@@ -1,15 +1,16 @@
 package hookApiMgr_test
 
 import (
-	"github.com/ddkwork/hyperdbgui/src/fnTable/hookApiMgr"
 	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream"
 	"testing"
 )
 
 func TestName(t *testing.T) {
-	h := hookApiMgr.New()
-	h.TestIopXxxControlFile()
+	b := stream.NewString("hyperdbg-cli.exe")
+	mylog.HexDump("pname test", b.Bytes())
+	//h := hookApiMgr.New()
+	//h.TestIopXxxControlFile()
 }
 
 func TestName1(t *testing.T) {
