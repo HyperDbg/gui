@@ -2,10 +2,13 @@ module github.com/ddkwork/hyperdbgui
 
 go 1.18
 
+replace zydis => ./go-zydis
+
 require (
 	fyne.io/fyne/v2 v2.2.3
 	github.com/ddkwork/librarygo v1.0.6
 	github.com/fpabl0/sparky-go v0.0.0-20220505200009-411aff1dbf3d
+	zydis v0.0.0-00010101000000-000000000000
 )
 
 require (

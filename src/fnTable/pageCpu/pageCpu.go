@@ -19,26 +19,14 @@ type (
 )
 
 func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
-	d := dism.New().CanvasObject(window)
+	d := dism.New().CanvasObject(window) //table
 	r := reg.New().CanvasObject(window)
-	dump := dump.New().CanvasObject(window)
-	s := stack.New().CanvasObject(window)
-
-	return container.NewBorder(
-		d,
-		//dump,
-		nil,
-		nil,
-		nil,
-	)
-
+	dump := dump.New().CanvasObject(window) //table
+	s := stack.New().CanvasObject(window)   //table
 	hSplit := container.NewHSplit(d, r)
 	hSplit.Offset = 0.7
 	newHSplit := container.NewHSplit(dump, s)
 	newHSplit.Offset = 0.5
-
-	//return container.NewBorder(hSplit, newHSplit, nil, nil)
-
 	cpu := container.NewAdaptiveGrid(1, hSplit, newHSplit)
 	//cpu := container.NewVSplit(hSplit, newHSplit)
 	//cpu.Offset = 0.7
