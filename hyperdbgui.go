@@ -3,7 +3,7 @@ package hyperdbgui
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"github.com/ddkwork/hyperdbgui/src/fnTable/pageCpu"
+	"github.com/ddkwork/hyperdbgui/src/fnTable"
 	"github.com/ddkwork/hyperdbgui/src/meau"
 	"github.com/ddkwork/hyperdbgui/src/toolbar"
 	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
@@ -42,15 +42,10 @@ func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 		topMeau.Help(),
 	)
 	o.mainMenu.Items = Items
-	//todo need fix all table item layout for page view
+	//todo
 	// ImmediateData   window and register window redesign
 	// hide all table header,need api set
-	//box := container.NewVBox(toolbar.New().CanvasObject(nil), fnTable.New().CanvasObject(nil))
-	//command := swid.NewSelectEntryFormField("command", "", []string{"default", "script"})
-	//command.Hint = "Hyper Debugger is running ..."
-	//return container.NewBorder(box, command, nil, nil)
-
 	command := swid.NewSelectEntryFormField("command", "", []string{"default", "script"})
 	command.Hint = "Hyper Debugger is running ..."
-	return container.NewBorder(toolbar.New().CanvasObject(nil), command, nil, nil, pageCpu.New().CanvasObject(window))
+	return container.NewBorder(toolbar.New().CanvasObject(nil), command, nil, nil, fnTable.New().CanvasObject(window))
 }
