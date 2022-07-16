@@ -1,4 +1,4 @@
-package dvlist
+package myTable
 
 import (
 	"fyne.io/fyne/v2"
@@ -77,7 +77,7 @@ type resizableLabel struct {
 	text             []rune
 	mux              *sync.RWMutex
 	partialDisplay   *uint32 // 1 if only part of text is showed, 0 otherwise
-	look             *Look
+	style            *StyleObj
 	actChan          chan labelAct
 	metaData         interface{}
 	dragging         *uint32
@@ -114,79 +114,79 @@ func WithDoubleTapHandler(h LabelTapHandler) ResizableLabelOption {
 	}
 }
 
-func NewResizableLabel(s string, look *Look, options ...ResizableLabelOption) *resizableLabel {
-	rlabel := &resizableLabel{
+func NewResizableLabel(s string, look *StyleObj, options ...ResizableLabelOption) *resizableLabel {
+	label := &resizableLabel{
 		text:           []rune(s),
 		mux:            new(sync.RWMutex),
 		partialDisplay: new(uint32),
-		look:           look,
+		style:          look,
 		actChan:        make(chan labelAct, labelChanDepth),
 		dragging:       new(uint32),
 	}
-	atomic.StoreUint32(rlabel.partialDisplay, 0)
-	atomic.StoreUint32(rlabel.dragging, 0)
+	atomic.StoreUint32(label.partialDisplay, 0)
+	atomic.StoreUint32(label.dragging, 0)
 	for _, o := range options {
-		o(rlabel)
+		o(label)
 	}
-	rlabel.ExtendBaseWidget(rlabel)
-	return rlabel
+	label.ExtendBaseWidget(label)
+	return label
 }
-func (rl *resizableLabel) CreateRenderer() fyne.WidgetRenderer {
-	rl.ExtendBaseWidget(rl)
-	return newResizableLabelRender(rl)
-}
-
-func (rl *resizableLabel) Get() []rune {
-	rl.mux.RLock()
-	defer rl.mux.RUnlock()
-	return rl.text
+func (l *resizableLabel) CreateRenderer() fyne.WidgetRenderer {
+	l.ExtendBaseWidget(l)
+	return newResizableLabelRender(l)
 }
 
-func (rl *resizableLabel) Set(s string) []rune {
-	rl.mux.Lock()
-	rl.text = []rune(s)
-	rl.mux.Unlock()
+func (l *resizableLabel) Get() []rune {
+	l.mux.RLock()
+	defer l.mux.RUnlock()
+	return l.text
+}
+
+func (l *resizableLabel) Set(s string) []rune {
+	l.mux.Lock()
+	l.text = []rune(s)
+	l.mux.Unlock()
 	select {
-	case rl.actChan <- labelActReload:
-		rl.Refresh()
+	case l.actChan <- labelActReload:
+		l.Refresh()
 	default:
 		break
 	}
-	return rl.text
+	return l.text
 }
 
-func (rl *resizableLabel) Dragged(evt *fyne.DragEvent) {
-	if rl.draggingHandler == nil {
+func (l *resizableLabel) Dragged(evt *fyne.DragEvent) {
+	if l.draggingHandler == nil {
 		return
 	}
-	atomic.StoreUint32(rl.dragging, 1)
-	// log.Printf("field %d dragged X %d", rl.metaData, evt.DraggedX)
-	rl.draggingHandler(rl.metaData, evt)
+	atomic.StoreUint32(l.dragging, 1)
+	// log.Printf("field %d dragged X %d", l.metaData, evt.DraggedX)
+	l.draggingHandler(l.metaData, evt)
 
 }
-func (rl *resizableLabel) DragEnd() {
+func (l *resizableLabel) DragEnd() {
 	// atomic.StoreUint32(row.dragging, 0)
 
 }
 
-func (rl *resizableLabel) Tapped(evt *fyne.PointEvent) {
+func (l *resizableLabel) Tapped(evt *fyne.PointEvent) {
 	// log.Printf("mouse clicked")
-	if atomic.LoadUint32(rl.dragging) != 0 {
-		atomic.StoreUint32(rl.dragging, 0)
+	if atomic.LoadUint32(l.dragging) != 0 {
+		atomic.StoreUint32(l.dragging, 0)
 		return
 	}
-	if rl.tapHandler != nil {
-		rl.tapHandler(rl.metaData, evt)
+	if l.tapHandler != nil {
+		l.tapHandler(l.metaData, evt)
 	}
 }
 
-func (rl *resizableLabel) DoubleTapped(evt *fyne.PointEvent) {
-	if atomic.LoadUint32(rl.dragging) != 0 {
-		atomic.StoreUint32(rl.dragging, 0)
+func (l *resizableLabel) DoubleTapped(evt *fyne.PointEvent) {
+	if atomic.LoadUint32(l.dragging) != 0 {
+		atomic.StoreUint32(l.dragging, 0)
 		return
 	}
-	if rl.doubleTapHandler != nil {
-		rl.doubleTapHandler(rl.metaData, evt)
+	if l.doubleTapHandler != nil {
+		l.doubleTapHandler(l.metaData, evt)
 	}
 
 }
@@ -196,8 +196,8 @@ func getUnitSize(fontsize float32, style fyne.TextStyle) fyne.Size {
 }
 
 // IsPartial return true if only part of text is showed
-func (rl *resizableLabel) IsPartial() bool {
-	return atomic.LoadUint32(rl.partialDisplay) == 1
+func (l *resizableLabel) IsPartial() bool {
+	return atomic.LoadUint32(l.partialDisplay) == 1
 }
 
 type resizableLabelRender struct {
@@ -219,72 +219,72 @@ func newResizableLabelRender(l *resizableLabel) *resizableLabelRender {
 	r.calUnitSize()
 	return r
 }
-func (rlr *resizableLabelRender) BackgroundColor() color.Color {
+func (r *resizableLabelRender) BackgroundColor() color.Color {
 	return color.Transparent
 }
 
-func (rlr *resizableLabelRender) calUnitSize() {
-	rlr.unitSize = getUnitSize(rlr.label.look.TextSize, rlr.label.look.TextStyle)
+func (r *resizableLabelRender) calUnitSize() {
+	r.unitSize = getUnitSize(r.label.style.TextSize, r.label.style.TextStyle)
 	return
 }
 
-func (rlr *resizableLabelRender) MinSize() fyne.Size {
-	return rlr.unitSize
+func (r *resizableLabelRender) MinSize() fyne.Size {
+	return r.unitSize
 }
-func (rlr *resizableLabelRender) Destroy() {
+func (r *resizableLabelRender) Destroy() {
 	// log.Printf("label destroyed")
 
 }
-func (rlr *resizableLabelRender) Objects() []fyne.CanvasObject {
+func (r *resizableLabelRender) Objects() []fyne.CanvasObject {
 	// log.Printf("label objects")
-	rlr.mux.RLock()
-	defer rlr.mux.RUnlock()
-	return []fyne.CanvasObject{rlr.overallContainer}
+	r.mux.RLock()
+	defer r.mux.RUnlock()
+	return []fyne.CanvasObject{r.overallContainer}
 }
 
-func (rlr *resizableLabelRender) Refresh() {
+func (r *resizableLabelRender) Refresh() {
 	select {
-	case act := <-rlr.label.actChan:
+	case act := <-r.label.actChan:
 		switch act {
 		case labelActReload:
-			rlr.Layout(rlr.label.Size())
+			r.Layout(r.label.Size())
 		}
 	default:
 		return
 	}
-	canvas.Refresh(rlr.label)
+	canvas.Refresh(r.label)
 }
-func (rlr *resizableLabelRender) Layout(layoutsize fyne.Size) {
+func (r *resizableLabelRender) Layout(layoutsize fyne.Size) {
 	// log.Printf("label layout for size %v", layoutsize)
 	if layoutsize.Width <= 0 {
 		return
 	}
-	rlr.mux.Lock()
-	defer rlr.mux.Unlock()
-	rlr.calUnitSize()
-	totalSize := fyne.MeasureText(string(rlr.label.Get()), rlr.label.look.TextSize, rlr.label.look.TextStyle)
-	i := lineChars(rlr.label.Get(), 0, layoutsize.Width, rlr.unitSize.Width, rlr.label.look.TextSize, rlr.label.look.TextStyle)
-	if i < len(rlr.label.Get())-1 {
-		atomic.StoreUint32(rlr.label.partialDisplay, 1)
+	r.mux.Lock()
+	defer r.mux.Unlock()
+	r.calUnitSize()
+	totalSize := fyne.MeasureText(string(r.label.Get()), r.label.style.TextSize, r.label.style.TextStyle)
+	i := lineChars(r.label.Get(), 0, layoutsize.Width, r.unitSize.Width, r.label.style.TextSize, r.label.style.TextStyle)
+	if i < len(r.label.Get())-1 {
+		atomic.StoreUint32(r.label.partialDisplay, 1)
 	} else {
-		atomic.StoreUint32(rlr.label.partialDisplay, 0)
+		atomic.StoreUint32(r.label.partialDisplay, 0)
 	}
-	rlr.canvasText = canvas.NewText(string(rlr.label.Get()[:i]), rlr.label.look.TextColor)
-	rlr.canvasText.TextStyle = rlr.label.look.TextStyle
-	rlr.canvasText.TextSize = rlr.label.look.TextSize
-	rlr.canvasText.Refresh()
-	switch rlr.label.look.Alignment {
+	r.canvasText = canvas.NewText(string(r.label.Get()[:i]), r.label.style.TextColor)
+	r.canvasText.TextStyle = r.label.style.TextStyle
+	r.canvasText.TextSize = r.label.style.TextSize
+	r.canvasText.Refresh()
+	switch r.label.style.Alignment {
 	case fyne.TextAlignCenter:
 		if layoutsize.Width > totalSize.Width {
-			rlr.canvasText.Move(fyne.NewPos((layoutsize.Width-totalSize.Width)/2, 0))
+			r.canvasText.Move(fyne.NewPos((layoutsize.Width-totalSize.Width)/2, 0))
 		}
 	case fyne.TextAlignTrailing:
 		if layoutsize.Width > totalSize.Width {
-			rlr.canvasText.Move(fyne.NewPos(layoutsize.Width-totalSize.Width, 0))
+			r.canvasText.Move(fyne.NewPos(layoutsize.Width-totalSize.Width, 0))
 		}
 	default:
 	}
 
-	rlr.overallContainer = container.NewWithoutLayout()
-	rlr.overallContainer.Add(rlr.canvasText)
+	r.overallContainer = container.NewWithoutLayout()
+	r.overallContainer.Add(r.canvasText)
 }

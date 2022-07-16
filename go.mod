@@ -7,6 +7,7 @@ replace zydis => ./go-zydis
 require (
 	fyne.io/fyne/v2 v2.2.3
 	github.com/ddkwork/librarygo v1.0.6
+	github.com/drognisep/fynehelpers v0.0.0-20220612030159-a59fafbc482d
 	github.com/fpabl0/sparky-go v0.0.0-20220505200009-411aff1dbf3d
 	zydis v0.0.0-00010101000000-000000000000
 )
@@ -23,10 +24,12 @@ require (
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20211213063430-748e38ca8aec // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/goki/freetype v0.0.0-20181231101311-fa8a33aabaff // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/hjson/hjson-go v3.1.0+incompatible // indirect
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
 	github.com/kr/pretty v0.3.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/srwiley/oksvg v0.0.0-20211120171407-1837d6608d8c // indirect
 	github.com/srwiley/rasterx v0.0.0-20210519020934-456a8d69b780 // indirect

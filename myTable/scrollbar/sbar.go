@@ -16,8 +16,8 @@ type OffsetChangeHandler func(newoffset uint32)
 // OffsetResolution indicate max value of the scroll offset
 const OffsetResolution = 100
 
-// SBar is the fyne widget for scroll bar
-type SBar struct {
+// ScrollBar is the fyne widget for scroll bar
+type ScrollBar struct {
 	widget.BaseWidget
 	offset     *uint32
 	actChan    chan posAction
@@ -30,8 +30,8 @@ const actChanDepth = 4
 // NewSBar returns a new scrollbar instance,
 // with the specified handler function handler, could be nil;
 // horizontal scrollbar if h is true, vertical otherwise;
-func NewSBar(handler OffsetChangeHandler, h bool) *SBar {
-	r := &SBar{
+func NewSBar(handler OffsetChangeHandler, h bool) *ScrollBar {
+	r := &ScrollBar{
 		offset:     new(uint32),
 		actChan:    make(chan posAction, actChanDepth),
 		offsetH:    handler,
@@ -43,17 +43,17 @@ func NewSBar(handler OffsetChangeHandler, h bool) *SBar {
 }
 
 // CreateRenderer implments fyne.Widget interface
-func (sbar *SBar) CreateRenderer() fyne.WidgetRenderer {
+func (sbar *ScrollBar) CreateRenderer() fyne.WidgetRenderer {
 	sbar.ExtendBaseWidget(sbar)
 	return newSbarRender(sbar)
 }
 
 // DragEnd implements fyne.Draggable interface
-func (sbar *SBar) DragEnd() {
+func (sbar *ScrollBar) DragEnd() {
 }
 
 // Dragged implements fyne.Draggable interface
-func (sbar *SBar) Dragged(evt *fyne.DragEvent) {
+func (sbar *ScrollBar) Dragged(evt *fyne.DragEvent) {
 	cord := evt.Position.Y + evt.Dragged.DY
 	if sbar.horizontal {
 		cord = evt.Position.X + evt.Dragged.DX
@@ -67,16 +67,16 @@ func (sbar *SBar) Dragged(evt *fyne.DragEvent) {
 }
 
 // IsHorizontal returns true if it is horizontal scroll bar
-func (sbar *SBar) IsHorizontal() bool {
+func (sbar *ScrollBar) IsHorizontal() bool {
 	return sbar.horizontal
 }
 
 // SetOffset set the scroll offset;
 // note this function won't trigger the OffsetChangeHandler function
-func (sbar *SBar) SetOffset(o uint32) {
+func (sbar *ScrollBar) SetOffset(o uint32) {
 	sbar.setOffset(o, false)
 }
-func (sbar *SBar) setOffset(o uint32, callh bool) {
+func (sbar *ScrollBar) setOffset(o uint32, callh bool) {
 	var i = o
 	if o > OffsetResolution {
 		i = OffsetResolution
@@ -94,7 +94,7 @@ func (sbar *SBar) setOffset(o uint32, callh bool) {
 }
 
 // GetOffset returns current offset
-func (sbar *SBar) GetOffset() uint32 { return atomic.LoadUint32(sbar.offset) }
+func (sbar *ScrollBar) GetOffset() uint32 { return atomic.LoadUint32(sbar.offset) }
 
 const (
 	BarWidth  = 20 //竖滚动条宽度
@@ -112,14 +112,14 @@ type posAction struct {
 }
 
 type sbarRender struct {
-	sbar             *SBar
+	sbar             *ScrollBar
 	bar              *canvas.Rectangle
 	curBarSize       fyne.Size
 	mux              *sync.RWMutex
 	overallContainer *fyne.Container
 }
 
-func newSbarRender(b *SBar) *sbarRender {
+func newSbarRender(b *ScrollBar) *sbarRender {
 	r := &sbarRender{
 		sbar: b,
 		bar:  canvas.NewRectangle(theme.ScrollBarColor()),
