@@ -3,8 +3,8 @@ package ImmediateData
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/ddkwork/hyperdbgui/myTable"
-	"zydis"
+	"github.com/ddkwork/librarygo/src/fynelib/myTable"
+	"github.com/ddkwork/librarygo/src/go-zydis"
 )
 
 type (
