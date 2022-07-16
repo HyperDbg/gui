@@ -40,7 +40,7 @@ func TestSBar(t *testing.T) {
 			expected: 62,
 		},
 	}
-	var sbar *SBar
+	var sbar *ScrollBar
 	var input testInput
 	var caseID int
 	f := func(off uint32) {

@@ -1,4 +1,4 @@
-package dump
+package ImmediateData
 
 import (
 	"fyne.io/fyne/v2"

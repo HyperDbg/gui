@@ -5,7 +5,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/widget"
-	"github.com/ddkwork/hyperdbgui/dvlist"
+	"github.com/ddkwork/hyperdbgui/myTable"
 	"github.com/ddkwork/librarygo/src/fynelib/fyneTheme"
 	"net/http"
 	"sort"
@@ -14,8 +14,8 @@ import (
 
 type (
 	a interface {
-		dvlist.Data
-		Add(info PacketInfo)
+		myTable.Interface
+		AddRow(info PacketInfo)
 	}
 	DecodedInfo struct {
 		Head      string
@@ -48,6 +48,11 @@ type (
 	packets []*PacketInfo
 )
 
+func (p *packets) Append(data any) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func main() {
 	a := app.NewWithID("com.rows.app")
 	a.SetIcon(nil)
@@ -57,11 +62,11 @@ func main() {
 	w.SetMaster()
 	w.CenterOnScreen()
 	p := new(packets)
-	selectionHandler := dvlist.WithSelectionHandler(func(id int, selected bool) {
+	selectionHandler := myTable.WithSelectionHandler(func(id int, selected bool) {
 		println(id)
 		println(selected)
 	})
-	doubleClickHandler := dvlist.WithDoubleClickHandler(func(id int) {
+	doubleClickHandler := myTable.WithDoubleClickHandler(func(id int) {
 		popUpMenu := widget.NewPopUpMenu(
 			fyne.NewMenu("pop",
 				fyne.NewMenuItem("copy", func() {
@@ -78,12 +83,12 @@ func main() {
 		)
 		popUpMenu.Show()
 	})
-	list, err := dvlist.NewDVList(p, selectionHandler, doubleClickHandler)
+	list, err := myTable.NewDVList(p, selectionHandler, doubleClickHandler)
 	if err != nil {
 		panic(err.Error())
 	}
 	go func() {
-		dvlist.ColumnWidth = map[int]float32{
+		myTable.ColumnWidth = map[int]float32{
 			2: 300,
 		} //todo
 		ticker := time.NewTicker(1 * time.Second)
@@ -151,7 +156,7 @@ func (FieldName) Note() string        { return "Note" }
 
 var fieldName FieldName
 
-func (p packets) Fields() []string {
+func (p packets) Header() []string {
 	return []string{
 		fieldName.PacketIndex(),
 		fieldName.Method(),
@@ -167,7 +172,7 @@ func (p packets) Fields() []string {
 	}
 }
 
-func (p packets) Item(id int) []string {
+func (p packets) Rows(id int) []string {
 	if id < 0 || id >= p.Len() {
 		return nil
 	}
@@ -187,7 +192,7 @@ func (p packets) Item(id int) []string {
 }
 
 func (p packets) Sort(field int, ascend bool) {
-	switch p.Fields()[field] {
+	switch p.Header()[field] {
 	case fieldName.PacketIndex():
 		sort.Slice(p, func(i, j int) bool {
 			return p[i].PacketIndex > p[j].PacketIndex
@@ -235,7 +240,7 @@ func (p packets) Sort(field int, ascend bool) {
 	}
 }
 func (p packets) Filter(kw string, i int) {
-	//for lineIndex, s := range p.Item(i) {
+	//for lineIndex, s := range p.Rows(i) {
 	//	println(s)
 	//	if strings.Contains(kw, s) {
 	//	}
