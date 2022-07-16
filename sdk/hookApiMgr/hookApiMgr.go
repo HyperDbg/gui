@@ -1,7 +1,7 @@
 package hookApiMgr
 
 import (
-	"cppkit/clang"
+	"github.com/ddkwork/librarygo/src/clang"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream"

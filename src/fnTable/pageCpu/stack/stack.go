@@ -2,8 +2,8 @@ package stack
 
 import (
 	"fyne.io/fyne/v2"
-	"github.com/ddkwork/hyperdbgui/myTable"
 	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
+	"github.com/ddkwork/librarygo/src/fynelib/myTable"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/mylog"
 )
