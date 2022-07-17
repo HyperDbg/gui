@@ -66,6 +66,8 @@ type (
 	object struct{}
 )
 
+func New() Interface { return &object{} }
+
 func (o *object) DecodeStack(api, stack string, argsInput ...string) (argList []ArgList, ok bool) {
 	lines, ok := tool.File().ToLines(stack)
 	if !ok {
@@ -393,5 +395,3 @@ func (o *object) Vmware() (ok bool) {
 	//TODO implement me
 	panic("implement me")
 }
-
-func New() Interface { return &object{} }

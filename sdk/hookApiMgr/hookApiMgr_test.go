@@ -1,14 +1,17 @@
 package hookApiMgr_test
 
 import (
+	"github.com/ddkwork/hyperdbgui/sdk/scriptGen"
+	"github.com/ddkwork/librarygo/src/clang"
 	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream"
 	"testing"
 )
 
 func TestName(t *testing.T) {
-	b := stream.NewString("hyperdbg-cli.exe")
-	mylog.HexDump("pname test", b.Bytes())
+	h := scriptGen.New()
+	h.ProcessNameFilter("ssd.exe")
+	clang.New().Format(`C:\Users\Admin\Desktop\gui\sdk\scriptGen\cpuid.ds`)
 	//h := hookApiMgr.New()
 	//h.TestIopXxxControlFile()
 }
