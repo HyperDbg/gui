@@ -1,5 +1,12 @@
 package scriptGen
 
+import (
+	"fmt"
+	"github.com/ddkwork/librarygo/src/mylog"
+	"github.com/ddkwork/librarygo/src/stream"
+	"path/filepath"
+)
+
 type (
 	Interface interface {
 		//canvasobjectapi.Interface
@@ -37,9 +44,38 @@ type (
 		EptHook() (ok bool)                //cc break,通用，慢，支持r0-3
 		HookMidForDataRecovery() (ok bool) //cc break
 		SaveLog() (ok bool)                //
+		ProcessNameFilter(processName string, fn string) (ok bool)
 	}
-	object struct{}
+	object struct {
+		s *stream.Buffer
+	}
 )
+
+func New() Interface {
+	return &object{
+		s: stream.New(),
+	}
+}
+
+func (o *object) ProcessNameFilter(processName string, fn string) (ok bool) {
+	o.s.WriteStringLn("\nif(")
+	processName = processName[:len(processName)-len(filepath.Ext(processName))]
+	b := stream.NewString(processName)
+	mylog.HexDump("pname test", b.Bytes())
+	for i, b2 := range b.Bytes() {
+		s := `db($pname +` + fmt.Sprint(i) + `) ==` + fmt.Sprintf("%x", b2)
+		if i < b.Len()-1 {
+			s += `&&`
+		}
+		o.s.WriteStringLn(s)
+	}
+
+	o.s.WriteStringLn("){")
+	o.s.WriteStringLn(" printf(\"Process name starts with: %s\\n\",$pname)")
+	o.s.WriteStringLn("}")
+	mylog.Info("pname gen", o.s.String())
+	return true
+}
 
 func (o *object) FormatString() (ok bool) {
 	//TODO implement me
@@ -132,5 +168,3 @@ func (o *object) SaveLog() (ok bool) {
 	//TODO implement me
 	panic("implement me")
 }
-
-func New() Interface { return &object{} }

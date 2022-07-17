@@ -1,0 +1,1 @@
+SyscallDumper.exe -o ssdtTable.txt -d

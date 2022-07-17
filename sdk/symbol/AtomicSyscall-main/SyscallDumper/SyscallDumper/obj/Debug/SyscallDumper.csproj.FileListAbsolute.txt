@@ -1,0 +1,8 @@
+D:\下载\AtomicSyscall-main\SyscallDumper\SyscallDumper\bin\Debug\SyscallDumper.exe.config
+D:\下载\AtomicSyscall-main\SyscallDumper\SyscallDumper\bin\Debug\SyscallDumper.exe
+D:\下载\AtomicSyscall-main\SyscallDumper\SyscallDumper\bin\Debug\SyscallDumper.pdb
+D:\下载\AtomicSyscall-main\SyscallDumper\SyscallDumper\obj\Debug\SyscallDumper.csproj.AssemblyReference.cache
+D:\下载\AtomicSyscall-main\SyscallDumper\SyscallDumper\obj\Debug\SyscallDumper.csproj.SuggestedBindingRedirects.cache
+D:\下载\AtomicSyscall-main\SyscallDumper\SyscallDumper\obj\Debug\SyscallDumper.csproj.CoreCompileInputs.cache
+D:\下载\AtomicSyscall-main\SyscallDumper\SyscallDumper\obj\Debug\SyscallDumper.exe
+D:\下载\AtomicSyscall-main\SyscallDumper\SyscallDumper\obj\Debug\SyscallDumper.pdb
