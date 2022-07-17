@@ -10,9 +10,8 @@ import (
 	"github.com/fpabl0/sparky-go/swid"
 )
 
-// go get github.com/ddkwork/librarygo@master
-// go get github.com/ddkwork/librarygo@latest
-//todo driver load fix
+//go:generate   go get github.com/ddkwork/librarygo@master
+
 type (
 	Interface interface {
 		canvasobjectapi.Interface //ui show and event finish

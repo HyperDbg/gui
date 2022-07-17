@@ -20,7 +20,7 @@ func New() Interface {
 func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 	d := newDisassemblyObject()
 	d.SetLines(nil)
-	list, err := myTable.NewDVList(d, myTable.WithSelectionHandler(func(id int, selected bool) {
+	list, err := myTable.NewTable(d, myTable.WithSelectionHandler(func(id int, selected bool) {
 		l := d.Lines()[id]
 		mylog.Struct(l)
 	}))
