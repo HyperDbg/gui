@@ -2,8 +2,8 @@ package pageNotes
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/widget"
 	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
+	"github.com/ddkwork/librarygo/src/fynelib/notes"
 )
 
 type (
@@ -15,8 +15,13 @@ type (
 )
 
 func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
-	//TODO implement me
-	return widget.NewLabel("")
+	list := &notes.Notelist{Pref: fyne.CurrentApp().Preferences()}
+	list.Load()
+	notesUI := &notes.Ui{Notes: list}
+
+	//window.SetContent(notesUI.LoadUI())
+	notesUI.RegisterKeys(window)
+	return notesUI.LoadUI()
 }
 
 func New() Interface { return &object{} }

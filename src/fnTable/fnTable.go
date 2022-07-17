@@ -6,6 +6,8 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageCpu"
+	"github.com/ddkwork/hyperdbgui/src/fnTable/pageNotes"
+	"github.com/ddkwork/librarygo/src/driverTool"
 	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
 )
 
@@ -22,8 +24,8 @@ func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 	ico := newPageIcoObj()
 	return container.NewAppTabs(
 		container.NewTabItemWithIcon("cpu", ico.cpu(), pageCpu.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("log", ico.log(), widget.NewButton("log", nil)),
-		container.NewTabItemWithIcon("notes", ico.notes(), widget.NewButton("notes", nil)),
+		container.NewTabItemWithIcon("log", ico.log(), widget.NewMultiLineEntry()), //todo export for set log
+		container.NewTabItemWithIcon("notes", ico.notes(), pageNotes.New().CanvasObject(window)),
 		container.NewTabItemWithIcon("breaks", ico.breaks(), widget.NewButton("breaks", nil)),
 		container.NewTabItemWithIcon("memory", ico.memory(), widget.NewButton("memory", nil)),
 		container.NewTabItemWithIcon("stack", ico.stack(), widget.NewButton("stack", nil)),
@@ -35,6 +37,7 @@ func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 		container.NewTabItemWithIcon("thead", ico.thead(), widget.NewButton("thead", nil)),
 		container.NewTabItemWithIcon("handle", ico.handle(), widget.NewButton("handle", nil)),
 		container.NewTabItemWithIcon("trace", ico.trace(), widget.NewButton("trace", nil)),
+		container.NewTabItemWithIcon("driver control", ico.trace(), driverTool.New().CanvasObject(window)),
 	)
 }
 

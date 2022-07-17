@@ -10,7 +10,6 @@ import (
 	"github.com/fpabl0/sparky-go/swid"
 )
 
-//todo driver load fix
 type (
 	Interface interface {
 		canvasobjectapi.Interface //ui show and event finish
