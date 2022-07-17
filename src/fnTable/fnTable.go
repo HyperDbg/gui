@@ -37,7 +37,7 @@ func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 		container.NewTabItemWithIcon("thead", ico.thead(), widget.NewButton("thead", nil)),
 		container.NewTabItemWithIcon("handle", ico.handle(), widget.NewButton("handle", nil)),
 		container.NewTabItemWithIcon("trace", ico.trace(), widget.NewButton("trace", nil)),
-		container.NewTabItemWithIcon("driver control", ico.trace(), driverTool.New().CanvasObject(window)),
+		container.NewTabItemWithIcon("driver control", ico.vt(), driverTool.New().CanvasObject(window)),
 	)
 }
 
@@ -57,6 +57,7 @@ type (
 		thead() fyne.Resource
 		handle() fyne.Resource
 		trace() fyne.Resource
+		vt() fyne.Resource
 	}
 	pageIcoObj struct {
 	}
@@ -76,6 +77,7 @@ func (p *pageIcoObj) xFrom() fyne.Resource   { return fyne.NewStaticResource("xF
 func (p *pageIcoObj) thead() fyne.Resource   { return fyne.NewStaticResource("thead", thead) }
 func (p *pageIcoObj) handle() fyne.Resource  { return fyne.NewStaticResource("handle", handle) }
 func (p *pageIcoObj) trace() fyne.Resource   { return fyne.NewStaticResource("trace", trace) }
+func (p *pageIcoObj) vt() fyne.Resource      { return fyne.NewStaticResource("vt", vt) }
 func newPageIcoObj() pageIco {
 	return &pageIcoObj{}
 }
@@ -122,3 +124,6 @@ var handle []byte
 
 //go:embed pageIco/trace.png
 var trace []byte
+
+//go:embed pageIco/vt.ico
+var vt []byte
