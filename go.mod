@@ -4,7 +4,6 @@ go 1.18
 
 require (
 	fyne.io/fyne/v2 v2.2.3
-	github.com/ddkwork/librarygo v0.0.0
 	github.com/fpabl0/sparky-go v0.0.0-20220505200009-411aff1dbf3d
 )
 
@@ -14,6 +13,7 @@ require (
 	github.com/PeterYangs/tools v0.2.31 // indirect
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/ddkwork/librarygo v0.0.0 // indirect
 	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/fyne-io/gl-js v0.0.0-20220119005834-d2da28d9ccfe // indirect
