@@ -13,7 +13,8 @@ event send to driver
 
 sdk expand for hook api mgr etc.
 
-gui windows work with sdk api.
+gui windows work with sdk api, like get all reg , stack dism api addrress data 
+from event and show on gui, debug support etc.
 
 finish another gui widow page etc
 
