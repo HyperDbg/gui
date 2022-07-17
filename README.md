@@ -3,8 +3,6 @@ HyperDbg's Graphical User Interface (GUI)
 
 todo list:
 
-driver load
-
 symbol load
 
 .ds generate
