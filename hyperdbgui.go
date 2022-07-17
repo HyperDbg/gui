@@ -10,8 +10,6 @@ import (
 	"github.com/fpabl0/sparky-go/swid"
 )
 
-//go:generate   go get github.com/ddkwork/librarygo@master
-
 type (
 	Interface interface {
 		canvasobjectapi.Interface //ui show and event finish
