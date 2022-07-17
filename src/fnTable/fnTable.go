@@ -62,20 +62,20 @@ type (
 	}
 )
 
-func (p *pageIcoObj) cpu() fyne.Resource     { return fyne.NewStaticResource("i23", cpu) }
-func (p *pageIcoObj) log() fyne.Resource     { return fyne.NewStaticResource("i23", log) }
-func (p *pageIcoObj) notes() fyne.Resource   { return fyne.NewStaticResource("i23", notes) }
-func (p *pageIcoObj) breaks() fyne.Resource  { return fyne.NewStaticResource("i23", breaks) }
-func (p *pageIcoObj) memory() fyne.Resource  { return fyne.NewStaticResource("i23", memory) }
-func (p *pageIcoObj) stack() fyne.Resource   { return fyne.NewStaticResource("i23", stack) }
-func (p *pageIcoObj) sehList() fyne.Resource { return fyne.NewStaticResource("i23", sehList) }
-func (p *pageIcoObj) script() fyne.Resource  { return fyne.NewStaticResource("i23", script) }
-func (p *pageIcoObj) symbols() fyne.Resource { return fyne.NewStaticResource("i23", symbols) }
-func (p *pageIcoObj) source() fyne.Resource  { return fyne.NewStaticResource("i23", source) }
-func (p *pageIcoObj) xFrom() fyne.Resource   { return fyne.NewStaticResource("i23", xFrom) }
-func (p *pageIcoObj) thead() fyne.Resource   { return fyne.NewStaticResource("i23", thead) }
-func (p *pageIcoObj) handle() fyne.Resource  { return fyne.NewStaticResource("i23", handle) }
-func (p *pageIcoObj) trace() fyne.Resource   { return fyne.NewStaticResource("i23", trace) }
+func (p *pageIcoObj) cpu() fyne.Resource     { return fyne.NewStaticResource("cpu", cpu) }
+func (p *pageIcoObj) log() fyne.Resource     { return fyne.NewStaticResource("log", log) }
+func (p *pageIcoObj) notes() fyne.Resource   { return fyne.NewStaticResource("notes", notes) }
+func (p *pageIcoObj) breaks() fyne.Resource  { return fyne.NewStaticResource("breaks", breaks) }
+func (p *pageIcoObj) memory() fyne.Resource  { return fyne.NewStaticResource("memory", memory) }
+func (p *pageIcoObj) stack() fyne.Resource   { return fyne.NewStaticResource("stack", stack) }
+func (p *pageIcoObj) sehList() fyne.Resource { return fyne.NewStaticResource("sehList", sehList) }
+func (p *pageIcoObj) script() fyne.Resource  { return fyne.NewStaticResource("script", script) }
+func (p *pageIcoObj) symbols() fyne.Resource { return fyne.NewStaticResource("symbols", symbols) }
+func (p *pageIcoObj) source() fyne.Resource  { return fyne.NewStaticResource("source", source) }
+func (p *pageIcoObj) xFrom() fyne.Resource   { return fyne.NewStaticResource("xFrom", xFrom) }
+func (p *pageIcoObj) thead() fyne.Resource   { return fyne.NewStaticResource("thead", thead) }
+func (p *pageIcoObj) handle() fyne.Resource  { return fyne.NewStaticResource("handle", handle) }
+func (p *pageIcoObj) trace() fyne.Resource   { return fyne.NewStaticResource("trace", trace) }
 func newPageIcoObj() pageIco {
 	return &pageIcoObj{}
 }
