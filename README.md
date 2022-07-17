@@ -20,4 +20,7 @@ reDesign some widget
 
 
 
-![image](https://user-images.githubusercontent.com/19886504/179351884-21f4d9dc-f766-4e79-b8aa-6dc859250e86.png)
+![image](https://user-images.githubusercontent.com/19886504/179392103-1d719f91-7023-421d-bf27-4be4ccec7e6b.png)
+
+![image](https://user-images.githubusercontent.com/19886504/179392118-3115d31f-62a7-4161-a425-f19b0ac1bdfd.png)
+
