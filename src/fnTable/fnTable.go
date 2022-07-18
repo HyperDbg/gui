@@ -22,6 +22,8 @@ func New() Interface { return &object{} }
 
 func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 	ico := newPageIcoObj()
+	driver := driverTool.New()
+	driver.Driver().DeviceName = "HyperdbgHypervisorDevice"
 	return container.NewAppTabs(
 		container.NewTabItemWithIcon("cpu", ico.cpu(), pageCpu.New().CanvasObject(window)),
 		container.NewTabItemWithIcon("log", ico.log(), widget.NewMultiLineEntry()), //todo export for set log
@@ -37,7 +39,7 @@ func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 		container.NewTabItemWithIcon("thead", ico.thead(), widget.NewButton("thead", nil)),
 		container.NewTabItemWithIcon("handle", ico.handle(), widget.NewButton("handle", nil)),
 		container.NewTabItemWithIcon("trace", ico.trace(), widget.NewButton("trace", nil)),
-		container.NewTabItemWithIcon("driver control", ico.vt(), driverTool.New().CanvasObject(window)),
+		container.NewTabItemWithIcon("driver control", ico.vt(), driver.CanvasObject(window)),
 	)
 }
 
