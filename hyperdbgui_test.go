@@ -1,7 +1,7 @@
 package hyperdbgui
 
-//go:generate   go get github.com/ddkwork/librarygo@master
-//go:generate  go  clean -modcache
+//go:generate  go get github.com/ddkwork/librarygo@master
+//go:generate  go clean -modcache
 //go:generate  go work init
 //go:generate  go work use -r .
 //go:generate  go work sync
