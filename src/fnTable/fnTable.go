@@ -5,8 +5,16 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"github.com/ddkwork/hyperdbgui/src/fnTable/pageBreaks"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageCpu"
+	"github.com/ddkwork/hyperdbgui/src/fnTable/pageHandle"
+	"github.com/ddkwork/hyperdbgui/src/fnTable/pageMemory"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageNotes"
+	"github.com/ddkwork/hyperdbgui/src/fnTable/pageScript"
+	"github.com/ddkwork/hyperdbgui/src/fnTable/pageSehList"
+	"github.com/ddkwork/hyperdbgui/src/fnTable/pageStack"
+	"github.com/ddkwork/hyperdbgui/src/fnTable/pageSymbol"
+	"github.com/ddkwork/hyperdbgui/src/fnTable/pageThead"
 	"github.com/ddkwork/librarygo/src/driverTool"
 	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
 )
@@ -22,22 +30,24 @@ func New() Interface { return &object{} }
 
 func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 	ico := newPageIcoObj()
+	driver := driverTool.New()
+	driver.Driver().DeviceName = "HyperdbgHypervisorDevice"
 	return container.NewAppTabs(
 		container.NewTabItemWithIcon("cpu", ico.cpu(), pageCpu.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("log", ico.log(), widget.NewMultiLineEntry()), //todo export for set log
+		container.NewTabItemWithIcon("log", ico.log(), widget.NewMultiLineEntry()),
 		container.NewTabItemWithIcon("notes", ico.notes(), pageNotes.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("breaks", ico.breaks(), widget.NewButton("breaks", nil)),
-		container.NewTabItemWithIcon("memory", ico.memory(), widget.NewButton("memory", nil)),
-		container.NewTabItemWithIcon("stack", ico.stack(), widget.NewButton("stack", nil)),
-		container.NewTabItemWithIcon("sehList", ico.sehList(), widget.NewButton("sehList", nil)),
-		container.NewTabItemWithIcon("script", ico.script(), widget.NewButton("script", nil)),
-		container.NewTabItemWithIcon("symbols", ico.symbols(), widget.NewButton("symbols", nil)),
+		container.NewTabItemWithIcon("breaks", ico.breaks(), pageBreaks.New().CanvasObject(window)),
+		container.NewTabItemWithIcon("memory", ico.memory(), pageMemory.New().CanvasObject(window)),
+		container.NewTabItemWithIcon("stack", ico.stack(), pageStack.New().CanvasObject(window)),
+		container.NewTabItemWithIcon("sehList", ico.sehList(), pageSehList.New().CanvasObject(window)),
+		container.NewTabItemWithIcon("script", ico.script(), pageScript.New().CanvasObject(window)),
+		container.NewTabItemWithIcon("symbols", ico.symbols(), pageSymbol.New().CanvasObject(window)),
 		container.NewTabItemWithIcon("source", ico.source(), widget.NewButton("source", nil)),
 		container.NewTabItemWithIcon("xFrom", ico.xFrom(), widget.NewButton("xFrom", nil)),
-		container.NewTabItemWithIcon("thead", ico.thead(), widget.NewButton("thead", nil)),
-		container.NewTabItemWithIcon("handle", ico.handle(), widget.NewButton("handle", nil)),
+		container.NewTabItemWithIcon("thead", ico.thead(), pageThead.New().CanvasObject(window)),
+		container.NewTabItemWithIcon("handle", ico.handle(), pageHandle.New().CanvasObject(window)),
 		container.NewTabItemWithIcon("trace", ico.trace(), widget.NewButton("trace", nil)),
-		container.NewTabItemWithIcon("driver control", ico.vt(), driverTool.New().CanvasObject(window)),
+		container.NewTabItemWithIcon("driver control", ico.vt(), driver.CanvasObject(window)),
 	)
 }
 
