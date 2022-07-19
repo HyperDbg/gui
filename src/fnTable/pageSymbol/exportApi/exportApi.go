@@ -2,10 +2,12 @@ package exportApi
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
 	"github.com/ddkwork/librarygo/src/fynelib/myTable"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/mylog"
+	"github.com/fpabl0/sparky-go/swid"
 )
 
 type (
@@ -27,5 +29,6 @@ func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 	if !mycheck.Error(err) {
 		return nil
 	}
-	return list
+	filter := swid.NewTextFormField("filter", "")
+	return container.NewBorder(list, filter, nil, nil)
 }

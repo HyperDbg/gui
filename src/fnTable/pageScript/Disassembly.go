@@ -1,7 +1,6 @@
-package module
+package pageScript
 
 import (
-	"encoding/hex"
 	"fmt"
 	"github.com/ddkwork/librarygo/src/fynelib/myTable"
 	"github.com/ddkwork/librarygo/src/go-zydis"
@@ -14,10 +13,9 @@ type (
 		Lines() []line
 	}
 	line struct {
-		address string
-		data    string
-		dism    string
-		notes   string
+		line    string
+		content string
+		info    string
 	}
 	disassemblyObject struct {
 		lines []line
@@ -73,10 +71,9 @@ func (d *disassemblyObject) SetLines(lines []line) {
 		//	str,
 		//)
 		l := line{
-			address: fmt.Sprintf("%016x", runtimeAddress),
-			data:    hex.EncodeToString(data[:instr.Length]),
-			dism:    str,
-			notes:   "",
+			line:    "",
+			content: "",
+			info:    str,
 		}
 		d.lines = append(d.lines, l)
 
@@ -92,19 +89,17 @@ func (d *disassemblyObject) Lines() []line     { return d.lines }
 func newDisassemblyObject() *disassemblyObject { return &disassemblyObject{lines: make([]line, 0)} }
 func (d *disassemblyObject) Append(data any)   { d.lines = append(d.lines, data.(line)) }
 func (d *disassemblyObject) Header() []string {
-	return []string{
-		"address",
-		"module",
-		"from",
-		"path",
+	return []string{ //todo add thead id
+		"line",
+		"content",
+		"info",
 	}
 }
 func (d *disassemblyObject) Rows(id int) []string {
 	return []string{
-		d.lines[id].address,
-		d.lines[id].data,
-		d.lines[id].dism,
-		d.lines[id].notes,
+		d.lines[id].line,
+		d.lines[id].content,
+		d.lines[id].info,
 	}
 }
 func (d *disassemblyObject) Len() int { return len(d.lines) }

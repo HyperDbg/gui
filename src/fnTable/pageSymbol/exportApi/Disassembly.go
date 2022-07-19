@@ -94,9 +94,9 @@ func (d *disassemblyObject) Append(data any)   { d.lines = append(d.lines, data.
 func (d *disassemblyObject) Header() []string {
 	return []string{
 		"address",
-		"data",
-		"dism",
-		"notes",
+		"type",
+		"number",
+		"name",
 	}
 }
 func (d *disassemblyObject) Rows(id int) []string {

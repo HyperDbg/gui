@@ -1,7 +1,6 @@
-package module
+package pageMemory
 
 import (
-	"encoding/hex"
 	"fmt"
 	"github.com/ddkwork/librarygo/src/fynelib/myTable"
 	"github.com/ddkwork/librarygo/src/go-zydis"
@@ -14,10 +13,13 @@ type (
 		Lines() []line
 	}
 	line struct {
-		address string
-		data    string
-		dism    string
-		notes   string
+		address        string
+		Size           string
+		pageInfo       string
+		content        string
+		Type           string
+		pageProtect    string
+		defaultProtect string
 	}
 	disassemblyObject struct {
 		lines []line
@@ -73,10 +75,13 @@ func (d *disassemblyObject) SetLines(lines []line) {
 		//	str,
 		//)
 		l := line{
-			address: fmt.Sprintf("%016x", runtimeAddress),
-			data:    hex.EncodeToString(data[:instr.Length]),
-			dism:    str,
-			notes:   "",
+			address:        fmt.Sprintf("%016x", runtimeAddress),
+			Size:           "",
+			pageInfo:       "",
+			content:        "",
+			Type:           "",
+			pageProtect:    "",
+			defaultProtect: str,
 		}
 		d.lines = append(d.lines, l)
 
@@ -94,17 +99,23 @@ func (d *disassemblyObject) Append(data any)   { d.lines = append(d.lines, data.
 func (d *disassemblyObject) Header() []string {
 	return []string{
 		"address",
-		"module",
-		"from",
-		"path",
+		"size",
+		"page info",
+		"content",
+		"type",
+		"page protect",
+		"default protect",
 	}
 }
 func (d *disassemblyObject) Rows(id int) []string {
 	return []string{
 		d.lines[id].address,
-		d.lines[id].data,
-		d.lines[id].dism,
-		d.lines[id].notes,
+		d.lines[id].Size,
+		d.lines[id].pageInfo,
+		d.lines[id].content,
+		d.lines[id].Type,
+		d.lines[id].pageProtect,
+		d.lines[id].defaultProtect,
 	}
 }
 func (d *disassemblyObject) Len() int { return len(d.lines) }

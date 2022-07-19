@@ -1,7 +1,6 @@
-package module
+package pageStack
 
 import (
-	"encoding/hex"
 	"fmt"
 	"github.com/ddkwork/librarygo/src/fynelib/myTable"
 	"github.com/ddkwork/librarygo/src/go-zydis"
@@ -14,10 +13,12 @@ type (
 		Lines() []line
 	}
 	line struct {
-		address string
-		data    string
-		dism    string
-		notes   string
+		address    string
+		Return     string
+		ReturnFrom string
+		Size       string
+		notes      string
+		mod        string
 	}
 	disassemblyObject struct {
 		lines []line
@@ -73,10 +74,12 @@ func (d *disassemblyObject) SetLines(lines []line) {
 		//	str,
 		//)
 		l := line{
-			address: fmt.Sprintf("%016x", runtimeAddress),
-			data:    hex.EncodeToString(data[:instr.Length]),
-			dism:    str,
-			notes:   "",
+			address:    fmt.Sprintf("%016x", runtimeAddress),
+			Return:     "",
+			ReturnFrom: "",
+			Size:       "",
+			notes:      "",
+			mod:        str,
 		}
 		d.lines = append(d.lines, l)
 
@@ -92,19 +95,23 @@ func (d *disassemblyObject) Lines() []line     { return d.lines }
 func newDisassemblyObject() *disassemblyObject { return &disassemblyObject{lines: make([]line, 0)} }
 func (d *disassemblyObject) Append(data any)   { d.lines = append(d.lines, data.(line)) }
 func (d *disassemblyObject) Header() []string {
-	return []string{
+	return []string{ //todo add thead id
 		"address",
+		"return",
+		"return from",
+		"size",
+		"notes",
 		"module",
-		"from",
-		"path",
 	}
 }
 func (d *disassemblyObject) Rows(id int) []string {
 	return []string{
 		d.lines[id].address,
-		d.lines[id].data,
-		d.lines[id].dism,
+		d.lines[id].Return,
+		d.lines[id].ReturnFrom,
+		d.lines[id].Size,
 		d.lines[id].notes,
+		d.lines[id].mod,
 	}
 }
 func (d *disassemblyObject) Len() int { return len(d.lines) }

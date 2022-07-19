@@ -1,7 +1,6 @@
-package module
+package pageBreaks
 
 import (
-	"encoding/hex"
 	"fmt"
 	"github.com/ddkwork/librarygo/src/fynelib/myTable"
 	"github.com/ddkwork/librarygo/src/go-zydis"
@@ -14,10 +13,13 @@ type (
 		Lines() []line
 	}
 	line struct {
-		address string
-		data    string
-		dism    string
-		notes   string
+		Type        string
+		address     string
+		mod         string
+		stat        string
+		disassembly string
+		count       string
+		notes       string
 	}
 	disassemblyObject struct {
 		lines []line
@@ -73,10 +75,13 @@ func (d *disassemblyObject) SetLines(lines []line) {
 		//	str,
 		//)
 		l := line{
-			address: fmt.Sprintf("%016x", runtimeAddress),
-			data:    hex.EncodeToString(data[:instr.Length]),
-			dism:    str,
-			notes:   "",
+			Type:        "",
+			address:     fmt.Sprintf("%016x", runtimeAddress),
+			mod:         "",
+			stat:        "",
+			disassembly: "",
+			count:       "",
+			notes:       str,
 		}
 		d.lines = append(d.lines, l)
 
@@ -93,17 +98,23 @@ func newDisassemblyObject() *disassemblyObject { return &disassemblyObject{lines
 func (d *disassemblyObject) Append(data any)   { d.lines = append(d.lines, data.(line)) }
 func (d *disassemblyObject) Header() []string {
 	return []string{
+		"type",
 		"address",
-		"module",
-		"from",
-		"path",
+		"module/tag/",
+		"state",
+		"disassembly",
+		"count",
+		"notes",
 	}
 }
 func (d *disassemblyObject) Rows(id int) []string {
 	return []string{
+		d.lines[id].Type,
 		d.lines[id].address,
-		d.lines[id].data,
-		d.lines[id].dism,
+		d.lines[id].mod,
+		d.lines[id].stat,
+		d.lines[id].disassembly,
+		d.lines[id].count,
 		d.lines[id].notes,
 	}
 }

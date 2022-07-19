@@ -1,7 +1,6 @@
-package module
+package pageThead
 
 import (
-	"encoding/hex"
 	"fmt"
 	"github.com/ddkwork/librarygo/src/fynelib/myTable"
 	"github.com/ddkwork/librarygo/src/go-zydis"
@@ -14,10 +13,20 @@ type (
 		Lines() []line
 	}
 	line struct {
-		address string
-		data    string
-		dism    string
-		notes   string
+		index      string
+		id         string
+		entry      string
+		teb        string
+		rip        string
+		count      string
+		level      string
+		waitReason string
+		lastError  string
+		userTime   string
+		systemTime string
+		creatTime  string
+		cpu        string
+		name       string
 	}
 	disassemblyObject struct {
 		lines []line
@@ -73,10 +82,20 @@ func (d *disassemblyObject) SetLines(lines []line) {
 		//	str,
 		//)
 		l := line{
-			address: fmt.Sprintf("%016x", runtimeAddress),
-			data:    hex.EncodeToString(data[:instr.Length]),
-			dism:    str,
-			notes:   "",
+			index:      str,
+			id:         "",
+			entry:      "",
+			teb:        "",
+			rip:        "",
+			count:      "",
+			level:      "",
+			waitReason: "",
+			lastError:  "",
+			userTime:   "",
+			systemTime: "",
+			creatTime:  "",
+			cpu:        "",
+			name:       "",
 		}
 		d.lines = append(d.lines, l)
 
@@ -92,19 +111,39 @@ func (d *disassemblyObject) Lines() []line     { return d.lines }
 func newDisassemblyObject() *disassemblyObject { return &disassemblyObject{lines: make([]line, 0)} }
 func (d *disassemblyObject) Append(data any)   { d.lines = append(d.lines, data.(line)) }
 func (d *disassemblyObject) Header() []string {
-	return []string{
-		"address",
-		"module",
-		"from",
-		"path",
+	return []string{ //todo add thead id
+		"index",
+		"id",
+		"entry",
+		"teb",
+		"rip",
+		"count",
+		"level",
+		"waitReason",
+		"lastError",
+		"userTime",
+		"systemTime",
+		"creatTime",
+		"cpu",
+		"name",
 	}
 }
 func (d *disassemblyObject) Rows(id int) []string {
 	return []string{
-		d.lines[id].address,
-		d.lines[id].data,
-		d.lines[id].dism,
-		d.lines[id].notes,
+		d.lines[id].index,
+		d.lines[id].id,
+		d.lines[id].entry,
+		d.lines[id].teb,
+		d.lines[id].rip,
+		d.lines[id].count,
+		d.lines[id].level,
+		d.lines[id].waitReason,
+		d.lines[id].lastError,
+		d.lines[id].userTime,
+		d.lines[id].systemTime,
+		d.lines[id].creatTime,
+		d.lines[id].cpu,
+		d.lines[id].name,
 	}
 }
 func (d *disassemblyObject) Len() int { return len(d.lines) }

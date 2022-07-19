@@ -1,4 +1,4 @@
-package module
+package pageSehList
 
 import (
 	"encoding/hex"
@@ -92,11 +92,11 @@ func (d *disassemblyObject) Lines() []line     { return d.lines }
 func newDisassemblyObject() *disassemblyObject { return &disassemblyObject{lines: make([]line, 0)} }
 func (d *disassemblyObject) Append(data any)   { d.lines = append(d.lines, data.(line)) }
 func (d *disassemblyObject) Header() []string {
-	return []string{
+	return []string{ //todo add thead id
 		"address",
-		"module",
-		"from",
-		"path",
+		"seh handle",
+		"mod",
+		"notes",
 	}
 }
 func (d *disassemblyObject) Rows(id int) []string {
