@@ -27,7 +27,7 @@ func main() {
 	fyneTheme.New().SetDarkTheme(a)
 	w := a.NewWindow("Hyper Debugger")
 	w.SetMaster()
-	//w.FullScreen()
+	w.SetFullScreen(true)
 	h := hyperdbgui.New()
 	w.SetMainMenu(h.MainMenu())
 	w.CenterOnScreen()
