@@ -78,10 +78,8 @@ github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ3
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/ddkwork/librarygo v0.0.0-20220717161249-f5473235f4fc h1:G1Qe/lOeWkztbSXFTRfyrSkEFmfu8l1vUDH2npPZr0g=
-github.com/ddkwork/librarygo v0.0.0-20220717161249-f5473235f4fc/go.mod h1:Lcs75J1o8y2uhO43BMizuBYTI2nZ08a21CWac5NWtLA=
-github.com/ddkwork/librarygo v0.0.0-20220718163303-9322fa42a4a6 h1:P0fWKexfIX2HlxZofJPRMjlKUEsIMJzL53nyyapvIJ8=
-github.com/ddkwork/librarygo v0.0.0-20220718163303-9322fa42a4a6/go.mod h1:Lcs75J1o8y2uhO43BMizuBYTI2nZ08a21CWac5NWtLA=
+github.com/ddkwork/librarygo v0.0.0-20220721074538-5b175fcd2888 h1:bmPXXdAjbOk0nSIETZb53A72KSyo1Mv6fH7K05H30Dg=
+github.com/ddkwork/librarygo v0.0.0-20220721074538-5b175fcd2888/go.mod h1:r2pC2ZCq303BIwBYyrOJ9/jk2R9BwaN/3A7EyCNpWpA=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=

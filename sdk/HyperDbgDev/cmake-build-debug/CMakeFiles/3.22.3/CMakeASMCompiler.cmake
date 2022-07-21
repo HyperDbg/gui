@@ -1,16 +1,16 @@
-set(CMAKE_ASM_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/Llvm/x64/bin/clang.exe")
+set(CMAKE_ASM_COMPILER "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x86/cl.exe")
 set(CMAKE_ASM_COMPILER_ARG1 "")
-set(CMAKE_AR "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/Llvm/x64/bin/llvm-ar.exe")
-set(CMAKE_ASM_COMPILER_AR "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/Llvm/x64/bin/llvm-ar.exe")
-set(CMAKE_RANLIB "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/Llvm/x64/bin/llvm-ranlib.exe")
-set(CMAKE_ASM_COMPILER_RANLIB "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/Llvm/x64/bin/llvm-ranlib.exe")
-set(CMAKE_LINKER "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/Llvm/x64/bin/ld.lld.exe")
-set(CMAKE_MT "")
+set(CMAKE_AR "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x86/lib.exe")
+set(CMAKE_ASM_COMPILER_AR "")
+set(CMAKE_RANLIB ":")
+set(CMAKE_ASM_COMPILER_RANLIB "")
+set(CMAKE_LINKER "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.32.31326/bin/Hostx64/x86/link.exe")
+set(CMAKE_MT "C:/Program Files (x86)/Windows Kits/10/bin/10.0.22621.0/x64/mt.exe")
 set(CMAKE_ASM_COMPILER_LOADED 1)
-set(CMAKE_ASM_COMPILER_ID "Clang")
+set(CMAKE_ASM_COMPILER_ID "MSVC")
 set(CMAKE_ASM_COMPILER_VERSION "")
 set(CMAKE_ASM_COMPILER_ENV_VAR "ASM")
-set(CMAKE_ASM_COMPILER_ID_VENDOR_MATCH [==[clang version]==])
+
 
 
 

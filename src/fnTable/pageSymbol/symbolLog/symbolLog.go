@@ -12,7 +12,9 @@ type (
 )
 
 func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
-	return widget.NewMultiLineEntry()
+	entry := widget.NewMultiLineEntry()
+	entry.SetPlaceHolder("log ...")
+	return entry
 }
 
 func New() Interface {

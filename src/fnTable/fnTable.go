@@ -32,6 +32,12 @@ func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 	ico := newPageIcoObj()
 	driver := driverTool.New()
 	driver.Driver().DeviceName = "HyperdbgHypervisorDevice"
+	driver.SetLoadVmmTapped(func() {
+
+	})
+	driver.SetUnloadVmmTapped(func() {
+
+	})
 	return container.NewAppTabs(
 		container.NewTabItemWithIcon("cpu", ico.cpu(), pageCpu.New().CanvasObject(window)),
 		container.NewTabItemWithIcon("log", ico.log(), widget.NewMultiLineEntry()),
@@ -122,7 +128,8 @@ var symbols []byte
 //go:embed pageIco/source.png
 var source []byte
 
-//todo
+// todo
+//
 //go:embed pageIco/log.png
 var xFrom []byte
 
