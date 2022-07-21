@@ -8,7 +8,9 @@ import (
 )
 
 // todo need fix long type as int64 error
-// add define fomr clang ast
+//
+//	add define fomr clang ast
+//	reset BuildDateTime fn
 type (
 	Interface interface {
 		LoadVmm() (ok bool)
