@@ -3,10 +3,8 @@ package sdk
 import (
 	_ "embed"
 	"github.com/ddkwork/librarygo/src/mycheck"
-	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream"
 	"github.com/ddkwork/librarygo/src/stream/tool"
-	"github.com/goplus/c2go/clang/parser"
 	"go/format"
 	"os"
 	"strings"
@@ -15,13 +13,13 @@ import (
 
 func TestConstants(t *testing.T) { //Constants.h define only
 	path := "D:\\codespace\\workspace\\src\\cppkit\\gui\\sdk\\HyperDbgDev\\hyperdbg\\include\\SDK\\Headers\\Constants.h"
-	result, warning, err2 := parser.ParseFile(path, 0)
-	if !mycheck.Error(err2) {
-		return
-	}
-	println(warning)
-	mylog.Struct(*result)
-	return
+	//result, warning, err2 := parser.ParseFile(path, 0)
+	//if !mycheck.Error(err2) {
+	//	return
+	//}
+	//println(warning)
+	//mylog.Struct(*result)
+	//return
 	Constants, err := os.ReadFile(path)
 	if !mycheck.Error(err) {
 		return
@@ -85,5 +83,5 @@ func TestConstants(t *testing.T) { //Constants.h define only
 		return
 	}
 	println(string(source))
-	mycheck.Assert(t).True(tool.File().WriteTruncate("Constants.go", source))
+	//mycheck.Assert(t).True(tool.File().WriteTruncate("Constants.go", source))
 }

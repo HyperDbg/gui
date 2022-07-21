@@ -7,6 +7,8 @@ import (
 	"syscall"
 )
 
+// todo need fix long type as int64 error
+// add define fomr clang ast
 type (
 	Interface interface {
 		LoadVmm() (ok bool)
