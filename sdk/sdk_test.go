@@ -34,18 +34,18 @@ func TestConstants(t *testing.T) { //Constants.h define only
 	for i := 0; i < len(ss); i++ {
 		switch {
 		case strings.Contains(ss[i], "#define") && strings.Contains(ss[i], `\`):
-			j := 0
-			define = ss[i+j]
+			defineEnd := 0
+			define = ss[i+defineEnd]
 			for {
-				j++
-				define += ss[i+j]
+				defineEnd++
+				define += ss[i+defineEnd]
 				define = strings.ReplaceAll(define, `\`, ``)
 				define = strings.Trim(define, " ")
 				if define != "" {
 					defines = append(defines, define)
 				}
-				if strings.Contains(ss[i+j], "#define") {
-					i += j
+				if strings.Contains(ss[i+defineEnd], "#define") {
+					i += defineEnd - 1
 					break
 				}
 			}
