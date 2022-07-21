@@ -8,6 +8,10 @@ import (
 	"github.com/ddkwork/librarygo/src/fynelib/fyneTheme"
 )
 
+//go:generate  go build .
+//go:generate  goreleaser init
+//go:generate 	goreleaser --snapshot --skip-publish --rm-dist
+
 func main() {
 	a := app.NewWithID("org.hyperdbg")
 	a.SetIcon(fyne.NewStaticResource("ico1", ico1))
@@ -28,5 +32,3 @@ var ico1 []byte
 
 //go:embed stock-illustration-debugger.jpg
 var ico2 []byte
-
-//go:generate  go build .
