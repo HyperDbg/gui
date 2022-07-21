@@ -8,6 +8,12 @@ import (
 	"github.com/ddkwork/librarygo/src/fynelib/fyneTheme"
 )
 
+/*
+    git clone https://github.com/goreleaser/goreleaser
+    cd goreleaser
+	go install ./...
+	goreleaser --version
+*/
 //go:generate  git clone --recursive -b dev https://github.com/HyperDbg/HyperDbg HyperDbgDev
 //go:generate  git clone --recursive https://github.com/ddkwork/gui.git
 //go:generate  git clone --recursive https://github.com/ddkwork/librarygo.git
