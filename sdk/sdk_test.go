@@ -58,7 +58,7 @@ func TestConstants(t *testing.T) { //Constants.h define only
 	}
 
 	b := stream.New()
-	b.WriteStringLn("const(")
+	b.WriteStringLn("var(")
 	for _, define := range defines {
 		//println(define)
 		all := strings.ReplaceAll(define, "#define", "")
@@ -76,4 +76,5 @@ func TestConstants(t *testing.T) { //Constants.h define only
 		return
 	}
 	println(string(source))
+	mycheck.Assert(t).True(tool.File().WriteTruncate("Constants.go", source))
 }
