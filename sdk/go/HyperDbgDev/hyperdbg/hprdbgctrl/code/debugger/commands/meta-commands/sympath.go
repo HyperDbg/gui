@@ -1,4 +1,4 @@
-package sympath
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var sympathBuf string
 
 type (
-	Interface interface {
+	Sympath interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	sympath struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newsympath() Sympath { return &sympath{} }

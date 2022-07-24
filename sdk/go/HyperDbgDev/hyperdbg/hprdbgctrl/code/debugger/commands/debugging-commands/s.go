@@ -1,4 +1,4 @@
-package s
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var sBuf string
 
 type (
-	Interface interface {
+	S interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	s struct{}
 )
-func New() Interface { return &object{} }
 
-
+func News() S { return &s{} }

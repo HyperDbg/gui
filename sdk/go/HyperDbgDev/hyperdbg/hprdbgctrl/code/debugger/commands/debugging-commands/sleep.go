@@ -1,4 +1,4 @@
-package sleep
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var sleepBuf string
 
 type (
-	Interface interface {
+	Sleep interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	sleep struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newsleep() Sleep { return &sleep{} }

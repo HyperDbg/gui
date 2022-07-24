@@ -1,4 +1,4 @@
-package exit
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var exitBuf string
 
 type (
-	Interface interface {
+	Exit interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	exit struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newexit() Exit { return &exit{} }

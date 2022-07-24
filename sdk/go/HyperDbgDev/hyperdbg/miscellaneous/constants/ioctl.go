@@ -1,4 +1,4 @@
-package ioctl
+package constants
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var ioctlBuf string
 
 type (
-	Interface interface {
+	Ioctl interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	ioctl struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newioctl() Ioctl { return &ioctl{} }

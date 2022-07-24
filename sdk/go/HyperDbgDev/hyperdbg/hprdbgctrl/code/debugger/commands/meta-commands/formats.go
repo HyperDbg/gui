@@ -1,4 +1,4 @@
-package formats
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var formatsBuf string
 
 type (
-	Interface interface {
+	Formats interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	formats struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newformats() Formats { return &formats{} }

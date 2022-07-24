@@ -1,4 +1,4 @@
-package crwrite
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var crwriteBuf string
 
 type (
-	Interface interface {
+	Crwrite interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	crwrite struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newcrwrite() Crwrite { return &crwrite{} }

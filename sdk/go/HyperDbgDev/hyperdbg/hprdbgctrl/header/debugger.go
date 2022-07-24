@@ -1,4 +1,4 @@
-package ud
+package header
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var debuggerBuf string
 
 type (
-	Interface interface {
+	Debugger interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	debugger struct{}
 )
 
-func New() Interface { return &object{} }
+func Newdebugger() Debugger { return &debugger{} }

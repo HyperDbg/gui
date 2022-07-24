@@ -1,4 +1,4 @@
-package pa2va
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var pa2vaBuf string
 
 type (
-	Interface interface {
+	Pa2va interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	pa2va struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newpa2va() Pa2va { return &pa2va{} }

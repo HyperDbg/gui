@@ -1,4 +1,4 @@
-package hide
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var hideBuf string
 
 type (
-	Interface interface {
+	Hide interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	hide struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newhide() Hide { return &hide{} }

@@ -1,4 +1,4 @@
-package events
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var eventsBuf string
 
 type (
-	Interface interface {
+	Events interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	events struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newevents() Events { return &events{} }

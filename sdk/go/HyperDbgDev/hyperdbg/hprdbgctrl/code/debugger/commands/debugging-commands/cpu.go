@@ -1,4 +1,4 @@
-package cpu
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var cpuBuf string
 
 type (
-	Interface interface {
+	Cpu interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	cpu struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newcpu() Cpu { return &cpu{} }

@@ -1,4 +1,4 @@
-package errors
+package constants
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var errorsBuf string
 
 type (
-	Interface interface {
+	Errors interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	errors struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newerrors() Errors { return &errors{} }

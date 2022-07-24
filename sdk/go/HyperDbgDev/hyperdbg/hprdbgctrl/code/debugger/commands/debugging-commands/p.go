@@ -1,4 +1,4 @@
-package p
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var pBuf string
 
 type (
-	Interface interface {
+	P interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	p struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newp() P { return &p{} }

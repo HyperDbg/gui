@@ -1,4 +1,4 @@
-package pause
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var pauseBuf string
 
 type (
-	Interface interface {
+	Pause interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	pause struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newpause() Pause { return &pause{} }

@@ -1,4 +1,4 @@
-package flush
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var flushBuf string
 
 type (
-	Interface interface {
+	Flush interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	flush struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newflush() Flush { return &flush{} }

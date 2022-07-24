@@ -1,4 +1,4 @@
-package readmem
+package misc
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var readmemBuf string
 
 type (
-	Interface interface {
+	Readmem interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	readmem struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newreadmem() Readmem { return &readmem{} }

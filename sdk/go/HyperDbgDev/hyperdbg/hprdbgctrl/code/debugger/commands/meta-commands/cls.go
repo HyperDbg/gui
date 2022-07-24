@@ -1,4 +1,4 @@
-package cls
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var clsBuf string
 
 type (
-	Interface interface {
+	Cls interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	cls struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newcls() Cls { return &cls{} }

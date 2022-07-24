@@ -1,4 +1,4 @@
-package spinlock
+package common
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var spinlockBuf string
 
 type (
-	Interface interface {
+	Spinlock interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	spinlock struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newspinlock() Spinlock { return &spinlock{} }

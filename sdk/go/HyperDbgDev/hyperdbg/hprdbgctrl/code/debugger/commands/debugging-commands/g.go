@@ -1,4 +1,4 @@
-package g
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var gBuf string
 
 type (
-	Interface interface {
+	G interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	g struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newg() G { return &g{} }

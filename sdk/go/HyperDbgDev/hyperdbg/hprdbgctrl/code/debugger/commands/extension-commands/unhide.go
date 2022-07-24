@@ -1,4 +1,4 @@
-package unhide
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var unhideBuf string
 
 type (
-	Interface interface {
+	Unhide interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	unhide struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newunhide() Unhide { return &unhide{} }

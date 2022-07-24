@@ -1,4 +1,4 @@
-package ud
+package header
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var symbolBuf string
 
 type (
-	Interface interface {
+	Symbol interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	symbol struct{}
 )
 
-func New() Interface { return &object{} }
+func Newsymbol() Symbol { return &symbol{} }

@@ -1,4 +1,4 @@
-package lm
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var lmBuf string
 
 type (
-	Interface interface {
+	Lm interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	lm struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newlm() Lm { return &lm{} }

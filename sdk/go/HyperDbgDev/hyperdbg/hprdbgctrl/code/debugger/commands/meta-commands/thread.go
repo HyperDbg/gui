@@ -1,4 +1,4 @@
-package thread
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var threadBuf string
 
 type (
-	Interface interface {
+	Thread interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	thread struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newthread() Thread { return &thread{} }

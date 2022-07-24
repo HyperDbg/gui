@@ -2,6 +2,7 @@ package sdk
 
 import (
 	_ "embed"
+	"github.com/ddkwork/librarygo/src/caseconv"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/stream"
 	"github.com/ddkwork/librarygo/src/stream/tool"
@@ -27,15 +28,28 @@ func TestAll(t *testing.T) {
 			ext := filepath.Ext(path)
 			base := filepath.Base(path)
 			base = base[:len(base)-len(ext)]
+			if strings.Contains(base, `~`) {
+				base = strings.ReplaceAll(base, `~`, `unknown`)
+			}
+			if strings.Contains(base, `-`) {
+				base = strings.ReplaceAll(base, `-`, `_`)
+			}
+			if strings.Contains(base, `switch`) {
+				base = strings.ReplaceAll(base, `switch`, `switchA`)
+			}
+			base = caseconv.ToCamel(base, false)
+			base = strings.TrimRight(base, " ")
 			switch ext {
 			case ".h", ".cpp", ".asm", ".txt":
 				buffer.Reset()
-				pkgNmae := base
-				if strings.Contains(base, "-") {
-					pkgNmae = strings.ReplaceAll(base, "-", "")
+				dir := filepath.Dir(path)
+				lastIndex := strings.LastIndex(dir, `\`)
+				pkgNmae := dir[lastIndex+1:]
+				if strings.Contains(pkgNmae, "-") {
+					pkgNmae = strings.ReplaceAll(pkgNmae, "-", "")
 				}
-				if strings.Contains(base, "~") {
-					pkgNmae = strings.ReplaceAll(base, "~", "unknown")
+				if strings.Contains(pkgNmae, "~") {
+					pkgNmae = strings.ReplaceAll(pkgNmae, "~", "unknown")
 				}
 				buffer.WriteStringLn("package " + pkgNmae)
 				buffer.WriteStringLn(`
@@ -49,22 +63,26 @@ import (
 				}
 				buffer.WriteStringLn(`//go:embed ` + strconv.Quote(abs))
 				buffer.WriteStringLn(`var ` + base + `Buf string`)
-				buffer.WriteStringLn(`
-type (
-	Interface interface {
-		//Fn() (ok bool)
-	}
-	object struct{}
-)
-func New() Interface { return &object{} }
-`)
 
+				buffer.WriteStringLn(`type (`)
+				buffer.WriteStringLn(caseconv.ToCamelUpper(base, false) + ` interface {`)
+				buffer.WriteStringLn(`		//Fn() (ok bool)`)
+				buffer.WriteStringLn(`	}`)
+				buffer.WriteStringLn(caseconv.ToCamel(base, false) + `  struct{}`)
+				buffer.WriteStringLn(`)`)
+				buffer.WriteStringLn(`func New` + caseconv.ToCamel(base, false) + `() ` +
+					caseconv.ToCamelUpper(base, false) + ` { return & ` + caseconv.ToCamel(base, false) + `{} }`)
+				//buffer.WriteStringLn(``)
+				//println(buffer.String())
+				source, err := format.Source(buffer.Bytes())
+				if !mycheck.Error(err) {
+					return err
+				}
 				join := filepath.Join("go", filepath.Dir(path), base+".go")
-				if !tool.File().WriteTruncate(join, buffer.String()) {
+				if !tool.File().WriteTruncate(join, source) {
 					return err
 				}
 				//println(path)
-				//println(buffer.String())
 			}
 		}
 		return err

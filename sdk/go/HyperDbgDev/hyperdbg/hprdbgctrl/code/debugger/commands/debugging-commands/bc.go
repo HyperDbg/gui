@@ -1,4 +1,4 @@
-package bc
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var bcBuf string
 
 type (
-	Interface interface {
+	Bc interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	bc struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newbc() Bc { return &bc{} }

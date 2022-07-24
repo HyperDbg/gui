@@ -1,4 +1,4 @@
-package cpuid
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var cpuidBuf string
 
 type (
-	Interface interface {
+	Cpuid interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	cpuid struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newcpuid() Cpuid { return &cpuid{} }

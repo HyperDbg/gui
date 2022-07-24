@@ -1,4 +1,4 @@
-package settings
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var settingsBuf string
 
 type (
-	Interface interface {
+	Settings interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	settings struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newsettings() Settings { return &settings{} }

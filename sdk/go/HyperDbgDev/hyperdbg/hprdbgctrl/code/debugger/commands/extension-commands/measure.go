@@ -1,4 +1,4 @@
-package measure
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var measureBuf string
 
 type (
-	Interface interface {
+	Measure interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	measure struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newmeasure() Measure { return &measure{} }

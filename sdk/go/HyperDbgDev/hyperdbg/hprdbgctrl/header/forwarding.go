@@ -1,4 +1,4 @@
-package ud
+package header
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var forwardingBuf string
 
 type (
-	Interface interface {
+	Forwarding interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	forwarding struct{}
 )
 
-func New() Interface { return &object{} }
+func Newforwarding() Forwarding { return &forwarding{} }

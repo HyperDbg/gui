@@ -1,4 +1,4 @@
-package ioout
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var iooutBuf string
 
 type (
-	Interface interface {
+	Ioout interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	ioout struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newioout() Ioout { return &ioout{} }

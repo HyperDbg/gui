@@ -1,4 +1,4 @@
-package rdmsr
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var rdmsrBuf string
 
 type (
-	Interface interface {
+	Rdmsr interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	rdmsr struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newrdmsr() Rdmsr { return &rdmsr{} }

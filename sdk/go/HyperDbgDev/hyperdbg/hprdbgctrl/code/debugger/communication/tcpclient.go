@@ -1,4 +1,4 @@
-package tcpclient
+package communication
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var tcpclientBuf string
 
 type (
-	Interface interface {
+	Tcpclient interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	tcpclient struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newtcpclient() Tcpclient { return &tcpclient{} }

@@ -1,4 +1,4 @@
-package dr
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var drBuf string
 
 type (
-	Interface interface {
+	Dr interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	dr struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newdr() Dr { return &dr{} }

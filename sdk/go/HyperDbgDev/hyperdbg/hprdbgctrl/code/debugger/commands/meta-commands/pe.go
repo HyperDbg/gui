@@ -1,4 +1,4 @@
-package pe
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var peBuf string
 
 type (
-	Interface interface {
+	Pe interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	pe struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newpe() Pe { return &pe{} }

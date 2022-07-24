@@ -1,4 +1,4 @@
-package eval
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var evalBuf string
 
 type (
-	Interface interface {
+	Eval interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	eval struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Neweval() Eval { return &eval{} }

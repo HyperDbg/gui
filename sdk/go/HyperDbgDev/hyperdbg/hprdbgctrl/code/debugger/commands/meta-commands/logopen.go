@@ -1,4 +1,4 @@
-package logopen
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var logopenBuf string
 
 type (
-	Interface interface {
+	Logopen interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	logopen struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newlogopen() Logopen { return &logopen{} }

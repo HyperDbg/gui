@@ -1,4 +1,4 @@
-package ntstatus
+package constants
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var ntstatusBuf string
 
 type (
-	Interface interface {
+	Ntstatus interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	ntstatus struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newntstatus() Ntstatus { return &ntstatus{} }

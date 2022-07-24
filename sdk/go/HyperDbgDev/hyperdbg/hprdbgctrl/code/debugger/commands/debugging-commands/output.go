@@ -1,4 +1,4 @@
-package output
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var outputBuf string
 
 type (
-	Interface interface {
+	Output interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	output struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newoutput() Output { return &output{} }

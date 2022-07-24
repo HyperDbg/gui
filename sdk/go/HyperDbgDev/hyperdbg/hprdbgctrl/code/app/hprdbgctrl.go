@@ -1,4 +1,4 @@
-package hprdbgctrl
+package app
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var hprdbgctrlBuf string
 
 type (
-	Interface interface {
+	Hprdbgctrl interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	hprdbgctrl struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newhprdbgctrl() Hprdbgctrl { return &hprdbgctrl{} }

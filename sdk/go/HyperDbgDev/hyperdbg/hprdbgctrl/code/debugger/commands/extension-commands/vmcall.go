@@ -1,4 +1,4 @@
-package vmcall
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var vmcallBuf string
 
 type (
-	Interface interface {
+	Vmcall interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	vmcall struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newvmcall() Vmcall { return &vmcall{} }

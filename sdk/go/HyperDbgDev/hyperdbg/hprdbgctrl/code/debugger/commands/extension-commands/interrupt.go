@@ -1,4 +1,4 @@
-package interrupt
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var interruptBuf string
 
 type (
-	Interface interface {
+	Interrupt interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	interrupt struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newinterrupt() Interrupt { return &interrupt{} }

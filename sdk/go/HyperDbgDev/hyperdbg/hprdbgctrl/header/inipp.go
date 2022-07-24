@@ -1,4 +1,4 @@
-package ud
+package header
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var inippBuf string
 
 type (
-	Interface interface {
+	Inipp interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	inipp struct{}
 )
 
-func New() Interface { return &object{} }
+func Newinipp() Inipp { return &inipp{} }

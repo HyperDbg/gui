@@ -1,4 +1,4 @@
-package bp
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var bpBuf string
 
 type (
-	Interface interface {
+	Bp interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	bp struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newbp() Bp { return &bp{} }

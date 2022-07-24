@@ -1,4 +1,4 @@
-package k
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var kBuf string
 
 type (
-	Interface interface {
+	K interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	k struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newk() K { return &k{} }

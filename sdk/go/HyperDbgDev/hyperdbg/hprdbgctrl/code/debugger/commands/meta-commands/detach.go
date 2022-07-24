@@ -1,4 +1,4 @@
-package detach
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var detachBuf string
 
 type (
-	Interface interface {
+	Detach interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	detach struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newdetach() Detach { return &detach{} }

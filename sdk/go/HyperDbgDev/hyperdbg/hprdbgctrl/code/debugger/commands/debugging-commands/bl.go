@@ -1,4 +1,4 @@
-package bl
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var blBuf string
 
 type (
-	Interface interface {
+	Bl interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	bl struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newbl() Bl { return &bl{} }

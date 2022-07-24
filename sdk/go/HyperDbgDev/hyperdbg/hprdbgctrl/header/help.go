@@ -1,4 +1,4 @@
-package ud
+package header
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var helpBuf string
 
 type (
-	Interface interface {
+	Help interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	help struct{}
 )
 
-func New() Interface { return &object{} }
+func Newhelp() Help { return &help{} }

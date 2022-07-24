@@ -1,4 +1,4 @@
-package load
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var loadBuf string
 
 type (
-	Interface interface {
+	Load interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	load struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newload() Load { return &load{} }

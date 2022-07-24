@@ -1,4 +1,4 @@
-package kill
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var killBuf string
 
 type (
-	Interface interface {
+	Kill interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	kill struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newkill() Kill { return &kill{} }

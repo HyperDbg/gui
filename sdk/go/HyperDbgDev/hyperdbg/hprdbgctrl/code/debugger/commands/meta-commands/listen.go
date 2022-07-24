@@ -1,4 +1,4 @@
-package listen
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var listenBuf string
 
 type (
-	Interface interface {
+	Listen interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	listen struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newlisten() Listen { return &listen{} }

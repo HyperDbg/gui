@@ -1,4 +1,4 @@
-package restart
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var restartBuf string
 
 type (
-	Interface interface {
+	Restart interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	restart struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newrestart() Restart { return &restart{} }

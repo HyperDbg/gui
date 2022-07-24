@@ -1,4 +1,4 @@
-package pte
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var pteBuf string
 
 type (
-	Interface interface {
+	Pte interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	pte struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newpte() Pte { return &pte{} }

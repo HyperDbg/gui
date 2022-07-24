@@ -1,4 +1,4 @@
-package connect
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var connectBuf string
 
 type (
-	Interface interface {
+	Connect interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	connect struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newconnect() Connect { return &connect{} }

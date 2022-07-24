@@ -1,4 +1,4 @@
-package dllmain
+package app
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var dllmainBuf string
 
 type (
-	Interface interface {
+	Dllmain interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	dllmain struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newdllmain() Dllmain { return &dllmain{} }

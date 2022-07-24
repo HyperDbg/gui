@@ -8,11 +8,10 @@ import (
 var transparencyBuf string
 
 type (
-	Interface interface {
+	Transparency interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	transparency struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newtransparency() Transparency { return &transparency{} }

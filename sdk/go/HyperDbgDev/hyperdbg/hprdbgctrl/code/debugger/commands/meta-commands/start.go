@@ -1,4 +1,4 @@
-package start
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var startBuf string
 
 type (
-	Interface interface {
+	Start interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	start struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newstart() Start { return &start{} }

@@ -1,4 +1,4 @@
-package process
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var processBuf string
 
 type (
-	Interface interface {
+	Process interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	process struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newprocess() Process { return &process{} }

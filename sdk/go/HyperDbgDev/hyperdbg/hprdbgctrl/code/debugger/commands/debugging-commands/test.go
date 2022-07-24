@@ -1,4 +1,4 @@
-package test
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var testBuf string
 
 type (
-	Interface interface {
+	Test interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	test struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newtest() Test { return &test{} }

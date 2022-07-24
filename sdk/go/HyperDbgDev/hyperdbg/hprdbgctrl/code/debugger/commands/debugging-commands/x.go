@@ -1,4 +1,4 @@
-package x
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var xBuf string
 
 type (
-	Interface interface {
+	X interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	x struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newx() X { return &x{} }

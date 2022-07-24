@@ -1,4 +1,4 @@
-package be
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var beBuf string
 
 type (
-	Interface interface {
+	Be interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	be struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newbe() Be { return &be{} }

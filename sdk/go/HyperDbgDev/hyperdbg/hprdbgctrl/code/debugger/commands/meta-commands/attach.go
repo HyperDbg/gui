@@ -1,4 +1,4 @@
-package attach
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var attachBuf string
 
 type (
-	Interface interface {
+	Attach interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	attach struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newattach() Attach { return &attach{} }

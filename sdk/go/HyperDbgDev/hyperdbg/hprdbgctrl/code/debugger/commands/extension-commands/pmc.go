@@ -1,4 +1,4 @@
-package pmc
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var pmcBuf string
 
 type (
-	Interface interface {
+	Pmc interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	pmc struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newpmc() Pmc { return &pmc{} }

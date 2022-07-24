@@ -1,4 +1,4 @@
-package ud
+package header
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var commonBuf string
 
 type (
-	Interface interface {
+	Common interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	common struct{}
 )
 
-func New() Interface { return &object{} }
+func Newcommon() Common { return &common{} }

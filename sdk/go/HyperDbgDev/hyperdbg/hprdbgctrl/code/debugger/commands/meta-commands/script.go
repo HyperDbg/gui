@@ -1,4 +1,4 @@
-package script
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var scriptBuf string
 
 type (
-	Interface interface {
+	Script interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	script struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newscript() Script { return &script{} }

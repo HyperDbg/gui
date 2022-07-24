@@ -1,4 +1,4 @@
-package print
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var printBuf string
 
 type (
-	Interface interface {
+	Print interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	print struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newprint() Print { return &print{} }

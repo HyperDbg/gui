@@ -1,4 +1,4 @@
-package tsc
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var tscBuf string
 
 type (
-	Interface interface {
+	Tsc interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	tsc struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newtsc() Tsc { return &tsc{} }

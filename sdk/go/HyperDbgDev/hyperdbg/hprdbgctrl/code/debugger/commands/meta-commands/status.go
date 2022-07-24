@@ -1,4 +1,4 @@
-package status
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var statusBuf string
 
 type (
-	Interface interface {
+	Status interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	status struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newstatus() Status { return &status{} }

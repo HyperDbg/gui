@@ -1,4 +1,4 @@
-package r
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var rBuf string
 
 type (
-	Interface interface {
+	R interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	r struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newr() R { return &r{} }

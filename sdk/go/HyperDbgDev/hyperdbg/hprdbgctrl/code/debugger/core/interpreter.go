@@ -1,4 +1,4 @@
-package interpreter
+package core
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var interpreterBuf string
 
 type (
-	Interface interface {
+	Interpreter interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	interpreter struct{}
 )
 
-func New() Interface { return &object{} }
+func Newinterpreter() Interpreter { return &interpreter{} }

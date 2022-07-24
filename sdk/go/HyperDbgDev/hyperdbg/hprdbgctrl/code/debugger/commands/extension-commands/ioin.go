@@ -1,4 +1,4 @@
-package ioin
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var ioinBuf string
 
 type (
-	Interface interface {
+	Ioin interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	ioin struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newioin() Ioin { return &ioin{} }

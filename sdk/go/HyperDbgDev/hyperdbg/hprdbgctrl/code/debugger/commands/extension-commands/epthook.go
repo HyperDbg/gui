@@ -1,4 +1,4 @@
-package epthook
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var epthookBuf string
 
 type (
-	Interface interface {
+	Epthook interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	epthook struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newepthook() Epthook { return &epthook{} }

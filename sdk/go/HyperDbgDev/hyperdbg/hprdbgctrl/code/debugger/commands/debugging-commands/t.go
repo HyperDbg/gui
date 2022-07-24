@@ -1,4 +1,4 @@
-package t
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var tBuf string
 
 type (
-	Interface interface {
+	T interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	t struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newt() T { return &t{} }

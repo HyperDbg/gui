@@ -1,4 +1,4 @@
-package prealloc
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var preallocBuf string
 
 type (
-	Interface interface {
+	Prealloc interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	prealloc struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newprealloc() Prealloc { return &prealloc{} }

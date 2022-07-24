@@ -1,4 +1,4 @@
-package bd
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var bdBuf string
 
 type (
-	Interface interface {
+	Bd interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	bd struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newbd() Bd { return &bd{} }

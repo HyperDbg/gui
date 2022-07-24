@@ -1,4 +1,4 @@
-package ud
+package header
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var objectsBuf string
 
 type (
-	Interface interface {
+	Objects interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	objects struct{}
 )
 
-func New() Interface { return &object{} }
+func Newobjects() Objects { return &objects{} }

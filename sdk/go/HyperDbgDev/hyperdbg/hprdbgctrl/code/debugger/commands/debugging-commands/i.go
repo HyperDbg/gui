@@ -1,4 +1,4 @@
-package i
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var iBuf string
 
 type (
-	Interface interface {
+	I interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	i struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newi() I { return &i{} }

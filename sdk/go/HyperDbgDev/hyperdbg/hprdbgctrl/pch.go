@@ -1,4 +1,4 @@
-package pch
+package hprdbgctrl
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var pchBuf string
 
 type (
-	Interface interface {
+	Pch interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	pch struct{}
 )
 
-func New() Interface { return &object{} }
+func Newpch() Pch { return &pch{} }

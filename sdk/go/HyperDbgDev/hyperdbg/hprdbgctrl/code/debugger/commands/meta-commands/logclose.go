@@ -1,4 +1,4 @@
-package logclose
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var logcloseBuf string
 
 type (
-	Interface interface {
+	Logclose interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	logclose struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newlogclose() Logclose { return &logclose{} }

@@ -1,4 +1,4 @@
-package ud
+package header
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var communicationBuf string
 
 type (
-	Interface interface {
+	Communication interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	communication struct{}
 )
 
-func New() Interface { return &object{} }
+func Newcommunication() Communication { return &communication{} }

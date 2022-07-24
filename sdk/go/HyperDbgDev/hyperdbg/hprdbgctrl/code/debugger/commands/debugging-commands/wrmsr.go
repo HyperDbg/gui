@@ -1,4 +1,4 @@
-package wrmsr
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var wrmsrBuf string
 
 type (
-	Interface interface {
+	Wrmsr interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	wrmsr struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newwrmsr() Wrmsr { return &wrmsr{} }

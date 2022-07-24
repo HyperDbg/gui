@@ -1,4 +1,4 @@
-package ud
+package header
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var namedpipeBuf string
 
 type (
-	Interface interface {
+	Namedpipe interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	namedpipe struct{}
 )
 
-func New() Interface { return &object{} }
+func Newnamedpipe() Namedpipe { return &namedpipe{} }

@@ -1,4 +1,4 @@
-package msrread
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var msrreadBuf string
 
 type (
-	Interface interface {
+	Msrread interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	msrread struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newmsrread() Msrread { return &msrread{} }

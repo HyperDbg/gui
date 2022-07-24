@@ -1,4 +1,4 @@
-package ud
+package header
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var kdBuf string
 
 type (
-	Interface interface {
+	Kd interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	kd struct{}
 )
 
-func New() Interface { return &object{} }
+func Newkd() Kd { return &kd{} }

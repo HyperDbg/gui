@@ -1,4 +1,4 @@
-package disassembler
+package misc
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var disassemblerBuf string
 
 type (
-	Interface interface {
+	Disassembler interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	disassembler struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newdisassembler() Disassembler { return &disassembler{} }

@@ -1,4 +1,4 @@
-package sym
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var symBuf string
 
 type (
-	Interface interface {
+	Sym interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	sym struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newsym() Sym { return &sym{} }

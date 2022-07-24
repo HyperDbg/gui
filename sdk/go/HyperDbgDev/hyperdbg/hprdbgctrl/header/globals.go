@@ -1,4 +1,4 @@
-package ud
+package header
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var globalsBuf string
 
 type (
-	Interface interface {
+	Globals interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	globals struct{}
 )
 
-func New() Interface { return &object{} }
+func Newglobals() Globals { return &globals{} }

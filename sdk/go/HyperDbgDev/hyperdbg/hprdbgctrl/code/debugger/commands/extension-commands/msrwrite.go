@@ -1,4 +1,4 @@
-package msrwrite
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var msrwriteBuf string
 
 type (
-	Interface interface {
+	Msrwrite interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	msrwrite struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newmsrwrite() Msrwrite { return &msrwrite{} }

@@ -1,4 +1,4 @@
-package install
+package driverloader
 
 import (
 	_ "embed"
@@ -8,10 +8,10 @@ import (
 var installBuf string
 
 type (
-	Interface interface {
+	Install interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	install struct{}
 )
 
-func New() Interface { return &object{} }
+func Newinstall() Install { return &install{} }

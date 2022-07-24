@@ -1,4 +1,4 @@
-package exception
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var exceptionBuf string
 
 type (
-	Interface interface {
+	Exception interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	exception struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newexception() Exception { return &exception{} }

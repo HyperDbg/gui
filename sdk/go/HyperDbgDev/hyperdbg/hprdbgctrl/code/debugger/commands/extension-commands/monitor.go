@@ -1,4 +1,4 @@
-package monitor
+package extensioncommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var monitorBuf string
 
 type (
-	Interface interface {
+	Monitor interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	monitor struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newmonitor() Monitor { return &monitor{} }

@@ -1,4 +1,4 @@
-package unload
+package debuggingcommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var unloadBuf string
 
 type (
-	Interface interface {
+	Unload interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	unload struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newunload() Unload { return &unload{} }

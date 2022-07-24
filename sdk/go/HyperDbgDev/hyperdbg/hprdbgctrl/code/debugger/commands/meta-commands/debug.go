@@ -1,4 +1,4 @@
-package debug
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var debugBuf string
 
 type (
-	Interface interface {
+	Debug interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	debug struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newdebug() Debug { return &debug{} }

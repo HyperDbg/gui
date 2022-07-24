@@ -1,4 +1,4 @@
-package disconnect
+package metacommands
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var disconnectBuf string
 
 type (
-	Interface interface {
+	Disconnect interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	disconnect struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newdisconnect() Disconnect { return &disconnect{} }

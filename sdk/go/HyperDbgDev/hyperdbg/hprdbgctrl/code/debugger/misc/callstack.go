@@ -1,4 +1,4 @@
-package callstack
+package misc
 
 import (
 	_ "embed"
@@ -8,11 +8,10 @@ import (
 var callstackBuf string
 
 type (
-	Interface interface {
+	Callstack interface {
 		//Fn() (ok bool)
 	}
-	object struct{}
+	callstack struct{}
 )
-func New() Interface { return &object{} }
 
-
+func Newcallstack() Callstack { return &callstack{} }
