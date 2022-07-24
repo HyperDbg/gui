@@ -1,4 +1,4 @@
-package scriptengine
+package ud
 
 import (
 	_ "embed"

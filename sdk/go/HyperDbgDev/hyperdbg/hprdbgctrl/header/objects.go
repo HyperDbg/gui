@@ -1,4 +1,4 @@
-package objects
+package ud
 
 import (
 	_ "embed"
@@ -13,6 +13,5 @@ type (
 	}
 	object struct{}
 )
+
 func New() Interface { return &object{} }
-
-

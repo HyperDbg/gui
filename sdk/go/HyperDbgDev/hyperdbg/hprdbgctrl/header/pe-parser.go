@@ -1,4 +1,4 @@
-package peparser
+package ud
 
 import (
 	_ "embed"
