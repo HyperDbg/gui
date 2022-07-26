@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 namespace EvalScripts
 {
     class Eval
@@ -15,13 +16,23 @@ namespace EvalScripts
                 var SetParam = await CSharpScript.RunAsync("var num = " + Statement + ";");
                 var RunCode = await SetParam.ContinueWithAsync("num");
                 var X = RunCode.ReturnValue;
+
+                //
+                // Script run without error
+                //
                 return new Tuple<bool, int>(true, (int)X);
             }
             catch (Exception)
             {
+
+                //
+                // Script has error
+                //
                 return new Tuple<bool, int>(false, 0);
             }
+
         }
+
         public static async Task<Tuple<bool, int>> EvalScriptRunConditionalStatementAsync(string Script)
         {
             try
@@ -36,14 +47,23 @@ namespace EvalScripts
                 " + Script + @"
                 
                 int num = tmp;
+
                 ";
                 var SetParam = await CSharpScript.RunAsync(FinalCode);
                 var RunCode = await SetParam.ContinueWithAsync("num");
                 var X = RunCode.ReturnValue;
+
+                //
+                // Script run without error
+                //
                 return new Tuple<bool, int>(true, (int)X);
             }
             catch (Exception)
             {
+
+                //
+                // Script has error
+                //
                 return new Tuple<bool, int>(false, 0);
             }
         } 
@@ -59,20 +79,32 @@ namespace EvalScripts
                 void test_statement(int Token) {
                     tmp = Token;
                 }
+
                 int tmp_counter = 0;
                 int x = 0;
                     
                 " + Script + @"
+
                 test_statement(tmp_counter);     
                 int num = tmp;
+
                 ";
+
                 var SetParam = await CSharpScript.RunAsync(FinalCode);
                 var RunCode = await SetParam.ContinueWithAsync("num");
                 var X = RunCode.ReturnValue;
+
+                //
+                // Script run without error
+                //
                 return new Tuple<bool, int>(true, (int)X);
             }
             catch (Exception)
             {
+
+                //
+                // Script has error
+                //
                 return new Tuple<bool, int>(false, 0);
             }
         } 
@@ -82,13 +114,20 @@ namespace EvalScripts
             try
             {
                 CSharpScript.EvaluateAsync(Script);
+
+                //
+                // Script run without error
+                //
                 return new Tuple<bool, int>(true, 0);
             }
             catch (Exception)
             {
+
+                //
+                // Script has error
+                //
                 return new Tuple<bool, int>(false, 0);
             }
         }
     }
 }
-

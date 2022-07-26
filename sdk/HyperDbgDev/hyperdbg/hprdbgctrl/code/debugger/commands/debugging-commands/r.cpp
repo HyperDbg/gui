@@ -1,5 +1,24 @@
+/**
+ * @file r.cpp
+ * @author Alee Amini (alee@hyperdbg.org)
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief r command
+ * @details
+ * @version 0.1
+ * @date 2021-02-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
-extern BOOLEAN                   g_IsSerialConnectedToRemoteDebuggee;
+
+//using namespace std;
+
+//
+// Global Variables
+//
+extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
+
 std::map<std::string, REGS_ENUM> RegistersMap = {
     {"rax", REGISTER_RAX},
     {"eax", REGISTER_EAX},
@@ -122,11 +141,20 @@ std::map<std::string, REGS_ENUM> RegistersMap = {
     {"eip", REGISTER_EIP},
     {"ip", REGISTER_IP},
 };
+
+/**
+ * @brief help of r command
+ *
+ * @return VOID
+ */
 VOID
-CommandRHelp() {
+CommandRHelp()
+{
     ShowMessages("r : reads or modifies registers.\n\n");
+
     ShowMessages("syntax : \tr\n");
     ShowMessages("syntax : \tr [Register (string)] [= Expr (string)]\n");
+
     ShowMessages("\n");
     ShowMessages("\t\te.g : r\n");
     ShowMessages("\t\te.g : r @rax\n");
@@ -135,87 +163,201 @@ CommandRHelp() {
     ShowMessages("\t\te.g : r rax = @rbx + @rcx + 0n10\n");
 }
 
+/**
+ * @brief handler of r show all registers command
+ *
+ * @return BOOLEAN
+ */
+
 VOID
-ShowAllRegisters() {
+ShowAllRegisters()
+{
     DEBUGGEE_REGISTER_READ_DESCRIPTION RegState = {0};
     RegState.RegisterID                         = DEBUGGEE_SHOW_ALL_REGISTERS;
     KdSendReadRegisterPacketToDebuggee(&RegState);
 }
-
+/**
+ * @brief handler of r command
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
-CommandR(std::vector<std::string> SplittedCommand, std::string Command) {
+CommandR(std::vector<std::string> SplittedCommand, std::string Command)
+{
+    //
+    // Interpret here
+    //
     PVOID                    CodeBuffer;
     UINT64                   BufferAddress;
     UINT32                   BufferLength;
     UINT32                   Pointer;
     REGS_ENUM                RegKind;
     std::vector<std::string> Tmp;
-    std::string              SetRegValue = "SetRegValue";
-    if (SplittedCommand[0] != "r") {
+
+    std::string SetRegValue = "SetRegValue";
+
+    if (SplittedCommand[0] != "r")
+    {
         return;
     }
-    if (SplittedCommand.size() == 1) {
-        if (g_IsSerialConnectedToRemoteDebuggee) {
+
+    if (SplittedCommand.size() == 1)
+    {
+        //
+        // show all registers
+        //
+        if (g_IsSerialConnectedToRemoteDebuggee)
+        {
             ShowAllRegisters();
-        } else {
+        }
+        else
+        {
             ShowMessages("err, reading registers (r) is not valid in the current "
                          "context, you should connect to a debuggee\n");
         }
+
         return;
     }
-    if (Command.find('=', 0) == string::npos) {
+    //
+    // clear additional space of the command string
+    //
+
+    //
+    // if command does not contain a '=' means user wants to read it
+    //
+    if (Command.find('=', 0) == string::npos)
+    {
+        //
+        //erase '=' from the string now we have just the name of register
+        //
         Command.erase(0, 1);
         ReplaceAll(Command, "@", "");
         ReplaceAll(Command, " ", "");
-        if (RegistersMap.find(Command) != RegistersMap.end()) {
+        if (RegistersMap.find(Command) != RegistersMap.end())
+        {
             RegKind = RegistersMap[Command];
-        } else {
+        }
+        else
+        {
+            //
+            //set the Reg to -1(invalid register)
+            //
             RegKind = (REGS_ENUM)-1;
         }
-        if (RegKind != -1) {
+        if (RegKind != -1)
+        {
             DEBUGGEE_REGISTER_READ_DESCRIPTION RegState = {0};
             RegState.RegisterID                         = RegKind;
-            if (g_IsSerialConnectedToRemoteDebuggee) {
+
+            //
+            // send the request
+            //
+            if (g_IsSerialConnectedToRemoteDebuggee)
+            {
                 KdSendReadRegisterPacketToDebuggee(&RegState);
-            } else {
+            }
+            else
+            {
                 ShowMessages("err, reading registers (r) is not valid in the current "
                              "context, you should connect to a debuggee\n");
             }
-        } else {
+        }
+        else
+        {
             ShowMessages("err, invalid register\n");
         }
-    } else if (Command.find('=', 0) != string::npos) {
+    }
+
+    //
+    // if command contains a '=' means user wants modify the register
+    //
+
+    else if (Command.find('=', 0) != string::npos)
+    {
         Command.erase(0, 1);
         Tmp = Split(Command, '=');
-        if (Tmp.size() == 2) {
+        if (Tmp.size() == 2)
+        {
             ReplaceAll(Tmp[0], " ", "");
             string tmp = Tmp[0];
-            if (RegistersMap.find(Tmp[0]) != RegistersMap.end()) {
+            if (RegistersMap.find(Tmp[0]) != RegistersMap.end())
+            {
                 RegKind = RegistersMap[Tmp[0]];
-            } else {
+            }
+            else
+            {
                 ReplaceAll(tmp, "@", "");
-                if (RegistersMap.find(tmp) != RegistersMap.end()) {
+                if (RegistersMap.find(tmp) != RegistersMap.end())
+                {
                     RegKind = RegistersMap[tmp];
-                } else {
+                }
+                else
+                {
                     RegKind = (REGS_ENUM)-1;
                 }
             }
-            if (RegKind != -1) {
+            if (RegKind != -1)
+            {
+                //
+                // send the request
+                //
+
                 SetRegValue = "@" + tmp + '=' + Tmp[1] + "; ";
-                if (g_IsSerialConnectedToRemoteDebuggee) {
+                if (g_IsSerialConnectedToRemoteDebuggee)
+                {
+                    //
+                    // Send over serial
+                    //
+
+                    //
+                    // Run script engine handler
+                    //
                     CodeBuffer = ScriptEngineParseWrapper((char *)SetRegValue.c_str(), TRUE);
-                    if (CodeBuffer == NULL) {
+                    if (CodeBuffer == NULL)
+                    {
+                        //
+                        // return to show that this item contains an script
+                        //
                         return;
                     }
+
+                    //
+                    // Print symbols (test)
+                    //
+                    // PrintSymbolBufferWrapper(CodeBuffer);
+
+                    //
+                    // Set the buffer and length
+                    //
                     BufferAddress = ScriptEngineWrapperGetHead(CodeBuffer);
                     BufferLength  = ScriptEngineWrapperGetSize(CodeBuffer);
                     Pointer       = ScriptEngineWrapperGetPointer(CodeBuffer);
+
+                    //
+                    // Send it to the remote debuggee
+                    //
                     KdSendScriptPacketToDebuggee(BufferAddress, BufferLength, Pointer, FALSE);
+
+                    //
+                    // Remove the buffer of script engine interpreted code
+                    //
                     ScriptEngineWrapperRemoveSymbolBuffer(CodeBuffer);
-                } else {
+                }
+                else
+                {
+                    //
+                    // error
+                    //
                     ShowMessages("err, you're not connected to any debuggee\n");
                 }
-            } else {
+            }
+            else
+            {
+                //
+                // error
+                //
                 ShowMessages("err, invalid register\n");
             }
         }

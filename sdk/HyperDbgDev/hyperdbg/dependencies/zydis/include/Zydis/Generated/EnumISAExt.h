@@ -1,4 +1,8 @@
-typedef enum ZydisISAExt_ {
+/**
+ * Defines the `ZydisISAExt` enum.
+ */
+typedef enum ZydisISAExt_
+{
     ZYDIS_ISA_EXT_INVALID,
     ZYDIS_ISA_EXT_ADOX_ADCX,
     ZYDIS_ISA_EXT_AES,
@@ -73,6 +77,13 @@ typedef enum ZydisISAExt_ {
     ZYDIS_ISA_EXT_XSAVEC,
     ZYDIS_ISA_EXT_XSAVEOPT,
     ZYDIS_ISA_EXT_XSAVES,
-    ZYDIS_ISA_EXT_MAX_VALUE     = ZYDIS_ISA_EXT_XSAVES,
+
+    /**
+     * Maximum value of this enum.
+     */
+    ZYDIS_ISA_EXT_MAX_VALUE = ZYDIS_ISA_EXT_XSAVES,
+    /**
+     * The minimum number of bits required to represent all values of this enum.
+     */
     ZYDIS_ISA_EXT_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT(ZYDIS_ISA_EXT_MAX_VALUE)
 } ZydisISAExt;

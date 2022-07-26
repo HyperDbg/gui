@@ -1,4 +1,8 @@
-typedef enum ZydisInstructionCategory_ {
+/**
+ * Defines the `ZydisInstructionCategory` enum.
+ */
+typedef enum ZydisInstructionCategory_
+{
     ZYDIS_CATEGORY_INVALID,
     ZYDIS_CATEGORY_ADOX_ADCX,
     ZYDIS_CATEGORY_AES,
@@ -98,6 +102,13 @@ typedef enum ZydisInstructionCategory_ {
     ZYDIS_CATEGORY_XOP,
     ZYDIS_CATEGORY_XSAVE,
     ZYDIS_CATEGORY_XSAVEOPT,
-    ZYDIS_CATEGORY_MAX_VALUE     = ZYDIS_CATEGORY_XSAVEOPT,
+
+    /**
+     * Maximum value of this enum.
+     */
+    ZYDIS_CATEGORY_MAX_VALUE = ZYDIS_CATEGORY_XSAVEOPT,
+    /**
+     * The minimum number of bits required to represent all values of this enum.
+     */
     ZYDIS_CATEGORY_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT(ZYDIS_CATEGORY_MAX_VALUE)
 } ZydisInstructionCategory;

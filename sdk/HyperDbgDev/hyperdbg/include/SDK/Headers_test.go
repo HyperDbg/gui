@@ -2,9 +2,9 @@ package SDK
 
 import (
 	_ "embed"
+	"github.com/ddkwork/librarygo/src/myc2go/windef"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/stream"
-	"github.com/ddkwork/librarygo/src/windef"
 	"os"
 	"strings"
 	"testing"
