@@ -15,3 +15,5 @@ type (
 )
 
 func Newevents() Events { return &events{} }
+
+const ()

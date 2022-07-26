@@ -15,3 +15,5 @@ type (
 )
 
 func NewerrorCodes() ErrorCodes { return &errorCodes{} }
+
+const ()

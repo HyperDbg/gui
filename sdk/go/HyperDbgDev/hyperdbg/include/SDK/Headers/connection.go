@@ -15,3 +15,5 @@ type (
 )
 
 func Newconnection() Connection { return &connection{} }
+
+const ()

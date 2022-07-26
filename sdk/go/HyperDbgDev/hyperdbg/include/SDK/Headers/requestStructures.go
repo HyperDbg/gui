@@ -15,3 +15,5 @@ type (
 )
 
 func NewrequestStructures() RequestStructures { return &requestStructures{} }
+
+const ()

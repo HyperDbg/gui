@@ -15,3 +15,5 @@ type (
 )
 
 func Newsymbols() Symbols { return &symbols{} }
+
+const ()

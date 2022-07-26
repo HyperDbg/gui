@@ -15,3 +15,5 @@ type (
 )
 
 func Newdatatypes() Datatypes { return &datatypes{} }
+
+const ()

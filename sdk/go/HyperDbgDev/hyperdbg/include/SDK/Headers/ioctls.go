@@ -15,3 +15,5 @@ type (
 )
 
 func Newioctls() Ioctls { return &ioctls{} }
+
+const ()

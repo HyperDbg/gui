@@ -15,3 +15,5 @@ type (
 )
 
 func NewbasicTypes() BasicTypes { return &basicTypes{} }
+
+const ()

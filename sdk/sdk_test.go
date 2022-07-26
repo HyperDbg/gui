@@ -18,8 +18,13 @@ import (
 
 func TestC2go(t *testing.T) {
 	setup := myc2go.NewSetup(myc2go.Setup{
-		SetRoot: func() []string { return []string{"./HyperDbgDev"} },
-		SetExt:  func() []string { return []string{".h", ".cpp", ".asm", ".txt"} },
+		SetRoot: func() []string {
+			return []string{
+				"./HyperDbgDev/hyperdbg/include/SDK/Headers",
+				//"./HyperDbgDev",
+			}
+		},
+		SetExt: func() []string { return []string{".h", ".cpp", ".asm", ".txt"} },
 		SetContains: func() []string {
 			return []string{"hyperdbg\\miscellaneous",
 				"hyperdbg\\include",
