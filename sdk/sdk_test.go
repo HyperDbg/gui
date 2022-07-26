@@ -38,6 +38,7 @@ func TestC2go(t *testing.T) {
 				"sizeof(DEBUGGER_REMOTE_PACKET)": "11",
 			}
 		},
+		SetBasicTypes: func() string { return `Headers` },
 	})
 	mycheck.Assert(t).True(setup.ConvertAll())
 }
