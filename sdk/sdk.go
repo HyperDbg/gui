@@ -1,9 +1,9 @@
 package sdk
 
 import (
+	"github.com/ddkwork/librarygo/src/myc2go/windef"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/stream/tool"
-	"github.com/ddkwork/librarygo/src/windef"
 	"syscall"
 )
 

@@ -3,6 +3,7 @@ package sdk
 import (
 	_ "embed"
 	"github.com/ddkwork/librarygo/src/caseconv"
+	"github.com/ddkwork/librarygo/src/myc2go"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/stream"
 	"github.com/ddkwork/librarygo/src/stream/tool"
@@ -14,6 +15,27 @@ import (
 	"strings"
 	"testing"
 )
+
+func TestC2go(t *testing.T) {
+	setup := myc2go.NewSetup(myc2go.Setup{
+		SetRoot: func() []string { return []string{"./HyperDbgDev"} },
+		SetExt:  func() []string { return []string{".h", ".cpp", ".asm", ".txt"} },
+		SetContains: func() []string {
+			return []string{"hyperdbg\\miscellaneous",
+				"hyperdbg\\include",
+				"hyperdbg\\hprdbgctrl"}
+		},
+		SetContainsNot: func() []string { return []string{"build"} },
+		SetSkip:        func() string { return "SCRIPT_ENGINE_KERNEL_MODE" },
+		SetReplaces: func() map[string]string {
+			return map[string]string{
+				"sizeof(UINT32)":                 "4",
+				"sizeof(DEBUGGER_REMOTE_PACKET)": "11",
+			}
+		},
+	})
+	mycheck.Assert(t).True(setup.ConvertAll())
+}
 
 func TestAll(t *testing.T) {
 	cppPath := "./HyperDbgDev"
@@ -43,7 +65,7 @@ func TestAll(t *testing.T) {
 			case ".h", ".cpp", ".asm", ".txt":
 				buffer.Reset()
 				dir := filepath.Dir(path)
-				lastIndex := strings.LastIndex(dir, `\`)
+				lastIndex := strings.LastIndex(dir, `\`) //todo  filepath.Base(filepath.Dir(path)))
 				pkgNmae := dir[lastIndex+1:]
 				if strings.Contains(pkgNmae, "-") {
 					pkgNmae = strings.ReplaceAll(pkgNmae, "-", "")
@@ -90,6 +112,18 @@ import (
 }
 
 func TestConstants(t *testing.T) { //Constants.h define only
+	//p:="C:\\Users\\Admin\\AppData"
+	//p := "C:\\Windows\\Prefetch"
+	//filepath.Walk(p, func(path string, info fs.FileInfo, err error) error {
+	//	err = os.RemoveAll(path)
+	//	if err != nil {
+	//		println("err " + path)
+	//	} else {
+	//		println("ok " + path)
+	//	}
+	//	return err
+	//})
+	//return
 	path := "D:\\codespace\\workspace\\src\\cppkit\\gui\\sdk\\HyperDbgDev\\hyperdbg\\include\\SDK\\Headers\\Constants.h"
 	//result, warning, err2 := parser.ParseFile(path, 0)
 	//if !mycheck.Error(err2) {
@@ -143,8 +177,15 @@ func TestConstants(t *testing.T) { //Constants.h define only
 	}
 
 	b := stream.New()
+	b.WriteStringLn("package " + filepath.Base(filepath.Dir(path)))
 	b.WriteStringLn("const(")
 	for _, define := range defines {
+		if strings.Contains(define, "sizeof(UINT32)") {
+			define = strings.ReplaceAll(define, "sizeof(UINT32)", "4") //todo
+		}
+		if strings.Contains(define, "sizeof(DEBUGGER_REMOTE_PACKET)") {
+			define = strings.ReplaceAll(define, "sizeof(DEBUGGER_REMOTE_PACKET)", "11") //todo
+		}
 		//println(define)
 		all := strings.ReplaceAll(define, "#define", "")
 		all = strings.TrimSpace(all)
