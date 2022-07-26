@@ -112,7 +112,6 @@ import (
 }
 
 func TestConstants(t *testing.T) { //Constants.h define only
-	//p:="C:\\Users\\Admin\\AppData"
 	//p := "C:\\Windows\\Prefetch"
 	//filepath.Walk(p, func(path string, info fs.FileInfo, err error) error {
 	//	err = os.RemoveAll(path)
