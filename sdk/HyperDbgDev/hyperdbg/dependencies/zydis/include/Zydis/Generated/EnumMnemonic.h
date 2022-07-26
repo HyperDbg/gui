@@ -1,4 +1,8 @@
-typedef enum ZydisMnemonic_ {
+/**
+ * Defines the `ZydisMnemonic` enum.
+ */
+typedef enum ZydisMnemonic_
+{
     ZYDIS_MNEMONIC_INVALID,
     ZYDIS_MNEMONIC_AAA,
     ZYDIS_MNEMONIC_AAD,
@@ -1605,6 +1609,13 @@ typedef enum ZydisMnemonic_ {
     ZYDIS_MNEMONIC_XSHA256,
     ZYDIS_MNEMONIC_XSTORE,
     ZYDIS_MNEMONIC_XTEST,
-    ZYDIS_MNEMONIC_MAX_VALUE     = ZYDIS_MNEMONIC_XTEST,
+
+    /**
+     * Maximum value of this enum.
+     */
+    ZYDIS_MNEMONIC_MAX_VALUE = ZYDIS_MNEMONIC_XTEST,
+    /**
+     * The minimum number of bits required to represent all values of this enum.
+     */
     ZYDIS_MNEMONIC_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT(ZYDIS_MNEMONIC_MAX_VALUE)
 } ZydisMnemonic;

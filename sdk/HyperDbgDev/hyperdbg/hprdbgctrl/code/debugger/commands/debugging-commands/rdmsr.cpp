@@ -1,15 +1,43 @@
+/**
+ * @file rdmsr.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief rdmsr command
+ * @details
+ * @version 0.1
+ * @date 2020-05-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
+
+/**
+ * @brief help of rdmsr command
+ *
+ * @return VOID
+ */
 VOID
-CommandRdmsrHelp() {
+CommandRdmsrHelp()
+{
     ShowMessages("rdmsr : reads a model-specific register (MSR).\n\n");
+
     ShowMessages("syntax : \trdmsr [Msr (hex)] [core CoreNumber (hex)]\n");
+
     ShowMessages("\n");
     ShowMessages("\t\te.g : rdmsr c0000082\n");
     ShowMessages("\t\te.g : rdmsr c0000082 core 2\n");
 }
 
+/**
+ * @brief rdmsr command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
-CommandRdmsr(vector<string> SplittedCommand, string Command) {
+CommandRdmsr(vector<string> SplittedCommand, string Command)
+{
     BOOL                           Status;
     BOOL                           IsNextCoreId = FALSE;
     BOOL                           SetMsr       = FALSE;
@@ -19,17 +47,25 @@ CommandRdmsr(vector<string> SplittedCommand, string Command) {
     UINT32                         CoreNumer = DEBUGGER_READ_AND_WRITE_ON_MSR_APPLY_ALL_CORES;
     SYSTEM_INFO                    SysInfo;
     DWORD                          NumCPU;
-    if (SplittedCommand.size() >= 5) {
+
+    if (SplittedCommand.size() >= 5)
+    {
         ShowMessages("incorrect use of 'rdmsr'\n\n");
         CommandRdmsrHelp();
         return;
     }
-    for (auto Section : SplittedCommand) {
-        if (!Section.compare(SplittedCommand.at(0))) {
+
+    for (auto Section : SplittedCommand)
+    {
+        if (!Section.compare(SplittedCommand.at(0)))
+        {
             continue;
         }
-        if (IsNextCoreId) {
-            if (!ConvertStringToUInt32(Section, &CoreNumer)) {
+
+        if (IsNextCoreId)
+        {
+            if (!ConvertStringToUInt32(Section, &CoreNumer))
+            {
                 ShowMessages("please specify a correct hex value for core id\n\n");
                 CommandRdmsrHelp();
                 return;
@@ -37,35 +73,57 @@ CommandRdmsr(vector<string> SplittedCommand, string Command) {
             IsNextCoreId = FALSE;
             continue;
         }
-        if (!Section.compare("core")) {
+
+        if (!Section.compare("core"))
+        {
             IsNextCoreId = TRUE;
             continue;
         }
-        if (SetMsr || !ConvertStringToUInt64(Section, &Msr)) {
+
+        if (SetMsr || !ConvertStringToUInt64(Section, &Msr))
+        {
             ShowMessages("please specify a correct hex value to be read\n\n");
             CommandRdmsrHelp();
             return;
         }
         SetMsr = TRUE;
     }
-    if (!SetMsr) {
+
+    //
+    // Check if msr is set or not
+    //
+    if (!SetMsr)
+    {
         ShowMessages("please specify a correct hex value to be read\n\n");
         CommandRdmsrHelp();
         return;
     }
-    if (IsNextCoreId) {
+    if (IsNextCoreId)
+    {
         ShowMessages("please specify a correct hex value for core\n\n");
         CommandRdmsrHelp();
         return;
     }
+
     AssertShowMessageReturnStmt(g_DeviceHandle, ASSERT_MESSAGE_DRIVER_NOT_LOADED, AssertReturn);
+
     MsrReadRequest.ActionType = DEBUGGER_MSR_READ;
     MsrReadRequest.Msr        = Msr;
     MsrReadRequest.CoreNumber = CoreNumer;
+
+    //
+    // Find logical cores count
+    //
     GetSystemInfo(&SysInfo);
-    NumCPU                = SysInfo.dwNumberOfProcessors;
+    NumCPU = SysInfo.dwNumberOfProcessors;
+
+    //
+    // allocate buffer for transfering messages
+    //
     UINT64 * OutputBuffer = (UINT64 *)malloc(sizeof(UINT64) * NumCPU);
+
     ZeroMemory(OutputBuffer, sizeof(UINT64) * NumCPU);
+
     Status = DeviceIoControl(
         g_DeviceHandle,                        // Handle to device
         IOCTL_DEBUGGER_READ_OR_WRITE_MSR,      // IO Control code
@@ -76,18 +134,38 @@ CommandRdmsr(vector<string> SplittedCommand, string Command) {
         &ReturnedLength,                       // Bytes placed in buffer.
         NULL                                   // synchronous call
     );
-    if (!Status) {
+
+    if (!Status)
+    {
         ShowMessages("ioctl failed with code (%x), either msr index or core id is invalid\n",
                      GetLastError());
         free(OutputBuffer);
         return;
     }
-    if (CoreNumer == DEBUGGER_READ_AND_WRITE_ON_MSR_APPLY_ALL_CORES) {
-        for (size_t i = 0; i < NumCPU; i++) {
+
+    //
+    // btw, %x is enough, no need to %llx
+    //
+    if (CoreNumer == DEBUGGER_READ_AND_WRITE_ON_MSR_APPLY_ALL_CORES)
+    {
+        //
+        // Show all cores
+        //
+        for (size_t i = 0; i < NumCPU; i++)
+        {
             ShowMessages("core : 0x%x - msr[%llx] = %s\n", i, Msr, SeparateTo64BitValue((OutputBuffer[i])).c_str());
         }
-    } else {
+    }
+    else
+    {
+        //
+        // Show for a single-core
+        //
         ShowMessages("core : 0x%x - msr[%llx] = %s\n", CoreNumer, Msr, SeparateTo64BitValue((OutputBuffer[0])).c_str());
     }
+
+    //
+    // Free the buffer
+    //
     free(OutputBuffer);
 }

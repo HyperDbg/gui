@@ -1,7 +1,13 @@
 #pragma once
+
+//
+// Header file of symbol-parser
+// Imports
+//
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 __declspec(dllimport) VOID
     SymSetTextMessageCallback(PVOID Handler);
 __declspec(dllimport) UINT64
@@ -48,7 +54,7 @@ __declspec(dllimport) BOOLEAN
                                      _Out_ char **     NewStructOrTypeName,
                                      _Out_ UINT32 *    OffsetOfFieldFromTop,
                                      _Out_ UINT32 *    SizeOfField);
+
 #ifdef __cplusplus
 }
-
 #endif

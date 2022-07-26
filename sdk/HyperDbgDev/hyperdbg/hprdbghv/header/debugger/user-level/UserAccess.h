@@ -1,5 +1,26 @@
+/**
+ * @file UserAccess.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Access and parse user-mode components of binaries
+ * @details Access to Portable Executables
+ * @version 0.1
+ * @date 2021-12-24
+ * 
+ * @copyright This project is released under the GNU Public License v3.
+ * 
+ */
 #pragma once
-typedef struct _PEB_LDR_DATA {
+
+//////////////////////////////////////////////////
+//				   Structures					//
+//////////////////////////////////////////////////
+
+/**
+ * @brief PEB LDR Data
+ * 
+ */
+typedef struct _PEB_LDR_DATA
+{
     ULONG      Length;
     BOOLEAN    Initialized;
     PVOID      SsHandle;
@@ -7,14 +28,31 @@ typedef struct _PEB_LDR_DATA {
     LIST_ENTRY ModuleListMemoryOrder;
     LIST_ENTRY ModuleListInitOrder;
 } PEB_LDR_DATA, *PPEB_LDR_DATA;
-typedef struct _RTL_USER_PROCESS_PARAMETERS {
+
+/**
+ * @brief User process params
+ * 
+ */
+typedef struct _RTL_USER_PROCESS_PARAMETERS
+{
     BYTE           Reserved1[16];
     PVOID          Reserved2[10];
     UNICODE_STRING ImagePathName;
     UNICODE_STRING CommandLine;
 } RTL_USER_PROCESS_PARAMETERS, *PRTL_USER_PROCESS_PARAMETERS;
+
+/**
+ * @brief Random windows type
+ * 
+ */
 typedef void(__stdcall * PPS_POST_PROCESS_INIT_ROUTINE)(void); // not exported
-typedef struct _PEB {
+
+/**
+ * @brief PEB 64-bit
+ * 
+ */
+typedef struct _PEB
+{
     BYTE                          Reserved1[2];
     BYTE                          BeingDebugged;
     BYTE                          Reserved2[1];
@@ -35,7 +73,13 @@ typedef struct _PEB {
     PVOID                         Reserved12[1];
     ULONG                         SessionId;
 } PEB, *PPEB;
-typedef struct _PEB32 {
+
+/**
+ * @brief PEB 32-bit
+ * 
+ */
+typedef struct _PEB32
+{
     UCHAR InheritedAddressSpace;
     UCHAR ReadImageFileExecOptions;
     UCHAR BeingDebugged;
@@ -55,7 +99,13 @@ typedef struct _PEB32 {
     ULONG AtlThunkSListPtr32;
     ULONG ApiSetMap;
 } PEB32, *PPEB32;
-typedef struct _PEB_LDR_DATA32 {
+
+/**
+ * @brief LDR Data 32-bit
+ * 
+ */
+typedef struct _PEB_LDR_DATA32
+{
     ULONG        Length;
     UCHAR        Initialized;
     ULONG        SsHandle;
@@ -63,7 +113,13 @@ typedef struct _PEB_LDR_DATA32 {
     LIST_ENTRY32 InMemoryOrderModuleList;
     LIST_ENTRY32 InInitializationOrderModuleList;
 } PEB_LDR_DATA32, *PPEB_LDR_DATA32;
-typedef struct _LDR_DATA_TABLE_ENTRY32 {
+
+/**
+ * @brief LDR Data Table 32-bit
+ * 
+ */
+typedef struct _LDR_DATA_TABLE_ENTRY32
+{
     LIST_ENTRY32     InLoadOrderLinks;
     LIST_ENTRY32     InMemoryOrderLinks;
     LIST_ENTRY32     InInitializationOrderLinks;
@@ -78,7 +134,13 @@ typedef struct _LDR_DATA_TABLE_ENTRY32 {
     LIST_ENTRY32     HashLinks;
     ULONG            TimeDateStamp;
 } LDR_DATA_TABLE_ENTRY32, *PLDR_DATA_TABLE_ENTRY32;
-typedef struct _LDR_DATA_TABLE_ENTRY {
+
+/**
+ * @brief LDR Data Table 64-bit
+ * 
+ */
+typedef struct _LDR_DATA_TABLE_ENTRY
+{
     LIST_ENTRY     InLoadOrderModuleList;
     LIST_ENTRY     InMemoryOrderModuleList;
     LIST_ENTRY     InInitializationOrderModuleList;
@@ -94,25 +156,61 @@ typedef struct _LDR_DATA_TABLE_ENTRY {
     PVOID          SectionPointer;
     ULONG          CheckSum;
     ULONG          TimeDateStamp;
+    //    PVOID			LoadedImports;
+    //    seems they are exist only on XP
+    //    EntryPointActivationContext;
 } LDR_DATA_TABLE_ENTRY, *PLDR_DATA_TABLE_ENTRY;
+
+//////////////////////////////////////////////////
+//				   Definitions					//
+//////////////////////////////////////////////////
+
 typedef NTSTATUS (*ZwQueryInformationProcess)(
     __in HANDLE                                  ProcessHandle,
     __in PROCESSINFOCLASS                        ProcessInformationClass,
     __out_bcount(ProcessInformationLength) PVOID ProcessInformation,
     __in ULONG                                   ProcessInformationLength,
     __out_opt PULONG                             ReturnLength);
+
 typedef PPEB(NTAPI * PsGetProcessPeb)(PEPROCESS Process);
+
 typedef PPEB32(NTAPI * PsGetProcessWow64Process)(PEPROCESS Process);
+
+//////////////////////////////////////////////////
+//				   Variables					//
+//////////////////////////////////////////////////
+
+/**
+ * @brief Address of ZwQueryInformationProcess
+ * 
+ */
 ZwQueryInformationProcess g_ZwQueryInformationProcess;
-PsGetProcessPeb           g_PsGetProcessPeb;
-PsGetProcessWow64Process  g_PsGetProcessWow64Process;
+
+/**
+ * @brief Address of PsGetProcessPeb
+ * 
+ */
+PsGetProcessPeb g_PsGetProcessPeb;
+
+/**
+ * @brief Address of PsGetProcessWow64Process
+ * 
+ */
+PsGetProcessWow64Process g_PsGetProcessWow64Process;
+
+//////////////////////////////////////////////////
+//				   Functions					//
+//////////////////////////////////////////////////
+
 BOOLEAN
 UserAccessAllocateAndGetImagePathFromProcessId(HANDLE          ProcessId,
                                                PUNICODE_STRING ProcessImageName,
                                                UINT32          SizeOfImageNameToBeAllocated);
 BOOLEAN
 UserAccessGetLoadedModules(PUSERMODE_LOADED_MODULE_DETAILS ProcessLoadedModuleRequest, UINT32 BufferSize);
+
 BOOLEAN
 UserAccessIsWow64Process(HANDLE ProcessId, PBOOLEAN Is32Bit);
+
 BOOLEAN
 UserAccessCheckForLoadedModuleDetails();

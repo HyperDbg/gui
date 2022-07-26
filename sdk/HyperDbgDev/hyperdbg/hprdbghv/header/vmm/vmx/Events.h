@@ -1,7 +1,33 @@
+/**
+ * @file Events.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers relating to Exception Bitmap and Event (Interrupt and Exception) Injection 
+ * @details
+ * @version 0.1
+ * @date 2020-04-11
+ * 
+ * @copyright This project is released under the GNU Public License v3.
+ * 
+ */
 #pragma once
+
+//////////////////////////////////////////////////
+//					Definitions					//
+//////////////////////////////////////////////////
+
 #define RESERVED_MSR_RANGE_LOW 0x40000000
 #define RESERVED_MSR_RANGE_HI  0x4000109F
-typedef enum _EXCEPTION_VECTORS {
+
+//////////////////////////////////////////////////
+//					Enums						//
+//////////////////////////////////////////////////
+
+/**
+ * @brief Exceptions enum
+ * 
+ */
+typedef enum _EXCEPTION_VECTORS
+{
     EXCEPTION_VECTOR_DIVIDE_ERROR,
     EXCEPTION_VECTOR_DEBUG_BREAKPOINT,
     EXCEPTION_VECTOR_NMI,
@@ -34,13 +60,24 @@ typedef enum _EXCEPTION_VECTORS {
     EXCEPTION_VECTOR_RESERVED10,
     EXCEPTION_VECTOR_RESERVED11,
     EXCEPTION_VECTOR_RESERVED12,
+
+    //
+    // NT (Windows) specific exception vectors.
+    //
     APC_INTERRUPT   = 31,
     DPC_INTERRUPT   = 47,
     CLOCK_INTERRUPT = 209,
     IPI_INTERRUPT   = 225,
     PMI_INTERRUPT   = 254,
+
 } EXCEPTION_VECTORS;
-typedef enum _INTERRUPT_TYPE {
+
+/**
+ * @brief Type of interrupts
+ * 
+ */
+typedef enum _INTERRUPT_TYPE
+{
     INTERRUPT_TYPE_EXTERNAL_INTERRUPT            = 0,
     INTERRUPT_TYPE_RESERVED                      = 1,
     INTERRUPT_TYPE_NMI                           = 2,
@@ -50,10 +87,22 @@ typedef enum _INTERRUPT_TYPE {
     INTERRUPT_TYPE_SOFTWARE_EXCEPTION            = 6,
     INTERRUPT_TYPE_OTHER_EVENT                   = 7
 } INTERRUPT_TYPE;
-typedef union _INTERRUPT_INFO {
+
+//////////////////////////////////////////////////
+//					Structures					//
+//////////////////////////////////////////////////
+
+/**
+ * @brief Interrupt injection and event format
+ * 
+ */
+typedef union _INTERRUPT_INFO
+{
     struct
     {
         UINT32 Vector : 8;
+        /* 0=Ext Int, 1=Rsvd, 2=NMI, 3=Exception, 4=Soft INT,
+		 * 5=Priv Soft Trap, 6=Unpriv Soft Trap, 7=Other */
         UINT32 InterruptType : 3;
         UINT32 DeliverCode : 1; /* 0=Do not deliver, 1=Deliver */
         UINT32 Reserved : 19;
@@ -61,20 +110,36 @@ typedef union _INTERRUPT_INFO {
     } Fields;
     UINT32 Flags;
 } INTERRUPT_INFO, *PINTERRUPT_INFO;
-typedef struct _EVENT_INFORMATION {
+
+/**
+ * @brief Event information
+ * 
+ */
+typedef struct _EVENT_INFORMATION
+{
     INTERRUPT_INFO InterruptInfo;
     UINT32         InstructionLength;
     UINT64         ErrorCode;
 } EVENT_INFORMATION, *PEVENT_INFORMATION;
+
+//////////////////////////////////////////////////
+//					Functions					//
+//////////////////////////////////////////////////
+
 VOID
 EventInjectBreakpoint();
+
 VOID
 EventInjectInterruption(INTERRUPT_TYPE InterruptionType, EXCEPTION_VECTORS Vector, BOOLEAN DeliverErrorCode, UINT32 ErrorCode);
+
 VOID
 EventInjectGeneralProtection();
+
 VOID
 EventInjectUndefinedOpcode(UINT32 CurrentProcessorIndex);
+
 VOID
 EventInjectPageFault(UINT64 PageFaultAddress);
+
 VOID
 EventInjectDebugBreakpoint();

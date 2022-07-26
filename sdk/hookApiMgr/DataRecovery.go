@@ -9,11 +9,11 @@ type (
 		edx int64
 	}
 	ssdNumber struct {
-		mod    *stream.Buffer //40
-		serial *stream.Buffer //20
+		mod    *stream.Stream //40
+		serial *stream.Stream //20
 	}
 	mac0 struct {
-		addr *stream.Buffer //8
+		addr *stream.Stream //8
 	}
 	hookInfo struct {
 		cpu1      cpu1

@@ -12,17 +12,12 @@
 # =============================================================================
 
 #############################################
-# localized /showIncludes string
-
-msvc_deps_prefix = Note: including file: 
-
-
-#############################################
 # Rule for compiling C files.
 
 rule C_COMPILER__HyperDbgDev_Debug
-  deps = msvc
-  command = "C:\PROGRA~1\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\Hostx64\x86\cl.exe"  /nologo $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  depfile = $DEP_FILE
+  deps = gcc
+  command = "C:\PROGRA~1\JetBrains\CLion 2022.1.3\bin\mingw\bin\gcc.exe" $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -30,8 +25,9 @@ rule C_COMPILER__HyperDbgDev_Debug
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__HyperDbgDev_Debug
-  deps = msvc
-  command = "C:\PROGRA~1\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\Hostx64\x86\cl.exe"  /nologo /TP $DEFINES $INCLUDES $FLAGS /showIncludes /Fo$out /Fd$TARGET_COMPILE_PDB /FS -c $in
+  depfile = $DEP_FILE
+  deps = gcc
+  command = "C:\PROGRA~1\JetBrains\CLion 2022.1.3\bin\mingw\bin\g++.exe" $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building CXX object $out
 
 
@@ -39,10 +35,10 @@ rule CXX_COMPILER__HyperDbgDev_Debug
 # Rule for linking CXX executable.
 
 rule CXX_EXECUTABLE_LINKER__HyperDbgDev_Debug
-  command = cmd.exe /C "$PRE_LINK && "C:\Program Files\JetBrains\CLion 2022.1.3\bin\cmake\win\bin\cmake.exe" -E vs_link_exe --intdir=$OBJECT_DIR --rc="C:\PROGRA~2\Windows Kits\10\bin\10.0.22621.0\x64\rc.exe" --mt="C:\PROGRA~2\Windows Kits\10\bin\10.0.22621.0\x64\mt.exe" --manifests $MANIFESTS -- "C:\PROGRA~1\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\Hostx64\x86\link.exe" /nologo @$RSP_FILE  /out:$TARGET_FILE /implib:$TARGET_IMPLIB /pdb:$TARGET_PDB /version:0.0 $LINK_FLAGS  && $POST_BUILD"
+  command = cmd.exe /C "$PRE_LINK && "C:\PROGRA~1\JetBrains\CLion 2022.1.3\bin\mingw\bin\g++.exe" $FLAGS $LINK_FLAGS @$RSP_FILE -o $TARGET_FILE -Wl,--out-implib,$TARGET_IMPLIB -Wl,--major-image-version,0,--minor-image-version,0  && $POST_BUILD"
   description = Linking CXX executable $TARGET_FILE
   rspfile = $RSP_FILE
-  rspfile_content = $in_newline $LINK_PATH $LINK_LIBRARIES
+  rspfile_content = $in $LINK_PATH $LINK_LIBRARIES
   restat = $RESTAT
 
 

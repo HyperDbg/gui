@@ -1,4 +1,5 @@
 #pragma once
+
 #include "SDK/Headers/Constants.h"
 #include "SDK/Headers/BasicTypes.h"
 #include "SDK/Headers/ErrorCodes.h"
