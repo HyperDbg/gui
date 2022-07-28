@@ -1,7 +1,8 @@
-package sdk
+package sdk_test
 
 import (
 	_ "embed"
+	"github.com/ddkwork/hyperdbgui/sdk"
 	"github.com/ddkwork/librarygo/src/caseconv"
 	"github.com/ddkwork/librarygo/src/myc2go"
 	"github.com/ddkwork/librarygo/src/mycheck"
@@ -15,6 +16,11 @@ import (
 	"strings"
 	"testing"
 )
+
+func TestLoadVmm(t *testing.T) {
+	s := sdk.New()
+	s.LoadVmm()
+}
 
 func TestC2go(t *testing.T) {
 	setup := myc2go.NewSetup(myc2go.Setup{

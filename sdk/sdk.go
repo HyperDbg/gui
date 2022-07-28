@@ -1,8 +1,10 @@
 package sdk
 
 import (
+	"github.com/ddkwork/librarygo/src/hardwareIndo"
 	"github.com/ddkwork/librarygo/src/myc2go/windef"
 	"github.com/ddkwork/librarygo/src/mycheck"
+	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream/tool"
 	"syscall"
 )
@@ -15,10 +17,26 @@ type (
 	Interface interface {
 		LoadVmm() (ok bool)
 		UnLoadVmm() (ok bool)
+		VmxSupportDetection() (ok bool)
 	}
 	object struct {
 	}
 )
+
+func (o *object) VmxSupportDetection() (ok bool) {
+	h := hardwareIndo.New()
+	if !h.CpuInfo.Get() {
+		return
+	}
+	if h.CpuInfo.Vendor != "GenuineIntel" {
+		mylog.Info("", "this program is not designed to run in a non-VT-x environemnt !")
+		return
+	}
+	mylog.Info("", "virtualization technology is vt-x")
+	return true
+}
+
+func New() Interface { return &object{} }
 
 func (o *object) DeviceName() string { return "HyperdbgHypervisorDevice" }
 func (o *object) LinkName() (*uint16, error) {
@@ -85,13 +103,13 @@ func (o *object) DeviceIoControl() (ok bool) {
 }
 
 func (o *object) LoadVmm() (ok bool) {
-	//TODO implement me
-	panic("implement me")
+	if !o.VmxSupportDetection() {
+		return
+	}
+	return true
 }
 
 func (o *object) UnLoadVmm() (ok bool) {
 	//TODO implement me
 	panic("implement me")
 }
-
-func New() Interface { return &object{} }

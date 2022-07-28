@@ -27,20 +27,25 @@ func TestName(t *testing.T) {
 	base := "HyperDbgDev"
 	includesPATH := make([]string, 0)
 	for i, include := range includes {
-		join := filepath.Join(base, include)
-		join = ` -I` + join + " "
-		includesPATH = append(includesPATH, join)
-		println(join)
-		if i == 2 {
+		if i == 6 {
 			break
 		}
+		join := filepath.Join(base, include)
+		//abs, err := filepath.Abs(join)
+		//if !mycheck.Error(err) {
+		//	return
+		//}
+		//join = abs
+		join = ` -I` + join + " "
+		includesPATH = append(includesPATH, join)
 	}
 	include := ""
 	for _, s := range includesPATH {
 		include += s
 	}
+	//clang++ -Xclang -dM -E -I -I./HyperDbgDev/hyperdbg\/prdbgctrl   ./HyperDbgDev/hyperdbg/hprdbgctrl/code/app/hprdbgctrl.cpp
 	//c := `clang++ -Xclang -dM -E -ast-dump=json -fsyntax-only `
-	c := `clang++ -Xclang -dM -E -I` + include
+	c := `clang++ -Xclang -dM -E` + include
 	b, err2 := cmd.Run(c + main)
 	if !mycheck.Error(err2) {
 		return
@@ -122,12 +127,13 @@ var includes = []string{
 	"hyperdbg/hprdbgctrl",
 	"hyperdbg/hprdbgctrl/header",
 	"hyperdbg/dependencies",
+	"hyperdbg/dependencies/phnt",
+	"C:\\Users\\Admin\\Downloads\\WindowsKits\\10\\Include\\10.0.22621.0\\um",
 	"hyperdbg/dependencies/zydis/dependencies/zycore/include/Zycore",
 	"hyperdbg/dependencies/zydis/include/Zydis",
 	"hyperdbg/dependencies/zydis/dependencies/zycore/include",
 	"hyperdbg/dependencies/zydis/include",
 	"hyperdbg/dependencies/zydis/msvc",
-	"hyperdbg/dependencies/phnt",
 	"hyperdbg/dependencies/zydis/assets",
 	"hyperdbg/dependencies/zydis/include/Zydis/Internal",
 	"hyperdbg/dependencies/pdbex/Source",
