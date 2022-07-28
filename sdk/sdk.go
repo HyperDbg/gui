@@ -33,6 +33,7 @@ func (o *object) VmxSupportDetection() (ok bool) {
 		return
 	}
 	mylog.Info("", "virtualization technology is vt-x")
+	mylog.Hex("ecx", h.CpuInfo.Cpu1.Ecx) //3DBAE3BF
 	return true
 }
 
