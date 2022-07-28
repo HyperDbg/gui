@@ -71,15 +71,15 @@ func (o *object) VmxSupportDetection() (ok bool) {
 	       return 1;
 	   }
 	*/
-	h := hardwareIndo.New()
-	if !h.CpuInfo.Get() {
+	hard := hardwareIndo.New()
+	if !hard.CpuInfo.Get() {
 		return
 	}
-	if h.CpuInfo.Vendor != "GenuineIntel" {
+	if hard.CpuInfo.Vendor != "GenuineIntel" {
 		return mycheck.Error("this program is not designed to run in a non-VT-x environemnt !")
 	}
 	mylog.Info("", "virtualization technology is vt-x")
-	field := bitfield.NewFromUint32(h.CpuInfo.Cpu1.Ecx)
+	field := bitfield.NewFromUint32(hard.CpuInfo.Cpu1.Ecx)
 	if !field.Test(5) {
 		return mycheck.Error("vmx operation is not supported by your processor")
 	}
