@@ -55,9 +55,8 @@ func (o *object) ReadIrpBasedBuffer() (ok bool) {
 	case OPERATION_COMMAND_FROM_DEBUGGER_RELOAD_SYMBOL:
 	case OPERATION_NOTIFICATION_FROM_USER_DEBUGGER_PAUSE:
 	default:
-		//reset buffer ?
-		//close handle
 		outBuffer = outBuffer[:0]
+		return mycheck.Error(syscall.CloseHandle(o.handle))
 	}
 	return true
 }
