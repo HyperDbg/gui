@@ -85,7 +85,16 @@ func (o *object) VmxSupportDetection() (ok bool) {
 	}
 	mylog.Info("", "vmx operation is supported by your processor")
 	//    g_IsVmxOffProcessStart = FALSE;
-	return o.DeviceIoControl()
+	return o.Handle() //todo not use list
+	go func() {
+		select {
+		//ReadIrpBasedBuffer(); with channel
+		}
+	}()
+	return true
+	//l := list.New() //InitializeListHead(&g_EventTrace);
+	//ntdll := syscall.NewLazyDLL("ntdll.dll")
+	//ntCreateThread := ntdll.NewProc("NtCreateThread")
 }
 
 func (o *object) DeviceName() string { return "HyperdbgHypervisorDevice" }
@@ -118,33 +127,6 @@ func (o *object) Handle() (ok bool) {
 	}
 	o.handle = handle
 	return true
-}
-func (o *object) DeviceIoControl() (ok bool) {
-	return o.Handle() //todo not use list
-	go func() {
-		select {
-		//ReadIrpBasedBuffer(); with channel
-		}
-	}()
-	return true
-	//l := list.New() //InitializeListHead(&g_EventTrace);
-	//ntdll := syscall.NewLazyDLL("ntdll.dll")
-	//ntCreateThread := ntdll.NewProc("NtCreateThread")
-
-	//outBuffer := make([]byte, 528)
-	//var bytesReturned uint32
-	//if !mycheck.Error(syscall.DeviceIoControl(
-	//	handle,
-	//	windef.SMART_GET_VERSION,
-	//	nil,
-	//	0,
-	//	&outBuffer[0],
-	//	528,
-	//	&bytesReturned,
-	//	nil,
-	//)) {
-	//	return
-	//}
 }
 
 func (o *object) LoadVmm() (ok bool) { return o.VmxSupportDetection() }
