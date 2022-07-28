@@ -18,8 +18,10 @@ import (
 )
 
 func TestName(t *testing.T) {
+	//./HyperDbgDev/hyperdbg/hprdbgctrl/header/debugger.h
 	//f := "./HyperDbgDev/hyperdbg/include/SDK/Headers/Ioctls.h"
-	f := "./HyperDbgDev/hyperdbg/include/SDK/Headers/Constants.h"
+	f := "./HyperDbgDev/hyperdbg/hprdbgctrl/header/debugger.h"
+	//f := "./HyperDbgDev/hyperdbg/include/SDK/Headers/Constants.h"
 	c := `clang++ -Xclang -dM -E ` + f
 	b, err2 := cmd.Run(c)
 	if !mycheck.Error(err2) {

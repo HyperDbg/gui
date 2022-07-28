@@ -6,6 +6,7 @@ import (
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/mylog"
 	"syscall"
+	"time"
 )
 
 type (
@@ -23,6 +24,40 @@ func (o *object) ReadIrpBasedBuffer() (ok bool) {
 		return
 	}
 	b := make([]byte, UsermodeBufferSize)
+	time.Sleep(DefaultSpeedOfReadingKernelMessages)
+	OperationCode := 0
+	if !mycheck.Error(syscall.DeviceIoControl(
+		o.handle,
+		IOCTL_REGISTER_EVENT,
+		//RegisterEvent
+		nil, //todo "D:\codespace\workspace\src\cppkit\gui\sdk\HyperDbgDev\hyperdbg\include\Definition.h"
+		0,
+		nil,
+		0,
+		nil,
+		nil,
+	)) {
+		return mycheck.Error(syscall.GetLastError())
+	}
+	//copy()
+	switch OperationCode {
+	case OPERATION_LOG_NON_IMMEDIATE_MESSAGE:
+	case OPERATION_LOG_INFO_MESSAGE:
+	case OPERATION_LOG_ERROR_MESSAGE:
+	case OPERATION_LOG_WARNING_MESSAGE:
+	case OPERATION_COMMAND_FROM_DEBUGGER_CLOSE_AND_UNLOAD_VMM:
+	case OPERATION_DEBUGGEE_USER_INPUT:
+	case OPERATION_DEBUGGEE_REGISTER_EVENT:
+	case OPERATION_DEBUGGEE_ADD_ACTION_TO_EVENT:
+	case OPERATION_DEBUGGEE_CLEAR_EVENTS:
+	case OPERATION_HYPERVISOR_DRIVER_IS_SUCCESSFULLY_LOADED:
+	case OPERATION_HYPERVISOR_DRIVER_END_OF_IRPS:
+	case OPERATION_COMMAND_FROM_DEBUGGER_RELOAD_SYMBOL:
+	case OPERATION_NOTIFICATION_FROM_USER_DEBUGGER_PAUSE:
+	default:
+		//reset buffer ?
+		//close handle
+	}
 	return true
 }
 
