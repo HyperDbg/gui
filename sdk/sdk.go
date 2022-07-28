@@ -13,9 +13,20 @@ type (
 		LoadVmm() (ok bool)
 		UnLoadVmm() (ok bool)
 		VmxSupportDetection() (ok bool)
+		ReadIrpBasedBuffer() (ok bool)
 	}
 	object struct{ handle syscall.Handle }
 )
+
+func (o *object) ReadIrpBasedBuffer() (ok bool) {
+	if !o.Handle() {
+		return
+	}
+	b := make([]byte, UsermodeBufferSize)
+	return true
+}
+
+func New() Interface { return &object{} }
 
 func (o *object) VmxSupportDetection() (ok bool) {
 	/*
@@ -43,8 +54,6 @@ func (o *object) VmxSupportDetection() (ok bool) {
 	//    g_IsVmxOffProcessStart = FALSE;
 	return o.DeviceIoControl()
 }
-
-func New() Interface { return &object{} }
 
 func (o *object) DeviceName() string { return "HyperdbgHypervisorDevice" }
 func (o *object) LinkName() (*uint16, error) {

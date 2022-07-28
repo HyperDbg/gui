@@ -18,7 +18,8 @@ import (
 )
 
 func TestName(t *testing.T) {
-	f := "./HyperDbgDev/hyperdbg/include/SDK/Headers/Ioctls.h"
+	//f := "./HyperDbgDev/hyperdbg/include/SDK/Headers/Ioctls.h"
+	f := "./HyperDbgDev/hyperdbg/include/SDK/Headers/Constants.h"
 	c := `clang++ -Xclang -dM -E ` + f
 	b, err2 := cmd.Run(c)
 	if !mycheck.Error(err2) {
@@ -33,7 +34,7 @@ func TestName(t *testing.T) {
 	for _, line := range lines {
 		if strings.Contains(line, `#define`) {
 			if !strings.Contains(line, `IOCTL`) {
-				continue
+				//continue
 			}
 			split := strings.Split(line, ` `)
 			key := split[1]
