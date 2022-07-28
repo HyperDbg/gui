@@ -24,7 +24,7 @@ func (o *object) ReadIrpBasedBuffer() (ok bool) {
 		return
 	}
 	outBuffer := make([]byte, UsermodeBufferSize)
-	time.Sleep(DefaultSpeedOfReadingKernelMessages)
+	time.Sleep(DefaultSpeedOfReadingKernelMessages) //need seasoned ?
 	OperationCode := 0
 	if !mycheck.Error(syscall.DeviceIoControl(
 		o.handle,
