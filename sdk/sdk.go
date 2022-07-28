@@ -8,17 +8,13 @@ import (
 	"syscall"
 )
 
-// todo need fix long type as int64 error
-//
-//	add define fomr clang ast
-//	reset BuildDateTime fn
 type (
 	Interface interface {
 		LoadVmm() (ok bool)
 		UnLoadVmm() (ok bool)
 		VmxSupportDetection() (ok bool)
 	}
-	object struct{}
+	object struct{ handle syscall.Handle }
 )
 
 func (o *object) VmxSupportDetection() (ok bool) {
@@ -54,12 +50,15 @@ func (o *object) DeviceName() string { return "HyperdbgHypervisorDevice" }
 func (o *object) LinkName() (*uint16, error) {
 	return syscall.UTF16PtrFromString(`\\\\.\\` + o.DeviceName())
 }
-func (o *object) Handle() (handle syscall.Handle, err error) {
+func (o *object) Handle() (ok bool) {
+	if o.handle != syscall.InvalidHandle {
+		return true //? //todo change to as open stata
+	}
 	name, err := o.LinkName()
 	if !mycheck.Error(err) {
 		return
 	}
-	return syscall.CreateFile( //todo change to as open stata
+	handle, err := syscall.CreateFile(
 		name,
 		syscall.GENERIC_READ|syscall.GENERIC_WRITE,
 		syscall.FILE_SHARE_READ|syscall.FILE_SHARE_WRITE,
@@ -68,15 +67,19 @@ func (o *object) Handle() (handle syscall.Handle, err error) {
 		syscall.FILE_ATTRIBUTE_NORMAL|syscall.FILE_FLAG_OVERLAPPED,
 		0,
 	)
-}
-func (o *object) DeviceIoControl() (ok bool) {
-	handle, err := o.Handle()
 	if !mycheck.Error(err) {
 		//e := `a device attached to the system is not functioning,vmx feature might be disabled from BIOS or VBS/HVCI is active`
 		return mycheck.Error(syscall.GetLastError())
 	}
 	if handle == syscall.InvalidHandle {
 		return mycheck.Error("handle == syscall.InvalidHandle")
+	}
+	o.handle = handle
+	return true
+}
+func (o *object) DeviceIoControl() (ok bool) {
+	if !o.Handle() {
+		return
 	}
 	//l := list.New() //InitializeListHead(&g_EventTrace);
 	//ntdll := syscall.NewLazyDLL("ntdll.dll")
@@ -107,6 +110,22 @@ func (o *object) LoadVmm() (ok bool) {
 }
 
 func (o *object) UnLoadVmm() (ok bool) {
-	//TODO implement me
-	panic("implement me")
+	mylog.Info("", "start terminating...")
+	//remoce list     UdUninitializeUserDebugger();
+	if !o.Handle() {
+		return
+	}
+	if !mycheck.Error(syscall.DeviceIoControl(
+		o.handle,
+		IOCTL_TERMINATE_VMX,
+		nil,
+		0,
+		nil,
+		0,
+		nil,
+		nil,
+	)) {
+		return mycheck.Error(syscall.GetLastError())
+	}
+	return true
 }

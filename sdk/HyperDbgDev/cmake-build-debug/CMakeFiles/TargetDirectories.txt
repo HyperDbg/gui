@@ -1,0 +1,3 @@
+D:/codespace/workspace/src/cppkit/gui/sdk/HyperDbgDev/cmake-build-debug/CMakeFiles/HyperDbgDev.dir
+D:/codespace/workspace/src/cppkit/gui/sdk/HyperDbgDev/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/codespace/workspace/src/cppkit/gui/sdk/HyperDbgDev/cmake-build-debug/CMakeFiles/rebuild_cache.dir

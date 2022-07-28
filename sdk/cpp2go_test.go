@@ -18,6 +18,31 @@ import (
 )
 
 func TestName(t *testing.T) {
+	f := "./HyperDbgDev/hyperdbg/include/SDK/Headers/Ioctls.h"
+	c := `clang++ -Xclang -dM -E ` + f
+	b, err2 := cmd.Run(c)
+	if !mycheck.Error(err2) {
+		return
+	}
+	//mylog.Info("", b)
+	lines, ok := tool.File().ToLines(b)
+	if !ok {
+		return
+	}
+	println("const(")
+	for _, line := range lines {
+		if strings.Contains(line, `#define`) {
+			if !strings.Contains(line, `IOCTL`) {
+				continue
+			}
+			split := strings.Split(line, ` `)
+			key := split[1]
+			value := strings.Join(split[2:], ``)
+			fmt.Printf("%-70s = %s\n", key, value)
+		}
+	}
+	println(")")
+	return
 	// #include "BasicTypes.h"
 	//typedef unsigned short wchar_t;
 	//typedef void *PVOID;
@@ -45,8 +70,8 @@ func TestName(t *testing.T) {
 	}
 	//clang++ -Xclang -dM -E -I -I./HyperDbgDev/hyperdbg\/prdbgctrl   ./HyperDbgDev/hyperdbg/hprdbgctrl/code/app/hprdbgctrl.cpp
 	//c := `clang++ -Xclang -dM -E -ast-dump=json -fsyntax-only `
-	c := `clang++ -Xclang -dM -E` + include
-	b, err2 := cmd.Run(c + main)
+	c = `clang++ -Xclang -dM -E` + include
+	b, err2 = cmd.Run(c + main)
 	if !mycheck.Error(err2) {
 		return
 	}
@@ -79,7 +104,7 @@ func TestName(t *testing.T) {
 		}
 	}
 	//mylog.Json("ast", b)
-	lines, ok := tool.File().ToLines(b)
+	lines, ok = tool.File().ToLines(b)
 	if !ok {
 		return
 	}
