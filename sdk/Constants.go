@@ -1,5 +1,7 @@
 package sdk
 
+import "unsafe"
+
 const (
 	//BUILD_DAY_CH0                                                          = ((__DATE__[4]>='0')?(__DATE__[4]):'0')
 	//BUILD_DAY_CH1                                                          = (__DATE__[5])
@@ -94,8 +96,10 @@ const (
 	TCP_END_OF_BUFFER_CHAR_2                             = 0x20
 	TCP_END_OF_BUFFER_CHAR_3                             = 0x33
 	TCP_END_OF_BUFFER_CHAR_4                             = 0x44
+
+	sizeofUINT32 = unsafe.Sizeof(0)
 	//UsermodeBufferSize                                        = sizeof(UINT32) + PacketChunkSize + 1
-	UsermodeBufferSize             = 4 + PacketChunkSize + 1
+	UsermodeBufferSize             = sizeofUINT32 + PacketChunkSize + 1
 	VERSION_MAJOR                  = 0
 	VERSION_MAJOR_INIT             = (VERSION_MAJOR + '0')
 	VERSION_MINOR                  = 2
