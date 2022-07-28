@@ -15,11 +15,17 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"unsafe"
 )
 
 func TestLoadVmm(t *testing.T) {
 	s := sdk.New()
 	s.LoadVmm()
+}
+
+func TestUnsafe(t *testing.T) {
+	sizeofUINT32 := unsafe.Sizeof(uint32(0))
+	mycheck.Assert(t).Equal(uint32(sizeofUINT32), uint32(4))
 }
 
 func TestC2go(t *testing.T) {
