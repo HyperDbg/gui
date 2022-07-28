@@ -23,7 +23,7 @@ func (o *object) ReadIrpBasedBuffer() (ok bool) {
 	if !o.Handle() {
 		return
 	}
-	//b := make([]byte, UsermodeBufferSize)
+	outBuffer := make([]byte, UsermodeBufferSize)
 	time.Sleep(DefaultSpeedOfReadingKernelMessages)
 	OperationCode := 0
 	if !mycheck.Error(syscall.DeviceIoControl(
@@ -57,6 +57,7 @@ func (o *object) ReadIrpBasedBuffer() (ok bool) {
 	default:
 		//reset buffer ?
 		//close handle
+		outBuffer = outBuffer[:0]
 	}
 	return true
 }
