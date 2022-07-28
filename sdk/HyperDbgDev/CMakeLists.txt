@@ -5,7 +5,7 @@
 # project
 cmake_minimum_required(VERSION 3.15.0)
 cmake_policy(SET CMP0091 NEW)
-project(HyperDbgDev LANGUAGES ASM CXX C ASM)
+project(HyperDbgDev LANGUAGES ASM CXX C)
 
 # target
 add_executable(HyperDbgDev "")

@@ -9,9 +9,14 @@ var breakControlBuf string
 
 type (
 	BreakControl interface {
-		//Fn() (ok bool)
+		BreakController() (ok bool)
 	}
 	breakControl struct{}
 )
+
+func (b *breakControl) BreakController() (ok bool) {
+	//TODO implement me
+	panic("implement me")
+}
 
 func NewbreakControl() BreakControl { return &breakControl{} }

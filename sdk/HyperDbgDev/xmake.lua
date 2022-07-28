@@ -2,6 +2,7 @@
 
 add_rules("mode.debug","mode.release")
 target("HyperDbgDev")
+-- set_config("cc","C:\Program Files\LLVM\bin\clang++.exe")
 set_group("HyperDbgDev")
 set_kind("binary")
 add_defines(
