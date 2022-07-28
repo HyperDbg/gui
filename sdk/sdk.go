@@ -1,14 +1,10 @@
 package sdk
 
 import (
-	"cppkit/todo/Ntdll"
-	"github.com/0xrawsec/golang-win32/win32/ntdll"
 	"github.com/ddkwork/librarygo/src/bitfield"
 	"github.com/ddkwork/librarygo/src/hardwareIndo"
-	"github.com/ddkwork/librarygo/src/myc2go/windef"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/mylog"
-	"github.com/ddkwork/myencoding/myreflect/list"
 	"syscall"
 )
 
@@ -63,7 +59,7 @@ func (o *object) Handle() (handle syscall.Handle, err error) {
 	if !mycheck.Error(err) {
 		return
 	}
-	return syscall.CreateFile(
+	return syscall.CreateFile( //todo change to as open stata
 		name,
 		syscall.GENERIC_READ|syscall.GENERIC_WRITE,
 		syscall.FILE_SHARE_READ|syscall.FILE_SHARE_WRITE,
@@ -82,26 +78,24 @@ func (o *object) DeviceIoControl() (ok bool) {
 	if handle == syscall.InvalidHandle {
 		return mycheck.Error("handle == syscall.InvalidHandle")
 	}
-	l := list.New() //InitializeListHead(&g_EventTrace);
-	ntCreateThread = ntdll.NewProc("NtCreateThread")
+	//l := list.New() //InitializeListHead(&g_EventTrace);
+	//ntdll := syscall.NewLazyDLL("ntdll.dll")
+	//ntCreateThread := ntdll.NewProc("NtCreateThread")
 
-	Ntdll.NtCreateKeyTransacted()
-	outBuffer := make([]byte, 528)
-	var bytesReturned uint32
-	if !mycheck.Error(syscall.DeviceIoControl(
-		handle,
-		windef.SMART_GET_VERSION,
-		nil,
-		0,
-		&outBuffer[0],
-		528,
-		&bytesReturned,
-		nil,
-	)) {
-		return
-	}
-	//todo return event buffer
-	// add iocode
+	//outBuffer := make([]byte, 528)
+	//var bytesReturned uint32
+	//if !mycheck.Error(syscall.DeviceIoControl(
+	//	handle,
+	//	windef.SMART_GET_VERSION,
+	//	nil,
+	//	0,
+	//	&outBuffer[0],
+	//	528,
+	//	&bytesReturned,
+	//	nil,
+	//)) {
+	//	return
+	//}
 	return true
 }
 
