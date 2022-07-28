@@ -1,11 +1,13 @@
 package sdk
 
 import (
+	"github.com/ddkwork/librarygo/src/bitfield"
 	"github.com/ddkwork/librarygo/src/hardwareIndo"
 	"github.com/ddkwork/librarygo/src/myc2go/windef"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream/tool"
+	"github.com/ddkwork/myencoding/myreflect/list"
 	"syscall"
 )
 
@@ -19,11 +21,17 @@ type (
 		UnLoadVmm() (ok bool)
 		VmxSupportDetection() (ok bool)
 	}
-	object struct {
-	}
+	object struct{}
 )
 
 func (o *object) VmxSupportDetection() (ok bool) {
+	/*
+	   if (g_DeviceHandle){
+	       ShowMessages("handle of the driver found, if you use 'load' before, please "
+	                    "unload it using 'unload'\n");
+	       return 1;
+	   }
+	*/
 	h := hardwareIndo.New()
 	if !h.CpuInfo.Get() {
 		return
@@ -33,8 +41,14 @@ func (o *object) VmxSupportDetection() (ok bool) {
 		return
 	}
 	mylog.Info("", "virtualization technology is vt-x")
-	mylog.Hex("ecx", h.CpuInfo.Cpu1.Ecx) //3DBAE3BF
-	return true
+	field := bitfield.NewFromUint32(h.CpuInfo.Cpu1.Ecx)
+	if !field.Test(5) {
+		mylog.Info("", "vmx operation is not supported by your processor")
+		return
+	}
+	mylog.Info("", "vmx operation is supported by your processor")
+	//    g_IsVmxOffProcessStart = FALSE;
+	return o.DeviceIoControl()
 }
 
 func New() Interface { return &object{} }
@@ -61,26 +75,14 @@ func (o *object) Handle() (handle syscall.Handle, err error) {
 func (o *object) DeviceIoControl() (ok bool) {
 	handle, err := o.Handle()
 	if !mycheck.Error(err) {
-		switch err {
-		//todo get ERROR_ACCESS_DENIED error type number ? administrator
-		// ERROR_GEN_FAILURE
-		/*
-		 ShowMessages("err, a device attached to the system is not functioning\n"
-		                         "vmx feature might be disabled from BIOS or VBS/HVCI is active\n");
-		*/
-		// default "err, CreateFile failed with (%x)\n", ErrorNum);
-		}
-		return
+		//e := `a device attached to the system is not functioning,vmx feature might be disabled from BIOS or VBS/HVCI is active`
+		return mycheck.Error(syscall.GetLastError())
 	}
 	if handle == syscall.InvalidHandle {
-
+		return mycheck.Error("handle == syscall.InvalidHandle")
 	}
+	l := list.New() //InitializeListHead(&g_EventTrace);
 
-	//so now start translate src/cppkit/gui/sdk/HyperDbgDev/hyperdbg/include/SDK/Headers/Constants.h
-	// for set outBufferSize etc
-	//
-	//the verson generated was so big,maybe call this is small
-	//src/cppkit/gui/sdk/HyperDbgDev/hyperdbg/include/SDK/Headers/windefTest/windef.c.i.go
 	verSion := tool.VerSion()
 	verSion.SetMajor(2)
 
