@@ -85,11 +85,13 @@ func (o *object) VmxSupportDetection() (ok bool) {
 	}
 	mylog.Info("", "vmx operation is supported by your processor")
 	//    g_IsVmxOffProcessStart = FALSE;
-	return o.Handle() //todo not use list
+	if !o.Handle() {
+		return
+	}
 	go func() {
-		select {
-		//ReadIrpBasedBuffer(); with channel
-		}
+		o.ReadIrpBasedBuffer() //todo with channel
+		//select {
+		//}
 	}()
 	return true
 	//l := list.New() //InitializeListHead(&g_EventTrace);
