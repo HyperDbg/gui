@@ -78,9 +78,7 @@ func (o *object) Handle() (ok bool) {
 	return true
 }
 func (o *object) DeviceIoControl() (ok bool) {
-	if !o.Handle() {
-		return
-	}
+	return o.Handle()
 	//l := list.New() //InitializeListHead(&g_EventTrace);
 	//ntdll := syscall.NewLazyDLL("ntdll.dll")
 	//ntCreateThread := ntdll.NewProc("NtCreateThread")
@@ -99,19 +97,12 @@ func (o *object) DeviceIoControl() (ok bool) {
 	//)) {
 	//	return
 	//}
-	return true
 }
 
-func (o *object) LoadVmm() (ok bool) {
-	if !o.VmxSupportDetection() {
-		return
-	}
-	return true
-}
-
+func (o *object) LoadVmm() (ok bool) { return o.VmxSupportDetection() }
 func (o *object) UnLoadVmm() (ok bool) {
 	mylog.Info("", "start terminating...")
-	//remoce list     UdUninitializeUserDebugger();
+	//remove list ?    UdUninitializeUserDebugger();
 	if !o.Handle() {
 		return
 	}
