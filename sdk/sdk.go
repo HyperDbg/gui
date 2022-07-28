@@ -94,7 +94,7 @@ func (o *object) LinkName() (*uint16, error) {
 }
 func (o *object) Handle() (ok bool) {
 	if o.handle != syscall.InvalidHandle {
-		return true //? //todo change to as open stata
+		return true //? //todo change to as open state
 	}
 	name, err := o.LinkName()
 	if !mycheck.Error(err) {
