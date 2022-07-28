@@ -23,7 +23,7 @@ func (o *object) ReadIrpBasedBuffer() (ok bool) {
 	if !o.Handle() {
 		return
 	}
-	b := make([]byte, UsermodeBufferSize)
+	//b := make([]byte, UsermodeBufferSize)
 	time.Sleep(DefaultSpeedOfReadingKernelMessages)
 	OperationCode := 0
 	if !mycheck.Error(syscall.DeviceIoControl(
@@ -120,7 +120,13 @@ func (o *object) Handle() (ok bool) {
 	return true
 }
 func (o *object) DeviceIoControl() (ok bool) {
-	return o.Handle()
+	return o.Handle() //todo not use list
+	go func() {
+		select {
+		//ReadIrpBasedBuffer(); with channel
+		}
+	}()
+	return true
 	//l := list.New() //InitializeListHead(&g_EventTrace);
 	//ntdll := syscall.NewLazyDLL("ntdll.dll")
 	//ntCreateThread := ntdll.NewProc("NtCreateThread")
