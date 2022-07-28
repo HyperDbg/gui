@@ -84,19 +84,7 @@ func (o *object) VmxSupportDetection() (ok bool) {
 		return mycheck.Error("vmx operation is not supported by your processor")
 	}
 	mylog.Info("", "vmx operation is supported by your processor")
-	//    g_IsVmxOffProcessStart = FALSE;
-	if !o.Handle() {
-		return
-	}
-	go func() {
-		o.ReadIrpBasedBuffer() //todo with channel
-		//select {
-		//}
-	}()
 	return true
-	//l := list.New() //InitializeListHead(&g_EventTrace);
-	//ntdll := syscall.NewLazyDLL("ntdll.dll")
-	//ntCreateThread := ntdll.NewProc("NtCreateThread")
 }
 
 func (o *object) DeviceName() string { return "HyperdbgHypervisorDevice" }
@@ -131,7 +119,24 @@ func (o *object) Handle() (ok bool) {
 	return true
 }
 
-func (o *object) LoadVmm() (ok bool) { return o.VmxSupportDetection() }
+func (o *object) LoadVmm() (ok bool) {
+	if !o.VmxSupportDetection() {
+		return
+	}
+	//    g_IsVmxOffProcessStart = FALSE;
+	if !o.Handle() {
+		return
+	}
+	go func() {
+		o.ReadIrpBasedBuffer() //todo with channel
+		//select {
+		//}
+	}()
+	return true
+	//l := list.New() //InitializeListHead(&g_EventTrace);
+	//ntdll := syscall.NewLazyDLL("ntdll.dll")
+	//ntCreateThread := ntdll.NewProc("NtCreateThread")
+}
 func (o *object) UnLoadVmm() (ok bool) {
 	mylog.Info("", "start terminating...")
 	//remove list ?    UdUninitializeUserDebugger();
