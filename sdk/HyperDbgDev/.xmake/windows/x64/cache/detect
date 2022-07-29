@@ -1,0 +1,44 @@
+{
+    find_program_msvc_arch_x64_plat_windows_checktoolas = {
+        ["ml64.exe"] = [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\ml64.exe]]
+    },
+    find_programver = {
+        ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\cl.exe"] = "19.32.31332"
+    },
+    find_program_msvc_arch_x64_plat_windows_checktoolcxx = {
+        ["cl.exe"] = [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]]
+    },
+    find_program_msvc_arch_x64_plat_windows_checktoolld = {
+        ["link.exe"] = [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\link.exe]]
+    },
+    find_program_msvc_arch_x64_plat_windows_checktoolcc = {
+        ["cl.exe"] = [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]]
+    },
+    ["detect.sdks.find_wdk"] = {
+        wdk = {
+            sdkver = "10.0.22621.0",
+            bindir = [[C:\Program Files (x86)\Windows Kits\10\bin]],
+            libdir = [[C:\Program Files (x86)\Windows Kits\10\Lib]],
+            kmdfver = "1.11",
+            includedir = [[C:\Program Files (x86)\Windows Kits\10\Include]],
+            umdfver = "2.0",
+            sdkdir = [[C:\Program Files (x86)\Windows Kits\10\]]
+        }
+    },
+    find_program = {
+        gdc = false,
+        ldc2 = false,
+        dmd = false,
+        zig = false,
+        ["cl.exe"] = [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]],
+        ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\cl.exe"] = [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]],
+        mofcomp = "mofcomp"
+    },
+    ["lib.detect.has_flags"] = {
+        ["windows_x64_C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\cl.exe_19.32.31332_cc___-Od"] = true,
+        ["windows_x64_C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\cl.exe_19.32.31332_cxx__/EHsc_-Od"] = true,
+        ["windows_x64_C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\cl.exe_19.32.31332_cxx_cxflags_/EHsc_-FS -Fd"] = true,
+        ["windows_x64_C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\cl.exe_19.32.31332_cc_cxflags_-nologo_-FS -Fd"] = true,
+        ["windows_x64_C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.32.31326\\bin\\HostX64\\x64\\cl.exe_19.32.31332_cxx_cxflags_/EHsc_-std:c++20"] = true
+    }
+}

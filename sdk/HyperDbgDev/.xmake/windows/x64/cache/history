@@ -1,0 +1,11 @@
+{
+    cmdlines = {
+        "xmake -r",
+        [[xmake lua "C:\\\\Program Files\\\\xmake\\\\actions\\\\build\\\\statistics.lua"]],
+        [[xmake lua "C:\\\\Program Files\\\\xmake\\\\actions\\\\build\\\\cleaner.lua"]],
+        "xmake package -vD",
+        "xmake project -k cmakelists",
+        "xmake project -k vsxmake -m debug,release",
+        "xmake project -k compile_commands"
+    }
+}
