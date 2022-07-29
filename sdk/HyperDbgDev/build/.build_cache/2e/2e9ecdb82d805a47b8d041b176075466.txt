@@ -1,0 +1,33 @@
+{
+    outdata = "__cpp_script-engine.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\script-engine\\header\\script-engine.h(35): warning C4273: 'ScriptEngineGetFieldOffset': inconsistent dll linkage\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\script-engine\\header\\script-engine.h(21): note: see previous definition of 'ScriptEngineGetFieldOffset'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\script-engine\\header\\script-engine.h(37): warning C4273: 'ScriptEngineGetDataTypeSize': inconsistent dll linkage\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\script-engine\\header\\script-engine.h(23): note: see previous definition of 'ScriptEngineGetDataTypeSize'\
+hyperdbg\\script-engine\\code\\script-engine.c(230): warning C4098: 'ScriptEngineSymbolAbortLoading': 'void' function returning a value\
+hyperdbg\\script-engine\\code\\script-engine.c(386): warning C4090: 'initializing': different 'const' qualifiers\
+hyperdbg\\script-engine\\code\\script-engine.c(531): warning C4022: 'free': pointer mismatch for actual parameter 1\
+hyperdbg\\script-engine\\code\\script-engine.c(538): warning C4022: 'free': pointer mismatch for actual parameter 1\
+hyperdbg\\script-engine\\code\\script-engine.c(873): warning C4477: 'sprintf' : format string '%llu' requires an argument of type 'unsigned __int64', but variadic argument 1 has type 'unsigned int'\
+hyperdbg\\script-engine\\code\\script-engine.c(873): note: consider using '%u' in the format string\
+hyperdbg\\script-engine\\code\\script-engine.c(873): note: consider using '%I32u' in the format string\
+hyperdbg\\script-engine\\code\\script-engine.c(946): warning C4477: 'sprintf' : format string '%llu' requires an argument of type 'unsigned __int64', but variadic argument 1 has type 'unsigned int'\
+hyperdbg\\script-engine\\code\\script-engine.c(946): note: consider using '%u' in the format string\
+hyperdbg\\script-engine\\code\\script-engine.c(946): note: consider using '%I32u' in the format string\
+hyperdbg\\script-engine\\code\\script-engine.c(1042): warning C4477: 'sprintf' : format string '%llu' requires an argument of type 'unsigned __int64', but variadic argument 1 has type 'unsigned int'\
+hyperdbg\\script-engine\\code\\script-engine.c(1042): note: consider using '%u' in the format string\
+hyperdbg\\script-engine\\code\\script-engine.c(1042): note: consider using '%I32u' in the format string\
+hyperdbg\\script-engine\\code\\script-engine.c(1120): warning C4477: 'sprintf' : format string '%llu' requires an argument of type 'unsigned __int64', but variadic argument 1 has type 'unsigned int'\
+hyperdbg\\script-engine\\code\\script-engine.c(1120): note: consider using '%u' in the format string\
+hyperdbg\\script-engine\\code\\script-engine.c(1120): note: consider using '%I32u' in the format string\
+hyperdbg\\script-engine\\code\\script-engine.c(1190): warning C4477: 'sprintf' : format string '%llu' requires an argument of type 'unsigned __int64', but variadic argument 1 has type 'unsigned int'\
+hyperdbg\\script-engine\\code\\script-engine.c(1190): note: consider using '%u' in the format string\
+hyperdbg\\script-engine\\code\\script-engine.c(1190): note: consider using '%I32u' in the format string\
+hyperdbg\\script-engine\\code\\script-engine.c(1670): warning C4090: '=': different 'const' qualifiers\
+hyperdbg\\script-engine\\code\\script-engine.c(1672): warning C4090: '=': different 'const' qualifiers\
+hyperdbg\\script-engine\\code\\script-engine.c(1762): warning C4047: '=': 'PSYMBOL' differs in levels of indirection from 'unsigned __int64'\
+hyperdbg\\script-engine\\code\\script-engine.c(1763): warning C4133: 'function': incompatible types - from 'unsigned __int64 *' to 'char *'\
+hyperdbg\\script-engine\\code\\script-engine.c(1777): warning C4133: 'function': incompatible types - from 'unsigned __int64 *' to 'const char *'\
+hyperdbg\\script-engine\\code\\script-engine.c(1804): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 2 has type 'unsigned __int64 *'\
+"
+}

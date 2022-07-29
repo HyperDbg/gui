@@ -1,0 +1,4 @@
+{
+    outdata = "__cpp_bcm2835.c.c\
+"
+}

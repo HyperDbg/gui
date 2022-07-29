@@ -1,0 +1,77 @@
+{
+    outdata = "__cpp_MemoryMapper.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(150): warning C4047: '=': 'PUINT64' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(160): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(160): warning C4024: 'MemoryMapperGetOffset': different types for formal and actual parameter 2\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(169): warning C4047: '=': 'PUINT64' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(179): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(179): warning C4024: 'MemoryMapperGetOffset': different types for formal and actual parameter 2\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(188): warning C4047: '=': 'PUINT64' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(198): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(198): warning C4024: 'MemoryMapperGetOffset': different types for formal and actual parameter 2\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(207): warning C4047: '=': 'PUINT64' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(217): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(217): warning C4024: 'MemoryMapperGetOffset': different types for formal and actual parameter 2\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(162): warning C4133: 'initializing': incompatible types - from 'unsigned __int64 *' to 'PPAGE_ENTRY'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(181): warning C4133: 'initializing': incompatible types - from 'unsigned __int64 *' to 'PPAGE_ENTRY'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(200): warning C4133: 'initializing': incompatible types - from 'unsigned __int64 *' to 'PPAGE_ENTRY'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(219): warning C4133: 'initializing': incompatible types - from 'unsigned __int64 *' to 'PPAGE_ENTRY'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(407): warning C4047: '=': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(412): warning C4022: 'MemoryMapperGetPte': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(412): warning C4047: '=': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(416): warning C4047: 'return': 'PVOID' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(440): warning C4047: '=': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(464): warning C4047: '!=': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(465): warning C4022: 'MemoryMapperUnmapReservedPageRange': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(467): warning C4047: '=': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(468): warning C4047: '=': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(554): warning C4047: '=': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(492): warning C4047: 'initializing': 'PVOID' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(495): warning C4047: 'initializing': 'PPAGE_ENTRY' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(638): warning C4047: '=': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(579): warning C4047: 'initializing': 'PVOID' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(582): warning C4047: 'initializing': 'PPAGE_ENTRY' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(669): warning C4022: 'VirtualAddressToPhysicalAddress': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(675): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(709): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(710): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(754): warning C4022: 'MemoryMapperReadMemorySafeByPte': pointer mismatch for actual parameter 2\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(783): warning C4022: 'MemoryMapperReadMemorySafeByPte': pointer mismatch for actual parameter 2\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(830): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(830): warning C4024: 'MemoryMapperReadMemorySafeByPhysicalAddressWrapper': different types for formal and actual parameter 3\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(954): warning C4047: '==': 'UINT32' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(956): warning C4022: 'VirtualAddressToPhysicalAddress': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(960): warning C4022: 'VirtualAddressToPhysicalAddressByProcessId': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(967): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(969): warning C4022: 'VirtualAddressToPhysicalAddress': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(973): warning C4022: 'VirtualAddressToPhysicalAddressByProcessCr3': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(979): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1016): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1017): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1060): warning C4022: 'MemoryMapperWriteMemorySafeByPte': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1087): warning C4022: 'MemoryMapperWriteMemorySafeByPte': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1117): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1117): warning C4024: 'MemoryMapperWriteMemorySafeWrapper': different types for formal and actual parameter 3\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1120): warning C4047: 'function': 'UINT32' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1120): warning C4024: 'MemoryMapperWriteMemorySafeWrapper': different types for formal and actual parameter 6\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1141): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1141): warning C4024: 'MemoryMapperWriteMemorySafeWrapper': different types for formal and actual parameter 3\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1170): warning C4047: 'function': 'UINT32' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1170): warning C4024: 'MemoryMapperWriteMemorySafeWrapper': different types for formal and actual parameter 6\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1191): warning C4047: '!=': 'HANDLE' differs in levels of indirection from 'UINT32'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1197): warning C4022: 'PsLookupProcessByProcessId': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1202): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1214): warning C4047: 'function': 'ULONG_PTR' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1214): warning C4024: 'ZwAllocateVirtualMemory': different types for formal and actual parameter 3\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1228): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1239): warning C4047: 'function': 'ULONG_PTR' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1239): warning C4024: 'ZwAllocateVirtualMemory': different types for formal and actual parameter 3\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1247): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1250): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1271): warning C4047: '!=': 'HANDLE' differs in levels of indirection from 'UINT32'\
+hyperdbg\\hprdbghv\\code\\memory\\MemoryMapper.c(1277): warning C4022: 'PsLookupProcessByProcessId': pointer mismatch for actual parameter 1\
+"
+}

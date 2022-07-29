@@ -1,0 +1,4 @@
+{
+    outdata = "__cpp_sdm845.c.c\
+"
+}

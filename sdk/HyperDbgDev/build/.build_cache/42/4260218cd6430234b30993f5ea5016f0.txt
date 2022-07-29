@@ -1,0 +1,24 @@
+{
+    outdata = "__cpp_listen.cpp.cpp\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbgctrl\\header/exports.h(28): warning C4273: 'HyperDbgLoadVmm': inconsistent dll linkage\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\include\\SDK/Imports/HyperDbgCtrlImports.h(14): note: see previous definition of 'HyperDbgLoadVmm'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbgctrl\\header/exports.h(29): warning C4273: 'HyperDbgUnloadVmm': inconsistent dll linkage\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\include\\SDK/Imports/HyperDbgCtrlImports.h(15): note: see previous definition of 'HyperDbgUnloadVmm'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbgctrl\\header/exports.h(30): warning C4273: 'HyperDbgInstallVmmDriver': inconsistent dll linkage\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\include\\SDK/Imports/HyperDbgCtrlImports.h(16): note: see previous definition of 'HyperDbgInstallVmmDriver'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbgctrl\\header/exports.h(31): warning C4273: 'HyperDbgUninstallVmmDriver': inconsistent dll linkage\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\include\\SDK/Imports/HyperDbgCtrlImports.h(17): note: see previous definition of 'HyperDbgUninstallVmmDriver'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbgctrl\\header/exports.h(32): warning C4273: 'HyperDbgStopVmmDriver': inconsistent dll linkage\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\include\\SDK/Imports/HyperDbgCtrlImports.h(18): note: see previous definition of 'HyperDbgStopVmmDriver'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbgctrl\\header/exports.h(37): warning C4273: 'HyperDbgInterpreter': inconsistent dll linkage\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\include\\SDK/Imports/HyperDbgCtrlImports.h(23): note: see previous definition of 'HyperDbgInterpreter'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbgctrl\\header/exports.h(38): warning C4273: 'HyperDbgShowSignature': inconsistent dll linkage\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\include\\SDK/Imports/HyperDbgCtrlImports.h(24): note: see previous definition of 'HyperDbgShowSignature'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbgctrl\\header/exports.h(40): warning C4273: 'HyperDbgScriptReadFileAndExecuteCommand': inconsistent dll linkage\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\include\\SDK/Imports/HyperDbgCtrlImports.h(26): note: see previous definition of 'HyperDbgScriptReadFileAndExecuteCommand'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbgctrl\\header/exports.h(41): warning C4273: 'HyperDbgContinuePreviousCommand': inconsistent dll linkage\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\include\\SDK/Imports/HyperDbgCtrlImports.h(27): note: see previous definition of 'HyperDbgContinuePreviousCommand'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbgctrl\\header/exports.h(42): warning C4273: 'HyperDbgCheckMultilineCommand': inconsistent dll linkage\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\include\\SDK/Imports/HyperDbgCtrlImports.h(28): note: see previous definition of 'HyperDbgCheckMultilineCommand'\
+"
+}

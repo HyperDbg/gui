@@ -23,8 +23,8 @@ func (o *object) ReadIrpBasedBuffer() (ok bool) {
 	if !o.Handle() {
 		return
 	}
-	b := make([]byte, UsermodeBufferSize)
-	time.Sleep(DefaultSpeedOfReadingKernelMessages)
+	outBuffer := make([]byte, UsermodeBufferSize)
+	time.Sleep(DefaultSpeedOfReadingKernelMessages) //need seasoned ?
 	OperationCode := 0
 	if !mycheck.Error(syscall.DeviceIoControl(
 		o.handle,
@@ -55,8 +55,8 @@ func (o *object) ReadIrpBasedBuffer() (ok bool) {
 	case OPERATION_COMMAND_FROM_DEBUGGER_RELOAD_SYMBOL:
 	case OPERATION_NOTIFICATION_FROM_USER_DEBUGGER_PAUSE:
 	default:
-		//reset buffer ?
-		//close handle
+		outBuffer = outBuffer[:0]
+		return mycheck.Error(syscall.CloseHandle(o.handle))
 	}
 	return true
 }
@@ -71,23 +71,20 @@ func (o *object) VmxSupportDetection() (ok bool) {
 	       return 1;
 	   }
 	*/
-	h := hardwareIndo.New()
-	if !h.CpuInfo.Get() {
+	hard := hardwareIndo.New()
+	if !hard.CpuInfo.Get() {
 		return
 	}
-	if h.CpuInfo.Vendor != "GenuineIntel" {
-		mylog.Info("", "this program is not designed to run in a non-VT-x environemnt !")
-		return
+	if hard.CpuInfo.Vendor != "GenuineIntel" {
+		return mycheck.Error("this program is not designed to run in a non-VT-x environemnt !")
 	}
 	mylog.Info("", "virtualization technology is vt-x")
-	field := bitfield.NewFromUint32(h.CpuInfo.Cpu1.Ecx)
+	field := bitfield.NewFromUint32(hard.CpuInfo.Cpu1.Ecx)
 	if !field.Test(5) {
-		mylog.Info("", "vmx operation is not supported by your processor")
-		return
+		return mycheck.Error("vmx operation is not supported by your processor")
 	}
 	mylog.Info("", "vmx operation is supported by your processor")
-	//    g_IsVmxOffProcessStart = FALSE;
-	return o.DeviceIoControl()
+	return true
 }
 
 func (o *object) DeviceName() string { return "HyperdbgHypervisorDevice" }
@@ -96,7 +93,7 @@ func (o *object) LinkName() (*uint16, error) {
 }
 func (o *object) Handle() (ok bool) {
 	if o.handle != syscall.InvalidHandle {
-		return true //? //todo change to as open stata
+		return true //? //todo change to as open state
 	}
 	name, err := o.LinkName()
 	if !mycheck.Error(err) {
@@ -121,29 +118,25 @@ func (o *object) Handle() (ok bool) {
 	o.handle = handle
 	return true
 }
-func (o *object) DeviceIoControl() (ok bool) {
-	return o.Handle()
+
+func (o *object) LoadVmm() (ok bool) {
+	if !o.VmxSupportDetection() {
+		return
+	}
+	//    g_IsVmxOffProcessStart = FALSE;
+	if !o.Handle() {
+		return
+	}
+	go func() {
+		o.ReadIrpBasedBuffer() //todo with channel
+		//select {
+		//}
+	}()
+	return true
 	//l := list.New() //InitializeListHead(&g_EventTrace);
 	//ntdll := syscall.NewLazyDLL("ntdll.dll")
 	//ntCreateThread := ntdll.NewProc("NtCreateThread")
-
-	//outBuffer := make([]byte, 528)
-	//var bytesReturned uint32
-	//if !mycheck.Error(syscall.DeviceIoControl(
-	//	handle,
-	//	windef.SMART_GET_VERSION,
-	//	nil,
-	//	0,
-	//	&outBuffer[0],
-	//	528,
-	//	&bytesReturned,
-	//	nil,
-	//)) {
-	//	return
-	//}
 }
-
-func (o *object) LoadVmm() (ok bool) { return o.VmxSupportDetection() }
 func (o *object) UnLoadVmm() (ok bool) {
 	mylog.Info("", "start terminating...")
 	//remove list ?    UdUninitializeUserDebugger();

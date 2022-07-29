@@ -1,0 +1,28 @@
+{
+    outdata = "__cpp_Hv.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(156): warning C4022: 'DebuggerTriggerEvents': pointer mismatch for actual parameter 3\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(177): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(248): warning C4022: 'DebuggerTriggerEvents': pointer mismatch for actual parameter 3\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(323): warning C4047: 'initializing': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(324): warning C4047: 'initializing': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(349): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(380): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(411): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(461): warning C4022: 'AsmReloadGdtr': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(469): warning C4022: 'AsmReloadIdtr': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(487): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(563): warning C4133: 'function': incompatible types - from 'UINT32 *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(582): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(616): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(655): warning C4133: 'function': incompatible types - from 'VMX_EXIT_QUALIFICATION_MOV_DR *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(705): warning C4133: 'function': incompatible types - from 'CR4 *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(742): warning C4133: 'function': incompatible types - from 'DR7 *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(650): warning C4133: 'initializing': incompatible types - from 'PGUEST_REGS' to 'UINT64 *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(859): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(860): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Hv.c(894): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+"
+}

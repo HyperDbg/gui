@@ -1,0 +1,14 @@
+{
+    outdata = "__cpp_ScriptEngineEval.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\script-eval\\code\\ScriptEngineEval.c(47): warning C4047: '!=': 'unsigned __int64' differs in levels of indirection from 'void *'\
+hyperdbg\\script-eval\\code\\ScriptEngineEval.c(54): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\script-eval\\code\\ScriptEngineEval.c(114): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\script-eval\\code\\ScriptEngineEval.c(121): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\script-eval\\code\\ScriptEngineEval.c(132) : warning C4715: 'GetValue': not all control paths return a value\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\script-eval\\code\\ScriptEngineEval.c(69) : warning C4715: 'GetPseudoRegValue': not all control paths return a value\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\script-eval\\code\\ScriptEngineEval.c(1509) : warning C4715: 'ScriptEngineExecute': not all control paths return a value\
+"
+}

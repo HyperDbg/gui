@@ -1,0 +1,10 @@
+{
+    outdata = "__cpp_Ioctl.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\driver\\Ioctl.c(223): warning C4133: 'function': incompatible types - from 'PDEBUGGER_READ_AND_WRITE_ON_MSR' to 'UINT64 *'\
+hyperdbg\\hprdbghv\\code\\driver\\Ioctl.c(909): warning C4047: '==': 'UINT32' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\driver\\Ioctl.c(964): warning C4047: '==': 'UINT32' differs in levels of indirection from 'void *'\
+"
+}

@@ -1,0 +1,52 @@
+{
+    outdata = "__cpp_UserAccess.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(226): warning C4047: '=': 'unsigned __int64' differs in levels of indirection from 'PPEB'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(254): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PPEB'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(254): warning C4024: 'MemoryMapperReadMemorySafeOnTargetProcess': different types for formal and actual parameter 1\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(256): warning C4312: 'type cast': conversion from 'ULONG' to 'PPEB_LDR_DATA32' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(263): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PPEB_LDR_DATA32'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(263): warning C4024: 'MemoryMapperReadMemorySafeOnTargetProcess': different types for formal and actual parameter 1\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(265): warning C4312: 'type cast': conversion from 'ULONG' to 'PLIST_ENTRY32' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(270): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PLDR_DATA_TABLE_ENTRY32'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(270): warning C4024: 'MemoryMapperReadMemorySafeOnTargetProcess': different types for formal and actual parameter 1\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(272): warning C4047: '==': 'ULONG' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(272): warning C4047: '==': 'ULONG' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(292): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PPEB'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(292): warning C4024: 'MemoryMapperReadMemorySafeOnTargetProcess': different types for formal and actual parameter 1\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(301): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PPEB_LDR_DATA'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(301): warning C4024: 'MemoryMapperReadMemorySafeOnTargetProcess': different types for formal and actual parameter 1\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(308): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'PLDR_DATA_TABLE_ENTRY'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(308): warning C4024: 'MemoryMapperReadMemorySafeOnTargetProcess': different types for formal and actual parameter 1\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(318): warning C4047: '=': 'unsigned __int64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(319): warning C4047: '=': 'unsigned __int64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(453): warning C4047: '=': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(454): warning C4047: '=': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(519): warning C4312: 'type cast': conversion from 'ULONG' to 'PPEB_LDR_DATA32' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(532): warning C4312: 'type cast': conversion from 'ULONG' to 'PLIST_ENTRY32' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(534): warning C4312: 'type cast': conversion from 'ULONG' to 'PLIST_ENTRY32' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(562): warning C4312: 'type cast': conversion from 'ULONG' to 'PPEB_LDR_DATA32' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(573): warning C4312: 'type cast': conversion from 'ULONG' to 'PLIST_ENTRY32' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(575): warning C4312: 'type cast': conversion from 'ULONG' to 'PLIST_ENTRY32' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(608): warning C4022: 'memcpy': pointer mismatch for actual parameter 2\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(650): warning C4312: 'type cast': conversion from 'ULONG' to 'PPEB_LDR_DATA32' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(661): warning C4312: 'type cast': conversion from 'ULONG' to 'PLIST_ENTRY32' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(663): warning C4312: 'type cast': conversion from 'ULONG' to 'PLIST_ENTRY32' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(683): warning C4312: 'type cast': conversion from 'ULONG' to 'PWCH' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(687): warning C4312: 'type cast': conversion from 'ULONG' to 'PWCH' of greater size\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(675): warning C4047: 'initializing': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(676): warning C4047: 'initializing': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(770): warning C4022: 'PsLookupProcessByProcessId': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(784): warning C4022: 'UserAccessIsWow64Process': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(801): warning C4047: 'function': 'PUSERMODE_LOADED_MODULE_SYMBOLS' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(801): warning C4024: 'UserAccessPrintLoadedModulesX86': different types for formal and actual parameter 4\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(816): warning C4047: 'function': 'PUSERMODE_LOADED_MODULE_SYMBOLS' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(816): warning C4024: 'UserAccessPrintLoadedModulesX64': different types for formal and actual parameter 4\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(844): warning C4047: 'function': 'UINT32' differs in levels of indirection from 'HANDLE'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(844): warning C4024: 'AttachingFindProcessDebuggingDetailsByProcessId': different types for formal and actual parameter 1\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(837): warning C4047: 'initializing': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\user-level\\UserAccess.c(838): warning C4047: 'initializing': 'UINT64' differs in levels of indirection from 'void *'\
+"
+}

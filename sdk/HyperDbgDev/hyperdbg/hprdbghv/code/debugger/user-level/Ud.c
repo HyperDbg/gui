@@ -10,7 +10,6 @@
  *
  */
 #include "pch.h"
-#include "Attaching.h"
 
 /**
  * @brief initialize user debugger

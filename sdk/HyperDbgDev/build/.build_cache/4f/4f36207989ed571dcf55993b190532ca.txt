@@ -1,0 +1,16 @@
+{
+    outdata = "__cpp_Transparency.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\debugger\\transparency\\Transparency.c(343): warning C4022: 'memcpy': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\debugger\\transparency\\Transparency.c(343): warning C4022: 'memcpy': pointer mismatch for actual parameter 2\
+hyperdbg\\hprdbghv\\code\\debugger\\transparency\\Transparency.c(350): warning C4047: '=': 'PVOID' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\debugger\\transparency\\Transparency.c(552): warning C4047: '==': 'UINT32' differs in levels of indirection from 'PCHAR'\
+hyperdbg\\hprdbghv\\code\\debugger\\transparency\\Transparency.c(602): warning C4047: '=': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\transparency\\Transparency.c(612): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\transparency\\Transparency.c(629): warning C4047: '!=': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\transparency\\Transparency.c(663): warning C4047: '!=': 'UINT64' differs in levels of indirection from 'void *'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\code\\debugger\\transparency\\Transparency.c(358) : warning C4715: 'TransparentAddNameOrProcessIdToTheList': not all control paths return a value\
+"
+}
