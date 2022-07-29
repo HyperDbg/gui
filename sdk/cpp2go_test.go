@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/mylog"
+	"github.com/ddkwork/librarygo/src/stream"
 	"github.com/ddkwork/librarygo/src/stream/tool"
 	"github.com/ddkwork/librarygo/src/stream/tool/cmd"
 	"github.com/goplus/c2go"
@@ -12,10 +13,48 @@ import (
 	"github.com/goplus/c2go/clang/parser"
 	"github.com/goplus/c2go/clang/preprocessor"
 	"github.com/goplus/gox"
+	"io/fs"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 )
+
+/*
+c++   自己解析方法
+h ast 批量
+c c2go
+mod重写和单元测试
+摸清脚本的r3和r0的瓜葛，以便开展翻译工作
+
+*/
+
+func TestXmake(t *testing.T) {
+	targets := stream.New()
+	targets.WriteStringLn("add_rules(\"mode.debug\", \"mode.release\")\n")
+	filepath.Walk("./HyperDbgDev", func(path string, info fs.FileInfo, err error) error {
+		ext := filepath.Ext(path)
+		if ext == ".vcxproj" {
+			if !strings.Contains(path, "dependencies") {
+				s := stream.New()
+				s.WriteStringLn("--" + filepath.Dir(path))
+				s.WriteStringLn("target(" + strconv.Quote(filepath.Base(filepath.Dir(path))) + ")")
+				if strings.Contains(path, "hyperdbg-cli") {
+					s.WriteStringLn("set_kind(\"binary\")")
+				} else {
+					s.WriteStringLn("set_kind(\"static\")")
+				}
+				s.WriteStringLn("add_headerfiles()")
+				s.WriteStringLn("add_files()")
+				s.WriteStringLn("add_includedirs(\"\", { public = true })")
+				s.WriteStringLn("add_deps()")
+				targets.WriteStringLn(s.String())
+			}
+		}
+		return err
+	})
+	tool.File().WriteTruncate("./HyperDbgDev/xmake.lua", targets.String())
+}
 
 func TestName(t *testing.T) {
 	//./HyperDbgDev/hyperdbg/hprdbgctrl/header/debugger.h

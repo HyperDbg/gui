@@ -1,4 +1,3 @@
-cd .
 xmake f -c -p windows -a x64 -m debug
 xmake -r
 xmake package -vD
