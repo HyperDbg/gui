@@ -52,7 +52,7 @@ xmake version 2.6.9+dev.43a82d194
     <XmakeArch>x86</XmakeArch>
     <XmakeKind>static</XmakeKind>
     <XmakeDefault>true</XmakeDefault>
-    <XmakeDefines>ZYCORE_STATIC_DEFINE;ZYDIS_STATIC_DEFINE</XmakeDefines>
+    <XmakeDefines>ZYDIS_STATIC_DEFINE</XmakeDefines>
     <XmakeLanguages></XmakeLanguages>
     <XmakeSubSystem>console</XmakeSubSystem>
     <XmakeCudaVersion><!-- nil --></XmakeCudaVersion>
@@ -61,8 +61,8 @@ xmake version 2.6.9+dev.43a82d194
     <XmakeRunEnvs>PATH=;$([System.Environment]::GetEnvironmentVariable('PATH'))</XmakeRunEnvs>
     <XmakeRunArgs><!-- nil --></XmakeRunArgs>
     <XmakeConfigFlags></XmakeConfigFlags>
-    <XmakeIncludeDirs>$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\include;$(XmakeProjectDir)\hyperdbg\include;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\src;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\include</XmakeIncludeDirs>
-    <XmakeLinkDirs></XmakeLinkDirs>
+    <XmakeIncludeDirs>$(XmakeProjectDir)\hyperdbg\include;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\src;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\include;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\include</XmakeIncludeDirs>
+    <XmakeLinkDirs>$(XmakeProjectDir)\build\windows\x86\debug</XmakeLinkDirs>
     <XmakeSourceDirs></XmakeSourceDirs>
     <XmakePrecompiledHeader><!-- nil --></XmakePrecompiledHeader>
   </PropertyGroup>
@@ -74,7 +74,7 @@ xmake version 2.6.9+dev.43a82d194
     <XmakeArch>x86</XmakeArch>
     <XmakeKind>static</XmakeKind>
     <XmakeDefault>true</XmakeDefault>
-    <XmakeDefines>ZYCORE_STATIC_DEFINE;ZYDIS_STATIC_DEFINE</XmakeDefines>
+    <XmakeDefines>ZYDIS_STATIC_DEFINE</XmakeDefines>
     <XmakeLanguages></XmakeLanguages>
     <XmakeSubSystem>console</XmakeSubSystem>
     <XmakeCudaVersion><!-- nil --></XmakeCudaVersion>
@@ -83,8 +83,8 @@ xmake version 2.6.9+dev.43a82d194
     <XmakeRunEnvs>PATH=;$([System.Environment]::GetEnvironmentVariable('PATH'))</XmakeRunEnvs>
     <XmakeRunArgs><!-- nil --></XmakeRunArgs>
     <XmakeConfigFlags></XmakeConfigFlags>
-    <XmakeIncludeDirs>$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\include;$(XmakeProjectDir)\hyperdbg\include;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\src;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\include</XmakeIncludeDirs>
-    <XmakeLinkDirs></XmakeLinkDirs>
+    <XmakeIncludeDirs>$(XmakeProjectDir)\hyperdbg\include;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\src;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\include;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\include</XmakeIncludeDirs>
+    <XmakeLinkDirs>$(XmakeProjectDir)\build\windows\x86\release</XmakeLinkDirs>
     <XmakeSourceDirs></XmakeSourceDirs>
     <XmakePrecompiledHeader><!-- nil --></XmakePrecompiledHeader>
   </PropertyGroup>
@@ -96,7 +96,7 @@ xmake version 2.6.9+dev.43a82d194
     <XmakeArch>x64</XmakeArch>
     <XmakeKind>static</XmakeKind>
     <XmakeDefault>true</XmakeDefault>
-    <XmakeDefines>ZYCORE_STATIC_DEFINE;ZYDIS_STATIC_DEFINE</XmakeDefines>
+    <XmakeDefines>ZYDIS_STATIC_DEFINE</XmakeDefines>
     <XmakeLanguages></XmakeLanguages>
     <XmakeSubSystem>console</XmakeSubSystem>
     <XmakeCudaVersion><!-- nil --></XmakeCudaVersion>
@@ -105,8 +105,8 @@ xmake version 2.6.9+dev.43a82d194
     <XmakeRunEnvs>PATH=;$([System.Environment]::GetEnvironmentVariable('PATH'))</XmakeRunEnvs>
     <XmakeRunArgs><!-- nil --></XmakeRunArgs>
     <XmakeConfigFlags></XmakeConfigFlags>
-    <XmakeIncludeDirs>$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\include;$(XmakeProjectDir)\hyperdbg\include;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\src;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\include</XmakeIncludeDirs>
-    <XmakeLinkDirs></XmakeLinkDirs>
+    <XmakeIncludeDirs>$(XmakeProjectDir)\hyperdbg\include;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\src;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\include;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\include</XmakeIncludeDirs>
+    <XmakeLinkDirs>$(XmakeProjectDir)\build\windows\x64\debug</XmakeLinkDirs>
     <XmakeSourceDirs></XmakeSourceDirs>
     <XmakePrecompiledHeader><!-- nil --></XmakePrecompiledHeader>
   </PropertyGroup>
@@ -118,7 +118,7 @@ xmake version 2.6.9+dev.43a82d194
     <XmakeArch>x64</XmakeArch>
     <XmakeKind>static</XmakeKind>
     <XmakeDefault>true</XmakeDefault>
-    <XmakeDefines>ZYCORE_STATIC_DEFINE;ZYDIS_STATIC_DEFINE</XmakeDefines>
+    <XmakeDefines>ZYDIS_STATIC_DEFINE</XmakeDefines>
     <XmakeLanguages></XmakeLanguages>
     <XmakeSubSystem>console</XmakeSubSystem>
     <XmakeCudaVersion><!-- nil --></XmakeCudaVersion>
@@ -127,8 +127,8 @@ xmake version 2.6.9+dev.43a82d194
     <XmakeRunEnvs>PATH=;$([System.Environment]::GetEnvironmentVariable('PATH'))</XmakeRunEnvs>
     <XmakeRunArgs><!-- nil --></XmakeRunArgs>
     <XmakeConfigFlags></XmakeConfigFlags>
-    <XmakeIncludeDirs>$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\include;$(XmakeProjectDir)\hyperdbg\include;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\src;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\include</XmakeIncludeDirs>
-    <XmakeLinkDirs></XmakeLinkDirs>
+    <XmakeIncludeDirs>$(XmakeProjectDir)\hyperdbg\include;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\src;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\include;$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\include</XmakeIncludeDirs>
+    <XmakeLinkDirs>$(XmakeProjectDir)\build\windows\x64\release</XmakeLinkDirs>
     <XmakeSourceDirs></XmakeSourceDirs>
     <XmakePrecompiledHeader><!-- nil --></XmakePrecompiledHeader>
   </PropertyGroup>
@@ -191,30 +191,6 @@ xmake version 2.6.9+dev.43a82d194
 
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\Allocator.c">
-      <CompileAs>CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\ArgParse.c">
-      <CompileAs>CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\Bitset.c">
-      <CompileAs>CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\Format.c">
-      <CompileAs>CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\List.c">
-      <CompileAs>CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\String.c">
-      <CompileAs>CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\Vector.c">
-      <CompileAs>CompileAsC</CompileAs>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\Zycore.c">
-      <CompileAs>CompileAsC</CompileAs>
-    </ClCompile>
     <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\src\Decoder.c">
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
@@ -270,6 +246,9 @@ xmake version 2.6.9+dev.43a82d194
 
   </ItemGroup>
   <!-- <ItemGroup>
+    <ProjectReference Include="..\zycore\zycore.vcxproj">
+      <Project>{49B19889-B762-449F-9ED9-2C8A69736768}</Project>
+    </ProjectReference>
 
   </ItemGroup> -->
   <Import Project="$(XmakeProgramDir)\plugins\project\vsxmake\vsproj\Xmake.targets" />

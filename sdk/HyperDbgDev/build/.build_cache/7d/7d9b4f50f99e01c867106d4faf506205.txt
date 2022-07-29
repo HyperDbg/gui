@@ -1,0 +1,28 @@
+{
+    outdata = "__cpp_VmxRegions.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(54): warning C4047: '=': 'UINT64' differs in levels of indirection from 'BYTE *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(60): warning C4047: '=': 'UINT64' differs in levels of indirection from 'BYTE *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(89): warning C4047: '=': 'UINT64' differs in levels of indirection from 'UINT8 *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(133): warning C4047: '=': 'UINT64' differs in levels of indirection from 'BYTE *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(136): warning C4047: '=': 'UINT64' differs in levels of indirection from 'BYTE *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(155): warning C4047: '=': 'UINT64' differs in levels of indirection from 'UINT8 *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(174): warning C4047: '=': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(175): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(181): warning C4022: 'memset': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(203): warning C4047: '=': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(204): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(210): warning C4022: 'memset': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(211): warning C4022: 'VirtualAddressToPhysicalAddress': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(233): warning C4047: '=': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(234): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(240): warning C4022: 'memset': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(241): warning C4022: 'VirtualAddressToPhysicalAddress': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(249): warning C4047: '=': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(250): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(256): warning C4022: 'memset': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\VmxRegions.c(257): warning C4022: 'VirtualAddressToPhysicalAddress': pointer mismatch for actual parameter 1\
+"
+}

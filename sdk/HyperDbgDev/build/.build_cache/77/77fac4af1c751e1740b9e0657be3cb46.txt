@@ -1,0 +1,4 @@
+{
+    outdata = "__cpp_sam5250.c.c\
+"
+}

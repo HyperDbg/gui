@@ -1,0 +1,4 @@
+{
+    outdata = "__cpp_main.cpp.cpp\
+"
+}

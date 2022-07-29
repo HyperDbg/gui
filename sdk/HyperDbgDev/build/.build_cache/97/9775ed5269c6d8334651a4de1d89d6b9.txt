@@ -1,0 +1,11 @@
+{
+    outdata = "__cpp_PoolManager.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\memory\\PoolManager.c(133): warning C4022: 'ExFreePoolWithTag': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\memory\\PoolManager.c(264): warning C4047: '=': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\memory\\PoolManager.c(272): warning C4022: 'memset': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\memory\\PoolManager.c(371): warning C4022: 'ExFreePoolWithTag': pointer mismatch for actual parameter 1\
+"
+}

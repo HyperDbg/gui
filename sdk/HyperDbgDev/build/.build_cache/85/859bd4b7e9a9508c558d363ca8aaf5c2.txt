@@ -1,0 +1,13 @@
+{
+    outdata = "__cpp_SerialConnection.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\debugger\\communication\\SerialConnection.c(75): warning C4047: '=': 'BYTE' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\communication\\SerialConnection.c(76): warning C4047: '=': 'BYTE' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\communication\\SerialConnection.c(77): warning C4047: '=': 'BYTE' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\communication\\SerialConnection.c(78): warning C4047: '=': 'BYTE' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\communication\\SerialConnection.c(109): warning C4047: 'initializing': 'UCHAR' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\debugger\\communication\\SerialConnection.c(379): warning C4133: 'function': incompatible types - from 'PDEBUGGER_PREPARE_DEBUGGEE' to 'CHAR *'\
+"
+}

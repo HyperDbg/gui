@@ -1,0 +1,22 @@
+{
+    outdata = "__cpp_Vmx.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(451): warning C4047: 'function': 'unsigned __int64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(451): warning C4024: 'AsmVmxVmcall': different types for formal and actual parameter 2\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(451): warning C4047: 'function': 'unsigned __int64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(451): warning C4024: 'AsmVmxVmcall': different types for formal and actual parameter 3\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(451): warning C4047: 'function': '__int64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(451): warning C4024: 'AsmVmxVmcall': different types for formal and actual parameter 4\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(460): warning C4022: 'MmFreeContiguousMemory': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(461): warning C4022: 'MmFreeContiguousMemory': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(462): warning C4022: 'ExFreePoolWithTag': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(463): warning C4022: 'ExFreePoolWithTag': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(464): warning C4022: 'ExFreePoolWithTag': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(465): warning C4022: 'ExFreePoolWithTag': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(719): warning C4047: '=': 'PVOID' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(721): warning C4047: 'function': 'size_t' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\Vmx.c(721): warning C4024: '__vmx_vmwrite': different types for formal and actual parameter 2\
+"
+}

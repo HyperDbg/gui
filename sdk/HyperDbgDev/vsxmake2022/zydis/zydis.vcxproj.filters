@@ -21,15 +21,6 @@ xmake version 2.6.9+dev.43a82d194
     <Filter Include="hyperdbg\dependencies\zydis">
       <UniqueIdentifier>{3D8A39F3-FD91-46AC-BDF1-2FA94FDF502A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="hyperdbg\dependencies\zydis\dependencies">
-      <UniqueIdentifier>{A79F51D3-90F4-4B1D-A7DC-2FDAEFB67518}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="hyperdbg\dependencies\zydis\dependencies\zycore">
-      <UniqueIdentifier>{4F48A81C-514B-428D-A5D6-7EC47D2386C3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="hyperdbg\dependencies\zydis\dependencies\zycore\src">
-      <UniqueIdentifier>{5189C032-3AB1-46F9-953E-1BFB52376F38}</UniqueIdentifier>
-    </Filter>
     <Filter Include="hyperdbg\dependencies\zydis\include">
       <UniqueIdentifier>{3247F939-E141-4470-AA18-3BEFCF45C543}</UniqueIdentifier>
     </Filter>
@@ -138,30 +129,6 @@ xmake version 2.6.9+dev.43a82d194
 
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\Allocator.c">
-      <Filter>hyperdbg\dependencies\zydis\dependencies\zycore\src</Filter>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\ArgParse.c">
-      <Filter>hyperdbg\dependencies\zydis\dependencies\zycore\src</Filter>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\Bitset.c">
-      <Filter>hyperdbg\dependencies\zydis\dependencies\zycore\src</Filter>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\Format.c">
-      <Filter>hyperdbg\dependencies\zydis\dependencies\zycore\src</Filter>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\List.c">
-      <Filter>hyperdbg\dependencies\zydis\dependencies\zycore\src</Filter>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\String.c">
-      <Filter>hyperdbg\dependencies\zydis\dependencies\zycore\src</Filter>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\Vector.c">
-      <Filter>hyperdbg\dependencies\zydis\dependencies\zycore\src</Filter>
-    </ClCompile>
-    <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\dependencies\zycore\src\Zycore.c">
-      <Filter>hyperdbg\dependencies\zydis\dependencies\zycore\src</Filter>
-    </ClCompile>
     <ClCompile Include="$(XmakeProjectDir)\hyperdbg\dependencies\zydis\src\Decoder.c">
       <Filter>hyperdbg\dependencies\zydis\src</Filter>
     </ClCompile>

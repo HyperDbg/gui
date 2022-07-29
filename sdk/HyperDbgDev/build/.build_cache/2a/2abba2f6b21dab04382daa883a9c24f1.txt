@@ -1,0 +1,4 @@
+{
+    outdata = "__cpp_SharedData.c.c\
+"
+}

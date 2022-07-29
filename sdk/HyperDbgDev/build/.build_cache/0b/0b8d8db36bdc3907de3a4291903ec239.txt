@@ -1,0 +1,25 @@
+{
+    outdata = "__cpp_IdtEmulation.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(39): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(70): warning C4133: 'function': incompatible types - from 'PAGE_FAULT_ERROR_CODE *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(72): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(177): warning C4022: 'DebuggerTriggerEvents': pointer mismatch for actual parameter 3\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(237): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(246): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(246): warning C4024: 'AttachingCheckPageFaultsWithUserDebugger': different types for formal and actual parameter 4\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(258): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(258): warning C4024: 'IdtEmulationHandlePageFaults': different types for formal and actual parameter 3\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(374): warning C4047: '==': 'UINT32' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(524): warning C4133: 'function': incompatible types - from 'RFLAGS *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(525): warning C4133: 'function': incompatible types - from 'VMX_INTERRUPTIBILITY_STATE *' to 'size_t *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(577): warning C4022: 'DebuggerTriggerEvents': pointer mismatch for actual parameter 3\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(615): warning C4047: '!=': 'UINT32' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(625): warning C4047: '=': 'UINT32' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(652): warning C4133: 'function': incompatible types - from 'ULONG *' to 'size_t *'\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(46) : warning C4716: 'IdtEmulationReInjectInterruptOrException': must return a value\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IdtEmulation.c(116) : warning C4716: 'IdtEmulationHandlePageFaults': must return a value\
+"
+}

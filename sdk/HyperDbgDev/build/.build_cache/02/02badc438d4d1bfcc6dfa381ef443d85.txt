@@ -1,0 +1,37 @@
+{
+    outdata = "__cpp_Common.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(136): warning C4022: 'PsLookupProcessByProcessId': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(173): warning C4022: 'PsLookupProcessByProcessId': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(368): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(373): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(379): warning C4047: '=': 'LONGLONG' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(380): warning C4047: '=': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(416): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(421): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(427): warning C4047: '=': 'LONGLONG' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(428): warning C4047: '=': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(505): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(510): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(549): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(554): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(595): warning C4047: '==': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(600): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(629): warning C4047: 'return': 'UINT64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(697): warning C4022: 'PsLookupProcessByProcessId': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(976): warning C4022: 'MemoryMapperCheckIfPageIsPresentByCr3': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(1002): warning C4022: 'MemoryMapperCheckIfPageIsPresentByCr3': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(1079): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'const CHAR *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(1079): warning C4024: 'MemoryMapperReadMemorySafe': different types for formal and actual parameter 1\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(1039): warning C4047: 'initializing': 'CHAR' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(1170): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'const wchar_t *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(1170): warning C4024: 'MemoryMapperReadMemorySafe': different types for formal and actual parameter 1\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(1128): warning C4047: 'initializing': 'wchar_t' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(1236): warning C4133: 'function': incompatible types - from 'UINT64 *' to 'unsigned long *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(1260): warning C4047: '=': 'HANDLE' differs in levels of indirection from 'UINT32'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(1343): warning C4047: '==': 'UINT32' differs in levels of indirection from 'void *'\
+hyperdbg\\hprdbghv\\code\\common\\Common.c(1376): warning C4022: 'UndocumentedNtOpenProcess': pointer mismatch for actual parameter 3\
+"
+}

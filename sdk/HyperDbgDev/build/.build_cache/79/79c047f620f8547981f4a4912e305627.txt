@@ -1,0 +1,4 @@
+{
+    outdata = "__cpp_mx6uart.c.c\
+"
+}

@@ -1,0 +1,37 @@
+{
+    outdata = "__cpp_Functions.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\script-eval\\code\\Functions.c(197): warning C4022: 'VirtualAddressToPhysicalAddressOnTargetProcess': pointer mismatch for actual parameter 1\
+hyperdbg\\script-eval\\code\\Functions.c(221): warning C4022: 'PhysicalAddressToVirtualAddressOnTargetProcess': pointer mismatch for actual parameter 1\
+hyperdbg\\script-eval\\code\\Functions.c(291): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'volatile LONG *'\
+hyperdbg\\script-eval\\code\\Functions.c(291): warning C4024: 'CheckMemoryAccessSafety': different types for formal and actual parameter 1\
+hyperdbg\\script-eval\\code\\Functions.c(320): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'volatile LONG *'\
+hyperdbg\\script-eval\\code\\Functions.c(320): warning C4024: 'CheckMemoryAccessSafety': different types for formal and actual parameter 1\
+hyperdbg\\script-eval\\code\\Functions.c(350): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'volatile long *'\
+hyperdbg\\script-eval\\code\\Functions.c(350): warning C4024: 'CheckMemoryAccessSafety': different types for formal and actual parameter 1\
+hyperdbg\\script-eval\\code\\Functions.c(421): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'volatile __int64 *'\
+hyperdbg\\script-eval\\code\\Functions.c(421): warning C4024: 'CheckMemoryAccessSafety': different types for formal and actual parameter 1\
+hyperdbg\\script-eval\\code\\Functions.c(424): warning C4047: 'return': '__int64' differs in levels of indirection from 'void *'\
+hyperdbg\\script-eval\\code\\Functions.c(451): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'volatile __int64 *'\
+hyperdbg\\script-eval\\code\\Functions.c(451): warning C4024: 'CheckMemoryAccessSafety': different types for formal and actual parameter 1\
+hyperdbg\\script-eval\\code\\Functions.c(454): warning C4047: 'return': '__int64' differs in levels of indirection from 'void *'\
+hyperdbg\\script-eval\\code\\Functions.c(479): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'volatile __int64 *'\
+hyperdbg\\script-eval\\code\\Functions.c(479): warning C4024: 'CheckMemoryAccessSafety': different types for formal and actual parameter 1\
+hyperdbg\\script-eval\\code\\Functions.c(482): warning C4047: 'return': '__int64' differs in levels of indirection from 'void *'\
+hyperdbg\\script-eval\\code\\Functions.c(507): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'volatile __int64 *'\
+hyperdbg\\script-eval\\code\\Functions.c(507): warning C4024: 'CheckMemoryAccessSafety': different types for formal and actual parameter 1\
+hyperdbg\\script-eval\\code\\Functions.c(510): warning C4047: 'return': '__int64' differs in levels of indirection from 'void *'\
+hyperdbg\\script-eval\\code\\Functions.c(540): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'volatile __int64 *'\
+hyperdbg\\script-eval\\code\\Functions.c(540): warning C4024: 'CheckMemoryAccessSafety': different types for formal and actual parameter 1\
+hyperdbg\\script-eval\\code\\Functions.c(543): warning C4047: 'return': '__int64' differs in levels of indirection from 'void *'\
+hyperdbg\\script-eval\\code\\Functions.c(640): warning C4047: '=': 'PVOID' differs in levels of indirection from 'UINT64'\
+hyperdbg\\script-eval\\code\\Functions.c(654): warning C4047: 'function': '__int64' differs in levels of indirection from 'PGUEST_REGS'\
+hyperdbg\\script-eval\\code\\Functions.c(654): warning C4024: 'AsmVmxVmcall': different types for formal and actual parameter 4\
+hyperdbg\\script-eval\\code\\Functions.c(984): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\script-eval\\code\\Functions.c(984): warning C4024: 'MemoryMapperReadMemorySafeOnTargetProcess': different types for formal and actual parameter 1\
+hyperdbg\\script-eval\\code\\Functions.c(1001): warning C4047: 'function': 'UINT64' differs in levels of indirection from 'void *'\
+hyperdbg\\script-eval\\code\\Functions.c(1001): warning C4024: 'MemoryMapperReadMemorySafeOnTargetProcess': different types for formal and actual parameter 1\
+"
+}

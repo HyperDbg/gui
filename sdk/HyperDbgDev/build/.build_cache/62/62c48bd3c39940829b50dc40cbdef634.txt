@@ -1,0 +1,4 @@
+{
+    outdata = "__cpp_msm8974.c.c\
+"
+}

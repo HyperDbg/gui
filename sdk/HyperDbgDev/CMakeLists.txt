@@ -5,7 +5,190 @@
 # project
 cmake_minimum_required(VERSION 3.15.0)
 cmake_policy(SET CMP0091 NEW)
-project(hprdbghv LANGUAGES ASM C CXX)
+project(hprdbgctrl LANGUAGES CXX C ASM)
+
+# target
+add_library(hprdbgctrl STATIC "")
+set_target_properties(hprdbgctrl PROPERTIES OUTPUT_NAME "hprdbgctrl")
+set_target_properties(hprdbgctrl PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/windows/x64/debug")
+add_dependencies(hprdbgctrl zydis script-engine)
+target_include_directories(hprdbgctrl PRIVATE
+    hyperdbg/hprdbgctrl
+    hyperdbg/hprdbgctrl/header
+    hyperdbg/dependencies
+    hyperdbg/dependencies/phnt
+    hyperdbg/include
+    hyperdbg/script-engine/header
+    hyperdbg/script-engine
+    hyperdbg/symbol-parser/header
+    hyperdbg/symbol-parser
+    hyperdbg/dependencies/pdbex/Source
+    "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/DIA SDK/include"
+    hyperdbg/dependencies/zydis/src
+    hyperdbg/dependencies/zydis/include
+    hyperdbg/dependencies/zydis/dependencies/zycore/include
+)
+target_include_directories(hprdbgctrl INTERFACE
+    hyperdbg/hprdbgctrl
+    hyperdbg/hprdbgctrl/header
+    hyperdbg/dependencies
+    hyperdbg/dependencies/phnt
+    hyperdbg/include
+)
+if(MSVC)
+    target_compile_options(hprdbgctrl PRIVATE $<$<CONFIG:Debug>:-Od>)
+else()
+    target_compile_options(hprdbgctrl PRIVATE -O0)
+endif()
+if(MSVC)
+    target_compile_options(hprdbgctrl PRIVATE -Zi)
+else()
+    target_compile_options(hprdbgctrl PRIVATE -g)
+endif()
+if(MSVC)
+    set_property(TARGET hprdbgctrl PROPERTY
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+target_link_libraries(hprdbgctrl PRIVATE
+    script-engine
+    symbol-parser
+    user32
+    pdbex
+    zydis
+    zycore
+)
+target_link_directories(hprdbgctrl PRIVATE
+    build/windows/x64/debug
+)
+target_sources(hprdbgctrl PRIVATE
+    hyperdbg/hprdbgctrl/code/app/dllmain.cpp
+    hyperdbg/hprdbgctrl/code/app/hprdbgctrl.cpp
+    hyperdbg/hprdbgctrl/code/common/common.cpp
+    hyperdbg/hprdbgctrl/code/common/list.cpp
+    hyperdbg/hprdbgctrl/code/common/spinlock.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/bc.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/bd.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/be.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/bl.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/bp.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/cpu.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/d-u.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/dt-struct.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/e.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/eval.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/events.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/exit.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/flush.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/g.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/i.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/k.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/lm.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/load.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/output.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/p.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/pause.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/prealloc.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/print.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/r.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/rdmsr.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/s.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/settings.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/sleep.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/t.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/test.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/unload.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/wrmsr.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/x.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/debugging-commands/~.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/cpuid.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/crwrite.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/dr.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/epthook.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/epthook2.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/exception.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/hide.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/interrupt.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/ioin.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/ioout.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/measure.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/monitor.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/msrread.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/msrwrite.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/pa2va.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/pmc.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/pte.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/syscall-sysret.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/tsc.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/unhide.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/va2pa.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/extension-commands/vmcall.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/attach.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/cls.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/connect.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/debug.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/detach.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/disconnect.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/formats.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/help.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/kill.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/listen.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/logclose.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/logopen.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/pe.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/process.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/restart.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/script.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/start.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/status.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/switch.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/sym.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/sympath.cpp
+    hyperdbg/hprdbgctrl/code/debugger/commands/meta-commands/thread.cpp
+    hyperdbg/hprdbgctrl/code/debugger/communication/forwarding.cpp
+    hyperdbg/hprdbgctrl/code/debugger/communication/namedpipe.cpp
+    hyperdbg/hprdbgctrl/code/debugger/communication/remote-connection.cpp
+    hyperdbg/hprdbgctrl/code/debugger/communication/tcpclient.cpp
+    hyperdbg/hprdbgctrl/code/debugger/communication/tcpserver.cpp
+    hyperdbg/hprdbgctrl/code/debugger/core/break-control.cpp
+    hyperdbg/hprdbgctrl/code/debugger/core/debugger.cpp
+    hyperdbg/hprdbgctrl/code/debugger/core/interpreter.cpp
+    hyperdbg/hprdbgctrl/code/debugger/driver-loader/install.cpp
+    hyperdbg/hprdbgctrl/code/debugger/kernel-level/kd.cpp
+    hyperdbg/hprdbgctrl/code/debugger/kernel-level/kernel-listening.cpp
+    hyperdbg/hprdbgctrl/code/debugger/misc/callstack.cpp
+    hyperdbg/hprdbgctrl/code/debugger/misc/disassembler.cpp
+    hyperdbg/hprdbgctrl/code/debugger/misc/readmem.cpp
+    hyperdbg/hprdbgctrl/code/debugger/script-engine-wrapper/script-engine-wrapper.cpp
+    hyperdbg/hprdbgctrl/code/debugger/script-engine-wrapper/script-engine.cpp
+    hyperdbg/hprdbgctrl/code/debugger/script-engine-wrapper/symbol.cpp
+    hyperdbg/hprdbgctrl/code/debugger/tests/tests.cpp
+    hyperdbg/hprdbgctrl/code/debugger/transparency/gaussian-rng.cpp
+    hyperdbg/hprdbgctrl/code/debugger/transparency/transparency.cpp
+    hyperdbg/hprdbgctrl/code/debugger/user-level/pe-parser.cpp
+    hyperdbg/hprdbgctrl/code/debugger/user-level/ud.cpp
+    hyperdbg/hprdbgctrl/code/debugger/user-level/user-listening.cpp
+    hyperdbg/hprdbgctrl/code/objects/objects.cpp
+    hyperdbg/hprdbgctrl/header/commands.h
+    hyperdbg/hprdbgctrl/header/common.h
+    hyperdbg/hprdbgctrl/header/communication.h
+    hyperdbg/hprdbgctrl/header/debugger.h
+    hyperdbg/hprdbgctrl/header/exports.h
+    hyperdbg/hprdbgctrl/header/forwarding.h
+    hyperdbg/hprdbgctrl/header/globals.h
+    hyperdbg/hprdbgctrl/header/help.h
+    hyperdbg/hprdbgctrl/header/inipp.h
+    hyperdbg/hprdbgctrl/header/install.h
+    hyperdbg/hprdbgctrl/header/kd.h
+    hyperdbg/hprdbgctrl/header/list.h
+    hyperdbg/hprdbgctrl/header/namedpipe.h
+    hyperdbg/hprdbgctrl/header/objects.h
+    hyperdbg/hprdbgctrl/header/pe-parser.h
+    hyperdbg/hprdbgctrl/header/script-engine.h
+    hyperdbg/hprdbgctrl/header/symbol.h
+    hyperdbg/hprdbgctrl/header/tests.h
+    hyperdbg/hprdbgctrl/header/transparency.h
+    hyperdbg/hprdbgctrl/header/ud.h
+)
 
 # target
 add_executable(hprdbghv "")
@@ -14,6 +197,8 @@ set_target_properties(hprdbghv PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOUR
 add_dependencies(hprdbghv kdserial)
 target_include_directories(hprdbghv PRIVATE
     hyperdbg/hprdbghv/header
+    hyperdbg/script-eval/header
+    hyperdbg/script-eval
     hyperdbg/hprdbghv
     hyperdbg/dependencies
     hyperdbg/include
@@ -24,6 +209,8 @@ target_include_directories(hprdbghv PRIVATE
 )
 target_include_directories(hprdbghv INTERFACE
     hyperdbg/hprdbghv/header
+    hyperdbg/script-eval/header
+    hyperdbg/script-eval
     hyperdbg/hprdbghv
     hyperdbg/dependencies
     hyperdbg/include
@@ -147,6 +334,11 @@ target_sources(hprdbghv PRIVATE
     hyperdbg/hprdbghv/code/vmm/vmx/VmxBroadcast.c
     hyperdbg/hprdbghv/code/vmm/vmx/VmxMechanisms.c
     hyperdbg/hprdbghv/code/vmm/vmx/VmxRegions.c
+    hyperdbg/script-eval/code/Functions.c
+    hyperdbg/script-eval/code/Keywords.c
+    hyperdbg/script-eval/code/PseudoRegisters.c
+    hyperdbg/script-eval/code/Regs.c
+    hyperdbg/script-eval/code/ScriptEngineEval.c
     hyperdbg/hprdbghv/header/common/Common.h
     hyperdbg/hprdbghv/header/common/Dpc.h
     hyperdbg/hprdbghv/header/common/LengthDisassemblerEngine.h
@@ -200,6 +392,72 @@ target_sources(hprdbghv PRIVATE
     hyperdbg/hprdbghv/header/vmm/vmx/Vmx.h
     hyperdbg/hprdbghv/header/vmm/vmx/VmxBroadcast.h
     hyperdbg/hprdbghv/header/vmm/vmx/VmxMechanisms.h
+)
+
+# target
+add_executable(hyperdbg-test "")
+set_target_properties(hyperdbg-test PROPERTIES OUTPUT_NAME "hyperdbg-test")
+set_target_properties(hyperdbg-test PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/windows/x64/debug")
+add_dependencies(hyperdbg-test hprdbgctrl)
+target_include_directories(hyperdbg-test PRIVATE
+    hyperdbg/hyperdbg-test/header
+    hyperdbg/hyperdbg-test
+    hyperdbg/dependencies
+    hyperdbg/include
+    hyperdbg/hprdbgctrl
+    hyperdbg/hprdbgctrl/header
+    hyperdbg/dependencies/phnt
+    hyperdbg/script-engine/header
+    hyperdbg/script-engine
+    hyperdbg/symbol-parser/header
+    hyperdbg/symbol-parser
+    hyperdbg/dependencies/pdbex/Source
+    "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/DIA SDK/include"
+    hyperdbg/dependencies/zydis/src
+    hyperdbg/dependencies/zydis/include
+    hyperdbg/dependencies/zydis/dependencies/zycore/include
+)
+target_include_directories(hyperdbg-test INTERFACE
+    hyperdbg/hyperdbg-test/header
+    hyperdbg/hyperdbg-test
+    hyperdbg/dependencies
+    hyperdbg/include
+)
+if(MSVC)
+    target_compile_options(hyperdbg-test PRIVATE $<$<CONFIG:Debug>:-Od>)
+else()
+    target_compile_options(hyperdbg-test PRIVATE -O0)
+endif()
+if(MSVC)
+    target_compile_options(hyperdbg-test PRIVATE -Zi)
+else()
+    target_compile_options(hyperdbg-test PRIVATE -g)
+endif()
+if(MSVC)
+    set_property(TARGET hyperdbg-test PROPERTY
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+target_link_libraries(hyperdbg-test PRIVATE
+    hprdbgctrl
+    script-engine
+    symbol-parser
+    user32
+    pdbex
+    zydis
+    zycore
+)
+target_link_directories(hyperdbg-test PRIVATE
+    build/windows/x64/debug
+)
+target_sources(hyperdbg-test PRIVATE
+    hyperdbg/hyperdbg-test/code/assembly/asm-test.asm
+    hyperdbg/hyperdbg-test/code/tests/hyperdbg-test.cpp
+    hyperdbg/hyperdbg-test/code/tests/lookup.cpp
+    hyperdbg/hyperdbg-test/code/tests/namedpipe.cpp
+    hyperdbg/hyperdbg-test/code/tests/test-cases.cpp
+    hyperdbg/hyperdbg-test/code/tests/tools.cpp
+    hyperdbg/hyperdbg-test/header/namedpipe.h
+    hyperdbg/hyperdbg-test/header/routines.h
 )
 
 # target
@@ -276,5 +534,277 @@ target_sources(kdserial PRIVATE
     hyperdbg/kdserial/kdcom.h
     hyperdbg/kdserial/uartp.h
     hyperdbg/kdserial/win11sdk.h
+)
+
+# target
+add_library(pdbex STATIC "")
+set_target_properties(pdbex PROPERTIES OUTPUT_NAME "pdbex")
+set_target_properties(pdbex PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/windows/x64/debug")
+target_include_directories(pdbex PRIVATE
+    hyperdbg/dependencies/pdbex/Source
+    "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/DIA SDK/include"
+)
+target_include_directories(pdbex INTERFACE
+    hyperdbg/dependencies/pdbex/Source
+    "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/DIA SDK/include"
+)
+target_compile_features(pdbex PRIVATE cxx_std_20)
+if(MSVC)
+    target_compile_options(pdbex PRIVATE $<$<CONFIG:Debug>:-Od>)
+else()
+    target_compile_options(pdbex PRIVATE -O0)
+endif()
+if(MSVC)
+    target_compile_options(pdbex PRIVATE -Zi)
+else()
+    target_compile_options(pdbex PRIVATE -g)
+endif()
+if(MSVC)
+    set_property(TARGET pdbex PROPERTY
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+target_sources(pdbex PRIVATE
+    hyperdbg/dependencies/pdbex/Source/HyperDbgIntegration.cpp
+    hyperdbg/dependencies/pdbex/Source/main.cpp
+    hyperdbg/dependencies/pdbex/Source/PDB.cpp
+    hyperdbg/dependencies/pdbex/Source/PDBExtractor.cpp
+    hyperdbg/dependencies/pdbex/Source/PDBHeaderReconstructor.cpp
+    hyperdbg/dependencies/pdbex/Source/HyperDbgExport.h
+    hyperdbg/dependencies/pdbex/Source/HyperDbgGlobals.h
+    hyperdbg/dependencies/pdbex/Source/PDB.h
+    hyperdbg/dependencies/pdbex/Source/PDBCallback.h
+    hyperdbg/dependencies/pdbex/Source/PDBExtractor.h
+    hyperdbg/dependencies/pdbex/Source/PDBHeaderReconstructor.h
+    hyperdbg/dependencies/pdbex/Source/PDBReconstructorBase.h
+    hyperdbg/dependencies/pdbex/Source/PDBSymbolSorter.h
+    hyperdbg/dependencies/pdbex/Source/PDBSymbolSorterAlphabetical.h
+    hyperdbg/dependencies/pdbex/Source/PDBSymbolSorterBase.h
+    hyperdbg/dependencies/pdbex/Source/PDBSymbolVisitor.h
+    hyperdbg/dependencies/pdbex/Source/PDBSymbolVisitorBase.h
+    hyperdbg/dependencies/pdbex/Source/UdtFieldDefinition.h
+    hyperdbg/dependencies/pdbex/Source/UdtFieldDefinitionBase.h
+)
+
+# target
+add_library(script-engine STATIC "")
+set_target_properties(script-engine PROPERTIES OUTPUT_NAME "script-engine")
+set_target_properties(script-engine PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/windows/x64/debug")
+add_dependencies(script-engine symbol-parser)
+target_include_directories(script-engine PRIVATE
+    hyperdbg/script-engine/header
+    hyperdbg/script-engine
+    hyperdbg/dependencies
+    hyperdbg/include
+    hyperdbg/symbol-parser/header
+    hyperdbg/symbol-parser
+    hyperdbg/dependencies/pdbex/Source
+    "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/DIA SDK/include"
+)
+target_include_directories(script-engine INTERFACE
+    hyperdbg/script-engine/header
+    hyperdbg/script-engine
+    hyperdbg/dependencies
+    hyperdbg/include
+)
+if(MSVC)
+    target_compile_options(script-engine PRIVATE $<$<CONFIG:Debug>:-Od>)
+else()
+    target_compile_options(script-engine PRIVATE -O0)
+endif()
+if(MSVC)
+    target_compile_options(script-engine PRIVATE -Zi)
+else()
+    target_compile_options(script-engine PRIVATE -g)
+endif()
+if(MSVC)
+    set_property(TARGET script-engine PROPERTY
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+target_link_libraries(script-engine PRIVATE
+    symbol-parser
+    user32
+    pdbex
+)
+target_link_directories(script-engine PRIVATE
+    build/windows/x64/debug
+)
+target_sources(script-engine PRIVATE
+    hyperdbg/script-engine/code/common.c
+    hyperdbg/script-engine/code/globals.c
+    hyperdbg/script-engine/code/parse-table.c
+    hyperdbg/script-engine/code/scanner.c
+    hyperdbg/script-engine/code/script-engine.c
+    hyperdbg/script-engine/header/common.h
+    hyperdbg/script-engine/header/globals.h
+    hyperdbg/script-engine/header/parse-table.h
+    hyperdbg/script-engine/header/scanner.h
+    hyperdbg/script-engine/header/script-engine.h
+)
+
+# target
+add_library(symbol-parser STATIC "")
+set_target_properties(symbol-parser PROPERTIES OUTPUT_NAME "symbol-parser")
+set_target_properties(symbol-parser PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/windows/x64/debug")
+add_dependencies(symbol-parser pdbex)
+target_include_directories(symbol-parser PRIVATE
+    hyperdbg/symbol-parser/header
+    hyperdbg/symbol-parser
+    hyperdbg/dependencies
+    hyperdbg/include
+    hyperdbg/dependencies/pdbex/Source
+    "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/DIA SDK/include"
+)
+target_include_directories(symbol-parser INTERFACE
+    hyperdbg/symbol-parser/header
+    hyperdbg/symbol-parser
+    hyperdbg/dependencies
+    hyperdbg/include
+)
+if(MSVC)
+    target_compile_options(symbol-parser PRIVATE $<$<CONFIG:Debug>:-Od>)
+else()
+    target_compile_options(symbol-parser PRIVATE -O0)
+endif()
+if(MSVC)
+    target_compile_options(symbol-parser PRIVATE -Zi)
+else()
+    target_compile_options(symbol-parser PRIVATE -g)
+endif()
+if(MSVC)
+    set_property(TARGET symbol-parser PROPERTY
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+target_link_libraries(symbol-parser PRIVATE
+    user32
+    pdbex
+)
+target_link_directories(symbol-parser PRIVATE
+    build/windows/x64/debug
+)
+target_sources(symbol-parser PRIVATE
+    hyperdbg/symbol-parser/code/casting.cpp
+    hyperdbg/symbol-parser/code/common-utils.cpp
+    hyperdbg/symbol-parser/code/symbol-parser.cpp
+    hyperdbg/symbol-parser/header/common-utils.h
+    hyperdbg/symbol-parser/header/symbol-parser.h
+)
+
+# target
+add_library(zycore STATIC "")
+set_target_properties(zycore PROPERTIES OUTPUT_NAME "zycore")
+set_target_properties(zycore PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/windows/x64/debug")
+target_include_directories(zycore PRIVATE
+    hyperdbg/dependencies/zydis/dependencies/zycore/include
+    hyperdbg/include
+)
+target_include_directories(zycore INTERFACE
+    hyperdbg/dependencies/zydis/dependencies/zycore/include
+    hyperdbg/include
+)
+target_compile_definitions(zycore PRIVATE
+    ZYCORE_STATIC_DEFINE
+)
+if(MSVC)
+    target_compile_options(zycore PRIVATE $<$<CONFIG:Debug>:-Od>)
+else()
+    target_compile_options(zycore PRIVATE -O0)
+endif()
+if(MSVC)
+    target_compile_options(zycore PRIVATE -Zi)
+else()
+    target_compile_options(zycore PRIVATE -g)
+endif()
+if(MSVC)
+    set_property(TARGET zycore PROPERTY
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+target_sources(zycore PRIVATE
+    hyperdbg/dependencies/zydis/dependencies/zycore/src/Allocator.c
+    hyperdbg/dependencies/zydis/dependencies/zycore/src/ArgParse.c
+    hyperdbg/dependencies/zydis/dependencies/zycore/src/Bitset.c
+    hyperdbg/dependencies/zydis/dependencies/zycore/src/Format.c
+    hyperdbg/dependencies/zydis/dependencies/zycore/src/List.c
+    hyperdbg/dependencies/zydis/dependencies/zycore/src/String.c
+    hyperdbg/dependencies/zydis/dependencies/zycore/src/Vector.c
+    hyperdbg/dependencies/zydis/dependencies/zycore/src/Zycore.c
+)
+
+# target
+add_library(zydis STATIC "")
+set_target_properties(zydis PROPERTIES OUTPUT_NAME "zydis")
+set_target_properties(zydis PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/windows/x64/debug")
+add_dependencies(zydis zycore)
+target_include_directories(zydis PRIVATE
+    hyperdbg/include
+    hyperdbg/dependencies/zydis/src
+    hyperdbg/dependencies/zydis/include
+    hyperdbg/dependencies/zydis/dependencies/zycore/include
+)
+target_include_directories(zydis INTERFACE
+    hyperdbg/include
+    hyperdbg/dependencies/zydis/src
+    hyperdbg/dependencies/zydis/include
+)
+target_compile_definitions(zydis PRIVATE
+    ZYDIS_STATIC_DEFINE
+)
+if(MSVC)
+    target_compile_options(zydis PRIVATE $<$<CONFIG:Debug>:-Od>)
+else()
+    target_compile_options(zydis PRIVATE -O0)
+endif()
+if(MSVC)
+    target_compile_options(zydis PRIVATE -Zi)
+else()
+    target_compile_options(zydis PRIVATE -g)
+endif()
+if(MSVC)
+    set_property(TARGET zydis PROPERTY
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+target_link_libraries(zydis PRIVATE
+    zycore
+)
+target_link_directories(zydis PRIVATE
+    build/windows/x64/debug
+)
+target_sources(zydis PRIVATE
+    hyperdbg/dependencies/zydis/src/Decoder.c
+    hyperdbg/dependencies/zydis/src/DecoderData.c
+    hyperdbg/dependencies/zydis/src/Formatter.c
+    hyperdbg/dependencies/zydis/src/FormatterATT.c
+    hyperdbg/dependencies/zydis/src/FormatterBase.c
+    hyperdbg/dependencies/zydis/src/FormatterBuffer.c
+    hyperdbg/dependencies/zydis/src/FormatterIntel.c
+    hyperdbg/dependencies/zydis/src/MetaInfo.c
+    hyperdbg/dependencies/zydis/src/Mnemonic.c
+    hyperdbg/dependencies/zydis/src/Register.c
+    hyperdbg/dependencies/zydis/src/SharedData.c
+    hyperdbg/dependencies/zydis/src/String.c
+    hyperdbg/dependencies/zydis/src/Utils.c
+    hyperdbg/dependencies/zydis/src/Zydis.c
+    hyperdbg/dependencies/zydis/include/Zydis/Decoder.h
+    hyperdbg/dependencies/zydis/include/Zydis/DecoderTypes.h
+    hyperdbg/dependencies/zydis/include/Zydis/Formatter.h
+    hyperdbg/dependencies/zydis/include/Zydis/FormatterBuffer.h
+    hyperdbg/dependencies/zydis/include/Zydis/Generated/EnumInstructionCategory.h
+    hyperdbg/dependencies/zydis/include/Zydis/Generated/EnumISAExt.h
+    hyperdbg/dependencies/zydis/include/Zydis/Generated/EnumISASet.h
+    hyperdbg/dependencies/zydis/include/Zydis/Generated/EnumMnemonic.h
+    hyperdbg/dependencies/zydis/include/Zydis/Generated/EnumRegister.h
+    hyperdbg/dependencies/zydis/include/Zydis/Internal/DecoderData.h
+    hyperdbg/dependencies/zydis/include/Zydis/Internal/FormatterATT.h
+    hyperdbg/dependencies/zydis/include/Zydis/Internal/FormatterBase.h
+    hyperdbg/dependencies/zydis/include/Zydis/Internal/FormatterIntel.h
+    hyperdbg/dependencies/zydis/include/Zydis/Internal/SharedData.h
+    hyperdbg/dependencies/zydis/include/Zydis/Internal/String.h
+    hyperdbg/dependencies/zydis/include/Zydis/MetaInfo.h
+    hyperdbg/dependencies/zydis/include/Zydis/Mnemonic.h
+    hyperdbg/dependencies/zydis/include/Zydis/Register.h
+    hyperdbg/dependencies/zydis/include/Zydis/SharedTypes.h
+    hyperdbg/dependencies/zydis/include/Zydis/ShortString.h
+    hyperdbg/dependencies/zydis/include/Zydis/Status.h
+    hyperdbg/dependencies/zydis/include/Zydis/Utils.h
+    hyperdbg/dependencies/zydis/include/Zydis/Zydis.h
 )
 

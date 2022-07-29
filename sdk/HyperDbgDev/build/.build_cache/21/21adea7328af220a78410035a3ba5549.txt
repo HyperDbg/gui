@@ -1,0 +1,13 @@
+{
+    outdata = "__cpp_SsdtHook.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\debugger\\features\\hooks\\syscall-hook\\SsdtHook.c(145): warning C4047: '=': 'unsigned __int64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\debugger\\features\\hooks\\syscall-hook\\SsdtHook.c(146): warning C4047: '=': 'unsigned __int64' differs in levels of indirection from 'PVOID'\
+hyperdbg\\hprdbghv\\code\\debugger\\features\\hooks\\syscall-hook\\SsdtHook.c(180): warning C4047: '=': 'SSDTStruct *' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\debugger\\features\\hooks\\syscall-hook\\SsdtHook.c(188): warning C4047: '=': 'SSDTStruct *' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\debugger\\features\\hooks\\syscall-hook\\SsdtHook.c(298): warning C4047: 'function': 'UINT32' differs in levels of indirection from 'HANDLE'\
+hyperdbg\\hprdbghv\\code\\debugger\\features\\hooks\\syscall-hook\\SsdtHook.c(298): warning C4024: 'EptHook2': different types for formal and actual parameter 3\
+"
+}

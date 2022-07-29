@@ -1,0 +1,17 @@
+{
+    outdata = "__cpp_IoHandler.c.c\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\Vmx.h(309): warning C4091: 'typedef ': ignored on left of 'MOV_TO_DEBUG_REG' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(30): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-AccessOut>' when no variable is declared\
+D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hprdbghv\\..\\hprdbghv\\header\\vmm\\vmx\\IoHandler.h(40): warning C4091: 'typedef ': ignored on left of '<unnamed-enum-OpEncodingDx>' when no variable is declared\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IoHandler.c(70): warning C4047: '=': 'void *' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IoHandler.c(243): warning C4022: 'ldisasm': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IoHandler.c(265): warning C4047: 'function': 'unsigned long *' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IoHandler.c(265): warning C4024: 'SetBit': different types for formal and actual parameter 2\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IoHandler.c(269): warning C4047: 'function': 'unsigned long *' differs in levels of indirection from 'UINT64'\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IoHandler.c(269): warning C4024: 'SetBit': different types for formal and actual parameter 2\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IoHandler.c(296): warning C4022: 'memset': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IoHandler.c(297): warning C4022: 'memset': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IoHandler.c(321): warning C4022: 'memset': pointer mismatch for actual parameter 1\
+hyperdbg\\hprdbghv\\code\\vmm\\vmx\\IoHandler.c(322): warning C4022: 'memset': pointer mismatch for actual parameter 1\
+"
+}
