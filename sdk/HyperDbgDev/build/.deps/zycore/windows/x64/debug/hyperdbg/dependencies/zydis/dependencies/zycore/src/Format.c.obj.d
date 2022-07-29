@@ -2,19 +2,6 @@
     files = {
         [[hyperdbg\dependencies\zydis\dependencies\zycore\src\Format.c]]
     },
-    values = {
-        [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]],
-        {
-            "-nologo",
-            "-Zi",
-            "-FS",
-            [[-Fdbuild\windows\x64\debug\zycore.pdb]],
-            "-Od",
-            [[-Ihyperdbg\dependencies\zydis\dependencies\zycore\include]],
-            [[-Ihyperdbg\include]],
-            "-DZYCORE_STATIC_DEFINE"
-        }
-    },
     depfiles_cl_json = "{\
     \"Version\": \"1.2\",\
     \"Data\": {\
@@ -57,5 +44,18 @@
             \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.22621.0\\\\ucrt\\\\corecrt_wstring.h\"\
         ]\
     }\
-}"
+}",
+    values = {
+        [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]],
+        {
+            "-nologo",
+            "-Zi",
+            "-FS",
+            [[-Fdbuild\windows\x64\debug\zycore.pdb]],
+            "-Od",
+            [[-Ihyperdbg\dependencies\zydis\dependencies\zycore\include]],
+            [[-Ihyperdbg\include]],
+            "-DZYCORE_STATIC_DEFINE"
+        }
+    }
 }

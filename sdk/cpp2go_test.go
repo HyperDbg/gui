@@ -57,7 +57,8 @@ func TestXmake(t *testing.T) {
 func TestName(t *testing.T) {
 	//./HyperDbgDev/hyperdbg/hprdbgctrl/header/debugger.h
 	//f := "./HyperDbgDev/hyperdbg/include/SDK/Headers/Ioctls.h"
-	f := "./HyperDbgDev/hyperdbg/hprdbgctrl/header/debugger.h"
+	//f := "./HyperDbgDev/hyperdbg/hprdbgctrl/header/debugger.h"
+	f := "D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\hyperdbg-test\\code\\tests\\hyperdbg-test.cpp"
 	//f := "./HyperDbgDev/hyperdbg/include/SDK/Headers/Constants.h"
 	c := `clang++ -Xclang -dM -E ` + f
 	b, err2 := cmd.Run(c)
@@ -65,24 +66,25 @@ func TestName(t *testing.T) {
 		return
 	}
 	//mylog.Info("", b)
-	lines, ok := tool.File().ToLines(b)
-	if !ok {
-		return
-	}
-	println("const(")
-	for _, line := range lines {
-		if strings.Contains(line, `#define`) {
-			if !strings.Contains(line, `IOCTL`) {
-				//continue
-			}
-			split := strings.Split(line, ` `)
-			key := split[1]
-			value := strings.Join(split[2:], ``)
-			fmt.Printf("%-70s = %s\n", key, value)
-		}
-	}
-	println(")")
-	return
+	//lines, ok := tool.File().ToLines(b)
+	//if !ok {
+	//	return
+	//}
+	//println("const(")
+	//for _, line := range lines {
+	//	if strings.Contains(line, `#define`) {
+	//		if !strings.Contains(line, `IOCTL`) {
+	//			//continue
+	//		}
+	//		split := strings.Split(line, ` `)
+	//		key := split[1]
+	//		value := strings.Join(split[2:], ``)
+	//		fmt.Printf("%-70s = %s\n", key, value)
+	//	}
+	//}
+	//println(")")
+	//return
+
 	// #include "BasicTypes.h"
 	//typedef unsigned short wchar_t;
 	//typedef void *PVOID;
@@ -93,7 +95,7 @@ func TestName(t *testing.T) {
 	includesPATH := make([]string, 0)
 	for i, include := range includes {
 		if i == 6 {
-			break
+			//break
 		}
 		join := filepath.Join(base, include)
 		//abs, err := filepath.Abs(join)
@@ -144,7 +146,7 @@ func TestName(t *testing.T) {
 		}
 	}
 	//mylog.Json("ast", b)
-	lines, ok = tool.File().ToLines(b)
+	lines, ok := tool.File().ToLines(b)
 	if !ok {
 		return
 	}
@@ -189,51 +191,52 @@ func Run(path, pkg string) {
 }
 
 var includes = []string{
-	"hyperdbg/hprdbgctrl",
-	"hyperdbg/hprdbgctrl/header",
-	"hyperdbg/dependencies",
-	"hyperdbg/dependencies/phnt",
-	"C:\\Users\\Admin\\Downloads\\WindowsKits\\10\\Include\\10.0.22621.0\\um",
-	"hyperdbg/dependencies/zydis/dependencies/zycore/include/Zycore",
-	"hyperdbg/dependencies/zydis/include/Zydis",
-	"hyperdbg/dependencies/zydis/dependencies/zycore/include",
-	"hyperdbg/dependencies/zydis/include",
-	"hyperdbg/dependencies/zydis/msvc",
-	"hyperdbg/dependencies/zydis/assets",
-	"hyperdbg/dependencies/zydis/include/Zydis/Internal",
-	"hyperdbg/dependencies/pdbex/Source",
+	"hyperdbg/hprdbgctrl/hyperdbg-test/",
+	"hyperdbg/hprdbgctrl/",
+	"hyperdbg/hprdbgctrl/header/",
+	"hyperdbg/dependencies/",
+	"hyperdbg/dependencies/phnt/",
+	"C:\\Users\\Admin\\Downloads\\WindowsKits\\10\\Include\\10.0.22621.0\\um\\",
+	"hyperdbg/dependencies/zydis/dependencies/zycore/include/Zycore/",
+	"hyperdbg/dependencies/zydis/include/Zydis/",
+	"hyperdbg/dependencies/zydis/dependencies/zycore/include/",
+	"hyperdbg/dependencies/zydis/include/",
+	"hyperdbg/dependencies/zydis/msvc/",
+	"hyperdbg/dependencies/zydis/assets/",
+	"hyperdbg/dependencies/zydis/include/Zydis/Internal/",
+	"hyperdbg/dependencies/pdbex/Source/",
 
-	"hyperdbg/hprdbghv/header/debugger/commands",
-	"hyperdbg/hprdbghv/header/debugger/core",
-	"hyperdbg/hprdbghv/header/debugger/kernel-level",
-	"hyperdbg/hprdbghv/header/debugger/script-engine",
-	"hyperdbg/include/SDK/Headers",
-	"hyperdbg/script-eval/header",
-	"hyperdbg/hprdbghv/header/misc",
-	"hyperdbg/hprdbghv/header/globals",
-	"hyperdbg/hprdbghv/header/platform",
-	"hyperdbg/hyperdbg-test/header",
-	"hyperdbg/hyperdbg-test",
-	"hyperdbg/include",
-	"hyperdbg/kdserial",
-	"hyperdbg/hprdbghv/header/debugger/user-level",
-	"hyperdbg/hprdbghv/header/devices",
-	"hyperdbg/hprdbghv/header/vmm/ept",
-	"hyperdbg/include/SDK",
-	"hyperdbg/script-engine/header",
-	"hyperdbg/hprdbghv/header/common",
-	"hyperdbg/hprdbghv/header/debugger/tests",
-	"hyperdbg/hprdbghv",
-	"hyperdbg/script-engine",
-	"hyperdbg/hprdbghv/header/memory",
-	"hyperdbg/symbol-parser/header",
-	"hyperdbg/symbol-parser",
-	"hyperdbg/hprdbghv/header/debugger/broadcast",
-	"hyperdbg/hprdbghv/header/debugger/features",
-	"hyperdbg/hprdbghv/header/debugger/objects",
-	"hyperdbg/hprdbghv/header/debugger/transparency",
-	"hyperdbg/hprdbghv/header/vmm/vmx",
-	"hyperdbg/include/SDK/Imports",
-	"hyperdbg/hprdbghv/header/components/registers",
-	"hyperdbg/hprdbghv/header/debugger/communication",
+	"hyperdbg/hprdbghv/header/debugger/commands/",
+	"hyperdbg/hprdbghv/header/debugger/core/",
+	"hyperdbg/hprdbghv/header/debugger/kernel-level/",
+	"hyperdbg/hprdbghv/header/debugger/script-engine/",
+	"hyperdbg/include/SDK/Headers/",
+	"hyperdbg/script-eval/header/",
+	"hyperdbg/hprdbghv/header/misc/",
+	"hyperdbg/hprdbghv/header/globals/",
+	"hyperdbg/hprdbghv/header/platform/",
+	"hyperdbg/hyperdbg-test/header/",
+	"hyperdbg/hyperdbg-test/",
+	"hyperdbg/include/",
+	"hyperdbg/kdserial/",
+	"hyperdbg/hprdbghv/header/debugger/user-level/",
+	"hyperdbg/hprdbghv/header/devices/",
+	"hyperdbg/hprdbghv/header/vmm/ept/",
+	"hyperdbg/include/SDK/",
+	"hyperdbg/script-engine/header/",
+	"hyperdbg/hprdbghv/header/common/",
+	"hyperdbg/hprdbghv/header/debugger/tests/",
+	"hyperdbg/hprdbghv/",
+	"hyperdbg/script-engine/",
+	"hyperdbg/hprdbghv/header/memory/",
+	"hyperdbg/symbol-parser/header/",
+	"hyperdbg/symbol-parser/",
+	"hyperdbg/hprdbghv/header/debugger/broadcast/",
+	"hyperdbg/hprdbghv/header/debugger/features/",
+	"hyperdbg/hprdbghv/header/debugger/objects/",
+	"hyperdbg/hprdbghv/header/debugger/transparency/",
+	"hyperdbg/hprdbghv/header/vmm/vmx/",
+	"hyperdbg/include/SDK/Imports/",
+	"hyperdbg/hprdbghv/header/components/registers/",
+	"hyperdbg/hprdbghv/header/debugger/communication/",
 }

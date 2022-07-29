@@ -2,20 +2,6 @@
     files = {
         [[hyperdbg\dependencies\pdbex\Source\HyperDbgIntegration.cpp]]
     },
-    values = {
-        [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]],
-        {
-            "/EHsc",
-            "-nologo",
-            "-Zi",
-            "-FS",
-            [[-Fdbuild\windows\x64\debug\pdbex.pdb]],
-            "-Od",
-            "-std:c++20",
-            [[-Ihyperdbg\dependencies\pdbex\Source]],
-            [[-IC:\Program Files\Microsoft Visual Studio\2022\Enterprise\DIA SDK\include]]
-        }
-    },
     depfiles_cl_json = "{\
     \"Version\": \"1.2\",\
     \"Data\": {\
@@ -379,5 +365,19 @@
         \"ImportedModules\": [],\
         \"ImportedHeaderUnits\": []\
     }\
-}"
+}",
+    values = {
+        [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]],
+        {
+            "/EHsc",
+            "-nologo",
+            "-Zi",
+            "-FS",
+            [[-Fdbuild\windows\x64\debug\pdbex.pdb]],
+            "-Od",
+            "-std:c++20",
+            [[-Ihyperdbg\dependencies\pdbex\Source]],
+            [[-IC:\Program Files\Microsoft Visual Studio\2022\Enterprise\DIA SDK\include]]
+        }
+    }
 }

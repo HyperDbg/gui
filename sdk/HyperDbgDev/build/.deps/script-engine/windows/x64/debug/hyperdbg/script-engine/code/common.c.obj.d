@@ -2,24 +2,6 @@
     files = {
         [[hyperdbg\script-engine\code\common.c]]
     },
-    values = {
-        [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]],
-        {
-            "-nologo",
-            "-Zi",
-            "-FS",
-            [[-Fdbuild\windows\x64\debug\script-engine.pdb]],
-            "-Od",
-            [[-Ihyperdbg\script-engine\header]],
-            [[-Ihyperdbg\script-engine]],
-            [[-Ihyperdbg\symbol-parser\header]],
-            [[-Ihyperdbg\symbol-parser]],
-            [[-Ihyperdbg\dependencies]],
-            [[-Ihyperdbg\include]],
-            [[-Ihyperdbg\dependencies\pdbex\Source]],
-            [[-IC:\Program Files\Microsoft Visual Studio\2022\Enterprise\DIA SDK\include]]
-        }
-    },
     depfiles_cl_json = "{\
     \"Version\": \"1.2\",\
     \"Data\": {\
@@ -167,5 +149,23 @@
             \"d:\\\\codespace\\\\gui\\\\sdk\\\\hyperdbgdev\\\\hyperdbg\\\\script-engine\\\\header\\\\parse-table.h\"\
         ]\
     }\
-}"
+}",
+    values = {
+        [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]],
+        {
+            "-nologo",
+            "-Zi",
+            "-FS",
+            [[-Fdbuild\windows\x64\debug\script-engine.pdb]],
+            "-Od",
+            [[-Ihyperdbg\script-engine\header]],
+            [[-Ihyperdbg\script-engine]],
+            [[-Ihyperdbg\symbol-parser\header]],
+            [[-Ihyperdbg\symbol-parser]],
+            [[-Ihyperdbg\dependencies]],
+            [[-Ihyperdbg\include]],
+            [[-Ihyperdbg\dependencies\pdbex\Source]],
+            [[-IC:\Program Files\Microsoft Visual Studio\2022\Enterprise\DIA SDK\include]]
+        }
+    }
 }

@@ -2,21 +2,6 @@
     files = {
         [[hyperdbg\dependencies\zydis\src\Register.c]]
     },
-    values = {
-        [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]],
-        {
-            "-nologo",
-            "-Zi",
-            "-FS",
-            [[-Fdbuild\windows\x64\debug\zydis.pdb]],
-            "-Od",
-            [[-Ihyperdbg\dependencies\zydis\src]],
-            [[-Ihyperdbg\dependencies\zydis\include]],
-            [[-Ihyperdbg\dependencies\zydis\dependencies\zycore\include]],
-            [[-Ihyperdbg\include]],
-            "-DZYDIS_STATIC_DEFINE"
-        }
-    },
     depfiles_cl_json = "{\
     \"Version\": \"1.2\",\
     \"Data\": {\
@@ -41,5 +26,20 @@
             \"d:\\\\codespace\\\\gui\\\\sdk\\\\hyperdbgdev\\\\hyperdbg\\\\dependencies\\\\zydis\\\\src\\\\generated\\\\enumregister.inc\"\
         ]\
     }\
-}"
+}",
+    values = {
+        [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]],
+        {
+            "-nologo",
+            "-Zi",
+            "-FS",
+            [[-Fdbuild\windows\x64\debug\zydis.pdb]],
+            "-Od",
+            [[-Ihyperdbg\dependencies\zydis\src]],
+            [[-Ihyperdbg\dependencies\zydis\include]],
+            [[-Ihyperdbg\dependencies\zydis\dependencies\zycore\include]],
+            [[-Ihyperdbg\include]],
+            "-DZYDIS_STATIC_DEFINE"
+        }
+    }
 }

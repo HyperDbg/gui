@@ -2,33 +2,6 @@
     files = {
         [[hyperdbg\hyperdbg-test\code\tests\namedpipe.cpp]]
     },
-    values = {
-        [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]],
-        {
-            "/EHsc",
-            "-nologo",
-            "-Zi",
-            "-FS",
-            [[-Fdbuild\windows\x64\debug\compile.hyperdbg-test.pdb]],
-            "-Od",
-            [[-Ihyperdbg\hyperdbg-test\header]],
-            [[-Ihyperdbg\hyperdbg-test]],
-            [[-Ihyperdbg\hprdbgctrl]],
-            [[-Ihyperdbg\hprdbgctrl\header]],
-            [[-Ihyperdbg\dependencies\phnt]],
-            [[-Ihyperdbg\script-engine\header]],
-            [[-Ihyperdbg\script-engine]],
-            [[-Ihyperdbg\symbol-parser\header]],
-            [[-Ihyperdbg\symbol-parser]],
-            [[-Ihyperdbg\dependencies]],
-            [[-Ihyperdbg\dependencies\pdbex\Source]],
-            [[-IC:\Program Files\Microsoft Visual Studio\2022\Enterprise\DIA SDK\include]],
-            [[-Ihyperdbg\dependencies\zydis\src]],
-            [[-Ihyperdbg\dependencies\zydis\include]],
-            [[-Ihyperdbg\dependencies\zydis\dependencies\zycore\include]],
-            [[-Ihyperdbg\include]]
-        }
-    },
     depfiles_cl_json = "{\
     \"Version\": \"1.2\",\
     \"Data\": {\
@@ -381,5 +354,32 @@
         \"ImportedModules\": [],\
         \"ImportedHeaderUnits\": []\
     }\
-}"
+}",
+    values = {
+        [[C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe]],
+        {
+            "/EHsc",
+            "-nologo",
+            "-Zi",
+            "-FS",
+            [[-Fdbuild\windows\x64\debug\compile.hyperdbg-test.pdb]],
+            "-Od",
+            [[-Ihyperdbg\hyperdbg-test\header]],
+            [[-Ihyperdbg\hyperdbg-test]],
+            [[-Ihyperdbg\hprdbgctrl]],
+            [[-Ihyperdbg\hprdbgctrl\header]],
+            [[-Ihyperdbg\dependencies\phnt]],
+            [[-Ihyperdbg\script-engine\header]],
+            [[-Ihyperdbg\script-engine]],
+            [[-Ihyperdbg\symbol-parser\header]],
+            [[-Ihyperdbg\symbol-parser]],
+            [[-Ihyperdbg\dependencies]],
+            [[-Ihyperdbg\dependencies\pdbex\Source]],
+            [[-IC:\Program Files\Microsoft Visual Studio\2022\Enterprise\DIA SDK\include]],
+            [[-Ihyperdbg\dependencies\zydis\src]],
+            [[-Ihyperdbg\dependencies\zydis\include]],
+            [[-Ihyperdbg\dependencies\zydis\dependencies\zycore\include]],
+            [[-Ihyperdbg\include]]
+        }
+    }
 }
