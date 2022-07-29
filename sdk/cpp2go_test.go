@@ -25,8 +25,6 @@ c++   自己解析方法
 h ast 批量
 c c2go
 mod重写和单元测试
-摸清脚本的r3和r0的瓜葛，以便开展翻译工作
-
 */
 
 func TestXmake(t *testing.T) {
