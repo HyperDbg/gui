@@ -175,7 +175,7 @@ func (o *object) GetDefine(lines []string) string {
 
 func (o *object) Convert() *object {
 	for _, cpp := range o.back {
-		if strings.Contains(cpp.path, "Events.h.back") {
+		if strings.Contains(cpp.path, "SDK\\Headers\\Events.h.back") {
 			mylog.Info("current file path", cpp.path)
 			//println(cpp.body)
 			lines, ok := tool.File().ToLines(cpp.body)
@@ -188,13 +188,33 @@ func (o *object) Convert() *object {
 			b.WriteStringLn("package " + pkgName)
 			b.WriteStringLn("//" + cpp.path)
 
-			define := o.GetDefine(lines)
-			if define != "" {
-				b.WriteStringLn(define)
-				mylog.Json("define ==> const", define)
+			//define := o.GetDefine(lines)
+			//if define != "" {
+			//	b.WriteStringLn(define)
+			//	mylog.Json("define ==> const", define)
+			//}
+
+			enum := o.GetEnum(lines)
+			if enum != "" {
+				b.WriteStringLn(enum)
+				mylog.Json("enum ==> const", enum)
 			}
 
-			mylog.Json("cpp ==> go", b.String())
+			//Struct := o.GetStruct(lines)
+			//if Struct != "" {
+			//	b.WriteStringLn(Struct)
+			//	mylog.Json("Struct ==> struct", Struct)
+			//}
+			//
+			//method := o.GetMethod(lines)
+			//if method != "" {
+			//	b.WriteStringLn(method)
+			//	mylog.Json("method ==> func", method)
+			//}
+
+			//extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
+
+			//mylog.Json("cpp ==> go", b.String())
 		}
 	}
 	return o
@@ -206,9 +226,124 @@ func (o *object) Check(err error) {
 	}
 }
 
-func (o *object) Enum() *object {
-	//TODO implement me
-	panic("implement me")
+func (o *object) GetEnum(lines []string) string {
+	b := stream.New()
+	b.WriteStringLn("const(")
+	enum := make([]string, 0)
+	for i, line := range lines {
+		//block := make([]string, 0)
+		if strings.Contains(line, `typedef enum`) {
+			col := i + 1
+			if line != "" {
+				mylog.Info(fmt.Sprint(col), line)
+			}
+			//enum = append(enum, o.handleDefineBlock(col, line))
+			if !strings.Contains(line, `}`) {
+				//break
+			}
+			//else {
+			//	start := lines[i:]
+			//	for _, s := range start {
+			//		block = append(block, s)
+			//		if !strings.Contains(s, `\`) {
+			//			l := o.handleDefineBlock(col, block...)
+			//			//mylog.Trace(fmt.Sprint(col), l)
+			//			enum = append(enum, l)
+			//			break
+			//		}
+			//	}
+			//}
+
+		}
+	}
+	if len(enum) == 0 {
+		return ""
+	}
+	for _, s := range enum {
+		b.WriteStringLn(s)
+	}
+	b.WriteStringLn(")")
+	return b.String()
+}
+
+func (o *object) GetStruct(lines []string) string {
+	b := stream.New()
+	b.WriteStringLn("type xxx struct(")
+	Struct := make([]string, 0)
+	for i, line := range lines {
+		//block := make([]string, 0)
+		if strings.Contains(line, `typedef struct`) {
+			col := i + 1
+			if line != "" {
+				mylog.Info(fmt.Sprint(col), line)
+			}
+			//Struct = append(Struct, o.handleDefineBlock(col, line))
+			if !strings.Contains(line, `}`) {
+				//break
+			}
+			//else {
+			//	start := lines[i:]
+			//	for _, s := range start {
+			//		block = append(block, s)
+			//		if !strings.Contains(s, `\`) {
+			//			l := o.handleDefineBlock(col, block...)
+			//			//mylog.Trace(fmt.Sprint(col), l)
+			//			Struct = append(Struct, l)
+			//			break
+			//		}
+			//	}
+			//}
+
+		}
+	}
+	if len(Struct) == 0 {
+		return ""
+	}
+	for _, s := range Struct {
+		b.WriteStringLn(s)
+	}
+	b.WriteStringLn(")")
+	return b.String()
+}
+
+func (o *object) GetMethod(lines []string) string {
+	b := stream.New()
+	b.WriteStringLn("func xxx (")
+	method := make([]string, 0)
+	for i, line := range lines {
+		//block := make([]string, 0)
+		if strings.Contains(line, `VOID`) { //todo ???? hard
+			col := i + 1
+			if line != "" {
+				mylog.Info(fmt.Sprint(col), line)
+			}
+			//method = append(method, o.handleDefineBlock(col, line))
+			if !strings.Contains(line, `}`) {
+				//break
+			}
+			//else {
+			//	start := lines[i:]
+			//	for _, s := range start {
+			//		block = append(block, s)
+			//		if !strings.Contains(s, `\`) {
+			//			l := o.handleDefineBlock(col, block...)
+			//			//mylog.Trace(fmt.Sprint(col), l)
+			//			method = append(method, l)
+			//			break
+			//		}
+			//	}
+			//}
+
+		}
+	}
+	if len(method) == 0 {
+		return ""
+	}
+	for _, s := range method {
+		b.WriteStringLn(s)
+	}
+	b.WriteStringLn(")")
+	return b.String()
 }
 
 func (o *object) Struct() *object {
