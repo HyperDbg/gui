@@ -327,6 +327,14 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 	)
 	fields := make([]structType, 0)
 	var Struct structType
+
+	fnGetWord := func(line string) (word, next string) {
+		space := strings.TrimSpace(line)
+		index := strings.Index(space, " ")
+		word = space[:index]
+		next = space[index:]
+		return
+	}
 	for i, blockLine := range lines {
 		switch {
 		case strings.Contains(blockLine, "typedef struct "):
@@ -340,27 +348,36 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 			continue
 		}
 		if strings.Contains(blockLine, ";") {
-			split := strings.Split(blockLine, " ") //todo test more
-			if len(split) == 1 {
-				blockLine = strings.ReplaceAll(blockLine, ";", "")
-				Struct.elemType = blockLine
-				Struct.elemName = "byte" //? see     TypeOfAction;
+			word, next := fnGetWord(blockLine)
+			if word[len(word)-1] != ';' {
+				Struct.elemType = word
+				word, next = fnGetWord(next)
+				word = strings.ReplaceAll(word, ";", "")
+				Struct.elemName = word
+			} else { //not ' ' space,it's a nested field
+				word = strings.ReplaceAll(word, ";", "")
+				Struct.elemName = word
+				Struct.elemType = "byte" //? see  TypeOfAction;
 			}
-			Struct.elemType = split[0]
-			Struct.elemName = split[1]
-			Struct.elemName = strings.ReplaceAll(Struct.elemName, ";", "")
 		} else {
-			//nested
+			//nested type
+			blockLine = strings.TrimSpace(blockLine)
 			Struct.elemType = blockLine
-			Struct.elemName = caseconv.ToCamel(blockLine, false) //todo test
+			camel := caseconv.ToCamelUpper(blockLine, false) //todo test
+			camel = strings.TrimSpace(camel)
+			camel = strings.TrimSuffix(camel, " ")
+			Struct.elemName = camel
 		}
 		Struct.comment = o.fmtComment(col + i)
 		fields = append(fields, Struct)
 	}
+	//for i, field := range fields {//todo bind go Type
+	//
+	//}
 	tmp := stream.New()
 	tmp.WriteStringLn("type " + fields[0].name + " struct{")
 	for _, field := range fields {
-		tmp.WriteStringLn(strings.Join([]string{field.elemType, field.elemName}, " "))
+		tmp.WriteStringLn(strings.Join([]string{field.elemName, field.elemType}, " "))
 	}
 	tmp.WriteStringLn("}\n")
 	return tmp.String()
