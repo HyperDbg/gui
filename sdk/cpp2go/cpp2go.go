@@ -178,6 +178,21 @@ func (o *object) GetDefine(lines []string) string {
 	return b.String()
 }
 
+func (o *object) GetInterfaceName(path string) string {
+	base := filepath.Base(path)
+	if strings.Contains(base, `~`) {
+		base = strings.ReplaceAll(base, `~`, `unknown`)
+	}
+	if strings.Contains(base, `-`) {
+		base = strings.ReplaceAll(base, `-`, `_`)
+	}
+	if strings.Contains(base, `switch`) {
+		base = strings.ReplaceAll(base, `switch`, `switchA`)
+	}
+	split := strings.Split(base, ".")
+	return caseconv.ToCamelUpper(split[0], false)
+}
+
 func (o *object) Convert() *object {
 	for _, cpp := range o.back {
 		if strings.Contains(cpp.path, "bd.cpp.back") {
@@ -210,19 +225,8 @@ func (o *object) Convert() *object {
 			//	b.WriteStringLn(Struct)
 			//	mylog.Json("Struct ==> struct", Struct)
 			//}
-			base := filepath.Base(cpp.path) //todo - $
-			if strings.Contains(base, `~`) {
-				base = strings.ReplaceAll(base, `~`, `unknown`)
-			}
-			if strings.Contains(base, `-`) {
-				base = strings.ReplaceAll(base, `-`, `_`)
-			}
-			if strings.Contains(base, `switch`) {
-				base = strings.ReplaceAll(base, `switch`, `switchA`)
-			}
-			split := strings.Split(base, ".")
-			InterfaceName := caseconv.ToCamelUpper(split[0], false)
-			method := o.GetMethod(lines, InterfaceName)
+
+			method := o.GetMethod(lines, o.GetInterfaceName(cpp.path))
 			if method != "" {
 				b.WriteStringLn(method)
 				mylog.Json("method ==> func", method)
