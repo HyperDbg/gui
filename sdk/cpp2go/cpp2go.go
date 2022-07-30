@@ -118,6 +118,7 @@ func (o *object) Back() *object {
 	}))
 	return o
 }
+func (o *object) fmtComment(col int) string { return " //col:" + fmt.Sprint(col) }
 func (o *object) handleDefineBlock(col int, lines ...string) string {
 	fnClean := func(line string) string {
 		line = strings.ReplaceAll(line, `\`, ``)
@@ -126,14 +127,13 @@ func (o *object) handleDefineBlock(col int, lines ...string) string {
 		line = strings.TrimSpace(line)
 		return line
 	}
-	notes := " //col:" + fmt.Sprint(col)
 	if len(lines) == 1 {
 		line := lines[0]
 		line = fnClean(line)
 		split := strings.Split(line, " ")
 		key := split[0]
 		value := split[1:]
-		return key + " = " + strings.Join(value, " ") + notes
+		return key + " = " + strings.Join(value, " ") + o.fmtComment(col)
 	}
 	for i, line := range lines {
 		line = fnClean(line)
@@ -141,7 +141,7 @@ func (o *object) handleDefineBlock(col int, lines ...string) string {
 	}
 	key := lines[0]
 	value := lines[1:]
-	return key + " = " + strings.Join(value, " ") + notes
+	return key + " = " + strings.Join(value, " ") + o.fmtComment(col)
 }
 func (o *object) GetDefine(lines []string) string {
 	b := stream.New()
@@ -247,21 +247,52 @@ func (o *object) Check(err error) {
 }
 
 func (o *object) GetEnum(lines []string) string {
+	type (
+		enumType struct {
+			key   string
+			value string
+		}
+	)
 	b := stream.New()
-	b.WriteStringLn("const(") //todo
 	enum := make([]string, 0)
 	for i, line := range lines {
 		if strings.Contains(line, `typedef enum`) {
-			//col := i + 1
+			col := i + 1
 			block := lines[i:]
+			blockBody := make([]string, 0)
 			for _, s := range block {
 				if s != "" { //todo
-					//enum = append(enum, o.handleDefineBlock(col, s))
 					if !o.isComment(s) {
-						enum = append(enum, s)
+						blockBody = append(blockBody, s)
 					}
 				}
 				if strings.Contains(s, `}`) {
+					blockLines := make([]string, 0)
+					for _, blockLine := range blockBody {
+						switch {
+						case strings.Contains(blockLine, "{"):
+							continue
+						case strings.Contains(blockLine, "typedef enum "):
+							continue
+						case strings.Contains(blockLine, "}"):
+							continue
+						}
+						blockLine = strings.ReplaceAll(blockLine, ",", "")
+						blockLines = append(blockLines, blockLine)
+					}
+					tmp := stream.New()
+					tmp.WriteStringLn("const(")
+					for j, blockLine := range blockLines {
+						value := j
+						if !strings.Contains(blockLine, "=") {
+							tmp.WriteStringLn(blockLine + " = " + fmt.Sprint(value+1) + o.fmtComment(col+j))
+							value++
+						} else {
+							tmp.WriteStringLn(blockLine + o.fmtComment(col+j))
+						}
+					}
+					tmp.WriteStringLn(")\n")
+					enum = append(enum, tmp.String())
 					break
 				}
 			}
@@ -273,7 +304,6 @@ func (o *object) GetEnum(lines []string) string {
 	for _, s := range enum {
 		b.WriteStringLn(s)
 	}
-	b.WriteStringLn(")")
 	return b.String()
 }
 
