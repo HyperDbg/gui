@@ -175,7 +175,7 @@ func (o *object) GetDefine(lines []string) string {
 
 func (o *object) Convert() *object {
 	for _, cpp := range o.back {
-		if strings.Contains(cpp.path, "SDK\\Headers\\Events.h.back") {
+		if strings.Contains(cpp.path, "bd.cpp.back") {
 			mylog.Info("current file path", cpp.path)
 			//println(cpp.body)
 			lines, ok := tool.File().ToLines(cpp.body)
@@ -194,23 +194,23 @@ func (o *object) Convert() *object {
 			//	mylog.Json("define ==> const", define)
 			//}
 
-			enum := o.GetEnum(lines)
-			if enum != "" {
-				b.WriteStringLn(enum)
-				mylog.Json("enum ==> const", enum)
-			}
+			//enum := o.GetEnum(lines)
+			//if enum != "" {
+			//	b.WriteStringLn(enum)
+			//	mylog.Json("enum ==> const", enum)
+			//}
 
 			//Struct := o.GetStruct(lines)
 			//if Struct != "" {
 			//	b.WriteStringLn(Struct)
 			//	mylog.Json("Struct ==> struct", Struct)
 			//}
-			//
-			//method := o.GetMethod(lines)
-			//if method != "" {
-			//	b.WriteStringLn(method)
-			//	mylog.Json("method ==> func", method)
-			//}
+
+			method := o.GetMethod(lines)
+			if method != "" {
+				b.WriteStringLn(method)
+				mylog.Json("method ==> func", method)
+			}
 
 			//extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 
@@ -228,32 +228,21 @@ func (o *object) Check(err error) {
 
 func (o *object) GetEnum(lines []string) string {
 	b := stream.New()
-	b.WriteStringLn("const(")
+	b.WriteStringLn("const(") //todo
 	enum := make([]string, 0)
 	for i, line := range lines {
-		//block := make([]string, 0)
 		if strings.Contains(line, `typedef enum`) {
-			col := i + 1
-			if line != "" {
-				mylog.Info(fmt.Sprint(col), line)
+			//col := i + 1
+			block := lines[i:]
+			for _, s := range block {
+				if s != "" { //todo
+					//enum = append(enum, o.handleDefineBlock(col, s))
+					enum = append(enum, s)
+				}
+				if strings.Contains(s, `}`) {
+					break
+				}
 			}
-			//enum = append(enum, o.handleDefineBlock(col, line))
-			if !strings.Contains(line, `}`) {
-				//break
-			}
-			//else {
-			//	start := lines[i:]
-			//	for _, s := range start {
-			//		block = append(block, s)
-			//		if !strings.Contains(s, `\`) {
-			//			l := o.handleDefineBlock(col, block...)
-			//			//mylog.Trace(fmt.Sprint(col), l)
-			//			enum = append(enum, l)
-			//			break
-			//		}
-			//	}
-			//}
-
 		}
 	}
 	if len(enum) == 0 {
@@ -273,27 +262,17 @@ func (o *object) GetStruct(lines []string) string {
 	for i, line := range lines {
 		//block := make([]string, 0)
 		if strings.Contains(line, `typedef struct`) {
-			col := i + 1
-			if line != "" {
-				mylog.Info(fmt.Sprint(col), line)
+			//col := i + 1
+			block := lines[i:]
+			for _, s := range block {
+				if s != "" { //todo
+					//enum = append(enum, o.handleDefineBlock(col, s))
+					Struct = append(Struct, s)
+				}
+				if strings.Contains(s, `}`) {
+					break
+				}
 			}
-			//Struct = append(Struct, o.handleDefineBlock(col, line))
-			if !strings.Contains(line, `}`) {
-				//break
-			}
-			//else {
-			//	start := lines[i:]
-			//	for _, s := range start {
-			//		block = append(block, s)
-			//		if !strings.Contains(s, `\`) {
-			//			l := o.handleDefineBlock(col, block...)
-			//			//mylog.Trace(fmt.Sprint(col), l)
-			//			Struct = append(Struct, l)
-			//			break
-			//		}
-			//	}
-			//}
-
 		}
 	}
 	if len(Struct) == 0 {
@@ -313,27 +292,17 @@ func (o *object) GetMethod(lines []string) string {
 	for i, line := range lines {
 		//block := make([]string, 0)
 		if strings.Contains(line, `VOID`) { //todo ???? hard
-			col := i + 1
-			if line != "" {
-				mylog.Info(fmt.Sprint(col), line)
+			//col := i + 1
+			block := lines[i:]
+			for _, s := range block {
+				if s != "" { //todo
+					//enum = append(enum, o.handleDefineBlock(col, s))
+					method = append(method, s)
+				}
+				if strings.Contains(s, `}`) {
+					break
+				}
 			}
-			//method = append(method, o.handleDefineBlock(col, line))
-			if !strings.Contains(line, `}`) {
-				//break
-			}
-			//else {
-			//	start := lines[i:]
-			//	for _, s := range start {
-			//		block = append(block, s)
-			//		if !strings.Contains(s, `\`) {
-			//			l := o.handleDefineBlock(col, block...)
-			//			//mylog.Trace(fmt.Sprint(col), l)
-			//			method = append(method, l)
-			//			break
-			//		}
-			//	}
-			//}
-
 		}
 	}
 	if len(method) == 0 {
