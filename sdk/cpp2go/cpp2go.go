@@ -210,8 +210,10 @@ func (o *object) Convert() *object {
 			//	b.WriteStringLn(Struct)
 			//	mylog.Json("Struct ==> struct", Struct)
 			//}
-
-			method := o.GetMethod(lines, pkgName)
+			base := filepath.Base(cpp.path) //todo - $
+			split := strings.Split(base, ".")
+			InterfaceName := caseconv.ToCamelUpper(split[0], false)
+			method := o.GetMethod(lines, InterfaceName)
 			if method != "" {
 				b.WriteStringLn(method)
 				mylog.Json("method ==> func", method)
@@ -290,23 +292,23 @@ func (o *object) GetStruct(lines []string) string {
 	return b.String()
 }
 
-func (o *object) GetMethod(lines []string, InterfaceName string) string {
-	isNotes := func(line string) (ok bool) {
-		switch {
-		case strings.Contains(line, `/*`):
-			return true
-		case strings.Contains(line, `*/`):
-			return true
-		case strings.Contains(line, `//`):
-			return true
-		case strings.Contains(line, `@`):
-			return true
-		default:
-			return
-		}
+func (o *object) isNotes(line string) (ok bool) {
+	switch {
+	case strings.Contains(line, `/*`):
+		return true
+	case strings.Contains(line, `*/`):
+		return true
+	case strings.Contains(line, `//`):
+		return true
+	case strings.Contains(line, `@`):
+		return true
+	default:
+		return
 	}
+}
+func (o *object) GetMethod(lines []string, InterfaceName string) string {
 	fnIsApi := func(line string) (ok bool) {
-		if isNotes(line) {
+		if o.isNotes(line) {
 			return
 		}
 		return strings.Contains(line, `(`)
@@ -320,8 +322,8 @@ func (o *object) GetMethod(lines []string, InterfaceName string) string {
 			methodBody := make([]string, 0)
 			for j, s := range block {
 				if s != "" {
-					methodBody = append(methodBody, s)
-					if !isNotes(s) {
+					if !o.isNotes(s) {
+						methodBody = append(methodBody, s)
 						if s[0] == '}' {
 							api, _, found := strings.Cut(methodBody[0], "(")
 							if !found {
@@ -351,17 +353,20 @@ func (o *object) GetMethod(lines []string, InterfaceName string) string {
 	b := stream.New()
 	ApiName := caseconv.ToCamelUpper(InterfaceName, false)
 	objectName := caseconv.ToCamel(InterfaceName, false)
+	objectName = strings.TrimSpace(objectName)
+	objectName = strings.TrimRight(objectName, "")
 	b.WriteStringLn("type " + ApiName + " interface(")
 	for _, method := range methods {
 		b.WriteStringLn(method.api)
 	}
-	b.WriteStringLn(")")
+	b.WriteStringLn(")\n")
 	ReceiverName := string(objectName[0])
 	for _, method := range methods {
-		b.WriteStringLn("func (" + ReceiverName + " *" + objectName + ") (ok bool){")
+		split := strings.Split(method.api, `//`)
+		b.WriteStringLn("func (" + ReceiverName + " *" + objectName + ")" + split[0] + "{//" + split[1])
 		b.WriteStringLn(method.body)
 		b.WriteStringLn("return true")
-		b.WriteStringLn("}")
+		b.WriteStringLn("}\n")
 	}
 	return b.String()
 }
