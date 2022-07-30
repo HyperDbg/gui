@@ -195,7 +195,7 @@ func (o *object) GetInterfaceName(path string) string {
 
 func (o *object) Convert() *object {
 	for _, cpp := range o.back {
-		if strings.Contains(cpp.path, "bd.cpp.back") {
+		if strings.Contains(cpp.path, "Events.h.back") {
 			mylog.Info("current file path", cpp.path)
 			//println(cpp.body)
 			lines, ok := tool.File().ToLines(cpp.body)
@@ -214,11 +214,11 @@ func (o *object) Convert() *object {
 			//	mylog.Json("define ==> const", define)
 			//}
 
-			//enum := o.GetEnum(lines)
-			//if enum != "" {
-			//	b.WriteStringLn(enum)
-			//	mylog.Json("enum ==> const", enum)
-			//}
+			enum := o.GetEnum(lines)
+			if enum != "" {
+				b.WriteStringLn(enum)
+				mylog.Json("enum ==> const", enum)
+			}
 
 			//Struct := o.GetStruct(lines)
 			//if Struct != "" {
@@ -226,11 +226,11 @@ func (o *object) Convert() *object {
 			//	mylog.Json("Struct ==> struct", Struct)
 			//}
 
-			method := o.GetMethod(lines, o.GetInterfaceName(cpp.path))
-			if method != "" {
-				b.WriteStringLn(method)
-				mylog.Json("method ==> func", method)
-			}
+			//method := o.GetMethod(lines, o.GetInterfaceName(cpp.path))
+			//if method != "" {
+			//	b.WriteStringLn(method)
+			//	mylog.Json("method ==> func", method)
+			//}
 
 			//extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 
@@ -257,7 +257,9 @@ func (o *object) GetEnum(lines []string) string {
 			for _, s := range block {
 				if s != "" { //todo
 					//enum = append(enum, o.handleDefineBlock(col, s))
-					enum = append(enum, s)
+					if !o.isComment(s) {
+						enum = append(enum, s)
+					}
 				}
 				if strings.Contains(s, `}`) {
 					break
