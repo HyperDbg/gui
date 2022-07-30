@@ -3,6 +3,7 @@ package sdk_test
 import (
 	_ "embed"
 	"github.com/ddkwork/hyperdbgui/sdk"
+	"github.com/ddkwork/librarygo/src/myc2go"
 	"github.com/ddkwork/librarygo/src/stream"
 	"github.com/ddkwork/librarygo/src/stream/tool"
 	"io/fs"
@@ -11,6 +12,16 @@ import (
 	"strings"
 	"testing"
 )
+
+func TestCpp2Go(t *testing.T) {
+	o := myc2go.NewObj()
+	o.Src("D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg").
+		Dst("binding").
+		ExpandPath("miscellaneous\\constants", ".txt").
+		Back().
+		Convert()
+	//o.Format()
+}
 
 func TestLoadVmm(t *testing.T) {
 	s := sdk.New()
