@@ -205,35 +205,35 @@ func (o *object) Convert() *object {
 			dir := filepath.Dir(cpp.path)
 			pkgName := filepath.Base(dir)
 			b.WriteStringLn("package " + pkgName)
-			b.WriteStringLn("//" + cpp.path)
+			b.WriteStringLn("//" + cpp.path + "\n")
 
-			//define := o.GetDefine(lines)
-			//if define != "" {
-			//	b.WriteStringLn(define)
-			//	mylog.Json("define ==> const", define)
-			//}
+			define := o.GetDefine(lines)
+			if define != "" {
+				b.WriteStringLn(define)
+				//mylog.Json("define ==> const", define)
+			}
 
-			//enum := o.GetEnum(lines)
-			//if enum != "" {
-			//	b.WriteStringLn(enum)
-			//	mylog.Json("enum ==> const", enum)
-			//}
+			enum := o.GetEnum(lines)
+			if enum != "" {
+				b.WriteStringLn(enum)
+				//mylog.Json("enum ==> const", enum)
+			}
 
 			Struct := o.GetStruct(lines)
 			if Struct != "" {
 				b.WriteStringLn(Struct)
-				mylog.Json("Struct ==> struct", Struct)
+				//mylog.Json("Struct ==> struct", Struct)
 			}
 
-			//method := o.GetMethod(lines, o.GetInterfaceName(cpp.path))
-			//if method != "" {
-			//	b.WriteStringLn(method)
-			//	mylog.Json("method ==> func", method)
-			//}
+			method := o.GetMethod(lines, o.GetInterfaceName(cpp.path))
+			if method != "" {
+				b.WriteStringLn(method)
+				//mylog.Json("method ==> func", method)
+			}
 
 			//extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 
-			//mylog.Json("cpp ==> go", b.String())
+			mylog.Json("cpp ==> go", b.String())
 		}
 	}
 	return o
