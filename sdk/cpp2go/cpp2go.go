@@ -15,8 +15,6 @@ import (
 
 type (
 	Interface interface {
-
-		//Ext() //include txt when status code dir
 	}
 	methodObj struct {
 		api  string
@@ -195,7 +193,7 @@ func (o *object) GetInterfaceName(path string) string {
 
 func (o *object) Convert() *object {
 	for _, cpp := range o.back {
-		if strings.Contains(cpp.path, "Events.h.back") {
+		if strings.Contains(cpp.path, "Headers\\Events.h.back") {
 			mylog.Info("current file path", cpp.path)
 			//println(cpp.body)
 			lines, ok := tool.File().ToLines(cpp.body)
@@ -246,13 +244,59 @@ func (o *object) Check(err error) {
 	}
 }
 
-func (o *object) GetEnum(lines []string) string {
+func (o *object) HandleEnumBlock(col int, lines ...string) string {
 	type (
 		enumType struct {
-			key   string
-			value string
+			name    string
+			Type    string
+			value   string
+			comment string
 		}
 	)
+	enums := make([]enumType, 0)
+	var enum enumType
+	for i, blockLine := range lines {
+		switch {
+		case strings.Contains(blockLine, "typedef enum "):
+			enum.Type = strings.TrimPrefix(blockLine, `typedef enum _`) //todo check more
+			continue
+		case strings.Contains(blockLine, "{"):
+			continue
+		case blockLine == "":
+			continue
+		case strings.Contains(blockLine, "}"):
+			continue
+		}
+		blockLine = strings.ReplaceAll(blockLine, ",", "")
+		enum.comment = o.fmtComment(col + i)
+		enum.name = blockLine
+		enums = append(enums, enum)
+	}
+	tmp := stream.New()
+	types := make(map[string]int)
+	for i, e := range enums {
+		types[e.Type] = i
+	}
+	for s := range types {
+		tmp.WriteStringLn("type " + s + " uint32")
+	}
+	tmp.WriteStringLn("const(")
+	for i, enum := range enums {
+		if !strings.Contains(enum.name, "=") {
+			enum.value = fmt.Sprint(i + 1)
+			tmp.WriteStringLn(strings.Join([]string{enum.name, enum.Type, "=", enum.value, enum.comment}, " "))
+		} else {
+			split := strings.Split(enum.name, "=")
+			enum.name = split[0]
+			enum.value = split[1]
+			tmp.WriteStringLn(strings.Join([]string{enum.name, enum.Type, "=", enum.value, enum.comment}, " "))
+		}
+	}
+	tmp.WriteStringLn(")\n")
+	return tmp.String()
+}
+
+func (o *object) GetEnum(lines []string) string {
 	b := stream.New()
 	enum := make([]string, 0)
 	for i, line := range lines {
@@ -261,38 +305,9 @@ func (o *object) GetEnum(lines []string) string {
 			block := lines[i:]
 			blockBody := make([]string, 0)
 			for _, s := range block {
-				if s != "" { //todo
-					if !o.isComment(s) {
-						blockBody = append(blockBody, s)
-					}
-				}
+				blockBody = append(blockBody, s)
 				if strings.Contains(s, `}`) {
-					blockLines := make([]string, 0)
-					for _, blockLine := range blockBody {
-						switch {
-						case strings.Contains(blockLine, "{"):
-							continue
-						case strings.Contains(blockLine, "typedef enum "):
-							continue
-						case strings.Contains(blockLine, "}"):
-							continue
-						}
-						blockLine = strings.ReplaceAll(blockLine, ",", "")
-						blockLines = append(blockLines, blockLine)
-					}
-					tmp := stream.New()
-					tmp.WriteStringLn("const(")
-					for j, blockLine := range blockLines {
-						value := j
-						if !strings.Contains(blockLine, "=") {
-							tmp.WriteStringLn(blockLine + " = " + fmt.Sprint(value+1) + o.fmtComment(col+j))
-							value++
-						} else {
-							tmp.WriteStringLn(blockLine + o.fmtComment(col+j))
-						}
-					}
-					tmp.WriteStringLn(")\n")
-					enum = append(enum, tmp.String())
+					enum = append(enum, o.HandleEnumBlock(col, blockBody...))
 					break
 				}
 			}
