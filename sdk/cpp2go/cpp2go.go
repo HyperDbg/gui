@@ -193,47 +193,50 @@ func (o *object) GetInterfaceName(path string) string {
 }
 
 func (o *object) Convert() *object {
-	for _, cpp := range o.back {
-		if strings.Contains(cpp.path, "Headers\\Events.h.back") {
-			mylog.Info("current file path", cpp.path)
-			//println(cpp.body)
-			lines, ok := tool.File().ToLines(cpp.body)
-			if !ok {
-				panic("ToLines")
-			}
-			b := stream.New()
-			dir := filepath.Dir(cpp.path)
-			pkgName := filepath.Base(dir)
-			b.WriteStringLn("package " + pkgName)
-			b.WriteStringLn("//" + cpp.path + "\n")
+	for i, cpp := range o.back {
+		if !strings.Contains(cpp.path, "Headers\\Events.h.back") {
+			//continue //test
+		}
+		mylog.Info("current file path", cpp.path)
+		lines, ok := tool.File().ToLines(cpp.body)
+		if !ok {
+			panic("ToLines")
+		}
+		b := stream.New()
+		dir := filepath.Dir(cpp.path)
+		pkgName := filepath.Base(dir)
+		b.WriteStringLn("package " + pkgName)
+		b.WriteStringLn("//" + cpp.path + "\n")
 
-			define := o.GetDefine(lines)
-			if define != "" {
-				b.WriteStringLn(define)
-				//mylog.Json("define ==> const", define)
-			}
+		define := o.GetDefine(lines)
+		if define != "" {
+			b.WriteStringLn(define)
+			//mylog.Json("define ==> const", define)
+		}
 
-			enum := o.GetEnum(lines)
-			if enum != "" {
-				b.WriteStringLn(enum)
-				//mylog.Json("enum ==> const", enum)
-			}
+		enum := o.GetEnum(lines)
+		if enum != "" {
+			b.WriteStringLn(enum)
+			//mylog.Json("enum ==> const", enum)
+		}
 
-			Struct := o.GetStruct(lines)
-			if Struct != "" {
-				b.WriteStringLn(Struct)
-				//mylog.Json("Struct ==> struct", Struct)
-			}
+		Struct := o.GetStruct(lines)
+		if Struct != "" {
+			b.WriteStringLn(Struct)
+			//mylog.Json("Struct ==> struct", Struct)
+		}
 
-			method := o.GetMethod(lines, o.GetInterfaceName(cpp.path))
-			if method != "" {
-				b.WriteStringLn(method)
-				//mylog.Json("method ==> func", method)
-			}
+		method := o.GetMethod(lines, o.GetInterfaceName(cpp.path))
+		if method != "" {
+			b.WriteStringLn(method)
+			//mylog.Json("method ==> func", method)
+		}
 
-			//extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
+		//extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee; //todo
 
-			mylog.Json("cpp ==> go", b.String())
+		//mylog.Json("cpp ==> go", b.String())
+		if !tool.File().WriteTruncate(o.goPath[i].path, b.String()) {
+			panic("cpp ==> go error")
 		}
 	}
 	return o
@@ -341,9 +344,18 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 	var Struct structType
 
 	fnGetWord := func(line string) (word, next string) {
+		if strings.Contains(line, "MaxCpuidInputValue") { //debug
+			//mylog.Info("line", line)
+		}
 		space := strings.TrimSpace(line)
 		index := strings.Index(space, " ")
-		word = space[:index]
+		if index < 0 {
+			word = space
+			return
+		}
+		//mylog.Info("line", line)
+		//mylog.Info("index", index)
+		word = space[:index] //
 		next = space[index:]
 		return
 	}
@@ -356,6 +368,8 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 			continue
 		case blockLine == "":
 			continue
+		case o.isComment(blockLine):
+			continue
 		case strings.Contains(blockLine, "}"):
 			continue
 		}
@@ -367,9 +381,9 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 				word = strings.ReplaceAll(word, ";", "")
 				Struct.elemName = word
 			} else { //not ' ' space,it's a nested field
-				word = strings.ReplaceAll(word, ";", "")
-				Struct.elemName = word
 				Struct.elemType = "byte" //? see  TypeOfAction;
+				Struct.elemName = word
+				word = strings.ReplaceAll(word, ";", "")
 			}
 		} else {
 			//nested type
@@ -385,6 +399,11 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 	}
 	for i, field := range fields {
 		fields[i].elemType = o.bindGoType(field.elemType)
+	}
+	if len(fields) == 0 {
+		mylog.Struct(fields)
+		return "" //todo check
+		panic("len(fields)==0")
 	}
 	tmp := stream.New()
 	tmp.WriteStringLn("type " + fields[0].name + " struct{")
