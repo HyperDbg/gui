@@ -189,7 +189,7 @@ func (o *object) Convert() *object {
 			}
 			b := stream.New()
 			dir := filepath.Dir(cpp.path)
-			pkgName := filepath.Base(dir) //todo rename
+			pkgName := filepath.Base(dir)
 			b.WriteStringLn("package " + pkgName)
 			b.WriteStringLn("//" + cpp.path)
 
@@ -211,6 +211,15 @@ func (o *object) Convert() *object {
 			//	mylog.Json("Struct ==> struct", Struct)
 			//}
 			base := filepath.Base(cpp.path) //todo - $
+			if strings.Contains(base, `~`) {
+				base = strings.ReplaceAll(base, `~`, `unknown`)
+			}
+			if strings.Contains(base, `-`) {
+				base = strings.ReplaceAll(base, `-`, `_`)
+			}
+			if strings.Contains(base, `switch`) {
+				base = strings.ReplaceAll(base, `switch`, `switchA`)
+			}
 			split := strings.Split(base, ".")
 			InterfaceName := caseconv.ToCamelUpper(split[0], false)
 			method := o.GetMethod(lines, InterfaceName)
@@ -292,7 +301,7 @@ func (o *object) GetStruct(lines []string) string {
 	return b.String()
 }
 
-func (o *object) isNotes(line string) (ok bool) {
+func (o *object) isComment(line string) (ok bool) {
 	switch {
 	case strings.Contains(line, `/*`):
 		return true
@@ -308,7 +317,7 @@ func (o *object) isNotes(line string) (ok bool) {
 }
 func (o *object) GetMethod(lines []string, InterfaceName string) string {
 	fnIsApi := func(line string) (ok bool) {
-		if o.isNotes(line) {
+		if o.isComment(line) {
 			return
 		}
 		return strings.Contains(line, `(`)
@@ -322,7 +331,7 @@ func (o *object) GetMethod(lines []string, InterfaceName string) string {
 			methodBody := make([]string, 0)
 			for j, s := range block {
 				if s != "" {
-					if !o.isNotes(s) {
+					if !o.isComment(s) {
 						methodBody = append(methodBody, s)
 						if s[0] == '}' {
 							api, _, found := strings.Cut(methodBody[0], "(")
@@ -355,11 +364,13 @@ func (o *object) GetMethod(lines []string, InterfaceName string) string {
 	objectName := caseconv.ToCamel(InterfaceName, false)
 	objectName = strings.TrimSpace(objectName)
 	objectName = strings.TrimRight(objectName, "")
-	b.WriteStringLn("type " + ApiName + " interface(")
+	b.WriteStringLn("type (\n" + ApiName + " interface{")
 	for _, method := range methods {
 		b.WriteStringLn(method.api)
 	}
-	b.WriteStringLn(")\n")
+	b.WriteStringLn("}\n)\n")
+	b.WriteStringLn(`func New` + InterfaceName + `() { return & ` + objectName + `{} }` + "\n")
+
 	ReceiverName := string(objectName[0])
 	for _, method := range methods {
 		split := strings.Split(method.api, `//`)
