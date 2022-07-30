@@ -35,9 +35,9 @@ func Test2(t *testing.T) {
 func TestName(t *testing.T) {
 	o := cpp2go.NewObj()
 	o.Src("../HyperDbgDev/hyperdbg").
-		Dsc("back").
+		Dst("back").
 		ExpandPath("miscellaneous\\constants", ".txt").
-		Dsc("back").
+		Dst("back").
 		Back().
 		Convert()
 	//o.Format()

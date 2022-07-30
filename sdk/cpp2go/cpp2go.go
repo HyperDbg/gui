@@ -70,7 +70,7 @@ func (o *object) Src(s string) *object {
 	o.src = s
 	return o
 }
-func (o *object) Dsc(s string) *object {
+func (o *object) Dst(s string) *object {
 	o.dst = s
 	return o
 }
