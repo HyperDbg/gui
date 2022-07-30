@@ -273,13 +273,7 @@ func (o *object) HandleEnumBlock(col int, lines ...string) string {
 		enums = append(enums, enum)
 	}
 	tmp := stream.New()
-	types := make(map[string]int)
-	for i, e := range enums {
-		types[e.Type] = i
-	}
-	for s := range types {
-		tmp.WriteStringLn("type " + s + " uint32")
-	}
+	tmp.WriteStringLn("type " + enums[0].name + " uint32")
 	tmp.WriteStringLn("const(")
 	for i, enum := range enums {
 		if !strings.Contains(enum.name, "=") {
@@ -331,12 +325,12 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 			comment  string
 		}
 	)
-	structs := make([]structType, 0)
+	fields := make([]structType, 0)
 	var Struct structType
 	for i, blockLine := range lines {
 		switch {
-		case strings.Contains(blockLine, "typedef Struct "):
-			Struct.elemType = strings.TrimPrefix(blockLine, `typedef Struct _`) //todo check more
+		case strings.Contains(blockLine, "typedef struct "):
+			Struct.name = strings.TrimPrefix(blockLine, `typedef struct _`) //todo check more
 			continue
 		case strings.Contains(blockLine, "{"):
 			continue
@@ -345,32 +339,30 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 		case strings.Contains(blockLine, "}"):
 			continue
 		}
-		blockLine = strings.ReplaceAll(blockLine, ",", "")
+		if strings.Contains(blockLine, ";") {
+			split := strings.Split(blockLine, " ") //todo test more
+			if len(split) == 1 {
+				blockLine = strings.ReplaceAll(blockLine, ";", "")
+				Struct.elemType = blockLine
+				Struct.elemName = "byte" //? see     TypeOfAction;
+			}
+			Struct.elemType = split[0]
+			Struct.elemName = split[1]
+			Struct.elemName = strings.ReplaceAll(Struct.elemName, ";", "")
+		} else {
+			//nested
+			Struct.elemType = blockLine
+			Struct.elemName = caseconv.ToCamel(blockLine, false) //todo test
+		}
 		Struct.comment = o.fmtComment(col + i)
-		Struct.name = blockLine
-		structs = append(structs, Struct)
+		fields = append(fields, Struct)
 	}
 	tmp := stream.New()
-	types := make(map[string]int)
-	for i, e := range structs {
-		types[e.elemType] = i
+	tmp.WriteStringLn("type " + fields[0].name + " struct{")
+	for _, field := range fields {
+		tmp.WriteStringLn(strings.Join([]string{field.elemType, field.elemName}, " "))
 	}
-	for s := range types {
-		tmp.WriteStringLn("type " + s + " uint32")
-	}
-	tmp.WriteStringLn("const(")
-	for i, enum := range structs {
-		if !strings.Contains(enum.name, "=") {
-			enum.elemName = fmt.Sprint(i + 1)
-			tmp.WriteStringLn(strings.Join([]string{enum.name, enum.elemType, "=", enum.elemName, enum.comment}, " "))
-		} else {
-			split := strings.Split(enum.name, "=")
-			enum.name = split[0]
-			enum.elemName = split[1]
-			tmp.WriteStringLn(strings.Join([]string{enum.name, enum.elemType, "=", enum.elemName, enum.comment}, " "))
-		}
-	}
-	tmp.WriteStringLn(")\n")
+	tmp.WriteStringLn("}\n")
 	return tmp.String()
 }
 
