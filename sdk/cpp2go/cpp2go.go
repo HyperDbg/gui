@@ -2,6 +2,7 @@ package cpp2go
 
 import (
 	"fmt"
+	"github.com/ddkwork/librarygo/src/caseconv"
 	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream"
 	"github.com/ddkwork/librarygo/src/stream/tool"
@@ -16,6 +17,10 @@ type (
 	Interface interface {
 
 		//Ext() //include txt when status code dir
+	}
+	methodObj struct {
+		api  string
+		body string
 	}
 	pathBody struct {
 		path string
@@ -206,7 +211,7 @@ func (o *object) Convert() *object {
 			//	mylog.Json("Struct ==> struct", Struct)
 			//}
 
-			method := o.GetMethod(lines)
+			method := o.GetMethod(lines, pkgName)
 			if method != "" {
 				b.WriteStringLn(method)
 				mylog.Json("method ==> func", method)
@@ -285,33 +290,79 @@ func (o *object) GetStruct(lines []string) string {
 	return b.String()
 }
 
-func (o *object) GetMethod(lines []string) string {
-	b := stream.New()
-	b.WriteStringLn("func xxx (")
-	method := make([]string, 0)
-	for i, line := range lines {
-		//block := make([]string, 0)
-		if strings.Contains(line, `VOID`) { //todo ???? hard
-			//col := i + 1
+func (o *object) GetMethod(lines []string, InterfaceName string) string {
+	isNotes := func(line string) (ok bool) {
+		switch {
+		case strings.Contains(line, `/*`):
+			return true
+		case strings.Contains(line, `*/`):
+			return true
+		case strings.Contains(line, `//`):
+			return true
+		case strings.Contains(line, `@`):
+			return true
+		default:
+			return
+		}
+	}
+	fnIsApi := func(line string) (ok bool) {
+		if isNotes(line) {
+			return
+		}
+		return strings.Contains(line, `(`)
+	}
+	methods := make([]methodObj, 0)
+	for i := 0; i < len(lines); i++ {
+		line := lines[i]
+		if fnIsApi(line) {
+			col := i + 1
 			block := lines[i:]
-			for _, s := range block {
-				if s != "" { //todo
-					//enum = append(enum, o.handleDefineBlock(col, s))
-					method = append(method, s)
-				}
-				if strings.Contains(s, `}`) {
-					break
+			methodBody := make([]string, 0)
+			for j, s := range block {
+				if s != "" {
+					methodBody = append(methodBody, s)
+					if !isNotes(s) {
+						if s[0] == '}' {
+							api, _, found := strings.Cut(methodBody[0], "(")
+							if !found {
+								panic("api not found")
+							}
+							api += "()(ok bool)"
+							api += "//col:" + fmt.Sprint(col+j)
+							//mylog.Info(fmt.Sprint(col+j), s)
+							body := `/*`
+							body += strings.Join(methodBody, "\n")
+							body += `*/`
+							methods = append(methods, methodObj{
+								api:  api,
+								body: body,
+							})
+							i += j
+							break
+						}
+					}
 				}
 			}
 		}
 	}
-	if len(method) == 0 {
+	if len(methods) == 0 {
 		return ""
 	}
-	for _, s := range method {
-		b.WriteStringLn(s)
+	b := stream.New()
+	ApiName := caseconv.ToCamelUpper(InterfaceName, false)
+	objectName := caseconv.ToCamel(InterfaceName, false)
+	b.WriteStringLn("type " + ApiName + " interface(")
+	for _, method := range methods {
+		b.WriteStringLn(method.api)
 	}
 	b.WriteStringLn(")")
+	ReceiverName := string(objectName[0])
+	for _, method := range methods {
+		b.WriteStringLn("func (" + ReceiverName + " *" + objectName + ") (ok bool){")
+		b.WriteStringLn(method.body)
+		b.WriteStringLn("return true")
+		b.WriteStringLn("}")
+	}
 	return b.String()
 }
 
