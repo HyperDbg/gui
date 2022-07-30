@@ -163,6 +163,9 @@ func (o *object) GetDefine(lines []string) string {
 			}
 		}
 	}
+	if len(define) == 0 {
+		return ""
+	}
 	for _, s := range define {
 		b.WriteStringLn(s)
 	}
@@ -172,7 +175,7 @@ func (o *object) GetDefine(lines []string) string {
 
 func (o *object) Convert() *object {
 	for _, cpp := range o.back {
-		if strings.Contains(cpp.path, "Constants.h.back") {
+		if strings.Contains(cpp.path, "Events.h.back") {
 			mylog.Info("current file path", cpp.path)
 			//println(cpp.body)
 			lines, ok := tool.File().ToLines(cpp.body)
@@ -185,10 +188,13 @@ func (o *object) Convert() *object {
 			b.WriteStringLn("package " + pkgName)
 			b.WriteStringLn("//" + cpp.path)
 
-			b.WriteStringLn(o.GetDefine(lines))
+			define := o.GetDefine(lines)
+			if define != "" {
+				b.WriteStringLn(define)
+				mylog.Json("define ==> const", define)
+			}
 
-			mylog.Json("define ==> const", b.String())
-
+			mylog.Json("cpp ==> go", b.String())
 		}
 	}
 	return o
