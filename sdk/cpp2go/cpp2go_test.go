@@ -29,7 +29,6 @@ func TestName(t *testing.T) {
 	o := cpp2go.NewObj()
 	o.Src("../HyperDbgDev/hyperdbg").
 		Dsc("back").
-		Ext([]string{".c", ".cpp", ".inc", ".h", ".c", ".asm"}).
 		ExpandPath("miscellaneous\\constants", ".txt").
 		Dsc("back").
 		Back().

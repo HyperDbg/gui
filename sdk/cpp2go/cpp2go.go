@@ -48,13 +48,12 @@ func NewObj() *object {
 		dst:        "",
 		col:        "",
 		noExtPath:  "",
-		ext:        make([]string, 0),
+		ext:        []string{".c", ".cpp", ".inc", ".h", ".c", ".asm"},
 		back:       make([]pathBody, 0),
 		goPath:     make([]pathBody, 0),
 		expandPath: expandPath{},
 	}
 }
-
 func (o *object) ExpandPath(no, ext string) *object {
 	o.expandPath = expandPath{
 		path: no,
@@ -62,24 +61,20 @@ func (o *object) ExpandPath(no, ext string) *object {
 	}
 	return o
 }
-
 func (o *object) Src(s string) *object {
 	o.src = s
 	return o
 }
-
 func (o *object) Dsc(s string) *object {
 	o.dst = s
 	return o
 }
-
 func (o *object) expandExt(path string) (e string) {
 	if strings.Contains(path, o.expandPath.path) {
 		return filepath.Ext(path)
 	}
 	return ""
 }
-
 func (o *object) backPath(path string) string {
 	slash := filepath.ToSlash(path)
 	_, after, found := strings.Cut(slash, `/`)
@@ -176,7 +171,6 @@ func (o *object) GetDefine(lines []string) string {
 	b.WriteStringLn(")")
 	return b.String()
 }
-
 func (o *object) GetInterfaceName(path string) string {
 	base := filepath.Base(path)
 	if strings.Contains(base, `~`) {
@@ -191,7 +185,6 @@ func (o *object) GetInterfaceName(path string) string {
 	split := strings.Split(base, ".")
 	return caseconv.ToCamelUpper(split[0], false)
 }
-
 func (o *object) Convert() *object {
 	for i, cpp := range o.back {
 		if !strings.Contains(cpp.path, "Headers\\Events.h.back") {
@@ -247,7 +240,6 @@ func (o *object) Check(err error) {
 		panic(err.Error())
 	}
 }
-
 func (o *object) HandleEnumBlock(col int, lines ...string) string {
 	type (
 		enumType struct {
@@ -293,7 +285,6 @@ func (o *object) HandleEnumBlock(col int, lines ...string) string {
 	tmp.WriteStringLn(")\n")
 	return tmp.String()
 }
-
 func (o *object) GetEnum(lines []string) string {
 	b := stream.New()
 	enum := make([]string, 0)
@@ -319,7 +310,6 @@ func (o *object) GetEnum(lines []string) string {
 	}
 	return b.String()
 }
-
 func (o *object) bindGoType(cppType string) (goType string) {
 	switch cppType {
 	case "UINT64":
@@ -344,17 +334,15 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 	var Struct structType
 
 	fnGetWord := func(line string) (word, next string) {
-		if strings.Contains(line, "MaxCpuidInputValue") { //debug
-			//mylog.Info("line", line)
-		}
+		//if strings.Contains(line, "MaxCpuidInputValue") { //debug
+		//mylog.Info("line", line)
+		//}
 		space := strings.TrimSpace(line)
 		index := strings.Index(space, " ")
 		if index < 0 {
 			word = space
 			return
 		}
-		//mylog.Info("line", line)
-		//mylog.Info("index", index)
 		word = space[:index] //
 		next = space[index:]
 		return
@@ -413,7 +401,6 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 	tmp.WriteStringLn("}\n")
 	return tmp.String()
 }
-
 func (o *object) GetStruct(lines []string) string {
 	b := stream.New()
 	Struct := make([]string, 0)
@@ -439,7 +426,6 @@ func (o *object) GetStruct(lines []string) string {
 	}
 	return b.String()
 }
-
 func (o *object) isComment(line string) (ok bool) {
 	switch {
 	case strings.Contains(line, `/*`):
@@ -520,33 +506,11 @@ func (o *object) GetMethod(lines []string, InterfaceName string) string {
 	}
 	return b.String()
 }
-
-func (o *object) Struct() *object {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (o *object) Var() *object {
 	//TODO implement me
 	panic("implement me")
 }
-
-func (o *object) Method() *object {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (o *object) Type() *object {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (o *object) Format() *object {
 	//TODO implement me
 	panic("implement me")
-}
-
-func (o *object) Ext(e []string) *object {
-	o.ext = e
-	return o
 }
