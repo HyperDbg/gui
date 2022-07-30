@@ -54,16 +54,6 @@ const(
 
 
 
-type DEBUGGER_MODIFY_EVENTS struct{
-Tag uint64
-KernelStatus uint64
-DebuggerModifyEventsType DEBUGGER_MODIFY_EVENTS_TYPE
-TypeOfAction byte
-IsEnabled bool
-}
-
-
-
 type (
 Events interface{
 #define SIZEOF_DEBUGGER_MODIFY_EVENTS sizeof()(ok bool)//col:92

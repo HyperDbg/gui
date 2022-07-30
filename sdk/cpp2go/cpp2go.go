@@ -213,11 +213,11 @@ func (o *object) Convert() *object {
 			//mylog.Json("enum ==> const", enum)
 		}
 
-		Struct := o.GetStruct(lines)
-		if Struct != "" {
-			b.WriteStringLn(Struct)
-			//mylog.Json("Struct ==> struct", Struct)
-		}
+		//Struct := o.GetStruct(lines)//todo need fix bug
+		//if Struct != "" {
+		//	b.WriteStringLn(Struct)
+		//	//mylog.Json("Struct ==> struct", Struct)
+		//}
 
 		method := o.GetMethod(lines, o.GetInterfaceName(cpp.path))
 		if method != "" {

@@ -76,19 +76,6 @@ GDI_CLIENT_METAFILE16_TYPE = (GDI_CLIENT_CLIENTOBJ_TYPE | GDI_ALTTYPE_1) //col:1
 GDI_CLIENT_PEN_TYPE = (GDI_CLIENT_BRUSH_TYPE | GDI_ALTTYPE_1) //col:102
 )
 
-type GDI_HANDLE_ENTRY struct{
-Union union
-Object PVOID
-NextFree PVOID
-}
-
-
-type GDI_SHARED_MEMORY struct{
-Handles[GDI_MAX_HANDLE_COUNT] GDI_HANDLE_ENTRY
-}
-
-
-
 type (
 Ntgdi interface{
  * Attribution 4.0 International ()(ok bool)//col:125
