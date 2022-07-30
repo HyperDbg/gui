@@ -231,6 +231,7 @@ func (o *object) Convert() *object {
 		if !tool.File().WriteTruncate(o.goPath[i].path, b.String()) {
 			panic("cpp ==> go error")
 		}
+		b.Reset()
 	}
 	return o
 }
@@ -389,7 +390,7 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 		fields[i].elemType = o.bindGoType(field.elemType)
 	}
 	if len(fields) == 0 {
-		mylog.Struct(fields)
+		//mylog.Struct(fields)
 		return "" //todo check
 		panic("len(fields)==0")
 	}
