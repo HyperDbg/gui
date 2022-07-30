@@ -212,17 +212,17 @@ func (o *object) Convert() *object {
 			//	mylog.Json("define ==> const", define)
 			//}
 
-			enum := o.GetEnum(lines)
-			if enum != "" {
-				b.WriteStringLn(enum)
-				mylog.Json("enum ==> const", enum)
-			}
-
-			//Struct := o.GetStruct(lines)
-			//if Struct != "" {
-			//	b.WriteStringLn(Struct)
-			//	mylog.Json("Struct ==> struct", Struct)
+			//enum := o.GetEnum(lines)
+			//if enum != "" {
+			//	b.WriteStringLn(enum)
+			//	mylog.Json("enum ==> const", enum)
 			//}
+
+			Struct := o.GetStruct(lines)
+			if Struct != "" {
+				b.WriteStringLn(Struct)
+				mylog.Json("Struct ==> struct", Struct)
+			}
 
 			//method := o.GetMethod(lines, o.GetInterfaceName(cpp.path))
 			//if method != "" {
@@ -322,21 +322,70 @@ func (o *object) GetEnum(lines []string) string {
 	return b.String()
 }
 
+func (o *object) HandleStructBlock(col int, lines ...string) string {
+	type (
+		structType struct {
+			name     string
+			elemType string
+			elemName string
+			comment  string
+		}
+	)
+	structs := make([]structType, 0)
+	var Struct structType
+	for i, blockLine := range lines {
+		switch {
+		case strings.Contains(blockLine, "typedef Struct "):
+			Struct.elemType = strings.TrimPrefix(blockLine, `typedef Struct _`) //todo check more
+			continue
+		case strings.Contains(blockLine, "{"):
+			continue
+		case blockLine == "":
+			continue
+		case strings.Contains(blockLine, "}"):
+			continue
+		}
+		blockLine = strings.ReplaceAll(blockLine, ",", "")
+		Struct.comment = o.fmtComment(col + i)
+		Struct.name = blockLine
+		structs = append(structs, Struct)
+	}
+	tmp := stream.New()
+	types := make(map[string]int)
+	for i, e := range structs {
+		types[e.elemType] = i
+	}
+	for s := range types {
+		tmp.WriteStringLn("type " + s + " uint32")
+	}
+	tmp.WriteStringLn("const(")
+	for i, enum := range structs {
+		if !strings.Contains(enum.name, "=") {
+			enum.elemName = fmt.Sprint(i + 1)
+			tmp.WriteStringLn(strings.Join([]string{enum.name, enum.elemType, "=", enum.elemName, enum.comment}, " "))
+		} else {
+			split := strings.Split(enum.name, "=")
+			enum.name = split[0]
+			enum.elemName = split[1]
+			tmp.WriteStringLn(strings.Join([]string{enum.name, enum.elemType, "=", enum.elemName, enum.comment}, " "))
+		}
+	}
+	tmp.WriteStringLn(")\n")
+	return tmp.String()
+}
+
 func (o *object) GetStruct(lines []string) string {
 	b := stream.New()
-	b.WriteStringLn("type xxx struct(")
 	Struct := make([]string, 0)
 	for i, line := range lines {
-		//block := make([]string, 0)
 		if strings.Contains(line, `typedef struct`) {
-			//col := i + 1
+			col := i + 1
 			block := lines[i:]
+			blockBody := make([]string, 0)
 			for _, s := range block {
-				if s != "" { //todo
-					//enum = append(enum, o.handleDefineBlock(col, s))
-					Struct = append(Struct, s)
-				}
+				blockBody = append(blockBody, s)
 				if strings.Contains(s, `}`) {
+					Struct = append(Struct, o.HandleStructBlock(col, blockBody...))
 					break
 				}
 			}
@@ -348,7 +397,6 @@ func (o *object) GetStruct(lines []string) string {
 	for _, s := range Struct {
 		b.WriteStringLn(s)
 	}
-	b.WriteStringLn(")")
 	return b.String()
 }
 
