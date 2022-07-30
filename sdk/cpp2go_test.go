@@ -20,13 +20,6 @@ import (
 	"testing"
 )
 
-/*
-c++   自己解析方法
-h ast 批量
-c c2go
-mod重写和单元测试
-*/
-
 func TestXmake(t *testing.T) {
 	targets := stream.New()
 	targets.WriteStringLn("add_rules(\"mode.debug\", \"mode.release\")\n")
