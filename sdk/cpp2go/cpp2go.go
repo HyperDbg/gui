@@ -3,9 +3,14 @@ package cpp2go
 import (
 	"fmt"
 	"github.com/ddkwork/librarygo/src/caseconv"
+	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream"
 	"github.com/ddkwork/librarygo/src/stream/tool"
+	"github.com/goplus/c2go"
+	"github.com/goplus/c2go/cl"
+	"github.com/goplus/c2go/clang/preprocessor"
+	"github.com/goplus/gox"
 	"go/types"
 	"io/fs"
 	"os"
@@ -184,6 +189,16 @@ func (o *object) GetInterfaceName(path string) string {
 	}
 	split := strings.Split(base, ".")
 	return caseconv.ToCamelUpper(split[0], false)
+}
+func Run(path, pkg string) {
+	abs, err := filepath.Abs(path)
+	if !mycheck.Error(err) {
+		return
+	}
+	cl.SetDebug(cl.DbgFlagAll)
+	preprocessor.SetDebug(preprocessor.DbgFlagAll)
+	gox.SetDebug(gox.DbgFlagInstruction) // | gox.DbgFlagMatch)
+	c2go.Run(pkg, abs, c2go.FlagDumpJson, nil)
 }
 func (o *object) Convert() *object {
 	for i, cpp := range o.back {
