@@ -1,6 +1,7 @@
 package cpp2go
 
 import (
+	"fmt"
 	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream/tool"
 	"io/fs"
@@ -10,12 +11,6 @@ import (
 	"strings"
 )
 
-/*
-c++   自己解析方法
-h ast 批量
-c c2go
-mod重写和单元测试
-*/
 type (
 	Interface interface {
 
@@ -35,6 +30,7 @@ type (
 		col        string
 		noExtPath  string
 		ext        []string
+		define     []string
 		back       []pathBody
 		goPath     []pathBody
 		expandPath expandPath
@@ -117,11 +113,64 @@ func (o *object) Back() *object {
 	}))
 	return o
 }
+func (o *object) handleDefineBlock(col int, lines ...string) string {
+	fnClean := func(line string) string {
+		line = strings.ReplaceAll(line, `\`, ``)
+		line = strings.ReplaceAll(line, `#define`, ``)
+		line = strings.ReplaceAll(line, `sizeof(UINT32)`, `unsafe.Sizeof(uint32(0))`)
+		line = strings.TrimSpace(line)
+		return line
+	}
+	notes := " //col:" + fmt.Sprint(col)
+	if len(lines) == 1 {
+		line := lines[0]
+		line = fnClean(line)
+		split := strings.Split(line, " ")
+		key := split[0]
+		value := split[1:]
+		return key + " = " + strings.Join(value, " ") + notes
+	}
+	for i, line := range lines {
+		line = fnClean(line)
+		lines[i] = line
+	}
+	key := lines[0]
+	value := lines[1:]
+	return key + " = " + strings.Join(value, " ") + notes
+}
 func (o *object) Convert() *object {
 	for _, cpp := range o.back {
-		if strings.Contains(cpp.path, "Ioctls.h.back") {
-			println(cpp.path)
-			println(cpp.body)
+		if strings.Contains(cpp.path, "Constants.h.back") {
+			mylog.Info("current file path", cpp.path)
+			//println(cpp.body)
+			lines, ok := tool.File().ToLines(cpp.body)
+			if !ok {
+				panic("ToLines")
+			}
+			for i, line := range lines {
+				block := make([]string, 0)
+				if strings.Contains(line, `#define`) {
+					col := i + 1
+					//mylog.Info(fmt.Sprint(col), line)
+					if !strings.Contains(line, `\`) {
+						o.define = append(o.define, o.handleDefineBlock(col, line))
+					} else {
+						start := lines[i:]
+						for _, s := range start {
+							block = append(block, s)
+							if !strings.Contains(s, `\`) {
+								l := o.handleDefineBlock(col, block...)
+								//mylog.Trace(fmt.Sprint(col), l)
+								o.define = append(o.define, l)
+								break
+							}
+						}
+					}
+				}
+			}
+			for _, s := range o.define {
+				mylog.Trace("", s)
+			}
 		}
 	}
 	return o
@@ -138,12 +187,7 @@ func (o *object) Enum() *object {
 	panic("implement me")
 }
 
-func (o *object) Define() *object {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (o *object) Strcut() *object {
+func (o *object) Struct() *object {
 	//TODO implement me
 	panic("implement me")
 }
