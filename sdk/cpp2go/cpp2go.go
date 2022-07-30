@@ -6,6 +6,7 @@ import (
 	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream"
 	"github.com/ddkwork/librarygo/src/stream/tool"
+	"go/types"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -316,6 +317,17 @@ func (o *object) GetEnum(lines []string) string {
 	return b.String()
 }
 
+func (o *object) bindGoType(cppType string) (goType string) {
+	switch cppType {
+	case "UINT64":
+		return types.Typ[types.Uint64].Name()
+	case "BOOLEAN":
+		return types.Typ[types.Bool].Name()
+
+	default:
+		return cppType
+	}
+}
 func (o *object) HandleStructBlock(col int, lines ...string) string {
 	type (
 		structType struct {
@@ -371,9 +383,9 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 		Struct.comment = o.fmtComment(col + i)
 		fields = append(fields, Struct)
 	}
-	//for i, field := range fields {//todo bind go Type
-	//
-	//}
+	for i, field := range fields {
+		fields[i].elemType = o.bindGoType(field.elemType)
+	}
 	tmp := stream.New()
 	tmp.WriteStringLn("type " + fields[0].name + " struct{")
 	for _, field := range fields {
