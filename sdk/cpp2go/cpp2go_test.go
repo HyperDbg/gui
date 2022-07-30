@@ -7,6 +7,12 @@ import (
 	"testing"
 )
 
+func Test3(t *testing.T) {
+	dir := filepath.Dir("back\\HyperDbgDev\\hyperdbg\\include\\SDK\\Headers\\Constants.h.back")
+	pkgName := filepath.Base(dir)
+	println(pkgName)
+}
+
 func Test2(t *testing.T) {
 	p := "../HyperDbgDev/hyperdbg"
 	slash := filepath.ToSlash(p)

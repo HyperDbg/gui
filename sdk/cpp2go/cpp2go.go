@@ -3,6 +3,7 @@ package cpp2go
 import (
 	"fmt"
 	"github.com/ddkwork/librarygo/src/mylog"
+	"github.com/ddkwork/librarygo/src/stream"
 	"github.com/ddkwork/librarygo/src/stream/tool"
 	"io/fs"
 	"os"
@@ -30,7 +31,6 @@ type (
 		col        string
 		noExtPath  string
 		ext        []string
-		define     []string
 		back       []pathBody
 		goPath     []pathBody
 		expandPath expandPath
@@ -138,6 +138,38 @@ func (o *object) handleDefineBlock(col int, lines ...string) string {
 	value := lines[1:]
 	return key + " = " + strings.Join(value, " ") + notes
 }
+func (o *object) GetDefine(lines []string) string {
+	b := stream.New()
+	b.WriteStringLn("const(")
+	define := make([]string, 0)
+	for i, line := range lines {
+		block := make([]string, 0)
+		if strings.Contains(line, `#define`) {
+			col := i + 1
+			//mylog.Info(fmt.Sprint(col), line)
+			if !strings.Contains(line, `\`) {
+				define = append(define, o.handleDefineBlock(col, line))
+			} else {
+				start := lines[i:]
+				for _, s := range start {
+					block = append(block, s)
+					if !strings.Contains(s, `\`) {
+						l := o.handleDefineBlock(col, block...)
+						//mylog.Trace(fmt.Sprint(col), l)
+						define = append(define, l)
+						break
+					}
+				}
+			}
+		}
+	}
+	for _, s := range define {
+		b.WriteStringLn(s)
+	}
+	b.WriteStringLn(")")
+	return b.String()
+}
+
 func (o *object) Convert() *object {
 	for _, cpp := range o.back {
 		if strings.Contains(cpp.path, "Constants.h.back") {
@@ -147,30 +179,16 @@ func (o *object) Convert() *object {
 			if !ok {
 				panic("ToLines")
 			}
-			for i, line := range lines {
-				block := make([]string, 0)
-				if strings.Contains(line, `#define`) {
-					col := i + 1
-					//mylog.Info(fmt.Sprint(col), line)
-					if !strings.Contains(line, `\`) {
-						o.define = append(o.define, o.handleDefineBlock(col, line))
-					} else {
-						start := lines[i:]
-						for _, s := range start {
-							block = append(block, s)
-							if !strings.Contains(s, `\`) {
-								l := o.handleDefineBlock(col, block...)
-								//mylog.Trace(fmt.Sprint(col), l)
-								o.define = append(o.define, l)
-								break
-							}
-						}
-					}
-				}
-			}
-			for _, s := range o.define {
-				mylog.Trace("", s)
-			}
+			b := stream.New()
+			dir := filepath.Dir(cpp.path)
+			pkgName := filepath.Base(dir) //todo rename
+			b.WriteStringLn("package " + pkgName)
+			b.WriteStringLn("//" + cpp.path)
+
+			b.WriteStringLn(o.GetDefine(lines))
+
+			mylog.Json("define ==> const", b.String())
+
 		}
 	}
 	return o
