@@ -95,7 +95,7 @@ func (o *object) backCpp(path string) *object {
 			goPath := backPath + ".go"
 			o.back = append(o.back, pathBody{
 				path: cppPath,
-				body: string(body),
+				body: "",
 			})
 			tool.File().WriteTruncate(cppPath, body)
 			o.goPath = append(o.goPath, pathBody{
@@ -222,7 +222,7 @@ func (o *object) GetInterfaceName(path string) string {
 }
 
 type (
-	BlockObject struct {
+	BlockObject struct { //todo class add ?
 		externs []string
 		defines []string
 		structs []string
@@ -231,8 +231,15 @@ type (
 	}
 )
 
-func (o *object) Block(lines []string) BlockObject {
-
+func (o *object) Block(lines []string) (b BlockObject) {
+	b = BlockObject{
+		externs: make([]string, 0),
+		defines: make([]string, 0),
+		structs: make([]string, 0),
+		enums:   make([]string, 0),
+		methods: make([]string, 0),
+	}
+	return
 }
 func (o *object) Convert() *object {
 	for i, cpp := range o.back {
