@@ -34,6 +34,29 @@ UartpSetAccess()(ok bool)//col:373
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewUartio() { return & uartio{} }
@@ -73,6 +96,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (u *uartio)ReadRegisterWithIndex8()(ok bool){//col:67
 
 
@@ -84,6 +130,29 @@ func (u *uartio)ReadRegisterWithIndex8()(ok bool){//col:67
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -129,6 +198,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (u *uartio)ReadRegisterWithIndex16()(ok bool){//col:93
 
 
@@ -140,6 +232,29 @@ func (u *uartio)ReadRegisterWithIndex16()(ok bool){//col:93
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -185,6 +300,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (u *uartio)ReadRegisterWithIndex32()(ok bool){//col:119
 
 
@@ -196,6 +334,29 @@ func (u *uartio)ReadRegisterWithIndex32()(ok bool){//col:119
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -243,6 +404,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (u *uartio)ReadRegisterWithIndex64()(ok bool){//col:147
 
 
@@ -254,6 +438,29 @@ func (u *uartio)ReadRegisterWithIndex64()(ok bool){//col:147
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -301,6 +508,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (u *uartio)ReadPortWithIndex8()(ok bool){//col:181
 
 
@@ -312,6 +542,29 @@ func (u *uartio)ReadPortWithIndex8()(ok bool){//col:181
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -357,6 +610,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (u *uartio)ReadPortWithIndex16()(ok bool){//col:207
 
 
@@ -368,6 +644,29 @@ func (u *uartio)ReadPortWithIndex16()(ok bool){//col:207
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -413,6 +712,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (u *uartio)ReadPortWithIndex32()(ok bool){//col:233
 
 
@@ -424,6 +746,29 @@ func (u *uartio)ReadPortWithIndex32()(ok bool){//col:233
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -523,6 +868,29 @@ func (u *uartio)UartpSetAccess()(ok bool){//col:373
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

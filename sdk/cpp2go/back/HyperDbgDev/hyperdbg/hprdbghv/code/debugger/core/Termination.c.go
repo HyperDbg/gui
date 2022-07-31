@@ -37,6 +37,29 @@ TerminateSysretHookEferEvent()(ok bool)//col:1169
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewTermination() { return & termination{} }
@@ -90,6 +113,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *termination)TerminateHiddenHookReadAndWriteEvent()(ok bool){//col:126
 
 
@@ -105,6 +151,29 @@ func (t *termination)TerminateHiddenHookReadAndWriteEvent()(ok bool){//col:126
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -146,6 +215,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *termination)TerminateHiddenHookExecDetoursEvent()(ok bool){//col:182
 
 
@@ -153,6 +245,29 @@ func (t *termination)TerminateHiddenHookExecDetoursEvent()(ok bool){//col:182
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -219,6 +334,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *termination)TerminateWrmsrExecutionEvent()(ok bool){//col:342
 
 
@@ -268,6 +406,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *termination)TerminateExceptionEvent()(ok bool){//col:423
 
 
@@ -300,6 +461,29 @@ func (t *termination)TerminateExceptionEvent()(ok bool){//col:423
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -367,6 +551,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *termination)TerminateOutInstructionExecutionEvent()(ok bool){//col:597
 
 
@@ -417,6 +624,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *termination)TerminateVmcallExecutionEvent()(ok bool){//col:636
 
 
@@ -448,6 +678,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *termination)TerminateCpuidExecutionEvent()(ok bool){//col:675
 
 
@@ -462,6 +715,29 @@ func (t *termination)TerminateCpuidExecutionEvent()(ok bool){//col:675
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -528,6 +804,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *termination)TerminatePmcEvent()(ok bool){//col:835
 
 
@@ -560,6 +859,29 @@ func (t *termination)TerminatePmcEvent()(ok bool){//col:835
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -626,6 +948,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *termination)TerminateDebugRegistersEvent()(ok bool){//col:995
 
 
@@ -658,6 +1003,29 @@ func (t *termination)TerminateDebugRegistersEvent()(ok bool){//col:995
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -725,6 +1093,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *termination)TerminateSysretHookEferEvent()(ok bool){//col:1169
 
 
@@ -758,6 +1149,29 @@ func (t *termination)TerminateSysretHookEferEvent()(ok bool){//col:1169
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

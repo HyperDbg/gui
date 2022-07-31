@@ -56,6 +56,30 @@ int main()(ok bool)//col:1195
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewZydisPe() { return & zydisPe{} }
@@ -122,6 +146,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (z *zydisPe)#pragma pack()(ok bool){//col:310
 
 
@@ -153,6 +201,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (z *zydisPe)#pragma pack()(ok bool){//col:318
 
 
@@ -162,6 +234,30 @@ func (z *zydisPe)#pragma pack()(ok bool){//col:318
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -208,6 +304,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (z *zydisPe)static ZyanI32 CompareSymbol()(ok bool){//col:413
 
 
@@ -225,6 +345,30 @@ func (z *zydisPe)static ZyanI32 CompareSymbol()(ok bool){//col:413
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -286,6 +430,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (z *zydisPe)const void* RVAToFileOffset()(ok bool){//col:476
 
 
@@ -299,6 +467,30 @@ func (z *zydisPe)const void* RVAToFileOffset()(ok bool){//col:476
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -332,6 +524,30 @@ func (z *zydisPe)static ZyanStatus ZydisPEContextFinalize()(ok bool){//col:502
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -671,6 +887,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (z *zydisPe)static ZyanStatus ZydisFormatterPrintAddress()(ok bool){//col:926
 
 
@@ -721,6 +961,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (z *zydisPe)static ZyanStatus ZydisFormatterPrintAddressABS()(ok bool){//col:937
 
 
@@ -749,6 +1013,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (z *zydisPe)static ZyanStatus ZydisFormatterPrintAddressREL()(ok bool){//col:947
 
 
@@ -759,6 +1047,30 @@ func (z *zydisPe)static ZyanStatus ZydisFormatterPrintAddressREL()(ok bool){//co
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -914,6 +1226,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (z *zydisPe)int main()(ok bool){//col:1195
 
 
@@ -997,6 +1333,30 @@ func (z *zydisPe)int main()(ok bool){//col:1195
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

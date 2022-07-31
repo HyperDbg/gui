@@ -275,6 +275,30 @@ typedef NTSTATUS ()(ok bool)//col:351
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewNtpoapi() { return & ntpoapi{} }
@@ -323,6 +347,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntpoapi)            _Field_size_()(ok bool){//col:160
 
 
@@ -331,6 +379,30 @@ func (n *ntpoapi)            _Field_size_()(ok bool){//col:160
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -396,6 +468,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntpoapi)typedef NTSTATUS ()(ok bool){//col:339
 
 
@@ -435,6 +531,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntpoapi)typedef NTSTATUS ()(ok bool){//col:351
 
 
@@ -448,6 +568,30 @@ func (n *ntpoapi)typedef NTSTATUS ()(ok bool){//col:351
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -22,6 +22,29 @@ CrsAllocateNonPagedPool()(ok bool)//col:42
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewCrossApi() { return & crossApi{} }
@@ -55,6 +78,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *crossApi)CrsAllocateNonPagedPool()(ok bool){//col:42
 
 
@@ -65,6 +111,29 @@ func (c *crossApi)CrsAllocateNonPagedPool()(ok bool){//col:42
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

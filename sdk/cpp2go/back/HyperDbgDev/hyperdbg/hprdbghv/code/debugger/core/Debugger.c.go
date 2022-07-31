@@ -51,6 +51,29 @@ DebuggerParseEventsModificationFromUsermode()(ok bool)//col:3277
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewDebugger() { return & debugger{} }
@@ -60,6 +83,29 @@ func (d *debugger)    return GetRegValue()(ok bool){//col:24
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -101,6 +147,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerSetLastError()(ok bool){//col:49
 
 
@@ -108,6 +177,29 @@ func (d *debugger)DebuggerSetLastError()(ok bool){//col:49
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -218,6 +310,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerUninitialize()(ok bool){//col:283
 
 
@@ -233,6 +348,29 @@ func (d *debugger)DebuggerUninitialize()(ok bool){//col:283
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -297,6 +435,29 @@ func (d *debugger)DebuggerCreateEvent()(ok bool){//col:384
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -428,6 +589,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerRegisterEvent()(ok bool){//col:705
 
 
@@ -498,6 +682,29 @@ func (d *debugger)DebuggerRegisterEvent()(ok bool){//col:705
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -774,6 +981,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerPerformActions()(ok bool){//col:1188
 
 
@@ -801,6 +1031,29 @@ func (d *debugger)DebuggerPerformActions()(ok bool){//col:1188
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -894,6 +1147,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerPerformRunTheCustomCode()(ok bool){//col:1340
 
 
@@ -912,6 +1188,29 @@ func (d *debugger)DebuggerPerformRunTheCustomCode()(ok bool){//col:1340
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -969,6 +1268,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerGetEventByTag()(ok bool){//col:1423
 
 
@@ -992,6 +1314,29 @@ func (d *debugger)DebuggerGetEventByTag()(ok bool){//col:1423
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1051,6 +1396,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerTerminateAllEvents()(ok bool){//col:1516
 
 
@@ -1076,6 +1444,29 @@ func (d *debugger)DebuggerTerminateAllEvents()(ok bool){//col:1516
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1135,6 +1526,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerEventListCount()(ok bool){//col:1598
 
 
@@ -1151,6 +1565,29 @@ func (d *debugger)DebuggerEventListCount()(ok bool){//col:1598
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1205,6 +1642,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerExceptionEventBitmapMask()(ok bool){//col:1672
 
 
@@ -1225,6 +1685,29 @@ func (d *debugger)DebuggerExceptionEventBitmapMask()(ok bool){//col:1672
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1273,6 +1756,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerQueryStateEvent()(ok bool){//col:1735
 
 
@@ -1286,6 +1792,29 @@ func (d *debugger)DebuggerQueryStateEvent()(ok bool){//col:1735
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1334,6 +1863,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerIsTagValid()(ok bool){//col:1797
 
 
@@ -1347,6 +1899,29 @@ func (d *debugger)DebuggerIsTagValid()(ok bool){//col:1797
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1405,6 +1980,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerRemoveAllActionsFromEvent()(ok bool){//col:1901
 
 
@@ -1443,6 +2041,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerRemoveEvent()(ok bool){//col:1964
 
 
@@ -1464,6 +2085,29 @@ func (d *debugger)DebuggerRemoveEvent()(ok bool){//col:1964
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1875,6 +2519,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerParseActionFromUsermode()(ok bool){//col:2907
 
 
@@ -1933,6 +2600,29 @@ func (d *debugger)DebuggerParseActionFromUsermode()(ok bool){//col:2907
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2072,6 +2762,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *debugger)DebuggerParseEventsModificationFromUsermode()(ok bool){//col:3277
 
 
@@ -2148,6 +2861,29 @@ func (d *debugger)DebuggerParseEventsModificationFromUsermode()(ok bool){//col:3
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

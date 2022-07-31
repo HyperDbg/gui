@@ -23,6 +23,30 @@ CommandEval()(ok bool)//col:301
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewEval() { return & eval{} }
@@ -36,6 +60,30 @@ func (e *eval)CommandEvalHelp()(ok bool){//col:36
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -160,6 +208,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (e *eval)CommandEval()(ok bool){//col:301
 
 
@@ -213,6 +285,30 @@ func (e *eval)CommandEval()(ok bool){//col:301
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

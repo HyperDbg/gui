@@ -30,6 +30,29 @@ ThreadQueryDetails()(ok bool)//col:697
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewThread() { return & thread{} }
@@ -47,6 +70,29 @@ func (t *thread)ThreadHandleThreadChange()(ok bool){//col:46
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -99,6 +145,29 @@ func (t *thread)ThreadSwitch()(ok bool){//col:110
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -240,6 +309,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *thread)ThreadInterpretThread()(ok bool){//col:409
 
 
@@ -288,6 +380,29 @@ func (t *thread)ThreadInterpretThread()(ok bool){//col:409
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -355,6 +470,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *thread)ThreadDetectChangeByInterceptingClockInterrupts()(ok bool){//col:582
 
 
@@ -389,6 +527,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *thread)ThreadEnableOrDisableThreadChangeMonitor()(ok bool){//col:611
 
 
@@ -405,6 +566,29 @@ func (t *thread)ThreadEnableOrDisableThreadChangeMonitor()(ok bool){//col:611
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -458,6 +642,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *thread)ThreadQueryList()(ok bool){//col:672
 
 
@@ -490,6 +697,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *thread)ThreadQueryDetails()(ok bool){//col:697
 
 
@@ -505,6 +735,29 @@ func (t *thread)ThreadQueryDetails()(ok bool){//col:697
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -30,6 +30,29 @@ MsrHandlePerformMsrBitmapWriteReset()(ok bool)//col:500
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewMsrHandlers() { return & msrHandlers{} }
@@ -88,6 +111,29 @@ func (m *msrHandlers)MsrHandleRdmsrVmexit()(ok bool){//col:129
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -180,6 +226,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (m *msrHandlers)MsrHandleSetMsrBitmap()(ok bool){//col:292
 
 
@@ -218,6 +287,29 @@ func (m *msrHandlers)MsrHandleSetMsrBitmap()(ok bool){//col:292
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -290,6 +382,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (m *msrHandlers)MsrHandleFilterMsrReadBitmap()(ok bool){//col:367
 
 
@@ -300,6 +415,29 @@ func (m *msrHandlers)MsrHandleFilterMsrReadBitmap()(ok bool){//col:367
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -329,6 +467,29 @@ func (m *msrHandlers)MsrHandleFilterMsrWriteBitmap()(ok bool){//col:397
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -380,6 +541,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (m *msrHandlers)MsrHandlePerformMsrBitmapReadReset()(ok bool){//col:449
 
 
@@ -389,6 +573,29 @@ func (m *msrHandlers)MsrHandlePerformMsrBitmapReadReset()(ok bool){//col:449
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -440,6 +647,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (m *msrHandlers)MsrHandlePerformMsrBitmapWriteReset()(ok bool){//col:500
 
 
@@ -449,6 +679,29 @@ func (m *msrHandlers)MsrHandlePerformMsrBitmapWriteReset()(ok bool){//col:500
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

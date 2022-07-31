@@ -44,6 +44,30 @@ DecoderTables interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewDecoderTables() { return & decoderTables{} }
@@ -53,6 +77,30 @@ func (d *decoderTables)    { ZYDIS_FILTER()(ok bool){//col:4
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -93,11 +141,59 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoderTables)    { ZYDIS_FILTER()(ok bool){//col:15
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -219,6 +315,30 @@ func (d *decoderTables)    { ZYDIS_FILTER()(ok bool){//col:119
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -512,6 +632,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:391
 
 
@@ -520,6 +664,30 @@ func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:391
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2284,6 +2452,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:2245
 
 
@@ -2420,6 +2612,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:2309
 
 
@@ -2484,6 +2700,30 @@ func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:2309
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2953,6 +3193,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:2789
 
 
@@ -2998,6 +3262,30 @@ func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:2789
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3077,6 +3365,30 @@ func (d *decoderTables)    { ZYDIS_INVALID, ZYDIS_DEFINITION()(ok bool){//col:28
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4514,6 +4826,30 @@ func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:4271
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -6030,11 +6366,59 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:5758
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7014,6 +7398,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:6829
 
 
@@ -7154,6 +7562,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:6852
 
 
@@ -7176,6 +7608,30 @@ func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:6852
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7221,12 +7677,60 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoderTables)    { ZYDIS_FILTER()(ok bool){//col:6869
 
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7269,12 +7773,60 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoderTables)    { ZYDIS_INVALID, ZYDIS_DEFINITION()(ok bool){//col:6883
 
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7315,11 +7867,59 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoderTables)    { ZYDIS_DEFINITION()(ok bool){//col:6899
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -44,6 +44,30 @@ Memory interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewMemory() { return & memory{} }
@@ -74,6 +98,30 @@ func (m *memory)#if   defined()(ok bool){//col:74
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

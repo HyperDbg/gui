@@ -22,6 +22,31 @@ PdbReconstructorBase interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewPdbReconstructorBase() { return & pdbReconstructorBase{} }
@@ -153,6 +178,31 @@ func (p *pdbReconstructorBase)		OnEnumType()(ok bool){//col:216
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

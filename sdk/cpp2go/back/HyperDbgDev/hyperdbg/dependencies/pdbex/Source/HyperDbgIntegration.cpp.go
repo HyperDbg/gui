@@ -25,6 +25,31 @@ SymSeparateTo64BitValue()(ok bool)//col:65
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewHyperDbgIntegration() { return & hyperDbgIntegration{} }
@@ -69,6 +94,31 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (h *hyperDbgIntegration)pdbex_set_logging_method_export()(ok bool){//col:43
 
 
@@ -76,6 +126,31 @@ func (h *hyperDbgIntegration)pdbex_set_logging_method_export()(ok bool){//col:43
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -120,6 +195,31 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (h *hyperDbgIntegration)SymSeparateTo64BitValue()(ok bool){//col:65
 
 
@@ -132,6 +232,31 @@ func (h *hyperDbgIntegration)SymSeparateTo64BitValue()(ok bool){//col:65
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

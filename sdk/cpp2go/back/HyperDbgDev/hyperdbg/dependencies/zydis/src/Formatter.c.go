@@ -34,6 +34,30 @@ ZyanStatus ZydisFormatterTokenizeOperandEx()(ok bool)//col:654
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewFormatter() { return & formatter{} }
@@ -56,6 +80,30 @@ func (f *formatter)void ZydisFormatterBufferInit()(ok bool){//col:73
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -117,6 +165,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatter)ZyanStatus ZydisFormatterInit()(ok bool){//col:123
 
 
@@ -129,6 +201,30 @@ func (f *formatter)ZyanStatus ZydisFormatterInit()(ok bool){//col:123
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -379,6 +475,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatter)ZyanStatus ZydisFormatterSetHook()(ok bool){//col:416
 
 
@@ -462,6 +582,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatter)ZyanStatus ZydisFormatterFormatInstruction()(ok bool){//col:429
 
 
@@ -472,6 +616,30 @@ func (f *formatter)ZyanStatus ZydisFormatterFormatInstruction()(ok bool){//col:4
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -537,6 +705,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatter)ZyanStatus ZydisFormatterFormatOperand()(ok bool){//col:472
 
 
@@ -547,6 +739,30 @@ func (f *formatter)ZyanStatus ZydisFormatterFormatOperand()(ok bool){//col:472
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -629,6 +845,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatter)ZyanStatus ZydisFormatterTokenizeInstruction()(ok bool){//col:539
 
 
@@ -639,6 +879,30 @@ func (f *formatter)ZyanStatus ZydisFormatterTokenizeInstruction()(ok bool){//col
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -712,6 +976,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatter)ZyanStatus ZydisFormatterTokenizeOperand()(ok bool){//col:591
 
 
@@ -722,6 +1010,30 @@ func (f *formatter)ZyanStatus ZydisFormatterTokenizeOperand()(ok bool){//col:591
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -794,6 +1106,30 @@ func (f *formatter)ZyanStatus ZydisFormatterTokenizeOperandEx()(ok bool){//col:6
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

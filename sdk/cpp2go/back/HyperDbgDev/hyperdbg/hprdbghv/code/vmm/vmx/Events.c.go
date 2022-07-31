@@ -26,6 +26,29 @@ EventInjectPageFault()(ok bool)//col:128
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewEvents() { return & events{} }
@@ -46,6 +69,29 @@ func (e *events)EventInjectInterruption()(ok bool){//col:37
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -90,6 +136,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (e *events)EventInjectGeneralProtection()(ok bool){//col:67
 
 
@@ -100,6 +169,29 @@ func (e *events)EventInjectGeneralProtection()(ok bool){//col:67
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -142,6 +234,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (e *events)EventInjectDebugBreakpoint()(ok bool){//col:96
 
 
@@ -149,6 +264,29 @@ func (e *events)EventInjectDebugBreakpoint()(ok bool){//col:96
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -180,6 +318,29 @@ func (e *events)EventInjectPageFault()(ok bool){//col:128
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

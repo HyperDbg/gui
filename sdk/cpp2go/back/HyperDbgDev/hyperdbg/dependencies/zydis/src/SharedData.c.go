@@ -28,6 +28,30 @@ ZyanBool ZydisGetAccessedFlags()(ok bool)//col:185
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewSharedData() { return & sharedData{} }
@@ -94,6 +118,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *sharedData)ZyanU8 ZydisGetOperandDefinitions()(ok bool){//col:123
 
 
@@ -109,6 +157,30 @@ func (s *sharedData)ZyanU8 ZydisGetOperandDefinitions()(ok bool){//col:123
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -183,6 +255,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *sharedData)ZyanBool ZydisGetAccessedFlags()(ok bool){//col:185
 
 
@@ -193,6 +289,30 @@ func (s *sharedData)ZyanBool ZydisGetAccessedFlags()(ok bool){//col:185
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

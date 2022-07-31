@@ -43,6 +43,30 @@ ZYDIS_EXPORT ZyanU64 ZydisGetVersion()(ok bool)//col:166
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewZydis() { return & zydis{} }
@@ -70,6 +94,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (z *zydis)ZYDIS_EXPORT ZyanU64 ZydisGetVersion()(ok bool){//col:166
 
 
@@ -77,6 +125,30 @@ func (z *zydis)ZYDIS_EXPORT ZyanU64 ZydisGetVersion()(ok bool){//col:166
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

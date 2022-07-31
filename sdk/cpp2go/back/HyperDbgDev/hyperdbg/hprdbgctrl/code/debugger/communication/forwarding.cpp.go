@@ -28,6 +28,29 @@ ForwardingSendToTcpSocket()(ok bool)//col:497
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewForwarding() { return & forwarding{} }
@@ -39,6 +62,29 @@ func (f *forwarding)ForwardingGetNewOutputSourceTag()(ok bool){//col:30
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -84,6 +130,29 @@ func (f *forwarding)ForwardingOpenOutputSource()(ok bool){//col:93
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -151,6 +220,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *forwarding)ForwardingCreateOutputSource()(ok bool){//col:281
 
 
@@ -199,6 +291,29 @@ func (f *forwarding)ForwardingCreateOutputSource()(ok bool){//col:281
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -292,6 +407,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *forwarding)ForwardingWriteToFile()(ok bool){//col:434
 
 
@@ -316,6 +454,29 @@ func (f *forwarding)ForwardingWriteToFile()(ok bool){//col:434
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -364,6 +525,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *forwarding)ForwardingSendToTcpSocket()(ok bool){//col:497
 
 
@@ -375,6 +559,29 @@ func (f *forwarding)ForwardingSendToTcpSocket()(ok bool){//col:497
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

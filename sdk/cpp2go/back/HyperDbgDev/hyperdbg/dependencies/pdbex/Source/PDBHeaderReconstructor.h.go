@@ -22,6 +22,31 @@ PdbHeaderReconstructor interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewPdbHeaderReconstructor() { return & pdbHeaderReconstructor{} }
@@ -205,6 +230,31 @@ func (p *pdbHeaderReconstructor)			Settings()(ok bool){//col:289
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -40,6 +40,29 @@ ProtectedHvSetMov2CrExiting()(ok bool)//col:749
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewProtectedHv() { return & protectedHv{} }
@@ -99,6 +122,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *protectedHv)ProtectedHvSetExceptionBitmap()(ok bool){//col:142
 
 
@@ -116,6 +162,29 @@ func (p *protectedHv)ProtectedHvSetExceptionBitmap()(ok bool){//col:142
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -167,6 +236,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *protectedHv)ProtectedHvResetExceptionBitmapToClearEvents()(ok bool){//col:194
 
 
@@ -175,6 +267,29 @@ func (p *protectedHv)ProtectedHvResetExceptionBitmapToClearEvents()(ok bool){//c
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -202,6 +317,29 @@ func (p *protectedHv)ProtectedHvRemoveUndefinedInstructionForDisablingSyscallSys
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -275,6 +413,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *protectedHv)ProtectedHvSetExternalInterruptExiting()(ok bool){//col:328
 
 
@@ -299,6 +460,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *protectedHv)ProtectedHvExternalInterruptExitingForDisablingInterruptCommands()(ok bool){//col:340
 
 
@@ -306,6 +490,29 @@ func (p *protectedHv)ProtectedHvExternalInterruptExitingForDisablingInterruptCom
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -373,6 +580,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *protectedHv)ProtectedHvSetMovDebugRegsVmexit()(ok bool){//col:497
 
 
@@ -406,6 +636,29 @@ func (p *protectedHv)ProtectedHvSetMovDebugRegsVmexit()(ok bool){//col:497
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -472,6 +725,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *protectedHv)ProtectedHvSetMovControlRegsVmexit()(ok bool){//col:590
 
 
@@ -492,6 +768,29 @@ func (p *protectedHv)ProtectedHvSetMovControlRegsVmexit()(ok bool){//col:590
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -555,6 +854,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *protectedHv)ProtectedHvSetRdtscExiting()(ok bool){//col:670
 
 
@@ -562,6 +884,29 @@ func (p *protectedHv)ProtectedHvSetRdtscExiting()(ok bool){//col:670
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -603,6 +948,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *protectedHv)ProtectedHvSetMovDebugRegsExiting()(ok bool){//col:695
 
 
@@ -610,6 +978,29 @@ func (p *protectedHv)ProtectedHvSetMovDebugRegsExiting()(ok bool){//col:695
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -651,6 +1042,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *protectedHv)ProtectedHvDisableMovControlRegsExitingForDisablingCrCommands()(ok bool){//col:721
 
 
@@ -658,6 +1072,29 @@ func (p *protectedHv)ProtectedHvDisableMovControlRegsExitingForDisablingCrComman
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -699,6 +1136,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *protectedHv)ProtectedHvSetMov2CrExiting()(ok bool){//col:749
 
 
@@ -706,6 +1166,29 @@ func (p *protectedHv)ProtectedHvSetMov2CrExiting()(ok bool){//col:749
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

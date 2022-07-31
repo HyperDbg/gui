@@ -31,6 +31,29 @@ ProcessQueryDetails()(ok bool)//col:675
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewProcess() { return & process{} }
@@ -48,6 +71,29 @@ func (p *process)ProcessHandleProcessChange()(ok bool){//col:44
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -128,6 +174,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *process)ProcessDetectChangeByInterceptingClockInterrupts()(ok bool){//col:165
 
 
@@ -145,6 +214,29 @@ func (p *process)ProcessDetectChangeByInterceptingClockInterrupts()(ok bool){//c
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -196,6 +288,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *process)ProcessEnableOrDisableThreadChangeMonitor()(ok bool){//col:237
 
 
@@ -212,6 +327,29 @@ func (p *process)ProcessEnableOrDisableThreadChangeMonitor()(ok bool){//col:237
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -263,6 +401,29 @@ func (p *process)ProcessCheckIfEprocessIsValid()(ok bool){//col:312
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -392,6 +553,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *process)ProcessInterpretProcess()(ok bool){//col:592
 
 
@@ -455,6 +639,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *process)ProcessQueryCount()(ok bool){//col:624
 
 
@@ -474,6 +681,29 @@ func (p *process)ProcessQueryCount()(ok bool){//col:624
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -523,6 +753,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *process)ProcessQueryDetails()(ok bool){//col:675
 
 
@@ -536,6 +789,29 @@ func (p *process)ProcessQueryDetails()(ok bool){//col:675
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

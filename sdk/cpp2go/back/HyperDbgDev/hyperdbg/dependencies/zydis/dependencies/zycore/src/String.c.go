@@ -72,6 +72,30 @@ ZyanStatus ZyanStringGetData()(ok bool)//col:1139
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewString() { return & string{} }
@@ -88,6 +112,30 @@ func (s *string)      *()(ok bool){//col:60
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -144,6 +192,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringInitCustomBuffer()(ok bool){//col:106
 
 
@@ -162,6 +234,30 @@ func (s *string)ZyanStatus ZyanStringInitCustomBuffer()(ok bool){//col:106
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -213,6 +309,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringDuplicate()(ok bool){//col:135
 
 
@@ -222,6 +342,30 @@ func (s *string)ZyanStatus ZyanStringDuplicate()(ok bool){//col:135
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -260,6 +404,30 @@ func (s *string)ZyanStatus ZyanStringDuplicateEx()(ok bool){//col:159
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -319,6 +487,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringConcat()(ok bool){//col:199
 
 
@@ -328,6 +520,30 @@ func (s *string)ZyanStatus ZyanStringConcat()(ok bool){//col:199
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -368,6 +584,30 @@ func (s *string)ZyanStatus ZyanStringConcatEx()(ok bool){//col:225
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -428,6 +668,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringViewInsideView()(ok bool){//col:270
 
 
@@ -441,6 +705,30 @@ func (s *string)ZyanStatus ZyanStringViewInsideView()(ok bool){//col:270
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -495,6 +783,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringViewInsideBuffer()(ok bool){//col:304
 
 
@@ -508,6 +820,30 @@ func (s *string)ZyanStatus ZyanStringViewInsideBuffer()(ok bool){//col:304
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -557,6 +893,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringViewGetSize()(ok bool){//col:332
 
 
@@ -588,6 +948,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZYCORE_EXPORT ZyanStatus ZyanStringViewGetData()(ok bool){//col:345
 
 
@@ -600,6 +984,30 @@ func (s *string)ZYCORE_EXPORT ZyanStatus ZyanStringViewGetData()(ok bool){//col:
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -654,6 +1062,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringGetCharMutable()(ok bool){//col:387
 
 
@@ -669,6 +1101,30 @@ func (s *string)ZyanStatus ZyanStringGetCharMutable()(ok bool){//col:387
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -720,6 +1176,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringInsert()(ok bool){//col:434
 
 
@@ -742,6 +1222,30 @@ func (s *string)ZyanStatus ZyanStringInsert()(ok bool){//col:434
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -805,6 +1309,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringAppend()(ok bool){//col:488
 
 
@@ -821,6 +1349,30 @@ func (s *string)ZyanStatus ZyanStringAppend()(ok bool){//col:488
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -878,6 +1430,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringDelete()(ok bool){//col:536
 
 
@@ -895,6 +1471,30 @@ func (s *string)ZyanStatus ZyanStringDelete()(ok bool){//col:536
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -948,6 +1548,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringClear()(ok bool){//col:574
 
 
@@ -981,6 +1605,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringLPos()(ok bool){//col:590
 
 
@@ -993,6 +1641,30 @@ func (s *string)ZyanStatus ZyanStringLPos()(ok bool){//col:590
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1080,6 +1752,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringLPosI()(ok bool){//col:657
 
 
@@ -1092,6 +1788,30 @@ func (s *string)ZyanStatus ZyanStringLPosI()(ok bool){//col:657
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1181,6 +1901,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringRPos()(ok bool){//col:731
 
 
@@ -1194,6 +1938,30 @@ func (s *string)ZyanStatus ZyanStringRPos()(ok bool){//col:731
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1282,6 +2050,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringRPosI()(ok bool){//col:800
 
 
@@ -1295,6 +2087,30 @@ func (s *string)ZyanStatus ZyanStringRPosI()(ok bool){//col:800
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1385,6 +2201,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringCompare()(ok bool){//col:913
 
 
@@ -1428,6 +2268,30 @@ func (s *string)ZyanStatus ZyanStringCompare()(ok bool){//col:913
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1507,6 +2371,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringToLowerCase()(ok bool){//col:979
 
 
@@ -1518,6 +2406,30 @@ func (s *string)ZyanStatus ZyanStringToLowerCase()(ok bool){//col:979
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1579,6 +2491,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringToUpperCase()(ok bool){//col:1022
 
 
@@ -1590,6 +2526,30 @@ func (s *string)ZyanStatus ZyanStringToUpperCase()(ok bool){//col:1022
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1651,6 +2611,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringResize()(ok bool){//col:1072
 
 
@@ -1664,6 +2648,30 @@ func (s *string)ZyanStatus ZyanStringResize()(ok bool){//col:1072
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1711,6 +2719,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringShrinkToFit()(ok bool){//col:1094
 
 
@@ -1722,6 +2754,30 @@ func (s *string)ZyanStatus ZyanStringShrinkToFit()(ok bool){//col:1094
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1771,6 +2827,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringGetSize()(ok bool){//col:1126
 
 
@@ -1802,6 +2882,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZyanStringGetData()(ok bool){//col:1139
 
 
@@ -1814,6 +2918,30 @@ func (s *string)ZyanStatus ZyanStringGetData()(ok bool){//col:1139
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

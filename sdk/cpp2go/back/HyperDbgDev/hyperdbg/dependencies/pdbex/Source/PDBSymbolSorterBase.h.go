@@ -22,6 +22,31 @@ PdbSymbolSorterBase interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewPdbSymbolSorterBase() { return & pdbSymbolSorterBase{} }
@@ -37,6 +62,31 @@ func (p *pdbSymbolSorterBase)		GetSortedSymbols()(ok bool){//col:29
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

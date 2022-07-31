@@ -26,6 +26,30 @@ ZYDIS_EXPORT const char* ZydisMnemonicGetString()(ok bool)//col:85
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewMnemonic() { return & mnemonic{} }
@@ -37,6 +61,30 @@ func (m *mnemonic)ZYDIS_EXPORT const char* ZydisMnemonicGetString()(ok bool){//c
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -47,6 +47,29 @@ __outdwordstring()(ok bool)//col:175
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewIoHandler() { return & ioHandler{} }
@@ -61,6 +84,29 @@ func (i *ioHandler)__inbyte()(ok bool){//col:54
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -105,6 +151,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (i *ioHandler)__indword()(ok bool){//col:76
 
 
@@ -115,6 +184,29 @@ func (i *ioHandler)__indword()(ok bool){//col:76
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -159,6 +251,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (i *ioHandler)__inwordstring()(ok bool){//col:98
 
 
@@ -169,6 +284,29 @@ func (i *ioHandler)__inwordstring()(ok bool){//col:98
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -213,6 +351,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (i *ioHandler)__outbyte()(ok bool){//col:120
 
 
@@ -223,6 +384,29 @@ func (i *ioHandler)__outbyte()(ok bool){//col:120
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -267,6 +451,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (i *ioHandler)__outdword()(ok bool){//col:142
 
 
@@ -277,6 +484,29 @@ func (i *ioHandler)__outdword()(ok bool){//col:142
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -321,6 +551,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (i *ioHandler)__outwordstring()(ok bool){//col:164
 
 
@@ -348,6 +601,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (i *ioHandler)__outdwordstring()(ok bool){//col:175
 
 
@@ -358,6 +634,29 @@ func (i *ioHandler)__outdwordstring()(ok bool){//col:175
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

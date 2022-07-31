@@ -82,6 +82,30 @@ NtCreatePrivateNamespace()(ok bool)//col:430
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewNtobapi() { return & ntobapi{} }
@@ -138,6 +162,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntobapi)#if ()(ok bool){//col:85
 
 
@@ -146,6 +194,30 @@ func (n *ntobapi)#if ()(ok bool){//col:85
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -339,6 +411,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntobapi)NtQueryDirectoryObject()(ok bool){//col:333
 
 
@@ -361,6 +457,30 @@ func (n *ntobapi)NtQueryDirectoryObject()(ok bool){//col:333
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -435,6 +555,30 @@ func (n *ntobapi)NtCreatePrivateNamespace()(ok bool){//col:430
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

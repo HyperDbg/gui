@@ -23,6 +23,30 @@ CommandG()(ok bool)//col:105
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewG() { return & g{} }
@@ -35,6 +59,30 @@ func (g *g)CommandGHelp()(ok bool){//col:33
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -99,6 +147,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (g *g)CommandG()(ok bool){//col:105
 
 
@@ -112,6 +184,30 @@ func (g *g)CommandG()(ok bool){//col:105
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

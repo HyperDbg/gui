@@ -32,6 +32,29 @@ NamedPipeClientExample()(ok bool)//col:512
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewNamedpipe() { return & namedpipe{} }
@@ -50,6 +73,29 @@ func (n *namedpipe)NamedPipeServerCreatePipe()(ok bool){//col:57
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -99,6 +145,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *namedpipe)NamedPipeServerReadClientMessage()(ok bool){//col:130
 
 
@@ -114,6 +183,29 @@ func (n *namedpipe)NamedPipeServerReadClientMessage()(ok bool){//col:130
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -166,6 +258,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *namedpipe)NamedPipeServerCloseHandle()(ok bool){//col:171
 
 
@@ -173,6 +288,29 @@ func (n *namedpipe)NamedPipeServerCloseHandle()(ok bool){//col:171
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -208,6 +346,29 @@ func (n *namedpipe)NamedPipeClientCreatePipe()(ok bool){//col:227
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -264,6 +425,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *namedpipe)NamedPipeClientSendMessage()(ok bool){//col:336
 
 
@@ -284,6 +468,29 @@ func (n *namedpipe)NamedPipeClientSendMessage()(ok bool){//col:336
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -332,6 +539,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *namedpipe)NamedPipeClientClosePipe()(ok bool){//col:381
 
 
@@ -339,6 +569,29 @@ func (n *namedpipe)NamedPipeClientClosePipe()(ok bool){//col:381
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -413,6 +666,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *namedpipe)NamedPipeClientExample()(ok bool){//col:512
 
 
@@ -443,6 +719,29 @@ func (n *namedpipe)NamedPipeClientExample()(ok bool){//col:512
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

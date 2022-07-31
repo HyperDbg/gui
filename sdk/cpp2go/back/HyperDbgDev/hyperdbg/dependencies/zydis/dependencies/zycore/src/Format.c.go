@@ -38,6 +38,30 @@ ZyanStatus ZyanStringAppendHexS()(ok bool)//col:511
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewFormat() { return & format{} }
@@ -106,6 +130,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *format)ZyanStatus ZyanStringAppendDecU64()(ok bool){//col:177
 
 
@@ -147,6 +195,30 @@ func (f *format)ZyanStatus ZyanStringAppendDecU64()(ok bool){//col:177
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -248,6 +320,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *format)ZyanStatus ZyanStringAppendHexU64()(ok bool){//col:326
 
 
@@ -331,6 +427,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *format)ZyanStatus ZyanStringAppendFormat()(ok bool){//col:422
 
 
@@ -391,6 +511,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *format)ZyanStatus ZyanStringAppendDecU()(ok bool){//col:441
 
 
@@ -406,6 +550,30 @@ func (f *format)ZyanStatus ZyanStringAppendDecU()(ok bool){//col:441
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -468,6 +636,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *format)ZyanStatus ZyanStringAppendHexU()(ok bool){//col:484
 
 
@@ -484,6 +676,30 @@ func (f *format)ZyanStatus ZyanStringAppendHexU()(ok bool){//col:484
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -528,6 +744,30 @@ func (f *format)ZyanStatus ZyanStringAppendHexS()(ok bool){//col:511
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

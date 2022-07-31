@@ -152,6 +152,29 @@ MSM8974RxReady()(ok bool)//col:636
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewMsm8974() { return & msm8974{} }
@@ -211,6 +234,29 @@ func (m *msm8974)    READ_REGISTER_ULONG()(ok bool){//col:318
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -297,6 +343,29 @@ func (m *msm8974)MSM8974SetBaud()(ok bool){//col:414
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -416,6 +485,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (m *msm8974)MSM8974PutByte()(ok bool){//col:598
 
 
@@ -466,6 +558,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (m *msm8974)MSM8974RxReady()(ok bool){//col:636
 
 
@@ -484,6 +599,29 @@ func (m *msm8974)MSM8974RxReady()(ok bool){//col:636
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

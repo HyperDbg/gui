@@ -26,6 +26,30 @@ ZYDIS_EXPORT const char* ZydisCategoryGetString()(ok bool)//col:85
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewMetaInfo() { return & metaInfo{} }
@@ -38,6 +62,30 @@ func (m *metaInfo)ZYDIS_EXPORT const char* ZydisCategoryGetString()(ok bool){//c
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

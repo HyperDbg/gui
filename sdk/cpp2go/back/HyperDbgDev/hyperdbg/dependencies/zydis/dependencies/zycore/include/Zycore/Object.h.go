@@ -26,6 +26,30 @@ typedef void ()(ok bool)//col:81
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewObject() { return & object{} }
@@ -39,6 +63,30 @@ func (o *object)typedef void ()(ok bool){//col:81
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -32,6 +32,30 @@ int main()(ok bool)//col:403
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewVector() { return & vector{} }
@@ -46,6 +70,30 @@ func (v *vector)static void InitTestdata()(ok bool){//col:72
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -114,6 +162,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)static ZyanI32 TestDataComparison()(ok bool){//col:161
 
 
@@ -131,6 +203,30 @@ func (v *vector)static ZyanI32 TestDataComparison()(ok bool){//col:161
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -195,6 +291,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)static ZyanStatus TestDynamic()(ok bool){//col:224
 
 
@@ -208,6 +328,30 @@ func (v *vector)static ZyanStatus TestDynamic()(ok bool){//col:224
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -269,6 +413,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)static ZyanStatus AllocatorAllocate()(ok bool){//col:284
 
 
@@ -287,6 +455,30 @@ func (v *vector)static ZyanStatus AllocatorAllocate()(ok bool){//col:284
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -342,6 +534,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)static ZyanStatus AllocatorDeallocate()(ok bool){//col:323
 
 
@@ -358,6 +574,30 @@ func (v *vector)static ZyanStatus AllocatorDeallocate()(ok bool){//col:323
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -424,6 +664,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)int main()(ok bool){//col:403
 
 
@@ -445,6 +709,30 @@ func (v *vector)int main()(ok bool){//col:403
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

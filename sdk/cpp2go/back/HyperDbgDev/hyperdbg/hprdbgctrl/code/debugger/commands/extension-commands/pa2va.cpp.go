@@ -22,6 +22,29 @@ CommandPa2va()(ok bool)//col:209
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewPa2va() { return & pa2va{} }
@@ -39,6 +62,29 @@ func (p *pa2va)CommandPa2vaHelp()(ok bool){//col:38
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -160,6 +206,29 @@ func (p *pa2va)CommandPa2va()(ok bool){//col:209
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

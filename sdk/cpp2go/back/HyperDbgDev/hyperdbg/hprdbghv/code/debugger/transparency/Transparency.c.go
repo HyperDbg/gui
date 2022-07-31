@@ -33,6 +33,29 @@ TransparentModeStart()(ok bool)//col:686
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewTransparency() { return & transparency{} }
@@ -48,6 +71,29 @@ func (t *transparency)TransparentGetRand()(ok bool){//col:142
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -94,6 +140,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *transparency)TransparentLog()(ok bool){//col:186
 
 
@@ -108,6 +177,29 @@ func (t *transparency)TransparentLog()(ok bool){//col:186
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -165,6 +257,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *transparency)TransparentRandn()(ok bool){//col:272
 
 
@@ -195,6 +310,29 @@ func (t *transparency)TransparentRandn()(ok bool){//col:272
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -266,6 +404,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *transparency)TransparentHideDebugger()(ok bool){//col:440
 
 
@@ -315,6 +476,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *transparency)TransparentUnhideDebugger()(ok bool){//col:504
 
 
@@ -343,6 +527,29 @@ func (t *transparency)TransparentUnhideDebugger()(ok bool){//col:504
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -449,6 +656,29 @@ func (t *transparency)TransparentModeStart()(ok bool){//col:686
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

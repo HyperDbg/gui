@@ -61,6 +61,29 @@ BinaryToInt()(ok bool)//col:1163
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewCommon() { return & common{} }
@@ -79,6 +102,29 @@ func (c *common)NewUnknownToken()(ok bool){//col:39
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -125,6 +171,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)RemoveToken()(ok bool){//col:76
 
 
@@ -135,6 +204,29 @@ func (c *common)RemoveToken()(ok bool){//col:76
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -250,6 +342,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)Append()(ok bool){//col:209
 
 
@@ -266,6 +381,29 @@ func (c *common)Append()(ok bool){//col:209
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -311,6 +449,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)NewTokenList()(ok bool){//col:258
 
 
@@ -323,6 +484,29 @@ func (c *common)NewTokenList()(ok bool){//col:258
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -370,6 +554,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)PrintTokenList()(ok bool){//col:296
 
 
@@ -382,6 +589,29 @@ func (c *common)PrintTokenList()(ok bool){//col:296
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -434,6 +664,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)Pop()(ok bool){//col:375
 
 
@@ -446,6 +699,29 @@ func (c *common)Pop()(ok bool){//col:375
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -488,6 +764,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsHex()(ok bool){//col:411
 
 
@@ -514,6 +813,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsDecimal()(ok bool){//col:427
 
 
@@ -524,6 +846,29 @@ func (c *common)IsDecimal()(ok bool){//col:427
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -568,6 +913,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsBinary()(ok bool){//col:463
 
 
@@ -596,6 +964,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsOctal()(ok bool){//col:479
 
 
@@ -606,6 +997,29 @@ func (c *common)IsOctal()(ok bool){//col:479
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -665,6 +1079,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)FreeTemp()(ok bool){//col:528
 
 
@@ -692,6 +1129,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)CleanTempList()(ok bool){//col:542
 
 
@@ -702,6 +1162,29 @@ func (c *common)CleanTempList()(ok bool){//col:542
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -749,6 +1232,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsType2Func()(ok bool){//col:584
 
 
@@ -764,6 +1270,29 @@ func (c *common)IsType2Func()(ok bool){//col:584
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -811,6 +1340,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsOneOperandOperator()(ok bool){//col:626
 
 
@@ -826,6 +1378,29 @@ func (c *common)IsOneOperandOperator()(ok bool){//col:626
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -873,6 +1448,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsType5Func()(ok bool){//col:668
 
 
@@ -888,6 +1486,29 @@ func (c *common)IsType5Func()(ok bool){//col:668
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -935,6 +1556,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsType7Func()(ok bool){//col:710
 
 
@@ -950,6 +1594,29 @@ func (c *common)IsType7Func()(ok bool){//col:710
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -997,6 +1664,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsNoneTerminal()(ok bool){//col:748
 
 
@@ -1007,6 +1697,29 @@ func (c *common)IsNoneTerminal()(ok bool){//col:748
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1048,6 +1761,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)GetNonTerminalId()(ok bool){//col:783
 
 
@@ -1060,6 +1796,29 @@ func (c *common)GetNonTerminalId()(ok bool){//col:783
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1167,6 +1926,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)LalrGetNonTerminalId()(ok bool){//col:884
 
 
@@ -1179,6 +1961,29 @@ func (c *common)LalrGetNonTerminalId()(ok bool){//col:884
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1286,6 +2091,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsEqual()(ok bool){//col:1013
 
 
@@ -1339,6 +2167,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)SetType()(ok bool){//col:1026
 
 
@@ -1346,6 +2197,29 @@ func (c *common)SetType()(ok bool){//col:1026
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1377,6 +2251,29 @@ func (c *common)DecimalToInt()(ok bool){//col:1048
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1437,6 +2334,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)HexToInt()(ok bool){//col:1117
 
 
@@ -1464,6 +2384,29 @@ func (c *common)HexToInt()(ok bool){//col:1117
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1511,6 +2454,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *common)BinaryToInt()(ok bool){//col:1163
 
 
@@ -1526,6 +2492,29 @@ func (c *common)BinaryToInt()(ok bool){//col:1163
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

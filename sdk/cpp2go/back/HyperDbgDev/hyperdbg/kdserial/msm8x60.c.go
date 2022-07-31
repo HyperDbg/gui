@@ -153,6 +153,29 @@ MSM8x60RxReady()(ok bool)//col:637
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewMsm8x60() { return & msm8x60{} }
@@ -212,6 +235,29 @@ func (m *msm8x60)    READ_REGISTER_ULONG()(ok bool){//col:319
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -298,6 +344,29 @@ func (m *msm8x60)MSM8x60SetBaud()(ok bool){//col:415
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -417,6 +486,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (m *msm8x60)MSM8x60PutByte()(ok bool){//col:599
 
 
@@ -467,6 +559,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (m *msm8x60)MSM8x60RxReady()(ok bool){//col:637
 
 
@@ -485,6 +600,29 @@ func (m *msm8x60)MSM8x60RxReady()(ok bool){//col:637
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -29,6 +29,29 @@ UserAccessCheckForLoadedModuleDetails()(ok bool)//col:890
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewUserAccess() { return & userAccess{} }
@@ -127,6 +150,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (u *userAccess)UserAccessGetPebFromProcessId()(ok bool){//col:232
 
 
@@ -171,6 +217,29 @@ func (u *userAccess)UserAccessGetPebFromProcessId()(ok bool){//col:232
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -250,6 +319,29 @@ func (u *userAccess)UserAccessGetBaseAndEntrypointOfMainModuleIfLoadedInVmxRoot(
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -365,6 +457,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (u *userAccess)UserAccessPrintLoadedModulesX86()(ok bool){//col:620
 
 
@@ -463,6 +578,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (u *userAccess)UserAccessPrintLoadedModulesX86_2()(ok bool){//col:704
 
 
@@ -532,6 +670,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (u *userAccess)UserAccessIsWow64Process()(ok bool){//col:760
 
 
@@ -563,6 +724,29 @@ func (u *userAccess)UserAccessIsWow64Process()(ok bool){//col:760
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -642,6 +826,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (u *userAccess)UserAccessCheckForLoadedModuleDetails()(ok bool){//col:890
 
 
@@ -675,6 +882,29 @@ func (u *userAccess)UserAccessCheckForLoadedModuleDetails()(ok bool){//col:890
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

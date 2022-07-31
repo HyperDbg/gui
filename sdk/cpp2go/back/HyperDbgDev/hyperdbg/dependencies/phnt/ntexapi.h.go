@@ -922,6 +922,30 @@ NtQueryInformationAtom()(ok bool)//col:5543
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewNtexapi() { return & ntexapi{} }
@@ -997,6 +1021,30 @@ func (n *ntexapi)#if ()(ok bool){//col:102
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1148,6 +1196,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntexapi)#if ()(ok bool){//col:310
 
 
@@ -1176,6 +1248,30 @@ func (n *ntexapi)#if ()(ok bool){//col:310
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1335,6 +1431,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntexapi)NtCreateMutant()(ok bool){//col:534
 
 
@@ -1382,6 +1502,30 @@ func (n *ntexapi)NtCreateMutant()(ok bool){//col:534
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1466,6 +1610,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntexapi)typedef VOID ()(ok bool){//col:617
 
 
@@ -1478,6 +1646,30 @@ func (n *ntexapi)typedef VOID ()(ok bool){//col:617
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1511,6 +1703,30 @@ func (n *ntexapi)#if ()(ok bool){//col:631
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1608,6 +1824,30 @@ func (n *ntexapi)NtCreateTimer()(ok bool){//col:722
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1785,6 +2025,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntexapi)#if ()(ok bool){//col:1095
 
 
@@ -1921,6 +2185,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntexapi)#if ()(ok bool){//col:1198
 
 
@@ -1987,6 +2275,30 @@ func (n *ntexapi)#if ()(ok bool){//col:1198
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2113,6 +2425,30 @@ func (n *ntexapi)NtWaitForWorkViaWorkerFactory()(ok bool){//col:1546
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2264,6 +2600,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntexapi)typedef NTSTATUS ()(ok bool){//col:2651
 
 
@@ -2273,6 +2633,30 @@ func (n *ntexapi)typedef NTSTATUS ()(ok bool){//col:2651
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2301,6 +2685,30 @@ func (n *ntexapi)#if ()(ok bool){//col:2681
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2351,6 +2759,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntexapi)    VOID ()(ok bool){//col:3711
 
 
@@ -2358,6 +2790,30 @@ func (n *ntexapi)    VOID ()(ok bool){//col:3711
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2390,6 +2846,30 @@ func (n *ntexapi)#if !defined()(ok bool){//col:4225
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2483,6 +2963,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntexapi)NtSystemDebugControl()(ok bool){//col:4896
 
 
@@ -2524,6 +3028,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntexapi)NtRaiseHardError()(ok bool){//col:4934
 
 
@@ -2541,6 +3069,30 @@ func (n *ntexapi)NtRaiseHardError()(ok bool){//col:4934
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2618,6 +3170,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntexapi)FORCEINLINE ULONG NtGetTickCount()(ok bool){//col:5198
 
 
@@ -2639,6 +3215,30 @@ func (n *ntexapi)FORCEINLINE ULONG NtGetTickCount()(ok bool){//col:5198
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2681,6 +3281,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntexapi)FORCEINLINE ULONG NtGetTickCount()(ok bool){//col:5212
 
 
@@ -2688,6 +3312,30 @@ func (n *ntexapi)FORCEINLINE ULONG NtGetTickCount()(ok bool){//col:5212
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2879,6 +3527,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntexapi)NtQueryInformationAtom()(ok bool){//col:5543
 
 
@@ -2945,6 +3617,30 @@ func (n *ntexapi)NtQueryInformationAtom()(ok bool){//col:5543
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

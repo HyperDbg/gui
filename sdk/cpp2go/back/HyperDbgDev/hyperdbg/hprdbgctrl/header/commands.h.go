@@ -112,6 +112,29 @@ CommandSettingsLoadDefaultValuesFromConfigFile()(ok bool)//col:143
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewCommands() { return & commands{} }
@@ -192,6 +215,29 @@ func (c *commands)CommandSettingsLoadDefaultValuesFromConfigFile()(ok bool){//co
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

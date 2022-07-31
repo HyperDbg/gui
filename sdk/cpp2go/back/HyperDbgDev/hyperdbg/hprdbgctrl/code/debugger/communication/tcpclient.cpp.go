@@ -25,6 +25,29 @@ CommunicationClientCleanup()(ok bool)//col:229
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewTcpclient() { return & tcpclient{} }
@@ -100,6 +123,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *tcpclient)CommunicationClientSendMessage()(ok bool){//col:129
 
 
@@ -133,6 +179,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *tcpclient)CommunicationClientShutdownConnection()(ok bool){//col:163
 
 
@@ -148,6 +217,29 @@ func (t *tcpclient)CommunicationClientShutdownConnection()(ok bool){//col:163
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -204,6 +296,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (t *tcpclient)CommunicationClientCleanup()(ok bool){//col:229
 
 
@@ -213,6 +328,29 @@ func (t *tcpclient)CommunicationClientCleanup()(ok bool){//col:229
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

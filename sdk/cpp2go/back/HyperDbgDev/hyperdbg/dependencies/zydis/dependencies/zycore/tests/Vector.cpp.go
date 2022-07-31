@@ -38,6 +38,30 @@ INSTANTIATE_TEST_SUITE_P()(ok bool)//col:517
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewVector() { return & vector{} }
@@ -65,6 +89,30 @@ func (v *vector)    void SetUp()(ok bool){//col:78
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -117,6 +165,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)static ZyanStatus InitZyanU64()(ok bool){//col:123
 
 
@@ -125,6 +197,30 @@ func (v *vector)static ZyanStatus InitZyanU64()(ok bool){//col:123
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -169,6 +265,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)TEST()(ok bool){//col:164
 
 
@@ -190,6 +310,30 @@ func (v *vector)TEST()(ok bool){//col:164
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -249,6 +393,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)TEST()(ok bool){//col:210
 
 
@@ -270,6 +438,30 @@ func (v *vector)TEST()(ok bool){//col:210
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -346,6 +538,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)TEST_P()(ok bool){//col:286
 
 
@@ -392,6 +608,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)TEST_P()(ok bool){//col:311
 
 
@@ -417,6 +657,30 @@ func (v *vector)TEST_P()(ok bool){//col:311
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -492,6 +756,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)TEST_P()(ok bool){//col:383
 
 
@@ -538,6 +826,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)TEST_P()(ok bool){//col:409
 
 
@@ -562,6 +874,30 @@ func (v *vector)TEST_P()(ok bool){//col:409
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -630,6 +966,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)TEST_P()(ok bool){//col:468
 
 
@@ -652,6 +1012,30 @@ func (v *vector)TEST_P()(ok bool){//col:468
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -711,6 +1095,30 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (v *vector)INSTANTIATE_TEST_SUITE_P()(ok bool){//col:517
 
 
@@ -723,6 +1131,30 @@ func (v *vector)INSTANTIATE_TEST_SUITE_P()(ok bool){//col:517
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -23,6 +23,29 @@ Split()(ok bool)//col:100
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewCommonUtils() { return & commonUtils{} }
@@ -51,6 +74,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *commonUtils)IsDirExists()(ok bool){//col:45
 
 
@@ -60,6 +106,29 @@ func (c *commonUtils)IsDirExists()(ok bool){//col:45
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -107,6 +176,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (c *commonUtils)Split()(ok bool){//col:100
 
 
@@ -128,6 +220,29 @@ func (c *commonUtils)Split()(ok bool){//col:100
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

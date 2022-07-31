@@ -49,6 +49,29 @@ ScriptEngineFunctionPrintf()(ok bool)//col:1309
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewFunctions() { return & functions{} }
@@ -75,6 +98,29 @@ func (f *functions)GetValue()(ok bool){//col:74
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -123,6 +169,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionEb()(ok bool){//col:150
 
 
@@ -139,6 +208,29 @@ func (f *functions)ScriptEngineFunctionEb()(ok bool){//col:150
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -188,6 +280,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionVirtualToPhysical()(ok bool){//col:204
 
 
@@ -214,6 +329,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionPhysicalToVirtual()(ok bool){//col:229
 
 
@@ -224,6 +362,29 @@ func (f *functions)ScriptEngineFunctionPhysicalToVirtual()(ok bool){//col:229
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -268,6 +429,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionTestStatement()(ok bool){//col:278
 
 
@@ -277,6 +461,29 @@ func (f *functions)ScriptEngineFunctionTestStatement()(ok bool){//col:278
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -324,6 +531,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionSpinlockUnlock()(ok bool){//col:338
 
 
@@ -339,6 +569,29 @@ func (f *functions)ScriptEngineFunctionSpinlockUnlock()(ok bool){//col:338
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -386,6 +639,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionStrlen()(ok bool){//col:391
 
 
@@ -414,6 +690,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionWcslen()(ok bool){//col:414
 
 
@@ -426,6 +725,29 @@ func (f *functions)ScriptEngineFunctionWcslen()(ok bool){//col:414
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -475,6 +797,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionInterlockedExchangeAdd()(ok bool){//col:476
 
 
@@ -492,6 +837,29 @@ func (f *functions)ScriptEngineFunctionInterlockedExchangeAdd()(ok bool){//col:4
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -540,6 +908,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionInterlockedDecrement()(ok bool){//col:534
 
 
@@ -556,6 +947,29 @@ func (f *functions)ScriptEngineFunctionInterlockedDecrement()(ok bool){//col:534
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -607,6 +1021,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionEnableEvent()(ok bool){//col:594
 
 
@@ -638,6 +1075,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionDisableEvent()(ok bool){//col:620
 
 
@@ -653,6 +1113,29 @@ func (f *functions)ScriptEngineFunctionDisableEvent()(ok bool){//col:620
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -722,6 +1205,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionFlush()(ok bool){//col:709
 
 
@@ -733,6 +1239,29 @@ func (f *functions)ScriptEngineFunctionFlush()(ok bool){//col:709
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -776,6 +1305,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)ScriptEngineFunctionFormats()(ok bool){//col:766
 
 
@@ -795,6 +1347,29 @@ func (f *functions)ScriptEngineFunctionFormats()(ok bool){//col:766
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -851,6 +1426,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)CheckIfStringIsSafe()(ok bool){//col:832
 
 
@@ -868,6 +1466,29 @@ func (f *functions)CheckIfStringIsSafe()(ok bool){//col:832
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -918,6 +1539,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (f *functions)WcharToChar()(ok bool){//col:912
 
 
@@ -943,6 +1587,29 @@ func (f *functions)WcharToChar()(ok bool){//col:912
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1033,6 +1700,29 @@ func (f *functions)ApplyStringFormatSpecifier()(ok bool){//col:1072
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1179,6 +1869,29 @@ func (f *functions)ScriptEngineFunctionPrintf()(ok bool){//col:1309
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

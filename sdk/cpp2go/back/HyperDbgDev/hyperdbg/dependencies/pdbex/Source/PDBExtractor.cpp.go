@@ -36,6 +36,31 @@ PDBExtractor::CloseOpenFiles()(ok bool)//col:738
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewPdbExtractor() { return & pdbExtractor{} }
@@ -77,6 +102,31 @@ func (p *pdbExtractor)		"int main()(ok bool){//col:84
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -149,6 +199,31 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdbExtractor)PDBExtractor::PrintUsage()(ok bool){//col:170
 
 
@@ -193,6 +268,31 @@ func (p *pdbExtractor)PDBExtractor::PrintUsage()(ok bool){//col:170
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -421,6 +521,31 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdbExtractor)PDBExtractor::OpenPDBFile()(ok bool){//col:433
 
 
@@ -431,6 +556,31 @@ func (p *pdbExtractor)PDBExtractor::OpenPDBFile()(ok bool){//col:433
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -482,6 +632,31 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdbExtractor)PDBExtractor::PrintTestFooter()(ok bool){//col:459
 
 
@@ -492,6 +667,31 @@ func (p *pdbExtractor)PDBExtractor::PrintTestFooter()(ok bool){//col:459
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -545,6 +745,31 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdbExtractor)PDBExtractor::PrintPDBDeclarations()(ok bool){//col:524
 
 
@@ -572,6 +797,31 @@ func (p *pdbExtractor)PDBExtractor::PrintPDBDeclarations()(ok bool){//col:524
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -649,6 +899,31 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdbExtractor)PDBExtractor::PrintPDBFunctions()(ok bool){//col:605
 
 
@@ -668,6 +943,31 @@ func (p *pdbExtractor)PDBExtractor::PrintPDBFunctions()(ok bool){//col:605
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -718,6 +1018,31 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdbExtractor)PDBExtractor::DumpOneSymbol()(ok bool){//col:663
 
 
@@ -740,6 +1065,31 @@ func (p *pdbExtractor)PDBExtractor::DumpOneSymbol()(ok bool){//col:663
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -815,6 +1165,31 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdbExtractor)PDBExtractor::CloseOpenFiles()(ok bool){//col:738
 
 
@@ -829,6 +1204,31 @@ func (p *pdbExtractor)PDBExtractor::CloseOpenFiles()(ok bool){//col:738
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

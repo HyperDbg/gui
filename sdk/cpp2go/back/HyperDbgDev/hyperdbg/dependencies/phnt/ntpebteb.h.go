@@ -27,6 +27,30 @@ C_ASSERT()(ok bool)//col:258
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewNtpebteb() { return & ntpebteb{} }
@@ -45,6 +69,30 @@ func (n *ntpebteb)C_ASSERT()(ok bool){//col:258
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

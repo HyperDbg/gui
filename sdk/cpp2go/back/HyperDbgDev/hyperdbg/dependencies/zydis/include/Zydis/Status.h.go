@@ -39,6 +39,30 @@ Status interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewStatus() { return & status{} }
@@ -71,6 +95,30 @@ func (s *status)    ZYAN_MAKE_STATUS()(ok bool){//col:156
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

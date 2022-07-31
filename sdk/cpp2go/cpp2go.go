@@ -13,6 +13,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime/debug"
+	"strconv"
 	"strings"
 )
 
@@ -260,6 +261,14 @@ func (t *tmpObject) removeComment(lines []string) {
 		switch {
 		case line == "#pragma once":
 			lines[i] = ""
+		case strings.Contains(line, `/*`):
+			start := strings.Index(line, `/*`)
+			end := strings.LastIndex(line, `*/`)
+			c := line[start-1 : end+2] //?
+			dd := strconv.Quote(line)
+			dd = dd //8-18 ? "        /* flags  */ 0, \\"
+			line = strings.ReplaceAll(line, c, "")
+			lines[i] = line //        /* flags  */ 0, \
 		case strings.Contains(line, "//"):
 			before, _, found := strings.Cut(line, "//")
 			if !found {
@@ -304,18 +313,17 @@ func (o *object) Block(lines []string) (b BlockObject) {
 	t := newTmpObject()
 	t.removeComment(lines)
 	//defer func() { t.finished() }()
-	b.defines = block.FindAll(t.read(), `#define`, `\`)
+	b.defines = block.FindAll(t.read(), `#define `, ``)
 	t.clean(b.defines)
-	return
-	b.externs = block.FindAll(t.read(), `extern`, ``)
+
+	b.externs = block.FindAll(t.read(), `extern `, ``)
 	t.clean(b.externs)
 
-	b.structs = block.FindAll(t.read(), `typedef struct`, ``)
-	t.clean(b.structs)
-
-	b.enums = block.FindAll(t.read(), `typedef enum`, ``)
+	b.enums = block.FindAll(t.read(), `typedef enum `, `}`)
 	t.clean(b.enums)
 
+	b.structs = block.FindAll(t.read(), `typedef struct `, `}`)
+	t.clean(b.structs)
 	b.methods = block.FindAll(t.read(), `(`, ``)
 	t.clean(b.methods)
 	b = BlockObject{
@@ -329,7 +337,7 @@ func (o *object) Block(lines []string) (b BlockObject) {
 }
 func (o *object) Convert() *object {
 	for i, cpp := range o.back {
-		if !strings.Contains(cpp.path, "Headers\\RequestStructures.h.back") {
+		if !strings.Contains(cpp.path, "Decoder.c.back") {
 			continue //test
 		}
 		mylog.Info("current file path", cpp.path)
