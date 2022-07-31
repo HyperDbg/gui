@@ -3,6 +3,7 @@ package cpp2go
 import (
 	"fmt"
 	"github.com/ddkwork/librarygo/src/Comment"
+	"github.com/ddkwork/librarygo/src/block"
 	"github.com/ddkwork/librarygo/src/caseconv"
 	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream"
@@ -223,33 +224,7 @@ type (
 		enums   []string
 		methods []string
 	}
-	blockBodyObject struct {
-		line string
-		col  int
-	}
-	blockBodys []blockBodyObject
 )
-
-func findAllBlockBody(lines []string, with, next string) (bodys blockBodys) {
-	bodys = make(blockBodys, 0)
-	for i, line := range lines {
-		if strings.Contains(line, with) {
-			col := i + 1
-			if !strings.Contains(line, next) {
-				bodys = append(bodys, blockBodyObject{line: line, col: col})
-			} else {
-				start := lines[i:]
-				for j, s := range start {
-					bodys = append(bodys, blockBodyObject{line: s, col: col + j})
-					if !strings.Contains(s, next) {
-						break
-					}
-				}
-			}
-		}
-	}
-	return
-}
 
 type (
 	tmpInterface interface {
@@ -323,19 +298,19 @@ func (o *object) Block(lines []string) (b BlockObject) {
 	}
 	type (
 		fns struct {
-			externs func(in []string) blockBodys
-			defines func(in []string) blockBodys
-			structs func(in []string) blockBodys
-			enums   func(in []string) blockBodys
-			methods func(in []string) blockBodys
+			externs func(in []string) block.Lines
+			defines func(in []string) block.Lines
+			structs func(in []string) block.Lines
+			enums   func(in []string) block.Lines
+			methods func(in []string) block.Lines
 		}
 	)
 	f := fns{
-		externs: func(in []string) blockBodys { return findAllBlockBody(in, `#define`, `\`) },
-		defines: func(in []string) blockBodys { return findAllBlockBody(in, `#define`, `\`) },
-		structs: func(in []string) blockBodys { return findAllBlockBody(in, `#define`, `\`) },
-		enums:   func(in []string) blockBodys { return findAllBlockBody(in, `#define`, `\`) },
-		methods: func(in []string) blockBodys { return findAllBlockBody(in, `#define`, `\`) },
+		externs: func(in []string) block.Lines { return block.FindAll(in, `extern`, ``) },
+		defines: func(in []string) block.Lines { return block.FindAll(in, `#define`, `\`) },
+		structs: func(in []string) block.Lines { return block.FindAll(in, `typedef struct`, ``) },
+		enums:   func(in []string) block.Lines { return block.FindAll(in, `typedef enum`, ``) },
+		methods: func(in []string) block.Lines { return block.FindAll(in, `(`, ``) },
 	}
 	out := f.defines(t.read())
 	b.externs = out
