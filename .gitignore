@@ -1,2 +1,5 @@
 log.log
 .idea
+/go.work
+/go.work.sum
+/work_test.go
