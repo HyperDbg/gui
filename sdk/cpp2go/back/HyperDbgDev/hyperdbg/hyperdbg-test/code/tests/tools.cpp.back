@@ -1,4 +1,16 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
 std::string
 Uint64ToString(UINT64 value)
 {
@@ -6,6 +18,7 @@ Uint64ToString(UINT64 value)
     Os << setw(16) << setfill('0') << hex << value;
     return Os.str();
 }
+
 
 BOOLEAN
 StringReplace(std::string & str, const std::string & from, const std::string & to)
@@ -17,10 +30,13 @@ StringReplace(std::string & str, const std::string & from, const std::string & t
     return TRUE;
 }
 
+
 std::string
 ConvertToString(char * Str)
 {
     string s(Str);
+
     return s;
 }
+
 

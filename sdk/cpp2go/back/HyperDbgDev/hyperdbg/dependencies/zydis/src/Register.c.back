@@ -1,13 +1,71 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <Zydis/Register.h>
+
+
+
+
+
 #include <Generated/EnumRegister.inc>
+
+
+
+
+
+
+
+
 typedef struct ZydisRegisterMapItem_
 {
+
+
+
     ZydisRegisterClass class;
+
+
+
     ZydisRegister lo;
+
+
+
     ZydisRegister hi;
+
+
+
     ZydisRegisterWidth width;
+
+
+
     ZydisRegisterWidth width64;
 } ZydisRegisterMapItem;
+
+
+
+
 static const ZydisRegisterMapItem REGISTER_MAP[] =
 {
     { ZYDIS_REGCLASS_INVALID  , ZYDIS_REGISTER_NONE   , ZYDIS_REGISTER_NONE   ,   0   ,   0 },
@@ -29,6 +87,15 @@ static const ZydisRegisterMapItem REGISTER_MAP[] =
     { ZYDIS_REGCLASS_MASK     , ZYDIS_REGISTER_K0     , ZYDIS_REGISTER_K7     ,   0   ,   0 },
     { ZYDIS_REGCLASS_BOUND    , ZYDIS_REGISTER_BND0   , ZYDIS_REGISTER_BND3   , 128   , 128 }
 };
+
+
+
+
+
+
+
+
+
 ZydisRegister ZydisRegisterEncode(ZydisRegisterClass register_class, ZyanU8 id)
 {
     switch (register_class)
@@ -46,6 +113,7 @@ ZydisRegister ZydisRegisterEncode(ZydisRegisterClass register_class, ZyanU8 id)
     }
     return ZYDIS_REGISTER_NONE;
 }
+
 
 ZyanI8 ZydisRegisterGetId(ZydisRegister reg)
 {
@@ -67,6 +135,7 @@ ZyanI8 ZydisRegisterGetId(ZydisRegister reg)
     return -1;
 }
 
+
 ZydisRegisterClass ZydisRegisterGetClass(ZydisRegister reg)
 {
     for (ZyanUSize i = 0; i < ZYAN_ARRAY_LENGTH(REGISTER_MAP); ++i)
@@ -79,8 +148,10 @@ ZydisRegisterClass ZydisRegisterGetClass(ZydisRegister reg)
     return ZYDIS_REGCLASS_INVALID;
 }
 
+
 ZydisRegisterWidth ZydisRegisterGetWidth(ZydisMachineMode mode, ZydisRegister reg)
 {
+
     switch (reg)
     {
     case ZYDIS_REGISTER_X87CONTROL:
@@ -107,6 +178,8 @@ ZydisRegisterWidth ZydisRegisterGetWidth(ZydisMachineMode mode, ZydisRegister re
     default:
         break;
     }
+
+
     for (ZyanUSize i = 0; i < ZYAN_ARRAY_LENGTH(REGISTER_MAP); ++i)
     {
         if ((reg >= REGISTER_MAP[i].lo) && (reg <= REGISTER_MAP[i].hi))
@@ -117,6 +190,7 @@ ZydisRegisterWidth ZydisRegisterGetWidth(ZydisMachineMode mode, ZydisRegister re
     }
     return 0;
 }
+
 
 ZydisRegister ZydisRegisterGetLargestEnclosing(ZydisMachineMode mode,
     ZydisRegister reg)
@@ -144,6 +218,7 @@ ZydisRegister ZydisRegisterGetLargestEnclosing(ZydisMachineMode mode,
         /* R14B */ 14,
         /* R15B */ 15,
     };
+
     for (ZyanUSize i = 0; i < ZYAN_ARRAY_LENGTH(REGISTER_MAP); ++i)
     {
         if ((reg >= REGISTER_MAP[i].lo) && (reg <= REGISTER_MAP[i].hi))
@@ -153,6 +228,7 @@ ZydisRegister ZydisRegisterGetLargestEnclosing(ZydisMachineMode mode,
             {
                 return ZYDIS_REGISTER_NONE;
             }
+
             ZyanU8 reg_id = (ZyanU8)(reg - REGISTER_MAP[reg_class].lo);
             switch (reg_class)
             {
@@ -189,8 +265,10 @@ ZydisRegister ZydisRegisterGetLargestEnclosing(ZydisMachineMode mode,
             }
         }
     }
+
     return ZYDIS_REGISTER_NONE;
 }
+
 
 const char* ZydisRegisterGetString(ZydisRegister reg)
 {
@@ -201,6 +279,7 @@ const char* ZydisRegisterGetString(ZydisRegister reg)
     return STR_REGISTER[reg].data;
 }
 
+
 const ZydisShortString* ZydisRegisterGetStringWrapped(ZydisRegister reg)
 {
     if ((ZyanUSize)reg >= ZYAN_ARRAY_LENGTH(STR_REGISTER))
@@ -209,6 +288,11 @@ const ZydisShortString* ZydisRegisterGetStringWrapped(ZydisRegister reg)
     }
     return &STR_REGISTER[reg];
 }
+
+
+
+
+
 
 ZydisRegisterWidth ZydisRegisterClassGetWidth(ZydisMachineMode mode,
     ZydisRegisterClass register_class)
@@ -220,4 +304,9 @@ ZydisRegisterWidth ZydisRegisterClassGetWidth(ZydisMachineMode mode,
     }
     return 0;
 }
+
+
+
+
+
 

@@ -3,18 +3,29 @@ PUBLIC AsmCliInstruction
 PUBLIC AsmGetRflags
 PUBLIC AsmReloadGdtr
 PUBLIC AsmReloadIdtr
+
 .code _text
+
 ;------------------------------------------------------------------------
+
 AsmStiInstruction PROC PUBLIC
+
     sti
     ret
+
 AsmStiInstruction ENDP 
+
 ;------------------------------------------------------------------------
+
 AsmCliInstruction PROC PUBLIC
+
     cli
     ret
+
 AsmCliInstruction ENDP 
+
 ;------------------------------------------------------------------------
+
 AsmGetRflags PROC
     
     pushfq
@@ -22,9 +33,13 @@ AsmGetRflags PROC
     ret
     
 AsmGetRflags ENDP
+
 ;------------------------------------------------------------------------
+
 ; AsmReloadGdtr (PVOID GdtBase (rcx), ULONG GdtLimit (rdx) );
+
 AsmReloadGdtr PROC
+
     push	rcx
     shl		rdx, 48
     push	rdx
@@ -34,8 +49,11 @@ AsmReloadGdtr PROC
     ret
     
 AsmReloadGdtr ENDP
+
 ;------------------------------------------------------------------------
+
 ; AsmReloadIdtr (PVOID IdtBase (rcx), ULONG IdtLimit (rdx) );
+
 AsmReloadIdtr PROC
     
     push	rcx
@@ -47,5 +65,7 @@ AsmReloadIdtr PROC
     ret
     
 AsmReloadIdtr ENDP
+
 ;------------------------------------------------------------------------
+
 END                     

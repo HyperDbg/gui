@@ -1,10 +1,12 @@
 #pragma once
 #include "PDBSymbolSorterBase.h"
+
 #include <cassert>
 #include <string>
 #include <vector>
 #include <map>
 #include <algorithm>
+
 class PDBSymbolSorterAlphabetical
 	: public PDBSymbolSorterBase
 {
@@ -20,22 +22,28 @@ class PDBSymbolSorterAlphabetical
 					[](const SYMBOL* lhs, const SYMBOL* rhs) {
 						return strcmp(lhs->Name, rhs->Name) < 0;
 					});
+
 				m_Dirty = false;
 			}
+
 			return m_SortedSymbols;
 		}
+
 		ImageArchitecture
 		GetImageArchitecture() const override
 		{
 			return m_Architecture;
 		}
+
 		void
 		Clear() override
 		{
 			ImageArchitecture m_Architecture = ImageArchitecture::None;
+
 			m_VisitedUdts.clear();
 			m_SortedSymbols.clear();
 		}
+
 	protected:
 		void
 		VisitEnumType(
@@ -43,8 +51,10 @@ class PDBSymbolSorterAlphabetical
 			) override
 		{
 			if (HasBeenVisited(Symbol)) return;
+
 			AddSymbol(Symbol);
 		}
+
 		void
 		VisitPointerType(
 			const SYMBOL* Symbol
@@ -57,24 +67,30 @@ class PDBSymbolSorterAlphabetical
 					case 4:
 						m_Architecture = ImageArchitecture::x86;
 						break;
+
 					case 8:
 						m_Architecture = ImageArchitecture::x64;
 						break;
+
 					default:
 						assert(0);
 						break;
 				}
 			}
 		}
+
 		void
 		VisitUdt(
 			const SYMBOL* Symbol
 			) override
 		{
 			if (HasBeenVisited(Symbol)) return;
+
 			PDBSymbolVisitorBase::VisitUdt(Symbol);
+
 			AddSymbol(Symbol);
 		}
+
 		void
 		VisitUdtField(
 			const SYMBOL_UDT_FIELD* UdtField
@@ -82,6 +98,7 @@ class PDBSymbolSorterAlphabetical
 		{
 			Visit(UdtField->Type);
 		}
+
 	private:
 		bool
 		HasBeenVisited(
@@ -89,6 +106,24 @@ class PDBSymbolSorterAlphabetical
 			)
 		{
 			static DWORD UnnamedCounter = 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			std::string Key = Symbol->Name;
 			if (m_VisitedUdts.find(Key) != m_VisitedUdts.end())
 			{
@@ -100,10 +135,12 @@ class PDBSymbolSorterAlphabetical
 				{
 					Key += std::to_string(++UnnamedCounter);
 				}
+
 				m_VisitedUdts[Key] = Symbol;
 				return false;
 			}
 		}
+
 		void
 		AddSymbol(
 			const SYMBOL* Symbol
@@ -115,8 +152,11 @@ class PDBSymbolSorterAlphabetical
 				m_Dirty = true;
 			}
 		}
+
 		ImageArchitecture m_Architecture = ImageArchitecture::None;
+
 		std::map<std::string, const SYMBOL*> m_VisitedUdts;
 		std::vector<const SYMBOL*> m_SortedSymbols;
 		bool m_Dirty = true;
 };
+

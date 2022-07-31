@@ -1,10 +1,33 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
+
+
+
+
+
+
+
 typedef struct _UNICODE_STRING
 {
     USHORT Length;        // +0x000
     USHORT MaximumLength; // +0x002
     PWSTR  Buffer;        // +0x004
 } UNICODE_STRING, *PUNICODE_STRING;
+
 typedef struct _STUPID_STRUCT1
 {
     UINT32          Flag32;      // +0x000
@@ -12,6 +35,7 @@ typedef struct _STUPID_STRUCT1
     PVOID           Context;     // +0x00c
     PUNICODE_STRING StringValue; // +0x014
 } STUPID_STRUCT1, *PSTUPID_STRUCT1;
+
 typedef struct _STUPID_STRUCT2
 {
     UINT32          Sina32;        // +0x000
@@ -19,7 +43,31 @@ typedef struct _STUPID_STRUCT2
     PVOID           AghaaSina;     // +0x00c
     PUNICODE_STRING UnicodeStr;    // +0x014
     PSTUPID_STRUCT1 StupidStruct1; // +0x01c
+
 } STUPID_STRUCT2, *PSTUPID_STRUCT2;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 BOOLEAN
 SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
                                  _In_ const char * FiledOfStructName,
@@ -33,6 +81,7 @@ SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
     BOOLEAN IsTheStructItselfAPointer = FALSE;
     UINT32  TempOffsetOfFieldFromTop  = 0;
     UINT32  TempSizeOfField           = 0;
+
     if (strcmp(StructName, "STUPID_STRUCT1") == 0 ||
         strcmp(StructName, "PSTUPID_STRUCT1") == 0)
     {
@@ -40,6 +89,7 @@ SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
         {
             IsTheStructItselfAPointer = TRUE;
         }
+
         if (strcmp(FiledOfStructName, "Flag32") == 0)
         {
             IsPointer                = FALSE;
@@ -70,6 +120,9 @@ SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
         }
         else
         {
+
+
+
             return FALSE;
         }
     }
@@ -80,6 +133,7 @@ SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
         {
             IsTheStructItselfAPointer = TRUE;
         }
+
         if (strcmp(FiledOfStructName, "Sina32") == 0)
         {
             IsPointer                = FALSE;
@@ -117,6 +171,9 @@ SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
         }
         else
         {
+
+
+
             return FALSE;
         }
     }
@@ -127,6 +184,7 @@ SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
         {
             IsTheStructItselfAPointer = TRUE;
         }
+
         if (strcmp(FiledOfStructName, "Length") == 0)
         {
             IsPointer                = FALSE;
@@ -150,19 +208,42 @@ SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
         }
         else
         {
+
+
+
             return FALSE;
         }
     }
     else
     {
+
+
+
         return FALSE;
     }
+
+
+
+
     *OffsetOfFieldFromTop            = TempOffsetOfFieldFromTop;
     *SizeOfField                     = TempSizeOfField;
     *IsFiledOfStructNamePointerOrNot = IsPointer;
     *IsStructNamePointerOrNot        = IsTheStructItselfAPointer;
+
     return TRUE;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 BOOLEAN
 SymQuerySizeof(_In_ const char * StructNameOrTypeName, _Out_ UINT32 * SizeOfField)
@@ -193,19 +274,30 @@ SymQuerySizeof(_In_ const char * StructNameOrTypeName, _Out_ UINT32 * SizeOfFiel
     }
     else
     {
+
+
+
         return FALSE;
     }
+
     return TRUE;
 }
+
 
 int
 main()
 {
     UINT32 SizeofResult = 0;
+
+
+
+
+
     if (SymQuerySizeof("PUNICODE_STRING", &SizeofResult))
     {
         printf("result of sizeof(PUNICODE_STRING) is : 0x%x\n", SizeofResult);
     }
+
     if (SymQuerySizeof("SOME_UNKNOWN_STRUCT", &SizeofResult))
     {
         printf("result of sizeof(SOME_UNKNOWN_STRUCT) is : 0x%x\n", SizeofResult);
@@ -214,12 +306,96 @@ main()
     {
         printf("SOME_UNKNOWN_STRUCT is not found\n");
     }
+
     printf("\n\n\n");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     BOOLEAN IsStructPointerOrNot = FALSE;
     BOOLEAN IsFieldPointerOrNot  = FALSE;
     UINT32  OffsetOfFieldFromTop = NULL;
     UINT32  SizeOfField          = NULL;
     CHAR *  NewStructOrTypeName  = (CHAR *)malloc(100);
+
     if (SymCastingQueryForFiledsAndTypes(
             "STUPID_STRUCT2",
             "UnicodeStr",
@@ -236,6 +412,8 @@ main()
         printf("offset of field from top : %x\n", OffsetOfFieldFromTop);
         printf("size of field : %x\n", SizeOfField);
     }
+
     free(NewStructOrTypeName);
 }
+
 

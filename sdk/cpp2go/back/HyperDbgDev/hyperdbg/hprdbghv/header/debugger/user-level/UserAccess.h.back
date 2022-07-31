@@ -1,4 +1,24 @@
+
+
+
+
+
+
+
+
+
+
+
 #pragma once
+
+
+
+
+
+
+
+
+
 typedef struct _PEB_LDR_DATA
 {
     ULONG      Length;
@@ -8,6 +28,11 @@ typedef struct _PEB_LDR_DATA
     LIST_ENTRY ModuleListMemoryOrder;
     LIST_ENTRY ModuleListInitOrder;
 } PEB_LDR_DATA, *PPEB_LDR_DATA;
+
+
+
+
+
 typedef struct _RTL_USER_PROCESS_PARAMETERS
 {
     BYTE           Reserved1[16];
@@ -15,7 +40,17 @@ typedef struct _RTL_USER_PROCESS_PARAMETERS
     UNICODE_STRING ImagePathName;
     UNICODE_STRING CommandLine;
 } RTL_USER_PROCESS_PARAMETERS, *PRTL_USER_PROCESS_PARAMETERS;
+
+
+
+
+
 typedef void(__stdcall * PPS_POST_PROCESS_INIT_ROUTINE)(void); // not exported
+
+
+
+
+
 typedef struct _PEB
 {
     BYTE                          Reserved1[2];
@@ -38,6 +73,11 @@ typedef struct _PEB
     PVOID                         Reserved12[1];
     ULONG                         SessionId;
 } PEB, *PPEB;
+
+
+
+
+
 typedef struct _PEB32
 {
     UCHAR InheritedAddressSpace;
@@ -59,6 +99,11 @@ typedef struct _PEB32
     ULONG AtlThunkSListPtr32;
     ULONG ApiSetMap;
 } PEB32, *PPEB32;
+
+
+
+
+
 typedef struct _PEB_LDR_DATA32
 {
     ULONG        Length;
@@ -68,6 +113,11 @@ typedef struct _PEB_LDR_DATA32
     LIST_ENTRY32 InMemoryOrderModuleList;
     LIST_ENTRY32 InInitializationOrderModuleList;
 } PEB_LDR_DATA32, *PPEB_LDR_DATA32;
+
+
+
+
+
 typedef struct _LDR_DATA_TABLE_ENTRY32
 {
     LIST_ENTRY32     InLoadOrderLinks;
@@ -84,6 +134,11 @@ typedef struct _LDR_DATA_TABLE_ENTRY32
     LIST_ENTRY32     HashLinks;
     ULONG            TimeDateStamp;
 } LDR_DATA_TABLE_ENTRY32, *PLDR_DATA_TABLE_ENTRY32;
+
+
+
+
+
 typedef struct _LDR_DATA_TABLE_ENTRY
 {
     LIST_ENTRY     InLoadOrderModuleList;
@@ -101,25 +156,62 @@ typedef struct _LDR_DATA_TABLE_ENTRY
     PVOID          SectionPointer;
     ULONG          CheckSum;
     ULONG          TimeDateStamp;
+
+
+
 } LDR_DATA_TABLE_ENTRY, *PLDR_DATA_TABLE_ENTRY;
+
+
+
+
+
 typedef NTSTATUS (*ZwQueryInformationProcess)(
     __in HANDLE                                  ProcessHandle,
     __in PROCESSINFOCLASS                        ProcessInformationClass,
     __out_bcount(ProcessInformationLength) PVOID ProcessInformation,
     __in ULONG                                   ProcessInformationLength,
     __out_opt PULONG                             ReturnLength);
+
 typedef PPEB(NTAPI * PsGetProcessPeb)(PEPROCESS Process);
+
 typedef PPEB32(NTAPI * PsGetProcessWow64Process)(PEPROCESS Process);
+
+
+
+
+
+
+
+
+
 ZwQueryInformationProcess g_ZwQueryInformationProcess;
+
+
+
+
+
 PsGetProcessPeb g_PsGetProcessPeb;
+
+
+
+
+
 PsGetProcessWow64Process g_PsGetProcessWow64Process;
+
+
+
+
+
 BOOLEAN
 UserAccessAllocateAndGetImagePathFromProcessId(HANDLE          ProcessId,
                                                PUNICODE_STRING ProcessImageName,
                                                UINT32          SizeOfImageNameToBeAllocated);
 BOOLEAN
 UserAccessGetLoadedModules(PUSERMODE_LOADED_MODULE_DETAILS ProcessLoadedModuleRequest, UINT32 BufferSize);
+
 BOOLEAN
 UserAccessIsWow64Process(HANDLE ProcessId, PBOOLEAN Is32Bit);
+
 BOOLEAN
 UserAccessCheckForLoadedModuleDetails();
+

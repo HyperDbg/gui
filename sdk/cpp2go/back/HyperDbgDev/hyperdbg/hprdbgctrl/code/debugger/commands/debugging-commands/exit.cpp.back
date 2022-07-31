@@ -1,12 +1,42 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
 extern HANDLE g_DeviceHandle;
+
+
+
+
+
+
 VOID
 CommandExitHelp()
 {
     ShowMessages(
         "exit : unloads and uninstalls the drivers and closes the debugger.\n\n");
+
     ShowMessages("syntax : \texit\n");
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandExit(vector<string> SplittedCommand, string Command)
@@ -17,10 +47,16 @@ CommandExit(vector<string> SplittedCommand, string Command)
         CommandExitHelp();
         return;
     }
+
+
+
+
     if (g_DeviceHandle)
     {
         HyperDbgUnloadVmm();
     }
+
     exit(0);
 }
+
 

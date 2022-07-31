@@ -1,15 +1,34 @@
+
+
+
+
+
+
+
+
+
+
+
 #pragma once
+
+
+
+
+
 #define X2_MSR_BASE 0x800
 #define ICROffset   0x300
 #define TO_X2(x)    (x / 0x10)
+
 #define APIC_DEFAULT_PHYS_BASE 0xfee00000
 #define APIC_BSP               (1UL << 8)
 #define APIC_EXTD              (1UL << 10)
 #define APIC_EN                (1UL << 11)
+
 #define APIC_LVR            0x30
 #define APIC_LVR_MASK       0xFF00FF
 #define GET_APIC_VERSION(x) ((x)&0xFFu)
 #define GET_APIC_MAXLVT(x)  (((x) >> 16) & 0xFFu)
+
 #define APIC_INTEGRATED(x) (1)
 #define APIC_XAPIC(x)      ((x) >= 0x14)
 #define APIC_TASKPRI       0x80
@@ -17,6 +36,7 @@
 #define APIC_ARBPRI        0x90
 #define APIC_ARBPRI_MASK   0xFFu
 #define APIC_PROCPRI       0xA0
+
 #define APIC_EIO_ACK                 0x0
 #define APIC_RRR                     0xC0
 #define APIC_LDR                     0xD0
@@ -120,12 +140,22 @@
 #define APIC_EILVT1                  0x510
 #define APIC_EILVT2                  0x520
 #define APIC_EILVT3                  0x530
+
 #define APIC_BASE_MSR 0x800
+
+
+
+
+
 BOOLEAN
 ApicInitialize();
+
 VOID
 ApicUninitialize();
+
 VOID
 ApicSelfIpi(UINT32 Vector);
+
 VOID
 ApicTriggerGenericNmi();
+

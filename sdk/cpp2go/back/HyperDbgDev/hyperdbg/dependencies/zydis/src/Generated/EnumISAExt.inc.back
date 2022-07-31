@@ -75,3 +75,4 @@ static const char* STR_ISAEXT[] =
     "XSAVEOPT",
     "XSAVES"
 };
+

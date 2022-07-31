@@ -1,20 +1,51 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
+
+
+
+
+
 VOID
 PeHexDump(CHAR * Ptr, int Size, int SecAddress)
 {
     int i = 1, Temp = 0;
+
+
+
+
+
     wchar_t Buf[18];
     ShowMessages("\n\n%x: |", SecAddress);
+
     Buf[Temp]      = ' '; // initial space
     Buf[Temp + 16] = ' '; // final space
     Buf[Temp + 17] = 0;   // End of Buf
     Temp++;               // Temp = 1;
+
     for (; i <= Size; i++, Ptr++, Temp++)
     {
         Buf[Temp] = !iswcntrl((*Ptr) & 0xff) ? (*Ptr) & 0xff : '.';
         ShowMessages("%-3.2x", (*Ptr) & 0xff);
+
         if (i % 16 == 0)
         {
+
+
+
             _putws(Buf);
             if (i + 1 <= Size)
                 ShowMessages("%x: ", SecAddress += 16);
@@ -32,6 +63,15 @@ PeHexDump(CHAR * Ptr, int Size, int SecAddress)
     }
 }
 
+
+
+
+
+
+
+
+
+
 BOOLEAN
 PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * SectionToShow, BOOLEAN Is32Bit)
 {
@@ -47,28 +87,50 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
     IMAGE_OPTIONAL_HEADER32 OpHeader32;                  // Optional Header of PE files present in NT Header structure
     IMAGE_OPTIONAL_HEADER64 OpHeader64;                  // Optional Header of PE files present in NT Header structure
     PIMAGE_SECTION_HEADER   SecHeader;                   // Section Header or Section Table Header
+
+
+
+
     FileHandle = CreateFileW(AddressOfFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if (FileHandle == INVALID_HANDLE_VALUE)
     {
         ShowMessages("err, could not open the file specified\n");
         return FALSE;
     };
+
+
+
+
     MapObjectHandle =
         CreateFileMapping(FileHandle, NULL, PAGE_READONLY, 0, 0, NULL);
+
     if (MapObjectHandle == NULL)
     {
         CloseHandle(FileHandle);
         return FALSE;
     }
+
     BaseAddr = MapViewOfFile(MapObjectHandle, FILE_MAP_READ, 0, 0, 0);
+
     if (BaseAddr == NULL)
     {
         CloseHandle(FileHandle);
         return FALSE;
     }
+
+
+
+
     DosHeader = (PIMAGE_DOS_HEADER)BaseAddr; // 0x04000000
+
+
+
+
     if (DosHeader->e_magic == IMAGE_DOS_SIGNATURE)
     {
+
+
+
         ShowMessages("\nValid Dos Exe File\n------------------\n");
         ShowMessages("\nDumping DOS Header Info....\n---------------------------");
         ShowMessages("\n%-36s%s ",
@@ -109,6 +171,13 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
         Result = FALSE;
         goto Finished;
     }
+
+
+
+
+
+
+
     if (Is32Bit)
     {
         NtHeader32 = (PIMAGE_NT_HEADERS32)((UINT64)(DosHeader) + (DosHeader->e_lfanew));
@@ -117,6 +186,10 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
     {
         NtHeader64 = (PIMAGE_NT_HEADERS64)((UINT64)(DosHeader) + (DosHeader->e_lfanew));
     }
+
+
+
+
     if (Is32Bit && NtHeader32->Signature == IMAGE_NT_SIGNATURE)
     {
         ShowMessages("\nValid PE32 file \n-------------\n");
@@ -131,9 +204,17 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
         Result = FALSE;
         goto Finished;
     }
+
+
+
+
     ShowMessages("\nDumping COFF/PE Header "
                  "Info....\n--------------------------------");
     ShowMessages("\n%-36s%s", "Signature :", "PE");
+
+
+
+
     if (Is32Bit)
     {
         Header = NtHeader32->FileHeader;
@@ -142,7 +223,16 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
     {
         Header = NtHeader64->FileHeader;
     }
+
+
+
+
     ShowMessages("\n%-36s", "Machine Architechture :");
+
+
+
+
+
     switch (Header.Machine)
     {
     case 0x0:
@@ -173,6 +263,10 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
         ShowMessages("Not Found");
         break;
     }
+
+
+
+
     ShowMessages("\n%-36s", "Characteristics : ");
     if ((Header.Characteristics & 0x0002) == 0x0002)
         ShowMessages("Executable Image, ");
@@ -184,18 +278,31 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
         ShowMessages("Dll file, ");
     if ((Header.Characteristics & 0x4000) == 0x4000)
         ShowMessages("Application runs only in Uniprocessor, ");
+
+
+
+
     ShowMessages("\n%-36s%s",
                  "Time Stamp :",
                  ctime((const time_t *)&(Header.TimeDateStamp)));
+
+
+
+
     ShowMessages("%-36s%d", "No.sections(size) :", Header.NumberOfSections);
     ShowMessages("\n%-36s%d", "No.entries in symbol table :", Header.NumberOfSymbols);
     ShowMessages("\n%-36s%d",
                  "Size of optional header :",
                  Header.SizeOfOptionalHeader);
+
     ShowMessages("\n\nDumping PE Optional Header "
                  "Info....\n-----------------------------------");
+
     if (Is32Bit)
     {
+
+
+
         OpHeader32 = NtHeader32->OptionalHeader;
         ShowMessages("\n\nInfo of optional Header\n-----------------------");
         ShowMessages("\n%-36s%#x",
@@ -211,15 +318,20 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
         ShowMessages("\n%-36s%d",
                      "Size of Initialized data : ",
                      OpHeader32.SizeOfInitializedData);
+
         ShowMessages("\n%-36s%#x",
                      "Base address of data segment(RVA) :",
                      OpHeader32.BaseOfData);
+
         ShowMessages("\n%-36s%#x", "Section Alignment :", OpHeader32.SectionAlignment);
         ShowMessages("\n%-36s%d", "Major Linker Version : ", OpHeader32.MajorLinkerVersion);
         ShowMessages("\n%-36s%d", "Minor Linker Version : ", OpHeader32.MinorLinkerVersion);
     }
     else
     {
+
+
+
         OpHeader64 = NtHeader64->OptionalHeader;
         ShowMessages("\n\nInfo of optional Header\n-----------------------");
         ShowMessages("\n%-36s%#x",
@@ -235,12 +347,18 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
         ShowMessages("\n%-36s%d",
                      "Size of Initialized data : ",
                      OpHeader64.SizeOfInitializedData);
+
         ShowMessages("\n%-36s%#x", "Section Alignment :", OpHeader64.SectionAlignment);
         ShowMessages("\n%-36s%d", "Major Linker Version : ", OpHeader64.MajorLinkerVersion);
         ShowMessages("\n%-36s%d", "Minor Linker Version : ", OpHeader64.MinorLinkerVersion);
     }
+
     ShowMessages("\n\nDumping Sections Header "
                  "Info....\n--------------------------------");
+
+
+
+
     if (Is32Bit)
     {
         SecHeader        = IMAGE_FIRST_SECTION(NtHeader32);
@@ -251,6 +369,7 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
         SecHeader        = IMAGE_FIRST_SECTION(NtHeader64);
         NumberOfSections = NtHeader64->FileHeader.NumberOfSections;
     }
+
     for (i = 0; i < NumberOfSections; i++, SecHeader++)
     {
         if (Is32Bit)
@@ -261,6 +380,7 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
         {
             ShowMessages("\n\nSection Info (%d of %d)", i + 1, NtHeader64->FileHeader.NumberOfSections);
         }
+
         ShowMessages("\n---------------------");
         ShowMessages("\n%-36s%s", "Section Header name : ", SecHeader->Name);
         ShowMessages("\n%-36s%#x",
@@ -300,6 +420,10 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
             ShowMessages("Readable, ");
         if ((SecHeader->Characteristics & 0x80000000) == 0x80000000)
             ShowMessages("Writable, ");
+
+
+
+
         if (SectionToShow != NULL)
         {
             if (!_strcmpi(SectionToShow, (const char *)SecHeader->Name))
@@ -322,14 +446,32 @@ PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * Sectio
             }
         }
     }
+
     ShowMessages("\n==============================================================="
                  "================\n");
+
+
+
+
     Result = TRUE;
+
 Finished:
+
+
+
     UnmapViewOfFile(BaseAddr);
     CloseHandle(MapObjectHandle);
+
     return Result;
 }
+
+
+
+
+
+
+
+
 
 BOOLEAN
 PeIsPE32BitOr64Bit(const WCHAR * AddressOfFile, PBOOLEAN Is32Bit)
@@ -341,43 +483,91 @@ PeIsPE32BitOr64Bit(const WCHAR * AddressOfFile, PBOOLEAN Is32Bit)
     PIMAGE_NT_HEADERS32     NtHeader32 = NULL;           // Pointer to NT Header 32 bit
     IMAGE_OPTIONAL_HEADER32 OpHeader32;                  // Optional Header of PE files present in NT Header structure
     IMAGE_FILE_HEADER       Header;                      // Pointer to image file header of NT Header
+
+
+
+
     FileHandle = CreateFileW(AddressOfFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if (FileHandle == INVALID_HANDLE_VALUE)
     {
         ShowMessages("err, unable to read the file (%x)\n", GetLastError());
         return FALSE;
     };
+
+
+
+
     MapObjectHandle =
         CreateFileMapping(FileHandle, NULL, PAGE_READONLY, 0, 0, NULL);
+
     if (MapObjectHandle == NULL)
     {
         CloseHandle(FileHandle);
+
         ShowMessages("err, unable to create file mappings (%x)\n", GetLastError());
         return FALSE;
     }
+
     BaseAddr = MapViewOfFile(MapObjectHandle, FILE_MAP_READ, 0, 0, 0);
+
     if (BaseAddr == NULL)
     {
         CloseHandle(FileHandle);
+
         ShowMessages("err, unable to create map view of file (%x)\n", GetLastError());
         return FALSE;
     }
+
+
+
+
     DosHeader = (PIMAGE_DOS_HEADER)BaseAddr; // 0x04000000
+
+
+
+
     if (DosHeader->e_magic != IMAGE_DOS_SIGNATURE)
     {
         Result = FALSE;
+
         ShowMessages("err, the selected file is not in a valid PE format\n");
         goto Finished;
     }
+
+
+
+
+
+
+
+
     NtHeader32 = (PIMAGE_NT_HEADERS32)((UINT64)(DosHeader) + (DosHeader->e_lfanew));
+
+
+
+
     if (NtHeader32->Signature != IMAGE_NT_SIGNATURE)
     {
         Result = FALSE;
+
         ShowMessages("err, invalid image NT signature\n");
         goto Finished;
     }
+
+
+
+
     OpHeader32 = NtHeader32->OptionalHeader;
+
+
+
+
     Header = NtHeader32->FileHeader;
+
+
+
+
+
     switch (Header.Machine)
     {
     case IMAGE_FILE_MACHINE_I386:
@@ -397,9 +587,15 @@ PeIsPE32BitOr64Bit(const WCHAR * AddressOfFile, PBOOLEAN Is32Bit)
         goto Finished;
         break;
     }
+
 Finished:
+
+
+
     UnmapViewOfFile(BaseAddr);
     CloseHandle(MapObjectHandle);
+
     return Result;
 }
+
 

@@ -1,19 +1,46 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
+
+
 VOID
 CommandMonitorHelp()
 {
     ShowMessages("!monitor : monitors address range for read and writes.\n\n");
+
     ShowMessages("syntax : \t!monitor [Mode (string)] [FromAddress (hex)] "
                  "[ToAddress (hex)] [pid ProcessId (hex)] [core CoreId (hex)] "
                  "[imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] "
                  "[script { Script (string) }] [condition { Condition (hex) }] "
                  "[code { Code (hex) }]\n");
+
     ShowMessages("\n");
     ShowMessages("\t\te.g : !monitor rw fffff801deadb000 fffff801deadbfff\n");
     ShowMessages("\t\te.g : !monitor rw nt!Kd_DEFAULT_Mask Kd_DEFAULT_Mask+5\n");
     ShowMessages("\t\te.g : !monitor r fffff801deadb000 fffff801deadbfff pid 400\n");
     ShowMessages("\t\te.g : !monitor w fffff801deadb000 fffff801deadbfff core 2 pid 400\n");
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandMonitor(vector<string> SplittedCommand, string Command)
@@ -35,12 +62,21 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
     vector<string>                     SplittedCommandCaseSensitive {Split(Command, ' ')};
     UINT32                             IndexInCommandCaseSensitive = 0;
     DEBUGGER_EVENT_PARSING_ERROR_CAUSE EventParsingErrorCause;
+
     if (SplittedCommand.size() < 4)
     {
         ShowMessages("incorrect use of '!monitor'\n");
         CommandMonitorHelp();
         return;
     }
+
+
+
+
+
+
+
+
     if (!InterpretGeneralEventAndActionsFields(
             &SplittedCommand,
             &SplittedCommandCaseSensitive,
@@ -57,9 +93,14 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
     {
         return;
     }
+
+
+
+
     for (auto Section : SplittedCommand)
     {
         IndexInCommandCaseSensitive++;
+
         if (!Section.compare("!monitor"))
         {
             continue;
@@ -81,15 +122,22 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
         }
         else
         {
+
+
+
             if (!SetFrom)
             {
                 if (!SymbolConvertNameOrExprToAddress(
                         SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1),
                         &OptionalParam1))
                 {
+
+
+
                     ShowMessages("err, couldn't resolve error at '%s'\n\n",
                                  SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1).c_str());
                     CommandMonitorHelp();
+
                     FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
                     return;
                 }
@@ -101,9 +149,14 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
                         SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1),
                         &OptionalParam2))
                 {
+
+
+
                     ShowMessages("err, couldn't resolve error at '%s'\n\n",
                                  SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1).c_str());
+
                     CommandMonitorHelp();
+
                     FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
                     return;
                 }
@@ -111,33 +164,68 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
             }
             else
             {
+
+
+
                 ShowMessages("unknown parameter '%s'\n\n", Section.c_str());
                 CommandMonitorHelp();
+
                 FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
                 return;
             }
         }
     }
+
+
+
+
     if (OptionalParam1 > OptionalParam2)
     {
+
+
+
         ShowMessages("please choose the 'from' value first, then choose the 'to' "
                      "value\n");
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
+
+
+
+
     if (!SetMode)
     {
         ShowMessages("please specify the attribute(s) that you want to monitor (r, w, rw)\n");
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
+
+
+
+
     Event->OptionalParam1 = OptionalParam1;
     Event->OptionalParam2 = OptionalParam2;
+
+
+
+
     if (!SendEventToKernel(Event, EventLength))
     {
+
+
+
+
+
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
+
+
+
+
     if (!RegisterActionToEvent(Event,
                                ActionBreakToDebugger,
                                ActionBreakToDebuggerLength,
@@ -146,8 +234,13 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
                                ActionScript,
                                ActionScriptLength))
     {
+
+
+
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
 }
+
 

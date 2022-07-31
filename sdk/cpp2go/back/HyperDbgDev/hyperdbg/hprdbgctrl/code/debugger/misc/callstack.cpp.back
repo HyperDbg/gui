@@ -1,13 +1,56 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
 extern BOOLEAN g_AddressConversion;
+
+
+
+
+
+
+
+
+
+
+
 BOOLEAN
 CallstackReturnAddressToCallingAddress(UCHAR * ReturnAddress, PUINT32 IndexOfCallFromReturnAddress)
 {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     if (ReturnAddress[-7] == 0x9A)
     {
         *IndexOfCallFromReturnAddress = 7;
         return TRUE;
     }
+
     else if (ReturnAddress[-5] == 0xE8)
     {
         *IndexOfCallFromReturnAddress = 5;
@@ -15,13 +58,62 @@ CallstackReturnAddressToCallingAddress(UCHAR * ReturnAddress, PUINT32 IndexOfCal
     }
     else
     {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         const unsigned char RmMask = 0xF8;
+
+
+
+
         if (ReturnAddress[-7] == 0xFF &&
             (ReturnAddress[-6] == 0x94 || ReturnAddress[-6] == 0x9C))
         {
             *IndexOfCallFromReturnAddress = 7;
             return TRUE;
         }
+
+
+
+
+
         else if (ReturnAddress[-6] == 0xFF &&
                  ((ReturnAddress[-5] & RmMask) == 0x90 || (ReturnAddress[-5] & RmMask) == 0x98) &&
                  (ReturnAddress[-5] != 0x94 && ReturnAddress[-5] != 0x9C))
@@ -29,18 +121,32 @@ CallstackReturnAddressToCallingAddress(UCHAR * ReturnAddress, PUINT32 IndexOfCal
             *IndexOfCallFromReturnAddress = 6;
             return TRUE;
         }
+
+
+
+
         else if (ReturnAddress[-6] == 0xFF &&
                  (ReturnAddress[-5] == 0x15 || ReturnAddress[-5] == 0x1D))
         {
             *IndexOfCallFromReturnAddress = 6;
             return TRUE;
         }
+
+
+
+
+
         else if (ReturnAddress[-4] == 0xFF &&
                  (ReturnAddress[-3] == 0x54 || ReturnAddress[-3] == 0x5C))
         {
             *IndexOfCallFromReturnAddress = 4;
             return TRUE;
         }
+
+
+
+
+
         else if (ReturnAddress[-3] == 0xFF &&
                  ((ReturnAddress[-2] & RmMask) == 0x50 || (ReturnAddress[-2] & RmMask) == 0x58) &&
                  (ReturnAddress[-2] != 0x54 && ReturnAddress[-2] != 0x5C))
@@ -48,18 +154,33 @@ CallstackReturnAddressToCallingAddress(UCHAR * ReturnAddress, PUINT32 IndexOfCal
             *IndexOfCallFromReturnAddress = 3;
             return TRUE;
         }
+
+
+
+
+
         else if (ReturnAddress[-3] == 0xFF &&
                  (ReturnAddress[-2] == 0x14 || ReturnAddress[-2] == 0x1C))
         {
             *IndexOfCallFromReturnAddress = 3;
             return TRUE;
         }
+
+
+
+
+
         else if (ReturnAddress[-2] == 0xFF &&
                  ((ReturnAddress[-1] & RmMask) == 0xD0 || (ReturnAddress[-1] & RmMask) == 0xD8))
         {
             *IndexOfCallFromReturnAddress = 2;
             return TRUE;
         }
+
+
+
+
+
         else if (ReturnAddress[-2] == 0xFF &&
                  ((ReturnAddress[-1] & RmMask) == 0x10 || (ReturnAddress[-1] & RmMask) == 0x18) &&
                  (ReturnAddress[-1] != 0x14 && ReturnAddress[-1] != 0x15 &&
@@ -73,8 +194,20 @@ CallstackReturnAddressToCallingAddress(UCHAR * ReturnAddress, PUINT32 IndexOfCal
             return FALSE;
         }
     }
+
     return FALSE;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 VOID
 CallstackShowFrames(PDEBUGGER_SINGLE_CALLSTACK_FRAME  CallstackFrames,
@@ -87,28 +220,46 @@ CallstackShowFrames(PDEBUGGER_SINGLE_CALLSTACK_FRAME  CallstackFrames,
     UINT64                                                 UsedBaseAddress;
     BOOLEAN                                                IsCall = FALSE;
     std::map<UINT64, LOCAL_FUNCTION_DESCRIPTION>::iterator Iterate;
+
+
+
+
     for (size_t i = 0; i < FrameCount; i++)
     {
         IsCall = FALSE;
+
         if (CallstackFrames[i].IsValidAddress)
         {
+
+
+
             if (CallstackFrames[i].IsExecutable && CallstackReturnAddressToCallingAddress(
                                                        (unsigned char *)&CallstackFrames[i].InstructionBytesOnRip[MAXIMUM_CALL_INSTR_SIZE],
                                                        &CallLength))
             {
+
+
+
                 TargetAddress = CallstackFrames[i].Value - CallLength;
+
                 IsCall = TRUE;
             }
             else
             {
+
+
+
                 if (DisplayMethod == DEBUGGER_CALLSTACK_DISPLAY_METHOD_WITHOUT_PARAMS)
                 {
                     continue;
                 }
+
                 IsCall        = FALSE;
                 TargetAddress = CallstackFrames[i].Value;
             }
+
             ShowMessages("[$+%03x] ", i * (Is32Bit ? sizeof(UINT32) : sizeof(UINT64)));
+
             if (IsCall)
             {
                 if (Is32Bit)
@@ -131,6 +282,11 @@ CallstackShowFrames(PDEBUGGER_SINGLE_CALLSTACK_FRAME  CallstackFrames,
                     ShowMessages("     %016llx (addr ", TargetAddress);
                 }
             }
+
+
+
+
+
             if (g_AddressConversion)
             {
                 if (SymbolShowFunctionNameBasedOnAddress(TargetAddress, &UsedBaseAddress))
@@ -138,6 +294,7 @@ CallstackShowFrames(PDEBUGGER_SINGLE_CALLSTACK_FRAME  CallstackFrames,
                     ShowMessages(" ");
                 }
             }
+
             if (Is32Bit)
             {
                 ShowMessages("<%08x>)\n", TargetAddress);
@@ -149,11 +306,16 @@ CallstackShowFrames(PDEBUGGER_SINGLE_CALLSTACK_FRAME  CallstackFrames,
         }
         else
         {
+
+
+
             if (DisplayMethod == DEBUGGER_CALLSTACK_DISPLAY_METHOD_WITHOUT_PARAMS)
             {
                 continue;
             }
+
             ShowMessages("[$+%03x] ", i * (Is32Bit ? sizeof(UINT32) : sizeof(UINT64)));
+
             if (Is32Bit)
             {
                 ShowMessages("     %08x\n", CallstackFrames[i].Value);
@@ -165,4 +327,5 @@ CallstackShowFrames(PDEBUGGER_SINGLE_CALLSTACK_FRAME  CallstackFrames,
         }
     }
 }
+
 

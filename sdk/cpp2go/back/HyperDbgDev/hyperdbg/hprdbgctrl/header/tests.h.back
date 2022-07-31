@@ -1,5 +1,30 @@
+
+
+
+
+
+
+
+
+
+
+
 #pragma once
+
+
+
+
+
+
+
+
+
 #define TEST_PROCESS_NAME "hyperdbg-test.exe"
+
+
+
+
+
 BOOLEAN
 CreateProcessAndOpenPipeConnection(PVOID   KernelInformation,
                                    UINT32  KernelInformationSize,
@@ -10,3 +35,4 @@ VOID
 CloseProcessAndClosePipeConnection(HANDLE ConnectionPipeHandle,
                                    HANDLE ThreadHandle,
                                    HANDLE ProcessHandle);
+

@@ -1,6 +1,27 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
 extern BOOLEAN                  g_IsSerialConnectedToRemoteDebuggee;
 extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
+
+
+
+
+
+
 VOID
 CommandEditMemoryHelp()
 {
@@ -8,11 +29,14 @@ CommandEditMemoryHelp()
     ShowMessages("eb  Byte and ASCII characters\n");
     ShowMessages("ed  Double-word values (4 bytes)\n");
     ShowMessages("eq  Quad-word values (8 bytes). \n");
+
     ShowMessages("\n If you want to edit physical (address) memory then add '!' "
                  "at the start of the command\n");
+
     ShowMessages("syntax : \teb [Address (hex)] [Contents (hex)] [pid ProcessId (hex)]\n");
     ShowMessages("syntax : \ted [Address (hex)] [Contents (hex)] [pid ProcessId (hex)]\n");
     ShowMessages("syntax : \teq [Address (hex)] [Contents (hex)] [pid ProcessId (hex)]\n");
+
     ShowMessages("\n");
     ShowMessages("\t\te.g : eb fffff8077356f010 90 \n");
     ShowMessages("\t\te.g : eb nt!Kd_DEFAULT_Mask ff ff ff ff \n");
@@ -23,6 +47,14 @@ CommandEditMemoryHelp()
     ShowMessages("\t\te.g : !eq 100000 9090909090909090 9090909090909090 "
                  "9090909090909090 9090909090909090 9090909090909090\n");
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandEditMemory(vector<string> SplittedCommand, string Command)
@@ -42,19 +74,27 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
     UINT32               FinalSize         = 0;
     vector<string>       SplittedCommandCaseSensitive {Split(Command, ' ')};
     UINT32               IndexInCommandCaseSensitive = 0;
+
+
+
+
+
     if (g_ActiveProcessDebuggingState.IsActive)
     {
         ProcId = g_ActiveProcessDebuggingState.ProcessId;
     }
+
     if (SplittedCommand.size() <= 2)
     {
         ShowMessages("incorrect use of 'e*'\n\n");
         CommandEditMemoryHelp();
         return;
     }
+
     for (auto Section : SplittedCommand)
     {
         IndexInCommandCaseSensitive++;
+
         if (!Section.compare(SplittedCommand.at(0)))
         {
             if (!Section.compare("!eb"))
@@ -89,15 +129,23 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
+
+
+
                 ShowMessages("unknown error happened !\n\n");
                 CommandEditMemoryHelp();
                 return;
             }
+
             continue;
         }
         if (NextIsProcId)
         {
+
+
+
             NextIsProcId = FALSE;
+
             if (!ConvertStringToUInt32(Section, &ProcId))
             {
                 ShowMessages("please specify a correct hex prcoess id\n\n");
@@ -106,14 +154,22 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
+
+
+
                 continue;
             }
         }
+
+
+
+
         if (!SetProcId && !Section.compare("pid"))
         {
             NextIsProcId = TRUE;
             continue;
         }
+
         if (!SetAddress)
         {
             if (!SymbolConvertNameOrExprToAddress(SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1),
@@ -126,12 +182,19 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
+
+
+
                 SetAddress = TRUE;
                 continue;
             }
         }
+
         if (SetAddress)
         {
+
+
+
             if (Section.rfind("0x", 0) == 0 || Section.rfind("0X", 0) == 0 ||
                 Section.rfind("\\x", 0) == 0 || Section.rfind("\\X", 0) == 0)
             {
@@ -142,6 +205,10 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
                 Section = Section.erase(0, 1);
             }
             Section.erase(remove(Section.begin(), Section.end(), '`'), Section.end());
+
+
+
+
             if (EditMemoryRequest.ByteSize == EDIT_BYTE && Section.size() >= 3)
             {
                 ShowMessages("please specify a byte (hex) value for 'eb' or '!eb'\n\n");
@@ -159,6 +226,12 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
                     "please specify a qword (hex) value for 'eq' or '!eq'\n\n");
                 return;
             }
+
+
+
+
+
+
             if (!ConvertStringToUInt64(Section, &Value))
             {
                 ShowMessages("please specify a correct hex value to change the memory "
@@ -168,28 +241,53 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
+
+
+
+
                 ValuesToEdit.push_back(Value);
+
+
+
+
                 CountOfValues++;
+
                 if (!SetValue)
                 {
+
+
+
                     SetValue = TRUE;
                 }
                 continue;
             }
         }
     }
+
+
+
+
     if (g_IsSerialConnectedToRemoteDebuggee && ProcId != 0)
     {
         ShowMessages("err, you cannot specify 'pid' in the debugger mode\n\n");
         return;
     }
+
     if (ProcId == 0)
     {
         ProcId = GetCurrentProcessId();
     }
+
+
+
+
     EditMemoryRequest.ProcessId       = ProcId;
     EditMemoryRequest.Address         = Address;
     EditMemoryRequest.CountOf64Chunks = CountOfValues;
+
+
+
+
     if (!SetAddress)
     {
         ShowMessages("please specify a correct hex address\n\n");
@@ -209,23 +307,57 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
         CommandEditMemoryHelp();
         return;
     }
+
+
+
+
     FinalSize = (CountOfValues * sizeof(UINT64)) + SIZEOF_DEBUGGER_EDIT_MEMORY;
+
+
+
+
     EditMemoryRequest.FinalStructureSize = FinalSize;
+
+
+
+
     FinalBuffer = (UINT64 *)malloc(FinalSize);
+
     if (!FinalBuffer)
     {
         ShowMessages("unable to allocate memory\n\n");
         return;
     }
+
+
+
+
     ZeroMemory(FinalBuffer, FinalSize);
+
+
+
+
     memcpy(FinalBuffer, &EditMemoryRequest, SIZEOF_DEBUGGER_EDIT_MEMORY);
+
+
+
+
     std::copy(ValuesToEdit.begin(), ValuesToEdit.end(), (UINT64 *)((UINT64)FinalBuffer + SIZEOF_DEBUGGER_EDIT_MEMORY));
+
+
+
+
     if (g_IsSerialConnectedToRemoteDebuggee)
     {
         KdSendEditMemoryPacketToDebuggee((DEBUGGER_EDIT_MEMORY *)FinalBuffer, FinalSize);
         return;
     }
+
+
+
+
     AssertShowMessageReturnStmt(g_DeviceHandle, ASSERT_MESSAGE_DRIVER_NOT_LOADED, AssertReturn);
+
     Status = DeviceIoControl(
         g_DeviceHandle,              // Handle to device
         IOCTL_DEBUGGER_EDIT_MEMORY,  // IO Control code
@@ -236,14 +368,19 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
         NULL,                        // Bytes placed in buffer.
         NULL                         // synchronous call
     );
+
     if (!Status)
     {
         free(FinalBuffer);
         ShowMessages("ioctl failed with code 0x%x\n", GetLastError());
         return;
     }
+
     if (EditMemoryRequest.Result == DEBUGGER_OPERATION_WAS_SUCCESSFULL)
     {
+
+
+
     }
     else if (
         EditMemoryRequest.Result ==
@@ -266,6 +403,11 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
     {
         ShowErrorMessage(EditMemoryRequest.Result);
     }
+
+
+
+
     free(FinalBuffer);
 }
+
 

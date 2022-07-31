@@ -1,7 +1,51 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <inttypes.h>
 #include <Zycore/Format.h>
 #include <Zycore/LibC.h>
 #include <Zydis/Zydis.h>
+
+
+
+
+
+
+
+
 static const char* const CONDITION_CODE_STRINGS[0x20] =
 {
     /*00*/ "eq",
@@ -37,22 +81,41 @@ static const char* const CONDITION_CODE_STRINGS[0x20] =
     /*1E*/ "gt_oq",
     /*1F*/ "true_us"
 };
+
+
+
+
+
+
+
+
 typedef struct ZydisCustomUserData_
 {
     ZyanBool omit_immediate;
 } ZydisCustomUserData;
+
+
+
+
+
 ZydisFormatterFunc default_print_mnemonic;
+
 static ZyanStatus ZydisFormatterPrintMnemonic(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
 {
+
     ZydisCustomUserData* user_data = (ZydisCustomUserData*)context->user_data;
     user_data->omit_immediate = ZYAN_TRUE;
+
+
     if (context->instruction->operand_count &&
         context->instruction->operands[context->instruction->operand_count - 1].type ==
         ZYDIS_OPERAND_TYPE_IMMEDIATE)
     {
+
         ZyanString* string;
         ZYAN_CHECK(ZydisFormatterBufferGetString(buffer, &string));
+
         const ZyanU8 condition_code = (ZyanU8)context->instruction->operands[
             context->instruction->operand_count - 1].imm.value.u;
         switch (context->instruction->mnemonic)
@@ -93,21 +156,41 @@ static ZyanStatus ZydisFormatterPrintMnemonic(const ZydisFormatter* formatter,
             break;
         }
     }
+
+
+
     user_data->omit_immediate = ZYAN_FALSE;
+
+
     return default_print_mnemonic(formatter, buffer, context);
 }
 
+
+
+
 ZydisFormatterFunc default_format_operand_imm;
+
 static ZyanStatus ZydisFormatterFormatOperandIMM(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
 {
+
+
     const ZydisCustomUserData* user_data = (ZydisCustomUserData*)context->user_data;
     if (user_data->omit_immediate)
     {
         return ZYDIS_STATUS_SKIP_TOKEN;
     }
+
+
     return default_format_operand_imm(formatter, buffer, context);
 }
+
+
+
+
+
+
+
 
 static void DisassembleBuffer(ZydisDecoder* decoder, ZyanU8* data, ZyanUSize length,
     ZyanBool install_hooks)
@@ -116,6 +199,7 @@ static void DisassembleBuffer(ZydisDecoder* decoder, ZyanU8* data, ZyanUSize len
     ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
     ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SEGMENT, ZYAN_TRUE);
     ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SIZE, ZYAN_TRUE);
+
     if (install_hooks)
     {
         default_print_mnemonic = (ZydisFormatterFunc)&ZydisFormatterPrintMnemonic;
@@ -125,7 +209,9 @@ static void DisassembleBuffer(ZydisDecoder* decoder, ZyanU8* data, ZyanUSize len
         ZydisFormatterSetHook(&formatter, ZYDIS_FORMATTER_FUNC_FORMAT_OPERAND_IMM,
             (const void**)&default_format_operand_imm);
     }
+
     ZyanU64 runtime_address = 0x007FFFFFFF400000;
+
     ZydisDecodedInstruction instruction;
     ZydisCustomUserData user_data;
     char buffer[256];
@@ -141,6 +227,11 @@ static void DisassembleBuffer(ZydisDecoder* decoder, ZyanU8* data, ZyanUSize len
     }
 }
 
+
+
+
+
+
 int main(void)
 {
     if (ZydisGetVersion() != ZYDIS_VERSION)
@@ -148,18 +239,32 @@ int main(void)
         fputs("Invalid zydis version\n", ZYAN_STDERR);
         return EXIT_FAILURE;
     }
+
     ZyanU8 data[] =
     {
+
         0x90,
+
+
         0x0F, 0xC2, 0xCC, 0x03,
+
+
         0xC5, 0xE9, 0xC2, 0xCB, 0x17,
+
+
         0x62, 0xF1, 0x6C, 0x5F, 0xC2, 0x54, 0x98, 0x40, 0x0F
     };
+
     ZydisDecoder decoder;
     ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64, ZYDIS_ADDRESS_WIDTH_64);
+
     DisassembleBuffer(&decoder, &data[0], sizeof(data), ZYAN_FALSE);
     ZYAN_PUTS("");
     DisassembleBuffer(&decoder, &data[0], sizeof(data), ZYAN_TRUE);
+
     return 0;
 }
+
+
+
 

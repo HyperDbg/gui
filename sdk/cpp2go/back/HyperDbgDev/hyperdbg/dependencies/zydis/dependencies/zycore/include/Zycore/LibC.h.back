@@ -1,16 +1,78 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #ifndef ZYCORE_LIBC_H
 #define ZYCORE_LIBC_H
+
 #ifndef ZYAN_CUSTOM_LIBC
+
+
+
+
 #ifndef ZYAN_NO_LIBC
+
+
+
+
+
+
+
+
+
 #include <errno.h>
+
 #define ZYAN_ERRNO  errno
+
+
+
+
+
 #include <stdarg.h>
+
+
+
+
 typedef va_list ZyanVAList;
+
 #define ZYAN_VA_START               va_start
 #define ZYAN_VA_ARG                 va_arg
 #define ZYAN_VA_END                 va_end
 #define ZYAN_VA_COPY(dest, source)  va_copy((dest), (source))
+
+
+
+
+
 #include <stdio.h>
+
 #define ZYAN_FPUTS      fputs
 #define ZYAN_FPUTC      fputc
 #define ZYAN_FPRINTF    fprintf
@@ -20,15 +82,30 @@ typedef va_list ZyanVAList;
 #define ZYAN_SCANF      scanf
 #define ZYAN_SSCANF     sscanf
 #define ZYAN_VSNPRINTF  vsnprintf
+
+
+
+
 typedef FILE ZyanFile;
+
 #define ZYAN_STDIN      stdin
 #define ZYAN_STDOUT     stdout
 #define ZYAN_STDERR     stderr
+
+
+
+
+
 #include <stdlib.h>
 #define ZYAN_CALLOC     calloc
 #define ZYAN_FREE       free
 #define ZYAN_MALLOC     malloc
 #define ZYAN_REALLOC    realloc
+
+
+
+
+
 #include <string.h>
 #define ZYAN_MEMCHR     memchr
 #define ZYAN_MEMCMP     memcmp
@@ -51,24 +128,108 @@ typedef FILE ZyanFile;
 #define ZYAN_STRSTR     strstr
 #define ZYAN_STRTOK     strtok
 #define ZYAN_STRXFRM    strxfrm
+
+
+
 #else  // if ZYAN_NO_LIBC
+
+
+
+
+
 #include <Zycore/Defines.h>
 #include <Zycore/Types.h>
+
+
+
+
+
+
+
+
+
+
+
 #if defined(ZYAN_MSVC) || defined(ZYAN_ICC)
+
+
+
+
 typedef char* ZyanVAList;
+
 #   define ZYAN_VA_START __crt_va_start
 #   define ZYAN_VA_ARG   __crt_va_arg
 #   define ZYAN_VA_END   __crt_va_end
 #   define ZYAN_VA_COPY(destination, source) ((destination) = (source))
+
 #elif defined(ZYAN_GNUC)
+
+
+
+
 typedef __builtin_va_list  ZyanVAList;
+
 #   define ZYAN_VA_START(v, l)  __builtin_va_start(v, l)
 #   define ZYAN_VA_END(v)       __builtin_va_end(v)
 #   define ZYAN_VA_ARG(v, l)    __builtin_va_arg(v, l)
 #   define ZYAN_VA_COPY(d, s)   __builtin_va_copy(d, s)
+
 #else
 #   error "Unsupported compiler for no-libc mode."
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ZYAN_INLINE void* ZYAN_MEMCHR(const void* str, int c, ZyanUSize n)
 {
     const ZyanU8* p = (ZyanU8*)str;
@@ -85,6 +246,7 @@ ZYAN_INLINE void* ZYAN_MEMCHR(const void* str, int c, ZyanUSize n)
     return 0;
 }
 
+
 ZYAN_INLINE int ZYAN_MEMCMP(const void* s1, const void* s2, ZyanUSize n)
 {
     const ZyanU8* p1 = s1, *p2 = s2;
@@ -99,6 +261,7 @@ ZYAN_INLINE int ZYAN_MEMCMP(const void* s1, const void* s2, ZyanUSize n)
     return 0;
 }
 
+
 ZYAN_INLINE void* ZYAN_MEMCPY(void* dst, const void* src, ZyanUSize n)
 {
     volatile ZyanU8* dp = dst;
@@ -109,6 +272,7 @@ ZYAN_INLINE void* ZYAN_MEMCPY(void* dst, const void* src, ZyanUSize n)
     }
     return dst;
 }
+
 
 ZYAN_INLINE void* ZYAN_MEMMOVE(void* dst, const void* src, ZyanUSize n)
 {
@@ -130,6 +294,7 @@ ZYAN_INLINE void* ZYAN_MEMMOVE(void* dst, const void* src, ZyanUSize n)
     return dst;
 }
 
+
 ZYAN_INLINE void* ZYAN_MEMSET(void* dst, int val, ZyanUSize n)
 {
     volatile ZyanU8* p = dst;
@@ -139,6 +304,7 @@ ZYAN_INLINE void* ZYAN_MEMSET(void* dst, int val, ZyanUSize n)
     }
     return dst;
 }
+
 
 ZYAN_INLINE char* ZYAN_STRCAT(char* dest, const char* src)
 {
@@ -150,6 +316,7 @@ ZYAN_INLINE char* ZYAN_STRCAT(char* dest, const char* src)
     while ((*dest++ = *src++));
     return ret;
 }
+
 
 ZYAN_INLINE char* ZYAN_STRCHR(const char* s, int c)
 {
@@ -163,6 +330,7 @@ ZYAN_INLINE char* ZYAN_STRCHR(const char* s, int c)
     return (char*)s;
 }
 
+
 ZYAN_INLINE int ZYAN_STRCMP(const char* s1, const char* s2)
 {
     while (*s1 && (*s1 == *s2))
@@ -172,12 +340,17 @@ ZYAN_INLINE int ZYAN_STRCMP(const char* s1, const char* s2)
     return *(const ZyanU8*)s1 - *(const ZyanU8*)s2;
 }
 
+
 ZYAN_INLINE int ZYAN_STRCOLL(const char *s1, const char *s2)
 {
+
+
     ZYAN_UNUSED(s1);
     ZYAN_UNUSED(s2);
+
     return 0;
 }
+
 
 ZYAN_INLINE char* ZYAN_STRCPY(char* dest, const char* src)
 {
@@ -185,6 +358,7 @@ ZYAN_INLINE char* ZYAN_STRCPY(char* dest, const char* src)
     while ((*dest++ = *src++));
     return ret;
 }
+
 
 ZYAN_INLINE ZyanUSize ZYAN_STRCSPN(const char *s1, const char *s2)
 {
@@ -200,6 +374,7 @@ ZYAN_INLINE ZyanUSize ZYAN_STRCSPN(const char *s1, const char *s2)
     return ret;
 }
 
+
 ZYAN_INLINE ZyanUSize ZYAN_STRLEN(const char* str)
 {
     const char* p = str;
@@ -209,6 +384,7 @@ ZYAN_INLINE ZyanUSize ZYAN_STRLEN(const char* str)
     }
     return str - p;
 }
+
 
 ZYAN_INLINE char* ZYAN_STRNCAT(char* dest, const char* src, ZyanUSize n)
 {
@@ -228,6 +404,7 @@ ZYAN_INLINE char* ZYAN_STRNCAT(char* dest, const char* src, ZyanUSize n)
     return ret;
 }
 
+
 ZYAN_INLINE int ZYAN_STRNCMP(const char* s1, const char* s2, ZyanUSize n)
 {
     while (n--)
@@ -239,6 +416,7 @@ ZYAN_INLINE int ZYAN_STRNCMP(const char* s1, const char* s2, ZyanUSize n)
     }
     return 0;
 }
+
 
 ZYAN_INLINE char* ZYAN_STRNCPY(char* dest, const char* src, ZyanUSize n)
 {
@@ -257,6 +435,7 @@ ZYAN_INLINE char* ZYAN_STRNCPY(char* dest, const char* src, ZyanUSize n)
     return ret;
 }
 
+
 ZYAN_INLINE char* ZYAN_STRPBRK(const char* s1, const char* s2)
 {
     while (*s1)
@@ -268,6 +447,7 @@ ZYAN_INLINE char* ZYAN_STRPBRK(const char* s1, const char* s2)
     }
     return 0;
 }
+
 
 ZYAN_INLINE char* ZYAN_STRRCHR(const char* s, int c)
 {
@@ -282,6 +462,7 @@ ZYAN_INLINE char* ZYAN_STRRCHR(const char* s, int c)
     return ret;
 }
 
+
 ZYAN_INLINE ZyanUSize ZYAN_STRSPN(const char* s1, const char* s2)
 {
     ZyanUSize ret = 0;
@@ -291,6 +472,7 @@ ZYAN_INLINE ZyanUSize ZYAN_STRSPN(const char* s1, const char* s2)
     }
     return ret;
 }
+
 
 ZYAN_INLINE char* ZYAN_STRSTR(const char* s1, const char* s2)
 {
@@ -304,6 +486,7 @@ ZYAN_INLINE char* ZYAN_STRSTR(const char* s1, const char* s2)
     }
     return 0;
 }
+
 
 ZYAN_INLINE char* ZYAN_STRTOK(char* str, const char* delim)
 {
@@ -326,6 +509,7 @@ ZYAN_INLINE char* ZYAN_STRTOK(char* str, const char* delim)
     return str;
 }
 
+
 ZYAN_INLINE ZyanUSize ZYAN_STRXFRM(char* dest, const char* src, ZyanUSize n)
 {
     const ZyanUSize n2 = ZYAN_STRLEN(src);
@@ -336,6 +520,14 @@ ZYAN_INLINE ZyanUSize ZYAN_STRXFRM(char* dest, const char* src, ZyanUSize n)
     return n2;
 }
 
+
+
+
 #endif
+
 #endif
+
+
+
 #endif /* ZYCORE_LIBC_H */
+

@@ -1,19 +1,54 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
 extern BOOLEAN                  g_BreakPrintingOutput;
 extern BOOLEAN                  g_IsConnectedToRemoteDebuggee;
 extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
+
+
+
+
+
+
 VOID
 CommandPauseHelp()
 {
     ShowMessages("pause : pauses the kernel events.\n\n");
+
     ShowMessages("syntax : \tpause \n");
 }
+
+
+
+
+
+
 
 VOID
 CommandPauseRequest()
 {
+
+
+
     g_BreakPrintingOutput = TRUE;
     ShowMessages("pausing...\n");
+
+
+
+
     if (g_IsConnectedToRemoteDebuggee)
     {
         RemoteConnectionSendCommand("pause", strlen("pause") + 1);
@@ -26,6 +61,14 @@ CommandPauseRequest()
     }
 }
 
+
+
+
+
+
+
+
+
 VOID
 CommandPause(vector<string> SplittedCommand, string Command)
 {
@@ -35,6 +78,8 @@ CommandPause(vector<string> SplittedCommand, string Command)
         CommandPauseHelp();
         return;
     }
+
     CommandPauseRequest();
 }
+
 

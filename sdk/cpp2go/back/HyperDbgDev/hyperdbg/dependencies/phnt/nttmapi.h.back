@@ -1,5 +1,17 @@
+
+
+
+
+
+
+
+
+
+
+
 #ifndef _NTTMAPI_H
 #define _NTTMAPI_H
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -13,6 +25,7 @@ NtCreateTransactionManager(
     _In_opt_ ULONG CommitStrength
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -26,6 +39,7 @@ NtOpenTransactionManager(
     _In_opt_ ULONG OpenOptions
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -35,6 +49,7 @@ NtRenameTransactionManager(
     _In_ LPGUID ExistingTransactionManagerGuid
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -44,6 +59,7 @@ NtRollforwardTransactionManager(
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -52,6 +68,7 @@ NtRecoverTransactionManager(
     _In_ HANDLE TransactionManagerHandle
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -64,6 +81,7 @@ NtQueryInformationTransactionManager(
     _Out_opt_ PULONG ReturnLength
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -75,6 +93,7 @@ NtSetInformationTransactionManager(
     _In_ ULONG TransactionManagerInformationLength
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -87,6 +106,7 @@ NtEnumerateTransactionObject(
     _Out_ PULONG ReturnLength
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -104,6 +124,7 @@ NtCreateTransaction(
     _In_opt_ PUNICODE_STRING Description
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -116,6 +137,7 @@ NtOpenTransaction(
     _In_opt_ HANDLE TmHandle
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -128,6 +150,7 @@ NtQueryInformationTransaction(
     _Out_opt_ PULONG ReturnLength
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -139,6 +162,7 @@ NtSetInformationTransaction(
     _In_ ULONG TransactionInformationLength
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -148,6 +172,7 @@ NtCommitTransaction(
     _In_ BOOLEAN Wait
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -157,6 +182,7 @@ NtRollbackTransaction(
     _In_ BOOLEAN Wait
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -172,6 +198,7 @@ NtCreateEnlistment(
     _In_opt_ PVOID EnlistmentKey
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -184,6 +211,7 @@ NtOpenEnlistment(
     _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -196,6 +224,7 @@ NtQueryInformationEnlistment(
     _Out_opt_ PULONG ReturnLength
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -207,6 +236,7 @@ NtSetInformationEnlistment(
     _In_ ULONG EnlistmentInformationLength
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -216,6 +246,7 @@ NtRecoverEnlistment(
     _In_opt_ PVOID EnlistmentKey
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -225,6 +256,7 @@ NtPrePrepareEnlistment(
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -234,6 +266,7 @@ NtPrepareEnlistment(
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -243,6 +276,7 @@ NtCommitEnlistment(
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -252,6 +286,7 @@ NtRollbackEnlistment(
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -261,6 +296,7 @@ NtPrePrepareComplete(
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -270,6 +306,7 @@ NtPrepareComplete(
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -279,6 +316,7 @@ NtCommitComplete(
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -288,6 +326,7 @@ NtReadOnlyEnlistment(
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -297,6 +336,7 @@ NtRollbackComplete(
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -306,6 +346,7 @@ NtSinglePhaseReject(
     _In_opt_ PLARGE_INTEGER TmVirtualClock
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -320,6 +361,7 @@ NtCreateResourceManager(
     _In_opt_ PUNICODE_STRING Description
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -332,6 +374,7 @@ NtOpenResourceManager(
     _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -340,6 +383,7 @@ NtRecoverResourceManager(
     _In_ HANDLE ResourceManagerHandle
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -354,6 +398,7 @@ NtGetNotificationResourceManager(
     _In_opt_ ULONG_PTR AsynchronousContext
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -366,6 +411,7 @@ NtQueryInformationResourceManager(
     _Out_opt_ PULONG ReturnLength
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -377,6 +423,7 @@ NtSetInformationResourceManager(
     _In_ ULONG ResourceManagerInformationLength
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -389,6 +436,7 @@ NtRegisterProtocolAddressInformation(
     _In_opt_ ULONG CreateOptions
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -400,6 +448,7 @@ NtPropagationComplete(
     _In_ PVOID Buffer
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -410,7 +459,9 @@ NtPropagationFailed(
     _In_ NTSTATUS PropStatus
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -419,7 +470,9 @@ NtFreezeTransactions(
     _In_ PLARGE_INTEGER ThawTimeout
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -427,4 +480,6 @@ NtThawTransactions(
     VOID
     );
 #endif
+
 #endif
+

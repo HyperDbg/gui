@@ -38,6 +38,8 @@ extern const char* VarArgFunc1[];
 extern const SYMBOL_MAP SemanticRulesMapList[];
 extern const SYMBOL_MAP RegisterMapList[];
 extern const SYMBOL_MAP PseudoRegisterMapList[];
+
+
 #define LALR_RULES_COUNT 69
 #define LALR_TERMINAL_COUNT 54
 #define LALR_NONTERMINAL_COUNT 15
@@ -52,3 +54,4 @@ extern const int LalrGotoTable[LALR_STATE_COUNT][LALR_NONTERMINAL_COUNT];
 extern const int LalrActionTable[LALR_STATE_COUNT][LALR_TERMINAL_COUNT];
 extern const struct _TOKEN LalrSemanticRules[RULES_COUNT];
 #endif
+

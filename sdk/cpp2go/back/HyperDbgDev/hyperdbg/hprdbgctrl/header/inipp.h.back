@@ -1,4 +1,29 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #pragma once
+
 #include <algorithm>
 #include <cctype>
 #include <cstring>
@@ -11,8 +36,13 @@
 #include <memory>
 #include <sstream>
 #include <string>
+
 namespace inipp {
+
 namespace detail {
+
+
+
 template <class CharT>
 inline void
 ltrim(std::basic_string<CharT> & s, const std::locale & loc)
@@ -20,6 +50,7 @@ ltrim(std::basic_string<CharT> & s, const std::locale & loc)
     s.erase(s.begin(),
             std::find_if(s.begin(), s.end(), [&loc](CharT ch) { return !std::isspace(ch, loc); }));
 }
+
 
 template <class CharT>
 inline void
@@ -29,12 +60,16 @@ rtrim(std::basic_string<CharT> & s, const std::locale & loc)
             s.end());
 }
 
+
 template <class CharT, class UnaryPredicate>
 inline void
 rtrim2(std::basic_string<CharT> & s, UnaryPredicate pred)
 {
     s.erase(std::find_if(s.begin(), s.end(), pred), s.end());
 }
+
+
+
 
 template <class CharT>
 inline bool
@@ -51,7 +86,9 @@ replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, c
     return changed;
 }
 
+
 } // namespace detail
+
 template <typename CharT, typename T>
 inline bool
 extract(const std::basic_string<CharT> & value, T & dst)
@@ -70,6 +107,7 @@ extract(const std::basic_string<CharT> & value, T & dst)
     }
 }
 
+
 template <typename CharT>
 inline bool
 extract(const std::basic_string<CharT> & value, std::basic_string<CharT> & dst)
@@ -77,6 +115,7 @@ extract(const std::basic_string<CharT> & value, std::basic_string<CharT> & dst)
     dst = value;
     return true;
 }
+
 
 template <typename CharT, typename T>
 inline bool
@@ -88,6 +127,7 @@ get_value(const std::map<std::basic_string<CharT>, std::basic_string<CharT>> & s
     return extract(it->second, dst);
 }
 
+
 template <typename CharT, typename T>
 inline bool
 get_value(const std::map<std::basic_string<CharT>, std::basic_string<CharT>> & sec, const CharT * key, T & dst)
@@ -95,35 +135,46 @@ get_value(const std::map<std::basic_string<CharT>, std::basic_string<CharT>> & s
     return get_value(sec, std::basic_string<CharT>(key), dst);
 }
 
+
 template <class CharT>
 class Format
 {
 public:
+
     const CharT char_section_start;
     const CharT char_section_end;
     const CharT char_assign;
     const CharT char_comment;
+
+
     virtual bool is_section_start(CharT ch) const { return ch == char_section_start; }
     virtual bool is_section_end(CharT ch) const { return ch == char_section_end; }
     virtual bool is_assign(CharT ch) const { return ch == char_assign; }
     virtual bool is_comment(CharT ch) const { return ch == char_comment; }
+
+
     const CharT char_interpol;
     const CharT char_interpol_start;
     const CharT char_interpol_sep;
     const CharT char_interpol_end;
+
     Format(CharT section_start, CharT section_end, CharT assign, CharT comment, CharT interpol, CharT interpol_start, CharT interpol_sep, CharT interpol_end) :
         char_section_start(section_start), char_section_end(section_end), char_assign(assign), char_comment(comment), char_interpol(interpol), char_interpol_start(interpol_start), char_interpol_sep(interpol_sep), char_interpol_end(interpol_end) { }
+
     Format() :
         Format('[', ']', '=', ';', '$', '{', ':', '}') { }
+
     const std::basic_string<CharT> local_symbol(const std::basic_string<CharT> & name) const
     {
         return char_interpol + (char_interpol_start + name + char_interpol_end);
     }
+
     const std::basic_string<CharT> global_symbol(const std::basic_string<CharT> & sec_name, const std::basic_string<CharT> & name) const
     {
         return local_symbol(sec_name + char_interpol_sep + name);
     }
 };
+
 template <class CharT>
 class Ini
 {
@@ -131,14 +182,18 @@ public:
     using String   = std::basic_string<CharT>;
     using Section  = std::map<String, String>;
     using Sections = std::map<String, Section>;
+
     Sections                       sections;
     std::list<String>              errors;
     std::shared_ptr<Format<CharT>> format;
+
     static const int max_interpolation_depth = 10;
+
     Ini() :
         format(std::make_shared<Format<CharT>>()) {};
     Ini(std::shared_ptr<Format<CharT>> fmt) :
         format(fmt) {};
+
     void generate(std::basic_ostream<CharT> & os) const
     {
         for (auto const & sec : sections)
@@ -151,6 +206,7 @@ public:
             os << std::endl;
         }
     }
+
     void parse(std::basic_istream<CharT> & is)
     {
         String            line;
@@ -194,12 +250,15 @@ public:
             }
         }
     }
+
     void interpolate()
     {
         int  global_iteration = 0;
         auto changed          = false;
+
         for (auto & sec : sections)
             replace_symbols(local_symbols(sec.first, sec.second), sec.second);
+
         do
         {
             changed         = false;
@@ -208,12 +267,14 @@ public:
                 changed |= replace_symbols(syms, sec.second);
         } while (changed && (max_interpolation_depth > global_iteration++));
     }
+
     void default_section(const Section & sec)
     {
         for (auto & sec2 : sections)
             for (const auto & val : sec)
                 sec2.second.insert(val);
     }
+
     void strip_trailing_comments()
     {
         const std::locale loc {"C"};
@@ -224,13 +285,16 @@ public:
                 detail::rtrim(val.second, loc);
             }
     }
+
     void clear()
     {
         sections.clear();
         errors.clear();
     }
+
 private:
     using Symbols = std::vector<std::pair<String, String>>;
+
     const Symbols local_symbols(const String & sec_name, const Section & sec) const
     {
         Symbols result;
@@ -238,6 +302,7 @@ private:
             result.emplace_back(format->local_symbol(val.first), format->global_symbol(sec_name, val.first));
         return result;
     }
+
     const Symbols global_symbols() const
     {
         Symbols result;
@@ -246,6 +311,7 @@ private:
                 result.emplace_back(format->global_symbol(sec.first, val.first), val.second);
         return result;
     }
+
     bool replace_symbols(const Symbols & syms, Section & sec) const
     {
         auto changed = false;
@@ -255,4 +321,6 @@ private:
         return changed;
     }
 };
+
 } // namespace inipp
+

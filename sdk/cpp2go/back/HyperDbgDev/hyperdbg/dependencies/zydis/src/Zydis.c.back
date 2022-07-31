@@ -1,8 +1,40 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <Zydis/Zydis.h>
+
+
+
+
+
 ZyanU64 ZydisGetVersion(void)
 {
     return ZYDIS_VERSION;
 }
+
 
 ZyanStatus ZydisIsFeatureEnabled(ZydisFeature feature)
 {
@@ -26,14 +58,19 @@ ZyanStatus ZydisIsFeatureEnabled(ZydisFeature feature)
 #else
         return ZYAN_STATUS_FALSE;
 #endif
+
     case ZYDIS_FEATURE_KNC:
 #ifndef ZYDIS_DISABLE_KNC
         return ZYAN_STATUS_TRUE;
 #else
         return ZYAN_STATUS_FALSE;
 #endif
+
     default:
         return ZYAN_STATUS_INVALID_ARGUMENT;
     }
 }
+
+
+
 

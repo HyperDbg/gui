@@ -1,18 +1,27 @@
 PUBLIC AsmEnableVmxOperation
 PUBLIC AsmVmxVmcall
 PUBLIC AsmHypervVmcall
+
 .code _text
+
 ;------------------------------------------------------------------------
+
 AsmEnableVmxOperation PROC PUBLIC
+
     xor rax,rax			; Clear the RAX
     mov rax,cr4
     or rax,02000h		; Set the 14th bit
     mov cr4,rax
     ret
+
 AsmEnableVmxOperation ENDP
+
 ;------------------------------------------------------------------------
+
 AsmVmxVmcall PROC
+
     pushfq
+
     push    r10
     push    r11
     push    r12
@@ -23,12 +32,18 @@ AsmVmxVmcall PROC
     pop     r12
     pop     r11
     pop     r10
+
     popfq
     ret                             ; Return type is NTSTATUS and it's on RAX from the previous function, no need to change anything
+
 AsmVmxVmcall ENDP
+
 ;------------------------------------------------------------------------
+
 AsmHypervVmcall PROC
+
     pushfq
+
     push r15
     push r14
     push r13
@@ -45,6 +60,7 @@ AsmHypervVmcall PROC
     push rdx
     push rcx
     push rax
+
     mov rax, qword ptr [rcx+0h]
     mov rdx, qword ptr [rcx+10h]
     mov rbx, qword ptr [rcx+18h]
@@ -60,10 +76,14 @@ AsmHypervVmcall PROC
     mov r13, qword ptr [rcx+68h]
     mov r14, qword ptr [rcx+70h]
     mov r15, qword ptr [rcx+78h]
+
     push rcx
     mov rcx, qword ptr [rcx+08h]
+
     vmcall                          ; __fastcall Vmcall(rcx = HypercallInputValue, rdx = InputParamGPA, r8 = OutputParamGPA)
+
     pop rcx
+
     mov qword ptr [rcx+0h], rax
     mov qword ptr [rcx+10h], rdx
     mov qword ptr [rcx+18h], rbx
@@ -79,7 +99,9 @@ AsmHypervVmcall PROC
     mov qword ptr [rcx+68h], r13
     mov qword ptr [rcx+70h], r14
     mov qword ptr [rcx+78h], r15
+
     mov qword ptr [rcx+08h], rcx
+
     pop rax
     pop rcx
     pop rdx
@@ -96,8 +118,13 @@ AsmHypervVmcall PROC
     pop r13
     pop r14
     pop r15
+
     popfq
+
     ret
+
 AsmHypervVmcall ENDP
+
 ;------------------------------------------------------------------------
+
 END

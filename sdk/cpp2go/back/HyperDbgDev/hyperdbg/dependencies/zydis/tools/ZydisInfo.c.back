@@ -1,7 +1,48 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <inttypes.h>
 #include <Zycore/API/Terminal.h>
 #include <Zycore/LibC.h>
 #include <Zydis/Zydis.h>
+
+
+
+
+
+
+
+
+
 #define COLOR_DEFAULT       ZYAN_VT100SGR_FG_DEFAULT
 #define COLOR_ERROR         ZYAN_VT100SGR_FG_BRIGHT_RED
 #define COLOR_HEADER        ZYAN_VT100SGR_FG_DEFAULT
@@ -10,10 +51,51 @@
 #define COLOR_VALUE_R       ZYAN_VT100SGR_FG_BRIGHT_RED
 #define COLOR_VALUE_G       ZYAN_VT100SGR_FG_BRIGHT_GREEN
 #define COLOR_VALUE_B       ZYAN_VT100SGR_FG_CYAN
+
+
+
+
+
 static ZyanBool g_vt100_stdout;
 static ZyanBool g_vt100_stderr;
+
+
+
+
+
+
+
+
+
+
+
 #define CVT100_OUT(sequence) (g_vt100_stdout ? (sequence) : "")
+
+
+
+
+
+
+
 #define CVT100_ERR(sequence) (g_vt100_stderr ? (sequence) : "")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 static const char* FormatZyanStatus(ZyanStatus status)
 {
     static const char* strings_zycore[] =
@@ -45,20 +127,33 @@ static const char* FormatZyanStatus(ZyanStatus status)
         "MALFORMED_MVEX",
         "INVALID_MASK",
     };
+
     if (ZYAN_STATUS_MODULE(status) == ZYAN_MODULE_ZYCORE)
     {
         status = ZYAN_STATUS_CODE(status);
         ZYAN_ASSERT(status < ZYAN_ARRAY_LENGTH(strings_zycore));
         return strings_zycore[status];
     }
+
     if (ZYAN_STATUS_MODULE(status) == ZYAN_MODULE_ZYDIS)
     {
         status = ZYAN_STATUS_CODE(status);
         ZYAN_ASSERT(status < ZYAN_ARRAY_LENGTH(strings_zydis));
         return strings_zydis[status];
     }
+
     ZYAN_UNREACHABLE;
 }
+
+
+
+
+
+
+
+
+
+
 
 static void PrintSectionHeader(const char* name)
 {
@@ -69,40 +164,87 @@ static void PrintSectionHeader(const char* name)
         CVT100_OUT(COLOR_DEFAULT));
 }
 
+
+
+
+
+
+
 static void PrintValueLabel(const char* name)
 {
     ZYAN_ASSERT(ZYAN_STRLEN(name) <= 11);
     ZYAN_PRINTF("%s%11s:%s ", CVT100_OUT(COLOR_VALUE_LABEL), name, CVT100_OUT(COLOR_DEFAULT));
 }
 
+
+
+
+
+
+
+
+
 #define PRINT_VALUE_R(name, format, ...) \
     PrintValueLabel(name); \
     ZYAN_PRINTF("%s" format "%s\n", CVT100_OUT(COLOR_VALUE_R), __VA_ARGS__, \
         CVT100_OUT(COLOR_DEFAULT));
+
+
+
+
+
+
+
+
 #define PRINT_VALUE_G(name, format, ...) \
     PrintValueLabel(name); \
     ZYAN_PRINTF("%s" format "%s\n", CVT100_OUT(COLOR_VALUE_G), __VA_ARGS__, \
         CVT100_OUT(COLOR_DEFAULT));
+
+
+
+
+
+
+
+
 #define PRINT_VALUE_B(name, format, ...) \
     PrintValueLabel(name); \
     ZYAN_PRINTF("%s" format "%s\n", CVT100_OUT(COLOR_VALUE_B), __VA_ARGS__, \
         CVT100_OUT(COLOR_DEFAULT));
+
+
+
+
+
+
+
+
+
+
+
+
+
 static void PrintSegments(const ZydisDecodedInstruction* instruction, const ZyanU8* buffer)
 {
     PrintSectionHeader("SEGMENTS");
+
     ZydisInstructionSegments segments;
     ZydisGetInstructionSegments(instruction, &segments);
+
     struct
     {
         ZyanU8 pos;
         const char* color;
         const char* name;
     } print_info[ZYAN_ARRAY_LENGTH(segments.segments)];
+
     ZyanU8 pos = 0;
     ZyanU8 imm = 0;
     for (ZyanU8 i = 0; i < segments.count; ++i)
     {
         print_info[i].pos = pos;
+
         switch (segments.segments[i].type)
         {
         case ZYDIS_INSTR_SEGMENT_PREFIXES:
@@ -159,6 +301,7 @@ static void PrintSegments(const ZydisDecodedInstruction* instruction, const Zyan
         default:
             ZYAN_UNREACHABLE;
         }
+
         ZYAN_PRINTF("%s", print_info[i].color);
         for (int j = 0; j < segments.segments[i].size; ++j)
         {
@@ -191,6 +334,7 @@ static void PrintSegments(const ZydisDecodedInstruction* instruction, const Zyan
         }
     }
     ZYAN_PRINTF("%s\n", CVT100_OUT(COLOR_DEFAULT));
+
     for (ZyanU8 i = 0; i < segments.count; ++i)
     {
         ZyanU8 j = 0;
@@ -210,8 +354,15 @@ static void PrintSegments(const ZydisDecodedInstruction* instruction, const Zyan
         ZYAN_PRINTF("..%s%s\n", print_info[segments.count - i - 1].color,
             print_info[segments.count - i - 1].name);
     }
+
     ZYAN_PRINTF(CVT100_OUT(COLOR_DEFAULT));
 }
+
+
+
+
+
+
 
 static void PrintOperands(const ZydisDecodedInstruction* instruction)
 {
@@ -220,6 +371,7 @@ static void PrintOperands(const ZydisDecodedInstruction* instruction)
         "PE                        VALUE%s\n", CVT100_OUT(COLOR_HEADER), CVT100_OUT(COLOR_DEFAULT));
     ZYAN_PRINTF("%s--  ---------  ----------  ------  ------------   ----  -----  ------  ------" \
         "--  ---------------------------%s\n", CVT100_OUT(COLOR_HEADER), CVT100_OUT(COLOR_DEFAULT));
+
     ZyanU8 imm_id = 0;
     for (ZyanU8 i = 0; i < instruction->operand_count; ++i)
     {
@@ -314,6 +466,7 @@ static void PrintOperands(const ZydisDecodedInstruction* instruction)
             "AGEN",
             "MIB"
         };
+
         ZYAN_PRINTF("%s%2d  %s%9s  %10s  %6s  %12s  %s%5d   %4d  %6d  %s%8s%s",
             CVT100_OUT(COLOR_VALUE_G),
             i,
@@ -406,9 +559,16 @@ static void PrintOperands(const ZydisDecodedInstruction* instruction)
         }
         ZYAN_PUTS("");
     }
+
     ZYAN_PRINTF("%s--  ---------  ----------  ------  ------------   ----  -----  ------  ------" \
         "--  ---------------------------%s\n", CVT100_OUT(COLOR_HEADER), CVT100_OUT(COLOR_DEFAULT));
 }
+
+
+
+
+
+
 
 static void PrintFlags(const ZydisDecodedInstruction* instruction)
 {
@@ -446,7 +606,9 @@ static void PrintFlags(const ZydisDecodedInstruction* instruction)
         "1",
         "U"
     };
+
     PrintSectionHeader("FLAGS");
+
     PrintValueLabel("ACTIONS");
     ZyanU8 c = 0;
     for (ZydisCPUFlag i = 0; (ZyanUSize)i < ZYAN_ARRAY_LENGTH(instruction->accessed_flags); ++i)
@@ -467,6 +629,7 @@ static void PrintFlags(const ZydisDecodedInstruction* instruction)
         }
     }
     ZYAN_PUTS("");
+
     ZydisCPUFlags flags, temp;
     ZydisGetAccessedFlagsByAction(instruction, ZYDIS_CPUFLAG_ACTION_UNDEFINED, &temp);
     ZydisGetAccessedFlagsRead(instruction, &flags);
@@ -476,6 +639,12 @@ static void PrintFlags(const ZydisDecodedInstruction* instruction)
     PRINT_VALUE_G("MODIFIED", "0x%08" PRIX32, flags);
     PRINT_VALUE_G("UNDEFINED", "0x%08" PRIX32, temp);
 }
+
+
+
+
+
+
 
 static void PrintAVXInfo(const ZydisDecodedInstruction* instruction)
 {
@@ -495,6 +664,7 @@ static void PrintAVXInfo(const ZydisDecodedInstruction* instruction)
         "4_TO_16",
         "8_TO_16"
     };
+
     static const char* strings_mask_mode[] =
     {
         "INVALID",
@@ -504,6 +674,7 @@ static void PrintAVXInfo(const ZydisDecodedInstruction* instruction)
         "CONTROL",
         "CONTROL_ZEROING"
     };
+
     static const char* strings_rounding_mode[] =
     {
         "DEFAULT",
@@ -512,6 +683,7 @@ static void PrintAVXInfo(const ZydisDecodedInstruction* instruction)
         "RU",
         "RZ"
     };
+
     static const char* strings_swizzle_mode[] =
     {
         "NONE",
@@ -524,6 +696,7 @@ static void PrintAVXInfo(const ZydisDecodedInstruction* instruction)
         "CCCC",
         "DDDD"
     };
+
     static const char* strings_conversion_mode[] =
     {
         "NONE",
@@ -533,10 +706,13 @@ static void PrintAVXInfo(const ZydisDecodedInstruction* instruction)
         "SINT16",
         "UINT16"
     };
+
     PrintSectionHeader("AVX");
+
     PRINT_VALUE_B("VECTORLEN", "%03d", instruction->avx.vector_length);
     PRINT_VALUE_B("BROADCAST", "%s%s%s", strings_broadcast_mode[instruction->avx.broadcast.mode],
         CVT100_OUT(COLOR_VALUE_LABEL), instruction->avx.broadcast.is_static ? " (static)" : "");
+
     switch (instruction->encoding)
     {
     case ZYDIS_INSTRUCTION_ENCODING_EVEX:
@@ -563,6 +739,12 @@ static void PrintAVXInfo(const ZydisDecodedInstruction* instruction)
     }
 }
 
+
+
+
+
+
+
 static void PrintTokenizedInstruction(const ZydisFormatterToken* token)
 {
     ZyanStatus status = ZYAN_STATUS_SUCCESS;
@@ -576,6 +758,7 @@ static void PrintTokenizedInstruction(const ZydisFormatterToken* token)
                 CVT100_OUT(COLOR_ERROR), CVT100_OUT(ZYAN_VT100SGR_RESET));
             exit(status);
         }
+
         const char* color;
         switch (token->type)
         {
@@ -610,17 +793,27 @@ static void PrintTokenizedInstruction(const ZydisFormatterToken* token)
             break;
         }
         ZYAN_PRINTF("%s%s", color, value);
+
         status = ZydisFormatterTokenNext(&token);
     }
     ZYAN_ASSERT(status == ZYAN_STATUS_OUT_OF_RANGE);
+
     ZYAN_PRINTF("%s\n", CVT100_OUT(COLOR_DEFAULT));
 }
+
+
+
+
+
+
+
 
 static void PrintDisassembly(const ZydisDecodedInstruction* instruction,
     ZydisFormatterStyle style)
 {
     ZyanStatus status;
     ZydisFormatter formatter;
+
     switch (style)
     {
     case ZYDIS_FORMATTER_STYLE_ATT:
@@ -648,8 +841,10 @@ static void PrintDisassembly(const ZydisDecodedInstruction* instruction,
     default:
         ZYAN_UNREACHABLE;
     }
+
     ZyanU8 buffer[256];
     const ZydisFormatterToken* token;
+
     PrintValueLabel("ABSOLUTE");
     ZydisFormatterTokenizeInstruction(&formatter, instruction, buffer, sizeof(buffer), 0, &token);
     PrintTokenizedInstruction(token);
@@ -658,6 +853,12 @@ static void PrintDisassembly(const ZydisDecodedInstruction* instruction,
         ZYDIS_RUNTIME_ADDRESS_NONE, &token);
     PrintTokenizedInstruction(token);
 }
+
+
+
+
+
+
 
 static void PrintInstruction(const ZydisDecodedInstruction* instruction)
 {
@@ -672,6 +873,7 @@ static void PrintInstruction(const ZydisDecodedInstruction* instruction)
         "XOP9",
         "XOPA"
     };
+
     static const char* instr_encodings[] =
     {
         "DEFAULT",
@@ -681,6 +883,7 @@ static void PrintInstruction(const ZydisDecodedInstruction* instruction)
         "EVEX",
         "MVEX"
     };
+
     static const char* exception_classes[] =
     {
         "NONE",
@@ -724,6 +927,7 @@ static void PrintInstruction(const ZydisDecodedInstruction* instruction)
         "K20",
         "K21"
     };
+
     struct
     {
         ZydisInstructionAttributes attribute_mask;
@@ -779,6 +983,7 @@ static void PrintInstruction(const ZydisDecodedInstruction* instruction)
         { ZYDIS_ATTRIB_HAS_OPERANDSIZE,          "HAS_OPERANDSIZE"          },
         { ZYDIS_ATTRIB_HAS_ADDRESSSIZE,          "HAS_ADDRESSSIZE"          }
     };
+
     PrintSectionHeader("BASIC");
     PrintValueLabel("MNEMONIC");
     ZYAN_PRINTF("%s%s%s [ENC: %s%s%s, MAP: %s%s%s, OPC: %s0x%02X%s]%s\n",
@@ -798,6 +1003,7 @@ static void PrintInstruction(const ZydisDecodedInstruction* instruction)
     PRINT_VALUE_B("ISA-SET"   , "%s" , ZydisISASetGetString(instruction->meta.isa_set));
     PRINT_VALUE_B("ISA-EXT"   , "%s" , ZydisISAExtGetString(instruction->meta.isa_ext));
     PRINT_VALUE_B("EXCEPTIONS", "%s" , exception_classes[instruction->meta.exception_class]);
+
     if (instruction->attributes)
     {
         PrintValueLabel("ATTRIBUTES");
@@ -818,16 +1024,19 @@ static void PrintInstruction(const ZydisDecodedInstruction* instruction)
         }
         ZYAN_PUTS(CVT100_OUT(COLOR_DEFAULT));
     }
+
     if (instruction->operand_count > 0)
     {
         ZYAN_PUTS("");
         PrintOperands(instruction);
     }
+
     if (instruction->attributes & ZYDIS_ATTRIB_CPUFLAG_ACCESS)
     {
         ZYAN_PUTS("");
         PrintFlags(instruction);
     }
+
     if ((instruction->encoding == ZYDIS_INSTRUCTION_ENCODING_XOP) ||
         (instruction->encoding == ZYDIS_INSTRUCTION_ENCODING_VEX) ||
         (instruction->encoding == ZYDIS_INSTRUCTION_ENCODING_EVEX) ||
@@ -836,24 +1045,36 @@ static void PrintInstruction(const ZydisDecodedInstruction* instruction)
         ZYAN_PUTS("");
         PrintAVXInfo(instruction);
     }
+
     ZYAN_PUTS("");
     PrintDisassembly(instruction, ZYDIS_FORMATTER_STYLE_ATT);
     ZYAN_PUTS("");
     PrintDisassembly(instruction, ZYDIS_FORMATTER_STYLE_INTEL);
 }
 
+
+
+
+
+
 int main(int argc, char** argv)
 {
+
     g_vt100_stdout = (ZyanTerminalIsTTY(ZYAN_STDSTREAM_OUT) == ZYAN_STATUS_TRUE) &&
                      ZYAN_SUCCESS(ZyanTerminalEnableVT100(ZYAN_STDSTREAM_OUT));
     g_vt100_stderr = (ZyanTerminalIsTTY(ZYAN_STDSTREAM_ERR) == ZYAN_STATUS_TRUE) &&
                      ZYAN_SUCCESS(ZyanTerminalEnableVT100(ZYAN_STDSTREAM_ERR));
+
+
+
+
     if (ZydisGetVersion() != ZYDIS_VERSION)
     {
         ZYAN_FPRINTF(ZYAN_STDERR, "%sInvalid zydis version%s\n",
             CVT100_ERR(COLOR_ERROR), CVT100_ERR(ZYAN_VT100SGR_RESET));
         return ZYAN_STATUS_INVALID_OPERATION;
     }
+
     if (argc < 3)
     {
         ZYAN_FPRINTF(ZYAN_STDERR, "%sUsage: %s -[real|16|32|64] [hexbytes]%s\n",
@@ -861,6 +1082,7 @@ int main(int argc, char** argv)
             CVT100_ERR(ZYAN_VT100SGR_RESET));
         return ZYAN_STATUS_INVALID_ARGUMENT;
     }
+
     ZydisDecoder decoder;
     if (!ZYAN_STRCMP(argv[1], "-real"))
     {
@@ -884,11 +1106,14 @@ int main(int argc, char** argv)
             CVT100_ERR(ZYAN_VT100SGR_RESET));
         return ZYAN_STATUS_INVALID_ARGUMENT;
     }
+
     ZyanU8 data[ZYDIS_MAX_INSTRUCTION_LENGTH];
     ZyanU8 byte_length = 0;
     for (ZyanU8 i = 2; i < argc; ++i)
     {
         char* cur_arg = argv[i];
+
+
         const ZyanUSize arg_len = ZYAN_STRLEN(cur_arg);
         ZyanUSize write = 0;
         for (ZyanUSize read = 0; read < arg_len; ++read)
@@ -898,6 +1123,7 @@ int main(int argc, char** argv)
             cur_arg[write++] = ch;
         }
         cur_arg[write] = '\0';
+
         if (write % 2)
         {
             ZYAN_FPRINTF(ZYAN_STDERR, "%sEven number of hex nibbles expected%s\n",
@@ -924,6 +1150,7 @@ int main(int argc, char** argv)
             ++byte_length;
         }
     }
+
     ZydisDecodedInstruction instruction;
     const ZyanStatus status = ZydisDecoderDecodeBuffer(&decoder, &data, byte_length, &instruction);
     if (!ZYAN_SUCCESS(status))
@@ -942,9 +1169,15 @@ int main(int argc, char** argv)
         }
         return status;
     }
+
     PrintInstruction(&instruction);
+
     ZYAN_PUTS("");
     PrintSegments(&instruction, &data[0]);
+
     return EXIT_SUCCESS;
 }
+
+
+
 

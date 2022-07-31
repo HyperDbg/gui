@@ -1,6 +1,38 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <Zydis/Internal/FormatterBase.h>
 #include <Zydis/Utils.h>
+
+
+
+
+
 #include <Generated/FormatterStrings.inc>
+
 static const ZydisShortString* const STR_PREF_REX[16] =
 {
     &STR_PREF_REX_40,
@@ -20,6 +52,7 @@ static const ZydisShortString* const STR_PREF_REX[16] =
     &STR_PREF_REX_4E,
     &STR_PREF_REX_4F
 };
+
 static const ZydisPredefinedToken* const TOK_PREF_REX[16] =
 {
     (const ZydisPredefinedToken* const)&TOK_DATA_PREF_REX_40,
@@ -39,19 +72,27 @@ static const ZydisPredefinedToken* const TOK_PREF_REX[16] =
     (const ZydisPredefinedToken* const)&TOK_DATA_PREF_REX_4E,
     (const ZydisPredefinedToken* const)&TOK_DATA_PREF_REX_4F
 };
+
+
+
+
+
 ZyanU32 ZydisFormatterHelperGetExplicitSize(const ZydisFormatter* formatter,
     ZydisFormatterContext* context, ZyanU8 memop_id)
 {
     ZYAN_ASSERT(formatter);
     ZYAN_ASSERT(context);
     ZYAN_ASSERT(memop_id < context->instruction->operand_count);
+
     const ZydisDecodedOperand* const operand = &context->instruction->operands[memop_id];
     ZYAN_ASSERT(operand->type == ZYDIS_OPERAND_TYPE_MEMORY);
     ZYAN_ASSERT(operand->mem.type == ZYDIS_MEMOP_TYPE_MEM);
+
     if (formatter->force_memory_size)
     {
         return operand->size;
     }
+
     switch (operand->id)
     {
     case 0:
@@ -82,8 +123,18 @@ ZyanU32 ZydisFormatterHelperGetExplicitSize(const ZydisFormatter* formatter,
     default:
         break;
     }
+
     return 0;
 }
+
+
+
+
+
+
+
+
+
 
 ZyanStatus ZydisFormatterBaseFormatOperandREG(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -91,8 +142,10 @@ ZyanStatus ZydisFormatterBaseFormatOperandREG(const ZydisFormatter* formatter,
     ZYAN_ASSERT(formatter);
     ZYAN_ASSERT(buffer);
     ZYAN_ASSERT(context);
+
     return formatter->func_print_register(formatter, buffer, context, context->operand->reg.value);
 }
+
 
 ZyanStatus ZydisFormatterBaseFormatOperandPTR(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -100,6 +153,7 @@ ZyanStatus ZydisFormatterBaseFormatOperandPTR(const ZydisFormatter* formatter,
     ZYAN_ASSERT(formatter);
     ZYAN_ASSERT(buffer);
     ZYAN_ASSERT(context);
+
     ZYDIS_BUFFER_APPEND_TOKEN(buffer, ZYDIS_TOKEN_IMMEDIATE);
     ZYDIS_STRING_APPEND_NUM_U(formatter, formatter->addr_base, &buffer->string,
         context->operand->ptr.segment, 4);
@@ -107,8 +161,10 @@ ZyanStatus ZydisFormatterBaseFormatOperandPTR(const ZydisFormatter* formatter,
     ZYDIS_BUFFER_APPEND_TOKEN(buffer, ZYDIS_TOKEN_IMMEDIATE);
     ZYDIS_STRING_APPEND_NUM_U(formatter, formatter->addr_base, &buffer->string,
         context->operand->ptr.offset , 8);
+
     return ZYAN_STATUS_SUCCESS;
 }
+
 
 ZyanStatus ZydisFormatterBaseFormatOperandIMM(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -116,6 +172,8 @@ ZyanStatus ZydisFormatterBaseFormatOperandIMM(const ZydisFormatter* formatter,
     ZYAN_ASSERT(formatter);
     ZYAN_ASSERT(buffer);
     ZYAN_ASSERT(context);
+
+
     if (context->operand->imm.is_relative)
     {
         const ZyanBool absolute = !formatter->force_relative_branches &&
@@ -126,8 +184,15 @@ ZyanStatus ZydisFormatterBaseFormatOperandIMM(const ZydisFormatter* formatter,
         }
         return formatter->func_print_address_rel(formatter, buffer, context);
     }
+
+
     return formatter->func_print_imm(formatter, buffer, context);
 }
+
+
+
+
+
 
 ZyanStatus ZydisFormatterBasePrintAddressABS(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -135,6 +200,7 @@ ZyanStatus ZydisFormatterBasePrintAddressABS(const ZydisFormatter* formatter,
     ZYAN_ASSERT(formatter);
     ZYAN_ASSERT(buffer);
     ZYAN_ASSERT(context);
+
     ZyanU64 address;
     ZYAN_CHECK(ZydisCalcAbsoluteAddress(context->instruction, context->operand,
         context->runtime_address, &address));
@@ -160,10 +226,13 @@ ZyanStatus ZydisFormatterBasePrintAddressABS(const ZydisFormatter* formatter,
             return ZYAN_STATUS_INVALID_ARGUMENT;
         }
     }
+
     ZYDIS_BUFFER_APPEND_TOKEN(buffer, ZYDIS_TOKEN_ADDRESS_ABS);
     ZYDIS_STRING_APPEND_NUM_U(formatter, formatter->addr_base, &buffer->string, address, padding);
+
     return ZYAN_STATUS_SUCCESS;
 }
+
 
 ZyanStatus ZydisFormatterBasePrintAddressREL(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -171,8 +240,10 @@ ZyanStatus ZydisFormatterBasePrintAddressREL(const ZydisFormatter* formatter,
     ZYAN_ASSERT(formatter);
     ZYAN_ASSERT(buffer);
     ZYAN_ASSERT(context);
+
     ZyanU64 address;
     ZYAN_CHECK(ZydisCalcAbsoluteAddress(context->instruction, context->operand, 0, &address));
+
     ZyanU8 padding = (formatter->addr_padding_relative ==
         ZYDIS_PADDING_AUTO) ? 0 : (ZyanU8)formatter->addr_padding_relative;
     if ((formatter->addr_padding_relative == ZYDIS_PADDING_AUTO) &&
@@ -195,6 +266,7 @@ ZyanStatus ZydisFormatterBasePrintAddressREL(const ZydisFormatter* formatter,
             return ZYAN_STATUS_INVALID_ARGUMENT;
         }
     }
+
     ZYDIS_BUFFER_APPEND_TOKEN(buffer, ZYDIS_TOKEN_ADDRESS_REL);
     switch (formatter->addr_signedness)
     {
@@ -211,8 +283,10 @@ ZyanStatus ZydisFormatterBasePrintAddressREL(const ZydisFormatter* formatter,
     default:
         return ZYAN_STATUS_INVALID_ARGUMENT;
     }
+
     return ZYAN_STATUS_SUCCESS;
 }
+
 
 ZyanStatus ZydisFormatterBasePrintIMM(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -220,7 +294,9 @@ ZyanStatus ZydisFormatterBasePrintIMM(const ZydisFormatter* formatter,
     ZYAN_ASSERT(formatter);
     ZYAN_ASSERT(buffer);
     ZYAN_ASSERT(context);
+
     ZYDIS_BUFFER_APPEND_TOKEN(buffer, ZYDIS_TOKEN_IMMEDIATE);
+
     const ZyanBool is_signed =
         (formatter->imm_signedness == ZYDIS_SIGNEDNESS_SIGNED) ||
         (formatter->imm_signedness == ZYDIS_SIGNEDNESS_AUTO && (context->operand->imm.is_signed));
@@ -267,8 +343,14 @@ ZyanStatus ZydisFormatterBasePrintIMM(const ZydisFormatter* formatter,
         return ZYAN_STATUS_INVALID_ARGUMENT;
     }
     ZYDIS_STRING_APPEND_NUM_U(formatter, formatter->imm_base, &buffer->string, value, padding);
+
     return ZYAN_STATUS_SUCCESS;
 }
+
+
+
+
+
 
 ZyanStatus ZydisFormatterBasePrintSegment(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -276,6 +358,7 @@ ZyanStatus ZydisFormatterBasePrintSegment(const ZydisFormatter* formatter,
     ZYAN_ASSERT(formatter);
     ZYAN_ASSERT(buffer);
     ZYAN_ASSERT(context);
+
     ZyanBool printed_segment = ZYAN_FALSE;
     switch (context->operand->mem.segment)
     {
@@ -312,8 +395,10 @@ ZyanStatus ZydisFormatterBasePrintSegment(const ZydisFormatter* formatter,
     {
         ZYDIS_BUFFER_APPEND(buffer, DELIM_SEGMENT);
     }
+
     return ZYAN_STATUS_SUCCESS;
 }
+
 
 ZyanStatus ZydisFormatterBasePrintPrefixes(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -321,6 +406,7 @@ ZyanStatus ZydisFormatterBasePrintPrefixes(const ZydisFormatter* formatter,
     ZYAN_ASSERT(formatter);
     ZYAN_ASSERT(buffer);
     ZYAN_ASSERT(context);
+
     if (formatter->detailed_prefixes)
     {
         for (ZyanU8 i = 0; i < context->instruction->raw.prefix_count; ++i)
@@ -335,6 +421,7 @@ ZyanStatus ZydisFormatterBasePrintPrefixes(const ZydisFormatter* formatter,
                 {
                     if (buffer->is_token_list)
                     {
+
                         ZYAN_CHECK(ZydisFormatterBufferAppendPredefined(buffer,
                             TOK_PREF_REX[value & 0x0F]));
                     } else
@@ -393,6 +480,7 @@ ZyanStatus ZydisFormatterBasePrintPrefixes(const ZydisFormatter* formatter,
                     {
                         ZYDIS_BUFFER_APPEND_CASE(buffer, PREF_REPNE, formatter->case_prefixes);
                     }
+
                     if (context->instruction->attributes & ZYDIS_ATTRIB_HAS_BND)
                     {
                         ZYDIS_BUFFER_APPEND_CASE(buffer, PREF_BND, formatter->case_prefixes);
@@ -422,6 +510,7 @@ ZyanStatus ZydisFormatterBasePrintPrefixes(const ZydisFormatter* formatter,
         }
         return ZYAN_STATUS_SUCCESS;
     }
+
     if (context->instruction->attributes & ZYDIS_ATTRIB_HAS_XACQUIRE)
     {
         ZYDIS_BUFFER_APPEND_CASE(buffer, PREF_XACQUIRE, formatter->case_prefixes);
@@ -430,11 +519,13 @@ ZyanStatus ZydisFormatterBasePrintPrefixes(const ZydisFormatter* formatter,
     {
         ZYDIS_BUFFER_APPEND_CASE(buffer, PREF_XRELEASE, formatter->case_prefixes);
     }
+
     if (context->instruction->attributes & ZYDIS_ATTRIB_HAS_LOCK)
     {
         ZYDIS_BUFFER_APPEND_CASE(buffer, PREF_LOCK, formatter->case_prefixes);
         return ZYAN_STATUS_SUCCESS;
     }
+
     if (context->instruction->attributes & ZYDIS_ATTRIB_HAS_REP)
     {
         ZYDIS_BUFFER_APPEND_CASE(buffer, PREF_REP, formatter->case_prefixes);
@@ -450,13 +541,16 @@ ZyanStatus ZydisFormatterBasePrintPrefixes(const ZydisFormatter* formatter,
         ZYDIS_BUFFER_APPEND_CASE(buffer, PREF_REPNE, formatter->case_prefixes);
         return ZYAN_STATUS_SUCCESS;
     }
+
     if (context->instruction->attributes & ZYDIS_ATTRIB_HAS_BND)
     {
         ZYDIS_BUFFER_APPEND_CASE(buffer, PREF_BND, formatter->case_prefixes);
         return ZYAN_STATUS_SUCCESS;
     }
+
     return ZYAN_STATUS_SUCCESS;
 }
+
 
 ZyanStatus ZydisFormatterBasePrintDecorator(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context, ZydisDecorator decorator)
@@ -464,11 +558,13 @@ ZyanStatus ZydisFormatterBasePrintDecorator(const ZydisFormatter* formatter,
     ZYAN_ASSERT(formatter);
     ZYAN_ASSERT(buffer);
     ZYAN_ASSERT(context);
+
 #if defined(ZYDIS_DISABLE_AVX512) && defined(ZYDIS_DISABLE_KNC)
     ZYAN_UNUSED(formatter);
     ZYAN_UNUSED(buffer);
     ZYAN_UNUSED(context);
 #endif
+
     switch (decorator)
     {
     case ZYDIS_DECORATOR_MASK:
@@ -489,6 +585,9 @@ ZyanStatus ZydisFormatterBasePrintDecorator(const ZydisFormatter* formatter,
                     context->instruction->avx.mask.reg));
                 ZYAN_CHECK(ZydisStringAppendShort(&buffer->string, &STR_DECO_END));
             }
+
+
+
             if ((context->instruction->avx.mask.mode == ZYDIS_MASK_MODE_ZEROING ||
                  context->instruction->avx.mask.mode == ZYDIS_MASK_MODE_CONTROL_ZEROING) &&
                 (context->instruction->raw.evex.z))
@@ -592,6 +691,7 @@ ZyanStatus ZydisFormatterBasePrintDecorator(const ZydisFormatter* formatter,
         {
         case ZYDIS_SWIZZLE_MODE_INVALID:
         case ZYDIS_SWIZZLE_MODE_DCBA:
+
             break;
         case ZYDIS_SWIZZLE_MODE_CDAB:
             ZYDIS_BUFFER_APPEND_CASE(buffer, DECO_CDAB, formatter->case_decorators);
@@ -656,6 +756,12 @@ ZyanStatus ZydisFormatterBasePrintDecorator(const ZydisFormatter* formatter,
     default:
         return ZYAN_STATUS_INVALID_ARGUMENT;
     }
+
     return ZYAN_STATUS_SUCCESS;
 }
+
+
+
+
+
 

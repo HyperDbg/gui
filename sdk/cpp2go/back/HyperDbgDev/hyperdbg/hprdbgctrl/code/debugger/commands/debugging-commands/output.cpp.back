@@ -1,13 +1,36 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
 extern LIST_ENTRY g_OutputSources;
 extern BOOLEAN    g_OutputSourcesInitialized;
+
+
+
+
+
+
 VOID
 CommandOutputHelp()
 {
     ShowMessages("output : creates an output instance that can be used in event "
                  "forwarding.\n\n");
+
     ShowMessages("syntax : \toutput [create Name (string)] [file|namedpipe|tcp Address (string)]\n");
     ShowMessages("syntax : \toutput [open|close Name (string)]\n");
+
     ShowMessages("\n");
     ShowMessages("\t\te.g : output create MyOutputName1 file "
                  "c:\\users\\sina\\desktop\\output.txt\n");
@@ -17,6 +40,14 @@ CommandOutputHelp()
     ShowMessages("\t\te.g : output open MyOutputName1\n");
     ShowMessages("\t\te.g : output close MyOutputName1\n");
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandOutput(vector<string> SplittedCommand, string Command)
@@ -31,20 +62,33 @@ CommandOutput(vector<string> SplittedCommand, string Command)
     HANDLE                         SourceHandle      = INVALID_HANDLE_VALUE;
     SOCKET                         Socket            = NULL;
     vector<string>                 SplittedCommandCaseSensitive {Split(Command, ' ')};
+
+
+
+
     if (SplittedCommand.size() == 1)
     {
         IndexToShowList = 0;
+
         if (g_OutputSourcesInitialized)
         {
             TempList = &g_OutputSources;
+
             while (&g_OutputSources != TempList->Blink)
             {
                 TempList = TempList->Blink;
+
                 PDEBUGGER_EVENT_FORWARDING CurrentOutputSourceDetails =
                     CONTAINING_RECORD(TempList, DEBUGGER_EVENT_FORWARDING, OutputSourcesList);
+
+
+
+
                 IndexToShowList++;
+
                 string TempStateString = "";
                 string TempTypeString  = "";
+
                 if (CurrentOutputSourceDetails->State ==
                     EVENT_FORWARDING_STATE_NOT_OPENED)
                 {
@@ -60,6 +104,7 @@ CommandOutput(vector<string> SplittedCommand, string Command)
                 {
                     TempStateString = "closed    ";
                 }
+
                 if (CurrentOutputSourceDetails->Type == EVENT_FORWARDING_NAMEDPIPE)
                 {
                     TempTypeString = "namedpipe";
@@ -72,6 +117,7 @@ CommandOutput(vector<string> SplittedCommand, string Command)
                 {
                     TempTypeString = "tcp      ";
                 }
+
                 ShowMessages("%x  %s   %s\t%s\n", IndexToShowList, TempTypeString.c_str(), TempStateString.c_str(), CurrentOutputSourceDetails->Name);
             }
         }
@@ -79,22 +125,39 @@ CommandOutput(vector<string> SplittedCommand, string Command)
         {
             ShowMessages("output forwarding list is empty\n");
         }
+
         return;
     }
+
     if (SplittedCommand.size() <= 2)
     {
         ShowMessages("incorrect use of 'output'\n\n");
         CommandOutputHelp();
         return;
     }
+
+
+
+
     if (!SplittedCommand.at(1).compare("create"))
     {
+
+
+
+
+
+
+
         if (SplittedCommand.size() <= 4)
         {
             ShowMessages("incorrect use of 'output'\n\n");
             CommandOutputHelp();
             return;
         }
+
+
+
+
         if (!SplittedCommand.at(3).compare("file"))
         {
             Type = EVENT_FORWARDING_FILE;
@@ -114,6 +177,10 @@ CommandOutput(vector<string> SplittedCommand, string Command)
             CommandOutputHelp();
             return;
         }
+
+
+
+
         if (SplittedCommand.at(2).size() >=
             MAXIMUM_CHARACTERS_FOR_EVENT_FORWARDING_NAME)
         {
@@ -122,21 +189,42 @@ CommandOutput(vector<string> SplittedCommand, string Command)
             CommandOutputHelp();
             return;
         }
+
+
+
+
+
+
+
         if (g_OutputSourcesInitialized)
         {
             TempList = &g_OutputSources;
+
             while (&g_OutputSources != TempList->Flink)
             {
                 TempList = TempList->Flink;
+
                 PDEBUGGER_EVENT_FORWARDING CurrentOutputSourceDetails =
                     CONTAINING_RECORD(TempList, DEBUGGER_EVENT_FORWARDING, OutputSourcesList);
+
                 if (strcmp(CurrentOutputSourceDetails->Name,
                            SplittedCommandCaseSensitive.at(2).c_str()) == 0)
                 {
+
+
+
                     OutputSourceFound = TRUE;
+
+
+
+
                     break;
                 }
             }
+
+
+
+
             if (OutputSourceFound)
             {
                 ShowMessages("err, the name you entered, already exists, please choose "
@@ -144,27 +232,59 @@ CommandOutput(vector<string> SplittedCommand, string Command)
                 return;
             }
         }
+
+
+
+
+
         DetailsOfSource = Command.substr(Command.find(SplittedCommandCaseSensitive.at(3)) +
                                              SplittedCommandCaseSensitive.at(3).size() + 1,
                                          Command.size());
+
         SourceHandle = ForwardingCreateOutputSource(Type, DetailsOfSource, &Socket);
+
+
+
+
         if (SourceHandle == INVALID_HANDLE_VALUE)
         {
             ShowMessages(
                 "err, invalid address or cannot open or find the address\n");
             return;
         }
+
+
+
+
         EventForwardingObject =
             (PDEBUGGER_EVENT_FORWARDING)malloc(sizeof(DEBUGGER_EVENT_FORWARDING));
+
         if (EventForwardingObject == NULL)
         {
             ShowMessages("err, in allocating memory for event forwarding\n");
             return;
         }
+
         RtlZeroMemory(EventForwardingObject, sizeof(DEBUGGER_EVENT_FORWARDING));
+
+
+
+
         EventForwardingObject->State = EVENT_FORWARDING_STATE_NOT_OPENED;
+
+
+
+
         EventForwardingObject->Type = Type;
+
+
+
+
         EventForwardingObject->OutputUniqueTag = ForwardingGetNewOutputSourceTag();
+
+
+
+
         if (Type == EVENT_FORWARDING_TCP)
         {
             EventForwardingObject->Socket = Socket;
@@ -173,35 +293,65 @@ CommandOutput(vector<string> SplittedCommand, string Command)
         {
             EventForwardingObject->Handle = SourceHandle;
         }
+
+
+
+
         strcpy_s(EventForwardingObject->Name, SplittedCommandCaseSensitive.at(2).c_str());
+
+
+
+
         if (!g_OutputSourcesInitialized)
         {
             g_OutputSourcesInitialized = TRUE;
             InitializeListHead(&g_OutputSources);
         }
+
+
+
+
         InsertHeadList(&g_OutputSources,
                        &(EventForwardingObject->OutputSourcesList));
     }
     else if (!SplittedCommand.at(1).compare("open"))
     {
+
+
+
         if (!g_OutputSourcesInitialized)
         {
             ShowMessages("err, the name you entered, not found\n");
             return;
         }
+
+
+
+
         TempList = &g_OutputSources;
+
         while (&g_OutputSources != TempList->Flink)
         {
             TempList = TempList->Flink;
+
             PDEBUGGER_EVENT_FORWARDING CurrentOutputSourceDetails = CONTAINING_RECORD(
                 TempList,
                 DEBUGGER_EVENT_FORWARDING,
                 OutputSourcesList);
+
             if (strcmp(CurrentOutputSourceDetails->Name,
                        SplittedCommandCaseSensitive.at(2).c_str()) == 0)
             {
+
+
+
                 OutputSourceFound = TRUE;
+
+
+
+
                 Status = ForwardingOpenOutputSource(CurrentOutputSourceDetails);
+
                 if (Status == DEBUGGER_OUTPUT_SOURCE_STATUS_ALREADY_CLOSED)
                 {
                     ShowMessages("err, the name you entered was already closed\n");
@@ -218,9 +368,14 @@ CommandOutput(vector<string> SplittedCommand, string Command)
                     ShowMessages("err, unable to open the output source\n");
                     return;
                 }
+
+
+
+
                 break;
             }
         }
+
         if (!OutputSourceFound)
         {
             ShowMessages("err, the name you entered, not found\n");
@@ -229,24 +384,43 @@ CommandOutput(vector<string> SplittedCommand, string Command)
     }
     else if (!SplittedCommand.at(1).compare("close"))
     {
+
+
+
         if (!g_OutputSourcesInitialized)
         {
             ShowMessages("err, the name you entered, not found\n");
             return;
         }
+
+
+
+
+
         TempList = &g_OutputSources;
+
         while (&g_OutputSources != TempList->Flink)
         {
             TempList = TempList->Flink;
+
             PDEBUGGER_EVENT_FORWARDING CurrentOutputSourceDetails = CONTAINING_RECORD(
                 TempList,
                 DEBUGGER_EVENT_FORWARDING,
                 OutputSourcesList);
+
             if (strcmp(CurrentOutputSourceDetails->Name,
                        SplittedCommandCaseSensitive.at(2).c_str()) == 0)
             {
+
+
+
                 OutputSourceFound = TRUE;
+
+
+
+
                 Status = ForwardingCloseOutputSource(CurrentOutputSourceDetails);
+
                 if (Status == DEBUGGER_OUTPUT_SOURCE_STATUS_ALREADY_CLOSED)
                 {
                     ShowMessages("err, the name you entered was already closed\n");
@@ -263,9 +437,14 @@ CommandOutput(vector<string> SplittedCommand, string Command)
                     ShowMessages("err, unable to close the source\n");
                     return;
                 }
+
+
+
+
                 break;
             }
         }
+
         if (!OutputSourceFound)
         {
             ShowMessages("err, the name you entered, not found\n");
@@ -274,9 +453,13 @@ CommandOutput(vector<string> SplittedCommand, string Command)
     }
     else
     {
+
+
+
         ShowMessages("incorrect option at '%s'\n\n", SplittedCommand.at(1).c_str());
         CommandOutputHelp();
         return;
     }
 }
+
 

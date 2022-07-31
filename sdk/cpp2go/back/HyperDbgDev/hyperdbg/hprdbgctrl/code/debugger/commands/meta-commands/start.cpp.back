@@ -1,22 +1,58 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
 extern std::wstring g_StartCommandPath;
 extern std::wstring g_StartCommandPathAndArguments;
 extern BOOLEAN      g_IsSerialConnectedToRemoteDebugger;
+
+
+
+
+
+
 VOID
 CommandStartHelp()
 {
     ShowMessages(".start : runs a user-mode process.\n\n");
+
     ShowMessages("syntax : \t.start [path Path (string)] [Parameters (string)]\n");
+
     ShowMessages("\n");
     ShowMessages("\t\te.g : .start path c:\\users\\sina\\reverse eng\\my_file.exe\n");
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandStart(vector<string> SplittedCommand, string Command)
 {
     vector<string> PathAndArgs;
     string         Arguments = "";
+
+
+
+
 #if ActivateUserModeDebugger == FALSE
+
     if (!g_IsSerialConnectedToRemoteDebugger)
     {
         ShowMessages("The user-mode debugger is still in the beta version and not stable. "
@@ -26,28 +62,75 @@ CommandStart(vector<string> SplittedCommand, string Command)
                      "https://docs.hyperdbg.org/getting-started/build-and-install \n");
         return;
     }
+
 #endif // !ActivateUserModeDebugger
+
     if (SplittedCommand.size() <= 2)
     {
         ShowMessages("incorrect use of '.start'\n\n");
         CommandStartHelp();
         return;
     }
+
     if (!SplittedCommand.at(1).compare("path"))
     {
+
+
+
+
+
+
+
         Trim(Command);
+
+
+
+
         Command.erase(0, 6);
+
+
+
+
         Command.erase(0, 4 + 1);
+
+
+
+
         Trim(Command);
+
+
+
+
         SplitPathAndArgs(PathAndArgs, Command);
+
+
+
+
         StringToWString(g_StartCommandPath, PathAndArgs.at(0));
+
         if (PathAndArgs.size() != 1)
         {
+
+
+
+
             for (auto item : PathAndArgs)
             {
+
+
+
+
                 Arguments += item + " ";
             }
+
+
+
+
             Arguments.pop_back();
+
+
+
+
             StringToWString(g_StartCommandPathAndArguments, Arguments);
         }
     }
@@ -58,6 +141,10 @@ CommandStart(vector<string> SplittedCommand, string Command)
         CommandStartHelp();
         return;
     }
+
+
+
+
     if (Arguments.empty())
     {
         UdAttachToProcess(NULL,
@@ -71,4 +158,5 @@ CommandStart(vector<string> SplittedCommand, string Command)
                           (WCHAR *)g_StartCommandPathAndArguments.c_str());
     }
 }
+
 

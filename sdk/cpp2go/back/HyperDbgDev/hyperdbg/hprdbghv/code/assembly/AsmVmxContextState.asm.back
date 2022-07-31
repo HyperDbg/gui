@@ -1,11 +1,17 @@
 PUBLIC AsmVmxSaveState
 PUBLIC AsmVmxRestoreState
+
 EXTERN VmxVirtualizeCurrentSystem:PROC
+
 .code _text
+
 ;------------------------------------------------------------------------
+
 AsmVmxSaveState PROC
+
     push 0 ; add it because the alignment of the RSP when calling the target function
      ; should be aligned to 16 (otherwise cause performance issues)
+
     pushfq	; save r/eflag
     
     push rax
@@ -36,7 +42,9 @@ AsmVmxSaveState PROC
     jmp AsmVmxRestoreState
     	
 AsmVmxSaveState ENDP
+
 ;------------------------------------------------------------------------
+
 AsmVmxRestoreState PROC
     
     add rsp, 0100h
@@ -61,5 +69,8 @@ AsmVmxRestoreState PROC
     ret
     
 AsmVmxRestoreState ENDP
+
 ;------------------------------------------------------------------------
+
 END
+

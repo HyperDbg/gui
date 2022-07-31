@@ -1,3 +1,6 @@
+
+
+
 typedef enum ZydisInstructionCategory_
 {
     ZYDIS_CATEGORY_INVALID,
@@ -99,6 +102,14 @@ typedef enum ZydisInstructionCategory_
     ZYDIS_CATEGORY_XOP,
     ZYDIS_CATEGORY_XSAVE,
     ZYDIS_CATEGORY_XSAVEOPT,
+
+
+
+
     ZYDIS_CATEGORY_MAX_VALUE = ZYDIS_CATEGORY_XSAVEOPT,
+
+
+
     ZYDIS_CATEGORY_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT(ZYDIS_CATEGORY_MAX_VALUE)
 } ZydisInstructionCategory;
+

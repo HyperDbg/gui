@@ -1,17 +1,44 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
+
+
 VOID
 CommandMsrreadHelp()
 {
     ShowMessages("!msrread : detects the execution of rdmsr instructions.\n\n");
+
     ShowMessages("syntax : \t!msrread [Msr (hex)] [pid ProcessId (hex)] "
                  "[core CoreId (hex)] [imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] "
                  "[script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }]\n");
+
     ShowMessages("\n");
     ShowMessages("\t\te.g : !msrread\n");
     ShowMessages("\t\te.g : !msrread 0xc0000082\n");
     ShowMessages("\t\te.g : !msread pid 400\n");
     ShowMessages("\t\te.g : !msrread core 2 pid 400\n");
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandMsrread(vector<string> SplittedCommand, string Command)
@@ -28,6 +55,11 @@ CommandMsrread(vector<string> SplittedCommand, string Command)
     BOOLEAN                            GetAddress                  = FALSE;
     vector<string>                     SplittedCommandCaseSensitive {Split(Command, ' ')};
     DEBUGGER_EVENT_PARSING_ERROR_CAUSE EventParsingErrorCause;
+
+
+
+
+
     if (!InterpretGeneralEventAndActionsFields(
             &SplittedCommand,
             &SplittedCommandCaseSensitive,
@@ -44,6 +76,11 @@ CommandMsrread(vector<string> SplittedCommand, string Command)
     {
         return;
     }
+
+
+
+
+
     for (auto Section : SplittedCommand)
     {
         if (!Section.compare("!msrread") || !Section.compare("!msread"))
@@ -52,10 +89,17 @@ CommandMsrread(vector<string> SplittedCommand, string Command)
         }
         else if (!GetAddress)
         {
+
+
+
             if (!ConvertStringToUInt64(Section, &SpecialTarget))
             {
+
+
+
                 ShowMessages("unknown parameter '%s'\n\n", Section.c_str());
                 CommandMsrreadHelp();
+
                 FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
                 return;
             }
@@ -66,18 +110,40 @@ CommandMsrread(vector<string> SplittedCommand, string Command)
         }
         else
         {
+
+
+
             ShowMessages("unknown parameter '%s'\n\n", Section.c_str());
             CommandMsrreadHelp();
+
             FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
             return;
         }
     }
+
+
+
+
     Event->OptionalParam1 = SpecialTarget;
+
+
+
+
     if (!SendEventToKernel(Event, EventLength))
     {
+
+
+
+
+
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
+
+
+
+
     if (!RegisterActionToEvent(Event,
                                ActionBreakToDebugger,
                                ActionBreakToDebuggerLength,
@@ -86,8 +152,13 @@ CommandMsrread(vector<string> SplittedCommand, string Command)
                                ActionScript,
                                ActionScriptLength))
     {
+
+
+
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
 }
+
 

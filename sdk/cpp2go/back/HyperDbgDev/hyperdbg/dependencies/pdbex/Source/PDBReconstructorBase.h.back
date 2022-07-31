@@ -1,9 +1,15 @@
 #pragma once
+
 #include "PDB.h"
 #include "UdtFieldDefinitionBase.h"
+
 class PDBReconstructorBase
 {
 	public:
+
+
+
+
 		virtual
 		bool
 		OnEnumType(
@@ -12,27 +18,48 @@ class PDBReconstructorBase
 		{
 			return false;
 		}
+
+
+
+
+
 		virtual
 		void
 		OnEnumTypeBegin(
 			const SYMBOL* Symbol
 			)
 		{
+
 		}
+
+
+
+
 		virtual
 		void
 		OnEnumTypeEnd(
 			const SYMBOL* Symbol
 			)
 		{
+
 		}
+
+
+
+
 		virtual
 		void
 		OnEnumField(
 			const SYMBOL_ENUM_FIELD* EnumField
 			)
 		{
+
 		}
+
+
+
+
+
 		virtual
 		bool
 		OnUdt(
@@ -41,34 +68,59 @@ class PDBReconstructorBase
 		{
 			return false;
 		}
+
+
+
+
+
 		virtual
 		void
 		OnUdtBegin(
 			const SYMBOL* Symbol
 			)
 		{
+
 		}
+
+
+
+
 		virtual
 		void
 		OnUdtEnd(
 			const SYMBOL* Symbol
 			)
 		{
+
 		}
+
+
+
+
 		virtual
 		void
 		OnUdtFieldBegin(
 			const SYMBOL_UDT_FIELD* UdtField
 			)
 		{
+
 		}
+
+
+
+
 		virtual
 		void
 		OnUdtFieldEnd(
 			const SYMBOL_UDT_FIELD* UdtField
 			)
 		{
+
 		}
+
+
+
+
 		virtual
 		void
 		OnUdtField(
@@ -76,7 +128,13 @@ class PDBReconstructorBase
 			UdtFieldDefinitionBase* MemberDefinition
 			)
 		{
+
 		}
+
+
+
+
+
 		virtual
 		void
 		OnAnonymousUdtBegin(
@@ -84,7 +142,12 @@ class PDBReconstructorBase
 			const SYMBOL_UDT_FIELD* FirstUdtField
 			)
 		{
+
 		}
+
+
+
+
 		virtual
 		void
 		OnAnonymousUdtEnd(
@@ -94,7 +157,12 @@ class PDBReconstructorBase
 			DWORD Size
 			)
 		{
+
 		}
+
+
+
+
 		virtual
 		void
 		OnUdtFieldBitFieldBegin(
@@ -102,7 +170,12 @@ class PDBReconstructorBase
 			const SYMBOL_UDT_FIELD* LastUdtFieldBitField
 			)
 		{
+
 		}
+
+
+
+
 		virtual
 		void
 		OnUdtFieldBitFieldEnd(
@@ -110,7 +183,12 @@ class PDBReconstructorBase
 			const SYMBOL_UDT_FIELD* LastUdtFieldBitField
 			)
 		{
+
 		}
+
+
+
+
 		virtual
 		void
 		OnPaddingMember(
@@ -120,7 +198,12 @@ class PDBReconstructorBase
 			DWORD PaddingSize
 			)
 		{
+
 		}
+
+
+
+
 		virtual
 		void
 		OnPaddingBitFieldField(
@@ -128,5 +211,7 @@ class PDBReconstructorBase
 			const SYMBOL_UDT_FIELD* PreviousUdtField
 			)
 		{
+
 		}
 };
+

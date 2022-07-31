@@ -1,19 +1,96 @@
+
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 BOOLEAN
 DebugRegistersSet(UINT32 DebugRegNum, DEBUG_REGISTER_TYPE ActionType, BOOLEAN ApplyToVmcs, UINT64 TargetAddress)
 {
     DR7 Dr7 = {0};
+
+
+
+
     if (DebugRegNum >= 4)
     {
         return FALSE;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     Dr7.Reserved1 = 1;
+
+
+
+
+
     Dr7.LocalExactBreakpoint  = 1;
     Dr7.GlobalExactBreakpoint = 1;
+
+
+
+
     if (DebugRegNum == 0)
     {
         __writedr(0, TargetAddress);
+
         Dr7.GlobalBreakpoint0 = 1;
+
+
+
+
+
+
+
+
+
+
+
         switch (ActionType)
         {
         case BREAK_ON_INSTRUCTION_FETCH:
@@ -30,7 +107,11 @@ DebugRegistersSet(UINT32 DebugRegNum, DEBUG_REGISTER_TYPE ActionType, BOOLEAN Ap
         case BREAK_ON_READ_AND_WRITE_BUT_NOT_FETCH:
             Dr7.ReadWrite0 = 0b11; // 0b11 => 3
             break;
+
         default:
+
+
+
             LogError("Err, unknown parameter as debug reg action type");
             return FALSE;
             break;
@@ -40,6 +121,17 @@ DebugRegistersSet(UINT32 DebugRegNum, DEBUG_REGISTER_TYPE ActionType, BOOLEAN Ap
     {
         __writedr(1, TargetAddress);
         Dr7.GlobalBreakpoint1 = 1;
+
+
+
+
+
+
+
+
+
+
+
         switch (ActionType)
         {
         case BREAK_ON_INSTRUCTION_FETCH:
@@ -56,7 +148,11 @@ DebugRegistersSet(UINT32 DebugRegNum, DEBUG_REGISTER_TYPE ActionType, BOOLEAN Ap
         case BREAK_ON_READ_AND_WRITE_BUT_NOT_FETCH:
             Dr7.ReadWrite1 = 0b11; // 0b11 => 3
             break;
+
         default:
+
+
+
             LogError("Err, unknown parameter as debug reg action type");
             return FALSE;
             break;
@@ -66,6 +162,17 @@ DebugRegistersSet(UINT32 DebugRegNum, DEBUG_REGISTER_TYPE ActionType, BOOLEAN Ap
     {
         __writedr(2, TargetAddress);
         Dr7.GlobalBreakpoint2 = 1;
+
+
+
+
+
+
+
+
+
+
+
         switch (ActionType)
         {
         case BREAK_ON_INSTRUCTION_FETCH:
@@ -82,7 +189,11 @@ DebugRegistersSet(UINT32 DebugRegNum, DEBUG_REGISTER_TYPE ActionType, BOOLEAN Ap
         case BREAK_ON_READ_AND_WRITE_BUT_NOT_FETCH:
             Dr7.ReadWrite2 = 0b11; // 0b11 => 3
             break;
+
         default:
+
+
+
             LogError("Err, unknown parameter as debug reg action type");
             return FALSE;
             break;
@@ -92,6 +203,17 @@ DebugRegistersSet(UINT32 DebugRegNum, DEBUG_REGISTER_TYPE ActionType, BOOLEAN Ap
     {
         __writedr(3, TargetAddress);
         Dr7.GlobalBreakpoint3 = 1;
+
+
+
+
+
+
+
+
+
+
+
         switch (ActionType)
         {
         case BREAK_ON_INSTRUCTION_FETCH:
@@ -108,12 +230,22 @@ DebugRegistersSet(UINT32 DebugRegNum, DEBUG_REGISTER_TYPE ActionType, BOOLEAN Ap
         case BREAK_ON_READ_AND_WRITE_BUT_NOT_FETCH:
             Dr7.ReadWrite3 = 0b11; // 0b11 => 3
             break;
+
         default:
+
+
+
             LogError("Err, unknown parameter as debug reg action type");
             return FALSE;
             break;
         }
     }
+
+
+
+
+
+
     if (ApplyToVmcs)
     {
         __vmx_vmwrite(VMCS_GUEST_DR7, Dr7.AsUInt);
@@ -122,6 +254,8 @@ DebugRegistersSet(UINT32 DebugRegNum, DEBUG_REGISTER_TYPE ActionType, BOOLEAN Ap
     {
         __writedr(7, Dr7.AsUInt);
     }
+
     return TRUE;
 }
+
 

@@ -1,10 +1,23 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
 _Use_decl_annotations_
 NTSTATUS
 VmxHypervVmcallHandler(PGUEST_REGS GuestRegs)
 {
     UINT64                GuestRsp   = NULL;
     HYPERCALL_INPUT_VALUE InputValue = {.Flags = GuestRegs->rcx};
+
     switch (InputValue.Fields.CallCode)
     {
     case HvSwitchVirtualAddressSpace:
@@ -12,18 +25,42 @@ VmxHypervVmcallHandler(PGUEST_REGS GuestRegs)
     case HvFlushVirtualAddressList:
     case HvCallFlushVirtualAddressSpaceEx:
     case HvCallFlushVirtualAddressListEx:
+
         VpidInvvpidAllContext();
         break;
+
     case HvCallFlushGuestPhysicalAddressSpace:
     case HvCallFlushGuestPhysicalAddressList:
+
         EptInveptSingleContext(g_EptState->EptPointer.AsUInt);
         break;
     }
+
+
+
+
+
     GuestRsp = GuestRegs->rsp;
+
+
+
+
     AsmHypervVmcall(GuestRegs);
+
+
+
+
     GuestRegs->rsp = GuestRsp;
+
     return STATUS_SUCCESS;
 }
+
+
+
+
+
+
+
 
 _Use_decl_annotations_
 NTSTATUS
@@ -32,13 +69,24 @@ VmxHandleVmcallVmExit(UINT32      CoreIndex,
 {
     UINT64  GuestRsp         = NULL;
     BOOLEAN IsHyperdbgVmcall = FALSE;
+
+
+
+
+
+
+
     if (g_TriggerEventForVmcalls)
     {
         DebuggerTriggerEvents(VMCALL_INSTRUCTION_EXECUTION, GuestRegs, NULL);
     }
+
     IsHyperdbgVmcall = (GuestRegs->r10 == 0x48564653 &&
                         GuestRegs->r11 == 0x564d43414c4c &&
                         GuestRegs->r12 == 0x4e4f485950455256);
+
+
+
     if (IsHyperdbgVmcall)
     {
         GuestRegs->rax = VmxVmcallHandler(CoreIndex,
@@ -52,8 +100,19 @@ VmxHandleVmcallVmExit(UINT32      CoreIndex,
     {
         return VmxHypervVmcallHandler(GuestRegs);
     }
+
     return STATUS_SUCCESS;
 }
+
+
+
+
+
+
+
+
+
+
 
 _Use_decl_annotations_
 NTSTATUS
@@ -69,6 +128,10 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
     BOOLEAN  UnsetExec    = FALSE;
     BOOLEAN  UnsetWrite   = FALSE;
     BOOLEAN  UnsetRead    = FALSE;
+
+
+
+
     switch (VmcallNumber & 0xffffffff)
     {
     case VMCALL_TEST:
@@ -84,18 +147,27 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
     }
     case VMCALL_CHANGE_PAGE_ATTRIB:
     {
+
+
+
+
         UINT32 AttributeMask = (UINT32)((VmcallNumber & 0xFFFFFFFF00000000LL) >> 32);
+
         UnsetRead  = (AttributeMask & PAGE_ATTRIB_READ) ? TRUE : FALSE;
         UnsetWrite = (AttributeMask & PAGE_ATTRIB_WRITE) ? TRUE : FALSE;
         UnsetExec  = (AttributeMask & PAGE_ATTRIB_EXEC) ? TRUE : FALSE;
+
         CR3_TYPE ProcCr3 = {.Flags = OptionalParam3};
+
         HookResult = EptHookPerformPageHook2(OptionalParam1 /* TargetAddress */,
                                              OptionalParam2 /* Hook Function*/,
                                              ProcCr3 /* Process cr3 */,
                                              UnsetRead,
                                              UnsetWrite,
                                              UnsetExec);
+
         VmcallStatus = (HookResult == TRUE) ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
+
         break;
     }
     case VMCALL_INVEPT_SINGLE_CONTEXT:
@@ -122,6 +194,7 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
             VmcallStatus = STATUS_SUCCESS;
         else
             VmcallStatus = STATUS_UNSUCCESSFUL;
+
         break;
     }
     case VMCALL_ENABLE_SYSCALL_HOOK_EFER:
@@ -187,9 +260,12 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
     case VMCALL_SET_HIDDEN_CC_BREAKPOINT:
     {
         CR3_TYPE ProcCr3 = {.Flags = OptionalParam2};
+
         HookResult = EptHookPerformPageHook(OptionalParam1, /* TargetAddress */
                                             ProcCr3);       /* process cr3 */
+
         VmcallStatus = (HookResult == TRUE) ? STATUS_SUCCESS : STATUS_UNSUCCESSFUL;
+
         break;
     }
     case VMCALL_DISABLE_EXTERNAL_INTERRUPT_EXITING_ONLY_TO_CLEAR_INTERRUPT_COMMANDS:
@@ -203,6 +279,7 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
         HvSetRdtscExiting(FALSE);
         VmcallStatus = STATUS_SUCCESS;
         break;
+
         break;
     }
     case VMCALL_UNSET_RDPMC_EXITING:
@@ -319,26 +396,41 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
     case VMCALL_SIGNAL_DEBUGGER_EXECUTION_FINISHED:
     {
         KdSendCommandFinishedSignal(CurrentCoreIndex, GuestRegs);
+
         VmcallStatus = STATUS_SUCCESS;
         break;
     }
     case VMCALL_SEND_MESSAGES_TO_DEBUGGER:
     {
+
+
+
         KdLoggingResponsePacketToDebugger(
             OptionalParam1,
             OptionalParam2,
             OPERATION_LOG_INFO_MESSAGE);
+
         VmcallStatus = STATUS_SUCCESS;
         break;
     }
     case VMCALL_SEND_GENERAL_BUFFER_TO_DEBUGGER:
     {
+
+
+
+
         PDEBUGGEE_SEND_GENERAL_PACKET_FROM_DEBUGGEE_TO_DEBUGGER DebuggeeBufferRequest =
             OptionalParam1;
+
         KdResponsePacketToDebugger(DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGEE_TO_DEBUGGER,
                                    DebuggeeBufferRequest->RequestedAction,
                                    (UINT64)DebuggeeBufferRequest + (SIZEOF_DEBUGGEE_SEND_GENERAL_PACKET_FROM_DEBUGGEE_TO_DEBUGGER),
                                    DebuggeeBufferRequest->LengthOfBuffer);
+
+
+
+
+
         if (DebuggeeBufferRequest->PauseDebuggeeWhenSent)
         {
             KdHandleBreakpointAndDebugBreakpoints(CurrentCoreIndex,
@@ -346,16 +438,22 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
                                                   DEBUGGEE_PAUSING_REASON_PAUSE_WITHOUT_DISASM,
                                                   NULL);
         }
+
         VmcallStatus = STATUS_SUCCESS;
         break;
     }
     case VMCALL_VM_EXIT_HALT_SYSTEM_AS_A_RESULT_OF_TRIGGERING_EVENT:
     {
         DEBUGGER_TRIGGERED_EVENT_DETAILS TriggeredEventDetail = {0};
+
         TriggeredEventDetail.Context = OptionalParam1;
         TriggeredEventDetail.Tag     = OptionalParam2;
+
         KdHandleBreakpointAndDebugBreakpoints(CurrentCoreIndex,
                                               OptionalParam3, // We won't send current vmcall registers
+
+
+
                                               DEBUGGEE_PAUSING_REASON_DEBUGGEE_EVENT_TRIGGERED,
                                               &TriggeredEventDetail);
         VmcallStatus = STATUS_SUCCESS;
@@ -389,6 +487,15 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
     return VmcallStatus;
 }
 
+
+
+
+
+
+
+
+
+
 NTSTATUS
 VmcallTest(_In_ UINT64 Param1,
            _In_ UINT64 Param2,
@@ -398,10 +505,17 @@ VmcallTest(_In_ UINT64 Param1,
                  Param1,
                  Param2,
                  Param3);
+
+
+
+
+
     LogSendBuffer(OPERATION_HYPERVISOR_DRIVER_IS_SUCCESSFULLY_LOADED,
                   "$",
                   1,
                   TRUE);
+
     return STATUS_SUCCESS;
 }
+
 

@@ -1,17 +1,40 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
 extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 extern BOOLEAN g_IsRunningInstruction32Bit;
+
+
+
+
+
+
 VOID
 CommandKHelp()
 {
     ShowMessages(
         "k, kd, kq : shows the callstack of the thread.\n\n");
+
     ShowMessages("syntax : \tk\n");
     ShowMessages("syntax : \tkd\n");
     ShowMessages("syntax : \tkq\n");
     ShowMessages("syntax : \tk [base StackAddress (hex)] [l Length (hex)]\n");
     ShowMessages("syntax : \tkd [base StackAddress (hex)] [l Length (hex)]\n");
     ShowMessages("syntax : \tkq [base StackAddress (hex)] [l Length (hex)]\n");
+
     ShowMessages("\n");
     ShowMessages("\t\te.g : k\n");
     ShowMessages("\t\te.g : k l 100\n");
@@ -20,6 +43,14 @@ CommandKHelp()
     ShowMessages("\t\te.g : kq base @rbx-10\n");
     ShowMessages("\t\te.g : kq base fffff8077356f010 l 100\n");
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandK(vector<string> SplittedCommand, string Command)
@@ -31,19 +62,26 @@ CommandK(vector<string> SplittedCommand, string Command)
     BOOLEAN        IsFirstCommand              = TRUE;
     BOOLEAN        IsNextBase                  = FALSE;
     BOOLEAN        IsNextLength                = FALSE;
+
     string FirstCommand = SplittedCommand.front();
+
     if (SplittedCommand.size() >= 6)
     {
         ShowMessages("incorrect use of '%s'\n\n", FirstCommand.c_str());
         CommandKHelp();
         return;
     }
+
     if (!g_IsSerialConnectedToRemoteDebuggee)
     {
         ShowMessages("err, tracing callstack is not possible when you're not "
                      "connected to a debuggee\n");
         return;
     }
+
+
+
+
     if (g_IsRunningInstruction32Bit)
     {
         Length = 0x100;
@@ -52,9 +90,11 @@ CommandK(vector<string> SplittedCommand, string Command)
     {
         Length = 0x200;
     }
+
     for (auto Section : SplittedCommand)
     {
         IndexInCommandCaseSensitive++;
+
         if (IsFirstCommand)
         {
             IsFirstCommand = FALSE;
@@ -65,13 +105,18 @@ CommandK(vector<string> SplittedCommand, string Command)
             if (!SymbolConvertNameOrExprToAddress(SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1),
                                                   &BaseAddress))
             {
+
+
+
                 ShowMessages("err, couldn't resolve error at '%s'\n",
                              SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1).c_str());
                 return;
             }
+
             IsNextBase = FALSE;
             continue;
         }
+
         if (IsNextLength == TRUE)
         {
             if (!ConvertStringToUInt32(Section, &Length))
@@ -82,27 +127,40 @@ CommandK(vector<string> SplittedCommand, string Command)
             IsNextLength = FALSE;
             continue;
         }
+
         if (!Section.compare("l"))
         {
             IsNextLength = TRUE;
             continue;
         }
+
         if (!Section.compare("base"))
         {
             IsNextBase = TRUE;
             continue;
         }
+
+
+
+
         ShowMessages("err, incorrect use of '%s' command\n\n",
                      FirstCommand.c_str());
         CommandKHelp();
+
         return;
     }
+
     if (IsNextLength || IsNextBase)
     {
         ShowMessages("incorrect use of '%s' command\n\n", FirstCommand.c_str());
         CommandKHelp();
         return;
     }
+
+
+
+
+
     if (!FirstCommand.compare("k"))
     {
         KdSendCallStackPacketToDebuggee(BaseAddress,
@@ -125,4 +183,5 @@ CommandK(vector<string> SplittedCommand, string Command)
                                         TRUE);
     }
 }
+
 

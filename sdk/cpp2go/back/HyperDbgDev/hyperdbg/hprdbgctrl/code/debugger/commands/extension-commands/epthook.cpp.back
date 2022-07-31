@@ -1,13 +1,32 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
+
+
 VOID
 CommandEptHookHelp()
 {
     ShowMessages("!epthook : puts a hidden-hook EPT (hidden breakpoints).\n\n");
+
     ShowMessages(
         "syntax : \t!epthook [Address (hex)] [pid ProcessId (hex)] [core CoreId (hex)] "
         "[imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] "
         "[script { Script (string) }] [condition { Condition (hex) }] "
         "[code { Code (hex) }] \n");
+
     ShowMessages("\n");
     ShowMessages("\t\te.g : !epthook nt!ExAllocatePoolWithTag\n");
     ShowMessages("\t\te.g : !epthook nt!ExAllocatePoolWithTag+5\n");
@@ -15,6 +34,14 @@ CommandEptHookHelp()
     ShowMessages("\t\te.g : !epthook fffff801deadb000 pid 400\n");
     ShowMessages("\t\te.g : !epthook fffff801deadb000 core 2 pid 400\n");
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandEptHook(vector<string> SplittedCommand, string Command)
@@ -32,12 +59,17 @@ CommandEptHook(vector<string> SplittedCommand, string Command)
     vector<string>                     SplittedCommandCaseSensitive {Split(Command, ' ')};
     UINT32                             IndexInCommandCaseSensitive = 0;
     DEBUGGER_EVENT_PARSING_ERROR_CAUSE EventParsingErrorCause;
+
     if (SplittedCommand.size() < 2)
     {
         ShowMessages("incorrect use of '!epthook'\n");
         CommandEptHookHelp();
         return;
     }
+
+
+
+
     if (!InterpretGeneralEventAndActionsFields(
             &SplittedCommand,
             &SplittedCommandCaseSensitive,
@@ -54,22 +86,34 @@ CommandEptHook(vector<string> SplittedCommand, string Command)
     {
         return;
     }
+
+
+
+
     for (auto Section : SplittedCommand)
     {
         IndexInCommandCaseSensitive++;
+
         if (!Section.compare("!epthook"))
         {
             continue;
         }
         else if (!GetAddress)
         {
+
+
+
             if (!SymbolConvertNameOrExprToAddress(
                     SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1),
                     &OptionalParam1))
             {
+
+
+
                 ShowMessages("err, couldn't resolve error at '%s'\n\n",
                              SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1).c_str());
                 CommandEptHookHelp();
+
                 FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
                 return;
             }
@@ -80,8 +124,12 @@ CommandEptHook(vector<string> SplittedCommand, string Command)
         }
         else
         {
+
+
+
             ShowMessages("unknown parameter '%s'\n\n", Section.c_str());
             CommandEptHookHelp();
+
             FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
             return;
         }
@@ -89,15 +137,34 @@ CommandEptHook(vector<string> SplittedCommand, string Command)
     if (OptionalParam1 == 0)
     {
         ShowMessages("please choose an address to put the hidden breakpoint on it\n");
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
+
+
+
+
     Event->OptionalParam1 = OptionalParam1;
+
+
+
+
     if (!SendEventToKernel(Event, EventLength))
     {
+
+
+
+
+
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
+
+
+
+
     if (!RegisterActionToEvent(Event,
                                ActionBreakToDebugger,
                                ActionBreakToDebuggerLength,
@@ -106,8 +173,13 @@ CommandEptHook(vector<string> SplittedCommand, string Command)
                                ActionScript,
                                ActionScriptLength))
     {
+
+
+
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
 }
+
 

@@ -1,7 +1,24 @@
+
+
+
+
+
+
+
+
+
+
+
 #ifndef _NTMISC_H
 #define _NTMISC_H
+
+
+
 #define FLT_PORT_CONNECT 0x0001
 #define FLT_PORT_ALL_ACCESS (FLT_PORT_CONNECT | STANDARD_RIGHTS_ALL)
+
+
+
 typedef enum _VDMSERVICECLASS
 {
     VdmStartExecution,
@@ -21,6 +38,7 @@ typedef enum _VDMSERVICECLASS
     VdmQueryVdmProcess,
     VdmPreInitialize
 } VDMSERVICECLASS, *PVDMSERVICECLASS;
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -28,6 +46,9 @@ NtVdmControl(
     _In_ VDMSERVICECLASS Service,
     _Inout_ PVOID ServiceData
     );
+
+
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -37,6 +58,7 @@ NtTraceEvent(
     _In_ ULONG FieldSize,
     _In_ PVOID Fields
     );
+
 typedef enum _TRACE_CONTROL_INFORMATION_CLASS
 {
     TraceControlStartLogger = 1,
@@ -45,6 +67,7 @@ typedef enum _TRACE_CONTROL_INFORMATION_CLASS
     TraceControlUpdateLogger = 4,
     TraceControlFlushLogger = 5,
     TraceControlIncrementLoggerFile = 6,
+
     TraceControlRealtimeConnect = 11,
     TraceControlActivityIdCreate = 12,
     TraceControlWdiDispatchControl = 13,
@@ -79,6 +102,7 @@ typedef enum _TRACE_CONTROL_INFORMATION_CLASS
     TraceControlMaxLoggers = 42,
     TraceControlMaxPmcCounter = 43
 } TRACE_CONTROL_INFORMATION_CLASS;
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -92,4 +116,6 @@ NtTraceControl(
     _Out_ PULONG ReturnLength
     );
 #endif
+
 #endif
+

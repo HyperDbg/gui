@@ -1,5 +1,17 @@
+
+
+
+
+
+
+
+
+
+
+
 #ifndef _NTPNPAPI_H
 #define _NTPNPAPI_H
+
 typedef enum _PLUGPLAY_EVENT_CATEGORY
 {
     HardwareProfileChangeEvent,
@@ -14,6 +26,7 @@ typedef enum _PLUGPLAY_EVENT_CATEGORY
     InvalidIDEvent,
     MaxPlugEventCategory
 } PLUGPLAY_EVENT_CATEGORY, *PPLUGPLAY_EVENT_CATEGORY;
+
 typedef struct _PLUGPLAY_EVENT_BLOCK
 {
     GUID EventGuid;
@@ -22,6 +35,7 @@ typedef struct _PLUGPLAY_EVENT_BLOCK
     ULONG Flags;
     ULONG TotalSize;
     PVOID DeviceObject;
+
     union
     {
         struct
@@ -66,6 +80,7 @@ typedef struct _PLUGPLAY_EVENT_BLOCK
         } InvalidIDNotification;
     } u;
 } PLUGPLAY_EVENT_BLOCK, *PPLUGPLAY_EVENT_BLOCK;
+
 typedef enum _PLUGPLAY_CONTROL_CLASS
 {
     PlugPlayControlEnumerateDevice, // PLUGPLAY_CONTROL_ENUMERATE_DEVICE_DATA
@@ -94,6 +109,7 @@ typedef enum _PLUGPLAY_CONTROL_CLASS
     PlugPlayControlGetDeviceInterfaceEnabled, // PLUGPLAY_CONTROL_DEVICE_INTERFACE_ENABLED
     MaxPlugPlayControl
 } PLUGPLAY_CONTROL_CLASS, *PPLUGPLAY_CONTROL_CLASS;
+
 #if (PHNT_VERSION < PHNT_WIN8)
 NTSYSCALLAPI
 NTSTATUS
@@ -105,6 +121,7 @@ NtGetPlugPlayEvent(
     _In_ ULONG EventBufferSize
     );
 #endif
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -113,26 +130,32 @@ NtPlugPlayControl(
     _Inout_updates_bytes_(PnPControlDataLength) PVOID PnPControlData,
     _In_ ULONG PnPControlDataLength
     );
+
 #if (PHNT_VERSION >= PHNT_WIN7)
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtSerializeBoot(
     VOID
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtEnableLastKnownGood(
     VOID
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtDisableLastKnownGood(
     VOID
     );
+
 #endif
+
 #if (PHNT_VERSION >= PHNT_VISTA)
 NTSYSCALLAPI
 NTSTATUS
@@ -143,4 +166,6 @@ NtReplacePartitionUnit(
     _In_ ULONG Flags
     );
 #endif
+
 #endif
+

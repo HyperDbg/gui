@@ -1,18 +1,45 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
+
+
 VOID
 CommandIoinHelp()
 {
     ShowMessages("!ioin : detects the execution of IN (I/O instructions) "
                  "instructions.\n\n");
+
     ShowMessages("syntax : \t!ioin [Port (hex)] [pid ProcessId (hex)] [core CoreId (hex)] "
                  "[imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] "
                  "[condition { Condition (hex) }] [code { Code (hex) }]\n");
+
     ShowMessages("\n");
     ShowMessages("\t\te.g : !ioin\n");
     ShowMessages("\t\te.g : !ioin 0x64\n");
     ShowMessages("\t\te.g : !ioin pid 400\n");
     ShowMessages("\t\te.g : !ioin core 2 pid 400\n");
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandIoin(vector<string> SplittedCommand, string Command)
@@ -29,6 +56,10 @@ CommandIoin(vector<string> SplittedCommand, string Command)
     BOOLEAN                            GetPort                     = FALSE;
     vector<string>                     SplittedCommandCaseSensitive {Split(Command, ' ')};
     DEBUGGER_EVENT_PARSING_ERROR_CAUSE EventParsingErrorCause;
+
+
+
+
     if (!InterpretGeneralEventAndActionsFields(
             &SplittedCommand,
             &SplittedCommandCaseSensitive,
@@ -45,6 +76,10 @@ CommandIoin(vector<string> SplittedCommand, string Command)
     {
         return;
     }
+
+
+
+
     for (auto Section : SplittedCommand)
     {
         if (!Section.compare("!ioin"))
@@ -53,10 +88,17 @@ CommandIoin(vector<string> SplittedCommand, string Command)
         }
         else if (!GetPort)
         {
+
+
+
             if (!ConvertStringToUInt64(Section, &SpecialTarget))
             {
+
+
+
                 ShowMessages("unknown parameter '%s'\n\n", Section.c_str());
                 CommandIoinHelp();
+
                 FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
                 return;
             }
@@ -67,18 +109,40 @@ CommandIoin(vector<string> SplittedCommand, string Command)
         }
         else
         {
+
+
+
             ShowMessages("unknown parameter '%s'\n\n", Section.c_str());
             CommandIoinHelp();
+
             FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
             return;
         }
     }
+
+
+
+
     Event->OptionalParam1 = SpecialTarget;
+
+
+
+
     if (!SendEventToKernel(Event, EventLength))
     {
+
+
+
+
+
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
+
+
+
+
     if (!RegisterActionToEvent(Event,
                                ActionBreakToDebugger,
                                ActionBreakToDebuggerLength,
@@ -87,8 +151,13 @@ CommandIoin(vector<string> SplittedCommand, string Command)
                                ActionScript,
                                ActionScriptLength))
     {
+
+
+
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
 }
+
 

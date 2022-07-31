@@ -1,6 +1,27 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
 extern BOOLEAN                  g_IsSerialConnectedToRemoteDebuggee;
 extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
+
+
+
+
+
+
 VOID
 CommandSearchMemoryHelp()
 {
@@ -9,12 +30,15 @@ CommandSearchMemoryHelp()
     ShowMessages("sb  Byte and ASCII characters\n");
     ShowMessages("sd  Double-word values (4 bytes)\n");
     ShowMessages("sq  Quad-word values (8 bytes). \n");
+
     ShowMessages(
         "\n If you want to search in physical (address) memory then add '!' "
         "at the start of the command\n");
+
     ShowMessages("syntax : \tsb [StartAddress (hex)] [l Length (hex)] [BytePattern (hex)] [pid ProcessId (hex)]\n");
     ShowMessages("syntax : \tsd [StartAddress (hex)] [l Length (hex)] [BytePattern (hex)] [pid ProcessId (hex)]\n");
     ShowMessages("syntax : \tsq [StartAddress (hex)] [l Length (hex)] [BytePattern (hex)] [pid ProcessId (hex)]\n");
+
     ShowMessages("\n");
     ShowMessages("\t\te.g : sb nt!ExAllocatePoolWithTag 90 85 95 l ffff \n");
     ShowMessages("\t\te.g : sb nt!ExAllocatePoolWithTag+5 90 85 95 l ffff \n");
@@ -27,14 +51,35 @@ CommandSearchMemoryHelp()
                  "9090909090909090 l ffffff\n");
 }
 
+
+
+
+
+
+
+
+
 VOID
 CommandSearchSendRequest(UINT64 * BufferToSendAsIoctl, UINT32 BufferToSendAsIoctlSize)
 {
     BOOL    Status;
     UINT64  CurrentValue;
     PUINT64 ResultsBuffer = NULL;
+
+
+
+
     ResultsBuffer = (PUINT64)malloc(MaximumSearchResults * sizeof(UINT64));
+
+
+
+
+
     ZeroMemory(ResultsBuffer, MaximumSearchResults * sizeof(UINT64));
+
+
+
+
     Status =
         DeviceIoControl(g_DeviceHandle,               // Handle to device
                         IOCTL_DEBUGGER_SEARCH_MEMORY, // IO Control code
@@ -46,17 +91,28 @@ CommandSearchSendRequest(UINT64 * BufferToSendAsIoctl, UINT32 BufferToSendAsIoct
                         NULL,               // Bytes placed in buffer.
                         NULL                // synchronous call
         );
+
     if (!Status)
     {
         ShowMessages("ioctl failed with code 0x%x\n", GetLastError());
+
         free(ResultsBuffer);
         return;
     }
+
+
+
+
     for (size_t i = 0; i < MaximumSearchResults; i++)
     {
         CurrentValue = ResultsBuffer[i];
+
         if (CurrentValue == NULL)
         {
+
+
+
+
             if (i == 0)
             {
                 ShowMessages("not found\n");
@@ -65,8 +121,20 @@ CommandSearchSendRequest(UINT64 * BufferToSendAsIoctl, UINT32 BufferToSendAsIoct
         }
         ShowMessages("%llx\n", CurrentValue);
     }
+
+
+
+
     free(ResultsBuffer);
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandSearchMemory(vector<string> SplittedCommand, string Command)
@@ -88,19 +156,27 @@ CommandSearchMemory(vector<string> SplittedCommand, string Command)
     vector<UINT64>         ValuesToEdit;
     vector<string>         SplittedCommandCaseSensitive {Split(Command, ' ')};
     UINT32                 IndexInCommandCaseSensitive = 0;
+
+
+
+
+
     if (g_ActiveProcessDebuggingState.IsActive)
     {
         ProcId = g_ActiveProcessDebuggingState.ProcessId;
     }
+
     if (SplittedCommand.size() <= 4)
     {
         ShowMessages("incorrect use of 's*'\n\n");
         CommandSearchMemoryHelp();
         return;
     }
+
     for (auto Section : SplittedCommand)
     {
         IndexInCommandCaseSensitive++;
+
         if (!Section.compare(SplittedCommand.at(0)))
         {
             if (!Section.compare("!sb"))
@@ -135,15 +211,24 @@ CommandSearchMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
+
+
+
                 ShowMessages("unknown error happened !\n\n");
                 CommandSearchMemoryHelp();
                 return;
             }
+
             continue;
         }
+
         if (NextIsProcId)
         {
+
+
+
             NextIsProcId = FALSE;
+
             if (!ConvertStringToUInt32(Section, &ProcId))
             {
                 ShowMessages("please specify a correct hex prcoess id\n\n");
@@ -152,12 +237,20 @@ CommandSearchMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
+
+
+
                 continue;
             }
         }
+
         if (NextIsLength)
         {
+
+
+
             NextIsLength = FALSE;
+
             if (!ConvertStringToUInt64(Section, &Length))
             {
                 ShowMessages("please specify a correct hex length\n\n");
@@ -166,20 +259,32 @@ CommandSearchMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
+
+
+
                 SetLength = TRUE;
                 continue;
             }
         }
+
+
+
+
         if (!SetProcId && !Section.compare("pid"))
         {
             NextIsProcId = TRUE;
             continue;
         }
+
+
+
+
         if (!SetLength && !Section.compare("l"))
         {
             NextIsLength = TRUE;
             continue;
         }
+
         if (!SetAddress)
         {
             if (!SymbolConvertNameOrExprToAddress(SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1), &Address))
@@ -191,12 +296,19 @@ CommandSearchMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
+
+
+
                 SetAddress = TRUE;
                 continue;
             }
         }
+
         if (SetAddress)
         {
+
+
+
             if (Section.rfind("0x", 0) == 0 || Section.rfind("0X", 0) == 0 ||
                 Section.rfind("\\x", 0) == 0 || Section.rfind("\\X", 0) == 0)
             {
@@ -207,6 +319,10 @@ CommandSearchMemory(vector<string> SplittedCommand, string Command)
                 Section = Section.erase(0, 1);
             }
             Section.erase(remove(Section.begin(), Section.end(), '`'), Section.end());
+
+
+
+
             if (SearchMemoryRequest.ByteSize == SEARCH_BYTE && Section.size() >= 3)
             {
                 ShowMessages("please specify a byte (hex) value for 'sb' or '!sb'\n\n");
@@ -225,6 +341,11 @@ CommandSearchMemory(vector<string> SplittedCommand, string Command)
                     "please specify a qword (hex) value for 'sq' or '!sq'\n\n");
                 return;
             }
+
+
+
+
+
             if (!ConvertStringToUInt64(Section, &Value))
             {
                 ShowMessages("please specify a correct hex value to search in the "
@@ -234,28 +355,52 @@ CommandSearchMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
+
+
+
                 ValuesToEdit.push_back(Value);
+
+
+
+
                 CountOfValues++;
+
                 if (!SetValue)
                 {
+
+
+
                     SetValue = TRUE;
                 }
                 continue;
             }
         }
     }
+
+
+
+
     if (g_IsSerialConnectedToRemoteDebuggee && ProcId != 0)
     {
         ShowMessages("err, you cannot specify 'pid' in the debugger mode\n");
         return;
     }
+
     if (ProcId == 0)
     {
         ProcId = GetCurrentProcessId();
     }
+
+
+
+
     SearchMemoryRequest.ProcessId       = ProcId;
     SearchMemoryRequest.Address         = Address;
     SearchMemoryRequest.CountOf64Chunks = CountOfValues;
+
+
+
+
     if (!SetAddress)
     {
         ShowMessages("please specify a correct hex address\n\n");
@@ -287,30 +432,75 @@ CommandSearchMemory(vector<string> SplittedCommand, string Command)
         CommandSearchMemoryHelp();
         return;
     }
+
+
+
+
     FinalSize = (CountOfValues * sizeof(UINT64)) + SIZEOF_DEBUGGER_SEARCH_MEMORY;
+
+
+
+
     SearchMemoryRequest.FinalStructureSize = FinalSize;
+
+
+
+
     SearchMemoryRequest.Length = Length;
+
     if (!g_IsSerialConnectedToRemoteDebuggee)
     {
         AssertShowMessageReturnStmt(g_DeviceHandle, ASSERT_MESSAGE_DRIVER_NOT_LOADED, AssertReturn);
     }
+
+
+
+
     FinalBuffer = (UINT64 *)malloc(FinalSize);
+
     if (!FinalBuffer)
     {
         ShowMessages("unable to allocate memory\n\n");
         return;
     }
+
+
+
+
     ZeroMemory(FinalBuffer, FinalSize);
+
+
+
+
     memcpy(FinalBuffer, &SearchMemoryRequest, SIZEOF_DEBUGGER_SEARCH_MEMORY);
+
+
+
+
     std::copy(ValuesToEdit.begin(), ValuesToEdit.end(), (UINT64 *)((UINT64)FinalBuffer + SIZEOF_DEBUGGER_SEARCH_MEMORY));
+
+
+
+
     if (g_IsSerialConnectedToRemoteDebuggee)
     {
+
+
+
         KdSendSearchRequestPacketToDebuggee(FinalBuffer, FinalSize);
     }
     else
     {
+
+
+
         CommandSearchSendRequest(FinalBuffer, FinalSize);
     }
+
+
+
+
     free(FinalBuffer);
 }
+
 

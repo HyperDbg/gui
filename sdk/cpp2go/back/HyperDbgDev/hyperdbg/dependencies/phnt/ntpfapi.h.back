@@ -1,5 +1,21 @@
+
+
+
+
+
+
+
+
+
+
+
 #ifndef _NTPFAPI_H
 #define _NTPFAPI_H
+
+
+
+
+
 typedef enum _PF_BOOT_PHASE_ID
 {
     PfKernelInitPhase = 0,
@@ -13,6 +29,7 @@ typedef enum _PF_BOOT_PHASE_ID
     PfUserShellReadyPhase = 300,
     PfMaxBootPhaseId = 900
 } PF_BOOT_PHASE_ID;
+
 typedef enum _PF_ENABLE_STATUS
 {
     PfSvNotSpecified,
@@ -20,12 +37,14 @@ typedef enum _PF_ENABLE_STATUS
     PfSvDisabled,
     PfSvMaxEnableStatus
 } PF_ENABLE_STATUS;
+
 typedef struct _PF_TRACE_LIMITS
 {
     ULONG MaxNumPages;
     ULONG MaxNumSections;
     LONGLONG TimerPeriod;
 } PF_TRACE_LIMITS, *PPF_TRACE_LIMITS;
+
 typedef struct _PF_SYSTEM_PREFETCH_PARAMETERS
 {
     PF_ENABLE_STATUS EnableStatus[2];
@@ -35,12 +54,15 @@ typedef struct _PF_SYSTEM_PREFETCH_PARAMETERS
     WCHAR RootDirPath[32];
     WCHAR HostingApplicationList[128];
 } PF_SYSTEM_PREFETCH_PARAMETERS, *PPF_SYSTEM_PREFETCH_PARAMETERS;
+
 #define PF_BOOT_CONTROL_VERSION 1
+
 typedef struct _PF_BOOT_CONTROL
 {
     ULONG Version;
     ULONG DisableBootPrefetching;
 } PF_BOOT_CONTROL, *PPF_BOOT_CONTROL;
+
 typedef enum _PREFETCHER_INFORMATION_CLASS
 {
     PrefetcherRetrieveTrace = 1, // q: CHAR[]
@@ -53,8 +75,10 @@ typedef enum _PREFETCHER_INFORMATION_CLASS
     PrefetcherAppLaunchScenarioControl,
     PrefetcherInformationMax
 } PREFETCHER_INFORMATION_CLASS;
+
 #define PREFETCHER_INFORMATION_VERSION 23 // rev
 #define PREFETCHER_INFORMATION_MAGIC ('kuhC') // rev
+
 typedef struct _PREFETCHER_INFORMATION
 {
     _In_ ULONG Version;
@@ -63,6 +87,9 @@ typedef struct _PREFETCHER_INFORMATION
     _Inout_ PVOID PrefetcherInformation;
     _Inout_ ULONG PrefetcherInformationLength;
 } PREFETCHER_INFORMATION, *PPREFETCHER_INFORMATION;
+
+
+
 typedef struct _PF_SYSTEM_SUPERFETCH_PARAMETERS
 {
     ULONG EnabledComponents;
@@ -73,9 +100,11 @@ typedef struct _PF_SYSTEM_SUPERFETCH_PARAMETERS
     ULONG ScenarioPrefetchTimeoutHibernate;
     ULONG ScenarioPrefetchTimeoutHiberBoot;
 } PF_SYSTEM_SUPERFETCH_PARAMETERS, *PPF_SYSTEM_SUPERFETCH_PARAMETERS;
+
 #define PF_PFN_PRIO_REQUEST_VERSION 1
 #define PF_PFN_PRIO_REQUEST_QUERY_MEMORY_LIST 0x1
 #define PF_PFN_PRIO_REQUEST_VALID_FLAGS 0x1
+
 typedef struct _PF_PFN_PRIO_REQUEST
 {
     ULONG Version;
@@ -84,6 +113,7 @@ typedef struct _PF_PFN_PRIO_REQUEST
     SYSTEM_MEMORY_LIST_INFORMATION MemInfo;
     MMPFN_IDENTITY PageData[256];
 } PF_PFN_PRIO_REQUEST, *PPF_PFN_PRIO_REQUEST;
+
 typedef enum _PFS_PRIVATE_PAGE_SOURCE_TYPE
 {
     PfsPrivateSourceKernel,
@@ -91,6 +121,7 @@ typedef enum _PFS_PRIVATE_PAGE_SOURCE_TYPE
     PfsPrivateSourceProcess,
     PfsPrivateSourceMax
 } PFS_PRIVATE_PAGE_SOURCE_TYPE;
+
 typedef struct _PFS_PRIVATE_PAGE_SOURCE
 {
     PFS_PRIVATE_PAGE_SOURCE_TYPE Type;
@@ -102,6 +133,7 @@ typedef struct _PFS_PRIVATE_PAGE_SOURCE
     ULONG ImagePathHash;
     ULONG_PTR UniqueProcessHash;
 } PFS_PRIVATE_PAGE_SOURCE, *PPFS_PRIVATE_PAGE_SOURCE;
+
 typedef struct _PF_PRIVSOURCE_INFO
 {
     PFS_PRIVATE_PAGE_SOURCE DbInfo;
@@ -123,7 +155,9 @@ typedef struct _PF_PRIVSOURCE_INFO
     ULONG PerProcessStore : 1;      // process only.
     ULONG Spare : 28;
 } PF_PRIVSOURCE_INFO, *PPF_PRIVSOURCE_INFO;
+
 #define PF_PRIVSOURCE_QUERY_REQUEST_VERSION 8
+
 typedef struct _PF_PRIVSOURCE_QUERY_REQUEST
 {
     ULONG Version;
@@ -131,6 +165,7 @@ typedef struct _PF_PRIVSOURCE_QUERY_REQUEST
     ULONG InfoCount;
     PF_PRIVSOURCE_INFO InfoArray[1];
 } PF_PRIVSOURCE_QUERY_REQUEST, *PPF_PRIVSOURCE_QUERY_REQUEST;
+
 typedef enum _PF_PHASED_SCENARIO_TYPE
 {
     PfScenarioTypeNone,
@@ -139,7 +174,9 @@ typedef enum _PF_PHASED_SCENARIO_TYPE
     PfScenarioTypeFUS,
     PfScenarioTypeMax
 } PF_PHASED_SCENARIO_TYPE;
+
 #define PF_SCENARIO_PHASE_INFO_VERSION 4
+
 typedef struct _PF_SCENARIO_PHASE_INFO
 {
     ULONG Version;
@@ -149,6 +186,7 @@ typedef struct _PF_SCENARIO_PHASE_INFO
     ULONG Flags;
     ULONG FUSUserId;
 } PF_SCENARIO_PHASE_INFO, *PPF_SCENARIO_PHASE_INFO;
+
 typedef struct _PF_MEMORY_LIST_NODE
 {
     ULONGLONG Node : 8;
@@ -159,7 +197,9 @@ typedef struct _PF_MEMORY_LIST_NODE
     ULONGLONG FreePageCount;
     ULONGLONG ModifiedPageCount;
 } PF_MEMORY_LIST_NODE, *PPF_MEMORY_LIST_NODE;
+
 #define PF_MEMORY_LIST_INFO_VERSION 1
+
 typedef struct _PF_MEMORY_LIST_INFO
 {
     ULONG Version;
@@ -167,19 +207,24 @@ typedef struct _PF_MEMORY_LIST_INFO
     ULONG NodeCount;
     PF_MEMORY_LIST_NODE Nodes[1];
 } PF_MEMORY_LIST_INFO, *PPF_MEMORY_LIST_INFO;
+
 typedef struct _PF_PHYSICAL_MEMORY_RANGE
 {
     ULONG_PTR BasePfn;
     ULONG_PTR PageCount;
 } PF_PHYSICAL_MEMORY_RANGE, *PPF_PHYSICAL_MEMORY_RANGE;
+
 #define PF_PHYSICAL_MEMORY_RANGE_INFO_V1_VERSION 1
+
 typedef struct _PF_PHYSICAL_MEMORY_RANGE_INFO_V1
 {
     ULONG Version;
     ULONG RangeCount;
     PF_PHYSICAL_MEMORY_RANGE Ranges[1];
 } PF_PHYSICAL_MEMORY_RANGE_INFO_V1, *PPF_PHYSICAL_MEMORY_RANGE_INFO_V1;
+
 #define PF_PHYSICAL_MEMORY_RANGE_INFO_V2_VERSION 2
+
 typedef struct _PF_PHYSICAL_MEMORY_RANGE_INFO_V2
 {
     ULONG Version;
@@ -187,12 +232,19 @@ typedef struct _PF_PHYSICAL_MEMORY_RANGE_INFO_V2
     ULONG RangeCount;
     PF_PHYSICAL_MEMORY_RANGE Ranges[ANYSIZE_ARRAY];
 } PF_PHYSICAL_MEMORY_RANGE_INFO_V2, *PPF_PHYSICAL_MEMORY_RANGE_INFO_V2;
+
+
+
 #define PF_REPURPOSED_BY_PREFETCH_INFO_VERSION 1
+
 typedef struct _PF_REPURPOSED_BY_PREFETCH_INFO
 {
     ULONG Version;
     ULONG RepurposedByPrefetch;
 } PF_REPURPOSED_BY_PREFETCH_INFO, *PPF_REPURPOSED_BY_PREFETCH_INFO;
+
+
+
 typedef enum _SUPERFETCH_INFORMATION_CLASS
 {
     SuperfetchRetrieveTrace = 1, // q: CHAR[]
@@ -225,8 +277,10 @@ typedef enum _SUPERFETCH_INFORMATION_CLASS
     SuperfetchGpuUtilizationQuery, // PF_GPU_UTILIZATION_INFO
     SuperfetchInformationMax
 } SUPERFETCH_INFORMATION_CLASS;
+
 #define SUPERFETCH_INFORMATION_VERSION 45 // rev
 #define SUPERFETCH_INFORMATION_MAGIC ('kuhC') // rev
+
 typedef struct _SUPERFETCH_INFORMATION
 {
     _In_ ULONG Version;
@@ -235,4 +289,8 @@ typedef struct _SUPERFETCH_INFORMATION
     _Inout_ PVOID SuperfetchInformation;
     _Inout_ ULONG SuperfetchInformationLength;
 } SUPERFETCH_INFORMATION, *PSUPERFETCH_INFORMATION;
+
+
+
 #endif
+

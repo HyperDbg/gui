@@ -1,20 +1,48 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
+
+
 VOID
 CommandExceptionHelp()
 {
     ShowMessages("!exception : monitors the first 32 entry of IDT (starting from "
                  "zero).\n\n");
+
     ShowMessages(
         "syntax : \t!exception [IdtIndex (hex)] [pid ProcessId (hex)] "
         "[core CoreId (hex)] [imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] "
         "[script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }]\n");
+
     ShowMessages("\nnote: monitoring page-faults (entry 0xe) is implemented differently.\n");
+
     ShowMessages("\n");
     ShowMessages("\t\te.g : !exception\n");
     ShowMessages("\t\te.g : !exception 0xe\n");
     ShowMessages("\t\te.g : !exception pid 400\n");
     ShowMessages("\t\te.g : !exception core 2 pid 400\n");
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandException(vector<string> SplittedCommand, string Command)
@@ -31,6 +59,11 @@ CommandException(vector<string> SplittedCommand, string Command)
     BOOLEAN                            GetEntry                    = FALSE;
     vector<string>                     SplittedCommandCaseSensitive {Split(Command, ' ')};
     DEBUGGER_EVENT_PARSING_ERROR_CAUSE EventParsingErrorCause;
+
+
+
+
+
     if (!InterpretGeneralEventAndActionsFields(
             &SplittedCommand,
             &SplittedCommandCaseSensitive,
@@ -47,6 +80,10 @@ CommandException(vector<string> SplittedCommand, string Command)
     {
         return;
     }
+
+
+
+
     for (auto Section : SplittedCommand)
     {
         if (!Section.compare("!exception"))
@@ -55,20 +92,35 @@ CommandException(vector<string> SplittedCommand, string Command)
         }
         else if (!GetEntry)
         {
+
+
+
             if (!ConvertStringToUInt64(Section, &SpecialTarget))
             {
+
+
+
                 ShowMessages("unknown parameter '%s'\n\n", Section.c_str());
                 CommandExceptionHelp();
+
                 FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
                 return;
             }
             else
             {
+
+
+
                 if (SpecialTarget >= 31)
                 {
+
+
+
+
                     ShowMessages("the entry should be between 0x0 to 0x1f or first 32 "
                                  "entries'\n\n");
                     CommandExceptionHelp();
+
                     FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
                     return;
                 }
@@ -77,18 +129,40 @@ CommandException(vector<string> SplittedCommand, string Command)
         }
         else
         {
+
+
+
             ShowMessages("unknown parameter '%s'\n\n", Section.c_str());
             CommandExceptionHelp();
+
             FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
             return;
         }
     }
+
+
+
+
     Event->OptionalParam1 = SpecialTarget;
+
+
+
+
     if (!SendEventToKernel(Event, EventLength))
     {
+
+
+
+
+
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
+
+
+
+
     if (!RegisterActionToEvent(Event,
                                ActionBreakToDebugger,
                                ActionBreakToDebuggerLength,
@@ -97,8 +171,13 @@ CommandException(vector<string> SplittedCommand, string Command)
                                ActionScript,
                                ActionScriptLength))
     {
+
+
+
+
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
 }
+
 

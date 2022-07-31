@@ -1,15 +1,80 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <stdio.h>
 #include <Zycore/Allocator.h>
 #include <Zycore/Defines.h>
 #include <Zycore/LibC.h>
 #include <Zycore/String.h>
 #include <Zycore/Types.h>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 static ZyanStatus PerformBasicTests(ZyanString* string)
 {
     ZYAN_ASSERT(string);
     ZYAN_UNUSED(string);
+
+
+
     return ZYAN_STATUS_SUCCESS;
 }
+
+
+
+
+
+
 
 static ZyanStatus TestDynamic(void)
 {
@@ -17,16 +82,98 @@ static ZyanStatus TestDynamic(void)
     return ZYAN_STATUS_SUCCESS;
 }
 
+
+
+
+
+
+
 static ZyanStatus TestStatic(void)
 {
     PerformBasicTests(ZYAN_NULL);
     return ZYAN_STATUS_SUCCESS;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 static ZyanStatus TestAllocator(void)
 {
     return ZYAN_STATUS_SUCCESS;
 }
+
+
+
+
+
+
+
 
 int main()
 {
@@ -42,6 +189,10 @@ int main()
     {
         return EXIT_FAILURE;
     }
+
     return EXIT_SUCCESS;
 }
+
+
+
 

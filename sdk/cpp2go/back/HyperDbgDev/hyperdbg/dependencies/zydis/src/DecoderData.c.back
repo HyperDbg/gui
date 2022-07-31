@@ -1,16 +1,70 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <Zydis/Internal/DecoderData.h>
+
+
+
+
+
+
+
+
+
 #include <Generated/InstructionEncodings.inc>
+
+
+
+
+
 #define ZYDIS_INVALID \
     { ZYDIS_NODETYPE_INVALID, 0x00000000 }
 #define ZYDIS_FILTER(type, id) \
     { type, id }
 #define ZYDIS_DEFINITION(encoding_id, id) \
     { ZYDIS_NODETYPE_DEFINITION_MASK | encoding_id, id }
+
 #include <Generated/DecoderTables.inc>
+
 #undef ZYDIS_INVALID
 #undef ZYDIS_FILTER
 #undef ZYDIS_DEFINITION
+
+
+
+
+
+
+
+
+
+
+
 const ZydisDecoderTreeNode zydis_decoder_tree_root = { ZYDIS_NODETYPE_FILTER_OPCODE, 0x0000 };
+
 const ZydisDecoderTreeNode* ZydisDecoderTreeGetChildNode(const ZydisDecoderTreeNode* parent,
     ZyanU16 index)
 {
@@ -106,6 +160,7 @@ const ZydisDecoderTreeNode* ZydisDecoderTreeGetChildNode(const ZydisDecoderTreeN
     }
 }
 
+
 void ZydisGetInstructionEncodingInfo(const ZydisDecoderTreeNode* node,
     const ZydisInstructionEncodingInfo** info)
 {
@@ -114,4 +169,9 @@ void ZydisGetInstructionEncodingInfo(const ZydisDecoderTreeNode* node,
     ZYAN_ASSERT(class < ZYAN_ARRAY_LENGTH(INSTR_ENCODINGS));
     *info = &INSTR_ENCODINGS[class];
 }
+
+
+
+
+
 

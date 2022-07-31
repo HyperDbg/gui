@@ -1607,3 +1607,4 @@ static const ZydisShortString STR_MNEMONIC[] =
     ZYDIS_MAKE_SHORTSTRING("xstore"),
     ZYDIS_MAKE_SHORTSTRING("xtest")
 };
+

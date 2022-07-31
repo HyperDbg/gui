@@ -1,6 +1,19 @@
+
+
+
+
+
+
+
+
+
+
+
 #ifndef _NTNLS_H
 #define _NTNLS_H
+
 #define MAXIMUM_LEADBYTES 12
+
 typedef struct _CPTABLEINFO
 {
     USHORT CodePage;
@@ -16,6 +29,7 @@ typedef struct _CPTABLEINFO
     PUSHORT DBCSRanges;
     PUSHORT DBCSOffsets;
 } CPTABLEINFO, *PCPTABLEINFO;
+
 typedef struct _NLSTABLEINFO
 {
     CPTABLEINFO OemTableInfo;
@@ -23,9 +37,12 @@ typedef struct _NLSTABLEINFO
     PUSHORT UpperCaseTable;
     PUSHORT LowerCaseTable;
 } NLSTABLEINFO, *PNLSTABLEINFO;
+
 #if (PHNT_MODE != PHNT_MODE_KERNEL)
 NTSYSAPI USHORT NlsAnsiCodePage;
 NTSYSAPI BOOLEAN NlsMbCodePageTag;
 NTSYSAPI BOOLEAN NlsMbOemCodePageTag;
 #endif
+
 #endif
+

@@ -1,4 +1,12 @@
 #include <ntddk.h>
+
+
+
+
+
+
+
+
 NTSTATUS
 DllInitialize(
     _In_ PUNICODE_STRING RegistryPath)
@@ -6,9 +14,11 @@ DllInitialize(
     return STATUS_SUCCESS;
 }
 
+
 NTSTATUS
 DllUnload(void)
 {
     return STATUS_SUCCESS;
 }
+
 

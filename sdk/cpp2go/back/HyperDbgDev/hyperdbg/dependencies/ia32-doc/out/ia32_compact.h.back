@@ -1,9 +1,21 @@
 #pragma once
 #include <stdint.h>
+
 #if defined(_MSC_EXTENSIONS)
 #pragma warning(push)
 #pragma warning(disable: 4201)
 #endif
+
+
+
+
+
+
+
+
+
+
+
 typedef union {
   struct {
     uint64_t protection_enable                                       : 1;
@@ -21,8 +33,10 @@ typedef union {
     uint64_t cache_disable                                           : 1;
     uint64_t paging_enable                                           : 1;
   };
+
   uint64_t flags;
 } cr0;
+
 typedef union {
   struct {
     uint64_t reserved_1                                              : 3;
@@ -31,8 +45,10 @@ typedef union {
     uint64_t reserved_2                                              : 7;
     uint64_t address_of_page_directory                               : 36;
   };
+
   uint64_t flags;
 } cr3;
+
 typedef union {
   struct {
     uint64_t virtual_mode_extensions                                 : 1;
@@ -61,15 +77,28 @@ typedef union {
     uint64_t control_flow_enforcement_enable                         : 1;
     uint64_t protection_key_for_supervisor_mode_enable               : 1;
   };
+
   uint64_t flags;
 } cr4;
+
 typedef union {
   struct {
     uint64_t task_priority_level                                     : 4;
     uint64_t reserved                                                : 60;
   };
+
   uint64_t flags;
 } cr8;
+
+
+
+
+
+
+
+
+
+
 typedef union {
   struct {
     uint64_t breakpoint_condition                                    : 4;
@@ -79,8 +108,10 @@ typedef union {
     uint64_t task_switch                                             : 1;
     uint64_t restricted_transactional_memory                         : 1;
   };
+
   uint64_t flags;
 } dr6;
+
 typedef union {
   struct {
     uint64_t local_breakpoint_0                                      : 1;
@@ -107,8 +138,19 @@ typedef union {
     uint64_t read_write_3                                            : 2;
     uint64_t length_3                                                : 2;
   };
+
   uint64_t flags;
 } dr7;
+
+
+
+
+
+
+
+
+
+
 #define CPUID_SIGNATURE                                              0x00000000
 typedef struct {
   uint32_t max_cpuid_input_value;
@@ -116,6 +158,7 @@ typedef struct {
   uint32_t ecx_value_ntel;
   uint32_t edx_value_inei;
 } cpuid_eax_00;
+
 #define CPUID_VERSION_INFO                                           0x00000001
 typedef struct {
   union {
@@ -128,8 +171,10 @@ typedef struct {
       uint32_t extended_model_id                                     : 4;
       uint32_t extended_family_id                                    : 8;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t brand_index                                           : 8;
@@ -137,8 +182,10 @@ typedef struct {
       uint32_t max_addressable_ids                                   : 8;
       uint32_t initial_apic_id                                       : 8;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t streaming_simd_extensions_3                           : 1;
@@ -173,8 +220,10 @@ typedef struct {
       uint32_t half_precision_conversion_instructions                : 1;
       uint32_t rdrand_instruction                                    : 1;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t floating_point_unit_on_chip                           : 1;
@@ -210,9 +259,12 @@ typedef struct {
       uint32_t reserved_3                                            : 1;
       uint32_t pending_break_enable                                  : 1;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_01;
+
 #define CPUID_CACHE_PARAMS                                           0x00000004
 typedef struct {
   union {
@@ -225,52 +277,67 @@ typedef struct {
       uint32_t max_addressable_ids_for_logical_processors_sharing_this_cache: 12;
       uint32_t max_addressable_ids_for_processor_cores_in_physical_package: 6;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t system_coherency_line_size                            : 12;
       uint32_t physical_line_partitions                              : 10;
       uint32_t ways_of_associativity                                 : 10;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t number_of_sets                                        : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t write_back_invalidate                                 : 1;
       uint32_t cache_inclusiveness                                   : 1;
       uint32_t complex_cache_indexing                                : 1;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_04;
+
 #define CPUID_MONITOR_MWAIT                                          0x00000005
 typedef struct {
   union {
     struct {
       uint32_t smallest_monitor_line_size                            : 16;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t largest_monitor_line_size                             : 16;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t enumeration_of_monitor_mwait_extensions               : 1;
       uint32_t supports_treating_interrupts_as_break_event_for_mwait : 1;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t number_of_c0_sub_c_states                             : 4;
@@ -282,9 +349,12 @@ typedef struct {
       uint32_t number_of_c6_sub_c_states                             : 4;
       uint32_t number_of_c7_sub_c_states                             : 4;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_05;
+
 #define CPUID_THERMAL_POWER_MANAGEMENT                               0x00000006
 typedef struct {
   union {
@@ -313,14 +383,18 @@ typedef struct {
       uint32_t reserved_4                                            : 2;
       uint32_t intel_thread_director                                 : 1;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t number_of_interrupt_thresholds_in_thermal_sensor      : 4;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t hardware_coordination_feedback_capability             : 1;
@@ -329,23 +403,30 @@ typedef struct {
       uint32_t reserved_2                                            : 4;
       uint32_t performance_energy_bias_preference                    : 8;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_06;
+
 #define CPUID_STRUCTURED_EXTENDED_FEATURE_FLAGS                      0x00000007
 typedef struct {
   union {
     struct {
       uint32_t number_of_sub_leaves                                  : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t fsgsbase                                              : 1;
@@ -381,8 +462,10 @@ typedef struct {
       uint32_t avx512bw                                              : 1;
       uint32_t avx512vl                                              : 1;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t prefetchwt1                                           : 1;
@@ -414,8 +497,10 @@ typedef struct {
       uint32_t sgx_lc                                                : 1;
       uint32_t pks                                                   : 1;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved_1                                            : 2;
@@ -441,36 +526,48 @@ typedef struct {
       uint32_t ia32_core_capabilities                                : 1;
       uint32_t ssbd                                                  : 1;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_07;
+
 #define CPUID_DIRECT_CACHE_ACCESS_INFO                               0x00000009
 typedef struct {
   union {
     struct {
       uint32_t ia32_platform_dca_cap                                 : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_09;
+
 #define CPUID_ARCHITECTURAL_PERFORMANCE_MONITORING                   0x0000000A
 typedef struct {
   union {
@@ -480,8 +577,10 @@ typedef struct {
       uint32_t bit_width_of_performance_monitoring_counter           : 8;
       uint32_t ebx_bit_vector_length                                 : 8;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t core_cycle_event_not_available                        : 1;
@@ -492,14 +591,18 @@ typedef struct {
       uint32_t branch_instruction_retired_event_not_available        : 1;
       uint32_t branch_mispredict_retired_event_not_available         : 1;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t number_of_fixed_function_performance_counters         : 5;
@@ -507,37 +610,54 @@ typedef struct {
       uint32_t reserved_1                                            : 2;
       uint32_t any_thread_deprecation                                : 1;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_0a;
+
 #define CPUID_EXTENDED_TOPOLOGY                                      0x0000000B
 typedef struct {
   union {
     struct {
       uint32_t x2apic_id_to_unique_topology_id_shift                 : 5;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t number_of_logical_processors_at_this_level_type       : 16;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t level_number                                          : 8;
       uint32_t level_type                                            : 8;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t x2apic_id                                             : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_0b;
+
+
+
+
+
+
 #define CPUID_EXTENDED_STATE                                         0x0000000D
 typedef struct {
   union {
@@ -552,27 +672,36 @@ typedef struct {
       uint32_t reserved_1                                            : 3;
       uint32_t used_for_ia32_xss_2                                   : 1;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t max_size_required_by_enabled_features_in_xcr0         : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t max_size_of_xsave_xrstor_save_area                    : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t xcr0_supported_bits                                   : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_0d_ecx_00;
+
 typedef struct {
   union {
     struct {
@@ -581,14 +710,18 @@ typedef struct {
       uint32_t supports_xgetbv_with_ecx_1                            : 1;
       uint32_t supports_xsave_xrstor_and_ia32_xss                    : 1;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t size_of_xsave_aread                                   : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t used_for_xcr0_1                                       : 8;
@@ -602,106 +735,158 @@ typedef struct {
       uint32_t lbr_state                                             : 1;
       uint32_t hwp_state                                             : 1;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t supported_upper_ia32_xss_bits                         : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_0d_ecx_01;
+
 typedef struct {
   union {
     struct {
       uint32_t ia32_platform_dca_cap                                 : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t ecx_2                                                 : 1;
       uint32_t ecx_1                                                 : 1;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_0d_ecx_n;
+
+
+
+
+
+
+
+
+
+
 #define CPUID_INTEL_RDT_MONITORING                                   0x0000000F
 typedef struct {
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t rmid_max_range                                        : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved_1                                            : 1;
       uint32_t supports_l3_cache_intel_rdt_monitoring                : 1;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_0f_ecx_00;
+
 typedef struct {
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t conversion_factor                                     : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t rmid_max_range                                        : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t supports_l3_occupancy_monitoring                      : 1;
       uint32_t supports_l3_total_bandwidth_monitoring                : 1;
       uint32_t supports_l3_local_bandwidth_monitoring                : 1;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_0f_ecx_01;
+
+
+
+
+
+
+
+
+
+
 #define CPUID_INTEL_RDT_ALLOCATION                                   0x00000010
 typedef struct {
   union {
     struct {
       uint32_t ia32_platform_dca_cap                                 : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t reserved_1                                            : 1;
@@ -709,101 +894,144 @@ typedef struct {
       uint32_t supports_l2_cache_allocation_technology               : 1;
       uint32_t supports_memory_bandwidth_allocation                  : 1;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_10_ecx_00;
+
 typedef struct {
   union {
     struct {
       uint32_t length_of_capacity_bit_mask                           : 5;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t ebx_0                                                 : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved_1                                            : 2;
       uint32_t code_and_data_priorization_technology_supported       : 1;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t highest_cos_number_supported                          : 16;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_10_ecx_01;
+
 typedef struct {
   union {
     struct {
       uint32_t length_of_capacity_bit_mask                           : 5;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t ebx_0                                                 : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t highest_cos_number_supported                          : 16;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_10_ecx_02;
+
 typedef struct {
   union {
     struct {
       uint32_t max_mba_throttling_value                              : 12;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved_1                                            : 2;
       uint32_t response_of_delay_is_linear                           : 1;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t highest_cos_number_supported                          : 16;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_10_ecx_03;
+
+
+
+
+
+
+
+
+
+
 #define CPUID_INTEL_SGX                                              0x00000012
 typedef struct {
   union {
@@ -814,80 +1042,107 @@ typedef struct {
       uint32_t sgx_enclv_advanced                                    : 1;
       uint32_t sgx_encls_advanced                                    : 1;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t miscselect                                            : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t max_enclave_size_not64                                : 8;
       uint32_t max_enclave_size_64                                   : 8;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_12_ecx_00;
+
 typedef struct {
   union {
     struct {
       uint32_t valid_secs_attributes_0                               : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t valid_secs_attributes_1                               : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t valid_secs_attributes_2                               : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t valid_secs_attributes_3                               : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_12_ecx_01;
+
 typedef struct {
   union {
     struct {
       uint32_t sub_leaf_type                                         : 4;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t zero                                                  : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t zero                                                  : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t zero                                                  : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_12_ecx_02p_slt_0;
+
 typedef struct {
   union {
     struct {
@@ -895,37 +1150,57 @@ typedef struct {
       uint32_t reserved_1                                            : 8;
       uint32_t epc_base_physical_address_1                           : 20;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t epc_base_physical_address_2                           : 20;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t epc_section_property                                  : 4;
       uint32_t reserved_1                                            : 8;
       uint32_t epc_size_1                                            : 20;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t epc_size_2                                            : 20;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_12_ecx_02p_slt_1;
+
+
+
+
+
+
+
+
+
+
 #define CPUID_INTEL_PROCESSOR_TRACE                                  0x00000014
 typedef struct {
   union {
     struct {
       uint32_t max_sub_leaf                                          : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t flag0                                                 : 1;
@@ -938,8 +1213,10 @@ typedef struct {
       uint32_t flag7                                                 : 1;
       uint32_t flag8                                                 : 1;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t flag0                                                 : 1;
@@ -949,15 +1226,20 @@ typedef struct {
       uint32_t reserved_1                                            : 27;
       uint32_t flag31                                                : 1;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_14_ecx_00;
+
 typedef struct {
   union {
     struct {
@@ -965,170 +1247,244 @@ typedef struct {
       uint32_t reserved_1                                            : 13;
       uint32_t bitmap_of_supported_mtc_period_encodings              : 16;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t bitmap_of_supported_cycle_threshold_value_encodings   : 16;
       uint32_t bitmap_of_supported_configurable_psb_frequency_encodings: 16;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_14_ecx_01;
+
+
+
+
+
 #define CPUID_TIME_STAMP_COUNTER                                     0x00000015
 typedef struct {
   union {
     struct {
       uint32_t denominator                                           : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t numerator                                             : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t nominal_frequency                                     : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_15;
+
 #define CPUID_PROCESSOR_FREQUENCY                                    0x00000016
 typedef struct {
   union {
     struct {
       uint32_t procesor_base_frequency_mhz                           : 16;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t processor_maximum_frequency_mhz                       : 16;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t bus_frequency_mhz                                     : 16;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_16;
+
+
+
+
+
+
 #define CPUID_SOC_VENDOR                                             0x00000017
 typedef struct {
   union {
     struct {
       uint32_t max_soc_id_index                                      : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t soc_vendor_id                                         : 16;
       uint32_t is_vendor_scheme                                      : 1;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t project_id                                            : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t stepping_id                                           : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_17_ecx_00;
+
 typedef struct {
   union {
     struct {
       uint32_t soc_vendor_brand_string                               : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t soc_vendor_brand_string                               : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t soc_vendor_brand_string                               : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t soc_vendor_brand_string                               : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_17_ecx_01_03;
+
 typedef struct {
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_17_ecx_n;
+
+
+
+
+
+
+
+
+
+
 #define CPUID_DETERMINISTIC_ADDRESS_TRANSLATION_PARAMETERS           0x00000018
 typedef struct {
   union {
     struct {
       uint32_t max_sub_leaf                                          : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t page_entries_4kb_supported                            : 1;
@@ -1140,14 +1496,18 @@ typedef struct {
       uint32_t reserved_2                                            : 5;
       uint32_t ways_of_associativity_00                              : 16;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t number_of_sets                                        : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t translation_cache_type_field                          : 5;
@@ -1156,16 +1516,21 @@ typedef struct {
       uint32_t reserved_1                                            : 5;
       uint32_t max_addressable_ids_for_logical_processors            : 12;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_18_ecx_00;
+
 typedef struct {
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t page_entries_4kb_supported                            : 1;
@@ -1177,14 +1542,18 @@ typedef struct {
       uint32_t reserved_2                                            : 5;
       uint32_t ways_of_associativity_01                              : 16;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t number_of_sets                                        : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t translation_cache_type_field                          : 5;
@@ -1193,50 +1562,70 @@ typedef struct {
       uint32_t reserved_1                                            : 5;
       uint32_t max_addressable_ids_for_logical_processors            : 12;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_18_ecx_01p;
+
+
+
+
+
 #define CPUID_EXTENDED_FUNCTION                                      0x80000000
 typedef struct {
   union {
     struct {
       uint32_t max_extended_functions                                : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_80000000;
+
 #define CPUID_EXTENDED_CPU_SIGNATURE                                 0x80000001
 typedef struct {
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t lahf_sahf_available_in_64_bit_mode                    : 1;
@@ -1245,8 +1634,10 @@ typedef struct {
       uint32_t reserved_2                                            : 2;
       uint32_t prefetchw                                             : 1;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved_1                                            : 11;
@@ -1259,9 +1650,12 @@ typedef struct {
       uint32_t reserved_4                                            : 1;
       uint32_t ia64_available                                        : 1;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_80000001;
+
 #define CPUID_BRAND_STRING1                                          0x80000002
 #define CPUID_BRAND_STRING2                                          0x80000003
 #define CPUID_BRAND_STRING3                                          0x80000004
@@ -1270,119 +1664,159 @@ typedef struct {
     struct {
       uint32_t processor_brand_string_1                              : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t processor_brand_string_2                              : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t processor_brand_string_3                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t processor_brand_string_4                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_80000002;
+
 typedef struct {
   union {
     struct {
       uint32_t processor_brand_string_5                              : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t processor_brand_string_6                              : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t processor_brand_string_7                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t processor_brand_string_8                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_80000003;
+
 typedef struct {
   union {
     struct {
       uint32_t processor_brand_string_9                              : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t processor_brand_string_10                             : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t processor_brand_string_11                             : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t processor_brand_string_12                             : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_80000004;
+
 typedef struct {
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_80000005;
+
 #define CPUID_EXTENDED_CACHE_INFO                                    0x80000006
 typedef struct {
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t cache_line_size_in_bytes                              : 8;
@@ -1390,43 +1824,57 @@ typedef struct {
       uint32_t l2_associativity_field                                : 4;
       uint32_t cache_size_in_1k_units                                : 16;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_80000006;
+
 #define CPUID_EXTENDED_TIME_STAMP_COUNTER                            0x80000007
 typedef struct {
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved_1                                            : 8;
       uint32_t invariant_tsc_available                               : 1;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_80000007;
+
 #define CPUID_EXTENDED_VIRT_PHYS_ADDRESS_SIZE                        0x80000008
 typedef struct {
   union {
@@ -1434,29 +1882,56 @@ typedef struct {
       uint32_t number_of_physical_address_bits                       : 8;
       uint32_t number_of_linear_address_bits                         : 8;
     };
+
     uint32_t flags;
   } eax;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ebx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } ecx;
+
   union {
     struct {
       uint32_t reserved                                              : 32;
     };
+
     uint32_t flags;
   } edx;
+
 } cpuid_eax_80000008;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #define IA32_P5_MC_ADDR                                              0x00000000
 #define IA32_P5_MC_TYPE                                              0x00000001
+
+
+
+
 #define IA32_MONITOR_FILTER_SIZE                                     0x00000006
 #define IA32_TIME_STAMP_COUNTER                                      0x00000010
 #define IA32_PLATFORM_ID                                             0x00000017
@@ -1465,8 +1940,10 @@ typedef union {
     uint64_t reserved_1                                              : 50;
     uint64_t platform_id                                             : 3;
   };
+
   uint64_t flags;
 } ia32_platform_id_register;
+
 #define IA32_APIC_BASE                                               0x0000001B
 typedef union {
   struct {
@@ -1477,8 +1954,10 @@ typedef union {
     uint64_t apic_global_enable                                      : 1;
     uint64_t apic_base                                               : 36;
   };
+
   uint64_t flags;
 } ia32_apic_base_register;
+
 #define IA32_FEATURE_CONTROL                                         0x0000003A
 typedef union {
   struct {
@@ -1494,12 +1973,15 @@ typedef union {
     uint64_t reserved_3                                              : 1;
     uint64_t lmce_on                                                 : 1;
   };
+
   uint64_t flags;
 } ia32_feature_control_register;
+
 #define IA32_TSC_ADJUST                                              0x0000003B
 typedef struct {
   uint64_t thread_adjust;
 } ia32_tsc_adjust_register;
+
 #define IA32_SPEC_CTRL                                               0x00000048
 typedef union {
   struct {
@@ -1507,15 +1989,19 @@ typedef union {
     uint64_t stibp                                                   : 1;
     uint64_t ssbd                                                    : 1;
   };
+
   uint64_t flags;
 } ia32_spec_ctrl_register;
+
 #define IA32_PRED_CMD                                                0x00000049
 typedef union {
   struct {
     uint64_t ibpb                                                    : 1;
   };
+
   uint64_t flags;
 } ia32_pred_cmd_register;
+
 #define IA32_BIOS_UPDT_TRIG                                          0x00000079
 #define IA32_BIOS_SIGN_ID                                            0x0000008B
 typedef union {
@@ -1523,12 +2009,23 @@ typedef union {
     uint64_t reserved                                                : 32;
     uint64_t microcode_update_signature                              : 32;
   };
+
   uint64_t flags;
 } ia32_bios_sign_id_register;
+
+
+
+
+
+
 #define IA32_SGXLEPUBKEYHASH0                                        0x0000008C
 #define IA32_SGXLEPUBKEYHASH1                                        0x0000008D
 #define IA32_SGXLEPUBKEYHASH2                                        0x0000008E
 #define IA32_SGXLEPUBKEYHASH3                                        0x0000008F
+
+
+
+
 #define IA32_SMM_MONITOR_CTL                                         0x0000009B
 typedef union {
   struct {
@@ -1538,11 +2035,14 @@ typedef union {
     uint64_t reserved_2                                              : 9;
     uint64_t mseg_base                                               : 20;
   };
+
   uint64_t flags;
 } ia32_smm_monitor_ctl_register;
+
 typedef struct {
   uint32_t mseg_header_revision;
   uint32_t monitor_features;
+
 #define IA32_STM_FEATURES_IA32E                                      0x00000001
   uint32_t gdtr_limit;
   uint32_t gdtr_base_offset;
@@ -1551,7 +2051,13 @@ typedef struct {
   uint32_t esp_offset;
   uint32_t cr3_offset;
 } ia32_mseg_header;
+
 #define IA32_SMBASE                                                  0x0000009E
+
+
+
+
+
 #define IA32_PMC0                                                    0x000000C1
 #define IA32_PMC1                                                    0x000000C2
 #define IA32_PMC2                                                    0x000000C3
@@ -1560,14 +2066,20 @@ typedef struct {
 #define IA32_PMC5                                                    0x000000C6
 #define IA32_PMC6                                                    0x000000C7
 #define IA32_PMC7                                                    0x000000C8
+
+
+
+
 #define IA32_MPERF                                                   0x000000E7
 typedef struct {
   uint64_t c0_mcnt;
 } ia32_mperf_register;
+
 #define IA32_APERF                                                   0x000000E8
 typedef struct {
   uint64_t c0_acnt;
 } ia32_aperf_register;
+
 #define IA32_MTRRCAP                                                 0x000000FE
 typedef union {
   struct {
@@ -1577,8 +2089,10 @@ typedef union {
     uint64_t write_combining                                         : 1;
     uint64_t system_management_range_register                        : 1;
   };
+
   uint64_t flags;
 } ia32_mtrrcap_register;
+
 #define IA32_ARCH_CAPABILITIES                                       0x0000010A
 typedef union {
   struct {
@@ -1592,23 +2106,29 @@ typedef union {
     uint64_t tsx_ctrl                                                : 1;
     uint64_t taa_no                                                  : 1;
   };
+
   uint64_t flags;
 } ia32_arch_capabilities_register;
+
 #define IA32_FLUSH_CMD                                               0x0000010B
 typedef union {
   struct {
     uint64_t l1d_flush                                               : 1;
   };
+
   uint64_t flags;
 } ia32_flush_cmd_register;
+
 #define IA32_TSX_CTRL                                                0x00000122
 typedef union {
   struct {
     uint64_t rtm_disable                                             : 1;
     uint64_t tsx_cpuid_clear                                         : 1;
   };
+
   uint64_t flags;
 } ia32_tsx_ctrl_register;
+
 #define IA32_SYSENTER_CS                                             0x00000174
 typedef union {
   struct {
@@ -1616,8 +2136,10 @@ typedef union {
     uint64_t not_used_1                                              : 16;
     uint64_t not_used_2                                              : 32;
   };
+
   uint64_t flags;
 } ia32_sysenter_cs_register;
+
 #define IA32_SYSENTER_ESP                                            0x00000175
 #define IA32_SYSENTER_EIP                                            0x00000176
 #define IA32_MCG_CAP                                                 0x00000179
@@ -1635,8 +2157,10 @@ typedef union {
     uint64_t mcg_elog_p                                              : 1;
     uint64_t mcg_lmce_p                                              : 1;
   };
+
   uint64_t flags;
 } ia32_mcg_cap_register;
+
 #define IA32_MCG_STATUS                                              0x0000017A
 typedef union {
   struct {
@@ -1645,9 +2169,16 @@ typedef union {
     uint64_t mcip                                                    : 1;
     uint64_t lmce_s                                                  : 1;
   };
+
   uint64_t flags;
 } ia32_mcg_status_register;
+
 #define IA32_MCG_CTL                                                 0x0000017B
+
+
+
+
+
 #define IA32_PERFEVTSEL0                                             0x00000186
 #define IA32_PERFEVTSEL1                                             0x00000187
 #define IA32_PERFEVTSEL2                                             0x00000188
@@ -1666,15 +2197,23 @@ typedef union {
     uint64_t inv                                                     : 1;
     uint64_t cmask                                                   : 8;
   };
+
   uint64_t flags;
 } ia32_perfevtsel_register;
+
+
+
+
+
 #define IA32_PERF_STATUS                                             0x00000198
 typedef union {
   struct {
     uint64_t current_performance_state_value                         : 16;
   };
+
   uint64_t flags;
 } ia32_perf_status_register;
+
 #define IA32_PERF_CTL                                                0x00000199
 typedef union {
   struct {
@@ -1682,8 +2221,10 @@ typedef union {
     uint64_t reserved_1                                              : 16;
     uint64_t ida_engage                                              : 1;
   };
+
   uint64_t flags;
 } ia32_perf_ctl_register;
+
 #define IA32_CLOCK_MODULATION                                        0x0000019A
 typedef union {
   struct {
@@ -1691,8 +2232,10 @@ typedef union {
     uint64_t on_demand_clock_modulation_duty_cycle                   : 3;
     uint64_t on_demand_clock_modulation_enable                       : 1;
   };
+
   uint64_t flags;
 } ia32_clock_modulation_register;
+
 #define IA32_THERM_INTERRUPT                                         0x0000019B
 typedef union {
   struct {
@@ -1708,8 +2251,10 @@ typedef union {
     uint64_t threshold2_interrupt_enable                             : 1;
     uint64_t power_limit_notification_enable                         : 1;
   };
+
   uint64_t flags;
 } ia32_therm_interrupt_register;
+
 #define IA32_THERM_STATUS                                            0x0000019C
 typedef union {
   struct {
@@ -1734,8 +2279,10 @@ typedef union {
     uint64_t resolution_in_degrees_celsius                           : 4;
     uint64_t reading_valid                                           : 1;
   };
+
   uint64_t flags;
 } ia32_therm_status_register;
+
 #define IA32_MISC_ENABLE                                             0x000001A0
 typedef union {
   struct {
@@ -1757,15 +2304,19 @@ typedef union {
     uint64_t reserved_7                                              : 10;
     uint64_t xd_bit_disable                                          : 1;
   };
+
   uint64_t flags;
 } ia32_misc_enable_register;
+
 #define IA32_ENERGY_PERF_BIAS                                        0x000001B0
 typedef union {
   struct {
     uint64_t power_policy_preference                                 : 4;
   };
+
   uint64_t flags;
 } ia32_energy_perf_bias_register;
+
 #define IA32_PACKAGE_THERM_STATUS                                    0x000001B1
 typedef union {
   struct {
@@ -1784,8 +2335,10 @@ typedef union {
     uint64_t reserved_1                                              : 4;
     uint64_t digital_readout                                         : 7;
   };
+
   uint64_t flags;
 } ia32_package_therm_status_register;
+
 #define IA32_PACKAGE_THERM_INTERRUPT                                 0x000001B2
 typedef union {
   struct {
@@ -1801,8 +2354,10 @@ typedef union {
     uint64_t threshold2_interrupt_enable                             : 1;
     uint64_t power_limit_notification_enable                         : 1;
   };
+
   uint64_t flags;
 } ia32_package_therm_interrupt_register;
+
 #define IA32_DEBUGCTL                                                0x000001D9
 typedef union {
   struct {
@@ -1820,8 +2375,10 @@ typedef union {
     uint64_t freeze_while_smm                                        : 1;
     uint64_t rtm_debug                                               : 1;
   };
+
   uint64_t flags;
 } ia32_debugctl_register;
+
 #define IA32_SMRR_PHYSBASE                                           0x000001F2
 typedef union {
   struct {
@@ -1829,8 +2386,10 @@ typedef union {
     uint64_t reserved_1                                              : 4;
     uint64_t smrr_physical_base_address                              : 20;
   };
+
   uint64_t flags;
 } ia32_smrr_physbase_register;
+
 #define IA32_SMRR_PHYSMASK                                           0x000001F3
 typedef union {
   struct {
@@ -1838,8 +2397,10 @@ typedef union {
     uint64_t enable_range_mask                                       : 1;
     uint64_t smrr_address_range_mask                                 : 20;
   };
+
   uint64_t flags;
 } ia32_smrr_physmask_register;
+
 #define IA32_PLATFORM_DCA_CAP                                        0x000001F8
 #define IA32_CPU_DCA_CAP                                             0x000001F9
 #define IA32_DCA_0_CAP                                               0x000001FA
@@ -1856,16 +2417,25 @@ typedef union {
     uint64_t reserved_3                                              : 1;
     uint64_t hw_block                                                : 1;
   };
+
   uint64_t flags;
 } ia32_dca_0_cap_register;
+
+
+
+
+
+
 typedef union {
   struct {
     uint64_t type                                                    : 8;
     uint64_t reserved_1                                              : 4;
     uint64_t physical_addres_base                                    : 36;
   };
+
   uint64_t flags;
 } ia32_mtrr_physbase_register;
+
 #define IA32_MTRR_PHYSBASE0                                          0x00000200
 #define IA32_MTRR_PHYSBASE1                                          0x00000202
 #define IA32_MTRR_PHYSBASE2                                          0x00000204
@@ -1876,14 +2446,25 @@ typedef union {
 #define IA32_MTRR_PHYSBASE7                                          0x0000020E
 #define IA32_MTRR_PHYSBASE8                                          0x00000210
 #define IA32_MTRR_PHYSBASE9                                          0x00000212
+
+
+
+
+
+
+
+
+
 typedef union {
   struct {
     uint64_t reserved_1                                              : 11;
     uint64_t valid                                                   : 1;
     uint64_t physical_addres_mask                                    : 36;
   };
+
   uint64_t flags;
 } ia32_mtrr_physmask_register;
+
 #define IA32_MTRR_PHYSMASK0                                          0x00000201
 #define IA32_MTRR_PHYSMASK1                                          0x00000203
 #define IA32_MTRR_PHYSMASK2                                          0x00000205
@@ -1894,13 +2475,45 @@ typedef union {
 #define IA32_MTRR_PHYSMASK7                                          0x0000020F
 #define IA32_MTRR_PHYSMASK8                                          0x00000211
 #define IA32_MTRR_PHYSMASK9                                          0x00000213
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #define IA32_MTRR_FIX64K_BASE                                        0x00000000
 #define IA32_MTRR_FIX64K_SIZE                                        0x00010000
 #define IA32_MTRR_FIX64K_00000                                       0x00000250
+
+
+
+
+
+
+
+
+
 #define IA32_MTRR_FIX16K_BASE                                        0x00080000
 #define IA32_MTRR_FIX16K_SIZE                                        0x00004000
 #define IA32_MTRR_FIX16K_80000                                       0x00000258
 #define IA32_MTRR_FIX16K_A0000                                       0x00000259
+
+
+
+
+
+
+
+
+
 #define IA32_MTRR_FIX4K_BASE                                         0x000C0000
 #define IA32_MTRR_FIX4K_SIZE                                         0x00001000
 #define IA32_MTRR_FIX4K_C0000                                        0x00000268
@@ -1911,9 +2524,17 @@ typedef union {
 #define IA32_MTRR_FIX4K_E8000                                        0x0000026D
 #define IA32_MTRR_FIX4K_F0000                                        0x0000026E
 #define IA32_MTRR_FIX4K_F8000                                        0x0000026F
+
+
+
+
 #define IA32_MTRR_FIX_COUNT                                          ((1 + 2 + 8) * 8)
 #define IA32_MTRR_VARIABLE_COUNT                                     0x0000000A
 #define IA32_MTRR_COUNT                                              (IA32_MTRR_FIX_COUNT + IA32_MTRR_VARIABLE_COUNT)
+
+
+
+
 #define IA32_PAT                                                     0x00000277
 typedef union {
   struct {
@@ -1933,8 +2554,15 @@ typedef union {
     uint64_t reserved_7                                              : 5;
     uint64_t pa7                                                     : 3;
   };
+
   uint64_t flags;
 } ia32_pat_register;
+
+
+
+
+
+
 #define IA32_MC0_CTL2                                                0x00000280
 #define IA32_MC1_CTL2                                                0x00000281
 #define IA32_MC2_CTL2                                                0x00000282
@@ -1973,8 +2601,14 @@ typedef union {
     uint64_t reserved_1                                              : 15;
     uint64_t cmci_en                                                 : 1;
   };
+
   uint64_t flags;
 } ia32_mc_ctl2_register;
+
+
+
+
+
 #define IA32_MTRR_DEF_TYPE                                           0x000002FF
 typedef union {
   struct {
@@ -1983,11 +2617,22 @@ typedef union {
     uint64_t fixed_range_mtrr_enable                                 : 1;
     uint64_t mtrr_enable                                             : 1;
   };
+
   uint64_t flags;
 } ia32_mtrr_def_type_register;
+
+
+
+
+
+
 #define IA32_FIXED_CTR0                                              0x00000309
 #define IA32_FIXED_CTR1                                              0x0000030A
 #define IA32_FIXED_CTR2                                              0x0000030B
+
+
+
+
 #define IA32_PERF_CAPABILITIES                                       0x00000345
 typedef union {
   struct {
@@ -1998,8 +2643,10 @@ typedef union {
     uint64_t freeze_while_smm_is_supported                           : 1;
     uint64_t full_width_counter_write                                : 1;
   };
+
   uint64_t flags;
 } ia32_perf_capabilities_register;
+
 #define IA32_FIXED_CTR_CTRL                                          0x0000038D
 typedef union {
   struct {
@@ -2016,8 +2663,10 @@ typedef union {
     uint64_t any_thread2                                             : 1;
     uint64_t en2_pmi                                                 : 1;
   };
+
   uint64_t flags;
 } ia32_fixed_ctr_ctrl_register;
+
 #define IA32_PERF_GLOBAL_STATUS                                      0x0000038E
 typedef union {
   struct {
@@ -2039,16 +2688,20 @@ typedef union {
     uint64_t ovf_buf                                                 : 1;
     uint64_t cond_chgd                                               : 1;
   };
+
   uint64_t flags;
 } ia32_perf_global_status_register;
+
 #define IA32_PERF_GLOBAL_CTRL                                        0x0000038F
 typedef union {
   struct {
     uint64_t en_pmcn                                                 : 32;
     uint64_t en_fixed_ctrn                                           : 32;
   };
+
   uint64_t flags;
 } ia32_perf_global_ctrl_register;
+
 #define IA32_PERF_GLOBAL_STATUS_RESET                                0x00000390
 typedef union {
   struct {
@@ -2064,8 +2717,10 @@ typedef union {
     uint64_t clear_ovf_buf                                           : 1;
     uint64_t clear_cond_chgd                                         : 1;
   };
+
   uint64_t flags;
 } ia32_perf_global_status_reset_register;
+
 #define IA32_PERF_GLOBAL_STATUS_SET                                  0x00000391
 typedef union {
   struct {
@@ -2080,8 +2735,10 @@ typedef union {
     uint64_t ovf_uncore                                              : 1;
     uint64_t ovf_buf                                                 : 1;
   };
+
   uint64_t flags;
 } ia32_perf_global_status_set_register;
+
 #define IA32_PERF_GLOBAL_INUSE                                       0x00000392
 typedef union {
   struct {
@@ -2090,8 +2747,10 @@ typedef union {
     uint64_t reserved_1                                              : 28;
     uint64_t pmi_in_use                                              : 1;
   };
+
   uint64_t flags;
 } ia32_perf_global_inuse_register;
+
 #define IA32_PEBS_ENABLE                                             0x000003F1
 typedef union {
   struct {
@@ -2100,8 +2759,15 @@ typedef union {
     uint64_t reserved_1                                              : 28;
     uint64_t reservedormodelspecific2                                : 4;
   };
+
   uint64_t flags;
 } ia32_pebs_enable_register;
+
+
+
+
+
+
 #define IA32_MC0_CTL                                                 0x00000400
 #define IA32_MC1_CTL                                                 0x00000404
 #define IA32_MC2_CTL                                                 0x00000408
@@ -2131,6 +2797,15 @@ typedef union {
 #define IA32_MC26_CTL                                                0x00000468
 #define IA32_MC27_CTL                                                0x0000046C
 #define IA32_MC28_CTL                                                0x00000470
+
+
+
+
+
+
+
+
+
 #define IA32_MC0_STATUS                                              0x00000401
 #define IA32_MC1_STATUS                                              0x00000405
 #define IA32_MC2_STATUS                                              0x00000409
@@ -2160,6 +2835,15 @@ typedef union {
 #define IA32_MC26_STATUS                                             0x00000469
 #define IA32_MC27_STATUS                                             0x0000046D
 #define IA32_MC28_STATUS                                             0x00000471
+
+
+
+
+
+
+
+
+
 #define IA32_MC0_ADDR                                                0x00000402
 #define IA32_MC1_ADDR                                                0x00000406
 #define IA32_MC2_ADDR                                                0x0000040A
@@ -2189,6 +2873,15 @@ typedef union {
 #define IA32_MC26_ADDR                                               0x0000046A
 #define IA32_MC27_ADDR                                               0x0000046E
 #define IA32_MC28_ADDR                                               0x00000472
+
+
+
+
+
+
+
+
+
 #define IA32_MC0_MISC                                                0x00000403
 #define IA32_MC1_MISC                                                0x00000407
 #define IA32_MC2_MISC                                                0x0000040B
@@ -2218,6 +2911,10 @@ typedef union {
 #define IA32_MC26_MISC                                               0x0000046B
 #define IA32_MC27_MISC                                               0x0000046F
 #define IA32_MC28_MISC                                               0x00000473
+
+
+
+
 #define IA32_VMX_BASIC                                               0x00000480
 typedef union {
   struct {
@@ -2231,8 +2928,10 @@ typedef union {
     uint64_t ins_outs_vmexit_information                             : 1;
     uint64_t true_controls                                           : 1;
   };
+
   uint64_t flags;
 } ia32_vmx_basic_register;
+
 #define IA32_VMX_PINBASED_CTLS                                       0x00000481
 typedef union {
   struct {
@@ -2244,8 +2943,10 @@ typedef union {
     uint64_t activate_vmx_preemption_timer                           : 1;
     uint64_t process_posted_interrupts                               : 1;
   };
+
   uint64_t flags;
 } ia32_vmx_pinbased_ctls_register;
+
 #define IA32_VMX_PROCBASED_CTLS                                      0x00000482
 typedef union {
   struct {
@@ -2278,8 +2979,10 @@ typedef union {
     uint64_t pause_exiting                                           : 1;
     uint64_t activate_secondary_controls                             : 1;
   };
+
   uint64_t flags;
 } ia32_vmx_procbased_ctls_register;
+
 #define IA32_VMX_EXIT_CTLS                                           0x00000483
 typedef union {
   struct {
@@ -2307,8 +3010,10 @@ typedef union {
     uint64_t reserved_7                                              : 1;
     uint64_t activate_secondary_controls                             : 1;
   };
+
   uint64_t flags;
 } ia32_vmx_exit_ctls_register;
+
 #define IA32_VMX_ENTRY_CTLS                                          0x00000484
 typedef union {
   struct {
@@ -2330,8 +3035,10 @@ typedef union {
     uint64_t load_ia32_lbr_ctl                                       : 1;
     uint64_t load_ia32_pkrs                                          : 1;
   };
+
   uint64_t flags;
 } ia32_vmx_entry_ctls_register;
+
 #define IA32_VMX_MISC                                                0x00000485
 typedef union {
   struct {
@@ -2349,8 +3056,10 @@ typedef union {
     uint64_t reserved_2                                              : 1;
     uint64_t mseg_id                                                 : 32;
   };
+
   uint64_t flags;
 } ia32_vmx_misc_register;
+
 #define IA32_VMX_CR0_FIXED0                                          0x00000486
 #define IA32_VMX_CR0_FIXED1                                          0x00000487
 #define IA32_VMX_CR4_FIXED0                                          0x00000488
@@ -2364,8 +3073,10 @@ typedef union {
     uint64_t reserved_1                                              : 1;
     uint64_t field_width                                             : 2;
   };
+
   uint64_t flags;
 } ia32_vmx_vmcs_enum_register;
+
 #define IA32_VMX_PROCBASED_CTLS2                                     0x0000048B
 typedef union {
   struct {
@@ -2399,8 +3110,10 @@ typedef union {
     uint64_t reserved_2                                              : 1;
     uint64_t enable_enclv_exiting                                    : 1;
   };
+
   uint64_t flags;
 } ia32_vmx_procbased_ctls2_register;
+
 #define IA32_VMX_EPT_VPID_CAP                                        0x0000048C
 typedef union {
   struct {
@@ -2432,8 +3145,15 @@ typedef union {
     uint64_t reserved_9                                              : 4;
     uint64_t max_hlat_prefix_size                                    : 6;
   };
+
   uint64_t flags;
 } ia32_vmx_ept_vpid_cap_register;
+
+
+
+
+
+
 #define IA32_VMX_TRUE_PINBASED_CTLS                                  0x0000048D
 #define IA32_VMX_TRUE_PROCBASED_CTLS                                 0x0000048E
 #define IA32_VMX_TRUE_EXIT_CTLS                                      0x0000048F
@@ -2443,15 +3163,23 @@ typedef union {
     uint64_t allowed_0_settings                                      : 32;
     uint64_t allowed_1_settings                                      : 32;
   };
+
   uint64_t flags;
 } ia32_vmx_true_ctls_register;
+
+
+
+
+
 #define IA32_VMX_VMFUNC                                              0x00000491
 typedef union {
   struct {
     uint64_t eptp_switching                                          : 1;
   };
+
   uint64_t flags;
 } ia32_vmx_vmfunc_register;
+
 #define IA32_VMX_PROCBASED_CTLS3                                     0x00000492
 typedef union {
   struct {
@@ -2460,15 +3188,24 @@ typedef union {
     uint64_t ept_paging_write                                        : 1;
     uint64_t guest_paging                                            : 1;
   };
+
   uint64_t flags;
 } ia32_vmx_procbased_ctls3_register;
+
 #define IA32_VMX_EXIT_CTLS2                                          0x00000493
 typedef union {
   struct {
     uint64_t reserved                                                : 64;
   };
+
   uint64_t flags;
 } ia32_vmx_exit_ctls2_register;
+
+
+
+
+
+
 #define IA32_A_PMC0                                                  0x000004C1
 #define IA32_A_PMC1                                                  0x000004C2
 #define IA32_A_PMC2                                                  0x000004C3
@@ -2477,13 +3214,19 @@ typedef union {
 #define IA32_A_PMC5                                                  0x000004C6
 #define IA32_A_PMC6                                                  0x000004C7
 #define IA32_A_PMC7                                                  0x000004C8
+
+
+
+
 #define IA32_MCG_EXT_CTL                                             0x000004D0
 typedef union {
   struct {
     uint64_t lmce_en                                                 : 1;
   };
+
   uint64_t flags;
 } ia32_mcg_ext_ctl_register;
+
 #define IA32_SGX_SVN_STATUS                                          0x00000500
 typedef union {
   struct {
@@ -2491,16 +3234,20 @@ typedef union {
     uint64_t reserved_1                                              : 15;
     uint64_t sgx_svn_sinit                                           : 8;
   };
+
   uint64_t flags;
 } ia32_sgx_svn_status_register;
+
 #define IA32_RTIT_OUTPUT_BASE                                        0x00000560
 typedef union {
   struct {
     uint64_t reserved_1                                              : 7;
     uint64_t base_physical_address                                   : 41;
   };
+
   uint64_t flags;
 } ia32_rtit_output_base_register;
+
 #define IA32_RTIT_OUTPUT_MASK_PTRS                                   0x00000561
 typedef union {
   struct {
@@ -2508,8 +3255,10 @@ typedef union {
     uint64_t mask_or_table_offset                                    : 25;
     uint64_t output_offset                                           : 32;
   };
+
   uint64_t flags;
 } ia32_rtit_output_mask_ptrs_register;
+
 #define IA32_RTIT_CTL                                                0x00000570
 typedef union {
   struct {
@@ -2540,8 +3289,10 @@ typedef union {
     uint64_t reserved_4                                              : 8;
     uint64_t inject_psb_pmi_on_enable                                : 1;
   };
+
   uint64_t flags;
 } ia32_rtit_ctl_register;
+
 #define IA32_RTIT_STATUS                                             0x00000571
 typedef union {
   struct {
@@ -2556,31 +3307,64 @@ typedef union {
     uint64_t reserved_2                                              : 24;
     uint64_t packet_byte_cnt                                         : 17;
   };
+
   uint64_t flags;
 } ia32_rtit_status_register;
+
 #define IA32_RTIT_CR3_MATCH                                          0x00000572
 typedef union {
   struct {
     uint64_t reserved_1                                              : 5;
     uint64_t cr3_value_to_match                                      : 59;
   };
+
   uint64_t flags;
 } ia32_rtit_cr3_match_register;
+
+
+
+
+
+
+
+
+
+
+
 #define IA32_RTIT_ADDR0_A                                            0x00000580
 #define IA32_RTIT_ADDR1_A                                            0x00000582
 #define IA32_RTIT_ADDR2_A                                            0x00000584
 #define IA32_RTIT_ADDR3_A                                            0x00000586
+
+
+
+
+
+
+
+
+
 #define IA32_RTIT_ADDR0_B                                            0x00000581
 #define IA32_RTIT_ADDR1_B                                            0x00000583
 #define IA32_RTIT_ADDR2_B                                            0x00000585
 #define IA32_RTIT_ADDR3_B                                            0x00000587
+
+
+
+
 typedef union {
   struct {
     uint64_t virtual_address                                         : 48;
     uint64_t sign_ext_va                                             : 16;
   };
+
   uint64_t flags;
 } ia32_rtit_addr_register;
+
+
+
+
+
 #define IA32_DS_AREA                                                 0x00000600
 #define IA32_U_CET                                                   0x000006A0
 typedef union {
@@ -2596,8 +3380,10 @@ typedef union {
     uint64_t tracker                                                 : 1;
     uint64_t eb_leg_bitmap_base                                      : 52;
   };
+
   uint64_t flags;
 } ia32_u_cet_register;
+
 #define IA32_S_CET                                                   0x000006A2
 typedef union {
   struct {
@@ -2612,8 +3398,10 @@ typedef union {
     uint64_t tracker                                                 : 1;
     uint64_t eb_leg_bitmap_base                                      : 52;
   };
+
   uint64_t flags;
 } ia32_s_cet_register;
+
 #define IA32_PL0_SSP                                                 0x000006A4
 #define IA32_PL1_SSP                                                 0x000006A5
 #define IA32_PL2_SSP                                                 0x000006A6
@@ -2625,8 +3413,10 @@ typedef union {
   struct {
     uint64_t hwp_enable                                              : 1;
   };
+
   uint64_t flags;
 } ia32_pm_enable_register;
+
 #define IA32_HWP_CAPABILITIES                                        0x00000771
 typedef union {
   struct {
@@ -2635,8 +3425,10 @@ typedef union {
     uint64_t most_efficient_performance                              : 8;
     uint64_t lowest_performance                                      : 8;
   };
+
   uint64_t flags;
 } ia32_hwp_capabilities_register;
+
 #define IA32_HWP_REQUEST_PKG                                         0x00000772
 typedef union {
   struct {
@@ -2646,16 +3438,20 @@ typedef union {
     uint64_t energy_performance_preference                           : 8;
     uint64_t activity_window                                         : 10;
   };
+
   uint64_t flags;
 } ia32_hwp_request_pkg_register;
+
 #define IA32_HWP_INTERRUPT                                           0x00000773
 typedef union {
   struct {
     uint64_t en_guaranteed_performance_change                        : 1;
     uint64_t en_excursion_minimum                                    : 1;
   };
+
   uint64_t flags;
 } ia32_hwp_interrupt_register;
+
 #define IA32_HWP_REQUEST                                             0x00000774
 typedef union {
   struct {
@@ -2666,8 +3462,10 @@ typedef union {
     uint64_t activity_window                                         : 10;
     uint64_t package_control                                         : 1;
   };
+
   uint64_t flags;
 } ia32_hwp_request_register;
+
 #define IA32_HWP_STATUS                                              0x00000777
 typedef union {
   struct {
@@ -2675,8 +3473,10 @@ typedef union {
     uint64_t reserved_1                                              : 1;
     uint64_t excursion_to_minimum                                    : 1;
   };
+
   uint64_t flags;
 } ia32_hwp_status_register;
+
 #define IA32_X2APIC_APICID                                           0x00000802
 #define IA32_X2APIC_VERSION                                          0x00000803
 #define IA32_X2APIC_TPR                                              0x00000808
@@ -2684,6 +3484,11 @@ typedef union {
 #define IA32_X2APIC_EOI                                              0x0000080B
 #define IA32_X2APIC_LDR                                              0x0000080D
 #define IA32_X2APIC_SIVR                                             0x0000080F
+
+
+
+
+
 #define IA32_X2APIC_ISR0                                             0x00000810
 #define IA32_X2APIC_ISR1                                             0x00000811
 #define IA32_X2APIC_ISR2                                             0x00000812
@@ -2692,6 +3497,15 @@ typedef union {
 #define IA32_X2APIC_ISR5                                             0x00000815
 #define IA32_X2APIC_ISR6                                             0x00000816
 #define IA32_X2APIC_ISR7                                             0x00000817
+
+
+
+
+
+
+
+
+
 #define IA32_X2APIC_TMR0                                             0x00000818
 #define IA32_X2APIC_TMR1                                             0x00000819
 #define IA32_X2APIC_TMR2                                             0x0000081A
@@ -2700,6 +3514,15 @@ typedef union {
 #define IA32_X2APIC_TMR5                                             0x0000081D
 #define IA32_X2APIC_TMR6                                             0x0000081E
 #define IA32_X2APIC_TMR7                                             0x0000081F
+
+
+
+
+
+
+
+
+
 #define IA32_X2APIC_IRR0                                             0x00000820
 #define IA32_X2APIC_IRR1                                             0x00000821
 #define IA32_X2APIC_IRR2                                             0x00000822
@@ -2708,6 +3531,10 @@ typedef union {
 #define IA32_X2APIC_IRR5                                             0x00000825
 #define IA32_X2APIC_IRR6                                             0x00000826
 #define IA32_X2APIC_IRR7                                             0x00000827
+
+
+
+
 #define IA32_X2APIC_ESR                                              0x00000828
 #define IA32_X2APIC_LVT_CMCI                                         0x0000082F
 #define IA32_X2APIC_ICR                                              0x00000830
@@ -2729,22 +3556,28 @@ typedef union {
     uint64_t lock                                                    : 1;
     uint64_t debug_occurred                                          : 1;
   };
+
   uint64_t flags;
 } ia32_debug_interface_register;
+
 #define IA32_L3_QOS_CFG                                              0x00000C81
 typedef union {
   struct {
     uint64_t enable                                                  : 1;
   };
+
   uint64_t flags;
 } ia32_l3_qos_cfg_register;
+
 #define IA32_L2_QOS_CFG                                              0x00000C82
 typedef union {
   struct {
     uint64_t enable                                                  : 1;
   };
+
   uint64_t flags;
 } ia32_l2_qos_cfg_register;
+
 #define IA32_QM_EVTSEL                                               0x00000C8D
 typedef union {
   struct {
@@ -2752,8 +3585,10 @@ typedef union {
     uint64_t reserved_1                                              : 24;
     uint64_t resource_monitoring_id                                  : 32;
   };
+
   uint64_t flags;
 } ia32_qm_evtsel_register;
+
 #define IA32_QM_CTR                                                  0x00000C8E
 typedef union {
   struct {
@@ -2761,16 +3596,20 @@ typedef union {
     uint64_t unavailable                                             : 1;
     uint64_t error                                                   : 1;
   };
+
   uint64_t flags;
 } ia32_qm_ctr_register;
+
 #define IA32_PQR_ASSOC                                               0x00000C8F
 typedef union {
   struct {
     uint64_t resource_monitoring_id                                  : 32;
     uint64_t cos                                                     : 32;
   };
+
   uint64_t flags;
 } ia32_pqr_assoc_register;
+
 #define IA32_BNDCFGS                                                 0x00000D90
 typedef union {
   struct {
@@ -2779,34 +3618,43 @@ typedef union {
     uint64_t reserved_1                                              : 10;
     uint64_t bound_directory_base_address                            : 52;
   };
+
   uint64_t flags;
 } ia32_bndcfgs_register;
+
 #define IA32_XSS                                                     0x00000DA0
 typedef union {
   struct {
     uint64_t reserved_1                                              : 8;
     uint64_t trace_packet_configuration_state                        : 1;
   };
+
   uint64_t flags;
 } ia32_xss_register;
+
 #define IA32_PKG_HDC_CTL                                             0x00000DB0
 typedef union {
   struct {
     uint64_t hdc_pkg_enable                                          : 1;
   };
+
   uint64_t flags;
 } ia32_pkg_hdc_ctl_register;
+
 #define IA32_PM_CTL1                                                 0x00000DB1
 typedef union {
   struct {
     uint64_t hdc_allow_block                                         : 1;
   };
+
   uint64_t flags;
 } ia32_pm_ctl1_register;
+
 #define IA32_THREAD_STALL                                            0x00000DB2
 typedef struct {
   uint64_t stall_cycle_cnt;
 } ia32_thread_stall_register;
+
 #define IA32_EFER                                                    0xC0000080
 typedef union {
   struct {
@@ -2817,8 +3665,10 @@ typedef union {
     uint64_t ia32e_mode_active                                       : 1;
     uint64_t execute_disable_bit_enable                              : 1;
   };
+
   uint64_t flags;
 } ia32_efer_register;
+
 #define IA32_STAR                                                    0xC0000081
 #define IA32_LSTAR                                                   0xC0000082
 #define IA32_CSTAR                                                   0xC0000083
@@ -2831,8 +3681,24 @@ typedef union {
   struct {
     uint64_t tsc_auxiliary_signature                                 : 32;
   };
+
   uint64_t flags;
 } ia32_tsc_aux_register;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 typedef union {
   struct {
     uint32_t present                                                 : 1;
@@ -2850,8 +3716,10 @@ typedef union {
     uint32_t reserved_1                                              : 1;
     uint32_t page_frame_number_high                                  : 10;
   };
+
   uint32_t flags;
 } pde_4mb_32;
+
 typedef union {
   struct {
     uint32_t present                                                 : 1;
@@ -2865,8 +3733,10 @@ typedef union {
     uint32_t ignored_2                                               : 4;
     uint32_t page_frame_number                                       : 20;
   };
+
   uint32_t flags;
 } pde_32;
+
 typedef union {
   struct {
     uint32_t present                                                 : 1;
@@ -2881,8 +3751,10 @@ typedef union {
     uint32_t ignored_1                                               : 3;
     uint32_t page_frame_number                                       : 20;
   };
+
   uint32_t flags;
 } pte_32;
+
 typedef union {
   struct {
     uint32_t present                                                 : 1;
@@ -2897,10 +3769,30 @@ typedef union {
     uint32_t ignored_1                                               : 3;
     uint32_t page_frame_number                                       : 20;
   };
+
   uint32_t flags;
 } pt_entry_32;
+
+
+
+
+
+
 #define PDE_ENTRY_COUNT_32                                           0x00000400
 #define PTE_ENTRY_COUNT_32                                           0x00000400
+
+
+
+
+
+
+
+
+
+
+
+
+
 typedef union {
   struct {
     uint64_t present                                                 : 1;
@@ -2918,8 +3810,10 @@ typedef union {
     uint64_t ignored_2                                               : 11;
     uint64_t execute_disable                                         : 1;
   };
+
   uint64_t flags;
 } pml4e_64;
+
 typedef union {
   struct {
     uint64_t present                                                 : 1;
@@ -2941,8 +3835,10 @@ typedef union {
     uint64_t protection_key                                          : 4;
     uint64_t execute_disable                                         : 1;
   };
+
   uint64_t flags;
 } pdpte_1gb_64;
+
 typedef union {
   struct {
     uint64_t present                                                 : 1;
@@ -2960,8 +3856,10 @@ typedef union {
     uint64_t ignored_2                                               : 11;
     uint64_t execute_disable                                         : 1;
   };
+
   uint64_t flags;
 } pdpte_64;
+
 typedef union {
   struct {
     uint64_t present                                                 : 1;
@@ -2983,8 +3881,10 @@ typedef union {
     uint64_t protection_key                                          : 4;
     uint64_t execute_disable                                         : 1;
   };
+
   uint64_t flags;
 } pde_2mb_64;
+
 typedef union {
   struct {
     uint64_t present                                                 : 1;
@@ -3002,8 +3902,10 @@ typedef union {
     uint64_t ignored_2                                               : 11;
     uint64_t execute_disable                                         : 1;
   };
+
   uint64_t flags;
 } pde_64;
+
 typedef union {
   struct {
     uint64_t present                                                 : 1;
@@ -3023,8 +3925,10 @@ typedef union {
     uint64_t protection_key                                          : 4;
     uint64_t execute_disable                                         : 1;
   };
+
   uint64_t flags;
 } pte_64;
+
 typedef union {
   struct {
     uint64_t present                                                 : 1;
@@ -3044,38 +3948,67 @@ typedef union {
     uint64_t protection_key                                          : 4;
     uint64_t execute_disable                                         : 1;
   };
+
   uint64_t flags;
 } pt_entry_64;
+
+
+
+
+
+
 #define PML4_ENTRY_COUNT_64                                          0x00000200
 #define PDPTE_ENTRY_COUNT_64                                         0x00000200
 #define PDE_ENTRY_COUNT_64                                           0x00000200
 #define PTE_ENTRY_COUNT_64                                           0x00000200
+
+
+
+
+
+
+
+
+
+
+
+
 typedef enum {
   invpcid_individual_address                                   = 0x00000000,
   invpcid_single_context                                       = 0x00000001,
   invpcid_all_context_with_globals                             = 0x00000002,
   invpcid_all_context                                          = 0x00000003,
 } invpcid_type;
+
 typedef union {
   struct {
     uint64_t pcid                                                    : 12;
     uint64_t reserved1                                               : 52;
     uint64_t linear_address                                          : 64;
   };
+
   uint64_t flags;
 } invpcid_descriptor;
+
+
+
+
+
+
 #pragma pack(push, 1)
 typedef struct {
   uint16_t limit;
   uint32_t base_address;
 } segment_descriptor_register_32;
 #pragma pack(pop)
+
 #pragma pack(push, 1)
 typedef struct {
   uint16_t limit;
   uint64_t base_address;
 } segment_descriptor_register_64;
 #pragma pack(pop)
+
 typedef union {
   struct {
     uint32_t reserved_1                                              : 8;
@@ -3089,8 +4022,10 @@ typedef union {
     uint32_t default_big                                             : 1;
     uint32_t granularity                                             : 1;
   };
+
   uint32_t flags;
 } segment_access_rights;
+
 typedef struct {
   uint16_t segment_limit_low;
   uint16_t base_address_low;
@@ -3108,9 +4043,12 @@ typedef struct {
       uint32_t granularity                                           : 1;
       uint32_t base_address_high                                     : 8;
     };
+
     uint32_t flags;
   } ;
+
 } segment_descriptor_32;
+
 typedef struct {
   uint16_t segment_limit_low;
   uint16_t base_address_low;
@@ -3128,11 +4066,14 @@ typedef struct {
       uint32_t granularity                                           : 1;
       uint32_t base_address_high                                     : 8;
     };
+
     uint32_t flags;
   } ;
+
   uint32_t base_address_upper;
   uint32_t must_be_zero;
 } segment_descriptor_64;
+
 typedef struct {
   uint16_t offset_low;
   uint16_t segment_selector;
@@ -3146,13 +4087,21 @@ typedef struct {
       uint32_t present                                               : 1;
       uint32_t offset_middle                                         : 16;
     };
+
     uint32_t flags;
   } ;
+
   uint32_t offset_high;
   uint32_t reserved;
 } segment_descriptor_interrupt_gate_64;
+
 #define SEGMENT_DESCRIPTOR_TYPE_SYSTEM                               0x00000000
 #define SEGMENT_DESCRIPTOR_TYPE_CODE_OR_DATA                         0x00000001
+
+
+
+
+
 #define SEGMENT_DESCRIPTOR_TYPE_DATA_R                               0x00000000
 #define SEGMENT_DESCRIPTOR_TYPE_DATA_RA                              0x00000001
 #define SEGMENT_DESCRIPTOR_TYPE_DATA_RW                              0x00000002
@@ -3169,6 +4118,15 @@ typedef struct {
 #define SEGMENT_DESCRIPTOR_TYPE_CODE_ECA                             0x0000000D
 #define SEGMENT_DESCRIPTOR_TYPE_CODE_ERC                             0x0000000E
 #define SEGMENT_DESCRIPTOR_TYPE_CODE_ERCA                            0x0000000F
+
+
+
+
+
+
+
+
+
 #define SEGMENT_DESCRIPTOR_TYPE_RESERVED_1                           0x00000000
 #define SEGMENT_DESCRIPTOR_TYPE_TSS_16_AVAILABLE                     0x00000001
 #define SEGMENT_DESCRIPTOR_TYPE_LDT                                  0x00000002
@@ -3185,14 +4143,24 @@ typedef struct {
 #define SEGMENT_DESCRIPTOR_TYPE_RESERVED_4                           0x0000000D
 #define SEGMENT_DESCRIPTOR_TYPE_INTERRUPT_GATE                       0x0000000E
 #define SEGMENT_DESCRIPTOR_TYPE_TRAP_GATE                            0x0000000F
+
+
+
+
 typedef union {
   struct {
     uint16_t request_privilege_level                                 : 2;
     uint16_t table_indicator                                         : 1;
     uint16_t index                                                   : 13;
   };
+
   uint16_t flags;
 } segment_selector;
+
+
+
+
+
 #pragma pack(push, 1)
 typedef struct {
   uint32_t reserved_0;
@@ -3212,6 +4180,20 @@ typedef struct {
   uint16_t io_map_base;
 } task_state_segment_64;
 #pragma pack(pop)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #define VMX_EXIT_REASON_XCPT_OR_NMI                                  0x00000000
 #define VMX_EXIT_REASON_EXT_INT                                      0x00000001
 #define VMX_EXIT_REASON_TRIPLE_FAULT                                 0x00000002
@@ -3274,6 +4256,15 @@ typedef struct {
 #define VMX_EXIT_REASON_PML_FULL                                     0x0000003E
 #define VMX_EXIT_REASON_XSAVES                                       0x0000003F
 #define VMX_EXIT_REASON_XRSTORS                                      0x00000040
+
+
+
+
+
+
+
+
+
 #define VMX_ERROR_VMCALL                                             0x00000001
 #define VMX_ERROR_VMCLEAR_INVALID_PHYS_ADDR                          0x00000002
 #define VMX_ERROR_VMCLEAR_INVALID_VMXON_PTR                          0x00000003
@@ -3299,6 +4290,15 @@ typedef struct {
 #define VMX_ERROR_VMENTRY_INVALID_VM_EXEC_CTRL                       0x00000019
 #define VMX_ERROR_VMENTRY_MOV_SS                                     0x0000001A
 #define VMX_ERROR_INVEPTVPID_INVALID_OPERAND                         0x0000001C
+
+
+
+
+
+
+
+
+
 typedef struct {
   uint32_t reason;
   uint32_t exception_mask;
@@ -3307,6 +4307,16 @@ typedef struct {
   uint64_t guest_physical_address;
   uint16_t current_eptp_index;
 } vmx_ve_except_info;
+
+
+
+
+
+
+
+
+
+
 typedef union {
   struct {
     uint64_t breakpoint_condition                                    : 4;
@@ -3314,8 +4324,10 @@ typedef union {
     uint64_t debug_register_access_detected                          : 1;
     uint64_t single_instruction                                      : 1;
   };
+
   uint64_t flags;
 } vmx_exit_qualification_debug_exception;
+
 typedef union {
   struct {
     uint64_t selector                                                : 16;
@@ -3326,8 +4338,10 @@ typedef union {
 #define VMX_EXIT_QUALIFICATION_TYPE_JMP                              0x00000002
 #define VMX_EXIT_QUALIFICATION_TYPE_IDT                              0x00000003
   };
+
   uint64_t flags;
 } vmx_exit_qualification_task_switch;
+
 typedef union {
   struct {
     uint64_t cr_number                                               : 4;
@@ -3365,8 +4379,10 @@ typedef union {
     uint64_t reserved_2                                              : 4;
     uint64_t lmsw_source_data                                        : 16;
   };
+
   uint64_t flags;
 } vmx_exit_qualification_cr_access;
+
 typedef union {
   struct {
     uint64_t dr_number                                               : 3;
@@ -3383,8 +4399,10 @@ typedef union {
     uint64_t reserved_2                                              : 3;
     uint64_t gp_register                                             : 4;
   };
+
   uint64_t flags;
 } vmx_exit_qualification_dr_access;
+
 typedef union {
   struct {
     uint64_t size_of_access                                          : 3;
@@ -3406,8 +4424,10 @@ typedef union {
     uint64_t reserved_1                                              : 9;
     uint64_t port_number                                             : 16;
   };
+
   uint64_t flags;
 } vmx_exit_qualification_io_inst;
+
 typedef union {
   struct {
     uint64_t page_offset                                             : 12;
@@ -3419,8 +4439,10 @@ typedef union {
 #define VMX_EXIT_QUALIFICATION_TYPE_PHYSICAL_EVENT_DELIVERY          0x0000000A
 #define VMX_EXIT_QUALIFICATION_TYPE_PHYSICAL_INSTR                   0x0000000F
   };
+
   uint64_t flags;
 } vmx_exit_qualification_apic_access;
+
 typedef union {
   struct {
     uint64_t data_read                                               : 1;
@@ -3441,8 +4463,19 @@ typedef union {
     uint64_t guest_paging_verification                               : 1;
     uint64_t asynchronous_to_instruction                             : 1;
   };
+
   uint64_t flags;
 } vmx_exit_qualification_ept_violation;
+
+
+
+
+
+
+
+
+
+
 typedef union {
   struct {
     uint64_t reserved_1                                              : 7;
@@ -3450,8 +4483,10 @@ typedef union {
     uint64_t reserved_2                                              : 5;
     uint64_t segment_register                                        : 3;
   };
+
   uint64_t flags;
 } vmx_vmexit_instruction_info_ins_outs;
+
 typedef union {
   struct {
     uint64_t scaling                                                 : 2;
@@ -3465,8 +4500,10 @@ typedef union {
     uint64_t base_register_invalid                                   : 1;
     uint64_t register_2                                              : 4;
   };
+
   uint64_t flags;
 } vmx_vmexit_instruction_info_invalidate;
+
 typedef union {
   struct {
     uint64_t scaling                                                 : 2;
@@ -3482,8 +4519,10 @@ typedef union {
     uint64_t base_register_invalid                                   : 1;
     uint64_t instruction_identity                                    : 2;
   };
+
   uint64_t flags;
 } vmx_vmexit_instruction_info_gdtr_idtr_access;
+
 typedef union {
   struct {
     uint64_t scaling                                                 : 2;
@@ -3499,8 +4538,10 @@ typedef union {
     uint64_t base_register_invalid                                   : 1;
     uint64_t instruction_identity                                    : 2;
   };
+
   uint64_t flags;
 } vmx_vmexit_instruction_info_ldtr_tr_access;
+
 typedef union {
   struct {
     uint64_t reserved_1                                              : 3;
@@ -3508,8 +4549,10 @@ typedef union {
     uint64_t reserved_2                                              : 4;
     uint64_t operand_size                                            : 2;
   };
+
   uint64_t flags;
 } vmx_vmexit_instruction_info_rdrand_rdseed;
+
 typedef union {
   struct {
     uint64_t scaling                                                 : 2;
@@ -3522,8 +4565,10 @@ typedef union {
     uint64_t base_register                                           : 4;
     uint64_t base_register_invalid                                   : 1;
   };
+
   uint64_t flags;
 } vmx_vmexit_instruction_info_vmx_and_xsaves;
+
 typedef union {
   struct {
     uint64_t scaling                                                 : 2;
@@ -3539,8 +4584,14 @@ typedef union {
     uint64_t base_register_invalid                                   : 1;
     uint64_t register_2                                              : 4;
   };
+
   uint64_t flags;
 } vmx_vmexit_instruction_info_vmread_vmwrite;
+
+
+
+
+
 typedef union {
   struct {
     uint32_t type                                                    : 4;
@@ -3554,8 +4605,10 @@ typedef union {
     uint32_t granularity                                             : 1;
     uint32_t unusable                                                : 1;
   };
+
   uint32_t flags;
 } vmx_segment_access_rights;
+
 typedef union {
   struct {
     uint32_t blocking_by_sti                                         : 1;
@@ -3564,14 +4617,17 @@ typedef union {
     uint32_t blocking_by_nmi                                         : 1;
     uint32_t enclave_interruption                                    : 1;
   };
+
   uint32_t flags;
 } vmx_interruptibility_state;
+
 typedef enum {
   vmx_active                                                   = 0x00000000,
   vmx_hlt                                                      = 0x00000001,
   vmx_shutdown                                                 = 0x00000002,
   vmx_wait_for_sipi                                            = 0x00000003,
 } vmx_guest_activity_state;
+
 typedef union {
   struct {
     uint64_t b0                                                      : 1;
@@ -3585,8 +4641,14 @@ typedef union {
     uint64_t reserved_3                                              : 1;
     uint64_t rtm                                                     : 1;
   };
+
   uint64_t flags;
 } vmx_pending_debug_exceptions;
+
+
+
+
+
 typedef union {
   struct {
     uint32_t basic_exit_reason                                       : 16;
@@ -3598,8 +4660,10 @@ typedef union {
     uint32_t reserved2                                               : 1;
     uint32_t vm_entry_failure                                        : 1;
   };
+
   uint32_t flags;
 } vmx_vmexit_reason;
+
 typedef struct {
 #define IO_BITMAP_A_MIN                                              0x00000000
 #define IO_BITMAP_A_MAX                                              0x00007FFF
@@ -3608,6 +4672,7 @@ typedef struct {
   uint8_t io_a[4096];
   uint8_t io_b[4096];
 } vmx_io_bitmap;
+
 typedef struct {
 #define MSR_ID_LOW_MIN                                               0x00000000
 #define MSR_ID_LOW_MAX                                               0x00001FFF
@@ -3618,6 +4683,12 @@ typedef struct {
   uint8_t wrmsr_low[1024];
   uint8_t wrmsr_high[1024];
 } vmx_msr_bitmap;
+
+
+
+
+
+
 typedef union {
   struct {
     uint64_t memory_type                                             : 3;
@@ -3628,8 +4699,10 @@ typedef union {
     uint64_t reserved_1                                              : 4;
     uint64_t page_frame_number                                       : 36;
   };
+
   uint64_t flags;
 } eptp;
+
 typedef union {
   struct {
     uint64_t read_access                                             : 1;
@@ -3642,8 +4715,10 @@ typedef union {
     uint64_t reserved_3                                              : 1;
     uint64_t page_frame_number                                       : 36;
   };
+
   uint64_t flags;
 } epml4e;
+
 typedef union {
   struct {
     uint64_t read_access                                             : 1;
@@ -3665,8 +4740,10 @@ typedef union {
     uint64_t reserved_4                                              : 2;
     uint64_t suppress_ve                                             : 1;
   };
+
   uint64_t flags;
 } epdpte_1gb;
+
 typedef union {
   struct {
     uint64_t read_access                                             : 1;
@@ -3679,8 +4756,10 @@ typedef union {
     uint64_t reserved_3                                              : 1;
     uint64_t page_frame_number                                       : 36;
   };
+
   uint64_t flags;
 } epdpte;
+
 typedef union {
   struct {
     uint64_t read_access                                             : 1;
@@ -3702,8 +4781,10 @@ typedef union {
     uint64_t reserved_4                                              : 2;
     uint64_t suppress_ve                                             : 1;
   };
+
   uint64_t flags;
 } epde_2mb;
+
 typedef union {
   struct {
     uint64_t read_access                                             : 1;
@@ -3716,8 +4797,10 @@ typedef union {
     uint64_t reserved_3                                              : 1;
     uint64_t page_frame_number                                       : 36;
   };
+
   uint64_t flags;
 } epde;
+
 typedef union {
   struct {
     uint64_t read_access                                             : 1;
@@ -3740,8 +4823,10 @@ typedef union {
     uint64_t reserved_5                                              : 1;
     uint64_t suppress_ve                                             : 1;
   };
+
   uint64_t flags;
 } epte;
+
 typedef union {
   struct {
     uint64_t read_access                                             : 1;
@@ -3758,36 +4843,64 @@ typedef union {
     uint64_t reserved_2                                              : 15;
     uint64_t suppress_ve                                             : 1;
   };
+
   uint64_t flags;
 } ept_entry;
+
+
+
+
+
+
 #define EPT_LEVEL_PML4E                                              0x00000003
 #define EPT_LEVEL_PDPTE                                              0x00000002
 #define EPT_LEVEL_PDE                                                0x00000001
 #define EPT_LEVEL_PTE                                                0x00000000
+
+
+
+
+
+
+
+
+
 #define EPML4_ENTRY_COUNT                                            0x00000200
 #define EPDPTE_ENTRY_COUNT                                           0x00000200
 #define EPDE_ENTRY_COUNT                                             0x00000200
 #define EPTE_ENTRY_COUNT                                             0x00000200
+
+
+
+
+
+
+
+
 typedef enum {
   invept_single_context                                        = 0x00000001,
   invept_all_context                                           = 0x00000002,
 } invept_type;
+
 typedef enum {
   invvpid_individual_address                                   = 0x00000000,
   invvpid_single_context                                       = 0x00000001,
   invvpid_all_context                                          = 0x00000002,
   invvpid_single_context_retaining_globals                     = 0x00000003,
 } invvpid_type;
+
 typedef struct {
   uint64_t ept_pointer;
   uint64_t reserved;
 } invept_descriptor;
+
 typedef struct {
   uint16_t vpid;
   uint16_t reserved1;
   uint32_t reserved2;
   uint64_t linear_address;
 } invvpid_descriptor;
+
 typedef union {
   struct {
     uint64_t reserved_1                                              : 3;
@@ -3796,23 +4909,34 @@ typedef union {
     uint64_t reserved_2                                              : 7;
     uint64_t page_frame_number                                       : 36;
   };
+
   uint64_t flags;
 } hlatp;
+
 typedef struct {
   struct {
     uint32_t revision_id                                             : 31;
     uint32_t shadow_vmcs_indicator                                   : 1;
   };
+
   uint32_t abort_indicator;
   uint8_t data[4088];
 } vmcs;
+
 typedef struct {
   struct {
     uint32_t revision_id                                             : 31;
     uint32_t must_be_zero                                            : 1;
   };
+
   uint8_t data[4092];
 } vmxon;
+
+
+
+
+
+
 typedef union {
   struct {
     uint16_t access_type                                             : 1;
@@ -3821,12 +4945,33 @@ typedef union {
     uint16_t must_be_zero                                            : 1;
     uint16_t width                                                   : 2;
   };
+
   uint16_t flags;
 } vmcs_component_encoding;
+
+
+
+
+
+
+
+
+
+
+
 #define VMCS_CTRL_VPID                                               0x00000000
 #define VMCS_CTRL_POSTED_INTR_NOTIFY_VECTOR                          0x00000002
 #define VMCS_CTRL_EPTP_INDEX                                         0x00000004
 #define VMCS_CTRL_HLAT_PREFIX_SIZE                                   0x00000006
+
+
+
+
+
+
+
+
+
 #define VMCS_GUEST_ES_SEL                                            0x00000800
 #define VMCS_GUEST_CS_SEL                                            0x00000802
 #define VMCS_GUEST_SS_SEL                                            0x00000804
@@ -3837,6 +4982,15 @@ typedef union {
 #define VMCS_GUEST_TR_SEL                                            0x0000080E
 #define VMCS_GUEST_INTR_STATUS                                       0x00000810
 #define VMCS_GUEST_PML_INDEX                                         0x00000812
+
+
+
+
+
+
+
+
+
 #define VMCS_HOST_ES_SEL                                             0x00000C00
 #define VMCS_HOST_CS_SEL                                             0x00000C02
 #define VMCS_HOST_SS_SEL                                             0x00000C04
@@ -3844,6 +4998,24 @@ typedef union {
 #define VMCS_HOST_FS_SEL                                             0x00000C08
 #define VMCS_HOST_GS_SEL                                             0x00000C0A
 #define VMCS_HOST_TR_SEL                                             0x00000C0C
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #define VMCS_CTRL_IO_BITMAP_A                                        0x00002000
 #define VMCS_CTRL_IO_BITMAP_B                                        0x00002002
 #define VMCS_CTRL_MSR_BITMAP                                         0x00002004
@@ -3874,7 +5046,25 @@ typedef union {
 #define VMCS_CTRL_ENCLV_EXITING_BITMAP                               0x00002036
 #define VMCS_CTRL_HLATP                                              0x00002040
 #define VMCS_CTRL_SECONDARY_EXIT                                     0x00002044
+
+
+
+
+
+
+
+
+
 #define VMCS_GUEST_PHYS_ADDR                                         0x00002400
+
+
+
+
+
+
+
+
+
 #define VMCS_GUEST_VMCS_LINK_PTR                                     0x00002800
 #define VMCS_GUEST_DEBUGCTL                                          0x00002802
 #define VMCS_GUEST_PAT                                               0x00002804
@@ -3888,10 +5078,37 @@ typedef union {
 #define VMCS_GUEST_RTIT_CTL                                          0x00002814
 #define VMCS_GUEST_LBR_CTL                                           0x00002816
 #define VMCS_GUEST_PKRS                                              0x00002818
+
+
+
+
+
+
+
+
+
 #define VMCS_HOST_PAT                                                0x00002C00
 #define VMCS_HOST_EFER                                               0x00002C02
 #define VMCS_HOST_PERF_GLOBAL_CTRL                                   0x00002C04
 #define VMCS_HOST_PKRS                                               0x00002C06
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #define VMCS_CTRL_PIN_EXEC                                           0x00004000
 #define VMCS_CTRL_PROC_EXEC                                          0x00004002
 #define VMCS_CTRL_EXCEPTION_BITMAP                                   0x00004004
@@ -3910,6 +5127,15 @@ typedef union {
 #define VMCS_CTRL_PROC_EXEC2                                         0x0000401E
 #define VMCS_CTRL_PLE_GAP                                            0x00004020
 #define VMCS_CTRL_PLE_WINDOW                                         0x00004022
+
+
+
+
+
+
+
+
+
 #define VMCS_VM_INSTR_ERROR                                          0x00004400
 #define VMCS_EXIT_REASON                                             0x00004402
 #define VMCS_EXIT_INTERRUPTION_INFO                                  0x00004404
@@ -3918,6 +5144,15 @@ typedef union {
 #define VMCS_IDT_VECTORING_ERROR_CODE                                0x0000440A
 #define VMCS_EXIT_INSTR_LENGTH                                       0x0000440C
 #define VMCS_EXIT_INSTR_INFO                                         0x0000440E
+
+
+
+
+
+
+
+
+
 #define VMCS_GUEST_ES_LIMIT                                          0x00004800
 #define VMCS_GUEST_CS_LIMIT                                          0x00004802
 #define VMCS_GUEST_SS_LIMIT                                          0x00004804
@@ -3941,7 +5176,34 @@ typedef union {
 #define VMCS_GUEST_SMBASE                                            0x00004828
 #define VMCS_GUEST_SYSENTER_CS                                       0x0000482A
 #define VMCS_GUEST_PREEMPT_TIMER_VALUE                               0x0000482E
+
+
+
+
+
+
+
+
+
 #define VMCS_HOST_SYSENTER_CS                                        0x00004C00
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #define VMCS_CTRL_CR0_MASK                                           0x00006000
 #define VMCS_CTRL_CR4_MASK                                           0x00006002
 #define VMCS_CTRL_CR0_READ_SHADOW                                    0x00006004
@@ -3950,12 +5212,30 @@ typedef union {
 #define VMCS_CTRL_CR3_TARGET_VAL1                                    0x0000600A
 #define VMCS_CTRL_CR3_TARGET_VAL2                                    0x0000600C
 #define VMCS_CTRL_CR3_TARGET_VAL3                                    0x0000600E
+
+
+
+
+
+
+
+
+
 #define VMCS_EXIT_QUALIFICATION                                      0x00006400
 #define VMCS_IO_RCX                                                  0x00006402
 #define VMCS_IO_RSI                                                  0x00006404
 #define VMCS_IO_RDI                                                  0x00006406
 #define VMCS_IO_RIP                                                  0x00006408
 #define VMCS_EXIT_GUEST_LINEAR_ADDR                                  0x0000640A
+
+
+
+
+
+
+
+
+
 #define VMCS_GUEST_CR0                                               0x00006800
 #define VMCS_GUEST_CR3                                               0x00006802
 #define VMCS_GUEST_CR4                                               0x00006804
@@ -3979,6 +5259,15 @@ typedef union {
 #define VMCS_GUEST_S_CET                                             0x00006C28
 #define VMCS_GUEST_SSP                                               0x00006C2A
 #define VMCS_GUEST_INTERRUPT_SSP_TABLE_ADDR                          0x00006C2C
+
+
+
+
+
+
+
+
+
 #define VMCS_HOST_CR0                                                0x00006C00
 #define VMCS_HOST_CR3                                                0x00006C02
 #define VMCS_HOST_CR4                                                0x00006C04
@@ -3994,6 +5283,18 @@ typedef union {
 #define VMCS_HOST_S_CET                                              0x00006C18
 #define VMCS_HOST_SSP                                                0x00006C1A
 #define VMCS_HOST_INTERRUPT_SSP_TABLE_ADDR                           0x00006C1C
+
+
+
+
+
+
+
+
+
+
+
+
 typedef enum {
   external_interrupt                                           = 0x00000000,
   non_maskable_interrupt                                       = 0x00000002,
@@ -4003,6 +5304,7 @@ typedef enum {
   software_exception                                           = 0x00000006,
   other_event                                                  = 0x00000007,
 } interruption_type;
+
 typedef union {
   struct {
     uint32_t vector                                                  : 8;
@@ -4011,8 +5313,10 @@ typedef union {
     uint32_t reserved_1                                              : 19;
     uint32_t valid                                                   : 1;
   };
+
   uint32_t flags;
 } vmentry_interrupt_info;
+
 typedef union {
   struct {
     uint32_t vector                                                  : 8;
@@ -4022,8 +5326,19 @@ typedef union {
     uint32_t reserved_1                                              : 18;
     uint32_t valid                                                   : 1;
   };
+
   uint32_t flags;
 } vmexit_interrupt_info;
+
+
+
+
+
+
+
+
+
+
 #define APIC_BASE                                                    0xFEE00000
 #define APIC_ID                                                      0x00000020
 #define APIC_VERSION                                                 0x00000030
@@ -4072,6 +5387,10 @@ typedef union {
 #define APIC_INITIAL_COUNT                                           0x00000380
 #define APIC_CURRENT_COUNT                                           0x00000390
 #define APIC_DIVIDE_CONFIGURATION                                    0x000003E0
+
+
+
+
 typedef union {
   struct {
     uint32_t carry_flag                                              : 1;
@@ -4096,8 +5415,10 @@ typedef union {
     uint32_t virtual_interrupt_pending_flag                          : 1;
     uint32_t identification_flag                                     : 1;
   };
+
   uint32_t flags;
 } efl;
+
 typedef union {
   struct {
     uint64_t carry_flag                                              : 1;
@@ -4122,15 +5443,24 @@ typedef union {
     uint64_t virtual_interrupt_pending_flag                          : 1;
     uint64_t identification_flag                                     : 1;
   };
+
   uint64_t flags;
 } rfl;
+
+
+
+
+
+
 typedef union {
   struct {
     uint32_t cpec                                                    : 15;
     uint32_t encl                                                    : 1;
   };
+
   uint32_t flags;
 } control_protection_exception;
+
 typedef enum {
   divide_error                                                 = 0x00000000,
   debug                                                        = 0x00000001,
@@ -4154,6 +5484,7 @@ typedef enum {
   virtualization_exception                                     = 0x00000014,
   control_protection                                           = 0x00000015,
 } exception_vector;
+
 typedef union {
   struct {
     uint32_t external_event                                          : 1;
@@ -4161,8 +5492,10 @@ typedef union {
     uint32_t gdt_ldt                                                 : 1;
     uint32_t index                                                   : 13;
   };
+
   uint32_t flags;
 } exception_error_code;
+
 typedef union {
   struct {
     uint32_t present                                                 : 1;
@@ -4176,8 +5509,19 @@ typedef union {
     uint32_t reserved_1                                              : 7;
     uint32_t sgx                                                     : 1;
   };
+
   uint32_t flags;
 } page_fault_exception;
+
+
+
+
+
+
+
+
+
+
 #define MEMORY_TYPE_UC                                               0x00000000
 #define MEMORY_TYPE_WC                                               0x00000001
 #define MEMORY_TYPE_WT                                               0x00000004
@@ -4185,6 +5529,15 @@ typedef union {
 #define MEMORY_TYPE_WB                                               0x00000006
 #define MEMORY_TYPE_UC_MINUS                                         0x00000007
 #define MEMORY_TYPE_INVALID                                          0x000000FF
+
+
+
+
+
+
+
+
+
 typedef struct {
   union {
     struct {
@@ -4192,15 +5545,20 @@ typedef struct {
       uint64_t reserved_1                                            : 11;
       uint64_t context_table_pointer                                 : 52;
     };
+
     uint64_t flags;
   } lower64;
+
   union {
     struct {
       uint64_t reserved                                              : 64;
     };
+
     uint64_t flags;
   } upper64;
+
 } vtd_root_entry;
+
 typedef struct {
   union {
     struct {
@@ -4210,8 +5568,10 @@ typedef struct {
       uint64_t reserved_1                                            : 8;
       uint64_t second_level_page_translation_pointer                 : 52;
     };
+
     uint64_t flags;
   } lower64;
+
   union {
     struct {
       uint64_t address_width                                         : 3;
@@ -4219,19 +5579,33 @@ typedef struct {
       uint64_t reserved_1                                            : 1;
       uint64_t domain_identifier                                     : 10;
     };
+
     uint64_t flags;
   } upper64;
+
 } vtd_context_entry;
+
+
+
+
+
+
 #define VTD_ROOT_ENTRY_COUNT                                         0x00000100
 #define VTD_CONTEXT_ENTRY_COUNT                                      0x00000100
+
+
+
+
 #define VTD_VERSION                                                  0x00000000
 typedef union {
   struct {
     uint32_t minor                                                   : 4;
     uint32_t major                                                   : 4;
   };
+
   uint32_t flags;
 } vtd_version_register;
+
 #define VTD_CAPABILITY                                               0x00000008
 typedef union {
   struct {
@@ -4262,8 +5636,10 @@ typedef union {
     uint64_t enhanced_set_interrupt_remap_table_pointer_support      : 1;
     uint64_t enhanced_set_root_table_pointer_support                 : 1;
   };
+
   uint64_t flags;
 } vtd_capability_register;
+
 #define VTD_EXTENDED_CAPABILITY                                      0x00000010
 typedef union {
   struct {
@@ -4303,8 +5679,10 @@ typedef union {
     uint64_t abort_dma_mode_support                                  : 1;
     uint64_t rid_priv_support                                        : 1;
   };
+
   uint64_t flags;
 } vtd_extended_capability_register;
+
 #define VTD_GLOBAL_COMMAND                                           0x00000018
 typedef union {
   struct {
@@ -4319,8 +5697,10 @@ typedef union {
     uint32_t set_root_table_pointer                                  : 1;
     uint32_t translation_enable                                      : 1;
   };
+
   uint32_t flags;
 } vtd_global_command_register;
+
 #define VTD_GLOBAL_STATUS                                            0x0000001C
 typedef union {
   struct {
@@ -4335,8 +5715,10 @@ typedef union {
     uint32_t root_table_pointer_status                               : 1;
     uint32_t translation_enable_status                               : 1;
   };
+
   uint32_t flags;
 } vtd_global_status_register;
+
 #define VTD_ROOT_TABLE_ADDRESS                                       0x00000020
 typedef union {
   struct {
@@ -4344,8 +5726,10 @@ typedef union {
     uint64_t translation_table_mode                                  : 2;
     uint64_t root_table_address                                      : 52;
   };
+
   uint64_t flags;
 } vtd_root_table_address_register;
+
 #define VTD_CONTEXT_COMMAND                                          0x00000028
 typedef union {
   struct {
@@ -4357,8 +5741,10 @@ typedef union {
     uint64_t context_invalidation_request_granularity                : 2;
     uint64_t invalidate_context_cache                                : 1;
   };
+
   uint64_t flags;
 } vtd_context_command_register;
+
 #define VTD_INVALIDATE_ADDRESS                                       0x00000000
 typedef union {
   struct {
@@ -4367,8 +5753,10 @@ typedef union {
     uint64_t reserved_1                                              : 5;
     uint64_t page_address                                            : 52;
   };
+
   uint64_t flags;
 } vtd_invalidate_address_register;
+
 #define VTD_IOTLB_INVALIDATE                                         0x00000008
 typedef union {
   struct {
@@ -4383,8 +5771,14 @@ typedef union {
     uint64_t reserved_4                                              : 1;
     uint64_t invalidate_iotlb                                        : 1;
   };
+
   uint64_t flags;
 } vtd_iotlb_invalidate_register;
+
+
+
+
+
 typedef union {
   struct {
     uint64_t x87                                                     : 1;
@@ -4398,8 +5792,16 @@ typedef union {
     uint64_t reserved_1                                              : 1;
     uint64_t pkru                                                    : 1;
   };
+
   uint64_t flags;
 } xcr0;
+
+
+
+
+
 #if defined(_MSC_EXTENSIONS)
 #pragma warning(pop)
 #endif
+
+

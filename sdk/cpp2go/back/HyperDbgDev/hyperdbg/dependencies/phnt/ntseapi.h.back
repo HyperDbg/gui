@@ -1,10 +1,25 @@
+
+
+
+
+
+
+
+
+
+
+
 #ifndef _NTSEAPI_H
 #define _NTSEAPI_H
+
+
+
 #define SE_MIN_WELL_KNOWN_PRIVILEGE (2L)
 #define SE_CREATE_TOKEN_PRIVILEGE (2L)
 #define SE_ASSIGNPRIMARYTOKEN_PRIVILEGE (3L)
 #define SE_LOCK_MEMORY_PRIVILEGE (4L)
 #define SE_INCREASE_QUOTA_PRIVILEGE (5L)
+
 #define SE_MACHINE_ACCOUNT_PRIVILEGE (6L)
 #define SE_TCB_PRIVILEGE (7L)
 #define SE_SECURITY_PRIVILEGE (8L)
@@ -37,6 +52,11 @@
 #define SE_CREATE_SYMBOLIC_LINK_PRIVILEGE (35L)
 #define SE_DELEGATE_SESSION_USER_IMPERSONATE_PRIVILEGE (36L)
 #define SE_MAX_WELL_KNOWN_PRIVILEGE SE_DELEGATE_SESSION_USER_IMPERSONATE_PRIVILEGE
+
+
+
+
+
 #if (PHNT_MODE == PHNT_MODE_KERNEL)
 typedef enum _TOKEN_INFORMATION_CLASS
 {
@@ -91,6 +111,9 @@ typedef enum _TOKEN_INFORMATION_CLASS
     MaxTokenInfoClass
 } TOKEN_INFORMATION_CLASS, *PTOKEN_INFORMATION_CLASS;
 #endif
+
+
+
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_INVALID 0x00
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_INT64 0x01
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_UINT64 0x02
@@ -99,6 +122,9 @@ typedef enum _TOKEN_INFORMATION_CLASS
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_SID 0x05
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_BOOLEAN 0x06
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_OCTET_STRING 0x10
+
+
+
 #define TOKEN_SECURITY_ATTRIBUTE_NON_INHERITABLE 0x0001
 #define TOKEN_SECURITY_ATTRIBUTE_VALUE_CASE_SENSITIVE 0x0002
 #define TOKEN_SECURITY_ATTRIBUTE_USE_FOR_DENY_ONLY 0x0004
@@ -106,6 +132,7 @@ typedef enum _TOKEN_INFORMATION_CLASS
 #define TOKEN_SECURITY_ATTRIBUTE_DISABLED 0x0010
 #define TOKEN_SECURITY_ATTRIBUTE_MANDATORY 0x0020
 #define TOKEN_SECURITY_ATTRIBUTE_COMPARE_IGNORE 0x0040
+
 #define TOKEN_SECURITY_ATTRIBUTE_VALID_FLAGS ( \
     TOKEN_SECURITY_ATTRIBUTE_NON_INHERITABLE | \
     TOKEN_SECURITY_ATTRIBUTE_VALUE_CASE_SENSITIVE | \
@@ -113,17 +140,26 @@ typedef enum _TOKEN_INFORMATION_CLASS
     TOKEN_SECURITY_ATTRIBUTE_DISABLED_BY_DEFAULT | \
     TOKEN_SECURITY_ATTRIBUTE_DISABLED | \
     TOKEN_SECURITY_ATTRIBUTE_MANDATORY)
+
 #define TOKEN_SECURITY_ATTRIBUTE_CUSTOM_FLAGS 0xffff0000
+
+
+
+
 typedef struct _TOKEN_SECURITY_ATTRIBUTE_FQBN_VALUE
 {
     ULONG64 Version;
     UNICODE_STRING Name;
 } TOKEN_SECURITY_ATTRIBUTE_FQBN_VALUE, *PTOKEN_SECURITY_ATTRIBUTE_FQBN_VALUE;
+
+
 typedef struct _TOKEN_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE
 {
     PVOID pValue;
     ULONG ValueLength;
 } TOKEN_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE, *PTOKEN_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE;
+
+
 typedef struct _TOKEN_SECURITY_ATTRIBUTE_V1
 {
     UNICODE_STRING Name;
@@ -140,8 +176,13 @@ typedef struct _TOKEN_SECURITY_ATTRIBUTE_V1
         PTOKEN_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE pOctetString;
     } Values;
 } TOKEN_SECURITY_ATTRIBUTE_V1, *PTOKEN_SECURITY_ATTRIBUTE_V1;
+
+
 #define TOKEN_SECURITY_ATTRIBUTES_INFORMATION_VERSION_V1 1
+
 #define TOKEN_SECURITY_ATTRIBUTES_INFORMATION_VERSION TOKEN_SECURITY_ATTRIBUTES_INFORMATION_VERSION_V1
+
+
 typedef struct _TOKEN_SECURITY_ATTRIBUTES_INFORMATION
 {
     USHORT Version;
@@ -152,6 +193,8 @@ typedef struct _TOKEN_SECURITY_ATTRIBUTES_INFORMATION
         PTOKEN_SECURITY_ATTRIBUTE_V1 pAttributeV1;
     } Attribute;
 } TOKEN_SECURITY_ATTRIBUTES_INFORMATION, *PTOKEN_SECURITY_ATTRIBUTES_INFORMATION;
+
+
 typedef enum _TOKEN_SECURITY_ATTRIBUTE_OPERATION
 {
     TOKEN_SECURITY_ATTRIBUTE_OPERATION_NONE,
@@ -160,15 +203,22 @@ typedef enum _TOKEN_SECURITY_ATTRIBUTE_OPERATION
     TOKEN_SECURITY_ATTRIBUTE_OPERATION_DELETE,
     TOKEN_SECURITY_ATTRIBUTE_OPERATION_REPLACE
 } TOKEN_SECURITY_ATTRIBUTE_OPERATION, *PTOKEN_SECURITY_ATTRIBUTE_OPERATION;
+
+
 typedef struct _TOKEN_SECURITY_ATTRIBUTES_AND_OPERATION_INFORMATION
 {
     PTOKEN_SECURITY_ATTRIBUTES_INFORMATION Attributes;
     PTOKEN_SECURITY_ATTRIBUTE_OPERATION Operations;
 } TOKEN_SECURITY_ATTRIBUTES_AND_OPERATION_INFORMATION, *PTOKEN_SECURITY_ATTRIBUTES_AND_OPERATION_INFORMATION;
+
+
 typedef struct _TOKEN_PROCESS_TRUST_LEVEL
 {
     PSID TrustLevelSid;
 } TOKEN_PROCESS_TRUST_LEVEL, *PTOKEN_PROCESS_TRUST_LEVEL;
+
+
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -187,6 +237,7 @@ NtCreateToken(
     _In_opt_ PTOKEN_DEFAULT_DACL DefaultDacl,
     _In_ PTOKEN_SOURCE Source
     );
+
 #if (PHNT_VERSION >= PHNT_WIN8)
 NTSYSCALLAPI
 NTSTATUS
@@ -203,6 +254,7 @@ NtCreateLowBoxToken(
     _In_reads_opt_(HandleCount) HANDLE *Handles
     );
 #endif
+
 #if (PHNT_VERSION >= PHNT_WIN8)
 NTSYSCALLAPI
 NTSTATUS
@@ -227,6 +279,7 @@ NtCreateTokenEx(
     _In_ PTOKEN_SOURCE Source
     );
 #endif
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -235,6 +288,7 @@ NtOpenProcessToken(
     _In_ ACCESS_MASK DesiredAccess,
     _Out_ PHANDLE TokenHandle
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -244,6 +298,7 @@ NtOpenProcessTokenEx(
     _In_ ULONG HandleAttributes,
     _Out_ PHANDLE TokenHandle
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -253,6 +308,7 @@ NtOpenThreadToken(
     _In_ BOOLEAN OpenAsSelf,
     _Out_ PHANDLE TokenHandle
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -263,6 +319,7 @@ NtOpenThreadTokenEx(
     _In_ ULONG HandleAttributes,
     _Out_ PHANDLE TokenHandle
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -274,6 +331,7 @@ NtDuplicateToken(
     _In_ TOKEN_TYPE Type,
     _Out_ PHANDLE NewTokenHandle
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -284,6 +342,7 @@ NtQueryInformationToken(
     _In_ ULONG TokenInformationLength,
     _Out_ PULONG ReturnLength
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -293,6 +352,7 @@ NtSetInformationToken(
     _In_reads_bytes_(TokenInformationLength) PVOID TokenInformation,
     _In_ ULONG TokenInformationLength
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -304,6 +364,7 @@ NtAdjustPrivilegesToken(
     _Out_writes_bytes_to_opt_(BufferLength, *ReturnLength) PTOKEN_PRIVILEGES PreviousState,
     _Out_opt_ PULONG ReturnLength
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -315,6 +376,7 @@ NtAdjustGroupsToken(
     _Out_writes_bytes_to_opt_(BufferLength, *ReturnLength) PTOKEN_GROUPS PreviousState,
     _Out_opt_ PULONG ReturnLength
     );
+
 #if (PHNT_VERSION >= PHNT_WIN8)
 NTSYSCALLAPI
 NTSTATUS
@@ -338,6 +400,7 @@ NtAdjustTokenClaimsAndDeviceGroups(
     _Out_opt_ PULONG DeviceGroupsReturnBufferLength
     );
 #endif
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -349,6 +412,7 @@ NtFilterToken(
     _In_opt_ PTOKEN_GROUPS RestrictedSids,
     _Out_ PHANDLE NewTokenHandle
     );
+
 #if (PHNT_VERSION >= PHNT_WIN8)
 NTSYSCALLAPI
 NTSTATUS
@@ -370,6 +434,7 @@ NtFilterTokenEx(
     _Out_ PHANDLE NewTokenHandle
     );
 #endif
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -378,6 +443,7 @@ NtCompareTokens(
     _In_ HANDLE SecondTokenHandle,
     _Out_ PBOOLEAN Equal
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -386,13 +452,16 @@ NtPrivilegeCheck(
     _Inout_ PPRIVILEGE_SET RequiredPrivileges,
     _Out_ PBOOLEAN Result
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
 NtImpersonateAnonymousToken(
     _In_ HANDLE ThreadHandle
     );
+
 #if (PHNT_VERSION >= PHNT_WIN7)
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -405,6 +474,9 @@ NtQuerySecurityAttributesToken(
     _Out_ PULONG ReturnLength
     );
 #endif
+
+
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -418,6 +490,7 @@ NtAccessCheck(
     _Out_ PACCESS_MASK GrantedAccess,
     _Out_ PNTSTATUS AccessStatus
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -434,6 +507,7 @@ NtAccessCheckByType(
     _Out_ PACCESS_MASK GrantedAccess,
     _Out_ PNTSTATUS AccessStatus
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -450,7 +524,11 @@ NtAccessCheckByTypeResultList(
     _Out_writes_(ObjectTypeListLength) PACCESS_MASK GrantedAccess,
     _Out_writes_(ObjectTypeListLength) PNTSTATUS AccessStatus
     );
+
+
+
 #if (PHNT_VERSION >= PHNT_THRESHOLD)
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -461,6 +539,7 @@ NtSetCachedSigningLevel(
     _In_ ULONG SourceFileCount,
     _In_opt_ HANDLE TargetFile
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -472,6 +551,8 @@ NtGetCachedSigningLevel(
     _Inout_opt_ PULONG ThumbprintSize,
     _Out_opt_ PULONG ThumbprintAlgorithm
     );
+
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -479,7 +560,11 @@ NtCompareSigningLevels(
     _In_ SE_SIGNING_LEVEL FirstSigningLevel,
     _In_ SE_SIGNING_LEVEL SecondSigningLevel
     );
+
 #endif
+
+
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -496,6 +581,7 @@ NtAccessCheckAndAuditAlarm(
     _Out_ PNTSTATUS AccessStatus,
     _Out_ PBOOLEAN GenerateOnClose
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -517,6 +603,7 @@ NtAccessCheckByTypeAndAuditAlarm(
     _Out_ PNTSTATUS AccessStatus,
     _Out_ PBOOLEAN GenerateOnClose
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -538,6 +625,7 @@ NtAccessCheckByTypeResultListAndAuditAlarm(
     _Out_writes_(ObjectTypeListLength) PNTSTATUS AccessStatus,
     _Out_ PBOOLEAN GenerateOnClose
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -560,6 +648,7 @@ NtAccessCheckByTypeResultListAndAuditAlarmByHandle(
     _Out_writes_(ObjectTypeListLength) PNTSTATUS AccessStatus,
     _Out_ PBOOLEAN GenerateOnClose
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -577,6 +666,7 @@ NtOpenObjectAuditAlarm(
     _In_ BOOLEAN AccessGranted,
     _Out_ PBOOLEAN GenerateOnClose
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -588,6 +678,7 @@ NtPrivilegeObjectAuditAlarm(
     _In_ PPRIVILEGE_SET Privileges,
     _In_ BOOLEAN AccessGranted
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -596,6 +687,7 @@ NtCloseObjectAuditAlarm(
     _In_opt_ PVOID HandleId,
     _In_ BOOLEAN GenerateOnClose
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -604,6 +696,7 @@ NtDeleteObjectAuditAlarm(
     _In_opt_ PVOID HandleId,
     _In_ BOOLEAN GenerateOnClose
     );
+
 NTSYSCALLAPI
 NTSTATUS
 NTAPI
@@ -614,4 +707,6 @@ NtPrivilegedServiceAuditAlarm(
     _In_ PPRIVILEGE_SET Privileges,
     _In_ BOOLEAN AccessGranted
     );
+
 #endif
+

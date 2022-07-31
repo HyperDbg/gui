@@ -1,12 +1,42 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
 extern BOOLEAN  g_LogOpened;
 extern ofstream g_LogOpenFile;
+
+
+
+
+
+
 VOID
 CommandLogcloseHelp()
 {
     ShowMessages(".logclose : closes the previously opened log.\n\n");
+
     ShowMessages("syntax : \t.logclose\n");
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandLogclose(vector<string> SplittedCommand, string Command)
@@ -22,6 +52,10 @@ CommandLogclose(vector<string> SplittedCommand, string Command)
         ShowMessages("there is no opened log, did you use '.logopen'? \n");
         return;
     }
+
+
+
+
     time_t    t  = time(NULL);
     struct tm tm = *localtime(&t);
     ShowMessages("log file closed (%d-%02d-%02d "
@@ -32,7 +66,15 @@ CommandLogclose(vector<string> SplittedCommand, string Command)
                  tm.tm_hour,
                  tm.tm_min,
                  tm.tm_sec);
+
+
+
     g_LogOpenFile.close();
+
+
+
+
     g_LogOpened = FALSE;
 }
+
 

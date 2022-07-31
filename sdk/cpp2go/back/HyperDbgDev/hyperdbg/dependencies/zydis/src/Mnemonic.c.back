@@ -1,5 +1,36 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include <Zydis/Mnemonic.h>
 #include <Generated/EnumMnemonic.inc>
+
+
+
+
+
 const char* ZydisMnemonicGetString(ZydisMnemonic mnemonic)
 {
     if ((ZyanUSize)mnemonic >= ZYAN_ARRAY_LENGTH(STR_MNEMONIC))
@@ -9,6 +40,7 @@ const char* ZydisMnemonicGetString(ZydisMnemonic mnemonic)
     return (const char*)STR_MNEMONIC[mnemonic].data;
 }
 
+
 const ZydisShortString* ZydisMnemonicGetStringWrapped(ZydisMnemonic mnemonic)
 {
     if ((ZyanUSize)mnemonic >= ZYAN_ARRAY_LENGTH(STR_MNEMONIC))
@@ -17,4 +49,7 @@ const ZydisShortString* ZydisMnemonicGetStringWrapped(ZydisMnemonic mnemonic)
     }
     return &STR_MNEMONIC[mnemonic];
 }
+
+
+
 

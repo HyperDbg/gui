@@ -1,4 +1,22 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
+
+
+
 PVOID
 SyscallHookGetKernelBase(PULONG pImageSize)
 {
@@ -8,30 +26,38 @@ SyscallHookGetKernelBase(PULONG pImageSize)
     PVOID                      pModuleBase          = NULL;
     PSYSTEM_MODULE_INFORMATION pSystemInfoBuffer    = NULL;
     ULONG                      SystemInfoBufferSize = 0;
+
     RtlInitUnicodeString(&routineName, L"ZwQuerySystemInformation");
     ZwQSI = (ZWQUERYSYSTEMINFORMATION)MmGetSystemRoutineAddress(&routineName);
     if (!ZwQSI)
         return NULL;
+
     status = ZwQSI(SystemModuleInformation,
                    &SystemInfoBufferSize,
                    0,
                    &SystemInfoBufferSize);
+
     if (!SystemInfoBufferSize)
     {
         LogError("Err, ZwQuerySystemInformation (1) failed");
         return NULL;
     }
+
     pSystemInfoBuffer = (PSYSTEM_MODULE_INFORMATION)ExAllocatePool(NonPagedPool, SystemInfoBufferSize * 2);
+
     if (!pSystemInfoBuffer)
     {
         LogError("Err, insufficient memory");
         return NULL;
     }
+
     memset(pSystemInfoBuffer, 0, SystemInfoBufferSize * 2);
+
     status = ZwQSI(SystemModuleInformation,
                    pSystemInfoBuffer,
                    SystemInfoBufferSize * 2,
                    &SystemInfoBufferSize);
+
     if (NT_SUCCESS(status))
     {
         pModuleBase = pSystemInfoBuffer->Module[0].ImageBase;
@@ -43,9 +69,19 @@ SyscallHookGetKernelBase(PULONG pImageSize)
         LogError("Err, ZwQuerySystemInformation (2) failed");
         return NULL;
     }
+
     ExFreePool(pSystemInfoBuffer);
     return pModuleBase;
 }
+
+
+
+
+
+
+
+
+
 
 BOOLEAN
 SyscallHookFindSsdt(PUINT64 NtTable, PUINT64 Win32kTable)
@@ -61,9 +97,18 @@ SyscallHookFindSsdt(PUINT64 NtTable, PUINT64 Win32kTable)
     SSDTStruct *        shadow;
     PVOID               ntTable;
     PVOID               win32kTable;
+
+
+
+
     kernelBase = (ULONG_PTR)SyscallHookGetKernelBase(&kernelSize);
+
     if (kernelBase == 0 || kernelSize == 0)
         return FALSE;
+
+
+
+
     ULONG KiSSSOffset;
     for (KiSSSOffset = 0; KiSSSOffset < kernelSize - signatureSize; KiSSSOffset++)
     {
@@ -73,25 +118,44 @@ SyscallHookFindSsdt(PUINT64 NtTable, PUINT64 Win32kTable)
             break;
         }
     }
+
     if (!found)
         return FALSE;
+
     addressAfterPattern = kernelBase + KiSSSOffset + signatureSize;
     address             = addressAfterPattern + 7; // Skip lea r10,[nt!KeServiceDescriptorTable]
+
+
+
+
     if ((*(unsigned char *)address == 0x4c) &&
         (*(unsigned char *)(address + 1) == 0x8d) &&
         (*(unsigned char *)(address + 2) == 0x1d))
     {
         relativeOffset = *(LONG *)(address + 3);
     }
+
     if (relativeOffset == 0)
         return FALSE;
+
     shadow = (SSDTStruct *)(address + relativeOffset + 7);
+
     ntTable     = (PVOID)shadow;
     win32kTable = (PVOID)((ULONG_PTR)shadow + 0x20); // Offset showed in Windbg
+
     *NtTable     = ntTable;
     *Win32kTable = win32kTable;
+
     return TRUE;
 }
+
+
+
+
+
+
+
+
 
 PVOID
 SyscallHookGetFunctionAddress(INT32 ApiNumber, BOOLEAN GetFromWin32k)
@@ -101,22 +165,33 @@ SyscallHookGetFunctionAddress(INT32 ApiNumber, BOOLEAN GetFromWin32k)
     ULONG_PTR    SSDTbase;
     ULONG        ReadOffset;
     UINT64       NtTable, Win32kTable;
+
+
+
+
     Result = SyscallHookFindSsdt(&NtTable, &Win32kTable);
+
     if (!Result)
     {
         LogError("Err, SSDT not found");
         return 0;
     }
+
     if (!GetFromWin32k)
     {
         SSDT = NtTable;
     }
     else
     {
+
+
+
         ApiNumber = ApiNumber - 0x1000;
         SSDT      = Win32kTable;
     }
+
     SSDTbase = (ULONG_PTR)SSDT->pServiceTable;
+
     if (!SSDTbase)
     {
         LogError("Err, ServiceTable not found");
@@ -124,6 +199,23 @@ SyscallHookGetFunctionAddress(INT32 ApiNumber, BOOLEAN GetFromWin32k)
     }
     return (PVOID)((SSDT->pServiceTable[ApiNumber] >> 4) + SSDTbase);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 NTSTATUS
 NtCreateFileHook(
@@ -143,44 +235,74 @@ NtCreateFileHook(
     NTSTATUS       ConvertStatus;
     UNICODE_STRING kObjectName;
     ANSI_STRING    FileNameA;
+
     kObjectName.Buffer = NULL;
+
     __try
     {
         ProbeForRead(FileHandle, sizeof(HANDLE), 1);
         ProbeForRead(ObjectAttributes, sizeof(OBJECT_ATTRIBUTES), 1);
         ProbeForRead(ObjectAttributes->ObjectName, sizeof(UNICODE_STRING), 1);
         ProbeForRead(ObjectAttributes->ObjectName->Buffer, ObjectAttributes->ObjectName->Length, 1);
+
         kFileHandle               = *FileHandle;
         kObjectName.Length        = ObjectAttributes->ObjectName->Length;
         kObjectName.MaximumLength = ObjectAttributes->ObjectName->MaximumLength;
         kObjectName.Buffer        = ExAllocatePoolWithTag(NonPagedPool, kObjectName.MaximumLength, 0xA);
         RtlCopyUnicodeString(&kObjectName, ObjectAttributes->ObjectName);
+
         ConvertStatus = RtlUnicodeStringToAnsiString(&FileNameA, ObjectAttributes->ObjectName, TRUE);
         LogInfo("NtCreateFile called for : %s", FileNameA.Buffer);
     }
     __except (EXCEPTION_EXECUTE_HANDLER)
     {
     }
+
     if (kObjectName.Buffer)
     {
         ExFreePoolWithTag(kObjectName.Buffer, 0xA);
     }
+
     return NtCreateFileOrig(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize, FileAttributes, ShareAccess, CreateDisposition, CreateOptions, EaBuffer, EaLength);
 }
+
+
+
+
+
+
+
 
 VOID
 SyscallHookTest()
 {
+
+
+
+
+
+
+
+
+
+
+
     INT32 ApiNumberOfNtCreateFile           = 0x0055;
     PVOID ApiLocationFromSSDTOfNtCreateFile = SyscallHookGetFunctionAddress(ApiNumberOfNtCreateFile, FALSE);
+
     if (!ApiLocationFromSSDTOfNtCreateFile)
     {
         LogError("Err, address finding for syscall base address");
         return;
     }
+
+
+
+
     if (EptHook2(ApiLocationFromSSDTOfNtCreateFile, NtCreateFileHook, PsGetCurrentProcessId(), FALSE, FALSE, TRUE))
     {
         LogInfo("Hook appkied to address of API Number : 0x%x at %llx\n", ApiNumberOfNtCreateFile, ApiLocationFromSSDTOfNtCreateFile);
     }
 }
+
 

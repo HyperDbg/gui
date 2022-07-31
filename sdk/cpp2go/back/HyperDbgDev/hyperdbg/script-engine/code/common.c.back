@@ -1,29 +1,70 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
+
+
 PTOKEN
 NewUnknownToken()
 {
     PTOKEN Token;
+
+
+
+
     Token        = (PTOKEN)malloc(sizeof(TOKEN));
     Token->Value = (char *)calloc(TOKEN_VALUE_MAX_LEN + 1, sizeof(char));
+
+
+
+
     strcpy(Token->Value, "");
     Token->Type   = UNKNOWN;
     Token->Len    = 0;
     Token->MaxLen = TOKEN_VALUE_MAX_LEN;
+
     return Token;
 }
+
 
 PTOKEN
 NewToken(TOKEN_TYPE Type, char * Value)
 {
+
+
+
     PTOKEN Token = (PTOKEN)malloc(sizeof(TOKEN));
+
+
+
+
     unsigned int Len = strlen(Value);
     Token->Type      = Type;
     Token->Len       = Len;
     Token->MaxLen    = Len;
     Token->Value     = (char *)calloc(Token->MaxLen + 1, sizeof(char));
     strcpy(Token->Value, Value);
+
     return Token;
 }
+
+
+
+
+
+
 
 void
 RemoveToken(PTOKEN * Token)
@@ -34,9 +75,19 @@ RemoveToken(PTOKEN * Token)
     return;
 }
 
+
+
+
+
+
+
+
 void
 PrintToken(PTOKEN Token)
 {
+
+
+
     if (Token->Type == WHITE_SPACE)
     {
         printf("< :");
@@ -45,6 +96,10 @@ PrintToken(PTOKEN Token)
     {
         printf("<'%s' : ", Token->Value);
     }
+
+
+
+
     switch (Token->Type)
     {
     case GLOBAL_ID:
@@ -110,26 +165,54 @@ PrintToken(PTOKEN Token)
     case UNKNOWN:
         printf(" UNKNOWN>\n");
         break;
+
     default:
         printf(" ERROR>\n");
         break;
     }
 }
 
+
+
+
+
+
+
+
 void
 Append(PTOKEN Token, char c)
 {
+
+
+
     if (Token->Len >= Token->MaxLen - 1)
     {
+
+
+
         Token->MaxLen *= 2;
         char * NewValue = (char *)calloc(Token->MaxLen + 1, sizeof(char));
+
+
+
+
         strncpy(NewValue, Token->Value, Token->Len);
         free(Token->Value);
         Token->Value = NewValue;
     }
+
+
+
+
     strncat(Token->Value, &c, 1);
     Token->Len++;
 }
+
+
+
+
+
+
 
 PTOKEN
 CopyToken(PTOKEN Token)
@@ -140,19 +223,45 @@ CopyToken(PTOKEN Token)
     TokenCopy->Len    = Token->Len;
     TokenCopy->Value  = (char *)calloc(strlen(Token->Value) + 1, sizeof(char));
     strcpy(TokenCopy->Value, Token->Value);
+
     return TokenCopy;
 }
+
+
+
+
+
+
 
 PTOKEN_LIST
 NewTokenList(void)
 {
     PTOKEN_LIST TokenList;
+
+
+
+
     TokenList = (PTOKEN_LIST)malloc(sizeof(*TokenList));
+
+
+
+
     TokenList->Pointer = 0;
     TokenList->Size    = TOKEN_LIST_INIT_SIZE;
+
+
+
+
     TokenList->Head = (PTOKEN *)malloc(TokenList->Size * sizeof(PTOKEN));
+
     return TokenList;
 }
+
+
+
+
+
+
 
 void
 RemoveTokenList(PTOKEN_LIST TokenList)
@@ -165,8 +274,15 @@ RemoveTokenList(PTOKEN_LIST TokenList)
     }
     free(TokenList->Head);
     free(TokenList);
+
     return;
 }
+
+
+
+
+
+
 
 void
 PrintTokenList(PTOKEN_LIST TokenList)
@@ -179,44 +295,111 @@ PrintTokenList(PTOKEN_LIST TokenList)
     }
 }
 
+
+
+
+
+
+
+
+
 PTOKEN_LIST
 Push(PTOKEN_LIST TokenList, PTOKEN Token)
 {
+
+
+
     uintptr_t Head      = (uintptr_t)TokenList->Head;
     uintptr_t Pointer   = (uintptr_t)TokenList->Pointer;
     PTOKEN *  WriteAddr = (PTOKEN *)(Head + Pointer * sizeof(PTOKEN));
+
+
+
+
     *WriteAddr = Token;
+
+
+
+
     TokenList->Pointer++;
+
+
+
+
     if (Pointer == TokenList->Size - 1)
     {
+
+
+
         PTOKEN * NewHead = (PTOKEN *)malloc(2 * TokenList->Size * sizeof(PTOKEN));
+
+
+
+
         memcpy(NewHead, TokenList->Head, TokenList->Size * sizeof(PTOKEN));
+
+
+
+
         free(TokenList->Head);
+
+
+
+
         TokenList->Size = TokenList->Size * 2;
         TokenList->Head = NewHead;
     }
+
     return TokenList;
 }
+
+
+
+
+
+
 
 PTOKEN
 Pop(PTOKEN_LIST TokenList)
 {
+
+
+
     if (TokenList->Pointer > 0)
         TokenList->Pointer--;
     uintptr_t Head     = (uintptr_t)TokenList->Head;
     uintptr_t Pointer  = (uintptr_t)TokenList->Pointer;
     PTOKEN *  ReadAddr = (PTOKEN *)(Head + Pointer * sizeof(PTOKEN));
+
     return *ReadAddr;
 }
+
+
+
+
+
+
+
 
 PTOKEN
 Top(PTOKEN_LIST TokenList)
 {
+
+
+
     uintptr_t Head     = (uintptr_t)TokenList->Head;
     uintptr_t Pointer  = (uintptr_t)TokenList->Pointer - 1;
     PTOKEN *  ReadAddr = (PTOKEN *)(Head + Pointer * sizeof(PTOKEN));
+
     return *ReadAddr;
 }
+
+
+
+
+
+
+
 
 char
 IsHex(char c)
@@ -227,6 +410,13 @@ IsHex(char c)
         return 0;
 }
 
+
+
+
+
+
+
+
 char
 IsDecimal(char c)
 {
@@ -235,6 +425,13 @@ IsDecimal(char c)
     else
         return 0;
 }
+
+
+
+
+
+
+
 
 char
 IsLetter(char c)
@@ -247,6 +444,13 @@ IsLetter(char c)
     }
 }
 
+
+
+
+
+
+
+
 char
 IsBinary(char c)
 {
@@ -258,6 +462,13 @@ IsBinary(char c)
     }
 }
 
+
+
+
+
+
+
+
 char
 IsOctal(char c)
 {
@@ -266,6 +477,13 @@ IsOctal(char c)
     else
         return 0;
 }
+
+
+
+
+
+
+
 
 PTOKEN
 NewTemp(PSCRIPT_ENGINE_ERROR_TYPE Error)
@@ -293,6 +511,12 @@ NewTemp(PSCRIPT_ENGINE_ERROR_TYPE Error)
     return Temp;
 }
 
+
+
+
+
+
+
 void
 FreeTemp(PTOKEN Temp)
 {
@@ -303,6 +527,11 @@ FreeTemp(PTOKEN Temp)
     }
 }
 
+
+
+
+
+
 void
 CleanTempList(void)
 {
@@ -311,6 +540,13 @@ CleanTempList(void)
         TempMap[i] = 0;
     }
 }
+
+
+
+
+
+
+
 
 char
 IsType1Func(PTOKEN Operator)
@@ -326,6 +562,13 @@ IsType1Func(PTOKEN Operator)
     return 0;
 }
 
+
+
+
+
+
+
+
 char
 IsType2Func(PTOKEN Operator)
 {
@@ -339,6 +582,13 @@ IsType2Func(PTOKEN Operator)
     }
     return 0;
 }
+
+
+
+
+
+
+
 
 char
 IsTwoOperandOperator(PTOKEN Operator)
@@ -354,6 +604,13 @@ IsTwoOperandOperator(PTOKEN Operator)
     return 0;
 }
 
+
+
+
+
+
+
+
 char
 IsOneOperandOperator(PTOKEN Operator)
 {
@@ -367,6 +624,13 @@ IsOneOperandOperator(PTOKEN Operator)
     }
     return 0;
 }
+
+
+
+
+
+
+
 
 char
 IsType4Func(PTOKEN Operator)
@@ -382,6 +646,13 @@ IsType4Func(PTOKEN Operator)
     return 0;
 }
 
+
+
+
+
+
+
+
 char
 IsType5Func(PTOKEN Operator)
 {
@@ -395,6 +666,13 @@ IsType5Func(PTOKEN Operator)
     }
     return 0;
 }
+
+
+
+
+
+
+
 
 char
 IsType6Func(PTOKEN Operator)
@@ -410,6 +688,13 @@ IsType6Func(PTOKEN Operator)
     return 0;
 }
 
+
+
+
+
+
+
+
 char
 IsType7Func(PTOKEN Operator)
 {
@@ -423,6 +708,13 @@ IsType7Func(PTOKEN Operator)
     }
     return 0;
 }
+
+
+
+
+
+
+
 
 char
 IsType8Func(PTOKEN Operator)
@@ -438,6 +730,14 @@ IsType8Func(PTOKEN Operator)
     return 0;
 }
 
+
+
+
+
+
+
+
+
 char
 IsNoneTerminal(PTOKEN Token)
 {
@@ -447,6 +747,14 @@ IsNoneTerminal(PTOKEN Token)
         return 0;
 }
 
+
+
+
+
+
+
+
+
 char
 IsSemanticRule(PTOKEN Token)
 {
@@ -455,6 +763,13 @@ IsSemanticRule(PTOKEN Token)
     else
         return 0;
 }
+
+
+
+
+
+
+
 
 int
 GetNonTerminalId(PTOKEN Token)
@@ -466,6 +781,13 @@ GetNonTerminalId(PTOKEN Token)
     }
     return INVALID;
 }
+
+
+
+
+
+
+
 
 int
 GetTerminalId(PTOKEN Token)
@@ -533,6 +855,7 @@ GetTerminalId(PTOKEN Token)
                 return i;
             }
         }
+
         else // Keyword
         {
             if (!strcmp(Token->Value, TerminalMap[i]))
@@ -541,6 +864,13 @@ GetTerminalId(PTOKEN Token)
     }
     return INVALID;
 }
+
+
+
+
+
+
+
 
 int
 LalrGetNonTerminalId(PTOKEN Token)
@@ -552,6 +882,13 @@ LalrGetNonTerminalId(PTOKEN Token)
     }
     return INVALID;
 }
+
+
+
+
+
+
+
 
 int
 LalrGetTerminalId(PTOKEN Token)
@@ -619,6 +956,7 @@ LalrGetTerminalId(PTOKEN Token)
                 return i;
             }
         }
+
         else // Keyword
         {
             if (!strcmp(Token->Value, LalrTerminalMap[i]))
@@ -627,6 +965,14 @@ LalrGetTerminalId(PTOKEN Token)
     }
     return INVALID;
 }
+
+
+
+
+
+
+
+
 
 char
 IsEqual(const PTOKEN Token1, const PTOKEN Token2)
@@ -653,6 +999,7 @@ IsEqual(const PTOKEN Token1, const PTOKEN Token2)
     {
         return 1;
     }
+
     if (Token1->Type == LOCAL_ID && Token2->Type == LOCAL_UNRESOLVED_ID)
     {
         return 1;
@@ -661,8 +1008,16 @@ IsEqual(const PTOKEN Token1, const PTOKEN Token2)
     {
         return 1;
     }
+
     return 0;
 }
+
+
+
+
+
+
+
 
 void
 SetType(unsigned long long * Val, unsigned char Type)
@@ -670,11 +1025,19 @@ SetType(unsigned long long * Val, unsigned char Type)
     *Val = (unsigned long long int)Type;
 }
 
+
+
+
+
+
+
+
 unsigned long long int
 DecimalToInt(char * str)
 {
     unsigned long long int Acc = 0;
     size_t                 Len;
+
     Len = strlen(str);
     for (int i = 0; i < Len; i++)
     {
@@ -684,11 +1047,19 @@ DecimalToInt(char * str)
     return Acc;
 }
 
+
+
+
+
+
+
+
 unsigned long long int
 DecimalToSignedInt(char * str)
 {
     long long int Acc = 0;
     size_t        Len;
+
     if (str[0] == '-')
     {
         Len = strlen(str);
@@ -710,6 +1081,13 @@ DecimalToSignedInt(char * str)
         return Acc;
     }
 }
+
+
+
+
+
+
+
 
 unsigned long long int
 HexToInt(char * str)
@@ -734,15 +1112,25 @@ HexToInt(char * str)
         }
         Acc += temp;
     }
+
     return Acc;
 }
+
+
+
+
+
+
+
 
 unsigned long long int
 OctalToInt(char * str)
 {
     size_t                 Len;
     unsigned long long int Acc = 0;
+
     Len = strlen(str);
+
     for (int i = 0; i < Len; i++)
     {
         Acc <<= 3;
@@ -751,12 +1139,21 @@ OctalToInt(char * str)
     return Acc;
 }
 
+
+
+
+
+
+
+
 unsigned long long int
 BinaryToInt(char * str)
 {
     size_t                 Len;
     unsigned long long int Acc = 0;
+
     Len = strlen(str);
+
     for (int i = 0; i < Len; i++)
     {
         Acc <<= 1;
@@ -764,4 +1161,5 @@ BinaryToInt(char * str)
     }
     return Acc;
 }
+
 

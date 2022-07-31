@@ -22,6 +22,8 @@ typedef struct ACTION_BUFFER {
   char ImmediatelySendTheResults;
   long long unsigned Context;
 } ACTION_BUFFER, *PACTION_BUFFER;
+
+
 #define SYMBOL_GLOBAL_ID_TYPE 0
 #define SYMBOL_LOCAL_ID_TYPE 1
 #define SYMBOL_NUM_TYPE 2
@@ -35,6 +37,9 @@ typedef struct ACTION_BUFFER {
 #define SYMBOL_INVALID 9
 #define INVALID -999
 #define LALR_ACCEPT 999
+
+
+
 #define FUNC_INC 0
 #define FUNC_DEC 1
 #define FUNC_REFERENCE 2
@@ -253,7 +258,9 @@ typedef enum REGS_ENUM {
 	REGISTER_DR3 = 117,
 	REGISTER_DR6 = 118,
 	REGISTER_DR7 = 119
+
 } REGS_ENUM;
+
 static const char *const RegistersNames[] = {
 "rax", "eax", "ax", "ah", "al", "rcx", "ecx", "cx",
 "ch", "cl", "rdx", "edx", "dx", "dh", "dl", "rbx",
@@ -271,6 +278,7 @@ static const char *const RegistersNames[] = {
 "ip", "idtr", "ldtr", "gdtr", "tr", "cr0", "cr2", "cr3",
 "cr4", "cr8", "dr0", "dr1", "dr2", "dr3", "dr6", 	"dr7"
 };
+
 #define PSEUDO_REGISTER_PID 0
 #define PSEUDO_REGISTER_TID 1
 #define PSEUDO_REGISTER_PNAME 2
@@ -286,3 +294,4 @@ static const char *const RegistersNames[] = {
 #define PSEUDO_REGISTER_EVENT_ID 12
  
 #endif
+

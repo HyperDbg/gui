@@ -1,8 +1,46 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #ifndef ZYCORE_TYPES_H
 #define ZYCORE_TYPES_H
+
 #include <Zycore/Defines.h>
+
+
+
+
+
 #if defined(ZYAN_NO_LIBC) || \
     (defined(ZYAN_MSVC) && defined(ZYAN_KERNEL)) // The WDK LibC lacks stdint.h.
+
 #   if defined(ZYAN_MSVC) || defined(ZYAN_ICC)
         typedef unsigned __int8  ZyanU8;
         typedef unsigned __int16 ZyanU16;
@@ -40,6 +78,7 @@
 #       error "Unsupported compiler for no-libc mode."
 #   endif
 #else
+
 #   include <stdint.h>
 #   include <stddef.h>
     typedef uint8_t   ZyanU8;
@@ -55,6 +94,8 @@
     typedef uintptr_t ZyanUPointer;
     typedef intptr_t  ZyanIPointer;
 #endif
+
+
 ZYAN_STATIC_ASSERT(sizeof(ZyanU8      ) == 1            );
 ZYAN_STATIC_ASSERT(sizeof(ZyanU16     ) == 2            );
 ZYAN_STATIC_ASSERT(sizeof(ZyanU32     ) == 4            );
@@ -67,20 +108,89 @@ ZYAN_STATIC_ASSERT(sizeof(ZyanUSize   ) == sizeof(void*)); // TODO: This one is 
 ZYAN_STATIC_ASSERT(sizeof(ZyanISize   ) == sizeof(void*)); // TODO: This one is incorrect!
 ZYAN_STATIC_ASSERT(sizeof(ZyanUPointer) == sizeof(void*));
 ZYAN_STATIC_ASSERT(sizeof(ZyanIPointer) == sizeof(void*));
+
+
 ZYAN_STATIC_ASSERT((ZyanI8 )-1 >> 1 < (ZyanI8 )((ZyanU8 )-1 >> 1));
 ZYAN_STATIC_ASSERT((ZyanI16)-1 >> 1 < (ZyanI16)((ZyanU16)-1 >> 1));
 ZYAN_STATIC_ASSERT((ZyanI32)-1 >> 1 < (ZyanI32)((ZyanU32)-1 >> 1));
 ZYAN_STATIC_ASSERT((ZyanI64)-1 >> 1 < (ZyanI64)((ZyanU64)-1 >> 1));
+
+
+
+
+
+
+
+
 typedef char* ZyanVoidPointer;
+
+
+
+
 typedef const void* ZyanConstVoidPointer;
+
 #define ZYAN_NULL ((void*)0)
+
+
+
+
+
+
+
+
+
 #define ZYAN_FALSE 0
 #define ZYAN_TRUE  1
+
+
+
+
+
+
+
 typedef ZyanU8 ZyanBool;
+
+
+
+
+
+
+
+
+
+
+
 typedef ZyanI8 ZyanTernary;
+
 #define ZYAN_TERNARY_FALSE    (-1)
 #define ZYAN_TERNARY_UNKNOWN  0x00
 #define ZYAN_TERNARY_TRUE     0x01
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 typedef char* ZyanCharPointer;
+
+
+
+
+
+
 typedef const char* ZyanConstCharPointer;
+
+
+
+
+
 #endif /* ZYCORE_TYPES_H */
+

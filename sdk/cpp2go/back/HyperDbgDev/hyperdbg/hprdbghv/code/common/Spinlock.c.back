@@ -1,21 +1,71 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
+
 static unsigned MaxWait = 65536;
+
+
+
+
+
+
+
 BOOLEAN
 SpinlockTryLock(volatile LONG * Lock)
 {
     return (!(*Lock) && !_interlockedbittestandset(Lock, 0));
 }
 
+
+
+
+
+
+
 void
 SpinlockLock(volatile LONG * Lock)
 {
     unsigned wait = 1;
+
     while (!SpinlockTryLock(Lock))
     {
         for (unsigned i = 0; i < wait; ++i)
         {
             _mm_pause();
         }
+
+
+
+
+
+
         if (wait * 2 > MaxWait)
         {
             wait = MaxWait;
@@ -26,6 +76,15 @@ SpinlockLock(volatile LONG * Lock)
         }
     }
 }
+
+
+
+
+
+
+
+
+
 
 void
 SpinlockInterlockedCompareExchange(
@@ -34,12 +93,19 @@ SpinlockInterlockedCompareExchange(
     LONG            Comperand)
 {
     unsigned wait = 1;
+
     while (InterlockedCompareExchange(Destination, Exchange, Comperand) != Comperand)
     {
         for (unsigned i = 0; i < wait; ++i)
         {
             _mm_pause();
         }
+
+
+
+
+
+
         if (wait * 2 > MaxWait)
         {
             wait = MaxWait;
@@ -51,16 +117,30 @@ SpinlockInterlockedCompareExchange(
     }
 }
 
+
+
+
+
+
+
+
 void
 SpinlockLockWithCustomWait(volatile LONG * Lock, unsigned MaximumWait)
 {
     unsigned wait = 1;
+
     while (!SpinlockTryLock(Lock))
     {
         for (unsigned i = 0; i < wait; ++i)
         {
             _mm_pause();
         }
+
+
+
+
+
+
         if (wait * 2 > MaximumWait)
         {
             wait = MaximumWait;
@@ -72,9 +152,16 @@ SpinlockLockWithCustomWait(volatile LONG * Lock, unsigned MaximumWait)
     }
 }
 
+
+
+
+
+
+
 void
 SpinlockUnlock(volatile LONG * Lock)
 {
     *Lock = 0;
 }
+
 

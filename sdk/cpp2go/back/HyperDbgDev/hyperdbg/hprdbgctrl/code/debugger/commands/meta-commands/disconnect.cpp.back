@@ -1,15 +1,45 @@
+
+
+
+
+
+
+
+
+
+
+
 #include "pch.h"
+
+
+
+
 extern BOOLEAN g_IsConnectedToHyperDbgLocally;
 extern BOOLEAN g_IsConnectedToRemoteDebuggee;
 extern HANDLE  g_RemoteDebuggeeListeningThread;
 extern HANDLE  g_EndOfMessageReceivedEvent;
+
+
+
+
+
+
 VOID
 CommandDisconnectHelp()
 {
     ShowMessages(".disconnect : disconnects from a debugging session (it won't "
                  "unload the modules).\n\n");
+
     ShowMessages("syntax : \t.disconnect \n");
 }
+
+
+
+
+
+
+
+
 
 VOID
 CommandDisconnect(vector<string> SplittedCommand, string Command)
@@ -20,12 +50,18 @@ CommandDisconnect(vector<string> SplittedCommand, string Command)
         CommandDisconnectHelp();
         return;
     }
+
     if (!g_IsConnectedToHyperDbgLocally && !g_IsConnectedToRemoteDebuggee)
     {
         ShowMessages("you're not connected to any instance of HyperDbg, did you "
                      "use '.connect'? \n");
         return;
     }
+
+
+
+
+
     if (g_IsConnectedToHyperDbgLocally && g_DeviceHandle)
     {
         ShowMessages("you cannot disconnect in local debugging while the "
@@ -33,16 +69,32 @@ CommandDisconnect(vector<string> SplittedCommand, string Command)
                      "disconnecting from the current instance of debugger\n");
         return;
     }
+
+
+
+
     g_IsConnectedToHyperDbgLocally = FALSE;
+
+
+
+
     if (g_IsConnectedToRemoteDebuggee)
     {
+
+
+
+
         TerminateThread(g_RemoteDebuggeeListeningThread, 0);
         CloseHandle(g_RemoteDebuggeeListeningThread);
         CloseHandle(g_EndOfMessageReceivedEvent);
         g_EndOfMessageReceivedEvent = NULL;
+
         RemoteConnectionCloseTheConnectionWithDebuggee();
+
         g_IsConnectedToRemoteDebuggee = FALSE;
     }
+
     ShowMessages("disconnected successfully\n");
 }
+
 
