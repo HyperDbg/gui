@@ -93,15 +93,9 @@ func (o *object) backCpp(path string) *object {
 			o.Check(err)
 			cppPath := backPath + ".back"
 			goPath := backPath + ".go"
-			o.back = append(o.back, pathBody{
-				path: cppPath,
-				body: "",
-			})
+			o.back = append(o.back, pathBody{path: cppPath, body: ""})
 			tool.File().WriteTruncate(cppPath, body)
-			o.goPath = append(o.goPath, pathBody{
-				path: goPath,
-				body: "",
-			})
+			o.goPath = append(o.goPath, pathBody{path: goPath, body: ""})
 		}
 	}
 	return o
