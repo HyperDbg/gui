@@ -1,0 +1,16 @@
+package vmx
+
+
+const(
+    PASSING_OVER_NONE                                   =  0  //col:30
+    PASSING_OVER_UD_EXCEPTIONS_FOR_SYSCALL_SYSRET_HOOK  =  1  //col:31
+    PASSING_OVER_EXCEPTION_EVENTS = 3  //col:32
+    PASSING_OVER_INTERRUPT_EVENTS = 4  //col:37
+    PASSING_OVER_TSC_EVENTS = 5  //col:42
+    PASSING_OVER_MOV_TO_HW_DEBUG_REGS_EVENTS = 6  //col:47
+    PASSING_OVER_MOV_TO_CONTROL_REGS_EVENTS = 7  //col:52
+)
+
+
+
+

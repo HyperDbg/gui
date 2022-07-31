@@ -148,8 +148,33 @@ func (o *object) handleDefineBlock(col int, lines ...string) string {
 	return key + " = " + strings.Join(value, " ") + o.fmtComment(col)
 }
 func (o *object) GetDefine(lines []string) string {
+	isCTL_CODE := false
+	for _, line := range lines {
+		if line != "" {
+			if strings.Contains(line, "CTL_CODE") {
+				isCTL_CODE = true
+				break
+			}
+		}
+	}
 	b := stream.New()
-	b.WriteStringLn("const(")
+	if isCTL_CODE {
+		s := `
+func CTL_CODE(deviceType, function, method, access uint32) uint32 {
+	return ((deviceType) << 16) | ((access) << 14) | ((function) << 2) | (method)
+}
+
+const (
+	FILE_DEVICE_UNKNOWN = windef.FILE_DEVICE_UNKNOWN
+	METHOD_BUFFERED     = windef.METHOD_BUFFERED
+	FILE_ANY_ACCESS     = windef.FILE_ANY_ACCESS
+)
+`
+		b.WriteStringLn(s)
+		b.WriteStringLn("var(")
+	} else {
+		b.WriteStringLn("const(")
+	}
 	define := make([]string, 0)
 	for i, line := range lines {
 		block := make([]string, 0)
@@ -197,7 +222,7 @@ func (o *object) GetInterfaceName(path string) string {
 }
 func (o *object) Convert() *object {
 	for i, cpp := range o.back {
-		if !strings.Contains(cpp.path, "Headers\\Ioctls.h.back") {
+		if !strings.Contains(cpp.path, "Headers\\RequestStructures.h.back") {
 			continue //test
 		}
 		mylog.Info("current file path", cpp.path)
@@ -327,6 +352,8 @@ func (o *object) bindGoType(cppType string) (goType string) {
 		return types.Typ[types.Uint64].Name()
 	case "BOOLEAN":
 		return types.Typ[types.Bool].Name()
+	case "void":
+		return "uintptr(0)"
 
 	default:
 		return cppType
@@ -456,7 +483,16 @@ func (o *object) GetMethod(lines []string, InterfaceName string) string {
 		if o.isComment(line) {
 			return
 		}
-		return strings.Contains(line, `(`)
+		switch {
+		case strings.Contains(line, `#define`):
+			return
+		case strings.Contains(line, `typedef struct`):
+			return
+		case strings.Contains(line, `(`):
+			return true
+		default:
+			return
+		}
 	}
 	methods := make([]methodObj, 0)
 	for i := 0; i < len(lines); i++ {
