@@ -4,14 +4,9 @@ import (
 	"fmt"
 	"github.com/ddkwork/librarygo/src/Comment"
 	"github.com/ddkwork/librarygo/src/caseconv"
-	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream"
 	"github.com/ddkwork/librarygo/src/stream/tool"
-	"github.com/goplus/c2go"
-	"github.com/goplus/c2go/cl"
-	"github.com/goplus/c2go/clang/preprocessor"
-	"github.com/goplus/gox"
 	"go/types"
 	"io/fs"
 	"os"
@@ -36,28 +31,28 @@ type (
 		ext  string
 	}
 	object struct {
-		src        string
-		dst        string
-		col        string
-		noExtPath  string
-		ext        []string
-		back       []pathBody
-		goPath     []pathBody
-		expandPath expandPath
+		src           string
+		dst           string
+		col           string
+		expandPathExt string
+		ext           []string
+		back          []pathBody
+		goPath        []pathBody
+		expandPath    expandPath
 	}
 )
 
 func New() Interface { return NewObj() }
 func NewObj() *object {
 	return &object{
-		src:        "",
-		dst:        "",
-		col:        "",
-		noExtPath:  "",
-		ext:        []string{".c", ".cpp", ".inc", ".h", ".c", ".asm"},
-		back:       make([]pathBody, 0),
-		goPath:     make([]pathBody, 0),
-		expandPath: expandPath{},
+		src:           "",
+		dst:           "",
+		col:           "",
+		expandPathExt: "",
+		ext:           []string{".c", ".cpp", ".inc", ".h", ".c", ".asm"},
+		back:          make([]pathBody, 0),
+		goPath:        make([]pathBody, 0),
+		expandPath:    expandPath{},
 	}
 }
 func (o *object) ExpandPath(no, ext string) *object {
@@ -83,9 +78,9 @@ func (o *object) expandExt(path string) (e string) {
 }
 func (o *object) backPath(path string) string {
 	slash := filepath.ToSlash(path)
-	_, after, found := strings.Cut(slash, `/`)
+	before, after, found := strings.Cut(slash, `/`)
 	if !found {
-		panic("!found")
+		return before
 	}
 	return filepath.Join(o.dst, after)
 }
@@ -117,8 +112,13 @@ func (o *object) Back() *object {
 		o.backCpp(path)
 		return err
 	}))
-	if !Comment.New().DeleteKepSpace(o.backPath(o.src)) {
-		panic("!Comment.New().DeleteKepSpace(backPath)")
+	if !Comment.New().DeleteKeepNewLine(o.backPath(o.src)) {
+		panic("!Comment.New().DeleteKeepNewLine(backPath)")
+	}
+	for i, body := range o.back {
+		body, err := os.ReadFile(body.path)
+		o.Check(err)
+		o.back[i].body = string(body)
 	}
 	return o
 }
@@ -195,20 +195,10 @@ func (o *object) GetInterfaceName(path string) string {
 	split := strings.Split(base, ".")
 	return caseconv.ToCamelUpper(split[0], false)
 }
-func Run(path, pkg string) {
-	abs, err := filepath.Abs(path)
-	if !mycheck.Error(err) {
-		return
-	}
-	cl.SetDebug(cl.DbgFlagAll)
-	preprocessor.SetDebug(preprocessor.DbgFlagAll)
-	gox.SetDebug(gox.DbgFlagInstruction) // | gox.DbgFlagMatch)
-	c2go.Run(pkg, abs, c2go.FlagDumpJson, nil)
-}
 func (o *object) Convert() *object {
 	for i, cpp := range o.back {
-		if !strings.Contains(cpp.path, "Headers\\Events.h.back") {
-			//continue //test
+		if !strings.Contains(cpp.path, "Headers\\Ioctls.h.back") {
+			continue //test
 		}
 		mylog.Info("current file path", cpp.path)
 		lines, ok := tool.File().ToLines(cpp.body)
@@ -290,17 +280,17 @@ func (o *object) HandleEnumBlock(col int, lines ...string) string {
 		enums = append(enums, enum)
 	}
 	tmp := stream.New()
-	tmp.WriteStringLn("type " + enums[0].name + " uint32")
+	//tmp.WriteStringLn("type " + enums[0].name + " uint32")
 	tmp.WriteStringLn("const(")
 	for i, enum := range enums {
 		if !strings.Contains(enum.name, "=") {
 			enum.value = fmt.Sprint(i + 1)
-			tmp.WriteStringLn(strings.Join([]string{enum.name, enum.Type, "=", enum.value, enum.comment}, " "))
+			tmp.WriteStringLn(strings.Join([]string{enum.name, "=", enum.value, enum.comment}, " "))
 		} else {
 			split := strings.Split(enum.name, "=")
 			enum.name = split[0]
 			enum.value = split[1]
-			tmp.WriteStringLn(strings.Join([]string{enum.name, enum.Type, "=", enum.value, enum.comment}, " "))
+			tmp.WriteStringLn(strings.Join([]string{enum.name, "=", enum.value, enum.comment}, " "))
 		}
 	}
 	tmp.WriteStringLn(")\n")
@@ -447,7 +437,7 @@ func (o *object) GetStruct(lines []string) string {
 	}
 	return b.String()
 }
-func (o *object) isComment(line string) (ok bool) {
+func (o *object) isComment(line string) (ok bool) { //todo delete
 	switch {
 	case strings.Contains(line, `/*`):
 		return true
