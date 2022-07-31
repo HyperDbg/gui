@@ -160,8 +160,8 @@ func (o *object) GetDefine(lines []string) string {
 	b := stream.New()
 	if isCTL_CODE {
 		s := `
-func CTL_CODE(deviceType, function, method, access uint32) uint32 {
-	return ((deviceType) << 16) | ((access) << 14) | ((function) << 2) | (method)
+func CTL_CODE(deviceType, function, methods, access uint32) uint32 {
+	return ((deviceType) << 16) | ((access) << 14) | ((function) << 2) | (methods)
 }
 
 const (
@@ -220,6 +220,20 @@ func (o *object) GetInterfaceName(path string) string {
 	split := strings.Split(base, ".")
 	return caseconv.ToCamelUpper(split[0], false)
 }
+
+type (
+	BlockObject struct {
+		externs []string
+		defines []string
+		structs []string
+		enums   []string
+		methods []string
+	}
+)
+
+func (o *object) Block(lines []string) BlockObject {
+
+}
 func (o *object) Convert() *object {
 	for i, cpp := range o.back {
 		if !strings.Contains(cpp.path, "Headers\\RequestStructures.h.back") {
@@ -236,28 +250,30 @@ func (o *object) Convert() *object {
 		b.WriteStringLn("package " + pkgName)
 		b.WriteStringLn("//" + cpp.path + "\n")
 
-		define := o.GetDefine(lines)
+		block := o.Block(lines)
+
+		define := o.GetDefine(block.defines)
 		if define != "" {
 			b.WriteStringLn(define)
 			//mylog.Json("define ==> const", define)
 		}
 
-		enum := o.GetEnum(lines)
+		enum := o.GetEnum(block.enums)
 		if enum != "" {
 			b.WriteStringLn(enum)
 			//mylog.Json("enum ==> const", enum)
 		}
 
-		//Struct := o.GetStruct(lines)//todo need fix bug
+		//Struct := o.GetStruct(BlockObject.structs)//todo need fix bug
 		//if Struct != "" {
 		//	b.WriteStringLn(Struct)
 		//	//mylog.Json("Struct ==> struct", Struct)
 		//}
 
-		method := o.GetMethod(lines, o.GetInterfaceName(cpp.path))
+		method := o.GetMethod(block.methods, o.GetInterfaceName(cpp.path))
 		if method != "" {
 			b.WriteStringLn(method)
-			//mylog.Json("method ==> func", method)
+			//mylog.Json("methods ==> func", methods)
 		}
 
 		//extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee; //todo
