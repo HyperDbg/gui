@@ -223,7 +223,33 @@ type (
 		enums   []string
 		methods []string
 	}
+	blockBodyObject struct {
+		line string
+		col  int
+	}
+	blockBodys []blockBodyObject
 )
+
+func findAllBlockBody(lines []string, with, next string) (bodys blockBodys) {
+	bodys = make(blockBodys, 0)
+	for i, line := range lines {
+		if strings.Contains(line, with) {
+			col := i + 1
+			if !strings.Contains(line, next) {
+				bodys = append(bodys, blockBodyObject{line: line, col: col})
+			} else {
+				start := lines[i:]
+				for j, s := range start {
+					bodys = append(bodys, blockBodyObject{line: s, col: col + j})
+					if !strings.Contains(s, next) {
+						break
+					}
+				}
+			}
+		}
+	}
+	return
+}
 
 type (
 	tmpInterface interface {
@@ -234,8 +260,7 @@ type (
 		finished()
 		flush()
 	}
-	tmpObject struct {
-	}
+	tmpObject struct{}
 )
 
 func (t *tmpObject) flush() { Check(os.Remove(t.name())) }
@@ -247,7 +272,6 @@ func (t *tmpObject) finished() {
 		}
 	}
 }
-
 func (t *tmpObject) name() string { return "./tmp.bak" }
 func (t *tmpObject) removeComment(lines []string) {
 	for i, line := range lines {
@@ -289,9 +313,7 @@ func newTmpObject() tmpInterface {
 func (o *object) Block(lines []string) (b BlockObject) {
 	t := newTmpObject()
 	t.removeComment(lines)
-	panic(1111)
-	defer func() { t.finished() }()
-
+	//defer func() { t.finished() }()
 	b = BlockObject{
 		externs: make([]string, 0),
 		defines: make([]string, 0),
@@ -301,36 +323,24 @@ func (o *object) Block(lines []string) (b BlockObject) {
 	}
 	type (
 		fns struct {
-			externs func(in []string) (out []string)
-			defines func(in []string) (out []string)
-			structs func(in []string) (out []string)
-			enums   func(in []string) (out []string)
-			methods func(in []string) (out []string)
+			externs func(in []string) blockBodys
+			defines func(in []string) blockBodys
+			structs func(in []string) blockBodys
+			enums   func(in []string) blockBodys
+			methods func(in []string) blockBodys
 		}
 	)
 	f := fns{
-		externs: func(in []string) (out []string) {
-			out = make([]string, 0)
-			return
-		},
-		defines: func(in []string) (out []string) {
-			out = make([]string, 0)
-			return
-		},
-		structs: func(in []string) (out []string) {
-			out = make([]string, 0)
-			return
-		},
-		enums: func(in []string) (out []string) {
-			out = make([]string, 0)
-			return
-		},
-		methods: func(in []string) (out []string) {
-			out = make([]string, 0)
-			return
-		},
+		externs: func(in []string) blockBodys { return findAllBlockBody(in, `#define`, `\`) },
+		defines: func(in []string) blockBodys { return findAllBlockBody(in, `#define`, `\`) },
+		structs: func(in []string) blockBodys { return findAllBlockBody(in, `#define`, `\`) },
+		enums:   func(in []string) blockBodys { return findAllBlockBody(in, `#define`, `\`) },
+		methods: func(in []string) blockBodys { return findAllBlockBody(in, `#define`, `\`) },
 	}
-	out := f.externs(lines)
+	out := f.defines(t.read())
+	b.externs = out
+	return
+	out = f.externs(lines)
 	b.externs = out
 
 	out = f.enums(out)
