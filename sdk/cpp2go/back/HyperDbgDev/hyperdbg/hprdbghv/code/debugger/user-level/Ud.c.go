@@ -22,6 +22,16 @@ UdCheckAndHandleBreakpointsAndDebugBreaks()(ok bool)//col:645
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewUd() { return & ud{} }
@@ -53,6 +63,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (u *ud)UdUninitializeUserDebugger()(ok bool){//col:93
 
 
@@ -64,6 +84,16 @@ func (u *ud)UdUninitializeUserDebugger()(ok bool){//col:93
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -85,6 +115,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (u *ud)UdContinueThread()(ok bool){//col:137
 
 
@@ -94,6 +134,16 @@ func (u *ud)UdContinueThread()(ok bool){//col:137
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -132,6 +182,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (u *ud)UdPerformCommand()(ok bool){//col:251
 
 
@@ -156,6 +216,16 @@ func (u *ud)UdPerformCommand()(ok bool){//col:251
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -207,6 +277,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (u *ud)UdDispatchUsermodeCommands()(ok bool){//col:366
 
 
@@ -231,6 +311,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (u *ud)UdSpinThreadOnNop()(ok bool){//col:394
 
 
@@ -241,6 +331,16 @@ func (u *ud)UdSpinThreadOnNop()(ok bool){//col:394
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -260,6 +360,16 @@ func (u *ud)UdHandleAfterSteppingReason()(ok bool){//col:424
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -288,6 +398,16 @@ func (u *ud)UdPrePausingReasons()(ok bool){//col:463
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -369,6 +489,16 @@ func (u *ud)UdCheckAndHandleBreakpointsAndDebugBreaks()(ok bool){//col:645
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

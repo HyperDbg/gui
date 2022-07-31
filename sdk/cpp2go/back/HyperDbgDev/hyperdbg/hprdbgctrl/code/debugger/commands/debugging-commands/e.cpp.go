@@ -12,6 +12,16 @@ CommandEditMemory()(ok bool)//col:411
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewE() { return & e{} }
@@ -39,6 +49,16 @@ func (e *e)CommandEditMemoryHelp()(ok bool){//col:49
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -284,6 +304,16 @@ func (e *e)CommandEditMemory()(ok bool){//col:411
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

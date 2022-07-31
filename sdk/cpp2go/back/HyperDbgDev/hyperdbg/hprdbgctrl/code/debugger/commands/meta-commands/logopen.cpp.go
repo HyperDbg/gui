@@ -13,6 +13,16 @@ LogopenSaveToFile()(ok bool)//col:124
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewLogopen() { return & logopen{} }
@@ -25,6 +35,16 @@ func (l *logopen)CommandLogopenHelp()(ok bool){//col:33
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -81,6 +101,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (l *logopen)LogopenSaveToFile()(ok bool){//col:124
 
 
@@ -88,6 +118,16 @@ func (l *logopen)LogopenSaveToFile()(ok bool){//col:124
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

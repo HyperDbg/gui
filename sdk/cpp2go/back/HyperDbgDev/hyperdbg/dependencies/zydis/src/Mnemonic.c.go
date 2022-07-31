@@ -12,6 +12,16 @@ const ZydisShortString* ZydisMnemonicGetStringWrapped()(ok bool)//col:51
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewMnemonic() { return & mnemonic{} }
@@ -34,6 +44,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (m *mnemonic)const ZydisShortString* ZydisMnemonicGetStringWrapped()(ok bool){//col:51
 
 
@@ -45,6 +65,16 @@ func (m *mnemonic)const ZydisShortString* ZydisMnemonicGetStringWrapped()(ok boo
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

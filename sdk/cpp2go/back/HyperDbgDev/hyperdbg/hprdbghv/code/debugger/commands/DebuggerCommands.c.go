@@ -23,6 +23,16 @@ DebuggerCommandReservePreallocatedPools()(ok bool)//col:1229
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewDebuggerCommands() { return & debuggerCommands{} }
@@ -49,6 +59,16 @@ func (d *debuggerCommands)DebuggerCommandReadMemory()(ok bool){//col:44
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -107,6 +127,16 @@ func (d *debuggerCommands)DebuggerCommandReadMemoryVmxRoot()(ok bool){//col:138
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -196,6 +226,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (d *debuggerCommands)DebuggerCommandEditMemory()(ok bool){//col:403
 
 
@@ -265,6 +305,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (d *debuggerCommands)DebuggerCommandEditMemoryVmxRoot()(ok bool){//col:505
 
 
@@ -323,6 +373,16 @@ func (d *debuggerCommands)DebuggerCommandEditMemoryVmxRoot()(ok bool){//col:505
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -485,6 +545,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (d *debuggerCommands)SearchAddressWrapper()(ok bool){//col:977
 
 
@@ -585,6 +655,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (d *debuggerCommands)DebuggerCommandSearchMemory()(ok bool){//col:1084
 
 
@@ -635,6 +715,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (d *debuggerCommands)DebuggerCommandFlush()(ok bool){//col:1104
 
 
@@ -652,6 +742,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (d *debuggerCommands)DebuggerCommandSignalExecutionState()(ok bool){//col:1125
 
 
@@ -661,6 +761,16 @@ func (d *debuggerCommands)DebuggerCommandSignalExecutionState()(ok bool){//col:1
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -687,6 +797,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (d *debuggerCommands)DebuggerCommandSendGeneralBufferToDebugger()(ok bool){//col:1171
 
 
@@ -699,6 +819,16 @@ func (d *debuggerCommands)DebuggerCommandSendGeneralBufferToDebugger()(ok bool){
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -734,6 +864,16 @@ func (d *debuggerCommands)DebuggerCommandReservePreallocatedPools()(ok bool){//c
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

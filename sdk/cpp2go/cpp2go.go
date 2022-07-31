@@ -217,26 +217,33 @@ func (o *object) GetInterfaceName(path string) string {
 }
 
 type (
-	BlockObject struct { //todo class add ?
-		externs []string
-		defines []string
-		structs []string
-		enums   []string
-		methods []string
-	}
-)
-
-type (
 	tmpInterface interface {
 		removeComment(lines []string)
 		read() []string
 		write(lines []string)
 		name() string
 		finished()
+		clean(b block.Lines)
 		flush()
 	}
 	tmpObject struct{}
 )
+
+func newTmpObject() tmpInterface {
+	return &tmpObject{}
+}
+
+func (t *tmpObject) clean(b block.Lines) {
+	lines := t.read()
+	for _, info := range b {
+		for i2 := range lines {
+			if info.Col == i2+1 {
+				lines[i2] = ""
+			}
+		}
+	}
+	t.write(lines)
+}
 
 func (t *tmpObject) flush() { Check(os.Remove(t.name())) }
 func (t *tmpObject) finished() {
@@ -261,13 +268,7 @@ func (t *tmpObject) removeComment(lines []string) {
 			lines[i] = before
 		}
 	}
-	s := stream.New()
-	for _, line := range lines {
-		s.WriteStringLn(line)
-	}
-	if !tool.File().WriteTruncate(t.name(), s.String()) {
-		panic(t.name())
-	}
+	t.write(lines)
 }
 func (t *tmpObject) read() []string {
 	file, err := os.ReadFile(t.name())
@@ -279,48 +280,51 @@ func (t *tmpObject) read() []string {
 	return lines
 }
 func (t *tmpObject) write(lines []string) {
-	//TODO implement me
-	panic("implement me")
+	s := stream.New()
+	for _, line := range lines {
+		s.WriteStringLn(line)
+	}
+	if !tool.File().WriteTruncate(t.name(), s.String()) {
+		panic(t.name())
+	}
 }
-func newTmpObject() tmpInterface {
-	return &tmpObject{}
-}
+
+type (
+	BlockObject struct {
+		//todo class add ?
+		externs block.Lines
+		defines block.Lines
+		structs block.Lines
+		enums   block.Lines
+		methods block.Lines
+	}
+)
+
 func (o *object) Block(lines []string) (b BlockObject) {
 	t := newTmpObject()
 	t.removeComment(lines)
 	//defer func() { t.finished() }()
-	b = BlockObject{
-		externs: make([]string, 0),
-		defines: make([]string, 0),
-		structs: make([]string, 0),
-		enums:   make([]string, 0),
-		methods: make([]string, 0),
-	}
-	type (
-		fns struct {
-			externs func(in []string) block.Lines
-			defines func(in []string) block.Lines
-			structs func(in []string) block.Lines
-			enums   func(in []string) block.Lines
-			methods func(in []string) block.Lines
-		}
-	)
-	f := fns{
-		externs: func(in []string) block.Lines { return block.FindAll(in, `extern`, ``) },
-		defines: func(in []string) block.Lines { return block.FindAll(in, `#define`, `\`) },
-		structs: func(in []string) block.Lines { return block.FindAll(in, `typedef struct`, ``) },
-		enums:   func(in []string) block.Lines { return block.FindAll(in, `typedef enum`, ``) },
-		methods: func(in []string) block.Lines { return block.FindAll(in, `(`, ``) },
-	}
-	out := f.defines(t.read())
-	b.externs = out
+	b.defines = block.FindAll(t.read(), `#define`, `\`)
+	t.clean(b.defines)
 	return
-	out = f.externs(lines)
-	b.externs = out
+	b.externs = block.FindAll(t.read(), `extern`, ``)
+	t.clean(b.externs)
 
-	out = f.enums(out)
-	b.enums = out
+	b.structs = block.FindAll(t.read(), `typedef struct`, ``)
+	t.clean(b.structs)
 
+	b.enums = block.FindAll(t.read(), `typedef enum`, ``)
+	t.clean(b.enums)
+
+	b.methods = block.FindAll(t.read(), `(`, ``)
+	t.clean(b.methods)
+	b = BlockObject{
+		externs: make(block.Lines, 0),
+		defines: make(block.Lines, 0),
+		structs: make(block.Lines, 0),
+		enums:   make(block.Lines, 0),
+		methods: make(block.Lines, 0),
+	}
 	return
 }
 func (o *object) Convert() *object {
@@ -340,18 +344,19 @@ func (o *object) Convert() *object {
 		b.WriteStringLn("//" + cpp.path + "\n")
 
 		block := o.Block(lines)
+		block = block
 
-		define := o.GetDefine(block.defines)
-		if define != "" {
-			b.WriteStringLn(define)
-			//mylog.Json("define ==> const", define)
-		}
+		//define := o.GetDefine(block.defines)
+		//if define != "" {
+		//	b.WriteStringLn(define)
+		//	//mylog.Json("define ==> const", define)
+		//}
 
-		enum := o.GetEnum(block.enums)
-		if enum != "" {
-			b.WriteStringLn(enum)
-			//mylog.Json("enum ==> const", enum)
-		}
+		//enum := o.GetEnum(block.enums)
+		//if enum != "" {
+		//	b.WriteStringLn(enum)
+		//	//mylog.Json("enum ==> const", enum)
+		//}
 
 		//Struct := o.GetStruct(BlockObject.structs)//todo need fix bug
 		//if Struct != "" {
@@ -359,11 +364,11 @@ func (o *object) Convert() *object {
 		//	//mylog.Json("Struct ==> struct", Struct)
 		//}
 
-		method := o.GetMethod(block.methods, o.GetInterfaceName(cpp.path))
-		if method != "" {
-			b.WriteStringLn(method)
-			//mylog.Json("methods ==> func", methods)
-		}
+		//method := o.GetMethod(block.methods, o.GetInterfaceName(cpp.path))
+		//if method != "" {
+		//	b.WriteStringLn(method)
+		//	//mylog.Json("methods ==> func", methods)
+		//}
 
 		//extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee; //todo
 

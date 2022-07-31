@@ -13,6 +13,16 @@ CommandR()(ok bool)//col:367
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewR() { return & r{} }
@@ -37,6 +47,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (r *r)ShowAllRegisters()(ok bool){//col:179
 
 
@@ -46,6 +66,16 @@ func (r *r)ShowAllRegisters()(ok bool){//col:179
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -163,6 +193,16 @@ func (r *r)CommandR()(ok bool){//col:367
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

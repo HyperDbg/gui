@@ -224,6 +224,17 @@ Ntmmapi interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewNtmmapi() { return & ntmmapi{} }
@@ -247,6 +258,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntmmapi)#if ()(ok bool){//col:518
 
 
@@ -256,6 +278,17 @@ func (n *ntmmapi)#if ()(ok bool){//col:518
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -372,6 +405,17 @@ func (n *ntmmapi)#if ()(ok bool){//col:655
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -545,6 +589,17 @@ func (n *ntmmapi)#if ()(ok bool){//col:871
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

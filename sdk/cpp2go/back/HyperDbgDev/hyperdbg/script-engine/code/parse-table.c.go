@@ -14,6 +14,15 @@ ParseTable interface{
 
 
 
+
+
+
+
+
+
+
+
+
 )
 
 func NewParseTable() { return & parseTable{} }
@@ -24,6 +33,15 @@ func (p *parseTable)	{{SPECIAL_TOKEN, "()(ok bool){//col:275
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -63,11 +81,29 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (p *parseTable)	{{SPECIAL_TOKEN, "()(ok bool){//col:1075
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -93,6 +129,15 @@ func (p *parseTable)"()(ok bool){//col:1222
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 

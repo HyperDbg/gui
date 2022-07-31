@@ -12,6 +12,16 @@ static_assert()(ok bool)//col:97
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewSymbols() { return & symbols{} }
@@ -33,6 +43,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (s *symbols)static_assert()(ok bool){//col:97
 
 
@@ -41,6 +61,16 @@ func (s *symbols)static_assert()(ok bool){//col:97
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

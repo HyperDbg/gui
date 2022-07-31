@@ -20,6 +20,17 @@ int main()(ok bool)//col:327
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewArgParse() { return & argParse{} }
@@ -35,6 +46,17 @@ func (a *argParse)auto cvt_string_view()(ok bool){//col:50
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -67,6 +89,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (a *argParse)TEST()(ok bool){//col:90
 
 
@@ -83,6 +116,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (a *argParse)TEST()(ok bool){//col:98
 
 
@@ -92,6 +136,17 @@ func (a *argParse)TEST()(ok bool){//col:98
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -118,6 +173,17 @@ func (a *argParse)TEST()(ok bool){//col:119
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -175,6 +241,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (a *argParse)TEST()(ok bool){//col:226
 
 
@@ -216,6 +293,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (a *argParse)TEST()(ok bool){//col:262
 
 
@@ -241,6 +329,17 @@ func (a *argParse)TEST()(ok bool){//col:262
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -297,6 +396,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (a *argParse)int main()(ok bool){//col:327
 
 
@@ -305,6 +415,17 @@ func (a *argParse)int main()(ok bool){//col:327
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

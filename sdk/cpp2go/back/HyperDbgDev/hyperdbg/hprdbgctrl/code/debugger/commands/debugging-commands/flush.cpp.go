@@ -13,6 +13,16 @@ CommandFlush()(ok bool)//col:124
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewFlush() { return & flush{} }
@@ -26,6 +36,16 @@ func (f *flush)CommandFlushHelp()(ok bool){//col:31
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -75,6 +95,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (f *flush)CommandFlush()(ok bool){//col:124
 
 
@@ -88,6 +118,16 @@ func (f *flush)CommandFlush()(ok bool){//col:124
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

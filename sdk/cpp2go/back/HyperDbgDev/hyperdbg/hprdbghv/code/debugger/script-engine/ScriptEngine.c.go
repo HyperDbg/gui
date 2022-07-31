@@ -12,6 +12,16 @@ ScriptEngineWrapperGetAddressOfReservedBuffer()(ok bool)//col:55
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewScriptEngine() { return & scriptEngine{} }
@@ -41,6 +51,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineWrapperGetAddressOfReservedBuffer()(ok bool){//col:55
 
 
@@ -48,6 +68,16 @@ func (s *scriptEngine)ScriptEngineWrapperGetAddressOfReservedBuffer()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

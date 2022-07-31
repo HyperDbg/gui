@@ -34,6 +34,15 @@ Sam5250RxReady()(ok bool)//col:343
 
 
 
+
+
+
+
+
+
+
+
+
 )
 
 func NewSam5250() { return & sam5250{} }
@@ -75,6 +84,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (s *sam5250)Sam5250SetBaud()(ok bool){//col:170
 
 
@@ -89,6 +107,15 @@ func (s *sam5250)Sam5250SetBaud()(ok bool){//col:170
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -132,6 +159,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (s *sam5250)Sam5250PutByte()(ok bool){//col:301
 
 
@@ -166,6 +202,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (s *sam5250)Sam5250RxReady()(ok bool){//col:343
 
 
@@ -184,6 +229,15 @@ func (s *sam5250)Sam5250RxReady()(ok bool){//col:343
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 

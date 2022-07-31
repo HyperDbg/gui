@@ -13,6 +13,16 @@ TestKernelGetInformation()(ok bool)//col:166
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewKernelTests() { return & kernelTests{} }
@@ -53,6 +63,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kernelTests)TestKernelPerformTests()(ok bool){//col:110
 
 
@@ -68,6 +88,16 @@ func (k *kernelTests)TestKernelPerformTests()(ok bool){//col:110
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -98,6 +128,16 @@ func (k *kernelTests)TestKernelGetInformation()(ok bool){//col:166
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

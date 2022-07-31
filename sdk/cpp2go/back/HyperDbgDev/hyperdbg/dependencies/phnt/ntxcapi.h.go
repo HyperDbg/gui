@@ -31,6 +31,17 @@ RtlDispatchException()(ok bool)//col:54
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewNtxcapi() { return & ntxcapi{} }
@@ -71,6 +82,17 @@ func (n *ntxcapi)RtlDispatchException()(ok bool){//col:54
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

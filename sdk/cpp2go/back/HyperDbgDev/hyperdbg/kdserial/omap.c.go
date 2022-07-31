@@ -19,6 +19,15 @@ OmapSetBaud()(ok bool)//col:251
 
 
 
+
+
+
+
+
+
+
+
+
 )
 
 func NewOmap() { return & omap{} }
@@ -70,6 +79,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (o *omap)OmapSetBaud()(ok bool){//col:251
 
 
@@ -99,6 +117,15 @@ func (o *omap)OmapSetBaud()(ok bool){//col:251
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 

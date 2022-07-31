@@ -30,6 +30,16 @@ Definition interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewDefinition() { return & definition{} }
@@ -64,6 +74,16 @@ func (d *definition)#if defined()(ok bool){//col:132
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

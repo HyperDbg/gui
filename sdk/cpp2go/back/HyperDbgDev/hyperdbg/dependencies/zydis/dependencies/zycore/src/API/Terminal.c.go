@@ -12,6 +12,17 @@ ZyanStatus ZyanTerminalIsTTY()(ok bool)//col:155
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewTerminal() { return & terminal{} }
@@ -80,6 +91,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (t *terminal)ZyanStatus ZyanTerminalIsTTY()(ok bool){//col:155
 
 
@@ -135,6 +157,17 @@ func (t *terminal)ZyanStatus ZyanTerminalIsTTY()(ok bool){//col:155
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

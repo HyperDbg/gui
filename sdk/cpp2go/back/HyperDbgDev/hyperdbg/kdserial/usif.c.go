@@ -23,6 +23,15 @@ UsifRxReady()(ok bool)//col:277
 
 
 
+
+
+
+
+
+
+
+
+
 )
 
 func NewUsif() { return & usif{} }
@@ -55,6 +64,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (u *usif)UsifSetBaud()(ok bool){//col:117
 
 
@@ -70,6 +88,15 @@ func (u *usif)UsifSetBaud()(ok bool){//col:117
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -100,6 +127,15 @@ func (u *usif)UsifGetByte()(ok bool){//col:176
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -140,6 +176,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (u *usif)UsifRxReady()(ok bool){//col:277
 
 
@@ -158,6 +203,15 @@ func (u *usif)UsifRxReady()(ok bool){//col:277
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 

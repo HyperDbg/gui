@@ -20,6 +20,17 @@ ZYCORE_EXPORT ZyanU64 ZycoreGetVersion()(ok bool)//col:108
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewZycore() { return & zycore{} }
@@ -30,6 +41,17 @@ func (z *zycore)ZYCORE_EXPORT ZyanU64 ZycoreGetVersion()(ok bool){//col:108
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -117,6 +117,17 @@ EnumInstructionCategory interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewEnumInstructionCategory() { return & enumInstructionCategory{} }
@@ -126,6 +137,17 @@ func (e *enumInstructionCategory)    ZYDIS_CATEGORY_REQUIRED_BITS = ZYAN_BITS_TO
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

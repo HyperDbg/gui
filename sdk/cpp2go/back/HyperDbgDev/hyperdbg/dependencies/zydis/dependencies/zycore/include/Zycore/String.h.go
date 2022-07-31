@@ -22,6 +22,17 @@ ZYCORE_EXPORT ZYAN_REQUIRES_LIBC ZyanStatus ZyanStringInit()(ok bool)//col:1009
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewString() { return & string{} }
@@ -109,6 +120,17 @@ func (s *string)ZYCORE_EXPORT ZYAN_REQUIRES_LIBC ZyanStatus ZyanStringInit()(ok 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

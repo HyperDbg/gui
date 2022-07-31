@@ -41,6 +41,17 @@ ZyanStatus ZyanListGetSize()(ok bool)//col:695
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewList() { return & list{} }
@@ -84,6 +95,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)static ZyanStatus ZyanListDeallocateNode()(ok bool){//col:119
 
 
@@ -111,6 +133,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)ZYAN_REQUIRES_LIBC ZyanStatus ZyanListInit()(ok bool){//col:138
 
 
@@ -119,6 +152,17 @@ func (l *list)ZYAN_REQUIRES_LIBC ZyanStatus ZyanListInit()(ok bool){//col:138
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -154,6 +198,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)ZyanStatus ZyanListInitCustomBuffer()(ok bool){//col:184
 
 
@@ -175,6 +230,17 @@ func (l *list)ZyanStatus ZyanListInitCustomBuffer()(ok bool){//col:184
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -217,6 +283,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)ZyanStatus ZyanListGetHeadNode()(ok bool){//col:240
 
 
@@ -229,6 +306,17 @@ func (l *list)ZyanStatus ZyanListGetHeadNode()(ok bool){//col:240
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -255,6 +343,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)ZyanStatus ZyanListGetPrevNode()(ok bool){//col:266
 
 
@@ -267,6 +366,17 @@ func (l *list)ZyanStatus ZyanListGetPrevNode()(ok bool){//col:266
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -293,6 +403,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)const void* ZyanListGetNodeData()(ok bool){//col:290
 
 
@@ -304,6 +425,17 @@ func (l *list)const void* ZyanListGetNodeData()(ok bool){//col:290
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -330,6 +462,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)void* ZyanListGetNodeDataMutable()(ok bool){//col:314
 
 
@@ -341,6 +484,17 @@ func (l *list)void* ZyanListGetNodeDataMutable()(ok bool){//col:314
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -367,6 +521,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)ZyanStatus ZyanListSetNodeData()(ok bool){//col:346
 
 
@@ -384,6 +549,17 @@ func (l *list)ZyanStatus ZyanListSetNodeData()(ok bool){//col:346
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -424,6 +600,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)ZyanStatus ZyanListPushFront()(ok bool){//col:408
 
 
@@ -450,6 +637,17 @@ func (l *list)ZyanStatus ZyanListPushFront()(ok bool){//col:408
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -494,6 +692,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)ZyanStatus ZyanListEmplaceFront()(ok bool){//col:474
 
 
@@ -524,6 +733,17 @@ func (l *list)ZyanStatus ZyanListEmplaceFront()(ok bool){//col:474
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -568,6 +788,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)ZyanStatus ZyanListPopFront()(ok bool){//col:544
 
 
@@ -605,6 +836,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)ZyanStatus ZyanListRemove()(ok bool){//col:552
 
 
@@ -614,6 +856,17 @@ func (l *list)ZyanStatus ZyanListRemove()(ok bool){//col:552
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -638,6 +891,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)ZyanStatus ZyanListClear()(ok bool){//col:567
 
 
@@ -652,6 +916,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)ZyanStatus ZyanListResize()(ok bool){//col:583
 
 
@@ -659,6 +934,17 @@ func (l *list)ZyanStatus ZyanListResize()(ok bool){//col:583
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -754,6 +1040,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (l *list)ZyanStatus ZyanListGetSize()(ok bool){//col:695
 
 
@@ -766,6 +1063,17 @@ func (l *list)ZyanStatus ZyanListGetSize()(ok bool){//col:695
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -16,6 +16,17 @@ ZYCORE_EXPORT ZyanStatus ZyanAllocatorInit()(ok bool)//col:140
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewAllocator() { return & allocator{} }
@@ -40,6 +51,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (a *allocator)ZYCORE_EXPORT ZyanStatus ZyanAllocatorInit()(ok bool){//col:140
 
 
@@ -49,6 +71,17 @@ func (a *allocator)ZYCORE_EXPORT ZyanStatus ZyanAllocatorInit()(ok bool){//col:1
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

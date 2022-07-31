@@ -14,6 +14,16 @@ CommandScript()(ok bool)//col:280
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewScript() { return & script{} }
@@ -29,6 +39,16 @@ func (s *script)CommandScriptHelp()(ok bool){//col:40
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -65,6 +85,16 @@ func (s *script)CommandScriptRunCommand()(ok bool){//col:106
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -130,6 +160,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (s *script)CommandScript()(ok bool){//col:280
 
 
@@ -148,6 +188,16 @@ func (s *script)CommandScript()(ok bool){//col:280
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

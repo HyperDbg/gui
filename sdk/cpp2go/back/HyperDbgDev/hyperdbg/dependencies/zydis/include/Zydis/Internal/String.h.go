@@ -33,6 +33,17 @@ ZyanStatus ZydisStringAppendHexU()(ok bool)//col:458
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewString() { return & string{} }
@@ -42,6 +53,17 @@ func (s *string)    ZYDIS_LETTER_CASE_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(o
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -70,6 +92,17 @@ func (s *string)      ZYAN_ASSERT()(ok bool){//col:147
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -142,6 +175,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZYAN_INLINE ZyanStatus ZydisStringAppendShort()(ok bool){//col:249
 
 
@@ -161,6 +205,17 @@ func (s *string)ZYAN_INLINE ZyanStatus ZydisStringAppendShort()(ok bool){//col:2
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -233,6 +288,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZydisStringAppendDecU()(ok bool){//col:388
 
 
@@ -268,6 +334,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (s *string)ZyanStatus ZydisStringAppendHexU()(ok bool){//col:458
 
 
@@ -296,6 +373,17 @@ func (s *string)ZyanStatus ZydisStringAppendHexU()(ok bool){//col:458
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

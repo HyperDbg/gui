@@ -17,6 +17,17 @@ Thread interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewThread() { return & thread{} }
@@ -52,6 +63,17 @@ func (t *thread)#if   defined()(ok bool){//col:239
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

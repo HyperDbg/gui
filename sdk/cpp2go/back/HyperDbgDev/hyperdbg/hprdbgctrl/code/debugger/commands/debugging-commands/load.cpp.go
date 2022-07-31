@@ -13,6 +13,16 @@ CommandLoad()(ok bool)//col:184
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewLoad() { return & load{} }
@@ -27,6 +37,16 @@ func (l *load)CommandLoadHelp()(ok bool){//col:36
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -79,6 +99,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (l *load)CommandLoad()(ok bool){//col:184
 
 
@@ -118,6 +148,16 @@ func (l *load)CommandLoad()(ok bool){//col:184
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

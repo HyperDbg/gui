@@ -15,6 +15,16 @@ SyscallHookTest()(ok bool)//col:306
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewSsdtHook() { return & ssdtHook{} }
@@ -75,6 +85,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (s *ssdtHook)SyscallHookFindSsdt()(ok bool){//col:150
 
 
@@ -127,6 +147,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (s *ssdtHook)SyscallHookGetFunctionAddress()(ok bool){//col:201
 
 
@@ -160,6 +190,16 @@ func (s *ssdtHook)SyscallHookGetFunctionAddress()(ok bool){//col:201
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -218,6 +258,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (s *ssdtHook)SyscallHookTest()(ok bool){//col:306
 
 
@@ -235,6 +285,16 @@ func (s *ssdtHook)SyscallHookTest()(ok bool){//col:306
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

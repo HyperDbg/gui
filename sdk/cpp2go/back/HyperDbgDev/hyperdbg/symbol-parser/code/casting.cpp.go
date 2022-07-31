@@ -13,6 +13,15 @@ main()(ok bool)//col:417
 
 
 
+
+
+
+
+
+
+
+
+
 )
 
 func NewCasting() { return & casting{} }
@@ -169,6 +178,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (c *casting)SymQuerySizeof()(ok bool){//col:284
 
 
@@ -204,6 +222,15 @@ func (c *casting)SymQuerySizeof()(ok bool){//col:284
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -253,6 +280,15 @@ func (c *casting)main()(ok bool){//col:417
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 

@@ -22,6 +22,15 @@ ScriptEnginePseudoRegGetEventId()(ok bool)//col:387
 
 
 
+
+
+
+
+
+
+
+
+
 )
 
 func NewPseudoRegisters() { return & pseudoRegisters{} }
@@ -36,6 +45,15 @@ func (p *pseudoRegisters)ScriptEnginePseudoRegGetTid()(ok bool){//col:34
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -60,6 +78,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetPid()(ok bool){//col:70
 
 
@@ -70,6 +97,15 @@ func (p *pseudoRegisters)ScriptEnginePseudoRegGetPid()(ok bool){//col:70
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -112,6 +148,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetProc()(ok bool){//col:138
 
 
@@ -129,6 +174,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetThread()(ok bool){//col:156
 
 
@@ -139,6 +193,15 @@ func (p *pseudoRegisters)ScriptEnginePseudoRegGetThread()(ok bool){//col:156
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -236,6 +299,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetTeb()(ok bool){//col:306
 
 
@@ -246,6 +318,15 @@ func (p *pseudoRegisters)ScriptEnginePseudoRegGetTeb()(ok bool){//col:306
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -270,6 +351,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetBuffer()(ok bool){//col:349
 
 
@@ -280,6 +370,15 @@ func (p *pseudoRegisters)ScriptEnginePseudoRegGetBuffer()(ok bool){//col:349
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -304,6 +403,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetEventId()(ok bool){//col:387
 
 
@@ -314,6 +422,15 @@ func (p *pseudoRegisters)ScriptEnginePseudoRegGetEventId()(ok bool){//col:387
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 

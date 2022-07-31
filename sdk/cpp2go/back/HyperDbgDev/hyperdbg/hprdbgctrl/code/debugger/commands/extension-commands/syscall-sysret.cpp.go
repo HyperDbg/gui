@@ -13,6 +13,16 @@ CommandSyscallAndSysret()(ok bool)//col:270
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewSyscallSysret() { return & syscallSysret{} }
@@ -48,6 +58,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (s *syscallSysret)CommandSysretHelp()(ok bool){//col:70
 
 
@@ -69,6 +89,16 @@ func (s *syscallSysret)CommandSysretHelp()(ok bool){//col:70
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -207,6 +237,16 @@ func (s *syscallSysret)CommandSyscallAndSysret()(ok bool){//col:270
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

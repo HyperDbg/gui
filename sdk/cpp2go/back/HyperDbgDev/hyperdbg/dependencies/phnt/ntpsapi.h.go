@@ -655,6 +655,17 @@ NtCreateJobObject()(ok bool)//col:2480
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewNtpsapi() { return & ntpsapi{} }
@@ -737,6 +748,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntpsapi)#if ()(ok bool){//col:229
 
 
@@ -758,6 +780,17 @@ func (n *ntpsapi)#if ()(ok bool){//col:229
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -787,6 +820,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntpsapi)#if ()(ok bool){//col:300
 
 
@@ -795,6 +839,17 @@ func (n *ntpsapi)#if ()(ok bool){//col:300
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -815,6 +870,17 @@ func (n *ntpsapi)#if ()(ok bool){//col:315
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -848,6 +914,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntpsapi)#if ()(ok bool){//col:677
 
 
@@ -864,6 +941,17 @@ func (n *ntpsapi)#if ()(ok bool){//col:677
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -903,6 +991,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntpsapi)#if ()(ok bool){//col:1185
 
 
@@ -913,6 +1012,17 @@ func (n *ntpsapi)#if ()(ok bool){//col:1185
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1047,6 +1157,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntpsapi)#if ()(ok bool){//col:1395
 
 
@@ -1079,6 +1200,17 @@ func (n *ntpsapi)#if ()(ok bool){//col:1395
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1292,6 +1424,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntpsapi)NtQueueApcThreadEx2()(ok bool){//col:1740
 
 
@@ -1365,6 +1508,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntpsapi)    ProcThreadAttributeValue()(ok bool){//col:1858
 
 
@@ -1391,6 +1545,17 @@ func (n *ntpsapi)    ProcThreadAttributeValue()(ok bool){//col:1858
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1485,6 +1650,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntpsapi)#if ()(ok bool){//col:2294
 
 
@@ -1553,6 +1729,17 @@ func (n *ntpsapi)#if ()(ok bool){//col:2294
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1640,6 +1827,17 @@ func (n *ntpsapi)NtCreateJobObject()(ok bool){//col:2480
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

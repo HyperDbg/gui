@@ -66,6 +66,17 @@ PDB::IsUnnamedSymbol()(ok bool)//col:1248
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewPdb() { return & pdb{} }
@@ -99,6 +110,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModuleBase::SymbolModuleBase()(ok bool){//col:54
 
 
@@ -107,6 +129,17 @@ func (p *pdb)SymbolModuleBase::SymbolModuleBase()(ok bool){//col:54
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -127,6 +160,17 @@ func (p *pdb)SymbolModuleBase::LoadDiaViaCoCreateInstance()(ok bool){//col:67
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -161,6 +205,17 @@ func (p *pdb)SymbolModuleBase::LoadDiaViaLoadLibrary()(ok bool){//col:100
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -231,6 +286,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModuleBase::Close()(ok bool){//col:212
 
 
@@ -248,6 +314,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModuleBase::IsOpen()(ok bool){//col:219
 
 
@@ -255,6 +332,17 @@ func (p *pdb)SymbolModuleBase::IsOpen()(ok bool){//col:219
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -379,12 +467,34 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::SymbolModule()(ok bool){//col:370
 
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -399,6 +509,17 @@ func (p *pdb)SymbolModule::~SymbolModule()(ok bool){//col:376
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -433,6 +554,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::IsOpen()(ok bool){//col:409
 
 
@@ -447,6 +579,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::GetPath()(ok bool){//col:416
 
 
@@ -454,6 +597,17 @@ func (p *pdb)SymbolModule::GetPath()(ok bool){//col:416
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -484,6 +638,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::GetMachineType()(ok bool){//col:441
 
 
@@ -498,6 +663,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::GetLanguage()(ok bool){//col:448
 
 
@@ -505,6 +681,17 @@ func (p *pdb)SymbolModule::GetLanguage()(ok bool){//col:448
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -539,6 +726,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::GetSymbolByName()(ok bool){//col:497
 
 
@@ -556,6 +754,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::GetSymbolByTypeId()(ok bool){//col:507
 
 
@@ -566,6 +775,17 @@ func (p *pdb)SymbolModule::GetSymbolByTypeId()(ok bool){//col:507
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -605,6 +825,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::BuildSymbolMapFromEnumerator()(ok bool){//col:555
 
 
@@ -620,6 +851,17 @@ func (p *pdb)SymbolModule::BuildSymbolMapFromEnumerator()(ok bool){//col:555
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -658,6 +900,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::BuildSymbolMap()(ok bool){//col:608
 
 
@@ -686,6 +939,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::GetSymbolMap()(ok bool){//col:615
 
 
@@ -693,6 +957,17 @@ func (p *pdb)SymbolModule::GetSymbolMap()(ok bool){//col:615
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -714,6 +989,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::GetFunctionSet()(ok bool){//col:629
 
 
@@ -721,6 +1007,17 @@ func (p *pdb)SymbolModule::GetFunctionSet()(ok bool){//col:629
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -774,6 +1071,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::ProcessSymbolBase()(ok bool){//col:687
 
 
@@ -783,6 +1091,17 @@ func (p *pdb)SymbolModule::ProcessSymbolBase()(ok bool){//col:687
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -828,6 +1147,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::ProcessSymbolTypedef()(ok bool){//col:741
 
 
@@ -840,6 +1170,17 @@ func (p *pdb)SymbolModule::ProcessSymbolTypedef()(ok bool){//col:741
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -876,6 +1217,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::ProcessSymbolArray()(ok bool){//col:788
 
 
@@ -889,6 +1241,17 @@ func (p *pdb)SymbolModule::ProcessSymbolArray()(ok bool){//col:788
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -938,6 +1301,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)SymbolModule::ProcessSymbolFunctionArg()(ok bool){//col:859
 
 
@@ -950,6 +1324,17 @@ func (p *pdb)SymbolModule::ProcessSymbolFunctionArg()(ok bool){//col:859
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1043,6 +1428,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)void SymbolModule::DestroySymbol()(ok bool){//col:996
 
 
@@ -1079,11 +1475,33 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)	{ ()(ok bool){//col:1044
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1103,6 +1521,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)PDB::PDB()(ok bool){//col:1084
 
 
@@ -1110,6 +1539,17 @@ func (p *pdb)PDB::PDB()(ok bool){//col:1084
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1134,6 +1574,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)PDB::~PDB()(ok bool){//col:1099
 
 
@@ -1141,6 +1592,17 @@ func (p *pdb)PDB::~PDB()(ok bool){//col:1099
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1164,6 +1626,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)PDB::IsOpened()(ok bool){//col:1115
 
 
@@ -1171,6 +1644,17 @@ func (p *pdb)PDB::IsOpened()(ok bool){//col:1115
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1192,6 +1676,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)PDB::Close()(ok bool){//col:1129
 
 
@@ -1199,6 +1694,17 @@ func (p *pdb)PDB::Close()(ok bool){//col:1129
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1220,6 +1726,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)PDB::GetLanguage()(ok bool){//col:1143
 
 
@@ -1227,6 +1744,17 @@ func (p *pdb)PDB::GetLanguage()(ok bool){//col:1143
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1250,6 +1778,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)PDB::GetSymbolByTypeId()(ok bool){//col:1161
 
 
@@ -1259,6 +1798,17 @@ func (p *pdb)PDB::GetSymbolByTypeId()(ok bool){//col:1161
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1280,6 +1830,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)PDB::GetSymbolNameMap()(ok bool){//col:1175
 
 
@@ -1294,6 +1855,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)PDB::GetFunctionSet()(ok bool){//col:1182
 
 
@@ -1301,6 +1873,17 @@ func (p *pdb)PDB::GetFunctionSet()(ok bool){//col:1182
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1338,6 +1921,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)PDB::GetBasicTypeString()(ok bool){//col:1217
 
 
@@ -1348,6 +1942,17 @@ func (p *pdb)PDB::GetBasicTypeString()(ok bool){//col:1217
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1380,6 +1985,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (p *pdb)PDB::IsUnnamedSymbol()(ok bool){//col:1248
 
 
@@ -1391,6 +2007,17 @@ func (p *pdb)PDB::IsUnnamedSymbol()(ok bool){//col:1248
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

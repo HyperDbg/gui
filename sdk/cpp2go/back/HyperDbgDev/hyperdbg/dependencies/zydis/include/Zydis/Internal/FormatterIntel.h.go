@@ -15,6 +15,17 @@ ZyanStatus ZydisFormatterIntelFormatInstruction()(ok bool)//col:170
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewFormatterIntel() { return & formatterIntel{} }
@@ -56,6 +67,17 @@ func (f *formatterIntel)ZyanStatus ZydisFormatterIntelFormatInstruction()(ok boo
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

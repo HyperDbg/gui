@@ -21,6 +21,17 @@ ZyanStatus ZydisFormatterBasePrintDecorator()(ok bool)//col:761
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewFormatterBase() { return & formatterBase{} }
@@ -45,6 +56,17 @@ func (f *formatterBase)    ()(ok bool){//col:74
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -107,6 +129,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatterBase)ZyanStatus ZydisFormatterBaseFormatOperandREG()(ok bool){//col:147
 
 
@@ -118,6 +151,17 @@ func (f *formatterBase)ZyanStatus ZydisFormatterBaseFormatOperandREG()(ok bool){
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -150,6 +194,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatterBase)ZyanStatus ZydisFormatterBaseFormatOperandIMM()(ok bool){//col:190
 
 
@@ -171,6 +226,17 @@ func (f *formatterBase)ZyanStatus ZydisFormatterBaseFormatOperandIMM()(ok bool){
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -216,6 +282,17 @@ func (f *formatterBase)ZyanStatus ZydisFormatterBasePrintAddressABS()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -274,6 +351,17 @@ func (f *formatterBase)ZyanStatus ZydisFormatterBasePrintAddressREL()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -346,6 +434,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatterBase)ZyanStatus ZydisFormatterBasePrintSegment()(ok bool){//col:400
 
 
@@ -393,6 +492,17 @@ func (f *formatterBase)ZyanStatus ZydisFormatterBasePrintSegment()(ok bool){//co
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -545,6 +655,17 @@ func (f *formatterBase)ZyanStatus ZydisFormatterBasePrintPrefixes()(ok bool){//c
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -755,6 +876,17 @@ func (f *formatterBase)ZyanStatus ZydisFormatterBasePrintDecorator()(ok bool){//
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

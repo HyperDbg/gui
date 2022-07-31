@@ -171,6 +171,17 @@ SharedTypes interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewSharedTypes() { return & sharedTypes{} }
@@ -180,6 +191,17 @@ func (s *sharedTypes)    ZYDIS_MACHINE_MODE_REQUIRED_BITS = ZYAN_BITS_TO_REPRESE
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -199,11 +221,33 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (s *sharedTypes)    ZYDIS_ELEMENT_TYPE_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:180
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -223,11 +267,33 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (s *sharedTypes)    ZYDIS_OPERAND_ENCODING_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:284
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -247,11 +313,33 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (s *sharedTypes)    ZYDIS_OPERAND_ACTION_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:392
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -271,11 +359,33 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (s *sharedTypes)    ZYDIS_OPCODE_MAP_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:470
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

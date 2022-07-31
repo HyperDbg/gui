@@ -19,6 +19,17 @@ typedef ZyanBool ()(ok bool)//col:313
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewComparison() { return & comparison{} }
@@ -90,6 +101,17 @@ func (c *comparison)typedef ZyanBool ()(ok bool){//col:313
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

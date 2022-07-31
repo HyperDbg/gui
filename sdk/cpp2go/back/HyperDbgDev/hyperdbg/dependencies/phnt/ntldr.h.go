@@ -122,6 +122,17 @@ LdrFindResource_U()(ok bool)//col:756
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewNtldr() { return & ntldr{} }
@@ -140,6 +151,17 @@ func (n *ntldr)#if ()(ok bool){//col:30
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -358,6 +380,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntldr)#if ()(ok bool){//col:528
 
 
@@ -390,6 +423,17 @@ func (n *ntldr)#if ()(ok bool){//col:528
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -442,6 +486,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntldr)LdrGetFailureData()(ok bool){//col:602
 
 
@@ -452,6 +507,17 @@ func (n *ntldr)LdrGetFailureData()(ok bool){//col:602
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -522,6 +588,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntldr)LdrFindResource_U()(ok bool){//col:756
 
 
@@ -566,6 +643,17 @@ func (n *ntldr)LdrFindResource_U()(ok bool){//col:756
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -626,6 +714,17 @@ func (n *ntldr)    ()(ok bool){//col:819
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -709,6 +808,17 @@ func (n *ntldr)#if ()(ok bool){//col:918
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

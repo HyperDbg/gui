@@ -27,6 +27,16 @@ VmxPerformTermination()(ok bool)//col:926
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewVmx() { return & vmx{} }
@@ -51,6 +61,16 @@ func (v *vmx)VmxCheckVmxSupport()(ok bool){//col:68
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -99,6 +119,16 @@ func (v *vmx)VmxInitialize()(ok bool){//col:164
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -161,6 +191,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (v *vmx)VmxPerformVirtualizationOnSpecificCore()(ok bool){//col:299
 
 
@@ -184,6 +224,16 @@ func (v *vmx)VmxPerformVirtualizationOnSpecificCore()(ok bool){//col:299
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -219,6 +269,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (v *vmx)VmxCheckIsOnVmxRoot()(ok bool){//col:365
 
 
@@ -240,6 +300,16 @@ func (v *vmx)VmxCheckIsOnVmxRoot()(ok bool){//col:365
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -285,6 +355,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (v *vmx)VmxTerminate()(ok bool){//col:478
 
 
@@ -314,6 +394,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (v *vmx)VmxVmptrst()(ok bool){//col:494
 
 
@@ -324,6 +414,16 @@ func (v *vmx)VmxVmptrst()(ok bool){//col:494
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -354,6 +454,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (v *vmx)VmxLoadVmcs()(ok bool){//col:550
 
 
@@ -368,6 +478,16 @@ func (v *vmx)VmxLoadVmcs()(ok bool){//col:550
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -478,6 +598,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (v *vmx)VmxVmresume()(ok bool){//col:763
 
 
@@ -489,6 +619,16 @@ func (v *vmx)VmxVmresume()(ok bool){//col:763
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -528,6 +668,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (v *vmx)VmxReturnStackPointerForVmxoff()(ok bool){//col:857
 
 
@@ -542,6 +692,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (v *vmx)VmxReturnInstructionPointerForVmxoff()(ok bool){//col:869
 
 
@@ -549,6 +709,16 @@ func (v *vmx)VmxReturnInstructionPointerForVmxoff()(ok bool){//col:869
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -571,6 +741,16 @@ func (v *vmx)VmxPerformTermination()(ok bool){//col:926
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

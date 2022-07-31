@@ -22,6 +22,15 @@ __declspec()(ok bool)//col:61
 
 
 
+
+
+
+
+
+
+
+
+
 )
 
 func NewScriptEngine() { return & scriptEngine{} }
@@ -70,6 +79,15 @@ func (s *scriptEngine)__declspec()(ok bool){//col:61
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 

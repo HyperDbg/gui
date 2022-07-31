@@ -12,6 +12,16 @@ CommandClearScreen()(ok bool)//col:39
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewCls() { return & cls{} }
@@ -31,6 +41,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *cls)CommandClearScreen()(ok bool){//col:39
 
 
@@ -38,6 +58,16 @@ func (c *cls)CommandClearScreen()(ok bool){//col:39
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

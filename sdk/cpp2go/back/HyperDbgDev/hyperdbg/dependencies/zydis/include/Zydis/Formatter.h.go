@@ -130,6 +130,17 @@ ZYDIS_EXPORT ZyanStatus ZydisFormatterInit()(ok bool)//col:1176
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewFormatter() { return & formatter{} }
@@ -139,6 +150,17 @@ func (f *formatter)    ZYDIS_FORMATTER_STYLE_REQUIRED_BITS = ZYAN_BITS_TO_REPRES
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -158,6 +180,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatter)    ZYDIS_NUMERIC_BASE_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:349
 
 
@@ -170,11 +203,33 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatter)    ZYDIS_SIGNEDNESS_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:380
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -196,6 +251,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatter)    ZYDIS_FORMATTER_FUNC_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:571
 
 
@@ -208,11 +274,33 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatter)    ZYDIS_DECORATOR_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:620
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -287,6 +375,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (f *formatter)ZYDIS_EXPORT ZyanStatus ZydisFormatterInit()(ok bool){//col:1176
 
 
@@ -321,6 +420,17 @@ func (f *formatter)ZYDIS_EXPORT ZyanStatus ZydisFormatterInit()(ok bool){//col:1
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

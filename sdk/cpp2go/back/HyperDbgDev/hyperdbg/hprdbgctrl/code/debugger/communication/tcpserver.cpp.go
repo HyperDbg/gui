@@ -18,6 +18,16 @@ CommunicationServerShutdownAndCleanupConnection()(ok bool)//col:256
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewTcpserver() { return & tcpserver{} }
@@ -104,6 +114,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (t *tcpserver)CommunicationServerReceiveMessage()(ok bool){//col:178
 
 
@@ -133,6 +153,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (t *tcpserver)CommunicationServerSendMessage()(ok bool){//col:208
 
 
@@ -146,6 +176,16 @@ func (t *tcpserver)CommunicationServerSendMessage()(ok bool){//col:208
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -172,6 +212,16 @@ func (t *tcpserver)CommunicationServerShutdownAndCleanupConnection()(ok bool){//
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

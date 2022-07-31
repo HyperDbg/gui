@@ -14,6 +14,17 @@ ZyanStatus ZyanMemoryVirtualFree()(ok bool)//col:127
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewMemory() { return & memory{} }
@@ -44,6 +55,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (m *memory)ZyanU32 ZyanMemoryGetSystemAllocationGranularity()(ok bool){//col:76
 
 
@@ -57,6 +79,17 @@ func (m *memory)ZyanU32 ZyanMemoryGetSystemAllocationGranularity()(ok bool){//co
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -91,6 +124,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (m *memory)ZyanStatus ZyanMemoryVirtualFree()(ok bool){//col:127
 
 
@@ -110,6 +154,17 @@ func (m *memory)ZyanStatus ZyanMemoryVirtualFree()(ok bool){//col:127
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -33,6 +33,16 @@ AttachingTargetProcess()(ok bool)//col:1481
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewAttaching() { return & attaching{} }
@@ -80,6 +90,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (a *attaching)AttachingCreateProcessDebuggingDetails()(ok bool){//col:156
 
 
@@ -120,6 +140,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (a *attaching)AttachingFindProcessDebuggingDetailsByToken()(ok bool){//col:180
 
 
@@ -134,6 +164,16 @@ func (a *attaching)AttachingFindProcessDebuggingDetailsByToken()(ok bool){//col:
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -162,6 +202,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (a *attaching)AttachingFindProcessDebuggingDetailsInStartingPhase()(ok bool){//col:225
 
 
@@ -176,6 +226,16 @@ func (a *attaching)AttachingFindProcessDebuggingDetailsInStartingPhase()(ok bool
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -202,6 +262,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (a *attaching)AttachingRemoveProcessDebuggingDetailsByToken()(ok bool){//col:296
 
 
@@ -218,6 +288,16 @@ func (a *attaching)AttachingRemoveProcessDebuggingDetailsByToken()(ok bool){//co
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -251,6 +331,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (a *attaching)AttachingReachedToProcessEntrypoint()(ok bool){//col:387
 
 
@@ -272,6 +362,16 @@ func (a *attaching)AttachingReachedToProcessEntrypoint()(ok bool){//col:387
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -337,6 +437,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (a *attaching)AttachingAdjustNopSledBuffer()(ok bool){//col:599
 
 
@@ -364,6 +474,16 @@ func (a *attaching)AttachingAdjustNopSledBuffer()(ok bool){//col:599
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -402,6 +522,16 @@ func (a *attaching)AttachingCheckPageFaultsWithUserDebugger()(ok bool){//col:666
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -457,6 +587,16 @@ func (a *attaching)AttachingConfigureInterceptingThreads()(ok bool){//col:759
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -582,6 +722,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (a *attaching)AttachingHandleCr3VmexitsForThreadInterception()(ok bool){//col:1040
 
 
@@ -613,6 +763,16 @@ func (a *attaching)AttachingHandleCr3VmexitsForThreadInterception()(ok bool){//c
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -660,6 +820,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (a *attaching)AttachingPauseProcess()(ok bool){//col:1128
 
 
@@ -676,6 +846,16 @@ func (a *attaching)AttachingPauseProcess()(ok bool){//col:1128
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -725,6 +905,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (a *attaching)AttachingPerformDetach()(ok bool){//col:1265
 
 
@@ -751,6 +941,16 @@ func (a *attaching)AttachingPerformDetach()(ok bool){//col:1265
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -812,6 +1012,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (a *attaching)AttachingQueryCountOfActiveDebuggingThreadsAndProcesses()(ok bool){//col:1380
 
 
@@ -823,6 +1033,16 @@ func (a *attaching)AttachingQueryCountOfActiveDebuggingThreadsAndProcesses()(ok 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -844,6 +1064,16 @@ func (a *attaching)AttachingQueryDetailsOfActiveDebuggingThreadsAndProcesses()(o
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -885,6 +1115,16 @@ func (a *attaching)AttachingTargetProcess()(ok bool){//col:1481
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

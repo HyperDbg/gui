@@ -47,6 +47,16 @@ KdHaltSystem()(ok bool)//col:2670
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewKd() { return & kd{} }
@@ -63,6 +73,16 @@ func (k *kd)KdInitializeKernelDebugger()(ok bool){//col:62
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -92,6 +112,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdDummyDPC()(ok bool){//col:122
 
 
@@ -102,6 +132,16 @@ func (k *kd)KdDummyDPC()(ok bool){//col:122
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -126,6 +166,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdComputeDataChecksum()(ok bool){//col:165
 
 
@@ -141,6 +191,16 @@ func (k *kd)KdComputeDataChecksum()(ok bool){//col:165
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -197,6 +257,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdLoggingResponsePacketToDebugger()(ok bool){//col:302
 
 
@@ -224,6 +294,16 @@ func (k *kd)KdLoggingResponsePacketToDebugger()(ok bool){//col:302
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -303,6 +383,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdApplyTasksPreHaltCore()(ok bool){//col:474
 
 
@@ -327,6 +417,16 @@ func (k *kd)KdApplyTasksPreHaltCore()(ok bool){//col:474
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -362,6 +462,16 @@ func (k *kd)KdApplyTasksPostContinueCore()(ok bool){//col:529
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -405,6 +515,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdContinueDebuggeeJustCurrentCore()(ok bool){//col:613
 
 
@@ -415,6 +535,16 @@ func (k *kd)KdContinueDebuggeeJustCurrentCore()(ok bool){//col:613
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -458,6 +588,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdReadMemory()(ok bool){//col:713
 
 
@@ -487,6 +627,16 @@ func (k *kd)KdReadMemory()(ok bool){//col:713
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -525,6 +675,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdCloseConnectionAndUnloadDebuggee()(ok bool){//col:807
 
 
@@ -535,6 +695,16 @@ func (k *kd)KdCloseConnectionAndUnloadDebuggee()(ok bool){//col:807
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -559,6 +729,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdNotifyDebuggeeForUserInput()(ok bool){//col:849
 
 
@@ -569,6 +749,16 @@ func (k *kd)KdNotifyDebuggeeForUserInput()(ok bool){//col:849
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -597,6 +787,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdSendCommandFinishedSignal()(ok bool){//col:893
 
 
@@ -615,6 +815,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdHandleHaltsWhenNmiReceivedFromVmxRoot()(ok bool){//col:947
 
 
@@ -624,6 +834,16 @@ func (k *kd)KdHandleHaltsWhenNmiReceivedFromVmxRoot()(ok bool){//col:947
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -667,6 +887,16 @@ func (k *kd)KdCustomDebuggerBreakSpinlockLock()(ok bool){//col:1020
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -724,6 +954,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdHandleNmi()(ok bool){//col:1172
 
 
@@ -748,6 +988,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdGuaranteedStepInstruction()(ok bool){//col:1224
 
 
@@ -765,6 +1015,16 @@ func (k *kd)KdGuaranteedStepInstruction()(ok bool){//col:1224
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -812,6 +1072,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdRegularStepInInstruction()(ok bool){//col:1355
 
 
@@ -841,6 +1111,16 @@ func (k *kd)KdRegularStepInInstruction()(ok bool){//col:1355
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -882,6 +1162,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdPerformRegisterEvent()(ok bool){//col:1426
 
 
@@ -899,6 +1189,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdPerformAddActionToEvent()(ok bool){//col:1442
 
 
@@ -909,6 +1209,16 @@ func (k *kd)KdPerformAddActionToEvent()(ok bool){//col:1442
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -948,6 +1258,16 @@ func (k *kd)KdQuerySystemState()(ok bool){//col:1491
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1025,6 +1345,16 @@ func (k *kd)KdPerformEventQueryAndModification()(ok bool){//col:1618
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1427,6 +1757,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdIsGuestOnUsermode32Bit()(ok bool){//col:2444
 
 
@@ -1452,6 +1792,16 @@ func (k *kd)KdIsGuestOnUsermode32Bit()(ok bool){//col:2444
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1539,6 +1889,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (k *kd)KdBroadcastHaltOnAllCores()(ok bool){//col:2639
 
 
@@ -1546,6 +1906,16 @@ func (k *kd)KdBroadcastHaltOnAllCores()(ok bool){//col:2639
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1561,6 +1931,16 @@ func (k *kd)KdHaltSystem()(ok bool){//col:2670
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

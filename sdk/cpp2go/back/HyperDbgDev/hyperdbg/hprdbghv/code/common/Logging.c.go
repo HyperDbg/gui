@@ -21,6 +21,16 @@ LogRegisterEventBasedNotification()(ok bool)//col:1350
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewLogging() { return & logging{} }
@@ -64,6 +74,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (l *logging)LogUnInitialize()(ok bool){//col:121
 
 
@@ -77,6 +97,16 @@ func (l *logging)LogUnInitialize()(ok bool){//col:121
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -189,6 +219,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (l *logging)LogMarkAllAsRead()(ok bool){//col:481
 
 
@@ -247,6 +287,16 @@ func (l *logging)LogMarkAllAsRead()(ok bool){//col:481
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -370,6 +420,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (l *logging)LogCheckForNewMessage()(ok bool){//col:756
 
 
@@ -400,6 +460,16 @@ func (l *logging)LogCheckForNewMessage()(ok bool){//col:756
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -463,6 +533,16 @@ func (l *logging)LogPrepareAndSendMessageToQueue()(ok bool){//col:904
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -556,6 +636,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (l *logging)LogNotifyUsermodeCallback()(ok bool){//col:1170
 
 
@@ -627,6 +717,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (l *logging)LogRegisterIrpBasedNotification()(ok bool){//col:1287
 
 
@@ -687,6 +787,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (l *logging)LogRegisterEventBasedNotification()(ok bool){//col:1350
 
 
@@ -721,6 +831,16 @@ func (l *logging)LogRegisterEventBasedNotification()(ok bool){//col:1350
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

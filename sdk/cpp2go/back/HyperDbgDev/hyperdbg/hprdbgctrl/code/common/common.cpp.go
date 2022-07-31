@@ -45,6 +45,16 @@ CheckMemoryAccessSafety()(ok bool)//col:1241
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewCommon() { return & common{} }
@@ -61,6 +71,16 @@ func (c *common)SeparateTo64BitValue()(ok bool){//col:37
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -93,6 +113,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)Replace()(ok bool){//col:82
 
 
@@ -104,6 +134,16 @@ func (c *common)Replace()(ok bool){//col:82
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -125,6 +165,16 @@ func (c *common)ReplaceAll()(ok bool){//col:110
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -160,6 +210,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsNumber()(ok bool){//col:158
 
 
@@ -168,6 +228,16 @@ func (c *common)IsNumber()(ok bool){//col:158
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -202,6 +272,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsDecimalNotation()(ok bool){//col:214
 
 
@@ -229,6 +309,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)HexToBytes()(ok bool){//col:236
 
 
@@ -243,6 +333,16 @@ func (c *common)HexToBytes()(ok bool){//col:236
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -332,6 +432,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)ConvertStringToUInt32()(ok bool){//col:446
 
 
@@ -410,6 +520,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)HasEnding()(ok bool){//col:471
 
 
@@ -426,6 +546,16 @@ func (c *common)HasEnding()(ok bool){//col:471
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -455,6 +585,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)VmxSupportDetection()(ok bool){//col:524
 
 
@@ -462,6 +602,16 @@ func (c *common)VmxSupportDetection()(ok bool){//col:524
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -501,6 +651,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)ltrim()(ok bool){//col:588
 
 
@@ -508,6 +668,16 @@ func (c *common)ltrim()(ok bool){//col:588
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -531,6 +701,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)Trim()(ok bool){//col:615
 
 
@@ -539,6 +719,16 @@ func (c *common)Trim()(ok bool){//col:615
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -561,6 +751,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsFileExistA()(ok bool){//col:642
 
 
@@ -576,6 +776,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)IsFileExistW()(ok bool){//col:656
 
 
@@ -584,6 +794,16 @@ func (c *common)IsFileExistW()(ok bool){//col:656
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -618,6 +838,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)GetConfigFilePath()(ok bool){//col:711
 
 
@@ -628,6 +858,16 @@ func (c *common)GetConfigFilePath()(ok bool){//col:711
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -661,6 +901,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)StringToWString()(ok bool){//col:758
 
 
@@ -669,6 +919,16 @@ func (c *common)StringToWString()(ok bool){//col:758
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -734,6 +994,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)FindCaseInsensitive()(ok bool){//col:851
 
 
@@ -743,6 +1013,16 @@ func (c *common)FindCaseInsensitive()(ok bool){//col:851
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -766,6 +1046,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)ConvertStringVectorToCharPointerArray()(ok bool){//col:891
 
 
@@ -782,6 +1072,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)GetCpuid()(ok bool){//col:906
 
 
@@ -789,6 +1089,16 @@ func (c *common)GetCpuid()(ok bool){//col:906
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -812,6 +1122,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)CheckCpuSupportRtm()(ok bool){//col:961
 
 
@@ -825,6 +1145,16 @@ func (c *common)CheckCpuSupportRtm()(ok bool){//col:961
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -864,6 +1194,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (c *common)CheckIfAddressIsValidUsingTsx()(ok bool){//col:1061
 
 
@@ -884,6 +1224,16 @@ func (c *common)CheckIfAddressIsValidUsingTsx()(ok bool){//col:1061
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -977,6 +1327,16 @@ func (c *common)CheckMemoryAccessSafety()(ok bool){//col:1241
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

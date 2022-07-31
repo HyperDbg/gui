@@ -14,6 +14,16 @@ SpinlockUnlock()(ok bool)//col:125
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewSpinlock() { return & spinlock{} }
@@ -25,6 +35,16 @@ func (s *spinlock)SpinlockTryLock()(ok bool){//col:44
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -61,6 +81,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (s *spinlock)SpinlockLockWithCustomWait()(ok bool){//col:113
 
 
@@ -90,6 +120,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (s *spinlock)SpinlockUnlock()(ok bool){//col:125
 
 
@@ -97,6 +137,16 @@ func (s *spinlock)SpinlockUnlock()(ok bool){//col:125
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

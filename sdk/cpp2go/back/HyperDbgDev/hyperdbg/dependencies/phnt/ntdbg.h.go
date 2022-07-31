@@ -51,6 +51,17 @@ DbgUserBreakPoint()(ok bool)//col:117
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewNtdbg() { return & ntdbg{} }
@@ -143,6 +154,17 @@ func (n *ntdbg)DbgUserBreakPoint()(ok bool){//col:117
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

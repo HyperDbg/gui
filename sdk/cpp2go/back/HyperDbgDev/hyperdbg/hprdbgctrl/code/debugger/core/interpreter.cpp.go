@@ -18,6 +18,16 @@ InitializeCommandsDictionary()(ok bool)//col:828
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewInterpreter() { return & interpreter{} }
@@ -148,6 +158,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (i *interpreter)InterpreterRemoveComments()(ok bool){//col:320
 
 
@@ -201,6 +221,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (i *interpreter)HyperDbgShowSignature()(ok bool){//col:363
 
 
@@ -226,6 +256,16 @@ func (i *interpreter)HyperDbgShowSignature()(ok bool){//col:363
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -297,6 +337,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (i *interpreter)HyperDbgContinuePreviousCommand()(ok bool){//col:485
 
 
@@ -313,6 +363,16 @@ func (i *interpreter)HyperDbgContinuePreviousCommand()(ok bool){//col:485
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -344,6 +404,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (i *interpreter)InitializeDebugger()(ok bool){//col:571
 
 
@@ -360,6 +430,16 @@ func (i *interpreter)InitializeDebugger()(ok bool){//col:571
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -540,6 +620,16 @@ func (i *interpreter)InitializeCommandsDictionary()(ok bool){//col:828
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

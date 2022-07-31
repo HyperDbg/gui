@@ -14,6 +14,16 @@ CommandDebug()(ok bool)//col:312
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewDebug() { return & debug{} }
@@ -48,6 +58,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (d *debug)CommandDebugCheckBaudrate()(ok bool){//col:73
 
 
@@ -64,6 +84,16 @@ func (d *debug)CommandDebugCheckBaudrate()(ok bool){//col:73
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -98,6 +128,16 @@ func (d *debug)CommandDebugCheckComPort()(ok bool){//col:107
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -225,6 +265,16 @@ func (d *debug)CommandDebug()(ok bool){//col:312
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

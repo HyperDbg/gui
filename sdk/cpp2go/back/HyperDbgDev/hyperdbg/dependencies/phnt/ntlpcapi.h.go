@@ -97,6 +97,17 @@ typedef struct DECLSPEC_ALIGN()(ok bool)//col:445
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewNtlpcapi() { return & ntlpcapi{} }
@@ -110,6 +121,17 @@ func (n *ntlpcapi)    ()(ok bool){//col:94
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -277,6 +299,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntlpcapi)NtQueryInformationPort()(ok bool){//col:388
 
 
@@ -310,6 +343,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (n *ntlpcapi)typedef struct DECLSPEC_ALIGN()(ok bool){//col:445
 
 
@@ -334,6 +378,17 @@ func (n *ntlpcapi)typedef struct DECLSPEC_ALIGN()(ok bool){//col:445
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

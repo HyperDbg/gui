@@ -12,6 +12,16 @@ CommandVmcall()(ok bool)//col:123
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewVmcall() { return & vmcall{} }
@@ -31,6 +41,16 @@ func (v *vmcall)CommandVmcallHelp()(ok bool){//col:33
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -93,6 +113,16 @@ func (v *vmcall)CommandVmcall()(ok bool){//col:123
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

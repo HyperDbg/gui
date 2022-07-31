@@ -12,6 +12,16 @@ CommandStatus()(ok bool)//col:107
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewStatus() { return & status{} }
@@ -28,6 +38,16 @@ func (s *status)CommandStatusHelp()(ok bool){//col:40
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -75,6 +95,16 @@ func (s *status)CommandStatus()(ok bool){//col:107
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

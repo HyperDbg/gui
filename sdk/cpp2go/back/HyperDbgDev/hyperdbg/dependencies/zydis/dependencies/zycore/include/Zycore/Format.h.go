@@ -15,6 +15,17 @@ ZYAN_PRINTF_ATTR()(ok bool)//col:258
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewFormat() { return & format{} }
@@ -47,6 +58,17 @@ func (f *format)ZYAN_PRINTF_ATTR()(ok bool){//col:258
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

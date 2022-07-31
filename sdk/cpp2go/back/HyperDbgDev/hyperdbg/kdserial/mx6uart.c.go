@@ -43,6 +43,15 @@ MX6RxReady()(ok bool)//col:382
 
 
 
+
+
+
+
+
+
+
+
+
 )
 
 func NewMx6uart() { return & mx6uart{} }
@@ -95,6 +104,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (m *mx6uart)MX6SetBaud()(ok bool){//col:208
 
 
@@ -109,6 +127,15 @@ func (m *mx6uart)MX6SetBaud()(ok bool){//col:208
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -142,6 +169,15 @@ func (m *mx6uart)MX6GetByte()(ok bool){//col:275
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -189,6 +225,15 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
 func (m *mx6uart)MX6RxReady()(ok bool){//col:382
 
 
@@ -205,6 +250,15 @@ func (m *mx6uart)MX6RxReady()(ok bool){//col:382
 
 return true
 }
+
+
+
+
+
+
+
+
+
 
 
 

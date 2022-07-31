@@ -43,6 +43,17 @@ Status interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewStatus() { return & status{} }
@@ -111,6 +122,17 @@ func (s *status)    ()(ok bool){//col:284
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

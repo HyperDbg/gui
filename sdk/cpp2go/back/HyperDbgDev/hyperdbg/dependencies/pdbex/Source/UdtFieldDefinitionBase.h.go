@@ -11,6 +11,17 @@ UdtFieldDefinitionBase interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewUdtFieldDefinitionBase() { return & udtFieldDefinitionBase{} }
@@ -106,6 +117,17 @@ func (u *udtFieldDefinitionBase)		VisitBaseType()(ok bool){//col:122
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

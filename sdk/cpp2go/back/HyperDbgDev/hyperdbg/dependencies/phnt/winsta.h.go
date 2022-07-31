@@ -242,6 +242,17 @@ Winsta interface{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewWinsta() { return & winsta{} }
@@ -304,6 +315,17 @@ func (w *winsta)    ()(ok bool){//col:93
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

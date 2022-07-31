@@ -13,6 +13,16 @@ CommandDetach()(ok bool)//col:99
 
 
 
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewDetach() { return & detach{} }
@@ -25,6 +35,16 @@ func (d *detach)CommandDetachHelp()(ok bool){//col:31
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -55,6 +75,16 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
 func (d *detach)CommandDetach()(ok bool){//col:99
 
 
@@ -75,6 +105,16 @@ func (d *detach)CommandDetach()(ok bool){//col:99
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

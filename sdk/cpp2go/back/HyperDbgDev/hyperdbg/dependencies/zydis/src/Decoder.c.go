@@ -78,6 +78,17 @@ ZyanStatus ZydisDecoderDecodeBuffer()(ok bool)//col:4974
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 )
 
 func NewDecoder() { return & decoder{} }
@@ -96,11 +107,33 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)    ZYDIS_REG_ENCODING_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:268
 
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -135,6 +168,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static void ZydisInputSkip()(ok bool){//col:333
 
 
@@ -147,6 +191,17 @@ func (d *decoder)static void ZydisInputSkip()(ok bool){//col:333
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -176,6 +231,17 @@ func (d *decoder)static ZyanStatus ZydisInputNext()(ok bool){//col:369
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -213,6 +279,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static void ZydisDecodeREX()(ok bool){//col:441
 
 
@@ -231,6 +308,17 @@ func (d *decoder)static void ZydisDecodeREX()(ok bool){//col:441
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -270,6 +358,17 @@ func (d *decoder)static ZyanStatus ZydisDecodeXOP()(ok bool){//col:488
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -332,6 +431,17 @@ func (d *decoder)static ZyanStatus ZydisDecodeVEX()(ok bool){//col:558
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -407,6 +517,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisDecodeMVEX()(ok bool){//col:704
 
 
@@ -453,6 +574,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static void ZydisDecodeModRM()(ok bool){//col:724
 
 
@@ -466,6 +598,17 @@ func (d *decoder)static void ZydisDecodeModRM()(ok bool){//col:724
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -488,6 +631,17 @@ func (d *decoder)static void ZydisDecodeSIB()(ok bool){//col:745
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -541,6 +695,17 @@ func (d *decoder)static ZyanStatus ZydisReadDisplacement()(ok bool){//col:806
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -623,6 +788,17 @@ func (d *decoder)static ZyanStatus ZydisReadImmediate()(ok bool){//col:896
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -842,6 +1018,17 @@ func (d *decoder)static ZyanU8 ZydisCalcRegisterId()(ok bool){//col:1132
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1075,6 +1262,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisDecodeOperandRegister()(ok bool){//col:1418
 
 
@@ -1100,6 +1298,17 @@ func (d *decoder)static ZyanStatus ZydisDecodeOperandRegister()(ok bool){//col:1
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1295,6 +1504,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static void ZydisDecodeOperandImplicitRegister()(ok bool){//col:1687
 
 
@@ -1365,6 +1585,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static void ZydisDecodeOperandImplicitMemory()(ok bool){//col:1761
 
 
@@ -1426,6 +1657,17 @@ func (d *decoder)static void ZydisDecodeOperandImplicitMemory()(ok bool){//col:1
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1779,6 +2021,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static void ZydisSetAttributes()(ok bool){//col:2402
 
 
@@ -2016,6 +2269,17 @@ func (d *decoder)static void ZydisSetAttributes()(ok bool){//col:2402
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2673,6 +2937,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisCollectOptionalPrefixes()(ok bool){//col:3261
 
 
@@ -2782,6 +3057,17 @@ func (d *decoder)static ZyanStatus ZydisCollectOptionalPrefixes()(ok bool){//col
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2913,6 +3199,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static void ZydisSetEffectiveOperandWidth()(ok bool){//col:3549
 
 
@@ -2989,6 +3286,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static void ZydisSetEffectiveAddressWidth()(ok bool){//col:3631
 
 
@@ -3046,6 +3354,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisNodeHandlerXOP()(ok bool){//col:3654
 
 
@@ -3067,6 +3386,17 @@ func (d *decoder)static ZyanStatus ZydisNodeHandlerXOP()(ok bool){//col:3654
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3102,6 +3432,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisNodeHandlerEMVEX()(ok bool){//col:3700
 
 
@@ -3127,6 +3468,17 @@ func (d *decoder)static ZyanStatus ZydisNodeHandlerEMVEX()(ok bool){//col:3700
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3334,6 +3686,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisNodeHandlerMode()(ok bool){//col:3936
 
 
@@ -3367,6 +3730,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisNodeHandlerModeCompact()(ok bool){//col:3946
 
 
@@ -3377,6 +3751,17 @@ func (d *decoder)static ZyanStatus ZydisNodeHandlerModeCompact()(ok bool){//col:
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3410,6 +3795,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisNodeHandlerModrmModCompact()(ok bool){//col:3974
 
 
@@ -3420,6 +3816,17 @@ func (d *decoder)static ZyanStatus ZydisNodeHandlerModrmModCompact()(ok bool){//
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3453,6 +3860,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisNodeHandlerModrmRm()(ok bool){//col:4012
 
 
@@ -3472,6 +3890,17 @@ func (d *decoder)static ZyanStatus ZydisNodeHandlerModrmRm()(ok bool){//col:4012
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3512,6 +3941,17 @@ func (d *decoder)static ZyanStatus ZydisNodeHandlerMandatoryPrefix()(ok bool){//
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3563,6 +4003,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisNodeHandlerAddressSize()(ok bool){//col:4115
 
 
@@ -3588,6 +4039,17 @@ func (d *decoder)static ZyanStatus ZydisNodeHandlerAddressSize()(ok bool){//col:
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3635,6 +4097,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisNodeHandlerRexW()(ok bool){//col:4180
 
 
@@ -3666,6 +4139,17 @@ func (d *decoder)static ZyanStatus ZydisNodeHandlerRexW()(ok bool){//col:4180
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3711,6 +4195,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisNodeHandlerEvexB()(ok bool){//col:4225
 
 
@@ -3730,6 +4225,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisNodeHandlerMvexE()(ok bool){//col:4239
 
 
@@ -3742,6 +4248,17 @@ func (d *decoder)static ZyanStatus ZydisNodeHandlerMvexE()(ok bool){//col:4239
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4078,6 +4595,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)static ZyanStatus ZydisDecodeInstruction()(ok bool){//col:4860
 
 
@@ -4290,6 +4818,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)ZyanStatus ZydisDecoderInit()(ok bool){//col:4920
 
 
@@ -4339,6 +4878,17 @@ return true
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 func (d *decoder)ZyanStatus ZydisDecoderEnableMode()(ok bool){//col:4940
 
 
@@ -4357,6 +4907,17 @@ func (d *decoder)ZyanStatus ZydisDecoderEnableMode()(ok bool){//col:4940
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4394,6 +4955,17 @@ func (d *decoder)ZyanStatus ZydisDecoderDecodeBuffer()(ok bool){//col:4974
 
 return true
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
