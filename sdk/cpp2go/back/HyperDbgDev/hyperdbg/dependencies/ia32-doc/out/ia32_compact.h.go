@@ -1,6 +1,4 @@
 package out
-//back\HyperDbgDev\hyperdbg\dependencies\ia32-doc\out\ia32_compact.h.back
-
 const(
 CPUID_SIGNATURE =                                              0x00000000 //col:154
 CPUID_VERSION_INFO =                                           0x00000001 //col:162
@@ -847,7 +845,6 @@ VTD_CONTEXT_COMMAND =                                          0x00000028 //col:
 VTD_INVALIDATE_ADDRESS =                                       0x00000000 //col:5748
 VTD_IOTLB_INVALIDATE =                                         0x00000008 //col:5760
 )
-
 type   invpcid_individual_address                                   = 0x00000000 uint32
 const(
   invpcid_individual_address                                    typedef enum { =  0x00000000  //col:3977
@@ -855,8 +852,6 @@ const(
   invpcid_all_context_with_globals                              typedef enum { =  0x00000002  //col:3979
   invpcid_all_context                                           typedef enum { =  0x00000003  //col:3980
 )
-
-
 type   vmx_active                                                   = 0x00000000 uint32
 const(
   vmx_active                                                    typedef enum { =  0x00000000  //col:4625
@@ -864,15 +859,11 @@ const(
   vmx_shutdown                                                  typedef enum { =  0x00000002  //col:4627
   vmx_wait_for_sipi                                             typedef enum { =  0x00000003  //col:4628
 )
-
-
 type   invept_single_context                                        = 0x00000001 uint32
 const(
   invept_single_context                                         typedef enum { =  0x00000001  //col:4881
   invept_all_context                                            typedef enum { =  0x00000002  //col:4882
 )
-
-
 type   invvpid_individual_address                                   = 0x00000000 uint32
 const(
   invvpid_individual_address                                    typedef enum { =  0x00000000  //col:4886
@@ -880,8 +871,6 @@ const(
   invvpid_all_context                                           typedef enum { =  0x00000002  //col:4888
   invvpid_single_context_retaining_globals                      typedef enum { =  0x00000003  //col:4889
 )
-
-
 type   external_interrupt                                           = 0x00000000 uint32
 const(
   external_interrupt                                            typedef enum { =  0x00000000  //col:5299
@@ -892,8 +881,6 @@ const(
   software_exception                                            typedef enum { =  0x00000006  //col:5304
   other_event                                                   typedef enum { =  0x00000007  //col:5305
 )
-
-
 type   divide_error                                                 = 0x00000000 uint32
 const(
   divide_error                                                  typedef enum { =  0x00000000  //col:5465
@@ -918,9 +905,6 @@ const(
   virtualization_exception                                      typedef enum { =  0x00000014  //col:5484
   control_protection                                            typedef enum { =  0x00000015  //col:5485
 )
-
-
-
 type (
 Ia32Compact interface{
 #if defined()(ok bool)//col:38
@@ -947,791 +931,98 @@ Ia32Compact interface{
  *           VMCS ()(ok bool)//col:4950
  *           Advanced Programmable Interrupt Controller ()(ok bool)//col:5420
 }
+
 )
-
 func NewIa32Compact() { return & ia32Compact{} }
-
 func (i *ia32Compact)#if defined()(ok bool){//col:38
-/*#if defined(_MSC_EXTENSIONS)
-#pragma warning(push)
-#pragma warning(disable: 4201)
-#endif
- *           Intel Manual
- *           Control registers
-typedef union {
-  struct {
-    uint64_t protection_enable                                       : 1;
-    uint64_t monitor_coprocessor                                     : 1;
-    uint64_t emulate_fpu                                             : 1;
-    uint64_t task_switched                                           : 1;
-    uint64_t extension_type                                          : 1;
-    uint64_t numeric_error                                           : 1;
-    uint64_t reserved_1                                              : 10;
-    uint64_t write_protect                                           : 1;
-    uint64_t reserved_2                                              : 1;
-    uint64_t alignment_mask                                          : 1;
-    uint64_t reserved_3                                              : 10;
-    uint64_t not_write_through                                       : 1;
-    uint64_t cache_disable                                           : 1;
-    uint64_t paging_enable                                           : 1;
-  };
-  uint64_t flags;
-} cr0;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_P5_MC_()(ok bool){//col:1945
-/* *           IA32_P5_MC_(x)
-#define IA32_P5_MC_ADDR                                              0x00000000
-#define IA32_P5_MC_TYPE                                              0x00000001
-#define IA32_MONITOR_FILTER_SIZE                                     0x00000006
-#define IA32_TIME_STAMP_COUNTER                                      0x00000010
-#define IA32_PLATFORM_ID                                             0x00000017
-typedef union {
-  struct {
-    uint64_t reserved_1                                              : 50;
-    uint64_t platform_id                                             : 3;
-  };
-  uint64_t flags;
-} ia32_platform_id_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_SGXLEPUBKEYHASH[()(ok bool){//col:2040
-/* *           IA32_SGXLEPUBKEYHASH[(64*n+63):(64*n)]
-#define IA32_SGXLEPUBKEYHASH0                                        0x0000008C
-#define IA32_SGXLEPUBKEYHASH1                                        0x0000008D
-#define IA32_SGXLEPUBKEYHASH2                                        0x0000008E
-#define IA32_SGXLEPUBKEYHASH3                                        0x0000008F
-#define IA32_SMM_MONITOR_CTL                                         0x0000009B
-typedef union {
-  struct {
-    uint64_t valid                                                   : 1;
-    uint64_t reserved_1                                              : 1;
-    uint64_t smi_unblocking_by_vmxoff                                : 1;
-    uint64_t reserved_2                                              : 9;
-    uint64_t mseg_base                                               : 20;
-  };
-  uint64_t flags;
-} ia32_smm_monitor_ctl_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_PMC()(ok bool){//col:2076
-/* *           IA32_PMC(n)
-#define IA32_PMC0                                                    0x000000C1
-#define IA32_PMC1                                                    0x000000C2
-#define IA32_PMC2                                                    0x000000C3
-#define IA32_PMC3                                                    0x000000C4
-#define IA32_PMC4                                                    0x000000C5
-#define IA32_PMC5                                                    0x000000C6
-#define IA32_PMC6                                                    0x000000C7
-#define IA32_PMC7                                                    0x000000C8
-#define IA32_MPERF                                                   0x000000E7
-typedef struct {
-  uint64_t c0_mcnt;
-} ia32_mperf_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_PERFEVTSEL()(ok bool){//col:2202
-/* *           IA32_PERFEVTSEL(n)
-#define IA32_PERFEVTSEL0                                             0x00000186
-#define IA32_PERFEVTSEL1                                             0x00000187
-#define IA32_PERFEVTSEL2                                             0x00000188
-#define IA32_PERFEVTSEL3                                             0x00000189
-typedef union {
-  struct {
-    uint64_t event_select                                            : 8;
-    uint64_t u_mask                                                  : 8;
-    uint64_t usr                                                     : 1;
-    uint64_t os                                                      : 1;
-    uint64_t edge                                                    : 1;
-    uint64_t pc                                                      : 1;
-    uint64_t intr                                                    : 1;
-    uint64_t any_thread                                              : 1;
-    uint64_t en                                                      : 1;
-    uint64_t inv                                                     : 1;
-    uint64_t cmask                                                   : 8;
-  };
-  uint64_t flags;
-} ia32_perfevtsel_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_MTRR_PHYSBASE()(ok bool){//col:2437
-/* *           IA32_MTRR_PHYSBASE(n)
-typedef union {
-  struct {
-    uint64_t type                                                    : 8;
-    uint64_t reserved_1                                              : 4;
-    uint64_t physical_addres_base                                    : 36;
-  };
-  uint64_t flags;
-} ia32_mtrr_physbase_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_MTRR_PHYSMASK()(ok bool){//col:2466
-/* *           IA32_MTRR_PHYSMASK(n)
-typedef union {
-  struct {
-    uint64_t reserved_1                                              : 11;
-    uint64_t valid                                                   : 1;
-    uint64_t physical_addres_mask                                    : 36;
-  };
-  uint64_t flags;
-} ia32_mtrr_physmask_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_MTRR_FIX()(ok bool){//col:2559
-/* *           IA32_MTRR_FIX(x)
- *           IA32_MTRR_FIX64K(x)
-#define IA32_MTRR_FIX64K_BASE                                        0x00000000
-#define IA32_MTRR_FIX64K_SIZE                                        0x00010000
-#define IA32_MTRR_FIX64K_00000                                       0x00000250
- *           IA32_MTRR_FIX16K(x)
-#define IA32_MTRR_FIX16K_BASE                                        0x00080000
-#define IA32_MTRR_FIX16K_SIZE                                        0x00004000
-#define IA32_MTRR_FIX16K_80000                                       0x00000258
-#define IA32_MTRR_FIX16K_A0000                                       0x00000259
- *           IA32_MTRR_FIX4K(x)
-#define IA32_MTRR_FIX4K_BASE                                         0x000C0000
-#define IA32_MTRR_FIX4K_SIZE                                         0x00001000
-#define IA32_MTRR_FIX4K_C0000                                        0x00000268
-#define IA32_MTRR_FIX4K_C8000                                        0x00000269
-#define IA32_MTRR_FIX4K_D0000                                        0x0000026A
-#define IA32_MTRR_FIX4K_D8000                                        0x0000026B
-#define IA32_MTRR_FIX4K_E0000                                        0x0000026C
-#define IA32_MTRR_FIX4K_E8000                                        0x0000026D
-#define IA32_MTRR_FIX4K_F0000                                        0x0000026E
-#define IA32_MTRR_FIX4K_F8000                                        0x0000026F
-#define IA32_MTRR_FIX_COUNT                                          ((1 + 2 + 8) * 8)
-#define IA32_MTRR_VARIABLE_COUNT                                     0x0000000A
-#define IA32_MTRR_COUNT                                              (IA32_MTRR_FIX_COUNT + IA32_MTRR_VARIABLE_COUNT)
-#define IA32_PAT                                                     0x00000277
-typedef union {
-  struct {
-    uint64_t pa0                                                     : 3;
-    uint64_t reserved_1                                              : 5;
-    uint64_t pa1                                                     : 3;
-    uint64_t reserved_2                                              : 5;
-    uint64_t pa2                                                     : 3;
-    uint64_t reserved_3                                              : 5;
-    uint64_t pa3                                                     : 3;
-    uint64_t reserved_4                                              : 5;
-    uint64_t pa4                                                     : 3;
-    uint64_t reserved_5                                              : 5;
-    uint64_t pa5                                                     : 3;
-    uint64_t reserved_6                                              : 5;
-    uint64_t pa6                                                     : 3;
-    uint64_t reserved_7                                              : 5;
-    uint64_t pa7                                                     : 3;
-  };
-  uint64_t flags;
-} ia32_pat_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_MC()(ok bool){//col:2606
-/* *           IA32_MC(i)_CTL2
-#define IA32_MC0_CTL2                                                0x00000280
-#define IA32_MC1_CTL2                                                0x00000281
-#define IA32_MC2_CTL2                                                0x00000282
-#define IA32_MC3_CTL2                                                0x00000283
-#define IA32_MC4_CTL2                                                0x00000284
-#define IA32_MC5_CTL2                                                0x00000285
-#define IA32_MC6_CTL2                                                0x00000286
-#define IA32_MC7_CTL2                                                0x00000287
-#define IA32_MC8_CTL2                                                0x00000288
-#define IA32_MC9_CTL2                                                0x00000289
-#define IA32_MC10_CTL2                                               0x0000028A
-#define IA32_MC11_CTL2                                               0x0000028B
-#define IA32_MC12_CTL2                                               0x0000028C
-#define IA32_MC13_CTL2                                               0x0000028D
-#define IA32_MC14_CTL2                                               0x0000028E
-#define IA32_MC15_CTL2                                               0x0000028F
-#define IA32_MC16_CTL2                                               0x00000290
-#define IA32_MC17_CTL2                                               0x00000291
-#define IA32_MC18_CTL2                                               0x00000292
-#define IA32_MC19_CTL2                                               0x00000293
-#define IA32_MC20_CTL2                                               0x00000294
-#define IA32_MC21_CTL2                                               0x00000295
-#define IA32_MC22_CTL2                                               0x00000296
-#define IA32_MC23_CTL2                                               0x00000297
-#define IA32_MC24_CTL2                                               0x00000298
-#define IA32_MC25_CTL2                                               0x00000299
-#define IA32_MC26_CTL2                                               0x0000029A
-#define IA32_MC27_CTL2                                               0x0000029B
-#define IA32_MC28_CTL2                                               0x0000029C
-#define IA32_MC29_CTL2                                               0x0000029D
-#define IA32_MC30_CTL2                                               0x0000029E
-#define IA32_MC31_CTL2                                               0x0000029F
-typedef union {
-  struct {
-    uint64_t corrected_error_count_threshold                         : 15;
-    uint64_t reserved_1                                              : 15;
-    uint64_t cmci_en                                                 : 1;
-  };
-  uint64_t flags;
-} ia32_mc_ctl2_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_FIXED_CTR()(ok bool){//col:2648
-/* *           IA32_FIXED_CTR(n)
-#define IA32_FIXED_CTR0                                              0x00000309
-#define IA32_FIXED_CTR1                                              0x0000030A
-#define IA32_FIXED_CTR2                                              0x0000030B
-#define IA32_PERF_CAPABILITIES                                       0x00000345
-typedef union {
-  struct {
-    uint64_t lbr_format                                              : 6;
-    uint64_t pebs_trap                                               : 1;
-    uint64_t pebs_save_arch_regs                                     : 1;
-    uint64_t pebs_record_format                                      : 4;
-    uint64_t freeze_while_smm_is_supported                           : 1;
-    uint64_t full_width_counter_write                                : 1;
-  };
-  uint64_t flags;
-} ia32_perf_capabilities_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_MC()(ok bool){//col:2933
-/* *           IA32_MC(i)_CTL
-#define IA32_MC0_CTL                                                 0x00000400
-#define IA32_MC1_CTL                                                 0x00000404
-#define IA32_MC2_CTL                                                 0x00000408
-#define IA32_MC3_CTL                                                 0x0000040C
-#define IA32_MC4_CTL                                                 0x00000410
-#define IA32_MC5_CTL                                                 0x00000414
-#define IA32_MC6_CTL                                                 0x00000418
-#define IA32_MC7_CTL                                                 0x0000041C
-#define IA32_MC8_CTL                                                 0x00000420
-#define IA32_MC9_CTL                                                 0x00000424
-#define IA32_MC10_CTL                                                0x00000428
-#define IA32_MC11_CTL                                                0x0000042C
-#define IA32_MC12_CTL                                                0x00000430
-#define IA32_MC13_CTL                                                0x00000434
-#define IA32_MC14_CTL                                                0x00000438
-#define IA32_MC15_CTL                                                0x0000043C
-#define IA32_MC16_CTL                                                0x00000440
-#define IA32_MC17_CTL                                                0x00000444
-#define IA32_MC18_CTL                                                0x00000448
-#define IA32_MC19_CTL                                                0x0000044C
-#define IA32_MC20_CTL                                                0x00000450
-#define IA32_MC21_CTL                                                0x00000454
-#define IA32_MC22_CTL                                                0x00000458
-#define IA32_MC23_CTL                                                0x0000045C
-#define IA32_MC24_CTL                                                0x00000460
-#define IA32_MC25_CTL                                                0x00000464
-#define IA32_MC26_CTL                                                0x00000468
-#define IA32_MC27_CTL                                                0x0000046C
-#define IA32_MC28_CTL                                                0x00000470
- *           IA32_MC(i)_STATUS
-#define IA32_MC0_STATUS                                              0x00000401
-#define IA32_MC1_STATUS                                              0x00000405
-#define IA32_MC2_STATUS                                              0x00000409
-#define IA32_MC3_STATUS                                              0x0000040D
-#define IA32_MC4_STATUS                                              0x00000411
-#define IA32_MC5_STATUS                                              0x00000415
-#define IA32_MC6_STATUS                                              0x00000419
-#define IA32_MC7_STATUS                                              0x0000041D
-#define IA32_MC8_STATUS                                              0x00000421
-#define IA32_MC9_STATUS                                              0x00000425
-#define IA32_MC10_STATUS                                             0x00000429
-#define IA32_MC11_STATUS                                             0x0000042D
-#define IA32_MC12_STATUS                                             0x00000431
-#define IA32_MC13_STATUS                                             0x00000435
-#define IA32_MC14_STATUS                                             0x00000439
-#define IA32_MC15_STATUS                                             0x0000043D
-#define IA32_MC16_STATUS                                             0x00000441
-#define IA32_MC17_STATUS                                             0x00000445
-#define IA32_MC18_STATUS                                             0x00000449
-#define IA32_MC19_STATUS                                             0x0000044D
-#define IA32_MC20_STATUS                                             0x00000451
-#define IA32_MC21_STATUS                                             0x00000455
-#define IA32_MC22_STATUS                                             0x00000459
-#define IA32_MC23_STATUS                                             0x0000045D
-#define IA32_MC24_STATUS                                             0x00000461
-#define IA32_MC25_STATUS                                             0x00000465
-#define IA32_MC26_STATUS                                             0x00000469
-#define IA32_MC27_STATUS                                             0x0000046D
-#define IA32_MC28_STATUS                                             0x00000471
- *           IA32_MC(i)_ADDR
-#define IA32_MC0_ADDR                                                0x00000402
-#define IA32_MC1_ADDR                                                0x00000406
-#define IA32_MC2_ADDR                                                0x0000040A
-#define IA32_MC3_ADDR                                                0x0000040E
-#define IA32_MC4_ADDR                                                0x00000412
-#define IA32_MC5_ADDR                                                0x00000416
-#define IA32_MC6_ADDR                                                0x0000041A
-#define IA32_MC7_ADDR                                                0x0000041E
-#define IA32_MC8_ADDR                                                0x00000422
-#define IA32_MC9_ADDR                                                0x00000426
-#define IA32_MC10_ADDR                                               0x0000042A
-#define IA32_MC11_ADDR                                               0x0000042E
-#define IA32_MC12_ADDR                                               0x00000432
-#define IA32_MC13_ADDR                                               0x00000436
-#define IA32_MC14_ADDR                                               0x0000043A
-#define IA32_MC15_ADDR                                               0x0000043E
-#define IA32_MC16_ADDR                                               0x00000442
-#define IA32_MC17_ADDR                                               0x00000446
-#define IA32_MC18_ADDR                                               0x0000044A
-#define IA32_MC19_ADDR                                               0x0000044E
-#define IA32_MC20_ADDR                                               0x00000452
-#define IA32_MC21_ADDR                                               0x00000456
-#define IA32_MC22_ADDR                                               0x0000045A
-#define IA32_MC23_ADDR                                               0x0000045E
-#define IA32_MC24_ADDR                                               0x00000462
-#define IA32_MC25_ADDR                                               0x00000466
-#define IA32_MC26_ADDR                                               0x0000046A
-#define IA32_MC27_ADDR                                               0x0000046E
-#define IA32_MC28_ADDR                                               0x00000472
- *           IA32_MC(i)_MISC
-#define IA32_MC0_MISC                                                0x00000403
-#define IA32_MC1_MISC                                                0x00000407
-#define IA32_MC2_MISC                                                0x0000040B
-#define IA32_MC3_MISC                                                0x0000040F
-#define IA32_MC4_MISC                                                0x00000413
-#define IA32_MC5_MISC                                                0x00000417
-#define IA32_MC6_MISC                                                0x0000041B
-#define IA32_MC7_MISC                                                0x0000041F
-#define IA32_MC8_MISC                                                0x00000423
-#define IA32_MC9_MISC                                                0x00000427
-#define IA32_MC10_MISC                                               0x0000042B
-#define IA32_MC11_MISC                                               0x0000042F
-#define IA32_MC12_MISC                                               0x00000433
-#define IA32_MC13_MISC                                               0x00000437
-#define IA32_MC14_MISC                                               0x0000043B
-#define IA32_MC15_MISC                                               0x0000043F
-#define IA32_MC16_MISC                                               0x00000443
-#define IA32_MC17_MISC                                               0x00000447
-#define IA32_MC18_MISC                                               0x0000044B
-#define IA32_MC19_MISC                                               0x0000044F
-#define IA32_MC20_MISC                                               0x00000453
-#define IA32_MC21_MISC                                               0x00000457
-#define IA32_MC22_MISC                                               0x0000045B
-#define IA32_MC23_MISC                                               0x0000045F
-#define IA32_MC24_MISC                                               0x00000463
-#define IA32_MC25_MISC                                               0x00000467
-#define IA32_MC26_MISC                                               0x0000046B
-#define IA32_MC27_MISC                                               0x0000046F
-#define IA32_MC28_MISC                                               0x00000473
-#define IA32_VMX_BASIC                                               0x00000480
-typedef union {
-  struct {
-    uint64_t vmcs_revision_id                                        : 31;
-    uint64_t must_be_zero                                            : 1;
-    uint64_t vmcs_size_in_bytes                                      : 13;
-    uint64_t reserved_1                                              : 3;
-    uint64_t vmcs_physical_address_width                             : 1;
-    uint64_t dual_monitor                                            : 1;
-    uint64_t memory_type                                             : 4;
-    uint64_t ins_outs_vmexit_information                             : 1;
-    uint64_t true_controls                                           : 1;
-  };
-  uint64_t flags;
-} ia32_vmx_basic_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_VMX_TRUE_()(ok bool){//col:3168
-/* *           IA32_VMX_TRUE_(x)_CTLS
-#define IA32_VMX_TRUE_PINBASED_CTLS                                  0x0000048D
-#define IA32_VMX_TRUE_PROCBASED_CTLS                                 0x0000048E
-#define IA32_VMX_TRUE_EXIT_CTLS                                      0x0000048F
-#define IA32_VMX_TRUE_ENTRY_CTLS                                     0x00000490
-typedef union {
-  struct {
-    uint64_t allowed_0_settings                                      : 32;
-    uint64_t allowed_1_settings                                      : 32;
-  };
-  uint64_t flags;
-} ia32_vmx_true_ctls_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_A_PMC()(ok bool){//col:3228
-/* *           IA32_A_PMC(n)
-#define IA32_A_PMC0                                                  0x000004C1
-#define IA32_A_PMC1                                                  0x000004C2
-#define IA32_A_PMC2                                                  0x000004C3
-#define IA32_A_PMC3                                                  0x000004C4
-#define IA32_A_PMC4                                                  0x000004C5
-#define IA32_A_PMC5                                                  0x000004C6
-#define IA32_A_PMC6                                                  0x000004C7
-#define IA32_A_PMC7                                                  0x000004C8
-#define IA32_MCG_EXT_CTL                                             0x000004D0
-typedef union {
-  struct {
-    uint64_t lmce_en                                                 : 1;
-  };
-  uint64_t flags;
-} ia32_mcg_ext_ctl_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_RTIT_ADDR()(ok bool){//col:3362
-/* *           IA32_RTIT_ADDR(x)
- *           IA32_RTIT_ADDR(n)_A
-#define IA32_RTIT_ADDR0_A                                            0x00000580
-#define IA32_RTIT_ADDR1_A                                            0x00000582
-#define IA32_RTIT_ADDR2_A                                            0x00000584
-#define IA32_RTIT_ADDR3_A                                            0x00000586
- *           IA32_RTIT_ADDR(n)_B
-#define IA32_RTIT_ADDR0_B                                            0x00000581
-#define IA32_RTIT_ADDR1_B                                            0x00000583
-#define IA32_RTIT_ADDR2_B                                            0x00000585
-#define IA32_RTIT_ADDR3_B                                            0x00000587
-typedef union {
-  struct {
-    uint64_t virtual_address                                         : 48;
-    uint64_t sign_ext_va                                             : 16;
-  };
-  uint64_t flags;
-} ia32_rtit_addr_register;*/
 return true
 }
 
 func (i *ia32Compact) *           IA32_X2APIC_ISR()(ok bool){//col:3561
-/* *           IA32_X2APIC_ISR(n)
-#define IA32_X2APIC_ISR0                                             0x00000810
-#define IA32_X2APIC_ISR1                                             0x00000811
-#define IA32_X2APIC_ISR2                                             0x00000812
-#define IA32_X2APIC_ISR3                                             0x00000813
-#define IA32_X2APIC_ISR4                                             0x00000814
-#define IA32_X2APIC_ISR5                                             0x00000815
-#define IA32_X2APIC_ISR6                                             0x00000816
-#define IA32_X2APIC_ISR7                                             0x00000817
- *           IA32_X2APIC_TMR(n)
-#define IA32_X2APIC_TMR0                                             0x00000818
-#define IA32_X2APIC_TMR1                                             0x00000819
-#define IA32_X2APIC_TMR2                                             0x0000081A
-#define IA32_X2APIC_TMR3                                             0x0000081B
-#define IA32_X2APIC_TMR4                                             0x0000081C
-#define IA32_X2APIC_TMR5                                             0x0000081D
-#define IA32_X2APIC_TMR6                                             0x0000081E
-#define IA32_X2APIC_TMR7                                             0x0000081F
- *           IA32_X2APIC_IRR(n)
-#define IA32_X2APIC_IRR0                                             0x00000820
-#define IA32_X2APIC_IRR1                                             0x00000821
-#define IA32_X2APIC_IRR2                                             0x00000822
-#define IA32_X2APIC_IRR3                                             0x00000823
-#define IA32_X2APIC_IRR4                                             0x00000824
-#define IA32_X2APIC_IRR5                                             0x00000825
-#define IA32_X2APIC_IRR6                                             0x00000826
-#define IA32_X2APIC_IRR7                                             0x00000827
-#define IA32_X2APIC_ESR                                              0x00000828
-#define IA32_X2APIC_LVT_CMCI                                         0x0000082F
-#define IA32_X2APIC_ICR                                              0x00000830
-#define IA32_X2APIC_LVT_TIMER                                        0x00000832
-#define IA32_X2APIC_LVT_THERMAL                                      0x00000833
-#define IA32_X2APIC_LVT_PMI                                          0x00000834
-#define IA32_X2APIC_LVT_LINT0                                        0x00000835
-#define IA32_X2APIC_LVT_LINT1                                        0x00000836
-#define IA32_X2APIC_LVT_ERROR                                        0x00000837
-#define IA32_X2APIC_INIT_COUNT                                       0x00000838
-#define IA32_X2APIC_CUR_COUNT                                        0x00000839
-#define IA32_X2APIC_DIV_CONF                                         0x0000083E
-#define IA32_X2APIC_SELF_IPI                                         0x0000083F
-#define IA32_DEBUG_INTERFACE                                         0x00000C80
-typedef union {
-  struct {
-    uint64_t enable                                                  : 1;
-    uint64_t reserved_1                                              : 29;
-    uint64_t lock                                                    : 1;
-    uint64_t debug_occurred                                          : 1;
-  };
-  uint64_t flags;
-} ia32_debug_interface_register;*/
 return true
 }
 
 func (i *ia32Compact) *           64-Bit ()(ok bool){//col:3815
-/* *           64-Bit (4-Level) Paging
-typedef union {
-  struct {
-    uint64_t present                                                 : 1;
-    uint64_t write                                                   : 1;
-    uint64_t supervisor                                              : 1;
-    uint64_t page_level_write_through                                : 1;
-    uint64_t page_level_cache_disable                                : 1;
-    uint64_t accessed                                                : 1;
-    uint64_t reserved_1                                              : 1;
-    uint64_t must_be_zero                                            : 1;
-    uint64_t ignored_1                                               : 3;
-    uint64_t restart                                                 : 1;
-    uint64_t page_frame_number                                       : 36;
-    uint64_t reserved_2                                              : 4;
-    uint64_t ignored_2                                               : 11;
-    uint64_t execute_disable                                         : 1;
-  };
-  uint64_t flags;
-} pml4e_64;*/
 return true
 }
 
 func (i *ia32Compact)#pragma pack()(ok bool){//col:4002
-/*#pragma pack(push, 1)
-typedef struct {
-  uint16_t limit;
-  uint32_t base_address;
-} segment_descriptor_register_32;*/
 return true
 }
 
 func (i *ia32Compact)#pragma pack()(ok bool){//col:4009
-/*#pragma pack(pop)
-#pragma pack(push, 1)
-typedef struct {
-  uint16_t limit;
-  uint64_t base_address;
-} segment_descriptor_register_64;*/
 return true
 }
 
 func (i *ia32Compact)#pragma pack()(ok bool){//col:4027
-/*#pragma pack(pop)
-typedef union {
-  struct {
-    uint32_t reserved_1                                              : 8;
-    uint32_t type                                                    : 4;
-    uint32_t descriptor_type                                         : 1;
-    uint32_t descriptor_privilege_level                              : 2;
-    uint32_t present                                                 : 1;
-    uint32_t reserved_2                                              : 4;
-    uint32_t available_bit                                           : 1;
-    uint32_t long_mode                                               : 1;
-    uint32_t default_big                                             : 1;
-    uint32_t granularity                                             : 1;
-  };
-  uint32_t flags;
-} segment_access_rights;*/
 return true
 }
 
 func (i *ia32Compact)#pragma pack()(ok bool){//col:4181
-/*#pragma pack(push, 1)
-typedef struct {
-  uint32_t reserved_0;
-  uint64_t rsp0;
-  uint64_t rsp1;
-  uint64_t rsp2;
-  uint64_t reserved_1;
-  uint64_t ist1;
-  uint64_t ist2;
-  uint64_t ist3;
-  uint64_t ist4;
-  uint64_t ist5;
-  uint64_t ist6;
-  uint64_t ist7;
-  uint64_t reserved_2;
-  uint16_t reserved_3;
-  uint16_t io_map_base;
-} task_state_segment_64;*/
 return true
 }
 
 func (i *ia32Compact)#pragma pack()(ok bool){//col:4309
-/*#pragma pack(pop)
- *           VMX
- *           VMX Basic Exit Reasons
-#define VMX_EXIT_REASON_XCPT_OR_NMI                                  0x00000000
-#define VMX_EXIT_REASON_EXT_INT                                      0x00000001
-#define VMX_EXIT_REASON_TRIPLE_FAULT                                 0x00000002
-#define VMX_EXIT_REASON_INIT_SIGNAL                                  0x00000003
-#define VMX_EXIT_REASON_SIPI                                         0x00000004
-#define VMX_EXIT_REASON_IO_SMI                                       0x00000005
-#define VMX_EXIT_REASON_SMI                                          0x00000006
-#define VMX_EXIT_REASON_INT_WINDOW                                   0x00000007
-#define VMX_EXIT_REASON_NMI_WINDOW                                   0x00000008
-#define VMX_EXIT_REASON_TASK_SWITCH                                  0x00000009
-#define VMX_EXIT_REASON_CPUID                                        0x0000000A
-#define VMX_EXIT_REASON_GETSEC                                       0x0000000B
-#define VMX_EXIT_REASON_HLT                                          0x0000000C
-#define VMX_EXIT_REASON_INVD                                         0x0000000D
-#define VMX_EXIT_REASON_INVLPG                                       0x0000000E
-#define VMX_EXIT_REASON_RDPMC                                        0x0000000F
-#define VMX_EXIT_REASON_RDTSC                                        0x00000010
-#define VMX_EXIT_REASON_RSM                                          0x00000011
-#define VMX_EXIT_REASON_VMCALL                                       0x00000012
-#define VMX_EXIT_REASON_VMCLEAR                                      0x00000013
-#define VMX_EXIT_REASON_VMLAUNCH                                     0x00000014
-#define VMX_EXIT_REASON_VMPTRLD                                      0x00000015
-#define VMX_EXIT_REASON_VMPTRST                                      0x00000016
-#define VMX_EXIT_REASON_VMREAD                                       0x00000017
-#define VMX_EXIT_REASON_VMRESUME                                     0x00000018
-#define VMX_EXIT_REASON_VMWRITE                                      0x00000019
-#define VMX_EXIT_REASON_VMXOFF                                       0x0000001A
-#define VMX_EXIT_REASON_VMXON                                        0x0000001B
-#define VMX_EXIT_REASON_MOV_CRX                                      0x0000001C
-#define VMX_EXIT_REASON_MOV_DRX                                      0x0000001D
-#define VMX_EXIT_REASON_IO_INSTR                                     0x0000001E
-#define VMX_EXIT_REASON_RDMSR                                        0x0000001F
-#define VMX_EXIT_REASON_WRMSR                                        0x00000020
-#define VMX_EXIT_REASON_ERR_INVALID_GUEST_STATE                      0x00000021
-#define VMX_EXIT_REASON_ERR_MSR_LOAD                                 0x00000022
-#define VMX_EXIT_REASON_MWAIT                                        0x00000024
-#define VMX_EXIT_REASON_MTF                                          0x00000025
-#define VMX_EXIT_REASON_MONITOR                                      0x00000027
-#define VMX_EXIT_REASON_PAUSE                                        0x00000028
-#define VMX_EXIT_REASON_ERR_MACHINE_CHECK                            0x00000029
-#define VMX_EXIT_REASON_TPR_BELOW_THRESHOLD                          0x0000002B
-#define VMX_EXIT_REASON_APIC_ACCESS                                  0x0000002C
-#define VMX_EXIT_REASON_VIRTUALIZED_EOI                              0x0000002D
-#define VMX_EXIT_REASON_XDTR_ACCESS                                  0x0000002E
-#define VMX_EXIT_REASON_TR_ACCESS                                    0x0000002F
-#define VMX_EXIT_REASON_EPT_VIOLATION                                0x00000030
-#define VMX_EXIT_REASON_EPT_MISCONFIG                                0x00000031
-#define VMX_EXIT_REASON_INVEPT                                       0x00000032
-#define VMX_EXIT_REASON_RDTSCP                                       0x00000033
-#define VMX_EXIT_REASON_PREEMPT_TIMER                                0x00000034
-#define VMX_EXIT_REASON_INVVPID                                      0x00000035
-#define VMX_EXIT_REASON_WBINVD                                       0x00000036
-#define VMX_EXIT_REASON_XSETBV                                       0x00000037
-#define VMX_EXIT_REASON_APIC_WRITE                                   0x00000038
-#define VMX_EXIT_REASON_RDRAND                                       0x00000039
-#define VMX_EXIT_REASON_INVPCID                                      0x0000003A
-#define VMX_EXIT_REASON_VMFUNC                                       0x0000003B
-#define VMX_EXIT_REASON_ENCLS                                        0x0000003C
-#define VMX_EXIT_REASON_RDSEED                                       0x0000003D
-#define VMX_EXIT_REASON_PML_FULL                                     0x0000003E
-#define VMX_EXIT_REASON_XSAVES                                       0x0000003F
-#define VMX_EXIT_REASON_XRSTORS                                      0x00000040
- *           VM-Instruction Error Numbers
-#define VMX_ERROR_VMCALL                                             0x00000001
-#define VMX_ERROR_VMCLEAR_INVALID_PHYS_ADDR                          0x00000002
-#define VMX_ERROR_VMCLEAR_INVALID_VMXON_PTR                          0x00000003
-#define VMX_ERROR_VMLAUCH_NON_CLEAR_VMCS                             0x00000004
-#define VMX_ERROR_VMRESUME_NON_LAUNCHED_VMCS                         0x00000005
-#define VMX_ERROR_VMRESUME_CORRUPTED_VMCS                            0x00000006
-#define VMX_ERROR_VMENTRY_INVALID_CONTROL_FIELDS                     0x00000007
-#define VMX_ERROR_VMENTRY_INVALID_HOST_STATE                         0x00000008
-#define VMX_ERROR_VMPTRLD_INVALID_PHYS_ADDR                          0x00000009
-#define VMX_ERROR_VMPTRLD_VMXON_PTR                                  0x0000000A
-#define VMX_ERROR_VMPTRLD_WRONG_VMCS_REVISION                        0x0000000B
-#define VMX_ERROR_VMREAD_VMWRITE_INVALID_COMPONENT                   0x0000000C
-#define VMX_ERROR_VMWRITE_READONLY_COMPONENT                         0x0000000D
-#define VMX_ERROR_VMXON_IN_VMX_ROOT_OP                               0x0000000F
-#define VMX_ERROR_VMENTRY_INVALID_VMCS_EXEC_PTR                      0x00000010
-#define VMX_ERROR_VMENTRY_NON_LAUNCHED_EXEC_VMCS                     0x00000011
-#define VMX_ERROR_VMENTRY_EXEC_VMCS_PTR                              0x00000012
-#define VMX_ERROR_VMCALL_NON_CLEAR_VMCS                              0x00000013
-#define VMX_ERROR_VMCALL_INVALID_VMEXIT_FIELDS                       0x00000014
-#define VMX_ERROR_VMCALL_INVALID_MSEG_REVISION                       0x00000016
-#define VMX_ERROR_VMXOFF_DUAL_MONITOR                                0x00000017
-#define VMX_ERROR_VMCALL_INVALID_SMM_MONITOR                         0x00000018
-#define VMX_ERROR_VMENTRY_INVALID_VM_EXEC_CTRL                       0x00000019
-#define VMX_ERROR_VMENTRY_MOV_SS                                     0x0000001A
-#define VMX_ERROR_INVEPTVPID_INVALID_OPERAND                         0x0000001C
- *           Virtualization Exceptions
-typedef struct {
-  uint32_t reason;
-  uint32_t exception_mask;
-  uint64_t exit;
-  uint64_t guest_linear_address;
-  uint64_t guest_physical_address;
-  uint16_t current_eptp_index;
-} vmx_ve_except_info;*/
 return true
 }
 
 func (i *ia32Compact) *           VMCS ()(ok bool){//col:4950
-/* *           VMCS (VM Control Structure)
-typedef union {
-  struct {
-    uint16_t access_type                                             : 1;
-    uint16_t index                                                   : 9;
-    uint16_t type                                                    : 2;
-    uint16_t must_be_zero                                            : 1;
-    uint16_t width                                                   : 2;
-  };
-  uint16_t flags;
-} vmcs_component_encoding;*/
 return true
 }
 
 func (i *ia32Compact) *           Advanced Programmable Interrupt Controller ()(ok bool){//col:5420
-/* *           Advanced Programmable Interrupt Controller (APIC)
-#define APIC_BASE                                                    0xFEE00000
-#define APIC_ID                                                      0x00000020
-#define APIC_VERSION                                                 0x00000030
-#define APIC_TPR                                                     0x00000080
-#define APIC_APR                                                     0x00000090
-#define APIC_PPR                                                     0x000000A0
-#define APIC_EOI                                                     0x000000B0
-#define APIC_REMOTE_READ                                             0x000000C0
-#define APIC_LOGICAL_DESTINATION                                     0x000000D0
-#define APIC_DESTINATION_FORMAT                                      0x000000E0
-#define APIC_SIV                                                     0x000000F0
-#define APIC_ISR_31_0                                                0x00000100
-#define APIC_ISR_63_32                                               0x00000110
-#define APIC_ISR_95_64                                               0x00000120
-#define APIC_ISR_127_96                                              0x00000130
-#define APIC_ISR_159_128                                             0x00000140
-#define APIC_ISR_191_160                                             0x00000150
-#define APIC_ISR_223_192                                             0x00000160
-#define APIC_ISR_255_224                                             0x00000170
-#define APIC_TMR_31_0                                                0x00000180
-#define APIC_TMR_63_32                                               0x00000190
-#define APIC_TMR_95_64                                               0x000001A0
-#define APIC_TMR_127_96                                              0x000001B0
-#define APIC_TMR_159_128                                             0x000001C0
-#define APIC_TMR_191_160                                             0x000001D0
-#define APIC_TMR_223_192                                             0x000001E0
-#define APIC_TMR_255_224                                             0x000001F0
-#define APIC_IRR_31_0                                                0x00000200
-#define APIC_IRR_63_32                                               0x00000210
-#define APIC_IRR_95_64                                               0x00000220
-#define APIC_IRR_127_96                                              0x00000230
-#define APIC_IRR_159_128                                             0x00000240
-#define APIC_IRR_191_160                                             0x00000250
-#define APIC_IRR_223_192                                             0x00000260
-#define APIC_IRR_255_224                                             0x00000270
-#define APIC_ERROR_STATUS                                            0x00000280
-#define APIC_CMCI                                                    0x000002F0
-#define APIC_ICR_0_31                                                0x00000300
-#define APIC_ICR_32_63                                               0x00000310
-#define APIC_LVT_TIMER                                               0x00000320
-#define APIC_LVT_THERMAL_SENSOR                                      0x00000330
-#define APIC_LVT_PERFORMANCE_MONITORING_COUNTERS                     0x00000340
-#define APIC_LVT_LINT0                                               0x00000350
-#define APIC_LVT_LINT1                                               0x00000360
-#define APIC_LVT_ERROR                                               0x00000370
-#define APIC_INITIAL_COUNT                                           0x00000380
-#define APIC_CURRENT_COUNT                                           0x00000390
-#define APIC_DIVIDE_CONFIGURATION                                    0x000003E0
-typedef union {
-  struct {
-    uint32_t carry_flag                                              : 1;
-    uint32_t read_as_1                                               : 1;
-    uint32_t parity_flag                                             : 1;
-    uint32_t reserved_1                                              : 1;
-    uint32_t auxiliary_carry_flag                                    : 1;
-    uint32_t reserved_2                                              : 1;
-    uint32_t zero_flag                                               : 1;
-    uint32_t sign_flag                                               : 1;
-    uint32_t trap_flag                                               : 1;
-    uint32_t interrupt_enable_flag                                   : 1;
-    uint32_t direction_flag                                          : 1;
-    uint32_t overflow_flag                                           : 1;
-    uint32_t io_privilege_level                                      : 2;
-    uint32_t nested_task_flag                                        : 1;
-    uint32_t reserved_3                                              : 1;
-    uint32_t resume_flag                                             : 1;
-    uint32_t virtual_8086_mode_flag                                  : 1;
-    uint32_t alignment_check_flag                                    : 1;
-    uint32_t virtual_interrupt_flag                                  : 1;
-    uint32_t virtual_interrupt_pending_flag                          : 1;
-    uint32_t identification_flag                                     : 1;
-  };
-  uint32_t flags;
-} efl;*/
 return true
 }
-
-
 

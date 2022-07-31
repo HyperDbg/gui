@@ -1,7 +1,4 @@
 package vmx
-
-//back\HyperDbgDev\hyperdbg\hprdbghv\header\vmm\vmx\VmxBroadcast.h.back
-
 type NMI_BROADCAST_ACTION_NONE =
 0 uint32
 const (

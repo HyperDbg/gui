@@ -1,14 +1,9 @@
 package vmx
-
-//back\HyperDbgDev\hyperdbg\hprdbghv\header\vmm\vmx\Events.h.back
-
 const (
 	RESERVED_MSR_RANGE_LOW = 0x40000000 //col:18
 	RESERVED_MSR_RANGE_HI  = 0x4000109F //col:19
 )
-
 type EXCEPTION_VECTOR_DIVIDE_ERROR uint32
-
 const (
 	EXCEPTION_VECTOR_DIVIDE_ERROR                      EXCEPTION_VECTORS = 1  //col:31
 	EXCEPTION_VECTOR_DEBUG_BREAKPOINT                  EXCEPTION_VECTORS = 2  //col:32
@@ -42,16 +37,12 @@ const (
 	EXCEPTION_VECTOR_RESERVED10                        EXCEPTION_VECTORS = 30 //col:60
 	EXCEPTION_VECTOR_RESERVED11                        EXCEPTION_VECTORS = 31 //col:61
 	EXCEPTION_VECTOR_RESERVED12                        EXCEPTION_VECTORS = 32 //col:62
-	// EXCEPTION_VECTORS = 33  //col:64
-	// NT (Windows) specific exception vectors. EXCEPTION_VECTORS = 34  //col:65
-	// EXCEPTION_VECTORS = 35  //col:66
 	APC_INTERRUPT   EXCEPTION_VECTORS = 31  //col:67
 	DPC_INTERRUPT   EXCEPTION_VECTORS = 47  //col:68
 	CLOCK_INTERRUPT EXCEPTION_VECTORS = 209 //col:69
 	IPI_INTERRUPT   EXCEPTION_VECTORS = 225 //col:70
 	PMI_INTERRUPT   EXCEPTION_VECTORS = 254 //col:71
 )
-
 type INTERRUPT_TYPE_EXTERNAL_INTERRUPT =
 0 uint32
 const (

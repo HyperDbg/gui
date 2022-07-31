@@ -1,6 +1,4 @@
 package phnt
-//back\HyperDbgDev\hyperdbg\dependencies\phnt\ntioapi.h.back
-
 const(
 _NTIOAPI_H =  //col:13
 FILE_SUPERSEDE = 0x00000000 //col:17
@@ -232,7 +230,6 @@ MOUNTMGR_IS_DOS_VOLUME_NAME_WB(s) ( = MOUNTMGR_IS_VOLUME_NAME(s) && (s)->Length 
 MOUNTMGR_IS_NT_VOLUME_NAME(s) ( = MOUNTMGR_IS_VOLUME_NAME(s) && (s)->Length == 96 && (s)->Buffer[1] == '?') //col:2354
 MOUNTMGR_IS_NT_VOLUME_NAME_WB(s) ( = MOUNTMGR_IS_VOLUME_NAME(s) && (s)->Length == 98 && (s)->Buffer[1] == '?') //col:2359
 )
-
 type     FileDirectoryInformation = 1 // FILE_DIRECTORY_INFORMATION uint32
 const(
     FileDirectoryInformation  FILE_INFORMATION_CLASS =  1 // FILE_DIRECTORY_INFORMATION  //col:193
@@ -313,8 +310,6 @@ const(
     FileKnownFolderInformation // FILE_KNOWN_FOLDER_INFORMATION // since WIN11 FILE_INFORMATION_CLASS = 76  //col:268
     FileMaximumInformation FILE_INFORMATION_CLASS = 77  //col:269
 )
-
-
 type     IoPriorityVeryLow = 0 // Defragging content indexing and other background I/Os. uint32
 const(
     IoPriorityVeryLow  IO_PRIORITY_HINT =  0 // Defragging content indexing and other background I/Os.  //col:619
@@ -324,8 +319,6 @@ const(
     IoPriorityCritical // Used by memory manager. Not available for applications. IO_PRIORITY_HINT = 5  //col:623
     MaxIoPriorityTypes IO_PRIORITY_HINT = 6  //col:624
 )
-
-
 type     KnownFolderNone uint32
 const(
     KnownFolderNone FILE_KNOWN_FOLDER_TYPE = 1  //col:877
@@ -338,8 +331,6 @@ const(
     KnownFolderOther FILE_KNOWN_FOLDER_TYPE = 8  //col:884
     KnownFolderMax  FILE_KNOWN_FOLDER_TYPE =  7  //col:885
 )
-
-
 type     FileFsVolumeInformation = 1 // FILE_FS_VOLUME_INFORMATION uint32
 const(
     FileFsVolumeInformation  FSINFOCLASS =  1 // FILE_FS_VOLUME_INFORMATION  //col:1067
@@ -358,8 +349,6 @@ const(
     FileFsFullSizeInformationEx // FILE_FS_FULL_SIZE_INFORMATION_EX // since REDSTONE5 FSINFOCLASS = 14  //col:1080
     FileFsMaximumInformation FSINFOCLASS = 15  //col:1081
 )
-
-
 type     DirectoryNotifyInformation = 1 // FILE_NOTIFY_INFORMATION uint32
 const(
     DirectoryNotifyInformation  DIRECTORY_NOTIFY_INFORMATION_CLASS =  1 // FILE_NOTIFY_INFORMATION  //col:1664
@@ -367,14 +356,10 @@ const(
     DirectoryNotifyFullInformation // since 22H2 DIRECTORY_NOTIFY_INFORMATION_CLASS = 3  //col:1666
     DirectoryNotifyMaximumInformation DIRECTORY_NOTIFY_INFORMATION_CLASS = 4  //col:1667
 )
-
-
 type     IoCompletionBasicInformation uint32
 const(
     IoCompletionBasicInformation IO_COMPLETION_INFORMATION_CLASS = 1  //col:1718
 )
-
-
 type     IoSessionEventIgnore uint32
 const(
     IoSessionEventIgnore IO_SESSION_EVENT = 1  //col:1847
@@ -386,8 +371,6 @@ const(
     IoSessionEventLogoff IO_SESSION_EVENT = 7  //col:1853
     IoSessionEventMax IO_SESSION_EVENT = 8  //col:1854
 )
-
-
 type     IoSessionStateCreated = 1 uint32
 const(
     IoSessionStateCreated  IO_SESSION_STATE =  1  //col:1859
@@ -400,8 +383,6 @@ const(
     IoSessionStateTerminated  IO_SESSION_STATE =  8  //col:1866
     IoSessionStateMax IO_SESSION_STATE = 9  //col:1867
 )
-
-
 type     InterfaceTypeUndefined = -1 uint32
 const(
     InterfaceTypeUndefined  INTERFACE_TYPE =  -1  //col:1907
@@ -425,8 +406,6 @@ const(
     ACPIBus  INTERFACE_TYPE =  17  //col:1925
     MaximumInterfaceType INTERFACE_TYPE = 20  //col:1926
 )
-
-
 type     Width8Bits uint32
 const(
     Width8Bits DMA_WIDTH = 1  //col:1931
@@ -436,8 +415,6 @@ const(
     WidthNoWrap DMA_WIDTH = 5  //col:1935
     MaximumDmaWidth DMA_WIDTH = 6  //col:1936
 )
-
-
 type     Compatible uint32
 const(
     Compatible DMA_SPEED = 1  //col:1941
@@ -447,8 +424,6 @@ const(
     TypeF DMA_SPEED = 5  //col:1945
     MaximumDmaSpeed DMA_SPEED = 6  //col:1946
 )
-
-
 type     ConfigurationSpaceUndefined = -1 uint32
 const(
     ConfigurationSpaceUndefined  BUS_DATA_TYPE =  -1  //col:1951
@@ -466,9 +441,6 @@ const(
     SgiInternalConfiguration BUS_DATA_TYPE = 13  //col:1963
     MaximumBusDataType BUS_DATA_TYPE = 14  //col:1964
 )
-
-
-
 type (
 Ntioapi interface{
  * Attribution 4.0 International ()(ok bool)//col:175
@@ -491,1067 +463,82 @@ NtCreateIoCompletion()(ok bool)//col:1855
 #define IOCTL_MOUNTMGR_CREATE_POINT                 CTL_CODE()(ok bool)//col:2220
 #define MOUNTMGR_IS_DRIVE_LETTER()(ok bool)//col:2335
 }
+
 )
-
 func NewNtioapi() { return & ntioapi{} }
-
 func (n *ntioapi) * Attribution 4.0 International ()(ok bool){//col:175
-/* * Attribution 4.0 International (CC BY 4.0) license. 
- * 
- * You must give appropriate credit, provide a link to the license, and 
- * indicate if changes were made. You may do so in any reasonable manner, but 
- * not in any way that suggests the licensor endorses you or your use.
-#ifndef _NTIOAPI_H
-#define _NTIOAPI_H
-#define FILE_SUPERSEDE 0x00000000
-#define FILE_OPEN 0x00000001
-#define FILE_CREATE 0x00000002
-#define FILE_OPEN_IF 0x00000003
-#define FILE_OVERWRITE 0x00000004
-#define FILE_OVERWRITE_IF 0x00000005
-#define FILE_MAXIMUM_DISPOSITION 0x00000005
-#define FILE_DIRECTORY_FILE 0x00000001
-#define FILE_WRITE_THROUGH 0x00000002
-#define FILE_SEQUENTIAL_ONLY 0x00000004
-#define FILE_NO_INTERMEDIATE_BUFFERING 0x00000008
-#define FILE_SYNCHRONOUS_IO_ALERT 0x00000010
-#define FILE_SYNCHRONOUS_IO_NONALERT 0x00000020
-#define FILE_NON_DIRECTORY_FILE 0x00000040
-#define FILE_CREATE_TREE_CONNECTION 0x00000080
-#define FILE_COMPLETE_IF_OPLOCKED 0x00000100
-#define FILE_NO_EA_KNOWLEDGE 0x00000200
-#define FILE_OPEN_FOR_RECOVERY 0x00000400
-#define FILE_RANDOM_ACCESS 0x00000800
-#define FILE_DELETE_ON_CLOSE 0x00001000
-#define FILE_OPEN_BY_FILE_ID 0x00002000
-#define FILE_OPEN_FOR_BACKUP_INTENT 0x00004000
-#define FILE_NO_COMPRESSION 0x00008000
-#if (PHNT_VERSION >= PHNT_WIN7)
-#define FILE_OPEN_REQUIRING_OPLOCK 0x00010000
-#define FILE_DISALLOW_EXCLUSIVE 0x00020000
-#endif
-#if (PHNT_VERSION >= PHNT_WIN8)
-#define FILE_SESSION_AWARE 0x00040000
-#endif
-#define FILE_RESERVE_OPFILTER 0x00100000
-#define FILE_OPEN_REPARSE_POINT 0x00200000
-#define FILE_OPEN_NO_RECALL 0x00400000
-#define FILE_OPEN_FOR_FREE_SPACE_QUERY 0x00800000
-#define FILE_COPY_STRUCTURED_STORAGE 0x00000041
-#define FILE_STRUCTURED_STORAGE 0x00000441
-#define FILE_SUPERSEDED 0x00000000
-#define FILE_OPENED 0x00000001
-#define FILE_CREATED 0x00000002
-#define FILE_OVERWRITTEN 0x00000003
-#define FILE_EXISTS 0x00000004
-#define FILE_DOES_NOT_EXIST 0x00000005
-#define FILE_WRITE_TO_END_OF_FILE 0xffffffff
-#define FILE_USE_FILE_POINTER_POSITION 0xfffffffe
-#define FILE_BYTE_ALIGNMENT 0x00000000
-#define FILE_WORD_ALIGNMENT 0x00000001
-#define FILE_LONG_ALIGNMENT 0x00000003
-#define FILE_QUAD_ALIGNMENT 0x00000007
-#define FILE_OCTA_ALIGNMENT 0x0000000f
-#define FILE_32_BYTE_ALIGNMENT 0x0000001f
-#define FILE_64_BYTE_ALIGNMENT 0x0000003f
-#define FILE_128_BYTE_ALIGNMENT 0x0000007f
-#define FILE_256_BYTE_ALIGNMENT 0x000000ff
-#define FILE_512_BYTE_ALIGNMENT 0x000001ff
-#define MAXIMUM_FILENAME_LENGTH 256
-#define FILE_NEED_EA 0x00000080
-#define FILE_EA_TYPE_BINARY 0xfffe
-#define FILE_EA_TYPE_ASCII 0xfffd
-#define FILE_EA_TYPE_BITMAP 0xfffb
-#define FILE_EA_TYPE_METAFILE 0xfffa
-#define FILE_EA_TYPE_ICON 0xfff9
-#define FILE_EA_TYPE_EA 0xffee
-#define FILE_EA_TYPE_MVMT 0xffdf
-#define FILE_EA_TYPE_MVST 0xffde
-#define FILE_EA_TYPE_ASN1 0xffdd
-#define FILE_EA_TYPE_FAMILY_IDS 0xff01
-#define FILE_REMOVABLE_MEDIA 0x00000001
-#define FILE_READ_ONLY_DEVICE 0x00000002
-#define FILE_FLOPPY_DISKETTE 0x00000004
-#define FILE_WRITE_ONCE_MEDIA 0x00000008
-#define FILE_REMOTE_DEVICE 0x00000010
-#define FILE_DEVICE_IS_MOUNTED 0x00000020
-#define FILE_VIRTUAL_VOLUME 0x00000040
-#define FILE_AUTOGENERATED_DEVICE_NAME 0x00000080
-#define FILE_DEVICE_SECURE_OPEN 0x00000100
-#define FILE_CHARACTERISTIC_PNP_DEVICE 0x00000800
-#define FILE_CHARACTERISTIC_TS_DEVICE 0x00001000
-#define FILE_CHARACTERISTIC_WEBDAV_DEVICE 0x00002000
-#define FILE_CHARACTERISTIC_CSV 0x00010000
-#define FILE_DEVICE_ALLOW_APPCONTAINER_TRAVERSAL 0x00020000
-#define FILE_PORTABLE_DEVICE 0x00040000
-#define FILE_REMOTE_DEVICE_VSMB 0x00080000
-#define FILE_DEVICE_REQUIRE_SECURITY_CHECK 0x00100000
-#define FILE_PIPE_BYTE_STREAM_TYPE 0x00000000
-#define FILE_PIPE_MESSAGE_TYPE 0x00000001
-#define FILE_PIPE_ACCEPT_REMOTE_CLIENTS 0x00000000
-#define FILE_PIPE_REJECT_REMOTE_CLIENTS 0x00000002
-#define FILE_PIPE_TYPE_VALID_MASK 0x00000003
-#define FILE_PIPE_QUEUE_OPERATION 0x00000000
-#define FILE_PIPE_COMPLETE_OPERATION 0x00000001
-#define FILE_PIPE_BYTE_STREAM_MODE 0x00000000
-#define FILE_PIPE_MESSAGE_MODE 0x00000001
-#define FILE_PIPE_INBOUND 0x00000000
-#define FILE_PIPE_OUTBOUND 0x00000001
-#define FILE_PIPE_FULL_DUPLEX 0x00000002
-#define FILE_PIPE_DISCONNECTED_STATE 0x00000001
-#define FILE_PIPE_LISTENING_STATE 0x00000002
-#define FILE_PIPE_CONNECTED_STATE 0x00000003
-#define FILE_PIPE_CLOSING_STATE 0x00000004
-#define FILE_PIPE_CLIENT_END 0x00000000
-#define FILE_PIPE_SERVER_END 0x00000001
-#define FILE_PIPE_UNLIMITED_INSTANCES 0xffffffff 
-#define MAILSLOT_SIZE_AUTO 0
-typedef struct _IO_STATUS_BLOCK
-{
-    union
-    {
-        NTSTATUS Status;
-        PVOID Pointer;
-    };
-    ULONG_PTR Information;
-} IO_STATUS_BLOCK, *PIO_STATUS_BLOCK;*/
 return true
 }
 
 func (n *ntioapi)typedef VOID ()(ok bool){//col:189
-/*typedef VOID (NTAPI *PIO_APC_ROUTINE)(
-    _In_ PVOID ApcContext,
-    _In_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_ ULONG Reserved
-    );
-typedef struct _FILE_IO_COMPLETION_INFORMATION
-{
-    PVOID KeyContext;
-    PVOID ApcContext;
-    IO_STATUS_BLOCK IoStatusBlock;
-} FILE_IO_COMPLETION_INFORMATION, *PFILE_IO_COMPLETION_INFORMATION;*/
 return true
 }
 
 func (n *ntioapi)#if ()(ok bool){//col:446
-/*#if (PHNT_VERSION >= PHNT_REDSTONE5)
-#define FILE_LINK_REPLACE_IF_EXISTS 0x00000001
-#define FILE_LINK_POSIX_SEMANTICS 0x00000002
-#define FILE_LINK_SUPPRESS_STORAGE_RESERVE_INHERITANCE 0x00000008
-#define FILE_LINK_NO_INCREASE_AVAILABLE_SPACE 0x00000010
-#define FILE_LINK_NO_DECREASE_AVAILABLE_SPACE 0x00000020
-#define FILE_LINK_PRESERVE_AVAILABLE_SPACE 0x00000030
-#define FILE_LINK_IGNORE_READONLY_ATTRIBUTE 0x00000040
-#endif
-#if (PHNT_VERSION >= PHNT_19H1)
-#define FILE_LINK_FORCE_RESIZE_TARGET_SR 0x00000080
-#define FILE_LINK_FORCE_RESIZE_SOURCE_SR 0x00000100
-#define FILE_LINK_FORCE_RESIZE_SR 0x00000180
-#endif
-typedef struct _FILE_LINK_INFORMATION
-{
-#if (PHNT_VERSION >= PHNT_REDSTONE5)
-    union
-    {
-    };
-#else
-    BOOLEAN ReplaceIfExists;
-#endif
-    HANDLE RootDirectory;
-    ULONG FileNameLength;
-    WCHAR FileName[1];
-} FILE_LINK_INFORMATION, *PFILE_LINK_INFORMATION;*/
 return true
 }
 
 func (n *ntioapi)#if ()(ok bool){//col:501
-/*#if (PHNT_VERSION >= PHNT_REDSTONE)
-#define FILE_RENAME_REPLACE_IF_EXISTS 0x00000001
-#define FILE_RENAME_POSIX_SEMANTICS 0x00000002
-#endif
-#if (PHNT_VERSION >= PHNT_REDSTONE3)
-#define FILE_RENAME_SUPPRESS_PIN_STATE_INHERITANCE 0x00000004
-#endif
-#if (PHNT_VERSION >= PHNT_REDSTONE5)
-#define FILE_RENAME_SUPPRESS_STORAGE_RESERVE_INHERITANCE 0x00000008
-#define FILE_RENAME_NO_INCREASE_AVAILABLE_SPACE 0x00000010
-#define FILE_RENAME_NO_DECREASE_AVAILABLE_SPACE 0x00000020
-#define FILE_RENAME_PRESERVE_AVAILABLE_SPACE 0x00000030
-#define FILE_RENAME_IGNORE_READONLY_ATTRIBUTE 0x00000040
-#endif
-#if (PHNT_VERSION >= PHNT_19H1)
-#define FILE_RENAME_FORCE_RESIZE_TARGET_SR 0x00000080
-#define FILE_RENAME_FORCE_RESIZE_SOURCE_SR 0x00000100
-#define FILE_RENAME_FORCE_RESIZE_SR 0x00000180
-#endif
-typedef struct _FILE_RENAME_INFORMATION_EX
-{
-    ULONG Flags;
-    HANDLE RootDirectory;
-    ULONG FileNameLength;
-    WCHAR FileName[1];
-} FILE_RENAME_INFORMATION_EX, *PFILE_RENAME_INFORMATION_EX;*/
 return true
 }
 
 func (n *ntioapi)typedef DECLSPEC_ALIGN()(ok bool){//col:630
-/*typedef DECLSPEC_ALIGN(8) struct _FILE_IO_PRIORITY_HINT_INFORMATION
-{
-    IO_PRIORITY_HINT PriorityHint;
-} FILE_IO_PRIORITY_HINT_INFORMATION, *PFILE_IO_PRIORITY_HINT_INFORMATION;*/
 return true
 }
 
 func (n *ntioapi)#if ()(ok bool){//col:729
-/*#if (_WIN32_WINNT < PHNT_WIN8)
-    struct
-    {
-        ULONG Reserved[16];
-    } ProtocolSpecificReserved;
-#endif
-#if (PHNT_VERSION >= PHNT_WIN8)
-    union
-    {
-        struct
-        {
-            struct
-            {
-                ULONG Capabilities;
-            } Server;
-            struct
-            {
-                ULONG Capabilities;
-#if (PHNT_VERSION >= PHNT_21H1)
-                ULONG ShareFlags;
-#else
-                ULONG CachingFlags;
-#endif
-#if (PHNT_VERSION >= PHNT_REDSTONE5)
-                UCHAR ShareType;
-                UCHAR Reserved0[3];
-                ULONG Reserved1;
-#endif
-            } Share;
-        } Smb2;
-        ULONG Reserved[16];
-    } ProtocolSpecific;
-#endif
-} FILE_REMOTE_PROTOCOL_INFORMATION, *PFILE_REMOTE_PROTOCOL_INFORMATION;*/
 return true
 }
 
 func (n *ntioapi)NtCreateFile()(ok bool){//col:1668
-/*NtCreateFile(
-    _Out_ PHANDLE FileHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_opt_ PLARGE_INTEGER AllocationSize,
-    _In_ ULONG FileAttributes,
-    _In_ ULONG ShareAccess,
-    _In_ ULONG CreateDisposition,
-    _In_ ULONG CreateOptions,
-    _In_reads_bytes_opt_(EaLength) PVOID EaBuffer,
-    _In_ ULONG EaLength
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateNamedPipeFile(
-    _Out_ PHANDLE FileHandle,
-    _In_ ULONG DesiredAccess,
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_ ULONG ShareAccess,
-    _In_ ULONG CreateDisposition,
-    _In_ ULONG CreateOptions,
-    _In_ ULONG NamedPipeType,
-    _In_ ULONG ReadMode,
-    _In_ ULONG CompletionMode,
-    _In_ ULONG MaximumInstances,
-    _In_ ULONG InboundQuota,
-    _In_ ULONG OutboundQuota,
-    _In_opt_ PLARGE_INTEGER DefaultTimeout
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateMailslotFile(
-    _Out_ PHANDLE FileHandle,
-    _In_ ULONG DesiredAccess,
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_ ULONG CreateOptions,
-    _In_ ULONG MailslotQuota,
-    _In_ ULONG MaximumMessageSize,
-    _In_ PLARGE_INTEGER ReadTimeout
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtOpenFile(
-    _Out_ PHANDLE FileHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_ ULONG ShareAccess,
-    _In_ ULONG OpenOptions
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtDeleteFile(
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtFlushBuffersFile(
-    _In_ HANDLE FileHandle,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock
-    );
-#define FLUSH_FLAGS_FILE_DATA_ONLY 0x00000001
-#define FLUSH_FLAGS_NO_SYNC 0x00000002
-#if (PHNT_VERSION >= PHNT_WIN8)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtFlushBuffersFileEx(
-    _In_ HANDLE FileHandle,
-    _In_ ULONG Flags,
-    _In_reads_bytes_(ParametersSize) PVOID Parameters,
-    _In_ ULONG ParametersSize,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryInformationFile(
-    _In_ HANDLE FileHandle,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _Out_writes_bytes_(Length) PVOID FileInformation,
-    _In_ ULONG Length,
-    _In_ FILE_INFORMATION_CLASS FileInformationClass
-    );
-#if (PHNT_VERSION >= PHNT_REDSTONE2)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryInformationByName(
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _Out_writes_bytes_(Length) PVOID FileInformation,
-    _In_ ULONG Length,
-    _In_ FILE_INFORMATION_CLASS FileInformationClass
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSetInformationFile(
-    _In_ HANDLE FileHandle,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_reads_bytes_(Length) PVOID FileInformation,
-    _In_ ULONG Length,
-    _In_ FILE_INFORMATION_CLASS FileInformationClass
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryDirectoryFile(
-    _In_ HANDLE FileHandle,
-    _In_opt_ HANDLE Event,
-    _In_opt_ PIO_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcContext,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _Out_writes_bytes_(Length) PVOID FileInformation,
-    _In_ ULONG Length,
-    _In_ FILE_INFORMATION_CLASS FileInformationClass,
-    _In_ BOOLEAN ReturnSingleEntry,
-    _In_opt_ PUNICODE_STRING FileName,
-    _In_ BOOLEAN RestartScan
-    );
-#if (PHNT_VERSION >= PHNT_REDSTONE3)
-#define FILE_QUERY_RESTART_SCAN 0x00000001
-#define FILE_QUERY_RETURN_SINGLE_ENTRY 0x00000002
-#define FILE_QUERY_INDEX_SPECIFIED 0x00000004
-#define FILE_QUERY_RETURN_ON_DISK_ENTRIES_ONLY 0x00000008
-#if (PHNT_VERSION >= PHNT_REDSTONE5)
-#define FILE_QUERY_NO_CURSOR_UPDATE 0x00000010
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryDirectoryFileEx(
-    _In_ HANDLE FileHandle,
-    _In_opt_ HANDLE Event,
-    _In_opt_ PIO_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcContext,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _Out_writes_bytes_(Length) PVOID FileInformation,
-    _In_ ULONG Length,
-    _In_ FILE_INFORMATION_CLASS FileInformationClass,
-    _In_ ULONG QueryFlags,
-    _In_opt_ PUNICODE_STRING FileName
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryEaFile(
-    _In_ HANDLE FileHandle,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _Out_writes_bytes_(Length) PVOID Buffer,
-    _In_ ULONG Length,
-    _In_ BOOLEAN ReturnSingleEntry,
-    _In_reads_bytes_opt_(EaListLength) PVOID EaList,
-    _In_ ULONG EaListLength,
-    _In_opt_ PULONG EaIndex,
-    _In_ BOOLEAN RestartScan
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSetEaFile(
-    _In_ HANDLE FileHandle,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_reads_bytes_(Length) PVOID Buffer,
-    _In_ ULONG Length
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryQuotaInformationFile(
-    _In_ HANDLE FileHandle,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _Out_writes_bytes_(Length) PVOID Buffer,
-    _In_ ULONG Length,
-    _In_ BOOLEAN ReturnSingleEntry,
-    _In_reads_bytes_opt_(SidListLength) PVOID SidList,
-    _In_ ULONG SidListLength,
-    _In_opt_ PSID StartSid,
-    _In_ BOOLEAN RestartScan
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSetQuotaInformationFile(
-    _In_ HANDLE FileHandle,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_reads_bytes_(Length) PVOID Buffer,
-    _In_ ULONG Length
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryVolumeInformationFile(
-    _In_ HANDLE FileHandle,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _Out_writes_bytes_(Length) PVOID FsInformation,
-    _In_ ULONG Length,
-    _In_ FSINFOCLASS FsInformationClass
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSetVolumeInformationFile(
-    _In_ HANDLE FileHandle,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_reads_bytes_(Length) PVOID FsInformation,
-    _In_ ULONG Length,
-    _In_ FSINFOCLASS FsInformationClass
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCancelIoFile(
-    _In_ HANDLE FileHandle,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock
-    );
-#if (PHNT_VERSION >= PHNT_VISTA)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCancelIoFileEx(
-    _In_ HANDLE FileHandle,
-    _In_opt_ PIO_STATUS_BLOCK IoRequestToCancel,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock
-    );
-#endif
-#if (PHNT_VERSION >= PHNT_VISTA)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCancelSynchronousIoFile(
-    _In_ HANDLE ThreadHandle,
-    _In_opt_ PIO_STATUS_BLOCK IoRequestToCancel,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtDeviceIoControlFile(
-    _In_ HANDLE FileHandle,
-    _In_opt_ HANDLE Event,
-    _In_opt_ PIO_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcContext,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_ ULONG IoControlCode,
-    _In_reads_bytes_opt_(InputBufferLength) PVOID InputBuffer,
-    _In_ ULONG InputBufferLength,
-    _Out_writes_bytes_opt_(OutputBufferLength) PVOID OutputBuffer,
-    _In_ ULONG OutputBufferLength
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtFsControlFile(
-    _In_ HANDLE FileHandle,
-    _In_opt_ HANDLE Event,
-    _In_opt_ PIO_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcContext,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_ ULONG FsControlCode,
-    _In_reads_bytes_opt_(InputBufferLength) PVOID InputBuffer,
-    _In_ ULONG InputBufferLength,
-    _Out_writes_bytes_opt_(OutputBufferLength) PVOID OutputBuffer,
-    _In_ ULONG OutputBufferLength
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtReadFile(
-    _In_ HANDLE FileHandle,
-    _In_opt_ HANDLE Event,
-    _In_opt_ PIO_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcContext,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _Out_writes_bytes_(Length) PVOID Buffer,
-    _In_ ULONG Length,
-    _In_opt_ PLARGE_INTEGER ByteOffset,
-    _In_opt_ PULONG Key
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtWriteFile(
-    _In_ HANDLE FileHandle,
-    _In_opt_ HANDLE Event,
-    _In_opt_ PIO_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcContext,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_reads_bytes_(Length) PVOID Buffer,
-    _In_ ULONG Length,
-    _In_opt_ PLARGE_INTEGER ByteOffset,
-    _In_opt_ PULONG Key
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtReadFileScatter(
-    _In_ HANDLE FileHandle,
-    _In_opt_ HANDLE Event,
-    _In_opt_ PIO_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcContext,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_ PFILE_SEGMENT_ELEMENT SegmentArray,
-    _In_ ULONG Length,
-    _In_opt_ PLARGE_INTEGER ByteOffset,
-    _In_opt_ PULONG Key
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtWriteFileGather(
-    _In_ HANDLE FileHandle,
-    _In_opt_ HANDLE Event,
-    _In_opt_ PIO_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcContext,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_ PFILE_SEGMENT_ELEMENT SegmentArray,
-    _In_ ULONG Length,
-    _In_opt_ PLARGE_INTEGER ByteOffset,
-    _In_opt_ PULONG Key
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtLockFile(
-    _In_ HANDLE FileHandle,
-    _In_opt_ HANDLE Event,
-    _In_opt_ PIO_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcContext,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_ PLARGE_INTEGER ByteOffset,
-    _In_ PLARGE_INTEGER Length,
-    _In_ ULONG Key,
-    _In_ BOOLEAN FailImmediately,
-    _In_ BOOLEAN ExclusiveLock
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtUnlockFile(
-    _In_ HANDLE FileHandle,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_ PLARGE_INTEGER ByteOffset,
-    _In_ PLARGE_INTEGER Length,
-    _In_ ULONG Key
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryAttributesFile(
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _Out_ PFILE_BASIC_INFORMATION FileInformation
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryFullAttributesFile(
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _Out_ PFILE_NETWORK_OPEN_INFORMATION FileInformation
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtNotifyChangeDirectoryFile(
-    _In_ HANDLE FileHandle,
-    _In_opt_ HANDLE Event,
-    _In_opt_ PIO_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcContext,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_ ULONG Length,
-    _In_ ULONG CompletionFilter,
-    _In_ BOOLEAN WatchTree
-    );
-typedef enum _DIRECTORY_NOTIFY_INFORMATION_CLASS
-{
-    DirectoryNotifyMaximumInformation
-} DIRECTORY_NOTIFY_INFORMATION_CLASS, *PDIRECTORY_NOTIFY_INFORMATION_CLASS;*/
 return true
 }
 
 func (n *ntioapi)#if ()(ok bool){//col:1719
-/*#if (PHNT_VERSION >= PHNT_REDSTONE3)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtNotifyChangeDirectoryFileEx(
-    _In_ HANDLE FileHandle,
-    _In_opt_ HANDLE Event,
-    _In_opt_ PIO_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcContext,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _Out_writes_bytes_(Length) PVOID Buffer,
-    _In_ ULONG Length,
-    _In_ ULONG CompletionFilter,
-    _In_ BOOLEAN WatchTree,
-    _In_opt_ DIRECTORY_NOTIFY_INFORMATION_CLASS DirectoryNotifyInformationClass
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtLoadDriver(
-    _In_ PUNICODE_STRING DriverServiceName
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtUnloadDriver(
-    _In_ PUNICODE_STRING DriverServiceName
-    );
-#ifndef IO_COMPLETION_QUERY_STATE
-#define IO_COMPLETION_QUERY_STATE 0x0001
-#endif
-#ifndef IO_COMPLETION_MODIFY_STATE
-#define IO_COMPLETION_MODIFY_STATE 0x0002
-#endif
-#ifndef IO_COMPLETION_ALL_ACCESS
-#define IO_COMPLETION_ALL_ACCESS (IO_COMPLETION_QUERY_STATE|IO_COMPLETION_MODIFY_STATE|STANDARD_RIGHTS_REQUIRED|SYNCHRONIZE) 
-#endif
-typedef enum _IO_COMPLETION_INFORMATION_CLASS
-{
-    IoCompletionBasicInformation
-} IO_COMPLETION_INFORMATION_CLASS;*/
 return true
 }
 
 func (n *ntioapi)NtCreateIoCompletion()(ok bool){//col:1855
-/*NtCreateIoCompletion(
-    _Out_ PHANDLE IoCompletionHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _In_opt_ ULONG Count
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtOpenIoCompletion(
-    _Out_ PHANDLE IoCompletionHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryIoCompletion(
-    _In_ HANDLE IoCompletionHandle,
-    _In_ IO_COMPLETION_INFORMATION_CLASS IoCompletionInformationClass,
-    _Out_writes_bytes_(IoCompletionInformationLength) PVOID IoCompletionInformation,
-    _In_ ULONG IoCompletionInformationLength,
-    _Out_opt_ PULONG ReturnLength
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSetIoCompletion(
-    _In_ HANDLE IoCompletionHandle,
-    _In_opt_ PVOID KeyContext,
-    _In_opt_ PVOID ApcContext,
-    _In_ NTSTATUS IoStatus,
-    _In_ ULONG_PTR IoStatusInformation
-    );
-#if (PHNT_VERSION >= PHNT_WIN7)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSetIoCompletionEx(
-    _In_ HANDLE IoCompletionHandle,
-    _In_ HANDLE IoCompletionPacketHandle,
-    _In_opt_ PVOID KeyContext,
-    _In_opt_ PVOID ApcContext,
-    _In_ NTSTATUS IoStatus,
-    _In_ ULONG_PTR IoStatusInformation
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtRemoveIoCompletion(
-    _In_ HANDLE IoCompletionHandle,
-    _Out_ PVOID *KeyContext,
-    _Out_ PVOID *ApcContext,
-    _Out_ PIO_STATUS_BLOCK IoStatusBlock,
-    _In_opt_ PLARGE_INTEGER Timeout
-    );
-#if (PHNT_VERSION >= PHNT_VISTA)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtRemoveIoCompletionEx(
-    _In_ HANDLE IoCompletionHandle,
-    _Out_writes_to_(Count, *NumEntriesRemoved) PFILE_IO_COMPLETION_INFORMATION IoCompletionInformation,
-    _In_ ULONG Count,
-    _Out_ PULONG NumEntriesRemoved,
-    _In_opt_ PLARGE_INTEGER Timeout,
-    _In_ BOOLEAN Alertable
-    );
-#endif
-#if (PHNT_VERSION >= PHNT_WIN8)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateWaitCompletionPacket(
-    _Out_ PHANDLE WaitCompletionPacketHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtAssociateWaitCompletionPacket(
-    _In_ HANDLE WaitCompletionPacketHandle,
-    _In_ HANDLE IoCompletionHandle,
-    _In_ HANDLE TargetObjectHandle,
-    _In_opt_ PVOID KeyContext,
-    _In_opt_ PVOID ApcContext,
-    _In_ NTSTATUS IoStatus,
-    _In_ ULONG_PTR IoStatusInformation,
-    _Out_opt_ PBOOLEAN AlreadySignaled
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCancelWaitCompletionPacket(
-    _In_ HANDLE WaitCompletionPacketHandle,
-    _In_ BOOLEAN RemoveSignaledPacket
-    );
-#endif
-typedef enum _IO_SESSION_EVENT
-{
-    IoSessionEventIgnore,
-    IoSessionEventCreated,
-    IoSessionEventTerminated,
-    IoSessionEventConnected,
-    IoSessionEventDisconnected,
-    IoSessionEventLogon,
-    IoSessionEventLogoff,
-    IoSessionEventMax
-} IO_SESSION_EVENT;*/
 return true
 }
 
 func (n *ntioapi)#if ()(ok bool){//col:1927
-/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
-#if (PHNT_VERSION >= PHNT_VISTA)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtOpenSession(
-    _Out_ PHANDLE SessionHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes
-    );
-#endif
-#endif
-#if (PHNT_VERSION >= PHNT_WIN7)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtNotifyChangeSession(
-    _In_ HANDLE SessionHandle,
-    _In_ ULONG ChangeSequenceNumber,
-    _In_ PLARGE_INTEGER ChangeTimeStamp,
-    _In_ IO_SESSION_EVENT Event,
-    _In_ IO_SESSION_STATE NewState,
-    _In_ IO_SESSION_STATE PreviousState,
-    _In_reads_bytes_opt_(PayloadSize) PVOID Payload,
-    _In_ ULONG PayloadSize
-    );
-#endif
-typedef enum _INTERFACE_TYPE
-{
-    InterfaceTypeUndefined = -1,
-    Internal = 0,
-    Isa = 1,
-    Eisa = 2,
-    MicroChannel = 3,
-    TurboChannel = 4,
-    PCIBus = 5,
-    VMEBus = 6,
-    NuBus = 7,
-    PCMCIABus = 8,
-    CBus = 9,
-    MPIBus = 10,
-    MPSABus = 11,
-    ProcessorInternal = 12,
-    InternalPowerBus = 13,
-    PNPISABus = 14,
-    PNPBus = 15,
-    Vmcs = 16,
-    ACPIBus = 17,
-    MaximumInterfaceType
-} INTERFACE_TYPE, *PINTERFACE_TYPE;*/
 return true
 }
 
 func (n *ntioapi)#if ()(ok bool){//col:2009
-/*#if (PHNT_VERSION >= PHNT_REDSTONE4)
-#endif
-typedef struct _REPARSE_DATA_BUFFER
-{
-    ULONG ReparseTag;
-    USHORT ReparseDataLength;
-    USHORT Reserved;
-    _Field_size_bytes_(ReparseDataLength)
-    union
-    {
-        struct
-        {
-            USHORT SubstituteNameOffset;
-            USHORT SubstituteNameLength;
-            USHORT PrintNameOffset;
-            USHORT PrintNameLength;
-            ULONG Flags;
-            WCHAR PathBuffer[1];
-        } SymbolicLinkReparseBuffer;
-        struct
-        {
-            USHORT SubstituteNameOffset;
-            USHORT SubstituteNameLength;
-            USHORT PrintNameOffset;
-            USHORT PrintNameLength;
-            WCHAR PathBuffer[1];
-        } MountPointReparseBuffer;
-        struct
-        {
-            UCHAR DataBuffer[1];
-        } GenericReparseBuffer;
-    };
-} REPARSE_DATA_BUFFER, *PREPARSE_DATA_BUFFER;*/
 return true
 }
 
 func (n *ntioapi)#define REPARSE_DATA_BUFFER_HEADER_SIZE UFIELD_OFFSET()(ok bool){//col:2055
-/*#define REPARSE_DATA_BUFFER_HEADER_SIZE UFIELD_OFFSET(REPARSE_DATA_BUFFER, GenericReparseBuffer)
-#define DEVICE_NAMED_PIPE L"\\Device\\NamedPipe\\"
-#define FSCTL_PIPE_ASSIGN_EVENT             CTL_CODE(FILE_DEVICE_NAMED_PIPE, 0, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_DISCONNECT               CTL_CODE(FILE_DEVICE_NAMED_PIPE, 1, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_LISTEN                   CTL_CODE(FILE_DEVICE_NAMED_PIPE, 2, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_PEEK                     CTL_CODE(FILE_DEVICE_NAMED_PIPE, 3, METHOD_BUFFERED, FILE_READ_DATA)
-#define FSCTL_PIPE_QUERY_EVENT              CTL_CODE(FILE_DEVICE_NAMED_PIPE, 4, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_TRANSCEIVE               CTL_CODE(FILE_DEVICE_NAMED_PIPE, 5, METHOD_NEITHER,  FILE_READ_DATA | FILE_WRITE_DATA)
-#define FSCTL_PIPE_WAIT                     CTL_CODE(FILE_DEVICE_NAMED_PIPE, 6, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_IMPERSONATE              CTL_CODE(FILE_DEVICE_NAMED_PIPE, 7, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_SET_CLIENT_PROCESS       CTL_CODE(FILE_DEVICE_NAMED_PIPE, 8, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_QUERY_CLIENT_PROCESS     CTL_CODE(FILE_DEVICE_NAMED_PIPE, 9, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_GET_PIPE_ATTRIBUTE       CTL_CODE(FILE_DEVICE_NAMED_PIPE, 10, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_SET_PIPE_ATTRIBUTE       CTL_CODE(FILE_DEVICE_NAMED_PIPE, 11, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_GET_CONNECTION_ATTRIBUTE CTL_CODE(FILE_DEVICE_NAMED_PIPE, 12, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_SET_CONNECTION_ATTRIBUTE CTL_CODE(FILE_DEVICE_NAMED_PIPE, 13, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_GET_HANDLE_ATTRIBUTE     CTL_CODE(FILE_DEVICE_NAMED_PIPE, 14, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_SET_HANDLE_ATTRIBUTE     CTL_CODE(FILE_DEVICE_NAMED_PIPE, 15, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_FLUSH                    CTL_CODE(FILE_DEVICE_NAMED_PIPE, 16, METHOD_BUFFERED, FILE_WRITE_DATA)
-#define FSCTL_PIPE_DISABLE_IMPERSONATE      CTL_CODE(FILE_DEVICE_NAMED_PIPE, 17, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_SILO_ARRIVAL             CTL_CODE(FILE_DEVICE_NAMED_PIPE, 18, METHOD_BUFFERED, FILE_WRITE_DATA)
-#define FSCTL_PIPE_CREATE_SYMLINK           CTL_CODE(FILE_DEVICE_NAMED_PIPE, 19, METHOD_BUFFERED, FILE_SPECIAL_ACCESS)
-#define FSCTL_PIPE_DELETE_SYMLINK           CTL_CODE(FILE_DEVICE_NAMED_PIPE, 20, METHOD_BUFFERED, FILE_SPECIAL_ACCESS)
-#define FSCTL_PIPE_QUERY_CLIENT_PROCESS_V2  CTL_CODE(FILE_DEVICE_NAMED_PIPE, 21, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define FSCTL_PIPE_INTERNAL_READ            CTL_CODE(FILE_DEVICE_NAMED_PIPE, 2045, METHOD_BUFFERED, FILE_READ_DATA)
-#define FSCTL_PIPE_INTERNAL_WRITE           CTL_CODE(FILE_DEVICE_NAMED_PIPE, 2046, METHOD_BUFFERED, FILE_WRITE_DATA)
-#define FSCTL_PIPE_INTERNAL_TRANSCEIVE      CTL_CODE(FILE_DEVICE_NAMED_PIPE, 2047, METHOD_NEITHER, FILE_READ_DATA | FILE_WRITE_DATA)
-#define FSCTL_PIPE_INTERNAL_READ_OVFLOW     CTL_CODE(FILE_DEVICE_NAMED_PIPE, 2048, METHOD_BUFFERED, FILE_READ_DATA)
-#define FILE_PIPE_READ_DATA 0x00000000
-#define FILE_PIPE_WRITE_SPACE 0x00000001
-typedef struct _FILE_PIPE_ASSIGN_EVENT_BUFFER
-{
-    HANDLE EventHandle;
-    ULONG KeyValue;
-} FILE_PIPE_ASSIGN_EVENT_BUFFER, *PFILE_PIPE_ASSIGN_EVENT_BUFFER;*/
 return true
 }
 
 func (n *ntioapi)#if !defined()(ok bool){//col:2096
-/*#if !defined(BUILD_WOW6432)
-    PVOID ClientSession;
-    PVOID ClientProcess;
-#else
-    ULONGLONG ClientSession;
-    ULONGLONG ClientProcess;
-#endif
-} FILE_PIPE_CLIENT_PROCESS_BUFFER, *PFILE_PIPE_CLIENT_PROCESS_BUFFER;*/
 return true
 }
 
 func (n *ntioapi)#if !defined()(ok bool){//col:2108
-/*#if !defined(BUILD_WOW6432)
-     PVOID ClientProcess;
-#else
-     ULONGLONG ClientProcess;
-#endif
-} FILE_PIPE_CLIENT_PROCESS_BUFFER_V2, *PFILE_PIPE_CLIENT_PROCESS_BUFFER_V2;*/
 return true
 }
 
 func (n *ntioapi)#if !defined()(ok bool){//col:2124
-/*#if !defined(BUILD_WOW6432)
-    PVOID ClientSession;
-    PVOID ClientProcess;
-#else
-    ULONGLONG ClientSession;
-    ULONGLONG ClientProcess;
-#endif
-} FILE_PIPE_CLIENT_PROCESS_BUFFER_EX, *PFILE_PIPE_CLIENT_PROCESS_BUFFER_EX;*/
 return true
 }
 
 func (n *ntioapi)    ()(ok bool){//col:2165
-/*    (FILE_PIPE_SYMLINK_FLAG_GLOBAL | FILE_PIPE_SYMLINK_FLAG_RELATIVE)
-typedef struct _FILE_PIPE_CREATE_SYMLINK_INPUT
-{
-    USHORT NameOffset;
-    USHORT NameLength;
-    USHORT SubstituteNameOffset;
-    USHORT SubstituteNameLength;
-    ULONG Flags;
-} FILE_PIPE_CREATE_SYMLINK_INPUT, *PFILE_PIPE_CREATE_SYMLINK_INPUT;*/
 return true
 }
 
 func (n *ntioapi)#define FSCTL_MAILSLOT_PEEK             CTL_CODE()(ok bool){//col:2188
-/*#define FSCTL_MAILSLOT_PEEK             CTL_CODE(FILE_DEVICE_MAILSLOT, 0, METHOD_NEITHER, FILE_READ_DATA)
-typedef struct _FILE_MAILSLOT_PEEK_BUFFER
-{
-    ULONG ReadDataAvailable;
-    ULONG NumberOfMessages;
-    ULONG MessageLength;
-} FILE_MAILSLOT_PEEK_BUFFER, *PFILE_MAILSLOT_PEEK_BUFFER;*/
 return true
 }
 
 func (n *ntioapi)#define IOCTL_MOUNTMGR_CREATE_POINT                 CTL_CODE()(ok bool){//col:2220
-/*#define IOCTL_MOUNTMGR_CREATE_POINT                 CTL_CODE(MOUNTMGRCONTROLTYPE, 0, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
-#define IOCTL_MOUNTMGR_DELETE_POINTS                CTL_CODE(MOUNTMGRCONTROLTYPE, 1, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
-#define IOCTL_MOUNTMGR_QUERY_POINTS                 CTL_CODE(MOUNTMGRCONTROLTYPE, 2, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define IOCTL_MOUNTMGR_DELETE_POINTS_DBONLY         CTL_CODE(MOUNTMGRCONTROLTYPE, 3, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
-#define IOCTL_MOUNTMGR_NEXT_DRIVE_LETTER            CTL_CODE(MOUNTMGRCONTROLTYPE, 4, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
-#define IOCTL_MOUNTMGR_AUTO_DL_ASSIGNMENTS          CTL_CODE(MOUNTMGRCONTROLTYPE, 5, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
-#define IOCTL_MOUNTMGR_VOLUME_MOUNT_POINT_CREATED   CTL_CODE(MOUNTMGRCONTROLTYPE, 6, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
-#define IOCTL_MOUNTMGR_VOLUME_MOUNT_POINT_DELETED   CTL_CODE(MOUNTMGRCONTROLTYPE, 7, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
-#define IOCTL_MOUNTMGR_CHANGE_NOTIFY                CTL_CODE(MOUNTMGRCONTROLTYPE, 8, METHOD_BUFFERED, FILE_READ_ACCESS)
-#define IOCTL_MOUNTMGR_KEEP_LINKS_WHEN_OFFLINE      CTL_CODE(MOUNTMGRCONTROLTYPE, 9, METHOD_BUFFERED, FILE_READ_ACCESS | FILE_WRITE_ACCESS)
-#define IOCTL_MOUNTMGR_CHECK_UNPROCESSED_VOLUMES    CTL_CODE(MOUNTMGRCONTROLTYPE, 10, METHOD_BUFFERED, FILE_READ_ACCESS)
-#define IOCTL_MOUNTMGR_VOLUME_ARRIVAL_NOTIFICATION  CTL_CODE(MOUNTMGRCONTROLTYPE, 11, METHOD_BUFFERED, FILE_READ_ACCESS)
-#define IOCTL_MOUNTMGR_QUERY_DOS_VOLUME_PATH        CTL_CODE(MOUNTMGRCONTROLTYPE, 12, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define IOCTL_MOUNTMGR_QUERY_DOS_VOLUME_PATHS       CTL_CODE(MOUNTMGRCONTROLTYPE, 13, METHOD_BUFFERED, FILE_ANY_ACCESS)
-#define IOCTL_MOUNTDEV_QUERY_DEVICE_NAME            CTL_CODE(MOUNTDEVCONTROLTYPE, 2, METHOD_BUFFERED, FILE_ANY_ACCESS)
-typedef struct _MOUNTMGR_CREATE_POINT_INPUT
-{
-    USHORT SymbolicLinkNameOffset;
-    USHORT SymbolicLinkNameLength;
-    USHORT DeviceNameOffset;
-    USHORT DeviceNameLength;
-} MOUNTMGR_CREATE_POINT_INPUT, *PMOUNTMGR_CREATE_POINT_INPUT;*/
 return true
 }
 
 func (n *ntioapi)#define MOUNTMGR_IS_DRIVE_LETTER()(ok bool){//col:2335
-/*#define MOUNTMGR_IS_DRIVE_LETTER(s) ( \
-    (s)->Length == 28 && \
-    (s)->Buffer[0] == '\\' && \
-    (s)->Buffer[1] == 'D' && \
-    (s)->Buffer[2] == 'o' && \
-    (s)->Buffer[3] == 's' && \
-    (s)->Buffer[4] == 'D' && \
-    (s)->Buffer[5] == 'e' && \
-    (s)->Buffer[6] == 'v' && \
-    (s)->Buffer[7] == 'i' && \
-    (s)->Buffer[8] == 'c' && \
-    (s)->Buffer[9] == 'e' && \
-    (s)->Buffer[10] == 's' && \
-    (s)->Buffer[11] == '\\' && \
-    (s)->Buffer[12] >= 'A' && \
-    (s)->Buffer[12] <= 'Z' && \
-    (s)->Buffer[13] == ':')
-#define MOUNTMGR_IS_VOLUME_NAME(s) ( \
-     ((s)->Length == 96 || ((s)->Length == 98 && (s)->Buffer[48] == '\\')) && \
-     (s)->Buffer[0] == '\\' && \
-     ((s)->Buffer[1] == '?' || (s)->Buffer[1] == '\\') && \
-     (s)->Buffer[2] == '?' && \
-     (s)->Buffer[3] == '\\' && \
-     (s)->Buffer[4] == 'V' && \
-     (s)->Buffer[5] == 'o' && \
-     (s)->Buffer[6] == 'l' && \
-     (s)->Buffer[7] == 'u' && \
-     (s)->Buffer[8] == 'm' && \
-     (s)->Buffer[9] == 'e' && \
-     (s)->Buffer[10] == '{' && \
-     (s)->Buffer[19] == '-' && \
-     (s)->Buffer[24] == '-' && \
-     (s)->Buffer[29] == '-' && \
-     (s)->Buffer[34] == '-' && \
-     (s)->Buffer[47] == '}')
-typedef struct _MOUNTDEV_NAME
-{
-    USHORT NameLength;
-    WCHAR Name[1];
-} MOUNTDEV_NAME, * PMOUNTDEV_NAME;*/
 return true
 }
-
-
 

@@ -1,22 +1,6 @@
-/*++
-
-Copyright (c) Microsoft Corporation.  All rights reserved.
-
-Module Name:
-
-    ioaccess.c
-
-Abstract:
-
-    This module provides a function table consumed by the UART library.
-
---*/
-
 #include <ntddk.h>
 #include <uart.h>
-
 #if defined(_X86_)
-
 UCHAR
 ReadPort8(
     PUCHAR Port)
@@ -108,68 +92,49 @@ WriteRegister32(
 }
 
 #endif
-
 UART_HARDWARE_ACCESS UartHardwareAccess = {
-
 #if defined(_X86_)
-
     ReadPort8,
     WritePort8,
     ReadPort16,
     WritePort16,
     ReadPort32,
     WritePort32,
-
 #elif defined(_AMD64_)
-
     READ_PORT_UCHAR,
     WRITE_PORT_UCHAR,
     READ_PORT_USHORT,
     WRITE_PORT_USHORT,
     READ_PORT_ULONG,
     WRITE_PORT_ULONG,
-
 #else
-
     NULL,
     NULL,
     NULL,
     NULL,
     NULL,
     NULL,
-
 #endif
-
 #if defined(_X86_)
-
     ReadRegister8,
     WriteRegister8,
     ReadRegister16,
     WriteRegister16,
     ReadRegister32,
     WriteRegister32,
-
 #else
-
     READ_REGISTER_UCHAR,
     WRITE_REGISTER_UCHAR,
     READ_REGISTER_USHORT,
     WRITE_REGISTER_USHORT,
     READ_REGISTER_ULONG,
     WRITE_REGISTER_ULONG,
-
 #endif
-
 #if defined(_WIN64)
-
     READ_REGISTER_ULONG64,
     WRITE_REGISTER_ULONG64
-
 #else
-
     NULL,
     NULL
-
 #endif
-
 };

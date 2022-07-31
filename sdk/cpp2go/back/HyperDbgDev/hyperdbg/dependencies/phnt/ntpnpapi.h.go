@@ -1,10 +1,7 @@
 package phnt
-//back\HyperDbgDev\hyperdbg\dependencies\phnt\ntpnpapi.h.back
-
 const(
 _NTPNPAPI_H =  //col:13
 )
-
 type     HardwareProfileChangeEvent uint32
 const(
     HardwareProfileChangeEvent PLUGPLAY_EVENT_CATEGORY = 1  //col:17
@@ -19,8 +16,6 @@ const(
     InvalidIDEvent PLUGPLAY_EVENT_CATEGORY = 10  //col:26
     MaxPlugEventCategory PLUGPLAY_EVENT_CATEGORY = 11  //col:27
 )
-
-
 type     PlugPlayControlEnumerateDevice // PLUGPLAY_CONTROL_ENUMERATE_DEVICE_DATA uint32
 const(
     PlugPlayControlEnumerateDevice // PLUGPLAY_CONTROL_ENUMERATE_DEVICE_DATA PLUGPLAY_CONTROL_CLASS = 1  //col:86
@@ -49,41 +44,14 @@ const(
     PlugPlayControlGetDeviceInterfaceEnabled // PLUGPLAY_CONTROL_DEVICE_INTERFACE_ENABLED PLUGPLAY_CONTROL_CLASS = 24  //col:109
     MaxPlugPlayControl PLUGPLAY_CONTROL_CLASS = 25  //col:110
 )
-
-
-
 type (
 Ntpnpapi interface{
  * Attribution 4.0 International ()(ok bool)//col:28
 }
+
 )
-
 func NewNtpnpapi() { return & ntpnpapi{} }
-
 func (n *ntpnpapi) * Attribution 4.0 International ()(ok bool){//col:28
-/* * Attribution 4.0 International (CC BY 4.0) license. 
- * 
- * You must give appropriate credit, provide a link to the license, and 
- * indicate if changes were made. You may do so in any reasonable manner, but 
- * not in any way that suggests the licensor endorses you or your use.
-#ifndef _NTPNPAPI_H
-#define _NTPNPAPI_H
-typedef enum _PLUGPLAY_EVENT_CATEGORY
-{
-    HardwareProfileChangeEvent,
-    TargetDeviceChangeEvent,
-    DeviceClassChangeEvent,
-    CustomDeviceEvent,
-    DeviceInstallEvent,
-    DeviceArrivalEvent,
-    PowerEvent,
-    VetoEvent,
-    BlockedDriverEvent,
-    InvalidIDEvent,
-    MaxPlugEventCategory
-} PLUGPLAY_EVENT_CATEGORY, *PPLUGPLAY_EVENT_CATEGORY;*/
 return true
 }
-
-
 

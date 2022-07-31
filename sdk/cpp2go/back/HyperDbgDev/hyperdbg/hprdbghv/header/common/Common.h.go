@@ -1,7 +1,4 @@
 package common
-
-//back\HyperDbgDev\hyperdbg\hprdbghv\header\common\Common.h.back
-
 const (
 	ScopedSpinlock(
 LockObject, CodeToRun
@@ -117,7 +114,6 @@ const (
 	LDTR SEGMENT_REGISTERS = 7 //col:30
 	TR   SEGMENT_REGISTERS = 8 //col:31
 )
-
 type PROCESS_KILL_METHOD_1 =
 0 uint32
 const (
@@ -125,128 +121,26 @@ const (
 	PROCESS_KILL_METHOD_2 PROCESS_KILL_METHODS = 2 //col:41
 	PROCESS_KILL_METHOD_3 PROCESS_KILL_METHODS = 3 //col:42
 )
-
 type LOG_INFO uint32
-
 const (
 	LOG_INFO    LOG_TYPE = 1 //col:356
 	LOG_WARNING LOG_TYPE = 2 //col:357
 	LOG_ERROR   LOG_TYPE = 3 //col:358
 )
-
 type (
 	Common interface {
 		SpinlockTryLock() (ok bool) //col:280
 		typedef void ()
 (ok bool) //col:360
 }
+
 )
-
 func NewCommon() { return &common{} }
-
 func (c *common) SpinlockTryLock() (ok bool) { //col:280
-	/*SpinlockTryLock(volatile LONG * Lock);
-	  void
-	  SpinlockLock(volatile LONG * Lock);
-	  void
-	  SpinlockLockWithCustomWait(volatile LONG * Lock, unsigned MaxWait);
-	  void
-	  SpinlockUnlock(volatile LONG * Lock);
-	  void
-	  SpinlockInterlockedCompareExchange(
-	      LONG volatile * Destination,
-	      LONG            Exchange,
-	      LONG            Comperand);
-	  #define ScopedSpinlock(LockObject, CodeToRun)   \
-	      MetaScopedExpr(SpinlockLock(&LockObject),   \
-	                     SpinlockUnlock(&LockObject), \
-	                     CodeToRun)
-	   *
-	   *
-	  #define X86_FLAGS_CF                 (1 << 0)
-	  #define X86_FLAGS_PF                 (1 << 2)
-	  #define X86_FLAGS_AF                 (1 << 4)
-	  #define X86_FLAGS_ZF                 (1 << 6)
-	  #define X86_FLAGS_SF                 (1 << 7)
-	  #define X86_FLAGS_TF                 (1 << 8)
-	  #define X86_FLAGS_IF                 (1 << 9)
-	  #define X86_FLAGS_DF                 (1 << 10)
-	  #define X86_FLAGS_OF                 (1 << 11)
-	  #define X86_FLAGS_STATUS_MASK        (0xfff)
-	  #define X86_FLAGS_IOPL_MASK          (3 << 12)
-	  #define X86_FLAGS_IOPL_SHIFT         (12)
-	  #define X86_FLAGS_IOPL_SHIFT_2ND_BIT (13)
-	  #define X86_FLAGS_NT                 (1 << 14)
-	  #define X86_FLAGS_RF                 (1 << 16)
-	  #define X86_FLAGS_VM                 (1 << 17)
-	  #define X86_FLAGS_AC                 (1 << 18)
-	  #define X86_FLAGS_VIF                (1 << 19)
-	  #define X86_FLAGS_VIP                (1 << 20)
-	  #define X86_FLAGS_ID                 (1 << 21)
-	  #define X86_FLAGS_RESERVED_ONES      0x2
-	  #define X86_FLAGS_RESERVED           0xffc0802a
-	  #define X86_FLAGS_RESERVED_BITS 0xffc38028
-	  #define X86_FLAGS_FIXED         0x00000002
-	   *
-	  #define PCID_NONE 0x000
-	  #define PCID_MASK 0x003
-	   *
-	  #define CPUID_HV_VENDOR_AND_MAX_FUNCTIONS 0x40000000
-	  #define CPUID_HV_INTERFACE                0x40000001
-	   *
-	  #define CPUID_ADDR_WIDTH 0x80000008
-	   *
-	  #define CPUID_PROCESSOR_AND_PROCESSOR_FEATURE_IDENTIFIERS 0x00000001
-	   *
-	  #define RESERVED_MSR_RANGE_LOW 0x40000000
-	  #define RESERVED_MSR_RANGE_HI  0x400000F0
-	   *
-	  #define __CPU_INDEX__ KeGetCurrentProcessorNumberEx(NULL)
-	   *
-	  #define ALIGNMENT_PAGE_SIZE 4096
-	   *
-	  #define MAXIMUM_ADDRESS 0xffffffffffffffff
-	   *
-	   *
-	  #define DPL_USER   3
-	  #define DPL_SYSTEM 0
-	   *
-	  #define RPL_MASK 3
-	  #define BITS_PER_LONG (sizeof(unsigned long) * 8)
-	  #define ORDER_LONG    (sizeof(unsigned long) == 4 ? 5 : 6)
-	  #define BITMAP_ENTRY(_nr, _bmap) ((_bmap))[(_nr) / BITS_PER_LONG]
-	  #define BITMAP_SHIFT(_nr)        ((_nr) % BITS_PER_LONG)
-	   *
-	  #define PAGE_OFFSET(Va) ((PVOID)((ULONG_PTR)(Va) & (PAGE_SIZE - 1)))
-	   *
-	  #define _XBEGIN_STARTED  (~0u)
-	  #define _XABORT_EXPLICIT (1 << 0)
-	  #define _XABORT_RETRY    (1 << 1)
-	  #define _XABORT_CONFLICT (1 << 2)
-	  #define _XABORT_CAPACITY (1 << 3)
-	  #define _XABORT_DEBUG    (1 << 4)
-	  #define _XABORT_NESTED   (1 << 5)
-	  #define _XABORT_CODE(x)  (((x) >> 24) & 0xFF)
-	  typedef SEGMENT_DESCRIPTOR_32 * PSEGMENT_DESCRIPTOR;
-	   *
-	  typedef struct _VMX_SEGMENT_SELECTOR
-	  {
-	      UINT16                    Selector;
-	      VMX_SEGMENT_ACCESS_RIGHTS Attributes;
-	      UINT32                    Limit;
-	      UINT64                    Base;
-	  } VMX_SEGMENT_SELECTOR, *PVMX_SEGMENT_SELECTOR;*/
 	return true
 }
 
 func (c *common) typedef void ()(ok bool) { //col:360
-	/*typedef void (*RunOnLogicalCoreFunc)(ULONG ProcessorID);
-	   *
-	  typedef enum _LOG_TYPE
-	  {
-	      LOG_INFO,
-	      LOG_WARNING,
-	      LOG_ERROR
-	  } LOG_TYPE;*/
 	return true
 }
+

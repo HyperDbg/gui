@@ -1,7 +1,4 @@
 package vmx
-
-//back\HyperDbgDev\hyperdbg\hprdbghv\header\vmm\vmx\Vmx.h.back
-
 const (
 	VMCS_SIZE                                                                 = 4096                                                                                                                                                                                 //col:22
 	VMXON_SIZE                                                                = 4096                                                                                                                                                                                 //col:28
@@ -77,43 +74,21 @@ const (
 	VMCS_GUEST_DEBUGCTL_HIGH                                                  = 0x00002803                                                                                                                                                                           //col:298
 	VIRTUAL_PROCESSOR_ID                                                      = 0x00000000                                                                                                                                                                           //col:299
 )
-
 type AccessToDebugRegister =
 0 uint32
 const (
 	AccessToDebugRegister typedef enum MOV_TO_DEBUG_REG = 0 //col:307
 AccessFromDebugRegister  typedef enum MOV_TO_DEBUG_REG = 1 //col:308
 )
-
 type (
 	Vmx interface{
 #define IS_VALID_DEBUG_REGISTER()
 (ok bool) //col:173
 }
+
 )
-
 func NewVmx() { return &vmx{} }
-
 func (v *vmx) #define IS_VALID_DEBUG_REGISTER()(ok bool) { //col:173
-	/*#define IS_VALID_DEBUG_REGISTER(DebugRegister)                   \
-	      (((DebugRegister <= VMX_EXIT_QUALIFICATION_REGISTER_DR0) &&  \
-	        (DebugRegister <= VMX_EXIT_QUALIFICATION_REGISTER_DR7)) && \
-	       (DebugRegister != 0x00000004 && DebugRegister != 0x00000005))
-	   *
-	  typedef union _HYPERCALL_INPUT_VALUE
-	  {
-	      UINT64 Flags;
-	      struct
-	      {
-	          UINT64 Fast : 1;
-	          UINT64 VariableHeaderSize : 9;
-	          UINT64 IsNested : 1;
-	          UINT64 Reserved0 : 5;
-	          UINT64 RepCount : 12;
-	          UINT64 Reserved1 : 4;
-	          UINT64 RepStartIndex : 12;
-	          UINT64 Reserved2 : 4;
-	      } Fields;
-	  } HYPERCALL_INPUT_VALUE, *PHYPERCALL_INPUT_VALUE;*/
 	return true
 }
+

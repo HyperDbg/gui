@@ -1,6 +1,4 @@
 package phnt
-//back\HyperDbgDev\hyperdbg\dependencies\phnt\ntmmapi.h.back
-
 const(
 _NTMMAPI_H =  //col:13
 PAGE_NOACCESS = 0x01 //col:17
@@ -125,7 +123,6 @@ SystemMemoryPartitionClearAttributes = 0xC //col:885
 SystemMemoryPartitionSetMemoryThresholds = 0xD //col:886
 SystemMemoryPartitionMax = 0xE //col:887
 )
-
 type     MemoryBasicInformation // MEMORY_BASIC_INFORMATION uint32
 const(
     MemoryBasicInformation // MEMORY_BASIC_INFORMATION MEMORY_INFORMATION_CLASS = 1  //col:90
@@ -144,8 +141,6 @@ const(
     MemoryBadInformationAllProcesses // since 22H1 MEMORY_INFORMATION_CLASS = 14  //col:103
     MaxMemoryInfoClass MEMORY_INFORMATION_CLASS = 15  //col:104
 )
-
-
 type     MemoryLocationInvalid uint32
 const(
     MemoryLocationInvalid MEMORY_WORKING_SET_EX_LOCATION = 1  //col:177
@@ -153,8 +148,6 @@ const(
     MemoryLocationPagefile MEMORY_WORKING_SET_EX_LOCATION = 3  //col:179
     MemoryLocationReserved MEMORY_WORKING_SET_EX_LOCATION = 4  //col:180
 )
-
-
 type     MemoryNotContiguous uint32
 const(
     MemoryNotContiguous MEMORY_PHYSICAL_CONTIGUITY_UNIT_STATE = 1  //col:272
@@ -163,38 +156,12 @@ const(
     MemoryNotEligibleToMakeContiguous MEMORY_PHYSICAL_CONTIGUITY_UNIT_STATE = 4  //col:275
     MemoryContiguityStateMax MEMORY_PHYSICAL_CONTIGUITY_UNIT_STATE = 5  //col:276
 )
-
-
 type //    ZeroedPageList = 0 uint32
 const(
-//    ZeroedPageList  //typedef enum _MMLISTS =  0  //col:314
-//    FreePageList  //typedef enum _MMLISTS =  1  //col:315
-//    StandbyPageList  //typedef enum _MMLISTS =  2  //col:316
-//    ModifiedPageList  //typedef enum _MMLISTS =  3  //col:317
-//    ModifiedNoWritePageList  //typedef enum _MMLISTS =  4  //col:318
-//    BadPageList  //typedef enum _MMLISTS =  5  //col:319
-//    ActiveAndValid  //typedef enum _MMLISTS =  6  //col:320
-//    TransitionPage  //typedef enum _MMLISTS =  7  //col:321
 )
-
-
 type //    ProcessPrivatePage uint32
 const(
-//    ProcessPrivatePage //typedef enum _MMPFNUSE = 1  //col:339
-//    MemoryMappedFilePage //typedef enum _MMPFNUSE = 2  //col:340
-//    PageFileMappedPage //typedef enum _MMPFNUSE = 3  //col:341
-//    PageTablePage //typedef enum _MMPFNUSE = 4  //col:342
-//    PagedPoolPage //typedef enum _MMPFNUSE = 5  //col:343
-//    NonPagedPoolPage //typedef enum _MMPFNUSE = 6  //col:344
-//    SystemPTEPage //typedef enum _MMPFNUSE = 7  //col:345
-//    SessionPrivatePage //typedef enum _MMPFNUSE = 8  //col:346
-//    MetafilePage //typedef enum _MMPFNUSE = 9  //col:347
-//    AWEPage //typedef enum _MMPFNUSE = 10  //col:348
-//    DriverLockedPage //typedef enum _MMPFNUSE = 11  //col:349
-//    KernelStackPage //typedef enum _MMPFNUSE = 12  //col:350
 )
-
-
 type     SectionBasicInformation // q; SECTION_BASIC_INFORMATION uint32
 const(
     SectionBasicInformation // q; SECTION_BASIC_INFORMATION SECTION_INFORMATION_CLASS = 1  //col:427
@@ -204,15 +171,11 @@ const(
     SectionInternalImageInformation // SECTION_INTERNAL_IMAGE_INFORMATION // since REDSTONE2 SECTION_INFORMATION_CLASS = 5  //col:431
     MaxSectionInfoClass SECTION_INFORMATION_CLASS = 6  //col:432
 )
-
-
 type     ViewShare = 1 uint32
 const(
     ViewShare  SECTION_INHERIT =  1  //col:516
     ViewUnmap  SECTION_INHERIT =  2  //col:517
 )
-
-
 type     VmPrefetchInformation // ULONG uint32
 const(
     VmPrefetchInformation // ULONG VIRTUAL_MEMORY_INFORMATION_CLASS = 1  //col:646
@@ -225,8 +188,6 @@ const(
     VmRemoveFromWorkingSetInformation VIRTUAL_MEMORY_INFORMATION_CLASS = 8  //col:653
     MaxVmInfoClass VIRTUAL_MEMORY_INFORMATION_CLASS = 9  //col:654
 )
-
-
 type     SystemMemoryPartitionInformation // q: MEMORY_PARTITION_CONFIGURATION_INFORMATION uint32
 const(
     SystemMemoryPartitionInformation // q: MEMORY_PARTITION_CONFIGURATION_INFORMATION PARTITION_INFORMATION_CLASS = 1  //col:856
@@ -245,9 +206,6 @@ const(
     SystemMemoryPartitionSetMemoryThresholds // since WIN11 PARTITION_INFORMATION_CLASS = 14  //col:869
     SystemMemoryPartitionMax PARTITION_INFORMATION_CLASS = 15  //col:870
 )
-
-
-
 type (
 Ntmmapi interface{
  * Attribution 4.0 International ()(ok bool)//col:105
@@ -255,375 +213,22 @@ Ntmmapi interface{
 #if ()(ok bool)//col:655
 #if ()(ok bool)//col:871
 }
+
 )
-
 func NewNtmmapi() { return & ntmmapi{} }
-
 func (n *ntmmapi) * Attribution 4.0 International ()(ok bool){//col:105
-/* * Attribution 4.0 International (CC BY 4.0) license. 
- * 
- * You must give appropriate credit, provide a link to the license, and 
- * indicate if changes were made. You may do so in any reasonable manner, but 
- * not in any way that suggests the licensor endorses you or your use.
-#ifndef _NTMMAPI_H
-#define _NTMMAPI_H
-#define PAGE_NOACCESS 0x01
-#define PAGE_READONLY 0x02
-#define PAGE_READWRITE 0x04
-#define PAGE_WRITECOPY 0x08
-#define PAGE_EXECUTE 0x10
-#define PAGE_EXECUTE_READ 0x20
-#define PAGE_EXECUTE_READWRITE 0x40
-#define PAGE_EXECUTE_WRITECOPY 0x80
-#define PAGE_GUARD 0x100
-#define PAGE_NOCACHE 0x200
-#define PAGE_WRITECOMBINE 0x400
-#define PAGE_REVERT_TO_FILE_MAP     0x80000000
-#define PAGE_ENCLAVE_THREAD_CONTROL 0x80000000
-#define PAGE_TARGETS_NO_UPDATE      0x40000000
-#define PAGE_TARGETS_INVALID        0x40000000
-#define PAGE_ENCLAVE_UNVALIDATED    0x20000000  
-#define PAGE_ENCLAVE_NO_CHANGE      0x20000000
-#define PAGE_ENCLAVE_MASK           0x10000000  
-#define PAGE_ENCLAVE_DECOMMIT       (PAGE_ENCLAVE_MASK | 0) 
-#define PAGE_ENCLAVE_SS_FIRST       (PAGE_ENCLAVE_MASK | 1) 
-#define PAGE_ENCLAVE_SS_REST        (PAGE_ENCLAVE_MASK | 2)
-#define MEM_COMMIT 0x00001000
-#define MEM_RESERVE 0x00002000
-#define MEM_DECOMMIT 0x00004000
-#define MEM_RELEASE 0x00008000
-#define MEM_FREE 0x00010000
-#define MEM_PRIVATE 0x00020000
-#define MEM_MAPPED 0x00040000
-#define MEM_RESET 0x00080000
-#define MEM_TOP_DOWN 0x00100000
-#define MEM_WRITE_WATCH 0x00200000
-#define MEM_PHYSICAL 0x00400000
-#define MEM_ROTATE 0x00800000
-#define MEM_DIFFERENT_IMAGE_BASE_OK 0x00800000
-#define MEM_RESET_UNDO 0x01000000
-#define MEM_LARGE_PAGES 0x20000000
-#define MEM_DOS_LIM 0x40000000
-#define MEM_4MB_PAGES 0x80000000
-#define MEM_64K_PAGES (MEM_LARGE_PAGES | MEM_PHYSICAL)
-#define MEM_UNMAP_WITH_TRANSIENT_BOOST 0x00000001
-#define MEM_COALESCE_PLACEHOLDERS 0x00000001
-#define MEM_PRESERVE_PLACEHOLDER 0x00000002
-#define MEM_REPLACE_PLACEHOLDER 0x00004000
-#define MEM_RESERVE_PLACEHOLDER 0x00040000
-#define SEC_HUGE_PAGES 0x00020000  
-#define SEC_PARTITION_OWNER_HANDLE 0x00040000 
-#define SEC_64K_PAGES 0x00080000
-#define SEC_BASED 0x00200000
-#define SEC_NO_CHANGE 0x00400000
-#define SEC_FILE 0x00800000
-#define SEC_IMAGE 0x01000000
-#define SEC_PROTECTED_IMAGE 0x02000000
-#define SEC_RESERVE 0x04000000
-#define SEC_COMMIT 0x08000000
-#define SEC_NOCACHE 0x10000000
-#define SEC_GLOBAL 0x20000000
-#define SEC_WRITECOMBINE 0x40000000
-#define SEC_LARGE_PAGES 0x80000000
-#define SEC_IMAGE_NO_EXECUTE (SEC_IMAGE | SEC_NOCACHE)
-#if (PHNT_MODE == PHNT_MODE_KERNEL)
-#define MEM_IMAGE SEC_IMAGE
-#endif
-#if (PHNT_MODE != PHNT_MODE_KERNEL)
-typedef enum _MEMORY_INFORMATION_CLASS
-{
-    MemoryPrivilegedBasicInformation,
-    MaxMemoryInfoClass
-} MEMORY_INFORMATION_CLASS;*/
 return true
 }
 
 func (n *ntmmapi)#if ()(ok bool){//col:518
-/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
-typedef enum _SECTION_INHERIT
-{
-    ViewShare = 1,
-    ViewUnmap = 2
-} SECTION_INHERIT;*/
 return true
 }
 
 func (n *ntmmapi)#if ()(ok bool){//col:655
-/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtAllocateVirtualMemory(
-    _In_ HANDLE ProcessHandle,
-    _Inout_ _At_(*BaseAddress, _Readable_bytes_(*RegionSize) _Writable_bytes_(*RegionSize) _Post_readable_byte_size_(*RegionSize)) PVOID *BaseAddress,
-    _In_ ULONG_PTR ZeroBits,
-    _Inout_ PSIZE_T RegionSize,
-    _In_ ULONG AllocationType,
-    _In_ ULONG Protect
-    );
-#if (PHNT_VERSION >= PHNT_REDSTONE5)
-NTSYSAPI
-NTSTATUS
-NTAPI
-NtAllocateVirtualMemoryEx(
-    _In_ HANDLE ProcessHandle,
-    _Inout_ _At_(*BaseAddress, _Readable_bytes_(*RegionSize) _Writable_bytes_(*RegionSize) _Post_readable_byte_size_(*RegionSize)) PVOID *BaseAddress,
-    _Inout_ PSIZE_T RegionSize,
-    _In_ ULONG AllocationType,
-    _In_ ULONG PageProtection,
-    _Inout_updates_opt_(ExtendedParameterCount) PMEM_EXTENDED_PARAMETER ExtendedParameters,
-    _In_ ULONG ExtendedParameterCount
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtFreeVirtualMemory(
-    _In_ HANDLE ProcessHandle,
-    _Inout_ PVOID *BaseAddress,
-    _Inout_ PSIZE_T RegionSize,
-    _In_ ULONG FreeType
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtReadVirtualMemory(
-    _In_ HANDLE ProcessHandle,
-    _In_opt_ PVOID BaseAddress,
-    _Out_writes_bytes_(BufferSize) PVOID Buffer,
-    _In_ SIZE_T BufferSize,
-    _Out_opt_ PSIZE_T NumberOfBytesRead
-    );
-#if (PHNT_VERSION >= PHNT_WIN11)
-NTSYSAPI
-NTSTATUS
-NTAPI
-NtReadVirtualMemoryEx(
-    _In_ HANDLE ProcessHandle,
-    _In_opt_ PVOID BaseAddress,
-    _Out_writes_bytes_(BufferSize) PVOID Buffer,
-    _In_ SIZE_T BufferSize,
-    _Out_opt_ PSIZE_T NumberOfBytesRead,
-    _In_ ULONG Flags
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtWriteVirtualMemory(
-    _In_ HANDLE ProcessHandle,
-    _In_opt_ PVOID BaseAddress,
-    _In_reads_bytes_(BufferSize) PVOID Buffer,
-    _In_ SIZE_T BufferSize,
-    _Out_opt_ PSIZE_T NumberOfBytesWritten
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtProtectVirtualMemory(
-    _In_ HANDLE ProcessHandle,
-    _Inout_ PVOID *BaseAddress,
-    _Inout_ PSIZE_T RegionSize,
-    _In_ ULONG NewProtect,
-    _Out_ PULONG OldProtect
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryVirtualMemory(
-    _In_ HANDLE ProcessHandle,
-    _In_opt_ PVOID BaseAddress,
-    _In_ MEMORY_INFORMATION_CLASS MemoryInformationClass,
-    _Out_writes_bytes_(MemoryInformationLength) PVOID MemoryInformation,
-    _In_ SIZE_T MemoryInformationLength,
-    _Out_opt_ PSIZE_T ReturnLength
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtFlushVirtualMemory(
-    _In_ HANDLE ProcessHandle,
-    _Inout_ PVOID *BaseAddress,
-    _Inout_ PSIZE_T RegionSize,
-    _Out_ struct _IO_STATUS_BLOCK* IoStatus
-    );
-#endif
-#if (PHNT_MODE != PHNT_MODE_KERNEL)
-typedef enum _VIRTUAL_MEMORY_INFORMATION_CLASS
-{
-    VmVirtualMachinePrepopulateInformation,
-    VmRemoveFromWorkingSetInformation,
-    MaxVmInfoClass
-} VIRTUAL_MEMORY_INFORMATION_CLASS;*/
 return true
 }
 
 func (n *ntmmapi)#if ()(ok bool){//col:871
-/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
-#if (PHNT_VERSION >= PHNT_WIN8)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSetInformationVirtualMemory(
-    _In_ HANDLE ProcessHandle,
-    _In_ VIRTUAL_MEMORY_INFORMATION_CLASS VmInformationClass,
-    _In_ ULONG_PTR NumberOfEntries,
-    _In_reads_ (NumberOfEntries) PMEMORY_RANGE_ENTRY VirtualAddresses,
-    _In_reads_bytes_ (VmInformationLength) PVOID VmInformation,
-    _In_ ULONG VmInformationLength
-    );
-#endif
-#define MAP_PROCESS 1
-#define MAP_SYSTEM 2
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtLockVirtualMemory(
-    _In_ HANDLE ProcessHandle,
-    _Inout_ PVOID *BaseAddress,
-    _Inout_ PSIZE_T RegionSize,
-    _In_ ULONG MapType
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtUnlockVirtualMemory(
-    _In_ HANDLE ProcessHandle,
-    _Inout_ PVOID *BaseAddress,
-    _Inout_ PSIZE_T RegionSize,
-    _In_ ULONG MapType
-    );
-#endif
-#if (PHNT_MODE != PHNT_MODE_KERNEL)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateSection(
-    _Out_ PHANDLE SectionHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _In_opt_ PLARGE_INTEGER MaximumSize,
-    _In_ ULONG SectionPageProtection,
-    _In_ ULONG AllocationAttributes,
-    _In_opt_ HANDLE FileHandle
-    );
-#if (PHNT_VERSION >= PHNT_REDSTONE5)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateSectionEx(
-    _Out_ PHANDLE SectionHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _In_opt_ PLARGE_INTEGER MaximumSize,
-    _In_ ULONG SectionPageProtection,
-    _In_ ULONG AllocationAttributes,
-    _In_opt_ HANDLE FileHandle,
-    _Inout_updates_opt_(ExtendedParameterCount) PMEM_EXTENDED_PARAMETER ExtendedParameters,
-    _In_ ULONG ExtendedParameterCount
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtOpenSection(
-    _Out_ PHANDLE SectionHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtMapViewOfSection(
-    _In_ HANDLE SectionHandle,
-    _In_ HANDLE ProcessHandle,
-    _Inout_ _At_(*BaseAddress, _Readable_bytes_(*ViewSize) _Writable_bytes_(*ViewSize) _Post_readable_byte_size_(*ViewSize)) PVOID *BaseAddress,
-    _In_ ULONG_PTR ZeroBits,
-    _In_ SIZE_T CommitSize,
-    _Inout_opt_ PLARGE_INTEGER SectionOffset,
-    _Inout_ PSIZE_T ViewSize,
-    _In_ SECTION_INHERIT InheritDisposition,
-    _In_ ULONG AllocationType,
-    _In_ ULONG Win32Protect
-    );
-#if (PHNT_VERSION >= PHNT_REDSTONE5)
-NTSYSAPI
-NTSTATUS
-NTAPI
-NtMapViewOfSectionEx(
-    _In_ HANDLE SectionHandle,
-    _In_ HANDLE ProcessHandle,
-    _Inout_ _At_(*BaseAddress, _Readable_bytes_(*ViewSize) _Writable_bytes_(*ViewSize) _Post_readable_byte_size_(*ViewSize)) PVOID *BaseAddress,
-    _Inout_opt_ PLARGE_INTEGER SectionOffset,
-    _Inout_ PSIZE_T ViewSize,
-    _In_ ULONG AllocationType,
-    _In_ ULONG Win32Protect,
-    _Inout_updates_opt_(ParameterCount) PMEM_EXTENDED_PARAMETER ExtendedParameters,
-    _In_ ULONG ExtendedParameterCount
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtUnmapViewOfSection(
-    _In_ HANDLE ProcessHandle,
-    _In_opt_ PVOID BaseAddress
-    );
-#if (PHNT_VERSION >= PHNT_WIN8)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtUnmapViewOfSectionEx(
-    _In_ HANDLE ProcessHandle,
-    _In_opt_ PVOID BaseAddress,
-    _In_ ULONG Flags
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtExtendSection(
-    _In_ HANDLE SectionHandle,
-    _Inout_ PLARGE_INTEGER NewSectionSize
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQuerySection(
-    _In_ HANDLE SectionHandle,
-    _In_ SECTION_INFORMATION_CLASS SectionInformationClass,
-    _Out_writes_bytes_(SectionInformationLength) PVOID SectionInformation,
-    _In_ SIZE_T SectionInformationLength,
-    _Out_opt_ PSIZE_T ReturnLength
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtAreMappedFilesTheSame(
-    _In_ PVOID File1MappedAsAnImage,
-    _In_ PVOID File2MappedAsFile
-    );
-#endif
-#ifndef MEMORY_PARTITION_QUERY_ACCESS
-#define MEMORY_PARTITION_QUERY_ACCESS 0x0001
-#define MEMORY_PARTITION_MODIFY_ACCESS 0x0002
-#define MEMORY_PARTITION_ALL_ACCESS \
-    (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
-     MEMORY_PARTITION_QUERY_ACCESS | MEMORY_PARTITION_MODIFY_ACCESS)
-#endif
-#if (PHNT_MODE != PHNT_MODE_KERNEL)
-typedef enum _PARTITION_INFORMATION_CLASS
-{
-    SystemMemoryPartitionSetAttributes,
-    SystemMemoryPartitionNodeInformation,
-    SystemMemoryPartitionCreateLargePages,
-    SystemMemoryPartitionDedicatedMemoryInformation,
-    SystemMemoryPartitionMemoryChargeAttributes,
-    SystemMemoryPartitionClearAttributes,
-    SystemMemoryPartitionMax
-} PARTITION_INFORMATION_CLASS, *PPARTITION_INFORMATION_CLASS;*/
 return true
 }
-
-
 

@@ -14,7 +14,6 @@ func TestCpp2Go(t *testing.T) {
 	o.Src("../HyperDbgDev/hyperdbg").
 		Dst("back").
 		ExpandPath("miscellaneous\\constants", ".txt").
-		Dst("back").
 		Back().
 		Convert()
 	//o.Format()

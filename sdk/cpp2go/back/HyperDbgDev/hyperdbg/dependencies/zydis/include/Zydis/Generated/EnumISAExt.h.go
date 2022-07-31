@@ -1,6 +1,4 @@
 package Generated
-//back\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Generated\EnumISAExt.h.back
-
 type     ZYDIS_ISA_EXT_INVALID uint32
 const(
     ZYDIS_ISA_EXT_INVALID typedef enum ZydisISAExt_ = 1  //col:6
@@ -77,31 +75,6 @@ const(
     ZYDIS_ISA_EXT_XSAVEC typedef enum ZydisISAExt_ = 72  //col:77
     ZYDIS_ISA_EXT_XSAVEOPT typedef enum ZydisISAExt_ = 73  //col:78
     ZYDIS_ISA_EXT_XSAVES typedef enum ZydisISAExt_ = 74  //col:79
-    /** typedef enum ZydisISAExt_ = 75  //col:81
-     * Maximum value of this enum. typedef enum ZydisISAExt_ = 76  //col:82
-     */ typedef enum ZydisISAExt_ = 77  //col:83
-    ZYDIS_ISA_EXT_MAX_VALUE  typedef enum ZydisISAExt_ =  ZYDIS_ISA_EXT_XSAVES  //col:84
-    /** typedef enum ZydisISAExt_ = 79  //col:85
-     * The minimum number of bits required to represent all values of this enum. typedef enum ZydisISAExt_ = 80  //col:86
-     */ typedef enum ZydisISAExt_ = 81  //col:87
-    ZYDIS_ISA_EXT_REQUIRED_BITS  typedef enum ZydisISAExt_ =  ZYAN_BITS_TO_REPRESENT(ZYDIS_ISA_EXT_MAX_VALUE)  //col:88
-)
-
-
-
-type (
-EnumIsaExt interface{
-    ZYDIS_ISA_EXT_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool)//col:89
-}
-)
-
-func NewEnumIsaExt() { return & enumIsaExt{} }
-
-func (e *enumIsaExt)    ZYDIS_ISA_EXT_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:89
-/*    ZYDIS_ISA_EXT_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT(ZYDIS_ISA_EXT_MAX_VALUE)
-} ZydisISAExt;*/
 return true
 }
-
-
 

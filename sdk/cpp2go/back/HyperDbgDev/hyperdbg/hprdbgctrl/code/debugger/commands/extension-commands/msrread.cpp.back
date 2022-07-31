@@ -1,30 +1,11 @@
-/**
- * @file msrread.cpp
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief !msrread command
- * @details
- * @version 0.1
- * @date 2020-06-01
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
 #include "pch.h"
-
-/**
- * @brief help of !msrread command
- *
- * @return VOID
- */
 VOID
 CommandMsrreadHelp()
 {
     ShowMessages("!msrread : detects the execution of rdmsr instructions.\n\n");
-
     ShowMessages("syntax : \t!msrread [Msr (hex)] [pid ProcessId (hex)] "
                  "[core CoreId (hex)] [imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] "
                  "[script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }]\n");
-
     ShowMessages("\n");
     ShowMessages("\t\te.g : !msrread\n");
     ShowMessages("\t\te.g : !msrread 0xc0000082\n");
@@ -32,13 +13,6 @@ CommandMsrreadHelp()
     ShowMessages("\t\te.g : !msrread core 2 pid 400\n");
 }
 
-/**
- * @brief !msrread command handler
- *
- * @param SplittedCommand
- * @param Command
- * @return VOID
- */
 VOID
 CommandMsrread(vector<string> SplittedCommand, string Command)
 {
@@ -54,11 +28,6 @@ CommandMsrread(vector<string> SplittedCommand, string Command)
     BOOLEAN                            GetAddress                  = FALSE;
     vector<string>                     SplittedCommandCaseSensitive {Split(Command, ' ')};
     DEBUGGER_EVENT_PARSING_ERROR_CAUSE EventParsingErrorCause;
-
-    //
-    // Interpret and fill the general event and action fields
-    //
-    //
     if (!InterpretGeneralEventAndActionsFields(
             &SplittedCommand,
             &SplittedCommandCaseSensitive,
@@ -75,11 +44,6 @@ CommandMsrread(vector<string> SplittedCommand, string Command)
     {
         return;
     }
-
-    //
-    // Interpret command specific details (if any), it is because we can use
-    // special msr bitmap here
-    //
     for (auto Section : SplittedCommand)
     {
         if (!Section.compare("!msrread") || !Section.compare("!msread"))
@@ -88,17 +52,10 @@ CommandMsrread(vector<string> SplittedCommand, string Command)
         }
         else if (!GetAddress)
         {
-            //
-            // It's probably an msr
-            //
             if (!ConvertStringToUInt64(Section, &SpecialTarget))
             {
-                //
-                // Unkonwn parameter
-                //
                 ShowMessages("unknown parameter '%s'\n\n", Section.c_str());
                 CommandMsrreadHelp();
-
                 FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
                 return;
             }
@@ -109,40 +66,18 @@ CommandMsrread(vector<string> SplittedCommand, string Command)
         }
         else
         {
-            //
-            // Unkonwn parameter
-            //
             ShowMessages("unknown parameter '%s'\n\n", Section.c_str());
             CommandMsrreadHelp();
-
             FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
             return;
         }
     }
-
-    //
-    // Set the target msr (if not specific then it means all msrs)
-    //
     Event->OptionalParam1 = SpecialTarget;
-
-    //
-    // Send the ioctl to the kernel for event registration
-    //
     if (!SendEventToKernel(Event, EventLength))
     {
-        //
-        // There was an error, probably the handle was not initialized
-        // we have to free the Action before exit, it is because, we
-        // already freed the Event and string buffers
-        //
-
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
-
-    //
-    // Add the event to the kernel
-    //
     if (!RegisterActionToEvent(Event,
                                ActionBreakToDebugger,
                                ActionBreakToDebuggerLength,
@@ -151,10 +86,6 @@ CommandMsrread(vector<string> SplittedCommand, string Command)
                                ActionScript,
                                ActionScriptLength))
     {
-        //
-        // There was an error
-        //
-
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }

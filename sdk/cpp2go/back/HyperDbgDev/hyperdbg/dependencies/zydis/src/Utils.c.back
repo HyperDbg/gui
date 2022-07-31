@@ -1,40 +1,5 @@
-/***************************************************************************************************
-
-  Zyan Disassembler Library (Zydis)
-
-  Original Author : Florian Bernd
-
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
-
-***************************************************************************************************/
-
 #include <Zycore/LibC.h>
 #include <Zydis/Utils.h>
-
-/* ============================================================================================== */
-/* Exported functions                                                                             */
-/* ============================================================================================== */
-
-/* ---------------------------------------------------------------------------------------------- */
-/* Address calculation                                                                            */
-/* ---------------------------------------------------------------------------------------------- */
-
 ZyanStatus ZydisCalcAbsoluteAddress(const ZydisDecodedInstruction* instruction,
     const ZydisDecodedOperand* operand, ZyanU64 runtime_address, ZyanU64* result_address)
 {
@@ -42,7 +7,6 @@ ZyanStatus ZydisCalcAbsoluteAddress(const ZydisDecodedInstruction* instruction,
     {
         return ZYAN_STATUS_INVALID_ARGUMENT;
     }
-
     switch (operand->type)
     {
     case ZYDIS_OPERAND_TYPE_MEMORY:
@@ -109,7 +73,6 @@ ZyanStatus ZydisCalcAbsoluteAddress(const ZydisDecodedInstruction* instruction,
     default:
         break;
     }
-
     return ZYAN_STATUS_INVALID_ARGUMENT;
 }
 
@@ -117,14 +80,10 @@ ZyanStatus ZydisCalcAbsoluteAddressEx(const ZydisDecodedInstruction* instruction
     const ZydisDecodedOperand* operand, ZyanU64 runtime_address,
     const ZydisRegisterContext* register_context, ZyanU64* result_address)
 {
-    // TODO: Test this with AGEN/MIB operands
-    // TODO: Add support for Gather/Scatter instructions
-
     if (!instruction || !operand || !register_context || !result_address)
     {
         return ZYAN_STATUS_INVALID_ARGUMENT;
     }
-
     if ((operand->type != ZYDIS_OPERAND_TYPE_MEMORY) ||
         ((operand->mem.base == ZYDIS_REGISTER_NONE) &&
          (operand->mem.index == ZYDIS_REGISTER_NONE)) ||
@@ -133,7 +92,6 @@ ZyanStatus ZydisCalcAbsoluteAddressEx(const ZydisDecodedInstruction* instruction
     {
         return ZydisCalcAbsoluteAddress(instruction, operand, runtime_address, result_address);
     }
-
     ZyanU64 value = operand->mem.disp.value;
     if (operand->mem.base)
     {
@@ -143,7 +101,6 @@ ZyanStatus ZydisCalcAbsoluteAddressEx(const ZydisDecodedInstruction* instruction
     {
         value += register_context->values[operand->mem.index] * operand->mem.scale;
     }
-
     switch (instruction->address_width)
     {
     case 16:
@@ -160,10 +117,6 @@ ZyanStatus ZydisCalcAbsoluteAddressEx(const ZydisDecodedInstruction* instruction
     }
 }
 
-/* ---------------------------------------------------------------------------------------------- */
-/* Accessed CPU flags                                                                             */
-/* ---------------------------------------------------------------------------------------------- */
-
 ZyanStatus ZydisGetAccessedFlagsByAction(const ZydisDecodedInstruction* instruction,
     ZydisCPUFlagAction action, ZydisCPUFlags* flags)
 {
@@ -171,7 +124,6 @@ ZyanStatus ZydisGetAccessedFlagsByAction(const ZydisDecodedInstruction* instruct
     {
         return ZYAN_STATUS_INVALID_ARGUMENT;
     }
-
     *flags = 0;
     for (ZyanUSize i = 0; i < ZYAN_ARRAY_LENGTH(instruction->accessed_flags); ++i)
     {
@@ -180,7 +132,6 @@ ZyanStatus ZydisGetAccessedFlagsByAction(const ZydisDecodedInstruction* instruct
             *flags |= (1 << i);
         }
     }
-
     return ZYAN_STATUS_SUCCESS;
 }
 
@@ -192,7 +143,6 @@ ZyanStatus ZydisGetAccessedFlagsRead(const ZydisDecodedInstruction* instruction,
     ZYAN_CHECK(ZydisGetAccessedFlagsByAction(instruction, ZYDIS_CPUFLAG_ACTION_TESTED_MODIFIED,
         &temp));
     *flags |= temp;
-
     return ZYAN_STATUS_SUCCESS;
 }
 
@@ -210,13 +160,8 @@ ZyanStatus ZydisGetAccessedFlagsWritten(const ZydisDecodedInstruction* instructi
     *flags |= temp;
     ZYAN_CHECK(ZydisGetAccessedFlagsByAction(instruction, ZYDIS_CPUFLAG_ACTION_UNDEFINED, &temp));
     *flags |= temp;
-
     return ZYAN_STATUS_SUCCESS;
 }
-
-/* ---------------------------------------------------------------------------------------------- */
-/* Instruction segments                                                                           */
-/* ---------------------------------------------------------------------------------------------- */
 
 ZyanStatus ZydisGetInstructionSegments(const ZydisDecodedInstruction* instruction,
     ZydisInstructionSegments* segments)
@@ -225,10 +170,7 @@ ZyanStatus ZydisGetInstructionSegments(const ZydisDecodedInstruction* instructio
     {
         return ZYAN_STATUS_INVALID_ARGUMENT;
     }
-
     ZYAN_MEMSET(segments, 0, sizeof(*segments));
-
-    // Legacy prefixes and `REX`
     if (instruction->raw.prefix_count)
     {
         const ZyanU8 rex_offset = (instruction->attributes & ZYDIS_ATTRIB_HAS_REX) ? 1 : 0;
@@ -247,8 +189,6 @@ ZyanStatus ZydisGetInstructionSegments(const ZydisDecodedInstruction* instructio
             segments->segments[segments->count++].size   = 1;
         }
     }
-
-    // Encoding prefixes
     ZydisInstructionSegment segment_type = ZYDIS_INSTR_SEGMENT_NONE;
     ZyanU8 segment_offset = 0;
     ZyanU8 segment_size = 0;
@@ -283,8 +223,6 @@ ZyanStatus ZydisGetInstructionSegments(const ZydisDecodedInstruction* instructio
         segments->segments[segments->count  ].offset = segment_offset;
         segments->segments[segments->count++].size   = segment_size;
     }
-
-    // Opcode
     segment_size = 1;
     if ((instruction->encoding == ZYDIS_INSTRUCTION_ENCODING_LEGACY) ||
         (instruction->encoding == ZYDIS_INSTRUCTION_ENCODING_3DNOW))
@@ -318,32 +256,24 @@ ZyanStatus ZydisGetInstructionSegments(const ZydisDecodedInstruction* instructio
         segments->segments[segments->count].offset = 0;
     }
     segments->segments[segments->count++].size = segment_size;
-
-    // ModRM
     if (instruction->attributes & ZYDIS_ATTRIB_HAS_MODRM)
     {
         segments->segments[segments->count  ].type = ZYDIS_INSTR_SEGMENT_MODRM;
         segments->segments[segments->count  ].offset = instruction->raw.modrm.offset;
         segments->segments[segments->count++].size = 1;
     }
-
-    // SIB
     if (instruction->attributes & ZYDIS_ATTRIB_HAS_SIB)
     {
         segments->segments[segments->count  ].type = ZYDIS_INSTR_SEGMENT_SIB;
         segments->segments[segments->count  ].offset = instruction->raw.sib.offset;
         segments->segments[segments->count++].size = 1;
     }
-
-    // Displacement
     if (instruction->raw.disp.size)
     {
         segments->segments[segments->count  ].type = ZYDIS_INSTR_SEGMENT_DISPLACEMENT;
         segments->segments[segments->count  ].offset = instruction->raw.disp.offset;
         segments->segments[segments->count++].size = instruction->raw.disp.size / 8;
     }
-
-    // Immediates
     for (ZyanU8 i = 0; i < 2; ++i)
     {
         if (instruction->raw.imm[i].size)
@@ -353,18 +283,12 @@ ZyanStatus ZydisGetInstructionSegments(const ZydisDecodedInstruction* instructio
             segments->segments[segments->count++].size = instruction->raw.imm[i].size / 8;
         }
     }
-
     if (instruction->encoding == ZYDIS_INSTRUCTION_ENCODING_3DNOW)
     {
         segments->segments[segments->count].type = ZYDIS_INSTR_SEGMENT_OPCODE;
         segments->segments[segments->count].offset = instruction->length -1;
         segments->segments[segments->count++].size = 1;
     }
-
     return ZYAN_STATUS_SUCCESS;
 }
-
-/* ---------------------------------------------------------------------------------------------- */
-
-/* ============================================================================================== */
 

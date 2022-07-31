@@ -1658,4 +1658,3 @@ const struct _TOKEN LalrSemanticRules[RULES_COUNT]=
 	{SEMANTIC_RULE, "@PUSH"},
 	{SEMANTIC_RULE, "@PUSH"}
 };
-

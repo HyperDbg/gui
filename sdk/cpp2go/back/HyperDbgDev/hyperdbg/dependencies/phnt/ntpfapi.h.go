@@ -1,6 +1,4 @@
 package phnt
-//back\HyperDbgDev\hyperdbg\dependencies\phnt\ntpfapi.h.back
-
 const(
 _NTPFAPI_H =  //col:13
 PF_BOOT_CONTROL_VERSION = 1 //col:58
@@ -18,7 +16,6 @@ PF_REPURPOSED_BY_PREFETCH_INFO_VERSION = 1 //col:238
 SUPERFETCH_INFORMATION_VERSION = 45 // rev //col:281
 SUPERFETCH_INFORMATION_MAGIC = ('kuhC') // rev //col:282
 )
-
 type     PfKernelInitPhase = 0 uint32
 const(
     PfKernelInitPhase  PF_BOOT_PHASE_ID =  0  //col:21
@@ -32,8 +29,6 @@ const(
     PfUserShellReadyPhase  PF_BOOT_PHASE_ID =  300  //col:29
     PfMaxBootPhaseId  PF_BOOT_PHASE_ID =  900  //col:30
 )
-
-
 type     PfSvNotSpecified uint32
 const(
     PfSvNotSpecified PF_ENABLE_STATUS = 1  //col:35
@@ -41,8 +36,6 @@ const(
     PfSvDisabled PF_ENABLE_STATUS = 3  //col:37
     PfSvMaxEnableStatus PF_ENABLE_STATUS = 4  //col:38
 )
-
-
 type     PrefetcherRetrieveTrace = 1 // q: CHAR[] uint32
 const(
     PrefetcherRetrieveTrace  PREFETCHER_INFORMATION_CLASS =  1 // q: CHAR[]  //col:68
@@ -55,8 +48,6 @@ const(
     PrefetcherAppLaunchScenarioControl PREFETCHER_INFORMATION_CLASS = 8  //col:75
     PrefetcherInformationMax PREFETCHER_INFORMATION_CLASS = 9  //col:76
 )
-
-
 type     PfsPrivateSourceKernel uint32
 const(
     PfsPrivateSourceKernel PFS_PRIVATE_PAGE_SOURCE_TYPE = 1  //col:119
@@ -64,8 +55,6 @@ const(
     PfsPrivateSourceProcess PFS_PRIVATE_PAGE_SOURCE_TYPE = 3  //col:121
     PfsPrivateSourceMax PFS_PRIVATE_PAGE_SOURCE_TYPE = 4  //col:122
 )
-
-
 type     PfScenarioTypeNone uint32
 const(
     PfScenarioTypeNone PF_PHASED_SCENARIO_TYPE = 1  //col:171
@@ -74,8 +63,6 @@ const(
     PfScenarioTypeFUS PF_PHASED_SCENARIO_TYPE = 4  //col:174
     PfScenarioTypeMax PF_PHASED_SCENARIO_TYPE = 5  //col:175
 )
-
-
 type     SuperfetchRetrieveTrace = 1 // q: CHAR[] uint32
 const(
     SuperfetchRetrieveTrace  SUPERFETCH_INFORMATION_CLASS =  1 // q: CHAR[]  //col:250
@@ -108,40 +95,14 @@ const(
     SuperfetchGpuUtilizationQuery // PF_GPU_UTILIZATION_INFO SUPERFETCH_INFORMATION_CLASS = 28  //col:277
     SuperfetchInformationMax SUPERFETCH_INFORMATION_CLASS = 29  //col:278
 )
-
-
-
 type (
 Ntpfapi interface{
  * Attribution 4.0 International ()(ok bool)//col:31
 }
+
 )
-
 func NewNtpfapi() { return & ntpfapi{} }
-
 func (n *ntpfapi) * Attribution 4.0 International ()(ok bool){//col:31
-/* * Attribution 4.0 International (CC BY 4.0) license. 
- * 
- * You must give appropriate credit, provide a link to the license, and 
- * indicate if changes were made. You may do so in any reasonable manner, but 
- * not in any way that suggests the licensor endorses you or your use.
-#ifndef _NTPFAPI_H
-#define _NTPFAPI_H
-typedef enum _PF_BOOT_PHASE_ID
-{
-    PfKernelInitPhase = 0,
-    PfBootDriverInitPhase = 90,
-    PfSystemDriverInitPhase = 120,
-    PfSessionManagerInitPhase = 150,
-    PfSMRegistryInitPhase = 180,
-    PfVideoInitPhase = 210,
-    PfPostVideoInitPhase = 240,
-    PfBootAcceptedRegistryInitPhase = 270,
-    PfUserShellReadyPhase = 300,
-    PfMaxBootPhaseId = 900
-} PF_BOOT_PHASE_ID;*/
 return true
 }
-
-
 

@@ -1,7 +1,5 @@
 #include "PDBExtractor.h"
-
 #pragma comment(lib, "dbghelp.lib")
-
 int main_impl(int argc, char** argv)
 {
 	PDBExtractor Instance;

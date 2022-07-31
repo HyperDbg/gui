@@ -1,22 +1,16 @@
 PUBLIC AsmVmexitHandler
-
 EXTERN VmxVmexitHandler:PROC
 EXTERN VmxVmresume:PROC
 EXTERN VmxReturnStackPointerForVmxoff:PROC
 EXTERN VmxReturnInstructionPointerForVmxoff:PROC
-
 .code _text
-
 ;------------------------------------------------------------------------
-
 AsmVmexitHandler PROC
     
     push 0  ; we might be in an unaligned stack state, so the memory before stack might cause 
             ; irql less or equal as it doesn't exist, so we just put some extra space avoid
             ; these kind of erros
-
     pushfq
-
     ; ------------ Save XMM Registers ------------
     ;
     ;   ;;;;;;;;;;;; 16 Byte * 16 Byte = 256 + 4  = 260 (0x106 == 0x110 but let's align it to have better performance) ;;;;;;;;;;;;
@@ -41,7 +35,6 @@ AsmVmexitHandler PROC
     ;   stmxcsr dword ptr [rsp+0100h]           ; MxCsr is 4 Byte
     ;
     ;---------------------------------------------
-
     push r15
     push r14
     push r13
@@ -84,7 +77,6 @@ RestoreState:
     pop r13
     pop r14
     pop r15
-
     ; ------------ Restore XMM Registers ------------
     ;
     ;   movaps xmm0, xmmword ptr [rsp+000h]
@@ -108,16 +100,12 @@ RestoreState:
     ;   
     ;   add     rsp, 0110h
     ; ----------------------------------------------
-
     popfq
-
     sub rsp, 0100h      ; to avoid error in future functions
     jmp VmxVmresume
     
 AsmVmexitHandler ENDP
-
 ;------------------------------------------------------------------------
-
 AsmVmxoffHandler PROC
     
     sub rsp, 020h ; shadow space
@@ -162,7 +150,6 @@ RestoreState:
     pop r13
     pop r14
     pop r15
-
     ; ------------ Restore XMM Registers ------------
     ;
     ;    movaps xmm0, xmmword ptr [rsp+000h]
@@ -186,15 +173,9 @@ RestoreState:
     ;    
     ;    add     rsp, 0110h
     ; ----------------------------------------------
-
     popfq
     pop		rsp     ; restore rsp
-
     ret             ; jump back to where we called Vmcall
-
 AsmVmxoffHandler ENDP
-
 ;------------------------------------------------------------------------
-
 END
-

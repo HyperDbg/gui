@@ -1,6 +1,4 @@
 package header
-//back\HyperDbgDev\hyperdbg\script-engine\header\parse-table.h.back
-
 const(
 PARSE_TABLE_H =  //col:3
 RULES_COUNT = 134 //col:4
@@ -27,5 +25,3 @@ LALR_NONTERMINAL_COUNT = 15 //col:45
 LALR_MAX_RHS_LEN = 9 //col:46
 LALR_STATE_COUNT = 180 //col:47
 )
-
-

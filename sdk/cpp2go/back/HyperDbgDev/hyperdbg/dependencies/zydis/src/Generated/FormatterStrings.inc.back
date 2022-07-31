@@ -692,4 +692,3 @@ static const struct ZydisPredefinedTokenSUB_
 static const ZydisPredefinedToken* const TOK_SUB = (const ZydisPredefinedToken* const)&TOK_DATA_SUB;
 static const ZydisShortString STR_WHITESPACE = ZYDIS_MAKE_SHORTSTRING(" ");
 #pragma pack(pop)
-

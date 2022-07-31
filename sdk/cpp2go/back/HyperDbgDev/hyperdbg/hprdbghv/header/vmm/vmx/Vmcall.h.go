@@ -1,7 +1,4 @@
 package vmx
-
-//back\HyperDbgDev\hyperdbg\hprdbghv\header\vmm\vmx\Vmcall.h.back
-
 const (
 	VMCALL_TEST                                                                = 0x00000001 //col:22
 	VMCALL_VMXOFF                                                              = 0x00000002 //col:28

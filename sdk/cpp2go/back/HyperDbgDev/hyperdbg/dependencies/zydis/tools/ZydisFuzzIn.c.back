@@ -1,9 +1,6 @@
 ﻿/***************************************************************************************************
-
   Zyan Disassembler Library (Zydis)
-
   Original Author : Joel Hoener
-
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -21,33 +18,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-
 ***************************************************************************************************/
-
-/**
- * @file
- *
- * This file implements a tool that is supposed to be fed as input for fuzzers like AFL, reading a
- * control block from `stdin`, allowing the fuzzer to reach every possible code-path, testing any
- * possible combination of disassembler configurations.
- */
-
 #include <stdio.h>
 #include <Zycore/LibC.h>
 #include <Zydis/Zydis.h>
-
 #ifdef ZYAN_WINDOWS
 #   include <fcntl.h>
 #   include <io.h>
 #endif
-
-/* ============================================================================================== */
-/* Enums and types                                                                                */
-/* ============================================================================================== */
-
-/**
- * Defines the `ZydisFuzzControlBlock` struct.
- */
 typedef struct ZydisFuzzControlBlock_
 {
     ZydisMachineMode machine_mode;
@@ -58,26 +36,13 @@ typedef struct ZydisFuzzControlBlock_
     ZyanUPointer formatter_properties[ZYDIS_FORMATTER_PROP_MAX_VALUE + 1];
     char string[16];
 } ZydisFuzzControlBlock;
-
-/* ============================================================================================== */
-/* Macros                                                                                         */
-/* ============================================================================================== */
-
-// Limit maximum amount of bytes
 #define ZYDIS_FUZZ_MAX_BYTES (1024 * 10 /* 10 KiB */)
-
 #if defined(ZYDIS_FUZZ_AFL_FAST) || defined(ZYDIS_LIBFUZZER)
 #   define ZYDIS_MAYBE_FPUTS(x, y)
 #else
 #   define ZYDIS_MAYBE_FPUTS(x, y) fputs(x, y)
 #endif
-
-/* ============================================================================================== */
-/* Stream reading abstraction                                                                     */
-/* ============================================================================================== */
-
 typedef ZyanUSize (*ZydisStreamRead)(void* ctx, ZyanU8* buf, ZyanUSize max_len);
-
 ZyanUSize ZydisStdinRead(void *ctx, ZyanU8* buf, ZyanUSize max_len)
 {
     ZYAN_UNUSED(ctx);
@@ -91,7 +56,6 @@ typedef struct
     ZyanUSize buf_len;
     ZyanUSize read_offs;
 } ZydisLibFuzzerContext;
-
 ZyanUSize ZydisLibFuzzerRead(void* ctx, ZyanU8* buf, ZyanUSize max_len)
 {
     ZydisLibFuzzerContext* c = ctx;
@@ -101,22 +65,14 @@ ZyanUSize ZydisLibFuzzerRead(void* ctx, ZyanU8* buf, ZyanUSize max_len)
     c->read_offs += len;
     return len;
 }
+
 #endif // ZYDIS_LIBFUZZER
-
-/* ============================================================================================== */
-/* Main iteration                                                                                 */
-/* ============================================================================================== */
-
 static int DoIteration(ZydisStreamRead read_fn, void* stream_ctx)
 {
     ZydisFuzzControlBlock control_block;
-
 #ifdef ZYAN_WINDOWS
-    // The `stdin` pipe uses text-mode on Windows platforms by default. We need it to be opened in
-    // binary mode
     _setmode(_fileno(ZYAN_STDIN), _O_BINARY);
 #endif
-
     if (read_fn(
         stream_ctx, (ZyanU8*)&control_block, sizeof(control_block)) != sizeof(control_block))
     {
@@ -124,7 +80,6 @@ static int DoIteration(ZydisStreamRead read_fn, void* stream_ctx)
         return EXIT_FAILURE;
     }
     control_block.string[ZYAN_ARRAY_LENGTH(control_block.string) - 1] = 0;
-
     ZydisDecoder decoder;
     if (!ZYAN_SUCCESS(ZydisDecoderInit(&decoder, control_block.machine_mode,
         control_block.address_width)))
@@ -141,7 +96,6 @@ static int DoIteration(ZydisStreamRead read_fn, void* stream_ctx)
             return EXIT_FAILURE;
         }
     }
-
     ZydisFormatter formatter;
     if (!ZYAN_SUCCESS(ZydisFormatterInit(&formatter, control_block.formatter_style)))
     {
@@ -169,42 +123,30 @@ static int DoIteration(ZydisStreamRead read_fn, void* stream_ctx)
             return EXIT_FAILURE;
         }
     }
-
     ZyanU8 buffer[32];
     ZyanUSize buf_len = read_fn(stream_ctx, buffer, sizeof(buffer));
-
     ZydisDecodedInstruction instruction;
     char format_buffer[256];
-
     ZyanStatus status = ZydisDecoderDecodeBuffer(&decoder, buffer, buf_len, &instruction);
     if (!ZYAN_SUCCESS(status))
     {
         return EXIT_FAILURE;
     }
-
     ZydisFormatterFormatInstruction(&formatter, &instruction, format_buffer,
         sizeof(format_buffer), control_block.rt_address);
-
     return EXIT_SUCCESS;
 }
 
-/* ============================================================================================== */
-/* Entry point                                                                                    */
-/* ============================================================================================== */
-
 #ifdef ZYDIS_LIBFUZZER
-
 int LLVMFuzzerInitialize(int *argc, char ***argv)
 {
     ZYAN_UNUSED(argc);
     ZYAN_UNUSED(argv);
-
     if (ZydisGetVersion() != ZYDIS_VERSION)
     {
         fputs("Invalid zydis version\n", ZYAN_STDERR);
         return EXIT_FAILURE;
     }
-
     return EXIT_SUCCESS;
 }
 
@@ -214,13 +156,11 @@ int LLVMFuzzerTestOneInput(ZyanU8 *buf, ZyanUSize len)
     ctx.buf = buf;
     ctx.buf_len = len;
     ctx.read_offs = 0;
-
     DoIteration(&ZydisLibFuzzerRead, &ctx);
     return 0;
 }
 
 #else // !ZYDIS_LIBFUZZER
-
 int main(void)
 {
     if (ZydisGetVersion() != ZYDIS_VERSION)
@@ -228,7 +168,6 @@ int main(void)
         fputs("Invalid zydis version\n", ZYAN_STDERR);
         return EXIT_FAILURE;
     }
-
 #   ifdef ZYDIS_FUZZ_AFL_FAST
     while (__AFL_LOOP(1000))
     {
@@ -241,7 +180,3 @@ int main(void)
 }
 
 #endif // ZYDIS_LIBFUZZER
-
-/* ============================================================================================== */
-
-

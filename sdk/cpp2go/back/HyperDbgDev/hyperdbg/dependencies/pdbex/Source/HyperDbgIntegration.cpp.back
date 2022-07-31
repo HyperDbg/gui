@@ -2,14 +2,11 @@
 #include "HyperDbgExport.h"
 #include <sstream>
 #include <iomanip>
-
 Callback g_MessageHandler       = NULL;
 BOOLEAN  g_IsOutputToFile       = FALSE;
 BOOLEAN  g_ShowInOffestFormat   = FALSE;
 CHAR *   g_MappingBufferAddress = FALSE;
-
 #pragma comment(lib, "dbghelp.lib")
-
 int
 pdbex_export(int     argc,
              char ** argv,
@@ -17,7 +14,6 @@ pdbex_export(int     argc,
              void *  buffer_address)
 {
     PDBExtractor Instance;
-
     if (!is_struct)
     {
         g_ShowInOffestFormat = TRUE;
@@ -26,12 +22,7 @@ pdbex_export(int     argc,
     {
         g_ShowInOffestFormat = FALSE;
     }
-
-    //
-    // Set the buffer address for mapping data
-    //
     g_MappingBufferAddress = (CHAR *)buffer_address;
-
     return Instance.Run(argc, argv);
 }
 
@@ -53,10 +44,8 @@ SymSeparateTo64BitValue(UINT64 Value)
 {
     std::ostringstream OstringStream;
     std::string        Temp;
-
     OstringStream << std::setw(16) << std::setfill('0') << std::hex << Value;
     Temp = OstringStream.str();
-
     Temp.insert(8, 1, '`');
     return Temp;
 }

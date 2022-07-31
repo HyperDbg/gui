@@ -1,6 +1,4 @@
 package header
-//back\HyperDbgDev\hyperdbg\script-engine\header\common.h.back
-
 type     LOCAL_ID uint32
 const(
     LOCAL_ID typedef enum TOKEN_TYPE = 1  //col:38
@@ -26,7 +24,3 @@ const(
     STRING typedef enum TOKEN_TYPE = 21  //col:58
     UNKNOWN typedef enum TOKEN_TYPE = 22  //col:59
 )
-
-
-
-

@@ -2,6 +2,7 @@ package cpp2go
 
 import (
 	"fmt"
+	"github.com/ddkwork/librarygo/src/CommentDeletor"
 	"github.com/ddkwork/librarygo/src/caseconv"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/mylog"
@@ -90,12 +91,13 @@ func (o *object) backPath(path string) string {
 }
 func (o *object) backCpp(path string) *object {
 	ext := filepath.Ext(path)
+	backPath := o.backPath(path)
 	for _, e := range o.ext {
 		if ext == e || o.expandExt(path) != "" {
 			body, err := os.ReadFile(path)
 			o.Check(err)
-			cppPath := o.backPath(path) + ".back"
-			goPath := o.backPath(path) + ".go"
+			cppPath := backPath + ".back"
+			goPath := backPath + ".go"
 			o.back = append(o.back, pathBody{
 				path: cppPath,
 				body: string(body),
@@ -106,6 +108,9 @@ func (o *object) backCpp(path string) *object {
 				body: "",
 			})
 		}
+	}
+	if !CommentDeletor.New().DeleteKepSpace(backPath) {
+		panic("!CommentDeletor.New().DeleteKepSpace(backPath)")
 	}
 	return o
 }

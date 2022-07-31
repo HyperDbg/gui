@@ -1,6 +1,4 @@
 package Generated
-//back\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Generated\EnumInstructionCategory.h.back
-
 type     ZYDIS_CATEGORY_INVALID uint32
 const(
     ZYDIS_CATEGORY_INVALID typedef enum ZydisInstructionCategory_ = 1  //col:6
@@ -102,31 +100,6 @@ const(
     ZYDIS_CATEGORY_XOP typedef enum ZydisInstructionCategory_ = 97  //col:102
     ZYDIS_CATEGORY_XSAVE typedef enum ZydisInstructionCategory_ = 98  //col:103
     ZYDIS_CATEGORY_XSAVEOPT typedef enum ZydisInstructionCategory_ = 99  //col:104
-    /** typedef enum ZydisInstructionCategory_ = 100  //col:106
-     * Maximum value of this enum. typedef enum ZydisInstructionCategory_ = 101  //col:107
-     */ typedef enum ZydisInstructionCategory_ = 102  //col:108
-    ZYDIS_CATEGORY_MAX_VALUE  typedef enum ZydisInstructionCategory_ =  ZYDIS_CATEGORY_XSAVEOPT  //col:109
-    /** typedef enum ZydisInstructionCategory_ = 104  //col:110
-     * The minimum number of bits required to represent all values of this enum. typedef enum ZydisInstructionCategory_ = 105  //col:111
-     */ typedef enum ZydisInstructionCategory_ = 106  //col:112
-    ZYDIS_CATEGORY_REQUIRED_BITS  typedef enum ZydisInstructionCategory_ =  ZYAN_BITS_TO_REPRESENT(ZYDIS_CATEGORY_MAX_VALUE)  //col:113
-)
-
-
-
-type (
-EnumInstructionCategory interface{
-    ZYDIS_CATEGORY_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool)//col:114
-}
-)
-
-func NewEnumInstructionCategory() { return & enumInstructionCategory{} }
-
-func (e *enumInstructionCategory)    ZYDIS_CATEGORY_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:114
-/*    ZYDIS_CATEGORY_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT(ZYDIS_CATEGORY_MAX_VALUE)
-} ZydisInstructionCategory;*/
 return true
 }
-
-
 

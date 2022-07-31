@@ -1,7 +1,4 @@
 package communication
-
-//back\HyperDbgDev\hyperdbg\hprdbghv\header\debugger\communication\SerialConnection.h.back
-
 const (
 	CBR_110    = 110    //col:71
 	CBR_300    = 300    //col:72

@@ -1,12 +1,9 @@
 package phnt
-//back\HyperDbgDev\hyperdbg\dependencies\phnt\ntmisc.h.back
-
 const(
 _NTMISC_H =  //col:13
 FLT_PORT_CONNECT = 0x0001 //col:17
 FLT_PORT_ALL_ACCESS = (FLT_PORT_CONNECT | STANDARD_RIGHTS_ALL) //col:18
 )
-
 type     VdmStartExecution uint32
 const(
     VdmStartExecution VDMSERVICECLASS = 1  //col:24
@@ -26,8 +23,6 @@ const(
     VdmQueryVdmProcess VDMSERVICECLASS = 15  //col:38
     VdmPreInitialize VDMSERVICECLASS = 16  //col:39
 )
-
-
 type     TraceControlStartLogger = 1 uint32
 const(
     TraceControlStartLogger  TRACE_CONTROL_INFORMATION_CLASS =  1  //col:64
@@ -70,107 +65,19 @@ const(
     TraceControlMaxLoggers  TRACE_CONTROL_INFORMATION_CLASS =  42  //col:102
     TraceControlMaxPmcCounter  TRACE_CONTROL_INFORMATION_CLASS =  43  //col:103
 )
-
-
-
 type (
 Ntmisc interface{
  * Attribution 4.0 International ()(ok bool)//col:40
 NtVdmControl()(ok bool)//col:104
 }
+
 )
-
 func NewNtmisc() { return & ntmisc{} }
-
 func (n *ntmisc) * Attribution 4.0 International ()(ok bool){//col:40
-/* * Attribution 4.0 International (CC BY 4.0) license. 
- * 
- * You must give appropriate credit, provide a link to the license, and 
- * indicate if changes were made. You may do so in any reasonable manner, but 
- * not in any way that suggests the licensor endorses you or your use.
-#ifndef _NTMISC_H
-#define _NTMISC_H
-#define FLT_PORT_CONNECT 0x0001
-#define FLT_PORT_ALL_ACCESS (FLT_PORT_CONNECT | STANDARD_RIGHTS_ALL)
-typedef enum _VDMSERVICECLASS
-{
-    VdmStartExecution,
-    VdmQueueInterrupt,
-    VdmDelayInterrupt,
-    VdmInitialize,
-    VdmFeatures,
-    VdmSetInt21Handler,
-    VdmQueryDir,
-    VdmPrinterDirectIoOpen,
-    VdmPrinterDirectIoClose,
-    VdmPrinterInitialize,
-    VdmSetLdtEntries,
-    VdmSetProcessLdtInfo,
-    VdmAdlibEmulation,
-    VdmPMCliControl,
-    VdmQueryVdmProcess,
-    VdmPreInitialize
-} VDMSERVICECLASS, *PVDMSERVICECLASS;*/
 return true
 }
 
 func (n *ntmisc)NtVdmControl()(ok bool){//col:104
-/*NtVdmControl(
-    _In_ VDMSERVICECLASS Service,
-    _Inout_ PVOID ServiceData
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtTraceEvent(
-    _In_ HANDLE TraceHandle,
-    _In_ ULONG Flags,
-    _In_ ULONG FieldSize,
-    _In_ PVOID Fields
-    );
-typedef enum _TRACE_CONTROL_INFORMATION_CLASS
-{
-    TraceControlStartLogger = 1,
-    TraceControlStopLogger = 2,
-    TraceControlQueryLogger = 3,
-    TraceControlUpdateLogger = 4,
-    TraceControlFlushLogger = 5,
-    TraceControlIncrementLoggerFile = 6,
-    TraceControlRealtimeConnect = 11,
-    TraceControlActivityIdCreate = 12,
-    TraceControlWdiDispatchControl = 13,
-    TraceControlRealtimeDisconnectConsumerByHandle = 14,
-    TraceControlRegisterGuidsCode = 15,
-    TraceControlReceiveNotification = 16,
-    TraceControlSendReplyDataBlock = 18,
-    TraceControlReceiveReplyDataBlock = 19,
-    TraceControlWdiUpdateSem = 20,
-    TraceControlEnumTraceGuidList = 21,
-    TraceControlGetTraceGuidInfo = 22,
-    TraceControlEnumerateTraceGuids = 23,
-    TraceControlRegisterSecurityProv = 24,
-    TraceControlQueryReferenceTime = 25,
-    TraceControlTrackProviderBinary = 26,
-    TraceControlAddNotificationEvent = 27,
-    TraceControlUpdateDisallowList = 28,
-    TraceControlSetEnableAllKeywordsCode = 29,
-    TraceControlSetProviderTraitsCode = 30,
-    TraceControlUseDescriptorTypeCode = 31,
-    TraceControlEnumTraceGroupList = 32,
-    TraceControlGetTraceGroupInfo = 33,
-    TraceControlTraceSetDisallowList= 34,
-    TraceControlSetCompressionSettings = 35,
-    TraceControlGetCompressionSettings= 36,
-    TraceControlUpdatePeriodicCaptureState = 37,
-    TraceControlGetPrivateSessionTraceHandle = 38,
-    TraceControlRegisterPrivateSession = 39,
-    TraceControlQuerySessionDemuxObject = 40,
-    TraceControlSetProviderBinaryTracking = 41,
-    TraceControlMaxLoggers = 42,
-    TraceControlMaxPmcCounter = 43
-} TRACE_CONTROL_INFORMATION_CLASS;*/
 return true
 }
-
-
 

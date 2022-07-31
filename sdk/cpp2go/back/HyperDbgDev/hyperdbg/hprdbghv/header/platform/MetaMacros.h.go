@@ -1,7 +1,4 @@
 package platform
-
-//back\HyperDbgDev\hyperdbg\hprdbghv\header\platform\MetaMacros.h.back
-
 const (
 	MetaScopedExpr(
 Pre_, Post_, ScopedExpr_

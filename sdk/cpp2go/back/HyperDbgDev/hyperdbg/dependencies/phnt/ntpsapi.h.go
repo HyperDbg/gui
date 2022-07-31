@@ -1,6 +1,4 @@
 package phnt
-//back\HyperDbgDev\hyperdbg\dependencies\phnt\ntpsapi.h.back
-
 const(
 _NTPSAPI_H =  //col:13
 PROCESS_TERMINATE = 0x0001 //col:16
@@ -28,7 +26,6 @@ JOB_OBJECT_QUERY = 0x0004 //col:49
 JOB_OBJECT_TERMINATE = 0x0008 //col:50
 JOB_OBJECT_SET_SECURITY_ATTRIBUTES = 0x0010 //col:51
 JOB_OBJECT_ALL_ACCESS = (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | 0x3F) //col:52
-// = JOB_OBJECT_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | 0x1f) // pre-Vista full access //col:53
 GDI_HANDLE_BUFFER_SIZE32 = 34 //col:56
 GDI_HANDLE_BUFFER_SIZE64 = 60 //col:57
 GDI_HANDLE_BUFFER_SIZE = GDI_HANDLE_BUFFER_SIZE32 //col:60
@@ -256,7 +253,6 @@ JobObjectIoPriorityLimit = 48 //col:2280
 JobObjectPagePriorityLimit = 49 //col:2281
 MaxJobObjectInfoClass = 50 //col:2282
 )
-
 type     ProcessBasicInformation // q: PROCESS_BASIC_INFORMATION PROCESS_EXTENDED_BASIC_INFORMATION uint32
 const(
     ProcessBasicInformation // q: PROCESS_BASIC_INFORMATION PROCESS_EXTENDED_BASIC_INFORMATION PROCESSINFOCLASS = 1  //col:116
@@ -373,8 +369,6 @@ const(
     ProcessEffectivePagePriority PROCESSINFOCLASS = 112  //col:227
     MaxProcessInfoClass PROCESSINFOCLASS = 113  //col:228
 )
-
-
 type     ThreadBasicInformation // q: THREAD_BASIC_INFORMATION uint32
 const(
     ThreadBasicInformation // q: THREAD_BASIC_INFORMATION THREADINFOCLASS = 1  //col:235
@@ -435,24 +429,18 @@ const(
     ThreadEffectivePagePriority THREADINFOCLASS = 56  //col:290
     MaxThreadInfoClass THREADINFOCLASS = 57  //col:291
 )
-
-
 type     ProcessTlsReplaceIndex uint32
 const(
     ProcessTlsReplaceIndex PROCESS_TLS_INFORMATION_TYPE = 1  //col:557
     ProcessTlsReplaceVector PROCESS_TLS_INFORMATION_TYPE = 2  //col:558
     MaxProcessTlsOperation PROCESS_TLS_INFORMATION_TYPE = 3  //col:559
 )
-
-
 type     ProcessWorkingSetSwap uint32
 const(
     ProcessWorkingSetSwap PROCESS_WORKING_SET_OPERATION = 1  //col:719
     ProcessWorkingSetEmpty PROCESS_WORKING_SET_OPERATION = 2  //col:720
     ProcessWorkingSetOperationMax PROCESS_WORKING_SET_OPERATION = 3  //col:721
 )
-
-
 type     PsProtectedTypeNone uint32
 const(
     PsProtectedTypeNone PS_PROTECTED_TYPE = 1  //col:733
@@ -460,8 +448,6 @@ const(
     PsProtectedTypeProtected PS_PROTECTED_TYPE = 3  //col:735
     PsProtectedTypeMax PS_PROTECTED_TYPE = 4  //col:736
 )
-
-
 type     PsProtectedSignerNone uint32
 const(
     PsProtectedSignerNone PS_PROTECTED_SIGNER = 1  //col:741
@@ -475,8 +461,6 @@ const(
     PsProtectedSignerApp PS_PROTECTED_SIGNER = 9  //col:749
     PsProtectedSignerMax PS_PROTECTED_SIGNER = 10  //col:750
 )
-
-
 type     UmsInformationCommandInvalid uint32
 const(
     UmsInformationCommandInvalid THREAD_UMS_INFORMATION_COMMAND = 1  //col:1116
@@ -484,47 +468,35 @@ const(
     UmsInformationCommandDetach THREAD_UMS_INFORMATION_COMMAND = 3  //col:1118
     UmsInformationCommandQuery THREAD_UMS_INFORMATION_COMMAND = 4  //col:1119
 )
-
-
 type     SubsystemInformationTypeWin32 uint32
 const(
     SubsystemInformationTypeWin32 SUBSYSTEM_INFORMATION_TYPE  = 1  //col:1182
     SubsystemInformationTypeWSL SUBSYSTEM_INFORMATION_TYPE  = 2  //col:1183
     MaxSubsystemInformationType SUBSYSTEM_INFORMATION_TYPE  = 3  //col:1184
 )
-
-
 type     ThreadWorkloadClassDefault uint32
 const(
     ThreadWorkloadClassDefault THREAD_WORKLOAD_CLASS = 1  //col:1191
     ThreadWorkloadClassGraphics THREAD_WORKLOAD_CLASS = 2  //col:1192
     MaxThreadWorkloadClass THREAD_WORKLOAD_CLASS = 3  //col:1193
 )
-
-
 type     ProcessStateChangeSuspend uint32
 const(
     ProcessStateChangeSuspend PROCESS_STATE_CHANGE_TYPE = 1  //col:1358
     ProcessStateChangeResume PROCESS_STATE_CHANGE_TYPE = 2  //col:1359
     ProcessStateChangeMax PROCESS_STATE_CHANGE_TYPE = 3  //col:1360
 )
-
-
 type     ThreadStateChangeSuspend uint32
 const(
     ThreadStateChangeSuspend THREAD_STATE_CHANGE_TYPE = 1  //col:1392
     ThreadStateChangeResume THREAD_STATE_CHANGE_TYPE = 2  //col:1393
     ThreadStateChangeMax THREAD_STATE_CHANGE_TYPE = 3  //col:1394
 )
-
-
 type     QUEUE_USER_APC_FLAGS_NONE = 0x0 uint32
 const(
     QUEUE_USER_APC_FLAGS_NONE  QUEUE_USER_APC_FLAGS =  0x0  //col:1624
     QUEUE_USER_APC_FLAGS_SPECIAL_USER_APC  QUEUE_USER_APC_FLAGS =  0x1  //col:1625
 )
-
-
 type     SeSafeOpenExperienceNone = 0x00 uint32
 const(
     SeSafeOpenExperienceNone  SE_SAFE_OPEN_PROMPT_EXPERIENCE_RESULTS { =  0x00  //col:1769
@@ -537,8 +509,6 @@ const(
     SeSafeOpenExperienceDefenderTrustedInstaller  SE_SAFE_OPEN_PROMPT_EXPERIENCE_RESULTS { =  0x40  //col:1776
     SeSafeOpenExperienceMOTWPresent  SE_SAFE_OPEN_PROMPT_EXPERIENCE_RESULTS { =  0x80  //col:1777
 )
-
-
 type     PsAttributeParentProcess // in HANDLE uint32
 const(
     PsAttributeParentProcess // in HANDLE PS_ATTRIBUTE_NUM = 1  //col:1826
@@ -574,8 +544,6 @@ const(
     PsAttributeEnableOptionalXStateFeatures // since WIN11 PS_ATTRIBUTE_NUM = 31  //col:1856
     PsAttributeMax PS_ATTRIBUTE_NUM = 32  //col:1857
 )
-
-
 type     PsNeverDuplicate uint32
 const(
     PsNeverDuplicate PS_STD_HANDLE_STATE = 1  //col:1967
@@ -583,8 +551,6 @@ const(
     PsAlwaysDuplicate // always duplicate standard handles PS_STD_HANDLE_STATE = 3  //col:1969
     PsMaxStdHandleStates PS_STD_HANDLE_STATE = 4  //col:1970
 )
-
-
 type     PS_MITIGATION_OPTION_NX uint32
 const(
     PS_MITIGATION_OPTION_NX PS_MITIGATION_OPTION = 1  //col:2049
@@ -624,8 +590,6 @@ const(
     PS_MITIGATION_OPTION_CET_DYNAMIC_APIS_OUT_OF_PROC_ONLY PS_MITIGATION_OPTION = 35  //col:2083
     PS_MITIGATION_OPTION_REDIRECTION_TRUST // since 22H1 PS_MITIGATION_OPTION = 36  //col:2084
 )
-
-
 type     PsCreateInitialState uint32
 const(
     PsCreateInitialState PS_CREATE_STATE = 1  //col:2090
@@ -637,17 +601,12 @@ const(
     PsCreateSuccess PS_CREATE_STATE = 7  //col:2096
     PsCreateMaximumStates PS_CREATE_STATE = 8  //col:2097
 )
-
-
 type     MemoryReserveUserApc uint32
 const(
     MemoryReserveUserApc MEMORY_RESERVE_TYPE = 1  //col:2477
     MemoryReserveIoCompletion MEMORY_RESERVE_TYPE = 2  //col:2478
     MemoryReserveTypeMax MEMORY_RESERVE_TYPE = 3  //col:2479
 )
-
-
-
 type (
 Ntpsapi interface{
  * Attribution 4.0 International ()(ok bool)//col:92
@@ -671,934 +630,86 @@ NtQueueApcThreadEx2()(ok bool)//col:1740
 #if ()(ok bool)//col:2294
 NtCreateJobObject()(ok bool)//col:2480
 }
+
 )
-
 func NewNtpsapi() { return & ntpsapi{} }
-
 func (n *ntpsapi) * Attribution 4.0 International ()(ok bool){//col:92
-/* * Attribution 4.0 International (CC BY 4.0) license. 
- * 
- * You must give appropriate credit, provide a link to the license, and 
- * indicate if changes were made. You may do so in any reasonable manner, but 
- * not in any way that suggests the licensor endorses you or your use.
-#ifndef _NTPSAPI_H
-#define _NTPSAPI_H
-#if (PHNT_MODE == PHNT_MODE_KERNEL)
-#define PROCESS_TERMINATE 0x0001
-#define PROCESS_CREATE_THREAD 0x0002
-#define PROCESS_SET_SESSIONID 0x0004
-#define PROCESS_VM_OPERATION 0x0008
-#define PROCESS_VM_READ 0x0010
-#define PROCESS_VM_WRITE 0x0020
-#define PROCESS_CREATE_PROCESS 0x0080
-#define PROCESS_SET_QUOTA 0x0100
-#define PROCESS_SET_INFORMATION 0x0200
-#define PROCESS_QUERY_INFORMATION 0x0400
-#define PROCESS_SET_PORT 0x0800
-#define PROCESS_SUSPEND_RESUME 0x0800
-#define PROCESS_QUERY_LIMITED_INFORMATION 0x1000
-#else
-#ifndef PROCESS_SET_PORT
-#define PROCESS_SET_PORT 0x0800
-#endif
-#endif
-#if (PHNT_MODE == PHNT_MODE_KERNEL)
-#define THREAD_QUERY_INFORMATION 0x0040
-#define THREAD_SET_THREAD_TOKEN 0x0080
-#define THREAD_IMPERSONATE 0x0100
-#define THREAD_DIRECT_IMPERSONATION 0x0200
-#else
-#ifndef THREAD_ALERT
-#define THREAD_ALERT 0x0004
-#endif
-#endif
-#if (PHNT_MODE == PHNT_MODE_KERNEL)
-#define JOB_OBJECT_ASSIGN_PROCESS 0x0001
-#define JOB_OBJECT_SET_ATTRIBUTES 0x0002
-#define JOB_OBJECT_QUERY 0x0004
-#define JOB_OBJECT_TERMINATE 0x0008
-#define JOB_OBJECT_SET_SECURITY_ATTRIBUTES 0x0010
-#define JOB_OBJECT_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | 0x3F)
-#endif
-#define GDI_HANDLE_BUFFER_SIZE32 34
-#define GDI_HANDLE_BUFFER_SIZE64 60
-#ifndef _WIN64
-#define GDI_HANDLE_BUFFER_SIZE GDI_HANDLE_BUFFER_SIZE32
-#else
-#define GDI_HANDLE_BUFFER_SIZE GDI_HANDLE_BUFFER_SIZE64
-#endif
-typedef ULONG GDI_HANDLE_BUFFER[GDI_HANDLE_BUFFER_SIZE];
-typedef ULONG GDI_HANDLE_BUFFER32[GDI_HANDLE_BUFFER_SIZE32];
-typedef ULONG GDI_HANDLE_BUFFER64[GDI_HANDLE_BUFFER_SIZE64];
-#ifndef FLS_MAXIMUM_AVAILABLE
-#define FLS_MAXIMUM_AVAILABLE 128
-#endif
-#ifndef TLS_MINIMUM_AVAILABLE
-#define TLS_MINIMUM_AVAILABLE 64
-#endif
-#ifndef TLS_EXPANSION_SLOTS
-#define TLS_EXPANSION_SLOTS 1024
-#endif
-typedef struct _PEB_LDR_DATA
-{
-    ULONG Length;
-    BOOLEAN Initialized;
-    HANDLE SsHandle;
-    LIST_ENTRY InLoadOrderModuleList;
-    LIST_ENTRY InMemoryOrderModuleList;
-    LIST_ENTRY InInitializationOrderModuleList;
-    PVOID EntryInProgress;
-    BOOLEAN ShutdownInProgress;
-    HANDLE ShutdownThreadId;
-} PEB_LDR_DATA, *PPEB_LDR_DATA;*/
 return true
 }
 
 func (n *ntpsapi)#if ()(ok bool){//col:229
-/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
-typedef enum _PROCESSINFOCLASS
-{
-    ProcessDynamicFunctionTableInformation,
-    ProcessSubsystemProcess,
-    ProcessIumChallengeResponse,
-    ProcessCaptureTrustletLiveDump,
-    ProcessTelemetryCoverage,
-    ProcessEnclaveInformation,
-    ProcessApplyStateChange,
-    ProcessEnableOptionalXStateFeatures,
-    ProcessAssignCpuPartitions,
-    ProcessPriorityClassEx,
-    ProcessMembershipInformation,
-    ProcessEffectiveIoPriority,
-    ProcessEffectivePagePriority,
-    MaxProcessInfoClass
-} PROCESSINFOCLASS;*/
 return true
 }
 
 func (n *ntpsapi)#if ()(ok bool){//col:292
-/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
-typedef enum _THREADINFOCLASS
-{
-    ThreadEventPair,
-    ThreadCSwitchMon,
-    ThreadCSwitchPmu,
-    ThreadSelectedCpuSets,
-    ThreadApplyStateChange,
-    ThreadEffectiveIoPriority,
-    ThreadEffectivePagePriority,
-    MaxThreadInfoClass
-} THREADINFOCLASS;*/
 return true
 }
 
 func (n *ntpsapi)#if ()(ok bool){//col:300
-/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
-typedef struct _PAGE_PRIORITY_INFORMATION
-{
-    ULONG PagePriority;
-} PAGE_PRIORITY_INFORMATION, *PPAGE_PRIORITY_INFORMATION;*/
 return true
 }
 
 func (n *ntpsapi)#if ()(ok bool){//col:315
-/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
-typedef struct _PROCESS_BASIC_INFORMATION
-{
-    NTSTATUS ExitStatus;
-    PPEB PebBaseAddress;
-    KAFFINITY AffinityMask;
-    KPRIORITY BasePriority;
-    HANDLE UniqueProcessId;
-    HANDLE InheritedFromUniqueProcessId;
-} PROCESS_BASIC_INFORMATION, *PPROCESS_BASIC_INFORMATION;*/
 return true
 }
 
 func (n *ntpsapi)#define PROCESS_EXCEPTION_PORT_ALL_STATE_FLAGS ()(ok bool){//col:407
-/*#define PROCESS_EXCEPTION_PORT_ALL_STATE_FLAGS ((ULONG_PTR)((1UL << PROCESS_EXCEPTION_PORT_ALL_STATE_BITS) - 1))
-typedef struct _PROCESS_EXCEPTION_PORT 
-{
-} PROCESS_EXCEPTION_PORT, *PPROCESS_EXCEPTION_PORT;*/
 return true
 }
 
 func (n *ntpsapi)#if ()(ok bool){//col:478
-/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
-typedef struct _PROCESS_DEVICEMAP_INFORMATION
-{
-    union
-    {
-        struct
-        {
-            HANDLE DirectoryHandle;
-        } Set;
-        struct
-        {
-            ULONG DriveMap;
-            UCHAR DriveType[32];
-        } Query;
-    };
-} PROCESS_DEVICEMAP_INFORMATION, *PPROCESS_DEVICEMAP_INFORMATION;*/
 return true
 }
 
 func (n *ntpsapi)#if ()(ok bool){//col:677
-/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
-#if !defined(NTDDI_WIN10_CO) || (NTDDI_VERSION < NTDDI_WIN10_CO) && !PHNT_PATCH_FOR_HYPERDBG
-typedef struct _PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY
-{
-    union {
-        ULONG Flags;
-        struct {
-            ULONG EnforceRedirectionTrust : 1;
-            ULONG AuditRedirectionTrust : 1;
-            ULONG ReservedFlags : 30;
-        };
-    };
-} PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY, * PPROCESS_MITIGATION_REDIRECTION_TRUST_POLICY;*/
 return true
 }
 
 func (n *ntpsapi)#define PsProtectedValue()(ok bool){//col:783
-/*#define PsProtectedValue(aSigner, aAudit, aType) ( \
-    ((aSigner & PS_PROTECTED_SIGNER_MASK) << 4) | \
-    ((aAudit & PS_PROTECTED_AUDIT_MASK) << 3) | \
-    (aType & PS_PROTECTED_TYPE_MASK)\
-    )
-#define InitializePsProtection(aProtectionLevelPtr, aSigner, aAudit, aType) { \
-    (aProtectionLevelPtr)->Signer = aSigner; \
-    (aProtectionLevelPtr)->Audit = aAudit; \
-    (aProtectionLevelPtr)->Type = aType; \
-    }
-typedef struct _PS_PROTECTION
-{
-    union
-    {
-        UCHAR Level;
-        struct
-        {
-            UCHAR Type : 3;
-            UCHAR Audit : 1;
-            UCHAR Signer : 4;
-        };
-    };
-} PS_PROTECTION, *PPS_PROTECTION;*/
 return true
 }
 
 func (n *ntpsapi)#define POWER_THROTTLING_PROCESS_VALID_FLAGS ()(ok bool){//col:853
-/*#define POWER_THROTTLING_PROCESS_VALID_FLAGS ((POWER_THROTTLING_PROCESS_EXECUTION_SPEED | POWER_THROTTLING_PROCESS_DELAYTIMERS))
-typedef struct _POWER_THROTTLING_PROCESS_STATE
-{
-    ULONG Version;
-    ULONG ControlMask;
-    ULONG StateMask;
-} POWER_THROTTLING_PROCESS_STATE, *PPOWER_THROTTLING_PROCESS_STATE;*/
 return true
 }
 
 func (n *ntpsapi)#define POWER_THROTTLING_THREAD_VALID_FLAGS ()(ok bool){//col:900
-/*#define POWER_THROTTLING_THREAD_VALID_FLAGS (POWER_THROTTLING_THREAD_EXECUTION_SPEED)
-typedef struct _POWER_THROTTLING_THREAD_STATE
-{
-    ULONG Version;
-    ULONG ControlMask;
-    ULONG StateMask;
-} POWER_THROTTLING_THREAD_STATE, *PPOWER_THROTTLING_THREAD_STATE;*/
 return true
 }
 
 func (n *ntpsapi)#if ()(ok bool){//col:1185
-/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
-typedef enum _SUBSYSTEM_INFORMATION_TYPE 
-{
-    SubsystemInformationTypeWin32,
-    SubsystemInformationTypeWSL,
-    MaxSubsystemInformationType
-} SUBSYSTEM_INFORMATION_TYPE;*/
 return true
 }
 
 func (n *ntpsapi)#if ()(ok bool){//col:1361
-/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateProcess(
-    _Out_ PHANDLE ProcessHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _In_ HANDLE ParentProcess,
-    _In_ BOOLEAN InheritObjectTable,
-    _In_opt_ HANDLE SectionHandle,
-    _In_opt_ HANDLE DebugPort,
-    _In_opt_ HANDLE TokenHandle
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateProcessEx(
-    _Out_ PHANDLE ProcessHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _In_ HANDLE ParentProcess,
-    _In_opt_ HANDLE SectionHandle,
-    _In_opt_ HANDLE DebugPort,
-    _In_opt_ HANDLE TokenHandle,
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtOpenProcess(
-    _Out_ PHANDLE ProcessHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _In_opt_ PCLIENT_ID ClientId
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtTerminateProcess(
-    _In_opt_ HANDLE ProcessHandle,
-    _In_ NTSTATUS ExitStatus
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSuspendProcess(
-    _In_ HANDLE ProcessHandle
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtResumeProcess(
-    _In_ HANDLE ProcessHandle
-    );
-#define NtCurrentProcess() ((HANDLE)(LONG_PTR)-1)
-#define ZwCurrentProcess() NtCurrentProcess()
-#define NtCurrentThread() ((HANDLE)(LONG_PTR)-2)
-#define ZwCurrentThread() NtCurrentThread()
-#define NtCurrentSession() ((HANDLE)(LONG_PTR)-3)
-#define ZwCurrentSession() NtCurrentSession()
-#define NtCurrentPeb() (NtCurrentTeb()->ProcessEnvironmentBlock)
-#define NtCurrentSilo() ((HANDLE)(LONG_PTR)-1)
-#define NtCurrentProcessId() (NtCurrentTeb()->ClientId.UniqueProcess)
-#define NtCurrentThreadId() (NtCurrentTeb()->ClientId.UniqueThread)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryInformationProcess(
-    _In_ HANDLE ProcessHandle,
-    _In_ PROCESSINFOCLASS ProcessInformationClass,
-    _Out_writes_bytes_(ProcessInformationLength) PVOID ProcessInformation,
-    _In_ ULONG ProcessInformationLength,
-    _Out_opt_ PULONG ReturnLength
-    );
-#if (PHNT_VERSION >= PHNT_WS03)
-#define PROCESS_GET_NEXT_FLAGS_PREVIOUS_PROCESS 0x00000001
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtGetNextProcess(
-    _In_opt_ HANDLE ProcessHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_ ULONG HandleAttributes,
-    _In_ ULONG Flags,
-    _Out_ PHANDLE NewProcessHandle
-    );
-#endif
-#if (PHNT_VERSION >= PHNT_WS03)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtGetNextThread(
-    _In_ HANDLE ProcessHandle,
-    _In_opt_ HANDLE ThreadHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_ ULONG HandleAttributes,
-    _In_ ULONG Flags,
-    _Out_ PHANDLE NewThreadHandle
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSetInformationProcess(
-    _In_ HANDLE ProcessHandle,
-    _In_ PROCESSINFOCLASS ProcessInformationClass,
-    _In_reads_bytes_(ProcessInformationLength) PVOID ProcessInformation,
-    _In_ ULONG ProcessInformationLength
-    );
-#endif
-#define STATECHANGE_SET_ATTRIBUTES 0x0001
-typedef enum _PROCESS_STATE_CHANGE_TYPE
-{
-    ProcessStateChangeSuspend,
-    ProcessStateChangeResume,
-    ProcessStateChangeMax,
-} PROCESS_STATE_CHANGE_TYPE, *PPROCESS_STATE_CHANGE_TYPE;*/
 return true
 }
 
 func (n *ntpsapi)#if ()(ok bool){//col:1395
-/*#if (PHNT_VERSION >= PHNT_WIN11)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateProcessStateChange(
-    _Out_ PHANDLE ProcessStateChangeHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _In_ HANDLE ProcessHandle,
-    _In_opt_ ULONG64 Reserved
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtChangeProcessState(
-    _In_ HANDLE ProcessStateChangeHandle,
-    _In_ HANDLE ProcessHandle,
-    _In_ PROCESS_STATE_CHANGE_TYPE StateChangeType,
-    _In_opt_ PVOID ExtendedInformation,
-    _In_opt_ SIZE_T ExtendedInformationLength,
-    _In_opt_ ULONG64 Reserved
-    );
-#endif
-typedef enum _THREAD_STATE_CHANGE_TYPE
-{
-    ThreadStateChangeSuspend,
-    ThreadStateChangeResume,
-    ThreadStateChangeMax,
-} THREAD_STATE_CHANGE_TYPE, *PTHREAD_STATE_CHANGE_TYPE;*/
 return true
 }
 
 func (n *ntpsapi)#if ()(ok bool){//col:1626
-/*#if (PHNT_VERSION >= PHNT_WIN11)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateThreadStateChange(
-    _Out_ PHANDLE ThreadStateChangeHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _In_ HANDLE ThreadHandle,
-    _In_opt_ ULONG64 Reserved
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtChangeThreadState(
-    _In_ HANDLE ThreadStateChangeHandle,
-    _In_ HANDLE ThreadHandle,
-    _In_ THREAD_STATE_CHANGE_TYPE StateChangeType,
-    _In_opt_ PVOID ExtendedInformation,
-    _In_opt_ SIZE_T ExtendedInformationLength,
-    _In_opt_ ULONG64 Reserved
-    );
-#endif
-#if (PHNT_MODE != PHNT_MODE_KERNEL)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateThread(
-    _Out_ PHANDLE ThreadHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _In_ HANDLE ProcessHandle,
-    _Out_ PCLIENT_ID ClientId,
-    _In_ PCONTEXT ThreadContext,
-    _In_ PINITIAL_TEB InitialTeb,
-    _In_ BOOLEAN CreateSuspended
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtOpenThread(
-    _Out_ PHANDLE ThreadHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _In_opt_ PCLIENT_ID ClientId
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtTerminateThread(
-    _In_opt_ HANDLE ThreadHandle,
-    _In_ NTSTATUS ExitStatus
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSuspendThread(
-    _In_ HANDLE ThreadHandle,
-    _Out_opt_ PULONG PreviousSuspendCount
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtResumeThread(
-    _In_ HANDLE ThreadHandle,
-    _Out_opt_ PULONG PreviousSuspendCount
-    );
-NTSYSCALLAPI
-ULONG
-NTAPI
-NtGetCurrentProcessorNumber(
-    VOID
-    );
-#if (PHNT_VERSION >= PHNT_WIN7)
-NTSYSCALLAPI
-ULONG
-NTAPI
-NtGetCurrentProcessorNumberEx(
-    _Out_opt_ PPROCESSOR_NUMBER ProcessorNumber
-    );
-#endif
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtGetContextThread(
-    _In_ HANDLE ThreadHandle,
-    _Inout_ PCONTEXT ThreadContext
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSetContextThread(
-    _In_ HANDLE ThreadHandle,
-    _In_ PCONTEXT ThreadContext
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryInformationThread(
-    _In_ HANDLE ThreadHandle,
-    _In_ THREADINFOCLASS ThreadInformationClass,
-    _Out_writes_bytes_(ThreadInformationLength) PVOID ThreadInformation,
-    _In_ ULONG ThreadInformationLength,
-    _Out_opt_ PULONG ReturnLength
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSetInformationThread(
-    _In_ HANDLE ThreadHandle,
-    _In_ THREADINFOCLASS ThreadInformationClass,
-    _In_reads_bytes_(ThreadInformationLength) PVOID ThreadInformation,
-    _In_ ULONG ThreadInformationLength
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtAlertThread(
-    _In_ HANDLE ThreadHandle
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtAlertResumeThread(
-    _In_ HANDLE ThreadHandle,
-    _Out_opt_ PULONG PreviousSuspendCount
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtTestAlert(
-    VOID
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtImpersonateThread(
-    _In_ HANDLE ServerThreadHandle,
-    _In_ HANDLE ClientThreadHandle,
-    _In_ PSECURITY_QUALITY_OF_SERVICE SecurityQos
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtRegisterThreadTerminatePort(
-    _In_ HANDLE PortHandle
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSetLdtEntries(
-    _In_ ULONG Selector0,
-    _In_ ULONG Entry0Low,
-    _In_ ULONG Entry0Hi,
-    _In_ ULONG Selector1,
-    _In_ ULONG Entry1Low,
-    _In_ ULONG Entry1Hi
-    );
-typedef VOID (*PPS_APC_ROUTINE)(
-    _In_opt_ PVOID ApcArgument1,
-    _In_opt_ PVOID ApcArgument2,
-    _In_opt_ PVOID ApcArgument3
-    );
-#define Wow64EncodeApcRoutine(ApcRoutine) \
-    ((PVOID)((0 - ((LONG_PTR)(ApcRoutine))) << 2))
-#define Wow64DecodeApcRoutine(ApcRoutine) \
-    ((PVOID)(0 - (((LONG_PTR)(ApcRoutine)) >> 2)))
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueueApcThread(
-    _In_ HANDLE ThreadHandle,
-    _In_ PPS_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcArgument1,
-    _In_opt_ PVOID ApcArgument2,
-    _In_opt_ PVOID ApcArgument3
-    );
-#if (PHNT_VERSION >= PHNT_WIN7)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueueApcThreadEx(
-    _In_ HANDLE ThreadHandle,
-    _In_ PPS_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcArgument1,
-    _In_opt_ PVOID ApcArgument2,
-    _In_opt_ PVOID ApcArgument3
-    );
-#endif
-#if (PHNT_VERSION >= PHNT_WIN11)
-#if !defined(NTDDI_WIN10_CO) || (NTDDI_VERSION < NTDDI_WIN10_CO)
-typedef enum _QUEUE_USER_APC_FLAGS
-{
-    QUEUE_USER_APC_FLAGS_NONE = 0x0,
-    QUEUE_USER_APC_FLAGS_SPECIAL_USER_APC = 0x1,
-} QUEUE_USER_APC_FLAGS;*/
 return true
 }
 
 func (n *ntpsapi)NtQueueApcThreadEx2()(ok bool){//col:1740
-/*NtQueueApcThreadEx2(
-    _In_ HANDLE ThreadHandle,
-    _In_ QUEUE_USER_APC_FLAGS ApcFlags,
-    _In_ PPS_APC_ROUTINE ApcRoutine,
-    _In_opt_ PVOID ApcArgument1,
-    _In_opt_ PVOID ApcArgument2,
-    _In_opt_ PVOID ApcArgument3
-    );
-#endif
-#if (PHNT_VERSION >= PHNT_WIN8)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtAlertThreadByThreadId(
-    _In_ HANDLE ThreadId
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtWaitForAlertByThreadId(
-    _In_ PVOID Address,
-    _In_opt_ PLARGE_INTEGER Timeout
-    );
-#endif
-#endif
-#if (PHNT_MODE != PHNT_MODE_KERNEL)
-#ifndef PROC_THREAD_ATTRIBUTE_EXTENDED_FLAGS
-#define PROC_THREAD_ATTRIBUTE_EXTENDED_FLAGS \
-    ProcThreadAttributeValue(ProcThreadAttributeExtendedFlags, FALSE, TRUE, TRUE)
-#endif
-#ifndef PROC_THREAD_ATTRIBUTE_PACKAGE_FULL_NAME
-#define PROC_THREAD_ATTRIBUTE_PACKAGE_FULL_NAME \
-    ProcThreadAttributeValue(ProcThreadAttributePackageFullName, FALSE, TRUE, FALSE)
-#endif
-#ifndef PROC_THREAD_ATTRIBUTE_CONSOLE_REFERENCE
-#define PROC_THREAD_ATTRIBUTE_CONSOLE_REFERENCE \
-    ProcThreadAttributeValue(ProcThreadAttributeConsoleReference, FALSE, TRUE, FALSE)
-#endif
-#ifndef PROC_THREAD_ATTRIBUTE_OSMAXVERSIONTESTED
-#define PROC_THREAD_ATTRIBUTE_OSMAXVERSIONTESTED \
-    ProcThreadAttributeValue(ProcThreadAttributeOsMaxVersionTested, FALSE, TRUE, FALSE)
-#endif
-#ifndef PROC_THREAD_ATTRIBUTE_SAFE_OPEN_PROMPT_ORIGIN_CLAIM
-#define PROC_THREAD_ATTRIBUTE_SAFE_OPEN_PROMPT_ORIGIN_CLAIM \
-    ProcThreadAttributeValue(ProcThreadAttributeSafeOpenPromptOriginClaim, FALSE, TRUE, FALSE)
-#endif
-#ifndef PROC_THREAD_ATTRIBUTE_BNO_ISOLATION
-#define PROC_THREAD_ATTRIBUTE_BNO_ISOLATION \
-    ProcThreadAttributeValue(ProcThreadAttributeBnoIsolation, FALSE, TRUE, FALSE)
-#endif
-#ifndef PROC_THREAD_ATTRIBUTE_ISOLATION_MANIFEST
-#define PROC_THREAD_ATTRIBUTE_ISOLATION_MANIFEST \
-    ProcThreadAttributeValue(ProcThreadAttributeIsolationManifest, FALSE, TRUE, FALSE)
-#endif
-#ifndef PROC_THREAD_ATTRIBUTE_CREATE_STORE
-#define PROC_THREAD_ATTRIBUTE_CREATE_STORE \
-    ProcThreadAttributeValue(ProcThreadAttributeCreateStore, FALSE, TRUE, FALSE)
-#endif
-typedef struct _PROC_THREAD_ATTRIBUTE {
-    ULONG_PTR Attribute;
-    SIZE_T Size;
-    ULONG_PTR Value;
-} PROC_THREAD_ATTRIBUTE, *PPROC_THREAD_ATTRIBUTE;*/
 return true
 }
 
 func (n *ntpsapi)    ProcThreadAttributeValue()(ok bool){//col:1858
-/*    ProcThreadAttributeValue(ProcThreadAttributeExtendedFlags, FALSE, TRUE, TRUE)
-#endif
-#ifndef PROC_THREAD_ATTRIBUTE_CONSOLE_REFERENCE
-#define PROC_THREAD_ATTRIBUTE_CONSOLE_REFERENCE \
-    ProcThreadAttributeValue(ProcThreadAttributeConsoleReference, FALSE, TRUE, FALSE)
-#endif
-#ifndef PROC_THREAD_ATTRIBUTE_OSMAXVERSIONTESTED
-#define PROC_THREAD_ATTRIBUTE_OSMAXVERSIONTESTED \
-    ProcThreadAttributeValue(ProcThreadAttributeOsMaxVersionTested, FALSE, TRUE, FALSE)
-#endif
-#ifndef PROC_THREAD_ATTRIBUTE_SAFE_OPEN_PROMPT_ORIGIN_CLAIM
-#define PROC_THREAD_ATTRIBUTE_SAFE_OPEN_PROMPT_ORIGIN_CLAIM \
-    ProcThreadAttributeValue(ProcThreadAttributeSafeOpenPromptOriginClaim, FALSE, TRUE, FALSE)
-#endif
-#ifndef PROC_THREAD_ATTRIBUTE_BNO_ISOLATION
-#define PROC_THREAD_ATTRIBUTE_BNO_ISOLATION \
-    ProcThreadAttributeValue(ProcThreadAttributeBnoIsolation, FALSE, TRUE, FALSE)
-#endif
-typedef enum _PS_ATTRIBUTE_NUM
-{
-    PsAttributeComponentFilter,
-    PsAttributeMax
-} PS_ATTRIBUTE_NUM;*/
 return true
 }
 
 func (n *ntpsapi)#define PsAttributeValue()(ok bool){//col:1951
-/*#define PsAttributeValue(Number, Thread, Input, Additive) \
-    (((Number) & PS_ATTRIBUTE_NUMBER_MASK) | \
-    ((Thread) ? PS_ATTRIBUTE_THREAD : 0) | \
-    ((Input) ? PS_ATTRIBUTE_INPUT : 0) | \
-    ((Additive) ? PS_ATTRIBUTE_ADDITIVE : 0))
-#define PS_ATTRIBUTE_PARENT_PROCESS \
-    PsAttributeValue(PsAttributeParentProcess, FALSE, TRUE, TRUE)
-#define PS_ATTRIBUTE_DEBUG_OBJECT \
-    PsAttributeValue(PsAttributeDebugObject, FALSE, TRUE, TRUE)
-#define PS_ATTRIBUTE_TOKEN \
-    PsAttributeValue(PsAttributeToken, FALSE, TRUE, TRUE)
-#define PS_ATTRIBUTE_CLIENT_ID \
-    PsAttributeValue(PsAttributeClientId, TRUE, FALSE, FALSE)
-#define PS_ATTRIBUTE_TEB_ADDRESS \
-    PsAttributeValue(PsAttributeTebAddress, TRUE, FALSE, FALSE)
-#define PS_ATTRIBUTE_IMAGE_NAME \
-    PsAttributeValue(PsAttributeImageName, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_IMAGE_INFO \
-    PsAttributeValue(PsAttributeImageInfo, FALSE, FALSE, FALSE)
-#define PS_ATTRIBUTE_MEMORY_RESERVE \
-    PsAttributeValue(PsAttributeMemoryReserve, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_PRIORITY_CLASS \
-    PsAttributeValue(PsAttributePriorityClass, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_ERROR_MODE \
-    PsAttributeValue(PsAttributeErrorMode, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_STD_HANDLE_INFO \
-    PsAttributeValue(PsAttributeStdHandleInfo, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_HANDLE_LIST \
-    PsAttributeValue(PsAttributeHandleList, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_GROUP_AFFINITY \
-    PsAttributeValue(PsAttributeGroupAffinity, TRUE, TRUE, FALSE)
-#define PS_ATTRIBUTE_PREFERRED_NODE \
-    PsAttributeValue(PsAttributePreferredNode, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_IDEAL_PROCESSOR \
-    PsAttributeValue(PsAttributeIdealProcessor, TRUE, TRUE, FALSE)
-#define PS_ATTRIBUTE_UMS_THREAD \
-    PsAttributeValue(PsAttributeUmsThread, TRUE, TRUE, FALSE)
-#define PS_ATTRIBUTE_MITIGATION_OPTIONS \
-    PsAttributeValue(PsAttributeMitigationOptions, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_PROTECTION_LEVEL \
-    PsAttributeValue(PsAttributeProtectionLevel, FALSE, TRUE, TRUE)
-#define PS_ATTRIBUTE_SECURE_PROCESS \
-    PsAttributeValue(PsAttributeSecureProcess, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_JOB_LIST \
-    PsAttributeValue(PsAttributeJobList, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_CHILD_PROCESS_POLICY \
-    PsAttributeValue(PsAttributeChildProcessPolicy, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_ALL_APPLICATION_PACKAGES_POLICY \
-    PsAttributeValue(PsAttributeAllApplicationPackagesPolicy, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_WIN32K_FILTER \
-    PsAttributeValue(PsAttributeWin32kFilter, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_SAFE_OPEN_PROMPT_ORIGIN_CLAIM \
-    PsAttributeValue(PsAttributeSafeOpenPromptOriginClaim, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_BNO_ISOLATION \
-    PsAttributeValue(PsAttributeBnoIsolation, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_DESKTOP_APP_POLICY \
-    PsAttributeValue(PsAttributeDesktopAppPolicy, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_CHPE \
-    PsAttributeValue(PsAttributeChpe, FALSE, TRUE, TRUE)
-#define PS_ATTRIBUTE_MITIGATION_AUDIT_OPTIONS \
-    PsAttributeValue(PsAttributeMitigationAuditOptions, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_MACHINE_TYPE \
-    PsAttributeValue(PsAttributeMachineType, FALSE, TRUE, TRUE)
-#define PS_ATTRIBUTE_COMPONENT_FILTER \
-    PsAttributeValue(PsAttributeComponentFilter, FALSE, TRUE, FALSE)
-#define PS_ATTRIBUTE_ENABLE_OPTIONAL_XSTATE_FEATURES \
-    PsAttributeValue(PsAttributeEnableOptionalXStateFeatures, TRUE, TRUE, FALSE)
-typedef struct _PS_ATTRIBUTE
-{
-    ULONG_PTR Attribute;
-    SIZE_T Size;
-    union
-    {
-        ULONG_PTR Value;
-        PVOID ValuePtr;
-    };
-    PSIZE_T ReturnLength;
-} PS_ATTRIBUTE, *PPS_ATTRIBUTE;*/
 return true
 }
 
 func (n *ntpsapi)#if ()(ok bool){//col:2294
-/*#if (PHNT_VERSION >= PHNT_VISTA)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateUserProcess(
-    _Out_ PHANDLE ProcessHandle,
-    _Out_ PHANDLE ThreadHandle,
-    _In_ ACCESS_MASK ProcessDesiredAccess,
-    _In_ ACCESS_MASK ThreadDesiredAccess,
-    _In_opt_ POBJECT_ATTRIBUTES ProcessObjectAttributes,
-    _In_opt_ POBJECT_ATTRIBUTES ThreadObjectAttributes,
-    _Inout_ PPS_CREATE_INFO CreateInfo,
-    _In_opt_ PPS_ATTRIBUTE_LIST AttributeList
-    );
-#endif
-#if (PHNT_VERSION >= PHNT_VISTA)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateThreadEx(
-    _Out_ PHANDLE ThreadHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
-    _In_ HANDLE ProcessHandle,
-    _In_opt_ PVOID Argument,
-    _In_ SIZE_T ZeroBits,
-    _In_ SIZE_T StackSize,
-    _In_ SIZE_T MaximumStackSize,
-    _In_opt_ PPS_ATTRIBUTE_LIST AttributeList
-    );
-#endif
-#endif
-#if (PHNT_MODE != PHNT_MODE_KERNEL)
-#define JobObjectCompletionFilter 16
-#define JobObjectCompletionCounter 17
-#define JobObjectBackgroundInformation 21
-#define JobObjectSchedulingRankBiasInformation 22
-#define JobObjectTimerVirtualizationInformation 23
-#define JobObjectCycleTimeNotification 24
-#define JobObjectClearEvent 25
-#define JobObjectClearPeakJobMemoryUsed 27
-#define JobObjectSharedCommit 29
-#define JobObjectContainerId 30
-#define JobObjectIoRateControlInformation 31
-#define JobObjectCreateSilo 35
-#define JobObjectServerSiloInitialize 40
-#define JobObjectServerSiloRunningState 41
-#define JobObjectIoAttribution 42
-#define JobObjectMemoryPartitionInformation 43
-#define JobObjectContainerTelemetryId 44
-#define JobObjectSiloSystemRoot 45
-#define JobObjectThreadImpersonationInformation 47
-#define JobObjectIoPriorityLimit 48
-#define JobObjectPagePriorityLimit 49
-#define MaxJobObjectInfoClass 50
-typedef struct _JOBOBJECT_EXTENDED_ACCOUNTING_INFORMATION
-{
-    JOBOBJECT_BASIC_ACCOUNTING_INFORMATION BasicInfo;
-    IO_COUNTERS IoInfo;
-    PROCESS_DISK_COUNTERS DiskIoInfo;
-    ULONG64 ContextSwitches;
-    LARGE_INTEGER TotalCycleTime;
-    ULONG64 ReadyTime;
-    PROCESS_ENERGY_VALUES EnergyValues;
-} JOBOBJECT_EXTENDED_ACCOUNTING_INFORMATION, *PJOBOBJECT_EXTENDED_ACCOUNTING_INFORMATION;*/
 return true
 }
 
 func (n *ntpsapi)NtCreateJobObject()(ok bool){//col:2480
-/*NtCreateJobObject(
-    _Out_ PHANDLE JobHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtOpenJobObject(
-    _Out_ PHANDLE JobHandle,
-    _In_ ACCESS_MASK DesiredAccess,
-    _In_ POBJECT_ATTRIBUTES ObjectAttributes
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtAssignProcessToJobObject(
-    _In_ HANDLE JobHandle,
-    _In_ HANDLE ProcessHandle
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtTerminateJobObject(
-    _In_ HANDLE JobHandle,
-    _In_ NTSTATUS ExitStatus
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtIsProcessInJob(
-    _In_ HANDLE ProcessHandle,
-    _In_opt_ HANDLE JobHandle
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtQueryInformationJobObject(
-    _In_opt_ HANDLE JobHandle,
-    _In_ JOBOBJECTINFOCLASS JobObjectInformationClass,
-    _Out_writes_bytes_(JobObjectInformationLength) PVOID JobObjectInformation,
-    _In_ ULONG JobObjectInformationLength,
-    _Out_opt_ PULONG ReturnLength
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtSetInformationJobObject(
-    _In_ HANDLE JobHandle,
-    _In_ JOBOBJECTINFOCLASS JobObjectInformationClass,
-    _In_reads_bytes_(JobObjectInformationLength) PVOID JobObjectInformation,
-    _In_ ULONG JobObjectInformationLength
-    );
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtCreateJobSet(
-    _In_ ULONG NumJob,
-    _In_reads_(NumJob) PJOB_SET_ARRAY UserJobSet,
-    _In_ ULONG Flags
-    );
-#if (PHNT_VERSION >= PHNT_THRESHOLD)
-NTSYSCALLAPI
-NTSTATUS
-NTAPI
-NtRevertContainerImpersonation(
-    VOID
-    );
-#endif
-#endif
-#if (PHNT_MODE != PHNT_MODE_KERNEL)
-typedef enum _MEMORY_RESERVE_TYPE
-{
-    MemoryReserveUserApc,
-    MemoryReserveIoCompletion,
-    MemoryReserveTypeMax
-} MEMORY_RESERVE_TYPE;*/
 return true
 }
-
-
 

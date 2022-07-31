@@ -1,7 +1,4 @@
 package devices
-
-//back\HyperDbgDev\hyperdbg\hprdbghv\header\devices\Apic.h.back
-
 const (
 	X2_MSR_BASE                = 0x800      //col:18
 	ICROffset                  = 0x300      //col:19

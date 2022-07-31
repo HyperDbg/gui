@@ -1,41 +1,13 @@
-/*++
-
-Copyright (c) Microsoft Corporation.  All rights reserved.
-
-Module Name:
-
-    hardware.c
-
-Abstract:
-
-    This file defines the global UART hardware driver table.
-
---*/
-
 #include "common.h"
-
-// --------------------------------------------------------------------- Macros
-
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
-
-// -------------------------------------------------------------------- Globals
-
 UART_HARDWARE_DRIVER UsifHardwareDriver = {
     UsifInitializePort,
     UsifSetBaud,
     UsifGetByte,
     UsifPutByte,
     UsifRxReady};
-
-//
-// The array order here is the serial subtype as specified
-// in the Microsoft Debug Port Table 2 (DBG2) specification.
-//
-
 PUART_HARDWARE_DRIVER UartHardwareDrivers[] = {
-
 #if defined(_X86_) || defined(_AMD64_)
-
     &Legacy16550HardwareDriver, // 0x0
     &Uart16550HardwareDriver,   // 0x1
     &SpiMax311HardwareDriver,   // 0x2
@@ -55,9 +27,7 @@ PUART_HARDWARE_DRIVER UartHardwareDrivers[] = {
     NULL,
     NULL,                  // 0xC-0x11
     &MM16550HardwareDriver // 0x12
-
 #elif defined(_ARM_) || defined(_ARM64_)
-
     NULL,                     // 0x0
     &Uart16550HardwareDriver, // 0x1
     NULL,                     // 0x2
@@ -77,16 +47,9 @@ PUART_HARDWARE_DRIVER UartHardwareDrivers[] = {
     &Bcm2835HardwareDriver,   // 0x10
     &SDM845HardwareDriver,    // 0x11
     &MM16550HardwareDriver    // 0x12
-
 #else
-
 #    error "Unknown Processor Architecture"
-
 #endif
-
 };
-
 C_ASSERT(ARRAY_SIZE(UartHardwareDrivers) == 19);
-
 ULONG UartHardwareDriverCount = ARRAY_SIZE(UartHardwareDrivers);
-

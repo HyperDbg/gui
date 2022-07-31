@@ -1,6 +1,4 @@
 package Headers
-//back\HyperDbgDev\hyperdbg\include\SDK\Headers\BasicTypes.h.back
-
 const(
 VOID = void //col:31
 FALSE = 0 //col:49
@@ -14,5 +12,3 @@ LOWER_8_BITS =                   0x00000000000000ff //col:57
 SECOND_LOWER_8_BITS =            0x000000000000ff00 //col:58
 UPPER_48_BITS_AND_LOWER_8_BITS = 0xffffffffffff00ff //col:59
 )
-
-
