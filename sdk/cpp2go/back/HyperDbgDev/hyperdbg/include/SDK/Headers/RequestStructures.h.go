@@ -1,5 +1,5 @@
 package Headers
-//back\HyperDbgDev\hyperdbg\include\SDK\Headers\RequestStructures.h.back
+
 
 const(
 SIZEOF_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS = sizeof(DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS) //col:14
@@ -191,238 +191,338 @@ RequestStructures interface{
     sizeof()(ok bool)//col:841
     sizeof()(ok bool)//col:882
 }
+
+
+
+
+
 )
 
 func NewRequestStructures() { return & requestStructures{} }
 
 func (r *requestStructures)    sizeof()(ok bool){//col:40
-/*    sizeof(DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS)
-typedef struct _DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS
-{
-    UINT64 VirtualAddress;
-    UINT32 ProcessId;
-    UINT64 Pml4eVirtualAddress;
-    UINT64 Pml4eValue;
-    UINT64 PdpteVirtualAddress;
-    UINT64 PdpteValue;
-    UINT64 PdeVirtualAddress;
-    UINT64 PdeValue;
-    UINT64 PteVirtualAddress;
-    UINT64 PteValue;
-    UINT32 KernelStatus;
-} DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS,*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:61
-/*    sizeof(DEBUGGER_VA2PA_AND_PA2VA_COMMANDS)
-typedef struct _DEBUGGER_VA2PA_AND_PA2VA_COMMANDS
-{
-    UINT64  VirtualAddress;
-    UINT64  PhysicalAddress;
-    UINT32  ProcessId;
-    BOOLEAN IsVirtual2Physical;
-    UINT32  KernelStatus;
-} DEBUGGER_VA2PA_AND_PA2VA_COMMANDS, *PDEBUGGER_VA2PA_AND_PA2VA_COMMANDS;*/
+
+
+
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:83
-/*    sizeof(DEBUGGER_DT_COMMAND_OPTIONS)
-typedef struct _DEBUGGER_DT_COMMAND_OPTIONS
-{
-    const char * TypeName;
-    UINT64       SizeOfTypeName;
-    UINT64       Address;
-    BOOLEAN      IsStruct;
-    PVOID        BufferAddress;
-    UINT32       TargetPid;
-    const char * AdditionalParameters;
-} DEBUGGER_DT_COMMAND_OPTIONS, *PDEBUGGER_DT_COMMAND_OPTIONS;*/
+
+
+
+
+
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:111
-/*    sizeof(DEBUGGER_PREALLOC_COMMAND)
-typedef struct _DEBUGGER_PREALLOC_COMMAND
-{
-    DEBUGGER_PREALLOC_COMMAND_TYPE Type;
-    UINT64                         Count;
-    UINT32                         KernelStatus;
-} DEBUGGER_PREALLOC_COMMAND, *PDEBUGGER_PREALLOC_COMMAND;*/
+
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:188
-/*    sizeof(DEBUGGER_FLUSH_LOGGING_BUFFERS)
-typedef struct _DEBUGGER_FLUSH_LOGGING_BUFFERS
-{
-    UINT32 KernelStatus;
-    UINT32 CountOfMessagesThatSetAsReadFromVmxRoot;
-    UINT32 CountOfMessagesThatSetAsReadFromVmxNonRoot;
-} DEBUGGER_FLUSH_LOGGING_BUFFERS, *PDEBUGGER_FLUSH_LOGGING_BUFFERS;*/
+
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:205
-/*    sizeof(DEBUGGER_TEST_QUERY_BUFFER)
-typedef struct _DEBUGGER_DEBUGGER_TEST_QUERY_BUFFER
-{
-    UINT32 RequestIndex;
-    UINT32 KernelStatus;
-} DEBUGGER_DEBUGGER_TEST_QUERY_BUFFER, *PDEBUGGER_DEBUGGER_TEST_QUERY_BUFFER;*/
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:221
-/*    sizeof(DEBUGGER_PERFORM_KERNEL_TESTS)
-typedef struct _DEBUGGER_PERFORM_KERNEL_TESTS
-{
-    UINT32 KernelStatus;
-} DEBUGGER_PERFORM_KERNEL_TESTS, *PDEBUGGER_PERFORM_KERNEL_TESTS;*/
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:237
-/*    sizeof(DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL)
-typedef struct _DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL
-{
-    UINT32 KernelStatus;
-} DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL,*/
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:255
-/*    sizeof(DEBUGGEE_KERNEL_AND_USER_TEST_INFORMATION)
-typedef struct _DEBUGGEE_KERNEL_AND_USER_TEST_INFORMATION
-{
-    UINT64 Value;
-    char   Tag[32];
-} DEBUGGEE_KERNEL_AND_USER_TEST_INFORMATION,*/
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:279
-/*    sizeof(DEBUGGEE_SEND_GENERAL_PACKET_FROM_DEBUGGEE_TO_DEBUGGER)
-typedef struct _DEBUGGEE_SEND_GENERAL_PACKET_FROM_DEBUGGEE_TO_DEBUGGER
-{
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION RequestedAction;
-    UINT32                                  LengthOfBuffer;
-    BOOLEAN                                 PauseDebuggeeWhenSent;
-    UINT32                                  KernelResult;
-} DEBUGGEE_SEND_GENERAL_PACKET_FROM_DEBUGGEE_TO_DEBUGGER,*/
+
+
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:301
-/*    sizeof(DEBUGGER_SEND_USERMODE_MESSAGES_TO_DEBUGGER)
-typedef struct _DEBUGGER_SEND_USERMODE_MESSAGES_TO_DEBUGGER
-{
-    UINT32 KernelStatus;
-    UINT32 Length;
-} DEBUGGER_SEND_USERMODE_MESSAGES_TO_DEBUGGER,*/
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:318
-/*    sizeof(DEBUGGER_READ_AND_WRITE_ON_MSR)
-typedef enum _DEBUGGER_MSR_ACTION_TYPE
-{
-    DEBUGGER_MSR_READ,
-    DEBUGGER_MSR_WRITE
-} DEBUGGER_MSR_ACTION_TYPE;*/
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:455
-/*    sizeof(DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE)
-typedef struct _DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE
-{
-    BOOLEAN IsHide;
-    UINT64 CpuidAverage;
-    UINT64 CpuidStandardDeviation;
-    UINT64 CpuidMedian;
-    UINT64 RdtscAverage;
-    UINT64 RdtscStandardDeviation;
-    UINT64 RdtscMedian;
-    BOOLEAN TrueIfProcessIdAndFalseIfProcessName;
-    UINT32  ProcId;
-                          DEBUGGER_ERROR_UNABLE_TO_HIDE_OR_UNHIDE_DEBUGGER
-} DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE,*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:510
-/*    sizeof(DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS)
-typedef enum _DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_TYPE
-{
-    DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_ATTACH,
-    DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_DETACH,
-    DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_REMOVE_HOOKS,
-    DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_KILL_PROCESS,
-    DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_PAUSE_PROCESS,
-    DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_SWITCH_BY_PROCESS_OR_THREAD,
-    DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_QUERY_COUNT_OF_ACTIVE_DEBUGGING_THREADS,
-} DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_TYPE;*/
+
+
+
+
+
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:549
-/*    sizeof(DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS)
-typedef enum _DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_TYPES
-{
-    DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_QUERY_PROCESS_COUNT   = 1,
-    DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_QUERY_THREAD_COUNT    = 2,
-    DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_QUERY_PROCESS_LIST    = 3,
-    DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_QUERY_THREAD_LIST     = 4,
-    DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_QUERY_CURRENT_PROCESS = 5,
-    DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_QUERY_CURRENT_THREAD  = 6,
-} DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_TYPES;*/
+
+
+
+
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:667
-/*    sizeof(DEBUGGER_CALLSTACK_REQUEST)
-typedef enum _DEBUGGER_CALLSTACK_DISPLAY_METHOD
-{
-    DEBUGGER_CALLSTACK_DISPLAY_METHOD_WITHOUT_PARAMS,
-    DEBUGGER_CALLSTACK_DISPLAY_METHOD_WITH_PARAMS,
-} DEBUGGER_CALLSTACK_DISPLAY_METHOD;*/
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:700
-/*    sizeof(USERMODE_DEBUGGING_THREAD_OR_PROCESS_STATE_DETAILS)
-typedef struct _USERMODE_DEBUGGING_THREAD_OR_PROCESS_STATE_DETAILS
-{
-    UINT32  ProcessId;
-    UINT32  ThreadId;
-    BOOLEAN IsProcess;
-} USERMODE_DEBUGGING_THREAD_OR_PROCESS_STATE_DETAILS, *PUSERMODE_DEBUGGING_THREAD_OR_PROCESS_STATE_DETAILS;*/
+
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 func (r *requestStructures)    sizeof()(ok bool){//col:841
-/*    sizeof(DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_PACKET)
-typedef enum _DEBUGGEE_DETAILS_AND_SWITCH_THREAD_TYPE
-{
-    DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PERFORM_SWITCH,
-    DEBUGGEE_DETAILS_AND_SWITCH_THREAD_GET_THREAD_DETAILS,
-    DEBUGGEE_DETAILS_AND_SWITCH_THREAD_GET_THREAD_LIST,
-} DEBUGGEE_DETAILS_AND_SWITCH_THREAD_TYPE;*/
+
+
+
+
+
+
+
 return true
 }
 
+
+
+
+
+
 func (r *requestStructures)    sizeof()(ok bool){//col:882
-/*    sizeof(DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET)
-typedef enum _DEBUGGER_REMOTE_STEPPING_REQUEST
-{
-    DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_OVER,
-    DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_IN,
-    DEBUGGER_REMOTE_STEPPING_REQUEST_INSTRUMENTATION_STEP_IN,
-} DEBUGGER_REMOTE_STEPPING_REQUEST;*/
+
+
+
+
+
+
+
 return true
 }
+
+
+
+
+
 
 
 

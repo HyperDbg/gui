@@ -13,6 +13,11 @@ const ZydisDecoderTreeNode* ZydisDecoderTreeGetChildNode()(ok bool)//col:161
 void ZydisGetInstructionEncodingInfo()(ok bool)//col:171
 }
 
+
+
+
+
+
 )
 
 func NewDecoderData() { return & decoderData{} }
@@ -116,6 +121,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *decoderData)void ZydisGetInstructionEncodingInfo()(ok bool){//col:171
 
 
@@ -127,6 +137,11 @@ func (d *decoderData)void ZydisGetInstructionEncodingInfo()(ok bool){//col:171
 
 return true
 }
+
+
+
+
+
 
 
 

@@ -10,6 +10,11 @@ CounterSetPreemptionTimer()(ok bool)//col:84
 CounterClearPreemptionTimer()(ok bool)//col:99
 }
 
+
+
+
+
+
 )
 
 func NewCounters() { return & counters{} }
@@ -25,6 +30,11 @@ return true
 }
 
 
+
+
+
+
+
 func (c *counters)CounterEmulateRdtscp()(ok bool){//col:50
 
 
@@ -36,6 +46,11 @@ func (c *counters)CounterEmulateRdtscp()(ok bool){//col:50
 
 return true
 }
+
+
+
+
+
 
 
 func (c *counters)CounterEmulateRdpmc()(ok bool){//col:68
@@ -51,6 +66,11 @@ return true
 }
 
 
+
+
+
+
+
 func (c *counters)CounterSetPreemptionTimer()(ok bool){//col:84
 
 
@@ -60,6 +80,11 @@ return true
 }
 
 
+
+
+
+
+
 func (c *counters)CounterClearPreemptionTimer()(ok bool){//col:99
 
 
@@ -67,6 +92,11 @@ func (c *counters)CounterClearPreemptionTimer()(ok bool){//col:99
 
 return true
 }
+
+
+
+
+
 
 
 

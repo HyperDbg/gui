@@ -13,6 +13,11 @@ BroadcastDisableNmiExitingAllCores()(ok bool)//col:117
 BroadcastNotifyAllToInvalidateEptAllCores()(ok bool)//col:132
 }
 
+
+
+
+
+
 )
 
 func NewBroadcast() { return & broadcast{} }
@@ -26,6 +31,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *broadcast)BroadcastEnableDbAndBpExitingAllCores()(ok bool){//col:42
 
 
@@ -33,6 +43,11 @@ func (b *broadcast)BroadcastEnableDbAndBpExitingAllCores()(ok bool){//col:42
 
 return true
 }
+
+
+
+
+
 
 
 func (b *broadcast)BroadcastDisableDbAndBpExitingAllCores()(ok bool){//col:57
@@ -44,6 +59,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *broadcast)BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores()(ok bool){//col:72
 
 
@@ -51,6 +71,11 @@ func (b *broadcast)BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores()(o
 
 return true
 }
+
+
+
+
+
 
 
 func (b *broadcast)BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores()(ok bool){//col:87
@@ -62,6 +87,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *broadcast)BroadcastEnableNmiExitingAllCores()(ok bool){//col:102
 
 
@@ -69,6 +99,11 @@ func (b *broadcast)BroadcastEnableNmiExitingAllCores()(ok bool){//col:102
 
 return true
 }
+
+
+
+
+
 
 
 func (b *broadcast)BroadcastDisableNmiExitingAllCores()(ok bool){//col:117
@@ -80,6 +115,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *broadcast)BroadcastNotifyAllToInvalidateEptAllCores()(ok bool){//col:132
 
 
@@ -87,6 +127,11 @@ func (b *broadcast)BroadcastNotifyAllToInvalidateEptAllCores()(ok bool){//col:13
 
 return true
 }
+
+
+
+
+
 
 
 

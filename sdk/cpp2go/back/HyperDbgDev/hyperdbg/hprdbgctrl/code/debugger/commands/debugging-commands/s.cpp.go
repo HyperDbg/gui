@@ -8,6 +8,11 @@ CommandSearchSendRequest()(ok bool)//col:129
 CommandSearchMemory()(ok bool)//col:504
 }
 
+
+
+
+
+
 )
 
 func NewS() { return & s{} }
@@ -37,6 +42,11 @@ func (s *s)CommandSearchMemoryHelp()(ok bool){//col:52
 
 return true
 }
+
+
+
+
+
 
 
 func (s *s)CommandSearchSendRequest()(ok bool){//col:129
@@ -73,6 +83,11 @@ func (s *s)CommandSearchSendRequest()(ok bool){//col:129
 
 return true
 }
+
+
+
+
+
 
 
 func (s *s)CommandSearchMemory()(ok bool){//col:504
@@ -322,6 +337,11 @@ func (s *s)CommandSearchMemory()(ok bool){//col:504
 
 return true
 }
+
+
+
+
+
 
 
 

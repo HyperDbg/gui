@@ -87,6 +87,11 @@ EnumIsaExt interface{
     ZYDIS_ISA_EXT_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool)//col:89
 }
 
+
+
+
+
+
 )
 
 func NewEnumIsaExt() { return & enumIsaExt{} }
@@ -96,6 +101,11 @@ func (e *enumIsaExt)    ZYDIS_ISA_EXT_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(o
 
 return true
 }
+
+
+
+
+
 
 
 

@@ -12,6 +12,11 @@ ZyanStatus ZydisFormatterBufferRemember()(ok bool)//col:168
 ZyanStatus ZydisFormatterBufferRestore()(ok bool)//col:193
 }
 
+
+
+
+
+
 )
 
 func NewFormatterBuffer() { return & formatterBuffer{} }
@@ -30,6 +35,11 @@ func (f *formatterBuffer)ZyanStatus ZydisFormatterTokenGetValue()(ok bool){//col
 
 return true
 }
+
+
+
+
+
 
 
 func (f *formatterBuffer)ZyanStatus ZydisFormatterTokenNext()(ok bool){//col:68
@@ -51,6 +61,11 @@ return true
 }
 
 
+
+
+
+
+
 func (f *formatterBuffer)ZyanStatus ZydisFormatterBufferGetToken()(ok bool){//col:90
 
 
@@ -68,6 +83,11 @@ func (f *formatterBuffer)ZyanStatus ZydisFormatterBufferGetToken()(ok bool){//co
 
 return true
 }
+
+
+
+
+
 
 
 func (f *formatterBuffer)ZyanStatus ZydisFormatterBufferGetString()(ok bool){//col:112
@@ -89,6 +109,11 @@ func (f *formatterBuffer)ZyanStatus ZydisFormatterBufferGetString()(ok bool){//c
 
 return true
 }
+
+
+
+
+
 
 
 func (f *formatterBuffer)ZyanStatus ZydisFormatterBufferAppend()(ok bool){//col:149
@@ -125,6 +150,11 @@ return true
 }
 
 
+
+
+
+
+
 func (f *formatterBuffer)ZyanStatus ZydisFormatterBufferRemember()(ok bool){//col:168
 
 
@@ -143,6 +173,11 @@ func (f *formatterBuffer)ZyanStatus ZydisFormatterBufferRemember()(ok bool){//co
 
 return true
 }
+
+
+
+
+
 
 
 func (f *formatterBuffer)ZyanStatus ZydisFormatterBufferRestore()(ok bool){//col:193
@@ -168,6 +203,11 @@ func (f *formatterBuffer)ZyanStatus ZydisFormatterBufferRestore()(ok bool){//col
 
 return true
 }
+
+
+
+
+
 
 
 

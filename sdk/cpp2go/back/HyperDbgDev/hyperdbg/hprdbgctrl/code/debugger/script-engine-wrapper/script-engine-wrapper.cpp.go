@@ -30,6 +30,11 @@ ScriptEngineWrapperGetPointer()(ok bool)//col:683
 ScriptEngineWrapperRemoveSymbolBuffer()(ok bool)//col:696
 }
 
+
+
+
+
+
 )
 
 func NewScriptEngineWrapper() { return & scriptEngineWrapper{} }
@@ -43,6 +48,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)ScriptEngineLoadFileSymbolWrapper()(ok bool){//col:70
 
 
@@ -50,6 +60,11 @@ func (s *scriptEngineWrapper)ScriptEngineLoadFileSymbolWrapper()(ok bool){//col:
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngineWrapper)ScriptEngineSetTextMessageCallbackWrapper()(ok bool){//col:84
@@ -61,6 +76,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)ScriptEngineUnloadAllSymbolsWrapper()(ok bool){//col:96
 
 
@@ -68,6 +88,11 @@ func (s *scriptEngineWrapper)ScriptEngineUnloadAllSymbolsWrapper()(ok bool){//co
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngineWrapper)ScriptEngineUnloadModuleSymbolWrapper()(ok bool){//col:109
@@ -79,6 +104,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)ScriptEngineSearchSymbolForMaskWrapper()(ok bool){//col:123
 
 
@@ -86,6 +116,11 @@ func (s *scriptEngineWrapper)ScriptEngineSearchSymbolForMaskWrapper()(ok bool){/
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngineWrapper)ScriptEngineGetFieldOffsetWrapper()(ok bool){//col:140
@@ -97,6 +132,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)ScriptEngineGetDataTypeSizeWrapper()(ok bool){//col:155
 
 
@@ -104,6 +144,11 @@ func (s *scriptEngineWrapper)ScriptEngineGetDataTypeSizeWrapper()(ok bool){//col
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngineWrapper)ScriptEngineCreateSymbolTableForDisassemblerWrapper()(ok bool){//col:169
@@ -115,6 +160,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)ScriptEngineConvertFileToPdbPathWrapper()(ok bool){//col:185
 
 
@@ -122,6 +172,11 @@ func (s *scriptEngineWrapper)ScriptEngineConvertFileToPdbPathWrapper()(ok bool){
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngineWrapper)ScriptEngineSymbolInitLoadWrapper()(ok bool){//col:207
@@ -135,6 +190,11 @@ func (s *scriptEngineWrapper)ScriptEngineSymbolInitLoadWrapper()(ok bool){//col:
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngineWrapper)ScriptEngineShowDataBasedOnSymbolTypesWrapper()(ok bool){//col:230
@@ -151,6 +211,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)ScriptEngineSymbolAbortLoadingWrapper()(ok bool){//col:243
 
 
@@ -158,6 +223,11 @@ func (s *scriptEngineWrapper)ScriptEngineSymbolAbortLoadingWrapper()(ok bool){//
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngineWrapper)ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetailsWrapper()(ok bool){//col:262
@@ -169,6 +239,11 @@ func (s *scriptEngineWrapper)ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetail
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngineWrapper)ScriptEngineParseWrapper()(ok bool){//col:302
@@ -194,6 +269,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)PrintSymbolBufferWrapper()(ok bool){//col:316
 
 
@@ -201,6 +281,11 @@ func (s *scriptEngineWrapper)PrintSymbolBufferWrapper()(ok bool){//col:316
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngineWrapper)ScriptEngineEvalWrapper()(ok bool){//col:425
@@ -265,6 +350,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)ScriptAutomaticStatementsTestWrapper()(ok bool){//col:463
 
 
@@ -282,6 +372,11 @@ func (s *scriptEngineWrapper)ScriptAutomaticStatementsTestWrapper()(ok bool){//c
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngineWrapper)AllocateStructForCasting()(ok bool){//col:552
@@ -335,6 +430,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)ScriptEngineWrapperTestParser()(ok bool){//col:616
 
 
@@ -386,6 +486,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)ScriptEngineEvalUInt64StyleExpressionWrapper()(ok bool){//col:642
 
 
@@ -398,6 +503,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)ScriptEngineWrapperGetHead()(ok bool){//col:655
 
 
@@ -405,6 +515,11 @@ func (s *scriptEngineWrapper)ScriptEngineWrapperGetHead()(ok bool){//col:655
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngineWrapper)ScriptEngineWrapperGetSize()(ok bool){//col:670
@@ -418,6 +533,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)ScriptEngineWrapperGetPointer()(ok bool){//col:683
 
 
@@ -427,6 +547,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngineWrapper)ScriptEngineWrapperRemoveSymbolBuffer()(ok bool){//col:696
 
 
@@ -434,6 +559,11 @@ func (s *scriptEngineWrapper)ScriptEngineWrapperRemoveSymbolBuffer()(ok bool){//
 
 return true
 }
+
+
+
+
+
 
 
 

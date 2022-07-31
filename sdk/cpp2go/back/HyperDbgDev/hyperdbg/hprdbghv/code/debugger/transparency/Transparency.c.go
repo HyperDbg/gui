@@ -18,6 +18,11 @@ TransparentUnhideDebugger()(ok bool)//col:504
 TransparentModeStart()(ok bool)//col:686
 }
 
+
+
+
+
+
 )
 
 func NewTransparency() { return & transparency{} }
@@ -35,6 +40,11 @@ return true
 }
 
 
+
+
+
+
+
 func (t *transparency)TransparentPow()(ok bool){//col:161
 
 
@@ -47,6 +57,11 @@ func (t *transparency)TransparentPow()(ok bool){//col:161
 
 return true
 }
+
+
+
+
+
 
 
 func (t *transparency)TransparentLog()(ok bool){//col:186
@@ -63,6 +78,11 @@ func (t *transparency)TransparentLog()(ok bool){//col:186
 
 return true
 }
+
+
+
+
+
 
 
 func (t *transparency)TransparentSqrt()(ok bool){//col:223
@@ -88,6 +108,11 @@ func (t *transparency)TransparentSqrt()(ok bool){//col:223
 
 return true
 }
+
+
+
+
+
 
 
 func (t *transparency)TransparentRandn()(ok bool){//col:272
@@ -120,6 +145,11 @@ func (t *transparency)TransparentRandn()(ok bool){//col:272
 
 return true
 }
+
+
+
+
+
 
 
 func (t *transparency)TransparentAddNameOrProcessIdToTheList()(ok bool){//col:363
@@ -161,6 +191,11 @@ return true
 }
 
 
+
+
+
+
+
 func (t *transparency)TransparentHideDebugger()(ok bool){//col:440
 
 
@@ -195,6 +230,11 @@ return true
 }
 
 
+
+
+
+
+
 func (t *transparency)TransparentUnhideDebugger()(ok bool){//col:504
 
 
@@ -223,6 +263,11 @@ func (t *transparency)TransparentUnhideDebugger()(ok bool){//col:504
 
 return true
 }
+
+
+
+
+
 
 
 func (t *transparency)TransparentModeStart()(ok bool){//col:686
@@ -314,6 +359,11 @@ func (t *transparency)TransparentModeStart()(ok bool){//col:686
 
 return true
 }
+
+
+
+
+
 
 
 

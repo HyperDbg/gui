@@ -41,6 +41,11 @@ static ZyanStatus DisassembleMappedPEFile()(ok bool)//col:1094
 int main()(ok bool)//col:1195
 }
 
+
+
+
+
+
 )
 
 func NewZydisPe() { return & zydisPe{} }
@@ -92,6 +97,11 @@ return true
 }
 
 
+
+
+
+
+
 func (z *zydisPe)#pragma pack()(ok bool){//col:310
 
 
@@ -108,6 +118,11 @@ return true
 }
 
 
+
+
+
+
+
 func (z *zydisPe)#pragma pack()(ok bool){//col:318
 
 
@@ -117,6 +132,11 @@ func (z *zydisPe)#pragma pack()(ok bool){//col:318
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPe)    ()(ok bool){//col:356
@@ -131,6 +151,11 @@ func (z *zydisPe)    ()(ok bool){//col:356
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPe)static ZyanI32 CompareSymbol()(ok bool){//col:413
@@ -150,6 +175,11 @@ func (z *zydisPe)static ZyanI32 CompareSymbol()(ok bool){//col:413
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPe)static const IMAGE_SECTION_HEADER* GetSectionByRVA()(ok bool){//col:453
@@ -181,6 +211,11 @@ return true
 }
 
 
+
+
+
+
+
 func (z *zydisPe)const void* RVAToFileOffset()(ok bool){//col:476
 
 
@@ -194,6 +229,11 @@ func (z *zydisPe)const void* RVAToFileOffset()(ok bool){//col:476
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPe)static ZyanStatus ZydisPEContextFinalize()(ok bool){//col:502
@@ -212,6 +252,11 @@ func (z *zydisPe)static ZyanStatus ZydisPEContextFinalize()(ok bool){//col:502
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPe)static ZyanStatus ZydisPEContextInit()(ok bool){//col:875
@@ -521,6 +566,11 @@ return true
 }
 
 
+
+
+
+
+
 func (z *zydisPe)static ZyanStatus ZydisFormatterPrintAddress()(ok bool){//col:926
 
 
@@ -556,6 +606,11 @@ return true
 }
 
 
+
+
+
+
+
 func (z *zydisPe)static ZyanStatus ZydisFormatterPrintAddressABS()(ok bool){//col:937
 
 
@@ -569,6 +624,11 @@ return true
 }
 
 
+
+
+
+
+
 func (z *zydisPe)static ZyanStatus ZydisFormatterPrintAddressREL()(ok bool){//col:947
 
 
@@ -579,6 +639,11 @@ func (z *zydisPe)static ZyanStatus ZydisFormatterPrintAddressREL()(ok bool){//co
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPe)static ZyanStatus DisassembleMappedPEFile()(ok bool){//col:1094
@@ -704,6 +769,11 @@ return true
 }
 
 
+
+
+
+
+
 func (z *zydisPe)int main()(ok bool){//col:1195
 
 
@@ -787,6 +857,11 @@ func (z *zydisPe)int main()(ok bool){//col:1195
 
 return true
 }
+
+
+
+
+
 
 
 

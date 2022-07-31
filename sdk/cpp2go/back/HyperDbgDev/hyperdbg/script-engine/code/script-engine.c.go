@@ -43,6 +43,11 @@ LalrGetRhsSize()(ok bool)//col:2319
 LalrIsOperandType()(ok bool)//col:2377
 }
 
+
+
+
+
+
 )
 
 func NewScriptEngine() { return & scriptEngine{} }
@@ -56,6 +61,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineLoadFileSymbol()(ok bool){//col:52
 
 
@@ -63,6 +73,11 @@ func (s *scriptEngine)ScriptEngineLoadFileSymbol()(ok bool){//col:52
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)ScriptEngineSetTextMessageCallback()(ok bool){//col:65
@@ -74,6 +89,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineUnloadAllSymbols()(ok bool){//col:80
 
 
@@ -81,6 +101,11 @@ func (s *scriptEngine)ScriptEngineUnloadAllSymbols()(ok bool){//col:80
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)ScriptEngineUnloadModuleSymbol()(ok bool){//col:96
@@ -92,6 +117,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineSearchSymbolForMask()(ok bool){//col:112
 
 
@@ -99,6 +129,11 @@ func (s *scriptEngine)ScriptEngineSearchSymbolForMask()(ok bool){//col:112
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)ScriptEngineGetFieldOffset()(ok bool){//col:130
@@ -110,6 +145,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineGetDataTypeSize()(ok bool){//col:147
 
 
@@ -117,6 +157,11 @@ func (s *scriptEngine)ScriptEngineGetDataTypeSize()(ok bool){//col:147
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)ScriptEngineCreateSymbolTableForDisassembler()(ok bool){//col:163
@@ -128,6 +173,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineConvertFileToPdbPath()(ok bool){//col:180
 
 
@@ -135,6 +185,11 @@ func (s *scriptEngine)ScriptEngineConvertFileToPdbPath()(ok bool){//col:180
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)ScriptEngineSymbolInitLoad()(ok bool){//col:204
@@ -150,6 +205,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineShowDataBasedOnSymbolTypes()(ok bool){//col:228
 
 
@@ -163,6 +223,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineSymbolAbortLoading()(ok bool){//col:243
 
 
@@ -172,6 +237,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails()(ok bool){//col:261
 
 
@@ -179,6 +249,11 @@ func (s *scriptEngine)ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails()(ok 
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)ScriptEngineParse()(ok bool){//col:490
@@ -359,6 +434,11 @@ func (s *scriptEngine)ScriptEngineParse()(ok bool){//col:490
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)CodeGen()(ok bool){//col:1519
@@ -1038,6 +1118,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)BooleanExpressionExtractEnd()(ok bool){//col:1568
 
 
@@ -1079,6 +1164,11 @@ func (s *scriptEngine)BooleanExpressionExtractEnd()(ok bool){//col:1568
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)ScriptEngineBooleanExpresssionParse()(ok bool){//col:1751
@@ -1226,6 +1316,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)NewSymbol()(ok bool){//col:1767
 
 
@@ -1237,6 +1332,11 @@ func (s *scriptEngine)NewSymbol()(ok bool){//col:1767
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)NewStringSymbol()(ok bool){//col:1785
@@ -1253,6 +1353,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)GetStringSymbolSize()(ok bool){//col:1799
 
 
@@ -1261,6 +1366,11 @@ func (s *scriptEngine)GetStringSymbolSize()(ok bool){//col:1799
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)RemoveSymbol()(ok bool){//col:1813
@@ -1272,6 +1382,11 @@ func (s *scriptEngine)RemoveSymbol()(ok bool){//col:1813
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)PrintSymbol()(ok bool){//col:1832
@@ -1288,6 +1403,11 @@ func (s *scriptEngine)PrintSymbol()(ok bool){//col:1832
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)ToSymbol()(ok bool){//col:1902
@@ -1350,6 +1470,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)NewSymbolBuffer()(ok bool){//col:1920
 
 
@@ -1365,6 +1490,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)RemoveSymbolBuffer()(ok bool){//col:1934
 
 
@@ -1374,6 +1504,11 @@ func (s *scriptEngine)RemoveSymbolBuffer()(ok bool){//col:1934
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)PushSymbol()(ok bool){//col:2041
@@ -1421,6 +1556,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)PrintSymbolBuffer()(ok bool){//col:2069
 
 
@@ -1445,6 +1585,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)RegisterToInt()(ok bool){//col:2089
 
 
@@ -1459,6 +1604,11 @@ func (s *scriptEngine)RegisterToInt()(ok bool){//col:2089
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)PseudoRegToInt()(ok bool){//col:2109
@@ -1477,6 +1627,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)SemanticRuleToInt()(ok bool){//col:2129
 
 
@@ -1491,6 +1646,11 @@ func (s *scriptEngine)SemanticRuleToInt()(ok bool){//col:2129
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)HandleError()(ok bool){//col:2223
@@ -1551,6 +1711,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)GetGlobalIdentifierVal()(ok bool){//col:2245
 
 
@@ -1567,6 +1732,11 @@ func (s *scriptEngine)GetGlobalIdentifierVal()(ok bool){//col:2245
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)GetLocalIdentifierVal()(ok bool){//col:2267
@@ -1587,6 +1757,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)NewGlobalIdentifier()(ok bool){//col:2282
 
 
@@ -1598,6 +1773,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scriptEngine)NewLocalIdentifier()(ok bool){//col:2297
 
 
@@ -1607,6 +1787,11 @@ func (s *scriptEngine)NewLocalIdentifier()(ok bool){//col:2297
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)LalrGetRhsSize()(ok bool){//col:2319
@@ -1625,6 +1810,11 @@ func (s *scriptEngine)LalrGetRhsSize()(ok bool){//col:2319
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scriptEngine)LalrIsOperandType()(ok bool){//col:2377
@@ -1678,6 +1868,11 @@ func (s *scriptEngine)LalrIsOperandType()(ok bool){//col:2377
 
 return true
 }
+
+
+
+
+
 
 
 

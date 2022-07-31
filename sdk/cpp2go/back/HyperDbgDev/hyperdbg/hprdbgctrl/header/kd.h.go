@@ -11,6 +11,11 @@ Kd interface{
         WaitForSingleObject()(ok bool)//col:63
 }
 
+
+
+
+
+
 )
 
 func NewKd() { return & kd{} }
@@ -46,6 +51,11 @@ func (k *kd)        WaitForSingleObject()(ok bool){//col:63
 
 return true
 }
+
+
+
+
+
 
 
 

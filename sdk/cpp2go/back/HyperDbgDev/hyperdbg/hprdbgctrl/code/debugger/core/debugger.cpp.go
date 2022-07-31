@@ -18,6 +18,11 @@ FreeEventsAndActionsMemory()(ok bool)//col:2064
 InterpretGeneralEventAndActionsFields()(ok bool)//col:3014
 }
 
+
+
+
+
+
 )
 
 func NewDebugger() { return & debugger{} }
@@ -302,6 +307,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerGetNtoskrnlBase()(ok bool){//col:409
 
 
@@ -327,6 +337,11 @@ func (d *debugger)DebuggerGetNtoskrnlBase()(ok bool){//col:409
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerPauseDebuggee()(ok bool){//col:460
@@ -355,6 +370,11 @@ func (d *debugger)DebuggerPauseDebuggee()(ok bool){//col:460
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)IsConnectedToAnyInstanceOfDebuggerOrDebuggee()(ok bool){//col:512
@@ -402,6 +422,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)IsTagExist()(ok bool){//col:552
 
 
@@ -426,6 +451,11 @@ func (d *debugger)IsTagExist()(ok bool){//col:552
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)InterpretScript()(ok bool){//col:1039
@@ -647,6 +677,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)InterpretConditionsAndCodes()(ok bool){//col:1418
 
 
@@ -846,6 +881,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)InterpretOutput()(ok bool){//col:1694
 
 
@@ -991,6 +1031,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)SendEventToKernel()(ok bool){//col:1811
 
 
@@ -1043,6 +1088,11 @@ func (d *debugger)SendEventToKernel()(ok bool){//col:1811
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)RegisterActionToEvent()(ok bool){//col:2014
@@ -1124,6 +1174,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)GetNewDebuggerEventTag()(ok bool){//col:2027
 
 
@@ -1131,6 +1186,11 @@ func (d *debugger)GetNewDebuggerEventTag()(ok bool){//col:2027
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)FreeEventsAndActionsMemory()(ok bool){//col:2064
@@ -1162,6 +1222,11 @@ func (d *debugger)FreeEventsAndActionsMemory()(ok bool){//col:2064
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)InterpretGeneralEventAndActionsFields()(ok bool){//col:3014
@@ -1637,6 +1702,11 @@ func (d *debugger)InterpretGeneralEventAndActionsFields()(ok bool){//col:3014
 
 return true
 }
+
+
+
+
+
 
 
 

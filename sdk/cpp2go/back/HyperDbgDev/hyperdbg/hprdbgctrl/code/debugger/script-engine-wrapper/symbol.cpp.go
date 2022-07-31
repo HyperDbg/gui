@@ -18,6 +18,11 @@ SymbolBuildAndUpdateSymbolTable()(ok bool)//col:986
 SymbolReloadSymbolTableInDebuggerMode()(ok bool)//col:1015
 }
 
+
+
+
+
+
 )
 
 func NewSymbol() { return & symbol{} }
@@ -32,6 +37,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *symbol)SymbolLocalReload()(ok bool){//col:61
 
 
@@ -43,6 +53,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *symbol)SymbolPrepareDebuggerWithSymbolInfo()(ok bool){//col:78
 
 
@@ -50,6 +65,11 @@ func (s *symbol)SymbolPrepareDebuggerWithSymbolInfo()(ok bool){//col:78
 
 return true
 }
+
+
+
+
+
 
 
 func (s *symbol)SymbolCreateDisassemblerMapCallback()(ok bool){//col:134
@@ -80,6 +100,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *symbol)SymbolCreateDisassemblerSymbolMap()(ok bool){//col:156
 
 
@@ -89,6 +114,11 @@ func (s *symbol)SymbolCreateDisassemblerSymbolMap()(ok bool){//col:156
 
 return true
 }
+
+
+
+
+
 
 
 func (s *symbol)SymbolShowFunctionNameBasedOnAddress()(ok bool){//col:259
@@ -153,6 +183,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *symbol)SymbolBuildAndShowSymbolTable()(ok bool){//col:292
 
 
@@ -175,6 +210,11 @@ func (s *symbol)SymbolBuildAndShowSymbolTable()(ok bool){//col:292
 
 return true
 }
+
+
+
+
+
 
 
 func (s *symbol)SymbolLoadOrDownloadSymbols()(ok bool){//col:352
@@ -204,6 +244,11 @@ func (s *symbol)SymbolLoadOrDownloadSymbols()(ok bool){//col:352
 
 return true
 }
+
+
+
+
+
 
 
 func (s *symbol)SymbolConvertNameOrExprToAddress()(ok bool){//col:430
@@ -247,6 +292,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *symbol)SymbolDeleteSymTable()(ok bool){//col:454
 
 
@@ -265,6 +315,11 @@ func (s *symbol)SymbolDeleteSymTable()(ok bool){//col:454
 
 return true
 }
+
+
+
+
+
 
 
 func (s *symbol)SymbolBuildSymbolTable()(ok bool){//col:918
@@ -494,6 +549,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *symbol)SymbolBuildAndUpdateSymbolTable()(ok bool){//col:986
 
 
@@ -523,6 +583,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *symbol)SymbolReloadSymbolTableInDebuggerMode()(ok bool){//col:1015
 
 
@@ -539,6 +604,11 @@ func (s *symbol)SymbolReloadSymbolTableInDebuggerMode()(ok bool){//col:1015
 
 return true
 }
+
+
+
+
+
 
 
 

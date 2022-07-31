@@ -26,6 +26,11 @@ static void GenerateTestData()(ok bool)//col:454
 int main()(ok bool)//col:586
 }
 
+
+
+
+
+
 )
 
 func NewZydisPerfTest() { return & zydisPerfTest{} }
@@ -74,6 +79,11 @@ return true
 }
 
 
+
+
+
+
+
 func (z *zydisPerfTest)static double GetCounter()(ok bool){//col:127
 
 
@@ -83,6 +93,11 @@ func (z *zydisPerfTest)static double GetCounter()(ok bool){//col:127
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPerfTest)#elif defined()(ok bool){//col:138
@@ -95,6 +110,11 @@ func (z *zydisPerfTest)#elif defined()(ok bool){//col:138
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPerfTest)static double GetCounter()(ok bool){//col:151
@@ -111,6 +131,11 @@ return true
 }
 
 
+
+
+
+
+
 func (z *zydisPerfTest)#elif defined()(ok bool){//col:161
 
 
@@ -120,6 +145,11 @@ func (z *zydisPerfTest)#elif defined()(ok bool){//col:161
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPerfTest)static double GetCounter()(ok bool){//col:171
@@ -132,6 +162,11 @@ func (z *zydisPerfTest)static double GetCounter()(ok bool){//col:171
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPerfTest)static void AdjustProcessAndThreadPriority()(ok bool){//col:224
@@ -175,6 +210,11 @@ func (z *zydisPerfTest)static void AdjustProcessAndThreadPriority()(ok bool){//c
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPerfTest)static ZyanU64 ProcessBuffer()(ok bool){//col:295
@@ -237,6 +277,11 @@ return true
 }
 
 
+
+
+
+
+
 func (z *zydisPerfTest)static void TestPerformance()(ok bool){//col:363
 
 
@@ -291,6 +336,11 @@ func (z *zydisPerfTest)static void TestPerformance()(ok bool){//col:363
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPerfTest)static void GenerateTestData()(ok bool){//col:454
@@ -382,6 +432,11 @@ func (z *zydisPerfTest)static void GenerateTestData()(ok bool){//col:454
 
 return true
 }
+
+
+
+
+
 
 
 func (z *zydisPerfTest)int main()(ok bool){//col:586
@@ -496,6 +551,11 @@ func (z *zydisPerfTest)int main()(ok bool){//col:586
 
 return true
 }
+
+
+
+
+
 
 
 

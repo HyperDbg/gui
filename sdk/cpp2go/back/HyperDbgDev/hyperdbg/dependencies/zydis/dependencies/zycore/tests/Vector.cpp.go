@@ -22,6 +22,11 @@ TEST_P()(ok bool)//col:498
 INSTANTIATE_TEST_SUITE_P()(ok bool)//col:517
 }
 
+
+
+
+
+
 )
 
 func NewVector() { return & vector{} }
@@ -51,6 +56,11 @@ return true
 }
 
 
+
+
+
+
+
 func (v *vector)    void SetUp()(ok bool){//col:104
 
 
@@ -69,6 +79,11 @@ return true
 }
 
 
+
+
+
+
+
 func (v *vector)static ZyanStatus InitZyanU64()(ok bool){//col:123
 
 
@@ -79,6 +94,11 @@ return true
 }
 
 
+
+
+
+
+
 func (v *vector)static ZyanStatus FreeZyanU16()(ok bool){//col:137
 
 
@@ -87,6 +107,11 @@ func (v *vector)static ZyanStatus FreeZyanU16()(ok bool){//col:137
 
 return true
 }
+
+
+
+
+
 
 
 func (v *vector)TEST()(ok bool){//col:164
@@ -110,6 +135,11 @@ func (v *vector)TEST()(ok bool){//col:164
 
 return true
 }
+
+
+
+
+
 
 
 func (v *vector)TEST()(ok bool){//col:189
@@ -137,6 +167,11 @@ return true
 }
 
 
+
+
+
+
+
 func (v *vector)TEST()(ok bool){//col:210
 
 
@@ -158,6 +193,11 @@ func (v *vector)TEST()(ok bool){//col:210
 
 return true
 }
+
+
+
+
+
 
 
 func (v *vector)TEST()(ok bool){//col:255
@@ -202,6 +242,11 @@ return true
 }
 
 
+
+
+
+
+
 func (v *vector)TEST_P()(ok bool){//col:286
 
 
@@ -232,6 +277,11 @@ return true
 }
 
 
+
+
+
+
+
 func (v *vector)TEST_P()(ok bool){//col:311
 
 
@@ -257,6 +307,11 @@ func (v *vector)TEST_P()(ok bool){//col:311
 
 return true
 }
+
+
+
+
+
 
 
 func (v *vector)TEST_P()(ok bool){//col:353
@@ -300,6 +355,11 @@ return true
 }
 
 
+
+
+
+
+
 func (v *vector)TEST_P()(ok bool){//col:383
 
 
@@ -330,6 +390,11 @@ return true
 }
 
 
+
+
+
+
+
 func (v *vector)TEST_P()(ok bool){//col:409
 
 
@@ -354,6 +419,11 @@ func (v *vector)TEST_P()(ok bool){//col:409
 
 return true
 }
+
+
+
+
+
 
 
 func (v *vector)TEST_P()(ok bool){//col:444
@@ -390,6 +460,11 @@ return true
 }
 
 
+
+
+
+
+
 func (v *vector)TEST_P()(ok bool){//col:468
 
 
@@ -412,6 +487,11 @@ func (v *vector)TEST_P()(ok bool){//col:468
 
 return true
 }
+
+
+
+
+
 
 
 func (v *vector)TEST_P()(ok bool){//col:498
@@ -439,6 +519,11 @@ return true
 }
 
 
+
+
+
+
+
 func (v *vector)INSTANTIATE_TEST_SUITE_P()(ok bool){//col:517
 
 
@@ -451,6 +536,11 @@ func (v *vector)INSTANTIATE_TEST_SUITE_P()(ok bool){//col:517
 
 return true
 }
+
+
+
+
+
 
 
 

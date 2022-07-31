@@ -117,6 +117,11 @@ LdrFindResource_U()(ok bool)//col:756
 #if ()(ok bool)//col:918
 }
 
+
+
+
+
+
 )
 
 func NewNtldr() { return & ntldr{} }
@@ -135,6 +140,11 @@ func (n *ntldr)#if ()(ok bool){//col:30
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntldr)LdrLoadDll()(ok bool){//col:471
@@ -343,6 +353,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntldr)#if ()(ok bool){//col:528
 
 
@@ -375,6 +390,11 @@ func (n *ntldr)#if ()(ok bool){//col:528
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntldr)typedef VOID ()(ok bool){//col:588
@@ -417,6 +437,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntldr)LdrGetFailureData()(ok bool){//col:602
 
 
@@ -427,6 +452,11 @@ func (n *ntldr)LdrGetFailureData()(ok bool){//col:602
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntldr)#if ()(ok bool){//col:702
@@ -487,6 +517,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntldr)LdrFindResource_U()(ok bool){//col:756
 
 
@@ -531,6 +566,11 @@ func (n *ntldr)LdrFindResource_U()(ok bool){//col:756
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntldr)    ()(ok bool){//col:819
@@ -586,6 +626,11 @@ func (n *ntldr)    ()(ok bool){//col:819
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntldr)#if ()(ok bool){//col:918
@@ -664,6 +709,11 @@ func (n *ntldr)#if ()(ok bool){//col:918
 
 return true
 }
+
+
+
+
+
 
 
 

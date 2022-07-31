@@ -29,6 +29,11 @@ ExtensionCommandIoBitmapChangeAllCores()(ok bool)//col:599
 ExtensionCommandIoBitmapResetAllCores()(ok bool)//col:613
 }
 
+
+
+
+
+
 )
 
 func NewExtensionCommands() { return & extensionCommands{} }
@@ -109,6 +114,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandPte()(ok bool){//col:286
 
 
@@ -178,6 +188,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandChangeAllMsrBitmapReadAllCores()(ok bool){//col:302
 
 
@@ -185,6 +200,11 @@ func (e *extensionCommands)ExtensionCommandChangeAllMsrBitmapReadAllCores()(ok b
 
 return true
 }
+
+
+
+
+
 
 
 func (e *extensionCommands)ExtensionCommandResetChangeAllMsrBitmapReadAllCores()(ok bool){//col:316
@@ -196,6 +216,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandChangeAllMsrBitmapWriteAllCores()(ok bool){//col:331
 
 
@@ -203,6 +228,11 @@ func (e *extensionCommands)ExtensionCommandChangeAllMsrBitmapWriteAllCores()(ok 
 
 return true
 }
+
+
+
+
+
 
 
 func (e *extensionCommands)ExtensionCommandResetAllMsrBitmapWriteAllCores()(ok bool){//col:345
@@ -214,6 +244,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandEnableRdtscExitingAllCores()(ok bool){//col:360
 
 
@@ -221,6 +256,11 @@ func (e *extensionCommands)ExtensionCommandEnableRdtscExitingAllCores()(ok bool)
 
 return true
 }
+
+
+
+
+
 
 
 func (e *extensionCommands)ExtensionCommandDisableRdtscExitingAllCores()(ok bool){//col:374
@@ -232,6 +272,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandDisableRdtscExitingForClearingEventsAllCores()(ok bool){//col:388
 
 
@@ -239,6 +284,11 @@ func (e *extensionCommands)ExtensionCommandDisableRdtscExitingForClearingEventsA
 
 return true
 }
+
+
+
+
+
 
 
 func (e *extensionCommands)ExtensionCommandDisableMov2ControlRegsExitingForClearingEventsAllCores()(ok bool){//col:403
@@ -250,6 +300,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandDisableMov2DebugRegsExitingForClearingEventsAllCores()(ok bool){//col:417
 
 
@@ -257,6 +312,11 @@ func (e *extensionCommands)ExtensionCommandDisableMov2DebugRegsExitingForClearin
 
 return true
 }
+
+
+
+
+
 
 
 func (e *extensionCommands)ExtensionCommandEnableRdpmcExitingAllCores()(ok bool){//col:432
@@ -268,6 +328,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandDisableRdpmcExitingAllCores()(ok bool){//col:446
 
 
@@ -275,6 +340,11 @@ func (e *extensionCommands)ExtensionCommandDisableRdpmcExitingAllCores()(ok bool
 
 return true
 }
+
+
+
+
+
 
 
 func (e *extensionCommands)ExtensionCommandSetExceptionBitmapAllCores()(ok bool){//col:463
@@ -286,6 +356,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandUnsetExceptionBitmapAllCores()(ok bool){//col:480
 
 
@@ -293,6 +368,11 @@ func (e *extensionCommands)ExtensionCommandUnsetExceptionBitmapAllCores()(ok boo
 
 return true
 }
+
+
+
+
+
 
 
 func (e *extensionCommands)ExtensionCommandResetExceptionBitmapAllCores()(ok bool){//col:494
@@ -304,6 +384,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandEnableMovControlRegisterExitingAllCores()(ok bool){//col:510
 
 
@@ -311,6 +396,11 @@ func (e *extensionCommands)ExtensionCommandEnableMovControlRegisterExitingAllCor
 
 return true
 }
+
+
+
+
+
 
 
 func (e *extensionCommands)ExtensionCommandDisableMovToControlRegistersExitingAllCores()(ok bool){//col:525
@@ -322,6 +412,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandEnableMovDebugRegistersExitingAllCores()(ok bool){//col:541
 
 
@@ -329,6 +424,11 @@ func (e *extensionCommands)ExtensionCommandEnableMovDebugRegistersExitingAllCore
 
 return true
 }
+
+
+
+
+
 
 
 func (e *extensionCommands)ExtensionCommandDisableMovDebugRegistersExitingAllCores()(ok bool){//col:555
@@ -340,6 +440,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandSetExternalInterruptExitingAllCores()(ok bool){//col:570
 
 
@@ -347,6 +452,11 @@ func (e *extensionCommands)ExtensionCommandSetExternalInterruptExitingAllCores()
 
 return true
 }
+
+
+
+
+
 
 
 func (e *extensionCommands)ExtensionCommandUnsetExternalInterruptExitingOnlyOnClearingInterruptEventsAllCores()(ok bool){//col:584
@@ -358,6 +468,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandIoBitmapChangeAllCores()(ok bool){//col:599
 
 
@@ -367,6 +482,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *extensionCommands)ExtensionCommandIoBitmapResetAllCores()(ok bool){//col:613
 
 
@@ -374,6 +494,11 @@ func (e *extensionCommands)ExtensionCommandIoBitmapResetAllCores()(ok bool){//co
 
 return true
 }
+
+
+
+
+
 
 
 

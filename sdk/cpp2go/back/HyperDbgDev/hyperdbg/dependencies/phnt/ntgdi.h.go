@@ -81,6 +81,11 @@ Ntgdi interface{
     ()(ok bool)//col:125
 }
 
+
+
+
+
+
 )
 
 func NewNtgdi() { return & ntgdi{} }
@@ -129,6 +134,11 @@ func (n *ntgdi)    ()(ok bool){//col:125
 
 return true
 }
+
+
+
+
+
 
 
 

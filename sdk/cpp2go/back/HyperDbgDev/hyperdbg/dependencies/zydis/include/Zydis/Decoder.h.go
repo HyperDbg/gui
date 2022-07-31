@@ -27,6 +27,11 @@ Decoder interface{
 ZYDIS_EXPORT ZyanStatus ZydisDecoderInit()(ok bool)//col:231
 }
 
+
+
+
+
+
 )
 
 func NewDecoder() { return & decoder{} }
@@ -36,6 +41,11 @@ func (d *decoder)    ZYDIS_DECODER_MODE_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()
 
 return true
 }
+
+
+
+
+
 
 
 func (d *decoder)ZYDIS_EXPORT ZyanStatus ZydisDecoderInit()(ok bool){//col:231
@@ -49,6 +59,11 @@ func (d *decoder)ZYDIS_EXPORT ZyanStatus ZydisDecoderInit()(ok bool){//col:231
 
 return true
 }
+
+
+
+
+
 
 
 

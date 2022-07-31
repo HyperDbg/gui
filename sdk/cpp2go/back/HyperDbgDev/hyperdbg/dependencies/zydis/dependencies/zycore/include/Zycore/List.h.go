@@ -13,6 +13,11 @@ List interface{
     ()(ok bool)//col:571
 }
 
+
+
+
+
+
 )
 
 func NewList() { return & list{} }
@@ -67,6 +72,11 @@ func (l *list)    ()(ok bool){//col:571
 
 return true
 }
+
+
+
+
+
 
 
 

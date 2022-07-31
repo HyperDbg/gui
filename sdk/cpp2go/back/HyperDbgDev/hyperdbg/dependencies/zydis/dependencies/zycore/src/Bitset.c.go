@@ -48,6 +48,11 @@ ZyanStatus ZyanBitsetAny()(ok bool)//col:633
 ZyanStatus ZyanBitsetNone()(ok bool)//col:666
 }
 
+
+
+
+
+
 )
 
 func NewBitset() { return & bitset{} }
@@ -72,6 +77,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)static ZyanStatus ZyanBitsetOperationAND()(ok bool){//col:109
 
 
@@ -80,6 +90,11 @@ func (b *bitset)static ZyanStatus ZyanBitsetOperationAND()(ok bool){//col:109
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)static ZyanStatus ZyanBitsetOperationOR ()(ok bool){//col:116
@@ -92,6 +107,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)static ZyanStatus ZyanBitsetOperationXOR()(ok bool){//col:123
 
 
@@ -102,6 +122,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetInit()(ok bool){//col:142
 
 
@@ -110,6 +135,11 @@ func (b *bitset)ZyanStatus ZyanBitsetInit()(ok bool){//col:142
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetInitEx()(ok bool){//col:163
@@ -129,6 +159,11 @@ func (b *bitset)ZyanStatus ZyanBitsetInitEx()(ok bool){//col:163
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetInitBuffer()(ok bool){//col:186
@@ -154,6 +189,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetDestroy()(ok bool){//col:197
 
 
@@ -165,6 +205,11 @@ func (b *bitset)ZyanStatus ZyanBitsetDestroy()(ok bool){//col:197
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetPerformByteOperation()(ok bool){//col:232
@@ -196,6 +241,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetAND()(ok bool){//col:238
 
 
@@ -203,6 +253,11 @@ func (b *bitset)ZyanStatus ZyanBitsetAND()(ok bool){//col:238
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetOR ()(ok bool){//col:244
@@ -214,6 +269,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetXOR()(ok bool){//col:250
 
 
@@ -221,6 +281,11 @@ func (b *bitset)ZyanStatus ZyanBitsetXOR()(ok bool){//col:250
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetFlip()(ok bool){//col:270
@@ -244,6 +309,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetSet()(ok bool){//col:294
 
 
@@ -262,6 +332,11 @@ func (b *bitset)ZyanStatus ZyanBitsetSet()(ok bool){//col:294
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetReset()(ok bool){//col:313
@@ -284,6 +359,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetAssign()(ok bool){//col:323
 
 
@@ -295,6 +375,11 @@ func (b *bitset)ZyanStatus ZyanBitsetAssign()(ok bool){//col:323
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetToggle()(ok bool){//col:342
@@ -315,6 +400,11 @@ func (b *bitset)ZyanStatus ZyanBitsetToggle()(ok bool){//col:342
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetTest()(ok bool){//col:363
@@ -340,6 +430,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetTestMSB()(ok bool){//col:374
 
 
@@ -353,6 +448,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetTestLSB()(ok bool){//col:380
 
 
@@ -360,6 +460,11 @@ func (b *bitset)ZyanStatus ZyanBitsetTestLSB()(ok bool){//col:380
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetSetAll()(ok bool){//col:402
@@ -383,6 +488,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetResetAll()(ok bool){//col:422
 
 
@@ -404,6 +514,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetPush()(ok bool){//col:443
 
 
@@ -420,6 +535,11 @@ func (b *bitset)ZyanStatus ZyanBitsetPush()(ok bool){//col:443
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetPop()(ok bool){//col:459
@@ -439,6 +559,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetClear()(ok bool){//col:471
 
 
@@ -453,6 +578,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetReserve()(ok bool){//col:481
 
 
@@ -462,6 +592,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetShrinkToFit()(ok bool){//col:487
 
 
@@ -469,6 +604,11 @@ func (b *bitset)ZyanStatus ZyanBitsetShrinkToFit()(ok bool){//col:487
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetGetSize()(ok bool){//col:504
@@ -485,6 +625,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetGetCapacity()(ok bool){//col:513
 
 
@@ -494,6 +639,11 @@ func (b *bitset)ZyanStatus ZyanBitsetGetCapacity()(ok bool){//col:513
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetGetSizeBytes()(ok bool){//col:524
@@ -509,6 +659,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetGetCapacityBytes()(ok bool){//col:535
 
 
@@ -520,6 +675,11 @@ func (b *bitset)ZyanStatus ZyanBitsetGetCapacityBytes()(ok bool){//col:535
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetCount()(ok bool){//col:567
@@ -547,6 +707,11 @@ func (b *bitset)ZyanStatus ZyanBitsetCount()(ok bool){//col:567
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bitset)ZyanStatus ZyanBitsetAll()(ok bool){//col:600
@@ -583,6 +748,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetAny()(ok bool){//col:633
 
 
@@ -617,6 +787,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bitset)ZyanStatus ZyanBitsetNone()(ok bool){//col:666
 
 
@@ -649,6 +824,11 @@ func (b *bitset)ZyanStatus ZyanBitsetNone()(ok bool){//col:666
 
 return true
 }
+
+
+
+
+
 
 
 

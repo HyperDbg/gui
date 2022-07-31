@@ -37,6 +37,11 @@ MemoryMapperMapPhysicalAddressToPte()(ok bool)//col:1440
 MemoryMapperSetSupervisorBitWithoutSwitchingByCr3()(ok bool)//col:1478
 }
 
+
+
+
+
+
 )
 
 func NewMemoryMapper() { return & memoryMapper{} }
@@ -52,6 +57,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperGetOffset()(ok bool){//col:49
 
 
@@ -60,6 +70,11 @@ func (m *memoryMapper)MemoryMapperGetOffset()(ok bool){//col:49
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperGetPteVa()(ok bool){//col:74
@@ -71,6 +86,11 @@ func (m *memoryMapper)MemoryMapperGetPteVa()(ok bool){//col:74
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperGetPteVaByCr3()(ok bool){//col:117
@@ -85,6 +105,11 @@ func (m *memoryMapper)MemoryMapperGetPteVaByCr3()(ok bool){//col:117
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperGetPteVaWithoutSwitchingByCr3()(ok bool){//col:226
@@ -145,6 +170,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperCheckIfPageIsPresentByCr3()(ok bool){//col:256
 
 
@@ -163,6 +193,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperCheckIfPageIsNxBitSetByCr3()(ok bool){//col:285
 
 
@@ -179,6 +214,11 @@ func (m *memoryMapper)MemoryMapperCheckIfPageIsNxBitSetByCr3()(ok bool){//col:28
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperCheckIfPageIsNxBitSetOnTargetProcess()(ok bool){//col:336
@@ -206,6 +246,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperMapReservedPageRange()(ok bool){//col:354
 
 
@@ -213,6 +258,11 @@ func (m *memoryMapper)MemoryMapperMapReservedPageRange()(ok bool){//col:354
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperUnmapReservedPageRange()(ok bool){//col:369
@@ -224,6 +274,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperGetPte()(ok bool){//col:383
 
 
@@ -233,6 +288,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperGetPteByCr3()(ok bool){//col:399
 
 
@@ -240,6 +300,11 @@ func (m *memoryMapper)MemoryMapperGetPteByCr3()(ok bool){//col:399
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperMapPageAndGetPte()(ok bool){//col:429
@@ -254,6 +319,11 @@ func (m *memoryMapper)MemoryMapperMapPageAndGetPte()(ok bool){//col:429
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperInitialize()(ok bool){//col:456
@@ -273,6 +343,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperUninitialize()(ok bool){//col:484
 
 
@@ -289,6 +364,11 @@ func (m *memoryMapper)MemoryMapperUninitialize()(ok bool){//col:484
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperReadMemorySafeByPte()(ok bool){//col:572
@@ -322,6 +402,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperWriteMemorySafeByPte()(ok bool){//col:657
 
 
@@ -353,6 +438,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperReadMemorySafeByPhysicalAddressWrapperAddressMaker()(ok bool){//col:697
 
 
@@ -375,6 +465,11 @@ func (m *memoryMapper)MemoryMapperReadMemorySafeByPhysicalAddressWrapperAddressM
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperReadMemorySafeByPhysicalAddressWrapper()(ok bool){//col:807
@@ -439,6 +534,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperReadMemorySafeByPhysicalAddress()(ok bool){//col:832
 
 
@@ -453,6 +553,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperReadMemorySafe()(ok bool){//col:852
 
 
@@ -463,6 +568,11 @@ func (m *memoryMapper)MemoryMapperReadMemorySafe()(ok bool){//col:852
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperReadMemorySafeOnTargetProcess()(ok bool){//col:898
@@ -482,6 +592,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperWriteMemorySafeOnTargetProcess()(ok bool){//col:944
 
 
@@ -497,6 +612,11 @@ func (m *memoryMapper)MemoryMapperWriteMemorySafeOnTargetProcess()(ok bool){//co
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperWriteMemorySafeWrapperAddressMaker()(ok bool){//col:1008
@@ -539,6 +659,11 @@ func (m *memoryMapper)MemoryMapperWriteMemorySafeWrapperAddressMaker()(ok bool){
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperWriteMemorySafeWrapper()(ok bool){//col:1118
@@ -608,6 +733,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperWriteMemorySafe()(ok bool){//col:1146
 
 
@@ -625,6 +755,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperWriteMemoryUnsafe()(ok bool){//col:1171
 
 
@@ -637,6 +772,11 @@ func (m *memoryMapper)MemoryMapperWriteMemoryUnsafe()(ok bool){//col:1171
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperWriteMemorySafeByPhysicalAddress()(ok bool){//col:1198
@@ -653,6 +793,11 @@ func (m *memoryMapper)MemoryMapperWriteMemorySafeByPhysicalAddress()(ok bool){//
 
 return true
 }
+
+
+
+
+
 
 
 func (m *memoryMapper)MemoryMapperReserveUsermodeAddressInTargetProcess()(ok bool){//col:1279
@@ -709,6 +854,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperFreeMemoryInTargetProcess()(ok bool){//col:1357
 
 
@@ -757,6 +907,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperMapPhysicalAddressToPte()(ok bool){//col:1440
 
 
@@ -781,6 +936,11 @@ return true
 }
 
 
+
+
+
+
+
 func (m *memoryMapper)MemoryMapperSetSupervisorBitWithoutSwitchingByCr3()(ok bool){//col:1478
 
 
@@ -802,6 +962,11 @@ func (m *memoryMapper)MemoryMapperSetSupervisorBitWithoutSwitchingByCr3()(ok boo
 
 return true
 }
+
+
+
+
+
 
 
 

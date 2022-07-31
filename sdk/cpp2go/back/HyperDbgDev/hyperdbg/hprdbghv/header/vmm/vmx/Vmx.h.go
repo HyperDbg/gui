@@ -89,6 +89,11 @@ Vmx interface{
     ()(ok bool)//col:173
 }
 
+
+
+
+
+
 )
 
 func NewVmx() { return & vmx{} }
@@ -114,6 +119,11 @@ func (v *vmx)    ()(ok bool){//col:173
 
 return true
 }
+
+
+
+
+
 
 
 

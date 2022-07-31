@@ -49,6 +49,11 @@ C_ASSERT()(ok bool)//col:581
 FORCEINLINE VOID UStrToUStr32()(ok bool)//col:592
 }
 
+
+
+
+
+
 )
 
 func NewNtwow64() { return & ntwow64{} }
@@ -72,12 +77,22 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntwow64)    WOW64_POINTER()(ok bool){//col:64
 
 
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntwow64)    WOW64_POINTER()(ok bool){//col:77
@@ -93,6 +108,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntwow64)    WOW64_POINTER()(ok bool){//col:83
 
 
@@ -101,11 +121,21 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntwow64)    WOW64_POINTER()(ok bool){//col:88
 
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntwow64)    WOW64_POINTER()(ok bool){//col:106
@@ -125,6 +155,11 @@ func (n *ntwow64)    WOW64_POINTER()(ok bool){//col:106
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntwow64)    WOW64_POINTER()(ok bool){//col:183
@@ -194,11 +229,21 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntwow64)    WOW64_POINTER()(ok bool){//col:189
 
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntwow64)    WOW64_POINTER()(ok bool){//col:245
@@ -236,6 +281,11 @@ func (n *ntwow64)    WOW64_POINTER()(ok bool){//col:245
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntwow64)    WOW64_POINTER()(ok bool){//col:390
@@ -345,6 +395,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntwow64)C_ASSERT()(ok bool){//col:407
 
 
@@ -361,6 +416,11 @@ func (n *ntwow64)C_ASSERT()(ok bool){//col:407
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntwow64)    WOW64_POINTER()(ok bool){//col:553
@@ -495,6 +555,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntwow64)C_ASSERT()(ok bool){//col:581
 
 
@@ -524,6 +589,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntwow64)FORCEINLINE VOID UStrToUStr32()(ok bool){//col:592
 
 
@@ -536,6 +606,11 @@ func (n *ntwow64)FORCEINLINE VOID UStrToUStr32()(ok bool){//col:592
 
 return true
 }
+
+
+
+
+
 
 
 

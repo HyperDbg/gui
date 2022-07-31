@@ -7,6 +7,11 @@ func CTL_CODE(deviceType, function, method, access uint32) uint32 {
 }
 
 
+
+
+
+
+
 const (
 	FILE_DEVICE_UNKNOWN = windef.FILE_DEVICE_UNKNOWN
 	METHOD_BUFFERED     = windef.METHOD_BUFFERED
@@ -489,6 +494,11 @@ NtCreateIoCompletion()(ok bool)//col:1855
     ()(ok bool)//col:2335
 }
 
+
+
+
+
+
 )
 
 func NewNtioapi() { return & ntioapi{} }
@@ -587,6 +597,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntioapi)typedef VOID ()(ok bool){//col:189
 
 
@@ -601,6 +616,11 @@ func (n *ntioapi)typedef VOID ()(ok bool){//col:189
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntioapi)#if ()(ok bool){//col:446
@@ -635,6 +655,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntioapi)#if ()(ok bool){//col:501
 
 
@@ -666,6 +691,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntioapi)typedef DECLSPEC_ALIGN()(ok bool){//col:630
 
 
@@ -673,6 +703,11 @@ func (n *ntioapi)typedef DECLSPEC_ALIGN()(ok bool){//col:630
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntioapi)#if ()(ok bool){//col:729
@@ -712,6 +747,11 @@ func (n *ntioapi)#if ()(ok bool){//col:729
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntioapi)NtCreateFile()(ok bool){//col:1668
@@ -1109,6 +1149,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntioapi)#if ()(ok bool){//col:1719
 
 
@@ -1154,6 +1199,11 @@ func (n *ntioapi)#if ()(ok bool){//col:1719
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntioapi)NtCreateIoCompletion()(ok bool){//col:1855
@@ -1272,6 +1322,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntioapi)#if ()(ok bool){//col:1927
 
 
@@ -1327,6 +1382,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntioapi)#if ()(ok bool){//col:2009
 
 
@@ -1365,6 +1425,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntioapi)#if !defined()(ok bool){//col:2096
 
 
@@ -1378,6 +1443,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntioapi)#if !defined()(ok bool){//col:2108
 
 
@@ -1387,6 +1457,11 @@ func (n *ntioapi)#if !defined()(ok bool){//col:2108
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntioapi)#if !defined()(ok bool){//col:2124
@@ -1402,6 +1477,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntioapi)    ()(ok bool){//col:2165
 
 
@@ -1414,6 +1494,11 @@ func (n *ntioapi)    ()(ok bool){//col:2165
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntioapi)    ()(ok bool){//col:2335
@@ -1458,6 +1543,11 @@ func (n *ntioapi)    ()(ok bool){//col:2335
 
 return true
 }
+
+
+
+
+
 
 
 

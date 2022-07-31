@@ -26,6 +26,11 @@ Ept interface{
     DECLSPEC_ALIGN()(ok bool)//col:296
 }
 
+
+
+
+
+
 )
 
 func NewEpt() { return & ept{} }
@@ -42,6 +47,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *ept)    DECLSPEC_ALIGN()(ok bool){//col:207
 
 
@@ -54,6 +64,11 @@ func (e *ept)    DECLSPEC_ALIGN()(ok bool){//col:207
 
 return true
 }
+
+
+
+
+
 
 
 func (e *ept)    DECLSPEC_ALIGN()(ok bool){//col:296
@@ -76,6 +91,11 @@ func (e *ept)    DECLSPEC_ALIGN()(ok bool){//col:296
 
 return true
 }
+
+
+
+
+
 
 
 

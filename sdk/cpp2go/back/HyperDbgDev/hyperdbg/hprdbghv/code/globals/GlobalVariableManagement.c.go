@@ -9,6 +9,11 @@ GlobalEventsAllocateZeroedMemory()(ok bool)//col:80
 GlobalEventsFreeMemory()(ok bool)//col:93
 }
 
+
+
+
+
+
 )
 
 func NewGlobalVariableManagement() { return & globalVariableManagement{} }
@@ -31,6 +36,11 @@ return true
 }
 
 
+
+
+
+
+
 func (g *globalVariableManagement)VOID GlobalGuestStateFreeMemory()(ok bool){//col:57
 
 
@@ -38,6 +48,11 @@ func (g *globalVariableManagement)VOID GlobalGuestStateFreeMemory()(ok bool){//c
 
 return true
 }
+
+
+
+
+
 
 
 func (g *globalVariableManagement)GlobalEventsAllocateZeroedMemory()(ok bool){//col:80
@@ -57,6 +72,11 @@ return true
 }
 
 
+
+
+
+
+
 func (g *globalVariableManagement)GlobalEventsFreeMemory()(ok bool){//col:93
 
 
@@ -69,6 +89,11 @@ func (g *globalVariableManagement)GlobalEventsFreeMemory()(ok bool){//col:93
 
 return true
 }
+
+
+
+
+
 
 
 

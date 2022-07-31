@@ -8,6 +8,11 @@ StringReplace()(ok bool)//col:31
 ConvertToString()(ok bool)//col:40
 }
 
+
+
+
+
+
 )
 
 func NewTools() { return & tools{} }
@@ -23,6 +28,11 @@ return true
 }
 
 
+
+
+
+
+
 func (t *tools)StringReplace()(ok bool){//col:31
 
 
@@ -36,6 +46,11 @@ return true
 }
 
 
+
+
+
+
+
 func (t *tools)ConvertToString()(ok bool){//col:40
 
 
@@ -44,6 +59,11 @@ func (t *tools)ConvertToString()(ok bool){//col:40
 
 return true
 }
+
+
+
+
+
 
 
 

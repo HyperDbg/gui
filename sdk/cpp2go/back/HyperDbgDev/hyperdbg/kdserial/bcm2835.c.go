@@ -22,6 +22,11 @@ Bcm2835PutByte()(ok bool)//col:290
 Bcm2835RxReady()(ok bool)//col:339
 }
 
+
+
+
+
+
 )
 
 func NewBcm2835() { return & bcm2835{} }
@@ -58,6 +63,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bcm2835)Bcm2835SetBaud()(ok bool){//col:165
 
 
@@ -72,6 +82,11 @@ func (b *bcm2835)Bcm2835SetBaud()(ok bool){//col:165
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bcm2835)Bcm2835GetByte()(ok bool){//col:221
@@ -94,6 +109,11 @@ func (b *bcm2835)Bcm2835GetByte()(ok bool){//col:221
 
 return true
 }
+
+
+
+
+
 
 
 func (b *bcm2835)Bcm2835PutByte()(ok bool){//col:290
@@ -131,6 +151,11 @@ return true
 }
 
 
+
+
+
+
+
 func (b *bcm2835)Bcm2835RxReady()(ok bool){//col:339
 
 
@@ -149,6 +174,11 @@ func (b *bcm2835)Bcm2835RxReady()(ok bool){//col:339
 
 return true
 }
+
+
+
+
+
 
 
 

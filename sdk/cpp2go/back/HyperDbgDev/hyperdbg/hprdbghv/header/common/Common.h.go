@@ -136,6 +136,11 @@ SpinlockTryLock()(ok bool)//col:280
 typedef void ()(ok bool)//col:360
 }
 
+
+
+
+
+
 )
 
 func NewCommon() { return & common{} }
@@ -220,6 +225,11 @@ return true
 }
 
 
+
+
+
+
+
 func (c *common)typedef void ()(ok bool){//col:360
 
 
@@ -230,6 +240,11 @@ func (c *common)typedef void ()(ok bool){//col:360
 
 return true
 }
+
+
+
+
+
 
 
 

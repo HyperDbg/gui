@@ -18,6 +18,11 @@ EptHandleMisconfiguration()(ok bool)//col:774
 EptSetPML1AndInvalidateTLB()(ok bool)//col:820
 }
 
+
+
+
+
+
 )
 
 func NewEpt() { return & ept{} }
@@ -58,6 +63,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *ept)EptBuildMtrrMap()(ok bool){//col:133
 
 
@@ -93,6 +103,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *ept)EptGetPml1Entry()(ok bool){//col:195
 
 
@@ -125,6 +140,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *ept)EptGetPml2Entry()(ok bool){//col:225
 
 
@@ -142,6 +162,11 @@ func (e *ept)EptGetPml2Entry()(ok bool){//col:225
 
 return true
 }
+
+
+
+
+
 
 
 func (e *ept)EptSplitLargePage()(ok bool){//col:337
@@ -198,6 +223,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *ept)EptSetupPML2Entry()(ok bool){//col:432
 
 
@@ -232,6 +262,11 @@ func (e *ept)EptSetupPML2Entry()(ok bool){//col:432
 
 return true
 }
+
+
+
+
+
 
 
 func (e *ept)EptAllocateAndCreateIdentityPageTable()(ok bool){//col:550
@@ -281,6 +316,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *ept)EptLogicalProcessorInitialize()(ok bool){//col:607
 
 
@@ -302,6 +342,11 @@ func (e *ept)EptLogicalProcessorInitialize()(ok bool){//col:607
 
 return true
 }
+
+
+
+
+
 
 
 func (e *ept)EptHandlePageHookExit()(ok bool){//col:705
@@ -336,6 +381,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *ept)EptHandleEptViolation()(ok bool){//col:739
 
 
@@ -351,6 +401,11 @@ return true
 }
 
 
+
+
+
+
+
 func (e *ept)EptHandleMonitorTrapFlag()(ok bool){//col:755
 
 
@@ -358,6 +413,11 @@ func (e *ept)EptHandleMonitorTrapFlag()(ok bool){//col:755
 
 return true
 }
+
+
+
+
+
 
 
 func (e *ept)EptHandleMisconfiguration()(ok bool){//col:774
@@ -368,6 +428,11 @@ func (e *ept)EptHandleMisconfiguration()(ok bool){//col:774
 
 return true
 }
+
+
+
+
+
 
 
 func (e *ept)EptSetPML1AndInvalidateTLB()(ok bool){//col:820
@@ -391,6 +456,11 @@ func (e *ept)EptSetPML1AndInvalidateTLB()(ok bool){//col:820
 
 return true
 }
+
+
+
+
+
 
 
 

@@ -7,6 +7,11 @@ CommandProcessHelp()(ok bool)//col:46
 CommandProcess()(ok bool)//col:241
 }
 
+
+
+
+
+
 )
 
 func NewProcess() { return & process{} }
@@ -34,6 +39,11 @@ func (p *process)CommandProcessHelp()(ok bool){//col:46
 
 return true
 }
+
+
+
+
+
 
 
 func (p *process)CommandProcess()(ok bool){//col:241
@@ -173,6 +183,11 @@ func (p *process)CommandProcess()(ok bool){//col:241
 
 return true
 }
+
+
+
+
+
 
 
 

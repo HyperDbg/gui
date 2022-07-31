@@ -9,6 +9,11 @@ func CTL_CODE(deviceType, function, method, access uint32) uint32 {
 }
 
 
+
+
+
+
+
 const (
 	FILE_DEVICE_UNKNOWN = windef.FILE_DEVICE_UNKNOWN
 	METHOD_BUFFERED     = windef.METHOD_BUFFERED

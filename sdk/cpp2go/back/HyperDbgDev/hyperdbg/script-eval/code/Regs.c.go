@@ -7,6 +7,11 @@ GetRegValue()(ok bool)//col:951
 SetRegValue()(ok bool)//col:1975
 }
 
+
+
+
+
+
 )
 
 func NewRegs() { return & regs{} }
@@ -521,6 +526,11 @@ return true
 }
 
 
+
+
+
+
+
 func (r *regs)SetRegValue()(ok bool){//col:1975
 
 
@@ -1002,6 +1012,11 @@ func (r *regs)SetRegValue()(ok bool){//col:1975
 
 return true
 }
+
+
+
+
+
 
 
 

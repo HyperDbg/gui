@@ -176,6 +176,11 @@ EnumIsaSet interface{
     ZYDIS_ISA_SET_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool)//col:178
 }
 
+
+
+
+
+
 )
 
 func NewEnumIsaSet() { return & enumIsaSet{} }
@@ -185,6 +190,11 @@ func (e *enumIsaSet)    ZYDIS_ISA_SET_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(o
 
 return true
 }
+
+
+
+
+
 
 
 

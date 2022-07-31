@@ -7,6 +7,11 @@ VmxHandleXsetbv()(ok bool)//col:25
 VmxHandleVmxPreemptionTimerVmexit()(ok bool)//col:45
 }
 
+
+
+
+
+
 )
 
 func NewCrossVmexits() { return & crossVmexits{} }
@@ -20,6 +25,11 @@ return true
 }
 
 
+
+
+
+
+
 func (c *crossVmexits)VmxHandleVmxPreemptionTimerVmexit()(ok bool){//col:45
 
 
@@ -29,6 +39,11 @@ func (c *crossVmexits)VmxHandleVmxPreemptionTimerVmexit()(ok bool){//col:45
 
 return true
 }
+
+
+
+
+
 
 
 

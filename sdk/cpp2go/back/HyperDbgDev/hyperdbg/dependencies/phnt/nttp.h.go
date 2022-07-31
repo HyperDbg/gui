@@ -18,6 +18,11 @@ Nttp interface{
 typedef VOID ()(ok bool)//col:447
 }
 
+
+
+
+
+
 )
 
 func NewNttp() { return & nttp{} }
@@ -364,6 +369,11 @@ func (n *nttp)typedef VOID ()(ok bool){//col:447
 
 return true
 }
+
+
+
+
+
 
 
 

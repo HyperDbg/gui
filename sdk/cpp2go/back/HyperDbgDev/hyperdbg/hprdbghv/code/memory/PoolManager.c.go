@@ -14,6 +14,11 @@ PoolManagerCheckAndPerformAllocationAndDeallocation()(ok bool)//col:402
 PoolManagerRequestAllocation()(ok bool)//col:453
 }
 
+
+
+
+
+
 )
 
 func NewPoolManager() { return & poolManager{} }
@@ -33,6 +38,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *poolManager)VOID PlmgrFreeRequestNewAllocation()(ok bool){//col:41
 
 
@@ -40,6 +50,11 @@ func (p *poolManager)VOID PlmgrFreeRequestNewAllocation()(ok bool){//col:41
 
 return true
 }
+
+
+
+
+
 
 
 func (p *poolManager)PoolManagerInitialize()(ok bool){//col:107
@@ -66,6 +81,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *poolManager)PoolManagerUninitialize()(ok bool){//col:151
 
 
@@ -87,6 +107,11 @@ func (p *poolManager)PoolManagerUninitialize()(ok bool){//col:151
 
 return true
 }
+
+
+
+
+
 
 
 func (p *poolManager)PoolManagerFreePool()(ok bool){//col:196
@@ -115,6 +140,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *poolManager)PoolManagerRequestPool()(ok bool){//col:239
 
 
@@ -137,6 +167,11 @@ func (p *poolManager)PoolManagerRequestPool()(ok bool){//col:239
 
 return true
 }
+
+
+
+
+
 
 
 func (p *poolManager)PoolManagerAllocateAndAddToPoolTable()(ok bool){//col:292
@@ -169,6 +204,11 @@ func (p *poolManager)PoolManagerAllocateAndAddToPoolTable()(ok bool){//col:292
 
 return true
 }
+
+
+
+
+
 
 
 func (p *poolManager)PoolManagerCheckAndPerformAllocationAndDeallocation()(ok bool){//col:402
@@ -224,6 +264,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *poolManager)PoolManagerRequestAllocation()(ok bool){//col:453
 
 
@@ -252,6 +297,11 @@ func (p *poolManager)PoolManagerRequestAllocation()(ok bool){//col:453
 
 return true
 }
+
+
+
+
+
 
 
 

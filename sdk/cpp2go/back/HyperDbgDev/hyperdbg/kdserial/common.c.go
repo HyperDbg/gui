@@ -7,6 +7,11 @@ DllInitialize()(ok bool)//col:15
 DllUnload()(ok bool)//col:22
 }
 
+
+
+
+
+
 )
 
 func NewCommon() { return & common{} }
@@ -21,6 +26,11 @@ return true
 }
 
 
+
+
+
+
+
 func (c *common)DllUnload()(ok bool){//col:22
 
 
@@ -28,6 +38,11 @@ func (c *common)DllUnload()(ok bool){//col:22
 
 return true
 }
+
+
+
+
+
 
 
 

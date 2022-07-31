@@ -28,6 +28,11 @@ FormatterBuffer interface{
 ZYDIS_EXPORT ZyanStatus ZydisFormatterTokenGetValue()(ok bool)//col:303
 }
 
+
+
+
+
+
 )
 
 func NewFormatterBuffer() { return & formatterBuffer{} }
@@ -43,6 +48,11 @@ return true
 }
 
 
+
+
+
+
+
 func (f *formatterBuffer)#pragma pack()(ok bool){//col:183
 
 
@@ -54,6 +64,11 @@ func (f *formatterBuffer)#pragma pack()(ok bool){//col:183
 
 return true
 }
+
+
+
+
+
 
 
 func (f *formatterBuffer)ZYDIS_EXPORT ZyanStatus ZydisFormatterTokenGetValue()(ok bool){//col:303
@@ -74,6 +89,11 @@ func (f *formatterBuffer)ZYDIS_EXPORT ZyanStatus ZydisFormatterTokenGetValue()(o
 
 return true
 }
+
+
+
+
+
 
 
 

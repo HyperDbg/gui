@@ -9,6 +9,11 @@ static void DisassembleBuffer()(ok bool)//col:228
 int main()(ok bool)//col:266
 }
 
+
+
+
+
+
 )
 
 func NewFormatter02() { return & formatter02{} }
@@ -72,6 +77,11 @@ return true
 }
 
 
+
+
+
+
+
 func (f *formatter02)static ZyanStatus ZydisFormatterFormatOperandIMM()(ok bool){//col:186
 
 
@@ -85,6 +95,11 @@ func (f *formatter02)static ZyanStatus ZydisFormatterFormatOperandIMM()(ok bool)
 
 return true
 }
+
+
+
+
+
 
 
 func (f *formatter02)static void DisassembleBuffer()(ok bool){//col:228
@@ -123,6 +138,11 @@ return true
 }
 
 
+
+
+
+
+
 func (f *formatter02)int main()(ok bool){//col:266
 
 
@@ -147,6 +167,11 @@ func (f *formatter02)int main()(ok bool){//col:266
 
 return true
 }
+
+
+
+
+
 
 
 

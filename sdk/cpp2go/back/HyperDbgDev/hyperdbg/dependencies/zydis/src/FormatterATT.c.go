@@ -11,6 +11,11 @@ ZyanStatus ZydisFormatterATTPrintDISP()(ok bool)//col:384
 ZyanStatus ZydisFormatterATTPrintIMM()(ok bool)//col:396
 }
 
+
+
+
+
+
 )
 
 func NewFormatterAtt() { return & formatterAtt{} }
@@ -151,6 +156,11 @@ return true
 }
 
 
+
+
+
+
+
 func (f *formatterAtt)ZyanStatus ZydisFormatterATTFormatOperandMEM()(ok bool){//col:259
 
 
@@ -210,6 +220,11 @@ func (f *formatterAtt)ZyanStatus ZydisFormatterATTFormatOperandMEM()(ok bool){//
 
 return true
 }
+
+
+
+
+
 
 
 func (f *formatterAtt)ZyanStatus ZydisFormatterATTPrintMnemonic()(ok bool){//col:337
@@ -282,6 +297,11 @@ return true
 }
 
 
+
+
+
+
+
 func (f *formatterAtt)ZyanStatus ZydisFormatterATTPrintRegister()(ok bool){//col:357
 
 
@@ -301,6 +321,11 @@ func (f *formatterAtt)ZyanStatus ZydisFormatterATTPrintRegister()(ok bool){//col
 
 return true
 }
+
+
+
+
+
 
 
 func (f *formatterAtt)ZyanStatus ZydisFormatterATTPrintDISP()(ok bool){//col:384
@@ -331,6 +356,11 @@ return true
 }
 
 
+
+
+
+
+
 func (f *formatterAtt)ZyanStatus ZydisFormatterATTPrintIMM()(ok bool){//col:396
 
 
@@ -343,6 +373,11 @@ func (f *formatterAtt)ZyanStatus ZydisFormatterATTPrintIMM()(ok bool){//col:396
 
 return true
 }
+
+
+
+
+
 
 
 

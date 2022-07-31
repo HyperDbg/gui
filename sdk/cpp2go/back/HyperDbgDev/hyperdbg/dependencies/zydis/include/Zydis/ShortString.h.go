@@ -12,6 +12,11 @@ ShortString interface{
 #pragma pack()(ok bool)//col:87
 }
 
+
+
+
+
+
 )
 
 func NewShortString() { return & shortString{} }
@@ -27,6 +32,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *shortString)#pragma pack()(ok bool){//col:87
 
 
@@ -35,6 +45,11 @@ func (s *shortString)#pragma pack()(ok bool){//col:87
 
 return true
 }
+
+
+
+
+
 
 
 

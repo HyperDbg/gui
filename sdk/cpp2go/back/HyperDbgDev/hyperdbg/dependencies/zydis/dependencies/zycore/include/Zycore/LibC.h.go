@@ -72,6 +72,11 @@ ZYAN_INLINE char* ZYAN_STRTOK()(ok bool)//col:510
 ZYAN_INLINE ZyanUSize ZYAN_STRXFRM()(ok bool)//col:521
 }
 
+
+
+
+
+
 )
 
 func NewLibC() { return & libC{} }
@@ -111,6 +116,11 @@ return true
 }
 
 
+
+
+
+
+
 func (l *libC)ZYAN_INLINE int ZYAN_MEMCMP()(ok bool){//col:262
 
 
@@ -129,6 +139,11 @@ return true
 }
 
 
+
+
+
+
+
 func (l *libC)ZYAN_INLINE void* ZYAN_MEMCPY()(ok bool){//col:274
 
 
@@ -142,6 +157,11 @@ func (l *libC)ZYAN_INLINE void* ZYAN_MEMCPY()(ok bool){//col:274
 
 return true
 }
+
+
+
+
+
 
 
 func (l *libC)ZYAN_INLINE void* ZYAN_MEMMOVE()(ok bool){//col:295
@@ -168,6 +188,11 @@ return true
 }
 
 
+
+
+
+
+
 func (l *libC)ZYAN_INLINE void* ZYAN_MEMSET()(ok bool){//col:306
 
 
@@ -180,6 +205,11 @@ func (l *libC)ZYAN_INLINE void* ZYAN_MEMSET()(ok bool){//col:306
 
 return true
 }
+
+
+
+
+
 
 
 func (l *libC)ZYAN_INLINE char* ZYAN_STRCAT()(ok bool){//col:318
@@ -195,6 +225,11 @@ func (l *libC)ZYAN_INLINE char* ZYAN_STRCAT()(ok bool){//col:318
 
 return true
 }
+
+
+
+
+
 
 
 func (l *libC)ZYAN_INLINE char* ZYAN_STRCHR()(ok bool){//col:331
@@ -213,6 +248,11 @@ return true
 }
 
 
+
+
+
+
+
 func (l *libC)ZYAN_INLINE int ZYAN_STRCMP()(ok bool){//col:341
 
 
@@ -226,6 +266,11 @@ return true
 }
 
 
+
+
+
+
+
 func (l *libC)ZYAN_INLINE int ZYAN_STRCOLL()(ok bool){//col:352
 
 
@@ -237,6 +282,11 @@ return true
 }
 
 
+
+
+
+
+
 func (l *libC)ZYAN_INLINE char* ZYAN_STRCPY()(ok bool){//col:360
 
 
@@ -246,6 +296,11 @@ func (l *libC)ZYAN_INLINE char* ZYAN_STRCPY()(ok bool){//col:360
 
 return true
 }
+
+
+
+
+
 
 
 func (l *libC)ZYAN_INLINE ZyanUSize ZYAN_STRCSPN()(ok bool){//col:375
@@ -266,6 +321,11 @@ return true
 }
 
 
+
+
+
+
+
 func (l *libC)ZYAN_INLINE ZyanUSize ZYAN_STRLEN()(ok bool){//col:386
 
 
@@ -278,6 +338,11 @@ func (l *libC)ZYAN_INLINE ZyanUSize ZYAN_STRLEN()(ok bool){//col:386
 
 return true
 }
+
+
+
+
+
 
 
 func (l *libC)ZYAN_INLINE char* ZYAN_STRNCAT()(ok bool){//col:405
@@ -302,6 +367,11 @@ return true
 }
 
 
+
+
+
+
+
 func (l *libC)ZYAN_INLINE int ZYAN_STRNCMP()(ok bool){//col:418
 
 
@@ -316,6 +386,11 @@ func (l *libC)ZYAN_INLINE int ZYAN_STRNCMP()(ok bool){//col:418
 
 return true
 }
+
+
+
+
+
 
 
 func (l *libC)ZYAN_INLINE char* ZYAN_STRNCPY()(ok bool){//col:436
@@ -339,6 +414,11 @@ return true
 }
 
 
+
+
+
+
+
 func (l *libC)ZYAN_INLINE char* ZYAN_STRPBRK()(ok bool){//col:449
 
 
@@ -353,6 +433,11 @@ func (l *libC)ZYAN_INLINE char* ZYAN_STRPBRK()(ok bool){//col:449
 
 return true
 }
+
+
+
+
+
 
 
 func (l *libC)ZYAN_INLINE char* ZYAN_STRRCHR()(ok bool){//col:463
@@ -372,6 +457,11 @@ return true
 }
 
 
+
+
+
+
+
 func (l *libC)ZYAN_INLINE ZyanUSize ZYAN_STRSPN()(ok bool){//col:474
 
 
@@ -384,6 +474,11 @@ func (l *libC)ZYAN_INLINE ZyanUSize ZYAN_STRSPN()(ok bool){//col:474
 
 return true
 }
+
+
+
+
+
 
 
 func (l *libC)ZYAN_INLINE char* ZYAN_STRSTR()(ok bool){//col:488
@@ -401,6 +496,11 @@ func (l *libC)ZYAN_INLINE char* ZYAN_STRSTR()(ok bool){//col:488
 
 return true
 }
+
+
+
+
+
 
 
 func (l *libC)ZYAN_INLINE char* ZYAN_STRTOK()(ok bool){//col:510
@@ -428,6 +528,11 @@ return true
 }
 
 
+
+
+
+
+
 func (l *libC)ZYAN_INLINE ZyanUSize ZYAN_STRXFRM()(ok bool){//col:521
 
 
@@ -440,6 +545,11 @@ func (l *libC)ZYAN_INLINE ZyanUSize ZYAN_STRXFRM()(ok bool){//col:521
 
 return true
 }
+
+
+
+
+
 
 
 

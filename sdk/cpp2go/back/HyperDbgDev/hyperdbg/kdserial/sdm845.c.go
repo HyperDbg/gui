@@ -729,6 +729,11 @@ SDM845PutByte()(ok bool)//col:1364
 SDM845RxReady()(ok bool)//col:1442
 }
 
+
+
+
+
+
 )
 
 func NewSdm845() { return & sdm845{} }
@@ -1556,6 +1561,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *sdm845)SDM845SetBaud()(ok bool){//col:1045
 
 
@@ -1613,6 +1623,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *sdm845)SDM845InitializePort()(ok bool){//col:1095
 
 
@@ -1633,6 +1648,11 @@ func (s *sdm845)SDM845InitializePort()(ok bool){//col:1095
 
 return true
 }
+
+
+
+
+
 
 
 func (s *sdm845)SDM845SetBaud()(ok bool){//col:1186
@@ -1695,6 +1715,11 @@ func (s *sdm845)SDM845SetBaud()(ok bool){//col:1186
 
 return true
 }
+
+
+
+
+
 
 
 func (s *sdm845)SDM845GetByte()(ok bool){//col:1303
@@ -1775,6 +1800,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *sdm845)SDM845PutByte()(ok bool){//col:1364
 
 
@@ -1805,6 +1835,11 @@ func (s *sdm845)SDM845PutByte()(ok bool){//col:1364
 
 return true
 }
+
+
+
+
+
 
 
 func (s *sdm845)SDM845RxReady()(ok bool){//col:1442
@@ -1851,6 +1886,11 @@ func (s *sdm845)SDM845RxReady()(ok bool){//col:1442
 
 return true
 }
+
+
+
+
+
 
 
 

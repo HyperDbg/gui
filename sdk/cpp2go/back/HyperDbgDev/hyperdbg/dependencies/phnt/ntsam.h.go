@@ -372,6 +372,11 @@ typedef NTSTATUS ()(ok bool)//col:1759
 SamValidatePassword()(ok bool)//col:1862
 }
 
+
+
+
+
+
 )
 
 func NewNtsam() { return & ntsam{} }
@@ -383,11 +388,21 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntsam)    _Field_size_bytes_()(ok bool){//col:45
 
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntsam)SamFreeMemory()(ok bool){//col:215
@@ -518,11 +533,21 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntsam)    _Field_size_()(ok bool){//col:412
 
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntsam)SamLookupDomainInSamServer()(ok bool){//col:551
@@ -640,6 +665,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntsam)SamEnumerateGroupsInDomain()(ok bool){//col:717
 
 
@@ -746,6 +776,11 @@ func (n *ntsam)SamEnumerateGroupsInDomain()(ok bool){//col:717
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntsam)SamEnumerateAliasesInDomain()(ok bool){//col:983
@@ -938,6 +973,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntsam)    ()(ok bool){//col:1378
 
 
@@ -1046,6 +1086,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntsam)    UCHAR Buffer[()(ok bool){//col:1392
 
 
@@ -1053,11 +1098,21 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntsam)    UCHAR Buffer[()(ok bool){//col:1409
 
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntsam)SamEnumerateUsersInDomain()(ok bool){//col:1669
@@ -1195,6 +1250,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntsam)typedef NTSTATUS ()(ok bool){//col:1759
 
 
@@ -1239,6 +1299,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntsam)    _Field_size_bytes_()(ok bool){//col:1765
 
 
@@ -1246,11 +1311,21 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntsam)    _Field_size_bytes_()(ok bool){//col:1785
 
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntsam)SamValidatePassword()(ok bool){//col:1862
@@ -1266,6 +1341,11 @@ func (n *ntsam)SamValidatePassword()(ok bool){//col:1862
 
 return true
 }
+
+
+
+
+
 
 
 

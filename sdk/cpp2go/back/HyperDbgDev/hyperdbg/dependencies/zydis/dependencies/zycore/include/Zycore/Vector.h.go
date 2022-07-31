@@ -18,6 +18,11 @@ Vector interface{
     ()(ok bool)//col:720
 }
 
+
+
+
+
+
 )
 
 func NewVector() { return & vector{} }
@@ -113,6 +118,11 @@ func (v *vector)    ()(ok bool){//col:720
 
 return true
 }
+
+
+
+
+
 
 
 

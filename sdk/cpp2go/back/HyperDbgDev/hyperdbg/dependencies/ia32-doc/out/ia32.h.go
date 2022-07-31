@@ -6875,6 +6875,11 @@ Ia32 interface{
 #pragma pack()(ok bool)//col:18224
 }
 
+
+
+
+
+
 )
 
 func NewIa32() { return & ia32{} }
@@ -6954,6 +6959,11 @@ return true
 }
 
 
+
+
+
+
+
 func (i *ia32)#pragma pack()(ok bool){//col:16490
 
 
@@ -6963,6 +6973,11 @@ func (i *ia32)#pragma pack()(ok bool){//col:16490
 
 return true
 }
+
+
+
+
+
 
 
 func (i *ia32)#pragma pack()(ok bool){//col:16510
@@ -6975,6 +6990,11 @@ func (i *ia32)#pragma pack()(ok bool){//col:16510
 
 return true
 }
+
+
+
+
+
 
 
 func (i *ia32)#pragma pack()(ok bool){//col:16649
@@ -7033,6 +7053,11 @@ return true
 }
 
 
+
+
+
+
+
 func (i *ia32)#pragma pack()(ok bool){//col:17519
 
 
@@ -7055,6 +7080,11 @@ func (i *ia32)#pragma pack()(ok bool){//col:17519
 
 return true
 }
+
+
+
+
+
 
 
 func (i *ia32)#pragma pack()(ok bool){//col:18224
@@ -7157,6 +7187,11 @@ func (i *ia32)#pragma pack()(ok bool){//col:18224
 
 return true
 }
+
+
+
+
+
 
 
 

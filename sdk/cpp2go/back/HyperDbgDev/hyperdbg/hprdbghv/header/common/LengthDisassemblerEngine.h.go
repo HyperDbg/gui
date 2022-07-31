@@ -8,6 +8,11 @@ parseModRM()(ok bool)//col:62
 ldisasm()(ok bool)//col:127
 }
 
+
+
+
+
+
 )
 
 func NewLengthDisassemblerEngine() { return & lengthDisassemblerEngine{} }
@@ -28,6 +33,11 @@ return true
 }
 
 
+
+
+
+
+
 func (l *lengthDisassemblerEngine)parseModRM()(ok bool){//col:62
 
 
@@ -45,6 +55,11 @@ func (l *lengthDisassemblerEngine)parseModRM()(ok bool){//col:62
 
 return true
 }
+
+
+
+
+
 
 
 func (l *lengthDisassemblerEngine)ldisasm()(ok bool){//col:127
@@ -91,6 +106,11 @@ func (l *lengthDisassemblerEngine)ldisasm()(ok bool){//col:127
 
 return true
 }
+
+
+
+
+
 
 
 

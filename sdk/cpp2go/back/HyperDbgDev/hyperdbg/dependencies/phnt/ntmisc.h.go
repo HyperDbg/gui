@@ -76,6 +76,11 @@ Ntmisc interface{
 NtVdmControl()(ok bool)//col:104
 }
 
+
+
+
+
+
 )
 
 func NewNtmisc() { return & ntmisc{} }
@@ -137,6 +142,11 @@ func (n *ntmisc)NtVdmControl()(ok bool){//col:104
 
 return true
 }
+
+
+
+
+
 
 
 

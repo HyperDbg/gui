@@ -20,6 +20,11 @@ Uart16550PutByte()(ok bool)//col:745
 Uart16550RxReady()(ok bool)//col:800
 }
 
+
+
+
+
+
 )
 
 func NewUart16550() { return & uart16550{} }
@@ -39,6 +44,11 @@ return true
 }
 
 
+
+
+
+
+
 func (u *uart16550)ReadPortWithIndex8()(ok bool){//col:57
 
 
@@ -50,6 +60,11 @@ func (u *uart16550)ReadPortWithIndex8()(ok bool){//col:57
 
 return true
 }
+
+
+
+
+
 
 
 func (u *uart16550)KdHyperDbgTest()(ok bool){//col:84
@@ -71,6 +86,11 @@ return true
 }
 
 
+
+
+
+
+
 func (u *uart16550)KdHyperDbgPrepareDebuggeeConnectionPort()(ok bool){//col:97
 
 
@@ -85,6 +105,11 @@ return true
 }
 
 
+
+
+
+
+
 func (u *uart16550)KdHyperDbgSendByte()(ok bool){//col:104
 
 
@@ -92,6 +117,11 @@ func (u *uart16550)KdHyperDbgSendByte()(ok bool){//col:104
 
 return true
 }
+
+
+
+
+
 
 
 func (u *uart16550)KdHyperDbgRecvByte()(ok bool){//col:115
@@ -105,6 +135,11 @@ func (u *uart16550)KdHyperDbgRecvByte()(ok bool){//col:115
 
 return true
 }
+
+
+
+
+
 
 
 func (u *uart16550)Uart16550SetBaud()(ok bool){//col:227
@@ -139,6 +174,11 @@ func (u *uart16550)Uart16550SetBaud()(ok bool){//col:227
 
 return true
 }
+
+
+
+
+
 
 
 func (u *uart16550)Uart16550LegacyInitializePort()(ok bool){//col:300
@@ -180,6 +220,11 @@ return true
 }
 
 
+
+
+
+
+
 func (u *uart16550)Uart16550InitializePort()(ok bool){//col:379
 
 
@@ -212,6 +257,11 @@ return true
 }
 
 
+
+
+
+
+
 func (u *uart16550)Uart16550MmInitializePort()(ok bool){//col:427
 
 
@@ -229,6 +279,11 @@ func (u *uart16550)Uart16550MmInitializePort()(ok bool){//col:427
 
 return true
 }
+
+
+
+
+
 
 
 func (u *uart16550)Uart16550SetBaudCommon()(ok bool){//col:506
@@ -260,6 +315,11 @@ return true
 }
 
 
+
+
+
+
+
 func (u *uart16550)Uart16550SetBaud()(ok bool){//col:539
 
 
@@ -273,6 +333,11 @@ func (u *uart16550)Uart16550SetBaud()(ok bool){//col:539
 
 return true
 }
+
+
+
+
+
 
 
 func (u *uart16550)Uart16550GetByte()(ok bool){//col:637
@@ -327,6 +392,11 @@ func (u *uart16550)Uart16550GetByte()(ok bool){//col:637
 
 return true
 }
+
+
+
+
+
 
 
 func (u *uart16550)Uart16550PutByte()(ok bool){//col:745
@@ -385,6 +455,11 @@ return true
 }
 
 
+
+
+
+
+
 func (u *uart16550)Uart16550RxReady()(ok bool){//col:800
 
 
@@ -407,6 +482,11 @@ func (u *uart16550)Uart16550RxReady()(ok bool){//col:800
 
 return true
 }
+
+
+
+
+
 
 
 

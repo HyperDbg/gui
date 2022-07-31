@@ -12,6 +12,11 @@ typedef int ()(ok bool)//col:44
 static_assert()(ok bool)//col:141
 }
 
+
+
+
+
+
 )
 
 func NewDatatypes() { return & datatypes{} }
@@ -28,6 +33,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *datatypes)    sizeof()(ok bool){//col:76
 
 
@@ -35,6 +45,11 @@ func (d *datatypes)    sizeof()(ok bool){//col:76
 
 return true
 }
+
+
+
+
+
 
 
 func (d *datatypes)static_assert()(ok bool){//col:141
@@ -47,6 +62,11 @@ func (d *datatypes)static_assert()(ok bool){//col:141
 
 return true
 }
+
+
+
+
+
 
 
 

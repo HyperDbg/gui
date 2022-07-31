@@ -11,6 +11,11 @@ IsRegister()(ok bool)//col:866
 IsId()(ok bool)//col:880
 }
 
+
+
+
+
+
 )
 
 func NewScanner() { return & scanner{} }
@@ -696,6 +701,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scanner)Scan()(ok bool){//col:798
 
 
@@ -753,6 +763,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scanner)sgetc()(ok bool){//col:821
 
 
@@ -769,6 +784,11 @@ func (s *scanner)sgetc()(ok bool){//col:821
 
 return true
 }
+
+
+
+
+
 
 
 func (s *scanner)IsKeyword()(ok bool){//col:851
@@ -796,6 +816,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scanner)IsRegister()(ok bool){//col:866
 
 
@@ -807,6 +832,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *scanner)IsId()(ok bool){//col:880
 
 
@@ -814,6 +844,11 @@ func (s *scanner)IsId()(ok bool){//col:880
 
 return true
 }
+
+
+
+
+
 
 
 

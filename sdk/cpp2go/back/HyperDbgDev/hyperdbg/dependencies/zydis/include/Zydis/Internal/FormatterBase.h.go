@@ -18,6 +18,11 @@ FormatterBase interface{
 ZyanU32 ZydisFormatterHelperGetExplicitSize()(ok bool)//col:316
 }
 
+
+
+
+
+
 )
 
 func NewFormatterBase() { return & formatterBase{} }
@@ -100,6 +105,11 @@ return true
 }
 
 
+
+
+
+
+
 func (f *formatterBase)#pragma pack()(ok bool){//col:243
 
 
@@ -130,6 +140,11 @@ return true
 }
 
 
+
+
+
+
+
 func (f *formatterBase)ZyanU32 ZydisFormatterHelperGetExplicitSize()(ok bool){//col:316
 
 
@@ -155,6 +170,11 @@ func (f *formatterBase)ZyanU32 ZydisFormatterHelperGetExplicitSize()(ok bool){//
 
 return true
 }
+
+
+
+
+
 
 
 

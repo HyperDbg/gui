@@ -10,6 +10,11 @@ static ZyanStatus TestAllocator()(ok bool)//col:169
 int main()(ok bool)//col:194
 }
 
+
+
+
+
+
 )
 
 func NewString() { return & string{} }
@@ -25,6 +30,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *string)static ZyanStatus TestDynamic()(ok bool){//col:83
 
 
@@ -33,6 +43,11 @@ func (s *string)static ZyanStatus TestDynamic()(ok bool){//col:83
 
 return true
 }
+
+
+
+
+
 
 
 func (s *string)static ZyanStatus TestStatic()(ok bool){//col:95
@@ -45,6 +60,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *string)static ZyanStatus TestAllocator()(ok bool){//col:169
 
 
@@ -52,6 +72,11 @@ func (s *string)static ZyanStatus TestAllocator()(ok bool){//col:169
 
 return true
 }
+
+
+
+
+
 
 
 func (s *string)int main()(ok bool){//col:194
@@ -73,6 +98,11 @@ func (s *string)int main()(ok bool){//col:194
 
 return true
 }
+
+
+
+
+
 
 
 

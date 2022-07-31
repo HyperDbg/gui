@@ -425,6 +425,11 @@ RtlCreateBootStatusDataFile()(ok bool)//col:8710
 RtlNotifyFeatureUsage()(ok bool)//col:8725
 }
 
+
+
+
+
+
 )
 
 func NewNtrtl() { return & ntrtl{} }
@@ -440,6 +445,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)_Check_return_ FORCEINLINE BOOLEAN IsListEmpty()(ok bool){//col:33
 
 
@@ -449,6 +459,11 @@ func (n *ntrtl)_Check_return_ FORCEINLINE BOOLEAN IsListEmpty()(ok bool){//col:3
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)FORCEINLINE BOOLEAN RemoveEntryList()(ok bool){//col:49
@@ -468,6 +483,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)FORCEINLINE PLIST_ENTRY RemoveHeadList()(ok bool){//col:65
 
 
@@ -483,6 +503,11 @@ func (n *ntrtl)FORCEINLINE PLIST_ENTRY RemoveHeadList()(ok bool){//col:65
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)FORCEINLINE PLIST_ENTRY RemoveTailList()(ok bool){//col:81
@@ -502,6 +527,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)FORCEINLINE VOID InsertTailList()(ok bool){//col:96
 
 
@@ -517,6 +547,11 @@ func (n *ntrtl)FORCEINLINE VOID InsertTailList()(ok bool){//col:96
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)FORCEINLINE VOID InsertHeadList()(ok bool){//col:111
@@ -536,6 +571,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)FORCEINLINE VOID AppendTailList()(ok bool){//col:125
 
 
@@ -550,6 +590,11 @@ func (n *ntrtl)FORCEINLINE VOID AppendTailList()(ok bool){//col:125
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)FORCEINLINE PSINGLE_LIST_ENTRY PopEntryList()(ok bool){//col:140
@@ -567,6 +612,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)FORCEINLINE VOID PushEntryList()(ok bool){//col:150
 
 
@@ -578,6 +628,11 @@ func (n *ntrtl)FORCEINLINE VOID PushEntryList()(ok bool){//col:150
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)typedef RTL_GENERIC_COMPARE_RESULTS ()(ok bool){//col:199
@@ -609,6 +664,11 @@ func (n *ntrtl)typedef RTL_GENERIC_COMPARE_RESULTS ()(ok bool){//col:199
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlInitializeGenericTableAvl()(ok bool){//col:347
@@ -732,6 +792,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)    _SplayLinks = ()(ok bool){//col:356
 
 
@@ -740,6 +805,11 @@ func (n *ntrtl)    _SplayLinks = ()(ok bool){//col:356
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)    _SplayParent = ()(ok bool){//col:374
@@ -752,6 +822,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)    _SplayParent = ()(ok bool){//col:385
 
 
@@ -760,6 +835,11 @@ func (n *ntrtl)    _SplayParent = ()(ok bool){//col:385
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlSplay()(ok bool){//col:471
@@ -835,6 +915,11 @@ func (n *ntrtl)RtlSplay()(ok bool){//col:471
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlInitializeGenericTable()(ok bool){//col:581
@@ -935,6 +1020,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)#if ()(ok bool){//col:618
 
 
@@ -965,6 +1055,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)#if ()(ok bool){//col:666
 
 
@@ -980,6 +1075,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlInitHashTableContextFromEnumerator()(ok bool){//col:678
 
 
@@ -991,6 +1091,11 @@ func (n *ntrtl)RtlInitHashTableContextFromEnumerator()(ok bool){//col:678
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlReleaseHashTableContext()(ok bool){//col:689
@@ -1005,6 +1110,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlTotalBucketsHashTable()(ok bool){//col:699
 
 
@@ -1014,6 +1124,11 @@ func (n *ntrtl)RtlTotalBucketsHashTable()(ok bool){//col:699
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlNonEmptyBucketsHashTable()(ok bool){//col:709
@@ -1027,6 +1142,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlEmptyBucketsHashTable()(ok bool){//col:719
 
 
@@ -1036,6 +1156,11 @@ func (n *ntrtl)RtlEmptyBucketsHashTable()(ok bool){//col:719
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlTotalEntriesHashTable()(ok bool){//col:729
@@ -1049,6 +1174,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlActiveEnumeratorsHashTable()(ok bool){//col:739
 
 
@@ -1058,6 +1188,11 @@ func (n *ntrtl)RtlActiveEnumeratorsHashTable()(ok bool){//col:739
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlCreateHashTable()(ok bool){//col:1002
@@ -1277,6 +1412,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlInitializeResource()(ok bool){//col:1272
 
 
@@ -1478,6 +1618,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)FORCEINLINE VOID RtlInitString()(ok bool){//col:1287
 
 
@@ -1492,6 +1637,11 @@ func (n *ntrtl)FORCEINLINE VOID RtlInitString()(ok bool){//col:1287
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlInitString()(ok bool){//col:1321
@@ -1523,6 +1673,11 @@ func (n *ntrtl)RtlInitString()(ok bool){//col:1321
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlInitAnsiString()(ok bool){//col:1458
@@ -1647,6 +1802,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlInitEmptyUnicodeString()(ok bool){//col:1473
 
 
@@ -1660,6 +1820,11 @@ func (n *ntrtl)RtlInitEmptyUnicodeString()(ok bool){//col:1473
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)FORCEINLINE VOID RtlInitUnicodeString()(ok bool){//col:1488
@@ -1676,6 +1841,11 @@ func (n *ntrtl)FORCEINLINE VOID RtlInitUnicodeString()(ok bool){//col:1488
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlInitUnicodeString()(ok bool){//col:2026
@@ -2159,6 +2329,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)#if ()(ok bool){//col:2197
 
 
@@ -2308,6 +2483,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)PfxInitialize()(ok bool){//col:2246
 
 
@@ -2345,6 +2525,11 @@ func (n *ntrtl)PfxInitialize()(ok bool){//col:2246
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlInitializeUnicodePrefix()(ok bool){//col:2311
@@ -2392,6 +2577,11 @@ func (n *ntrtl)RtlInitializeUnicodePrefix()(ok bool){//col:2311
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlGetCompressionWorkSpaceSize()(ok bool){//col:2615
@@ -2650,6 +2840,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlCreateProcessParameters()(ok bool){//col:2757
 
 
@@ -2710,6 +2905,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlCreateUserProcess()(ok bool){//col:2791
 
 
@@ -2737,6 +2937,11 @@ func (n *ntrtl)RtlCreateUserProcess()(ok bool){//col:2791
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlCreateUserProcessEx()(ok bool){//col:2824
@@ -2767,6 +2972,11 @@ func (n *ntrtl)RtlCreateUserProcessEx()(ok bool){//col:2824
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)#if ()(ok bool){//col:2878
@@ -2807,6 +3017,11 @@ func (n *ntrtl)#if ()(ok bool){//col:2878
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)#if ()(ok bool){//col:2990
@@ -2902,6 +3117,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)#if ()(ok bool){//col:3038
 
 
@@ -2936,6 +3156,11 @@ func (n *ntrtl)#if ()(ok bool){//col:3038
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlInitializeContext()(ok bool){//col:3247
@@ -3101,6 +3326,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlGetFunctionTableListHead()(ok bool){//col:3453
 
 
@@ -3239,6 +3469,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlFillMemoryUlong()(ok bool){//col:3610
 
 
@@ -3366,6 +3601,11 @@ func (n *ntrtl)RtlFillMemoryUlong()(ok bool){//col:3610
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlDetermineDosPathNameType_U()(ok bool){//col:3883
@@ -3581,6 +3821,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlGenerate8dot3Name()(ok bool){//col:4010
 
 
@@ -3681,6 +3926,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)typedef NTSTATUS ()(ok bool){//col:4078
 
 
@@ -3703,6 +3953,11 @@ func (n *ntrtl)typedef NTSTATUS ()(ok bool){//col:4078
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlCreateHeap()(ok bool){//col:4239
@@ -3835,6 +4090,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlCreateTagHeap()(ok bool){//col:4326
 
 
@@ -3912,6 +4172,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlUsageHeap()(ok bool){//col:4377
 
 
@@ -3947,6 +4212,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlWalkHeap()(ok bool){//col:4403
 
 
@@ -3963,6 +4233,11 @@ func (n *ntrtl)RtlWalkHeap()(ok bool){//col:4403
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)typedef NTSTATUS ()(ok bool){//col:4457
@@ -3986,6 +4261,11 @@ func (n *ntrtl)typedef NTSTATUS ()(ok bool){//col:4457
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlQueryHeapInformation()(ok bool){//col:4527
@@ -4047,6 +4327,11 @@ func (n *ntrtl)RtlQueryHeapInformation()(ok bool){//col:4527
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)#if ()(ok bool){//col:4694
@@ -4177,6 +4462,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)FORCEINLINE BOOLEAN RtlIsZeroLuid()(ok bool){//col:4702
 
 
@@ -4186,6 +4476,11 @@ func (n *ntrtl)FORCEINLINE BOOLEAN RtlIsZeroLuid()(ok bool){//col:4702
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)FORCEINLINE LUID RtlConvertLongToLuid()(ok bool){//col:4717
@@ -4204,6 +4499,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)FORCEINLINE LUID RtlConvertUlongToLuid()(ok bool){//col:4730
 
 
@@ -4216,6 +4516,11 @@ func (n *ntrtl)FORCEINLINE LUID RtlConvertUlongToLuid()(ok bool){//col:4730
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlCopyLuid()(ok bool){//col:4788
@@ -4263,6 +4568,11 @@ func (n *ntrtl)RtlCopyLuid()(ok bool){//col:4788
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlCreateQueryDebugBuffer()(ok bool){//col:4928
@@ -4353,6 +4663,11 @@ func (n *ntrtl)RtlCreateQueryDebugBuffer()(ok bool){//col:4928
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlFormatMessageEx()(ok bool){//col:5302
@@ -4659,6 +4974,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlCutoverTimeToSystemTime()(ok bool){//col:5435
 
 
@@ -4776,6 +5096,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlQueryTimeZoneInformation()(ok bool){//col:5457
 
 
@@ -4793,6 +5118,11 @@ func (n *ntrtl)RtlQueryTimeZoneInformation()(ok bool){//col:5457
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlInitializeBitMap()(ok bool){//col:5589
@@ -4914,6 +5244,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlFindClearRuns()(ok bool){//col:5630
 
 
@@ -4951,6 +5286,11 @@ func (n *ntrtl)RtlFindClearRuns()(ok bool){//col:5630
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlNumberOfClearBits()(ok bool){//col:5769
@@ -5068,6 +5408,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlInitializeBitMapEx()(ok bool){//col:5849
 
 
@@ -5130,6 +5475,11 @@ func (n *ntrtl)RtlInitializeBitMapEx()(ok bool){//col:5849
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlInitializeHandleTable()(ok bool){//col:6508
@@ -5687,6 +6037,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlAreAnyAccessesGranted()(ok bool){//col:6520
 
 
@@ -5697,6 +6052,11 @@ func (n *ntrtl)RtlAreAnyAccessesGranted()(ok bool){//col:6520
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlAreAllAccessesGranted()(ok bool){//col:6942
@@ -6071,6 +6431,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlCreateUserSecurityObject()(ok bool){//col:7385
 
 
@@ -6424,6 +6789,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlQueryRegistryValues()(ok bool){//col:7702
 
 
@@ -6671,6 +7041,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)#if ()(ok bool){//col:7790
 
 
@@ -6735,6 +7110,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlGetUnloadEventTrace()(ok bool){//col:7865
 
 
@@ -6771,6 +7151,11 @@ func (n *ntrtl)RtlGetUnloadEventTrace()(ok bool){//col:7865
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)#if ()(ok bool){//col:8237
@@ -6955,6 +7340,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)#if ()(ok bool){//col:8270
 
 
@@ -6986,6 +7376,11 @@ func (n *ntrtl)#if ()(ok bool){//col:8270
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)#if ()(ok bool){//col:8406
@@ -7099,6 +7494,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)#if ()(ok bool){//col:8489
 
 
@@ -7155,6 +7555,11 @@ func (n *ntrtl)#if ()(ok bool){//col:8489
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntrtl)RtlCreateBootStatusDataFile()(ok bool){//col:8710
@@ -7281,6 +7686,11 @@ return true
 }
 
 
+
+
+
+
+
 func (n *ntrtl)RtlNotifyFeatureUsage()(ok bool){//col:8725
 
 
@@ -7293,6 +7703,11 @@ func (n *ntrtl)RtlNotifyFeatureUsage()(ok bool){//col:8725
 
 return true
 }
+
+
+
+
+
 
 
 

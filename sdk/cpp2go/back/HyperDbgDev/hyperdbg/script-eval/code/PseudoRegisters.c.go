@@ -17,6 +17,11 @@ ScriptEnginePseudoRegGetEventTag()(ok bool)//col:368
 ScriptEnginePseudoRegGetEventId()(ok bool)//col:387
 }
 
+
+
+
+
+
 )
 
 func NewPseudoRegisters() { return & pseudoRegisters{} }
@@ -33,6 +38,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetCore()(ok bool){//col:52
 
 
@@ -45,6 +55,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetPid()(ok bool){//col:70
 
 
@@ -55,6 +70,11 @@ func (p *pseudoRegisters)ScriptEnginePseudoRegGetPid()(ok bool){//col:70
 
 return true
 }
+
+
+
+
+
 
 
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetPname()(ok bool){//col:120
@@ -87,6 +107,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetProc()(ok bool){//col:138
 
 
@@ -99,6 +124,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetThread()(ok bool){//col:156
 
 
@@ -109,6 +139,11 @@ func (p *pseudoRegisters)ScriptEnginePseudoRegGetThread()(ok bool){//col:156
 
 return true
 }
+
+
+
+
+
 
 
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetPeb()(ok bool){//col:288
@@ -196,6 +231,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetTeb()(ok bool){//col:306
 
 
@@ -206,6 +246,11 @@ func (p *pseudoRegisters)ScriptEnginePseudoRegGetTeb()(ok bool){//col:306
 
 return true
 }
+
+
+
+
+
 
 
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetIp()(ok bool){//col:327
@@ -220,6 +265,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetBuffer()(ok bool){//col:349
 
 
@@ -230,6 +280,11 @@ func (p *pseudoRegisters)ScriptEnginePseudoRegGetBuffer()(ok bool){//col:349
 
 return true
 }
+
+
+
+
+
 
 
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetEventTag()(ok bool){//col:368
@@ -244,6 +299,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetEventId()(ok bool){//col:387
 
 
@@ -254,6 +314,11 @@ func (p *pseudoRegisters)ScriptEnginePseudoRegGetEventId()(ok bool){//col:387
 
 return true
 }
+
+
+
+
+
 
 
 

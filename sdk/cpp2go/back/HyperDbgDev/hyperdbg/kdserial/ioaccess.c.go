@@ -18,6 +18,11 @@ WriteRegister32()(ok bool)//col:119
 #if defined()(ok bool)//col:187
 }
 
+
+
+
+
+
 )
 
 func NewIoaccess() { return & ioaccess{} }
@@ -34,6 +39,11 @@ return true
 }
 
 
+
+
+
+
+
 func (i *ioaccess)ReadPort16()(ok bool){//col:33
 
 
@@ -44,6 +54,11 @@ return true
 }
 
 
+
+
+
+
+
 func (i *ioaccess)ReadPort32()(ok bool){//col:41
 
 
@@ -52,6 +67,11 @@ func (i *ioaccess)ReadPort32()(ok bool){//col:41
 
 return true
 }
+
+
+
+
+
 
 
 func (i *ioaccess)WritePort8()(ok bool){//col:50
@@ -65,6 +85,11 @@ return true
 }
 
 
+
+
+
+
+
 func (i *ioaccess)WritePort16()(ok bool){//col:59
 
 
@@ -74,6 +99,11 @@ func (i *ioaccess)WritePort16()(ok bool){//col:59
 
 return true
 }
+
+
+
+
+
 
 
 func (i *ioaccess)WritePort32()(ok bool){//col:68
@@ -87,6 +117,11 @@ return true
 }
 
 
+
+
+
+
+
 func (i *ioaccess)ReadRegister8()(ok bool){//col:76
 
 
@@ -95,6 +130,11 @@ func (i *ioaccess)ReadRegister8()(ok bool){//col:76
 
 return true
 }
+
+
+
+
+
 
 
 func (i *ioaccess)ReadRegister16()(ok bool){//col:84
@@ -107,6 +147,11 @@ return true
 }
 
 
+
+
+
+
+
 func (i *ioaccess)ReadRegister32()(ok bool){//col:92
 
 
@@ -115,6 +160,11 @@ func (i *ioaccess)ReadRegister32()(ok bool){//col:92
 
 return true
 }
+
+
+
+
+
 
 
 func (i *ioaccess)WriteRegister8()(ok bool){//col:101
@@ -128,6 +178,11 @@ return true
 }
 
 
+
+
+
+
+
 func (i *ioaccess)WriteRegister16()(ok bool){//col:110
 
 
@@ -139,6 +194,11 @@ return true
 }
 
 
+
+
+
+
+
 func (i *ioaccess)WriteRegister32()(ok bool){//col:119
 
 
@@ -148,6 +208,11 @@ func (i *ioaccess)WriteRegister32()(ok bool){//col:119
 
 return true
 }
+
+
+
+
+
 
 
 func (i *ioaccess)#if defined()(ok bool){//col:187
@@ -198,6 +263,11 @@ func (i *ioaccess)#if defined()(ok bool){//col:187
 
 return true
 }
+
+
+
+
+
 
 
 

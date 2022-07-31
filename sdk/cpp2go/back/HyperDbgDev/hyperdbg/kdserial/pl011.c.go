@@ -66,6 +66,11 @@ PL011PutByte()(ok bool)//col:545
 PL011RxReady()(ok bool)//col:599
 }
 
+
+
+
+
+
 )
 
 func NewPl011() { return & pl011{} }
@@ -136,6 +141,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *pl011)SBSAInitializePort()(ok bool){//col:320
 
 
@@ -188,6 +198,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *pl011)SBSA32InitializePort()(ok bool){//col:362
 
 
@@ -201,6 +216,11 @@ func (p *pl011)SBSA32InitializePort()(ok bool){//col:362
 
 return true
 }
+
+
+
+
+
 
 
 func (p *pl011)PL011SetBaud()(ok bool){//col:400
@@ -217,6 +237,11 @@ func (p *pl011)PL011SetBaud()(ok bool){//col:400
 
 return true
 }
+
+
+
+
+
 
 
 func (p *pl011)PL011GetByte()(ok bool){//col:474
@@ -251,6 +276,11 @@ func (p *pl011)PL011GetByte()(ok bool){//col:474
 
 return true
 }
+
+
+
+
+
 
 
 func (p *pl011)PL011PutByte()(ok bool){//col:545
@@ -290,6 +320,11 @@ return true
 }
 
 
+
+
+
+
+
 func (p *pl011)PL011RxReady()(ok bool){//col:599
 
 
@@ -313,6 +348,11 @@ func (p *pl011)PL011RxReady()(ok bool){//col:599
 
 return true
 }
+
+
+
+
+
 
 
 

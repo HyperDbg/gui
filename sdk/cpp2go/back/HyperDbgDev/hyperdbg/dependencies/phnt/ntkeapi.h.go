@@ -122,6 +122,11 @@ Ntkeapi interface{
 #if ()(ok bool)//col:100
 }
 
+
+
+
+
+
 )
 
 func NewNtkeapi() { return & ntkeapi{} }
@@ -145,6 +150,11 @@ func (n *ntkeapi)#if ()(ok bool){//col:35
 
 return true
 }
+
+
+
+
+
 
 
 func (n *ntkeapi)#if ()(ok bool){//col:100
@@ -197,6 +207,11 @@ func (n *ntkeapi)#if ()(ok bool){//col:100
 
 return true
 }
+
+
+
+
+
 
 
 

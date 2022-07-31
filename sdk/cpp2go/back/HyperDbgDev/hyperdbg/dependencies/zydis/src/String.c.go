@@ -18,6 +18,11 @@ ZyanStatus ZydisStringAppendDecU()(ok bool)//col:334
 ZyanStatus ZydisStringAppendHexU()(ok bool)//col:363
 }
 
+
+
+
+
+
 )
 
 func NewString() { return & string{} }
@@ -64,6 +69,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *string)ZyanStatus ZydisStringAppendDecU64()(ok bool){//col:155
 
 
@@ -103,6 +113,11 @@ func (s *string)ZyanStatus ZydisStringAppendDecU64()(ok bool){//col:155
 
 return true
 }
+
+
+
+
+
 
 
 func (s *string)#if defined()(ok bool){//col:228
@@ -169,6 +184,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *string)ZyanStatus ZydisStringAppendHexU64()(ok bool){//col:298
 
 
@@ -233,6 +253,11 @@ return true
 }
 
 
+
+
+
+
+
 func (s *string)ZyanStatus ZydisStringAppendDecU()(ok bool){//col:334
 
 
@@ -258,6 +283,11 @@ func (s *string)ZyanStatus ZydisStringAppendDecU()(ok bool){//col:334
 
 return true
 }
+
+
+
+
+
 
 
 func (s *string)ZyanStatus ZydisStringAppendHexU()(ok bool){//col:363
@@ -288,6 +318,11 @@ func (s *string)ZyanStatus ZydisStringAppendHexU()(ok bool){//col:363
 
 return true
 }
+
+
+
+
+
 
 
 

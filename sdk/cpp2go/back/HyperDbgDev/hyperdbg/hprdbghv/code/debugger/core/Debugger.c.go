@@ -36,6 +36,11 @@ DebuggerTerminateEvent()(ok bool)//col:3102
 DebuggerParseEventsModificationFromUsermode()(ok bool)//col:3277
 }
 
+
+
+
+
+
 )
 
 func NewDebugger() { return & debugger{} }
@@ -47,6 +52,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerGetLastError()(ok bool){//col:36
 
 
@@ -56,6 +66,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerSetLastError()(ok bool){//col:49
 
 
@@ -63,6 +78,11 @@ func (d *debugger)DebuggerSetLastError()(ok bool){//col:49
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerInitialize()(ok bool){//col:216
@@ -143,6 +163,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerUninitialize()(ok bool){//col:283
 
 
@@ -158,6 +183,11 @@ func (d *debugger)DebuggerUninitialize()(ok bool){//col:283
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerCreateEvent()(ok bool){//col:384
@@ -207,6 +237,11 @@ func (d *debugger)DebuggerCreateEvent()(ok bool){//col:384
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerAddActionToEvent()(ok bool){//col:621
@@ -308,6 +343,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerRegisterEvent()(ok bool){//col:705
 
 
@@ -378,6 +418,11 @@ func (d *debugger)DebuggerRegisterEvent()(ok bool){//col:705
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerTriggerEvents()(ok bool){//col:1141
@@ -624,6 +669,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerPerformActions()(ok bool){//col:1188
 
 
@@ -651,6 +701,11 @@ func (d *debugger)DebuggerPerformActions()(ok bool){//col:1188
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerPerformRunScript()(ok bool){//col:1287
@@ -714,6 +769,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerPerformRunTheCustomCode()(ok bool){//col:1340
 
 
@@ -732,6 +792,11 @@ func (d *debugger)DebuggerPerformRunTheCustomCode()(ok bool){//col:1340
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerPerformBreakToDebugger()(ok bool){//col:1381
@@ -759,6 +824,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerGetEventByTag()(ok bool){//col:1423
 
 
@@ -782,6 +852,11 @@ func (d *debugger)DebuggerGetEventByTag()(ok bool){//col:1423
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerEnableOrDisableAllEvents()(ok bool){//col:1470
@@ -811,6 +886,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerTerminateAllEvents()(ok bool){//col:1516
 
 
@@ -836,6 +916,11 @@ func (d *debugger)DebuggerTerminateAllEvents()(ok bool){//col:1516
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerRemoveAllEvents()(ok bool){//col:1566
@@ -865,6 +950,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerEventListCount()(ok bool){//col:1598
 
 
@@ -881,6 +971,11 @@ func (d *debugger)DebuggerEventListCount()(ok bool){//col:1598
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerEventListCountByCore()(ok bool){//col:1637
@@ -905,6 +1000,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerExceptionEventBitmapMask()(ok bool){//col:1672
 
 
@@ -927,6 +1027,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerEnableEvent()(ok bool){//col:1705
 
 
@@ -943,6 +1048,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerQueryStateEvent()(ok bool){//col:1735
 
 
@@ -956,6 +1066,11 @@ func (d *debugger)DebuggerQueryStateEvent()(ok bool){//col:1735
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerDisableEvent()(ok bool){//col:1769
@@ -974,6 +1089,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerIsTagValid()(ok bool){//col:1797
 
 
@@ -987,6 +1107,11 @@ func (d *debugger)DebuggerIsTagValid()(ok bool){//col:1797
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerRemoveEventFromEventList()(ok bool){//col:1848
@@ -1015,6 +1140,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerRemoveAllActionsFromEvent()(ok bool){//col:1901
 
 
@@ -1038,6 +1168,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerRemoveEvent()(ok bool){//col:1964
 
 
@@ -1059,6 +1194,11 @@ func (d *debugger)DebuggerRemoveEvent()(ok bool){//col:1964
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerParseEventFromUsermode()(ok bool){//col:2766
@@ -1440,6 +1580,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerParseActionFromUsermode()(ok bool){//col:2907
 
 
@@ -1498,6 +1643,11 @@ func (d *debugger)DebuggerParseActionFromUsermode()(ok bool){//col:2907
 
 return true
 }
+
+
+
+
+
 
 
 func (d *debugger)DebuggerTerminateEvent()(ok bool){//col:3102
@@ -1607,6 +1757,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *debugger)DebuggerParseEventsModificationFromUsermode()(ok bool){//col:3277
 
 
@@ -1683,6 +1838,11 @@ func (d *debugger)DebuggerParseEventsModificationFromUsermode()(ok bool){//col:3
 
 return true
 }
+
+
+
+
+
 
 
 

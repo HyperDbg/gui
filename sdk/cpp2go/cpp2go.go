@@ -90,7 +90,7 @@ func (o *object) backCpp(path string) *object {
 	for _, e := range o.ext {
 		if ext == e || o.expandExt(path) != "" {
 			body, err := os.ReadFile(path)
-			o.Check(err)
+			Check(err)
 			cppPath := backPath + ".back"
 			goPath := backPath + ".go"
 			o.back = append(o.back, pathBody{path: cppPath, body: ""})
@@ -102,7 +102,7 @@ func (o *object) backCpp(path string) *object {
 }
 func (o *object) Back() *object {
 	mylog.Info("src", o.src)
-	o.Check(filepath.Walk(o.src, func(path string, info fs.FileInfo, err error) error {
+	Check(filepath.Walk(o.src, func(path string, info fs.FileInfo, err error) error {
 		o.backCpp(path)
 		return err
 	}))
@@ -111,7 +111,7 @@ func (o *object) Back() *object {
 	}
 	for i, body := range o.back {
 		b, err := os.ReadFile(body.path)
-		o.Check(err)
+		Check(err)
 		o.back[i].body = string(b)
 	}
 	return o
@@ -225,7 +225,73 @@ type (
 	}
 )
 
+type (
+	tmpInterface interface {
+		removeComment(lines []string)
+		read() []string
+		write(lines []string)
+		name() string
+		finished()
+		flush()
+	}
+	tmpObject struct {
+	}
+)
+
+func (t *tmpObject) flush() { Check(os.Remove(t.name())) }
+func (t *tmpObject) finished() {
+	lines := t.read()
+	for _, line := range lines {
+		if line != "" {
+			panic(t.name() + "not finished")
+		}
+	}
+}
+
+func (t *tmpObject) name() string { return "./tmp.bak" }
+func (t *tmpObject) removeComment(lines []string) {
+	for i, line := range lines {
+		switch {
+		case line == "#pragma once":
+			lines[i] = ""
+		case strings.Contains(line, "//"):
+			before, _, found := strings.Cut(line, "//")
+			if !found {
+				panic("// not found")
+			}
+			lines[i] = before
+		}
+	}
+	s := stream.New()
+	for _, line := range lines {
+		s.WriteStringLn(line)
+	}
+	if !tool.File().WriteTruncate(t.name(), s.String()) {
+		panic(t.name())
+	}
+}
+func (t *tmpObject) read() []string {
+	file, err := os.ReadFile(t.name())
+	Check(err)
+	lines, ok := tool.File().ToLines(file)
+	if !ok {
+		panic(t.name() + " ToLines")
+	}
+	return lines
+}
+func (t *tmpObject) write(lines []string) {
+	//TODO implement me
+	panic("implement me")
+}
+func newTmpObject() tmpInterface {
+	return &tmpObject{}
+}
 func (o *object) Block(lines []string) (b BlockObject) {
+	t := newTmpObject()
+	t.removeComment(lines)
+	panic(1111)
+	defer func() { t.finished() }()
+
 	b = BlockObject{
 		externs: make([]string, 0),
 		defines: make([]string, 0),
@@ -324,7 +390,7 @@ func (o *object) Convert() *object {
 	}
 	return o
 }
-func (o *object) Check(err error) {
+func Check(err error) {
 	if err != nil {
 		debug.PrintStack()
 		panic(err.Error())

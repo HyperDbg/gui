@@ -18,6 +18,11 @@ ZYAN_INLINE const ZydisDecoderTreeNode* ZydisDecoderTreeGetRootNode()(ok bool)//
 ZYDIS_NO_EXPORT const ZydisDecoderTreeNode* ZydisDecoderTreeGetChildNode()(ok bool)//col:329
 }
 
+
+
+
+
+
 )
 
 func NewDecoderData() { return & decoderData{} }
@@ -64,6 +69,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *decoderData)#pragma pack()(ok bool){//col:278
 
 
@@ -93,6 +103,11 @@ return true
 }
 
 
+
+
+
+
+
 func (d *decoderData)ZYAN_INLINE const ZydisDecoderTreeNode* ZydisDecoderTreeGetRootNode()(ok bool){//col:300
 
 
@@ -100,6 +115,11 @@ func (d *decoderData)ZYAN_INLINE const ZydisDecoderTreeNode* ZydisDecoderTreeGet
 
 return true
 }
+
+
+
+
+
 
 
 func (d *decoderData)ZYDIS_NO_EXPORT const ZydisDecoderTreeNode* ZydisDecoderTreeGetChildNode()(ok bool){//col:329
@@ -111,6 +131,11 @@ func (d *decoderData)ZYDIS_NO_EXPORT const ZydisDecoderTreeNode* ZydisDecoderTre
 
 return true
 }
+
+
+
+
+
 
 
 

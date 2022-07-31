@@ -7,6 +7,11 @@ ObjectShowProcessesOrThreadDetails()(ok bool)//col:126
 ObjectShowProcessesOrThreadList()(ok bool)//col:350
 }
 
+
+
+
+
+
 )
 
 func NewObjects() { return & objects{} }
@@ -69,6 +74,11 @@ func (o *objects)ObjectShowProcessesOrThreadDetails()(ok bool){//col:126
 
 return true
 }
+
+
+
+
+
 
 
 func (o *objects)ObjectShowProcessesOrThreadList()(ok bool){//col:350
@@ -196,6 +206,11 @@ func (o *objects)ObjectShowProcessesOrThreadList()(ok bool){//col:350
 
 return true
 }
+
+
+
+
+
 
 
 
