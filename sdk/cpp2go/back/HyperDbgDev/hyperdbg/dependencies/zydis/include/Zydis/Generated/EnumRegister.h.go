@@ -1,7 +1,10 @@
 package Generated
+//back\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Generated\EnumRegister.h.back
+
 type     ZYDIS_REGISTER_NONE uint32
 const(
     ZYDIS_REGISTER_NONE typedef enum ZydisRegister_ = 1  //col:6
+    // General purpose registers  8-bit typedef enum ZydisRegister_ = 2  //col:8
     ZYDIS_REGISTER_AL typedef enum ZydisRegister_ = 3  //col:9
     ZYDIS_REGISTER_CL typedef enum ZydisRegister_ = 4  //col:10
     ZYDIS_REGISTER_DL typedef enum ZydisRegister_ = 5  //col:11
@@ -22,6 +25,7 @@ const(
     ZYDIS_REGISTER_R13B typedef enum ZydisRegister_ = 20  //col:26
     ZYDIS_REGISTER_R14B typedef enum ZydisRegister_ = 21  //col:27
     ZYDIS_REGISTER_R15B typedef enum ZydisRegister_ = 22  //col:28
+    // General purpose registers 16-bit typedef enum ZydisRegister_ = 23  //col:29
     ZYDIS_REGISTER_AX typedef enum ZydisRegister_ = 24  //col:30
     ZYDIS_REGISTER_CX typedef enum ZydisRegister_ = 25  //col:31
     ZYDIS_REGISTER_DX typedef enum ZydisRegister_ = 26  //col:32
@@ -38,6 +42,7 @@ const(
     ZYDIS_REGISTER_R13W typedef enum ZydisRegister_ = 37  //col:43
     ZYDIS_REGISTER_R14W typedef enum ZydisRegister_ = 38  //col:44
     ZYDIS_REGISTER_R15W typedef enum ZydisRegister_ = 39  //col:45
+    // General purpose registers 32-bit typedef enum ZydisRegister_ = 40  //col:46
     ZYDIS_REGISTER_EAX typedef enum ZydisRegister_ = 41  //col:47
     ZYDIS_REGISTER_ECX typedef enum ZydisRegister_ = 42  //col:48
     ZYDIS_REGISTER_EDX typedef enum ZydisRegister_ = 43  //col:49
@@ -54,6 +59,7 @@ const(
     ZYDIS_REGISTER_R13D typedef enum ZydisRegister_ = 54  //col:60
     ZYDIS_REGISTER_R14D typedef enum ZydisRegister_ = 55  //col:61
     ZYDIS_REGISTER_R15D typedef enum ZydisRegister_ = 56  //col:62
+    // General purpose registers 64-bit typedef enum ZydisRegister_ = 57  //col:63
     ZYDIS_REGISTER_RAX typedef enum ZydisRegister_ = 58  //col:64
     ZYDIS_REGISTER_RCX typedef enum ZydisRegister_ = 59  //col:65
     ZYDIS_REGISTER_RDX typedef enum ZydisRegister_ = 60  //col:66
@@ -70,6 +76,7 @@ const(
     ZYDIS_REGISTER_R13 typedef enum ZydisRegister_ = 71  //col:77
     ZYDIS_REGISTER_R14 typedef enum ZydisRegister_ = 72  //col:78
     ZYDIS_REGISTER_R15 typedef enum ZydisRegister_ = 73  //col:79
+    // Floating point legacy registers typedef enum ZydisRegister_ = 74  //col:80
     ZYDIS_REGISTER_ST0 typedef enum ZydisRegister_ = 75  //col:81
     ZYDIS_REGISTER_ST1 typedef enum ZydisRegister_ = 76  //col:82
     ZYDIS_REGISTER_ST2 typedef enum ZydisRegister_ = 77  //col:83
@@ -81,6 +88,7 @@ const(
     ZYDIS_REGISTER_X87CONTROL typedef enum ZydisRegister_ = 83  //col:89
     ZYDIS_REGISTER_X87STATUS typedef enum ZydisRegister_ = 84  //col:90
     ZYDIS_REGISTER_X87TAG typedef enum ZydisRegister_ = 85  //col:91
+    // Floating point multimedia registers typedef enum ZydisRegister_ = 86  //col:92
     ZYDIS_REGISTER_MM0 typedef enum ZydisRegister_ = 87  //col:93
     ZYDIS_REGISTER_MM1 typedef enum ZydisRegister_ = 88  //col:94
     ZYDIS_REGISTER_MM2 typedef enum ZydisRegister_ = 89  //col:95
@@ -89,6 +97,7 @@ const(
     ZYDIS_REGISTER_MM5 typedef enum ZydisRegister_ = 92  //col:98
     ZYDIS_REGISTER_MM6 typedef enum ZydisRegister_ = 93  //col:99
     ZYDIS_REGISTER_MM7 typedef enum ZydisRegister_ = 94  //col:100
+    // Floating point vector registers 128-bit typedef enum ZydisRegister_ = 95  //col:101
     ZYDIS_REGISTER_XMM0 typedef enum ZydisRegister_ = 96  //col:102
     ZYDIS_REGISTER_XMM1 typedef enum ZydisRegister_ = 97  //col:103
     ZYDIS_REGISTER_XMM2 typedef enum ZydisRegister_ = 98  //col:104
@@ -121,6 +130,7 @@ const(
     ZYDIS_REGISTER_XMM29 typedef enum ZydisRegister_ = 125  //col:131
     ZYDIS_REGISTER_XMM30 typedef enum ZydisRegister_ = 126  //col:132
     ZYDIS_REGISTER_XMM31 typedef enum ZydisRegister_ = 127  //col:133
+    // Floating point vector registers 256-bit typedef enum ZydisRegister_ = 128  //col:134
     ZYDIS_REGISTER_YMM0 typedef enum ZydisRegister_ = 129  //col:135
     ZYDIS_REGISTER_YMM1 typedef enum ZydisRegister_ = 130  //col:136
     ZYDIS_REGISTER_YMM2 typedef enum ZydisRegister_ = 131  //col:137
@@ -153,6 +163,7 @@ const(
     ZYDIS_REGISTER_YMM29 typedef enum ZydisRegister_ = 158  //col:164
     ZYDIS_REGISTER_YMM30 typedef enum ZydisRegister_ = 159  //col:165
     ZYDIS_REGISTER_YMM31 typedef enum ZydisRegister_ = 160  //col:166
+    // Floating point vector registers 512-bit typedef enum ZydisRegister_ = 161  //col:167
     ZYDIS_REGISTER_ZMM0 typedef enum ZydisRegister_ = 162  //col:168
     ZYDIS_REGISTER_ZMM1 typedef enum ZydisRegister_ = 163  //col:169
     ZYDIS_REGISTER_ZMM2 typedef enum ZydisRegister_ = 164  //col:170
@@ -185,22 +196,27 @@ const(
     ZYDIS_REGISTER_ZMM29 typedef enum ZydisRegister_ = 191  //col:197
     ZYDIS_REGISTER_ZMM30 typedef enum ZydisRegister_ = 192  //col:198
     ZYDIS_REGISTER_ZMM31 typedef enum ZydisRegister_ = 193  //col:199
+    // Flags registers typedef enum ZydisRegister_ = 194  //col:200
     ZYDIS_REGISTER_FLAGS typedef enum ZydisRegister_ = 195  //col:201
     ZYDIS_REGISTER_EFLAGS typedef enum ZydisRegister_ = 196  //col:202
     ZYDIS_REGISTER_RFLAGS typedef enum ZydisRegister_ = 197  //col:203
+    // Instruction-pointer registers typedef enum ZydisRegister_ = 198  //col:204
     ZYDIS_REGISTER_IP typedef enum ZydisRegister_ = 199  //col:205
     ZYDIS_REGISTER_EIP typedef enum ZydisRegister_ = 200  //col:206
     ZYDIS_REGISTER_RIP typedef enum ZydisRegister_ = 201  //col:207
+    // Segment registers typedef enum ZydisRegister_ = 202  //col:208
     ZYDIS_REGISTER_ES typedef enum ZydisRegister_ = 203  //col:209
     ZYDIS_REGISTER_CS typedef enum ZydisRegister_ = 204  //col:210
     ZYDIS_REGISTER_SS typedef enum ZydisRegister_ = 205  //col:211
     ZYDIS_REGISTER_DS typedef enum ZydisRegister_ = 206  //col:212
     ZYDIS_REGISTER_FS typedef enum ZydisRegister_ = 207  //col:213
     ZYDIS_REGISTER_GS typedef enum ZydisRegister_ = 208  //col:214
+    // Table registers typedef enum ZydisRegister_ = 209  //col:215
     ZYDIS_REGISTER_GDTR typedef enum ZydisRegister_ = 210  //col:216
     ZYDIS_REGISTER_LDTR typedef enum ZydisRegister_ = 211  //col:217
     ZYDIS_REGISTER_IDTR typedef enum ZydisRegister_ = 212  //col:218
     ZYDIS_REGISTER_TR typedef enum ZydisRegister_ = 213  //col:219
+    // Test registers typedef enum ZydisRegister_ = 214  //col:220
     ZYDIS_REGISTER_TR0 typedef enum ZydisRegister_ = 215  //col:221
     ZYDIS_REGISTER_TR1 typedef enum ZydisRegister_ = 216  //col:222
     ZYDIS_REGISTER_TR2 typedef enum ZydisRegister_ = 217  //col:223
@@ -209,6 +225,7 @@ const(
     ZYDIS_REGISTER_TR5 typedef enum ZydisRegister_ = 220  //col:226
     ZYDIS_REGISTER_TR6 typedef enum ZydisRegister_ = 221  //col:227
     ZYDIS_REGISTER_TR7 typedef enum ZydisRegister_ = 222  //col:228
+    // Control registers typedef enum ZydisRegister_ = 223  //col:229
     ZYDIS_REGISTER_CR0 typedef enum ZydisRegister_ = 224  //col:230
     ZYDIS_REGISTER_CR1 typedef enum ZydisRegister_ = 225  //col:231
     ZYDIS_REGISTER_CR2 typedef enum ZydisRegister_ = 226  //col:232
@@ -225,6 +242,7 @@ const(
     ZYDIS_REGISTER_CR13 typedef enum ZydisRegister_ = 237  //col:243
     ZYDIS_REGISTER_CR14 typedef enum ZydisRegister_ = 238  //col:244
     ZYDIS_REGISTER_CR15 typedef enum ZydisRegister_ = 239  //col:245
+    // Debug registers typedef enum ZydisRegister_ = 240  //col:246
     ZYDIS_REGISTER_DR0 typedef enum ZydisRegister_ = 241  //col:247
     ZYDIS_REGISTER_DR1 typedef enum ZydisRegister_ = 242  //col:248
     ZYDIS_REGISTER_DR2 typedef enum ZydisRegister_ = 243  //col:249
@@ -241,6 +259,7 @@ const(
     ZYDIS_REGISTER_DR13 typedef enum ZydisRegister_ = 254  //col:260
     ZYDIS_REGISTER_DR14 typedef enum ZydisRegister_ = 255  //col:261
     ZYDIS_REGISTER_DR15 typedef enum ZydisRegister_ = 256  //col:262
+    // Mask registers typedef enum ZydisRegister_ = 257  //col:263
     ZYDIS_REGISTER_K0 typedef enum ZydisRegister_ = 258  //col:264
     ZYDIS_REGISTER_K1 typedef enum ZydisRegister_ = 259  //col:265
     ZYDIS_REGISTER_K2 typedef enum ZydisRegister_ = 260  //col:266
@@ -249,15 +268,42 @@ const(
     ZYDIS_REGISTER_K5 typedef enum ZydisRegister_ = 263  //col:269
     ZYDIS_REGISTER_K6 typedef enum ZydisRegister_ = 264  //col:270
     ZYDIS_REGISTER_K7 typedef enum ZydisRegister_ = 265  //col:271
+    // Bound registers typedef enum ZydisRegister_ = 266  //col:272
     ZYDIS_REGISTER_BND0 typedef enum ZydisRegister_ = 267  //col:273
     ZYDIS_REGISTER_BND1 typedef enum ZydisRegister_ = 268  //col:274
     ZYDIS_REGISTER_BND2 typedef enum ZydisRegister_ = 269  //col:275
     ZYDIS_REGISTER_BND3 typedef enum ZydisRegister_ = 270  //col:276
     ZYDIS_REGISTER_BNDCFG typedef enum ZydisRegister_ = 271  //col:277
     ZYDIS_REGISTER_BNDSTATUS typedef enum ZydisRegister_ = 272  //col:278
+    // Uncategorized typedef enum ZydisRegister_ = 273  //col:279
     ZYDIS_REGISTER_MXCSR typedef enum ZydisRegister_ = 274  //col:280
     ZYDIS_REGISTER_PKRU typedef enum ZydisRegister_ = 275  //col:281
     ZYDIS_REGISTER_XCR0 typedef enum ZydisRegister_ = 276  //col:282
+    /** typedef enum ZydisRegister_ = 277  //col:284
+     * Maximum value of this enum. typedef enum ZydisRegister_ = 278  //col:285
+     */ typedef enum ZydisRegister_ = 279  //col:286
+    ZYDIS_REGISTER_MAX_VALUE  typedef enum ZydisRegister_ =  ZYDIS_REGISTER_XCR0  //col:287
+    /** typedef enum ZydisRegister_ = 281  //col:288
+     * The minimum number of bits required to represent all values of this enum. typedef enum ZydisRegister_ = 282  //col:289
+     */ typedef enum ZydisRegister_ = 283  //col:290
+    ZYDIS_REGISTER_REQUIRED_BITS  typedef enum ZydisRegister_ =  ZYAN_BITS_TO_REPRESENT(ZYDIS_REGISTER_MAX_VALUE)  //col:291
+)
+
+
+
+type (
+EnumRegister interface{
+    ZYDIS_REGISTER_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool)//col:292
+}
+)
+
+func NewEnumRegister() { return & enumRegister{} }
+
+func (e *enumRegister)    ZYDIS_REGISTER_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:292
+/*    ZYDIS_REGISTER_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT(ZYDIS_REGISTER_MAX_VALUE)
+} ZydisRegister;*/
 return true
 }
+
+
 

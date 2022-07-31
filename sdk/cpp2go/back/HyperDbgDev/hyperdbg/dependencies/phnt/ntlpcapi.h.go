@@ -1,4 +1,6 @@
 package phnt
+//back\HyperDbgDev\hyperdbg\dependencies\phnt\ntlpcapi.h.back
+
 const(
 _NTLPCAPI_H =  //col:13
 PORT_CONNECT = 0x0001 //col:15
@@ -48,11 +50,14 @@ ALPC_ATTRFLG_ALLOCATEDATTR = 0x20000000 //col:900
 ALPC_ATTRFLG_VALIDATTR = 0x40000000 //col:901
 ALPC_ATTRFLG_KEEPRUNNINGATTR = 0x60000000 //col:902
 )
+
 type     PortBasicInformation uint32
 const(
     PortBasicInformation PORT_INFORMATION_CLASS = 1  //col:349
     PortDumpInformation PORT_INFORMATION_CLASS = 2  //col:350
 )
+
+
 type     AlpcBasicInformation // q: out ALPC_BASIC_INFORMATION uint32
 const(
     AlpcBasicInformation // q: out ALPC_BASIC_INFORMATION ALPC_PORT_INFORMATION_CLASS = 1  //col:523
@@ -69,6 +74,8 @@ const(
     AlpcWaitForPortReferences ALPC_PORT_INFORMATION_CLASS = 12  //col:534
     AlpcServerSessionInformation // q: ALPC_SERVER_SESSION_INFORMATION // since 19H2 ALPC_PORT_INFORMATION_CLASS = 13  //col:535
 )
+
+
 type     AlpcMessageSidInformation // q: out SID uint32
 const(
     AlpcMessageSidInformation // q: out SID ALPC_MESSAGE_INFORMATION_CLASS = 1  //col:597
@@ -77,6 +84,9 @@ const(
     AlpcMessageHandleInformation // ALPC_MESSAGE_HANDLE_INFORMATION ALPC_MESSAGE_INFORMATION_CLASS = 4  //col:600
     MaxAlpcMessageInfoClass ALPC_MESSAGE_INFORMATION_CLASS = 5  //col:601
 )
+
+
+
 type (
 Ntlpcapi interface{
  * Attribution 4.0 International ()(ok bool)//col:49
@@ -85,26 +95,278 @@ NtCreatePort()(ok bool)//col:351
 NtQueryInformationPort()(ok bool)//col:388
 typedef struct DECLSPEC_ALIGN()(ok bool)//col:445
 }
-
 )
+
 func NewNtlpcapi() { return & ntlpcapi{} }
+
 func (n *ntlpcapi) * Attribution 4.0 International ()(ok bool){//col:49
+/* * Attribution 4.0 International (CC BY 4.0) license. 
+ * 
+ * You must give appropriate credit, provide a link to the license, and 
+ * indicate if changes were made. You may do so in any reasonable manner, but 
+ * not in any way that suggests the licensor endorses you or your use.
+#ifndef _NTLPCAPI_H
+#define _NTLPCAPI_H
+#define PORT_CONNECT 0x0001
+#define PORT_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | 0x1)
+typedef struct _PORT_MESSAGE
+{
+    union
+    {
+        struct
+        {
+            CSHORT DataLength;
+            CSHORT TotalLength;
+        } s1;
+        ULONG Length;
+    } u1;
+    union
+    {
+        struct
+        {
+            CSHORT Type;
+            CSHORT DataInfoOffset;
+        } s2;
+        ULONG ZeroInit;
+    } u2;
+    union
+    {
+        CLIENT_ID ClientId;
+        double DoNotUseThisField;
+    };
+    ULONG MessageId;
+    union
+    {
+    };
+} PORT_MESSAGE, *PPORT_MESSAGE;*/
 return true
 }
 
 func (n *ntlpcapi)#define LPC_KERNELMODE_MESSAGE ()(ok bool){//col:94
+/*#define LPC_KERNELMODE_MESSAGE (CSHORT)0x8000
+#define LPC_NO_IMPERSONATE (CSHORT)0x4000
+#define PORT_VALID_OBJECT_ATTRIBUTES OBJ_CASE_INSENSITIVE
+#ifdef _WIN64
+#define PORT_MAXIMUM_MESSAGE_LENGTH 512
+#else
+#define PORT_MAXIMUM_MESSAGE_LENGTH 256
+#endif
+#define LPC_MAX_CONNECTION_INFO_SIZE (16 * sizeof(ULONG_PTR))
+#define PORT_TOTAL_MAXIMUM_MESSAGE_LENGTH \
+    ((PORT_MAXIMUM_MESSAGE_LENGTH + sizeof(PORT_MESSAGE) + LPC_MAX_CONNECTION_INFO_SIZE + 0xf) & ~0xf)
+typedef struct _LPC_CLIENT_DIED_MSG
+{
+    PORT_MESSAGE PortMsg;
+    LARGE_INTEGER CreateTime;
+} LPC_CLIENT_DIED_MSG, *PLPC_CLIENT_DIED_MSG;*/
 return true
 }
 
 func (n *ntlpcapi)NtCreatePort()(ok bool){//col:351
+/*NtCreatePort(
+    _Out_ PHANDLE PortHandle,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ ULONG MaxConnectionInfoLength,
+    _In_ ULONG MaxMessageLength,
+    _In_opt_ ULONG MaxPoolUsage
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCreateWaitablePort(
+    _Out_ PHANDLE PortHandle,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ ULONG MaxConnectionInfoLength,
+    _In_ ULONG MaxMessageLength,
+    _In_opt_ ULONG MaxPoolUsage
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtConnectPort(
+    _Out_ PHANDLE PortHandle,
+    _In_ PUNICODE_STRING PortName,
+    _In_ PSECURITY_QUALITY_OF_SERVICE SecurityQos,
+    _Inout_opt_ PPORT_VIEW ClientView,
+    _Inout_opt_ PREMOTE_PORT_VIEW ServerView,
+    _Out_opt_ PULONG MaxMessageLength,
+    _Inout_updates_bytes_to_opt_(*ConnectionInformationLength, *ConnectionInformationLength) PVOID ConnectionInformation,
+    _Inout_opt_ PULONG ConnectionInformationLength
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSecureConnectPort(
+    _Out_ PHANDLE PortHandle,
+    _In_ PUNICODE_STRING PortName,
+    _In_ PSECURITY_QUALITY_OF_SERVICE SecurityQos,
+    _Inout_opt_ PPORT_VIEW ClientView,
+    _In_opt_ PSID RequiredServerSid,
+    _Inout_opt_ PREMOTE_PORT_VIEW ServerView,
+    _Out_opt_ PULONG MaxMessageLength,
+    _Inout_updates_bytes_to_opt_(*ConnectionInformationLength, *ConnectionInformationLength) PVOID ConnectionInformation,
+    _Inout_opt_ PULONG ConnectionInformationLength
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtListenPort(
+    _In_ HANDLE PortHandle,
+    _Out_ PPORT_MESSAGE ConnectionRequest
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtAcceptConnectPort(
+    _Out_ PHANDLE PortHandle,
+    _In_opt_ PVOID PortContext,
+    _In_ PPORT_MESSAGE ConnectionRequest,
+    _In_ BOOLEAN AcceptConnection,
+    _Inout_opt_ PPORT_VIEW ServerView,
+    _Out_opt_ PREMOTE_PORT_VIEW ClientView
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCompleteConnectPort(
+    _In_ HANDLE PortHandle
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtRequestPort(
+    _In_ HANDLE PortHandle,
+    _In_reads_bytes_(RequestMessage->u1.s1.TotalLength) PPORT_MESSAGE RequestMessage
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtRequestWaitReplyPort(
+    _In_ HANDLE PortHandle,
+    _In_reads_bytes_(RequestMessage->u1.s1.TotalLength) PPORT_MESSAGE RequestMessage,
+    _Out_ PPORT_MESSAGE ReplyMessage
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtReplyPort(
+    _In_ HANDLE PortHandle,
+    _In_reads_bytes_(ReplyMessage->u1.s1.TotalLength) PPORT_MESSAGE ReplyMessage
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtReplyWaitReplyPort(
+    _In_ HANDLE PortHandle,
+    _Inout_ PPORT_MESSAGE ReplyMessage
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtReplyWaitReceivePort(
+    _In_ HANDLE PortHandle,
+    _Out_opt_ PVOID *PortContext,
+    _In_reads_bytes_opt_(ReplyMessage->u1.s1.TotalLength) PPORT_MESSAGE ReplyMessage,
+    _Out_ PPORT_MESSAGE ReceiveMessage
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtReplyWaitReceivePortEx(
+    _In_ HANDLE PortHandle,
+    _Out_opt_ PVOID *PortContext,
+    _In_reads_bytes_opt_(ReplyMessage->u1.s1.TotalLength) PPORT_MESSAGE ReplyMessage,
+    _Out_ PPORT_MESSAGE ReceiveMessage,
+    _In_opt_ PLARGE_INTEGER Timeout
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtImpersonateClientOfPort(
+    _In_ HANDLE PortHandle,
+    _In_ PPORT_MESSAGE Message
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtReadRequestData(
+    _In_ HANDLE PortHandle,
+    _In_ PPORT_MESSAGE Message,
+    _In_ ULONG DataEntryIndex,
+    _Out_writes_bytes_to_(BufferSize, *NumberOfBytesRead) PVOID Buffer,
+    _In_ SIZE_T BufferSize,
+    _Out_opt_ PSIZE_T NumberOfBytesRead
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtWriteRequestData(
+    _In_ HANDLE PortHandle,
+    _In_ PPORT_MESSAGE Message,
+    _In_ ULONG DataEntryIndex,
+    _In_reads_bytes_(BufferSize) PVOID Buffer,
+    _In_ SIZE_T BufferSize,
+    _Out_opt_ PSIZE_T NumberOfBytesWritten
+    );
+typedef enum _PORT_INFORMATION_CLASS
+{
+    PortBasicInformation,
+    PortDumpInformation
+} PORT_INFORMATION_CLASS;*/
 return true
 }
 
 func (n *ntlpcapi)NtQueryInformationPort()(ok bool){//col:388
+/*NtQueryInformationPort(
+    _In_ HANDLE PortHandle,
+    _In_ PORT_INFORMATION_CLASS PortInformationClass,
+    _Out_writes_bytes_to_(Length, *ReturnLength) PVOID PortInformation,
+    _In_ ULONG Length,
+    _Out_opt_ PULONG ReturnLength
+    );
+typedef HANDLE ALPC_HANDLE, *PALPC_HANDLE;
+typedef struct _ALPC_PORT_ATTRIBUTES
+{
+    ULONG Flags;
+    SECURITY_QUALITY_OF_SERVICE SecurityQos;
+    SIZE_T MaxMessageLength;
+    SIZE_T MemoryBandwidth;
+    SIZE_T MaxPoolUsage;
+    SIZE_T MaxSectionSize;
+    SIZE_T MaxViewSize;
+    SIZE_T MaxTotalSectionSize;
+    ULONG DupObjectTypes;
+#ifdef _WIN64
+    ULONG Reserved;
+#endif
+} ALPC_PORT_ATTRIBUTES, *PALPC_PORT_ATTRIBUTES;*/
 return true
 }
 
 func (n *ntlpcapi)typedef struct DECLSPEC_ALIGN()(ok bool){//col:445
+/*typedef struct DECLSPEC_ALIGN(128) _ALPC_COMPLETION_LIST_HEADER
+{
+    ULONG64 StartMagic;
+    ULONG TotalSize;
+    ULONG ListOffset;
+    ULONG ListSize;
+    ULONG BitmapOffset;
+    ULONG BitmapSize;
+    ULONG DataOffset;
+    ULONG DataSize;
+    ULONG AttributeFlags;
+    ULONG AttributeSize;
+    DECLSPEC_ALIGN(128) ALPC_COMPLETION_LIST_STATE State;
+    ULONG LastMessageId;
+    ULONG LastCallbackId;
+    DECLSPEC_ALIGN(128) ULONG PostCount;
+    DECLSPEC_ALIGN(128) ULONG ReturnCount;
+    DECLSPEC_ALIGN(128) ULONG LogSequenceNumber;
+    DECLSPEC_ALIGN(128) RTL_SRWLOCK UserLock;
+    ULONG64 EndMagic;
+} ALPC_COMPLETION_LIST_HEADER, *PALPC_COMPLETION_LIST_HEADER;*/
 return true
 }
+
+
 

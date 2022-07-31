@@ -2,7 +2,7 @@ package cpp2go
 
 import (
 	"fmt"
-	"github.com/ddkwork/librarygo/src/CommentDeletor"
+	"github.com/ddkwork/librarygo/src/Comment"
 	"github.com/ddkwork/librarygo/src/caseconv"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/mylog"
@@ -109,9 +109,6 @@ func (o *object) backCpp(path string) *object {
 			})
 		}
 	}
-	if !CommentDeletor.New().DeleteKepSpace(backPath) {
-		panic("!CommentDeletor.New().DeleteKepSpace(backPath)")
-	}
 	return o
 }
 func (o *object) Back() *object {
@@ -120,6 +117,9 @@ func (o *object) Back() *object {
 		o.backCpp(path)
 		return err
 	}))
+	if !Comment.New().DeleteKepSpace(o.backPath(o.src)) {
+		panic("!Comment.New().DeleteKepSpace(backPath)")
+	}
 	return o
 }
 func (o *object) fmtComment(col int) string { return " //col:" + fmt.Sprint(col) }

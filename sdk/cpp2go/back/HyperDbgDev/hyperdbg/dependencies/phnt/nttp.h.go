@@ -1,21 +1,377 @@
 package phnt
+//back\HyperDbgDev\hyperdbg\dependencies\phnt\nttp.h.back
+
 const(
 _NTTP_H =  //col:13
 )
+
 type     TpTraceThreadPriority = 1 uint32
 const(
     TpTraceThreadPriority  TP_TRACE_TYPE =  1  //col:444
     TpTraceThreadAffinity TP_TRACE_TYPE = 2  //col:445
     MaxTpTraceType TP_TRACE_TYPE = 3  //col:446
 )
+
+
+
 type (
 Nttp interface{
  * Attribution 4.0 International ()(ok bool)//col:447
 }
-
 )
+
 func NewNttp() { return & nttp{} }
+
 func (n *nttp) * Attribution 4.0 International ()(ok bool){//col:447
+/* * Attribution 4.0 International (CC BY 4.0) license. 
+ * 
+ * You must give appropriate credit, provide a link to the license, and 
+ * indicate if changes were made. You may do so in any reasonable manner, but 
+ * not in any way that suggests the licensor endorses you or your use.
+#ifndef _NTTP_H
+#define _NTTP_H
+typedef struct _TP_ALPC TP_ALPC, *PTP_ALPC;
+typedef VOID (NTAPI *PTP_ALPC_CALLBACK)(
+    _Inout_ PTP_CALLBACK_INSTANCE Instance,
+    _Inout_opt_ PVOID Context,
+    _In_ PTP_ALPC Alpc
+    );
+typedef VOID (NTAPI *PTP_ALPC_CALLBACK_EX)(
+    _Inout_ PTP_CALLBACK_INSTANCE Instance,
+    _Inout_opt_ PVOID Context,
+    _In_ PTP_ALPC Alpc,
+    _In_ PVOID ApcContext
+    );
+#if (PHNT_VERSION >= PHNT_VISTA)
+_Check_return_
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpAllocPool(
+    _Out_ PTP_POOL *PoolReturn,
+    _Reserved_ PVOID Reserved
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpReleasePool(
+    _Inout_ PTP_POOL Pool
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpSetPoolMaxThreads(
+    _Inout_ PTP_POOL Pool,
+    _In_ ULONG MaxThreads
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpSetPoolMinThreads(
+    _Inout_ PTP_POOL Pool,
+    _In_ ULONG MinThreads
+    );
+#if (PHNT_VERSION >= PHNT_WIN7)
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpQueryPoolStackInformation(
+    _In_ PTP_POOL Pool,
+    _Out_ PTP_POOL_STACK_INFORMATION PoolStackInformation
+    );
+#endif
+#if (PHNT_VERSION >= PHNT_WIN7)
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpSetPoolStackInformation(
+    _Inout_ PTP_POOL Pool,
+    _In_ PTP_POOL_STACK_INFORMATION PoolStackInformation
+    );
+#endif
+_Check_return_
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpAllocCleanupGroup(
+    _Out_ PTP_CLEANUP_GROUP *CleanupGroupReturn
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpReleaseCleanupGroup(
+    _Inout_ PTP_CLEANUP_GROUP CleanupGroup
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpReleaseCleanupGroupMembers(
+    _Inout_ PTP_CLEANUP_GROUP CleanupGroup,
+    _In_ LOGICAL CancelPendingCallbacks,
+    _Inout_opt_ PVOID CleanupParameter
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpCallbackSetEventOnCompletion(
+    _Inout_ PTP_CALLBACK_INSTANCE Instance,
+    _In_ HANDLE Event
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpCallbackReleaseSemaphoreOnCompletion(
+    _Inout_ PTP_CALLBACK_INSTANCE Instance,
+    _In_ HANDLE Semaphore,
+    _In_ ULONG ReleaseCount
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpCallbackReleaseMutexOnCompletion(
+    _Inout_ PTP_CALLBACK_INSTANCE Instance,
+    _In_ HANDLE Mutex
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpCallbackLeaveCriticalSectionOnCompletion(
+    _Inout_ PTP_CALLBACK_INSTANCE Instance,
+    _Inout_ PRTL_CRITICAL_SECTION CriticalSection
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpCallbackUnloadDllOnCompletion(
+    _Inout_ PTP_CALLBACK_INSTANCE Instance,
+    _In_ PVOID DllHandle
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpCallbackMayRunLong(
+    _Inout_ PTP_CALLBACK_INSTANCE Instance
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpDisassociateCallback(
+    _Inout_ PTP_CALLBACK_INSTANCE Instance
+    );
+_Check_return_
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpSimpleTryPost(
+    _In_ PTP_SIMPLE_CALLBACK Callback,
+    _Inout_opt_ PVOID Context,
+    _In_opt_ PTP_CALLBACK_ENVIRON CallbackEnviron
+    );
+_Check_return_
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpAllocWork(
+    _Out_ PTP_WORK *WorkReturn,
+    _In_ PTP_WORK_CALLBACK Callback,
+    _Inout_opt_ PVOID Context,
+    _In_opt_ PTP_CALLBACK_ENVIRON CallbackEnviron
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpReleaseWork(
+    _Inout_ PTP_WORK Work
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpPostWork(
+    _Inout_ PTP_WORK Work
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpWaitForWork(
+    _Inout_ PTP_WORK Work,
+    _In_ LOGICAL CancelPendingCallbacks
+    );
+_Check_return_
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpAllocTimer(
+    _Out_ PTP_TIMER *Timer,
+    _In_ PTP_TIMER_CALLBACK Callback,
+    _Inout_opt_ PVOID Context,
+    _In_opt_ PTP_CALLBACK_ENVIRON CallbackEnviron
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpReleaseTimer(
+    _Inout_ PTP_TIMER Timer
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpSetTimer(
+    _Inout_ PTP_TIMER Timer,
+    _In_opt_ PLARGE_INTEGER DueTime,
+    _In_ ULONG Period,
+    _In_opt_ ULONG WindowLength
+    );
+#if (PHNT_VERSION >= PHNT_WIN8)
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpSetTimerEx(
+    _Inout_ PTP_TIMER Timer,
+    _In_opt_ PLARGE_INTEGER DueTime,
+    _In_ ULONG Period,
+    _In_opt_ ULONG WindowLength
+    );
+#endif
+NTSYSAPI
+LOGICAL
+NTAPI
+TpIsTimerSet(
+    _In_ PTP_TIMER Timer
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpWaitForTimer(
+    _Inout_ PTP_TIMER Timer,
+    _In_ LOGICAL CancelPendingCallbacks
+    );
+_Check_return_
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpAllocWait(
+    _Out_ PTP_WAIT *WaitReturn,
+    _In_ PTP_WAIT_CALLBACK Callback,
+    _Inout_opt_ PVOID Context,
+    _In_opt_ PTP_CALLBACK_ENVIRON CallbackEnviron
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpReleaseWait(
+    _Inout_ PTP_WAIT Wait
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpSetWait(
+    _Inout_ PTP_WAIT Wait,
+    _In_opt_ HANDLE Handle,
+    _In_opt_ PLARGE_INTEGER Timeout
+    );
+#if (PHNT_VERSION >= PHNT_WIN8)
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpSetWaitEx(
+    _Inout_ PTP_WAIT Wait,
+    _In_opt_ HANDLE Handle,
+    _In_opt_ PLARGE_INTEGER Timeout,
+    _In_opt_ PVOID Reserved
+    );
+#endif
+NTSYSAPI
+VOID
+NTAPI
+TpWaitForWait(
+    _Inout_ PTP_WAIT Wait,
+    _In_ LOGICAL CancelPendingCallbacks
+    );
+typedef VOID (NTAPI *PTP_IO_CALLBACK)(
+    _Inout_ PTP_CALLBACK_INSTANCE Instance,
+    _Inout_opt_ PVOID Context,
+    _In_ PVOID ApcContext,
+    _In_ PIO_STATUS_BLOCK IoSB,
+    _In_ PTP_IO Io
+    );
+_Check_return_
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpAllocIoCompletion(
+    _Out_ PTP_IO *IoReturn,
+    _In_ HANDLE File,
+    _In_ PTP_IO_CALLBACK Callback,
+    _Inout_opt_ PVOID Context,
+    _In_opt_ PTP_CALLBACK_ENVIRON CallbackEnviron
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpReleaseIoCompletion(
+    _Inout_ PTP_IO Io
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpStartAsyncIoOperation(
+    _Inout_ PTP_IO Io
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpCancelAsyncIoOperation(
+    _Inout_ PTP_IO Io
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpWaitForIoCompletion(
+    _Inout_ PTP_IO Io,
+    _In_ LOGICAL CancelPendingCallbacks
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpAllocAlpcCompletion(
+    _Out_ PTP_ALPC *AlpcReturn,
+    _In_ HANDLE AlpcPort,
+    _In_ PTP_ALPC_CALLBACK Callback,
+    _Inout_opt_ PVOID Context,
+    _In_opt_ PTP_CALLBACK_ENVIRON CallbackEnviron
+    );
+#if (PHNT_VERSION >= PHNT_WIN7)
+NTSYSAPI
+NTSTATUS
+NTAPI
+TpAllocAlpcCompletionEx(
+    _Out_ PTP_ALPC *AlpcReturn,
+    _In_ HANDLE AlpcPort,
+    _In_ PTP_ALPC_CALLBACK_EX Callback,
+    _Inout_opt_ PVOID Context,
+    _In_opt_ PTP_CALLBACK_ENVIRON CallbackEnviron
+    );
+#endif
+NTSYSAPI
+VOID
+NTAPI
+TpReleaseAlpcCompletion(
+    _Inout_ PTP_ALPC Alpc
+    );
+NTSYSAPI
+VOID
+NTAPI
+TpWaitForAlpcCompletion(
+    _Inout_ PTP_ALPC Alpc
+    );
+typedef enum _TP_TRACE_TYPE
+{
+    TpTraceThreadPriority = 1,
+    TpTraceThreadAffinity,
+    MaxTpTraceType
+} TP_TRACE_TYPE;*/
 return true
 }
+
+
 

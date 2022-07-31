@@ -1,4 +1,6 @@
 package phnt
+//back\HyperDbgDev\hyperdbg\dependencies\phnt\ntpoapi.h.back
+
 const(
 _NTPOAPI_H =  //col:13
 SystemPowerPolicyAc = 0 // SYSTEM_POWER_POLICY // GET: InputBuffer NULL. SET: InputBuffer not NULL. //col:18
@@ -105,6 +107,7 @@ POWER_REQUEST_SUPPORTED_TYPES_V2 = 9 // Windows 8 //col:261
 POWER_REQUEST_SUPPORTED_TYPES_V3 = 5 // Windows 8.1 and Windows 10 TH1-TH2 //col:262
 POWER_REQUEST_SUPPORTED_TYPES_V4 = 6 // Windows 10 RS1+ //col:263
 )
+
 type     PowerRequestDisplayRequiredInternal uint32
 const(
     PowerRequestDisplayRequiredInternal POWER_REQUEST_TYPE_INTERNAL // POWER_REQUEST_TYPE = 1  //col:164
@@ -113,21 +116,28 @@ const(
     PowerRequestExecutionRequiredInternal // Windows 8+ POWER_REQUEST_TYPE_INTERNAL // POWER_REQUEST_TYPE = 4  //col:167
     PowerRequestPerfBoostRequiredInternal // Windows 8+ POWER_REQUEST_TYPE_INTERNAL // POWER_REQUEST_TYPE = 5  //col:168
     PowerRequestActiveLockScreenInternal // Windows 10 RS1+ (reserved on Windows 8) POWER_REQUEST_TYPE_INTERNAL // POWER_REQUEST_TYPE = 6  //col:169
+    // Values 6 and 7 are reserved for Windows 8 only POWER_REQUEST_TYPE_INTERNAL // POWER_REQUEST_TYPE = 7  //col:170
     PowerRequestInternalInvalid POWER_REQUEST_TYPE_INTERNAL // POWER_REQUEST_TYPE = 8  //col:171
     PowerRequestInternalUnknown POWER_REQUEST_TYPE_INTERNAL // POWER_REQUEST_TYPE = 9  //col:172
     PowerRequestFullScreenVideoRequired  // Windows 8 only POWER_REQUEST_TYPE_INTERNAL // POWER_REQUEST_TYPE = 10  //col:173
 )
+
+
 type     SystemPowerState = 0 uint32
 const(
     SystemPowerState  POWER_STATE_TYPE =  0  //col:192
     DevicePowerState POWER_STATE_TYPE = 2  //col:193
 )
+
+
 type     KernelRequester = 0 uint32
 const(
     KernelRequester  REQUESTER_TYPE =  0  //col:217
     UserProcessRequester  REQUESTER_TYPE =  1  //col:218
     UserSharedServiceRequester  REQUESTER_TYPE =  2  //col:219
 )
+
+
 type     PowerStateSleeping1 = 0 uint32
 const(
     PowerStateSleeping1  POWER_STATE_HANDLER_TYPE =  0  //col:310
@@ -139,6 +149,8 @@ const(
     PowerStateSleeping4Firmware  POWER_STATE_HANDLER_TYPE =  6  //col:316
     PowerStateMaximum  POWER_STATE_HANDLER_TYPE =  7  //col:317
 )
+
+
 type     PowerInternalAcpiInterfaceRegister uint32
 const(
     PowerInternalAcpiInterfaceRegister POWER_INFORMATION_LEVEL_INTERNAL = 1  //col:362
@@ -230,6 +242,8 @@ const(
     PowerInternalManageTransitionStateRecord POWER_INFORMATION_LEVEL_INTERNAL = 87  //col:450
     PowerInformationInternalMaximum POWER_INFORMATION_LEVEL_INTERNAL = 88  //col:451
 )
+
+
 type     PoS0DisconnectedReasonNone uint32
 const(
     PoS0DisconnectedReasonNone POWER_S0_DISCONNECTED_REASON = 1  //col:456
@@ -240,6 +254,9 @@ const(
     PoS0DisconnectedReasonSmartStandby POWER_S0_DISCONNECTED_REASON = 6  //col:461
     PoS0DisconnectedReasonMaximum POWER_S0_DISCONNECTED_REASON = 7  //col:462
 )
+
+
+
 type (
 Ntpoapi interface{
  * Attribution 4.0 International ()(ok bool)//col:126
@@ -248,26 +265,118 @@ Ntpoapi interface{
 typedef NTSTATUS ()(ok bool)//col:339
 typedef NTSTATUS ()(ok bool)//col:351
 }
-
 )
+
 func NewNtpoapi() { return & ntpoapi{} }
+
 func (n *ntpoapi) * Attribution 4.0 International ()(ok bool){//col:126
+/* * Attribution 4.0 International (CC BY 4.0) license. 
+ * 
+ * You must give appropriate credit, provide a link to the license, and 
+ * indicate if changes were made. You may do so in any reasonable manner, but 
+ * not in any way that suggests the licensor endorses you or your use.
+#ifndef _NTPOAPI_H
+#define _NTPOAPI_H
+#if (PHNT_MODE != PHNT_MODE_KERNEL)
+#define SystemWakeSource 35
+#define TraceServicePowerMessage 37
+#define ProcessorLoad 38
+#define PowerSettingNotificationName 58
+#define SessionPowerCleanup 63
+#define ExitLatencySamplingPercentage 78
+#define BatteryDeviceState 86
+#define EnergyTrackerCreate 92
+#define EnergyTrackerQuery 93
+#define UpdateBlackBoxRecorder 94
+#define SessionAllowExternalDmaDevices 95
+#define PowerInformationLevelMaximum 97
+#endif
+typedef struct _PROCESSOR_POWER_INFORMATION
+{
+    ULONG Number;
+    ULONG MaxMhz;
+    ULONG CurrentMhz;
+    ULONG MhzLimit;
+    ULONG MaxIdleState;
+    ULONG CurrentIdleState;
+} PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;*/
 return true
 }
 
 func (n *ntpoapi)            _Field_size_()(ok bool){//col:160
+/*            _Field_size_(StringCount) PUNICODE_STRING ReasonStrings;
+        };
+        UNICODE_STRING SimpleString;
+    };
+} COUNTED_REASON_CONTEXT, *PCOUNTED_REASON_CONTEXT;*/
 return true
 }
 
 func (n *ntpoapi)#if ()(ok bool){//col:300
+/*#if (PHNT_VERSION >= PHNT_WIN8)
+        struct
+        {
+            ULONG SupportedRequestMask;
+            ULONG PowerRequestCount[POWER_REQUEST_SUPPORTED_TYPES_V2];
+            DIAGNOSTIC_BUFFER DiagnosticBuffer;
+        } V2;
+#endif
+#if (PHNT_VERSION >= PHNT_WINBLUE)
+        struct
+        {
+            ULONG SupportedRequestMask;
+            ULONG PowerRequestCount[POWER_REQUEST_SUPPORTED_TYPES_V3];
+            DIAGNOSTIC_BUFFER DiagnosticBuffer;
+        } V3;
+#endif
+#if (PHNT_VERSION >= PHNT_REDSTONE)
+        struct
+        {
+            ULONG SupportedRequestMask;
+            ULONG PowerRequestCount[POWER_REQUEST_SUPPORTED_TYPES_V4];
+            DIAGNOSTIC_BUFFER DiagnosticBuffer;
+        } V4;
+#endif
+    };
+} POWER_REQUEST, *PPOWER_REQUEST;*/
 return true
 }
 
 func (n *ntpoapi)typedef NTSTATUS ()(ok bool){//col:339
+/*typedef NTSTATUS (NTAPI *PENTER_STATE_SYSTEM_HANDLER)(
+    _In_ PVOID SystemContext
+    );
+typedef NTSTATUS (NTAPI *PENTER_STATE_HANDLER)(
+    _In_ PVOID Context,
+    _In_opt_ PENTER_STATE_SYSTEM_HANDLER SystemHandler,
+    _In_ PVOID SystemContext,
+    _In_ LONG NumberProcessors,
+    _In_ LONG volatile *Number
+    );
+typedef struct _POWER_STATE_HANDLER
+{
+    POWER_STATE_HANDLER_TYPE Type;
+    BOOLEAN RtcWake;
+    UCHAR Spare[3];
+    PENTER_STATE_HANDLER Handler;
+    PVOID Context;
+} POWER_STATE_HANDLER, *PPOWER_STATE_HANDLER;*/
 return true
 }
 
 func (n *ntpoapi)typedef NTSTATUS ()(ok bool){//col:351
+/*typedef NTSTATUS (NTAPI *PENTER_STATE_NOTIFY_HANDLER)(
+    _In_ POWER_STATE_HANDLER_TYPE State,
+    _In_ PVOID Context,
+    _In_ BOOLEAN Entering
+    );
+typedef struct _POWER_STATE_NOTIFY_HANDLER
+{
+    PENTER_STATE_NOTIFY_HANDLER Handler;
+    PVOID Context;
+} POWER_STATE_NOTIFY_HANDLER, *PPOWER_STATE_NOTIFY_HANDLER;*/
 return true
 }
+
+
 

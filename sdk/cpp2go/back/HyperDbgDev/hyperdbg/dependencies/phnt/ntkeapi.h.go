@@ -1,4 +1,6 @@
 package phnt
+//back\HyperDbgDev\hyperdbg\dependencies\phnt\ntkeapi.h.back
+
 const(
 _NTKEAPI_H =  //col:13
 LOW_PRIORITY = 0 // Lowest thread priority level //col:16
@@ -6,6 +8,7 @@ LOW_REALTIME_PRIORITY = 16 // Lowest realtime priority level //col:17
 HIGH_PRIORITY = 31 // Highest thread priority level //col:18
 MAXIMUM_PRIORITY = 32 // Number of thread priority levels //col:19
 )
+
 type     Initialized uint32
 const(
     Initialized KTHREAD_STATE = 1  //col:24
@@ -20,6 +23,8 @@ const(
     WaitingForProcessInSwap KTHREAD_STATE = 10  //col:33
     MaximumThreadState KTHREAD_STATE = 11  //col:34
 )
+
+
 type     KHeteroCpuPolicyAll = 0 uint32
 const(
     KHeteroCpuPolicyAll  KHETERO_CPU_POLICY =  0  //col:40
@@ -34,6 +39,8 @@ const(
     KHeteroCpuPolicyDefault  KHETERO_CPU_POLICY =  8  //col:49
     KHeteroCpuPolicyMax  KHETERO_CPU_POLICY =  9  //col:50
 )
+
+
 type     Executive uint32
 const(
     Executive KWAIT_REASON = 1  //col:57
@@ -80,6 +87,8 @@ const(
     WrMdlCache KWAIT_REASON = 42  //col:98
     MaximumWaitReason KWAIT_REASON = 43  //col:99
 )
+
+
 type     ProfileTime uint32
 const(
     ProfileTime KPROFILE_SOURCE = 1  //col:104
@@ -108,19 +117,95 @@ const(
     ProfileLoadLinkedIssues KPROFILE_SOURCE = 24  //col:127
     ProfileMaximum KPROFILE_SOURCE = 25  //col:128
 )
+
+
+
 type (
 Ntkeapi interface{
  * Attribution 4.0 International ()(ok bool)//col:35
 #if ()(ok bool)//col:100
 }
-
 )
+
 func NewNtkeapi() { return & ntkeapi{} }
+
 func (n *ntkeapi) * Attribution 4.0 International ()(ok bool){//col:35
+/* * Attribution 4.0 International (CC BY 4.0) license. 
+ * 
+ * You must give appropriate credit, provide a link to the license, and 
+ * indicate if changes were made. You may do so in any reasonable manner, but 
+ * not in any way that suggests the licensor endorses you or your use.
+#ifndef _NTKEAPI_H
+#define _NTKEAPI_H
+#if (PHNT_MODE != PHNT_MODE_KERNEL)
+#endif
+typedef enum _KTHREAD_STATE
+{
+    Initialized,
+    Ready,
+    Running,
+    Standby,
+    Terminated,
+    Waiting,
+    Transition,
+    DeferredReady,
+    GateWaitObsolete,
+    WaitingForProcessInSwap,
+    MaximumThreadState
+} KTHREAD_STATE, *PKTHREAD_STATE;*/
 return true
 }
 
 func (n *ntkeapi)#if ()(ok bool){//col:100
+/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
+typedef enum _KWAIT_REASON
+{
+    Executive,
+    FreePage,
+    PageIn,
+    PoolAllocation,
+    DelayExecution,
+    Suspended,
+    UserRequest,
+    WrExecutive,
+    WrFreePage,
+    WrPageIn,
+    WrPoolAllocation,
+    WrDelayExecution,
+    WrSuspended,
+    WrUserRequest,
+    WrEventPair,
+    WrQueue,
+    WrLpcReceive,
+    WrLpcReply,
+    WrVirtualMemory,
+    WrPageOut,
+    WrRendezvous,
+    WrKeyedEvent,
+    WrTerminated,
+    WrProcessInSwap,
+    WrCpuRateControl,
+    WrCalloutStack,
+    WrKernel,
+    WrResource,
+    WrPushLock,
+    WrMutex,
+    WrQuantumEnd,
+    WrDispatchInt,
+    WrPreempted,
+    WrYieldExecution,
+    WrFastMutex,
+    WrGuardedMutex,
+    WrRundown,
+    WrAlertByThreadId,
+    WrDeferredPreempt,
+    WrPhysicalFault,
+    WrIoRing,
+    WrMdlCache,
+    MaximumWaitReason
+} KWAIT_REASON, *PKWAIT_REASON;*/
 return true
 }
+
+
 

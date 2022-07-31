@@ -1,4 +1,6 @@
 package kdserial
+//back\HyperDbgDev\hyperdbg\kdserial\kdcom.h.back
+
 const(
 COM1_PORT = 0x03F8 //col:26
 COM2_PORT = 0x02F8 //col:27
@@ -48,3 +50,5 @@ SERIAL_MSR_RI = 0x40 //col:107
 SERIAL_MSR_DCD = 0x80 //col:114
 SERIAL_LSR_NOT_PRESENT = 0xff //col:116
 )
+
+

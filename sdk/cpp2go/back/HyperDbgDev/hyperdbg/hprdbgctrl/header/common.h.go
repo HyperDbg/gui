@@ -1,4 +1,6 @@
 package header
+//back\HyperDbgDev\hyperdbg\hprdbgctrl\header\common.h.back
+
 const(
 AssertReturn = return; //col:19
 AssertReturnFalse = return FALSE; //col:21
@@ -10,3 +12,5 @@ PAGE_SIZE = 0x1000 //col:59
 PAGE_ALIGN(Va) = ((PVOID)((ULONG_PTR)(Va) & ~(PAGE_SIZE - 1))) //col:65
 CPUID_ADDR_WIDTH = 0x80000008 //col:71
 )
+
+

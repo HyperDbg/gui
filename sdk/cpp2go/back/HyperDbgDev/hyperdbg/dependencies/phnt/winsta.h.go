@@ -1,4 +1,6 @@
 package phnt
+//back\HyperDbgDev\hyperdbg\dependencies\phnt\winsta.h.back
+
 const(
 _WINSTA_H =  //col:13
 WINSTATION_QUERY = 0x00000001 // WinStationQueryInformation //col:17
@@ -88,6 +90,7 @@ WNOTIFY_ALL_SESSIONS = 0x1 //col:813
 LOGONID_CURRENT = (-1) //col:820
 SERVERNAME_CURRENT = ((PWSTR)NULL) //col:821
 )
+
 type     State_Active = 0 uint32
 const(
     State_Active  WINSTATIONSTATECLASS =  0  //col:97
@@ -101,6 +104,8 @@ const(
     State_Down  WINSTATIONSTATECLASS =  8  //col:105
     State_Init  WINSTATIONSTATECLASS =  9  //col:106
 )
+
+
 type     WinStationCreateData // WINSTATIONCREATE uint32
 const(
     WinStationCreateData // WINSTATIONCREATE WINSTATIONINFOCLASS = 1  //col:123
@@ -146,12 +151,16 @@ const(
     WinStationInformationEx // WINSTATIONINFORMATIONEX  WINSTATIONINFOCLASS = 41  //col:163
     WinStationValidationInfo WINSTATIONINFOCLASS = 42  //col:164
 )
+
+
 type     Callback_Disable uint32
 const(
     Callback_Disable CALLBACKCLASS = 1  //col:184
     Callback_Roving CALLBACKCLASS = 2  //col:185
     Callback_Fixed CALLBACKCLASS = 3  //col:186
 )
+
+
 type     Shadow_Disable // Shadowing is disabled. uint32
 const(
     Shadow_Disable // Shadowing is disabled. SHADOWCLASS = 1  //col:192
@@ -160,6 +169,8 @@ const(
     Shadow_EnableNoInputNotify // Permission is asked first from the session being shadowed. The shadower is not permitted keyboard and mouse input and MUST observe the shadowed session. SHADOWCLASS = 4  //col:195
     Shadow_EnableNoInputNoNotify // Permission is not asked first from the session being shadowed. The shadower is not permitted keyboard and mouse input and MUST observe the shadowed session. SHADOWCLASS = 5  //col:196
 )
+
+
 type     SdNone = 0 uint32
 const(
     SdNone  SDCLASS =  0  //col:267
@@ -168,24 +179,32 @@ const(
     SdAsync SDCLASS = 4  //col:270
     SdOemTransport SDCLASS = 5  //col:271
 )
+
+
 type     FlowControl_None uint32
 const(
     FlowControl_None FLOWCONTROLCLASS = 1  //col:296
     FlowControl_Hardware FLOWCONTROLCLASS = 2  //col:297
     FlowControl_Software FLOWCONTROLCLASS = 3  //col:298
 )
+
+
 type     ReceiveFlowControl_None uint32
 const(
     ReceiveFlowControl_None RECEIVEFLOWCONTROLCLASS = 1  //col:303
     ReceiveFlowControl_RTS RECEIVEFLOWCONTROLCLASS = 2  //col:304
     ReceiveFlowControl_DTR RECEIVEFLOWCONTROLCLASS = 3  //col:305
 )
+
+
 type     TransmitFlowControl_None uint32
 const(
     TransmitFlowControl_None TRANSMITFLOWCONTROLCLASS = 1  //col:310
     TransmitFlowControl_CTS TRANSMITFLOWCONTROLCLASS = 2  //col:311
     TransmitFlowControl_DSR TRANSMITFLOWCONTROLCLASS = 3  //col:312
 )
+
+
 type     Connect_CTS uint32
 const(
     Connect_CTS ASYNCCONNECTCLASS = 1  //col:317
@@ -195,12 +214,16 @@ const(
     Connect_FirstChar ASYNCCONNECTCLASS = 5  //col:321
     Connect_Perm ASYNCCONNECTCLASS = 6  //col:322
 )
+
+
 type     CdNone // No connection driver.    uint32
 const(
     CdNone // No connection driver.    CDCLASS = 1  //col:569
     CdModem // Connection driver is a modem. CDCLASS = 2  //col:570
     CdClass_Maximum CDCLASS = 3  //col:571
 )
+
+
 type     ErrorConstraint // An error occurred while obtaining constraint data. uint32
 const(
     ErrorConstraint // An error occurred while obtaining constraint data. LOADFACTORTYPE = 1  //col:596
@@ -210,20 +233,94 @@ const(
     SystemPtesConstraint // The number of system page table entries (PTEs) is the constraint. LOADFACTORTYPE = 5  //col:600
     CPUConstraint // CPU usage is the constraint. LOADFACTORTYPE = 6  //col:601
 )
+
+
 type     State_NoShadow // No shadow operations are currently being performed on this session. uint32
 const(
     State_NoShadow // No shadow operations are currently being performed on this session. SHADOWSTATECLASS = 1  //col:619
     State_Shadowing // The session is shadowing a different session. The current session is referred to as a shadow client. SHADOWSTATECLASS = 2  //col:620
     State_Shadowed // The session is being shadowed by a different session. The current session is referred to as a shadow target. SHADOWSTATECLASS = 3  //col:621
 )
+
+
+
 type (
 Winsta interface{
  * Attribution 4.0 International ()(ok bool)//col:93
 }
-
 )
+
 func NewWinsta() { return & winsta{} }
+
 func (w *winsta) * Attribution 4.0 International ()(ok bool){//col:93
+/* * Attribution 4.0 International (CC BY 4.0) license. 
+ * 
+ * You must give appropriate credit, provide a link to the license, and 
+ * indicate if changes were made. You may do so in any reasonable manner, but 
+ * not in any way that suggests the licensor endorses you or your use.
+#ifndef _WINSTA_H
+#define _WINSTA_H
+#define WINSTATION_GUEST_ACCESS WINSTATION_LOGON
+#define WINSTATION_CURRENT_GUEST_ACCESS (WINSTATION_VIRTUAL | WINSTATION_LOGOFF)
+#define WINSTATION_USER_ACCESS (WINSTATION_GUEST_ACCESS | WINSTATION_QUERY | WINSTATION_CONNECT)
+#define WINSTATION_CURRENT_USER_ACCESS \
+    (WINSTATION_SET | WINSTATION_RESET | WINSTATION_VIRTUAL | \
+    WINSTATION_LOGOFF | WINSTATION_DISCONNECT)
+#define WINSTATION_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED | WINSTATION_QUERY | \
+    WINSTATION_SET | WINSTATION_RESET | WINSTATION_VIRTUAL | \
+    WINSTATION_SHADOW | WINSTATION_LOGON | WINSTATION_MSG | \
+    WINSTATION_CONNECT | WINSTATION_DISCONNECT)
+#define WDPREFIX_LENGTH 12
+#define CALLBACK_LENGTH 50
+#define DLLNAME_LENGTH 32
+#define CDNAME_LENGTH 32
+#define WDNAME_LENGTH 32
+#define PDNAME_LENGTH 32
+#define DEVICENAME_LENGTH 128
+#define MODEMNAME_LENGTH DEVICENAME_LENGTH
+#define STACK_ADDRESS_LENGTH 128
+#define MAX_BR_NAME 65
+#define DIRECTORY_LENGTH 256
+#define INITIALPROGRAM_LENGTH 256
+#define USERNAME_LENGTH 20
+#define DOMAIN_LENGTH 17
+#define PASSWORD_LENGTH 14
+#define NASISPECIFICNAME_LENGTH 14
+#define NASIUSERNAME_LENGTH 47
+#define NASIPASSWORD_LENGTH 24
+#define NASISESSIONNAME_LENGTH 16
+#define NASIFILESERVER_LENGTH 47
+#define CLIENTDATANAME_LENGTH 7
+#define CLIENTNAME_LENGTH 20
+#define CLIENTADDRESS_LENGTH 30
+#define IMEFILENAME_LENGTH 32
+#define DIRECTORY_LENGTH 256
+#define CLIENTLICENSE_LENGTH 32
+#define CLIENTMODEM_LENGTH 40
+#define CLIENT_PRODUCT_ID_LENGTH 32
+#define MAX_COUNTER_EXTENSIONS 2
+#define WINSTATIONNAME_LENGTH 32
+#define TERMSRV_TOTAL_SESSIONS 1
+#define TERMSRV_DISC_SESSIONS 2
+#define TERMSRV_RECON_SESSIONS 3
+#define TERMSRV_CURRENT_ACTIVE_SESSIONS 4
+#define TERMSRV_CURRENT_DISC_SESSIONS 5
+#define TERMSRV_PENDING_SESSIONS 6
+#define TERMSRV_SUCC_TOTAL_LOGONS 7
+#define TERMSRV_SUCC_LOCAL_LOGONS 8
+#define TERMSRV_SUCC_REMOTE_LOGONS 9
+#define TERMSRV_SUCC_SESSION0_LOGONS 10
+#define TERMSRV_CURRENT_TERMINATING_SESSIONS 11
+#define TERMSRV_CURRENT_LOGGEDON_SESSIONS 12
+typedef RTL_TIME_ZONE_INFORMATION TS_TIME_ZONE_INFORMATION, *PTS_TIME_ZONE_INFORMATION;
+typedef WCHAR WINSTATIONNAME[WINSTATIONNAME_LENGTH + 1];
+typedef struct _VARDATA_WIRE
+{
+    USHORT Size;
+    USHORT Offset;
+} VARDATA_WIRE, *PVARDATA_WIRE;*/
 return true
 }
+
+
 

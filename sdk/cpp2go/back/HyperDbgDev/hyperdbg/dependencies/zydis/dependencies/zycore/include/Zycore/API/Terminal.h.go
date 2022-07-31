@@ -1,4 +1,6 @@
 package API
+//back\HyperDbgDev\hyperdbg\dependencies\zydis\dependencies\zycore\include\Zycore\API\Terminal.h.back
+
 const(
 ZYCORE_TERMINAL_H =  //col:33
 ZYAN_VT100SGR_RESET             "033[0m" =  //col:53
@@ -37,12 +39,119 @@ ZYAN_VT100SGR_BG_BRIGHT_MAGENTA "033[105m" = ZYAN_VT100SGR_BG_BRIGHT_CYAN    "03
 ZYAN_VT100SGR_BG_BRIGHT_CYAN    "033[106m" = ZYAN_VT100SGR_BG_BRIGHT_WHITE   "033[107m"  //col:98
 ZYAN_VT100SGR_BG_BRIGHT_WHITE   "033[107m" =  //col:99
 )
+
 type     /** uint32
 const(
+    /** typedef enum ZyanStandardStream_ = 1  //col:112
+     * @brief   The default input stream. typedef enum ZyanStandardStream_ = 2  //col:113
+     */ typedef enum ZyanStandardStream_ = 3  //col:114
+    ZYAN_STDSTREAM_IN typedef enum ZyanStandardStream_ = 4  //col:115
+    /** typedef enum ZyanStandardStream_ = 5  //col:116
+     * @brief   The default output stream. typedef enum ZyanStandardStream_ = 6  //col:117
+     */ typedef enum ZyanStandardStream_ = 7  //col:118
+    ZYAN_STDSTREAM_OUT typedef enum ZyanStandardStream_ = 8  //col:119
+    /** typedef enum ZyanStandardStream_ = 9  //col:120
+     * @brief   The default error stream. typedef enum ZyanStandardStream_ = 10  //col:121
+     */ typedef enum ZyanStandardStream_ = 11  //col:122
+    ZYAN_STDSTREAM_ERR typedef enum ZyanStandardStream_ = 12  //col:123
+)
+
+
+
+type (
+Terminal interface{
+  Zyan Core Library ()(ok bool)//col:124
+ * On Windows systems, VT100 functionality is only supported on Windows 10 build 1607 ()(ok bool)//col:160
+}
+)
+
+func NewTerminal() { return & terminal{} }
+
+func (t *terminal)  Zyan Core Library ()(ok bool){//col:124
+/*  Zyan Core Library (Zycore-C)
+  Original Author : Florian Bernd
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+#ifndef ZYCORE_TERMINAL_H
+#define ZYCORE_TERMINAL_H
+#include <ZycoreExportConfig.h>
+#include <Zycore/LibC.h>
+#include <Zycore/Status.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
+#ifndef ZYAN_NO_LIBC
+#define ZYAN_VT100SGR_RESET             "\033[0m"
+#define ZYAN_VT100SGR_FG_DEFAULT        "\033[39m"
+#define ZYAN_VT100SGR_FG_BLACK          "\033[30m"
+#define ZYAN_VT100SGR_FG_RED            "\033[31m"
+#define ZYAN_VT100SGR_FG_GREEN          "\033[32m"
+#define ZYAN_VT100SGR_FG_YELLOW         "\033[33m"
+#define ZYAN_VT100SGR_FG_BLUE           "\033[34m"
+#define ZYAN_VT100SGR_FG_MAGENTA        "\033[35m"
+#define ZYAN_VT100SGR_FG_CYAN           "\033[36m"
+#define ZYAN_VT100SGR_FG_WHITE          "\033[37m"
+#define ZYAN_VT100SGR_FG_BRIGHT_BLACK   "\033[90m"
+#define ZYAN_VT100SGR_FG_BRIGHT_RED     "\033[91m"
+#define ZYAN_VT100SGR_FG_BRIGHT_GREEN   "\033[92m"
+#define ZYAN_VT100SGR_FG_BRIGHT_YELLOW  "\033[93m"
+#define ZYAN_VT100SGR_FG_BRIGHT_BLUE    "\033[94m"
+#define ZYAN_VT100SGR_FG_BRIGHT_MAGENTA "\033[95m"
+#define ZYAN_VT100SGR_FG_BRIGHT_CYAN    "\033[96m"
+#define ZYAN_VT100SGR_FG_BRIGHT_WHITE   "\033[97m"
+#define ZYAN_VT100SGR_BG_DEFAULT        "\033[49m"
+#define ZYAN_VT100SGR_BG_BLACK          "\033[40m"
+#define ZYAN_VT100SGR_BG_RED            "\033[41m"
+#define ZYAN_VT100SGR_BG_GREEN          "\033[42m"
+#define ZYAN_VT100SGR_BG_YELLOW         "\033[43m"
+#define ZYAN_VT100SGR_BG_BLUE           "\033[44m"
+#define ZYAN_VT100SGR_BG_MAGENTA        "\033[45m"
+#define ZYAN_VT100SGR_BG_CYAN           "\033[46m"
+#define ZYAN_VT100SGR_BG_WHITE          "\033[47m"
+#define ZYAN_VT100SGR_BG_BRIGHT_BLACK   "\033[100m"
+#define ZYAN_VT100SGR_BG_BRIGHT_RED     "\033[101m"
+#define ZYAN_VT100SGR_BG_BRIGHT_GREEN   "\033[102m"
+#define ZYAN_VT100SGR_BG_BRIGHT_YELLOW  "\033[103m"
+#define ZYAN_VT100SGR_BG_BRIGHT_BLUE    "\033[104m"
+#define ZYAN_VT100SGR_BG_BRIGHT_MAGENTA "\033[105m"
+#define ZYAN_VT100SGR_BG_BRIGHT_CYAN    "\033[106m"
+#define ZYAN_VT100SGR_BG_BRIGHT_WHITE   "\033[107m"
+typedef enum ZyanStandardStream_
+{
+    ZYAN_STDSTREAM_IN,
+    ZYAN_STDSTREAM_OUT,
+    ZYAN_STDSTREAM_ERR
+} ZyanStandardStream;*/
 return true
 }
 
 func (t *terminal) * On Windows systems, VT100 functionality is only supported on Windows 10 build 1607 ()(ok bool){//col:160
+/* * On Windows systems, VT100 functionality is only supported on Windows 10 build 1607 (anniversary
+ * update) and later.
+ZYCORE_EXPORT ZyanStatus ZyanTerminalEnableVT100(ZyanStandardStream stream);
+ *
+ *
+ *          or another zyan status code if an error occured.
+ZYCORE_EXPORT ZyanStatus ZyanTerminalIsTTY(ZyanStandardStream stream);
+#ifdef __cplusplus
+}*/
 return true
 }
+
+
 

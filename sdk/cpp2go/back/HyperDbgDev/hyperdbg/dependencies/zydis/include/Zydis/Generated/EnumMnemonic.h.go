@@ -1,4 +1,6 @@
 package Generated
+//back\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Generated\EnumMnemonic.h.back
+
 type     ZYDIS_MNEMONIC_INVALID uint32
 const(
     ZYDIS_MNEMONIC_INVALID typedef enum ZydisMnemonic_ = 1  //col:6
@@ -1607,6 +1609,31 @@ const(
     ZYDIS_MNEMONIC_XSHA256 typedef enum ZydisMnemonic_ = 1604  //col:1609
     ZYDIS_MNEMONIC_XSTORE typedef enum ZydisMnemonic_ = 1605  //col:1610
     ZYDIS_MNEMONIC_XTEST typedef enum ZydisMnemonic_ = 1606  //col:1611
+    /** typedef enum ZydisMnemonic_ = 1607  //col:1613
+     * Maximum value of this enum. typedef enum ZydisMnemonic_ = 1608  //col:1614
+     */ typedef enum ZydisMnemonic_ = 1609  //col:1615
+    ZYDIS_MNEMONIC_MAX_VALUE  typedef enum ZydisMnemonic_ =  ZYDIS_MNEMONIC_XTEST  //col:1616
+    /** typedef enum ZydisMnemonic_ = 1611  //col:1617
+     * The minimum number of bits required to represent all values of this enum. typedef enum ZydisMnemonic_ = 1612  //col:1618
+     */ typedef enum ZydisMnemonic_ = 1613  //col:1619
+    ZYDIS_MNEMONIC_REQUIRED_BITS  typedef enum ZydisMnemonic_ =  ZYAN_BITS_TO_REPRESENT(ZYDIS_MNEMONIC_MAX_VALUE)  //col:1620
+)
+
+
+
+type (
+EnumMnemonic interface{
+    ZYDIS_MNEMONIC_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool)//col:1621
+}
+)
+
+func NewEnumMnemonic() { return & enumMnemonic{} }
+
+func (e *enumMnemonic)    ZYDIS_MNEMONIC_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:1621
+/*    ZYDIS_MNEMONIC_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT(ZYDIS_MNEMONIC_MAX_VALUE)
+} ZydisMnemonic;*/
 return true
 }
+
+
 

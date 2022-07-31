@@ -1,4 +1,6 @@
 package phnt
+//back\HyperDbgDev\hyperdbg\dependencies\phnt\ntexapi.h.back
+
 const(
 _NTEXAPI_H =  //col:13
 EFI_VARIABLE_NON_VOLATILE = 0x00000001 //col:49
@@ -243,6 +245,7 @@ FLG_USERMODE_VALID_BITS (FLG_STOP_ON_EXCEPTION | = FLG_SHOW_LDR_SNAPS | FLG_HEAP
 FLG_BOOTONLY_VALID_BITS (FLG_KERNEL_STACK_TRACE_DB | = FLG_MAINTAIN_OBJECT_TYPELIST | FLG_ENABLE_CSRDEBUG | FLG_DEBUG_INITIAL_COMMAND | FLG_DEBUG_INITIAL_COMMAND_EX | FLG_DISABLE_PAGE_KERNEL_STACKS) //col:5493
 FLG_KERNELMODE_VALID_BITS (FLG_STOP_ON_EXCEPTION | = FLG_SHOW_LDR_SNAPS | FLG_STOP_ON_HUNG_GUI | FLG_POOL_ENABLE_TAGGING | FLG_ENABLE_KDEBUG_SYMBOL_LOAD | FLG_ENABLE_CLOSE_EXCEPTIONS | FLG_ENABLE_EXCEPTION_LOGGING | FLG_ENABLE_HANDLE_TYPE_TAGGING | FLG_DISABLE_DBGPRINT | FLG_ENABLE_HANDLE_EXCEPTIONS) //col:5500
 )
+
 type     FilterBootOptionOperationOpenSystemStore uint32
 const(
     FilterBootOptionOperationOpenSystemStore FILTER_BOOT_OPTION_OPERATION = 1  //col:272
@@ -250,28 +253,40 @@ const(
     FilterBootOptionOperationDeleteElement FILTER_BOOT_OPTION_OPERATION = 3  //col:274
     FilterBootOptionOperationMax FILTER_BOOT_OPTION_OPERATION = 4  //col:275
 )
+
+
 type     EventBasicInformation uint32
 const(
     EventBasicInformation EVENT_INFORMATION_CLASS = 1  //col:309
 )
+
+
 type     MutantBasicInformation // MUTANT_BASIC_INFORMATION uint32
 const(
     MutantBasicInformation // MUTANT_BASIC_INFORMATION MUTANT_INFORMATION_CLASS = 1  //col:463
     MutantOwnerInformation // MUTANT_OWNER_INFORMATION MUTANT_INFORMATION_CLASS = 2  //col:464
 )
+
+
 type     SemaphoreBasicInformation uint32
 const(
     SemaphoreBasicInformation SEMAPHORE_INFORMATION_CLASS = 1  //col:533
 )
+
+
 type     TimerBasicInformation // TIMER_BASIC_INFORMATION uint32
 const(
     TimerBasicInformation // TIMER_BASIC_INFORMATION TIMER_INFORMATION_CLASS = 1  //col:598
 )
+
+
 type     TimerSetCoalescableTimer // TIMER_SET_COALESCABLE_TIMER_INFO uint32
 const(
     TimerSetCoalescableTimer // TIMER_SET_COALESCABLE_TIMER_INFO TIMER_SET_INFORMATION_CLASS = 1  //col:615
     MaxTimerInfoClass TIMER_SET_INFORMATION_CLASS = 2  //col:616
 )
+
+
 type     WnfWellKnownStateName uint32
 const(
     WnfWellKnownStateName WNF_STATE_NAME_LIFETIME = 1  //col:897
@@ -279,12 +294,16 @@ const(
     WnfPersistentStateName WNF_STATE_NAME_LIFETIME = 3  //col:899
     WnfTemporaryStateName WNF_STATE_NAME_LIFETIME = 4  //col:900
 )
+
+
 type     WnfInfoStateNameExist uint32
 const(
     WnfInfoStateNameExist WNF_STATE_NAME_INFORMATION = 1  //col:905
     WnfInfoSubscribersPresent WNF_STATE_NAME_INFORMATION = 2  //col:906
     WnfInfoIsQuiescent WNF_STATE_NAME_INFORMATION = 3  //col:907
 )
+
+
 type     WnfDataScopeSystem uint32
 const(
     WnfDataScopeSystem WNF_DATA_SCOPE = 1  //col:912
@@ -294,6 +313,8 @@ const(
     WnfDataScopeMachine // REDSTONE3 WNF_DATA_SCOPE = 5  //col:916
     WnfDataScopePhysicalMachine // WIN11 WNF_DATA_SCOPE = 6  //col:917
 )
+
+
 type     WorkerFactoryTimeout // LARGE_INTEGER uint32
 const(
     WorkerFactoryTimeout // LARGE_INTEGER WORKERFACTORYINFOCLASS = 1  //col:1078
@@ -314,6 +335,8 @@ const(
     WorkerFactoryThreadCpuSets // since REDSTONE5 WORKERFACTORYINFOCLASS = 16  //col:1093
     MaxWorkerFactoryInfoClass WORKERFACTORYINFOCLASS = 17  //col:1094
 )
+
+
 type     SystemBasicInformation // q: SYSTEM_BASIC_INFORMATION uint32
 const(
     SystemBasicInformation // q: SYSTEM_BASIC_INFORMATION SYSTEM_INFORMATION_CLASS = 1  //col:1306
@@ -557,6 +580,8 @@ const(
     SystemOriginalImageFeatureInformation SYSTEM_INFORMATION_CLASS = 239  //col:1544
     MaxSystemInfoClass SYSTEM_INFORMATION_CLASS = 240  //col:1545
 )
+
+
 type     EventTraceKernelVersionInformation // EVENT_TRACE_VERSION_INFORMATION uint32
 const(
     EventTraceKernelVersionInformation // EVENT_TRACE_VERSION_INFORMATION EVENT_TRACE_INFORMATION_CLASS = 1  //col:2011
@@ -588,12 +613,16 @@ const(
     EventTraceUnifiedStackCachingInformation // sicne 21H1 EVENT_TRACE_INFORMATION_CLASS = 27  //col:2037
     MaxEventTraceInfoClass EVENT_TRACE_INFORMATION_CLASS = 28  //col:2038
 )
+
+
 type     SystemCrashDumpDisable uint32
 const(
     SystemCrashDumpDisable SYSTEM_CRASH_DUMP_CONFIGURATION_CLASS = 1  //col:2337
     SystemCrashDumpReconfigure SYSTEM_CRASH_DUMP_CONFIGURATION_CLASS = 2  //col:2338
     SystemCrashDumpInitializationComplete SYSTEM_CRASH_DUMP_CONFIGURATION_CLASS = 3  //col:2339
 )
+
+
 type     WdActionSetTimeoutValue uint32
 const(
     WdActionSetTimeoutValue WATCHDOG_HANDLER_ACTION  = 1  //col:2634
@@ -605,6 +634,8 @@ const(
     WdActionQueryTriggerAction WATCHDOG_HANDLER_ACTION  = 7  //col:2640
     WdActionQueryState WATCHDOG_HANDLER_ACTION  = 8  //col:2641
 )
+
+
 type     WdInfoTimeoutValue = 0 uint32
 const(
     WdInfoTimeoutValue  WATCHDOG_INFORMATION_CLASS =  0  //col:2655
@@ -618,12 +649,16 @@ const(
     WdInfoGeneratedLastReset  WATCHDOG_INFORMATION_CLASS =  8  //col:2663
     WdInfoInvalid  WATCHDOG_INFORMATION_CLASS =  9  //col:2664
 )
+
+
 type     SystemFirmwareTableEnumerate uint32
 const(
     SystemFirmwareTableEnumerate SYSTEM_FIRMWARE_TABLE_ACTION = 1  //col:2678
     SystemFirmwareTableGet SYSTEM_FIRMWARE_TABLE_ACTION = 2  //col:2679
     SystemFirmwareTableMax SYSTEM_FIRMWARE_TABLE_ACTION = 3  //col:2680
 )
+
+
 type     MemoryCaptureAccessedBits uint32
 const(
     MemoryCaptureAccessedBits SYSTEM_MEMORY_LIST_COMMAND = 1  //col:2726
@@ -634,12 +669,16 @@ const(
     MemoryPurgeLowPriorityStandbyList SYSTEM_MEMORY_LIST_COMMAND = 6  //col:2731
     MemoryCommandMax SYSTEM_MEMORY_LIST_COMMAND = 7  //col:2732
 )
+
+
 type     CoverageAllModules = 0 uint32
 const(
     CoverageAllModules  COVERAGE_REQUEST_CODES =  0  //col:2832
     CoverageSearchByHash  COVERAGE_REQUEST_CODES =  1  //col:2833
     CoverageSearchByName  COVERAGE_REQUEST_CODES =  2  //col:2834
 )
+
+
 type     SystemVaTypeAll uint32
 const(
     SystemVaTypeAll SYSTEM_VA_TYPE = 1  //col:2978
@@ -650,6 +689,8 @@ const(
     SystemVaTypeSessionSpace SYSTEM_VA_TYPE = 6  //col:2983
     SystemVaTypeMax SYSTEM_VA_TYPE = 7  //col:2984
 )
+
+
 type     StorePageRequest = 1 uint32
 const(
     StorePageRequest  STORE_INFORMATION_CLASS =  1  //col:2999
@@ -677,6 +718,8 @@ const(
     ProcessStoreInfoRequest  STORE_INFORMATION_CLASS =  23 // SmProcessProcessStoreInfoRequest  //col:3021
     StoreInformationMax STORE_INFORMATION_CLASS = 24  //col:3022
 )
+
+
 type     StStatsLevelBasic = 0 uint32
 const(
     StStatsLevelBasic  ST_STATS_LEVEL =  0  //col:3041
@@ -685,18 +728,24 @@ const(
     StStatsLevelSpaceBitmap  ST_STATS_LEVEL =  3 // requires SeProfileSingleProcessPrivilege  //col:3044
     StStatsLevelMax  ST_STATS_LEVEL =  4  //col:3045
 )
+
+
 type     StoreTypeInMemory=0 uint32
 const(
     StoreTypeInMemory SM_STORE_TYPE = 0  //col:3146
     StoreTypeFile SM_STORE_TYPE = 1  //col:3147
     StoreTypeMax SM_STORE_TYPE = 2  //col:3148
 )
+
+
 type     SmStoreManagerTypePhysical=0 uint32
 const(
     SmStoreManagerTypePhysical SM_STORE_MANAGER_TYPE = 0  //col:3300
     SmStoreManagerTypeVirtual SM_STORE_MANAGER_TYPE = 1  //col:3301
     SmStoreManagerTypeMax SM_STORE_MANAGER_TYPE = 2  //col:3302
 )
+
+
 type     SmConfigDirtyPageCompression = 0 uint32
 const(
     SmConfigDirtyPageCompression  SM_CONFIG_TYPE =  0  //col:3395
@@ -704,6 +753,8 @@ const(
     SmConfigPrefetchSeekThreshold  SM_CONFIG_TYPE =  2  //col:3397
     SmConfigTypeMax  SM_CONFIG_TYPE =  3  //col:3398
 )
+
+
 type     TpmBootEntropyStructureUninitialized uint32
 const(
     TpmBootEntropyStructureUninitialized TPM_BOOT_ENTROPY_RESULT_CODE = 1  //col:3507
@@ -712,6 +763,8 @@ const(
     TpmBootEntropyTpmError TPM_BOOT_ENTROPY_RESULT_CODE = 4  //col:3510
     TpmBootEntropySuccess TPM_BOOT_ENTROPY_RESULT_CODE = 5  //col:3511
 )
+
+
 type     SystemPixelFormatUnknown uint32
 const(
     SystemPixelFormatUnknown SYSTEM_PIXEL_FORMAT = 1  //col:3602
@@ -720,6 +773,8 @@ const(
     SystemPixelFormatB8G8R8 SYSTEM_PIXEL_FORMAT = 4  //col:3605
     SystemPixelFormatB8G8R8X8 SYSTEM_PIXEL_FORMAT = 5  //col:3606
 )
+
+
 type     SystemProcessClassificationNormal uint32
 const(
     SystemProcessClassificationNormal SYSTEM_PROCESS_CLASSIFICATION = 1  //col:3952
@@ -729,6 +784,8 @@ const(
     SystemProcessClassificationRegistry // REDSTONE4 SYSTEM_PROCESS_CLASSIFICATION = 5  //col:3956
     SystemProcessClassificationMaximum SYSTEM_PROCESS_CLASSIFICATION = 6  //col:3957
 )
+
+
 type     SystemActivityModerationStateSystemManaged uint32
 const(
     SystemActivityModerationStateSystemManaged SYSTEM_ACTIVITY_MODERATION_STATE = 1  //col:4258
@@ -736,17 +793,23 @@ const(
     SystemActivityModerationStateUserManagedDisableThrottling SYSTEM_ACTIVITY_MODERATION_STATE = 3  //col:4260
     MaxSystemActivityModerationState SYSTEM_ACTIVITY_MODERATION_STATE = 4  //col:4261
 )
+
+
 type     SystemActivityModerationAppTypeClassic uint32
 const(
     SystemActivityModerationAppTypeClassic SYSTEM_ACTIVITY_MODERATION_APP_TYPE = 1  //col:4273
     SystemActivityModerationAppTypePackaged SYSTEM_ACTIVITY_MODERATION_APP_TYPE = 2  //col:4274
     MaxSystemActivityModerationAppType SYSTEM_ACTIVITY_MODERATION_APP_TYPE = 3  //col:4275
 )
+
+
 type     IommuStateBlock uint32
 const(
     IommuStateBlock SYSTEM_IOMMU_STATE = 1  //col:4594
     IommuStateUnblock SYSTEM_IOMMU_STATE = 2  //col:4595
 )
+
+
 type     SysDbgQueryModuleInformation uint32
 const(
     SysDbgQueryModuleInformation SYSDBG_COMMAND = 1  //col:4694
@@ -790,6 +853,8 @@ const(
     SysDbgKdPullRemoteFile // SYSDBG_KD_PULL_REMOTE_FILE SYSDBG_COMMAND = 39  //col:4732
     SysDbgMaxInfoClass SYSDBG_COMMAND = 40  //col:4733
 )
+
+
 type     OptionAbortRetryIgnore uint32
 const(
     OptionAbortRetryIgnore HARDERROR_RESPONSE_OPTION = 1  //col:4887
@@ -802,6 +867,8 @@ const(
     OptionOkNoWait HARDERROR_RESPONSE_OPTION = 8  //col:4894
     OptionCancelTryContinue HARDERROR_RESPONSE_OPTION = 9  //col:4895
 )
+
+
 type     ResponseReturnToCaller uint32
 const(
     ResponseReturnToCaller HARDERROR_RESPONSE = 1  //col:4900
@@ -816,17 +883,23 @@ const(
     ResponseTryAgain HARDERROR_RESPONSE = 10  //col:4909
     ResponseContinue HARDERROR_RESPONSE = 11  //col:4910
 )
+
+
 type     StandardDesign uint32
 const(
     StandardDesign ALTERNATIVE_ARCHITECTURE_TYPE = 1  //col:4931
     NEC98x86 ALTERNATIVE_ARCHITECTURE_TYPE = 2  //col:4932
     EndAlternatives ALTERNATIVE_ARCHITECTURE_TYPE = 3  //col:4933
 )
+
+
 type     AtomBasicInformation uint32
 const(
     AtomBasicInformation ATOM_INFORMATION_CLASS = 1  //col:5402
     AtomTableInformation ATOM_INFORMATION_CLASS = 2  //col:5403
 )
+
+
 type     ShutdownNoReboot uint32
 const(
     ShutdownNoReboot SHUTDOWN_ACTION = 1  //col:5535
@@ -834,6 +907,9 @@ const(
     ShutdownPowerOff SHUTDOWN_ACTION = 3  //col:5537
     ShutdownRebootForRecovery // since WIN11 SHUTDOWN_ACTION = 4  //col:5538
 )
+
+
+
 type (
 Ntexapi interface{
  * Attribution 4.0 International ()(ok bool)//col:102
@@ -865,118 +941,1584 @@ FORCEINLINE ULONG NtGetTickCount()(ok bool)//col:5209
 NtQueryDefaultLocale()(ok bool)//col:5404
 NtQueryInformationAtom()(ok bool)//col:5539
 }
-
 )
+
 func NewNtexapi() { return & ntexapi{} }
+
 func (n *ntexapi) * Attribution 4.0 International ()(ok bool){//col:102
+/* * Attribution 4.0 International (CC BY 4.0) license. 
+ * 
+ * You must give appropriate credit, provide a link to the license, and 
+ * indicate if changes were made. You may do so in any reasonable manner, but 
+ * not in any way that suggests the licensor endorses you or your use.
+#ifndef _NTEXAPI_H
+#define _NTEXAPI_H
+#include <ntkeapi.h>
+#if (PHNT_MODE != PHNT_MODE_KERNEL)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtDelayExecution(
+    _In_ BOOLEAN Alertable,
+    _In_opt_ PLARGE_INTEGER DelayInterval
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQuerySystemEnvironmentValue(
+    _In_ PUNICODE_STRING VariableName,
+    _Out_writes_bytes_(ValueLength) PWSTR VariableValue,
+    _In_ USHORT ValueLength,
+    _Out_opt_ PUSHORT ReturnLength
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetSystemEnvironmentValue(
+    _In_ PUNICODE_STRING VariableName,
+    _In_ PUNICODE_STRING VariableValue
+    );
+#define EFI_VARIABLE_NON_VOLATILE 0x00000001
+#define EFI_VARIABLE_BOOTSERVICE_ACCESS 0x00000002
+#define EFI_VARIABLE_RUNTIME_ACCESS 0x00000004
+#define EFI_VARIABLE_HARDWARE_ERROR_RECORD 0x00000008
+#define EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS 0x00000010
+#define EFI_VARIABLE_TIME_BASED_AUTHENTICATED_WRITE_ACCESS 0x00000020
+#define EFI_VARIABLE_APPEND_WRITE 0x00000040
+#define EFI_VARIABLE_ENHANCED_AUTHENTICATED_ACCESS 0x00000080
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQuerySystemEnvironmentValueEx(
+    _In_ PUNICODE_STRING VariableName,
+    _In_ LPGUID VendorGuid,
+    _Out_writes_bytes_opt_(*ValueLength) PVOID Value,
+    _Inout_ PULONG ValueLength,
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetSystemEnvironmentValueEx(
+    _In_ PUNICODE_STRING VariableName,
+    _In_ LPGUID VendorGuid,
+    _In_reads_bytes_opt_(ValueLength) PVOID Value,
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtEnumerateSystemEnvironmentValuesEx(
+    _In_ ULONG InformationClass,
+    _Out_ PVOID Buffer,
+    _Inout_ PULONG BufferLength
+    );
+typedef struct _BOOT_ENTRY
+{
+    ULONG Version;
+    ULONG Length;
+    ULONG Id;
+    ULONG Attributes;
+    ULONG FriendlyNameOffset;
+    ULONG BootFilePathOffset;
+    ULONG OsOptionsLength;
+    UCHAR OsOptions[1];
+} BOOT_ENTRY, *PBOOT_ENTRY;*/
 return true
 }
 
 func (n *ntexapi)#if ()(ok bool){//col:276
+/*#if (PHNT_VERSION >= PHNT_WINXP)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtAddBootEntry(
+    _In_ PBOOT_ENTRY BootEntry,
+    _Out_opt_ PULONG Id
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtDeleteBootEntry(
+    _In_ ULONG Id
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtModifyBootEntry(
+    _In_ PBOOT_ENTRY BootEntry
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtEnumerateBootEntries(
+    _Out_writes_bytes_opt_(*BufferLength) PVOID Buffer,
+    _Inout_ PULONG BufferLength
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryBootEntryOrder(
+    _Out_writes_opt_(*Count) PULONG Ids,
+    _Inout_ PULONG Count
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetBootEntryOrder(
+    _In_reads_(Count) PULONG Ids,
+    _In_ ULONG Count
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryBootOptions(
+    _Out_writes_bytes_opt_(*BootOptionsLength) PBOOT_OPTIONS BootOptions,
+    _Inout_ PULONG BootOptionsLength
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetBootOptions(
+    _In_ PBOOT_OPTIONS BootOptions,
+    _In_ ULONG FieldsToChange
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtTranslateFilePath(
+    _In_ PFILE_PATH InputFilePath,
+    _In_ ULONG OutputType,
+    _Out_writes_bytes_opt_(*OutputFilePathLength) PFILE_PATH OutputFilePath,
+    _Inout_opt_ PULONG OutputFilePathLength
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtAddDriverEntry(
+    _In_ PEFI_DRIVER_ENTRY DriverEntry,
+    _Out_opt_ PULONG Id
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtDeleteDriverEntry(
+    _In_ ULONG Id
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtModifyDriverEntry(
+    _In_ PEFI_DRIVER_ENTRY DriverEntry
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtEnumerateDriverEntries(
+    _Out_writes_bytes_opt_(*BufferLength) PVOID Buffer,
+    _Inout_ PULONG BufferLength
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryDriverEntryOrder(
+    _Out_writes_opt_(*Count) PULONG Ids,
+    _Inout_ PULONG Count
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetDriverEntryOrder(
+    _In_reads_(Count) PULONG Ids,
+    _In_ ULONG Count
+    );
+#endif
+typedef enum _FILTER_BOOT_OPTION_OPERATION
+{
+    FilterBootOptionOperationOpenSystemStore,
+    FilterBootOptionOperationSetElement,
+    FilterBootOptionOperationDeleteElement,
+    FilterBootOptionOperationMax
+} FILTER_BOOT_OPTION_OPERATION;*/
 return true
 }
 
 func (n *ntexapi)#if ()(ok bool){//col:310
+/*#if (PHNT_VERSION >= PHNT_WIN8)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtFilterBootOption(
+    _In_ FILTER_BOOT_OPTION_OPERATION FilterOperation,
+    _In_ ULONG ObjectType,
+    _In_ ULONG ElementType,
+    _In_reads_bytes_opt_(DataSize) PVOID Data,
+    _In_ ULONG DataSize
+    );
+#endif
+#ifndef EVENT_QUERY_STATE
+#define EVENT_QUERY_STATE 0x0001
+#endif
+#ifndef EVENT_MODIFY_STATE
+#define EVENT_MODIFY_STATE 0x0002
+#endif
+#ifndef EVENT_ALL_ACCESS
+#define EVENT_ALL_ACCESS (EVENT_QUERY_STATE|EVENT_MODIFY_STATE|STANDARD_RIGHTS_REQUIRED|SYNCHRONIZE)
+#endif
+typedef enum _EVENT_INFORMATION_CLASS
+{
+    EventBasicInformation
+} EVENT_INFORMATION_CLASS;*/
 return true
 }
 
 func (n *ntexapi)NtCreateEvent()(ok bool){//col:465
+/*NtCreateEvent(
+    _Out_ PHANDLE EventHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ EVENT_TYPE EventType,
+    _In_ BOOLEAN InitialState
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtOpenEvent(
+    _Out_ PHANDLE EventHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ POBJECT_ATTRIBUTES ObjectAttributes
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetEvent(
+    _In_ HANDLE EventHandle,
+    _Out_opt_ PLONG PreviousState
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetEventBoostPriority(
+    _In_ HANDLE EventHandle
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtClearEvent(
+    _In_ HANDLE EventHandle
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtResetEvent(
+    _In_ HANDLE EventHandle,
+    _Out_opt_ PLONG PreviousState
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtPulseEvent(
+    _In_ HANDLE EventHandle,
+    _Out_opt_ PLONG PreviousState
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryEvent(
+    _In_ HANDLE EventHandle,
+    _In_ EVENT_INFORMATION_CLASS EventInformationClass,
+    _Out_writes_bytes_(EventInformationLength) PVOID EventInformation,
+    _In_ ULONG EventInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
+#define EVENT_PAIR_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCreateEventPair(
+    _Out_ PHANDLE EventPairHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtOpenEventPair(
+    _Out_ PHANDLE EventPairHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ POBJECT_ATTRIBUTES ObjectAttributes
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetLowEventPair(
+    _In_ HANDLE EventPairHandle
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetHighEventPair(
+    _In_ HANDLE EventPairHandle
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtWaitLowEventPair(
+    _In_ HANDLE EventPairHandle
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtWaitHighEventPair(
+    _In_ HANDLE EventPairHandle
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetLowWaitHighEventPair(
+    _In_ HANDLE EventPairHandle
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetHighWaitLowEventPair(
+    _In_ HANDLE EventPairHandle
+    );
+#ifndef MUTANT_QUERY_STATE
+#define MUTANT_QUERY_STATE 0x0001
+#endif
+#ifndef MUTANT_ALL_ACCESS
+#define MUTANT_ALL_ACCESS (MUTANT_QUERY_STATE|STANDARD_RIGHTS_REQUIRED|SYNCHRONIZE)
+#endif
+typedef enum _MUTANT_INFORMATION_CLASS
+{
+} MUTANT_INFORMATION_CLASS;*/
 return true
 }
 
 func (n *ntexapi)NtCreateMutant()(ok bool){//col:534
+/*NtCreateMutant(
+    _Out_ PHANDLE MutantHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ BOOLEAN InitialOwner
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtOpenMutant(
+    _Out_ PHANDLE MutantHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ POBJECT_ATTRIBUTES ObjectAttributes
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtReleaseMutant(
+    _In_ HANDLE MutantHandle,
+    _Out_opt_ PLONG PreviousCount
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryMutant(
+    _In_ HANDLE MutantHandle,
+    _In_ MUTANT_INFORMATION_CLASS MutantInformationClass,
+    _Out_writes_bytes_(MutantInformationLength) PVOID MutantInformation,
+    _In_ ULONG MutantInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
+#ifndef SEMAPHORE_QUERY_STATE
+#define SEMAPHORE_QUERY_STATE 0x0001
+#endif
+#ifndef SEMAPHORE_MODIFY_STATE
+#define SEMAPHORE_MODIFY_STATE 0x0002
+#endif
+#ifndef SEMAPHORE_ALL_ACCESS
+#define SEMAPHORE_ALL_ACCESS (SEMAPHORE_QUERY_STATE|SEMAPHORE_MODIFY_STATE|STANDARD_RIGHTS_REQUIRED|SYNCHRONIZE)
+#endif
+typedef enum _SEMAPHORE_INFORMATION_CLASS
+{
+    SemaphoreBasicInformation
+} SEMAPHORE_INFORMATION_CLASS;*/
 return true
 }
 
 func (n *ntexapi)NtCreateSemaphore()(ok bool){//col:599
+/*NtCreateSemaphore(
+    _Out_ PHANDLE SemaphoreHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ LONG InitialCount,
+    _In_ LONG MaximumCount
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtOpenSemaphore(
+    _Out_ PHANDLE SemaphoreHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ POBJECT_ATTRIBUTES ObjectAttributes
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtReleaseSemaphore(
+    _In_ HANDLE SemaphoreHandle,
+    _In_ LONG ReleaseCount,
+    _Out_opt_ PLONG PreviousCount
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQuerySemaphore(
+    _In_ HANDLE SemaphoreHandle,
+    _In_ SEMAPHORE_INFORMATION_CLASS SemaphoreInformationClass,
+    _Out_writes_bytes_(SemaphoreInformationLength) PVOID SemaphoreInformation,
+    _In_ ULONG SemaphoreInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
+#ifndef TIMER_QUERY_STATE
+#define TIMER_QUERY_STATE 0x0001
+#endif
+#ifndef TIMER_MODIFY_STATE
+#define TIMER_MODIFY_STATE 0x0002
+#endif
+#ifndef TIMER_ALL_ACCESS
+#define TIMER_ALL_ACCESS (TIMER_QUERY_STATE|TIMER_MODIFY_STATE|STANDARD_RIGHTS_REQUIRED|SYNCHRONIZE)
+#endif
+typedef enum _TIMER_INFORMATION_CLASS
+{
+} TIMER_INFORMATION_CLASS;*/
 return true
 }
 
 func (n *ntexapi)typedef VOID ()(ok bool){//col:617
+/*typedef VOID (NTAPI *PTIMER_APC_ROUTINE)(
+    _In_ PVOID TimerContext,
+    _In_ ULONG TimerLowValue,
+    _In_ LONG TimerHighValue
+    );
+typedef enum _TIMER_SET_INFORMATION_CLASS
+{
+    MaxTimerInfoClass
+} TIMER_SET_INFORMATION_CLASS;*/
 return true
 }
 
 func (n *ntexapi)#if ()(ok bool){//col:631
+/*#if (PHNT_VERSION >= PHNT_WIN7)
+struct _COUNTED_REASON_CONTEXT;
+typedef struct _TIMER_SET_COALESCABLE_TIMER_INFO
+{
+    _In_ LARGE_INTEGER DueTime;
+    _In_opt_ PTIMER_APC_ROUTINE TimerApcRoutine;
+    _In_opt_ PVOID TimerContext;
+    _In_opt_ struct _COUNTED_REASON_CONTEXT *WakeContext;
+    _In_opt_ ULONG Period;
+    _In_ ULONG TolerableDelay;
+    _Out_opt_ PBOOLEAN PreviousState;
+} TIMER_SET_COALESCABLE_TIMER_INFO, *PTIMER_SET_COALESCABLE_TIMER_INFO;*/
 return true
 }
 
 func (n *ntexapi)NtCreateTimer()(ok bool){//col:722
+/*NtCreateTimer(
+    _Out_ PHANDLE TimerHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ TIMER_TYPE TimerType
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtOpenTimer(
+    _Out_ PHANDLE TimerHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ POBJECT_ATTRIBUTES ObjectAttributes
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetTimer(
+    _In_ HANDLE TimerHandle,
+    _In_ PLARGE_INTEGER DueTime,
+    _In_opt_ PTIMER_APC_ROUTINE TimerApcRoutine,
+    _In_opt_ PVOID TimerContext,
+    _In_ BOOLEAN ResumeTimer,
+    _In_opt_ LONG Period,
+    _Out_opt_ PBOOLEAN PreviousState
+    );
+#if (PHNT_VERSION >= PHNT_WIN7)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetTimerEx(
+    _In_ HANDLE TimerHandle,
+    _In_ TIMER_SET_INFORMATION_CLASS TimerSetInformationClass,
+    _Inout_updates_bytes_opt_(TimerSetInformationLength) PVOID TimerSetInformation,
+    _In_ ULONG TimerSetInformationLength
+    );
+#endif
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCancelTimer(
+    _In_ HANDLE TimerHandle,
+    _Out_opt_ PBOOLEAN CurrentState
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryTimer(
+    _In_ HANDLE TimerHandle,
+    _In_ TIMER_INFORMATION_CLASS TimerInformationClass,
+    _Out_writes_bytes_(TimerInformationLength) PVOID TimerInformation,
+    _In_ ULONG TimerInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
+#if (PHNT_VERSION >= PHNT_WIN8)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCreateIRTimer(
+    _Out_ PHANDLE TimerHandle,
+    _In_ ACCESS_MASK DesiredAccess
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetIRTimer(
+    _In_ HANDLE TimerHandle,
+    _In_opt_ PLARGE_INTEGER DueTime
+    );
+#endif
+typedef struct _T2_SET_PARAMETERS_V0
+{
+    ULONG Version;
+    ULONG Reserved;
+    LONGLONG NoWakeTolerance;
+} T2_SET_PARAMETERS, *PT2_SET_PARAMETERS;*/
 return true
 }
 
 func (n *ntexapi)#if ()(ok bool){//col:891
+/*#if (PHNT_VERSION >= PHNT_THRESHOLD)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCreateTimer2(
+    _Out_ PHANDLE TimerHandle,
+    _In_opt_ PVOID Reserved1,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ ULONG Attributes,
+    _In_ ACCESS_MASK DesiredAccess
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetTimer2(
+    _In_ HANDLE TimerHandle,
+    _In_ PLARGE_INTEGER DueTime,
+    _In_opt_ PLARGE_INTEGER Period,
+    _In_ PT2_SET_PARAMETERS Parameters
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCancelTimer2(
+    _In_ HANDLE TimerHandle,
+    _In_ PT2_CANCEL_PARAMETERS Parameters
+    );
+#endif
+#define PROFILE_CONTROL 0x0001
+#define PROFILE_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED | PROFILE_CONTROL)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCreateProfile(
+    _Out_ PHANDLE ProfileHandle,
+    _In_opt_ HANDLE Process,
+    _In_ PVOID ProfileBase,
+    _In_ SIZE_T ProfileSize,
+    _In_ ULONG BucketSize,
+    _In_reads_bytes_(BufferSize) PULONG Buffer,
+    _In_ ULONG BufferSize,
+    _In_ KPROFILE_SOURCE ProfileSource,
+    _In_ KAFFINITY Affinity
+    );
+#if (PHNT_VERSION >= PHNT_WIN7)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCreateProfileEx(
+    _Out_ PHANDLE ProfileHandle,
+    _In_opt_ HANDLE Process,
+    _In_ PVOID ProfileBase,
+    _In_ SIZE_T ProfileSize,
+    _In_ ULONG BucketSize,
+    _In_reads_bytes_(BufferSize) PULONG Buffer,
+    _In_ ULONG BufferSize,
+    _In_ KPROFILE_SOURCE ProfileSource,
+    _In_ USHORT GroupCount,
+    _In_reads_(GroupCount) PGROUP_AFFINITY GroupAffinity
+    );
+#endif
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtStartProfile(
+    _In_ HANDLE ProfileHandle
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtStopProfile(
+    _In_ HANDLE ProfileHandle
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryIntervalProfile(
+    _In_ KPROFILE_SOURCE ProfileSource,
+    _Out_ PULONG Interval
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetIntervalProfile(
+    _In_ ULONG Interval,
+    _In_ KPROFILE_SOURCE Source
+    );
+#define KEYEDEVENT_WAIT 0x0001
+#define KEYEDEVENT_WAKE 0x0002
+#define KEYEDEVENT_ALL_ACCESS \
+    (STANDARD_RIGHTS_REQUIRED | KEYEDEVENT_WAIT | KEYEDEVENT_WAKE)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCreateKeyedEvent(
+    _Out_ PHANDLE KeyedEventHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ ULONG Flags
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtOpenKeyedEvent(
+    _Out_ PHANDLE KeyedEventHandle,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_ POBJECT_ATTRIBUTES ObjectAttributes
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtReleaseKeyedEvent(
+    _In_ HANDLE KeyedEventHandle,
+    _In_ PVOID KeyValue,
+    _In_ BOOLEAN Alertable,
+    _In_opt_ PLARGE_INTEGER Timeout
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtWaitForKeyedEvent(
+    _In_ HANDLE KeyedEventHandle,
+    _In_ PVOID KeyValue,
+    _In_ BOOLEAN Alertable,
+    _In_opt_ PLARGE_INTEGER Timeout
+    );
+#if (PHNT_VERSION >= PHNT_WIN7)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtUmsThreadYield(
+    _In_ PVOID SchedulerParam
+    );
+#endif
+typedef struct _WNF_STATE_NAME
+{
+    ULONG Data[2];
+} WNF_STATE_NAME, *PWNF_STATE_NAME;*/
 return true
 }
 
 func (n *ntexapi)#if ()(ok bool){//col:1095
+/*#if (PHNT_VERSION >= PHNT_WIN8)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCreateWnfStateName(
+    _Out_ PWNF_STATE_NAME StateName,
+    _In_ WNF_STATE_NAME_LIFETIME NameLifetime,
+    _In_ WNF_DATA_SCOPE DataScope,
+    _In_ BOOLEAN PersistData,
+    _In_opt_ PCWNF_TYPE_ID TypeId,
+    _In_ ULONG MaximumStateSize,
+    _In_ PSECURITY_DESCRIPTOR SecurityDescriptor
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtDeleteWnfStateName(
+    _In_ PCWNF_STATE_NAME StateName
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtUpdateWnfStateData(
+    _In_ PCWNF_STATE_NAME StateName,
+    _In_reads_bytes_opt_(Length) const VOID *Buffer,
+    _In_opt_ ULONG Length,
+    _In_opt_ PCWNF_TYPE_ID TypeId,
+    _In_opt_ const VOID *ExplicitScope,
+    _In_ WNF_CHANGE_STAMP MatchingChangeStamp,
+    _In_ LOGICAL CheckStamp
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtDeleteWnfStateData(
+    _In_ PCWNF_STATE_NAME StateName,
+    _In_opt_ const VOID *ExplicitScope
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryWnfStateData(
+    _In_ PCWNF_STATE_NAME StateName,
+    _In_opt_ PCWNF_TYPE_ID TypeId,
+    _In_opt_ const VOID *ExplicitScope,
+    _Out_ PWNF_CHANGE_STAMP ChangeStamp,
+    _Out_writes_bytes_to_opt_(*BufferSize, *BufferSize) PVOID Buffer,
+    _Inout_ PULONG BufferSize
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryWnfStateNameInformation(
+    _In_ PCWNF_STATE_NAME StateName,
+    _In_ WNF_STATE_NAME_INFORMATION NameInfoClass,
+    _In_opt_ const VOID *ExplicitScope,
+    _Out_writes_bytes_(InfoBufferSize) PVOID InfoBuffer,
+    _In_ ULONG InfoBufferSize
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSubscribeWnfStateChange(
+    _In_ PCWNF_STATE_NAME StateName,
+    _In_opt_ WNF_CHANGE_STAMP ChangeStamp,
+    _In_ ULONG EventMask,
+    _Out_opt_ PULONG64 SubscriptionId
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtUnsubscribeWnfStateChange(
+    _In_ PCWNF_STATE_NAME StateName
+    );
+#endif
+#if (PHNT_VERSION >= PHNT_THRESHOLD)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtGetCompleteWnfStateSubscription(
+    _In_opt_ PWNF_STATE_NAME OldDescriptorStateName,
+    _In_opt_ ULONG64 *OldSubscriptionId,
+    _In_opt_ ULONG OldDescriptorEventMask,
+    _In_opt_ ULONG OldDescriptorStatus,
+    _Out_writes_bytes_(DescriptorSize) PWNF_DELIVERY_DESCRIPTOR NewDeliveryDescriptor,
+    _In_ ULONG DescriptorSize
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetWnfProcessNotificationEvent(
+    _In_ HANDLE NotificationEvent
+    );
+#endif
+#define WORKER_FACTORY_RELEASE_WORKER 0x0001
+#define WORKER_FACTORY_WAIT 0x0002
+#define WORKER_FACTORY_SET_INFORMATION 0x0004
+#define WORKER_FACTORY_QUERY_INFORMATION 0x0008
+#define WORKER_FACTORY_READY_WORKER 0x0010
+#define WORKER_FACTORY_SHUTDOWN 0x0020
+#define WORKER_FACTORY_ALL_ACCESS ( \
+    STANDARD_RIGHTS_REQUIRED | \
+    WORKER_FACTORY_RELEASE_WORKER | \
+    WORKER_FACTORY_WAIT | \
+    WORKER_FACTORY_SET_INFORMATION | \
+    WORKER_FACTORY_QUERY_INFORMATION | \
+    WORKER_FACTORY_READY_WORKER | \
+    WORKER_FACTORY_SHUTDOWN \
+    )
+typedef enum _WORKERFACTORYINFOCLASS
+{
+    WorkerFactoryAdjustThreadGoal,
+    WorkerFactoryCallbackType,
+    MaxWorkerFactoryInfoClass
+} WORKERFACTORYINFOCLASS, *PWORKERFACTORYINFOCLASS;*/
 return true
 }
 
 func (n *ntexapi)#if ()(ok bool){//col:1198
+/*#if (PHNT_VERSION >= PHNT_VISTA)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtCreateWorkerFactory(
+    _Out_ PHANDLE WorkerFactoryHandleReturn,
+    _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_ HANDLE CompletionPortHandle,
+    _In_ HANDLE WorkerProcessHandle,
+    _In_ PVOID StartRoutine,
+    _In_opt_ PVOID StartParameter,
+    _In_opt_ ULONG MaxThreadCount,
+    _In_opt_ SIZE_T StackReserve,
+    _In_opt_ SIZE_T StackCommit
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryInformationWorkerFactory(
+    _In_ HANDLE WorkerFactoryHandle,
+    _In_ WORKERFACTORYINFOCLASS WorkerFactoryInformationClass,
+    _Out_writes_bytes_(WorkerFactoryInformationLength) PVOID WorkerFactoryInformation,
+    _In_ ULONG WorkerFactoryInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetInformationWorkerFactory(
+    _In_ HANDLE WorkerFactoryHandle,
+    _In_ WORKERFACTORYINFOCLASS WorkerFactoryInformationClass,
+    _In_reads_bytes_(WorkerFactoryInformationLength) PVOID WorkerFactoryInformation,
+    _In_ ULONG WorkerFactoryInformationLength
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtShutdownWorkerFactory(
+    _In_ HANDLE WorkerFactoryHandle,
+    _Inout_ volatile LONG *PendingWorkerCount
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtReleaseWorkerFactoryWorker(
+    _In_ HANDLE WorkerFactoryHandle
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtWorkerFactoryWorkerReady(
+    _In_ HANDLE WorkerFactoryHandle
+    );
+struct _FILE_IO_COMPLETION_INFORMATION;
+#if (PHNT_VERSION >= PHNT_WIN8)
+typedef struct _WORKER_FACTORY_DEFERRED_WORK
+{
+    struct _PORT_MESSAGE *AlpcSendMessage;
+    PVOID AlpcSendMessagePort;
+    ULONG AlpcSendMessageFlags;
+    ULONG Flags;
+} WORKER_FACTORY_DEFERRED_WORK, *PWORKER_FACTORY_DEFERRED_WORK;*/
 return true
 }
 
 func (n *ntexapi)NtWaitForWorkViaWorkerFactory()(ok bool){//col:1546
+/*NtWaitForWorkViaWorkerFactory(
+    _In_ HANDLE WorkerFactoryHandle,
+    _Out_writes_to_(Count, *PacketsReturned) struct _FILE_IO_COMPLETION_INFORMATION *MiniPackets,
+    _In_ ULONG Count,
+    _Out_ PULONG PacketsReturned,
+    _In_ PWORKER_FACTORY_DEFERRED_WORK DeferredWork
+    );
+#else
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtWaitForWorkViaWorkerFactory(
+    _In_ HANDLE WorkerFactoryHandle,
+    _Out_ struct _FILE_IO_COMPLETION_INFORMATION *MiniPacket
+    );
+#endif
+#endif
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQuerySystemTime(
+    _Out_ PLARGE_INTEGER SystemTime
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetSystemTime(
+    _In_opt_ PLARGE_INTEGER SystemTime,
+    _Out_opt_ PLARGE_INTEGER PreviousTime
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryTimerResolution(
+    _Out_ PULONG MaximumTime,
+    _Out_ PULONG MinimumTime,
+    _Out_ PULONG CurrentTime
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetTimerResolution(
+    _In_ ULONG DesiredTime,
+    _In_ BOOLEAN SetResolution,
+    _Out_ PULONG ActualTime
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryPerformanceCounter(
+    _Out_ PLARGE_INTEGER PerformanceCounter,
+    _Out_opt_ PLARGE_INTEGER PerformanceFrequency
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtAllocateLocallyUniqueId(
+    _Out_ PLUID Luid
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetUuidSeed(
+    _In_ PCHAR Seed
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtAllocateUuids(
+    _Out_ PULARGE_INTEGER Time,
+    _Out_ PULONG Range,
+    _Out_ PULONG Sequence,
+    _Out_ PCHAR Seed
+    );
+typedef enum _SYSTEM_INFORMATION_CLASS
+{
+    SystemBadPageInformation,
+    SystemCriticalProcessErrorLogInformation,
+    SystemEntropyInterruptTimingRawInformation,
+    SystemVmGenerationCountInformation,
+    SystemHardwareSecurityTestInterfaceResultsInformation,
+    SystemAllowedCpuSetsInformation,
+    SystemCodeIntegrityPolicyFullInformation,
+    SystemWin32WerStartCallout,
+    SystemControlFlowTransition,
+    SystemCodeIntegrityPoliciesFullInformation,
+    SystemIntegrityQuotaInformation,
+    SystemSecureDumpEncryptionInformation,
+    SystemFirmwareBootPerformanceInformation,
+    SystemCodeIntegrityUnlockModeInformation,
+    SystemCodeIntegritySyntheticCacheInformation,
+    SystemWheaIpmiHardwareInformation,
+    SystemDifSetRuleClassInformation,
+    SystemDifClearRuleClassInformation,
+    SystemDifApplyPluginVerificationOnDriver,
+    SystemCodeIntegrityAddDynamicStore,
+    SystemCodeIntegrityClearDynamicStores,
+    SystemDifPoolTrackingInformation,
+    SystemDpcWatchdogInformation,
+    SystemDpcWatchdogInformation2,
+    SystemXfgCheckFailureInformation,
+    SystemSecureKernelDebuggerInformation,
+    SystemOriginalImageFeatureInformation,
+    MaxSystemInfoClass
+} SYSTEM_INFORMATION_CLASS;*/
 return true
 }
 
 func (n *ntexapi)#define PERF_MASK_INDEX ()(ok bool){//col:2189
+/*#define PERF_MASK_INDEX (0xe0000000)
+#define PERF_MASK_GROUP (~PERF_MASK_INDEX)
+#define PERF_NUM_MASKS 8
+#define PERF_GET_MASK_INDEX(GM) (((GM) & PERF_MASK_INDEX) >> 29)
+#define PERF_GET_MASK_GROUP(GM) ((GM) & PERF_MASK_GROUP)
+#define PERFINFO_OR_GROUP_WITH_GROUPMASK(Group, pGroupMask) \
+    (pGroupMask)->Masks[PERF_GET_MASK_INDEX(Group)] |= PERF_GET_MASK_GROUP(Group);
+#define PERF_PROCESS            EVENT_TRACE_FLAG_PROCESS
+#define PERF_THREAD             EVENT_TRACE_FLAG_THREAD
+#define PERF_PROC_THREAD        EVENT_TRACE_FLAG_PROCESS | EVENT_TRACE_FLAG_THREAD
+#define PERF_LOADER             EVENT_TRACE_FLAG_IMAGE_LOAD
+#define PERF_PERF_COUNTER       EVENT_TRACE_FLAG_PROCESS_COUNTERS
+#define PERF_FILENAME           EVENT_TRACE_FLAG_DISK_FILE_IO
+#define PERF_DISK_IO            EVENT_TRACE_FLAG_DISK_FILE_IO | EVENT_TRACE_FLAG_DISK_IO
+#define PERF_DISK_IO_INIT       EVENT_TRACE_FLAG_DISK_IO_INIT
+#define PERF_ALL_FAULTS         EVENT_TRACE_FLAG_MEMORY_PAGE_FAULTS
+#define PERF_HARD_FAULTS        EVENT_TRACE_FLAG_MEMORY_HARD_FAULTS
+#define PERF_VAMAP              EVENT_TRACE_FLAG_VAMAP
+#define PERF_NETWORK            EVENT_TRACE_FLAG_NETWORK_TCPIP
+#define PERF_REGISTRY           EVENT_TRACE_FLAG_REGISTRY
+#define PERF_DBGPRINT           EVENT_TRACE_FLAG_DBGPRINT
+#define PERF_JOB                EVENT_TRACE_FLAG_JOB
+#define PERF_ALPC               EVENT_TRACE_FLAG_ALPC
+#define PERF_SPLIT_IO           EVENT_TRACE_FLAG_SPLIT_IO
+#define PERF_DEBUG_EVENTS       EVENT_TRACE_FLAG_DEBUG_EVENTS
+#define PERF_FILE_IO            EVENT_TRACE_FLAG_FILE_IO
+#define PERF_FILE_IO_INIT       EVENT_TRACE_FLAG_FILE_IO_INIT
+#define PERF_NO_SYSCONFIG       EVENT_TRACE_FLAG_NO_SYSCONFIG
+#define PERF_MEMORY             0x20000001
+#define PERF_FOOTPRINT          0x20000008
+#define PERF_REFSET             0x20000020
+#define PERF_POOL               0x20000040
+#define PERF_POOLTRACE          0x20000041
+#define PERF_COMPACT_CSWITCH    0x20000100
+#define PERF_PMC_PROFILE        0x20000400
+#define PERF_PROFILING          0x20000402
+#define PERF_PROCESS_INSWAP     0x20000800
+#define PERF_AFFINITY           0x20001000
+#define PERF_PRIORITY           0x20002000
+#define PERF_SPINLOCK           0x20010000
+#define PERF_SYNC_OBJECTS       0x20020000
+#define PERF_DPC_QUEUE          0x20040000
+#define PERF_MEMINFO            0x20080000
+#define PERF_CONTMEM_GEN        0x20100000
+#define PERF_SPINLOCK_CNTRS     0x20200000
+#define PERF_SPININSTR          0x20210000
+#define PERF_SESSION            0x20400000
+#define PERF_PFSECTION          0x20400000
+#define PERF_MEMINFO_WS         0x20800000
+#define PERF_KERNEL_QUEUE       0x21000000
+#define PERF_INTERRUPT_STEER    0x22000000
+#define PERF_SHOULD_YIELD       0x24000000
+#define PERF_WS                 0x28000000
+#define PERF_ANTI_STARVATION    0x40000001
+#define PERF_PROCESS_FREEZE     0x40000002
+#define PERF_PFN_LIST           0x40000004
+#define PERF_WS_DETAIL          0x40000008
+#define PERF_WS_ENTRY           0x40000010
+#define PERF_HEAP               0x40000020
+#define PERF_UMS                0x40000080
+#define PERF_BACKTRACE          0x40000100
+#define PERF_VULCAN             0x40000200
+#define PERF_OBJECTS            0x40000400
+#define PERF_EVENTS             0x40000800
+#define PERF_FULLTRACE          0x40001000
+#define PERF_DFSS               0x40002000
+#define PERF_PREFETCH           0x40004000
+#define PERF_PROCESSOR_IDLE     0x40008000
+#define PERF_CPU_CONFIG         0x40010000
+#define PERF_TIMER              0x40020000
+#define PERF_CLOCK_INTERRUPT    0x40040000
+#define PERF_LOAD_BALANCER      0x40080000
+#define PERF_CLOCK_TIMER        0x40100000
+#define PERF_IDLE_SELECTION     0x40200000
+#define PERF_IPI                0x40400000
+#define PERF_IO_TIMER           0x40800000
+#define PERF_REG_HIVE           0x41000000
+#define PERF_REG_NOTIF          0x42000000
+#define PERF_PPM_EXIT_LATENCY   0x44000000
+#define PERF_WORKER_THREAD      0x48000000
+#define PERF_OPTICAL_IO         0x80000001
+#define PERF_OPTICAL_IO_INIT    0x80000002
+#define PERF_DLL_INFO           0x80000008
+#define PERF_DLL_FLUSH_WS       0x80000010
+#define PERF_OB_HANDLE          0x80000040
+#define PERF_OB_OBJECT          0x80000080
+#define PERF_WAKE_DROP          0x80000200
+#define PERF_WAKE_EVENT         0x80000400
+#define PERF_DEBUGGER           0x80000800
+#define PERF_PROC_ATTACH        0x80001000
+#define PERF_WAKE_COUNTER       0x80002000
+#define PERF_POWER              0x80008000
+#define PERF_SOFT_TRIM          0x80010000
+#define PERF_CC                 0x80020000
+#define PERF_FLT_IO_INIT        0x80080000
+#define PERF_FLT_IO             0x80100000
+#define PERF_FLT_FASTIO         0x80200000
+#define PERF_FLT_IO_FAILURE     0x80400000
+#define PERF_HV_PROFILE         0x80800000
+#define PERF_WDF_DPC            0x81000000
+#define PERF_WDF_INTERRUPT      0x82000000
+#define PERF_CACHE_FLUSH        0x84000000
+#define PERF_HIBER_RUNDOWN      0xA0000001
+#define PERF_SYSCFG_SYSTEM      0xC0000001
+#define PERF_SYSCFG_GRAPHICS    0xC0000002
+#define PERF_SYSCFG_STORAGE     0xC0000004
+#define PERF_SYSCFG_NETWORK     0xC0000008
+#define PERF_SYSCFG_SERVICES    0xC0000010
+#define PERF_SYSCFG_PNP         0xC0000020
+#define PERF_SYSCFG_OPTICAL     0xC0000040
+#define PERF_SYSCFG_ALL         0xDFFFFFFF
+#define PERF_CLUSTER_OFF        0xE0000001
+#define PERF_MEMORY_CONTROL     0xE0000002
+typedef ULONG PERFINFO_MASK;
+typedef struct _PERFINFO_GROUPMASK
+{
+    ULONG Masks[PERF_NUM_MASKS];
+} PERFINFO_GROUPMASK, *PPERFINFO_GROUPMASK;*/
 return true
 }
 
 func (n *ntexapi)typedef NTSTATUS ()(ok bool){//col:2651
+/*typedef NTSTATUS (*PSYSTEM_WATCHDOG_HANDLER)(_In_ WATCHDOG_HANDLER_ACTION Action, _In_ PVOID Context, _Inout_ PULONG DataValue, _In_ BOOLEAN NoLocks);
+typedef struct _SYSTEM_WATCHDOG_HANDLER_INFORMATION 
+{
+    PSYSTEM_WATCHDOG_HANDLER WdHandler;
+    PVOID Context;
+} SYSTEM_WATCHDOG_HANDLER_INFORMATION, *PSYSTEM_WATCHDOG_HANDLER_INFORMATION;*/
 return true
 }
 
 func (n *ntexapi)#if ()(ok bool){//col:2681
+/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
+typedef enum _SYSTEM_FIRMWARE_TABLE_ACTION
+{
+    SystemFirmwareTableEnumerate,
+    SystemFirmwareTableGet,
+    SystemFirmwareTableMax
+} SYSTEM_FIRMWARE_TABLE_ACTION;*/
 return true
 }
 
 func (n *ntexapi)#if ()(ok bool){//col:2707
+/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
+typedef NTSTATUS (__cdecl* PFNFTH)(
+    _Inout_ PSYSTEM_FIRMWARE_TABLE_INFORMATION SystemFirmwareTableInfo
+    );
+typedef struct _SYSTEM_FIRMWARE_TABLE_HANDLER
+{
+    ULONG ProviderSignature;
+    BOOLEAN Register;
+    PFNFTH FirmwareTableHandler;
+    PVOID DriverObject;
+} SYSTEM_FIRMWARE_TABLE_HANDLER, *PSYSTEM_FIRMWARE_TABLE_HANDLER;*/
 return true
 }
 
 func (n *ntexapi)    VOID ()(ok bool){//col:3711
+/*    VOID (NTAPI *EntropyRoutine)(PVOID, ULONG);
+    VOID (NTAPI *InitializationRoutine)(PVOID, ULONG, PVOID);
+    PVOID InitializationContext;
+} SYSTEM_ENTROPY_TIMING_INFORMATION, *PSYSTEM_ENTROPY_TIMING_INFORMATION;*/
 return true
 }
 
 func (n *ntexapi)#if !defined()(ok bool){//col:4225
+/*#if !defined(NTDDI_WIN10_CO) || (NTDDI_VERSION < NTDDI_WIN10_CO) && !PHNT_PATCH_FOR_HYPERDBG
+typedef struct _SYSTEM_SUPPORTED_PROCESSOR_ARCHITECTURES_INFORMATION
+{
+    ULONG Machine : 16;
+    ULONG KernelMode : 1;
+    ULONG UserMode : 1;
+    ULONG Native : 1;
+    ULONG Process : 1;
+    ULONG WoW64Container : 1;
+    ULONG ReservedZero0 : 11;
+} SYSTEM_SUPPORTED_PROCESSOR_ARCHITECTURES_INFORMATION;*/
 return true
 }
 
 func (n *ntexapi)#if ()(ok bool){//col:4734
+/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQuerySystemInformation(
+    _In_ SYSTEM_INFORMATION_CLASS SystemInformationClass,
+    _Out_writes_bytes_opt_(SystemInformationLength) PVOID SystemInformation,
+    _In_ ULONG SystemInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
+#if (PHNT_VERSION >= PHNT_WIN7)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQuerySystemInformationEx(
+    _In_ SYSTEM_INFORMATION_CLASS SystemInformationClass,
+    _In_reads_bytes_(InputBufferLength) PVOID InputBuffer,
+    _In_ ULONG InputBufferLength,
+    _Out_writes_bytes_opt_(SystemInformationLength) PVOID SystemInformation,
+    _In_ ULONG SystemInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
+#endif
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetSystemInformation(
+    _In_ SYSTEM_INFORMATION_CLASS SystemInformationClass,
+    _In_reads_bytes_opt_(SystemInformationLength) PVOID SystemInformation,
+    _In_ ULONG SystemInformationLength
+    );
+typedef enum _SYSDBG_COMMAND
+{
+    SysDbgQueryModuleInformation,
+    SysDbgQueryTraceInformation,
+    SysDbgSetTracepoint,
+    SysDbgQuerySpecialCalls,
+    SysDbgBreakPoint,
+    SysDbgEnableKernelDebugger,
+    SysDbgDisableKernelDebugger,
+    SysDbgGetAutoKdEnable,
+    SysDbgSetAutoKdEnable,
+    SysDbgGetPrintBufferSize,
+    SysDbgSetPrintBufferSize,
+    SysDbgGetKdUmExceptionEnable,
+    SysDbgSetKdUmExceptionEnable,
+    SysDbgSetKdBlockEnable,
+    SysDbgRegisterForUmBreakInfo,
+    SysDbgGetUmBreakPid,
+    SysDbgClearUmBreakPid,
+    SysDbgGetUmAttachPid,
+    SysDbgClearUmAttachPid,
+    SysDbgMaxInfoClass
+} SYSDBG_COMMAND, *PSYSDBG_COMMAND;*/
 return true
 }
 
 func (n *ntexapi)NtSystemDebugControl()(ok bool){//col:4896
+/*NtSystemDebugControl(
+    _In_ SYSDBG_COMMAND Command,
+    _Inout_updates_bytes_opt_(InputBufferLength) PVOID InputBuffer,
+    _In_ ULONG InputBufferLength,
+    _Out_writes_bytes_opt_(OutputBufferLength) PVOID OutputBuffer,
+    _In_ ULONG OutputBufferLength,
+    _Out_opt_ PULONG ReturnLength
+    );
+typedef enum _HARDERROR_RESPONSE_OPTION
+{
+    OptionAbortRetryIgnore,
+    OptionOk,
+    OptionOkCancel,
+    OptionRetryCancel,
+    OptionYesNo,
+    OptionYesNoCancel,
+    OptionShutdownSystem,
+    OptionOkNoWait,
+    OptionCancelTryContinue
+} HARDERROR_RESPONSE_OPTION;*/
 return true
 }
 
 func (n *ntexapi)NtRaiseHardError()(ok bool){//col:4934
+/*NtRaiseHardError(
+    _In_ NTSTATUS ErrorStatus,
+    _In_ ULONG NumberOfParameters,
+    _In_ ULONG UnicodeStringParameterMask,
+    _In_reads_(NumberOfParameters) PULONG_PTR Parameters,
+    _In_ ULONG ValidResponseOptions,
+    _Out_ PULONG Response
+    );
+typedef enum _ALTERNATIVE_ARCHITECTURE_TYPE
+{
+    StandardDesign,
+    NEC98x86,
+    EndAlternatives
+} ALTERNATIVE_ARCHITECTURE_TYPE;*/
 return true
 }
 
 func (n *ntexapi)C_ASSERT()(ok bool){//col:5170
+/*C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, TickCountMultiplier) == 0x4);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, InterruptTime) == 0x8);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, SystemTime) == 0x14);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, NtSystemRoot) == 0x30);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, LargePageMinimum) == 0x244);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, NtProductType) == 0x264);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, NtMajorVersion) == 0x26c);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, NtMinorVersion) == 0x270);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, ProcessorFeatures) == 0x274);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, KdDebuggerEnabled) == 0x2d4);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, ActiveConsoleId) == 0x2d8);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, NumberOfPhysicalPages) == 0x2e8);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, SafeBootMode) == 0x2ec);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, TickCount) == 0x320);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, TickCountQuad) == 0x320);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, ActiveProcessorCount) == 0x3c0);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, ActiveGroupCount) == 0x3c4);
+C_ASSERT(FIELD_OFFSET(KUSER_SHARED_DATA, XState) == 0x3d8);
+#define USER_SHARED_DATA ((KUSER_SHARED_DATA * const)0x7ffe0000)
+#if (PHNT_VERSION >= PHNT_WS03)
+FORCEINLINE ULONGLONG NtGetTickCount64()
+{
+    ULARGE_INTEGER tickCount;
+#ifdef _WIN64
+    tickCount.QuadPart = USER_SHARED_DATA->TickCountQuad;
+#else
+    while (TRUE)
+    {
+        tickCount.HighPart = (ULONG)USER_SHARED_DATA->TickCount.High1Time;
+        tickCount.LowPart = USER_SHARED_DATA->TickCount.LowPart;
+        if (tickCount.HighPart == (ULONG)USER_SHARED_DATA->TickCount.High2Time)
+            break;
+        YieldProcessor();
+    }
+#endif
+    return (UInt32x32To64(tickCount.LowPart, USER_SHARED_DATA->TickCountMultiplier) >> 24) +
+        (UInt32x32To64(tickCount.HighPart, USER_SHARED_DATA->TickCountMultiplier) << 8);
+}*/
 return true
 }
 
 func (n *ntexapi)FORCEINLINE ULONG NtGetTickCount()(ok bool){//col:5197
+/*FORCEINLINE ULONG NtGetTickCount()
+{
+#ifdef _WIN64
+    return (ULONG)((USER_SHARED_DATA->TickCountQuad * USER_SHARED_DATA->TickCountMultiplier) >> 24);
+#else
+    ULARGE_INTEGER tickCount;
+    while (TRUE)
+    {
+        tickCount.HighPart = (ULONG)USER_SHARED_DATA->TickCount.High1Time;
+        tickCount.LowPart = USER_SHARED_DATA->TickCount.LowPart;
+        if (tickCount.HighPart == (ULONG)USER_SHARED_DATA->TickCount.High2Time)
+            break;
+        YieldProcessor();
+    }
+    return (ULONG)((UInt32x32To64(tickCount.LowPart, USER_SHARED_DATA->TickCountMultiplier) >> 24) +
+        UInt32x32To64((tickCount.HighPart << 8) & 0xffffffff, USER_SHARED_DATA->TickCountMultiplier));
+#endif
+}*/
 return true
 }
 
 func (n *ntexapi)FORCEINLINE ULONGLONG NtGetTickCount64()(ok bool){//col:5204
+/*FORCEINLINE ULONGLONG NtGetTickCount64()
+{
+}*/
 return true
 }
 
 func (n *ntexapi)FORCEINLINE ULONG NtGetTickCount()(ok bool){//col:5209
+/*FORCEINLINE ULONG NtGetTickCount()
+{
+    return GetTickCount();
+}*/
 return true
 }
 
 func (n *ntexapi)NtQueryDefaultLocale()(ok bool){//col:5404
+/*NtQueryDefaultLocale(
+    _In_ BOOLEAN UserProfile,
+    _Out_ PLCID DefaultLocaleId
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetDefaultLocale(
+    _In_ BOOLEAN UserProfile,
+    _In_ LCID DefaultLocaleId
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryInstallUILanguage(
+    _Out_ LANGID *InstallUILanguageId
+    );
+#if (PHNT_VERSION >= PHNT_VISTA)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtFlushInstallUILanguage(
+    _In_ LANGID InstallUILanguage,
+    _In_ ULONG SetComittedFlag
+    );
+#endif
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryDefaultUILanguage(
+    _Out_ LANGID *DefaultUILanguageId
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetDefaultUILanguage(
+    _In_ LANGID DefaultUILanguageId
+    );
+#if (PHNT_VERSION >= PHNT_VISTA)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtIsUILanguageComitted(
+    VOID
+    );
+#endif
+#if (PHNT_VERSION >= PHNT_VISTA)
+#if (PHNT_VERSION >= PHNT_WIN7)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtInitializeNlsFiles(
+    _Out_ PVOID *BaseAddress,
+    _Out_ PLCID DefaultLocaleId,
+    _Out_ PLARGE_INTEGER DefaultCasingTableSize
+    );
+#else
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtInitializeNlsFiles(
+    _Out_ PVOID *BaseAddress,
+    _Out_ PLCID DefaultLocaleId,
+    _Out_ PLARGE_INTEGER DefaultCasingTableSize,
+    _Out_opt_ PULONG CurrentNLSVersion
+    );
+#endif
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtGetNlsSectionPtr(
+    _In_ ULONG SectionType,
+    _In_ ULONG SectionData,
+    _In_ PVOID ContextData,
+    _Out_ PVOID *SectionPointer,
+    _Out_ PULONG SectionSize
+    );
+#if (PHNT_VERSION < PHNT_WIN7)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtAcquireCMFViewOwnership(
+    _Out_ PULONGLONG TimeStamp,
+    _Out_ PBOOLEAN tokenTaken,
+    _In_ BOOLEAN replaceExisting
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtReleaseCMFViewOwnership(
+    VOID
+    );
+#endif
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtMapCMFModule(
+    _In_ ULONG What,
+    _In_ ULONG Index,
+    _Out_opt_ PULONG CacheIndexOut,
+    _Out_opt_ PULONG CacheFlagsOut,
+    _Out_opt_ PULONG ViewSizeOut,
+    _Out_opt_ PVOID *BaseAddress
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtGetMUIRegistryInfo(
+    _In_ ULONG Flags,
+    _Inout_ PULONG DataSize,
+    _Out_ PVOID Data
+    );
+#endif
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtAddAtom(
+    _In_reads_bytes_opt_(Length) PWSTR AtomName,
+    _In_ ULONG Length,
+    _Out_opt_ PRTL_ATOM Atom
+    );
+#if (PHNT_VERSION >= PHNT_WIN8)
+#define ATOM_FLAG_GLOBAL 0x2
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtAddAtomEx(
+    _In_reads_bytes_opt_(Length) PWSTR AtomName,
+    _In_ ULONG Length,
+    _Out_opt_ PRTL_ATOM Atom,
+    _In_ ULONG Flags
+    );
+#endif
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtFindAtom(
+    _In_reads_bytes_opt_(Length) PWSTR AtomName,
+    _In_ ULONG Length,
+    _Out_opt_ PRTL_ATOM Atom
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtDeleteAtom(
+    _In_ RTL_ATOM Atom
+    );
+typedef enum _ATOM_INFORMATION_CLASS
+{
+    AtomBasicInformation,
+    AtomTableInformation
+} ATOM_INFORMATION_CLASS;*/
 return true
 }
 
 func (n *ntexapi)NtQueryInformationAtom()(ok bool){//col:5539
+/*NtQueryInformationAtom(
+    _In_ RTL_ATOM Atom,
+    _In_ ATOM_INFORMATION_CLASS AtomInformationClass,
+    _Out_writes_bytes_(AtomInformationLength) PVOID AtomInformation,
+    _In_ ULONG AtomInformationLength,
+    _Out_opt_ PULONG ReturnLength
+    );
+#define FLG_VALID_BITS 0xfffffdff
+#define FLG_USERMODE_VALID_BITS (FLG_STOP_ON_EXCEPTION | \
+    FLG_SHOW_LDR_SNAPS | \
+    FLG_HEAP_ENABLE_TAIL_CHECK | \
+    FLG_HEAP_ENABLE_FREE_CHECK | \
+    FLG_HEAP_VALIDATE_PARAMETERS | \
+    FLG_HEAP_VALIDATE_ALL | \
+    FLG_APPLICATION_VERIFIER | \
+    FLG_HEAP_ENABLE_TAGGING | \
+    FLG_USER_STACK_TRACE_DB | \
+    FLG_HEAP_ENABLE_TAG_BY_DLL | \
+    FLG_DISABLE_STACK_EXTENSION | \
+    FLG_ENABLE_SYSTEM_CRIT_BREAKS | \
+    FLG_HEAP_DISABLE_COALESCING | \
+    FLG_DISABLE_PROTDLLS | \
+    FLG_HEAP_PAGE_ALLOCS | \
+    FLG_CRITSEC_EVENT_CREATION | \
+    FLG_LDR_TOP_DOWN)
+#define FLG_BOOTONLY_VALID_BITS (FLG_KERNEL_STACK_TRACE_DB | \
+    FLG_MAINTAIN_OBJECT_TYPELIST | \
+    FLG_ENABLE_CSRDEBUG | \
+    FLG_DEBUG_INITIAL_COMMAND | \
+    FLG_DEBUG_INITIAL_COMMAND_EX | \
+    FLG_DISABLE_PAGE_KERNEL_STACKS)
+#define FLG_KERNELMODE_VALID_BITS (FLG_STOP_ON_EXCEPTION | \
+    FLG_SHOW_LDR_SNAPS | \
+    FLG_STOP_ON_HUNG_GUI | \
+    FLG_POOL_ENABLE_TAGGING | \
+    FLG_ENABLE_KDEBUG_SYMBOL_LOAD | \
+    FLG_ENABLE_CLOSE_EXCEPTIONS | \
+    FLG_ENABLE_EXCEPTION_LOGGING | \
+    FLG_ENABLE_HANDLE_TYPE_TAGGING | \
+    FLG_DISABLE_DBGPRINT | \
+    FLG_ENABLE_HANDLE_EXCEPTIONS)
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtQueryLicenseValue(
+    _In_ PUNICODE_STRING ValueName,
+    _Out_opt_ PULONG Type,
+    _Out_writes_bytes_to_opt_(DataSize, *ResultDataSize) PVOID Data,
+    _In_ ULONG DataSize,
+    _Out_ PULONG ResultDataSize
+    );
+NTSYSCALLAPI
+NTSTATUS
+NTAPI
+NtSetDefaultHardErrorPort(
+    _In_ HANDLE DefaultHardErrorPort
+    );
+typedef enum _SHUTDOWN_ACTION
+{
+    ShutdownNoReboot,
+    ShutdownReboot,
+    ShutdownPowerOff,
+} SHUTDOWN_ACTION;*/
 return true
 }
+
+
 

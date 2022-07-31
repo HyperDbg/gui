@@ -1,4 +1,6 @@
 package Headers
+//back\HyperDbgDev\hyperdbg\include\SDK\Headers\Constants.h.back
+
 const(
 VERSION_MAJOR = 0 //col:19
 VERSION_MINOR = 2 //col:20
@@ -122,3 +124,5 @@ DEBUGGEE_BP_APPLY_TO_ALL_PROCESSES = 0xffffffff //col:559
 DEBUGGEE_BP_APPLY_TO_ALL_THREADS = 0xffffffff //col:565
 DEBUGGEE_SHOW_ALL_REGISTERS = 0xffffffff //col:571
 )
+
+

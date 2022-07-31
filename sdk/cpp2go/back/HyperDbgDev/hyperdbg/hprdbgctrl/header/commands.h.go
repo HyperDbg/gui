@@ -1,4 +1,6 @@
 package header
+//back\HyperDbgDev\hyperdbg\hprdbgctrl\header\commands.h.back
+
 const(
 DEBUGGER_COMMAND_ATTRIBUTE_EVENT = 0x1 | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE //col:155
 DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE =     0x2 //col:157
@@ -89,14 +91,94 @@ DEBUGGER_COMMAND_DT_ATTRIBUTES = DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEB
 DEBUGGER_COMMAND_STRUCT_ATTRIBUTES = DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE //col:373
 DEBUGGER_COMMAND_PE_ATTRIBUTES = NULL //col:376
 )
+
 type (
 Commands interface{
 CommandSettingsLoadDefaultValuesFromConfigFile()(ok bool)//col:143
 }
-
 )
+
 func NewCommands() { return & commands{} }
+
 func (c *commands)CommandSettingsLoadDefaultValuesFromConfigFile()(ok bool){//col:143
+/*CommandSettingsLoadDefaultValuesFromConfigFile();
+VOID
+CommandSettingsSetValueFromConfigFile(std::string OptionName, std::string OptionValue);
+BOOLEAN
+CommandSettingsGetValueFromConfigFile(std::string OptionName, std::string & OptionValue);
+int
+ReadCpuDetails();
+string
+ReadVendorString();
+VOID
+ShowMessages(const char * Fmt, ...);
+string
+SeparateTo64BitValue(UINT64 Value);
+void
+ShowMemoryCommandDB(unsigned char * OutputBuffer, UINT Size, UINT64 Address, DEBUGGER_READ_MEMORY_TYPE MemoryType, UINT64 Length);
+void
+ShowMemoryCommandDD(unsigned char * OutputBuffer, UINT Size, UINT64 Address, DEBUGGER_READ_MEMORY_TYPE MemoryType, UINT64 Length);
+void
+ShowMemoryCommandDC(unsigned char * OutputBuffer, UINT Size, UINT64 Address, DEBUGGER_READ_MEMORY_TYPE MemoryType, UINT64 Length);
+void
+ShowMemoryCommandDQ(unsigned char * OutputBuffer, UINT Size, UINT64 Address, DEBUGGER_READ_MEMORY_TYPE MemoryType, UINT64 Length);
+VOID
+CommandPteShowResults(UINT64 TargetVa, PDEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS PteRead);
+DEBUGGER_CONDITIONAL_JUMP_STATUS
+HyperDbgIsConditionalJumpTaken(unsigned char * BufferToDisassemble,
+                               UINT64          BuffLength,
+                               RFLAGS          Rflags,
+                               BOOLEAN         Isx86_64);
+int
+HyperDbgDisassembler64(unsigned char * BufferToDisassemble,
+                       UINT64          BaseAddress,
+                       UINT64          Size,
+                       UINT32          MaximumInstrDecoded,
+                       BOOLEAN         ShowBranchIsTakenOrNot,
+                       PRFLAGS         Rflags);
+int
+HyperDbgDisassembler32(unsigned char * BufferToDisassemble,
+                       UINT64          BaseAddress,
+                       UINT64          Size,
+                       UINT32          MaximumInstrDecoded,
+                       BOOLEAN         ShowBranchIsTakenOrNot,
+                       PRFLAGS         Rflags);
+UINT32
+HyperDbgLengthDisassemblerEngine(
+    unsigned char * BufferToDisassemble,
+    UINT64          BuffLength,
+    BOOLEAN         Isx86_64);
+BOOLEAN
+HyperDbgCheckWhetherTheCurrentInstructionIsCall(
+    unsigned char * BufferToDisassemble,
+    UINT64          BuffLength,
+    BOOLEAN         Isx86_64,
+    PUINT32         CallLength);
+VOID
+HyperDbgReadMemoryAndDisassemble(DEBUGGER_SHOW_MEMORY_STYLE   Style,
+                                 UINT64                       Address,
+                                 DEBUGGER_READ_MEMORY_TYPE    MemoryType,
+                                 DEBUGGER_READ_READING_TYPE   ReadingType,
+                                 UINT32                       Pid,
+                                 UINT32                       Size,
+                                 PDEBUGGER_DT_COMMAND_OPTIONS DtDetails);
+VOID
+InitializeCommandsDictionary();
+VOID
+InitializeDebugger();
+ *
+typedef VOID (*CommandFuncType)(vector<string> SplittedCommand, string Command);
+ *
+typedef VOID (*CommandHelpFuncType)();
+ *
+typedef struct _COMMAND_DETAIL
+{
+    CommandFuncType     CommandFunction;
+    CommandHelpFuncType CommandHelpFunction;
+    UINT64              CommandAttrib;
+} COMMAND_DETAIL, *PCOMMAND_DETAIL;*/
 return true
 }
+
+
 

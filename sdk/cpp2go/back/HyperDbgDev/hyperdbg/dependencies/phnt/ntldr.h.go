@@ -1,4 +1,6 @@
 package phnt
+//back\HyperDbgDev\hyperdbg\dependencies\phnt\ntldr.h.back
+
 const(
 _NTLDR_H =  //col:13
 LDRP_PACKAGED_BINARY = 0x00000001 //col:113
@@ -56,6 +58,7 @@ RESOURCE_LANGUAGE_LEVEL = 2 //col:706
 RESOURCE_DATA_LEVEL = 3 //col:707
 NAME_FROM_RESOURCE_ENTRY(RootDirectory, Entry) = ((Entry)->NameIsString ? (ULONG_PTR)PTR_ADD_OFFSET((RootDirectory), (Entry)->NameOffset) : (Entry)->Id) //col:758
 )
+
 type     LdrModulesMerged = -5 uint32
 const(
     LdrModulesMerged  LDR_DDAG_STATE =  -5  //col:41
@@ -74,6 +77,8 @@ const(
     LdrModulesInitializing  LDR_DDAG_STATE =  8  //col:54
     LdrModulesReadyToRun  LDR_DDAG_STATE =  9  //col:55
 )
+
+
 type     LoadReasonStaticDependency uint32
 const(
     LoadReasonStaticDependency LDR_DLL_LOAD_REASON = 1  //col:89
@@ -88,6 +93,8 @@ const(
     LoadReasonPatchImage // since WIN11 LDR_DLL_LOAD_REASON = 10  //col:98
     LoadReasonUnknown  LDR_DLL_LOAD_REASON =  -1  //col:99
 )
+
+
 type     LdrHotPatchBaseImage uint32
 const(
     LdrHotPatchBaseImage LDR_HOT_PATCH_STATE = 1  //col:104
@@ -97,6 +104,9 @@ const(
     LdrHotPatchFailedToPatch LDR_HOT_PATCH_STATE = 5  //col:108
     LdrHotPatchStateMax LDR_HOT_PATCH_STATE = 6  //col:109
 )
+
+
+
 type (
 Ntldr interface{
  * Attribution 4.0 International ()(ok bool)//col:30
@@ -110,46 +120,643 @@ LdrFindResource_U()(ok bool)//col:756
 #define NAME_FROM_RESOURCE_ENTRY()(ok bool)//col:819
 #if ()(ok bool)//col:918
 }
-
 )
+
 func NewNtldr() { return & ntldr{} }
+
 func (n *ntldr) * Attribution 4.0 International ()(ok bool){//col:30
+/* * Attribution 4.0 International (CC BY 4.0) license. 
+ * 
+ * You must give appropriate credit, provide a link to the license, and 
+ * indicate if changes were made. You may do so in any reasonable manner, but 
+ * not in any way that suggests the licensor endorses you or your use.
+#ifndef _NTLDR_H
+#define _NTLDR_H
+#if (PHNT_MODE != PHNT_MODE_KERNEL)
+typedef BOOLEAN (NTAPI *PLDR_INIT_ROUTINE)(
+    _In_ PVOID DllHandle,
+    _In_ ULONG Reason,
+    _In_opt_ PVOID Context
+    );
+typedef struct _LDR_SERVICE_TAG_RECORD
+{
+    struct _LDR_SERVICE_TAG_RECORD *Next;
+    ULONG ServiceTag;
+} LDR_SERVICE_TAG_RECORD, *PLDR_SERVICE_TAG_RECORD;*/
 return true
 }
 
 func (n *ntldr)#define LDR_DATA_TABLE_ENTRY_SIZE_WINXP FIELD_OFFSET()(ok bool){//col:221
+/*#define LDR_DATA_TABLE_ENTRY_SIZE_WINXP FIELD_OFFSET(LDR_DATA_TABLE_ENTRY, DdagNode)
+#define LDR_DATA_TABLE_ENTRY_SIZE_WIN7 FIELD_OFFSET(LDR_DATA_TABLE_ENTRY, BaseNameHashValue)
+#define LDR_DATA_TABLE_ENTRY_SIZE_WIN8 FIELD_OFFSET(LDR_DATA_TABLE_ENTRY, ImplicitPathOptions)
+#define LDR_DATA_TABLE_ENTRY_SIZE_WIN10 FIELD_OFFSET(LDR_DATA_TABLE_ENTRY, SigningLevel)
+#define LDR_DATA_TABLE_ENTRY_SIZE_WIN11 sizeof(LDR_DATA_TABLE_ENTRY)
+typedef struct _LDR_DATA_TABLE_ENTRY
+{
+    LIST_ENTRY InLoadOrderLinks;
+    LIST_ENTRY InMemoryOrderLinks;
+    union
+    {
+        LIST_ENTRY InInitializationOrderLinks;
+        LIST_ENTRY InProgressLinks;
+    };
+    PVOID DllBase;
+    PLDR_INIT_ROUTINE EntryPoint;
+    ULONG SizeOfImage;
+    UNICODE_STRING FullDllName;
+    UNICODE_STRING BaseDllName;
+    union
+    {
+        UCHAR FlagGroup[4];
+        ULONG Flags;
+        struct
+        {
+            ULONG PackagedBinary : 1;
+            ULONG MarkedForRemoval : 1;
+            ULONG ImageDll : 1;
+            ULONG LoadNotificationsSent : 1;
+            ULONG TelemetryEntryProcessed : 1;
+            ULONG ProcessStaticImport : 1;
+            ULONG InLegacyLists : 1;
+            ULONG InIndexes : 1;
+            ULONG ShimDll : 1;
+            ULONG InExceptionTable : 1;
+            ULONG ReservedFlags1 : 2;
+            ULONG LoadInProgress : 1;
+            ULONG LoadConfigProcessed : 1;
+            ULONG EntryProcessed : 1;
+            ULONG ProtectDelayLoad : 1;
+            ULONG ReservedFlags3 : 2;
+            ULONG DontCallForThreads : 1;
+            ULONG ProcessAttachCalled : 1;
+            ULONG ProcessAttachFailed : 1;
+            ULONG CorDeferredValidate : 1;
+            ULONG CorImage : 1;
+            ULONG DontRelocate : 1;
+            ULONG CorILOnly : 1;
+            ULONG ChpeImage : 1;
+            ULONG ChpeEmulatorImage : 1;
+            ULONG ReservedFlags5 : 1;
+            ULONG Redirected : 1;
+            ULONG ReservedFlags6 : 2;
+            ULONG CompatDatabaseProcessed : 1;
+        };
+    };
+    USHORT ObsoleteLoadCount;
+    USHORT TlsIndex;
+    LIST_ENTRY HashLinks;
+    ULONG TimeDateStamp;
+    struct _ACTIVATION_CONTEXT *EntryPointActivationContext;
+    PLDR_DDAG_NODE DdagNode;
+    LIST_ENTRY NodeModuleLink;
+    struct _LDRP_LOAD_CONTEXT *LoadContext;
+    PVOID ParentDllBase;
+    PVOID SwitchBackContext;
+    RTL_BALANCED_NODE BaseAddressIndexNode;
+    RTL_BALANCED_NODE MappingInfoIndexNode;
+    ULONG_PTR OriginalBase;
+    LARGE_INTEGER LoadTime;
+    ULONG BaseNameHashValue;
+    ULONG ImplicitPathOptions;
+    ULONG DependentLoadFlags;
+    PVOID ActivePatchImageBase;
+    LDR_HOT_PATCH_STATE HotPatchState;
+} LDR_DATA_TABLE_ENTRY, *PLDR_DATA_TABLE_ENTRY;*/
 return true
 }
 
 func (n *ntldr)#define LDR_IS_DATAFILE()(ok bool){//col:471
+/*#define LDR_IS_DATAFILE(DllHandle) (((ULONG_PTR)(DllHandle)) & (ULONG_PTR)1)
+#define LDR_IS_IMAGEMAPPING(DllHandle) (((ULONG_PTR)(DllHandle)) & (ULONG_PTR)2)
+#define LDR_MAPPEDVIEW_TO_DATAFILE(BaseAddress) ((PVOID)(((ULONG_PTR)(BaseAddress)) | (ULONG_PTR)1))
+#define LDR_MAPPEDVIEW_TO_IMAGEMAPPING(BaseAddress) ((PVOID)(((ULONG_PTR)(BaseAddress)) | (ULONG_PTR)2))
+#define LDR_DATAFILE_TO_MAPPEDVIEW(DllHandle) ((PVOID)(((ULONG_PTR)(DllHandle)) & ~(ULONG_PTR)1))
+#define LDR_IMAGEMAPPING_TO_MAPPEDVIEW(DllHandle) ((PVOID)(((ULONG_PTR)(DllHandle)) & ~(ULONG_PTR)2))
+#define LDR_IS_RESOURCE(DllHandle) (LDR_IS_IMAGEMAPPING(DllHandle) || LDR_IS_DATAFILE(DllHandle))
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrLoadDll(
+    _In_opt_ PWSTR DllPath,
+    _In_opt_ PULONG DllCharacteristics,
+    _In_ PUNICODE_STRING DllName,
+    _Out_ PVOID *DllHandle
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrUnloadDll(
+    _In_ PVOID DllHandle
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrGetDllHandle(
+    _In_opt_ PWSTR DllPath,
+    _In_opt_ PULONG DllCharacteristics,
+    _In_ PUNICODE_STRING DllName,
+    _Out_ PVOID *DllHandle
+    );
+#define LDR_GET_DLL_HANDLE_EX_UNCHANGED_REFCOUNT 0x00000001
+#define LDR_GET_DLL_HANDLE_EX_PIN 0x00000002
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrGetDllHandleEx(
+    _In_ ULONG Flags,
+    _In_opt_ PWSTR DllPath,
+    _In_opt_ PULONG DllCharacteristics,
+    _In_ PUNICODE_STRING DllName,
+    _Out_ PVOID *DllHandle
+    );
+#if (PHNT_VERSION >= PHNT_WIN7)
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrGetDllHandleByMapping(
+    _In_ PVOID BaseAddress,
+    _Out_ PVOID *DllHandle
+    );
+#endif
+#if (PHNT_VERSION >= PHNT_WIN7)
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrGetDllHandleByName(
+    _In_opt_ PUNICODE_STRING BaseDllName,
+    _In_opt_ PUNICODE_STRING FullDllName,
+    _Out_ PVOID *DllHandle
+    );
+#endif
+#if (PHNT_VERSION >= PHNT_WIN8)
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrGetDllFullName(
+    _In_ PVOID DllHandle,
+    _Out_ PUNICODE_STRING FullDllName
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrGetDllDirectory(
+    _Out_ PUNICODE_STRING DllDirectory
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrSetDllDirectory(
+    _In_ PUNICODE_STRING DllDirectory
+    );
+#endif
+#define LDR_ADDREF_DLL_PIN 0x00000001
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrAddRefDll(
+    _In_ ULONG Flags,
+    _In_ PVOID DllHandle
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrGetProcedureAddress(
+    _In_ PVOID DllHandle,
+    _In_opt_ PANSI_STRING ProcedureName,
+    _In_opt_ ULONG ProcedureNumber,
+    _Out_ PVOID *ProcedureAddress
+    );
+#define LDR_GET_PROCEDURE_ADDRESS_DONT_RECORD_FORWARDER 0x00000001
+#if (PHNT_VERSION >= PHNT_VISTA)
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrGetProcedureAddressEx(
+    _In_ PVOID DllHandle,
+    _In_opt_ PANSI_STRING ProcedureName,
+    _In_opt_ ULONG ProcedureNumber,
+    _Out_ PVOID *ProcedureAddress,
+    _In_ ULONG Flags
+    );
+#endif
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrGetKnownDllSectionHandle(
+    _In_ PCWSTR DllName,
+    _In_ BOOLEAN KnownDlls32,
+    _Out_ PHANDLE Section
+    );
+#if (PHNT_VERSION >= PHNT_THRESHOLD)
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrGetProcedureAddressForCaller(
+    _In_ PVOID DllHandle,
+    _In_opt_ PANSI_STRING ProcedureName,
+    _In_opt_ ULONG ProcedureNumber,
+    _Out_ PVOID *ProcedureAddress,
+    _In_ ULONG Flags,
+    _In_ PVOID *Callback
+    );
+#endif
+#define LDR_LOCK_LOADER_LOCK_FLAG_RAISE_ON_ERRORS 0x00000001
+#define LDR_LOCK_LOADER_LOCK_FLAG_TRY_ONLY 0x00000002
+#define LDR_LOCK_LOADER_LOCK_DISPOSITION_INVALID 0
+#define LDR_LOCK_LOADER_LOCK_DISPOSITION_LOCK_ACQUIRED 1
+#define LDR_LOCK_LOADER_LOCK_DISPOSITION_LOCK_NOT_ACQUIRED 2
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrLockLoaderLock(
+    _In_ ULONG Flags,
+    _Out_opt_ ULONG *Disposition,
+    _Out_ PVOID *Cookie
+    );
+#define LDR_UNLOCK_LOADER_LOCK_FLAG_RAISE_ON_ERRORS 0x00000001
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrUnlockLoaderLock(
+    _In_ ULONG Flags,
+    _Inout_ PVOID Cookie
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrRelocateImage(
+    _In_ PVOID NewBase,
+    _In_opt_ PSTR LoaderName,
+    _In_ NTSTATUS Success,
+    _In_ NTSTATUS Conflict,
+    _In_ NTSTATUS Invalid
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrRelocateImageWithBias(
+    _In_ PVOID NewBase,
+    _In_opt_ LONGLONG Bias,
+    _In_opt_ PSTR LoaderName,
+    _In_ NTSTATUS Success,
+    _In_ NTSTATUS Conflict,
+    _In_ NTSTATUS Invalid
+    );
+NTSYSAPI
+PIMAGE_BASE_RELOCATION
+NTAPI
+LdrProcessRelocationBlock(
+    _In_ ULONG_PTR VA,
+    _In_ ULONG SizeOfBlock,
+    _In_ PUSHORT NextOffset,
+    _In_ LONG_PTR Diff
+    );
+NTSYSAPI
+BOOLEAN
+NTAPI
+LdrVerifyMappedImageMatchesChecksum(
+    _In_ PVOID BaseAddress,
+    _In_ SIZE_T NumberOfBytes,
+    _In_ ULONG FileLength
+    );
+typedef VOID (NTAPI *PLDR_IMPORT_MODULE_CALLBACK)(
+    _In_ PVOID Parameter,
+    _In_ PSTR ModuleName
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrVerifyImageMatchesChecksum(
+    _In_ HANDLE ImageFileHandle,
+    _In_opt_ PLDR_IMPORT_MODULE_CALLBACK ImportCallbackRoutine,
+    _In_ PVOID ImportCallbackParameter,
+    _Out_opt_ PUSHORT ImageCharacteristics
+    );
+typedef struct _LDR_IMPORT_CALLBACK_INFO
+{
+    PLDR_IMPORT_MODULE_CALLBACK ImportCallbackRoutine;
+    PVOID ImportCallbackParameter;
+} LDR_IMPORT_CALLBACK_INFO, *PLDR_IMPORT_CALLBACK_INFO;*/
 return true
 }
 
 func (n *ntldr)#if ()(ok bool){//col:528
+/*#if (PHNT_VERSION >= PHNT_VISTA)
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrVerifyImageMatchesChecksumEx(
+    _In_ HANDLE ImageFileHandle,
+    _Inout_ PLDR_VERIFY_IMAGE_INFO VerifyInfo
+    );
+#endif
+#if (PHNT_VERSION >= PHNT_VISTA)
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrQueryModuleServiceTags(
+    _In_ PVOID DllHandle,
+    _Out_writes_(*BufferSize) PULONG ServiceTagBuffer,
+    _Inout_ PULONG BufferSize
+    );
+#endif
+#define LDR_DLL_NOTIFICATION_REASON_LOADED 1
+#define LDR_DLL_NOTIFICATION_REASON_UNLOADED 2
+typedef struct _LDR_DLL_LOADED_NOTIFICATION_DATA
+{
+    ULONG Flags;
+    PUNICODE_STRING FullDllName;
+    PUNICODE_STRING BaseDllName;
+    PVOID DllBase;
+    ULONG SizeOfImage;
+} LDR_DLL_LOADED_NOTIFICATION_DATA, *PLDR_DLL_LOADED_NOTIFICATION_DATA;*/
 return true
 }
 
 func (n *ntldr)typedef VOID ()(ok bool){//col:588
+/*typedef VOID (NTAPI *PLDR_DLL_NOTIFICATION_FUNCTION)(
+    _In_ ULONG NotificationReason,
+    _In_ PLDR_DLL_NOTIFICATION_DATA NotificationData,
+    _In_opt_ PVOID Context
+    );
+#if (PHNT_VERSION >= PHNT_VISTA)
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrRegisterDllNotification(
+    _In_ ULONG Flags,
+    _In_ PLDR_DLL_NOTIFICATION_FUNCTION NotificationFunction,
+    _In_opt_ PVOID Context,
+    _Out_ PVOID *Cookie
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrUnregisterDllNotification(
+    _In_ PVOID Cookie
+    );
+#endif
+NTSYSAPI
+PUNICODE_STRING
+NTAPI
+LdrStandardizeSystemPath(
+    _In_ PUNICODE_STRING SystemPath
+    );
+#if (PHNT_VERSION >= PHNT_WINBLUE)
+typedef struct _LDR_FAILURE_DATA
+{
+    NTSTATUS Status;
+    WCHAR DllName[0x20];
+    WCHAR AdditionalInfo[0x20];
+} LDR_FAILURE_DATA, *PLDR_FAILURE_DATA;*/
 return true
 }
 
 func (n *ntldr)LdrGetFailureData()(ok bool){//col:602
+/*LdrGetFailureData(
+    VOID
+    );
+#endif
+typedef struct _PS_MITIGATION_OPTIONS_MAP
+{
+} PS_MITIGATION_OPTIONS_MAP, *PPS_MITIGATION_OPTIONS_MAP;*/
 return true
 }
 
 func (n *ntldr)#if ()(ok bool){//col:702
+/*#if (PHNT_VERSION >= PHNT_THRESHOLD)
+NTSYSAPI PS_SYSTEM_DLL_INIT_BLOCK LdrSystemDllInitBlock;
+#endif
+#if (PHNT_VERSION >= PHNT_VISTA)
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrAddLoadAsDataTable(
+    _In_ PVOID Module,
+    _In_ PWSTR FilePath,
+    _In_ SIZE_T Size,
+    _In_ HANDLE Handle,
+    _In_opt_ HANDLE ActCtx
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrRemoveLoadAsDataTable(
+    _In_ PVOID InitModule,
+    _Out_opt_ PVOID *BaseModule,
+    _Out_opt_ PSIZE_T Size,
+    _In_ ULONG Flags
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrGetFileNameFromLoadAsDataTable(
+    _In_ PVOID Module,
+    _Out_ PVOID *pFileNamePrt
+    );
+#endif
+NTSYSAPI
+NTSTATUS 
+NTAPI 
+LdrDisableThreadCalloutsForDll(
+    _In_ PVOID DllImageBase
+    );
+    
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrAccessResource(
+    _In_ PVOID DllHandle,
+    _In_ PIMAGE_RESOURCE_DATA_ENTRY ResourceDataEntry,
+    _Out_opt_ PVOID *ResourceBuffer,
+    _Out_opt_ ULONG *ResourceLength
+    );
+typedef struct _LDR_RESOURCE_INFO
+{
+    ULONG_PTR Type;
+    ULONG_PTR Name;
+    ULONG_PTR Language;
+} LDR_RESOURCE_INFO, *PLDR_RESOURCE_INFO;*/
 return true
 }
 
 func (n *ntldr)LdrFindResource_U()(ok bool){//col:756
+/*LdrFindResource_U(
+    _In_ PVOID DllHandle,
+    _In_ PLDR_RESOURCE_INFO ResourceInfo,
+    _In_ ULONG Level,
+    _Out_ PIMAGE_RESOURCE_DATA_ENTRY *ResourceDataEntry
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrFindResourceEx_U(
+    _In_ ULONG Flags,
+    _In_ PVOID DllHandle,
+    _In_ PLDR_RESOURCE_INFO ResourceInfo,
+    _In_ ULONG Level,
+    _Out_ PIMAGE_RESOURCE_DATA_ENTRY *ResourceDataEntry
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrFindResourceDirectory_U(
+    _In_ PVOID DllHandle,
+    _In_ PLDR_RESOURCE_INFO ResourceInfo,
+    _In_ ULONG Level,
+    _Out_ PIMAGE_RESOURCE_DIRECTORY *ResourceDirectory
+    );
+typedef struct _LDR_ENUM_RESOURCE_ENTRY
+{
+    union
+    {
+        ULONG_PTR NameOrId;
+        PIMAGE_RESOURCE_DIRECTORY_STRING Name;
+        struct
+        {
+            USHORT Id;
+            USHORT NameIsPresent;
+        };
+    } Path[3];
+    PVOID Data;
+    ULONG Size;
+    ULONG Reserved;
+} LDR_ENUM_RESOURCE_ENTRY, *PLDR_ENUM_RESOURCE_ENTRY;*/
 return true
 }
 
 func (n *ntldr)#define NAME_FROM_RESOURCE_ENTRY()(ok bool){//col:819
+/*#define NAME_FROM_RESOURCE_ENTRY(RootDirectory, Entry) \
+    ((Entry)->NameIsString ? (ULONG_PTR)PTR_ADD_OFFSET((RootDirectory), (Entry)->NameOffset) : (Entry)->Id)
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrEnumResources(
+    _In_ PVOID DllHandle,
+    _In_ PLDR_RESOURCE_INFO ResourceInfo,
+    _In_ ULONG Level,
+    _Inout_ ULONG *ResourceCount,
+    _Out_writes_to_opt_(*ResourceCount, *ResourceCount) PLDR_ENUM_RESOURCE_ENTRY Resources
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrFindEntryForAddress(
+    _In_ PVOID DllHandle,
+    _Out_ PLDR_DATA_TABLE_ENTRY *Entry
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrLoadAlternateResourceModule(
+    _In_ PVOID DllHandle,
+    _Out_ PVOID *ResourceDllBase,
+    _Out_opt_ ULONG_PTR *ResourceOffset,
+    _In_ ULONG Flags
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrLoadAlternateResourceModuleEx(
+    _In_ PVOID DllHandle,
+    _In_ LANGID LanguageId,
+    _Out_ PVOID *ResourceDllBase,
+    _Out_opt_ ULONG_PTR *ResourceOffset,
+    _In_ ULONG Flags
+    );
+typedef struct _RTL_PROCESS_MODULE_INFORMATION
+{
+    HANDLE Section;
+    PVOID MappedBase;
+    PVOID ImageBase;
+    ULONG ImageSize;
+    ULONG Flags;
+    USHORT LoadOrderIndex;
+    USHORT InitOrderIndex;
+    USHORT LoadCount;
+    USHORT OffsetToFileName;
+    UCHAR FullPathName[256];
+} RTL_PROCESS_MODULE_INFORMATION, *PRTL_PROCESS_MODULE_INFORMATION;*/
 return true
 }
 
 func (n *ntldr)#if ()(ok bool){//col:918
+/*#if (PHNT_MODE != PHNT_MODE_KERNEL)
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrQueryProcessModuleInformation(
+    _In_opt_ PRTL_PROCESS_MODULES ModuleInformation,
+    _In_opt_ ULONG Size,
+    _Out_ PULONG ReturnedSize
+    );
+typedef VOID (NTAPI *PLDR_ENUM_CALLBACK)(
+    _In_ PLDR_DATA_TABLE_ENTRY ModuleInformation, 
+    _In_ PVOID Parameter, 
+    _Out_ BOOLEAN *Stop
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrEnumerateLoadedModules(
+    _In_ BOOLEAN ReservedFlag,
+    _In_ PLDR_ENUM_CALLBACK EnumProc,
+    _In_ PVOID Context
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrOpenImageFileOptionsKey(
+    _In_ PUNICODE_STRING SubKey,
+    _In_ BOOLEAN Wow64,
+    _Out_ PHANDLE NewKeyHandle
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrQueryImageFileKeyOption(
+    _In_ HANDLE KeyHandle,
+    _In_ PCWSTR ValueName,
+    _In_ ULONG Type,
+    _Out_ PVOID Buffer,
+    _In_ ULONG BufferSize,
+    _Out_opt_ PULONG ReturnedLength
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrQueryImageFileExecutionOptions(
+    _In_ PUNICODE_STRING SubKey,
+    _In_ PCWSTR ValueName,
+    _In_ ULONG ValueSize,
+    _Out_ PVOID Buffer,
+    _In_ ULONG BufferSize,
+    _Out_opt_ PULONG ReturnedLength
+    );
+NTSYSAPI
+NTSTATUS
+NTAPI
+LdrQueryImageFileExecutionOptionsEx(
+    _In_ PUNICODE_STRING SubKey,
+    _In_ PCWSTR ValueName,
+    _In_ ULONG Type,
+    _Out_ PVOID Buffer,
+    _In_ ULONG BufferSize,
+    _Out_opt_ PULONG ReturnedLength,
+    _In_ BOOLEAN Wow64
+    );
+typedef struct _DELAYLOAD_PROC_DESCRIPTOR
+{
+    ULONG ImportDescribedByName;
+    union
+    {
+        PCSTR Name;
+        ULONG Ordinal;
+    } Description;
+} DELAYLOAD_PROC_DESCRIPTOR, *PDELAYLOAD_PROC_DESCRIPTOR;*/
 return true
 }
+
+
 
