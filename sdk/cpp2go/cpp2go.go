@@ -110,9 +110,9 @@ func (o *object) Back() *object {
 		panic("!Comment.New().DeleteKeepNewLine(backPath)")
 	}
 	for i, body := range o.back {
-		body, err := os.ReadFile(body.path)
+		b, err := os.ReadFile(body.path)
 		o.Check(err)
-		o.back[i].body = string(body)
+		o.back[i].body = string(b)
 	}
 	return o
 }
@@ -233,6 +233,43 @@ func (o *object) Block(lines []string) (b BlockObject) {
 		enums:   make([]string, 0),
 		methods: make([]string, 0),
 	}
+	type (
+		fns struct {
+			externs func(in []string) (out []string)
+			defines func(in []string) (out []string)
+			structs func(in []string) (out []string)
+			enums   func(in []string) (out []string)
+			methods func(in []string) (out []string)
+		}
+	)
+	f := fns{
+		externs: func(in []string) (out []string) {
+			out = make([]string, 0)
+			return
+		},
+		defines: func(in []string) (out []string) {
+			out = make([]string, 0)
+			return
+		},
+		structs: func(in []string) (out []string) {
+			out = make([]string, 0)
+			return
+		},
+		enums: func(in []string) (out []string) {
+			out = make([]string, 0)
+			return
+		},
+		methods: func(in []string) (out []string) {
+			out = make([]string, 0)
+			return
+		},
+	}
+	out := f.externs(lines)
+	b.externs = out
+
+	out = f.enums(out)
+	b.enums = out
+
 	return
 }
 func (o *object) Convert() *object {
