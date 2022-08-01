@@ -3,8 +3,8 @@ package cpp2go
 import (
 	"fmt"
 	"github.com/ddkwork/librarygo/src/Comment"
-	"github.com/ddkwork/librarygo/src/block"
 	"github.com/ddkwork/librarygo/src/caseconv"
+	"github.com/ddkwork/librarygo/src/cppBlock"
 	"github.com/ddkwork/librarygo/src/mylog"
 	"github.com/ddkwork/librarygo/src/stream"
 	"github.com/ddkwork/librarygo/src/stream/tool"
@@ -143,7 +143,7 @@ func (o *object) handleDefineBlock(col int, lines ...string) string {
 	value := lines[1:]
 	return key + " = " + strings.Join(value, " ") + o.fmtComment(col)
 }
-func (o *object) GetDefine(lines block.Lines) string {
+func (o *object) GetDefine(lines cppBlock.Lines) string {
 	isCTL_CODE := false
 	for _, line := range lines {
 		if line.Line != "" {
@@ -224,7 +224,7 @@ type (
 		write(lines []string)
 		name() string
 		finished()
-		clean(b block.Lines)
+		clean(b cppBlock.Lines)
 		flush()
 	}
 	tmpObject struct{}
@@ -234,7 +234,7 @@ func newTmpObject() tmpInterface {
 	return &tmpObject{}
 }
 
-func (t *tmpObject) clean(b block.Lines) {
+func (t *tmpObject) clean(b cppBlock.Lines) {
 	lines := t.read()
 	for _, info := range b {
 		for i2 := range lines {
@@ -297,11 +297,11 @@ func (t *tmpObject) write(lines []string) {
 type (
 	BlockObject struct {
 		//todo class add ?
-		externs block.Lines
-		defines block.Lines
-		structs block.Lines
-		enums   block.Lines
-		methods block.Lines
+		externs cppBlock.Lines
+		defines cppBlock.Lines
+		structs cppBlock.Lines
+		enums   cppBlock.Lines
+		methods cppBlock.Lines
 	}
 )
 
@@ -309,19 +309,19 @@ func (o *object) Block(lines []string) (b BlockObject) {
 	t := newTmpObject()
 	t.removeComment(lines)
 	//defer func() { t.finished() }()
-	b.defines = block.FindAll(t.read(), `#define `, ``)
+	b.defines = cppBlock.FindDefine(t.read())
 	t.clean(b.defines)
 
-	b.externs = block.FindAll(t.read(), `extern `, ``)
+	b.externs = cppBlock.FindExtern(t.read())
 	t.clean(b.externs)
 
-	b.enums = block.FindAll(t.read(), `typedef enum `, `}`)
+	b.enums = cppBlock.FindEnum(t.read())
 	t.clean(b.enums)
 
-	b.structs = block.FindAll(t.read(), `typedef struct `, `}`)
+	b.structs = cppBlock.FindStruct(t.read())
 	t.clean(b.structs)
 
-	b.methods = block.FindAll(t.read(), `(`, ``)
+	b.methods = cppBlock.findAll(t.read(), `(`, '}')
 	t.clean(b.methods)
 	return
 }
@@ -427,7 +427,7 @@ func (o *object) HandleEnumBlock(col int, lines ...string) string {
 	tmp.WriteStringLn(")\n")
 	return tmp.String()
 }
-func (o *object) GetEnum(lines block.Lines) string {
+func (o *object) GetEnum(lines cppBlock.Lines) string {
 	b := stream.New()
 	enum := make([]string, 0)
 	for i, line := range lines {
@@ -545,7 +545,7 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 	tmp.WriteStringLn("}\n")
 	return tmp.String()
 }
-func (o *object) GetStruct(lines block.Lines) string {
+func (o *object) GetStruct(lines cppBlock.Lines) string {
 	b := stream.New()
 	Struct := make([]string, 0)
 	for i, line := range lines {
@@ -584,7 +584,7 @@ func (o *object) isComment(line string) (ok bool) { //todo delete
 		return
 	}
 }
-func (o *object) GetMethod(lines block.Lines, InterfaceName string) string {
+func (o *object) GetMethod(lines cppBlock.Lines, InterfaceName string) string {
 	fnIsApi := func(line string) (ok bool) {
 		if o.isComment(line) {
 			return

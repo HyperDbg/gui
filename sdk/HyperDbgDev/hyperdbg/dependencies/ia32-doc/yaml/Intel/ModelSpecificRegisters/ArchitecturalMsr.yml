@@ -1783,7 +1783,7 @@
 
     - bit: 24
       name: SW_BLOCK
-      description: SW can request DCA block by setting this bit.
+      description: SW can request DCA cppBlock by setting this bit.
 
     - bit: 26
       name: HW_BLOCK
