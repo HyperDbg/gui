@@ -1,10 +1,4 @@
 package include
-
-import (
-    "container/list"
-    "time"
-)
-
 //back\HyperDbgDev\hyperdbg\include\Definition.h.back
 
 const(

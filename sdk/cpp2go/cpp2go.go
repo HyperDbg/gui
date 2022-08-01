@@ -355,7 +355,7 @@ func (o *object) Convert() *object {
 			//mylog.Json("enum ==> const", enum)
 		}
 
-		Struct := o.GetStruct(block.structs) //todo need fix bug
+		Struct := o.GetStruct(block.structs)
 		if Struct != "" {
 			b.WriteStringLn(Struct)
 			//mylog.Json("Struct ==> struct", Struct)
