@@ -12,7 +12,7 @@ ModuleListInitOrder *list.List
 
 
 type RTL_USER_PROCESS_PARAMETERS struct{
-Reserved1[16] BYTE
+Reserved1[16] uint8
 Reserved2[10] PVOID
 ImagePathName UNICODE_STRING
 CommandLine UNICODE_STRING
@@ -20,9 +20,9 @@ CommandLine UNICODE_STRING
 
 
 type PEB struct{
-Reserved1[2] BYTE
-BeingDebugged BYTE
-Reserved2[1] BYTE
+Reserved1[2] uint8
+BeingDebugged uint8
+Reserved2[1] uint8
 Reserved3[2] PVOID
 Ldr PPEB_LDR_DATA
 ProcessParameters PRTL_USER_PROCESS_PARAMETERS
@@ -34,9 +34,9 @@ Reserved7 PVOID
 Reserved8 ULONG
 AtlThunkSListPtr32 ULONG
 Reserved9[45] PVOID
-Reserved10[96] BYTE
+Reserved10[96] uint8
 PostProcessInitRoutine PPS_POST_PROCESS_INIT_ROUTINE
-Reserved11[128] BYTE
+Reserved11[128] uint8
 Reserved12[1] PVOID
 SessionId ULONG
 }

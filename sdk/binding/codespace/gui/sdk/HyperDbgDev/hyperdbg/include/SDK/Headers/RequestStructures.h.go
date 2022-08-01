@@ -392,7 +392,7 @@ IsStackAddressValid bool
 IsValidAddress bool
 IsExecutable bool
 Value uint64
-InstructionBytesOnRip[MAXIMUM_CALL_INSTR_SIZE] BYTE
+InstructionBytesOnRip[MAXIMUM_CALL_INSTR_SIZE] uint8
 }
 
 
@@ -515,7 +515,7 @@ Pid uint32
 Tid uint32
 Core uint32
 InstructionLength UINT16
-PreviousByte BYTE
+PreviousByte uint8
 SetRflagsIFBitOnMtf bool
 AvoidReApplyBreakpoint bool
 }

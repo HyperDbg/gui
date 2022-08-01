@@ -314,7 +314,7 @@ MaxConnectionTime ULONG
 MaxDisconnectionTime ULONG
 MaxIdleTime ULONG
 KeyboardLayout ULONG
-MinEncryptionLevel BYTE
+MinEncryptionLevel uint8
 NWLogonServer[NASIFILESERVER_LENGTH WCHAR
 PublishedName[MAX_BR_NAME] WCHAR
 WFProfilePath[DIRECTORY_LENGTH WCHAR
@@ -435,7 +435,7 @@ Password[PASSWORD_LENGTH WCHAR
 WorkDirectory[DIRECTORY_LENGTH WCHAR
 InitialProgram[INITIALPROGRAM_LENGTH WCHAR
 SerialNumber ULONG
-EncryptionLevel BYTE
+EncryptionLevel uint8
 ClientAddressFamily ULONG
 ClientAddress[CLIENTADDRESS_LENGTH WCHAR
 HRes USHORT

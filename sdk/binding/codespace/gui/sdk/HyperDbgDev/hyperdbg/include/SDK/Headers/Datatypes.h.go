@@ -29,7 +29,7 @@ PausingReason DEBUGGEE_PAUSING_REASON
 CurrentCore ULONG
 EventTag uint64
 Rflags uint64
-InstructionBytesOnRip[MAXIMUM_INSTR_SIZE] BYTE
+InstructionBytesOnRip[MAXIMUM_INSTR_SIZE] uint8
 ReadInstructionLen UINT16
 }
 
@@ -43,7 +43,7 @@ ProcessId uint32
 ThreadId uint32
 EventTag uint64
 Rflags uint64
-InstructionBytesOnRip[MAXIMUM_INSTR_SIZE] BYTE
+InstructionBytesOnRip[MAXIMUM_INSTR_SIZE] uint8
 ReadInstructionLen UINT16
 GuestRegs GUEST_REGS
 }
