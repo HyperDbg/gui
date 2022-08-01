@@ -51,7 +51,7 @@ func NewObj() *object {
 		dst:           "",
 		col:           "",
 		expandPathExt: "",
-		ext:           []string{".c", ".cpp", ".inc", ".h", ".c", ".asm"},
+		ext:           []string{".c", ".cpp", ".h", ".c", ".asm"}, //".inc", too big
 		back:          make([]pathBody, 0),
 		goPath:        make([]pathBody, 0),
 		expandPath:    expandPath{},
@@ -261,7 +261,7 @@ func (t *tmpObject) removeComment(lines []string) {
 		switch {
 		case line == "#pragma once":
 			lines[i] = ""
-		case strings.Contains(line, `/*`):
+		case strings.Contains(line, `/*`) && strings.Contains(line, `*/`):
 			start := strings.Index(line, `/*`)
 			end := strings.LastIndex(line, `*/`)
 			c := line[start-1 : end+2] //?
@@ -321,14 +321,14 @@ func (o *object) Block(lines []string) (b BlockObject) {
 	b.structs = cppBlock.FindStruct(t.read())
 	t.clean(b.structs)
 
-	b.methods = cppBlock.findAll(t.read(), `(`, '}')
+	b.methods = cppBlock.FindMethod(t.read())
 	t.clean(b.methods)
 	return
 }
 func (o *object) Convert() *object {
 	for i, cpp := range o.back {
-		if !strings.Contains(cpp.path, "Decoder.c.back") {
-			continue //test
+		if !strings.Contains(cpp.path, "phnt\\ntpebteb.h.back") {
+			//continue //test
 		}
 		mylog.Info("current file path", cpp.path)
 		lines, ok := tool.File().ToLines(cpp.body)
@@ -368,11 +368,12 @@ func (o *object) Convert() *object {
 		}
 
 		//mylog.Json("cpp ==> go", b.String())
+		//source, err := format.Source(b.Bytes())
+		//Check(err)
 		if !tool.File().WriteTruncate(o.goPath[i].path, b.String()) {
 			panic("cpp ==> go error")
 		}
 		b.Reset()
-		panic(11111111) //test
 	}
 	return o
 }
@@ -520,7 +521,11 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 		} else {
 			//nested type
 			blockLine = strings.TrimSpace(blockLine)
+			if blockLine == "" { //todo bug,need more test
+				continue
+			}
 			Struct.elemType = blockLine
+			//mylog.Trace(fmt.Sprint(col), blockLine)
 			camel := caseconv.ToCamelUpper(blockLine, false) //todo test
 			camel = strings.TrimSpace(camel)
 			camel = strings.TrimSuffix(camel, " ")
@@ -616,6 +621,8 @@ func (o *object) GetMethod(lines cppBlock.Lines, InterfaceName string) string {
 							if !found {
 								panic("api not found")
 							}
+							api = strings.ReplaceAll(api, " ", "_")
+							api = strings.ReplaceAll(api, "*", "Ptr")
 							api += "()(ok bool)"
 							api += "//col:" + fmt.Sprint(col+j)
 							//mylog.Info(fmt.Sprint(col+j), s)
