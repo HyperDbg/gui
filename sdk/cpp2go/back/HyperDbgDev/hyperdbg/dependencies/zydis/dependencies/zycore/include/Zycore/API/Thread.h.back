@@ -1,0 +1,246 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ifndef ZYCORE_THREAD_H
+#define ZYCORE_THREAD_H
+
+#ifndef ZYAN_NO_LIBC
+
+#include <ZycoreExportConfig.h>
+#include <Zycore/Defines.h>
+#include <Zycore/Status.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
+
+
+#if   defined(ZYAN_POSIX)
+
+#include <pthread.h>
+
+
+
+
+
+
+
+
+typedef pthread_t ZyanThread;
+
+
+
+
+typedef ZyanU64 ZyanThreadId;
+
+
+
+
+
+
+
+
+typedef pthread_key_t ZyanThreadTlsIndex;
+
+
+
+
+typedef void(*ZyanThreadTlsCallback)(void* data);
+
+
+
+
+
+
+
+
+#define ZYAN_THREAD_DECLARE_TLS_CALLBACK(name, param_type, param_name) \
+    void name(param_type* param_name)
+
+
+
+#elif defined(ZYAN_WINDOWS)
+
+#include <windows.h>
+
+
+
+
+
+
+
+
+typedef HANDLE ZyanThread;
+
+
+
+
+typedef DWORD ZyanThreadId;
+
+
+
+
+
+
+
+
+typedef DWORD ZyanThreadTlsIndex;
+
+
+
+
+typedef PFLS_CALLBACK_FUNCTION ZyanThreadTlsCallback;
+
+
+
+
+
+
+
+
+#define ZYAN_THREAD_DECLARE_TLS_CALLBACK(name, param_type, param_name) \
+    VOID NTAPI name(param_type* param_name)
+
+
+
+#else
+#   error "Unsupported platform detected"
+#endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ZYCORE_EXPORT ZyanStatus ZyanThreadGetCurrentThread(ZyanThread* thread);
+
+
+
+
+
+
+
+
+ZYCORE_EXPORT ZyanStatus ZyanThreadGetCurrentThreadId(ZyanThreadId* thread_id);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ZYCORE_EXPORT ZyanStatus ZyanThreadTlsAlloc(ZyanThreadTlsIndex* index,
+    ZyanThreadTlsCallback destructor);
+
+
+
+
+
+
+
+
+ZYCORE_EXPORT ZyanStatus ZyanThreadTlsFree(ZyanThreadTlsIndex index);
+
+
+
+
+
+
+
+
+
+
+
+ZYCORE_EXPORT ZyanStatus ZyanThreadTlsGetValue(ZyanThreadTlsIndex index, void** data);
+
+
+
+
+
+
+
+
+
+
+ZYCORE_EXPORT ZyanStatus ZyanThreadTlsSetValue(ZyanThreadTlsIndex index, void* data);
+
+
+
+
+
+#ifdef __cplusplus
+}
+
+#endif
+
+#endif /* ZYAN_NO_LIBC */
+
+#endif /* ZYCORE_THREAD_H */
+
