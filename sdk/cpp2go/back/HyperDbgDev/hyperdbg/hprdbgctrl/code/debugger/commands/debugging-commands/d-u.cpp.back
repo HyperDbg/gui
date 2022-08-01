@@ -1,27 +1,27 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file d-u.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief !u* u* , !d* d* commands
+ * @details
+ * @version 0.1
+ * @date 2020-05-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern BOOLEAN                  g_IsSerialConnectedToRemoteDebuggee;
 extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
 
-
-
-
-
-
+/**
+ * @brief help of u* d* !u* !d* commands
+ *
+ * @return VOID
+ */
 VOID
 CommandReadMemoryAndDisassemblerHelp()
 {
@@ -58,14 +58,13 @@ CommandReadMemoryAndDisassemblerHelp()
     ShowMessages("\t\te.g : u fffff8077356f010+@rcx\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief u* d* !u* !d* commands handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandReadMemoryAndDisassembler(vector<string> SplittedCommand, string Command)
 {
@@ -80,10 +79,10 @@ CommandReadMemoryAndDisassembler(vector<string> SplittedCommand, string Command)
 
     string FirstCommand = SplittedCommand.front();
 
-
-
-
-
+    //
+    // By default if the user-debugger is active, we use these commands
+    // on the memory layout of the debuggee process
+    //
     if (g_ActiveProcessDebuggingState.IsActive)
     {
         Pid = g_ActiveProcessDebuggingState.ProcessId;
@@ -91,10 +90,10 @@ CommandReadMemoryAndDisassembler(vector<string> SplittedCommand, string Command)
 
     if (SplittedCommand.size() == 1)
     {
-
-
-
-
+        //
+        // Means that user entered just a connect so we have to
+        // ask to connect to what ?
+        //
         ShowMessages("incorrect use of '%s' command\n\n", FirstCommand.c_str());
         CommandReadMemoryAndDisassemblerHelp();
         return;
@@ -143,17 +142,17 @@ CommandReadMemoryAndDisassembler(vector<string> SplittedCommand, string Command)
             continue;
         }
 
-
-
-
+        //
+        // Probably it's address
+        //
         if (TargetAddress == 0)
         {
             if (!SymbolConvertNameOrExprToAddress(SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1),
                                                   &TargetAddress))
             {
-
-
-
+                //
+                // Couldn't resolve or unkonwn parameter
+                //
                 ShowMessages("err, couldn't resolve error at '%s'\n",
                              SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1).c_str());
                 return;
@@ -161,9 +160,9 @@ CommandReadMemoryAndDisassembler(vector<string> SplittedCommand, string Command)
         }
         else
         {
-
-
-
+            //
+            // User inserts two address
+            //
             ShowMessages("err, incorrect use of '%s' command\n\n",
                          FirstCommand.c_str());
             CommandReadMemoryAndDisassemblerHelp();
@@ -174,9 +173,9 @@ CommandReadMemoryAndDisassembler(vector<string> SplittedCommand, string Command)
 
     if (!TargetAddress)
     {
-
-
-
+        //
+        // User inserts two address
+        //
         ShowMessages("err, please enter a valid address\n\n");
 
         return;
@@ -184,9 +183,9 @@ CommandReadMemoryAndDisassembler(vector<string> SplittedCommand, string Command)
 
     if (Length == 0)
     {
-
-
-
+        //
+        // Default length (user doesn't specified)
+        //
         if (!FirstCommand.compare("u") || !FirstCommand.compare("!u"))
         {
             Length = 0x40;
@@ -204,9 +203,9 @@ CommandReadMemoryAndDisassembler(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Check to prevent using process id in d* and u* commands
+    //
     if (g_IsSerialConnectedToRemoteDebuggee && Pid != 0)
     {
         ShowMessages("err, you cannot specify 'pid' in the debugger mode\n");
@@ -215,9 +214,9 @@ CommandReadMemoryAndDisassembler(vector<string> SplittedCommand, string Command)
 
     if (Pid == 0)
     {
-
-
-
+        //
+        // Default process we read from current process
+        //
         Pid = GetCurrentProcessId();
     }
 
@@ -302,9 +301,9 @@ CommandReadMemoryAndDisassembler(vector<string> SplittedCommand, string Command)
                                          NULL);
     }
 
-
-
-
+    //
+    // Disassembler (!u or u or u2 !u2)
+    //
     else if (!FirstCommand.compare("u"))
     {
         HyperDbgReadMemoryAndDisassemble(
@@ -350,5 +349,4 @@ CommandReadMemoryAndDisassembler(vector<string> SplittedCommand, string Command)
             NULL);
     }
 }
-
 

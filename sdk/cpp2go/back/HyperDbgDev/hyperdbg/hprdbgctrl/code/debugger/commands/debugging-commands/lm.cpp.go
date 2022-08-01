@@ -48,6 +48,12 @@ CommandLm()(ok bool)//col:487
 
 
 
+
+
+
+
+
+
 )
 
 func NewLm() { return & lm{} }
@@ -68,6 +74,12 @@ func (l *lm)CommandLmHelp()(ok bool){//col:41
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -248,6 +260,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (l *lm)CommandLmShowKernelModeModule()(ok bool){//col:332
 
 
@@ -321,6 +339,12 @@ func (l *lm)CommandLmShowKernelModeModule()(ok bool){//col:332
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -480,6 +504,12 @@ func (l *lm)CommandLm()(ok bool){//col:487
 
 return true
 }
+
+
+
+
+
+
 
 
 

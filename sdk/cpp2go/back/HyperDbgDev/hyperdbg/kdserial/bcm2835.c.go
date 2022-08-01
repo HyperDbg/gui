@@ -60,6 +60,12 @@ Bcm2835RxReady()(ok bool)//col:339
 
 
 
+
+
+
+
+
+
 )
 
 func NewBcm2835() { return & bcm2835{} }
@@ -94,6 +100,12 @@ func (b *bcm2835)Bcm2835RxReady()(ok bool){//col:126
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -188,6 +200,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (b *bcm2835)Bcm2835GetByte()(ok bool){//col:221
 
 
@@ -208,6 +226,12 @@ func (b *bcm2835)Bcm2835GetByte()(ok bool){//col:221
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -321,6 +345,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (b *bcm2835)Bcm2835RxReady()(ok bool){//col:339
 
 
@@ -339,6 +369,12 @@ func (b *bcm2835)Bcm2835RxReady()(ok bool){//col:339
 
 return true
 }
+
+
+
+
+
+
 
 
 

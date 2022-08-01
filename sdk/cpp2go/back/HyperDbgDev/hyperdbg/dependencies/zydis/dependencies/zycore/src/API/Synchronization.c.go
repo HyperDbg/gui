@@ -55,6 +55,14 @@ ZyanStatus ZyanCriticalSectionDelete()(ok bool)//col:201
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewSynchronization() { return & synchronization{} }
@@ -101,6 +109,14 @@ func (s *synchronization)#if   defined()(ok bool){//col:92
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -205,6 +221,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *synchronization)ZyanBool ZyanCriticalSectionTryEnter()(ok bool){//col:119
 
 
@@ -212,6 +236,14 @@ func (s *synchronization)ZyanBool ZyanCriticalSectionTryEnter()(ok bool){//col:1
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -316,6 +348,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *synchronization)ZyanStatus ZyanCriticalSectionDelete()(ok bool){//col:155
 
 
@@ -332,6 +372,14 @@ func (s *synchronization)ZyanStatus ZyanCriticalSectionDelete()(ok bool){//col:1
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -425,6 +473,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *synchronization)ZyanStatus ZyanCriticalSectionEnter()(ok bool){//col:179
 
 
@@ -475,6 +531,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *synchronization)ZyanBool ZyanCriticalSectionTryEnter()(ok bool){//col:185
 
 
@@ -482,6 +546,14 @@ func (s *synchronization)ZyanBool ZyanCriticalSectionTryEnter()(ok bool){//col:1
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -574,6 +646,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *synchronization)ZyanStatus ZyanCriticalSectionDelete()(ok bool){//col:201
 
 
@@ -582,6 +662,14 @@ func (s *synchronization)ZyanStatus ZyanCriticalSectionDelete()(ok bool){//col:2
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

@@ -52,6 +52,12 @@ UserAccessCheckForLoadedModuleDetails()(ok bool)//col:890
 
 
 
+
+
+
+
+
+
 )
 
 func NewUserAccess() { return & userAccess{} }
@@ -133,6 +139,12 @@ func (u *userAccess)UserAccessAllocateAndGetImagePathFromProcessId()(ok bool){//
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -257,6 +269,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *userAccess)UserAccessGetBaseAndEntrypointOfMainModuleIfLoadedInVmxRoot()(ok bool){//col:326
 
 
@@ -319,6 +337,12 @@ func (u *userAccess)UserAccessGetBaseAndEntrypointOfMainModuleIfLoadedInVmxRoot(
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -480,6 +504,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *userAccess)UserAccessPrintLoadedModulesX86()(ok bool){//col:620
 
 
@@ -561,6 +591,12 @@ func (u *userAccess)UserAccessPrintLoadedModulesX86()(ok bool){//col:620
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -693,6 +729,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *userAccess)UserAccessIsWow64Process()(ok bool){//col:760
 
 
@@ -724,6 +766,12 @@ func (u *userAccess)UserAccessIsWow64Process()(ok bool){//col:760
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -849,6 +897,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *userAccess)UserAccessCheckForLoadedModuleDetails()(ok bool){//col:890
 
 
@@ -882,6 +936,12 @@ func (u *userAccess)UserAccessCheckForLoadedModuleDetails()(ok bool){//col:890
 
 return true
 }
+
+
+
+
+
+
 
 
 

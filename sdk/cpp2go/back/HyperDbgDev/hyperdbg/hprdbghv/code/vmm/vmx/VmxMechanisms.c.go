@@ -48,6 +48,12 @@ VmxMechanismHandleImmediateVmexit()(ok bool)//col:122
 
 
 
+
+
+
+
+
+
 )
 
 func NewVmxMechanisms() { return & vmxMechanisms{} }
@@ -60,6 +66,12 @@ func (v *vmxMechanisms)VmxMechanismCreateImmediateVmexitByVmxPreemptionTimer()(o
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -148,6 +160,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (v *vmxMechanisms)VmxMechanismCreateImmediateVmexitBySelfIpi()(ok bool){//col:67
 
 
@@ -155,6 +173,12 @@ func (v *vmxMechanisms)VmxMechanismCreateImmediateVmexitBySelfIpi()(ok bool){//c
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -244,6 +268,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (v *vmxMechanisms)VmxMechanismHandleImmediateVmexit()(ok bool){//col:122
 
 
@@ -252,6 +282,12 @@ func (v *vmxMechanisms)VmxMechanismHandleImmediateVmexit()(ok bool){//col:122
 
 return true
 }
+
+
+
+
+
+
 
 
 

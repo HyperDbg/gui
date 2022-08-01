@@ -1,21 +1,21 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file interpreter.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief The hyperdbg command interpreter and driver connector
+ * @details
+ * @version 0.1
+ * @date 2020-04-11
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
 using namespace std;
 
-
-
-
+//
+// Global Variables
+//
 extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
 extern CommandType              g_CommandsList;
 
@@ -39,13 +39,13 @@ extern ULONG  g_CurrentRemoteCore;
 extern string g_ServerPort;
 extern string g_ServerIp;
 
-
-
-
-
-
-
-
+/**
+ * @brief Interpret commands
+ *
+ * @param Command The text of command
+ * @return int returns return zero if it was successful or non-zero if there was
+ * error
+ */
 int
 HyperDbgInterpreter(char * Command)
 {
@@ -53,49 +53,49 @@ HyperDbgInterpreter(char * Command)
     UINT64                CommandAttributes = NULL;
     CommandType::iterator Iterator;
 
-
-
-
-
+    //
+    // Check if it's the first command and whether the mapping of command is
+    // initialized or not
+    //
     if (!g_IsCommandListInitialized)
     {
-
-
-
+        //
+        // Initialize the debugger
+        //
         InitializeDebugger();
 
         g_IsCommandListInitialized = TRUE;
     }
 
-
-
-
+    //
+    // Save the command into log open file
+    //
     if (g_LogOpened && !g_ExecutingScript)
     {
         LogopenSaveToFile(Command);
         LogopenSaveToFile("\n");
     }
 
-
-
-
+    //
+    // Remove the comments
+    //
     InterpreterRemoveComments(Command);
 
-
-
-
+    //
+    // Convert to string
+    //
     string CommandString(Command);
 
-
-
-
+    //
+    // Convert to lower case
+    //
     transform(CommandString.begin(), CommandString.end(), CommandString.begin(), [](unsigned char c) { return std::tolower(c); });
 
     vector<string> SplittedCommand {Split(CommandString, ' ')};
 
-
-
-
+    //
+    // Check if user entered an empty imput
+    //
     if (SplittedCommand.empty())
     {
         ShowMessages("\n");
@@ -104,14 +104,14 @@ HyperDbgInterpreter(char * Command)
 
     string FirstCommand = SplittedCommand.front();
 
-
-
-
+    //
+    // Read the command's attributes
+    //
     CommandAttributes = GetCommandAttributes(FirstCommand);
 
-
-
-
+    //
+    // Check if the command needs to be continued by pressing enter
+    //
     if (CommandAttributes & DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER)
     {
         g_ShouldPreviousCommandBeContinued = TRUE;
@@ -121,53 +121,53 @@ HyperDbgInterpreter(char * Command)
         g_ShouldPreviousCommandBeContinued = FALSE;
     }
 
-
-
-
-
-
-
+    //
+    // Check and send remote command and also we check whether this
+    // is a command that should be handled in this command or we can
+    // send it to the remote computer, it is because in a remote connection
+    // still some of the commands should be handled in the local HyperDbg
+    //
     if (g_IsConnectedToRemoteDebuggee &&
         !(CommandAttributes & DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_REMOTE_CONNECTION))
     {
-
-
-
-
-
-
+        //
+        // Check it here because generally, we use this variable in host
+        // for showing the correct signature but we won't try to block
+        // other commands, the only thing is events which is blocked
+        // by the remote computer itself
+        //
         if (g_BreakPrintingOutput)
         {
             g_BreakPrintingOutput = FALSE;
         }
 
-
-
-
+        //
+        // It's a connection over network (VMI-Mode)
+        //
         RemoteConnectionSendCommand(Command, strlen(Command) + 1);
 
         ShowMessages("\n");
 
-
-
-
+        //
+        // Indicate that we sent the command to the target system
+        //
         return 2;
     }
     else if (g_IsSerialConnectedToRemoteDebuggee &&
              !(CommandAttributes &
                DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE))
     {
-
-
-
+        //
+        // It's a connection over serial (Debugger-Mode)
+        //
 
         if (CommandAttributes & DEBUGGER_COMMAND_ATTRIBUTE_WONT_STOP_DEBUGGER_AGAIN)
         {
             KdSendUserInputPacketToDebuggee(Command, strlen(Command) + 1, TRUE);
 
-
-
-
+            //
+            // Set the debuggee to show that it's running
+            //
             KdSetStatusAndWaitForPause();
         }
         else
@@ -175,23 +175,23 @@ HyperDbgInterpreter(char * Command)
             KdSendUserInputPacketToDebuggee(Command, strlen(Command) + 1, FALSE);
         }
 
-
-
-
+        //
+        // Indicate that we sent the command to the target system
+        //
         return 2;
     }
 
-
-
-
+    //
+    // Detect whether it's a .help command or not
+    //
     if (!FirstCommand.compare(".help") || !FirstCommand.compare("help") ||
         !FirstCommand.compare(".hh"))
     {
         if (SplittedCommand.size() == 2)
         {
-
-
-
+            //
+            // Show that it's a help command
+            //
             HelpCommand  = TRUE;
             FirstCommand = SplittedCommand.at(1);
         }
@@ -203,16 +203,16 @@ HyperDbgInterpreter(char * Command)
         }
     }
 
-
-
-
+    //
+    // Start parsing commands
+    //
     Iterator = g_CommandsList.find(FirstCommand);
 
     if (Iterator == g_CommandsList.end())
     {
-
-
-
+        //
+        //  Command doesn't exist
+        //
         string         CaseSensitiveCommandString(Command);
         vector<string> CaseSensitiveSplittedCommand {Split(CaseSensitiveCommandString, ' ')};
 
@@ -234,9 +234,9 @@ HyperDbgInterpreter(char * Command)
         }
         else
         {
-
-
-
+            //
+            // Check if command is case-sensitive or not
+            //
             if ((Iterator->second.CommandAttrib &
                  DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE))
             {
@@ -250,9 +250,9 @@ HyperDbgInterpreter(char * Command)
         }
     }
 
-
-
-
+    //
+    // Save the command into log open file
+    //
     if (g_LogOpened && !g_ExecutingScript)
     {
         LogopenSaveToFile("\n");
@@ -261,12 +261,11 @@ HyperDbgInterpreter(char * Command)
     return 0;
 }
 
-
-
-
-
-
-
+/**
+ * @brief Remove batch comments
+ *
+ * @return VOID
+ */
 VOID
 InterpreterRemoveComments(char * CommandText)
 {
@@ -293,9 +292,9 @@ InterpreterRemoveComments(char * CommandText)
         }
         else if (CommandText[i] == '#' && !IsOnString)
         {
-
-
-
+            //
+            // Comment detected
+            //
             IsComment = TRUE;
             i--;
         }
@@ -303,9 +302,9 @@ InterpreterRemoveComments(char * CommandText)
         {
             if (i != 0 && CommandText[i - 1] == '\\')
             {
-
-
-
+                //
+                // It's an escape character for : \"
+                //
             }
             else if (IsOnString)
             {
@@ -319,27 +318,26 @@ InterpreterRemoveComments(char * CommandText)
     }
 }
 
-
-
-
-
-
-
+/**
+ * @brief Show signature of HyperDbg
+ *
+ * @return VOID
+ */
 VOID
 HyperDbgShowSignature()
 {
     if (g_IsConnectedToRemoteDebuggee)
     {
-
-
-
+        //
+        // Remote debugging over tcp (vmi-mode)
+        //
         ShowMessages("[%s:%s] HyperDbg> ", g_ServerIp.c_str(), g_ServerPort.c_str());
     }
     else if (g_ActiveProcessDebuggingState.IsActive)
     {
-
-
-
+        //
+        // Debugging a special process
+        //
         ShowMessages("%x:%x u%sHyperDbg> ",
                      g_ActiveProcessDebuggingState.ProcessId,
                      g_ActiveProcessDebuggingState.ThreadId,
@@ -347,30 +345,29 @@ HyperDbgShowSignature()
     }
     else if (g_IsSerialConnectedToRemoteDebuggee)
     {
-
-
-
+        //
+        // Remote debugging over serial (debugger-mode)
+        //
         ShowMessages("%x: kHyperDbg> ", g_CurrentRemoteCore);
     }
     else
     {
-
-
-
-
+        //
+        // Anything other than above scenarios including local debugging
+        // in vmi-mode
+        //
         ShowMessages("HyperDbg> ");
     }
 }
 
-
-
-
-
-
-
-
-
-
+/**
+ * @brief check for multi-line commands
+ *
+ * @param CurrentCommand
+ * @param Reset
+ * @return bool return true if the command needs extra input, otherwise
+ * return false
+ */
 bool
 HyperDbgCheckMultilineCommand(std::string & CurrentCommand, bool Reset)
 {
@@ -440,38 +437,37 @@ HyperDbgCheckMultilineCommand(std::string & CurrentCommand, bool Reset)
 
     if (g_IsInterpreterOnString == FALSE && g_InterpreterCountOfOpenCurlyBrackets == 0)
     {
-
-
-
-
+        //
+        // either the command is finished or it's a single
+        // line command
+        //
         return false;
     }
     else
     {
-
-
-
+        //
+        // There still other lines, this command is incomplete
+        //
         return true;
     }
 }
 
-
-
-
-
-
-
-
-
-
+/**
+ * @brief Some of commands like stepping commands (i, p, t) and etc.
+ * need to be repeated when the user press enter, this function shows
+ * whether we should continue the previous command or not
+ *
+ * @return true means the command should be continued, false means command
+ * should be ignored
+ */
 bool
 HyperDbgContinuePreviousCommand()
 {
     BOOLEAN Result = g_ShouldPreviousCommandBeContinued;
 
-
-
-
+    //
+    // We should keep it false for the next command
+    //
     g_ShouldPreviousCommandBeContinued = FALSE;
 
     if (Result)
@@ -484,31 +480,30 @@ HyperDbgContinuePreviousCommand()
     }
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Get Command Attributes
+ *
+ * @param FirstCommand just the first word of command (without other parameters)
+ * @return BOOLEAN Mask of the command's attributes
+ */
 UINT64
 GetCommandAttributes(const string & FirstCommand)
 {
     CommandType::iterator Iterator;
 
-
-
-
-
+    //
+    // Some commands should not be passed to the remote system
+    // and instead should be handled in the current debugger
+    //
 
     Iterator = g_CommandsList.find(FirstCommand);
 
     if (Iterator == g_CommandsList.end())
     {
-
-
-
-
+        //
+        // Command doesn't exist, if it's not exists then it's better to handle
+        // it locally, instead of sending it to the remote computer
+        //
         return DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL;
     }
     else
@@ -519,63 +514,61 @@ GetCommandAttributes(const string & FirstCommand)
     return NULL;
 }
 
-
-
-
-
-
-
+/**
+ * @brief Initialize the debugger and adjust commands for the first run
+ *
+ * @return VOID
+ */
 VOID
 InitializeDebugger()
 {
-
-
-
+    //
+    // Initialize the mapping of functions
+    //
     InitializeCommandsDictionary();
 
-
-
-
+    //
+    // Set the callback for symbol message handler
+    //
     ScriptEngineSetTextMessageCallbackWrapper(ShowMessages);
 
-
-
-
+    //
+    // Register the CTRL+C and CTRL+BREAK Signals handler
+    //
     if (!SetConsoleCtrlHandler(BreakController, TRUE))
     {
         ShowMessages("err, when registering CTRL+C and CTRL+BREAK Signals "
                      "handler\n");
-
-
-
+        //
+        // prefer to continue
+        //
     }
 
+    //
+    // *** Check for feature indicators ***
+    //
 
-
-
-
-
-
-
+    //
+    // Get x86 processor width for virtual address
+    //
     g_VirtualAddressWidth = Getx86VirtualAddressWidth();
 
-
-
-
+    //
+    // Check if processor supports TSX (RTM)
+    //
     g_RtmSupport = CheckCpuSupportRtm();
 
-
-
-
+    //
+    // Load default settings
+    //
     CommandSettingsLoadDefaultValuesFromConfigFile();
 }
 
-
-
-
-
-
-
+/**
+ * @brief Initialize commands and attributes
+ *
+ * @return VOID
+ */
 VOID
 InitializeCommandsDictionary()
 {
@@ -826,5 +819,4 @@ InitializeCommandsDictionary()
 
     g_CommandsList[".pe"] = {&CommandPe, &CommandPeHelp, DEBUGGER_COMMAND_PE_ATTRIBUTES};
 }
-
 

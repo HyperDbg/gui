@@ -57,6 +57,12 @@ HyperDbgLengthDisassemblerEngine()(ok bool)//col:913
 
 
 
+
+
+
+
+
+
 )
 
 func NewDisassembler() { return & disassembler{} }
@@ -74,6 +80,12 @@ func (d *disassembler)#pragma comment()(ok bool){//col:61
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -140,6 +152,12 @@ func (d *disassembler)ZydisFormatterPrintAddressAbsolute()(ok bool){//col:106
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -318,6 +336,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *disassembler)ZydisTest()(ok bool){//col:318
 
 
@@ -356,6 +380,12 @@ func (d *disassembler)ZydisTest()(ok bool){//col:318
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -456,6 +486,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *disassembler)HyperDbgDisassembler32()(ok bool){//col:400
 
 
@@ -476,6 +512,12 @@ func (d *disassembler)HyperDbgDisassembler32()(ok bool){//col:400
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -701,6 +743,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *disassembler)HyperDbgCheckWhetherTheCurrentInstructionIsCall()(ok bool){//col:840
 
 
@@ -791,6 +839,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *disassembler)HyperDbgLengthDisassemblerEngine()(ok bool){//col:913
 
 
@@ -832,6 +886,12 @@ func (d *disassembler)HyperDbgLengthDisassemblerEngine()(ok bool){//col:913
 
 return true
 }
+
+
+
+
+
+
 
 
 

@@ -967,6 +967,14 @@ Ia32Compact interface{
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewIa32Compact() { return & ia32Compact{} }
@@ -997,6 +1005,14 @@ func (i *ia32Compact)#if defined()(ok bool){//col:38
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1093,6 +1109,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (i *ia32Compact)#pragma pack()(ok bool){//col:4009
 
 
@@ -1102,6 +1126,14 @@ func (i *ia32Compact)#pragma pack()(ok bool){//col:4009
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1209,6 +1241,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (i *ia32Compact)#pragma pack()(ok bool){//col:4181
 
 
@@ -1230,6 +1270,14 @@ func (i *ia32Compact)#pragma pack()(ok bool){//col:4181
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1373,6 +1421,14 @@ func (i *ia32Compact)#pragma pack()(ok bool){//col:4309
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

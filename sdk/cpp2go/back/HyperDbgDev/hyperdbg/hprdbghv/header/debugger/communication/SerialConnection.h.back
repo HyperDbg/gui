@@ -1,19 +1,19 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file SerialConnection.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Header for serial port connection from debuggee to debugger
+ * @details
+ * @version 0.1
+ * @date 2020-12-15
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
-
-
-
+//////////////////////////////////////////////////
+//			  External Functions				//
+//////////////////////////////////////////////////
 
 UINT64
 KdHyperDbgTest(UINT16 Byte);
@@ -27,9 +27,9 @@ KdHyperDbgSendByte(UCHAR Byte, BOOLEAN BusyWait);
 BOOLEAN
 KdHyperDbgRecvByte(PUCHAR RecvByte);
 
-
-
-
+//////////////////////////////////////////////////
+//					 Functions					//
+//////////////////////////////////////////////////
 
 VOID
 SerialConnectionTest();
@@ -61,13 +61,13 @@ SerialConnectionSendThreeBuffers(CHAR * Buffer1,
                                  CHAR * Buffer3,
                                  UINT32 Length3);
 
+//////////////////////////////////////////////////
+//					 Constants					//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
+//
+// Baud rates at which the communication device operates
+//
 #define CBR_110    110
 #define CBR_300    300
 #define CBR_600    600
@@ -84,9 +84,9 @@ SerialConnectionSendThreeBuffers(CHAR * Buffer1,
 #define CBR_128000 128000
 #define CBR_256000 256000
 
-
-
-
+//
+// Serial ports
+//
 #define COM1_PORT 0x03F8
 #define COM2_PORT 0x02F8
 #define COM3_PORT 0x03E8

@@ -169,6 +169,14 @@ Ntseapi interface{
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewNtseapi() { return & ntseapi{} }
@@ -181,6 +189,14 @@ func (n *ntseapi)#if ()(ok bool){//col:112
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

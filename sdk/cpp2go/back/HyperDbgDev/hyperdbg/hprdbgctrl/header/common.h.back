@@ -1,20 +1,20 @@
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file common.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief header for HyperDbg's general functions for reading and converting and
+ * etc
+ * @details
+ * @version 0.1
+ * @date 2020-05-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
-
-
-
+//////////////////////////////////////////////////
+//			    	 Definitions                //
+//////////////////////////////////////////////////
 
 #define AssertReturn return;
 
@@ -52,27 +52,27 @@
         }                                              \
     } while (0)
 
-
-
-
-
+/**
+ * @brief Size of each page (4096 bytes)
+ *
+ */
 #define PAGE_SIZE 0x1000
 
-
-
-
-
+/**
+ * @brief Aligning a page
+ *
+ */
 #define PAGE_ALIGN(Va) ((PVOID)((ULONG_PTR)(Va) & ~(PAGE_SIZE - 1)))
 
-
-
-
-
+/**
+ * @brief Cpuid to get virtual address width
+ *
+ */
 #define CPUID_ADDR_WIDTH 0x80000008
 
-
-
-
+//////////////////////////////////////////////////
+//			    	 Spinlocks                  //
+//////////////////////////////////////////////////
 
 void
 SpinlockLock(volatile LONG * Lock);
@@ -83,9 +83,9 @@ SpinlockLockWithCustomWait(volatile LONG * Lock, unsigned MaximumWait);
 void
 SpinlockUnlock(volatile LONG * Lock);
 
-
-
-
+//////////////////////////////////////////////////
+//			    	 Functions                  //
+//////////////////////////////////////////////////
 
 VOID
 PrintBits(size_t const size, void const * const ptr);

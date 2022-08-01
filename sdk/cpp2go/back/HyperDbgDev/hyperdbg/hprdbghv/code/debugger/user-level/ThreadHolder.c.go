@@ -54,6 +54,12 @@ ThreadHolderQueryDetailsOfActiveDebuggingThreadsAndProcesses()(ok bool)//col:630
 
 
 
+
+
+
+
+
+
 )
 
 func NewThreadHolder() { return & threadHolder{} }
@@ -66,6 +72,12 @@ func (t *threadHolder)ThreadHolderAllocateThreadHoldingBuffers()(ok bool){//col:
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -162,6 +174,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (t *threadHolder)ThreadHolderIsAnyPausedThreadInProcess()(ok bool){//col:101
 
 
@@ -184,6 +202,12 @@ func (t *threadHolder)ThreadHolderIsAnyPausedThreadInProcess()(ok bool){//col:10
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -292,6 +316,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (t *threadHolder)ThreadHolderGetProcessFirstThreadDetailsByProcessId()(ok bool){//col:200
 
 
@@ -320,6 +350,12 @@ func (t *threadHolder)ThreadHolderGetProcessFirstThreadDetailsByProcessId()(ok b
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -430,6 +466,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (t *threadHolder)ThreadHolderFindOrCreateThreadDebuggingDetail()(ok bool){//col:358
 
 
@@ -482,6 +524,12 @@ func (t *threadHolder)ThreadHolderFindOrCreateThreadDebuggingDetail()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -620,6 +668,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (t *threadHolder)ThreadHolderFreeHoldingStructures()(ok bool){//col:491
 
 
@@ -635,6 +689,12 @@ func (t *threadHolder)ThreadHolderFreeHoldingStructures()(ok bool){//col:491
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -747,6 +807,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (t *threadHolder)ThreadHolderQueryDetailsOfActiveDebuggingThreadsAndProcesses()(ok bool){//col:630
 
 
@@ -797,6 +863,12 @@ func (t *threadHolder)ThreadHolderQueryDetailsOfActiveDebuggingThreadsAndProcess
 
 return true
 }
+
+
+
+
+
+
 
 
 

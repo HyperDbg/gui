@@ -46,6 +46,12 @@ PeIsPE32BitOr64Bit()(ok bool)//col:599
 
 
 
+
+
+
+
+
+
 )
 
 func NewPeParser() { return & peParser{} }
@@ -80,6 +86,12 @@ func (p *peParser)PeHexDump()(ok bool){//col:64
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -449,6 +461,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (p *peParser)PeIsPE32BitOr64Bit()(ok bool){//col:599
 
 
@@ -515,6 +533,12 @@ func (p *peParser)PeIsPE32BitOr64Bit()(ok bool){//col:599
 
 return true
 }
+
+
+
+
+
+
 
 
 

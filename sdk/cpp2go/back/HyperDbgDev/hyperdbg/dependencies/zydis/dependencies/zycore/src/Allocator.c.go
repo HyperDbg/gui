@@ -50,6 +50,14 @@ ZyanAllocator* ZyanAllocatorDefault()(ok bool)//col:134
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewAllocator() { return & allocator{} }
@@ -72,6 +80,14 @@ func (a *allocator)static ZyanStatus ZyanAllocatorDefaultAllocate()(ok bool){//c
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -175,6 +191,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (a *allocator)static ZyanStatus ZyanAllocatorDefaultDeallocate()(ok bool){//col:96
 
 
@@ -191,6 +215,14 @@ func (a *allocator)static ZyanStatus ZyanAllocatorDefaultDeallocate()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -290,6 +322,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (a *allocator)ZyanAllocator* ZyanAllocatorDefault()(ok bool){//col:134
 
 
@@ -303,6 +343,14 @@ func (a *allocator)ZyanAllocator* ZyanAllocatorDefault()(ok bool){//col:134
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

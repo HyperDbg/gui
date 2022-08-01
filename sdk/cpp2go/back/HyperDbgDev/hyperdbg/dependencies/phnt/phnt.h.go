@@ -75,6 +75,14 @@ Phnt interface{
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewPhnt() { return & phnt{} }
@@ -117,6 +125,14 @@ func (p *phnt)#if ()(ok bool){//col:121
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

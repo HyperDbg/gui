@@ -48,6 +48,12 @@ ShowMemoryCommandDQ()(ok bool)//col:413
 
 
 
+
+
+
+
+
+
 )
 
 func NewReadmem() { return & readmem{} }
@@ -172,6 +178,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (r *readmem)ShowMemoryCommandDB()(ok bool){//col:238
 
 
@@ -212,6 +224,12 @@ func (r *readmem)ShowMemoryCommandDB()(ok bool){//col:238
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -333,6 +351,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (r *readmem)ShowMemoryCommandDD()(ok bool){//col:359
 
 
@@ -361,6 +385,12 @@ func (r *readmem)ShowMemoryCommandDD()(ok bool){//col:359
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -430,6 +460,12 @@ func (r *readmem)ShowMemoryCommandDQ()(ok bool){//col:413
 
 return true
 }
+
+
+
+
+
+
 
 
 

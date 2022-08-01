@@ -1,28 +1,28 @@
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file commands.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @author Alee Amini (alee@hyperdbg.org)
+ * @brief The hyperdbg command interpreter and driver connector
+ * @details
+ * @version 0.1
+ * @date 2020-04-11
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
 using namespace std;
 
-
-
-
+//////////////////////////////////////////////////
+//                    Externs                   //
+//////////////////////////////////////////////////
 
 extern HANDLE g_DeviceHandle;
 
-
-
-
+//////////////////////////////////////////////////
+//                  Settings                    //
+//////////////////////////////////////////////////
 
 VOID
 CommandSettingsLoadDefaultValuesFromConfigFile();
@@ -33,9 +33,9 @@ CommandSettingsSetValueFromConfigFile(std::string OptionName, std::string Option
 BOOLEAN
 CommandSettingsGetValueFromConfigFile(std::string OptionName, std::string & OptionValue);
 
-
-
-
+//////////////////////////////////////////////////
+//                  Functions                   //
+//////////////////////////////////////////////////
 
 int
 ReadCpuDetails();
@@ -114,26 +114,26 @@ InitializeCommandsDictionary();
 VOID
 InitializeDebugger();
 
+//////////////////////////////////////////////////
+//              Type of Commands                //
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief Command's function type
+ *
+ */
 typedef VOID (*CommandFuncType)(vector<string> SplittedCommand, string Command);
 
-
-
-
-
+/**
+ * @brief Command's help function type
+ *
+ */
 typedef VOID (*CommandHelpFuncType)();
 
-
-
-
-
+/**
+ * @brief Details of each command
+ *
+ */
 typedef struct _COMMAND_DETAIL
 {
     CommandFuncType     CommandFunction;
@@ -142,16 +142,16 @@ typedef struct _COMMAND_DETAIL
 
 } COMMAND_DETAIL, *PCOMMAND_DETAIL;
 
-
-
-
-
+/**
+ * @brief Type saving commands and mapping to command string
+ *
+ */
 typedef std::map<std::string, COMMAND_DETAIL> CommandType;
 
-
-
-
-
+/**
+ * @brief Different attributes of commands
+ *
+ */
 #define DEBUGGER_COMMAND_ATTRIBUTE_EVENT \
     0x1 | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
 #define DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE     0x2
@@ -160,18 +160,18 @@ typedef std::map<std::string, COMMAND_DETAIL> CommandType;
 #define DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER                    0x10
 #define DEBUGGER_COMMAND_ATTRIBUTE_WONT_STOP_DEBUGGER_AGAIN           0x20
 
-
-
-
-
+/**
+ * @brief Absolute local commands
+ *
+ */
 #define DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL               \
     DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | \
         DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_REMOTE_CONNECTION
 
-
-
-
-
+/**
+ * @brief Command's attributes
+ *
+ */
 #define DEBUGGER_COMMAND_CLEAR_ATTRIBUTES \
     DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL
 
@@ -375,9 +375,9 @@ typedef std::map<std::string, COMMAND_DETAIL> CommandType;
 
 #define DEBUGGER_COMMAND_PE_ATTRIBUTES NULL
 
-
-
-
+//////////////////////////////////////////////////
+//             Command Functions                //
+//////////////////////////////////////////////////
 
 VOID
 CommandTest(vector<string> SplittedCommand, string Command);

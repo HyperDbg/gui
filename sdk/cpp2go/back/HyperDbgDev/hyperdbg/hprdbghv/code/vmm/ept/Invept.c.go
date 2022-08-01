@@ -46,6 +46,12 @@ EptInveptAllContexts()(ok bool)//col:59
 
 
 
+
+
+
+
+
+
 )
 
 func NewInvept() { return & invept{} }
@@ -62,6 +68,12 @@ func (i *invept)EptInvept()(ok bool){//col:31
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -152,6 +164,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (i *invept)EptInveptAllContexts()(ok bool){//col:59
 
 
@@ -159,6 +177,12 @@ func (i *invept)EptInveptAllContexts()(ok bool){//col:59
 
 return true
 }
+
+
+
+
+
+
 
 
 

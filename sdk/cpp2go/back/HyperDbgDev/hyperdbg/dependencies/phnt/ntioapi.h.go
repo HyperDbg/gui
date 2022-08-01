@@ -47,6 +47,14 @@ func CTL_CODE(deviceType, function, method, access uint32) uint32 {
 
 
 
+
+
+
+
+
+
+
+
 const (
 	FILE_DEVICE_UNKNOWN = windef.FILE_DEVICE_UNKNOWN
 	METHOD_BUFFERED     = windef.METHOD_BUFFERED
@@ -569,6 +577,14 @@ NtCreateIoCompletion()(ok bool)//col:1855
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewNtioapi() { return & ntioapi{} }
@@ -707,6 +723,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntioapi)typedef VOID ()(ok bool){//col:189
 
 
@@ -721,6 +745,14 @@ func (n *ntioapi)typedef VOID ()(ok bool){//col:189
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -835,6 +867,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntioapi)#if ()(ok bool){//col:501
 
 
@@ -864,6 +904,14 @@ func (n *ntioapi)#if ()(ok bool){//col:501
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -955,6 +1003,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntioapi)#if ()(ok bool){//col:729
 
 
@@ -992,6 +1048,14 @@ func (n *ntioapi)#if ()(ok bool){//col:729
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1469,6 +1533,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntioapi)#if ()(ok bool){//col:1719
 
 
@@ -1514,6 +1586,14 @@ func (n *ntioapi)#if ()(ok bool){//col:1719
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1712,6 +1792,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntioapi)#if ()(ok bool){//col:1927
 
 
@@ -1765,6 +1853,14 @@ func (n *ntioapi)#if ()(ok bool){//col:1927
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1885,6 +1981,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntioapi)#if !defined()(ok bool){//col:2096
 
 
@@ -1896,6 +2000,14 @@ func (n *ntioapi)#if !defined()(ok bool){//col:2096
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1989,6 +2101,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntioapi)#if !defined()(ok bool){//col:2124
 
 
@@ -2000,6 +2120,14 @@ func (n *ntioapi)#if !defined()(ok bool){//col:2124
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -2096,6 +2224,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntioapi)    ()(ok bool){//col:2335
 
 
@@ -2138,6 +2274,14 @@ func (n *ntioapi)    ()(ok bool){//col:2335
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

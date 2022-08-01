@@ -1,32 +1,32 @@
+/*++
 
+Copyright (c) Microsoft Corporation.  All rights reserved.
 
+Module Name:
 
+    uartp.h
 
+Abstract:
 
+    This header file declares the private variable, function, and type
+    definitions that are common to all the serial port hardware drivers.
 
-
-
-
-
-
-
-
-
+--*/
 
 #pragma once
 
+// --------------------------------------------------------------------- Macros
 
-
-
-
-
+//
+// Useful macros for setting and checking flags.
+//
 
 #define SET_FLAGS(_x, _f)         ((_x) |= (_f))
 #define CLEAR_FLAGS(_x, _f)       ((_x) &= ~(_f))
 #define CLEAR_OTHER_FLAGS(_x, _f) ((_x) &= (_f))
 #define CHECK_FLAG(_x, _f)        ((_x) & (_f))
 
-
+// ---------------------------------------------------------------- Definitions
 
 #define READ_PORT_UCHAR        UartHardwareAccess.ReadPort8
 #define WRITE_PORT_UCHAR       UartHardwareAccess.WritePort8
@@ -43,7 +43,7 @@
 #define READ_REGISTER_ULONG64  UartHardwareAccess.ReadRegister64
 #define WRITE_REGISTER_ULONG64 UartHardwareAccess.WriteRegister64
 
-
+// ----------------------------------------------------------------- Data Types
 
 typedef enum _ACPI_GENERIC_ACCESS_SIZE
 {
@@ -55,11 +55,11 @@ typedef enum _ACPI_GENERIC_ACCESS_SIZE
 } ACPI_GENERIC_ACCESS_SIZE,
     *PACPI_GENERIC_ACCESS_SIZE;
 
-
+// -------------------------------------------------------------------- Externs
 
 extern UART_HARDWARE_ACCESS UartHardwareAccess;
 
-
+// ----------------------------------------------------------------- Prototypes
 
 BOOLEAN
 UartpSetAccess(

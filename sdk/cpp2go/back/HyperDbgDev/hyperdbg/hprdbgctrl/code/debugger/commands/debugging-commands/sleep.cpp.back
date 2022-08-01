@@ -1,21 +1,21 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file sleep.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief sleep command
+ * @details
+ * @version 0.1
+ * @date 2020-07-25
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
-
-
+/**
+ * @brief help of sleep command
+ *
+ * @return VOID
+ */
 VOID
 CommandSleepHelp()
 {
@@ -26,14 +26,13 @@ CommandSleepHelp()
     ShowMessages("syntax : \tsleep [MillisecondsTime (hex)]\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief sleep command help
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandSleep(vector<string> SplittedCommand, string Command)
 {
@@ -55,5 +54,4 @@ CommandSleep(vector<string> SplittedCommand, string Command)
     }
     Sleep(MillisecondsTime);
 }
-
 

@@ -1,27 +1,27 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file attach.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief .attach command
+ * @details
+ * @version 0.1
+ * @date 2020-08-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 extern BOOLEAN g_IsSerialConnectedToRemoteDebugger;
 
-
-
-
-
-
+/**
+ * @brief help of .attach command
+ *
+ * @return VOID
+ */
 VOID
 CommandAttachHelp()
 {
@@ -33,23 +33,22 @@ CommandAttachHelp()
     ShowMessages("\t\te.g : .attach pid b60 \n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief .attach command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandAttach(vector<string> SplittedCommand, string Command)
 {
     UINT64  TargetPid = 0;
     BOOLEAN NextIsPid = FALSE;
 
-
-
-
+    //
+    // Disable user-mode debugger in this version
+    //
 #if ActivateUserModeDebugger == FALSE
 
     if (!g_IsSerialConnectedToRemoteDebugger)
@@ -64,9 +63,9 @@ CommandAttach(vector<string> SplittedCommand, string Command)
 
 #endif // !ActivateUserModeDebugger
 
-
-
-
+    //
+    // It's a attach to a target PID
+    //
     if (SplittedCommand.size() >= 4)
     {
         ShowMessages("incorrect use of '.attach'\n\n");
@@ -74,9 +73,9 @@ CommandAttach(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // .attach and .detach commands are only supported in VMI Mode
+    //
     if (g_IsSerialConnectedToRemoteDebuggee)
     {
         ShowMessages("err, '.attach', and '.detach' commands are only usable "
@@ -87,9 +86,9 @@ CommandAttach(vector<string> SplittedCommand, string Command)
 
     for (auto item : SplittedCommand)
     {
-
-
-
+        //
+        // Find out whether the user enters pid or not
+        //
         if (NextIsPid)
         {
             NextIsPid = FALSE;
@@ -103,16 +102,16 @@ CommandAttach(vector<string> SplittedCommand, string Command)
         }
         else if (!item.compare("pid"))
         {
-
-
-
+            //
+            // next item is a pid for the process
+            //
             NextIsPid = TRUE;
         }
     }
 
-
-
-
+    //
+    // Check if the process id is empty or not
+    //
     if (TargetPid == 0)
     {
         ShowMessages("please specify a hex value for process id\n\n");
@@ -120,10 +119,9 @@ CommandAttach(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Perform attach to target process
+    //
     UdAttachToProcess(TargetPid, NULL, NULL);
 }
-
 

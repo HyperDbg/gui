@@ -147,6 +147,12 @@ SpiMax311RxReady()(ok bool)//col:947
 
 
 
+
+
+
+
+
+
 )
 
 func NewSpimax311() { return & spimax311{} }
@@ -190,6 +196,12 @@ func (s *spimax311)SpiMax311SetBaud()(ok bool){//col:337
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -293,6 +305,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *spimax311)SpiMax311BufferRxData()(ok bool){//col:454
 
 
@@ -309,6 +327,12 @@ func (s *spimax311)SpiMax311BufferRxData()(ok bool){//col:454
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -409,6 +433,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *spimax311)SpiMax311InitializePort()(ok bool){//col:590
 
 
@@ -432,6 +462,12 @@ func (s *spimax311)SpiMax311InitializePort()(ok bool){//col:590
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -580,6 +616,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *spimax311)SpiMax311GetByte()(ok bool){//col:791
 
 
@@ -617,6 +659,12 @@ func (s *spimax311)SpiMax311GetByte()(ok bool){//col:791
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -729,6 +777,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *spimax311)SpiMax311RxReady()(ok bool){//col:947
 
 
@@ -755,6 +809,12 @@ func (s *spimax311)SpiMax311RxReady()(ok bool){//col:947
 
 return true
 }
+
+
+
+
+
+
 
 
 

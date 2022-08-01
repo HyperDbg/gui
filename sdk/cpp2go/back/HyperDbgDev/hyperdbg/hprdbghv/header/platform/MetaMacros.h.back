@@ -1,15 +1,15 @@
 
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file MetaMacros.h
+ * @author Behrooz Abbassi (BehroozAbbassi@hyperdbg.org)
+ * @brief Helper macros
+ * @details 
+ * @version 0.1
+ * @date 2022-05-05
+ * 
+ * @copyright This project is released under the GNU Public License v3.
+ * 
+ */
 #pragma once
 
 #define MetaScopedExpr(Pre_, Post_, ScopedExpr_) \
@@ -20,23 +20,23 @@
         Post_;                                   \
     } while (FALSE);
 
+//
+// Linked-List
+//
 
-
-
-
-
-
-
-
-
+//
+// borrowed from
+// https://github.com/hvmi/hvmi/blob/master/introcore/include/hlist.h
+// https://github.com/hvmi/hvmi/blob/master/introcore/src/introcore.c
+//
 
 #define LIST_FOR_EACH(_head, _struct_type, _var)               _LIST_FOR_EACH(_head, _struct_type, Link, _var)
 #define LIST_FOR_NEXT(_start, _head, _type, _var)              _LIST_FOR_NEXT(_start, _head, _type, Link, _var)
 #define LIST_FOR_EACH_LINK(_head, _struct_type, _member, _var) _LIST_FOR_EACH(_head, _struct_type, _member, _var)
 
-
-
-
+//
+// RAW versions, use only if really needed
+//
 #define _NEXT(_var, _member)              _var->_member.Flink
 #define _NEXT_ENTRY(_var, _member, _type) CONTAINING_RECORD(_NEXT(_var, _member), _type, _member)
 

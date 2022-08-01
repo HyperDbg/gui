@@ -46,6 +46,12 @@ ConvertToString()(ok bool)//col:40
 
 
 
+
+
+
+
+
+
 )
 
 func NewTools() { return & tools{} }
@@ -59,6 +65,12 @@ func (t *tools)Uint64ToString()(ok bool){//col:20
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -150,6 +162,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (t *tools)ConvertToString()(ok bool){//col:40
 
 
@@ -158,6 +176,12 @@ func (t *tools)ConvertToString()(ok bool){//col:40
 
 return true
 }
+
+
+
+
+
+
 
 
 

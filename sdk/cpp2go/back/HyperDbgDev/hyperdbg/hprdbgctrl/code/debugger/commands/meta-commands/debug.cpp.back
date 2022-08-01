@@ -1,30 +1,30 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file debug.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief .debug command
+ * @details
+ * @version 0.1
+ * @date 2020-12-19
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern HANDLE  g_SerialListeningThreadHandle;
 extern HANDLE  g_SerialRemoteComPortHandle;
 extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 extern BOOLEAN g_IsSerialConnectedToRemoteDebugger;
 extern BOOLEAN g_IsDebuggeeRunning;
 
-
-
-
-
-
+/**
+ * @brief help of .debug command
+ *
+ * @return VOID
+ */
 VOID
 CommandDebugHelp()
 {
@@ -50,13 +50,12 @@ CommandDebugHelp()
     ShowMessages("valid COM ports : COM1, COM2, COM3, COM4 \n");
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Check if baud rate is valid or not
+ *
+ * @param Baudrate
+ * @return BOOLEAN
+ */
 BOOLEAN
 CommandDebugCheckBaudrate(DWORD Baudrate)
 {
@@ -72,13 +71,12 @@ CommandDebugCheckBaudrate(DWORD Baudrate)
     return FALSE;
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Check if COM port is valid or not
+ *
+ * @param ComPort
+ * @return BOOLEAN
+ */
 BOOLEAN
 CommandDebugCheckComPort(const string & ComPort, UINT32 * Port)
 {
@@ -106,14 +104,13 @@ CommandDebugCheckComPort(const string & ComPort, UINT32 * Port)
     return FALSE;
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief .debug command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandDebug(vector<string> SplittedCommand, string Command)
 {
@@ -141,20 +138,20 @@ CommandDebug(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Check the main command
+    //
     if (!SplittedCommand.at(1).compare("remote"))
     {
-
-
-
+        //
+        // in the case of 'remote'
+        //
 
         if (!SplittedCommand.at(2).compare("serial"))
         {
-
-
-
+            //
+            // Connect to a remote serial device
+            //
             if (SplittedCommand.size() != 5)
             {
                 ShowMessages("incorrect use of '.debug'\n\n");
@@ -162,14 +159,14 @@ CommandDebug(vector<string> SplittedCommand, string Command)
                 return;
             }
 
-
-
-
+            //
+            // Set baudrate
+            //
             if (!IsNumber(SplittedCommand.at(3)))
             {
-
-
-
+                //
+                // Unkonwn parameter
+                //
                 ShowMessages("unknown parameter '%s'\n\n",
                              SplittedCommand.at(3).c_str());
                 CommandDebugHelp();
@@ -178,57 +175,57 @@ CommandDebug(vector<string> SplittedCommand, string Command)
 
             Baudrate = stoi(SplittedCommand.at(3));
 
-
-
-
+            //
+            // Check if baudrate is valid or not
+            //
             if (!CommandDebugCheckBaudrate(Baudrate))
             {
-
-
-
+                //
+                // Baud-rate is invalid
+                //
                 ShowMessages("err, baud rate is invalid\n\n");
                 CommandDebugHelp();
                 return;
             }
 
-
-
-
+            //
+            // check if com port address is valid or not
+            //
             if (!CommandDebugCheckComPort(SplittedCommand.at(4), &Port))
             {
-
-
-
+                //
+                // com port is invalid
+                //
                 ShowMessages("err, COM port is invalid\n\n");
                 CommandDebugHelp();
                 return;
             }
 
-
-
-
+            //
+            // Everything is okay, connect to the remote machine to send (debugger)
+            //
             KdPrepareAndConnectDebugPort(SplittedCommand.at(4).c_str(), Baudrate, Port, FALSE, FALSE);
         }
         else if (!SplittedCommand.at(2).compare("namedpipe"))
         {
-
-
-
+            //
+            // Connect to a remote namedpipe
+            //
             string Delimiter = "namedpipe";
             string Token     = Command.substr(
                 Command.find(Delimiter) + Delimiter.size() + 1,
                 Command.size());
 
-
-
-
+            //
+            // Connect to a namedpipe (it's probably a Virtual Machine debugging)
+            //
             KdPrepareAndConnectDebugPort(Token.c_str(), NULL, NULL, FALSE, TRUE);
         }
         else
         {
-
-
-
+            //
+            // Unkonwn parameter
+            //
             ShowMessages("unknown parameter '%s'\n\n", SplittedCommand.at(2).c_str());
             CommandDebugHelp();
             return;
@@ -243,20 +240,20 @@ CommandDebug(vector<string> SplittedCommand, string Command)
             return;
         }
 
-
-
-
-
+        //
+        // in the case of 'prepare'
+        // currently we only support serial
+        //
         if (!SplittedCommand.at(2).compare("serial"))
         {
-
-
-
+            //
+            // Set baudrate
+            //
             if (!IsNumber(SplittedCommand.at(3)))
             {
-
-
-
+                //
+                // Unkonwn parameter
+                //
                 ShowMessages("unknown parameter '%s'\n\n",
                              SplittedCommand.at(3).c_str());
                 CommandDebugHelp();
@@ -265,35 +262,35 @@ CommandDebug(vector<string> SplittedCommand, string Command)
 
             Baudrate = stoi(SplittedCommand.at(3));
 
-
-
-
+            //
+            // Check if baudrate is valid or not
+            //
             if (!CommandDebugCheckBaudrate(Baudrate))
             {
-
-
-
+                //
+                // Baud-rate is invalid
+                //
                 ShowMessages("err, baud rate is invalid\n\n");
                 CommandDebugHelp();
                 return;
             }
 
-
-
-
+            //
+            // check if com port address is valid or not
+            //
             if (!CommandDebugCheckComPort(SplittedCommand.at(4), &Port))
             {
-
-
-
+                //
+                // com port is invalid
+                //
                 ShowMessages("err, COM port is invalid\n\n");
                 CommandDebugHelp();
                 return;
             }
 
-
-
-
+            //
+            // Everything is okay, prepare to send (debuggee)
+            //
             KdPrepareAndConnectDebugPort(SplittedCommand.at(4).c_str(), Baudrate, Port, TRUE, FALSE);
         }
         else
@@ -310,5 +307,4 @@ CommandDebug(vector<string> SplittedCommand, string Command)
         return;
     }
 }
-
 

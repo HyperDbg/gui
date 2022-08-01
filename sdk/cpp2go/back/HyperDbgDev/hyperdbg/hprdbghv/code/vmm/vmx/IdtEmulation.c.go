@@ -51,6 +51,12 @@ IdtEmulationHandleInterruptWindowExiting()(ok bool)//col:672
 
 
 
+
+
+
+
+
+
 )
 
 func NewIdtEmulation() { return & idtEmulation{} }
@@ -68,6 +74,12 @@ func (i *idtEmulation)IdtEmulationReInjectInterruptOrException()(ok bool){//col:
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -136,6 +148,12 @@ func (i *idtEmulation)IdtEmulationHandlePageFaults()(ok bool){//col:117
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -311,6 +329,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (i *idtEmulation)IdtEmulationInjectInterruptWhenInterruptWindowIsOpen()(ok bool){//col:389
 
 
@@ -330,6 +354,12 @@ func (i *idtEmulation)IdtEmulationInjectInterruptWhenInterruptWindowIsOpen()(ok 
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -395,6 +425,12 @@ func (i *idtEmulation)IdtEmulationCheckProcessOrThreadChange()(ok bool){//col:43
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -527,6 +563,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (i *idtEmulation)IdtEmulationHandleNmiWindowExiting()(ok bool){//col:597
 
 
@@ -534,6 +576,12 @@ func (i *idtEmulation)IdtEmulationHandleNmiWindowExiting()(ok bool){//col:597
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -606,6 +654,12 @@ func (i *idtEmulation)IdtEmulationHandleInterruptWindowExiting()(ok bool){//col:
 
 return true
 }
+
+
+
+
+
+
 
 
 

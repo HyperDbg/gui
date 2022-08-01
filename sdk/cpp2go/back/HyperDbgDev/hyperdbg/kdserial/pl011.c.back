@@ -1,22 +1,22 @@
+/*++
 
+Copyright (c) Microsoft Corporation.  All rights reserved.
 
+Module Name:
 
+    pl011.c
 
+Abstract:
 
+    This module contains support for the PL011/SBSA serial UART.
 
+--*/
 
-
-
-
-
-
-
-
-
+// ------------------------------------------------------------------- Includes
 
 #include "common.h"
 
-
+// ---------------------------------------------------------------- Definitions
 
 #define UART_DR    0x00 // Data Register
 #define UART_RSR   0x04 // Receive status register (read)
@@ -36,9 +36,9 @@
 
 #define TOTAL_UART_REGISTER_SIZE 0x4C
 
-
-
-
+//
+// Register Masks
+//
 
 #define UART_FR_TXFE 0x80 // UART_FR flag, xmit buffer empty
 #define UART_FR_RXFF 0x40 // UART_FR flag, receive buffer full
@@ -75,7 +75,7 @@
 #define UART_DR_PE 0x200 // UART_DR flag, parity error
 #define UART_DR_FE 0x100 // UART_DR flag, framing error
 
-
+// --------------------------------------------------------------------- Macros
 
 #define PL011_READ_REGISTER_UCHAR(a, f) \
     (UCHAR)((f) ? READ_REGISTER_ULONG((PULONG)(a)) : READ_REGISTER_UCHAR(a))
@@ -89,7 +89,7 @@
 #define PL011_WRITE_REGISTER_USHORT(a, d, f) \
     ((f) ? WRITE_REGISTER_ULONG((PULONG)(a), d) : WRITE_REGISTER_USHORT(a, d))
 
-
+// ------------------------------------------------------------------ Functions
 
 BOOLEAN
 PL011InitializePort(
@@ -99,32 +99,32 @@ PL011InitializePort(
     UCHAR                            AccessSize,
     UCHAR                            BitWidth)
 
+/*++
 
+Routine Description:
 
+    This routine performs the initialization of a PL011 serial UART.
 
+Arguments:
 
+    LoadOptions - Optional load option string. Currently unused.
 
+    Port - Supplies a pointer to a CPPORT object which will be filled in as
+        part of the port initialization.
 
+    MemoryMapped - Supplies a boolean which indicates if the UART is accessed
+        through memory-mapped registers or legacy port I/O.
 
+    AccessSize - Supplies an ACPI Generic Access Size value which indicates the
+        type of bus access that should be performed when accessing the UART.
 
+    BitWidth - Supplies a number indicating how wide the UART's registers are.
 
+Return Value:
 
+    TRUE if the port has been successfully initialized, FALSE otherwise.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     UINT16  Cr;
@@ -150,18 +150,18 @@ PL011InitializePort(
         Force32Bit  = FALSE;
     }
 
-
-
-
+    //
+    // Disable UART.
+    //
 
     PL011_WRITE_REGISTER_USHORT((PUSHORT)(Port->Address + UART_CR),
                                 0,
                                 Force32Bit);
 
-
-
-
-
+    //
+    // Flush the FIFO by disabling the FIFO.
+    // FIFO need to be flushed before re-enabling the UART.
+    //
 
     do
     {
@@ -170,17 +170,17 @@ PL011InitializePort(
 
     } while ((Fsr & (UART_FR_RXFE | UART_FR_TXFE)) != (UART_FR_RXFE | UART_FR_TXFE));
 
-
-
-
+    //
+    // Set word length to 8 bits, enable the FIFO, disable parity.
+    //
 
     PL011_WRITE_REGISTER_UCHAR(Port->Address + UART_LCRH,
                                (UART_LCRH_WLEN_8 | UART_LCRH_FEN),
                                Force32Bit);
 
-
-
-
+    //
+    // Clear all interrupts
+    //
 
     PL011_WRITE_REGISTER_USHORT((PUSHORT)(Port->Address + UART_IMSC),
                                 0x0000,
@@ -190,12 +190,12 @@ PL011InitializePort(
                                 0x07FF,
                                 Force32Bit);
 
-
-
-
-
-
-
+    //
+    // Enable UART, Enable Transmit and Receive, Enable RTS.
+    //
+    // The RTS hardware flow control is required to ensure RX FIFO won't be
+    // overflowed on simulator.
+    //
 
     PL011_WRITE_REGISTER_USHORT((PUSHORT)(Port->Address + UART_CR),
                                 (UART_CR_RTSEn | UART_CR_RXE | UART_CR_TXE),
@@ -211,7 +211,6 @@ PL011InitializePort(
     return TRUE;
 }
 
-
 BOOLEAN
 SBSAInitializePort(
     _In_opt_ _Null_terminated_ PCHAR LoadOptions,
@@ -220,32 +219,32 @@ SBSAInitializePort(
     UCHAR                            AccessSize,
     UCHAR                            BitWidth)
 
+/*++
 
+Routine Description:
 
+    This routine performs the initialization of an SBSA serial UART.
 
+Arguments:
 
+    LoadOptions - Optional load option string. Currently unused.
 
+    Port - Supplies a pointer to a CPPORT object which will be filled in as
+        part of the port initialization.
 
+    MemoryMapped - Supplies a boolean which indicates if the UART is accessed
+        through memory-mapped registers or legacy port I/O.
 
+    AccessSize - Supplies an ACPI Generic Access Size value which indicates the
+        type of bus access that should be performed when accessing the UART.
 
+    BitWidth - Supplies a number indicating how wide the UART's registers are.
 
+Return Value:
 
+    TRUE if the port has been successfully initialized, FALSE otherwise.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     UINT16  Cr;
@@ -270,25 +269,25 @@ SBSAInitializePort(
         Force32Bit  = FALSE;
     }
 
-
-
-
+    //
+    // Disable UART.
+    //
 
     PL011_WRITE_REGISTER_USHORT((PUSHORT)(Port->Address + UART_CR),
                                 0,
                                 Force32Bit);
 
-
-
-
+    //
+    // Set word length to 8 bits, enable the FIFO, disable parity.
+    //
 
     PL011_WRITE_REGISTER_UCHAR(Port->Address + UART_LCRH,
                                (UART_LCRH_WLEN_8 | UART_LCRH_FEN),
                                Force32Bit);
 
-
-
-
+    //
+    // Clear all interrupts
+    //
 
     PL011_WRITE_REGISTER_USHORT((PUSHORT)(Port->Address + UART_IMSC),
                                 0x0000,
@@ -298,12 +297,12 @@ SBSAInitializePort(
                                 0x07FF,
                                 Force32Bit);
 
-
-
-
-
-
-
+    //
+    // Enable UART, Enable Transmit and Receive, Enable RTS.
+    //
+    // The RTS hardware flow control is required to ensure RX FIFO won't be
+    // overflowed on simulator.
+    //
 
     PL011_WRITE_REGISTER_USHORT((PUSHORT)(Port->Address + UART_CR),
                                 (UART_CR_RTSEn | UART_CR_RXE | UART_CR_TXE),
@@ -319,7 +318,6 @@ SBSAInitializePort(
     return TRUE;
 }
 
-
 BOOLEAN
 SBSA32InitializePort(
     _In_opt_ _Null_terminated_ PCHAR LoadOptions,
@@ -328,32 +326,32 @@ SBSA32InitializePort(
     UCHAR                            AccessSize,
     UCHAR                            BitWidth)
 
+/*++
 
+Routine Description:
 
+    This routine performs the initialization of an SBSA32 serial UART.
 
+Arguments:
 
+    LoadOptions - Optional load option string. Currently unused.
 
+    Port - Supplies a pointer to a CPPORT object which will be filled in as
+        part of the port initialization.
 
+    MemoryMapped - Supplies a boolean which indicates if the UART is accessed
+        through memory-mapped registers or legacy port I/O.
 
+    AccessSize - Supplies an ACPI Generic Access Size value which indicates the
+        type of bus access that should be performed when accessing the UART.
 
+    BitWidth - Supplies a number indicating how wide the UART's registers are.
 
+Return Value:
 
+    TRUE if the port has been successfully initialized, FALSE otherwise.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     UNREFERENCED_PARAMETER(BitWidth);
@@ -361,29 +359,28 @@ SBSA32InitializePort(
     return SBSAInitializePort(LoadOptions, Port, MemoryMapped, AccessSize, 32);
 }
 
-
 BOOLEAN
 PL011SetBaud(
     _Inout_ PCPPORT Port,
     ULONG           Rate)
 
+/*++
 
+Routine Description:
 
+    Set the baud rate for the UART hardware and record it in the port object.
 
+Arguments:
 
+    Port - Supplies the address of the port object that describes the UART.
 
+    Rate - Supplies the desired baud rate in bits per second.
 
+Return Value:
 
+    TRUE if the baud rate was programmed, FALSE if it was not.
 
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     if ((Port == NULL) || (Port->Address == NULL))
@@ -391,37 +388,36 @@ PL011SetBaud(
         return FALSE;
     }
 
-
-
-
+    //
+    // Remember the baud rate.
+    //
 
     Port->BaudRate = Rate;
     return TRUE;
 }
-
 
 UART_STATUS
 PL011GetByte(
     _Inout_ PCPPORT Port,
     _Out_ PUCHAR    Byte)
 
+/*++
 
+Routine Description:
 
+    Fetch a data byte from the UART device and return it.
 
+Arguments:
 
+    Port - Supplies the address of the port object that describes the UART.
 
+    Byte - Supplies the address of variable to hold the result.
 
+Return Value:
 
+    UART_STATUS code.
 
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     BOOLEAN Force32Bit;
@@ -435,30 +431,30 @@ PL011GetByte(
 
     Force32Bit = ((Port->Flags & PORT_FORCE_32BIT_IO) != 0);
 
-
-
-
+    //
+    // Get FIFO status.
+    //
 
     Fsr = PL011_READ_REGISTER_USHORT((PUSHORT)(Port->Address + UART_FR),
                                      Force32Bit);
 
-
-
-
+    //
+    // Is at least one character available?
+    //
 
     if ((Fsr & UART_FR_RXFE) == 0)
     {
-
-
-
+        //
+        // Fetch the data byte and associated error information.
+        //
 
         Value =
             PL011_READ_REGISTER_USHORT((PUSHORT)(Port->Address + UART_DR),
                                        Force32Bit);
 
-
-
-
+        //
+        // Check for errors. Deliberately don't treat overrun as an error.
+        //
 
         if ((Value & (UART_DR_PE | UART_DR_FE | UART_DR_BE)) != 0)
         {
@@ -473,33 +469,32 @@ PL011GetByte(
     return UartNoData;
 }
 
-
 UART_STATUS
 PL011PutByte(
     _Inout_ PCPPORT Port,
     UCHAR           Byte,
     BOOLEAN         BusyWait)
 
+/*++
 
+Routine Description:
 
+    Write a data byte out to the UART device.
 
+Arguments:
 
+    Port - Supplies the address of the port object that describes the UART.
 
+    Byte - Supplies the data to emit.
 
+    BusyWait - Supplies a flag to control whether this routine will busy
+        wait (spin) for the UART hardware to be ready to transmit.
 
+Return Value:
 
+    UART_STATUS code.
 
-
-
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     BOOLEAN Force32Bit;
@@ -511,11 +506,11 @@ PL011PutByte(
 
     Force32Bit = ((Port->Flags & PORT_FORCE_32BIT_IO) != 0);
 
-
-
-
-
-
+    //
+    // Wait for port to be free and FIFO not full.
+    //
+    // _ARM_WORKAROUND_ modem control is not supported
+    //
 
     if (BusyWait != FALSE)
     {
@@ -536,34 +531,33 @@ PL011PutByte(
         }
     }
 
-
-
-
+    //
+    // Send the byte.
+    //
 
     PL011_WRITE_REGISTER_UCHAR(Port->Address + UART_DR, Byte, Force32Bit);
     return UartSuccess;
 }
 
-
 BOOLEAN
 PL011RxReady(
     _Inout_ PCPPORT Port)
 
+/*++
 
+Routine Description:
 
+    This routine determines if there is data pending in the UART.
 
+Arguments:
 
+    Port - Supplies the address of the port object that describes the UART.
 
+Return Value:
 
+    TRUE if data is available, FALSE otherwise.
 
-
-
-
-
-
-
-
-
+--*/
 
 {
     PUCHAR  BaseAddress;
@@ -575,20 +569,20 @@ PL011RxReady(
         return FALSE;
     }
 
-
-
-
-
+    //
+    // Read the Flag Register to determine if there is any pending
+    // data to read.
+    //
 
     BaseAddress = Port->Address;
     Force32Bit  = ((Port->Flags & PORT_FORCE_32BIT_IO) != 0);
     Flags       = PL011_READ_REGISTER_USHORT((PUSHORT)(BaseAddress + UART_FR),
                                        Force32Bit);
 
-
-
-
-
+    //
+    // Check the "receive FIFO empty" flag. If it is clear, then at least one
+    // byte is available.
+    //
 
     if (CHECK_FLAG(Flags, UART_FR_RXFE) == 0)
     {
@@ -598,8 +592,7 @@ PL011RxReady(
     return FALSE;
 }
 
-
-
+// -------------------------------------------------------------------- Globals
 
 UART_HARDWARE_DRIVER PL011HardwareDriver = {
     PL011InitializePort,

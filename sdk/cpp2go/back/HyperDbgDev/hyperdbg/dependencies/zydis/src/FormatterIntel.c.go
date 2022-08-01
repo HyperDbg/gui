@@ -53,6 +53,12 @@ ZyanStatus ZydisFormatterIntelPrintAddressMASM()(ok bool)//col:444
 
 
 
+
+
+
+
+
+
 )
 
 func NewFormatterIntel() { return & formatterIntel{} }
@@ -229,6 +235,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterIntel)ZyanStatus ZydisFormatterIntelFormatOperandMEM()(ok bool){//col:252
 
 
@@ -289,6 +301,12 @@ func (f *formatterIntel)ZyanStatus ZydisFormatterIntelFormatOperandMEM()(ok bool
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -413,6 +431,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterIntel)ZyanStatus ZydisFormatterIntelPrintRegister()(ok bool){//col:315
 
 
@@ -432,6 +456,12 @@ func (f *formatterIntel)ZyanStatus ZydisFormatterIntelPrintRegister()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -557,6 +587,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterIntel)ZyanStatus ZydisFormatterIntelPrintTypecast()(ok bool){//col:383
 
 
@@ -582,6 +618,12 @@ func (f *formatterIntel)ZyanStatus ZydisFormatterIntelPrintTypecast()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -678,6 +720,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterIntel)ZyanStatus ZydisFormatterIntelPrintAddressMASM()(ok bool){//col:444
 
 
@@ -716,6 +764,12 @@ func (f *formatterIntel)ZyanStatus ZydisFormatterIntelPrintAddressMASM()(ok bool
 
 return true
 }
+
+
+
+
+
+
 
 
 

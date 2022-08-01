@@ -1,24 +1,24 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file VmxBroadcast.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers for broadcast in VMX-root mode
+ * @details
+ * @version 0.1
+ * @date 2021-12-31
+ * 
+ * @copyright This project is released under the GNU Public License v3.
+ * 
+ */
 #pragma once
 
+//////////////////////////////////////////////////
+//					  Enums		    			//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief Types of actions for NMI broadcasting
+ * 
+ */
 typedef enum _NMI_BROADCAST_ACTION_TYPE
 {
     NMI_BROADCAST_ACTION_NONE = 0,
@@ -27,9 +27,9 @@ typedef enum _NMI_BROADCAST_ACTION_TYPE
 
 } NMI_BROADCAST_ACTION_TYPE;
 
-
-
-
+//////////////////////////////////////////////////
+//					Functions					//
+//////////////////////////////////////////////////
 
 BOOLEAN
 VmxBroadcastHandleNmiCallback(PVOID Context, BOOLEAN Handled);

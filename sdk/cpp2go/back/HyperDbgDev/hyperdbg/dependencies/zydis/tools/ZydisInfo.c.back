@@ -1,47 +1,47 @@
+/***************************************************************************************************
 
+  Zyan Disassembler Library (Zydis)
 
+  Original Author : Florian Bernd
 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
 
+***************************************************************************************************/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file
+ * Disassembles a given hex-buffer and prints detailed information about the decoded
+ * instruction, the operands and additional attributes.
+ */
 
 #include <inttypes.h>
 #include <Zycore/API/Terminal.h>
 #include <Zycore/LibC.h>
 #include <Zydis/Zydis.h>
 
+/* ============================================================================================== */
+/* Colors                                                                                         */
+/* ============================================================================================== */
 
-
-
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Configuration                                                                                  */
+/* ---------------------------------------------------------------------------------------------- */
 
 #define COLOR_DEFAULT       ZYAN_VT100SGR_FG_DEFAULT
 #define COLOR_ERROR         ZYAN_VT100SGR_FG_BRIGHT_RED
@@ -52,50 +52,50 @@
 #define COLOR_VALUE_G       ZYAN_VT100SGR_FG_BRIGHT_GREEN
 #define COLOR_VALUE_B       ZYAN_VT100SGR_FG_CYAN
 
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Global variables                                                                               */
+/* ---------------------------------------------------------------------------------------------- */
 
 static ZyanBool g_vt100_stdout;
 static ZyanBool g_vt100_stderr;
 
+/* ---------------------------------------------------------------------------------------------- */
+/* Helper macros                                                                                  */
+/* ---------------------------------------------------------------------------------------------- */
 
-
-
-
-
-
-
-
-
-
+/**
+ * Conditionally expands to the passed VT100 sequence, if `g_colors_stdout` is
+ * `ZYAN_TRUE`, or an empty string, if not.
+ *
+ * @param   The VT100 SGT sequence.
+ */
 #define CVT100_OUT(sequence) (g_vt100_stdout ? (sequence) : "")
 
-
-
-
-
-
-
+/**
+ * Conditionally expands to the passed VT100 sequence, if `g_colors_stderr` is
+ * `ZYAN_TRUE`, or an empty string, if not.
+ *
+ * @param   The VT100 SGT sequence.
+ */
 #define CVT100_ERR(sequence) (g_vt100_stderr ? (sequence) : "")
 
+/* ---------------------------------------------------------------------------------------------- */
 
+/* ============================================================================================== */
+/* Helper functions                                                                               */
+/* ============================================================================================== */
 
+/* ---------------------------------------------------------------------------------------------- */
+/* General                                                                                        */
+/* ---------------------------------------------------------------------------------------------- */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Formats the given zyan status code to a human readable string.
+ *
+ * @param   status  The zyan status code.
+ *
+ * @return  The status code string.
+ */
 static const char* FormatZyanStatus(ZyanStatus status)
 {
     static const char* strings_zycore[] =
@@ -145,16 +145,15 @@ static const char* FormatZyanStatus(ZyanStatus status)
     ZYAN_UNREACHABLE;
 }
 
+/* ---------------------------------------------------------------------------------------------- */
+/* Text output                                                                                    */
+/* ---------------------------------------------------------------------------------------------- */
 
-
-
-
-
-
-
-
-
-
+/**
+ * Prints a section header.
+ *
+ * @param   name    The section name.
+ */
 static void PrintSectionHeader(const char* name)
 {
     ZYAN_ASSERT(ZYAN_STRLEN(name) <= 8);
@@ -164,67 +163,65 @@ static void PrintSectionHeader(const char* name)
         CVT100_OUT(COLOR_DEFAULT));
 }
 
-
-
-
-
-
-
+/**
+ * Prints a value label.
+ *
+ * @param   name    The value name.
+ */
 static void PrintValueLabel(const char* name)
 {
     ZYAN_ASSERT(ZYAN_STRLEN(name) <= 11);
     ZYAN_PRINTF("%s%11s:%s ", CVT100_OUT(COLOR_VALUE_LABEL), name, CVT100_OUT(COLOR_DEFAULT));
 }
 
-
-
-
-
-
-
-
-
+/**
+ * Prints a formatted value using red color.
+ *
+ * @param   name    The value name.
+ * @param   format  The format string.
+ * @param   ...     The format arguments.
+ */
 #define PRINT_VALUE_R(name, format, ...) \
     PrintValueLabel(name); \
     ZYAN_PRINTF("%s" format "%s\n", CVT100_OUT(COLOR_VALUE_R), __VA_ARGS__, \
         CVT100_OUT(COLOR_DEFAULT));
 
-
-
-
-
-
-
-
+/**
+ * Prints a formatted value using green color.
+ *
+ * @param   name    The value name.
+ * @param   format  The format string.
+ * @param   ...     The format arguments.
+ */
 #define PRINT_VALUE_G(name, format, ...) \
     PrintValueLabel(name); \
     ZYAN_PRINTF("%s" format "%s\n", CVT100_OUT(COLOR_VALUE_G), __VA_ARGS__, \
         CVT100_OUT(COLOR_DEFAULT));
 
-
-
-
-
-
-
-
+/**
+ * Prints a formatted value using blue color.
+ *
+ * @param   name    The value name.
+ * @param   format  The format string.
+ * @param   ...     The format arguments.
+ */
 #define PRINT_VALUE_B(name, format, ...) \
     PrintValueLabel(name); \
     ZYAN_PRINTF("%s" format "%s\n", CVT100_OUT(COLOR_VALUE_B), __VA_ARGS__, \
         CVT100_OUT(COLOR_DEFAULT));
 
+/* ---------------------------------------------------------------------------------------------- */
 
+/* ============================================================================================== */
+/* Print functions                                                                                */
+/* ============================================================================================== */
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * Prints instruction segments (parts).
+ *
+ * @param   instruction A pointer to the `ZydisDecodedInstruction` struct.
+ * @param   buffer      The buffer that contains the instruction bytes.
+ */
 static void PrintSegments(const ZydisDecodedInstruction* instruction, const ZyanU8* buffer)
 {
     PrintSectionHeader("SEGMENTS");
@@ -358,12 +355,11 @@ static void PrintSegments(const ZydisDecodedInstruction* instruction, const Zyan
     ZYAN_PRINTF(CVT100_OUT(COLOR_DEFAULT));
 }
 
-
-
-
-
-
-
+/**
+ * Prints instruction operands info.
+ *
+ * @param   instruction A pointer to the `ZydisDecodedInstruction` struct.
+ */
 static void PrintOperands(const ZydisDecodedInstruction* instruction)
 {
     PrintSectionHeader("OPERANDS");
@@ -564,12 +560,11 @@ static void PrintOperands(const ZydisDecodedInstruction* instruction)
         "--  ---------------------------%s\n", CVT100_OUT(COLOR_HEADER), CVT100_OUT(COLOR_DEFAULT));
 }
 
-
-
-
-
-
-
+/**
+ * Prints instruction flags info.
+ *
+ * @param   instruction A pointer to the `ZydisDecodedInstruction` struct.
+ */
 static void PrintFlags(const ZydisDecodedInstruction* instruction)
 {
     static const char* strings_flag_name[] =
@@ -640,12 +635,11 @@ static void PrintFlags(const ZydisDecodedInstruction* instruction)
     PRINT_VALUE_G("UNDEFINED", "0x%08" PRIX32, temp);
 }
 
-
-
-
-
-
-
+/**
+ * Prints instruction AVX info.
+ *
+ * @param   instruction A pointer to the `ZydisDecodedInstruction` struct.
+ */
 static void PrintAVXInfo(const ZydisDecodedInstruction* instruction)
 {
     static const char* strings_broadcast_mode[] =
@@ -739,12 +733,11 @@ static void PrintAVXInfo(const ZydisDecodedInstruction* instruction)
     }
 }
 
-
-
-
-
-
-
+/**
+ * Prints the tokenized instruction.
+ *
+ * @param   token   A pointer to the first token.
+ */
 static void PrintTokenizedInstruction(const ZydisFormatterToken* token)
 {
     ZyanStatus status = ZYAN_STATUS_SUCCESS;
@@ -801,13 +794,12 @@ static void PrintTokenizedInstruction(const ZydisFormatterToken* token)
     ZYAN_PRINTF("%s\n", CVT100_OUT(COLOR_DEFAULT));
 }
 
-
-
-
-
-
-
-
+/**
+ * Prints the formatted instruction disassembly.
+ *
+ * @param   instruction A pointer to the `ZydisDecodedInstruction` struct.
+ * @param   style       The formatter style.
+ */
 static void PrintDisassembly(const ZydisDecodedInstruction* instruction,
     ZydisFormatterStyle style)
 {
@@ -854,12 +846,11 @@ static void PrintDisassembly(const ZydisDecodedInstruction* instruction,
     PrintTokenizedInstruction(token);
 }
 
-
-
-
-
-
-
+/**
+ * Dumps basic instruction info.
+ *
+ * @param   instruction A pointer to the `ZydisDecodedInstruction` struct.
+ */
 static void PrintInstruction(const ZydisDecodedInstruction* instruction)
 {
     static const char* opcode_maps[] =
@@ -1052,21 +1043,20 @@ static void PrintInstruction(const ZydisDecodedInstruction* instruction)
     PrintDisassembly(instruction, ZYDIS_FORMATTER_STYLE_INTEL);
 }
 
-
-
-
-
+/* ============================================================================================== */
+/* Entry point                                                                                    */
+/* ============================================================================================== */
 
 int main(int argc, char** argv)
 {
-
+    // Enable VT100 escape sequences on Windows, if the output is not redirected
     g_vt100_stdout = (ZyanTerminalIsTTY(ZYAN_STDSTREAM_OUT) == ZYAN_STATUS_TRUE) &&
                      ZYAN_SUCCESS(ZyanTerminalEnableVT100(ZYAN_STDSTREAM_OUT));
     g_vt100_stderr = (ZyanTerminalIsTTY(ZYAN_STDSTREAM_ERR) == ZYAN_STATUS_TRUE) &&
                      ZYAN_SUCCESS(ZyanTerminalEnableVT100(ZYAN_STDSTREAM_ERR));
 
-
-
+    // ZYAN_PRINTF("%zu\n", sizeof(ZydisDecodedInstruction));
+    // ZYAN_PRINTF("%zu\n", sizeof(ZydisDecodedOperand));
 
     if (ZydisGetVersion() != ZYDIS_VERSION)
     {
@@ -1113,7 +1103,7 @@ int main(int argc, char** argv)
     {
         char* cur_arg = argv[i];
 
-
+        // Strip whitespace in-place.
         const ZyanUSize arg_len = ZYAN_STRLEN(cur_arg);
         ZyanUSize write = 0;
         for (ZyanUSize read = 0; read < arg_len; ++read)
@@ -1178,6 +1168,5 @@ int main(int argc, char** argv)
     return EXIT_SUCCESS;
 }
 
-
-
+/* ============================================================================================== */
 

@@ -293,6 +293,14 @@ DecoderTypes interface{
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewDecoderTypes() { return & decoderTypes{} }
@@ -302,6 +310,14 @@ func (d *decoderTypes)    ZYDIS_MEMOP_TYPE_REQUIRED_BITS = ZYAN_BITS_TO_REPRESEN
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -391,11 +407,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (d *decoderTypes)    ZYDIS_CPUFLAG_ACTION_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:579
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -485,11 +517,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (d *decoderTypes)    ZYDIS_EXCEPTION_CLASS_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:676
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -579,11 +627,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (d *decoderTypes)    ZYDIS_BROADCAST_MODE_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:750
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -673,11 +737,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (d *decoderTypes)    ZYDIS_SWIZZLE_MODE_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:816
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -767,11 +847,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (d *decoderTypes)    ZYDIS_PREFIX_TYPE_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:880
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

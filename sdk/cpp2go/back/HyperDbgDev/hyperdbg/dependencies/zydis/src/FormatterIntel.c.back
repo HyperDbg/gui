@@ -1,45 +1,45 @@
+/***************************************************************************************************
 
+  Zyan Disassembler Library (Zydis)
 
+  Original Author : Florian Bernd, Joel Hoener
 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+***************************************************************************************************/
 
 #include <Zydis/Internal/FormatterIntel.h>
 #include <Zydis/Utils.h>
 
-
-
-
+/* ============================================================================================== */
+/* Constants                                                                                      */
+/* ============================================================================================== */
 
 #include <Generated/FormatterStrings.inc>
 
+/* ============================================================================================== */
+/* Formatter functions                                                                            */
+/* ============================================================================================== */
 
-
-
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Intel                                                                                          */
+/* ---------------------------------------------------------------------------------------------- */
 
 ZyanStatus ZydisFormatterIntelFormatInstruction(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -62,7 +62,7 @@ ZyanStatus ZydisFormatterIntelFormatInstruction(const ZydisFormatter* formatter,
             break;
         }
 
-
+        // Print embedded-mask registers as decorator instead of a regular operand
         if ((i == 1) && (operand->type == ZYDIS_OPERAND_TYPE_REGISTER) &&
             (operand->encoding == ZYDIS_OPERAND_ENCODING_MASK))
         {
@@ -80,7 +80,7 @@ ZyanStatus ZydisFormatterIntelFormatInstruction(const ZydisFormatter* formatter,
             ZYDIS_BUFFER_APPEND(buffer, DELIM_MNEMONIC);
         }
 
-
+        // Set current operand
         context->operand = operand;
 
         ZyanStatus status;
@@ -162,8 +162,8 @@ ZyanStatus ZydisFormatterIntelFormatInstruction(const ZydisFormatter* formatter,
                 }
             } else
             {
-
-
+                // TODO: `sae` is displayed twice e.g. for `62 E30D1B 0A D3 A5`
+                // TODO: Checking the `operand_count` does not work for instructions with hidden operands
                 if ((i == (context->instruction->operand_count - 1)) ||
                     (context->instruction->operands[i + 1].type == ZYDIS_OPERAND_TYPE_IMMEDIATE))
                 {
@@ -184,7 +184,6 @@ ZyanStatus ZydisFormatterIntelFormatInstruction(const ZydisFormatter* formatter,
 
     return ZYAN_STATUS_SUCCESS;
 }
-
 
 ZyanStatus ZydisFormatterIntelFormatOperandMEM(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -209,7 +208,7 @@ ZyanStatus ZydisFormatterIntelFormatOperandMEM(const ZydisFormatter* formatter,
         (context->operand->mem.base  == ZYDIS_REGISTER_EIP ) ||
         (context->operand->mem.base  == ZYDIS_REGISTER_RIP )))
     {
-
+        // EIP/RIP-relative or absolute-displacement address operand
         ZYAN_CHECK(formatter->func_print_address_abs(formatter, buffer, context));
     } else
     {
@@ -218,7 +217,7 @@ ZyanStatus ZydisFormatterIntelFormatOperandMEM(const ZydisFormatter* formatter,
             (context->operand->mem.type  != ZYDIS_MEMOP_TYPE_MIB);
         ZyanBool neither_reg_nor_idx = !should_print_reg && !should_print_idx;
 
-
+        // Regular memory operand
         if (should_print_reg)
         {
             ZYAN_CHECK(formatter->func_print_register(formatter, buffer, context,
@@ -250,7 +249,6 @@ ZyanStatus ZydisFormatterIntelFormatOperandMEM(const ZydisFormatter* formatter,
     ZYDIS_BUFFER_APPEND(buffer, MEMORY_END_INTEL);
     return ZYAN_STATUS_SUCCESS;
 }
-
 
 ZyanStatus ZydisFormatterIntelPrintMnemonic(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -293,7 +291,6 @@ ZyanStatus ZydisFormatterIntelPrintMnemonic(const ZydisFormatter* formatter,
     return ZYAN_STATUS_SUCCESS;
 }
 
-
 ZyanStatus ZydisFormatterIntelPrintRegister(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context, ZydisRegister reg)
 {
@@ -313,7 +310,6 @@ ZyanStatus ZydisFormatterIntelPrintRegister(const ZydisFormatter* formatter,
     ZYDIS_BUFFER_APPEND_TOKEN(buffer, ZYDIS_TOKEN_REGISTER);
     return ZydisStringAppendShortCase(&buffer->string, str, formatter->case_registers);
 }
-
 
 ZyanStatus ZydisFormatterIntelPrintDISP(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -356,7 +352,6 @@ ZyanStatus ZydisFormatterIntelPrintDISP(const ZydisFormatter* formatter,
     return ZYAN_STATUS_SUCCESS;
 }
 
-
 ZyanStatus ZydisFormatterIntelPrintTypecast(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
 {
@@ -382,10 +377,9 @@ ZyanStatus ZydisFormatterIntelPrintTypecast(const ZydisFormatter* formatter,
     return ZYAN_STATUS_SUCCESS;
 }
 
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* MASM                                                                                           */
+/* ---------------------------------------------------------------------------------------------- */
 
 ZyanStatus ZydisFormatterIntelFormatInstructionMASM(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -394,14 +388,13 @@ ZyanStatus ZydisFormatterIntelFormatInstructionMASM(const ZydisFormatter* format
     ZYAN_ASSERT(buffer);
     ZYAN_ASSERT(context);
 
-
-
-
+    // Force the formatter to always call our MASM `ZYDIS_FORMATTER_PRINT_ADDRESS_ABS` function.
+    // This implicitly omits printing of the `RIP`/`EIP` registers for `RIP`/`EIP`-relative
+    // memory operands
     context->runtime_address = 0;
 
     return ZydisFormatterIntelFormatInstruction(formatter, buffer, context);
 }
-
 
 ZyanStatus ZydisFormatterIntelPrintAddressMASM(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -443,8 +436,7 @@ ZyanStatus ZydisFormatterIntelPrintAddressMASM(const ZydisFormatter* formatter,
     return ZYAN_STATUS_SUCCESS;
 }
 
+/* ---------------------------------------------------------------------------------------------- */
 
-
-
-
+/* ============================================================================================== */
 

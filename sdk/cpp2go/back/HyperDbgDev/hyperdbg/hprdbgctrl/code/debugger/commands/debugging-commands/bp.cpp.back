@@ -1,26 +1,26 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file bp.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief bp command
+ * @details
+ * @version 0.1
+ * @date 2021-10-03
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 
-
-
-
-
-
+/**
+ * @brief help of bp command
+ *
+ * @return VOID
+ */
 VOID
 CommandBpHelp()
 {
@@ -43,14 +43,13 @@ CommandBpHelp()
     ShowMessages("\t\te.g : bp fffff8077356f010 pid 0x4 core 2\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief bp command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandBp(vector<string> SplittedCommand, string Command)
 {
@@ -83,9 +82,9 @@ CommandBp(vector<string> SplittedCommand, string Command)
     {
         IndexInCommandCaseSensitive++;
 
-
-
-
+        //
+        // Ignore the first argument as it's the command string itself (bp)
+        //
         if (!Section.compare(SplittedCommand.at(0)))
         {
             continue;
@@ -146,9 +145,9 @@ CommandBp(vector<string> SplittedCommand, string Command)
         {
             if (!SymbolConvertNameOrExprToAddress(SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1), &Address))
             {
-
-
-
+                //
+                // Couldn't resolve or unkonwn parameter
+                //
                 ShowMessages("err, couldn't resolve error at '%s'\n\n",
                              SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1).c_str());
                 CommandBpHelp();
@@ -156,18 +155,18 @@ CommandBp(vector<string> SplittedCommand, string Command)
             }
             else
             {
-
-
-
+                //
+                // Means that address is received
+                //
                 SetAddress = TRUE;
                 continue;
             }
         }
     }
 
-
-
-
+    //
+    // Check if address is set or not
+    //
     if (!SetAddress)
     {
         ShowMessages(
@@ -201,18 +200,17 @@ CommandBp(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Set the details for the remote packet
+    //
     BpPacket.Address = Address;
     BpPacket.Core    = CoreNumer;
     BpPacket.Pid     = Pid;
     BpPacket.Tid     = Tid;
 
-
-
-
+    //
+    // Send the bp packet
+    //
     KdSendBpPacketToDebuggee(&BpPacket);
 }
-
 

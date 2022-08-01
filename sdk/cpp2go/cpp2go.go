@@ -143,11 +143,11 @@ func (o *object) handleDefineBlock(col int, lines ...string) string {
 	value := lines[1:]
 	return key + " = " + strings.Join(value, " ") + o.fmtComment(col)
 }
-func (o *object) GetDefine(lines []string) string {
+func (o *object) GetDefine(lines block.Lines) string {
 	isCTL_CODE := false
 	for _, line := range lines {
-		if line != "" {
-			if strings.Contains(line, "CTL_CODE") {
+		if line.Line != "" {
+			if strings.Contains(line.Line, "CTL_CODE") {
 				isCTL_CODE = true
 				break
 			}
@@ -174,16 +174,16 @@ const (
 	define := make([]string, 0)
 	for i, line := range lines {
 		block := make([]string, 0)
-		if strings.Contains(line, `#define`) {
+		if strings.Contains(line.Line, `#define`) {
 			col := i + 1
 			//mylog.Info(fmt.Sprint(col), line)
-			if !strings.Contains(line, `\`) {
-				define = append(define, o.handleDefineBlock(col, line))
+			if !strings.Contains(line.Line, `\`) {
+				define = append(define, o.handleDefineBlock(col, line.Line))
 			} else {
 				start := lines[i:]
 				for _, s := range start {
-					block = append(block, s)
-					if !strings.Contains(s, `\`) {
+					block = append(block, s.Line)
+					if !strings.Contains(s.Line, `\`) {
 						l := o.handleDefineBlock(col, block...)
 						//mylog.Trace(fmt.Sprint(col), l)
 						define = append(define, l)
@@ -289,11 +289,7 @@ func (t *tmpObject) read() []string {
 	return lines
 }
 func (t *tmpObject) write(lines []string) {
-	s := stream.New()
-	for _, line := range lines {
-		s.WriteStringLn(line)
-	}
-	if !tool.File().WriteTruncate(t.name(), s.String()) {
+	if !tool.File().WriteTruncate(t.name(), stream.New().LinesToString(lines)) {
 		panic(t.name())
 	}
 }
@@ -324,15 +320,9 @@ func (o *object) Block(lines []string) (b BlockObject) {
 
 	b.structs = block.FindAll(t.read(), `typedef struct `, `}`)
 	t.clean(b.structs)
+
 	b.methods = block.FindAll(t.read(), `(`, ``)
 	t.clean(b.methods)
-	b = BlockObject{
-		externs: make(block.Lines, 0),
-		defines: make(block.Lines, 0),
-		structs: make(block.Lines, 0),
-		enums:   make(block.Lines, 0),
-		methods: make(block.Lines, 0),
-	}
 	return
 }
 func (o *object) Convert() *object {
@@ -352,39 +342,37 @@ func (o *object) Convert() *object {
 		b.WriteStringLn("//" + cpp.path + "\n")
 
 		block := o.Block(lines)
-		block = block
 
-		//define := o.GetDefine(block.defines)
-		//if define != "" {
-		//	b.WriteStringLn(define)
-		//	//mylog.Json("define ==> const", define)
-		//}
+		define := o.GetDefine(block.defines)
+		if define != "" {
+			b.WriteStringLn(define)
+			//mylog.Json("define ==> const", define)
+		}
 
-		//enum := o.GetEnum(block.enums)
-		//if enum != "" {
-		//	b.WriteStringLn(enum)
-		//	//mylog.Json("enum ==> const", enum)
-		//}
+		enum := o.GetEnum(block.enums)
+		if enum != "" {
+			b.WriteStringLn(enum)
+			//mylog.Json("enum ==> const", enum)
+		}
 
-		//Struct := o.GetStruct(BlockObject.structs)//todo need fix bug
-		//if Struct != "" {
-		//	b.WriteStringLn(Struct)
-		//	//mylog.Json("Struct ==> struct", Struct)
-		//}
+		Struct := o.GetStruct(block.structs) //todo need fix bug
+		if Struct != "" {
+			b.WriteStringLn(Struct)
+			//mylog.Json("Struct ==> struct", Struct)
+		}
 
-		//method := o.GetMethod(block.methods, o.GetInterfaceName(cpp.path))
-		//if method != "" {
-		//	b.WriteStringLn(method)
-		//	//mylog.Json("methods ==> func", methods)
-		//}
-
-		//extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee; //todo
+		method := o.GetMethod(block.methods, o.GetInterfaceName(cpp.path))
+		if method != "" {
+			b.WriteStringLn(method)
+			//mylog.Json("methods ==> func", methods)
+		}
 
 		//mylog.Json("cpp ==> go", b.String())
 		if !tool.File().WriteTruncate(o.goPath[i].path, b.String()) {
 			panic("cpp ==> go error")
 		}
 		b.Reset()
+		panic(11111111) //test
 	}
 	return o
 }
@@ -439,17 +427,17 @@ func (o *object) HandleEnumBlock(col int, lines ...string) string {
 	tmp.WriteStringLn(")\n")
 	return tmp.String()
 }
-func (o *object) GetEnum(lines []string) string {
+func (o *object) GetEnum(lines block.Lines) string {
 	b := stream.New()
 	enum := make([]string, 0)
 	for i, line := range lines {
-		if strings.Contains(line, `typedef enum`) {
+		if strings.Contains(line.Line, `typedef enum`) {
 			col := i + 1
 			block := lines[i:]
 			blockBody := make([]string, 0)
 			for _, s := range block {
-				blockBody = append(blockBody, s)
-				if strings.Contains(s, `}`) {
+				blockBody = append(blockBody, s.Line)
+				if strings.Contains(s.Line, `}`) {
 					enum = append(enum, o.HandleEnumBlock(col, blockBody...))
 					break
 				}
@@ -557,17 +545,17 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 	tmp.WriteStringLn("}\n")
 	return tmp.String()
 }
-func (o *object) GetStruct(lines []string) string {
+func (o *object) GetStruct(lines block.Lines) string {
 	b := stream.New()
 	Struct := make([]string, 0)
 	for i, line := range lines {
-		if strings.Contains(line, `typedef struct`) {
+		if strings.Contains(line.Line, `typedef struct`) {
 			col := i + 1
 			block := lines[i:]
 			blockBody := make([]string, 0)
 			for _, s := range block {
-				blockBody = append(blockBody, s)
-				if strings.Contains(s, `}`) {
+				blockBody = append(blockBody, s.Line)
+				if strings.Contains(s.Line, `}`) {
 					Struct = append(Struct, o.HandleStructBlock(col, blockBody...))
 					break
 				}
@@ -596,7 +584,7 @@ func (o *object) isComment(line string) (ok bool) { //todo delete
 		return
 	}
 }
-func (o *object) GetMethod(lines []string, InterfaceName string) string {
+func (o *object) GetMethod(lines block.Lines, InterfaceName string) string {
 	fnIsApi := func(line string) (ok bool) {
 		if o.isComment(line) {
 			return
@@ -615,15 +603,15 @@ func (o *object) GetMethod(lines []string, InterfaceName string) string {
 	methods := make([]methodObj, 0)
 	for i := 0; i < len(lines); i++ {
 		line := lines[i]
-		if fnIsApi(line) {
+		if fnIsApi(line.Line) {
 			col := i + 1
 			block := lines[i:]
 			methodBody := make([]string, 0)
 			for j, s := range block {
-				if s != "" {
-					if !o.isComment(s) {
-						methodBody = append(methodBody, s)
-						if s[0] == '}' {
+				if s.Line != "" {
+					if !o.isComment(s.Line) {
+						methodBody = append(methodBody, s.Line)
+						if s.Line[0] == '}' {
 							api, _, found := strings.Cut(methodBody[0], "(")
 							if !found {
 								panic("api not found")

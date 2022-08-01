@@ -1,24 +1,24 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file Events.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK Headers for Events
+ * @details This file contains definitions of event datatypes
+ * @version 0.2
+ * @date 2022-06-28
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
+//////////////////////////////////////////////////
+//               Event Details                  //
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief enum to show type of all HyperDbg events
+ *
+ */
 typedef enum _DEBUGGER_EVENT_TYPE_ENUM
 {
 
@@ -54,10 +54,10 @@ typedef enum _DEBUGGER_EVENT_TYPE_ENUM
 
 } DEBUGGER_EVENT_TYPE_ENUM;
 
-
-
-
-
+/**
+ * @brief Type of Actions
+ *
+ */
 typedef enum _DEBUGGER_EVENT_ACTION_TYPE_ENUM
 {
     BREAK_TO_DEBUGGER,
@@ -66,10 +66,10 @@ typedef enum _DEBUGGER_EVENT_ACTION_TYPE_ENUM
 
 } DEBUGGER_EVENT_ACTION_TYPE_ENUM;
 
-
-
-
-
+/**
+ * @brief Type of handling !syscall or !sysret
+ *
+ */
 typedef enum _DEBUGGER_EVENT_SYSCALL_SYSRET_TYPE
 {
     DEBUGGER_EVENT_SYSCALL_SYSRET_SAFE_ACCESS_MEMORY = 0,
@@ -79,10 +79,10 @@ typedef enum _DEBUGGER_EVENT_SYSCALL_SYSRET_TYPE
 
 #define SIZEOF_DEBUGGER_MODIFY_EVENTS sizeof(DEBUGGER_MODIFY_EVENTS)
 
-
-
-
-
+/**
+ * @brief different types of modifing events request (enable/disable/clear)
+ *
+ */
 typedef enum _DEBUGGER_MODIFY_EVENTS_TYPE
 {
     DEBUGGER_MODIFY_EVENTS_QUERY_STATE,
@@ -91,10 +91,10 @@ typedef enum _DEBUGGER_MODIFY_EVENTS_TYPE
     DEBUGGER_MODIFY_EVENTS_CLEAR
 } DEBUGGER_MODIFY_EVENTS_TYPE;
 
-
-
-
-
+/**
+ * @brief request for modifying events (enable/disable/clear)
+ *
+ */
 typedef struct _DEBUGGER_MODIFY_EVENTS
 {
     UINT64 Tag;          // Tag of the target event that we want to modify

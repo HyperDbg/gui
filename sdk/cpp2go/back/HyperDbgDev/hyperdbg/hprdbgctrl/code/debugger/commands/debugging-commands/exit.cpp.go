@@ -46,6 +46,12 @@ CommandExit()(ok bool)//col:60
 
 
 
+
+
+
+
+
+
 )
 
 func NewExit() { return & exit{} }
@@ -59,6 +65,12 @@ func (e *exit)CommandExitHelp()(ok bool){//col:31
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -117,6 +129,12 @@ func (e *exit)CommandExit()(ok bool){//col:60
 
 return true
 }
+
+
+
+
+
+
 
 
 

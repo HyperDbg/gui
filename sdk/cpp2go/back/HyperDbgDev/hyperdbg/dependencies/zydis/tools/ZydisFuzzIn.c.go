@@ -55,6 +55,12 @@ int main()(ok bool)//col:246
 
 
 
+
+
+
+
+
+
 )
 
 func NewZydisFuzzIn() { return & zydisFuzzIn{} }
@@ -98,6 +104,12 @@ func (z *zydisFuzzIn)  Zyan Disassembler Library ()(ok bool){//col:60
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -194,6 +206,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (z *zydisFuzzIn)ZyanUSize ZydisLibFuzzerRead()(ok bool){//col:104
 
 
@@ -206,6 +224,12 @@ func (z *zydisFuzzIn)ZyanUSize ZydisLibFuzzerRead()(ok bool){//col:104
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -360,6 +384,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (z *zydisFuzzIn)int LLVMFuzzerInitialize()(ok bool){//col:212
 
 
@@ -374,6 +404,12 @@ func (z *zydisFuzzIn)int LLVMFuzzerInitialize()(ok bool){//col:212
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -468,6 +504,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (z *zydisFuzzIn)int main()(ok bool){//col:246
 
 
@@ -488,6 +530,12 @@ func (z *zydisFuzzIn)int main()(ok bool){//col:246
 
 return true
 }
+
+
+
+
+
+
 
 
 

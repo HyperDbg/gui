@@ -48,6 +48,14 @@ int main()(ok bool)//col:15
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewMain() { return & main{} }
@@ -104,6 +112,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (m *main)int main()(ok bool){//col:15
 
 
@@ -111,6 +127,14 @@ func (m *main)int main()(ok bool){//col:15
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

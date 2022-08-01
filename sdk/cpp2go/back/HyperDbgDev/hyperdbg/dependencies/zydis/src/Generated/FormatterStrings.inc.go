@@ -129,6 +129,12 @@ static const ZydisPredefinedToken* const TOK_SIZE_512_INTEL = ()(ok bool)//col:6
 
 
 
+
+
+
+
+
+
 )
 
 func NewFormatterStrings() { return & formatterStrings{} }
@@ -144,6 +150,12 @@ func (f *formatterStrings)#pragma pack()(ok bool){//col:8
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -237,6 +249,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_ADDR_RELATIVE = ()(ok bool){//col:24
 
 
@@ -248,6 +266,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_ADDR_RELA
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -341,6 +365,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_1TO4 = ()(ok bool){//col:40
 
 
@@ -352,6 +382,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_1TO4
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -445,6 +481,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_1TO16 = ()(ok bool){//col:56
 
 
@@ -456,6 +498,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_1TO1
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -549,6 +597,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_4TO16 = ()(ok bool){//col:72
 
 
@@ -560,6 +614,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_4TO1
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -653,6 +713,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_BADC = ()(ok bool){//col:88
 
 
@@ -664,6 +730,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_BADC
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -757,6 +829,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_BEGIN = ()(ok bool){//col:104
 
 
@@ -768,6 +846,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_BEGI
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -861,6 +945,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_CDAB = ()(ok bool){//col:120
 
 
@@ -872,6 +962,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_CDAB
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -965,6 +1061,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_DDDD = ()(ok bool){//col:136
 
 
@@ -976,6 +1078,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_DDDD
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1069,6 +1177,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_END = ()(ok bool){//col:152
 
 
@@ -1080,6 +1194,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_END 
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1173,6 +1293,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_RD = ()(ok bool){//col:168
 
 
@@ -1184,6 +1310,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_RD =
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1277,6 +1409,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_RN = ()(ok bool){//col:184
 
 
@@ -1288,6 +1426,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_RN =
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1381,6 +1525,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_RU = ()(ok bool){//col:200
 
 
@@ -1392,6 +1542,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_RU =
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1485,6 +1641,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_RZ = ()(ok bool){//col:216
 
 
@@ -1496,6 +1658,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_RZ =
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1589,6 +1757,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_SAE = ()(ok bool){//col:232
 
 
@@ -1600,6 +1774,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_SAE 
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1693,6 +1873,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_SINT16 = ()(ok bool){//col:248
 
 
@@ -1704,6 +1890,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_SINT
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1797,6 +1989,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_UINT16 = ()(ok bool){//col:264
 
 
@@ -1808,6 +2006,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DECO_UINT
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1901,6 +2105,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DELIM_MEMORY = ()(ok bool){//col:280
 
 
@@ -1912,6 +2122,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DELIM_MEM
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2005,6 +2221,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DELIM_OPERAND = ()(ok bool){//col:296
 
 
@@ -2016,6 +2238,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_DELIM_OPE
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2111,6 +2339,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_IMMEDIATE = ()(ok bool){//col:314
 
 
@@ -2122,6 +2356,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_IMMEDIATE
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2215,6 +2455,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_INVALID_REG = ()(ok bool){//col:330
 
 
@@ -2226,6 +2472,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_INVALID_R
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2319,6 +2571,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_MEMORY_BEGIN_INTEL = ()(ok bool){//col:346
 
 
@@ -2330,6 +2588,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_MEMORY_BE
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2423,6 +2687,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_MEMORY_END_INTEL = ()(ok bool){//col:362
 
 
@@ -2434,6 +2704,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_MEMORY_EN
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2528,6 +2804,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_BND = ()(ok bool){//col:379
 
 
@@ -2539,6 +2821,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_BND 
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2632,6 +2920,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REP = ()(ok bool){//col:395
 
 
@@ -2643,6 +2937,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REP 
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2736,6 +3036,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REPNE = ()(ok bool){//col:411
 
 
@@ -2747,6 +3053,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REPN
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2840,6 +3152,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_4B = ()(ok bool){//col:427
 
 
@@ -2851,6 +3169,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2944,6 +3268,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_4D = ()(ok bool){//col:443
 
 
@@ -2955,6 +3285,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3048,6 +3384,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_4F = ()(ok bool){//col:459
 
 
@@ -3059,6 +3401,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3152,6 +3500,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_41 = ()(ok bool){//col:475
 
 
@@ -3163,6 +3517,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3256,6 +3616,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_43 = ()(ok bool){//col:491
 
 
@@ -3267,6 +3633,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3360,6 +3732,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_45 = ()(ok bool){//col:507
 
 
@@ -3371,6 +3749,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3464,6 +3848,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_47 = ()(ok bool){//col:523
 
 
@@ -3475,6 +3865,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3568,6 +3964,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_49 = ()(ok bool){//col:539
 
 
@@ -3579,6 +3981,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_REX_
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3672,6 +4080,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_SEG_DS = ()(ok bool){//col:555
 
 
@@ -3683,6 +4097,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_SEG_
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3776,6 +4196,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_SEG_FS = ()(ok bool){//col:571
 
 
@@ -3787,6 +4213,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_SEG_
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3880,6 +4312,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_SEG_SS = ()(ok bool){//col:587
 
 
@@ -3891,6 +4329,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_SEG_
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3984,6 +4428,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_XRELEASE = ()(ok bool){//col:603
 
 
@@ -3995,6 +4445,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_PREF_XREL
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -4090,6 +4546,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_SIZE_8_INTEL = ()(ok bool){//col:622
 
 
@@ -4102,6 +4564,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_SIZE_8_IN
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -4196,6 +4664,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_SIZE_32_INTEL = ()(ok bool){//col:639
 
 
@@ -4207,6 +4681,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_SIZE_32_I
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -4301,6 +4781,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_SIZE_64_INTEL = ()(ok bool){//col:656
 
 
@@ -4312,6 +4798,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_SIZE_64_I
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -4406,6 +4898,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_SIZE_128_INTEL = ()(ok bool){//col:674
 
 
@@ -4418,6 +4916,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_SIZE_128_
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -4512,6 +5016,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_SIZE_512_INTEL = ()(ok bool){//col:691
 
 
@@ -4523,6 +5033,12 @@ func (f *formatterStrings)static const ZydisPredefinedToken* const TOK_SIZE_512_
 
 return true
 }
+
+
+
+
+
+
 
 
 

@@ -76,6 +76,14 @@ ZYDIS_EXPORT ZydisRegister ZydisRegisterEncode()(ok bool)//col:286
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewRegister() { return & register{} }
@@ -85,6 +93,14 @@ func (r *register)    ZYDIS_REGCLASS_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -142,6 +158,14 @@ func (r *register)ZYDIS_EXPORT ZydisRegister ZydisRegisterEncode()(ok bool){//co
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

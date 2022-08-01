@@ -348,6 +348,14 @@ ZYAN_STATIC_ASSERT()(ok bool)//col:871
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewSharedData() { return & sharedData{} }
@@ -438,11 +446,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *sharedData)    ZYDIS_IELEMENT_TYPE_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:143
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -532,11 +556,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *sharedData)    ZYDIS_IMPLMEM_BASE_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:195
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -658,11 +698,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *sharedData)    ZYDIS_RW_ACTION_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:262
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -752,11 +808,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *sharedData)    ZYDIS_IVECTOR_LENGTH_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:313
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -846,11 +918,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *sharedData)    ZYDIS_EVEX_FUNC_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:368
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -940,11 +1028,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *sharedData)    ZYDIS_MVEX_FUNC_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:569
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1034,11 +1138,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *sharedData)        ZYAN_BITS_TO_REPRESENT()(ok bool){//col:627
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1128,6 +1248,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *sharedData)    ZYDIS_MASK_POLICY_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:683
 
 
@@ -1175,11 +1303,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *sharedData)    ZYDIS_MASK_OVERRIDE_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(ok bool){//col:704
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1313,6 +1457,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *sharedData)    ZyanBool is_privileged                 ZYAN_BITFIELD()(ok bool){//col:785
 
 
@@ -1373,6 +1525,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *sharedData)ZYAN_STATIC_ASSERT()(ok bool){//col:816
 
 
@@ -1384,6 +1544,14 @@ func (s *sharedData)ZYAN_STATIC_ASSERT()(ok bool){//col:816
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1494,6 +1662,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *sharedData)ZYAN_STATIC_ASSERT()(ok bool){//col:871
 
 
@@ -1510,6 +1686,14 @@ func (s *sharedData)ZYAN_STATIC_ASSERT()(ok bool){//col:871
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1575,6 +1759,14 @@ func (s *sharedData)#pragma pack()(ok bool){//col:966
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

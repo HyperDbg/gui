@@ -1,20 +1,20 @@
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file symbol.cpp
+ * @author Alee Amini (alee@hyperdbg.org)
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief symbol parser
+ * @details
+ * @version 0.1
+ * @date 2021-05-20
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern PMODULE_SYMBOL_DETAIL                        g_SymbolTable;
 extern UINT32                                       g_SymbolTableSize;
 extern UINT32                                       g_SymbolTableCurrentIndex;
@@ -25,28 +25,27 @@ extern std::map<UINT64, LOCAL_FUNCTION_DESCRIPTION> g_DisassemblerSymbolMap;
 
 using namespace std;
 
-
-
-
-
-
+/**
+ * @brief Initial load of symbols (for previously download symbols)
+ *
+ * @return VOID
+ */
 VOID
 SymbolInitialReload()
 {
-
-
-
+    //
+    // Load already downloaded symbol (won't download at this point)
+    //
     ShowMessages("interpreting symbols and creating symbol maps\n");
     SymbolLoadOrDownloadSymbols(FALSE, TRUE);
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Locally reload the symbol table
+ * @param UserProcessId
+ *
+ * @return BOOLEAN
+ */
 BOOLEAN
 SymbolLocalReload(UINT32 UserProcessId)
 {
@@ -54,49 +53,47 @@ SymbolLocalReload(UINT32 UserProcessId)
 
     SymbolBuildSymbolTable(&g_SymbolTable, &g_SymbolTableSize, UserProcessId, FALSE);
 
-
-
-
+    //
+    // And also load the symbols
+    //
     return SymbolLoadOrDownloadSymbols(FALSE, TRUE);
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief Initial and send the results of serial for the debugger
+ * in the case of debugger mode
+ * @param UserProcessId
+ *
+ * @return VOID
+ */
 VOID
 SymbolPrepareDebuggerWithSymbolInfo(UINT32 UserProcessId)
 {
-
-
-
+    //
+    // Load already downloaded symbol (won't download at this point)
+    //
     SymbolBuildSymbolTable(&g_SymbolTable, &g_SymbolTableSize, UserProcessId, TRUE);
 }
 
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @brief Callback for creating symbol map for disassembler
+ *
+ * @param Address
+ * @param ModuleName
+ * @param ObjectName
+ * @param ObjectSize
+ *
+ * @return VOID
+ */
 VOID
 SymbolCreateDisassemblerMapCallback(UINT64       Address,
                                     char *       ModuleName,
                                     char *       ObjectName,
                                     unsigned int ObjectSize)
 {
-
-
-
+    //
+    // It has a string, should not be initialized with zero
+    //
     LOCAL_FUNCTION_DESCRIPTION LocalFunctionDescription = {};
     string                     FinalModuleName          = "";
 
@@ -105,98 +102,96 @@ SymbolCreateDisassemblerMapCallback(UINT64       Address,
         ObjectSize = DISASSEMBLY_MAXIMUM_DISTANCE_FROM_OBJECT_NAME;
     }
 
-
-
-
+    //
+    // Convert module name to string
+    //
     if (ModuleName != NULL)
     {
         FinalModuleName += std::string(ModuleName) + "!";
     }
 
-
-
-
+    //
+    // Convert object name to string
+    //
     if (ObjectName != NULL)
     {
         FinalModuleName += std::string(ObjectName);
     }
 
-
-
-
+    //
+    // Create the structure
+    //
     LocalFunctionDescription.ObjectName = std::move(FinalModuleName);
     LocalFunctionDescription.ObjectSize = ObjectSize;
 
-
-
-
+    //
+    // Add to disassembler map
+    //
     g_DisassemblerSymbolMap[Address] = LocalFunctionDescription;
 }
 
-
-
-
-
-
-
+/**
+ * @brief Update (or create) symbol map for the disassembler
+ *
+ * @return BOOLEAN
+ */
 BOOLEAN
 SymbolCreateDisassemblerSymbolMap()
 {
-
-
-
+    //
+    // Clear the map table
+    //
     g_DisassemblerSymbolMap.clear();
 
-
-
-
+    //
+    // Get all the symbols in the callback
+    //
     ScriptEngineCreateSymbolTableForDisassemblerWrapper(SymbolCreateDisassemblerMapCallback);
 
     return TRUE;
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief shows the functions' name for the disassembler
+ * @param Address
+ * @param UsedBaseAddress
+ *
+ * @return BOOLEAN
+ */
 BOOLEAN
 SymbolShowFunctionNameBasedOnAddress(UINT64 Address, PUINT64 UsedBaseAddress)
 {
     std::map<UINT64, LOCAL_FUNCTION_DESCRIPTION>::iterator Low, Prev;
     UINT64                                                 Pos = Address;
 
-
-
-
-
+    //
+    // Check if showing function (object) names is not prohibited
+    // form settings command
+    //
     if (!g_AddressConversion)
     {
         return FALSE;
     }
 
-
-
-
+    //
+    // Check if we already built the symbol map for disassembler or not
+    //
     if (!g_DisassemblerSymbolMap.empty())
     {
         Low = g_DisassemblerSymbolMap.lower_bound(Pos);
 
         if (Low == g_DisassemblerSymbolMap.end())
         {
-
-
-
+            //
+            // Nothing found, maybe use rbegin()
+            //
             return FALSE;
         }
         else if (Low == g_DisassemblerSymbolMap.begin() && Low->first > Address)
         {
-
-
-
+            //
+            // Nothing to do, address is below the lowest entry in symbol table
+            //
             return FALSE;
         }
         else if (Low->first == Address)
@@ -215,13 +210,13 @@ SymbolShowFunctionNameBasedOnAddress(UINT64 Address, PUINT64 UsedBaseAddress)
             Prev        = std::prev(Low);
             UINT64 Diff = Address - Prev->first;
 
-
-
-
-
-
-
-
+            //
+            // Check, so we have a threshold boundary to add +xx to the
+            // symbols function name, in otherwords, the maximum number of
+            // bytes that a function could contain (it's definitely not the
+            // best option to find start and end of function, it's an approximate
+            // and not always might be true)
+            //
             if (Prev->second.ObjectSize >= Diff)
             {
                 if (*UsedBaseAddress != Prev->first)
@@ -235,11 +230,11 @@ SymbolShowFunctionNameBasedOnAddress(UINT64 Address, PUINT64 UsedBaseAddress)
             }
             else if (DISASSEMBLY_MAXIMUM_DISTANCE_FROM_OBJECT_NAME >= Diff)
             {
-
-
-
-
-
+                //
+                // We add the logic of adding Name+X+X to show that a address is x bytes
+                // after the Object Name and not within the size of the function but x
+                // bytes from the above of the function
+                //
                 if (*UsedBaseAddress != Prev->first)
                 {
                     ShowMessages("%s+0x%x+0x%x", Prev->second.ObjectName.c_str(), Diff, Diff - Prev->second.ObjectSize);
@@ -252,20 +247,19 @@ SymbolShowFunctionNameBasedOnAddress(UINT64 Address, PUINT64 UsedBaseAddress)
         }
     }
 
-
-
-
+    //
+    // Nothing is showed
+    //
     return FALSE;
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief Build and show symbol table details
+ * @param BuildLocalSymTable Should this function call to build local symbol
+ * or the symbols are from a remote debuggee in debugger mode
+ *
+ * @return VOID
+ */
 VOID
 SymbolBuildAndShowSymbolTable()
 {
@@ -276,9 +270,9 @@ SymbolBuildAndShowSymbolTable()
         return;
     }
 
-
-
-
+    //
+    // show packet details
+    //
     for (size_t i = 0; i < g_SymbolTableSize / sizeof(MODULE_SYMBOL_DETAIL); i++)
     {
         ShowMessages("is pdb details available? : %s\n", g_SymbolTable[i].IsSymbolDetailsFound ? "true" : "false");
@@ -291,23 +285,22 @@ SymbolBuildAndShowSymbolTable()
     }
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief Load or download symbols
+ * @param IsDownload Download from remote server if not available locally
+ * @param SilentLoad Load without any message
+ *
+ * @return BOOLEAN
+ */
 BOOLEAN
 SymbolLoadOrDownloadSymbols(BOOLEAN IsDownload, BOOLEAN SilentLoad)
 {
     string  SymbolServer;
     BOOLEAN Result = FALSE;
 
-
-
-
+    //
+    // *** Read symbol path/server from config file ***
+    //
 
     if (!CommandSettingsGetValueFromConfigFile("SymbolServer", SymbolServer))
     {
@@ -315,22 +308,22 @@ SymbolLoadOrDownloadSymbols(BOOLEAN IsDownload, BOOLEAN SilentLoad)
         return FALSE;
     }
 
-
-
-
+    //
+    // Check if symbol table is empty
+    //
     if (g_SymbolTable == NULL || g_SymbolTableSize == NULL)
     {
         ShowMessages("symbol table is empty, please use '.sym reload' to build a symbol table\n");
         return FALSE;
     }
 
+    //
+    // *** Load or download available symbols ***
+    //
 
-
-
-
-
-
-
+    //
+    // Indicate that we're in loading routines
+    //
     g_IsExecutingSymbolLoadingRoutines = TRUE;
     Result                             = ScriptEngineSymbolInitLoadWrapper(g_SymbolTable,
                                                g_SymbolTableSize,
@@ -338,29 +331,28 @@ SymbolLoadOrDownloadSymbols(BOOLEAN IsDownload, BOOLEAN SilentLoad)
                                                SymbolServer.c_str(),
                                                SilentLoad);
 
-
-
-
+    //
+    // Build symbol table for disassembler
+    //
     SymbolCreateDisassemblerSymbolMap();
 
-
-
-
+    //
+    // Not in loading routines anymore
+    //
     g_IsExecutingSymbolLoadingRoutines = FALSE;
 
     return Result;
 }
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * @brief check and convert string to a 64 bit unsigned interger and also
+ *  check for symbol object names and evaluate expressions
+ *
+ * @param TextToConvert the target string
+ * @param Result result will be save to the pointer
+ *
+ * @return BOOLEAN shows whether the conversion was successful or not
+ */
 BOOLEAN
 SymbolConvertNameOrExprToAddress(const string & TextToConvert, PUINT64 Result)
 {
@@ -370,57 +362,57 @@ SymbolConvertNameOrExprToAddress(const string & TextToConvert, PUINT64 Result)
 
     if (!ConvertStringToUInt64(TextToConvert, &Address))
     {
-
-
-
+        //
+        // Check for symbol object names
+        //
         string ConstTextToConvert = TextToConvert;
         Address                   = ScriptEngineConvertNameToAddressWrapper(ConstTextToConvert.c_str(), &IsFound);
 
         if (!IsFound)
         {
-
-
-
-
-
-
-
+            //
+            // It's neither a number, nor a founded object name,
+            // as the last resort, we have to test whether it's an expression or not
+            // if we're in the Debugger Mode then we have to send it the kernel to get
+            // the evaluation, if we're in VMI mode, then we evaluate it here with all
+            // registers set to Zero
+            //
             Address = ScriptEngineEvalSingleExpression(TextToConvert, &HasError);
 
             if (HasError)
             {
-
-
-
+                //
+                // Not found or has error
+                //
                 IsFound = FALSE;
             }
             else
             {
-
-
-
+                //
+                // Expression evaluated successfully
+                //
                 IsFound = TRUE;
             }
         }
         else
         {
-
-
-
+            //
+            // Object name is found
+            //
             IsFound = TRUE;
         }
     }
     else
     {
-
-
-
+        //
+        // It's a hex number
+        //
         IsFound = TRUE;
     }
 
-
-
-
+    //
+    // Set the number if the address is founded
+    //
     if (IsFound)
     {
         *Result = Address;
@@ -429,12 +421,11 @@ SymbolConvertNameOrExprToAddress(const string & TextToConvert, PUINT64 Result)
     return IsFound;
 }
 
-
-
-
-
-
-
+/**
+ * @brief Delete and free structures and variables related to the symbols
+ *
+ * @return BOOLEAN shows whether the operation was successful or not
+ */
 BOOLEAN
 SymbolDeleteSymTable()
 {
@@ -453,20 +444,19 @@ SymbolDeleteSymTable()
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @brief make the initial packet required for symbol server
+ * or reload packet
+ *
+ * @param BufferToStoreDetails Pointer to a buffer to store the symbols details
+ * this buffer will be allocated by this function and needs to be freed by caller
+ * @param StoredLength The length that stored on the BufferToStoreDetails
+ * @param UserProcessId Which user mode process to get its modules
+ * @param SendOverSerial Shows whether the packet should be sent to the debugger
+ * over the serial or not
+ *
+ * @return BOOLEAN shows whether the operation was successful or not
+ */
 BOOLEAN
 SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
                        PUINT32                 StoredLength,
@@ -491,14 +481,14 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
     PUSERMODE_LOADED_MODULE_SYMBOLS Modules                                           = NULL;
     USERMODE_LOADED_MODULE_DETAILS  ModuleCountRequest                                = {0};
 
-
-
-
+    //
+    // Check if we found an already built symbol table
+    //
     SymbolDeleteSymTable();
 
-
-
-
+    //
+    // Get system root
+    //
     if (GetSystemDirectoryA(SystemRoot, MAX_PATH) == NULL)
     {
         ShowMessages("err, unable to get system directory (%x)\n",
@@ -509,33 +499,33 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
 
     string SystemRootString(SystemRoot);
 
-
-
-
+    //
+    // Convert root path to lower-case
+    //
     transform(SystemRootString.begin(),
               SystemRootString.end(),
               SystemRootString.begin(),
               [](unsigned char c) { return std::tolower(c); });
 
-
-
-
+    //
+    // Remove system32 from the root
+    //
     Replace(SystemRootString, "\\system32", "");
 
+    //
+    // *****************************************************************
+    //              Get kernel-mode modules information
+    // *****************************************************************
+    //
 
-
-
-
-
-
-
-
-
+    //
+    // Get required size of "RTL_PROCESS_MODULES" buffer
+    //
     NtStatus = NtQuerySystemInformation(SystemModuleInformation, NULL, NULL, &SysModuleInfoBufferSize);
 
-
-
-
+    //
+    // Allocate memory for the module list
+    //
     ModuleInfo = (PRTL_PROCESS_MODULES)VirtualAlloc(
         NULL,
         SysModuleInfoBufferSize,
@@ -561,44 +551,44 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
         return FALSE;
     }
 
+    //
+    // *****************************************************************
+    //              Get user-mode modules information
+    // *****************************************************************
+    //
 
-
-
-
-
-
-
-
-
+    //
+    // We won't fail the entire process if the user-mode modules is failed
+    //
 
     do
     {
-
-
-
+        //
+        // Check if debugger is loaded or not
+        //
         if (!g_DeviceHandle)
         {
             break;
         }
 
-
-
-
+        //
+        // Set the module details to get the details
+        //
         ModuleCountRequest.ProcessId        = UserProcessId;
         ModuleCountRequest.OnlyCountModules = TRUE;
 
-
-
-
+        //
+        // Send the request to the kernel
+        //
         Status = DeviceIoControl(
             g_DeviceHandle,                         // Handle to device
             IOCTL_GET_USER_MODE_MODULE_DETAILS,     // IO Control
-
+                                                    // code
             &ModuleCountRequest,                    // Input Buffer to driver.
             sizeof(USERMODE_LOADED_MODULE_DETAILS), // Input buffer length
             &ModuleCountRequest,                    // Output Buffer from driver.
             sizeof(USERMODE_LOADED_MODULE_DETAILS), // Length of output
-
+                                                    // buffer in bytes.
             &ReturnedLength,                        // Bytes placed in buffer.
             NULL                                    // synchronous call
         );
@@ -608,14 +598,14 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
             break;
         }
 
-
-
-
+        //
+        // Check if counting modules was successful or not
+        //
         if (ModuleCountRequest.Result == DEBUGGER_OPERATION_WAS_SUCCESSFULL)
         {
             ModulesCount = ModuleCountRequest.ModulesCount;
 
-
+            // ShowMessages("Count of modules : 0x%x\n", ModuleCountRequest.ModulesCount);
 
             ModuleDetailsSize = sizeof(USERMODE_LOADED_MODULE_DETAILS) +
                                 (ModuleCountRequest.ModulesCount * sizeof(USERMODE_LOADED_MODULE_SYMBOLS));
@@ -629,24 +619,24 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
 
             RtlZeroMemory(ModuleDetailsRequest, ModuleDetailsSize);
 
-
-
-
+            //
+            // Set the module details to get the modules (not count)
+            //
             ModuleDetailsRequest->ProcessId        = UserProcessId;
             ModuleDetailsRequest->OnlyCountModules = FALSE;
 
-
-
-
+            //
+            // Send the request to the kernel
+            //
             Status = DeviceIoControl(
                 g_DeviceHandle,                         // Handle to device
                 IOCTL_GET_USER_MODE_MODULE_DETAILS,     // IO Control
-
+                                                        // code
                 ModuleDetailsRequest,                   // Input Buffer to driver.
                 sizeof(USERMODE_LOADED_MODULE_DETAILS), // Input buffer length
                 ModuleDetailsRequest,                   // Output Buffer from driver.
                 ModuleDetailsSize,                      // Length of output
-
+                                                        // buffer in bytes.
                 &ReturnedLength,                        // Bytes placed in buffer.
                 NULL                                    // synchronous call
             );
@@ -657,20 +647,20 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
                 break;
             }
 
-
-
-
+            //
+            // Show modules list
+            //
             if (ModuleCountRequest.Result == DEBUGGER_OPERATION_WAS_SUCCESSFULL)
             {
-
-
-
+                //
+                // Se the modules buffer
+                //
                 Modules = (PUSERMODE_LOADED_MODULE_SYMBOLS)((UINT64)ModuleDetailsRequest +
                                                             sizeof(USERMODE_LOADED_MODULE_DETAILS));
 
-
-
-
+                //
+                // Check if modules buffer is valid
+                //
                 if (Modules == NULL)
                 {
                     ModulesCount = 0;
@@ -685,9 +675,9 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
                 break;
             }
 
-
-
-
+            //
+            // Everything is okay when we reached here
+            //
             IsFreeUsermodeModulesBuffer = TRUE;
         }
         else
@@ -698,13 +688,13 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
 
     } while (FALSE);
 
+    //
+    // *****************************************************************
+    //
 
-
-
-
-
-
-
+    //
+    // Allocate Details buffer
+    //
     ModuleSymDetailArray = (PMODULE_SYMBOL_DETAIL)malloc(
         (ModuleInfo->NumberOfModules + ModulesCount) * sizeof(MODULE_SYMBOL_DETAIL));
 
@@ -720,42 +710,42 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
         return FALSE;
     }
 
-
-
-
+    //
+    // Make sure buffer is zero
+    //
     RtlZeroMemory(ModuleSymDetailArray, (ModuleInfo->NumberOfModules + ModulesCount) * sizeof(MODULE_SYMBOL_DETAIL));
 
-
-
-
-
-
+    //
+    // ----------------------------------------------------------------------------------
+    // Add user-modules
+    // ----------------------------------------------------------------------------------
+    //
 
     if (ModulesCount != 0)
     {
         for (int i = 0; i < ModulesCount; i++)
         {
+            //
+            // For logging purpose
+            //
 
+            /*
+            ShowMessages("%016llx\t%016llx\t%ws\n",
+                         Modules[i].BaseAddress,
+                         Modules[i].Entrypoint,
+                         Modules[i].FilePath);
+                         */
 
-
-
-
-
-
-
-
-
-
-
-
-
+            //
+            // Read symbol signature details
+            //
             RtlZeroMemory(ModuleSymbolPath, sizeof(ModuleSymbolPath));
             RtlZeroMemory(TempPath, sizeof(TempPath));
             RtlZeroMemory(ModuleSymbolGuidAndAge, sizeof(ModuleSymbolGuidAndAge));
 
-
-
-
+            //
+            // Convert symbol path from unicode to ascii
+            //
             wcstombs(TempPath, Modules[i].FilePath, MAX_PATH);
 
             if (ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetailsWrapper(
@@ -765,18 +755,18 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
             {
                 IsSymbolPdbDetailAvailable = TRUE;
 
-
+                // ShowMessages("Hash : %s , Symbol path : %s\n", ModuleSymbolGuidAndAge, ModuleSymbolPath);
             }
             else
             {
                 IsSymbolPdbDetailAvailable = FALSE;
 
-
+                // ShowMessages("err, unable to get module pdb details\n");
             }
 
-
-
-
+            //
+            // Build the structure for this module
+            //
             ModuleSymDetailArray[i].BaseAddress = Modules[i].BaseAddress;
             ModuleSymDetailArray[i].IsUserMode  = TRUE;
             memcpy(ModuleSymDetailArray[i].FilePath, TempPath, strlen(TempPath));
@@ -787,9 +777,9 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
                 memcpy(ModuleSymDetailArray[i].ModuleSymbolGuidAndAge, ModuleSymbolGuidAndAge, MAXIMUM_GUID_AND_AGE_SIZE);
                 memcpy(ModuleSymDetailArray[i].ModuleSymbolPath, ModuleSymbolPath, MAX_PATH);
 
-
-
-
+                //
+                // Check if pdb file name is a real path or a module name
+                //
                 string ModuleSymbolPathString(ModuleSymbolPath);
                 if (ModuleSymbolPathString.find(":\\") != std::string::npos)
                     ModuleSymDetailArray[i].IsLocalSymbolPath = TRUE;
@@ -801,11 +791,11 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
                 ModuleSymDetailArray[i].IsSymbolDetailsFound = FALSE;
             }
 
-
-
-
-
-
+            //
+            // Check if it should be send to the remote debugger over serial
+            // and also make sure that we're connected to the remote debugger
+            // and this is a debuggee
+            //
             if (SendOverSerial)
             {
                 KdSendSymbolDetailPacket(&ModuleSymDetailArray[i], i, ModuleInfo->NumberOfModules + ModulesCount);
@@ -813,11 +803,11 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
         }
     }
 
-
-
-
-
-
+    //
+    // ----------------------------------------------------------------------------------
+    // Add kernel-modules
+    // ----------------------------------------------------------------------------------
+    //
 
     for (int i = 0; i < ModuleInfo->NumberOfModules; i++)
     {
@@ -825,9 +815,9 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
 
         auto PathName = ModuleInfo->Modules[i].FullPathName + ModuleInfo->Modules[i].OffsetToFileName;
 
-
-
-
+        //
+        // Read symbol signature details
+        //
         RtlZeroMemory(ModuleSymbolPath, sizeof(ModuleSymbolPath));
         RtlZeroMemory(ModuleSymbolGuidAndAge, sizeof(ModuleSymbolGuidAndAge));
 
@@ -835,11 +825,11 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
 
         if (ModuleFullPath.rfind("\\SystemRoot\\", 0) == 0)
         {
-
-
-
-
-
+            //
+            // Path starts with \SystemRoot\
+            // we should change it to the real system root
+            // path
+            //
             Replace(ModuleFullPath, "\\SystemRoot", SystemRootString);
         }
 
@@ -847,22 +837,22 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
         {
             IsSymbolPdbDetailAvailable = TRUE;
 
-
-
-
+            //
+            // ShowMessages("Hash : %s , Symbol path : %s\n", ModuleSymbolGuidAndAge, ModuleSymbolPath);
+            //
         }
         else
         {
             IsSymbolPdbDetailAvailable = FALSE;
 
-
-
-
+            //
+            // ShowMessages("err, unable to get module pdb details\n");
+            //
         }
 
-
-
-
+        //
+        // Build the structure for this module
+        //
         ModuleSymDetailArray[IndexInSymbolBuffer].BaseAddress = (UINT64)ModuleInfo->Modules[i].ImageBase;
         memcpy(ModuleSymDetailArray[IndexInSymbolBuffer].FilePath, ModuleFullPath.c_str(), ModuleFullPath.size());
 
@@ -872,9 +862,9 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
             memcpy(ModuleSymDetailArray[IndexInSymbolBuffer].ModuleSymbolGuidAndAge, ModuleSymbolGuidAndAge, MAXIMUM_GUID_AND_AGE_SIZE);
             memcpy(ModuleSymDetailArray[IndexInSymbolBuffer].ModuleSymbolPath, ModuleSymbolPath, MAX_PATH);
 
-
-
-
+            //
+            // Check if pdb file name is a real path or a module name
+            //
             string ModuleSymbolPathString(ModuleSymbolPath);
             if (ModuleSymbolPathString.find(":\\") != std::string::npos)
                 ModuleSymDetailArray[IndexInSymbolBuffer].IsLocalSymbolPath = TRUE;
@@ -886,24 +876,24 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
             ModuleSymDetailArray[IndexInSymbolBuffer].IsSymbolDetailsFound = FALSE;
         }
 
-
-
-
-
-
+        //
+        // Check if it should be send to the remote debugger over serial
+        // and also make sure that we're connected to the remote debugger
+        // and this is a debuggee
+        //
         if (SendOverSerial)
         {
             KdSendSymbolDetailPacket(&ModuleSymDetailArray[IndexInSymbolBuffer], i, ModuleInfo->NumberOfModules + ModulesCount);
         }
     }
 
+    //
+    // ----------------------------------------------------------------------------------
+    //
 
-
-
-
-
-
-
+    //
+    // Store the buffer and length of module symbols details
+    //
     *BufferToStoreDetails = ModuleSymDetailArray;
     *StoredLength         = (ModuleInfo->NumberOfModules + ModulesCount) * sizeof(MODULE_SYMBOL_DETAIL);
 
@@ -917,36 +907,35 @@ SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
     return TRUE;
 }
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * @brief Allocate (build) and update the symbol table whenever a debuggee is attached
+ * on the debugger mode
+ *
+ * @param SymbolDetail Pointer to a buffer that was received as the single
+ * symbol info
+ *
+ * @return BOOLEAN shows whether the operation was successful or not
+ */
 BOOLEAN
 SymbolBuildAndUpdateSymbolTable(PMODULE_SYMBOL_DETAIL SymbolDetail)
 {
-
-
-
+    //
+    // Check to avoid overflow in symbol table
+    //
     if (g_SymbolTableCurrentIndex >= MAXIMUM_SUPPORTED_SYMBOLS)
     {
         ShowMessages("err, the symbol table buffer is full, unable to add new symbol\n");
         return FALSE;
     }
 
-
-
-
+    //
+    // Check if we found an already built symbol table
+    //
     if (g_SymbolTable == NULL)
     {
-
-
-
+        //
+        // Allocate Details buffer
+        //
         g_SymbolTable = (PMODULE_SYMBOL_DETAIL)malloc(MAXIMUM_SUPPORTED_SYMBOLS * sizeof(MODULE_SYMBOL_DETAIL));
 
         if (g_SymbolTable == NULL)
@@ -956,53 +945,52 @@ SymbolBuildAndUpdateSymbolTable(PMODULE_SYMBOL_DETAIL SymbolDetail)
             return FALSE;
         }
 
-
-
-
+        //
+        // Reset the index
+        //
         g_SymbolTableCurrentIndex = 0;
 
-
-
-
+        //
+        // Make sure buffer is zero
+        //
         RtlZeroMemory(g_SymbolTable, MAXIMUM_SUPPORTED_SYMBOLS * sizeof(MODULE_SYMBOL_DETAIL));
     }
 
-
-
-
+    //
+    // Move it to the new buffer
+    //
     memcpy(&g_SymbolTable[g_SymbolTableCurrentIndex], SymbolDetail, sizeof(MODULE_SYMBOL_DETAIL));
 
-
-
-
+    //
+    // Add to index for future symbols
+    //
     g_SymbolTableCurrentIndex++;
 
-
-
-
+    //
+    // Compute the (new) current size
+    //
     g_SymbolTableSize = g_SymbolTableCurrentIndex * sizeof(MODULE_SYMBOL_DETAIL);
 
     return TRUE;
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Update the symbol table from remote debuggee in debugger mode
+ * @param ProcessId
+ *
+ * @return BOOLEAN shows whether the operation was successful or not
+ */
 BOOLEAN
 SymbolReloadSymbolTableInDebuggerMode(UINT32 ProcessId)
 {
-
-
-
+    //
+    // Check if we found an already built symbol table
+    //
     SymbolDeleteSymTable();
 
-
-
-
+    //
+    // Request to send new symbol details
+    //
     if (KdSendSymbolReloadPacketToDebuggee(ProcessId))
     {
         ShowMessages("symbol table updated successfully\n");
@@ -1013,5 +1001,4 @@ SymbolReloadSymbolTableInDebuggerMode(UINT32 ProcessId)
         return FALSE;
     }
 }
-
 

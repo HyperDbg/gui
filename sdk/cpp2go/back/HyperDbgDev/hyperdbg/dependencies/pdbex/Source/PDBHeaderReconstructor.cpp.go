@@ -76,6 +76,14 @@ PDBHeaderReconstructor::ShouldExpand()(ok bool)//col:1213
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewPdbHeaderReconstructor() { return & pdbHeaderReconstructor{} }
@@ -137,6 +145,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::Clear()(ok bool){//col:42
 
 
@@ -149,6 +165,14 @@ func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::Clear()(ok bool){//col:4
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -264,6 +288,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnEnumType()(ok bool){//col:108
 
 
@@ -280,6 +312,14 @@ func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnEnumType()(ok bool){//
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -382,6 +422,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnEnumTypeEnd()(ok bool){//col:157
 
 
@@ -441,6 +489,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnEnumField()(ok bool){//col:170
 
 
@@ -453,6 +509,14 @@ func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnEnumField()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -571,6 +635,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnUdtBegin()(ok bool){//col:276
 
 
@@ -611,6 +683,14 @@ func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnUdtBegin()(ok bool){//
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -741,6 +821,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)	if ()(ok bool){//col:356
 
 
@@ -749,6 +837,14 @@ func (p *pdbHeaderReconstructor)	if ()(ok bool){//col:356
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -851,6 +947,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnUdtFieldEnd()(ok bool){//col:398
 
 
@@ -860,6 +964,14 @@ func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnUdtFieldEnd()(ok bool)
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1051,6 +1163,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnAnonymousUdtBegin()(ok bool){//col:589
 
 
@@ -1075,6 +1195,14 @@ func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnAnonymousUdtBegin()(ok
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1198,6 +1326,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnUdtFieldBitFieldBegin()(ok bool){//col:680
 
 
@@ -1270,6 +1406,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnUdtFieldBitFieldEnd()(ok bool){//col:714
 
 
@@ -1297,6 +1441,14 @@ func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnUdtFieldBitFieldEnd()(
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1421,6 +1573,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnPaddingBitFieldField()(ok bool){//col:837
 
 
@@ -1468,6 +1628,14 @@ func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::OnPaddingBitFieldField()
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1627,6 +1795,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::WriteUnnamedDataType()(ok bool){//col:959
 
 
@@ -1698,6 +1874,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::WriteTypedefBegin()(ok bool){//col:974
 
 
@@ -1712,6 +1896,14 @@ func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::WriteTypedefBegin()(ok b
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1839,6 +2031,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::WriteOffset()(ok bool){//col:1056
 
 
@@ -1862,6 +2062,14 @@ func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::WriteOffset()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1958,6 +2166,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::MarkAsVisited()(ok bool){//col:1076
 
 
@@ -2011,6 +2227,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::GetParentOffset()(ok bool){//col:1083
 
 
@@ -2018,6 +2242,14 @@ func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::GetParentOffset()(ok boo
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -2153,6 +2385,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::ShouldExpand()(ok bool){//col:1213
 
 
@@ -2176,6 +2416,14 @@ func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::ShouldExpand()(ok bool){
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

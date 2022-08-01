@@ -310,6 +310,14 @@ EnumRegister interface{
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewEnumRegister() { return & enumRegister{} }
@@ -319,6 +327,14 @@ func (e *enumRegister)    ZYDIS_REGISTER_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT(
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

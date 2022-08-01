@@ -1,26 +1,26 @@
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file PseudoRegisters.c
+ * @author M.H. Gholamrezaei (mh@hyperdbg.org)
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Script engine pseudo-registers implementations
+ * @details
+ * @version 0.2
+ * @date 2022-06-29
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
+//
+// *** Pseudo-registers ***
+//
 
-
-
-
-
-
-
-
-
+/**
+ * @brief Implementation of $tid pseudo-register
+ *
+ * @return UINT64
+ */
 UINT64
 ScriptEnginePseudoRegGetTid()
 {
@@ -33,12 +33,11 @@ ScriptEnginePseudoRegGetTid()
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 }
 
-
-
-
-
-
-
+/**
+ * @brief Implementation of $core pseudo-register
+ *
+ * @return UINT64
+ */
 UINT64
 ScriptEnginePseudoRegGetCore()
 {
@@ -51,12 +50,11 @@ ScriptEnginePseudoRegGetCore()
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 }
 
-
-
-
-
-
-
+/**
+ * @brief Implementation of $pid pseudo-register
+ *
+ * @return UINT64
+ */
 UINT64
 ScriptEnginePseudoRegGetPid()
 {
@@ -69,12 +67,11 @@ ScriptEnginePseudoRegGetPid()
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 }
 
-
-
-
-
-
-
+/**
+ * @brief Implementation of $pname pseudo-register
+ *
+ * @return CHAR*
+ */
 CHAR *
 ScriptEnginePseudoRegGetPname()
 {
@@ -91,25 +88,25 @@ ScriptEnginePseudoRegGetPname()
         CHAR CurrentModulePath[MAX_PATH] = {0};
         if (GetModuleFileNameEx(Handle, 0, CurrentModulePath, MAX_PATH))
         {
-
-
-
+            //
+            // At this point, buffer contains the full path to the executable
+            //
             CloseHandle(Handle);
             return PathFindFileNameA(CurrentModulePath);
         }
         else
         {
-
-
-
+            //
+            // error might be shown by GetLastError()
+            //
             CloseHandle(Handle);
             return NULL;
         }
     }
 
-
-
-
+    //
+    // unable to get handle
+    //
     return NULL;
 
 #endif // SCRIPT_ENGINE_USER_MODE
@@ -119,12 +116,11 @@ ScriptEnginePseudoRegGetPname()
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 }
 
-
-
-
-
-
-
+/**
+ * @brief Implementation of $proc pseudo-register
+ *
+ * @return UINT64
+ */
 UINT64
 ScriptEnginePseudoRegGetProc()
 {
@@ -137,12 +133,11 @@ ScriptEnginePseudoRegGetProc()
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 }
 
-
-
-
-
-
-
+/**
+ * @brief Implementation of $thread pseudo-register
+ *
+ * @return UINT64
+ */
 UINT64
 ScriptEnginePseudoRegGetThread()
 {
@@ -155,19 +150,18 @@ ScriptEnginePseudoRegGetThread()
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 }
 
-
-
-
-
-
-
+/**
+ * @brief Implementation of $peb pseudo-register
+ *
+ * @return UINT64
+ */
 UINT64
 ScriptEnginePseudoRegGetPeb()
 {
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+    //
+    // Hand-rolled structs ( may cause conflict depending on your dev env )
+    //
     struct PROCESS_BASIC_INFORMATION
     {
         PVOID     Reserved1;
@@ -240,9 +234,9 @@ ScriptEnginePseudoRegGetPeb()
     NTSTATUS NtCallRet;
     ULONG    BytesReturned;
 
-
-
-
+    //
+    // function pointer to house result from GetProcAddress
+    //
     NTSTATUS(WINAPI * QueryInfoProcPtr)
     (HANDLE, enum PROCESSINFOCLASS, PVOID, ULONG, PULONG);
 
@@ -250,28 +244,28 @@ ScriptEnginePseudoRegGetPeb()
     struct PEB *                     PebPtr;
     struct LDR_MODULE *              modPtr;
 
-
+    /* retrieve pseudo-handle */
     ThisProcess = GetCurrentProcess();
 
-
-
-
+    //
+    // get address to already loaded module
+    //
     NtdllMod = LoadLibraryW(NTDLL_NAME);
 
-
-
-
+    //
+    // get pointer to query function
+    //
     QueryInfoProcPtr =
         (NTSTATUS(WINAPI *)(HANDLE, enum PROCESSINFOCLASS, PVOID, ULONG, PULONG))GetProcAddress(NtdllMod, NTQUERYINFO_NAME);
 
-
-
-
+    //
+    // call function on self; introspect
+    //
     NtCallRet = QueryInfoProcPtr(ThisProcess, ProcessBasicInformation, &BasicInfo, sizeof(BasicInfo), &BytesReturned);
 
-
-
-
+    //
+    // get peb ptr and decode some if its fields
+    //
     PebPtr = (struct PEB *)BasicInfo.PebBaseAddress;
 
     return (UINT64)PebPtr;
@@ -280,19 +274,18 @@ ScriptEnginePseudoRegGetPeb()
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
 
-
-
-
+    //
+    // PEB doesn't make sense in kernel-mode
+    //
     return NULL;
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 }
 
-
-
-
-
-
-
+/**
+ * @brief Implementation of $teb pseudo-register
+ *
+ * @return UINT64
+ */
 UINT64
 ScriptEnginePseudoRegGetTeb()
 {
@@ -305,19 +298,18 @@ ScriptEnginePseudoRegGetTeb()
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 }
 
-
-
-
-
-
-
+/**
+ * @brief Implementation of $ip pseudo-register
+ *
+ * @return UINT64
+ */
 UINT64
 ScriptEnginePseudoRegGetIp()
 {
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+    //
+    // $ip doesn't have meaning in user-moderds
+    //
     return NULL;
 #endif // SCRIPT_ENGINE_USER_MODE
 
@@ -326,20 +318,19 @@ ScriptEnginePseudoRegGetIp()
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Implementation of $buffer pseudo-register
+ *
+ * @param CorrespondingAction
+ * @return UINT64
+ */
 UINT64
 ScriptEnginePseudoRegGetBuffer(UINT64 * CorrespondingAction)
 {
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+    //
+    // $buffer doesn't mean anything in user-mode
+    //
     return NULL;
 #endif // SCRIPT_ENGINE_USER_MODE
 
@@ -348,13 +339,12 @@ ScriptEnginePseudoRegGetBuffer(UINT64 * CorrespondingAction)
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Implementation of $event_tag pseudo-register
+ * @param ActionBuffer
+ *
+ * @return UINT64
+ */
 UINT64
 ScriptEnginePseudoRegGetEventTag(PACTION_BUFFER ActionBuffer)
 {
@@ -367,13 +357,12 @@ ScriptEnginePseudoRegGetEventTag(PACTION_BUFFER ActionBuffer)
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Implementation of $event_id pseudo-register
+ * @param ActionBuffer
+ *
+ * @return UINT64
+ */
 UINT64
 ScriptEnginePseudoRegGetEventId(PACTION_BUFFER ActionBuffer)
 {
@@ -385,5 +374,4 @@ ScriptEnginePseudoRegGetEventId(PACTION_BUFFER ActionBuffer)
     return (ActionBuffer->Tag - DebuggerEventTagStartSeed);
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 }
-
 

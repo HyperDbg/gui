@@ -56,6 +56,12 @@ EptSetPML1AndInvalidateTLB()(ok bool)//col:820
 
 
 
+
+
+
+
+
+
 )
 
 func NewEpt() { return & ept{} }
@@ -94,6 +100,12 @@ func (e *ept)EptCheckFeatures()(ok bool){//col:58
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -207,6 +219,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (e *ept)EptGetPml1Entry()(ok bool){//col:195
 
 
@@ -277,6 +295,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (e *ept)EptGetPml2Entry()(ok bool){//col:225
 
 
@@ -294,6 +318,12 @@ func (e *ept)EptGetPml2Entry()(ok bool){//col:225
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -426,6 +456,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (e *ept)EptSetupPML2Entry()(ok bool){//col:432
 
 
@@ -460,6 +496,12 @@ func (e *ept)EptSetupPML2Entry()(ok bool){//col:432
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -585,6 +627,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (e *ept)EptLogicalProcessorInitialize()(ok bool){//col:607
 
 
@@ -606,6 +654,12 @@ func (e *ept)EptLogicalProcessorInitialize()(ok bool){//col:607
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -716,6 +770,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (e *ept)EptHandleEptViolation()(ok bool){//col:739
 
 
@@ -769,6 +829,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (e *ept)EptHandleMonitorTrapFlag()(ok bool){//col:755
 
 
@@ -776,6 +842,12 @@ func (e *ept)EptHandleMonitorTrapFlag()(ok bool){//col:755
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -864,6 +936,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (e *ept)EptSetPML1AndInvalidateTLB()(ok bool){//col:820
 
 
@@ -885,6 +963,12 @@ func (e *ept)EptSetPML1AndInvalidateTLB()(ok bool){//col:820
 
 return true
 }
+
+
+
+
+
+
 
 
 

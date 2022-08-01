@@ -1,28 +1,28 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file eval.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief eval (?) command
+ * @details
+ * @version 0.1
+ * @date 2021-02-05
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
 using namespace std;
 
-
-
-
+//
+// Global Variables
+//
 extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 
-
-
-
-
-
+/**
+ * @brief help of ? command
+ *
+ * @return VOID
+ */
 VOID
 CommandEvalHelp()
 {
@@ -35,12 +35,11 @@ CommandEvalHelp()
     ShowMessages("\t\te.g : ? json(dq(poi(@rcx)));\n");
 }
 
-
-
-
-
-
-
+/**
+ * @brief Check test-cases for script-engine
+ *
+ * @return BOOLEAN
+ */
 BOOLEAN
 CommandEvalCheckTestcase()
 {
@@ -64,30 +63,30 @@ CommandEvalCheckTestcase()
 
     for (auto item : TestFiles)
     {
-
-
-
+        //
+        // Read the test-case file for script-engine
+        //
         ifstream File(item.c_str());
 
         if (File.is_open())
         {
             IsOpened = TRUE;
 
-
-
-
+            //
+            // File name
+            //
             ShowMessages("Running from : %s\n\n", item.c_str());
 
             while (std::getline(File, Line))
             {
-
-
-
+                //
+                // Test case number
+                //
                 ShowMessages("Test-case number : %s\n", Line.c_str());
 
-
-
-
+                //
+                // Test-case statement
+                //
                 if (!std::getline(File, Line))
                 {
                     goto ErrorMessage;
@@ -96,9 +95,9 @@ CommandEvalCheckTestcase()
                 Expr = Line;
                 ShowMessages("Statement : %s\n", Line.c_str());
 
-
-
-
+                //
+                // Test-case result
+                //
                 if (!std::getline(File, Line))
                 {
                     goto ErrorMessage;
@@ -106,9 +105,9 @@ CommandEvalCheckTestcase()
 
                 if (!Line.compare("$error$"))
                 {
-
-
-
+                    //
+                    // It's an $error$ statement
+                    //
                     ShowMessages("Expected result : %s\n", Line.c_str());
 
                     ExpectError   = TRUE;
@@ -121,21 +120,21 @@ CommandEvalCheckTestcase()
                 }
                 else
                 {
-
-
-
+                    //
+                    // It's a value expected statement
+                    //
                     ExpectError = FALSE;
                     ShowMessages("Expected result : %llx\n", ExpectedValue);
                 }
 
-
-
-
+                //
+                // Call wrapper for testing statements
+                //
                 Expr.append(" ");
 
-
-
-
+                //
+                // Test results
+                //
                 if (ScriptAutomaticStatementsTestWrapper(Expr, ExpectedValue, ExpectError))
                 {
                     ShowMessages("Test result : Passed\n");
@@ -145,22 +144,22 @@ CommandEvalCheckTestcase()
                     ShowMessages("Test result : Failed\n");
                 }
 
-
-
-
+                //
+                // Test-case end
+                //
                 if (!std::getline(File, Line))
                 {
                     goto ErrorMessage;
                 }
 
-
-
-
+                //
+                // Check end case
+                //
                 if (Line.compare("$end$"))
                 {
-
-
-
+                    //
+                    // err, we'd expect a $end$ at this situation
+                    //
                     goto ErrorMessage;
                 }
 
@@ -186,14 +185,13 @@ ErrorMessage:
     return FALSE;
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief handler of ? command
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandEval(vector<string> SplittedCommand, string Command)
 {
@@ -209,29 +207,29 @@ CommandEval(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Trim the command
+    //
     Trim(Command);
 
-
-
-
+    //
+    // Remove first command from it
+    //
     Command.erase(0, SplittedCommand.at(0).size());
 
-
-
-
+    //
+    // Trim it again
+    //
     Trim(Command);
 
-
-
-
+    //
+    // Check if it's a test-case check or not
+    //
     if (!Command.compare("test"))
     {
-
-
-
+        //
+        // It's a test-case checker
+        //
         if (!CommandEvalCheckTestcase())
         {
             ShowMessages("err, testing script engine test-cases was not successful\n");
@@ -246,50 +244,50 @@ CommandEval(vector<string> SplittedCommand, string Command)
 
     if (g_IsSerialConnectedToRemoteDebuggee)
     {
+        //
+        // Send over serial
+        //
 
-
-
-
-
-
-
+        //
+        // Run script engine handler
+        //
         CodeBuffer = ScriptEngineParseWrapper((char *)Command.c_str(), TRUE);
 
         if (CodeBuffer == NULL)
         {
-
-
-
+            //
+            // return to show that this item contains an script
+            //
             return;
         }
 
+        //
+        // Print symbols (test)
+        //
+        // PrintSymbolBufferWrapper(CodeBuffer);
 
-
-
-
-
-
-
-
+        //
+        // Set the buffer and length
+        //
         BufferAddress = ScriptEngineWrapperGetHead(CodeBuffer);
         BufferLength  = ScriptEngineWrapperGetSize(CodeBuffer);
         Pointer       = ScriptEngineWrapperGetPointer(CodeBuffer);
 
-
-
-
+        //
+        // Send it to the remote debuggee
+        //
         KdSendScriptPacketToDebuggee(BufferAddress, BufferLength, Pointer, FALSE);
 
-
-
-
+        //
+        // Remove the buffer of script engine interpreted code
+        //
         ScriptEngineWrapperRemoveSymbolBuffer(CodeBuffer);
     }
     else
     {
-
-
-
+        //
+        // It's a test
+        //
         ShowMessages("this command should not be used while you're in VMI-Mode or not in debugger-mode, "
                      "the results that you see is a simulated result for TESTING script-engine "
                      "and is not based on the status of your system. You can use this command, "
@@ -299,5 +297,4 @@ CommandEval(vector<string> SplittedCommand, string Command)
         ScriptEngineWrapperTestParser(Command);
     }
 }
-
 

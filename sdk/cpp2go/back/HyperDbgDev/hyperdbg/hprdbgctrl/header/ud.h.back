@@ -1,19 +1,19 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file ud.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief headers for user-mode debugging routines
+ * @details
+ * @version 0.1
+ * @date 2021-12-28
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
-
-
-
+//////////////////////////////////////////////////
+//		            Definitions                 //
+//////////////////////////////////////////////////
 
 #define DbgWaitForUserResponse(UserSyncObjectId)                          \
     do                                                                    \
@@ -35,15 +35,15 @@
         SetEvent(SyncronizationObject->EventHandle);                   \
     } while (FALSE);
 
+//////////////////////////////////////////////////
+//            	    Structures                  //
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
-
+/**
+ * @brief structures related to current thread debugging
+ * state
+ *
+ */
 typedef struct _ACTIVE_DEBUGGING_PROCESS
 {
     BOOLEAN    IsActive;
@@ -56,9 +56,9 @@ typedef struct _ACTIVE_DEBUGGING_PROCESS
     BOOLEAN    Is32Bit;
 } ACTIVE_DEBUGGING_PROCESS, *PACTIVE_DEBUGGING_PROCESS;
 
-
-
-
+//////////////////////////////////////////////////
+//            	    Functions                  //
+//////////////////////////////////////////////////
 
 VOID
 UdInitializeUserDebugger();

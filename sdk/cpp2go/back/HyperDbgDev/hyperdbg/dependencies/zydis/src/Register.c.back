@@ -1,71 +1,71 @@
+/***************************************************************************************************
 
+  Zyan Disassembler Library (Zydis)
 
+  Original Author : Florian Bernd
 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+***************************************************************************************************/
 
 #include <Zydis/Register.h>
 
-
-
-
+/* ============================================================================================== */
+/* Register strings                                                                               */
+/* ============================================================================================== */
 
 #include <Generated/EnumRegister.inc>
 
+/* ============================================================================================== */
+/* Register-class mapping                                                                         */
+/* ============================================================================================== */
 
-
-
-
-
-
-
+/**
+ * Defines the `ZydisRegisterMapItem` struct.
+ */
 typedef struct ZydisRegisterMapItem_
 {
-
-
-
+    /**
+     * The register class.
+     */
     ZydisRegisterClass class;
-
-
-
+    /**
+     * The lowest register of the current class.
+     */
     ZydisRegister lo;
-
-
-
+    /**
+     * The highest register of the current class.
+     */
     ZydisRegister hi;
-
-
-
+    /**
+     * The width of registers of the current class in 16- and 32-bit mode.
+     */
     ZydisRegisterWidth width;
-
-
-
+    /**
+     * The width of registers of the current class in 64-bit mode.
+     */
     ZydisRegisterWidth width64;
 } ZydisRegisterMapItem;
 
-
-
-
+/**
+ * Provides register to register-class and register-class + id to register mappings.
+ */
 static const ZydisRegisterMapItem REGISTER_MAP[] =
 {
     { ZYDIS_REGCLASS_INVALID  , ZYDIS_REGISTER_NONE   , ZYDIS_REGISTER_NONE   ,   0   ,   0 },
@@ -88,13 +88,13 @@ static const ZydisRegisterMapItem REGISTER_MAP[] =
     { ZYDIS_REGCLASS_BOUND    , ZYDIS_REGISTER_BND0   , ZYDIS_REGISTER_BND3   , 128   , 128 }
 };
 
+/* ============================================================================================== */
+/* Exported functions                                                                             */
+/* ============================================================================================== */
 
-
-
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Register                                                                                       */
+/* ---------------------------------------------------------------------------------------------- */
 
 ZydisRegister ZydisRegisterEncode(ZydisRegisterClass register_class, ZyanU8 id)
 {
@@ -113,7 +113,6 @@ ZydisRegister ZydisRegisterEncode(ZydisRegisterClass register_class, ZyanU8 id)
     }
     return ZYDIS_REGISTER_NONE;
 }
-
 
 ZyanI8 ZydisRegisterGetId(ZydisRegister reg)
 {
@@ -135,7 +134,6 @@ ZyanI8 ZydisRegisterGetId(ZydisRegister reg)
     return -1;
 }
 
-
 ZydisRegisterClass ZydisRegisterGetClass(ZydisRegister reg)
 {
     for (ZyanUSize i = 0; i < ZYAN_ARRAY_LENGTH(REGISTER_MAP); ++i)
@@ -148,10 +146,9 @@ ZydisRegisterClass ZydisRegisterGetClass(ZydisRegister reg)
     return ZYDIS_REGCLASS_INVALID;
 }
 
-
 ZydisRegisterWidth ZydisRegisterGetWidth(ZydisMachineMode mode, ZydisRegister reg)
 {
-
+    // Special cases
     switch (reg)
     {
     case ZYDIS_REGISTER_X87CONTROL:
@@ -179,7 +176,7 @@ ZydisRegisterWidth ZydisRegisterGetWidth(ZydisMachineMode mode, ZydisRegister re
         break;
     }
 
-
+    // Register classes
     for (ZyanUSize i = 0; i < ZYAN_ARRAY_LENGTH(REGISTER_MAP); ++i)
     {
         if ((reg >= REGISTER_MAP[i].lo) && (reg <= REGISTER_MAP[i].hi))
@@ -190,7 +187,6 @@ ZydisRegisterWidth ZydisRegisterGetWidth(ZydisMachineMode mode, ZydisRegister re
     }
     return 0;
 }
-
 
 ZydisRegister ZydisRegisterGetLargestEnclosing(ZydisMachineMode mode,
     ZydisRegister reg)
@@ -269,7 +265,6 @@ ZydisRegister ZydisRegisterGetLargestEnclosing(ZydisMachineMode mode,
     return ZYDIS_REGISTER_NONE;
 }
 
-
 const char* ZydisRegisterGetString(ZydisRegister reg)
 {
     if ((ZyanUSize)reg >= ZYAN_ARRAY_LENGTH(STR_REGISTER))
@@ -278,7 +273,6 @@ const char* ZydisRegisterGetString(ZydisRegister reg)
     }
     return STR_REGISTER[reg].data;
 }
-
 
 const ZydisShortString* ZydisRegisterGetStringWrapped(ZydisRegister reg)
 {
@@ -289,10 +283,9 @@ const ZydisShortString* ZydisRegisterGetStringWrapped(ZydisRegister reg)
     return &STR_REGISTER[reg];
 }
 
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Register class                                                                                 */
+/* ---------------------------------------------------------------------------------------------- */
 
 ZydisRegisterWidth ZydisRegisterClassGetWidth(ZydisMachineMode mode,
     ZydisRegisterClass register_class)
@@ -305,8 +298,7 @@ ZydisRegisterWidth ZydisRegisterClassGetWidth(ZydisMachineMode mode,
     return 0;
 }
 
+/* ---------------------------------------------------------------------------------------------- */
 
-
-
-
+/* ============================================================================================== */
 

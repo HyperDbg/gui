@@ -1,21 +1,21 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file hprdbgctrl.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Main interface to connect applications to driver
+ * @details
+ * @version 0.1
+ * @date 2020-04-11
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
 using namespace std;
 
-
-
-
+//
+// Global Variables
+//
 extern HANDLE     g_DeviceHandle;
 extern HANDLE     g_IsDriverLoadedSuccessfully;
 extern BOOLEAN    g_IsVmxOffProcessStart;
@@ -30,24 +30,23 @@ extern BOOLEAN    g_IsSerialConnectedToRemoteDebugger;
 extern BOOLEAN    g_IsDebuggerModulesLoaded;
 extern LIST_ENTRY g_OutputSources;
 
-
-
-
-
-
-
+/**
+ * @brief Set the function callback that will be called if any message
+ * needs to be shown
+ *
+ * @param handler Function that handles the messages
+ */
 VOID
 HyperdbgSetTextMessageCallback(Callback handler)
 {
     g_MessageHandler = handler;
 }
 
-
-
-
-
-
-
+/**
+ * @brief Show messages
+ *
+ * @param Fmt format string message
+ */
 VOID
 ShowMessages(const char * Fmt, ...)
 {
@@ -75,11 +74,11 @@ ShowMessages(const char * Fmt, ...)
     {
         if (g_IsConnectedToRemoteDebugger)
         {
-
-
-
-
-
+            //
+            // vsprintf_s and vswprintf_s return the number of characters written,
+            // not including the terminating null character, or a negative value
+            // if an output error occurs.
+            //
             RemoteConnectionSendResultsToHost(TempMessage, sprintfresult);
         }
         else if (g_IsSerialConnectedToRemoteDebugger)
@@ -89,29 +88,28 @@ ShowMessages(const char * Fmt, ...)
 
         if (g_LogOpened)
         {
-
-
-
+            //
+            // .logopen command executed
+            //
             LogopenSaveToFile(TempMessage);
         }
         if (g_MessageHandler != NULL)
         {
-
-
-
+            //
+            // There is another handler
+            //
             g_MessageHandler(TempMessage);
         }
     }
 }
 
-
 #if !UseDbgPrintInsteadOfUsermodeMessageTracking
 
-
-
-
-
-
+/**
+ * @brief Read kernel buffers using IRP Pending
+ *
+ * @param Device Driver handle
+ */
 void
 ReadIrpBasedBuffer()
 {
@@ -127,14 +125,14 @@ ReadIrpBasedBuffer()
     RegisterEvent.hEvent = NULL;
     RegisterEvent.Type   = IRP_BASED;
 
-
-
-
-
-
-
-
-
+    //
+    // Create another handle to be used in for reading kernel messages,
+    // it is because I noticed that if I use a same handle for IRP Pending
+    // and other IOCTLs then if I complete that IOCTL then both of the current
+    // IOCTL and the Pending IRP are completed and return to user mode,
+    // even if it's odd but that what happens, so this way we can solve it
+    // if you know why this problem happens, then contact me !
+    //
     Handle = CreateFileA(
         "\\\\.\\HyperdbgHypervisorDevice",
         GENERIC_READ | GENERIC_WRITE,
@@ -168,9 +166,9 @@ ReadIrpBasedBuffer()
         return;
     }
 
-
-
-
+    //
+    // allocate buffer for transfering messages
+    //
     char * OutputBuffer = (char *)malloc(UsermodeBufferSize);
 
     try
@@ -179,9 +177,9 @@ ReadIrpBasedBuffer()
         {
             if (!g_IsVmxOffProcessStart)
             {
-
-
-
+                //
+                // Clear the buffer
+                //
                 ZeroMemory(OutputBuffer, UsermodeBufferSize);
 
                 Sleep(DefaultSpeedOfReadingKernelMessages); // we're not trying to eat all of the CPU ;)
@@ -192,7 +190,7 @@ ReadIrpBasedBuffer()
                     &RegisterEvent,       // Input Buffer to driver.
                     SIZEOF_REGISTER_EVENT *
                         2,              // Length of input buffer in bytes. (x 2 is bcuz as the
-
+                                        // driver is x64 and has 64 bit values)
                     OutputBuffer,       // Output Buffer from driver.
                     UsermodeBufferSize, // Length of output buffer in bytes.
                     &ReturnedLength,    // Bytes placed in buffer.
@@ -201,28 +199,28 @@ ReadIrpBasedBuffer()
 
                 if (!Status)
                 {
+                    //
+                    // Error occured for second time, and we show the error message
+                    //
+                    // ShowMessages("ioctl failed with code 0x%x\n", GetLastError());
 
-
-
-
-
-
-
-
-
+                    //
+                    // if we reach here, the packet is probably failed, it might
+                    // be because of using flush command
+                    //
                     continue;
                 }
 
-
-
-
+                //
+                // Compute the received buffer's operation code
+                //
                 OperationCode = 0;
                 memcpy(&OperationCode, OutputBuffer, sizeof(UINT32));
 
-
-
-
-
+                /*
+        ShowMessages("Returned Length : 0x%x \n", ReturnedLength);
+        ShowMessages("Operation Code : 0x%x \n", OperationCode);
+                */
 
                 switch (OperationCode)
                 {
@@ -230,10 +228,10 @@ ReadIrpBasedBuffer()
 
                     if (g_BreakPrintingOutput)
                     {
-
-
-
-
+                        //
+                        // means that the user asserts a CTRL+C or CTRL+BREAK Signal
+                        // we shouldn't show or save anything in this case
+                        //
                         continue;
                     }
 
@@ -244,10 +242,10 @@ ReadIrpBasedBuffer()
 
                     if (g_BreakPrintingOutput)
                     {
-
-
-
-
+                        //
+                        // means that the user asserts a CTRL+C or CTRL+BREAK Signal
+                        // we shouldn't show or save anything in this case
+                        //
                         continue;
                     }
 
@@ -257,10 +255,10 @@ ReadIrpBasedBuffer()
                 case OPERATION_LOG_ERROR_MESSAGE:
                     if (g_BreakPrintingOutput)
                     {
-
-
-
-
+                        //
+                        // means that the user asserts a CTRL+C or CTRL+BREAK Signal
+                        // we shouldn't show or save anything in this case
+                        //
                         continue;
                     }
 
@@ -271,10 +269,10 @@ ReadIrpBasedBuffer()
 
                     if (g_BreakPrintingOutput)
                     {
-
-
-
-
+                        //
+                        // means that the user asserts a CTRL+C or CTRL+BREAK Signal
+                        // we shouldn't show or save anything in this case
+                        //
                         continue;
                     }
 
@@ -319,25 +317,25 @@ ReadIrpBasedBuffer()
 
                 case OPERATION_HYPERVISOR_DRIVER_IS_SUCCESSFULLY_LOADED:
 
-
-
-
+                    //
+                    // Indicate that driver (Hypervisor) is loaded successfully
+                    //
                     SetEvent(g_IsDriverLoadedSuccessfully);
 
                     break;
 
                 case OPERATION_HYPERVISOR_DRIVER_END_OF_IRPS:
 
-
-
-
+                    //
+                    // End of receiving messages (IRPs), nothing to do
+                    //
                     break;
 
                 case OPERATION_COMMAND_FROM_DEBUGGER_RELOAD_SYMBOL:
 
-
-
-
+                    //
+                    // Pause debugger after getting the results
+                    //
                     KdReloadSymbolsInDebuggee(TRUE,
                                               ((PDEBUGGEE_SYMBOL_REQUEST_PACKET)(OutputBuffer + sizeof(UINT32)))->ProcessId);
 
@@ -345,9 +343,9 @@ ReadIrpBasedBuffer()
 
                 case OPERATION_NOTIFICATION_FROM_USER_DEBUGGER_PAUSE:
 
-
-
-
+                    //
+                    // handle pausing packet from user debugger
+                    //
                     UdHandleUserDebuggerPausing(
                         (PDEBUGGEE_UD_PAUSED_PACKET)(OutputBuffer + sizeof(UINT32)));
 
@@ -357,28 +355,28 @@ ReadIrpBasedBuffer()
 
                     if (g_BreakPrintingOutput)
                     {
-
-
-
-
+                        //
+                        // means that the user asserts a CTRL+C or CTRL+BREAK Signal
+                        // we shouldn't show or save anything in this case
+                        //
                         continue;
                     }
 
-
-
-
+                    //
+                    // Set output source to not found
+                    //
                     OutputSourceFound = FALSE;
 
-
-
-
+                    //
+                    // Check if there are available output sources
+                    //
                     if (g_OutputSourcesInitialized)
                     {
-
-
-
-
-
+                        //
+                        // Now, we should check whether the following flag matches
+                        // with an output or not, also this is not where we want to
+                        // check output resources
+                        //
                         TempList = &g_EventTrace;
                         while (&g_EventTrace != TempList->Blink)
                         {
@@ -391,14 +389,14 @@ ReadIrpBasedBuffer()
 
                             if (EventDetail->HasCustomOutput)
                             {
-
-
-
+                                //
+                                // Output source found
+                                //
                                 OutputSourceFound = TRUE;
 
-
-
-
+                                //
+                                // Send the event to output sources
+                                //
                                 if (!ForwardingPerformEventForwarding(
                                         EventDetail,
                                         OutputBuffer + sizeof(UINT32),
@@ -413,9 +411,9 @@ ReadIrpBasedBuffer()
                         }
                     }
 
-
-
-
+                    //
+                    // Show the message if the source not found
+                    //
                     if (!OutputSourceFound)
                     {
                         ShowMessages("%s", OutputBuffer + sizeof(UINT32));
@@ -426,14 +424,14 @@ ReadIrpBasedBuffer()
             }
             else
             {
-
-
-
+                //
+                // the thread should not work anymore
+                //
                 free(OutputBuffer);
 
-
-
-
+                //
+                // closeHandle
+                //
                 if (!CloseHandle(Handle))
                 {
                     ShowMessages("err, closing handle 0x%x\n", GetLastError());
@@ -449,50 +447,48 @@ ReadIrpBasedBuffer()
     }
     free(OutputBuffer);
 
-
-
-
+    //
+    // closeHandle
+    //
     if (!CloseHandle(Handle))
     {
         ShowMessages("err, closing handle 0x%x\n", GetLastError());
     };
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Create a thread for pending buffers
+ *
+ * @param Data
+ * @return DWORD Device Handle
+ */
 DWORD WINAPI
 ThreadFunc(void * data)
 {
-
-
-
-
-
+    //
+    // Do stuff.  This will be the first function called on the new
+    // thread. When this function returns, the thread goes away.  See
+    // MSDN for more details. Test Irp Based Notifications
+    //
     ReadIrpBasedBuffer();
 
     return 0;
 }
-
 #endif
 
-
-
-
-
-
-
+/**
+ * @brief Install VMM driver
+ *
+ * @return int return zero if it was successful or non-zero if there
+ * was error
+ */
 HPRDBGCTRL_API int
 HyperDbgInstallVmmDriver()
 {
-
-
-
-
+    //
+    // The driver is not started yet so let us the install driver
+    // First setup full path to driver name
+    //
 
     if (!SetupDriverName(g_DriverLocation, sizeof(g_DriverLocation)))
     {
@@ -503,9 +499,9 @@ HyperDbgInstallVmmDriver()
     {
         ShowMessages("unable to install driver\n");
 
-
-
-
+        //
+        // Error - remove driver
+        //
         ManageDriver(VMM_DRIVER_NAME, g_DriverLocation, DRIVER_FUNC_REMOVE);
 
         return 1;
@@ -514,19 +510,18 @@ HyperDbgInstallVmmDriver()
     return 0;
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Stop the driver
+ *
+ * @return int return zero if it was successful or non-zero if there
+ * was error
+ */
 int
 HyperdbgStopDriver(LPCTSTR DriverName)
 {
-
-
-
+    //
+    // Unload the driver if loaded
+    //
     if (g_DriverLocation[0] != (TCHAR)0 &&
         ManageDriver(DriverName, g_DriverLocation, DRIVER_FUNC_STOP))
     {
@@ -538,32 +533,30 @@ HyperdbgStopDriver(LPCTSTR DriverName)
     }
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Stop VMM driver
+ *
+ * @return int return zero if it was successful or non-zero if there
+ * was error
+ */
 HPRDBGCTRL_API int
 HyperDbgStopVmmDriver()
 {
     return HyperdbgStopDriver(VMM_DRIVER_NAME);
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Remove the driver
+ *
+ * @return int return zero if it was successful or non-zero if there
+ * was error
+ */
 int
 HyperdbgUninstallDriver(LPCTSTR DriverName)
 {
-
-
-
+    //
+    // Unload the driver if loaded.  Ignore any errors
+    //
     if (g_DriverLocation[0] != (TCHAR)0 &&
         ManageDriver(DriverName, g_DriverLocation, DRIVER_FUNC_REMOVE))
     {
@@ -575,26 +568,24 @@ HyperdbgUninstallDriver(LPCTSTR DriverName)
     }
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Remove the VMM driver
+ *
+ * @return int return zero if it was successful or non-zero if there
+ * was error
+ */
 HPRDBGCTRL_API int
 HyperDbgUninstallVmmDriver()
 {
     return HyperdbgUninstallDriver(VMM_DRIVER_NAME);
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Load the driver
+ *
+ * @return int return zero if it was successful or non-zero if there
+ * was error
+ */
 HPRDBGCTRL_API int
 HyperDbgLoadVmm()
 {
@@ -635,15 +626,15 @@ HyperDbgLoadVmm()
         return 1;
     }
 
-
-
-
-
+    //
+    // Make sure that this variable is false, because it might be set to
+    // true as the result of a previous load
+    //
     g_IsVmxOffProcessStart = FALSE;
 
-
-
-
+    //
+    // Init entering vmx
+    //
     g_DeviceHandle = CreateFileA(
         "\\\\.\\HyperdbgHypervisorDevice",
         GENERIC_READ | GENERIC_WRITE,
@@ -675,31 +666,30 @@ HyperDbgLoadVmm()
         return 1;
     }
 
-
-
-
+    //
+    // Initialize the list of events
+    //
     InitializeListHead(&g_EventTrace);
 
 #if !UseDbgPrintInsteadOfUsermodeMessageTracking
     HANDLE Thread = CreateThread(NULL, 0, ThreadFunc, NULL, 0, &ThreadId);
 
-
-
-
-
+    // if (Thread)
+    // {
+    // ShowMessages("thread Created successfully\n");
+    // }
 
 #endif
 
     return 0;
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Unload VMM driver
+ *
+ * @return int return zero if it was successful or non-zero if there
+ * was error
+ */
 HPRDBGCTRL_API int
 HyperDbgUnloadVmm()
 {
@@ -709,95 +699,94 @@ HyperDbgUnloadVmm()
 
     ShowMessages("start terminating...\n");
 
-
-
-
+    //
+    // Uninitialize the user debugger if it's initialized
+    //
     UdUninitializeUserDebugger();
 
-
-
-
+    //
+    // Send IOCTL to mark complete all IRP Pending
+    //
     Status = DeviceIoControl(g_DeviceHandle,      // Handle to device
                              IOCTL_TERMINATE_VMX, // IO Control code
                              NULL,                // Input Buffer to driver.
                              0,                   // Length of input buffer in bytes. (x 2 is bcuz
-
+                                                  // as the driver is x64 and has 64 bit values)
                              NULL,                // Output Buffer from driver.
                              0,                   // Length of output buffer in bytes.
                              NULL,                // Bytes placed in buffer.
                              NULL                 // synchronous call
     );
 
-
-
-
+    //
+    // wait to make sure we don't use an invalid handle in another Ioctl
+    //
     if (!Status)
     {
         ShowMessages("ioctl failed with code 0x%x\n", GetLastError());
         return 1;
     }
 
-
-
-
+    //
+    // Send IOCTL to mark complete all IRP Pending
+    //
     Status = DeviceIoControl(
         g_DeviceHandle,                                      // Handle to device
         IOCTL_RETURN_IRP_PENDING_PACKETS_AND_DISALLOW_IOCTL, // IO
-
-
+                                                             // Control
+                                                             // code
         NULL,                                                // Input Buffer to driver.
         0,                                                   // Length of input buffer in bytes. (x 2 is bcuz as the
-
+                                                             // driver is x64 and has 64 bit values)
         NULL,                                                // Output Buffer from driver.
         0,                                                   // Length of output buffer in bytes.
         NULL,                                                // Bytes placed in buffer.
         NULL                                                 // synchronous call
     );
 
-
-
-
+    //
+    // wait to make sure we don't use an invalid handle in another Ioctl
+    //
     if (!Status)
     {
         ShowMessages("ioctl failed with code 0x%x\n", GetLastError());
         return 1;
     }
 
-
-
-
+    //
+    // Indicate that the finish process start or not
+    //
     g_IsVmxOffProcessStart = TRUE;
 
     Sleep(1000); // Wait so next thread can return from IRP Pending
 
-
-
-
+    //
+    // Send IRP_MJ_CLOSE to driver to terminate Vmxs
+    //
     if (!CloseHandle(g_DeviceHandle))
     {
         ShowMessages("err, closing handle 0x%x\n", GetLastError());
         return 1;
     };
 
-
-
-
-
+    //
+    // Null the handle to indicate that the driver's device is not ready
+    // to use
+    //
     g_DeviceHandle = NULL;
 
-
-
-
+    //
+    // Debugger module is not loaded anymore
+    //
     g_IsDebuggerModulesLoaded = FALSE;
 
-
-
-
+    //
+    // Check if we found an already built symbol table
+    //
     SymbolDeleteSymTable();
 
     ShowMessages("you're not on HyperDbg's hypervisor anymore!\n");
 
     return 0;
 }
-
 

@@ -531,6 +531,14 @@ BcdEnumerateElementsWithFlags()(ok bool)//col:833
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewNtbcd() { return & ntbcd{} }
@@ -654,6 +662,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntbcd)BcdImportStoreWithFlags()(ok bool){//col:206
 
 
@@ -680,6 +696,14 @@ func (n *ntbcd)BcdImportStoreWithFlags()(ok bool){//col:206
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -762,6 +786,14 @@ func (n *ntbcd)BcdOpenStore()(ok bool){//col:251
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -895,6 +927,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntbcd)BcdEnumerateObjects()(ok bool){//col:403
 
 
@@ -943,6 +983,14 @@ func (n *ntbcd)BcdEnumerateObjects()(ok bool){//col:403
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1079,6 +1127,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntbcd)    ()(ok bool){//col:514
 
 
@@ -1099,6 +1155,14 @@ func (n *ntbcd)    ()(ok bool){//col:514
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1211,6 +1275,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntbcd)BcdEnumerateElements()(ok bool){//col:646
 
 
@@ -1231,6 +1303,14 @@ func (n *ntbcd)BcdEnumerateElements()(ok bool){//col:646
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1356,6 +1436,14 @@ func (n *ntbcd)BcdEnumerateElementsWithFlags()(ok bool){//col:833
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1530,6 +1618,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (n *ntbcd)    BcdSetupInteger_DeviceType = MAKE_BCDE_DATA_TYPE()(ok bool){//col:1395
 
 
@@ -1540,6 +1636,14 @@ func (n *ntbcd)    BcdSetupInteger_DeviceType = MAKE_BCDE_DATA_TYPE()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -1714,6 +1818,14 @@ func (n *ntbcd)    BcdOSLoaderDevice_OSDevice = MAKE_BCDE_DATA_TYPE()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

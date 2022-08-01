@@ -1,40 +1,40 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file Kd.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Header for routines related to kernel mode debugging
+ * @details 
+ * @version 0.1
+ * @date 2020-12-20
+ * 
+ * @copyright This project is released under the GNU Public License v3.
+ * 
+ */
 #pragma once
 
+//////////////////////////////////////////////////
+//				      Locks 	    			//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief Vmx-root lock for sending response of debugger
+ * 
+ */
 volatile LONG DebuggerResponseLock;
 
-
-
-
-
+/**
+ * @brief Vmx-root lock for handling breaks to debugger
+ * 
+ */
 volatile LONG DebuggerHandleBreakpointLock;
 
+//////////////////////////////////////////////////
+//				      Structures    			//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief request to change the process
+ *
+ */
 typedef struct _DEBUGGEE_REQUEST_TO_CHANGE_PROCESS
 {
     UINT32 ProcessId;
@@ -42,10 +42,10 @@ typedef struct _DEBUGGEE_REQUEST_TO_CHANGE_PROCESS
 
 } DEBUGGEE_REQUEST_TO_CHANGE_PROCESS, *PDEBUGGEE_REQUEST_TO_CHANGE_PROCESS;
 
-
-
-
-
+/**
+ * @brief request to change the thread
+ *
+ */
 typedef struct _DEBUGGEE_REQUEST_TO_CHANGE_THREAD
 {
     UINT32 ThreadId;
@@ -53,10 +53,10 @@ typedef struct _DEBUGGEE_REQUEST_TO_CHANGE_THREAD
 
 } DEBUGGEE_REQUEST_TO_CHANGE_THREAD, *PDEBUGGEE_REQUEST_TO_CHANGE_THREAD;
 
-
-
-
-
+/**
+ * @brief request to pause and halt the system
+ *
+ */
 typedef struct _DEBUGGEE_REQUEST_TO_IGNORE_BREAKS_UNTIL_AN_EVENT
 {
     volatile BOOLEAN                        PauseBreaksUntilSpecialMessageSent;
@@ -64,11 +64,11 @@ typedef struct _DEBUGGEE_REQUEST_TO_IGNORE_BREAKS_UNTIL_AN_EVENT
 
 } DEBUGGEE_REQUEST_TO_IGNORE_BREAKS_UNTIL_AN_EVENT, *PDEBUGGEE_REQUEST_TO_IGNORE_BREAKS_UNTIL_AN_EVENT;
 
-
-
-
-
-
+/**
+ * @brief store the details of a hardware debug register to ignore any 
+ * trigger for other threads
+ *
+ */
 typedef struct _HARDWARE_DEBUG_REGISTER_DETAILS
 {
     UINT64 Address;
@@ -77,13 +77,13 @@ typedef struct _HARDWARE_DEBUG_REGISTER_DETAILS
 
 } HARDWARE_DEBUG_REGISTER_DETAILS, *PHARDWARE_DEBUG_REGISTER_DETAILS;
 
+//////////////////////////////////////////////////
+//				   Functions 	    			//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
+// ----------------------------------------------------------------------------
+// Private Interfaces
+//
 
 static VOID
 KdCustomDebuggerBreakSpinlockLock(UINT32 CurrentCore, volatile LONG * Lock, PGUEST_REGS GuestRegs);
@@ -131,8 +131,8 @@ KdReloadSymbolDetailsInDebuggee(_In_ PDEBUGGEE_SYMBOL_REQUEST_PACKET SymPacket);
 static VOID
 KdNotifyDebuggeeForUserInput(DEBUGGEE_USER_INPUT_PACKET * Descriptor, UINT32 Len);
 
-
-
+//static VOID
+//KdSendFormatsFunctionResult(UINT64 Value);
 
 static VOID
 KdGuaranteedStepInstruction(UINT32 CurrentCore);
@@ -161,9 +161,9 @@ KdDispatchAndPerformCommandsFromDebugger(ULONG CurrentCore, PGUEST_REGS GuestReg
 static VOID
 KdBroadcastHaltOnAllCores();
 
-
-
-
+// ----------------------------------------------------------------------------
+// Public Interfaces
+//
 
 VOID
 KdHaltSystem(PDEBUGGER_PAUSE_PACKET_RECEIVED PausePacket);

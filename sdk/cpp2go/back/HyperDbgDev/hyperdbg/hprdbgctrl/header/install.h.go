@@ -50,6 +50,12 @@ Install interface{
 
 
 
+
+
+
+
+
+
 )
 
 func NewInstall() { return & install{} }
@@ -66,6 +72,12 @@ func (i *install)#    define HPRDBGCTRL_API __declspec()(ok bool){//col:40
 
 return true
 }
+
+
+
+
+
+
 
 
 

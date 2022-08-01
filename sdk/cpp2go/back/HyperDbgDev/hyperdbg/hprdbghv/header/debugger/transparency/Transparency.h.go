@@ -49,6 +49,12 @@ TransparentModeStart()(ok bool)//col:59
 
 
 
+
+
+
+
+
+
 )
 
 func NewTransparency() { return & transparency{} }
@@ -70,6 +76,12 @@ func (t *transparency)TransparentModeStart()(ok bool){//col:59
 
 return true
 }
+
+
+
+
+
+
 
 
 

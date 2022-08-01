@@ -1,27 +1,27 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file e.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief e* command
+ * @details
+ * @version 0.1
+ * @date 2020-07-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern BOOLEAN                  g_IsSerialConnectedToRemoteDebuggee;
 extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
 
-
-
-
-
-
+/**
+ * @brief help of !e* and e* commands
+ *
+ * @return VOID
+ */
 VOID
 CommandEditMemoryHelp()
 {
@@ -48,14 +48,13 @@ CommandEditMemoryHelp()
                  "9090909090909090 9090909090909090 9090909090909090\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief !e* and e* commands handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandEditMemory(vector<string> SplittedCommand, string Command)
 {
@@ -75,10 +74,10 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
     vector<string>       SplittedCommandCaseSensitive {Split(Command, ' ')};
     UINT32               IndexInCommandCaseSensitive = 0;
 
-
-
-
-
+    //
+    // By default if the user-debugger is active, we use these commands
+    // on the memory layout of the debuggee process
+    //
     if (g_ActiveProcessDebuggingState.IsActive)
     {
         ProcId = g_ActiveProcessDebuggingState.ProcessId;
@@ -129,9 +128,9 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
-
-
-
+                //
+                // What's this? :(
+                //
                 ShowMessages("unknown error happened !\n\n");
                 CommandEditMemoryHelp();
                 return;
@@ -141,9 +140,9 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
         }
         if (NextIsProcId)
         {
-
-
-
+            //
+            // It's a process id
+            //
             NextIsProcId = FALSE;
 
             if (!ConvertStringToUInt32(Section, &ProcId))
@@ -154,16 +153,16 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
-
-
-
+                //
+                // Means that the proc id is set, next we should read value
+                //
                 continue;
             }
         }
 
-
-
-
+        //
+        // Check if it's a process id or not
+        //
         if (!SetProcId && !Section.compare("pid"))
         {
             NextIsProcId = TRUE;
@@ -182,9 +181,9 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
-
-
-
+                //
+                // Means that the address is set, next we should read value
+                //
                 SetAddress = TRUE;
                 continue;
             }
@@ -192,9 +191,9 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
 
         if (SetAddress)
         {
-
-
-
+            //
+            // Remove the hex notations
+            //
             if (Section.rfind("0x", 0) == 0 || Section.rfind("0X", 0) == 0 ||
                 Section.rfind("\\x", 0) == 0 || Section.rfind("\\X", 0) == 0)
             {
@@ -206,9 +205,9 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
             }
             Section.erase(remove(Section.begin(), Section.end(), '`'), Section.end());
 
-
-
-
+            //
+            // Check if the value is valid based on byte counts
+            //
             if (EditMemoryRequest.ByteSize == EDIT_BYTE && Section.size() >= 3)
             {
                 ShowMessages("please specify a byte (hex) value for 'eb' or '!eb'\n\n");
@@ -227,10 +226,10 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
                 return;
             }
 
-
-
-
-
+            //
+            // Qword is checked by the following function, no need to double
+            // check it above.
+            //
 
             if (!ConvertStringToUInt64(Section, &Value))
             {
@@ -241,22 +240,22 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
             }
             else
             {
-
-
-
+                //
+                // Add it to the list
+                //
 
                 ValuesToEdit.push_back(Value);
 
-
-
-
+                //
+                // Keep track of values to modify
+                //
                 CountOfValues++;
 
                 if (!SetValue)
                 {
-
-
-
+                    //
+                    // At least on value is there
+                    //
                     SetValue = TRUE;
                 }
                 continue;
@@ -264,9 +263,9 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
         }
     }
 
-
-
-
+    //
+    // Check to prevent using process id in e* commands
+    //
     if (g_IsSerialConnectedToRemoteDebuggee && ProcId != 0)
     {
         ShowMessages("err, you cannot specify 'pid' in the debugger mode\n\n");
@@ -278,16 +277,16 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
         ProcId = GetCurrentProcessId();
     }
 
-
-
-
+    //
+    // Fill the structure
+    //
     EditMemoryRequest.ProcessId       = ProcId;
     EditMemoryRequest.Address         = Address;
     EditMemoryRequest.CountOf64Chunks = CountOfValues;
 
-
-
-
+    //
+    // Check if address and value are set or not
+    //
     if (!SetAddress)
     {
         ShowMessages("please specify a correct hex address\n\n");
@@ -308,19 +307,19 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Now it's time to put everything together in one structure
+    //
     FinalSize = (CountOfValues * sizeof(UINT64)) + SIZEOF_DEBUGGER_EDIT_MEMORY;
 
-
-
-
+    //
+    // Set the size
+    //
     EditMemoryRequest.FinalStructureSize = FinalSize;
 
-
-
-
+    //
+    // Allocate structure + buffer
+    //
     FinalBuffer = (UINT64 *)malloc(FinalSize);
 
     if (!FinalBuffer)
@@ -329,33 +328,33 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Zero the buffer
+    //
     ZeroMemory(FinalBuffer, FinalSize);
 
-
-
-
+    //
+    // Copy the structure on top of the allocated buffer
+    //
     memcpy(FinalBuffer, &EditMemoryRequest, SIZEOF_DEBUGGER_EDIT_MEMORY);
 
-
-
-
+    //
+    // Put the values in 64 bit structures
+    //
     std::copy(ValuesToEdit.begin(), ValuesToEdit.end(), (UINT64 *)((UINT64)FinalBuffer + SIZEOF_DEBUGGER_EDIT_MEMORY));
 
-
-
-
+    //
+    // send the request
+    //
     if (g_IsSerialConnectedToRemoteDebuggee)
     {
         KdSendEditMemoryPacketToDebuggee((DEBUGGER_EDIT_MEMORY *)FinalBuffer, FinalSize);
         return;
     }
 
-
-
-
+    //
+    // It's on VMI mode
+    //
     AssertShowMessageReturnStmt(g_DeviceHandle, ASSERT_MESSAGE_DRIVER_NOT_LOADED, AssertReturn);
 
     Status = DeviceIoControl(
@@ -378,9 +377,9 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
 
     if (EditMemoryRequest.Result == DEBUGGER_OPERATION_WAS_SUCCESSFULL)
     {
-
-
-
+        //
+        // Was successful, nothing to do
+        //
     }
     else if (
         EditMemoryRequest.Result ==
@@ -404,10 +403,9 @@ CommandEditMemory(vector<string> SplittedCommand, string Command)
         ShowErrorMessage(EditMemoryRequest.Result);
     }
 
-
-
-
+    //
+    // Free the malloc buffer
+    //
     free(FinalBuffer);
 }
-
 

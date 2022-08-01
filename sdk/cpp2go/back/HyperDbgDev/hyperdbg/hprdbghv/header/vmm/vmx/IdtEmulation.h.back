@@ -1,23 +1,23 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file IdtEmulation.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Header for Handlers of Guest's IDT Emulator
+ * @details
+ * @version 0.1
+ * @date 2020-06-10
+ * 
+ * @copyright This project is released under the GNU Public License v3.
+ * 
+ */
 #pragma once
 
+//////////////////////////////////////////////////
+//				     Structures		      		//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
+//////////////////////////////////////////////////
+//				     Functions		      		//
+//////////////////////////////////////////////////
 
 VOID
 IdtEmulationHandleExceptionAndNmi(_In_ UINT32                          CurrentProcessorIndex,

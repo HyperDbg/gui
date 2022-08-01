@@ -1,20 +1,20 @@
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file ScriptEngineInternalHeader.h
+ * @author M.H. Gholamrezaei (mh@hyperdbg.org)
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Internal Headers of script engine
+ * @details
+ * @version 0.2
+ * @date 2022-06-29
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
-
-
-
+//////////////////////////////////////////////////
+//			        Registers                   //
+//////////////////////////////////////////////////
 
 VOID
 SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value);
@@ -22,9 +22,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value);
 UINT64
 GetRegValue(PGUEST_REGS GuestRegs, REGS_ENUM RegId);
 
-
-
-
+//////////////////////////////////////////////////
+//			    Pseudo-registers               //
+//////////////////////////////////////////////////
 
 UINT64
 ScriptEnginePseudoRegGetTid();
@@ -62,9 +62,9 @@ ScriptEnginePseudoRegGetEventTag(PACTION_BUFFER ActionBuffer);
 UINT64
 ScriptEnginePseudoRegGetEventId(PACTION_BUFFER ActionBuffer);
 
-
-
-
+//////////////////////////////////////////////////
+//			         Keywords                   //
+//////////////////////////////////////////////////
 
 UINT64
 ScriptEngineKeywordPoi(PUINT64 Address, BOOL * HasError);
@@ -87,9 +87,9 @@ ScriptEngineKeywordDw(PUINT64 Address, BOOL * HasError);
 QWORD
 ScriptEngineKeywordDq(PUINT64 Address, BOOL * HasError);
 
-
-
-
+//////////////////////////////////////////////////
+//			        Functions                   //
+//////////////////////////////////////////////////
 
 BOOLEAN
 ScriptEngineFunctionEq(UINT64 Address, QWORD Value, BOOL * HasError);

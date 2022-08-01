@@ -1,36 +1,36 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file MemoryMapper.c
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief This file shows the header functions to map memory to reserved system ranges
+ * 
+ * also some of the functions derived from hvpp
+ * - https://github.com/wbenny/hvpp
+ * 
+ * @version 0.1
+ * @date 2020-05-3
+ * 
+ * @copyright This project is released under the GNU Public License v3.
+ * 
+ */
 #pragma once
 
-
-
-
+//////////////////////////////////////////////////
+//				    Definitions					//
+//////////////////////////////////////////////////
 
 #define PAGE_4KB_OFFSET ((UINT64)(1 << 12) - 1)
 #define PAGE_2MB_OFFSET ((UINT64)(1 << 21) - 1)
 #define PAGE_4MB_OFFSET ((UINT64)(1 << 22) - 1)
 #define PAGE_1GB_OFFSET ((UINT64)(1 << 30) - 1)
 
+//////////////////////////////////////////////////
+//					   Enums  					//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief Different levels of paging
+ * 
+ */
 typedef enum _PAGING_LEVEL
 {
     PagingLevelPageTable = 0,
@@ -39,20 +39,20 @@ typedef enum _PAGING_LEVEL
     PagingLevelPageMapLevel4
 } PAGING_LEVEL;
 
-
-
-
-
+/**
+ * @brief Memory wrapper for reading safe from the memory
+ * 
+ */
 typedef enum _MEMORY_MAPPER_WRAPPER_FOR_MEMORY_READ
 {
     MEMORY_MAPPER_WRAPPER_READ_PHYSICAL_MEMORY,
     MEMORY_MAPPER_WRAPPER_READ_VIRTUAL_MEMORY,
 } MEMORY_MAPPER_WRAPPER_FOR_MEMORY_READ;
 
-
-
-
-
+/**
+ * @brief Memory wrapper for writing safe into the memory
+ * 
+ */
 typedef enum _MEMORY_MAPPER_WRAPPER_FOR_MEMORY_WRITE
 {
     MEMORY_MAPPER_WRAPPER_WRITE_PHYSICAL_MEMORY,
@@ -61,24 +61,24 @@ typedef enum _MEMORY_MAPPER_WRAPPER_FOR_MEMORY_WRITE
 
 } MEMORY_MAPPER_WRAPPER_FOR_MEMORY_WRITE;
 
+//////////////////////////////////////////////////
+//					Structures					//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief Memory mapper PTE and reserved virtual address
+ * 
+ */
 typedef struct _MEMORY_MAPPER_ADDRESSES
 {
     UINT64 PteVirtualAddress; // The virtual address of PTE
     UINT64 VirualAddress;     // The actual kernel virtual address to read or write
 } MEMORY_MAPPER_ADDRESSES, *PMEMORY_MAPPER_ADDRESSES;
 
-
-
-
-
+/**
+ * @brief Page Entries
+ * 
+ */
 typedef struct _PAGE_ENTRY
 {
     union
@@ -92,9 +92,9 @@ typedef struct _PAGE_ENTRY
         PDE_64       Pd;
         PTE_64       Pt;
 
-
-
-
+        //
+        // Common fields.
+        //
 
         struct
         {
@@ -117,10 +117,10 @@ typedef struct _PAGE_ENTRY
     };
 } PAGE_ENTRY, *PPAGE_ENTRY;
 
-
-
-
-
+/**
+ * @brief CR3 Structure
+ * 
+ */
 typedef struct _CR3_TYPE
 {
     union
@@ -138,13 +138,13 @@ typedef struct _CR3_TYPE
     };
 } CR3_TYPE, *PCR3_TYPE;
 
+//////////////////////////////////////////////////
+//					Functions					//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
+// ----------------------------------------------------------------------------
+// Private Interfaces
+//
 
 static UINT64
 MemoryMapperGetIndex(_In_ PAGING_LEVEL Level,
@@ -216,9 +216,9 @@ MemoryMapperWriteMemorySafeWrapper(_In_ MEMORY_MAPPER_WRAPPER_FOR_MEMORY_WRITE T
                                    _In_opt_ PCR3_TYPE                          TargetProcessCr3,
                                    _In_opt_ UINT32                             TargetProcessId);
 
-
-
-
+// ----------------------------------------------------------------------------
+// Public Interfaces
+//
 
 BOOLEAN
 MemoryMapperReadMemorySafe(_In_ UINT64   VaAddressToRead,

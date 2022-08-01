@@ -91,6 +91,12 @@ KdUninitializeConnection()(ok bool)//col:2878
 
 
 
+
+
+
+
+
+
 )
 
 func NewKd() { return & kd{} }
@@ -160,6 +166,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdCompareBufferWithString()(ok bool){//col:109
 
 
@@ -172,6 +184,12 @@ func (k *kd)KdCompareBufferWithString()(ok bool){//col:109
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -267,6 +285,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdInterpretPausedDebuggee()(ok bool){//col:147
 
 
@@ -274,6 +298,12 @@ func (k *kd)KdInterpretPausedDebuggee()(ok bool){//col:147
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -368,6 +398,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendSwitchCorePacketToDebuggee()(ok bool){//col:219
 
 
@@ -392,6 +428,12 @@ func (k *kd)KdSendSwitchCorePacketToDebuggee()(ok bool){//col:219
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -499,6 +541,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendFlushPacketToDebuggee()(ok bool){//col:304
 
 
@@ -516,6 +564,12 @@ func (k *kd)KdSendFlushPacketToDebuggee()(ok bool){//col:304
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -645,6 +699,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendTestQueryPacketToDebuggee()(ok bool){//col:418
 
 
@@ -663,6 +723,12 @@ func (k *kd)KdSendTestQueryPacketToDebuggee()(ok bool){//col:418
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -761,6 +827,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendReadRegisterPacketToDebuggee()(ok bool){//col:480
 
 
@@ -777,6 +849,12 @@ func (k *kd)KdSendReadRegisterPacketToDebuggee()(ok bool){//col:480
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -885,6 +963,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendEditMemoryPacketToDebuggee()(ok bool){//col:558
 
 
@@ -901,6 +985,12 @@ func (k *kd)KdSendEditMemoryPacketToDebuggee()(ok bool){//col:558
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1017,6 +1107,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendAddActionToEventPacketToDebuggee()(ok bool){//col:694
 
 
@@ -1053,6 +1149,12 @@ func (k *kd)KdSendAddActionToEventPacketToDebuggee()(ok bool){//col:694
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1162,6 +1264,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendSwitchThreadPacketToDebuggee()(ok bool){//col:802
 
 
@@ -1191,6 +1299,12 @@ func (k *kd)KdSendSwitchThreadPacketToDebuggee()(ok bool){//col:802
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1287,6 +1401,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendVa2paAndPa2vaPacketToDebuggee()(ok bool){//col:862
 
 
@@ -1303,6 +1423,12 @@ func (k *kd)KdSendVa2paAndPa2vaPacketToDebuggee()(ok bool){//col:862
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1399,6 +1525,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendListOrModifyPacketToDebuggee()(ok bool){//col:923
 
 
@@ -1416,6 +1548,12 @@ func (k *kd)KdSendListOrModifyPacketToDebuggee()(ok bool){//col:923
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1529,6 +1667,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendUserInputPacketToDebuggee()(ok bool){//col:1049
 
 
@@ -1600,6 +1744,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendSearchRequestPacketToDebuggee()(ok bool){//col:1080
 
 
@@ -1616,6 +1766,12 @@ func (k *kd)KdSendSearchRequestPacketToDebuggee()(ok bool){//col:1080
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1726,6 +1882,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendPausePacketToDebuggee()(ok bool){//col:1167
 
 
@@ -1740,6 +1902,12 @@ func (k *kd)KdSendPausePacketToDebuggee()(ok bool){//col:1167
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1863,6 +2031,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdReceivePacketFromDebuggee()(ok bool){//col:1337
 
 
@@ -1910,6 +2084,12 @@ func (k *kd)KdReceivePacketFromDebuggee()(ok bool){//col:1337
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2055,6 +2235,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdCommandPacketToDebuggee()(ok bool){//col:1509
 
 
@@ -2077,6 +2263,12 @@ func (k *kd)KdCommandPacketToDebuggee()(ok bool){//col:1509
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2194,6 +2386,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdBreakControlCheckAndPauseDebugger()(ok bool){//col:1611
 
 
@@ -2248,6 +2446,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSetStatusAndWaitForPause()(ok bool){//col:1631
 
 
@@ -2256,6 +2460,12 @@ func (k *kd)KdSetStatusAndWaitForPause()(ok bool){//col:1631
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2353,6 +2563,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdTheRemoteSystemIsRunning()(ok bool){//col:1683
 
 
@@ -2361,6 +2577,12 @@ func (k *kd)KdTheRemoteSystemIsRunning()(ok bool){//col:1683
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2444,6 +2666,12 @@ func (k *kd)KdPrepareSerialConnectionToRemoteSystem()(ok bool){//col:1821
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2664,6 +2892,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendGeneralBuffersFromDebuggeeToDebugger()(ok bool){//col:2321
 
 
@@ -2754,6 +2988,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdReloadSymbolsInDebuggee()(ok bool){//col:2365
 
 
@@ -2772,6 +3012,12 @@ func (k *kd)KdReloadSymbolsInDebuggee()(ok bool){//col:2365
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2893,6 +3139,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdRegisterEventInDebuggee()(ok bool){//col:2499
 
 
@@ -2917,6 +3169,12 @@ func (k *kd)KdRegisterEventInDebuggee()(ok bool){//col:2499
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3020,6 +3278,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendModifyEventInDebuggee()(ok bool){//col:2605
 
 
@@ -3040,6 +3304,12 @@ func (k *kd)KdSendModifyEventInDebuggee()(ok bool){//col:2605
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3142,6 +3412,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdSendUsermodePrints()(ok bool){//col:2720
 
 
@@ -3170,6 +3446,12 @@ func (k *kd)KdSendUsermodePrints()(ok bool){//col:2720
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3279,6 +3561,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kd)KdUninitializeConnection()(ok bool){//col:2878
 
 
@@ -3327,6 +3615,12 @@ func (k *kd)KdUninitializeConnection()(ok bool){//col:2878
 
 return true
 }
+
+
+
+
+
+
 
 
 

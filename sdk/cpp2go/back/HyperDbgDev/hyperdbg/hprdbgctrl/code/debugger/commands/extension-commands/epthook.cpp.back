@@ -1,21 +1,21 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file epthook.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief !epthook command
+ * @details
+ * @version 0.1
+ * @date 2020-07-10
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
-
-
+/**
+ * @brief help of !epthook command
+ *
+ * @return VOID
+ */
 VOID
 CommandEptHookHelp()
 {
@@ -35,14 +35,13 @@ CommandEptHookHelp()
     ShowMessages("\t\te.g : !epthook fffff801deadb000 core 2 pid 400\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief !epthook command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandEptHook(vector<string> SplittedCommand, string Command)
 {
@@ -67,9 +66,9 @@ CommandEptHook(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Interpret and fill the general event and action fields
+    //
     if (!InterpretGeneralEventAndActionsFields(
             &SplittedCommand,
             &SplittedCommandCaseSensitive,
@@ -87,9 +86,9 @@ CommandEptHook(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Interpret command specific details (if any)
+    //
     for (auto Section : SplittedCommand)
     {
         IndexInCommandCaseSensitive++;
@@ -100,16 +99,16 @@ CommandEptHook(vector<string> SplittedCommand, string Command)
         }
         else if (!GetAddress)
         {
-
-
-
+            //
+            // It's probably address
+            //
             if (!SymbolConvertNameOrExprToAddress(
                     SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1),
                     &OptionalParam1))
             {
-
-
-
+                //
+                // Couldn't resolve or unkonwn parameter
+                //
                 ShowMessages("err, couldn't resolve error at '%s'\n\n",
                              SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1).c_str());
                 CommandEptHookHelp();
@@ -124,9 +123,9 @@ CommandEptHook(vector<string> SplittedCommand, string Command)
         }
         else
         {
-
-
-
+            //
+            // Unkonwn parameter
+            //
             ShowMessages("unknown parameter '%s'\n\n", Section.c_str());
             CommandEptHookHelp();
 
@@ -142,29 +141,29 @@ CommandEptHook(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Set the optional parameters
+    //
     Event->OptionalParam1 = OptionalParam1;
 
-
-
-
+    //
+    // Send the ioctl to the kernel for event registration
+    //
     if (!SendEventToKernel(Event, EventLength))
     {
-
-
-
-
-
+        //
+        // There was an error, probably the handle was not initialized
+        // we have to free the Action before exit, it is because, we
+        // already freed the Event and string buffers
+        //
 
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
 
-
-
-
+    //
+    // Add the event to the kernel
+    //
     if (!RegisterActionToEvent(Event,
                                ActionBreakToDebugger,
                                ActionBreakToDebuggerLength,
@@ -173,13 +172,12 @@ CommandEptHook(vector<string> SplittedCommand, string Command)
                                ActionScript,
                                ActionScriptLength))
     {
-
-
-
+        //
+        // There was an error
+        //
 
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
 }
-
 

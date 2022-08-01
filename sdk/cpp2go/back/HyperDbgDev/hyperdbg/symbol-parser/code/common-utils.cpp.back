@@ -1,23 +1,23 @@
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file common-utils.cpp
+ * @author Alee Amini (alee@hyperdbg.org)
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief common utils
+ * @details
+ * @version 0.1
+ * @date 2021-06-10
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
-
-
-
+/**
+ * @brief check if a file exist or not
+ * 
+ * @param FileName path of file
+ * @return BOOLEAN shows whether the file exist or not
+ */
 BOOLEAN
 IsFileExists(const std::string & FileName)
 {
@@ -25,12 +25,11 @@ IsFileExists(const std::string & FileName)
     return (stat(FileName.c_str(), &buffer) == 0);
 }
 
-
-
-
-
-
-
+/**
+ * @brief check if a path exist or not
+ * @param DirPath path of dir
+ * @return BOOLEAN shows whether the file exist or not
+ */
 BOOLEAN
 IsDirExists(const std::string & DirPath)
 {
@@ -44,14 +43,13 @@ IsDirExists(const std::string & DirPath)
     return FALSE; // this is not a directory!
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief create a directory recursivly
+ * 
+ * @param Path path of file
+ * 
+ * @return BOOLEAN 
+ */
 BOOLEAN
 CreateDirectoryRecursive(const std::string & Path)
 {
@@ -69,14 +67,13 @@ CreateDirectoryRecursive(const std::string & Path)
     return FALSE;
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief general split command
+ *
+ * @param s target string
+ * @param c splitter (delimiter)
+ * @return const vector<string>
+ */
 const std::vector<std::string>
 Split(const std::string & s, const char & c)
 {
@@ -98,5 +95,4 @@ Split(const std::string & s, const char & c)
 
     return v;
 }
-
 

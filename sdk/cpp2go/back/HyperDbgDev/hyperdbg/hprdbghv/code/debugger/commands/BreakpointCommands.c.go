@@ -54,6 +54,12 @@ BreakpointListOrModify()(ok bool)//col:850
 
 
 
+
+
+
+
+
+
 )
 
 func NewBreakpointCommands() { return & breakpointCommands{} }
@@ -92,6 +98,12 @@ func (b *breakpointCommands)BreakpointCheckAndHandleEptHookBreakpoints()(ok bool
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -239,6 +251,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (b *breakpointCommands)BreakpointHandleBpTraps()(ok bool){//col:374
 
 
@@ -316,6 +334,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (b *breakpointCommands)BreakpointWrite()(ok bool){//col:419
 
 
@@ -335,6 +359,12 @@ func (b *breakpointCommands)BreakpointWrite()(ok bool){//col:419
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -436,6 +466,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (b *breakpointCommands)BreakpointRemoveAllBreakpoints()(ok bool){//col:502
 
 
@@ -452,6 +488,12 @@ func (b *breakpointCommands)BreakpointRemoveAllBreakpoints()(ok bool){//col:502
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -550,6 +592,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (b *breakpointCommands)BreakpointGetEntryByAddress()(ok bool){//col:566
 
 
@@ -568,6 +616,12 @@ func (b *breakpointCommands)BreakpointGetEntryByAddress()(ok bool){//col:566
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -695,6 +749,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (b *breakpointCommands)BreakpointListAllBreakpoint()(ok bool){//col:743
 
 
@@ -732,6 +792,12 @@ func (b *breakpointCommands)BreakpointListAllBreakpoint()(ok bool){//col:743
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -827,6 +893,12 @@ func (b *breakpointCommands)BreakpointListOrModify()(ok bool){//col:850
 
 return true
 }
+
+
+
+
+
+
 
 
 

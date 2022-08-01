@@ -49,6 +49,12 @@ Ud interface{
 
 
 
+
+
+
+
+
+
 )
 
 func NewUd() { return & ud{} }
@@ -76,6 +82,12 @@ func (u *ud)        WaitForSingleObject()(ok bool){//col:57
 
 return true
 }
+
+
+
+
+
+
 
 
 

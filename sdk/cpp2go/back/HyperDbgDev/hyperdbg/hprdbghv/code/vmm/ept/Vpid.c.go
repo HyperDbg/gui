@@ -48,6 +48,12 @@ VpidInvvpidSingleContextRetainingGlobals()(ok bool)//col:94
 
 
 
+
+
+
+
+
+
 )
 
 func NewVpid() { return & vpid{} }
@@ -69,6 +75,12 @@ func (v *vpid)VpidInvvpid()(ok bool){//col:38
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -157,6 +169,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (v *vpid)VpidInvvpidSingleContext()(ok bool){//col:68
 
 
@@ -165,6 +183,12 @@ func (v *vpid)VpidInvvpidSingleContext()(ok bool){//col:68
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -252,6 +276,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (v *vpid)VpidInvvpidSingleContextRetainingGlobals()(ok bool){//col:94
 
 
@@ -260,6 +290,12 @@ func (v *vpid)VpidInvvpidSingleContextRetainingGlobals()(ok bool){//col:94
 
 return true
 }
+
+
+
+
+
+
 
 
 

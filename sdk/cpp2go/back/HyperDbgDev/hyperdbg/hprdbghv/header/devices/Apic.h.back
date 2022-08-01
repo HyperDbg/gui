@@ -1,19 +1,19 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file Apic.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers relating to Advanced Programmable Interrupt Controller (APIC)
+ * @details Some of the constants are copied from KVM project
+ * @version 0.1
+ * @date 2020-12-31
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
-
-
-
+//////////////////////////////////////////////////
+//				   Definition					//
+//////////////////////////////////////////////////
 
 #define X2_MSR_BASE 0x800
 #define ICROffset   0x300
@@ -143,9 +143,9 @@
 
 #define APIC_BASE_MSR 0x800
 
-
-
-
+//////////////////////////////////////////////////
+//				   Functions					//
+//////////////////////////////////////////////////
 
 BOOLEAN
 ApicInitialize();

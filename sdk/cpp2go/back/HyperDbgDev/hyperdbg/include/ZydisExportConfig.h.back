@@ -9,10 +9,10 @@
 #    else
 #        ifndef ZYDIS_EXPORT
 #            ifdef Zydis_EXPORTS
-
+/* We are building this library */
 #                define ZYDIS_EXPORT __declspec(dllexport)
 #            else
-
+/* We are using this library */
 #                define ZYDIS_EXPORT __declspec(dllimport)
 #            endif
 #        endif

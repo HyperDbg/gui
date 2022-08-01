@@ -1,19 +1,19 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file measure.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief !measure command
+ * @details
+ * @version 0.1
+ * @date 2020-08-06
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern UINT64 g_CpuidAverage;
 extern UINT64 g_CpuidStandardDeviation;
 extern UINT64 g_CpuidMedian;
@@ -24,11 +24,11 @@ extern UINT64 g_RdtscMedian;
 
 extern BOOLEAN g_TransparentResultsMeasured;
 
-
-
-
-
-
+/**
+ * @brief help of !measure command
+ *
+ * @return VOID
+ */
 VOID
 CommandMeasureHelp()
 {
@@ -42,14 +42,13 @@ CommandMeasureHelp()
     ShowMessages("\t\te.g : !measure default\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief !measure command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandMeasure(vector<string> SplittedCommand, string Command)
 {
@@ -74,9 +73,9 @@ CommandMeasure(vector<string> SplittedCommand, string Command)
         DefaultMode = TRUE;
     }
 
-
-
-
+    //
+    // Check if debugger is loaded or not
+    //
     if (g_DeviceHandle && !DefaultMode)
     {
         ShowMessages(
@@ -121,20 +120,20 @@ CommandMeasure(vector<string> SplittedCommand, string Command)
     }
     else
     {
+        //
+        // It's a default mode
+        //
 
-
-
-
-
-
-
+        //
+        // Default values for cpuid
+        //
         g_CpuidAverage           = 0x5f;
         g_CpuidStandardDeviation = 0x10;
         g_CpuidMedian            = 0x5f;
 
-
-
-
+        //
+        // Default values for rdtsc/p
+        //
         g_RdtscAverage           = 0x16;
         g_RdtscStandardDeviation = 0x5;
         g_RdtscMedian            = 0x16;
@@ -142,10 +141,9 @@ CommandMeasure(vector<string> SplittedCommand, string Command)
 
     ShowMessages("the measurements were successful\nyou can use the '!hide' command now\n");
 
-
-
-
+    //
+    // Indicate that the measurements was successful
+    //
     g_TransparentResultsMeasured = TRUE;
 }
-
 

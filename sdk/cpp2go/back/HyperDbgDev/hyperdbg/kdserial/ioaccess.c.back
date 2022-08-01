@@ -1,16 +1,16 @@
+/*++
 
+Copyright (c) Microsoft Corporation.  All rights reserved.
 
+Module Name:
 
+    ioaccess.c
 
+Abstract:
 
+    This module provides a function table consumed by the UART library.
 
-
-
-
-
-
-
-
+--*/
 
 #include <ntddk.h>
 #include <uart.h>
@@ -24,7 +24,6 @@ ReadPort8(
     return READ_PORT_UCHAR(Port);
 }
 
-
 USHORT
 ReadPort16(
     PUSHORT Port)
@@ -32,14 +31,12 @@ ReadPort16(
     return READ_PORT_USHORT(Port);
 }
 
-
 ULONG
 ReadPort32(
     PULONG Port)
 {
     return READ_PORT_ULONG(Port);
 }
-
 
 VOID
 WritePort8(
@@ -49,7 +46,6 @@ WritePort8(
     WRITE_PORT_UCHAR(Port, Value);
 }
 
-
 VOID
 WritePort16(
     PUSHORT      Port,
@@ -57,7 +53,6 @@ WritePort16(
 {
     WRITE_PORT_USHORT(Port, Value);
 }
-
 
 VOID
 WritePort32(
@@ -67,14 +62,12 @@ WritePort32(
     WRITE_PORT_ULONG(Port, Value);
 }
 
-
 UCHAR
 ReadRegister8(
     PUCHAR Register)
 {
     return READ_REGISTER_UCHAR(Register);
 }
-
 
 USHORT
 ReadRegister16(
@@ -83,14 +76,12 @@ ReadRegister16(
     return READ_REGISTER_USHORT(Register);
 }
 
-
 ULONG
 ReadRegister32(
     PULONG Register)
 {
     return READ_REGISTER_ULONG(Register);
 }
-
 
 VOID
 WriteRegister8(
@@ -100,7 +91,6 @@ WriteRegister8(
     WRITE_REGISTER_UCHAR(Register, Value);
 }
 
-
 VOID
 WriteRegister16(
     PUSHORT      Register,
@@ -109,7 +99,6 @@ WriteRegister16(
     WRITE_REGISTER_USHORT(Register, Value);
 }
 
-
 VOID
 WriteRegister32(
     PULONG      Register,
@@ -117,7 +106,6 @@ WriteRegister32(
 {
     WRITE_REGISTER_ULONG(Register, Value);
 }
-
 
 #endif
 

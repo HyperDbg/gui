@@ -54,6 +54,12 @@ CommandEventsModifyAndQueryEvents()(ok bool)//col:716
 
 
 
+
+
+
+
+
+
 )
 
 func NewEvents() { return & events{} }
@@ -78,6 +84,12 @@ func (e *events)CommandEventsHelp()(ok bool){//col:52
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -218,6 +230,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (e *events)CommandEventQueryEventState()(ok bool){//col:195
 
 
@@ -247,6 +265,12 @@ func (e *events)CommandEventQueryEventState()(ok bool){//col:195
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -363,6 +387,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (e *events)CommandEventDisableEvent()(ok bool){//col:304
 
 
@@ -432,6 +462,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (e *events)CommandEventEnableEvent()(ok bool){//col:355
 
 
@@ -460,6 +496,12 @@ func (e *events)CommandEventEnableEvent()(ok bool){//col:355
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -583,6 +625,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (e *events)CommandEventsClearAllEventsAndResetTags()(ok bool){//col:470
 
 
@@ -595,6 +643,12 @@ func (e *events)CommandEventsClearAllEventsAndResetTags()(ok bool){//col:470
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -780,6 +834,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (e *events)CommandEventsModifyAndQueryEvents()(ok bool){//col:716
 
 
@@ -825,6 +885,12 @@ func (e *events)CommandEventsModifyAndQueryEvents()(ok bool){//col:716
 
 return true
 }
+
+
+
+
+
+
 
 
 

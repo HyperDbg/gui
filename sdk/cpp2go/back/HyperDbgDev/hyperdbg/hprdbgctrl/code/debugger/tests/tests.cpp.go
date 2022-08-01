@@ -46,6 +46,12 @@ CloseProcessAndClosePipeConnection()(ok bool)//col:326
 
 
 
+
+
+
+
+
+
 )
 
 func NewTests() { return & tests{} }
@@ -82,6 +88,12 @@ func (t *tests)SetupTestName()(ok bool){//col:100
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -271,6 +283,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (t *tests)CloseProcessAndClosePipeConnection()(ok bool){//col:326
 
 
@@ -282,6 +300,12 @@ func (t *tests)CloseProcessAndClosePipeConnection()(ok bool){//col:326
 
 return true
 }
+
+
+
+
+
+
 
 
 

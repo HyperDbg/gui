@@ -1,33 +1,33 @@
+/*++
 
+Copyright (c) Microsoft Corporation.  All rights reserved.
 
+Module Name:
 
+    sdm845.c
 
+Abstract:
 
+    This module contains support for the Qualcomm SDM 845 serial UART.
 
+--*/
 
-
-
-
-
-
-
-
-
+// ------------------------------------------------------------------- Includes
 
 #include "common.h"
 
+// ---------------------------------------------------------------- Definitions
 
-
-
+// Different base addresses offset
 #define GENI4_CFG        0x0
 #define GENI4_IMAGE_REGS 0x100
 #define GENI4_DATA       0x600
 #define QUPV3_SE_DMA     0xC00
 #define GENI4_IMAGE      0x1000
 
-
-
-
+//
+// QUPV3_SE
+//
 
 #define TX_FIFO_DEPTH_MASK  HWIO_SE_HW_PARAM_0_TX_FIFO_DEPTH_BMSK
 #define TX_FIFO_DEPTH_SHIFT HWIO_SE_HW_PARAM_0_TX_FIFO_DEPTH_SHFT
@@ -35,18 +35,18 @@
 #define RX_FIFO_DEPTH_MASK  HWIO_SE_HW_PARAM_1_RX_FIFO_DEPTH_BMSK
 #define RX_FIFO_DEPTH_SHIFT HWIO_SE_HW_PARAM_1_RX_FIFO_DEPTH_SHFT
 
-
-
-
+//
+// FIFO
+//
 
 #define RX_LAST_VALID_BYTES_MASK  HWIO_GENI_RX_FIFO_STATUS_RX_LAST_BYTE_VALID_BMSK
 #define RX_LAST_VALID_BYTES_SHIFT HWIO_GENI_RX_FIFO_STATUS_RX_LAST_BYTE_VALID_SHFT
 #define RX_FIFO_WC                HWIO_GENI_RX_FIFO_STATUS_RX_FIFO_WC_BMSK
 #define RX_FIFO_WC_SHIFT          HWIO_GENI_RX_FIFO_STATUS_RX_FIFO_WC_SHFT
 
-
-
-
+//
+// IRQ
+//
 
 #define TF_FIFO_WATERMARK_IRQ HWIO_GENI_M_IRQ_STATUS_TX_FIFO_WATERMARK_BMSK
 #define M_CMD_DONE_IRQ        HWIO_GENI_M_IRQ_STATUS_M_CMD_DONE_BMSK
@@ -55,9 +55,9 @@
 #define RX_LAST_IRQ           HWIO_GENI_S_IRQ_STATUS_RX_FIFO_LAST_BMSK
 #define RX_FIFO_WATERMARK_IRQ HWIO_GENI_S_IRQ_STATUS_RX_FIFO_WATERMARK_BMSK
 
-
-
-
+//
+// MODULE: GENI4_CFG
+//
 
 #define GENI4_CFG_REG_BASE      (QUPV3_NORTH_QUPV3_ID_1_BASE + 0x00080000)
 #define GENI4_CFG_REG_BASE_OFFS 0x00080000
@@ -187,9 +187,9 @@
 #define HWIO_GENI_FORCE_DEFAULT_REG_FORCE_DEFAULT_BMSK 0x1
 #define HWIO_GENI_FORCE_DEFAULT_REG_FORCE_DEFAULT_SHFT 0x0
 
-
-
-
+//
+// MODULE: GENI4_DATA
+//
 
 #define GENI4_DATA_REG_BASE      (QUPV3_NORTH_QUPV3_ID_1_BASE + 0x00080600)
 #define GENI4_DATA_REG_BASE_OFFS 0x00080600
@@ -920,7 +920,7 @@
 #define MAX_RX_FIFO_SIZE 128
 #define MAX_RETRIES      0x100000
 
-
+// --------------------------------------------------------------------- Macros
 
 #define UART_DM_READ_REG(addr, offset) \
     UartHardwareAccess.ReadRegister32((ULONG *)((PUCHAR)addr + offset))
@@ -928,11 +928,11 @@
 #define UART_DM_WRITE_REG(addr, offset, val) \
     UartHardwareAccess.WriteRegister32((ULONG *)((PUCHAR)addr + offset), val)
 
+// -------------------------------------------------------------------- Globals
 
-
-
-
-
+//
+// This structure indicates the local stored data read/write from/to FIFO HW.
+//
 
 typedef struct _FIFO_TX_BLOCK
 {
@@ -941,49 +941,49 @@ typedef struct _FIFO_TX_BLOCK
     PUCHAR PtrToFifoBuffer;
 } FIFO_TX_BLOCK, *PFIFO_TX_BLOCK;
 
-
-
-
+//
+// This is the control transfer data block.
+//
 
 static FIFO_TX_BLOCK Transfer;
 
-
+// ----------------------------------------------- Internal Function Prototypes
 
 BOOLEAN
 SDM845SetBaud(
     _Inout_ PCPPORT Port,
     ULONG           Rate);
 
-
+// ------------------------------------------------------------------ Functions
 
 BOOLEAN
 SDM845ReinitializePort(
     _Inout_ PCPPORT Port)
 
+/*++
 
+Routine Description:
 
+    This routine performs the re-initialization of an SDM845 serial UART.
 
+Arguments:
 
+    Port - Supplies a pointer to a CPPORT object which will be filled in as
+        part of the port initialization.
 
+Return Value:
 
+    TRUE if the port has been successfully initialized, FALSE otherwise.
 
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     ULONG ConfigMask;
     ULONG Retries;
 
-
-
-
+    //
+    // Wait for the state machine to clear up.
+    //
 
     Retries = 0;
     while ((UART_DM_READ_REG(Port->Address + GENI4_CFG, HWIO_GENI_STATUS_OFFS) &
@@ -1013,17 +1013,17 @@ SDM845ReinitializePort(
     UART_DM_WRITE_REG(Port->Address + GENI4_DATA, HWIO_GENI_M_IRQ_ENABLE_OFFS, 0xB300005F);
     UART_DM_WRITE_REG(Port->Address + GENI4_DATA, HWIO_GENI_S_IRQ_ENABLE_OFFS, 0xB3007E5F);
 
-
-
-
+    //
+    // Get TX FIFO width.
+    //
 
     ConfigMask = UART_DM_READ_REG(Port->Address + QUPV3_SE_DMA, HWIO_SE_HW_PARAM_0_OFFS);
     ConfigMask = (ConfigMask & TX_FIFO_DEPTH_MASK) >> TX_FIFO_DEPTH_SHIFT;
     UART_DM_WRITE_REG(Port->Address + GENI4_DATA, HWIO_GENI_TX_WATERMARK_REG_OFFS, 4);
 
-
-
-
+    //
+    // Get RX FIFO width.
+    //
 
     ConfigMask = UART_DM_READ_REG(Port->Address + QUPV3_SE_DMA, HWIO_SE_HW_PARAM_1_OFFS);
     ConfigMask = (ConfigMask & RX_FIFO_DEPTH_MASK) >> RX_FIFO_DEPTH_SHIFT;
@@ -1044,7 +1044,6 @@ SDM845ReinitializePort(
     return TRUE;
 }
 
-
 BOOLEAN
 SDM845InitializePort(
     _In_opt_ _Null_terminated_ PCHAR LoadOptions,
@@ -1053,32 +1052,32 @@ SDM845InitializePort(
     UCHAR                            AccessSize,
     UCHAR                            BitWidth)
 
+/*++
 
+Routine Description:
 
+    This routine performs the initialization of an SDM845 serial UART.
 
+Arguments:
 
+    LoadOptions - Optional load option string. Currently unused.
 
+    Port - Supplies a pointer to a CPPORT object which will be filled in as
+        part of the port initialization.
 
+    MemoryMapped - Supplies a boolean which indicates if the UART is accessed
+        through memory-mapped registers or legacy port I/O.
 
+    AccessSize - Supplies an ACPI Generic Access Size value which indicates the
+        type of bus access that should be performed when accessing the UART.
 
+    BitWidth - Supplies a number indicating how wide the UART's registers are.
 
+Return Value:
 
+    TRUE if the port has been successfully initialized, FALSE otherwise.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     UNREFERENCED_PARAMETER(LoadOptions);
@@ -1094,29 +1093,28 @@ SDM845InitializePort(
     return SDM845ReinitializePort(Port);
 }
 
-
 BOOLEAN
 SDM845SetBaud(
     _Inout_ PCPPORT Port,
     ULONG           Rate)
 
+/*++
 
+Routine Description:
 
+    Set the baud rate for the UART hardware and record it in the port object.
 
+Arguments:
 
+    Port - Supplies the address of the port object that describes the UART.
 
+    Rate - Supplies the desired baud rate in bits per second.
 
+Return Value:
 
+    TRUE if the baud rate was programmed, FALSE if it was not.
 
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     UINT32 DivisorLatch  = 0;
@@ -1135,9 +1133,9 @@ SDM845SetBaud(
         return FALSE;
     }
 
-
-
-
+    //
+    // Clock rate is 1843200.
+    //
 
     switch (Rate)
     {
@@ -1185,29 +1183,28 @@ SDM845SetBaud(
     return TRUE;
 }
 
-
 UART_STATUS
 SDM845GetByte(
     _Inout_ PCPPORT Port,
     _Out_ PUCHAR    Byte)
 
+/*++
 
+Routine Description:
 
+    Fetch a data byte from the UART device and return it.
 
+Arguments:
 
+    Port - Supplies the address of the port object that describes the UART.
 
+    Byte - Supplies the address of variable to hold the result.
 
+Return Value:
 
+    UART_STATUS code.
 
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     ULONG  AvailableBytes;
@@ -1228,10 +1225,10 @@ SDM845GetByte(
     BaseAddress = Port->Address;
     ArrayIndex  = 0;
 
-
-
-
-
+    //
+    // Check if there is any available data. If not, then read from the FIFO
+    // and fill the local transfer buffer.
+    //
 
     if (Transfer.AvailableBytes == 0)
     {
@@ -1240,9 +1237,9 @@ SDM845GetByte(
         UART_DM_WRITE_REG(BaseAddress + GENI4_DATA, HWIO_GENI_S_IRQ_CLEAR_OFFS, IrqStatus);
         RxFifoStatus = UART_DM_READ_REG(BaseAddress + GENI4_DATA, HWIO_GENI_RX_FIFO_STATUS_OFFS);
 
-
-
-
+        //
+        // Calculate the number of bytes to read.
+        //
 
         PartialBytesToRead = (RxFifoStatus & RX_LAST_VALID_BYTES_MASK) >> RX_LAST_VALID_BYTES_SHIFT;
         WordsToRead        = RxFifoStatus & RX_FIFO_WC;
@@ -1258,9 +1255,9 @@ SDM845GetByte(
             WordsToRead = UART_DM_READ_REG(BaseAddress + GENI4_DATA, HWIO_GENI_RX_WATERMARK_REG_OFFS);
         }
 
-
-
-
+        //
+        // Don't overrun the local transfer buffer.
+        //
 
         AvailableBytes = (WordsToRead * 4) + PartialBytesToRead;
         if (AvailableBytes > MAX_RX_FIFO_SIZE)
@@ -1302,33 +1299,32 @@ SDM845GetByte(
     return UartNoData;
 }
 
-
 UART_STATUS
 SDM845PutByte(
     _Inout_ PCPPORT Port,
     UCHAR           Byte,
     BOOLEAN         BusyWait)
 
+/*++
 
+Routine Description:
 
+    Write a data byte out to the UART device.
 
+Arguments:
 
+    Port - Supplies the address of the port object that describes the UART.
 
+    Byte - Supplies the data to emit.
 
+    BusyWait - Supplies a flag to control whether this routine will busy
+        wait (spin) for the UART hardware to be ready to transmit.
 
+Return Value:
 
+    UART_STATUS code.
 
-
-
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     PUCHAR Address;
@@ -1340,9 +1336,9 @@ SDM845PutByte(
 
     Address = Port->Address;
 
-
-
-
+    //
+    // Wait for the state machine to clear up.
+    //
 
     if (BusyWait != FALSE)
     {
@@ -1363,26 +1359,25 @@ SDM845PutByte(
     return UartSuccess;
 }
 
-
 BOOLEAN
 SDM845RxReady(
     _Inout_ PCPPORT Port)
 
+/*++
 
+Routine Description:
 
+    This routine determines if there is data pending in the UART.
 
+Arguments:
 
+    Port - Supplies the address of the port object that describes the UART.
 
+Return Value:
 
+    TRUE if data is available, FALSE otherwise.
 
-
-
-
-
-
-
-
-
+--*/
 
 {
     PUCHAR  BaseAddress;
@@ -1397,9 +1392,9 @@ SDM845RxReady(
         return FALSE;
     }
 
-
-
-
+    //
+    // Check if there is any waiting pending data.
+    //
 
     if (Transfer.AvailableBytes != 0)
     {
@@ -1407,16 +1402,16 @@ SDM845RxReady(
         goto SDM845ReceiveDataAvailableEnd;
     }
 
-
-
-
+    //
+    // Read the FIFO status register
+    //
 
     BaseAddress = Port->Address;
     FifoStatReg = UART_DM_READ_REG(BaseAddress + GENI4_DATA, HWIO_GENI_RX_FIFO_STATUS_OFFS);
 
-
-
-
+    //
+    // Calculate the number of bytes to read
+    //
 
     PartialBytesToRead = (FifoStatReg & RX_LAST_VALID_BYTES_MASK) >> RX_LAST_VALID_BYTES_SHIFT;
     WordsToRead        = FifoStatReg & RX_FIFO_WC;
@@ -1441,8 +1436,7 @@ SDM845ReceiveDataAvailableEnd:
     return IsAvailableBytes;
 }
 
-
-
+// -------------------------------------------------------------------- Globals
 
 UART_HARDWARE_DRIVER SDM845HardwareDriver = {
     SDM845InitializePort,

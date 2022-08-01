@@ -1659,6 +1659,14 @@ EnumMnemonic interface{
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewEnumMnemonic() { return & enumMnemonic{} }
@@ -1668,6 +1676,14 @@ func (e *enumMnemonic)    ZYDIS_MNEMONIC_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT(
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

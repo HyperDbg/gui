@@ -49,6 +49,12 @@ CommandDtAndStruct()(ok bool)//col:707
 
 
 
+
+
+
+
+
+
 )
 
 func NewDtStruct() { return & dtStruct{} }
@@ -123,6 +129,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dtStruct)CommandStructHelp()(ok bool){//col:79
 
 
@@ -140,6 +152,12 @@ func (d *dtStruct)CommandStructHelp()(ok bool){//col:79
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -378,6 +396,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dtStruct)CommandDtShowDataBasedOnSymbolTypes()(ok bool){//col:418
 
 
@@ -436,6 +460,12 @@ func (d *dtStruct)CommandDtShowDataBasedOnSymbolTypes()(ok bool){//col:418
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -642,6 +672,12 @@ func (d *dtStruct)CommandDtAndStruct()(ok bool){//col:707
 
 return true
 }
+
+
+
+
+
+
 
 
 

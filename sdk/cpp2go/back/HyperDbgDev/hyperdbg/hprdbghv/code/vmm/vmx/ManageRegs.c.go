@@ -96,6 +96,12 @@ GetGuestDr7()(ok bool)//col:784
 
 
 
+
+
+
+
+
+
 )
 
 func NewManageRegs() { return & manageRegs{} }
@@ -147,6 +153,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestCs()(ok bool){//col:42
 
 
@@ -157,6 +169,12 @@ func (m *manageRegs)SetGuestCs()(ok bool){//col:42
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -249,6 +267,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestSsSel()(ok bool){//col:74
 
 
@@ -256,6 +280,12 @@ func (m *manageRegs)SetGuestSsSel()(ok bool){//col:74
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -306,6 +336,12 @@ func (m *manageRegs)SetGuestSs()(ok bool){//col:90
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -398,6 +434,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestDsSel()(ok bool){//col:122
 
 
@@ -405,6 +447,12 @@ func (m *manageRegs)SetGuestDsSel()(ok bool){//col:122
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -455,6 +503,12 @@ func (m *manageRegs)SetGuestDs()(ok bool){//col:138
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -547,6 +601,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestFsSel()(ok bool){//col:170
 
 
@@ -554,6 +614,12 @@ func (m *manageRegs)SetGuestFsSel()(ok bool){//col:170
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -604,6 +670,12 @@ func (m *manageRegs)SetGuestFs()(ok bool){//col:186
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -696,6 +768,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestGsSel()(ok bool){//col:218
 
 
@@ -703,6 +781,12 @@ func (m *manageRegs)SetGuestGsSel()(ok bool){//col:218
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -753,6 +837,12 @@ func (m *manageRegs)SetGuestGs()(ok bool){//col:234
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -845,6 +935,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestEsSel()(ok bool){//col:266
 
 
@@ -852,6 +948,12 @@ func (m *manageRegs)SetGuestEsSel()(ok bool){//col:266
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -902,6 +1004,12 @@ func (m *manageRegs)SetGuestEs()(ok bool){//col:282
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -994,6 +1102,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestIdtr()(ok bool){//col:314
 
 
@@ -1001,6 +1115,12 @@ func (m *manageRegs)SetGuestIdtr()(ok bool){//col:314
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1090,6 +1210,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestLdtr()(ok bool){//col:343
 
 
@@ -1097,6 +1223,12 @@ func (m *manageRegs)SetGuestLdtr()(ok bool){//col:343
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1186,6 +1318,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestGdtr()(ok bool){//col:372
 
 
@@ -1193,6 +1331,12 @@ func (m *manageRegs)SetGuestGdtr()(ok bool){//col:372
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1282,6 +1426,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestTr()(ok bool){//col:399
 
 
@@ -1289,6 +1439,12 @@ func (m *manageRegs)SetGuestTr()(ok bool){//col:399
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1378,6 +1534,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestRFlags()(ok bool){//col:427
 
 
@@ -1385,6 +1547,12 @@ func (m *manageRegs)SetGuestRFlags()(ok bool){//col:427
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1474,6 +1642,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestRIP()(ok bool){//col:454
 
 
@@ -1521,6 +1695,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestRSP()(ok bool){//col:467
 
 
@@ -1528,6 +1708,12 @@ func (m *manageRegs)SetGuestRSP()(ok bool){//col:467
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1617,6 +1803,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)GetGuestCr0()(ok bool){//col:497
 
 
@@ -1626,6 +1818,12 @@ func (m *manageRegs)GetGuestCr0()(ok bool){//col:497
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1715,6 +1913,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)GetGuestCr3()(ok bool){//col:527
 
 
@@ -1724,6 +1928,12 @@ func (m *manageRegs)GetGuestCr3()(ok bool){//col:527
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1813,6 +2023,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)GetGuestCr8()(ok bool){//col:557
 
 
@@ -1822,6 +2038,12 @@ func (m *manageRegs)GetGuestCr8()(ok bool){//col:557
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1909,6 +2131,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestCr2()(ok bool){//col:583
 
 
@@ -1916,6 +2144,12 @@ func (m *manageRegs)SetGuestCr2()(ok bool){//col:583
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2003,6 +2237,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestCr4()(ok bool){//col:609
 
 
@@ -2010,6 +2250,12 @@ func (m *manageRegs)SetGuestCr4()(ok bool){//col:609
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2097,6 +2343,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestDr0()(ok bool){//col:635
 
 
@@ -2104,6 +2356,12 @@ func (m *manageRegs)SetGuestDr0()(ok bool){//col:635
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2191,6 +2449,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestDr2()(ok bool){//col:661
 
 
@@ -2198,6 +2462,12 @@ func (m *manageRegs)SetGuestDr2()(ok bool){//col:661
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2285,6 +2555,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestDr6()(ok bool){//col:687
 
 
@@ -2332,6 +2608,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)SetGuestDr7()(ok bool){//col:700
 
 
@@ -2339,6 +2621,12 @@ func (m *manageRegs)SetGuestDr7()(ok bool){//col:700
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2428,6 +2716,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)GetGuestDr1()(ok bool){//col:728
 
 
@@ -2437,6 +2731,12 @@ func (m *manageRegs)GetGuestDr1()(ok bool){//col:728
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2526,6 +2826,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)GetGuestDr3()(ok bool){//col:756
 
 
@@ -2535,6 +2841,12 @@ func (m *manageRegs)GetGuestDr3()(ok bool){//col:756
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2624,6 +2936,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (m *manageRegs)GetGuestDr7()(ok bool){//col:784
 
 
@@ -2633,6 +2951,12 @@ func (m *manageRegs)GetGuestDr7()(ok bool){//col:784
 
 return true
 }
+
+
+
+
+
+
 
 
 

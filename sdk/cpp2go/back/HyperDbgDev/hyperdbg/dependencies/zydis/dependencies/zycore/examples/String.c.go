@@ -50,6 +50,14 @@ int main()(ok bool)//col:194
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewString() { return & string{} }
@@ -63,6 +71,14 @@ func (s *string)static ZyanStatus PerformBasicTests()(ok bool){//col:71
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -155,6 +171,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *string)static ZyanStatus TestStatic()(ok bool){//col:95
 
 
@@ -163,6 +187,14 @@ func (s *string)static ZyanStatus TestStatic()(ok bool){//col:95
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -254,6 +286,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (s *string)int main()(ok bool){//col:194
 
 
@@ -273,6 +313,14 @@ func (s *string)int main()(ok bool){//col:194
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

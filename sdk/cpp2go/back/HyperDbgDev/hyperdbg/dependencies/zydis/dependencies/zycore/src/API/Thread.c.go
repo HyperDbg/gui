@@ -57,6 +57,14 @@ ZyanStatus ZyanThreadTlsSetValue()(ok bool)//col:197
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewThread() { return & thread{} }
@@ -113,6 +121,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (t *thread)ZYAN_STATIC_ASSERT()(ok bool){//col:70
 
 
@@ -123,6 +139,14 @@ func (t *thread)ZYAN_STATIC_ASSERT()(ok bool){//col:70
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -229,6 +253,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (t *thread)ZyanStatus ZyanThreadTlsFree()(ok bool){//col:102
 
 
@@ -236,6 +268,14 @@ func (t *thread)ZyanStatus ZyanThreadTlsFree()(ok bool){//col:102
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -286,6 +326,14 @@ func (t *thread)ZyanStatus ZyanThreadTlsGetValue()(ok bool){//col:110
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -386,6 +434,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (t *thread)#elif defined()(ok bool){//col:142
 
 
@@ -437,6 +493,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (t *thread)ZyanStatus ZyanThreadGetCurrentThreadId()(ok bool){//col:150
 
 
@@ -445,6 +509,14 @@ func (t *thread)ZyanStatus ZyanThreadGetCurrentThreadId()(ok bool){//col:150
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -542,6 +614,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (t *thread)ZyanStatus ZyanThreadTlsFree()(ok bool){//col:173
 
 
@@ -549,6 +629,14 @@ func (t *thread)ZyanStatus ZyanThreadTlsFree()(ok bool){//col:173
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -641,6 +729,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (t *thread)ZyanStatus ZyanThreadTlsSetValue()(ok bool){//col:197
 
 
@@ -657,6 +753,14 @@ func (t *thread)ZyanStatus ZyanThreadTlsSetValue()(ok bool){//col:197
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

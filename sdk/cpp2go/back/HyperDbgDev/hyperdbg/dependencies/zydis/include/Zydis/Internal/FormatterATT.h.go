@@ -50,6 +50,14 @@ ZyanStatus ZydisFormatterATTFormatInstruction()(ok bool)//col:168
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewFormatterAtt() { return & formatterAtt{} }
@@ -87,6 +95,14 @@ func (f *formatterAtt)ZyanStatus ZydisFormatterATTFormatInstruction()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

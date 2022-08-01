@@ -49,6 +49,12 @@ TransparentModeCheckRdtscpVmexit()(ok bool)//col:248
 
 
 
+
+
+
+
+
+
 )
 
 func NewTransparency() { return & transparency{} }
@@ -106,6 +112,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (t *transparency)TransparentModeRdtscVmexitTracing()(ok bool){//col:100
 
 
@@ -117,6 +129,12 @@ func (t *transparency)TransparentModeRdtscVmexitTracing()(ok bool){//col:100
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -220,6 +238,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (t *transparency)TransparentModeRdtscEmulationDetection()(ok bool){//col:186
 
 
@@ -243,6 +267,12 @@ func (t *transparency)TransparentModeRdtscEmulationDetection()(ok bool){//col:18
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -341,6 +371,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (t *transparency)TransparentModeCheckRdtscpVmexit()(ok bool){//col:248
 
 
@@ -359,6 +395,12 @@ func (t *transparency)TransparentModeCheckRdtscpVmexit()(ok bool){//col:248
 
 return true
 }
+
+
+
+
+
+
 
 
 

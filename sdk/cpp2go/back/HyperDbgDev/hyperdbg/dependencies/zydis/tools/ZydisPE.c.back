@@ -1,33 +1,33 @@
+/***************************************************************************************************
 
+  Zyan Disassembler Library (Zydis)
 
+  Original Author : Florian Bernd
 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
 
+***************************************************************************************************/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file
+ * Disassembles a given PE file.
+ */
 
 #include <errno.h>
 #include <inttypes.h>
@@ -38,60 +38,60 @@
 #include <Zycore/Vector.h>
 #include <Zydis/Zydis.h>
 
+// TODO: Add buffer overread checks
+// TODO: Use platform specific file mapping routines instead of `fopen`/`malloc`
 
-
-
-
-
-
+/* ============================================================================================== */
+/* String constants                                                                               */
+/* ============================================================================================== */
 
 static const ZyanStringView STR_DOT = ZYAN_DEFINE_STRING_VIEW(".");
 static const ZyanStringView STR_ENTRY_POINT = ZYAN_DEFINE_STRING_VIEW("EntryPoint");
 
+/* ============================================================================================== */
+/* Status codes                                                                                   */
+/* ============================================================================================== */
 
+/* ---------------------------------------------------------------------------------------------- */
+/* Module IDs                                                                                     */
+/* ---------------------------------------------------------------------------------------------- */
 
-
-
-
-
-
-
-
-
-
+/**
+ * The zydis PE tool module id.
+ */
 #define ZYAN_MODULE_ZYDIS_PE    0x101
 
+/* ---------------------------------------------------------------------------------------------- */
+/* Status codes                                                                                   */
+/* ---------------------------------------------------------------------------------------------- */
 
-
-
-
-
-
-
+/**
+ * The signature of the PE-files DOS header field is invalid.
+ */
 #define ZYDIS_STATUS_INVALID_DOS_SIGNATURE \
     ZYAN_MAKE_STATUS(1, ZYAN_MODULE_ZYDIS_PE, 0x00)
 
-
-
-
+/**
+ * The signature of the PE-files NT headers field is invalid.
+ */
 #define ZYDIS_STATUS_INVALID_NT_SIGNATURE \
     ZYAN_MAKE_STATUS(1, ZYAN_MODULE_ZYDIS_PE, 0x01)
 
-
-
-
+/**
+ * The architecture of the assembly code contained in the PE-file is not supported.
+ */
 #define ZYDIS_STATUS_UNSUPPORTED_ARCHITECTURE \
     ZYAN_MAKE_STATUS(1, ZYAN_MODULE_ZYDIS_PE, 0x02)
 
+/* ---------------------------------------------------------------------------------------------- */
 
+/* ============================================================================================== */
+/* PE stuff from `Windows.h`                                                                      */
+/* ============================================================================================== */
 
-
-
-
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Constants                                                                                      */
+/* ---------------------------------------------------------------------------------------------- */
 
 #define IMAGE_DOS_SIGNATURE                             0x5A4D  // MZ
 #define IMAGE_NT_SIGNATURE                          0x00004550  // PE00
@@ -111,9 +111,9 @@ static const ZyanStringView STR_ENTRY_POINT = ZYAN_DEFINE_STRING_VIEW("EntryPoin
 #define IMAGE_IMPORT_BY_ORDINAL32                   0x80000000
 #define IMAGE_IMPORT_BY_ORDINAL64           0x8000000000000000
 
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Enums and types                                                                                */
+/* ---------------------------------------------------------------------------------------------- */
 
 typedef struct IMAGE_DOS_HEADER_
 {
@@ -317,85 +317,85 @@ typedef struct IMAGE_IMPORT_BY_NAME_
     char    Name[1];
 } IMAGE_IMPORT_BY_NAME;
 
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Macros                                                                                         */
+/* ---------------------------------------------------------------------------------------------- */
 
 #define IMAGE_FIRST_SECTION(nt_headers) \
     ((IMAGE_SECTION_HEADER*)((ZyanUPointer)(nt_headers) \
         + offsetof(IMAGE_NT_HEADERS32, OptionalHeader) \
         + ((nt_headers))->FileHeader.SizeOfOptionalHeader))
 
+/* ---------------------------------------------------------------------------------------------- */
 
+/* ============================================================================================== */
+/* PE Context                                                                                     */
+/* ============================================================================================== */
 
+/* ---------------------------------------------------------------------------------------------- */
+/* Enums and types                                                                                */
+/* ---------------------------------------------------------------------------------------------- */
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * Defines the `ZydisPESymbol` struct.
+ */
 typedef struct ZydisPESymbol_
 {
-
-
-
+    /**
+     * The virtual address of the symbol.
+     */
     ZyanU64 address;
-
-
-
+    /**
+     * The module string.
+     */
     ZyanString module_name;
-
-
-
+    /**
+     * The symbol string.
+     */
     ZyanString symbol_name;
 } ZydisPESymbol;
 
-
-
-
+/**
+ * Defines the `ZydisPEContext` struct.
+ */
 typedef struct ZydisPEContext_
 {
-
-
-
+    /**
+     * The memory that contains the mapped PE-file.
+     */
     const void* base;
-
-
-
+    /**
+     * The size of the memory mapped PE-file.
+     */
     ZyanUSize size;
-
-
-
+    /**
+     * A vector that contains the addresses and names of all symbols.
+     */
     ZyanVector symbols;
-
-
-
+    /**
+     * The desired image-base of the PE-file.
+     */
     ZyanU64 image_base;
-
-
-
+    /**
+     * A vector that contains all string instances that need to be destroyed.
+     */
     ZyanVector unique_strings;
 } ZydisPEContext;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Functions                                                                                      */
+/* ---------------------------------------------------------------------------------------------- */
+/**
+ * A comparison function for the `ZydisPESymbol` that uses the `address` field as key value.
+ *
+ * @param   left    A pointer to the first element.
+ * @param   right   A pointer to the second element.
+ *
+ * @return  Returns values in the following range:
+ *          `left == right -> result == 0`
+ *          `left <  right -> result  < 0`
+ *          `left >  right -> result  > 0`
+ */
 static ZyanI32 CompareSymbol(const ZydisPESymbol* left, const ZydisPESymbol* right)
 {
     ZYAN_ASSERT(left);
@@ -412,17 +412,16 @@ static ZyanI32 CompareSymbol(const ZydisPESymbol* left, const ZydisPESymbol* rig
     return 0;
 }
 
+/* ---------------------------------------------------------------------------------------------- */
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * Returns a pointer to the section header of the section that contains the given `rva`.
+ *
+ * @param   base    A pointer to the memory that contains the mapped PE-file.
+ * @param   rva     The relative virtual address.
+ *
+ * @return  A pointer to a `IMAGE_SECTION_HEADER` struct, or `ZYAN_NULL`.
+ */
 static const IMAGE_SECTION_HEADER* GetSectionByRVA(const void* base, ZyanU64 rva)
 {
     ZYAN_ASSERT(base);
@@ -452,15 +451,14 @@ static const IMAGE_SECTION_HEADER* GetSectionByRVA(const void* base, ZyanU64 rva
     return ZYAN_NULL;
 }
 
-
-
-
-
-
-
-
-
-
+/**
+ * Converts a relative virtual address to file offset.
+ *
+ * @param   base    A pointer to the memory mapped PE-file.
+ * @param   rva     The relative virtual-address.
+ *
+ * @return  The address in file mapping corresponding to `rva` or `ZYAN_NULL`.
+ */
 const void* RVAToFileOffset(const void* base, ZyanU64 rva)
 {
     ZYAN_ASSERT(base);
@@ -475,16 +473,15 @@ const void* RVAToFileOffset(const void* base, ZyanU64 rva)
     return (void*)((ZyanU8*)base + section->PointerToRawData + (rva - section->VirtualAddress));
 }
 
+/* ---------------------------------------------------------------------------------------------- */
 
-
-
-
-
-
-
-
-
-
+/**
+ * Finalizes the given `ZydisPEContext` struct.
+ *
+ * @param   context A pointer to the `ZydisPEContext` struct.
+ *
+ * @return  A zycore status code.
+ */
 static ZyanStatus ZydisPEContextFinalize(ZydisPEContext* context)
 {
     ZyanUSize size;
@@ -501,16 +498,15 @@ static ZyanStatus ZydisPEContextFinalize(ZydisPEContext* context)
     return ZyanVectorDestroy(&context->unique_strings);
 }
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * Initializes the given `ZydisPEContext` struct.
+ *
+ * @param   context A pointer to the `ZydisPEContext` struct.
+ * @param   base    A pointer to the memory that contains the mapped PE-file.
+ * @param   size    The size of the memory mapped PE-file.
+ *
+ * @return  A zycore status code.
+ */
 static ZyanStatus ZydisPEContextInit(ZydisPEContext* context, const void* base, ZyanUSize size)
 {
     ZYAN_ASSERT(context);
@@ -534,7 +530,7 @@ static ZyanStatus ZydisPEContextInit(ZydisPEContext* context, const void* base, 
         (const IMAGE_NT_HEADERS32*)((ZyanU8*)dos_header + dos_header->e_lfanew);
     ZYAN_ASSERT(nt_headers_temp->Signature == IMAGE_NT_SIGNATURE);
 
-
+    // Parse symbols
 
     switch (nt_headers_temp->OptionalHeader.Magic)
     {
@@ -544,7 +540,7 @@ static ZyanStatus ZydisPEContextInit(ZydisPEContext* context, const void* base, 
             (const IMAGE_NT_HEADERS32*)((ZyanU8*)dos_header + dos_header->e_lfanew);
         context->image_base = nt_headers->OptionalHeader.ImageBase;
 
-
+        // Entry point
         ZydisPESymbol element;
         const ZyanUPointer entry_point = nt_headers->OptionalHeader.AddressOfEntryPoint;
         element.address = entry_point;
@@ -556,7 +552,7 @@ static ZyanStatus ZydisPEContextInit(ZydisPEContext* context, const void* base, 
             goto FatalError;
         }
 
-
+        // Exports
         if (nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress)
         {
             const IMAGE_EXPORT_DIRECTORY* export_directory =
@@ -572,7 +568,7 @@ static ZyanStatus ZydisPEContextInit(ZydisPEContext* context, const void* base, 
             {
                 goto FatalError;
             }
-
+            // Remove file-extension
             ZyanISize index;
             if (!ZYAN_SUCCESS(status = ZyanStringRPos(&module_name, &STR_DOT, &index)))
             {
@@ -624,7 +620,7 @@ static ZyanStatus ZydisPEContextInit(ZydisPEContext* context, const void* base, 
             }
         }
 
-
+        // Imports
         if (nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress)
         {
             const IMAGE_IMPORT_DESCRIPTOR* descriptor =
@@ -641,7 +637,7 @@ static ZyanStatus ZydisPEContextInit(ZydisPEContext* context, const void* base, 
                 {
                     goto FatalError;
                 }
-
+                // Remove file-extension
                 ZyanISize index;
                 if (!ZYAN_SUCCESS(status = ZyanStringRPos(&module_name, &STR_DOT, &index)))
                 {
@@ -717,7 +713,7 @@ static ZyanStatus ZydisPEContextInit(ZydisPEContext* context, const void* base, 
             (const IMAGE_NT_HEADERS64*)((ZyanU8*)dos_header + dos_header->e_lfanew);
         context->image_base = nt_headers->OptionalHeader.ImageBase;
 
-
+        // Entry point.
         ZydisPESymbol element;
         const ZyanUPointer entry_point = nt_headers->OptionalHeader.AddressOfEntryPoint;
         element.address = entry_point;
@@ -729,7 +725,7 @@ static ZyanStatus ZydisPEContextInit(ZydisPEContext* context, const void* base, 
             goto FatalError;
         }
 
-
+        // Exports
         if (nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress)
         {
             const IMAGE_EXPORT_DIRECTORY* export_directory =
@@ -746,15 +742,15 @@ static ZyanStatus ZydisPEContextInit(ZydisPEContext* context, const void* base, 
             {
                 goto FatalError;
             }
-
-
-
-
-
-
-
-
-
+            // TODO: Implement
+            /*for (ZyanUSize i = element.module_name.length - 1; i >= 0; --i)
+            {
+                if (element.module_name.buffer[i] == '.')
+                {
+                    element.module_name.length = i;
+                    break;
+                }
+            }*/
 
             const ZyanU32* export_addresses =
                 (const ZyanU32*)RVAToFileOffset(base,
@@ -787,7 +783,7 @@ static ZyanStatus ZydisPEContextInit(ZydisPEContext* context, const void* base, 
             }
         }
 
-
+        // Imports
         if (nt_headers->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress)
         {
             const IMAGE_IMPORT_DESCRIPTOR* descriptor =
@@ -805,15 +801,15 @@ static ZyanStatus ZydisPEContextInit(ZydisPEContext* context, const void* base, 
                 {
                     goto FatalError;
                 }
-
-
-
-
-
-
-
-
-
+                // TODO: Implement
+                /*for (ZyanUSize i = element.module_name.length - 1; i >= 0; --i)
+                {
+                    if (element.module_name.buffer[i] == '.')
+                    {
+                        element.module_name.length = i;
+                        break;
+                    }
+                }*/
 
                 const IMAGE_THUNK_DATA64* original_thunk =
                     (const IMAGE_THUNK_DATA64*)RVAToFileOffset(base,
@@ -874,16 +870,15 @@ FatalError:
     return status;
 }
 
+/* ---------------------------------------------------------------------------------------------- */
 
+/* ============================================================================================== */
+/* Disassembler                                                                                   */
+/* ============================================================================================== */
 
-
-
-
-
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Callbacks                                                                                      */
+/* ---------------------------------------------------------------------------------------------- */
 
 ZydisFormatterFunc default_print_address_abs;
 ZydisFormatterFunc default_print_address_rel;
@@ -920,11 +915,10 @@ static ZyanStatus ZydisFormatterPrintAddress(const ZydisFormatter* formatter,
         return ZyanStringAppend(string, ZYAN_STRING_TO_VIEW(&element->symbol_name));
     }
 
-
+    // Default address printing
     ZydisFormatterFunc fn = is_abs ? default_print_address_abs : default_print_address_rel;
     return fn(formatter, buffer, context);
 }
-
 
 static ZyanStatus ZydisFormatterPrintAddressABS(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
@@ -936,7 +930,6 @@ static ZyanStatus ZydisFormatterPrintAddressABS(const ZydisFormatter* formatter,
     return ZydisFormatterPrintAddress(formatter, buffer, context, address, ZYAN_TRUE);
 }
 
-
 static ZyanStatus ZydisFormatterPrintAddressREL(const ZydisFormatter* formatter,
     ZydisFormatterBuffer* buffer, ZydisFormatterContext* context)
 {
@@ -946,17 +939,16 @@ static ZyanStatus ZydisFormatterPrintAddressREL(const ZydisFormatter* formatter,
     return ZydisFormatterPrintAddress(formatter, buffer, context, address, ZYAN_FALSE);
 }
 
+/* ---------------------------------------------------------------------------------------------- */
+/* Disassembler                                                                                   */
+/* ---------------------------------------------------------------------------------------------- */
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * Disassembles a mapped PE-file and prints the output to `stdout`.
+ * Automatically resolves exports and imports.
+ *
+ * base    A pointer to the `ZydisPEContext` struct.
+ */
 static ZyanStatus DisassembleMappedPEFile(const ZydisPEContext* context)
 {
     ZYAN_ASSERT(context);
@@ -969,7 +961,7 @@ static ZyanStatus DisassembleMappedPEFile(const ZydisPEContext* context)
 
     ZyanStatus status;
 
-
+    // Initialize decoder
     ZydisMachineMode machine_mode;
     ZydisAddressWidth address_width;
     switch (nt_headers->FileHeader.Machine)
@@ -993,7 +985,7 @@ static ZyanStatus DisassembleMappedPEFile(const ZydisPEContext* context)
         return status;
     }
 
-
+    // Initialize formatter
     default_print_address_abs = (ZydisFormatterFunc)&ZydisFormatterPrintAddressABS;
     default_print_address_rel = (ZydisFormatterFunc)&ZydisFormatterPrintAddressREL;
     ZydisFormatter formatter;
@@ -1011,7 +1003,7 @@ static ZyanStatus DisassembleMappedPEFile(const ZydisPEContext* context)
         return status;
     }
 
-
+    // Disassemble all code sections
     ZydisDecodedInstruction instruction;
     const IMAGE_SECTION_HEADER* section_header = IMAGE_FIRST_SECTION(nt_headers);
     for (ZyanU16 i = 0; i < nt_headers->FileHeader.NumberOfSections; ++i)
@@ -1093,12 +1085,11 @@ static ZyanStatus DisassembleMappedPEFile(const ZydisPEContext* context)
     return ZYAN_STATUS_SUCCESS;
 }
 
+/* ---------------------------------------------------------------------------------------------- */
 
-
-
-
-
-
+/* ============================================================================================== */
+/* Entry point                                                                                    */
+/* ============================================================================================== */
 
 int main(int argc, char** argv)
 {
@@ -1109,7 +1100,7 @@ int main(int argc, char** argv)
         return ZYAN_STATUS_INVALID_ARGUMENT;
     }
 
-
+    // Map PE-file to memory
     FILE* file = fopen(argv[1], "rb");
     if (!file)
     {
@@ -1137,7 +1128,7 @@ int main(int argc, char** argv)
         return ZYAN_STATUS_BAD_SYSTEMCALL;
     }
 
-
+    // Validate PE file
     const IMAGE_DOS_HEADER* dos_header = (const IMAGE_DOS_HEADER*)buffer;
     if (dos_header->e_magic != IMAGE_DOS_SIGNATURE)
     {
@@ -1194,6 +1185,5 @@ Exit:
     return status;
 }
 
-
-
+/* ============================================================================================== */
 

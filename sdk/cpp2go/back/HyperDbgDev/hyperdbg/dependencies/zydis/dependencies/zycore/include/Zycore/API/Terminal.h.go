@@ -93,6 +93,14 @@ ZYCORE_EXPORT ZyanStatus ZyanTerminalEnableVT100()(ok bool)//col:160
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewTerminal() { return & terminal{} }
@@ -104,6 +112,14 @@ func (t *terminal)ZYCORE_EXPORT ZyanStatus ZyanTerminalEnableVT100()(ok bool){//
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

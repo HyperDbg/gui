@@ -1,26 +1,26 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file process.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief show and change process
+ * @details
+ * @version 0.1
+ * @date 2021-02-02
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 
-
-
-
-
-
+/**
+ * @brief help of .process command
+ *
+ * @return VOID
+ */
 VOID
 CommandProcessHelp()
 {
@@ -45,14 +45,13 @@ CommandProcessHelp()
     ShowMessages("\t\te.g : .process process ffff948c`c2349280\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief .process command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandProcess(vector<string> SplittedCommand, string Command)
 {
@@ -75,21 +74,21 @@ CommandProcess(vector<string> SplittedCommand, string Command)
 
     if (SplittedCommand.size() == 1)
     {
-
-
-
+        //
+        // Check if it's connected to a remote debuggee or not
+        //
         if (!g_IsSerialConnectedToRemoteDebuggee)
         {
-
-
-
+            //
+            // Get the process details in VMI mode
+            //
             ObjectShowProcessesOrThreadDetails(TRUE);
         }
         else
         {
-
-
-
+            //
+            // Send the packet to get current process
+            //
             KdSendSwitchProcessPacketToDebuggee(DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_GET_PROCESS_DETAILS,
                                                 NULL,
                                                 NULL,
@@ -101,27 +100,27 @@ CommandProcess(vector<string> SplittedCommand, string Command)
     {
         if (!SplittedCommand.at(1).compare("list"))
         {
-
-
-
-
-
-
+            //
+            // Query for nt!_EPROCESS.ImageFileName, nt!_EPROCESS.UniqueProcessId,
+            // nt!_EPROCESS.UniqueProcessId offset from the top of nt!_EPROCESS,
+            // and nt!PsActiveProcessHead address and check if we find them or not,
+            // otherwise, it means that the PDB for ntoskrnl.exe is not available
+            //
             if (ScriptEngineGetFieldOffsetWrapper((CHAR *)"nt!_EPROCESS", (CHAR *)"ActiveProcessLinks", &OffsetOfActiveProcessLinks) &&
                 ScriptEngineGetFieldOffsetWrapper((CHAR *)"nt!_EPROCESS", (CHAR *)"ImageFileName", &OffsetOfImageFileName) &&
                 ScriptEngineGetFieldOffsetWrapper((CHAR *)"nt!_EPROCESS", (CHAR *)"UniqueProcessId", &OffsetOfUniqueProcessId) &&
                 SymbolConvertNameOrExprToAddress("nt!PsActiveProcessHead", &AddressOfActiveProcessHead))
             {
+                //
+                // For test offsets and addresses
+                //
 
-
-
-
-
-
-
-
-
-
+                /*
+                ShowMessages("Address of ActiveProcessHead : %llx\n", AddressOfActiveProcessHead);
+                ShowMessages("Offset Of ActiveProcessLinks : 0x%x\n", OffsetOfActiveProcessLinks);
+                ShowMessages("Offset Of ImageFileName : 0x%x\n", OffsetOfImageFileName);
+                ShowMessages("Offset Of UniqueProcessId : 0x%x\n", OffsetOfUniqueProcessId);
+                */
 
                 ProcessListNeededItems.PsActiveProcessHead      = AddressOfActiveProcessHead;
                 ProcessListNeededItems.ActiveProcessLinksOffset = OffsetOfActiveProcessLinks;
@@ -130,9 +129,9 @@ CommandProcess(vector<string> SplittedCommand, string Command)
 
                 if (!g_IsSerialConnectedToRemoteDebuggee)
                 {
-
-
-
+                    //
+                    // Get list of processes in VMI mode
+                    //
                     ObjectShowProcessesOrThreadList(TRUE,
                                                     &ProcessListNeededItems,
                                                     NULL,
@@ -140,9 +139,9 @@ CommandProcess(vector<string> SplittedCommand, string Command)
                 }
                 else
                 {
-
-
-
+                    //
+                    // Send the packet to show list of process
+                    //
                     KdSendSwitchProcessPacketToDebuggee(DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_GET_PROCESS_LIST,
                                                         NULL,
                                                         NULL,
@@ -169,9 +168,9 @@ CommandProcess(vector<string> SplittedCommand, string Command)
     }
     else if (SplittedCommand.size() == 3)
     {
-
-
-
+        //
+        // Check if it's connected to a remote debuggee or not
+        //
         if (!g_IsSerialConnectedToRemoteDebuggee)
         {
             ShowMessages("err, you're not connected to any debuggee in Debugger Mode, "
@@ -211,9 +210,9 @@ CommandProcess(vector<string> SplittedCommand, string Command)
             return;
         }
 
-
-
-
+        //
+        // Check for switching method
+        //
         if (!SplittedCommand.at(0).compare(".process2"))
         {
             IsSetByClkIntr = FALSE;
@@ -223,9 +222,9 @@ CommandProcess(vector<string> SplittedCommand, string Command)
             IsSetByClkIntr = TRUE;
         }
 
-
-
-
+        //
+        // Send the packet to change process
+        //
         KdSendSwitchProcessPacketToDebuggee(DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_PERFORM_SWITCH,
                                             TargetProcessId,
                                             TargetProcess,
@@ -239,5 +238,4 @@ CommandProcess(vector<string> SplittedCommand, string Command)
         return;
     }
 }
-
 

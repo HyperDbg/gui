@@ -1,9 +1,9 @@
 #pragma once
 
-
-
-
-
+//
+// Header file of script-engine
+// Imports
+//
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -13,9 +13,9 @@ __declspec(dllimport) void PrintSymbolBuffer(const PSYMBOL_BUFFER SymbolBuffer);
 __declspec(dllimport) void PrintSymbol(PSYMBOL Symbol);
 __declspec(dllimport) void RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer);
 
-
-
-
+//
+// pdb parser
+//
 __declspec(dllimport) VOID
     ScriptEngineSetTextMessageCallback(PVOID Handler);
 __declspec(dllimport) VOID
@@ -47,6 +47,5 @@ __declspec(dllimport) BOOLEAN
 
 #ifdef __cplusplus
 }
-
 #endif
 

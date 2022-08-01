@@ -1,38 +1,38 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file common.h
+ * @author M.H. Gholamrezaei (mh@hyperdbg.org)
+ * 
+ * @details Common routines header
+ * @version 0.1
+ * @date 2020-10-22
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
 #ifndef COMMON_H
 #    define COMMON_H
 
-
-
-
-
+/**
+* 
+initial size of symbol buffer
+*/
 #    define SYMBOL_BUFFER_INIT_SIZE 64
 
-
-
-
+/**
+* @brief maximum length of string in the token
+*/
 #    define TOKEN_VALUE_MAX_LEN 8
 
-
-
-
+/**
+* @brief init size of token list
+*/
 #    define TOKEN_LIST_INIT_SIZE 256
 
-
-
-
+/**
+* @brief enumerates possible types for token
+*/
 typedef enum TOKEN_TYPE
 {
     LOCAL_ID,
@@ -59,9 +59,9 @@ typedef enum TOKEN_TYPE
     UNKNOWN
 } TOKEN_TYPE;
 
-
-
-
+/**
+* @brief read tokens from input stored in this structure
+*/
 typedef struct _TOKEN
 {
     TOKEN_TYPE   Type;
@@ -70,9 +70,9 @@ typedef struct _TOKEN
     unsigned int MaxLen;
 } TOKEN, *PTOKEN;
 
-
-
-
+/**
+* @brief this structure is a dynamic containter of TOKENS
+*/
 typedef struct _TOKEN_LIST
 {
     PTOKEN *     Head;
@@ -80,9 +80,9 @@ typedef struct _TOKEN_LIST
     unsigned int Size;
 } TOKEN_LIST, *PTOKEN_LIST;
 
-
-
-
+////////////////////////////////////////////////////
+// PTOKEN related functions						  //
+////////////////////////////////////////////////////
 PTOKEN
 NewUnknownToken(void);
 
@@ -110,9 +110,9 @@ FreeTemp(PTOKEN Temp);
 void
 CleanTempList(void);
 
-
-
-
+////////////////////////////////////////////////////
+//			TOKEN_LIST related functions		  //
+////////////////////////////////////////////////////
 
 PTOKEN_LIST
 NewTokenList(void);
@@ -150,9 +150,9 @@ LalrGetNonTerminalId(PTOKEN Token);
 int
 LalrGetTerminalId(PTOKEN Token);
 
-
-
-
+////////////////////////////////////////////////////
+//					Util Functions				  //
+////////////////////////////////////////////////////
 
 char
 IsHex(char c);
@@ -187,9 +187,9 @@ OctalToInt(char * str);
 unsigned long long int
 BinaryToInt(char * str);
 
-
-
-
+////////////////////////////////////////////////////
+//	       Semantic Rule Related Functions		  //
+////////////////////////////////////////////////////
 
 char
 IsType1Func(PTOKEN Operator);

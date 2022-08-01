@@ -54,6 +54,12 @@ NamedPipeClientExample()(ok bool)//col:444
 
 
 
+
+
+
+
+
+
 )
 
 func NewNamedpipe() { return & namedpipe{} }
@@ -72,6 +78,12 @@ func (n *namedpipe)NamedPipeServerCreatePipe()(ok bool){//col:49
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -167,6 +179,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (n *namedpipe)NamedPipeServerReadClientMessage()(ok bool){//col:122
 
 
@@ -182,6 +200,12 @@ func (n *namedpipe)NamedPipeServerReadClientMessage()(ok bool){//col:122
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -280,6 +304,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (n *namedpipe)NamedPipeServerCloseHandle()(ok bool){//col:163
 
 
@@ -287,6 +317,12 @@ func (n *namedpipe)NamedPipeServerCloseHandle()(ok bool){//col:163
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -345,6 +381,12 @@ func (n *namedpipe)NamedPipeClientCreatePipe()(ok bool){//col:219
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -445,6 +487,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (n *namedpipe)NamedPipeClientReadMessage()(ok bool){//col:300
 
 
@@ -499,6 +547,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (n *namedpipe)NamedPipeClientClosePipe()(ok bool){//col:313
 
 
@@ -506,6 +560,12 @@ func (n *namedpipe)NamedPipeClientClosePipe()(ok bool){//col:313
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -626,6 +686,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (n *namedpipe)NamedPipeClientExample()(ok bool){//col:444
 
 
@@ -656,6 +722,12 @@ func (n *namedpipe)NamedPipeClientExample()(ok bool){//col:444
 
 return true
 }
+
+
+
+
+
+
 
 
 

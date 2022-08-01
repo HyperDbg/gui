@@ -45,6 +45,12 @@ CommandX()(ok bool)//col:69
 
 
 
+
+
+
+
+
+
 )
 
 func NewX() { return & x{} }
@@ -101,6 +107,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (x *x)CommandX()(ok bool){//col:69
 
 
@@ -117,6 +129,12 @@ func (x *x)CommandX()(ok bool){//col:69
 
 return true
 }
+
+
+
+
+
+
 
 
 

@@ -1,24 +1,24 @@
+/*++
 
+Copyright (c) Microsoft Corporation.  All rights reserved.
 
+Module Name:
 
+    hardware.c
 
+Abstract:
 
+    This file defines the global UART hardware driver table.
 
-
-
-
-
-
-
-
+--*/
 
 #include "common.h"
 
-
+// --------------------------------------------------------------------- Macros
 
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
-
+// -------------------------------------------------------------------- Globals
 
 UART_HARDWARE_DRIVER UsifHardwareDriver = {
     UsifInitializePort,
@@ -27,10 +27,10 @@ UART_HARDWARE_DRIVER UsifHardwareDriver = {
     UsifPutByte,
     UsifRxReady};
 
-
-
-
-
+//
+// The array order here is the serial subtype as specified
+// in the Microsoft Debug Port Table 2 (DBG2) specification.
+//
 
 PUART_HARDWARE_DRIVER UartHardwareDrivers[] = {
 

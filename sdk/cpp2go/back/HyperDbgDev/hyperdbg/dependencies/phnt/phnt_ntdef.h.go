@@ -141,6 +141,14 @@ typedef _Return_type_success_()(ok bool)//col:72
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewPhntNtdef() { return & phntNtdef{} }
@@ -153,6 +161,14 @@ func (p *phntNtdef)typedef struct DECLSPEC_ALIGN()(ok bool){//col:41
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -257,6 +273,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *phntNtdef)    _Field_size_bytes_part_opt_()(ok bool){//col:124
 
 
@@ -304,11 +328,27 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *phntNtdef)    _Field_size_bytes_part_()(ok bool){//col:138
 
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -401,6 +441,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (p *phntNtdef)    ()(ok bool){//col:249
 
 
@@ -423,6 +471,14 @@ func (p *phntNtdef)    ()(ok bool){//col:249
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

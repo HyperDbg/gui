@@ -2427,6 +2427,14 @@ Ia32DefinesOnly interface{
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewIa32DefinesOnly() { return & ia32DefinesOnly{} }
@@ -2469,6 +2477,14 @@ func (i *ia32DefinesOnly)#if defined()(ok bool){//col:50
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -2563,6 +2579,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (i *ia32DefinesOnly)#pragma pack()(ok bool){//col:5202
 
 
@@ -2572,6 +2596,14 @@ func (i *ia32DefinesOnly)#pragma pack()(ok bool){//col:5202
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -2686,6 +2718,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (i *ia32DefinesOnly)#pragma pack()(ok bool){//col:5415
 
 
@@ -2707,6 +2747,14 @@ func (i *ia32DefinesOnly)#pragma pack()(ok bool){//col:5415
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -2849,6 +2897,14 @@ func (i *ia32DefinesOnly)#pragma pack()(ok bool){//col:5543
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

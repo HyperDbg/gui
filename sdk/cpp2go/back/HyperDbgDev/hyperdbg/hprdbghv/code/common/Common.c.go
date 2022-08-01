@@ -84,6 +84,12 @@ KillProcess()(ok bool)//col:1459
 
 
 
+
+
+
+
+
+
 )
 
 func NewCommon() { return & common{} }
@@ -110,6 +116,12 @@ func (c *common)MathPower()(ok bool){//col:42
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -203,6 +215,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)TestBit()(ok bool){//col:84
 
 
@@ -210,6 +228,12 @@ func (c *common)TestBit()(ok bool){//col:84
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -297,6 +321,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)SetBit()(ok bool){//col:110
 
 
@@ -304,6 +334,12 @@ func (c *common)SetBit()(ok bool){//col:110
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -391,6 +427,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)GetCr3FromProcessId()(ok bool){//col:160
 
 
@@ -407,6 +449,12 @@ func (c *common)GetCr3FromProcessId()(ok bool){//col:160
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -506,6 +554,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)SwitchOnMemoryLayoutOfTargetProcess()(ok bool){//col:238
 
 
@@ -558,6 +612,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)SwitchOnAnotherProcessMemoryLayoutByCr3()(ok bool){//col:265
 
 
@@ -568,6 +628,12 @@ func (c *common)SwitchOnAnotherProcessMemoryLayoutByCr3()(ok bool){//col:265
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -687,6 +753,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)RestoreToPreviousProcess()(ok bool){//col:351
 
 
@@ -694,6 +766,12 @@ func (c *common)RestoreToPreviousProcess()(ok bool){//col:351
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -792,6 +870,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)PhysicalAddressToVirtualAddressByCr3()(ok bool){//col:449
 
 
@@ -810,6 +894,12 @@ func (c *common)PhysicalAddressToVirtualAddressByCr3()(ok bool){//col:449
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -900,6 +990,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)GetRunningCr3OnTargetProcess()(ok bool){//col:493
 
 
@@ -910,6 +1006,12 @@ func (c *common)GetRunningCr3OnTargetProcess()(ok bool){//col:493
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1006,6 +1108,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)VirtualAddressToPhysicalAddressByProcessCr3()(ok bool){//col:585
 
 
@@ -1022,6 +1130,12 @@ func (c *common)VirtualAddressToPhysicalAddressByProcessCr3()(ok bool){//col:585
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1120,6 +1234,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)PhysicalAddressToVirtualAddress()(ok bool){//col:649
 
 
@@ -1169,6 +1289,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)FindSystemDirectoryTableBase()(ok bool){//col:665
 
 
@@ -1177,6 +1303,12 @@ func (c *common)FindSystemDirectoryTableBase()(ok bool){//col:665
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1266,6 +1398,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)StartsWith()(ok bool){//col:702
 
 
@@ -1275,6 +1413,12 @@ func (c *common)StartsWith()(ok bool){//col:702
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1332,6 +1476,12 @@ func (c *common)IsProcessExist()(ok bool){//col:733
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1432,6 +1582,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)GetCpuid()(ok bool){//col:789
 
 
@@ -1439,6 +1595,12 @@ func (c *common)GetCpuid()(ok bool){//col:789
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1532,6 +1694,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)Getx86VirtualAddressWidth()(ok bool){//col:844
 
 
@@ -1541,6 +1709,12 @@ func (c *common)Getx86VirtualAddressWidth()(ok bool){//col:844
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1606,6 +1780,12 @@ func (c *common)CheckCanonicalVirtualAddress()(ok bool){//col:903
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1738,6 +1918,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)VmxrootCompatibleStrlen()(ok bool){//col:1146
 
 
@@ -1781,6 +1967,12 @@ func (c *common)VmxrootCompatibleStrlen()(ok bool){//col:1146
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1905,6 +2097,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)AllocateInvalidMsrBimap()(ok bool){//col:1273
 
 
@@ -1970,6 +2168,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)GetHandleFromProcess()(ok bool){//col:1299
 
 
@@ -1985,6 +2189,12 @@ func (c *common)GetHandleFromProcess()(ok bool){//col:1299
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2108,6 +2318,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (c *common)KillProcess()(ok bool){//col:1459
 
 
@@ -2160,6 +2376,12 @@ func (c *common)KillProcess()(ok bool){//col:1459
 
 return true
 }
+
+
+
+
+
+
 
 
 

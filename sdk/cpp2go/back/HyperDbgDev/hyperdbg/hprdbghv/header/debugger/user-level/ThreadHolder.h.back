@@ -1,34 +1,34 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file ThreadHolder.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief User debugger's thread holder headers
+ * @details 
+ * @version 0.1
+ * @date 2022-01-28
+ * 
+ * @copyright This project is released under the GNU Public License v3.
+ * 
+ */
 #pragma once
 
+//////////////////////////////////////////////////
+//				        Locks       			//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief Vmx-root lock for thread holding
+ * 
+ */
 volatile LONG VmxRootThreadHoldingLock;
 
+//////////////////////////////////////////////////
+//				      Structures     			//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief Details of each thread in process
+ * 
+ */
 typedef struct _USERMODE_DEBUGGING_THREAD_DETAILS
 {
     UINT32                     ThreadId;
@@ -39,10 +39,10 @@ typedef struct _USERMODE_DEBUGGING_THREAD_DETAILS
 
 } USERMODE_DEBUGGING_THREAD_DETAILS, *PUSERMODE_DEBUGGING_THREAD_DETAILS;
 
-
-
-
-
+/**
+ * @brief The holder for detail of each thread in process
+ * 
+ */
 typedef struct _USERMODE_DEBUGGING_THREAD_HOLDER
 {
     LIST_ENTRY                        ThreadHolderList;
@@ -50,9 +50,9 @@ typedef struct _USERMODE_DEBUGGING_THREAD_HOLDER
 
 } USERMODE_DEBUGGING_THREAD_HOLDER, *PUSERMODE_DEBUGGING_THREAD_HOLDER;
 
-
-
-
+//////////////////////////////////////////////////
+//				      Functions     			//
+//////////////////////////////////////////////////
 
 VOID
 ThreadHolderAllocateThreadHoldingBuffers();

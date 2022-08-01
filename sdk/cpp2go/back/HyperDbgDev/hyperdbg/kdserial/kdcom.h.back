@@ -1,25 +1,25 @@
+/*++
 
+Copyright (c) Microsoft Corporation.  All rights reserved.
 
+Module Name:
 
+    kdcom.h
 
+Abstract:
 
+    Contains constants used when interacting with 16550-based serial ports.
 
+Author:
 
+    Bryan M. Willman (bryanwi) 24-Sep-1990
 
+Revision History:
 
+    John Vert (jvert) 19-Jul-1991
+        Moved into HAL
 
-
-
-
-
-
-
-
-
-
-
-
-
+--*/
 
 #pragma once
 
@@ -72,44 +72,44 @@
 #define BD_57600  57600
 #define BD_115200 115200
 
-
-
-
-
+//
+// This bit controls the loopback testing mode of the device.  Basically
+// the outputs are connected to the inputs (and vice versa).
+//
 
 #define SERIAL_MCR_LOOP 0x10
 
-
-
-
+//
+// This bit is used for general purpose output.
+//
 
 #define SERIAL_MCR_OUT1 0x04
 
-
-
-
-
+//
+// This bit contains the (complemented) state of the clear to send
+// (CTS) line.
+//
 
 #define SERIAL_MSR_CTS 0x10
 
-
-
-
-
+//
+// This bit contains the (complemented) state of the data set ready
+// (DSR) line.
+//
 
 #define SERIAL_MSR_DSR 0x20
 
-
-
-
-
+//
+// This bit contains the (complemented) state of the ring indicator
+// (RI) line.
+//
 
 #define SERIAL_MSR_RI 0x40
 
-
-
-
-
+//
+// This bit contains the (complemented) state of the data carrier detect
+// (DCD) line.
+//
 
 #define SERIAL_MSR_DCD 0x80
 

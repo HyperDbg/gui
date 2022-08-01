@@ -1,24 +1,24 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file UserAccess.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Access and parse user-mode components of binaries
+ * @details Access to Portable Executables
+ * @version 0.1
+ * @date 2021-12-24
+ * 
+ * @copyright This project is released under the GNU Public License v3.
+ * 
+ */
 #pragma once
 
+//////////////////////////////////////////////////
+//				   Structures					//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief PEB LDR Data
+ * 
+ */
 typedef struct _PEB_LDR_DATA
 {
     ULONG      Length;
@@ -29,10 +29,10 @@ typedef struct _PEB_LDR_DATA
     LIST_ENTRY ModuleListInitOrder;
 } PEB_LDR_DATA, *PPEB_LDR_DATA;
 
-
-
-
-
+/**
+ * @brief User process params
+ * 
+ */
 typedef struct _RTL_USER_PROCESS_PARAMETERS
 {
     BYTE           Reserved1[16];
@@ -41,16 +41,16 @@ typedef struct _RTL_USER_PROCESS_PARAMETERS
     UNICODE_STRING CommandLine;
 } RTL_USER_PROCESS_PARAMETERS, *PRTL_USER_PROCESS_PARAMETERS;
 
-
-
-
-
+/**
+ * @brief Random windows type
+ * 
+ */
 typedef void(__stdcall * PPS_POST_PROCESS_INIT_ROUTINE)(void); // not exported
 
-
-
-
-
+/**
+ * @brief PEB 64-bit
+ * 
+ */
 typedef struct _PEB
 {
     BYTE                          Reserved1[2];
@@ -74,10 +74,10 @@ typedef struct _PEB
     ULONG                         SessionId;
 } PEB, *PPEB;
 
-
-
-
-
+/**
+ * @brief PEB 32-bit
+ * 
+ */
 typedef struct _PEB32
 {
     UCHAR InheritedAddressSpace;
@@ -100,10 +100,10 @@ typedef struct _PEB32
     ULONG ApiSetMap;
 } PEB32, *PPEB32;
 
-
-
-
-
+/**
+ * @brief LDR Data 32-bit
+ * 
+ */
 typedef struct _PEB_LDR_DATA32
 {
     ULONG        Length;
@@ -114,10 +114,10 @@ typedef struct _PEB_LDR_DATA32
     LIST_ENTRY32 InInitializationOrderModuleList;
 } PEB_LDR_DATA32, *PPEB_LDR_DATA32;
 
-
-
-
-
+/**
+ * @brief LDR Data Table 32-bit
+ * 
+ */
 typedef struct _LDR_DATA_TABLE_ENTRY32
 {
     LIST_ENTRY32     InLoadOrderLinks;
@@ -135,10 +135,10 @@ typedef struct _LDR_DATA_TABLE_ENTRY32
     ULONG            TimeDateStamp;
 } LDR_DATA_TABLE_ENTRY32, *PLDR_DATA_TABLE_ENTRY32;
 
-
-
-
-
+/**
+ * @brief LDR Data Table 64-bit
+ * 
+ */
 typedef struct _LDR_DATA_TABLE_ENTRY
 {
     LIST_ENTRY     InLoadOrderModuleList;
@@ -156,14 +156,14 @@ typedef struct _LDR_DATA_TABLE_ENTRY
     PVOID          SectionPointer;
     ULONG          CheckSum;
     ULONG          TimeDateStamp;
-
-
-
+    //    PVOID			LoadedImports;
+    //    seems they are exist only on XP
+    //    EntryPointActivationContext;
 } LDR_DATA_TABLE_ENTRY, *PLDR_DATA_TABLE_ENTRY;
 
-
-
-
+//////////////////////////////////////////////////
+//				   Definitions					//
+//////////////////////////////////////////////////
 
 typedef NTSTATUS (*ZwQueryInformationProcess)(
     __in HANDLE                                  ProcessHandle,
@@ -176,31 +176,31 @@ typedef PPEB(NTAPI * PsGetProcessPeb)(PEPROCESS Process);
 
 typedef PPEB32(NTAPI * PsGetProcessWow64Process)(PEPROCESS Process);
 
+//////////////////////////////////////////////////
+//				   Variables					//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief Address of ZwQueryInformationProcess
+ * 
+ */
 ZwQueryInformationProcess g_ZwQueryInformationProcess;
 
-
-
-
-
+/**
+ * @brief Address of PsGetProcessPeb
+ * 
+ */
 PsGetProcessPeb g_PsGetProcessPeb;
 
-
-
-
-
+/**
+ * @brief Address of PsGetProcessWow64Process
+ * 
+ */
 PsGetProcessWow64Process g_PsGetProcessWow64Process;
 
-
-
-
+//////////////////////////////////////////////////
+//				   Functions					//
+//////////////////////////////////////////////////
 
 BOOLEAN
 UserAccessAllocateAndGetImagePathFromProcessId(HANDLE          ProcessId,

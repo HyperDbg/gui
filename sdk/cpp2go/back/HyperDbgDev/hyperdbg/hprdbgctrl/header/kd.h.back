@@ -1,19 +1,19 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file kd.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief routines for remote kernel debugging
+ * @details
+ * @version 0.1
+ * @date 2020-12-22
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
-
-
-
+//////////////////////////////////////////////////
+//		            Definitions                 //
+//////////////////////////////////////////////////
 
 #define DbgWaitForKernelResponse(KernelSyncObjectId)                       \
     do                                                                     \
@@ -35,9 +35,9 @@
         SetEvent(SyncronizationObject->EventHandle);                       \
     } while (FALSE);
 
-
-
-
+//////////////////////////////////////////////////
+//		    Display Windows Details             //
+//////////////////////////////////////////////////
 
 struct HKeyHolder
 {
@@ -62,9 +62,9 @@ public:
     HKEY * operator&() { return &m_Key; }
 };
 
-
-
-
+//////////////////////////////////////////////////
+//			    	 Functions                  //
+//////////////////////////////////////////////////
 
 BOOLEAN
 KdCommandPacketToDebuggee(

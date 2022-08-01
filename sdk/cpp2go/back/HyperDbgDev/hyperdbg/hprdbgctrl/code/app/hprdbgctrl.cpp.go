@@ -55,6 +55,12 @@ HyperDbgUnloadVmm()(ok bool)//col:801
 
 
 
+
+
+
+
+
+
 )
 
 func NewHprdbgctrl() { return & hprdbgctrl{} }
@@ -66,6 +72,12 @@ func (h *hprdbgctrl)HyperdbgSetTextMessageCallback()(ok bool){//col:43
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -149,6 +161,12 @@ func (h *hprdbgctrl)ShowMessages()(ok bool){//col:105
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -412,6 +430,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (h *hprdbgctrl)ThreadFunc()(ok bool){//col:479
 
 
@@ -420,6 +444,12 @@ func (h *hprdbgctrl)ThreadFunc()(ok bool){//col:479
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -519,6 +549,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (h *hprdbgctrl)HyperdbgStopDriver()(ok bool){//col:539
 
 
@@ -575,6 +611,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (h *hprdbgctrl)HyperDbgStopVmmDriver()(ok bool){//col:552
 
 
@@ -582,6 +624,12 @@ func (h *hprdbgctrl)HyperDbgStopVmmDriver()(ok bool){//col:552
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -679,6 +727,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (h *hprdbgctrl)HyperDbgUninstallVmmDriver()(ok bool){//col:589
 
 
@@ -686,6 +740,12 @@ func (h *hprdbgctrl)HyperDbgUninstallVmmDriver()(ok bool){//col:589
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -837,6 +897,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (h *hprdbgctrl)HyperDbgUnloadVmm()(ok bool){//col:801
 
 
@@ -871,6 +937,12 @@ func (h *hprdbgctrl)HyperDbgUnloadVmm()(ok bool){//col:801
 
 return true
 }
+
+
+
+
+
+
 
 
 

@@ -48,6 +48,12 @@ IoHandlePerformIoBitmapReset()(ok bool)//col:327
 
 
 
+
+
+
+
+
+
 )
 
 func NewIoHandler() { return & ioHandler{} }
@@ -204,6 +210,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (i *ioHandler)IoHandleIoVmExitsAndDisassemble()(ok bool){//col:250
 
 
@@ -221,6 +233,12 @@ func (i *ioHandler)IoHandleIoVmExitsAndDisassemble()(ok bool){//col:250
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -321,6 +339,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (i *ioHandler)IoHandlePerformIoBitmapChange()(ok bool){//col:309
 
 
@@ -378,6 +402,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (i *ioHandler)IoHandlePerformIoBitmapReset()(ok bool){//col:327
 
 
@@ -388,6 +418,12 @@ func (i *ioHandler)IoHandlePerformIoBitmapReset()(ok bool){//col:327
 
 return true
 }
+
+
+
+
+
+
 
 
 

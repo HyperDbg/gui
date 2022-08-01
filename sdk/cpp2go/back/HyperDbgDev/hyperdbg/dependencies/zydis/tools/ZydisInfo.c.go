@@ -71,6 +71,12 @@ int main()(ok bool)//col:1179
 
 
 
+
+
+
+
+
+
 )
 
 func NewZydisInfo() { return & zydisInfo{} }
@@ -164,6 +170,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (z *zydisInfo)static void PrintSectionHeader()(ok bool){//col:165
 
 
@@ -216,6 +228,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (z *zydisInfo)static void PrintValueLabel()(ok bool){//col:177
 
 
@@ -224,6 +242,12 @@ func (z *zydisInfo)static void PrintValueLabel()(ok bool){//col:177
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -404,6 +428,12 @@ func (z *zydisInfo)    PrintValueLabel()(ok bool){//col:359
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -670,6 +700,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (z *zydisInfo)static void PrintFlags()(ok bool){//col:641
 
 
@@ -739,6 +775,12 @@ func (z *zydisInfo)static void PrintFlags()(ok bool){//col:641
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -909,6 +951,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (z *zydisInfo)static void PrintTokenizedInstruction()(ok bool){//col:802
 
 
@@ -1005,6 +1053,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (z *zydisInfo)static void PrintDisassembly()(ok bool){//col:855
 
 
@@ -1050,6 +1104,12 @@ func (z *zydisInfo)static void PrintDisassembly()(ok bool){//col:855
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1317,6 +1377,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (z *zydisInfo)int main()(ok bool){//col:1179
 
 
@@ -1425,6 +1491,12 @@ func (z *zydisInfo)int main()(ok bool){//col:1179
 
 return true
 }
+
+
+
+
+
+
 
 
 

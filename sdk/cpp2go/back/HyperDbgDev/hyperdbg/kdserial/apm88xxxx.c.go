@@ -49,6 +49,12 @@ Apm88xxxxSetBaud()(ok bool)//col:141
 
 
 
+
+
+
+
+
+
 )
 
 func NewApm88xxxx() { return & apm88xxxx{} }
@@ -136,6 +142,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (a *apm88xxxx)Apm88xxxxSetBaud()(ok bool){//col:141
 
 
@@ -149,6 +161,12 @@ func (a *apm88xxxx)Apm88xxxxSetBaud()(ok bool){//col:141
 
 return true
 }
+
+
+
+
+
+
 
 
 

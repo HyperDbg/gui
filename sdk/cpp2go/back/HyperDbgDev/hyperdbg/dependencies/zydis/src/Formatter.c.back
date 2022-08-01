@@ -1,28 +1,28 @@
+/***************************************************************************************************
 
+  Zyan Disassembler Library (Zydis)
 
+  Original Author : Florian Bernd, Joel Hoener
 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+***************************************************************************************************/
 
 #include <Zycore/LibC.h>
 #include <Zydis/Formatter.h>
@@ -30,13 +30,13 @@
 #include <Zydis/Internal/FormatterIntel.h>
 #include <Zydis/Internal/String.h>
 
+/* ============================================================================================== */
+/* Constants                                                                                      */
+/* ============================================================================================== */
 
-
-
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Formatter presets                                                                              */
+/* ---------------------------------------------------------------------------------------------- */
 
 static const ZydisFormatter* const FORMATTER_PRESETS[ZYDIS_FORMATTER_STYLE_MAX_VALUE + 1] =
 {
@@ -45,15 +45,15 @@ static const ZydisFormatter* const FORMATTER_PRESETS[ZYDIS_FORMATTER_STYLE_MAX_V
     &FORMATTER_INTEL_MASM
 };
 
+/* ---------------------------------------------------------------------------------------------- */
 
+/* ============================================================================================== */
+/* Internal functions                                                                             */
+/* ============================================================================================== */
 
-
-
-
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Helper functions                                                                               */
+/* ---------------------------------------------------------------------------------------------- */
 
 void ZydisFormatterBufferInit(ZydisFormatterBuffer* buffer, char* user_buffer,
     ZyanUSize length)
@@ -71,7 +71,6 @@ void ZydisFormatterBufferInit(ZydisFormatterBuffer* buffer, char* user_buffer,
     buffer->string.vector.data         = user_buffer;
     *user_buffer = '\0';
 }
-
 
 void ZydisFormatterBufferInitTokenized(ZydisFormatterBuffer* buffer,
     ZydisFormatterToken** first_token, void* user_buffer, ZyanUSize length)
@@ -99,16 +98,15 @@ void ZydisFormatterBufferInitTokenized(ZydisFormatterBuffer* buffer,
     *(char*)user_buffer = '\0';
 }
 
+/* ---------------------------------------------------------------------------------------------- */
 
+/* ============================================================================================== */
+/* Exported functions                                                                             */
+/* ============================================================================================== */
 
-
-
-
-
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Initialization                                                                                 */
+/* ---------------------------------------------------------------------------------------------- */
 
 ZyanStatus ZydisFormatterInit(ZydisFormatter* formatter, ZydisFormatterStyle style)
 {
@@ -122,10 +120,9 @@ ZyanStatus ZydisFormatterInit(ZydisFormatter* formatter, ZydisFormatterStyle sty
     return ZYAN_STATUS_SUCCESS;
 }
 
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Setter                                                                                         */
+/* ---------------------------------------------------------------------------------------------- */
 
 ZyanStatus ZydisFormatterSetProperty(ZydisFormatter* formatter, ZydisFormatterProperty property,
     ZyanUPointer value)
@@ -318,7 +315,7 @@ ZyanStatus ZydisFormatterSetProperty(ZydisFormatter* formatter, ZydisFormatterPr
         return ZYAN_STATUS_INVALID_ARGUMENT;
     }
 
-
+    // Set prefix or suffix
     if (base != (ZydisNumericBase)(-1))
     {
         if (value)
@@ -344,7 +341,6 @@ ZyanStatus ZydisFormatterSetProperty(ZydisFormatter* formatter, ZydisFormatterPr
     return ZYAN_STATUS_SUCCESS;
 }
 
-
 ZyanStatus ZydisFormatterSetHook(ZydisFormatter* formatter, ZydisFormatterFunction type,
     const void** callback)
 {
@@ -355,8 +351,8 @@ ZyanStatus ZydisFormatterSetHook(ZydisFormatter* formatter, ZydisFormatterFuncti
 
     const void* const temp = *callback;
 
-
-
+    // The following code relies on the order of the enum values and the function fields inside
+    // the `ZydisFormatter` struct
 
 #ifdef ZYAN_DEBUG
     const ZyanUPointer* test = (ZyanUPointer*)(&formatter->func_pre_instruction + type);
@@ -415,10 +411,9 @@ ZyanStatus ZydisFormatterSetHook(ZydisFormatter* formatter, ZydisFormatterFuncti
     return ZYAN_STATUS_SUCCESS;
 }
 
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Formatting                                                                                     */
+/* ---------------------------------------------------------------------------------------------- */
 
 ZyanStatus ZydisFormatterFormatInstruction(const ZydisFormatter* formatter,
     const ZydisDecodedInstruction* instruction, char* buffer, ZyanUSize length,
@@ -427,7 +422,6 @@ ZyanStatus ZydisFormatterFormatInstruction(const ZydisFormatter* formatter,
      return ZydisFormatterFormatInstructionEx(formatter, instruction, buffer, length,
          runtime_address, ZYAN_NULL);
 }
-
 
 ZyanStatus ZydisFormatterFormatInstructionEx(const ZydisFormatter* formatter,
     const ZydisDecodedInstruction* instruction, char* buffer, ZyanUSize length,
@@ -462,7 +456,6 @@ ZyanStatus ZydisFormatterFormatInstructionEx(const ZydisFormatter* formatter,
     return ZYAN_STATUS_SUCCESS;
 }
 
-
 ZyanStatus ZydisFormatterFormatOperand(const ZydisFormatter* formatter,
     const ZydisDecodedInstruction* instruction, ZyanU8 index, char* buffer, ZyanUSize length,
     ZyanU64 runtime_address)
@@ -470,7 +463,6 @@ ZyanStatus ZydisFormatterFormatOperand(const ZydisFormatter* formatter,
     return ZydisFormatterFormatOperandEx(formatter, instruction, index, buffer, length,
         runtime_address, ZYAN_NULL);
 }
-
 
 ZyanStatus ZydisFormatterFormatOperandEx(const ZydisFormatter* formatter,
     const ZydisDecodedInstruction* instruction, ZyanU8 index, char* buffer, ZyanUSize length,
@@ -491,8 +483,8 @@ ZyanStatus ZydisFormatterFormatOperandEx(const ZydisFormatter* formatter,
     context.operand         = &instruction->operands[index];
     context.user_data       = user_data;
 
-
-
+    // We ignore `ZYDIS_STATUS_SKIP_TOKEN` for all operand-functions as it does not make any sense
+    // to skip the only operand printed by this function
 
     if (formatter->func_pre_operand)
     {
@@ -525,10 +517,9 @@ ZyanStatus ZydisFormatterFormatOperandEx(const ZydisFormatter* formatter,
     return ZYAN_STATUS_SUCCESS;
 }
 
-
-
-
-
+/* ---------------------------------------------------------------------------------------------- */
+/* Tokenizing                                                                                     */
+/* ---------------------------------------------------------------------------------------------- */
 
 ZyanStatus ZydisFormatterTokenizeInstruction(const ZydisFormatter* formatter,
     const ZydisDecodedInstruction* instruction, void* buffer, ZyanUSize length,
@@ -537,7 +528,6 @@ ZyanStatus ZydisFormatterTokenizeInstruction(const ZydisFormatter* formatter,
     return ZydisFormatterTokenizeInstructionEx(formatter, instruction, buffer, length,
         runtime_address, token, ZYAN_NULL);
 }
-
 
 ZyanStatus ZydisFormatterTokenizeInstructionEx(const ZydisFormatter* formatter,
     const ZydisDecodedInstruction* instruction, void* buffer, ZyanUSize length,
@@ -581,7 +571,6 @@ ZyanStatus ZydisFormatterTokenizeInstructionEx(const ZydisFormatter* formatter,
     return ZYAN_STATUS_SUCCESS;
 }
 
-
 ZyanStatus ZydisFormatterTokenizeOperand(const ZydisFormatter* formatter,
     const ZydisDecodedInstruction* instruction, ZyanU8 index, void* buffer, ZyanUSize length,
     ZyanU64 runtime_address, ZydisFormatterTokenConst** token)
@@ -589,7 +578,6 @@ ZyanStatus ZydisFormatterTokenizeOperand(const ZydisFormatter* formatter,
     return ZydisFormatterTokenizeOperandEx(formatter, instruction, index, buffer, length,
         runtime_address, token, ZYAN_NULL);
 }
-
 
 ZyanStatus ZydisFormatterTokenizeOperandEx(const ZydisFormatter* formatter,
     const ZydisDecodedInstruction* instruction, ZyanU8 index, void* buffer, ZyanUSize length,
@@ -611,8 +599,8 @@ ZyanStatus ZydisFormatterTokenizeOperandEx(const ZydisFormatter* formatter,
     context.operand         = &instruction->operands[index];
     context.user_data       = user_data;
 
-
-
+    // We ignore `ZYDIS_STATUS_SKIP_TOKEN` for all operand-functions as it does not make any sense
+    // to skip the only operand printed by this function
 
     if (formatter->func_pre_operand)
     {
@@ -653,8 +641,7 @@ ZyanStatus ZydisFormatterTokenizeOperandEx(const ZydisFormatter* formatter,
     return ZYAN_STATUS_SUCCESS;
 }
 
+/* ============================================================================================== */
 
-
-
-
+/* ============================================================================================== */
 

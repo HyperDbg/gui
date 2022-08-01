@@ -50,6 +50,14 @@ Synchronization interface{
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewSynchronization() { return & synchronization{} }
@@ -73,6 +81,14 @@ func (s *synchronization)#if   defined()(ok bool){//col:128
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

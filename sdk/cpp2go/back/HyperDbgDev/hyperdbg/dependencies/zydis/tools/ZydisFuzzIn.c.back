@@ -24,13 +24,13 @@
 
 ***************************************************************************************************/
 
-
-
-
-
-
-
-
+/**
+ * @file
+ *
+ * This file implements a tool that is supposed to be fed as input for fuzzers like AFL, reading a
+ * control block from `stdin`, allowing the fuzzer to reach every possible code-path, testing any
+ * possible combination of disassembler configurations.
+ */
 
 #include <stdio.h>
 #include <Zycore/LibC.h>
@@ -41,13 +41,13 @@
 #   include <io.h>
 #endif
 
+/* ============================================================================================== */
+/* Enums and types                                                                                */
+/* ============================================================================================== */
 
-
-
-
-
-
-
+/**
+ * Defines the `ZydisFuzzControlBlock` struct.
+ */
 typedef struct ZydisFuzzControlBlock_
 {
     ZydisMachineMode machine_mode;
@@ -59,11 +59,11 @@ typedef struct ZydisFuzzControlBlock_
     char string[16];
 } ZydisFuzzControlBlock;
 
+/* ============================================================================================== */
+/* Macros                                                                                         */
+/* ============================================================================================== */
 
-
-
-
-
+// Limit maximum amount of bytes
 #define ZYDIS_FUZZ_MAX_BYTES (1024 * 10 /* 10 KiB */)
 
 #if defined(ZYDIS_FUZZ_AFL_FAST) || defined(ZYDIS_LIBFUZZER)
@@ -72,9 +72,9 @@ typedef struct ZydisFuzzControlBlock_
 #   define ZYDIS_MAYBE_FPUTS(x, y) fputs(x, y)
 #endif
 
-
-
-
+/* ============================================================================================== */
+/* Stream reading abstraction                                                                     */
+/* ============================================================================================== */
 
 typedef ZyanUSize (*ZydisStreamRead)(void* ctx, ZyanU8* buf, ZyanUSize max_len);
 
@@ -83,7 +83,6 @@ ZyanUSize ZydisStdinRead(void *ctx, ZyanU8* buf, ZyanUSize max_len)
     ZYAN_UNUSED(ctx);
     return fread(buf, 1, max_len, ZYAN_STDIN);
 }
-
 
 #ifdef ZYDIS_LIBFUZZER
 typedef struct
@@ -102,20 +101,19 @@ ZyanUSize ZydisLibFuzzerRead(void* ctx, ZyanU8* buf, ZyanUSize max_len)
     c->read_offs += len;
     return len;
 }
-
 #endif // ZYDIS_LIBFUZZER
 
-
-
-
+/* ============================================================================================== */
+/* Main iteration                                                                                 */
+/* ============================================================================================== */
 
 static int DoIteration(ZydisStreamRead read_fn, void* stream_ctx)
 {
     ZydisFuzzControlBlock control_block;
 
 #ifdef ZYAN_WINDOWS
-
-
+    // The `stdin` pipe uses text-mode on Windows platforms by default. We need it to be opened in
+    // binary mode
     _setmode(_fileno(ZYAN_STDIN), _O_BINARY);
 #endif
 
@@ -190,10 +188,9 @@ static int DoIteration(ZydisStreamRead read_fn, void* stream_ctx)
     return EXIT_SUCCESS;
 }
 
-
-
-
-
+/* ============================================================================================== */
+/* Entry point                                                                                    */
+/* ============================================================================================== */
 
 #ifdef ZYDIS_LIBFUZZER
 
@@ -211,7 +208,6 @@ int LLVMFuzzerInitialize(int *argc, char ***argv)
     return EXIT_SUCCESS;
 }
 
-
 int LLVMFuzzerTestOneInput(ZyanU8 *buf, ZyanUSize len)
 {
     ZydisLibFuzzerContext ctx;
@@ -222,7 +218,6 @@ int LLVMFuzzerTestOneInput(ZyanU8 *buf, ZyanUSize len)
     DoIteration(&ZydisLibFuzzerRead, &ctx);
     return 0;
 }
-
 
 #else // !ZYDIS_LIBFUZZER
 
@@ -245,9 +240,8 @@ int main(void)
 #   endif
 }
 
-
 #endif // ZYDIS_LIBFUZZER
 
-
+/* ============================================================================================== */
 
 

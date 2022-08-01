@@ -1,25 +1,25 @@
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file ScriptEngineEval.c
+ * @author M.H. Gholamrezaei (mh@hyperdbg.org)
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Shared Headers for Script engine
+ * @details
+ * @version 0.1
+ * @date 2020-10-22
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 #include "..\script-eval\header\ScriptEngineInternalHeader.h"
 
-
-
-
-
-
-
-
+/**
+ * @brief Get the Pseudo reg value
+ *
+ * @param Symbol
+ * @param ActionBuffer
+ * @return UINT64
+ */
 UINT64
 GetPseudoRegValue(PSYMBOL Symbol, PACTION_BUFFER ActionBuffer)
 {
@@ -64,21 +64,20 @@ GetPseudoRegValue(PSYMBOL Symbol, PACTION_BUFFER ActionBuffer)
         ShowMessages("error in reading regesiter");
 #endif // SCRIPT_ENGINE_USER_MODE
         return INVALID;
-
+        // TODO: Add all the register
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @brief Get the Value (reg, peseudo-reg, etc.)
+ *
+ * @param GuestRegs
+ * @param ActionBuffer
+ * @param VariablesList
+ * @param Symbol
+ * @param ReturnReference
+ * @return UINT64
+ */
 UINT64
 GetValue(PGUEST_REGS                   GuestRegs,
          PACTION_BUFFER                ActionBuffer,
@@ -132,16 +131,15 @@ GetValue(PGUEST_REGS                   GuestRegs,
     }
 }
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * @brief Set the value
+ *
+ * @param GuestRegs
+ * @param VariablesList
+ * @param Symbol
+ * @param Value
+ * @return VOID
+ */
 VOID
 SetValue(PGUEST_REGS GuestRegs, SCRIPT_ENGINE_VARIABLES_LIST * VariablesList, PSYMBOL Symbol, UINT64 Value)
 {
@@ -162,14 +160,13 @@ SetValue(PGUEST_REGS GuestRegs, SCRIPT_ENGINE_VARIABLES_LIST * VariablesList, PS
     }
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief Get the operator name
+ *
+ * @param OperatorSymbol
+ * @param BufferForName
+ * @return VOID
+ */
 VOID
 ScriptEngineGetOperatorName(PSYMBOL OperatorSymbol, CHAR * BufferForName)
 {
@@ -202,18 +199,17 @@ ScriptEngineGetOperatorName(PSYMBOL OperatorSymbol, CHAR * BufferForName)
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @brief Execute the script buffer
+ *
+ * @param GuestRegs General purpose registers
+ * @param ActionDetail Detail of the specific action
+ * @param VariablesList List of core specific (and global) variable holders
+ * @param CodeBuffer The script buffer to be executed
+ * @param Indx Script Buffer index
+ * @param ErrorOperator Error in operator
+ * @return BOOL
+ */
 BOOL
 ScriptEngineExecute(PGUEST_REGS                    GuestRegs,
                     ACTION_BUFFER *                ActionDetail,
@@ -1074,9 +1070,9 @@ ScriptEngineExecute(PGUEST_REGS                    GuestRegs,
 
         *Indx = *Indx + 1;
 
-
-
-
+        //
+        // It's reference, we need an address
+        //
         SrcVal0 = GetValue(GuestRegs, ActionDetail, VariablesList, Src0, TRUE);
 
         Des   = (PSYMBOL)((unsigned long long)CodeBuffer->Head +
@@ -1315,9 +1311,9 @@ ScriptEngineExecute(PGUEST_REGS                    GuestRegs,
         SrcVal0 =
             GetValue(GuestRegs, ActionDetail, VariablesList, Src0, FALSE);
 
-
-
-
+        //
+        // Call the target function
+        //
         ScriptEngineFunctionPrint(ActionDetail->Tag,
                                   ActionDetail->ImmediatelySendTheResults,
                                   SrcVal0);
@@ -1330,9 +1326,9 @@ ScriptEngineExecute(PGUEST_REGS                    GuestRegs,
         SrcVal0 =
             GetValue(GuestRegs, ActionDetail, VariablesList, Src0, FALSE);
 
-
-
-
+        //
+        // Call the target function
+        //
         ScriptEngineFunctionTestStatement(ActionDetail->Tag,
                                           ActionDetail->ImmediatelySendTheResults,
                                           SrcVal0);
@@ -1346,9 +1342,9 @@ ScriptEngineExecute(PGUEST_REGS                    GuestRegs,
         SrcVal0 =
             GetValue(GuestRegs, ActionDetail, VariablesList, Src0, FALSE);
 
-
-
-
+        //
+        // Call the target function
+        //
         ScriptEngineFunctionSpinlockLock((volatile LONG *)SrcVal0, &HasError);
 
         return HasError;
@@ -1360,9 +1356,9 @@ ScriptEngineExecute(PGUEST_REGS                    GuestRegs,
         SrcVal0 =
             GetValue(GuestRegs, ActionDetail, VariablesList, Src0, FALSE);
 
-
-
-
+        //
+        // Call the target function
+        //
         ScriptEngineFunctionSpinlockUnlock((volatile LONG *)SrcVal0, &HasError);
 
         return HasError;
@@ -1405,9 +1401,9 @@ ScriptEngineExecute(PGUEST_REGS                    GuestRegs,
         SrcVal0 =
             GetValue(GuestRegs, ActionDetail, VariablesList, Src0, FALSE);
 
-
-
-
+        //
+        // Call the target function
+        //
         ScriptEngineFunctionFormats(
             ActionDetail->Tag,
             ActionDetail->ImmediatelySendTheResults,
@@ -1474,9 +1470,9 @@ ScriptEngineExecute(PGUEST_REGS                    GuestRegs,
                          (unsigned long long)(*Indx * sizeof(SYMBOL)));
         *Indx = *Indx + 1;
 
-
-
-
+        //
+        // Call the target function
+        //
 
         *Indx =
             *Indx + ((sizeof(unsigned long long) + strlen((char *)&Src0->Value)) /
@@ -1511,5 +1507,4 @@ ScriptEngineExecute(PGUEST_REGS                    GuestRegs,
         return HasError;
     }
 }
-
 

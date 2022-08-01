@@ -1,21 +1,21 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file monitor.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief !monitor command
+ * @details
+ * @version 0.1
+ * @date 2020-05-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
-
-
+/**
+ * @brief help of !monitor command
+ *
+ * @return VOID
+ */
 VOID
 CommandMonitorHelp()
 {
@@ -34,14 +34,13 @@ CommandMonitorHelp()
     ShowMessages("\t\te.g : !monitor w fffff801deadb000 fffff801deadbfff core 2 pid 400\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief !monitor command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandMonitor(vector<string> SplittedCommand, string Command)
 {
@@ -70,13 +69,13 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
-
-
-
-
+    //
+    // Interpret and fill the general event and action fields
+    //
+    // We use HIDDEN_HOOK_READ_AND_WRITE here but it might be changed to
+    // HIDDEN_HOOK_READ or HIDDEN_HOOK_WRITE it is because we are not sure what
+    // kind event the user need
+    //
     if (!InterpretGeneralEventAndActionsFields(
             &SplittedCommand,
             &SplittedCommandCaseSensitive,
@@ -94,9 +93,9 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Interpret command specific details (if any)
+    //
     for (auto Section : SplittedCommand)
     {
         IndexInCommandCaseSensitive++;
@@ -122,18 +121,18 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
         }
         else
         {
-
-
-
+            //
+            // It's probably address
+            //
             if (!SetFrom)
             {
                 if (!SymbolConvertNameOrExprToAddress(
                         SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1),
                         &OptionalParam1))
                 {
-
-
-
+                    //
+                    // couldn't resolve or unkonwn parameter
+                    //
                     ShowMessages("err, couldn't resolve error at '%s'\n\n",
                                  SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1).c_str());
                     CommandMonitorHelp();
@@ -149,9 +148,9 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
                         SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1),
                         &OptionalParam2))
                 {
-
-
-
+                    //
+                    // Couldn't resolve or unkonwn parameter
+                    //
                     ShowMessages("err, couldn't resolve error at '%s'\n\n",
                                  SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1).c_str());
 
@@ -164,9 +163,9 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
             }
             else
             {
-
-
-
+                //
+                // Unkonwn parameter
+                //
                 ShowMessages("unknown parameter '%s'\n\n", Section.c_str());
                 CommandMonitorHelp();
 
@@ -176,14 +175,14 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
         }
     }
 
-
-
-
+    //
+    // Check for invalid order of address
+    //
     if (OptionalParam1 > OptionalParam2)
     {
-
-
-
+        //
+        // 'from' is greater than 'to'
+        //
         ShowMessages("please choose the 'from' value first, then choose the 'to' "
                      "value\n");
 
@@ -191,9 +190,9 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Check if user set the mode of !monitor or not
+    //
     if (!SetMode)
     {
         ShowMessages("please specify the attribute(s) that you want to monitor (r, w, rw)\n");
@@ -202,30 +201,30 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Set the optional parameters
+    //
     Event->OptionalParam1 = OptionalParam1;
     Event->OptionalParam2 = OptionalParam2;
 
-
-
-
+    //
+    // Send the ioctl to the kernel for event registration
+    //
     if (!SendEventToKernel(Event, EventLength))
     {
-
-
-
-
-
+        //
+        // There was an error, probably the handle was not initialized
+        // we have to free the Action before exit, it is because, we
+        // already freed the Event and string buffers
+        //
 
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
 
-
-
-
+    //
+    // Add the event to the kernel
+    //
     if (!RegisterActionToEvent(Event,
                                ActionBreakToDebugger,
                                ActionBreakToDebuggerLength,
@@ -234,13 +233,12 @@ CommandMonitor(vector<string> SplittedCommand, string Command)
                                ActionScript,
                                ActionScriptLength))
     {
-
-
-
+        //
+        // There was an error
+        //
 
         FreeEventsAndActionsMemory(Event, ActionBreakToDebugger, ActionCustomCode, ActionScript);
         return;
     }
 }
-
 

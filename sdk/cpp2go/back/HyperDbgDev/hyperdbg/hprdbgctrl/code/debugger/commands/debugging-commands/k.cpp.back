@@ -1,27 +1,27 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file k.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief k command
+ * @details
+ * @version 0.1
+ * @date 2021-12-13
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 extern BOOLEAN g_IsRunningInstruction32Bit;
 
-
-
-
-
-
+/**
+ * @brief help of k command
+ *
+ * @return VOID
+ */
 VOID
 CommandKHelp()
 {
@@ -44,14 +44,13 @@ CommandKHelp()
     ShowMessages("\t\te.g : kq base fffff8077356f010 l 100\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief k command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandK(vector<string> SplittedCommand, string Command)
 {
@@ -79,9 +78,9 @@ CommandK(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Set the default length
+    //
     if (g_IsRunningInstruction32Bit)
     {
         Length = 0x100;
@@ -105,9 +104,9 @@ CommandK(vector<string> SplittedCommand, string Command)
             if (!SymbolConvertNameOrExprToAddress(SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1),
                                                   &BaseAddress))
             {
-
-
-
+                //
+                // Couldn't resolve or unkonwn parameter
+                //
                 ShowMessages("err, couldn't resolve error at '%s'\n",
                              SplittedCommandCaseSensitive.at(IndexInCommandCaseSensitive - 1).c_str());
                 return;
@@ -140,9 +139,9 @@ CommandK(vector<string> SplittedCommand, string Command)
             continue;
         }
 
-
-
-
+        //
+        // User inserts unexpected input
+        //
         ShowMessages("err, incorrect use of '%s' command\n\n",
                      FirstCommand.c_str());
         CommandKHelp();
@@ -157,9 +156,9 @@ CommandK(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Send callstack request
+    //
 
     if (!FirstCommand.compare("k"))
     {
@@ -183,5 +182,4 @@ CommandK(vector<string> SplittedCommand, string Command)
                                         TRUE);
     }
 }
-
 

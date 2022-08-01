@@ -8,10 +8,10 @@
 #else
 #    ifndef ZYCORE_EXPORT
 #        ifdef Zycore_EXPORTS
-
+/* We are building this library */
 #            define ZYCORE_EXPORT __declspec(dllexport)
 #        else
-
+/* We are using this library */
 #            define ZYCORE_EXPORT __declspec(dllimport)
 #        endif
 #    endif

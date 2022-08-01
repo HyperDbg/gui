@@ -50,6 +50,12 @@ TestGaussianFromFile()(ok bool)//col:249
 
 
 
+
+
+
+
+
+
 )
 
 func NewGaussianRng() { return & gaussianRng{} }
@@ -76,6 +82,12 @@ func (g *gaussianRng)Median()(ok bool){//col:42
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -169,6 +181,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (g *gaussianRng)CalculateStandardDeviation()(ok bool){//col:90
 
 
@@ -181,6 +199,12 @@ func (g *gaussianRng)CalculateStandardDeviation()(ok bool){//col:90
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -276,6 +300,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (g *gaussianRng)Randn()(ok bool){//col:151
 
 
@@ -301,6 +331,12 @@ func (g *gaussianRng)Randn()(ok bool){//col:151
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -415,6 +451,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (g *gaussianRng)TestGaussianFromFile()(ok bool){//col:249
 
 
@@ -436,6 +478,12 @@ func (g *gaussianRng)TestGaussianFromFile()(ok bool){//col:249
 
 return true
 }
+
+
+
+
+
+
 
 
 

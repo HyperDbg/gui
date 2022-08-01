@@ -45,6 +45,12 @@ HviIsHypervisorVendorMicrosoft()(ok bool)//col:23
 
 
 
+
+
+
+
+
+
 )
 
 func NewWin11sdk() { return & win11sdk{} }
@@ -60,6 +66,12 @@ func (w *win11sdk)__declspec()(ok bool){//col:11
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -145,6 +157,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (w *win11sdk)HviIsHypervisorVendorMicrosoft()(ok bool){//col:23
 
 
@@ -152,6 +170,12 @@ func (w *win11sdk)HviIsHypervisorVendorMicrosoft()(ok bool){//col:23
 
 return true
 }
+
+
+
+
+
+
 
 
 

@@ -1,14 +1,14 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file tools.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief general functions used in test project
+ * @details
+ * @version 0.1
+ * @date 2021-04-11
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
 std::string
@@ -18,7 +18,6 @@ Uint64ToString(UINT64 value)
     Os << setw(16) << setfill('0') << hex << value;
     return Os.str();
 }
-
 
 BOOLEAN
 StringReplace(std::string & str, const std::string & from, const std::string & to)
@@ -30,7 +29,6 @@ StringReplace(std::string & str, const std::string & from, const std::string & t
     return TRUE;
 }
 
-
 std::string
 ConvertToString(char * Str)
 {
@@ -38,5 +36,4 @@ ConvertToString(char * Str)
 
     return s;
 }
-
 

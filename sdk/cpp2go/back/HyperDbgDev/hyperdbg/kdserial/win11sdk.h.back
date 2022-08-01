@@ -9,21 +9,18 @@ HviGetDebugDeviceOptions()
 {
     return;
 }
-
 inline void
 HviGetHypervisorFeatures()
 {
     return;
 }
-
 inline void
 HviIsHypervisorVendorMicrosoft()
 {
     return;
 }
 
-
-
+// -------------------------------------------------------------------- Globals
 
 BOOLEAN
 UsifInitializePort(

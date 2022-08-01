@@ -49,6 +49,12 @@ CommandTest()(ok bool)//col:321
 
 
 
+
+
+
+
+
+
 )
 
 func NewTest() { return & test{} }
@@ -65,6 +71,12 @@ func (t *test)CommandTestHelp()(ok bool){//col:35
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -131,6 +143,12 @@ func (t *test)CommandTestPerformKernelTestsIoctl()(ok bool){//col:91
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -271,6 +289,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (t *test)CommandTestInVmiMode()(ok bool){//col:266
 
 
@@ -300,6 +324,12 @@ func (t *test)CommandTestInVmiMode()(ok bool){//col:266
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -393,6 +423,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (t *test)CommandTest()(ok bool){//col:321
 
 
@@ -413,6 +449,12 @@ func (t *test)CommandTest()(ok bool){//col:321
 
 return true
 }
+
+
+
+
+
+
 
 
 

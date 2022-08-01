@@ -47,6 +47,14 @@ PdbSymbolVisitorBase interface{
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewPdbSymbolVisitorBase() { return & pdbSymbolVisitorBase{} }
@@ -246,6 +254,14 @@ func (p *pdbSymbolVisitorBase)		~PDBSymbolVisitorBase()(ok bool){//col:258
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

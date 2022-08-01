@@ -50,6 +50,12 @@ ZyanStatus ZydisGetInstructionSegments()(ok bool)//col:370
 
 
 
+
+
+
+
+
+
 )
 
 func NewUtils() { return & utils{} }
@@ -132,6 +138,12 @@ func (u *utils)ZyanStatus ZydisCalcAbsoluteAddress()(ok bool){//col:114
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -257,6 +269,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *utils)ZyanStatus ZydisGetAccessedFlagsByAction()(ok bool){//col:187
 
 
@@ -277,6 +295,12 @@ func (u *utils)ZyanStatus ZydisGetAccessedFlagsByAction()(ok bool){//col:187
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -372,6 +396,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *utils)ZyanStatus ZydisGetAccessedFlagsWritten()(ok bool){//col:219
 
 
@@ -391,6 +421,12 @@ func (u *utils)ZyanStatus ZydisGetAccessedFlagsWritten()(ok bool){//col:219
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -563,6 +599,12 @@ func (u *utils)ZyanStatus ZydisGetInstructionSegments()(ok bool){//col:370
 
 return true
 }
+
+
+
+
+
+
 
 
 

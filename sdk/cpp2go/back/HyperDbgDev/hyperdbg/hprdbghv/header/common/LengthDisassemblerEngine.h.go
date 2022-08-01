@@ -46,6 +46,12 @@ ldisasm()(ok bool)//col:127
 
 
 
+
+
+
+
+
+
 )
 
 func NewLengthDisassemblerEngine() { return & lengthDisassemblerEngine{} }
@@ -64,6 +70,12 @@ func (l *lengthDisassemblerEngine)findByte()(ok bool){//col:39
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -161,6 +173,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (l *lengthDisassemblerEngine)ldisasm()(ok bool){//col:127
 
 
@@ -205,6 +223,12 @@ func (l *lengthDisassemblerEngine)ldisasm()(ok bool){//col:127
 
 return true
 }
+
+
+
+
+
+
 
 
 

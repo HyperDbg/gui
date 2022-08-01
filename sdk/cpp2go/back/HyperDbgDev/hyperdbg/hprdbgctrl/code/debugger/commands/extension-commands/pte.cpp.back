@@ -1,27 +1,27 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file pte.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief !pte command
+ * @details
+ * @version 0.1
+ * @date 2020-05-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern BOOLEAN                  g_IsSerialConnectedToRemoteDebuggee;
 extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
 
-
-
-
-
-
+/**
+ * @brief help of !pte command
+ *
+ * @return VOID
+ */
 VOID
 CommandPteHelp()
 {
@@ -36,25 +36,24 @@ CommandPteHelp()
     ShowMessages("\t\te.g : !pte 0x400021000 pid 1c0\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief show results of !pte command
+ *
+ * @param TargetVa
+ * @param PteRead
+ * @return VOID
+ */
 VOID
 CommandPteShowResults(UINT64 TargetVa, PDEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS PteRead)
 {
-
-
-
-
-
-
-
-
+    /*
+    VA fffff8003abc9370
+    PXE at FFFF83C1E0F07F80    PPE at FFFF83C1E0FF0000    PDE at
+    FFFF83C1FE000EA8    PTE at FFFF83FC001D5E48 contains 0000000004108063
+    contains 0000000004109063  contains 00000000026008E3  contains
+    0000000000000000 pfn 4108      ---DA--KWEV  pfn 4109      ---DA--KWEV  pfn
+    2600      --LDA--KWEV  LARGE PAGE pfn 27c9
+  */
     ShowMessages("VA %llx\n", TargetVa);
     ShowMessages("PML4E (PXE) at %016llx\tcontains %016llx\nPDPT (PPE) at "
                  "%016llx\tcontains "
@@ -66,9 +65,9 @@ CommandPteShowResults(UINT64 TargetVa, PDEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS
                  PteRead->PdeVirtualAddress,
                  PteRead->PdeValue);
 
-
-
-
+    //
+    // Check if it's a large PDE
+    //
     if (PteRead->PdeVirtualAddress == PteRead->PteVirtualAddress)
     {
         ShowMessages("PDE is a large page, so it doesn't have a PTE\n");
@@ -81,14 +80,13 @@ CommandPteShowResults(UINT64 TargetVa, PDEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS
     }
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief !pte command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandPte(vector<string> SplittedCommand, string Command)
 {
@@ -107,10 +105,10 @@ CommandPte(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
-
+    //
+    // By default if the user-debugger is active, we use these commands
+    // on the memory layout of the debuggee process
+    //
     if (g_ActiveProcessDebuggingState.IsActive)
     {
         Pid = g_ActiveProcessDebuggingState.ProcessId;
@@ -118,14 +116,14 @@ CommandPte(vector<string> SplittedCommand, string Command)
 
     if (SplittedCommand.size() == 2)
     {
-
-
-
+        //
+        // It's just an address for current process
+        //
         if (!SymbolConvertNameOrExprToAddress(SplittedCommandCaseSensitive.at(1), &TargetVa))
         {
-
-
-
+            //
+            // Couldn't resolve or unkonwn parameter
+            //
             ShowMessages("err, couldn't resolve error at '%s'\n",
                          SplittedCommandCaseSensitive.at(1).c_str());
             return;
@@ -133,9 +131,9 @@ CommandPte(vector<string> SplittedCommand, string Command)
     }
     else
     {
-
-
-
+        //
+        // It might be address + pid
+        //
         if (!SplittedCommand.at(1).compare("pid"))
         {
             if (!ConvertStringToUInt32(SplittedCommand.at(2), &Pid))
@@ -146,9 +144,9 @@ CommandPte(vector<string> SplittedCommand, string Command)
 
             if (!SymbolConvertNameOrExprToAddress(SplittedCommandCaseSensitive.at(3), &TargetVa))
             {
-
-
-
+                //
+                // Couldn't resolve or unkonwn parameter
+                //
                 ShowMessages("err, couldn't resolve error at '%s'\n",
                              SplittedCommandCaseSensitive.at(3).c_str());
                 return;
@@ -158,9 +156,9 @@ CommandPte(vector<string> SplittedCommand, string Command)
         {
             if (!SymbolConvertNameOrExprToAddress(SplittedCommandCaseSensitive.at(1), &TargetVa))
             {
-
-
-
+                //
+                // Couldn't resolve or unkonwn parameter
+                //
                 ShowMessages("err, couldn't resolve error at '%s'\n\n",
                              SplittedCommandCaseSensitive.at(1).c_str());
                 return;
@@ -180,27 +178,27 @@ CommandPte(vector<string> SplittedCommand, string Command)
         }
     }
 
-
-
-
-
+    //
+    // Prepare the buffer
+    // We use same buffer for input and output
+    //
     AddressDetails.VirtualAddress = TargetVa;
     AddressDetails.ProcessId      = Pid; // null in debugger mode
 
     if (g_IsSerialConnectedToRemoteDebuggee)
     {
-
-
-
+        //
+        // Check to prevent using process id in !pte command
+        //
         if (Pid != 0)
         {
             ShowMessages("err, you cannot specify 'pid' in the debugger mode\n");
             return;
         }
 
-
-
-
+        //
+        // Send the request over serial kernel debugger
+        //
 
         KdSendPtePacketToDebuggee(&AddressDetails);
     }
@@ -214,9 +212,9 @@ CommandPte(vector<string> SplittedCommand, string Command)
             AddressDetails.ProcessId = Pid;
         }
 
-
-
-
+        //
+        // Send IOCTL
+        //
         Status = DeviceIoControl(
             g_DeviceHandle,                                  // Handle to device
             IOCTL_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS,  // IO Control code
@@ -224,7 +222,7 @@ CommandPte(vector<string> SplittedCommand, string Command)
             SIZEOF_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS, // Input buffer length
             &AddressDetails,                                 // Output Buffer from driver.
             SIZEOF_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS, // Length of output
-
+                                                             // buffer in bytes.
             &ReturnedLength,                                 // Bytes placed in buffer.
             NULL                                             // synchronous call
         );
@@ -241,11 +239,10 @@ CommandPte(vector<string> SplittedCommand, string Command)
             return;
         }
 
-
-
-
+        //
+        // Show the results
+        //
         CommandPteShowResults(TargetVa, &AddressDetails);
     }
 }
-
 

@@ -80,6 +80,12 @@ LalrIsOperandType()(ok bool)//col:2377
 
 
 
+
+
+
+
+
+
 )
 
 func NewScriptEngine() { return & scriptEngine{} }
@@ -91,6 +97,12 @@ func (s *scriptEngine)ScriptEngineConvertNameToAddress()(ok bool){//col:33
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -176,6 +188,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineSetTextMessageCallback()(ok bool){//col:65
 
 
@@ -183,6 +201,12 @@ func (s *scriptEngine)ScriptEngineSetTextMessageCallback()(ok bool){//col:65
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -268,6 +292,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineUnloadModuleSymbol()(ok bool){//col:96
 
 
@@ -275,6 +305,12 @@ func (s *scriptEngine)ScriptEngineUnloadModuleSymbol()(ok bool){//col:96
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -360,6 +396,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineGetFieldOffset()(ok bool){//col:130
 
 
@@ -367,6 +409,12 @@ func (s *scriptEngine)ScriptEngineGetFieldOffset()(ok bool){//col:130
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -452,6 +500,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineCreateSymbolTableForDisassembler()(ok bool){//col:163
 
 
@@ -498,6 +552,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineConvertFileToPdbPath()(ok bool){//col:180
 
 
@@ -505,6 +565,12 @@ func (s *scriptEngine)ScriptEngineConvertFileToPdbPath()(ok bool){//col:180
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -594,6 +660,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineShowDataBasedOnSymbolTypes()(ok bool){//col:228
 
 
@@ -605,6 +677,12 @@ func (s *scriptEngine)ScriptEngineShowDataBasedOnSymbolTypes()(ok bool){//col:22
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -690,6 +768,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails()(ok bool){//col:261
 
 
@@ -697,6 +781,12 @@ func (s *scriptEngine)ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails()(ok 
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -914,6 +1004,12 @@ func (s *scriptEngine)ScriptEngineParse()(ok bool){//col:490
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1667,6 +1763,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)BooleanExpressionExtractEnd()(ok bool){//col:1568
 
 
@@ -1708,6 +1810,12 @@ func (s *scriptEngine)BooleanExpressionExtractEnd()(ok bool){//col:1568
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1929,6 +2037,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)NewSymbol()(ok bool){//col:1767
 
 
@@ -1940,6 +2054,12 @@ func (s *scriptEngine)NewSymbol()(ok bool){//col:1767
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2030,6 +2150,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)GetStringSymbolSize()(ok bool){//col:1799
 
 
@@ -2038,6 +2164,12 @@ func (s *scriptEngine)GetStringSymbolSize()(ok bool){//col:1799
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2125,6 +2257,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)PrintSymbol()(ok bool){//col:1832
 
 
@@ -2139,6 +2277,12 @@ func (s *scriptEngine)PrintSymbol()(ok bool){//col:1832
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2275,6 +2419,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)NewSymbolBuffer()(ok bool){//col:1920
 
 
@@ -2327,6 +2477,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)RemoveSymbolBuffer()(ok bool){//col:1934
 
 
@@ -2336,6 +2492,12 @@ func (s *scriptEngine)RemoveSymbolBuffer()(ok bool){//col:1934
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2457,6 +2619,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)PrintSymbolBuffer()(ok bool){//col:2069
 
 
@@ -2479,6 +2647,12 @@ func (s *scriptEngine)PrintSymbolBuffer()(ok bool){//col:2069
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2571,6 +2745,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)PseudoRegToInt()(ok bool){//col:2109
 
 
@@ -2624,6 +2804,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)SemanticRuleToInt()(ok bool){//col:2129
 
 
@@ -2638,6 +2824,12 @@ func (s *scriptEngine)SemanticRuleToInt()(ok bool){//col:2129
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2772,6 +2964,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)GetGlobalIdentifierVal()(ok bool){//col:2245
 
 
@@ -2788,6 +2986,12 @@ func (s *scriptEngine)GetGlobalIdentifierVal()(ok bool){//col:2245
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2882,6 +3086,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)NewGlobalIdentifier()(ok bool){//col:2282
 
 
@@ -2930,6 +3140,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)NewLocalIdentifier()(ok bool){//col:2297
 
 
@@ -2939,6 +3155,12 @@ func (s *scriptEngine)NewLocalIdentifier()(ok bool){//col:2297
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3033,6 +3255,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *scriptEngine)LalrIsOperandType()(ok bool){//col:2377
 
 
@@ -3084,6 +3312,12 @@ func (s *scriptEngine)LalrIsOperandType()(ok bool){//col:2377
 
 return true
 }
+
+
+
+
+
+
 
 
 

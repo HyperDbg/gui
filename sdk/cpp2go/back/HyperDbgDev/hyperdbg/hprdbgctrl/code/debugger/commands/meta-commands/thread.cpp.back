@@ -1,26 +1,26 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file thread.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief show and change threads
+ * @details
+ * @version 0.1
+ * @date 2021-11-23
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 
-
-
-
-
-
+/**
+ * @brief help of .thread command
+ *
+ * @return VOID
+ */
 VOID
 CommandThreadHelp()
 {
@@ -46,7 +46,6 @@ CommandThreadHelp()
     ShowMessages("\t\te.g : .thread list process ffff948c`a1279880\n");
 }
 
-
 BOOLEAN
 CommandThreadListThreads(UINT64 Eprocess)
 {
@@ -57,12 +56,12 @@ CommandThreadListThreads(UINT64 Eprocess)
     UINT64                              AddressOfActiveProcessHead = 0; // nt!PsActiveProcessHead
     DEBUGGEE_THREAD_LIST_NEEDED_DETAILS ThreadListNeededItems      = {0};
 
-
-
-
-
-
-
+    //
+    // Query for nt!_EPROCESS.ThreadListHead, nt!_ETHREAD.ThreadListEntry,
+    // from the top of nt!_EPROCESS, and nt!_ETHREAD address and check if
+    // we find them or not, otherwise, it means that the PDB for ntoskrnl.exe
+    // is not available
+    //
     if (ScriptEngineGetFieldOffsetWrapper((CHAR *)"nt!_EPROCESS", (CHAR *)"ThreadListHead", &ThreadListHeadOffset) &&
         ScriptEngineGetFieldOffsetWrapper((CHAR *)"nt!_ETHREAD", (CHAR *)"ThreadListEntry", &ThreadListEntryOffset) &&
         ScriptEngineGetFieldOffsetWrapper((CHAR *)"nt!_ETHREAD", (CHAR *)"Cid", &CidOffset) &&
@@ -76,14 +75,14 @@ CommandThreadListThreads(UINT64 Eprocess)
         ThreadListNeededItems.PsActiveProcessHead      = AddressOfActiveProcessHead;
         ThreadListNeededItems.Process                  = Eprocess;
 
-
-
-
+        //
+        // Check if it's connected to a remote debuggee or not
+        //
         if (!g_IsSerialConnectedToRemoteDebuggee)
         {
-
-
-
+            //
+            // Get the thread details in VMI mode
+            //
             ObjectShowProcessesOrThreadList(FALSE,
                                             NULL,
                                             NULL,
@@ -91,9 +90,9 @@ CommandThreadListThreads(UINT64 Eprocess)
         }
         else
         {
-
-
-
+            //
+            // Send the packet to list threads
+            //
             KdSendSwitchThreadPacketToDebuggee(DEBUGGEE_DETAILS_AND_SWITCH_THREAD_GET_THREAD_LIST,
                                                NULL,
                                                NULL,
@@ -109,14 +108,13 @@ CommandThreadListThreads(UINT64 Eprocess)
     }
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief .thread command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandThread(vector<string> SplittedCommand, string Command)
 {
@@ -134,18 +132,18 @@ CommandThread(vector<string> SplittedCommand, string Command)
 
     if (SplittedCommand.size() == 1)
     {
-
-
-
+        //
+        // Check if it's connected to a remote debuggee or not
+        //
         if (!g_IsSerialConnectedToRemoteDebuggee)
         {
             ObjectShowProcessesOrThreadDetails(FALSE);
         }
         else
         {
-
-
-
+            //
+            // Send the packet to get current thread
+            //
             KdSendSwitchThreadPacketToDebuggee(DEBUGGEE_DETAILS_AND_SWITCH_THREAD_GET_THREAD_DETAILS,
                                                NULL,
                                                NULL,
@@ -157,10 +155,10 @@ CommandThread(vector<string> SplittedCommand, string Command)
     {
         if (!SplittedCommand.at(1).compare("list"))
         {
-
-
-
-
+            //
+            // Sending null as the nt!_EPROCESS indicates that the target process is
+            // the current process (Current nt!_EPROCESS)
+            //
             if (!CommandThreadListThreads(NULL))
             {
                 ShowMessages("err, the need offset to iterate over threads not found, "
@@ -180,9 +178,9 @@ CommandThread(vector<string> SplittedCommand, string Command)
     }
     else if (SplittedCommand.size() == 3)
     {
-
-
-
+        //
+        // Check if it's connected to a remote debuggee or not
+        //
         if (!g_IsSerialConnectedToRemoteDebuggee)
         {
             ShowMessages("err, you're not connected to any debuggee in Debugger Mode, "
@@ -231,22 +229,22 @@ CommandThread(vector<string> SplittedCommand, string Command)
 
         if (!SplittedCommand.at(0).compare(".thread2"))
         {
-
-
-
+            //
+            // Check by changes to gs:[188]
+            //
             CheckByClkIntr = FALSE;
         }
         else
         {
-
-
-
+            //
+            // Check on clock interrupt changes
+            //
             CheckByClkIntr = TRUE;
         }
 
-
-
-
+        //
+        // Send the packet to change the thread
+        //
         KdSendSwitchThreadPacketToDebuggee(DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PERFORM_SWITCH,
                                            TargetThreadId,
                                            TargetThread,
@@ -268,9 +266,9 @@ CommandThread(vector<string> SplittedCommand, string Command)
                     return;
                 }
 
-
-
-
+                //
+                // List the target process's threads
+                //
                 if (!CommandThreadListThreads(TargetProcess))
                 {
                     ShowMessages("err, the need offset to iterate over threads not found, "
@@ -304,5 +302,4 @@ CommandThread(vector<string> SplittedCommand, string Command)
         return;
     }
 }
-
 

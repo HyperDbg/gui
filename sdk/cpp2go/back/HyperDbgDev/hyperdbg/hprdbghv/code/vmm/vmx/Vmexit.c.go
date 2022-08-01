@@ -44,6 +44,12 @@ VmxVmexitHandler()(ok bool)//col:462
 
 
 
+
+
+
+
+
+
 )
 
 func NewVmexit() { return & vmexit{} }
@@ -267,6 +273,12 @@ func (v *vmexit)VmxVmexitHandler()(ok bool){//col:462
 
 return true
 }
+
+
+
+
+
+
 
 
 

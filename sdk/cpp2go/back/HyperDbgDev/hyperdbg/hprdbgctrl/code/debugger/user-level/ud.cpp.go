@@ -60,6 +60,12 @@ UdShowListActiveDebuggingProcessesAndThreads()(ok bool)//col:1138
 
 
 
+
+
+
+
+
+
 )
 
 func NewUd() { return & ud{} }
@@ -80,6 +86,12 @@ func (u *ud)UdInitializeUserDebugger()(ok bool){//col:48
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -183,6 +195,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *ud)UdSetActiveDebuggingProcess()(ok bool){//col:122
 
 
@@ -239,6 +257,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *ud)UdRemoveActiveDebuggingProcess()(ok bool){//col:138
 
 
@@ -246,6 +270,12 @@ func (u *ud)UdRemoveActiveDebuggingProcess()(ok bool){//col:138
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -350,6 +380,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *ud)UdListProcessThreads()(ok bool){//col:237
 
 
@@ -377,6 +413,12 @@ func (u *ud)UdListProcessThreads()(ok bool){//col:237
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -487,6 +529,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *ud)UdCreateSuspendedProcess()(ok bool){//col:342
 
 
@@ -513,6 +561,12 @@ func (u *ud)UdCreateSuspendedProcess()(ok bool){//col:342
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -682,6 +736,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *ud)UdKillProcess()(ok bool){//col:620
 
 
@@ -711,6 +771,12 @@ func (u *ud)UdKillProcess()(ok bool){//col:620
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -821,6 +887,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *ud)UdPauseProcess()(ok bool){//col:772
 
 
@@ -849,6 +921,12 @@ func (u *ud)UdPauseProcess()(ok bool){//col:772
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -962,6 +1040,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *ud)UdContinueDebuggee()(ok bool){//col:863
 
 
@@ -976,6 +1060,12 @@ func (u *ud)UdContinueDebuggee()(ok bool){//col:863
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1078,6 +1168,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (u *ud)UdSetActiveDebuggingThreadByPidOrTid()(ok bool){//col:987
 
 
@@ -1118,6 +1214,12 @@ func (u *ud)UdSetActiveDebuggingThreadByPidOrTid()(ok bool){//col:987
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1239,6 +1341,12 @@ func (u *ud)UdShowListActiveDebuggingProcessesAndThreads()(ok bool){//col:1138
 
 return true
 }
+
+
+
+
+
+
 
 
 

@@ -52,6 +52,12 @@ CommandSettings()(ok bool)//col:634
 
 
 
+
+
+
+
+
+
 )
 
 func NewSettings() { return & settings{} }
@@ -79,6 +85,12 @@ func (s *settings)CommandSettingsHelp()(ok bool){//col:50
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -186,6 +198,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *settings)CommandSettingsSetValueFromConfigFile()(ok bool){//col:155
 
 
@@ -203,6 +221,12 @@ func (s *settings)CommandSettingsSetValueFromConfigFile()(ok bool){//col:155
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -355,6 +379,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *settings)CommandSettingsAddressConversion()(ok bool){//col:332
 
 
@@ -399,6 +429,12 @@ func (s *settings)CommandSettingsAddressConversion()(ok bool){//col:332
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -523,6 +559,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *settings)CommandSettingsAutoUpause()(ok bool){//col:461
 
 
@@ -567,6 +609,12 @@ func (s *settings)CommandSettingsAutoUpause()(ok bool){//col:461
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -706,6 +754,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *settings)CommandSettings()(ok bool){//col:634
 
 
@@ -761,6 +815,12 @@ func (s *settings)CommandSettings()(ok bool){//col:634
 
 return true
 }
+
+
+
+
+
+
 
 
 

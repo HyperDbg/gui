@@ -49,6 +49,12 @@ DebuggerEventEnableMonitorReadAndWriteForAddress()(ok bool)//col:162
 
 
 
+
+
+
+
+
+
 )
 
 func NewDebuggerEvents() { return & debuggerEvents{} }
@@ -60,6 +66,12 @@ func (d *debuggerEvents)DebuggerEventEnableEferOnAllProcessors()(ok bool){//col:
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -147,6 +159,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *debuggerEvents)DebuggerEventEnableMovToCr3ExitingOnAllProcessors()(ok bool){//col:47
 
 
@@ -194,6 +212,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *debuggerEvents)DebuggerEventDisableMovToCr3ExitingOnAllProcessors()(ok bool){//col:59
 
 
@@ -201,6 +225,12 @@ func (d *debuggerEvents)DebuggerEventDisableMovToCr3ExitingOnAllProcessors()(ok 
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -304,6 +334,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *debuggerEvents)DebuggerEventEnableMonitorReadAndWriteForAddress()(ok bool){//col:162
 
 
@@ -319,6 +355,12 @@ func (d *debuggerEvents)DebuggerEventEnableMonitorReadAndWriteForAddress()(ok bo
 
 return true
 }
+
+
+
+
+
+
 
 
 

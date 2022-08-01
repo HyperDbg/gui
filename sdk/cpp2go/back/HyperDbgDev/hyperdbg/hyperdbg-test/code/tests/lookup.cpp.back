@@ -1,22 +1,22 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file lookup.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief perform tests and create lookup details
+ * @details
+ * @version 0.1
+ * @date 2021-04-09
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
-
-
-
+/**
+ * @brief Thread for listening for results 
+ *
+ * @param Data
+ * @return DWORD Device Handle
+ */
 DWORD WINAPI
 TestListenerForResultsThread(void * data)
 {
@@ -25,30 +25,30 @@ TestListenerForResultsThread(void * data)
     char * BufferToRead;
     char   TestPipe[] = "\\\\.\\Pipe\\HyperDbgOutputTest";
 
-
-
-
+    //
+    // Create server pipe for outputs ******** Thread ********
+    //
     OutputPipeHandle = NamedPipeServerCreatePipe(TestPipe,
                                                  TEST_CASE_MAXIMUM_BUFFERS_TO_COMMUNICATE,
                                                  TEST_CASE_MAXIMUM_BUFFERS_TO_COMMUNICATE);
     if (!OutputPipeHandle)
     {
-
-
-
+        //
+        // Error in creating handle
+        //
         return FALSE;
     }
 
     BufferToRead = (char *)malloc(TEST_CASE_MAXIMUM_BUFFERS_TO_COMMUNICATE);
 
-
-
-
+    //
+    // Wait for message from the target processs
+    //
     if (!NamedPipeServerWaitForClientConntection(OutputPipeHandle))
     {
-
-
-
+        //
+        // Error in connection
+        //
         free(BufferToRead);
         return FALSE;
     }
@@ -59,37 +59,36 @@ ReadAgain:
 
     if (!ReadBytes)
     {
-
-
-
+        //
+        // Nothing to read
+        //
 
         free(BufferToRead);
         return FALSE;
     }
 
-
-
-
+    //
+    // parse results from debugger
+    //
     printf("Test from debugger : %s\n", BufferToRead);
 
-
-
-
+    //
+    // Stuck on a loop
+    //
     goto ReadAgain;
 
     return TRUE;
 }
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * @brief Create lookup table for test
+ *
+ * @param PipeHandle
+ * @param KernelInformation
+ * @param KernelInformationSize
+ * 
+ * @return VOID
+ */
 VOID
 TestCreateLookupTable(HANDLE PipeHandle, PVOID KernelInformation, UINT32 KernelInformationSize)
 {
@@ -106,45 +105,45 @@ TestCreateLookupTable(HANDLE PipeHandle, PVOID KernelInformation, UINT32 KernelI
 
     KernelInfoArray = (PDEBUGGEE_KERNEL_AND_USER_TEST_INFORMATION)KernelInformation;
 
-
-
-
+    //
+    // Add kernel-mode details to lookup table
+    //
     for (size_t i = 0; i < KernelInformationSize / sizeof(DEBUGGEE_KERNEL_AND_USER_TEST_INFORMATION); i++)
     {
         LookupTable.push_back(KernelInfoArray[i]);
     }
 
+    //
+    //  Add user-mode details to lookup table
+    //
 
+    // Todo
 
-
-
-
-
-
-
-
+    //
+    // Create thread for listening results
+    //
     HANDLE Thread = CreateThread(NULL, 0, TestListenerForResultsThread, NULL, 0, &ThreadId);
 
-
-
-
+    //
+    // Read test-cases
+    //
     if (!TestCase(TestCases))
     {
-
-
-
+        //
+        // There was an error
+        //
         return;
     }
 
-
-
-
+    //
+    // Replace tags with addresses
+    //
     for (auto & CurrentCase : TestCases)
     {
-
-
-
-
+        //
+        // Template instantiations for
+        // extracting the matching pattern
+        //
         smatch Match;
         regex  r("\\[(.*?)\\]");
         string Subject = std::move(CurrentCase);
@@ -163,9 +162,9 @@ TestCreateLookupTable(HANDLE PipeHandle, PVOID KernelInformation, UINT32 KernelI
                 }
             }
 
-
-
-
+            //
+            // suffix to find the rest of the string
+            //
             Subject = Match.suffix().str();
             i++;
         }
@@ -174,9 +173,9 @@ TestCreateLookupTable(HANDLE PipeHandle, PVOID KernelInformation, UINT32 KernelI
 
     _getch();
 
-
-
-
+    //
+    // Execute commands in debugger
+    //
     for (auto NewCase : TestCases)
     {
         printf("new cases : %s\n", NewCase.c_str());
@@ -186,42 +185,41 @@ TestCreateLookupTable(HANDLE PipeHandle, PVOID KernelInformation, UINT32 KernelI
         SentMessageResult = NamedPipeClientSendMessage(PipeHandle, (char *)OutputCommand.c_str(), OutputCommand.length() + 1);
         if (!SentMessageResult)
         {
-
-
-
+            //
+            // Sending error
+            //
             return;
         }
     }
 
     _getch();
 
-
-
-
+    //
+    // Send test kernel message to the HyperDbg
+    //
     SentMessageResult = NamedPipeClientSendMessage(PipeHandle, (char *)KernelTestMessage, sizeof(KernelTestMessage));
 
     if (!SentMessageResult)
     {
-
-
-
+        //
+        // Sending error
+        //
         return;
     }
 
     _getch();
 
-
-
-
+    //
+    // Send success message to the HyperDbg
+    //
     SentMessageResult = NamedPipeClientSendMessage(PipeHandle, (char *)SuccessMessage, sizeof(SuccessMessage));
 
     if (!SentMessageResult)
     {
-
-
-
+        //
+        // Sending error
+        //
         return;
     }
 }
-
 

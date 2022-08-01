@@ -1,24 +1,24 @@
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file Regs.c
+ * @author Alee Amini (alee@hyperdbg.org)
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Script engine registers implementations
+ * @details
+ * @version 0.2
+ * @date 2022-06-29
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
-
-
-
-
+/**
+ * @brief Get the register value 
+ * 
+ * @param GuestRegs 
+ * @param RegId 
+ * @return UINT64 
+ */
 UINT64
 GetRegValue(PGUEST_REGS GuestRegs, REGS_ENUM RegId)
 {
@@ -950,15 +950,14 @@ GetRegValue(PGUEST_REGS GuestRegs, REGS_ENUM RegId)
     }
 }
 
-
-
-
-
-
-
-
-
-
+/**
+ * @brief Set the register value
+ * 
+ * @param GuestRegs 
+ * @param Symbol 
+ * @param Value 
+ * @return VOID 
+ */
 VOID
 SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
 {
@@ -1351,9 +1350,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_DS:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1366,9 +1365,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_ES:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1381,9 +1380,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_FS:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1396,9 +1395,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_GS:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1411,9 +1410,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_CS:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1426,9 +1425,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_SS:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1441,9 +1440,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_RFLAGS:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1455,9 +1454,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_EFLAGS:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1469,9 +1468,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_FLAGS:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1483,9 +1482,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_CF:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1497,9 +1496,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_PF:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1511,9 +1510,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_AF:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1525,9 +1524,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_ZF:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1539,9 +1538,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_SF:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1553,9 +1552,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_TF:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1567,9 +1566,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_IF:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1581,9 +1580,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_DF:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1595,9 +1594,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_OF:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1609,9 +1608,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_IOPL:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1625,9 +1624,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_NT:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1639,9 +1638,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_RF:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1653,9 +1652,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_VM:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1667,9 +1666,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_AC:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1681,9 +1680,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_VIF:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1695,9 +1694,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_VIP:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1709,9 +1708,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_ID:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1723,9 +1722,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_RIP:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1737,9 +1736,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_EIP:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1751,9 +1750,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_IP:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1765,9 +1764,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_IDTR:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1779,9 +1778,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_LDTR:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1793,9 +1792,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_GDTR:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1807,9 +1806,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_TR:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1821,9 +1820,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_CR0:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1835,9 +1834,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_CR2:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1849,9 +1848,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_CR3:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1863,9 +1862,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_CR4:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1877,9 +1876,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_CR8:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1891,9 +1890,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_DR0:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1905,9 +1904,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_DR1:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1919,9 +1918,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_DR2:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1933,9 +1932,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_DR3:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1947,9 +1946,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_DR6:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1961,9 +1960,9 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
     case REGISTER_DR7:
 
 #ifdef SCRIPT_ENGINE_USER_MODE
-
-
-
+        //
+        // Nothing to do
+        //
 #endif // SCRIPT_ENGINE_USER_MODE
 
 #ifdef SCRIPT_ENGINE_KERNEL_MODE
@@ -1973,5 +1972,4 @@ SetRegValue(PGUEST_REGS GuestRegs, PSYMBOL Symbol, UINT64 Value)
         break;
     }
 }
-
 

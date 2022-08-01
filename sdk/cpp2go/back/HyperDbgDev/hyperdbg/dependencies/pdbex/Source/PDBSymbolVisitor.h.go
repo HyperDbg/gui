@@ -47,6 +47,14 @@ PdbSymbolVisitor interface{
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewPdbSymbolVisitor() { return & pdbSymbolVisitor{} }
@@ -266,6 +274,14 @@ func (p *pdbSymbolVisitor)		PDBSymbolVisitor()(ok bool){//col:372
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

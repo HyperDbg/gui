@@ -1,19 +1,19 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file connect.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief .connect command
+ * @details
+ * @version 0.1
+ * @date 2020-05-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern BOOLEAN g_IsConnectedToHyperDbgLocally;
 extern BOOLEAN g_IsConnectedToRemoteDebuggee;
 extern BOOLEAN g_IsConnectedToRemoteDebugger;
@@ -22,11 +22,11 @@ extern BOOLEAN g_IsSerialConnectedToRemoteDebugger;
 extern string  g_ServerPort;
 extern string  g_ServerIp;
 
-
-
-
-
-
+/**
+ * @brief help of .connect command
+ *
+ * @return VOID
+ */
 VOID
 CommandConnectHelp()
 {
@@ -41,14 +41,13 @@ CommandConnectHelp()
     ShowMessages("\t\te.g : .connect 192.168.1.5 50000\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief .connect command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandConnect(vector<string> SplittedCommand, string Command)
 {
@@ -73,19 +72,19 @@ CommandConnect(vector<string> SplittedCommand, string Command)
 
     if (SplittedCommand.size() == 1)
     {
-
-
-
-
+        //
+        // Means that user entered just a connect so we have to
+        // ask to connect to what ?
+        //
         ShowMessages("incorrect use of '.connect'\n\n");
         CommandConnectHelp();
         return;
     }
     else if (SplittedCommand.at(1) == "local" && SplittedCommand.size() == 2)
     {
-
-
-
+        //
+        // connect to local debugger
+        //
         ShowMessages("local debugging (vmi-mode)\n");
         g_IsConnectedToHyperDbgLocally = TRUE;
         return;
@@ -99,11 +98,11 @@ CommandConnect(vector<string> SplittedCommand, string Command)
             port = SplittedCommand.at(2);
         }
 
-
-
-
-
-
+        //
+        // means that probably wants to connect to a remote
+        // system, let's first check the if the parameters are
+        // valid
+        //
         if (!ValidateIP(ip))
         {
             ShowMessages("incorrect ip address\n");
@@ -118,18 +117,18 @@ CommandConnect(vector<string> SplittedCommand, string Command)
                 return;
             }
 
-
-
-
+            //
+            // connect to remote debugger
+            //
             g_ServerIp   = ip;
             g_ServerPort = port;
             RemoteConnectionConnect(ip.c_str(), port.c_str());
         }
         else
         {
-
-
-
+            //
+            // connect to remote debugger (default port)
+            //
             g_ServerIp   = ip;
             g_ServerPort = DEFAULT_PORT;
             RemoteConnectionConnect(ip.c_str(), DEFAULT_PORT);
@@ -142,5 +141,4 @@ CommandConnect(vector<string> SplittedCommand, string Command)
         return;
     }
 }
-
 

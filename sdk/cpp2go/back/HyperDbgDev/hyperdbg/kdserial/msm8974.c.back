@@ -1,29 +1,29 @@
+/*++
 
+Copyright (c) Microsoft Corporation.  All rights reserved.
 
+Module Name:
 
+    msm8974.c
 
+Abstract:
 
+    This module contains support for the Qualcomm 8974 serial UART.
 
+--*/
 
-
-
-
-
-
-
-
-
+// ------------------------------------------------------------------- Includes
 
 #include "common.h"
 
-
+// ---------------------------------------------------------------- Definitions
 
 #define UART_RX_BYTES_TO_RECEIVE 0x2000
 #define RX_FIFO_WIDTH            sizeof(UINT32)
 
-
-
-
+//
+// Register addresses
+//
 
 #define UART_DM_MR1_ADDR             0x00000000
 #define UART_DM_MR2_ADDR             0x00000004
@@ -47,20 +47,20 @@
 #define UART_DM_TF_ADDR              0x00000100
 #define UART_DM_RF_ADDR              0x00000140
 
+//
+// Register Masks
+//
 
-
-
-
-
-
-
+//
+// Mode Register 1
+//
 
 #define UART_DM_MR1_RFRC 0x80 // Ready-for-receiving Control
 #define UART_DM_MR1_CTSC 0x40 // Clear-to-send Control
 
-
-
-
+//
+// Mode Register 2
+//
 
 #define UART_DM_MR2_LOOPBACK 0x80 // Channel Mode
 #define UART_DM_MR2_ERRMODE  0x40 // Error Mode
@@ -77,9 +77,9 @@
 #define UART_DM_MR2_EPAR     0x02 // Even Parity
 #define UART_DM_MR2_SPAR     0x03 // Space Parity
 
-
-
-
+//
+// Status Register
+//
 
 #define UART_DM_SR_RXRDY_BMSK         0x1
 #define UART_DM_SR_TXRDY_BMSK         0x4
@@ -91,28 +91,28 @@
 #define UART_DM_SR_ERROR_BMSK         (UART_DM_SR_UART_OVERRUN_BMSK | \
                                UART_DM_SR_PAR_FRAME_ERR_BMSK)
 
-
-
-
+//
+// Interrupt Status Register
+//
 
 #define UART_DM_ISR_RXSTALE_BMSK  0x8
 #define UART_DM_ISR_TX_READY_BMSK 0x80
 
-
-
-
+//
+// Receive FIFO Status Register
+//
 
 #define UART_DM_RXFS_RX_FIFO_STATE_LSB_BMSK 0x7f
 
-
-
-
+//
+// Data mover enable/disable register
+//
 
 #define UART_DM_DMA_EN_RXTX_DM_DIS 0x00
 
-
-
-
+//
+// Command Register
+//
 
 #define UART_DM_CR_ENA_RX        0x01   // Enable Receiver
 #define UART_DM_CR_DIS_RX        0x02   // Disable Receiver
@@ -142,9 +142,9 @@
 #define UART_DM_CR_ENA_STALE_EVT 0x0500 // Enables Stale Event
 #define UART_DM_CR_DIS_STALE_EVT 0x0600 // Disables Stale Event
 
-
-
-
+//
+// Interrupt Mask Register
+//
 
 #define UART_DM_IMR_TX_DONE   0x200 // TX Done
 #define UART_DM_IMR_TX_ERROR  0x100 // TX Error
@@ -164,27 +164,27 @@
                              UART_DM_MR2_NOPAR)
 #define UART_DM_IMR_DEFAULT 0
 
-
-
-
+//
+// Interrupt Program Register
+//
 
 #define UART_DM_IPR_DEFAULT 0x2
 
-
-
-
+//
+// RX FIFO Base Address Register
+//
 
 #define UART_DM_BADR_DEFAULT 0x70
 
-
-
-
+//
+// For UART IRDA Register
+//
 
 #define UART_DM_IRDA_DISABLE 0x00 // Disable UART IRDA transceiver
 
-
-
-
+//
+// Channel Command
+//
 
 #define UART_DM_CH_CMD_RESET_RECEIVER          0x01
 #define UART_DM_CH_CMD_RESET_TRANSMITTER       0x02
@@ -207,9 +207,9 @@
 #define UART_DM_CH_CMD_RESET_BRK_END_IRQ       0x13
 #define UART_DM_CH_CMD_RESET_PAR_FRAME_ERR_IRQ 0x14
 
-
-
-
+//
+// General Command
+//
 
 #define UART_DM_GENERAL_CMD_CR_PROTECTION_ENABLE  0x01
 #define UART_DM_GENERAL_CMD_CR_PROTECTION_DISABLE 0x02
@@ -218,7 +218,7 @@
 #define UART_DM_GENERAL_CMD_ENABLE_STALE_EVENT    0x05
 #define UART_DM_GENERAL_CMD_DISABLE_STALE_EVENT   0x06
 
-
+// --------------------------------------------------------------------- Macros
 
 #define UART_DM_READ_REG(addr, offset) \
     READ_REGISTER_ULONG((ULONG *)((PUCHAR)addr + offset))
@@ -233,14 +233,14 @@
 #define UART_DM_GENERAL_CMD(a, v) \
     UART_DM_WRITE_REG((a), UART_DM_CR_ADDR, ((v)&0x7) << 8)
 
-
+// ----------------------------------------------- Internal Function Prototypes
 
 BOOLEAN
 MSM8974SetBaud(
     _Inout_ PCPPORT Port,
     ULONG           Rate);
 
-
+// ------------------------------------------------------------------ Functions
 
 BOOLEAN
 MSM8974InitializePort(
@@ -250,32 +250,32 @@ MSM8974InitializePort(
     UCHAR                            AccessSize,
     UCHAR                            BitWidth)
 
+/*++
 
+Routine Description:
 
+    This routine performs the initialization of an MSM8974 serial UART.
 
+Arguments:
 
+    LoadOptions - Optional load option string. Currently unused.
 
+    Port - Supplies a pointer to a CPPORT object which will be filled in as
+        part of the port initialization.
 
+    MemoryMapped - Supplies a boolean which indicates if the UART is accessed
+        through memory-mapped registers or legacy port I/O.
 
+    AccessSize - Supplies an ACPI Generic Access Size value which indicates the
+        type of bus access that should be performed when accessing the UART.
 
+    BitWidth - Supplies a number indicating how wide the UART's registers are.
 
+Return Value:
 
+    TRUE if the port has been successfully initialized, FALSE otherwise.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     UNREFERENCED_PARAMETER(LoadOptions);
@@ -317,29 +317,28 @@ MSM8974InitializePort(
     return TRUE;
 }
 
-
 BOOLEAN
 MSM8974SetBaud(
     _Inout_ PCPPORT Port,
     ULONG           Rate)
 
+/*++
 
+Routine Description:
 
+    Set the baud rate for the UART hardware and record it in the port object.
 
+Arguments:
 
+    Port - Supplies the address of the port object that describes the UART.
 
+    Rate - Supplies the desired baud rate in bits per second.
 
+Return Value:
 
+    TRUE if the baud rate was programmed, FALSE if it was not.
 
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     UINT32 DivisorLatch;
@@ -349,9 +348,9 @@ MSM8974SetBaud(
         return FALSE;
     }
 
-
-
-
+    //
+    // Clock rate is 1843200.
+    //
 
     switch (Rate)
     {
@@ -413,29 +412,28 @@ MSM8974SetBaud(
     return TRUE;
 }
 
-
 UART_STATUS
 MSM8974GetByte(
     _Inout_ PCPPORT Port,
     _Out_ PUCHAR    Byte)
 
+/*++
 
+Routine Description:
 
+    Fetch a data byte from the UART device and return it.
 
+Arguments:
 
+    Port - Supplies the address of the port object that describes the UART.
 
+    Byte - Supplies the address of variable to hold the result.
 
+Return Value:
 
+    UART_STATUS code.
 
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     static UINT32 RxWord;
@@ -468,10 +466,10 @@ MSM8974GetByte(
                 continue;
             }
 
-
-
-
-
+            //
+            // Read only if there are more than 4 bytes in the FIFO or RX Stale
+            // occurred
+            //
 
             if ((UART_DM_READ_REG(Address, UART_DM_RXFS_ADDR) &
                  UART_DM_RXFS_RX_FIFO_STATE_LSB_BMSK) == 1)
@@ -537,33 +535,32 @@ MSM8974GetByte(
     return UartNoData;
 }
 
-
 UART_STATUS
 MSM8974PutByte(
     _Inout_ PCPPORT Port,
     UCHAR           Byte,
     BOOLEAN         BusyWait)
 
+/*++
 
+Routine Description:
 
+    Write a data byte out to the UART device.
 
+Arguments:
 
+    Port - Supplies the address of the port object that describes the UART.
 
+    Byte - Supplies the data to emit.
 
+    BusyWait - Supplies a flag to control whether this routine will busy
+        wait (spin) for the UART hardware to be ready to transmit.
 
+Return Value:
 
+    UART_STATUS code.
 
-
-
-
-
-
-
-
-
-
-
-
+--*/
 
 {
     PUCHAR Address;
@@ -597,26 +594,25 @@ MSM8974PutByte(
     return UartSuccess;
 }
 
-
 BOOLEAN
 MSM8974RxReady(
     _Inout_ PCPPORT Port)
 
+/*++
 
+Routine Description:
 
+    This routine determines if there is data pending in the UART.
 
+Arguments:
 
+    Port - Supplies the address of the port object that describes the UART.
 
+Return Value:
 
+    TRUE if data is available, FALSE otherwise.
 
-
-
-
-
-
-
-
-
+--*/
 
 {
     UINT32 Sr;
@@ -635,8 +631,7 @@ MSM8974RxReady(
     return FALSE;
 }
 
-
-
+// -------------------------------------------------------------------- Globals
 
 UART_HARDWARE_DRIVER MSM8974HardwareDriver = {
     MSM8974InitializePort,

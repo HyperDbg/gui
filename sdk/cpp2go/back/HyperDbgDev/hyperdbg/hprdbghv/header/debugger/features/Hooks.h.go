@@ -61,6 +61,12 @@ Hooks interface{
 
 
 
+
+
+
+
+
+
 )
 
 func NewHooks() { return & hooks{} }
@@ -79,6 +85,12 @@ func (h *hooks)    ()(ok bool){//col:61
 
 return true
 }
+
+
+
+
+
+
 
 
 

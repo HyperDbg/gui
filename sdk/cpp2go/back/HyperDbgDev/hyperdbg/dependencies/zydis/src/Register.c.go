@@ -52,6 +52,12 @@ ZydisRegisterWidth ZydisRegisterClassGetWidth()(ok bool)//col:306
 
 
 
+
+
+
+
+
+
 )
 
 func NewRegister() { return & register{} }
@@ -76,6 +82,12 @@ func (r *register)ZydisRegister ZydisRegisterEncode()(ok bool){//col:115
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -180,6 +192,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (r *register)ZydisRegisterClass ZydisRegisterGetClass()(ok bool){//col:149
 
 
@@ -194,6 +212,12 @@ func (r *register)ZydisRegisterClass ZydisRegisterGetClass()(ok bool){//col:149
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -276,6 +300,12 @@ func (r *register)ZydisRegisterWidth ZydisRegisterGetWidth()(ok bool){//col:192
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -414,6 +444,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (r *register)const char* ZydisRegisterGetString()(ok bool){//col:280
 
 
@@ -425,6 +461,12 @@ func (r *register)const char* ZydisRegisterGetString()(ok bool){//col:280
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -518,6 +560,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (r *register)ZydisRegisterWidth ZydisRegisterClassGetWidth()(ok bool){//col:306
 
 
@@ -531,6 +579,12 @@ func (r *register)ZydisRegisterWidth ZydisRegisterClassGetWidth()(ok bool){//col
 
 return true
 }
+
+
+
+
+
+
 
 
 

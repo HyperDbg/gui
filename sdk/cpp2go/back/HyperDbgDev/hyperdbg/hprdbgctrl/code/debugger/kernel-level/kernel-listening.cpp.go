@@ -47,6 +47,12 @@ ListeningSerialPauseDebuggeeThread()(ok bool)//col:1314
 
 
 
+
+
+
+
+
+
 )
 
 func NewKernelListening() { return & kernelListening{} }
@@ -737,6 +743,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kernelListening)ListeningSerialPortInDebuggee()(ok bool){//col:1278
 
 
@@ -853,6 +865,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kernelListening)ListeningSerialPauseDebuggerThread()(ok bool){//col:1296
 
 
@@ -901,6 +919,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kernelListening)ListeningSerialPauseDebuggeeThread()(ok bool){//col:1314
 
 
@@ -909,6 +933,12 @@ func (k *kernelListening)ListeningSerialPauseDebuggeeThread()(ok bool){//col:131
 
 return true
 }
+
+
+
+
+
+
 
 
 

@@ -1,24 +1,24 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file Common.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Header files for common functions
+ * @details
+ * @version 0.1
+ * @date 2020-04-10
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
+//////////////////////////////////////////////////
+//					Enums						//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief Segment selector registers in x86
+ *
+ */
 typedef enum _SEGMENT_REGISTERS
 {
     ES = 0,
@@ -31,10 +31,10 @@ typedef enum _SEGMENT_REGISTERS
     TR
 } SEGMENT_REGISTERS;
 
-
-
-
-
+/**
+ * @brief Different methods of killing a process
+ *
+ */
 typedef enum _PROCESS_KILL_METHODS
 {
     PROCESS_KILL_METHOD_1 = 0,
@@ -43,9 +43,9 @@ typedef enum _PROCESS_KILL_METHODS
 
 } PROCESS_KILL_METHODS;
 
-
-
-
+//////////////////////////////////////////////////
+//				 Spinlock Funtions				//
+//////////////////////////////////////////////////
 
 BOOLEAN
 SpinlockTryLock(volatile LONG * Lock);
@@ -70,13 +70,13 @@ SpinlockInterlockedCompareExchange(
                    SpinlockUnlock(&LockObject), \
                    CodeToRun)
 
+//////////////////////////////////////////////////
+//					Constants					//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
+/*
+ * @brief Windows IRQ Levels
+ */
 #define PASSIVE_LEVEL  0  // Passive release level
 #define LOW_LEVEL      0  // Lowest interrupt level
 #define APC_LEVEL      1  // APC interrupt level
@@ -89,9 +89,9 @@ SpinlockInterlockedCompareExchange(
 #define PROFILE_LEVEL  15 // timer used for profiling.
 #define HIGH_LEVEL     15 // Highest interrupt level
 
-
-
-
+/*
+ * @brief Segment register and corresponding GDT meaning in Windows
+ */
 #define KGDT64_NULL      (0 * 16)     // NULL descriptor
 #define KGDT64_R0_CODE   (1 * 16)     // kernel mode 64-bit code
 #define KGDT64_R0_DATA   (1 * 16) + 8 // kernel mode 64-bit data (stack)
@@ -103,9 +103,9 @@ SpinlockInterlockedCompareExchange(
 #define KGDT64_R0_CMCODE (6 * 16)     // kernel mode 32-bit code
 #define KGDT64_LAST      (7 * 16)     // last entry
 
-
-
-
+/**
+ * @brief Intel CPU flags in CR0
+ */
 #define X86_CR0_PE 0x00000001 /* Enable Protected Mode    (RW) */
 #define X86_CR0_MP 0x00000002 /* Monitor Coprocessor      (RW) */
 #define X86_CR0_EM 0x00000004 /* Require FPU Emulation    (RO) */
@@ -118,10 +118,10 @@ SpinlockInterlockedCompareExchange(
 #define X86_CR0_CD 0x40000000 /* Cache Disable            (RW) */
 #define X86_CR0_PG 0x80000000 /* Paging                         */
 
-
-
-
-
+/**
+ * @brief Intel CPU features in CR4
+ *
+ */
 #define X86_CR4_VME        0x0001 /* enable vm86 extensions */
 #define X86_CR4_PVI        0x0002 /* virtual interrupts flag enable */
 #define X86_CR4_TSD        0x0004 /* disable time stamp at ipl 3 */
@@ -135,10 +135,10 @@ SpinlockInterlockedCompareExchange(
 #define X86_CR4_OSXMMEXCPT 0x0400 /* enable unmasked SSE exceptions */
 #define X86_CR4_VMXE       0x2000 /* enable VMX */
 
-
-
-
-
+/**
+ * @brief EFLAGS/RFLAGS
+ *
+ */
 #define X86_FLAGS_CF                 (1 << 0)
 #define X86_FLAGS_PF                 (1 << 2)
 #define X86_FLAGS_AF                 (1 << 4)
@@ -165,74 +165,74 @@ SpinlockInterlockedCompareExchange(
 #define X86_FLAGS_RESERVED_BITS 0xffc38028
 #define X86_FLAGS_FIXED         0x00000002
 
-
-
-
-
+/**
+ * @brief PCID Flags
+ *
+ */
 #define PCID_NONE 0x000
 #define PCID_MASK 0x003
 
-
-
-
-
+/**
+ * @brief The Microsoft Hypervisor interface defined constants
+ *
+ */
 #define CPUID_HV_VENDOR_AND_MAX_FUNCTIONS 0x40000000
 #define CPUID_HV_INTERFACE                0x40000001
 
-
-
-
-
+/**
+ * @brief Cpuid to get virtual address width
+ *
+ */
 #define CPUID_ADDR_WIDTH 0x80000008
 
-
-
-
-
+/**
+ * @brief CPUID Features
+ *
+ */
 #define CPUID_PROCESSOR_AND_PROCESSOR_FEATURE_IDENTIFIERS 0x00000001
 
-
-
-
-
+/**
+ * @brief Hypervisor reserved range for RDMSR and WRMSR
+ *
+ */
 #define RESERVED_MSR_RANGE_LOW 0x40000000
 #define RESERVED_MSR_RANGE_HI  0x400000F0
 
-
-
-
-
+/**
+ * @brief Core Id
+ *
+ */
 #define __CPU_INDEX__ KeGetCurrentProcessorNumberEx(NULL)
 
-
-
-
-
+/**
+ * @brief Alignment Size
+ *
+ */
 #define ALIGNMENT_PAGE_SIZE 4096
 
-
-
-
-
+/**
+ * @brief Maximum x64 Address
+ *
+ */
 #define MAXIMUM_ADDRESS 0xffffffffffffffff
 
-
-
-
-
+/**
+ * @brief Pool tag
+ *
+ */
 #define POOLTAG 0x48444247 // [H]yper[DBG] (HDBG)
 
-
-
-
-
+/**
+ * @brief System and User ring definitions
+ *
+ */
 #define DPL_USER   3
 #define DPL_SYSTEM 0
 
-
-
-
-
+/**
+ * @brief RPL Mask
+ *
+ */
 #define RPL_MASK 3
 
 #define BITS_PER_LONG (sizeof(unsigned long) * 8)
@@ -241,16 +241,16 @@ SpinlockInterlockedCompareExchange(
 #define BITMAP_ENTRY(_nr, _bmap) ((_bmap))[(_nr) / BITS_PER_LONG]
 #define BITMAP_SHIFT(_nr)        ((_nr) % BITS_PER_LONG)
 
-
-
-
-
+/**
+ * @brief Offset from a page's 4096 bytes
+ *
+ */
 #define PAGE_OFFSET(Va) ((PVOID)((ULONG_PTR)(Va) & (PAGE_SIZE - 1)))
 
-
-
-
-
+/**
+ * @brief Intel TSX Constants
+ *
+ */
 #define _XBEGIN_STARTED  (~0u)
 #define _XABORT_EXPLICIT (1 << 0)
 #define _XABORT_RETRY    (1 << 1)
@@ -260,16 +260,16 @@ SpinlockInterlockedCompareExchange(
 #define _XABORT_NESTED   (1 << 5)
 #define _XABORT_CODE(x)  (((x) >> 24) & 0xFF)
 
-
-
-
+//////////////////////////////////////////////////
+//					 Structures					//
+//////////////////////////////////////////////////
 
 typedef SEGMENT_DESCRIPTOR_32 * PSEGMENT_DESCRIPTOR;
 
-
-
-
-
+/**
+ * @brief Segment selector
+ *
+ */
 
 typedef struct _VMX_SEGMENT_SELECTOR
 {
@@ -279,10 +279,10 @@ typedef struct _VMX_SEGMENT_SELECTOR
     UINT64                    Base;
 } VMX_SEGMENT_SELECTOR, *PVMX_SEGMENT_SELECTOR;
 
-
-
-
-
+/**
+ * @brief CPUID Registers
+ *
+ */
 typedef struct _CPUID
 {
     int eax;
@@ -291,10 +291,10 @@ typedef struct _CPUID
     int edx;
 } CPUID, *PCPUID;
 
-
-
-
-
+/**
+ * @brief KPROCESS Brief structure
+ *
+ */
 typedef struct _NT_KPROCESS
 {
     DISPATCHER_HEADER Header;
@@ -303,10 +303,10 @@ typedef struct _NT_KPROCESS
     UCHAR             Data[1];
 } NT_KPROCESS, *PNT_KPROCESS;
 
-
-
-
-
+/**
+ * @brief Page-Fault Error Code
+ *
+ */
 typedef union _PAGE_FAULT_ERROR_CODE
 {
     UINT32 Flags;
@@ -333,24 +333,24 @@ typedef union _CR_FIXED
 
 } CR_FIXED, *PCR_FIXED;
 
+//////////////////////////////////////////////////
+//				 Function Types					//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief Prototype to run a function on a logical core
+ *
+ */
 typedef void (*RunOnLogicalCoreFunc)(ULONG ProcessorID);
 
+//////////////////////////////////////////////////
+//					Logging						//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief Types of log messages
+ *
+ */
 typedef enum _LOG_TYPE
 {
     LOG_INFO,
@@ -359,12 +359,12 @@ typedef enum _LOG_TYPE
 
 } LOG_TYPE;
 
-
-
-
-
+/**
+ * @brief Define log variables
+ *
+ */
 #if UseDbgPrintInsteadOfUsermodeMessageTracking
-
+/* Use DbgPrint */
 #    define Logformat, ...)                           \
         DbgPrint("[+] Information (%s:%d) | " format "\n", \
                  __func__,                                 \
@@ -384,19 +384,19 @@ typedef enum _LOG_TYPE
                  __VA_ARGS__);                       \
         DbgBreakPoint()
 
-
-
-
-
+/**
+ * @brief Log without any prefix
+ *
+ */
 #    define Log(format, ...) \
         DbgPrint(format, __VA_ARGS__)
 
 #else
 
-
-
-
-
+/**
+ * @brief Log, general
+ *
+ */
 #    define LogInfo(format, ...)                                                  \
         LogPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
                                         UseImmediateMessaging,                    \
@@ -407,10 +407,10 @@ typedef enum _LOG_TYPE
                                         __LINE__,                                 \
                                         __VA_ARGS__)
 
-
-
-
-
+/**
+ * @brief Log in the case of priority message
+ *
+ */
 #    define LogInfoPriority(format, ...)                                          \
         LogPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
                                         TRUE,                                     \
@@ -421,10 +421,10 @@ typedef enum _LOG_TYPE
                                         __LINE__,                                 \
                                         __VA_ARGS__)
 
-
-
-
-
+/**
+ * @brief Log in the case of warning
+ *
+ */
 #    define LogWarning(format, ...)                                           \
         LogPrepareAndSendMessageToQueue(OPERATION_LOG_WARNING_MESSAGE,        \
                                         UseImmediateMessaging,                \
@@ -435,10 +435,10 @@ typedef enum _LOG_TYPE
                                         __LINE__,                             \
                                         __VA_ARGS__)
 
-
-
-
-
+/**
+ * @brief Log in the case of error
+ *
+ */
 #    define LogError(format, ...)                                           \
         LogPrepareAndSendMessageToQueue(OPERATION_LOG_ERROR_MESSAGE,        \
                                         UseImmediateMessaging,              \
@@ -451,10 +451,10 @@ typedef enum _LOG_TYPE
         if (DebugMode)                                                      \
         DbgBreakPoint()
 
-
-
-
-
+/**
+ * @brief Log without any prefix
+ *
+ */
 #    define Log(format, ...)                                        \
         LogPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE, \
                                         TRUE,                       \
@@ -463,11 +463,11 @@ typedef enum _LOG_TYPE
                                         format,                     \
                                         __VA_ARGS__)
 
-
-
-
-
-
+/**
+ * @brief Log without any prefix and bypass the stack
+ * problem (getting two temporary stacks in preparing phase)
+ *
+ */
 #    define LogSimpleWithTag(tag, isimmdte, buffer, len) \
         LogSendMessageToQueue(tag,                       \
                               isimmdte,                  \
@@ -477,10 +477,10 @@ typedef enum _LOG_TYPE
 
 #endif // UseDbgPrintInsteadOfUsermodeMessageTracking
 
-
-
-
-
+/**
+ * @brief Log, initilize boot information and debug information
+ *
+ */
 #define LogDebugInfo(format, ...)                                             \
     if (DebugMode)                                                            \
     LogPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
@@ -492,9 +492,9 @@ typedef enum _LOG_TYPE
                                     __LINE__,                                 \
                                     __VA_ARGS__)
 
-
-
-
+//////////////////////////////////////////////////
+//				External Functions				//
+//////////////////////////////////////////////////
 
 UCHAR *
 PsGetProcessImageFileName(IN PEPROCESS Process);
@@ -516,20 +516,20 @@ PsGetProcessSectionBaseAddress(PEPROCESS Process); // Used to get the base addre
 NTSTATUS
 MmUnmapViewOfSection(PEPROCESS Process, PVOID BaseAddress); // Used to unmap process's executable image
 
+//////////////////////////////////////////////////
+//			 Function Definitions				//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
+// ----------------------------------------------------------------------------
+// Private Interfaces
+//
 
 static NTSTATUS
 GetHandleFromProcess(_In_ UINT32 ProcessId, _Out_ PHANDLE Handle);
 
-
-
-
+// ----------------------------------------------------------------------------
+// Public Interfaces
+//
 
 int
 TestBit(int nth, unsigned long * addr);
@@ -623,22 +623,22 @@ CheckCanonicalVirtualAddress(UINT64 VAddr, PBOOLEAN IsKernelAddress);
 BOOLEAN
 CheckMemoryAccessSafety(UINT64 TargetAddress, UINT32 Size);
 
+//////////////////////////////////////////////////
+//			 WDK Major Functions				//
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
+/**
+ * @brief Load & Unload
+ */
 NTSTATUS
 DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath);
 
 VOID
 DrvUnload(PDRIVER_OBJECT DriverObject);
 
-
-
-
+/**
+ * @brief IRP Major Functions
+ */
 NTSTATUS
 DrvCreate(PDEVICE_OBJECT DeviceObject, PIRP Irp);
 
@@ -657,60 +657,60 @@ DrvUnsupported(PDEVICE_OBJECT DeviceObject, PIRP Irp);
 NTSTATUS
 DrvDispatchIoControl(PDEVICE_OBJECT DeviceObject, PIRP Irp);
 
-
-
-
+//////////////////////////////////////////////////
+//			         Functions  				//
+//////////////////////////////////////////////////
 
 #define MAX_EXEC_TRAMPOLINE_SIZE 100
 
-
-
-
-
-
+/**
+ * @brief A test function for Syscall hook
+ *
+ * @return VOID
+ */
 VOID
 SyscallHookTest();
 
-
-
-
-
+/**
+ * @brief Enable or Disable Syscall Hook for EFER MSR
+ *
+ */
 VOID
 SyscallHookConfigureEFER(BOOLEAN EnableEFERSyscallHook);
 
-
-
-
-
+/**
+ * @brief Manage #UD Exceptions for EFER Syscall
+ *
+ */
 BOOLEAN
 SyscallHookHandleUD(_Inout_ PGUEST_REGS Regs, _In_ UINT32 CoreIndex);
 
-
-
-
-
+/**
+ * @brief SYSRET instruction emulation routine
+ *
+ */
 BOOLEAN
 SyscallHookEmulateSYSRET(_In_ PGUEST_REGS Regs);
 
-
-
-
-
+/**
+ * @brief SYSCALL instruction emulation routine
+ *
+ */
 BOOLEAN
 SyscallHookEmulateSYSCALL(_Out_ PGUEST_REGS Regs);
 
-
-
-
-
+/**
+ * @brief Get Segment Descriptor
+ *
+ */
 _Success_(return )
 BOOLEAN
 GetSegmentDescriptor(_In_ PUCHAR GdtBase, _In_ UINT16 Selector, _Out_ PVMX_SEGMENT_SELECTOR SegmentSelector);
 
-
-
-
-
+/**
+ * @brief Kill a process using different methods
+ *
+ */
 BOOLEAN
 KillProcess(_In_ UINT32 ProcessId, _In_ PROCESS_KILL_METHODS KillingMethod);
 

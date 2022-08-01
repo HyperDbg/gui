@@ -49,6 +49,12 @@ ScriptEngineKeywordDq()(ok bool)//col:261
 
 
 
+
+
+
+
+
+
 )
 
 func NewKeywords() { return & keywords{} }
@@ -71,6 +77,12 @@ func (k *keywords)ScriptEngineKeywordPoi()(ok bool){//col:51
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -167,6 +179,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *keywords)ScriptEngineKeywordLow()(ok bool){//col:121
 
 
@@ -185,6 +203,12 @@ func (k *keywords)ScriptEngineKeywordLow()(ok bool){//col:121
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -281,6 +305,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *keywords)ScriptEngineKeywordDd()(ok bool){//col:191
 
 
@@ -299,6 +329,12 @@ func (k *keywords)ScriptEngineKeywordDd()(ok bool){//col:191
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -395,6 +431,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *keywords)ScriptEngineKeywordDq()(ok bool){//col:261
 
 
@@ -413,6 +455,12 @@ func (k *keywords)ScriptEngineKeywordDq()(ok bool){//col:261
 
 return true
 }
+
+
+
+
+
+
 
 
 

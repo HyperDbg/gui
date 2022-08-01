@@ -46,6 +46,12 @@ TestKernelGetInformation()(ok bool)//col:166
 
 
 
+
+
+
+
+
+
 )
 
 func NewKernelTests() { return & kernelTests{} }
@@ -79,6 +85,12 @@ func (k *kernelTests)TestKernelConfigureTagsAndCallTargetFunction()(ok bool){//c
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -174,6 +186,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (k *kernelTests)TestKernelGetInformation()(ok bool){//col:166
 
 
@@ -197,6 +215,12 @@ func (k *kernelTests)TestKernelGetInformation()(ok bool){//col:166
 
 return true
 }
+
+
+
+
+
+
 
 
 

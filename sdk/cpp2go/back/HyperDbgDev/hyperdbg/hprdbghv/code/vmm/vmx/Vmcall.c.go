@@ -47,6 +47,12 @@ VmcallTest()(ok bool)//col:519
 
 
 
+
+
+
+
+
+
 )
 
 func NewVmcall() { return & vmcall{} }
@@ -117,6 +123,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (v *vmcall)VmxHandleVmcallVmExit()(ok bool){//col:105
 
 
@@ -147,6 +159,12 @@ func (v *vmcall)VmxHandleVmcallVmExit()(ok bool){//col:105
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -555,6 +573,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (v *vmcall)VmcallTest()(ok bool){//col:519
 
 
@@ -571,6 +595,12 @@ func (v *vmcall)VmcallTest()(ok bool){//col:519
 
 return true
 }
+
+
+
+
+
+
 
 
 

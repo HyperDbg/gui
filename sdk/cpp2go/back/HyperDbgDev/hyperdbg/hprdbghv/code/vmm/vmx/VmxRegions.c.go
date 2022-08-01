@@ -48,6 +48,12 @@ VmxAllocateIoBitmaps()(ok bool)//col:267
 
 
 
+
+
+
+
+
+
 )
 
 func NewVmxRegions() { return & vmxRegions{} }
@@ -92,6 +98,12 @@ func (v *vmxRegions)VmxAllocateVmxonRegion()(ok bool){//col:92
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -205,6 +217,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (v *vmxRegions)VmxAllocateVmmStack()(ok bool){//col:188
 
 
@@ -221,6 +239,12 @@ func (v *vmxRegions)VmxAllocateVmmStack()(ok bool){//col:188
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -319,6 +343,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (v *vmxRegions)VmxAllocateIoBitmaps()(ok bool){//col:267
 
 
@@ -345,6 +375,12 @@ func (v *vmxRegions)VmxAllocateIoBitmaps()(ok bool){//col:267
 
 return true
 }
+
+
+
+
+
+
 
 
 

@@ -46,6 +46,12 @@ CommandOutput()(ok bool)//col:463
 
 
 
+
+
+
+
+
+
 )
 
 func NewOutput() { return & output{} }
@@ -68,6 +74,12 @@ func (o *output)CommandOutputHelp()(ok bool){//col:42
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -372,6 +384,12 @@ func (o *output)CommandOutput()(ok bool){//col:463
 
 return true
 }
+
+
+
+
+
+
 
 
 

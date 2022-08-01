@@ -1,19 +1,19 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file BasicTypes.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK Headers For Basic Datatypes
+ * @details This file contains definitions of basic datatypes
+ * @version 0.2
+ * @date 2022-06-28
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
-
-
-
+//////////////////////////////////////////////////
+//               Basic Datatypes                //
+//////////////////////////////////////////////////
 
 typedef unsigned long long QWORD;
 typedef unsigned __int64   UINT64, *PUINT64;
@@ -58,14 +58,14 @@ typedef unsigned __int64 UINT64, *PUINT64;
 #define SECOND_LOWER_8_BITS            0x000000000000ff00
 #define UPPER_48_BITS_AND_LOWER_8_BITS 0xffffffffffff00ff
 
-
-
-
+//
+// DO NOT FUCKING TOUCH THIS STRUCTURE WITHOUT COORDINATION WITH SINA
+//
 typedef struct GUEST_REGS
 {
-
-
-
+    //
+    // DO NOT FUCKING TOUCH THIS STRUCTURE WITHOUT COORDINATION WITH SINA
+    //
 
     UINT64 rax; // 0x00
     UINT64 rcx; // 0x08
@@ -84,16 +84,16 @@ typedef struct GUEST_REGS
     UINT64 r14; // 0x70
     UINT64 r15; // 0x78
 
-
-
-
+    //
+    // DO NOT FUCKING TOUCH THIS STRUCTURE WITHOUT COORDINATION WITH SINA
+    //
 
 } GUEST_REGS, *PGUEST_REGS;
 
-
-
-
-
+/**
+ * @brief struct for extra registers
+ *
+ */
 typedef struct GUEST_EXTRA_REGISTERS
 {
     UINT16 CS;
@@ -106,10 +106,10 @@ typedef struct GUEST_EXTRA_REGISTERS
     UINT64 RIP;
 } GUEST_EXTRA_REGISTERS, *PGUEST_EXTRA_REGISTERS;
 
-
-
-
-
+/**
+ * @brief The structure of detail of a triggered event in HyperDbg
+ *
+ */
 typedef struct _DEBUGGER_TRIGGERED_EVENT_DETAILS
 {
     UINT64 Tag; /* in breakpoints Tag is breakpoint id, not event tag */
@@ -117,9 +117,9 @@ typedef struct _DEBUGGER_TRIGGERED_EVENT_DETAILS
 
 } DEBUGGER_TRIGGERED_EVENT_DETAILS, *PDEBUGGER_TRIGGERED_EVENT_DETAILS;
 
-
-
-
+/**
+ * @brief List of different variables
+ */
 typedef struct _SCRIPT_ENGINE_VARIABLES_LIST
 {
     UINT64 * TempList;

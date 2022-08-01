@@ -1,28 +1,28 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file lm.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief lm command
+ * @details
+ * @version 0.1
+ * @date 2020-07-13
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
 using namespace std;
 
-
-
-
+//
+// Global Variables
+//
 extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
 
-
-
-
-
-
+/**
+ * @brief help of lm command
+ *
+ * @return VOID
+ */
 VOID
 CommandLmHelp()
 {
@@ -40,14 +40,13 @@ CommandLmHelp()
     ShowMessages("\t\te.g : lm um m kernel32 pid 1240\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief show modules for specified user mode process
+ * @param ProcessId
+ * @param SearchModule
+ *
+ * @return BOOLEAN
+ */
 BOOLEAN
 CommandLmShowUserModeModule(UINT32 ProcessId, const char * SearchModule)
 {
@@ -62,29 +61,29 @@ CommandLmShowUserModeModule(UINT32 ProcessId, const char * SearchModule)
     wchar_t *                       WcharBuff            = NULL;
     wstring                         SearchModuleString;
 
-
-
-
+    //
+    // Check if debugger is loaded or not
+    //
     AssertShowMessageReturnStmt(g_DeviceHandle, ASSERT_MESSAGE_DRIVER_NOT_LOADED, AssertReturnFalse);
 
-
-
-
+    //
+    // Set the module details to get the details
+    //
     ModuleCountRequest.ProcessId        = ProcessId;
     ModuleCountRequest.OnlyCountModules = TRUE;
 
-
-
-
+    //
+    // Send the request to the kernel
+    //
     Status = DeviceIoControl(
         g_DeviceHandle,                         // Handle to device
         IOCTL_GET_USER_MODE_MODULE_DETAILS,     // IO Control
-
+                                                // code
         &ModuleCountRequest,                    // Input Buffer to driver.
         sizeof(USERMODE_LOADED_MODULE_DETAILS), // Input buffer length
         &ModuleCountRequest,                    // Output Buffer from driver.
         sizeof(USERMODE_LOADED_MODULE_DETAILS), // Length of output
-
+                                                // buffer in bytes.
         &ReturnedLength,                        // Bytes placed in buffer.
         NULL                                    // synchronous call
     );
@@ -95,14 +94,14 @@ CommandLmShowUserModeModule(UINT32 ProcessId, const char * SearchModule)
         return FALSE;
     }
 
-
-
-
+    //
+    // Check if counting modules was successful or not
+    //
     if (ModuleCountRequest.Result == DEBUGGER_OPERATION_WAS_SUCCESSFULL)
     {
         ModulesCount = ModuleCountRequest.ModulesCount;
 
-
+        // ShowMessages("Count of modules : 0x%x\n", ModuleCountRequest.ModulesCount);
 
         ModuleDetailsSize = sizeof(USERMODE_LOADED_MODULE_DETAILS) +
                             (ModuleCountRequest.ModulesCount * sizeof(USERMODE_LOADED_MODULE_SYMBOLS));
@@ -116,24 +115,24 @@ CommandLmShowUserModeModule(UINT32 ProcessId, const char * SearchModule)
 
         RtlZeroMemory(ModuleDetailsRequest, ModuleDetailsSize);
 
-
-
-
+        //
+        // Set the module details to get the modules (not count)
+        //
         ModuleDetailsRequest->ProcessId        = ProcessId;
         ModuleDetailsRequest->OnlyCountModules = FALSE;
 
-
-
-
+        //
+        // Send the request to the kernel
+        //
         Status = DeviceIoControl(
             g_DeviceHandle,                         // Handle to device
             IOCTL_GET_USER_MODE_MODULE_DETAILS,     // IO Control
-
+                                                    // code
             ModuleDetailsRequest,                   // Input Buffer to driver.
             sizeof(USERMODE_LOADED_MODULE_DETAILS), // Input buffer length
             ModuleDetailsRequest,                   // Output Buffer from driver.
             ModuleDetailsSize,                      // Length of output
-
+                                                    // buffer in bytes.
             &ReturnedLength,                        // Bytes placed in buffer.
             NULL                                    // synchronous call
         );
@@ -145,9 +144,9 @@ CommandLmShowUserModeModule(UINT32 ProcessId, const char * SearchModule)
             return FALSE;
         }
 
-
-
-
+        //
+        // Show modules list
+        //
         if (ModuleCountRequest.Result == DEBUGGER_OPERATION_WAS_SUCCESSFULL)
         {
             Modules = (PUSERMODE_LOADED_MODULE_SYMBOLS)((UINT64)ModuleDetailsRequest +
@@ -174,21 +173,21 @@ CommandLmShowUserModeModule(UINT32 ProcessId, const char * SearchModule)
 
             for (size_t i = 0; i < ModulesCount; i++)
             {
-
-
-
+                //
+                // Check if we need to search for the module or not
+                //
                 if (SearchModule != NULL)
                 {
-
-
-
+                    //
+                    // Convert FullPathName to string
+                    //
                     std::wstring FullPathName((wchar_t *)Modules[i].FilePath);
 
                     if (FindCaseInsensitiveW(FullPathName, SearchModuleString, 0) == std::wstring::npos)
                     {
-
-
-
+                        //
+                        // not found
+                        //
                         continue;
                     }
                 }
@@ -220,13 +219,12 @@ CommandLmShowUserModeModule(UINT32 ProcessId, const char * SearchModule)
     }
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief show modules for kernel mode
+ * @param SearchModule
+ *
+ * @return BOOLEAN
+ */
 BOOLEAN
 CommandLmShowKernelModeModule(const char * SearchModule)
 {
@@ -235,14 +233,14 @@ CommandLmShowKernelModeModule(const char * SearchModule)
     ULONG                SysModuleInfoBufferSize = 0;
     string               SearchModuleString;
 
-
-
-
+    //
+    // Get required size of "RTL_PROCESS_MODULES" buffer
+    //
     Status = NtQuerySystemInformation(SystemModuleInformation, NULL, NULL, &SysModuleInfoBufferSize);
 
-
-
-
+    //
+    // Allocate memory for the module list
+    //
     ModulesInfo = (PRTL_PROCESS_MODULES)VirtualAlloc(
         NULL,
         SysModuleInfoBufferSize,
@@ -280,21 +278,21 @@ CommandLmShowKernelModeModule(const char * SearchModule)
     {
         RTL_PROCESS_MODULE_INFORMATION * CurrentModule = &ModulesInfo->Modules[i];
 
-
-
-
+        //
+        // Check if we need to search for the module or not
+        //
         if (SearchModule != NULL)
         {
-
-
-
+            //
+            // Convert FullPathName to string
+            //
             std::string FullPathName((char *)CurrentModule->FullPathName);
 
             if (FindCaseInsensitive(FullPathName, SearchModuleString, 0) == std::string::npos)
             {
-
-
-
+                //
+                // not found
+                //
                 continue;
             }
         }
@@ -331,14 +329,13 @@ CommandLmShowKernelModeModule(const char * SearchModule)
     return TRUE;
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief handle lm command
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandLm(vector<string> SplittedCommand, string Command)
 {
@@ -351,9 +348,9 @@ CommandLm(vector<string> SplittedCommand, string Command)
     char    Search[MAX_PATH]      = {0};
     char *  SearchString          = NULL;
 
-
-
-
+    //
+    // Interpret command specific details (if any)
+    //
     for (auto Section : SplittedCommand)
     {
         if (!Section.compare("lm"))
@@ -372,9 +369,9 @@ CommandLm(vector<string> SplittedCommand, string Command)
         {
             if (!ConvertStringToUInt32(Section, &TargetPid))
             {
-
-
-
+                //
+                // couldn't resolve or unkonwn parameter
+                //
                 ShowMessages("err, couldn't resolve error at '%s'\n\n",
                              Section.c_str());
                 CommandLmHelp();
@@ -421,9 +418,9 @@ CommandLm(vector<string> SplittedCommand, string Command)
         }
         else
         {
-
-
-
+            //
+            // Unknown parameter
+            //
             ShowMessages("err, couldn't resolve error at '%s'\n\n",
                          Section.c_str());
             CommandLmHelp();
@@ -445,17 +442,17 @@ CommandLm(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Check if we have string to search
+    //
     if (SearchStringEntered)
     {
         SearchString = Search;
     }
 
-
-
-
+    //
+    // Show user mode modules
+    //
     if (!OnlyShowKernelModules)
     {
         if (TargetPid != NULL)
@@ -472,9 +469,9 @@ CommandLm(vector<string> SplittedCommand, string Command)
         }
     }
 
-
-
-
+    //
+    // Show kernel mode modules
+    //
     if (!OnlyShowUserModules)
     {
         if (!OnlyShowKernelModules)
@@ -485,5 +482,4 @@ CommandLm(vector<string> SplittedCommand, string Command)
         CommandLmShowKernelModeModule(SearchString);
     }
 }
-
 

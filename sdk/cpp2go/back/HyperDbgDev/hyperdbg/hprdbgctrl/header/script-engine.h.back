@@ -1,19 +1,19 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file script-engine.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief General script-engine functions and wrappers
+ * @details
+ * @version 0.1
+ * @date 2021-09-23
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
-
-
-
+//////////////////////////////////////////////////
+//    Pdb Parser Wrapper (from script-engine)   //
+//////////////////////////////////////////////////
 UINT64
 ScriptEngineConvertNameToAddressWrapper(const char * FunctionOrVariableName, PBOOLEAN WasFound);
 
@@ -67,9 +67,9 @@ ScriptEngineShowDataBasedOnSymbolTypesWrapper(
 VOID
 ScriptEngineSymbolAbortLoadingWrapper();
 
-
-
-
+//////////////////////////////////////////////////
+//          Script Engine Wrapper               //
+//////////////////////////////////////////////////
 
 VOID
 ScriptEngineWrapperTestParser(const string & Expr);
@@ -98,9 +98,9 @@ ScriptEngineWrapperRemoveSymbolBuffer(PVOID SymbolBuffer);
 UINT64
 ScriptEngineEvalUInt64StyleExpressionWrapper(const string & Expr, PBOOLEAN HasError);
 
-
-
-
+//////////////////////////////////////////////////
+//          Script Engine Functions             //
+//////////////////////////////////////////////////
 
 UINT64
 ScriptEngineEvalSingleExpression(string Expr, PBOOLEAN HasError);

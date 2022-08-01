@@ -1,14 +1,14 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file Vmcall.c
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief The main VMCALL and Hypercall handler
+ * @details
+ * @version 0.1
+ * @date 2020-04-11
+ * 
+ * @copyright This project is released under the GNU Public License v3.
+ * 
+ */
 #include "pch.h"
 
 _Use_decl_annotations_
@@ -36,32 +36,31 @@ VmxHypervVmcallHandler(PGUEST_REGS GuestRegs)
         break;
     }
 
-
-
-
-
+    //
+    // Save the guest rsp as it will be modified during the Hyper-V's
+    // VMCALL process
+    //
     GuestRsp = GuestRegs->rsp;
 
-
-
-
+    //
+    // Let the top-level hypervisor to manage it
+    //
     AsmHypervVmcall(GuestRegs);
 
-
-
-
+    //
+    // Restore the guest's RSP
+    //
     GuestRegs->rsp = GuestRsp;
 
     return STATUS_SUCCESS;
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief Handle vm-exits of VMCALLs
+ * 
+ * @param GuestRegs Guest Registers
+ * @return NTSTATUS 
+ */
 _Use_decl_annotations_
 NTSTATUS
 VmxHandleVmcallVmExit(UINT32      CoreIndex,
@@ -70,12 +69,12 @@ VmxHandleVmcallVmExit(UINT32      CoreIndex,
     UINT64  GuestRsp         = NULL;
     BOOLEAN IsHyperdbgVmcall = FALSE;
 
-
-
-
-
-
-
+    //
+    // Trigger the event
+    //
+    // As the context to event trigger, we send NULL
+    // Registers are the best source to know the purpose
+    //
     if (g_TriggerEventForVmcalls)
     {
         DebuggerTriggerEvents(VMCALL_INSTRUCTION_EXECUTION, GuestRegs, NULL);
@@ -84,9 +83,9 @@ VmxHandleVmcallVmExit(UINT32      CoreIndex,
     IsHyperdbgVmcall = (GuestRegs->r10 == 0x48564653 &&
                         GuestRegs->r11 == 0x564d43414c4c &&
                         GuestRegs->r12 == 0x4e4f485950455256);
-
-
-
+    //
+    // Check if it's our routines that request the VMCALL, or it relates to the Hyper-V
+    //
     if (IsHyperdbgVmcall)
     {
         GuestRegs->rax = VmxVmcallHandler(CoreIndex,
@@ -104,16 +103,15 @@ VmxHandleVmcallVmExit(UINT32      CoreIndex,
     return STATUS_SUCCESS;
 }
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * @brief Main Vmcall Handler
+ * 
+ * @param VmcallNumber Request Number
+ * @param OptionalParam1 
+ * @param OptionalParam2 
+ * @param OptionalParam3 
+ * @return NTSTATUS 
+ */
 _Use_decl_annotations_
 NTSTATUS
 VmxVmcallHandler(UINT32      CurrentCoreIndex,
@@ -129,9 +127,9 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
     BOOLEAN  UnsetWrite   = FALSE;
     BOOLEAN  UnsetRead    = FALSE;
 
-
-
-
+    //
+    // Only 32bit of Vmcall is valid, this way we can use the upper 32 bit of the Vmcall
+    //
     switch (VmcallNumber & 0xffffffff)
     {
     case VMCALL_TEST:
@@ -147,10 +145,10 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
     }
     case VMCALL_CHANGE_PAGE_ATTRIB:
     {
-
-
-
-
+        //
+        // Mask is the upper 32 bits to this Vmcall
+        // Upper 32 bits of the Vmcall contains the attribute mask
+        //
         UINT32 AttributeMask = (UINT32)((VmcallNumber & 0xFFFFFFFF00000000LL) >> 32);
 
         UnsetRead  = (AttributeMask & PAGE_ATTRIB_READ) ? TRUE : FALSE;
@@ -402,9 +400,9 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
     }
     case VMCALL_SEND_MESSAGES_TO_DEBUGGER:
     {
-
-
-
+        //
+        // Kernel debugger is active, we should send the bytes over serial
+        //
         KdLoggingResponsePacketToDebugger(
             OptionalParam1,
             OptionalParam2,
@@ -415,10 +413,10 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
     }
     case VMCALL_SEND_GENERAL_BUFFER_TO_DEBUGGER:
     {
-
-
-
-
+        //
+        // Cast the buffer received to perform sending buffer and possibly
+        // halt the the debuggee
+        //
         PDEBUGGEE_SEND_GENERAL_PACKET_FROM_DEBUGGEE_TO_DEBUGGER DebuggeeBufferRequest =
             OptionalParam1;
 
@@ -427,10 +425,10 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
                                    (UINT64)DebuggeeBufferRequest + (SIZEOF_DEBUGGEE_SEND_GENERAL_PACKET_FROM_DEBUGGEE_TO_DEBUGGER),
                                    DebuggeeBufferRequest->LengthOfBuffer);
 
-
-
-
-
+        //
+        // Check if we expect a buffer and command from the debugger or the
+        // request is just finished
+        //
         if (DebuggeeBufferRequest->PauseDebuggeeWhenSent)
         {
             KdHandleBreakpointAndDebugBreakpoints(CurrentCoreIndex,
@@ -451,9 +449,9 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
 
         KdHandleBreakpointAndDebugBreakpoints(CurrentCoreIndex,
                                               OptionalParam3, // We won't send current vmcall registers
-
-
-
+                                                              // instead we send the registers provided
+                                                              // from the third parameter
+                                                              //
                                               DEBUGGEE_PAUSING_REASON_DEBUGGEE_EVENT_TRIGGERED,
                                               &TriggeredEventDetail);
         VmcallStatus = STATUS_SUCCESS;
@@ -487,15 +485,14 @@ VmxVmcallHandler(UINT32      CurrentCoreIndex,
     return VmcallStatus;
 }
 
-
-
-
-
-
-
-
-
-
+/**
+ * @brief Test Vmcall (VMCALL_TEST)
+ * 
+ * @param Param1 
+ * @param Param2 
+ * @param Param3 
+ * @return NTSTATUS 
+ */
 NTSTATUS
 VmcallTest(_In_ UINT64 Param1,
            _In_ UINT64 Param2,
@@ -506,10 +503,10 @@ VmcallTest(_In_ UINT64 Param1,
                  Param2,
                  Param3);
 
-
-
-
-
+    //
+    // Send one byte buffer to show that Hypervisor
+    // is successfully loaded
+    //
     LogSendBuffer(OPERATION_HYPERVISOR_DRIVER_IS_SUCCESSFULLY_LOADED,
                   "$",
                   1,
@@ -517,5 +514,4 @@ VmcallTest(_In_ UINT64 Param1,
 
     return STATUS_SUCCESS;
 }
-
 

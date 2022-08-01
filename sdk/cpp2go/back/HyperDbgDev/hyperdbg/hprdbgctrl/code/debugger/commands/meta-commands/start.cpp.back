@@ -1,28 +1,28 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file start.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief .start command
+ * @details
+ * @version 0.1
+ * @date 2022-01-06
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern std::wstring g_StartCommandPath;
 extern std::wstring g_StartCommandPathAndArguments;
 extern BOOLEAN      g_IsSerialConnectedToRemoteDebugger;
 
-
-
-
-
-
+/**
+ * @brief help of .start command
+ *
+ * @return VOID
+ */
 VOID
 CommandStartHelp()
 {
@@ -34,23 +34,22 @@ CommandStartHelp()
     ShowMessages("\t\te.g : .start path c:\\users\\sina\\reverse eng\\my_file.exe\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief .start command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandStart(vector<string> SplittedCommand, string Command)
 {
     vector<string> PathAndArgs;
     string         Arguments = "";
 
-
-
-
+    //
+    // Disable user-mode debugger in this version
+    //
 #if ActivateUserModeDebugger == FALSE
 
     if (!g_IsSerialConnectedToRemoteDebugger)
@@ -74,63 +73,63 @@ CommandStart(vector<string> SplittedCommand, string Command)
 
     if (!SplittedCommand.at(1).compare("path"))
     {
+        //
+        // *** It's a run of target PE file ***
+        //
 
-
-
-
-
-
-
+        //
+        // Trim the command
+        //
         Trim(Command);
 
-
-
-
+        //
+        // Remove .start from it
+        //
         Command.erase(0, 6);
 
-
-
-
+        //
+        // Remove path + space
+        //
         Command.erase(0, 4 + 1);
 
-
-
-
+        //
+        // Trim it again
+        //
         Trim(Command);
 
-
-
-
+        //
+        // Split Path and args
+        //
         SplitPathAndArgs(PathAndArgs, Command);
 
-
-
-
+        //
+        // Convert path to wstring
+        //
         StringToWString(g_StartCommandPath, PathAndArgs.at(0));
 
         if (PathAndArgs.size() != 1)
         {
-
-
-
+            //
+            // There are arguments to this command
+            //
 
             for (auto item : PathAndArgs)
             {
-
-
-
-
+                //
+                // Append the arguments
+                //
+                // ShowMessages("Arg : %s\n", item.c_str());
                 Arguments += item + " ";
             }
 
-
-
-
+            //
+            // Remove the latest space
+            //
             Arguments.pop_back();
 
-
-
-
+            //
+            // Convert arguments to wstring
+            //
             StringToWString(g_StartCommandPathAndArguments, Arguments);
         }
     }
@@ -142,9 +141,9 @@ CommandStart(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Perform run of the target file
+    //
     if (Arguments.empty())
     {
         UdAttachToProcess(NULL,
@@ -158,5 +157,4 @@ CommandStart(vector<string> SplittedCommand, string Command)
                           (WCHAR *)g_StartCommandPathAndArguments.c_str());
     }
 }
-
 

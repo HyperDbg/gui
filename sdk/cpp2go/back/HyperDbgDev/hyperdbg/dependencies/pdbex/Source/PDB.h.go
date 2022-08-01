@@ -51,6 +51,14 @@ Pdb interface{
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewPdb() { return & pdb{} }
@@ -117,6 +125,14 @@ func (p *pdb)		PDB()(ok bool){//col:443
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

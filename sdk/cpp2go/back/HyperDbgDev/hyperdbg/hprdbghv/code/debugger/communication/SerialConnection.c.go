@@ -53,6 +53,12 @@ SerialConnectionPrepare()(ok bool)//col:397
 
 
 
+
+
+
+
+
+
 )
 
 func NewSerialConnection() { return & serialConnection{} }
@@ -67,6 +73,12 @@ func (s *serialConnection)SerialConnectionTest()(ok bool){//col:26
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -157,6 +169,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *serialConnection)SerialConnectionCheckForTheEndOfTheBuffer()(ok bool){//col:90
 
 
@@ -182,6 +200,12 @@ func (s *serialConnection)SerialConnectionCheckForTheEndOfTheBuffer()(ok bool){/
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -291,6 +315,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *serialConnection)SerialConnectionSend()(ok bool){//col:183
 
 
@@ -310,6 +340,12 @@ func (s *serialConnection)SerialConnectionSend()(ok bool){//col:183
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -373,6 +409,12 @@ func (s *serialConnection)SerialConnectionSendTwoBuffers()(ok bool){//col:231
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -485,6 +527,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *serialConnection)SerialConnectionCheckBaudrate()(ok bool){//col:317
 
 
@@ -501,6 +549,12 @@ func (s *serialConnection)SerialConnectionCheckBaudrate()(ok bool){//col:317
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -593,6 +647,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *serialConnection)SerialConnectionPrepare()(ok bool){//col:397
 
 
@@ -617,6 +677,12 @@ func (s *serialConnection)SerialConnectionPrepare()(ok bool){//col:397
 
 return true
 }
+
+
+
+
+
+
 
 
 

@@ -47,6 +47,14 @@ int main()(ok bool)//col:125
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewFormatter03() { return & formatter03{} }
@@ -129,6 +137,14 @@ return true
 
 
 
+
+
+
+
+
+
+
+
 func (f *formatter03)int main()(ok bool){//col:125
 
 
@@ -148,6 +164,14 @@ func (f *formatter03)int main()(ok bool){//col:125
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

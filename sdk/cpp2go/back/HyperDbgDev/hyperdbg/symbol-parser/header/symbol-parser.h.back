@@ -1,30 +1,30 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file symbol-parser.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief symbol parser headers
+ * @details 
+ * @version 0.1
+ * @date 2021-05-29
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #pragma once
 
-
-
-
+//////////////////////////////////////////////////
+//					Configs                     //
+//////////////////////////////////////////////////
 
 #define DoNotShowDetailedResult TRUE
 
+//////////////////////////////////////////////////
+//					Structures                  //
+//////////////////////////////////////////////////
 
-
-
-
-
-
-
-
+/**
+ * @brief Hold detail about the loaded modules
+ *
+ */
 typedef struct _SYMBOL_LOADED_MODULE_DETAILS
 {
     UINT64 BaseAddress;
@@ -34,20 +34,20 @@ typedef struct _SYMBOL_LOADED_MODULE_DETAILS
 
 } SYMBOL_LOADED_MODULE_DETAILS, *PSYMBOL_LOADED_MODULE_DETAILS;
 
-
-
-
+//////////////////////////////////////////////////
+//				Exports & Imports               //
+//////////////////////////////////////////////////
 extern "C" {
 
-
-
-
+//
+// Imports
+//
 __declspec(dllimport) int pdbex_export(int argc, char ** argv, bool is_struct, void * buffer_address);
 __declspec(dllimport) void pdbex_set_logging_method_export(PVOID handler);
 
-
-
-
+//
+// Exports
+//
 __declspec(dllexport) VOID SymSetTextMessageCallback(PVOID handler);
 __declspec(dllexport) UINT32 SymLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName);
 __declspec(dllexport) UINT32 SymUnloadAllSymbols();
@@ -66,10 +66,9 @@ __declspec(dllexport) BOOLEAN SymQuerySizeof(_In_ const char * StructNameOrTypeN
 __declspec(dllexport) BOOLEAN SymCastingQueryForFiledsAndTypes(_In_ const char * StructName, _In_ const char * FiledOfStructName, _Out_ PBOOLEAN IsStructNamePointerOrNot, _Out_ PBOOLEAN IsFiledOfStructNamePointerOrNot, _Out_ char ** NewStructOrTypeName, _Out_ UINT32 * OffsetOfFieldFromTop, _Out_ UINT32 * SizeOfField);
 }
 
-
-
-
-
+//////////////////////////////////////////////////
+//					Functions                   //
+//////////////////////////////////////////////////
 
 BOOL
 SymGetFileParams(const char * FileName, DWORD & FileSize);

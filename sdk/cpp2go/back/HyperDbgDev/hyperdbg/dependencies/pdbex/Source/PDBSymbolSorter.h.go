@@ -47,6 +47,14 @@ PdbSymbolSorter interface{
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewPdbSymbolSorter() { return & pdbSymbolSorter{} }
@@ -152,6 +160,14 @@ func (p *pdbSymbolSorter)		GetSortedSymbols()(ok bool){//col:146
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

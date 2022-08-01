@@ -47,6 +47,12 @@ Hardware interface{
 
 
 
+
+
+
+
+
+
 )
 
 func NewHardware() { return & hardware{} }
@@ -70,6 +76,12 @@ func (h *hardware)#if defined()(ok bool){//col:87
 
 return true
 }
+
+
+
+
+
+
 
 
 

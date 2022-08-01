@@ -1,26 +1,26 @@
+/*
+MIT License
 
+Copyright (c) 2017-2020 Matthias C. M. Troffaes
 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 
 #pragma once
 
@@ -41,7 +41,7 @@ namespace inipp {
 
 namespace detail {
 
-
+// trim functions based on http://stackoverflow.com/a/217605
 
 template <class CharT>
 inline void
@@ -51,7 +51,6 @@ ltrim(std::basic_string<CharT> & s, const std::locale & loc)
             std::find_if(s.begin(), s.end(), [&loc](CharT ch) { return !std::isspace(ch, loc); }));
 }
 
-
 template <class CharT>
 inline void
 rtrim(std::basic_string<CharT> & s, const std::locale & loc)
@@ -60,7 +59,6 @@ rtrim(std::basic_string<CharT> & s, const std::locale & loc)
             s.end());
 }
 
-
 template <class CharT, class UnaryPredicate>
 inline void
 rtrim2(std::basic_string<CharT> & s, UnaryPredicate pred)
@@ -68,8 +66,7 @@ rtrim2(std::basic_string<CharT> & s, UnaryPredicate pred)
     s.erase(std::find_if(s.begin(), s.end(), pred), s.end());
 }
 
-
-
+// string replacement function based on http://stackoverflow.com/a/3418285
 
 template <class CharT>
 inline bool
@@ -85,7 +82,6 @@ replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, c
     }
     return changed;
 }
-
 
 } // namespace detail
 
@@ -107,7 +103,6 @@ extract(const std::basic_string<CharT> & value, T & dst)
     }
 }
 
-
 template <typename CharT>
 inline bool
 extract(const std::basic_string<CharT> & value, std::basic_string<CharT> & dst)
@@ -115,7 +110,6 @@ extract(const std::basic_string<CharT> & value, std::basic_string<CharT> & dst)
     dst = value;
     return true;
 }
-
 
 template <typename CharT, typename T>
 inline bool
@@ -127,7 +121,6 @@ get_value(const std::map<std::basic_string<CharT>, std::basic_string<CharT>> & s
     return extract(it->second, dst);
 }
 
-
 template <typename CharT, typename T>
 inline bool
 get_value(const std::map<std::basic_string<CharT>, std::basic_string<CharT>> & sec, const CharT * key, T & dst)
@@ -135,24 +128,23 @@ get_value(const std::map<std::basic_string<CharT>, std::basic_string<CharT>> & s
     return get_value(sec, std::basic_string<CharT>(key), dst);
 }
 
-
 template <class CharT>
 class Format
 {
 public:
-
+    // used for generating
     const CharT char_section_start;
     const CharT char_section_end;
     const CharT char_assign;
     const CharT char_comment;
 
-
+    // used for parsing
     virtual bool is_section_start(CharT ch) const { return ch == char_section_start; }
     virtual bool is_section_end(CharT ch) const { return ch == char_section_end; }
     virtual bool is_assign(CharT ch) const { return ch == char_assign; }
     virtual bool is_comment(CharT ch) const { return ch == char_comment; }
 
-
+    // used for interpolation
     const CharT char_interpol;
     const CharT char_interpol_start;
     const CharT char_interpol_sep;
@@ -255,10 +247,10 @@ public:
     {
         int  global_iteration = 0;
         auto changed          = false;
-
+        // replace each "${variable}" by "${section:variable}"
         for (auto & sec : sections)
             replace_symbols(local_symbols(sec.first, sec.second), sec.second);
-
+        // replace each "${section:variable}" by its value
         do
         {
             changed         = false;

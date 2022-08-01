@@ -1,9 +1,9 @@
 #pragma once
 
-
-
-
-
+//
+// Header file of symbol-parser
+// Imports
+//
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -57,6 +57,5 @@ __declspec(dllimport) BOOLEAN
 
 #ifdef __cplusplus
 }
-
 #endif
 

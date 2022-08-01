@@ -1,23 +1,23 @@
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file GaussianRng.cpp
+ * @author Saleh Khalaj Monfared (saleh@hyperdbg.org)
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Main interface to connect applications to driver
+ * @details
+ * @version 0.1
+ * @date 2020-07-30
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
-
-
-
+/**
+ * @brief get the median of a vector
+ * 
+ * @param Cases all the elements
+ * @return double median of elements
+ */
 double
 Median(vector<double> Cases)
 {
@@ -41,14 +41,13 @@ Median(vector<double> Cases)
     }
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief get the average of a vector
+ * 
+ * @tparam T type of vector
+ * @param vec all the elements
+ * @return T the average of elements
+ */
 template <typename T>
 T
 Average(const vector<T> & vec)
@@ -59,22 +58,21 @@ Average(const vector<T> & vec)
     if (Sz == 1)
         return 0.0;
 
-
-
-
+    //
+    // Calculate the mean
+    //
     Mean = std::accumulate(vec.begin(), vec.end(), 0.0) / Sz;
 
     return Mean;
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief get the standard deviation of elements
+ * 
+ * @tparam T type of vector
+ * @param v all the elements
+ * @return T the standard deviation of elements
+ */
 template <typename T>
 T
 CalculateStandardDeviation(const std::vector<T> & v)
@@ -89,13 +87,12 @@ CalculateStandardDeviation(const std::vector<T> & v)
     return Stdev;
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief get the Median Absolute Deviation (MAD) Test
+ * 
+ * @param Data all the elements
+ * @return double result of MAD test
+ */
 double
 MedianAbsoluteDeviationTest(vector<double> Data)
 {
@@ -113,14 +110,13 @@ MedianAbsoluteDeviationTest(vector<double> Data)
     return Mad;
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief random generator based on calculations
+ * 
+ * @param mu 
+ * @param sigma 
+ * @return double random number in the range of gaussian curve
+ */
 double
 Randn(double mu, double sigma)
 {
@@ -150,15 +146,14 @@ Randn(double mu, double sigma)
     return (mu + sigma * (double)X1);
 }
 
-
-
-
-
-
-
-
-
-
+/**
+ * @brief Calculate and generate random gaussian number
+ * 
+ * @param Data 
+ * @param AverageOfData 
+ * @param StandardDeviationOfData 
+ * @param MedianOfData 
+ */
 VOID
 GuassianGenerateRandom(vector<double> Data, UINT64 * AverageOfData, UINT64 * StandardDeviationOfData, UINT64 * MedianOfData)
 {
@@ -192,40 +187,39 @@ GuassianGenerateRandom(vector<double> Data, UINT64 * AverageOfData, UINT64 * Sta
     DataAverage       = Average(FinalData);
     DataMedian        = Median(FinalData);
 
-
-
-
+    //
+    // Set the values to return
+    //
     *AverageOfData = (UINT64)DataAverage;
 
-
-
-
-
+    //
+    // We add 5 to the standard deviation because this value might be
+    // 0 or 1 so we need more variance
+    //
     *StandardDeviationOfData = (UINT64)StandardDeviation + 5;
     *MedianOfData            = (UINT64)DataMedian;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //
+    // ShowMessages("varience : %f\n", StandardDeviation);
+    // ShowMessages("mean : %f\n", DataAverage);
+    // ShowMessages("count of outliers : %d\n", CountOfOutliers);
+    //
+    //
+    // for (int i = 0; i < 10000; i++)
+    // {
+    // 	ShowMessages("final Random Time Stamp : %d\n", (int) Randn(DataAverage,
+    // StandardDeviation));
+    // _getch();
+    // }
+    //
 }
 
-
-
-
-
-
-
-
+/**
+ * @brief A simple test for the data based on 
+ * pre-defined numbers in a file
+ * 
+ * @return VOID 
+ */
 VOID
 TestGaussianFromFile()
 {
@@ -247,5 +241,4 @@ TestGaussianFromFile()
         GuassianGenerateRandom(MyVector, &AverageOfData, &StandardDeviationOfData, &MedianOfData);
     }
 }
-
 

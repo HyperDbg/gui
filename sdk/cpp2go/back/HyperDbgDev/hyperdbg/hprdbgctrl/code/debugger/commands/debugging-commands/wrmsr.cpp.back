@@ -1,21 +1,21 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file wrmsr.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief wrmsr command
+ * @details
+ * @version 0.1
+ * @date 2020-05-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
-
-
+/**
+ * @brief help of wrmsr command
+ *
+ * @return VOID
+ */
 VOID
 CommandWrmsrHelp()
 {
@@ -30,14 +30,13 @@ CommandWrmsrHelp()
     ShowMessages("\t\te.g : wrmsr c0000082 fffff8077356f010 core 2\n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief wrmsr command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandWrmsr(vector<string> SplittedCommand, string Command)
 {
@@ -92,9 +91,9 @@ CommandWrmsr(vector<string> SplittedCommand, string Command)
             }
             else
             {
-
-
-
+                //
+                // Means that the MSR is set, next we should read value
+                //
                 SetMsr = TRUE;
                 continue;
             }
@@ -117,9 +116,9 @@ CommandWrmsr(vector<string> SplittedCommand, string Command)
         }
     }
 
-
-
-
+    //
+    // Check if msr is set or not
+    //
     if (!SetMsr)
     {
         ShowMessages("please specify a correct hex value to write\n\n");
@@ -166,5 +165,4 @@ CommandWrmsr(vector<string> SplittedCommand, string Command)
 
     ShowMessages("\n");
 }
-
 

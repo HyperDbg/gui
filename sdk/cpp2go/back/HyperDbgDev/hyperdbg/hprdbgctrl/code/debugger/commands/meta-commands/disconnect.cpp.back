@@ -1,29 +1,29 @@
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * @file disconnect.cpp
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief .disconnect command
+ * @details
+ * @version 0.1
+ * @date 2020-05-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
 #include "pch.h"
 
-
-
-
+//
+// Global Variables
+//
 extern BOOLEAN g_IsConnectedToHyperDbgLocally;
 extern BOOLEAN g_IsConnectedToRemoteDebuggee;
 extern HANDLE  g_RemoteDebuggeeListeningThread;
 extern HANDLE  g_EndOfMessageReceivedEvent;
 
-
-
-
-
-
+/**
+ * @brief help of .disconnect command
+ *
+ * @return VOID
+ */
 VOID
 CommandDisconnectHelp()
 {
@@ -33,14 +33,13 @@ CommandDisconnectHelp()
     ShowMessages("syntax : \t.disconnect \n");
 }
 
-
-
-
-
-
-
-
-
+/**
+ * @brief .disconnect command handler
+ *
+ * @param SplittedCommand
+ * @param Command
+ * @return VOID
+ */
 VOID
 CommandDisconnect(vector<string> SplittedCommand, string Command)
 {
@@ -58,10 +57,10 @@ CommandDisconnect(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
-
+    //
+    // Check if it's local debugger and the driver is still
+    // loading (not unloaded)
+    //
     if (g_IsConnectedToHyperDbgLocally && g_DeviceHandle)
     {
         ShowMessages("you cannot disconnect in local debugging while the "
@@ -70,20 +69,20 @@ CommandDisconnect(vector<string> SplittedCommand, string Command)
         return;
     }
 
-
-
-
+    //
+    // Disconnect the session
+    //
     g_IsConnectedToHyperDbgLocally = FALSE;
 
-
-
-
+    //
+    // This computer is connected to a remote system
+    //
     if (g_IsConnectedToRemoteDebuggee)
     {
-
-
-
-
+        //
+        // We should kill the thread that was listening for the
+        // remote commands and close the connection
+        //
         TerminateThread(g_RemoteDebuggeeListeningThread, 0);
         CloseHandle(g_RemoteDebuggeeListeningThread);
         CloseHandle(g_EndOfMessageReceivedEvent);
@@ -96,5 +95,4 @@ CommandDisconnect(vector<string> SplittedCommand, string Command)
 
     ShowMessages("disconnected successfully\n");
 }
-
 

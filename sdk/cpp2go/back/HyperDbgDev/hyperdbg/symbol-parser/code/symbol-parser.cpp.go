@@ -69,6 +69,12 @@ SymShowDataBasedOnSymbolTypes()(ok bool)//col:1944
 
 
 
+
+
+
+
+
+
 )
 
 func NewSymbolParser() { return & symbolParser{} }
@@ -81,6 +87,12 @@ func (s *symbolParser)SymSetTextMessageCallback()(ok bool){//col:41
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -145,6 +157,12 @@ func (s *symbolParser)ShowMessages()(ok bool){//col:76
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -279,6 +297,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymGetFieldOffsetFromModule()(ok bool){//col:323
 
 
@@ -373,6 +397,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymGetDataTypeSizeFromModule()(ok bool){//col:371
 
 
@@ -394,6 +424,12 @@ func (s *symbolParser)SymGetDataTypeSizeFromModule()(ok bool){//col:371
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -547,6 +583,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymUnloadModuleSymbol()(ok bool){//col:623
 
 
@@ -581,6 +623,12 @@ func (s *symbolParser)SymUnloadModuleSymbol()(ok bool){//col:623
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -684,6 +732,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymConvertNameToAddress()(ok bool){//col:739
 
 
@@ -718,6 +772,12 @@ func (s *symbolParser)SymConvertNameToAddress()(ok bool){//col:739
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -832,6 +892,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymGetDataTypeSize()(ok bool){//col:880
 
 
@@ -863,6 +929,12 @@ func (s *symbolParser)SymGetDataTypeSize()(ok bool){//col:880
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -962,6 +1034,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymCreateSymbolTableForDisassembler()(ok bool){//col:981
 
 
@@ -1021,6 +1099,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymSeparateTo64BitValue()(ok bool){//col:1001
 
 
@@ -1033,6 +1117,12 @@ func (s *symbolParser)SymSeparateTo64BitValue()(ok bool){//col:1001
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1136,6 +1226,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymGetFileSize()(ok bool){//col:1117
 
 
@@ -1162,6 +1258,12 @@ func (s *symbolParser)SymGetFileSize()(ok bool){//col:1117
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1315,6 +1417,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymDisplayMaskSymbolsCallback()(ok bool){//col:1290
 
 
@@ -1326,6 +1434,12 @@ func (s *symbolParser)SymDisplayMaskSymbolsCallback()(ok bool){//col:1290
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1415,6 +1529,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymShowSymbolDetails()(ok bool){//col:1363
 
 
@@ -1433,6 +1553,12 @@ func (s *symbolParser)SymShowSymbolDetails()(ok bool){//col:1363
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1585,6 +1711,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymConvertFileToPdbPath()(ok bool){//col:1530
 
 
@@ -1660,6 +1792,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymConvertFileToPdbFileAndGuidAndAgeDetails()(ok bool){//col:1587
 
 
@@ -1696,6 +1834,12 @@ func (s *symbolParser)SymConvertFileToPdbFileAndGuidAndAgeDetails()(ok bool){//c
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1874,6 +2018,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymbolPDBDownload()(ok bool){//col:1802
 
 
@@ -1959,6 +2109,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (s *symbolParser)SymbolAbortLoading()(ok bool){//col:1819
 
 
@@ -1970,6 +2126,12 @@ func (s *symbolParser)SymbolAbortLoading()(ok bool){//col:1819
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2065,6 +2227,12 @@ func (s *symbolParser)SymShowDataBasedOnSymbolTypes()(ok bool){//col:1944
 
 return true
 }
+
+
+
+
+
+
 
 
 

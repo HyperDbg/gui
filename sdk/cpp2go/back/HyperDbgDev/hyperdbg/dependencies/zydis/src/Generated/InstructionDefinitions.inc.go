@@ -50,6 +50,12 @@ InstructionDefinitions interface{
 
 
 
+
+
+
+
+
+
 )
 
 func NewInstructionDefinitions() { return & instructionDefinitions{} }
@@ -2004,6 +2010,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (i *instructionDefinitions)    { ZYDIS_MNEMONIC_PAVGUSB ZYDIS_NOTMIN()(ok bool){//col:1960
 
 
@@ -2056,6 +2068,12 @@ func (i *instructionDefinitions)    { ZYDIS_MNEMONIC_PAVGUSB ZYDIS_NOTMIN()(ok b
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2297,6 +2315,12 @@ func (i *instructionDefinitions)    { ZYDIS_MNEMONIC_BEXTR ZYDIS_NOTMIN()(ok boo
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -3939,6 +3963,12 @@ func (i *instructionDefinitions)    { ZYDIS_MNEMONIC_ANDN ZYDIS_NOTMIN()(ok bool
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -7077,6 +7107,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (i *instructionDefinitions)    { ZYDIS_MNEMONIC_CLEVICT0 ZYDIS_NOTMIN()(ok bool){//col:7231
 
 
@@ -7488,6 +7524,12 @@ func (i *instructionDefinitions)    { ZYDIS_MNEMONIC_CLEVICT0 ZYDIS_NOTMIN()(ok 
 
 return true
 }
+
+
+
+
+
+
 
 
 

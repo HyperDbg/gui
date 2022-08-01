@@ -71,6 +71,14 @@ ZYDIS_EXPORT ZyanStatus ZydisCalcAbsoluteAddress()(ok bool)//col:266
 
 
 
+
+
+
+
+
+
+
+
 )
 
 func NewUtils() { return & utils{} }
@@ -80,6 +88,14 @@ func (u *utils)    ZYDIS_INSTR_SEGMENT_REQUIRED_BITS = ZYAN_BITS_TO_REPRESENT()(
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -140,6 +156,14 @@ func (u *utils)ZYDIS_EXPORT ZyanStatus ZydisCalcAbsoluteAddress()(ok bool){//col
 
 return true
 }
+
+
+
+
+
+
+
+
 
 
 

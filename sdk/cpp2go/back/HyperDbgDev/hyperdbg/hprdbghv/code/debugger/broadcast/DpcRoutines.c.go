@@ -97,6 +97,12 @@ DpcRoutineTerminateGuest()(ok bool)//col:1823
 
 
 
+
+
+
+
+
+
 )
 
 func NewDpcRoutines() { return & dpcRoutines{} }
@@ -171,6 +177,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutinePerformVirtualization()(ok bool){//col:147
 
 
@@ -181,6 +193,12 @@ func (d *dpcRoutines)DpcRoutinePerformVirtualization()(ok bool){//col:147
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -277,6 +295,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutinePerformReadMsr()(ok bool){//col:216
 
 
@@ -292,6 +316,12 @@ func (d *dpcRoutines)DpcRoutinePerformReadMsr()(ok bool){//col:216
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -383,6 +413,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutinePerformChangeMsrBitmapWriteOnSingleCore()(ok bool){//col:274
 
 
@@ -394,6 +430,12 @@ func (d *dpcRoutines)DpcRoutinePerformChangeMsrBitmapWriteOnSingleCore()(ok bool
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -486,6 +528,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutinePerformEnableRdpmcExitingOnSingleCore()(ok bool){//col:334
 
 
@@ -498,6 +546,12 @@ func (d *dpcRoutines)DpcRoutinePerformEnableRdpmcExitingOnSingleCore()(ok bool){
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -590,6 +644,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutinePerformEnableMovToDebugRegistersExiting()(ok bool){//col:394
 
 
@@ -642,6 +702,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutinePerformEnableMovToControlRegisterExiting()(ok bool){//col:423
 
 
@@ -653,6 +719,12 @@ func (d *dpcRoutines)DpcRoutinePerformEnableMovToControlRegisterExiting()(ok boo
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -745,6 +817,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutinePerformEnableEferSyscallHookOnSingleCore()(ok bool){//col:483
 
 
@@ -757,6 +835,12 @@ func (d *dpcRoutines)DpcRoutinePerformEnableEferSyscallHookOnSingleCore()(ok boo
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -848,6 +932,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineEnableMovToCr3Exiting()(ok bool){//col:544
 
 
@@ -859,6 +949,12 @@ func (d *dpcRoutines)DpcRoutineEnableMovToCr3Exiting()(ok bool){//col:544
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -950,6 +1046,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineEnableEferSyscallEvents()(ok bool){//col:608
 
 
@@ -1001,6 +1103,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineDisableEferSyscallEvents()(ok bool){//col:640
 
 
@@ -1012,6 +1120,12 @@ func (d *dpcRoutines)DpcRoutineDisableEferSyscallEvents()(ok bool){//col:640
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1106,6 +1220,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineReadMsrToAllCores()(ok bool){//col:712
 
 
@@ -1160,6 +1280,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineChangeMsrBitmapReadOnAllCores()(ok bool){//col:743
 
 
@@ -1170,6 +1296,12 @@ func (d *dpcRoutines)DpcRoutineChangeMsrBitmapReadOnAllCores()(ok bool){//col:74
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1261,6 +1393,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineChangeMsrBitmapWriteOnAllCores()(ok bool){//col:806
 
 
@@ -1271,6 +1409,12 @@ func (d *dpcRoutines)DpcRoutineChangeMsrBitmapWriteOnAllCores()(ok bool){//col:8
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1362,6 +1506,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineEnableRdtscExitingAllCores()(ok bool){//col:870
 
 
@@ -1373,6 +1523,12 @@ func (d *dpcRoutines)DpcRoutineEnableRdtscExitingAllCores()(ok bool){//col:870
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1464,6 +1620,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineDisableRdtscExitingForClearingTscEventsAllCores()(ok bool){//col:936
 
 
@@ -1475,6 +1637,12 @@ func (d *dpcRoutines)DpcRoutineDisableRdtscExitingForClearingTscEventsAllCores()
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1566,6 +1734,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineDisableMov2CrExitingForClearingCrEventsAllCores()(ok bool){//col:1001
 
 
@@ -1576,6 +1750,12 @@ func (d *dpcRoutines)DpcRoutineDisableMov2CrExitingForClearingCrEventsAllCores()
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1667,6 +1847,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineDisableRdpmcExitingAllCores()(ok bool){//col:1065
 
 
@@ -1678,6 +1864,12 @@ func (d *dpcRoutines)DpcRoutineDisableRdpmcExitingAllCores()(ok bool){//col:1065
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1768,6 +1960,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineUnsetExceptionBitmapOnAllCores()(ok bool){//col:1127
 
 
@@ -1778,6 +1976,12 @@ func (d *dpcRoutines)DpcRoutineUnsetExceptionBitmapOnAllCores()(ok bool){//col:1
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1871,6 +2075,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineEnableMovDebigRegisterExitingAllCores()(ok bool){//col:1194
 
 
@@ -1882,6 +2092,12 @@ func (d *dpcRoutines)DpcRoutineEnableMovDebigRegisterExitingAllCores()(ok bool){
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -1972,6 +2188,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineDisableMovControlRegisterExitingAllCores()(ok bool){//col:1256
 
 
@@ -1982,6 +2204,12 @@ func (d *dpcRoutines)DpcRoutineDisableMovControlRegisterExitingAllCores()(ok boo
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2073,6 +2301,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineSetEnableExternalInterruptExitingOnAllCores()(ok bool){//col:1320
 
 
@@ -2084,6 +2318,12 @@ func (d *dpcRoutines)DpcRoutineSetEnableExternalInterruptExitingOnAllCores()(ok 
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2178,6 +2418,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineChangeIoBitmapOnAllCores()(ok bool){//col:1386
 
 
@@ -2188,6 +2434,12 @@ func (d *dpcRoutines)DpcRoutineChangeIoBitmapOnAllCores()(ok bool){//col:1386
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2279,6 +2531,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineEnableBreakpointOnExceptionBitmapOnAllCores()(ok bool){//col:1450
 
 
@@ -2290,6 +2548,12 @@ func (d *dpcRoutines)DpcRoutineEnableBreakpointOnExceptionBitmapOnAllCores()(ok 
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2381,6 +2645,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineEnableNmiVmexitOnAllCores()(ok bool){//col:1514
 
 
@@ -2392,6 +2662,12 @@ func (d *dpcRoutines)DpcRoutineEnableNmiVmexitOnAllCores()(ok bool){//col:1514
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2483,6 +2759,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineVmExitAndHaltSystemAllCores()(ok bool){//col:1578
 
 
@@ -2494,6 +2776,12 @@ func (d *dpcRoutines)DpcRoutineVmExitAndHaltSystemAllCores()(ok bool){//col:1578
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2586,6 +2874,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineDisableDbAndBpExitingOnAllCores()(ok bool){//col:1652
 
 
@@ -2598,6 +2892,12 @@ func (d *dpcRoutines)DpcRoutineDisableDbAndBpExitingOnAllCores()(ok bool){//col:
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2689,6 +2989,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineRemoveHookAndInvalidateSingleEntryOnAllCores()(ok bool){//col:1716
 
 
@@ -2700,6 +3006,12 @@ func (d *dpcRoutines)DpcRoutineRemoveHookAndInvalidateSingleEntryOnAllCores()(ok
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2797,6 +3109,12 @@ return true
 
 
 
+
+
+
+
+
+
 func (d *dpcRoutines)DpcRoutineInitializeGuest()(ok bool){//col:1788
 
 
@@ -2808,6 +3126,12 @@ func (d *dpcRoutines)DpcRoutineInitializeGuest()(ok bool){//col:1788
 
 return true
 }
+
+
+
+
+
+
 
 
 
@@ -2862,6 +3186,12 @@ func (d *dpcRoutines)DpcRoutineTerminateGuest()(ok bool){//col:1823
 
 return true
 }
+
+
+
+
+
+
 
 
 
