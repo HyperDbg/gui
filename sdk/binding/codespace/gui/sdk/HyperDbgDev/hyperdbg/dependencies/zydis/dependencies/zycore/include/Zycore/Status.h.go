@@ -1,17 +1,20 @@
 package Zycore
+
 //binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\dependencies\zycore\include\Zycore\Status.h.back
 
-const(
-ZYCORE_STATUS_H =  //col:1
-ZYAN_MAKE_STATUS(error, module, code) = (ZyanStatus)((((error) & 0x01) << 31) | (((module) & 0x7FF) << 20) | ((code) & 0xFFFFF)) //col:2
+const (
+	ZYCORE_STATUS_H = //col:1
+	ZYAN_MAKE_STATUS(error, module, code) = (
+ZyanStatus
+)((((error) & 0x01) << 31) | (((module) & 0x7FF) << 20) | ((code) & 0xFFFFF)) //col:2
 ZYAN_SUCCESS(status) = (!((status) & 0x80000000)) //col:4
 ZYAN_FAILED(status) = ((status) & 0x80000000) //col:6
 ZYAN_CHECK(status) = do { const ZyanStatus status_047620348 = (status); if (!ZYAN_SUCCESS(status_047620348)) { return status_047620348; } } while (0) //col:8
 ZYAN_STATUS_MODULE(status) = (((status) >> 20) & 0x7FF) //col:17
 ZYAN_STATUS_CODE(status) = ((status) & 0xFFFFF) //col:19
-ZYAN_MODULE_ZYCORE =      0x001 //col:21
-ZYAN_MODULE_ARGPARSE =    0x003 //col:22
-ZYAN_MODULE_USER =        0x3FF //col:23
+ZYAN_MODULE_ZYCORE = 0x001                      //col:21
+ZYAN_MODULE_ARGPARSE = 0x003 //col:22
+ZYAN_MODULE_USER = 0x3FF     //col:23
 ZYAN_STATUS_SUCCESS = ZYAN_MAKE_STATUS(0, ZYAN_MODULE_ZYCORE, 0x00) //col:24
 ZYAN_STATUS_FAILED = ZYAN_MAKE_STATUS(1, ZYAN_MODULE_ZYCORE, 0x01) //col:26
 ZYAN_STATUS_TRUE = ZYAN_MAKE_STATUS(0, ZYAN_MODULE_ZYCORE, 0x02) //col:28
@@ -32,5 +35,3 @@ ZYAN_STATUS_TOO_MANY_ARGS = ZYAN_MAKE_STATUS(1, ZYAN_MODULE_ARGPARSE, 0x02) //co
 ZYAN_STATUS_ARG_MISSES_VALUE = ZYAN_MAKE_STATUS(1, ZYAN_MODULE_ARGPARSE, 0x03) //col:58
 ZYAN_STATUS_REQUIRED_ARG_MISSING = ZYAN_MAKE_STATUS(1, ZYAN_MODULE_ARGPARSE, 0x04) //col:60
 )
-
-
