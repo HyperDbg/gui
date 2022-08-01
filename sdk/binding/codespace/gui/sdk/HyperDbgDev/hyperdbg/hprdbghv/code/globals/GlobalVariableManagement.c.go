@@ -8,9 +8,10 @@ VOID_GlobalGuestStateFreeMemory()(ok bool)//col:17
 GlobalEventsAllocateZeroedMemory()(ok bool)//col:29
 GlobalEventsFreeMemory()(ok bool)//col:38
 }
+globalVariableManagement struct{}
 )
 
-func NewGlobalVariableManagement() { return & globalVariableManagement{} }
+func NewGlobalVariableManagement()GlobalVariableManagement{ return & globalVariableManagement{} }
 
 func (g *globalVariableManagement)GlobalGuestStateAllocateZeroedMemory()(ok bool){//col:13
 /*GlobalGuestStateAllocateZeroedMemory(VOID)

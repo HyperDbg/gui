@@ -10,9 +10,10 @@ DebuggerEventDisableMovToCr3ExitingOnAllProcessors()(ok bool)//col:16
 DebuggerEventEptHook2GeneralDetourEventHandler()(ok bool)//col:36
 DebuggerEventEnableMonitorReadAndWriteForAddress()(ok bool)//col:48
 }
+debuggerEvents struct{}
 )
 
-func NewDebuggerEvents() { return & debuggerEvents{} }
+func NewDebuggerEvents()DebuggerEvents{ return & debuggerEvents{} }
 
 func (d *debuggerEvents)DebuggerEventEnableEferOnAllProcessors()(ok bool){//col:4
 /*DebuggerEventEnableEferOnAllProcessors()

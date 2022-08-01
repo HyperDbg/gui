@@ -5,9 +5,10 @@ type (
 Callstack interface{
 CallstackWalkthroughStack()(ok bool)//col:45
 }
+callstack struct{}
 )
 
-func NewCallstack() { return & callstack{} }
+func NewCallstack()Callstack{ return & callstack{} }
 
 func (c *callstack)CallstackWalkthroughStack()(ok bool){//col:45
 /*CallstackWalkthroughStack(PDEBUGGER_SINGLE_CALLSTACK_FRAME AddressToSaveFrames,

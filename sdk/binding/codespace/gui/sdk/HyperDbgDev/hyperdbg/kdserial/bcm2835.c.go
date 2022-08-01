@@ -21,9 +21,10 @@ Bcm2835GetByte()(ok bool)//col:55
 Bcm2835PutByte()(ok bool)//col:85
 Bcm2835RxReady()(ok bool)//col:100
 }
+bcm2835 struct{}
 )
 
-func NewBcm2835() { return & bcm2835{} }
+func NewBcm2835()Bcm2835{ return & bcm2835{} }
 
 func (b *bcm2835)Bcm2835RxReady()(ok bool){//col:27
 /*Bcm2835RxReady(

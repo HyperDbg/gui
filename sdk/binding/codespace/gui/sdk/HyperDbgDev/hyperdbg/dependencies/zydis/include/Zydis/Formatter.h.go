@@ -113,18 +113,18 @@ const(
 
 
 type typedef struct ZydisFormatterContext_ struct{
-ZydisDecodedInstruction* const
-ZydisDecodedOperand* const
-runtime_address ZyanU64
-user_data void*
+ZydisDecodedInstruction* bool //col:4
+ZydisDecodedOperand* bool //col:5
+runtime_address ZyanU64 //col:6
+user_data void* //col:7
 }
 
 
 type typedef struct ZydisFormatterContext_ struct{
-ZydisDecodedInstruction* const
-ZydisDecodedOperand* const
-runtime_address ZyanU64
-user_data void*
+ZydisDecodedInstruction* bool //col:4
+ZydisDecodedOperand* bool //col:5
+runtime_address ZyanU64 //col:6
+user_data void* //col:7
 }
 
 
@@ -134,9 +134,10 @@ Formatter interface{
 typedef_ZyanStatus_()(ok bool)//col:57
 ZYDIS_EXPORT_ZyanStatus_ZydisFormatterInit()(ok bool)//col:88
 }
+formatter struct{}
 )
 
-func NewFormatter() { return & formatter{} }
+func NewFormatter()Formatter{ return & formatter{} }
 
 func (f *formatter)typedef_ZyanStatus_()(ok bool){//col:57
 /*typedef ZyanStatus (*ZydisFormatterFunc)(const ZydisFormatter* formatter,

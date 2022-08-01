@@ -5,9 +5,10 @@ type (
 ScriptEngine interface{
 ScriptEngineEvalSingleExpression()(ok bool)//col:43
 }
+scriptEngine struct{}
 )
 
-func NewScriptEngine() { return & scriptEngine{} }
+func NewScriptEngine()ScriptEngine{ return & scriptEngine{} }
 
 func (s *scriptEngine)ScriptEngineEvalSingleExpression()(ok bool){//col:43
 /*ScriptEngineEvalSingleExpression(string Expr, PBOOLEAN HasError)

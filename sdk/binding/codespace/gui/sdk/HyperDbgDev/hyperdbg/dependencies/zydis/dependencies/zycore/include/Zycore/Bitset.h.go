@@ -6,8 +6,8 @@ ZYCORE_BITSET_H =  //col:1
 )
 
 type typedef struct ZyanBitset_ struct{
-size ZyanUSize
-bits ZyanVector
+size ZyanUSize //col:3
+bits ZyanVector //col:4
 }
 
 

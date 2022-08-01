@@ -6,9 +6,10 @@ Crwrite interface{
 CommandCrwriteHelp()(ok bool)//col:12
 CommandCrwrite()(ok bool)//col:119
 }
+crwrite struct{}
 )
 
-func NewCrwrite() { return & crwrite{} }
+func NewCrwrite()Crwrite{ return & crwrite{} }
 
 func (c *crwrite)CommandCrwriteHelp()(ok bool){//col:12
 /*CommandCrwriteHelp()

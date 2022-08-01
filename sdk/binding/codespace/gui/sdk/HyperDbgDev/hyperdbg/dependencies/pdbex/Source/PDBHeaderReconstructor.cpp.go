@@ -34,9 +34,10 @@ PDBHeaderReconstructor::GetParentOffset()(ok bool)//col:702
 PDBHeaderReconstructor::AppendToTest()(ok bool)//col:748
 PDBHeaderReconstructor::ShouldExpand()(ok bool)//col:768
 }
+pdbHeaderReconstructor struct{}
 )
 
-func NewPdbHeaderReconstructor() { return & pdbHeaderReconstructor{} }
+func NewPdbHeaderReconstructor()PdbHeaderReconstructor{ return & pdbHeaderReconstructor{} }
 
 func (p *pdbHeaderReconstructor)PDBHeaderReconstructor::PDBHeaderReconstructor()(ok bool){//col:11
 /*PDBHeaderReconstructor::PDBHeaderReconstructor(

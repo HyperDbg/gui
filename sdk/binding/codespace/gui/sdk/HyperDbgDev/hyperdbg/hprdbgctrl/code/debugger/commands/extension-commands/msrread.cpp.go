@@ -6,9 +6,10 @@ Msrread interface{
 CommandMsrreadHelp()(ok bool)//col:12
 CommandMsrread()(ok bool)//col:88
 }
+msrread struct{}
 )
 
-func NewMsrread() { return & msrread{} }
+func NewMsrread()Msrread{ return & msrread{} }
 
 func (m *msrread)CommandMsrreadHelp()(ok bool){//col:12
 /*CommandMsrreadHelp()

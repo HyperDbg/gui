@@ -6,8 +6,8 @@ PDBEX_DEFAULT_CONFIGURATION = "-j- -k- -e n -i" //col:1
 )
 
 type LOCAL_FUNCTION_DESCRIPTION struct{
-ObjectName std::string
-ObjectSize uint32
+ObjectName std::string //col:3
+ObjectSize uint32 //col:4
 }
 
 

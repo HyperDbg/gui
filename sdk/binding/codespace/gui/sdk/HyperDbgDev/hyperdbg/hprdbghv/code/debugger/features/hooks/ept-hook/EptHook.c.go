@@ -33,9 +33,10 @@ EptHookUnHookSingleAddressHiddenBreakpoint()(ok bool)//col:628
 EptHookUnHookSingleAddress()(ok bool)//col:663
 EptHookUnHookAll()(ok bool)//col:682
 }
+eptHook struct{}
 )
 
-func NewEptHook() { return & eptHook{} }
+func NewEptHook()EptHook{ return & eptHook{} }
 
 func (e *eptHook)GetCurrentVmxExecutionMode()(ok bool){//col:6
 /*GetCurrentVmxExecutionMode()

@@ -6,9 +6,10 @@ Wrmsr interface{
 CommandWrmsrHelp()(ok bool)//col:10
 CommandWrmsr()(ok bool)//col:119
 }
+wrmsr struct{}
 )
 
-func NewWrmsr() { return & wrmsr{} }
+func NewWrmsr()Wrmsr{ return & wrmsr{} }
 
 func (w *wrmsr)CommandWrmsrHelp()(ok bool){//col:10
 /*CommandWrmsrHelp()

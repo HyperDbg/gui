@@ -9,9 +9,10 @@ CounterEmulateRdpmc()(ok bool)//col:22
 CounterSetPreemptionTimer()(ok bool)//col:26
 CounterClearPreemptionTimer()(ok bool)//col:30
 }
+counters struct{}
 )
 
-func NewCounters() { return & counters{} }
+func NewCounters()Counters{ return & counters{} }
 
 func (c *counters)CounterEmulateRdtsc()(ok bool){//col:6
 /*CounterEmulateRdtsc(PGUEST_REGS GuestRegs)

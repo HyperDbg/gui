@@ -21,9 +21,10 @@ VmxReturnStackPointerForVmxoff()(ok bool)//col:363
 VmxReturnInstructionPointerForVmxoff()(ok bool)//col:367
 VmxPerformTermination()(ok bool)//col:379
 }
+vmx struct{}
 )
 
-func NewVmx() { return & vmx{} }
+func NewVmx()Vmx{ return & vmx{} }
 
 func (v *vmx)VmxCheckVmxSupport()(ok bool){//col:17
 /*VmxCheckVmxSupport()

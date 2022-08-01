@@ -29,9 +29,10 @@ HvSetExternalInterruptExiting()(ok bool)//col:422
 HvSetRdtscExiting()(ok bool)//col:426
 HvSetMovDebugRegsExiting()(ok bool)//col:430
 }
+hv struct{}
 )
 
-func NewHv() { return & hv{} }
+func NewHv()Hv{ return & hv{} }
 
 func (h *hv)HvAdjustControls()(ok bool){//col:8
 /*HvAdjustControls(ULONG Ctl, ULONG Msr)

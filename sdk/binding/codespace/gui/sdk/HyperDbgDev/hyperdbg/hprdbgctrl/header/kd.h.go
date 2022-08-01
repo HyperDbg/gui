@@ -18,9 +18,10 @@ KdCommandPacketToDebuggee()(ok bool)//col:763
 KdCommandPacketToDebuggee()(ok bool)//col:883
 KdCommandPacketToDebuggee()(ok bool)//col:1002
 }
+kd struct{}
 )
 
-func NewKd() { return & kd{} }
+func NewKd()Kd{ return & kd{} }
 
 func (k *kd)____HKeyHolder()(ok bool){//col:12
 /*    HKeyHolder() :

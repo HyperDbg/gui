@@ -6,9 +6,10 @@ Msrwrite interface{
 CommandMsrwriteHelp()(ok bool)//col:12
 CommandMsrwrite()(ok bool)//col:88
 }
+msrwrite struct{}
 )
 
-func NewMsrwrite() { return & msrwrite{} }
+func NewMsrwrite()Msrwrite{ return & msrwrite{} }
 
 func (m *msrwrite)CommandMsrwriteHelp()(ok bool){//col:12
 /*CommandMsrwriteHelp()

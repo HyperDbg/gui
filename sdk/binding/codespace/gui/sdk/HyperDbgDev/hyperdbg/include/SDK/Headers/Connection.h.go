@@ -85,10 +85,10 @@ const(
 
 
 type DEBUGGER_REMOTE_PACKET struct{
-Checksum uint8
-Indicator uint64
-TypeOfThePacket DEBUGGER_REMOTE_PACKET_TYPE
-RequestedActionOfThePacket DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION
+Checksum uint8 //col:3
+Indicator uint64 //col:4
+TypeOfThePacket DEBUGGER_REMOTE_PACKET_TYPE //col:5
+RequestedActionOfThePacket DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION //col:6
 }
 
 

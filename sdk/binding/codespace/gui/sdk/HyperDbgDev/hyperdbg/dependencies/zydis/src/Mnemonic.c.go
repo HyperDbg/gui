@@ -6,9 +6,10 @@ Mnemonic interface{
 const_charPtr_ZydisMnemonicGetString()(ok bool)//col:8
 const_ZydisShortStringPtr_ZydisMnemonicGetStringWrapped()(ok bool)//col:16
 }
+mnemonic struct{}
 )
 
-func NewMnemonic() { return & mnemonic{} }
+func NewMnemonic()Mnemonic{ return & mnemonic{} }
 
 func (m *mnemonic)const_charPtr_ZydisMnemonicGetString()(ok bool){//col:8
 /*const char* ZydisMnemonicGetString(ZydisMnemonic mnemonic)

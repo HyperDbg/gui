@@ -14,9 +14,10 @@ TEST()(ok bool)//col:164
 TEST()(ok bool)//col:208
 int_main()(ok bool)//col:213
 }
+argParse struct{}
 )
 
-func NewArgParse() { return & argParse{} }
+func NewArgParse()ArgParse{ return & argParse{} }
 
 func (a *argParse)auto_cvt_string_view()(ok bool){//col:8
 /*auto cvt_string_view(const ZyanStringView *sv)

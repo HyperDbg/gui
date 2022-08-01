@@ -17,9 +17,10 @@ TransparentHideDebugger()(ok bool)//col:138
 TransparentUnhideDebugger()(ok bool)//col:163
 TransparentModeStart()(ok bool)//col:249
 }
+transparency struct{}
 )
 
-func NewTransparency() { return & transparency{} }
+func NewTransparency()Transparency{ return & transparency{} }
 
 func (t *transparency)TransparentGetRand()(ok bool){//col:8
 /*TransparentGetRand()

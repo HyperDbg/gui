@@ -5,9 +5,10 @@ type (
 Help interface{
 CommandHelpHelp()(ok bool)//col:7
 }
+help struct{}
 )
 
-func NewHelp() { return & help{} }
+func NewHelp()Help{ return & help{} }
 
 func (h *help)CommandHelpHelp()(ok bool){//col:7
 /*CommandHelpHelp()

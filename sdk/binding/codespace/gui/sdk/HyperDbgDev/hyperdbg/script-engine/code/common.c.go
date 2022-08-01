@@ -46,9 +46,10 @@ HexToInt()(ok bool)//col:658
 OctalToInt()(ok bool)//col:670
 BinaryToInt()(ok bool)//col:682
 }
+common struct{}
 )
 
-func NewCommon() { return & common{} }
+func NewCommon()Common{ return & common{} }
 
 func (c *common)NewUnknownToken()(ok bool){//col:11
 /*NewUnknownToken()

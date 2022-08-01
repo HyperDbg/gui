@@ -9,9 +9,10 @@ SyscallHookGetFunctionAddress()(ok bool)//col:120
 NtCreateFileHook()(ok bool)//col:161
 SyscallHookTest()(ok bool)//col:175
 }
+ssdtHook struct{}
 )
 
-func NewSsdtHook() { return & ssdtHook{} }
+func NewSsdtHook()SsdtHook{ return & ssdtHook{} }
 
 func (s *ssdtHook)SyscallHookGetKernelBase()(ok bool){//col:46
 /*SyscallHookGetKernelBase(PULONG pImageSize)

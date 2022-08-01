@@ -7,8 +7,8 @@ PaddingLength = 12 //col:2
 )
 
 type typedef struct ZydisSymbol_ struct{
-address ZyanU64
-char const
+address ZyanU64 //col:3
+char bool //col:4
 }
 
 
@@ -24,9 +24,10 @@ HyperDbgIsConditionalJumpTaken()(ok bool)//col:334
 HyperDbgCheckWhetherTheCurrentInstructionIsCall()(ok bool)//col:381
 HyperDbgLengthDisassemblerEngine()(ok bool)//col:419
 }
+disassembler struct{}
 )
 
-func NewDisassembler() { return & disassembler{} }
+func NewDisassembler()Disassembler{ return & disassembler{} }
 
 func (d *disassembler)ZydisFormatterPrintAddressAbsolute()(ok bool){//col:23
 /*ZydisFormatterPrintAddressAbsolute(const ZydisFormatter *  formatter,

@@ -11,9 +11,10 @@ Randn()(ok bool)//col:73
 GuassianGenerateRandom()(ok bool)//col:104
 TestGaussianFromFile()(ok bool)//col:122
 }
+gaussianRng struct{}
 )
 
-func NewGaussianRng() { return & gaussianRng{} }
+func NewGaussianRng()GaussianRng{ return & gaussianRng{} }
 
 func (g *gaussianRng)Median()(ok bool){//col:20
 /*Median(vector<double> Cases)

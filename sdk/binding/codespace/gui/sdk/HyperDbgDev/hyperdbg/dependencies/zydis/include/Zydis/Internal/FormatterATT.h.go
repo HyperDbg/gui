@@ -9,9 +9,10 @@ type (
 FormatterAtt interface{
 ZyanStatus_ZydisFormatterATTFormatInstruction()(ok bool)//col:84
 }
+formatterAtt struct{}
 )
 
-func NewFormatterAtt() { return & formatterAtt{} }
+func NewFormatterAtt()FormatterAtt{ return & formatterAtt{} }
 
 func (f *formatterAtt)ZyanStatus_ZydisFormatterATTFormatInstruction()(ok bool){//col:84
 /*ZyanStatus ZydisFormatterATTFormatInstruction(const ZydisFormatter* formatter,

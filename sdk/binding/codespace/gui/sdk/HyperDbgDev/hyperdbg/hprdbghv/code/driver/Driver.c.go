@@ -11,9 +11,10 @@ DrvWrite()(ok bool)//col:149
 DrvClose()(ok bool)//col:157
 DrvUnsupported()(ok bool)//col:165
 }
+driver struct{}
 )
 
-func NewDriver() { return & driver{} }
+func NewDriver()Driver{ return & driver{} }
 
 func (d *driver)DriverEntry()(ok bool){//col:48
 /*DriverEntry(

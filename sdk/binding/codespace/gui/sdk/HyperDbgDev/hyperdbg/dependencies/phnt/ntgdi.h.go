@@ -77,14 +77,14 @@ GDI_CLIENT_PEN_TYPE = (GDI_CLIENT_BRUSH_TYPE | GDI_ALTTYPE_1) //col:73
 )
 
 type GDI_HANDLE_ENTRY struct{
-Union union
-Object PVOID
-NextFree PVOID
+Union union //col:3
+Object PVOID //col:5
+NextFree PVOID //col:6
 }
 
 
 type GDI_SHARED_MEMORY struct{
-Handles[GDI_MAX_HANDLE_COUNT] GDI_HANDLE_ENTRY
+Handles[GDI_MAX_HANDLE_COUNT] GDI_HANDLE_ENTRY //col:25
 }
 
 

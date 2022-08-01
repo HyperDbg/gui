@@ -34,9 +34,10 @@ WcharToChar()(ok bool)//col:424
 ApplyStringFormatSpecifier()(ok bool)//col:503
 ScriptEngineFunctionPrintf()(ok bool)//col:632
 }
+functions struct{}
 )
 
-func NewFunctions() { return & functions{} }
+func NewFunctions()Functions{ return & functions{} }
 
 func (f *functions)GetValue()(ok bool){//col:22
 /*GetValue(PGUEST_REGS                    GuestRegs,

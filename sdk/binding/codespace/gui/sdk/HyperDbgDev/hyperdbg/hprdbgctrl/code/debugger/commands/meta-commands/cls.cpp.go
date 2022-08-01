@@ -6,9 +6,10 @@ Cls interface{
 CommandClearScreenHelp()(ok bool)//col:5
 CommandClearScreen()(ok bool)//col:9
 }
+cls struct{}
 )
 
-func NewCls() { return & cls{} }
+func NewCls()Cls{ return & cls{} }
 
 func (c *cls)CommandClearScreenHelp()(ok bool){//col:5
 /*CommandClearScreenHelp()

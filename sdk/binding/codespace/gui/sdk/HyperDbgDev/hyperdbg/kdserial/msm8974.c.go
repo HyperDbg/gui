@@ -137,9 +137,10 @@ MSM8974GetByte()(ok bool)//col:193
 MSM8974PutByte()(ok bool)//col:224
 MSM8974RxReady()(ok bool)//col:239
 }
+msm8974 struct{}
 )
 
-func NewMsm8974() { return & msm8974{} }
+func NewMsm8974()Msm8974{ return & msm8974{} }
 
 func (m *msm8974)MSM8974SetBaud()(ok bool){//col:42
 /*MSM8974SetBaud(

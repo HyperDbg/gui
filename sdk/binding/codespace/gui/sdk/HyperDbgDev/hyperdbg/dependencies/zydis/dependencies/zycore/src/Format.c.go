@@ -20,9 +20,10 @@ ZyanStatus_ZyanStringAppendDecS()(ok bool)//col:276
 ZyanStatus_ZyanStringAppendHexU()(ok bool)//col:289
 ZyanStatus_ZyanStringAppendHexS()(ok bool)//col:312
 }
+format struct{}
 )
 
-func NewFormat() { return & format{} }
+func NewFormat()Format{ return & format{} }
 
 func (f *format)static_const_ZyanStringView_STR_ADD_=_ZYAN_DEFINE_STRING_VIEW()(ok bool){//col:41
 /*static const ZyanStringView STR_ADD = ZYAN_DEFINE_STRING_VIEW("+");

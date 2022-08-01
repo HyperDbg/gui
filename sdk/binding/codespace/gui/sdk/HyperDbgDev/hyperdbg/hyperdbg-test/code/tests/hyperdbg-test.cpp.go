@@ -5,9 +5,10 @@ type (
 HyperdbgTest interface{
 main()(ok bool)//col:74
 }
+hyperdbgTest struct{}
 )
 
-func NewHyperdbgTest() { return & hyperdbgTest{} }
+func NewHyperdbgTest()HyperdbgTest{ return & hyperdbgTest{} }
 
 func (h *hyperdbgTest)main()(ok bool){//col:74
 /*main(int argc, char * argv[])

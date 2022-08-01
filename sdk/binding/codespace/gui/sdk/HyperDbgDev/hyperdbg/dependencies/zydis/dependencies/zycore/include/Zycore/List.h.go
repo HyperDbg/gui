@@ -9,21 +9,21 @@ ZYAN_LIST_GET(type, node) = (*(const type*)ZyanListGetNodeData(node)) //col:16
 )
 
 type typedef struct ZyanListNode_ struct{
-ZyanListNode_* struct
-ZyanListNode_* struct
+ZyanListNode_* struct //col:3
+ZyanListNode_* struct //col:4
 }
 
 
 type typedef struct ZyanList_ struct{
-allocator ZyanAllocator*
-size ZyanUSize
-element_size ZyanUSize
-destructor ZyanMemberProcedure
-head ZyanListNode*
-tail ZyanListNode*
-buffer void*
-capacity ZyanUSize
-first_unused ZyanListNode*
+allocator ZyanAllocator* //col:8
+size ZyanUSize //col:9
+element_size ZyanUSize //col:10
+destructor ZyanMemberProcedure //col:11
+head ZyanListNode* //col:12
+tail ZyanListNode* //col:13
+buffer void* //col:14
+capacity ZyanUSize //col:15
+first_unused ZyanListNode* //col:16
 }
 
 

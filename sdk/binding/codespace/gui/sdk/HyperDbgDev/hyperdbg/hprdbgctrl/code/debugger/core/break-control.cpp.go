@@ -5,9 +5,10 @@ type (
 BreakControl interface{
 BreakController()(ok bool)//col:80
 }
+breakControl struct{}
 )
 
-func NewBreakControl() { return & breakControl{} }
+func NewBreakControl()BreakControl{ return & breakControl{} }
 
 func (b *breakControl)BreakController()(ok bool){//col:80
 /*BreakController(DWORD CtrlType)

@@ -6,9 +6,10 @@ Pe interface{
 CommandPeHelp()(ok bool)//col:10
 CommandPe()(ok bool)//col:68
 }
+pe struct{}
 )
 
-func NewPe() { return & pe{} }
+func NewPe()Pe{ return & pe{} }
 
 func (p *pe)CommandPeHelp()(ok bool){//col:10
 /*CommandPeHelp()

@@ -6,9 +6,10 @@ Disconnect interface{
 CommandDisconnectHelp()(ok bool)//col:6
 CommandDisconnect()(ok bool)//col:39
 }
+disconnect struct{}
 )
 
-func NewDisconnect() { return & disconnect{} }
+func NewDisconnect()Disconnect{ return & disconnect{} }
 
 func (d *disconnect)CommandDisconnectHelp()(ok bool){//col:6
 /*CommandDisconnectHelp()

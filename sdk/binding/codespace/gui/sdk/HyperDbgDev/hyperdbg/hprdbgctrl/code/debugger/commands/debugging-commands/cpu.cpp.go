@@ -9,9 +9,10 @@ ____static_std::string_Vendor()(ok bool)//col:153
 ReadVendorString()(ok bool)//col:159
 ReadCpuDetails()(ok bool)//col:221
 }
+cpu struct{}
 )
 
-func NewCpu() { return & cpu{} }
+func NewCpu()Cpu{ return & cpu{} }
 
 func (c *cpu)CommandCpuHelp()(ok bool){//col:5
 /*CommandCpuHelp()

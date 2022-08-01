@@ -2,8 +2,8 @@ package examples
 //binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\examples\Formatter01.c.back
 
 type typedef struct ZydisSymbol_ struct{
-address ZyanU64
-char* const
+address ZyanU64 //col:3
+char* bool //col:4
 }
 
 
@@ -14,9 +14,10 @@ static_ZyanStatus_ZydisFormatterPrintAddressAbsolute()(ok bool)//col:18
 static_void_DisassembleBuffer()(ok bool)//col:41
 int_main()(ok bool)//col:62
 }
+formatter01 struct{}
 )
 
-func NewFormatter01() { return & formatter01{} }
+func NewFormatter01()Formatter01{ return & formatter01{} }
 
 func (f *formatter01)static_ZyanStatus_ZydisFormatterPrintAddressAbsolute()(ok bool){//col:18
 /*static ZyanStatus ZydisFormatterPrintAddressAbsolute(const ZydisFormatter* formatter,

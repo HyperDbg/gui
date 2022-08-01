@@ -6,9 +6,10 @@ T interface{
 CommandTHelp()(ok bool)//col:14
 CommandT()(ok bool)//col:80
 }
+t struct{}
 )
 
-func NewT() { return & t{} }
+func NewT()T{ return & t{} }
 
 func (t *t)CommandTHelp()(ok bool){//col:14
 /*CommandTHelp()

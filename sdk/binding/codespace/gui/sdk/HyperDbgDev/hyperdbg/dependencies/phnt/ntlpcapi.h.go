@@ -85,234 +85,234 @@ const(
 
 
 type PORT_MESSAGE struct{
-Union union
-Struct struct
-DataLength CSHORT
-TotalLength CSHORT
+Union union //col:3
+Struct struct //col:5
+DataLength CSHORT //col:7
+TotalLength CSHORT //col:8
 }
 
 
 type PORT_DATA_ENTRY struct{
-Base PVOID
-Size ULONG
+Base PVOID //col:35
+Size uint32 //col:36
 }
 
 
 type PORT_DATA_INFORMATION struct{
-CountDataEntries ULONG
-DataEntries[1] PORT_DATA_ENTRY
+CountDataEntries uint32 //col:40
+DataEntries[1] PORT_DATA_ENTRY //col:41
 }
 
 
 type LPC_CLIENT_DIED_MSG struct{
-PortMsg PORT_MESSAGE
-CreateTime LARGE_INTEGER
+PortMsg PORT_MESSAGE //col:45
+CreateTime LARGE_INTEGER //col:46
 }
 
 
 type PORT_VIEW struct{
-Length ULONG
-SectionHandle HANDLE
-SectionOffset ULONG
-ViewSize SIZE_T
-ViewBase PVOID
-ViewRemoteBase PVOID
+Length uint32 //col:50
+SectionHandle HANDLE //col:51
+SectionOffset uint32 //col:52
+ViewSize SIZE_T //col:53
+ViewBase PVOID //col:54
+ViewRemoteBase PVOID //col:55
 }
 
 
 type REMOTE_PORT_VIEW struct{
-Length ULONG
-ViewSize SIZE_T
-ViewBase PVOID
+Length uint32 //col:59
+ViewSize SIZE_T //col:60
+ViewBase PVOID //col:61
 }
 
 
 type PORT_MESSAGE64 struct{
-Union union
-Struct struct
-DataLength CSHORT
-TotalLength CSHORT
+Union union //col:65
+Struct struct //col:67
+DataLength CSHORT //col:69
+TotalLength CSHORT //col:70
 }
 
 
 type LPC_CLIENT_DIED_MSG64 struct{
-PortMsg PORT_MESSAGE64
-CreateTime LARGE_INTEGER
+PortMsg PORT_MESSAGE64 //col:97
+CreateTime LARGE_INTEGER //col:98
 }
 
 
 type PORT_VIEW64 struct{
-Length ULONG
-SectionHandle ULONGLONG
-SectionOffset ULONG
-ViewSize ULONGLONG
-ViewBase ULONGLONG
-ViewRemoteBase ULONGLONG
+Length uint32 //col:102
+SectionHandle ULONGLONG //col:103
+SectionOffset uint32 //col:104
+ViewSize ULONGLONG //col:105
+ViewBase ULONGLONG //col:106
+ViewRemoteBase ULONGLONG //col:107
 }
 
 
 type REMOTE_PORT_VIEW64 struct{
-Length ULONG
-ViewSize ULONGLONG
-ViewBase ULONGLONG
+Length uint32 //col:111
+ViewSize ULONGLONG //col:112
+ViewBase ULONGLONG //col:113
 }
 
 
 type ALPC_PORT_ATTRIBUTES struct{
-Flags ULONG
-SecurityQos SECURITY_QUALITY_OF_SERVICE
-MaxMessageLength SIZE_T
-MemoryBandwidth SIZE_T
-MaxPoolUsage SIZE_T
-MaxSectionSize SIZE_T
-MaxViewSize SIZE_T
-MaxTotalSectionSize SIZE_T
-DupObjectTypes ULONG
-#ifdefWin64 #ifdef _WIN64
-Reserved ULONG
-#endif #endif
+Flags uint32 //col:117
+SecurityQos SECURITY_QUALITY_OF_SERVICE //col:118
+MaxMessageLength SIZE_T //col:119
+MemoryBandwidth SIZE_T //col:120
+MaxPoolUsage SIZE_T //col:121
+MaxSectionSize SIZE_T //col:122
+MaxViewSize SIZE_T //col:123
+MaxTotalSectionSize SIZE_T //col:124
+DupObjectTypes uint32 //col:125
+#ifdefWin64 #ifdef _WIN64 //col:126
+Reserved uint32 //col:127
+#endif #endif //col:128
 }
 
 
 type ALPC_MESSAGE_ATTRIBUTES struct{
-AllocatedAttributes ULONG
-ValidAttributes ULONG
+AllocatedAttributes uint32 //col:132
+ValidAttributes uint32 //col:133
 }
 
 
 type ALPC_COMPLETION_LIST_STATE struct{
-Union union
-Struct struct
-Head ULONG64
-Tail ULONG64
-ActiveThreadCount ULONG64
+Union union //col:137
+Struct struct //col:139
+Head ULONG64 //col:141
+Tail ULONG64 //col:142
+ActiveThreadCount ULONG64 //col:143
 }
 
 
 type typedef struct DECLSPEC_ALIGN(128) _ALPC_COMPLETION_LIST_HEADER struct{
-StartMagic ULONG64
-TotalSize ULONG
-ListOffset ULONG
-ListSize ULONG
-BitmapOffset ULONG
-BitmapSize ULONG
-DataOffset ULONG
-DataSize ULONG
-AttributeFlags ULONG
-AttributeSize ULONG
-ALPC_COMPLETION_LIST_STATE DECLSPEC_ALIGN(128)
-LastMessageId ULONG
-LastCallbackId ULONG
-ULONG DECLSPEC_ALIGN(128)
-ULONG DECLSPEC_ALIGN(128)
-ULONG DECLSPEC_ALIGN(128)
-RTL_SRWLOCK DECLSPEC_ALIGN(128)
-EndMagic ULONG64
+StartMagic ULONG64 //col:150
+TotalSize uint32 //col:151
+ListOffset uint32 //col:152
+ListSize uint32 //col:153
+BitmapOffset uint32 //col:154
+BitmapSize uint32 //col:155
+DataOffset uint32 //col:156
+DataSize uint32 //col:157
+AttributeFlags uint32 //col:158
+AttributeSize uint32 //col:159
+ALPC_COMPLETION_LIST_STATE DECLSPEC_ALIGN(128) //col:160
+LastMessageId uint32 //col:161
+LastCallbackId uint32 //col:162
+ULONG DECLSPEC_ALIGN(128) //col:163
+ULONG DECLSPEC_ALIGN(128) //col:164
+ULONG DECLSPEC_ALIGN(128) //col:165
+RTL_SRWLOCK DECLSPEC_ALIGN(128) //col:166
+EndMagic ULONG64 //col:167
 }
 
 
 type ALPC_CONTEXT_ATTR struct{
-PortContext PVOID
-MessageContext PVOID
-Sequence ULONG
-MessageId ULONG
-CallbackId ULONG
+PortContext PVOID //col:171
+MessageContext PVOID //col:172
+Sequence uint32 //col:173
+MessageId uint32 //col:174
+CallbackId uint32 //col:175
 }
 
 
 type ALPC_HANDLE_ATTR32 struct{
-Flags ULONG
-Reserved0 ULONG
-SameAccess ULONG
-SameAttributes ULONG
-Indirect ULONG
-Inherit ULONG
-Reserved1 ULONG
-Handle ULONG
-ObjectType ULONG
-DesiredAccess ULONG
-GrantedAccess ULONG
+Flags uint32 //col:179
+Reserved0 uint32 //col:180
+SameAccess uint32 //col:181
+SameAttributes uint32 //col:182
+Indirect uint32 //col:183
+Inherit uint32 //col:184
+Reserved1 uint32 //col:185
+Handle uint32 //col:186
+ObjectType uint32 //col:187
+DesiredAccess uint32 //col:188
+GrantedAccess uint32 //col:189
 }
 
 
 type ALPC_HANDLE_ATTR struct{
-Flags ULONG
-Reserved0 ULONG
-SameAccess ULONG
-SameAttributes ULONG
-Indirect ULONG
-Inherit ULONG
-Reserved1 ULONG
-Handle HANDLE
-HandleAttrArray PALPC_HANDLE_ATTR32
-ObjectType ULONG
-HandleCount ULONG
-DesiredAccess ACCESS_MASK
-GrantedAccess ACCESS_MASK
+Flags uint32 //col:193
+Reserved0 uint32 //col:194
+SameAccess uint32 //col:195
+SameAttributes uint32 //col:196
+Indirect uint32 //col:197
+Inherit uint32 //col:198
+Reserved1 uint32 //col:199
+Handle HANDLE //col:200
+HandleAttrArray PALPC_HANDLE_ATTR32 //col:201
+ObjectType uint32 //col:202
+HandleCount uint32 //col:203
+DesiredAccess ACCESS_MASK //col:204
+GrantedAccess ACCESS_MASK //col:205
 }
 
 
 type ALPC_SECURITY_ATTR struct{
-Flags ULONG
-QoS PSECURITY_QUALITY_OF_SERVICE
-ContextHandle ALPC_HANDLE
+Flags uint32 //col:209
+QoS PSECURITY_QUALITY_OF_SERVICE //col:210
+ContextHandle ALPC_HANDLE //col:211
 }
 
 
 type ALPC_DATA_VIEW_ATTR struct{
-Flags ULONG
-SectionHandle ALPC_HANDLE
-ViewBase PVOID
-ViewSize SIZE_T
+Flags uint32 //col:215
+SectionHandle ALPC_HANDLE //col:216
+ViewBase PVOID //col:217
+ViewSize SIZE_T //col:218
 }
 
 
 type ALPC_BASIC_INFORMATION struct{
-Flags ULONG
-SequenceNo ULONG
-PortContext PVOID
+Flags uint32 //col:222
+SequenceNo uint32 //col:223
+PortContext PVOID //col:224
 }
 
 
 type ALPC_PORT_ASSOCIATE_COMPLETION_PORT struct{
-CompletionKey PVOID
-CompletionPort HANDLE
+CompletionKey PVOID //col:228
+CompletionPort HANDLE //col:229
 }
 
 
 type ALPC_SERVER_INFORMATION struct{
-Union union
-Struct struct
-ThreadHandle HANDLE
+Union union //col:233
+Struct struct //col:235
+ThreadHandle HANDLE //col:237
 }
 
 
 type ALPC_PORT_MESSAGE_ZONE_INFORMATION struct{
-Buffer PVOID
-Size ULONG
+Buffer PVOID //col:249
+Size uint32 //col:250
 }
 
 
 type ALPC_PORT_COMPLETION_LIST_INFORMATION struct{
-Buffer PVOID
-Size ULONG
-ConcurrencyCount ULONG
-AttributeFlags ULONG
+Buffer PVOID //col:254
+Size uint32 //col:255
+ConcurrencyCount uint32 //col:256
+AttributeFlags uint32 //col:257
 }
 
 
 type ALPC_SERVER_SESSION_INFORMATION struct{
-SessionId ULONG
-ProcessId ULONG
+SessionId uint32 //col:261
+ProcessId uint32 //col:262
 }
 
 
 type ALPC_MESSAGE_HANDLE_INFORMATION struct{
-Index ULONG
-Flags ULONG
-Handle ULONG
-ObjectType ULONG
-GrantedAccess ACCESS_MASK
+Index uint32 //col:266
+Flags uint32 //col:267
+Handle uint32 //col:268
+ObjectType uint32 //col:269
+GrantedAccess ACCESS_MASK //col:270
 }
 
 

@@ -20,9 +20,9 @@ const(
 
 
 type KCONTINUE_ARGUMENT struct{
-ContinueType KCONTINUE_TYPE
-ContinueFlags ULONG
-Reserved[2] ULONGLONG
+ContinueType KCONTINUE_TYPE //col:3
+ContinueFlags uint32 //col:4
+Reserved[2] ULONGLONG //col:5
 }
 
 

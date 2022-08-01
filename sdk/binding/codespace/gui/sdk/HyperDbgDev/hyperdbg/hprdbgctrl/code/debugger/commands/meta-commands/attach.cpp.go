@@ -6,9 +6,10 @@ Attach interface{
 CommandAttachHelp()(ok bool)//col:7
 CommandAttach()(ok bool)//col:60
 }
+attach struct{}
 )
 
-func NewAttach() { return & attach{} }
+func NewAttach()Attach{ return & attach{} }
 
 func (a *attach)CommandAttachHelp()(ok bool){//col:7
 /*CommandAttachHelp()

@@ -28,9 +28,10 @@ PdbSymbolSorter interface{
 		AddSymbol()(ok bool)//col:1328
 			if_()(ok bool)//col:1337
 }
+pdbSymbolSorter struct{}
 )
 
-func NewPdbSymbolSorter() { return & pdbSymbolSorter{} }
+func NewPdbSymbolSorter()PdbSymbolSorter{ return & pdbSymbolSorter{} }
 
 func (p *pdbSymbolSorter)		GetSortedSymbols()(ok bool){//col:98
 /*		GetSortedSymbols() override

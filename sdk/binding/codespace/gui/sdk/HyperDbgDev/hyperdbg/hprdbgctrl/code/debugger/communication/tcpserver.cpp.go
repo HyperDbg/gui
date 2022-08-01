@@ -12,9 +12,10 @@ CommunicationServerReceiveMessage()(ok bool)//col:89
 CommunicationServerSendMessage()(ok bool)//col:99
 CommunicationServerShutdownAndCleanupConnection()(ok bool)//col:115
 }
+tcpserver struct{}
 )
 
-func NewTcpserver() { return & tcpserver{} }
+func NewTcpserver()Tcpserver{ return & tcpserver{} }
 
 func (t *tcpserver)CommunicationServerCreateServerAndWaitForClient()(ok bool){//col:70
 /*CommunicationServerCreateServerAndWaitForClient(PCSTR    Port,

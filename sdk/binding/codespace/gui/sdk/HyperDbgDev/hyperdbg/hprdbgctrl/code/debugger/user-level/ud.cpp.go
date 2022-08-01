@@ -21,9 +21,10 @@ UdSendStepPacketToDebuggee()(ok bool)//col:422
 UdSetActiveDebuggingThreadByPidOrTid()(ok bool)//col:467
 UdShowListActiveDebuggingProcessesAndThreads()(ok bool)//col:561
 }
+ud struct{}
 )
 
-func NewUd() { return & ud{} }
+func NewUd()Ud{ return & ud{} }
 
 func (u *ud)UdInitializeUserDebugger()(ok bool){//col:13
 /*UdInitializeUserDebugger()

@@ -65,9 +65,10 @@ PL011GetByte()(ok bool)//col:150
 PL011PutByte()(ok bool)//col:182
 PL011RxReady()(ok bool)//col:202
 }
+pl011 struct{}
 )
 
-func NewPl011() { return & pl011{} }
+func NewPl011()Pl011{ return & pl011{} }
 
 func (p *pl011)PL011InitializePort()(ok bool){//col:53
 /*PL011InitializePort(

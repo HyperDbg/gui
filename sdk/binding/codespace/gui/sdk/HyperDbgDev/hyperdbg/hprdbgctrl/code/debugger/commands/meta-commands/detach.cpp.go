@@ -7,9 +7,10 @@ CommandDetachHelp()(ok bool)//col:5
 DetachFromProcess()(ok bool)//col:18
 CommandDetach()(ok bool)//col:35
 }
+detach struct{}
 )
 
-func NewDetach() { return & detach{} }
+func NewDetach()Detach{ return & detach{} }
 
 func (d *detach)CommandDetachHelp()(ok bool){//col:5
 /*CommandDetachHelp()

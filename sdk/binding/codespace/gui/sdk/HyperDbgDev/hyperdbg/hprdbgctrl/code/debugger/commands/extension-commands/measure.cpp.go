@@ -6,9 +6,10 @@ Measure interface{
 CommandMeasureHelp()(ok bool)//col:9
 CommandMeasure()(ok bool)//col:79
 }
+measure struct{}
 )
 
-func NewMeasure() { return & measure{} }
+func NewMeasure()Measure{ return & measure{} }
 
 func (m *measure)CommandMeasureHelp()(ok bool){//col:9
 /*CommandMeasureHelp()

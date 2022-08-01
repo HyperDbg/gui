@@ -9,9 +9,10 @@ SetValue()(ok bool)//col:103
 ScriptEngineGetOperatorName()(ok bool)//col:133
 ScriptEngineExecute()(ok bool)//col:957
 }
+scriptEngineEval struct{}
 )
 
-func NewScriptEngineEval() { return & scriptEngineEval{} }
+func NewScriptEngineEval()ScriptEngineEval{ return & scriptEngineEval{} }
 
 func (s *scriptEngineEval)GetPseudoRegValue()(ok bool){//col:45
 /*GetPseudoRegValue(PSYMBOL Symbol, PACTION_BUFFER ActionBuffer)

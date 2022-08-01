@@ -6,9 +6,10 @@ Monitor interface{
 CommandMonitorHelp()(ok bool)//col:14
 CommandMonitor()(ok bool)//col:148
 }
+monitor struct{}
 )
 
-func NewMonitor() { return & monitor{} }
+func NewMonitor()Monitor{ return & monitor{} }
 
 func (m *monitor)CommandMonitorHelp()(ok bool){//col:14
 /*CommandMonitorHelp()

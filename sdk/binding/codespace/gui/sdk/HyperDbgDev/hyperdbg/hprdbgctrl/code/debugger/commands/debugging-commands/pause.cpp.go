@@ -7,9 +7,10 @@ CommandPauseHelp()(ok bool)//col:5
 CommandPauseRequest()(ok bool)//col:20
 CommandPause()(ok bool)//col:30
 }
+pause struct{}
 )
 
-func NewPause() { return & pause{} }
+func NewPause()Pause{ return & pause{} }
 
 func (p *pause)CommandPauseHelp()(ok bool){//col:5
 /*CommandPauseHelp()

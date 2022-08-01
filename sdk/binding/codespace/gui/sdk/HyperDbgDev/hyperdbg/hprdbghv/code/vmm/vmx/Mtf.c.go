@@ -5,9 +5,10 @@ type (
 Mtf interface{
 MtfHandleVmexit()(ok bool)//col:102
 }
+mtf struct{}
 )
 
-func NewMtf() { return & mtf{} }
+func NewMtf()Mtf{ return & mtf{} }
 
 func (m *mtf)MtfHandleVmexit()(ok bool){//col:102
 /*MtfHandleVmexit(ULONG CurrentProcessorIndex, PGUEST_REGS GuestRegs)

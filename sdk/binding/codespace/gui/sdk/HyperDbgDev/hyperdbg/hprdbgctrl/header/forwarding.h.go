@@ -30,14 +30,14 @@ const(
 
 
 type DEBUGGER_EVENT_FORWARDING struct{
-Type DEBUGGER_EVENT_FORWARDING_TYPE
-State DEBUGGER_EVENT_FORWARDING_STATE
-Handle HANDLE
-Socket SOCKET
-OutputUniqueTag uint64
-ListEntry *list.List
-OutputSourcesList byte
-Name[MAXIMUM_CHARACTERS_FOR_EVENT_FORWARDING_NAME] CHAR
+Type DEBUGGER_EVENT_FORWARDING_TYPE //col:3
+State DEBUGGER_EVENT_FORWARDING_STATE //col:4
+Handle HANDLE //col:5
+Socket SOCKET //col:6
+OutputUniqueTag uint64 //col:7
+ListEntry *list.List //col:8
+OutputSourcesList byte //col:9
+Name[MAXIMUM_CHARACTERS_FOR_EVENT_FORWARDING_NAME] int8 //col:10
 }
 
 

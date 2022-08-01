@@ -50,9 +50,10 @@ ZyanStatus_ZyanStringGetCapacity()(ok bool)//col:767
 ZyanStatus_ZyanStringGetSize()(ok bool)//col:777
 ZyanStatus_ZyanStringGetData()(ok bool)//col:786
 }
+string struct{}
 )
 
-func NewString() { return & string{} }
+func NewString()String{ return & string{} }
 
 func (s *string)ZyanStatus_ZyanStringInit()(ok bool){//col:5
 /*ZyanStatus ZyanStringInit(ZyanString* string, ZyanUSize capacity)

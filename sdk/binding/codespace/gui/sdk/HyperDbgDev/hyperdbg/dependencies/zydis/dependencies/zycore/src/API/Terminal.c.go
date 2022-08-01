@@ -6,9 +6,10 @@ Terminal interface{
 ZyanStatus_ZyanTerminalEnableVT100()(ok bool)//col:41
 ZyanStatus_ZyanTerminalIsTTY()(ok bool)//col:93
 }
+terminal struct{}
 )
 
-func NewTerminal() { return & terminal{} }
+func NewTerminal()Terminal{ return & terminal{} }
 
 func (t *terminal)ZyanStatus_ZyanTerminalEnableVT100()(ok bool){//col:41
 /*ZyanStatus ZyanTerminalEnableVT100(ZyanStandardStream stream)

@@ -5,9 +5,10 @@ type (
 HyperdbgCli interface{
 main()(ok bool)//col:82
 }
+hyperdbgCli struct{}
 )
 
-func NewHyperdbgCli() { return & hyperdbgCli{} }
+func NewHyperdbgCli()HyperdbgCli{ return & hyperdbgCli{} }
 
 func (h *hyperdbgCli)main()(ok bool){//col:82
 /*main(int argc, char * argv[])

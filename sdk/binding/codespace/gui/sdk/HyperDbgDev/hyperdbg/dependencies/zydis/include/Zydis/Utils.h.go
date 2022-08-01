@@ -26,11 +26,11 @@ const(
 
 
 type typedef struct ZydisInstructionSegments_ struct{
-count ZyanU8
-Struct struct
-type ZydisInstructionSegment
-offset ZyanU8
-size ZyanU8
+count ZyanU8 //col:3
+Struct struct //col:4
+type ZydisInstructionSegment //col:6
+offset ZyanU8 //col:7
+size ZyanU8 //col:8
 }
 
 

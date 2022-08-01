@@ -13,9 +13,10 @@ Omap interface{
 Uart16550GetByte()(ok bool)//col:37
 OmapSetBaud()(ok bool)//col:63
 }
+omap struct{}
 )
 
-func NewOmap() { return & omap{} }
+func NewOmap()Omap{ return & omap{} }
 
 func (o *omap)Uart16550GetByte()(ok bool){//col:37
 /*Uart16550GetByte(

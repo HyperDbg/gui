@@ -57,9 +57,10 @@ GetGuestDr3()(ok bool)//col:282
 GetGuestDr6()(ok bool)//col:288
 GetGuestDr7()(ok bool)//col:294
 }
+manageRegs struct{}
 )
 
-func NewManageRegs() { return & manageRegs{} }
+func NewManageRegs()ManageRegs{ return & manageRegs{} }
 
 func (m *manageRegs)SetGuestCsSel()(ok bool){//col:4
 /*SetGuestCsSel(PVMX_SEGMENT_SELECTOR Cs)

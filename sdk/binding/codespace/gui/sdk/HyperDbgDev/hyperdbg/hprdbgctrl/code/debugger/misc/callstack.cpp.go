@@ -6,9 +6,10 @@ Callstack interface{
 CallstackReturnAddressToCallingAddress()(ok bool)//col:74
 CallstackShowFrames()(ok bool)//col:162
 }
+callstack struct{}
 )
 
-func NewCallstack() { return & callstack{} }
+func NewCallstack()Callstack{ return & callstack{} }
 
 func (c *callstack)CallstackReturnAddressToCallingAddress()(ok bool){//col:74
 /*CallstackReturnAddressToCallingAddress(UCHAR * ReturnAddress, PUINT32 IndexOfCallFromReturnAddress)

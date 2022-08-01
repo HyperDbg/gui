@@ -9,9 +9,10 @@ ShowMemoryCommandDC()(ok bool)//col:160
 ShowMemoryCommandDD()(ok bool)//col:185
 ShowMemoryCommandDQ()(ok bool)//col:211
 }
+readmem struct{}
 )
 
-func NewReadmem() { return & readmem{} }
+func NewReadmem()Readmem{ return & readmem{} }
 
 func (r *readmem)HyperDbgReadMemoryAndDisassemble()(ok bool){//col:85
 /*HyperDbgReadMemoryAndDisassemble(DEBUGGER_SHOW_MEMORY_STYLE   Style,

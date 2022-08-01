@@ -6,9 +6,10 @@ Unload interface{
 CommandUnloadHelp()(ok bool)//col:9
 CommandUnload()(ok bool)//col:62
 }
+unload struct{}
 )
 
-func NewUnload() { return & unload{} }
+func NewUnload()Unload{ return & unload{} }
 
 func (u *unload)CommandUnloadHelp()(ok bool){//col:9
 /*CommandUnloadHelp()

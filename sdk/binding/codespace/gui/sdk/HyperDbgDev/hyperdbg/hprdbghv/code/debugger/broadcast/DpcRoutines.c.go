@@ -58,9 +58,10 @@ DpcRoutineInvalidateEptOnAllCores()(ok bool)//col:463
 DpcRoutineInitializeGuest()(ok bool)//col:471
 DpcRoutineTerminateGuest()(ok bool)//col:482
 }
+dpcRoutines struct{}
 )
 
-func NewDpcRoutines() { return & dpcRoutines{} }
+func NewDpcRoutines()DpcRoutines{ return & dpcRoutines{} }
 
 func (d *dpcRoutines)DpcRoutineRunTaskOnSingleCore()(ok bool){//col:30
 /*DpcRoutineRunTaskOnSingleCore(UINT32 CoreNumber, PVOID Routine, PVOID DeferredContext)

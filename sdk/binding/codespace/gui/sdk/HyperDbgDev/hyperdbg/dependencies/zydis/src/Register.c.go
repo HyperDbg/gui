@@ -2,11 +2,11 @@ package src
 //binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\src\Register.c.back
 
 type typedef struct ZydisRegisterMapItem_ struct{
-class ZydisRegisterClass
-lo ZydisRegister
-hi ZydisRegister
-width ZydisRegisterWidth
-width64 ZydisRegisterWidth
+class ZydisRegisterClass //col:3
+lo ZydisRegister //col:4
+hi ZydisRegister //col:5
+width ZydisRegisterWidth //col:6
+width64 ZydisRegisterWidth //col:7
 }
 
 
@@ -22,9 +22,10 @@ const_charPtr_ZydisRegisterGetString()(ok bool)//col:166
 const_ZydisShortStringPtr_ZydisRegisterGetStringWrapped()(ok bool)//col:174
 ZydisRegisterWidth_ZydisRegisterClassGetWidth()(ok bool)//col:184
 }
+register struct{}
 )
 
-func NewRegister() { return & register{} }
+func NewRegister()Register{ return & register{} }
 
 func (r *register)ZydisRegister_ZydisRegisterEncode()(ok bool){//col:17
 /*ZydisRegister ZydisRegisterEncode(ZydisRegisterClass register_class, ZyanU8 id)

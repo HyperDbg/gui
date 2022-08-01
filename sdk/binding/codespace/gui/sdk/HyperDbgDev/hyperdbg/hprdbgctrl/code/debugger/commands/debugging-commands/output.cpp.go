@@ -6,9 +6,10 @@ Output interface{
 CommandOutputHelp()(ok bool)//col:15
 CommandOutput()(ok bool)//col:275
 }
+output struct{}
 )
 
-func NewOutput() { return & output{} }
+func NewOutput()Output{ return & output{} }
 
 func (o *output)CommandOutputHelp()(ok bool){//col:15
 /*CommandOutputHelp()

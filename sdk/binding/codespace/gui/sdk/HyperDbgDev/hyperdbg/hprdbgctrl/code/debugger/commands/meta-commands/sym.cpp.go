@@ -6,9 +6,10 @@ Sym interface{
 CommandSymHelp()(ok bool)//col:17
 CommandSym()(ok bool)//col:162
 }
+sym struct{}
 )
 
-func NewSym() { return & sym{} }
+func NewSym()Sym{ return & sym{} }
 
 func (s *sym)CommandSymHelp()(ok bool){//col:17
 /*CommandSymHelp()

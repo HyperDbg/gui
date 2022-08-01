@@ -7,9 +7,10 @@ PeHexDump()(ok bool)//col:31
 PeShowSectionInformationAndDump()(ok bool)//col:328
 PeIsPE32BitOr64Bit()(ok bool)//col:398
 }
+peParser struct{}
 )
 
-func NewPeParser() { return & peParser{} }
+func NewPeParser()PeParser{ return & peParser{} }
 
 func (p *peParser)PeHexDump()(ok bool){//col:31
 /*PeHexDump(CHAR * Ptr, int Size, int SecAddress)

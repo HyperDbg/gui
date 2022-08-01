@@ -6,9 +6,10 @@ Unhide interface{
 CommandUnhideHelp()(ok bool)//col:7
 CommandUnhide()(ok bool)//col:49
 }
+unhide struct{}
 )
 
-func NewUnhide() { return & unhide{} }
+func NewUnhide()Unhide{ return & unhide{} }
 
 func (u *unhide)CommandUnhideHelp()(ok bool){//col:7
 /*CommandUnhideHelp()

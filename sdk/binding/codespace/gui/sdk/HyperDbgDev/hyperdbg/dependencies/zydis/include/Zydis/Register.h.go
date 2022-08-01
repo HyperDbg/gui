@@ -31,7 +31,7 @@ const(
 
 
 type typedef struct ZydisRegisterContext_ struct{
-values[ZYDIS_REGISTER_MAX_VALUE ZyanU64
+values[ZYDIS_REGISTER_MAX_VALUE ZyanU64 //col:3
 }
 
 

@@ -2,44 +2,44 @@ package script-engine-wrapper
 //binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbgctrl\code\debugger\script-engine-wrapper\script-engine-wrapper.cpp.back
 
 type ALLOCATED_MEMORY_FOR_SCRIPT_ENGINE_CASTING struct{
-* CHAR
-* CHAR
-* CHAR
-* CHAR
-* CHAR
-* CHAR
+* int8 //col:3
+* int8 //col:4
+* int8 //col:5
+* int8 //col:6
+* int8 //col:7
+* int8 //col:8
 }
 
 
 type     typedef struct _UNICODE_STRING struct{
-Length UINT16
-MaximumLength UINT16
-Buffer PWSTR
+Length uint16 //col:12
+MaximumLength uint16 //col:13
+Buffer PWSTR //col:14
 }
 
 
 type     typedef struct _STUPID_STRUCT1 struct{
-Flag32 uint32
-Flag64 uint64
-Context PVOID
-StringValue PUNICODE_STRING
+Flag32 uint32 //col:18
+Flag64 uint64 //col:19
+Context PVOID //col:20
+StringValue PUNICODE_STRING //col:21
 }
 
 
 type     typedef struct _STUPID_STRUCT2 struct{
-Sina32 uint32
-Sina64 uint64
-AghaaSina PVOID
-UnicodeStr PUNICODE_STRING
-StupidStruct1 PSTUPID_STRUCT1
+Sina32 uint32 //col:25
+Sina64 uint64 //col:26
+AghaaSina PVOID //col:27
+UnicodeStr PUNICODE_STRING //col:28
+StupidStruct1 PSTUPID_STRUCT1 //col:29
 }
 
 
 type     typedef struct _TEST_STRUCT struct{
-Var1 uint64
-Var2 uint64
-Var3 uint64
-Var4 uint64
+Var1 uint64 //col:68
+Var2 uint64 //col:69
+Var3 uint64 //col:70
+Var4 uint64 //col:71
 }
 
 
@@ -70,9 +70,10 @@ ScriptEngineWrapperGetSize()(ok bool)//col:184
 ScriptEngineWrapperGetPointer()(ok bool)//col:188
 ScriptEngineWrapperRemoveSymbolBuffer()(ok bool)//col:192
 }
+scriptEngineWrapper struct{}
 )
 
-func NewScriptEngineWrapper() { return & scriptEngineWrapper{} }
+func NewScriptEngineWrapper()ScriptEngineWrapper{ return & scriptEngineWrapper{} }
 
 func (s *scriptEngineWrapper)ScriptEngineConvertNameToAddressWrapper()(ok bool){//col:4
 /*ScriptEngineConvertNameToAddressWrapper(const char * FunctionOrVariableName, PBOOLEAN WasFound)

@@ -7,9 +7,10 @@ TestKernelConfigureTagsAndCallTargetFunction()(ok bool)//col:26
 TestKernelPerformTests()(ok bool)//col:44
 TestKernelGetInformation()(ok bool)//col:64
 }
+kernelTests struct{}
 )
 
-func NewKernelTests() { return & kernelTests{} }
+func NewKernelTests()KernelTests{ return & kernelTests{} }
 
 func (k *kernelTests)TestKernelConfigureTagsAndCallTargetFunction()(ok bool){//col:26
 /*TestKernelConfigureTagsAndCallTargetFunction(UINT64 Tag1,

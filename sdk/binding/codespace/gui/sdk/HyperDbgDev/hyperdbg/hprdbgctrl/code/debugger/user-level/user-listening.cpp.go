@@ -5,9 +5,10 @@ type (
 UserListening interface{
 UdHandleUserDebuggerPausing()(ok bool)//col:54
 }
+userListening struct{}
 )
 
-func NewUserListening() { return & userListening{} }
+func NewUserListening()UserListening{ return & userListening{} }
 
 func (u *userListening)UdHandleUserDebuggerPausing()(ok bool){//col:54
 /*UdHandleUserDebuggerPausing(PDEBUGGEE_UD_PAUSED_PACKET PausePacket)

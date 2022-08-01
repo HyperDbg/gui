@@ -5,9 +5,10 @@ type (
 TestCases interface{
 TestCase()(ok bool)//col:20
 }
+testCases struct{}
 )
 
-func NewTestCases() { return & testCases{} }
+func NewTestCases()TestCases{ return & testCases{} }
 
 func (t *testCases)TestCase()(ok bool){//col:20
 /*TestCase(std::vector<std::string> & TestCases)

@@ -92,117 +92,117 @@ const(
 
 
 type QUAD struct{
-Union union
-UseThisFieldToCopy __int64
-DoNotUseThisField double
+Union union //col:3
+UseThisFieldToCopy __int64 //col:5
+DoNotUseThisField double //col:6
 }
 
 
 type typedef struct DECLSPEC_ALIGN(MEMORY_ALLOCATION_ALIGNMENT) _QUAD_PTR struct{
-DoNotUseThisField1 ULONG_PTR
-DoNotUseThisField2 ULONG_PTR
+DoNotUseThisField1 ULONG_PTR //col:11
+DoNotUseThisField2 ULONG_PTR //col:12
 }
 
 
 type LARGE_INTEGER_128 struct{
-QuadPart[2] LONGLONG
+QuadPart[2] LONGLONG //col:16
 }
 
 
 type STRING struct{
-Length USHORT
-MaximumLength USHORT
-Length) _Field_size_bytes_part_opt_(MaximumLength,
+Length USHORT //col:20
+MaximumLength USHORT //col:21
+Length) _Field_size_bytes_part_opt_(MaximumLength, //col:22
 }
 
 
 type UNICODE_STRING struct{
-Length USHORT
-MaximumLength USHORT
-Length) _Field_size_bytes_part_(MaximumLength,
+Length USHORT //col:26
+MaximumLength USHORT //col:27
+Length) _Field_size_bytes_part_(MaximumLength, //col:28
 }
 
 
 type RTL_BALANCED_NODE struct{
-Union union
-_RTL_BALANCED_NODE struct
-Struct struct
-_RTL_BALANCED_NODE struct
-_RTL_BALANCED_NODE struct
+Union union //col:32
+_RTL_BALANCED_NODE struct //col:34
+Struct struct //col:35
+_RTL_BALANCED_NODE struct //col:37
+_RTL_BALANCED_NODE struct //col:38
 }
 
 
 type SINGLE_LIST_ENTRY32 struct{
-Next ULONG
+Next uint32 //col:50
 }
 
 
 type STRING32 struct{
-Length USHORT
-MaximumLength USHORT
-Buffer ULONG
+Length USHORT //col:54
+MaximumLength USHORT //col:55
+Buffer uint32 //col:56
 }
 
 
 type STRING64 struct{
-Length USHORT
-MaximumLength USHORT
-Buffer ULONGLONG
+Length USHORT //col:60
+MaximumLength USHORT //col:61
+Buffer ULONGLONG //col:62
 }
 
 
 type OBJECT_ATTRIBUTES struct{
-Length ULONG
-RootDirectory HANDLE
-ObjectName PUNICODE_STRING
-Attributes ULONG
-SecurityDescriptor PVOID
-SecurityQualityOfService PVOID
+Length uint32 //col:66
+RootDirectory HANDLE //col:67
+ObjectName PUNICODE_STRING //col:68
+Attributes uint32 //col:69
+SecurityDescriptor PVOID //col:70
+SecurityQualityOfService PVOID //col:71
 }
 
 
 type OBJECT_ATTRIBUTES64 struct{
-Length ULONG
-RootDirectory ULONG64
-ObjectName ULONG64
-Attributes ULONG
-SecurityDescriptor ULONG64
-SecurityQualityOfService ULONG64
+Length uint32 //col:75
+RootDirectory ULONG64 //col:76
+ObjectName ULONG64 //col:77
+Attributes uint32 //col:78
+SecurityDescriptor ULONG64 //col:79
+SecurityQualityOfService ULONG64 //col:80
 }
 
 
 type OBJECT_ATTRIBUTES32 struct{
-Length ULONG
-RootDirectory ULONG
-ObjectName ULONG
-Attributes ULONG
-SecurityDescriptor ULONG
-SecurityQualityOfService ULONG
+Length uint32 //col:84
+RootDirectory uint32 //col:85
+ObjectName uint32 //col:86
+Attributes uint32 //col:87
+SecurityDescriptor uint32 //col:88
+SecurityQualityOfService uint32 //col:89
 }
 
 
 type CLIENT_ID struct{
-UniqueProcess HANDLE
-UniqueThread HANDLE
+UniqueProcess HANDLE //col:93
+UniqueThread HANDLE //col:94
 }
 
 
 type CLIENT_ID32 struct{
-UniqueProcess ULONG
-UniqueThread ULONG
+UniqueProcess uint32 //col:98
+UniqueThread uint32 //col:99
 }
 
 
 type CLIENT_ID64 struct{
-UniqueProcess ULONGLONG
-UniqueThread ULONGLONG
+UniqueProcess ULONGLONG //col:103
+UniqueThread ULONGLONG //col:104
 }
 
 
 type KSYSTEM_TIME struct{
-LowPart ULONG
-High1Time LONG
-High2Time LONG
+LowPart uint32 //col:108
+High1Time LONG //col:109
+High2Time LONG //col:110
 }
 
 

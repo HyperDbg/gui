@@ -10,9 +10,10 @@ CommandTestInVmiMode()(ok bool)//col:131
 CommandTestQueryState()(ok bool)//col:141
 CommandTest()(ok bool)//col:158
 }
+test struct{}
 )
 
-func NewTest() { return & test{} }
+func NewTest()Test{ return & test{} }
 
 func (t *test)CommandTestHelp()(ok bool){//col:9
 /*CommandTestHelp()

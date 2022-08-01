@@ -312,9 +312,10 @@ ParseTable interface{
 "()(ok bool)//col:108642
 "()(ok bool)//col:109095
 }
+parseTable struct{}
 )
 
-func NewParseTable() { return & parseTable{} }
+func NewParseTable()ParseTable{ return & parseTable{} }
 
 func (p *parseTable)	{{SPECIAL_TOKEN,_"()(ok bool){//col:120
 /*	{{SPECIAL_TOKEN, "("},{NON_TERMINAL, "EXPRESSION"},{SPECIAL_TOKEN, ")"}},

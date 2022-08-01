@@ -48,8 +48,8 @@ const(
 
 
 type DEBUGGER_SYNCRONIZATION_EVENTS_STATE struct{
-EventHandle HANDLE
-IsOnWaitingState bool
+EventHandle HANDLE //col:3
+IsOnWaitingState bool //col:4
 }
 
 

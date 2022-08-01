@@ -6,9 +6,10 @@ Print interface{
 CommandPrintHelp()(ok bool)//col:7
 CommandPrint()(ok bool)//col:43
 }
+print struct{}
 )
 
-func NewPrint() { return & print{} }
+func NewPrint()Print{ return & print{} }
 
 func (p *print)CommandPrintHelp()(ok bool){//col:7
 /*CommandPrintHelp()

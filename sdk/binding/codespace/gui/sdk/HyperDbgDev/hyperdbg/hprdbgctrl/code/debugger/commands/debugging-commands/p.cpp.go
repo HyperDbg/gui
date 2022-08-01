@@ -6,9 +6,10 @@ P interface{
 CommandPHelp()(ok bool)//col:14
 CommandP()(ok bool)//col:80
 }
+p struct{}
 )
 
-func NewP() { return & p{} }
+func NewP()P{ return & p{} }
 
 func (p *p)CommandPHelp()(ok bool){//col:14
 /*CommandPHelp()

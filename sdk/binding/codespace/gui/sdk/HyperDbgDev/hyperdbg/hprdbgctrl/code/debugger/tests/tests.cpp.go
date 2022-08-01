@@ -7,9 +7,10 @@ SetupTestName()(ok bool)//col:29
 CreateProcessAndOpenPipeConnection()(ok bool)//col:135
 CloseProcessAndClosePipeConnection()(ok bool)//col:143
 }
+tests struct{}
 )
 
-func NewTests() { return & tests{} }
+func NewTests()Tests{ return & tests{} }
 
 func (t *tests)SetupTestName()(ok bool){//col:29
 /*SetupTestName(_Inout_updates_bytes_all_(BufferLength) PCHAR TestLocation,

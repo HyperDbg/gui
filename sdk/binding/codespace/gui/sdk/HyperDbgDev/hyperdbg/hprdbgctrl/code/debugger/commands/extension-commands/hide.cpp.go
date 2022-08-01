@@ -6,9 +6,10 @@ Hide interface{
 CommandHideHelp()(ok bool)//col:14
 CommandHide()(ok bool)//col:143
 }
+hide struct{}
 )
 
-func NewHide() { return & hide{} }
+func NewHide()Hide{ return & hide{} }
 
 func (h *hide)CommandHideHelp()(ok bool){//col:14
 /*CommandHideHelp()

@@ -16,9 +16,10 @@ ScriptEnginePseudoRegGetBuffer()(ok bool)//col:184
 ScriptEnginePseudoRegGetEventTag()(ok bool)//col:193
 ScriptEnginePseudoRegGetEventId()(ok bool)//col:202
 }
+pseudoRegisters struct{}
 )
 
-func NewPseudoRegisters() { return & pseudoRegisters{} }
+func NewPseudoRegisters()PseudoRegisters{ return & pseudoRegisters{} }
 
 func (p *pseudoRegisters)ScriptEnginePseudoRegGetTid()(ok bool){//col:9
 /*ScriptEnginePseudoRegGetTid()

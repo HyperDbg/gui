@@ -6,9 +6,10 @@ SwitchA interface{
 CommandSwitchHelp()(ok bool)//col:12
 CommandSwitch()(ok bool)//col:63
 }
+switchA struct{}
 )
 
-func NewSwitchA() { return & switchA{} }
+func NewSwitchA()SwitchA{ return & switchA{} }
 
 func (s *switchA)CommandSwitchHelp()(ok bool){//col:12
 /*CommandSwitchHelp()

@@ -6,9 +6,10 @@ Exit interface{
 CommandExitHelp()(ok bool)//col:6
 CommandExit()(ok bool)//col:20
 }
+exit struct{}
 )
 
-func NewExit() { return & exit{} }
+func NewExit()Exit{ return & exit{} }
 
 func (e *exit)CommandExitHelp()(ok bool){//col:6
 /*CommandExitHelp()

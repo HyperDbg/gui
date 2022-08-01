@@ -10,9 +10,10 @@ TransparentModeRdtscEmulationDetection()(ok bool)//col:58
 TransparentModeCheckHypervisorPresence()(ok bool)//col:73
 TransparentModeCheckRdtscpVmexit()(ok bool)//col:88
 }
+transparency struct{}
 )
 
-func NewTransparency() { return & transparency{} }
+func NewTransparency()Transparency{ return & transparency{} }
 
 func (t *transparency)TransparentModeRdtscDiffVmexit()(ok bool){//col:10
 /*TransparentModeRdtscDiffVmexit()

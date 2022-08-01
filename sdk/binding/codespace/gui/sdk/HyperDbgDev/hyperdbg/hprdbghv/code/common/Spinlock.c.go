@@ -9,9 +9,10 @@ SpinlockInterlockedCompareExchange()(ok bool)//col:45
 SpinlockLockWithCustomWait()(ok bool)//col:64
 SpinlockUnlock()(ok bool)//col:68
 }
+spinlock struct{}
 )
 
-func NewSpinlock() { return & spinlock{} }
+func NewSpinlock()Spinlock{ return & spinlock{} }
 
 func (s *spinlock)SpinlockTryLock()(ok bool){//col:4
 /*SpinlockTryLock(volatile LONG * Lock)

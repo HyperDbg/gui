@@ -31,48 +31,48 @@ const(
 
 
 type MEMORY_MAPPER_ADDRESSES struct{
-PteVirtualAddress uint64
-VirualAddress uint64
+PteVirtualAddress uint64 //col:3
+VirualAddress uint64 //col:4
 }
 
 
 type PAGE_ENTRY struct{
-Union union
-Flags uint64
-Pml4 PML4E_64
-PdptLarge PDPTE_1GB_64
-Pdpt PDPTE_64
-PdLarge PDE_2MB_64
-Pd PDE_64
-Pt PTE_64
-Struct struct
-Present uint64
-Write uint64
-Supervisor uint64
-PageLevelWriteThrough uint64
-PageLevelCacheDisable uint64
-Accessed uint64
-Dirty uint64
-LargePage uint64
-Global uint64
-Ignored1 uint64
-PageFrameNumber uint64
-Reserved1 uint64
-Ignored2 uint64
-ProtectionKey uint64
-ExecuteDisable uint64
+Union union //col:8
+Flags uint64 //col:10
+Pml4 PML4E_64 //col:11
+PdptLarge PDPTE_1GB_64 //col:12
+Pdpt PDPTE_64 //col:13
+PdLarge PDE_2MB_64 //col:14
+Pd PDE_64 //col:15
+Pt PTE_64 //col:16
+Struct struct //col:17
+Present uint64 //col:19
+Write uint64 //col:20
+Supervisor uint64 //col:21
+PageLevelWriteThrough uint64 //col:22
+PageLevelCacheDisable uint64 //col:23
+Accessed uint64 //col:24
+Dirty uint64 //col:25
+LargePage uint64 //col:26
+Global uint64 //col:27
+Ignored1 uint64 //col:28
+PageFrameNumber uint64 //col:29
+Reserved1 uint64 //col:30
+Ignored2 uint64 //col:31
+ProtectionKey uint64 //col:32
+ExecuteDisable uint64 //col:33
 }
 
 
 type CR3_TYPE struct{
-Union union
-Flags uint64
-Struct struct
-Pcid uint64
-PageFrameNumber uint64
-Reserved1 uint64
-Reserved_2 uint64
-PcidInvalidate uint64
+Union union //col:39
+Flags uint64 //col:41
+Struct struct //col:42
+Pcid uint64 //col:44
+PageFrameNumber uint64 //col:45
+Reserved1 uint64 //col:46
+Reserved_2 uint64 //col:47
+PcidInvalidate uint64 //col:48
 }
 
 

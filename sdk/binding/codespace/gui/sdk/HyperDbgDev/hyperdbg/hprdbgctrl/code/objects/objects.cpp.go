@@ -6,9 +6,10 @@ Objects interface{
 ObjectShowProcessesOrThreadDetails()(ok bool)//col:71
 ObjectShowProcessesOrThreadList()(ok bool)//col:209
 }
+objects struct{}
 )
 
-func NewObjects() { return & objects{} }
+func NewObjects()Objects{ return & objects{} }
 
 func (o *objects)ObjectShowProcessesOrThreadDetails()(ok bool){//col:71
 /*ObjectShowProcessesOrThreadDetails(BOOLEAN IsProcess)

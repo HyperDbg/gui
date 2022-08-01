@@ -13,9 +13,10 @@ UserAccessIsWow64Process()(ok bool)//col:409
 UserAccessGetLoadedModules()(ok bool)//col:451
 UserAccessCheckForLoadedModuleDetails()(ok bool)//col:481
 }
+userAccess struct{}
 )
 
-func NewUserAccess() { return & userAccess{} }
+func NewUserAccess()UserAccess{ return & userAccess{} }
 
 func (u *userAccess)UserAccessAllocateAndGetImagePathFromProcessId()(ok bool){//col:76
 /*UserAccessAllocateAndGetImagePathFromProcessId(HANDLE          ProcessId,

@@ -51,16 +51,16 @@ const(
 
 
 type PLUGPLAY_EVENT_BLOCK struct{
-EventGuid GUID
-EventCategory PLUGPLAY_EVENT_CATEGORY
-Result PULONG
-Flags ULONG
-TotalSize ULONG
-DeviceObject PVOID
-Union union
-Struct struct
-ClassGuid GUID
-SymbolicLinkName[1] WCHAR
+EventGuid GUID //col:3
+EventCategory PLUGPLAY_EVENT_CATEGORY //col:4
+Result PULONG //col:5
+Flags uint32 //col:6
+TotalSize uint32 //col:7
+DeviceObject PVOID //col:8
+Union union //col:9
+Struct struct //col:11
+ClassGuid GUID //col:13
+SymbolicLinkName[1] WCHAR //col:14
 }
 
 

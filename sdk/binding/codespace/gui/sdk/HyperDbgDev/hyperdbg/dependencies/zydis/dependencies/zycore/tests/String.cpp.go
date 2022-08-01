@@ -5,9 +5,10 @@ type (
 String interface{
 int_main()(ok bool)//col:5
 }
+string struct{}
 )
 
-func NewString() { return & string{} }
+func NewString()String{ return & string{} }
 
 func (s *string)int_main()(ok bool){//col:5
 /*int main(int argc, char **argv)

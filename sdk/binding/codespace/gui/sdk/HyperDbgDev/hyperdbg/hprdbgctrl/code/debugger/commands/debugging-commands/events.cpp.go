@@ -14,9 +14,10 @@ CommandEventsClearAllEventsAndResetTags()(ok bool)//col:227
 CommandEventsHandleModifiedEvent()(ok bool)//col:327
 CommandEventsModifyAndQueryEvents()(ok bool)//col:377
 }
+events struct{}
 )
 
-func NewEvents() { return & events{} }
+func NewEvents()Events{ return & events{} }
 
 func (e *events)CommandEventsHelp()(ok bool){//col:17
 /*CommandEventsHelp()

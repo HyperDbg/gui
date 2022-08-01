@@ -47,9 +47,10 @@ ZyanStatus_ZyanBitsetAll()(ok bool)//col:361
 ZyanStatus_ZyanBitsetAny()(ok bool)//col:390
 ZyanStatus_ZyanBitsetNone()(ok bool)//col:419
 }
+bitset struct{}
 )
 
-func NewBitset() { return & bitset{} }
+func NewBitset()Bitset{ return & bitset{} }
 
 func (b *bitset)static_ZyanStatus_ZyanBitsetInitVectorElements()(ok bool){//col:10
 /*static ZyanStatus ZyanBitsetInitVectorElements(ZyanVector* vector, ZyanUSize count)

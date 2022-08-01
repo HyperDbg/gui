@@ -7,9 +7,10 @@ CommandThreadHelp()(ok bool)//col:21
 CommandThreadListThreads()(ok bool)//col:63
 CommandThread()(ok bool)//col:218
 }
+thread struct{}
 )
 
-func NewThread() { return & thread{} }
+func NewThread()Thread{ return & thread{} }
 
 func (t *thread)CommandThreadHelp()(ok bool){//col:21
 /*CommandThreadHelp()

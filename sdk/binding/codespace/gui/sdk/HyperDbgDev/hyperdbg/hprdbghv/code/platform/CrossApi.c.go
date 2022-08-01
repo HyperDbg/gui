@@ -6,9 +6,10 @@ CrossApi interface{
 CrsAllocateContiguousZeroedMemory()(ok bool)//col:9
 CrsAllocateNonPagedPool()(ok bool)//col:16
 }
+crossApi struct{}
 )
 
-func NewCrossApi() { return & crossApi{} }
+func NewCrossApi()CrossApi{ return & crossApi{} }
 
 func (c *crossApi)CrsAllocateContiguousZeroedMemory()(ok bool){//col:9
 /*CrsAllocateContiguousZeroedMemory(_In_ SIZE_T NumberOfBytes)

@@ -42,75 +42,75 @@ const(
 
 
 type DBGKM_EXCEPTION struct{
-ExceptionRecord EXCEPTION_RECORD
-FirstChance ULONG
+ExceptionRecord EXCEPTION_RECORD //col:3
+FirstChance uint32 //col:4
 }
 
 
 type DBGKM_CREATE_THREAD struct{
-SubSystemKey ULONG
-StartAddress PVOID
+SubSystemKey uint32 //col:8
+StartAddress PVOID //col:9
 }
 
 
 type DBGKM_CREATE_PROCESS struct{
-SubSystemKey ULONG
-FileHandle HANDLE
-BaseOfImage PVOID
-DebugInfoFileOffset ULONG
-DebugInfoSize ULONG
-InitialThread DBGKM_CREATE_THREAD
+SubSystemKey uint32 //col:13
+FileHandle HANDLE //col:14
+BaseOfImage PVOID //col:15
+DebugInfoFileOffset uint32 //col:16
+DebugInfoSize uint32 //col:17
+InitialThread DBGKM_CREATE_THREAD //col:18
 }
 
 
 type DBGKM_EXIT_THREAD struct{
-ExitStatus NTSTATUS
+ExitStatus NTSTATUS //col:22
 }
 
 
 type DBGKM_EXIT_PROCESS struct{
-ExitStatus NTSTATUS
+ExitStatus NTSTATUS //col:26
 }
 
 
 type DBGKM_LOAD_DLL struct{
-FileHandle HANDLE
-BaseOfDll PVOID
-DebugInfoFileOffset ULONG
-DebugInfoSize ULONG
-NamePointer PVOID
+FileHandle HANDLE //col:30
+BaseOfDll PVOID //col:31
+DebugInfoFileOffset uint32 //col:32
+DebugInfoSize uint32 //col:33
+NamePointer PVOID //col:34
 }
 
 
 type DBGKM_UNLOAD_DLL struct{
-BaseAddress PVOID
+BaseAddress PVOID //col:38
 }
 
 
 type DBGUI_CREATE_THREAD struct{
-HandleToThread HANDLE
-NewThread DBGKM_CREATE_THREAD
+HandleToThread HANDLE //col:42
+NewThread DBGKM_CREATE_THREAD //col:43
 }
 
 
 type DBGUI_CREATE_PROCESS struct{
-HandleToProcess HANDLE
-HandleToThread HANDLE
-NewProcess DBGKM_CREATE_PROCESS
+HandleToProcess HANDLE //col:47
+HandleToThread HANDLE //col:48
+NewProcess DBGKM_CREATE_PROCESS //col:49
 }
 
 
 type DBGUI_WAIT_STATE_CHANGE struct{
-NewState DBG_STATE
-AppClientId CLIENT_ID
-Union union
-Exception DBGKM_EXCEPTION
-CreateThread DBGUI_CREATE_THREAD
-CreateProcessInfo DBGUI_CREATE_PROCESS
-ExitThread DBGKM_EXIT_THREAD
-ExitProcess DBGKM_EXIT_PROCESS
-LoadDll DBGKM_LOAD_DLL
-UnloadDll DBGKM_UNLOAD_DLL
+NewState DBG_STATE //col:53
+AppClientId CLIENT_ID //col:54
+Union union //col:55
+Exception DBGKM_EXCEPTION //col:57
+CreateThread DBGUI_CREATE_THREAD //col:58
+CreateProcessInfo DBGUI_CREATE_PROCESS //col:59
+ExitThread DBGKM_EXIT_THREAD //col:60
+ExitProcess DBGKM_EXIT_PROCESS //col:61
+LoadDll DBGKM_LOAD_DLL //col:62
+UnloadDll DBGKM_UNLOAD_DLL //col:63
 }
 
 

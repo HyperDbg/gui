@@ -33,9 +33,10 @@ PdbSymbolVisitor interface{
 			GetNext()(ok bool)//col:4161
 				if_()(ok bool)//col:4229
 }
+pdbSymbolVisitor struct{}
 )
 
-func NewPdbSymbolVisitor() { return & pdbSymbolVisitor{} }
+func NewPdbSymbolVisitor()PdbSymbolVisitor{ return & pdbSymbolVisitor{} }
 
 func (p *pdbSymbolVisitor)		PDBSymbolVisitor()(ok bool){//col:213
 /*		PDBSymbolVisitor(

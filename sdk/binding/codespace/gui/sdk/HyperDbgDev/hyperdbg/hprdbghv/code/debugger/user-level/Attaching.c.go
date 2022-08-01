@@ -27,9 +27,10 @@ AttachingQueryCountOfActiveDebuggingThreadsAndProcesses()(ok bool)//col:583
 AttachingQueryDetailsOfActiveDebuggingThreadsAndProcesses()(ok bool)//col:594
 AttachingTargetProcess()(ok bool)//col:625
 }
+attaching struct{}
 )
 
-func NewAttaching() { return & attaching{} }
+func NewAttaching()Attaching{ return & attaching{} }
 
 func (a *attaching)AttachingInitialize()(ok bool){//col:33
 /*AttachingInitialize()

@@ -6,21 +6,21 @@ ZYDIS_FUZZ_MAX_BYTES = (1024 * 10) //col:1
 )
 
 type typedef struct ZydisFuzzControlBlock_ struct{
-machine_mode ZydisMachineMode
-address_width ZydisAddressWidth
-decoder_mode[ZYDIS_DECODER_MODE_MAX_VALUE ZyanBool
-formatter_style ZydisFormatterStyle
-rt_address ZyanU64
-formatter_properties[ZYDIS_FORMATTER_PROP_MAX_VALUE ZyanUPointer
-string[16] char
+machine_mode ZydisMachineMode //col:3
+address_width ZydisAddressWidth //col:4
+decoder_mode[ZYDIS_DECODER_MODE_MAX_VALUE ZyanBool //col:5
+formatter_style ZydisFormatterStyle //col:6
+rt_address ZyanU64 //col:7
+formatter_properties[ZYDIS_FORMATTER_PROP_MAX_VALUE ZyanUPointer //col:8
+string[16] int8 //col:9
 }
 
 
 type  struct{
-TypedefStruct typedef struct
-*buf ZyanU8
-buf_len ZyanUSize
-read_offs ZyanUSize
+TypedefStruct typedef struct //col:11
+*buf ZyanU8 //col:13
+buf_len ZyanUSize //col:14
+read_offs ZyanUSize //col:15
 }
 
 
@@ -34,9 +34,10 @@ int_LLVMFuzzerInitialize()(ok bool)//col:127
 int_LLVMFuzzerTestOneInput()(ok bool)//col:136
 int_main()(ok bool)//col:153
 }
+zydisFuzzIn struct{}
 )
 
-func NewZydisFuzzIn() { return & zydisFuzzIn{} }
+func NewZydisFuzzIn()ZydisFuzzIn{ return & zydisFuzzIn{} }
 
 func (z *zydisFuzzIn)__Zyan_Disassembler_Library_()(ok bool){//col:38
 /*  Zyan Disassembler Library (Zydis)

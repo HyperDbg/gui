@@ -254,30 +254,30 @@ const(
 
 
 type typedef struct SYMBOL { struct{
-long long
-long long
+long long //col:2
+long long //col:3
 }
 
 
 type typedef struct SYMBOL_BUFFER { struct{
-Head PSYMBOL
-int unsigned
-int unsigned
-Message char*
+Head PSYMBOL //col:6
+int unsigned //col:7
+int unsigned //col:8
+Message char* //col:9
 }
 
 
 type typedef struct SYMBOL_MAP struct{
-Name char*
-long long
+Name char* //col:13
+long long //col:14
 }
 
 
 type typedef struct ACTION_BUFFER { struct{
-long long
-long long
-ImmediatelySendTheResults char
-long long
+long long //col:17
+long long //col:18
+ImmediatelySendTheResults int8 //col:19
+long long //col:20
 }
 
 

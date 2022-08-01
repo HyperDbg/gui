@@ -6,9 +6,10 @@ Sympath interface{
 CommandSympathHelp()(ok bool)//col:9
 CommandSympath()(ok bool)//col:55
 }
+sympath struct{}
 )
 
-func NewSympath() { return & sympath{} }
+func NewSympath()Sympath{ return & sympath{} }
 
 func (s *sympath)CommandSympathHelp()(ok bool){//col:9
 /*CommandSympathHelp()

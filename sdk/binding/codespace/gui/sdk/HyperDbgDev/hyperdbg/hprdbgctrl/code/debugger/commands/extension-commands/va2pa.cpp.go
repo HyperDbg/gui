@@ -6,9 +6,10 @@ Va2pa interface{
 CommandVa2paHelp()(ok bool)//col:12
 CommandVa2pa()(ok bool)//col:122
 }
+va2pa struct{}
 )
 
-func NewVa2pa() { return & va2pa{} }
+func NewVa2pa()Va2pa{ return & va2pa{} }
 
 func (v *va2pa)CommandVa2paHelp()(ok bool){//col:12
 /*CommandVa2paHelp()

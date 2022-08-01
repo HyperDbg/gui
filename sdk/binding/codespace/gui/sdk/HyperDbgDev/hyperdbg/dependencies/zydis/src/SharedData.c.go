@@ -12,9 +12,10 @@ ZyanU8_ZydisGetOperandDefinitions()(ok bool)//col:43
 void_ZydisGetElementInfo()(ok bool)//col:80
 ZyanBool_ZydisGetAccessedFlags()(ok bool)//col:87
 }
+sharedData struct{}
 )
 
-func NewSharedData() { return & sharedData{} }
+func NewSharedData()SharedData{ return & sharedData{} }
 
 func (s *sharedData)void_ZydisGetInstructionDefinition()(ok bool){//col:31
 /*void ZydisGetInstructionDefinition(ZydisInstructionEncoding encoding, ZyanU16 id,

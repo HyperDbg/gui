@@ -9,9 +9,10 @@ static_ZyanStatus_ZyanAllocatorDefaultDeallocate()(ok bool)//col:44
 ZyanStatus_ZyanAllocatorInit()(ok bool)//col:56
 ZyanAllocatorPtr_ZyanAllocatorDefault()(ok bool)//col:66
 }
+allocator struct{}
 )
 
-func NewAllocator() { return & allocator{} }
+func NewAllocator()Allocator{ return & allocator{} }
 
 func (a *allocator)static_ZyanStatus_ZyanAllocatorDefaultAllocate()(ok bool){//col:15
 /*static ZyanStatus ZyanAllocatorDefaultAllocate(ZyanAllocator* allocator, void** p,

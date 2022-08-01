@@ -6,9 +6,10 @@ Common interface{
 DllInitialize()(ok bool)//col:5
 DllUnload()(ok bool)//col:9
 }
+common struct{}
 )
 
-func NewCommon() { return & common{} }
+func NewCommon()Common{ return & common{} }
 
 func (c *common)DllInitialize()(ok bool){//col:5
 /*DllInitialize(

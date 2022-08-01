@@ -2,7 +2,7 @@ package examples
 //binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\examples\Formatter02.c.back
 
 type typedef struct ZydisCustomUserData_ struct{
-omit_immediate ZyanBool
+omit_immediate ZyanBool //col:3
 }
 
 
@@ -14,9 +14,10 @@ static_ZyanStatus_ZydisFormatterFormatOperandIMM()(ok bool)//col:64
 static_void_DisassembleBuffer()(ok bool)//col:95
 int_main()(ok bool)//col:116
 }
+formatter02 struct{}
 )
 
-func NewFormatter02() { return & formatter02{} }
+func NewFormatter02()Formatter02{ return & formatter02{} }
 
 func (f *formatter02)static_ZyanStatus_ZydisFormatterPrintMnemonic()(ok bool){//col:54
 /*static ZyanStatus ZydisFormatterPrintMnemonic(const ZydisFormatter* formatter,

@@ -7,9 +7,10 @@ CommandLoadHelp()(ok bool)//col:7
 CommandLoadVmmModule()(ok bool)//col:42
 CommandLoad()(ok bool)//col:78
 }
+load struct{}
 )
 
-func NewLoad() { return & load{} }
+func NewLoad()Load{ return & load{} }
 
 func (l *load)CommandLoadHelp()(ok bool){//col:7
 /*CommandLoadHelp()

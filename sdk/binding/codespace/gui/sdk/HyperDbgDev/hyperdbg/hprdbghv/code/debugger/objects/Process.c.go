@@ -15,9 +15,10 @@ ProcessQueryCount()(ok bool)//col:280
 ProcessQueryList()(ok bool)//col:292
 ProcessQueryDetails()(ok bool)//col:302
 }
+process struct{}
 )
 
-func NewProcess() { return & process{} }
+func NewProcess()Process{ return & process{} }
 
 func (p *process)ProcessHandleProcessChange()(ok bool){//col:10
 /*ProcessHandleProcessChange(UINT32 ProcessorIndex, PGUEST_REGS GuestState)

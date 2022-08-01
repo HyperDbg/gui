@@ -5,9 +5,10 @@ type (
 MemoryManager interface{
 MemoryManagerReadProcessMemoryNormal()(ok bool)//col:60
 }
+memoryManager struct{}
 )
 
-func NewMemoryManager() { return & memoryManager{} }
+func NewMemoryManager()MemoryManager{ return & memoryManager{} }
 
 func (m *memoryManager)MemoryManagerReadProcessMemoryNormal()(ok bool){//col:60
 /*MemoryManagerReadProcessMemoryNormal(HANDLE                    PID,

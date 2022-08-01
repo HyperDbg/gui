@@ -14,9 +14,10 @@ ThreadQueryCount()(ok bool)//col:269
 ThreadQueryList()(ok bool)//col:281
 ThreadQueryDetails()(ok bool)//col:293
 }
+thread struct{}
 )
 
-func NewThread() { return & thread{} }
+func NewThread()Thread{ return & thread{} }
 
 func (t *thread)ThreadHandleThreadChange()(ok bool){//col:10
 /*ThreadHandleThreadChange(UINT32 CurrentCore, PGUEST_REGS GuestState)

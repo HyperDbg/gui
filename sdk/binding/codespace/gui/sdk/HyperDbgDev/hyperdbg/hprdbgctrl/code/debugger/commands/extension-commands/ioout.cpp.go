@@ -6,9 +6,10 @@ Ioout interface{
 CommandIooutHelp()(ok bool)//col:13
 CommandIoout()(ok bool)//col:89
 }
+ioout struct{}
 )
 
-func NewIoout() { return & ioout{} }
+func NewIoout()Ioout{ return & ioout{} }
 
 func (i *ioout)CommandIooutHelp()(ok bool){//col:13
 /*CommandIooutHelp()

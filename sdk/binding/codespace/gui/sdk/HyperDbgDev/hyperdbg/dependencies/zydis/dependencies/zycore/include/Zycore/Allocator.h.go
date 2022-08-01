@@ -6,9 +6,9 @@ ZYCORE_ALLOCATOR_H =  //col:1
 )
 
 type typedef struct ZyanAllocator_ struct{
-allocate ZyanAllocatorAllocate
-reallocate ZyanAllocatorAllocate
-deallocate ZyanAllocatorDeallocate
+allocate ZyanAllocatorAllocate //col:3
+reallocate ZyanAllocatorAllocate //col:4
+deallocate ZyanAllocatorDeallocate //col:5
 }
 
 

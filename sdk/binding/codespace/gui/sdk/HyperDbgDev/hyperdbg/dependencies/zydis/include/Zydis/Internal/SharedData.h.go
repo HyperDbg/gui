@@ -282,94 +282,94 @@ const(
 
 
 type typedef struct ZydisOperandDefinition_ struct{
-type ZyanU8
-visibility ZyanU8
-actions ZyanU8
-size[3] ZyanU16
-element_type ZyanU8
-Union union
-encoding ZyanU8
-Struct struct
-type ZyanU8
-Union union
-reg ZyanU16
-id ZyanU8
+type ZyanU8 //col:3
+visibility ZyanU8 //col:4
+actions ZyanU8 //col:5
+size[3] ZyanU16 //col:6
+element_type ZyanU8 //col:7
+Union union //col:8
+encoding ZyanU8 //col:10
+Struct struct //col:11
+type ZyanU8 //col:13
+Union union //col:14
+reg ZyanU16 //col:16
+id ZyanU8 //col:17
 }
 
 
 type typedef struct ZydisInstructionDefinition_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE byte
+ZYDIS_INSTRUCTION_DEFINITION_BASE byte //col:29
 }
 
 
 type typedef struct ZydisInstructionDefinitionLEGACY_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE byte
-#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE
-is_privileged ZyanBool
-#endif #endif
-accepts_LOCK ZyanBool
-#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE
-accepts_REP ZyanBool
-accepts_REPEREPZ ZyanBool
-accepts_REPNEREPNZ ZyanBool
-accepts_BOUND ZyanBool
-accepts_XACQUIRE ZyanBool
-accepts_XRELEASE ZyanBool
-accepts_hle_without_lock ZyanBool
-accepts_branch_hints ZyanBool
-accepts_segment ZyanBool
-#endif #endif
+ZYDIS_INSTRUCTION_DEFINITION_BASE byte //col:33
+#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:34
+is_privileged ZyanBool //col:35
+#endif #endif //col:36
+accepts_LOCK ZyanBool //col:37
+#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:38
+accepts_REP ZyanBool //col:39
+accepts_REPEREPZ ZyanBool //col:40
+accepts_REPNEREPNZ ZyanBool //col:41
+accepts_BOUND ZyanBool //col:42
+accepts_XACQUIRE ZyanBool //col:43
+accepts_XRELEASE ZyanBool //col:44
+accepts_hle_without_lock ZyanBool //col:45
+accepts_branch_hints ZyanBool //col:46
+accepts_segment ZyanBool //col:47
+#endif #endif //col:48
 }
 
 
 type typedef struct ZydisInstructionDefinition3DNOW_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE byte
+ZYDIS_INSTRUCTION_DEFINITION_BASE byte //col:52
 }
 
 
 type typedef struct ZydisInstructionDefinitionXOP_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR byte
+ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR byte //col:56
 }
 
 
 type typedef struct ZydisInstructionDefinitionVEX_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte
-#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE
-broadcast ZyanU8
-#endif #endif
+ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte //col:60
+#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:61
+broadcast ZyanU8 //col:62
+#endif #endif //col:63
 }
 
 
 type typedef struct ZydisInstructionDefinitionEVEX_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte
-#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE
-vector_length ZyanU8
-tuple_type ZyanU8
-element_size ZyanU8
-functionality ZyanU8
-#endif #endif
-mask_policy ZyanU8
-accepts_zero_mask ZyanBool
-#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE
-mask_override ZyanU8
-broadcast ZyanU8
-#endif #endif
+ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte //col:67
+#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:68
+vector_length ZyanU8 //col:69
+tuple_type ZyanU8 //col:70
+element_size ZyanU8 //col:71
+functionality ZyanU8 //col:72
+#endif #endif //col:73
+mask_policy ZyanU8 //col:74
+accepts_zero_mask ZyanBool //col:75
+#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:76
+mask_override ZyanU8 //col:77
+broadcast ZyanU8 //col:78
+#endif #endif //col:79
 }
 
 
 type typedef struct ZydisInstructionDefinitionMVEX_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte
-functionality ZyanU8
-mask_policy ZyanU8
-#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE
-has_element_granularity ZyanBool
-broadcast ZyanU8
-#endif #endif
+ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte //col:83
+functionality ZyanU8 //col:84
+mask_policy ZyanU8 //col:85
+#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:86
+has_element_granularity ZyanBool //col:87
+broadcast ZyanU8 //col:88
+#endif #endif //col:89
 }
 
 
 type typedef struct ZydisAccessedFlags_ struct{
-action[ZYDIS_CPUFLAG_MAX_VALUE ZydisCPUFlagAction
+action[ZYDIS_CPUFLAG_MAX_VALUE ZydisCPUFlagAction //col:93
 }
 
 

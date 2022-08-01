@@ -30,25 +30,25 @@ MX6_UTS_RXEMPTY_MASK = (1 << 5) //col:25
 )
 
 type MX6_UART_REGISTERS struct{
-Rxd ULONG
-reserved1[15] ULONG
-Txd ULONG
-reserved2[15] ULONG
-Ucr1 ULONG
-Ucr2 ULONG
-Ucr3 ULONG
-Ucr4 ULONG
-Ufcr ULONG
-Usr1 ULONG
-Usr2 ULONG
-Uesc ULONG
-Utim ULONG
-Ubir ULONG
-reserved3 ULONG
-Ubrc ULONG
-Onems ULONG
-Uts ULONG
-Umcr ULONG
+Rxd uint32 //col:3
+reserved1[15] uint32 //col:4
+Txd uint32 //col:5
+reserved2[15] uint32 //col:6
+Ucr1 uint32 //col:7
+Ucr2 uint32 //col:8
+Ucr3 uint32 //col:9
+Ucr4 uint32 //col:10
+Ufcr uint32 //col:11
+Usr1 uint32 //col:12
+Usr2 uint32 //col:13
+Uesc uint32 //col:14
+Utim uint32 //col:15
+Ubir uint32 //col:16
+reserved3 uint32 //col:17
+Ubrc uint32 //col:18
+Onems uint32 //col:19
+Uts uint32 //col:20
+Umcr uint32 //col:21
 }
 
 
@@ -61,9 +61,10 @@ MX6GetByte()(ok bool)//col:72
 MX6PutByte()(ok bool)//col:102
 MX6RxReady()(ok bool)//col:115
 }
+mx6uart struct{}
 )
 
-func NewMx6uart() { return & mx6uart{} }
+func NewMx6uart()Mx6uart{ return & mx6uart{} }
 
 func (m *mx6uart)C_ASSERT()(ok bool){//col:38
 /*C_ASSERT(FIELD_OFFSET(MX6_UART_REGISTERS, Umcr) == 0xB8);

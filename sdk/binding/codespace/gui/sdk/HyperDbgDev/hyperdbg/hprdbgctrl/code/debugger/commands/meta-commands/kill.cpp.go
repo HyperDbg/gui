@@ -6,9 +6,10 @@ Kill interface{
 CommandKillHelp()(ok bool)//col:5
 CommandKill()(ok bool)//col:20
 }
+kill struct{}
 )
 
-func NewKill() { return & kill{} }
+func NewKill()Kill{ return & kill{} }
 
 func (k *kill)CommandKillHelp()(ok bool){//col:5
 /*CommandKillHelp()

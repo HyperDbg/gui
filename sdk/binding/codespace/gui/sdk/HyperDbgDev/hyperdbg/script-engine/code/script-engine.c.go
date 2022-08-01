@@ -42,9 +42,10 @@ NewLocalIdentifier()(ok bool)//col:1429
 LalrGetRhsSize()(ok bool)//col:1442
 LalrIsOperandType()(ok bool)//col:1490
 }
+scriptEngine struct{}
 )
 
-func NewScriptEngine() { return & scriptEngine{} }
+func NewScriptEngine()ScriptEngine{ return & scriptEngine{} }
 
 func (s *scriptEngine)ScriptEngineConvertNameToAddress()(ok bool){//col:16
 /*ScriptEngineConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound)

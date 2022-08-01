@@ -6,9 +6,10 @@ Du interface{
 CommandReadMemoryAndDisassemblerHelp()(ok bool)//col:32
 CommandReadMemoryAndDisassembler()(ok bool)//col:265
 }
+du struct{}
 )
 
-func NewDU() { return & du{} }
+func NewDU()DU{ return & du{} }
 
 func (d *du)CommandReadMemoryAndDisassemblerHelp()(ok bool){//col:32
 /*CommandReadMemoryAndDisassemblerHelp()

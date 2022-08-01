@@ -14,9 +14,10 @@ SerialConnectionCheckBaudrate()(ok bool)//col:140
 SerialConnectionCheckPort()(ok bool)//col:149
 SerialConnectionPrepare()(ok bool)//col:170
 }
+serialConnection struct{}
 )
 
-func NewSerialConnection() { return & serialConnection{} }
+func NewSerialConnection()SerialConnection{ return & serialConnection{} }
 
 func (s *serialConnection)SerialConnectionTest()(ok bool){//col:7
 /*SerialConnectionTest()

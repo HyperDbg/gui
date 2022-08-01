@@ -7,9 +7,10 @@ findByte()(ok bool)//col:11
 parseModRM()(ok bool)//col:29
 ldisasm()(ok bool)//col:82
 }
+lengthDisassemblerEngine struct{}
 )
 
-func NewLengthDisassemblerEngine() { return & lengthDisassemblerEngine{} }
+func NewLengthDisassemblerEngine()LengthDisassemblerEngine{ return & lengthDisassemblerEngine{} }
 
 func (l *lengthDisassemblerEngine)findByte()(ok bool){//col:11
 /*findByte(const UINT8 * arr, const size_t N, const UINT8 x)

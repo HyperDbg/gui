@@ -8,9 +8,10 @@ SyscallHookEmulateSYSCALL()(ok bool)//col:59
 SyscallHookEmulateSYSRET()(ok bool)//col:82
 SyscallHookHandleUD()(ok bool)//col:142
 }
+eferHook struct{}
 )
 
-func NewEferHook() { return & eferHook{} }
+func NewEferHook()EferHook{ return & eferHook{} }
 
 func (e *eferHook)SyscallHookConfigureEFER()(ok bool){//col:28
 /*SyscallHookConfigureEFER(BOOLEAN EnableEFERSyscallHook)

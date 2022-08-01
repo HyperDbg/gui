@@ -13,9 +13,10 @@ PoolManagerAllocateAndAddToPoolTable()(ok bool)//col:118
 PoolManagerCheckAndPerformAllocationAndDeallocation()(ok bool)//col:166
 PoolManagerRequestAllocation()(ok bool)//col:191
 }
+poolManager struct{}
 )
 
-func NewPoolManager() { return & poolManager{} }
+func NewPoolManager()PoolManager{ return & poolManager{} }
 
 func (p *poolManager)PlmgrAllocateRequestNewAllocation()(ok bool){//col:10
 /*PlmgrAllocateRequestNewAllocation(SIZE_T NumberOfBytes)

@@ -19,9 +19,10 @@ WritePortWithIndex32()(ok bool)//col:118
 ReadPortWithIndex32()(ok bool)//col:126
 UartpSetAccess()(ok bool)//col:206
 }
+uartio struct{}
 )
 
-func NewUartio() { return & uartio{} }
+func NewUartio()Uartio{ return & uartio{} }
 
 func (u *uartio)WriteRegisterWithIndex8()(ok bool){//col:10
 /*WriteRegisterWithIndex8(

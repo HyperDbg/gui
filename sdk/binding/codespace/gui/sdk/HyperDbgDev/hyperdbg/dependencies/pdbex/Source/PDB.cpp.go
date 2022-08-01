@@ -60,9 +60,10 @@ PDB::GetBasicTypeString()(ok bool)//col:778
 PDB::GetUdtKindString()(ok bool)//col:793
 PDB::IsUnnamedSymbol()(ok bool)//col:801
 }
+pdb struct{}
 )
 
-func NewPdb() { return & pdb{} }
+func NewPdb()Pdb{ return & pdb{} }
 
 func (p *pdb)		SymbolModuleBase()(ok bool){//col:19
 /*		SymbolModuleBase();

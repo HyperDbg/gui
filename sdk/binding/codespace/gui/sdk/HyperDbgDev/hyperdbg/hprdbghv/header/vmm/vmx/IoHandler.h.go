@@ -31,9 +31,10 @@ __outbytestring()(ok bool)//col:70
 __outwordstring()(ok bool)//col:77
 __outdwordstring()(ok bool)//col:84
 }
+ioHandler struct{}
 )
 
-func NewIoHandler() { return & ioHandler{} }
+func NewIoHandler()IoHandler{ return & ioHandler{} }
 
 func (i *ioHandler)__inbyte()(ok bool){//col:7
 /*__inbyte(unsigned short);

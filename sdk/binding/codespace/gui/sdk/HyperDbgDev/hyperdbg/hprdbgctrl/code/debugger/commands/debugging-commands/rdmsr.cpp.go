@@ -6,9 +6,10 @@ Rdmsr interface{
 CommandRdmsrHelp()(ok bool)//col:8
 CommandRdmsr()(ok bool)//col:105
 }
+rdmsr struct{}
 )
 
-func NewRdmsr() { return & rdmsr{} }
+func NewRdmsr()Rdmsr{ return & rdmsr{} }
 
 func (r *rdmsr)CommandRdmsrHelp()(ok bool){//col:8
 /*CommandRdmsrHelp()

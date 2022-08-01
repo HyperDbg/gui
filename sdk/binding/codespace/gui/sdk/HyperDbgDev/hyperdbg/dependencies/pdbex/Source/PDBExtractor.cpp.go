@@ -19,9 +19,10 @@ PDBExtractor::DumpOneSymbol()(ok bool)//col:449
 PDBExtractor::DumpAllSymbolsOneByOne()(ok bool)//col:485
 PDBExtractor::CloseOpenFiles()(ok bool)//col:496
 }
+pdbExtractor struct{}
 )
 
-func NewPdbExtractor() { return & pdbExtractor{} }
+func NewPdbExtractor()PdbExtractor{ return & pdbExtractor{} }
 
 func (p *pdbExtractor)		"int_main()(ok bool){//col:36
 /*		"int main()\n"

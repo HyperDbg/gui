@@ -16,9 +16,10 @@ WriteRegister8()(ok bool)//col:54
 WriteRegister16()(ok bool)//col:60
 WriteRegister32()(ok bool)//col:66
 }
+ioaccess struct{}
 )
 
-func NewIoaccess() { return & ioaccess{} }
+func NewIoaccess()Ioaccess{ return & ioaccess{} }
 
 func (i *ioaccess)ReadPort8()(ok bool){//col:5
 /*ReadPort8(

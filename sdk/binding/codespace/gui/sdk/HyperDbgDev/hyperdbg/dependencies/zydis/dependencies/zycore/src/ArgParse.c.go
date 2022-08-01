@@ -6,9 +6,10 @@ ArgParse interface{
 ZyanStatus_ZyanArgParse()(ok bool)//col:5
 ZyanStatus_ZyanArgParseEx()(ok bool)//col:174
 }
+argParse struct{}
 )
 
-func NewArgParse() { return & argParse{} }
+func NewArgParse()ArgParse{ return & argParse{} }
 
 func (a *argParse)ZyanStatus_ZyanArgParse()(ok bool){//col:5
 /*ZyanStatus ZyanArgParse(const ZyanArgParseConfig *cfg, ZyanVector* parsed,

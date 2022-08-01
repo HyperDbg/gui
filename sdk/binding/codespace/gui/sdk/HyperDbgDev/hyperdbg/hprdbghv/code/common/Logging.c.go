@@ -15,9 +15,10 @@ LogNotifyUsermodeCallback()(ok bool)//col:528
 LogRegisterIrpBasedNotification()(ok bool)//col:581
 LogRegisterEventBasedNotification()(ok bool)//col:615
 }
+logging struct{}
 )
 
-func NewLogging() { return & logging{} }
+func NewLogging()Logging{ return & logging{} }
 
 func (l *logging)LogInitialize()(ok bool){//col:32
 /*LogInitialize()

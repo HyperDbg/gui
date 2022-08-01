@@ -16,9 +16,10 @@ UdHandleAfterSteppingReason()(ok bool)//col:141
 UdPrePausingReasons()(ok bool)//col:159
 UdCheckAndHandleBreakpointsAndDebugBreaks()(ok bool)//col:230
 }
+ud struct{}
 )
 
-func NewUd() { return & ud{} }
+func NewUd()Ud{ return & ud{} }
 
 func (u *ud)UdInitializeUserDebugger()(ok bool){//col:17
 /*UdInitializeUserDebugger()

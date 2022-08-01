@@ -6,9 +6,10 @@ Bp interface{
 CommandBpHelp()(ok bool)//col:17
 CommandBp()(ok bool)//col:147
 }
+bp struct{}
 )
 
-func NewBp() { return & bp{} }
+func NewBp()Bp{ return & bp{} }
 
 func (b *bp)CommandBpHelp()(ok bool){//col:17
 /*CommandBpHelp()

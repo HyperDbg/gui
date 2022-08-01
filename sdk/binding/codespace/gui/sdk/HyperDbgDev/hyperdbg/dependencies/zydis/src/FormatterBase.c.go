@@ -15,9 +15,10 @@ ZyanStatus_ZydisFormatterBasePrintSegment()(ok bool)//col:285
 ZyanStatus_ZydisFormatterBasePrintPrefixes()(ok bool)//col:427
 ZyanStatus_ZydisFormatterBasePrintDecorator()(ok bool)//col:627
 }
+formatterBase struct{}
 )
 
-func NewFormatterBase() { return & formatterBase{} }
+func NewFormatterBase()FormatterBase{ return & formatterBase{} }
 
 func (f *formatterBase)____()(ok bool){//col:17
 /*    (const ZydisPredefinedToken* const)&TOK_DATA_PREF_REX_40,

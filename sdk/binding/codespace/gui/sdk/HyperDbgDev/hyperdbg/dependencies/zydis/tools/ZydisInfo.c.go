@@ -31,9 +31,10 @@ static_void_PrintDisassembly()(ok bool)//col:624
 static_void_PrintInstruction()(ok bool)//col:806
 int_main()(ok bool)//col:911
 }
+zydisInfo struct{}
 )
 
-func NewZydisInfo() { return & zydisInfo{} }
+func NewZydisInfo()ZydisInfo{ return & zydisInfo{} }
 
 func (z *zydisInfo)static_const_charPtr_FormatZyanStatus()(ok bool){//col:45
 /*static const char* FormatZyanStatus(ZyanStatus status)

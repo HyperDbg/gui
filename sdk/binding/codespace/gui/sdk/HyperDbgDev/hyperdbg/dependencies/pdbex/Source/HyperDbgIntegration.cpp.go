@@ -8,9 +8,10 @@ pdbex_set_logging_method_export()(ok bool)//col:21
 ExtractBits()(ok bool)//col:26
 SymSeparateTo64BitValue()(ok bool)//col:35
 }
+hyperDbgIntegration struct{}
 )
 
-func NewHyperDbgIntegration() { return & hyperDbgIntegration{} }
+func NewHyperDbgIntegration()HyperDbgIntegration{ return & hyperDbgIntegration{} }
 
 func (h *hyperDbgIntegration)pdbex_export()(ok bool){//col:17
 /*pdbex_export(int     argc,

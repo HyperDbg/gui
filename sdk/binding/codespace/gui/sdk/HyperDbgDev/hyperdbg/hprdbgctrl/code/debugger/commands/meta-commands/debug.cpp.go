@@ -8,9 +8,10 @@ CommandDebugCheckBaudrate()(ok bool)//col:33
 CommandDebugCheckComPort()(ok bool)//col:57
 CommandDebug()(ok bool)//col:174
 }
+debug struct{}
 )
 
-func NewDebug() { return & debug{} }
+func NewDebug()Debug{ return & debug{} }
 
 func (d *debug)CommandDebugHelp()(ok bool){//col:20
 /*CommandDebugHelp()

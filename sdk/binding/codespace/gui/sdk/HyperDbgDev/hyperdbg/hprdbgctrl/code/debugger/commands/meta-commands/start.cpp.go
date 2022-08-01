@@ -6,9 +6,10 @@ Start interface{
 CommandStartHelp()(ok bool)//col:7
 CommandStart()(ok bool)//col:66
 }
+start struct{}
 )
 
-func NewStart() { return & start{} }
+func NewStart()Start{ return & start{} }
 
 func (s *start)CommandStartHelp()(ok bool){//col:7
 /*CommandStartHelp()

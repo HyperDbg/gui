@@ -9,9 +9,10 @@ CommandDtAndStructConvertHyperDbgArgsToPdbex()(ok bool)//col:194
 CommandDtShowDataBasedOnSymbolTypes()(ok bool)//col:250
 CommandDtAndStruct()(ok bool)//col:412
 }
+dtStruct struct{}
 )
 
-func NewDtStruct() { return & dtStruct{} }
+func NewDtStruct()DtStruct{ return & dtStruct{} }
 
 func (d *dtStruct)CommandDtHelp()(ok bool){//col:27
 /*CommandDtHelp()

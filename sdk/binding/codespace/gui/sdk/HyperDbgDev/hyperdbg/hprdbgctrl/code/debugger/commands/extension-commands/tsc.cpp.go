@@ -6,9 +6,10 @@ Tsc interface{
 CommandTscHelp()(ok bool)//col:12
 CommandTsc()(ok bool)//col:64
 }
+tsc struct{}
 )
 
-func NewTsc() { return & tsc{} }
+func NewTsc()Tsc{ return & tsc{} }
 
 func (t *tsc)CommandTscHelp()(ok bool){//col:12
 /*CommandTscHelp()

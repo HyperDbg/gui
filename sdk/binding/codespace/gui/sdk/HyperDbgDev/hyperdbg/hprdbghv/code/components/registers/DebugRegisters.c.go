@@ -5,9 +5,10 @@ type (
 DebugRegisters interface{
 DebugRegistersSet()(ok bool)//col:124
 }
+debugRegisters struct{}
 )
 
-func NewDebugRegisters() { return & debugRegisters{} }
+func NewDebugRegisters()DebugRegisters{ return & debugRegisters{} }
 
 func (d *debugRegisters)DebugRegistersSet()(ok bool){//col:124
 /*DebugRegistersSet(UINT32 DebugRegNum, DEBUG_REGISTER_TYPE ActionType, BOOLEAN ApplyToVmcs, UINT64 TargetAddress)

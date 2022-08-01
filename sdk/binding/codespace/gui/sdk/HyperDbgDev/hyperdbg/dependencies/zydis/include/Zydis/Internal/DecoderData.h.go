@@ -11,15 +11,15 @@ ZYDIS_INSTR_ENC_FLAG_FORCE_REG_FORM = 0x10 //col:6
 )
 
 type typedef struct ZydisDecoderTreeNode_ struct{
-type ZydisDecoderTreeNodeType
-value ZydisDecoderTreeNodeValue
+type ZydisDecoderTreeNodeType //col:3
+value ZydisDecoderTreeNodeValue //col:4
 }
 
 
 type typedef struct ZydisInstructionEncodingInfo_ struct{
-flags ZydisInstructionEncodingFlags
-Struct struct
-size[3] ZyanU8
+flags ZydisInstructionEncodingFlags //col:8
+Struct struct //col:9
+size[3] ZyanU8 //col:11
 }
 
 
@@ -28,9 +28,10 @@ type (
 DecoderData interface{
 ZYAN_INLINE_const_ZydisDecoderTreeNodePtr_ZydisDecoderTreeGetRootNode()(ok bool)//col:4
 }
+decoderData struct{}
 )
 
-func NewDecoderData() { return & decoderData{} }
+func NewDecoderData()DecoderData{ return & decoderData{} }
 
 func (d *decoderData)ZYAN_INLINE_const_ZydisDecoderTreeNodePtr_ZydisDecoderTreeGetRootNode()(ok bool){//col:4
 /*ZYAN_INLINE const ZydisDecoderTreeNode* ZydisDecoderTreeGetRootNode(void)

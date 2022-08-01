@@ -9,9 +9,10 @@ CommunicationClientShutdownConnection()(ok bool)//col:76
 CommunicationClientReceiveMessage()(ok bool)//col:95
 CommunicationClientCleanup()(ok bool)//col:101
 }
+tcpclient struct{}
 )
 
-func NewTcpclient() { return & tcpclient{} }
+func NewTcpclient()Tcpclient{ return & tcpclient{} }
 
 func (t *tcpclient)CommunicationClientConnectToServer()(ok bool){//col:51
 /*CommunicationClientConnectToServer(PCSTR Ip, PCSTR Port, SOCKET * ConnectSocketArg)

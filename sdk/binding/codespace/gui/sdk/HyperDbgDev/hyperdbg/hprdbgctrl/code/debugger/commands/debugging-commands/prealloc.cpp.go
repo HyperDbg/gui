@@ -6,9 +6,10 @@ Prealloc interface{
 CommandPreallocHelp()(ok bool)//col:8
 CommandPrealloc()(ok bool)//col:66
 }
+prealloc struct{}
 )
 
-func NewPrealloc() { return & prealloc{} }
+func NewPrealloc()Prealloc{ return & prealloc{} }
 
 func (p *prealloc)CommandPreallocHelp()(ok bool){//col:8
 /*CommandPreallocHelp()

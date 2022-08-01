@@ -36,9 +36,10 @@ MemoryMapperFreeMemoryInTargetProcess()(ok bool)//col:567
 MemoryMapperMapPhysicalAddressToPte()(ok bool)//col:586
 MemoryMapperSetSupervisorBitWithoutSwitchingByCr3()(ok bool)//col:604
 }
+memoryMapper struct{}
 )
 
-func NewMemoryMapper() { return & memoryMapper{} }
+func NewMemoryMapper()MemoryMapper{ return & memoryMapper{} }
 
 func (m *memoryMapper)MemoryMapperGetIndex()(ok bool){//col:6
 /*MemoryMapperGetIndex(PAGING_LEVEL Level, UINT64 Va)

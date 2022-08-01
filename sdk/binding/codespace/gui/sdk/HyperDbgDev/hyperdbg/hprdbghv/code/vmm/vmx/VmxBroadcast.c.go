@@ -8,9 +8,10 @@ VmxBroadcastNmi()(ok bool)//col:35
 VmxBroadcastHandleKdDebugBreaks()(ok bool)//col:49
 VmxBroadcastNmiHandler()(ok bool)//col:77
 }
+vmxBroadcast struct{}
 )
 
-func NewVmxBroadcast() { return & vmxBroadcast{} }
+func NewVmxBroadcast()VmxBroadcast{ return & vmxBroadcast{} }
 
 func (v *vmxBroadcast)VmxBroadcastHandleNmiCallback()(ok bool){//col:13
 /*VmxBroadcastHandleNmiCallback(PVOID Context, BOOLEAN Handled)

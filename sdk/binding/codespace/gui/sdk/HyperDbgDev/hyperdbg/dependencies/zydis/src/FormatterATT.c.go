@@ -10,9 +10,10 @@ ZyanStatus_ZydisFormatterATTPrintRegister()(ok bool)//col:268
 ZyanStatus_ZydisFormatterATTPrintDISP()(ok bool)//col:291
 ZyanStatus_ZydisFormatterATTPrintIMM()(ok bool)//col:300
 }
+formatterAtt struct{}
 )
 
-func NewFormatterAtt() { return & formatterAtt{} }
+func NewFormatterAtt()FormatterAtt{ return & formatterAtt{} }
 
 func (f *formatterAtt)ZyanStatus_ZydisFormatterATTFormatInstruction()(ok bool){//col:131
 /*ZyanStatus ZydisFormatterATTFormatInstruction(const ZydisFormatter* formatter,

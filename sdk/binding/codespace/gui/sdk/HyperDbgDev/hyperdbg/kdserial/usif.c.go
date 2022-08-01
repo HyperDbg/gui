@@ -17,9 +17,10 @@ UsifGetByte()(ok bool)//col:50
 UsifPutByte()(ok bool)//col:73
 UsifRxReady()(ok bool)//col:88
 }
+usif struct{}
 )
 
-func NewUsif() { return & usif{} }
+func NewUsif()Usif{ return & usif{} }
 
 func (u *usif)UsifInitializePort()(ok bool){//col:18
 /*UsifInitializePort(

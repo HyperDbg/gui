@@ -8,9 +8,10 @@ VmxHandleVmcallVmExit()(ok bool)//col:50
 VmxVmcallHandler()(ok bool)//col:381
 VmcallTest()(ok bool)//col:395
 }
+vmcall struct{}
 )
 
-func NewVmcall() { return & vmcall{} }
+func NewVmcall()Vmcall{ return & vmcall{} }
 
 func (v *vmcall)VmxHypervVmcallHandler()(ok bool){//col:23
 /*VmxHypervVmcallHandler(PGUEST_REGS GuestRegs)

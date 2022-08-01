@@ -6,9 +6,10 @@ Ioin interface{
 CommandIoinHelp()(ok bool)//col:13
 CommandIoin()(ok bool)//col:89
 }
+ioin struct{}
 )
 
-func NewIoin() { return & ioin{} }
+func NewIoin()Ioin{ return & ioin{} }
 
 func (i *ioin)CommandIoinHelp()(ok bool){//col:13
 /*CommandIoinHelp()

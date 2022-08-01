@@ -5,9 +5,10 @@ type (
 PdbHeaderReconstructor interface{
 			Settings()(ok bool)//col:178
 }
+pdbHeaderReconstructor struct{}
 )
 
-func NewPdbHeaderReconstructor() { return & pdbHeaderReconstructor{} }
+func NewPdbHeaderReconstructor()PdbHeaderReconstructor{ return & pdbHeaderReconstructor{} }
 
 func (p *pdbHeaderReconstructor)			Settings()(ok bool){//col:178
 /*			Settings()

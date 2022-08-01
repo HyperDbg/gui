@@ -6,9 +6,10 @@ Cpuid interface{
 CommandCpuidHelp()(ok bool)//col:13
 CommandCpuid()(ok bool)//col:65
 }
+cpuid struct{}
 )
 
-func NewCpuid() { return & cpuid{} }
+func NewCpuid()Cpuid{ return & cpuid{} }
 
 func (c *cpuid)CommandCpuidHelp()(ok bool){//col:13
 /*CommandCpuidHelp()

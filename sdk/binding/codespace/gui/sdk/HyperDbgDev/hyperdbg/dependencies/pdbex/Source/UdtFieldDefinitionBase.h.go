@@ -18,9 +18,10 @@ UdtFieldDefinitionBase interface{
 		SetSettings()(ok bool)//col:611
 		GetSettings()(ok bool)//col:616
 }
+udtFieldDefinitionBase struct{}
 )
 
-func NewUdtFieldDefinitionBase() { return & udtFieldDefinitionBase{} }
+func NewUdtFieldDefinitionBase()UdtFieldDefinitionBase{ return & udtFieldDefinitionBase{} }
 
 func (u *udtFieldDefinitionBase)		VisitBaseType()(ok bool){//col:88
 /*		VisitBaseType(

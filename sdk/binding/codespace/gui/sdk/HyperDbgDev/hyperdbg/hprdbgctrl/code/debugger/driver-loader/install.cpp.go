@@ -10,9 +10,10 @@ StartDriver()(ok bool)//col:174
 StopDriver()(ok bool)//col:200
 SetupDriverName()(ok bool)//col:230
 }
+install struct{}
 )
 
-func NewInstall() { return & install{} }
+func NewInstall()Install{ return & install{} }
 
 func (i *install)InstallDriver()(ok bool){//col:52
 /*InstallDriver(SC_HANDLE SchSCManager, LPCTSTR DriverName, LPCTSTR ServiceExe);

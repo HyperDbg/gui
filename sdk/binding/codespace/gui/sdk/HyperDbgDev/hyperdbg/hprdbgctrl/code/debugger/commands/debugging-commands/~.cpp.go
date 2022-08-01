@@ -6,9 +6,10 @@ Unknown interface{
 CommandCoreHelp()(ok bool)//col:9
 CommandCore()(ok bool)//col:39
 }
+unknown struct{}
 )
 
-func NewUnknown() { return & unknown{} }
+func NewUnknown()Unknown{ return & unknown{} }
 
 func (u *unknown)CommandCoreHelp()(ok bool){//col:9
 /*CommandCoreHelp()

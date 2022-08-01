@@ -50,9 +50,10 @@ PdbSymbolVisitorBase interface{
 		VisitUdtFieldBitFieldEnd()(ok bool)//col:4949
 		VisitUdtFieldBitField()(ok bool)//col:4956
 }
+pdbSymbolVisitorBase struct{}
 )
 
-func NewPdbSymbolVisitorBase() { return & pdbSymbolVisitorBase{} }
+func NewPdbSymbolVisitorBase()PdbSymbolVisitorBase{ return & pdbSymbolVisitorBase{} }
 
 func (p *pdbSymbolVisitorBase)		~PDBSymbolVisitorBase()(ok bool){//col:192
 /*		~PDBSymbolVisitorBase() = default;

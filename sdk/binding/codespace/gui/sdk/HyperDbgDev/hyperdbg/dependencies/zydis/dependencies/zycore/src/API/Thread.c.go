@@ -16,9 +16,10 @@ ZyanStatus_ZyanThreadTlsFree()(ok bool)//col:77
 ZyanStatus_ZyanThreadTlsGetValue()(ok bool)//col:82
 ZyanStatus_ZyanThreadTlsSetValue()(ok bool)//col:95
 }
+thread struct{}
 )
 
-func NewThread() { return & thread{} }
+func NewThread()Thread{ return & thread{} }
 
 func (t *thread)ZyanStatus_ZyanThreadGetCurrentThread()(ok bool){//col:5
 /*ZyanStatus ZyanThreadGetCurrentThread(ZyanThread* thread)

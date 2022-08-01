@@ -8,9 +8,10 @@ ListeningSerialPortInDebuggee()(ok bool)//col:722
 ListeningSerialPauseDebuggerThread()(ok bool)//col:727
 ListeningSerialPauseDebuggeeThread()(ok bool)//col:732
 }
+kernelListening struct{}
 )
 
-func NewKernelListening() { return & kernelListening{} }
+func NewKernelListening()KernelListening{ return & kernelListening{} }
 
 func (k *kernelListening)ListeningSerialPortInDebugger()(ok bool){//col:643
 /*ListeningSerialPortInDebugger()

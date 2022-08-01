@@ -22,15 +22,15 @@ ZYDIS_TOKEN_USER =                0x80 //col:17
 )
 
 type typedef struct ZydisFormatterToken_ struct{
-type ZydisTokenType
-next ZyanU8
+type ZydisTokenType //col:3
+next ZyanU8 //col:4
 }
 
 
 type typedef struct ZydisFormatterBuffer_ struct{
-is_token_list ZyanBool
-capacity ZyanUSize
-string ZyanString
+is_token_list ZyanBool //col:8
+capacity ZyanUSize //col:9
+string ZyanString //col:10
 }
 
 

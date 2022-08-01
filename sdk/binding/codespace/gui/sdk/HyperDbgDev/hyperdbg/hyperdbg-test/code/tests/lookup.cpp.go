@@ -6,9 +6,10 @@ Lookup interface{
 TestListenerForResultsThread()(ok bool)//col:31
 TestCreateLookupTable()(ok bool)//col:98
 }
+lookup struct{}
 )
 
-func NewLookup() { return & lookup{} }
+func NewLookup()Lookup{ return & lookup{} }
 
 func (l *lookup)TestListenerForResultsThread()(ok bool){//col:31
 /*TestListenerForResultsThread(void * data)

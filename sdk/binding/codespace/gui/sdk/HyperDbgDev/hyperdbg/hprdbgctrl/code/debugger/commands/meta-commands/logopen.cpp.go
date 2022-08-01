@@ -7,9 +7,10 @@ CommandLogopenHelp()(ok bool)//col:5
 CommandLogopen()(ok bool)//col:44
 LogopenSaveToFile()(ok bool)//col:48
 }
+logopen struct{}
 )
 
-func NewLogopen() { return & logopen{} }
+func NewLogopen()Logopen{ return & logopen{} }
 
 func (l *logopen)CommandLogopenHelp()(ok bool){//col:5
 /*CommandLogopenHelp()

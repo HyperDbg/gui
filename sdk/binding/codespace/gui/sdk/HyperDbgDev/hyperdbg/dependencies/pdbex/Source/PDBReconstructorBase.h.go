@@ -20,9 +20,10 @@ PdbReconstructorBase interface{
 		OnPaddingMember()(ok bool)//col:1080
 		OnPaddingBitFieldField()(ok bool)//col:1087
 }
+pdbReconstructorBase struct{}
 )
 
-func NewPdbReconstructorBase() { return & pdbReconstructorBase{} }
+func NewPdbReconstructorBase()PdbReconstructorBase{ return & pdbReconstructorBase{} }
 
 func (p *pdbReconstructorBase)		OnEnumType()(ok bool){//col:124
 /*		OnEnumType(

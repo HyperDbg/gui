@@ -470,933 +470,933 @@ const(
 
 
 type IO_STATUS_BLOCK struct{
-Union union
-Status NTSTATUS
-Pointer PVOID
+Union union //col:3
+Status NTSTATUS //col:5
+Pointer PVOID //col:6
 }
 
 
 type FILE_IO_COMPLETION_INFORMATION struct{
-KeyContext PVOID
-ApcContext PVOID
-IoStatusBlock IO_STATUS_BLOCK
+KeyContext PVOID //col:12
+ApcContext PVOID //col:13
+IoStatusBlock IO_STATUS_BLOCK //col:14
 }
 
 
 type FILE_BASIC_INFORMATION struct{
-CreationTime LARGE_INTEGER
-LastAccessTime LARGE_INTEGER
-LastWriteTime LARGE_INTEGER
-ChangeTime LARGE_INTEGER
-FileAttributes ULONG
+CreationTime LARGE_INTEGER //col:18
+LastAccessTime LARGE_INTEGER //col:19
+LastWriteTime LARGE_INTEGER //col:20
+ChangeTime LARGE_INTEGER //col:21
+FileAttributes uint32 //col:22
 }
 
 
 type FILE_STANDARD_INFORMATION struct{
-AllocationSize LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-NumberOfLinks ULONG
-DeletePending bool
-Directory bool
+AllocationSize LARGE_INTEGER //col:26
+EndOfFile LARGE_INTEGER //col:27
+NumberOfLinks uint32 //col:28
+DeletePending bool //col:29
+Directory bool //col:30
 }
 
 
 type FILE_STANDARD_INFORMATION_EX struct{
-AllocationSize LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-NumberOfLinks ULONG
-DeletePending bool
-Directory bool
-AlternateStream bool
-MetadataAttribute bool
+AllocationSize LARGE_INTEGER //col:34
+EndOfFile LARGE_INTEGER //col:35
+NumberOfLinks uint32 //col:36
+DeletePending bool //col:37
+Directory bool //col:38
+AlternateStream bool //col:39
+MetadataAttribute bool //col:40
 }
 
 
 type FILE_INTERNAL_INFORMATION struct{
-IndexNumber LARGE_INTEGER
+IndexNumber LARGE_INTEGER //col:44
 }
 
 
 type FILE_EA_INFORMATION struct{
-EaSize ULONG
+EaSize uint32 //col:48
 }
 
 
 type FILE_ACCESS_INFORMATION struct{
-AccessFlags ACCESS_MASK
+AccessFlags ACCESS_MASK //col:52
 }
 
 
 type FILE_POSITION_INFORMATION struct{
-CurrentByteOffset LARGE_INTEGER
+CurrentByteOffset LARGE_INTEGER //col:56
 }
 
 
 type FILE_MODE_INFORMATION struct{
-Mode ULONG
+Mode uint32 //col:60
 }
 
 
 type FILE_ALIGNMENT_INFORMATION struct{
-AlignmentRequirement ULONG
+AlignmentRequirement uint32 //col:64
 }
 
 
 type FILE_NAME_INFORMATION struct{
-FileNameLength ULONG
-FileName[1] WCHAR
+FileNameLength uint32 //col:68
+FileName[1] WCHAR //col:69
 }
 
 
 type FILE_ALL_INFORMATION struct{
-BasicInformation FILE_BASIC_INFORMATION
-StandardInformation FILE_STANDARD_INFORMATION
-InternalInformation FILE_INTERNAL_INFORMATION
-EaInformation FILE_EA_INFORMATION
-AccessInformation FILE_ACCESS_INFORMATION
-PositionInformation FILE_POSITION_INFORMATION
-ModeInformation FILE_MODE_INFORMATION
-AlignmentInformation FILE_ALIGNMENT_INFORMATION
-NameInformation FILE_NAME_INFORMATION
+BasicInformation FILE_BASIC_INFORMATION //col:73
+StandardInformation FILE_STANDARD_INFORMATION //col:74
+InternalInformation FILE_INTERNAL_INFORMATION //col:75
+EaInformation FILE_EA_INFORMATION //col:76
+AccessInformation FILE_ACCESS_INFORMATION //col:77
+PositionInformation FILE_POSITION_INFORMATION //col:78
+ModeInformation FILE_MODE_INFORMATION //col:79
+AlignmentInformation FILE_ALIGNMENT_INFORMATION //col:80
+NameInformation FILE_NAME_INFORMATION //col:81
 }
 
 
 type FILE_NETWORK_OPEN_INFORMATION struct{
-CreationTime LARGE_INTEGER
-LastAccessTime LARGE_INTEGER
-LastWriteTime LARGE_INTEGER
-ChangeTime LARGE_INTEGER
-AllocationSize LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-FileAttributes ULONG
+CreationTime LARGE_INTEGER //col:85
+LastAccessTime LARGE_INTEGER //col:86
+LastWriteTime LARGE_INTEGER //col:87
+ChangeTime LARGE_INTEGER //col:88
+AllocationSize LARGE_INTEGER //col:89
+EndOfFile LARGE_INTEGER //col:90
+FileAttributes uint32 //col:91
 }
 
 
 type FILE_ATTRIBUTE_TAG_INFORMATION struct{
-FileAttributes ULONG
-ReparseTag ULONG
+FileAttributes uint32 //col:95
+ReparseTag uint32 //col:96
 }
 
 
 type FILE_ALLOCATION_INFORMATION struct{
-AllocationSize LARGE_INTEGER
+AllocationSize LARGE_INTEGER //col:100
 }
 
 
 type FILE_COMPRESSION_INFORMATION struct{
-CompressedFileSize LARGE_INTEGER
-CompressionFormat USHORT
-CompressionUnitShift UCHAR
-ChunkShift UCHAR
-ClusterShift UCHAR
-Reserved[3] UCHAR
+CompressedFileSize LARGE_INTEGER //col:104
+CompressionFormat USHORT //col:105
+CompressionUnitShift uint8 //col:106
+ChunkShift uint8 //col:107
+ClusterShift uint8 //col:108
+Reserved[3] uint8 //col:109
 }
 
 
 type FILE_DISPOSITION_INFORMATION struct{
-DeleteFile bool
+DeleteFile bool //col:113
 }
 
 
 type FILE_END_OF_FILE_INFORMATION struct{
-EndOfFile LARGE_INTEGER
+EndOfFile LARGE_INTEGER //col:117
 }
 
 
 type FILE_END_OF_FILE_INFORMATION_EX  struct{
-EndOfFile LARGE_INTEGER
-PagingFileSizeInMM LARGE_INTEGER
-PagingFileMaxSize LARGE_INTEGER
-Flags ULONG
+EndOfFile LARGE_INTEGER //col:121
+PagingFileSizeInMM LARGE_INTEGER //col:122
+PagingFileMaxSize LARGE_INTEGER //col:123
+Flags uint32 //col:124
 }
 
 
 type FILE_VALID_DATA_LENGTH_INFORMATION struct{
-ValidDataLength LARGE_INTEGER
+ValidDataLength LARGE_INTEGER //col:128
 }
 
 
 type FILE_LINK_INFORMATION struct{
-#if(PhntVersion>=PhntRedstone5) #if (PHNT_VERSION >= PHNT_REDSTONE5)
-Union union
-ReplaceIfExists bool
-Flags ULONG
+#if(PhntVersion>=PhntRedstone5) #if (PHNT_VERSION >= PHNT_REDSTONE5) //col:132
+Union union //col:133
+ReplaceIfExists bool //col:135
+Flags uint32 //col:136
 }
 
 
 type FILE_LINK_INFORMATION_EX struct{
-Flags ULONG
-RootDirectory HANDLE
-FileNameLength ULONG
-FileName[1] WCHAR
+Flags uint32 //col:147
+RootDirectory HANDLE //col:148
+FileNameLength uint32 //col:149
+FileName[1] WCHAR //col:150
 }
 
 
 type FILE_MOVE_CLUSTER_INFORMATION struct{
-ClusterCount ULONG
-RootDirectory HANDLE
-FileNameLength ULONG
-FileName[1] WCHAR
+ClusterCount uint32 //col:154
+RootDirectory HANDLE //col:155
+FileNameLength uint32 //col:156
+FileName[1] WCHAR //col:157
 }
 
 
 type FILE_RENAME_INFORMATION struct{
-ReplaceIfExists bool
-RootDirectory HANDLE
-FileNameLength ULONG
-FileName[1] WCHAR
+ReplaceIfExists bool //col:161
+RootDirectory HANDLE //col:162
+FileNameLength uint32 //col:163
+FileName[1] WCHAR //col:164
 }
 
 
 type FILE_RENAME_INFORMATION_EX struct{
-Flags ULONG
-RootDirectory HANDLE
-FileNameLength ULONG
-FileName[1] WCHAR
+Flags uint32 //col:168
+RootDirectory HANDLE //col:169
+FileNameLength uint32 //col:170
+FileName[1] WCHAR //col:171
 }
 
 
 type FILE_STREAM_INFORMATION struct{
-NextEntryOffset ULONG
-StreamNameLength ULONG
-StreamSize LARGE_INTEGER
-StreamAllocationSize LARGE_INTEGER
-StreamName[1] WCHAR
+NextEntryOffset uint32 //col:175
+StreamNameLength uint32 //col:176
+StreamSize LARGE_INTEGER //col:177
+StreamAllocationSize LARGE_INTEGER //col:178
+StreamName[1] WCHAR //col:179
 }
 
 
 type FILE_TRACKING_INFORMATION struct{
-DestinationFile HANDLE
-ObjectInformationLength ULONG
-ObjectInformation[1] CHAR
+DestinationFile HANDLE //col:183
+ObjectInformationLength uint32 //col:184
+ObjectInformation[1] int8 //col:185
 }
 
 
 type FILE_COMPLETION_INFORMATION struct{
-Port HANDLE
-Key PVOID
+Port HANDLE //col:189
+Key PVOID //col:190
 }
 
 
 type FILE_PIPE_INFORMATION struct{
-ReadMode ULONG
-CompletionMode ULONG
+ReadMode uint32 //col:194
+CompletionMode uint32 //col:195
 }
 
 
 type FILE_PIPE_LOCAL_INFORMATION struct{
-NamedPipeType ULONG
-NamedPipeConfiguration ULONG
-MaximumInstances ULONG
-CurrentInstances ULONG
-InboundQuota ULONG
-ReadDataAvailable ULONG
-OutboundQuota ULONG
-WriteQuotaAvailable ULONG
-NamedPipeState ULONG
-NamedPipeEnd ULONG
+NamedPipeType uint32 //col:199
+NamedPipeConfiguration uint32 //col:200
+MaximumInstances uint32 //col:201
+CurrentInstances uint32 //col:202
+InboundQuota uint32 //col:203
+ReadDataAvailable uint32 //col:204
+OutboundQuota uint32 //col:205
+WriteQuotaAvailable uint32 //col:206
+NamedPipeState uint32 //col:207
+NamedPipeEnd uint32 //col:208
 }
 
 
 type FILE_PIPE_REMOTE_INFORMATION struct{
-CollectDataTime LARGE_INTEGER
-MaximumCollectionCount ULONG
+CollectDataTime LARGE_INTEGER //col:212
+MaximumCollectionCount uint32 //col:213
 }
 
 
 type FILE_MAILSLOT_QUERY_INFORMATION struct{
-MaximumMessageSize ULONG
-MailslotQuota ULONG
-NextMessageSize ULONG
-MessagesAvailable ULONG
-ReadTimeout LARGE_INTEGER
+MaximumMessageSize uint32 //col:217
+MailslotQuota uint32 //col:218
+NextMessageSize uint32 //col:219
+MessagesAvailable uint32 //col:220
+ReadTimeout LARGE_INTEGER //col:221
 }
 
 
 type FILE_MAILSLOT_SET_INFORMATION struct{
-ReadTimeout PLARGE_INTEGER
+ReadTimeout PLARGE_INTEGER //col:225
 }
 
 
 type FILE_REPARSE_POINT_INFORMATION struct{
-FileReference LONGLONG
-Tag ULONG
+FileReference LONGLONG //col:229
+Tag uint32 //col:230
 }
 
 
 type FILE_LINK_ENTRY_INFORMATION struct{
-NextEntryOffset ULONG
-ParentFileId LONGLONG
-FileNameLength ULONG
-FileName[1] WCHAR
+NextEntryOffset uint32 //col:234
+ParentFileId LONGLONG //col:235
+FileNameLength uint32 //col:236
+FileName[1] WCHAR //col:237
 }
 
 
 type FILE_LINKS_INFORMATION struct{
-BytesNeeded ULONG
-EntriesReturned ULONG
-Entry FILE_LINK_ENTRY_INFORMATION
+BytesNeeded uint32 //col:241
+EntriesReturned uint32 //col:242
+Entry FILE_LINK_ENTRY_INFORMATION //col:243
 }
 
 
 type FILE_NETWORK_PHYSICAL_NAME_INFORMATION struct{
-FileNameLength ULONG
-FileName[1] WCHAR
+FileNameLength uint32 //col:247
+FileName[1] WCHAR //col:248
 }
 
 
 type FILE_STANDARD_LINK_INFORMATION struct{
-NumberOfAccessibleLinks ULONG
-TotalNumberOfLinks ULONG
-DeletePending bool
-Directory bool
+NumberOfAccessibleLinks uint32 //col:252
+TotalNumberOfLinks uint32 //col:253
+DeletePending bool //col:254
+Directory bool //col:255
 }
 
 
 type FILE_SFIO_RESERVE_INFORMATION struct{
-RequestsPerPeriod ULONG
-Period ULONG
-RetryFailures bool
-Discardable bool
-RequestSize ULONG
-NumOutstandingRequests ULONG
+RequestsPerPeriod uint32 //col:259
+Period uint32 //col:260
+RetryFailures bool //col:261
+Discardable bool //col:262
+RequestSize uint32 //col:263
+NumOutstandingRequests uint32 //col:264
 }
 
 
 type FILE_SFIO_VOLUME_INFORMATION struct{
-MaximumRequestsPerPeriod ULONG
-MinimumPeriod ULONG
-MinimumTransferSize ULONG
+MaximumRequestsPerPeriod uint32 //col:268
+MinimumPeriod uint32 //col:269
+MinimumTransferSize uint32 //col:270
 }
 
 
 type FILE_IO_PRIORITY_HINT_INFORMATION_EX struct{
-PriorityHint IO_PRIORITY_HINT
-BoostOutstanding bool
+PriorityHint IO_PRIORITY_HINT //col:274
+BoostOutstanding bool //col:275
 }
 
 
 type FILE_IO_COMPLETION_NOTIFICATION_INFORMATION struct{
-Flags ULONG
+Flags uint32 //col:279
 }
 
 
 type FILE_PROCESS_IDS_USING_FILE_INFORMATION struct{
-NumberOfProcessIdsInList ULONG
-ProcessIdList[1] ULONG_PTR
+NumberOfProcessIdsInList uint32 //col:283
+ProcessIdList[1] ULONG_PTR //col:284
 }
 
 
 type FILE_IS_REMOTE_DEVICE_INFORMATION struct{
-IsRemote bool
+IsRemote bool //col:288
 }
 
 
 type FILE_NUMA_NODE_INFORMATION struct{
-NodeNumber USHORT
+NodeNumber USHORT //col:292
 }
 
 
 type FILE_IOSTATUSBLOCK_RANGE_INFORMATION struct{
-IoStatusBlockRange PUCHAR
-Length ULONG
+IoStatusBlockRange PUCHAR //col:296
+Length uint32 //col:297
 }
 
 
 type FILE_REMOTE_PROTOCOL_INFORMATION struct{
-StructureVersion USHORT
-StructureSize USHORT
-Protocol ULONG
-ProtocolMajorVersion USHORT
-ProtocolMinorVersion USHORT
-ProtocolRevision USHORT
-Reserved USHORT
-Flags ULONG
-Struct struct
-Reserved[8] ULONG
+StructureVersion USHORT //col:301
+StructureSize USHORT //col:302
+Protocol uint32 //col:303
+ProtocolMajorVersion USHORT //col:304
+ProtocolMinorVersion USHORT //col:305
+ProtocolRevision USHORT //col:306
+Reserved USHORT //col:307
+Flags uint32 //col:308
+Struct struct //col:309
+Reserved[8] uint32 //col:311
 }
 
 
 type FILE_INTEGRITY_STREAM_INFORMATION struct{
-ChecksumAlgorithm USHORT
-ChecksumChunkShift UCHAR
-ClusterShift UCHAR
-Flags ULONG
+ChecksumAlgorithm USHORT //col:349
+ChecksumChunkShift uint8 //col:350
+ClusterShift uint8 //col:351
+Flags uint32 //col:352
 }
 
 
 type FILE_VOLUME_NAME_INFORMATION struct{
-DeviceNameLength ULONG
-DeviceName[1] WCHAR
+DeviceNameLength uint32 //col:356
+DeviceName[1] WCHAR //col:357
 }
 
 
 type FILE_ID_INFORMATION struct{
-VolumeSerialNumber ULONGLONG
-FileId FILE_ID_128
+VolumeSerialNumber ULONGLONG //col:361
+FileId FILE_ID_128 //col:362
 }
 
 
 type FILE_ID_EXTD_DIR_INFORMATION struct{
-NextEntryOffset ULONG
-FileIndex ULONG
-CreationTime LARGE_INTEGER
-LastAccessTime LARGE_INTEGER
-LastWriteTime LARGE_INTEGER
-ChangeTime LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-AllocationSize LARGE_INTEGER
-FileAttributes ULONG
-FileNameLength ULONG
-EaSize ULONG
-ReparsePointTag ULONG
-FileId FILE_ID_128
-FileName[1] WCHAR
+NextEntryOffset uint32 //col:366
+FileIndex uint32 //col:367
+CreationTime LARGE_INTEGER //col:368
+LastAccessTime LARGE_INTEGER //col:369
+LastWriteTime LARGE_INTEGER //col:370
+ChangeTime LARGE_INTEGER //col:371
+EndOfFile LARGE_INTEGER //col:372
+AllocationSize LARGE_INTEGER //col:373
+FileAttributes uint32 //col:374
+FileNameLength uint32 //col:375
+EaSize uint32 //col:376
+ReparsePointTag uint32 //col:377
+FileId FILE_ID_128 //col:378
+FileName[1] WCHAR //col:379
 }
 
 
 type FILE_LINK_ENTRY_FULL_ID_INFORMATION struct{
-NextEntryOffset ULONG
-ParentFileId FILE_ID_128
-FileNameLength ULONG
-FileName[1] WCHAR
+NextEntryOffset uint32 //col:383
+ParentFileId FILE_ID_128 //col:384
+FileNameLength uint32 //col:385
+FileName[1] WCHAR //col:386
 }
 
 
 type FILE_LINKS_FULL_ID_INFORMATION  struct{
-BytesNeeded ULONG
-EntriesReturned ULONG
-Entry FILE_LINK_ENTRY_FULL_ID_INFORMATION
+BytesNeeded uint32 //col:390
+EntriesReturned uint32 //col:391
+Entry FILE_LINK_ENTRY_FULL_ID_INFORMATION //col:392
 }
 
 
 type FILE_ID_EXTD_BOTH_DIR_INFORMATION struct{
-NextEntryOffset ULONG
-FileIndex ULONG
-CreationTime LARGE_INTEGER
-LastAccessTime LARGE_INTEGER
-LastWriteTime LARGE_INTEGER
-ChangeTime LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-AllocationSize LARGE_INTEGER
-FileAttributes ULONG
-FileNameLength ULONG
-EaSize ULONG
-ReparsePointTag ULONG
-FileId FILE_ID_128
-ShortNameLength CCHAR
-ShortName[12] WCHAR
-FileName[1] WCHAR
+NextEntryOffset uint32 //col:396
+FileIndex uint32 //col:397
+CreationTime LARGE_INTEGER //col:398
+LastAccessTime LARGE_INTEGER //col:399
+LastWriteTime LARGE_INTEGER //col:400
+ChangeTime LARGE_INTEGER //col:401
+EndOfFile LARGE_INTEGER //col:402
+AllocationSize LARGE_INTEGER //col:403
+FileAttributes uint32 //col:404
+FileNameLength uint32 //col:405
+EaSize uint32 //col:406
+ReparsePointTag uint32 //col:407
+FileId FILE_ID_128 //col:408
+ShortNameLength CCHAR //col:409
+ShortName[12] WCHAR //col:410
+FileName[1] WCHAR //col:411
 }
 
 
 type FILE_STAT_INFORMATION struct{
-FileId LARGE_INTEGER
-CreationTime LARGE_INTEGER
-LastAccessTime LARGE_INTEGER
-LastWriteTime LARGE_INTEGER
-ChangeTime LARGE_INTEGER
-AllocationSize LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-FileAttributes ULONG
-ReparseTag ULONG
-NumberOfLinks ULONG
-EffectiveAccess ACCESS_MASK
+FileId LARGE_INTEGER //col:415
+CreationTime LARGE_INTEGER //col:416
+LastAccessTime LARGE_INTEGER //col:417
+LastWriteTime LARGE_INTEGER //col:418
+ChangeTime LARGE_INTEGER //col:419
+AllocationSize LARGE_INTEGER //col:420
+EndOfFile LARGE_INTEGER //col:421
+FileAttributes uint32 //col:422
+ReparseTag uint32 //col:423
+NumberOfLinks uint32 //col:424
+EffectiveAccess ACCESS_MASK //col:425
 }
 
 
 type FILE_MEMORY_PARTITION_INFORMATION struct{
-OwnerPartitionHandle HANDLE
-Union union
-Struct struct
-NoCrossPartitionAccess UCHAR
-Spare[3] UCHAR
+OwnerPartitionHandle HANDLE //col:429
+Union union //col:430
+Struct struct //col:432
+NoCrossPartitionAccess uint8 //col:434
+Spare[3] uint8 //col:435
 }
 
 
 type FILE_STAT_LX_INFORMATION struct{
-FileId LARGE_INTEGER
-CreationTime LARGE_INTEGER
-LastAccessTime LARGE_INTEGER
-LastWriteTime LARGE_INTEGER
-ChangeTime LARGE_INTEGER
-AllocationSize LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-FileAttributes ULONG
-ReparseTag ULONG
-NumberOfLinks ULONG
-EffectiveAccess ACCESS_MASK
-LxFlags ULONG
-LxUid ULONG
-LxGid ULONG
-LxMode ULONG
-LxDeviceIdMajor ULONG
-LxDeviceIdMinor ULONG
+FileId LARGE_INTEGER //col:442
+CreationTime LARGE_INTEGER //col:443
+LastAccessTime LARGE_INTEGER //col:444
+LastWriteTime LARGE_INTEGER //col:445
+ChangeTime LARGE_INTEGER //col:446
+AllocationSize LARGE_INTEGER //col:447
+EndOfFile LARGE_INTEGER //col:448
+FileAttributes uint32 //col:449
+ReparseTag uint32 //col:450
+NumberOfLinks uint32 //col:451
+EffectiveAccess ACCESS_MASK //col:452
+LxFlags uint32 //col:453
+LxUid uint32 //col:454
+LxGid uint32 //col:455
+LxMode uint32 //col:456
+LxDeviceIdMajor uint32 //col:457
+LxDeviceIdMinor uint32 //col:458
 }
 
 
 type FILE_CASE_SENSITIVE_INFORMATION struct{
-Flags ULONG
+Flags uint32 //col:462
 }
 
 
 type FILE_KNOWN_FOLDER_INFORMATION struct{
-Type FILE_KNOWN_FOLDER_TYPE
+Type FILE_KNOWN_FOLDER_TYPE //col:466
 }
 
 
 type FILE_DIRECTORY_INFORMATION struct{
-NextEntryOffset ULONG
-FileIndex ULONG
-CreationTime LARGE_INTEGER
-LastAccessTime LARGE_INTEGER
-LastWriteTime LARGE_INTEGER
-ChangeTime LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-AllocationSize LARGE_INTEGER
-FileAttributes ULONG
-FileNameLength ULONG
-FileName[1] WCHAR
+NextEntryOffset uint32 //col:470
+FileIndex uint32 //col:471
+CreationTime LARGE_INTEGER //col:472
+LastAccessTime LARGE_INTEGER //col:473
+LastWriteTime LARGE_INTEGER //col:474
+ChangeTime LARGE_INTEGER //col:475
+EndOfFile LARGE_INTEGER //col:476
+AllocationSize LARGE_INTEGER //col:477
+FileAttributes uint32 //col:478
+FileNameLength uint32 //col:479
+FileName[1] WCHAR //col:480
 }
 
 
 type FILE_FULL_DIR_INFORMATION struct{
-NextEntryOffset ULONG
-FileIndex ULONG
-CreationTime LARGE_INTEGER
-LastAccessTime LARGE_INTEGER
-LastWriteTime LARGE_INTEGER
-ChangeTime LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-AllocationSize LARGE_INTEGER
-FileAttributes ULONG
-FileNameLength ULONG
-EaSize ULONG
-FileName[1] WCHAR
+NextEntryOffset uint32 //col:484
+FileIndex uint32 //col:485
+CreationTime LARGE_INTEGER //col:486
+LastAccessTime LARGE_INTEGER //col:487
+LastWriteTime LARGE_INTEGER //col:488
+ChangeTime LARGE_INTEGER //col:489
+EndOfFile LARGE_INTEGER //col:490
+AllocationSize LARGE_INTEGER //col:491
+FileAttributes uint32 //col:492
+FileNameLength uint32 //col:493
+EaSize uint32 //col:494
+FileName[1] WCHAR //col:495
 }
 
 
 type FILE_ID_FULL_DIR_INFORMATION struct{
-NextEntryOffset ULONG
-FileIndex ULONG
-CreationTime LARGE_INTEGER
-LastAccessTime LARGE_INTEGER
-LastWriteTime LARGE_INTEGER
-ChangeTime LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-AllocationSize LARGE_INTEGER
-FileAttributes ULONG
-FileNameLength ULONG
-EaSize ULONG
-FileId LARGE_INTEGER
-FileName[1] WCHAR
+NextEntryOffset uint32 //col:499
+FileIndex uint32 //col:500
+CreationTime LARGE_INTEGER //col:501
+LastAccessTime LARGE_INTEGER //col:502
+LastWriteTime LARGE_INTEGER //col:503
+ChangeTime LARGE_INTEGER //col:504
+EndOfFile LARGE_INTEGER //col:505
+AllocationSize LARGE_INTEGER //col:506
+FileAttributes uint32 //col:507
+FileNameLength uint32 //col:508
+EaSize uint32 //col:509
+FileId LARGE_INTEGER //col:510
+FileName[1] WCHAR //col:511
 }
 
 
 type FILE_BOTH_DIR_INFORMATION struct{
-NextEntryOffset ULONG
-FileIndex ULONG
-CreationTime LARGE_INTEGER
-LastAccessTime LARGE_INTEGER
-LastWriteTime LARGE_INTEGER
-ChangeTime LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-AllocationSize LARGE_INTEGER
-FileAttributes ULONG
-FileNameLength ULONG
-EaSize ULONG
-ShortNameLength CCHAR
-ShortName[12] WCHAR
-FileName[1] WCHAR
+NextEntryOffset uint32 //col:515
+FileIndex uint32 //col:516
+CreationTime LARGE_INTEGER //col:517
+LastAccessTime LARGE_INTEGER //col:518
+LastWriteTime LARGE_INTEGER //col:519
+ChangeTime LARGE_INTEGER //col:520
+EndOfFile LARGE_INTEGER //col:521
+AllocationSize LARGE_INTEGER //col:522
+FileAttributes uint32 //col:523
+FileNameLength uint32 //col:524
+EaSize uint32 //col:525
+ShortNameLength CCHAR //col:526
+ShortName[12] WCHAR //col:527
+FileName[1] WCHAR //col:528
 }
 
 
 type FILE_ID_BOTH_DIR_INFORMATION struct{
-NextEntryOffset ULONG
-FileIndex ULONG
-CreationTime LARGE_INTEGER
-LastAccessTime LARGE_INTEGER
-LastWriteTime LARGE_INTEGER
-ChangeTime LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-AllocationSize LARGE_INTEGER
-FileAttributes ULONG
-FileNameLength ULONG
-EaSize ULONG
-ShortNameLength CCHAR
-ShortName[12] WCHAR
-FileId LARGE_INTEGER
-FileName[1] WCHAR
+NextEntryOffset uint32 //col:532
+FileIndex uint32 //col:533
+CreationTime LARGE_INTEGER //col:534
+LastAccessTime LARGE_INTEGER //col:535
+LastWriteTime LARGE_INTEGER //col:536
+ChangeTime LARGE_INTEGER //col:537
+EndOfFile LARGE_INTEGER //col:538
+AllocationSize LARGE_INTEGER //col:539
+FileAttributes uint32 //col:540
+FileNameLength uint32 //col:541
+EaSize uint32 //col:542
+ShortNameLength CCHAR //col:543
+ShortName[12] WCHAR //col:544
+FileId LARGE_INTEGER //col:545
+FileName[1] WCHAR //col:546
 }
 
 
 type FILE_NAMES_INFORMATION struct{
-NextEntryOffset ULONG
-FileIndex ULONG
-FileNameLength ULONG
-FileName[1] WCHAR
+NextEntryOffset uint32 //col:550
+FileIndex uint32 //col:551
+FileNameLength uint32 //col:552
+FileName[1] WCHAR //col:553
 }
 
 
 type FILE_ID_GLOBAL_TX_DIR_INFORMATION struct{
-NextEntryOffset ULONG
-FileIndex ULONG
-CreationTime LARGE_INTEGER
-LastAccessTime LARGE_INTEGER
-LastWriteTime LARGE_INTEGER
-ChangeTime LARGE_INTEGER
-EndOfFile LARGE_INTEGER
-AllocationSize LARGE_INTEGER
-FileAttributes ULONG
-FileNameLength ULONG
-FileId LARGE_INTEGER
-LockingTransactionId GUID
-TxInfoFlags ULONG
-FileName[1] WCHAR
+NextEntryOffset uint32 //col:557
+FileIndex uint32 //col:558
+CreationTime LARGE_INTEGER //col:559
+LastAccessTime LARGE_INTEGER //col:560
+LastWriteTime LARGE_INTEGER //col:561
+ChangeTime LARGE_INTEGER //col:562
+EndOfFile LARGE_INTEGER //col:563
+AllocationSize LARGE_INTEGER //col:564
+FileAttributes uint32 //col:565
+FileNameLength uint32 //col:566
+FileId LARGE_INTEGER //col:567
+LockingTransactionId GUID //col:568
+TxInfoFlags uint32 //col:569
+FileName[1] WCHAR //col:570
 }
 
 
 type FILE_OBJECTID_INFORMATION struct{
-FileReference LONGLONG
-ObjectId[16] UCHAR
-Union union
-Struct struct
-BirthVolumeId[16] UCHAR
-BirthObjectId[16] UCHAR
-DomainId[16] UCHAR
+FileReference LONGLONG //col:574
+ObjectId[16] uint8 //col:575
+Union union //col:576
+Struct struct //col:578
+BirthVolumeId[16] uint8 //col:580
+BirthObjectId[16] uint8 //col:581
+DomainId[16] uint8 //col:582
 }
 
 
 type FILE_FULL_EA_INFORMATION struct{
-NextEntryOffset ULONG
-Flags UCHAR
-EaNameLength UCHAR
-EaValueLength USHORT
-EaName[1] CHAR
+NextEntryOffset uint32 //col:589
+Flags uint8 //col:590
+EaNameLength uint8 //col:591
+EaValueLength USHORT //col:592
+EaName[1] int8 //col:593
 }
 
 
 type FILE_GET_EA_INFORMATION struct{
-NextEntryOffset ULONG
-EaNameLength UCHAR
-EaName[1] CHAR
+NextEntryOffset uint32 //col:597
+EaNameLength uint8 //col:598
+EaName[1] int8 //col:599
 }
 
 
 type FILE_GET_QUOTA_INFORMATION struct{
-NextEntryOffset ULONG
-SidLength ULONG
-Sid SID
+NextEntryOffset uint32 //col:603
+SidLength uint32 //col:604
+Sid SID //col:605
 }
 
 
 type FILE_QUOTA_INFORMATION struct{
-NextEntryOffset ULONG
-SidLength ULONG
-ChangeTime LARGE_INTEGER
-QuotaUsed LARGE_INTEGER
-QuotaThreshold LARGE_INTEGER
-QuotaLimit LARGE_INTEGER
-Sid SID
+NextEntryOffset uint32 //col:609
+SidLength uint32 //col:610
+ChangeTime LARGE_INTEGER //col:611
+QuotaUsed LARGE_INTEGER //col:612
+QuotaThreshold LARGE_INTEGER //col:613
+QuotaLimit LARGE_INTEGER //col:614
+Sid SID //col:615
 }
 
 
 type FILE_FS_VOLUME_INFORMATION struct{
-VolumeCreationTime LARGE_INTEGER
-VolumeSerialNumber ULONG
-VolumeLabelLength ULONG
-SupportsObjects bool
-VolumeLabel[1] WCHAR
+VolumeCreationTime LARGE_INTEGER //col:619
+VolumeSerialNumber uint32 //col:620
+VolumeLabelLength uint32 //col:621
+SupportsObjects bool //col:622
+VolumeLabel[1] WCHAR //col:623
 }
 
 
 type FILE_FS_LABEL_INFORMATION struct{
-VolumeLabelLength ULONG
-VolumeLabel[1] WCHAR
+VolumeLabelLength uint32 //col:627
+VolumeLabel[1] WCHAR //col:628
 }
 
 
 type FILE_FS_SIZE_INFORMATION struct{
-TotalAllocationUnits LARGE_INTEGER
-AvailableAllocationUnits LARGE_INTEGER
-SectorsPerAllocationUnit ULONG
-BytesPerSector ULONG
+TotalAllocationUnits LARGE_INTEGER //col:632
+AvailableAllocationUnits LARGE_INTEGER //col:633
+SectorsPerAllocationUnit uint32 //col:634
+BytesPerSector uint32 //col:635
 }
 
 
 type FILE_FS_CONTROL_INFORMATION struct{
-FreeSpaceStartFiltering LARGE_INTEGER
-FreeSpaceThreshold LARGE_INTEGER
-FreeSpaceStopFiltering LARGE_INTEGER
-DefaultQuotaThreshold LARGE_INTEGER
-DefaultQuotaLimit LARGE_INTEGER
-FileSystemControlFlags ULONG
+FreeSpaceStartFiltering LARGE_INTEGER //col:639
+FreeSpaceThreshold LARGE_INTEGER //col:640
+FreeSpaceStopFiltering LARGE_INTEGER //col:641
+DefaultQuotaThreshold LARGE_INTEGER //col:642
+DefaultQuotaLimit LARGE_INTEGER //col:643
+FileSystemControlFlags uint32 //col:644
 }
 
 
 type FILE_FS_FULL_SIZE_INFORMATION struct{
-TotalAllocationUnits LARGE_INTEGER
-CallerAvailableAllocationUnits LARGE_INTEGER
-ActualAvailableAllocationUnits LARGE_INTEGER
-SectorsPerAllocationUnit ULONG
-BytesPerSector ULONG
+TotalAllocationUnits LARGE_INTEGER //col:648
+CallerAvailableAllocationUnits LARGE_INTEGER //col:649
+ActualAvailableAllocationUnits LARGE_INTEGER //col:650
+SectorsPerAllocationUnit uint32 //col:651
+BytesPerSector uint32 //col:652
 }
 
 
 type FILE_FS_OBJECTID_INFORMATION struct{
-ObjectId[16] UCHAR
-ExtendedInfo[48] UCHAR
+ObjectId[16] uint8 //col:656
+ExtendedInfo[48] uint8 //col:657
 }
 
 
 type FILE_FS_DEVICE_INFORMATION struct{
-DeviceType DEVICE_TYPE
-Characteristics ULONG
+DeviceType DEVICE_TYPE //col:661
+Characteristics uint32 //col:662
 }
 
 
 type FILE_FS_ATTRIBUTE_INFORMATION struct{
-FileSystemAttributes ULONG
-MaximumComponentNameLength LONG
-FileSystemNameLength ULONG
-FileSystemName[1] WCHAR
+FileSystemAttributes uint32 //col:666
+MaximumComponentNameLength LONG //col:667
+FileSystemNameLength uint32 //col:668
+FileSystemName[1] WCHAR //col:669
 }
 
 
 type FILE_FS_DRIVER_PATH_INFORMATION struct{
-DriverInPath bool
-DriverNameLength ULONG
-DriverName[1] WCHAR
+DriverInPath bool //col:673
+DriverNameLength uint32 //col:674
+DriverName[1] WCHAR //col:675
 }
 
 
 type FILE_FS_VOLUME_FLAGS_INFORMATION struct{
-Flags ULONG
+Flags uint32 //col:679
 }
 
 
 type FILE_FS_SECTOR_SIZE_INFORMATION struct{
-LogicalBytesPerSector ULONG
-PhysicalBytesPerSectorForAtomicity ULONG
-PhysicalBytesPerSectorForPerformance ULONG
-FileSystemEffectivePhysicalBytesPerSectorForAtomicity ULONG
-Flags ULONG
-ByteOffsetForSectorAlignment ULONG
-ByteOffsetForPartitionAlignment ULONG
+LogicalBytesPerSector uint32 //col:683
+PhysicalBytesPerSectorForAtomicity uint32 //col:684
+PhysicalBytesPerSectorForPerformance uint32 //col:685
+FileSystemEffectivePhysicalBytesPerSectorForAtomicity uint32 //col:686
+Flags uint32 //col:687
+ByteOffsetForSectorAlignment uint32 //col:688
+ByteOffsetForPartitionAlignment uint32 //col:689
 }
 
 
 type FILE_FS_DATA_COPY_INFORMATION struct{
-NumberOfCopies ULONG
+NumberOfCopies uint32 //col:693
 }
 
 
 type FILE_FS_METADATA_SIZE_INFORMATION struct{
-TotalMetadataAllocationUnits LARGE_INTEGER
-SectorsPerAllocationUnit ULONG
-BytesPerSector ULONG
+TotalMetadataAllocationUnits LARGE_INTEGER //col:697
+SectorsPerAllocationUnit uint32 //col:698
+BytesPerSector uint32 //col:699
 }
 
 
 type FILE_FS_FULL_SIZE_INFORMATION_EX struct{
-ActualTotalAllocationUnits ULONGLONG
-ActualAvailableAllocationUnits ULONGLONG
-ActualPoolUnavailableAllocationUnits ULONGLONG
-CallerTotalAllocationUnits ULONGLONG
-CallerAvailableAllocationUnits ULONGLONG
-CallerPoolUnavailableAllocationUnits ULONGLONG
-UsedAllocationUnits ULONGLONG
-TotalReservedAllocationUnits ULONGLONG
-VolumeStorageReserveAllocationUnits ULONGLONG
-AvailableCommittedAllocationUnits ULONGLONG
-PoolAvailableAllocationUnits ULONGLONG
-SectorsPerAllocationUnit ULONG
-BytesPerSector ULONG
+ActualTotalAllocationUnits ULONGLONG //col:703
+ActualAvailableAllocationUnits ULONGLONG //col:704
+ActualPoolUnavailableAllocationUnits ULONGLONG //col:705
+CallerTotalAllocationUnits ULONGLONG //col:706
+CallerAvailableAllocationUnits ULONGLONG //col:707
+CallerPoolUnavailableAllocationUnits ULONGLONG //col:708
+UsedAllocationUnits ULONGLONG //col:709
+TotalReservedAllocationUnits ULONGLONG //col:710
+VolumeStorageReserveAllocationUnits ULONGLONG //col:711
+AvailableCommittedAllocationUnits ULONGLONG //col:712
+PoolAvailableAllocationUnits ULONGLONG //col:713
+SectorsPerAllocationUnit uint32 //col:714
+BytesPerSector uint32 //col:715
 }
 
 
 type IO_COMPLETION_BASIC_INFORMATION struct{
-Depth LONG
+Depth LONG //col:719
 }
 
 
 type REPARSE_DATA_BUFFER struct{
-ReparseTag ULONG
-ReparseDataLength USHORT
-Reserved USHORT
-FieldSizeBytes(ReparseDataLength) _Field_size_bytes_(ReparseDataLength)
-Union union
-Struct struct
-SubstituteNameOffset USHORT
-SubstituteNameLength USHORT
-PrintNameOffset USHORT
-PrintNameLength USHORT
-Flags ULONG
-PathBuffer[1] WCHAR
+ReparseTag uint32 //col:723
+ReparseDataLength USHORT //col:724
+Reserved USHORT //col:725
+FieldSizeBytes(ReparseDataLength) _Field_size_bytes_(ReparseDataLength) //col:726
+Union union //col:727
+Struct struct //col:729
+SubstituteNameOffset USHORT //col:731
+SubstituteNameLength USHORT //col:732
+PrintNameOffset USHORT //col:733
+PrintNameLength USHORT //col:734
+Flags uint32 //col:735
+PathBuffer[1] WCHAR //col:736
 }
 
 
 type FILE_PIPE_ASSIGN_EVENT_BUFFER struct{
-EventHandle HANDLE
-KeyValue ULONG
+EventHandle HANDLE //col:754
+KeyValue uint32 //col:755
 }
 
 
 type FILE_PIPE_PEEK_BUFFER struct{
-NamedPipeState ULONG
-ReadDataAvailable ULONG
-NumberOfMessages ULONG
-MessageLength ULONG
-Data[1] CHAR
+NamedPipeState uint32 //col:759
+ReadDataAvailable uint32 //col:760
+NumberOfMessages uint32 //col:761
+MessageLength uint32 //col:762
+Data[1] int8 //col:763
 }
 
 
 type FILE_PIPE_EVENT_BUFFER struct{
-NamedPipeState ULONG
-EntryType ULONG
-ByteCount ULONG
-KeyValue ULONG
-NumberRequests ULONG
+NamedPipeState uint32 //col:767
+EntryType uint32 //col:768
+ByteCount uint32 //col:769
+KeyValue uint32 //col:770
+NumberRequests uint32 //col:771
 }
 
 
 type FILE_PIPE_WAIT_FOR_BUFFER struct{
-Timeout LARGE_INTEGER
-NameLength ULONG
-TimeoutSpecified bool
-Name[1] WCHAR
+Timeout LARGE_INTEGER //col:775
+NameLength uint32 //col:776
+TimeoutSpecified bool //col:777
+Name[1] WCHAR //col:778
 }
 
 
 type FILE_PIPE_CLIENT_PROCESS_BUFFER struct{
-#if!Defined(BuildWow6432) #if !defined(BUILD_WOW6432)
-ClientSession PVOID
-ClientProcess PVOID
-#else #else
-ClientSession ULONGLONG
-ClientProcess ULONGLONG
-#endif #endif
+#if!Defined(BuildWow6432) #if !defined(BUILD_WOW6432) //col:782
+ClientSession PVOID //col:783
+ClientProcess PVOID //col:784
+#else #else //col:785
+ClientSession ULONGLONG //col:786
+ClientProcess ULONGLONG //col:787
+#endif #endif //col:788
 }
 
 
 type FILE_PIPE_CLIENT_PROCESS_BUFFER_V2  struct{
-ClientSession ULONGLONG
-#if!Defined(BuildWow6432) #if !defined(BUILD_WOW6432)
-ClientProcess PVOID
-#else #else
-ClientProcess ULONGLONG
-#endif #endif
+ClientSession ULONGLONG //col:792
+#if!Defined(BuildWow6432) #if !defined(BUILD_WOW6432) //col:793
+ClientProcess PVOID //col:794
+#else #else //col:795
+ClientProcess ULONGLONG //col:796
+#endif #endif //col:797
 }
 
 
 type FILE_PIPE_CLIENT_PROCESS_BUFFER_EX struct{
-#if!Defined(BuildWow6432) #if !defined(BUILD_WOW6432)
-ClientSession PVOID
-ClientProcess PVOID
-#else #else
-ClientSession ULONGLONG
-ClientProcess ULONGLONG
-#endif #endif
-ClientComputerNameLength USHORT
-ClientComputerBuffer[FILE_PIPE_COMPUTER_NAME_LENGTH WCHAR
+#if!Defined(BuildWow6432) #if !defined(BUILD_WOW6432) //col:801
+ClientSession PVOID //col:802
+ClientProcess PVOID //col:803
+#else #else //col:804
+ClientSession ULONGLONG //col:805
+ClientProcess ULONGLONG //col:806
+#endif #endif //col:807
+ClientComputerNameLength USHORT //col:808
+ClientComputerBuffer[FILE_PIPE_COMPUTER_NAME_LENGTH WCHAR //col:809
 }
 
 
 type FILE_PIPE_SILO_ARRIVAL_INPUT struct{
-JobHandle HANDLE
+JobHandle HANDLE //col:813
 }
 
 
 type FILE_PIPE_CREATE_SYMLINK_INPUT struct{
-NameOffset USHORT
-NameLength USHORT
-SubstituteNameOffset USHORT
-SubstituteNameLength USHORT
-Flags ULONG
+NameOffset USHORT //col:817
+NameLength USHORT //col:818
+SubstituteNameOffset USHORT //col:819
+SubstituteNameLength USHORT //col:820
+Flags uint32 //col:821
 }
 
 
 type FILE_PIPE_DELETE_SYMLINK_INPUT struct{
-NameOffset USHORT
-NameLength USHORT
+NameOffset USHORT //col:825
+NameLength USHORT //col:826
 }
 
 
 type FILE_MAILSLOT_PEEK_BUFFER struct{
-ReadDataAvailable ULONG
-NumberOfMessages ULONG
-MessageLength ULONG
+ReadDataAvailable uint32 //col:830
+NumberOfMessages uint32 //col:831
+MessageLength uint32 //col:832
 }
 
 
 type MOUNTMGR_CREATE_POINT_INPUT struct{
-SymbolicLinkNameOffset USHORT
-SymbolicLinkNameLength USHORT
-DeviceNameOffset USHORT
-DeviceNameLength USHORT
+SymbolicLinkNameOffset USHORT //col:836
+SymbolicLinkNameLength USHORT //col:837
+DeviceNameOffset USHORT //col:838
+DeviceNameLength USHORT //col:839
 }
 
 
 type MOUNTMGR_MOUNT_POINT struct{
-SymbolicLinkNameOffset ULONG
-SymbolicLinkNameLength USHORT
-Reserved1 USHORT
-UniqueIdOffset ULONG
-UniqueIdLength USHORT
-Reserved2 USHORT
-DeviceNameOffset ULONG
-DeviceNameLength USHORT
-Reserved3 USHORT
+SymbolicLinkNameOffset uint32 //col:843
+SymbolicLinkNameLength USHORT //col:844
+Reserved1 USHORT //col:845
+UniqueIdOffset uint32 //col:846
+UniqueIdLength USHORT //col:847
+Reserved2 USHORT //col:848
+DeviceNameOffset uint32 //col:849
+DeviceNameLength USHORT //col:850
+Reserved3 USHORT //col:851
 }
 
 
 type MOUNTMGR_MOUNT_POINTS struct{
-Size ULONG
-NumberOfMountPoints ULONG
-MountPoints[1] MOUNTMGR_MOUNT_POINT
+Size uint32 //col:855
+NumberOfMountPoints uint32 //col:856
+MountPoints[1] MOUNTMGR_MOUNT_POINT //col:857
 }
 
 
 type MOUNTMGR_DRIVE_LETTER_TARGET struct{
-DeviceNameLength USHORT
-DeviceName[1] WCHAR
+DeviceNameLength USHORT //col:861
+DeviceName[1] WCHAR //col:862
 }
 
 
 type MOUNTMGR_DRIVE_LETTER_INFORMATION struct{
-DriveLetterWasAssigned bool
-CurrentDriveLetter UCHAR
+DriveLetterWasAssigned bool //col:866
+CurrentDriveLetter uint8 //col:867
 }
 
 
 type MOUNTMGR_VOLUME_MOUNT_POINT struct{
-SourceVolumeNameOffset USHORT
-SourceVolumeNameLength USHORT
-TargetVolumeNameOffset USHORT
-TargetVolumeNameLength USHORT
+SourceVolumeNameOffset USHORT //col:871
+SourceVolumeNameLength USHORT //col:872
+TargetVolumeNameOffset USHORT //col:873
+TargetVolumeNameLength USHORT //col:874
 }
 
 
 type MOUNTMGR_CHANGE_NOTIFY_INFO struct{
-EpicNumber ULONG
+EpicNumber uint32 //col:878
 }
 
 
 type MOUNTMGR_TARGET_NAME struct{
-DeviceNameLength USHORT
-DeviceName[1] WCHAR
+DeviceNameLength USHORT //col:882
+DeviceName[1] WCHAR //col:883
 }
 
 
 type MOUNTDEV_NAME struct{
-NameLength USHORT
-Name[1] WCHAR
+NameLength USHORT //col:887
+Name[1] WCHAR //col:888
 }
 
 
 type MOUNTMGR_VOLUME_PATHS struct{
-MultiSzLength ULONG
-MultiSz[1] WCHAR
+MultiSzLength uint32 //col:892
+MultiSz[1] WCHAR //col:893
 }
 
 
@@ -1406,9 +1406,10 @@ Ntioapi interface{
 typedef_VOID_()(ok bool)//col:21
 NtCreateFile()(ok bool)//col:576
 }
+ntioapi struct{}
 )
 
-func NewNtioapi() { return & ntioapi{} }
+func NewNtioapi()Ntioapi{ return & ntioapi{} }
 
 func (n *ntioapi)typedef_VOID_()(ok bool){//col:21
 /*typedef VOID (NTAPI *PIO_APC_ROUTINE)(

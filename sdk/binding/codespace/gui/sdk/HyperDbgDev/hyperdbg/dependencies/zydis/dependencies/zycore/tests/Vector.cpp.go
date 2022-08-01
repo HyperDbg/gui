@@ -21,9 +21,10 @@ TEST_P()(ok bool)//col:316
 TEST_P()(ok bool)//col:336
 INSTANTIATE_TEST_SUITE_P()(ok bool)//col:345
 }
+vector struct{}
 )
 
-func NewVector() { return & vector{} }
+func NewVector()Vector{ return & vector{} }
 
 func (v *vector)____void_SetUp()(ok bool){//col:20
 /*    void SetUp() override

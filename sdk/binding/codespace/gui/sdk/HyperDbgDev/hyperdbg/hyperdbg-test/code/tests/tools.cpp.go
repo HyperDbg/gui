@@ -7,9 +7,10 @@ Uint64ToString()(ok bool)//col:6
 StringReplace()(ok bool)//col:14
 ConvertToString()(ok bool)//col:19
 }
+tools struct{}
 )
 
-func NewTools() { return & tools{} }
+func NewTools()Tools{ return & tools{} }
 
 func (t *tools)Uint64ToString()(ok bool){//col:6
 /*Uint64ToString(UINT64 value)

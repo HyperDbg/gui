@@ -7,30 +7,30 @@ RAND_MAX = 0x7fff //col:2
 )
 
 type VM_EXIT_TRANSPARENCY struct{
-PreviousTimeStampCounter uint64
-ThreadId HANDLE
-RevealedTimeStampCounterByRdtsc uint64
-CpuidAfterRdtscDetected bool
+PreviousTimeStampCounter uint64 //col:3
+ThreadId HANDLE //col:4
+RevealedTimeStampCounterByRdtsc uint64 //col:5
+CpuidAfterRdtscDetected bool //col:6
 }
 
 
 type TRANSPARENCY_MEASUREMENTS struct{
-CpuidAverage uint64
-CpuidStandardDeviation uint64
-CpuidMedian uint64
-RdtscAverage uint64
-RdtscStandardDeviation uint64
-RdtscMedian uint64
-ProcessList *list.List
+CpuidAverage uint64 //col:10
+CpuidStandardDeviation uint64 //col:11
+CpuidMedian uint64 //col:12
+RdtscAverage uint64 //col:13
+RdtscStandardDeviation uint64 //col:14
+RdtscMedian uint64 //col:15
+ProcessList *list.List //col:16
 }
 
 
 type TRANSPARENCY_PROCESS struct{
-ProcessId uint32
-ProcessName PVOID
-BufferAddress PVOID
-TrueIfProcessIdAndFalseIfProcessName bool
-OtherProcesses *list.List
+ProcessId uint32 //col:20
+ProcessName PVOID //col:21
+BufferAddress PVOID //col:22
+TrueIfProcessIdAndFalseIfProcessName bool //col:23
+OtherProcesses *list.List //col:24
 }
 
 

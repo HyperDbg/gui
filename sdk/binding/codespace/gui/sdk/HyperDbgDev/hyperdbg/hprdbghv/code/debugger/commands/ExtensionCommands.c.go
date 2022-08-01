@@ -28,9 +28,10 @@ ExtensionCommandUnsetExternalInterruptExitingOnlyOnClearingInterruptEventsAllCor
 ExtensionCommandIoBitmapChangeAllCores()(ok bool)//col:219
 ExtensionCommandIoBitmapResetAllCores()(ok bool)//col:223
 }
+extensionCommands struct{}
 )
 
-func NewExtensionCommands() { return & extensionCommands{} }
+func NewExtensionCommands()ExtensionCommands{ return & extensionCommands{} }
 
 func (e *extensionCommands)ExtensionCommandVa2paAndPa2va()(ok bool){//col:71
 /*ExtensionCommandVa2paAndPa2va(PDEBUGGER_VA2PA_AND_PA2VA_COMMANDS AddressDetails, BOOLEAN OperateOnVmxRoot)

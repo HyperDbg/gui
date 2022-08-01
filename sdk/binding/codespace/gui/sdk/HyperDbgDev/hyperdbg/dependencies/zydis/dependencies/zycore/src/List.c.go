@@ -35,9 +35,10 @@ ZyanStatus_ZyanListResize()(ok bool)//col:370
 ZyanStatus_ZyanListResizeEx()(ok bool)//col:448
 ZyanStatus_ZyanListGetSize()(ok bool)//col:457
 }
+list struct{}
 )
 
-func NewList() { return & list{} }
+func NewList()List{ return & list{} }
 
 func (l *list)static_ZyanStatus_ZyanListAllocateNode()(ok bool){//col:28
 /*static ZyanStatus ZyanListAllocateNode(ZyanList* list, ZyanListNode** node)

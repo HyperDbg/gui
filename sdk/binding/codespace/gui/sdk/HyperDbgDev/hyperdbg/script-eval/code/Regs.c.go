@@ -6,9 +6,10 @@ Regs interface{
 GetRegValue()(ok bool)//col:595
 SetRegValue()(ok bool)//col:1169
 }
+regs struct{}
 )
 
-func NewRegs() { return & regs{} }
+func NewRegs()Regs{ return & regs{} }
 
 func (r *regs)GetRegValue()(ok bool){//col:595
 /*GetRegValue(PGUEST_REGS GuestRegs, REGS_ENUM RegId)

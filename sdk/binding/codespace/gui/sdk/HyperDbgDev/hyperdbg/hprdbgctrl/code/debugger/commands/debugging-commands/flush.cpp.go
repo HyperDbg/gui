@@ -7,9 +7,10 @@ CommandFlushHelp()(ok bool)//col:6
 CommandFlushRequestFlush()(ok bool)//col:46
 CommandFlush()(ok bool)//col:56
 }
+flush struct{}
 )
 
-func NewFlush() { return & flush{} }
+func NewFlush()Flush{ return & flush{} }
 
 func (f *flush)CommandFlushHelp()(ok bool){//col:6
 /*CommandFlushHelp()

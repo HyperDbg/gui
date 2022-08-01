@@ -12,9 +12,10 @@ GetCommandAttributes()(ok bool)//col:264
 InitializeDebugger()(ok bool)//col:277
 InitializeCommandsDictionary()(ok bool)//col:447
 }
+interpreter struct{}
 )
 
-func NewInterpreter() { return & interpreter{} }
+func NewInterpreter()Interpreter{ return & interpreter{} }
 
 func (i *interpreter)HyperDbgInterpreter()(ok bool){//col:116
 /*HyperDbgInterpreter(char * Command)

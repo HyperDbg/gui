@@ -15,9 +15,10 @@ HyperDbgUninstallVmmDriver()(ok bool)//col:283
 HyperDbgLoadVmm()(ok bool)//col:351
 HyperDbgUnloadVmm()(ok bool)//col:399
 }
+hprdbgctrl struct{}
 )
 
-func NewHprdbgctrl() { return & hprdbgctrl{} }
+func NewHprdbgctrl()Hprdbgctrl{ return & hprdbgctrl{} }
 
 func (h *hprdbgctrl)HyperdbgSetTextMessageCallback()(ok bool){//col:4
 /*HyperdbgSetTextMessageCallback(Callback handler)

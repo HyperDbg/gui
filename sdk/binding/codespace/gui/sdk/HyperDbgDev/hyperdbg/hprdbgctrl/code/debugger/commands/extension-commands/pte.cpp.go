@@ -7,9 +7,10 @@ CommandPteHelp()(ok bool)//col:10
 CommandPteShowResults()(ok bool)//col:33
 CommandPte()(ok bool)//col:140
 }
+pte struct{}
 )
 
-func NewPte() { return & pte{} }
+func NewPte()Pte{ return & pte{} }
 
 func (p *pte)CommandPteHelp()(ok bool){//col:10
 /*CommandPteHelp()

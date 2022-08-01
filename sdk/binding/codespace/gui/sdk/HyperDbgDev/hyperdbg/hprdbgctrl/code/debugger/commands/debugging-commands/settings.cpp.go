@@ -13,9 +13,10 @@ CommandSettingsAutoUpause()(ok bool)//col:250
 CommandSettingsSyntax()(ok bool)//col:306
 CommandSettings()(ok bool)//col:358
 }
+settings struct{}
 )
 
-func NewSettings() { return & settings{} }
+func NewSettings()Settings{ return & settings{} }
 
 func (s *settings)CommandSettingsHelp()(ok bool){//col:20
 /*CommandSettingsHelp()

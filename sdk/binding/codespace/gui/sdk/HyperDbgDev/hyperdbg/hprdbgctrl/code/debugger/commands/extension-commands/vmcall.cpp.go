@@ -6,9 +6,10 @@ Vmcall interface{
 CommandVmcallHelp()(ok bool)//col:12
 CommandVmcall()(ok bool)//col:64
 }
+vmcall struct{}
 )
 
-func NewVmcall() { return & vmcall{} }
+func NewVmcall()Vmcall{ return & vmcall{} }
 
 func (v *vmcall)CommandVmcallHelp()(ok bool){//col:12
 /*CommandVmcallHelp()

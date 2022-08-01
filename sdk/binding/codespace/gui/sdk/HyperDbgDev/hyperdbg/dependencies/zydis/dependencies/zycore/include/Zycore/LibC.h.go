@@ -71,9 +71,10 @@ ZYAN_INLINE_charPtr_ZYAN_STRSTR()(ok bool)//col:217
 ZYAN_INLINE_charPtr_ZYAN_STRTOK()(ok bool)//col:237
 ZYAN_INLINE_ZyanUSize_ZYAN_STRXFRM()(ok bool)//col:246
 }
+libC struct{}
 )
 
-func NewLibC() { return & libC{} }
+func NewLibC()LibC{ return & libC{} }
 
 func (l *libC)ZYAN_INLINE_voidPtr_ZYAN_MEMCHR()(ok bool){//col:15
 /*ZYAN_INLINE void* ZYAN_MEMCHR(const void* str, int c, ZyanUSize n)

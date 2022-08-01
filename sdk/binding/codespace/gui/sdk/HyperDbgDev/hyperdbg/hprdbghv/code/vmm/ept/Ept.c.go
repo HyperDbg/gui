@@ -17,9 +17,10 @@ EptHandleMonitorTrapFlag()(ok bool)//col:283
 EptHandleMisconfiguration()(ok bool)//col:288
 EptSetPML1AndInvalidateTLB()(ok bool)//col:306
 }
+ept struct{}
 )
 
-func NewEpt() { return & ept{} }
+func NewEpt()Ept{ return & ept{} }
 
 func (e *ept)EptCheckFeatures()(ok bool){//col:31
 /*EptCheckFeatures()

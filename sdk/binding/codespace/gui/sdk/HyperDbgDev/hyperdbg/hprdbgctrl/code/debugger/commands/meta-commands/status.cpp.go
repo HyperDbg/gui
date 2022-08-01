@@ -6,9 +6,10 @@ Status interface{
 CommandStatusHelp()(ok bool)//col:9
 CommandStatus()(ok bool)//col:46
 }
+status struct{}
 )
 
-func NewStatus() { return & status{} }
+func NewStatus()Status{ return & status{} }
 
 func (s *status)CommandStatusHelp()(ok bool){//col:9
 /*CommandStatusHelp()

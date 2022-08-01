@@ -239,35 +239,35 @@ const(
 
 
 type typedef struct ZydisDecodedOperand_ struct{
-id ZyanU8
-type ZydisOperandType
-visibility ZydisOperandVisibility
-actions ZydisOperandActions
-encoding ZydisOperandEncoding
-size ZyanU16
-element_type ZydisElementType
-element_size ZydisElementSize
-element_count ZyanU16
-StructZydisDecodedOperandReg struct ZydisDecodedOperandReg_
-value ZydisRegister
+id ZyanU8 //col:3
+type ZydisOperandType //col:4
+visibility ZydisOperandVisibility //col:5
+actions ZydisOperandActions //col:6
+encoding ZydisOperandEncoding //col:7
+size ZyanU16 //col:8
+element_type ZydisElementType //col:9
+element_size ZydisElementSize //col:10
+element_count ZyanU16 //col:11
+StructZydisDecodedOperandReg struct ZydisDecodedOperandReg_ //col:12
+value ZydisRegister //col:14
 }
 
 
 type typedef struct ZydisDecodedInstruction_ struct{
-machine_mode ZydisMachineMode
-mnemonic ZydisMnemonic
-length ZyanU8
-encoding ZydisInstructionEncoding
-opcode_map ZydisOpcodeMap
-opcode ZyanU8
-stack_width ZyanU8
-operand_width ZyanU8
-address_width ZyanU8
-operand_count ZyanU8
-operands[ZYDIS_MAX_OPERAND_COUNT] ZydisDecodedOperand
-attributes ZydisInstructionAttributes
-StructZydisDecodedInstructionAccessedFlags struct ZydisDecodedInstructionAccessedFlags_
-action ZydisCPUFlagAction
+machine_mode ZydisMachineMode //col:47
+mnemonic ZydisMnemonic //col:48
+length ZyanU8 //col:49
+encoding ZydisInstructionEncoding //col:50
+opcode_map ZydisOpcodeMap //col:51
+opcode ZyanU8 //col:52
+stack_width ZyanU8 //col:53
+operand_width ZyanU8 //col:54
+address_width ZyanU8 //col:55
+operand_count ZyanU8 //col:56
+operands[ZYDIS_MAX_OPERAND_COUNT] ZydisDecodedOperand //col:57
+attributes ZydisInstructionAttributes //col:58
+StructZydisDecodedInstructionAccessedFlags struct ZydisDecodedInstructionAccessedFlags_ //col:59
+action ZydisCPUFlagAction //col:61
 }
 
 

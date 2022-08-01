@@ -6,9 +6,10 @@ K interface{
 CommandKHelp()(ok bool)//col:18
 CommandK()(ok bool)//col:121
 }
+k struct{}
 )
 
-func NewK() { return & k{} }
+func NewK()K{ return & k{} }
 
 func (k *k)CommandKHelp()(ok bool){//col:18
 /*CommandKHelp()

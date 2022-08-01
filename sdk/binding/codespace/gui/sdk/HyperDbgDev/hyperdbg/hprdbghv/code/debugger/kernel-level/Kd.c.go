@@ -41,9 +41,10 @@ KdManageSystemHaltOnVmxRoot()(ok bool)//col:1139
 KdBroadcastHaltOnAllCores()(ok bool)//col:1143
 KdHaltSystem()(ok bool)//col:1148
 }
+kd struct{}
 )
 
-func NewKd() { return & kd{} }
+func NewKd()Kd{ return & kd{} }
 
 func (k *kd)KdInitializeKernelDebugger()(ok bool){//col:9
 /*KdInitializeKernelDebugger()

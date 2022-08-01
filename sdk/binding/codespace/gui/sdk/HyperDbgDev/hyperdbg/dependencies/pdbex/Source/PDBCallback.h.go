@@ -26,9 +26,10 @@ PdbCallback interface{
 		HRESULT_STDMETHODCALLTYPE_RestrictDBGAccess()(ok bool)//col:1100
 		HRESULT_STDMETHODCALLTYPE_RestrictSystemRootAccess()(ok bool)//col:1107
 }
+pdbCallback struct{}
 )
 
-func NewPdbCallback() { return & pdbCallback{} }
+func NewPdbCallback()PdbCallback{ return & pdbCallback{} }
 
 func (p *pdbCallback)		ULONG_STDMETHODCALLTYPE_AddRef()(ok bool){//col:87
 /*		ULONG STDMETHODCALLTYPE AddRef() override

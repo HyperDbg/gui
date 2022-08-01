@@ -6,9 +6,10 @@ Exception interface{
 CommandExceptionHelp()(ok bool)//col:15
 CommandException()(ok bool)//col:99
 }
+exception struct{}
 )
 
-func NewException() { return & exception{} }
+func NewException()Exception{ return & exception{} }
 
 func (e *exception)CommandExceptionHelp()(ok bool){//col:15
 /*CommandExceptionHelp()

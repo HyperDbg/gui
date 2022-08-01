@@ -17,9 +17,10 @@ ZyanStatus_ZydisStringAppendHexU64()(ok bool)//col:189
 ZyanStatus_ZydisStringAppendDecU()(ok bool)//col:211
 ZyanStatus_ZydisStringAppendHexU()(ok bool)//col:236
 }
+string struct{}
 )
 
-func NewString() { return & string{} }
+func NewString()String{ return & string{} }
 
 func (s *string)ZyanStatus_ZydisStringAppendDecU32()(ok bool){//col:36
 /*ZyanStatus ZydisStringAppendDecU32(ZyanString* string, ZyanU32 value, ZyanU8 padding_length)

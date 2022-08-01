@@ -9,9 +9,10 @@ static_ZyanStatus_TestStatic()(ok bool)//col:16
 static_ZyanStatus_TestAllocator()(ok bool)//col:20
 int_main()(ok bool)//col:36
 }
+string struct{}
 )
 
-func NewString() { return & string{} }
+func NewString()String{ return & string{} }
 
 func (s *string)static_ZyanStatus_PerformBasicTests()(ok bool){//col:6
 /*static ZyanStatus PerformBasicTests(ZyanString* string)

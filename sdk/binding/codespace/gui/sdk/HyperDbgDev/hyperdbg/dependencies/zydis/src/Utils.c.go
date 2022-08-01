@@ -10,9 +10,10 @@ ZyanStatus_ZydisGetAccessedFlagsRead()(ok bool)//col:142
 ZyanStatus_ZydisGetAccessedFlagsWritten()(ok bool)//col:158
 ZyanStatus_ZydisGetInstructionSegments()(ok bool)//col:286
 }
+utils struct{}
 )
 
-func NewUtils() { return & utils{} }
+func NewUtils()Utils{ return & utils{} }
 
 func (u *utils)ZyanStatus_ZydisCalcAbsoluteAddress()(ok bool){//col:75
 /*ZyanStatus ZydisCalcAbsoluteAddress(const ZydisDecodedInstruction* instruction,

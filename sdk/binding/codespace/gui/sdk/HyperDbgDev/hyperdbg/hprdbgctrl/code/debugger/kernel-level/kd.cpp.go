@@ -52,9 +52,10 @@ KdSendUsermodePrints()(ok bool)//col:1227
 KdSendSymbolDetailPacket()(ok bool)//col:1253
 KdUninitializeConnection()(ok bool)//col:1298
 }
+kd struct{}
 )
 
-func NewKd() { return & kd{} }
+func NewKd()Kd{ return & kd{} }
 
 func (k *kd)KdCheckForTheEndOfTheBuffer()(ok bool){//col:22
 /*KdCheckForTheEndOfTheBuffer(PUINT32 CurrentLoopIndex, BYTE * Buffer)

@@ -6,9 +6,10 @@ ScriptEngine interface{
 ScriptEngineWrapperGetInstructionPointer()(ok bool)//col:15
 ScriptEngineWrapperGetAddressOfReservedBuffer()(ok bool)//col:19
 }
+scriptEngine struct{}
 )
 
-func NewScriptEngine() { return & scriptEngine{} }
+func NewScriptEngine()ScriptEngine{ return & scriptEngine{} }
 
 func (s *scriptEngine)ScriptEngineWrapperGetInstructionPointer()(ok bool){//col:15
 /*ScriptEngineWrapperGetInstructionPointer()

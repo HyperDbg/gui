@@ -17,9 +17,10 @@ DebuggerCommandSendMessage()(ok bool)//col:550
 DebuggerCommandSendGeneralBufferToDebugger()(ok bool)//col:559
 DebuggerCommandReservePreallocatedPools()(ok bool)//col:584
 }
+debuggerCommands struct{}
 )
 
-func NewDebuggerCommands() { return & debuggerCommands{} }
+func NewDebuggerCommands()DebuggerCommands{ return & debuggerCommands{} }
 
 func (d *debuggerCommands)DebuggerCommandReadMemory()(ok bool){//col:19
 /*DebuggerCommandReadMemory(PDEBUGGER_READ_MEMORY ReadMemRequest, PVOID UserBuffer, PSIZE_T ReturnSize)

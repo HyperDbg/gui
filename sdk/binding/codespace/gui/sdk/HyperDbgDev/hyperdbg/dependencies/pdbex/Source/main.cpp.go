@@ -6,9 +6,10 @@ Main interface{
 int_main_impl()(ok bool)//col:5
 int_main()(ok bool)//col:9
 }
+main struct{}
 )
 
-func NewMain() { return & main{} }
+func NewMain()Main{ return & main{} }
 
 func (m *main)int_main_impl()(ok bool){//col:5
 /*int main_impl(int argc, char** argv)

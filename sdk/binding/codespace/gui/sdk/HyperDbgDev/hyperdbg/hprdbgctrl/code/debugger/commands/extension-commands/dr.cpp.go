@@ -6,9 +6,10 @@ Dr interface{
 CommandDrHelp()(ok bool)//col:12
 CommandDr()(ok bool)//col:64
 }
+dr struct{}
 )
 
-func NewDr() { return & dr{} }
+func NewDr()Dr{ return & dr{} }
 
 func (d *dr)CommandDrHelp()(ok bool){//col:12
 /*CommandDrHelp()

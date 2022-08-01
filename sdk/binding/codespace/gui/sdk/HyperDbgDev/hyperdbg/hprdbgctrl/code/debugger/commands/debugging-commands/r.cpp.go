@@ -7,9 +7,10 @@ CommandRHelp()(ok bool)//col:12
 ShowAllRegisters()(ok bool)//col:18
 CommandR()(ok bool)//col:128
 }
+r struct{}
 )
 
-func NewR() { return & r{} }
+func NewR()R{ return & r{} }
 
 func (r *r)CommandRHelp()(ok bool){//col:12
 /*CommandRHelp()

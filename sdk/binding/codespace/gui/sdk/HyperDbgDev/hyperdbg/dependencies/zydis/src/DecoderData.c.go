@@ -12,9 +12,10 @@ DecoderData interface{
 const_ZydisDecoderTreeNodePtr_ZydisDecoderTreeGetChildNode()(ok bool)//col:94
 void_ZydisGetInstructionEncodingInfo()(ok bool)//col:102
 }
+decoderData struct{}
 )
 
-func NewDecoderData() { return & decoderData{} }
+func NewDecoderData()DecoderData{ return & decoderData{} }
 
 func (d *decoderData)const_ZydisDecoderTreeNodePtr_ZydisDecoderTreeGetChildNode()(ok bool){//col:94
 /*const ZydisDecoderTreeNode* ZydisDecoderTreeGetChildNode(const ZydisDecoderTreeNode* parent,

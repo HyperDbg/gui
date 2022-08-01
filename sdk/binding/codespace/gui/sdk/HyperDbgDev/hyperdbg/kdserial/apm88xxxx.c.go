@@ -10,9 +10,10 @@ Apm88xxxx interface{
 Uart16550InitializePortCommon()(ok bool)//col:40
 Apm88xxxxSetBaud()(ok bool)//col:50
 }
+apm88xxxx struct{}
 )
 
-func NewApm88xxxx() { return & apm88xxxx{} }
+func NewApm88xxxx()Apm88xxxx{ return & apm88xxxx{} }
 
 func (a *apm88xxxx)Uart16550InitializePortCommon()(ok bool){//col:40
 /*Uart16550InitializePortCommon(

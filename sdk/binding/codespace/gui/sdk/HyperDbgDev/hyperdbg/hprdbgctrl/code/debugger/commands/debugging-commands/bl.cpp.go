@@ -6,9 +6,10 @@ Bl interface{
 CommandBlHelp()(ok bool)//col:5
 CommandBl()(ok bool)//col:26
 }
+bl struct{}
 )
 
-func NewBl() { return & bl{} }
+func NewBl()Bl{ return & bl{} }
 
 func (b *bl)CommandBlHelp()(ok bool){//col:5
 /*CommandBlHelp()

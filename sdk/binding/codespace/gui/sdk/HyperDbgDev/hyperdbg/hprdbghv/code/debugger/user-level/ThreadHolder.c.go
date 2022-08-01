@@ -15,9 +15,10 @@ ThreadHolderFreeHoldingStructures()(ok bool)//col:230
 ThreadHolderQueryCountOfActiveDebuggingThreadsAndProcesses()(ok bool)//col:259
 ThreadHolderQueryDetailsOfActiveDebuggingThreadsAndProcesses()(ok bool)//col:306
 }
+threadHolder struct{}
 )
 
-func NewThreadHolder() { return & threadHolder{} }
+func NewThreadHolder()ThreadHolder{ return & threadHolder{} }
 
 func (t *threadHolder)ThreadHolderAllocateThreadHoldingBuffers()(ok bool){//col:5
 /*ThreadHolderAllocateThreadHoldingBuffers()

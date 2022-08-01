@@ -138,9 +138,10 @@ MSM8x60GetByte()(ok bool)//col:193
 MSM8x60PutByte()(ok bool)//col:224
 MSM8x60RxReady()(ok bool)//col:239
 }
+msm8x60 struct{}
 )
 
-func NewMsm8x60() { return & msm8x60{} }
+func NewMsm8x60()Msm8x60{ return & msm8x60{} }
 
 func (m *msm8x60)MSM8x60SetBaud()(ok bool){//col:42
 /*MSM8x60SetBaud(

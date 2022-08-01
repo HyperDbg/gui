@@ -6,9 +6,10 @@ CrossVmexits interface{
 VmxHandleXsetbv()(ok bool)//col:4
 VmxHandleVmxPreemptionTimerVmexit()(ok bool)//col:10
 }
+crossVmexits struct{}
 )
 
-func NewCrossVmexits() { return & crossVmexits{} }
+func NewCrossVmexits()CrossVmexits{ return & crossVmexits{} }
 
 func (c *crossVmexits)VmxHandleXsetbv()(ok bool){//col:4
 /*VmxHandleXsetbv(UINT32 Reg, UINT64 Value)

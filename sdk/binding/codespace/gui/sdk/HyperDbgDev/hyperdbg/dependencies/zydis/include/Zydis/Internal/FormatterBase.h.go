@@ -12,9 +12,9 @@ ZYDIS_BUFFER_APPEND_CASE(buffer, name, letter_case) = if ((buffer)->is_token_lis
 )
 
 type typedef struct ZydisPredefinedToken_ struct{
-size ZyanU8
-next ZyanU8
-data[] ZyanU8
+size ZyanU8 //col:3
+next ZyanU8 //col:4
+data[] ZyanU8 //col:5
 }
 
 
@@ -23,9 +23,10 @@ type (
 FormatterBase interface{
 ZYAN_INLINE_ZyanStatus_ZydisFormatterBufferAppendPredefined()(ok bool)//col:21
 }
+formatterBase struct{}
 )
 
-func NewFormatterBase() { return & formatterBase{} }
+func NewFormatterBase()FormatterBase{ return & formatterBase{} }
 
 func (f *formatterBase)ZYAN_INLINE_ZyanStatus_ZydisFormatterBufferAppendPredefined()(ok bool){//col:21
 /*ZYAN_INLINE ZyanStatus ZydisFormatterBufferAppendPredefined(ZydisFormatterBuffer* buffer,

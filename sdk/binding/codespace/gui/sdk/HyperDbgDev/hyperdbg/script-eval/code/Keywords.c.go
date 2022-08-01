@@ -11,9 +11,10 @@ ScriptEngineKeywordDd()(ok bool)//col:90
 ScriptEngineKeywordDw()(ok bool)//col:108
 ScriptEngineKeywordDq()(ok bool)//col:126
 }
+keywords struct{}
 )
 
-func NewKeywords() { return & keywords{} }
+func NewKeywords()Keywords{ return & keywords{} }
 
 func (k *keywords)ScriptEngineKeywordPoi()(ok bool){//col:18
 /*ScriptEngineKeywordPoi(PUINT64 Address, BOOL * HasError)

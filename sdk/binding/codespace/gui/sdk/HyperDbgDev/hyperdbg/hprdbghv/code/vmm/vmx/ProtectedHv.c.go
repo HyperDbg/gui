@@ -24,9 +24,10 @@ ProtectedHvDisableMovControlRegsExitingForDisablingCrCommands()(ok bool)//col:27
 ProtectedHvSetMov2Cr3Exiting()(ok bool)//col:275
 ProtectedHvSetMov2CrExiting()(ok bool)//col:279
 }
+protectedHv struct{}
 )
 
-func NewProtectedHv() { return & protectedHv{} }
+func NewProtectedHv()ProtectedHv{ return & protectedHv{} }
 
 func (p *protectedHv)ProtectedHvChangeExceptionBitmapWithIntegrityCheck()(ok bool){//col:35
 /*ProtectedHvChangeExceptionBitmapWithIntegrityCheck(UINT32 CurrentMask, PROTECTED_HV_RESOURCES_PASSING_OVERS PassOver)

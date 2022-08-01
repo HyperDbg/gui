@@ -25,9 +25,10 @@ static_void_TestPerformance()(ok bool)//col:190
 static_void_GenerateTestData()(ok bool)//col:276
 int_main()(ok bool)//col:385
 }
+zydisPerfTest struct{}
 )
 
-func NewZydisPerfTest() { return & zydisPerfTest{} }
+func NewZydisPerfTest()ZydisPerfTest{ return & zydisPerfTest{} }
 
 func (z *zydisPerfTest)static_void_StartCounter()(ok bool){//col:13
 /*static void StartCounter(void)

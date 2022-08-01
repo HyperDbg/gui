@@ -15,9 +15,10 @@ BreakpointAddNew()(ok bool)//col:252
 BreakpointListAllBreakpoint()(ok bool)//col:286
 BreakpointListOrModify()(ok bool)//col:338
 }
+breakpointCommands struct{}
 )
 
-func NewBreakpointCommands() { return & breakpointCommands{} }
+func NewBreakpointCommands()BreakpointCommands{ return & breakpointCommands{} }
 
 func (b *breakpointCommands)BreakpointCheckAndHandleEptHookBreakpoints()(ok bool){//col:31
 /*BreakpointCheckAndHandleEptHookBreakpoints(UINT32 CurrentProcessorIndex, UINT64 GuestRip, PGUEST_REGS GuestRegs)

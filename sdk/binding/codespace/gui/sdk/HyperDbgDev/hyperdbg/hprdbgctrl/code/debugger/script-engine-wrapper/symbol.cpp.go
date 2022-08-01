@@ -17,9 +17,10 @@ SymbolBuildSymbolTable()(ok bool)//col:433
 SymbolBuildAndUpdateSymbolTable()(ok bool)//col:457
 SymbolReloadSymbolTableInDebuggerMode()(ok bool)//col:470
 }
+symbol struct{}
 )
 
-func NewSymbol() { return & symbol{} }
+func NewSymbol()Symbol{ return & symbol{} }
 
 func (s *symbol)SymbolInitialReload()(ok bool){//col:5
 /*SymbolInitialReload()

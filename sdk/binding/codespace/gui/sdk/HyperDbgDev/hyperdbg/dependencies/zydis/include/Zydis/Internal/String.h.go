@@ -24,9 +24,10 @@ ZYAN_INLINE_ZyanStatus_ZydisStringAppendShortCase()(ok bool)//col:141
 ZyanStatus_ZydisStringAppendDecU()(ok bool)//col:166
 ZyanStatus_ZydisStringAppendHexU()(ok bool)//col:191
 }
+string struct{}
 )
 
-func NewString() { return & string{} }
+func NewString()String{ return & string{} }
 
 func (s *string)ZYAN_INLINE_ZyanStatus_ZydisStringAppend()(ok bool){//col:15
 /*ZYAN_INLINE ZyanStatus ZydisStringAppend(ZyanString* destination, const ZyanStringView* source)

@@ -6,9 +6,10 @@ E interface{
 CommandEditMemoryHelp()(ok bool)//col:21
 CommandEditMemory()(ok bool)//col:264
 }
+e struct{}
 )
 
-func NewE() { return & e{} }
+func NewE()E{ return & e{} }
 
 func (e *e)CommandEditMemoryHelp()(ok bool){//col:21
 /*CommandEditMemoryHelp()

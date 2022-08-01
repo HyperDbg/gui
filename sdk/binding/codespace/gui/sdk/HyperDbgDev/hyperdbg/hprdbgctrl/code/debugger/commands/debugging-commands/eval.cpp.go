@@ -7,9 +7,10 @@ CommandEvalHelp()(ok bool)//col:8
 CommandEvalCheckTestcase()(ok bool)//col:95
 CommandEval()(ok bool)//col:145
 }
+eval struct{}
 )
 
-func NewEval() { return & eval{} }
+func NewEval()Eval{ return & eval{} }
 
 func (e *eval)CommandEvalHelp()(ok bool){//col:8
 /*CommandEvalHelp()

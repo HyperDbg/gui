@@ -10,9 +10,10 @@ FormatterIntel interface{
 ZyanStatus_ZydisFormatterIntelFormatInstruction()(ok bool)//col:88
 ________________ZYAN_DEFINE_STRING_VIEW()(ok bool)//col:160
 }
+formatterIntel struct{}
 )
 
-func NewFormatterIntel() { return & formatterIntel{} }
+func NewFormatterIntel()FormatterIntel{ return & formatterIntel{} }
 
 func (f *formatterIntel)ZyanStatus_ZydisFormatterIntelFormatInstruction()(ok bool){//col:88
 /*ZyanStatus ZydisFormatterIntelFormatInstruction(const ZydisFormatter* formatter,

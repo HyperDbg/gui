@@ -6,9 +6,10 @@ X interface{
 CommandXHelp()(ok bool)//col:9
 CommandX()(ok bool)//col:22
 }
+x struct{}
 )
 
-func NewX() { return & x{} }
+func NewX()X{ return & x{} }
 
 func (x *x)CommandXHelp()(ok bool){//col:9
 /*CommandXHelp()

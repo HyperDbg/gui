@@ -10,9 +10,10 @@ EventInjectUndefinedOpcode()(ok bool)//col:32
 EventInjectDebugBreakpoint()(ok bool)//col:36
 EventInjectPageFault()(ok bool)//col:47
 }
+events struct{}
 )
 
-func NewEvents() { return & events{} }
+func NewEvents()Events{ return & events{} }
 
 func (e *events)EventInjectInterruption()(ok bool){//col:13
 /*EventInjectInterruption(INTERRUPT_TYPE InterruptionType, EXCEPTION_VECTORS Vector, BOOLEAN DeliverErrorCode, UINT32 ErrorCode)

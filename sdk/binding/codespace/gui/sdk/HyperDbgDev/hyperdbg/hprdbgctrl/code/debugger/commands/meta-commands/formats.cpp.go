@@ -7,9 +7,10 @@ CommandFormatsHelp()(ok bool)//col:13
 CommandFormatsShowResults()(ok bool)//col:46
 CommandFormats()(ok bool)//col:69
 }
+formats struct{}
 )
 
-func NewFormats() { return & formats{} }
+func NewFormats()Formats{ return & formats{} }
 
 func (f *formats)CommandFormatsHelp()(ok bool){//col:13
 /*CommandFormatsHelp()

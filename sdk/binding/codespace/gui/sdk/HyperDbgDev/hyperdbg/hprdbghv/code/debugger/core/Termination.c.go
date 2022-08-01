@@ -21,9 +21,10 @@ TerminateDebugRegistersEvent()(ok bool)//col:334
 TerminateSyscallHookEferEvent()(ok bool)//col:364
 TerminateSysretHookEferEvent()(ok bool)//col:394
 }
+termination struct{}
 )
 
-func NewTermination() { return & termination{} }
+func NewTermination()Termination{ return & termination{} }
 
 func (t *termination)TerminateExternalInterruptEvent()(ok bool){//col:29
 /*TerminateExternalInterruptEvent(PDEBUGGER_EVENT Event)

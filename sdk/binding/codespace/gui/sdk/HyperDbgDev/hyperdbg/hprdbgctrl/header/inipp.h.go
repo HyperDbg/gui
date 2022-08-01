@@ -92,9 +92,10 @@ ____________for_()(ok bool)//col:5457
 ________________result.emplace_back()(ok bool)//col:5470
 ____bool_replace_symbols()(ok bool)//col:5480
 }
+inipp struct{}
 )
 
-func NewInipp() { return & inipp{} }
+func NewInipp()Inipp{ return & inipp{} }
 
 func (i *inipp)ltrim()(ok bool){//col:5
 /*ltrim(std::basic_string<CharT> & s, const std::locale & loc)

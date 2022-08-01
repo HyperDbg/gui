@@ -93,9 +93,9 @@ DEBUGGER_COMMAND_PE_ATTRIBUTES = NULL //col:132
 )
 
 type COMMAND_DETAIL struct{
-CommandFunction CommandFuncType
-CommandHelpFunction CommandHelpFuncType
-CommandAttrib uint64
+CommandFunction CommandFuncType //col:3
+CommandHelpFunction CommandHelpFuncType //col:4
+CommandAttrib uint64 //col:5
 }
 
 

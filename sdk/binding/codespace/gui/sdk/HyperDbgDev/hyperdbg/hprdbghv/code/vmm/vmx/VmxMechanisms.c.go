@@ -9,9 +9,10 @@ VmxMechanismCreateImmediateVmexitBySelfIpi()(ok bool)//col:14
 VmxMechanismCreateImmediateVmexit()(ok bool)//col:20
 VmxMechanismHandleImmediateVmexit()(ok bool)//col:25
 }
+vmxMechanisms struct{}
 )
 
-func NewVmxMechanisms() { return & vmxMechanisms{} }
+func NewVmxMechanisms()VmxMechanisms{ return & vmxMechanisms{} }
 
 func (v *vmxMechanisms)VmxMechanismCreateImmediateVmexitByVmxPreemptionTimer()(ok bool){//col:5
 /*VmxMechanismCreateImmediateVmexitByVmxPreemptionTimer()

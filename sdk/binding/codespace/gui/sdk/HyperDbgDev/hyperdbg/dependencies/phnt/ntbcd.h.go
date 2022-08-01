@@ -474,77 +474,77 @@ const(
 
 
 type BCD_OBJECT_DESCRIPTION struct{
-Version ULONG
-Type ULONG
+Version uint32 //col:3
+Type uint32 //col:4
 }
 
 
 type BCD_OBJECT struct{
-Identifer GUID
-Description PBCD_OBJECT_DESCRIPTION
+Identifer GUID //col:8
+Description PBCD_OBJECT_DESCRIPTION //col:9
 }
 
 
 type BCD_ELEMENT_DEVICE_QUALIFIED_PARTITION struct{
-PartitionStyle ULONG
-Reserved ULONG
-Struct struct
-Union union
-DiskSignature ULONG
-PartitionOffset ULONG64
+PartitionStyle uint32 //col:13
+Reserved uint32 //col:14
+Struct struct //col:15
+Union union //col:17
+DiskSignature uint32 //col:19
+PartitionOffset ULONG64 //col:20
 }
 
 
 type BCD_ELEMENT_DEVICE struct{
-DeviceType ULONG
-AdditionalOptions GUID
-Struct struct
-Union union
-ParentOffset ULONG
-Path[ANYSIZE_ARRAY] WCHAR
+DeviceType uint32 //col:31
+AdditionalOptions GUID //col:32
+Struct struct //col:33
+Union union //col:35
+ParentOffset uint32 //col:37
+Path[ANYSIZE_ARRAY] WCHAR //col:38
 }
 
 
 type BCD_ELEMENT_STRING struct{
-Value[ANYSIZE_ARRAY] WCHAR
+Value[ANYSIZE_ARRAY] WCHAR //col:64
 }
 
 
 type BCD_ELEMENT_OBJECT struct{
-Object GUID
+Object GUID //col:68
 }
 
 
 type BCD_ELEMENT_OBJECT_LIST struct{
-ObjectList[ANYSIZE_ARRAY] GUID
+ObjectList[ANYSIZE_ARRAY] GUID //col:72
 }
 
 
 type BCD_ELEMENT_INTEGER struct{
-Value ULONG64
+Value ULONG64 //col:76
 }
 
 
 type BCD_ELEMENT_INTEGER_LIST struct{
-Value[ANYSIZE_ARRAY] ULONG64
+Value[ANYSIZE_ARRAY] ULONG64 //col:80
 }
 
 
 type BCD_ELEMENT_BOOLEAN struct{
-Value bool
+Value bool //col:84
 }
 
 
 type typedef struct BCD_ELEMENT_DESCRIPTION struct{
-Version ULONG
-Type ULONG
-DataSize ULONG
+Version uint32 //col:88
+Type uint32 //col:89
+DataSize uint32 //col:90
 }
 
 
 type BCD_ELEMENT struct{
-Description PBCD_ELEMENT_DESCRIPTION
-Data PVOID
+Description PBCD_ELEMENT_DESCRIPTION //col:94
+Data PVOID //col:95
 }
 
 
@@ -601,9 +601,10 @@ BcdEnumerateElementTypes()(ok bool)//col:6482
 BcdEnumerateElementTypes()(ok bool)//col:6591
 BcdEnumerateElementTypes()(ok bool)//col:6692
 }
+ntbcd struct{}
 )
 
-func NewNtbcd() { return & ntbcd{} }
+func NewNtbcd()Ntbcd{ return & ntbcd{} }
 
 func (n *ntbcd)typedef_VOID_()(ok bool){//col:152
 /*typedef VOID (NTAPI* BCD_MESSAGE_CALLBACK)(

@@ -6,9 +6,10 @@ I interface{
 CommandIHelp()(ok bool)//col:17
 CommandI()(ok bool)//col:73
 }
+i struct{}
 )
 
-func NewI() { return & i{} }
+func NewI()I{ return & i{} }
 
 func (i *i)CommandIHelp()(ok bool){//col:17
 /*CommandIHelp()

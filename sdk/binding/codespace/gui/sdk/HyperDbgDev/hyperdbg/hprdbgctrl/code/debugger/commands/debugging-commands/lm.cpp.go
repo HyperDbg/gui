@@ -8,9 +8,10 @@ CommandLmShowUserModeModule()(ok bool)//col:124
 CommandLmShowKernelModeModule()(ok bool)//col:194
 CommandLm()(ok bool)//col:309
 }
+lm struct{}
 )
 
-func NewLm() { return & lm{} }
+func NewLm()Lm{ return & lm{} }
 
 func (l *lm)CommandLmHelp()(ok bool){//col:13
 /*CommandLmHelp()

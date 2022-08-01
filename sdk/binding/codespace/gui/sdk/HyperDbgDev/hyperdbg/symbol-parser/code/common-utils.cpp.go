@@ -8,9 +8,10 @@ IsDirExists()(ok bool)//col:14
 CreateDirectoryRecursive()(ok bool)//col:26
 Split()(ok bool)//col:44
 }
+commonUtils struct{}
 )
 
-func NewCommonUtils() { return & commonUtils{} }
+func NewCommonUtils()CommonUtils{ return & commonUtils{} }
 
 func (c *commonUtils)IsFileExists()(ok bool){//col:5
 /*IsFileExists(const std::string & FileName)

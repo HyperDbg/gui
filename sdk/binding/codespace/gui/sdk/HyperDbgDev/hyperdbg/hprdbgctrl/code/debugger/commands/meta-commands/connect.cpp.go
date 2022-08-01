@@ -6,9 +6,10 @@ Connect interface{
 CommandConnectHelp()(ok bool)//col:10
 CommandConnect()(ok bool)//col:77
 }
+connect struct{}
 )
 
-func NewConnect() { return & connect{} }
+func NewConnect()Connect{ return & connect{} }
 
 func (c *connect)CommandConnectHelp()(ok bool){//col:10
 /*CommandConnectHelp()

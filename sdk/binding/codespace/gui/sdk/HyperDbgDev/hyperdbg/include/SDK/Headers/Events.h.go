@@ -51,11 +51,11 @@ const(
 
 
 type DEBUGGER_MODIFY_EVENTS struct{
-Tag uint64
-KernelStatus uint64
-DebuggerModifyEventsType DEBUGGER_MODIFY_EVENTS_TYPE
-TypeOfAction byte
-IsEnabled bool
+Tag uint64 //col:3
+KernelStatus uint64 //col:4
+DebuggerModifyEventsType DEBUGGER_MODIFY_EVENTS_TYPE //col:5
+TypeOfAction byte //col:6
+IsEnabled bool //col:7
 }
 
 

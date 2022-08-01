@@ -39,9 +39,10 @@ CheckCanonicalVirtualAddress()(ok bool)//col:498
 CheckIfAddressIsValidUsingTsx()(ok bool)//col:515
 CheckMemoryAccessSafety()(ok bool)//col:598
 }
+common struct{}
 )
 
-func NewCommon() { return & common{} }
+func NewCommon()Common{ return & common{} }
 
 func (c *common)SeparateTo64BitValue()(ok bool){//col:9
 /*SeparateTo64BitValue(UINT64 Value)

@@ -5,9 +5,10 @@ type (
 Nvidia interface{
 Uart16550InitializePortCommon()(ok bool)//col:43
 }
+nvidia struct{}
 )
 
-func NewNvidia() { return & nvidia{} }
+func NewNvidia()Nvidia{ return & nvidia{} }
 
 func (n *nvidia)Uart16550InitializePortCommon()(ok bool){//col:43
 /*Uart16550InitializePortCommon(

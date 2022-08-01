@@ -131,26 +131,26 @@ const(
 
 
 type VMX_SEGMENT_SELECTOR struct{
-Selector UINT16
-Attributes VMX_SEGMENT_ACCESS_RIGHTS
-Limit uint32
-Base uint64
+Selector uint16 //col:3
+Attributes VMX_SEGMENT_ACCESS_RIGHTS //col:4
+Limit uint32 //col:5
+Base uint64 //col:6
 }
 
 
 type CPUID struct{
-eax int
-ebx int
-ecx int
-edx int
+eax int //col:10
+ebx int //col:11
+ecx int //col:12
+edx int //col:13
 }
 
 
 type NT_KPROCESS struct{
-Header DISPATCHER_HEADER
-ProfileListHead *list.List
-DirectoryTableBase ULONG_PTR
-Data[1] UCHAR
+Header DISPATCHER_HEADER //col:17
+ProfileListHead *list.List //col:18
+DirectoryTableBase ULONG_PTR //col:19
+Data[1] uint8 //col:20
 }
 
 
@@ -163,9 +163,10 @@ typedef_void_()(ok bool)//col:461
 typedef_void_()(ok bool)//col:676
 typedef_void_()(ok bool)//col:889
 }
+common struct{}
 )
 
-func NewCommon() { return & common{} }
+func NewCommon()Common{ return & common{} }
 
 func (c *common)SpinlockTryLock()(ok bool){//col:25
 /*SpinlockTryLock(volatile LONG * Lock);

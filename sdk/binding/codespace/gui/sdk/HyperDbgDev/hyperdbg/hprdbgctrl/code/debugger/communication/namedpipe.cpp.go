@@ -16,9 +16,10 @@ NamedPipeClientClosePipe()(ok bool)//col:165
 NamedPipeServerExample()(ok bool)//col:202
 NamedPipeClientExample()(ok bool)//col:229
 }
+namedpipe struct{}
 )
 
-func NewNamedpipe() { return & namedpipe{} }
+func NewNamedpipe()Namedpipe{ return & namedpipe{} }
 
 func (n *namedpipe)NamedPipeServerCreatePipe()(ok bool){//col:21
 /*NamedPipeServerCreatePipe(LPCSTR PipeName, UINT32 OutputBufferSize, UINT32 InputBufferSize)

@@ -7,9 +7,10 @@ CommandGHelp()(ok bool)//col:5
 CommandGRequest()(ok bool)//col:32
 CommandG()(ok bool)//col:42
 }
+g struct{}
 )
 
-func NewG() { return & g{} }
+func NewG()G{ return & g{} }
 
 func (g *g)CommandGHelp()(ok bool){//col:5
 /*CommandGHelp()

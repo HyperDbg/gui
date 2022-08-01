@@ -8,9 +8,10 @@ SpinlockLock()(ok bool)//col:23
 SpinlockLockWithCustomWait()(ok bool)//col:42
 SpinlockUnlock()(ok bool)//col:46
 }
+spinlock struct{}
 )
 
-func NewSpinlock() { return & spinlock{} }
+func NewSpinlock()Spinlock{ return & spinlock{} }
 
 func (s *spinlock)SpinlockTryLock()(ok bool){//col:4
 /*SpinlockTryLock(volatile LONG * Lock)

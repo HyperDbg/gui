@@ -28,9 +28,10 @@ Sam5250GetByte()(ok bool)//col:64
 Sam5250PutByte()(ok bool)//col:88
 Sam5250RxReady()(ok bool)//col:103
 }
+sam5250 struct{}
 )
 
-func NewSam5250() { return & sam5250{} }
+func NewSam5250()Sam5250{ return & sam5250{} }
 
 func (s *sam5250)Sam5250SetBaud()(ok bool){//col:27
 /*Sam5250SetBaud(

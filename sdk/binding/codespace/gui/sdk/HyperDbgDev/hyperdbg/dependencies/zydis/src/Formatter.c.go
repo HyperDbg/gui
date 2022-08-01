@@ -17,9 +17,10 @@ ZyanStatus_ZydisFormatterTokenizeInstructionEx()(ok bool)//col:443
 ZyanStatus_ZydisFormatterTokenizeOperand()(ok bool)//col:450
 ZyanStatus_ZydisFormatterTokenizeOperandEx()(ok bool)//col:501
 }
+formatter struct{}
 )
 
-func NewFormatter() { return & formatter{} }
+func NewFormatter()Formatter{ return & formatter{} }
 
 func (f *formatter)void_ZydisFormatterBufferInit()(ok bool){//col:15
 /*void ZydisFormatterBufferInit(ZydisFormatterBuffer* buffer, char* user_buffer,

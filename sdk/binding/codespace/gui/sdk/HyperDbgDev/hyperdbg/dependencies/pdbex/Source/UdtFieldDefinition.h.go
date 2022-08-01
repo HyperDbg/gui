@@ -26,9 +26,10 @@ UdtFieldDefinition interface{
 			m_Settings_=_static_cast<SettingsPtr>()(ok bool)//col:1268
 		GetSettings()(ok bool)//col:1279
 }
+udtFieldDefinition struct{}
 )
 
-func NewUdtFieldDefinition() { return & udtFieldDefinition{} }
+func NewUdtFieldDefinition()UdtFieldDefinition{ return & udtFieldDefinition{} }
 
 func (u *udtFieldDefinition)		VisitBaseType()(ok bool){//col:102
 /*		VisitBaseType(

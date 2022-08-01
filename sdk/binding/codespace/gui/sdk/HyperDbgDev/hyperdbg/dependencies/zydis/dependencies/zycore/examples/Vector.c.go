@@ -2,9 +2,9 @@ package examples
 //binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\dependencies\zycore\examples\Vector.c.back
 
 type typedef struct TestStruct_ struct{
-u32 ZyanU32
-u64 ZyanU64
-f float
+u32 ZyanU32 //col:3
+u64 ZyanU64 //col:4
+f float //col:5
 }
 
 
@@ -23,9 +23,10 @@ static_ZyanStatus_AllocatorDeallocate()(ok bool)//col:151
 static_ZyanStatus_TestAllocator()(ok bool)//col:179
 int_main()(ok bool)//col:197
 }
+vector struct{}
 )
 
-func NewVector() { return & vector{} }
+func NewVector()Vector{ return & vector{} }
 
 func (v *vector)static_void_InitTestdata()(ok bool){//col:7
 /*static void InitTestdata(TestStruct* data, ZyanU32 n)

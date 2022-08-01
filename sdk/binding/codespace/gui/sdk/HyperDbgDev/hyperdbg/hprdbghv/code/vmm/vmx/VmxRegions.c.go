@@ -9,9 +9,10 @@ VmxAllocateVmmStack()(ok bool)//col:82
 VmxAllocateMsrBitmap()(ok bool)//col:97
 VmxAllocateIoBitmaps()(ok bool)//col:122
 }
+vmxRegions struct{}
 )
 
-func NewVmxRegions() { return & vmxRegions{} }
+func NewVmxRegions()VmxRegions{ return & vmxRegions{} }
 
 func (v *vmxRegions)VmxAllocateVmxonRegion()(ok bool){//col:38
 /*VmxAllocateVmxonRegion(VIRTUAL_MACHINE_STATE * CurrentGuestState)

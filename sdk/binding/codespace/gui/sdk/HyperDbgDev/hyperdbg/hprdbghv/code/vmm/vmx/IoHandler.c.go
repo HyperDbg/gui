@@ -9,9 +9,10 @@ IoHandleSetIoBitmap()(ok bool)//col:140
 IoHandlePerformIoBitmapChange()(ok bool)//col:154
 IoHandlePerformIoBitmapReset()(ok bool)//col:161
 }
+ioHandler struct{}
 )
 
-func NewIoHandler() { return & ioHandler{} }
+func NewIoHandler()IoHandler{ return & ioHandler{} }
 
 func (i *ioHandler)IoHandleIoVmExits()(ok bool){//col:109
 /*IoHandleIoVmExits(PGUEST_REGS GuestRegs, VMX_EXIT_QUALIFICATION_IO_INSTRUCTION IoQualification, RFLAGS Flags)

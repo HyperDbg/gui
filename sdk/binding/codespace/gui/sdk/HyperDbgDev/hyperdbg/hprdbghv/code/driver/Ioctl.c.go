@@ -5,9 +5,10 @@ type (
 Ioctl interface{
 DrvDispatchIoControl()(ok bool)//col:761
 }
+ioctl struct{}
 )
 
-func NewIoctl() { return & ioctl{} }
+func NewIoctl()Ioctl{ return & ioctl{} }
 
 func (i *ioctl)DrvDispatchIoControl()(ok bool){//col:761
 /*DrvDispatchIoControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)

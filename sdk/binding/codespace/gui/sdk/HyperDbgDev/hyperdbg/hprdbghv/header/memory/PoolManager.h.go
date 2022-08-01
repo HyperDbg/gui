@@ -18,20 +18,20 @@ const(
 
 
 type POOL_TABLE struct{
-Address uint64
-Size SIZE_T
-Intention POOL_ALLOCATION_INTENTION
-PoolsList *list.List
-IsBusy bool
-ShouldBeFreed bool
-AlreadyFreed bool
+Address uint64 //col:3
+Size SIZE_T //col:4
+Intention POOL_ALLOCATION_INTENTION //col:5
+PoolsList *list.List //col:6
+IsBusy bool //col:7
+ShouldBeFreed bool //col:8
+AlreadyFreed bool //col:9
 }
 
 
 type REQUEST_NEW_ALLOCATION struct{
-Size SIZE_T
-Count uint32
-Intention POOL_ALLOCATION_INTENTION
+Size SIZE_T //col:13
+Count uint32 //col:14
+Intention POOL_ALLOCATION_INTENTION //col:15
 }
 
 

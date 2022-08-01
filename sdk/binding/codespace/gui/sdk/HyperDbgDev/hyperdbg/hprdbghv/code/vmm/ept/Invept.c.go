@@ -7,9 +7,10 @@ EptInvept()(ok bool)//col:9
 EptInveptSingleContext()(ok bool)//col:16
 EptInveptAllContexts()(ok bool)//col:20
 }
+invept struct{}
 )
 
-func NewInvept() { return & invept{} }
+func NewInvept()Invept{ return & invept{} }
 
 func (i *invept)EptInvept()(ok bool){//col:9
 /*EptInvept(_In_ UINT32 Type, _In_ INVEPT_DESCRIPTOR * Descriptor)

@@ -6,9 +6,10 @@ Process interface{
 CommandProcessHelp()(ok bool)//col:20
 CommandProcess()(ok bool)//col:158
 }
+process struct{}
 )
 
-func NewProcess() { return & process{} }
+func NewProcess()Process{ return & process{} }
 
 func (p *process)CommandProcessHelp()(ok bool){//col:20
 /*CommandProcessHelp()

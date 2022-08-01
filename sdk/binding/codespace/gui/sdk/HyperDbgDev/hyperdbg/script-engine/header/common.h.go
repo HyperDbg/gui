@@ -29,17 +29,17 @@ const(
 
 
 type TOKEN struct{
-Type TOKEN_TYPE
-* char
-int unsigned
-int unsigned
+Type TOKEN_TYPE //col:3
+* int8 //col:4
+int unsigned //col:5
+int unsigned //col:6
 }
 
 
 type TOKEN_LIST struct{
-* PTOKEN
-int unsigned
-int unsigned
+* PTOKEN //col:10
+int unsigned //col:11
+int unsigned //col:12
 }
 
 

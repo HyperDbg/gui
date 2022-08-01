@@ -6,9 +6,10 @@ Interrupt interface{
 CommandInterruptHelp()(ok bool)//col:12
 CommandInterrupt()(ok bool)//col:105
 }
+interrupt struct{}
 )
 
-func NewInterrupt() { return & interrupt{} }
+func NewInterrupt()Interrupt{ return & interrupt{} }
 
 func (i *interrupt)CommandInterruptHelp()(ok bool){//col:12
 /*CommandInterruptHelp()

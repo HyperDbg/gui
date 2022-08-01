@@ -719,9 +719,9 @@ UART_DM_WRITE_REG(addr, offset, val) = UartHardwareAccess.WriteRegister32((ULONG
 )
 
 type FIFO_TX_BLOCK struct{
-UCHAR __declspec(align(32))
-AvailableBytes ULONG
-PtrToFifoBuffer PUCHAR
+UCHAR __declspec(align(32)) //col:3
+AvailableBytes uint32 //col:4
+PtrToFifoBuffer PUCHAR //col:5
 }
 
 
@@ -735,9 +735,10 @@ SDM845GetByte()(ok bool)//col:199
 SDM845PutByte()(ok bool)//col:226
 SDM845RxReady()(ok bool)//col:267
 }
+sdm845 struct{}
 )
 
-func NewSdm845() { return & sdm845{} }
+func NewSdm845()Sdm845{ return & sdm845{} }
 
 func (s *sdm845)SDM845SetBaud()(ok bool){//col:52
 /*SDM845SetBaud(

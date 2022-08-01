@@ -45,9 +45,10 @@ GetHandleFromProcess()(ok bool)//col:473
 UndocumentedNtOpenProcess()(ok bool)//col:513
 KillProcess()(ok bool)//col:562
 }
+common struct{}
 )
 
-func NewCommon() { return & common{} }
+func NewCommon()Common{ return & common{} }
 
 func (c *common)MathPower()(ok bool){//col:19
 /*MathPower(int Base, int Exp)

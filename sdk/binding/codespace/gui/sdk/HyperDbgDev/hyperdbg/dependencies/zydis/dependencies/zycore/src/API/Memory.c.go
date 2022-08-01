@@ -8,9 +8,10 @@ ZyanU32_ZyanMemoryGetSystemAllocationGranularity()(ok bool)//col:20
 ZyanStatus_ZyanMemoryVirtualProtect()(ok bool)//col:37
 ZyanStatus_ZyanMemoryVirtualFree()(ok bool)//col:53
 }
+memory struct{}
 )
 
-func NewMemory() { return & memory{} }
+func NewMemory()Memory{ return & memory{} }
 
 func (m *memory)ZyanU32_ZyanMemoryGetSystemPageSize()(ok bool){//col:10
 /*ZyanU32 ZyanMemoryGetSystemPageSize()

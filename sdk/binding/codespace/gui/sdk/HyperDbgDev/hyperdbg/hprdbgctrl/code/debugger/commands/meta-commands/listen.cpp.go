@@ -6,9 +6,10 @@ Listen interface{
 CommandListenHelp()(ok bool)//col:12
 CommandListen()(ok bool)//col:58
 }
+listen struct{}
 )
 
-func NewListen() { return & listen{} }
+func NewListen()Listen{ return & listen{} }
 
 func (l *listen)CommandListenHelp()(ok bool){//col:12
 /*CommandListenHelp()

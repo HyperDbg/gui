@@ -6,9 +6,10 @@ Logclose interface{
 CommandLogcloseHelp()(ok bool)//col:5
 CommandLogclose()(ok bool)//col:31
 }
+logclose struct{}
 )
 
-func NewLogclose() { return & logclose{} }
+func NewLogclose()Logclose{ return & logclose{} }
 
 func (l *logclose)CommandLogcloseHelp()(ok bool){//col:5
 /*CommandLogcloseHelp()

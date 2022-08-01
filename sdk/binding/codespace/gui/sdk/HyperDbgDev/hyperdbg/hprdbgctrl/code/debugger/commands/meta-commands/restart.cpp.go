@@ -6,9 +6,10 @@ Restart interface{
 CommandRestartHelp()(ok bool)//col:7
 CommandRestart()(ok bool)//col:37
 }
+restart struct{}
 )
 
-func NewRestart() { return & restart{} }
+func NewRestart()Restart{ return & restart{} }
 
 func (r *restart)CommandRestartHelp()(ok bool){//col:7
 /*CommandRestartHelp()

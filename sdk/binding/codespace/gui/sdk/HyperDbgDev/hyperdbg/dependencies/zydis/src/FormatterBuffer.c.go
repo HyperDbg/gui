@@ -11,9 +11,10 @@ ZyanStatus_ZydisFormatterBufferAppend()(ok bool)//col:84
 ZyanStatus_ZydisFormatterBufferRemember()(ok bool)//col:99
 ZyanStatus_ZydisFormatterBufferRestore()(ok bool)//col:120
 }
+formatterBuffer struct{}
 )
 
-func NewFormatterBuffer() { return & formatterBuffer{} }
+func NewFormatterBuffer()FormatterBuffer{ return & formatterBuffer{} }
 
 func (f *formatterBuffer)ZyanStatus_ZydisFormatterTokenGetValue()(ok bool){//col:11
 /*ZyanStatus ZydisFormatterTokenGetValue(const ZydisFormatterToken* token,

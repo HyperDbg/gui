@@ -6,9 +6,10 @@ Epthook2 interface{
 CommandEptHook2Help()(ok bool)//col:14
 CommandEptHook2()(ok bool)//col:107
 }
+epthook2 struct{}
 )
 
-func NewEpthook2() { return & epthook2{} }
+func NewEpthook2()Epthook2{ return & epthook2{} }
 
 func (e *epthook2)CommandEptHook2Help()(ok bool){//col:14
 /*CommandEptHook2Help()

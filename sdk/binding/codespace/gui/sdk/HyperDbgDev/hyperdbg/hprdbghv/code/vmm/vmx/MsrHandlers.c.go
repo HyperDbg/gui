@@ -14,9 +14,10 @@ MsrHandlePerformMsrBitmapReadReset()(ok bool)//col:213
 MsrHandlePerformMsrBitmapWriteChange()(ok bool)//col:227
 MsrHandlePerformMsrBitmapWriteReset()(ok bool)//col:233
 }
+msrHandlers struct{}
 )
 
-func NewMsrHandlers() { return & msrHandlers{} }
+func NewMsrHandlers()MsrHandlers{ return & msrHandlers{} }
 
 func (m *msrHandlers)MsrHandleRdmsrVmexit()(ok bool){//col:52
 /*MsrHandleRdmsrVmexit(PGUEST_REGS GuestRegs)

@@ -6,9 +6,10 @@ Be interface{
 CommandBeHelp()(ok bool)//col:8
 CommandBe()(ok bool)//col:36
 }
+be struct{}
 )
 
-func NewBe() { return & be{} }
+func NewBe()Be{ return & be{} }
 
 func (b *be)CommandBeHelp()(ok bool){//col:8
 /*CommandBeHelp()

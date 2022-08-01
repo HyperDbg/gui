@@ -22,9 +22,9 @@ const(
 
 
 type typedef struct ZydisDecoder_ struct{
-machine_mode ZydisMachineMode
-address_width ZydisAddressWidth
-decoder_mode[ZYDIS_DECODER_MODE_MAX_VALUE ZyanBool
+machine_mode ZydisMachineMode //col:3
+address_width ZydisAddressWidth //col:4
+decoder_mode[ZYDIS_DECODER_MODE_MAX_VALUE ZyanBool //col:5
 }
 
 

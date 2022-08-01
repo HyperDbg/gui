@@ -45,9 +45,10 @@ ZyanStatus_ZyanVectorShrinkToFit()(ok bool)//col:548
 ZyanStatus_ZyanVectorGetCapacity()(ok bool)//col:557
 ZyanStatus_ZyanVectorGetSize()(ok bool)//col:566
 }
+vector struct{}
 )
 
-func NewVector() { return & vector{} }
+func NewVector()Vector{ return & vector{} }
 
 func (v *vector)static_ZyanStatus_ZyanVectorReallocate()(ok bool){//col:31
 /*static ZyanStatus ZyanVectorReallocate(ZyanVector* vector, ZyanUSize capacity)

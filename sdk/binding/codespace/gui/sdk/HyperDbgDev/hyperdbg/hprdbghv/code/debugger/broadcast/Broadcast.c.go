@@ -12,9 +12,10 @@ BroadcastEnableNmiExitingAllCores()(ok bool)//col:24
 BroadcastDisableNmiExitingAllCores()(ok bool)//col:28
 BroadcastNotifyAllToInvalidateEptAllCores()(ok bool)//col:32
 }
+broadcast struct{}
 )
 
-func NewBroadcast() { return & broadcast{} }
+func NewBroadcast()Broadcast{ return & broadcast{} }
 
 func (b *broadcast)BroadcastVmxVirtualizationAllCores()(ok bool){//col:4
 /*BroadcastVmxVirtualizationAllCores()

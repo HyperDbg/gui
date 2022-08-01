@@ -6,9 +6,10 @@ ZydisWinKernel interface{
 RtlPcToFileHeader()(ok bool)//col:32
 DriverEntry()(ok bool)//col:103
 }
+zydisWinKernel struct{}
 )
 
-func NewZydisWinKernel() { return & zydisWinKernel{} }
+func NewZydisWinKernel()ZydisWinKernel{ return & zydisWinKernel{} }
 
 func (z *zydisWinKernel)RtlPcToFileHeader()(ok bool){//col:32
 /*RtlPcToFileHeader(

@@ -7,8 +7,8 @@ ZYDIS_MAKE_SHORTSTRING(string) = { string, sizeof(string) - 1 } //col:2
 )
 
 type typedef struct ZydisShortString_ struct{
-char* const
-size ZyanU8
+char* bool //col:3
+size ZyanU8 //col:4
 }
 
 

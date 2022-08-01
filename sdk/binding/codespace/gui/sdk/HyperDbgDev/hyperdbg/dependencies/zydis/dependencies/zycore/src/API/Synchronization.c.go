@@ -14,9 +14,10 @@ ZyanBool_ZyanCriticalSectionTryEnter()(ok bool)//col:102
 ZyanStatus_ZyanCriticalSectionLeave()(ok bool)//col:107
 ZyanStatus_ZyanCriticalSectionDelete()(ok bool)//col:112
 }
+synchronization struct{}
 )
 
-func NewSynchronization() { return & synchronization{} }
+func NewSynchronization()Synchronization{ return & synchronization{} }
 
 func (s *synchronization)ZyanStatus_ZyanCriticalSectionInitialize()(ok bool){//col:37
 /*ZyanStatus ZyanCriticalSectionInitialize(ZyanCriticalSection* critical_section)

@@ -6,9 +6,10 @@ Sleep interface{
 CommandSleepHelp()(ok bool)//col:7
 CommandSleep()(ok bool)//col:25
 }
+sleep struct{}
 )
 
-func NewSleep() { return & sleep{} }
+func NewSleep()Sleep{ return & sleep{} }
 
 func (s *sleep)CommandSleepHelp()(ok bool){//col:7
 /*CommandSleepHelp()

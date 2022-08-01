@@ -19,9 +19,10 @@ Uart16550GetByte()(ok bool)//col:241
 Uart16550PutByte()(ok bool)//col:292
 Uart16550RxReady()(ok bool)//col:311
 }
+uart16550 struct{}
 )
 
-func NewUart16550() { return & uart16550{} }
+func NewUart16550()Uart16550{ return & uart16550{} }
 
 func (u *uart16550)WritePortWithIndex8()(ok bool){//col:10
 /*WritePortWithIndex8(

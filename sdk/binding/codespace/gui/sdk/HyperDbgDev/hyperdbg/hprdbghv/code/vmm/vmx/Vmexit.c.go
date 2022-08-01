@@ -5,9 +5,10 @@ type (
 Vmexit interface{
 VmxVmexitHandler()(ok bool)//col:216
 }
+vmexit struct{}
 )
 
-func NewVmexit() { return & vmexit{} }
+func NewVmexit()Vmexit{ return & vmexit{} }
 
 func (v *vmexit)VmxVmexitHandler()(ok bool){//col:216
 /*VmxVmexitHandler(_Inout_ PGUEST_REGS GuestRegs)

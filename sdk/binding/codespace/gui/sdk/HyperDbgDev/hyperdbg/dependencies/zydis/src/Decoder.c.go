@@ -19,22 +19,22 @@ const(
 
 
 type typedef struct ZydisDecoderContext_ struct{
-ZydisDecoder* const
-ZyanU8* const
-buffer_len ZyanUSize
-Struct struct
-has_lock ZyanBool
-group1 ZyanU8
-group2 ZyanU8
-effective_segment ZyanU8
-mandatory_candidate ZyanU8
-offset_lock ZyanU8
-offset_group1 ZyanU8
-offset_group2 ZyanU8
-offset_osz_override ZyanU8
-offset_asz_override ZyanU8
-offset_segment ZyanU8
-offset_mandatory ZyanU8
+ZydisDecoder* bool //col:3
+ZyanU8* bool //col:4
+buffer_len ZyanUSize //col:5
+Struct struct //col:6
+has_lock ZyanBool //col:8
+group1 ZyanU8 //col:9
+group2 ZyanU8 //col:10
+effective_segment ZyanU8 //col:11
+mandatory_candidate ZyanU8 //col:12
+offset_lock ZyanU8 //col:13
+offset_group1 ZyanU8 //col:14
+offset_group2 ZyanU8 //col:15
+offset_osz_override ZyanU8 //col:16
+offset_asz_override ZyanU8 //col:17
+offset_segment ZyanU8 //col:18
+offset_mandatory ZyanU8 //col:19
 }
 
 
@@ -91,9 +91,10 @@ ZyanStatus_ZydisDecoderInit()(ok bool)//col:3879
 ZyanStatus_ZydisDecoderEnableMode()(ok bool)//col:3894
 ZyanStatus_ZydisDecoderDecodeBuffer()(ok bool)//col:3921
 }
+decoder struct{}
 )
 
-func NewDecoder() { return & decoder{} }
+func NewDecoder()Decoder{ return & decoder{} }
 
 func (d *decoder)static_ZyanStatus_ZydisInputPeek()(ok bool){//col:17
 /*static ZyanStatus ZydisInputPeek(ZydisDecoderContext* context,

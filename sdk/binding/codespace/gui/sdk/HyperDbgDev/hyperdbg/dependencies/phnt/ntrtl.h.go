@@ -341,733 +341,733 @@ const(
 
 
 type RTL_BALANCED_LINKS struct{
-_RTL_BALANCED_LINKS struct
-_RTL_BALANCED_LINKS struct
-_RTL_BALANCED_LINKS struct
-Balance CHAR
-Reserved[3] UCHAR
+_RTL_BALANCED_LINKS struct //col:3
+_RTL_BALANCED_LINKS struct //col:4
+_RTL_BALANCED_LINKS struct //col:5
+Balance int8 //col:6
+Reserved[3] uint8 //col:7
 }
 
 
 type RTL_AVL_TABLE struct{
-BalancedRoot RTL_BALANCED_LINKS
-OrderedPointer PVOID
-WhichOrderedElement ULONG
-NumberGenericTableElements ULONG
-DepthOfTree ULONG
-RestartKey PRTL_BALANCED_LINKS
-DeleteCount ULONG
-CompareRoutine PRTL_AVL_COMPARE_ROUTINE
-AllocateRoutine PRTL_AVL_ALLOCATE_ROUTINE
-FreeRoutine PRTL_AVL_FREE_ROUTINE
-TableContext PVOID
+BalancedRoot RTL_BALANCED_LINKS //col:11
+OrderedPointer PVOID //col:12
+WhichOrderedElement uint32 //col:13
+NumberGenericTableElements uint32 //col:14
+DepthOfTree uint32 //col:15
+RestartKey PRTL_BALANCED_LINKS //col:16
+DeleteCount uint32 //col:17
+CompareRoutine PRTL_AVL_COMPARE_ROUTINE //col:18
+AllocateRoutine PRTL_AVL_ALLOCATE_ROUTINE //col:19
+FreeRoutine PRTL_AVL_FREE_ROUTINE //col:20
+TableContext PVOID //col:21
 }
 
 
 type RTL_SPLAY_LINKS struct{
-_RTL_SPLAY_LINKS struct
-_RTL_SPLAY_LINKS struct
-_RTL_SPLAY_LINKS struct
+_RTL_SPLAY_LINKS struct //col:25
+_RTL_SPLAY_LINKS struct //col:26
+_RTL_SPLAY_LINKS struct //col:27
 }
 
 
 type RTL_GENERIC_TABLE struct{
-TableRoot PRTL_SPLAY_LINKS
-InsertOrderList *list.List
-OrderedPointer PLIST_ENTRY
-WhichOrderedElement ULONG
-NumberGenericTableElements ULONG
-CompareRoutine PRTL_GENERIC_COMPARE_ROUTINE
-AllocateRoutine PRTL_GENERIC_ALLOCATE_ROUTINE
-FreeRoutine PRTL_GENERIC_FREE_ROUTINE
-TableContext PVOID
+TableRoot PRTL_SPLAY_LINKS //col:31
+InsertOrderList *list.List //col:32
+OrderedPointer PLIST_ENTRY //col:33
+WhichOrderedElement uint32 //col:34
+NumberGenericTableElements uint32 //col:35
+CompareRoutine PRTL_GENERIC_COMPARE_ROUTINE //col:36
+AllocateRoutine PRTL_GENERIC_ALLOCATE_ROUTINE //col:37
+FreeRoutine PRTL_GENERIC_FREE_ROUTINE //col:38
+TableContext PVOID //col:39
 }
 
 
 type RTL_RB_TREE struct{
-Root PRTL_BALANCED_NODE
-Min PRTL_BALANCED_NODE
+Root PRTL_BALANCED_NODE //col:43
+Min PRTL_BALANCED_NODE //col:44
 }
 
 
 type RTL_DYNAMIC_HASH_TABLE_ENTRY struct{
-Linkage *list.List
-Signature ULONG_PTR
+Linkage *list.List //col:48
+Signature ULONG_PTR //col:49
 }
 
 
 type RTL_DYNAMIC_HASH_TABLE_CONTEXT struct{
-ChainHead PLIST_ENTRY
-PrevLinkage PLIST_ENTRY
-Signature ULONG_PTR
+ChainHead PLIST_ENTRY //col:53
+PrevLinkage PLIST_ENTRY //col:54
+Signature ULONG_PTR //col:55
 }
 
 
 type RTL_DYNAMIC_HASH_TABLE_ENUMERATOR struct{
-HashEntry RTL_DYNAMIC_HASH_TABLE_ENTRY
-ChainHead PLIST_ENTRY
-BucketIndex ULONG
+HashEntry RTL_DYNAMIC_HASH_TABLE_ENTRY //col:59
+ChainHead PLIST_ENTRY //col:60
+BucketIndex uint32 //col:61
 }
 
 
 type RTL_DYNAMIC_HASH_TABLE struct{
-Flags ULONG
-Shift ULONG
-TableSize ULONG
-Pivot ULONG
-DivisorMask ULONG
-NumEntries ULONG
-NonEmptyBuckets ULONG
-NumEnumerators ULONG
-Directory PVOID
+Flags uint32 //col:65
+Shift uint32 //col:66
+TableSize uint32 //col:67
+Pivot uint32 //col:68
+DivisorMask uint32 //col:69
+NumEntries uint32 //col:70
+NonEmptyBuckets uint32 //col:71
+NumEnumerators uint32 //col:72
+Directory PVOID //col:73
 }
 
 
 type RTL_RESOURCE struct{
-CriticalSection RTL_CRITICAL_SECTION
-SharedSemaphore HANDLE
-ULONG volatile
-ExclusiveSemaphore HANDLE
-ULONG volatile
-LONG volatile
-ExclusiveOwnerThread HANDLE
-Flags ULONG
-DebugInfo PRTL_RESOURCE_DEBUG
+CriticalSection RTL_CRITICAL_SECTION //col:77
+SharedSemaphore HANDLE //col:78
+ULONG volatile //col:79
+ExclusiveSemaphore HANDLE //col:80
+ULONG volatile //col:81
+LONG volatile //col:82
+ExclusiveOwnerThread HANDLE //col:83
+Flags uint32 //col:84
+DebugInfo PRTL_RESOURCE_DEBUG //col:85
 }
 
 
 type PREFIX_TABLE_ENTRY struct{
-NodeTypeCode CSHORT
-NameLength CSHORT
-_PREFIX_TABLE_ENTRY struct
-Links RTL_SPLAY_LINKS
-Prefix PSTRING
+NodeTypeCode CSHORT //col:89
+NameLength CSHORT //col:90
+_PREFIX_TABLE_ENTRY struct //col:91
+Links RTL_SPLAY_LINKS //col:92
+Prefix PSTRING //col:93
 }
 
 
 type PREFIX_TABLE struct{
-NodeTypeCode CSHORT
-NameLength CSHORT
-NextPrefixTree PPREFIX_TABLE_ENTRY
+NodeTypeCode CSHORT //col:97
+NameLength CSHORT //col:98
+NextPrefixTree PPREFIX_TABLE_ENTRY //col:99
 }
 
 
 type UNICODE_PREFIX_TABLE_ENTRY struct{
-NodeTypeCode CSHORT
-NameLength CSHORT
-_UNICODE_PREFIX_TABLE_ENTRY struct
-_UNICODE_PREFIX_TABLE_ENTRY struct
-Links RTL_SPLAY_LINKS
-Prefix PUNICODE_STRING
+NodeTypeCode CSHORT //col:103
+NameLength CSHORT //col:104
+_UNICODE_PREFIX_TABLE_ENTRY struct //col:105
+_UNICODE_PREFIX_TABLE_ENTRY struct //col:106
+Links RTL_SPLAY_LINKS //col:107
+Prefix PUNICODE_STRING //col:108
 }
 
 
 type UNICODE_PREFIX_TABLE struct{
-NodeTypeCode CSHORT
-NameLength CSHORT
-NextPrefixTree PUNICODE_PREFIX_TABLE_ENTRY
-LastNextEntry PUNICODE_PREFIX_TABLE_ENTRY
+NodeTypeCode CSHORT //col:112
+NameLength CSHORT //col:113
+NextPrefixTree PUNICODE_PREFIX_TABLE_ENTRY //col:114
+LastNextEntry PUNICODE_PREFIX_TABLE_ENTRY //col:115
 }
 
 
 type COMPRESSED_DATA_INFO struct{
-CompressionFormatAndEngine USHORT
-CompressionUnitShift UCHAR
-ChunkShift UCHAR
-ClusterShift UCHAR
-Reserved UCHAR
-NumberOfChunks USHORT
-CompressedChunkSizes[1] ULONG
+CompressionFormatAndEngine USHORT //col:119
+CompressionUnitShift uint8 //col:120
+ChunkShift uint8 //col:121
+ClusterShift uint8 //col:122
+Reserved uint8 //col:123
+NumberOfChunks USHORT //col:124
+CompressedChunkSizes[1] uint32 //col:125
 }
 
 
 type CURDIR struct{
-DosPath UNICODE_STRING
-Handle HANDLE
+DosPath UNICODE_STRING //col:129
+Handle HANDLE //col:130
 }
 
 
 type RTL_DRIVE_LETTER_CURDIR struct{
-Flags USHORT
-Length USHORT
-TimeStamp ULONG
-DosPath STRING
+Flags USHORT //col:134
+Length USHORT //col:135
+TimeStamp uint32 //col:136
+DosPath STRING //col:137
 }
 
 
 type RTL_USER_PROCESS_PARAMETERS struct{
-MaximumLength ULONG
-Length ULONG
-Flags ULONG
-DebugFlags ULONG
-ConsoleHandle HANDLE
-ConsoleFlags ULONG
-StandardInput HANDLE
-StandardOutput HANDLE
-StandardError HANDLE
-CurrentDirectory CURDIR
-DllPath UNICODE_STRING
-ImagePathName UNICODE_STRING
-CommandLine UNICODE_STRING
-Environment PVOID
-StartingX ULONG
-StartingY ULONG
-CountX ULONG
-CountY ULONG
-CountCharsX ULONG
-CountCharsY ULONG
-FillAttribute ULONG
-WindowFlags ULONG
-ShowWindowFlags ULONG
-WindowTitle UNICODE_STRING
-DesktopInfo UNICODE_STRING
-ShellInfo UNICODE_STRING
-RuntimeData UNICODE_STRING
-CurrentDirectories[RTL_MAX_DRIVE_LETTERS] RTL_DRIVE_LETTER_CURDIR
-EnvironmentSize ULONG_PTR
-EnvironmentVersion ULONG_PTR
-PackageDependencyData PVOID
-ProcessGroupId ULONG
-LoaderThreads ULONG
-RedirectionDllName UNICODE_STRING
-HeapPartitionName UNICODE_STRING
-DefaultThreadpoolCpuSetMasks ULONG_PTR
-DefaultThreadpoolCpuSetMaskCount ULONG
+MaximumLength uint32 //col:141
+Length uint32 //col:142
+Flags uint32 //col:143
+DebugFlags uint32 //col:144
+ConsoleHandle HANDLE //col:145
+ConsoleFlags uint32 //col:146
+StandardInput HANDLE //col:147
+StandardOutput HANDLE //col:148
+StandardError HANDLE //col:149
+CurrentDirectory CURDIR //col:150
+DllPath UNICODE_STRING //col:151
+ImagePathName UNICODE_STRING //col:152
+CommandLine UNICODE_STRING //col:153
+Environment PVOID //col:154
+StartingX uint32 //col:155
+StartingY uint32 //col:156
+CountX uint32 //col:157
+CountY uint32 //col:158
+CountCharsX uint32 //col:159
+CountCharsY uint32 //col:160
+FillAttribute uint32 //col:161
+WindowFlags uint32 //col:162
+ShowWindowFlags uint32 //col:163
+WindowTitle UNICODE_STRING //col:164
+DesktopInfo UNICODE_STRING //col:165
+ShellInfo UNICODE_STRING //col:166
+RuntimeData UNICODE_STRING //col:167
+CurrentDirectories[RTL_MAX_DRIVE_LETTERS] RTL_DRIVE_LETTER_CURDIR //col:168
+EnvironmentSize ULONG_PTR //col:169
+EnvironmentVersion ULONG_PTR //col:170
+PackageDependencyData PVOID //col:171
+ProcessGroupId uint32 //col:172
+LoaderThreads uint32 //col:173
+RedirectionDllName UNICODE_STRING //col:174
+HeapPartitionName UNICODE_STRING //col:175
+DefaultThreadpoolCpuSetMasks ULONG_PTR //col:176
+DefaultThreadpoolCpuSetMaskCount uint32 //col:177
 }
 
 
 type RTL_USER_PROCESS_INFORMATION struct{
-Length ULONG
-ProcessHandle HANDLE
-ThreadHandle HANDLE
-ClientId CLIENT_ID
-ImageInformation SECTION_IMAGE_INFORMATION
+Length uint32 //col:181
+ProcessHandle HANDLE //col:182
+ThreadHandle HANDLE //col:183
+ClientId CLIENT_ID //col:184
+ImageInformation SECTION_IMAGE_INFORMATION //col:185
 }
 
 
 type RTL_USER_PROCESS_EXTENDED_PARAMETERS struct{
-Version USHORT
-NodeNumber USHORT
-ProcessSecurityDescriptor PSECURITY_DESCRIPTOR
-ThreadSecurityDescriptor PSECURITY_DESCRIPTOR
-ParentProcess HANDLE
-DebugPort HANDLE
-TokenHandle HANDLE
-JobHandle HANDLE
+Version USHORT //col:189
+NodeNumber USHORT //col:190
+ProcessSecurityDescriptor PSECURITY_DESCRIPTOR //col:191
+ThreadSecurityDescriptor PSECURITY_DESCRIPTOR //col:192
+ParentProcess HANDLE //col:193
+DebugPort HANDLE //col:194
+TokenHandle HANDLE //col:195
+JobHandle HANDLE //col:196
 }
 
 
 type RTLP_PROCESS_REFLECTION_REFLECTION_INFORMATION struct{
-ReflectionProcessHandle HANDLE
-ReflectionThreadHandle HANDLE
-ReflectionClientId CLIENT_ID
+ReflectionProcessHandle HANDLE //col:200
+ReflectionThreadHandle HANDLE //col:201
+ReflectionClientId CLIENT_ID //col:202
 }
 
 
 type CONTEXT_CHUNK  struct{
-Offset LONG
-Length ULONG
+Offset LONG //col:206
+Length uint32 //col:207
 }
 
 
 type CONTEXT_EX  struct{
-All CONTEXT_CHUNK
-Legacy CONTEXT_CHUNK
-XState CONTEXT_CHUNK
+All CONTEXT_CHUNK //col:211
+Legacy CONTEXT_CHUNK //col:212
+XState CONTEXT_CHUNK //col:213
 }
 
 
 type DYNAMIC_FUNCTION_TABLE struct{
-ListEntry *list.List
-FunctionTable PRUNTIME_FUNCTION
-TimeStamp LARGE_INTEGER
-MinimumAddress ULONG64
-MaximumAddress ULONG64
-BaseAddress ULONG64
-Callback PGET_RUNTIME_FUNCTION_CALLBACK
-Context PVOID
-OutOfProcessCallbackDll PWSTR
-Type FUNCTION_TABLE_TYPE
-EntryCount ULONG
-TreeNodeMin RTL_BALANCED_NODE
-TreeNodeMax RTL_BALANCED_NODE
+ListEntry *list.List //col:217
+FunctionTable PRUNTIME_FUNCTION //col:218
+TimeStamp LARGE_INTEGER //col:219
+MinimumAddress ULONG64 //col:220
+MaximumAddress ULONG64 //col:221
+BaseAddress ULONG64 //col:222
+Callback PGET_RUNTIME_FUNCTION_CALLBACK //col:223
+Context PVOID //col:224
+OutOfProcessCallbackDll PWSTR //col:225
+Type FUNCTION_TABLE_TYPE //col:226
+EntryCount uint32 //col:227
+TreeNodeMin RTL_BALANCED_NODE //col:228
+TreeNodeMax RTL_BALANCED_NODE //col:229
 }
 
 
 type RTLP_CURDIR_REF struct{
-ReferenceCount LONG
-DirectoryHandle HANDLE
+ReferenceCount LONG //col:233
+DirectoryHandle HANDLE //col:234
 }
 
 
 type RTL_RELATIVE_NAME_U struct{
-RelativeName UNICODE_STRING
-ContainingDirectory HANDLE
-CurDirRef PRTLP_CURDIR_REF
+RelativeName UNICODE_STRING //col:238
+ContainingDirectory HANDLE //col:239
+CurDirRef PRTLP_CURDIR_REF //col:240
 }
 
 
 type GENERATE_NAME_CONTEXT struct{
-Checksum USHORT
-CheckSumInserted bool
-NameLength UCHAR
-NameBuffer[8] WCHAR
-ExtensionLength ULONG
-ExtensionBuffer[4] WCHAR
-LastIndexValue ULONG
+Checksum USHORT //col:244
+CheckSumInserted bool //col:245
+NameLength uint8 //col:246
+NameBuffer[8] WCHAR //col:247
+ExtensionLength uint32 //col:248
+ExtensionBuffer[4] WCHAR //col:249
+LastIndexValue uint32 //col:250
 }
 
 
 type RTL_HEAP_ENTRY struct{
-Size SIZE_T
-Flags USHORT
-AllocatorBackTraceIndex USHORT
-Union union
-Struct struct
-Settable SIZE_T
-Tag ULONG
+Size SIZE_T //col:254
+Flags USHORT //col:255
+AllocatorBackTraceIndex USHORT //col:256
+Union union //col:257
+Struct struct //col:259
+Settable SIZE_T //col:261
+Tag uint32 //col:262
 }
 
 
 type RTL_HEAP_TAG struct{
-NumberOfAllocations ULONG
-NumberOfFrees ULONG
-BytesAllocated SIZE_T
-TagIndex USHORT
-CreatorBackTraceIndex USHORT
-TagName[24] WCHAR
+NumberOfAllocations uint32 //col:273
+NumberOfFrees uint32 //col:274
+BytesAllocated SIZE_T //col:275
+TagIndex USHORT //col:276
+CreatorBackTraceIndex USHORT //col:277
+TagName[24] WCHAR //col:278
 }
 
 
 type RTL_HEAP_INFORMATION struct{
-BaseAddress PVOID
-Flags ULONG
-EntryOverhead USHORT
-CreatorBackTraceIndex USHORT
-BytesAllocated SIZE_T
-BytesCommitted SIZE_T
-NumberOfTags ULONG
-NumberOfEntries ULONG
-NumberOfPseudoTags ULONG
-PseudoTagGranularity ULONG
-Reserved[5] ULONG
-Tags PRTL_HEAP_TAG
-Entries PRTL_HEAP_ENTRY
-HeapTag ULONG64
+BaseAddress PVOID //col:282
+Flags uint32 //col:283
+EntryOverhead USHORT //col:284
+CreatorBackTraceIndex USHORT //col:285
+BytesAllocated SIZE_T //col:286
+BytesCommitted SIZE_T //col:287
+NumberOfTags uint32 //col:288
+NumberOfEntries uint32 //col:289
+NumberOfPseudoTags uint32 //col:290
+PseudoTagGranularity uint32 //col:291
+Reserved[5] uint32 //col:292
+Tags PRTL_HEAP_TAG //col:293
+Entries PRTL_HEAP_ENTRY //col:294
+HeapTag ULONG64 //col:295
 }
 
 
 type RTL_PROCESS_HEAPS struct{
-NumberOfHeaps ULONG
-Heaps[1] RTL_HEAP_INFORMATION
+NumberOfHeaps uint32 //col:299
+Heaps[1] RTL_HEAP_INFORMATION //col:300
 }
 
 
 type RTL_HEAP_PARAMETERS struct{
-Length ULONG
-SegmentReserve SIZE_T
-SegmentCommit SIZE_T
-DeCommitFreeBlockThreshold SIZE_T
-DeCommitTotalFreeThreshold SIZE_T
-MaximumAllocationSize SIZE_T
-VirtualMemoryThreshold SIZE_T
-InitialCommit SIZE_T
-InitialReserve SIZE_T
-CommitRoutine PRTL_HEAP_COMMIT_ROUTINE
-Reserved[2] SIZE_T
+Length uint32 //col:304
+SegmentReserve SIZE_T //col:305
+SegmentCommit SIZE_T //col:306
+DeCommitFreeBlockThreshold SIZE_T //col:307
+DeCommitTotalFreeThreshold SIZE_T //col:308
+MaximumAllocationSize SIZE_T //col:309
+VirtualMemoryThreshold SIZE_T //col:310
+InitialCommit SIZE_T //col:311
+InitialReserve SIZE_T //col:312
+CommitRoutine PRTL_HEAP_COMMIT_ROUTINE //col:313
+Reserved[2] SIZE_T //col:314
 }
 
 
 type RTL_HEAP_TAG_INFO struct{
-NumberOfAllocations ULONG
-NumberOfFrees ULONG
-BytesAllocated SIZE_T
+NumberOfAllocations uint32 //col:318
+NumberOfFrees uint32 //col:319
+BytesAllocated SIZE_T //col:320
 }
 
 
 type RTL_HEAP_USAGE_ENTRY struct{
-_RTL_HEAP_USAGE_ENTRY struct
-Address PVOID
-Size SIZE_T
-AllocatorBackTraceIndex USHORT
-TagIndex USHORT
+_RTL_HEAP_USAGE_ENTRY struct //col:324
+Address PVOID //col:325
+Size SIZE_T //col:326
+AllocatorBackTraceIndex USHORT //col:327
+TagIndex USHORT //col:328
 }
 
 
 type RTL_HEAP_USAGE struct{
-Length ULONG
-BytesAllocated SIZE_T
-BytesCommitted SIZE_T
-BytesReserved SIZE_T
-BytesReservedMaximum SIZE_T
-Entries PRTL_HEAP_USAGE_ENTRY
-AddedEntries PRTL_HEAP_USAGE_ENTRY
-RemovedEntries PRTL_HEAP_USAGE_ENTRY
-Reserved[8] ULONG_PTR
+Length uint32 //col:332
+BytesAllocated SIZE_T //col:333
+BytesCommitted SIZE_T //col:334
+BytesReserved SIZE_T //col:335
+BytesReservedMaximum SIZE_T //col:336
+Entries PRTL_HEAP_USAGE_ENTRY //col:337
+AddedEntries PRTL_HEAP_USAGE_ENTRY //col:338
+RemovedEntries PRTL_HEAP_USAGE_ENTRY //col:339
+Reserved[8] ULONG_PTR //col:340
 }
 
 
 type RTL_HEAP_WALK_ENTRY struct{
-DataAddress PVOID
-DataSize SIZE_T
-OverheadBytes UCHAR
-SegmentIndex UCHAR
-Flags USHORT
-Union union
-Struct struct
-Settable SIZE_T
-TagIndex USHORT
-AllocatorBackTraceIndex USHORT
-Reserved[2] ULONG
+DataAddress PVOID //col:344
+DataSize SIZE_T //col:345
+OverheadBytes uint8 //col:346
+SegmentIndex uint8 //col:347
+Flags USHORT //col:348
+Union union //col:349
+Struct struct //col:351
+Settable SIZE_T //col:353
+TagIndex USHORT //col:354
+AllocatorBackTraceIndex USHORT //col:355
+Reserved[2] uint32 //col:356
 }
 
 
 type PROCESS_HEAP_INFORMATION struct{
-ReserveSize ULONG_PTR
-CommitSize ULONG_PTR
-NumberOfHeaps ULONG
-FirstHeapInformationOffset ULONG_PTR
+ReserveSize ULONG_PTR //col:369
+CommitSize ULONG_PTR //col:370
+NumberOfHeaps uint32 //col:371
+FirstHeapInformationOffset ULONG_PTR //col:372
 }
 
 
 type HEAP_INFORMATION struct{
-Address ULONG_PTR
-Mode ULONG
-ReserveSize ULONG_PTR
-CommitSize ULONG_PTR
-FirstRegionInformationOffset ULONG_PTR
-NextHeapInformationOffset ULONG_PTR
+Address ULONG_PTR //col:376
+Mode uint32 //col:377
+ReserveSize ULONG_PTR //col:378
+CommitSize ULONG_PTR //col:379
+FirstRegionInformationOffset ULONG_PTR //col:380
+NextHeapInformationOffset ULONG_PTR //col:381
 }
 
 
 type HEAP_EXTENDED_INFORMATION struct{
-Process HANDLE
-Heap ULONG_PTR
-Level ULONG
-CallbackRoutine PVOID
-CallbackContext PVOID
-Union union
-ProcessHeapInformation PROCESS_HEAP_INFORMATION
-HeapInformation HEAP_INFORMATION
+Process HANDLE //col:385
+Heap ULONG_PTR //col:386
+Level uint32 //col:387
+CallbackRoutine PVOID //col:388
+CallbackContext PVOID //col:389
+Union union //col:390
+ProcessHeapInformation PROCESS_HEAP_INFORMATION //col:392
+HeapInformation HEAP_INFORMATION //col:393
 }
 
 
 type HEAP_DEBUGGING_INFORMATION struct{
-InterceptorFunction PVOID
-InterceptorValue USHORT
-ExtendedOptions ULONG
-StackTraceDepth ULONG
-MinTotalBlockSize SIZE_T
-MaxTotalBlockSize SIZE_T
-HeapLeakEnumerationRoutine PRTL_HEAP_LEAK_ENUMERATION_ROUTINE
+InterceptorFunction PVOID //col:398
+InterceptorValue USHORT //col:399
+ExtendedOptions uint32 //col:400
+StackTraceDepth uint32 //col:401
+MinTotalBlockSize SIZE_T //col:402
+MaxTotalBlockSize SIZE_T //col:403
+HeapLeakEnumerationRoutine PRTL_HEAP_LEAK_ENUMERATION_ROUTINE //col:404
 }
 
 
 type RTL_MEMORY_ZONE_SEGMENT struct{
-_RTL_MEMORY_ZONE_SEGMENT struct
-Size SIZE_T
-Next PVOID
-Limit PVOID
+_RTL_MEMORY_ZONE_SEGMENT struct //col:408
+Size SIZE_T //col:409
+Next PVOID //col:410
+Limit PVOID //col:411
 }
 
 
 type RTL_MEMORY_ZONE struct{
-Segment RTL_MEMORY_ZONE_SEGMENT
-Lock RTL_SRWLOCK
-LockCount ULONG
-FirstSegment PRTL_MEMORY_ZONE_SEGMENT
+Segment RTL_MEMORY_ZONE_SEGMENT //col:415
+Lock RTL_SRWLOCK //col:416
+LockCount uint32 //col:417
+FirstSegment PRTL_MEMORY_ZONE_SEGMENT //col:418
 }
 
 
 type RTL_PROCESS_VERIFIER_OPTIONS struct{
-SizeStruct ULONG
-Option ULONG
-OptionData[1] UCHAR
+SizeStruct uint32 //col:422
+Option uint32 //col:423
+OptionData[1] uint8 //col:424
 }
 
 
 type RTL_DEBUG_INFORMATION struct{
-SectionHandleClient HANDLE
-ViewBaseClient PVOID
-ViewBaseTarget PVOID
-ViewBaseDelta ULONG_PTR
-EventPairClient HANDLE
-EventPairTarget HANDLE
-TargetProcessId HANDLE
-TargetThreadHandle HANDLE
-Flags ULONG
-OffsetFree SIZE_T
-CommitSize SIZE_T
-ViewSize SIZE_T
-Union union
-_RTL_PROCESS_MODULES struct
-_RTL_PROCESS_MODULE_INFORMATION_EX struct
+SectionHandleClient HANDLE //col:428
+ViewBaseClient PVOID //col:429
+ViewBaseTarget PVOID //col:430
+ViewBaseDelta ULONG_PTR //col:431
+EventPairClient HANDLE //col:432
+EventPairTarget HANDLE //col:433
+TargetProcessId HANDLE //col:434
+TargetThreadHandle HANDLE //col:435
+Flags uint32 //col:436
+OffsetFree SIZE_T //col:437
+CommitSize SIZE_T //col:438
+ViewSize SIZE_T //col:439
+Union union //col:440
+_RTL_PROCESS_MODULES struct //col:442
+_RTL_PROCESS_MODULE_INFORMATION_EX struct //col:443
 }
 
 
 type PARSE_MESSAGE_CONTEXT struct{
-fFlags ULONG
-cwSavColumn ULONG
-iwSrc SIZE_T
-iwDst SIZE_T
-iwDstSpace SIZE_T
-lpvArgStart va_list
+fFlags uint32 //col:458
+cwSavColumn uint32 //col:459
+iwSrc SIZE_T //col:460
+iwDst SIZE_T //col:461
+iwDstSpace SIZE_T //col:462
+lpvArgStart va_list //col:463
 }
 
 
 type TIME_FIELDS struct{
-Year CSHORT
-Month CSHORT
-Day CSHORT
-Hour CSHORT
-Minute CSHORT
-Second CSHORT
-Milliseconds CSHORT
-Weekday CSHORT
+Year CSHORT //col:467
+Month CSHORT //col:468
+Day CSHORT //col:469
+Hour CSHORT //col:470
+Minute CSHORT //col:471
+Second CSHORT //col:472
+Milliseconds CSHORT //col:473
+Weekday CSHORT //col:474
 }
 
 
 type RTL_TIME_ZONE_INFORMATION struct{
-Bias LONG
-StandardName[32] WCHAR
-StandardStart TIME_FIELDS
-StandardBias LONG
-DaylightName[32] WCHAR
-DaylightStart TIME_FIELDS
-DaylightBias LONG
+Bias LONG //col:478
+StandardName[32] WCHAR //col:479
+StandardStart TIME_FIELDS //col:480
+StandardBias LONG //col:481
+DaylightName[32] WCHAR //col:482
+DaylightStart TIME_FIELDS //col:483
+DaylightBias LONG //col:484
 }
 
 
 type RTL_BITMAP struct{
-SizeOfBitMap ULONG
-Buffer PULONG
+SizeOfBitMap uint32 //col:488
+Buffer PULONG //col:489
 }
 
 
 type RTL_BITMAP_RUN struct{
-StartingIndex ULONG
-NumberOfBits ULONG
+StartingIndex uint32 //col:493
+NumberOfBits uint32 //col:494
 }
 
 
 type RTL_BITMAP_EX struct{
-SizeOfBitMap ULONG64
-Buffer PULONG64
+SizeOfBitMap ULONG64 //col:498
+Buffer PULONG64 //col:499
 }
 
 
 type RTL_HANDLE_TABLE_ENTRY struct{
-Union union
-Flags ULONG
-_RTL_HANDLE_TABLE_ENTRY struct
+Union union //col:503
+Flags uint32 //col:505
+_RTL_HANDLE_TABLE_ENTRY struct //col:506
 }
 
 
 type RTL_HANDLE_TABLE struct{
-MaximumNumberOfHandles ULONG
-SizeOfHandleTableEntry ULONG
-Reserved[2] ULONG
-FreeHandles PRTL_HANDLE_TABLE_ENTRY
-CommittedHandles PRTL_HANDLE_TABLE_ENTRY
-UnCommittedHandles PRTL_HANDLE_TABLE_ENTRY
-MaxReservedHandles PRTL_HANDLE_TABLE_ENTRY
+MaximumNumberOfHandles uint32 //col:511
+SizeOfHandleTableEntry uint32 //col:512
+Reserved[2] uint32 //col:513
+FreeHandles PRTL_HANDLE_TABLE_ENTRY //col:514
+CommittedHandles PRTL_HANDLE_TABLE_ENTRY //col:515
+UnCommittedHandles PRTL_HANDLE_TABLE_ENTRY //col:516
+MaxReservedHandles PRTL_HANDLE_TABLE_ENTRY //col:517
 }
 
 
 type RTL_ACE_DATA struct{
-AceType UCHAR
-InheritFlags UCHAR
-AceFlags UCHAR
-AccessMask ACCESS_MASK
-Sid PSID*
+AceType uint8 //col:521
+InheritFlags uint8 //col:522
+AceFlags uint8 //col:523
+AccessMask ACCESS_MASK //col:524
+Sid PSID* //col:525
 }
 
 
 type RTL_QUERY_REGISTRY_TABLE struct{
-QueryRoutine PRTL_QUERY_REGISTRY_ROUTINE
-Flags ULONG
-Name PWSTR
-EntryContext PVOID
-DefaultType ULONG
-DefaultData PVOID
-DefaultLength ULONG
+QueryRoutine PRTL_QUERY_REGISTRY_ROUTINE //col:529
+Flags uint32 //col:530
+Name PWSTR //col:531
+EntryContext PVOID //col:532
+DefaultType uint32 //col:533
+DefaultData PVOID //col:534
+DefaultLength uint32 //col:535
 }
 
 
 type RTL_UNLOAD_EVENT_TRACE struct{
-BaseAddress PVOID
-SizeOfImage SIZE_T
-Sequence ULONG
-TimeDateStamp ULONG
-CheckSum ULONG
-ImageName[32] WCHAR
-Version[2] ULONG
+BaseAddress PVOID //col:539
+SizeOfImage SIZE_T //col:540
+Sequence uint32 //col:541
+TimeDateStamp uint32 //col:542
+CheckSum uint32 //col:543
+ImageName[32] WCHAR //col:544
+Version[2] uint32 //col:545
 }
 
 
 type RTL_UNLOAD_EVENT_TRACE32  struct{
-BaseAddress ULONG
-SizeOfImage ULONG
-Sequence ULONG
-TimeDateStamp ULONG
-CheckSum ULONG
-ImageName[32] WCHAR
-Version[2] ULONG
+BaseAddress uint32 //col:549
+SizeOfImage uint32 //col:550
+Sequence uint32 //col:551
+TimeDateStamp uint32 //col:552
+CheckSum uint32 //col:553
+ImageName[32] WCHAR //col:554
+Version[2] uint32 //col:555
 }
 
 
 type RTL_IMAGE_MITIGATION_DEP_POLICY struct{
-Dep RTL_IMAGE_MITIGATION_POLICY
+Dep RTL_IMAGE_MITIGATION_POLICY //col:559
 }
 
 
 type RTL_IMAGE_MITIGATION_ASLR_POLICY struct{
-ForceRelocateImages RTL_IMAGE_MITIGATION_POLICY
-BottomUpRandomization RTL_IMAGE_MITIGATION_POLICY
-HighEntropyRandomization RTL_IMAGE_MITIGATION_POLICY
+ForceRelocateImages RTL_IMAGE_MITIGATION_POLICY //col:563
+BottomUpRandomization RTL_IMAGE_MITIGATION_POLICY //col:564
+HighEntropyRandomization RTL_IMAGE_MITIGATION_POLICY //col:565
 }
 
 
 type RTL_IMAGE_MITIGATION_DYNAMIC_CODE_POLICY struct{
-BlockDynamicCode RTL_IMAGE_MITIGATION_POLICY
+BlockDynamicCode RTL_IMAGE_MITIGATION_POLICY //col:569
 }
 
 
 type RTL_IMAGE_MITIGATION_STRICT_HANDLE_CHECK_POLICY struct{
-StrictHandleChecks RTL_IMAGE_MITIGATION_POLICY
+StrictHandleChecks RTL_IMAGE_MITIGATION_POLICY //col:573
 }
 
 
 type RTL_IMAGE_MITIGATION_SYSTEM_CALL_DISABLE_POLICY struct{
-BlockWin32kSystemCalls RTL_IMAGE_MITIGATION_POLICY
+BlockWin32kSystemCalls RTL_IMAGE_MITIGATION_POLICY //col:577
 }
 
 
 type RTL_IMAGE_MITIGATION_EXTENSION_POINT_DISABLE_POLICY struct{
-DisableExtensionPoints RTL_IMAGE_MITIGATION_POLICY
+DisableExtensionPoints RTL_IMAGE_MITIGATION_POLICY //col:581
 }
 
 
 type RTL_IMAGE_MITIGATION_CONTROL_FLOW_GUARD_POLICY struct{
-ControlFlowGuard RTL_IMAGE_MITIGATION_POLICY
-StrictControlFlowGuard RTL_IMAGE_MITIGATION_POLICY
+ControlFlowGuard RTL_IMAGE_MITIGATION_POLICY //col:585
+StrictControlFlowGuard RTL_IMAGE_MITIGATION_POLICY //col:586
 }
 
 
 type RTL_IMAGE_MITIGATION_BINARY_SIGNATURE_POLICY struct{
-BlockNonMicrosoftSignedBinaries RTL_IMAGE_MITIGATION_POLICY
-EnforceSigningOnModuleDependencies RTL_IMAGE_MITIGATION_POLICY
+BlockNonMicrosoftSignedBinaries RTL_IMAGE_MITIGATION_POLICY //col:590
+EnforceSigningOnModuleDependencies RTL_IMAGE_MITIGATION_POLICY //col:591
 }
 
 
 type RTL_IMAGE_MITIGATION_FONT_DISABLE_POLICY struct{
-DisableNonSystemFonts RTL_IMAGE_MITIGATION_POLICY
+DisableNonSystemFonts RTL_IMAGE_MITIGATION_POLICY //col:595
 }
 
 
 type RTL_IMAGE_MITIGATION_IMAGE_LOAD_POLICY struct{
-BlockRemoteImageLoads RTL_IMAGE_MITIGATION_POLICY
-BlockLowLabelImageLoads RTL_IMAGE_MITIGATION_POLICY
-PreferSystem32 RTL_IMAGE_MITIGATION_POLICY
+BlockRemoteImageLoads RTL_IMAGE_MITIGATION_POLICY //col:599
+BlockLowLabelImageLoads RTL_IMAGE_MITIGATION_POLICY //col:600
+PreferSystem32 RTL_IMAGE_MITIGATION_POLICY //col:601
 }
 
 
 type RTL_IMAGE_MITIGATION_PAYLOAD_RESTRICTION_POLICY struct{
-EnableExportAddressFilter RTL_IMAGE_MITIGATION_POLICY
-EnableExportAddressFilterPlus RTL_IMAGE_MITIGATION_POLICY
-EnableImportAddressFilter RTL_IMAGE_MITIGATION_POLICY
-EnableRopStackPivot RTL_IMAGE_MITIGATION_POLICY
-EnableRopCallerCheck RTL_IMAGE_MITIGATION_POLICY
-EnableRopSimExec RTL_IMAGE_MITIGATION_POLICY
-EafPlusModuleList[512] WCHAR
+EnableExportAddressFilter RTL_IMAGE_MITIGATION_POLICY //col:605
+EnableExportAddressFilterPlus RTL_IMAGE_MITIGATION_POLICY //col:606
+EnableImportAddressFilter RTL_IMAGE_MITIGATION_POLICY //col:607
+EnableRopStackPivot RTL_IMAGE_MITIGATION_POLICY //col:608
+EnableRopCallerCheck RTL_IMAGE_MITIGATION_POLICY //col:609
+EnableRopSimExec RTL_IMAGE_MITIGATION_POLICY //col:610
+EafPlusModuleList[512] WCHAR //col:611
 }
 
 
 type RTL_IMAGE_MITIGATION_CHILD_PROCESS_POLICY struct{
-DisallowChildProcessCreation RTL_IMAGE_MITIGATION_POLICY
+DisallowChildProcessCreation RTL_IMAGE_MITIGATION_POLICY //col:615
 }
 
 
 type RTL_IMAGE_MITIGATION_SEHOP_POLICY struct{
-Sehop RTL_IMAGE_MITIGATION_POLICY
+Sehop RTL_IMAGE_MITIGATION_POLICY //col:619
 }
 
 
 type RTL_IMAGE_MITIGATION_HEAP_POLICY struct{
-TerminateOnHeapErrors RTL_IMAGE_MITIGATION_POLICY
+TerminateOnHeapErrors RTL_IMAGE_MITIGATION_POLICY //col:623
 }
 
 
 type RTL_IMAGE_MITIGATION_USER_SHADOW_STACK_POLICY struct{
-UserShadowStack RTL_IMAGE_MITIGATION_POLICY
-SetContextIpValidation RTL_IMAGE_MITIGATION_POLICY
-BlockNonCetBinaries RTL_IMAGE_MITIGATION_POLICY
+UserShadowStack RTL_IMAGE_MITIGATION_POLICY //col:627
+SetContextIpValidation RTL_IMAGE_MITIGATION_POLICY //col:628
+BlockNonCetBinaries RTL_IMAGE_MITIGATION_POLICY //col:629
 }
 
 
 type PS_PKG_CLAIM struct{
-Flags ULONG
-Origin ULONG
+Flags uint32 //col:633
+Origin uint32 //col:634
 }
 
 
 type RTL_BSD_DATA_POWER_TRANSITION struct{
-PowerButtonTimestamp LARGE_INTEGER
-Struct struct
-SystemRunning bool
-ConnectedStandbyInProgress bool
-UserShutdownInProgress bool
-SystemShutdownInProgress bool
-SleepInProgress bool
+PowerButtonTimestamp LARGE_INTEGER //col:638
+Struct struct //col:639
+SystemRunning bool //col:641
+ConnectedStandbyInProgress bool //col:642
+UserShutdownInProgress bool //col:643
+SystemShutdownInProgress bool //col:644
+SleepInProgress bool //col:645
 }
 
 
 type RTL_BSD_DATA_ERROR_INFO struct{
-BootId ULONG
-RepeatCount ULONG
-OtherErrorCount ULONG
-Code ULONG
-OtherErrorCount2 ULONG
+BootId uint32 //col:657
+RepeatCount uint32 //col:658
+OtherErrorCount uint32 //col:659
+Code uint32 //col:660
+OtherErrorCount2 uint32 //col:661
 }
 
 
 type RTL_BSD_POWER_BUTTON_PRESS_INFO struct{
-LastPressTime LARGE_INTEGER
-CumulativePressCount ULONG
-LastPressBootId USHORT
-LastPowerWatchdogStage UCHAR
-Struct struct
-WatchdogArmed UCHAR
-ShutdownInProgress UCHAR
+LastPressTime LARGE_INTEGER //col:665
+CumulativePressCount uint32 //col:666
+LastPressBootId USHORT //col:667
+LastPowerWatchdogStage uint8 //col:668
+Struct struct //col:669
+WatchdogArmed uint8 //col:671
+ShutdownInProgress uint8 //col:672
 }
 
 
 type RTL_BSD_ITEM struct{
-Type RTL_BSD_ITEM_TYPE
-DataBuffer PVOID
-DataLength ULONG
+Type RTL_BSD_ITEM_TYPE //col:685
+DataBuffer PVOID //col:686
+DataLength uint32 //col:687
 }
 
 
 type _RTL_FEATURE_USAGE_REPORT struct{
-FeatureId ULONG
-ReportingKind USHORT
-ReportingOptions USHORT
+FeatureId uint32 //col:691
+ReportingKind USHORT //col:692
+ReportingOptions USHORT //col:693
 }
 
 
 type RTL_FEATURE_CONFIGURATION struct{
-FeatureId ULONG
-Union union
-Flags ULONG
-Struct struct
-Priority ULONG
-EnabledState ULONG
-IsWexpConfiguration ULONG
-HasSubscriptions ULONG
-Variant ULONG
-VariantPayloadKind ULONG
-Reserved ULONG
+FeatureId uint32 //col:697
+Union union //col:698
+Flags uint32 //col:700
+Struct struct //col:701
+Priority uint32 //col:703
+EnabledState uint32 //col:704
+IsWexpConfiguration uint32 //col:705
+HasSubscriptions uint32 //col:706
+Variant uint32 //col:707
+VariantPayloadKind uint32 //col:708
+Reserved uint32 //col:709
 }
 
 
@@ -1357,9 +1357,10 @@ RtlAreAllAccessesGranted()(ok bool)//col:5588
 #if_()(ok bool)//col:138554
 #if_()(ok bool)//col:139106
 }
+ntrtl struct{}
 )
 
-func NewNtrtl() { return & ntrtl{} }
+func NewNtrtl()Ntrtl{ return & ntrtl{} }
 
 func (n *ntrtl)FORCEINLINE_VOID_InitializeListHead()(ok bool){//col:6
 /*FORCEINLINE VOID InitializeListHead(

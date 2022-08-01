@@ -7,9 +7,10 @@ CommandSyscallHelp()(ok bool)//col:21
 CommandSysretHelp()(ok bool)//col:39
 CommandSyscallAndSysret()(ok bool)//col:167
 }
+syscallSysret struct{}
 )
 
-func NewSyscallSysret() { return & syscallSysret{} }
+func NewSyscallSysret()SyscallSysret{ return & syscallSysret{} }
 
 func (s *syscallSysret)CommandSyscallHelp()(ok bool){//col:21
 /*CommandSyscallHelp()

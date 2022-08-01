@@ -10,9 +10,10 @@ RemoteConnectionSendCommand()(ok bool)//col:114
 RemoteConnectionSendResultsToHost()(ok bool)//col:122
 RemoteConnectionCloseTheConnectionWithDebuggee()(ok bool)//col:128
 }
+remoteConnection struct{}
 )
 
-func NewRemoteConnection() { return & remoteConnection{} }
+func NewRemoteConnection()RemoteConnection{ return & remoteConnection{} }
 
 func (r *remoteConnection)RemoteConnectionListen()(ok bool){//col:30
 /*RemoteConnectionListen(PCSTR Port)

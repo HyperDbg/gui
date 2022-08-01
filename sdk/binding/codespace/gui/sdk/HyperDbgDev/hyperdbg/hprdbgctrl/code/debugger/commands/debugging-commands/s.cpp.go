@@ -7,9 +7,10 @@ CommandSearchMemoryHelp()(ok bool)//col:24
 CommandSearchSendRequest()(ok bool)//col:63
 CommandSearchMemory()(ok bool)//col:307
 }
+s struct{}
 )
 
-func NewS() { return & s{} }
+func NewS()S{ return & s{} }
 
 func (s *s)CommandSearchMemoryHelp()(ok bool){//col:24
 /*CommandSearchMemoryHelp()

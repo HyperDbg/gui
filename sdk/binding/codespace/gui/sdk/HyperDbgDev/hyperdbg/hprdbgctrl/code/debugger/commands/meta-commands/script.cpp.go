@@ -8,9 +8,10 @@ CommandScriptRunCommand()(ok bool)//col:38
 HyperDbgScriptReadFileAndExecuteCommand()(ok bool)//col:86
 CommandScript()(ok bool)//col:101
 }
+script struct{}
 )
 
-func NewScript() { return & script{} }
+func NewScript()Script{ return & script{} }
 
 func (s *script)CommandScriptHelp()(ok bool){//col:12
 /*CommandScriptHelp()

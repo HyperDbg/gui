@@ -12,9 +12,10 @@ IdtEmulationHandleExternalInterrupt()(ok bool)//col:212
 IdtEmulationHandleNmiWindowExiting()(ok bool)//col:216
 IdtEmulationHandleInterruptWindowExiting()(ok bool)//col:245
 }
+idtEmulation struct{}
 )
 
-func NewIdtEmulation() { return & idtEmulation{} }
+func NewIdtEmulation()IdtEmulation{ return & idtEmulation{} }
 
 func (i *idtEmulation)IdtEmulationReInjectInterruptOrException()(ok bool){//col:10
 /*IdtEmulationReInjectInterruptOrException(_In_ VMEXIT_INTERRUPT_INFORMATION InterruptExit)

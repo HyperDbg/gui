@@ -9,9 +9,10 @@ VpidInvvpidSingleContext()(ok bool)//col:24
 VpidInvvpidAllContext()(ok bool)//col:28
 VpidInvvpidSingleContextRetainingGlobals()(ok bool)//col:33
 }
+vpid struct{}
 )
 
-func NewVpid() { return & vpid{} }
+func NewVpid()Vpid{ return & vpid{} }
 
 func (v *vpid)VpidInvvpid()(ok bool){//col:14
 /*VpidInvvpid(INVVPID_TYPE Type, INVVPID_DESCRIPTOR * Descriptor)

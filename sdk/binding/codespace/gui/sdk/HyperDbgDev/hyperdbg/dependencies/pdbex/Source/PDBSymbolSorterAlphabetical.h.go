@@ -34,9 +34,10 @@ PdbSymbolSorterAlphabetical interface{
 		AddSymbol()(ok bool)//col:2012
 			if_()(ok bool)//col:2023
 }
+pdbSymbolSorterAlphabetical struct{}
 )
 
-func NewPdbSymbolSorterAlphabetical() { return & pdbSymbolSorterAlphabetical{} }
+func NewPdbSymbolSorterAlphabetical()PdbSymbolSorterAlphabetical{ return & pdbSymbolSorterAlphabetical{} }
 
 func (p *pdbSymbolSorterAlphabetical)		GetSortedSymbols()(ok bool){//col:110
 /*		GetSortedSymbols() override

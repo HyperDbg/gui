@@ -10,9 +10,10 @@ IsKeyword()(ok bool)//col:762
 IsRegister()(ok bool)//col:768
 IsId()(ok bool)//col:772
 }
+scanner struct{}
 )
 
-func NewScanner() { return & scanner{} }
+func NewScanner()Scanner{ return & scanner{} }
 
 func (s *scanner)GetToken()(ok bool){//col:677
 /*GetToken(char * c, char * str)

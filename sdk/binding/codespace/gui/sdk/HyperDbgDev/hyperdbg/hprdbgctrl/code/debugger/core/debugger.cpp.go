@@ -17,9 +17,10 @@ GetNewDebuggerEventTag()(ok bool)//col:1096
 FreeEventsAndActionsMemory()(ok bool)//col:1122
 InterpretGeneralEventAndActionsFields()(ok bool)//col:1592
 }
+debugger struct{}
 )
 
-func NewDebugger() { return & debugger{} }
+func NewDebugger()Debugger{ return & debugger{} }
 
 func (d *debugger)ShowErrorMessage()(ok bool){//col:275
 /*ShowErrorMessage(UINT32 Error)

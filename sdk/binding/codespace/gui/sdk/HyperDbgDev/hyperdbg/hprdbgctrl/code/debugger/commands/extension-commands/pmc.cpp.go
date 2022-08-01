@@ -6,9 +6,10 @@ Pmc interface{
 CommandPmcHelp()(ok bool)//col:12
 CommandPmc()(ok bool)//col:64
 }
+pmc struct{}
 )
 
-func NewPmc() { return & pmc{} }
+func NewPmc()Pmc{ return & pmc{} }
 
 func (p *pmc)CommandPmcHelp()(ok bool){//col:12
 /*CommandPmcHelp()

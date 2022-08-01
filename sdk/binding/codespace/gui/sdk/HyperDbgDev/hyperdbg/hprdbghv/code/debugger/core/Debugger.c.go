@@ -35,9 +35,10 @@ DebuggerParseActionFromUsermode()(ok bool)//col:1318
 DebuggerTerminateEvent()(ok bool)//col:1420
 DebuggerParseEventsModificationFromUsermode()(ok bool)//col:1493
 }
+debugger struct{}
 )
 
-func NewDebugger() { return & debugger{} }
+func NewDebugger()Debugger{ return & debugger{} }
 
 func (d *debugger)DebuggerGetRegValueWrapper()(ok bool){//col:4
 /*DebuggerGetRegValueWrapper(PGUEST_REGS GuestRegs, UINT32 RegId)

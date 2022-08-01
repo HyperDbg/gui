@@ -5,9 +5,10 @@ type (
 ZydisDisasm interface{
 int_main()(ok bool)//col:101
 }
+zydisDisasm struct{}
 )
 
-func NewZydisDisasm() { return & zydisDisasm{} }
+func NewZydisDisasm()ZydisDisasm{ return & zydisDisasm{} }
 
 func (z *zydisDisasm)int_main()(ok bool){//col:101
 /*int main(int argc, char** argv)

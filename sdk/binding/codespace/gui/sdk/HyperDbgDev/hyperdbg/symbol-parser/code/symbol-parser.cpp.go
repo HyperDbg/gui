@@ -31,9 +31,10 @@ SymbolPDBDownload()(ok bool)//col:857
 SymbolAbortLoading()(ok bool)//col:865
 SymShowDataBasedOnSymbolTypes()(ok bool)//col:918
 }
+symbolParser struct{}
 )
 
-func NewSymbolParser() { return & symbolParser{} }
+func NewSymbolParser()SymbolParser{ return & symbolParser{} }
 
 func (s *symbolParser)SymSetTextMessageCallback()(ok bool){//col:5
 /*SymSetTextMessageCallback(PVOID handler)

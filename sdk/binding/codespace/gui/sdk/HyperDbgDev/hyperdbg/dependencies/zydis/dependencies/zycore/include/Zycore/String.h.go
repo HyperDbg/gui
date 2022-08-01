@@ -13,13 +13,13 @@ ZYAN_DEFINE_STRING_VIEW(string) = {  { 0,  { ZYAN_NULL, 1.0f, 0.0f, sizeof(strin
 )
 
 type typedef struct ZyanString_ struct{
-flags ZyanStringFlags
-vector ZyanVector
+flags ZyanStringFlags //col:3
+vector ZyanVector //col:4
 }
 
 
 type typedef struct ZyanStringView_ struct{
-string ZyanString
+string ZyanString //col:8
 }
 
 

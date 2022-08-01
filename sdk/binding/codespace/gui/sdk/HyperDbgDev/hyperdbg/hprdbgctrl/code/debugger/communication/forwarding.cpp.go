@@ -12,9 +12,10 @@ ForwardingWriteToFile()(ok bool)//col:186
 ForwardingSendToNamedPipe()(ok bool)//col:197
 ForwardingSendToTcpSocket()(ok bool)//col:205
 }
+forwarding struct{}
 )
 
-func NewForwarding() { return & forwarding{} }
+func NewForwarding()Forwarding{ return & forwarding{} }
 
 func (f *forwarding)ForwardingGetNewOutputSourceTag()(ok bool){//col:4
 /*ForwardingGetNewOutputSourceTag()

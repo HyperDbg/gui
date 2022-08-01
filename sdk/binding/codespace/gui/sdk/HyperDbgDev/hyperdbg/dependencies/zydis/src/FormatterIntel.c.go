@@ -12,9 +12,10 @@ ZyanStatus_ZydisFormatterIntelPrintTypecast()(ok bool)//col:297
 ZyanStatus_ZydisFormatterIntelFormatInstructionMASM()(ok bool)//col:306
 ZyanStatus_ZydisFormatterIntelPrintAddressMASM()(ok bool)//col:341
 }
+formatterIntel struct{}
 )
 
-func NewFormatterIntel() { return & formatterIntel{} }
+func NewFormatterIntel()FormatterIntel{ return & formatterIntel{} }
 
 func (f *formatterIntel)ZyanStatus_ZydisFormatterIntelFormatInstruction()(ok bool){//col:127
 /*ZyanStatus ZydisFormatterIntelFormatInstruction(const ZydisFormatter* formatter,

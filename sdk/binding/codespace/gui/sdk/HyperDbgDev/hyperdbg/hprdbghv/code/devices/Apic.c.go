@@ -10,9 +10,10 @@ ApicInitialize()(ok bool)//col:42
 ApicUninitialize()(ok bool)//col:47
 ApicSelfIpi()(ok bool)//col:58
 }
+apic struct{}
 )
 
-func NewApic() { return & apic{} }
+func NewApic()Apic{ return & apic{} }
 
 func (a *apic)XApicIcrWrite()(ok bool){//col:5
 /*XApicIcrWrite(UINT32 Low, UINT32 High)
