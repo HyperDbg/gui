@@ -457,11 +457,16 @@ func (o *object) bindGoType(cppType string) (goType string) {
 	switch cppType {
 	case "UINT64":
 		return types.Typ[types.Uint64].Name()
+	case "UINT32":
+		return types.Typ[types.Uint32].Name()
+	case "time_t":
+		return "time.Time"
 	case "BOOLEAN":
 		return types.Typ[types.Bool].Name()
 	case "void":
 		return "uintptr(0)"
-
+	case "LIST_ENTRY":
+		return "*list.List"
 	default:
 		return cppType
 	}
@@ -515,8 +520,8 @@ func (o *object) HandleStructBlock(col int, lines ...string) string {
 				Struct.elemName = word
 			} else { //not ' ' space,it's a nested field
 				Struct.elemType = "byte" //? see  TypeOfAction;
-				Struct.elemName = word
 				word = strings.ReplaceAll(word, ";", "")
+				Struct.elemName = word
 			}
 		} else {
 			//nested type

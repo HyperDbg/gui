@@ -110,7 +110,7 @@ IoBitmapVirtualAddressA uint64
 IoBitmapPhysicalAddressA uint64
 IoBitmapVirtualAddressB uint64
 IoBitmapPhysicalAddressB uint64
-PendingExternalInterrupts[PENDING_INTERRUPTS_BUFFER_CAPACITY] UINT32
+PendingExternalInterrupts[PENDING_INTERRUPTS_BUFFER_CAPACITY] uint32
 DebuggingState PROCESSOR_DEBUGGING_STATE
 VmxoffState VMX_VMXOFF_STATE
 TransparencyState VM_EXIT_TRANSPARENCY

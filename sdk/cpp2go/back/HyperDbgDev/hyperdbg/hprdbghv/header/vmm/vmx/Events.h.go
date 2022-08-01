@@ -62,7 +62,7 @@ const(
 
 type EVENT_INFORMATION struct{
 InterruptInfo INTERRUPT_INFO
-InstructionLength UINT32
+InstructionLength uint32
 ErrorCode uint64
 }
 

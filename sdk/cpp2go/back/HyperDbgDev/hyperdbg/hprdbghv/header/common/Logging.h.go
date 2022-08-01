@@ -10,8 +10,8 @@ PendingIrp PIRP
 
 
 type BUFFER_HEADER struct{
-OpeationNumber UINT32
-BufferLength UINT32
+OpeationNumber uint32
+BufferLength uint32
 Valid bool
 }
 
@@ -20,15 +20,15 @@ type LOG_BUFFER_INFORMATION struct{
 BufferLock KSPIN_LOCK
 BufferLockForNonImmMessage KSPIN_LOCK
 BufferForMultipleNonImmediateMessage uint64
-CurrentLengthOfNonImmBuffer UINT32
+CurrentLengthOfNonImmBuffer uint32
 BufferStartAddress uint64
 BufferEndAddress uint64
-CurrentIndexToSend UINT32
-CurrentIndexToWrite UINT32
+CurrentIndexToSend uint32
+CurrentIndexToWrite uint32
 BufferStartAddressPriority uint64
 BufferEndAddressPriority uint64
-CurrentIndexToSendPriority UINT32
-CurrentIndexToWritePriority UINT32
+CurrentIndexToSendPriority uint32
+CurrentIndexToWritePriority uint32
 }
 
 

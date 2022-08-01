@@ -9,8 +9,8 @@ DbgReceivedUserResponse(UserSyncObjectId) = do { DEBUGGER_SYNCRONIZATION_EVENTS_
 type ACTIVE_DEBUGGING_PROCESS struct{
 IsActive bool
 ProcessDebuggingToken uint64
-ProcessId UINT32
-ThreadId UINT32
+ProcessId uint32
+ThreadId uint32
 IsPaused bool
 Registers GUEST_REGS
 Context uint64

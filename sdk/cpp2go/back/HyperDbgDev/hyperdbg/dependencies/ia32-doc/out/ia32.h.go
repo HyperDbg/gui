@@ -6867,10 +6867,10 @@ typedef enum = 1  //col:37
 
 type  struct{
 TypedefStruct typedef struct
-MaxCpuidInputValue UINT32
-EbxValueGenu UINT32
-EcxValueNtel UINT32
-EdxValueInei UINT32
+MaxCpuidInputValue uint32
+EbxValueGenu uint32
+EcxValueNtel uint32
+EdxValueInei uint32
 }
 
 
@@ -6878,14 +6878,14 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-SteppingId UINT32
-Model UINT32
-FamilyId UINT32
-ProcessorType UINT32
-Reserved1 UINT32
-ExtendedModelId UINT32
-ExtendedFamilyId UINT32
-Reserved2 UINT32
+SteppingId uint32
+Model uint32
+FamilyId uint32
+ProcessorType uint32
+Reserved1 uint32
+ExtendedModelId uint32
+ExtendedFamilyId uint32
+Reserved2 uint32
 }
 
 
@@ -6893,13 +6893,13 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-CacheTypeField UINT32
-CacheLevel UINT32
-SelfInitializingCacheLevel UINT32
-FullyAssociativeCache UINT32
-Reserved1 UINT32
-MaxAddressableIdsForLogicalProcessorsSharingThisCache UINT32
-MaxAddressableIdsForProcessorCoresInPhysicalPackage UINT32
+CacheTypeField uint32
+CacheLevel uint32
+SelfInitializingCacheLevel uint32
+FullyAssociativeCache uint32
+Reserved1 uint32
+MaxAddressableIdsForLogicalProcessorsSharingThisCache uint32
+MaxAddressableIdsForProcessorCoresInPhysicalPackage uint32
 }
 
 
@@ -6907,8 +6907,8 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-SmallestMonitorLineSize UINT32
-Reserved1 UINT32
+SmallestMonitorLineSize uint32
+Reserved1 uint32
 }
 
 
@@ -6916,30 +6916,30 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-TemperatureSensorSupported UINT32
-IntelTurboBoostTechnologyAvailable UINT32
-ApicTimerAlwaysRunning UINT32
-Reserved1 UINT32
-PowerLimitNotification UINT32
-ClockModulationDuty UINT32
-PackageThermalManagement UINT32
-HwpBaseRegisters UINT32
-HwpNotification UINT32
-HwpActivityWindow UINT32
-HwpEnergyPerformancePreference UINT32
-HwpPackageLevelRequest UINT32
-Reserved2 UINT32
-Hdc UINT32
-IntelTurboBoostMaxTechnology3Available UINT32
-HwpCapabilities UINT32
-HwpPeciOverride UINT32
-FlexibleHwp UINT32
-FastAccessModeForHwpRequestMsr UINT32
-Reserved3 UINT32
-IgnoringIdleLogicalProcessorHwpRequest UINT32
-Reserved4 UINT32
-IntelThreadDirector UINT32
-Reserved5 UINT32
+TemperatureSensorSupported uint32
+IntelTurboBoostTechnologyAvailable uint32
+ApicTimerAlwaysRunning uint32
+Reserved1 uint32
+PowerLimitNotification uint32
+ClockModulationDuty uint32
+PackageThermalManagement uint32
+HwpBaseRegisters uint32
+HwpNotification uint32
+HwpActivityWindow uint32
+HwpEnergyPerformancePreference uint32
+HwpPackageLevelRequest uint32
+Reserved2 uint32
+Hdc uint32
+IntelTurboBoostMaxTechnology3Available uint32
+HwpCapabilities uint32
+HwpPeciOverride uint32
+FlexibleHwp uint32
+FastAccessModeForHwpRequestMsr uint32
+Reserved3 uint32
+IgnoringIdleLogicalProcessorHwpRequest uint32
+Reserved4 uint32
+IntelThreadDirector uint32
+Reserved5 uint32
 }
 
 
@@ -6947,7 +6947,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-NumberOfSubLeaves UINT32
+NumberOfSubLeaves uint32
 }
 
 
@@ -6955,7 +6955,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Ia32PlatformDcaCap UINT32
+Ia32PlatformDcaCap uint32
 }
 
 
@@ -6963,10 +6963,10 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-VersionIdOfArchitecturalPerformanceMonitoring UINT32
-NumberOfPerformanceMonitoringCounterPerLogicalProcessor: UINT32
-BitWidthOfPerformanceMonitoringCounter UINT32
-EbxBitVectorLength UINT32
+VersionIdOfArchitecturalPerformanceMonitoring uint32
+NumberOfPerformanceMonitoringCounterPerLogicalProcessor: uint32
+BitWidthOfPerformanceMonitoringCounter uint32
+EbxBitVectorLength uint32
 }
 
 
@@ -6974,8 +6974,8 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-X2ApicIdToUniqueTopologyIdShift UINT32
-Reserved1 UINT32
+X2ApicIdToUniqueTopologyIdShift uint32
+Reserved1 uint32
 }
 
 
@@ -6983,16 +6983,16 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-X87State UINT32
-SseState UINT32
-AvxState UINT32
-MpxState UINT32
-Avx512State UINT32
-UsedForIa32Xss1 UINT32
-PkruState UINT32
-Reserved1 UINT32
-UsedForIa32Xss2 UINT32
-Reserved2 UINT32
+X87State uint32
+SseState uint32
+AvxState uint32
+MpxState uint32
+Avx512State uint32
+UsedForIa32Xss1 uint32
+PkruState uint32
+Reserved1 uint32
+UsedForIa32Xss2 uint32
+Reserved2 uint32
 }
 
 
@@ -7000,11 +7000,11 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Reserved1 UINT32
-SupportsXsavecAndCompactedXrstor UINT32
-SupportsXgetbvWithEcx1 UINT32
-SupportsXsaveXrstorAndIa32Xss UINT32
-Reserved2 UINT32
+Reserved1 uint32
+SupportsXsavecAndCompactedXrstor uint32
+SupportsXgetbvWithEcx1 uint32
+SupportsXsaveXrstorAndIa32Xss uint32
+Reserved2 uint32
 }
 
 
@@ -7012,7 +7012,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Ia32PlatformDcaCap UINT32
+Ia32PlatformDcaCap uint32
 }
 
 
@@ -7020,7 +7020,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Reserved UINT32
+Reserved uint32
 }
 
 
@@ -7028,7 +7028,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Reserved UINT32
+Reserved uint32
 }
 
 
@@ -7036,7 +7036,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Ia32PlatformDcaCap UINT32
+Ia32PlatformDcaCap uint32
 }
 
 
@@ -7044,8 +7044,8 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-LengthOfCapacityBitMask UINT32
-Reserved1 UINT32
+LengthOfCapacityBitMask uint32
+Reserved1 uint32
 }
 
 
@@ -7053,8 +7053,8 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-LengthOfCapacityBitMask UINT32
-Reserved1 UINT32
+LengthOfCapacityBitMask uint32
+Reserved1 uint32
 }
 
 
@@ -7062,8 +7062,8 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-MaxMbaThrottlingValue UINT32
-Reserved1 UINT32
+MaxMbaThrottlingValue uint32
+Reserved1 uint32
 }
 
 
@@ -7071,12 +7071,12 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Sgx1 UINT32
-Sgx2 UINT32
-Reserved1 UINT32
-SgxEnclvAdvanced UINT32
-SgxEnclsAdvanced UINT32
-Reserved2 UINT32
+Sgx1 uint32
+Sgx2 uint32
+Reserved1 uint32
+SgxEnclvAdvanced uint32
+SgxEnclsAdvanced uint32
+Reserved2 uint32
 }
 
 
@@ -7084,7 +7084,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-ValidSecsAttributes0 UINT32
+ValidSecsAttributes0 uint32
 }
 
 
@@ -7092,8 +7092,8 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-SubLeafType UINT32
-Reserved1 UINT32
+SubLeafType uint32
+Reserved1 uint32
 }
 
 
@@ -7101,9 +7101,9 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-SubLeafType UINT32
-Reserved1 UINT32
-EpcBasePhysicalAddress1 UINT32
+SubLeafType uint32
+Reserved1 uint32
+EpcBasePhysicalAddress1 uint32
 }
 
 
@@ -7111,7 +7111,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-MaxSubLeaf UINT32
+MaxSubLeaf uint32
 }
 
 
@@ -7119,9 +7119,9 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-NumberOfConfigurableAddressRangesForFiltering UINT32
-Reserved1 UINT32
-BitmapOfSupportedMtcPeriodEncodings UINT32
+NumberOfConfigurableAddressRangesForFiltering uint32
+Reserved1 uint32
+BitmapOfSupportedMtcPeriodEncodings uint32
 }
 
 
@@ -7129,7 +7129,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Denominator UINT32
+Denominator uint32
 }
 
 
@@ -7137,8 +7137,8 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-ProcesorBaseFrequencyMhz UINT32
-Reserved1 UINT32
+ProcesorBaseFrequencyMhz uint32
+Reserved1 uint32
 }
 
 
@@ -7146,7 +7146,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-MaxSocIdIndex UINT32
+MaxSocIdIndex uint32
 }
 
 
@@ -7154,7 +7154,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-SocVendorBrandString UINT32
+SocVendorBrandString uint32
 }
 
 
@@ -7162,7 +7162,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Reserved UINT32
+Reserved uint32
 }
 
 
@@ -7170,7 +7170,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-MaxSubLeaf UINT32
+MaxSubLeaf uint32
 }
 
 
@@ -7178,7 +7178,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Reserved UINT32
+Reserved uint32
 }
 
 
@@ -7186,7 +7186,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-MaxExtendedFunctions UINT32
+MaxExtendedFunctions uint32
 }
 
 
@@ -7194,7 +7194,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Reserved UINT32
+Reserved uint32
 }
 
 
@@ -7202,7 +7202,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-ProcessorBrandString1 UINT32
+ProcessorBrandString1 uint32
 }
 
 
@@ -7210,7 +7210,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-ProcessorBrandString5 UINT32
+ProcessorBrandString5 uint32
 }
 
 
@@ -7218,7 +7218,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-ProcessorBrandString9 UINT32
+ProcessorBrandString9 uint32
 }
 
 
@@ -7226,7 +7226,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Reserved UINT32
+Reserved uint32
 }
 
 
@@ -7234,7 +7234,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Reserved UINT32
+Reserved uint32
 }
 
 
@@ -7242,7 +7242,7 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-Reserved UINT32
+Reserved uint32
 }
 
 
@@ -7250,9 +7250,9 @@ type  struct{
 TypedefStruct typedef struct
 Union union
 Struct struct
-NumberOfPhysicalAddressBits UINT32
-NumberOfLinearAddressBits UINT32
-Reserved1 UINT32
+NumberOfPhysicalAddressBits uint32
+NumberOfLinearAddressBits uint32
+Reserved1 uint32
 }
 
 
@@ -7264,14 +7264,14 @@ ThreadAdjust uint64
 
 type  struct{
 TypedefStruct typedef struct
-MsegHeaderRevision UINT32
-MonitorFeatures UINT32
-GdtrLimit UINT32
-GdtrBaseOffset UINT32
-CsSelector UINT32
-EipOffset UINT32
-EspOffset UINT32
-Cr3Offset UINT32
+MsegHeaderRevision uint32
+MonitorFeatures uint32
+GdtrLimit uint32
+GdtrBaseOffset uint32
+CsSelector uint32
+EipOffset uint32
+EspOffset uint32
+Cr3Offset uint32
 }
 
 
@@ -7296,7 +7296,7 @@ StallCycleCount uint64
 type  struct{
 TypedefStruct typedef struct
 Limit UINT16
-BaseAddress UINT32
+BaseAddress uint32
 }
 
 
@@ -7313,17 +7313,17 @@ SegmentLimitLow UINT16
 BaseAddressLow UINT16
 Union union
 Struct struct
-BaseAddressMiddle UINT32
-Type UINT32
-DescriptorType UINT32
-DescriptorPrivilegeLevel UINT32
-Present UINT32
-SegmentLimitHigh UINT32
-System UINT32
-LongMode UINT32
-DefaultBig UINT32
-Granularity UINT32
-BaseAddressHigh UINT32
+BaseAddressMiddle uint32
+Type uint32
+DescriptorType uint32
+DescriptorPrivilegeLevel uint32
+Present uint32
+SegmentLimitHigh uint32
+System uint32
+LongMode uint32
+DefaultBig uint32
+Granularity uint32
+BaseAddressHigh uint32
 }
 
 
@@ -7333,17 +7333,17 @@ SegmentLimitLow UINT16
 BaseAddressLow UINT16
 Union union
 Struct struct
-BaseAddressMiddle UINT32
-Type UINT32
-DescriptorType UINT32
-DescriptorPrivilegeLevel UINT32
-Present UINT32
-SegmentLimitHigh UINT32
-System UINT32
-LongMode UINT32
-DefaultBig UINT32
-Granularity UINT32
-BaseAddressHigh UINT32
+BaseAddressMiddle uint32
+Type uint32
+DescriptorType uint32
+DescriptorPrivilegeLevel uint32
+Present uint32
+SegmentLimitHigh uint32
+System uint32
+LongMode uint32
+DefaultBig uint32
+Granularity uint32
+BaseAddressHigh uint32
 }
 
 
@@ -7353,19 +7353,19 @@ OffsetLow UINT16
 SegmentSelector UINT16
 Union union
 Struct struct
-InterruptStackTable UINT32
-MustBeZero0 UINT32
-Type UINT32
-MustBeZero1 UINT32
-DescriptorPrivilegeLevel UINT32
-Present UINT32
-OffsetMiddle UINT32
+InterruptStackTable uint32
+MustBeZero0 uint32
+Type uint32
+MustBeZero1 uint32
+DescriptorPrivilegeLevel uint32
+Present uint32
+OffsetMiddle uint32
 }
 
 
 type  struct{
 TypedefStruct typedef struct
-Reserved0 UINT32
+Reserved0 uint32
 Rsp0 uint64
 Rsp1 uint64
 Rsp2 uint64
@@ -7385,8 +7385,8 @@ IoMapBase UINT16
 
 type  struct{
 TypedefStruct typedef struct
-Reason UINT32
-ExceptionMask UINT32
+Reason uint32
+ExceptionMask uint32
 Exit uint64
 GuestLinearAddress uint64
 GuestPhysicalAddress uint64
@@ -7421,7 +7421,7 @@ type  struct{
 TypedefStruct typedef struct
 Vpid UINT16
 Reserved1 UINT16
-Reserved2 UINT32
+Reserved2 uint32
 LinearAddress uint64
 }
 
@@ -7429,16 +7429,16 @@ LinearAddress uint64
 type  struct{
 TypedefStruct typedef struct
 Struct struct
-RevisionId UINT32
-ShadowVmcsIndicator UINT32
+RevisionId uint32
+ShadowVmcsIndicator uint32
 }
 
 
 type  struct{
 TypedefStruct typedef struct
 Struct struct
-RevisionId UINT32
-MustBeZero UINT32
+RevisionId uint32
+MustBeZero uint32
 }
 
 

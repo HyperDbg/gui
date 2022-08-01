@@ -19,7 +19,7 @@ Buffer PWSTR
 
 
 type     typedef struct _STUPID_STRUCT1 struct{
-Flag32 UINT32
+Flag32 uint32
 Flag64 uint64
 Context PVOID
 StringValue PUNICODE_STRING
@@ -27,7 +27,7 @@ StringValue PUNICODE_STRING
 
 
 type     typedef struct _STUPID_STRUCT2 struct{
-Sina32 UINT32
+Sina32 uint32
 Sina64 uint64
 AghaaSina PVOID
 UnicodeStr PUNICODE_STRING

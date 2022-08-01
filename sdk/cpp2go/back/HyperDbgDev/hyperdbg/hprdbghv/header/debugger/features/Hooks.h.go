@@ -37,7 +37,7 @@ pArgumentTable PCHAR
 
 
 type HIDDEN_HOOKS_DETOUR_DETAILS struct{
-OtherHooksList LIST_ENTRY
+OtherHooksList *list.List
 HookedFunctionAddress PVOID
 ReturnAddress PVOID
 }

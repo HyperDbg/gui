@@ -1,4 +1,10 @@
 package include
+
+import (
+    "container/list"
+    "time"
+)
+
 //back\HyperDbgDev\hyperdbg\include\Definition.h.back
 
 const(
@@ -21,17 +27,17 @@ const(
 
 
 type DEBUGGER_GENERAL_EVENT_DETAIL struct{
-ListEntry LIST_ENTRY
-CommandsEventList; byte
-CreationTime time_t
-CoreId UINT32
-ProcessId UINT32
+ListEntry *list.List
+CommandsEventList byte
+CreationTime time.Time
+CoreId uint32
+ProcessId uint32
 IsEnabled bool
 HasCustomOutput bool
 Uint64 uint64
 OutputSourceTags OutputSourceTags
-[DebuggerOutputSourceMaximumRemoteSourceForSingleEvent]; byte
-CountOfActions UINT32
+[DebuggerOutputSourceMaximumRemoteSourceForSingleEvent] byte
+CountOfActions uint32
 Tag uint64
 EventType DEBUGGER_EVENT_TYPE_ENUM
 OptionalParam1 uint64
@@ -39,7 +45,7 @@ OptionalParam2 uint64
 OptionalParam3 uint64
 OptionalParam4 uint64
 CommandStringBuffer PVOID
-ConditionBufferSize UINT32
+ConditionBufferSize uint32
 }
 
 
@@ -47,16 +53,16 @@ type DEBUGGER_GENERAL_ACTION struct{
 EventTag uint64
 ActionType DEBUGGER_EVENT_ACTION_TYPE_ENUM
 ImmediateMessagePassing bool
-PreAllocatedBuffer UINT32
-CustomCodeBufferSize UINT32
-ScriptBufferSize UINT32
-ScriptBufferPointer UINT32
+PreAllocatedBuffer uint32
+CustomCodeBufferSize uint32
+ScriptBufferSize uint32
+ScriptBufferPointer uint32
 }
 
 
 type DEBUGGER_EVENT_AND_ACTION_REG_BUFFER struct{
 IsSuccessful bool
-Error UINT32
+Error uint32
 }
 
 

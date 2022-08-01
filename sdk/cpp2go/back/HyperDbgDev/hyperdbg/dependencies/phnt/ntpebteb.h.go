@@ -8,7 +8,7 @@ GDI_BATCH_BUFFER_SIZE = 310 //col:2
 
 type ACTIVATION_CONTEXT_STACK struct{
 _RTL_ACTIVATION_CONTEXT_STACK_FRAME* struct
-FrameListCache LIST_ENTRY
+FrameListCache *list.List
 Flags ULONG
 NextCookieSequenceNumber ULONG
 StackId ULONG
@@ -17,7 +17,7 @@ StackId ULONG
 
 type ACTIVATION_CONTEXT_STACK struct{
 _RTL_ACTIVATION_CONTEXT_STACK_FRAME* struct
-FrameListCache LIST_ENTRY
+FrameListCache *list.List
 Flags ULONG
 NextCookieSequenceNumber ULONG
 StackId ULONG
@@ -26,7 +26,7 @@ StackId ULONG
 
 type ACTIVATION_CONTEXT_STACK struct{
 _RTL_ACTIVATION_CONTEXT_STACK_FRAME* struct
-FrameListCache LIST_ENTRY
+FrameListCache *list.List
 Flags ULONG
 NextCookieSequenceNumber ULONG
 StackId ULONG
@@ -171,7 +171,7 @@ StaticUnicodeString UNICODE_STRING
 StaticUnicodeBuffer[261] WCHAR
 DeallocationStack PVOID
 TlsSlots[64] PVOID
-TlsLinks LIST_ENTRY
+TlsLinks *list.List
 Vdm PVOID
 ReservedForNtRpc PVOID
 DbgSsReserved[2] PVOID

@@ -21,16 +21,16 @@ CpuidMedian uint64
 RdtscAverage uint64
 RdtscStandardDeviation uint64
 RdtscMedian uint64
-ProcessList LIST_ENTRY
+ProcessList *list.List
 }
 
 
 type TRANSPARENCY_PROCESS struct{
-ProcessId UINT32
+ProcessId uint32
 ProcessName PVOID
 BufferAddress PVOID
 TrueIfProcessIdAndFalseIfProcessName bool
-OtherProcesses LIST_ENTRY
+OtherProcesses *list.List
 }
 
 

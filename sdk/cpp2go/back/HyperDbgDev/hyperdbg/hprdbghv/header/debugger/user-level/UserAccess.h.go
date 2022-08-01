@@ -5,9 +5,9 @@ type PEB_LDR_DATA struct{
 Length ULONG
 Initialized bool
 SsHandle PVOID
-ModuleListLoadOrder LIST_ENTRY
-ModuleListMemoryOrder LIST_ENTRY
-ModuleListInitOrder LIST_ENTRY
+ModuleListLoadOrder *list.List
+ModuleListMemoryOrder *list.List
+ModuleListInitOrder *list.List
 }
 
 
@@ -92,9 +92,9 @@ TimeDateStamp ULONG
 
 
 type LDR_DATA_TABLE_ENTRY struct{
-InLoadOrderModuleList LIST_ENTRY
-InMemoryOrderModuleList LIST_ENTRY
-InInitializationOrderModuleList LIST_ENTRY
+InLoadOrderModuleList *list.List
+InMemoryOrderModuleList *list.List
+InInitializationOrderModuleList *list.List
 DllBase PVOID
 EntryPoint PVOID
 SizeOfImage ULONG
@@ -103,7 +103,7 @@ BaseDllName UNICODE_STRING
 Flags ULONG
 LoadCount UINT16
 TlsIndex UINT16
-HashLinks LIST_ENTRY
+HashLinks *list.List
 SectionPointer PVOID
 CheckSum ULONG
 TimeDateStamp ULONG

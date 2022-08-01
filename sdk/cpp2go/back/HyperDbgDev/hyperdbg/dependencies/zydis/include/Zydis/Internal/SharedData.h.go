@@ -298,12 +298,12 @@ id ZyanU8
 
 
 type typedef struct ZydisInstructionDefinition_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE; byte
+ZYDIS_INSTRUCTION_DEFINITION_BASE byte
 }
 
 
 type typedef struct ZydisInstructionDefinitionLEGACY_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE; byte
+ZYDIS_INSTRUCTION_DEFINITION_BASE byte
 #ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE
 is_privileged ZyanBool
 #endif #endif
@@ -323,17 +323,17 @@ accepts_segment ZyanBool
 
 
 type typedef struct ZydisInstructionDefinition3DNOW_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE; byte
+ZYDIS_INSTRUCTION_DEFINITION_BASE byte
 }
 
 
 type typedef struct ZydisInstructionDefinitionXOP_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR; byte
+ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR byte
 }
 
 
 type typedef struct ZydisInstructionDefinitionVEX_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL; byte
+ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte
 #ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE
 broadcast ZyanU8
 #endif #endif
@@ -341,7 +341,7 @@ broadcast ZyanU8
 
 
 type typedef struct ZydisInstructionDefinitionEVEX_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL; byte
+ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte
 #ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE
 vector_length ZyanU8
 tuple_type ZyanU8
@@ -358,7 +358,7 @@ broadcast ZyanU8
 
 
 type typedef struct ZydisInstructionDefinitionMVEX_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL; byte
+ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte
 functionality ZyanU8
 mask_policy ZyanU8
 #ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE

@@ -11,20 +11,20 @@ type USERMODE_DEBUGGING_PROCESS_DETAILS struct{
 Token uint64
 Enabled bool
 PebAddressToMonitor PVOID
-ActiveThreadId UINT32
+ActiveThreadId uint32
 Registers GUEST_REGS
 Context uint64
-AttachedProcessList LIST_ENTRY
+AttachedProcessList *list.List
 UsermodeReservedBuffer uint64
 EntrypointOfMainModule uint64
 BaseAddressOfMainModule uint64
 Eprocess PEPROCESS
-ProcessId UINT32
+ProcessId uint32
 Is32Bit bool
 IsOnTheStartingPhase bool
 IsOnThreadInterceptingPhase bool
 InterceptedCr3[MAX_CR3_IN_A_PROCESS] CR3_TYPE
-ThreadsListHead LIST_ENTRY
+ThreadsListHead *list.List
 }
 
 

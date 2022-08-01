@@ -133,7 +133,7 @@ const(
 type VMX_SEGMENT_SELECTOR struct{
 Selector UINT16
 Attributes VMX_SEGMENT_ACCESS_RIGHTS
-Limit UINT32
+Limit uint32
 Base uint64
 }
 
@@ -148,7 +148,7 @@ edx int
 
 type NT_KPROCESS struct{
 Header DISPATCHER_HEADER
-ProfileListHead LIST_ENTRY
+ProfileListHead *list.List
 DirectoryTableBase ULONG_PTR
 Data[1] UCHAR
 }

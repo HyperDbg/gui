@@ -21,7 +21,7 @@ type POOL_TABLE struct{
 Address uint64
 Size SIZE_T
 Intention POOL_ALLOCATION_INTENTION
-PoolsList LIST_ENTRY
+PoolsList *list.List
 IsBusy bool
 ShouldBeFreed bool
 AlreadyFreed bool
@@ -30,7 +30,7 @@ AlreadyFreed bool
 
 type REQUEST_NEW_ALLOCATION struct{
 Size SIZE_T
-Count UINT32
+Count uint32
 Intention POOL_ALLOCATION_INTENTION
 }
 

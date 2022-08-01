@@ -6,19 +6,19 @@ SIZEOF_DEBUGGER_PAUSE_PACKET_RECEIVED = sizeof(DEBUGGER_PAUSE_PACKET_RECEIVED) /
 )
 
 type DEBUGGEE_USER_INPUT_PACKET struct{
-CommandLen UINT32
+CommandLen uint32
 IgnoreFinishedSignal bool
-Result UINT32
+Result uint32
 }
 
 
 type DEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET struct{
-Length UINT32
+Length uint32
 }
 
 
 type DEBUGGER_PAUSE_PACKET_RECEIVED struct{
-Result UINT32
+Result uint32
 }
 
 
@@ -39,8 +39,8 @@ Rip uint64
 ProcessDebuggingToken uint64
 Is32Bit bool
 PausingReason DEBUGGEE_PAUSING_REASON
-ProcessId UINT32
-ThreadId UINT32
+ProcessId uint32
+ThreadId uint32
 EventTag uint64
 Rflags uint64
 InstructionBytesOnRip[MAXIMUM_INSTR_SIZE] BYTE
@@ -50,7 +50,7 @@ GuestRegs GUEST_REGS
 
 
 type DEBUGGEE_MESSAGE_PACKET struct{
-OperationCode UINT32
+OperationCode uint32
 Message[PacketChunkSize] CHAR
 }
 

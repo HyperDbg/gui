@@ -37,7 +37,7 @@ MemoryType UCHAR
 
 
 type EPT_STATE struct{
-HookedPagesList LIST_ENTRY
+HookedPagesList *list.List
 MemoryRanges[EPT_MTRR_RANGE_DESCRIPTOR_MAX] MTRR_RANGE_DESCRIPTOR
 NumberOfEnabledMemoryRanges ULONG
 EptPointer EPT_POINTER
@@ -58,7 +58,7 @@ Pointer PEPT_PML2_POINTER
 type EPT_HOOKED_PAGE_DETAIL struct{
 DeclspecAlign(PageSize) DECLSPEC_ALIGN(PAGE_SIZE)
 FakePageContents[PAGE_SIZE] CHAR
-PageHookList LIST_ENTRY
+PageHookList *list.List
 VirtualAddress uint64
 AddressOfEptHook2sDetourListEntry uint64
 PhysicalBaseAddress SIZE_T

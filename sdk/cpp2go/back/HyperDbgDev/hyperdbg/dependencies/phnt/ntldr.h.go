@@ -116,7 +116,7 @@ Tail PSINGLE_LIST_ENTRY
 
 
 type LDR_DDAG_NODE struct{
-Modules LIST_ENTRY
+Modules *list.List
 ServiceTagList PLDR_SERVICE_TAG_RECORD
 LoadCount ULONG
 LoadWhileUnloadingCount ULONG
@@ -136,11 +136,11 @@ IncomingDependencyNode PLDR_DDAG_NODE
 
 
 type LDR_DATA_TABLE_ENTRY struct{
-InLoadOrderLinks LIST_ENTRY
-InMemoryOrderLinks LIST_ENTRY
+InLoadOrderLinks *list.List
+InMemoryOrderLinks *list.List
 Union union
-InInitializationOrderLinks LIST_ENTRY
-InProgressLinks LIST_ENTRY
+InInitializationOrderLinks *list.List
+InProgressLinks *list.List
 }
 
 

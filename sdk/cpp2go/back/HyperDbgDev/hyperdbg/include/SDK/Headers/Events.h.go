@@ -54,7 +54,7 @@ type DEBUGGER_MODIFY_EVENTS struct{
 Tag uint64
 KernelStatus uint64
 DebuggerModifyEventsType DEBUGGER_MODIFY_EVENTS_TYPE
-TypeOfAction; byte
+TypeOfAction byte
 IsEnabled bool
 }
 

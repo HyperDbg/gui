@@ -171,7 +171,7 @@ const(
 
 type DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS struct{
 VirtualAddress uint64
-ProcessId UINT32
+ProcessId uint32
 Pml4eVirtualAddress uint64
 Pml4eValue uint64
 PdpteVirtualAddress uint64
@@ -180,16 +180,16 @@ PdeVirtualAddress uint64
 PdeValue uint64
 PteVirtualAddress uint64
 PteValue uint64
-KernelStatus UINT32
+KernelStatus uint32
 }
 
 
 type DEBUGGER_VA2PA_AND_PA2VA_COMMANDS struct{
 VirtualAddress uint64
 PhysicalAddress uint64
-ProcessId UINT32
+ProcessId uint32
 IsVirtual2Physical bool
-KernelStatus UINT32
+KernelStatus uint32
 }
 
 
@@ -199,7 +199,7 @@ SizeOfTypeName uint64
 Address uint64
 IsStruct bool
 BufferAddress PVOID
-TargetPid UINT32
+TargetPid uint32
 char const
 }
 
@@ -207,43 +207,43 @@ char const
 type DEBUGGER_PREALLOC_COMMAND struct{
 Type DEBUGGER_PREALLOC_COMMAND_TYPE
 Count uint64
-KernelStatus UINT32
+KernelStatus uint32
 }
 
 
 type DEBUGGER_READ_MEMORY struct{
-Pid UINT32
+Pid uint32
 Address uint64
-Size UINT32
+Size uint32
 MemoryType DEBUGGER_READ_MEMORY_TYPE
 ReadingType DEBUGGER_READ_READING_TYPE
 DtDetails PDEBUGGER_DT_COMMAND_OPTIONS
 Style DEBUGGER_SHOW_MEMORY_STYLE
-ReturnLength UINT32
-KernelStatus UINT32
+ReturnLength uint32
+KernelStatus uint32
 }
 
 
 type DEBUGGER_FLUSH_LOGGING_BUFFERS struct{
-KernelStatus UINT32
-CountOfMessagesThatSetAsReadFromVmxRoot UINT32
-CountOfMessagesThatSetAsReadFromVmxNonRoot UINT32
+KernelStatus uint32
+CountOfMessagesThatSetAsReadFromVmxRoot uint32
+CountOfMessagesThatSetAsReadFromVmxNonRoot uint32
 }
 
 
 type DEBUGGER_DEBUGGER_TEST_QUERY_BUFFER struct{
-RequestIndex UINT32
-KernelStatus UINT32
+RequestIndex uint32
+KernelStatus uint32
 }
 
 
 type DEBUGGER_PERFORM_KERNEL_TESTS struct{
-KernelStatus UINT32
+KernelStatus uint32
 }
 
 
 type DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL struct{
-KernelStatus UINT32
+KernelStatus uint32
 }
 
 
@@ -255,47 +255,47 @@ Tag[32] char
 
 type DEBUGGEE_SEND_GENERAL_PACKET_FROM_DEBUGGEE_TO_DEBUGGER struct{
 RequestedAction DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION
-LengthOfBuffer UINT32
+LengthOfBuffer uint32
 PauseDebuggeeWhenSent bool
-KernelResult UINT32
+KernelResult uint32
 }
 
 
 type DEBUGGER_SEND_USERMODE_MESSAGES_TO_DEBUGGER struct{
-KernelStatus UINT32
-Length UINT32
+KernelStatus uint32
+Length uint32
 }
 
 
 type DEBUGGER_READ_AND_WRITE_ON_MSR struct{
 Msr uint64
-CoreNumber UINT32
+CoreNumber uint32
 DebuggerMsrActionType DEBUGGER_MSR_ACTION_TYPE
-ActionType; byte
+ActionType byte
 Value uint64
 }
 
 
 type DEBUGGER_EDIT_MEMORY struct{
-Result UINT32
+Result uint32
 Address uint64
-ProcessId UINT32
+ProcessId uint32
 MemoryType DEBUGGER_EDIT_MEMORY_TYPE
 ByteSize DEBUGGER_EDIT_MEMORY_BYTE_SIZE
-CountOf64Chunks UINT32
-FinalStructureSize UINT32
-KernelStatus UINT32
+CountOf64Chunks uint32
+FinalStructureSize uint32
+KernelStatus uint32
 }
 
 
 type DEBUGGER_SEARCH_MEMORY struct{
 Address uint64
 Length uint64
-ProcessId UINT32
+ProcessId uint32
 MemoryType DEBUGGER_SEARCH_MEMORY_TYPE
 ByteSize DEBUGGER_SEARCH_MEMORY_BYTE_SIZE
-CountOf64Chunks UINT32
-FinalStructureSize UINT32
+CountOf64Chunks uint32
+FinalStructureSize uint32
 }
 
 
@@ -308,35 +308,35 @@ RdtscAverage uint64
 RdtscStandardDeviation uint64
 RdtscMedian uint64
 TrueIfProcessIdAndFalseIfProcessName bool
-ProcId UINT32
-LengthOfProcessName UINT32
+ProcId uint32
+LengthOfProcessName uint32
 DebuggerErrorUnableToHideOrUnhideDebugger DEBUGGER_ERROR_UNABLE_TO_HIDE_OR_UNHIDE_DEBUGGER
 }
 
 
 type DEBUGGER_PREPARE_DEBUGGEE struct{
-PortAddress UINT32
-Baudrate UINT32
+PortAddress uint32
+Baudrate uint32
 NtoskrnlBaseAddress uint64
-Result UINT32
+Result uint32
 OsName[MAXIMUM_CHARACTER_FOR_OS_NAME] CHAR
 }
 
 
 type DEBUGGEE_CHANGE_CORE_PACKET struct{
-NewCore UINT32
-Result UINT32
+NewCore uint32
+Result uint32
 }
 
 
 type DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS struct{
 IsStartingNewProcess bool
-ProcessId UINT32
-ThreadId UINT32
+ProcessId uint32
+ThreadId uint32
 Is32Bit bool
 IsPaused bool
 Action DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_TYPE
-CountOfActiveDebuggingThreadsAndProcesses UINT32
+CountOfActiveDebuggingThreadsAndProcesses uint32
 Token uint64
 Result uint64
 }
@@ -351,9 +351,9 @@ ActiveProcessLinksOffset ULONG
 
 
 type DEBUGGEE_THREAD_LIST_NEEDED_DETAILS struct{
-ThreadListHeadOffset UINT32
-ThreadListEntryOffset UINT32
-CidOffset UINT32
+ThreadListHeadOffset uint32
+ThreadListEntryOffset uint32
+CidOffset uint32
 PsActiveProcessHead uint64
 ActiveProcessLinksOffset ULONG
 Process uint64
@@ -362,7 +362,7 @@ Process uint64
 
 type DEBUGGEE_PROCESS_LIST_DETAILS_ENTRY struct{
 Eprocess uint64
-Pid UINT32
+Pid uint32
 Cr3 uint64
 ImageFileName[15 UCHAR
 }
@@ -382,7 +382,7 @@ ProcessListNeededDetails DEBUGGEE_PROCESS_LIST_NEEDED_DETAILS
 ThreadListNeededDetails DEBUGGEE_THREAD_LIST_NEEDED_DETAILS
 QueryType DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_TYPES
 QueryAction DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_ACTIONS
-Count UINT32
+Count uint32
 Result uint64
 }
 
@@ -398,41 +398,41 @@ InstructionBytesOnRip[MAXIMUM_CALL_INSTR_SIZE] BYTE
 
 type DEBUGGER_CALLSTACK_REQUEST struct{
 Is32Bit bool
-KernelStatus UINT32
+KernelStatus uint32
 DisplayMethod DEBUGGER_CALLSTACK_DISPLAY_METHOD
-Size UINT32
-FrameCount UINT32
+Size uint32
+FrameCount uint32
 BaseAddress uint64
 BufferSize uint64
 }
 
 
 type USERMODE_DEBUGGING_THREAD_OR_PROCESS_STATE_DETAILS struct{
-ProcessId UINT32
-ThreadId UINT32
+ProcessId uint32
+ThreadId uint32
 IsProcess bool
 }
 
 
 type DEBUGGER_EVENT_ACTION_RUN_SCRIPT_CONFIGURATION struct{
 ScriptBuffer uint64
-ScriptLength UINT32
-ScriptPointer UINT32
-OptionalRequestedBufferSize UINT32
+ScriptLength uint32
+ScriptPointer uint32
+OptionalRequestedBufferSize uint32
 }
 
 
 type DEBUGGER_EVENT_REQUEST_BUFFER struct{
 EnabledRequestBuffer bool
-RequestBufferSize UINT32
+RequestBufferSize uint32
 RequstBufferAddress uint64
 }
 
 
 type DEBUGGER_EVENT_REQUEST_CUSTOM_CODE struct{
-CustomCodeBufferSize UINT32
+CustomCodeBufferSize uint32
 CustomCodeBufferAddress PVOID
-OptionalRequestedBufferSize UINT32
+OptionalRequestedBufferSize uint32
 }
 
 
@@ -448,72 +448,72 @@ OptionalParam4 uint64
 type DEBUGGER_UD_COMMAND_PACKET struct{
 UdAction DEBUGGER_UD_COMMAND_ACTION
 ProcessDebuggingDetailToken uint64
-TargetThreadId UINT32
+TargetThreadId uint32
 ApplyToAllPausedThreads bool
-Result UINT32
+Result uint32
 }
 
 
 type DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_PACKET struct{
 ActionType DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_TYPE
-ProcessId UINT32
+ProcessId uint32
 Process uint64
 IsSwitchByClkIntr bool
 ProcessName[16] UCHAR
 ProcessListSymDetails DEBUGGEE_PROCESS_LIST_NEEDED_DETAILS
-Result UINT32
+Result uint32
 }
 
 
 type DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET struct{
 ActionType DEBUGGEE_DETAILS_AND_SWITCH_THREAD_TYPE
-ThreadId UINT32
-ProcessId UINT32
+ThreadId uint32
+ProcessId uint32
 Thread uint64
 Process uint64
 CheckByClockInterrupt bool
 ProcessName[16] UCHAR
 ThreadListSymDetails DEBUGGEE_THREAD_LIST_NEEDED_DETAILS
-Result UINT32
+Result uint32
 }
 
 
 type DEBUGGEE_STEP_PACKET struct{
 StepType DEBUGGER_REMOTE_STEPPING_REQUEST
 IsCurrentInstructionACall bool
-CallLength UINT32
+CallLength uint32
 }
 
 
 type DEBUGGEE_FORMATS_PACKET struct{
 Value uint64
-Result UINT32
+Result uint32
 }
 
 
 type DEBUGGEE_SYMBOL_REQUEST_PACKET struct{
-ProcessId UINT32
+ProcessId uint32
 }
 
 
 type DEBUGGEE_BP_PACKET struct{
 Address uint64
-Pid UINT32
-Tid UINT32
-Core UINT32
-Result UINT32
+Pid uint32
+Tid uint32
+Core uint32
+Result uint32
 }
 
 
 type DEBUGGEE_BP_DESCRIPTOR struct{
 BreakpointId uint64
-BreakpointsList LIST_ENTRY
+BreakpointsList *list.List
 Enabled bool
 Address uint64
 PhysAddress uint64
-Pid UINT32
-Tid UINT32
-Core UINT32
+Pid uint32
+Tid uint32
+Core uint32
 InstructionLength UINT16
 PreviousByte BYTE
 SetRflagsIFBitOnMtf bool
@@ -524,28 +524,28 @@ AvoidReApplyBreakpoint bool
 type DEBUGGEE_BP_LIST_OR_MODIFY_PACKET struct{
 BreakpointId uint64
 Request DEBUGGEE_BREAKPOINT_MODIFICATION_REQUEST
-Result UINT32
+Result uint32
 }
 
 
 type DEBUGGEE_SCRIPT_PACKET struct{
-ScriptBufferSize UINT32
-ScriptBufferPointer UINT32
+ScriptBufferSize uint32
+ScriptBufferPointer uint32
 IsFormat bool
-Result UINT32
+Result uint32
 }
 
 
 type DEBUGGEE_RESULT_OF_SEARCH_PACKET struct{
-CountOfResults UINT32
-Result UINT32
+CountOfResults uint32
+Result uint32
 }
 
 
 type DEBUGGEE_REGISTER_READ_DESCRIPTION struct{
-RegisterID UINT32
+RegisterID uint32
 Value uint64
-KernelStatus UINT32
+KernelStatus uint32
 }
 
 

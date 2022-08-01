@@ -21,16 +21,16 @@ FilePath[MAX_PATH] wchar_t
 
 
 type USERMODE_LOADED_MODULE_DETAILS struct{
-ProcessId UINT32
+ProcessId uint32
 OnlyCountModules bool
-ModulesCount UINT32
-Result UINT32
+ModulesCount uint32
+Result uint32
 }
 
 
 type DEBUGGER_UPDATE_SYMBOL_TABLE struct{
-TotalSymbols UINT32
-CurrentSymbolIndex UINT32
+TotalSymbols uint32
+CurrentSymbolIndex uint32
 SymbolDetailPacket MODULE_SYMBOL_DETAIL
 }
 

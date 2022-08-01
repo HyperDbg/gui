@@ -373,7 +373,7 @@ _RTL_SPLAY_LINKS struct
 
 type RTL_GENERIC_TABLE struct{
 TableRoot PRTL_SPLAY_LINKS
-InsertOrderList LIST_ENTRY
+InsertOrderList *list.List
 OrderedPointer PLIST_ENTRY
 WhichOrderedElement ULONG
 NumberGenericTableElements ULONG
@@ -391,7 +391,7 @@ Min PRTL_BALANCED_NODE
 
 
 type RTL_DYNAMIC_HASH_TABLE_ENTRY struct{
-Linkage LIST_ENTRY
+Linkage *list.List
 Signature ULONG_PTR
 }
 
@@ -578,7 +578,7 @@ XState CONTEXT_CHUNK
 
 
 type DYNAMIC_FUNCTION_TABLE struct{
-ListEntry LIST_ENTRY
+ListEntry *list.List
 FunctionTable PRUNTIME_FUNCTION
 TimeStamp LARGE_INTEGER
 MinimumAddress ULONG64

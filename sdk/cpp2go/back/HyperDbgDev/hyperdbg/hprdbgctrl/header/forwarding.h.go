@@ -35,8 +35,8 @@ State DEBUGGER_EVENT_FORWARDING_STATE
 Handle HANDLE
 Socket SOCKET
 OutputUniqueTag uint64
-ListEntry LIST_ENTRY
-OutputSourcesList; byte
+ListEntry *list.List
+OutputSourcesList byte
 Name[MAXIMUM_CHARACTERS_FOR_EVENT_FORWARDING_NAME] CHAR
 }
 

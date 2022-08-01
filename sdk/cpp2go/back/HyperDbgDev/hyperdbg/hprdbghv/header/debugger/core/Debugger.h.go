@@ -17,25 +17,25 @@ const(
 
 
 type DEBUGGER_CORE_EVENTS struct{
-HiddenHookReadAndWriteEventsHead LIST_ENTRY
-HiddenHookReadEventsHead LIST_ENTRY
-HiddenHookWriteEventsHead LIST_ENTRY
-EptHook2sExecDetourEventsHead LIST_ENTRY
-EptHookExecCcEventsHead LIST_ENTRY
-SyscallHooksEferSyscallEventsHead LIST_ENTRY
-SyscallHooksEferSysretEventsHead LIST_ENTRY
-CpuidInstructionExecutionEventsHead LIST_ENTRY
-RdmsrInstructionExecutionEventsHead LIST_ENTRY
-WrmsrInstructionExecutionEventsHead LIST_ENTRY
-ExceptionOccurredEventsHead LIST_ENTRY
-TscInstructionExecutionEventsHead LIST_ENTRY
-PmcInstructionExecutionEventsHead LIST_ENTRY
-InInstructionExecutionEventsHead LIST_ENTRY
-OutInstructionExecutionEventsHead LIST_ENTRY
-DebugRegistersAccessedEventsHead LIST_ENTRY
-ExternalInterruptOccurredEventsHead LIST_ENTRY
-VmcallInstructionExecutionEventsHead LIST_ENTRY
-ControlRegisterModifiedEventsHead LIST_ENTRY
+HiddenHookReadAndWriteEventsHead *list.List
+HiddenHookReadEventsHead *list.List
+HiddenHookWriteEventsHead *list.List
+EptHook2sExecDetourEventsHead *list.List
+EptHookExecCcEventsHead *list.List
+SyscallHooksEferSyscallEventsHead *list.List
+SyscallHooksEferSysretEventsHead *list.List
+CpuidInstructionExecutionEventsHead *list.List
+RdmsrInstructionExecutionEventsHead *list.List
+WrmsrInstructionExecutionEventsHead *list.List
+ExceptionOccurredEventsHead *list.List
+TscInstructionExecutionEventsHead *list.List
+PmcInstructionExecutionEventsHead *list.List
+InInstructionExecutionEventsHead *list.List
+OutInstructionExecutionEventsHead *list.List
+DebugRegistersAccessedEventsHead *list.List
+ExternalInterruptOccurredEventsHead *list.List
+VmcallInstructionExecutionEventsHead *list.List
+ControlRegisterModifiedEventsHead *list.List
 }
 
 
@@ -90,34 +90,34 @@ HardwareDebugRegisterForStepping uint64
 
 type DEBUGGER_EVENT_ACTION struct{
 Tag uint64
-ActionOrderCode UINT32
-ActionsList LIST_ENTRY
+ActionOrderCode uint32
+ActionsList *list.List
 ActionType DEBUGGER_EVENT_ACTION_TYPE_ENUM
 ImmediatelySendTheResults bool
 DebuggerEventActionRunScriptConfiguration DEBUGGER_EVENT_ACTION_RUN_SCRIPT_CONFIGURATION
-ScriptConfiguration; byte
+ScriptConfiguration byte
 DebuggerEventRequestBuffer DEBUGGER_EVENT_REQUEST_BUFFER
-RequestedBuffer; byte
-CustomCodeBufferSize UINT32
+RequestedBuffer byte
+CustomCodeBufferSize uint32
 CustomCodeBufferAddress PVOID
 }
 
 
 type DEBUGGER_EVENT struct{
 Tag uint64
-EventsOfSameTypeList LIST_ENTRY
+EventsOfSameTypeList *list.List
 EventType DEBUGGER_EVENT_TYPE_ENUM
 Enabled bool
-CoreId UINT32
-Uint32 UINT32
-ProcessId; byte
-ActionsListHead LIST_ENTRY
-CountOfActions UINT32
+CoreId uint32
+Uint32 uint32
+ProcessId byte
+ActionsListHead *list.List
+CountOfActions uint32
 OptionalParam1 uint64
 OptionalParam2 uint64
 OptionalParam3 uint64
 OptionalParam4 uint64
-ConditionsBufferSize UINT32
+ConditionsBufferSize uint32
 ConditionBufferAddress PVOID
 }
 

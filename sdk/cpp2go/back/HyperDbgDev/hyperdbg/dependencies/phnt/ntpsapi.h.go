@@ -633,9 +633,9 @@ type PEB_LDR_DATA struct{
 Length ULONG
 Initialized bool
 SsHandle HANDLE
-InLoadOrderModuleList LIST_ENTRY
-InMemoryOrderModuleList LIST_ENTRY
-InInitializationOrderModuleList LIST_ENTRY
+InLoadOrderModuleList *list.List
+InMemoryOrderModuleList *list.List
+InInitializationOrderModuleList *list.List
 EntryInProgress PVOID
 ShutdownInProgress bool
 ShutdownThreadId HANDLE
