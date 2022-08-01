@@ -1,4 +1,5 @@
-package user-level
+package user_level
+
 //binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\debugger\user-level\UserAccess.h.back
 
 type PEB_LDR_DATA struct {
@@ -102,3 +103,4 @@ type LDR_DATA_TABLE_ENTRY struct {
 	CheckSum                        uint32         //col:100
 	TimeDateStamp                   uint32         //col:101
 }
+

@@ -23,3 +23,4 @@ const (
 	COM3_PORT  = 0x03E8 //col:18
 	COM4_PORT  = 0x02E8 //col:19
 )
+

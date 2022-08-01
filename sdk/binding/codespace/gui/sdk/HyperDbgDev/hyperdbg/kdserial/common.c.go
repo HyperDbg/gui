@@ -13,18 +13,26 @@ type (
 func NewCommon() Common { return &common{} }
 
 func (c *common) DllInitialize() (ok bool) { //col:5
-	/*DllInitialize(
-	      _In_ PUNICODE_STRING RegistryPath)
-	  {
-	      return STATUS_SUCCESS;
-	  }*/
+	/*
+	   DllInitialize(
+
+	   	_In_ PUNICODE_STRING RegistryPath)
+
+	   	{
+	   	    return STATUS_SUCCESS;
+	   	}
+	*/
 	return true
 }
 
 func (c *common) DllUnload() (ok bool) { //col:9
-	/*DllUnload(void)
-	  {
-	      return STATUS_SUCCESS;
-	  }*/
+	/*
+	   DllUnload(void)
+
+	   	{
+	   	    return STATUS_SUCCESS;
+	   	}
+	*/
 	return true
 }
+

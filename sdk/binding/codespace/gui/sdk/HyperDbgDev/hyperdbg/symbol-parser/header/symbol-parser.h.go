@@ -12,3 +12,4 @@ type SYMBOL_LOADED_MODULE_DETAILS struct {
 	ModuleName  [_MAX_FNAME]int8 //col:5
 	PdbFilePath [MAX_PATH]int8   //col:6
 }
+

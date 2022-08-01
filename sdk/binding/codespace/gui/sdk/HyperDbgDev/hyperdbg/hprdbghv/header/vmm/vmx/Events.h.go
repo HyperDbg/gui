@@ -63,3 +63,4 @@ type EVENT_INFORMATION struct {
 	InstructionLength uint32         //col:4
 	ErrorCode         uint64         //col:5
 }
+

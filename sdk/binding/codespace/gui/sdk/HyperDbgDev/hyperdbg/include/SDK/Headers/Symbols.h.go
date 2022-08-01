@@ -35,3 +35,4 @@ type DEBUGGER_UPDATE_SYMBOL_TABLE struct {
 type DEBUGGEE_SYMBOL_UPDATE_RESULT struct {
 	KernelStatus uint64 //col:33
 }
+

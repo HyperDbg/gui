@@ -12,3 +12,4 @@ const (
 	DebugMode                                   = FALSE //col:7
 	ActivateUserModeDebugger                    = FALSE //col:8
 )
+

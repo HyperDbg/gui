@@ -51,3 +51,4 @@ const (
 	SERIAL_MSR_DCD         = 0x80   //col:46
 	SERIAL_LSR_NOT_PRESENT = 0xff   //col:47
 )
+

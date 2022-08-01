@@ -113,3 +113,4 @@ type DEBUGGER_EVENT struct {
 	ConditionsBufferSize   uint32                   //col:97
 	ConditionBufferAddress PVOID                    //col:98
 }
+

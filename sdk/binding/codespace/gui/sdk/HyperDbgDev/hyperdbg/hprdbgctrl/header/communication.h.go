@@ -8,3 +8,4 @@ const (
 	COM3_PORT = 0x03E8 //col:3
 	COM4_PORT = 0x02E8 //col:4
 )
+

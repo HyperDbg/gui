@@ -12,9 +12,13 @@ type (
 func NewZycore() Zycore { return &zycore{} }
 
 func (z *zycore) ZyanU64_ZycoreGetVersion() (ok bool) { //col:4
-	/*ZyanU64 ZycoreGetVersion(void)
-	  {
-	      return ZYCORE_VERSION;
-	  }*/
+	/*
+	   ZyanU64 ZycoreGetVersion(void)
+
+	   	{
+	   	    return ZYCORE_VERSION;
+	   	}
+	*/
 	return true
 }
+

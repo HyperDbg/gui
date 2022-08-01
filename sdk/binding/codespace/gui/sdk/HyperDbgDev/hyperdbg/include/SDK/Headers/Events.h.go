@@ -53,3 +53,4 @@ type DEBUGGER_MODIFY_EVENTS struct {
 	TypeOfAction             byte                        //col:6
 	IsEnabled                bool                        //col:7
 }
+

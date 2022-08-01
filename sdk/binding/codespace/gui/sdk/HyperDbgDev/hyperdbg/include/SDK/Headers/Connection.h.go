@@ -87,3 +87,4 @@ type DEBUGGER_REMOTE_PACKET struct {
 	TypeOfThePacket            DEBUGGER_REMOTE_PACKET_TYPE             //col:5
 	RequestedActionOfThePacket DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION //col:6
 }
+

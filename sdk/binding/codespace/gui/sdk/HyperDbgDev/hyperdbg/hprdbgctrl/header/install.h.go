@@ -7,3 +7,4 @@ const (
 	DRIVER_FUNC_STOP    = 0x02 //col:2
 	DRIVER_FUNC_REMOVE  = 0x03 //col:3
 )
+

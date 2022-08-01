@@ -31,3 +31,4 @@ type REQUEST_NEW_ALLOCATION struct {
 	Count     uint32                    //col:14
 	Intention POOL_ALLOCATION_INTENTION //col:15
 }
+

@@ -49,3 +49,4 @@ type DEBUGGEE_MESSAGE_PACKET struct {
 	OperationCode uint32                //col:42
 	Message       [PacketChunkSize]int8 //col:43
 }
+

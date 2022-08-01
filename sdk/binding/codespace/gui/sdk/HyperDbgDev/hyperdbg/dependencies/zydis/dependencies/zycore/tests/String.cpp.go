@@ -12,10 +12,14 @@ type (
 func NewString() String { return &string{} }
 
 func (s *string) int_main() (ok bool) { //col:5
-	/*int main(int argc, char **argv)
-	  {
-	    ::testing::InitGoogleTest(&argc, argv);
-	    return RUN_ALL_TESTS();
-	  }*/
+	/*
+	   int main(int argc, char **argv)
+
+	   	{
+	   	  ::testing::InitGoogleTest(&argc, argv);
+	   	  return RUN_ALL_TESTS();
+	   	}
+	*/
 	return true
 }
+

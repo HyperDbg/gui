@@ -50,3 +50,4 @@ type DEBUGGER_SYNCRONIZATION_EVENTS_STATE struct {
 	EventHandle      HANDLE //col:3
 	IsOnWaitingState bool   //col:4
 }
+

@@ -19,65 +19,90 @@ type (
 func NewBroadcast() Broadcast { return &broadcast{} }
 
 func (b *broadcast) BroadcastVmxVirtualizationAllCores() (ok bool) { //col:4
-	/*BroadcastVmxVirtualizationAllCores()
-	  {
-	      KeGenericCallDpc(DpcRoutinePerformVirtualization, NULL);
-	  }*/
+	/*
+	   BroadcastVmxVirtualizationAllCores()
+
+	   	{
+	   	    KeGenericCallDpc(DpcRoutinePerformVirtualization, NULL);
+	   	}
+	*/
 	return true
 }
 
 func (b *broadcast) BroadcastEnableDbAndBpExitingAllCores() (ok bool) { //col:8
-	/*BroadcastEnableDbAndBpExitingAllCores()
-	  {
-	      KeGenericCallDpc(DpcRoutineEnableDbAndBpExitingOnAllCores, NULL);
-	  }*/
+	/*
+	   BroadcastEnableDbAndBpExitingAllCores()
+
+	   	{
+	   	    KeGenericCallDpc(DpcRoutineEnableDbAndBpExitingOnAllCores, NULL);
+	   	}
+	*/
 	return true
 }
 
 func (b *broadcast) BroadcastDisableDbAndBpExitingAllCores() (ok bool) { //col:12
-	/*BroadcastDisableDbAndBpExitingAllCores()
-	  {
-	      KeGenericCallDpc(DpcRoutineDisableDbAndBpExitingOnAllCores, NULL);
-	  }*/
+	/*
+	   BroadcastDisableDbAndBpExitingAllCores()
+
+	   	{
+	   	    KeGenericCallDpc(DpcRoutineDisableDbAndBpExitingOnAllCores, NULL);
+	   	}
+	*/
 	return true
 }
 
 func (b *broadcast) BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores() (ok bool) { //col:16
-	/*BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores()
-	  {
-	      KeGenericCallDpc(DpcRoutineEnableBreakpointOnExceptionBitmapOnAllCores, NULL);
-	  }*/
+	/*
+	   BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores()
+
+	   	{
+	   	    KeGenericCallDpc(DpcRoutineEnableBreakpointOnExceptionBitmapOnAllCores, NULL);
+	   	}
+	*/
 	return true
 }
 
 func (b *broadcast) BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores() (ok bool) { //col:20
-	/*BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores()
-	  {
-	      KeGenericCallDpc(DpcRoutineDisableBreakpointOnExceptionBitmapOnAllCores, NULL);
-	  }*/
+	/*
+	   BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores()
+
+	   	{
+	   	    KeGenericCallDpc(DpcRoutineDisableBreakpointOnExceptionBitmapOnAllCores, NULL);
+	   	}
+	*/
 	return true
 }
 
 func (b *broadcast) BroadcastEnableNmiExitingAllCores() (ok bool) { //col:24
-	/*BroadcastEnableNmiExitingAllCores()
-	  {
-	      KeGenericCallDpc(DpcRoutineEnableNmiVmexitOnAllCores, NULL);
-	  }*/
+	/*
+	   BroadcastEnableNmiExitingAllCores()
+
+	   	{
+	   	    KeGenericCallDpc(DpcRoutineEnableNmiVmexitOnAllCores, NULL);
+	   	}
+	*/
 	return true
 }
 
 func (b *broadcast) BroadcastDisableNmiExitingAllCores() (ok bool) { //col:28
-	/*BroadcastDisableNmiExitingAllCores()
-	  {
-	      KeGenericCallDpc(DpcRoutineDisableNmiVmexitOnAllCores, NULL);
-	  }*/
+	/*
+	   BroadcastDisableNmiExitingAllCores()
+
+	   	{
+	   	    KeGenericCallDpc(DpcRoutineDisableNmiVmexitOnAllCores, NULL);
+	   	}
+	*/
 	return true
 }
 
 func (b *broadcast) BroadcastNotifyAllToInvalidateEptAllCores() (ok bool) { //col:32
-	/*BroadcastNotifyAllToInvalidateEptAllCores()
-	  {
-	      KeGenericCallDpc(DpcRoutineInvalidateEptOnAllCores, g_EptState->EptPointer.AsUInt);
-	  }*/
+	/*
+	   BroadcastNotifyAllToInvalidateEptAllCores()
+
+	   	{
+	   	    KeGenericCallDpc(DpcRoutineInvalidateEptOnAllCores, g_EptState->EptPointer.AsUInt);
+	   	}
+	*/
 	return true
 }
+

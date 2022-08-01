@@ -98,3 +98,4 @@ type COMMAND_DETAIL struct {
 	CommandHelpFunction CommandHelpFuncType //col:4
 	CommandAttrib       uint64              //col:5
 }
+

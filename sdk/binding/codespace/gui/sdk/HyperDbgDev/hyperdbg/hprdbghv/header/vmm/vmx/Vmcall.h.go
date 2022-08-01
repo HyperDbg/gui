@@ -49,3 +49,4 @@ const (
 	VMCALL_DISABLE_MOV_TO_CONTROL_REGS_EXITING                                 = 0x2c       //col:44
 	VMCALL_DISABLE_MOV_TO_CR_EXITING_ONLY_FOR_CR_EVENTS                        = 0x2d       //col:45
 )
+

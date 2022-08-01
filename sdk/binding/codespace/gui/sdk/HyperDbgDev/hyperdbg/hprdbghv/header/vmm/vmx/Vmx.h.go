@@ -115,3 +115,4 @@ type VIRTUAL_MACHINE_STATE struct {
 	MtfEptHookRestorePoint     PEPT_HOOKED_PAGE_DETAIL                    //col:31
 	MemoryMapper               MEMORY_MAPPER_ADDRESSES                    //col:32
 }
+

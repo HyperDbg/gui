@@ -29,3 +29,4 @@ type LOG_BUFFER_INFORMATION struct {
 	CurrentIndexToSendPriority           uint32     //col:30
 	CurrentIndexToWritePriority          uint32     //col:31
 }
+

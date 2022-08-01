@@ -1,4 +1,5 @@
-package kernel-level
+package kernel_level
+
 //binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\debugger\kernel-level\Kd.h.back
 
 type DEBUGGEE_REQUEST_TO_CHANGE_PROCESS struct {
@@ -21,3 +22,4 @@ type HARDWARE_DEBUG_REGISTER_DETAILS struct {
 	ProcessId uint32 //col:19
 	ThreadId  uint32 //col:20
 }
+

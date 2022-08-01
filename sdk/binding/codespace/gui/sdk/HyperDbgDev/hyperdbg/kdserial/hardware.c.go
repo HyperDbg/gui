@@ -5,3 +5,4 @@ package kdserial
 const (
 	ARRAY_SIZE (array) = (sizeof(array) / sizeof(array[0])) //col:1
 )
+

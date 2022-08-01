@@ -169,3 +169,4 @@ const (
 	ZYDIS_ISA_SET_MAX_VALUE               = ZYDIS_ISA_SET_XSAVES                            //col:166
 	ZYDIS_ISA_SET_REQUIRED_BITS           = ZYAN_BITS_TO_REPRESENT(ZYDIS_ISA_SET_MAX_VALUE) //col:167
 )
+

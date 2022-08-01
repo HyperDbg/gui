@@ -63,3 +63,4 @@ const (
 	DEBUGGER_ERROR_UNABLE_TO_GET_CALLSTACK                                      = 0xc0000038 //col:62
 	DEBUGGER_ERROR_UNABLE_TO_QUERY_COUNT_OF_PROCESSES_OR_THREADS                = 0xc0000039 //col:63
 )
+

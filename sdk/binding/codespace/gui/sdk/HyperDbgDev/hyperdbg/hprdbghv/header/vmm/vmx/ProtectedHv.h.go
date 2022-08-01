@@ -11,3 +11,4 @@ const (
 	PASSING_OVER_MOV_TO_HW_DEBUG_REGS_EVENTS           = 6 //col:8
 	PASSING_OVER_MOV_TO_CONTROL_REGS_EVENTS            = 7 //col:9
 )
+

@@ -36,3 +36,4 @@ type DEBUGGER_EVENT_FORWARDING struct {
 	OutputSourcesList byte                                               //col:9
 	Name              [MAXIMUM_CHARACTERS_FOR_EVENT_FORWARDING_NAME]int8 //col:10
 }
+

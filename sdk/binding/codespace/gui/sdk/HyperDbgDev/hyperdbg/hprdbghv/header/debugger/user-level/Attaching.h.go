@@ -1,4 +1,5 @@
-package user-level
+package user_level
+
 //binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\debugger\user-level\Attaching.h.back
 
 const (
@@ -26,3 +27,4 @@ type USERMODE_DEBUGGING_PROCESS_DETAILS struct {
 	InterceptedCr3              [MAX_CR3_IN_A_PROCESS]CR3_TYPE //col:18
 	ThreadsListHead             *list.List                     //col:19
 }
+

@@ -31,3 +31,4 @@ type TRANSPARENCY_PROCESS struct {
 	TrueIfProcessIdAndFalseIfProcessName bool       //col:23
 	OtherProcesses                       *list.List //col:24
 }
+
