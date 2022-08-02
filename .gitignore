@@ -3,3 +3,4 @@ log.log
 /go.work
 /go.work.sum
 /work_test.go
+/librarygo/
