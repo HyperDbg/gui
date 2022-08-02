@@ -1,5 +1,5 @@
 package phnt
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\winsta.h.back
 
 const(
     State_Active  =  0  //col:3
@@ -142,521 +142,482 @@ const(
 
 
 
-type VARDATA_WIRE struct{
-Size USHORT //col:3
-Offset USHORT //col:4
+type  _VARDATA_WIRE struct{
+Size uint16 //col:7
+Offset uint16 //col:8
 }
 
 
-
-type SESSIONIDW struct{
-Union union //col:8
-SessionId uint32 //col:10
-LogonId uint32 //col:11
+type  _SESSIONIDW struct{
+Union union //col:14
+SessionId uint32 //col:16
+LogonId uint32 //col:17
 }
 
 
-
-type WINSTATIONCREATE struct{
-fEnableWinStation uint32 //col:18
-MaxInstanceCount uint32 //col:19
+type  _WINSTATIONCREATE struct{
+fEnableWinStation uint32 //col:22
+MaxInstanceCount uint32 //col:23
 }
 
 
-
-type WINSTACONFIGWIRE struct{
-Comment[61] WCHAR //col:23
-OEMId[4] int8 //col:24
-UserConfig VARDATA_WIRE //col:25
-NewFields VARDATA_WIRE //col:26
+type  _WINSTACONFIGWIRE struct{
+Comment[61] WCHAR //col:29
+OEMId[4] int8 //col:30
+UserConfig VARDATA_WIRE //col:31
+NewFields VARDATA_WIRE //col:32
 }
 
 
-
-type USERCONFIG struct{
-fInheritAutoLogon uint32 //col:30
-fInheritResetBroken uint32 //col:31
-fInheritReconnectSame uint32 //col:32
-fInheritInitialProgram uint32 //col:33
-fInheritCallback uint32 //col:34
-fInheritCallbackNumber uint32 //col:35
-fInheritShadow uint32 //col:36
-fInheritMaxSessionTime uint32 //col:37
-fInheritMaxDisconnectionTime uint32 //col:38
-fInheritMaxIdleTime uint32 //col:39
-fInheritAutoClient uint32 //col:40
-fInheritSecurity uint32 //col:41
-fPromptForPassword uint32 //col:42
-fResetBroken uint32 //col:43
-fReconnectSame uint32 //col:44
-fLogonDisabled uint32 //col:45
-fWallPaperDisabled uint32 //col:46
-fAutoClientDrives uint32 //col:47
-fAutoClientLpts uint32 //col:48
-fForceClientLptDef uint32 //col:49
-fRequireEncryption uint32 //col:50
-fDisableEncryption uint32 //col:51
-fUnused1 uint32 //col:52
-fHomeDirectoryMapRoot uint32 //col:53
-fUseDefaultGina uint32 //col:54
-fCursorBlinkDisabled uint32 //col:55
-fPublishedApp uint32 //col:56
-fHideTitleBar uint32 //col:57
-fMaximize uint32 //col:58
-fDisableCpm uint32 //col:59
-fDisableCdm uint32 //col:60
-fDisableCcm uint32 //col:61
-fDisableLPT uint32 //col:62
-fDisableClip uint32 //col:63
-fDisableExe uint32 //col:64
-fDisableCam uint32 //col:65
-fDisableAutoReconnect uint32 //col:66
-ColorDepth uint32 //col:67
-fInheritColorDepth uint32 //col:68
-fErrorInvalidProfile uint32 //col:69
-fPasswordIsScPin uint32 //col:70
-fDisablePNPRedir uint32 //col:71
-UserName[USERNAME_LENGTH WCHAR //col:72
-Domain[DOMAIN_LENGTH WCHAR //col:73
-Password[PASSWORD_LENGTH WCHAR //col:74
-WorkDirectory[DIRECTORY_LENGTH WCHAR //col:75
-InitialProgram[INITIALPROGRAM_LENGTH WCHAR //col:76
-CallbackNumber[CALLBACK_LENGTH WCHAR //col:77
-Callback CALLBACKCLASS //col:78
-Shadow SHADOWCLASS //col:79
-MaxConnectionTime uint32 //col:80
-MaxDisconnectionTime uint32 //col:81
-MaxIdleTime uint32 //col:82
-KeyboardLayout uint32 //col:83
-MinEncryptionLevel uint8 //col:84
-NWLogonServer[NASIFILESERVER_LENGTH WCHAR //col:85
-PublishedName[MAX_BR_NAME] WCHAR //col:86
-WFProfilePath[DIRECTORY_LENGTH WCHAR //col:87
-WFHomeDir[DIRECTORY_LENGTH WCHAR //col:88
-WFHomeDirDrive[4] WCHAR //col:89
+type  _USERCONFIG struct{
+fInheritAutoLogon uint32 //col:92
+fInheritResetBroken uint32 //col:93
+fInheritReconnectSame uint32 //col:94
+fInheritInitialProgram uint32 //col:95
+fInheritCallback uint32 //col:96
+fInheritCallbackNumber uint32 //col:97
+fInheritShadow uint32 //col:98
+fInheritMaxSessionTime uint32 //col:99
+fInheritMaxDisconnectionTime uint32 //col:100
+fInheritMaxIdleTime uint32 //col:101
+fInheritAutoClient uint32 //col:102
+fInheritSecurity uint32 //col:103
+fPromptForPassword uint32 //col:104
+fResetBroken uint32 //col:105
+fReconnectSame uint32 //col:106
+fLogonDisabled uint32 //col:107
+fWallPaperDisabled uint32 //col:108
+fAutoClientDrives uint32 //col:109
+fAutoClientLpts uint32 //col:110
+fForceClientLptDef uint32 //col:111
+fRequireEncryption uint32 //col:112
+fDisableEncryption uint32 //col:113
+fUnused1 uint32 //col:114
+fHomeDirectoryMapRoot uint32 //col:115
+fUseDefaultGina uint32 //col:116
+fCursorBlinkDisabled uint32 //col:117
+fPublishedApp uint32 //col:118
+fHideTitleBar uint32 //col:119
+fMaximize uint32 //col:120
+fDisableCpm uint32 //col:121
+fDisableCdm uint32 //col:122
+fDisableCcm uint32 //col:123
+fDisableLPT uint32 //col:124
+fDisableClip uint32 //col:125
+fDisableExe uint32 //col:126
+fDisableCam uint32 //col:127
+fDisableAutoReconnect uint32 //col:128
+ColorDepth uint32 //col:129
+fInheritColorDepth uint32 //col:130
+fErrorInvalidProfile uint32 //col:131
+fPasswordIsScPin uint32 //col:132
+fDisablePNPRedir uint32 //col:133
+UserName[USERNAME_LENGTH WCHAR //col:134
+Domain[DOMAIN_LENGTH WCHAR //col:135
+Password[PASSWORD_LENGTH WCHAR //col:136
+WorkDirectory[DIRECTORY_LENGTH WCHAR //col:137
+InitialProgram[INITIALPROGRAM_LENGTH WCHAR //col:138
+CallbackNumber[CALLBACK_LENGTH WCHAR //col:139
+Callback CALLBACKCLASS //col:140
+Shadow SHADOWCLASS //col:141
+MaxConnectionTime uint32 //col:142
+MaxDisconnectionTime uint32 //col:143
+MaxIdleTime uint32 //col:144
+KeyboardLayout uint32 //col:145
+MinEncryptionLevel uint8 //col:146
+NWLogonServer[NASIFILESERVER_LENGTH WCHAR //col:147
+PublishedName[MAX_BR_NAME] WCHAR //col:148
+WFProfilePath[DIRECTORY_LENGTH WCHAR //col:149
+WFHomeDir[DIRECTORY_LENGTH WCHAR //col:150
+WFHomeDirDrive[4] WCHAR //col:151
 }
 
 
-
-type NETWORKCONFIG struct{
-LanAdapter LONG //col:93
-NetworkName DEVICENAME //col:94
-Flags uint32 //col:95
+type  _NETWORKCONFIG struct{
+LanAdapter int32 //col:98
+NetworkName DEVICENAME //col:99
+Flags uint32 //col:100
 }
 
 
-
-type FLOWCONTROLCONFIG struct{
-fEnableSoftwareTx uint32 //col:99
-fEnableSoftwareRx uint32 //col:100
-fEnableDTR uint32 //col:101
-fEnableRTS uint32 //col:102
-XonChar int8 //col:103
-XoffChar int8 //col:104
-Type FLOWCONTROLCLASS //col:105
-HardwareReceive RECEIVEFLOWCONTROLCLASS //col:106
-HardwareTransmit TRANSMITFLOWCONTROLCLASS //col:107
+type  _FLOWCONTROLCONFIG struct{
+fEnableSoftwareTx uint32 //col:110
+fEnableSoftwareRx uint32 //col:111
+fEnableDTR uint32 //col:112
+fEnableRTS uint32 //col:113
+XonChar int8 //col:114
+XoffChar int8 //col:115
+Type FLOWCONTROLCLASS //col:116
+HardwareReceive RECEIVEFLOWCONTROLCLASS //col:117
+HardwareTransmit TRANSMITFLOWCONTROLCLASS //col:118
 }
 
 
-
-type CONNECTCONFIG struct{
-Type ASYNCCONNECTCLASS //col:111
-fEnableBreakDisconnect uint32 //col:112
+type  _CONNECTCONFIG struct{
+Type ASYNCCONNECTCLASS //col:115
+fEnableBreakDisconnect uint32 //col:116
 }
 
 
-
-type ASYNCCONFIG struct{
-DeviceName DEVICENAME //col:116
-ModemName MODEMNAME //col:117
-BaudRate uint32 //col:118
-Parity uint32 //col:119
-StopBits uint32 //col:120
-ByteSize uint32 //col:121
-fEnableDsrSensitivity uint32 //col:122
-fConnectionDriver uint32 //col:123
-FlowControl FLOWCONTROLCONFIG //col:124
-Connect CONNECTCONFIG //col:125
+type  _ASYNCCONFIG struct{
+DeviceName DEVICENAME //col:128
+ModemName MODEMNAME //col:129
+BaudRate uint32 //col:130
+Parity uint32 //col:131
+StopBits uint32 //col:132
+ByteSize uint32 //col:133
+fEnableDsrSensitivity uint32 //col:134
+fConnectionDriver uint32 //col:135
+FlowControl FLOWCONTROLCONFIG //col:136
+Connect CONNECTCONFIG //col:137
 }
 
 
-
-type NASICONFIG struct{
-SpecificName NASISPECIFICNAME //col:129
-UserName NASIUSERNAME //col:130
-PassWord NASIPASSWORD //col:131
-SessionName NASISESIONNAME //col:132
-FileServer NASIFILESERVER //col:133
-GlobalSession bool //col:134
+type  _NASICONFIG struct{
+SpecificName NASISPECIFICNAME //col:137
+UserName NASIUSERNAME //col:138
+PassWord NASIPASSWORD //col:139
+SessionName NASISESIONNAME //col:140
+FileServer NASIFILESERVER //col:141
+GlobalSession bool //col:142
 }
 
 
-
-type OEMTDCONFIG struct{
-Adapter LONG //col:138
-DeviceName DEVICENAME //col:139
-Flags uint32 //col:140
+type  _OEMTDCONFIG struct{
+Adapter int32 //col:143
+DeviceName DEVICENAME //col:144
+Flags uint32 //col:145
 }
 
 
-
-type PDPARAMS struct{
-SdClass SDCLASS //col:144
-Union union //col:145
-Network NETWORKCONFIG //col:147
-Async ASYNCCONFIG //col:148
-Nasi NASICONFIG //col:149
-OemTd OEMTDCONFIG //col:150
+type  _PDPARAMS struct{
+SdClass SDCLASS //col:153
+Union union //col:154
+Network NETWORKCONFIG //col:156
+Async ASYNCCONFIG //col:157
+Nasi NASICONFIG //col:158
+OemTd OEMTDCONFIG //col:159
 }
 
 
-
-type WDCONFIG struct{
-WdName WDNAME //col:155
-WdDLL DLLNAME //col:156
-WsxDLL DLLNAME //col:157
-WdFlag uint32 //col:158
-WdInputBufferLength uint32 //col:159
-CfgDLL DLLNAME //col:160
-WdPrefix WDPREFIX //col:161
+type  _WDCONFIG struct{
+WdName WDNAME //col:164
+WdDLL DLLNAME //col:165
+WsxDLL DLLNAME //col:166
+WdFlag uint32 //col:167
+WdInputBufferLength uint32 //col:168
+CfgDLL DLLNAME //col:169
+WdPrefix WDPREFIX //col:170
 }
 
 
-
-type PDCONFIG2 struct{
-PdName PDNAME //col:165
-SdClass SDCLASS //col:166
-PdDLL DLLNAME //col:167
-PdFlag uint32 //col:168
-OutBufLength uint32 //col:169
-OutBufCount uint32 //col:170
-OutBufDelay uint32 //col:171
-InteractiveDelay uint32 //col:172
-PortNumber uint32 //col:173
-KeepAliveTimeout uint32 //col:174
+type  _PDCONFIG2 struct{
+PdName PDNAME //col:177
+SdClass SDCLASS //col:178
+PdDLL DLLNAME //col:179
+PdFlag uint32 //col:180
+OutBufLength uint32 //col:181
+OutBufCount uint32 //col:182
+OutBufDelay uint32 //col:183
+InteractiveDelay uint32 //col:184
+PortNumber uint32 //col:185
+KeepAliveTimeout uint32 //col:186
 }
 
 
-
-type WINSTATIONCLIENT struct{
-fTextOnly uint32 //col:178
-fDisableCtrlAltDel uint32 //col:179
-fMouse uint32 //col:180
-fDoubleClickDetect uint32 //col:181
-fINetClient uint32 //col:182
-fPromptForPassword uint32 //col:183
-fMaximizeShell uint32 //col:184
-fEnableWindowsKey uint32 //col:185
-fRemoteConsoleAudio uint32 //col:186
-fPasswordIsScPin uint32 //col:187
-fNoAudioPlayback uint32 //col:188
-fUsingSavedCreds uint32 //col:189
-ClientName[CLIENTNAME_LENGTH WCHAR //col:190
-Domain[DOMAIN_LENGTH WCHAR //col:191
-UserName[USERNAME_LENGTH WCHAR //col:192
-Password[PASSWORD_LENGTH WCHAR //col:193
-WorkDirectory[DIRECTORY_LENGTH WCHAR //col:194
-InitialProgram[INITIALPROGRAM_LENGTH WCHAR //col:195
-SerialNumber uint32 //col:196
-EncryptionLevel uint8 //col:197
-ClientAddressFamily uint32 //col:198
-ClientAddress[CLIENTADDRESS_LENGTH WCHAR //col:199
-HRes USHORT //col:200
-VRes USHORT //col:201
-ColorDepth USHORT //col:202
-ProtocolType USHORT //col:203
-KeyboardLayout uint32 //col:204
-KeyboardType uint32 //col:205
-KeyboardSubType uint32 //col:206
-KeyboardFunctionKey uint32 //col:207
-ImeFileName[IMEFILENAME_LENGTH WCHAR //col:208
-ClientDirectory[DIRECTORY_LENGTH WCHAR //col:209
-ClientLicense[CLIENTLICENSE_LENGTH WCHAR //col:210
-ClientModem[CLIENTMODEM_LENGTH WCHAR //col:211
-ClientBuildNumber uint32 //col:212
-ClientHardwareId uint32 //col:213
-ClientProductId USHORT //col:214
-OutBufCountHost USHORT //col:215
-OutBufCountClient USHORT //col:216
-OutBufLength USHORT //col:217
-AudioDriverName[9] WCHAR //col:218
-ClientTimeZone TS_TIME_ZONE_INFORMATION //col:219
-ClientSessionId uint32 //col:220
-ClientDigProductId[CLIENT_PRODUCT_ID_LENGTH] WCHAR //col:221
-PerformanceFlags uint32 //col:222
-ActiveInputLocale uint32 //col:223
+type  _WINSTATIONCLIENT struct{
+fTextOnly uint32 //col:226
+fDisableCtrlAltDel uint32 //col:227
+fMouse uint32 //col:228
+fDoubleClickDetect uint32 //col:229
+fINetClient uint32 //col:230
+fPromptForPassword uint32 //col:231
+fMaximizeShell uint32 //col:232
+fEnableWindowsKey uint32 //col:233
+fRemoteConsoleAudio uint32 //col:234
+fPasswordIsScPin uint32 //col:235
+fNoAudioPlayback uint32 //col:236
+fUsingSavedCreds uint32 //col:237
+ClientName[CLIENTNAME_LENGTH WCHAR //col:238
+Domain[DOMAIN_LENGTH WCHAR //col:239
+UserName[USERNAME_LENGTH WCHAR //col:240
+Password[PASSWORD_LENGTH WCHAR //col:241
+WorkDirectory[DIRECTORY_LENGTH WCHAR //col:242
+InitialProgram[INITIALPROGRAM_LENGTH WCHAR //col:243
+SerialNumber uint32 //col:244
+EncryptionLevel uint8 //col:245
+ClientAddressFamily uint32 //col:246
+ClientAddress[CLIENTADDRESS_LENGTH WCHAR //col:247
+HRes uint16 //col:248
+VRes uint16 //col:249
+ColorDepth uint16 //col:250
+ProtocolType uint16 //col:251
+KeyboardLayout uint32 //col:252
+KeyboardType uint32 //col:253
+KeyboardSubType uint32 //col:254
+KeyboardFunctionKey uint32 //col:255
+ImeFileName[IMEFILENAME_LENGTH WCHAR //col:256
+ClientDirectory[DIRECTORY_LENGTH WCHAR //col:257
+ClientLicense[CLIENTLICENSE_LENGTH WCHAR //col:258
+ClientModem[CLIENTMODEM_LENGTH WCHAR //col:259
+ClientBuildNumber uint32 //col:260
+ClientHardwareId uint32 //col:261
+ClientProductId uint16 //col:262
+OutBufCountHost uint16 //col:263
+OutBufCountClient uint16 //col:264
+OutBufLength uint16 //col:265
+AudioDriverName[9] WCHAR //col:266
+ClientTimeZone TS_TIME_ZONE_INFORMATION //col:267
+ClientSessionId uint32 //col:268
+ClientDigProductId[CLIENT_PRODUCT_ID_LENGTH] WCHAR //col:269
+PerformanceFlags uint32 //col:270
+ActiveInputLocale uint32 //col:271
 }
 
 
-
-type TSHARE_COUNTERS struct{
-Reserved uint32 //col:227
+type  _TSHARE_COUNTERS struct{
+Reserved uint32 //col:230
 }
 
 
-
-type PROTOCOLCOUNTERS struct{
-WdBytes uint32 //col:231
-WdFrames uint32 //col:232
-WaitForOutBuf uint32 //col:233
-Frames uint32 //col:234
-Bytes uint32 //col:235
-CompressedBytes uint32 //col:236
-CompressFlushes uint32 //col:237
-Errors uint32 //col:238
-Timeouts uint32 //col:239
-AsyncFramingError uint32 //col:240
-AsyncOverrunError uint32 //col:241
-AsyncOverflowError uint32 //col:242
-AsyncParityError uint32 //col:243
-TdErrors uint32 //col:244
-ProtocolType USHORT //col:245
-Length USHORT //col:246
-Union union //col:247
-TShareCounters TSHARE_COUNTERS //col:249
-Reserved[100] uint32 //col:250
+type  _PROTOCOLCOUNTERS struct{
+WdBytes uint32 //col:253
+WdFrames uint32 //col:254
+WaitForOutBuf uint32 //col:255
+Frames uint32 //col:256
+Bytes uint32 //col:257
+CompressedBytes uint32 //col:258
+CompressFlushes uint32 //col:259
+Errors uint32 //col:260
+Timeouts uint32 //col:261
+AsyncFramingError uint32 //col:262
+AsyncOverrunError uint32 //col:263
+AsyncOverflowError uint32 //col:264
+AsyncParityError uint32 //col:265
+TdErrors uint32 //col:266
+ProtocolType uint16 //col:267
+Length uint16 //col:268
+Union union //col:269
+TShareCounters TSHARE_COUNTERS //col:271
+Reserved[100] uint32 //col:272
 }
 
 
-
-type THINWIRECACHE struct{
-CacheReads uint32 //col:255
-CacheHits uint32 //col:256
+type  _THINWIRECACHE struct{
+CacheReads uint32 //col:259
+CacheHits uint32 //col:260
 }
 
 
-
-type RESERVED_CACHE struct{
-ThinWireCache[MAX_THINWIRECACHE] THINWIRECACHE //col:260
+type  _RESERVED_CACHE struct{
+ThinWireCache[MAX_THINWIRECACHE] THINWIRECACHE //col:263
 }
 
 
-
-type TSHARE_CACHE struct{
-Reserved uint32 //col:264
+type  _TSHARE_CACHE struct{
+Reserved uint32 //col:267
 }
 
 
-
-type typedef struct CACHE_STATISTICS struct{
-ProtocolType USHORT //col:268
-Length USHORT //col:269
-Union union //col:270
-ReservedCacheStats RESERVED_CACHE //col:272
-TShareCacheStats TSHARE_CACHE //col:273
-Reserved[20] uint32 //col:274
+type  CACHE_STATISTICS struct{
+ProtocolType uint16 //col:277
+Length uint16 //col:278
+Union union //col:279
+ReservedCacheStats RESERVED_CACHE //col:281
+TShareCacheStats TSHARE_CACHE //col:282
+Reserved[20] uint32 //col:283
 }
 
 
-
-type PROTOCOLSTATUS struct{
-Output PROTOCOLCOUNTERS //col:279
-Input PROTOCOLCOUNTERS //col:280
-Cache CACHE_STATISTICS //col:281
-AsyncSignal uint32 //col:282
-AsyncSignalMask uint32 //col:283
+type  _PROTOCOLSTATUS struct{
+Output PROTOCOLCOUNTERS //col:286
+Input PROTOCOLCOUNTERS //col:287
+Cache CACHE_STATISTICS //col:288
+AsyncSignal uint32 //col:289
+AsyncSignalMask uint32 //col:290
 }
 
 
-
-type WINSTATIONINFORMATION struct{
-ConnectState WINSTATIONSTATECLASS //col:287
-WinStationName WINSTATIONNAME //col:288
-LogonId uint32 //col:289
-ConnectTime LARGE_INTEGER //col:290
-DisconnectTime LARGE_INTEGER //col:291
-LastInputTime LARGE_INTEGER //col:292
-LogonTime LARGE_INTEGER //col:293
-Status PROTOCOLSTATUS //col:294
-Domain[DOMAIN_LENGTH WCHAR //col:295
-UserName[USERNAME_LENGTH WCHAR //col:296
-CurrentTime LARGE_INTEGER //col:297
+type  _WINSTATIONINFORMATION struct{
+ConnectState WINSTATIONSTATECLASS //col:300
+WinStationName WINSTATIONNAME //col:301
+LogonId uint32 //col:302
+ConnectTime LARGE_INTEGER //col:303
+DisconnectTime LARGE_INTEGER //col:304
+LastInputTime LARGE_INTEGER //col:305
+LogonTime LARGE_INTEGER //col:306
+Status PROTOCOLSTATUS //col:307
+Domain[DOMAIN_LENGTH WCHAR //col:308
+UserName[USERNAME_LENGTH WCHAR //col:309
+CurrentTime LARGE_INTEGER //col:310
 }
 
 
-
-type WINSTATIONUSERTOKEN struct{
-ProcessId HANDLE //col:301
-ThreadId HANDLE //col:302
-UserToken HANDLE //col:303
+type  _WINSTATIONUSERTOKEN struct{
+ProcessId uintptr //col:306
+ThreadId uintptr //col:307
+UserToken uintptr //col:308
 }
 
 
-
-type WINSTATIONVIDEODATA struct{
-HResolution USHORT //col:307
-VResolution USHORT //col:308
-fColorDepth USHORT //col:309
+type  _WINSTATIONVIDEODATA struct{
+HResolution uint16 //col:312
+VResolution uint16 //col:313
+fColorDepth uint16 //col:314
 }
 
 
-
-type CDCONFIG struct{
-CdClass CDCLASS //col:313
-CdName CDNAME //col:314
-CdDLL DLLNAME //col:315
-CdFlag uint32 //col:316
+type  _CDCONFIG struct{
+CdClass CDCLASS //col:319
+CdName CDNAME //col:320
+CdDLL DLLNAME //col:321
+CdFlag uint32 //col:322
 }
 
 
-
-type WINSTATIONCLIENTDATA struct{
-DataName CLIENTDATANAME //col:320
-fUnicodeData bool //col:321
+type  _WINSTATIONCLIENTDATA struct{
+DataName CLIENTDATANAME //col:324
+fUnicodeData bool //col:325
 }
 
 
-
-type WINSTATIONLOADINDICATORDATA struct{
-RemainingSessionCapacity uint32 //col:325
-LoadFactor LOADFACTORTYPE //col:326
-TotalSessions uint32 //col:327
-DisconnectedSessions uint32 //col:328
-IdleCPU LARGE_INTEGER //col:329
-TotalCPU LARGE_INTEGER //col:330
-RawSessionCapacity uint32 //col:331
-reserved[9] uint32 //col:332
+type  _WINSTATIONLOADINDICATORDATA struct{
+RemainingSessionCapacity uint32 //col:335
+LoadFactor LOADFACTORTYPE //col:336
+TotalSessions uint32 //col:337
+DisconnectedSessions uint32 //col:338
+IdleCPU LARGE_INTEGER //col:339
+TotalCPU LARGE_INTEGER //col:340
+RawSessionCapacity uint32 //col:341
+reserved[9] uint32 //col:342
 }
 
 
-
-type WINSTATIONSHADOW struct{
-ShadowState SHADOWSTATECLASS //col:336
-ShadowClass SHADOWCLASS //col:337
-SessionId uint32 //col:338
-ProtocolType uint32 //col:339
+type  _WINSTATIONSHADOW struct{
+ShadowState SHADOWSTATECLASS //col:342
+ShadowClass SHADOWCLASS //col:343
+SessionId uint32 //col:344
+ProtocolType uint32 //col:345
 }
 
 
-
-type WINSTATIONPRODID struct{
-DigProductId[CLIENT_PRODUCT_ID_LENGTH] WCHAR //col:343
-ClientDigProductId[CLIENT_PRODUCT_ID_LENGTH] WCHAR //col:344
-OuterMostDigProductId[CLIENT_PRODUCT_ID_LENGTH] WCHAR //col:345
-CurrentSessionId uint32 //col:346
-ClientSessionId uint32 //col:347
-OuterMostSessionId uint32 //col:348
+type  _WINSTATIONPRODID struct{
+DigProductId[CLIENT_PRODUCT_ID_LENGTH] WCHAR //col:351
+ClientDigProductId[CLIENT_PRODUCT_ID_LENGTH] WCHAR //col:352
+OuterMostDigProductId[CLIENT_PRODUCT_ID_LENGTH] WCHAR //col:353
+CurrentSessionId uint32 //col:354
+ClientSessionId uint32 //col:355
+OuterMostSessionId uint32 //col:356
 }
 
 
-
-type WINSTATIONREMOTEADDRESS struct{
-sin_family USHORT //col:352
-Union union //col:353
-Struct struct //col:355
-sin_port USHORT //col:357
-sin_addr uint32 //col:358
-sin_zero[8] uint8 //col:359
+type  _WINSTATIONREMOTEADDRESS struct{
+sin_family uint16 //col:362
+Union union //col:363
+Struct struct //col:365
+sin_port uint16 //col:367
+sin_addr uint32 //col:368
+sin_zero[8] uint8 //col:369
 }
 
 
-
-type WINSTATIONINFORMATIONEX_LEVEL1 struct{
-SessionId uint32 //col:372
-SessionState WINSTATIONSTATECLASS //col:373
-SessionFlags LONG //col:374
-WinStationName WINSTATIONNAME //col:375
-UserName[USERNAME_LENGTH WCHAR //col:376
-DomainName[DOMAIN_LENGTH WCHAR //col:377
-LogonTime LARGE_INTEGER //col:378
-ConnectTime LARGE_INTEGER //col:379
-DisconnectTime LARGE_INTEGER //col:380
-LastInputTime LARGE_INTEGER //col:381
-CurrentTime LARGE_INTEGER //col:382
-ProtocolStatus PROTOCOLSTATUS //col:383
+type  _WINSTATIONINFORMATIONEX_LEVEL1 struct{
+SessionId uint32 //col:386
+SessionState WINSTATIONSTATECLASS //col:387
+SessionFlags int32 //col:388
+WinStationName WINSTATIONNAME //col:389
+UserName[USERNAME_LENGTH WCHAR //col:390
+DomainName[DOMAIN_LENGTH WCHAR //col:391
+LogonTime LARGE_INTEGER //col:392
+ConnectTime LARGE_INTEGER //col:393
+DisconnectTime LARGE_INTEGER //col:394
+LastInputTime LARGE_INTEGER //col:395
+CurrentTime LARGE_INTEGER //col:396
+ProtocolStatus PROTOCOLSTATUS //col:397
 }
 
 
-
-type WINSTATIONINFORMATIONEX_LEVEL2 struct{
-SessionId uint32 //col:387
-SessionState WINSTATIONSTATECLASS //col:388
-SessionFlags LONG //col:389
-WinStationName WINSTATIONNAME //col:390
-SamCompatibleUserName[USERNAME_LENGTH WCHAR //col:391
-SamCompatibleDomainName[DOMAIN_LENGTH WCHAR //col:392
-LogonTime LARGE_INTEGER //col:393
-ConnectTime LARGE_INTEGER //col:394
-DisconnectTime LARGE_INTEGER //col:395
-LastInputTime LARGE_INTEGER //col:396
-CurrentTime LARGE_INTEGER //col:397
-ProtocolStatus PROTOCOLSTATUS //col:398
-UserName[257] WCHAR //col:399
-DomainName[256] WCHAR //col:400
+type  _WINSTATIONINFORMATIONEX_LEVEL2 struct{
+SessionId uint32 //col:403
+SessionState WINSTATIONSTATECLASS //col:404
+SessionFlags int32 //col:405
+WinStationName WINSTATIONNAME //col:406
+SamCompatibleUserName[USERNAME_LENGTH WCHAR //col:407
+SamCompatibleDomainName[DOMAIN_LENGTH WCHAR //col:408
+LogonTime LARGE_INTEGER //col:409
+ConnectTime LARGE_INTEGER //col:410
+DisconnectTime LARGE_INTEGER //col:411
+LastInputTime LARGE_INTEGER //col:412
+CurrentTime LARGE_INTEGER //col:413
+ProtocolStatus PROTOCOLSTATUS //col:414
+UserName[257] WCHAR //col:415
+DomainName[256] WCHAR //col:416
 }
 
 
-
-type WINSTATIONINFORMATIONEX struct{
-Level uint32 //col:404
-Data WINSTATIONINFORMATIONEX_LEVEL //col:405
+type  _WINSTATIONINFORMATIONEX struct{
+Level uint32 //col:408
+Data WINSTATIONINFORMATIONEX_LEVEL //col:409
 }
 
 
-
-type TS_PROCESS_INFORMATION_NT4 struct{
-MagicNumber uint32 //col:409
-LogonId uint32 //col:410
-ProcessSid PVOID //col:411
-Pad uint32 //col:412
+type  _TS_PROCESS_INFORMATION_NT4 struct{
+MagicNumber uint32 //col:415
+LogonId uint32 //col:416
+ProcessSid uintptr //col:417
+Pad uint32 //col:418
 }
 
 
-
-type TS_SYS_PROCESS_INFORMATION struct{
-NextEntryOffset uint32 //col:416
-NumberOfThreads uint32 //col:417
-SpareLi1 LARGE_INTEGER //col:418
-SpareLi2 LARGE_INTEGER //col:419
-SpareLi3 LARGE_INTEGER //col:420
-CreateTime LARGE_INTEGER //col:421
-UserTime LARGE_INTEGER //col:422
-KernelTime LARGE_INTEGER //col:423
-ImageName UNICODE_STRING //col:424
-BasePriority KPRIORITY //col:425
-UniqueProcessId uint32 //col:426
-InheritedFromUniqueProcessId uint32 //col:427
-HandleCount uint32 //col:428
-SessionId uint32 //col:429
-SpareUl3 uint32 //col:430
-PeakVirtualSize SIZE_T //col:431
-VirtualSize SIZE_T //col:432
-PageFaultCount uint32 //col:433
-PeakWorkingSetSize uint32 //col:434
-WorkingSetSize uint32 //col:435
-QuotaPeakPagedPoolUsage SIZE_T //col:436
-QuotaPagedPoolUsage SIZE_T //col:437
-QuotaPeakNonPagedPoolUsage SIZE_T //col:438
-QuotaNonPagedPoolUsage SIZE_T //col:439
-PagefileUsage SIZE_T //col:440
-PeakPagefileUsage SIZE_T //col:441
-PrivatePageCount SIZE_T //col:442
+type  _TS_SYS_PROCESS_INFORMATION struct{
+NextEntryOffset uint32 //col:445
+NumberOfThreads uint32 //col:446
+SpareLi1 LARGE_INTEGER //col:447
+SpareLi2 LARGE_INTEGER //col:448
+SpareLi3 LARGE_INTEGER //col:449
+CreateTime LARGE_INTEGER //col:450
+UserTime LARGE_INTEGER //col:451
+KernelTime LARGE_INTEGER //col:452
+ImageName *int16 //col:453
+BasePriority KPRIORITY //col:454
+UniqueProcessId uint32 //col:455
+InheritedFromUniqueProcessId uint32 //col:456
+HandleCount uint32 //col:457
+SessionId uint32 //col:458
+SpareUl3 uint32 //col:459
+PeakVirtualSize int64 //col:460
+VirtualSize int64 //col:461
+PageFaultCount uint32 //col:462
+PeakWorkingSetSize uint32 //col:463
+WorkingSetSize uint32 //col:464
+QuotaPeakPagedPoolUsage int64 //col:465
+QuotaPagedPoolUsage int64 //col:466
+QuotaPeakNonPagedPoolUsage int64 //col:467
+QuotaNonPagedPoolUsage int64 //col:468
+PagefileUsage int64 //col:469
+PeakPagefileUsage int64 //col:470
+PrivatePageCount int64 //col:471
 }
 
 
-
-type TS_ALL_PROCESSES_INFO struct{
-pTsProcessInfo PTS_SYS_PROCESS_INFORMATION //col:446
-SizeOfSid uint32 //col:447
-pSid PSID //col:448
+type  _TS_ALL_PROCESSES_INFO struct{
+pTsProcessInfo PTS_SYS_PROCESS_INFORMATION //col:451
+SizeOfSid uint32 //col:452
+pSid PSID //col:453
 }
 
 
-
-type TS_COUNTER_HEADER struct{
-dwCounterID DWORD //col:452
-bResult bool //col:453
+type  _TS_COUNTER_HEADER struct{
+dwCounterID uint32 //col:456
+bResult bool //col:457
 }
 
 
-
-type TS_COUNTER struct{
-CounterHead TS_COUNTER_HEADER //col:457
-dwValue DWORD //col:458
-StartTime LARGE_INTEGER //col:459
+type  _TS_COUNTER struct{
+CounterHead TS_COUNTER_HEADER //col:462
+dwValue uint32 //col:463
+StartTime LARGE_INTEGER //col:464
 }
-
 
 
 

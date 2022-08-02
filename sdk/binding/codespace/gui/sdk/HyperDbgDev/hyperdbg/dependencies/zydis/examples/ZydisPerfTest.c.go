@@ -1,27 +1,4 @@
 package examples
 
-type (
-	ZydisPerfTest interface {
-		static_void_StartCounter() (ok bool) //col:16
-		static_void_StartCounter() (ok bool) //col:27
-		static_void_StartCounter() (ok bool) //col:37
-	}
-	zydisPerfTest struct{}
-)
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\examples\ZydisPerfTest.c.back
 
-func NewZydisPerfTest() ZydisPerfTest { return &zydisPerfTest{} }
-
-func (z *zydisPerfTest) static_void_StartCounter() (ok bool) { //col:16
-
-	return true
-}
-
-func (z *zydisPerfTest) static_void_StartCounter() (ok bool) { //col:27
-
-	return true
-}
-
-func (z *zydisPerfTest) static_void_StartCounter() (ok bool) { //col:37
-
-	return true
-}

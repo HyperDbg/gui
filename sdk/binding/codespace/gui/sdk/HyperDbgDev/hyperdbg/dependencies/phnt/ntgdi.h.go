@@ -1,11 +1,14 @@
 package phnt
 
-type GDI_HANDLE_ENTRY struct {
-	Union    union //col:3
-	Object   PVOID //col:5
-	NextFree PVOID //col:6
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntgdi.h.back
+
+type _GDI_HANDLE_ENTRY struct {
+	Union    union   //col:9
+	Object   uintptr //col:11
+	NextFree uintptr //col:12
 }
 
-type GDI_SHARED_MEMORY struct {
-	Handles [GDI_MAX_HANDLE_COUNT]GDI_HANDLE_ENTRY //col:25
+type _GDI_SHARED_MEMORY struct {
+	Handles [GDI_MAX_HANDLE_COUNT]GDI_HANDLE_ENTRY //col:28
 }
+

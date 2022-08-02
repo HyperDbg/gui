@@ -1,6 +1,6 @@
 package header
 
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\script-engine\header\common.h.back
 
 const (
 	LOCAL_ID             = 1  //col:3
@@ -27,18 +27,16 @@ const (
 	UNKNOWN              = 22 //col:24
 )
 
-type TOKEN struct {
-	Type  TOKEN_TYPE //col:3
-	*int8            //col:4
-	int   unsigned   //col:5
-	int   unsigned   //col:6
+type _TOKEN struct {
+	Type   TOKEN_TYPE //col:9
+	*int8             //col:10
+	Len    uint32     //col:11
+	MaxLen uint32     //col:12
 }
 
-
-type TOKEN_LIST struct {
-	*PTOKEN          //col:10
-	int     unsigned //col:11
-	int     unsigned //col:12
+type _TOKEN_LIST struct {
+	*PTOKEN        //col:15
+	Pointer uint32 //col:16
+	Size    uint32 //col:17
 }
-
 

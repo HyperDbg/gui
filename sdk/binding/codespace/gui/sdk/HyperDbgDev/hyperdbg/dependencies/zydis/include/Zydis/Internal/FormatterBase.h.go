@@ -1,13 +1,10 @@
 package Internal
 
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Internal\FormatterBase.h.back
 
-type typedef struct ZydisPredefinedToken_ struct{
-size ZyanU8 //col:3
-next ZyanU8 //col:4
-data[] ZyanU8 //col:5
+type ZydisPredefinedToken_ struct {
+	size ZyanU8   //col:8
+	next ZyanU8   //col:9
+	data []ZyanU8 //col:10
 }
-
-
-
-
 

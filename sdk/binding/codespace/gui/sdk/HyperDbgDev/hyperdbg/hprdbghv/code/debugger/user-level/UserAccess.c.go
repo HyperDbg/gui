@@ -1,6 +1,6 @@
 package user_level
 
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\code\debugger\user-level\UserAccess.c.back
 
 type (
 	UserAccess interface {
@@ -15,418 +15,414 @@ type (
 func NewUserAccess() UserAccess { return &userAccess{} }
 
 func (u *userAccess) UserAccessAllocateAndGetImagePathFromProcessId() (ok bool) { //col:96
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	/*
+	   UserAccessAllocateAndGetImagePathFromProcessId(HANDLE          ProcessId,
+
+	   	PUNICODE_STRING ProcessImageName,
+	   	UINT32          SizeOfImageNameToBeAllocated)
+
+	   	{
+	   	    NTSTATUS        Status;
+	   	    ULONG           ReturnedLength;
+	   	    ULONG           BufferLength;
+	   	    HANDLE          ProcessHandle;
+	   	    PVOID           Buffer;
+	   	    PEPROCESS       EProcess;
+	   	    PUNICODE_STRING ImageName;
+	   	    PAGED_CODE();
+	   	    Status = PsLookupProcessByProcessId(ProcessId, &EProcess);
+	   	    if (NT_SUCCESS(Status))
+	   	    {
+	   	        Status = ObOpenObjectByPointer(EProcess, 0, NULL, 0, 0, KernelMode, &ProcessHandle);
+	   	        if (!NT_SUCCESS(Status))
+	   	        {
+	   	            LogError("Err, cannot get the process object (%08x)", Status);
+	   	        ObDereferenceObject(EProcess);
+	   	    if (g_ZwQueryInformationProcess == NULL)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    Status = g_ZwQueryInformationProcess(ProcessHandle,
+	   	                                         ProcessImageFileName,
+	   	                                         NULL,
+	   	                                         0,
+	   	                                         &ReturnedLength);
+	   	    if (Status != STATUS_INFO_LENGTH_MISMATCH)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    BufferLength = ReturnedLength - sizeof(UNICODE_STRING);
+	   	    if (SizeOfImageNameToBeAllocated < BufferLength)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    Buffer = ExAllocatePoolWithTag(NonPagedPool, ReturnedLength, POOLTAG);
+	   	    if (Buffer == NULL)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    Status = g_ZwQueryInformationProcess(ProcessHandle,
+	   	                                         ProcessImageFileName,
+	   	                                         Buffer,
+	   	                                         ReturnedLength,
+	   	                                         &ReturnedLength);
+	   	    if (NT_SUCCESS(Status))
+	   	    {
+	   	        ImageName = (PUNICODE_STRING)Buffer;
+	   	        ProcessImageName->Length        = 0;
+	   	        ProcessImageName->MaximumLength = SizeOfImageNameToBeAllocated;
+	   	        ProcessImageName->Buffer        = (PWSTR)ExAllocatePoolWithTag(NonPagedPool, SizeOfImageNameToBeAllocated, POOLTAG);
+	   	        if (ProcessImageName->Buffer == NULL)
+	   	        {
+	   	            return FALSE;
+	   	        }
+	   	        RtlZeroMemory(ProcessImageName->Buffer, SizeOfImageNameToBeAllocated);
+	   	        RtlCopyUnicodeString(ProcessImageName, ImageName);
+	   	        ExFreePoolWithTag(Buffer, POOLTAG);
+	   	        ExFreePoolWithTag(Buffer, POOLTAG);
+
+	   UserAccessGetPebFromProcessId(HANDLE ProcessId, PUINT64 Peb)
+
+	   	{
+	   	    NTSTATUS                  Status;
+	   	    ULONG                     ReturnedLength;
+	   	    HANDLE                    ProcessHandle;
+	   	    PEPROCESS                 EProcess;
+	   	    PPEB                      ProcessPeb;
+	   	    PROCESS_BASIC_INFORMATION ProcessBasicInfo = {0};
+	   	    PAGED_CODE();
+	   	    Status = PsLookupProcessByProcessId(ProcessId, &EProcess);
+	   	    if (NT_SUCCESS(Status))
+	   	    {
+	   	        Status = ObOpenObjectByPointer(EProcess, 0, NULL, 0, 0, KernelMode, &ProcessHandle);
+	   	        if (!NT_SUCCESS(Status))
+	   	        {
+	   	            LogError("Err, cannot get the process object (%08x)", Status);
+	   	        ObDereferenceObject(EProcess);
+	   	    if (g_ZwQueryInformationProcess == NULL)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    Status = g_ZwQueryInformationProcess(ProcessHandle,
+	   	                                         ProcessBasicInformation,
+	   	                                         &ProcessBasicInfo,
+	   	                                         sizeof(PROCESS_BASIC_INFORMATION),
+	   	                                         &ReturnedLength);
+	   	    if (NT_SUCCESS(Status))
+	   	    {
+	   	        ProcessPeb = ProcessBasicInfo.PebBaseAddress;
+	   	        *Peb = ProcessPeb;
+	   	        return TRUE;
+	   	    }
+	   	    return FALSE;
+	   	}
+	*/
 	return true
 }
-
 
 func (u *userAccess) UserAccessGetBaseAndEntrypointOfMainModuleIfLoadedInVmxRoot() (ok bool) { //col:153
+	/*
+	   UserAccessGetBaseAndEntrypointOfMainModuleIfLoadedInVmxRoot(PPEB PebAddress, BOOLEAN Is32Bit, PUINT64 BaseAddress, PUINT64 Entrypoint)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	   	{
+	   	    if (Is32Bit)
+	   	    {
+	   	        UNICODE_STRING  Name;
+	   	        PEB_LDR_DATA32  Ldr32        = {0};
+	   	        PEB32           Peb32        = {0};
+	   	        PPEB_LDR_DATA32 LdrAddress32 = NULL;
+	   	        MemoryMapperReadMemorySafeOnTargetProcess(PebAddress, &Peb32, sizeof(PEB32));
+	   	        LdrAddress32 = (PPEB_LDR_DATA32)Peb32.Ldr;
+	   	        if (!LdrAddress32)
+	   	        {
+	   	            return FALSE;
+	   	        }
+	   	        MemoryMapperReadMemorySafeOnTargetProcess(LdrAddress32, &Ldr32, sizeof(PEB_LDR_DATA32));
+	   	        PLIST_ENTRY32 List = (PLIST_ENTRY32)Ldr32.InLoadOrderModuleList.Flink;
+	   	        PLDR_DATA_TABLE_ENTRY32 EntryAddress = CONTAINING_RECORD(List, LDR_DATA_TABLE_ENTRY32, InLoadOrderLinks);
+	   	        MemoryMapperReadMemorySafeOnTargetProcess(EntryAddress, &Entry, sizeof(LDR_DATA_TABLE_ENTRY32));
+	   	        if (Entry.DllBase == NULL || Entry.EntryPoint == NULL)
+	   	        {
+	   	            return FALSE;
+	   	        }
+	   	        else
+	   	        {
+	   	            *BaseAddress = Entry.DllBase;
+	   	            *Entrypoint  = Entry.EntryPoint;
+	   	            return TRUE;
+	   	        }
+	   	    }
+	   	    else
+	   	    {
+	   	        UNICODE_STRING Name;
+	   	        PPEB_LDR_DATA  LdrAddress = NULL;
+	   	        PEB_LDR_DATA   Ldr        = {0};
+	   	        PEB Peb = {0};
+	   	        MemoryMapperReadMemorySafeOnTargetProcess(PebAddress, &Peb, sizeof(PEB));
+	   	        LdrAddress = (PPEB_LDR_DATA)Peb.Ldr;
+	   	        if (!LdrAddress)
+	   	        {
+	   	            return FALSE;
+	   	        }
+	   	        MemoryMapperReadMemorySafeOnTargetProcess(LdrAddress, &Ldr, sizeof(PEB_LDR_DATA));
+	   	        PLIST_ENTRY List = (PLIST_ENTRY)Ldr.ModuleListLoadOrder.Flink;
+	   	        PLDR_DATA_TABLE_ENTRY EntryAddress = CONTAINING_RECORD(List, LDR_DATA_TABLE_ENTRY, InLoadOrderModuleList);
+	   	        MemoryMapperReadMemorySafeOnTargetProcess(EntryAddress, &Entry, sizeof(LDR_DATA_TABLE_ENTRY));
+	   	        if (Entry.DllBase == NULL || Entry.EntryPoint == NULL)
+	   	        {
+	   	            return FALSE;
+	   	        }
+	   	        else
+	   	        {
+	   	            *BaseAddress = Entry.DllBase;
+	   	            *Entrypoint  = Entry.EntryPoint;
+	   	            return TRUE;
+	   	        }
+	   	    }
+	   	}
+	*/
 	return true
 }
-
 
 func (u *userAccess) UserAccessPrintLoadedModulesX64() (ok bool) { //col:331
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	/*
+	   UserAccessPrintLoadedModulesX64(PEPROCESS                       Proc,
+
+	   	BOOLEAN                         OnlyCountModules,
+	   	PUINT32                         ModulesCount,
+	   	PUSERMODE_LOADED_MODULE_SYMBOLS ModulesList,
+	   	UINT32                          SizeOfBufferForModulesList)
+
+	   	{
+	   	    KAPC_STATE     State;
+	   	    UNICODE_STRING Name;
+	   	    PPEB           Peb                 = NULL;
+	   	    PPEB_LDR_DATA  Ldr                 = NULL;
+	   	    UINT32         CountOfModules      = 0;
+	   	    UINT32         CurrentSavedModules = 0;
+	   	    UINT32         TempSize            = 0;
+	   	    if (g_PsGetProcessPeb == NULL)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    Peb = (PPEB)g_PsGetProcessPeb(Proc);
+	   	    if (!Peb)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    KeStackAttachProcess(Proc, &State);
+	   	    Ldr = (PPEB_LDR_DATA)Peb->Ldr;
+	   	    if (!Ldr)
+	   	    {
+	   	        KeUnstackDetachProcess(&State);
+	   	    if (OnlyCountModules)
+	   	    {
+	   	        for (PLIST_ENTRY List = (PLIST_ENTRY)Ldr->ModuleListLoadOrder.Flink;
+	   	             List != &Ldr->ModuleListLoadOrder;
+	   	             List = (PLIST_ENTRY)List->Flink)
+	   	        {
+	   	            PLDR_DATA_TABLE_ENTRY Entry =
+	   	                CONTAINING_RECORD(List, LDR_DATA_TABLE_ENTRY, InLoadOrderModuleList);
+	   	        KeUnstackDetachProcess(&State);
+	   	        CountOfModules = SizeOfBufferForModulesList / sizeof(USERMODE_LOADED_MODULE_SYMBOLS);
+	   	    Ldr = (PPEB_LDR_DATA)Peb->Ldr;
+	   	    if (!Ldr)
+	   	    {
+	   	        KeUnstackDetachProcess(&State);
+	   	    for (PLIST_ENTRY List = (PLIST_ENTRY)Ldr->ModuleListLoadOrder.Flink;
+	   	         List != &Ldr->ModuleListLoadOrder;
+	   	         List = (PLIST_ENTRY)List->Flink)
+	   	    {
+	   	        PLDR_DATA_TABLE_ENTRY Entry =
+	   	            CONTAINING_RECORD(List, LDR_DATA_TABLE_ENTRY, InLoadOrderModuleList);
+	   	        if (CountOfModules == CurrentSavedModules)
+	   	        {
+	   	            KeUnstackDetachProcess(&State);
+	   	        if (TempSize >= MAX_PATH)
+	   	        {
+	   	            TempSize = MAX_PATH;
+	   	        }
+	   	        TempSize = TempSize * 2;
+	   	        memcpy(&ModulesList[CurrentSavedModules].FilePath, Entry->FullDllName.Buffer, TempSize);
+	   	    KeUnstackDetachProcess(&State);
+
+	   UserAccessPrintLoadedModulesX86(PEPROCESS                       Proc,
+
+	   	BOOLEAN                         OnlyCountModules,
+	   	PUINT32                         ModulesCount,
+	   	PUSERMODE_LOADED_MODULE_SYMBOLS ModulesList,
+	   	UINT32                          SizeOfBufferForModulesList)
+
+	   	{
+	   	    KAPC_STATE      State;
+	   	    UNICODE_STRING  Name;
+	   	    PPEB32          Peb                 = NULL;
+	   	    PPEB_LDR_DATA32 Ldr                 = NULL;
+	   	    UINT32          CountOfModules      = 0;
+	   	    UINT32          CurrentSavedModules = 0;
+	   	    UINT32          TempSize            = 0;
+	   	    if (g_PsGetProcessWow64Process == NULL)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    Peb = (PPEB32)g_PsGetProcessWow64Process(Proc);
+	   	    if (!Peb)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    KeStackAttachProcess(Proc, &State);
+	   	    Ldr = (PPEB_LDR_DATA32)Peb->Ldr;
+	   	    if (!Ldr)
+	   	    {
+	   	        KeUnstackDetachProcess(&State);
+	   	    if (OnlyCountModules)
+	   	    {
+	   	        for (PLIST_ENTRY32 List = (PLIST_ENTRY32)Ldr->InLoadOrderModuleList.Flink;
+	   	             List != &Ldr->InLoadOrderModuleList;
+	   	             List = (PLIST_ENTRY32)List->Flink)
+	   	        {
+	   	            PLDR_DATA_TABLE_ENTRY32 Entry =
+	   	                CONTAINING_RECORD(List, LDR_DATA_TABLE_ENTRY32, InLoadOrderLinks);
+	   	        KeUnstackDetachProcess(&State);
+	   	        CountOfModules = SizeOfBufferForModulesList / sizeof(USERMODE_LOADED_MODULE_SYMBOLS);
+	   	    Ldr = (PPEB_LDR_DATA32)Peb->Ldr;
+	   	    if (!Ldr)
+	   	    {
+	   	        KeUnstackDetachProcess(&State);
+	   	    for (PLIST_ENTRY32 List = (PLIST_ENTRY32)Ldr->InLoadOrderModuleList.Flink;
+	   	         List != &Ldr->InLoadOrderModuleList;
+	   	         List = (PLIST_ENTRY32)List->Flink)
+	   	    {
+	   	        PLDR_DATA_TABLE_ENTRY32 Entry =
+	   	            CONTAINING_RECORD(List, LDR_DATA_TABLE_ENTRY32, InLoadOrderLinks);
+	   	        if (CountOfModules == CurrentSavedModules)
+	   	        {
+	   	            KeUnstackDetachProcess(&State);
+	   	        if (TempSize >= MAX_PATH)
+	   	        {
+	   	            TempSize = MAX_PATH;
+	   	        }
+	   	        TempSize = TempSize * 2;
+	   	        memcpy(&ModulesList[CurrentSavedModules].FilePath, Entry->FullDllName.Buffer, TempSize);
+	   	    KeUnstackDetachProcess(&State);
+
+	   UserAccessPrintLoadedModulesX86_2(PEPROCESS Proc)
+
+	   	{
+	   	    KAPC_STATE      State;
+	   	    UNICODE_STRING  Name;
+	   	    PPEB32          Peb = NULL;
+	   	    PPEB_LDR_DATA32 Ldr = NULL;
+	   	    if (g_PsGetProcessWow64Process == NULL)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    Peb = (PPEB32)g_PsGetProcessWow64Process(Proc);
+	   	    if (!Peb)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    KeStackAttachProcess(Proc, &State);
+	   	    Ldr = (PPEB_LDR_DATA32)Peb->Ldr;
+	   	    if (!Ldr)
+	   	    {
+	   	        KeUnstackDetachProcess(&State);
+	   	    for (PLIST_ENTRY32 List = (PLIST_ENTRY32)Ldr->InLoadOrderModuleList.Flink;
+	   	         List != &Ldr->InLoadOrderModuleList;
+	   	         List = (PLIST_ENTRY32)List->Flink)
+	   	    {
+	   	        PLDR_DATA_TABLE_ENTRY32 Entry =
+	   	            CONTAINING_RECORD(List, LDR_DATA_TABLE_ENTRY32, InLoadOrderLinks);
+	   	        ModuleName.Buffer        = (PWCH)Entry->BaseDllName.Buffer;
+	   	        ModulePath.Length        = Entry->FullDllName.Length;
+	   	        ModulePath.MaximumLength = Entry->FullDllName.MaximumLength;
+	   	        ModulePath.Buffer        = (PWCH)Entry->FullDllName.Buffer;
+	   	        Log("Base: %016llx\tEntryPoint: %016llx\tModule: %ws\tPath: %ws\n",
+	   	            BaseAddr,
+	   	            EntrypointAddress,
+	   	            ModuleName.Buffer,
+	   	            ModulePath.Buffer);
+	   	    KeUnstackDetachProcess(&State);
+
+	   UserAccessIsWow64Process(HANDLE ProcessId, PBOOLEAN Is32Bit)
+
+	   	{
+	   	    PEPROCESS  SourceProcess;
+	   	    KAPC_STATE State = {0};
+	   	    if (PsLookupProcessByProcessId(ProcessId, &SourceProcess) != STATUS_SUCCESS)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    ObDereferenceObject(SourceProcess);
+	   	    if (g_PsGetProcessWow64Process == NULL || g_PsGetProcessPeb == NULL)
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	    if (g_PsGetProcessWow64Process(SourceProcess))
+	   	    {
+	   	        *Is32Bit = TRUE;
+	   	        return TRUE;
+	   	    }
+	   	    else if (g_PsGetProcessPeb(SourceProcess))
+	   	    {
+	   	        *Is32Bit = FALSE;
+	   	        return TRUE;
+	   	    }
+	   	    else
+	   	    {
+	   	        return FALSE;
+	   	    }
+	   	}
+	*/
 	return true
 }
-
 
 func (u *userAccess) UserAccessGetLoadedModules() (ok bool) { //col:373
+	/*
+	   UserAccessGetLoadedModules(PUSERMODE_LOADED_MODULE_DETAILS ProcessLoadedModuleRequest, UINT32 BufferSize)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	   	{
+	   	    PEPROCESS SourceProcess;
+	   	    BOOLEAN   Is32Bit;
+	   	    if (PsLookupProcessByProcessId(ProcessLoadedModuleRequest->ProcessId, &SourceProcess) != STATUS_SUCCESS)
+	   	    {
+	   	        ProcessLoadedModuleRequest->Result = DEBUGGER_ERROR_INVALID_PROCESS_ID;
+	   	        return FALSE;
+	   	    }
+	   	    ObDereferenceObject(SourceProcess);
+	   	    if (!UserAccessIsWow64Process(ProcessLoadedModuleRequest->ProcessId, &Is32Bit))
+	   	    {
+	   	        ProcessLoadedModuleRequest->Result = DEBUGGER_ERROR_UNABLE_TO_GET_MODULES_OF_THE_PROCESS;
+	   	        return FALSE;
+	   	    }
+	   	    if (Is32Bit)
+	   	    {
+	   	        if (UserAccessPrintLoadedModulesX86(SourceProcess,
+	   	                                            ProcessLoadedModuleRequest->OnlyCountModules,
+	   	                                            &ProcessLoadedModuleRequest->ModulesCount,
+	   	                                            (UINT64)ProcessLoadedModuleRequest + sizeof(USERMODE_LOADED_MODULE_DETAILS),
+	   	                                            BufferSize - sizeof(USERMODE_LOADED_MODULE_DETAILS)))
+	   	        {
+	   	            ProcessLoadedModuleRequest->Result = DEBUGGER_OPERATION_WAS_SUCCESSFULL;
+	   	            return TRUE;
+	   	        }
+	   	    }
+	   	    else
+	   	    {
+	   	        if (UserAccessPrintLoadedModulesX64(SourceProcess,
+	   	                                            ProcessLoadedModuleRequest->OnlyCountModules,
+	   	                                            &ProcessLoadedModuleRequest->ModulesCount,
+	   	                                            (UINT64)ProcessLoadedModuleRequest + sizeof(USERMODE_LOADED_MODULE_DETAILS),
+	   	                                            BufferSize - sizeof(USERMODE_LOADED_MODULE_DETAILS)))
+	   	        {
+	   	            ProcessLoadedModuleRequest->Result = DEBUGGER_OPERATION_WAS_SUCCESSFULL;
+	   	            return TRUE;
+	   	        }
+	   	    }
+	   	    ProcessLoadedModuleRequest->Result = DEBUGGER_ERROR_UNABLE_TO_GET_MODULES_OF_THE_PROCESS;
+	   	    return FALSE;
+	   	}
+	*/
 	return true
 }
-
 

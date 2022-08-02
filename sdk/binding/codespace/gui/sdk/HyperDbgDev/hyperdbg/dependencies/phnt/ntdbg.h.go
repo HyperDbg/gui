@@ -1,5 +1,7 @@
 package phnt
 
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntdbg.h.back
+
 const (
 	DbgIdle                     = 1  //col:3
 	DbgReplyPending             = 2  //col:4
@@ -20,65 +22,66 @@ const (
 	MaxDebugObjectInfoClass                 = 3 //col:19
 )
 
-type DBGKM_EXCEPTION struct {
-	ExceptionRecord EXCEPTION_RECORD //col:3
-	FirstChance     uint32           //col:4
+type _DBGKM_EXCEPTION struct {
+	ExceptionRecord EXCEPTION_RECORD //col:7
+	FirstChance     uint32           //col:8
 }
 
-type DBGKM_CREATE_THREAD struct {
-	SubSystemKey uint32 //col:8
-	StartAddress PVOID  //col:9
+type _DBGKM_CREATE_THREAD struct {
+	SubSystemKey uint32  //col:12
+	StartAddress uintptr //col:13
 }
 
-type DBGKM_CREATE_PROCESS struct {
-	SubSystemKey        uint32              //col:13
-	FileHandle          HANDLE              //col:14
-	BaseOfImage         PVOID               //col:15
-	DebugInfoFileOffset uint32              //col:16
-	DebugInfoSize       uint32              //col:17
-	InitialThread       DBGKM_CREATE_THREAD //col:18
+type _DBGKM_CREATE_PROCESS struct {
+	SubSystemKey        uint32              //col:21
+	FileHandle          uintptr             //col:22
+	BaseOfImage         uintptr             //col:23
+	DebugInfoFileOffset uint32              //col:24
+	DebugInfoSize       uint32              //col:25
+	InitialThread       DBGKM_CREATE_THREAD //col:26
 }
 
-type DBGKM_EXIT_THREAD struct {
-	ExitStatus NTSTATUS //col:22
+type _DBGKM_EXIT_THREAD struct {
+	ExitStatus NTSTATUS //col:25
 }
 
-type DBGKM_EXIT_PROCESS struct {
-	ExitStatus NTSTATUS //col:26
+type _DBGKM_EXIT_PROCESS struct {
+	ExitStatus NTSTATUS //col:29
 }
 
-type DBGKM_LOAD_DLL struct {
-	FileHandle          HANDLE //col:30
-	BaseOfDll           PVOID  //col:31
-	DebugInfoFileOffset uint32 //col:32
-	DebugInfoSize       uint32 //col:33
-	NamePointer         PVOID  //col:34
+type _DBGKM_LOAD_DLL struct {
+	FileHandle          uintptr //col:37
+	BaseOfDll           uintptr //col:38
+	DebugInfoFileOffset uint32  //col:39
+	DebugInfoSize       uint32  //col:40
+	NamePointer         uintptr //col:41
 }
 
-type DBGKM_UNLOAD_DLL struct {
-	BaseAddress PVOID //col:38
+type _DBGKM_UNLOAD_DLL struct {
+	BaseAddress uintptr //col:41
 }
 
-type DBGUI_CREATE_THREAD struct {
-	HandleToThread HANDLE              //col:42
-	NewThread      DBGKM_CREATE_THREAD //col:43
+type _DBGUI_CREATE_THREAD struct {
+	HandleToThread uintptr             //col:46
+	NewThread      DBGKM_CREATE_THREAD //col:47
 }
 
-type DBGUI_CREATE_PROCESS struct {
-	HandleToProcess HANDLE               //col:47
-	HandleToThread  HANDLE               //col:48
-	NewProcess      DBGKM_CREATE_PROCESS //col:49
+type _DBGUI_CREATE_PROCESS struct {
+	HandleToProcess uintptr              //col:52
+	HandleToThread  uintptr              //col:53
+	NewProcess      DBGKM_CREATE_PROCESS //col:54
 }
 
-type DBGUI_WAIT_STATE_CHANGE struct {
-	NewState          DBG_STATE            //col:53
-	AppClientId       CLIENT_ID            //col:54
-	Union             union                //col:55
-	Exception         DBGKM_EXCEPTION      //col:57
-	CreateThread      DBGUI_CREATE_THREAD  //col:58
-	CreateProcessInfo DBGUI_CREATE_PROCESS //col:59
-	ExitThread        DBGKM_EXIT_THREAD    //col:60
-	ExitProcess       DBGKM_EXIT_PROCESS   //col:61
-	LoadDll           DBGKM_LOAD_DLL       //col:62
-	UnloadDll         DBGKM_UNLOAD_DLL     //col:63
+type _DBGUI_WAIT_STATE_CHANGE struct {
+	NewState          DBG_STATE            //col:66
+	AppClientId       CLIENT_ID            //col:67
+	Union             union                //col:68
+	Exception         DBGKM_EXCEPTION      //col:70
+	CreateThread      DBGUI_CREATE_THREAD  //col:71
+	CreateProcessInfo DBGUI_CREATE_PROCESS //col:72
+	ExitThread        DBGKM_EXIT_THREAD    //col:73
+	ExitProcess       DBGKM_EXIT_PROCESS   //col:74
+	LoadDll           DBGKM_LOAD_DLL       //col:75
+	UnloadDll         DBGKM_UNLOAD_DLL     //col:76
 }
+

@@ -1,5 +1,7 @@
 package phnt
 
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntkeapi.h.back
+
 const (
 	Initialized             = 1  //col:3
 	Ready                   = 2  //col:4
@@ -101,3 +103,4 @@ const (
 	ProfileLoadLinkedIssues     = 24 //col:100
 	ProfileMaximum              = 25 //col:101
 )
+

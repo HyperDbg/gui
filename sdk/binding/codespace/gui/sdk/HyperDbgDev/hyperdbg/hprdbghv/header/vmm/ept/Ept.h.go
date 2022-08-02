@@ -1,65 +1,60 @@
 package ept
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\vmm\ept\Ept.h.back
 
-
-type VMM_EPT_PAGE_TABLE struct{
-DeclspecAlign(PageSize) DECLSPEC_ALIGN(PAGE_SIZE) //col:3
-PML4[VMM_EPT_PML4E_COUNT] EPT_PML4_POINTER //col:4
-DeclspecAlign(PageSize) DECLSPEC_ALIGN(PAGE_SIZE) //col:5
-PML3[VMM_EPT_PML3E_COUNT] EPT_PML3_POINTER //col:6
-DeclspecAlign(PageSize) DECLSPEC_ALIGN(PAGE_SIZE) //col:7
-PML2[VMM_EPT_PML3E_COUNT][VMM_EPT_PML2E_COUNT] EPT_PML2_ENTRY //col:8
+type  _VMM_EPT_PAGE_TABLE struct{
+DeclspecAlign(PageSize) DECLSPEC_ALIGN(PAGE_SIZE) //col:11
+PML4[VMM_EPT_PML4E_COUNT] EPT_PML4_POINTER //col:12
+DeclspecAlign(PageSize) DECLSPEC_ALIGN(PAGE_SIZE) //col:13
+PML3[VMM_EPT_PML3E_COUNT] EPT_PML3_POINTER //col:14
+DeclspecAlign(PageSize) DECLSPEC_ALIGN(PAGE_SIZE) //col:15
+PML2[VMM_EPT_PML3E_COUNT][VMM_EPT_PML2E_COUNT] EPT_PML2_ENTRY //col:16
 }
 
 
-
-type MTRR_RANGE_DESCRIPTOR struct{
-PhysicalBaseAddress SIZE_T //col:12
-PhysicalEndAddress SIZE_T //col:13
-MemoryType uint8 //col:14
+type  _MTRR_RANGE_DESCRIPTOR struct{
+PhysicalBaseAddress int64 //col:17
+PhysicalEndAddress int64 //col:18
+MemoryType uint8 //col:19
 }
 
 
-
-type EPT_STATE struct{
-HookedPagesList *list.List //col:18
-MemoryRanges[EPT_MTRR_RANGE_DESCRIPTOR_MAX] MTRR_RANGE_DESCRIPTOR //col:19
-NumberOfEnabledMemoryRanges uint32 //col:20
-EptPointer EPT_POINTER //col:21
-EptPageTable PVMM_EPT_PAGE_TABLE //col:22
-SecondaryEptPageTable PVMM_EPT_PAGE_TABLE //col:23
+type  _EPT_STATE struct{
+HookedPagesList *list.List //col:26
+MemoryRanges[EPT_MTRR_RANGE_DESCRIPTOR_MAX] MTRR_RANGE_DESCRIPTOR //col:27
+NumberOfEnabledMemoryRanges uint32 //col:28
+EptPointer EPT_POINTER //col:29
+EptPageTable PVMM_EPT_PAGE_TABLE //col:30
+SecondaryEptPageTable PVMM_EPT_PAGE_TABLE //col:31
 }
 
 
-
-type VMM_EPT_DYNAMIC_SPLIT struct{
-DeclspecAlign(PageSize) DECLSPEC_ALIGN(PAGE_SIZE) //col:27
-PML1[VMM_EPT_PML1E_COUNT] EPT_PML1_ENTRY //col:28
-Union union //col:29
-Entry PEPT_PML2_ENTRY //col:31
-Pointer PEPT_PML2_POINTER //col:32
+type  _VMM_EPT_DYNAMIC_SPLIT struct{
+DeclspecAlign(PageSize) DECLSPEC_ALIGN(PAGE_SIZE) //col:35
+PML1[VMM_EPT_PML1E_COUNT] EPT_PML1_ENTRY //col:36
+Union union //col:37
+Entry PEPT_PML2_ENTRY //col:39
+Pointer PEPT_PML2_POINTER //col:40
 }
 
 
-
-type EPT_HOOKED_PAGE_DETAIL struct{
-DeclspecAlign(PageSize) DECLSPEC_ALIGN(PAGE_SIZE) //col:38
-FakePageContents[PAGE_SIZE] int8 //col:39
-PageHookList *list.List //col:40
-VirtualAddress uint64 //col:41
-AddressOfEptHook2sDetourListEntry uint64 //col:42
-PhysicalBaseAddress SIZE_T //col:43
-PhysicalBaseAddressOfFakePageContents SIZE_T //col:44
-EntryAddress PEPT_PML1_ENTRY //col:45
-OriginalEntry EPT_PML1_ENTRY //col:46
-ChangedEntry EPT_PML1_ENTRY //col:47
-Trampoline PCHAR //col:48
-IsExecutionHook bool //col:49
-IsHiddenBreakpoint bool //col:50
-BreakpointAddresses[MaximumHiddenBreakpointsOnPage] uint64 //col:51
-PreviousBytesOnBreakpointAddresses[MaximumHiddenBreakpointsOnPage] int8 //col:52
-CountOfBreakpoints uint64 //col:53
+type  _EPT_HOOKED_PAGE_DETAIL struct{
+DeclspecAlign(PageSize) DECLSPEC_ALIGN(PAGE_SIZE) //col:56
+FakePageContents[PAGE_SIZE] int8 //col:57
+PageHookList *list.List //col:58
+VirtualAddress uint64 //col:59
+AddressOfEptHook2sDetourListEntry uint64 //col:60
+PhysicalBaseAddress int64 //col:61
+PhysicalBaseAddressOfFakePageContents int64 //col:62
+EntryAddress PEPT_PML1_ENTRY //col:63
+OriginalEntry EPT_PML1_ENTRY //col:64
+ChangedEntry EPT_PML1_ENTRY //col:65
+Trampoline PCHAR //col:66
+IsExecutionHook bool //col:67
+IsHiddenBreakpoint bool //col:68
+BreakpointAddresses[MaximumHiddenBreakpointsOnPage] uint64 //col:69
+PreviousBytesOnBreakpointAddresses[MaximumHiddenBreakpointsOnPage] int8 //col:70
+CountOfBreakpoints uint64 //col:71
 }
-
 
 
 

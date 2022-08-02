@@ -1,6 +1,6 @@
 package Headers
 
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\include\SDK\Headers\Connection.h.back
 
 const (
 	DEBUGGEE_PAUSING_REASON_NOT_PAUSED                            = 0  //col:3
@@ -81,11 +81,10 @@ const (
 	DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGEE_TO_DEBUGGER_HARDWARE_LEVEL       = 5 //col:78
 )
 
-type DEBUGGER_REMOTE_PACKET struct {
-	Checksum                   uint8                                   //col:3
-	Indicator                  uint64                                  //col:4
-	TypeOfThePacket            DEBUGGER_REMOTE_PACKET_TYPE             //col:5
-	RequestedActionOfThePacket DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION //col:6
+type _DEBUGGER_REMOTE_PACKET struct {
+	Checksum                   uint8                                   //col:9
+	Indicator                  uint64                                  //col:10
+	TypeOfThePacket            DEBUGGER_REMOTE_PACKET_TYPE             //col:11
+	RequestedActionOfThePacket DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION //col:12
 }
-
 

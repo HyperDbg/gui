@@ -1,6 +1,6 @@
 package common
 
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\common\Common.h.back
 
 const (
 	ES   = 0 //col:3
@@ -25,27 +25,24 @@ const (
 	LOG_ERROR   = 3 //col:22
 )
 
-type VMX_SEGMENT_SELECTOR struct {
-	Selector   uint16                    //col:3
-	Attributes VMX_SEGMENT_ACCESS_RIGHTS //col:4
-	Limit      uint32                    //col:5
-	Base       uint64                    //col:6
+type _VMX_SEGMENT_SELECTOR struct {
+	Selector   uint16                    //col:9
+	Attributes VMX_SEGMENT_ACCESS_RIGHTS //col:10
+	Limit      uint32                    //col:11
+	Base       uint64                    //col:12
 }
 
-
-type CPUID struct {
-	eax int //col:10
-	ebx int //col:11
-	ecx int //col:12
-	edx int //col:13
+type _CPUID struct {
+	eax int //col:16
+	ebx int //col:17
+	ecx int //col:18
+	edx int //col:19
 }
 
-
-type NT_KPROCESS struct {
-	Header             DISPATCHER_HEADER //col:17
-	ProfileListHead    *list.List        //col:18
-	DirectoryTableBase ULONG_PTR         //col:19
-	Data               [1]uint8          //col:20
+type _NT_KPROCESS struct {
+	Header             DISPATCHER_HEADER //col:23
+	ProfileListHead    *list.List        //col:24
+	DirectoryTableBase ULONG_PTR         //col:25
+	Data               [1]uint8          //col:26
 }
-
 

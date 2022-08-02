@@ -75,601 +75,601 @@ typedef enum = 1  //col:37
 
 
 type  struct{
-TypedefStruct typedef struct //col:1
-MaxCpuidInputValue uint32 //col:3
-EbxValueGenu uint32 //col:4
-EcxValueNtel uint32 //col:5
-EdxValueInei uint32 //col:6
+TypedefStruct typedef struct //col:7
+MaxCpuidInputValue uint32 //col:9
+EbxValueGenu uint32 //col:10
+EcxValueNtel uint32 //col:11
+EdxValueInei uint32 //col:12
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:8
-Union union //col:10
-Struct struct //col:12
-SteppingId uint32 //col:14
-Model uint32 //col:15
-FamilyId uint32 //col:16
-ProcessorType uint32 //col:17
-Reserved1 uint32 //col:18
-ExtendedModelId uint32 //col:19
-ExtendedFamilyId uint32 //col:20
-Reserved2 uint32 //col:21
+TypedefStruct typedef struct //col:22
+Union union //col:24
+Struct struct //col:26
+SteppingId uint32 //col:28
+Model uint32 //col:29
+FamilyId uint32 //col:30
+ProcessorType uint32 //col:31
+Reserved1 uint32 //col:32
+ExtendedModelId uint32 //col:33
+ExtendedFamilyId uint32 //col:34
+Reserved2 uint32 //col:35
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:115
-Union union //col:117
-Struct struct //col:119
-CacheTypeField uint32 //col:121
-CacheLevel uint32 //col:122
-SelfInitializingCacheLevel uint32 //col:123
-FullyAssociativeCache uint32 //col:124
-Reserved1 uint32 //col:125
-MaxAddressableIdsForLogicalProcessorsSharingThisCache uint32 //col:126
-MaxAddressableIdsForProcessorCoresInPhysicalPackage uint32 //col:127
+TypedefStruct typedef struct //col:128
+Union union //col:130
+Struct struct //col:132
+CacheTypeField uint32 //col:134
+CacheLevel uint32 //col:135
+SelfInitializingCacheLevel uint32 //col:136
+FullyAssociativeCache uint32 //col:137
+Reserved1 uint32 //col:138
+MaxAddressableIdsForLogicalProcessorsSharingThisCache uint32 //col:139
+MaxAddressableIdsForProcessorCoresInPhysicalPackage uint32 //col:140
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:161
-Union union //col:163
-Struct struct //col:165
-SmallestMonitorLineSize uint32 //col:167
-Reserved1 uint32 //col:168
+TypedefStruct typedef struct //col:169
+Union union //col:171
+Struct struct //col:173
+SmallestMonitorLineSize uint32 //col:175
+Reserved1 uint32 //col:176
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:207
-Union union //col:209
-Struct struct //col:211
-TemperatureSensorSupported uint32 //col:213
-IntelTurboBoostTechnologyAvailable uint32 //col:214
-ApicTimerAlwaysRunning uint32 //col:215
-Reserved1 uint32 //col:216
-PowerLimitNotification uint32 //col:217
-ClockModulationDuty uint32 //col:218
-PackageThermalManagement uint32 //col:219
-HwpBaseRegisters uint32 //col:220
-HwpNotification uint32 //col:221
-HwpActivityWindow uint32 //col:222
-HwpEnergyPerformancePreference uint32 //col:223
-HwpPackageLevelRequest uint32 //col:224
-Reserved2 uint32 //col:225
-Hdc uint32 //col:226
-IntelTurboBoostMaxTechnology3Available uint32 //col:227
-HwpCapabilities uint32 //col:228
-HwpPeciOverride uint32 //col:229
-FlexibleHwp uint32 //col:230
-FastAccessModeForHwpRequestMsr uint32 //col:231
-Reserved3 uint32 //col:232
-IgnoringIdleLogicalProcessorHwpRequest uint32 //col:233
-Reserved4 uint32 //col:234
-IntelThreadDirector uint32 //col:235
-Reserved5 uint32 //col:236
+TypedefStruct typedef struct //col:237
+Union union //col:239
+Struct struct //col:241
+TemperatureSensorSupported uint32 //col:243
+IntelTurboBoostTechnologyAvailable uint32 //col:244
+ApicTimerAlwaysRunning uint32 //col:245
+Reserved1 uint32 //col:246
+PowerLimitNotification uint32 //col:247
+ClockModulationDuty uint32 //col:248
+PackageThermalManagement uint32 //col:249
+HwpBaseRegisters uint32 //col:250
+HwpNotification uint32 //col:251
+HwpActivityWindow uint32 //col:252
+HwpEnergyPerformancePreference uint32 //col:253
+HwpPackageLevelRequest uint32 //col:254
+Reserved2 uint32 //col:255
+Hdc uint32 //col:256
+IntelTurboBoostMaxTechnology3Available uint32 //col:257
+HwpCapabilities uint32 //col:258
+HwpPeciOverride uint32 //col:259
+FlexibleHwp uint32 //col:260
+FastAccessModeForHwpRequestMsr uint32 //col:261
+Reserved3 uint32 //col:262
+IgnoringIdleLogicalProcessorHwpRequest uint32 //col:263
+Reserved4 uint32 //col:264
+IntelThreadDirector uint32 //col:265
+Reserved5 uint32 //col:266
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:271
-Union union //col:273
-Struct struct //col:275
-NumberOfSubLeaves uint32 //col:277
+TypedefStruct typedef struct //col:278
+Union union //col:280
+Struct struct //col:282
+NumberOfSubLeaves uint32 //col:284
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:385
-Union union //col:387
-Struct struct //col:389
-Ia32PlatformDcaCap uint32 //col:391
+TypedefStruct typedef struct //col:392
+Union union //col:394
+Struct struct //col:396
+Ia32PlatformDcaCap uint32 //col:398
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:420
-Union union //col:422
-Struct struct //col:424
-VersionIdOfArchitecturalPerformanceMonitoring uint32 //col:426
-NumberOfPerformanceMonitoringCounterPerLogicalProcessor: uint32 //col:427
-BitWidthOfPerformanceMonitoringCounter uint32 //col:428
-EbxBitVectorLength uint32 //col:429
+TypedefStruct typedef struct //col:430
+Union union //col:432
+Struct struct //col:434
+VersionIdOfArchitecturalPerformanceMonitoring uint32 //col:436
+NumberOfPerformanceMonitoringCounterPerLogicalProcessor: uint32 //col:437
+BitWidthOfPerformanceMonitoringCounter uint32 //col:438
+EbxBitVectorLength uint32 //col:439
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:469
-Union union //col:471
-Struct struct //col:473
-X2ApicIdToUniqueTopologyIdShift uint32 //col:475
-Reserved1 uint32 //col:476
+TypedefStruct typedef struct //col:477
+Union union //col:479
+Struct struct //col:481
+X2ApicIdToUniqueTopologyIdShift uint32 //col:483
+Reserved1 uint32 //col:484
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:508
-Union union //col:510
-Struct struct //col:512
-X87State uint32 //col:514
-SseState uint32 //col:515
-AvxState uint32 //col:516
-MpxState uint32 //col:517
-Avx512State uint32 //col:518
-UsedForIa32Xss1 uint32 //col:519
-PkruState uint32 //col:520
-Reserved1 uint32 //col:521
-UsedForIa32Xss2 uint32 //col:522
-Reserved2 uint32 //col:523
+TypedefStruct typedef struct //col:524
+Union union //col:526
+Struct struct //col:528
+X87State uint32 //col:530
+SseState uint32 //col:531
+AvxState uint32 //col:532
+MpxState uint32 //col:533
+Avx512State uint32 //col:534
+UsedForIa32Xss1 uint32 //col:535
+PkruState uint32 //col:536
+Reserved1 uint32 //col:537
+UsedForIa32Xss2 uint32 //col:538
+Reserved2 uint32 //col:539
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:552
-Union union //col:554
-Struct struct //col:556
-Reserved1 uint32 //col:558
-SupportsXsavecAndCompactedXrstor uint32 //col:559
-SupportsXgetbvWithEcx1 uint32 //col:560
-SupportsXsaveXrstorAndIa32Xss uint32 //col:561
-Reserved2 uint32 //col:562
+TypedefStruct typedef struct //col:563
+Union union //col:565
+Struct struct //col:567
+Reserved1 uint32 //col:569
+SupportsXsavecAndCompactedXrstor uint32 //col:570
+SupportsXgetbvWithEcx1 uint32 //col:571
+SupportsXsaveXrstorAndIa32Xss uint32 //col:572
+Reserved2 uint32 //col:573
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:601
-Union union //col:603
-Struct struct //col:605
-Ia32PlatformDcaCap uint32 //col:607
+TypedefStruct typedef struct //col:608
+Union union //col:610
+Struct struct //col:612
+Ia32PlatformDcaCap uint32 //col:614
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:638
-Union union //col:640
-Struct struct //col:642
-Reserved uint32 //col:644
+TypedefStruct typedef struct //col:645
+Union union //col:647
+Struct struct //col:649
+Reserved uint32 //col:651
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:675
-Union union //col:677
-Struct struct //col:679
-Reserved uint32 //col:681
+TypedefStruct typedef struct //col:682
+Union union //col:684
+Struct struct //col:686
+Reserved uint32 //col:688
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:713
-Union union //col:715
-Struct struct //col:717
-Ia32PlatformDcaCap uint32 //col:719
+TypedefStruct typedef struct //col:720
+Union union //col:722
+Struct struct //col:724
+Ia32PlatformDcaCap uint32 //col:726
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:752
-Union union //col:754
-Struct struct //col:756
-LengthOfCapacityBitMask uint32 //col:758
-Reserved1 uint32 //col:759
+TypedefStruct typedef struct //col:760
+Union union //col:762
+Struct struct //col:764
+LengthOfCapacityBitMask uint32 //col:766
+Reserved1 uint32 //col:767
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:791
-Union union //col:793
-Struct struct //col:795
-LengthOfCapacityBitMask uint32 //col:797
-Reserved1 uint32 //col:798
+TypedefStruct typedef struct //col:799
+Union union //col:801
+Struct struct //col:803
+LengthOfCapacityBitMask uint32 //col:805
+Reserved1 uint32 //col:806
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:828
-Union union //col:830
-Struct struct //col:832
-MaxMbaThrottlingValue uint32 //col:834
-Reserved1 uint32 //col:835
+TypedefStruct typedef struct //col:836
+Union union //col:838
+Struct struct //col:840
+MaxMbaThrottlingValue uint32 //col:842
+Reserved1 uint32 //col:843
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:867
-Union union //col:869
-Struct struct //col:871
-Sgx1 uint32 //col:873
-Sgx2 uint32 //col:874
-Reserved1 uint32 //col:875
-SgxEnclvAdvanced uint32 //col:876
-SgxEnclsAdvanced uint32 //col:877
-Reserved2 uint32 //col:878
+TypedefStruct typedef struct //col:879
+Union union //col:881
+Struct struct //col:883
+Sgx1 uint32 //col:885
+Sgx2 uint32 //col:886
+Reserved1 uint32 //col:887
+SgxEnclvAdvanced uint32 //col:888
+SgxEnclsAdvanced uint32 //col:889
+Reserved2 uint32 //col:890
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:909
-Union union //col:911
-Struct struct //col:913
-ValidSecsAttributes0 uint32 //col:915
+TypedefStruct typedef struct //col:916
+Union union //col:918
+Struct struct //col:920
+ValidSecsAttributes0 uint32 //col:922
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:944
-Union union //col:946
-Struct struct //col:948
-SubLeafType uint32 //col:950
-Reserved1 uint32 //col:951
+TypedefStruct typedef struct //col:952
+Union union //col:954
+Struct struct //col:956
+SubLeafType uint32 //col:958
+Reserved1 uint32 //col:959
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:980
-Union union //col:982
-Struct struct //col:984
-SubLeafType uint32 //col:986
-Reserved1 uint32 //col:987
-EpcBasePhysicalAddress1 uint32 //col:988
+TypedefStruct typedef struct //col:989
+Union union //col:991
+Struct struct //col:993
+SubLeafType uint32 //col:995
+Reserved1 uint32 //col:996
+EpcBasePhysicalAddress1 uint32 //col:997
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1021
-Union union //col:1023
-Struct struct //col:1025
-MaxSubLeaf uint32 //col:1027
+TypedefStruct typedef struct //col:1028
+Union union //col:1030
+Struct struct //col:1032
+MaxSubLeaf uint32 //col:1034
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1070
-Union union //col:1072
-Struct struct //col:1074
-NumberOfConfigurableAddressRangesForFiltering uint32 //col:1076
-Reserved1 uint32 //col:1077
-BitmapOfSupportedMtcPeriodEncodings uint32 //col:1078
+TypedefStruct typedef struct //col:1079
+Union union //col:1081
+Struct struct //col:1083
+NumberOfConfigurableAddressRangesForFiltering uint32 //col:1085
+Reserved1 uint32 //col:1086
+BitmapOfSupportedMtcPeriodEncodings uint32 //col:1087
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1108
-Union union //col:1110
-Struct struct //col:1112
-Denominator uint32 //col:1114
+TypedefStruct typedef struct //col:1115
+Union union //col:1117
+Struct struct //col:1119
+Denominator uint32 //col:1121
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1143
-Union union //col:1145
-Struct struct //col:1147
-ProcesorBaseFrequencyMhz uint32 //col:1149
-Reserved1 uint32 //col:1150
+TypedefStruct typedef struct //col:1151
+Union union //col:1153
+Struct struct //col:1155
+ProcesorBaseFrequencyMhz uint32 //col:1157
+Reserved1 uint32 //col:1158
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1181
-Union union //col:1183
-Struct struct //col:1185
-MaxSocIdIndex uint32 //col:1187
+TypedefStruct typedef struct //col:1188
+Union union //col:1190
+Struct struct //col:1192
+MaxSocIdIndex uint32 //col:1194
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1218
-Union union //col:1220
-Struct struct //col:1222
-SocVendorBrandString uint32 //col:1224
+TypedefStruct typedef struct //col:1225
+Union union //col:1227
+Struct struct //col:1229
+SocVendorBrandString uint32 //col:1231
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1253
-Union union //col:1255
-Struct struct //col:1257
-Reserved uint32 //col:1259
+TypedefStruct typedef struct //col:1260
+Union union //col:1262
+Struct struct //col:1264
+Reserved uint32 //col:1266
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1288
-Union union //col:1290
-Struct struct //col:1292
-MaxSubLeaf uint32 //col:1294
+TypedefStruct typedef struct //col:1295
+Union union //col:1297
+Struct struct //col:1299
+MaxSubLeaf uint32 //col:1301
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1335
-Union union //col:1337
-Struct struct //col:1339
-Reserved uint32 //col:1341
+TypedefStruct typedef struct //col:1342
+Union union //col:1344
+Struct struct //col:1346
+Reserved uint32 //col:1348
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1382
-Union union //col:1384
-Struct struct //col:1386
-MaxExtendedFunctions uint32 //col:1388
+TypedefStruct typedef struct //col:1389
+Union union //col:1391
+Struct struct //col:1393
+MaxExtendedFunctions uint32 //col:1395
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1417
-Union union //col:1419
-Struct struct //col:1421
-Reserved uint32 //col:1423
+TypedefStruct typedef struct //col:1424
+Union union //col:1426
+Struct struct //col:1428
+Reserved uint32 //col:1430
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1466
-Union union //col:1468
-Struct struct //col:1470
-ProcessorBrandString1 uint32 //col:1472
+TypedefStruct typedef struct //col:1473
+Union union //col:1475
+Struct struct //col:1477
+ProcessorBrandString1 uint32 //col:1479
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1501
-Union union //col:1503
-Struct struct //col:1505
-ProcessorBrandString5 uint32 //col:1507
+TypedefStruct typedef struct //col:1508
+Union union //col:1510
+Struct struct //col:1512
+ProcessorBrandString5 uint32 //col:1514
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1536
-Union union //col:1538
-Struct struct //col:1540
-ProcessorBrandString9 uint32 //col:1542
+TypedefStruct typedef struct //col:1543
+Union union //col:1545
+Struct struct //col:1547
+ProcessorBrandString9 uint32 //col:1549
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1571
-Union union //col:1573
-Struct struct //col:1575
-Reserved uint32 //col:1577
+TypedefStruct typedef struct //col:1578
+Union union //col:1580
+Struct struct //col:1582
+Reserved uint32 //col:1584
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1606
-Union union //col:1608
-Struct struct //col:1610
-Reserved uint32 //col:1612
+TypedefStruct typedef struct //col:1613
+Union union //col:1615
+Struct struct //col:1617
+Reserved uint32 //col:1619
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1644
-Union union //col:1646
-Struct struct //col:1648
-Reserved uint32 //col:1650
+TypedefStruct typedef struct //col:1651
+Union union //col:1653
+Struct struct //col:1655
+Reserved uint32 //col:1657
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1681
-Union union //col:1683
-Struct struct //col:1685
-NumberOfPhysicalAddressBits uint32 //col:1687
-NumberOfLinearAddressBits uint32 //col:1688
-Reserved1 uint32 //col:1689
+TypedefStruct typedef struct //col:1690
+Union union //col:1692
+Struct struct //col:1694
+NumberOfPhysicalAddressBits uint32 //col:1696
+NumberOfLinearAddressBits uint32 //col:1697
+Reserved1 uint32 //col:1698
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1718
-ThreadAdjust uint64 //col:1720
+TypedefStruct typedef struct //col:1721
+ThreadAdjust uint64 //col:1723
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1722
-MsegHeaderRevision uint32 //col:1724
-MonitorFeatures uint32 //col:1725
-GdtrLimit uint32 //col:1726
-GdtrBaseOffset uint32 //col:1727
-CsSelector uint32 //col:1728
-EipOffset uint32 //col:1729
-EspOffset uint32 //col:1730
-Cr3Offset uint32 //col:1731
+TypedefStruct typedef struct //col:1732
+MsegHeaderRevision uint32 //col:1734
+MonitorFeatures uint32 //col:1735
+GdtrLimit uint32 //col:1736
+GdtrBaseOffset uint32 //col:1737
+CsSelector uint32 //col:1738
+EipOffset uint32 //col:1739
+EspOffset uint32 //col:1740
+Cr3Offset uint32 //col:1741
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1733
-C0Mcnt uint64 //col:1735
+TypedefStruct typedef struct //col:1736
+C0Mcnt uint64 //col:1738
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1737
-C0Acnt uint64 //col:1739
+TypedefStruct typedef struct //col:1740
+C0Acnt uint64 //col:1742
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1741
-StallCycleCount uint64 //col:1743
+TypedefStruct typedef struct //col:1744
+StallCycleCount uint64 //col:1746
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1745
-Limit uint16 //col:1747
-BaseAddress uint32 //col:1748
+TypedefStruct typedef struct //col:1749
+Limit uint16 //col:1751
+BaseAddress uint32 //col:1752
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1750
-Limit uint16 //col:1752
-BaseAddress uint64 //col:1753
+TypedefStruct typedef struct //col:1754
+Limit uint16 //col:1756
+BaseAddress uint64 //col:1757
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1755
-SegmentLimitLow uint16 //col:1757
-BaseAddressLow uint16 //col:1758
-Union union //col:1759
-Struct struct //col:1761
-BaseAddressMiddle uint32 //col:1763
-Type uint32 //col:1764
-DescriptorType uint32 //col:1765
-DescriptorPrivilegeLevel uint32 //col:1766
-Present uint32 //col:1767
-SegmentLimitHigh uint32 //col:1768
-System uint32 //col:1769
-LongMode uint32 //col:1770
-DefaultBig uint32 //col:1771
-Granularity uint32 //col:1772
-BaseAddressHigh uint32 //col:1773
+TypedefStruct typedef struct //col:1774
+SegmentLimitLow uint16 //col:1776
+BaseAddressLow uint16 //col:1777
+Union union //col:1778
+Struct struct //col:1780
+BaseAddressMiddle uint32 //col:1782
+Type uint32 //col:1783
+DescriptorType uint32 //col:1784
+DescriptorPrivilegeLevel uint32 //col:1785
+Present uint32 //col:1786
+SegmentLimitHigh uint32 //col:1787
+System uint32 //col:1788
+LongMode uint32 //col:1789
+DefaultBig uint32 //col:1790
+Granularity uint32 //col:1791
+BaseAddressHigh uint32 //col:1792
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1778
-SegmentLimitLow uint16 //col:1780
-BaseAddressLow uint16 //col:1781
-Union union //col:1782
-Struct struct //col:1784
-BaseAddressMiddle uint32 //col:1786
-Type uint32 //col:1787
-DescriptorType uint32 //col:1788
-DescriptorPrivilegeLevel uint32 //col:1789
-Present uint32 //col:1790
-SegmentLimitHigh uint32 //col:1791
-System uint32 //col:1792
-LongMode uint32 //col:1793
-DefaultBig uint32 //col:1794
-Granularity uint32 //col:1795
-BaseAddressHigh uint32 //col:1796
+TypedefStruct typedef struct //col:1797
+SegmentLimitLow uint16 //col:1799
+BaseAddressLow uint16 //col:1800
+Union union //col:1801
+Struct struct //col:1803
+BaseAddressMiddle uint32 //col:1805
+Type uint32 //col:1806
+DescriptorType uint32 //col:1807
+DescriptorPrivilegeLevel uint32 //col:1808
+Present uint32 //col:1809
+SegmentLimitHigh uint32 //col:1810
+System uint32 //col:1811
+LongMode uint32 //col:1812
+DefaultBig uint32 //col:1813
+Granularity uint32 //col:1814
+BaseAddressHigh uint32 //col:1815
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1803
-OffsetLow uint16 //col:1805
-SegmentSelector uint16 //col:1806
-Union union //col:1807
-Struct struct //col:1809
-InterruptStackTable uint32 //col:1811
-MustBeZero0 uint32 //col:1812
-Type uint32 //col:1813
-MustBeZero1 uint32 //col:1814
-DescriptorPrivilegeLevel uint32 //col:1815
-Present uint32 //col:1816
-OffsetMiddle uint32 //col:1817
+TypedefStruct typedef struct //col:1818
+OffsetLow uint16 //col:1820
+SegmentSelector uint16 //col:1821
+Union union //col:1822
+Struct struct //col:1824
+InterruptStackTable uint32 //col:1826
+MustBeZero0 uint32 //col:1827
+Type uint32 //col:1828
+MustBeZero1 uint32 //col:1829
+DescriptorPrivilegeLevel uint32 //col:1830
+Present uint32 //col:1831
+OffsetMiddle uint32 //col:1832
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1824
-Reserved0 uint32 //col:1826
-Rsp0 uint64 //col:1827
-Rsp1 uint64 //col:1828
-Rsp2 uint64 //col:1829
-Reserved1 uint64 //col:1830
-Ist1 uint64 //col:1831
-Ist2 uint64 //col:1832
-Ist3 uint64 //col:1833
-Ist4 uint64 //col:1834
-Ist5 uint64 //col:1835
-Ist6 uint64 //col:1836
-Ist7 uint64 //col:1837
-Reserved2 uint64 //col:1838
-Reserved3 uint16 //col:1839
-IoMapBase uint16 //col:1840
+TypedefStruct typedef struct //col:1841
+Reserved0 uint32 //col:1843
+Rsp0 uint64 //col:1844
+Rsp1 uint64 //col:1845
+Rsp2 uint64 //col:1846
+Reserved1 uint64 //col:1847
+Ist1 uint64 //col:1848
+Ist2 uint64 //col:1849
+Ist3 uint64 //col:1850
+Ist4 uint64 //col:1851
+Ist5 uint64 //col:1852
+Ist6 uint64 //col:1853
+Ist7 uint64 //col:1854
+Reserved2 uint64 //col:1855
+Reserved3 uint16 //col:1856
+IoMapBase uint16 //col:1857
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1842
-Reason uint32 //col:1844
-ExceptionMask uint32 //col:1845
-Exit uint64 //col:1846
-GuestLinearAddress uint64 //col:1847
-GuestPhysicalAddress uint64 //col:1848
-CurrentEptpIndex uint16 //col:1849
+TypedefStruct typedef struct //col:1850
+Reason uint32 //col:1852
+ExceptionMask uint32 //col:1853
+Exit uint64 //col:1854
+GuestLinearAddress uint64 //col:1855
+GuestPhysicalAddress uint64 //col:1856
+CurrentEptpIndex uint16 //col:1857
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1851
-IoA[4096] UINT8 //col:1853
-IoB[4096] UINT8 //col:1854
+TypedefStruct typedef struct //col:1855
+IoA[4096] UINT8 //col:1857
+IoB[4096] UINT8 //col:1858
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1856
-RdmsrLow[1024] UINT8 //col:1858
-RdmsrHigh[1024] UINT8 //col:1859
-WrmsrLow[1024] UINT8 //col:1860
-WrmsrHigh[1024] UINT8 //col:1861
+TypedefStruct typedef struct //col:1862
+RdmsrLow[1024] UINT8 //col:1864
+RdmsrHigh[1024] UINT8 //col:1865
+WrmsrLow[1024] UINT8 //col:1866
+WrmsrHigh[1024] UINT8 //col:1867
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1863
-EptPointer uint64 //col:1865
-Reserved uint64 //col:1866
+TypedefStruct typedef struct //col:1867
+EptPointer uint64 //col:1869
+Reserved uint64 //col:1870
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1868
-Vpid uint16 //col:1870
-Reserved1 uint16 //col:1871
-Reserved2 uint32 //col:1872
-LinearAddress uint64 //col:1873
+TypedefStruct typedef struct //col:1874
+Vpid uint16 //col:1876
+Reserved1 uint16 //col:1877
+Reserved2 uint32 //col:1878
+LinearAddress uint64 //col:1879
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1875
-Struct struct //col:1877
-RevisionId uint32 //col:1879
-ShadowVmcsIndicator uint32 //col:1880
+TypedefStruct typedef struct //col:1881
+Struct struct //col:1883
+RevisionId uint32 //col:1885
+ShadowVmcsIndicator uint32 //col:1886
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1885
-Struct struct //col:1887
-RevisionId uint32 //col:1889
-MustBeZero uint32 //col:1890
+TypedefStruct typedef struct //col:1891
+Struct struct //col:1893
+RevisionId uint32 //col:1895
+MustBeZero uint32 //col:1896
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1894
-Union union //col:1896
-Struct struct //col:1898
-Present uint64 //col:1900
-Reserved1 uint64 //col:1901
-ContextTablePointer uint64 //col:1902
+TypedefStruct typedef struct //col:1903
+Union union //col:1905
+Struct struct //col:1907
+Present uint64 //col:1909
+Reserved1 uint64 //col:1910
+ContextTablePointer uint64 //col:1911
 }
 
 
 type  struct{
-TypedefStruct typedef struct //col:1915
-Union union //col:1917
-Struct struct //col:1919
-Present uint64 //col:1921
-FaultProcessingDisable uint64 //col:1922
-TranslationType uint64 //col:1923
-Reserved1 uint64 //col:1924
-SecondLevelPageTranslationPointer uint64 //col:1925
+TypedefStruct typedef struct //col:1926
+Union union //col:1928
+Struct struct //col:1930
+Present uint64 //col:1932
+FaultProcessingDisable uint64 //col:1933
+TranslationType uint64 //col:1934
+Reserved1 uint64 //col:1935
+SecondLevelPageTranslationPointer uint64 //col:1936
 }
 
 

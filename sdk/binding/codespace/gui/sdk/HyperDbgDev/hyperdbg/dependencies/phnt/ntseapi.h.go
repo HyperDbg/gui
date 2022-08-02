@@ -1,5 +1,7 @@
 package phnt
 
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntseapi.h.back
+
 const (
 	TokenUser                            = 1  //col:3
 	TokenGroups                          = 2  //col:4
@@ -60,43 +62,44 @@ const (
 	TOKEN_SECURITY_ATTRIBUTE_OPERATION_REPLACE     = 5 //col:59
 )
 
-type TOKEN_SECURITY_ATTRIBUTE_FQBN_VALUE struct {
-	Version ULONG64        //col:3
-	Name    UNICODE_STRING //col:4
+type _TOKEN_SECURITY_ATTRIBUTE_FQBN_VALUE struct {
+	Version ULONG64 //col:7
+	Name    *int16  //col:8
 }
 
-type TOKEN_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE struct {
-	pValue      PVOID  //col:8
-	ValueLength uint32 //col:9
+type _TOKEN_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE struct {
+	pValue      uintptr //col:12
+	ValueLength uint32  //col:13
 }
 
-type TOKEN_SECURITY_ATTRIBUTE_V1 struct {
-	Name         UNICODE_STRING                               //col:13
-	ValueType    USHORT                                       //col:14
-	Reserved     USHORT                                       //col:15
-	Flags        uint32                                       //col:16
-	ValueCount   uint32                                       //col:17
-	Union        union                                        //col:18
-	pInt64       PLONG64                                      //col:20
-	pUint64      PULONG64                                     //col:21
-	pString      PUNICODE_STRING                              //col:22
-	pFqbn        PTOKEN_SECURITY_ATTRIBUTE_FQBN_VALUE         //col:23
-	pOctetString PTOKEN_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE //col:24
+type _TOKEN_SECURITY_ATTRIBUTE_V1 struct {
+	Name         *int16                                       //col:27
+	ValueType    uint16                                       //col:28
+	Reserved     uint16                                       //col:29
+	Flags        uint32                                       //col:30
+	ValueCount   uint32                                       //col:31
+	Union        union                                        //col:32
+	pInt64       PLONG64                                      //col:34
+	pUint64      PULONG64                                     //col:35
+	pString      *uint32                                      //col:36
+	pFqbn        PTOKEN_SECURITY_ATTRIBUTE_FQBN_VALUE         //col:37
+	pOctetString PTOKEN_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE //col:38
 }
 
-type TOKEN_SECURITY_ATTRIBUTES_INFORMATION struct {
-	Version        USHORT                       //col:29
-	Reserved       USHORT                       //col:30
-	AttributeCount uint32                       //col:31
-	Union          union                        //col:32
-	pAttributeV1   PTOKEN_SECURITY_ATTRIBUTE_V1 //col:34
+type _TOKEN_SECURITY_ATTRIBUTES_INFORMATION struct {
+	Version        uint16                       //col:37
+	Reserved       uint16                       //col:38
+	AttributeCount uint32                       //col:39
+	Union          union                        //col:40
+	pAttributeV1   PTOKEN_SECURITY_ATTRIBUTE_V1 //col:42
 }
 
-type TOKEN_SECURITY_ATTRIBUTES_AND_OPERATION_INFORMATION struct {
-	Attributes PTOKEN_SECURITY_ATTRIBUTES_INFORMATION //col:39
-	Operations PTOKEN_SECURITY_ATTRIBUTE_OPERATION    //col:40
+type _TOKEN_SECURITY_ATTRIBUTES_AND_OPERATION_INFORMATION struct {
+	Attributes PTOKEN_SECURITY_ATTRIBUTES_INFORMATION //col:43
+	Operations PTOKEN_SECURITY_ATTRIBUTE_OPERATION    //col:44
 }
 
-type TOKEN_PROCESS_TRUST_LEVEL struct {
-	TrustLevelSid PSID //col:44
+type _TOKEN_PROCESS_TRUST_LEVEL struct {
+	TrustLevelSid PSID //col:47
 }
+

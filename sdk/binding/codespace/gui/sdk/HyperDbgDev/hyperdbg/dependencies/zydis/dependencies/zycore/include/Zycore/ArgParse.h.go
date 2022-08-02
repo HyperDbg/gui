@@ -1,30 +1,27 @@
 package Zycore
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\dependencies\zycore\include\Zycore\ArgParse.h.back
 
-
-type typedef struct ZyanArgParseDefinition_ struct{
-char* bool //col:3
-boolean ZyanBool //col:4
-required ZyanBool //col:5
+type  ZyanArgParseDefinition_ struct{
+char* bool //col:8
+boolean ZyanBool //col:9
+required ZyanBool //col:10
 }
 
 
-
-type typedef struct ZyanArgParseConfig_ struct{
-char** bool //col:9
-argc ZyanUSize //col:10
-min_unnamed_args ZyanUSize //col:11
-max_unnamed_args ZyanUSize //col:12
-args ZyanArgParseDefinition* //col:13
+type  ZyanArgParseConfig_ struct{
+char** bool //col:16
+argc ZyanUSize //col:17
+min_unnamed_args ZyanUSize //col:18
+max_unnamed_args ZyanUSize //col:19
+args ZyanArgParseDefinition* //col:20
 }
 
 
-
-type typedef struct ZyanArgParseArg_ struct{
-ZyanArgParseDefinition* bool //col:17
-has_value ZyanBool //col:18
-value ZyanStringView //col:19
+type  ZyanArgParseArg_ struct{
+ZyanArgParseDefinition* bool //col:22
+has_value ZyanBool //col:23
+value ZyanStringView //col:24
 }
-
 
 
 

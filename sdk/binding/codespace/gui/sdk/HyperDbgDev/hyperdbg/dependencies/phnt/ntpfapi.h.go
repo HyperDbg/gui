@@ -1,5 +1,7 @@
 package phnt
 
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntpfapi.h.back
+
 const (
 	PfKernelInitPhase               = 0   //col:3
 	PfBootDriverInitPhase           = 90  //col:4
@@ -79,131 +81,132 @@ const (
 	SuperfetchInformationMax           = 29 //col:78
 )
 
-type PF_TRACE_LIMITS struct {
-	MaxNumPages    uint32   //col:3
-	MaxNumSections uint32   //col:4
-	TimerPeriod    LONGLONG //col:5
+type _PF_TRACE_LIMITS struct {
+	MaxNumPages    uint32   //col:8
+	MaxNumSections uint32   //col:9
+	TimerPeriod    LONGLONG //col:10
 }
 
-type PF_SYSTEM_PREFETCH_PARAMETERS struct {
-	EnableStatus           [2]PF_ENABLE_STATUS //col:9
-	TraceLimits            [2]PF_TRACE_LIMITS  //col:10
-	MaxNumActiveTraces     uint32              //col:11
-	MaxNumSavedTraces      uint32              //col:12
-	RootDirPath            [32]WCHAR           //col:13
-	HostingApplicationList [128]WCHAR          //col:14
+type _PF_SYSTEM_PREFETCH_PARAMETERS struct {
+	EnableStatus           [2]PF_ENABLE_STATUS //col:17
+	TraceLimits            [2]PF_TRACE_LIMITS  //col:18
+	MaxNumActiveTraces     uint32              //col:19
+	MaxNumSavedTraces      uint32              //col:20
+	RootDirPath            [32]WCHAR           //col:21
+	HostingApplicationList [128]WCHAR          //col:22
 }
 
-type PF_BOOT_CONTROL struct {
-	Version                uint32 //col:18
-	DisableBootPrefetching uint32 //col:19
+type _PF_BOOT_CONTROL struct {
+	Version                uint32 //col:22
+	DisableBootPrefetching uint32 //col:23
 }
 
-type PREFETCHER_INFORMATION struct {
-	ULONG                        _In_    //col:23
-	ULONG                        _In_    //col:24
-	PREFETCHER_INFORMATION_CLASS _In_    //col:25
-	PVOID                        _Inout_ //col:26
-	ULONG                        _Inout_ //col:27
+type _PREFETCHER_INFORMATION struct {
+	ULONG                        _In_    //col:30
+	ULONG                        _In_    //col:31
+	PREFETCHER_INFORMATION_CLASS _In_    //col:32
+	PVOID                        _Inout_ //col:33
+	ULONG                        _Inout_ //col:34
 }
 
-type PF_SYSTEM_SUPERFETCH_PARAMETERS struct {
-	EnabledComponents                uint32 //col:31
-	BootID                           uint32 //col:32
-	SavedSectInfoTracesMax           uint32 //col:33
-	SavedPageAccessTracesMax         uint32 //col:34
-	ScenarioPrefetchTimeoutStandby   uint32 //col:35
-	ScenarioPrefetchTimeoutHibernate uint32 //col:36
-	ScenarioPrefetchTimeoutHiberBoot uint32 //col:37
+type _PF_SYSTEM_SUPERFETCH_PARAMETERS struct {
+	EnabledComponents                uint32 //col:40
+	BootID                           uint32 //col:41
+	SavedSectInfoTracesMax           uint32 //col:42
+	SavedPageAccessTracesMax         uint32 //col:43
+	ScenarioPrefetchTimeoutStandby   uint32 //col:44
+	ScenarioPrefetchTimeoutHibernate uint32 //col:45
+	ScenarioPrefetchTimeoutHiberBoot uint32 //col:46
 }
 
-type PF_PFN_PRIO_REQUEST struct {
-	Version      uint32                         //col:41
-	RequestFlags uint32                         //col:42
-	PfnCount     ULONG_PTR                      //col:43
-	MemInfo      SYSTEM_MEMORY_LIST_INFORMATION //col:44
-	PageData     [256]MMPFN_IDENTITY            //col:45
+type _PF_PFN_PRIO_REQUEST struct {
+	Version      uint32                         //col:48
+	RequestFlags uint32                         //col:49
+	PfnCount     ULONG_PTR                      //col:50
+	MemInfo      SYSTEM_MEMORY_LIST_INFORMATION //col:51
+	PageData     [256]MMPFN_IDENTITY            //col:52
 }
 
-type PFS_PRIVATE_PAGE_SOURCE struct {
-	Type      PFS_PRIVATE_PAGE_SOURCE_TYPE //col:49
-	Union     union                        //col:50
-	SessionId uint32                       //col:52
-	ProcessId uint32                       //col:53
+type _PFS_PRIVATE_PAGE_SOURCE struct {
+	Type      PFS_PRIVATE_PAGE_SOURCE_TYPE //col:56
+	Union     union                        //col:57
+	SessionId uint32                       //col:59
+	ProcessId uint32                       //col:60
 }
 
-type PF_PRIVSOURCE_INFO struct {
-	DbInfo                PFS_PRIVATE_PAGE_SOURCE //col:60
-	EProcess              PVOID                   //col:61
-	WsPrivatePages        SIZE_T                  //col:62
-	TotalPrivatePages     SIZE_T                  //col:63
-	SessionID             uint32                  //col:64
-	ImageName             [16]int8                //col:65
-	WsSwapPages           ULONG_PTR               //col:67
-	SessionPagedPoolPages ULONG_PTR               //col:68
-	StoreSizePages        ULONG_PTR               //col:69
+type _PF_PRIVSOURCE_INFO struct {
+	DbInfo                PFS_PRIVATE_PAGE_SOURCE //col:72
+	EProcess              uintptr                 //col:73
+	WsPrivatePages        int64                   //col:74
+	TotalPrivatePages     int64                   //col:75
+	SessionID             uint32                  //col:76
+	ImageName             [16]int8                //col:77
+	WsSwapPages           ULONG_PTR               //col:79
+	SessionPagedPoolPages ULONG_PTR               //col:80
+	StoreSizePages        ULONG_PTR               //col:81
 }
 
-type PF_PRIVSOURCE_QUERY_REQUEST struct {
-	Version   uint32                //col:81
-	Flags     uint32                //col:82
-	InfoCount uint32                //col:83
-	InfoArray [1]PF_PRIVSOURCE_INFO //col:84
+type _PF_PRIVSOURCE_QUERY_REQUEST struct {
+	Version   uint32                //col:87
+	Flags     uint32                //col:88
+	InfoCount uint32                //col:89
+	InfoArray [1]PF_PRIVSOURCE_INFO //col:90
 }
 
-type PF_SCENARIO_PHASE_INFO struct {
-	Version        uint32                  //col:88
-	ScenType       PF_PHASED_SCENARIO_TYPE //col:89
-	PhaseId        uint32                  //col:90
-	SequenceNumber uint32                  //col:91
-	Flags          uint32                  //col:92
-	FUSUserId      uint32                  //col:93
+type _PF_SCENARIO_PHASE_INFO struct {
+	Version        uint32                  //col:96
+	ScenType       PF_PHASED_SCENARIO_TYPE //col:97
+	PhaseId        uint32                  //col:98
+	SequenceNumber uint32                  //col:99
+	Flags          uint32                  //col:100
+	FUSUserId      uint32                  //col:101
 }
 
-type PF_MEMORY_LIST_NODE struct {
-	Node                   ULONGLONG //col:97
-	Spare                  ULONGLONG //col:98
-	StandbyLowPageCount    ULONGLONG //col:99
-	StandbyMediumPageCount ULONGLONG //col:100
-	StandbyHighPageCount   ULONGLONG //col:101
-	FreePageCount          ULONGLONG //col:102
-	ModifiedPageCount      ULONGLONG //col:103
+type _PF_MEMORY_LIST_NODE struct {
+	Node                   ULONGLONG //col:106
+	Spare                  ULONGLONG //col:107
+	StandbyLowPageCount    ULONGLONG //col:108
+	StandbyMediumPageCount ULONGLONG //col:109
+	StandbyHighPageCount   ULONGLONG //col:110
+	FreePageCount          ULONGLONG //col:111
+	ModifiedPageCount      ULONGLONG //col:112
 }
 
-type PF_MEMORY_LIST_INFO struct {
-	Version   uint32                 //col:107
-	Size      uint32                 //col:108
-	NodeCount uint32                 //col:109
-	Nodes     [1]PF_MEMORY_LIST_NODE //col:110
+type _PF_MEMORY_LIST_INFO struct {
+	Version   uint32                 //col:113
+	Size      uint32                 //col:114
+	NodeCount uint32                 //col:115
+	Nodes     [1]PF_MEMORY_LIST_NODE //col:116
 }
 
-type PF_PHYSICAL_MEMORY_RANGE struct {
-	BasePfn   ULONG_PTR //col:114
-	PageCount ULONG_PTR //col:115
+type _PF_PHYSICAL_MEMORY_RANGE struct {
+	BasePfn   ULONG_PTR //col:118
+	PageCount ULONG_PTR //col:119
 }
 
-type PF_PHYSICAL_MEMORY_RANGE_INFO_V1 struct {
-	Version    uint32                      //col:119
-	RangeCount uint32                      //col:120
-	Ranges     [1]PF_PHYSICAL_MEMORY_RANGE //col:121
+type _PF_PHYSICAL_MEMORY_RANGE_INFO_V1 struct {
+	Version    uint32                      //col:124
+	RangeCount uint32                      //col:125
+	Ranges     [1]PF_PHYSICAL_MEMORY_RANGE //col:126
 }
 
-type PF_PHYSICAL_MEMORY_RANGE_INFO_V2 struct {
-	Version    uint32                                  //col:125
-	Flags      uint32                                  //col:126
-	RangeCount uint32                                  //col:127
-	Ranges     [ANYSIZE_ARRAY]PF_PHYSICAL_MEMORY_RANGE //col:128
+type _PF_PHYSICAL_MEMORY_RANGE_INFO_V2 struct {
+	Version    uint32                                  //col:131
+	Flags      uint32                                  //col:132
+	RangeCount uint32                                  //col:133
+	Ranges     [ANYSIZE_ARRAY]PF_PHYSICAL_MEMORY_RANGE //col:134
 }
 
-type PF_REPURPOSED_BY_PREFETCH_INFO struct {
-	Version              uint32 //col:132
-	RepurposedByPrefetch uint32 //col:133
+type _PF_REPURPOSED_BY_PREFETCH_INFO struct {
+	Version              uint32 //col:136
+	RepurposedByPrefetch uint32 //col:137
 }
 
-type SUPERFETCH_INFORMATION struct {
-	ULONG                        _In_    //col:137
-	ULONG                        _In_    //col:138
-	SUPERFETCH_INFORMATION_CLASS _In_    //col:139
-	PVOID                        _Inout_ //col:140
-	ULONG                        _Inout_ //col:141
+type _SUPERFETCH_INFORMATION struct {
+	ULONG                        _In_    //col:144
+	ULONG                        _In_    //col:145
+	SUPERFETCH_INFORMATION_CLASS _In_    //col:146
+	PVOID                        _Inout_ //col:147
+	ULONG                        _Inout_ //col:148
 }
+

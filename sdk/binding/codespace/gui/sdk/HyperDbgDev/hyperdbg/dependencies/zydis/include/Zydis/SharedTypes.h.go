@@ -1,5 +1,5 @@
 package Zydis
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\SharedTypes.h.back
 
 const(
     ZYDIS_MACHINE_MODE_LONG_64 = 1  //col:3

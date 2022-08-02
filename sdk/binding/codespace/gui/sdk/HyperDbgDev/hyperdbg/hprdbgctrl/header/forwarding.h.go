@@ -1,6 +1,6 @@
 package header
 
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbgctrl\header\forwarding.h.back
 
 const (
 	EVENT_FORWARDING_NAMEDPIPE = 1 //col:3
@@ -22,15 +22,14 @@ const (
 	DEBUGGER_OUTPUT_SOURCE_STATUS_UNKNOWN_ERROR       = 5 //col:19
 )
 
-type DEBUGGER_EVENT_FORWARDING struct {
-	Type              DEBUGGER_EVENT_FORWARDING_TYPE                     //col:3
-	State             DEBUGGER_EVENT_FORWARDING_STATE                    //col:4
-	Handle            HANDLE                                             //col:5
-	Socket            SOCKET                                             //col:6
-	OutputUniqueTag   uint64                                             //col:7
-	ListEntry         *list.List                                         //col:8
-	OutputSourcesList byte                                               //col:9
-	Name              [MAXIMUM_CHARACTERS_FOR_EVENT_FORWARDING_NAME]int8 //col:10
+type _DEBUGGER_EVENT_FORWARDING struct {
+	Type              DEBUGGER_EVENT_FORWARDING_TYPE                     //col:13
+	State             DEBUGGER_EVENT_FORWARDING_STATE                    //col:14
+	Handle            uintptr                                            //col:15
+	Socket            SOCKET                                             //col:16
+	OutputUniqueTag   uint64                                             //col:17
+	ListEntry         *list.List                                         //col:18
+	OutputSourcesList byte                                               //col:19
+	Name              [MAXIMUM_CHARACTERS_FOR_EVENT_FORWARDING_NAME]int8 //col:20
 }
-
 

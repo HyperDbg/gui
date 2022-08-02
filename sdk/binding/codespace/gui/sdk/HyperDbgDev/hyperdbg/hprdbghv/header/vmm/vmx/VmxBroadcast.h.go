@@ -1,6 +1,6 @@
 package vmx
 
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\vmm\vmx\VmxBroadcast.h.back
 
 const (
 	NMI_BROADCAST_ACTION_NONE         = 0 //col:3

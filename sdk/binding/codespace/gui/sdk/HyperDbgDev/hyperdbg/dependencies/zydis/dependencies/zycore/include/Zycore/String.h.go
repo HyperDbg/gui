@@ -1,18 +1,13 @@
 package Zycore
 
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\dependencies\zycore\include\Zycore\String.h.back
 
-type typedef struct ZyanString_ struct{
-flags ZyanStringFlags //col:3
-vector ZyanVector //col:4
+type ZyanString_ struct {
+	flags  ZyanStringFlags //col:7
+	vector ZyanVector      //col:8
 }
 
-
-
-type typedef struct ZyanStringView_ struct{
-string ZyanString //col:8
+type ZyanStringView_ struct {
+	string ZyanString //col:11
 }
-
-
-
-
 

@@ -1,82 +1,65 @@
 package Source
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\pdbex\Source\PDB.h.back
 
 type  struct{
-struct //typedef //col:1
-Name CHAR* //col:4
-Value VARIANT //col:5
-Parent SYMBOL* //col:6
+struct typedef //col:7
+Name *int8 //col:10
+Value VARIANT //col:11
+Parent SYMBOL* //col:12
 }
 
 
-
-type SYMBOL_ENUM_FIELD struct{
-Name CHAR* //col:4
-Value VARIANT //col:5
-Parent SYMBOL* //col:6
+type  _SYMBOL_UDT_FIELD struct{
+Name *int8 //col:18
+Type SYMBOL* //col:19
+Offset uint32 //col:20
+Bits uint32 //col:21
+BitPosition uint32 //col:22
+Parent SYMBOL* //col:23
 }
 
 
-
-type SYMBOL_UDT_FIELD struct{
-Name CHAR* //col:10
-Type SYMBOL* //col:11
-Offset DWORD //col:12
-Bits DWORD //col:13
-BitPosition DWORD //col:14
-Parent SYMBOL* //col:15
+type  _SYMBOL_ENUM struct{
+FieldCount uint32 //col:23
+Fields SYMBOL_ENUM_FIELD* //col:24
 }
 
 
-
-type SYMBOL_ENUM struct{
-FieldCount DWORD //col:19
-Fields SYMBOL_ENUM_FIELD* //col:20
+type  _SYMBOL_TYPEDEF struct{
+Type SYMBOL* //col:27
 }
 
 
-
-type SYMBOL_TYPEDEF struct{
-Type SYMBOL* //col:24
+type  _SYMBOL_POINTER struct{
+Type SYMBOL* //col:32
+IsReference BOOL //col:33
 }
 
 
-
-type SYMBOL_POINTER struct{
-Type SYMBOL* //col:28
-IsReference BOOL //col:29
+type  _SYMBOL_ARRAY struct{
+ElementType SYMBOL* //col:37
+ElementCount uint32 //col:38
 }
 
 
-
-type SYMBOL_ARRAY struct{
-ElementType SYMBOL* //col:33
-ElementCount DWORD //col:34
+type  _SYMBOL_FUNCTION struct{
+ReturnType SYMBOL* //col:44
+CallingConvention CV_call_e //col:45
+ArgumentCount uint32 //col:46
+Arguments SYMBOL** //col:47
 }
 
 
-
-type SYMBOL_FUNCTION struct{
-ReturnType SYMBOL* //col:38
-CallingConvention CV_call_e //col:39
-ArgumentCount DWORD //col:40
-Arguments SYMBOL** //col:41
+type  _SYMBOL_FUNCTIONARG struct{
+Type SYMBOL* //col:48
 }
 
 
-
-type SYMBOL_FUNCTIONARG struct{
-Type SYMBOL* //col:45
+type  _SYMBOL_UDT struct{
+Kind UdtKind //col:54
+FieldCount uint32 //col:55
+Fields SYMBOL_UDT_FIELD* //col:56
 }
-
-
-
-type SYMBOL_UDT struct{
-Kind UdtKind //col:49
-FieldCount DWORD //col:50
-Fields SYMBOL_UDT_FIELD* //col:51
-}
-
 
 
 

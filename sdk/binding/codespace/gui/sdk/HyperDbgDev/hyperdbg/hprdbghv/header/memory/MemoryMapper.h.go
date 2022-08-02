@@ -1,5 +1,5 @@
 package memory
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\memory\MemoryMapper.h.back
 
 const(
     PagingLevelPageTable  =  0  //col:3
@@ -23,53 +23,50 @@ const(
 
 
 
-type MEMORY_MAPPER_ADDRESSES struct{
-PteVirtualAddress uint64 //col:3
-VirualAddress uint64 //col:4
+type  _MEMORY_MAPPER_ADDRESSES struct{
+PteVirtualAddress uint64 //col:7
+VirualAddress uint64 //col:8
 }
 
 
-
-type PAGE_ENTRY struct{
-Union union //col:8
-Flags uint64 //col:10
-Pml4 PML4E_64 //col:11
-PdptLarge PDPTE_1GB_64 //col:12
-Pdpt PDPTE_64 //col:13
-PdLarge PDE_2MB_64 //col:14
-Pd PDE_64 //col:15
-Pt PTE_64 //col:16
-Struct struct //col:17
-Present uint64 //col:19
-Write uint64 //col:20
-Supervisor uint64 //col:21
-PageLevelWriteThrough uint64 //col:22
-PageLevelCacheDisable uint64 //col:23
-Accessed uint64 //col:24
-Dirty uint64 //col:25
-LargePage uint64 //col:26
-Global uint64 //col:27
-Ignored1 uint64 //col:28
-PageFrameNumber uint64 //col:29
-Reserved1 uint64 //col:30
-Ignored2 uint64 //col:31
-ProtectionKey uint64 //col:32
-ExecuteDisable uint64 //col:33
+type  _PAGE_ENTRY struct{
+Union union //col:36
+Flags uint64 //col:38
+Pml4 PML4E_64 //col:39
+PdptLarge PDPTE_1GB_64 //col:40
+Pdpt PDPTE_64 //col:41
+PdLarge PDE_2MB_64 //col:42
+Pd PDE_64 //col:43
+Pt PTE_64 //col:44
+Struct struct //col:45
+Present uint64 //col:47
+Write uint64 //col:48
+Supervisor uint64 //col:49
+PageLevelWriteThrough uint64 //col:50
+PageLevelCacheDisable uint64 //col:51
+Accessed uint64 //col:52
+Dirty uint64 //col:53
+LargePage uint64 //col:54
+Global uint64 //col:55
+Ignored1 uint64 //col:56
+PageFrameNumber uint64 //col:57
+Reserved1 uint64 //col:58
+Ignored2 uint64 //col:59
+ProtectionKey uint64 //col:60
+ExecuteDisable uint64 //col:61
 }
 
 
-
-type CR3_TYPE struct{
-Union union //col:39
-Flags uint64 //col:41
-Struct struct //col:42
-Pcid uint64 //col:44
-PageFrameNumber uint64 //col:45
-Reserved1 uint64 //col:46
-Reserved_2 uint64 //col:47
-PcidInvalidate uint64 //col:48
+type  _CR3_TYPE struct{
+Union union //col:51
+Flags uint64 //col:53
+Struct struct //col:54
+Pcid uint64 //col:56
+PageFrameNumber uint64 //col:57
+Reserved1 uint64 //col:58
+Reserved_2 uint64 //col:59
+PcidInvalidate uint64 //col:60
 }
-
 
 
 

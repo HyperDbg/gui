@@ -1,5 +1,5 @@
 package phnt
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntpoapi.h.back
 
 const(
     PowerRequestDisplayRequiredInternal = 1  //col:3
@@ -143,201 +143,179 @@ const(
 
 
 
-type PROCESSOR_POWER_INFORMATION struct{
-Number uint32 //col:3
-MaxMhz uint32 //col:4
-CurrentMhz uint32 //col:5
-MhzLimit uint32 //col:6
-MaxIdleState uint32 //col:7
-CurrentIdleState uint32 //col:8
+type  _PROCESSOR_POWER_INFORMATION struct{
+Number uint32 //col:11
+MaxMhz uint32 //col:12
+CurrentMhz uint32 //col:13
+MhzLimit uint32 //col:14
+MaxIdleState uint32 //col:15
+CurrentIdleState uint32 //col:16
 }
 
 
-
-type SYSTEM_POWER_INFORMATION struct{
-MaxIdlenessAllowed uint32 //col:12
-Idleness uint32 //col:13
-TimeRemaining uint32 //col:14
-CoolingMode uint8 //col:15
+type  _SYSTEM_POWER_INFORMATION struct{
+MaxIdlenessAllowed uint32 //col:18
+Idleness uint32 //col:19
+TimeRemaining uint32 //col:20
+CoolingMode uint8 //col:21
 }
 
 
-
-type SYSTEM_HIBERFILE_INFORMATION struct{
-NumberOfMcbPairs uint32 //col:19
-Mcb[1] LARGE_INTEGER //col:20
+type  _SYSTEM_HIBERFILE_INFORMATION struct{
+NumberOfMcbPairs uint32 //col:23
+Mcb[1] LARGE_INTEGER //col:24
 }
 
 
-
-type COUNTED_REASON_CONTEXT struct{
-Version uint32 //col:24
-Flags uint32 //col:25
-Union union //col:26
-Struct struct //col:28
-ResourceFileName UNICODE_STRING //col:30
-ResourceReasonId USHORT //col:31
-StringCount uint32 //col:32
-PUNICODE_STRING _Field_size_(StringCount) //col:33
+type  _COUNTED_REASON_CONTEXT struct{
+Version uint32 //col:36
+Flags uint32 //col:37
+Union union //col:38
+Struct struct //col:40
+ResourceFileName *int16 //col:42
+ResourceReasonId uint16 //col:43
+StringCount uint32 //col:44
+PUNICODE_STRING _Field_size_(StringCount) //col:45
 }
 
 
-
-type POWER_REQUEST_ACTION struct{
-PowerRequestHandle HANDLE //col:40
-RequestType POWER_REQUEST_TYPE_INTERNAL //col:41
-SetAction bool //col:42
-ProcessHandle HANDLE //col:43
+type  _POWER_REQUEST_ACTION struct{
+PowerRequestHandle uintptr //col:46
+RequestType POWER_REQUEST_TYPE_INTERNAL //col:47
+SetAction bool //col:48
+ProcessHandle uintptr //col:49
 }
 
 
-
-type SYSTEM_POWER_STATE_CONTEXT struct{
-Union union //col:47
-Struct struct //col:49
-Reserved1 uint32 //col:51
-TargetSystemState uint32 //col:52
-EffectiveSystemState uint32 //col:53
-CurrentSystemState uint32 //col:54
-IgnoreHibernationPath uint32 //col:55
-PseudoTransition uint32 //col:56
-Reserved2 uint32 //col:57
+type  _SYSTEM_POWER_STATE_CONTEXT struct{
+Union union //col:60
+Struct struct //col:62
+Reserved1 uint32 //col:64
+TargetSystemState uint32 //col:65
+EffectiveSystemState uint32 //col:66
+CurrentSystemState uint32 //col:67
+IgnoreHibernationPath uint32 //col:68
+PseudoTransition uint32 //col:69
+Reserved2 uint32 //col:70
 }
 
 
-
-type COUNTED_REASON_CONTEXT_RELATIVE struct{
-Flags uint32 //col:64
-Union union //col:65
-Struct struct //col:67
-ResourceFileNameOffset ULONG_PTR //col:69
-ResourceReasonId USHORT //col:70
-StringCount uint32 //col:71
-SubstitutionStringsOffset ULONG_PTR //col:72
+type  _COUNTED_REASON_CONTEXT_RELATIVE struct{
+Flags uint32 //col:75
+Union union //col:76
+Struct struct //col:78
+ResourceFileNameOffset ULONG_PTR //col:80
+ResourceReasonId uint16 //col:81
+StringCount uint32 //col:82
+SubstitutionStringsOffset ULONG_PTR //col:83
 }
 
 
-
-type DIAGNOSTIC_BUFFER struct{
-Size SIZE_T //col:79
-CallerType REQUESTER_TYPE //col:80
-Union union //col:81
-Struct struct //col:83
-ProcessImageNameOffset ULONG_PTR //col:85
-ProcessId uint32 //col:86
-ServiceTag uint32 //col:87
+type  _DIAGNOSTIC_BUFFER struct{
+Size int64 //col:90
+CallerType REQUESTER_TYPE //col:91
+Union union //col:92
+Struct struct //col:94
+ProcessImageNameOffset ULONG_PTR //col:96
+ProcessId uint32 //col:97
+ServiceTag uint32 //col:98
 }
 
 
-
-type POWER_REQUEST struct{
-Union union //col:99
-Struct struct //col:101
-SupportedRequestMask uint32 //col:103
-PowerRequestCount[POWER_REQUEST_SUPPORTED_TYPES_V1] uint32 //col:104
-DiagnosticBuffer DIAGNOSTIC_BUFFER //col:105
+type  _POWER_REQUEST struct{
+Union union //col:108
+Struct struct //col:110
+SupportedRequestMask uint32 //col:112
+PowerRequestCount[POWER_REQUEST_SUPPORTED_TYPES_V1] uint32 //col:113
+DiagnosticBuffer DIAGNOSTIC_BUFFER //col:114
 }
 
 
-
-type POWER_REQUEST_LIST struct{
-Count ULONG_PTR //col:135
-PowerRequestOffsets[ANYSIZE_ARRAY] ULONG_PTR //col:136
+type  _POWER_REQUEST_LIST struct{
+Count ULONG_PTR //col:139
+PowerRequestOffsets[ANYSIZE_ARRAY] ULONG_PTR //col:140
 }
 
 
-
-type POWER_STATE_HANDLER struct{
-Type POWER_STATE_HANDLER_TYPE //col:140
-RtcWake bool //col:141
-Spare[3] uint8 //col:142
-Handler PENTER_STATE_HANDLER //col:143
-Context PVOID //col:144
+type  _POWER_STATE_HANDLER struct{
+Type POWER_STATE_HANDLER_TYPE //col:147
+RtcWake bool //col:148
+Spare[3] uint8 //col:149
+Handler PENTER_STATE_HANDLER //col:150
+Context uintptr //col:151
 }
 
 
-
-type POWER_STATE_NOTIFY_HANDLER struct{
-Handler PENTER_STATE_NOTIFY_HANDLER //col:148
-Context PVOID //col:149
+type  _POWER_STATE_NOTIFY_HANDLER struct{
+Handler PENTER_STATE_NOTIFY_HANDLER //col:152
+Context uintptr //col:153
 }
 
 
-
-type POWER_REQUEST_ACTION_INTERNAL struct{
-PowerRequestPointer PVOID //col:153
-RequestType POWER_REQUEST_TYPE_INTERNAL //col:154
-SetAction bool //col:155
+type  _POWER_REQUEST_ACTION_INTERNAL struct{
+PowerRequestPointer uintptr //col:158
+RequestType POWER_REQUEST_TYPE_INTERNAL //col:159
+SetAction bool //col:160
 }
 
 
-
-type POWER_S0_LOW_POWER_IDLE_INFO struct{
-DisconnectedReason POWER_S0_DISCONNECTED_REASON //col:159
-Union union //col:160
-Storage bool //col:162
-WiFi bool //col:163
-Mbn bool //col:164
-Ethernet bool //col:165
-Reserved bool //col:166
-AsUCHAR uint8 //col:167
+type  _POWER_S0_LOW_POWER_IDLE_INFO struct{
+DisconnectedReason POWER_S0_DISCONNECTED_REASON //col:170
+Union union //col:171
+Storage bool //col:173
+WiFi bool //col:174
+Mbn bool //col:175
+Ethernet bool //col:176
+Reserved bool //col:177
+AsUCHAR uint8 //col:178
 }
 
 
-
-type POWER_INFORMATION_INTERNAL_HEADER struct{
-InternalType POWER_INFORMATION_LEVEL_INTERNAL //col:179
-Version uint32 //col:180
+type  _POWER_INFORMATION_INTERNAL_HEADER struct{
+InternalType POWER_INFORMATION_LEVEL_INTERNAL //col:183
+Version uint32 //col:184
 }
 
 
-
-type POWER_USER_ABSENCE_PREDICTION struct{
-Header POWER_INFORMATION_INTERNAL_HEADER //col:184
-ReturnTime LARGE_INTEGER //col:185
+type  _POWER_USER_ABSENCE_PREDICTION struct{
+Header POWER_INFORMATION_INTERNAL_HEADER //col:188
+ReturnTime LARGE_INTEGER //col:189
 }
 
 
-
-type POWER_USER_ABSENCE_PREDICTION_CAPABILITY struct{
-AbsencePredictionCapability bool //col:189
+type  _POWER_USER_ABSENCE_PREDICTION_CAPABILITY struct{
+AbsencePredictionCapability bool //col:192
 }
 
 
-
-type POWER_PROCESSOR_LATENCY_HINT struct{
-PowerInformationInternalHeader POWER_INFORMATION_INTERNAL_HEADER //col:193
-Type uint32 //col:194
+type  _POWER_PROCESSOR_LATENCY_HINT struct{
+PowerInformationInternalHeader POWER_INFORMATION_INTERNAL_HEADER //col:197
+Type uint32 //col:198
 }
 
 
-
-type POWER_STANDBY_NETWORK_REQUEST struct{
-PowerInformationInternalHeader POWER_INFORMATION_INTERNAL_HEADER //col:198
-Active bool //col:199
+type  _POWER_STANDBY_NETWORK_REQUEST struct{
+PowerInformationInternalHeader POWER_INFORMATION_INTERNAL_HEADER //col:202
+Active bool //col:203
 }
 
 
-
-type POWER_SET_BACKGROUND_TASK_STATE struct{
-PowerInformationInternalHeader POWER_INFORMATION_INTERNAL_HEADER //col:203
-Engaged bool //col:204
+type  _POWER_SET_BACKGROUND_TASK_STATE struct{
+PowerInformationInternalHeader POWER_INFORMATION_INTERNAL_HEADER //col:207
+Engaged bool //col:208
 }
 
 
-
-type typedef struct POWER_INTERNAL_PROCESSOR_BRANDED_FREQENCY_INPUT struct{
-InternalType POWER_INFORMATION_LEVEL_INTERNAL //col:208
-ProcessorNumber PROCESSOR_NUMBER //col:209
+type  POWER_INTERNAL_PROCESSOR_BRANDED_FREQENCY_INPUT struct{
+InternalType POWER_INFORMATION_LEVEL_INTERNAL //col:212
+ProcessorNumber PROCESSOR_NUMBER //col:213
 }
 
 
-
-type typedef struct POWER_INTERNAL_PROCESSOR_BRANDED_FREQENCY_OUTPUT struct{
-Version uint32 //col:213
-NominalFrequency uint32 //col:214
+type  POWER_INTERNAL_PROCESSOR_BRANDED_FREQENCY_OUTPUT struct{
+Version uint32 //col:217
+NominalFrequency uint32 //col:218
 }
-
 
 
 

@@ -1,6 +1,6 @@
 package vmx
 
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\vmm\vmx\IoHandler.h.back
 
 const (
 	typedef   enum = 1 //col:1

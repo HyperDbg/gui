@@ -1,5 +1,5 @@
 package Zydis
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Formatter.h.back
 
 const(
     ZYDIS_FORMATTER_STYLE_ATT = 1  //col:3
@@ -108,22 +108,12 @@ const(
 
 
 type  struct{
-struct //typedef //col:1
-const // //col:4
-ZydisDecodedOperand* bool //col:5
-runtime_address ZyanU64 //col:6
-user_data void* //col:7
+struct typedef //col:8
+ZydisDecodedInstruction* bool //col:11
+ZydisDecodedOperand* bool //col:12
+runtime_address ZyanU64 //col:13
+user_data void* //col:14
 }
-
-
-
-type typedef struct ZydisFormatterContext_ struct{
-const // //col:4
-ZydisDecodedOperand* bool //col:5
-runtime_address ZyanU64 //col:6
-user_data void* //col:7
-}
-
 
 
 

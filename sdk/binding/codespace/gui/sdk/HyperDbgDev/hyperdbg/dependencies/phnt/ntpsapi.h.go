@@ -1,5 +1,5 @@
 package phnt
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntpsapi.h.back
 
 const(
     ProcessBasicInformation  = 1  //col:3
@@ -374,928 +374,830 @@ const(
 
 
 
-type PEB_LDR_DATA struct{
-Length uint32 //col:3
-Initialized bool //col:4
-SsHandle HANDLE //col:5
-InLoadOrderModuleList *list.List //col:6
-InMemoryOrderModuleList *list.List //col:7
-InInitializationOrderModuleList *list.List //col:8
-EntryInProgress PVOID //col:9
-ShutdownInProgress bool //col:10
-ShutdownThreadId HANDLE //col:11
+type  _PEB_LDR_DATA struct{
+Length uint32 //col:14
+Initialized bool //col:15
+SsHandle uintptr //col:16
+InLoadOrderModuleList *list.List //col:17
+InMemoryOrderModuleList *list.List //col:18
+InInitializationOrderModuleList *list.List //col:19
+EntryInProgress uintptr //col:20
+ShutdownInProgress bool //col:21
+ShutdownThreadId uintptr //col:22
 }
 
 
-
-type INITIAL_TEB struct{
-Struct struct //col:15
-OldStackBase PVOID //col:17
-OldStackLimit PVOID //col:18
+type  _INITIAL_TEB struct{
+Struct struct //col:21
+OldStackBase uintptr //col:23
+OldStackLimit uintptr //col:24
 }
 
 
-
-type WOW64_PROCESS struct{
-Wow64 PVOID //col:26
+type  _WOW64_PROCESS struct{
+Wow64 uintptr //col:29
 }
 
 
-
-type PAGE_PRIORITY_INFORMATION struct{
-PagePriority uint32 //col:30
+type  _PAGE_PRIORITY_INFORMATION struct{
+PagePriority uint32 //col:33
 }
 
 
-
-type PROCESS_BASIC_INFORMATION struct{
-ExitStatus NTSTATUS //col:34
-PebBaseAddress PPEB //col:35
-AffinityMask KAFFINITY //col:36
-BasePriority KPRIORITY //col:37
-UniqueProcessId HANDLE //col:38
-InheritedFromUniqueProcessId HANDLE //col:39
+type  _PROCESS_BASIC_INFORMATION struct{
+ExitStatus NTSTATUS //col:42
+PebBaseAddress PPEB //col:43
+AffinityMask KAFFINITY //col:44
+BasePriority KPRIORITY //col:45
+UniqueProcessId uintptr //col:46
+InheritedFromUniqueProcessId uintptr //col:47
 }
 
 
-
-type PROCESS_EXTENDED_BASIC_INFORMATION struct{
-Size SIZE_T //col:43
-BasicInfo PROCESS_BASIC_INFORMATION //col:44
-Union union //col:45
-Flags uint32 //col:47
-Struct struct //col:48
-IsProtectedProcess uint32 //col:50
-IsWow64Process uint32 //col:51
-IsProcessDeleting uint32 //col:52
-IsCrossSessionCreate uint32 //col:53
-IsFrozen uint32 //col:54
-IsBackground uint32 //col:55
-IsStronglyNamed uint32 //col:56
-IsSecureProcess uint32 //col:57
-IsSubsystemProcess uint32 //col:58
-SpareBits uint32 //col:59
+type  _PROCESS_EXTENDED_BASIC_INFORMATION struct{
+Size int64 //col:62
+BasicInfo PROCESS_BASIC_INFORMATION //col:63
+Union union //col:64
+Flags uint32 //col:66
+Struct struct //col:67
+IsProtectedProcess uint32 //col:69
+IsWow64Process uint32 //col:70
+IsProcessDeleting uint32 //col:71
+IsCrossSessionCreate uint32 //col:72
+IsFrozen uint32 //col:73
+IsBackground uint32 //col:74
+IsStronglyNamed uint32 //col:75
+IsSecureProcess uint32 //col:76
+IsSubsystemProcess uint32 //col:77
+SpareBits uint32 //col:78
 }
 
 
-
-type VM_COUNTERS struct{
-PeakVirtualSize SIZE_T //col:65
-VirtualSize SIZE_T //col:66
-PageFaultCount uint32 //col:67
-PeakWorkingSetSize SIZE_T //col:68
-WorkingSetSize SIZE_T //col:69
-QuotaPeakPagedPoolUsage SIZE_T //col:70
-QuotaPagedPoolUsage SIZE_T //col:71
-QuotaPeakNonPagedPoolUsage SIZE_T //col:72
-QuotaNonPagedPoolUsage SIZE_T //col:73
-PagefileUsage SIZE_T //col:74
-PeakPagefileUsage SIZE_T //col:75
+type  _VM_COUNTERS struct{
+PeakVirtualSize int64 //col:78
+VirtualSize int64 //col:79
+PageFaultCount uint32 //col:80
+PeakWorkingSetSize int64 //col:81
+WorkingSetSize int64 //col:82
+QuotaPeakPagedPoolUsage int64 //col:83
+QuotaPagedPoolUsage int64 //col:84
+QuotaPeakNonPagedPoolUsage int64 //col:85
+QuotaNonPagedPoolUsage int64 //col:86
+PagefileUsage int64 //col:87
+PeakPagefileUsage int64 //col:88
 }
 
 
-
-type VM_COUNTERS_EX struct{
-PeakVirtualSize SIZE_T //col:79
-VirtualSize SIZE_T //col:80
-PageFaultCount uint32 //col:81
-PeakWorkingSetSize SIZE_T //col:82
-WorkingSetSize SIZE_T //col:83
-QuotaPeakPagedPoolUsage SIZE_T //col:84
-QuotaPagedPoolUsage SIZE_T //col:85
-QuotaPeakNonPagedPoolUsage SIZE_T //col:86
-QuotaNonPagedPoolUsage SIZE_T //col:87
-PagefileUsage SIZE_T //col:88
-PeakPagefileUsage SIZE_T //col:89
-PrivateUsage SIZE_T //col:90
+type  _VM_COUNTERS_EX struct{
+PeakVirtualSize int64 //col:93
+VirtualSize int64 //col:94
+PageFaultCount uint32 //col:95
+PeakWorkingSetSize int64 //col:96
+WorkingSetSize int64 //col:97
+QuotaPeakPagedPoolUsage int64 //col:98
+QuotaPagedPoolUsage int64 //col:99
+QuotaPeakNonPagedPoolUsage int64 //col:100
+QuotaNonPagedPoolUsage int64 //col:101
+PagefileUsage int64 //col:102
+PeakPagefileUsage int64 //col:103
+PrivateUsage int64 //col:104
 }
 
 
-
-type VM_COUNTERS_EX2 struct{
-CountersEx VM_COUNTERS_EX //col:94
-PrivateWorkingSetSize SIZE_T //col:95
-SharedCommitUsage SIZE_T //col:96
+type  _VM_COUNTERS_EX2 struct{
+CountersEx VM_COUNTERS_EX //col:99
+PrivateWorkingSetSize int64 //col:100
+SharedCommitUsage int64 //col:101
 }
 
 
-
-type KERNEL_USER_TIMES struct{
-CreateTime LARGE_INTEGER //col:100
-ExitTime LARGE_INTEGER //col:101
-KernelTime LARGE_INTEGER //col:102
-UserTime LARGE_INTEGER //col:103
+type  _KERNEL_USER_TIMES struct{
+CreateTime LARGE_INTEGER //col:106
+ExitTime LARGE_INTEGER //col:107
+KernelTime LARGE_INTEGER //col:108
+UserTime LARGE_INTEGER //col:109
 }
 
 
-
-type POOLED_USAGE_AND_LIMITS struct{
-PeakPagedPoolUsage SIZE_T //col:107
-PagedPoolUsage SIZE_T //col:108
-PagedPoolLimit SIZE_T //col:109
-PeakNonPagedPoolUsage SIZE_T //col:110
-NonPagedPoolUsage SIZE_T //col:111
-NonPagedPoolLimit SIZE_T //col:112
-PeakPagefileUsage SIZE_T //col:113
-PagefileUsage SIZE_T //col:114
-PagefileLimit SIZE_T //col:115
+type  _POOLED_USAGE_AND_LIMITS struct{
+PeakPagedPoolUsage int64 //col:118
+PagedPoolUsage int64 //col:119
+PagedPoolLimit int64 //col:120
+PeakNonPagedPoolUsage int64 //col:121
+NonPagedPoolUsage int64 //col:122
+NonPagedPoolLimit int64 //col:123
+PeakPagefileUsage int64 //col:124
+PagefileUsage int64 //col:125
+PagefileLimit int64 //col:126
 }
 
 
-
-type PROCESS_EXCEPTION_PORT  struct{
-HANDLE _In_ //col:119
-ULONG _Inout_ //col:120
+type  _PROCESS_EXCEPTION_PORT  struct{
+HANDLE _In_ //col:123
+ULONG _Inout_ //col:124
 }
 
 
-
-type PROCESS_ACCESS_TOKEN struct{
-Token HANDLE //col:124
-Thread HANDLE //col:125
+type  _PROCESS_ACCESS_TOKEN struct{
+Token uintptr //col:128
+Thread uintptr //col:129
 }
 
 
-
-type PROCESS_LDT_INFORMATION struct{
-Start uint32 //col:129
-Length uint32 //col:130
-LdtEntries[1] LDT_ENTRY //col:131
-}
-
-
-
-type PROCESS_LDT_SIZE struct{
+type  _PROCESS_LDT_INFORMATION struct{
+Start uint32 //col:134
 Length uint32 //col:135
+LdtEntries[1] LDT_ENTRY //col:136
 }
 
 
-
-type PROCESS_WS_WATCH_INFORMATION struct{
-FaultingPc PVOID //col:139
-FaultingVa PVOID //col:140
+type  _PROCESS_LDT_SIZE struct{
+Length uint32 //col:138
 }
-
 
 
-type PROCESS_WS_WATCH_INFORMATION_EX struct{
-BasicInfo PROCESS_WS_WATCH_INFORMATION //col:144
-FaultingThreadId ULONG_PTR //col:145
-Flags ULONG_PTR //col:146
+type  _PROCESS_WS_WATCH_INFORMATION struct{
+FaultingPc uintptr //col:143
+FaultingVa uintptr //col:144
 }
 
 
-
-type PROCESS_PRIORITY_CLASS struct{
-Foreground bool //col:150
-PriorityClass uint8 //col:151
+type  _PROCESS_WS_WATCH_INFORMATION_EX struct{
+BasicInfo PROCESS_WS_WATCH_INFORMATION //col:149
+FaultingThreadId ULONG_PTR //col:150
+Flags ULONG_PTR //col:151
 }
 
 
-
-type PROCESS_FOREGROUND_BACKGROUND struct{
-Foreground bool //col:155
+type  _PROCESS_PRIORITY_CLASS struct{
+Foreground bool //col:154
+PriorityClass uint8 //col:155
 }
-
 
 
-type PROCESS_DEVICEMAP_INFORMATION struct{
-Union union //col:159
-Struct struct //col:161
-DirectoryHandle HANDLE //col:163
+type  _PROCESS_FOREGROUND_BACKGROUND struct{
+Foreground bool //col:158
 }
 
 
-
-type PROCESS_DEVICEMAP_INFORMATION_EX struct{
-Union union //col:174
-Struct struct //col:176
-DirectoryHandle HANDLE //col:178
+type  _PROCESS_DEVICEMAP_INFORMATION struct{
+Union union //col:166
+Struct struct //col:168
+DirectoryHandle uintptr //col:170
 }
-
 
 
-type PROCESS_SESSION_INFORMATION struct{
-SessionId uint32 //col:190
+type  _PROCESS_DEVICEMAP_INFORMATION_EX struct{
+Union union //col:181
+Struct struct //col:183
+DirectoryHandle uintptr //col:185
 }
 
 
-
-type PROCESS_HANDLE_TRACING_ENABLE struct{
-Flags uint32 //col:194
+type  _PROCESS_SESSION_INFORMATION struct{
+SessionId uint32 //col:193
 }
 
 
-
-type PROCESS_HANDLE_TRACING_ENABLE_EX struct{
-Flags uint32 //col:198
-TotalSlots uint32 //col:199
+type  _PROCESS_HANDLE_TRACING_ENABLE struct{
+Flags uint32 //col:197
 }
-
 
 
-type PROCESS_HANDLE_TRACING_ENTRY struct{
-Handle HANDLE //col:203
-ClientId CLIENT_ID //col:204
-Type uint32 //col:205
-Stacks[PROCESS_HANDLE_TRACING_MAX_STACKS] PVOID //col:206
+type  _PROCESS_HANDLE_TRACING_ENABLE_EX struct{
+Flags uint32 //col:202
+TotalSlots uint32 //col:203
 }
 
 
-
-type PROCESS_HANDLE_TRACING_QUERY struct{
-Handle HANDLE //col:210
-TotalTraces uint32 //col:211
-HandleTrace[1] PROCESS_HANDLE_TRACING_ENTRY //col:212
+type  _PROCESS_HANDLE_TRACING_ENTRY struct{
+Handle uintptr //col:209
+ClientId CLIENT_ID //col:210
+Type uint32 //col:211
+Stacks[PROCESS_HANDLE_TRACING_MAX_STACKS] uintptr //col:212
 }
-
 
 
-type THREAD_TLS_INFORMATION struct{
-Flags uint32 //col:216
-NewTlsData PVOID //col:217
-OldTlsData PVOID //col:218
-ThreadId HANDLE //col:219
+type  _PROCESS_HANDLE_TRACING_QUERY struct{
+Handle uintptr //col:215
+TotalTraces uint32 //col:216
+HandleTrace[1] PROCESS_HANDLE_TRACING_ENTRY //col:217
 }
 
 
-
-type PROCESS_TLS_INFORMATION struct{
-Flags uint32 //col:223
-OperationType uint32 //col:224
-ThreadDataCount uint32 //col:225
-TlsIndex uint32 //col:226
-PreviousCount uint32 //col:227
-ThreadData[1] THREAD_TLS_INFORMATION //col:228
+type  _THREAD_TLS_INFORMATION struct{
+Flags uint32 //col:222
+NewTlsData uintptr //col:223
+OldTlsData uintptr //col:224
+ThreadId uintptr //col:225
 }
 
 
-
-type PROCESS_INSTRUMENTATION_CALLBACK_INFORMATION struct{
-Version uint32 //col:232
-Reserved uint32 //col:233
-Callback PVOID //col:234
+type  _PROCESS_TLS_INFORMATION struct{
+Flags uint32 //col:231
+OperationType uint32 //col:232
+ThreadDataCount uint32 //col:233
+TlsIndex uint32 //col:234
+PreviousCount uint32 //col:235
+ThreadData[1] THREAD_TLS_INFORMATION //col:236
 }
-
 
 
-type PROCESS_STACK_ALLOCATION_INFORMATION struct{
-ReserveSize SIZE_T //col:238
-ZeroBits SIZE_T //col:239
-StackBase PVOID //col:240
+type  _PROCESS_INSTRUMENTATION_CALLBACK_INFORMATION struct{
+Version uint32 //col:237
+Reserved uint32 //col:238
+Callback uintptr //col:239
 }
 
 
-
-type PROCESS_STACK_ALLOCATION_INFORMATION_EX struct{
-PreferredNode uint32 //col:244
-Reserved0 uint32 //col:245
-Reserved1 uint32 //col:246
-Reserved2 uint32 //col:247
-AllocInfo PROCESS_STACK_ALLOCATION_INFORMATION //col:248
+type  _PROCESS_STACK_ALLOCATION_INFORMATION struct{
+ReserveSize int64 //col:243
+ZeroBits int64 //col:244
+StackBase uintptr //col:245
 }
 
 
-
-type PROCESS_HANDLE_INFORMATION struct{
-HandleCount uint32 //col:252
-HandleCountHighWatermark uint32 //col:253
+type  _PROCESS_STACK_ALLOCATION_INFORMATION_EX struct{
+PreferredNode uint32 //col:251
+Reserved0 uint32 //col:252
+Reserved1 uint32 //col:253
+Reserved2 uint32 //col:254
+AllocInfo PROCESS_STACK_ALLOCATION_INFORMATION //col:255
 }
-
 
 
-type PROCESS_CYCLE_TIME_INFORMATION struct{
-AccumulatedCycles ULONGLONG //col:257
-CurrentCycleCount ULONGLONG //col:258
+type  _PROCESS_HANDLE_INFORMATION struct{
+HandleCount uint32 //col:256
+HandleCountHighWatermark uint32 //col:257
 }
 
 
-
-type PROCESS_WINDOW_INFORMATION struct{
-WindowFlags uint32 //col:262
-WindowTitleLength USHORT //col:263
-WindowTitle[1] WCHAR //col:264
+type  _PROCESS_CYCLE_TIME_INFORMATION struct{
+AccumulatedCycles ULONGLONG //col:261
+CurrentCycleCount ULONGLONG //col:262
 }
 
 
-
-type PROCESS_HANDLE_TABLE_ENTRY_INFO struct{
-HandleValue HANDLE //col:268
-HandleCount ULONG_PTR //col:269
-PointerCount ULONG_PTR //col:270
-GrantedAccess uint32 //col:271
-ObjectTypeIndex uint32 //col:272
-HandleAttributes uint32 //col:273
-Reserved uint32 //col:274
+type  _PROCESS_WINDOW_INFORMATION struct{
+WindowFlags uint32 //col:267
+WindowTitleLength uint16 //col:268
+WindowTitle[1] WCHAR //col:269
 }
-
 
 
-type PROCESS_HANDLE_SNAPSHOT_INFORMATION struct{
-NumberOfHandles ULONG_PTR //col:278
-Reserved ULONG_PTR //col:279
-Handles[1] PROCESS_HANDLE_TABLE_ENTRY_INFO //col:280
+type  _PROCESS_HANDLE_TABLE_ENTRY_INFO struct{
+HandleValue uintptr //col:277
+HandleCount ULONG_PTR //col:278
+PointerCount ULONG_PTR //col:279
+GrantedAccess uint32 //col:280
+ObjectTypeIndex uint32 //col:281
+HandleAttributes uint32 //col:282
+Reserved uint32 //col:283
 }
 
 
-
-type PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY struct{
-Flags uint32 //col:285
-EnforceRedirectionTrust uint32 //col:287
-AuditRedirectionTrust uint32 //col:288
-ReservedFlags uint32 //col:289
+type  _PROCESS_HANDLE_SNAPSHOT_INFORMATION struct{
+NumberOfHandles ULONG_PTR //col:283
+Reserved ULONG_PTR //col:284
+Handles[1] PROCESS_HANDLE_TABLE_ENTRY_INFO //col:285
 }
-
 
 
-type PROCESS_MITIGATION_POLICY_INFORMATION struct{
-Policy PROCESS_MITIGATION_POLICY //col:295
-Union union //col:296
-ASLRPolicy PROCESS_MITIGATION_ASLR_POLICY //col:298
-StrictHandleCheckPolicy PROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY //col:299
-SystemCallDisablePolicy PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY //col:300
-ExtensionPointDisablePolicy PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY //col:301
-DynamicCodePolicy PROCESS_MITIGATION_DYNAMIC_CODE_POLICY //col:302
-ControlFlowGuardPolicy PROCESS_MITIGATION_CONTROL_FLOW_GUARD_POLICY //col:303
-SignaturePolicy PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY //col:304
-FontDisablePolicy PROCESS_MITIGATION_FONT_DISABLE_POLICY //col:305
-ImageLoadPolicy PROCESS_MITIGATION_IMAGE_LOAD_POLICY //col:306
-SystemCallFilterPolicy PROCESS_MITIGATION_SYSTEM_CALL_FILTER_POLICY //col:307
-PayloadRestrictionPolicy PROCESS_MITIGATION_PAYLOAD_RESTRICTION_POLICY //col:308
-ChildProcessPolicy PROCESS_MITIGATION_CHILD_PROCESS_POLICY //col:309
-SideChannelIsolationPolicy PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY //col:310
-UserShadowStackPolicy PROCESS_MITIGATION_USER_SHADOW_STACK_POLICY //col:311
-RedirectionTrustPolicy PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY //col:312
+type  _PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY struct{
+Flags uint32 //col:293
+EnforceRedirectionTrust uint32 //col:295
+AuditRedirectionTrust uint32 //col:296
+ReservedFlags uint32 //col:297
 }
 
 
-
-type PROCESS_KEEPALIVE_COUNT_INFORMATION struct{
-WakeCount uint32 //col:317
-NoWakeCount uint32 //col:318
+type  _PROCESS_MITIGATION_POLICY_INFORMATION struct{
+Policy PROCESS_MITIGATION_POLICY //col:315
+Union union //col:316
+ASLRPolicy PROCESS_MITIGATION_ASLR_POLICY //col:318
+StrictHandleCheckPolicy PROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY //col:319
+SystemCallDisablePolicy PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY //col:320
+ExtensionPointDisablePolicy PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY //col:321
+DynamicCodePolicy PROCESS_MITIGATION_DYNAMIC_CODE_POLICY //col:322
+ControlFlowGuardPolicy PROCESS_MITIGATION_CONTROL_FLOW_GUARD_POLICY //col:323
+SignaturePolicy PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY //col:324
+FontDisablePolicy PROCESS_MITIGATION_FONT_DISABLE_POLICY //col:325
+ImageLoadPolicy PROCESS_MITIGATION_IMAGE_LOAD_POLICY //col:326
+SystemCallFilterPolicy PROCESS_MITIGATION_SYSTEM_CALL_FILTER_POLICY //col:327
+PayloadRestrictionPolicy PROCESS_MITIGATION_PAYLOAD_RESTRICTION_POLICY //col:328
+ChildProcessPolicy PROCESS_MITIGATION_CHILD_PROCESS_POLICY //col:329
+SideChannelIsolationPolicy PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY //col:330
+UserShadowStackPolicy PROCESS_MITIGATION_USER_SHADOW_STACK_POLICY //col:331
+RedirectionTrustPolicy PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY //col:332
 }
 
 
-
-type PROCESS_REVOKE_FILE_HANDLES_INFORMATION struct{
-TargetDevicePath UNICODE_STRING //col:322
+type  _PROCESS_KEEPALIVE_COUNT_INFORMATION struct{
+WakeCount uint32 //col:321
+NoWakeCount uint32 //col:322
 }
-
 
 
-type PROCESS_WORKING_SET_CONTROL struct{
-Version uint32 //col:326
-Operation PROCESS_WORKING_SET_OPERATION //col:327
-Flags uint32 //col:328
+type  _PROCESS_REVOKE_FILE_HANDLES_INFORMATION struct{
+TargetDevicePath *int16 //col:325
 }
 
 
-
-type PS_PROTECTION struct{
-Union union //col:332
-Level uint8 //col:334
-Struct struct //col:335
-Type uint8 //col:337
-Audit uint8 //col:338
-Signer uint8 //col:339
+type  _PROCESS_WORKING_SET_CONTROL struct{
+Version uint32 //col:331
+Operation PROCESS_WORKING_SET_OPERATION //col:332
+Flags uint32 //col:333
 }
-
 
 
-type PROCESS_FAULT_INFORMATION struct{
-FaultFlags uint32 //col:345
-AdditionalInfo uint32 //col:346
+type  _PS_PROTECTION struct{
+Union union //col:342
+Level uint8 //col:344
+Struct struct //col:345
+Type uint8 //col:347
+Audit uint8 //col:348
+Signer uint8 //col:349
 }
 
 
-
-type PROCESS_TELEMETRY_ID_INFORMATION struct{
-HeaderSize uint32 //col:350
-ProcessId uint32 //col:351
-ProcessStartKey ULONGLONG //col:352
-CreateTime ULONGLONG //col:353
-CreateInterruptTime ULONGLONG //col:354
-CreateUnbiasedInterruptTime ULONGLONG //col:355
-ProcessSequenceNumber ULONGLONG //col:356
-SessionCreateTime ULONGLONG //col:357
-SessionId uint32 //col:358
-BootId uint32 //col:359
-ImageChecksum uint32 //col:360
-ImageTimeDateStamp uint32 //col:361
-UserSidOffset uint32 //col:362
-ImagePathOffset uint32 //col:363
-PackageNameOffset uint32 //col:364
-RelativeAppNameOffset uint32 //col:365
-CommandLineOffset uint32 //col:366
+type  _PROCESS_FAULT_INFORMATION struct{
+FaultFlags uint32 //col:349
+AdditionalInfo uint32 //col:350
 }
 
 
-
-type PROCESS_COMMIT_RELEASE_INFORMATION struct{
-Version uint32 //col:370
-Struct struct //col:371
-Eligible uint32 //col:373
-ReleaseRepurposedMemResetCommit uint32 //col:374
-ForceReleaseMemResetCommit uint32 //col:375
-Spare uint32 //col:376
+type  _PROCESS_TELEMETRY_ID_INFORMATION struct{
+HeaderSize uint32 //col:369
+ProcessId uint32 //col:370
+ProcessStartKey ULONGLONG //col:371
+CreateTime ULONGLONG //col:372
+CreateInterruptTime ULONGLONG //col:373
+CreateUnbiasedInterruptTime ULONGLONG //col:374
+ProcessSequenceNumber ULONGLONG //col:375
+SessionCreateTime ULONGLONG //col:376
+SessionId uint32 //col:377
+BootId uint32 //col:378
+ImageChecksum uint32 //col:379
+ImageTimeDateStamp uint32 //col:380
+UserSidOffset uint32 //col:381
+ImagePathOffset uint32 //col:382
+PackageNameOffset uint32 //col:383
+RelativeAppNameOffset uint32 //col:384
+CommandLineOffset uint32 //col:385
 }
-
 
 
-type PROCESS_JOB_MEMORY_INFO struct{
-SharedCommitUsage ULONGLONG //col:384
-PrivateCommitUsage ULONGLONG //col:385
-PeakPrivateCommitUsage ULONGLONG //col:386
-PrivateCommitLimit ULONGLONG //col:387
-TotalCommitLimit ULONGLONG //col:388
+type  _PROCESS_COMMIT_RELEASE_INFORMATION struct{
+Version uint32 //col:379
+Struct struct //col:380
+Eligible uint32 //col:382
+ReleaseRepurposedMemResetCommit uint32 //col:383
+ForceReleaseMemResetCommit uint32 //col:384
+Spare uint32 //col:385
 }
 
 
-
-type PROCESS_CHILD_PROCESS_INFORMATION struct{
-ProhibitChildProcesses bool //col:392
-AlwaysAllowSecureChildProcess bool //col:393
-AuditProhibitChildProcesses bool //col:394
+type  _PROCESS_JOB_MEMORY_INFO struct{
+SharedCommitUsage ULONGLONG //col:391
+PrivateCommitUsage ULONGLONG //col:392
+PeakPrivateCommitUsage ULONGLONG //col:393
+PrivateCommitLimit ULONGLONG //col:394
+TotalCommitLimit ULONGLONG //col:395
 }
-
 
 
-type POWER_THROTTLING_PROCESS_STATE struct{
-Version uint32 //col:398
-ControlMask uint32 //col:399
-StateMask uint32 //col:400
+type  _PROCESS_CHILD_PROCESS_INFORMATION struct{
+ProhibitChildProcesses bool //col:397
+AlwaysAllowSecureChildProcess bool //col:398
+AuditProhibitChildProcesses bool //col:399
 }
 
 
-
-type WIN32K_SYSCALL_FILTER struct{
-FilterState uint32 //col:404
-FilterSet uint32 //col:405
+type  _POWER_THROTTLING_PROCESS_STATE struct{
+Version uint32 //col:403
+ControlMask uint32 //col:404
+StateMask uint32 //col:405
 }
 
 
-
-type PROCESS_WAKE_INFORMATION struct{
-NotificationChannel ULONGLONG //col:409
-WakeCounters[7] uint32 //col:410
-struct // //col:411
+type  _WIN32K_SYSCALL_FILTER struct{
+FilterState uint32 //col:408
+FilterSet uint32 //col:409
 }
-
 
 
-type PROCESS_ENERGY_TRACKING_STATE struct{
-StateUpdateMask uint32 //col:415
-StateDesiredValue uint32 //col:416
-StateSequence uint32 //col:417
-UpdateTag uint32 //col:418
-Tag[64] WCHAR //col:419
+type  _PROCESS_WAKE_INFORMATION struct{
+NotificationChannel ULONGLONG //col:414
+WakeCounters[7] uint32 //col:415
+_JOBOBJECT_WAKE_FILTER* struct //col:416
 }
 
 
-
-type MANAGE_WRITES_TO_EXECUTABLE_MEMORY struct{
-Version uint32 //col:423
-ProcessEnableWriteExceptions uint32 //col:424
-ThreadAllowWrites uint32 //col:425
-Spare uint32 //col:426
-KernelWriteToExecutableSignal PVOID //col:427
+type  _PROCESS_ENERGY_TRACKING_STATE struct{
+StateUpdateMask uint32 //col:422
+StateDesiredValue uint32 //col:423
+StateSequence uint32 //col:424
+UpdateTag uint32 //col:425
+Tag[64] WCHAR //col:426
 }
 
 
-
-type POWER_THROTTLING_THREAD_STATE struct{
-Version uint32 //col:431
-ControlMask uint32 //col:432
-StateMask uint32 //col:433
+type  _MANAGE_WRITES_TO_EXECUTABLE_MEMORY struct{
+Version uint32 //col:430
+ProcessEnableWriteExceptions uint32 //col:431
+ThreadAllowWrites uint32 //col:432
+Spare uint32 //col:433
+KernelWriteToExecutableSignal uintptr //col:434
 }
-
 
 
-type PROCESS_UPTIME_INFORMATION struct{
-QueryInterruptTime ULONGLONG //col:437
-QueryUnbiasedTime ULONGLONG //col:438
-EndInterruptTime ULONGLONG //col:439
-TimeSinceCreation ULONGLONG //col:440
-Uptime ULONGLONG //col:441
-SuspendedTime ULONGLONG //col:442
-Union union //col:443
-HangCount uint32 //col:445
-GhostCount uint32 //col:446
-Crashed uint32 //col:447
-Terminated uint32 //col:448
+type  _POWER_THROTTLING_THREAD_STATE struct{
+Version uint32 //col:436
+ControlMask uint32 //col:437
+StateMask uint32 //col:438
 }
 
 
-
-type PROCESS_SECURITY_DOMAIN_INFORMATION struct{
-SecurityDomain ULONGLONG //col:453
+type  _PROCESS_UPTIME_INFORMATION struct{
+QueryInterruptTime ULONGLONG //col:451
+QueryUnbiasedTime ULONGLONG //col:452
+EndInterruptTime ULONGLONG //col:453
+TimeSinceCreation ULONGLONG //col:454
+Uptime ULONGLONG //col:455
+SuspendedTime ULONGLONG //col:456
+Union union //col:457
+HangCount uint32 //col:459
+GhostCount uint32 //col:460
+Crashed uint32 //col:461
+Terminated uint32 //col:462
 }
 
 
-
-type PROCESS_COMBINE_SECURITY_DOMAINS_INFORMATION struct{
-ProcessHandle HANDLE //col:457
+type  _PROCESS_SECURITY_DOMAIN_INFORMATION struct{
+SecurityDomain ULONGLONG //col:456
 }
-
 
 
-type PROCESS_LEAP_SECOND_INFORMATION struct{
-Flags uint32 //col:461
-Reserved uint32 //col:462
+type  _PROCESS_COMBINE_SECURITY_DOMAINS_INFORMATION struct{
+ProcessHandle uintptr //col:460
 }
 
 
-
-type PROCESS_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION struct{
-ReserveSize ULONGLONG //col:466
-CommitSize ULONGLONG //col:467
-PreferredNode uint32 //col:468
-Reserved uint32 //col:469
-Ssp PVOID //col:470
+type  _PROCESS_LEAP_SECOND_INFORMATION struct{
+Flags uint32 //col:465
+Reserved uint32 //col:466
 }
-
 
 
-type PROCESS_FREE_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION struct{
-Ssp PVOID //col:474
+type  _PROCESS_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION struct{
+ReserveSize ULONGLONG //col:473
+CommitSize ULONGLONG //col:474
+PreferredNode uint32 //col:475
+Reserved uint32 //col:476
+Ssp uintptr //col:477
 }
 
 
-
-type THREAD_BASIC_INFORMATION struct{
-ExitStatus NTSTATUS //col:478
-TebBaseAddress PTEB //col:479
-ClientId CLIENT_ID //col:480
-AffinityMask KAFFINITY //col:481
-Priority KPRIORITY //col:482
-BasePriority KPRIORITY //col:483
+type  _PROCESS_FREE_FIBER_SHADOW_STACK_ALLOCATION_INFORMATION struct{
+Ssp uintptr //col:477
 }
 
 
-
-type THREAD_LAST_SYSCALL_INFORMATION struct{
-FirstArgument PVOID //col:487
-SystemCallNumber USHORT //col:488
-#ifdefWin64 #ifdef WIN64 //col:489
-Pad[0x3] USHORT //col:490
-#else #else //col:491
-Pad[0x1] USHORT //col:492
-#endif #endif //col:493
-WaitTime ULONG64 //col:494
+type  _THREAD_BASIC_INFORMATION struct{
+ExitStatus NTSTATUS //col:486
+TebBaseAddress PTEB //col:487
+ClientId CLIENT_ID //col:488
+AffinityMask KAFFINITY //col:489
+Priority KPRIORITY //col:490
+BasePriority KPRIORITY //col:491
 }
-
 
 
-type THREAD_CYCLE_TIME_INFORMATION struct{
-AccumulatedCycles ULONGLONG //col:498
-CurrentCycleCount ULONGLONG //col:499
+type  _THREAD_LAST_SYSCALL_INFORMATION struct{
+FirstArgument uintptr //col:497
+SystemCallNumber uint16 //col:498
+#ifdefWin64 #ifdef WIN64 //col:499
+Pad[0x3] uint16 //col:500
+#else #else //col:501
+Pad[0x1] uint16 //col:502
+#endif #endif //col:503
+WaitTime ULONG64 //col:504
 }
 
 
-
-type THREAD_TEB_INFORMATION struct{
-TebInformation PVOID //col:503
-TebOffset uint32 //col:504
-BytesToRead uint32 //col:505
+type  _THREAD_CYCLE_TIME_INFORMATION struct{
+AccumulatedCycles ULONGLONG //col:502
+CurrentCycleCount ULONGLONG //col:503
 }
-
 
 
-type COUNTER_READING struct{
-Type HARDWARE_COUNTER_TYPE //col:509
-Index uint32 //col:510
-Start ULONG64 //col:511
-Total ULONG64 //col:512
+type  _THREAD_TEB_INFORMATION struct{
+TebInformation uintptr //col:508
+TebOffset uint32 //col:509
+BytesToRead uint32 //col:510
 }
 
 
-
-type THREAD_PERFORMANCE_DATA struct{
-Size USHORT //col:516
-Version USHORT //col:517
-ProcessorNumber PROCESSOR_NUMBER //col:518
-ContextSwitches uint32 //col:519
-HwCountersCount uint32 //col:520
-UpdateCount ULONG64 //col:521
-WaitReasonBitMap ULONG64 //col:522
-HardwareCounters ULONG64 //col:523
-CycleTime COUNTER_READING //col:524
-HwCounters[MAX_HW_COUNTERS] COUNTER_READING //col:525
+type  _COUNTER_READING struct{
+Type HARDWARE_COUNTER_TYPE //col:515
+Index uint32 //col:516
+Start ULONG64 //col:517
+Total ULONG64 //col:518
 }
 
 
-
-type THREAD_PROFILING_INFORMATION struct{
-HardwareCounters ULONG64 //col:529
-Flags uint32 //col:530
-Enable uint32 //col:531
-PerformanceData PTHREAD_PERFORMANCE_DATA //col:532
+type  _THREAD_PERFORMANCE_DATA struct{
+Size uint16 //col:528
+Version uint16 //col:529
+ProcessorNumber PROCESSOR_NUMBER //col:530
+ContextSwitches uint32 //col:531
+HwCountersCount uint32 //col:532
+UpdateCount ULONG64 //col:533
+WaitReasonBitMap ULONG64 //col:534
+HardwareCounters ULONG64 //col:535
+CycleTime COUNTER_READING //col:536
+HwCounters[MAX_HW_COUNTERS] COUNTER_READING //col:537
 }
-
 
 
-type RTL_UMS_CONTEXT struct{
-Link SINGLE_LIST_ENTRY //col:536
-Context CONTEXT //col:537
-Teb PVOID //col:538
-UserContext PVOID //col:539
-ULONG volatile //col:540
-ULONG volatile //col:541
-ULONG volatile //col:542
-ULONG volatile //col:543
-ULONG volatile //col:544
-ULONG volatile //col:545
-ULONG volatile //col:546
-LONG volatile //col:547
-ULONG64 volatile //col:548
-ULONG64 volatile //col:549
-ULONG64 volatile //col:550
-struct // //col:551
-SwitchCount uint32 //col:552
-KernelYieldCount uint32 //col:553
-MixedYieldCount uint32 //col:554
-YieldCount uint32 //col:555
+type  _THREAD_PROFILING_INFORMATION struct{
+HardwareCounters ULONG64 //col:535
+Flags uint32 //col:536
+Enable uint32 //col:537
+PerformanceData PTHREAD_PERFORMANCE_DATA //col:538
 }
 
 
-
-type RTL_UMS_COMPLETION_LIST struct{
-ThreadListHead PSINGLE_LIST_ENTRY //col:559
-CompletionEvent PVOID //col:560
-CompletionFlags uint32 //col:561
-InternalListHead SINGLE_LIST_ENTRY //col:562
+type  _RTL_UMS_CONTEXT struct{
+Link SINGLE_LIST_ENTRY //col:558
+Context CONTEXT //col:559
+Teb uintptr //col:560
+UserContext uintptr //col:561
+ScheduledThread uint32 //col:562
+Suspended uint32 //col:563
+VolatileContext uint32 //col:564
+Terminated uint32 //col:565
+DebugActive uint32 //col:566
+RunningOnSelfThread uint32 //col:567
+DenyRunningOnSelfThread uint32 //col:568
+Flags int32 //col:569
+KernelUpdateLock ULONG64 //col:570
+PrimaryClientID ULONG64 //col:571
+ContextLock ULONG64 //col:572
+_RTL_UMS_CONTEXT* struct //col:573
+SwitchCount uint32 //col:574
+KernelYieldCount uint32 //col:575
+MixedYieldCount uint32 //col:576
+YieldCount uint32 //col:577
 }
-
 
 
-type THREAD_UMS_INFORMATION struct{
-Command THREAD_UMS_INFORMATION_COMMAND //col:566
-CompletionList PRTL_UMS_COMPLETION_LIST //col:567
-UmsContext PRTL_UMS_CONTEXT //col:568
-Union union //col:569
-Flags uint32 //col:571
-Struct struct //col:572
-IsUmsSchedulerThread uint32 //col:574
-IsUmsWorkerThread uint32 //col:575
-SpareBits uint32 //col:576
+type  _RTL_UMS_COMPLETION_LIST struct{
+ThreadListHead PSINGLE_LIST_ENTRY //col:565
+CompletionEvent uintptr //col:566
+CompletionFlags uint32 //col:567
+InternalListHead SINGLE_LIST_ENTRY //col:568
 }
 
 
-
-type THREAD_NAME_INFORMATION struct{
-ThreadName UNICODE_STRING //col:582
+type  _THREAD_UMS_INFORMATION struct{
+Command THREAD_UMS_INFORMATION_COMMAND //col:579
+CompletionList PRTL_UMS_COMPLETION_LIST //col:580
+UmsContext PRTL_UMS_CONTEXT //col:581
+Union union //col:582
+Flags uint32 //col:584
+Struct struct //col:585
+IsUmsSchedulerThread uint32 //col:587
+IsUmsWorkerThread uint32 //col:588
+SpareBits uint32 //col:589
 }
 
 
-
-type ALPC_WORK_ON_BEHALF_TICKET struct{
-ThreadId uint32 //col:586
-ThreadCreationTimeLow uint32 //col:587
+type  _THREAD_NAME_INFORMATION struct{
+ThreadName *int16 //col:585
 }
-
 
 
-type RTL_WORK_ON_BEHALF_TICKET_EX struct{
-Ticket ALPC_WORK_ON_BEHALF_TICKET //col:591
-Union union //col:592
-Flags uint32 //col:594
-Struct struct //col:595
-CurrentThread uint32 //col:597
-Reserved1 uint32 //col:598
+type  _ALPC_WORK_ON_BEHALF_TICKET struct{
+ThreadId uint32 //col:590
+ThreadCreationTimeLow uint32 //col:591
 }
 
 
-
-type PROC_THREAD_ATTRIBUTE { struct{
-Attribute ULONG_PTR //col:604
-Size SIZE_T //col:605
-Value ULONG_PTR //col:606
+type  _RTL_WORK_ON_BEHALF_TICKET_EX struct{
+Ticket ALPC_WORK_ON_BEHALF_TICKET //col:601
+Union union //col:602
+Flags uint32 //col:604
+Struct struct //col:605
+CurrentThread uint32 //col:607
+Reserved1 uint32 //col:608
 }
 
 
-
-type PROC_THREAD_ATTRIBUTE_LIST { struct{
-PresentFlags uint32 //col:609
-AttributeCount uint32 //col:610
-LastAttribute uint32 //col:611
-SpareUlong0 uint32 //col:612
-ExtendedFlagsAttribute PPROC_THREAD_ATTRIBUTE //col:613
-Attributes[1] PROC_THREAD_ATTRIBUTE //col:614
+type  _PROC_THREAD_ATTRIBUTE  struct{
+Attribute ULONG_PTR //col:608
+Size int64 //col:609
+Value ULONG_PTR //col:610
 }
-
 
 
-type SE_SAFE_OPEN_PROMPT_RESULTS { struct{
-Results SE_SAFE_OPEN_PROMPT_EXPERIENCE_RESULTS //col:617
-Path[MAX_PATH] WCHAR //col:618
+type  _PROC_THREAD_ATTRIBUTE_LIST  struct{
+PresentFlags uint32 //col:616
+AttributeCount uint32 //col:617
+LastAttribute uint32 //col:618
+SpareUlong0 uint32 //col:619
+ExtendedFlagsAttribute PPROC_THREAD_ATTRIBUTE //col:620
+Attributes[1] PROC_THREAD_ATTRIBUTE //col:621
 }
 
 
-
-type PROC_THREAD_BNOISOLATION_ATTRIBUTE struct{
-IsolationEnabled BOOL //col:622
-IsolationPrefix[0x88] WCHAR //col:623
+type  _SE_SAFE_OPEN_PROMPT_RESULTS  struct{
+Results SE_SAFE_OPEN_PROMPT_EXPERIENCE_RESULTS //col:620
+Path[MAX_PATH] WCHAR //col:621
 }
 
 
-
-type ISOLATION_MANIFEST_PROPERTIES { struct{
-InstancePath UNICODE_STRING //col:626
-FriendlyName UNICODE_STRING //col:627
-Description UNICODE_STRING //col:628
-Level ULONG_PTR //col:629
+type  _PROC_THREAD_BNOISOLATION_ATTRIBUTE struct{
+IsolationEnabled BOOL //col:626
+IsolationPrefix[0x88] WCHAR //col:627
 }
-
 
 
-type PS_ATTRIBUTE struct{
-Attribute ULONG_PTR //col:633
-Size SIZE_T //col:634
-Union union //col:635
-Value ULONG_PTR //col:637
-ValuePtr PVOID //col:638
+type  _ISOLATION_MANIFEST_PROPERTIES  struct{
+InstancePath *int16 //col:631
+FriendlyName *int16 //col:632
+Description *int16 //col:633
+Level ULONG_PTR //col:634
 }
 
 
-
-type PS_ATTRIBUTE_LIST struct{
-TotalLength SIZE_T //col:644
-Attributes[1] PS_ATTRIBUTE //col:645
+type  _PS_ATTRIBUTE struct{
+Attribute ULONG_PTR //col:641
+Size int64 //col:642
+Union union //col:643
+Value ULONG_PTR //col:645
+ValuePtr uintptr //col:646
 }
-
 
 
-type PS_MEMORY_RESERVE struct{
-ReserveAddress PVOID //col:649
-ReserveSize SIZE_T //col:650
+type  _PS_ATTRIBUTE_LIST struct{
+TotalLength int64 //col:648
+Attributes[1] PS_ATTRIBUTE //col:649
 }
 
 
-
-type PS_STD_HANDLE_INFO struct{
-Union union //col:654
-Flags uint32 //col:656
-Struct struct //col:657
-StdHandleState uint32 //col:659
-PseudoHandleMask uint32 //col:660
+type  _PS_MEMORY_RESERVE struct{
+ReserveAddress uintptr //col:653
+ReserveSize int64 //col:654
 }
 
 
-
-type PS_TRUSTLET_ATTRIBUTE_TYPE struct{
-Union union //col:667
-Struct struct //col:669
-Version uint8 //col:671
-DataCount uint8 //col:672
-SemanticType uint8 //col:673
-AccessRights PS_TRUSTLET_ATTRIBUTE_ACCESSRIGHTS //col:674
+type  _PS_STD_HANDLE_INFO struct{
+Union union //col:663
+Flags uint32 //col:665
+Struct struct //col:666
+StdHandleState uint32 //col:668
+PseudoHandleMask uint32 //col:669
 }
-
 
 
-type PS_TRUSTLET_ATTRIBUTE_HEADER struct{
-AttributeType PS_TRUSTLET_ATTRIBUTE_TYPE //col:681
-InstanceNumber uint32 //col:682
-Reserved uint32 //col:683
+type  _PS_TRUSTLET_ATTRIBUTE_TYPE struct{
+Union union //col:677
+Struct struct //col:679
+Version uint8 //col:681
+DataCount uint8 //col:682
+SemanticType uint8 //col:683
+AccessRights PS_TRUSTLET_ATTRIBUTE_ACCESSRIGHTS //col:684
 }
 
 
-
-type PS_TRUSTLET_ATTRIBUTE_DATA struct{
-Header PS_TRUSTLET_ATTRIBUTE_HEADER //col:687
-Data[1] ULONGLONG //col:688
+type  _PS_TRUSTLET_ATTRIBUTE_HEADER struct{
+AttributeType PS_TRUSTLET_ATTRIBUTE_TYPE //col:686
+InstanceNumber uint32 //col:687
+Reserved uint32 //col:688
 }
 
 
-
-type PS_TRUSTLET_CREATE_ATTRIBUTES struct{
-TrustletIdentity ULONGLONG //col:692
-Attributes[1] PS_TRUSTLET_ATTRIBUTE_DATA //col:693
+type  _PS_TRUSTLET_ATTRIBUTE_DATA struct{
+Header PS_TRUSTLET_ATTRIBUTE_HEADER //col:691
+Data[1] ULONGLONG //col:692
 }
-
 
 
-type PS_BNO_ISOLATION_PARAMETERS struct{
-IsolationPrefix UNICODE_STRING //col:697
-HandleCount uint32 //col:698
-*Handles PVOID //col:699
-IsolationEnabled bool //col:700
+type  _PS_TRUSTLET_CREATE_ATTRIBUTES struct{
+TrustletIdentity ULONGLONG //col:696
+Attributes[1] PS_TRUSTLET_ATTRIBUTE_DATA //col:697
 }
 
 
-
-type PS_CREATE_INFO struct{
-Size SIZE_T //col:704
-State PS_CREATE_STATE //col:705
-Union union //col:706
-Struct struct //col:708
-Union union //col:710
-InitFlags uint32 //col:712
-Struct struct //col:713
-WriteOutputOnExit uint8 //col:715
-DetectManifest uint8 //col:716
-IFEOSkipDebugger uint8 //col:717
-IFEODoNotPropagateKeyState uint8 //col:718
-SpareBits1 uint8 //col:719
-SpareBits2 uint8 //col:720
-ProhibitedImageCharacteristics USHORT //col:721
+type  _PS_BNO_ISOLATION_PARAMETERS struct{
+IsolationPrefix *int16 //col:703
+HandleCount uint32 //col:704
+*Handles uintptr //col:705
+IsolationEnabled bool //col:706
 }
 
 
-
-type JOBOBJECT_EXTENDED_ACCOUNTING_INFORMATION struct{
-BasicInfo JOBOBJECT_BASIC_ACCOUNTING_INFORMATION //col:769
-IoInfo IO_COUNTERS //col:770
-DiskIoInfo PROCESS_DISK_COUNTERS //col:771
-ContextSwitches ULONG64 //col:772
-TotalCycleTime LARGE_INTEGER //col:773
-ReadyTime ULONG64 //col:774
-EnergyValues PROCESS_ENERGY_VALUES //col:775
+type  _PS_CREATE_INFO struct{
+Size int64 //col:724
+State PS_CREATE_STATE //col:725
+Union union //col:726
+Struct struct //col:728
+Union union //col:730
+InitFlags uint32 //col:732
+Struct struct //col:733
+WriteOutputOnExit uint8 //col:735
+DetectManifest uint8 //col:736
+IFEOSkipDebugger uint8 //col:737
+IFEODoNotPropagateKeyState uint8 //col:738
+SpareBits1 uint8 //col:739
+SpareBits2 uint8 //col:740
+ProhibitedImageCharacteristics uint16 //col:741
 }
-
 
 
-type JOBOBJECT_WAKE_INFORMATION struct{
-NotificationChannel HANDLE //col:779
-WakeCounters[7] ULONG64 //col:780
+type  _JOBOBJECT_EXTENDED_ACCOUNTING_INFORMATION struct{
+BasicInfo JOBOBJECT_BASIC_ACCOUNTING_INFORMATION //col:778
+IoInfo IO_COUNTERS //col:779
+DiskIoInfo PROCESS_DISK_COUNTERS //col:780
+ContextSwitches ULONG64 //col:781
+TotalCycleTime LARGE_INTEGER //col:782
+ReadyTime ULONG64 //col:783
+EnergyValues PROCESS_ENERGY_VALUES //col:784
 }
 
 
-
-type JOBOBJECT_WAKE_INFORMATION_V1 struct{
-NotificationChannel HANDLE //col:784
-WakeCounters[4] ULONG64 //col:785
+type  _JOBOBJECT_WAKE_INFORMATION struct{
+NotificationChannel uintptr //col:783
+WakeCounters[7] ULONG64 //col:784
 }
-
 
 
-type JOBOBJECT_INTERFERENCE_INFORMATION struct{
-Count ULONG64 //col:789
+type  _JOBOBJECT_WAKE_INFORMATION_V1 struct{
+NotificationChannel uintptr //col:788
+WakeCounters[4] ULONG64 //col:789
 }
 
 
-
-type JOBOBJECT_WAKE_FILTER struct{
-HighEdgeFilter uint32 //col:793
-LowEdgeFilter uint32 //col:794
+type  _JOBOBJECT_INTERFERENCE_INFORMATION struct{
+Count ULONG64 //col:792
 }
 
 
-
-type JOBOBJECT_FREEZE_INFORMATION struct{
-Union union //col:798
-Flags uint32 //col:800
-Struct struct //col:801
-FreezeOperation uint32 //col:803
-FilterOperation uint32 //col:804
-SwapOperation uint32 //col:805
-Reserved uint32 //col:806
+type  _JOBOBJECT_WAKE_FILTER struct{
+HighEdgeFilter uint32 //col:797
+LowEdgeFilter uint32 //col:798
 }
-
 
 
-type JOBOBJECT_MEMORY_USAGE_INFORMATION struct{
-JobMemory ULONG64 //col:816
-PeakJobMemoryUsed ULONG64 //col:817
+type  _JOBOBJECT_FREEZE_INFORMATION struct{
+Union union //col:809
+Flags uint32 //col:811
+Struct struct //col:812
+FreezeOperation uint32 //col:814
+FilterOperation uint32 //col:815
+SwapOperation uint32 //col:816
+Reserved uint32 //col:817
 }
 
 
-
-type JOBOBJECT_MEMORY_USAGE_INFORMATION_V2 struct{
-BasicInfo JOBOBJECT_MEMORY_USAGE_INFORMATION //col:821
-JobSharedMemory ULONG64 //col:822
-Reserved[2] ULONG64 //col:823
+type  _JOBOBJECT_MEMORY_USAGE_INFORMATION struct{
+JobMemory ULONG64 //col:820
+PeakJobMemoryUsed ULONG64 //col:821
 }
 
 
-
-type SILO_USER_SHARED_DATA struct{
-ServiceSessionId ULONG64 //col:827
-ActiveConsoleId uint32 //col:828
-ConsoleSessionForegroundProcessId LONGLONG //col:829
-NtProductType NT_PRODUCT_TYPE //col:830
-SuiteMask uint32 //col:831
-SharedUserSessionId uint32 //col:832
-IsMultiSessionSku bool //col:833
-NtSystemRoot[260] WCHAR //col:834
-UserModeGlobalLogger[16] USHORT //col:835
+type  _JOBOBJECT_MEMORY_USAGE_INFORMATION_V2 struct{
+BasicInfo JOBOBJECT_MEMORY_USAGE_INFORMATION //col:826
+JobSharedMemory ULONG64 //col:827
+Reserved[2] ULONG64 //col:828
 }
-
 
 
-type SILOOBJECT_ROOT_DIRECTORY struct{
-ControlFlags uint32 //col:839
-Path UNICODE_STRING //col:840
+type  _SILO_USER_SHARED_DATA struct{
+ServiceSessionId ULONG64 //col:838
+ActiveConsoleId uint32 //col:839
+ConsoleSessionForegroundProcessId LONGLONG //col:840
+NtProductType NT_PRODUCT_TYPE //col:841
+SuiteMask uint32 //col:842
+SharedUserSessionId uint32 //col:843
+IsMultiSessionSku bool //col:844
+NtSystemRoot[260] WCHAR //col:845
+UserModeGlobalLogger[16] uint16 //col:846
 }
 
 
-
-type JOBOBJECT_ENERGY_TRACKING_STATE struct{
-Value ULONG64 //col:844
-UpdateMask uint32 //col:845
-DesiredState uint32 //col:846
+type  _SILOOBJECT_ROOT_DIRECTORY struct{
+ControlFlags uint32 //col:843
+Path *int16 //col:844
 }
 
+
+type  _JOBOBJECT_ENERGY_TRACKING_STATE struct{
+Value ULONG64 //col:849
+UpdateMask uint32 //col:850
+DesiredState uint32 //col:851
+}
 
 
 

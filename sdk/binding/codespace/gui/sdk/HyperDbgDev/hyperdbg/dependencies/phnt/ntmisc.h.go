@@ -1,5 +1,7 @@
 package phnt
 
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntmisc.h.back
+
 const (
 	VdmStartExecution       = 1  //col:3
 	VdmQueueInterrupt       = 2  //col:4
@@ -60,3 +62,4 @@ const (
 	TraceControlMaxLoggers                         = 42 //col:59
 	TraceControlMaxPmcCounter                      = 43 //col:60
 )
+

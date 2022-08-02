@@ -53,3 +53,4 @@ func (h *hyperDbgIntegration) ExtractBits() (ok bool) { //col:25
 	*/
 	return true
 }
+

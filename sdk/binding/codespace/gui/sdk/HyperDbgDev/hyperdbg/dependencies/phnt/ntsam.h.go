@@ -1,5 +1,5 @@
 package phnt
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntsam.h.back
 
 const(
     DomainPasswordInformation  =  1   //col:3
@@ -164,691 +164,607 @@ const(
 
 
 
-type SAM_RID_ENUMERATION struct{
-RelativeId uint32 //col:3
-Name UNICODE_STRING //col:4
+type  _SAM_RID_ENUMERATION struct{
+RelativeId uint32 //col:7
+Name *int16 //col:8
 }
 
 
-
-type SAM_SID_ENUMERATION struct{
-Sid PSID //col:8
-Name UNICODE_STRING //col:9
+type  _SAM_SID_ENUMERATION struct{
+Sid PSID //col:12
+Name *int16 //col:13
 }
 
 
-
-type SAM_BYTE_ARRAY struct{
-Size uint32 //col:13
-PUCHAR _Field_size_bytes_(Size) //col:14
+type  _SAM_BYTE_ARRAY struct{
+Size uint32 //col:17
+PUCHAR _Field_size_bytes_(Size) //col:18
 }
 
 
-
-type SAM_BYTE_ARRAY_32K struct{
-Size uint32 //col:18
-PUCHAR _Field_size_bytes_(Size) //col:19
+type  _SAM_BYTE_ARRAY_32K struct{
+Size uint32 //col:22
+PUCHAR _Field_size_bytes_(Size) //col:23
 }
 
 
-
-type DOMAIN_GENERAL_INFORMATION struct{
-ForceLogoff LARGE_INTEGER //col:23
-OemInformation UNICODE_STRING //col:24
-DomainName UNICODE_STRING //col:25
-ReplicaSourceNodeName UNICODE_STRING //col:26
-DomainModifiedCount LARGE_INTEGER //col:27
-DomainServerState DOMAIN_SERVER_ENABLE_STATE //col:28
-DomainServerRole DOMAIN_SERVER_ROLE //col:29
-UasCompatibilityRequired bool //col:30
-UserCount uint32 //col:31
-GroupCount uint32 //col:32
-AliasCount uint32 //col:33
+type  _DOMAIN_GENERAL_INFORMATION struct{
+ForceLogoff LARGE_INTEGER //col:36
+OemInformation *int16 //col:37
+DomainName *int16 //col:38
+ReplicaSourceNodeName *int16 //col:39
+DomainModifiedCount LARGE_INTEGER //col:40
+DomainServerState DOMAIN_SERVER_ENABLE_STATE //col:41
+DomainServerRole DOMAIN_SERVER_ROLE //col:42
+UasCompatibilityRequired bool //col:43
+UserCount uint32 //col:44
+GroupCount uint32 //col:45
+AliasCount uint32 //col:46
 }
 
 
-
-type DOMAIN_GENERAL_INFORMATION2 struct{
-I1 DOMAIN_GENERAL_INFORMATION //col:37
-LockoutDuration LARGE_INTEGER //col:38
-LockoutObservationWindow LARGE_INTEGER //col:39
-LockoutThreshold USHORT //col:40
+type  _DOMAIN_GENERAL_INFORMATION2 struct{
+I1 DOMAIN_GENERAL_INFORMATION //col:43
+LockoutDuration LARGE_INTEGER //col:44
+LockoutObservationWindow LARGE_INTEGER //col:45
+LockoutThreshold uint16 //col:46
 }
 
 
-
-type DOMAIN_UAS_INFORMATION struct{
-UasCompatibilityRequired bool //col:44
+type  _DOMAIN_UAS_INFORMATION struct{
+UasCompatibilityRequired bool //col:47
 }
 
 
-
-type DOMAIN_PASSWORD_INFORMATION struct{
-MinPasswordLength USHORT //col:48
-PasswordHistoryLength USHORT //col:49
-PasswordProperties uint32 //col:50
-MaxPasswordAge LARGE_INTEGER //col:51
-MinPasswordAge LARGE_INTEGER //col:52
+type  _DOMAIN_PASSWORD_INFORMATION struct{
+MinPasswordLength uint16 //col:55
+PasswordHistoryLength uint16 //col:56
+PasswordProperties uint32 //col:57
+MaxPasswordAge LARGE_INTEGER //col:58
+MinPasswordAge LARGE_INTEGER //col:59
 }
 
 
-
-type DOMAIN_LOGOFF_INFORMATION struct{
-ForceLogoff LARGE_INTEGER //col:56
+type  _DOMAIN_LOGOFF_INFORMATION struct{
+ForceLogoff LARGE_INTEGER //col:59
 }
 
 
-
-type DOMAIN_OEM_INFORMATION struct{
-OemInformation UNICODE_STRING //col:60
+type  _DOMAIN_OEM_INFORMATION struct{
+OemInformation *int16 //col:63
 }
 
 
-
-type DOMAIN_NAME_INFORMATION struct{
-DomainName UNICODE_STRING //col:64
+type  _DOMAIN_NAME_INFORMATION struct{
+DomainName *int16 //col:67
 }
 
 
-
-type DOMAIN_SERVER_ROLE_INFORMATION struct{
-DomainServerRole DOMAIN_SERVER_ROLE //col:68
+type  _DOMAIN_SERVER_ROLE_INFORMATION struct{
+DomainServerRole DOMAIN_SERVER_ROLE //col:71
 }
 
 
-
-type DOMAIN_REPLICATION_INFORMATION struct{
-ReplicaSourceNodeName UNICODE_STRING //col:72
+type  _DOMAIN_REPLICATION_INFORMATION struct{
+ReplicaSourceNodeName *int16 //col:75
 }
 
 
-
-type DOMAIN_MODIFIED_INFORMATION struct{
-DomainModifiedCount LARGE_INTEGER //col:76
-CreationTime LARGE_INTEGER //col:77
+type  _DOMAIN_MODIFIED_INFORMATION struct{
+DomainModifiedCount LARGE_INTEGER //col:80
+CreationTime LARGE_INTEGER //col:81
 }
 
 
-
-type DOMAIN_MODIFIED_INFORMATION2 struct{
-DomainModifiedCount LARGE_INTEGER //col:81
-CreationTime LARGE_INTEGER //col:82
-ModifiedCountAtLastPromotion LARGE_INTEGER //col:83
+type  _DOMAIN_MODIFIED_INFORMATION2 struct{
+DomainModifiedCount LARGE_INTEGER //col:86
+CreationTime LARGE_INTEGER //col:87
+ModifiedCountAtLastPromotion LARGE_INTEGER //col:88
 }
 
 
-
-type DOMAIN_STATE_INFORMATION struct{
-DomainServerState DOMAIN_SERVER_ENABLE_STATE //col:87
+type  _DOMAIN_STATE_INFORMATION struct{
+DomainServerState DOMAIN_SERVER_ENABLE_STATE //col:90
 }
 
 
-
-type DOMAIN_LOCKOUT_INFORMATION struct{
-LockoutDuration LARGE_INTEGER //col:91
-LockoutObservationWindow LARGE_INTEGER //col:92
-LockoutThreshold USHORT //col:93
+type  _DOMAIN_LOCKOUT_INFORMATION struct{
+LockoutDuration LARGE_INTEGER //col:96
+LockoutObservationWindow LARGE_INTEGER //col:97
+LockoutThreshold uint16 //col:98
 }
 
 
-
-type DOMAIN_DISPLAY_USER struct{
-Index uint32 //col:97
-Rid uint32 //col:98
-AccountControl uint32 //col:99
-LogonName UNICODE_STRING //col:100
-AdminComment UNICODE_STRING //col:101
-FullName UNICODE_STRING //col:102
+type  _DOMAIN_DISPLAY_USER struct{
+Index uint32 //col:105
+Rid uint32 //col:106
+AccountControl uint32 //col:107
+LogonName *int16 //col:108
+AdminComment *int16 //col:109
+FullName *int16 //col:110
 }
 
 
-
-type DOMAIN_DISPLAY_MACHINE struct{
-Index uint32 //col:106
-Rid uint32 //col:107
-AccountControl uint32 //col:108
-Machine UNICODE_STRING //col:109
-Comment UNICODE_STRING //col:110
+type  _DOMAIN_DISPLAY_MACHINE struct{
+Index uint32 //col:113
+Rid uint32 //col:114
+AccountControl uint32 //col:115
+Machine *int16 //col:116
+Comment *int16 //col:117
 }
 
 
-
-type DOMAIN_DISPLAY_GROUP struct{
-Index uint32 //col:114
-Rid uint32 //col:115
-Attributes uint32 //col:116
-Group UNICODE_STRING //col:117
-Comment UNICODE_STRING //col:118
+type  _DOMAIN_DISPLAY_GROUP struct{
+Index uint32 //col:121
+Rid uint32 //col:122
+Attributes uint32 //col:123
+Group *int16 //col:124
+Comment *int16 //col:125
 }
 
 
-
-type DOMAIN_DISPLAY_OEM_USER struct{
-Index uint32 //col:122
-User OEM_STRING //col:123
+type  _DOMAIN_DISPLAY_OEM_USER struct{
+Index uint32 //col:126
+User OEM_STRING //col:127
 }
 
 
-
-type DOMAIN_DISPLAY_OEM_GROUP struct{
-Index uint32 //col:127
-Group OEM_STRING //col:128
+type  _DOMAIN_DISPLAY_OEM_GROUP struct{
+Index uint32 //col:131
+Group OEM_STRING //col:132
 }
 
 
-
-type DOMAIN_LOCALIZABLE_ACCOUNTS_ENTRY struct{
-Rid uint32 //col:132
-Use SID_NAME_USE //col:133
-Name UNICODE_STRING //col:134
-AdminComment UNICODE_STRING //col:135
+type  _DOMAIN_LOCALIZABLE_ACCOUNTS_ENTRY struct{
+Rid uint32 //col:138
+Use SID_NAME_USE //col:139
+Name *int16 //col:140
+AdminComment *int16 //col:141
 }
 
 
-
-type DOMAIN_LOCALIZABLE_ACCOUNTS struct{
-Count uint32 //col:139
-DOMAIN_LOCALIZABLE_ACCOUNT_ENTRY _Field_size_(Count) //col:140
+type  _DOMAIN_LOCALIZABLE_ACCOUNTS struct{
+Count uint32 //col:143
+DOMAIN_LOCALIZABLE_ACCOUNT_ENTRY _Field_size_(Count) //col:144
 }
 
 
-
-type GROUP_MEMBERSHIP struct{
-RelativeId uint32 //col:144
-Attributes uint32 //col:145
+type  _GROUP_MEMBERSHIP struct{
+RelativeId uint32 //col:148
+Attributes uint32 //col:149
 }
 
 
-
-type GROUP_GENERAL_INFORMATION struct{
-Name UNICODE_STRING //col:149
-Attributes uint32 //col:150
-MemberCount uint32 //col:151
-AdminComment UNICODE_STRING //col:152
+type  _GROUP_GENERAL_INFORMATION struct{
+Name *int16 //col:155
+Attributes uint32 //col:156
+MemberCount uint32 //col:157
+AdminComment *int16 //col:158
 }
 
 
-
-type GROUP_NAME_INFORMATION struct{
-Name UNICODE_STRING //col:156
+type  _GROUP_NAME_INFORMATION struct{
+Name *int16 //col:159
 }
 
 
-
-type GROUP_ATTRIBUTE_INFORMATION struct{
-Attributes uint32 //col:160
+type  _GROUP_ATTRIBUTE_INFORMATION struct{
+Attributes uint32 //col:163
 }
 
 
-
-type GROUP_ADM_COMMENT_INFORMATION struct{
-AdminComment UNICODE_STRING //col:164
+type  _GROUP_ADM_COMMENT_INFORMATION struct{
+AdminComment *int16 //col:167
 }
 
 
-
-type ALIAS_GENERAL_INFORMATION struct{
-Name UNICODE_STRING //col:168
-MemberCount uint32 //col:169
-AdminComment UNICODE_STRING //col:170
+type  _ALIAS_GENERAL_INFORMATION struct{
+Name *int16 //col:173
+MemberCount uint32 //col:174
+AdminComment *int16 //col:175
 }
 
 
-
-type ALIAS_NAME_INFORMATION struct{
-Name UNICODE_STRING //col:174
+type  _ALIAS_NAME_INFORMATION struct{
+Name *int16 //col:177
 }
 
 
-
-type ALIAS_ADM_COMMENT_INFORMATION struct{
-AdminComment UNICODE_STRING //col:178
+type  _ALIAS_ADM_COMMENT_INFORMATION struct{
+AdminComment *int16 //col:181
 }
 
 
-
-type ALIAS_EXTENDED_INFORMATION struct{
-WhichFields uint32 //col:182
-ShellAdminObjectProperties SAM_SHELL_OBJECT_PROPERTIES //col:183
+type  _ALIAS_EXTENDED_INFORMATION struct{
+WhichFields uint32 //col:186
+ShellAdminObjectProperties SAM_SHELL_OBJECT_PROPERTIES //col:187
 }
 
 
-
-type LOGON_HOURS struct{
-UnitsPerWeek USHORT //col:187
-LogonHours PUCHAR //col:188
+type  _LOGON_HOURS struct{
+UnitsPerWeek uint16 //col:191
+LogonHours PUCHAR //col:192
 }
 
 
-
-type SR_SECURITY_DESCRIPTOR struct{
-Length uint32 //col:192
-SecurityDescriptor PUCHAR //col:193
+type  _SR_SECURITY_DESCRIPTOR struct{
+Length uint32 //col:196
+SecurityDescriptor PUCHAR //col:197
 }
 
 
-
-type USER_GENERAL_INFORMATION struct{
-UserName UNICODE_STRING //col:197
-FullName UNICODE_STRING //col:198
-PrimaryGroupId uint32 //col:199
-AdminComment UNICODE_STRING //col:200
-UserComment UNICODE_STRING //col:201
+type  _USER_GENERAL_INFORMATION struct{
+UserName *int16 //col:204
+FullName *int16 //col:205
+PrimaryGroupId uint32 //col:206
+AdminComment *int16 //col:207
+UserComment *int16 //col:208
 }
 
 
-
-type USER_PREFERENCES_INFORMATION struct{
-UserComment UNICODE_STRING //col:205
-Reserved1 UNICODE_STRING //col:206
-CountryCode USHORT //col:207
-CodePage USHORT //col:208
+type  _USER_PREFERENCES_INFORMATION struct{
+UserComment *int16 //col:211
+Reserved1 *int16 //col:212
+CountryCode uint16 //col:213
+CodePage uint16 //col:214
 }
 
 
-
-type USER_LOGON_INFORMATION struct{
-UserName UNICODE_STRING //col:212
-FullName UNICODE_STRING //col:213
-UserId uint32 //col:214
-PrimaryGroupId uint32 //col:215
-HomeDirectory UNICODE_STRING //col:216
-HomeDirectoryDrive UNICODE_STRING //col:217
-ScriptPath UNICODE_STRING //col:218
-ProfilePath UNICODE_STRING //col:219
-WorkStations UNICODE_STRING //col:220
-LastLogon LARGE_INTEGER //col:221
-LastLogoff LARGE_INTEGER //col:222
-PasswordLastSet LARGE_INTEGER //col:223
-PasswordCanChange LARGE_INTEGER //col:224
-PasswordMustChange LARGE_INTEGER //col:225
-LogonHours LOGON_HOURS //col:226
-BadPasswordCount USHORT //col:227
-LogonCount USHORT //col:228
-UserAccountControl uint32 //col:229
+type  _USER_LOGON_INFORMATION struct{
+UserName *int16 //col:232
+FullName *int16 //col:233
+UserId uint32 //col:234
+PrimaryGroupId uint32 //col:235
+HomeDirectory *int16 //col:236
+HomeDirectoryDrive *int16 //col:237
+ScriptPath *int16 //col:238
+ProfilePath *int16 //col:239
+WorkStations *int16 //col:240
+LastLogon LARGE_INTEGER //col:241
+LastLogoff LARGE_INTEGER //col:242
+PasswordLastSet LARGE_INTEGER //col:243
+PasswordCanChange LARGE_INTEGER //col:244
+PasswordMustChange LARGE_INTEGER //col:245
+LogonHours LOGON_HOURS //col:246
+BadPasswordCount uint16 //col:247
+LogonCount uint16 //col:248
+UserAccountControl uint32 //col:249
 }
 
 
-
-type USER_LOGON_HOURS_INFORMATION struct{
-LogonHours LOGON_HOURS //col:233
+type  _USER_LOGON_HOURS_INFORMATION struct{
+LogonHours LOGON_HOURS //col:236
 }
 
 
-
-type USER_ACCOUNT_INFORMATION struct{
-UserName UNICODE_STRING //col:237
-FullName UNICODE_STRING //col:238
-UserId uint32 //col:239
-PrimaryGroupId uint32 //col:240
-HomeDirectory UNICODE_STRING //col:241
-HomeDirectoryDrive UNICODE_STRING //col:242
-ScriptPath UNICODE_STRING //col:243
-ProfilePath UNICODE_STRING //col:244
-AdminComment UNICODE_STRING //col:245
-WorkStations UNICODE_STRING //col:246
-LastLogon LARGE_INTEGER //col:247
-LastLogoff LARGE_INTEGER //col:248
-LogonHours LOGON_HOURS //col:249
-BadPasswordCount USHORT //col:250
-LogonCount USHORT //col:251
-PasswordLastSet LARGE_INTEGER //col:252
-AccountExpires LARGE_INTEGER //col:253
-UserAccountControl uint32 //col:254
+type  _USER_ACCOUNT_INFORMATION struct{
+UserName *int16 //col:257
+FullName *int16 //col:258
+UserId uint32 //col:259
+PrimaryGroupId uint32 //col:260
+HomeDirectory *int16 //col:261
+HomeDirectoryDrive *int16 //col:262
+ScriptPath *int16 //col:263
+ProfilePath *int16 //col:264
+AdminComment *int16 //col:265
+WorkStations *int16 //col:266
+LastLogon LARGE_INTEGER //col:267
+LastLogoff LARGE_INTEGER //col:268
+LogonHours LOGON_HOURS //col:269
+BadPasswordCount uint16 //col:270
+LogonCount uint16 //col:271
+PasswordLastSet LARGE_INTEGER //col:272
+AccountExpires LARGE_INTEGER //col:273
+UserAccountControl uint32 //col:274
 }
 
 
-
-type USER_NAME_INFORMATION struct{
-UserName UNICODE_STRING //col:258
-FullName UNICODE_STRING //col:259
+type  _USER_NAME_INFORMATION struct{
+UserName *int16 //col:262
+FullName *int16 //col:263
 }
 
 
-
-type USER_ACCOUNT_NAME_INFORMATION struct{
-UserName UNICODE_STRING //col:263
+type  _USER_ACCOUNT_NAME_INFORMATION struct{
+UserName *int16 //col:266
 }
 
 
-
-type USER_FULL_NAME_INFORMATION struct{
-FullName UNICODE_STRING //col:267
+type  _USER_FULL_NAME_INFORMATION struct{
+FullName *int16 //col:270
 }
 
 
-
-type USER_PRIMARY_GROUP_INFORMATION struct{
-PrimaryGroupId uint32 //col:271
+type  _USER_PRIMARY_GROUP_INFORMATION struct{
+PrimaryGroupId uint32 //col:274
 }
 
 
-
-type USER_HOME_INFORMATION struct{
-HomeDirectory UNICODE_STRING //col:275
-HomeDirectoryDrive UNICODE_STRING //col:276
+type  _USER_HOME_INFORMATION struct{
+HomeDirectory *int16 //col:279
+HomeDirectoryDrive *int16 //col:280
 }
 
 
-
-type USER_SCRIPT_INFORMATION struct{
-ScriptPath UNICODE_STRING //col:280
+type  _USER_SCRIPT_INFORMATION struct{
+ScriptPath *int16 //col:283
 }
 
 
-
-type USER_PROFILE_INFORMATION struct{
-ProfilePath UNICODE_STRING //col:284
+type  _USER_PROFILE_INFORMATION struct{
+ProfilePath *int16 //col:287
 }
 
 
-
-type USER_ADMIN_COMMENT_INFORMATION struct{
-AdminComment UNICODE_STRING //col:288
+type  _USER_ADMIN_COMMENT_INFORMATION struct{
+AdminComment *int16 //col:291
 }
 
 
-
-type USER_WORKSTATIONS_INFORMATION struct{
-WorkStations UNICODE_STRING //col:292
+type  _USER_WORKSTATIONS_INFORMATION struct{
+WorkStations *int16 //col:295
 }
 
 
-
-type USER_SET_PASSWORD_INFORMATION struct{
-Password UNICODE_STRING //col:296
-PasswordExpired bool //col:297
+type  _USER_SET_PASSWORD_INFORMATION struct{
+Password *int16 //col:300
+PasswordExpired bool //col:301
 }
 
 
-
-type USER_CONTROL_INFORMATION struct{
-UserAccountControl uint32 //col:301
+type  _USER_CONTROL_INFORMATION struct{
+UserAccountControl uint32 //col:304
 }
 
 
-
-type USER_EXPIRES_INFORMATION struct{
-AccountExpires LARGE_INTEGER //col:305
+type  _USER_EXPIRES_INFORMATION struct{
+AccountExpires LARGE_INTEGER //col:308
 }
 
 
-
-type CYPHER_BLOCK struct{
-data[CYPHER_BLOCK_LENGTH] int8 //col:309
+type  _CYPHER_BLOCK struct{
+data[CYPHER_BLOCK_LENGTH] int8 //col:312
 }
 
 
-
-type ENCRYPTED_NT_OWF_PASSWORD struct{
-data[2] CYPHER_BLOCK //col:313
+type  _ENCRYPTED_NT_OWF_PASSWORD struct{
+data[2] CYPHER_BLOCK //col:316
 }
 
 
-
-type ENCRYPTED_LM_OWF_PASSWORD struct{
-data[2] CYPHER_BLOCK //col:317
+type  _ENCRYPTED_LM_OWF_PASSWORD struct{
+data[2] CYPHER_BLOCK //col:320
 }
 
 
-
-type USER_INTERNAL1_INFORMATION struct{
-EncryptedNtOwfPassword ENCRYPTED_NT_OWF_PASSWORD //col:321
-EncryptedLmOwfPassword ENCRYPTED_LM_OWF_PASSWORD //col:322
-NtPasswordPresent bool //col:323
-LmPasswordPresent bool //col:324
-PasswordExpired bool //col:325
+type  _USER_INTERNAL1_INFORMATION struct{
+EncryptedNtOwfPassword ENCRYPTED_NT_OWF_PASSWORD //col:328
+EncryptedLmOwfPassword ENCRYPTED_LM_OWF_PASSWORD //col:329
+NtPasswordPresent bool //col:330
+LmPasswordPresent bool //col:331
+PasswordExpired bool //col:332
 }
 
 
-
-type USER_INTERNAL2_INFORMATION struct{
-StatisticsToApply uint32 //col:329
-LastLogon LARGE_INTEGER //col:330
-LastLogoff LARGE_INTEGER //col:331
-BadPasswordCount USHORT //col:332
-LogonCount USHORT //col:333
+type  _USER_INTERNAL2_INFORMATION struct{
+StatisticsToApply uint32 //col:336
+LastLogon LARGE_INTEGER //col:337
+LastLogoff LARGE_INTEGER //col:338
+BadPasswordCount uint16 //col:339
+LogonCount uint16 //col:340
 }
 
 
-
-type USER_PARAMETERS_INFORMATION struct{
-Parameters UNICODE_STRING //col:337
+type  _USER_PARAMETERS_INFORMATION struct{
+Parameters *int16 //col:340
 }
 
 
-
-type USER_ALL_INFORMATION struct{
-LastLogon LARGE_INTEGER //col:341
-LastLogoff LARGE_INTEGER //col:342
-PasswordLastSet LARGE_INTEGER //col:343
-AccountExpires LARGE_INTEGER //col:344
-PasswordCanChange LARGE_INTEGER //col:345
-PasswordMustChange LARGE_INTEGER //col:346
-UserName UNICODE_STRING //col:347
-FullName UNICODE_STRING //col:348
-HomeDirectory UNICODE_STRING //col:349
-HomeDirectoryDrive UNICODE_STRING //col:350
-ScriptPath UNICODE_STRING //col:351
-ProfilePath UNICODE_STRING //col:352
-AdminComment UNICODE_STRING //col:353
-WorkStations UNICODE_STRING //col:354
-UserComment UNICODE_STRING //col:355
-Parameters UNICODE_STRING //col:356
-LmPassword UNICODE_STRING //col:357
-NtPassword UNICODE_STRING //col:358
-PrivateData UNICODE_STRING //col:359
-SecurityDescriptor SR_SECURITY_DESCRIPTOR //col:360
-UserId uint32 //col:361
-PrimaryGroupId uint32 //col:362
-UserAccountControl uint32 //col:363
-WhichFields uint32 //col:364
-LogonHours LOGON_HOURS //col:365
-BadPasswordCount USHORT //col:366
-LogonCount USHORT //col:367
-CountryCode USHORT //col:368
-CodePage USHORT //col:369
-LmPasswordPresent bool //col:370
-NtPasswordPresent bool //col:371
-PasswordExpired bool //col:372
-PrivateDataSensitive bool //col:373
+type  _USER_ALL_INFORMATION struct{
+LastLogon LARGE_INTEGER //col:376
+LastLogoff LARGE_INTEGER //col:377
+PasswordLastSet LARGE_INTEGER //col:378
+AccountExpires LARGE_INTEGER //col:379
+PasswordCanChange LARGE_INTEGER //col:380
+PasswordMustChange LARGE_INTEGER //col:381
+UserName *int16 //col:382
+FullName *int16 //col:383
+HomeDirectory *int16 //col:384
+HomeDirectoryDrive *int16 //col:385
+ScriptPath *int16 //col:386
+ProfilePath *int16 //col:387
+AdminComment *int16 //col:388
+WorkStations *int16 //col:389
+UserComment *int16 //col:390
+Parameters *int16 //col:391
+LmPassword *int16 //col:392
+NtPassword *int16 //col:393
+PrivateData *int16 //col:394
+SecurityDescriptor SR_SECURITY_DESCRIPTOR //col:395
+UserId uint32 //col:396
+PrimaryGroupId uint32 //col:397
+UserAccountControl uint32 //col:398
+WhichFields uint32 //col:399
+LogonHours LOGON_HOURS //col:400
+BadPasswordCount uint16 //col:401
+LogonCount uint16 //col:402
+CountryCode uint16 //col:403
+CodePage uint16 //col:404
+LmPasswordPresent bool //col:405
+NtPasswordPresent bool //col:406
+PasswordExpired bool //col:407
+PrivateDataSensitive bool //col:408
 }
 
 
-
-type USER_INTERNAL3_INFORMATION struct{
-I1 USER_ALL_INFORMATION //col:377
-LastBadPasswordTime LARGE_INTEGER //col:378
+type  _USER_INTERNAL3_INFORMATION struct{
+I1 USER_ALL_INFORMATION //col:381
+LastBadPasswordTime LARGE_INTEGER //col:382
 }
 
 
-
-type ENCRYPTED_USER_PASSWORD struct{
-Buffer[(SAM_MAX_PASSWORD_LENGTH uint8 //col:382
+type  _ENCRYPTED_USER_PASSWORD struct{
+Buffer[(SAM_MAX_PASSWORD_LENGTH uint8 //col:385
 }
 
 
-
-type USER_INTERNAL4_INFORMATION struct{
-I1 USER_ALL_INFORMATION //col:386
-UserPassword ENCRYPTED_USER_PASSWORD //col:387
-}
-
-
-
-type USER_INTERNAL5_INFORMATION struct{
+type  _USER_INTERNAL4_INFORMATION struct{
+I1 USER_ALL_INFORMATION //col:390
 UserPassword ENCRYPTED_USER_PASSWORD //col:391
-PasswordExpired bool //col:392
 }
 
 
-
-type ENCRYPTED_USER_PASSWORD_NEW struct{
-Buffer[(SAM_MAX_PASSWORD_LENGTH uint8 //col:396
+type  _USER_INTERNAL5_INFORMATION struct{
+UserPassword ENCRYPTED_USER_PASSWORD //col:395
+PasswordExpired bool //col:396
 }
 
 
-
-type USER_INTERNAL4_INFORMATION_NEW struct{
-I1 USER_ALL_INFORMATION //col:400
-UserPassword ENCRYPTED_USER_PASSWORD_NEW //col:401
+type  _ENCRYPTED_USER_PASSWORD_NEW struct{
+Buffer[(SAM_MAX_PASSWORD_LENGTH uint8 //col:399
 }
 
 
-
-type USER_INTERNAL5_INFORMATION_NEW struct{
+type  _USER_INTERNAL4_INFORMATION_NEW struct{
+I1 USER_ALL_INFORMATION //col:404
 UserPassword ENCRYPTED_USER_PASSWORD_NEW //col:405
-PasswordExpired bool //col:406
 }
 
 
-
-type USER_ALLOWED_TO_DELEGATE_TO_LIST struct{
-Size uint32 //col:410
-NumSPNs uint32 //col:411
-SPNList[ANYSIZE_ARRAY] UNICODE_STRING //col:412
+type  _USER_INTERNAL5_INFORMATION_NEW struct{
+UserPassword ENCRYPTED_USER_PASSWORD_NEW //col:409
+PasswordExpired bool //col:410
 }
 
 
-
-type USER_INTERNAL6_INFORMATION struct{
-I1 USER_ALL_INFORMATION //col:416
-LastBadPasswordTime LARGE_INTEGER //col:417
-ExtendedFields uint32 //col:418
-UPNDefaulted bool //col:419
-UPN UNICODE_STRING //col:420
-A2D2List PUSER_ALLOWED_TO_DELEGATE_TO_LIST //col:421
+type  _USER_ALLOWED_TO_DELEGATE_TO_LIST struct{
+Size uint32 //col:415
+NumSPNs uint32 //col:416
+SPNList[ANYSIZE_ARRAY] *int16 //col:417
 }
 
 
-
-type USER_EXTENDED_INFORMATION struct{
-ExtendedWhichFields uint32 //col:425
-UserTile SAM_USER_TILE //col:426
-PasswordHint UNICODE_STRING //col:427
-DontShowInLogonUI bool //col:428
-ShellAdminObjectProperties SAM_SHELL_OBJECT_PROPERTIES //col:429
+type  _USER_INTERNAL6_INFORMATION struct{
+I1 USER_ALL_INFORMATION //col:424
+LastBadPasswordTime LARGE_INTEGER //col:425
+ExtendedFields uint32 //col:426
+UPNDefaulted bool //col:427
+UPN *int16 //col:428
+A2D2List PUSER_ALLOWED_TO_DELEGATE_TO_LIST //col:429
 }
 
 
-
-type USER_LOGON_UI_INFORMATION struct{
-PasswordIsBlank bool //col:433
-AccountIsDisabled bool //col:434
+type  _USER_EXTENDED_INFORMATION struct{
+ExtendedWhichFields uint32 //col:432
+UserTile SAM_USER_TILE //col:433
+PasswordHint *int16 //col:434
+DontShowInLogonUI bool //col:435
+ShellAdminObjectProperties SAM_SHELL_OBJECT_PROPERTIES //col:436
 }
 
 
-
-type ENCRYPTED_PASSWORD_AES struct{
-AuthData[64] uint8 //col:438
-Salt[SAM_PASSWORD_ENCRYPTION_SALT_LEN] uint8 //col:439
-cbCipher uint32 //col:440
-Cipher PUCHAR //col:441
-PBKDF2Iterations ULONGLONG //col:442
+type  _USER_LOGON_UI_INFORMATION struct{
+PasswordIsBlank bool //col:437
+AccountIsDisabled bool //col:438
 }
 
 
-
-type USER_INTERNAL7_INFORMATION struct{
-UserPassword ENCRYPTED_PASSWORD_AES //col:446
-PasswordExpired bool //col:447
+type  _ENCRYPTED_PASSWORD_AES struct{
+AuthData[64] uint8 //col:445
+Salt[SAM_PASSWORD_ENCRYPTION_SALT_LEN] uint8 //col:446
+cbCipher uint32 //col:447
+Cipher PUCHAR //col:448
+PBKDF2Iterations ULONGLONG //col:449
 }
 
 
-
-type USER_INTERNAL8_INFORMATION struct{
-I1 USER_ALL_INFORMATION //col:451
-UserPassword ENCRYPTED_PASSWORD_AES //col:452
+type  _USER_INTERNAL7_INFORMATION struct{
+UserPassword ENCRYPTED_PASSWORD_AES //col:450
+PasswordExpired bool //col:451
 }
 
 
-
-type USER_PWD_CHANGE_FAILURE_INFORMATION struct{
-ExtendedFailureReason uint32 //col:456
-FilterModuleName UNICODE_STRING //col:457
+type  _USER_INTERNAL8_INFORMATION struct{
+I1 USER_ALL_INFORMATION //col:455
+UserPassword ENCRYPTED_PASSWORD_AES //col:456
 }
 
 
-
-type SAM_GROUP_MEMBER_ID struct{
-MemberRid uint32 //col:461
+type  _USER_PWD_CHANGE_FAILURE_INFORMATION struct{
+ExtendedFailureReason uint32 //col:460
+FilterModuleName *int16 //col:461
 }
 
 
-
-type SAM_ALIAS_MEMBER_ID struct{
-MemberSid PSID //col:465
+type  _SAM_GROUP_MEMBER_ID struct{
+MemberRid uint32 //col:464
 }
 
 
-
-type SAM_VALIDATE_PASSWORD_HASH struct{
-Length uint32 //col:469
-PUCHAR _Field_size_bytes_(Length) //col:470
+type  _SAM_ALIAS_MEMBER_ID struct{
+MemberSid PSID //col:468
 }
 
 
-
-type SAM_VALIDATE_PERSISTED_FIELDS struct{
-PresentFields uint32 //col:474
-PasswordLastSet LARGE_INTEGER //col:475
-BadPasswordTime LARGE_INTEGER //col:476
-LockoutTime LARGE_INTEGER //col:477
-BadPasswordCount uint32 //col:478
-PasswordHistoryLength uint32 //col:479
-PSAM_VALIDATE_PASSWORD_HASH _Field_size_bytes_(PasswordHistoryLength) //col:480
+type  _SAM_VALIDATE_PASSWORD_HASH struct{
+Length uint32 //col:473
+PUCHAR _Field_size_bytes_(Length) //col:474
 }
 
 
-
-type SAM_VALIDATE_STANDARD_OUTPUT_ARG struct{
-ChangedPersistedFields SAM_VALIDATE_PERSISTED_FIELDS //col:484
-ValidationStatus SAM_VALIDATE_VALIDATION_STATUS //col:485
+type  _SAM_VALIDATE_PERSISTED_FIELDS struct{
+PresentFields uint32 //col:483
+PasswordLastSet LARGE_INTEGER //col:484
+BadPasswordTime LARGE_INTEGER //col:485
+LockoutTime LARGE_INTEGER //col:486
+BadPasswordCount uint32 //col:487
+PasswordHistoryLength uint32 //col:488
+PSAM_VALIDATE_PASSWORD_HASH _Field_size_bytes_(PasswordHistoryLength) //col:489
 }
 
 
-
-type SAM_VALIDATE_AUTHENTICATION_INPUT_ARG struct{
-InputPersistedFields SAM_VALIDATE_PERSISTED_FIELDS //col:489
-PasswordMatched bool //col:490
+type  _SAM_VALIDATE_STANDARD_OUTPUT_ARG struct{
+ChangedPersistedFields SAM_VALIDATE_PERSISTED_FIELDS //col:488
+ValidationStatus SAM_VALIDATE_VALIDATION_STATUS //col:489
 }
 
 
-
-type SAM_VALIDATE_PASSWORD_CHANGE_INPUT_ARG struct{
-InputPersistedFields SAM_VALIDATE_PERSISTED_FIELDS //col:494
-ClearPassword UNICODE_STRING //col:495
-UserAccountName UNICODE_STRING //col:496
-HashedPassword SAM_VALIDATE_PASSWORD_HASH //col:497
-PasswordMatch bool //col:498
+type  _SAM_VALIDATE_AUTHENTICATION_INPUT_ARG struct{
+InputPersistedFields SAM_VALIDATE_PERSISTED_FIELDS //col:493
+PasswordMatched bool //col:494
 }
 
 
-
-type SAM_VALIDATE_PASSWORD_RESET_INPUT_ARG struct{
-InputPersistedFields SAM_VALIDATE_PERSISTED_FIELDS //col:502
-ClearPassword UNICODE_STRING //col:503
-UserAccountName UNICODE_STRING //col:504
-HashedPassword SAM_VALIDATE_PASSWORD_HASH //col:505
-PasswordMustChangeAtNextLogon bool //col:506
-ClearLockout bool //col:507
+type  _SAM_VALIDATE_PASSWORD_CHANGE_INPUT_ARG struct{
+InputPersistedFields SAM_VALIDATE_PERSISTED_FIELDS //col:501
+ClearPassword *int16 //col:502
+UserAccountName *int16 //col:503
+HashedPassword SAM_VALIDATE_PASSWORD_HASH //col:504
+PasswordMatch bool //col:505
 }
 
 
-
-type SAM_OPERATION_OBJCHG_INPUT struct{
-Register bool //col:511
-EventHandle ULONG64 //col:512
-ObjectType SECURITY_DB_OBJECT_TYPE //col:513
-ProcessID uint32 //col:514
+type  _SAM_VALIDATE_PASSWORD_RESET_INPUT_ARG struct{
+InputPersistedFields SAM_VALIDATE_PERSISTED_FIELDS //col:510
+ClearPassword *int16 //col:511
+UserAccountName *int16 //col:512
+HashedPassword SAM_VALIDATE_PASSWORD_HASH //col:513
+PasswordMustChangeAtNextLogon bool //col:514
+ClearLockout bool //col:515
 }
 
 
-
-type SAM_OPERATION_OBJCHG_OUTPUT struct{
-Reserved uint32 //col:518
+type  _SAM_OPERATION_OBJCHG_INPUT struct{
+Register bool //col:517
+EventHandle ULONG64 //col:518
+ObjectType SECURITY_DB_OBJECT_TYPE //col:519
+ProcessID uint32 //col:520
 }
 
+
+type  _SAM_OPERATION_OBJCHG_OUTPUT struct{
+Reserved uint32 //col:521
+}
 
 
 

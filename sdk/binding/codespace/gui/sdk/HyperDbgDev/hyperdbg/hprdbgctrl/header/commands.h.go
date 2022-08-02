@@ -1,11 +1,10 @@
 package header
 
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbgctrl\header\commands.h.back
 
-
-type COMMAND_DETAIL struct {
-	CommandFunction     CommandFuncType     //col:3
-	CommandHelpFunction CommandHelpFuncType //col:4
-	CommandAttrib       uint64              //col:5
+type _COMMAND_DETAIL struct {
+	CommandFunction     CommandFuncType     //col:8
+	CommandHelpFunction CommandHelpFuncType //col:9
+	CommandAttrib       uint64              //col:10
 }
-
 

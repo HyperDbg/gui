@@ -1,5 +1,5 @@
 package Zydis
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\DecoderTypes.h.back
 
 const(
     ZYDIS_MEMOP_TYPE_INVALID = 1  //col:3
@@ -186,39 +186,37 @@ const(
 
 
 
-type typedef struct ZydisDecodedOperand_ struct{
-id ZyanU8 //col:3
-type ZydisOperandType //col:4
-visibility ZydisOperandVisibility //col:5
-actions ZydisOperandActions //col:6
-encoding ZydisOperandEncoding //col:7
-size ZyanU16 //col:8
-element_type ZydisElementType //col:9
-element_size ZydisElementSize //col:10
-element_count ZyanU16 //col:11
-StructZydisDecodedOperandReg struct ZydisDecodedOperandReg_ //col:12
-value ZydisRegister //col:14
+type  ZydisDecodedOperand_ struct{
+id ZyanU8 //col:17
+type ZydisOperandType //col:18
+visibility ZydisOperandVisibility //col:19
+actions ZydisOperandActions //col:20
+encoding ZydisOperandEncoding //col:21
+size ZyanU16 //col:22
+element_type ZydisElementType //col:23
+element_size ZydisElementSize //col:24
+element_count ZyanU16 //col:25
+StructZydisDecodedOperandReg struct ZydisDecodedOperandReg_ //col:26
+value ZydisRegister //col:28
 }
 
 
-
-type typedef struct ZydisDecodedInstruction_ struct{
-machine_mode ZydisMachineMode //col:47
-mnemonic ZydisMnemonic //col:48
-length ZyanU8 //col:49
-ZydisInstructionEncoding // //col:50
-opcode_map ZydisOpcodeMap //col:51
-opcode ZyanU8 //col:52
-stack_width ZyanU8 //col:53
-operand_width ZyanU8 //col:54
-address_width ZyanU8 //col:55
-operand_count ZyanU8 //col:56
-operands[ZYDIS_MAX_OPERAND_COUNT] ZydisDecodedOperand //col:57
-ZydisInstructionAttributes // //col:58
-StructZydisDecodedInstructionAccessedFlags struct ZydisDecodedInstructionAccessedFlags_ //col:59
-action ZydisCPUFlagAction //col:61
+type  ZydisDecodedInstruction_ struct{
+machine_mode ZydisMachineMode //col:64
+mnemonic ZydisMnemonic //col:65
+length ZyanU8 //col:66
+encoding ZydisInstructionEncoding //col:67
+opcode_map ZydisOpcodeMap //col:68
+opcode ZyanU8 //col:69
+stack_width ZyanU8 //col:70
+operand_width ZyanU8 //col:71
+address_width ZyanU8 //col:72
+operand_count ZyanU8 //col:73
+operands[ZYDIS_MAX_OPERAND_COUNT] ZydisDecodedOperand //col:74
+attributes ZydisInstructionAttributes //col:75
+StructZydisDecodedInstructionAccessedFlags struct ZydisDecodedInstructionAccessedFlags_ //col:76
+action ZydisCPUFlagAction //col:78
 }
-
 
 
 

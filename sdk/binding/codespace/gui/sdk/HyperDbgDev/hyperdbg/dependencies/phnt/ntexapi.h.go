@@ -1,5 +1,5 @@
 package phnt
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntexapi.h.back
 
 const(
     FilterBootOptionOperationOpenSystemStore = 1  //col:3
@@ -629,2862 +629,2578 @@ const(
 
 
 
-type BOOT_ENTRY struct{
-Version uint32 //col:3
-Length uint32 //col:4
-Id uint32 //col:5
-Attributes uint32 //col:6
-FriendlyNameOffset uint32 //col:7
-BootFilePathOffset uint32 //col:8
-OsOptionsLength uint32 //col:9
-OsOptions[1] uint8 //col:10
+type  _BOOT_ENTRY struct{
+Version uint32 //col:13
+Length uint32 //col:14
+Id uint32 //col:15
+Attributes uint32 //col:16
+FriendlyNameOffset uint32 //col:17
+BootFilePathOffset uint32 //col:18
+OsOptionsLength uint32 //col:19
+OsOptions[1] uint8 //col:20
 }
 
 
-
-type BOOT_ENTRY_LIST struct{
-NextEntryOffset uint32 //col:14
-BootEntry BOOT_ENTRY //col:15
+type  _BOOT_ENTRY_LIST struct{
+NextEntryOffset uint32 //col:18
+BootEntry BOOT_ENTRY //col:19
 }
 
 
-
-type BOOT_OPTIONS struct{
-Version uint32 //col:19
-Length uint32 //col:20
-Timeout uint32 //col:21
-CurrentBootEntryId uint32 //col:22
-NextBootEntryId uint32 //col:23
-HeadlessRedirection[1] WCHAR //col:24
+type  _BOOT_OPTIONS struct{
+Version uint32 //col:27
+Length uint32 //col:28
+Timeout uint32 //col:29
+CurrentBootEntryId uint32 //col:30
+NextBootEntryId uint32 //col:31
+HeadlessRedirection[1] WCHAR //col:32
 }
 
 
-
-type FILE_PATH struct{
-Version uint32 //col:28
-Length uint32 //col:29
-Type uint32 //col:30
-FilePath[1] uint8 //col:31
+type  _FILE_PATH struct{
+Version uint32 //col:34
+Length uint32 //col:35
+Type uint32 //col:36
+FilePath[1] uint8 //col:37
 }
 
 
-
-type EFI_DRIVER_ENTRY struct{
-Version uint32 //col:35
-Length uint32 //col:36
-Id uint32 //col:37
-FriendlyNameOffset uint32 //col:38
-DriverFilePathOffset uint32 //col:39
+type  _EFI_DRIVER_ENTRY struct{
+Version uint32 //col:42
+Length uint32 //col:43
+Id uint32 //col:44
+FriendlyNameOffset uint32 //col:45
+DriverFilePathOffset uint32 //col:46
 }
 
 
-
-type EFI_DRIVER_ENTRY_LIST struct{
-NextEntryOffset uint32 //col:43
-DriverEntry EFI_DRIVER_ENTRY //col:44
+type  _EFI_DRIVER_ENTRY_LIST struct{
+NextEntryOffset uint32 //col:47
+DriverEntry EFI_DRIVER_ENTRY //col:48
 }
 
 
-
-type EVENT_BASIC_INFORMATION struct{
-EventType EVENT_TYPE //col:48
-EventState LONG //col:49
+type  _EVENT_BASIC_INFORMATION struct{
+EventType EVENT_TYPE //col:52
+EventState int32 //col:53
 }
 
 
-
-type MUTANT_BASIC_INFORMATION struct{
-CurrentCount LONG //col:53
-OwnedByCaller bool //col:54
-AbandonedState bool //col:55
+type  _MUTANT_BASIC_INFORMATION struct{
+CurrentCount int32 //col:58
+OwnedByCaller bool //col:59
+AbandonedState bool //col:60
 }
 
 
-
-type MUTANT_OWNER_INFORMATION struct{
-ClientId CLIENT_ID //col:59
+type  _MUTANT_OWNER_INFORMATION struct{
+ClientId CLIENT_ID //col:62
 }
 
 
-
-type SEMAPHORE_BASIC_INFORMATION struct{
-CurrentCount LONG //col:63
-MaximumCount LONG //col:64
+type  _SEMAPHORE_BASIC_INFORMATION struct{
+CurrentCount int32 //col:67
+MaximumCount int32 //col:68
 }
 
 
-
-type TIMER_BASIC_INFORMATION struct{
-RemainingTime LARGE_INTEGER //col:68
-TimerState bool //col:69
+type  _TIMER_BASIC_INFORMATION struct{
+RemainingTime LARGE_INTEGER //col:72
+TimerState bool //col:73
 }
 
 
-
-type TIMER_SET_COALESCABLE_TIMER_INFO struct{
-LARGE_INTEGER _In_ //col:73
-PTIMER_APC_ROUTINE _In_opt_ //col:74
-PVOID _In_opt_ //col:75
-_In_opt_ // //col:76
-ULONG _In_opt_ //col:77
-ULONG _In_ //col:78
-PBOOLEAN _Out_opt_ //col:79
+type  _TIMER_SET_COALESCABLE_TIMER_INFO struct{
+LARGE_INTEGER _In_ //col:82
+PTIMER_APC_ROUTINE _In_opt_ //col:83
+PVOID _In_opt_ //col:84
+struct _In_opt_ //col:85
+ULONG _In_opt_ //col:86
+ULONG _In_ //col:87
+PBOOLEAN _Out_opt_ //col:88
 }
 
 
-
-type T2_SET_PARAMETERS_V0 struct{
-Version uint32 //col:83
-Reserved uint32 //col:84
-NoWakeTolerance LONGLONG //col:85
+type  _T2_SET_PARAMETERS_V0 struct{
+Version uint32 //col:88
+Reserved uint32 //col:89
+NoWakeTolerance LONGLONG //col:90
 }
 
 
-
-type WNF_STATE_NAME struct{
-Data[2] uint32 //col:89
+type  _WNF_STATE_NAME struct{
+Data[2] uint32 //col:92
 }
 
 
-
-type WNF_TYPE_ID struct{
-TypeId GUID //col:93
+type  _WNF_TYPE_ID struct{
+TypeId GUID //col:96
 }
 
 
-
-type WNF_DELIVERY_DESCRIPTOR struct{
-SubscriptionId ULONGLONG //col:97
-StateName WNF_STATE_NAME //col:98
-ChangeStamp WNF_CHANGE_STAMP //col:99
-StateDataSize uint32 //col:100
-EventMask uint32 //col:101
-TypeId WNF_TYPE_ID //col:102
-StateDataOffset uint32 //col:103
+type  _WNF_DELIVERY_DESCRIPTOR struct{
+SubscriptionId ULONGLONG //col:106
+StateName WNF_STATE_NAME //col:107
+ChangeStamp WNF_CHANGE_STAMP //col:108
+StateDataSize uint32 //col:109
+EventMask uint32 //col:110
+TypeId WNF_TYPE_ID //col:111
+StateDataOffset uint32 //col:112
 }
 
 
-
-type WORKER_FACTORY_BASIC_INFORMATION struct{
-Timeout LARGE_INTEGER //col:107
-RetryTimeout LARGE_INTEGER //col:108
-IdleTimeout LARGE_INTEGER //col:109
-Paused bool //col:110
-TimerSet bool //col:111
-QueuedToExWorker bool //col:112
-MayCreate bool //col:113
-CreateInProgress bool //col:114
-InsertedIntoQueue bool //col:115
-Shutdown bool //col:116
-BindingCount uint32 //col:117
-ThreadMinimum uint32 //col:118
-ThreadMaximum uint32 //col:119
-PendingWorkerCount uint32 //col:120
-WaitingWorkerCount uint32 //col:121
-TotalWorkerCount uint32 //col:122
-ReleaseCount uint32 //col:123
-InfiniteWaitGoal LONGLONG //col:124
-StartRoutine PVOID //col:125
-StartParameter PVOID //col:126
-ProcessId HANDLE //col:127
-StackReserve SIZE_T //col:128
-StackCommit SIZE_T //col:129
-LastThreadCreationStatus NTSTATUS //col:130
+type  _WORKER_FACTORY_BASIC_INFORMATION struct{
+Timeout LARGE_INTEGER //col:133
+RetryTimeout LARGE_INTEGER //col:134
+IdleTimeout LARGE_INTEGER //col:135
+Paused bool //col:136
+TimerSet bool //col:137
+QueuedToExWorker bool //col:138
+MayCreate bool //col:139
+CreateInProgress bool //col:140
+InsertedIntoQueue bool //col:141
+Shutdown bool //col:142
+BindingCount uint32 //col:143
+ThreadMinimum uint32 //col:144
+ThreadMaximum uint32 //col:145
+PendingWorkerCount uint32 //col:146
+WaitingWorkerCount uint32 //col:147
+TotalWorkerCount uint32 //col:148
+ReleaseCount uint32 //col:149
+InfiniteWaitGoal LONGLONG //col:150
+StartRoutine uintptr //col:151
+StartParameter uintptr //col:152
+ProcessId uintptr //col:153
+StackReserve int64 //col:154
+StackCommit int64 //col:155
+LastThreadCreationStatus NTSTATUS //col:156
 }
 
 
-
-type WORKER_FACTORY_DEFERRED_WORK struct{
-struct // //col:134
-AlpcSendMessagePort PVOID //col:135
-AlpcSendMessageFlags uint32 //col:136
-Flags uint32 //col:137
+type  _WORKER_FACTORY_DEFERRED_WORK struct{
+_PORT_MESSAGE struct //col:140
+AlpcSendMessagePort uintptr //col:141
+AlpcSendMessageFlags uint32 //col:142
+Flags uint32 //col:143
 }
 
 
-
-type SYSTEM_BASIC_INFORMATION struct{
-Reserved uint32 //col:141
-TimerResolution uint32 //col:142
-PageSize uint32 //col:143
-NumberOfPhysicalPages uint32 //col:144
-LowestPhysicalPageNumber uint32 //col:145
-HighestPhysicalPageNumber uint32 //col:146
-AllocationGranularity uint32 //col:147
-MinimumUserModeAddress ULONG_PTR //col:148
-MaximumUserModeAddress ULONG_PTR //col:149
-ActiveProcessorsAffinityMask KAFFINITY //col:150
-NumberOfProcessors CCHAR //col:151
+type  _SYSTEM_BASIC_INFORMATION struct{
+Reserved uint32 //col:154
+TimerResolution uint32 //col:155
+PageSize uint32 //col:156
+NumberOfPhysicalPages uint32 //col:157
+LowestPhysicalPageNumber uint32 //col:158
+HighestPhysicalPageNumber uint32 //col:159
+AllocationGranularity uint32 //col:160
+MinimumUserModeAddress ULONG_PTR //col:161
+MaximumUserModeAddress ULONG_PTR //col:162
+ActiveProcessorsAffinityMask KAFFINITY //col:163
+NumberOfProcessors CCHAR //col:164
 }
 
 
-
-type SYSTEM_PROCESSOR_INFORMATION struct{
-ProcessorArchitecture USHORT //col:155
-ProcessorLevel USHORT //col:156
-ProcessorRevision USHORT //col:157
-MaximumProcessors USHORT //col:158
-ProcessorFeatureBits uint32 //col:159
+type  _SYSTEM_PROCESSOR_INFORMATION struct{
+ProcessorArchitecture uint16 //col:162
+ProcessorLevel uint16 //col:163
+ProcessorRevision uint16 //col:164
+MaximumProcessors uint16 //col:165
+ProcessorFeatureBits uint32 //col:166
 }
 
 
-
-type SYSTEM_PERFORMANCE_INFORMATION struct{
-IdleProcessTime LARGE_INTEGER //col:163
-IoReadTransferCount LARGE_INTEGER //col:164
-IoWriteTransferCount LARGE_INTEGER //col:165
-IoOtherTransferCount LARGE_INTEGER //col:166
-IoReadOperationCount uint32 //col:167
-IoWriteOperationCount uint32 //col:168
-IoOtherOperationCount uint32 //col:169
-AvailablePages uint32 //col:170
-CommittedPages uint32 //col:171
-CommitLimit uint32 //col:172
-PeakCommitment uint32 //col:173
-PageFaultCount uint32 //col:174
-CopyOnWriteCount uint32 //col:175
-TransitionCount uint32 //col:176
-CacheTransitionCount uint32 //col:177
-DemandZeroCount uint32 //col:178
-PageReadCount uint32 //col:179
-PageReadIoCount uint32 //col:180
-CacheReadCount uint32 //col:181
-CacheIoCount uint32 //col:182
-DirtyPagesWriteCount uint32 //col:183
-DirtyWriteIoCount uint32 //col:184
-MappedPagesWriteCount uint32 //col:185
-MappedWriteIoCount uint32 //col:186
-PagedPoolPages uint32 //col:187
-NonPagedPoolPages uint32 //col:188
-PagedPoolAllocs uint32 //col:189
-PagedPoolFrees uint32 //col:190
-NonPagedPoolAllocs uint32 //col:191
-NonPagedPoolFrees uint32 //col:192
-FreeSystemPtes uint32 //col:193
-ResidentSystemCodePage uint32 //col:194
-TotalSystemDriverPages uint32 //col:195
-TotalSystemCodePages uint32 //col:196
-NonPagedPoolLookasideHits uint32 //col:197
-PagedPoolLookasideHits uint32 //col:198
-AvailablePagedPoolPages uint32 //col:199
-ResidentSystemCachePage uint32 //col:200
-ResidentPagedPoolPage uint32 //col:201
-ResidentSystemDriverPage uint32 //col:202
-CcFastReadNoWait uint32 //col:203
-CcFastReadWait uint32 //col:204
-CcFastReadResourceMiss uint32 //col:205
-CcFastReadNotPossible uint32 //col:206
-CcFastMdlReadNoWait uint32 //col:207
-CcFastMdlReadWait uint32 //col:208
-CcFastMdlReadResourceMiss uint32 //col:209
-CcFastMdlReadNotPossible uint32 //col:210
-CcMapDataNoWait uint32 //col:211
-CcMapDataWait uint32 //col:212
-CcMapDataNoWaitMiss uint32 //col:213
-CcMapDataWaitMiss uint32 //col:214
-CcPinMappedDataCount uint32 //col:215
-CcPinReadNoWait uint32 //col:216
-CcPinReadWait uint32 //col:217
-CcPinReadNoWaitMiss uint32 //col:218
-CcPinReadWaitMiss uint32 //col:219
-CcCopyReadNoWait uint32 //col:220
-CcCopyReadWait uint32 //col:221
-CcCopyReadNoWaitMiss uint32 //col:222
-CcCopyReadWaitMiss uint32 //col:223
-CcMdlReadNoWait uint32 //col:224
-CcMdlReadWait uint32 //col:225
-CcMdlReadNoWaitMiss uint32 //col:226
-CcMdlReadWaitMiss uint32 //col:227
-CcReadAheadIos uint32 //col:228
-CcLazyWriteIos uint32 //col:229
-CcLazyWritePages uint32 //col:230
-CcDataFlushes uint32 //col:231
-CcDataPages uint32 //col:232
-ContextSwitches uint32 //col:233
-FirstLevelTbFills uint32 //col:234
-SecondLevelTbFills uint32 //col:235
-SystemCalls uint32 //col:236
-CcTotalDirtyPages ULONGLONG //col:237
-CcDirtyPageThreshold ULONGLONG //col:238
-ResidentAvailablePages LONGLONG //col:239
-SharedCommittedPages ULONGLONG //col:240
+type  _SYSTEM_PERFORMANCE_INFORMATION struct{
+IdleProcessTime LARGE_INTEGER //col:243
+IoReadTransferCount LARGE_INTEGER //col:244
+IoWriteTransferCount LARGE_INTEGER //col:245
+IoOtherTransferCount LARGE_INTEGER //col:246
+IoReadOperationCount uint32 //col:247
+IoWriteOperationCount uint32 //col:248
+IoOtherOperationCount uint32 //col:249
+AvailablePages uint32 //col:250
+CommittedPages uint32 //col:251
+CommitLimit uint32 //col:252
+PeakCommitment uint32 //col:253
+PageFaultCount uint32 //col:254
+CopyOnWriteCount uint32 //col:255
+TransitionCount uint32 //col:256
+CacheTransitionCount uint32 //col:257
+DemandZeroCount uint32 //col:258
+PageReadCount uint32 //col:259
+PageReadIoCount uint32 //col:260
+CacheReadCount uint32 //col:261
+CacheIoCount uint32 //col:262
+DirtyPagesWriteCount uint32 //col:263
+DirtyWriteIoCount uint32 //col:264
+MappedPagesWriteCount uint32 //col:265
+MappedWriteIoCount uint32 //col:266
+PagedPoolPages uint32 //col:267
+NonPagedPoolPages uint32 //col:268
+PagedPoolAllocs uint32 //col:269
+PagedPoolFrees uint32 //col:270
+NonPagedPoolAllocs uint32 //col:271
+NonPagedPoolFrees uint32 //col:272
+FreeSystemPtes uint32 //col:273
+ResidentSystemCodePage uint32 //col:274
+TotalSystemDriverPages uint32 //col:275
+TotalSystemCodePages uint32 //col:276
+NonPagedPoolLookasideHits uint32 //col:277
+PagedPoolLookasideHits uint32 //col:278
+AvailablePagedPoolPages uint32 //col:279
+ResidentSystemCachePage uint32 //col:280
+ResidentPagedPoolPage uint32 //col:281
+ResidentSystemDriverPage uint32 //col:282
+CcFastReadNoWait uint32 //col:283
+CcFastReadWait uint32 //col:284
+CcFastReadResourceMiss uint32 //col:285
+CcFastReadNotPossible uint32 //col:286
+CcFastMdlReadNoWait uint32 //col:287
+CcFastMdlReadWait uint32 //col:288
+CcFastMdlReadResourceMiss uint32 //col:289
+CcFastMdlReadNotPossible uint32 //col:290
+CcMapDataNoWait uint32 //col:291
+CcMapDataWait uint32 //col:292
+CcMapDataNoWaitMiss uint32 //col:293
+CcMapDataWaitMiss uint32 //col:294
+CcPinMappedDataCount uint32 //col:295
+CcPinReadNoWait uint32 //col:296
+CcPinReadWait uint32 //col:297
+CcPinReadNoWaitMiss uint32 //col:298
+CcPinReadWaitMiss uint32 //col:299
+CcCopyReadNoWait uint32 //col:300
+CcCopyReadWait uint32 //col:301
+CcCopyReadNoWaitMiss uint32 //col:302
+CcCopyReadWaitMiss uint32 //col:303
+CcMdlReadNoWait uint32 //col:304
+CcMdlReadWait uint32 //col:305
+CcMdlReadNoWaitMiss uint32 //col:306
+CcMdlReadWaitMiss uint32 //col:307
+CcReadAheadIos uint32 //col:308
+CcLazyWriteIos uint32 //col:309
+CcLazyWritePages uint32 //col:310
+CcDataFlushes uint32 //col:311
+CcDataPages uint32 //col:312
+ContextSwitches uint32 //col:313
+FirstLevelTbFills uint32 //col:314
+SecondLevelTbFills uint32 //col:315
+SystemCalls uint32 //col:316
+CcTotalDirtyPages ULONGLONG //col:317
+CcDirtyPageThreshold ULONGLONG //col:318
+ResidentAvailablePages LONGLONG //col:319
+SharedCommittedPages ULONGLONG //col:320
 }
 
 
-
-type SYSTEM_TIMEOFDAY_INFORMATION struct{
-BootTime LARGE_INTEGER //col:244
-CurrentTime LARGE_INTEGER //col:245
-TimeZoneBias LARGE_INTEGER //col:246
-TimeZoneId uint32 //col:247
-Reserved uint32 //col:248
-BootTimeBias ULONGLONG //col:249
-SleepTimeBias ULONGLONG //col:250
+type  _SYSTEM_TIMEOFDAY_INFORMATION struct{
+BootTime LARGE_INTEGER //col:253
+CurrentTime LARGE_INTEGER //col:254
+TimeZoneBias LARGE_INTEGER //col:255
+TimeZoneId uint32 //col:256
+Reserved uint32 //col:257
+BootTimeBias ULONGLONG //col:258
+SleepTimeBias ULONGLONG //col:259
 }
 
 
-
-type SYSTEM_THREAD_INFORMATION struct{
-KernelTime LARGE_INTEGER //col:254
-UserTime LARGE_INTEGER //col:255
-CreateTime LARGE_INTEGER //col:256
-WaitTime uint32 //col:257
-StartAddress PVOID //col:258
-ClientId CLIENT_ID //col:259
-Priority KPRIORITY //col:260
-BasePriority KPRIORITY //col:261
-ContextSwitches uint32 //col:262
-ThreadState KTHREAD_STATE //col:263
-WaitReason KWAIT_REASON //col:264
+type  _SYSTEM_THREAD_INFORMATION struct{
+KernelTime LARGE_INTEGER //col:267
+UserTime LARGE_INTEGER //col:268
+CreateTime LARGE_INTEGER //col:269
+WaitTime uint32 //col:270
+StartAddress uintptr //col:271
+ClientId CLIENT_ID //col:272
+Priority KPRIORITY //col:273
+BasePriority KPRIORITY //col:274
+ContextSwitches uint32 //col:275
+ThreadState KTHREAD_STATE //col:276
+WaitReason KWAIT_REASON //col:277
 }
-
 
 
 type  struct{
-struct //typedef //col:266
-ThreadInfo SYSTEM_THREAD_INFORMATION //col:269
-StackBase PVOID //col:270
-StackLimit PVOID //col:271
-Win32StartAddress PVOID //col:272
-TebBase PTEB //col:273
-Reserved2 ULONG_PTR //col:274
-Reserved3 ULONG_PTR //col:275
-Reserved4 ULONG_PTR //col:276
+struct typedef //col:277
+ThreadInfo SYSTEM_THREAD_INFORMATION //col:280
+StackBase uintptr //col:281
+StackLimit uintptr //col:282
+Win32StartAddress uintptr //col:283
+TebBase PTEB //col:284
+Reserved2 ULONG_PTR //col:285
+Reserved3 ULONG_PTR //col:286
+Reserved4 ULONG_PTR //col:287
 }
 
 
-
-type SYSTEM_EXTENDED_THREAD_INFORMATION struct{
-ThreadInfo SYSTEM_THREAD_INFORMATION //col:269
-StackBase PVOID //col:270
-StackLimit PVOID //col:271
-Win32StartAddress PVOID //col:272
-TebBase PTEB //col:273
-Reserved2 ULONG_PTR //col:274
-Reserved3 ULONG_PTR //col:275
-Reserved4 ULONG_PTR //col:276
+type  _SYSTEM_PROCESS_INFORMATION struct{
+NextEntryOffset uint32 //col:317
+NumberOfThreads uint32 //col:318
+WorkingSetPrivateSize LARGE_INTEGER //col:319
+HardFaultCount uint32 //col:320
+NumberOfThreadsHighWatermark uint32 //col:321
+CycleTime ULONGLONG //col:322
+CreateTime LARGE_INTEGER //col:323
+UserTime LARGE_INTEGER //col:324
+KernelTime LARGE_INTEGER //col:325
+ImageName *int16 //col:326
+BasePriority KPRIORITY //col:327
+UniqueProcessId uintptr //col:328
+InheritedFromUniqueProcessId uintptr //col:329
+HandleCount uint32 //col:330
+SessionId uint32 //col:331
+UniqueProcessKey ULONG_PTR //col:332
+PeakVirtualSize int64 //col:333
+VirtualSize int64 //col:334
+PageFaultCount uint32 //col:335
+PeakWorkingSetSize int64 //col:336
+WorkingSetSize int64 //col:337
+QuotaPeakPagedPoolUsage int64 //col:338
+QuotaPagedPoolUsage int64 //col:339
+QuotaPeakNonPagedPoolUsage int64 //col:340
+QuotaNonPagedPoolUsage int64 //col:341
+PagefileUsage int64 //col:342
+PeakPagefileUsage int64 //col:343
+PrivatePageCount int64 //col:344
+ReadOperationCount LARGE_INTEGER //col:345
+WriteOperationCount LARGE_INTEGER //col:346
+OtherOperationCount LARGE_INTEGER //col:347
+ReadTransferCount LARGE_INTEGER //col:348
+WriteTransferCount LARGE_INTEGER //col:349
+OtherTransferCount LARGE_INTEGER //col:350
+Threads[1] SYSTEM_THREAD_INFORMATION //col:351
 }
 
 
-
-type SYSTEM_PROCESS_INFORMATION struct{
-NextEntryOffset uint32 //col:280
-NumberOfThreads uint32 //col:281
-WorkingSetPrivateSize LARGE_INTEGER //col:282
-HardFaultCount uint32 //col:283
-NumberOfThreadsHighWatermark uint32 //col:284
-CycleTime ULONGLONG //col:285
-CreateTime LARGE_INTEGER //col:286
-UserTime LARGE_INTEGER //col:287
-KernelTime LARGE_INTEGER //col:288
-ImageName UNICODE_STRING //col:289
-BasePriority KPRIORITY //col:290
-UniqueProcessId HANDLE //col:291
-InheritedFromUniqueProcessId HANDLE //col:292
-HandleCount uint32 //col:293
-SessionId uint32 //col:294
-UniqueProcessKey ULONG_PTR //col:295
-PeakVirtualSize SIZE_T //col:296
-VirtualSize SIZE_T //col:297
-PageFaultCount uint32 //col:298
-PeakWorkingSetSize SIZE_T //col:299
-WorkingSetSize SIZE_T //col:300
-QuotaPeakPagedPoolUsage SIZE_T //col:301
-QuotaPagedPoolUsage SIZE_T //col:302
-QuotaPeakNonPagedPoolUsage SIZE_T //col:303
-QuotaNonPagedPoolUsage SIZE_T //col:304
-PagefileUsage SIZE_T //col:305
-PeakPagefileUsage SIZE_T //col:306
-PrivatePageCount SIZE_T //col:307
-ReadOperationCount LARGE_INTEGER //col:308
-WriteOperationCount LARGE_INTEGER //col:309
-OtherOperationCount LARGE_INTEGER //col:310
-ReadTransferCount LARGE_INTEGER //col:311
-WriteTransferCount LARGE_INTEGER //col:312
-OtherTransferCount LARGE_INTEGER //col:313
-Threads[1] SYSTEM_THREAD_INFORMATION //col:314
+type  _SYSTEM_CALL_COUNT_INFORMATION struct{
+Length uint32 //col:322
+NumberOfTables uint32 //col:323
 }
 
 
-
-type SYSTEM_CALL_COUNT_INFORMATION struct{
-Length uint32 //col:318
-NumberOfTables uint32 //col:319
+type  _SYSTEM_DEVICE_INFORMATION struct{
+NumberOfDisks uint32 //col:331
+NumberOfFloppies uint32 //col:332
+NumberOfCdRoms uint32 //col:333
+NumberOfTapes uint32 //col:334
+NumberOfSerialPorts uint32 //col:335
+NumberOfParallelPorts uint32 //col:336
 }
 
 
-
-type SYSTEM_DEVICE_INFORMATION struct{
-NumberOfDisks uint32 //col:323
-NumberOfFloppies uint32 //col:324
-NumberOfCdRoms uint32 //col:325
-NumberOfTapes uint32 //col:326
-NumberOfSerialPorts uint32 //col:327
-NumberOfParallelPorts uint32 //col:328
+type  _SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION struct{
+IdleTime LARGE_INTEGER //col:340
+KernelTime LARGE_INTEGER //col:341
+UserTime LARGE_INTEGER //col:342
+DpcTime LARGE_INTEGER //col:343
+InterruptTime LARGE_INTEGER //col:344
+InterruptCount uint32 //col:345
 }
 
 
-
-type SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION struct{
-IdleTime LARGE_INTEGER //col:332
-KernelTime LARGE_INTEGER //col:333
-UserTime LARGE_INTEGER //col:334
-DpcTime LARGE_INTEGER //col:335
-InterruptTime LARGE_INTEGER //col:336
-InterruptCount uint32 //col:337
+type  _SYSTEM_FLAGS_INFORMATION struct{
+Flags uint32 //col:344
 }
 
 
-
-type SYSTEM_FLAGS_INFORMATION struct{
-Flags uint32 //col:341
+type  _SYSTEM_CALL_TIME_INFORMATION struct{
+Length uint32 //col:350
+TotalCalls uint32 //col:351
+TimeOfCalls[1] LARGE_INTEGER //col:352
 }
 
 
-
-type SYSTEM_CALL_TIME_INFORMATION struct{
-Length uint32 //col:345
-TotalCalls uint32 //col:346
-TimeOfCalls[1] LARGE_INTEGER //col:347
+type  _RTL_PROCESS_LOCK_INFORMATION struct{
+Address uintptr //col:363
+Type uint16 //col:364
+CreatorBackTraceIndex uint16 //col:365
+OwningThread uintptr //col:366
+LockCount int32 //col:367
+ContentionCount uint32 //col:368
+EntryCount uint32 //col:369
+RecursionCount int32 //col:370
+NumberOfWaitingShared uint32 //col:371
+NumberOfWaitingExclusive uint32 //col:372
 }
 
 
-
-type RTL_PROCESS_LOCK_INFORMATION struct{
-Address PVOID //col:351
-Type USHORT //col:352
-CreatorBackTraceIndex USHORT //col:353
-OwningThread HANDLE //col:354
-LockCount LONG //col:355
-ContentionCount uint32 //col:356
-EntryCount uint32 //col:357
-RecursionCount LONG //col:358
-NumberOfWaitingShared uint32 //col:359
-NumberOfWaitingExclusive uint32 //col:360
+type  _RTL_PROCESS_LOCKS struct{
+NumberOfLocks uint32 //col:368
+Locks[1] RTL_PROCESS_LOCK_INFORMATION //col:369
 }
 
 
-
-type RTL_PROCESS_LOCKS struct{
-NumberOfLocks uint32 //col:364
-Locks[1] RTL_PROCESS_LOCK_INFORMATION //col:365
+type  _RTL_PROCESS_BACKTRACE_INFORMATION struct{
+SymbolicBackTrace PCHAR //col:376
+TraceCount uint32 //col:377
+Index uint16 //col:378
+Depth uint16 //col:379
+BackTrace[32] uintptr //col:380
 }
 
 
-
-type RTL_PROCESS_BACKTRACE_INFORMATION struct{
-SymbolicBackTrace PCHAR //col:369
-TraceCount uint32 //col:370
-Index USHORT //col:371
-Depth USHORT //col:372
-BackTrace[32] PVOID //col:373
+type  _RTL_PROCESS_BACKTRACES struct{
+CommittedMemory uint32 //col:384
+ReservedMemory uint32 //col:385
+NumberOfBackTraceLookups uint32 //col:386
+NumberOfBackTraces uint32 //col:387
+BackTraces[1] RTL_PROCESS_BACKTRACE_INFORMATION //col:388
 }
 
 
-
-type RTL_PROCESS_BACKTRACES struct{
-CommittedMemory uint32 //col:377
-ReservedMemory uint32 //col:378
-NumberOfBackTraceLookups uint32 //col:379
-NumberOfBackTraces uint32 //col:380
-BackTraces[1] RTL_PROCESS_BACKTRACE_INFORMATION //col:381
+type  _SYSTEM_HANDLE_TABLE_ENTRY_INFO struct{
+UniqueProcessId uint16 //col:394
+CreatorBackTraceIndex uint16 //col:395
+ObjectTypeIndex uint8 //col:396
+HandleAttributes uint8 //col:397
+HandleValue uint16 //col:398
+Object uintptr //col:399
+GrantedAccess uint32 //col:400
 }
 
 
-
-type SYSTEM_HANDLE_TABLE_ENTRY_INFO struct{
-UniqueProcessId USHORT //col:385
-CreatorBackTraceIndex USHORT //col:386
-ObjectTypeIndex uint8 //col:387
-HandleAttributes uint8 //col:388
-HandleValue USHORT //col:389
-Object PVOID //col:390
-GrantedAccess uint32 //col:391
+type  _SYSTEM_HANDLE_INFORMATION struct{
+NumberOfHandles uint32 //col:399
+Handles[1] SYSTEM_HANDLE_TABLE_ENTRY_INFO //col:400
 }
 
 
-
-type SYSTEM_HANDLE_INFORMATION struct{
-NumberOfHandles uint32 //col:395
-Handles[1] SYSTEM_HANDLE_TABLE_ENTRY_INFO //col:396
+type  _SYSTEM_OBJECTTYPE_INFORMATION struct{
+NextEntryOffset uint32 //col:413
+NumberOfObjects uint32 //col:414
+NumberOfHandles uint32 //col:415
+TypeIndex uint32 //col:416
+InvalidAttributes uint32 //col:417
+GenericMapping GENERIC_MAPPING //col:418
+ValidAccessMask uint32 //col:419
+PoolType uint32 //col:420
+SecurityRequired bool //col:421
+WaitableObject bool //col:422
+TypeName *int16 //col:423
 }
 
 
-
-type SYSTEM_OBJECTTYPE_INFORMATION struct{
-NextEntryOffset uint32 //col:400
-NumberOfObjects uint32 //col:401
-NumberOfHandles uint32 //col:402
-TypeIndex uint32 //col:403
-InvalidAttributes uint32 //col:404
-GenericMapping GENERIC_MAPPING //col:405
-ValidAccessMask uint32 //col:406
-PoolType uint32 //col:407
-SecurityRequired bool //col:408
-WaitableObject bool //col:409
-TypeName UNICODE_STRING //col:410
+type  _SYSTEM_OBJECT_INFORMATION struct{
+NextEntryOffset uint32 //col:428
+Object uintptr //col:429
+CreatorUniqueProcess uintptr //col:430
+CreatorBackTraceIndex uint16 //col:431
+Flags uint16 //col:432
+PointerCount int32 //col:433
+HandleCount int32 //col:434
+PagedPoolCharge uint32 //col:435
+NonPagedPoolCharge uint32 //col:436
+ExclusiveProcessId uintptr //col:437
+SecurityDescriptor uintptr //col:438
+NameInfo *int16 //col:439
 }
 
 
-
-type SYSTEM_OBJECT_INFORMATION struct{
-NextEntryOffset uint32 //col:414
-Object PVOID //col:415
-CreatorUniqueProcess HANDLE //col:416
-CreatorBackTraceIndex USHORT //col:417
-Flags USHORT //col:418
-PointerCount LONG //col:419
-HandleCount LONG //col:420
-PagedPoolCharge uint32 //col:421
-NonPagedPoolCharge uint32 //col:422
-ExclusiveProcessId HANDLE //col:423
-SecurityDescriptor PVOID //col:424
-NameInfo UNICODE_STRING //col:425
+type  _SYSTEM_PAGEFILE_INFORMATION struct{
+NextEntryOffset uint32 //col:436
+TotalSize uint32 //col:437
+TotalInUse uint32 //col:438
+PeakUsage uint32 //col:439
+PageFileName *int16 //col:440
 }
 
 
-
-type SYSTEM_PAGEFILE_INFORMATION struct{
-NextEntryOffset uint32 //col:429
-TotalSize uint32 //col:430
-TotalInUse uint32 //col:431
-PeakUsage uint32 //col:432
-PageFileName UNICODE_STRING //col:433
+type  _SYSTEM_VDM_INSTEMUL_INFO struct{
+SegmentNotPresent uint32 //col:473
+VdmOpcode0F uint32 //col:474
+OpcodeESPrefix uint32 //col:475
+OpcodeCSPrefix uint32 //col:476
+OpcodeSSPrefix uint32 //col:477
+OpcodeDSPrefix uint32 //col:478
+OpcodeFSPrefix uint32 //col:479
+OpcodeGSPrefix uint32 //col:480
+OpcodeOPER32Prefix uint32 //col:481
+OpcodeADDR32Prefix uint32 //col:482
+OpcodeINSB uint32 //col:483
+OpcodeINSW uint32 //col:484
+OpcodeOUTSB uint32 //col:485
+OpcodeOUTSW uint32 //col:486
+OpcodePUSHF uint32 //col:487
+OpcodePOPF uint32 //col:488
+OpcodeINTnn uint32 //col:489
+OpcodeINTO uint32 //col:490
+OpcodeIRET uint32 //col:491
+OpcodeINBimm uint32 //col:492
+OpcodeINWimm uint32 //col:493
+OpcodeOUTBimm uint32 //col:494
+OpcodeOUTWimm uint32 //col:495
+OpcodeINB uint32 //col:496
+OpcodeINW uint32 //col:497
+OpcodeOUTB uint32 //col:498
+OpcodeOUTW uint32 //col:499
+OpcodeLOCKPrefix uint32 //col:500
+OpcodeREPNEPrefix uint32 //col:501
+OpcodeREPPrefix uint32 //col:502
+OpcodeHLT uint32 //col:503
+OpcodeCLI uint32 //col:504
+OpcodeSTI uint32 //col:505
+BopCount uint32 //col:506
 }
 
 
-
-type SYSTEM_VDM_INSTEMUL_INFO struct{
-SegmentNotPresent uint32 //col:437
-VdmOpcode0F uint32 //col:438
-OpcodeESPrefix uint32 //col:439
-OpcodeCSPrefix uint32 //col:440
-OpcodeSSPrefix uint32 //col:441
-OpcodeDSPrefix uint32 //col:442
-OpcodeFSPrefix uint32 //col:443
-OpcodeGSPrefix uint32 //col:444
-OpcodeOPER32Prefix uint32 //col:445
-OpcodeADDR32Prefix uint32 //col:446
-OpcodeINSB uint32 //col:447
-OpcodeINSW uint32 //col:448
-OpcodeOUTSB uint32 //col:449
-OpcodeOUTSW uint32 //col:450
-OpcodePUSHF uint32 //col:451
-OpcodePOPF uint32 //col:452
-OpcodeINTnn uint32 //col:453
-OpcodeINTO uint32 //col:454
-OpcodeIRET uint32 //col:455
-OpcodeINBimm uint32 //col:456
-OpcodeINWimm uint32 //col:457
-OpcodeOUTBimm uint32 //col:458
-OpcodeOUTWimm uint32 //col:459
-OpcodeINB uint32 //col:460
-OpcodeINW uint32 //col:461
-OpcodeOUTB uint32 //col:462
-OpcodeOUTW uint32 //col:463
-OpcodeLOCKPrefix uint32 //col:464
-OpcodeREPNEPrefix uint32 //col:465
-OpcodeREPPrefix uint32 //col:466
-OpcodeHLT uint32 //col:467
-OpcodeCLI uint32 //col:468
-OpcodeSTI uint32 //col:469
-BopCount uint32 //col:470
+type  _SYSTEM_FILECACHE_INFORMATION struct{
+CurrentSize int64 //col:485
+PeakSize int64 //col:486
+PageFaultCount uint32 //col:487
+MinimumWorkingSet int64 //col:488
+MaximumWorkingSet int64 //col:489
+CurrentSizeIncludingTransitionInPages int64 //col:490
+PeakSizeIncludingTransitionInPages int64 //col:491
+TransitionRePurposeCount uint32 //col:492
+Flags uint32 //col:493
 }
 
 
-
-type SYSTEM_FILECACHE_INFORMATION struct{
-CurrentSize SIZE_T //col:474
-PeakSize SIZE_T //col:475
-PageFaultCount uint32 //col:476
-MinimumWorkingSet SIZE_T //col:477
-MaximumWorkingSet SIZE_T //col:478
-CurrentSizeIncludingTransitionInPages SIZE_T //col:479
-PeakSizeIncludingTransitionInPages SIZE_T //col:480
-TransitionRePurposeCount uint32 //col:481
-Flags uint32 //col:482
+type  _SYSTEM_BASIC_WORKING_SET_INFORMATION struct{
+CurrentSize int64 //col:491
+PeakSize int64 //col:492
+PageFaultCount uint32 //col:493
 }
 
 
-
-type SYSTEM_BASIC_WORKING_SET_INFORMATION struct{
-CurrentSize SIZE_T //col:486
-PeakSize SIZE_T //col:487
-PageFaultCount uint32 //col:488
+type  _SYSTEM_POOLTAG struct{
+Union union //col:498
+Tag[4] uint8 //col:500
+TagUlong uint32 //col:501
 }
 
 
-
-type SYSTEM_POOLTAG struct{
-Union union //col:492
-Tag[4] uint8 //col:494
-TagUlong uint32 //col:495
+type  _SYSTEM_POOLTAG_INFORMATION struct{
+Count uint32 //col:510
+TagInfo[1] SYSTEM_POOLTAG //col:511
 }
 
 
-
-type SYSTEM_POOLTAG_INFORMATION struct{
-Count uint32 //col:506
-TagInfo[1] SYSTEM_POOLTAG //col:507
+type  _SYSTEM_INTERRUPT_INFORMATION struct{
+ContextSwitches uint32 //col:519
+DpcCount uint32 //col:520
+DpcRate uint32 //col:521
+TimeIncrement uint32 //col:522
+DpcBypassCount uint32 //col:523
+ApcBypassCount uint32 //col:524
 }
 
 
-
-type SYSTEM_INTERRUPT_INFORMATION struct{
-ContextSwitches uint32 //col:511
-DpcCount uint32 //col:512
-DpcRate uint32 //col:513
-TimeIncrement uint32 //col:514
-DpcBypassCount uint32 //col:515
-ApcBypassCount uint32 //col:516
+type  _SYSTEM_DPC_BEHAVIOR_INFORMATION struct{
+Spare uint32 //col:527
+DpcQueueDepth uint32 //col:528
+MinimumDpcRate uint32 //col:529
+AdjustDpcThreshold uint32 //col:530
+IdealDpcRate uint32 //col:531
 }
 
 
-
-type SYSTEM_DPC_BEHAVIOR_INFORMATION struct{
-Spare uint32 //col:520
-DpcQueueDepth uint32 //col:521
-MinimumDpcRate uint32 //col:522
-AdjustDpcThreshold uint32 //col:523
-IdealDpcRate uint32 //col:524
+type  _SYSTEM_QUERY_TIME_ADJUST_INFORMATION struct{
+TimeAdjustment uint32 //col:533
+TimeIncrement uint32 //col:534
+Enable bool //col:535
 }
 
 
-
-type SYSTEM_QUERY_TIME_ADJUST_INFORMATION struct{
-TimeAdjustment uint32 //col:528
-TimeIncrement uint32 //col:529
-Enable bool //col:530
-}
-
-
-
-type SYSTEM_QUERY_TIME_ADJUST_INFORMATION_PRECISE struct{
-TimeAdjustment ULONGLONG //col:534
-TimeIncrement ULONGLONG //col:535
-Enable bool //col:536
-}
-
-
-
-type SYSTEM_SET_TIME_ADJUST_INFORMATION struct{
-TimeAdjustment uint32 //col:540
+type  _SYSTEM_QUERY_TIME_ADJUST_INFORMATION_PRECISE struct{
+TimeAdjustment ULONGLONG //col:539
+TimeIncrement ULONGLONG //col:540
 Enable bool //col:541
 }
 
 
-
-type SYSTEM_SET_TIME_ADJUST_INFORMATION_PRECISE struct{
-TimeAdjustment ULONGLONG //col:545
-Enable bool //col:546
+type  _SYSTEM_SET_TIME_ADJUST_INFORMATION struct{
+TimeAdjustment uint32 //col:544
+Enable bool //col:545
 }
 
 
-
-type EVENT_TRACE_VERSION_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:550
-EventTraceKernelVersion uint32 //col:551
+type  _SYSTEM_SET_TIME_ADJUST_INFORMATION_PRECISE struct{
+TimeAdjustment ULONGLONG //col:549
+Enable bool //col:550
 }
-
 
 
-type PERFINFO_GROUPMASK struct{
-Masks[PERF_NUM_MASKS] uint32 //col:555
+type  _EVENT_TRACE_VERSION_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:554
+EventTraceKernelVersion uint32 //col:555
 }
 
 
-
-type EVENT_TRACE_GROUPMASK_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:559
-TraceHandle TRACEHANDLE //col:560
-EventTraceGroupMasks PERFINFO_GROUPMASK //col:561
+type  _PERFINFO_GROUPMASK struct{
+Masks[PERF_NUM_MASKS] uint32 //col:558
 }
 
 
-
-type EVENT_TRACE_PERFORMANCE_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:565
-LogfileBytesWritten LARGE_INTEGER //col:566
+type  _EVENT_TRACE_GROUPMASK_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:564
+TraceHandle TRACEHANDLE //col:565
+EventTraceGroupMasks PERFINFO_GROUPMASK //col:566
 }
-
 
 
-type EVENT_TRACE_TIME_PROFILE_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:570
-ProfileInterval uint32 //col:571
+type  _EVENT_TRACE_PERFORMANCE_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:569
+LogfileBytesWritten LARGE_INTEGER //col:570
 }
 
 
-
-type EVENT_TRACE_SESSION_SECURITY_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:575
-SecurityInformation uint32 //col:576
-TraceHandle TRACEHANDLE //col:577
-SecurityDescriptor[1] uint8 //col:578
+type  _EVENT_TRACE_TIME_PROFILE_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:574
+ProfileInterval uint32 //col:575
 }
 
 
-
-type EVENT_TRACE_SPINLOCK_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:582
-SpinLockSpinThreshold uint32 //col:583
-SpinLockAcquireSampleRate uint32 //col:584
-SpinLockContentionSampleRate uint32 //col:585
-SpinLockHoldThreshold uint32 //col:586
+type  _EVENT_TRACE_SESSION_SECURITY_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:581
+SecurityInformation uint32 //col:582
+TraceHandle TRACEHANDLE //col:583
+SecurityDescriptor[1] uint8 //col:584
 }
-
 
 
-type EVENT_TRACE_SYSTEM_EVENT_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:590
-TraceHandle TRACEHANDLE //col:591
-HookId[1] uint32 //col:592
+type  _EVENT_TRACE_SPINLOCK_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:589
+SpinLockSpinThreshold uint32 //col:590
+SpinLockAcquireSampleRate uint32 //col:591
+SpinLockContentionSampleRate uint32 //col:592
+SpinLockHoldThreshold uint32 //col:593
 }
 
 
-
-type EVENT_TRACE_EXECUTIVE_RESOURCE_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:596
-ReleaseSamplingRate uint32 //col:597
-ContentionSamplingRate uint32 //col:598
-NumberOfExcessiveTimeouts uint32 //col:599
+type  _EVENT_TRACE_SYSTEM_EVENT_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:595
+TraceHandle TRACEHANDLE //col:596
+HookId[1] uint32 //col:597
 }
 
 
-
-type EVENT_TRACE_HEAP_TRACING_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:603
-ProcessId uint32 //col:604
+type  _EVENT_TRACE_EXECUTIVE_RESOURCE_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:602
+ReleaseSamplingRate uint32 //col:603
+ContentionSamplingRate uint32 //col:604
+NumberOfExcessiveTimeouts uint32 //col:605
 }
-
 
 
-type EVENT_TRACE_TAG_FILTER_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:608
-TraceHandle TRACEHANDLE //col:609
-Filter[1] uint32 //col:610
+type  _EVENT_TRACE_HEAP_TRACING_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:607
+ProcessId uint32 //col:608
 }
 
 
-
-type EVENT_TRACE_PROFILE_COUNTER_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:614
-TraceHandle TRACEHANDLE //col:615
-ProfileSource[1] uint32 //col:616
+type  _EVENT_TRACE_TAG_FILTER_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:613
+TraceHandle TRACEHANDLE //col:614
+Filter[1] uint32 //col:615
 }
 
 
-
-type EVENT_TRACE_PROFILE_LIST_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:620
-Spare uint32 //col:621
-struct // //col:622
+type  _EVENT_TRACE_PROFILE_COUNTER_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:619
+TraceHandle TRACEHANDLE //col:620
+ProfileSource[1] uint32 //col:621
 }
-
 
 
-type EVENT_TRACE_STACK_CACHING_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:626
-TraceHandle TRACEHANDLE //col:627
-Enabled bool //col:628
-Reserved[3] uint8 //col:629
-CacheSize uint32 //col:630
-BucketCount uint32 //col:631
+type  _EVENT_TRACE_PROFILE_LIST_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:625
+Spare uint32 //col:626
+_PROFILE_SOURCE_INFO* struct //col:627
 }
 
 
-
-type EVENT_TRACE_SOFT_RESTART_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:635
-TraceHandle TRACEHANDLE //col:636
-PersistTraceBuffers bool //col:637
-FileName[1] WCHAR //col:638
+type  _EVENT_TRACE_STACK_CACHING_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:634
+TraceHandle TRACEHANDLE //col:635
+Enabled bool //col:636
+Reserved[3] uint8 //col:637
+CacheSize uint32 //col:638
+BucketCount uint32 //col:639
 }
 
 
-
-type EVENT_TRACE_PROFILE_ADD_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:642
-PerfEvtEventSelect bool //col:643
-PerfEvtUnitSelect bool //col:644
-PerfEvtType uint32 //col:645
-CpuInfoHierarchy[0x3] uint32 //col:646
-InitialInterval uint32 //col:647
-AllowsHalt bool //col:648
-Persist bool //col:649
-ProfileSourceDescription[0x1] WCHAR //col:650
+type  _EVENT_TRACE_SOFT_RESTART_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:641
+TraceHandle TRACEHANDLE //col:642
+PersistTraceBuffers bool //col:643
+FileName[1] WCHAR //col:644
 }
-
 
 
-type EVENT_TRACE_PROFILE_REMOVE_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:654
-ProfileSource KPROFILE_SOURCE //col:655
-CpuInfoHierarchy[0x3] uint32 //col:656
+type  _EVENT_TRACE_PROFILE_ADD_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:653
+PerfEvtEventSelect bool //col:654
+PerfEvtUnitSelect bool //col:655
+PerfEvtType uint32 //col:656
+CpuInfoHierarchy[0x3] uint32 //col:657
+InitialInterval uint32 //col:658
+AllowsHalt bool //col:659
+Persist bool //col:660
+ProfileSourceDescription[0x1] WCHAR //col:661
 }
 
 
-
-type EVENT_TRACE_COVERAGE_SAMPLER_INFORMATION struct{
-EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:660
-CoverageSamplerInformationClass bool //col:661
-MajorVersion uint8 //col:662
-MinorVersion uint8 //col:663
-Reserved uint8 //col:664
-SamplerHandle HANDLE //col:665
+type  _EVENT_TRACE_PROFILE_REMOVE_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:659
+ProfileSource KPROFILE_SOURCE //col:660
+CpuInfoHierarchy[0x3] uint32 //col:661
 }
 
 
-
-type SYSTEM_EXCEPTION_INFORMATION struct{
-AlignmentFixupCount uint32 //col:669
-ExceptionDispatchCount uint32 //col:670
-FloatingEmulationCount uint32 //col:671
-ByteWordEmulationCount uint32 //col:672
+type  _EVENT_TRACE_COVERAGE_SAMPLER_INFORMATION struct{
+EventTraceInformationClass EVENT_TRACE_INFORMATION_CLASS //col:668
+CoverageSamplerInformationClass bool //col:669
+MajorVersion uint8 //col:670
+MinorVersion uint8 //col:671
+Reserved uint8 //col:672
+SamplerHandle uintptr //col:673
 }
-
 
 
-type SYSTEM_CRASH_DUMP_STATE_INFORMATION struct{
-CrashDumpConfigurationClass SYSTEM_CRASH_DUMP_CONFIGURATION_CLASS //col:676
+type  _SYSTEM_EXCEPTION_INFORMATION struct{
+AlignmentFixupCount uint32 //col:675
+ExceptionDispatchCount uint32 //col:676
+FloatingEmulationCount uint32 //col:677
+ByteWordEmulationCount uint32 //col:678
 }
 
 
-
-type SYSTEM_KERNEL_DEBUGGER_INFORMATION struct{
-KernelDebuggerEnabled bool //col:680
-KernelDebuggerNotPresent bool //col:681
+type  _SYSTEM_CRASH_DUMP_STATE_INFORMATION struct{
+CrashDumpConfigurationClass SYSTEM_CRASH_DUMP_CONFIGURATION_CLASS //col:679
 }
 
 
-
-type SYSTEM_CONTEXT_SWITCH_INFORMATION struct{
-ContextSwitches uint32 //col:685
-FindAny uint32 //col:686
-FindLast uint32 //col:687
-FindIdeal uint32 //col:688
-IdleAny uint32 //col:689
-IdleCurrent uint32 //col:690
-IdleLast uint32 //col:691
-IdleIdeal uint32 //col:692
-PreemptAny uint32 //col:693
-PreemptCurrent uint32 //col:694
-PreemptLast uint32 //col:695
-SwitchToIdle uint32 //col:696
+type  _SYSTEM_KERNEL_DEBUGGER_INFORMATION struct{
+KernelDebuggerEnabled bool //col:684
+KernelDebuggerNotPresent bool //col:685
 }
-
 
 
-type SYSTEM_REGISTRY_QUOTA_INFORMATION struct{
-RegistryQuotaAllowed uint32 //col:700
-RegistryQuotaUsed uint32 //col:701
-PagedPoolSize SIZE_T //col:702
+type  _SYSTEM_CONTEXT_SWITCH_INFORMATION struct{
+ContextSwitches uint32 //col:699
+FindAny uint32 //col:700
+FindLast uint32 //col:701
+FindIdeal uint32 //col:702
+IdleAny uint32 //col:703
+IdleCurrent uint32 //col:704
+IdleLast uint32 //col:705
+IdleIdeal uint32 //col:706
+PreemptAny uint32 //col:707
+PreemptCurrent uint32 //col:708
+PreemptLast uint32 //col:709
+SwitchToIdle uint32 //col:710
 }
 
 
-
-type SYSTEM_PROCESSOR_IDLE_INFORMATION struct{
-IdleTime ULONGLONG //col:706
-C1Time ULONGLONG //col:707
-C2Time ULONGLONG //col:708
-C3Time ULONGLONG //col:709
-C1Transitions uint32 //col:710
-C2Transitions uint32 //col:711
-C3Transitions uint32 //col:712
-Padding uint32 //col:713
+type  _SYSTEM_REGISTRY_QUOTA_INFORMATION struct{
+RegistryQuotaAllowed uint32 //col:705
+RegistryQuotaUsed uint32 //col:706
+PagedPoolSize int64 //col:707
 }
 
 
-
-type SYSTEM_LEGACY_DRIVER_INFORMATION struct{
-VetoType uint32 //col:717
-VetoList UNICODE_STRING //col:718
+type  _SYSTEM_PROCESSOR_IDLE_INFORMATION struct{
+IdleTime ULONGLONG //col:716
+C1Time ULONGLONG //col:717
+C2Time ULONGLONG //col:718
+C3Time ULONGLONG //col:719
+C1Transitions uint32 //col:720
+C2Transitions uint32 //col:721
+C3Transitions uint32 //col:722
+Padding uint32 //col:723
 }
-
 
 
-type SYSTEM_LOOKASIDE_INFORMATION struct{
-CurrentDepth USHORT //col:722
-MaximumDepth USHORT //col:723
-TotalAllocates uint32 //col:724
-AllocateMisses uint32 //col:725
-TotalFrees uint32 //col:726
-FreeMisses uint32 //col:727
-Type uint32 //col:728
-Tag uint32 //col:729
-Size uint32 //col:730
+type  _SYSTEM_LEGACY_DRIVER_INFORMATION struct{
+VetoType uint32 //col:721
+VetoList *int16 //col:722
 }
 
 
-
-type SYSTEM_RANGE_START_INFORMATION struct{
-SystemRangeStart ULONG_PTR //col:734
+type  _SYSTEM_LOOKASIDE_INFORMATION struct{
+CurrentDepth uint16 //col:733
+MaximumDepth uint16 //col:734
+TotalAllocates uint32 //col:735
+AllocateMisses uint32 //col:736
+TotalFrees uint32 //col:737
+FreeMisses uint32 //col:738
+Type uint32 //col:739
+Tag uint32 //col:740
+Size uint32 //col:741
 }
 
 
-
-type SYSTEM_VERIFIER_INFORMATION_LEGACY  struct{
-NextEntryOffset uint32 //col:738
-Level uint32 //col:739
-DriverName UNICODE_STRING //col:740
-RaiseIrqls uint32 //col:741
-AcquireSpinLocks uint32 //col:742
-SynchronizeExecutions uint32 //col:743
-AllocationsAttempted uint32 //col:744
-AllocationsSucceeded uint32 //col:745
-AllocationsSucceededSpecialPool uint32 //col:746
-AllocationsWithNoTag uint32 //col:747
-TrimRequests uint32 //col:748
-Trims uint32 //col:749
-AllocationsFailed uint32 //col:750
-AllocationsFailedDeliberately uint32 //col:751
-Loads uint32 //col:752
-Unloads uint32 //col:753
-UnTrackedPool uint32 //col:754
-CurrentPagedPoolAllocations uint32 //col:755
-CurrentNonPagedPoolAllocations uint32 //col:756
-PeakPagedPoolAllocations uint32 //col:757
-PeakNonPagedPoolAllocations uint32 //col:758
-PagedPoolUsageInBytes SIZE_T //col:759
-NonPagedPoolUsageInBytes SIZE_T //col:760
-PeakPagedPoolUsageInBytes SIZE_T //col:761
-PeakNonPagedPoolUsageInBytes SIZE_T //col:762
+type  _SYSTEM_RANGE_START_INFORMATION struct{
+SystemRangeStart ULONG_PTR //col:737
 }
-
 
 
-type SYSTEM_VERIFIER_INFORMATION struct{
-NextEntryOffset uint32 //col:766
-Level uint32 //col:767
-RuleClasses[2] uint32 //col:768
-TriageContext uint32 //col:769
-AreAllDriversBeingVerified uint32 //col:770
-DriverName UNICODE_STRING //col:771
-RaiseIrqls uint32 //col:772
-AcquireSpinLocks uint32 //col:773
-SynchronizeExecutions uint32 //col:774
-AllocationsAttempted uint32 //col:775
-AllocationsSucceeded uint32 //col:776
-AllocationsSucceededSpecialPool uint32 //col:777
-AllocationsWithNoTag uint32 //col:778
-TrimRequests uint32 //col:779
-Trims uint32 //col:780
-AllocationsFailed uint32 //col:781
-AllocationsFailedDeliberately uint32 //col:782
-Loads uint32 //col:783
-Unloads uint32 //col:784
-UnTrackedPool uint32 //col:785
-CurrentPagedPoolAllocations uint32 //col:786
-CurrentNonPagedPoolAllocations uint32 //col:787
-PeakPagedPoolAllocations uint32 //col:788
-PeakNonPagedPoolAllocations uint32 //col:789
-PagedPoolUsageInBytes SIZE_T //col:790
-NonPagedPoolUsageInBytes SIZE_T //col:791
-PeakPagedPoolUsageInBytes SIZE_T //col:792
-PeakNonPagedPoolUsageInBytes SIZE_T //col:793
+type  _SYSTEM_VERIFIER_INFORMATION_LEGACY  struct{
+NextEntryOffset uint32 //col:765
+Level uint32 //col:766
+DriverName *int16 //col:767
+RaiseIrqls uint32 //col:768
+AcquireSpinLocks uint32 //col:769
+SynchronizeExecutions uint32 //col:770
+AllocationsAttempted uint32 //col:771
+AllocationsSucceeded uint32 //col:772
+AllocationsSucceededSpecialPool uint32 //col:773
+AllocationsWithNoTag uint32 //col:774
+TrimRequests uint32 //col:775
+Trims uint32 //col:776
+AllocationsFailed uint32 //col:777
+AllocationsFailedDeliberately uint32 //col:778
+Loads uint32 //col:779
+Unloads uint32 //col:780
+UnTrackedPool uint32 //col:781
+CurrentPagedPoolAllocations uint32 //col:782
+CurrentNonPagedPoolAllocations uint32 //col:783
+PeakPagedPoolAllocations uint32 //col:784
+PeakNonPagedPoolAllocations uint32 //col:785
+PagedPoolUsageInBytes int64 //col:786
+NonPagedPoolUsageInBytes int64 //col:787
+PeakPagedPoolUsageInBytes int64 //col:788
+PeakNonPagedPoolUsageInBytes int64 //col:789
 }
 
 
-
-type SYSTEM_SESSION_PROCESS_INFORMATION struct{
-SessionId uint32 //col:797
-SizeOfBuf uint32 //col:798
-Buffer PVOID //col:799
+type  _SYSTEM_VERIFIER_INFORMATION struct{
+NextEntryOffset uint32 //col:796
+Level uint32 //col:797
+RuleClasses[2] uint32 //col:798
+TriageContext uint32 //col:799
+AreAllDriversBeingVerified uint32 //col:800
+DriverName *int16 //col:801
+RaiseIrqls uint32 //col:802
+AcquireSpinLocks uint32 //col:803
+SynchronizeExecutions uint32 //col:804
+AllocationsAttempted uint32 //col:805
+AllocationsSucceeded uint32 //col:806
+AllocationsSucceededSpecialPool uint32 //col:807
+AllocationsWithNoTag uint32 //col:808
+TrimRequests uint32 //col:809
+Trims uint32 //col:810
+AllocationsFailed uint32 //col:811
+AllocationsFailedDeliberately uint32 //col:812
+Loads uint32 //col:813
+Unloads uint32 //col:814
+UnTrackedPool uint32 //col:815
+CurrentPagedPoolAllocations uint32 //col:816
+CurrentNonPagedPoolAllocations uint32 //col:817
+PeakPagedPoolAllocations uint32 //col:818
+PeakNonPagedPoolAllocations uint32 //col:819
+PagedPoolUsageInBytes int64 //col:820
+NonPagedPoolUsageInBytes int64 //col:821
+PeakPagedPoolUsageInBytes int64 //col:822
+PeakNonPagedPoolUsageInBytes int64 //col:823
 }
 
 
-
-type SYSTEM_GDI_DRIVER_INFORMATION struct{
-DriverName UNICODE_STRING //col:803
-ImageAddress PVOID //col:804
-SectionPointer PVOID //col:805
-EntryPoint PVOID //col:806
-struct // //col:807
-ImageLength uint32 //col:808
+type  _SYSTEM_SESSION_PROCESS_INFORMATION struct{
+SessionId uint32 //col:802
+SizeOfBuf uint32 //col:803
+Buffer uintptr //col:804
 }
-
 
 
-type SYSTEM_NUMA_INFORMATION struct{
-HighestNodeNumber uint32 //col:812
-Reserved uint32 //col:813
-Union union //col:814
-ActiveProcessorsGroupAffinity[MAXIMUM_NODE_COUNT] GROUP_AFFINITY //col:816
-AvailableMemory[MAXIMUM_NODE_COUNT] ULONGLONG //col:817
-Pad[MAXIMUM_NODE_COUNT ULONGLONG //col:818
+type  _SYSTEM_GDI_DRIVER_INFORMATION struct{
+DriverName *int16 //col:811
+ImageAddress uintptr //col:812
+SectionPointer uintptr //col:813
+EntryPoint uintptr //col:814
+_IMAGE_EXPORT_DIRECTORY* struct //col:815
+ImageLength uint32 //col:816
 }
 
 
-
-type SYSTEM_PROCESSOR_POWER_INFORMATION struct{
-CurrentFrequency uint8 //col:823
-ThermalLimitFrequency uint8 //col:824
-ConstantThrottleFrequency uint8 //col:825
-DegradedThrottleFrequency uint8 //col:826
-LastBusyFrequency uint8 //col:827
-LastC3Frequency uint8 //col:828
-LastAdjustedBusyFrequency uint8 //col:829
-ProcessorMinThrottle uint8 //col:830
-ProcessorMaxThrottle uint8 //col:831
-NumberOfFrequencies uint32 //col:832
-PromotionCount uint32 //col:833
-DemotionCount uint32 //col:834
-ErrorCount uint32 //col:835
-RetryCount uint32 //col:836
-CurrentFrequencyTime ULONGLONG //col:837
-CurrentProcessorTime ULONGLONG //col:838
-CurrentProcessorIdleTime ULONGLONG //col:839
-LastProcessorTime ULONGLONG //col:840
-LastProcessorIdleTime ULONGLONG //col:841
-Energy ULONGLONG //col:842
+type  _SYSTEM_NUMA_INFORMATION struct{
+HighestNodeNumber uint32 //col:821
+Reserved uint32 //col:822
+Union union //col:823
+ActiveProcessorsGroupAffinity[MAXIMUM_NODE_COUNT] GROUP_AFFINITY //col:825
+AvailableMemory[MAXIMUM_NODE_COUNT] ULONGLONG //col:826
+Pad[MAXIMUM_NODE_COUNT ULONGLONG //col:827
 }
 
 
-
-type SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX struct{
-Object PVOID //col:846
-UniqueProcessId ULONG_PTR //col:847
-HandleValue ULONG_PTR //col:848
-GrantedAccess uint32 //col:849
-CreatorBackTraceIndex USHORT //col:850
-ObjectTypeIndex USHORT //col:851
-HandleAttributes uint32 //col:852
-Reserved uint32 //col:853
+type  _SYSTEM_PROCESSOR_POWER_INFORMATION struct{
+CurrentFrequency uint8 //col:845
+ThermalLimitFrequency uint8 //col:846
+ConstantThrottleFrequency uint8 //col:847
+DegradedThrottleFrequency uint8 //col:848
+LastBusyFrequency uint8 //col:849
+LastC3Frequency uint8 //col:850
+LastAdjustedBusyFrequency uint8 //col:851
+ProcessorMinThrottle uint8 //col:852
+ProcessorMaxThrottle uint8 //col:853
+NumberOfFrequencies uint32 //col:854
+PromotionCount uint32 //col:855
+DemotionCount uint32 //col:856
+ErrorCount uint32 //col:857
+RetryCount uint32 //col:858
+CurrentFrequencyTime ULONGLONG //col:859
+CurrentProcessorTime ULONGLONG //col:860
+CurrentProcessorIdleTime ULONGLONG //col:861
+LastProcessorTime ULONGLONG //col:862
+LastProcessorIdleTime ULONGLONG //col:863
+Energy ULONGLONG //col:864
 }
-
 
 
-type SYSTEM_HANDLE_INFORMATION_EX struct{
-NumberOfHandles ULONG_PTR //col:857
-Reserved ULONG_PTR //col:858
-Handles[1] SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX //col:859
+type  _SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX struct{
+Object uintptr //col:856
+UniqueProcessId ULONG_PTR //col:857
+HandleValue ULONG_PTR //col:858
+GrantedAccess uint32 //col:859
+CreatorBackTraceIndex uint16 //col:860
+ObjectTypeIndex uint16 //col:861
+HandleAttributes uint32 //col:862
+Reserved uint32 //col:863
 }
 
 
-
-type SYSTEM_BIGPOOL_ENTRY struct{
-Union union //col:863
-VirtualAddress PVOID //col:865
-NonPaged ULONG_PTR //col:866
+type  _SYSTEM_HANDLE_INFORMATION_EX struct{
+NumberOfHandles ULONG_PTR //col:862
+Reserved ULONG_PTR //col:863
+Handles[1] SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX //col:864
 }
 
 
-
-type SYSTEM_BIGPOOL_INFORMATION struct{
-Count uint32 //col:877
-AllocatedInfo[1] SYSTEM_BIGPOOL_ENTRY //col:878
+type  _SYSTEM_BIGPOOL_ENTRY struct{
+Union union //col:869
+VirtualAddress uintptr //col:871
+NonPaged ULONG_PTR //col:872
 }
-
 
 
-type SYSTEM_POOL_ENTRY struct{
-Allocated bool //col:882
-Spare0 bool //col:883
-AllocatorBackTraceIndex USHORT //col:884
-Size uint32 //col:885
-Union union //col:886
-Tag[4] uint8 //col:888
-TagUlong uint32 //col:889
-ProcessChargedQuota PVOID //col:890
+type  _SYSTEM_BIGPOOL_INFORMATION struct{
+Count uint32 //col:881
+AllocatedInfo[1] SYSTEM_BIGPOOL_ENTRY //col:882
 }
 
 
-
-type SYSTEM_POOL_INFORMATION struct{
-TotalSize SIZE_T //col:895
-FirstEntry PVOID //col:896
-EntryOverhead USHORT //col:897
-PoolTagPresent bool //col:898
-Spare0 bool //col:899
-NumberOfEntries uint32 //col:900
-Entries[1] SYSTEM_POOL_ENTRY //col:901
+type  _SYSTEM_POOL_ENTRY struct{
+Allocated bool //col:893
+Spare0 bool //col:894
+AllocatorBackTraceIndex uint16 //col:895
+Size uint32 //col:896
+Union union //col:897
+Tag[4] uint8 //col:899
+TagUlong uint32 //col:900
+ProcessChargedQuota uintptr //col:901
 }
 
 
-
-type SYSTEM_SESSION_POOLTAG_INFORMATION struct{
-NextEntryOffset SIZE_T //col:905
-SessionId uint32 //col:906
-Count uint32 //col:907
-TagInfo[1] SYSTEM_POOLTAG //col:908
+type  _SYSTEM_POOL_INFORMATION struct{
+TotalSize int64 //col:904
+FirstEntry uintptr //col:905
+EntryOverhead uint16 //col:906
+PoolTagPresent bool //col:907
+Spare0 bool //col:908
+NumberOfEntries uint32 //col:909
+Entries[1] SYSTEM_POOL_ENTRY //col:910
 }
-
 
 
-type SYSTEM_SESSION_MAPPED_VIEW_INFORMATION struct{
-NextEntryOffset SIZE_T //col:912
-SessionId uint32 //col:913
-ViewFailures uint32 //col:914
-NumberOfBytesAvailable SIZE_T //col:915
-NumberOfBytesAvailableContiguous SIZE_T //col:916
+type  _SYSTEM_SESSION_POOLTAG_INFORMATION struct{
+NextEntryOffset int64 //col:911
+SessionId uint32 //col:912
+Count uint32 //col:913
+TagInfo[1] SYSTEM_POOLTAG //col:914
 }
 
 
-
-type SYSTEM_WATCHDOG_HANDLER_INFORMATION  struct{
-WdHandler PSYSTEM_WATCHDOG_HANDLER //col:920
-Context PVOID //col:921
+type  _SYSTEM_SESSION_MAPPED_VIEW_INFORMATION struct{
+NextEntryOffset int64 //col:919
+SessionId uint32 //col:920
+ViewFailures uint32 //col:921
+NumberOfBytesAvailable int64 //col:922
+NumberOfBytesAvailableContiguous int64 //col:923
 }
 
 
-
-type SYSTEM_WATCHDOG_TIMER_INFORMATION struct{
-WdInfoClass WATCHDOG_INFORMATION_CLASS //col:925
-DataValue uint32 //col:926
+type  _SYSTEM_WATCHDOG_HANDLER_INFORMATION  struct{
+WdHandler PSYSTEM_WATCHDOG_HANDLER //col:924
+Context uintptr //col:925
 }
-
 
 
-type SYSTEM_FIRMWARE_TABLE_INFORMATION struct{
-ProviderSignature uint32 //col:930
-Action SYSTEM_FIRMWARE_TABLE_ACTION //col:931
-TableID uint32 //col:932
-TableBufferLength uint32 //col:933
-TableBuffer[1] uint8 //col:934
+type  _SYSTEM_WATCHDOG_TIMER_INFORMATION struct{
+WdInfoClass WATCHDOG_INFORMATION_CLASS //col:929
+DataValue uint32 //col:930
 }
 
 
-
-type SYSTEM_FIRMWARE_TABLE_HANDLER struct{
-ProviderSignature uint32 //col:938
-Register bool //col:939
-FirmwareTableHandler PFNFTH //col:940
-DriverObject PVOID //col:941
+type  _SYSTEM_FIRMWARE_TABLE_INFORMATION struct{
+ProviderSignature uint32 //col:937
+Action SYSTEM_FIRMWARE_TABLE_ACTION //col:938
+TableID uint32 //col:939
+TableBufferLength uint32 //col:940
+TableBuffer[1] uint8 //col:941
 }
-
 
 
-type SYSTEM_MEMORY_LIST_INFORMATION struct{
-ZeroPageCount ULONG_PTR //col:945
-FreePageCount ULONG_PTR //col:946
-ModifiedPageCount ULONG_PTR //col:947
-ModifiedNoWritePageCount ULONG_PTR //col:948
-BadPageCount ULONG_PTR //col:949
-PageCountByPriority[8] ULONG_PTR //col:950
-RepurposedPagesByPriority[8] ULONG_PTR //col:951
-ModifiedPageCountPageFile ULONG_PTR //col:952
+type  _SYSTEM_FIRMWARE_TABLE_HANDLER struct{
+ProviderSignature uint32 //col:944
+Register bool //col:945
+FirmwareTableHandler PFNFTH //col:946
+DriverObject uintptr //col:947
 }
 
 
-
-type SYSTEM_THREAD_CID_PRIORITY_INFORMATION struct{
-ClientId CLIENT_ID //col:956
-Priority KPRIORITY //col:957
+type  _SYSTEM_MEMORY_LIST_INFORMATION struct{
+ZeroPageCount ULONG_PTR //col:955
+FreePageCount ULONG_PTR //col:956
+ModifiedPageCount ULONG_PTR //col:957
+ModifiedNoWritePageCount ULONG_PTR //col:958
+BadPageCount ULONG_PTR //col:959
+PageCountByPriority[8] ULONG_PTR //col:960
+RepurposedPagesByPriority[8] ULONG_PTR //col:961
+ModifiedPageCountPageFile ULONG_PTR //col:962
 }
-
 
 
-type SYSTEM_PROCESSOR_IDLE_CYCLE_TIME_INFORMATION struct{
-CycleTime ULONGLONG //col:961
+type  _SYSTEM_THREAD_CID_PRIORITY_INFORMATION struct{
+ClientId CLIENT_ID //col:960
+Priority KPRIORITY //col:961
 }
 
 
-
-type SYSTEM_VERIFIER_ISSUE struct{
-IssueType ULONGLONG //col:965
-Address PVOID //col:966
-Parameters[2] ULONGLONG //col:967
+type  _SYSTEM_PROCESSOR_IDLE_CYCLE_TIME_INFORMATION struct{
+CycleTime ULONGLONG //col:964
 }
 
 
-
-type SYSTEM_VERIFIER_CANCELLATION_INFORMATION struct{
-CancelProbability uint32 //col:971
-CancelThreshold uint32 //col:972
-CompletionThreshold uint32 //col:973
-CancellationVerifierDisabled uint32 //col:974
-AvailableIssues uint32 //col:975
-Issues[128] SYSTEM_VERIFIER_ISSUE //col:976
+type  _SYSTEM_VERIFIER_ISSUE struct{
+IssueType ULONGLONG //col:970
+Address uintptr //col:971
+Parameters[2] ULONGLONG //col:972
 }
-
 
 
-type SYSTEM_REF_TRACE_INFORMATION struct{
-TraceEnable bool //col:980
-TracePermanent bool //col:981
-TraceProcessName UNICODE_STRING //col:982
-TracePoolTags UNICODE_STRING //col:983
+type  _SYSTEM_VERIFIER_CANCELLATION_INFORMATION struct{
+CancelProbability uint32 //col:979
+CancelThreshold uint32 //col:980
+CompletionThreshold uint32 //col:981
+CancellationVerifierDisabled uint32 //col:982
+AvailableIssues uint32 //col:983
+Issues[128] SYSTEM_VERIFIER_ISSUE //col:984
 }
 
 
-
-type SYSTEM_SPECIAL_POOL_INFORMATION struct{
-PoolTag uint32 //col:987
-Flags uint32 //col:988
+type  _SYSTEM_REF_TRACE_INFORMATION struct{
+TraceEnable bool //col:986
+TracePermanent bool //col:987
+TraceProcessName *int16 //col:988
+TracePoolTags *int16 //col:989
 }
 
 
-
-type SYSTEM_PROCESS_ID_INFORMATION struct{
-ProcessId HANDLE //col:992
-ImageName UNICODE_STRING //col:993
+type  _SYSTEM_SPECIAL_POOL_INFORMATION struct{
+PoolTag uint32 //col:991
+Flags uint32 //col:992
 }
-
 
 
-type SYSTEM_HYPERVISOR_QUERY_INFORMATION struct{
-HypervisorConnected bool //col:997
-HypervisorDebuggingEnabled bool //col:998
-HypervisorPresent bool //col:999
-Spare0[5] bool //col:1000
-EnabledEnlightenments ULONGLONG //col:1001
+type  _SYSTEM_PROCESS_ID_INFORMATION struct{
+ProcessId uintptr //col:996
+ImageName *int16 //col:997
 }
 
 
-
-type SYSTEM_BOOT_ENVIRONMENT_INFORMATION struct{
-BootIdentifier GUID //col:1005
-FirmwareType FIRMWARE_TYPE //col:1006
-Union union //col:1007
-BootFlags ULONGLONG //col:1009
-Struct struct //col:1010
-DbgMenuOsSelection ULONGLONG //col:1012
-DbgHiberBoot ULONGLONG //col:1013
-DbgSoftBoot ULONGLONG //col:1014
-DbgMeasuredLaunch ULONGLONG //col:1015
-DbgMeasuredLaunchCapable ULONGLONG //col:1016
-DbgSystemHiveReplace ULONGLONG //col:1017
-DbgMeasuredLaunchSmmProtections ULONGLONG //col:1018
-DbgMeasuredLaunchSmmLevel ULONGLONG //col:1019
+type  _SYSTEM_HYPERVISOR_QUERY_INFORMATION struct{
+HypervisorConnected bool //col:1004
+HypervisorDebuggingEnabled bool //col:1005
+HypervisorPresent bool //col:1006
+Spare0[5] bool //col:1007
+EnabledEnlightenments ULONGLONG //col:1008
 }
 
 
-
-type SYSTEM_IMAGE_FILE_EXECUTION_OPTIONS_INFORMATION struct{
-FlagsToEnable uint32 //col:1025
-FlagsToDisable uint32 //col:1026
+type  _SYSTEM_BOOT_ENVIRONMENT_INFORMATION struct{
+BootIdentifier GUID //col:1022
+FirmwareType FIRMWARE_TYPE //col:1023
+Union union //col:1024
+BootFlags ULONGLONG //col:1026
+Struct struct //col:1027
+DbgMenuOsSelection ULONGLONG //col:1029
+DbgHiberBoot ULONGLONG //col:1030
+DbgSoftBoot ULONGLONG //col:1031
+DbgMeasuredLaunch ULONGLONG //col:1032
+DbgMeasuredLaunchCapable ULONGLONG //col:1033
+DbgSystemHiveReplace ULONGLONG //col:1034
+DbgMeasuredLaunchSmmProtections ULONGLONG //col:1035
+DbgMeasuredLaunchSmmLevel ULONGLONG //col:1036
 }
-
 
 
-type COVERAGE_MODULE_REQUEST struct{
-RequestType COVERAGE_REQUEST_CODES //col:1030
-Union union //col:1031
-MD5Hash[16] uint8 //col:1033
-ModuleName UNICODE_STRING //col:1034
+type  _SYSTEM_IMAGE_FILE_EXECUTION_OPTIONS_INFORMATION struct{
+FlagsToEnable uint32 //col:1029
+FlagsToDisable uint32 //col:1030
 }
 
 
-
-type COVERAGE_MODULE_INFO struct{
-ModuleInfoSize uint32 //col:1039
-IsBinaryLoaded uint32 //col:1040
-ModulePathName UNICODE_STRING //col:1041
-CoverageSectionSize uint32 //col:1042
-CoverageSection[1] uint8 //col:1043
+type  _COVERAGE_MODULE_REQUEST struct{
+RequestType COVERAGE_REQUEST_CODES //col:1037
+Union union //col:1038
+MD5Hash[16] uint8 //col:1040
+ModuleName *int16 //col:1041
 }
 
 
-
-type COVERAGE_MODULES struct{
-ListAndReset uint32 //col:1047
-NumberOfModules uint32 //col:1048
-ModuleRequestInfo COVERAGE_MODULE_REQUEST //col:1049
-Modules[1] COVERAGE_MODULE_INFO //col:1050
+type  _COVERAGE_MODULE_INFO struct{
+ModuleInfoSize uint32 //col:1046
+IsBinaryLoaded uint32 //col:1047
+ModulePathName *int16 //col:1048
+CoverageSectionSize uint32 //col:1049
+CoverageSection[1] uint8 //col:1050
 }
-
 
 
-type SYSTEM_PREFETCH_PATCH_INFORMATION struct{
-PrefetchPatchCount uint32 //col:1054
+type  _COVERAGE_MODULES struct{
+ListAndReset uint32 //col:1053
+NumberOfModules uint32 //col:1054
+ModuleRequestInfo COVERAGE_MODULE_REQUEST //col:1055
+Modules[1] COVERAGE_MODULE_INFO //col:1056
 }
 
 
-
-type SYSTEM_VERIFIER_FAULTS_INFORMATION struct{
-Probability uint32 //col:1058
-MaxProbability uint32 //col:1059
-PoolTags UNICODE_STRING //col:1060
-Applications UNICODE_STRING //col:1061
+type  _SYSTEM_PREFETCH_PATCH_INFORMATION struct{
+PrefetchPatchCount uint32 //col:1057
 }
 
 
-
-type SYSTEM_VERIFIER_INFORMATION_EX struct{
-VerifyMode uint32 //col:1065
-OptionChanges uint32 //col:1066
-PreviousBucketName UNICODE_STRING //col:1067
-IrpCancelTimeoutMsec uint32 //col:1068
-VerifierExtensionEnabled uint32 //col:1069
-#ifdefWin64 #ifdef _WIN64 //col:1070
-Reserved[1] uint32 //col:1071
-#else #else //col:1072
-Reserved[3] uint32 //col:1073
-#endif #endif //col:1074
+type  _SYSTEM_VERIFIER_FAULTS_INFORMATION struct{
+Probability uint32 //col:1064
+MaxProbability uint32 //col:1065
+PoolTags *int16 //col:1066
+Applications *int16 //col:1067
 }
-
 
 
-type SYSTEM_SYSTEM_PARTITION_INFORMATION struct{
-SystemPartition UNICODE_STRING //col:1078
+type  _SYSTEM_VERIFIER_INFORMATION_EX struct{
+VerifyMode uint32 //col:1077
+OptionChanges uint32 //col:1078
+PreviousBucketName *int16 //col:1079
+IrpCancelTimeoutMsec uint32 //col:1080
+VerifierExtensionEnabled uint32 //col:1081
+#ifdefWin64 #ifdef _WIN64 //col:1082
+Reserved[1] uint32 //col:1083
+#else #else //col:1084
+Reserved[3] uint32 //col:1085
+#endif #endif //col:1086
 }
 
 
-
-type SYSTEM_SYSTEM_DISK_INFORMATION struct{
-SystemDisk UNICODE_STRING //col:1082
+type  _SYSTEM_SYSTEM_PARTITION_INFORMATION struct{
+SystemPartition *int16 //col:1081
 }
 
 
-
-type SYSTEM_NUMA_PROXIMITY_MAP struct{
-NodeProximityId uint32 //col:1086
-NodeNumber USHORT //col:1087
+type  _SYSTEM_SYSTEM_DISK_INFORMATION struct{
+SystemDisk *int16 //col:1085
 }
-
 
 
-type SYSTEM_PROCESSOR_PERFORMANCE_HITCOUNT struct{
-Hits ULONGLONG //col:1091
-PercentFrequency uint8 //col:1092
+type  _SYSTEM_NUMA_PROXIMITY_MAP struct{
+NodeProximityId uint32 //col:1090
+NodeNumber uint16 //col:1091
 }
 
 
-
-type SYSTEM_PROCESSOR_PERFORMANCE_HITCOUNT_WIN8 struct{
-Hits uint32 //col:1096
-PercentFrequency uint8 //col:1097
+type  _SYSTEM_PROCESSOR_PERFORMANCE_HITCOUNT struct{
+Hits ULONGLONG //col:1095
+PercentFrequency uint8 //col:1096
 }
 
 
-
-type SYSTEM_PROCESSOR_PERFORMANCE_STATE_DISTRIBUTION struct{
-ProcessorNumber uint32 //col:1101
-StateCount uint32 //col:1102
-States[1] SYSTEM_PROCESSOR_PERFORMANCE_HITCOUNT //col:1103
+type  _SYSTEM_PROCESSOR_PERFORMANCE_HITCOUNT_WIN8 struct{
+Hits uint32 //col:1100
+PercentFrequency uint8 //col:1101
 }
-
 
 
-type SYSTEM_PROCESSOR_PERFORMANCE_DISTRIBUTION struct{
-ProcessorCount uint32 //col:1107
-Offsets[1] uint32 //col:1108
+type  _SYSTEM_PROCESSOR_PERFORMANCE_STATE_DISTRIBUTION struct{
+ProcessorNumber uint32 //col:1106
+StateCount uint32 //col:1107
+States[1] SYSTEM_PROCESSOR_PERFORMANCE_HITCOUNT //col:1108
 }
 
 
-
-type SYSTEM_CODEINTEGRITY_INFORMATION struct{
-Length uint32 //col:1112
-CodeIntegrityOptions uint32 //col:1113
+type  _SYSTEM_PROCESSOR_PERFORMANCE_DISTRIBUTION struct{
+ProcessorCount uint32 //col:1111
+Offsets[1] uint32 //col:1112
 }
-
 
 
-type SYSTEM_PROCESSOR_MICROCODE_UPDATE_INFORMATION struct{
-Operation uint32 //col:1117
+type  _SYSTEM_CODEINTEGRITY_INFORMATION struct{
+Length uint32 //col:1116
+CodeIntegrityOptions uint32 //col:1117
 }
 
 
-
-type SYSTEM_VA_LIST_INFORMATION struct{
-VirtualSize SIZE_T //col:1121
-VirtualPeak SIZE_T //col:1122
-VirtualLimit SIZE_T //col:1123
-AllocationFailures SIZE_T //col:1124
+type  _SYSTEM_PROCESSOR_MICROCODE_UPDATE_INFORMATION struct{
+Operation uint32 //col:1120
 }
-
 
 
-type SYSTEM_STORE_INFORMATION struct{
-ULONG _In_ //col:1128
-STORE_INFORMATION_CLASS _In_ //col:1129
-PVOID _Inout_ //col:1130
-ULONG _Inout_ //col:1131
+type  _SYSTEM_VA_LIST_INFORMATION struct{
+VirtualSize int64 //col:1127
+VirtualPeak int64 //col:1128
+VirtualLimit int64 //col:1129
+AllocationFailures int64 //col:1130
 }
 
 
-
-type SM_STATS_REQUEST struct{
-Version uint32 //col:1135
-DetailLevel uint32 //col:1136
-StoreId uint32 //col:1137
-BufferSize uint32 //col:1138
-Buffer PVOID //col:1139
+type  _SYSTEM_STORE_INFORMATION struct{
+ULONG _In_ //col:1134
+STORE_INFORMATION_CLASS _In_ //col:1135
+PVOID _Inout_ //col:1136
+ULONG _Inout_ //col:1137
 }
 
 
-
-type ST_DATA_MGR_STATS struct{
-RegionCount uint32 //col:1143
-PagesStored uint32 //col:1144
-UniquePagesStored uint32 //col:1145
-LazyCleanupRegionCount uint32 //col:1146
-RegionsInUse uint32 //col:1148
-SpaceUsed uint32 //col:1149
+type  _SM_STATS_REQUEST struct{
+Version uint32 //col:1142
+DetailLevel uint32 //col:1143
+StoreId uint32 //col:1144
+BufferSize uint32 //col:1145
+Buffer uintptr //col:1146
 }
-
 
 
-type ST_IO_STATS_PERIOD struct{
-PageCounts[5] uint32 //col:1154
+type  _ST_DATA_MGR_STATS struct{
+RegionCount uint32 //col:1152
+PagesStored uint32 //col:1153
+UniquePagesStored uint32 //col:1154
+LazyCleanupRegionCount uint32 //col:1155
+RegionsInUse uint32 //col:1157
+SpaceUsed uint32 //col:1158
 }
 
 
-
-type ST_IO_STATS struct{
-PeriodCount uint32 //col:1158
-Periods[64] ST_IO_STATS_PERIOD //col:1159
+type  _ST_IO_STATS_PERIOD struct{
+PageCounts[5] uint32 //col:1157
 }
 
 
-
-type ST_READ_LATENCY_BUCKET struct{
-LatencyUs uint32 //col:1163
-Count uint32 //col:1164
+type  _ST_IO_STATS struct{
+PeriodCount uint32 //col:1162
+Periods[64] ST_IO_STATS_PERIOD //col:1163
 }
-
 
 
-type ST_READ_LATENCY_STATS struct{
-Buckets[8] ST_READ_LATENCY_BUCKET //col:1168
+type  _ST_READ_LATENCY_BUCKET struct{
+LatencyUs uint32 //col:1167
+Count uint32 //col:1168
 }
 
 
-
-type ST_STATS_REGION_INFO struct{
-SpaceUsed USHORT //col:1172
-Priority uint8 //col:1173
-Spare uint8 //col:1174
+type  _ST_READ_LATENCY_STATS struct{
+Buckets[8] ST_READ_LATENCY_BUCKET //col:1171
 }
 
 
-
-type ST_STATS_SPACE_BITMAP struct{
-CompressedBytes SIZE_T //col:1178
-BytesPerBit uint32 //col:1179
-StoreBitmap[1] uint8 //col:1180
+type  _ST_STATS_REGION_INFO struct{
+SpaceUsed uint16 //col:1177
+Priority uint8 //col:1178
+Spare uint8 //col:1179
 }
-
 
 
-type ST_STATS struct{
-Version uint32 //col:1184
-Level uint32 //col:1185
-StoreType uint32 //col:1186
-NoDuplication uint32 //col:1187
-NoCompression uint32 //col:1188
-EncryptionStrength uint32 //col:1189
-VirtualRegions uint32 //col:1190
-Spare0 uint32 //col:1191
-Size uint32 //col:1192
-CompressionFormat USHORT //col:1193
-Spare USHORT //col:1194
-Struct struct //col:1195
-RegionSize uint32 //col:1197
-RegionCount uint32 //col:1198
-RegionCountMax uint32 //col:1199
-Granularity uint32 //col:1200
-UserData ST_DATA_MGR_STATS //col:1201
-Metadata ST_DATA_MGR_STATS //col:1202
+type  _ST_STATS_SPACE_BITMAP struct{
+CompressedBytes int64 //col:1183
+BytesPerBit uint32 //col:1184
+StoreBitmap[1] uint8 //col:1185
 }
 
 
-
-type SM_STORE_BASIC_PARAMS struct{
-Union union //col:1212
-Struct struct //col:1214
-StoreType uint32 //col:1216
-NoDuplication uint32 //col:1217
-FailNoCompression uint32 //col:1218
-NoCompression uint32 //col:1219
-NoEncryption uint32 //col:1220
-NoEvictOnAdd uint32 //col:1221
-PerformsFileIo uint32 //col:1222
-VdlNotSet uint32 //col:1223
-UseIntermediateAddBuffer uint32 //col:1224
-CompressNoHuff uint32 //col:1225
-LockActiveRegions uint32 //col:1226
-VirtualRegions uint32 //col:1227
-Spare uint32 //col:1228
+type  _ST_STATS struct{
+Version uint32 //col:1205
+Level uint32 //col:1206
+StoreType uint32 //col:1207
+NoDuplication uint32 //col:1208
+NoCompression uint32 //col:1209
+EncryptionStrength uint32 //col:1210
+VirtualRegions uint32 //col:1211
+Spare0 uint32 //col:1212
+Size uint32 //col:1213
+CompressionFormat uint16 //col:1214
+Spare uint16 //col:1215
+Struct struct //col:1216
+RegionSize uint32 //col:1218
+RegionCount uint32 //col:1219
+RegionCountMax uint32 //col:1220
+Granularity uint32 //col:1221
+UserData ST_DATA_MGR_STATS //col:1222
+Metadata ST_DATA_MGR_STATS //col:1223
 }
 
 
-
-type SMKM_REGION_EXTENT struct{
-RegionCount uint32 //col:1238
-ByteOffset SIZE_T //col:1239
+type  _SM_STORE_BASIC_PARAMS struct{
+Union union //col:1231
+Struct struct //col:1233
+StoreType uint32 //col:1235
+NoDuplication uint32 //col:1236
+FailNoCompression uint32 //col:1237
+NoCompression uint32 //col:1238
+NoEncryption uint32 //col:1239
+NoEvictOnAdd uint32 //col:1240
+PerformsFileIo uint32 //col:1241
+VdlNotSet uint32 //col:1242
+UseIntermediateAddBuffer uint32 //col:1243
+CompressNoHuff uint32 //col:1244
+LockActiveRegions uint32 //col:1245
+VirtualRegions uint32 //col:1246
+Spare uint32 //col:1247
 }
-
 
 
-type SMKM_FILE_INFO struct{
-FileHandle HANDLE //col:1243
-struct // //col:1244
-struct // //col:1245
-struct // //col:1246
-VolumePnpHandle HANDLE //col:1247
-struct // //col:1248
-Extents PSMKM_REGION_EXTENT //col:1249
-ExtentCount uint32 //col:1250
+type  _SMKM_REGION_EXTENT struct{
+RegionCount uint32 //col:1242
+ByteOffset int64 //col:1243
 }
 
 
-
-type SM_STORE_CACHE_BACKED_PARAMS struct{
-SectorSize uint32 //col:1254
-EncryptionKey PCHAR //col:1255
-EncryptionKeySize uint32 //col:1256
-FileInfo PSMKM_FILE_INFO //col:1257
-EtaContext PVOID //col:1258
-struct // //col:1259
+type  _SMKM_FILE_INFO struct{
+FileHandle uintptr //col:1253
+_FILE_OBJECT struct //col:1254
+_FILE_OBJECT struct //col:1255
+_DEVICE_OBJECT struct //col:1256
+VolumePnpHandle uintptr //col:1257
+_IRP struct //col:1258
+Extents PSMKM_REGION_EXTENT //col:1259
+ExtentCount uint32 //col:1260
 }
 
 
-
-type SM_STORE_PARAMETERS struct{
-Store SM_STORE_BASIC_PARAMS //col:1263
-Priority uint32 //col:1264
-Flags uint32 //col:1265
-CacheBacked SM_STORE_CACHE_BACKED_PARAMS //col:1266
+type  _SM_STORE_CACHE_BACKED_PARAMS struct{
+SectorSize uint32 //col:1262
+EncryptionKey PCHAR //col:1263
+EncryptionKeySize uint32 //col:1264
+FileInfo PSMKM_FILE_INFO //col:1265
+EtaContext uintptr //col:1266
+_RTL_BITMAP struct //col:1267
 }
-
 
 
-type SM_CREATE_REQUEST struct{
-Version uint32 //col:1270
-AcquireReference uint32 //col:1271
-KeyedStore uint32 //col:1272
-Spare uint32 //col:1273
-Params SM_STORE_PARAMETERS //col:1274
-StoreId uint32 //col:1275
+type  _SM_STORE_PARAMETERS struct{
+Store SM_STORE_BASIC_PARAMS //col:1269
+Priority uint32 //col:1270
+Flags uint32 //col:1271
+CacheBacked SM_STORE_CACHE_BACKED_PARAMS //col:1272
 }
 
 
-
-type SM_DELETE_REQUEST struct{
-Version uint32 //col:1279
-Spare uint32 //col:1280
-StoreId uint32 //col:1281
+type  _SM_CREATE_REQUEST struct{
+Version uint32 //col:1278
+AcquireReference uint32 //col:1279
+KeyedStore uint32 //col:1280
+Spare uint32 //col:1281
+Params SM_STORE_PARAMETERS //col:1282
+StoreId uint32 //col:1283
 }
 
 
-
-type SM_STORE_LIST_REQUEST struct{
-Version uint32 //col:1285
-StoreCount uint32 //col:1286
-ExtendedRequest uint32 //col:1287
-Spare uint32 //col:1288
-StoreId[32] uint32 //col:1289
+type  _SM_DELETE_REQUEST struct{
+Version uint32 //col:1284
+Spare uint32 //col:1285
+StoreId uint32 //col:1286
 }
-
 
 
-type SM_STORE_LIST_REQUEST_EX struct{
-Request SM_STORE_LIST_REQUEST //col:1293
-NameBuffer[32][64] WCHAR //col:1294
+type  _SM_STORE_LIST_REQUEST struct{
+Version uint32 //col:1292
+StoreCount uint32 //col:1293
+ExtendedRequest uint32 //col:1294
+Spare uint32 //col:1295
+StoreId[32] uint32 //col:1296
 }
 
 
-
-type SMC_CACHE_LIST_REQUEST struct{
-Version uint32 //col:1298
-CacheCount uint32 //col:1299
-Spare uint32 //col:1300
-CacheId[16] uint32 //col:1301
+type  _SM_STORE_LIST_REQUEST_EX struct{
+Request SM_STORE_LIST_REQUEST //col:1297
+NameBuffer[32][64] WCHAR //col:1298
 }
 
 
-
-type SMC_CACHE_PARAMETERS struct{
-CacheFileSize SIZE_T //col:1305
-StoreAlignment uint32 //col:1306
-PerformsFileIo uint32 //col:1307
-VdlNotSet uint32 //col:1308
-Spare uint32 //col:1309
-CacheFlags uint32 //col:1310
-Priority uint32 //col:1311
+type  _SMC_CACHE_LIST_REQUEST struct{
+Version uint32 //col:1304
+CacheCount uint32 //col:1305
+Spare uint32 //col:1306
+CacheId[16] uint32 //col:1307
 }
-
 
 
-type SMC_CACHE_CREATE_PARAMETERS struct{
-CacheParameters SMC_CACHE_PARAMETERS //col:1315
-TemplateFilePath[512] WCHAR //col:1316
+type  _SMC_CACHE_PARAMETERS struct{
+CacheFileSize int64 //col:1314
+StoreAlignment uint32 //col:1315
+PerformsFileIo uint32 //col:1316
+VdlNotSet uint32 //col:1317
+Spare uint32 //col:1318
+CacheFlags uint32 //col:1319
+Priority uint32 //col:1320
 }
 
 
-
-type SMC_CACHE_CREATE_REQUEST struct{
-Version uint32 //col:1320
-Spare uint32 //col:1321
-CacheId uint32 //col:1322
-CacheCreateParams SMC_CACHE_CREATE_PARAMETERS //col:1323
+type  _SMC_CACHE_CREATE_PARAMETERS struct{
+CacheParameters SMC_CACHE_PARAMETERS //col:1319
+TemplateFilePath[512] WCHAR //col:1320
 }
-
 
 
-type SMC_CACHE_DELETE_REQUEST struct{
-Version uint32 //col:1327
-Spare uint32 //col:1328
-CacheId uint32 //col:1329
+type  _SMC_CACHE_CREATE_REQUEST struct{
+Version uint32 //col:1326
+Spare uint32 //col:1327
+CacheId uint32 //col:1328
+CacheCreateParams SMC_CACHE_CREATE_PARAMETERS //col:1329
 }
 
 
-
-type SMC_STORE_CREATE_REQUEST struct{
-Version uint32 //col:1333
-Spare uint32 //col:1334
-StoreParams SM_STORE_BASIC_PARAMS //col:1335
-CacheId uint32 //col:1336
-StoreManagerType SM_STORE_MANAGER_TYPE //col:1337
-StoreId uint32 //col:1338
+type  _SMC_CACHE_DELETE_REQUEST struct{
+Version uint32 //col:1332
+Spare uint32 //col:1333
+CacheId uint32 //col:1334
 }
-
 
 
-type SMC_STORE_DELETE_REQUEST struct{
-Version uint32 //col:1342
-Spare uint32 //col:1343
+type  _SMC_STORE_CREATE_REQUEST struct{
+Version uint32 //col:1341
+Spare uint32 //col:1342
+StoreParams SM_STORE_BASIC_PARAMS //col:1343
 CacheId uint32 //col:1344
 StoreManagerType SM_STORE_MANAGER_TYPE //col:1345
 StoreId uint32 //col:1346
 }
 
 
-
-type SMC_CACHE_STATS struct{
-TotalFileSize SIZE_T //col:1350
-StoreCount uint32 //col:1351
-RegionCount uint32 //col:1352
-RegionSizeBytes uint32 //col:1353
-FileCount uint32 //col:1354
-PerformsFileIo uint32 //col:1355
-Spare uint32 //col:1356
-StoreIds[16] uint32 //col:1357
-PhysicalStoreBitmap uint32 //col:1358
-Priority uint32 //col:1359
-TemplateFilePath[512] WCHAR //col:1360
+type  _SMC_STORE_DELETE_REQUEST struct{
+Version uint32 //col:1349
+Spare uint32 //col:1350
+CacheId uint32 //col:1351
+StoreManagerType SM_STORE_MANAGER_TYPE //col:1352
+StoreId uint32 //col:1353
 }
 
 
-
-type SMC_CACHE_STATS_REQUEST struct{
-Version uint32 //col:1364
-NoFilePath uint32 //col:1365
-Spare uint32 //col:1366
-CacheId uint32 //col:1367
-CacheStats SMC_CACHE_STATS //col:1368
+type  _SMC_CACHE_STATS struct{
+TotalFileSize int64 //col:1363
+StoreCount uint32 //col:1364
+RegionCount uint32 //col:1365
+RegionSizeBytes uint32 //col:1366
+FileCount uint32 //col:1367
+PerformsFileIo uint32 //col:1368
+Spare uint32 //col:1369
+StoreIds[16] uint32 //col:1370
+PhysicalStoreBitmap uint32 //col:1371
+Priority uint32 //col:1372
+TemplateFilePath[512] WCHAR //col:1373
 }
 
 
-
-type SM_REGISTRATION_INFO struct{
-CachesUpdatedEvent HANDLE //col:1372
+type  _SMC_CACHE_STATS_REQUEST struct{
+Version uint32 //col:1371
+NoFilePath uint32 //col:1372
+Spare uint32 //col:1373
+CacheId uint32 //col:1374
+CacheStats SMC_CACHE_STATS //col:1375
 }
 
 
-
-type SM_REGISTRATION_REQUEST struct{
-Version uint32 //col:1376
-Spare uint32 //col:1377
-RegInfo SM_REGISTRATION_INFO //col:1378
+type  _SM_REGISTRATION_INFO struct{
+CachesUpdatedEvent uintptr //col:1375
 }
 
 
-
-type SM_STORE_RESIZE_REQUEST struct{
-Version uint32 //col:1382
-AddRegions uint32 //col:1383
-Spare uint32 //col:1384
-StoreId uint32 //col:1385
-NumberOfRegions uint32 //col:1386
-struct // //col:1387
+type  _SM_REGISTRATION_REQUEST struct{
+Version uint32 //col:1381
+Spare uint32 //col:1382
+RegInfo SM_REGISTRATION_INFO //col:1383
 }
 
 
-
-type SMC_STORE_RESIZE_REQUEST struct{
-Version uint32 //col:1391
-AddRegions uint32 //col:1392
-Spare uint32 //col:1393
-CacheId uint32 //col:1394
-StoreId uint32 //col:1395
-StoreManagerType SM_STORE_MANAGER_TYPE //col:1396
-RegionCount uint32 //col:1397
+type  _SM_STORE_RESIZE_REQUEST struct{
+Version uint32 //col:1390
+AddRegions uint32 //col:1391
+Spare uint32 //col:1392
+StoreId uint32 //col:1393
+NumberOfRegions uint32 //col:1394
+_RTL_BITMAP struct //col:1395
 }
 
 
-
-type SM_CONFIG_REQUEST struct{
-Version uint32 //col:1401
+type  _SMC_STORE_RESIZE_REQUEST struct{
+Version uint32 //col:1400
+AddRegions uint32 //col:1401
 Spare uint32 //col:1402
-ConfigType uint32 //col:1403
-ConfigValue uint32 //col:1404
+CacheId uint32 //col:1403
+StoreId uint32 //col:1404
+StoreManagerType SM_STORE_MANAGER_TYPE //col:1405
+RegionCount uint32 //col:1406
 }
 
 
-
-type SM_STORE_HIGH_MEM_PRIORITY_REQUEST struct{
-Version uint32 //col:1408
-SetHighMemoryPriority uint32 //col:1409
-Spare uint32 //col:1410
-ProcessHandle HANDLE //col:1411
+type  _SM_CONFIG_REQUEST struct{
+Version uint32 //col:1407
+Spare uint32 //col:1408
+ConfigType uint32 //col:1409
+ConfigValue uint32 //col:1410
 }
 
 
-
-type SM_SYSTEM_STORE_TRIM_REQUEST struct{
-Version uint32 //col:1415
+type  _SM_STORE_HIGH_MEM_PRIORITY_REQUEST struct{
+Version uint32 //col:1414
+SetHighMemoryPriority uint32 //col:1415
 Spare uint32 //col:1416
-PagesToTrim SIZE_T //col:1417
+ProcessHandle uintptr //col:1417
 }
 
 
-
-type SM_MEM_COMPRESSION_INFO_REQUEST struct{
-Version uint32 //col:1421
-Spare uint32 //col:1422
-CompressionPid uint32 //col:1423
-WorkingSetSize uint32 //col:1424
-TotalDataCompressed SIZE_T //col:1425
-TotalCompressedSize SIZE_T //col:1426
-TotalUniqueDataCompressed SIZE_T //col:1427
+type  _SM_SYSTEM_STORE_TRIM_REQUEST struct{
+Version uint32 //col:1420
+Spare uint32 //col:1421
+PagesToTrim int64 //col:1422
 }
 
 
-
-type SYSTEM_REGISTRY_APPEND_STRING_PARAMETERS struct{
-KeyHandle HANDLE //col:1431
-ValueNamePointer PUNICODE_STRING //col:1432
-RequiredLengthPointer PULONG //col:1433
-Buffer PUCHAR //col:1434
-BufferLength uint32 //col:1435
-Type uint32 //col:1436
-AppendBuffer PUCHAR //col:1437
-AppendBufferLength uint32 //col:1438
-CreateIfDoesntExist bool //col:1439
-TruncateExistingValue bool //col:1440
+type  _SM_MEM_COMPRESSION_INFO_REQUEST struct{
+Version uint32 //col:1430
+Spare uint32 //col:1431
+CompressionPid uint32 //col:1432
+WorkingSetSize uint32 //col:1433
+TotalDataCompressed int64 //col:1434
+TotalCompressedSize int64 //col:1435
+TotalUniqueDataCompressed int64 //col:1436
 }
-
 
 
-type SYSTEM_VHD_BOOT_INFORMATION struct{
-OsDiskIsVhd bool //col:1444
-OsVhdFilePathOffset uint32 //col:1445
-OsVhdParentVolume[1] WCHAR //col:1446
+type  _SYSTEM_REGISTRY_APPEND_STRING_PARAMETERS struct{
+KeyHandle uintptr //col:1443
+ValueNamePointer *uint32 //col:1444
+RequiredLengthPointer PULONG //col:1445
+Buffer PUCHAR //col:1446
+BufferLength uint32 //col:1447
+Type uint32 //col:1448
+AppendBuffer PUCHAR //col:1449
+AppendBufferLength uint32 //col:1450
+CreateIfDoesntExist bool //col:1451
+TruncateExistingValue bool //col:1452
 }
 
 
-
-type PS_CPU_QUOTA_QUERY_ENTRY struct{
-SessionId uint32 //col:1450
-Weight uint32 //col:1451
+type  _SYSTEM_VHD_BOOT_INFORMATION struct{
+OsDiskIsVhd bool //col:1449
+OsVhdFilePathOffset uint32 //col:1450
+OsVhdParentVolume[1] WCHAR //col:1451
 }
-
 
 
-type PS_CPU_QUOTA_QUERY_INFORMATION struct{
-SessionCount uint32 //col:1455
-SessionInformation[1] PS_CPU_QUOTA_QUERY_ENTRY //col:1456
+type  _PS_CPU_QUOTA_QUERY_ENTRY struct{
+SessionId uint32 //col:1454
+Weight uint32 //col:1455
 }
 
 
-
-type SYSTEM_ERROR_PORT_TIMEOUTS struct{
-StartTimeout uint32 //col:1460
-CommTimeout uint32 //col:1461
+type  _PS_CPU_QUOTA_QUERY_INFORMATION struct{
+SessionCount uint32 //col:1459
+SessionInformation[1] PS_CPU_QUOTA_QUERY_ENTRY //col:1460
 }
-
 
 
-type SYSTEM_LOW_PRIORITY_IO_INFORMATION struct{
-LowPriReadOperations uint32 //col:1465
-LowPriWriteOperations uint32 //col:1466
-KernelBumpedToNormalOperations uint32 //col:1467
-LowPriPagingReadOperations uint32 //col:1468
-KernelPagingReadsBumpedToNormal uint32 //col:1469
-LowPriPagingWriteOperations uint32 //col:1470
-KernelPagingWritesBumpedToNormal uint32 //col:1471
-BoostedIrpCount uint32 //col:1472
-BoostedPagingIrpCount uint32 //col:1473
-BlanketBoostCount uint32 //col:1474
+type  _SYSTEM_ERROR_PORT_TIMEOUTS struct{
+StartTimeout uint32 //col:1464
+CommTimeout uint32 //col:1465
 }
 
 
-
-type TPM_BOOT_ENTROPY_NT_RESULT struct{
-Policy ULONGLONG //col:1478
-ResultCode TPM_BOOT_ENTROPY_RESULT_CODE //col:1479
-ResultStatus NTSTATUS //col:1480
-Time ULONGLONG //col:1481
-EntropyLength uint32 //col:1482
-EntropyData[40] uint8 //col:1483
+type  _SYSTEM_LOW_PRIORITY_IO_INFORMATION struct{
+LowPriReadOperations uint32 //col:1477
+LowPriWriteOperations uint32 //col:1478
+KernelBumpedToNormalOperations uint32 //col:1479
+LowPriPagingReadOperations uint32 //col:1480
+KernelPagingReadsBumpedToNormal uint32 //col:1481
+LowPriPagingWriteOperations uint32 //col:1482
+KernelPagingWritesBumpedToNormal uint32 //col:1483
+BoostedIrpCount uint32 //col:1484
+BoostedPagingIrpCount uint32 //col:1485
+BlanketBoostCount uint32 //col:1486
 }
 
 
-
-type SYSTEM_VERIFIER_COUNTERS_INFORMATION struct{
-Legacy SYSTEM_VERIFIER_INFORMATION //col:1487
-RaiseIrqls uint32 //col:1488
-AcquireSpinLocks uint32 //col:1489
-SynchronizeExecutions uint32 //col:1490
-AllocationsWithNoTag uint32 //col:1491
-AllocationsFailed uint32 //col:1492
-AllocationsFailedDeliberately uint32 //col:1493
-LockedBytes SIZE_T //col:1494
-PeakLockedBytes SIZE_T //col:1495
-MappedLockedBytes SIZE_T //col:1496
-PeakMappedLockedBytes SIZE_T //col:1497
-MappedIoSpaceBytes SIZE_T //col:1498
-PeakMappedIoSpaceBytes SIZE_T //col:1499
-PagesForMdlBytes SIZE_T //col:1500
-PeakPagesForMdlBytes SIZE_T //col:1501
-ContiguousMemoryBytes SIZE_T //col:1502
-PeakContiguousMemoryBytes SIZE_T //col:1503
-ExecutePoolTypes uint32 //col:1504
-ExecutePageProtections uint32 //col:1505
-ExecutePageMappings uint32 //col:1506
-ExecuteWriteSections uint32 //col:1507
-SectionAlignmentFailures uint32 //col:1508
-UnsupportedRelocs uint32 //col:1509
-IATInExecutableSection uint32 //col:1510
+type  _TPM_BOOT_ENTROPY_NT_RESULT struct{
+Policy ULONGLONG //col:1486
+ResultCode TPM_BOOT_ENTROPY_RESULT_CODE //col:1487
+ResultStatus NTSTATUS //col:1488
+Time ULONGLONG //col:1489
+EntropyLength uint32 //col:1490
+EntropyData[40] uint8 //col:1491
 }
-
 
 
-type SYSTEM_ACPI_AUDIT_INFORMATION struct{
-RsdpCount uint32 //col:1514
-SameRsdt uint32 //col:1515
-SlicPresent uint32 //col:1516
-SlicDifferent uint32 //col:1517
+type  _SYSTEM_VERIFIER_COUNTERS_INFORMATION struct{
+Legacy SYSTEM_VERIFIER_INFORMATION //col:1513
+RaiseIrqls uint32 //col:1514
+AcquireSpinLocks uint32 //col:1515
+SynchronizeExecutions uint32 //col:1516
+AllocationsWithNoTag uint32 //col:1517
+AllocationsFailed uint32 //col:1518
+AllocationsFailedDeliberately uint32 //col:1519
+LockedBytes int64 //col:1520
+PeakLockedBytes int64 //col:1521
+MappedLockedBytes int64 //col:1522
+PeakMappedLockedBytes int64 //col:1523
+MappedIoSpaceBytes int64 //col:1524
+PeakMappedIoSpaceBytes int64 //col:1525
+PagesForMdlBytes int64 //col:1526
+PeakPagesForMdlBytes int64 //col:1527
+ContiguousMemoryBytes int64 //col:1528
+PeakContiguousMemoryBytes int64 //col:1529
+ExecutePoolTypes uint32 //col:1530
+ExecutePageProtections uint32 //col:1531
+ExecutePageMappings uint32 //col:1532
+ExecuteWriteSections uint32 //col:1533
+SectionAlignmentFailures uint32 //col:1534
+UnsupportedRelocs uint32 //col:1535
+IATInExecutableSection uint32 //col:1536
 }
 
 
-
-type SYSTEM_BASIC_PERFORMANCE_INFORMATION struct{
-AvailablePages SIZE_T //col:1521
-CommittedPages SIZE_T //col:1522
-CommitLimit SIZE_T //col:1523
-PeakCommitment SIZE_T //col:1524
+type  _SYSTEM_ACPI_AUDIT_INFORMATION struct{
+RsdpCount uint32 //col:1520
+SameRsdt uint32 //col:1521
+SlicPresent uint32 //col:1522
+SlicDifferent uint32 //col:1523
 }
-
 
 
-type QUERY_PERFORMANCE_COUNTER_FLAGS struct{
-Union union //col:1528
-Struct struct //col:1530
-KernelTransition uint32 //col:1532
-Reserved uint32 //col:1533
+type  _SYSTEM_BASIC_PERFORMANCE_INFORMATION struct{
+AvailablePages int64 //col:1527
+CommittedPages int64 //col:1528
+CommitLimit int64 //col:1529
+PeakCommitment int64 //col:1530
 }
 
 
-
-type SYSTEM_QUERY_PERFORMANCE_COUNTER_INFORMATION struct{
-Version uint32 //col:1540
-Flags QUERY_PERFORMANCE_COUNTER_FLAGS //col:1541
-ValidFlags QUERY_PERFORMANCE_COUNTER_FLAGS //col:1542
+type  _QUERY_PERFORMANCE_COUNTER_FLAGS struct{
+Union union //col:1536
+Struct struct //col:1538
+KernelTransition uint32 //col:1540
+Reserved uint32 //col:1541
 }
-
 
 
-type SYSTEM_BOOT_GRAPHICS_INFORMATION struct{
-FrameBuffer LARGE_INTEGER //col:1546
-Width uint32 //col:1547
-Height uint32 //col:1548
-PixelStride uint32 //col:1549
-Flags uint32 //col:1550
-Format SYSTEM_PIXEL_FORMAT //col:1551
-DisplayRotation uint32 //col:1552
+type  _SYSTEM_QUERY_PERFORMANCE_COUNTER_INFORMATION struct{
+Version uint32 //col:1545
+Flags QUERY_PERFORMANCE_COUNTER_FLAGS //col:1546
+ValidFlags QUERY_PERFORMANCE_COUNTER_FLAGS //col:1547
 }
 
 
-
-type MEMORY_SCRUB_INFORMATION struct{
-Handle HANDLE //col:1556
-PagesScrubbed uint32 //col:1557
+type  _SYSTEM_BOOT_GRAPHICS_INFORMATION struct{
+FrameBuffer LARGE_INTEGER //col:1555
+Width uint32 //col:1556
+Height uint32 //col:1557
+PixelStride uint32 //col:1558
+Flags uint32 //col:1559
+Format SYSTEM_PIXEL_FORMAT //col:1560
+DisplayRotation uint32 //col:1561
 }
 
 
-
-type PEBS_DS_SAVE_AREA32 struct{
-BtsBufferBase uint32 //col:1561
-BtsIndex uint32 //col:1562
-BtsAbsoluteMaximum uint32 //col:1563
-BtsInterruptThreshold uint32 //col:1564
-PebsBufferBase uint32 //col:1565
-PebsIndex uint32 //col:1566
-PebsAbsoluteMaximum uint32 //col:1567
-PebsInterruptThreshold uint32 //col:1568
-PebsGpCounterReset[8] uint32 //col:1569
-PebsFixedCounterReset[4] uint32 //col:1570
+type  _MEMORY_SCRUB_INFORMATION struct{
+Handle uintptr //col:1560
+PagesScrubbed uint32 //col:1561
 }
-
 
 
-type PEBS_DS_SAVE_AREA64 struct{
-BtsBufferBase ULONGLONG //col:1574
-BtsIndex ULONGLONG //col:1575
-BtsAbsoluteMaximum ULONGLONG //col:1576
-BtsInterruptThreshold ULONGLONG //col:1577
-PebsBufferBase ULONGLONG //col:1578
-PebsIndex ULONGLONG //col:1579
-PebsAbsoluteMaximum ULONGLONG //col:1580
-PebsInterruptThreshold ULONGLONG //col:1581
-PebsGpCounterReset[8] ULONGLONG //col:1582
-PebsFixedCounterReset[4] ULONGLONG //col:1583
+type  _PEBS_DS_SAVE_AREA32 struct{
+BtsBufferBase uint32 //col:1573
+BtsIndex uint32 //col:1574
+BtsAbsoluteMaximum uint32 //col:1575
+BtsInterruptThreshold uint32 //col:1576
+PebsBufferBase uint32 //col:1577
+PebsIndex uint32 //col:1578
+PebsAbsoluteMaximum uint32 //col:1579
+PebsInterruptThreshold uint32 //col:1580
+PebsGpCounterReset[8] uint32 //col:1581
+PebsFixedCounterReset[4] uint32 //col:1582
 }
 
 
-
-type PROCESSOR_PROFILE_CONTROL_AREA struct{
-PebsDsSaveArea PEBS_DS_SAVE_AREA //col:1587
+type  _PEBS_DS_SAVE_AREA64 struct{
+BtsBufferBase ULONGLONG //col:1586
+BtsIndex ULONGLONG //col:1587
+BtsAbsoluteMaximum ULONGLONG //col:1588
+BtsInterruptThreshold ULONGLONG //col:1589
+PebsBufferBase ULONGLONG //col:1590
+PebsIndex ULONGLONG //col:1591
+PebsAbsoluteMaximum ULONGLONG //col:1592
+PebsInterruptThreshold ULONGLONG //col:1593
+PebsGpCounterReset[8] ULONGLONG //col:1594
+PebsFixedCounterReset[4] ULONGLONG //col:1595
 }
-
 
 
-type SYSTEM_PROCESSOR_PROFILE_CONTROL_AREA struct{
-ProcessorProfileControlArea PROCESSOR_PROFILE_CONTROL_AREA //col:1591
-Allocate bool //col:1592
+type  _PROCESSOR_PROFILE_CONTROL_AREA struct{
+PebsDsSaveArea PEBS_DS_SAVE_AREA //col:1590
 }
 
 
-
-type MEMORY_COMBINE_INFORMATION struct{
-Handle HANDLE //col:1596
-PagesCombined ULONG_PTR //col:1597
+type  _SYSTEM_PROCESSOR_PROFILE_CONTROL_AREA struct{
+ProcessorProfileControlArea PROCESSOR_PROFILE_CONTROL_AREA //col:1595
+Allocate bool //col:1596
 }
-
 
 
-type MEMORY_COMBINE_INFORMATION_EX struct{
-Handle HANDLE //col:1601
-PagesCombined ULONG_PTR //col:1602
-Flags uint32 //col:1603
+type  _MEMORY_COMBINE_INFORMATION struct{
+Handle uintptr //col:1600
+PagesCombined ULONG_PTR //col:1601
 }
 
 
-
-type MEMORY_COMBINE_INFORMATION_EX2 struct{
-Handle HANDLE //col:1607
-PagesCombined ULONG_PTR //col:1608
-Flags uint32 //col:1609
-ProcessHandle HANDLE //col:1610
+type  _MEMORY_COMBINE_INFORMATION_EX struct{
+Handle uintptr //col:1606
+PagesCombined ULONG_PTR //col:1607
+Flags uint32 //col:1608
 }
-
 
 
-type SYSTEM_ENTROPY_TIMING_INFORMATION struct{
-(NTAPI VOID //col:1614
-(NTAPI VOID //col:1615
-InitializationContext PVOID //col:1616
+type  _MEMORY_COMBINE_INFORMATION_EX2 struct{
+Handle uintptr //col:1613
+PagesCombined ULONG_PTR //col:1614
+Flags uint32 //col:1615
+ProcessHandle uintptr //col:1616
 }
 
 
-
-type SYSTEM_CONSOLE_INFORMATION struct{
-DriverLoaded uint32 //col:1620
-Spare uint32 //col:1621
+type  _SYSTEM_ENTROPY_TIMING_INFORMATION struct{
+(NTAPI VOID //col:1619
+(NTAPI VOID //col:1620
+InitializationContext uintptr //col:1621
 }
-
 
 
-type SYSTEM_PLATFORM_BINARY_INFORMATION struct{
-PhysicalAddress ULONG64 //col:1625
-HandoffBuffer PVOID //col:1626
-CommandLineBuffer PVOID //col:1627
-HandoffBufferSize uint32 //col:1628
-CommandLineBufferSize uint32 //col:1629
+type  _SYSTEM_CONSOLE_INFORMATION struct{
+DriverLoaded uint32 //col:1624
+Spare uint32 //col:1625
 }
 
 
-
-type SYSTEM_POLICY_INFORMATION struct{
-InputData PVOID //col:1633
-OutputData PVOID //col:1634
-InputDataSize uint32 //col:1635
-OutputDataSize uint32 //col:1636
-Version uint32 //col:1637
+type  _SYSTEM_PLATFORM_BINARY_INFORMATION struct{
+PhysicalAddress ULONG64 //col:1632
+HandoffBuffer uintptr //col:1633
+CommandLineBuffer uintptr //col:1634
+HandoffBufferSize uint32 //col:1635
+CommandLineBufferSize uint32 //col:1636
 }
-
 
 
-type SYSTEM_HYPERVISOR_PROCESSOR_COUNT_INFORMATION struct{
-NumberOfLogicalProcessors uint32 //col:1641
-NumberOfCores uint32 //col:1642
+type  _SYSTEM_POLICY_INFORMATION struct{
+InputData uintptr //col:1640
+OutputData uintptr //col:1641
+InputDataSize uint32 //col:1642
+OutputDataSize uint32 //col:1643
+Version uint32 //col:1644
 }
 
 
-
-type SYSTEM_DEVICE_DATA_INFORMATION struct{
-DeviceId UNICODE_STRING //col:1646
-DataName UNICODE_STRING //col:1647
-DataType uint32 //col:1648
-DataBufferLength uint32 //col:1649
-DataBuffer PVOID //col:1650
+type  _SYSTEM_HYPERVISOR_PROCESSOR_COUNT_INFORMATION struct{
+NumberOfLogicalProcessors uint32 //col:1645
+NumberOfCores uint32 //col:1646
 }
-
 
 
-type PHYSICAL_CHANNEL_RUN struct{
-NodeNumber uint32 //col:1654
-ChannelNumber uint32 //col:1655
-BasePage ULONGLONG //col:1656
-PageCount ULONGLONG //col:1657
-Flags uint32 //col:1658
+type  _SYSTEM_DEVICE_DATA_INFORMATION struct{
+DeviceId *int16 //col:1653
+DataName *int16 //col:1654
+DataType uint32 //col:1655
+DataBufferLength uint32 //col:1656
+DataBuffer uintptr //col:1657
 }
 
 
-
-type SYSTEM_MEMORY_TOPOLOGY_INFORMATION struct{
-NumberOfRuns ULONGLONG //col:1662
-NumberOfNodes uint32 //col:1663
-NumberOfChannels uint32 //col:1664
-Run[1] PHYSICAL_CHANNEL_RUN //col:1665
+type  _PHYSICAL_CHANNEL_RUN struct{
+NodeNumber uint32 //col:1661
+ChannelNumber uint32 //col:1662
+BasePage ULONGLONG //col:1663
+PageCount ULONGLONG //col:1664
+Flags uint32 //col:1665
 }
 
 
-
-type SYSTEM_MEMORY_CHANNEL_INFORMATION struct{
-ChannelNumber uint32 //col:1669
-ChannelHeatIndex uint32 //col:1670
-TotalPageCount ULONGLONG //col:1671
-ZeroPageCount ULONGLONG //col:1672
-FreePageCount ULONGLONG //col:1673
-StandbyPageCount ULONGLONG //col:1674
+type  _SYSTEM_MEMORY_TOPOLOGY_INFORMATION struct{
+NumberOfRuns ULONGLONG //col:1668
+NumberOfNodes uint32 //col:1669
+NumberOfChannels uint32 //col:1670
+Run[1] PHYSICAL_CHANNEL_RUN //col:1671
 }
-
 
 
-type SYSTEM_BOOT_LOGO_INFORMATION struct{
-Flags uint32 //col:1678
-BitmapOffset uint32 //col:1679
+type  _SYSTEM_MEMORY_CHANNEL_INFORMATION struct{
+ChannelNumber uint32 //col:1677
+ChannelHeatIndex uint32 //col:1678
+TotalPageCount ULONGLONG //col:1679
+ZeroPageCount ULONGLONG //col:1680
+FreePageCount ULONGLONG //col:1681
+StandbyPageCount ULONGLONG //col:1682
 }
 
 
-
-type SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION_EX struct{
-IdleTime LARGE_INTEGER //col:1683
-KernelTime LARGE_INTEGER //col:1684
-UserTime LARGE_INTEGER //col:1685
-DpcTime LARGE_INTEGER //col:1686
-InterruptTime LARGE_INTEGER //col:1687
-InterruptCount uint32 //col:1688
-Spare0 uint32 //col:1689
-AvailableTime LARGE_INTEGER //col:1690
-Spare1 LARGE_INTEGER //col:1691
-Spare2 LARGE_INTEGER //col:1692
+type  _SYSTEM_BOOT_LOGO_INFORMATION struct{
+Flags uint32 //col:1682
+BitmapOffset uint32 //col:1683
 }
-
 
 
-type SYSTEM_SECUREBOOT_POLICY_INFORMATION struct{
-PolicyPublisher GUID //col:1696
-PolicyVersion uint32 //col:1697
-PolicyOptions uint32 //col:1698
+type  _SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION_EX struct{
+IdleTime LARGE_INTEGER //col:1695
+KernelTime LARGE_INTEGER //col:1696
+UserTime LARGE_INTEGER //col:1697
+DpcTime LARGE_INTEGER //col:1698
+InterruptTime LARGE_INTEGER //col:1699
+InterruptCount uint32 //col:1700
+Spare0 uint32 //col:1701
+AvailableTime LARGE_INTEGER //col:1702
+Spare1 LARGE_INTEGER //col:1703
+Spare2 LARGE_INTEGER //col:1704
 }
 
 
-
-type SYSTEM_PAGEFILE_INFORMATION_EX struct{
-Union union //col:1702
-Info SYSTEM_PAGEFILE_INFORMATION //col:1704
-Struct struct //col:1705
-NextEntryOffset uint32 //col:1707
-TotalSize uint32 //col:1708
-TotalInUse uint32 //col:1709
-PeakUsage uint32 //col:1710
-PageFileName UNICODE_STRING //col:1711
+type  _SYSTEM_SECUREBOOT_POLICY_INFORMATION struct{
+PolicyPublisher GUID //col:1701
+PolicyVersion uint32 //col:1702
+PolicyOptions uint32 //col:1703
 }
-
 
 
-type SYSTEM_SECUREBOOT_INFORMATION struct{
-SecureBootEnabled bool //col:1719
-SecureBootCapable bool //col:1720
+type  _SYSTEM_PAGEFILE_INFORMATION_EX struct{
+Union union //col:1714
+Info SYSTEM_PAGEFILE_INFORMATION //col:1716
+Struct struct //col:1717
+NextEntryOffset uint32 //col:1719
+TotalSize uint32 //col:1720
+TotalInUse uint32 //col:1721
+PeakUsage uint32 //col:1722
+PageFileName *int16 //col:1723
 }
 
 
-
-type PROCESS_DISK_COUNTERS struct{
-BytesRead ULONGLONG //col:1724
-BytesWritten ULONGLONG //col:1725
-ReadOperationCount ULONGLONG //col:1726
-WriteOperationCount ULONGLONG //col:1727
-FlushOperationCount ULONGLONG //col:1728
+type  _SYSTEM_SECUREBOOT_INFORMATION struct{
+SecureBootEnabled bool //col:1723
+SecureBootCapable bool //col:1724
 }
 
 
-
-type PROCESS_ENERGY_VALUES struct{
-Cycles[4][2] ULONGLONG //col:1732
-DiskEnergy ULONGLONG //col:1733
-NetworkTailEnergy ULONGLONG //col:1734
-MBBTailEnergy ULONGLONG //col:1735
-NetworkTxRxBytes ULONGLONG //col:1736
-MBBTxRxBytes ULONGLONG //col:1737
-Union union //col:1738
-Durations[3] ENERGY_STATE_DURATION //col:1740
-Struct struct //col:1741
-ForegroundDuration ENERGY_STATE_DURATION //col:1743
-DesktopVisibleDuration ENERGY_STATE_DURATION //col:1744
-PSMForegroundDuration ENERGY_STATE_DURATION //col:1745
+type  _PROCESS_DISK_COUNTERS struct{
+BytesRead ULONGLONG //col:1731
+BytesWritten ULONGLONG //col:1732
+ReadOperationCount ULONGLONG //col:1733
+WriteOperationCount ULONGLONG //col:1734
+FlushOperationCount ULONGLONG //col:1735
 }
-
 
 
-type PROCESS_ENERGY_VALUES_EXTENSION struct{
-Union union //col:1757
-Timelines[14] TIMELINE_BITMAP //col:1759
-Struct struct //col:1760
-CpuTimeline TIMELINE_BITMAP //col:1762
-DiskTimeline TIMELINE_BITMAP //col:1763
-NetworkTimeline TIMELINE_BITMAP //col:1764
-MBBTimeline TIMELINE_BITMAP //col:1765
-ForegroundTimeline TIMELINE_BITMAP //col:1766
-DesktopVisibleTimeline TIMELINE_BITMAP //col:1767
-CompositionRenderedTimeline TIMELINE_BITMAP //col:1768
-CompositionDirtyGeneratedTimeline TIMELINE_BITMAP //col:1769
-CompositionDirtyPropagatedTimeline TIMELINE_BITMAP //col:1770
-InputTimeline TIMELINE_BITMAP //col:1771
-AudioInTimeline TIMELINE_BITMAP //col:1772
-AudioOutTimeline TIMELINE_BITMAP //col:1773
-DisplayRequiredTimeline TIMELINE_BITMAP //col:1774
-KeyboardInputTimeline TIMELINE_BITMAP //col:1775
+type  _PROCESS_ENERGY_VALUES struct{
+Cycles[4][2] ULONGLONG //col:1748
+DiskEnergy ULONGLONG //col:1749
+NetworkTailEnergy ULONGLONG //col:1750
+MBBTailEnergy ULONGLONG //col:1751
+NetworkTxRxBytes ULONGLONG //col:1752
+MBBTxRxBytes ULONGLONG //col:1753
+Union union //col:1754
+Durations[3] ENERGY_STATE_DURATION //col:1756
+Struct struct //col:1757
+ForegroundDuration ENERGY_STATE_DURATION //col:1759
+DesktopVisibleDuration ENERGY_STATE_DURATION //col:1760
+PSMForegroundDuration ENERGY_STATE_DURATION //col:1761
 }
 
 
-
-type PROCESS_EXTENDED_ENERGY_VALUES struct{
-Base PROCESS_ENERGY_VALUES //col:1795
-Extension PROCESS_ENERGY_VALUES_EXTENSION //col:1796
+type  _PROCESS_ENERGY_VALUES_EXTENSION struct{
+Union union //col:1778
+Timelines[14] TIMELINE_BITMAP //col:1780
+Struct struct //col:1781
+CpuTimeline TIMELINE_BITMAP //col:1783
+DiskTimeline TIMELINE_BITMAP //col:1784
+NetworkTimeline TIMELINE_BITMAP //col:1785
+MBBTimeline TIMELINE_BITMAP //col:1786
+ForegroundTimeline TIMELINE_BITMAP //col:1787
+DesktopVisibleTimeline TIMELINE_BITMAP //col:1788
+CompositionRenderedTimeline TIMELINE_BITMAP //col:1789
+CompositionDirtyGeneratedTimeline TIMELINE_BITMAP //col:1790
+CompositionDirtyPropagatedTimeline TIMELINE_BITMAP //col:1791
+InputTimeline TIMELINE_BITMAP //col:1792
+AudioInTimeline TIMELINE_BITMAP //col:1793
+AudioOutTimeline TIMELINE_BITMAP //col:1794
+DisplayRequiredTimeline TIMELINE_BITMAP //col:1795
+KeyboardInputTimeline TIMELINE_BITMAP //col:1796
 }
-
 
 
-type SYSTEM_PROCESS_INFORMATION_EXTENSION struct{
-DiskCounters PROCESS_DISK_COUNTERS //col:1800
-ContextSwitches ULONGLONG //col:1801
-Union union //col:1802
-Flags uint32 //col:1804
-Struct struct //col:1805
-HasStrongId uint32 //col:1807
-Classification uint32 //col:1808
-BackgroundActivityModerated uint32 //col:1809
-Spare uint32 //col:1810
+type  _PROCESS_EXTENDED_ENERGY_VALUES struct{
+Base PROCESS_ENERGY_VALUES //col:1799
+Extension PROCESS_ENERGY_VALUES_EXTENSION //col:1800
 }
 
 
-
-type SYSTEM_PORTABLE_WORKSPACE_EFI_LAUNCHER_INFORMATION struct{
-EfiLauncherEnabled bool //col:1824
+type  _SYSTEM_PROCESS_INFORMATION_EXTENSION struct{
+DiskCounters PROCESS_DISK_COUNTERS //col:1813
+ContextSwitches ULONGLONG //col:1814
+Union union //col:1815
+Flags uint32 //col:1817
+Struct struct //col:1818
+HasStrongId uint32 //col:1820
+Classification uint32 //col:1821
+BackgroundActivityModerated uint32 //col:1822
+Spare uint32 //col:1823
 }
-
 
 
-type SYSTEM_KERNEL_DEBUGGER_INFORMATION_EX struct{
-DebuggerAllowed bool //col:1828
-DebuggerEnabled bool //col:1829
-DebuggerPresent bool //col:1830
+type  _SYSTEM_PORTABLE_WORKSPACE_EFI_LAUNCHER_INFORMATION struct{
+EfiLauncherEnabled bool //col:1827
 }
 
 
-
-type SYSTEM_ELAM_CERTIFICATE_INFORMATION struct{
-ElamDriverFile HANDLE //col:1834
+type  _SYSTEM_KERNEL_DEBUGGER_INFORMATION_EX struct{
+DebuggerAllowed bool //col:1833
+DebuggerEnabled bool //col:1834
+DebuggerPresent bool //col:1835
 }
 
 
-
-type OFFLINE_CRASHDUMP_CONFIGURATION_TABLE_V2 struct{
-Version uint32 //col:1838
-AbnormalResetOccurred uint32 //col:1839
-OfflineMemoryDumpCapable uint32 //col:1840
-ResetDataAddress LARGE_INTEGER //col:1841
-ResetDataSize uint32 //col:1842
+type  _SYSTEM_ELAM_CERTIFICATE_INFORMATION struct{
+ElamDriverFile uintptr //col:1837
 }
-
 
 
-type OFFLINE_CRASHDUMP_CONFIGURATION_TABLE_V1 struct{
-Version uint32 //col:1846
-AbnormalResetOccurred uint32 //col:1847
-OfflineMemoryDumpCapable uint32 //col:1848
+type  _OFFLINE_CRASHDUMP_CONFIGURATION_TABLE_V2 struct{
+Version uint32 //col:1845
+AbnormalResetOccurred uint32 //col:1846
+OfflineMemoryDumpCapable uint32 //col:1847
+ResetDataAddress LARGE_INTEGER //col:1848
+ResetDataSize uint32 //col:1849
 }
 
 
-
-type SYSTEM_PROCESSOR_FEATURES_INFORMATION struct{
-ProcessorFeatureBits ULONGLONG //col:1852
-Reserved[3] ULONGLONG //col:1853
+type  _OFFLINE_CRASHDUMP_CONFIGURATION_TABLE_V1 struct{
+Version uint32 //col:1851
+AbnormalResetOccurred uint32 //col:1852
+OfflineMemoryDumpCapable uint32 //col:1853
 }
-
 
 
-type SYSTEM_EDID_INFORMATION struct{
-Edid[128] uint8 //col:1857
+type  _SYSTEM_PROCESSOR_FEATURES_INFORMATION struct{
+ProcessorFeatureBits ULONGLONG //col:1856
+Reserved[3] ULONGLONG //col:1857
 }
 
 
-
-type SYSTEM_MANUFACTURING_INFORMATION struct{
-Options uint32 //col:1861
-ProfileName UNICODE_STRING //col:1862
+type  _SYSTEM_EDID_INFORMATION struct{
+Edid[128] uint8 //col:1860
 }
-
 
 
-type SYSTEM_ENERGY_ESTIMATION_CONFIG_INFORMATION struct{
-Enabled bool //col:1866
+type  _SYSTEM_MANUFACTURING_INFORMATION struct{
+Options uint32 //col:1865
+ProfileName *int16 //col:1866
 }
 
 
-
-type HV_DETAILS struct{
-Data[4] uint32 //col:1870
+type  _SYSTEM_ENERGY_ESTIMATION_CONFIG_INFORMATION struct{
+Enabled bool //col:1869
 }
-
 
 
-type SYSTEM_HYPERVISOR_DETAIL_INFORMATION struct{
-HvVendorAndMaxFunction HV_DETAILS //col:1874
-HypervisorInterface HV_DETAILS //col:1875
-HypervisorVersion HV_DETAILS //col:1876
-HvFeatures HV_DETAILS //col:1877
-HwFeatures HV_DETAILS //col:1878
-EnlightenmentInfo HV_DETAILS //col:1879
-ImplementationLimits HV_DETAILS //col:1880
+type  _HV_DETAILS struct{
+Data[4] uint32 //col:1873
 }
 
 
-
-type SYSTEM_PROCESSOR_CYCLE_STATS_INFORMATION struct{
-Cycles[4][2] ULONGLONG //col:1884
+type  _SYSTEM_HYPERVISOR_DETAIL_INFORMATION struct{
+HvVendorAndMaxFunction HV_DETAILS //col:1883
+HypervisorInterface HV_DETAILS //col:1884
+HypervisorVersion HV_DETAILS //col:1885
+HvFeatures HV_DETAILS //col:1886
+HwFeatures HV_DETAILS //col:1887
+EnlightenmentInfo HV_DETAILS //col:1888
+ImplementationLimits HV_DETAILS //col:1889
 }
-
 
 
-type SYSTEM_TPM_INFORMATION struct{
-Flags uint32 //col:1888
+type  _SYSTEM_PROCESSOR_CYCLE_STATS_INFORMATION struct{
+Cycles[4][2] ULONGLONG //col:1887
 }
 
 
-
-type SYSTEM_VSM_PROTECTION_INFORMATION struct{
-DmaProtectionsAvailable bool //col:1892
-DmaProtectionsInUse bool //col:1893
-HardwareMbecAvailable bool //col:1894
-ApicVirtualizationAvailable bool //col:1895
+type  _SYSTEM_TPM_INFORMATION struct{
+Flags uint32 //col:1891
 }
-
 
 
-type SYSTEM_KERNEL_DEBUGGER_FLAGS struct{
-KernelDebuggerIgnoreUmExceptions bool //col:1899
+type  _SYSTEM_VSM_PROTECTION_INFORMATION struct{
+DmaProtectionsAvailable bool //col:1898
+DmaProtectionsInUse bool //col:1899
+HardwareMbecAvailable bool //col:1900
+ApicVirtualizationAvailable bool //col:1901
 }
 
 
-
-type SYSTEM_CODEINTEGRITYPOLICY_INFORMATION struct{
-Options uint32 //col:1903
-HVCIOptions uint32 //col:1904
-Version ULONGLONG //col:1905
-PolicyGuid GUID //col:1906
+type  _SYSTEM_KERNEL_DEBUGGER_FLAGS struct{
+KernelDebuggerIgnoreUmExceptions bool //col:1902
 }
-
 
 
-type SYSTEM_ISOLATED_USER_MODE_INFORMATION struct{
-SecureKernelRunning bool //col:1910
-HvciEnabled bool //col:1911
-HvciStrictMode bool //col:1912
-DebugEnabled bool //col:1913
-FirmwarePageProtection bool //col:1914
-EncryptionKeyAvailable bool //col:1915
-SpareFlags bool //col:1916
-TrustletRunning bool //col:1917
-HvciDisableAllowed bool //col:1918
-SpareFlags2 bool //col:1919
-Spare0[6] bool //col:1920
-Spare1 ULONGLONG //col:1921
+type  _SYSTEM_CODEINTEGRITYPOLICY_INFORMATION struct{
+Options uint32 //col:1909
+HVCIOptions uint32 //col:1910
+Version ULONGLONG //col:1911
+PolicyGuid GUID //col:1912
 }
 
 
-
-type SYSTEM_SINGLE_MODULE_INFORMATION struct{
-TargetModuleAddress PVOID //col:1925
-ExInfo RTL_PROCESS_MODULE_INFORMATION_EX //col:1926
+type  _SYSTEM_ISOLATED_USER_MODE_INFORMATION struct{
+SecureKernelRunning bool //col:1924
+HvciEnabled bool //col:1925
+HvciStrictMode bool //col:1926
+DebugEnabled bool //col:1927
+FirmwarePageProtection bool //col:1928
+EncryptionKeyAvailable bool //col:1929
+SpareFlags bool //col:1930
+TrustletRunning bool //col:1931
+HvciDisableAllowed bool //col:1932
+SpareFlags2 bool //col:1933
+Spare0[6] bool //col:1934
+Spare1 ULONGLONG //col:1935
 }
 
 
-
-type SYSTEM_INTERRUPT_CPU_SET_INFORMATION struct{
-Gsiv uint32 //col:1930
-Group USHORT //col:1931
-CpuSets ULONGLONG //col:1932
+type  _SYSTEM_SINGLE_MODULE_INFORMATION struct{
+TargetModuleAddress uintptr //col:1929
+ExInfo RTL_PROCESS_MODULE_INFORMATION_EX //col:1930
 }
-
 
 
-type SYSTEM_SECUREBOOT_POLICY_FULL_INFORMATION struct{
-PolicyInformation SYSTEM_SECUREBOOT_POLICY_INFORMATION //col:1936
-PolicySize uint32 //col:1937
-Policy[1] uint8 //col:1938
+type  _SYSTEM_INTERRUPT_CPU_SET_INFORMATION struct{
+Gsiv uint32 //col:1935
+Group uint16 //col:1936
+CpuSets ULONGLONG //col:1937
 }
 
 
-
-type SYSTEM_ROOT_SILO_INFORMATION struct{
-NumberOfSilos uint32 //col:1942
-SiloIdList[1] uint32 //col:1943
+type  _SYSTEM_SECUREBOOT_POLICY_FULL_INFORMATION struct{
+PolicyInformation SYSTEM_SECUREBOOT_POLICY_INFORMATION //col:1941
+PolicySize uint32 //col:1942
+Policy[1] uint8 //col:1943
 }
-
 
 
-type SYSTEM_CPU_SET_TAG_INFORMATION struct{
-Tag ULONGLONG //col:1947
-CpuSets[1] ULONGLONG //col:1948
+type  _SYSTEM_ROOT_SILO_INFORMATION struct{
+NumberOfSilos uint32 //col:1946
+SiloIdList[1] uint32 //col:1947
 }
 
 
-
-type SYSTEM_SECURE_KERNEL_HYPERGUARD_PROFILE_INFORMATION struct{
-ExtentCount uint32 //col:1952
-ValidStructureSize uint32 //col:1953
-NextExtentIndex uint32 //col:1954
-ExtentRestart uint32 //col:1955
-CycleCount uint32 //col:1956
-TimeoutCount uint32 //col:1957
-CycleTime ULONGLONG //col:1958
-CycleTimeMax ULONGLONG //col:1959
-ExtentTime ULONGLONG //col:1960
-ExtentTimeIndex uint32 //col:1961
-ExtentTimeMaxIndex uint32 //col:1962
-ExtentTimeMax ULONGLONG //col:1963
-HyperFlushTimeMax ULONGLONG //col:1964
-TranslateVaTimeMax ULONGLONG //col:1965
-DebugExemptionCount ULONGLONG //col:1966
-TbHitCount ULONGLONG //col:1967
-TbMissCount ULONGLONG //col:1968
-VinaPendingYield ULONGLONG //col:1969
-HashCycles ULONGLONG //col:1970
-HistogramOffset uint32 //col:1971
-HistogramBuckets uint32 //col:1972
-HistogramShift uint32 //col:1973
-Reserved1 uint32 //col:1974
-PageNotPresentCount ULONGLONG //col:1975
+type  _SYSTEM_CPU_SET_TAG_INFORMATION struct{
+Tag ULONGLONG //col:1951
+CpuSets[1] ULONGLONG //col:1952
 }
-
 
 
-type SYSTEM_SECUREBOOT_PLATFORM_MANIFEST_INFORMATION struct{
-PlatformManifestSize uint32 //col:1979
-PlatformManifest[1] uint8 //col:1980
+type  _SYSTEM_SECURE_KERNEL_HYPERGUARD_PROFILE_INFORMATION struct{
+ExtentCount uint32 //col:1978
+ValidStructureSize uint32 //col:1979
+NextExtentIndex uint32 //col:1980
+ExtentRestart uint32 //col:1981
+CycleCount uint32 //col:1982
+TimeoutCount uint32 //col:1983
+CycleTime ULONGLONG //col:1984
+CycleTimeMax ULONGLONG //col:1985
+ExtentTime ULONGLONG //col:1986
+ExtentTimeIndex uint32 //col:1987
+ExtentTimeMaxIndex uint32 //col:1988
+ExtentTimeMax ULONGLONG //col:1989
+HyperFlushTimeMax ULONGLONG //col:1990
+TranslateVaTimeMax ULONGLONG //col:1991
+DebugExemptionCount ULONGLONG //col:1992
+TbHitCount ULONGLONG //col:1993
+TbMissCount ULONGLONG //col:1994
+VinaPendingYield ULONGLONG //col:1995
+HashCycles ULONGLONG //col:1996
+HistogramOffset uint32 //col:1997
+HistogramBuckets uint32 //col:1998
+HistogramShift uint32 //col:1999
+Reserved1 uint32 //col:2000
+PageNotPresentCount ULONGLONG //col:2001
 }
 
 
-
-type SYSTEM_INTERRUPT_STEERING_INFORMATION_INPUT struct{
-Gsiv uint32 //col:1984
-ControllerInterrupt uint8 //col:1985
-EdgeInterrupt uint8 //col:1986
-IsPrimaryInterrupt uint8 //col:1987
-TargetAffinity GROUP_AFFINITY //col:1988
+type  _SYSTEM_SECUREBOOT_PLATFORM_MANIFEST_INFORMATION struct{
+PlatformManifestSize uint32 //col:1983
+PlatformManifest[1] uint8 //col:1984
 }
 
 
-
-type SYSTEM_SUPPORTED_PROCESSOR_ARCHITECTURES_INFORMATION struct{
-Machine uint32 //col:1992
-KernelMode uint32 //col:1993
-UserMode uint32 //col:1994
-Native uint32 //col:1995
-Process uint32 //col:1996
-WoW64Container uint32 //col:1997
-ReservedZero0 uint32 //col:1998
+type  _SYSTEM_INTERRUPT_STEERING_INFORMATION_INPUT struct{
+Gsiv uint32 //col:1991
+ControllerInterrupt uint8 //col:1992
+EdgeInterrupt uint8 //col:1993
+IsPrimaryInterrupt uint8 //col:1994
+TargetAffinity GROUP_AFFINITY //col:1995
 }
-
 
 
-type SYSTEM_MEMORY_USAGE_INFORMATION struct{
-TotalPhysicalBytes ULONGLONG //col:2002
-AvailableBytes ULONGLONG //col:2003
-ResidentAvailableBytes LONGLONG //col:2004
-CommittedBytes ULONGLONG //col:2005
-SharedCommittedBytes ULONGLONG //col:2006
-CommitLimitBytes ULONGLONG //col:2007
-PeakCommitmentBytes ULONGLONG //col:2008
+type  _SYSTEM_SUPPORTED_PROCESSOR_ARCHITECTURES_INFORMATION struct{
+Machine uint32 //col:2001
+KernelMode uint32 //col:2002
+UserMode uint32 //col:2003
+Native uint32 //col:2004
+Process uint32 //col:2005
+WoW64Container uint32 //col:2006
+ReservedZero0 uint32 //col:2007
 }
 
 
-
-type SYSTEM_CODEINTEGRITY_CERTIFICATE_INFORMATION struct{
-ImageFile HANDLE //col:2012
-Type uint32 //col:2013
+type  _SYSTEM_MEMORY_USAGE_INFORMATION struct{
+TotalPhysicalBytes ULONGLONG //col:2011
+AvailableBytes ULONGLONG //col:2012
+ResidentAvailableBytes LONGLONG //col:2013
+CommittedBytes ULONGLONG //col:2014
+SharedCommittedBytes ULONGLONG //col:2015
+CommitLimitBytes ULONGLONG //col:2016
+PeakCommitmentBytes ULONGLONG //col:2017
 }
-
 
 
-type SYSTEM_PHYSICAL_MEMORY_INFORMATION struct{
-TotalPhysicalBytes ULONGLONG //col:2017
-LowestPhysicalAddress ULONGLONG //col:2018
-HighestPhysicalAddress ULONGLONG //col:2019
+type  _SYSTEM_CODEINTEGRITY_CERTIFICATE_INFORMATION struct{
+ImageFile uintptr //col:2016
+Type uint32 //col:2017
 }
 
 
-
-type SYSTEM_ACTIVITY_MODERATION_EXE_STATE  struct{
-ExePathNt UNICODE_STRING //col:2023
-ModerationState SYSTEM_ACTIVITY_MODERATION_STATE //col:2024
+type  _SYSTEM_PHYSICAL_MEMORY_INFORMATION struct{
+TotalPhysicalBytes ULONGLONG //col:2022
+LowestPhysicalAddress ULONGLONG //col:2023
+HighestPhysicalAddress ULONGLONG //col:2024
 }
-
 
 
-type SYSTEM_ACTIVITY_MODERATION_INFO struct{
-Identifier UNICODE_STRING //col:2028
-ModerationState SYSTEM_ACTIVITY_MODERATION_STATE //col:2029
-AppType SYSTEM_ACTIVITY_MODERATION_APP_TYPE //col:2030
+type  _SYSTEM_ACTIVITY_MODERATION_EXE_STATE  struct{
+ExePathNt *int16 //col:2027
+ModerationState SYSTEM_ACTIVITY_MODERATION_STATE //col:2028
 }
 
 
-
-type SYSTEM_ACTIVITY_MODERATION_USER_SETTINGS struct{
-UserKeyHandle HANDLE //col:2034
+type  _SYSTEM_ACTIVITY_MODERATION_INFO struct{
+Identifier *int16 //col:2033
+ModerationState SYSTEM_ACTIVITY_MODERATION_STATE //col:2034
+AppType SYSTEM_ACTIVITY_MODERATION_APP_TYPE //col:2035
 }
 
 
-
-type SYSTEM_CODEINTEGRITY_UNLOCK_INFORMATION struct{
-Union union //col:2038
-Flags uint32 //col:2040
-Struct struct //col:2041
-Locked uint32 //col:2043
-UnlockApplied uint32 //col:2044
-UnlockIdValid uint32 //col:2045
-Reserved uint32 //col:2046
+type  _SYSTEM_ACTIVITY_MODERATION_USER_SETTINGS struct{
+UserKeyHandle uintptr //col:2037
 }
-
 
 
-type SYSTEM_FLUSH_INFORMATION struct{
-SupportedFlushMethods uint32 //col:2053
-ProcessorCacheFlushSize uint32 //col:2054
-SystemFlushCapabilities ULONGLONG //col:2055
-Reserved[2] ULONGLONG //col:2056
+type  _SYSTEM_CODEINTEGRITY_UNLOCK_INFORMATION struct{
+Union union //col:2049
+Flags uint32 //col:2051
+Struct struct //col:2052
+Locked uint32 //col:2054
+UnlockApplied uint32 //col:2055
+UnlockIdValid uint32 //col:2056
+Reserved uint32 //col:2057
 }
 
 
-
-type SYSTEM_WRITE_CONSTRAINT_INFORMATION struct{
-WriteConstraintPolicy uint32 //col:2060
-Reserved uint32 //col:2061
+type  _SYSTEM_FLUSH_INFORMATION struct{
+SupportedFlushMethods uint32 //col:2059
+ProcessorCacheFlushSize uint32 //col:2060
+SystemFlushCapabilities ULONGLONG //col:2061
+Reserved[2] ULONGLONG //col:2062
 }
-
 
 
-type SYSTEM_KERNEL_VA_SHADOW_INFORMATION struct{
-Union union //col:2065
-KvaShadowFlags uint32 //col:2067
-Struct struct //col:2068
-KvaShadowEnabled uint32 //col:2070
-KvaShadowUserGlobal uint32 //col:2071
-KvaShadowPcid uint32 //col:2072
-KvaShadowInvpcid uint32 //col:2073
-KvaShadowRequired uint32 //col:2074
-KvaShadowRequiredAvailable uint32 //col:2075
-InvalidPteBit uint32 //col:2076
-L1DataCacheFlushSupported uint32 //col:2077
-L1TerminalFaultMitigationPresent uint32 //col:2078
-Reserved uint32 //col:2079
+type  _SYSTEM_WRITE_CONSTRAINT_INFORMATION struct{
+WriteConstraintPolicy uint32 //col:2064
+Reserved uint32 //col:2065
 }
 
 
-
-type SYSTEM_CODEINTEGRITYVERIFICATION_INFORMATION struct{
-FileHandle HANDLE //col:2085
-ImageSize uint32 //col:2086
-Image PVOID //col:2087
+type  _SYSTEM_KERNEL_VA_SHADOW_INFORMATION struct{
+Union union //col:2082
+KvaShadowFlags uint32 //col:2084
+Struct struct //col:2085
+KvaShadowEnabled uint32 //col:2087
+KvaShadowUserGlobal uint32 //col:2088
+KvaShadowPcid uint32 //col:2089
+KvaShadowInvpcid uint32 //col:2090
+KvaShadowRequired uint32 //col:2091
+KvaShadowRequiredAvailable uint32 //col:2092
+InvalidPteBit uint32 //col:2093
+L1DataCacheFlushSupported uint32 //col:2094
+L1TerminalFaultMitigationPresent uint32 //col:2095
+Reserved uint32 //col:2096
 }
-
 
 
-type SYSTEM_HYPERVISOR_SHARED_PAGE_INFORMATION struct{
-HypervisorSharedUserVa PVOID //col:2091
+type  _SYSTEM_CODEINTEGRITYVERIFICATION_INFORMATION struct{
+FileHandle uintptr //col:2090
+ImageSize uint32 //col:2091
+Image uintptr //col:2092
 }
 
 
-
-type SYSTEM_FIRMWARE_PARTITION_INFORMATION struct{
-FirmwarePartition UNICODE_STRING //col:2095
+type  _SYSTEM_HYPERVISOR_SHARED_PAGE_INFORMATION struct{
+HypervisorSharedUserVa uintptr //col:2094
 }
-
 
 
-type SYSTEM_SPECULATION_CONTROL_INFORMATION struct{
-Union union //col:2099
-Flags uint32 //col:2101
-Struct struct //col:2102
-BpbEnabled uint32 //col:2104
-BpbDisabledSystemPolicy uint32 //col:2105
-BpbDisabledNoHardwareSupport uint32 //col:2106
-SpecCtrlEnumerated uint32 //col:2107
-SpecCmdEnumerated uint32 //col:2108
-IbrsPresent uint32 //col:2109
-StibpPresent uint32 //col:2110
-SmepPresent uint32 //col:2111
-SpeculativeStoreBypassDisableAvailable uint32 //col:2112
-SpeculativeStoreBypassDisableSupported uint32 //col:2113
-SpeculativeStoreBypassDisabledSystemWide uint32 //col:2114
-SpeculativeStoreBypassDisabledKernel uint32 //col:2115
-SpeculativeStoreBypassDisableRequired uint32 //col:2116
-BpbDisabledKernelToUser uint32 //col:2117
-SpecCtrlRetpolineEnabled uint32 //col:2118
-SpecCtrlImportOptimizationEnabled uint32 //col:2119
-EnhancedIbrs uint32 //col:2120
-HvL1tfStatusAvailable uint32 //col:2121
-HvL1tfProcessorNotAffected uint32 //col:2122
-HvL1tfMigitationEnabled uint32 //col:2123
-HvL1tfMigitationNotEnabled_Hardware uint32 //col:2124
-HvL1tfMigitationNotEnabled_LoadOption uint32 //col:2125
-HvL1tfMigitationNotEnabled_CoreScheduler uint32 //col:2126
-EnhancedIbrsReported uint32 //col:2127
-MdsHardwareProtected uint32 //col:2128
-MbClearEnabled uint32 //col:2129
-MbClearReported uint32 //col:2130
-Reserved uint32 //col:2131
+type  _SYSTEM_FIRMWARE_PARTITION_INFORMATION struct{
+FirmwarePartition *int16 //col:2098
 }
 
 
-
-type SYSTEM_DMA_GUARD_POLICY_INFORMATION struct{
-DmaGuardPolicyEnabled bool //col:2137
+type  _SYSTEM_SPECULATION_CONTROL_INFORMATION struct{
+Union union //col:2134
+Flags uint32 //col:2136
+Struct struct //col:2137
+BpbEnabled uint32 //col:2139
+BpbDisabledSystemPolicy uint32 //col:2140
+BpbDisabledNoHardwareSupport uint32 //col:2141
+SpecCtrlEnumerated uint32 //col:2142
+SpecCmdEnumerated uint32 //col:2143
+IbrsPresent uint32 //col:2144
+StibpPresent uint32 //col:2145
+SmepPresent uint32 //col:2146
+SpeculativeStoreBypassDisableAvailable uint32 //col:2147
+SpeculativeStoreBypassDisableSupported uint32 //col:2148
+SpeculativeStoreBypassDisabledSystemWide uint32 //col:2149
+SpeculativeStoreBypassDisabledKernel uint32 //col:2150
+SpeculativeStoreBypassDisableRequired uint32 //col:2151
+BpbDisabledKernelToUser uint32 //col:2152
+SpecCtrlRetpolineEnabled uint32 //col:2153
+SpecCtrlImportOptimizationEnabled uint32 //col:2154
+EnhancedIbrs uint32 //col:2155
+HvL1tfStatusAvailable uint32 //col:2156
+HvL1tfProcessorNotAffected uint32 //col:2157
+HvL1tfMigitationEnabled uint32 //col:2158
+HvL1tfMigitationNotEnabled_Hardware uint32 //col:2159
+HvL1tfMigitationNotEnabled_LoadOption uint32 //col:2160
+HvL1tfMigitationNotEnabled_CoreScheduler uint32 //col:2161
+EnhancedIbrsReported uint32 //col:2162
+MdsHardwareProtected uint32 //col:2163
+MbClearEnabled uint32 //col:2164
+MbClearReported uint32 //col:2165
+Reserved uint32 //col:2166
 }
-
 
 
-type SYSTEM_ENCLAVE_LAUNCH_CONTROL_INFORMATION struct{
-EnclaveLaunchSigner[32] uint8 //col:2141
+type  _SYSTEM_DMA_GUARD_POLICY_INFORMATION struct{
+DmaGuardPolicyEnabled bool //col:2140
 }
 
 
-
-type SYSTEM_WORKLOAD_ALLOWED_CPU_SET_INFORMATION struct{
-WorkloadClass ULONGLONG //col:2145
-CpuSets[1] ULONGLONG //col:2146
+type  _SYSTEM_ENCLAVE_LAUNCH_CONTROL_INFORMATION struct{
+EnclaveLaunchSigner[32] uint8 //col:2144
 }
-
 
 
-type SYSTEM_SECURITY_MODEL_INFORMATION struct{
-Union union //col:2150
-SecurityModelFlags uint32 //col:2152
-Struct struct //col:2153
-SModeAdminlessEnabled uint32 //col:2155
-AllowDeviceOwnerProtectionDowngrade uint32 //col:2156
-Reserved uint32 //col:2157
+type  _SYSTEM_WORKLOAD_ALLOWED_CPU_SET_INFORMATION struct{
+WorkloadClass ULONGLONG //col:2149
+CpuSets[1] ULONGLONG //col:2150
 }
 
 
-
-type SYSTEM_FEATURE_CONFIGURATION_INFORMATION struct{
-ChangeStamp ULONGLONG //col:2163
-struct // //col:2164
+type  _SYSTEM_SECURITY_MODEL_INFORMATION struct{
+Union union //col:2160
+SecurityModelFlags uint32 //col:2162
+Struct struct //col:2163
+SModeAdminlessEnabled uint32 //col:2165
+AllowDeviceOwnerProtectionDowngrade uint32 //col:2166
+Reserved uint32 //col:2167
 }
-
 
 
-type SYSTEM_FEATURE_CONFIGURATION_SECTIONS_INFORMATION_ENTRY struct{
-ChangeStamp ULONGLONG //col:2168
-Section PVOID //col:2169
-Size ULONGLONG //col:2170
+type  _SYSTEM_FEATURE_CONFIGURATION_INFORMATION struct{
+ChangeStamp ULONGLONG //col:2167
+_RTL_FEATURE_CONFIGURATION* struct //col:2168
 }
 
 
-
-type SYSTEM_FEATURE_CONFIGURATION_SECTIONS_INFORMATION struct{
-OverallChangeStamp ULONGLONG //col:2174
-Descriptors[3] SYSTEM_FEATURE_CONFIGURATION_SECTIONS_INFORMATION_ENTRY //col:2175
+type  _SYSTEM_FEATURE_CONFIGURATION_SECTIONS_INFORMATION_ENTRY struct{
+ChangeStamp ULONGLONG //col:2173
+Section uintptr //col:2174
+Size ULONGLONG //col:2175
 }
 
 
-
-type RTL_FEATURE_USAGE_SUBSCRIPTION_TARGET struct{
-Data[2] uint32 //col:2179
+type  _SYSTEM_FEATURE_CONFIGURATION_SECTIONS_INFORMATION struct{
+OverallChangeStamp ULONGLONG //col:2178
+Descriptors[3] SYSTEM_FEATURE_CONFIGURATION_SECTIONS_INFORMATION_ENTRY //col:2179
 }
-
 
 
-type SYSTEM_FEATURE_USAGE_SUBSCRIPTION_DETAILS struct{
-FeatureId uint32 //col:2183
-ReportingKind USHORT //col:2184
-ReportingOptions USHORT //col:2185
-ReportingTarget RTL_FEATURE_USAGE_SUBSCRIPTION_TARGET //col:2186
+type  _RTL_FEATURE_USAGE_SUBSCRIPTION_TARGET struct{
+Data[2] uint32 //col:2182
 }
 
 
-
-type SYSTEM_FIRMWARE_RAMDISK_INFORMATION struct{
-Version uint32 //col:2190
-BlockSize uint32 //col:2191
-BaseAddress ULONG_PTR //col:2192
-Size SIZE_T //col:2193
+type  _SYSTEM_FEATURE_USAGE_SUBSCRIPTION_DETAILS struct{
+FeatureId uint32 //col:2189
+ReportingKind uint16 //col:2190
+ReportingOptions uint16 //col:2191
+ReportingTarget RTL_FEATURE_USAGE_SUBSCRIPTION_TARGET //col:2192
 }
-
 
 
-type SYSTEM_SHADOW_STACK_INFORMATION struct{
-Union union //col:2197
-Flags uint32 //col:2199
-Struct struct //col:2200
-CetCapable uint32 //col:2202
-UserCetAllowed uint32 //col:2203
-ReservedForUserCet uint32 //col:2204
-KernelCetEnabled uint32 //col:2205
-KernelCetAuditModeEnabled uint32 //col:2206
-ReservedForKernelCet uint32 //col:2207
-Reserved uint32 //col:2208
+type  _SYSTEM_FIRMWARE_RAMDISK_INFORMATION struct{
+Version uint32 //col:2196
+BlockSize uint32 //col:2197
+BaseAddress ULONG_PTR //col:2198
+Size int64 //col:2199
 }
 
 
-
-type SYSTEM_BUILD_VERSION_INFORMATION struct{
-LayerNumber USHORT //col:2214
-LayerCount USHORT //col:2215
-OsMajorVersion uint32 //col:2216
-OsMinorVersion uint32 //col:2217
-NtBuildNumber uint32 //col:2218
-NtBuildQfe uint32 //col:2219
-LayerName[128] uint8 //col:2220
-NtBuildBranch[128] uint8 //col:2221
-NtBuildLab[128] uint8 //col:2222
-NtBuildLabEx[128] uint8 //col:2223
-NtBuildStamp[26] uint8 //col:2224
-NtBuildArch[16] uint8 //col:2225
-Flags SYSTEM_BUILD_VERSION_INFORMATION_FLAGS //col:2226
+type  _SYSTEM_SHADOW_STACK_INFORMATION struct{
+Union union //col:2211
+Flags uint32 //col:2213
+Struct struct //col:2214
+CetCapable uint32 //col:2216
+UserCetAllowed uint32 //col:2217
+ReservedForUserCet uint32 //col:2218
+KernelCetEnabled uint32 //col:2219
+KernelCetAuditModeEnabled uint32 //col:2220
+ReservedForKernelCet uint32 //col:2221
+Reserved uint32 //col:2222
 }
-
 
 
-type SYSTEM_POOL_LIMIT_MEM_INFO struct{
-MemoryLimit ULONGLONG //col:2230
-NotificationLimit ULONGLONG //col:2231
+type  _SYSTEM_BUILD_VERSION_INFORMATION struct{
+LayerNumber uint16 //col:2229
+LayerCount uint16 //col:2230
+OsMajorVersion uint32 //col:2231
+OsMinorVersion uint32 //col:2232
+NtBuildNumber uint32 //col:2233
+NtBuildQfe uint32 //col:2234
+LayerName[128] uint8 //col:2235
+NtBuildBranch[128] uint8 //col:2236
+NtBuildLab[128] uint8 //col:2237
+NtBuildLabEx[128] uint8 //col:2238
+NtBuildStamp[26] uint8 //col:2239
+NtBuildArch[16] uint8 //col:2240
+Flags SYSTEM_BUILD_VERSION_INFORMATION_FLAGS //col:2241
 }
 
 
-
-type SYSTEM_POOL_LIMIT_INFO struct{
-PoolTag uint32 //col:2235
-MemLimits[2] SYSTEM_POOL_LIMIT_MEM_INFO //col:2236
-NotificationHandle WNF_STATE_NAME //col:2237
+type  _SYSTEM_POOL_LIMIT_MEM_INFO struct{
+MemoryLimit ULONGLONG //col:2234
+NotificationLimit ULONGLONG //col:2235
 }
 
 
-
-type SYSTEM_POOL_LIMIT_INFORMATION struct{
-Version uint32 //col:2241
-EntryCount uint32 //col:2242
-LimitEntries[1] SYSTEM_POOL_LIMIT_INFO //col:2243
+type  _SYSTEM_POOL_LIMIT_INFO struct{
+PoolTag uint32 //col:2240
+MemLimits[2] SYSTEM_POOL_LIMIT_MEM_INFO //col:2241
+NotificationHandle WNF_STATE_NAME //col:2242
 }
-
 
 
-type HV_MINROOT_NUMA_LPS struct{
-NodeIndex uint32 //col:2247
-Mask[16] ULONG_PTR //col:2248
+type  _SYSTEM_POOL_LIMIT_INFORMATION struct{
+Version uint32 //col:2246
+EntryCount uint32 //col:2247
+LimitEntries[1] SYSTEM_POOL_LIMIT_INFO //col:2248
 }
 
 
-
-type SYSTEM_IOMMU_STATE_INFORMATION struct{
-State SYSTEM_IOMMU_STATE //col:2252
-Pdo PVOID //col:2253
+type  _HV_MINROOT_NUMA_LPS struct{
+NodeIndex uint32 //col:2251
+Mask[16] ULONG_PTR //col:2252
 }
-
 
 
-type SYSTEM_HYPERVISOR_MINROOT_INFORMATION struct{
-NumProc uint32 //col:2257
-RootProc uint32 //col:2258
-RootProcNumaNodesSpecified uint32 //col:2259
-RootProcNumaNodes[64] USHORT //col:2260
-RootProcPerCore uint32 //col:2261
-RootProcPerNode uint32 //col:2262
-RootProcNumaNodesLpsSpecified uint32 //col:2263
-RootProcNumaNodeLps[64] HV_MINROOT_NUMA_LPS //col:2264
+type  _SYSTEM_IOMMU_STATE_INFORMATION struct{
+State SYSTEM_IOMMU_STATE //col:2256
+Pdo uintptr //col:2257
 }
 
 
-
-type SYSTEM_HYPERVISOR_BOOT_PAGES_INFORMATION struct{
-RangeCount uint32 //col:2268
-RangeArray[1] ULONG_PTR //col:2269
+type  _SYSTEM_HYPERVISOR_MINROOT_INFORMATION struct{
+NumProc uint32 //col:2267
+RootProc uint32 //col:2268
+RootProcNumaNodesSpecified uint32 //col:2269
+RootProcNumaNodes[64] uint16 //col:2270
+RootProcPerCore uint32 //col:2271
+RootProcPerNode uint32 //col:2272
+RootProcNumaNodesLpsSpecified uint32 //col:2273
+RootProcNumaNodeLps[64] HV_MINROOT_NUMA_LPS //col:2274
 }
-
 
 
-type SYSTEM_POINTER_AUTH_INFORMATION struct{
-Union union //col:2273
-SupportedFlags USHORT //col:2275
-Struct struct //col:2276
-AddressAuthSupported USHORT //col:2278
-AddressAuthQarma USHORT //col:2279
-GenericAuthSupported USHORT //col:2280
-GenericAuthQarma USHORT //col:2281
-SupportedReserved USHORT //col:2282
+type  _SYSTEM_HYPERVISOR_BOOT_PAGES_INFORMATION struct{
+RangeCount uint32 //col:2272
+RangeArray[1] ULONG_PTR //col:2273
 }
 
 
-
-type SYSDBG_VIRTUAL struct{
-Address PVOID //col:2300
-Buffer PVOID //col:2301
-Request uint32 //col:2302
+type  _SYSTEM_POINTER_AUTH_INFORMATION struct{
+Union union //col:2285
+SupportedFlags uint16 //col:2287
+Struct struct //col:2288
+AddressAuthSupported uint16 //col:2290
+AddressAuthQarma uint16 //col:2291
+GenericAuthSupported uint16 //col:2292
+GenericAuthQarma uint16 //col:2293
+SupportedReserved uint16 //col:2294
 }
 
 
-
-type SYSDBG_PHYSICAL struct{
-Address PHYSICAL_ADDRESS //col:2306
-Buffer PVOID //col:2307
-Request uint32 //col:2308
+type  _SYSDBG_VIRTUAL struct{
+Address uintptr //col:2305
+Buffer uintptr //col:2306
+Request uint32 //col:2307
 }
-
 
 
-type SYSDBG_CONTROL_SPACE struct{
-Address ULONG64 //col:2312
-Buffer PVOID //col:2313
-Request uint32 //col:2314
-Processor uint32 //col:2315
+type  _SYSDBG_PHYSICAL struct{
+Address PHYSICAL_ADDRESS //col:2311
+Buffer uintptr //col:2312
+Request uint32 //col:2313
 }
 
 
-
-type SYSDBG_IO_SPACE struct{
-Address ULONG64 //col:2319
-Buffer PVOID //col:2320
-Request uint32 //col:2321
-_INTERFACE_TYPE enum //col:2322
-BusNumber uint32 //col:2323
-AddressSpace uint32 //col:2324
+type  _SYSDBG_CONTROL_SPACE struct{
+Address ULONG64 //col:2318
+Buffer uintptr //col:2319
+Request uint32 //col:2320
+Processor uint32 //col:2321
 }
-
 
 
-type SYSDBG_MSR struct{
-Msr uint32 //col:2328
-Data ULONG64 //col:2329
+type  _SYSDBG_IO_SPACE struct{
+Address ULONG64 //col:2327
+Buffer uintptr //col:2328
+Request uint32 //col:2329
+_INTERFACE_TYPE enum //col:2330
+BusNumber uint32 //col:2331
+AddressSpace uint32 //col:2332
 }
 
 
-
-type SYSDBG_BUS_DATA struct{
-Address uint32 //col:2333
-Buffer PVOID //col:2334
-Request uint32 //col:2335
-_BUS_DATA_TYPE enum //col:2336
-BusNumber uint32 //col:2337
-SlotNumber uint32 //col:2338
+type  _SYSDBG_MSR struct{
+Msr uint32 //col:2332
+Data ULONG64 //col:2333
 }
-
 
 
-type SYSDBG_TRIAGE_DUMP struct{
-Flags uint32 //col:2342
-BugCheckCode uint32 //col:2343
-BugCheckParam1 ULONG_PTR //col:2344
-BugCheckParam2 ULONG_PTR //col:2345
-BugCheckParam3 ULONG_PTR //col:2346
-BugCheckParam4 ULONG_PTR //col:2347
-ProcessHandles uint32 //col:2348
-ThreadHandles uint32 //col:2349
-Handles PHANDLE //col:2350
+type  _SYSDBG_BUS_DATA struct{
+Address uint32 //col:2341
+Buffer uintptr //col:2342
+Request uint32 //col:2343
+_BUS_DATA_TYPE enum //col:2344
+BusNumber uint32 //col:2345
+SlotNumber uint32 //col:2346
 }
 
 
-
-type SYSDBG_LIVEDUMP_SELECTIVE_CONTROL struct{
-Version uint32 //col:2354
-Size uint32 //col:2355
-Union union //col:2356
-Flags ULONGLONG //col:2358
-Struct struct //col:2359
-ThreadKernelStacks ULONGLONG //col:2361
-ReservedFlags ULONGLONG //col:2362
+type  _SYSDBG_TRIAGE_DUMP struct{
+Flags uint32 //col:2353
+BugCheckCode uint32 //col:2354
+BugCheckParam1 ULONG_PTR //col:2355
+BugCheckParam2 ULONG_PTR //col:2356
+BugCheckParam3 ULONG_PTR //col:2357
+BugCheckParam4 ULONG_PTR //col:2358
+ProcessHandles uint32 //col:2359
+ThreadHandles uint32 //col:2360
+Handles PHANDLE //col:2361
 }
-
 
 
-type SYSDBG_LIVEDUMP_CONTROL struct{
-Version uint32 //col:2369
-BugCheckCode uint32 //col:2370
-BugCheckParam1 ULONG_PTR //col:2371
-BugCheckParam2 ULONG_PTR //col:2372
-BugCheckParam3 ULONG_PTR //col:2373
-BugCheckParam4 ULONG_PTR //col:2374
-DumpFileHandle HANDLE //col:2375
-CancelEventHandle HANDLE //col:2376
-Flags SYSDBG_LIVEDUMP_CONTROL_FLAGS //col:2377
-AddPagesControl SYSDBG_LIVEDUMP_CONTROL_ADDPAGES //col:2378
-SelectiveControl PSYSDBG_LIVEDUMP_SELECTIVE_CONTROL //col:2379
+type  _SYSDBG_LIVEDUMP_SELECTIVE_CONTROL struct{
+Version uint32 //col:2365
+Size uint32 //col:2366
+Union union //col:2367
+Flags ULONGLONG //col:2369
+Struct struct //col:2370
+ThreadKernelStacks ULONGLONG //col:2372
+ReservedFlags ULONGLONG //col:2373
 }
 
 
-
-type SYSDBG_KD_PULL_REMOTE_FILE struct{
-ImageFileName UNICODE_STRING //col:2383
+type  _SYSDBG_LIVEDUMP_CONTROL struct{
+Version uint32 //col:2382
+BugCheckCode uint32 //col:2383
+BugCheckParam1 ULONG_PTR //col:2384
+BugCheckParam2 ULONG_PTR //col:2385
+BugCheckParam3 ULONG_PTR //col:2386
+BugCheckParam4 ULONG_PTR //col:2387
+DumpFileHandle uintptr //col:2388
+CancelEventHandle uintptr //col:2389
+Flags SYSDBG_LIVEDUMP_CONTROL_FLAGS //col:2390
+AddPagesControl SYSDBG_LIVEDUMP_CONTROL_ADDPAGES //col:2391
+SelectiveControl PSYSDBG_LIVEDUMP_SELECTIVE_CONTROL //col:2392
 }
-
 
 
-type KUSER_SHARED_DATA struct{
-TickCountLowDeprecated uint32 //col:2387
-TickCountMultiplier uint32 //col:2388
-KSYSTEM_TIME volatile //col:2389
-KSYSTEM_TIME volatile //col:2390
-KSYSTEM_TIME volatile //col:2391
-ImageNumberLow USHORT //col:2392
-ImageNumberHigh USHORT //col:2393
-NtSystemRoot[260] WCHAR //col:2394
-MaxStackTraceDepth uint32 //col:2395
-CryptoExponent uint32 //col:2396
-TimeZoneId uint32 //col:2397
-LargePageMinimum uint32 //col:2398
-AitSamplingValue uint32 //col:2399
-AppCompatFlag uint32 //col:2400
-RNGSeedVersion ULONGLONG //col:2401
-GlobalValidationRunlevel uint32 //col:2402
-TimeZoneBiasStamp LONG //col:2403
-NtBuildNumber uint32 //col:2404
-NtProductType NT_PRODUCT_TYPE //col:2405
-ProductTypeIsValid bool //col:2406
-Reserved0[1] uint8 //col:2407
-NativeProcessorArchitecture USHORT //col:2408
-NtMajorVersion uint32 //col:2409
-NtMinorVersion uint32 //col:2410
-ProcessorFeatures[PROCESSOR_FEATURE_MAX] bool //col:2411
-Reserved1 uint32 //col:2412
-Reserved3 uint32 //col:2413
-ULONG volatile //col:2414
-AlternativeArchitecture ALTERNATIVE_ARCHITECTURE_TYPE //col:2415
-BootId uint32 //col:2416
-SystemExpirationDate LARGE_INTEGER //col:2417
-SuiteMask uint32 //col:2418
-KdDebuggerEnabled bool //col:2419
-Union union //col:2420
-MitigationPolicies uint8 //col:2422
-Struct struct //col:2423
-NXSupportPolicy uint8 //col:2425
-SEHValidationPolicy uint8 //col:2426
-CurDirDevicesSkippedForDlls uint8 //col:2427
-Reserved uint8 //col:2428
+type  _SYSDBG_KD_PULL_REMOTE_FILE struct{
+ImageFileName *int16 //col:2386
 }
 
 
-
-type ATOM_BASIC_INFORMATION struct{
-UsageCount USHORT //col:2524
-Flags USHORT //col:2525
-NameLength USHORT //col:2526
-Name[1] WCHAR //col:2527
+type  _KUSER_SHARED_DATA struct{
+TickCountLowDeprecated uint32 //col:2431
+TickCountMultiplier uint32 //col:2432
+InterruptTime KSYSTEM_TIME //col:2433
+SystemTime KSYSTEM_TIME //col:2434
+TimeZoneBias KSYSTEM_TIME //col:2435
+ImageNumberLow uint16 //col:2436
+ImageNumberHigh uint16 //col:2437
+NtSystemRoot[260] WCHAR //col:2438
+MaxStackTraceDepth uint32 //col:2439
+CryptoExponent uint32 //col:2440
+TimeZoneId uint32 //col:2441
+LargePageMinimum uint32 //col:2442
+AitSamplingValue uint32 //col:2443
+AppCompatFlag uint32 //col:2444
+RNGSeedVersion ULONGLONG //col:2445
+GlobalValidationRunlevel uint32 //col:2446
+TimeZoneBiasStamp int32 //col:2447
+NtBuildNumber uint32 //col:2448
+NtProductType NT_PRODUCT_TYPE //col:2449
+ProductTypeIsValid bool //col:2450
+Reserved0[1] uint8 //col:2451
+NativeProcessorArchitecture uint16 //col:2452
+NtMajorVersion uint32 //col:2453
+NtMinorVersion uint32 //col:2454
+ProcessorFeatures[PROCESSOR_FEATURE_MAX] bool //col:2455
+Reserved1 uint32 //col:2456
+Reserved3 uint32 //col:2457
+TimeSlip uint32 //col:2458
+AlternativeArchitecture ALTERNATIVE_ARCHITECTURE_TYPE //col:2459
+BootId uint32 //col:2460
+SystemExpirationDate LARGE_INTEGER //col:2461
+SuiteMask uint32 //col:2462
+KdDebuggerEnabled bool //col:2463
+Union union //col:2464
+MitigationPolicies uint8 //col:2466
+Struct struct //col:2467
+NXSupportPolicy uint8 //col:2469
+SEHValidationPolicy uint8 //col:2470
+CurDirDevicesSkippedForDlls uint8 //col:2471
+Reserved uint8 //col:2472
 }
-
 
 
-type ATOM_TABLE_INFORMATION struct{
-NumberOfAtoms uint32 //col:2531
-Atoms[1] RTL_ATOM //col:2532
+type  _ATOM_BASIC_INFORMATION struct{
+UsageCount uint16 //col:2530
+Flags uint16 //col:2531
+NameLength uint16 //col:2532
+Name[1] WCHAR //col:2533
 }
 
+
+type  _ATOM_TABLE_INFORMATION struct{
+NumberOfAtoms uint32 //col:2535
+Atoms[1] RTL_ATOM //col:2536
+}
 
 
 

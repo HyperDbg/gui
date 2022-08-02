@@ -1,5 +1,7 @@
 package Generated
 
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Generated\EnumInstructionCategory.h.back
+
 const (
 	ZYDIS_CATEGORY_INVALID             = 1                                                //col:3
 	ZYDIS_CATEGORY_ADOX_ADCX           = 2                                                //col:4
@@ -103,3 +105,4 @@ const (
 	ZYDIS_CATEGORY_MAX_VALUE           = ZYDIS_CATEGORY_XSAVEOPT                          //col:102
 	ZYDIS_CATEGORY_REQUIRED_BITS       = ZYAN_BITS_TO_REPRESENT(ZYDIS_CATEGORY_MAX_VALUE) //col:103
 )
+

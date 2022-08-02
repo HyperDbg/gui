@@ -1,5 +1,5 @@
 package phnt
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntldr.h.back
 
 const(
     LdrModulesMerged  =  -5  //col:3
@@ -46,204 +46,183 @@ const(
 
 
 
-type LDR_SERVICE_TAG_RECORD struct{
-struct // //col:3
-ServiceTag uint32 //col:4
+type  _LDR_SERVICE_TAG_RECORD struct{
+_LDR_SERVICE_TAG_RECORD struct //col:7
+ServiceTag uint32 //col:8
 }
 
 
-
-type LDRP_CSLIST struct{
-Tail PSINGLE_LIST_ENTRY //col:8
+type  _LDRP_CSLIST struct{
+Tail PSINGLE_LIST_ENTRY //col:11
 }
 
 
-
-type LDR_DDAG_NODE struct{
-Modules *list.List //col:12
-ServiceTagList PLDR_SERVICE_TAG_RECORD //col:13
-LoadCount uint32 //col:14
-LoadWhileUnloadingCount uint32 //col:15
-LowestLink uint32 //col:16
-Union union //col:17
-Dependencies LDRP_CSLIST //col:19
-RemovalLink SINGLE_LIST_ENTRY //col:20
+type  _LDR_DDAG_NODE struct{
+Modules *list.List //col:23
+ServiceTagList PLDR_SERVICE_TAG_RECORD //col:24
+LoadCount uint32 //col:25
+LoadWhileUnloadingCount uint32 //col:26
+LowestLink uint32 //col:27
+Union union //col:28
+Dependencies LDRP_CSLIST //col:30
+RemovalLink SINGLE_LIST_ENTRY //col:31
 }
 
 
-
-type LDR_DEPENDENCY_RECORD struct{
-DependencyLink SINGLE_LIST_ENTRY //col:29
-DependencyNode PLDR_DDAG_NODE //col:30
-IncomingDependencyLink SINGLE_LIST_ENTRY //col:31
-IncomingDependencyNode PLDR_DDAG_NODE //col:32
+type  _LDR_DEPENDENCY_RECORD struct{
+DependencyLink SINGLE_LIST_ENTRY //col:35
+DependencyNode PLDR_DDAG_NODE //col:36
+IncomingDependencyLink SINGLE_LIST_ENTRY //col:37
+IncomingDependencyNode PLDR_DDAG_NODE //col:38
 }
 
 
-
-type LDR_DATA_TABLE_ENTRY struct{
-InLoadOrderLinks *list.List //col:36
-InMemoryOrderLinks *list.List //col:37
-Union union //col:38
-InInitializationOrderLinks *list.List //col:40
-InProgressLinks *list.List //col:41
+type  _LDR_DATA_TABLE_ENTRY struct{
+InLoadOrderLinks *list.List //col:44
+InMemoryOrderLinks *list.List //col:45
+Union union //col:46
+InInitializationOrderLinks *list.List //col:48
+InProgressLinks *list.List //col:49
 }
 
 
-
-type LDR_IMPORT_CALLBACK_INFO struct{
-ImportCallbackRoutine PLDR_IMPORT_MODULE_CALLBACK //col:112
-ImportCallbackParameter PVOID //col:113
+type  _LDR_IMPORT_CALLBACK_INFO struct{
+ImportCallbackRoutine PLDR_IMPORT_MODULE_CALLBACK //col:116
+ImportCallbackParameter uintptr //col:117
 }
 
 
-
-type LDR_SECTION_INFO struct{
-SectionHandle HANDLE //col:117
-DesiredAccess ACCESS_MASK //col:118
-ObjA POBJECT_ATTRIBUTES //col:119
-SectionPageProtection uint32 //col:120
-AllocationAttributes uint32 //col:121
+type  _LDR_SECTION_INFO struct{
+SectionHandle uintptr //col:124
+DesiredAccess ACCESS_MASK //col:125
+ObjA POBJECT_ATTRIBUTES //col:126
+SectionPageProtection uint32 //col:127
+AllocationAttributes uint32 //col:128
 }
 
 
-
-type LDR_VERIFY_IMAGE_INFO struct{
-Size uint32 //col:125
-Flags uint32 //col:126
-CallbackInfo LDR_IMPORT_CALLBACK_INFO //col:127
-SectionInfo LDR_SECTION_INFO //col:128
-ImageCharacteristics USHORT //col:129
-}
-
-
-
-type LDR_DLL_LOADED_NOTIFICATION_DATA struct{
+type  _LDR_VERIFY_IMAGE_INFO struct{
+Size uint32 //col:132
 Flags uint32 //col:133
-FullDllName PUNICODE_STRING //col:134
-BaseDllName PUNICODE_STRING //col:135
-DllBase PVOID //col:136
-SizeOfImage uint32 //col:137
+CallbackInfo LDR_IMPORT_CALLBACK_INFO //col:134
+SectionInfo LDR_SECTION_INFO //col:135
+ImageCharacteristics uint16 //col:136
 }
 
 
-
-type LDR_DLL_UNLOADED_NOTIFICATION_DATA struct{
-Flags uint32 //col:141
-FullDllName PCUNICODE_STRING //col:142
-BaseDllName PCUNICODE_STRING //col:143
-DllBase PVOID //col:144
-SizeOfImage uint32 //col:145
+type  _LDR_DLL_LOADED_NOTIFICATION_DATA struct{
+Flags uint32 //col:140
+FullDllName *uint32 //col:141
+BaseDllName *uint32 //col:142
+DllBase uintptr //col:143
+SizeOfImage uint32 //col:144
 }
 
 
-
-type LDR_FAILURE_DATA struct{
-Status NTSTATUS //col:149
-DllName[0x20] WCHAR //col:150
-AdditionalInfo[0x20] WCHAR //col:151
+type  _LDR_DLL_UNLOADED_NOTIFICATION_DATA struct{
+Flags uint32 //col:148
+FullDllName PCUNICODE_STRING //col:149
+BaseDllName PCUNICODE_STRING //col:150
+DllBase uintptr //col:151
+SizeOfImage uint32 //col:152
 }
 
 
-
-type PS_MITIGATION_OPTIONS_MAP struct{
-Map[3] ULONG_PTR //col:155
+type  _LDR_FAILURE_DATA struct{
+Status NTSTATUS //col:154
+DllName[0x20] WCHAR //col:155
+AdditionalInfo[0x20] WCHAR //col:156
 }
 
 
-
-type PS_MITIGATION_AUDIT_OPTIONS_MAP struct{
-Map[3] ULONG_PTR //col:159
+type  _PS_MITIGATION_OPTIONS_MAP struct{
+Map[3] ULONG_PTR //col:158
 }
 
 
-
-type PS_SYSTEM_DLL_INIT_BLOCK struct{
-Size uint32 //col:163
-SystemDllWowRelocation ULONG_PTR //col:164
-SystemDllNativeRelocation ULONG_PTR //col:165
-Wow64SharedInformation[16] ULONG_PTR //col:166
-RngData uint32 //col:167
-Union union //col:168
-Flags uint32 //col:170
-Struct struct //col:171
-CfgOverride uint32 //col:173
-Reserved uint32 //col:174
+type  _PS_MITIGATION_AUDIT_OPTIONS_MAP struct{
+Map[3] ULONG_PTR //col:162
 }
 
 
-
-type LDR_RESOURCE_INFO struct{
-Type ULONG_PTR //col:186
-Name ULONG_PTR //col:187
-Language ULONG_PTR //col:188
+type  _PS_SYSTEM_DLL_INIT_BLOCK struct{
+Size uint32 //col:177
+SystemDllWowRelocation ULONG_PTR //col:178
+SystemDllNativeRelocation ULONG_PTR //col:179
+Wow64SharedInformation[16] ULONG_PTR //col:180
+RngData uint32 //col:181
+Union union //col:182
+Flags uint32 //col:184
+Struct struct //col:185
+CfgOverride uint32 //col:187
+Reserved uint32 //col:188
 }
 
 
-
-type LDR_ENUM_RESOURCE_ENTRY struct{
-Union union //col:192
-NameOrId ULONG_PTR //col:194
-Name PIMAGE_RESOURCE_DIRECTORY_STRING //col:195
-Struct struct //col:196
-Id USHORT //col:198
-NameIsPresent USHORT //col:199
+type  _LDR_RESOURCE_INFO struct{
+Type ULONG_PTR //col:191
+Name ULONG_PTR //col:192
+Language ULONG_PTR //col:193
 }
 
 
-
-type RTL_PROCESS_MODULE_INFORMATION struct{
-Section HANDLE //col:208
-MappedBase PVOID //col:209
-ImageBase PVOID //col:210
-ImageSize uint32 //col:211
-Flags uint32 //col:212
-LoadOrderIndex USHORT //col:213
-InitOrderIndex USHORT //col:214
-LoadCount USHORT //col:215
-OffsetToFileName USHORT //col:216
-FullPathName[256] uint8 //col:217
+type  _LDR_ENUM_RESOURCE_ENTRY struct{
+Union union //col:202
+NameOrId ULONG_PTR //col:204
+Name PIMAGE_RESOURCE_DIRECTORY_STRING //col:205
+Struct struct //col:206
+Id uint16 //col:208
+NameIsPresent uint16 //col:209
 }
 
 
-
-type RTL_PROCESS_MODULES struct{
-NumberOfModules uint32 //col:221
-Modules[1] RTL_PROCESS_MODULE_INFORMATION //col:222
+type  _RTL_PROCESS_MODULE_INFORMATION struct{
+Section uintptr //col:220
+MappedBase uintptr //col:221
+ImageBase uintptr //col:222
+ImageSize uint32 //col:223
+Flags uint32 //col:224
+LoadOrderIndex uint16 //col:225
+InitOrderIndex uint16 //col:226
+LoadCount uint16 //col:227
+OffsetToFileName uint16 //col:228
+FullPathName[256] uint8 //col:229
 }
 
 
-
-type RTL_PROCESS_MODULE_INFORMATION_EX struct{
-NextOffset USHORT //col:226
-BaseInfo RTL_PROCESS_MODULE_INFORMATION //col:227
-ImageChecksum uint32 //col:228
-TimeDateStamp uint32 //col:229
-DefaultBase PVOID //col:230
+type  _RTL_PROCESS_MODULES struct{
+NumberOfModules uint32 //col:225
+Modules[1] RTL_PROCESS_MODULE_INFORMATION //col:226
 }
 
 
-
-type DELAYLOAD_PROC_DESCRIPTOR struct{
-ImportDescribedByName uint32 //col:234
-Union union //col:235
-Name PCSTR //col:237
-Ordinal uint32 //col:238
+type  _RTL_PROCESS_MODULE_INFORMATION_EX struct{
+NextOffset uint16 //col:233
+BaseInfo RTL_PROCESS_MODULE_INFORMATION //col:234
+ImageChecksum uint32 //col:235
+TimeDateStamp uint32 //col:236
+DefaultBase uintptr //col:237
 }
 
 
-
-type DELAYLOAD_INFO struct{
-Size uint32 //col:243
-DelayloadDescriptor PCIMAGE_DELAYLOAD_DESCRIPTOR //col:244
-ThunkAddress PIMAGE_THUNK_DATA //col:245
-TargetDllName PCSTR //col:246
-TargetApiDescriptor DELAYLOAD_PROC_DESCRIPTOR //col:247
-TargetModuleBase PVOID //col:248
-Unused PVOID //col:249
-LastError uint32 //col:250
+type  _DELAYLOAD_PROC_DESCRIPTOR struct{
+ImportDescribedByName uint32 //col:241
+Union union //col:242
+Name PCSTR //col:244
+Ordinal uint32 //col:245
 }
 
+
+type  _DELAYLOAD_INFO struct{
+Size uint32 //col:253
+DelayloadDescriptor PCIMAGE_DELAYLOAD_DESCRIPTOR //col:254
+ThunkAddress PIMAGE_THUNK_DATA //col:255
+TargetDllName PCSTR //col:256
+TargetApiDescriptor DELAYLOAD_PROC_DESCRIPTOR //col:257
+TargetModuleBase uintptr //col:258
+Unused uintptr //col:259
+LastError uint32 //col:260
+}
 
 
 

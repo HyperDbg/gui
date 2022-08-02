@@ -1,5 +1,5 @@
 package Internal
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Internal\SharedData.h.back
 
 const(
     ZYDIS_SEMANTIC_OPTYPE_UNUSED = 1  //col:3
@@ -275,112 +275,103 @@ const(
 
 
 
-type typedef struct ZydisOperandDefinition_ struct{
-type ZyanU8 //col:3
-visibility ZyanU8 //col:4
-actions ZyanU8 //col:5
-size[3] ZyanU16 //col:6
-element_type ZyanU8 //col:7
-Union union //col:8
-encoding ZyanU8 //col:10
-Struct struct //col:11
-type ZyanU8 //col:13
-Union union //col:14
-reg ZyanU16 //col:16
-id ZyanU8 //col:17
+type  ZydisOperandDefinition_ struct{
+type ZyanU8 //col:20
+visibility ZyanU8 //col:21
+actions ZyanU8 //col:22
+size[3] ZyanU16 //col:23
+element_type ZyanU8 //col:24
+Union union //col:25
+encoding ZyanU8 //col:27
+Struct struct //col:28
+type ZyanU8 //col:30
+Union union //col:31
+reg ZyanU16 //col:33
+id ZyanU8 //col:34
 }
 
 
-
-type typedef struct ZydisInstructionDefinition_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE byte //col:29
-ZydisInstructionDefinition //} //col:30
+type  ZydisInstructionDefinition_ struct{
+ZYDIS_INSTRUCTION_DEFINITION_BASE byte //col:32
+ZydisInstructionDefinition } //col:33
 }
 
 
-
-type typedef struct ZydisInstructionDefinitionLEGACY_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE byte //col:33
-#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:34
-is_privileged ZyanBool //col:35
-#endif #endif //col:36
-accepts_LOCK ZyanBool //col:37
-#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:38
-accepts_REP ZyanBool //col:39
-accepts_REPEREPZ ZyanBool //col:40
-accepts_REPNEREPNZ ZyanBool //col:41
-accepts_BOUND ZyanBool //col:42
-accepts_XACQUIRE ZyanBool //col:43
-accepts_XRELEASE ZyanBool //col:44
-accepts_hle_without_lock ZyanBool //col:45
-accepts_branch_hints ZyanBool //col:46
-accepts_segment ZyanBool //col:47
-#endif #endif //col:48
-ZydisInstructionDefinitionLEGACY //} //col:49
+type  ZydisInstructionDefinitionLEGACY_ struct{
+ZYDIS_INSTRUCTION_DEFINITION_BASE byte //col:51
+#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:52
+is_privileged ZyanBool //col:53
+#endif #endif //col:54
+accepts_LOCK ZyanBool //col:55
+#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:56
+accepts_REP ZyanBool //col:57
+accepts_REPEREPZ ZyanBool //col:58
+accepts_REPNEREPNZ ZyanBool //col:59
+accepts_BOUND ZyanBool //col:60
+accepts_XACQUIRE ZyanBool //col:61
+accepts_XRELEASE ZyanBool //col:62
+accepts_hle_without_lock ZyanBool //col:63
+accepts_branch_hints ZyanBool //col:64
+accepts_segment ZyanBool //col:65
+#endif #endif //col:66
+ZydisInstructionDefinitionLEGACY } //col:67
 }
 
 
-
-type typedef struct ZydisInstructionDefinition3DNOW_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE byte //col:52
-ZydisInstructionDefinition3DNOW //} //col:53
+type  ZydisInstructionDefinition3DNOW_ struct{
+ZYDIS_INSTRUCTION_DEFINITION_BASE byte //col:55
+ZydisInstructionDefinition3DNOW } //col:56
 }
 
 
-
-type typedef struct ZydisInstructionDefinitionXOP_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR byte //col:56
-ZydisInstructionDefinitionXOP //} //col:57
+type  ZydisInstructionDefinitionXOP_ struct{
+ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR byte //col:59
+ZydisInstructionDefinitionXOP } //col:60
 }
 
 
-
-type typedef struct ZydisInstructionDefinitionVEX_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte //col:60
-#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:61
-broadcast ZyanU8 //col:62
-#endif #endif //col:63
-ZydisInstructionDefinitionVEX //} //col:64
+type  ZydisInstructionDefinitionVEX_ struct{
+ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte //col:66
+#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:67
+broadcast ZyanU8 //col:68
+#endif #endif //col:69
+ZydisInstructionDefinitionVEX } //col:70
 }
 
 
-
-type typedef struct ZydisInstructionDefinitionEVEX_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte //col:67
-#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:68
-vector_length ZyanU8 //col:69
-tuple_type ZyanU8 //col:70
-element_size ZyanU8 //col:71
-functionality ZyanU8 //col:72
-#endif #endif //col:73
-mask_policy ZyanU8 //col:74
-accepts_zero_mask ZyanBool //col:75
-#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:76
-mask_override ZyanU8 //col:77
-broadcast ZyanU8 //col:78
-#endif #endif //col:79
-ZydisInstructionDefinitionEVEX //} //col:80
+type  ZydisInstructionDefinitionEVEX_ struct{
+ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte //col:82
+#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:83
+vector_length ZyanU8 //col:84
+tuple_type ZyanU8 //col:85
+element_size ZyanU8 //col:86
+functionality ZyanU8 //col:87
+#endif #endif //col:88
+mask_policy ZyanU8 //col:89
+accepts_zero_mask ZyanBool //col:90
+#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:91
+mask_override ZyanU8 //col:92
+broadcast ZyanU8 //col:93
+#endif #endif //col:94
+ZydisInstructionDefinitionEVEX } //col:95
 }
 
 
-
-type typedef struct ZydisInstructionDefinitionMVEX_ struct{
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte //col:83
-functionality ZyanU8 //col:84
-mask_policy ZyanU8 //col:85
-#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:86
-has_element_granularity ZyanBool //col:87
-broadcast ZyanU8 //col:88
-#endif #endif //col:89
-ZydisInstructionDefinitionMVEX //} //col:90
+type  ZydisInstructionDefinitionMVEX_ struct{
+ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte //col:92
+functionality ZyanU8 //col:93
+mask_policy ZyanU8 //col:94
+#ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:95
+has_element_granularity ZyanBool //col:96
+broadcast ZyanU8 //col:97
+#endif #endif //col:98
+ZydisInstructionDefinitionMVEX } //col:99
 }
 
 
-
-type typedef struct ZydisAccessedFlags_ struct{
-action[ZYDIS_CPUFLAG_MAX_VALUE ZydisCPUFlagAction //col:93
+type  ZydisAccessedFlags_ struct{
+action[ZYDIS_CPUFLAG_MAX_VALUE ZydisCPUFlagAction //col:96
 }
-
 
 
 

@@ -1,6 +1,6 @@
 package Headers
 
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\include\SDK\Headers\Events.h.back
 
 const (
 	HIDDEN_HOOK_READ_AND_WRITE   = 1  //col:3
@@ -42,12 +42,11 @@ const (
 	DEBUGGER_MODIFY_EVENTS_CLEAR       = 4 //col:39
 )
 
-type DEBUGGER_MODIFY_EVENTS struct {
-	Tag                      uint64                      //col:3
-	KernelStatus             uint64                      //col:4
-	DebuggerModifyEventsType DEBUGGER_MODIFY_EVENTS_TYPE //col:5
-	TypeOfAction             byte                        //col:6
-	IsEnabled                bool                        //col:7
+type _DEBUGGER_MODIFY_EVENTS struct {
+	Tag                      uint64                      //col:10
+	KernelStatus             uint64                      //col:11
+	DebuggerModifyEventsType DEBUGGER_MODIFY_EVENTS_TYPE //col:12
+	TypeOfAction             byte                        //col:13
+	IsEnabled                bool                        //col:14
 }
-
 

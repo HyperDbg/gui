@@ -1,5 +1,5 @@
 package phnt
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntpnpapi.h.back
 
 const(
     HardwareProfileChangeEvent = 1  //col:3
@@ -46,19 +46,18 @@ const(
 
 
 
-type PLUGPLAY_EVENT_BLOCK struct{
-EventGuid GUID //col:3
-EventCategory PLUGPLAY_EVENT_CATEGORY //col:4
-Result PULONG //col:5
-Flags uint32 //col:6
-TotalSize uint32 //col:7
-DeviceObject PVOID //col:8
-Union union //col:9
-Struct struct //col:11
-ClassGuid GUID //col:13
-SymbolicLinkName[1] WCHAR //col:14
+type  _PLUGPLAY_EVENT_BLOCK struct{
+EventGuid GUID //col:17
+EventCategory PLUGPLAY_EVENT_CATEGORY //col:18
+Result PULONG //col:19
+Flags uint32 //col:20
+TotalSize uint32 //col:21
+DeviceObject uintptr //col:22
+Union union //col:23
+Struct struct //col:25
+ClassGuid GUID //col:27
+SymbolicLinkName[1] WCHAR //col:28
 }
-
 
 
 

@@ -1,6 +1,6 @@
 package kdserial
 
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\kdserial\uartp.h.back
 
 const (
 	AcpiGenericAccessSizeLegacy = 0 //col:3

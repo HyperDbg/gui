@@ -1,6 +1,6 @@
 package vmx
 
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\vmm\vmx\Events.h.back
 
 const (
 	EXCEPTION_VECTOR_DIVIDE_ERROR                      = 1   //col:3
@@ -53,10 +53,9 @@ const (
 	INTERRUPT_TYPE_OTHER_EVENT                   = 7 //col:50
 )
 
-type EVENT_INFORMATION struct {
-	InterruptInfo INTERRUPT_INFO //col:3
-	UINT32                       // //col:4
-	ErrorCode     uint64         //col:5
+type _EVENT_INFORMATION struct {
+	InterruptInfo     INTERRUPT_INFO //col:8
+	InstructionLength uint32         //col:9
+	ErrorCode         uint64         //col:10
 }
-
 

@@ -1,6 +1,6 @@
 package memory
 
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\memory\PoolManager.h.back
 
 const (
 	TRACKING_HOOKED_PAGES           = 1 //col:3
@@ -11,21 +11,19 @@ const (
 	PROCESS_THREAD_HOLDER           = 6 //col:8
 )
 
-type POOL_TABLE struct {
-	Address       uint64                    //col:3
-	Size          SIZE_T                    //col:4
-	Intention     POOL_ALLOCATION_INTENTION //col:5
-	PoolsList     *list.List                //col:6
-	IsBusy        bool                      //col:7
-	ShouldBeFreed bool                      //col:8
-	AlreadyFreed  bool                      //col:9
+type _POOL_TABLE struct {
+	Address       uint64                    //col:12
+	Size          int64                     //col:13
+	Intention     POOL_ALLOCATION_INTENTION //col:14
+	PoolsList     *list.List                //col:15
+	IsBusy        bool                      //col:16
+	ShouldBeFreed bool                      //col:17
+	AlreadyFreed  bool                      //col:18
 }
 
-
-type REQUEST_NEW_ALLOCATION struct {
-	Size      SIZE_T                    //col:13
-	Count     uint32                    //col:14
-	Intention POOL_ALLOCATION_INTENTION //col:15
+type _REQUEST_NEW_ALLOCATION struct {
+	Size      int64                     //col:18
+	Count     uint32                    //col:19
+	Intention POOL_ALLOCATION_INTENTION //col:20
 }
-
 

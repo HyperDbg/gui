@@ -1,13 +1,10 @@
 package Zycore
 
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\dependencies\zycore\include\Zycore\Allocator.h.back
 
-type typedef struct ZyanAllocator_ struct{
-allocate ZyanAllocatorAllocate //col:3
-reallocate ZyanAllocatorAllocate //col:4
-deallocate ZyanAllocatorDeallocate //col:5
+type ZyanAllocator_ struct {
+	allocate   ZyanAllocatorAllocate   //col:8
+	reallocate ZyanAllocatorAllocate   //col:9
+	deallocate ZyanAllocatorDeallocate //col:10
 }
-
-
-
-
 

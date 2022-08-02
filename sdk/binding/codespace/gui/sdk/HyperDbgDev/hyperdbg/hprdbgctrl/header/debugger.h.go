@@ -1,6 +1,6 @@
 package header
 
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbgctrl\header\debugger.h.back
 
 const (
 	DEBUGGER_EVENT_PARSING_ERROR_CAUSE_SUCCESSFUL_NO_ERROR                          = 0 //col:3
@@ -15,9 +15,8 @@ const (
 	DEBUGGER_EVENT_PARSING_ERROR_CAUSE_IMMEDIATE_MESSAGING_IN_EVENT_FORWARDING_MODE = 9 //col:12
 )
 
-type DEBUGGER_SYNCRONIZATION_EVENTS_STATE struct {
-	EventHandle      HANDLE //col:3
-	IsOnWaitingState bool   //col:4
+type _DEBUGGER_SYNCRONIZATION_EVENTS_STATE struct {
+	EventHandle      uintptr //col:7
+	IsOnWaitingState bool    //col:8
 }
-
 

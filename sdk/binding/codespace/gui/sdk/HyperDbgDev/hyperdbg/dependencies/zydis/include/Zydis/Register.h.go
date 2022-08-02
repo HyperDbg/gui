@@ -1,5 +1,5 @@
 package Zydis
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Register.h.back
 
 const(
     ZYDIS_REGCLASS_INVALID = 1  //col:3
@@ -26,10 +26,9 @@ const(
 
 
 
-type typedef struct ZydisRegisterContext_ struct{
-values[ZYDIS_REGISTER_MAX_VALUE ZyanU64 //col:3
+type  ZydisRegisterContext_ struct{
+values[ZYDIS_REGISTER_MAX_VALUE ZyanU64 //col:6
 }
-
 
 
 

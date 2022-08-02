@@ -1,5 +1,5 @@
 package phnt
-
+//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntlpcapi.h.back
 
 const(
     PortBasicInformation = 1  //col:3
@@ -34,262 +34,236 @@ const(
 
 
 
-type PORT_MESSAGE struct{
-Union union //col:3
-Struct struct //col:5
-DataLength CSHORT //col:7
-TotalLength CSHORT //col:8
+type  _PORT_MESSAGE struct{
+Union union //col:11
+Struct struct //col:13
+DataLength CSHORT //col:15
+TotalLength CSHORT //col:16
 }
 
 
-
-type PORT_DATA_ENTRY struct{
-Base PVOID //col:35
-Size uint32 //col:36
+type  _PORT_DATA_ENTRY struct{
+Base uintptr //col:39
+Size uint32 //col:40
 }
 
 
-
-type PORT_DATA_INFORMATION struct{
-CountDataEntries uint32 //col:40
-DataEntries[1] PORT_DATA_ENTRY //col:41
+type  _PORT_DATA_INFORMATION struct{
+CountDataEntries uint32 //col:44
+DataEntries[1] PORT_DATA_ENTRY //col:45
 }
 
 
-
-type LPC_CLIENT_DIED_MSG struct{
-PortMsg PORT_MESSAGE //col:45
-CreateTime LARGE_INTEGER //col:46
+type  _LPC_CLIENT_DIED_MSG struct{
+PortMsg PORT_MESSAGE //col:49
+CreateTime LARGE_INTEGER //col:50
 }
 
 
-
-type PORT_VIEW struct{
-Length uint32 //col:50
-SectionHandle HANDLE //col:51
-SectionOffset uint32 //col:52
-ViewSize SIZE_T //col:53
-ViewBase PVOID //col:54
-ViewRemoteBase PVOID //col:55
+type  _PORT_VIEW struct{
+Length uint32 //col:58
+SectionHandle uintptr //col:59
+SectionOffset uint32 //col:60
+ViewSize int64 //col:61
+ViewBase uintptr //col:62
+ViewRemoteBase uintptr //col:63
 }
 
 
-
-type REMOTE_PORT_VIEW struct{
-Length uint32 //col:59
-ViewSize SIZE_T //col:60
-ViewBase PVOID //col:61
+type  _REMOTE_PORT_VIEW struct{
+Length uint32 //col:64
+ViewSize int64 //col:65
+ViewBase uintptr //col:66
 }
 
 
-
-type PORT_MESSAGE64 struct{
-Union union //col:65
-Struct struct //col:67
-DataLength CSHORT //col:69
-TotalLength CSHORT //col:70
+type  _PORT_MESSAGE64 struct{
+Union union //col:73
+Struct struct //col:75
+DataLength CSHORT //col:77
+TotalLength CSHORT //col:78
 }
 
 
-
-type LPC_CLIENT_DIED_MSG64 struct{
-PortMsg PORT_MESSAGE64 //col:97
-CreateTime LARGE_INTEGER //col:98
+type  _LPC_CLIENT_DIED_MSG64 struct{
+PortMsg PORT_MESSAGE64 //col:101
+CreateTime LARGE_INTEGER //col:102
 }
 
 
-
-type PORT_VIEW64 struct{
-Length uint32 //col:102
-SectionHandle ULONGLONG //col:103
-SectionOffset uint32 //col:104
-ViewSize ULONGLONG //col:105
-ViewBase ULONGLONG //col:106
-ViewRemoteBase ULONGLONG //col:107
+type  _PORT_VIEW64 struct{
+Length uint32 //col:110
+SectionHandle ULONGLONG //col:111
+SectionOffset uint32 //col:112
+ViewSize ULONGLONG //col:113
+ViewBase ULONGLONG //col:114
+ViewRemoteBase ULONGLONG //col:115
 }
 
 
-
-type REMOTE_PORT_VIEW64 struct{
-Length uint32 //col:111
-ViewSize ULONGLONG //col:112
-ViewBase ULONGLONG //col:113
+type  _REMOTE_PORT_VIEW64 struct{
+Length uint32 //col:116
+ViewSize ULONGLONG //col:117
+ViewBase ULONGLONG //col:118
 }
 
 
-
-type ALPC_PORT_ATTRIBUTES struct{
-Flags uint32 //col:117
-SecurityQos SECURITY_QUALITY_OF_SERVICE //col:118
-MaxMessageLength SIZE_T //col:119
-MemoryBandwidth SIZE_T //col:120
-MaxPoolUsage SIZE_T //col:121
-MaxSectionSize SIZE_T //col:122
-MaxViewSize SIZE_T //col:123
-MaxTotalSectionSize SIZE_T //col:124
-DupObjectTypes uint32 //col:125
-#ifdefWin64 #ifdef _WIN64 //col:126
-Reserved uint32 //col:127
-#endif #endif //col:128
+type  _ALPC_PORT_ATTRIBUTES struct{
+Flags uint32 //col:131
+SecurityQos SECURITY_QUALITY_OF_SERVICE //col:132
+MaxMessageLength int64 //col:133
+MemoryBandwidth int64 //col:134
+MaxPoolUsage int64 //col:135
+MaxSectionSize int64 //col:136
+MaxViewSize int64 //col:137
+MaxTotalSectionSize int64 //col:138
+DupObjectTypes uint32 //col:139
+#ifdefWin64 #ifdef _WIN64 //col:140
+Reserved uint32 //col:141
+#endif #endif //col:142
 }
 
 
-
-type ALPC_MESSAGE_ATTRIBUTES struct{
-AllocatedAttributes uint32 //col:132
-ValidAttributes uint32 //col:133
+type  _ALPC_MESSAGE_ATTRIBUTES struct{
+AllocatedAttributes uint32 //col:136
+ValidAttributes uint32 //col:137
 }
 
 
-
-type ALPC_COMPLETION_LIST_STATE struct{
-Union union //col:137
-Struct struct //col:139
-Head ULONG64 //col:141
-Tail ULONG64 //col:142
-ActiveThreadCount ULONG64 //col:143
+type  _ALPC_COMPLETION_LIST_STATE struct{
+Union union //col:146
+Struct struct //col:148
+Head ULONG64 //col:150
+Tail ULONG64 //col:151
+ActiveThreadCount ULONG64 //col:152
 }
 
 
-
-type typedef struct DECLSPEC_ALIGN(128) _ALPC_COMPLETION_LIST_HEADER struct{
-StartMagic ULONG64 //col:150
-TotalSize uint32 //col:151
-ListOffset uint32 //col:152
-ListSize uint32 //col:153
-BitmapOffset uint32 //col:154
-BitmapSize uint32 //col:155
-DataOffset uint32 //col:156
-DataSize uint32 //col:157
-AttributeFlags uint32 //col:158
-AttributeSize uint32 //col:159
-ALPC_COMPLETION_LIST_STATE DECLSPEC_ALIGN(128) //col:160
-LastMessageId uint32 //col:161
-LastCallbackId uint32 //col:162
-ULONG DECLSPEC_ALIGN(128) //col:163
-ULONG DECLSPEC_ALIGN(128) //col:164
-ULONG DECLSPEC_ALIGN(128) //col:165
-RTL_SRWLOCK DECLSPEC_ALIGN(128) //col:166
-EndMagic ULONG64 //col:167
+type  DECLSPEC_ALIGN(128) _ALPC_COMPLETION_LIST_HEADER struct{
+StartMagic ULONG64 //col:170
+TotalSize uint32 //col:171
+ListOffset uint32 //col:172
+ListSize uint32 //col:173
+BitmapOffset uint32 //col:174
+BitmapSize uint32 //col:175
+DataOffset uint32 //col:176
+DataSize uint32 //col:177
+AttributeFlags uint32 //col:178
+AttributeSize uint32 //col:179
+ALPC_COMPLETION_LIST_STATE DECLSPEC_ALIGN(128) //col:180
+LastMessageId uint32 //col:181
+LastCallbackId uint32 //col:182
+ULONG DECLSPEC_ALIGN(128) //col:183
+ULONG DECLSPEC_ALIGN(128) //col:184
+ULONG DECLSPEC_ALIGN(128) //col:185
+RTL_SRWLOCK DECLSPEC_ALIGN(128) //col:186
+EndMagic ULONG64 //col:187
 }
 
 
-
-type ALPC_CONTEXT_ATTR struct{
-PortContext PVOID //col:171
-MessageContext PVOID //col:172
-Sequence uint32 //col:173
-MessageId uint32 //col:174
-CallbackId uint32 //col:175
+type  _ALPC_CONTEXT_ATTR struct{
+PortContext uintptr //col:178
+MessageContext uintptr //col:179
+Sequence uint32 //col:180
+MessageId uint32 //col:181
+CallbackId uint32 //col:182
 }
 
 
-
-type ALPC_HANDLE_ATTR32 struct{
-Flags uint32 //col:179
-Reserved0 uint32 //col:180
-SameAccess uint32 //col:181
-SameAttributes uint32 //col:182
-Indirect uint32 //col:183
-Inherit uint32 //col:184
-Reserved1 uint32 //col:185
-Handle uint32 //col:186
-ObjectType uint32 //col:187
-DesiredAccess uint32 //col:188
-GrantedAccess uint32 //col:189
+type  _ALPC_HANDLE_ATTR32 struct{
+Flags uint32 //col:192
+Reserved0 uint32 //col:193
+SameAccess uint32 //col:194
+SameAttributes uint32 //col:195
+Indirect uint32 //col:196
+Inherit uint32 //col:197
+Reserved1 uint32 //col:198
+Handle uint32 //col:199
+ObjectType uint32 //col:200
+DesiredAccess uint32 //col:201
+GrantedAccess uint32 //col:202
 }
 
 
-
-type ALPC_HANDLE_ATTR struct{
-Flags uint32 //col:193
-Reserved0 uint32 //col:194
-SameAccess uint32 //col:195
-SameAttributes uint32 //col:196
-Indirect uint32 //col:197
-Inherit uint32 //col:198
-Reserved1 uint32 //col:199
-Handle HANDLE //col:200
-HandleAttrArray PALPC_HANDLE_ATTR32 //col:201
-ObjectType uint32 //col:202
-HandleCount uint32 //col:203
-DesiredAccess ACCESS_MASK //col:204
-GrantedAccess ACCESS_MASK //col:205
+type  _ALPC_HANDLE_ATTR struct{
+Flags uint32 //col:208
+Reserved0 uint32 //col:209
+SameAccess uint32 //col:210
+SameAttributes uint32 //col:211
+Indirect uint32 //col:212
+Inherit uint32 //col:213
+Reserved1 uint32 //col:214
+Handle uintptr //col:215
+HandleAttrArray PALPC_HANDLE_ATTR32 //col:216
+ObjectType uint32 //col:217
+HandleCount uint32 //col:218
+DesiredAccess ACCESS_MASK //col:219
+GrantedAccess ACCESS_MASK //col:220
 }
 
 
-
-type ALPC_SECURITY_ATTR struct{
-Flags uint32 //col:209
-QoS PSECURITY_QUALITY_OF_SERVICE //col:210
-ContextHandle ALPC_HANDLE //col:211
+type  _ALPC_SECURITY_ATTR struct{
+Flags uint32 //col:214
+QoS PSECURITY_QUALITY_OF_SERVICE //col:215
+ContextHandle ALPC_HANDLE //col:216
 }
 
 
-
-type ALPC_DATA_VIEW_ATTR struct{
-Flags uint32 //col:215
-SectionHandle ALPC_HANDLE //col:216
-ViewBase PVOID //col:217
-ViewSize SIZE_T //col:218
+type  _ALPC_DATA_VIEW_ATTR struct{
+Flags uint32 //col:221
+SectionHandle ALPC_HANDLE //col:222
+ViewBase uintptr //col:223
+ViewSize int64 //col:224
 }
 
 
-
-type ALPC_BASIC_INFORMATION struct{
-Flags uint32 //col:222
-SequenceNo uint32 //col:223
-PortContext PVOID //col:224
+type  _ALPC_BASIC_INFORMATION struct{
+Flags uint32 //col:227
+SequenceNo uint32 //col:228
+PortContext uintptr //col:229
 }
 
 
-
-type ALPC_PORT_ASSOCIATE_COMPLETION_PORT struct{
-CompletionKey PVOID //col:228
-CompletionPort HANDLE //col:229
+type  _ALPC_PORT_ASSOCIATE_COMPLETION_PORT struct{
+CompletionKey uintptr //col:232
+CompletionPort uintptr //col:233
 }
 
 
-
-type ALPC_SERVER_INFORMATION struct{
-Union union //col:233
-Struct struct //col:235
-ThreadHandle HANDLE //col:237
+type  _ALPC_SERVER_INFORMATION struct{
+Union union //col:240
+Struct struct //col:242
+ThreadHandle uintptr //col:244
 }
 
 
-
-type ALPC_PORT_MESSAGE_ZONE_INFORMATION struct{
-Buffer PVOID //col:249
-Size uint32 //col:250
+type  _ALPC_PORT_MESSAGE_ZONE_INFORMATION struct{
+Buffer uintptr //col:253
+Size uint32 //col:254
 }
 
 
-
-type ALPC_PORT_COMPLETION_LIST_INFORMATION struct{
-Buffer PVOID //col:254
-Size uint32 //col:255
-ConcurrencyCount uint32 //col:256
-AttributeFlags uint32 //col:257
+type  _ALPC_PORT_COMPLETION_LIST_INFORMATION struct{
+Buffer uintptr //col:260
+Size uint32 //col:261
+ConcurrencyCount uint32 //col:262
+AttributeFlags uint32 //col:263
 }
 
 
-
-type ALPC_SERVER_SESSION_INFORMATION struct{
-SessionId uint32 //col:261
-ProcessId uint32 //col:262
+type  _ALPC_SERVER_SESSION_INFORMATION struct{
+SessionId uint32 //col:265
+ProcessId uint32 //col:266
 }
 
 
-
-type ALPC_MESSAGE_HANDLE_INFORMATION struct{
-Index uint32 //col:266
-Flags uint32 //col:267
-Handle uint32 //col:268
-ObjectType uint32 //col:269
-GrantedAccess ACCESS_MASK //col:270
+type  _ALPC_MESSAGE_HANDLE_INFORMATION struct{
+Index uint32 //col:273
+Flags uint32 //col:274
+Handle uint32 //col:275
+ObjectType uint32 //col:276
+GrantedAccess ACCESS_MASK //col:277
 }
-
 
 
 
