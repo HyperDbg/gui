@@ -1,11 +1,5 @@
 package Internal
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Internal\SharedData.h.back
 
-const(
-ZYDIS_INTERNAL_SHAREDDATA_H =  //col:1
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR = ZYDIS_INSTRUCTION_DEFINITION_BASE; ZyanU8 constr_NDSNDD                   ZYAN_BITFIELD(ZYDIS_REG_CONSTRAINTS_REQUIRED_BITS) //col:2
-ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL = ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR; ZyanBool is_gather                     ZYAN_BITFIELD( 1) //col:5
-)
 
 const(
     ZYDIS_SEMANTIC_OPTYPE_UNUSED = 1  //col:3
@@ -297,9 +291,12 @@ id ZyanU8 //col:17
 }
 
 
+
 type typedef struct ZydisInstructionDefinition_ struct{
 ZYDIS_INSTRUCTION_DEFINITION_BASE byte //col:29
+ZydisInstructionDefinition //} //col:30
 }
+
 
 
 type typedef struct ZydisInstructionDefinitionLEGACY_ struct{
@@ -319,17 +316,23 @@ accepts_hle_without_lock ZyanBool //col:45
 accepts_branch_hints ZyanBool //col:46
 accepts_segment ZyanBool //col:47
 #endif #endif //col:48
+ZydisInstructionDefinitionLEGACY //} //col:49
 }
+
 
 
 type typedef struct ZydisInstructionDefinition3DNOW_ struct{
 ZYDIS_INSTRUCTION_DEFINITION_BASE byte //col:52
+ZydisInstructionDefinition3DNOW //} //col:53
 }
+
 
 
 type typedef struct ZydisInstructionDefinitionXOP_ struct{
 ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR byte //col:56
+ZydisInstructionDefinitionXOP //} //col:57
 }
+
 
 
 type typedef struct ZydisInstructionDefinitionVEX_ struct{
@@ -337,7 +340,9 @@ ZYDIS_INSTRUCTION_DEFINITION_BASE_VECTOR_INTEL byte //col:60
 #ifndefZydisMinimalMode #ifndef ZYDIS_MINIMAL_MODE //col:61
 broadcast ZyanU8 //col:62
 #endif #endif //col:63
+ZydisInstructionDefinitionVEX //} //col:64
 }
+
 
 
 type typedef struct ZydisInstructionDefinitionEVEX_ struct{
@@ -354,7 +359,9 @@ accepts_zero_mask ZyanBool //col:75
 mask_override ZyanU8 //col:77
 broadcast ZyanU8 //col:78
 #endif #endif //col:79
+ZydisInstructionDefinitionEVEX //} //col:80
 }
+
 
 
 type typedef struct ZydisInstructionDefinitionMVEX_ struct{
@@ -365,12 +372,15 @@ mask_policy ZyanU8 //col:85
 has_element_granularity ZyanBool //col:87
 broadcast ZyanU8 //col:88
 #endif #endif //col:89
+ZydisInstructionDefinitionMVEX //} //col:90
 }
+
 
 
 type typedef struct ZydisAccessedFlags_ struct{
 action[ZYDIS_CPUFLAG_MAX_VALUE ZydisCPUFlagAction //col:93
 }
+
 
 
 

@@ -1,18 +1,5 @@
 package phnt
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntwow64.h.back
 
-const(
-_NTWOW64_H =  //col:1
-WOW64_SYSTEM_DIRECTORY = "SysWOW64" //col:2
-WOW64_SYSTEM_DIRECTORY_U = L"SysWOW64" //col:3
-WOW64_X86_TAG = " (x86)" //col:4
-WOW64_X86_TAG_U = L" (x86)" //col:5
-WOW64_POINTER(Type) = ULONG //col:6
-LDR_DATA_TABLE_ENTRY_SIZE_WINXP_32 = FIELD_OFFSET(LDR_DATA_TABLE_ENTRY32, DdagNode) //col:7
-LDR_DATA_TABLE_ENTRY_SIZE_WIN7_32 = FIELD_OFFSET(LDR_DATA_TABLE_ENTRY32, BaseNameHashValue) //col:8
-LDR_DATA_TABLE_ENTRY_SIZE_WIN8_32 = FIELD_OFFSET(LDR_DATA_TABLE_ENTRY32, ImplicitPathOptions) //col:9
-GDI_BATCH_BUFFER_SIZE = 310 //col:10
-)
 
 const(
     SharedNtdll32LdrInitializeThunk = 1  //col:3
@@ -33,17 +20,19 @@ const(
 
 type RTL_BALANCED_NODE32 struct{
 Union union //col:3
-_RTL_BALANCED_NODE WOW64_POINTER(struct //col:5
+WOW64_POINTER(struct // //col:5
 Struct struct //col:6
-_RTL_BALANCED_NODE WOW64_POINTER(struct //col:8
-_RTL_BALANCED_NODE WOW64_POINTER(struct //col:9
+WOW64_POINTER(struct // //col:8
+WOW64_POINTER(struct // //col:9
 }
+
 
 
 type RTL_RB_TREE32 struct{
 Root WOW64_POINTER(PRTL_BALANCED_NODE) //col:21
 Min WOW64_POINTER(PRTL_BALANCED_NODE) //col:22
 }
+
 
 
 type PEB_LDR_DATA32 struct{
@@ -59,15 +48,18 @@ ShutdownThreadId WOW64_POINTER(HANDLE) //col:34
 }
 
 
+
 type LDR_SERVICE_TAG_RECORD32 struct{
-_LDR_SERVICE_TAG_RECORD WOW64_POINTER(struct //col:38
+WOW64_POINTER(struct // //col:38
 ServiceTag uint32 //col:39
 }
+
 
 
 type LDRP_CSLIST32 struct{
 Tail WOW64_POINTER(PSINGLE_LIST_ENTRY) //col:43
 }
+
 
 
 type LDR_DDAG_NODE32 struct{
@@ -82,6 +74,7 @@ RemovalLink SINGLE_LIST_ENTRY32 //col:55
 }
 
 
+
 type LDR_DATA_TABLE_ENTRY32 struct{
 InLoadOrderLinks LIST_ENTRY32 //col:64
 InMemoryOrderLinks LIST_ENTRY32 //col:65
@@ -91,10 +84,12 @@ InProgressLinks LIST_ENTRY32 //col:69
 }
 
 
+
 type CURDIR32 struct{
 DosPath UNICODE_STRING32 //col:136
 Handle WOW64_POINTER(HANDLE) //col:137
 }
+
 
 
 type RTL_DRIVE_LETTER_CURDIR32 struct{
@@ -103,6 +98,7 @@ Length USHORT //col:142
 TimeStamp uint32 //col:143
 DosPath STRING32 //col:144
 }
+
 
 
 type RTL_USER_PROCESS_PARAMETERS32 struct{
@@ -146,6 +142,7 @@ DefaultThreadpoolCpuSetMaskCount uint32 //col:184
 }
 
 
+
 type PEB32 struct{
 InheritedAddressSpace bool //col:188
 ReadImageFileExecOptions bool //col:189
@@ -164,11 +161,13 @@ IsLongPathAwareProcess bool //col:203
 }
 
 
+
 type GDI_TEB_BATCH32 struct{
 Offset uint32 //col:312
 HDC WOW64_POINTER(ULONG_PTR) //col:313
 Buffer[GDI_BATCH_BUFFER_SIZE] uint32 //col:314
 }
+
 
 
 type TEB32 struct{
@@ -241,63 +240,6 @@ IdealProcessor uint8 //col:385
 }
 
 
-
-type (
-Ntwow64 interface{
-C_ASSERT()(ok bool)//col:30
-FORCEINLINE_VOID_UStrToUStr32()(ok bool)//col:39
-}
-ntwow64 struct{}
-)
-
-func NewNtwow64()Ntwow64{ return & ntwow64{} }
-
-func (n *ntwow64)C_ASSERT()(ok bool){//col:30
-/*C_ASSERT(FIELD_OFFSET(PEB32, IFEOKey) == 0x024);
-C_ASSERT(FIELD_OFFSET(PEB32, UnicodeCaseTableData) == 0x060);
-C_ASSERT(FIELD_OFFSET(PEB32, SystemAssemblyStorageMap) == 0x204);
-C_ASSERT(FIELD_OFFSET(PEB32, pImageHeaderHash) == 0x23c);
-C_ASSERT(FIELD_OFFSET(PEB32, WaitOnAddressHashTable) == 0x25c);
-C_ASSERT(sizeof(PEB32) == 0x470);
-C_ASSERT(FIELD_OFFSET(TEB32, ProcessEnvironmentBlock) == 0x030);
-C_ASSERT(FIELD_OFFSET(TEB32, ExceptionCode) == 0x1a4);
-C_ASSERT(FIELD_OFFSET(TEB32, TxFsContext) == 0x1d0);
-C_ASSERT(FIELD_OFFSET(TEB32, glContext) == 0xbf0);
-C_ASSERT(FIELD_OFFSET(TEB32, StaticUnicodeBuffer) == 0xc00);
-C_ASSERT(FIELD_OFFSET(TEB32, TlsLinks) == 0xf10);
-C_ASSERT(FIELD_OFFSET(TEB32, DbgSsReserved) == 0xf20);
-C_ASSERT(FIELD_OFFSET(TEB32, ActivityId) == 0xf50);
-C_ASSERT(FIELD_OFFSET(TEB32, GdiBatchCount) == 0xf70);
-C_ASSERT(FIELD_OFFSET(TEB32, TlsExpansionSlots) == 0xf94);
-C_ASSERT(FIELD_OFFSET(TEB32, FlsData) == 0xfb4);
-C_ASSERT(FIELD_OFFSET(TEB32, MuiImpersonation) == 0xfc4);
-C_ASSERT(FIELD_OFFSET(TEB32, ReservedForCrt) == 0xfe8);
-C_ASSERT(FIELD_OFFSET(TEB32, EffectiveContainerId) == 0xff0);
-C_ASSERT(sizeof(TEB32) == 0x1000);
-FORCEINLINE VOID UStr32ToUStr(
-    _Out_ PUNICODE_STRING Destination,
-    _In_ PUNICODE_STRING32 Source
-    )
-{
-    Destination->Length = Source->Length;
-    Destination->MaximumLength = Source->MaximumLength;
-    Destination->Buffer = (PWCH)UlongToPtr(Source->Buffer);
-}*/
-return true
-}
-
-func (n *ntwow64)FORCEINLINE_VOID_UStrToUStr32()(ok bool){//col:39
-/*FORCEINLINE VOID UStrToUStr32(
-    _Out_ PUNICODE_STRING32 Destination,
-    _In_ PUNICODE_STRING Source
-    )
-{
-    Destination->Length = Source->Length;
-    Destination->MaximumLength = Source->MaximumLength;
-    Destination->Buffer = PtrToUlong(Source->Buffer);
-}*/
-return true
-}
 
 
 

@@ -4,17 +4,15 @@ package Source
 
 type (
 	HyperDbgIntegration interface {
-		pdbex_export() (ok bool)                    //col:17
-		pdbex_set_logging_method_export() (ok bool) //col:21
-		ExtractBits() (ok bool)                     //col:26
-		SymSeparateTo64BitValue() (ok bool)         //col:35
+		pdbex_export() (ok bool) //col:20
+		ExtractBits() (ok bool)  //col:25
 	}
 	hyperDbgIntegration struct{}
 )
 
 func NewHyperDbgIntegration() HyperDbgIntegration { return &hyperDbgIntegration{} }
 
-func (h *hyperDbgIntegration) pdbex_export() (ok bool) { //col:17
+func (h *hyperDbgIntegration) pdbex_export() (ok bool) { //col:20
 	/*
 	   pdbex_export(int     argc,
 
@@ -34,13 +32,7 @@ func (h *hyperDbgIntegration) pdbex_export() (ok bool) { //col:17
 	   	    }
 	   	    g_MappingBufferAddress = (CHAR *)buffer_address;
 	   	    return Instance.Run(argc, argv);
-	   	}
-	*/
-	return true
-}
 
-func (h *hyperDbgIntegration) pdbex_set_logging_method_export() (ok bool) { //col:21
-	/*
 	   pdbex_set_logging_method_export(PVOID handler)
 
 	   	{
@@ -50,7 +42,7 @@ func (h *hyperDbgIntegration) pdbex_set_logging_method_export() (ok bool) { //co
 	return true
 }
 
-func (h *hyperDbgIntegration) ExtractBits() (ok bool) { //col:26
+func (h *hyperDbgIntegration) ExtractBits() (ok bool) { //col:25
 	/*
 	   ExtractBits(UINT64 Orig64Bit, UINT64 From, UINT64 To)
 
@@ -61,20 +53,3 @@ func (h *hyperDbgIntegration) ExtractBits() (ok bool) { //col:26
 	*/
 	return true
 }
-
-func (h *hyperDbgIntegration) SymSeparateTo64BitValue() (ok bool) { //col:35
-	/*
-	   SymSeparateTo64BitValue(UINT64 Value)
-
-	   	{
-	   	    std::ostringstream OstringStream;
-	   	    std::string        Temp;
-	   	    OstringStream << std::setw(16) << std::setfill('0') << std::hex << Value;
-	   	    Temp = OstringStream.str();
-	   	    Temp.insert(8, 1, '`');
-	   	    return Temp;
-	   	}
-	*/
-	return true
-}
-

@@ -1,9 +1,5 @@
 package API
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\dependencies\zycore\include\Zycore\API\Memory.h.back
 
-const(
-ZYCORE_MEMORY_H =  //col:1
-)
 
 const(
 #if   defined(ZYAN_WINDOWS) = 1  //col:3

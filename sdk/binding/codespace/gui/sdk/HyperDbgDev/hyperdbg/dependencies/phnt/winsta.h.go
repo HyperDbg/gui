@@ -1,95 +1,5 @@
 package phnt
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\winsta.h.back
 
-const(
-_WINSTA_H =  //col:1
-WINSTATION_QUERY = 0x00000001 //col:2
-WINSTATION_SET = 0x00000002 //col:3
-WINSTATION_RESET = 0x00000004 //col:4
-WINSTATION_VIRTUAL = 0x00000008 //col:5
-WINSTATION_SHADOW = 0x00000010 //col:6
-WINSTATION_LOGON = 0x00000020 //col:7
-WINSTATION_LOGOFF = 0x00000040 //col:8
-WINSTATION_MSG = 0x00000080 //col:9
-WINSTATION_CONNECT = 0x00000100 //col:10
-WINSTATION_DISCONNECT = 0x00000200 //col:11
-WINSTATION_GUEST_ACCESS = WINSTATION_LOGON //col:12
-WINSTATION_CURRENT_GUEST_ACCESS = (WINSTATION_VIRTUAL | WINSTATION_LOGOFF) //col:13
-WINSTATION_USER_ACCESS = (WINSTATION_GUEST_ACCESS | WINSTATION_QUERY | WINSTATION_CONNECT) //col:14
-WINSTATION_CURRENT_USER_ACCESS = (WINSTATION_SET | WINSTATION_RESET | WINSTATION_VIRTUAL | WINSTATION_LOGOFF | WINSTATION_DISCONNECT) //col:15
-WINSTATION_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED | WINSTATION_QUERY | = WINSTATION_SET | WINSTATION_RESET | WINSTATION_VIRTUAL | WINSTATION_SHADOW | WINSTATION_LOGON | WINSTATION_MSG | WINSTATION_CONNECT | WINSTATION_DISCONNECT) //col:18
-WDPREFIX_LENGTH = 12 //col:22
-CALLBACK_LENGTH = 50 //col:23
-DLLNAME_LENGTH = 32 //col:24
-CDNAME_LENGTH = 32 //col:25
-WDNAME_LENGTH = 32 //col:26
-PDNAME_LENGTH = 32 //col:27
-DEVICENAME_LENGTH = 128 //col:28
-MODEMNAME_LENGTH = DEVICENAME_LENGTH //col:29
-STACK_ADDRESS_LENGTH = 128 //col:30
-MAX_BR_NAME = 65 //col:31
-DIRECTORY_LENGTH = 256 //col:32
-INITIALPROGRAM_LENGTH = 256 //col:33
-USERNAME_LENGTH = 20 //col:34
-DOMAIN_LENGTH = 17 //col:35
-PASSWORD_LENGTH = 14 //col:36
-NASISPECIFICNAME_LENGTH = 14 //col:37
-NASIUSERNAME_LENGTH = 47 //col:38
-NASIPASSWORD_LENGTH = 24 //col:39
-NASISESSIONNAME_LENGTH = 16 //col:40
-NASIFILESERVER_LENGTH = 47 //col:41
-CLIENTDATANAME_LENGTH = 7 //col:42
-CLIENTNAME_LENGTH = 20 //col:43
-CLIENTADDRESS_LENGTH = 30 //col:44
-IMEFILENAME_LENGTH = 32 //col:45
-DIRECTORY_LENGTH = 256 //col:46
-CLIENTLICENSE_LENGTH = 32 //col:47
-CLIENTMODEM_LENGTH = 40 //col:48
-CLIENT_PRODUCT_ID_LENGTH = 32 //col:49
-MAX_COUNTER_EXTENSIONS = 2 //col:50
-WINSTATIONNAME_LENGTH = 32 //col:51
-TERMSRV_TOTAL_SESSIONS = 1 //col:52
-TERMSRV_DISC_SESSIONS = 2 //col:53
-TERMSRV_RECON_SESSIONS = 3 //col:54
-TERMSRV_CURRENT_ACTIVE_SESSIONS = 4 //col:55
-TERMSRV_CURRENT_DISC_SESSIONS = 5 //col:56
-TERMSRV_PENDING_SESSIONS = 6 //col:57
-TERMSRV_SUCC_TOTAL_LOGONS = 7 //col:58
-TERMSRV_SUCC_LOCAL_LOGONS = 8 //col:59
-TERMSRV_SUCC_REMOTE_LOGONS = 9 //col:60
-TERMSRV_SUCC_SESSION0_LOGONS = 10 //col:61
-TERMSRV_CURRENT_TERMINATING_SESSIONS = 11 //col:62
-TERMSRV_CURRENT_LOGGEDON_SESSIONS = 12 //col:63
-MAX_THINWIRECACHE = 4 //col:64
-PROTOCOL_CONSOLE = 0 //col:65
-PROTOCOL_OTHERS = 1 //col:66
-PROTOCOL_RDP = 2 //col:67
-TS_PROCESS_INFO_MAGIC_NT4 = 0x23495452 //col:68
-SIZEOF_TS4_SYSTEM_THREAD_INFORMATION = 64 //col:69
-SIZEOF_TS4_SYSTEM_PROCESS_INFORMATION = 136 //col:70
-WSD_LOGOFF = 0x1 //col:71
-WSD_SHUTDOWN = 0x2 //col:72
-WSD_REBOOT = 0x4 //col:73
-WSD_POWEROFF = 0x8 //col:74
-WEVENT_NONE = 0x0 //col:75
-WEVENT_CREATE = 0x1 //col:76
-WEVENT_DELETE = 0x2 //col:77
-WEVENT_RENAME = 0x4 //col:78
-WEVENT_CONNECT = 0x8 //col:79
-WEVENT_DISCONNECT = 0x10 //col:80
-WEVENT_LOGON = 0x20 //col:81
-WEVENT_LOGOFF = 0x40 //col:82
-WEVENT_STATECHANGE = 0x80 //col:83
-WEVENT_LICENSE = 0x100 //col:84
-WEVENT_ALL = 0x7fffffff //col:85
-WEVENT_FLUSH = 0x80000000 //col:86
-KBDSHIFT = 0x1 //col:87
-KBDCTRL = 0x2 //col:88
-KBDALT = 0x4 //col:89
-WNOTIFY_ALL_SESSIONS = 0x1 //col:90
-LOGONID_CURRENT = (-1) //col:91
-SERVERNAME_CURRENT = ((PWSTR)NULL) //col:92
-)
 
 const(
     State_Active  =  0  //col:3
@@ -238,11 +148,13 @@ Offset USHORT //col:4
 }
 
 
+
 type SESSIONIDW struct{
 Union union //col:8
 SessionId uint32 //col:10
 LogonId uint32 //col:11
 }
+
 
 
 type WINSTATIONCREATE struct{
@@ -251,12 +163,14 @@ MaxInstanceCount uint32 //col:19
 }
 
 
+
 type WINSTACONFIGWIRE struct{
 Comment[61] WCHAR //col:23
 OEMId[4] int8 //col:24
 UserConfig VARDATA_WIRE //col:25
 NewFields VARDATA_WIRE //col:26
 }
+
 
 
 type USERCONFIG struct{
@@ -323,11 +237,13 @@ WFHomeDirDrive[4] WCHAR //col:89
 }
 
 
+
 type NETWORKCONFIG struct{
 LanAdapter LONG //col:93
 NetworkName DEVICENAME //col:94
 Flags uint32 //col:95
 }
+
 
 
 type FLOWCONTROLCONFIG struct{
@@ -343,10 +259,12 @@ HardwareTransmit TRANSMITFLOWCONTROLCLASS //col:107
 }
 
 
+
 type CONNECTCONFIG struct{
 Type ASYNCCONNECTCLASS //col:111
 fEnableBreakDisconnect uint32 //col:112
 }
+
 
 
 type ASYNCCONFIG struct{
@@ -363,6 +281,7 @@ Connect CONNECTCONFIG //col:125
 }
 
 
+
 type NASICONFIG struct{
 SpecificName NASISPECIFICNAME //col:129
 UserName NASIUSERNAME //col:130
@@ -373,11 +292,13 @@ GlobalSession bool //col:134
 }
 
 
+
 type OEMTDCONFIG struct{
 Adapter LONG //col:138
 DeviceName DEVICENAME //col:139
 Flags uint32 //col:140
 }
+
 
 
 type PDPARAMS struct{
@@ -390,6 +311,7 @@ OemTd OEMTDCONFIG //col:150
 }
 
 
+
 type WDCONFIG struct{
 WdName WDNAME //col:155
 WdDLL DLLNAME //col:156
@@ -399,6 +321,7 @@ WdInputBufferLength uint32 //col:159
 CfgDLL DLLNAME //col:160
 WdPrefix WDPREFIX //col:161
 }
+
 
 
 type PDCONFIG2 struct{
@@ -413,6 +336,7 @@ InteractiveDelay uint32 //col:172
 PortNumber uint32 //col:173
 KeepAliveTimeout uint32 //col:174
 }
+
 
 
 type WINSTATIONCLIENT struct{
@@ -465,9 +389,11 @@ ActiveInputLocale uint32 //col:223
 }
 
 
+
 type TSHARE_COUNTERS struct{
 Reserved uint32 //col:227
 }
+
 
 
 type PROTOCOLCOUNTERS struct{
@@ -493,10 +419,12 @@ Reserved[100] uint32 //col:250
 }
 
 
+
 type THINWIRECACHE struct{
 CacheReads uint32 //col:255
 CacheHits uint32 //col:256
 }
+
 
 
 type RESERVED_CACHE struct{
@@ -504,9 +432,11 @@ ThinWireCache[MAX_THINWIRECACHE] THINWIRECACHE //col:260
 }
 
 
+
 type TSHARE_CACHE struct{
 Reserved uint32 //col:264
 }
+
 
 
 type typedef struct CACHE_STATISTICS struct{
@@ -519,6 +449,7 @@ Reserved[20] uint32 //col:274
 }
 
 
+
 type PROTOCOLSTATUS struct{
 Output PROTOCOLCOUNTERS //col:279
 Input PROTOCOLCOUNTERS //col:280
@@ -526,6 +457,7 @@ Cache CACHE_STATISTICS //col:281
 AsyncSignal uint32 //col:282
 AsyncSignalMask uint32 //col:283
 }
+
 
 
 type WINSTATIONINFORMATION struct{
@@ -543,6 +475,7 @@ CurrentTime LARGE_INTEGER //col:297
 }
 
 
+
 type WINSTATIONUSERTOKEN struct{
 ProcessId HANDLE //col:301
 ThreadId HANDLE //col:302
@@ -550,11 +483,13 @@ UserToken HANDLE //col:303
 }
 
 
+
 type WINSTATIONVIDEODATA struct{
 HResolution USHORT //col:307
 VResolution USHORT //col:308
 fColorDepth USHORT //col:309
 }
+
 
 
 type CDCONFIG struct{
@@ -565,10 +500,12 @@ CdFlag uint32 //col:316
 }
 
 
+
 type WINSTATIONCLIENTDATA struct{
 DataName CLIENTDATANAME //col:320
 fUnicodeData bool //col:321
 }
+
 
 
 type WINSTATIONLOADINDICATORDATA struct{
@@ -583,12 +520,14 @@ reserved[9] uint32 //col:332
 }
 
 
+
 type WINSTATIONSHADOW struct{
 ShadowState SHADOWSTATECLASS //col:336
 ShadowClass SHADOWCLASS //col:337
 SessionId uint32 //col:338
 ProtocolType uint32 //col:339
 }
+
 
 
 type WINSTATIONPRODID struct{
@@ -601,6 +540,7 @@ OuterMostSessionId uint32 //col:348
 }
 
 
+
 type WINSTATIONREMOTEADDRESS struct{
 sin_family USHORT //col:352
 Union union //col:353
@@ -609,6 +549,7 @@ sin_port USHORT //col:357
 sin_addr uint32 //col:358
 sin_zero[8] uint8 //col:359
 }
+
 
 
 type WINSTATIONINFORMATIONEX_LEVEL1 struct{
@@ -625,6 +566,7 @@ LastInputTime LARGE_INTEGER //col:381
 CurrentTime LARGE_INTEGER //col:382
 ProtocolStatus PROTOCOLSTATUS //col:383
 }
+
 
 
 type WINSTATIONINFORMATIONEX_LEVEL2 struct{
@@ -645,10 +587,12 @@ DomainName[256] WCHAR //col:400
 }
 
 
+
 type WINSTATIONINFORMATIONEX struct{
 Level uint32 //col:404
 Data WINSTATIONINFORMATIONEX_LEVEL //col:405
 }
+
 
 
 type TS_PROCESS_INFORMATION_NT4 struct{
@@ -657,6 +601,7 @@ LogonId uint32 //col:410
 ProcessSid PVOID //col:411
 Pad uint32 //col:412
 }
+
 
 
 type TS_SYS_PROCESS_INFORMATION struct{
@@ -690,11 +635,13 @@ PrivatePageCount SIZE_T //col:442
 }
 
 
+
 type TS_ALL_PROCESSES_INFO struct{
 pTsProcessInfo PTS_SYS_PROCESS_INFORMATION //col:446
 SizeOfSid uint32 //col:447
 pSid PSID //col:448
 }
+
 
 
 type TS_COUNTER_HEADER struct{
@@ -703,11 +650,13 @@ bResult bool //col:453
 }
 
 
+
 type TS_COUNTER struct{
 CounterHead TS_COUNTER_HEADER //col:457
 dwValue DWORD //col:458
 StartTime LARGE_INTEGER //col:459
 }
+
 
 
 

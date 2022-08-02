@@ -1,6 +1,6 @@
 package user_level
 
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\debugger\user-level\UserAccess.h.back
+
 
 type PEB_LDR_DATA struct {
 	Length                uint32     //col:3
@@ -11,12 +11,14 @@ type PEB_LDR_DATA struct {
 	ModuleListInitOrder   *list.List //col:8
 }
 
+
 type RTL_USER_PROCESS_PARAMETERS struct {
 	Reserved1     [16]uint8      //col:12
 	Reserved2     [10]PVOID      //col:13
 	ImagePathName UNICODE_STRING //col:14
 	CommandLine   UNICODE_STRING //col:15
 }
+
 
 type PEB struct {
 	Reserved1              [2]uint8                      //col:19
@@ -40,6 +42,7 @@ type PEB struct {
 	SessionId              uint32                        //col:37
 }
 
+
 type PEB32 struct {
 	InheritedAddressSpace    uint8  //col:41
 	ReadImageFileExecOptions uint8  //col:42
@@ -61,6 +64,7 @@ type PEB32 struct {
 	ApiSetMap                uint32 //col:58
 }
 
+
 type PEB_LDR_DATA32 struct {
 	Length                          uint32       //col:62
 	Initialized                     uint8        //col:63
@@ -69,6 +73,7 @@ type PEB_LDR_DATA32 struct {
 	InMemoryOrderModuleList         LIST_ENTRY32 //col:66
 	InInitializationOrderModuleList LIST_ENTRY32 //col:67
 }
+
 
 type LDR_DATA_TABLE_ENTRY32 struct {
 	InLoadOrderLinks           LIST_ENTRY32     //col:71
@@ -85,6 +90,7 @@ type LDR_DATA_TABLE_ENTRY32 struct {
 	HashLinks                  LIST_ENTRY32     //col:82
 	TimeDateStamp              uint32           //col:83
 }
+
 
 type LDR_DATA_TABLE_ENTRY struct {
 	InLoadOrderModuleList           *list.List     //col:87
@@ -103,4 +109,5 @@ type LDR_DATA_TABLE_ENTRY struct {
 	CheckSum                        uint32         //col:100
 	TimeDateStamp                   uint32         //col:101
 }
+
 

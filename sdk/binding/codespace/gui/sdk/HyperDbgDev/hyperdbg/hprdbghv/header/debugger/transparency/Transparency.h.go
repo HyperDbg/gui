@@ -1,11 +1,6 @@
 package transparency
 
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\debugger\transparency\Transparency.h.back
 
-const (
-	MSR_IA32_TIME_STAMP_COUNTER = 0x10   //col:1
-	RAND_MAX                    = 0x7fff //col:2
-)
 
 type VM_EXIT_TRANSPARENCY struct {
 	PreviousTimeStampCounter        uint64 //col:3
@@ -13,6 +8,7 @@ type VM_EXIT_TRANSPARENCY struct {
 	RevealedTimeStampCounterByRdtsc uint64 //col:5
 	CpuidAfterRdtscDetected         bool   //col:6
 }
+
 
 type TRANSPARENCY_MEASUREMENTS struct {
 	CpuidAverage           uint64     //col:10
@@ -24,6 +20,7 @@ type TRANSPARENCY_MEASUREMENTS struct {
 	ProcessList            *list.List //col:16
 }
 
+
 type TRANSPARENCY_PROCESS struct {
 	ProcessId                            uint32     //col:20
 	ProcessName                          PVOID      //col:21
@@ -31,4 +28,5 @@ type TRANSPARENCY_PROCESS struct {
 	TrueIfProcessIdAndFalseIfProcessName bool       //col:23
 	OtherProcesses                       *list.List //col:24
 }
+
 

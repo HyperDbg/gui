@@ -1,9 +1,5 @@
 package phnt
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntpnpapi.h.back
 
-const(
-_NTPNPAPI_H =  //col:1
-)
 
 const(
     HardwareProfileChangeEvent = 1  //col:3
@@ -62,6 +58,7 @@ Struct struct //col:11
 ClassGuid GUID //col:13
 SymbolicLinkName[1] WCHAR //col:14
 }
+
 
 
 

@@ -1,6 +1,6 @@
 package registers
 
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\components\registers\DebugRegisters.h.back
+
 
 const (
 	BREAK_ON_INSTRUCTION_FETCH              = 1 //col:3

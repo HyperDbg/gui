@@ -1,12 +1,5 @@
 package memory
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\memory\MemoryMapper.h.back
 
-const(
-PAGE_4KB_OFFSET = ((UINT64)(1 << 12) - 1) //col:1
-PAGE_2MB_OFFSET = ((UINT64)(1 << 21) - 1) //col:2
-PAGE_4MB_OFFSET = ((UINT64)(1 << 22) - 1) //col:3
-PAGE_1GB_OFFSET = ((UINT64)(1 << 30) - 1) //col:4
-)
 
 const(
     PagingLevelPageTable  =  0  //col:3
@@ -34,6 +27,7 @@ type MEMORY_MAPPER_ADDRESSES struct{
 PteVirtualAddress uint64 //col:3
 VirualAddress uint64 //col:4
 }
+
 
 
 type PAGE_ENTRY struct{
@@ -64,6 +58,7 @@ ExecuteDisable uint64 //col:33
 }
 
 
+
 type CR3_TYPE struct{
 Union union //col:39
 Flags uint64 //col:41
@@ -74,6 +69,7 @@ Reserved1 uint64 //col:46
 Reserved_2 uint64 //col:47
 PcidInvalidate uint64 //col:48
 }
+
 
 
 

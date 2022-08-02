@@ -1,10 +1,6 @@
 package header
 
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbgctrl\header\forwarding.h.back
 
-const (
-	MAXIMUM_CHARACTERS_FOR_EVENT_FORWARDING_NAME = 50 //col:1
-)
 
 const (
 	EVENT_FORWARDING_NAMEDPIPE = 1 //col:3
@@ -36,4 +32,5 @@ type DEBUGGER_EVENT_FORWARDING struct {
 	OutputSourcesList byte                                               //col:9
 	Name              [MAXIMUM_CHARACTERS_FOR_EVENT_FORWARDING_NAME]int8 //col:10
 }
+
 

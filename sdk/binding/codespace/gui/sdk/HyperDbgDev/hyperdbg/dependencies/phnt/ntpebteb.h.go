@@ -1,13 +1,10 @@
 package phnt
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntpebteb.h.back
 
-const(
-_NTPEBTEB_H =  //col:1
-GDI_BATCH_BUFFER_SIZE = 310 //col:2
-)
 
-type ACTIVATION_CONTEXT_STACK struct{
-_RTL_ACTIVATION_CONTEXT_STACK_FRAME* struct //col:5
+type  struct{
+struct //typedef //col:1
+struct //typedef //col:2
+struct // //col:5
 FrameListCache *list.List //col:6
 Flags uint32 //col:7
 NextCookieSequenceNumber uint32 //col:8
@@ -15,8 +12,10 @@ StackId uint32 //col:9
 }
 
 
-type ACTIVATION_CONTEXT_STACK struct{
-_RTL_ACTIVATION_CONTEXT_STACK_FRAME* struct //col:5
+
+type  struct{
+struct //typedef //col:2
+struct // //col:5
 FrameListCache *list.List //col:6
 Flags uint32 //col:7
 NextCookieSequenceNumber uint32 //col:8
@@ -24,13 +23,15 @@ StackId uint32 //col:9
 }
 
 
+
 type ACTIVATION_CONTEXT_STACK struct{
-_RTL_ACTIVATION_CONTEXT_STACK_FRAME* struct //col:5
+struct // //col:5
 FrameListCache *list.List //col:6
 Flags uint32 //col:7
 NextCookieSequenceNumber uint32 //col:8
 StackId uint32 //col:9
 }
+
 
 
 type API_SET_NAMESPACE struct{
@@ -44,10 +45,12 @@ HashFactor uint32 //col:19
 }
 
 
+
 type API_SET_HASH_ENTRY struct{
 Hash uint32 //col:23
 Index uint32 //col:24
 }
+
 
 
 type API_SET_NAMESPACE_ENTRY struct{
@@ -60,6 +63,7 @@ ValueCount uint32 //col:33
 }
 
 
+
 type API_SET_VALUE_ENTRY  struct{
 Flags uint32 //col:37
 NameOffset uint32 //col:38
@@ -67,6 +71,7 @@ NameLength uint32 //col:39
 ValueOffset uint32 //col:40
 ValueLength uint32 //col:41
 }
+
 
 
 type PEB struct{
@@ -87,11 +92,13 @@ IsLongPathAwareProcess bool //col:60
 }
 
 
+
 type GDI_TEB_BATCH struct{
 Offset uint32 //col:190
 HDC ULONG_PTR //col:191
 Buffer[GDI_BATCH_BUFFER_SIZE] uint32 //col:192
 }
+
 
 
 type TEB_ACTIVE_FRAME_CONTEXT struct{
@@ -100,11 +107,13 @@ FrameName PSTR //col:197
 }
 
 
+
 type TEB_ACTIVE_FRAME struct{
 Flags uint32 //col:201
-_TEB_ACTIVE_FRAME struct //col:202
+struct // //col:202
 Context PTEB_ACTIVE_FRAME_CONTEXT //col:203
 }
+
 
 
 type TEB struct{
@@ -196,6 +205,7 @@ ReservedPad1 uint8 //col:295
 ReservedPad2 uint8 //col:296
 IdealProcessor uint8 //col:297
 }
+
 
 
 

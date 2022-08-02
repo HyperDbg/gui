@@ -1,9 +1,5 @@
 package Zydis
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Decoder.h.back
 
-const(
-ZYDIS_DECODER_H =  //col:1
-)
 
 const(
     ZYDIS_DECODER_MODE_MINIMAL = 1  //col:3
@@ -26,6 +22,7 @@ machine_mode ZydisMachineMode //col:3
 address_width ZydisAddressWidth //col:4
 decoder_mode[ZYDIS_DECODER_MODE_MAX_VALUE ZyanBool //col:5
 }
+
 
 
 

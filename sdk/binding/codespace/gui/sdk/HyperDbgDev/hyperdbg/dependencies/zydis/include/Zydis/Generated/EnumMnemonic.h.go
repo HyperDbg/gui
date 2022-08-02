@@ -1,7 +1,5 @@
 package Generated
 
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Generated\EnumMnemonic.h.back
-
 const (
 	ZYDIS_MNEMONIC_INVALID            = 1                                                //col:3
 	ZYDIS_MNEMONIC_AAA                = 2                                                //col:4
@@ -1612,4 +1610,3 @@ const (
 	ZYDIS_MNEMONIC_MAX_VALUE          = ZYDIS_MNEMONIC_XTEST                             //col:1609
 	ZYDIS_MNEMONIC_REQUIRED_BITS      = ZYAN_BITS_TO_REPRESENT(ZYDIS_MNEMONIC_MAX_VALUE) //col:1610
 )
-

@@ -1,57 +1,5 @@
 package Zydis
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\DecoderTypes.h.back
 
-const(
-ZYDIS_INSTRUCTIONINFO_H =  //col:1
-ZYDIS_ATTRIB_HAS_MODRM =                  0x0000000000000001 //col:2
-ZYDIS_ATTRIB_HAS_SIB =                    0x0000000000000002 //col:3
-ZYDIS_ATTRIB_HAS_REX =                    0x0000000000000004 //col:4
-ZYDIS_ATTRIB_HAS_XOP =                    0x0000000000000008 //col:5
-ZYDIS_ATTRIB_HAS_VEX =                    0x0000000000000010 //col:6
-ZYDIS_ATTRIB_HAS_EVEX =                   0x0000000000000020 //col:7
-ZYDIS_ATTRIB_HAS_MVEX =                   0x0000000000000040 //col:8
-ZYDIS_ATTRIB_IS_RELATIVE =                0x0000000000000080 //col:9
-ZYDIS_ATTRIB_IS_PRIVILEGED =              0x0000000000000100 //col:10
-ZYDIS_ATTRIB_CPUFLAG_ACCESS =             0x0000001000000000 //col:11
-ZYDIS_ATTRIB_CPU_STATE_CR =               0x0000002000000000 //col:12
-ZYDIS_ATTRIB_CPU_STATE_CW =               0x0000004000000000 //col:13
-ZYDIS_ATTRIB_FPU_STATE_CR =               0x0000008000000000 //col:14
-ZYDIS_ATTRIB_FPU_STATE_CW =               0x0000010000000000 //col:15
-ZYDIS_ATTRIB_XMM_STATE_CR =               0x0000020000000000 //col:16
-ZYDIS_ATTRIB_XMM_STATE_CW =               0x0000040000000000 //col:17
-ZYDIS_ATTRIB_ACCEPTS_LOCK =               0x0000000000000200 //col:18
-ZYDIS_ATTRIB_ACCEPTS_REP =                0x0000000000000400 //col:19
-ZYDIS_ATTRIB_ACCEPTS_REPE =               0x0000000000000800 //col:20
-ZYDIS_ATTRIB_ACCEPTS_REPZ =               0x0000000000000800 //col:21
-ZYDIS_ATTRIB_ACCEPTS_REPNE =              0x0000000000001000 //col:22
-ZYDIS_ATTRIB_ACCEPTS_REPNZ =              0x0000000000001000 //col:23
-ZYDIS_ATTRIB_ACCEPTS_BND =                0x0000000000002000 //col:24
-ZYDIS_ATTRIB_ACCEPTS_XACQUIRE =           0x0000000000004000 //col:25
-ZYDIS_ATTRIB_ACCEPTS_XRELEASE =           0x0000000000008000 //col:26
-ZYDIS_ATTRIB_ACCEPTS_HLE_WITHOUT_LOCK =   0x0000000000010000 //col:27
-ZYDIS_ATTRIB_ACCEPTS_BRANCH_HINTS =       0x0000000000020000 //col:28
-ZYDIS_ATTRIB_ACCEPTS_SEGMENT =            0x0000000000040000 //col:29
-ZYDIS_ATTRIB_HAS_LOCK =                   0x0000000000080000 //col:30
-ZYDIS_ATTRIB_HAS_REP =                    0x0000000000100000 //col:31
-ZYDIS_ATTRIB_HAS_REPE =                   0x0000000000200000 //col:32
-ZYDIS_ATTRIB_HAS_REPZ =                   0x0000000000200000 //col:33
-ZYDIS_ATTRIB_HAS_REPNE =                  0x0000000000400000 //col:34
-ZYDIS_ATTRIB_HAS_REPNZ =                  0x0000000000400000 //col:35
-ZYDIS_ATTRIB_HAS_BND =                    0x0000000000800000 //col:36
-ZYDIS_ATTRIB_HAS_XACQUIRE =               0x0000000001000000 //col:37
-ZYDIS_ATTRIB_HAS_XRELEASE =               0x0000000002000000 //col:38
-ZYDIS_ATTRIB_HAS_BRANCH_NOT_TAKEN =       0x0000000004000000 //col:39
-ZYDIS_ATTRIB_HAS_BRANCH_TAKEN =           0x0000000008000000 //col:40
-ZYDIS_ATTRIB_HAS_SEGMENT =                0x00000003F0000000 //col:41
-ZYDIS_ATTRIB_HAS_SEGMENT_CS =             0x0000000010000000 //col:42
-ZYDIS_ATTRIB_HAS_SEGMENT_SS =             0x0000000020000000 //col:43
-ZYDIS_ATTRIB_HAS_SEGMENT_DS =             0x0000000040000000 //col:44
-ZYDIS_ATTRIB_HAS_SEGMENT_ES =             0x0000000080000000 //col:45
-ZYDIS_ATTRIB_HAS_SEGMENT_FS =             0x0000000100000000 //col:46
-ZYDIS_ATTRIB_HAS_SEGMENT_GS =             0x0000000200000000 //col:47
-ZYDIS_ATTRIB_HAS_OPERANDSIZE =            0x0000000400000000 //col:48
-ZYDIS_ATTRIB_HAS_ADDRESSSIZE =            0x0000000800000000 //col:49
-)
 
 const(
     ZYDIS_MEMOP_TYPE_INVALID = 1  //col:3
@@ -253,11 +201,12 @@ value ZydisRegister //col:14
 }
 
 
+
 type typedef struct ZydisDecodedInstruction_ struct{
 machine_mode ZydisMachineMode //col:47
 mnemonic ZydisMnemonic //col:48
 length ZyanU8 //col:49
-encoding ZydisInstructionEncoding //col:50
+ZydisInstructionEncoding // //col:50
 opcode_map ZydisOpcodeMap //col:51
 opcode ZyanU8 //col:52
 stack_width ZyanU8 //col:53
@@ -265,10 +214,11 @@ operand_width ZyanU8 //col:54
 address_width ZyanU8 //col:55
 operand_count ZyanU8 //col:56
 operands[ZYDIS_MAX_OPERAND_COUNT] ZydisDecodedOperand //col:57
-attributes ZydisInstructionAttributes //col:58
+ZydisInstructionAttributes // //col:58
 StructZydisDecodedInstructionAccessedFlags struct ZydisDecodedInstructionAccessedFlags_ //col:59
 action ZydisCPUFlagAction //col:61
 }
+
 
 
 

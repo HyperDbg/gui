@@ -1,11 +1,6 @@
 package vmx
 
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\vmm\vmx\Events.h.back
 
-const (
-	RESERVED_MSR_RANGE_LOW = 0x40000000 //col:1
-	RESERVED_MSR_RANGE_HI  = 0x4000109F //col:2
-)
 
 const (
 	EXCEPTION_VECTOR_DIVIDE_ERROR                      = 1   //col:3
@@ -59,8 +54,9 @@ const (
 )
 
 type EVENT_INFORMATION struct {
-	InterruptInfo     INTERRUPT_INFO //col:3
-	InstructionLength uint32         //col:4
-	ErrorCode         uint64         //col:5
+	InterruptInfo INTERRUPT_INFO //col:3
+	UINT32                       // //col:4
+	ErrorCode     uint64         //col:5
 }
+
 

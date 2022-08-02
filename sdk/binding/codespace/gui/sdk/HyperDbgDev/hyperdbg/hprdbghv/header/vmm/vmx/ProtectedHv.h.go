@@ -1,6 +1,6 @@
 package vmx
 
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\vmm\vmx\ProtectedHv.h.back
+
 
 const (
 	PASSING_OVER_NONE                                  = 0 //col:3

@@ -1,10 +1,5 @@
 package Zydis
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Utils.h.back
 
-const(
-ZYDIS_UTILS_H =  //col:1
-ZYDIS_MAX_INSTRUCTION_SEGMENT_COUNT = 9 //col:2
-)
 
 const(
     ZYDIS_INSTR_SEGMENT_NONE = 1  //col:3
@@ -28,10 +23,11 @@ const(
 type typedef struct ZydisInstructionSegments_ struct{
 count ZyanU8 //col:3
 Struct struct //col:4
-type ZydisInstructionSegment //col:6
+ZydisInstructionSegment // //col:6
 offset ZyanU8 //col:7
 size ZyanU8 //col:8
 }
+
 
 
 

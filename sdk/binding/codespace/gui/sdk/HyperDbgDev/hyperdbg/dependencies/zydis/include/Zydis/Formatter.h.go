@@ -1,10 +1,5 @@
 package Zydis
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Formatter.h.back
 
-const(
-ZYDIS_FORMATTER_H =  //col:1
-ZYDIS_RUNTIME_ADDRESS_NONE = (ZyanU64)(-1) //col:2
-)
 
 const(
     ZYDIS_FORMATTER_STYLE_ATT = 1  //col:3
@@ -112,16 +107,9 @@ const(
 
 
 
-type typedef struct ZydisFormatterContext_ struct{
-ZydisDecodedInstruction* bool //col:4
-ZydisDecodedOperand* bool //col:5
-runtime_address ZyanU64 //col:6
-user_data void* //col:7
-}
-
-
-type typedef struct ZydisFormatterContext_ struct{
-ZydisDecodedInstruction* bool //col:4
+type  struct{
+struct //typedef //col:1
+const // //col:4
 ZydisDecodedOperand* bool //col:5
 runtime_address ZyanU64 //col:6
 user_data void* //col:7
@@ -129,111 +117,14 @@ user_data void* //col:7
 
 
 
-type (
-Formatter interface{
-typedef_ZyanStatus_()(ok bool)//col:57
-ZYDIS_EXPORT_ZyanStatus_ZydisFormatterInit()(ok bool)//col:88
-}
-formatter struct{}
-)
-
-func NewFormatter()Formatter{ return & formatter{} }
-
-func (f *formatter)typedef_ZyanStatus_()(ok bool){//col:57
-/*typedef ZyanStatus (*ZydisFormatterFunc)(const ZydisFormatter* formatter,
-    ZydisFormatterBuffer* buffer, ZydisFormatterContext* context);
-typedef ZyanStatus (*ZydisFormatterRegisterFunc)(const ZydisFormatter* formatter,
-    ZydisFormatterBuffer* buffer, ZydisFormatterContext* context, ZydisRegister reg);
-typedef ZyanStatus (*ZydisFormatterDecoratorFunc)(const ZydisFormatter* formatter,
-    ZydisFormatterBuffer* buffer, ZydisFormatterContext* context, ZydisDecorator decorator);
-struct ZydisFormatter_
-{
-    ZydisFormatterStyle style;
-    ZyanBool force_memory_size;
-    ZyanBool force_memory_segment;
-    ZyanBool force_relative_branches;
-    ZyanBool force_relative_riprel;
-    ZyanBool print_branch_size;
-    ZyanBool detailed_prefixes;
-    ZydisNumericBase addr_base;
-    ZydisSignedness addr_signedness;
-    ZydisPadding addr_padding_absolute;
-    ZydisPadding addr_padding_relative;
-    ZydisNumericBase disp_base;
-    ZydisSignedness disp_signedness;
-    ZydisPadding disp_padding;
-    ZydisNumericBase imm_base;
-    ZydisSignedness imm_signedness;
-    ZydisPadding imm_padding;
-    ZyanI32 case_prefixes;
-    ZyanI32 case_mnemonic;
-    ZyanI32 case_registers;
-    ZyanI32 case_typecasts;
-    ZyanI32 case_decorators;
-    ZyanBool hex_uppercase;
-    struct
-    {
-        const ZyanStringView* string;
-        ZyanStringView string_data;
-        char buffer[11];
-    } number_format[ZYDIS_NUMERIC_BASE_MAX_VALUE + 1][2];
-    ZydisFormatterFunc func_pre_instruction;
-    ZydisFormatterFunc func_post_instruction;
-    ZydisFormatterFunc func_format_instruction;
-    ZydisFormatterFunc func_pre_operand;
-    ZydisFormatterFunc func_post_operand;
-    ZydisFormatterFunc func_format_operand_reg;
-    ZydisFormatterFunc func_format_operand_mem;
-    ZydisFormatterFunc func_format_operand_ptr;
-    ZydisFormatterFunc func_format_operand_imm;
-    ZydisFormatterFunc func_print_mnemonic;
-    ZydisFormatterRegisterFunc func_print_register;
-    ZydisFormatterFunc func_print_address_abs;
-    ZydisFormatterFunc func_print_address_rel;
-    ZydisFormatterFunc func_print_disp;
-    ZydisFormatterFunc func_print_imm;
-    ZydisFormatterFunc func_print_typecast;
-    ZydisFormatterFunc func_print_segment;
-    ZydisFormatterFunc func_print_prefixes;
-    ZydisFormatterDecoratorFunc func_print_decorator;
-};*/
-return true
+type typedef struct ZydisFormatterContext_ struct{
+const // //col:4
+ZydisDecodedOperand* bool //col:5
+runtime_address ZyanU64 //col:6
+user_data void* //col:7
 }
 
-func (f *formatter)ZYDIS_EXPORT_ZyanStatus_ZydisFormatterInit()(ok bool){//col:88
-/*ZYDIS_EXPORT ZyanStatus ZydisFormatterInit(ZydisFormatter* formatter, ZydisFormatterStyle style);
-ZYDIS_EXPORT ZyanStatus ZydisFormatterSetProperty(ZydisFormatter* formatter,
-    ZydisFormatterProperty property, ZyanUPointer value);
-ZYDIS_EXPORT ZyanStatus ZydisFormatterSetHook(ZydisFormatter* formatter,
-    ZydisFormatterFunction type, const void** callback);
-ZYDIS_EXPORT ZyanStatus ZydisFormatterFormatInstruction(const ZydisFormatter* formatter,
-    const ZydisDecodedInstruction* instruction, char* buffer, ZyanUSize length,
-    ZyanU64 runtime_address);
-ZYDIS_EXPORT ZyanStatus ZydisFormatterFormatInstructionEx(const ZydisFormatter* formatter,
-    const ZydisDecodedInstruction* instruction, char* buffer, ZyanUSize length,
-    ZyanU64 runtime_address, void* user_data);
-ZYDIS_EXPORT ZyanStatus ZydisFormatterFormatOperand(const ZydisFormatter* formatter,
-    const ZydisDecodedInstruction* instruction, ZyanU8 index, char* buffer, ZyanUSize length,
-    ZyanU64 runtime_address);
-ZYDIS_EXPORT ZyanStatus ZydisFormatterFormatOperandEx(const ZydisFormatter* formatter,
-    const ZydisDecodedInstruction* instruction, ZyanU8 index, char* buffer, ZyanUSize length,
-    ZyanU64 runtime_address, void* user_data);
-ZYDIS_EXPORT ZyanStatus ZydisFormatterTokenizeInstruction(const ZydisFormatter* formatter,
-    const ZydisDecodedInstruction* instruction, void* buffer, ZyanUSize length,
-    ZyanU64 runtime_address, ZydisFormatterTokenConst** token);
-ZYDIS_EXPORT ZyanStatus ZydisFormatterTokenizeInstructionEx(const ZydisFormatter* formatter,
-    const ZydisDecodedInstruction* instruction, void* buffer, ZyanUSize length,
-    ZyanU64 runtime_address, ZydisFormatterTokenConst** token, void* user_data);
-ZYDIS_EXPORT ZyanStatus ZydisFormatterTokenizeOperand(const ZydisFormatter* formatter,
-    const ZydisDecodedInstruction* instruction, ZyanU8 index, void* buffer, ZyanUSize length,
-    ZyanU64 runtime_address, ZydisFormatterTokenConst** token);
-ZYDIS_EXPORT ZyanStatus ZydisFormatterTokenizeOperandEx(const ZydisFormatter* formatter,
-    const ZydisDecodedInstruction* instruction, ZyanU8 index, void* buffer, ZyanUSize length,
-    ZyanU64 runtime_address, ZydisFormatterTokenConst** token, void* user_data);
-#ifdef __cplusplus
-}*/
-return true
-}
+
 
 
 

@@ -1,112 +1,5 @@
 package phnt
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\phnt\ntpoapi.h.back
 
-const(
-_NTPOAPI_H =  //col:1
-SystemPowerPolicyAc = 0 //col:2
-SystemPowerPolicyDc = 1 //col:3
-VerifySystemPolicyAc = 2 //col:4
-VerifySystemPolicyDc = 3 //col:5
-SystemPowerCapabilities = 4 //col:6
-SystemBatteryState = 5 //col:7
-SystemPowerStateHandler = 6 //col:8
-ProcessorStateHandler = 7 //col:9
-SystemPowerPolicyCurrent = 8 //col:10
-AdministratorPowerPolicy = 9 //col:11
-SystemReserveHiberFile = 10 //col:12
-ProcessorInformation = 11 //col:13
-SystemPowerInformation = 12 //col:14
-ProcessorStateHandler2 = 13 //col:15
-LastWakeTime = 14 //col:16
-LastSleepTime = 15 //col:17
-SystemExecutionState = 16 //col:18
-SystemPowerStateNotifyHandler = 17 //col:19
-ProcessorPowerPolicyAc = 18 //col:20
-ProcessorPowerPolicyDc = 19 //col:21
-VerifyProcessorPowerPolicyAc = 20 //col:22
-VerifyProcessorPowerPolicyDc = 21 //col:23
-ProcessorPowerPolicyCurrent = 22 //col:24
-SystemPowerStateLogging = 23 //col:25
-SystemPowerLoggingEntry = 24 //col:26
-SetPowerSettingValue = 25 //col:27
-NotifyUserPowerSetting = 26 //col:28
-PowerInformationLevelUnused0 = 27 //col:29
-SystemMonitorHiberBootPowerOff = 28 //col:30
-SystemVideoState = 29 //col:31
-TraceApplicationPowerMessage = 30 //col:32
-TraceApplicationPowerMessageEnd = 31 //col:33
-ProcessorPerfStates = 32 //col:34
-ProcessorIdleStates = 33 //col:35
-ProcessorCap = 34 //col:36
-SystemWakeSource = 35 //col:37
-SystemHiberFileInformation = 36 //col:38
-TraceServicePowerMessage = 37 //col:39
-ProcessorLoad = 38 //col:40
-PowerShutdownNotification = 39 //col:41
-MonitorCapabilities = 40 //col:42
-SessionPowerInit = 41 //col:43
-SessionDisplayState = 42 //col:44
-PowerRequestCreate = 43 //col:45
-PowerRequestAction = 44 //col:46
-GetPowerRequestList = 45 //col:47
-ProcessorInformationEx = 46 //col:48
-NotifyUserModeLegacyPowerEvent = 47 //col:49
-GroupPark = 48 //col:50
-ProcessorIdleDomains = 49 //col:51
-WakeTimerList = 50 //col:52
-SystemHiberFileSize = 51 //col:53
-ProcessorIdleStatesHv = 52 //col:54
-ProcessorPerfStatesHv = 53 //col:55
-ProcessorPerfCapHv = 54 //col:56
-ProcessorSetIdle = 55 //col:57
-LogicalProcessorIdling = 56 //col:58
-UserPresence = 57 //col:59
-PowerSettingNotificationName = 58 //col:60
-GetPowerSettingValue = 59 //col:61
-IdleResiliency = 60 //col:62
-SessionRITState = 61 //col:63
-SessionConnectNotification = 62 //col:64
-SessionPowerCleanup = 63 //col:65
-SessionLockState = 64 //col:66
-SystemHiberbootState = 65 //col:67
-PlatformInformation = 66 //col:68
-PdcInvocation = 67 //col:69
-MonitorInvocation = 68 //col:70
-FirmwareTableInformationRegistered = 69 //col:71
-SetShutdownSelectedTime = 70 //col:72
-SuspendResumeInvocation = 71 //col:73
-PlmPowerRequestCreate = 72 //col:74
-ScreenOff = 73 //col:75
-CsDeviceNotification = 74 //col:76
-PlatformRole = 75 //col:77
-LastResumePerformance = 76 //col:78
-DisplayBurst = 77 //col:79
-ExitLatencySamplingPercentage = 78 //col:80
-RegisterSpmPowerSettings = 79 //col:81
-PlatformIdleStates = 80 //col:82
-ProcessorIdleVeto = 81 //col:83
-PlatformIdleVeto = 82 //col:84
-SystemBatteryStatePrecise = 83 //col:85
-ThermalEvent = 84 //col:86
-PowerRequestActionInternal = 85 //col:87
-BatteryDeviceState = 86 //col:88
-PowerInformationInternal = 87 //col:89
-ThermalStandby = 88 //col:90
-SystemHiberFileType = 89 //col:91
-PhysicalPowerButtonPress = 90 //col:92
-QueryPotentialDripsConstraint = 91 //col:93
-EnergyTrackerCreate = 92 //col:94
-EnergyTrackerQuery = 93 //col:95
-UpdateBlackBoxRecorder = 94 //col:96
-SessionAllowExternalDmaDevices = 95 //col:97
-SendSuspendResumeNotification = 96 //col:98
-PowerInformationLevelMaximum = 97 //col:99
-POWER_REQUEST_CONTEXT_NOT_SPECIFIED = DIAGNOSTIC_REASON_NOT_SPECIFIED //col:100
-POWER_REQUEST_SUPPORTED_TYPES_V1 = 3 //col:101
-POWER_REQUEST_SUPPORTED_TYPES_V2 = 9 //col:102
-POWER_REQUEST_SUPPORTED_TYPES_V3 = 5 //col:103
-POWER_REQUEST_SUPPORTED_TYPES_V4 = 6 //col:104
-)
 
 const(
     PowerRequestDisplayRequiredInternal = 1  //col:3
@@ -260,6 +153,7 @@ CurrentIdleState uint32 //col:8
 }
 
 
+
 type SYSTEM_POWER_INFORMATION struct{
 MaxIdlenessAllowed uint32 //col:12
 Idleness uint32 //col:13
@@ -268,10 +162,12 @@ CoolingMode uint8 //col:15
 }
 
 
+
 type SYSTEM_HIBERFILE_INFORMATION struct{
 NumberOfMcbPairs uint32 //col:19
 Mcb[1] LARGE_INTEGER //col:20
 }
+
 
 
 type COUNTED_REASON_CONTEXT struct{
@@ -286,12 +182,14 @@ PUNICODE_STRING _Field_size_(StringCount) //col:33
 }
 
 
+
 type POWER_REQUEST_ACTION struct{
 PowerRequestHandle HANDLE //col:40
 RequestType POWER_REQUEST_TYPE_INTERNAL //col:41
 SetAction bool //col:42
 ProcessHandle HANDLE //col:43
 }
+
 
 
 type SYSTEM_POWER_STATE_CONTEXT struct{
@@ -307,6 +205,7 @@ Reserved2 uint32 //col:57
 }
 
 
+
 type COUNTED_REASON_CONTEXT_RELATIVE struct{
 Flags uint32 //col:64
 Union union //col:65
@@ -316,6 +215,7 @@ ResourceReasonId USHORT //col:70
 StringCount uint32 //col:71
 SubstitutionStringsOffset ULONG_PTR //col:72
 }
+
 
 
 type DIAGNOSTIC_BUFFER struct{
@@ -329,6 +229,7 @@ ServiceTag uint32 //col:87
 }
 
 
+
 type POWER_REQUEST struct{
 Union union //col:99
 Struct struct //col:101
@@ -338,10 +239,12 @@ DiagnosticBuffer DIAGNOSTIC_BUFFER //col:105
 }
 
 
+
 type POWER_REQUEST_LIST struct{
 Count ULONG_PTR //col:135
 PowerRequestOffsets[ANYSIZE_ARRAY] ULONG_PTR //col:136
 }
+
 
 
 type POWER_STATE_HANDLER struct{
@@ -353,10 +256,12 @@ Context PVOID //col:144
 }
 
 
+
 type POWER_STATE_NOTIFY_HANDLER struct{
 Handler PENTER_STATE_NOTIFY_HANDLER //col:148
 Context PVOID //col:149
 }
+
 
 
 type POWER_REQUEST_ACTION_INTERNAL struct{
@@ -364,6 +269,7 @@ PowerRequestPointer PVOID //col:153
 RequestType POWER_REQUEST_TYPE_INTERNAL //col:154
 SetAction bool //col:155
 }
+
 
 
 type POWER_S0_LOW_POWER_IDLE_INFO struct{
@@ -378,10 +284,12 @@ AsUCHAR uint8 //col:167
 }
 
 
+
 type POWER_INFORMATION_INTERNAL_HEADER struct{
 InternalType POWER_INFORMATION_LEVEL_INTERNAL //col:179
 Version uint32 //col:180
 }
+
 
 
 type POWER_USER_ABSENCE_PREDICTION struct{
@@ -390,9 +298,11 @@ ReturnTime LARGE_INTEGER //col:185
 }
 
 
+
 type POWER_USER_ABSENCE_PREDICTION_CAPABILITY struct{
 AbsencePredictionCapability bool //col:189
 }
+
 
 
 type POWER_PROCESSOR_LATENCY_HINT struct{
@@ -401,10 +311,12 @@ Type uint32 //col:194
 }
 
 
+
 type POWER_STANDBY_NETWORK_REQUEST struct{
 PowerInformationInternalHeader POWER_INFORMATION_INTERNAL_HEADER //col:198
 Active bool //col:199
 }
+
 
 
 type POWER_SET_BACKGROUND_TASK_STATE struct{
@@ -413,16 +325,19 @@ Engaged bool //col:204
 }
 
 
+
 type typedef struct POWER_INTERNAL_PROCESSOR_BRANDED_FREQENCY_INPUT struct{
 InternalType POWER_INFORMATION_LEVEL_INTERNAL //col:208
 ProcessorNumber PROCESSOR_NUMBER //col:209
 }
 
 
+
 type typedef struct POWER_INTERNAL_PROCESSOR_BRANDED_FREQENCY_OUTPUT struct{
 Version uint32 //col:213
 NominalFrequency uint32 //col:214
 }
+
 
 
 

@@ -1,31 +1,5 @@
 package Headers
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\include\SDK\Headers\RequestStructures.h.back
 
-const(
-SIZEOF_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS = sizeof(DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS) //col:1
-SIZEOF_DEBUGGER_VA2PA_AND_PA2VA_COMMANDS = sizeof(DEBUGGER_VA2PA_AND_PA2VA_COMMANDS) //col:3
-SIZEOF_DEBUGGER_DT_COMMAND_OPTIONS = sizeof(DEBUGGER_DT_COMMAND_OPTIONS) //col:5
-SIZEOF_DEBUGGER_PREALLOC_COMMAND = sizeof(DEBUGGER_PREALLOC_COMMAND) //col:7
-SIZEOF_DEBUGGER_READ_MEMORY = sizeof(DEBUGGER_READ_MEMORY) //col:9
-SIZEOF_DEBUGGER_FLUSH_LOGGING_BUFFERS = sizeof(DEBUGGER_FLUSH_LOGGING_BUFFERS) //col:10
-SIZEOF_DEBUGGER_TEST_QUERY_BUFFER = sizeof(DEBUGGER_TEST_QUERY_BUFFER) //col:12
-SIZEOF_DEBUGGER_PERFORM_KERNEL_TESTS = sizeof(DEBUGGER_PERFORM_KERNEL_TESTS) //col:14
-SIZEOF_DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL = sizeof(DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL) //col:16
-SIZEOF_DEBUGGEE_KERNEL_AND_USER_TEST_INFORMATION = sizeof(DEBUGGEE_KERNEL_AND_USER_TEST_INFORMATION) //col:18
-SIZEOF_DEBUGGEE_SEND_GENERAL_PACKET_FROM_DEBUGGEE_TO_DEBUGGER = sizeof(DEBUGGEE_SEND_GENERAL_PACKET_FROM_DEBUGGEE_TO_DEBUGGER) //col:20
-SIZEOF_DEBUGGER_SEND_USERMODE_MESSAGES_TO_DEBUGGER = sizeof(DEBUGGER_SEND_USERMODE_MESSAGES_TO_DEBUGGER) //col:22
-SIZEOF_DEBUGGER_READ_AND_WRITE_ON_MSR = sizeof(DEBUGGER_READ_AND_WRITE_ON_MSR) //col:24
-SIZEOF_DEBUGGER_EDIT_MEMORY = sizeof(DEBUGGER_EDIT_MEMORY) //col:26
-SIZEOF_DEBUGGER_SEARCH_MEMORY = sizeof(DEBUGGER_SEARCH_MEMORY) //col:27
-SIZEOF_DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE = sizeof(DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE) //col:28
-SIZEOF_DEBUGGER_PREPARE_DEBUGGEE = sizeof(DEBUGGER_PREPARE_DEBUGGEE) //col:30
-SIZEOF_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS = sizeof(DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS) //col:31
-SIZEOF_DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS = sizeof(DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS) //col:33
-SIZEOF_DEBUGGER_CALLSTACK_REQUEST = sizeof(DEBUGGER_CALLSTACK_REQUEST) //col:35
-SIZEOF_USERMODE_DEBUGGING_THREAD_OR_PROCESS_STATE_DETAILS = sizeof(USERMODE_DEBUGGING_THREAD_OR_PROCESS_STATE_DETAILS) //col:37
-SIZEOF_DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_PACKET = sizeof(DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_PACKET) //col:39
-SIZEOF_DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET = sizeof(DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET) //col:41
-)
 
 const(
     DEBUGGER_PREALLOC_COMMAND_TYPE_MONITOR = 1  //col:3
@@ -184,6 +158,7 @@ KernelStatus uint32 //col:13
 }
 
 
+
 type DEBUGGER_VA2PA_AND_PA2VA_COMMANDS struct{
 VirtualAddress uint64 //col:17
 PhysicalAddress uint64 //col:18
@@ -191,6 +166,7 @@ ProcessId uint32 //col:19
 IsVirtual2Physical bool //col:20
 KernelStatus uint32 //col:21
 }
+
 
 
 type DEBUGGER_DT_COMMAND_OPTIONS struct{
@@ -204,11 +180,13 @@ char bool //col:31
 }
 
 
+
 type DEBUGGER_PREALLOC_COMMAND struct{
 Type DEBUGGER_PREALLOC_COMMAND_TYPE //col:35
 Count uint64 //col:36
 KernelStatus uint32 //col:37
 }
+
 
 
 type DEBUGGER_READ_MEMORY struct{
@@ -224,11 +202,13 @@ KernelStatus uint32 //col:49
 }
 
 
+
 type DEBUGGER_FLUSH_LOGGING_BUFFERS struct{
 KernelStatus uint32 //col:53
 CountOfMessagesThatSetAsReadFromVmxRoot uint32 //col:54
 CountOfMessagesThatSetAsReadFromVmxNonRoot uint32 //col:55
 }
+
 
 
 type DEBUGGER_DEBUGGER_TEST_QUERY_BUFFER struct{
@@ -237,9 +217,11 @@ KernelStatus uint32 //col:60
 }
 
 
+
 type DEBUGGER_PERFORM_KERNEL_TESTS struct{
 KernelStatus uint32 //col:64
 }
+
 
 
 type DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL struct{
@@ -247,10 +229,12 @@ KernelStatus uint32 //col:68
 }
 
 
+
 type DEBUGGEE_KERNEL_AND_USER_TEST_INFORMATION struct{
 Value uint64 //col:72
 Tag[32] int8 //col:73
 }
+
 
 
 type DEBUGGEE_SEND_GENERAL_PACKET_FROM_DEBUGGEE_TO_DEBUGGER struct{
@@ -261,10 +245,12 @@ KernelResult uint32 //col:80
 }
 
 
+
 type DEBUGGER_SEND_USERMODE_MESSAGES_TO_DEBUGGER struct{
 KernelStatus uint32 //col:84
 Length uint32 //col:85
 }
+
 
 
 type DEBUGGER_READ_AND_WRITE_ON_MSR struct{
@@ -274,6 +260,7 @@ DebuggerMsrActionType DEBUGGER_MSR_ACTION_TYPE //col:91
 ActionType byte //col:92
 Value uint64 //col:93
 }
+
 
 
 type DEBUGGER_EDIT_MEMORY struct{
@@ -288,6 +275,7 @@ KernelStatus uint32 //col:104
 }
 
 
+
 type DEBUGGER_SEARCH_MEMORY struct{
 Address uint64 //col:108
 Length uint64 //col:109
@@ -297,6 +285,7 @@ ByteSize DEBUGGER_SEARCH_MEMORY_BYTE_SIZE //col:112
 CountOf64Chunks uint32 //col:113
 FinalStructureSize uint32 //col:114
 }
+
 
 
 type DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE struct{
@@ -314,6 +303,7 @@ DebuggerErrorUnableToHideOrUnhideDebugger DEBUGGER_ERROR_UNABLE_TO_HIDE_OR_UNHID
 }
 
 
+
 type DEBUGGER_PREPARE_DEBUGGEE struct{
 PortAddress uint32 //col:134
 Baudrate uint32 //col:135
@@ -323,10 +313,12 @@ OsName[MAXIMUM_CHARACTER_FOR_OS_NAME] int8 //col:138
 }
 
 
+
 type DEBUGGEE_CHANGE_CORE_PACKET struct{
 NewCore uint32 //col:142
 Result uint32 //col:143
 }
+
 
 
 type DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS struct{
@@ -342,12 +334,14 @@ Result uint64 //col:155
 }
 
 
+
 type DEBUGGEE_PROCESS_LIST_NEEDED_DETAILS struct{
 PsActiveProcessHead uint64 //col:159
 ImageFileNameOffset uint32 //col:160
 UniquePidOffset uint32 //col:161
 ActiveProcessLinksOffset uint32 //col:162
 }
+
 
 
 type DEBUGGEE_THREAD_LIST_NEEDED_DETAILS struct{
@@ -360,12 +354,14 @@ Process uint64 //col:171
 }
 
 
+
 type DEBUGGEE_PROCESS_LIST_DETAILS_ENTRY struct{
 Eprocess uint64 //col:175
 Pid uint32 //col:176
 Cr3 uint64 //col:177
 ImageFileName[15 uint8 //col:178
 }
+
 
 
 type DEBUGGEE_THREAD_LIST_DETAILS_ENTRY struct{
@@ -375,6 +371,7 @@ Pid uint64 //col:184
 Tid uint64 //col:185
 ImageFileName[15 uint8 //col:186
 }
+
 
 
 type DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS struct{
@@ -387,13 +384,15 @@ Result uint64 //col:195
 }
 
 
+
 type DEBUGGER_SINGLE_CALLSTACK_FRAME struct{
 IsStackAddressValid bool //col:199
 IsValidAddress bool //col:200
 IsExecutable bool //col:201
 Value uint64 //col:202
-InstructionBytesOnRip[MAXIMUM_CALL_INSTR_SIZE] uint8 //col:203
+BYTE // //col:203
 }
+
 
 
 type DEBUGGER_CALLSTACK_REQUEST struct{
@@ -407,11 +406,13 @@ BufferSize uint64 //col:213
 }
 
 
+
 type USERMODE_DEBUGGING_THREAD_OR_PROCESS_STATE_DETAILS struct{
 ProcessId uint32 //col:217
 ThreadId uint32 //col:218
 IsProcess bool //col:219
 }
+
 
 
 type DEBUGGER_EVENT_ACTION_RUN_SCRIPT_CONFIGURATION struct{
@@ -422,6 +423,7 @@ OptionalRequestedBufferSize uint32 //col:226
 }
 
 
+
 type DEBUGGER_EVENT_REQUEST_BUFFER struct{
 EnabledRequestBuffer bool //col:230
 RequestBufferSize uint32 //col:231
@@ -429,11 +431,13 @@ RequstBufferAddress uint64 //col:232
 }
 
 
+
 type DEBUGGER_EVENT_REQUEST_CUSTOM_CODE struct{
 CustomCodeBufferSize uint32 //col:236
 CustomCodeBufferAddress PVOID //col:237
 OptionalRequestedBufferSize uint32 //col:238
 }
+
 
 
 type DEBUGGER_UD_COMMAND_ACTION struct{
@@ -445,6 +449,7 @@ OptionalParam4 uint64 //col:246
 }
 
 
+
 type DEBUGGER_UD_COMMAND_PACKET struct{
 UdAction DEBUGGER_UD_COMMAND_ACTION //col:250
 ProcessDebuggingDetailToken uint64 //col:251
@@ -452,6 +457,7 @@ TargetThreadId uint32 //col:252
 ApplyToAllPausedThreads bool //col:253
 Result uint32 //col:254
 }
+
 
 
 type DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_PACKET struct{
@@ -463,6 +469,7 @@ ProcessName[16] uint8 //col:262
 ProcessListSymDetails DEBUGGEE_PROCESS_LIST_NEEDED_DETAILS //col:263
 Result uint32 //col:264
 }
+
 
 
 type DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET struct{
@@ -478,11 +485,13 @@ Result uint32 //col:276
 }
 
 
+
 type DEBUGGEE_STEP_PACKET struct{
 StepType DEBUGGER_REMOTE_STEPPING_REQUEST //col:280
-IsCurrentInstructionACall bool //col:281
+BOOLEAN // //col:281
 CallLength uint32 //col:282
 }
+
 
 
 type DEBUGGEE_FORMATS_PACKET struct{
@@ -491,9 +500,11 @@ Result uint32 //col:287
 }
 
 
+
 type DEBUGGEE_SYMBOL_REQUEST_PACKET struct{
 ProcessId uint32 //col:291
 }
+
 
 
 type DEBUGGEE_BP_PACKET struct{
@@ -505,6 +516,7 @@ Result uint32 //col:299
 }
 
 
+
 type DEBUGGEE_BP_DESCRIPTOR struct{
 BreakpointId uint64 //col:303
 BreakpointsList *list.List //col:304
@@ -514,11 +526,12 @@ PhysAddress uint64 //col:307
 Pid uint32 //col:308
 Tid uint32 //col:309
 Core uint32 //col:310
-InstructionLength uint16 //col:311
+UINT16 // //col:311
 PreviousByte uint8 //col:312
 SetRflagsIFBitOnMtf bool //col:313
 AvoidReApplyBreakpoint bool //col:314
 }
+
 
 
 type DEBUGGEE_BP_LIST_OR_MODIFY_PACKET struct{
@@ -526,6 +539,7 @@ BreakpointId uint64 //col:318
 Request DEBUGGEE_BREAKPOINT_MODIFICATION_REQUEST //col:319
 Result uint32 //col:320
 }
+
 
 
 type DEBUGGEE_SCRIPT_PACKET struct{
@@ -536,10 +550,12 @@ Result uint32 //col:327
 }
 
 
+
 type DEBUGGEE_RESULT_OF_SEARCH_PACKET struct{
 CountOfResults uint32 //col:331
 Result uint32 //col:332
 }
+
 
 
 type DEBUGGEE_REGISTER_READ_DESCRIPTION struct{
@@ -547,6 +563,7 @@ RegisterID uint32 //col:336
 Value uint64 //col:337
 KernelStatus uint32 //col:338
 }
+
 
 
 

@@ -1,11 +1,6 @@
 package memory
 
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\memory\PoolManager.h.back
 
-const (
-	MaximumRequestsQueueDepth   = 100 //col:1
-	NumberOfPreAllocatedBuffers = 10  //col:2
-)
 
 const (
 	TRACKING_HOOKED_PAGES           = 1 //col:3
@@ -26,9 +21,11 @@ type POOL_TABLE struct {
 	AlreadyFreed  bool                      //col:9
 }
 
+
 type REQUEST_NEW_ALLOCATION struct {
 	Size      SIZE_T                    //col:13
 	Count     uint32                    //col:14
 	Intention POOL_ALLOCATION_INTENTION //col:15
 }
+
 

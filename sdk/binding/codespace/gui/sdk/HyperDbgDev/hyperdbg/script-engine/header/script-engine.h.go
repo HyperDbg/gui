@@ -1,6 +1,6 @@
 package header
 
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\script-engine\header\script-engine.h.back
+
 
 const (
 	SCRIPT_ENGINE_ERROR_FREE                    = 1 //col:3

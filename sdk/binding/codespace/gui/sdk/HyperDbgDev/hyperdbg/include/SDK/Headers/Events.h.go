@@ -1,10 +1,6 @@
 package Headers
 
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\include\SDK\Headers\Events.h.back
 
-const (
-	SIZEOF_DEBUGGER_MODIFY_EVENTS = sizeof(DEBUGGER_MODIFY_EVENTS) //col:1
-)
 
 const (
 	HIDDEN_HOOK_READ_AND_WRITE   = 1  //col:3
@@ -53,4 +49,5 @@ type DEBUGGER_MODIFY_EVENTS struct {
 	TypeOfAction             byte                        //col:6
 	IsEnabled                bool                        //col:7
 }
+
 

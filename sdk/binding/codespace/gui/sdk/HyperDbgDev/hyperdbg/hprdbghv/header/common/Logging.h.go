@@ -1,6 +1,6 @@
 package common
 
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\hprdbghv\header\common\Logging.h.back
+
 
 type NOTIFY_RECORD struct {
 	Type       NOTIFY_TYPE //col:3
@@ -9,11 +9,13 @@ type NOTIFY_RECORD struct {
 	PendingIrp PIRP        //col:7
 }
 
+
 type BUFFER_HEADER struct {
 	OpeationNumber uint32 //col:14
 	BufferLength   uint32 //col:15
 	Valid          bool   //col:16
 }
+
 
 type LOG_BUFFER_INFORMATION struct {
 	BufferLock                           KSPIN_LOCK //col:20
@@ -29,4 +31,5 @@ type LOG_BUFFER_INFORMATION struct {
 	CurrentIndexToSendPriority           uint32     //col:30
 	CurrentIndexToWritePriority          uint32     //col:31
 }
+
 

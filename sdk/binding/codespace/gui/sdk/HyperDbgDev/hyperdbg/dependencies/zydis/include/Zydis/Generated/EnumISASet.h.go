@@ -1,7 +1,5 @@
 package Generated
 
-//binding\codespace\gui\sdk\HyperDbgDev\hyperdbg\dependencies\zydis\include\Zydis\Generated\EnumISASet.h.back
-
 const (
 	ZYDIS_ISA_SET_INVALID                 = 1                                               //col:3
 	ZYDIS_ISA_SET_ADOX_ADCX               = 2                                               //col:4
@@ -169,4 +167,3 @@ const (
 	ZYDIS_ISA_SET_MAX_VALUE               = ZYDIS_ISA_SET_XSAVES                            //col:166
 	ZYDIS_ISA_SET_REQUIRED_BITS           = ZYAN_BITS_TO_REPRESENT(ZYDIS_ISA_SET_MAX_VALUE) //col:167
 )
-
