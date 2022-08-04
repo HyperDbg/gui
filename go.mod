@@ -3,14 +3,9 @@ module github.com/ddkwork/hyperdbgui
 go 1.18
 
 require (
-	fyne.io/fyne/v2 v2.2.3
-	github.com/ddkwork/librarygo v0.0.0-20220804073928-2c9d59726b82
-	github.com/fpabl0/sparky-go v0.0.0-20220505200009-411aff1dbf3d
-)
-
-require (
 	fyne.io/systray v1.10.1-0.20220621085403-9a2652634e93 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/ddkwork/librarygo v0.0.0-20220804084244-db77ce0d528d // indirect
 	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/fyne-io/gl-js v0.0.0-20220119005834-d2da28d9ccfe // indirect

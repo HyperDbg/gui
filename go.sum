@@ -79,6 +79,8 @@ github.com/ddkwork/librarygo v0.0.0-20220728081446-cbf030ce51d9 h1:9BeVS4VtF7gMr
 github.com/ddkwork/librarygo v0.0.0-20220728081446-cbf030ce51d9/go.mod h1:HG2g4mzPIUgz9xL5ADgR1UP1LivXA7VzyQYnXwMZ5Ak=
 github.com/ddkwork/librarygo v0.0.0-20220804073928-2c9d59726b82 h1:fyLcBS0o6nigkoVBxihsDQVLOiELz1HdDbLqfk2Ff4E=
 github.com/ddkwork/librarygo v0.0.0-20220804073928-2c9d59726b82/go.mod h1:cnv5SLg1oIpXHQVB5gDB6ODbeaQbkMdNdhtCZlMJXO4=
+github.com/ddkwork/librarygo v0.0.0-20220804084244-db77ce0d528d h1:JaMPQcpEAl7Hoy9qsbL6/WmNhnrfRm0dDE+GFMuMXGw=
+github.com/ddkwork/librarygo v0.0.0-20220804084244-db77ce0d528d/go.mod h1:cnv5SLg1oIpXHQVB5gDB6ODbeaQbkMdNdhtCZlMJXO4=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=
