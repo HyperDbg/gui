@@ -1,11 +1,41 @@
 package sdk
 
 import (
+	"github.com/ddkwork/librarygo/src/myc2go"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/stream/tool/cmd"
 	"strings"
 	"testing"
 )
+
+func TestCpp2Go(t *testing.T) {
+	o := myc2go.NewObj()
+	object := o.Src("./HyperDbgDev/hyperdbg").
+		Dst("binding").
+		ExpandPath("miscellaneous\\constants", ".txt").
+		Back()
+	if object == nil {
+		return
+	}
+	o.Convert()
+	//o.Format()
+}
+
+/*
+git clone --recursive https://github.com/vlang/v.git
+git clone --recursive https://github.com/goplus/c2go.git
+git clone --recursive https://gitlab.com/cznic/builder
+git clone --recursive https://gitlab.com/cznic/ccgo
+git clone --recursive https://gitlab.com/cznic/cc
+git clone --recursive https://gitlab.com/cznic/memory
+git clone --recursive https://gitlab.com/cznic/sqlite
+git clone --recursive https://gitlab.com/cznic/ql
+git clone --recursive https://gitlab.com/cznic/libc
+git clone --recursive https://gitlab.com/cznic/gc
+git clone --recursive https://gitlab.com/cznic/parser
+git clone --recursive -b dev https://github.com/HyperDbg/HyperDbg.git
+git clone --recursive https://github.com/vlang/tccbin/tree/thirdparty-windows-amd64
+*/
 
 /*
 uname -a
@@ -37,30 +67,3 @@ func TestName(t *testing.T) {
 	}
 	println(run)
 }
-
-/*
-https://github.com/vlang/v.git
-https://github.com/goplus/c2go.git
-https://gitlab.com/cznic/builder
-https://gitlab.com/cznic/ccgo
-https://gitlab.com/cznic/cc
-https://gitlab.com/cznic/memory
-https://gitlab.com/cznic/sqlite
-https://gitlab.com/cznic/ql
-https://gitlab.com/cznic/libc
-https://gitlab.com/cznic/gc
-https://gitlab.com/cznic/parser
-git clone --recursive -b dev https://github.com/HyperDbg/HyperDbg.git
-https://github.com/vlang/tccbin/tree/thirdparty-windows-amd64
-
-sudo pacman -S github-cli
-gh auth login
-sudo gh extension install github/gh-net
-
-sudo pacman -S openssh-server
-
-
-
-
-
-*/
