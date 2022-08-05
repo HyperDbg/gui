@@ -22,6 +22,8 @@ func TestCpp2Go(t *testing.T) {
 }
 
 /*
+mkdir cc
+cd cc
 git clone --recursive https://github.com/vlang/v.git
 git clone --recursive https://github.com/goplus/c2go.git
 git clone --recursive https://gitlab.com/cznic/builder

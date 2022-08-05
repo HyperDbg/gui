@@ -1,0 +1,268 @@
+TranslationUnitDecl 0x5627815593b8 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0x562781559c20 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0x562781559980 '__int128'
+|-TypedefDecl 0x562781559c90 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0x5627815599a0 'unsigned __int128'
+|-TypedefDecl 0x56278155a008 <<invalid sloc>> <invalid sloc> implicit __NSConstantString '__NSConstantString_tag'
+| `-RecordType 0x562781559d80 '__NSConstantString_tag'
+|   `-CXXRecord 0x562781559ce8 '__NSConstantString_tag'
+|-TypedefDecl 0x56278155a0a0 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0x56278155a060 'char *'
+|   `-BuiltinType 0x562781559460 'char'
+|-TypedefDecl 0x56278159eaa8 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list '__va_list_tag[1]'
+| `-ConstantArrayType 0x56278159ea50 '__va_list_tag[1]' 1 
+|   `-RecordType 0x56278155a190 '__va_list_tag'
+|     `-CXXRecord 0x56278155a0f8 '__va_list_tag'
+|-UsingDirectiveDecl 0x56278159eb98 <hprdbgctrl.cpp:14:1, col:17> col:17 Namespace 0x56278159eb28 'std'
+|-VarDecl 0x56278159ec18 <line:19:1, col:19> col:19 invalid g_DeviceHandle 'int' extern
+|-VarDecl 0x56278159eca8 <line:20:1, col:19> col:19 invalid g_IsDriverLoadedSuccessfully 'int' extern
+|-VarDecl 0x56278159ed38 <line:21:1, col:19> col:19 invalid g_IsVmxOffProcessStart 'int' extern
+|-VarDecl 0x56278159edc8 <line:22:1, col:19> col:19 invalid g_MessageHandler 'int' extern
+|-VarDecl 0x56278159ee58 <line:23:1, col:19> col:19 invalid g_DriverLocation 'int' extern
+|-VarDecl 0x56278159eee8 <line:24:1, col:19> col:19 invalid g_EventTrace 'int' extern
+|-VarDecl 0x56278159ef78 <line:25:1, col:19> col:19 invalid g_LogOpened 'int' extern
+|-VarDecl 0x56278159f008 <line:26:1, col:19> col:19 invalid g_BreakPrintingOutput 'int' extern
+|-VarDecl 0x56278159f098 <line:27:1, col:19> col:19 invalid g_IsConnectedToRemoteDebugger 'int' extern
+|-VarDecl 0x56278159f128 <line:28:1, col:19> col:19 invalid g_OutputSourcesInitialized 'int' extern
+|-VarDecl 0x56278159f1b8 <line:29:1, col:19> col:19 invalid g_IsSerialConnectedToRemoteDebugger 'int' extern
+|-VarDecl 0x56278159f248 <line:30:1, col:19> col:19 invalid g_IsDebuggerModulesLoaded 'int' extern
+|-VarDecl 0x56278159f2d8 <line:31:1, col:19> col:19 invalid g_OutputSources 'int' extern
+|-FunctionDecl 0x56278159f470 <line:39:1, line:43:1> line:40:1 invalid HyperdbgSetTextMessageCallback 'int (int)'
+| |-ParmVarDecl 0x56278159f3a0 <col:32, col:41> col:41 invalid handler 'int'
+| |-CompoundStmt 0x56278159f548 <line:41:1, line:43:1>
+| `-FullComment 0x5627815d2f70 <line:34:3, line:37:52>
+|   |-ParagraphComment 0x5627815d2d90 <line:34:3>
+|   | `-TextComment 0x5627815d2d60 <col:3> Text=" "
+|   |-BlockCommandComment 0x5627815d2db0 <col:4, line:35:20> Name="brief"
+|   | `-ParagraphComment 0x5627815d2e30 <line:34:10, line:35:20>
+|   |   |-TextComment 0x5627815d2de0 <line:34:10, col:70> Text=" Set the function callback that will be called if any message"
+|   |   `-TextComment 0x5627815d2e00 <line:35:3, col:20> Text=" needs to be shown"
+|   |-ParagraphComment 0x5627815d2e80 <line:37:3>
+|   | `-TextComment 0x5627815d2e50 <col:3> Text=" "
+|   `-ParamCommandComment 0x5627815d2ea0 <col:4, col:52> [in] implicitly Param="handler" ParamIndex=0
+|     `-ParagraphComment 0x5627815d2f30 <col:18, col:52>
+|       `-TextComment 0x5627815d2f00 <col:18, col:52> Text=" Function that handles the messages"
+|-FunctionDecl 0x56278159f658 <line:50:1, line:104:1> line:51:1 used invalid ShowMessages 'int (const char *, ...)'
+| |-ParmVarDecl 0x56278159f580 <col:14, col:27> col:27 used Fmt 'const char *'
+| |-CompoundStmt 0x5627815cdc98 <line:52:1, line:104:1>
+| | |-DeclStmt 0x56278159f790 <line:53:5, col:20>
+| | | `-VarDecl 0x56278159f728 <col:5, col:13> col:13 invalid ArgList 'int'
+| | |-DeclStmt 0x56278159f838 <line:54:5, col:17>
+| | | `-VarDecl 0x56278159f7d0 <col:5, col:13> col:13 invalid Args 'int'
+| | |-DeclStmt 0x56278159f930 <line:55:5, col:89>
+| | | `-VarDecl 0x56278159f860 <col:5, col:13> col:13 invalid TempMessage 'char'
+| | |-IfStmt 0x5627815cd790 <line:57:5, line:67:5>
+| | | |-RecoveryExpr 0x56278159f948 <line:57:9, line:58:10> 'bool' contains-errors
+| | | `-CompoundStmt 0x5627815cd778 <line:59:5, line:67:5>
+| | |   `-IfStmt 0x5627815cd758 <line:63:9, line:66:9>
+| | |     |-RecoveryExpr 0x5627815cd710 <line:63:13, col:14> 'bool' contains-errors
+| | |     `-CompoundStmt 0x5627815cd740 <line:64:9, line:66:9>
+| | |       `-ReturnStmt 0x5627815cd730 <line:65:13>
+| | |-DeclStmt 0x5627815cd8f0 <line:70:5, col:62>
+| | | `-VarDecl 0x5627815cd828 <col:5, col:9> col:9 used sprintfresult 'int'
+| | `-IfStmt 0x5627815cdc50 <line:73:5, line:103:5>
+| |   |-BinaryOperator 0x5627815cd9b8 <line:73:9, col:27> 'bool' '!='
+| |   | |-ImplicitCastExpr 0x5627815cd9a0 <col:9> 'int' <LValueToRValue>
+| |   | | `-DeclRefExpr 0x5627815cd948 <col:9> 'int' lvalue Var 0x5627815cd828 'sprintfresult' 'int'
+| |   | `-UnaryOperator 0x5627815cd988 <col:26, col:27> 'int' prefix '-'
+| |   |   `-IntegerLiteral 0x5627815cd968 <col:27> 'int' 1
+| |   `-CompoundStmt 0x5627815cdc28 <line:74:5, line:103:5>
+| |     |-IfStmt 0x5627815cdb18 <line:75:9, line:87:9> has_else
+| |     | |-RecoveryExpr 0x5627815cd9d8 <line:75:13> 'bool' contains-errors
+| |     | |-CompoundStmt 0x5627815cda58 <line:76:9, line:83:9>
+| |     | `-IfStmt 0x5627815cdaf8 <line:84:14, line:87:9>
+| |     |   |-RecoveryExpr 0x5627815cda68 <line:84:18> 'bool' contains-errors
+| |     |   `-CompoundStmt 0x5627815cdae8 <line:85:9, line:87:9>
+| |     |-IfStmt 0x5627815cdbb8 <line:89:9, line:95:9>
+| |     | |-RecoveryExpr 0x5627815cdb48 <line:89:13> 'bool' contains-errors
+| |     | `-CompoundStmt 0x5627815cdba8 <line:90:9, line:95:9>
+| |     `-IfStmt 0x5627815cdc08 <line:96:9, line:102:9>
+| |       |-RecoveryExpr 0x5627815cdbd8 <line:96:13, col:33> 'bool' contains-errors
+| |       `-CompoundStmt 0x5627815cdbf8 <line:97:9, line:102:9>
+| `-FullComment 0x5627815d31d0 <line:46:3, line:48:35>
+|   |-ParagraphComment 0x5627815d3010 <line:46:3>
+|   | `-TextComment 0x5627815d2fe0 <col:3> Text=" "
+|   |-BlockCommandComment 0x5627815d3030 <col:4, col:23> Name="brief"
+|   | `-ParagraphComment 0x5627815d3090 <col:10, col:23>
+|   |   `-TextComment 0x5627815d3060 <col:10, col:23> Text=" Show messages"
+|   |-ParagraphComment 0x5627815d30e0 <line:48:3>
+|   | `-TextComment 0x5627815d30b0 <col:3> Text=" "
+|   `-ParamCommandComment 0x5627815d3100 <col:4, col:35> [in] implicitly Param="Fmt" ParamIndex=0
+|     `-ParagraphComment 0x5627815d3190 <col:14, col:35>
+|       `-TextComment 0x5627815d3160 <col:14, col:35> Text=" format string message"
+|-FunctionDecl 0x5627815cdd28 <line:113:1, line:457:1> line:114:1 ReadIrpBasedBuffer 'void ()'
+| |-CompoundStmt 0x5627815d1f68 <line:115:1, line:457:1>
+| | |-DeclStmt 0x5627815cdea0 <line:116:5, col:34>
+| | | `-VarDecl 0x5627815cde38 <col:5, col:28> col:28 invalid Status 'int'
+| | |-DeclStmt 0x5627815cdf48 <line:117:5, col:42>
+| | | `-VarDecl 0x5627815cdee0 <col:5, col:28> col:28 invalid ReturnedLength 'int'
+| | |-DeclStmt 0x5627815cdff0 <line:118:5, col:41>
+| | | `-VarDecl 0x5627815cdf88 <col:5, col:28> col:28 invalid RegisterEvent 'int'
+| | |-DeclStmt 0x5627815ce098 <line:119:5, col:41>
+| | | `-VarDecl 0x5627815ce030 <col:5, col:28> col:28 invalid OperationCode 'int'
+| | |-DeclStmt 0x5627815ce140 <line:120:5, col:36>
+| | | `-VarDecl 0x5627815ce0d8 <col:5, col:28> col:28 invalid ErrorNum 'int'
+| | |-DeclStmt 0x5627815ce1e8 <line:121:5, col:34>
+| | | `-VarDecl 0x5627815ce180 <col:5, col:28> col:28 invalid Handle 'int'
+| | |-DeclStmt 0x5627815ce290 <line:122:5, col:45>
+| | | `-VarDecl 0x5627815ce228 <col:5, col:28> col:28 invalid OutputSourceFound 'int'
+| | |-DeclStmt 0x5627815ce338 <line:123:5, col:36>
+| | | `-VarDecl 0x5627815ce2d0 <col:5, col:28> col:28 invalid TempList 'int'
+| | |-IfStmt 0x5627815cec98 <line:145:5, line:167:5>
+| | | |-RecoveryExpr 0x5627815ce498 <line:145:9, col:19> 'bool' contains-errors
+| | | `-CompoundStmt 0x5627815cec78 <line:146:5, line:167:5>
+| | |   |-IfStmt 0x5627815cec38 <line:148:9, line:161:9> has_else
+| | |   | |-RecoveryExpr 0x5627815ce520 <line:148:13, col:25> 'bool' contains-errors
+| | |   | |-CompoundStmt 0x5627815ce8d0 <line:149:9, line:152:9>
+| | |   | | `-CallExpr 0x5627815ce890 <line:150:13, line:151:37> 'int'
+| | |   | |   |-ImplicitCastExpr 0x5627815ce6b8 <line:150:13> 'int (*)(const char *, ...)' <FunctionToPointerDecay>
+| | |   | |   | `-DeclRefExpr 0x5627815ce668 <col:13> 'int (const char *, ...)' lvalue Function 0x56278159f658 'ShowMessages' 'int (const char *, ...)'
+| | |   | |   `-ImplicitCastExpr 0x5627815ce8b8 <col:26, line:151:26> 'const char *' <ArrayToPointerDecay>
+| | |   | |     `-StringLiteral 0x5627815ce608 <line:150:26, line:151:26> 'const char[64]' lvalue "err, access denied\nare you sure you have administrator rights?\n"
+| | |   | `-IfStmt 0x5627815cec08 <line:153:14, line:161:9> has_else
+| | |   |   |-RecoveryExpr 0x5627815ce8e8 <line:153:18, col:30> 'bool' contains-errors
+| | |   |   |-CompoundStmt 0x5627815cead8 <line:154:9, line:157:9>
+| | |   |   | `-CallExpr 0x5627815cea98 <line:155:13, line:156:91> 'int'
+| | |   |   |   |-ImplicitCastExpr 0x5627815cea80 <line:155:13> 'int (*)(const char *, ...)' <FunctionToPointerDecay>
+| | |   |   |   | `-DeclRefExpr 0x5627815cea60 <col:13> 'int (const char *, ...)' lvalue Function 0x56278159f658 'ShowMessages' 'int (const char *, ...)'
+| | |   |   |   `-ImplicitCastExpr 0x5627815ceac0 <col:26, line:156:26> 'const char *' <ArrayToPointerDecay>
+| | |   |   |     `-StringLiteral 0x5627815ce9c8 <line:155:26, line:156:26> 'const char[119]' lvalue "err, a device attached to the system is not functioning\nvmx feature might be disabled from BIOS or VBS/HVCI is active\n"
+| | |   |   `-CompoundStmt 0x5627815cebf8 <line:159:9, line:161:9>
+| | |   `-ReturnStmt 0x5627815cec68 <line:166:9>
+| | |-DeclStmt 0x5627815ced78 <line:172:5, col:61>
+| | | `-VarDecl 0x5627815cecd0 <col:5, col:12> col:12 used OutputBuffer 'char *'
+| | |-CXXTryStmt 0x5627815d1cd0 <line:174:5, line:447:5>
+| | | |-CompoundStmt 0x5627815d1a70 <line:175:5, line:443:5>
+| | | | `-WhileStmt 0x5627815d1a50 <line:176:9, line:442:9>
+| | | |   |-RecoveryExpr 0x5627815ced90 <line:176:16> 'bool' contains-errors
+| | | |   `-CompoundStmt 0x5627815d1a38 <line:177:9, line:442:9>
+| | | |     `-IfStmt 0x5627815d1a08 <line:178:13, line:441:13> has_else
+| | | |       |-RecoveryExpr 0x5627815cedb0 <line:178:17, col:18> 'bool' contains-errors
+| | | |       |-CompoundStmt 0x5627815d16e0 <line:179:13, line:424:13>
+| | | |       | |-IfStmt 0x5627815cef30 <line:200:17, line:212:17>
+| | | |       | | |-RecoveryExpr 0x5627815ceef0 <line:200:21, col:22> 'bool' contains-errors
+| | | |       | | `-CompoundStmt 0x5627815cef18 <line:201:17, line:212:17>
+| | | |       | |   `-ContinueStmt 0x5627815cef10 <line:211:21>
+| | | |       | `-SwitchStmt 0x5627815ceff0 <line:225:17, line:423:17>
+| | | |       |   |-RecoveryExpr 0x5627815cefd0 <line:225:25> 'int' contains-errors
+| | | |       |   `-CompoundStmt 0x5627815d1620 <line:226:17, line:423:17>
+| | | |       |     |-IfStmt 0x5627815cf058 <line:229:21, line:236:21>
+| | | |       |     | |-RecoveryExpr 0x5627815cf018 <line:229:25> 'bool' contains-errors
+| | | |       |     | `-CompoundStmt 0x5627815cf040 <line:230:21, line:236:21>
+| | | |       |     |   `-ContinueStmt 0x5627815cf038 <line:235:25>
+| | | |       |     |-BreakStmt 0x5627815cf178 <line:240:21>
+| | | |       |     |-IfStmt 0x5627815cf1c0 <line:243:21, line:250:21>
+| | | |       |     | |-RecoveryExpr 0x5627815cf180 <line:243:25> 'bool' contains-errors
+| | | |       |     | `-CompoundStmt 0x5627815cf1a8 <line:244:21, line:250:21>
+| | | |       |     |   `-ContinueStmt 0x5627815cf1a0 <line:249:25>
+| | | |       |     |-BreakStmt 0x5627815cf268 <line:254:21>
+| | | |       |     |-IfStmt 0x5627815cf2b0 <line:256:21, line:263:21>
+| | | |       |     | |-RecoveryExpr 0x5627815cf270 <line:256:25> 'bool' contains-errors
+| | | |       |     | `-CompoundStmt 0x5627815cf298 <line:257:21, line:263:21>
+| | | |       |     |   `-ContinueStmt 0x5627815cf290 <line:262:25>
+| | | |       |     |-BreakStmt 0x5627815cf358 <line:267:21>
+| | | |       |     |-IfStmt 0x5627815cf3a0 <line:270:21, line:277:21>
+| | | |       |     | |-RecoveryExpr 0x5627815cf360 <line:270:25> 'bool' contains-errors
+| | | |       |     | `-CompoundStmt 0x5627815cf388 <line:271:21, line:277:21>
+| | | |       |     |   `-ContinueStmt 0x5627815cf380 <line:276:25>
+| | | |       |     |-BreakStmt 0x5627815cf448 <line:281:21>
+| | | |       |     |-RecoveryExpr 0x5627815cf490 <line:285:21, col:39> '<dependent type>' contains-errors lvalue
+| | | |       |     | `-UnresolvedLookupExpr 0x5627815cf450 <col:21> '<overloaded function type>' lvalue (ADL) = 'KdCloseConnection' empty
+| | | |       |     |-BreakStmt 0x5627815cf4b8 <line:287:21>
+| | | |       |     |-BreakStmt 0x5627815cf520 <line:293:21>
+| | | |       |     |-BreakStmt 0x5627815cf588 <line:301:21>
+| | | |       |     |-BreakStmt 0x5627815cf5f0 <line:309:21>
+| | | |       |     |-BreakStmt 0x5627815cf658 <line:316:21>
+| | | |       |     |-BreakStmt 0x5627815cf6a0 <line:325:21>
+| | | |       |     |-BreakStmt 0x5627815cf6a8 <line:332:21>
+| | | |       |     |-BreakStmt 0x5627815cf710 <line:342:21>
+| | | |       |     |-BreakStmt 0x5627815cf778 <line:352:21>
+| | | |       |     |-DefaultStmt 0x5627815cf7e0 <line:354:17, line:363:21>
+| | | |       |     | `-IfStmt 0x5627815cf7c0 <line:356:21, line:363:21>
+| | | |       |     |   |-RecoveryExpr 0x5627815cf780 <line:356:25> 'bool' contains-errors
+| | | |       |     |   `-CompoundStmt 0x5627815cf7a8 <line:357:21, line:363:21>
+| | | |       |     |     `-ContinueStmt 0x5627815cf7a0 <line:362:25>
+| | | |       |     |-IfStmt 0x5627815d1520 <line:373:21, line:412:21>
+| | | |       |     | |-RecoveryExpr 0x5627815cf800 <line:373:25> 'bool' contains-errors
+| | | |       |     | `-CompoundStmt 0x5627815d1508 <line:374:21, line:412:21>
+| | | |       |     |   `-WhileStmt 0x5627815d14e8 <line:381:25, line:411:25>
+| | | |       |     |     |-RecoveryExpr 0x5627815cf820 <line:381:32, col:59> 'bool' contains-errors
+| | | |       |     |     `-CompoundStmt 0x5627815d14c8 <line:382:25, line:411:25>
+| | | |       |     |       |-DeclStmt 0x5627815d11c8 <line:385:29, line:388:51>
+| | | |       |     |       | `-VarDecl 0x5627815d1120 <line:385:29, col:60> col:60 invalid EventDetail 'int'
+| | | |       |     |       `-IfStmt 0x5627815d14a8 <line:390:29, line:410:29>
+| | | |       |     |         |-RecoveryExpr 0x5627815d11e0 <line:390:33, col:46> 'bool' contains-errors
+| | | |       |     |         `-CompoundStmt 0x5627815d1488 <line:391:29, line:410:29>
+| | | |       |     |           |-IfStmt 0x5627815d1460 <line:400:33, line:407:33>
+| | | |       |     |           | |-RecoveryExpr 0x5627815d1280 <line:400:37, line:403:76> 'bool' contains-errors
+| | | |       |     |           | `-CompoundStmt 0x5627815d1448 <line:404:33, line:407:33>
+| | | |       |     |           |   `-CallExpr 0x5627815d1408 <line:405:37, line:406:83> 'int'
+| | | |       |     |           |     |-ImplicitCastExpr 0x5627815d13f0 <line:405:37> 'int (*)(const char *, ...)' <FunctionToPointerDecay>
+| | | |       |     |           |     | `-DeclRefExpr 0x5627815d13d0 <col:37> 'int (const char *, ...)' lvalue Function 0x56278159f658 'ShowMessages' 'int (const char *, ...)'
+| | | |       |     |           |     `-ImplicitCastExpr 0x5627815d1430 <col:50, line:406:50> 'const char *' <ArrayToPointerDecay>
+| | | |       |     |           |       `-StringLiteral 0x5627815d1368 <line:405:50, line:406:50> 'const char[72]' lvalue "err, there was an error transferring the message to the remote sources\n"
+| | | |       |     |           `-BreakStmt 0x5627815d1480 <line:409:33>
+| | | |       |     |-IfStmt 0x5627815d15f8 <line:417:21, line:420:21>
+| | | |       |     | |-RecoveryExpr 0x5627815d1540 <line:417:25, col:26> 'bool' contains-errors
+| | | |       |     | `-CompoundStmt 0x5627815d15e8 <line:418:21, line:420:21>
+| | | |       |     `-BreakStmt 0x5627815d1618 <line:422:21>
+| | | |       `-CompoundStmt 0x5627815d19d8 <line:426:13, line:441:13>
+| | | |         |-RecoveryExpr 0x5627815d1760 <line:430:17, col:34> '<dependent type>' contains-errors lvalue
+| | | |         | |-UnresolvedLookupExpr 0x5627815d1700 <col:17> '<overloaded function type>' lvalue (ADL) = 'free' empty
+| | | |         | `-DeclRefExpr 0x5627815d1740 <col:22> 'char *' lvalue Var 0x5627815cecd0 'OutputBuffer' 'char *'
+| | | |         |-IfStmt 0x5627815d19a0 <line:435:17, line:438:17>
+| | | |         | |-RecoveryExpr 0x5627815d17d0 <line:435:21, col:40> 'bool' contains-errors
+| | | |         | `-CompoundStmt 0x5627815d1988 <line:436:17, line:438:17>
+| | | |         |   `-CallExpr 0x5627815d1958 <line:437:21, col:78> '<dependent type>' contains-errors
+| | | |         |     |-UnresolvedLookupExpr 0x5627815d17f0 <col:21> '<overloaded function type>' lvalue (ADL) = 'ShowMessages' 0x56278159f658
+| | | |         |     |-StringLiteral 0x5627815d18b8 <col:34> 'const char[26]' lvalue "err, closing handle 0x%x\n"
+| | | |         |     `-RecoveryExpr 0x5627815d1930 <col:64, col:77> '<dependent type>' contains-errors lvalue
+| | | |         |       `-UnresolvedLookupExpr 0x5627815d18f0 <col:64> '<overloaded function type>' lvalue (ADL) = 'GetLastError' empty
+| | | |         |-NullStmt 0x5627815d19c0 <line:438:18>
+| | | |         `-ReturnStmt 0x5627815d19c8 <line:440:17>
+| | | `-CXXCatchStmt 0x5627815d1cb0 <line:444:5, line:447:5>
+| | |   |-VarDecl 0x5627815d1ad0 <line:444:12, <invalid sloc>> col:34 invalid 'const int &'
+| | |   `-CompoundStmt 0x5627815d1c98 <line:445:5, line:447:5>
+| | |     `-CallExpr 0x5627815d1c58 <line:446:9, col:38> 'int'
+| | |       |-ImplicitCastExpr 0x5627815d1c40 <col:9> 'int (*)(const char *, ...)' <FunctionToPointerDecay>
+| | |       | `-DeclRefExpr 0x5627815d1c20 <col:9> 'int (const char *, ...)' lvalue Function 0x56278159f658 'ShowMessages' 'int (const char *, ...)'
+| | |       `-ImplicitCastExpr 0x5627815d1c80 <col:22> 'const char *' <ArrayToPointerDecay>
+| | |         `-StringLiteral 0x5627815d1bf8 <col:22> 'const char[14]' lvalue " Exception !\n"
+| | |-RecoveryExpr 0x5627815d1d50 <line:448:5, col:22> '<dependent type>' contains-errors lvalue
+| | | |-UnresolvedLookupExpr 0x5627815d1cf0 <col:5> '<overloaded function type>' lvalue (ADL) = 'free' empty
+| | | `-DeclRefExpr 0x5627815d1d30 <col:10> 'char *' lvalue Var 0x5627815cecd0 'OutputBuffer' 'char *'
+| | |-IfStmt 0x5627815d1f10 <line:453:5, line:456:5>
+| | | |-RecoveryExpr 0x5627815d1dc0 <line:453:9, col:28> 'bool' contains-errors
+| | | `-CompoundStmt 0x5627815d1ef8 <line:454:5, line:456:5>
+| | |   `-CallExpr 0x5627815d1ec8 <line:455:9, col:66> '<dependent type>' contains-errors
+| | |     |-UnresolvedLookupExpr 0x5627815d1de0 <col:9> '<overloaded function type>' lvalue (ADL) = 'ShowMessages' 0x56278159f658
+| | |     |-StringLiteral 0x5627815d1e28 <col:22> 'const char[26]' lvalue "err, closing handle 0x%x\n"
+| | |     `-RecoveryExpr 0x5627815d1ea0 <col:52, col:65> '<dependent type>' contains-errors lvalue
+| | |       `-UnresolvedLookupExpr 0x5627815d1e60 <col:52> '<overloaded function type>' lvalue (ADL) = 'GetLastError' empty
+| | `-NullStmt 0x5627815d1f30 <line:456:6>
+| `-FullComment 0x5627815d3430 <line:109:3, line:111:30>
+|   |-ParagraphComment 0x5627815d3270 <line:109:3>
+|   | `-TextComment 0x5627815d3240 <col:3> Text=" "
+|   |-BlockCommandComment 0x5627815d3290 <col:4, col:47> Name="brief"
+|   | `-ParagraphComment 0x5627815d32f0 <col:10, col:47>
+|   |   `-TextComment 0x5627815d32c0 <col:10, col:47> Text=" Read kernel buffers using IRP Pending"
+|   |-ParagraphComment 0x5627815d3340 <line:111:3>
+|   | `-TextComment 0x5627815d3310 <col:3> Text=" "
+|   `-ParamCommandComment 0x5627815d3360 <col:4, col:30> [in] implicitly Param="Device"
+|     `-ParagraphComment 0x5627815d33f0 <col:17, col:30>
+|       `-TextComment 0x5627815d33c0 <col:17, col:30> Text=" Driver handle"
+`-VarDecl 0x5627815d2010 <line:465:1, col:7> col:7 invalid WINAPI 'int'
+  `-FullComment 0x5627815d3720 <line:460:3, line:463:30>
+    |-ParagraphComment 0x5627815d34d0 <line:460:3>
+    | `-TextComment 0x5627815d34a0 <col:3> Text=" "
+    |-BlockCommandComment 0x5627815d34f0 <col:4, col:45> Name="brief"
+    | `-ParagraphComment 0x5627815d3550 <col:10, col:45>
+    |   `-TextComment 0x5627815d3520 <col:10, col:45> Text=" Create a thread for pending buffers"
+    |-ParagraphComment 0x5627815d35a0 <line:462:3>
+    | `-TextComment 0x5627815d3570 <col:3> Text=" "
+    |-ParamCommandComment 0x5627815d35c0 <col:4, line:463:3> [in] implicitly Param="Data"
+    | `-ParagraphComment 0x5627815d3650 <col:3>
+    |   `-TextComment 0x5627815d3620 <col:3> Text=" "
+    `-BlockCommandComment 0x5627815d3670 <col:4, col:30> Name="return"
+      `-ParagraphComment 0x5627815d36d0 <col:11, col:30>
+        `-TextComment 0x5627815d36a0 <col:11, col:30> Text=" DWORD Device Handle"
