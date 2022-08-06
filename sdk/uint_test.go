@@ -1,6 +1,7 @@
 package sdk
 
 import (
+	"github.com/ddkwork/librarygo/src/Comment"
 	"github.com/ddkwork/librarygo/src/myc2go"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/stream/tool/cmd"
@@ -9,6 +10,8 @@ import (
 )
 
 func TestCpp2Go(t *testing.T) {
+	Comment.New().Delete("HyperDbgDev/hyperdbg")
+	return
 	o := myc2go.NewObj()
 	object := o.Src("./HyperDbgDev/hyperdbg").
 		Dst("binding").
