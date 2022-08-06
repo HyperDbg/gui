@@ -29,14 +29,15 @@
 
 
 
+
 #ifndef ZYCORE_BITSET_H
 #define ZYCORE_BITSET_H
 
-#include <ZycoreExportConfig.h>
 #include <Zycore/Allocator.h>
 #include <Zycore/Status.h>
 #include <Zycore/Types.h>
 #include <Zycore/Vector.h>
+#include <ZycoreExportConfig.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,16 +53,17 @@ extern "C" {
 
 
 
-typedef struct ZyanBitset_
-{
-    
 
 
-    ZyanUSize size;
-    
+typedef struct ZyanBitset_ {
+  
 
 
-    ZyanVector bits;
+  ZyanUSize size;
+  
+
+
+  ZyanVector bits;
 } ZyanBitset;
 
 
@@ -75,7 +77,12 @@ typedef struct ZyanBitset_
 
 
 
-typedef ZyanStatus (*ZyanBitsetByteOperation)(ZyanU8* v1, const ZyanU8* v2);
+
+typedef ZyanStatus (*ZyanBitsetByteOperation)(ZyanU8 *v1, const ZyanU8 *v2);
+
+
+
+
 
 
 
@@ -98,7 +105,9 @@ typedef ZyanStatus (*ZyanBitsetByteOperation)(ZyanU8* v1, const ZyanU8* v2);
 
 
 
-ZYCORE_EXPORT ZYAN_REQUIRES_LIBC ZyanStatus ZyanBitsetInit(ZyanBitset* bitset, ZyanUSize count);
+
+ZYCORE_EXPORT ZYAN_REQUIRES_LIBC ZyanStatus ZyanBitsetInit(ZyanBitset *bitset,
+                                                           ZyanUSize count);
 
 #endif 
 
@@ -117,8 +126,10 @@ ZYCORE_EXPORT ZYAN_REQUIRES_LIBC ZyanStatus ZyanBitsetInit(ZyanBitset* bitset, Z
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetInitEx(ZyanBitset* bitset, ZyanUSize count,
-    ZyanAllocator* allocator, float growth_factor, float shrink_threshold);
+ZYCORE_EXPORT ZyanStatus ZyanBitsetInitEx(ZyanBitset *bitset, ZyanUSize count,
+                                          ZyanAllocator *allocator,
+                                          float growth_factor,
+                                          float shrink_threshold);
 
 
 
@@ -131,9 +142,10 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetInitEx(ZyanBitset* bitset, ZyanUSize count,
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetInitBuffer(ZyanBitset* bitset, ZyanUSize count, void* buffer,
-    ZyanUSize capacity);
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetInitBuffer(ZyanBitset *bitset,
+                                              ZyanUSize count, void *buffer,
+                                              ZyanUSize capacity);
 
 
 
@@ -141,8 +153,8 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetInitBuffer(ZyanBitset* bitset, ZyanUSize coun
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetDestroy(ZyanBitset* bitset);
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetDestroy(ZyanBitset *bitset);
 
 
 
@@ -160,14 +172,15 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetDestroy(ZyanBitset* bitset);
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetPerformByteOperation(ZyanBitset* destination,
-    const ZyanBitset* source, ZyanBitsetByteOperation operation);
 
 
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetPerformByteOperation(
+    ZyanBitset *destination, const ZyanBitset *source,
+    ZyanBitsetByteOperation operation);
 
 
 
@@ -175,7 +188,6 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetPerformByteOperation(ZyanBitset* destination,
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetAND(ZyanBitset* destination, const ZyanBitset* source);
 
 
 
@@ -184,12 +196,13 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetAND(ZyanBitset* destination, const ZyanBitset
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetAND(ZyanBitset *destination,
+                                       const ZyanBitset *source);
 
 
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetOR (ZyanBitset* destination, const ZyanBitset* source);
 
 
 
@@ -200,10 +213,11 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetOR (ZyanBitset* destination, const ZyanBitset
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetOR(ZyanBitset *destination,
+                                      const ZyanBitset *source);
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetXOR(ZyanBitset* destination, const ZyanBitset* source);
 
 
 
@@ -212,11 +226,12 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetXOR(ZyanBitset* destination, const ZyanBitset
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetFlip(ZyanBitset* bitset);
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetXOR(ZyanBitset *destination,
+                                       const ZyanBitset *source);
 
 
 
@@ -225,8 +240,8 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetFlip(ZyanBitset* bitset);
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetFlip(ZyanBitset *bitset);
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetSet(ZyanBitset* bitset, ZyanUSize index);
 
 
 
@@ -236,79 +251,79 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetSet(ZyanBitset* bitset, ZyanUSize index);
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetReset(ZyanBitset* bitset, ZyanUSize index);
 
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetSet(ZyanBitset *bitset, ZyanUSize index);
 
 
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetAssign(ZyanBitset* bitset, ZyanUSize index, ZyanBool value);
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetReset(ZyanBitset *bitset, ZyanUSize index);
 
 
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetToggle(ZyanBitset* bitset, ZyanUSize index);
 
 
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetAssign(ZyanBitset *bitset, ZyanUSize index,
+                                          ZyanBool value);
 
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetTest(ZyanBitset* bitset, ZyanUSize index);
 
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetToggle(ZyanBitset *bitset, ZyanUSize index);
 
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetTestMSB(ZyanBitset* bitset);
 
 
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetTest(ZyanBitset *bitset, ZyanUSize index);
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetTestLSB(ZyanBitset* bitset);
 
 
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetTestMSB(ZyanBitset *bitset);
 
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetSetAll(ZyanBitset* bitset);
 
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetTestLSB(ZyanBitset *bitset);
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetResetAll(ZyanBitset* bitset);
 
 
 
@@ -317,21 +332,21 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetResetAll(ZyanBitset* bitset);
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetSetAll(ZyanBitset *bitset);
 
 
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetPush(ZyanBitset* bitset, ZyanBool value);
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetResetAll(ZyanBitset *bitset);
 
 
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetPop(ZyanBitset* bitset);
 
 
 
@@ -340,9 +355,9 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetPop(ZyanBitset* bitset);
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetClear(ZyanBitset* bitset);
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetPush(ZyanBitset *bitset, ZyanBool value);
 
 
 
@@ -351,19 +366,19 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetClear(ZyanBitset* bitset);
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetPop(ZyanBitset *bitset);
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetReserve(ZyanBitset* bitset, ZyanUSize count);
 
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetClear(ZyanBitset *bitset);
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetShrinkToFit(ZyanBitset* bitset);
 
 
 
@@ -376,8 +391,8 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetShrinkToFit(ZyanBitset* bitset);
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetReserve(ZyanBitset *bitset, ZyanUSize count);
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetGetSize(const ZyanBitset* bitset, ZyanUSize* size);
 
 
 
@@ -385,9 +400,9 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetGetSize(const ZyanBitset* bitset, ZyanUSize* 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetShrinkToFit(ZyanBitset *bitset);
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetGetCapacity(const ZyanBitset* bitset, ZyanUSize* capacity);
 
 
 
@@ -397,21 +412,23 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetGetCapacity(const ZyanBitset* bitset, ZyanUSi
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetGetSizeBytes(const ZyanBitset* bitset, ZyanUSize* size);
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetGetSize(const ZyanBitset *bitset,
+                                           ZyanUSize *size);
 
 
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetGetCapacityBytes(const ZyanBitset* bitset, ZyanUSize* capacity);
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetGetCapacity(const ZyanBitset *bitset,
+                                               ZyanUSize *capacity);
 
 
 
@@ -419,9 +436,10 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetGetCapacityBytes(const ZyanBitset* bitset, Zy
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetCount(const ZyanBitset* bitset, ZyanUSize* count);
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetGetSizeBytes(const ZyanBitset *bitset,
+                                                ZyanUSize *size);
 
 
 
@@ -429,9 +447,10 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetCount(const ZyanBitset* bitset, ZyanUSize* co
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetAll(const ZyanBitset* bitset);
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetGetCapacityBytes(const ZyanBitset *bitset,
+                                                    ZyanUSize *capacity);
 
 
 
@@ -439,17 +458,49 @@ ZYCORE_EXPORT ZyanStatus ZyanBitsetAll(const ZyanBitset* bitset);
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetAny(const ZyanBitset* bitset);
 
 
 
 
 
+ZYCORE_EXPORT ZyanStatus ZyanBitsetCount(const ZyanBitset *bitset,
+                                         ZyanUSize *count);
 
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanBitsetNone(const ZyanBitset* bitset);
+
+
+
+
+
+ZYCORE_EXPORT ZyanStatus ZyanBitsetAll(const ZyanBitset *bitset);
+
+
+
+
+
+
+
+
+
+ZYCORE_EXPORT ZyanStatus ZyanBitsetAny(const ZyanBitset *bitset);
+
+
+
+
+
+
+
+
+
+ZYCORE_EXPORT ZyanStatus ZyanBitsetNone(const ZyanBitset *bitset);
+
+
+
+
+
+
 
 
 

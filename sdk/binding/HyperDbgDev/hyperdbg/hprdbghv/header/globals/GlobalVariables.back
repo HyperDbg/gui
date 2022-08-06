@@ -12,6 +12,7 @@
 
 
 
+
 #pragma once
 
 
@@ -28,31 +29,32 @@ UINT32 g_LastError;
 
 
 
-VIRTUAL_MACHINE_STATE * g_GuestState;
+VIRTUAL_MACHINE_STATE *g_GuestState;
 
 
 
 
 
-EPT_STATE * g_EptState;
+EPT_STATE *g_EptState;
 
 
 
 
 
-DEBUGGER_CORE_EVENTS * g_Events;
+DEBUGGER_CORE_EVENTS *g_Events;
 
 
 
 
 
-UINT64 * g_ScriptGlobalVariables;
+UINT64 *g_ScriptGlobalVariables;
 
 
 
 
 
-NOTIFY_RECORD * g_GlobalNotifyRecord;
+
+NOTIFY_RECORD *g_GlobalNotifyRecord;
 
 
 
@@ -60,6 +62,7 @@ NOTIFY_RECORD * g_GlobalNotifyRecord;
 
 
 BOOLEAN g_ExecuteOnlySupport;
+
 
 
 
@@ -109,7 +112,7 @@ BOOLEAN g_TransparentMode;
 
 
 
-TRANSPARENCY_MEASUREMENTS * g_TransparentModeMeasurements;
+TRANSPARENCY_MEASUREMENTS *g_TransparentModeMeasurements;
 
 
 
@@ -133,7 +136,7 @@ BOOLEAN g_IsX2Apic;
 
 
 
-VOID * g_ApicBase;
+VOID *g_ApicBase;
 
 
 
@@ -241,7 +244,7 @@ DEBUGGEE_REQUEST_TO_CHANGE_THREAD g_ThreadSwitch;
 
 
 
-UINT64 * g_MsrBitmapInvalidMsrs;
+UINT64 *g_MsrBitmapInvalidMsrs;
 
 
 

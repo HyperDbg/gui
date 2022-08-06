@@ -11,7 +11,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+all
  * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -24,29 +25,28 @@
 
 ***************************************************************************************************/
 
-#include <Zydis/Mnemonic.h>
 #include <Generated/EnumMnemonic.inc>
+#include <Zydis/Mnemonic.h>
 
-/* ============================================================================================== */
-/* Exported functions                                                                             */
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
+/* Exported functions */
+/* ==============================================================================================
+ */
 
-const char* ZydisMnemonicGetString(ZydisMnemonic mnemonic)
-{
-    if ((ZyanUSize)mnemonic >= ZYAN_ARRAY_LENGTH(STR_MNEMONIC))
-    {
-        return ZYAN_NULL;
-    }
-    return (const char*)STR_MNEMONIC[mnemonic].data;
+const char *ZydisMnemonicGetString(ZydisMnemonic mnemonic) {
+  if ((ZyanUSize)mnemonic >= ZYAN_ARRAY_LENGTH(STR_MNEMONIC)) {
+    return ZYAN_NULL;
+  }
+  return (const char *)STR_MNEMONIC[mnemonic].data;
 }
 
-const ZydisShortString* ZydisMnemonicGetStringWrapped(ZydisMnemonic mnemonic)
-{
-    if ((ZyanUSize)mnemonic >= ZYAN_ARRAY_LENGTH(STR_MNEMONIC))
-    {
-        return ZYAN_NULL;
-    }
-    return &STR_MNEMONIC[mnemonic];
+const ZydisShortString *ZydisMnemonicGetStringWrapped(ZydisMnemonic mnemonic) {
+  if ((ZyanUSize)mnemonic >= ZYAN_ARRAY_LENGTH(STR_MNEMONIC)) {
+    return ZYAN_NULL;
+  }
+  return &STR_MNEMONIC[mnemonic];
 }
 
-/* ============================================================================================== */
+/* ==============================================================================================
+ */

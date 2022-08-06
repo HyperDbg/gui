@@ -9,6 +9,7 @@
 
 
 
+
 #pragma once
 
 
@@ -16,10 +17,12 @@
 
 
 BOOLEAN
-TransparentModeStart(PGUEST_REGS GuestRegs, ULONG ProcessorIndex, UINT32 ExitReason);
+TransparentModeStart(PGUEST_REGS GuestRegs, ULONG ProcessorIndex,
+                     UINT32 ExitReason);
 
 NTSTATUS
-TransparentHideDebugger(PDEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE Measurements);
+TransparentHideDebugger(
+    PDEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE Measurements);
 
 NTSTATUS
 TransparentUnhideDebugger();
@@ -48,13 +51,12 @@ TransparentUnhideDebugger();
 
 
 
-typedef struct _VM_EXIT_TRANSPARENCY
-{
-    UINT64 PreviousTimeStampCounter;
+typedef struct _VM_EXIT_TRANSPARENCY {
+  UINT64 PreviousTimeStampCounter;
 
-    HANDLE  ThreadId;
-    UINT64  RevealedTimeStampCounterByRdtsc;
-    BOOLEAN CpuidAfterRdtscDetected;
+  HANDLE ThreadId;
+  UINT64 RevealedTimeStampCounterByRdtsc;
+  BOOLEAN CpuidAfterRdtscDetected;
 
 } VM_EXIT_TRANSPARENCY, *PVM_EXIT_TRANSPARENCY;
 
@@ -62,17 +64,16 @@ typedef struct _VM_EXIT_TRANSPARENCY
 
 
 
-typedef struct _TRANSPARENCY_MEASUREMENTS
-{
-    UINT64 CpuidAverage;
-    UINT64 CpuidStandardDeviation;
-    UINT64 CpuidMedian;
+typedef struct _TRANSPARENCY_MEASUREMENTS {
+  UINT64 CpuidAverage;
+  UINT64 CpuidStandardDeviation;
+  UINT64 CpuidMedian;
 
-    UINT64 RdtscAverage;
-    UINT64 RdtscStandardDeviation;
-    UINT64 RdtscMedian;
+  UINT64 RdtscAverage;
+  UINT64 RdtscStandardDeviation;
+  UINT64 RdtscMedian;
 
-    LIST_ENTRY ProcessList;
+  LIST_ENTRY ProcessList;
 
 } TRANSPARENCY_MEASUREMENTS, *PTRANSPARENCY_MEASUREMENTS;
 
@@ -80,12 +81,11 @@ typedef struct _TRANSPARENCY_MEASUREMENTS
 
 
 
-typedef struct _TRANSPARENCY_PROCESS
-{
-    UINT32     ProcessId;
-    PVOID      ProcessName;
-    PVOID      BufferAddress;
-    BOOLEAN    TrueIfProcessIdAndFalseIfProcessName;
-    LIST_ENTRY OtherProcesses;
+typedef struct _TRANSPARENCY_PROCESS {
+  UINT32 ProcessId;
+  PVOID ProcessName;
+  PVOID BufferAddress;
+  BOOLEAN TrueIfProcessIdAndFalseIfProcessName;
+  LIST_ENTRY OtherProcesses;
 
 } TRANSPARENCY_PROCESS, *PTRANSPARENCY_PROCESS;

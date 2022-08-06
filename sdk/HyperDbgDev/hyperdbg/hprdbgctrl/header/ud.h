@@ -15,25 +15,23 @@
 //		            Definitions                 //
 //////////////////////////////////////////////////
 
-#define DbgWaitForUserResponse(UserSyncObjectId)                          \
-    do                                                                    \
-    {                                                                     \
-        DEBUGGER_SYNCRONIZATION_EVENTS_STATE * SyncronizationObject =     \
-            &g_UserSyncronizationObjectsHandleTable[UserSyncObjectId];    \
-                                                                          \
-        SyncronizationObject->IsOnWaitingState = TRUE;                    \
-        WaitForSingleObject(SyncronizationObject->EventHandle, INFINITE); \
-    } while (FALSE);
+#define DbgWaitForUserResponse(UserSyncObjectId)                               \
+  do {                                                                         \
+    DEBUGGER_SYNCRONIZATION_EVENTS_STATE *SyncronizationObject =               \
+        &g_UserSyncronizationObjectsHandleTable[UserSyncObjectId];             \
+                                                                               \
+    SyncronizationObject->IsOnWaitingState = TRUE;                             \
+    WaitForSingleObject(SyncronizationObject->EventHandle, INFINITE);          \
+  } while (FALSE);
 
-#define DbgReceivedUserResponse(UserSyncObjectId)                      \
-    do                                                                 \
-    {                                                                  \
-        DEBUGGER_SYNCRONIZATION_EVENTS_STATE * SyncronizationObject =  \
-            &g_UserSyncronizationObjectsHandleTable[UserSyncObjectId]; \
-                                                                       \
-        SyncronizationObject->IsOnWaitingState = FALSE;                \
-        SetEvent(SyncronizationObject->EventHandle);                   \
-    } while (FALSE);
+#define DbgReceivedUserResponse(UserSyncObjectId)                              \
+  do {                                                                         \
+    DEBUGGER_SYNCRONIZATION_EVENTS_STATE *SyncronizationObject =               \
+        &g_UserSyncronizationObjectsHandleTable[UserSyncObjectId];             \
+                                                                               \
+    SyncronizationObject->IsOnWaitingState = FALSE;                            \
+    SetEvent(SyncronizationObject->EventHandle);                               \
+  } while (FALSE);
 
 //////////////////////////////////////////////////
 //            	    Structures                  //
@@ -44,46 +42,37 @@
  * state
  *
  */
-typedef struct _ACTIVE_DEBUGGING_PROCESS
-{
-    BOOLEAN    IsActive;
-    UINT64     ProcessDebuggingToken;
-    UINT32     ProcessId;
-    UINT32     ThreadId;
-    BOOLEAN    IsPaused;
-    GUEST_REGS Registers; // thread registers
-    UINT64     Context;   // $context
-    BOOLEAN    Is32Bit;
+typedef struct _ACTIVE_DEBUGGING_PROCESS {
+  BOOLEAN IsActive;
+  UINT64 ProcessDebuggingToken;
+  UINT32 ProcessId;
+  UINT32 ThreadId;
+  BOOLEAN IsPaused;
+  GUEST_REGS Registers; // thread registers
+  UINT64 Context;       // $context
+  BOOLEAN Is32Bit;
 } ACTIVE_DEBUGGING_PROCESS, *PACTIVE_DEBUGGING_PROCESS;
 
 //////////////////////////////////////////////////
 //            	    Functions                  //
 //////////////////////////////////////////////////
 
-VOID
-UdInitializeUserDebugger();
+VOID UdInitializeUserDebugger();
 
-VOID
-UdUninitializeUserDebugger();
+VOID UdUninitializeUserDebugger();
 
-VOID
-UdRemoveActiveDebuggingProcess(BOOLEAN DontSwitchToNewProcess);
+VOID UdRemoveActiveDebuggingProcess(BOOLEAN DontSwitchToNewProcess);
 
-VOID
-UdHandleUserDebuggerPausing(PDEBUGGEE_UD_PAUSED_PACKET PausePacket);
+VOID UdHandleUserDebuggerPausing(PDEBUGGEE_UD_PAUSED_PACKET PausePacket);
 
-VOID
-UdContinueDebuggee(UINT64 ProcessDetailToken);
+VOID UdContinueDebuggee(UINT64 ProcessDetailToken);
 
-VOID
-UdSendStepPacketToDebuggee(UINT64 ThreadDetailToken, UINT32 TargetThreadId, DEBUGGER_REMOTE_STEPPING_REQUEST StepType);
+VOID UdSendStepPacketToDebuggee(UINT64 ThreadDetailToken, UINT32 TargetThreadId,
+                                DEBUGGER_REMOTE_STEPPING_REQUEST StepType);
 
-VOID
-UdSetActiveDebuggingProcess(UINT64  DebuggingId,
-                            UINT32  ProcessId,
-                            UINT32  ThreadId,
-                            BOOLEAN Is32Bit,
-                            BOOLEAN IsPaused);
+VOID UdSetActiveDebuggingProcess(UINT64 DebuggingId, UINT32 ProcessId,
+                                 UINT32 ThreadId, BOOLEAN Is32Bit,
+                                 BOOLEAN IsPaused);
 BOOLEAN
 UdSetActiveDebuggingThreadByPidOrTid(UINT32 TargetPidOrTid, BOOLEAN IsTid);
 
@@ -93,16 +82,14 @@ UdSetActiveDebuggingThreadByPidOrTid(UINT32 TargetPidOrTid, BOOLEAN IsTid);
 BOOLEAN
 UdShowListActiveDebuggingProcessesAndThreads();
 
-BOOL
-UdListProcessThreads(DWORD OwnerPID);
+BOOL UdListProcessThreads(DWORD OwnerPID);
 
 BOOLEAN
 UdCheckThreadByProcessId(DWORD Pid, DWORD Tid);
 
 BOOLEAN
-UdAttachToProcess(UINT32        TargetPid,
-                  const WCHAR * TargetFileAddress,
-                  WCHAR *       CommandLine);
+UdAttachToProcess(UINT32 TargetPid, const WCHAR *TargetFileAddress,
+                  WCHAR *CommandLine);
 
 BOOLEAN
 UdKillProcess(UINT32 TargetPid);

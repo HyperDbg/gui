@@ -11,7 +11,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+all
  * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -26,31 +27,37 @@
 
 /**
  * @file
- * @brief   Provides helper functions for performant number to string conversion.
+ * @brief   Provides helper functions for performant number to string
+ * conversion.
  */
 
 #ifndef ZYCORE_FORMAT_H
 #define ZYCORE_FORMAT_H
 
-#include <ZycoreExportConfig.h>
 #include <Zycore/Status.h>
 #include <Zycore/String.h>
 #include <Zycore/Types.h>
+#include <ZycoreExportConfig.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* ============================================================================================== */
-/* Exported functions                                                                             */
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
+/* Exported functions */
+/* ==============================================================================================
+ */
 
-/* ---------------------------------------------------------------------------------------------- */
-/* Insertion                                                                                      */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* Insertion */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 /**
- * @brief   Inserts formatted text in the destination string at the given `index`.
+ * @brief   Inserts formatted text in the destination string at the given
+ * `index`.
  *
  * @param   string  The destination string.
  * @param   index   The insert index.
@@ -59,98 +66,113 @@ extern "C" {
  *
  * @return  A zyan status code.
  *
- * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for the specified
- * `ZyanString` instance.
+ * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for
+ * the specified `ZyanString` instance.
  */
 ZYAN_PRINTF_ATTR(3, 4)
-ZYCORE_EXPORT ZyanStatus ZyanStringInsertFormat(ZyanString* string, ZyanUSize index,
-    const char* format, ...);
+ZYCORE_EXPORT ZyanStatus ZyanStringInsertFormat(ZyanString *string,
+                                                ZyanUSize index,
+                                                const char *format, ...);
 
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 /**
- * @brief   Formats the given unsigned ordinal `value` to its decimal text-representation and
- *          inserts it to the `string`.
+ * @brief   Formats the given unsigned ordinal `value` to its decimal
+ * text-representation and inserts it to the `string`.
  *
  * @param   string          A pointer to the `ZyanString` instance.
  * @param   index           The insert index.
  * @param   value           The value.
- * @param   padding_length  Padds the converted value with leading zeros, if the number of chars is
- *                          less than the `padding_length`.
+ * @param   padding_length  Padds the converted value with leading zeros, if the
+ * number of chars is less than the `padding_length`.
  *
  * @return  A zyan status code.
  *
- * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for the specified
- * `ZyanString` instance.
+ * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for
+ * the specified `ZyanString` instance.
  */
-ZYCORE_EXPORT ZyanStatus ZyanStringInsertDecU(ZyanString* string, ZyanUSize index, ZyanU64 value,
-    ZyanU8 padding_length);
+ZYCORE_EXPORT ZyanStatus ZyanStringInsertDecU(ZyanString *string,
+                                              ZyanUSize index, ZyanU64 value,
+                                              ZyanU8 padding_length);
 
 /**
- * @brief   Formats the given signed ordinal `value` to its decimal text-representation and
- *          inserts it to the `string`.
+ * @brief   Formats the given signed ordinal `value` to its decimal
+ * text-representation and inserts it to the `string`.
  *
  * @param   string          A pointer to the `ZyanString` instance.
  * @param   index           The insert index.
  * @param   value           The value.
- * @param   padding_length  Padds the converted value with leading zeros, if the number of chars is
- *                          less than the `padding_length`.
- * @param   force_sign      Set `ZYAN_TRUE`, to force printing of the `+` sign for positive numbers.
- * @param   prefix          The string to use as prefix or `ZYAN_NULL`, if not needed.
+ * @param   padding_length  Padds the converted value with leading zeros, if the
+ * number of chars is less than the `padding_length`.
+ * @param   force_sign      Set `ZYAN_TRUE`, to force printing of the `+` sign
+ * for positive numbers.
+ * @param   prefix          The string to use as prefix or `ZYAN_NULL`, if not
+ * needed.
  *
  * @return  A zyan status code.
  *
- * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for the specified
- * `ZyanString` instance.
+ * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for
+ * the specified `ZyanString` instance.
  */
-ZYCORE_EXPORT ZyanStatus ZyanStringInsertDecS(ZyanString* string, ZyanUSize index, ZyanI64 value,
-    ZyanU8 padding_length, ZyanBool force_sign, const ZyanString* prefix);
+ZYCORE_EXPORT ZyanStatus ZyanStringInsertDecS(ZyanString *string,
+                                              ZyanUSize index, ZyanI64 value,
+                                              ZyanU8 padding_length,
+                                              ZyanBool force_sign,
+                                              const ZyanString *prefix);
 
 /**
- * @brief   Formats the given unsigned ordinal `value` to its hexadecimal text-representation and
- *          inserts it to the `string`.
+ * @brief   Formats the given unsigned ordinal `value` to its hexadecimal
+ * text-representation and inserts it to the `string`.
  *
  * @param   string          A pointer to the `ZyanString` instance.
  * @param   index           The insert index.
  * @param   value           The value.
- * @param   padding_length  Padds the converted value with leading zeros, if the number of chars is
- *                          less than the `padding_length`.
- * @param   uppercase       Set `ZYAN_TRUE` to use uppercase letters ('A'-'F') instead of lowercase
- *                          ones ('a'-'f').
+ * @param   padding_length  Padds the converted value with leading zeros, if the
+ * number of chars is less than the `padding_length`.
+ * @param   uppercase       Set `ZYAN_TRUE` to use uppercase letters ('A'-'F')
+ * instead of lowercase ones ('a'-'f').
  *
  * @return  A zyan status code.
  *
- * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for the specified
- * `ZyanString` instance.
+ * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for
+ * the specified `ZyanString` instance.
  */
-ZYCORE_EXPORT ZyanStatus ZyanStringInsertHexU(ZyanString* string, ZyanUSize index, ZyanU64 value,
-    ZyanU8 padding_length, ZyanBool uppercase);
+ZYCORE_EXPORT ZyanStatus ZyanStringInsertHexU(ZyanString *string,
+                                              ZyanUSize index, ZyanU64 value,
+                                              ZyanU8 padding_length,
+                                              ZyanBool uppercase);
 
 /**
- * @brief   Formats the given signed ordinal `value` to its hexadecimal text-representation and
- *          inserts it to the `string`.
+ * @brief   Formats the given signed ordinal `value` to its hexadecimal
+ * text-representation and inserts it to the `string`.
  *
  * @param   string          A pointer to the `ZyanString` instance.
  * @param   index           The insert index.
  * @param   value           The value.
- * @param   padding_length  Padds the converted value with leading zeros, if the number of chars is
- *                          less than the `padding_length`.
- * @param   uppercase       Set `ZYAN_TRUE` to use uppercase letters ('A'-'F') instead of lowercase
- *                          ones ('a'-'f').
- * @param   force_sign      Set `ZYAN_TRUE`, to force printing of the `+` sign for positive numbers.
- * @param   prefix          The string to use as prefix or `ZYAN_NULL`, if not needed.
+ * @param   padding_length  Padds the converted value with leading zeros, if the
+ * number of chars is less than the `padding_length`.
+ * @param   uppercase       Set `ZYAN_TRUE` to use uppercase letters ('A'-'F')
+ * instead of lowercase ones ('a'-'f').
+ * @param   force_sign      Set `ZYAN_TRUE`, to force printing of the `+` sign
+ * for positive numbers.
+ * @param   prefix          The string to use as prefix or `ZYAN_NULL`, if not
+ * needed.
  *
  * @return  A zyan status code.
  *
- * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for the specified
- * `ZyanString` instance.
+ * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for
+ * the specified `ZyanString` instance.
  */
-ZYCORE_EXPORT ZyanStatus ZyanStringInsertHexS(ZyanString* string, ZyanUSize index, ZyanI64 value,
-    ZyanU8 padding_length, ZyanBool uppercase, ZyanBool force_sign, const ZyanString* prefix);
+ZYCORE_EXPORT ZyanStatus ZyanStringInsertHexS(
+    ZyanString *string, ZyanUSize index, ZyanI64 value, ZyanU8 padding_length,
+    ZyanBool uppercase, ZyanBool force_sign, const ZyanString *prefix);
 
-/* ---------------------------------------------------------------------------------------------- */
-/* Appending                                                                                      */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* Appending */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 #ifndef ZYAN_NO_LIBC
 
@@ -163,96 +185,109 @@ ZYCORE_EXPORT ZyanStatus ZyanStringInsertHexS(ZyanString* string, ZyanUSize inde
  *
  * @return  A zyan status code.
  *
- * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for the specified
- * `ZyanString` instance.
+ * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for
+ * the specified `ZyanString` instance.
  */
 ZYAN_PRINTF_ATTR(2, 3)
-ZYCORE_EXPORT ZYAN_REQUIRES_LIBC ZyanStatus ZyanStringAppendFormat(
-    ZyanString* string, const char* format, ...);
+ZYCORE_EXPORT ZYAN_REQUIRES_LIBC ZyanStatus
+ZyanStringAppendFormat(ZyanString *string, const char *format, ...);
 
 #endif // ZYAN_NO_LIBC
 
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 /**
- * @brief   Formats the given unsigned ordinal `value` to its decimal text-representation and
- *          appends it to the `string`.
+ * @brief   Formats the given unsigned ordinal `value` to its decimal
+ * text-representation and appends it to the `string`.
  *
  * @param   string          A pointer to the `ZyanString` instance.
  * @param   value           The value.
- * @param   padding_length  Padds the converted value with leading zeros, if the number of chars is
- *                          less than the `padding_length`.
+ * @param   padding_length  Padds the converted value with leading zeros, if the
+ * number of chars is less than the `padding_length`.
  *
  * @return  A zyan status code.
  *
- * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for the specified
- * `ZyanString` instance.
+ * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for
+ * the specified `ZyanString` instance.
  */
-ZYCORE_EXPORT ZyanStatus ZyanStringAppendDecU(ZyanString* string, ZyanU64 value,
-    ZyanU8 padding_length);
+ZYCORE_EXPORT ZyanStatus ZyanStringAppendDecU(ZyanString *string, ZyanU64 value,
+                                              ZyanU8 padding_length);
 
 /**
- * @brief   Formats the given signed ordinal `value` to its decimal text-representation and
- *          appends it to the `string`.
+ * @brief   Formats the given signed ordinal `value` to its decimal
+ * text-representation and appends it to the `string`.
  *
  * @param   string          A pointer to the `ZyanString` instance.
  * @param   value           The value.
- * @param   padding_length  Padds the converted value with leading zeros, if the number of chars is
- *                          less than the `padding_length`.
- * @param   force_sign      Set `ZYAN_TRUE`, to force printing of the `+` sign for positive numbers.
- * @param   prefix          The string to use as prefix or `ZYAN_NULL`, if not needed.
+ * @param   padding_length  Padds the converted value with leading zeros, if the
+ * number of chars is less than the `padding_length`.
+ * @param   force_sign      Set `ZYAN_TRUE`, to force printing of the `+` sign
+ * for positive numbers.
+ * @param   prefix          The string to use as prefix or `ZYAN_NULL`, if not
+ * needed.
  *
  * @return  A zyan status code.
  *
- * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for the specified
- * `ZyanString` instance.
+ * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for
+ * the specified `ZyanString` instance.
  */
-ZYCORE_EXPORT ZyanStatus ZyanStringAppendDecS(ZyanString* string, ZyanI64 value,
-    ZyanU8 padding_length, ZyanBool force_sign, const ZyanStringView* prefix);
+ZYCORE_EXPORT ZyanStatus ZyanStringAppendDecS(ZyanString *string, ZyanI64 value,
+                                              ZyanU8 padding_length,
+                                              ZyanBool force_sign,
+                                              const ZyanStringView *prefix);
 
 /**
- * @brief   Formats the given unsigned ordinal `value` to its hexadecimal text-representation and
- *          appends it to the `string`.
+ * @brief   Formats the given unsigned ordinal `value` to its hexadecimal
+ * text-representation and appends it to the `string`.
  *
  * @param   string          A pointer to the `ZyanString` instance.
  * @param   value           The value.
- * @param   padding_length  Padds the converted value with leading zeros, if the number of chars is
- *                          less than the `padding_length`.
- * @param   uppercase       Set `ZYAN_TRUE` to use uppercase letters ('A'-'F') instead of lowercase
- *                          ones ('a'-'f').
+ * @param   padding_length  Padds the converted value with leading zeros, if the
+ * number of chars is less than the `padding_length`.
+ * @param   uppercase       Set `ZYAN_TRUE` to use uppercase letters ('A'-'F')
+ * instead of lowercase ones ('a'-'f').
  *
  * @return  A zyan status code.
  *
- * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for the specified
- * `ZyanString` instance.
+ * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for
+ * the specified `ZyanString` instance.
  */
-ZYCORE_EXPORT ZyanStatus ZyanStringAppendHexU(ZyanString* string, ZyanU64 value,
-    ZyanU8 padding_length, ZyanBool uppercase);
+ZYCORE_EXPORT ZyanStatus ZyanStringAppendHexU(ZyanString *string, ZyanU64 value,
+                                              ZyanU8 padding_length,
+                                              ZyanBool uppercase);
 
 /**
- * @brief   Formats the given signed ordinal `value` to its hexadecimal text-representation and
- *          appends it to the `string`.
+ * @brief   Formats the given signed ordinal `value` to its hexadecimal
+ * text-representation and appends it to the `string`.
  *
  * @param   string          A pointer to the `ZyanString` instance.
  * @param   value           The value.
- * @param   padding_length  Padds the converted value with leading zeros, if the number of chars is
- *                          less than the `padding_length`.
- * @param   uppercase       Set `ZYAN_TRUE` to use uppercase letters ('A'-'F') instead of lowercase
- *                          ones ('a'-'f').
- * @param   force_sign      Set `ZYAN_TRUE`, to force printing of the `+` sign for positive numbers.
- * @param   prefix          The string to use as prefix or `ZYAN_NULL`, if not needed.
+ * @param   padding_length  Padds the converted value with leading zeros, if the
+ * number of chars is less than the `padding_length`.
+ * @param   uppercase       Set `ZYAN_TRUE` to use uppercase letters ('A'-'F')
+ * instead of lowercase ones ('a'-'f').
+ * @param   force_sign      Set `ZYAN_TRUE`, to force printing of the `+` sign
+ * for positive numbers.
+ * @param   prefix          The string to use as prefix or `ZYAN_NULL`, if not
+ * needed.
  *
  * @return  A zyan status code.
  *
- * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for the specified
- * `ZyanString` instance.
+ * This function will fail, if the `ZYAN_STRING_IS_IMMUTABLE` flag is set for
+ * the specified `ZyanString` instance.
  */
-ZYCORE_EXPORT ZyanStatus ZyanStringAppendHexS(ZyanString* string, ZyanI64 value,
-    ZyanU8 padding_length, ZyanBool uppercase, ZyanBool force_sign, const ZyanStringView* prefix);
+ZYCORE_EXPORT ZyanStatus ZyanStringAppendHexS(ZyanString *string, ZyanI64 value,
+                                              ZyanU8 padding_length,
+                                              ZyanBool uppercase,
+                                              ZyanBool force_sign,
+                                              const ZyanStringView *prefix);
 
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
 
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
 
 #ifdef __cplusplus
 }

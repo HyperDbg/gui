@@ -133,7 +133,9 @@
 
 
 
-#define VMCALL_DISABLE_EXTERNAL_INTERRUPT_EXITING_ONLY_TO_CLEAR_INTERRUPT_COMMANDS 0x00000014
+
+#define VMCALL_DISABLE_EXTERNAL_INTERRUPT_EXITING_ONLY_TO_CLEAR_INTERRUPT_COMMANDS \
+  0x00000014
 
 
 
@@ -165,7 +167,8 @@
 
 
 
-#define VMCALL_RESET_EXCEPTION_BITMAP_ONLY_ON_CLEARING_EXCEPTION_EVENTS 0x00000019
+#define VMCALL_RESET_EXCEPTION_BITMAP_ONLY_ON_CLEARING_EXCEPTION_EVENTS        \
+  0x00000019
 
 
 
@@ -308,8 +311,7 @@
 
 
 
-static NTSTATUS
-VmxHypervVmcallHandler(_Inout_ PGUEST_REGS GuestRegs);
+static NTSTATUS VmxHypervVmcallHandler(_Inout_ PGUEST_REGS GuestRegs);
 
 
 
@@ -318,8 +320,7 @@ VmxHypervVmcallHandler(_Inout_ PGUEST_REGS GuestRegs);
 
 
 NTSTATUS
-VmxHandleVmcallVmExit(_In_ UINT32         CoreIndex,
-                      _Inout_ PGUEST_REGS GuestRegs);
+VmxHandleVmcallVmExit(_In_ UINT32 CoreIndex, _Inout_ PGUEST_REGS GuestRegs);
 
 
 
@@ -331,12 +332,9 @@ VmxHandleVmcallVmExit(_In_ UINT32         CoreIndex,
 
 
 NTSTATUS
-VmxVmcallHandler(_In_ UINT32         CurrentCoreIndex,
-                 _In_ UINT64         VmcallNumber,
-                 _In_ UINT64         OptionalParam1,
-                 _In_ UINT64         OptionalParam2,
-                 _In_ UINT64         OptionalParam3,
-                 _Inout_ PGUEST_REGS GuestRegs);
+VmxVmcallHandler(_In_ UINT32 CurrentCoreIndex, _In_ UINT64 VmcallNumber,
+                 _In_ UINT64 OptionalParam1, _In_ UINT64 OptionalParam2,
+                 _In_ UINT64 OptionalParam3, _Inout_ PGUEST_REGS GuestRegs);
 
 
 
@@ -347,6 +345,4 @@ VmxVmcallHandler(_In_ UINT32         CurrentCoreIndex,
 
 
 NTSTATUS
-VmcallTest(_In_ UINT64 Param1,
-           _In_ UINT64 Param2,
-           _In_ UINT64 Param3);
+VmcallTest(_In_ UINT64 Param1, _In_ UINT64 Param2, _In_ UINT64 Param3);

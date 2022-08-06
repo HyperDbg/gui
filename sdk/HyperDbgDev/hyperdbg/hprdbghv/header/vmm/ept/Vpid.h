@@ -5,45 +5,45 @@
  * @details
  * @version 0.1
  * @date 2020-04-11
- * 
+ *
  * @copyright This project is released under the GNU Public License v3.
- * 
+ *
  */
 #pragma once
 
 //////////////////////////////////////////////////
-//					Enums						//
+//					Enums
+////
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-//					Structures					//
+//					Structures
+////
 //////////////////////////////////////////////////
 
 //////////////////////////////////////////////////
-//					Definitions					//
+//					Definitions
+////
 //////////////////////////////////////////////////
 
 /**
  * @brief VPID Tag
- * 
+ *
  */
 #define VPID_TAG 0x1
 
 //////////////////////////////////////////////////
-//					Functions					//
+//					Functions
+////
 //////////////////////////////////////////////////
 
-VOID
-VpidInvvpid(_In_ INVVPID_TYPE Type, _In_opt_ INVVPID_DESCRIPTOR * Descriptor);
+VOID VpidInvvpid(_In_ INVVPID_TYPE Type,
+                 _In_opt_ INVVPID_DESCRIPTOR *Descriptor);
 
-VOID
-VpidInvvpidIndividualAddress(_In_ UINT16 Vpid, _In_ UINT64 LinearAddress);
+VOID VpidInvvpidIndividualAddress(_In_ UINT16 Vpid, _In_ UINT64 LinearAddress);
 
-VOID
-VpidInvvpidSingleContext(UINT16 Vpid);
+VOID VpidInvvpidSingleContext(UINT16 Vpid);
 
-VOID
-VpidInvvpidAllContext();
+VOID VpidInvvpidAllContext();
 
-VOID
-VpidInvvpidSingleContextRetainingGlobals(UINT16 Vpid);
+VOID VpidInvvpidSingleContextRetainingGlobals(UINT16 Vpid);

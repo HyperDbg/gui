@@ -19,11 +19,11 @@
 
 #define USE_LIB_IA32
 #if defined(USE_LIB_IA32)
-#    pragma warning(push, 0)
+#pragma warning(push, 0)
 
-#    include <ia32-doc/out/ia32.h>
-#    pragma warning(pop)
-typedef RFLAGS * PRFLAGS;
+#include <ia32-doc/out/ia32.h>
+#pragma warning(pop)
+typedef RFLAGS *PRFLAGS;
 #endif 
 
 
@@ -68,12 +68,15 @@ typedef RFLAGS * PRFLAGS;
 
 
 
+
 #define TEST_CASE_MAXIMUM_NUMBER_OF_KERNEL_TEST_CASES 200
 
 
 
 
-#define TEST_CASE_MAXIMUM_BUFFERS_TO_COMMUNICATE sizeof(DEBUGGEE_KERNEL_AND_USER_TEST_INFORMATION) * TEST_CASE_MAXIMUM_NUMBER_OF_KERNEL_TEST_CASES
+#define TEST_CASE_MAXIMUM_BUFFERS_TO_COMMUNICATE                               \
+  sizeof(DEBUGGEE_KERNEL_AND_USER_TEST_INFORMATION) *                          \
+      TEST_CASE_MAXIMUM_NUMBER_OF_KERNEL_TEST_CASES
 
 
 
@@ -84,50 +87,49 @@ typedef RFLAGS * PRFLAGS;
 
 
 
-typedef struct _DEBUGGER_GENERAL_EVENT_DETAIL
-{
-    LIST_ENTRY
-    CommandsEventList; 
-                       
+typedef struct _DEBUGGER_GENERAL_EVENT_DETAIL {
+  LIST_ENTRY
+  CommandsEventList; 
+                     
 
-    time_t CreationTime; 
+  time_t CreationTime; 
 
-    UINT32 CoreId; 
-                   
+  UINT32 CoreId; 
+                 
 
-    UINT32 ProcessId; 
-                      
-                      
+  UINT32 ProcessId; 
+                    
+                    
 
-    BOOLEAN IsEnabled;
+  BOOLEAN IsEnabled;
 
-    BOOLEAN HasCustomOutput; 
-                             
+  BOOLEAN HasCustomOutput; 
+                           
 
-    UINT64
-    OutputSourceTags
-        [DebuggerOutputSourceMaximumRemoteSourceForSingleEvent]; 
-                                                                 
-                                                                 
-                                                                 
-                                                                 
-                                                                 
-                                                                 
-                                                                 
+  UINT64
+  OutputSourceTags
+      [DebuggerOutputSourceMaximumRemoteSourceForSingleEvent]; 
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
+                                                               
 
-    UINT32 CountOfActions;
+  UINT32 CountOfActions;
 
-    UINT64                   Tag; 
-    DEBUGGER_EVENT_TYPE_ENUM EventType;
+  UINT64 Tag; 
+  DEBUGGER_EVENT_TYPE_ENUM EventType;
 
-    UINT64 OptionalParam1;
-    UINT64 OptionalParam2;
-    UINT64 OptionalParam3;
-    UINT64 OptionalParam4;
+  UINT64 OptionalParam1;
+  UINT64 OptionalParam2;
+  UINT64 OptionalParam3;
+  UINT64 OptionalParam4;
 
-    PVOID CommandStringBuffer;
+  PVOID CommandStringBuffer;
 
-    UINT32 ConditionBufferSize;
+  UINT32 ConditionBufferSize;
 
 } DEBUGGER_GENERAL_EVENT_DETAIL, *PDEBUGGER_GENERAL_EVENT_DETAIL;
 
@@ -137,16 +139,15 @@ typedef struct _DEBUGGER_GENERAL_EVENT_DETAIL
 
 
 
-typedef struct _DEBUGGER_GENERAL_ACTION
-{
-    UINT64                          EventTag;
-    DEBUGGER_EVENT_ACTION_TYPE_ENUM ActionType;
-    BOOLEAN                         ImmediateMessagePassing;
-    UINT32                          PreAllocatedBuffer;
+typedef struct _DEBUGGER_GENERAL_ACTION {
+  UINT64 EventTag;
+  DEBUGGER_EVENT_ACTION_TYPE_ENUM ActionType;
+  BOOLEAN ImmediateMessagePassing;
+  UINT32 PreAllocatedBuffer;
 
-    UINT32 CustomCodeBufferSize;
-    UINT32 ScriptBufferSize;
-    UINT32 ScriptBufferPointer;
+  UINT32 CustomCodeBufferSize;
+  UINT32 ScriptBufferSize;
+  UINT32 ScriptBufferPointer;
 
 } DEBUGGER_GENERAL_ACTION, *PDEBUGGER_GENERAL_ACTION;
 
@@ -154,10 +155,9 @@ typedef struct _DEBUGGER_GENERAL_ACTION
 
 
 
-typedef struct _DEBUGGER_EVENT_AND_ACTION_REG_BUFFER
-{
-    BOOLEAN IsSuccessful;
-    UINT32  Error; 
+typedef struct _DEBUGGER_EVENT_AND_ACTION_REG_BUFFER {
+  BOOLEAN IsSuccessful;
+  UINT32 Error; 
 
 } DEBUGGER_EVENT_AND_ACTION_REG_BUFFER, *PDEBUGGER_EVENT_AND_ACTION_REG_BUFFER;
 
@@ -167,19 +167,14 @@ typedef struct _DEBUGGER_EVENT_AND_ACTION_REG_BUFFER
 
 
 
-typedef enum _NOTIFY_TYPE
-{
-    IRP_BASED,
-    EVENT_BASED
-} NOTIFY_TYPE;
+typedef enum _NOTIFY_TYPE { IRP_BASED, EVENT_BASED } NOTIFY_TYPE;
 
 
 
 
 
-typedef struct _REGISTER_NOTIFY_BUFFER
-{
-    NOTIFY_TYPE Type;
-    HANDLE      hEvent;
+typedef struct _REGISTER_NOTIFY_BUFFER {
+  NOTIFY_TYPE Type;
+  HANDLE hEvent;
 
 } REGISTER_NOTIFY_BUFFER, *PREGISTER_NOTIFY_BUFFER;

@@ -5,10 +5,8 @@ BOOLEAN g_IsInterpreterOnString = FALSE;
 BOOLEAN g_IsInterpreterPreviousCharacterABackSlash = FALSE;
 UINT32 g_InterpreterCountOfOpenCurlyBrackets = 0;
 BYTE g_EndOfBufferCheckTcp[TCP_END_OF_BUFFER_CHARS_COUNT] = {
-    TCP_END_OF_BUFFER_CHAR_1,
-    TCP_END_OF_BUFFER_CHAR_2,
-    TCP_END_OF_BUFFER_CHAR_3,
-    TCP_END_OF_BUFFER_CHAR_4};
+    TCP_END_OF_BUFFER_CHAR_1, TCP_END_OF_BUFFER_CHAR_2,
+    TCP_END_OF_BUFFER_CHAR_3, TCP_END_OF_BUFFER_CHAR_4};
 BOOLEAN g_IsConnectedToHyperDbgLocally = FALSE;
 BOOLEAN g_IsConnectedToRemoteDebuggee = FALSE;
 BOOLEAN g_IsConnectedToRemoteDebugger = FALSE;
@@ -27,10 +25,8 @@ BOOLEAN g_IsUserDebuggerInitialized = FALSE;
 DEBUGGER_SYNCRONIZATION_EVENTS_STATE g_UserSyncronizationObjectsHandleTable
     [DEBUGGER_MAXIMUM_SYNCRONIZATION_USER_DEBUGGER_OBJECTS] = {0};
 BYTE g_EndOfBufferCheckSerial[SERIAL_END_OF_BUFFER_CHARS_COUNT] = {
-    SERIAL_END_OF_BUFFER_CHAR_1,
-    SERIAL_END_OF_BUFFER_CHAR_2,
-    SERIAL_END_OF_BUFFER_CHAR_3,
-    SERIAL_END_OF_BUFFER_CHAR_4};
+    SERIAL_END_OF_BUFFER_CHAR_1, SERIAL_END_OF_BUFFER_CHAR_2,
+    SERIAL_END_OF_BUFFER_CHAR_3, SERIAL_END_OF_BUFFER_CHAR_4};
 DEBUGGER_SYNCRONIZATION_EVENTS_STATE g_KernelSyncronizationObjectsHandleTable
     [DEBUGGER_MAXIMUM_SYNCRONIZATION_KERNEL_DEBUGGER_OBJECTS] = {0};
 BYTE g_CurrentRunningInstruction[MAXIMUM_INSTR_SIZE] = {0};
@@ -47,14 +43,14 @@ HANDLE g_DebuggeeStopCommandEventHandle = NULL;
 DEBUGGER_EVENT_AND_ACTION_REG_BUFFER g_DebuggeeResultOfRegisteringEvent = {0};
 DEBUGGER_EVENT_AND_ACTION_REG_BUFFER g_DebuggeeResultOfAddingActionsToEvent = {
     0};
-OVERLAPPED g_OverlappedIoStructureForReadDebugger  = {0};
+OVERLAPPED g_OverlappedIoStructureForReadDebugger = {0};
 OVERLAPPED g_OverlappedIoStructureForWriteDebugger = {0};
 BOOLEAN g_SharedEventStatus = FALSE;
 BOOLEAN g_ShouldPreviousCommandBeContinued;
 CommandType g_CommandsList;
-UINT64 * g_ScriptGlobalVariables;
-UINT64 * g_ScriptLocalVariables;
-UINT64 * g_ScriptTempVariables;
+UINT64 *g_ScriptGlobalVariables;
+UINT64 *g_ScriptLocalVariables;
+UINT64 *g_ScriptTempVariables;
 BOOLEAN g_IsCommandListInitialized = FALSE;
 BOOLEAN g_IsDebuggerModulesLoaded = FALSE;
 ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState = {0};

@@ -1,40 +1,42 @@
 #pragma once
 volatile LONG VmxRootThreadHoldingLock;
-typedef struct _USERMODE_DEBUGGING_THREAD_DETAILS
-{
-    UINT32                     ThreadId;
-    UINT64                     ThreadRip; 
-    BOOLEAN                    IsPaused;
-    BOOLEAN                    IsRflagsTrapFlagsSet;
-    DEBUGGER_UD_COMMAND_ACTION UdAction[MAX_USER_ACTIONS_FOR_THREADS];
+typedef struct _USERMODE_DEBUGGING_THREAD_DETAILS {
+  UINT32 ThreadId;
+  UINT64 ThreadRip; 
+  BOOLEAN IsPaused;
+  BOOLEAN IsRflagsTrapFlagsSet;
+  DEBUGGER_UD_COMMAND_ACTION UdAction[MAX_USER_ACTIONS_FOR_THREADS];
 } USERMODE_DEBUGGING_THREAD_DETAILS, *PUSERMODE_DEBUGGING_THREAD_DETAILS;
-typedef struct _USERMODE_DEBUGGING_THREAD_HOLDER
-{
-    LIST_ENTRY                        ThreadHolderList;
-    USERMODE_DEBUGGING_THREAD_DETAILS Threads[MAX_THREADS_IN_A_PROCESS_HOLDER];
+typedef struct _USERMODE_DEBUGGING_THREAD_HOLDER {
+  LIST_ENTRY ThreadHolderList;
+  USERMODE_DEBUGGING_THREAD_DETAILS Threads[MAX_THREADS_IN_A_PROCESS_HOLDER];
 } USERMODE_DEBUGGING_THREAD_HOLDER, *PUSERMODE_DEBUGGING_THREAD_HOLDER;
-VOID
-ThreadHolderAllocateThreadHoldingBuffers();
+VOID ThreadHolderAllocateThreadHoldingBuffers();
 BOOLEAN
-ThreadHolderAssignThreadHolderToProcessDebuggingDetails(PUSERMODE_DEBUGGING_PROCESS_DETAILS ProcessDebuggingDetail);
+ThreadHolderAssignThreadHolderToProcessDebuggingDetails(
+    PUSERMODE_DEBUGGING_PROCESS_DETAILS ProcessDebuggingDetail);
 BOOLEAN
-ThreadHolderIsAnyPausedThreadInProcess(PUSERMODE_DEBUGGING_PROCESS_DETAILS ProcessDebuggingDetail);
+ThreadHolderIsAnyPausedThreadInProcess(
+    PUSERMODE_DEBUGGING_PROCESS_DETAILS ProcessDebuggingDetail);
 PUSERMODE_DEBUGGING_THREAD_DETAILS
-ThreadHolderGetProcessThreadDetailsByProcessIdAndThreadId(UINT32 ProcessId, UINT32 ThreadId);
+ThreadHolderGetProcessThreadDetailsByProcessIdAndThreadId(UINT32 ProcessId,
+                                                          UINT32 ThreadId);
 PUSERMODE_DEBUGGING_THREAD_DETAILS
 ThreadHolderGetProcessFirstThreadDetailsByProcessId(UINT32 ProcessId);
 PUSERMODE_DEBUGGING_PROCESS_DETAILS
 ThreadHolderGetProcessDebuggingDetailsByThreadId(UINT32 ThreadId);
 PUSERMODE_DEBUGGING_THREAD_DETAILS
-ThreadHolderFindOrCreateThreadDebuggingDetail(UINT32 ThreadId, PUSERMODE_DEBUGGING_PROCESS_DETAILS ProcessDebuggingDetail);
+ThreadHolderFindOrCreateThreadDebuggingDetail(
+    UINT32 ThreadId,
+    PUSERMODE_DEBUGGING_PROCESS_DETAILS ProcessDebuggingDetail);
 BOOLEAN
-ThreadHolderApplyActionToPausedThreads(PUSERMODE_DEBUGGING_PROCESS_DETAILS ProcessDebuggingDetails,
-                                       PDEBUGGER_UD_COMMAND_PACKET         ActionRequest);
-VOID
-ThreadHolderFreeHoldingStructures(PUSERMODE_DEBUGGING_PROCESS_DETAILS ProcessDebuggingDetail);
+ThreadHolderApplyActionToPausedThreads(
+    PUSERMODE_DEBUGGING_PROCESS_DETAILS ProcessDebuggingDetails,
+    PDEBUGGER_UD_COMMAND_PACKET ActionRequest);
+VOID ThreadHolderFreeHoldingStructures(
+    PUSERMODE_DEBUGGING_PROCESS_DETAILS ProcessDebuggingDetail);
 UINT32
 ThreadHolderQueryCountOfActiveDebuggingThreadsAndProcesses();
-VOID
-ThreadHolderQueryDetailsOfActiveDebuggingThreadsAndProcesses(
-    USERMODE_DEBUGGING_THREAD_OR_PROCESS_STATE_DETAILS * BufferToStoreDetails,
-    UINT32                                               MaxCount);
+VOID ThreadHolderQueryDetailsOfActiveDebuggingThreadsAndProcesses(
+    USERMODE_DEBUGGING_THREAD_OR_PROCESS_STATE_DETAILS *BufferToStoreDetails,
+    UINT32 MaxCount);

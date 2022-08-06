@@ -26,14 +26,12 @@
 
 
 
-typedef union _MSR
-{
-    struct
-    {
-        ULONG Low;
-        ULONG High;
-    } Fields;
+typedef union _MSR {
+  struct {
+    ULONG Low;
+    ULONG High;
+  } Fields;
 
-    UINT64 Flags;
+  UINT64 Flags;
 
 } MSR, *PMSR;

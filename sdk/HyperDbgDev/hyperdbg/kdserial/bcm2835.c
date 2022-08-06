@@ -19,12 +19,12 @@ Abstract:
 
 // ---------------------------------------------------------------- Definitions
 
-#define AUX_MU_IO_REG   0x40 // Data register
-#define AUX_MU_IER_REG  0x44 // Interrupt Enable register
-#define AUX_MU_LCR_REG  0x4C // Line Control register
+#define AUX_MU_IO_REG 0x40   // Data register
+#define AUX_MU_IER_REG 0x44  // Interrupt Enable register
+#define AUX_MU_LCR_REG 0x4C  // Line Control register
 #define AUX_MU_STAT_REG 0x64 // Line status register
 
-#define AUX_MU_IER_TXE  0x00000001 // TX FIFO empty interrupt
+#define AUX_MU_IER_TXE 0x00000001  // TX FIFO empty interrupt
 #define AUX_MU_IER_RXNE 0x00000002 // RX FIFO not empty interrupt
 
 //
@@ -41,18 +41,14 @@ Abstract:
 // ----------------------------------------------- Internal Function Prototypes
 
 BOOLEAN
-Bcm2835RxReady(
-    _Inout_ PCPPORT Port);
+Bcm2835RxReady(_Inout_ PCPPORT Port);
 
 // ------------------------------------------------------------------ Functions
 
 BOOLEAN
-Bcm2835InitializePort(
-    _In_opt_ _Null_terminated_ PCHAR LoadOptions,
-    _Inout_ PCPPORT                  Port,
-    BOOLEAN                          MemoryMapped,
-    UCHAR                            AccessSize,
-    UCHAR                            BitWidth)
+Bcm2835InitializePort(_In_opt_ _Null_terminated_ PCHAR LoadOptions,
+                      _Inout_ PCPPORT Port, BOOLEAN MemoryMapped,
+                      UCHAR AccessSize, UCHAR BitWidth)
 
 /*++
 
@@ -82,53 +78,50 @@ Return Value:
 --*/
 
 {
-    UNREFERENCED_PARAMETER(LoadOptions);
-    UNREFERENCED_PARAMETER(AccessSize);
-    UNREFERENCED_PARAMETER(BitWidth);
+  UNREFERENCED_PARAMETER(LoadOptions);
+  UNREFERENCED_PARAMETER(AccessSize);
+  UNREFERENCED_PARAMETER(BitWidth);
 
-    ULONG IntEnable;
+  ULONG IntEnable;
 
-    if (MemoryMapped == FALSE)
-    {
-        return FALSE;
-    }
+  if (MemoryMapped == FALSE) {
+    return FALSE;
+  }
 
-    Port->Flags = 0;
+  Port->Flags = 0;
 
-    //
-    // We cannot set the baud rate since we do not have the UART's clock value.
-    // Moreover with Raspberry Pi 2 and 3, the UEFI firmware sets the baud rate
-    // to 921600 bps, while BCDEdit limits it to 115200 bps.
-    //
+  //
+  // We cannot set the baud rate since we do not have the UART's clock value.
+  // Moreover with Raspberry Pi 2 and 3, the UEFI firmware sets the baud rate
+  // to 921600 bps, while BCDEdit limits it to 115200 bps.
+  //
 
-    Port->BaudRate = 0;
+  Port->BaudRate = 0;
 
-    //
-    // Disable interrupts
-    //
+  //
+  // Disable interrupts
+  //
 
-    IntEnable = READ_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_IER_REG));
-    IntEnable &= ~(AUX_MU_IER_TXE | AUX_MU_IER_RXNE);
-    WRITE_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_IER_REG), IntEnable);
+  IntEnable = READ_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_IER_REG));
+  IntEnable &= ~(AUX_MU_IER_TXE | AUX_MU_IER_RXNE);
+  WRITE_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_IER_REG), IntEnable);
 
-    //
-    // Set 8 bit mode
-    //
+  //
+  // Set 8 bit mode
+  //
 
-    WRITE_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_LCR_REG),
-                         AUX_MU_LCR_8BIT);
+  WRITE_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_LCR_REG),
+                       AUX_MU_LCR_8BIT);
 
-    //
-    // Mini UART RX/TX are always enabled!
-    //
+  //
+  // Mini UART RX/TX are always enabled!
+  //
 
-    return TRUE;
+  return TRUE;
 }
 
 BOOLEAN
-Bcm2835SetBaud(
-    _Inout_ PCPPORT Port,
-    ULONG           Rate)
+Bcm2835SetBaud(_Inout_ PCPPORT Port, ULONG Rate)
 
 /*++
 
@@ -150,23 +143,20 @@ Return Value:
 --*/
 
 {
-    if ((Port == NULL) || (Port->Address == NULL))
-    {
-        return FALSE;
-    }
+  if ((Port == NULL) || (Port->Address == NULL)) {
+    return FALSE;
+  }
 
-    //
-    // Remember the baud rate.
-    //
+  //
+  // Remember the baud rate.
+  //
 
-    Port->BaudRate = Rate;
-    return TRUE;
+  Port->BaudRate = Rate;
+  return TRUE;
 }
 
 UART_STATUS
-Bcm2835GetByte(
-    _Inout_ PCPPORT Port,
-    _Out_ PUCHAR    Byte)
+Bcm2835GetByte(_Inout_ PCPPORT Port, _Out_ PUCHAR Byte)
 
 /*++
 
@@ -187,42 +177,37 @@ Return Value:
 --*/
 
 {
-    ULONG Value;
+  ULONG Value;
 
-    if ((Port == NULL) || (Port->Address == NULL))
-    {
-        return UartNotReady;
-    }
+  if ((Port == NULL) || (Port->Address == NULL)) {
+    return UartNotReady;
+  }
+
+  //
+  // Check to see if a byte is available.
+  //
+
+  if (Bcm2835RxReady(Port) != FALSE) {
+    //
+    // Fetch the data byte and associated error information.
+    //
+
+    Value = READ_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_IO_REG));
 
     //
-    // Check to see if a byte is available.
+    // Cannot check for errors as the mini UART does not provide this
+    // information.
     //
 
-    if (Bcm2835RxReady(Port) != FALSE)
-    {
-        //
-        // Fetch the data byte and associated error information.
-        //
+    *Byte = Value & (UCHAR)0xFF;
+    return UartSuccess;
+  }
 
-        Value = READ_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_IO_REG));
-
-        //
-        // Cannot check for errors as the mini UART does not provide this
-        // information.
-        //
-
-        *Byte = Value & (UCHAR)0xFF;
-        return UartSuccess;
-    }
-
-    return UartNoData;
+  return UartNoData;
 }
 
 UART_STATUS
-Bcm2835PutByte(
-    _Inout_ PCPPORT Port,
-    UCHAR           Byte,
-    BOOLEAN         BusyWait)
+Bcm2835PutByte(_Inout_ PCPPORT Port, UCHAR Byte, BOOLEAN BusyWait)
 
 /*++
 
@@ -246,49 +231,41 @@ Return Value:
 --*/
 
 {
-    ULONG StatusReg;
+  ULONG StatusReg;
 
-    if ((Port == NULL) || (Port->Address == NULL))
-    {
-        return UartNotReady;
+  if ((Port == NULL) || (Port->Address == NULL)) {
+    return UartNotReady;
+  }
+
+  //
+  // If BusyWait is set, wait for FIFO to be not full. Otherwise, only check
+  // one time.
+  //
+
+  if (BusyWait != FALSE) {
+    do {
+      StatusReg =
+          READ_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_STAT_REG));
+
+    } while ((StatusReg & AUX_MU_STAT_TXNF) == 0);
+  } else {
+    StatusReg = READ_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_STAT_REG));
+
+    if ((StatusReg & AUX_MU_STAT_TXNF) == 0) {
+      return UartNotReady;
     }
+  }
 
-    //
-    // If BusyWait is set, wait for FIFO to be not full. Otherwise, only check
-    // one time.
-    //
+  //
+  // Send the byte
+  //
 
-    if (BusyWait != FALSE)
-    {
-        do
-        {
-            StatusReg =
-                READ_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_STAT_REG));
-
-        } while ((StatusReg & AUX_MU_STAT_TXNF) == 0);
-    }
-    else
-    {
-        StatusReg =
-            READ_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_STAT_REG));
-
-        if ((StatusReg & AUX_MU_STAT_TXNF) == 0)
-        {
-            return UartNotReady;
-        }
-    }
-
-    //
-    // Send the byte
-    //
-
-    WRITE_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_IO_REG), (ULONG)Byte);
-    return UartSuccess;
+  WRITE_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_IO_REG), (ULONG)Byte);
+  return UartSuccess;
 }
 
 BOOLEAN
-Bcm2835RxReady(
-    _Inout_ PCPPORT Port)
+Bcm2835RxReady(_Inout_ PCPPORT Port)
 
 /*++
 
@@ -307,38 +284,33 @@ Return Value:
 --*/
 
 {
-    ULONG StatusReg;
+  ULONG StatusReg;
 
-    if ((Port == NULL) || (Port->Address == NULL))
-    {
-        return FALSE;
-    }
-
-    //
-    // Read the Flag Register to determine if there is any pending
-    // data to read.
-    //
-
-    StatusReg = READ_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_STAT_REG));
-
-    //
-    // Check the "receive FIFO not-empty" flag.  If it is set, then at least
-    // one byte is available.
-    //
-
-    if ((StatusReg & AUX_MU_STAT_RXNE) != 0)
-    {
-        return TRUE;
-    }
-
+  if ((Port == NULL) || (Port->Address == NULL)) {
     return FALSE;
+  }
+
+  //
+  // Read the Flag Register to determine if there is any pending
+  // data to read.
+  //
+
+  StatusReg = READ_REGISTER_ULONG((PULONG)(Port->Address + AUX_MU_STAT_REG));
+
+  //
+  // Check the "receive FIFO not-empty" flag.  If it is set, then at least
+  // one byte is available.
+  //
+
+  if ((StatusReg & AUX_MU_STAT_RXNE) != 0) {
+    return TRUE;
+  }
+
+  return FALSE;
 }
 
 // -------------------------------------------------------------------- Globals
 
-UART_HARDWARE_DRIVER Bcm2835HardwareDriver = {
-    Bcm2835InitializePort,
-    Bcm2835SetBaud,
-    Bcm2835GetByte,
-    Bcm2835PutByte,
-    Bcm2835RxReady};
+UART_HARDWARE_DRIVER Bcm2835HardwareDriver = {Bcm2835InitializePort,
+                                              Bcm2835SetBaud, Bcm2835GetByte,
+                                              Bcm2835PutByte, Bcm2835RxReady};

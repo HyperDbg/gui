@@ -14,8 +14,8 @@
 //
 // Global Variables
 //
-extern std::wstring             g_StartCommandPath;
-extern std::wstring             g_StartCommandPathAndArguments;
+extern std::wstring g_StartCommandPath;
+extern std::wstring g_StartCommandPathAndArguments;
 extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
 
 /**
@@ -23,14 +23,11 @@ extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
  *
  * @return VOID
  */
-VOID
-CommandRestartHelp()
-{
-    ShowMessages(".restart : restarts the previously started process "
-                 "(using '.start' command).\n\n");
+VOID CommandRestartHelp() {
+  ShowMessages(".restart : restarts the previously started process "
+               "(using '.start' command).\n\n");
 
-    ShowMessages(
-        "syntax : \t.restart \n");
+  ShowMessages("syntax : \t.restart \n");
 }
 
 /**
@@ -40,50 +37,40 @@ CommandRestartHelp()
  * @param Command
  * @return VOID
  */
-VOID
-CommandRestart(vector<string> SplittedCommand, string Command)
-{
-    if (SplittedCommand.size() != 1)
-    {
-        ShowMessages("incorrect use of '.restart'\n\n");
-        CommandRestartHelp();
-        return;
-    }
+VOID CommandRestart(vector<string> SplittedCommand, string Command) {
+  if (SplittedCommand.size() != 1) {
+    ShowMessages("incorrect use of '.restart'\n\n");
+    CommandRestartHelp();
+    return;
+  }
 
-    //
-    // Check if the .start command is previously called or not
-    //
-    if (g_StartCommandPath.empty())
-    {
-        ShowMessages("nothing to restart, did you use the '.start' command before?\n");
-        return;
-    }
+  //
+  // Check if the .start command is previously called or not
+  //
+  if (g_StartCommandPath.empty()) {
+    ShowMessages(
+        "nothing to restart, did you use the '.start' command before?\n");
+    return;
+  }
 
+  //
+  // Check to kill the current active process (if exists)
+  //
+  if (g_ActiveProcessDebuggingState.IsActive) {
     //
-    // Check to kill the current active process (if exists)
+    // kill the process, we will restart the process even if we didn't
+    // successfully killed the active process
     //
-    if (g_ActiveProcessDebuggingState.IsActive)
-    {
-        //
-        // kill the process, we will restart the process even if we didn't
-        // successfully killed the active process
-        //
-        UdKillProcess(g_ActiveProcessDebuggingState.ProcessId);
-    }
+    UdKillProcess(g_ActiveProcessDebuggingState.ProcessId);
+  }
 
-    //
-    // Perform run of the target file
-    //
-    if (g_StartCommandPathAndArguments.empty())
-    {
-        UdAttachToProcess(NULL,
-                          g_StartCommandPath.c_str(),
-                          NULL);
-    }
-    else
-    {
-        UdAttachToProcess(NULL,
-                          g_StartCommandPath.c_str(),
-                          (WCHAR *)g_StartCommandPathAndArguments.c_str());
-    }
+  //
+  // Perform run of the target file
+  //
+  if (g_StartCommandPathAndArguments.empty()) {
+    UdAttachToProcess(NULL, g_StartCommandPath.c_str(), NULL);
+  } else {
+    UdAttachToProcess(NULL, g_StartCommandPath.c_str(),
+                      (WCHAR *)g_StartCommandPathAndArguments.c_str());
+  }
 }

@@ -14,9 +14,9 @@
 //
 // Global Variables
 //
-extern BOOLEAN                  g_BreakPrintingOutput;
-extern BOOLEAN                  g_IsConnectedToRemoteDebuggee;
-extern BOOLEAN                  g_IsSerialConnectedToRemoteDebuggee;
+extern BOOLEAN g_BreakPrintingOutput;
+extern BOOLEAN g_IsConnectedToRemoteDebuggee;
+extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
 
 /**
@@ -24,12 +24,11 @@ extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
  *
  * @return VOID
  */
-VOID
-CommandGHelp()
-{
-    ShowMessages("g : continues debuggee or continues processing kernel messages.\n\n");
+VOID CommandGHelp() {
+  ShowMessages(
+      "g : continues debuggee or continues processing kernel messages.\n\n");
 
-    ShowMessages("syntax : \tg \n");
+  ShowMessages("syntax : \tg \n");
 }
 
 /**
@@ -37,49 +36,38 @@ CommandGHelp()
  *
  * @return VOID
  */
-VOID
-CommandGRequest()
-{
+VOID CommandGRequest() {
+  //
+  // Check if the remote serial debuggee is paused or not
+  //
+  if (g_IsSerialConnectedToRemoteDebuggee) {
+    KdBreakControlCheckAndContinueDebugger();
+  } else {
     //
-    // Check if the remote serial debuggee is paused or not
+    // Set the g_BreakPrintingOutput to FALSE
     //
-    if (g_IsSerialConnectedToRemoteDebuggee)
-    {
-        KdBreakControlCheckAndContinueDebugger();
-    }
-    else
-    {
-        //
-        // Set the g_BreakPrintingOutput to FALSE
-        //
-        g_BreakPrintingOutput = FALSE;
+    g_BreakPrintingOutput = FALSE;
+
+    //
+    // If it's a remote debugger then we send the remote debuggee a 'g'
+    // and if we're connect to user debugger then we send the packet
+    // with current debugging thread token
+    //
+    if (g_IsConnectedToRemoteDebuggee) {
+      RemoteConnectionSendCommand("g", strlen("g") + 1);
+    } else if (g_ActiveProcessDebuggingState.IsActive) {
+      if (g_ActiveProcessDebuggingState.IsPaused) {
+        UdContinueDebuggee(g_ActiveProcessDebuggingState.ProcessDebuggingToken);
 
         //
-        // If it's a remote debugger then we send the remote debuggee a 'g'
-        // and if we're connect to user debugger then we send the packet
-        // with current debugging thread token
+        // Target process is running
         //
-        if (g_IsConnectedToRemoteDebuggee)
-        {
-            RemoteConnectionSendCommand("g", strlen("g") + 1);
-        }
-        else if (g_ActiveProcessDebuggingState.IsActive)
-        {
-            if (g_ActiveProcessDebuggingState.IsPaused)
-            {
-                UdContinueDebuggee(g_ActiveProcessDebuggingState.ProcessDebuggingToken);
-
-                //
-                // Target process is running
-                //
-                g_ActiveProcessDebuggingState.IsPaused = FALSE;
-            }
-            else
-            {
-                ShowMessages("err, target process is already running\n");
-            }
-        }
+        g_ActiveProcessDebuggingState.IsPaused = FALSE;
+      } else {
+        ShowMessages("err, target process is already running\n");
+      }
     }
+  }
 }
 
 /**
@@ -89,15 +77,12 @@ CommandGRequest()
  * @param Command
  * @return VOID
  */
-VOID
-CommandG(vector<string> SplittedCommand, string Command)
-{
-    if (SplittedCommand.size() != 1)
-    {
-        ShowMessages("incorrect use of 'g'\n\n");
-        CommandGHelp();
-        return;
-    }
+VOID CommandG(vector<string> SplittedCommand, string Command) {
+  if (SplittedCommand.size() != 1) {
+    ShowMessages("incorrect use of 'g'\n\n");
+    CommandGHelp();
+    return;
+  }
 
-    CommandGRequest();
+  CommandGRequest();
 }

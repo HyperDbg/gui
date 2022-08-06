@@ -11,7 +11,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+all
  * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -32,54 +33,59 @@
 #ifndef ZYCORE_MEMORY_H
 #define ZYCORE_MEMORY_H
 
-#include <ZycoreExportConfig.h>
 #include <Zycore/Defines.h>
 #include <Zycore/Status.h>
 #include <Zycore/Types.h>
+#include <ZycoreExportConfig.h>
 
-#if   defined(ZYAN_WINDOWS)
-#   include <windows.h>
+#if defined(ZYAN_WINDOWS)
+#include <windows.h>
 #elif defined(ZYAN_POSIX)
-#   include <sys/mman.h>
+#include <sys/mman.h>
 #else
-#   error "Unsupported platform detected"
+#error "Unsupported platform detected"
 #endif
 
-/* ============================================================================================== */
-/* Enums and types                                                                                */
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
+/* Enums and types */
+/* ==============================================================================================
+ */
 
 /**
- * @brief   Defines the `ZyanMemoryPageProtection` enum.  
+ * @brief   Defines the `ZyanMemoryPageProtection` enum.
  */
-typedef enum ZyanMemoryPageProtection_
-{
-#if   defined(ZYAN_WINDOWS)
+typedef enum ZyanMemoryPageProtection_ {
+#if defined(ZYAN_WINDOWS)
 
-    ZYAN_PAGE_READONLY          = PAGE_READONLY,           
-    ZYAN_PAGE_READWRITE         = PAGE_READWRITE,
-    ZYAN_PAGE_EXECUTE           = PAGE_EXECUTE,             
-    ZYAN_PAGE_EXECUTE_READ      = PAGE_EXECUTE_READ,
-    ZYAN_PAGE_EXECUTE_READWRITE = PAGE_EXECUTE_READWRITE
+  ZYAN_PAGE_READONLY = PAGE_READONLY,
+  ZYAN_PAGE_READWRITE = PAGE_READWRITE,
+  ZYAN_PAGE_EXECUTE = PAGE_EXECUTE,
+  ZYAN_PAGE_EXECUTE_READ = PAGE_EXECUTE_READ,
+  ZYAN_PAGE_EXECUTE_READWRITE = PAGE_EXECUTE_READWRITE
 
 #elif defined(ZYAN_POSIX)
 
-    ZYAN_PAGE_READONLY          = PROT_READ,           
-    ZYAN_PAGE_READWRITE         = PROT_READ | PROT_WRITE,
-    ZYAN_PAGE_EXECUTE           = PROT_EXEC,             
-    ZYAN_PAGE_EXECUTE_READ      = PROT_EXEC | PROT_READ,
-    ZYAN_PAGE_EXECUTE_READWRITE = PROT_EXEC | PROT_READ | PROT_WRITE
+  ZYAN_PAGE_READONLY = PROT_READ,
+  ZYAN_PAGE_READWRITE = PROT_READ | PROT_WRITE,
+  ZYAN_PAGE_EXECUTE = PROT_EXEC,
+  ZYAN_PAGE_EXECUTE_READ = PROT_EXEC | PROT_READ,
+  ZYAN_PAGE_EXECUTE_READWRITE = PROT_EXEC | PROT_READ | PROT_WRITE
 
 #endif
 } ZyanMemoryPageProtection;
 
-/* ============================================================================================== */
-/* Exported functions                                                                             */
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
+/* Exported functions */
+/* ==============================================================================================
+ */
 
-/* ---------------------------------------------------------------------------------------------- */
-/* General                                                                                        */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* General */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 /**
  * @brief   Returns the system page size.
@@ -91,19 +97,22 @@ ZyanU32 ZyanMemoryGetSystemPageSize();
 /**
  * @brief   Returns the system allocation granularity.
  *
- * The system allocation granularity specifies the minimum amount of bytes which can be allocated
- * at a specific address by a single call of `ZyanMemoryVirtualAlloc`.
+ * The system allocation granularity specifies the minimum amount of bytes which
+ * can be allocated at a specific address by a single call of
+ * `ZyanMemoryVirtualAlloc`.
  *
- * This value is typically 64KiB on Windows systems and equal to the page size on most POSIX
- * platforms.
+ * This value is typically 64KiB on Windows systems and equal to the page size
+ * on most POSIX platforms.
  *
  * @return  The system allocation granularity.
  */
 ZyanU32 ZyanMemoryGetSystemAllocationGranularity();
 
-/* ---------------------------------------------------------------------------------------------- */
-/* Memory management                                                                              */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* Memory management */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 /**
  * @brief   Changes the memory protection value of one or more pages.
@@ -114,8 +123,8 @@ ZyanU32 ZyanMemoryGetSystemAllocationGranularity();
  *
  * @return  A zyan status code.
  */
-ZyanStatus ZyanMemoryVirtualProtect(void* address, ZyanUSize size, 
-    ZyanMemoryPageProtection protection);
+ZyanStatus ZyanMemoryVirtualProtect(void *address, ZyanUSize size,
+                                    ZyanMemoryPageProtection protection);
 
 /**
  * @brief   Releases one or more memory pages starting at the given address.
@@ -125,10 +134,12 @@ ZyanStatus ZyanMemoryVirtualProtect(void* address, ZyanUSize size,
  *
  * @return  A zyan status code.
  */
-ZyanStatus ZyanMemoryVirtualFree(void* address, ZyanUSize size);
+ZyanStatus ZyanMemoryVirtualFree(void *address, ZyanUSize size);
 
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
 
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
 
 #endif /* ZYCORE_MEMORY_H */

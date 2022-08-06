@@ -29,6 +29,7 @@
 
 
 
+
 #ifndef ZYCORE_OBJECT_H
 #define ZYCORE_OBJECT_H
 
@@ -48,23 +49,16 @@ extern "C" {
 
 
 
-typedef void (*ZyanMemberProcedure)(void* object);
+
+
+typedef void (*ZyanMemberProcedure)(void *object);
 
 
 
 
 
 
-typedef void (*ZyanConstMemberProcedure)(const void* object);
-
-
-
-
-
-
-
-
-typedef ZyanStatus (*ZyanMemberFunction)(void* object);
+typedef void (*ZyanConstMemberProcedure)(const void *object);
 
 
 
@@ -73,7 +67,17 @@ typedef ZyanStatus (*ZyanMemberFunction)(void* object);
 
 
 
-typedef ZyanStatus (*ZyanConstMemberFunction)(const void* object);
+typedef ZyanStatus (*ZyanMemberFunction)(void *object);
+
+
+
+
+
+
+
+
+typedef ZyanStatus (*ZyanConstMemberFunction)(const void *object);
+
 
 
 

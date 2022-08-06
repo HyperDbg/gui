@@ -17,13 +17,11 @@
 
 
 
-VOID
-BroadcastVmxVirtualizationAllCores()
-{
-    
-    
-    
-    KeGenericCallDpc(DpcRoutinePerformVirtualization, NULL);
+VOID BroadcastVmxVirtualizationAllCores() {
+  
+  
+  
+  KeGenericCallDpc(DpcRoutinePerformVirtualization, NULL);
 }
 
 
@@ -31,13 +29,11 @@ BroadcastVmxVirtualizationAllCores()
 
 
 
-VOID
-BroadcastEnableDbAndBpExitingAllCores()
-{
-    
-    
-    
-    KeGenericCallDpc(DpcRoutineEnableDbAndBpExitingOnAllCores, NULL);
+VOID BroadcastEnableDbAndBpExitingAllCores() {
+  
+  
+  
+  KeGenericCallDpc(DpcRoutineEnableDbAndBpExitingOnAllCores, NULL);
 }
 
 
@@ -45,13 +41,11 @@ BroadcastEnableDbAndBpExitingAllCores()
 
 
 
-VOID
-BroadcastDisableDbAndBpExitingAllCores()
-{
-    
-    
-    
-    KeGenericCallDpc(DpcRoutineDisableDbAndBpExitingOnAllCores, NULL);
+VOID BroadcastDisableDbAndBpExitingAllCores() {
+  
+  
+  
+  KeGenericCallDpc(DpcRoutineDisableDbAndBpExitingOnAllCores, NULL);
 }
 
 
@@ -59,13 +53,11 @@ BroadcastDisableDbAndBpExitingAllCores()
 
 
 
-VOID
-BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores()
-{
-    
-    
-    
-    KeGenericCallDpc(DpcRoutineEnableBreakpointOnExceptionBitmapOnAllCores, NULL);
+VOID BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores() {
+  
+  
+  
+  KeGenericCallDpc(DpcRoutineEnableBreakpointOnExceptionBitmapOnAllCores, NULL);
 }
 
 
@@ -73,13 +65,12 @@ BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores()
 
 
 
-VOID
-BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores()
-{
-    
-    
-    
-    KeGenericCallDpc(DpcRoutineDisableBreakpointOnExceptionBitmapOnAllCores, NULL);
+VOID BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores() {
+  
+  
+  
+  KeGenericCallDpc(DpcRoutineDisableBreakpointOnExceptionBitmapOnAllCores,
+                   NULL);
 }
 
 
@@ -87,13 +78,11 @@ BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores()
 
 
 
-VOID
-BroadcastEnableNmiExitingAllCores()
-{
-    
-    
-    
-    KeGenericCallDpc(DpcRoutineEnableNmiVmexitOnAllCores, NULL);
+VOID BroadcastEnableNmiExitingAllCores() {
+  
+  
+  
+  KeGenericCallDpc(DpcRoutineEnableNmiVmexitOnAllCores, NULL);
 }
 
 
@@ -101,13 +90,11 @@ BroadcastEnableNmiExitingAllCores()
 
 
 
-VOID
-BroadcastDisableNmiExitingAllCores()
-{
-    
-    
-    
-    KeGenericCallDpc(DpcRoutineDisableNmiVmexitOnAllCores, NULL);
+VOID BroadcastDisableNmiExitingAllCores() {
+  
+  
+  
+  KeGenericCallDpc(DpcRoutineDisableNmiVmexitOnAllCores, NULL);
 }
 
 
@@ -115,11 +102,10 @@ BroadcastDisableNmiExitingAllCores()
 
 
 
-VOID
-BroadcastNotifyAllToInvalidateEptAllCores()
-{
-    
-    
-    
-    KeGenericCallDpc(DpcRoutineInvalidateEptOnAllCores, g_EptState->EptPointer.AsUInt);
+VOID BroadcastNotifyAllToInvalidateEptAllCores() {
+  
+  
+  
+  KeGenericCallDpc(DpcRoutineInvalidateEptOnAllCores,
+                   g_EptState->EptPointer.AsUInt);
 }

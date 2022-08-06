@@ -14,8 +14,8 @@
 //
 // Global Variables
 //
-extern BOOLEAN                  g_IsSerialConnectedToRemoteDebuggee;
-extern BOOLEAN                  g_IsInstrumentingInstructions;
+extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
+extern BOOLEAN g_IsInstrumentingInstructions;
 extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
 
 /**
@@ -23,22 +23,20 @@ extern ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState;
  *
  * @return VOID
  */
-VOID
-CommandPHelp()
-{
-    ShowMessages(
-        "p : executes a single instruction (step) and optionally displays the "
-        "resulting values of all registers and flags.\n\n");
+VOID CommandPHelp() {
+  ShowMessages(
+      "p : executes a single instruction (step) and optionally displays the "
+      "resulting values of all registers and flags.\n\n");
 
-    ShowMessages("syntax : \tp\n");
-    ShowMessages("syntax : \tp [Count (hex)]\n");
-    ShowMessages("syntax : \tpr\n");
-    ShowMessages("syntax : \tpr [Count (hex)]\n");
+  ShowMessages("syntax : \tp\n");
+  ShowMessages("syntax : \tp [Count (hex)]\n");
+  ShowMessages("syntax : \tpr\n");
+  ShowMessages("syntax : \tpr [Count (hex)]\n");
 
-    ShowMessages("\n");
-    ShowMessages("\t\te.g : p\n");
-    ShowMessages("\t\te.g : pr\n");
-    ShowMessages("\t\te.g : pr 1f\n");
+  ShowMessages("\n");
+  ShowMessages("\t\te.g : p\n");
+  ShowMessages("\t\te.g : pr\n");
+  ShowMessages("\t\te.g : pr 1f\n");
 }
 
 /**
@@ -48,119 +46,103 @@ CommandPHelp()
  * @param Command
  * @return VOID
  */
-VOID
-CommandP(vector<string> SplittedCommand, string Command)
-{
-    UINT32                           StepCount;
-    DEBUGGER_REMOTE_STEPPING_REQUEST RequestFormat;
+VOID CommandP(vector<string> SplittedCommand, string Command) {
+  UINT32 StepCount;
+  DEBUGGER_REMOTE_STEPPING_REQUEST RequestFormat;
 
+  //
+  // Validate the commands
+  //
+  if (SplittedCommand.size() != 1 && SplittedCommand.size() != 2) {
+    ShowMessages("incorrect use of 'p'\n\n");
+    CommandPHelp();
+    return;
+  }
+
+  //
+  // Set type of request
+  //
+  RequestFormat = DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_OVER;
+
+  //
+  // Check if the command has a counter parameter
+  //
+  if (SplittedCommand.size() == 2) {
+    if (!ConvertStringToUInt32(SplittedCommand.at(1), &StepCount)) {
+      ShowMessages("please specify a correct hex value for [count]\n\n");
+      CommandPHelp();
+      return;
+    }
+  } else {
+    StepCount = 1;
+  }
+
+  //
+  // Check if the remote serial debuggee or user debugger are paused or not
+  //
+  if (g_IsSerialConnectedToRemoteDebuggee ||
+      g_ActiveProcessDebuggingState.IsActive) {
     //
-    // Validate the commands
+    // Check if the thread is paused or not
     //
-    if (SplittedCommand.size() != 1 && SplittedCommand.size() != 2)
-    {
-        ShowMessages("incorrect use of 'p'\n\n");
-        CommandPHelp();
-        return;
+    if (g_ActiveProcessDebuggingState.IsActive &&
+        !g_ActiveProcessDebuggingState.IsPaused) {
+      ShowMessages("the target process is running, use the "
+                   "'pause' command or press CTRL+C to pause the process\n");
+      return;
     }
 
     //
-    // Set type of request
+    // Indicate that we're instrumenting
     //
-    RequestFormat = DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_OVER;
+    g_IsInstrumentingInstructions = TRUE;
 
-    //
-    // Check if the command has a counter parameter
-    //
-    if (SplittedCommand.size() == 2)
-    {
-        if (!ConvertStringToUInt32(SplittedCommand.at(1), &StepCount))
-        {
-            ShowMessages("please specify a correct hex value for [count]\n\n");
-            CommandPHelp();
-            return;
+    for (size_t i = 0; i < StepCount; i++) {
+      //
+      // For logging purpose
+      //
+      // ShowMessages("percentage : %f %% (%x)\n", 100.0 * (i /
+      //   (float)StepCount), i);
+      //
+
+      if (g_IsSerialConnectedToRemoteDebuggee) {
+        //
+        // It's stepping over serial connection in kernel debugger
+        //
+        KdSendStepPacketToDebuggee(RequestFormat);
+      } else {
+        //
+        // It's stepping over user debugger
+        //
+        UdSendStepPacketToDebuggee(
+            g_ActiveProcessDebuggingState.ProcessDebuggingToken,
+            g_ActiveProcessDebuggingState.ThreadId, RequestFormat);
+      }
+
+      if (!SplittedCommand.at(0).compare("pr")) {
+        //
+        // Show registers
+        //
+        ShowAllRegisters();
+        if (i != StepCount - 1) {
+          ShowMessages("\n");
         }
-    }
-    else
-    {
-        StepCount = 1;
+      }
+
+      //
+      // Check if user pressed CTRL+C
+      //
+      if (!g_IsInstrumentingInstructions) {
+        break;
+      }
     }
 
     //
-    // Check if the remote serial debuggee or user debugger are paused or not
+    // We're not instrumenting instructions anymore
     //
-    if (g_IsSerialConnectedToRemoteDebuggee || g_ActiveProcessDebuggingState.IsActive)
-    {
-        //
-        // Check if the thread is paused or not
-        //
-        if (g_ActiveProcessDebuggingState.IsActive && !g_ActiveProcessDebuggingState.IsPaused)
-        {
-            ShowMessages("the target process is running, use the "
-                         "'pause' command or press CTRL+C to pause the process\n");
-            return;
-        }
-
-        //
-        // Indicate that we're instrumenting
-        //
-        g_IsInstrumentingInstructions = TRUE;
-
-        for (size_t i = 0; i < StepCount; i++)
-        {
-            //
-            // For logging purpose
-            //
-            // ShowMessages("percentage : %f %% (%x)\n", 100.0 * (i /
-            //   (float)StepCount), i);
-            //
-
-            if (g_IsSerialConnectedToRemoteDebuggee)
-            {
-                //
-                // It's stepping over serial connection in kernel debugger
-                //
-                KdSendStepPacketToDebuggee(RequestFormat);
-            }
-            else
-            {
-                //
-                // It's stepping over user debugger
-                //
-                UdSendStepPacketToDebuggee(g_ActiveProcessDebuggingState.ProcessDebuggingToken,
-                                           g_ActiveProcessDebuggingState.ThreadId,
-                                           RequestFormat);
-            }
-
-            if (!SplittedCommand.at(0).compare("pr"))
-            {
-                //
-                // Show registers
-                //
-                ShowAllRegisters();
-                if (i != StepCount - 1)
-                {
-                    ShowMessages("\n");
-                }
-            }
-
-            //
-            // Check if user pressed CTRL+C
-            //
-            if (!g_IsInstrumentingInstructions)
-            {
-                break;
-            }
-        }
-
-        //
-        // We're not instrumenting instructions anymore
-        //
-        g_IsInstrumentingInstructions = FALSE;
-    }
-    else
-    {
-        ShowMessages("err, stepping (p) is not valid in the current context, you "
-                     "should connect to a debuggee\n");
-    }
+    g_IsInstrumentingInstructions = FALSE;
+  } else {
+    ShowMessages("err, stepping (p) is not valid in the current context, you "
+                 "should connect to a debuggee\n");
+  }
 }

@@ -16,10 +16,8 @@
 
 
 
-VOID
-DebuggerEventEnableEferOnAllProcessors()
-{
-    KeGenericCallDpc(DpcRoutineEnableEferSyscallEvents, 0x0);
+VOID DebuggerEventEnableEferOnAllProcessors() {
+  KeGenericCallDpc(DpcRoutineEnableEferSyscallEvents, 0x0);
 }
 
 
@@ -27,10 +25,8 @@ DebuggerEventEnableEferOnAllProcessors()
 
 
 
-VOID
-DebuggerEventDisableEferOnAllProcessors()
-{
-    KeGenericCallDpc(DpcRoutineDisableEferSyscallEvents, 0x0);
+VOID DebuggerEventDisableEferOnAllProcessors() {
+  KeGenericCallDpc(DpcRoutineDisableEferSyscallEvents, 0x0);
 }
 
 
@@ -38,10 +34,8 @@ DebuggerEventDisableEferOnAllProcessors()
 
 
 
-VOID
-DebuggerEventEnableMovToCr3ExitingOnAllProcessors()
-{
-    KeGenericCallDpc(DpcRoutineEnableMovToCr3Exiting, 0x0);
+VOID DebuggerEventEnableMovToCr3ExitingOnAllProcessors() {
+  KeGenericCallDpc(DpcRoutineEnableMovToCr3Exiting, 0x0);
 }
 
 
@@ -49,10 +43,8 @@ DebuggerEventEnableMovToCr3ExitingOnAllProcessors()
 
 
 
-VOID
-DebuggerEventDisableMovToCr3ExitingOnAllProcessors()
-{
-    KeGenericCallDpc(DpcRoutineDisableMovToCr3Exiting, 0x0);
+VOID DebuggerEventDisableMovToCr3ExitingOnAllProcessors() {
+  KeGenericCallDpc(DpcRoutineDisableMovToCr3Exiting, 0x0);
 }
 
 
@@ -61,66 +53,66 @@ DebuggerEventDisableMovToCr3ExitingOnAllProcessors()
 
 
 PVOID
-DebuggerEventEptHook2GeneralDetourEventHandler(PGUEST_REGS Regs, PVOID CalledFrom)
-{
-    PLIST_ENTRY                 TempList    = 0;
-    EPT_HOOKS_TEMPORARY_CONTEXT TempContext = {0};
+DebuggerEventEptHook2GeneralDetourEventHandler(PGUEST_REGS Regs,
+                                               PVOID CalledFrom) {
+  PLIST_ENTRY TempList = 0;
+  EPT_HOOKS_TEMPORARY_CONTEXT TempContext = {0};
 
-    
-    
-    
-    
-    Regs->rsp = (UINT64)Regs - sizeof(GUEST_REGS);
+  
+  
+  
+  
+  Regs->rsp = (UINT64)Regs - sizeof(GUEST_REGS);
 
-    
-    
-    
+  
+  
+  
 
-    
-    
-    
-    
-    
-    
-    
+  
+  
+  
+  
+  
+  
+  
+  
 
-    
-    
-    
-    TempContext.VirtualAddress  = CalledFrom;
-    TempContext.PhysicalAddress = VirtualAddressToPhysicalAddress(CalledFrom);
+  
+  
+  
+  TempContext.VirtualAddress = CalledFrom;
+  TempContext.PhysicalAddress = VirtualAddressToPhysicalAddress(CalledFrom);
 
-    
-    
-    
-    
-    DebuggerTriggerEvents(HIDDEN_HOOK_EXEC_DETOURS, Regs, &TempContext);
+  
+  
+  
+  
+  DebuggerTriggerEvents(HIDDEN_HOOK_EXEC_DETOURS, Regs, &TempContext);
 
-    
-    
-    
-    
-    TempList = &g_EptHook2sDetourListHead;
+  
+  
+  
+  
+  TempList = &g_EptHook2sDetourListHead;
 
-    while (&g_EptHook2sDetourListHead != TempList->Flink)
-    {
-        TempList                                          = TempList->Flink;
-        PHIDDEN_HOOKS_DETOUR_DETAILS CurrentHookedDetails = CONTAINING_RECORD(TempList, HIDDEN_HOOKS_DETOUR_DETAILS, OtherHooksList);
+  while (&g_EptHook2sDetourListHead != TempList->Flink) {
+    TempList = TempList->Flink;
+    PHIDDEN_HOOKS_DETOUR_DETAILS CurrentHookedDetails = CONTAINING_RECORD(
+        TempList, HIDDEN_HOOKS_DETOUR_DETAILS, OtherHooksList);
 
-        if (CurrentHookedDetails->HookedFunctionAddress == CalledFrom)
-        {
-            return CurrentHookedDetails->ReturnAddress;
-        }
+    if (CurrentHookedDetails->HookedFunctionAddress == CalledFrom) {
+      return CurrentHookedDetails->ReturnAddress;
     }
+  }
 
-    
-    
-    
-    
-    
-    
-    
-    return CalledFrom;
+  
+  
+  
+  
+  
+  
+  
+  return CalledFrom;
 }
 
 
@@ -130,28 +122,29 @@ DebuggerEventEptHook2GeneralDetourEventHandler(PGUEST_REGS Regs, PVOID CalledFro
 
 
 BOOLEAN
-DebuggerEventEnableMonitorReadAndWriteForAddress(UINT64 Address, UINT32 ProcessId, BOOLEAN EnableForRead, BOOLEAN EnableForWrite)
-{
-    
-    
-    
-    if (!EnableForRead && !EnableForWrite)
-    {
-        return FALSE;
-    }
+DebuggerEventEnableMonitorReadAndWriteForAddress(UINT64 Address,
+                                                 UINT32 ProcessId,
+                                                 BOOLEAN EnableForRead,
+                                                 BOOLEAN EnableForWrite) {
+  
+  
+  
+  if (!EnableForRead && !EnableForWrite) {
+    return FALSE;
+  }
 
-    
-    
-    
-    
-    
-    if (EnableForWrite)
-    {
-        EnableForRead = TRUE;
-    }
+  
+  
+  
+  
+  
+  if (EnableForWrite) {
+    EnableForRead = TRUE;
+  }
 
-    
-    
-    
-    return EptHook2(Address, NULL, ProcessId, EnableForRead, EnableForWrite, FALSE);
+  
+  
+  
+  return EptHook2(Address, NULL, ProcessId, EnableForRead, EnableForWrite,
+                  FALSE);
 }

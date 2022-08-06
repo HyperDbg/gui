@@ -18,23 +18,18 @@
 
 
 
-_Use_decl_annotations_
-VOID
-VpidInvvpid(INVVPID_TYPE Type, INVVPID_DESCRIPTOR * Descriptor)
-{
-    INVVPID_DESCRIPTOR * TargetDescriptor = NULL;
-    INVVPID_DESCRIPTOR   ZeroDescriptor   = {0};
+_Use_decl_annotations_ VOID VpidInvvpid(INVVPID_TYPE Type,
+                                        INVVPID_DESCRIPTOR *Descriptor) {
+  INVVPID_DESCRIPTOR *TargetDescriptor = NULL;
+  INVVPID_DESCRIPTOR ZeroDescriptor = {0};
 
-    if (!Descriptor)
-    {
-        TargetDescriptor = &ZeroDescriptor;
-    }
-    else
-    {
-        TargetDescriptor = Descriptor;
-    }
+  if (!Descriptor) {
+    TargetDescriptor = &ZeroDescriptor;
+  } else {
+    TargetDescriptor = Descriptor;
+  }
 
-    AsmInvvpid(Type, TargetDescriptor);
+  AsmInvvpid(Type, TargetDescriptor);
 }
 
 
@@ -44,12 +39,10 @@ VpidInvvpid(INVVPID_TYPE Type, INVVPID_DESCRIPTOR * Descriptor)
 
 
 
-_Use_decl_annotations_
-VOID
-VpidInvvpidIndividualAddress(UINT16 Vpid, UINT64 LinearAddress)
-{
-    INVVPID_DESCRIPTOR Descriptor = {Vpid, 0, 0, LinearAddress};
-    VpidInvvpid(InvvpidIndividualAddress, &Descriptor);
+_Use_decl_annotations_ VOID VpidInvvpidIndividualAddress(UINT16 Vpid,
+                                                         UINT64 LinearAddress) {
+  INVVPID_DESCRIPTOR Descriptor = {Vpid, 0, 0, LinearAddress};
+  VpidInvvpid(InvvpidIndividualAddress, &Descriptor);
 }
 
 
@@ -58,11 +51,9 @@ VpidInvvpidIndividualAddress(UINT16 Vpid, UINT64 LinearAddress)
 
 
 
-VOID
-VpidInvvpidSingleContext(UINT16 Vpid)
-{
-    INVVPID_DESCRIPTOR Descriptor = {Vpid, 0, 0, 0};
-    VpidInvvpid(InvvpidSingleContext, &Descriptor);
+VOID VpidInvvpidSingleContext(UINT16 Vpid) {
+  INVVPID_DESCRIPTOR Descriptor = {Vpid, 0, 0, 0};
+  VpidInvvpid(InvvpidSingleContext, &Descriptor);
 }
 
 
@@ -70,11 +61,7 @@ VpidInvvpidSingleContext(UINT16 Vpid)
 
 
 
-VOID
-VpidInvvpidAllContext()
-{
-    VpidInvvpid(InvvpidAllContext, NULL);
-}
+VOID VpidInvvpidAllContext() { VpidInvvpid(InvvpidAllContext, NULL); }
 
 
 
@@ -82,9 +69,7 @@ VpidInvvpidAllContext()
 
 
 
-VOID
-VpidInvvpidSingleContextRetainingGlobals(UINT16 Vpid)
-{
-    INVVPID_DESCRIPTOR Descriptor = {Vpid, 0, 0, 0};
-    VpidInvvpid(InvvpidSingleContextRetainingGlobals, &Descriptor);
+VOID VpidInvvpidSingleContextRetainingGlobals(UINT16 Vpid) {
+  INVVPID_DESCRIPTOR Descriptor = {Vpid, 0, 0, 0};
+  VpidInvvpid(InvvpidSingleContextRetainingGlobals, &Descriptor);
 }

@@ -1,17 +1,18 @@
 #pragma once
 BOOLEAN
 ThreadInterpretThread(PDEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET TidRequest);
-VOID
-ThreadEnableOrDisableThreadChangeMonitor(UINT32  CurrentProcessorIndex,
-                                         BOOLEAN Enable,
-                                         BOOLEAN CheckByClockInterrupts);
+VOID ThreadEnableOrDisableThreadChangeMonitor(UINT32 CurrentProcessorIndex,
+                                              BOOLEAN Enable,
+                                              BOOLEAN CheckByClockInterrupts);
 BOOLEAN
 ThreadHandleThreadChange(UINT32 CurrentCore, PGUEST_REGS GuestState);
 BOOLEAN
-ThreadQueryCount(PDEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS DebuggerUsermodeProcessOrThreadQueryRequest);
+ThreadQueryCount(PDEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS
+                     DebuggerUsermodeProcessOrThreadQueryRequest);
 BOOLEAN
-ThreadQueryList(PDEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS DebuggerUsermodeProcessOrThreadQueryRequest,
-                PVOID                                       AddressToSaveDetail,
-                UINT32                                      BufferSize);
+ThreadQueryList(PDEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS
+                    DebuggerUsermodeProcessOrThreadQueryRequest,
+                PVOID AddressToSaveDetail, UINT32 BufferSize);
 BOOLEAN
-ThreadQueryDetails(PDEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET GetInformationThreadRequest);
+ThreadQueryDetails(
+    PDEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET GetInformationThreadRequest);

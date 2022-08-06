@@ -48,28 +48,28 @@ Revision History:
 
 #define CLOCK_RATE 115200 // Hardware base clock frequency
 
-#define MC_DTRRTS   0x03 // Control bits to assert DTR and RTS
+#define MC_DTRRTS 0x03   // Control bits to assert DTR and RTS
 #define MS_DSRCTSCD 0xB0 // Status bits for DSR, CTS and CD
-#define MS_CD       0x80 // MSR bit to indicate carrier detect
+#define MS_CD 0x80       // MSR bit to indicate carrier detect
 
-#define FC_ENABLE         0x01 // FCR control bit to enable the FIFO
-#define FC_CLEAR_RECEIVE  0x02 // FCR control bit to clear receive FIFO
+#define FC_ENABLE 0x01         // FCR control bit to enable the FIFO
+#define FC_CLEAR_RECEIVE 0x02  // FCR control bit to clear receive FIFO
 #define FC_CLEAR_TRANSMIT 0x04 // FCR control bit to clear transmit FIFO
 
 #define COM_OUTRDY 0x20 // LSR bit to indicate transmitter is empty
 #define COM_DATRDY 0x01 // LSR bit to indicate data is available
 
-#define BD_150    150
-#define BD_300    300
-#define BD_600    600
-#define BD_1200   1200
-#define BD_2400   2400
-#define BD_4800   4800
-#define BD_9600   9600
-#define BD_14400  14400
-#define BD_19200  19200
-#define BD_56000  56000
-#define BD_57600  57600
+#define BD_150 150
+#define BD_300 300
+#define BD_600 600
+#define BD_1200 1200
+#define BD_2400 2400
+#define BD_4800 4800
+#define BD_9600 9600
+#define BD_14400 14400
+#define BD_19200 19200
+#define BD_56000 56000
+#define BD_57600 57600
 #define BD_115200 115200
 
 //

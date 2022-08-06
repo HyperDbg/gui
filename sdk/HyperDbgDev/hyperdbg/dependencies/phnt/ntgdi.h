@@ -1,11 +1,12 @@
 /*
- * This file is part of the Process Hacker project - https://processhacker.sourceforge.io/
+ * This file is part of the Process Hacker project -
+ * https://processhacker.sourceforge.io/
  *
- * You can redistribute this file and/or modify it under the terms of the 
- * Attribution 4.0 International (CC BY 4.0) license. 
- * 
- * You must give appropriate credit, provide a link to the license, and 
- * indicate if changes were made. You may do so in any reasonable manner, but 
+ * You can redistribute this file and/or modify it under the terms of the
+ * Attribution 4.0 International (CC BY 4.0) license.
+ *
+ * You must give appropriate credit, provide a link to the license, and
+ * indicate if changes were made. You may do so in any reasonable manner, but
  * not in any way that suggests the licensor endorses you or your use.
  */
 
@@ -34,12 +35,15 @@
 #define GDI_HANDLE_UNIQUE_BITS 8
 #define GDI_HANDLE_UNIQUE_MASK 0xff
 
-#define GDI_HANDLE_INDEX(Handle) ((ULONG)(Handle) & GDI_HANDLE_INDEX_MASK)
-#define GDI_HANDLE_TYPE(Handle) (((ULONG)(Handle) >> GDI_HANDLE_TYPE_SHIFT) & GDI_HANDLE_TYPE_MASK)
-#define GDI_HANDLE_ALTTYPE(Handle) (((ULONG)(Handle) >> GDI_HANDLE_ALTTYPE_SHIFT) & GDI_HANDLE_ALTTYPE_MASK)
+#define GDI_HANDLE_INDEX(Handle) ((ULONG)(Handle)&GDI_HANDLE_INDEX_MASK)
+#define GDI_HANDLE_TYPE(Handle)                                                \
+  (((ULONG)(Handle) >> GDI_HANDLE_TYPE_SHIFT) & GDI_HANDLE_TYPE_MASK)
+#define GDI_HANDLE_ALTTYPE(Handle)                                             \
+  (((ULONG)(Handle) >> GDI_HANDLE_ALTTYPE_SHIFT) & GDI_HANDLE_ALTTYPE_MASK)
 #define GDI_HANDLE_STOCK(Handle) (((ULONG)(Handle) >> GDI_HANDLE_STOCK_SHIFT)) & GDI_HANDLE_STOCK_MASK)
 
-#define GDI_MAKE_HANDLE(Index, Unique) ((ULONG)(((ULONG)(Unique) << GDI_HANDLE_INDEX_BITS) | (ULONG)(Index)))
+#define GDI_MAKE_HANDLE(Index, Unique)                                         \
+  ((ULONG)(((ULONG)(Unique) << GDI_HANDLE_INDEX_BITS) | (ULONG)(Index)))
 
 // GDI server-side types
 
@@ -60,7 +64,7 @@
 #define GDI_ICMCXF_TYPE 14
 #define GDI_ICMDLL_TYPE 15
 #define GDI_BRUSH_TYPE 16
-#define GDI_PFF_TYPE 17 // unused
+#define GDI_PFF_TYPE 17   // unused
 #define GDI_CACHE_TYPE 18 // unused
 #define GDI_SPACE_TYPE 19
 #define GDI_DBRUSH_TYPE 20 // unused
@@ -69,7 +73,7 @@
 #define GDI_BMFD_TYPE 23 // unused
 #define GDI_VTFD_TYPE 24 // unused
 #define GDI_TTFD_TYPE 25 // unused
-#define GDI_RC_TYPE 26 // unused
+#define GDI_RC_TYPE 26   // unused
 #define GDI_TEMP_TYPE 27 // unused
 #define GDI_DRVOBJ_TYPE 28
 #define GDI_DCIOBJ_TYPE 29 // unused
@@ -77,9 +81,11 @@
 
 // GDI client-side types
 
-#define GDI_CLIENT_TYPE_FROM_HANDLE(Handle) ((ULONG)(Handle) & ((GDI_HANDLE_ALTTYPE_MASK << GDI_HANDLE_ALTTYPE_SHIFT) | \
-    (GDI_HANDLE_TYPE_MASK << GDI_HANDLE_TYPE_SHIFT)))
-#define GDI_CLIENT_TYPE_FROM_UNIQUE(Unique) GDI_CLIENT_TYPE_FROM_HANDLE((ULONG)(Unique) << 16)
+#define GDI_CLIENT_TYPE_FROM_HANDLE(Handle)                                    \
+  ((ULONG)(Handle) & ((GDI_HANDLE_ALTTYPE_MASK << GDI_HANDLE_ALTTYPE_SHIFT) |  \
+                      (GDI_HANDLE_TYPE_MASK << GDI_HANDLE_TYPE_SHIFT)))
+#define GDI_CLIENT_TYPE_FROM_UNIQUE(Unique)                                    \
+  GDI_CLIENT_TYPE_FROM_HANDLE((ULONG)(Unique) << 16)
 
 #define GDI_ALTTYPE_1 (1 << GDI_HANDLE_ALTTYPE_SHIFT)
 #define GDI_ALTTYPE_2 (2 << GDI_HANDLE_ALTTYPE_SHIFT)
@@ -101,32 +107,27 @@
 #define GDI_CLIENT_METAFILE16_TYPE (GDI_CLIENT_CLIENTOBJ_TYPE | GDI_ALTTYPE_1)
 #define GDI_CLIENT_PEN_TYPE (GDI_CLIENT_BRUSH_TYPE | GDI_ALTTYPE_1)
 
-typedef struct _GDI_HANDLE_ENTRY
-{
-    union
-    {
-        PVOID Object;
-        PVOID NextFree;
+typedef struct _GDI_HANDLE_ENTRY {
+  union {
+    PVOID Object;
+    PVOID NextFree;
+  };
+  union {
+    struct {
+      USHORT ProcessId;
+      USHORT Lock : 1;
+      USHORT Count : 15;
     };
-    union
-    {
-        struct
-        {
-            USHORT ProcessId;
-            USHORT Lock : 1;
-            USHORT Count : 15;
-        };
-        ULONG Value;
-    } Owner;
-    USHORT Unique;
-    UCHAR Type;
-    UCHAR Flags;
-    PVOID UserPointer;
+    ULONG Value;
+  } Owner;
+  USHORT Unique;
+  UCHAR Type;
+  UCHAR Flags;
+  PVOID UserPointer;
 } GDI_HANDLE_ENTRY, *PGDI_HANDLE_ENTRY;
 
-typedef struct _GDI_SHARED_MEMORY
-{
-    GDI_HANDLE_ENTRY Handles[GDI_MAX_HANDLE_COUNT];
+typedef struct _GDI_SHARED_MEMORY {
+  GDI_HANDLE_ENTRY Handles[GDI_MAX_HANDLE_COUNT];
 } GDI_SHARED_MEMORY, *PGDI_SHARED_MEMORY;
 
 #endif

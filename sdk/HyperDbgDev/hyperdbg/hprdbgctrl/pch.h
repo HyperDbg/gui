@@ -27,11 +27,11 @@
 
 #define USE_LIB_IA32
 #if defined(USE_LIB_IA32)
-#    pragma warning(push, 0)
+#pragma warning(push, 0)
 //#    pragma warning(disable : 4201) // suppress nameless struct/union warning
-#    include <ia32-doc/out/ia32.h>
-#    pragma warning(pop)
-typedef RFLAGS * PRFLAGS;
+#include <ia32-doc/out/ia32.h>
+#pragma warning(pop)
+typedef RFLAGS *PRFLAGS;
 #endif // USE_LIB_IA32
 
 //
@@ -46,33 +46,32 @@ typedef RFLAGS * PRFLAGS;
 //
 typedef const wchar_t *LPCWCHAR, *PCWCHAR;
 
-#    define PHNT_MODE    PHNT_MODE_USER
-#    define PHNT_VERSION PHNT_WIN11 // Windows 7
+#define PHNT_MODE PHNT_MODE_USER
+#define PHNT_VERSION PHNT_WIN11 // Windows 7
 
-#    define PHNT_PATCH_FOR_HYPERDBG TRUE
+#define PHNT_PATCH_FOR_HYPERDBG TRUE
 
-#    include <phnt/phnt_windows.h>
-#    include <phnt/phnt.h>
+#include <phnt/phnt.h>
+#include <phnt/phnt_windows.h>
 
 #elif defined(USE_NATIVE_SDK_HEADERS)
 
-#    include <winternl.h>
-#    include <Windows.h>
-#    include <winioctl.h>
+#include <Windows.h>
+#include <winioctl.h>
+#include <winternl.h>
 
 #endif
 
+#include <VersionHelpers.h>
+#include <psapi.h>
+#include <shlobj.h>
+#include <shlwapi.h>
+#include <strsafe.h>
+#include <tchar.h>
+#include <time.h>
+#include <tlhelp32.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include <strsafe.h>
-#include <shlobj.h>
-#include <tchar.h>
-#include <tlhelp32.h>
-#include <shlwapi.h>
-#include <VersionHelpers.h>
-#include <tchar.h>
-#include <psapi.h>
-#include <time.h>
 
 #include <conio.h>
 #include <intrin.h>
@@ -84,22 +83,22 @@ typedef const wchar_t *LPCWCHAR, *PCWCHAR;
 // STL headers
 //
 #include <algorithm>
-#include <string>
-#include <vector>
 #include <array>
 #include <bitset>
+#include <cctype>
+#include <cstring>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <iterator>
-#include <sstream>
-#include <fstream>
-#include <map>
-#include <numeric>
 #include <list>
 #include <locale>
+#include <map>
 #include <memory>
-#include <cctype>
-#include <cstring>
+#include <numeric>
+#include <sstream>
+#include <string>
+#include <vector>
 
 //
 // Scope definitions
@@ -110,10 +109,10 @@ typedef const wchar_t *LPCWCHAR, *PCWCHAR;
 //
 // HyperDbg defined headers
 //
-#include "SDK/HyperDbgSdk.h"
-#include "SDK/Imports/HyperDbgCtrlImports.h"
 #include "Configuration.h"
 #include "Definition.h"
+#include "SDK/HyperDbgSdk.h"
+#include "SDK/Imports/HyperDbgCtrlImports.h"
 
 //
 // Script-engine
@@ -129,25 +128,25 @@ typedef const wchar_t *LPCWCHAR, *PCWCHAR;
 //
 // General
 //
-#include "header/inipp.h"
 #include "header/commands.h"
 #include "header/common.h"
-#include "header/symbol.h"
+#include "header/communication.h"
 #include "header/debugger.h"
-#include "header/script-engine.h"
 #include "header/exports.h"
+#include "header/forwarding.h"
 #include "header/help.h"
+#include "header/inipp.h"
 #include "header/install.h"
+#include "header/kd.h"
 #include "header/list.h"
+#include "header/namedpipe.h"
+#include "header/objects.h"
+#include "header/pe-parser.h"
+#include "header/script-engine.h"
+#include "header/symbol.h"
 #include "header/tests.h"
 #include "header/transparency.h"
-#include "header/communication.h"
-#include "header/namedpipe.h"
-#include "header/forwarding.h"
-#include "header/kd.h"
-#include "header/pe-parser.h"
 #include "header/ud.h"
-#include "header/objects.h"
 
 #pragma comment(lib, "ntdll.lib")
 

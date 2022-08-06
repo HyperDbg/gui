@@ -15,26 +15,19 @@
 
 
 
-VOID
-BroadcastVmxVirtualizationAllCores();
 
-VOID
-BroadcastEnableDbAndBpExitingAllCores();
+VOID BroadcastVmxVirtualizationAllCores();
 
-VOID
-BroadcastDisableDbAndBpExitingAllCores();
+VOID BroadcastEnableDbAndBpExitingAllCores();
 
-VOID
-BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores();
+VOID BroadcastDisableDbAndBpExitingAllCores();
 
-VOID
-BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores();
+VOID BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores();
 
-VOID
-BroadcastEnableNmiExitingAllCores();
+VOID BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores();
 
-VOID
-BroadcastDisableNmiExitingAllCores();
+VOID BroadcastEnableNmiExitingAllCores();
 
-VOID
-BroadcastNotifyAllToInvalidateEptAllCores();
+VOID BroadcastDisableNmiExitingAllCores();
+
+VOID BroadcastNotifyAllToInvalidateEptAllCores();

@@ -18,12 +18,14 @@
 #define VMCALL_CHANGE_IO_BITMAP 0x00000011
 #define VMCALL_SET_HIDDEN_CC_BREAKPOINT 0x00000012
 #define VMCALL_UNSET_RDTSC_EXITING 0x00000013
-#define VMCALL_DISABLE_EXTERNAL_INTERRUPT_EXITING_ONLY_TO_CLEAR_INTERRUPT_COMMANDS 0x00000014
+#define VMCALL_DISABLE_EXTERNAL_INTERRUPT_EXITING_ONLY_TO_CLEAR_INTERRUPT_COMMANDS \
+  0x00000014
 #define VMCALL_UNSET_RDPMC_EXITING 0x00000015
 #define VMCALL_DISABLE_MOV_TO_DEBUG_REGS_EXITING 0x00000016
 #define VMCALL_RESET_MSR_BITMAP_READ 0x00000017
 #define VMCALL_RESET_MSR_BITMAP_WRITE 0x00000018
-#define VMCALL_RESET_EXCEPTION_BITMAP_ONLY_ON_CLEARING_EXCEPTION_EVENTS 0x00000019
+#define VMCALL_RESET_EXCEPTION_BITMAP_ONLY_ON_CLEARING_EXCEPTION_EVENTS        \
+  0x00000019
 #define VMCALL_RESET_IO_BITMAP 0x0000001A
 #define VMCALL_ENABLE_MOV_TO_CR3_EXITING 0x0000001B
 #define VMCALL_DISABLE_MOV_TO_CR3_EXITING 0x0000001C
@@ -44,19 +46,12 @@
 #define VMCALL_ENABLE_MOV_TO_CONTROL_REGS_EXITING 0x2b
 #define VMCALL_DISABLE_MOV_TO_CONTROL_REGS_EXITING 0x2c
 #define VMCALL_DISABLE_MOV_TO_CR_EXITING_ONLY_FOR_CR_EVENTS 0x2d
-static NTSTATUS
-VmxHypervVmcallHandler(_Inout_ PGUEST_REGS GuestRegs);
+static NTSTATUS VmxHypervVmcallHandler(_Inout_ PGUEST_REGS GuestRegs);
 NTSTATUS
-VmxHandleVmcallVmExit(_In_ UINT32         CoreIndex,
-                      _Inout_ PGUEST_REGS GuestRegs);
+VmxHandleVmcallVmExit(_In_ UINT32 CoreIndex, _Inout_ PGUEST_REGS GuestRegs);
 NTSTATUS
-VmxVmcallHandler(_In_ UINT32         CurrentCoreIndex,
-                 _In_ UINT64         VmcallNumber,
-                 _In_ UINT64         OptionalParam1,
-                 _In_ UINT64         OptionalParam2,
-                 _In_ UINT64         OptionalParam3,
-                 _Inout_ PGUEST_REGS GuestRegs);
+VmxVmcallHandler(_In_ UINT32 CurrentCoreIndex, _In_ UINT64 VmcallNumber,
+                 _In_ UINT64 OptionalParam1, _In_ UINT64 OptionalParam2,
+                 _In_ UINT64 OptionalParam3, _Inout_ PGUEST_REGS GuestRegs);
 NTSTATUS
-VmcallTest(_In_ UINT64 Param1,
-           _In_ UINT64 Param2,
-           _In_ UINT64 Param3);
+VmcallTest(_In_ UINT64 Param1, _In_ UINT64 Param2, _In_ UINT64 Param3);

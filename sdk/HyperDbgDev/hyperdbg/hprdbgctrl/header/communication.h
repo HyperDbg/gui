@@ -24,55 +24,46 @@
 //			   	Server 		            //
 //////////////////////////////////////////
 
-int
-CommunicationServerCreateServerAndWaitForClient(PCSTR    Port,
-                                                SOCKET * ClientSocketArg,
-                                                SOCKET * ListenSocketArg);
+int CommunicationServerCreateServerAndWaitForClient(PCSTR Port,
+                                                    SOCKET *ClientSocketArg,
+                                                    SOCKET *ListenSocketArg);
 
-int
-CommunicationServerReceiveMessage(SOCKET ClientSocket, char * recvbuf, int recvbuflen);
+int CommunicationServerReceiveMessage(SOCKET ClientSocket, char *recvbuf,
+                                      int recvbuflen);
 
-int
-CommunicationServerSendMessage(SOCKET ClientSocket, const char * sendbuf, int length);
+int CommunicationServerSendMessage(SOCKET ClientSocket, const char *sendbuf,
+                                   int length);
 
-int
-CommunicationServerShutdownAndCleanupConnection(SOCKET ClientSocket,
-                                                SOCKET ListenSocket);
+int CommunicationServerShutdownAndCleanupConnection(SOCKET ClientSocket,
+                                                    SOCKET ListenSocket);
 
 //////////////////////////////////////////
 //                Client                //
 //////////////////////////////////////////
 
-int
-CommunicationClientConnectToServer(PCSTR Ip, PCSTR Port, SOCKET * ConnectSocketArg);
+int CommunicationClientConnectToServer(PCSTR Ip, PCSTR Port,
+                                       SOCKET *ConnectSocketArg);
 
-int
-CommunicationClientSendMessage(SOCKET ConnectSocket, const char * sendbuf, int buflen);
+int CommunicationClientSendMessage(SOCKET ConnectSocket, const char *sendbuf,
+                                   int buflen);
 
-int
-CommunicationClientShutdownConnection(SOCKET ConnectSocket);
+int CommunicationClientShutdownConnection(SOCKET ConnectSocket);
 
-int
-CommunicationClientReceiveMessage(SOCKET ConnectSocket, CHAR * RecvBuf, UINT32 MaxBuffLen, PUINT32 BuffLenRecvd);
+int CommunicationClientReceiveMessage(SOCKET ConnectSocket, CHAR *RecvBuf,
+                                      UINT32 MaxBuffLen, PUINT32 BuffLenRecvd);
 
-int
-CommunicationClientCleanup(SOCKET ConnectSocket);
+int CommunicationClientCleanup(SOCKET ConnectSocket);
 
 //////////////////////////////////////////
 //     Handle Remote Connection         //
 //////////////////////////////////////////
 
-VOID
-RemoteConnectionListen(PCSTR Port);
+VOID RemoteConnectionListen(PCSTR Port);
 
-VOID
-RemoteConnectionConnect(PCSTR Ip, PCSTR Port);
+VOID RemoteConnectionConnect(PCSTR Ip, PCSTR Port);
 
-int
-RemoteConnectionSendCommand(const char * sendbuf, int len);
+int RemoteConnectionSendCommand(const char *sendbuf, int len);
 
-int
-RemoteConnectionSendResultsToHost(const char * sendbuf, int len);
+int RemoteConnectionSendResultsToHost(const char *sendbuf, int len);
 
-int
-RemoteConnectionCloseTheConnectionWithDebuggee();
+int RemoteConnectionCloseTheConnectionWithDebuggee();

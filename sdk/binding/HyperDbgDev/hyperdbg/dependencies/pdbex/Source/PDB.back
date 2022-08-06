@@ -5,8 +5,8 @@
 #include <dia2.h>
 
 #include <set>
-#include <unordered_set>
 #include <unordered_map>
+#include <unordered_set>
 
 typedef struct _SYMBOL SYMBOL, *PSYMBOL;
 
@@ -23,22 +23,21 @@ typedef struct _SYMBOL SYMBOL, *PSYMBOL;
 
 
 
-typedef struct _SYMBOL_ENUM_FIELD
-{
-	
-	
-	
-	CHAR*                Name;
+typedef struct _SYMBOL_ENUM_FIELD {
+  
+  
+  
+  CHAR *Name;
 
-	
-	
-	
-	VARIANT              Value;
+  
+  
+  
+  VARIANT Value;
 
-	
-	
-	
-	SYMBOL*              Parent;
+  
+  
+  
+  SYMBOL *Parent;
 
 } SYMBOL_ENUM_FIELD, *PSYMBOL_ENUM_FIELD;
 
@@ -54,39 +53,38 @@ typedef struct _SYMBOL_ENUM_FIELD
 
 
 
-typedef struct _SYMBOL_UDT_FIELD
-{
-	
-	
-	
-	CHAR*                Name;
+typedef struct _SYMBOL_UDT_FIELD {
+  
+  
+  
+  CHAR *Name;
 
-	
-	
-	
-	SYMBOL*              Type;
+  
+  
+  
+  SYMBOL *Type;
 
-	
-	
-	
-	DWORD                Offset;
+  
+  
+  
+  DWORD Offset;
 
-	
-	
-	
-	
-	
-	DWORD                Bits;
+  
+  
+  
+  
+  
+  DWORD Bits;
 
-	
-	
-	
-	DWORD                BitPosition;
+  
+  
+  
+  DWORD BitPosition;
 
-	
-	
-	
-	SYMBOL*              Parent;
+  
+  
+  
+  SYMBOL *Parent;
 
 } SYMBOL_UDT_FIELD, *PSYMBOL_UDT_FIELD;
 
@@ -102,342 +100,299 @@ typedef struct _SYMBOL_UDT_FIELD
 
 
 
-typedef struct _SYMBOL_ENUM
-{
-	
-	
-	
-	DWORD                FieldCount;
+typedef struct _SYMBOL_ENUM {
+  
+  
+  
+  DWORD FieldCount;
 
-	
-	
-	
-	SYMBOL_ENUM_FIELD*   Fields;
+  
+  
+  
+  SYMBOL_ENUM_FIELD *Fields;
 
 } SYMBOL_ENUM, *PSYMBOL_ENUM;
 
 
 
 
-typedef struct _SYMBOL_TYPEDEF
-{
-	
-	
-	
-	SYMBOL*              Type;
+typedef struct _SYMBOL_TYPEDEF {
+  
+  
+  
+  SYMBOL *Type;
 
 } SYMBOL_TYPEDEF, *PSYMBOL_TYPEDEF;
 
 
 
 
-typedef struct _SYMBOL_POINTER
-{
-	
-	
-	
-	SYMBOL*              Type;
+typedef struct _SYMBOL_POINTER {
+  
+  
+  
+  SYMBOL *Type;
 
-	
-	
-	
-	BOOL                 IsReference;
+  
+  
+  
+  BOOL IsReference;
 
 } SYMBOL_POINTER, *PSYMBOL_POINTER;
 
 
 
 
-typedef struct _SYMBOL_ARRAY
-{
-	
-	
-	
-	SYMBOL*              ElementType;
+typedef struct _SYMBOL_ARRAY {
+  
+  
+  
+  SYMBOL *ElementType;
 
-	
-	
-	
-	DWORD                ElementCount;
+  
+  
+  
+  DWORD ElementCount;
 
 } SYMBOL_ARRAY, *PSYMBOL_ARRAY;
 
 
 
 
-typedef struct _SYMBOL_FUNCTION
-{
-	
-	
-	
-	SYMBOL*              ReturnType;
+typedef struct _SYMBOL_FUNCTION {
+  
+  
+  
+  SYMBOL *ReturnType;
 
-	
-	
-	
-	CV_call_e            CallingConvention;
+  
+  
+  
+  CV_call_e CallingConvention;
 
-	
-	
-	
-	DWORD                ArgumentCount;
+  
+  
+  
+  DWORD ArgumentCount;
 
-	
-	
-	
-	
-	SYMBOL**             Arguments;
+  
+  
+  
+  
+  
+  SYMBOL **Arguments;
 
 } SYMBOL_FUNCTION, *PSYMBOL_FUNCTION;
 
 
 
 
-typedef struct _SYMBOL_FUNCTIONARG
-{
-	
-	
-	
-	SYMBOL*              Type;
+typedef struct _SYMBOL_FUNCTIONARG {
+  
+  
+  
+  SYMBOL *Type;
 
 } SYMBOL_FUNCTIONARG, *PSYMBOL_FUNCTIONARG;
 
 
 
 
-typedef struct _SYMBOL_UDT
-{
-	
-	
-	
-	
-	UdtKind              Kind;
+typedef struct _SYMBOL_UDT {
+  
+  
+  
+  
+  UdtKind Kind;
 
-	
-	
-	
-	DWORD                FieldCount;
+  
+  
+  
+  DWORD FieldCount;
 
-	
-	
-	
-	SYMBOL_UDT_FIELD*    Fields;
+  
+  
+  
+  SYMBOL_UDT_FIELD *Fields;
 
 } SYMBOL_UDT, *PSYMBOL_UDT;
 
 
 
 
-struct _SYMBOL
-{
-	
-	
-	
-	enum SymTagEnum      Tag;
+struct _SYMBOL {
+  
+  
+  
+  enum SymTagEnum Tag;
 
-	
-	
-	
-	
-	enum DataKind        DataKind;
+  
+  
+  
+  
+  enum DataKind DataKind;
 
-	
-	
-	
-	
-	BasicType            BaseType;
+  
+  
+  
+  
+  BasicType BaseType;
 
-	
-	
-	
-	DWORD                TypeId;
+  
+  
+  
+  DWORD TypeId;
 
-	
-	
-	
-	DWORD                Size;
+  
+  
+  
+  DWORD Size;
 
-	
-	
-	
-	BOOL                 IsConst;
+  
+  
+  
+  BOOL IsConst;
 
-	
-	
-	
-	BOOL                 IsVolatile;
+  
+  
+  
+  BOOL IsVolatile;
 
-	
-	
-	
-	CHAR*                Name;
+  
+  
+  
+  CHAR *Name;
 
-	union
-	{
-		SYMBOL_ENUM        Enum;
-		SYMBOL_TYPEDEF     Typedef;
-		SYMBOL_POINTER     Pointer;
-		SYMBOL_ARRAY       Array;
-		SYMBOL_FUNCTION    Function;
-		SYMBOL_FUNCTIONARG FunctionArg;
-		SYMBOL_UDT         Udt;
-	} u;
+  union {
+    SYMBOL_ENUM Enum;
+    SYMBOL_TYPEDEF Typedef;
+    SYMBOL_POINTER Pointer;
+    SYMBOL_ARRAY Array;
+    SYMBOL_FUNCTION Function;
+    SYMBOL_FUNCTIONARG FunctionArg;
+    SYMBOL_UDT Udt;
+  } u;
 };
 
 class SymbolModule;
 
-using SymbolMap     = std::unordered_map<DWORD, SYMBOL*>;
-using SymbolNameMap = std::unordered_map<std::string, SYMBOL*>;
-using SymbolSet     = std::unordered_set<SYMBOL*>;
-using FunctionSet   = std::set<std::string>;
+using SymbolMap = std::unordered_map<DWORD, SYMBOL *>;
+using SymbolNameMap = std::unordered_map<std::string, SYMBOL *>;
+using SymbolSet = std::unordered_set<SYMBOL *>;
+using FunctionSet = std::set<std::string>;
 
-class PDB
-{
-	public:
-		
-		
-		
-		PDB();
+class PDB {
+public:
+  
+  
+  
+  PDB();
 
-		
-		
-		
-		PDB(
-			IN const CHAR* Path
-			);
+  
+  
+  
+  PDB(IN const CHAR *Path);
 
-		
-		
-		
-		~PDB();
+  
+  
+  
+  ~PDB();
 
-		
-		
-		
-		
-		
-		BOOL
-		Open(
-			IN const CHAR* Path
-			);
+  
+  
+  
+  
+  
+  BOOL Open(IN const CHAR *Path);
 
-		
-		
-		
-		BOOL
-		IsOpened() const;
+  
+  
+  
+  BOOL IsOpened() const;
 
-		
-		
-		
-		const CHAR*
-		GetPath() const;
+  
+  
+  
+  const CHAR *GetPath() const;
 
-		
-		
-		
-		VOID
-		Close();
+  
+  
+  
+  VOID Close();
 
-		
-		
-		
-		DWORD
-		GetMachineType() const;
+  
+  
+  
+  DWORD
+  GetMachineType() const;
 
-		
-		
-		
-		CV_CFL_LANG
-		GetLanguage() const;
+  
+  
+  
+  CV_CFL_LANG
+  GetLanguage() const;
 
-		
-		
-		
-		
-		
-		const SYMBOL*
-		GetSymbolByName(
-			IN const CHAR* SymbolName
-			);
+  
+  
+  
+  
+  
+  const SYMBOL *GetSymbolByName(IN const CHAR *SymbolName);
 
-		
-		
-		
-		
-		
-		const SYMBOL*
-		GetSymbolByTypeId(
-			IN DWORD TypeId
-			);
+  
+  
+  
+  
+  
+  const SYMBOL *GetSymbolByTypeId(IN DWORD TypeId);
 
-		
-		
-		
-		const SymbolMap&
-		GetSymbolMap() const;
+  
+  
+  
+  const SymbolMap &GetSymbolMap() const;
 
-		
-		
-		
-		const SymbolNameMap&
-		GetSymbolNameMap() const;
+  
+  
+  
+  const SymbolNameMap &GetSymbolNameMap() const;
 
-		
-		
-		
-		const FunctionSet&
-		GetFunctionSet() const;
+  
+  
+  
+  const FunctionSet &GetFunctionSet() const;
 
-		
-		
-		
-		
-		
-		
-		static
-		const CHAR*
-		GetBasicTypeString(
-			IN BasicType BaseType,
-			IN DWORD Size,
-			IN BOOL UseStdInt = FALSE
-			);
+  
+  
+  
+  
+  
+  
+  static const CHAR *GetBasicTypeString(IN BasicType BaseType, IN DWORD Size,
+                                        IN BOOL UseStdInt = FALSE);
 
-		
-		
-		
-		
-		
-		
-		static
-		const CHAR*
-		GetBasicTypeString(
-			IN const SYMBOL* Symbol,
-			IN BOOL UseStdInt = FALSE
-			);
+  
+  
+  
+  
+  
+  
+  static const CHAR *GetBasicTypeString(IN const SYMBOL *Symbol,
+                                        IN BOOL UseStdInt = FALSE);
 
-		
-		
-		
-		
-		
-		
-		static
-		const CHAR*
-		GetUdtKindString(
-			IN UdtKind Kind
-			);
+  
+  
+  
+  
+  
+  
+  static const CHAR *GetUdtKindString(IN UdtKind Kind);
 
-		
-		
-		
-		
-		static
-		BOOL
-		IsUnnamedSymbol(
-			const SYMBOL* Symbol
-			);
+  
+  
+  
+  
+  static BOOL IsUnnamedSymbol(const SYMBOL *Symbol);
 
-	private:
-		SymbolModule* m_Impl;
+private:
+  SymbolModule *m_Impl;
 };

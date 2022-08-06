@@ -10,7 +10,9 @@
 
 
 
+
 #pragma once
+
 
 
 
@@ -44,8 +46,7 @@ HvAdjustControls(ULONG Ctl, ULONG Msr);
 
 
 
-VOID
-HvHandleCpuid(PGUEST_REGS RegistersState);
+VOID HvHandleCpuid(PGUEST_REGS RegistersState);
 
 
 
@@ -55,8 +56,8 @@ HvHandleCpuid(PGUEST_REGS RegistersState);
 
 
 
-VOID
-HvFillGuestSelectorData(PVOID GdtBase, ULONG SegmentRegister, UINT16 Selector);
+VOID HvFillGuestSelectorData(PVOID GdtBase, ULONG SegmentRegister,
+                             UINT16 Selector);
 
 
 
@@ -64,16 +65,15 @@ HvFillGuestSelectorData(PVOID GdtBase, ULONG SegmentRegister, UINT16 Selector);
 
 
 
-VOID
-HvHandleControlRegisterAccess(PGUEST_REGS GuestState, UINT32 ProcessorIndex);
+VOID HvHandleControlRegisterAccess(PGUEST_REGS GuestState,
+                                   UINT32 ProcessorIndex);
 
 
 
 
 
 
-VOID
-HvResumeToNextInstruction();
+VOID HvResumeToNextInstruction();
 
 
 
@@ -81,8 +81,7 @@ HvResumeToNextInstruction();
 
 
 
-VOID
-HvSetMonitorTrapFlag(BOOLEAN Set);
+VOID HvSetMonitorTrapFlag(BOOLEAN Set);
 
 
 
@@ -90,8 +89,7 @@ HvSetMonitorTrapFlag(BOOLEAN Set);
 
 
 
-VOID
-HvSetLoadDebugControls(BOOLEAN Set);
+VOID HvSetLoadDebugControls(BOOLEAN Set);
 
 
 
@@ -99,8 +97,7 @@ HvSetLoadDebugControls(BOOLEAN Set);
 
 
 
-VOID
-HvSetSaveDebugControls(BOOLEAN Set);
+VOID HvSetSaveDebugControls(BOOLEAN Set);
 
 
 
@@ -108,8 +105,7 @@ HvSetSaveDebugControls(BOOLEAN Set);
 
 
 
-VOID
-HvRestoreRegisters();
+VOID HvRestoreRegisters();
 
 
 
@@ -117,8 +113,7 @@ HvRestoreRegisters();
 
 
 
-VOID
-HvSetPmcVmexit(BOOLEAN Set);
+VOID HvSetPmcVmexit(BOOLEAN Set);
 
 
 
@@ -128,8 +123,8 @@ HvSetPmcVmexit(BOOLEAN Set);
 
 
 
-VOID
-HvSetMovControlRegsExiting(BOOLEAN Set, UINT64 ControlRegister, UINT64 MaskRegister);
+VOID HvSetMovControlRegsExiting(BOOLEAN Set, UINT64 ControlRegister,
+                                UINT64 MaskRegister);
 
 
 
@@ -137,8 +132,7 @@ HvSetMovControlRegsExiting(BOOLEAN Set, UINT64 ControlRegister, UINT64 MaskRegis
 
 
 
-VOID
-HvSetMovToCr3Vmexit(BOOLEAN Set);
+VOID HvSetMovToCr3Vmexit(BOOLEAN Set);
 
 
 
@@ -146,8 +140,7 @@ HvSetMovToCr3Vmexit(BOOLEAN Set);
 
 
 
-VOID
-HvWriteExceptionBitmap(UINT32 BitmapMask);
+VOID HvWriteExceptionBitmap(UINT32 BitmapMask);
 
 
 
@@ -163,8 +156,7 @@ HvReadExceptionBitmap();
 
 
 
-VOID
-HvSetInterruptWindowExiting(BOOLEAN Set);
+VOID HvSetInterruptWindowExiting(BOOLEAN Set);
 
 
 
@@ -172,8 +164,7 @@ HvSetInterruptWindowExiting(BOOLEAN Set);
 
 
 
-VOID
-HvSetNmiWindowExiting(BOOLEAN Set);
+VOID HvSetNmiWindowExiting(BOOLEAN Set);
 
 
 
@@ -182,8 +173,7 @@ HvSetNmiWindowExiting(BOOLEAN Set);
 
 
 
-VOID
-HvHandleMovDebugRegister(UINT32 ProcessorIndex, PGUEST_REGS Regs);
+VOID HvHandleMovDebugRegister(UINT32 ProcessorIndex, PGUEST_REGS Regs);
 
 
 
@@ -191,8 +181,7 @@ HvHandleMovDebugRegister(UINT32 ProcessorIndex, PGUEST_REGS Regs);
 
 
 
-VOID
-HvSetMovDebugRegsExiting(BOOLEAN Set);
+VOID HvSetMovDebugRegsExiting(BOOLEAN Set);
 
 
 
@@ -200,8 +189,7 @@ HvSetMovDebugRegsExiting(BOOLEAN Set);
 
 
 
-VOID
-HvSetNmiExiting(BOOLEAN Set);
+VOID HvSetNmiExiting(BOOLEAN Set);
 
 
 
@@ -209,8 +197,7 @@ HvSetNmiExiting(BOOLEAN Set);
 
 
 
-VOID
-HvSetVmxPreemptionTimerExiting(BOOLEAN Set);
+VOID HvSetVmxPreemptionTimerExiting(BOOLEAN Set);
 
 
 
@@ -219,8 +206,7 @@ HvSetVmxPreemptionTimerExiting(BOOLEAN Set);
 
 
 
-VOID
-HvSetExceptionBitmap(UINT32 IdtIndex);
+VOID HvSetExceptionBitmap(UINT32 IdtIndex);
 
 
 
@@ -229,8 +215,7 @@ HvSetExceptionBitmap(UINT32 IdtIndex);
 
 
 
-VOID
-HvUnsetExceptionBitmap(UINT32 IdtIndex);
+VOID HvUnsetExceptionBitmap(UINT32 IdtIndex);
 
 
 
@@ -238,8 +223,7 @@ HvUnsetExceptionBitmap(UINT32 IdtIndex);
 
 
 
-VOID
-HvSetExternalInterruptExiting(BOOLEAN Set);
+VOID HvSetExternalInterruptExiting(BOOLEAN Set);
 
 
 
@@ -247,5 +231,4 @@ HvSetExternalInterruptExiting(BOOLEAN Set);
 
 
 
-VOID
-HvSetRdtscExiting(BOOLEAN Set);
+VOID HvSetRdtscExiting(BOOLEAN Set);

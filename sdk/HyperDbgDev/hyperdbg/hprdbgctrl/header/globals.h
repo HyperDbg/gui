@@ -54,10 +54,8 @@ UINT32 g_InterpreterCountOfOpenCurlyBrackets = 0;
  * @brief the buffer that we set at the end of buffers for tcp connection
  */
 BYTE g_EndOfBufferCheckTcp[TCP_END_OF_BUFFER_CHARS_COUNT] = {
-    TCP_END_OF_BUFFER_CHAR_1,
-    TCP_END_OF_BUFFER_CHAR_2,
-    TCP_END_OF_BUFFER_CHAR_3,
-    TCP_END_OF_BUFFER_CHAR_4};
+    TCP_END_OF_BUFFER_CHAR_1, TCP_END_OF_BUFFER_CHAR_2,
+    TCP_END_OF_BUFFER_CHAR_3, TCP_END_OF_BUFFER_CHAR_4};
 
 /**
  * @brief Shows whether the user is allowed to use 'load' command
@@ -183,10 +181,8 @@ DEBUGGER_SYNCRONIZATION_EVENTS_STATE g_UserSyncronizationObjectsHandleTable
  * @brief the buffer that we set at the end of buffers for serial
  */
 BYTE g_EndOfBufferCheckSerial[SERIAL_END_OF_BUFFER_CHARS_COUNT] = {
-    SERIAL_END_OF_BUFFER_CHAR_1,
-    SERIAL_END_OF_BUFFER_CHAR_2,
-    SERIAL_END_OF_BUFFER_CHAR_3,
-    SERIAL_END_OF_BUFFER_CHAR_4};
+    SERIAL_END_OF_BUFFER_CHAR_1, SERIAL_END_OF_BUFFER_CHAR_2,
+    SERIAL_END_OF_BUFFER_CHAR_3, SERIAL_END_OF_BUFFER_CHAR_4};
 
 /**
  * @brief In debugger (not debuggee), we save the handle
@@ -289,7 +285,7 @@ DEBUGGER_EVENT_AND_ACTION_REG_BUFFER g_DebuggeeResultOfAddingActionsToEvent = {
  * to read and write simultaneously)
  *
  */
-OVERLAPPED g_OverlappedIoStructureForReadDebugger  = {0};
+OVERLAPPED g_OverlappedIoStructureForReadDebugger = {0};
 OVERLAPPED g_OverlappedIoStructureForWriteDebugger = {0};
 
 /**
@@ -319,19 +315,19 @@ CommandType g_CommandsList;
  * @brief Holder of global variables for script engine
  *
  */
-UINT64 * g_ScriptGlobalVariables;
+UINT64 *g_ScriptGlobalVariables;
 
 /**
  * @brief Holder of local variables for script engine
  *
  */
-UINT64 * g_ScriptLocalVariables;
+UINT64 *g_ScriptLocalVariables;
 
 /**
  * @brief Holder of temp variables for script engine
  *
  */
-UINT64 * g_ScriptTempVariables;
+UINT64 *g_ScriptTempVariables;
 
 /**
  * @brief Is list of command initialized

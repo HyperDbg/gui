@@ -2,12 +2,12 @@
  * @file InlineAsm.h
  * @author Sina Karvandi (sina@hyperdbg.org)
  * @brief The definition of functions written in Assembly
- * @details 
+ * @details
  * @version 0.1
  * @date 2020-04-11
- * 
+ *
  * @copyright This project is released under the GNU Public License v3.
- * 
+ *
  */
 #pragma once
 
@@ -18,32 +18,35 @@
 
 /**
  * @brief Enable VMX Operation
- * 
+ *
  */
 extern void inline AsmEnableVmxOperation();
 
 /**
  * @brief Restore in vmxoff state
- * 
+ *
  */
 extern void inline AsmRestoreToVmxOffState();
 
 /**
  * @brief Request Vmcall
- * 
- * @param VmcallNumber 
- * @param OptionalParam1 
- * @param OptionalParam2 
- * @param OptionalParam3 
- * @return NTSTATUS 
+ *
+ * @param VmcallNumber
+ * @param OptionalParam1
+ * @param OptionalParam2
+ * @param OptionalParam3
+ * @return NTSTATUS
  */
-extern NTSTATUS inline AsmVmxVmcall(unsigned long long VmcallNumber, unsigned long long OptionalParam1, unsigned long long OptionalParam2, long long OptionalParam3);
+extern NTSTATUS inline AsmVmxVmcall(unsigned long long VmcallNumber,
+                                    unsigned long long OptionalParam1,
+                                    unsigned long long OptionalParam2,
+                                    long long OptionalParam3);
 
 /**
  * @brief Hyper-v vmcall handler
- * 
- * @param GuestRegisters 
- * @return void 
+ *
+ * @param GuestRegisters
+ * @return void
  */
 extern void inline AsmHypervVmcall(unsigned long long GuestRegisters);
 
@@ -54,17 +57,15 @@ extern void inline AsmHypervVmcall(unsigned long long GuestRegisters);
 
 /**
  * @brief Save state on vmx
- * 
+ *
  */
-extern void
-AsmVmxSaveState();
+extern void AsmVmxSaveState();
 
 /**
  * @brief Restore state on vmx
- * 
+ *
  */
-extern void
-AsmVmxRestoreState();
+extern void AsmVmxRestoreState();
 
 //
 // ====================  Vmx VM-Exit Handler ====================
@@ -73,14 +74,13 @@ AsmVmxRestoreState();
 
 /**
  * @brief Vm-exit handler
- * 
+ *
  */
-extern void
-AsmVmexitHandler();
+extern void AsmVmexitHandler();
 
 /**
  * @brief Save vmxoff state
- * 
+ *
  */
 extern void inline AsmSaveVmxOffState();
 
@@ -91,21 +91,21 @@ extern void inline AsmSaveVmxOffState();
 
 /**
  * @brief INVEPT wrapper
- * 
- * @param Type 
- * @param Descriptors 
- * @return unsigned char 
+ *
+ * @param Type
+ * @param Descriptors
+ * @return unsigned char
  */
-extern unsigned char inline AsmInvept(unsigned long Type, void * Descriptors);
+extern unsigned char inline AsmInvept(unsigned long Type, void *Descriptors);
 
 /**
  * @brief INVVPID wrapper
- * 
- * @param Type 
- * @param Descriptors 
- * @return unsigned char 
+ *
+ * @param Type
+ * @param Descriptors
+ * @return unsigned char
  */
-extern unsigned char inline AsmInvvpid(unsigned long Type, void * Descriptors);
+extern unsigned char inline AsmInvvpid(unsigned long Type, void *Descriptors);
 
 //
 // ====================  Get segment registers ====================
@@ -116,104 +116,93 @@ extern unsigned char inline AsmInvvpid(unsigned long Type, void * Descriptors);
 
 /**
  * @brief Get CS Register
- * 
- * @return unsigned short 
+ *
+ * @return unsigned short
  */
-extern unsigned short
-AsmGetCs();
+extern unsigned short AsmGetCs();
 
 /**
  * @brief Get DS Register
- * 
- * @return unsigned short 
+ *
+ * @return unsigned short
  */
-extern unsigned short
-AsmGetDs();
+extern unsigned short AsmGetDs();
 
 /**
  * @brief Get ES Register
- * 
- * @return unsigned short 
+ *
+ * @return unsigned short
  */
-extern unsigned short
-AsmGetEs();
+extern unsigned short AsmGetEs();
 
 /**
  * @brief Get SS Register
- * 
- * @return unsigned short 
+ *
+ * @return unsigned short
  */
-extern unsigned short
-AsmGetSs();
+extern unsigned short AsmGetSs();
 
 /**
  * @brief Get FS Register
- * 
- * @return unsigned short 
+ *
+ * @return unsigned short
  */
-extern unsigned short
-AsmGetFs();
+extern unsigned short AsmGetFs();
 
 /**
  * @brief Get GS Register
- * 
- * @return unsigned short 
+ *
+ * @return unsigned short
  */
-extern unsigned short
-AsmGetGs();
+extern unsigned short AsmGetGs();
 
 /**
  * @brief Get LDTR Register
- * 
- * @return unsigned short 
+ *
+ * @return unsigned short
  */
-extern unsigned short
-AsmGetLdtr();
+extern unsigned short AsmGetLdtr();
 
 /**
  * @brief Get TR Register
- * 
- * @return unsigned short 
+ *
+ * @return unsigned short
  */
-extern unsigned short
-AsmGetTr();
+extern unsigned short AsmGetTr();
 
 /* ******* Gdt related functions ******* */
 
 /**
  * @brief get GDT base
- * 
- * @return unsigned long long 
+ *
+ * @return unsigned long long
  */
 extern unsigned long long inline AsmGetGdtBase();
 
 /**
  * @brief Get GDT Limit
- * 
- * @return unsigned short 
+ *
+ * @return unsigned short
  */
-extern unsigned short
-AsmGetGdtLimit();
+extern unsigned short AsmGetGdtLimit();
 
 /* ******* Idt related functions ******* */
 
 /**
  * @brief Get IDT base
- * 
- * @return unsigned long long 
+ *
+ * @return unsigned long long
  */
 extern unsigned long long inline AsmGetIdtBase();
 
 /**
  * @brief Get IDT limit
- * 
- * @return unsigned short 
+ *
+ * @return unsigned short
  */
-extern unsigned short
-AsmGetIdtLimit();
+extern unsigned short AsmGetIdtLimit();
 
-extern UINT32
-AsmGetAccessRights(unsigned short Selector);
+extern UINT32 AsmGetAccessRights(unsigned short Selector);
 //
 // ====================  Common Functions ====================
 // File : AsmCommon.asm
@@ -221,41 +210,38 @@ AsmGetAccessRights(unsigned short Selector);
 
 /**
  * @brief Get R/EFLAGS
- * 
- * @return unsigned short 
+ *
+ * @return unsigned short
  */
-extern unsigned short
-AsmGetRflags();
+extern unsigned short AsmGetRflags();
 
 /**
  * @brief Run CLI Instruction
- * 
+ *
  */
 extern void inline AsmCliInstruction();
 
 /**
  * @brief Run STI Instruction
- * 
+ *
  */
 extern void inline AsmStiInstruction();
 
 /**
  * @brief Reload new GDTR
- * 
- * @param GdtBase 
- * @param GdtLimit 
+ *
+ * @param GdtBase
+ * @param GdtLimit
  */
-extern void
-AsmReloadGdtr(void * GdtBase, unsigned long GdtLimit);
+extern void AsmReloadGdtr(void *GdtBase, unsigned long GdtLimit);
 
 /**
  * @brief Reload new IDTR
- * 
- * @param GdtBase 
- * @param GdtLimit 
+ *
+ * @param GdtBase
+ * @param GdtLimit
  */
-extern void
-AsmReloadIdtr(void * GdtBase, unsigned long GdtLimit);
+extern void AsmReloadIdtr(void *GdtBase, unsigned long GdtLimit);
 
 //
 // ====================  Debugger Functions ====================
@@ -264,40 +250,42 @@ AsmReloadIdtr(void * GdtBase, unsigned long GdtLimit);
 
 /**
  * @brief Detour hook handler
- * 
+ *
  */
-extern void
-AsmGeneralDetourHook();
+extern void AsmGeneralDetourHook();
 
 /**
  * @brief default custom code handler for debugger
- * 
- * @param Param1 
- * @param Param2 
- * @param Param3 
- * @param Param4 
- * @return unsigned long long 
+ *
+ * @param Param1
+ * @param Param2
+ * @param Param3
+ * @param Param4
+ * @return unsigned long long
  */
-extern void
-AsmDebuggerCustomCodeHandler(unsigned long long Param1, unsigned long long Param2, unsigned long long Param3, unsigned long long Param4);
+extern void AsmDebuggerCustomCodeHandler(unsigned long long Param1,
+                                         unsigned long long Param2,
+                                         unsigned long long Param3,
+                                         unsigned long long Param4);
 
 /**
  * @brief default condition code handler
- * 
- * @param Param1 
- * @param Param2 
- * @param Param3 
- * @return unsigned long long 
+ *
+ * @param Param1
+ * @param Param2
+ * @param Param3
+ * @return unsigned long long
  */
 extern unsigned long long
-AsmDebuggerConditionCodeHandler(unsigned long long Param1, unsigned long long Param2, unsigned long long Param3);
+AsmDebuggerConditionCodeHandler(unsigned long long Param1,
+                                unsigned long long Param2,
+                                unsigned long long Param3);
 
 /**
  * @brief Spin on thread
- * 
+ *
  */
-extern void
-AsmDebuggerSpinOnThread();
+extern void AsmDebuggerSpinOnThread();
 
 //
 // ====================  Kernel Test Functions ====================
@@ -306,7 +294,9 @@ AsmDebuggerSpinOnThread();
 
 /**
  * @brief Tests with test tags wrapper
- * 
+ *
  */
-extern unsigned long long
-AsmTestWrapperWithTestTags(unsigned long long Param1, unsigned long long Param2, unsigned long long Param3, unsigned long long Param4);
+extern unsigned long long AsmTestWrapperWithTestTags(unsigned long long Param1,
+                                                     unsigned long long Param2,
+                                                     unsigned long long Param3,
+                                                     unsigned long long Param4);

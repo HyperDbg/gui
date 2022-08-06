@@ -1,11 +1,7 @@
 #include "common.h"
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 UART_HARDWARE_DRIVER UsifHardwareDriver = {
-    UsifInitializePort,
-    UsifSetBaud,
-    UsifGetByte,
-    UsifPutByte,
-    UsifRxReady};
+    UsifInitializePort, UsifSetBaud, UsifGetByte, UsifPutByte, UsifRxReady};
 PUART_HARDWARE_DRIVER UartHardwareDrivers[] = {
 #if defined(_X86_) || defined(_AMD64_)
     &Legacy16550HardwareDriver, 
@@ -48,7 +44,7 @@ PUART_HARDWARE_DRIVER UartHardwareDrivers[] = {
     &SDM845HardwareDriver,    
     &MM16550HardwareDriver    
 #else
-#    error "Unknown Processor Architecture"
+#error "Unknown Processor Architecture"
 #endif
 };
 C_ASSERT(ARRAY_SIZE(UartHardwareDrivers) == 19);

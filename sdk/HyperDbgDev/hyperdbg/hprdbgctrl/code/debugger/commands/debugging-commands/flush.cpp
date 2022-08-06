@@ -21,13 +21,11 @@ extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
  *
  * @return VOID
  */
-VOID
-CommandFlushHelp()
-{
-    ShowMessages("flush : removes all the buffer and messages from kernel-mode "
-                 "buffers.\n\n");
+VOID CommandFlushHelp() {
+  ShowMessages("flush : removes all the buffer and messages from kernel-mode "
+               "buffers.\n\n");
 
-    ShowMessages("syntax : \tflush \n");
+  ShowMessages("syntax : \tflush \n");
 }
 
 /**
@@ -35,67 +33,59 @@ CommandFlushHelp()
  *
  * @return VOID
  */
-VOID
-CommandFlushRequestFlush()
-{
-    BOOL                           Status;
-    ULONG                          ReturnedLength;
-    DEBUGGER_FLUSH_LOGGING_BUFFERS FlushRequest = {0};
+VOID CommandFlushRequestFlush() {
+  BOOL Status;
+  ULONG ReturnedLength;
+  DEBUGGER_FLUSH_LOGGING_BUFFERS FlushRequest = {0};
 
-    if (g_IsSerialConnectedToRemoteDebuggee)
-    {
-        //
-        // It's a debug-mode
-        //
-        KdSendFlushPacketToDebuggee();
+  if (g_IsSerialConnectedToRemoteDebuggee) {
+    //
+    // It's a debug-mode
+    //
+    KdSendFlushPacketToDebuggee();
+  } else {
+    //
+    // It's a vmi-mode
+    //
+    AssertShowMessageReturnStmt(g_DeviceHandle,
+                                ASSERT_MESSAGE_DRIVER_NOT_LOADED, AssertReturn);
+
+    //
+    // By the way, we don't need to send an input buffer
+    // to the kernel, but let's keep it like this, if we
+    // want to pass some other aguments to the kernel in
+    // the future
+    //
+    Status = DeviceIoControl(
+        g_DeviceHandle,                        // Handle to device
+        IOCTL_DEBUGGER_FLUSH_LOGGING_BUFFERS,  // IO Control code
+        &FlushRequest,                         // Input Buffer to driver.
+        SIZEOF_DEBUGGER_FLUSH_LOGGING_BUFFERS, // Input buffer length
+        &FlushRequest,                         // Output Buffer from driver.
+        SIZEOF_DEBUGGER_FLUSH_LOGGING_BUFFERS, // Length of output buffer in
+                                               // bytes.
+        &ReturnedLength,                       // Bytes placed in buffer.
+        NULL                                   // synchronous call
+    );
+
+    if (!Status) {
+      ShowMessages("ioctl failed with code 0x%x\n", GetLastError());
+      return;
     }
-    else
-    {
-        //
-        // It's a vmi-mode
-        //
-        AssertShowMessageReturnStmt(g_DeviceHandle, ASSERT_MESSAGE_DRIVER_NOT_LOADED, AssertReturn);
 
-        //
-        // By the way, we don't need to send an input buffer
-        // to the kernel, but let's keep it like this, if we
-        // want to pass some other aguments to the kernel in
-        // the future
-        //
-        Status = DeviceIoControl(
-            g_DeviceHandle,                        // Handle to device
-            IOCTL_DEBUGGER_FLUSH_LOGGING_BUFFERS,  // IO Control code
-            &FlushRequest,                         // Input Buffer to driver.
-            SIZEOF_DEBUGGER_FLUSH_LOGGING_BUFFERS, // Input buffer length
-            &FlushRequest,                         // Output Buffer from driver.
-            SIZEOF_DEBUGGER_FLUSH_LOGGING_BUFFERS, // Length of output buffer in
-                                                   // bytes.
-            &ReturnedLength,                       // Bytes placed in buffer.
-            NULL                                   // synchronous call
-        );
-
-        if (!Status)
-        {
-            ShowMessages("ioctl failed with code 0x%x\n", GetLastError());
-            return;
-        }
-
-        if (FlushRequest.KernelStatus == DEBUGGER_OPERATION_WAS_SUCCESSFULL)
-        {
-            //
-            // The amount of message that are deleted are the amount of
-            // vmx-root messages and vmx non-root messages
-            //
-            ShowMessages(
-                "flushing buffers was successful, total %d messages were cleared.\n",
-                FlushRequest.CountOfMessagesThatSetAsReadFromVmxNonRoot +
-                    FlushRequest.CountOfMessagesThatSetAsReadFromVmxRoot);
-        }
-        else
-        {
-            ShowMessages("flushing buffers was not successful :(\n");
-        }
+    if (FlushRequest.KernelStatus == DEBUGGER_OPERATION_WAS_SUCCESSFULL) {
+      //
+      // The amount of message that are deleted are the amount of
+      // vmx-root messages and vmx non-root messages
+      //
+      ShowMessages(
+          "flushing buffers was successful, total %d messages were cleared.\n",
+          FlushRequest.CountOfMessagesThatSetAsReadFromVmxNonRoot +
+              FlushRequest.CountOfMessagesThatSetAsReadFromVmxRoot);
+    } else {
+      ShowMessages("flushing buffers was not successful :(\n");
     }
+  }
 }
 
 /**
@@ -105,18 +95,15 @@ CommandFlushRequestFlush()
  * @param Command
  * @return VOID
  */
-VOID
-CommandFlush(vector<string> SplittedCommand, string Command)
-{
-    if (SplittedCommand.size() != 1)
-    {
-        ShowMessages("incorrect use of 'flush'\n\n");
-        CommandFlushHelp();
-        return;
-    }
+VOID CommandFlush(vector<string> SplittedCommand, string Command) {
+  if (SplittedCommand.size() != 1) {
+    ShowMessages("incorrect use of 'flush'\n\n");
+    CommandFlushHelp();
+    return;
+  }
 
-    //
-    // Flush the buffer
-    //
-    CommandFlushRequestFlush();
+  //
+  // Flush the buffer
+  //
+  CommandFlushRequestFlush();
 }

@@ -21,13 +21,11 @@ extern HANDLE g_DeviceHandle;
 
 
 
-VOID
-CommandExitHelp()
-{
-    ShowMessages(
-        "exit : unloads and uninstalls the drivers and closes the debugger.\n\n");
+VOID CommandExitHelp() {
+  ShowMessages(
+      "exit : unloads and uninstalls the drivers and closes the debugger.\n\n");
 
-    ShowMessages("syntax : \texit\n");
+  ShowMessages("syntax : \texit\n");
 }
 
 
@@ -37,23 +35,19 @@ CommandExitHelp()
 
 
 
-VOID
-CommandExit(vector<string> SplittedCommand, string Command)
-{
-    if (SplittedCommand.size() != 1)
-    {
-        ShowMessages("incorrect use of 'exit'\n\n");
-        CommandExitHelp();
-        return;
-    }
+VOID CommandExit(vector<string> SplittedCommand, string Command) {
+  if (SplittedCommand.size() != 1) {
+    ShowMessages("incorrect use of 'exit'\n\n");
+    CommandExitHelp();
+    return;
+  }
 
-    
-    
-    
-    if (g_DeviceHandle)
-    {
-        HyperDbgUnloadVmm();
-    }
+  
+  
+  
+  if (g_DeviceHandle) {
+    HyperDbgUnloadVmm();
+  }
 
-    exit(0);
+  exit(0);
 }

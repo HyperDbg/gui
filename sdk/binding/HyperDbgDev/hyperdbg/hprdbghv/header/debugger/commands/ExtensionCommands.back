@@ -16,73 +16,56 @@
 
 
 BOOLEAN
-ExtensionCommandPte(PDEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS PteDetails, BOOLEAN IsOperatingInVmxRoot);
+ExtensionCommandPte(PDEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS PteDetails,
+                    BOOLEAN IsOperatingInVmxRoot);
 
-VOID
-ExtensionCommandVa2paAndPa2va(PDEBUGGER_VA2PA_AND_PA2VA_COMMANDS AddressDetails, BOOLEAN OperateOnVmxRoot);
+VOID ExtensionCommandVa2paAndPa2va(
+    PDEBUGGER_VA2PA_AND_PA2VA_COMMANDS AddressDetails,
+    BOOLEAN OperateOnVmxRoot);
 
-VOID
-ExtensionCommandChangeAllMsrBitmapReadAllCores(UINT64 BitmapMask);
+VOID ExtensionCommandChangeAllMsrBitmapReadAllCores(UINT64 BitmapMask);
 
-VOID
-ExtensionCommandResetChangeAllMsrBitmapReadAllCores();
+VOID ExtensionCommandResetChangeAllMsrBitmapReadAllCores();
 
-VOID
-ExtensionCommandChangeAllMsrBitmapWriteAllCores(UINT64 BitmapMask);
+VOID ExtensionCommandChangeAllMsrBitmapWriteAllCores(UINT64 BitmapMask);
 
-VOID
-ExtensionCommandResetAllMsrBitmapWriteAllCores();
+VOID ExtensionCommandResetAllMsrBitmapWriteAllCores();
 
-VOID
-ExtensionCommandEnableRdtscExitingAllCores();
+VOID ExtensionCommandEnableRdtscExitingAllCores();
 
-VOID
-ExtensionCommandDisableRdtscExitingAllCores();
+VOID ExtensionCommandDisableRdtscExitingAllCores();
 
-VOID
-ExtensionCommandDisableRdtscExitingForClearingEventsAllCores();
+VOID ExtensionCommandDisableRdtscExitingForClearingEventsAllCores();
 
-VOID
-ExtensionCommandDisableMov2DebugRegsExitingForClearingEventsAllCores();
+VOID ExtensionCommandDisableMov2DebugRegsExitingForClearingEventsAllCores();
 
-VOID
-ExtensionCommandEnableRdpmcExitingAllCores();
+VOID ExtensionCommandEnableRdpmcExitingAllCores();
 
-VOID
-ExtensionCommandDisableRdpmcExitingAllCores();
+VOID ExtensionCommandDisableRdpmcExitingAllCores();
 
-VOID
-ExtensionCommandSetExceptionBitmapAllCores(UINT64 ExceptionIndex);
+VOID ExtensionCommandSetExceptionBitmapAllCores(UINT64 ExceptionIndex);
 
-VOID
-ExtensionCommandUnsetExceptionBitmapAllCores(UINT64 ExceptionIndex);
+VOID ExtensionCommandUnsetExceptionBitmapAllCores(UINT64 ExceptionIndex);
 
-VOID
-ExtensionCommandResetExceptionBitmapAllCores();
+VOID ExtensionCommandResetExceptionBitmapAllCores();
 
-VOID
-ExtensionCommandEnableMovDebugRegistersExitingAllCores();
+VOID ExtensionCommandEnableMovDebugRegistersExitingAllCores();
 
-VOID
-ExtensionCommandDisableMovDebugRegistersExitingAllCores();
+VOID ExtensionCommandDisableMovDebugRegistersExitingAllCores();
 
-VOID
-ExtensionCommandSetExternalInterruptExitingAllCores();
+VOID ExtensionCommandSetExternalInterruptExitingAllCores();
 
-VOID
-ExtensionCommandUnsetExternalInterruptExitingOnlyOnClearingInterruptEventsAllCores();
+VOID ExtensionCommandUnsetExternalInterruptExitingOnlyOnClearingInterruptEventsAllCores();
 
-VOID
-ExtensionCommandIoBitmapChangeAllCores(UINT64 Port);
+VOID ExtensionCommandIoBitmapChangeAllCores(UINT64 Port);
 
-VOID
-ExtensionCommandIoBitmapResetAllCores();
+VOID ExtensionCommandIoBitmapResetAllCores();
 
-VOID
-ExtensionCommandEnableMovControlRegisterExitingAllCores(PDEBUGGER_EVENT Event);
+VOID ExtensionCommandEnableMovControlRegisterExitingAllCores(
+    PDEBUGGER_EVENT Event);
 
-VOID
-ExtensionCommandDisableMovToControlRegisterExitingAllCores(PDEBUGGER_EVENT Event);
+VOID ExtensionCommandDisableMovToControlRegisterExitingAllCores(
+    PDEBUGGER_EVENT Event);
 
-VOID
-ExtensionCommandDisableMov2ControlRegsExitingForClearingEventsAllCores(PDEBUGGER_EVENT Event);
+VOID ExtensionCommandDisableMov2ControlRegsExitingForClearingEventsAllCores(
+    PDEBUGGER_EVENT Event);

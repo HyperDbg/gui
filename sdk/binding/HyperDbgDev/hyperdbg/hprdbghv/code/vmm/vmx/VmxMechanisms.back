@@ -16,20 +16,18 @@
 
 
 
-VOID
-VmxMechanismCreateImmediateVmexitByVmxPreemptionTimer()
-{
-    
-    
-    
-    HvSetVmxPreemptionTimerExiting(TRUE);
+VOID VmxMechanismCreateImmediateVmexitByVmxPreemptionTimer() {
+  
+  
+  
+  HvSetVmxPreemptionTimerExiting(TRUE);
 
-    
-    
-    
-    
-    
-    CounterSetPreemptionTimer(0);
+  
+  
+  
+  
+  
+  CounterSetPreemptionTimer(0);
 }
 
 
@@ -38,15 +36,13 @@ VmxMechanismCreateImmediateVmexitByVmxPreemptionTimer()
 
 
 
-VOID
-VmxMechanismDisableImmediateVmexitByVmxPreemptionTimer()
-{
-    CounterClearPreemptionTimer();
+VOID VmxMechanismDisableImmediateVmexitByVmxPreemptionTimer() {
+  CounterClearPreemptionTimer();
 
-    
-    
-    
-    HvSetVmxPreemptionTimerExiting(FALSE);
+  
+  
+  
+  HvSetVmxPreemptionTimerExiting(FALSE);
 }
 
 
@@ -55,13 +51,11 @@ VmxMechanismDisableImmediateVmexitByVmxPreemptionTimer()
 
 
 
-VOID
-VmxMechanismCreateImmediateVmexitBySelfIpi()
-{
-    
-    
-    
-    ApicSelfIpi(IMMEDIATE_VMEXIT_MECHANISM_VECTOR_FOR_SELF_IPI);
+VOID VmxMechanismCreateImmediateVmexitBySelfIpi() {
+  
+  
+  
+  ApicSelfIpi(IMMEDIATE_VMEXIT_MECHANISM_VECTOR_FOR_SELF_IPI);
 }
 
 
@@ -70,30 +64,28 @@ VmxMechanismCreateImmediateVmexitBySelfIpi()
 
 
 
-VOID
-VmxMechanismCreateImmediateVmexit(UINT32 CurrentCoreIndex)
-{
-    
-    
-    
-    
-    
-    
+VOID VmxMechanismCreateImmediateVmexit(UINT32 CurrentCoreIndex) {
+  
+  
+  
+  
+  
+  
 
-    
-    
-    
-    g_GuestState[CurrentCoreIndex].WaitForImmediateVmexit = TRUE;
+  
+  
+  
+  g_GuestState[CurrentCoreIndex].WaitForImmediateVmexit = TRUE;
 
-    
-    
-    
-    VmxMechanismCreateImmediateVmexitBySelfIpi();
+  
+  
+  
+  VmxMechanismCreateImmediateVmexitBySelfIpi();
 
-    
-    
-    
-    HvSetExternalInterruptExiting(TRUE);
+  
+  
+  
+  HvSetExternalInterruptExiting(TRUE);
 }
 
 
@@ -103,16 +95,15 @@ VmxMechanismCreateImmediateVmexit(UINT32 CurrentCoreIndex)
 
 
 
-VOID
-VmxMechanismHandleImmediateVmexit(UINT32 CurrentCoreIndex, PGUEST_REGS GuestRegs)
-{
-    
-    
-    
-    g_GuestState[CurrentCoreIndex].WaitForImmediateVmexit = FALSE;
+VOID VmxMechanismHandleImmediateVmexit(UINT32 CurrentCoreIndex,
+                                       PGUEST_REGS GuestRegs) {
+  
+  
+  
+  g_GuestState[CurrentCoreIndex].WaitForImmediateVmexit = FALSE;
 
-    
-    
-    
-    HvSetExternalInterruptExiting(FALSE);
+  
+  
+  
+  HvSetExternalInterruptExiting(FALSE);
 }

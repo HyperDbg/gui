@@ -15,7 +15,7 @@
 //					 Functions                  //
 //////////////////////////////////////////////////
 BOOLEAN
-TestCase(std::vector<std::string> & TestCase);
+TestCase(std::vector<std::string> &TestCase);
 
 //////////////////////////////////////////////////
 //		     Assembly Functions                 //
@@ -29,18 +29,16 @@ extern void inline AsmTest();
 //				Test Case Routines              //
 //////////////////////////////////////////////////
 
-VOID
-TestCreateLookupTable(HANDLE PipeHandle, PVOID KernelInformation, UINT32 KernelInformationSize);
+VOID TestCreateLookupTable(HANDLE PipeHandle, PVOID KernelInformation,
+                           UINT32 KernelInformationSize);
 
 //////////////////////////////////////////////////
 //				General Functions               //
 //////////////////////////////////////////////////
 
-std::string
-Uint64ToString(UINT64 value);
+std::string Uint64ToString(UINT64 value);
 
 BOOLEAN
-StringReplace(std::string & str, const std::string & from, const std::string & to);
+StringReplace(std::string &str, const std::string &from, const std::string &to);
 
-std::string
-ConvertToString(char * Str);
+std::string ConvertToString(char *Str);

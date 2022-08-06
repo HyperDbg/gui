@@ -5,10 +5,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-typedef void (*ZyanMemberProcedure)(void* object);
-typedef void (*ZyanConstMemberProcedure)(const void* object);
-typedef ZyanStatus (*ZyanMemberFunction)(void* object);
-typedef ZyanStatus (*ZyanConstMemberFunction)(const void* object);
+typedef void (*ZyanMemberProcedure)(void *object);
+typedef void (*ZyanConstMemberProcedure)(const void *object);
+typedef ZyanStatus (*ZyanMemberFunction)(void *object);
+typedef ZyanStatus (*ZyanConstMemberFunction)(const void *object);
 #ifdef __cplusplus
 }
 

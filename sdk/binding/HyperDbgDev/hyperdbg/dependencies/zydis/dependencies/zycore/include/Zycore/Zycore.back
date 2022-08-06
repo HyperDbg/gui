@@ -29,17 +29,22 @@
 
 
 
+
 #ifndef ZYCORE_H
 #define ZYCORE_H
 
-#include <ZycoreExportConfig.h>
 #include <Zycore/Types.h>
+#include <ZycoreExportConfig.h>
 
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+
+
 
 
 
@@ -63,21 +68,26 @@ extern "C" {
 
 
 
-#define ZYCORE_VERSION_MAJOR(version) (ZyanU16)((version & 0xFFFF000000000000) >> 48)
+
+
+#define ZYCORE_VERSION_MAJOR(version)                                          \
+  (ZyanU16)((version & 0xFFFF000000000000) >> 48)
 
 
 
 
 
 
-#define ZYCORE_VERSION_MINOR(version) (ZyanU16)((version & 0x0000FFFF00000000) >> 32)
+#define ZYCORE_VERSION_MINOR(version)                                          \
+  (ZyanU16)((version & 0x0000FFFF00000000) >> 32)
 
 
 
 
 
 
-#define ZYCORE_VERSION_PATCH(version) (ZyanU16)((version & 0x00000000FFFF0000) >> 16)
+#define ZYCORE_VERSION_PATCH(version)                                          \
+  (ZyanU16)((version & 0x00000000FFFF0000) >> 16)
 
 
 
@@ -100,7 +110,11 @@ extern "C" {
 
 
 
+
+
+
 ZYCORE_EXPORT ZyanU64 ZycoreGetVersion(void);
+
 
 
 

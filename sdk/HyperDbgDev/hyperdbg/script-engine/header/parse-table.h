@@ -22,23 +22,22 @@
 extern const struct _TOKEN Lhs[RULES_COUNT];
 extern const struct _TOKEN Rhs[RULES_COUNT][MAX_RHS_LEN];
 extern const unsigned int RhsSize[RULES_COUNT];
-extern const char* NoneTerminalMap[NONETERMINAL_COUNT];
-extern const char* TerminalMap[TERMINAL_COUNT];
+extern const char *NoneTerminalMap[NONETERMINAL_COUNT];
+extern const char *TerminalMap[TERMINAL_COUNT];
 extern const int ParseTable[NONETERMINAL_COUNT][TERMINAL_COUNT];
-extern const char* KeywordList[];
-extern const char* OperatorsTwoOperandList[];
-extern const char* OperatorsOneOperandList[];
-extern const char* ThreeOpFunc1[];
-extern const char* TwoOpFunc1[];
-extern const char* TwoOpFunc2[];
-extern const char* OneOpFunc1[];
-extern const char* OneOpFunc2[];
-extern const char* ZeroOpFunc1[];
-extern const char* VarArgFunc1[];
+extern const char *KeywordList[];
+extern const char *OperatorsTwoOperandList[];
+extern const char *OperatorsOneOperandList[];
+extern const char *ThreeOpFunc1[];
+extern const char *TwoOpFunc1[];
+extern const char *TwoOpFunc2[];
+extern const char *OneOpFunc1[];
+extern const char *OneOpFunc2[];
+extern const char *ZeroOpFunc1[];
+extern const char *VarArgFunc1[];
 extern const SYMBOL_MAP SemanticRulesMapList[];
 extern const SYMBOL_MAP RegisterMapList[];
 extern const SYMBOL_MAP PseudoRegisterMapList[];
-
 
 #define LALR_RULES_COUNT 69
 #define LALR_TERMINAL_COUNT 54
@@ -48,8 +47,8 @@ extern const SYMBOL_MAP PseudoRegisterMapList[];
 extern const struct _TOKEN LalrLhs[RULES_COUNT];
 extern const struct _TOKEN LalrRhs[RULES_COUNT][MAX_RHS_LEN];
 extern const unsigned int LalrRhsSize[RULES_COUNT];
-extern const char* LalrNoneTerminalMap[NONETERMINAL_COUNT];
-extern const char* LalrTerminalMap[TERMINAL_COUNT];
+extern const char *LalrNoneTerminalMap[NONETERMINAL_COUNT];
+extern const char *LalrTerminalMap[TERMINAL_COUNT];
 extern const int LalrGotoTable[LALR_STATE_COUNT][LALR_NONTERMINAL_COUNT];
 extern const int LalrActionTable[LALR_STATE_COUNT][LALR_TERMINAL_COUNT];
 extern const struct _TOKEN LalrSemanticRules[RULES_COUNT];

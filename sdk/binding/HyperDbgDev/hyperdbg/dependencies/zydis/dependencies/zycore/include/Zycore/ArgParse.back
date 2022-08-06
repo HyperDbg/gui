@@ -29,13 +29,14 @@
 
 
 
+
 #ifndef ZYCORE_ARGPARSE_H
 #define ZYCORE_ARGPARSE_H
 
-#include <Zycore/Types.h>
 #include <Zycore/Status.h>
-#include <Zycore/Vector.h>
 #include <Zycore/String.h>
+#include <Zycore/Types.h>
+#include <Zycore/Vector.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,78 +49,83 @@ extern "C" {
 
 
 
-typedef struct ZyanArgParseDefinition_
-{
-    
+
+
+typedef struct ZyanArgParseDefinition_ {
+  
 
 
 
 
 
-    const char* name;
-    
+
+  const char *name;
+  
 
 
-    ZyanBool boolean;
-    
+  ZyanBool boolean;
+  
 
 
-    ZyanBool required;
+  ZyanBool required;
 } ZyanArgParseDefinition;
 
 
 
 
-typedef struct ZyanArgParseConfig_
-{
-    
+typedef struct ZyanArgParseConfig_ {
+  
 
 
-    const char** argv;
-    
+  const char **argv;
+  
 
 
-    ZyanUSize argc;
-    
+  ZyanUSize argc;
+  
 
 
-    ZyanUSize min_unnamed_args;
-    
+  ZyanUSize min_unnamed_args;
+  
 
 
-    ZyanUSize max_unnamed_args;
-    
-
-
+  ZyanUSize max_unnamed_args;
+  
 
 
 
 
-    ZyanArgParseDefinition* args;
+
+
+
+  ZyanArgParseDefinition *args;
 } ZyanArgParseConfig;
 
 
 
 
-typedef struct ZyanArgParseArg_
-{
-    
+typedef struct ZyanArgParseArg_ {
+  
 
 
 
 
-    const ZyanArgParseDefinition* def;
-    
+
+  const ZyanArgParseDefinition *def;
+  
 
 
-    ZyanBool has_value;
-    
+  ZyanBool has_value;
+  
 
 
 
 
-    ZyanStringView value;
+
+  ZyanStringView value;
 } ZyanArgParseArg;
+
+
 
 
 
@@ -140,8 +146,9 @@ typedef struct ZyanArgParseArg_
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanArgParse(const ZyanArgParseConfig *cfg, ZyanVector* parsed,
-    const char** error_token);
+ZYCORE_EXPORT ZyanStatus ZyanArgParse(const ZyanArgParseConfig *cfg,
+                                      ZyanVector *parsed,
+                                      const char **error_token);
 
 #endif
 
@@ -161,8 +168,13 @@ ZYCORE_EXPORT ZyanStatus ZyanArgParse(const ZyanArgParseConfig *cfg, ZyanVector*
 
 
 
-ZYCORE_EXPORT ZyanStatus ZyanArgParseEx(const ZyanArgParseConfig *cfg, ZyanVector* parsed,
-    const char** error_token, ZyanAllocator* allocator);
+
+
+ZYCORE_EXPORT ZyanStatus ZyanArgParseEx(const ZyanArgParseConfig *cfg,
+                                        ZyanVector *parsed,
+                                        const char **error_token,
+                                        ZyanAllocator *allocator);
+
 
 
 

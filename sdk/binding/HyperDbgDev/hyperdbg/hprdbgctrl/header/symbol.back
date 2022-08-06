@@ -19,10 +19,9 @@
 
 
 
-typedef struct _LOCAL_FUNCTION_DESCRIPTION
-{
-    std::string ObjectName;
-    UINT32      ObjectSize;
+typedef struct _LOCAL_FUNCTION_DESCRIPTION {
+  std::string ObjectName;
+  UINT32 ObjectSize;
 
 } LOCAL_FUNCTION_DESCRIPTION, *PLOCAL_FUNCTION_DESCRIPTION;
 
@@ -36,8 +35,7 @@ typedef struct _LOCAL_FUNCTION_DESCRIPTION
 
 
 
-VOID
-SymbolBuildAndShowSymbolTable();
+VOID SymbolBuildAndShowSymbolTable();
 
 BOOLEAN
 SymbolShowFunctionNameBasedOnAddress(UINT64 Address, PUINT64 UsedBaseAddress);
@@ -46,28 +44,25 @@ BOOLEAN
 SymbolLoadOrDownloadSymbols(BOOLEAN IsDownload, BOOLEAN SilentLoad);
 
 BOOLEAN
-SymbolConvertNameOrExprToAddress(const string & TextToConvert, PUINT64 Result);
+SymbolConvertNameOrExprToAddress(const string &TextToConvert, PUINT64 Result);
 
 BOOLEAN
 SymbolDeleteSymTable();
 
 BOOLEAN
-SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
-                       PUINT32                 StoredLength,
-                       UINT32                  UserProcessId,
-                       BOOLEAN                 SendOverSerial);
+SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL *BufferToStoreDetails,
+                       PUINT32 StoredLength, UINT32 UserProcessId,
+                       BOOLEAN SendOverSerial);
 
 BOOLEAN
 SymbolBuildAndUpdateSymbolTable(PMODULE_SYMBOL_DETAIL SymbolDetail);
 
-VOID
-SymbolInitialReload();
+VOID SymbolInitialReload();
 
 BOOLEAN
 SymbolLocalReload(UINT32 UserProcessId);
 
-VOID
-SymbolPrepareDebuggerWithSymbolInfo(UINT32 UserProcessId);
+VOID SymbolPrepareDebuggerWithSymbolInfo(UINT32 UserProcessId);
 
 BOOLEAN
 SymbolReloadSymbolTableInDebuggerMode(UINT32 ProcessId);

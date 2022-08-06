@@ -30,16 +30,19 @@
 
 
 
+
 #ifndef ZYDIS_SHORTSTRING_H
 #define ZYDIS_SHORTSTRING_H
 
-#include <ZydisExportConfig.h>
 #include <Zycore/Defines.h>
 #include <Zycore/Types.h>
+#include <ZydisExportConfig.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
 
 
 
@@ -55,16 +58,16 @@ extern "C" {
 
 
 
-typedef struct ZydisShortString_
-{
-    
+
+typedef struct ZydisShortString_ {
+  
 
 
-    const char* data;
-    
+  const char *data;
+  
 
 
-    ZyanU8 size;
+  ZyanU8 size;
 } ZydisShortString;
 
 #pragma pack(pop)
@@ -78,8 +81,11 @@ typedef struct ZydisShortString_
 
 
 
-#define ZYDIS_MAKE_SHORTSTRING(string) \
-    { string, sizeof(string) - 1 }
+
+
+#define ZYDIS_MAKE_SHORTSTRING(string)                                         \
+  { string, sizeof(string) - 1 }
+
 
 
 

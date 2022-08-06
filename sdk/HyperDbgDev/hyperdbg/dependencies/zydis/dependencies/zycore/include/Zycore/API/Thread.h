@@ -11,7 +11,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+all
  * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -34,25 +35,29 @@
 
 #ifndef ZYAN_NO_LIBC
 
-#include <ZycoreExportConfig.h>
 #include <Zycore/Defines.h>
 #include <Zycore/Status.h>
+#include <ZycoreExportConfig.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* ============================================================================================== */
-/* Enums and types                                                                                */
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
+/* Enums and types */
+/* ==============================================================================================
+ */
 
-#if   defined(ZYAN_POSIX)
+#if defined(ZYAN_POSIX)
 
 #include <pthread.h>
 
-/* ---------------------------------------------------------------------------------------------- */
-/* General                                                                                        */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* General */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 /**
  *  @brief  Defines the `ZyanThread` data-type.
@@ -64,9 +69,11 @@ typedef pthread_t ZyanThread;
  */
 typedef ZyanU64 ZyanThreadId;
 
-/* ---------------------------------------------------------------------------------------------- */
-/* Thread Local Storage (TLS)                                                                     */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* Thread Local Storage (TLS) */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 /**
  *  @brief  Defines the `ZyanThreadTlsIndex` data-type.
@@ -76,7 +83,7 @@ typedef pthread_key_t ZyanThreadTlsIndex;
 /**
  *  @brief  Defines the `ZyanThreadTlsCallback` function prototype.
  */
-typedef void(*ZyanThreadTlsCallback)(void* data);
+typedef void (*ZyanThreadTlsCallback)(void *data);
 
 /**
  * @brief   Declares a Thread Local Storage (TLS) callback function.
@@ -85,18 +92,21 @@ typedef void(*ZyanThreadTlsCallback)(void* data);
  * @param   param_type  The callback data parameter type.
  * @param   param_name  The callback data parameter name.
  */
-#define ZYAN_THREAD_DECLARE_TLS_CALLBACK(name, param_type, param_name) \
-    void name(param_type* param_name)
+#define ZYAN_THREAD_DECLARE_TLS_CALLBACK(name, param_type, param_name)         \
+  void name(param_type *param_name)
 
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 #elif defined(ZYAN_WINDOWS)
 
 #include <windows.h>
 
-/* ---------------------------------------------------------------------------------------------- */
-/* General                                                                                        */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* General */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 /**
  *  @brief  Defines the `ZyanThread` data-type.
@@ -108,9 +118,11 @@ typedef HANDLE ZyanThread;
  */
 typedef DWORD ZyanThreadId;
 
-/* ---------------------------------------------------------------------------------------------- */
-/* Thread Local Storage (TLS)                                                                     */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* Thread Local Storage (TLS) */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 /**
  *  @brief  Defines the `ZyanThreadTlsIndex` data-type.
@@ -129,22 +141,27 @@ typedef PFLS_CALLBACK_FUNCTION ZyanThreadTlsCallback;
  * @param   param_type  The callback data parameter type.
  * @param   param_name  The callback data parameter name.
  */
-#define ZYAN_THREAD_DECLARE_TLS_CALLBACK(name, param_type, param_name) \
-    VOID NTAPI name(param_type* param_name)
+#define ZYAN_THREAD_DECLARE_TLS_CALLBACK(name, param_type, param_name)         \
+  VOID NTAPI name(param_type *param_name)
 
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 #else
-#   error "Unsupported platform detected"
+#error "Unsupported platform detected"
 #endif
 
-/* ============================================================================================== */
-/* Exported functions                                                                             */
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
+/* Exported functions */
+/* ==============================================================================================
+ */
 
-/* ---------------------------------------------------------------------------------------------- */
-/* General                                                                                        */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* General */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 /**
  * @brief   Returns the handle of the current thread.
@@ -153,7 +170,7 @@ typedef PFLS_CALLBACK_FUNCTION ZyanThreadTlsCallback;
  *
  * @return  A zyan status code.
  */
-ZYCORE_EXPORT ZyanStatus ZyanThreadGetCurrentThread(ZyanThread* thread);
+ZYCORE_EXPORT ZyanStatus ZyanThreadGetCurrentThread(ZyanThread *thread);
 
 /**
  * @brief   Returns the unique id of the current thread.
@@ -162,42 +179,45 @@ ZYCORE_EXPORT ZyanStatus ZyanThreadGetCurrentThread(ZyanThread* thread);
  *
  * @return  A zyan status code.
  */
-ZYCORE_EXPORT ZyanStatus ZyanThreadGetCurrentThreadId(ZyanThreadId* thread_id);
+ZYCORE_EXPORT ZyanStatus ZyanThreadGetCurrentThreadId(ZyanThreadId *thread_id);
 
-/* ---------------------------------------------------------------------------------------------- */
-/* Thread Local Storage (TLS)                                                                     */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* Thread Local Storage (TLS) */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 /**
  * @brief   Allocates a new Thread Local Storage (TLS) slot.
  *
  * @param   index       Receives the TLS slot index.
- * @param   destructor  A pointer to a destructor callback which is invoked to finalize the data
- *                      in the TLS slot or `ZYAN_NULL`, if not needed.
+ * @param   destructor  A pointer to a destructor callback which is invoked to
+ * finalize the data in the TLS slot or `ZYAN_NULL`, if not needed.
  *
- * The maximum available number of TLS slots is implementation specific and different on each
- * platform:
+ * The maximum available number of TLS slots is implementation specific and
+ * different on each platform:
  * - Windows
  *   - A total amount of 128 slots per process are guaranteed
  * - POSIX
  *   - A total amount of 128 slots per process are guaranteed
  *   - Some systems guarantee larger amounts like e.g. 1024 slots per process
  *
- * Note that the invocation rules for the destructor callback are implementation specific and
- * different on each platform:
+ * Note that the invocation rules for the destructor callback are implementation
+ * specific and different on each platform:
  * - Windows
  *   - The callback is invoked when a thread exits
  *   - The callback is invoked when the process exits
  *   - The callback is invoked when the TLS slot is released
  * - POSIX
- *   - The callback is invoked when a thread exits and the stored value is not null
+ *   - The callback is invoked when a thread exits and the stored value is not
+ * null
  *   - The callback is NOT invoked when the process exits
  *   - The callback is NOT invoked when the TLS slot is released
  *
  * @return  A zyan status code.
  */
-ZYCORE_EXPORT ZyanStatus ZyanThreadTlsAlloc(ZyanThreadTlsIndex* index,
-    ZyanThreadTlsCallback destructor);
+ZYCORE_EXPORT ZyanStatus ZyanThreadTlsAlloc(ZyanThreadTlsIndex *index,
+                                            ZyanThreadTlsCallback destructor);
 
 /**
  * @brief   Releases a Thread Local Storage (TLS) slot.
@@ -209,31 +229,36 @@ ZYCORE_EXPORT ZyanStatus ZyanThreadTlsAlloc(ZyanThreadTlsIndex* index,
 ZYCORE_EXPORT ZyanStatus ZyanThreadTlsFree(ZyanThreadTlsIndex index);
 
 /**
- * @brief   Returns the value inside the given Thread Local Storage (TLS) slot for the calling
- *          thread.
+ * @brief   Returns the value inside the given Thread Local Storage (TLS) slot
+ * for the calling thread.
  *
  * @param   index   The TLS slot index.
- * @param   data    Receives the value inside the given Thread Local Storage (TLS) slot for the
- *                  calling thread.
+ * @param   data    Receives the value inside the given Thread Local Storage
+ * (TLS) slot for the calling thread.
  *
  * @return  A zyan status code.
  */
-ZYCORE_EXPORT ZyanStatus ZyanThreadTlsGetValue(ZyanThreadTlsIndex index, void** data);
+ZYCORE_EXPORT ZyanStatus ZyanThreadTlsGetValue(ZyanThreadTlsIndex index,
+                                               void **data);
 
 /**
- * @brief   Set the value of the given Thread Local Storage (TLS) slot for the calling thread.
+ * @brief   Set the value of the given Thread Local Storage (TLS) slot for the
+ * calling thread.
  *
  * @param   index   The TLS slot index.
- * @param   data    The value to store inside the given Thread Local Storage (TLS) slot for the
- *                  calling thread
+ * @param   data    The value to store inside the given Thread Local Storage
+ * (TLS) slot for the calling thread
  *
  * @return  A zyan status code.
  */
-ZYCORE_EXPORT ZyanStatus ZyanThreadTlsSetValue(ZyanThreadTlsIndex index, void* data);
+ZYCORE_EXPORT ZyanStatus ZyanThreadTlsSetValue(ZyanThreadTlsIndex index,
+                                               void *data);
 
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
 
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
 
 #ifdef __cplusplus
 }

@@ -29,6 +29,7 @@
 
 
 
+
 #ifndef ZYDIS_MNEMONIC_H
 #define ZYDIS_MNEMONIC_H
 
@@ -38,6 +39,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
 
 
 
@@ -62,7 +65,10 @@ extern "C" {
 
 
 
-ZYDIS_EXPORT const char* ZydisMnemonicGetString(ZydisMnemonic mnemonic);
+
+
+
+ZYDIS_EXPORT const char *ZydisMnemonicGetString(ZydisMnemonic mnemonic);
 
 
 
@@ -73,7 +79,11 @@ ZYDIS_EXPORT const char* ZydisMnemonicGetString(ZydisMnemonic mnemonic);
 
 
 
-ZYDIS_EXPORT const ZydisShortString* ZydisMnemonicGetStringWrapped(ZydisMnemonic mnemonic);
+
+
+ZYDIS_EXPORT const ZydisShortString *
+ZydisMnemonicGetStringWrapped(ZydisMnemonic mnemonic);
+
 
 
 

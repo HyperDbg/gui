@@ -19,11 +19,11 @@
 
 #define USE_LIB_IA32
 #if defined(USE_LIB_IA32)
-#    pragma warning(push, 0)
+#pragma warning(push, 0)
 //#    pragma warning(disable : 4201) // suppress nameless struct/union warning
-#    include <ia32-doc/out/ia32.h>
-#    pragma warning(pop)
-typedef RFLAGS * PRFLAGS;
+#include <ia32-doc/out/ia32.h>
+#pragma warning(pop)
+typedef RFLAGS *PRFLAGS;
 #endif // USE_LIB_IA32
 
 //////////////////////////////////////////////////
@@ -66,14 +66,17 @@ typedef RFLAGS * PRFLAGS;
 #define SCRIPT_ENGINE_TEST_CASES_DIRECTORY "script-test-cases"
 
 /**
- * @brief Maximum test cases to communicate between debugger and debuggee process
+ * @brief Maximum test cases to communicate between debugger and debuggee
+ * process
  */
 #define TEST_CASE_MAXIMUM_NUMBER_OF_KERNEL_TEST_CASES 200
 
 /**
  * @brief Maximum buffer to communicate between debugger and debuggee process
  */
-#define TEST_CASE_MAXIMUM_BUFFERS_TO_COMMUNICATE sizeof(DEBUGGEE_KERNEL_AND_USER_TEST_INFORMATION) * TEST_CASE_MAXIMUM_NUMBER_OF_KERNEL_TEST_CASES
+#define TEST_CASE_MAXIMUM_BUFFERS_TO_COMMUNICATE                               \
+  sizeof(DEBUGGEE_KERNEL_AND_USER_TEST_INFORMATION) *                          \
+      TEST_CASE_MAXIMUM_NUMBER_OF_KERNEL_TEST_CASES
 
 //////////////////////////////////////////////////
 //               Event Details                  //
@@ -84,50 +87,49 @@ typedef RFLAGS * PRFLAGS;
  * tracing works in user mode and sending it to the kernl mode
  * @details THIS IS NOT WHAT HYPERDBG SAVES FOR EVENTS IN KERNEL MODE
  */
-typedef struct _DEBUGGER_GENERAL_EVENT_DETAIL
-{
-    LIST_ENTRY
-    CommandsEventList; // Linked-list of commands list (used for tracing purpose
-                       // in user mode)
+typedef struct _DEBUGGER_GENERAL_EVENT_DETAIL {
+  LIST_ENTRY
+  CommandsEventList; // Linked-list of commands list (used for tracing purpose
+                     // in user mode)
 
-    time_t CreationTime; // Date of creating this event
+  time_t CreationTime; // Date of creating this event
 
-    UINT32 CoreId; // determines the core index to apply this event to, if it's
-                   // 0xffffffff means that we have to apply it to all cores
+  UINT32 CoreId; // determines the core index to apply this event to, if it's
+                 // 0xffffffff means that we have to apply it to all cores
 
-    UINT32 ProcessId; // determines the process id to apply this to
-                      // only that 0xffffffff means that we have to
-                      // apply it to all processes
+  UINT32 ProcessId; // determines the process id to apply this to
+                    // only that 0xffffffff means that we have to
+                    // apply it to all processes
 
-    BOOLEAN IsEnabled;
+  BOOLEAN IsEnabled;
 
-    BOOLEAN HasCustomOutput; // Shows whether this event has a custom output
-                             // source or not
+  BOOLEAN HasCustomOutput; // Shows whether this event has a custom output
+                           // source or not
 
-    UINT64
-    OutputSourceTags
-        [DebuggerOutputSourceMaximumRemoteSourceForSingleEvent]; // tags of
-                                                                 // multiple
-                                                                 // sources which
-                                                                 // can be used to
-                                                                 // send the event
-                                                                 // results of
-                                                                 // scripts to
-                                                                 // remote sources
+  UINT64
+  OutputSourceTags
+      [DebuggerOutputSourceMaximumRemoteSourceForSingleEvent]; // tags of
+                                                               // multiple
+                                                               // sources which
+                                                               // can be used to
+                                                               // send the event
+                                                               // results of
+                                                               // scripts to
+                                                               // remote sources
 
-    UINT32 CountOfActions;
+  UINT32 CountOfActions;
 
-    UINT64                   Tag; // is same as operation code
-    DEBUGGER_EVENT_TYPE_ENUM EventType;
+  UINT64 Tag; // is same as operation code
+  DEBUGGER_EVENT_TYPE_ENUM EventType;
 
-    UINT64 OptionalParam1;
-    UINT64 OptionalParam2;
-    UINT64 OptionalParam3;
-    UINT64 OptionalParam4;
+  UINT64 OptionalParam1;
+  UINT64 OptionalParam2;
+  UINT64 OptionalParam3;
+  UINT64 OptionalParam4;
 
-    PVOID CommandStringBuffer;
+  PVOID CommandStringBuffer;
 
-    UINT32 ConditionBufferSize;
+  UINT32 ConditionBufferSize;
 
 } DEBUGGER_GENERAL_EVENT_DETAIL, *PDEBUGGER_GENERAL_EVENT_DETAIL;
 
@@ -137,16 +139,15 @@ typedef struct _DEBUGGER_GENERAL_EVENT_DETAIL
  * WE USE SEPARATE STRUCTURE FOR ACTIONS IN
  * KERNEL MODE
  */
-typedef struct _DEBUGGER_GENERAL_ACTION
-{
-    UINT64                          EventTag;
-    DEBUGGER_EVENT_ACTION_TYPE_ENUM ActionType;
-    BOOLEAN                         ImmediateMessagePassing;
-    UINT32                          PreAllocatedBuffer;
+typedef struct _DEBUGGER_GENERAL_ACTION {
+  UINT64 EventTag;
+  DEBUGGER_EVENT_ACTION_TYPE_ENUM ActionType;
+  BOOLEAN ImmediateMessagePassing;
+  UINT32 PreAllocatedBuffer;
 
-    UINT32 CustomCodeBufferSize;
-    UINT32 ScriptBufferSize;
-    UINT32 ScriptBufferPointer;
+  UINT32 CustomCodeBufferSize;
+  UINT32 ScriptBufferSize;
+  UINT32 ScriptBufferPointer;
 
 } DEBUGGER_GENERAL_ACTION, *PDEBUGGER_GENERAL_ACTION;
 
@@ -154,10 +155,9 @@ typedef struct _DEBUGGER_GENERAL_ACTION
  * @brief Status of register buffers
  *
  */
-typedef struct _DEBUGGER_EVENT_AND_ACTION_REG_BUFFER
-{
-    BOOLEAN IsSuccessful;
-    UINT32  Error; // If IsSuccessful was, FALSE
+typedef struct _DEBUGGER_EVENT_AND_ACTION_REG_BUFFER {
+  BOOLEAN IsSuccessful;
+  UINT32 Error; // If IsSuccessful was, FALSE
 
 } DEBUGGER_EVENT_AND_ACTION_REG_BUFFER, *PDEBUGGER_EVENT_AND_ACTION_REG_BUFFER;
 
@@ -167,19 +167,14 @@ typedef struct _DEBUGGER_EVENT_AND_ACTION_REG_BUFFER
  * @brief Type of transferring buffer between user-to-kernel
  *
  */
-typedef enum _NOTIFY_TYPE
-{
-    IRP_BASED,
-    EVENT_BASED
-} NOTIFY_TYPE;
+typedef enum _NOTIFY_TYPE { IRP_BASED, EVENT_BASED } NOTIFY_TYPE;
 
 /**
  * @brief Used to register event for transferring buffer between user-to-kernel
  *
  */
-typedef struct _REGISTER_NOTIFY_BUFFER
-{
-    NOTIFY_TYPE Type;
-    HANDLE      hEvent;
+typedef struct _REGISTER_NOTIFY_BUFFER {
+  NOTIFY_TYPE Type;
+  HANDLE hEvent;
 
 } REGISTER_NOTIFY_BUFFER, *PREGISTER_NOTIFY_BUFFER;

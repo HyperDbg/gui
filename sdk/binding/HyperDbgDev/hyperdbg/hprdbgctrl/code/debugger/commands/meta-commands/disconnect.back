@@ -16,21 +16,19 @@
 
 extern BOOLEAN g_IsConnectedToHyperDbgLocally;
 extern BOOLEAN g_IsConnectedToRemoteDebuggee;
-extern HANDLE  g_RemoteDebuggeeListeningThread;
-extern HANDLE  g_EndOfMessageReceivedEvent;
+extern HANDLE g_RemoteDebuggeeListeningThread;
+extern HANDLE g_EndOfMessageReceivedEvent;
 
 
 
 
 
 
-VOID
-CommandDisconnectHelp()
-{
-    ShowMessages(".disconnect : disconnects from a debugging session (it won't "
-                 "unload the modules).\n\n");
+VOID CommandDisconnectHelp() {
+  ShowMessages(".disconnect : disconnects from a debugging session (it won't "
+               "unload the modules).\n\n");
 
-    ShowMessages("syntax : \t.disconnect \n");
+  ShowMessages("syntax : \t.disconnect \n");
 }
 
 
@@ -40,58 +38,52 @@ CommandDisconnectHelp()
 
 
 
-VOID
-CommandDisconnect(vector<string> SplittedCommand, string Command)
-{
-    if (SplittedCommand.size() != 1)
-    {
-        ShowMessages("incorrect use of '.disconnect'\n\n");
-        CommandDisconnectHelp();
-        return;
-    }
+VOID CommandDisconnect(vector<string> SplittedCommand, string Command) {
+  if (SplittedCommand.size() != 1) {
+    ShowMessages("incorrect use of '.disconnect'\n\n");
+    CommandDisconnectHelp();
+    return;
+  }
 
-    if (!g_IsConnectedToHyperDbgLocally && !g_IsConnectedToRemoteDebuggee)
-    {
-        ShowMessages("you're not connected to any instance of HyperDbg, did you "
-                     "use '.connect'? \n");
-        return;
-    }
+  if (!g_IsConnectedToHyperDbgLocally && !g_IsConnectedToRemoteDebuggee) {
+    ShowMessages("you're not connected to any instance of HyperDbg, did you "
+                 "use '.connect'? \n");
+    return;
+  }
 
-    
-    
-    
-    
-    if (g_IsConnectedToHyperDbgLocally && g_DeviceHandle)
-    {
-        ShowMessages("you cannot disconnect in local debugging while the "
-                     "driver is still loaded. please use 'unload' command before "
-                     "disconnecting from the current instance of debugger\n");
-        return;
-    }
+  
+  
+  
+  
+  if (g_IsConnectedToHyperDbgLocally && g_DeviceHandle) {
+    ShowMessages("you cannot disconnect in local debugging while the "
+                 "driver is still loaded. please use 'unload' command before "
+                 "disconnecting from the current instance of debugger\n");
+    return;
+  }
 
-    
-    
-    
-    g_IsConnectedToHyperDbgLocally = FALSE;
+  
+  
+  
+  g_IsConnectedToHyperDbgLocally = FALSE;
 
+  
+  
+  
+  if (g_IsConnectedToRemoteDebuggee) {
     
     
     
-    if (g_IsConnectedToRemoteDebuggee)
-    {
-        
-        
-        
-        
-        TerminateThread(g_RemoteDebuggeeListeningThread, 0);
-        CloseHandle(g_RemoteDebuggeeListeningThread);
-        CloseHandle(g_EndOfMessageReceivedEvent);
-        g_EndOfMessageReceivedEvent = NULL;
+    
+    TerminateThread(g_RemoteDebuggeeListeningThread, 0);
+    CloseHandle(g_RemoteDebuggeeListeningThread);
+    CloseHandle(g_EndOfMessageReceivedEvent);
+    g_EndOfMessageReceivedEvent = NULL;
 
-        RemoteConnectionCloseTheConnectionWithDebuggee();
+    RemoteConnectionCloseTheConnectionWithDebuggee();
 
-        g_IsConnectedToRemoteDebuggee = FALSE;
-    }
+    g_IsConnectedToRemoteDebuggee = FALSE;
+  }
 
-    ShowMessages("disconnected successfully\n");
+  ShowMessages("disconnected successfully\n");
 }

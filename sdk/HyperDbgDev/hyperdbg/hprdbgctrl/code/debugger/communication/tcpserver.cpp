@@ -21,235 +21,217 @@
 /**
  * @brief Create server and wait for a client to connect
  * @details this function only accepts one client not multiple clients
- * 
- * @param Port 
- * @param ClientSocketArg 
- * @param ListenSocketArg 
- * @return int 
+ *
+ * @param Port
+ * @param ClientSocketArg
+ * @param ListenSocketArg
+ * @return int
  */
-int
-CommunicationServerCreateServerAndWaitForClient(PCSTR    Port,
-                                                SOCKET * ClientSocketArg,
-                                                SOCKET * ListenSocketArg)
-{
-    WSADATA wsaData;
-    int     iResult;
+int CommunicationServerCreateServerAndWaitForClient(PCSTR Port,
+                                                    SOCKET *ClientSocketArg,
+                                                    SOCKET *ListenSocketArg) {
+  WSADATA wsaData;
+  int iResult;
 
-    SOCKET ListenSocket = INVALID_SOCKET;
-    SOCKET ClientSocket = INVALID_SOCKET;
+  SOCKET ListenSocket = INVALID_SOCKET;
+  SOCKET ClientSocket = INVALID_SOCKET;
 
-    struct addrinfo * result = NULL;
-    struct addrinfo   hints;
+  struct addrinfo *result = NULL;
+  struct addrinfo hints;
 
-    //
-    // Initialize Winsock
-    //
-    iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (iResult != 0)
-    {
-        ShowMessages("err, WSAStartup failed (%x)\n", iResult);
-        return 1;
-    }
+  //
+  // Initialize Winsock
+  //
+  iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+  if (iResult != 0) {
+    ShowMessages("err, WSAStartup failed (%x)\n", iResult);
+    return 1;
+  }
 
-    ZeroMemory(&hints, sizeof(hints));
-    hints.ai_family   = AF_INET;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;
-    hints.ai_flags    = AI_PASSIVE;
+  ZeroMemory(&hints, sizeof(hints));
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_protocol = IPPROTO_TCP;
+  hints.ai_flags = AI_PASSIVE;
 
-    //
-    // Resolve the server address and port
-    //
-    iResult = getaddrinfo(NULL, Port, &hints, &result);
-    if (iResult != 0)
-    {
-        ShowMessages("err, getaddrinfo failed (%x)\n", iResult);
-        WSACleanup();
-        return 1;
-    }
+  //
+  // Resolve the server address and port
+  //
+  iResult = getaddrinfo(NULL, Port, &hints, &result);
+  if (iResult != 0) {
+    ShowMessages("err, getaddrinfo failed (%x)\n", iResult);
+    WSACleanup();
+    return 1;
+  }
 
-    //
-    // Create a SOCKET for connecting to server
-    //
-    ListenSocket =
-        socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-    if (ListenSocket == INVALID_SOCKET)
-    {
-        ShowMessages("socket failed with error: %ld\n", WSAGetLastError());
-        freeaddrinfo(result);
-        WSACleanup();
-        return 1;
-    }
-
-    //
-    // Setup the TCP listening socket
-    //
-    iResult = ::bind(ListenSocket, result->ai_addr, (int)result->ai_addrlen);
-    if (iResult == SOCKET_ERROR)
-    {
-        ShowMessages("err, bind failed (%x)\n", WSAGetLastError());
-        freeaddrinfo(result);
-        closesocket(ListenSocket);
-        WSACleanup();
-        return 1;
-    }
-
+  //
+  // Create a SOCKET for connecting to server
+  //
+  ListenSocket =
+      socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+  if (ListenSocket == INVALID_SOCKET) {
+    ShowMessages("socket failed with error: %ld\n", WSAGetLastError());
     freeaddrinfo(result);
+    WSACleanup();
+    return 1;
+  }
 
-    iResult = listen(ListenSocket, SOMAXCONN);
-    if (iResult == SOCKET_ERROR)
-    {
-        ShowMessages("err, listen failed (%x)\n", WSAGetLastError());
-        closesocket(ListenSocket);
-        WSACleanup();
-        return 1;
-    }
+  //
+  // Setup the TCP listening socket
+  //
+  iResult = ::bind(ListenSocket, result->ai_addr, (int)result->ai_addrlen);
+  if (iResult == SOCKET_ERROR) {
+    ShowMessages("err, bind failed (%x)\n", WSAGetLastError());
+    freeaddrinfo(result);
+    closesocket(ListenSocket);
+    WSACleanup();
+    return 1;
+  }
 
-    //
-    // Accept a client socket
-    //
-    sockaddr_in name    = {0};
-    int         addrlen = sizeof(name);
+  freeaddrinfo(result);
 
-    ClientSocket = accept(ListenSocket, (struct sockaddr *)&name, &addrlen);
+  iResult = listen(ListenSocket, SOMAXCONN);
+  if (iResult == SOCKET_ERROR) {
+    ShowMessages("err, listen failed (%x)\n", WSAGetLastError());
+    closesocket(ListenSocket);
+    WSACleanup();
+    return 1;
+  }
 
-    if (ClientSocket == INVALID_SOCKET)
-    {
-        ShowMessages("err, accept failed (%x)\n", WSAGetLastError());
-        closesocket(ListenSocket);
-        WSACleanup();
-        return 1;
-    }
+  //
+  // Accept a client socket
+  //
+  sockaddr_in name = {0};
+  int addrlen = sizeof(name);
 
-    //
-    // Show that we connected to a client
-    //
-    ShowMessages("connected to : %s:%d\n", inet_ntoa(name.sin_addr), ntohs(name.sin_port));
+  ClientSocket = accept(ListenSocket, (struct sockaddr *)&name, &addrlen);
 
-    //
-    // Set the argument
-    //
-    *ClientSocketArg = ClientSocket;
-    *ListenSocketArg = ListenSocket;
+  if (ClientSocket == INVALID_SOCKET) {
+    ShowMessages("err, accept failed (%x)\n", WSAGetLastError());
+    closesocket(ListenSocket);
+    WSACleanup();
+    return 1;
+  }
 
-    return 0;
+  //
+  // Show that we connected to a client
+  //
+  ShowMessages("connected to : %s:%d\n", inet_ntoa(name.sin_addr),
+               ntohs(name.sin_port));
+
+  //
+  // Set the argument
+  //
+  *ClientSocketArg = ClientSocket;
+  *ListenSocketArg = ListenSocket;
+
+  return 0;
 }
 
 /**
  * @brief listen and receive message as the server
- * 
- * @param ClientSocket 
- * @param recvbuf 
- * @param recvbuflen 
- * @return int 
+ *
+ * @param ClientSocket
+ * @param recvbuf
+ * @param recvbuflen
+ * @return int
  */
-int
-CommunicationServerReceiveMessage(SOCKET ClientSocket, char * recvbuf, int recvbuflen)
-{
-    int iResult;
+int CommunicationServerReceiveMessage(SOCKET ClientSocket, char *recvbuf,
+                                      int recvbuflen) {
+  int iResult;
 
+  //
+  // Receive until the peer shuts down the connection
+  //
+  iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+  if (iResult > 0) {
     //
-    // Receive until the peer shuts down the connection
+    // ShowMessages("bytes received: %d\n", iResult);
     //
-    iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-    if (iResult > 0)
-    {
-        //
-        // ShowMessages("bytes received: %d\n", iResult);
-        //
-    }
-    else if (iResult == 0)
-    {
-        //
-        // ShowMessages("connection closing...\n");
-        //
-    }
-    else
-    {
-        ShowMessages("err, recv failed (%x)\n", WSAGetLastError());
-        closesocket(ClientSocket);
-        WSACleanup();
+  } else if (iResult == 0) {
+    //
+    // ShowMessages("connection closing...\n");
+    //
+  } else {
+    ShowMessages("err, recv failed (%x)\n", WSAGetLastError());
+    closesocket(ClientSocket);
+    WSACleanup();
 
-        return 1;
-    }
+    return 1;
+  }
 
-    return 0;
+  return 0;
 }
 
 /**
  * @brief send message as the server
- * 
- * @param ClientSocket 
- * @param sendbuf 
- * @param length 
- * @return int 
+ *
+ * @param ClientSocket
+ * @param sendbuf
+ * @param length
+ * @return int
  */
-int
-CommunicationServerSendMessage(SOCKET ClientSocket, const char * sendbuf, int length)
-{
-    int iSendResult;
+int CommunicationServerSendMessage(SOCKET ClientSocket, const char *sendbuf,
+                                   int length) {
+  int iSendResult;
 
-    //
-    // Echo the buffer back to the sender
-    //
-    iSendResult = send(ClientSocket, sendbuf, length, 0);
-    if (iSendResult == SOCKET_ERROR)
-    {
-        /*
-    ShowMessages("err, send failed (%x)\n", WSAGetLastError());
-    closesocket(ClientSocket);
-    WSACleanup();   
-        */
-        return 1;
-    }
-    return 0;
+  //
+  // Echo the buffer back to the sender
+  //
+  iSendResult = send(ClientSocket, sendbuf, length, 0);
+  if (iSendResult == SOCKET_ERROR) {
+    /*
+ShowMessages("err, send failed (%x)\n", WSAGetLastError());
+closesocket(ClientSocket);
+WSACleanup();
+    */
+    return 1;
+  }
+  return 0;
 }
 
 /**
  * @brief Shutdown and cleanup connection as server
- * 
- * @param ClientSocket 
- * @param ListenSocket 
- * @return int 
+ *
+ * @param ClientSocket
+ * @param ListenSocket
+ * @return int
  */
-int
-CommunicationServerShutdownAndCleanupConnection(SOCKET ClientSocket,
-                                                SOCKET ListenSocket)
-{
-    int iResult;
+int CommunicationServerShutdownAndCleanupConnection(SOCKET ClientSocket,
+                                                    SOCKET ListenSocket) {
+  int iResult;
 
-    //
-    // No longer need server socket
-    //
-    closesocket(ListenSocket);
+  //
+  // No longer need server socket
+  //
+  closesocket(ListenSocket);
 
+  //
+  // shutdown the connection since we're done
+  //
+  iResult = shutdown(ClientSocket, SD_SEND);
+  if (iResult == SOCKET_ERROR) {
     //
-    // shutdown the connection since we're done
+    // We comment this line because the connection might be removed;
+    // thus, we don't need to show error
     //
-    iResult = shutdown(ClientSocket, SD_SEND);
-    if (iResult == SOCKET_ERROR)
-    {
-        //
-        // We comment this line because the connection might be removed;
-        // thus, we don't need to show error
-        //
 
-        /*
-    ShowMessages("err, shutdown failed (%x)\n", WSAGetLastError());
-    */
+    /*
+ShowMessages("err, shutdown failed (%x)\n", WSAGetLastError());
+*/
 
-        closesocket(ClientSocket);
-        WSACleanup();
-        return 1;
-    }
-
-    //
-    // cleanup
-    //
     closesocket(ClientSocket);
     WSACleanup();
+    return 1;
+  }
 
-    return 0;
+  //
+  // cleanup
+  //
+  closesocket(ClientSocket);
+  WSACleanup();
+
+  return 0;
 }
 
 //

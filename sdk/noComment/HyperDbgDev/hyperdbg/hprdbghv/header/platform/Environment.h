@@ -1,6 +1,6 @@
 #pragma once
 #if defined(_WIN32) || defined(_WIN64)
-#    define ENV_WINDOWS
+#define ENV_WINDOWS
 #else
-#    error "This code cannot compile on non windows platforms"
+#error "This code cannot compile on non windows platforms"
 #endif

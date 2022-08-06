@@ -31,100 +31,80 @@ F8 02 00 00 00 00 00 00  00 C2 01 00 00 00 01 00  ................
 
 */
 
-static VOID
-WritePortWithIndex8(
-    _In_ PCPPORT Port,
-    const UCHAR  Index,
-    const UCHAR  Value)
-{
-    PUCHAR Pointer;
+static VOID WritePortWithIndex8(_In_ PCPPORT Port, const UCHAR Index,
+                                const UCHAR Value) {
+  PUCHAR Pointer;
 
-    Pointer = (PUCHAR)(Port->Address + Index * Port->ByteWidth);
-    WRITE_PORT_UCHAR(Pointer, Value);
-    return;
+  Pointer = (PUCHAR)(Port->Address + Index * Port->ByteWidth);
+  WRITE_PORT_UCHAR(Pointer, Value);
+  return;
 }
 
-static UCHAR
-ReadPortWithIndex8(
-    _In_ PCPPORT Port,
-    const UCHAR  Index)
-{
-    PUCHAR Pointer;
+static UCHAR ReadPortWithIndex8(_In_ PCPPORT Port, const UCHAR Index) {
+  PUCHAR Pointer;
 
-    Pointer = (PUCHAR)(Port->Address + Index * Port->ByteWidth);
-    return (UCHAR)READ_PORT_UCHAR(Pointer);
+  Pointer = (PUCHAR)(Port->Address + Index * Port->ByteWidth);
+  return (UCHAR)READ_PORT_UCHAR(Pointer);
 }
 
 UINT64
-KdHyperDbgTest(UINT16 Byte)
-{
-    //
-    // *** This function is for internal use and test
-    // don't use it ***
-    //
+KdHyperDbgTest(UINT16 Byte) {
+  //
+  // *** This function is for internal use and test
+  // don't use it ***
+  //
 
-    CPPORT TempPort    = {0};
-    TempPort.Address   = 0x2f8;
-    TempPort.BaudRate  = 0x01c200; //115200
-    TempPort.Flags     = 0;
-    TempPort.ByteWidth = 1;
+  CPPORT TempPort = {0};
+  TempPort.Address = 0x2f8;
+  TempPort.BaudRate = 0x01c200; // 115200
+  TempPort.Flags = 0;
+  TempPort.ByteWidth = 1;
 
-    TempPort.Write = WritePortWithIndex8;
-    TempPort.Read  = ReadPortWithIndex8;
+  TempPort.Write = WritePortWithIndex8;
+  TempPort.Read = ReadPortWithIndex8;
 
-    Uart16550PutByte(&TempPort, 0x42, TRUE);
+  Uart16550PutByte(&TempPort, 0x42, TRUE);
 
-    for (size_t i = 0; i < 100; i++)
-    {
-        char RecvByte = 0;
-        // Uart16550GetByte(&TempPort,&RecvByte);
-    }
+  for (size_t i = 0; i < 100; i++) {
+    char RecvByte = 0;
+    // Uart16550GetByte(&TempPort,&RecvByte);
+  }
 }
 
-VOID
-KdHyperDbgPrepareDebuggeeConnectionPort(UINT32 PortAddress, UINT32 Baudrate)
-{
-    g_PortDetails.Address   = PortAddress;
-    g_PortDetails.BaudRate  = Baudrate;
-    g_PortDetails.Flags     = 0;
-    g_PortDetails.ByteWidth = 1;
+VOID KdHyperDbgPrepareDebuggeeConnectionPort(UINT32 PortAddress,
+                                             UINT32 Baudrate) {
+  g_PortDetails.Address = PortAddress;
+  g_PortDetails.BaudRate = Baudrate;
+  g_PortDetails.Flags = 0;
+  g_PortDetails.ByteWidth = 1;
 
-    g_PortDetails.Write = WritePortWithIndex8;
-    g_PortDetails.Read  = ReadPortWithIndex8;
+  g_PortDetails.Write = WritePortWithIndex8;
+  g_PortDetails.Read = ReadPortWithIndex8;
 }
 
-VOID
-KdHyperDbgSendByte(UCHAR Byte, BOOLEAN BusyWait)
-{
-    Uart16550PutByte(&g_PortDetails, Byte, BusyWait);
+VOID KdHyperDbgSendByte(UCHAR Byte, BOOLEAN BusyWait) {
+  Uart16550PutByte(&g_PortDetails, Byte, BusyWait);
 }
 
 BOOLEAN
-KdHyperDbgRecvByte(PUCHAR RecvByte)
-{
-    if (Uart16550GetByte(&g_PortDetails, RecvByte) == UartSuccess)
-    {
-        return TRUE;
-    }
-    return FALSE;
+KdHyperDbgRecvByte(PUCHAR RecvByte) {
+  if (Uart16550GetByte(&g_PortDetails, RecvByte) == UartSuccess) {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 // ----------------------------------------------- Internal Function Prototypes
 
 BOOLEAN
-Uart16550SetBaud(
-    _Inout_ PCPPORT Port,
-    ULONG           Rate);
+Uart16550SetBaud(_Inout_ PCPPORT Port, ULONG Rate);
 
 // ------------------------------------------------------------------ Functions
 
 BOOLEAN
-Uart16550InitializePortCommon(
-    _In_opt_ _Null_terminated_ PCHAR LoadOptions,
-    _Inout_ PCPPORT                  Port,
-    BOOLEAN                          MemoryMapped,
-    UCHAR                            AccessSize,
-    UCHAR                            BitWidth)
+Uart16550InitializePortCommon(_In_opt_ _Null_terminated_ PCHAR LoadOptions,
+                              _Inout_ PCPPORT Port, BOOLEAN MemoryMapped,
+                              UCHAR AccessSize, UCHAR BitWidth)
 
 /*++
 
@@ -154,79 +134,75 @@ Return Value:
 --*/
 
 {
-    UCHAR RegisterValue;
+  UCHAR RegisterValue;
 
-    UNREFERENCED_PARAMETER(LoadOptions);
+  UNREFERENCED_PARAMETER(LoadOptions);
 
-    //
-    // Set the Read / Write function pointers for this serial port.
-    //
+  //
+  // Set the Read / Write function pointers for this serial port.
+  //
 
-    UartpSetAccess(Port, MemoryMapped, AccessSize, BitWidth);
+  UartpSetAccess(Port, MemoryMapped, AccessSize, BitWidth);
 
-    //
-    // Set DLAB to zero. The DLAB controls the meaning of the first two
-    // registers. When zero, the first register is used for all byte transfers
-    // and the second register controls device interrupts.
-    //
+  //
+  // Set DLAB to zero. The DLAB controls the meaning of the first two
+  // registers. When zero, the first register is used for all byte transfers
+  // and the second register controls device interrupts.
+  //
 
-    RegisterValue = Port->Read(Port, COM_LCR);
-    RegisterValue &= ~LC_DLAB;
-    Port->Write(Port, COM_LCR, RegisterValue);
+  RegisterValue = Port->Read(Port, COM_LCR);
+  RegisterValue &= ~LC_DLAB;
+  Port->Write(Port, COM_LCR, RegisterValue);
 
-    //
-    // Disable device interrupts.  This implementation will handle state
-    // transitions by request only.
-    //
+  //
+  // Disable device interrupts.  This implementation will handle state
+  // transitions by request only.
+  //
 
-    Port->Write(Port, COM_IEN, 0);
+  Port->Write(Port, COM_IEN, 0);
 
-    //
-    // Reset and disable the FIFO queue.
-    // N.B. FIFO will be reenabled before returning from this routine.
-    //
+  //
+  // Reset and disable the FIFO queue.
+  // N.B. FIFO will be reenabled before returning from this routine.
+  //
 
-    Port->Write(Port, COM_FCR, FC_CLEAR_TRANSMIT | FC_CLEAR_RECEIVE);
+  Port->Write(Port, COM_FCR, FC_CLEAR_TRANSMIT | FC_CLEAR_RECEIVE);
 
-    //
-    // Configure the baud rate and mode.
-    //
+  //
+  // Configure the baud rate and mode.
+  //
 
-    Uart16550SetBaud(Port, Port->BaudRate);
+  Uart16550SetBaud(Port, Port->BaudRate);
 
-    //
-    // Enable the FIFO.
-    //
+  //
+  // Enable the FIFO.
+  //
 
-    Port->Write(Port, COM_FCR, FC_ENABLE);
+  Port->Write(Port, COM_FCR, FC_ENABLE);
 
-    //
-    // Assert DTR, RTS. Disable loopback. Indicate to the device that
-    // we are able to send and receive data.
-    //
+  //
+  // Assert DTR, RTS. Disable loopback. Indicate to the device that
+  // we are able to send and receive data.
+  //
 
-    Port->Write(Port, COM_MCR, MC_DTRRTS);
+  Port->Write(Port, COM_MCR, MC_DTRRTS);
 
-    //
-    // Initialize ring indicator bit based on hardware state.
-    //
+  //
+  // Initialize ring indicator bit based on hardware state.
+  //
 
-    RegisterValue = Port->Read(Port, COM_MSR);
-    if (CHECK_FLAG(RegisterValue, SERIAL_MSR_RI))
-    {
-        Port->Flags |= PORT_RING_INDICATOR;
-    }
+  RegisterValue = Port->Read(Port, COM_MSR);
+  if (CHECK_FLAG(RegisterValue, SERIAL_MSR_RI)) {
+    Port->Flags |= PORT_RING_INDICATOR;
+  }
 
-    return TRUE;
+  return TRUE;
 }
 
 BOOLEAN
-Uart16550LegacyInitializePort(
-    _In_opt_ _Null_terminated_ PCHAR LoadOptions,
-    _Inout_ PCPPORT                  Port,
-    BOOLEAN                          MemoryMapped,
-    UCHAR                            AccessSize,
-    UCHAR                            BitWidth)
+Uart16550LegacyInitializePort(_In_opt_ _Null_terminated_ PCHAR LoadOptions,
+                              _Inout_ PCPPORT Port, BOOLEAN MemoryMapped,
+                              UCHAR AccessSize, UCHAR BitWidth)
 
 /*++
 
@@ -258,47 +234,40 @@ Return Value:
 --*/
 
 {
-    UNREFERENCED_PARAMETER(AccessSize);
-    UNREFERENCED_PARAMETER(BitWidth);
-    UNREFERENCED_PARAMETER(MemoryMapped);
+  UNREFERENCED_PARAMETER(AccessSize);
+  UNREFERENCED_PARAMETER(BitWidth);
+  UNREFERENCED_PARAMETER(MemoryMapped);
 
-    switch ((ULONG_PTR)Port->Address)
-    {
-    case 1:
-        Port->Address = (PUCHAR)COM1_PORT;
-        break;
+  switch ((ULONG_PTR)Port->Address) {
+  case 1:
+    Port->Address = (PUCHAR)COM1_PORT;
+    break;
 
-    case 2:
-        Port->Address = (PUCHAR)COM2_PORT;
-        break;
+  case 2:
+    Port->Address = (PUCHAR)COM2_PORT;
+    break;
 
-    case 3:
-        Port->Address = (PUCHAR)COM3_PORT;
-        break;
+  case 3:
+    Port->Address = (PUCHAR)COM3_PORT;
+    break;
 
-    case 4:
-        Port->Address = (PUCHAR)COM4_PORT;
-        break;
+  case 4:
+    Port->Address = (PUCHAR)COM4_PORT;
+    break;
 
-    default:
-        return FALSE;
-    }
+  default:
+    return FALSE;
+  }
 
-    Port->Flags = 0;
-    return Uart16550InitializePortCommon(LoadOptions,
-                                         Port,
-                                         FALSE,
-                                         AcpiGenericAccessSizeByte,
-                                         8);
+  Port->Flags = 0;
+  return Uart16550InitializePortCommon(LoadOptions, Port, FALSE,
+                                       AcpiGenericAccessSizeByte, 8);
 }
 
 BOOLEAN
-Uart16550InitializePort(
-    _In_opt_ _Null_terminated_ PCHAR LoadOptions,
-    _Inout_ PCPPORT                  Port,
-    BOOLEAN                          MemoryMapped,
-    UCHAR                            AccessSize,
-    UCHAR                            BitWidth)
+Uart16550InitializePort(_In_opt_ _Null_terminated_ PCHAR LoadOptions,
+                        _Inout_ PCPPORT Port, BOOLEAN MemoryMapped,
+                        UCHAR AccessSize, UCHAR BitWidth)
 
 /*++
 
@@ -329,54 +298,48 @@ Return Value:
 --*/
 
 {
-    UCHAR RegisterBitWidth;
+  UCHAR RegisterBitWidth;
 
-    UNREFERENCED_PARAMETER(AccessSize);
-    UNREFERENCED_PARAMETER(BitWidth);
+  UNREFERENCED_PARAMETER(AccessSize);
+  UNREFERENCED_PARAMETER(BitWidth);
 
 #if defined(_ARM_) || defined(_ARM64_)
 
-    //
-    // ARM-based systems are by definition MMIO and tend to space the ports
-    // apart at 4-byte intervals. Expand to DWORD boundaries for ARM devices.
-    //
+  //
+  // ARM-based systems are by definition MMIO and tend to space the ports
+  // apart at 4-byte intervals. Expand to DWORD boundaries for ARM devices.
+  //
 
-    RegisterBitWidth = 32;
-    if (MemoryMapped == FALSE)
-    {
-        return FALSE;
-    }
+  RegisterBitWidth = 32;
+  if (MemoryMapped == FALSE) {
+    return FALSE;
+  }
 
-    //
-    // ARM-based systems typically have non-standard dividends for baud rate.
-    // It is deemed safest to assume the UEFI firmware has already set up
-    // the serial port properly and just inherit the baud rate that is already
-    // set.
-    //
+  //
+  // ARM-based systems typically have non-standard dividends for baud rate.
+  // It is deemed safest to assume the UEFI firmware has already set up
+  // the serial port properly and just inherit the baud rate that is already
+  // set.
+  //
 
-    Port->Flags = PORT_DEFAULT_RATE;
+  Port->Flags = PORT_DEFAULT_RATE;
 
 #else
 
-    RegisterBitWidth = 8;
-    Port->Flags      = 0;
+  RegisterBitWidth = 8;
+  Port->Flags = 0;
 
 #endif
 
-    return Uart16550InitializePortCommon(LoadOptions,
-                                         Port,
-                                         MemoryMapped,
-                                         AcpiGenericAccessSizeByte,
-                                         RegisterBitWidth);
+  return Uart16550InitializePortCommon(LoadOptions, Port, MemoryMapped,
+                                       AcpiGenericAccessSizeByte,
+                                       RegisterBitWidth);
 }
 
 BOOLEAN
-Uart16550MmInitializePort(
-    _In_opt_ _Null_terminated_ PCHAR LoadOptions,
-    _Inout_ PCPPORT                  Port,
-    BOOLEAN                          MemoryMapped,
-    UCHAR                            AccessSize,
-    UCHAR                            BitWidth)
+Uart16550MmInitializePort(_In_opt_ _Null_terminated_ PCHAR LoadOptions,
+                          _Inout_ PCPPORT Port, BOOLEAN MemoryMapped,
+                          UCHAR AccessSize, UCHAR BitWidth)
 
 /*++
 
@@ -409,19 +372,13 @@ Return Value:
 --*/
 
 {
-    Port->Flags = PORT_DEFAULT_RATE;
-    return Uart16550InitializePortCommon(LoadOptions,
-                                         Port,
-                                         MemoryMapped,
-                                         AccessSize,
-                                         BitWidth);
+  Port->Flags = PORT_DEFAULT_RATE;
+  return Uart16550InitializePortCommon(LoadOptions, Port, MemoryMapped,
+                                       AccessSize, BitWidth);
 }
 
 BOOLEAN
-Uart16550SetBaudCommon(
-    _Inout_ PCPPORT Port,
-    ULONG           Rate,
-    ULONG           Clock)
+Uart16550SetBaudCommon(_Inout_ PCPPORT Port, ULONG Rate, ULONG Clock)
 
 /*++
 
@@ -444,61 +401,57 @@ Return Value:
 --*/
 
 {
-    UCHAR Lcr;
+  UCHAR Lcr;
 
-    if ((Port == NULL) || (Port->Address == NULL))
-    {
-        return FALSE;
-    }
+  if ((Port == NULL) || (Port->Address == NULL)) {
+    return FALSE;
+  }
 
-    if ((Rate == 0) || (Clock == 0))
-    {
-        return FALSE;
-    }
+  if ((Rate == 0) || (Clock == 0)) {
+    return FALSE;
+  }
 
-    //
-    // A device's baud rate is written to DLL and DLM.  The values of these
-    // registers are the resultant when the max rate (clock) is divided by the
-    // device's desired operating rate.
-    //
+  //
+  // A device's baud rate is written to DLL and DLM.  The values of these
+  // registers are the resultant when the max rate (clock) is divided by the
+  // device's desired operating rate.
+  //
 
-    const ULONG DivisorLatch = Clock / Rate;
+  const ULONG DivisorLatch = Clock / Rate;
 
-    //
-    // Set the divisor latch access bit (DLAB) in the line control register.
-    // When non-zero, the first two registers become DLL and DLM.
-    //
+  //
+  // Set the divisor latch access bit (DLAB) in the line control register.
+  // When non-zero, the first two registers become DLL and DLM.
+  //
 
-    Lcr = Port->Read(Port, COM_LCR);
-    Lcr |= LC_DLAB;
-    Port->Write(Port, COM_LCR, Lcr);
+  Lcr = Port->Read(Port, COM_LCR);
+  Lcr |= LC_DLAB;
+  Port->Write(Port, COM_LCR, Lcr);
 
-    //
-    // Set the divisor latch value (MSB first, then LSB).
-    //
+  //
+  // Set the divisor latch value (MSB first, then LSB).
+  //
 
-    Port->Write(Port, COM_DLM, (UCHAR)((DivisorLatch >> 8) & 0xFF));
-    Port->Write(Port, COM_DLL, (UCHAR)(DivisorLatch & 0xFF));
+  Port->Write(Port, COM_DLM, (UCHAR)((DivisorLatch >> 8) & 0xFF));
+  Port->Write(Port, COM_DLL, (UCHAR)(DivisorLatch & 0xFF));
 
-    //
-    // Set Line Control Register to 8N1 (no parity, 8 data bits, 1 stop bit).
-    // This also sets the DLAB back to zero.
-    //
+  //
+  // Set Line Control Register to 8N1 (no parity, 8 data bits, 1 stop bit).
+  // This also sets the DLAB back to zero.
+  //
 
-    Port->Write(Port, COM_LCR, 3);
+  Port->Write(Port, COM_LCR, 3);
 
-    //
-    // Remember the baud rate.
-    //
+  //
+  // Remember the baud rate.
+  //
 
-    Port->BaudRate = Rate;
-    return TRUE;
+  Port->BaudRate = Rate;
+  return TRUE;
 }
 
 BOOLEAN
-Uart16550SetBaud(
-    _Inout_ PCPPORT Port,
-    ULONG           Rate)
+Uart16550SetBaud(_Inout_ PCPPORT Port, ULONG Rate)
 
 /*++
 
@@ -519,18 +472,15 @@ Return Value:
 --*/
 
 {
-    if (CHECK_FLAG(Port->Flags, PORT_DEFAULT_RATE))
-    {
-        return FALSE;
-    }
+  if (CHECK_FLAG(Port->Flags, PORT_DEFAULT_RATE)) {
+    return FALSE;
+  }
 
-    return Uart16550SetBaudCommon(Port, Rate, CLOCK_RATE);
+  return Uart16550SetBaudCommon(Port, Rate, CLOCK_RATE);
 }
 
 UART_STATUS
-Uart16550GetByte(
-    _Inout_ PCPPORT Port,
-    _Out_ PUCHAR    Byte)
+Uart16550GetByte(_Inout_ PCPPORT Port, _Out_ PUCHAR Byte)
 
 /*++
 
@@ -551,84 +501,71 @@ Return Value:
 --*/
 
 {
-    UCHAR Data;
-    UCHAR Lsr;
-    UCHAR Msr;
+  UCHAR Data;
+  UCHAR Lsr;
+  UCHAR Msr;
 
-    if ((Port == NULL) || (Port->Address == NULL))
-    {
-        return UartNotReady;
+  if ((Port == NULL) || (Port->Address == NULL)) {
+    return UartNotReady;
+  }
+
+  //
+  // Check to see if all bits are set in LSR. If this is the case, it means
+  // the port I/O address is invalid as 0xFF is nonsense for LSR.
+  //
+
+  Lsr = Port->Read(Port, COM_LSR);
+  if (Lsr == SERIAL_LSR_NOT_PRESENT) {
+    return UartNotReady;
+  }
+
+  if (CHECK_FLAG(Lsr, COM_DATRDY)) {
+    //
+    // Return unsuccessfully if any errors are indicated by the
+    // LSR.
+    //
+
+    if (CHECK_FLAG(Lsr, COM_PE) || CHECK_FLAG(Lsr, COM_FE) ||
+        CHECK_FLAG(Lsr, COM_OE)) {
+      return UartError;
     }
+
+    Data = Port->Read(Port, COM_DAT);
 
     //
-    // Check to see if all bits are set in LSR. If this is the case, it means
-    // the port I/O address is invalid as 0xFF is nonsense for LSR.
+    // When using modem control, ignore any bytes that don't have
+    // the carrier detect flag set.
     //
 
-    Lsr = Port->Read(Port, COM_LSR);
-    if (Lsr == SERIAL_LSR_NOT_PRESENT)
-    {
-        return UartNotReady;
-    }
-
-    if (CHECK_FLAG(Lsr, COM_DATRDY))
-    {
-        //
-        // Return unsuccessfully if any errors are indicated by the
-        // LSR.
-        //
-
-        if (CHECK_FLAG(Lsr, COM_PE) ||
-            CHECK_FLAG(Lsr, COM_FE) ||
-            CHECK_FLAG(Lsr, COM_OE))
-        {
-            return UartError;
-        }
-
-        Data = Port->Read(Port, COM_DAT);
-
-        //
-        // When using modem control, ignore any bytes that don't have
-        // the carrier detect flag set.
-        //
-
-        if (CHECK_FLAG(Port->Flags, PORT_MODEM_CONTROL))
-        {
-            Msr = Port->Read(Port, COM_MSR);
-            if (CHECK_FLAG(Msr, MS_CD) == FALSE)
-            {
-                return UartNoData;
-            }
-        }
-
-        *Byte = Data;
-        return UartSuccess;
-    }
-    else
-    {
-        //
-        // Data is not available. Determine if the ring indicator has toggled.
-        // If so, enable modem control.
-        //
-
-        Msr = Port->Read(Port, COM_MSR);
-        if ((CHECK_FLAG(Port->Flags, PORT_RING_INDICATOR) &&
-             !CHECK_FLAG(Msr, SERIAL_MSR_RI)) ||
-            (!CHECK_FLAG(Port->Flags, PORT_RING_INDICATOR) &&
-             CHECK_FLAG(Msr, SERIAL_MSR_RI)))
-        {
-            Port->Flags |= PORT_MODEM_CONTROL;
-        }
-
+    if (CHECK_FLAG(Port->Flags, PORT_MODEM_CONTROL)) {
+      Msr = Port->Read(Port, COM_MSR);
+      if (CHECK_FLAG(Msr, MS_CD) == FALSE) {
         return UartNoData;
+      }
     }
+
+    *Byte = Data;
+    return UartSuccess;
+  } else {
+    //
+    // Data is not available. Determine if the ring indicator has toggled.
+    // If so, enable modem control.
+    //
+
+    Msr = Port->Read(Port, COM_MSR);
+    if ((CHECK_FLAG(Port->Flags, PORT_RING_INDICATOR) &&
+         !CHECK_FLAG(Msr, SERIAL_MSR_RI)) ||
+        (!CHECK_FLAG(Port->Flags, PORT_RING_INDICATOR) &&
+         CHECK_FLAG(Msr, SERIAL_MSR_RI))) {
+      Port->Flags |= PORT_MODEM_CONTROL;
+    }
+
+    return UartNoData;
+  }
 }
 
 UART_STATUS
-Uart16550PutByte(
-    _Inout_ PCPPORT Port,
-    UCHAR           Byte,
-    BOOLEAN         BusyWait)
+Uart16550PutByte(_Inout_ PCPPORT Port, UCHAR Byte, BOOLEAN BusyWait)
 
 /*++
 
@@ -648,92 +585,82 @@ Arguments:
 --*/
 
 {
-    UCHAR Lsr;
-    UCHAR Msr;
+  UCHAR Lsr;
+  UCHAR Msr;
 
-    if ((Port == NULL) || (Port->Address == NULL))
-    {
-        return UartNotReady;
-    }
+  if ((Port == NULL) || (Port->Address == NULL)) {
+    return UartNotReady;
+  }
 
-    //
-    // When using modem control, DSR, CTS, and CD flags must all be set before
-    // sending any data.
-    //
+  //
+  // When using modem control, DSR, CTS, and CD flags must all be set before
+  // sending any data.
+  //
 
-    if (CHECK_FLAG(Port->Flags, PORT_MODEM_CONTROL))
-    {
-        Msr = Port->Read(Port, COM_MSR);
-        while ((Msr & MS_DSRCTSCD) != MS_DSRCTSCD)
-        {
-            //
-            // If there's a byte ready, discard it from the input queue.
-            //
+  if (CHECK_FLAG(Port->Flags, PORT_MODEM_CONTROL)) {
+    Msr = Port->Read(Port, COM_MSR);
+    while ((Msr & MS_DSRCTSCD) != MS_DSRCTSCD) {
+      //
+      // If there's a byte ready, discard it from the input queue.
+      //
 
-            if (!CHECK_FLAG(Msr, MS_CD))
-            {
-                Lsr = Port->Read(Port, COM_LSR);
-                if (CHECK_FLAG(Port->Flags, COM_DATRDY))
-                {
-                    Port->Read(Port, COM_DAT);
-                }
-            }
-
-            Msr = Port->Read(Port, COM_MSR);
+      if (!CHECK_FLAG(Msr, MS_CD)) {
+        Lsr = Port->Read(Port, COM_LSR);
+        if (CHECK_FLAG(Port->Flags, COM_DATRDY)) {
+          Port->Read(Port, COM_DAT);
         }
+      }
+
+      Msr = Port->Read(Port, COM_MSR);
+    }
+  }
+
+  //
+  // Check to see if all bits are set in LSR. If this is the case, it means
+  // the port I/O address is invalid as 0xFF is nonsense for LSR. This
+  // prevents writing a byte to non-existent hardware.
+  //
+
+  Lsr = Port->Read(Port, COM_LSR);
+  if (Lsr == SERIAL_LSR_NOT_PRESENT) {
+    return UartNotReady;
+  }
+
+  //
+  // The port must be ready to accept a byte for output before continuing.
+  //
+
+  while (!CHECK_FLAG(Lsr, COM_OUTRDY)) {
+    //
+    // Determine if the ring indicator has toggled.
+    // If so, enable modem control.
+    //
+
+    Msr = Port->Read(Port, COM_MSR);
+    if ((CHECK_FLAG(Port->Flags, PORT_RING_INDICATOR) &&
+         !CHECK_FLAG(Msr, SERIAL_MSR_RI)) ||
+        (!CHECK_FLAG(Port->Flags, PORT_RING_INDICATOR) &&
+         CHECK_FLAG(Msr, SERIAL_MSR_RI))) {
+      Port->Flags |= PORT_MODEM_CONTROL;
     }
 
-    //
-    // Check to see if all bits are set in LSR. If this is the case, it means
-    // the port I/O address is invalid as 0xFF is nonsense for LSR. This
-    // prevents writing a byte to non-existent hardware.
-    //
+    if (BusyWait == FALSE) {
+      return UartNotReady;
+    }
 
     Lsr = Port->Read(Port, COM_LSR);
-    if (Lsr == SERIAL_LSR_NOT_PRESENT)
-    {
-        return UartNotReady;
-    }
+  }
 
-    //
-    // The port must be ready to accept a byte for output before continuing.
-    //
+  //
+  // Transmitter holding register is empty. Send the byte.
+  //
 
-    while (!CHECK_FLAG(Lsr, COM_OUTRDY))
-    {
-        //
-        // Determine if the ring indicator has toggled.
-        // If so, enable modem control.
-        //
-
-        Msr = Port->Read(Port, COM_MSR);
-        if ((CHECK_FLAG(Port->Flags, PORT_RING_INDICATOR) &&
-             !CHECK_FLAG(Msr, SERIAL_MSR_RI)) ||
-            (!CHECK_FLAG(Port->Flags, PORT_RING_INDICATOR) &&
-             CHECK_FLAG(Msr, SERIAL_MSR_RI)))
-        {
-            Port->Flags |= PORT_MODEM_CONTROL;
-        }
-
-        if (BusyWait == FALSE)
-        {
-            return UartNotReady;
-        }
-
-        Lsr = Port->Read(Port, COM_LSR);
-    }
-
-    //
-    // Transmitter holding register is empty. Send the byte.
-    //
-
-    Port->Write(Port, COM_DAT, Byte);
-    return UartSuccess;
+  Port->Write(Port, COM_DAT, Byte);
+  return UartSuccess;
 }
 
 BOOLEAN
-Uart16550RxReady(
-    _Inout_ PCPPORT Port)
+Uart16550RxReady(_Inout_ PCPPORT Port)
 
 /*++
 
@@ -752,58 +679,46 @@ Return Value:
 --*/
 
 {
-    UCHAR Lsr;
+  UCHAR Lsr;
 
-    if ((Port == NULL) || (Port->Address == NULL))
-    {
-        return FALSE;
-    }
-
-    //
-    // Check to see if all bits are set in LSR. If this is the case, it means
-    // the port I/O address is invalid as 0xFF is nonsense for LSR. This
-    // prevents the DATRDY check below from returning TRUE, which could cause
-    // a caller to think that data is pending when in actuality there is no
-    // UART present.
-    //
-
-    Lsr = Port->Read(Port, COM_LSR);
-    if (Lsr == SERIAL_LSR_NOT_PRESENT)
-    {
-        return FALSE;
-    }
-
-    //
-    // Look at the Line Status Register to determine if there is pending data.
-    //
-
-    if (CHECK_FLAG(Lsr, COM_DATRDY))
-    {
-        return TRUE;
-    }
-
+  if ((Port == NULL) || (Port->Address == NULL)) {
     return FALSE;
+  }
+
+  //
+  // Check to see if all bits are set in LSR. If this is the case, it means
+  // the port I/O address is invalid as 0xFF is nonsense for LSR. This
+  // prevents the DATRDY check below from returning TRUE, which could cause
+  // a caller to think that data is pending when in actuality there is no
+  // UART present.
+  //
+
+  Lsr = Port->Read(Port, COM_LSR);
+  if (Lsr == SERIAL_LSR_NOT_PRESENT) {
+    return FALSE;
+  }
+
+  //
+  // Look at the Line Status Register to determine if there is pending data.
+  //
+
+  if (CHECK_FLAG(Lsr, COM_DATRDY)) {
+    return TRUE;
+  }
+
+  return FALSE;
 }
 
 // -------------------------------------------------------------------- Globals
 
 UART_HARDWARE_DRIVER Legacy16550HardwareDriver = {
-    Uart16550LegacyInitializePort,
-    Uart16550SetBaud,
-    Uart16550GetByte,
-    Uart16550PutByte,
-    Uart16550RxReady};
+    Uart16550LegacyInitializePort, Uart16550SetBaud, Uart16550GetByte,
+    Uart16550PutByte, Uart16550RxReady};
 
 UART_HARDWARE_DRIVER Uart16550HardwareDriver = {
-    Uart16550InitializePort,
-    Uart16550SetBaud,
-    Uart16550GetByte,
-    Uart16550PutByte,
-    Uart16550RxReady};
+    Uart16550InitializePort, Uart16550SetBaud, Uart16550GetByte,
+    Uart16550PutByte, Uart16550RxReady};
 
 UART_HARDWARE_DRIVER MM16550HardwareDriver = {
-    Uart16550MmInitializePort,
-    Uart16550SetBaud,
-    Uart16550GetByte,
-    Uart16550PutByte,
-    Uart16550RxReady};
+    Uart16550MmInitializePort, Uart16550SetBaud, Uart16550GetByte,
+    Uart16550PutByte, Uart16550RxReady};
