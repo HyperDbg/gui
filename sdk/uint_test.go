@@ -1,13 +1,40 @@
 package sdk
 
 import (
+	"fmt"
 	"github.com/ddkwork/librarygo/src/Comment"
 	"github.com/ddkwork/librarygo/src/myc2go"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/stream/tool/cmd"
+	cc "modernc.org/cc/v5"
 	"strings"
 	"testing"
 )
+
+func TestName2(t *testing.T) {
+	parse, err := cc.Parse(&cc.Config{
+		ABI:                 nil,
+		CC:                  "",
+		FS:                  nil,
+		HostIncludePaths:    nil,
+		HostSysIncludePaths: nil,
+		IncludePaths:        nil,
+		PragmaHandler:       nil,
+		Predefined:          "",
+		SysIncludePaths:     nil,
+	},
+		[]cc.Source{
+			cc.Source{
+				Name:  "",
+				Value: nil,
+				FS:    nil,
+			},
+		})
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Println(exampleAST(9, "\U00100001 'a' ( 'b' , 'c' )"))
+}
 
 func TestCpp2Go(t *testing.T) {
 	Comment.New().Delete("HyperDbgDev/hyperdbg")
