@@ -38,7 +38,7 @@ func (d *disassembler) ZydisFormatterPrintAddressAbsolute() (ok bool) { //col:85
 	   	            ZYAN_CHECK(ZydisFormatterBufferGetString(buffer, &string));
 	   	            return ZyanStringAppendFormat(string,
 	   	                                          "<%s (%s)>",
-	   	                                          Iterate->second.ObjectName.c_str(),
+	   	                                          Iterate->second.objectName.c_str(),
 	   	                                          SeparateTo64BitValue(Iterate->first).c_str());
 	   	    return default_print_address_absolute(formatter, buffer, context);
 
@@ -343,4 +343,3 @@ func (d *disassembler) HyperDbgCheckWhetherTheCurrentInstructionIsCall() (ok boo
 	*/
 	return true
 }
-

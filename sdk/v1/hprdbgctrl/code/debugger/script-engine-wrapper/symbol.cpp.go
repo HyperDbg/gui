@@ -34,7 +34,7 @@ func (s *symbol) SymbolInitialReload() (ok bool) { //col:136
 	   SymbolCreateDisassemblerMapCallback(UINT64       Address,
 
 	   	char *       ModuleName,
-	   	char *       ObjectName,
+	   	char *       objectName,
 	   	unsigned int ObjectSize)
 
 	   	{
@@ -48,10 +48,10 @@ func (s *symbol) SymbolInitialReload() (ok bool) { //col:136
 	   	    {
 	   	        FinalModuleName += std::string(ModuleName) + "!";
 	   	    }
-	   	    if (ObjectName != NULL)
+	   	    if (objectName != NULL)
 	   	    {
-	   	        FinalModuleName += std::string(ObjectName);
-	   	    LocalFunctionDescription.ObjectName = std::move(FinalModuleName);
+	   	        FinalModuleName += std::string(objectName);
+	   	    LocalFunctionDescription.objectName = std::move(FinalModuleName);
 
 	   SymbolCreateDisassemblerSymbolMap()
 
@@ -83,18 +83,18 @@ func (s *symbol) SymbolInitialReload() (ok bool) { //col:136
 	   	        {
 	   	            if (*UsedBaseAddress != Address)
 	   	            {
-	   	                ShowMessages("%s", Low->second.ObjectName.c_str());
+	   	                ShowMessages("%s", Low->second.objectName.c_str());
 	   	            Prev        = std::prev(Low);
 	   	            if (Prev->second.ObjectSize >= Diff)
 	   	            {
 	   	                if (*UsedBaseAddress != Prev->first)
 	   	                {
-	   	                    ShowMessages("%s+0x%x", Prev->second.ObjectName.c_str(), Diff);
+	   	                    ShowMessages("%s+0x%x", Prev->second.objectName.c_str(), Diff);
 	   	            else if (DISASSEMBLY_MAXIMUM_DISTANCE_FROM_OBJECT_NAME >= Diff)
 	   	            {
 	   	                if (*UsedBaseAddress != Prev->first)
 	   	                {
-	   	                    ShowMessages("%s+0x%x+0x%x", Prev->second.ObjectName.c_str(), Diff, Diff - Prev->second.ObjectSize);
+	   	                    ShowMessages("%s+0x%x+0x%x", Prev->second.objectName.c_str(), Diff, Diff - Prev->second.ObjectSize);
 
 	   SymbolBuildAndShowSymbolTable()
 
@@ -170,4 +170,3 @@ func (s *symbol) SymbolInitialReload() (ok bool) { //col:136
 	*/
 	return true
 }
-

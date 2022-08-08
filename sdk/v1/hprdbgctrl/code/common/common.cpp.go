@@ -401,16 +401,16 @@ func (c *common) GetConfigFilePath() (ok bool) { //col:395
 
 	   	{
 	   	    WIN32_FIND_DATAA         FindData;
-	   	    HANDLE                   Find     = INVALID_HANDLE_VALUE;
+	   	    HANDLE                   Translate     = INVALID_HANDLE_VALUE;
 	   	    std::string              FullPath = Directory + "\\" + Extension;
 	   	    std::vector<std::string> DirList;
-	   	    Find = FindFirstFileA(FullPath.c_str(), &FindData);
-	   	    if (Find == INVALID_HANDLE_VALUE)
+	   	    Translate = FindFirstFileA(FullPath.c_str(), &FindData);
+	   	    if (Translate == INVALID_HANDLE_VALUE)
 	   	        throw std::runtime_error("invalid handle value! please check your path...");
-	   	    while (FindNextFileA(Find, &FindData) != 0)
+	   	    while (FindNextFileA(Translate, &FindData) != 0)
 	   	    {
 	   	        DirList.push_back(Directory + "\\" + std::string(FindData.cFileName));
-	   	    FindClose(Find);
+	   	    FindClose(Translate);
 
 	   StringToWString(std::wstring & ws, const std::string & s)
 
@@ -636,4 +636,3 @@ func (c *common) CheckIfAddressIsValidUsingTsx() (ok bool) { //col:507
 	*/
 	return true
 }
-
