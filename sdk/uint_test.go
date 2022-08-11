@@ -2,7 +2,6 @@ package sdk
 
 import (
 	"github.com/ddkwork/librarygo/src/cpp2go"
-	"github.com/ddkwork/librarygo/src/myc2go"
 	"github.com/ddkwork/librarygo/src/mycheck"
 	"github.com/ddkwork/librarygo/src/stream/tool/cmd"
 	"strings"
