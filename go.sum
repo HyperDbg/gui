@@ -92,6 +92,8 @@ github.com/ddkwork/librarygo v1.1.1-0.20220811154116-99c2c36bed60 h1:Cl0Q1iPSWzn
 github.com/ddkwork/librarygo v1.1.1-0.20220811154116-99c2c36bed60/go.mod h1:NQlUa43WOCC1oeLErTb4lW63BEQ/rXLy1bvV82wX2pc=
 github.com/ddkwork/librarygo v1.1.1-0.20220811154500-90f611a331d5 h1:3lXAiiODC/FVdDTy9TafAxHLzu16lvBRIfHBCeTQm5o=
 github.com/ddkwork/librarygo v1.1.1-0.20220811154500-90f611a331d5/go.mod h1:NQlUa43WOCC1oeLErTb4lW63BEQ/rXLy1bvV82wX2pc=
+github.com/ddkwork/librarygo v1.1.1-0.20220812155146-ee722b70a96c h1:QIgRA3nG3WlgpKlumbvqBRpyZdocWqGh0EgMqAbbcOM=
+github.com/ddkwork/librarygo v1.1.1-0.20220812155146-ee722b70a96c/go.mod h1:tAGCrIdyzQr/VXU/zIBe0eyvkNcL8Et2RyYuI7X89JM=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=
@@ -278,6 +280,7 @@ github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh
 github.com/mitchellh/mapstructure v1.4.1/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 h1:ZqeYNhU3OHLH3mGKHDcjJRFFRrJa6eAM5H+CtDdOsPc=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
+github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9Gz0M=
