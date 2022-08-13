@@ -10,7 +10,7 @@ require (
 require (
 	fyne.io/systray v1.10.1-0.20220621085403-9a2652634e93 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/ddkwork/librarygo v1.1.1-0.20220812212947-624e274ac938 // indirect
+	github.com/ddkwork/librarygo v1.1.1-0.20220812214233-06a6166ee351 // indirect
 	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/fyne-io/gl-js v0.0.0-20220119005834-d2da28d9ccfe // indirect
