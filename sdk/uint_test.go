@@ -11,15 +11,15 @@ import (
 func TestCpp2Go(t *testing.T) {
 	cpp2go.New().RemoveComment("HyperDbgDev/hyperdbg")
 	return
-	o := myc2go.NewObj()
-	object := o.Src("./HyperDbgDev/hyperdbg").
-		Dst("binding").
-		ExpandPath("miscellaneous\\constants", ".txt").
-		Back()
-	if object == nil {
-		return
-	}
-	o.Convert()
+	//o := cpp2go.New()
+	//object := o.Src("./HyperDbgDev/hyperdbg").
+	//	Dst("binding").
+	//	ExpandPath("miscellaneous\\constants", ".txt").
+	//	Back()
+	//if object == nil {
+	//	return
+	//}
+	//o.Convert()
 	//o.Format()
 }
 

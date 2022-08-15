@@ -1,5 +1,7 @@
 package sdk
 
+import "github.com/ddkwork/librarygo/src/cpp2go/delete/myc2go/windef"
+
 func CTL_CODE(deviceType, function, method, access uint32) uint32 {
 	return ((deviceType) << 16) | ((access) << 14) | ((function) << 2) | (method)
 }

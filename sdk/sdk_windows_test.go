@@ -4,7 +4,7 @@ import (
 	_ "embed"
 	"github.com/ddkwork/hyperdbgui/sdk"
 	"github.com/ddkwork/librarygo/src/stream"
-	"github.com/ddkwork/librarygo/src/stream/tool"
+	"github.com/ddkwork/librarygo/src/stream/tool/cmd"
 	"io/fs"
 	"path/filepath"
 	"strconv"
@@ -24,9 +24,15 @@ func TestXmake(t *testing.T) {
 		ext := filepath.Ext(path)
 		if ext == ".vcxproj" {
 			if !strings.Contains(path, "dependencies") {
+				project := filepath.Base(filepath.Dir(path))
+				//println(project)
+				//cl /analyze /d1Aprintast *.cpp > 1.ast
+				ast := cmd.MakeArg("/analyze", "/d1Aprintast", ">", project+".ast")
+				println(ast)
+
 				s := stream.New()
 				s.WriteStringLn("--" + filepath.Dir(path))
-				s.WriteStringLn("target(" + strconv.Quote(filepath.Base(filepath.Dir(path))) + ")")
+				s.WriteStringLn("target(" + strconv.Quote(project) + ")")
 				if strings.Contains(path, "hyperdbg-cli") {
 					s.WriteStringLn("set_kind(\"binary\")")
 				} else {
@@ -41,5 +47,5 @@ func TestXmake(t *testing.T) {
 		}
 		return err
 	})
-	tool.File().WriteTruncate("./HyperDbgDev/xmake.lua", targets.String())
+	//tool.File().WriteTruncate("./HyperDbgDev/xmake.lua", targets.String())
 }

@@ -4,13 +4,14 @@ go 1.18
 
 require (
 	fyne.io/fyne/v2 v2.2.4-0.20220722155227-638ae24e4beb
+	github.com/ddkwork/librarygo v1.1.1-0.20220813072900-df90fcfe0e18
 	github.com/fpabl0/sparky-go v0.0.0-20220803072144-1a0971955531
 )
 
 require (
 	fyne.io/systray v1.10.1-0.20220621085403-9a2652634e93 // indirect
+	github.com/aquasecurity/table v1.7.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/ddkwork/librarygo v1.1.1-0.20220813072900-df90fcfe0e18 // indirect
 	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/fyne-io/gl-js v0.0.0-20220119005834-d2da28d9ccfe // indirect
@@ -28,10 +29,12 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
 	github.com/kr/pretty v0.3.0 // indirect
+	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/qiniu/x v1.11.9 // indirect
+	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spyre-project/spyre v1.2.5 // indirect
@@ -45,6 +48,7 @@ require (
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.0.0-20220722155237-a158d28d115b // indirect
 	golang.org/x/sys v0.0.0-20220804214406-8e32c043e418 // indirect
+	golang.org/x/term v0.0.0-20220526004731-065cf7ba2467 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.12 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
