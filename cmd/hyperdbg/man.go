@@ -25,7 +25,7 @@ import (
 func main() {
 	a := app.NewWithID("org.hyperdbg")
 	a.SetIcon(fyne.NewStaticResource("ico1", ico1))
-	fyneTheme.New().SetDark(a)
+	fyneTheme.Dark()
 	w := a.NewWindow("Hyper Debugger")
 	w.SetMaster()
 	w.SetPadded(false)
