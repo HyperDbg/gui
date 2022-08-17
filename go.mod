@@ -3,8 +3,8 @@ module github.com/ddkwork/hyperdbgui
 go 1.18
 
 require (
-	fyne.io/fyne/v2 v2.2.4-0.20220722155227-638ae24e4beb
-	github.com/ddkwork/librarygo v1.1.1-0.20220815142810-f292e0b4851c
+	fyne.io/fyne/v2 v2.2.4-0.20220812135223-d9f6975389ec
+	github.com/ddkwork/librarygo v1.1.1-0.20220816191217-be238737f635
 	github.com/fpabl0/sparky-go v0.0.0-20220803072144-1a0971955531
 )
 
