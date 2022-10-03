@@ -1,9 +1,8 @@
 package symbol
 
 import (
-	"github.com/ddkwork/librarygo/src/mycheck"
-	"github.com/ddkwork/librarygo/src/stream"
-	"github.com/ddkwork/librarygo/src/stream/tool"
+	"github.com/ddkwork/golibrary/src/stream"
+	"github.com/ddkwork/golibrary/src/stream/tool"
 	"go/format"
 	"os"
 	"strings"
@@ -12,7 +11,7 @@ import (
 
 func TestName(t *testing.T) {
 	b, err := os.ReadFile(`ssdtTable.txt`)
-	if !mycheck.Error(err) {
+	if !mylog.Error(err) {
 		return
 	}
 	lines, ok := tool.New().File().ToLines(b)
@@ -75,7 +74,7 @@ func TestName(t *testing.T) {
 		buffer.WriteStringLn(`func New` + name + `() Interface` + name + ` { return &object` + name + `{} }`)
 		goFileName := name + `.go`
 		source, err2 := format.Source(buffer.Bytes())
-		if !mycheck.Error(err2) {
+		if !mylog.Error(err2) {
 			return
 		}
 		return tool.File().WriteTruncate(goFileName, source)

@@ -1,10 +1,9 @@
 package sdk
 
 import (
-	"github.com/ddkwork/librarygo/src/bitfield"
-	"github.com/ddkwork/librarygo/src/hardwareIndo"
-	"github.com/ddkwork/librarygo/src/mycheck"
-	"github.com/ddkwork/librarygo/src/mylog"
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/src/bitfield"
+	"github.com/ddkwork/golibrary/src/hardwareIndo"
 	"syscall"
 	"time"
 )
@@ -26,7 +25,7 @@ func (o *object) ReadIrpBasedBuffer() (ok bool) {
 	outBuffer := make([]byte, UsermodeBufferSize)
 	time.Sleep(DefaultSpeedOfReadingKernelMessages) //need seasoned ?
 	OperationCode := 0
-	if !mycheck.Error(syscall.DeviceIoControl(
+	if !mylog.Error(syscall.DeviceIoControl(
 		o.handle,
 		IOCTL_REGISTER_EVENT,
 		//RegisterEvent
@@ -37,7 +36,7 @@ func (o *object) ReadIrpBasedBuffer() (ok bool) {
 		nil,
 		nil,
 	)) {
-		return mycheck.Error(syscall.GetLastError())
+		return mylog.Error(syscall.GetLastError())
 	}
 	//copy()
 	switch OperationCode {
@@ -56,7 +55,7 @@ func (o *object) ReadIrpBasedBuffer() (ok bool) {
 	case OPERATION_NOTIFICATION_FROM_USER_DEBUGGER_PAUSE:
 	default:
 		outBuffer = outBuffer[:0]
-		return mycheck.Error(syscall.CloseHandle(o.handle))
+		return mylog.Error(syscall.CloseHandle(o.handle))
 	}
 	return true
 }
@@ -76,12 +75,12 @@ func (o *object) VmxSupportDetection() (ok bool) {
 		return
 	}
 	if hard.CpuInfo.Vendor != "GenuineIntel" {
-		return mycheck.Error("this program is not designed to run in a non-VT-x environemnt !")
+		return mylog.Error("this program is not designed to run in a non-VT-x environemnt !")
 	}
 	mylog.Info("", "virtualization technology is vt-x")
 	field := bitfield.NewFromUint32(hard.CpuInfo.Cpu1.Ecx)
 	if !field.Test(5) {
-		return mycheck.Error("vmx operation is not supported by your processor")
+		return mylog.Error("vmx operation is not supported by your processor")
 	}
 	mylog.Info("", "vmx operation is supported by your processor")
 	return true
@@ -96,7 +95,7 @@ func (o *object) Handle() (ok bool) {
 		return true //? //todo change to as open state
 	}
 	name, err := o.LinkName()
-	if !mycheck.Error(err) {
+	if !mylog.Error(err) {
 		return
 	}
 	handle, err := syscall.CreateFile(
@@ -108,12 +107,12 @@ func (o *object) Handle() (ok bool) {
 		syscall.FILE_ATTRIBUTE_NORMAL|syscall.FILE_FLAG_OVERLAPPED,
 		0,
 	)
-	if !mycheck.Error(err) {
+	if !mylog.Error(err) {
 		//e := `a device attached to the system is not functioning,vmx feature might be disabled from BIOS or VBS/HVCI is active`
-		return mycheck.Error(syscall.GetLastError())
+		return mylog.Error(syscall.GetLastError())
 	}
 	if handle == syscall.InvalidHandle {
-		return mycheck.Error("handle == syscall.InvalidHandle")
+		return mylog.Error("handle == syscall.InvalidHandle")
 	}
 	o.handle = handle
 	return true
@@ -143,7 +142,7 @@ func (o *object) UnLoadVmm() (ok bool) {
 	if !o.Handle() {
 		return
 	}
-	if !mycheck.Error(syscall.DeviceIoControl(
+	if !mylog.Error(syscall.DeviceIoControl(
 		o.handle,
 		IOCTL_TERMINATE_VMX,
 		nil,
@@ -153,7 +152,7 @@ func (o *object) UnLoadVmm() (ok bool) {
 		nil,
 		nil,
 	)) {
-		return mycheck.Error(syscall.GetLastError())
+		return mylog.Error(syscall.GetLastError())
 	}
 	return true
 }

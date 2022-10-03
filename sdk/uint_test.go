@@ -1,9 +1,9 @@
 package sdk
 
 import (
-	"github.com/ddkwork/librarygo/src/cpp2go"
-	"github.com/ddkwork/librarygo/src/mycheck"
-	"github.com/ddkwork/librarygo/src/stream/tool/cmd"
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/src/cpp2go"
+	"github.com/ddkwork/golibrary/src/stream/tool/cmd"
 	"strings"
 	"testing"
 )
@@ -53,7 +53,7 @@ sudo pacman -Sy open-vm-tools
 */
 func TestName(t *testing.T) {
 	run, err := cmd.Run("uname -a")
-	if !mycheck.Error(err) {
+	if !mylog.Error(err) {
 		return
 	}
 	split := strings.Split(run, " ")
@@ -66,7 +66,7 @@ func TestName(t *testing.T) {
 	before = before[:index]
 	before = strings.ReplaceAll(before, ".", "")
 	run, err = cmd.Run(`sudo pacman  -Sy linux` + before + `-headers`)
-	if !mycheck.Error(err) {
+	if !mylog.Error(err) {
 		return
 	}
 	println(run)

@@ -2,8 +2,8 @@ package pageNotes
 
 import (
 	"fyne.io/fyne/v2"
-	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
-	"github.com/ddkwork/librarygo/src/fynelib/notes"
+	"github.com/ddkwork/golibrary/src/fynelib/canvasobjectapi"
+	"github.com/ddkwork/golibrary/src/fynelib/notes"
 )
 
 type (

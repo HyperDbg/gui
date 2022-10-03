@@ -2,8 +2,8 @@ package pageStack
 
 import (
 	"fmt"
-	"github.com/ddkwork/librarygo/src/fynelib/myTable"
-	"github.com/ddkwork/librarygo/src/go-zydis"
+	"github.com/ddkwork/golibrary/src/fynelib/myTable"
+	"github.com/ddkwork/golibrary/src/go-zydis"
 )
 
 type (
@@ -24,6 +24,16 @@ type (
 		lines []line
 	}
 )
+
+func (d *disassemblyObject) ColumnLen() int {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *disassemblyObject) ColumnWidths() []float32 {
+	//TODO implement me
+	panic("implement me")
+}
 
 func (d *disassemblyObject) SetLines(lines []line) {
 	major, minor, patch, build := zydis.Version()

@@ -4,7 +4,7 @@ import (
 	_ "embed"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
-	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
+	"github.com/ddkwork/golibrary/src/fynelib/canvasobjectapi"
 )
 
 type (
@@ -114,83 +114,85 @@ func (r *resObj) i25() fyne.Resource { return fyne.NewStaticResource("i25", i25)
 func (r *resObj) i26() fyne.Resource { return fyne.NewStaticResource("i26", i26) }
 func (r *resObj) i27() fyne.Resource { return fyne.NewStaticResource("i27", i27) }
 
-//go:embed "OllyICE 1.10/(1).jpg"
-var i1 []byte
+var (
+	//go:embed "OllyICE 1.10/(1).jpg"
+	i1 []byte
 
-//go:embed "OllyICE 1.10/(2).jpg"
-var i2 []byte
+	//go:embed "OllyICE 1.10/(2).jpg"
+	i2 []byte
 
-//go:embed "OllyICE 1.10/(3).jpg"
-var i3 []byte
+	//go:embed "OllyICE 1.10/(3).jpg"
+	i3 []byte
 
-//go:embed "OllyICE 1.10/(4).jpg"
-var i4 []byte
+	//go:embed "OllyICE 1.10/(4).jpg"
+	i4 []byte
 
-//go:embed "OllyICE 1.10/(5).jpg"
-var i5 []byte
+	//go:embed "OllyICE 1.10/(5).jpg"
+	i5 []byte
 
-//go:embed "OllyICE 1.10/(6).jpg"
-var i6 []byte
+	//go:embed "OllyICE 1.10/(6).jpg"
+	i6 []byte
 
-//go:embed "OllyICE 1.10/(7).jpg"
-var i7 []byte
+	//go:embed "OllyICE 1.10/(7).jpg"
+	i7 []byte
 
-//go:embed "OllyICE 1.10/(8).jpg"
-var i8 []byte
+	//go:embed "OllyICE 1.10/(8).jpg"
+	i8 []byte
 
-//go:embed "OllyICE 1.10/(9).jpg"
-var i9 []byte
+	//go:embed "OllyICE 1.10/(9).jpg"
+	i9 []byte
 
-//go:embed "OllyICE 1.10/(10).jpg"
-var i10 []byte
+	//go:embed "OllyICE 1.10/(10).jpg"
+	i10 []byte
 
-//go:embed "OllyICE 1.10/(11).jpg"
-var i11 []byte
+	//go:embed "OllyICE 1.10/(11).jpg"
+	i11 []byte
 
-//go:embed "OllyICE 1.10/(12).jpg"
-var i12 []byte
+	//go:embed "OllyICE 1.10/(12).jpg"
+	i12 []byte
 
-//go:embed "OllyICE 1.10/(13).jpg"
-var i13 []byte
+	//go:embed "OllyICE 1.10/(13).jpg"
+	i13 []byte
 
-//go:embed "OllyICE 1.10/(14).jpg"
-var i14 []byte
+	//go:embed "OllyICE 1.10/(14).jpg"
+	i14 []byte
 
-//go:embed "OllyICE 1.10/(15).jpg"
-var i15 []byte
+	//go:embed "OllyICE 1.10/(15).jpg"
+	i15 []byte
 
-//go:embed "OllyICE 1.10/(16).jpg"
-var i16 []byte
+	//go:embed "OllyICE 1.10/(16).jpg"
+	i16 []byte
 
-//go:embed "OllyICE 1.10/(17).jpg"
-var i17 []byte
+	//go:embed "OllyICE 1.10/(17).jpg"
+	i17 []byte
 
-//go:embed "OllyICE 1.10/(18).jpg"
-var i18 []byte
+	//go:embed "OllyICE 1.10/(18).jpg"
+	i18 []byte
 
-//go:embed "OllyICE 1.10/(19).jpg"
-var i19 []byte
+	//go:embed "OllyICE 1.10/(19).jpg"
+	i19 []byte
 
-//go:embed "OllyICE 1.10/(20).jpg"
-var i20 []byte
+	//go:embed "OllyICE 1.10/(20).jpg"
+	i20 []byte
 
-//go:embed "OllyICE 1.10/(21).jpg"
-var i21 []byte
+	//go:embed "OllyICE 1.10/(21).jpg"
+	i21 []byte
 
-//go:embed "OllyICE 1.10/(22).jpg"
-var i22 []byte
+	//go:embed "OllyICE 1.10/(22).jpg"
+	i22 []byte
 
-//go:embed "OllyICE 1.10/(23).jpg"
-var i23 []byte
+	//go:embed "OllyICE 1.10/(23).jpg"
+	i23 []byte
 
-//go:embed "OllyICE 1.10/(24).jpg"
-var i24 []byte
+	//go:embed "OllyICE 1.10/(24).jpg"
+	i24 []byte
 
-//go:embed "OllyICE 1.10/(25).jpg"
-var i25 []byte
+	//go:embed "OllyICE 1.10/(25).jpg"
+	i25 []byte
 
-//go:embed "OllyICE 1.10/(26).jpg"
-var i26 []byte
+	//go:embed "OllyICE 1.10/(26).jpg"
+	i26 []byte
 
-//go:embed "OllyICE 1.10/(27).jpg"
-var i27 []byte
+	//go:embed "OllyICE 1.10/(27).jpg"
+	i27 []byte
+)

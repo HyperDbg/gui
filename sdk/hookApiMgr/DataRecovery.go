@@ -1,6 +1,6 @@
 package hookApiMgr
 
-import "github.com/ddkwork/librarygo/src/stream"
+import "github.com/ddkwork/golibrary/src/stream"
 
 type (
 	cpu1 struct { //todo merge to hardware pkg add get  and set for hook

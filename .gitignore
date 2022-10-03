@@ -3,5 +3,5 @@ log.log
 /go.work
 /go.work.sum
 /work_test.go
-/librarygo/
+/golibrary/
 /sdk/HyperDbgDev/hyperdbg/.vs/

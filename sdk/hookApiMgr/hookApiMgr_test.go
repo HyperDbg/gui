@@ -1,10 +1,10 @@
 package hookApiMgr_test
 
 import (
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/src/clang"
+	"github.com/ddkwork/golibrary/src/stream"
 	"github.com/ddkwork/hyperdbgui/sdk/scriptGen"
-	"github.com/ddkwork/librarygo/src/clang"
-	"github.com/ddkwork/librarygo/src/mylog"
-	"github.com/ddkwork/librarygo/src/stream"
 	"testing"
 )
 

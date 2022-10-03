@@ -2,9 +2,9 @@ package sdk_test
 
 import (
 	_ "embed"
+	"github.com/ddkwork/golibrary/src/stream"
+	"github.com/ddkwork/golibrary/src/stream/tool/cmd"
 	"github.com/ddkwork/hyperdbgui/sdk"
-	"github.com/ddkwork/librarygo/src/stream"
-	"github.com/ddkwork/librarygo/src/stream/tool/cmd"
 	"io/fs"
 	"path/filepath"
 	"strconv"

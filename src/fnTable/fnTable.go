@@ -5,6 +5,8 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"github.com/ddkwork/golibrary/src/driverTool"
+	"github.com/ddkwork/golibrary/src/fynelib/canvasobjectapi"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageBreaks"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageCpu"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageHandle"
@@ -15,8 +17,6 @@ import (
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageStack"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageSymbol"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageThead"
-	"github.com/ddkwork/librarygo/src/driverTool"
-	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
 )
 
 type (
@@ -98,49 +98,52 @@ func newPageIcoObj() pageIco {
 	return &pageIcoObj{}
 }
 
-//go:embed pageIco/processor-cpu.png
-var cpu []byte
+var (
 
-//go:embed pageIco/log.png
-var log []byte
+	//go:embed pageIco/processor-cpu.png
+	cpu []byte
 
-//go:embed pageIco/notes.png
-var notes []byte
+	//go:embed pageIco/log.png
+	log []byte
 
-//go:embed pageIco/breakpoint.png
-var breaks []byte
+	//go:embed pageIco/notes.png
+	notes []byte
 
-//go:embed pageIco/memory-map.png
-var memory []byte
+	//go:embed pageIco/breakpoint.png
+	breaks []byte
 
-//go:embed pageIco/stack.png
-var stack []byte
+	//go:embed pageIco/memory-map.png
+	memory []byte
 
-//go:embed pageIco/seh-chain.png
-var sehList []byte
+	//go:embed pageIco/stack.png
+	stack []byte
 
-//go:embed pageIco/script-code.png
-var script []byte
+	//go:embed pageIco/seh-chain.png
+	sehList []byte
 
-//go:embed pageIco/download_symbols.png
-var symbols []byte
+	//go:embed pageIco/script-code.png
+	script []byte
 
-//go:embed pageIco/source.png
-var source []byte
+	//go:embed pageIco/download_symbols.png
+	symbols []byte
 
-// todo
-//
-//go:embed pageIco/log.png
-var xFrom []byte
+	//go:embed pageIco/source.png
+	source []byte
 
-//go:embed pageIco/thread-switch.png
-var thead []byte
+	// todo
+	//
+	//go:embed pageIco/log.png
+	xFrom []byte
 
-//go:embed pageIco/handles.png
-var handle []byte
+	//go:embed pageIco/thread-switch.png
+	thead []byte
 
-//go:embed pageIco/trace.png
-var trace []byte
+	//go:embed pageIco/handles.png
+	handle []byte
 
-//go:embed pageIco/vt.ico
-var vt []byte
+	//go:embed pageIco/trace.png
+	trace []byte
+
+	//go:embed pageIco/vt.ico
+	vt []byte
+)
