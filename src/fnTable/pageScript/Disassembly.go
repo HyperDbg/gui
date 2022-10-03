@@ -54,7 +54,7 @@ func (d *disassemblyObject) SetLines(lines []line) {
 	// Initialize formatter.
 	// Only required when instruction formatting ("disassembling"), like below.
 	formatter, err := zydis.NewFormatter(zydis.FormatterStyleIntel)
-	if err != nil {
+	if !mylog.Error(err) {
 		panic(err)
 	}
 
@@ -65,13 +65,13 @@ func (d *disassemblyObject) SetLines(lines []line) {
 
 	for len(data) > 0 {
 		instr, err := decoder.Decode(data)
-		if err != nil {
+		if !mylog.Error(err) {
 			break
 		}
 
 		// Format and print the binary instruction structure.
 		str, err := formatter.FormatInstruction(instr, runtimeAddress)
-		if err != nil {
+		if !mylog.Error(err) {
 			panic(err)
 		}
 		//s := fmt.Sprintf(
