@@ -3,6 +3,7 @@ package pageSehList
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/src/fynelib/myTable"
 	"github.com/ddkwork/golibrary/src/go-zydis"
 )
