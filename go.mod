@@ -7,7 +7,7 @@ require (
 	github.com/fpabl0/sparky-go v0.0.0-20220803072144-1a0971955531
 )
 
-require github.com/ddkwork/golibrary v0.0.0-20221003154453-88afe9337fcc
+require github.com/ddkwork/golibrary v0.0.0-20221006033826-9b25824bb9de
 
 require (
 	fyne.io/systray v1.10.1-0.20220621085403-9a2652634e93 // indirect
