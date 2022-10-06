@@ -79,7 +79,7 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/daviddengcn/go-colortext v1.0.0/go.mod h1:zDqEI5NVUop5QPpVJUxE9UO10hRnmkD5G4Pmri9+m4c=
-github.com/ddkwork/golibrary v0.0.0-20221006062635-8377531e0ce2 h1:7zsYcwyCx0fPu2xJqypY35yXp7bzbogyPrHZcue68ng=
+github.com/ddkwork/golibrary v0.0.0-20221006062635-8377531e0ce2 h1:SF/uHeWYzyYCbm6qDJQKT60D1s/FmNNhnUG1xfnWyQE=
 github.com/ddkwork/golibrary v0.0.0-20221006062635-8377531e0ce2/go.mod h1:YHeOcO6eK+e8ygYFzV7LdvgPtg82a+V4DySHv/07kCs=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=

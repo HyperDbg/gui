@@ -4,10 +4,9 @@ go 1.18
 
 require (
 	fyne.io/fyne/v2 v2.2.3
+	github.com/ddkwork/golibrary v0.0.0-20221006062635-8377531e0ce2
 	github.com/fpabl0/sparky-go v0.0.0-20220803072144-1a0971955531
 )
-
-require github.com/ddkwork/golibrary v0.0.0-20221006062635-8377531e0ce2
 
 require (
 	fyne.io/systray v1.10.1-0.20220621085403-9a2652634e93 // indirect
