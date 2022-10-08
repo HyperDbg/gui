@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	fyne.io/fyne/v2 v2.2.3
-	github.com/ddkwork/golibrary v0.0.0-20221006062635-8377531e0ce2
+	github.com/ddkwork/golibrary v0.0.0-20221008014230-2f4d1d89d38d
 	github.com/fpabl0/sparky-go v0.0.0-20220803072144-1a0971955531
 )
 
