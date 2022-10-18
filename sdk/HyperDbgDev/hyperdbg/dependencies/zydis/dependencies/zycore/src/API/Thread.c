@@ -11,7 +11,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+all
  * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -26,169 +27,168 @@
 
 #include <Zycore/API/Thread.h>
 
-/* ============================================================================================== */
-/* Internal functions                                                                             */
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
+/* Internal functions */
+/* ==============================================================================================
+ */
 
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
 /*                                                                                                */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
 
+/* ----------------------------------------------------------------------------------------------
+ */
 
+/* ==============================================================================================
+ */
+/* Exported functions */
+/* ==============================================================================================
+ */
 
-/* ---------------------------------------------------------------------------------------------- */
-
-/* ============================================================================================== */
-/* Exported functions                                                                             */
-/* ============================================================================================== */
-
-#if   defined(ZYAN_POSIX)
+#if defined(ZYAN_POSIX)
 
 #include <errno.h>
 
-/* ---------------------------------------------------------------------------------------------- */
-/* General                                                                                        */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* General */
+/* ----------------------------------------------------------------------------------------------
+ */
 
-ZyanStatus ZyanThreadGetCurrentThread(ZyanThread* thread)
-{
-    *thread = pthread_self();
+ZyanStatus ZyanThreadGetCurrentThread(ZyanThread *thread) {
+  *thread = pthread_self();
 
-    return ZYAN_STATUS_SUCCESS;
+  return ZYAN_STATUS_SUCCESS;
 }
 
 ZYAN_STATIC_ASSERT(sizeof(ZyanThreadId) <= sizeof(ZyanU64));
-ZyanStatus ZyanThreadGetCurrentThreadId(ZyanThreadId* thread_id)
-{
-    // TODO: Use `pthread_getthreadid_np` on platforms where it is available
+ZyanStatus ZyanThreadGetCurrentThreadId(ZyanThreadId *thread_id) {
+  // TODO: Use `pthread_getthreadid_np` on platforms where it is available
 
-    pthread_t ptid = pthread_self();
-    *thread_id = *(ZyanThreadId*)ptid;
+  pthread_t ptid = pthread_self();
+  *thread_id = *(ZyanThreadId *)ptid;
 
-    return ZYAN_STATUS_SUCCESS;
+  return ZYAN_STATUS_SUCCESS;
 }
 
-/* ---------------------------------------------------------------------------------------------- */
-/* Thread Local Storage                                                                           */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* Thread Local Storage */
+/* ----------------------------------------------------------------------------------------------
+ */
 
-ZyanStatus ZyanThreadTlsAlloc(ZyanThreadTlsIndex* index, ZyanThreadTlsCallback destructor)
-{
-    ZyanThreadTlsIndex value;
-    const int error = pthread_key_create(&value, destructor);
-    if (error != 0)
-    {
-        if (error == EAGAIN)
-        {
-            return ZYAN_STATUS_OUT_OF_RESOURCES;
-        }
-        if (error == ENOMEM)
-        {
-            return ZYAN_STATUS_NOT_ENOUGH_MEMORY;
-        }
-        return ZYAN_STATUS_BAD_SYSTEMCALL;
+ZyanStatus ZyanThreadTlsAlloc(ZyanThreadTlsIndex *index,
+                              ZyanThreadTlsCallback destructor) {
+  ZyanThreadTlsIndex value;
+  const int error = pthread_key_create(&value, destructor);
+  if (error != 0) {
+    if (error == EAGAIN) {
+      return ZYAN_STATUS_OUT_OF_RESOURCES;
     }
-
-    *index = value;
-    return ZYAN_STATUS_SUCCESS;
-}
-
-ZyanStatus ZyanThreadTlsFree(ZyanThreadTlsIndex index)
-{
-    return !pthread_key_delete(index) ? ZYAN_STATUS_SUCCESS : ZYAN_STATUS_BAD_SYSTEMCALL;
-}
-
-ZyanStatus ZyanThreadTlsGetValue(ZyanThreadTlsIndex index, void** data)
-{
-    *data = pthread_getspecific(index);
-
-    return ZYAN_STATUS_SUCCESS;
-}
-
-ZyanStatus ZyanThreadTlsSetValue(ZyanThreadTlsIndex index, void* data)
-{
-    const int error = pthread_setspecific(index, data);
-    if (error != 0)
-    {
-        if (error == EINVAL)
-        {
-            return ZYAN_STATUS_INVALID_ARGUMENT;
-        }
-        return ZYAN_STATUS_BAD_SYSTEMCALL;
+    if (error == ENOMEM) {
+      return ZYAN_STATUS_NOT_ENOUGH_MEMORY;
     }
+    return ZYAN_STATUS_BAD_SYSTEMCALL;
+  }
 
-    return ZYAN_STATUS_SUCCESS;
+  *index = value;
+  return ZYAN_STATUS_SUCCESS;
 }
 
-/* ---------------------------------------------------------------------------------------------- */
+ZyanStatus ZyanThreadTlsFree(ZyanThreadTlsIndex index) {
+  return !pthread_key_delete(index) ? ZYAN_STATUS_SUCCESS
+                                    : ZYAN_STATUS_BAD_SYSTEMCALL;
+}
+
+ZyanStatus ZyanThreadTlsGetValue(ZyanThreadTlsIndex index, void **data) {
+  *data = pthread_getspecific(index);
+
+  return ZYAN_STATUS_SUCCESS;
+}
+
+ZyanStatus ZyanThreadTlsSetValue(ZyanThreadTlsIndex index, void *data) {
+  const int error = pthread_setspecific(index, data);
+  if (error != 0) {
+    if (error == EINVAL) {
+      return ZYAN_STATUS_INVALID_ARGUMENT;
+    }
+    return ZYAN_STATUS_BAD_SYSTEMCALL;
+  }
+
+  return ZYAN_STATUS_SUCCESS;
+}
+
+/* ----------------------------------------------------------------------------------------------
+ */
 
 #elif defined(ZYAN_WINDOWS)
 
-/* ---------------------------------------------------------------------------------------------- */
-/* General                                                                                        */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* General */
+/* ----------------------------------------------------------------------------------------------
+ */
 
-ZyanStatus ZyanThreadGetCurrentThread(ZyanThread* thread)
-{
-    *thread = GetCurrentThread();
+ZyanStatus ZyanThreadGetCurrentThread(ZyanThread *thread) {
+  *thread = GetCurrentThread();
 
-    return ZYAN_STATUS_SUCCESS;
+  return ZYAN_STATUS_SUCCESS;
 }
 
-ZyanStatus ZyanThreadGetCurrentThreadId(ZyanThreadId* thread_id)
-{
-    *thread_id = GetCurrentThreadId();
+ZyanStatus ZyanThreadGetCurrentThreadId(ZyanThreadId *thread_id) {
+  *thread_id = GetCurrentThreadId();
 
-    return ZYAN_STATUS_SUCCESS;
+  return ZYAN_STATUS_SUCCESS;
 }
 
-/* ---------------------------------------------------------------------------------------------- */
-/* Thread Local Storage (TLS)                                                                     */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* Thread Local Storage (TLS) */
+/* ----------------------------------------------------------------------------------------------
+ */
 
-ZyanStatus ZyanThreadTlsAlloc(ZyanThreadTlsIndex* index, ZyanThreadTlsCallback destructor)
-{
-    const ZyanThreadTlsIndex value = FlsAlloc(destructor);
-    if (value == FLS_OUT_OF_INDEXES)
-    {
-        return ZYAN_STATUS_OUT_OF_RESOURCES;
+ZyanStatus ZyanThreadTlsAlloc(ZyanThreadTlsIndex *index,
+                              ZyanThreadTlsCallback destructor) {
+  const ZyanThreadTlsIndex value = FlsAlloc(destructor);
+  if (value == FLS_OUT_OF_INDEXES) {
+    return ZYAN_STATUS_OUT_OF_RESOURCES;
+  }
+
+  *index = value;
+  return ZYAN_STATUS_SUCCESS;
+}
+
+ZyanStatus ZyanThreadTlsFree(ZyanThreadTlsIndex index) {
+  return FlsFree(index) ? ZYAN_STATUS_SUCCESS : ZYAN_STATUS_BAD_SYSTEMCALL;
+}
+
+ZyanStatus ZyanThreadTlsGetValue(ZyanThreadTlsIndex index, void **data) {
+  *data = FlsGetValue(index);
+
+  return ZYAN_STATUS_SUCCESS;
+}
+
+ZyanStatus ZyanThreadTlsSetValue(ZyanThreadTlsIndex index, void *data) {
+  if (!FlsSetValue(index, data)) {
+    const DWORD error = GetLastError();
+    if (error == ERROR_INVALID_PARAMETER) {
+      return ZYAN_STATUS_INVALID_ARGUMENT;
     }
+    return ZYAN_STATUS_BAD_SYSTEMCALL;
+  }
 
-    *index = value;
-    return ZYAN_STATUS_SUCCESS;
+  return ZYAN_STATUS_SUCCESS;
 }
 
-ZyanStatus ZyanThreadTlsFree(ZyanThreadTlsIndex index)
-{
-    return FlsFree(index) ? ZYAN_STATUS_SUCCESS : ZYAN_STATUS_BAD_SYSTEMCALL;
-}
-
-ZyanStatus ZyanThreadTlsGetValue(ZyanThreadTlsIndex index, void** data)
-{
-    *data = FlsGetValue(index);
-
-    return ZYAN_STATUS_SUCCESS;
-}
-
-ZyanStatus ZyanThreadTlsSetValue(ZyanThreadTlsIndex index, void* data)
-{
-    if (!FlsSetValue(index, data))
-    {
-        const DWORD error = GetLastError();
-        if (error == ERROR_INVALID_PARAMETER)
-        {
-            return ZYAN_STATUS_INVALID_ARGUMENT;
-        }
-        return ZYAN_STATUS_BAD_SYSTEMCALL;
-    }
-
-    return ZYAN_STATUS_SUCCESS;
-}
-
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 #else
-#   error "Unsupported platform detected"
+#error "Unsupported platform detected"
 #endif
 
-/* ============================================================================================== */
+/* ==============================================================================================
+ */

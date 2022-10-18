@@ -2,39 +2,32 @@
  * @file Broadcast.h
  * @author Sina Karvandi (sina@hyperdbg.org)
  * @brief The broadcast (DPC) function to all the cores for debugger commands
- * @details 
+ * @details
  * @version 0.1
  * @date 2020-04-17
- * 
+ *
  * @copyright This project is released under the GNU Public License v3.
- * 
+ *
  */
 #pragma once
 
 //////////////////////////////////////////////////
-//					Functions					//
+//					Functions
+////
 //////////////////////////////////////////////////
 
-VOID
-BroadcastVmxVirtualizationAllCores();
+VOID BroadcastVmxVirtualizationAllCores();
 
-VOID
-BroadcastEnableDbAndBpExitingAllCores();
+VOID BroadcastEnableDbAndBpExitingAllCores();
 
-VOID
-BroadcastDisableDbAndBpExitingAllCores();
+VOID BroadcastDisableDbAndBpExitingAllCores();
 
-VOID
-BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores();
+VOID BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores();
 
-VOID
-BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores();
+VOID BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores();
 
-VOID
-BroadcastEnableNmiExitingAllCores();
+VOID BroadcastEnableNmiExitingAllCores();
 
-VOID
-BroadcastDisableNmiExitingAllCores();
+VOID BroadcastDisableNmiExitingAllCores();
 
-VOID
-BroadcastNotifyAllToInvalidateEptAllCores();
+VOID BroadcastNotifyAllToInvalidateEptAllCores();

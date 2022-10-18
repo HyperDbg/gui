@@ -41,23 +41,22 @@ all
 //
 // Global Variables
 //
-extern UINT32                                       g_DisassemblerSyntax;
+extern UINT32 g_DisassemblerSyntax;
 extern std::map<UINT64, LOCAL_FUNCTION_DESCRIPTION> g_DisassemblerSymbolMap;
-extern BOOLEAN                                      g_AddressConversion;
+extern BOOLEAN g_AddressConversion;
 
 /**
  * @brief Defines the `ZydisSymbol` struct.
  */
-typedef struct ZydisSymbol_
-{
-    /**
+typedef struct ZydisSymbol_ {
+  /**
    * @brief The symbol address.
    */
-    ZyanU64 address;
-    /**
+  ZyanU64 address;
+  /**
    * @brief The symbol name.
    */
-    const char * name;
+  const char *name;
 } ZydisSymbol;
 
 ZydisFormatterFunc default_print_address_absolute;
@@ -71,38 +70,35 @@ ZydisFormatterFunc default_print_address_absolute;
  * @return ZyanStatus
  */
 static ZyanStatus
-ZydisFormatterPrintAddressAbsolute(const ZydisFormatter *  formatter,
-                                   ZydisFormatterBuffer *  buffer,
-                                   ZydisFormatterContext * context)
-{
-    ZyanU64                                                address;
-    std::map<UINT64, LOCAL_FUNCTION_DESCRIPTION>::iterator Iterate;
+ZydisFormatterPrintAddressAbsolute(const ZydisFormatter *formatter,
+                                   ZydisFormatterBuffer *buffer,
+                                   ZydisFormatterContext *context) {
+  ZyanU64 address;
+  std::map<UINT64, LOCAL_FUNCTION_DESCRIPTION>::iterator Iterate;
 
-    ZYAN_CHECK(ZydisCalcAbsoluteAddress(context->instruction, context->operand, context->runtime_address, &address));
+  ZYAN_CHECK(ZydisCalcAbsoluteAddress(context->instruction, context->operand,
+                                      context->runtime_address, &address));
 
+  //
+  // Apply addressconversion of settings here
+  //
+  if (g_AddressConversion) {
     //
-    // Apply addressconversion of settings here
+    // Check to find the symbol of address
     //
-    if (g_AddressConversion)
-    {
-        //
-        // Check to find the symbol of address
-        //
-        Iterate = g_DisassemblerSymbolMap.find(address);
+    Iterate = g_DisassemblerSymbolMap.find(address);
 
-        if (Iterate != g_DisassemblerSymbolMap.end())
-        {
-            ZYAN_CHECK(ZydisFormatterBufferAppend(buffer, ZYDIS_TOKEN_SYMBOL));
-            ZyanString * string;
-            ZYAN_CHECK(ZydisFormatterBufferGetString(buffer, &string));
-            return ZyanStringAppendFormat(string,
-                                          "<%s (%s)>",
-                                          Iterate->second.ObjectName.c_str(),
-                                          SeparateTo64BitValue(Iterate->first).c_str());
-        }
+    if (Iterate != g_DisassemblerSymbolMap.end()) {
+      ZYAN_CHECK(ZydisFormatterBufferAppend(buffer, ZYDIS_TOKEN_SYMBOL));
+      ZyanString *string;
+      ZYAN_CHECK(ZydisFormatterBufferGetString(buffer, &string));
+      return ZyanStringAppendFormat(
+          string, "<%s (%s)>", Iterate->second.ObjectName.c_str(),
+          SeparateTo64BitValue(Iterate->first).c_str());
     }
+  }
 
-    return default_print_address_absolute(formatter, buffer, context);
+  return default_print_address_absolute(formatter, buffer, context);
 }
 
 /**
@@ -117,150 +113,127 @@ ZydisFormatterPrintAddressAbsolute(const ZydisFormatter *  formatter,
  * @param show_of_branch_is_taken
  * @param rflags just used in the case show_of_branch_is_taken is true
  */
-VOID
-DisassembleBuffer(ZydisDecoder * decoder,
-                  ZyanU64        runtime_address,
-                  ZyanU8 *       data,
-                  ZyanUSize      length,
-                  uint32_t       maximum_instr,
-                  BOOLEAN        is_x86_64,
-                  BOOLEAN        show_of_branch_is_taken,
-                  PRFLAGS        rflags)
-{
-    ZydisFormatter formatter;
-    int            instr_decoded   = 0;
-    UINT64         UsedBaseAddress = NULL;
+VOID DisassembleBuffer(ZydisDecoder *decoder, ZyanU64 runtime_address,
+                       ZyanU8 *data, ZyanUSize length, uint32_t maximum_instr,
+                       BOOLEAN is_x86_64, BOOLEAN show_of_branch_is_taken,
+                       PRFLAGS rflags) {
+  ZydisFormatter formatter;
+  int instr_decoded = 0;
+  UINT64 UsedBaseAddress = NULL;
 
-    if (g_DisassemblerSyntax == 1)
-    {
-        ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
-    }
-    else if (g_DisassemblerSyntax == 2)
-    {
-        ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_ATT);
-    }
-    else if (g_DisassemblerSyntax == 3)
-    {
-        ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL_MASM);
-    }
-    else
-    {
-        ShowMessages("err, in selecting disassembler syntax\n");
-        return;
+  if (g_DisassemblerSyntax == 1) {
+    ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
+  } else if (g_DisassemblerSyntax == 2) {
+    ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_ATT);
+  } else if (g_DisassemblerSyntax == 3) {
+    ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL_MASM);
+  } else {
+    ShowMessages("err, in selecting disassembler syntax\n");
+    return;
+  }
+
+  ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SEGMENT,
+                            ZYAN_TRUE);
+  ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SIZE,
+                            ZYAN_TRUE);
+
+  //
+  // Replace the `ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS` function that formats
+  // the absolute addresses
+  //
+  default_print_address_absolute =
+      (ZydisFormatterFunc)&ZydisFormatterPrintAddressAbsolute;
+  ZydisFormatterSetHook(&formatter, ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS,
+                        (const void **)&default_print_address_absolute);
+
+  ZydisDecodedInstruction instruction;
+  char buffer[256];
+  while (ZYAN_SUCCESS(
+      ZydisDecoderDecodeBuffer(decoder, data, length, &instruction))) {
+    //
+    // Apply addressconversion of settings here
+    //
+    if (g_AddressConversion) {
+      //
+      // Showing function names here
+      //
+      if (SymbolShowFunctionNameBasedOnAddress(runtime_address,
+                                               &UsedBaseAddress)) {
+        //
+        // The symbol address is showed
+        //
+        ShowMessages(":\n");
+      }
     }
 
-    ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SEGMENT, ZYAN_TRUE);
-    ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SIZE, ZYAN_TRUE);
+    // ZYAN_PRINTF("%016" PRIX64 "  ", runtime_address);
+    ShowMessages("%s   ", SeparateTo64BitValue(runtime_address).c_str());
+    //
+    // We have to pass a `runtime_address` different to
+    // `ZYDIS_RUNTIME_ADDRESS_NONE` to enable printing of absolute addresses
+    //
+    ZydisFormatterFormatInstruction(&formatter, &instruction, &buffer[0],
+                                    sizeof(buffer), runtime_address);
 
     //
-    // Replace the `ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS` function that formats
-    // the absolute addresses
+    // Show the memory for this instruction
     //
-    default_print_address_absolute =
-        (ZydisFormatterFunc)&ZydisFormatterPrintAddressAbsolute;
-    ZydisFormatterSetHook(&formatter, ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS, (const void **)&default_print_address_absolute);
-
-    ZydisDecodedInstruction instruction;
-    char                    buffer[256];
-    while (ZYAN_SUCCESS(
-        ZydisDecoderDecodeBuffer(decoder, data, length, &instruction)))
-    {
-        //
-        // Apply addressconversion of settings here
-        //
-        if (g_AddressConversion)
-        {
-            //
-            // Showing function names here
-            //
-            if (SymbolShowFunctionNameBasedOnAddress(runtime_address, &UsedBaseAddress))
-            {
-                //
-                // The symbol address is showed
-                //
-                ShowMessages(":\n");
-            }
-        }
-
-        // ZYAN_PRINTF("%016" PRIX64 "  ", runtime_address);
-        ShowMessages("%s   ", SeparateTo64BitValue(runtime_address).c_str());
-        //
-        // We have to pass a `runtime_address` different to
-        // `ZYDIS_RUNTIME_ADDRESS_NONE` to enable printing of absolute addresses
-        //
-        ZydisFormatterFormatInstruction(&formatter, &instruction, &buffer[0], sizeof(buffer), runtime_address);
-
-        //
-        // Show the memory for this instruction
-        //
-        for (size_t i = 0; i < instruction.length; i++)
-        {
-            ZyanU8 MemoryContent = data[i];
-            ShowMessages(" %02X", MemoryContent);
-        }
-        //
-        // Add padding (we assume that each instruction should be at least 10 bytes)
-        //
+    for (size_t i = 0; i < instruction.length; i++) {
+      ZyanU8 MemoryContent = data[i];
+      ShowMessages(" %02X", MemoryContent);
+    }
+    //
+    // Add padding (we assume that each instruction should be at least 10 bytes)
+    //
 #define PaddingLength 12
-        if (instruction.length < PaddingLength)
-        {
-            for (size_t i = 0; i < PaddingLength - instruction.length; i++)
-            {
-                ShowMessages("   ");
-            }
-        }
-
-        //
-        // Check whether we should show the result of conditional branches or not
-        //
-        if (show_of_branch_is_taken)
-        {
-            //
-            // Get the result of conditional jump, we re-format the instruction
-            // here because the user might have changed the configuration of zydis
-            // using the "settings" command so it's better to re-format with default
-            // configuration
-            //
-            RFLAGS TempRflags = {0};
-            TempRflags.AsUInt = rflags->AsUInt;
-            DEBUGGER_CONDITIONAL_JUMP_STATUS ResultOfCondJmp =
-                HyperDbgIsConditionalJumpTaken(data, length, TempRflags, is_x86_64);
-
-            if (ResultOfCondJmp == DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN)
-            {
-                ShowMessages(" %s [taken]\n", &buffer[0]);
-            }
-            else if (ResultOfCondJmp ==
-                     DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN)
-            {
-                ShowMessages(" %s [not taken]\n", &buffer[0]);
-            }
-            else
-            {
-                //
-                // It's either not a conditional jump or an error occurred
-                //
-                ShowMessages(" %s\n", &buffer[0]);
-            }
-        }
-        else
-        {
-            //
-            // Show regualr instruction
-            //
-            ShowMessages(" %s\n", &buffer[0]);
-        }
-
-        data += instruction.length;
-        length -= instruction.length;
-        runtime_address += instruction.length;
-        instr_decoded++;
-
-        if (instr_decoded == maximum_instr)
-        {
-            return;
-        }
+    if (instruction.length < PaddingLength) {
+      for (size_t i = 0; i < PaddingLength - instruction.length; i++) {
+        ShowMessages("   ");
+      }
     }
+
+    //
+    // Check whether we should show the result of conditional branches or not
+    //
+    if (show_of_branch_is_taken) {
+      //
+      // Get the result of conditional jump, we re-format the instruction
+      // here because the user might have changed the configuration of zydis
+      // using the "settings" command so it's better to re-format with default
+      // configuration
+      //
+      RFLAGS TempRflags = {0};
+      TempRflags.AsUInt = rflags->AsUInt;
+      DEBUGGER_CONDITIONAL_JUMP_STATUS ResultOfCondJmp =
+          HyperDbgIsConditionalJumpTaken(data, length, TempRflags, is_x86_64);
+
+      if (ResultOfCondJmp == DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN) {
+        ShowMessages(" %s [taken]\n", &buffer[0]);
+      } else if (ResultOfCondJmp ==
+                 DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN) {
+        ShowMessages(" %s [not taken]\n", &buffer[0]);
+      } else {
+        //
+        // It's either not a conditional jump or an error occurred
+        //
+        ShowMessages(" %s\n", &buffer[0]);
+      }
+    } else {
+      //
+      // Show regualr instruction
+      //
+      ShowMessages(" %s\n", &buffer[0]);
+    }
+
+    data += instruction.length;
+    length -= instruction.length;
+    runtime_address += instruction.length;
+    instr_decoded++;
+
+    if (instr_decoded == maximum_instr) {
+      return;
+    }
+  }
 }
 
 /**
@@ -268,51 +241,34 @@ DisassembleBuffer(ZydisDecoder * decoder,
  *
  * @return int
  */
-int
-ZydisTest()
-{
-    if (ZydisGetVersion() != ZYDIS_VERSION)
-    {
-        fputs("Invalid zydis version\n", ZYAN_STDERR);
-        return EXIT_FAILURE;
-    }
+int ZydisTest() {
+  if (ZydisGetVersion() != ZYDIS_VERSION) {
+    fputs("Invalid zydis version\n", ZYAN_STDERR);
+    return EXIT_FAILURE;
+  }
 
-    ZyanU8 data[] = {
-        0x48,
-        0x8B,
-        0x05,
-        0x39,
-        0x00,
-        0x13,
-        0x00, // mov rax, qword ptr ds:[<SomeModule.SomeData>]
-        0x50, // push rax
-        0xFF,
-        0x15,
-        0xF2,
-        0x10,
-        0x00,
-        0x00, // call qword ptr ds:[<SomeModule.SomeFunction>]
-        0x85,
-        0xC0, // test eax, eax
-        0x0F,
-        0x84,
-        0x00,
-        0x00,
-        0x00,
-        0x00, // jz 0x007FFFFFFF400016
-        0xE9,
-        0xE5,
-        0x0F,
-        0x00,
-        0x00 // jmp <SomeModule.EntryPoint>
-    };
+  ZyanU8 data[] = {
+      0x48, 0x8B, 0x05, 0x39, 0x00, 0x13,
+      0x00, // mov rax, qword ptr ds:[<SomeModule.SomeData>]
+      0x50, // push rax
+      0xFF, 0x15, 0xF2, 0x10, 0x00,
+      0x00, // call qword ptr ds:[<SomeModule.SomeFunction>]
+      0x85,
+      0xC0, // test eax, eax
+      0x0F, 0x84, 0x00, 0x00, 0x00,
+      0x00, // jz 0x007FFFFFFF400016
+      0xE9, 0xE5, 0x0F, 0x00,
+      0x00 // jmp <SomeModule.EntryPoint>
+  };
 
-    ZydisDecoder decoder;
-    ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64, ZYDIS_ADDRESS_WIDTH_64);
+  ZydisDecoder decoder;
+  ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64,
+                   ZYDIS_ADDRESS_WIDTH_64);
 
-    DisassembleBuffer(&decoder, 0x007FFFFFFF400000, &data[0], sizeof(data), 0xffffffff, TRUE, FALSE, NULL);
+  DisassembleBuffer(&decoder, 0x007FFFFFFF400000, &data[0], sizeof(data),
+                    0xffffffff, TRUE, FALSE, NULL);
 
-    return 0;
+  return 0;
 }
 
 /**
@@ -330,29 +286,26 @@ ZydisTest()
  *
  * @return int
  */
-int
-HyperDbgDisassembler64(unsigned char * BufferToDisassemble,
-                       UINT64          BaseAddress,
-                       UINT64          Size,
-                       UINT32          MaximumInstrDecoded,
-                       BOOLEAN         ShowBranchIsTakenOrNot,
-                       PRFLAGS         Rflags)
-{
-    if (ZydisGetVersion() != ZYDIS_VERSION)
-    {
-        fputs("Invalid zydis version\n", ZYAN_STDERR);
-        return EXIT_FAILURE;
-    }
+int HyperDbgDisassembler64(unsigned char *BufferToDisassemble,
+                           UINT64 BaseAddress, UINT64 Size,
+                           UINT32 MaximumInstrDecoded,
+                           BOOLEAN ShowBranchIsTakenOrNot, PRFLAGS Rflags) {
+  if (ZydisGetVersion() != ZYDIS_VERSION) {
+    fputs("Invalid zydis version\n", ZYAN_STDERR);
+    return EXIT_FAILURE;
+  }
 
-    ZydisDecoder decoder;
-    ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64, ZYDIS_ADDRESS_WIDTH_64);
+  ZydisDecoder decoder;
+  ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64,
+                   ZYDIS_ADDRESS_WIDTH_64);
 
-    //
-    // Disassembling buffer
-    //
-    DisassembleBuffer(&decoder, BaseAddress, &BufferToDisassemble[0], Size, MaximumInstrDecoded, TRUE, ShowBranchIsTakenOrNot, Rflags);
+  //
+  // Disassembling buffer
+  //
+  DisassembleBuffer(&decoder, BaseAddress, &BufferToDisassemble[0], Size,
+                    MaximumInstrDecoded, TRUE, ShowBranchIsTakenOrNot, Rflags);
 
-    return 0;
+  return 0;
 }
 
 /**
@@ -370,29 +323,27 @@ HyperDbgDisassembler64(unsigned char * BufferToDisassemble,
 
  * @return int
  */
-int
-HyperDbgDisassembler32(unsigned char * BufferToDisassemble,
-                       UINT64          BaseAddress,
-                       UINT64          Size,
-                       UINT32          MaximumInstrDecoded,
-                       BOOLEAN         ShowBranchIsTakenOrNot,
-                       PRFLAGS         Rflags)
-{
-    if (ZydisGetVersion() != ZYDIS_VERSION)
-    {
-        fputs("Invalid zydis version\n", ZYAN_STDERR);
-        return EXIT_FAILURE;
-    }
+int HyperDbgDisassembler32(unsigned char *BufferToDisassemble,
+                           UINT64 BaseAddress, UINT64 Size,
+                           UINT32 MaximumInstrDecoded,
+                           BOOLEAN ShowBranchIsTakenOrNot, PRFLAGS Rflags) {
+  if (ZydisGetVersion() != ZYDIS_VERSION) {
+    fputs("Invalid zydis version\n", ZYAN_STDERR);
+    return EXIT_FAILURE;
+  }
 
-    ZydisDecoder decoder;
-    ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_COMPAT_32, ZYDIS_ADDRESS_WIDTH_32);
+  ZydisDecoder decoder;
+  ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_COMPAT_32,
+                   ZYDIS_ADDRESS_WIDTH_32);
 
-    //
-    // Disassembling buffer
-    //
-    DisassembleBuffer(&decoder, (UINT32)BaseAddress, &BufferToDisassemble[0], Size, MaximumInstrDecoded, FALSE, ShowBranchIsTakenOrNot, Rflags);
+  //
+  // Disassembling buffer
+  //
+  DisassembleBuffer(&decoder, (UINT32)BaseAddress, &BufferToDisassemble[0],
+                    Size, MaximumInstrDecoded, FALSE, ShowBranchIsTakenOrNot,
+                    Rflags);
 
-    return 0;
+  return 0;
 }
 
 /**
@@ -408,334 +359,333 @@ HyperDbgDisassembler32(unsigned char * BufferToDisassemble,
  * @return DEBUGGER_NEXT_INSTRUCTION_FINDER_STATUS
  */
 DEBUGGER_CONDITIONAL_JUMP_STATUS
-HyperDbgIsConditionalJumpTaken(unsigned char * BufferToDisassemble,
-                               UINT64          BuffLength,
-                               RFLAGS          Rflags,
-                               BOOLEAN         Isx86_64)
-{
-    ZydisDecoder            decoder;
-    ZydisFormatter          formatter;
-    UINT64                  CurrentRip    = 0;
-    int                     instr_decoded = 0;
-    ZydisDecodedInstruction instruction;
-    char                    buffer[256];
-    UINT32                  MaximumInstrDecoded = 1;
+HyperDbgIsConditionalJumpTaken(unsigned char *BufferToDisassemble,
+                               UINT64 BuffLength, RFLAGS Rflags,
+                               BOOLEAN Isx86_64) {
+  ZydisDecoder decoder;
+  ZydisFormatter formatter;
+  UINT64 CurrentRip = 0;
+  int instr_decoded = 0;
+  ZydisDecodedInstruction instruction;
+  char buffer[256];
+  UINT32 MaximumInstrDecoded = 1;
 
-    if (ZydisGetVersion() != ZYDIS_VERSION)
-    {
-        ShowMessages("invalid zydis version\n");
-        return DEBUGGER_CONDITIONAL_JUMP_STATUS_ERROR;
-    }
+  if (ZydisGetVersion() != ZYDIS_VERSION) {
+    ShowMessages("invalid zydis version\n");
+    return DEBUGGER_CONDITIONAL_JUMP_STATUS_ERROR;
+  }
 
-    if (Isx86_64)
-    {
-        ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64, ZYDIS_ADDRESS_WIDTH_64);
-    }
-    else
-    {
-        ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_COMPAT_32, ZYDIS_ADDRESS_WIDTH_32);
-    }
+  if (Isx86_64) {
+    ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64,
+                     ZYDIS_ADDRESS_WIDTH_64);
+  } else {
+    ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_COMPAT_32,
+                     ZYDIS_ADDRESS_WIDTH_32);
+  }
 
-    ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
+  ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
 
-    ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SEGMENT, ZYAN_TRUE);
-    ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SIZE, ZYAN_TRUE);
+  ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SEGMENT,
+                            ZYAN_TRUE);
+  ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SIZE,
+                            ZYAN_TRUE);
 
+  //
+  // Replace the `ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS` function that
+  // formats the absolute addresses
+  //
+  default_print_address_absolute =
+      (ZydisFormatterFunc)&ZydisFormatterPrintAddressAbsolute;
+  ZydisFormatterSetHook(&formatter, ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS,
+                        (const void **)&default_print_address_absolute);
+
+  while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, BufferToDisassemble,
+                                               BuffLength, &instruction))) {
     //
-    // Replace the `ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS` function that
-    // formats the absolute addresses
+    // We have to pass a `runtime_address` different to
+    // `ZYDIS_RUNTIME_ADDRESS_NONE` to enable printing of absolute addresses
     //
-    default_print_address_absolute =
-        (ZydisFormatterFunc)&ZydisFormatterPrintAddressAbsolute;
-    ZydisFormatterSetHook(&formatter, ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS, (const void **)&default_print_address_absolute);
-
-    while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, BufferToDisassemble, BuffLength, &instruction)))
-    {
-        //
-        // We have to pass a `runtime_address` different to
-        // `ZYDIS_RUNTIME_ADDRESS_NONE` to enable printing of absolute addresses
-        //
-
-        ZydisFormatterFormatInstruction(&formatter, &instruction, &buffer[0], sizeof(buffer), (ZyanU64)CurrentRip);
-
-        switch (instruction.mnemonic)
-        {
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JO:
-
-            //
-            // Jump if overflow (jo)
-            //
-            if (Rflags.OverflowFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
-
-            break;
-
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JNO:
-
-            //
-            // Jump if not overflow (jno)
-            //
-            if (!Rflags.OverflowFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
-
-            break;
-
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JS:
-
-            //
-            // Jump if sign
-            //
-            if (Rflags.SignFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            break;
-
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JNS:
+    ZydisFormatterFormatInstruction(&formatter, &instruction, &buffer[0],
+                                    sizeof(buffer), (ZyanU64)CurrentRip);
 
-            //
-            // Jump if not sign
-            //
-            if (!Rflags.SignFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
-
-            break;
-
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JZ:
+    switch (instruction.mnemonic) {
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JO:
 
-            //
-            // Jump if equal (je),
-            // Jump if zero (jz)
-            //
-            if (Rflags.ZeroFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
-
-            break;
+      //
+      // Jump if overflow (jo)
+      //
+      if (Rflags.OverflowFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+
+      break;
 
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JNZ:
-
-            //
-            // Jump if not equal (jne),
-            // Jump if not zero (jnz)
-            //
-            if (!Rflags.ZeroFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JNO:
 
-            break;
+      //
+      // Jump if not overflow (jno)
+      //
+      if (!Rflags.OverflowFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JB:
+      break;
 
-            //
-            // Jump if below (jb),
-            // Jump if not above or equal (jnae),
-            // Jump if carry (jc)
-            //
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JS:
 
-            //
-            // This jump is unsigned
-            //
+      //
+      // Jump if sign
+      //
+      if (Rflags.SignFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            if (Rflags.CarryFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+      break;
 
-            break;
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JNS:
 
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JNB:
+      //
+      // Jump if not sign
+      //
+      if (!Rflags.SignFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            //
-            // Jump if not below (jnb),
-            // Jump if above or equal (jae),
-            // Jump if not carry (jnc)
-            //
+      break;
 
-            //
-            // This jump is unsigned
-            //
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JZ:
 
-            if (!Rflags.CarryFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+      //
+      // Jump if equal (je),
+      // Jump if zero (jz)
+      //
+      if (Rflags.ZeroFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            break;
+      break;
 
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JBE:
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JNZ:
 
-            //
-            // Jump if below or equal (jbe),
-            // Jump if not above (jna)
-            //
+      //
+      // Jump if not equal (jne),
+      // Jump if not zero (jnz)
+      //
+      if (!Rflags.ZeroFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            //
-            // This jump is unsigned
-            //
+      break;
 
-            if (Rflags.CarryFlag || Rflags.ZeroFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JB:
 
-            break;
+      //
+      // Jump if below (jb),
+      // Jump if not above or equal (jnae),
+      // Jump if carry (jc)
+      //
 
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JNBE:
+      //
+      // This jump is unsigned
+      //
 
-            //
-            // Jump if above (ja),
-            // Jump if not below or equal (jnbe)
-            //
+      if (Rflags.CarryFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            //
-            // This jump is unsigned
-            //
+      break;
 
-            if (!Rflags.CarryFlag && !Rflags.ZeroFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JNB:
 
-            break;
+      //
+      // Jump if not below (jnb),
+      // Jump if above or equal (jae),
+      // Jump if not carry (jnc)
+      //
 
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JL:
+      //
+      // This jump is unsigned
+      //
 
-            //
-            // Jump if less (jl),
-            // Jump if not greater or equal (jnge)
-            //
+      if (!Rflags.CarryFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            //
-            // This jump is signed
-            //
+      break;
 
-            if (Rflags.SignFlag != Rflags.OverflowFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JBE:
 
-            break;
+      //
+      // Jump if below or equal (jbe),
+      // Jump if not above (jna)
+      //
 
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JNL:
+      //
+      // This jump is unsigned
+      //
 
-            //
-            // Jump if greater or equal (jge),
-            // Jump if not less (jnl)
-            //
+      if (Rflags.CarryFlag || Rflags.ZeroFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            //
-            // This jump is signed
-            //
+      break;
 
-            if (Rflags.SignFlag == Rflags.OverflowFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JNBE:
 
-            break;
+      //
+      // Jump if above (ja),
+      // Jump if not below or equal (jnbe)
+      //
 
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JLE:
+      //
+      // This jump is unsigned
+      //
 
-            //
-            // Jump if less or equal (jle),
-            // Jump if not greater (jng)
-            //
+      if (!Rflags.CarryFlag && !Rflags.ZeroFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            //
-            // This jump is signed
-            //
+      break;
 
-            if (Rflags.ZeroFlag || Rflags.SignFlag != Rflags.OverflowFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JL:
 
-            break;
+      //
+      // Jump if less (jl),
+      // Jump if not greater or equal (jnge)
+      //
 
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JNLE:
+      //
+      // This jump is signed
+      //
 
-            //
-            // Jump if greater (jg),
-            // Jump if not less or equal (jnle)
-            //
+      if (Rflags.SignFlag != Rflags.OverflowFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            //
-            // This jump is signed
-            //
+      break;
 
-            if (!Rflags.ZeroFlag && Rflags.SignFlag == Rflags.OverflowFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JNL:
 
-            break;
+      //
+      // Jump if greater or equal (jge),
+      // Jump if not less (jnl)
+      //
 
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JP:
+      //
+      // This jump is signed
+      //
 
-            //
-            // Jump if parity (jp),
-            // Jump if parity even (jpe)
-            //
+      if (Rflags.SignFlag == Rflags.OverflowFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            if (Rflags.ParityFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+      break;
 
-            break;
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JLE:
 
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JNP:
+      //
+      // Jump if less or equal (jle),
+      // Jump if not greater (jng)
+      //
 
-            //
-            // Jump if not parity (jnp),
-            // Jump if parity odd (jpo)
-            //
+      //
+      // This jump is signed
+      //
 
-            if (!Rflags.ParityFlag)
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
-            else
-                return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+      if (Rflags.ZeroFlag || Rflags.SignFlag != Rflags.OverflowFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            break;
+      break;
 
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JCXZ:
-        case ZydisMnemonic::ZYDIS_MNEMONIC_JECXZ:
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JNLE:
 
-            //
-            // Jump if %CX register is 0 (jcxz),
-            // Jump if% ECX register is 0 (jecxz)
-            //
+      //
+      // Jump if greater (jg),
+      // Jump if not less or equal (jnle)
+      //
 
-            //
-            // Actually this instruction are rarely used
-            // but if we want to suport these instructions then we
-            // should read ecx and cx each time in the debuggee,
-            // so it's better to just ignore it as a non-conditional
-            // jump
-            //
-            return DEBUGGER_CONDITIONAL_JUMP_STATUS_NOT_CONDITIONAL_JUMP;
+      //
+      // This jump is signed
+      //
 
-        default:
+      if (!Rflags.ZeroFlag && Rflags.SignFlag == Rflags.OverflowFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
 
-            //
-            // It's not a jump
-            //
-            return DEBUGGER_CONDITIONAL_JUMP_STATUS_NOT_CONDITIONAL_JUMP;
-            break;
-        }
+      break;
 
-        return DEBUGGER_CONDITIONAL_JUMP_STATUS_ERROR;
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JP:
+
+      //
+      // Jump if parity (jp),
+      // Jump if parity even (jpe)
+      //
+
+      if (Rflags.ParityFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+
+      break;
+
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JNP:
+
+      //
+      // Jump if not parity (jnp),
+      // Jump if parity odd (jpo)
+      //
+
+      if (!Rflags.ParityFlag)
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_TAKEN;
+      else
+        return DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN;
+
+      break;
+
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JCXZ:
+    case ZydisMnemonic::ZYDIS_MNEMONIC_JECXZ:
+
+      //
+      // Jump if %CX register is 0 (jcxz),
+      // Jump if% ECX register is 0 (jecxz)
+      //
+
+      //
+      // Actually this instruction are rarely used
+      // but if we want to suport these instructions then we
+      // should read ecx and cx each time in the debuggee,
+      // so it's better to just ignore it as a non-conditional
+      // jump
+      //
+      return DEBUGGER_CONDITIONAL_JUMP_STATUS_NOT_CONDITIONAL_JUMP;
+
+    default:
+
+      //
+      // It's not a jump
+      //
+      return DEBUGGER_CONDITIONAL_JUMP_STATUS_NOT_CONDITIONAL_JUMP;
+      break;
     }
+
+    return DEBUGGER_CONDITIONAL_JUMP_STATUS_ERROR;
+  }
 }
 
 /**
@@ -750,87 +700,83 @@ HyperDbgIsConditionalJumpTaken(unsigned char * BufferToDisassemble,
  */
 BOOLEAN
 HyperDbgCheckWhetherTheCurrentInstructionIsCall(
-    unsigned char * BufferToDisassemble,
-    UINT64          BuffLength,
-    BOOLEAN         Isx86_64,
-    PUINT32         CallLength)
-{
-    ZydisDecoder            decoder;
-    ZydisFormatter          formatter;
-    UINT64                  CurrentRip    = 0;
-    int                     instr_decoded = 0;
-    ZydisDecodedInstruction instruction;
-    char                    buffer[256];
-    UINT32                  MaximumInstrDecoded = 1;
+    unsigned char *BufferToDisassemble, UINT64 BuffLength, BOOLEAN Isx86_64,
+    PUINT32 CallLength) {
+  ZydisDecoder decoder;
+  ZydisFormatter formatter;
+  UINT64 CurrentRip = 0;
+  int instr_decoded = 0;
+  ZydisDecodedInstruction instruction;
+  char buffer[256];
+  UINT32 MaximumInstrDecoded = 1;
 
+  //
+  // Default length
+  //
+  *CallLength = 0;
+
+  if (ZydisGetVersion() != ZYDIS_VERSION) {
+    ShowMessages("invalid zydis version\n");
+    return DEBUGGER_CONDITIONAL_JUMP_STATUS_ERROR;
+  }
+
+  if (Isx86_64) {
+    ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64,
+                     ZYDIS_ADDRESS_WIDTH_64);
+  } else {
+    ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_COMPAT_32,
+                     ZYDIS_ADDRESS_WIDTH_32);
+  }
+
+  ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
+
+  ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SEGMENT,
+                            ZYAN_TRUE);
+  ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SIZE,
+                            ZYAN_TRUE);
+
+  //
+  // Replace the `ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS` function that
+  // formats the absolute addresses
+  //
+  default_print_address_absolute =
+      (ZydisFormatterFunc)&ZydisFormatterPrintAddressAbsolute;
+  ZydisFormatterSetHook(&formatter, ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS,
+                        (const void **)&default_print_address_absolute);
+
+  while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, BufferToDisassemble,
+                                               BuffLength, &instruction))) {
     //
-    // Default length
+    // We have to pass a `runtime_address` different to
+    // `ZYDIS_RUNTIME_ADDRESS_NONE` to enable printing of absolute addresses
     //
-    *CallLength = 0;
 
-    if (ZydisGetVersion() != ZYDIS_VERSION)
-    {
-        ShowMessages("invalid zydis version\n");
-        return DEBUGGER_CONDITIONAL_JUMP_STATUS_ERROR;
+    ZydisFormatterFormatInstruction(&formatter, &instruction, &buffer[0],
+                                    sizeof(buffer), (ZyanU64)CurrentRip);
+
+    if (instruction.mnemonic == ZydisMnemonic::ZYDIS_MNEMONIC_CALL) {
+      //
+      // It's a call
+      //
+
+      //
+      // Log call
+      //
+      // ShowMessages("call length : 0x%x\n", instruction.length);
+
+      //
+      // Set the length
+      //
+      *CallLength = instruction.length;
+
+      return TRUE;
+    } else {
+      //
+      // It's not call
+      //
+      return FALSE;
     }
-
-    if (Isx86_64)
-    {
-        ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64, ZYDIS_ADDRESS_WIDTH_64);
-    }
-    else
-    {
-        ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_COMPAT_32, ZYDIS_ADDRESS_WIDTH_32);
-    }
-
-    ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
-
-    ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SEGMENT, ZYAN_TRUE);
-    ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SIZE, ZYAN_TRUE);
-
-    //
-    // Replace the `ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS` function that
-    // formats the absolute addresses
-    //
-    default_print_address_absolute =
-        (ZydisFormatterFunc)&ZydisFormatterPrintAddressAbsolute;
-    ZydisFormatterSetHook(&formatter, ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS, (const void **)&default_print_address_absolute);
-
-    while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, BufferToDisassemble, BuffLength, &instruction)))
-    {
-        //
-        // We have to pass a `runtime_address` different to
-        // `ZYDIS_RUNTIME_ADDRESS_NONE` to enable printing of absolute addresses
-        //
-
-        ZydisFormatterFormatInstruction(&formatter, &instruction, &buffer[0], sizeof(buffer), (ZyanU64)CurrentRip);
-
-        if (instruction.mnemonic == ZydisMnemonic::ZYDIS_MNEMONIC_CALL)
-        {
-            //
-            // It's a call
-            //
-
-            //
-            // Log call
-            //
-            // ShowMessages("call length : 0x%x\n", instruction.length);
-
-            //
-            // Set the length
-            //
-            *CallLength = instruction.length;
-
-            return TRUE;
-        }
-        else
-        {
-            //
-            // It's not call
-            //
-            return FALSE;
-        }
-    }
+  }
 }
 
 /**
@@ -844,63 +790,62 @@ HyperDbgCheckWhetherTheCurrentInstructionIsCall(
  * @return UINT32
  */
 UINT32
-HyperDbgLengthDisassemblerEngine(
-    unsigned char * BufferToDisassemble,
-    UINT64          BuffLength,
-    BOOLEAN         Isx86_64)
-{
-    ZydisDecoder            decoder;
-    ZydisFormatter          formatter;
-    UINT64                  CurrentRip    = 0;
-    int                     instr_decoded = 0;
-    ZydisDecodedInstruction instruction;
-    char                    buffer[256];
-    UINT32                  MaximumInstrDecoded = 1;
+HyperDbgLengthDisassemblerEngine(unsigned char *BufferToDisassemble,
+                                 UINT64 BuffLength, BOOLEAN Isx86_64) {
+  ZydisDecoder decoder;
+  ZydisFormatter formatter;
+  UINT64 CurrentRip = 0;
+  int instr_decoded = 0;
+  ZydisDecodedInstruction instruction;
+  char buffer[256];
+  UINT32 MaximumInstrDecoded = 1;
 
-    if (ZydisGetVersion() != ZYDIS_VERSION)
-    {
-        ShowMessages("invalid zydis version\n");
-        return DEBUGGER_CONDITIONAL_JUMP_STATUS_ERROR;
-    }
+  if (ZydisGetVersion() != ZYDIS_VERSION) {
+    ShowMessages("invalid zydis version\n");
+    return DEBUGGER_CONDITIONAL_JUMP_STATUS_ERROR;
+  }
 
-    if (Isx86_64)
-    {
-        ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64, ZYDIS_ADDRESS_WIDTH_64);
-    }
-    else
-    {
-        ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_COMPAT_32, ZYDIS_ADDRESS_WIDTH_32);
-    }
+  if (Isx86_64) {
+    ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64,
+                     ZYDIS_ADDRESS_WIDTH_64);
+  } else {
+    ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_COMPAT_32,
+                     ZYDIS_ADDRESS_WIDTH_32);
+  }
 
-    ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
+  ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
 
-    ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SEGMENT, ZYAN_TRUE);
-    ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SIZE, ZYAN_TRUE);
+  ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SEGMENT,
+                            ZYAN_TRUE);
+  ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SIZE,
+                            ZYAN_TRUE);
+
+  //
+  // Replace the `ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS` function that
+  // formats the absolute addresses
+  //
+  default_print_address_absolute =
+      (ZydisFormatterFunc)&ZydisFormatterPrintAddressAbsolute;
+  ZydisFormatterSetHook(&formatter, ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS,
+                        (const void **)&default_print_address_absolute);
+
+  while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, BufferToDisassemble,
+                                               BuffLength, &instruction))) {
+    //
+    // We have to pass a `runtime_address` different to
+    // `ZYDIS_RUNTIME_ADDRESS_NONE` to enable printing of absolute addresses
+    //
+    ZydisFormatterFormatInstruction(&formatter, &instruction, &buffer[0],
+                                    sizeof(buffer), (ZyanU64)CurrentRip);
 
     //
-    // Replace the `ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS` function that
-    // formats the absolute addresses
+    // Return len of buffer
     //
-    default_print_address_absolute =
-        (ZydisFormatterFunc)&ZydisFormatterPrintAddressAbsolute;
-    ZydisFormatterSetHook(&formatter, ZYDIS_FORMATTER_FUNC_PRINT_ADDRESS_ABS, (const void **)&default_print_address_absolute);
+    return instruction.length;
+  }
 
-    while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, BufferToDisassemble, BuffLength, &instruction)))
-    {
-        //
-        // We have to pass a `runtime_address` different to
-        // `ZYDIS_RUNTIME_ADDRESS_NONE` to enable printing of absolute addresses
-        //
-        ZydisFormatterFormatInstruction(&formatter, &instruction, &buffer[0], sizeof(buffer), (ZyanU64)CurrentRip);
-
-        //
-        // Return len of buffer
-        //
-        return instruction.length;
-    }
-
-    //
-    // Error in disassembling buffer
-    //
-    return 0;
+  //
+  // Error in disassembling buffer
+  //
+  return 0;
 }

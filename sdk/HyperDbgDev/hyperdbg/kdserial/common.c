@@ -8,14 +8,7 @@
 //
 
 NTSTATUS
-DllInitialize(
-    _In_ PUNICODE_STRING RegistryPath)
-{
-    return STATUS_SUCCESS;
-}
+DllInitialize(_In_ PUNICODE_STRING RegistryPath) { return STATUS_SUCCESS; }
 
 NTSTATUS
-DllUnload(void)
-{
-    return STATUS_SUCCESS;
-}
+DllUnload(void) { return STATUS_SUCCESS; }

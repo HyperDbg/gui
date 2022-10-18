@@ -3,7 +3,7 @@ package symbolLog
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
-	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
+	"github.com/ddkwork/golibrary/src/fynelib/canvasobjectapi"
 )
 
 type (

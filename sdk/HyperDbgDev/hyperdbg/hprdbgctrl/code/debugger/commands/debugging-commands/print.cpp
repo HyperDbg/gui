@@ -24,15 +24,13 @@ extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
  *
  * @return VOID
  */
-VOID
-CommandPrintHelp()
-{
-    ShowMessages("print : evaluates expressions.\n\n");
+VOID CommandPrintHelp() {
+  ShowMessages("print : evaluates expressions.\n\n");
 
-    ShowMessages("syntax : \tprint [Expression (string)]\n");
+  ShowMessages("syntax : \tprint [Expression (string)]\n");
 
-    ShowMessages("\n");
-    ShowMessages("\t\te.g : print dq(poi(@rcx))\n");
+  ShowMessages("\n");
+  ShowMessages("\t\te.g : print dq(poi(@rcx))\n");
 }
 
 /**
@@ -42,90 +40,83 @@ CommandPrintHelp()
  * @param Command
  * @return VOID
  */
-VOID
-CommandPrint(vector<string> SplittedCommand, string Command)
-{
-    PVOID  CodeBuffer;
-    UINT64 BufferAddress;
-    UINT32 BufferLength;
-    UINT32 Pointer;
+VOID CommandPrint(vector<string> SplittedCommand, string Command) {
+  PVOID CodeBuffer;
+  UINT64 BufferAddress;
+  UINT32 BufferLength;
+  UINT32 Pointer;
 
-    if (SplittedCommand.size() == 1)
-    {
-        ShowMessages("incorrect use of 'print'\n\n");
-        CommandPrintHelp();
-        return;
+  if (SplittedCommand.size() == 1) {
+    ShowMessages("incorrect use of 'print'\n\n");
+    CommandPrintHelp();
+    return;
+  }
+
+  //
+  // Trim the command
+  //
+  Trim(Command);
+
+  //
+  // Remove print from it
+  //
+  Command.erase(0, 5);
+
+  //
+  // Trim it again
+  //
+  Trim(Command);
+
+  //
+  // Prepend and append 'print(' and ')'
+  //
+  Command.insert(0, "print(");
+  Command.append(");");
+
+  if (g_IsSerialConnectedToRemoteDebuggee) {
+    //
+    // Send over serial
+    //
+
+    //
+    // Run script engine handler
+    //
+    CodeBuffer = ScriptEngineParseWrapper((char *)Command.c_str(), TRUE);
+
+    if (CodeBuffer == NULL) {
+      //
+      // return to show that this item contains an script
+      //
+      return;
     }
 
     //
-    // Trim the command
+    // Print symbols (test)
     //
-    Trim(Command);
-
-    //
-    // Remove print from it
-    //
-    Command.erase(0, 5);
+    // PrintSymbolBufferWrapper(CodeBuffer);
 
     //
-    // Trim it again
+    // Set the buffer and length
     //
-    Trim(Command);
+    BufferAddress = ScriptEngineWrapperGetHead(CodeBuffer);
+    BufferLength = ScriptEngineWrapperGetSize(CodeBuffer);
+    Pointer = ScriptEngineWrapperGetPointer(CodeBuffer);
 
     //
-    // Prepend and append 'print(' and ')'
+    // Send it to the remote debuggee
     //
-    Command.insert(0, "print(");
-    Command.append(");");
+    KdSendScriptPacketToDebuggee(BufferAddress, BufferLength, Pointer, FALSE);
 
-    if (g_IsSerialConnectedToRemoteDebuggee)
-    {
-        //
-        // Send over serial
-        //
+    //
+    // Remove the buffer of script engine interpreted code
+    //
+    ScriptEngineWrapperRemoveSymbolBuffer(CodeBuffer);
 
-        //
-        // Run script engine handler
-        //
-        CodeBuffer = ScriptEngineParseWrapper((char *)Command.c_str(), TRUE);
-
-        if (CodeBuffer == NULL)
-        {
-            //
-            // return to show that this item contains an script
-            //
-            return;
-        }
-
-        //
-        // Print symbols (test)
-        //
-        // PrintSymbolBufferWrapper(CodeBuffer);
-
-        //
-        // Set the buffer and length
-        //
-        BufferAddress = ScriptEngineWrapperGetHead(CodeBuffer);
-        BufferLength  = ScriptEngineWrapperGetSize(CodeBuffer);
-        Pointer       = ScriptEngineWrapperGetPointer(CodeBuffer);
-
-        //
-        // Send it to the remote debuggee
-        //
-        KdSendScriptPacketToDebuggee(BufferAddress, BufferLength, Pointer, FALSE);
-
-        //
-        // Remove the buffer of script engine interpreted code
-        //
-        ScriptEngineWrapperRemoveSymbolBuffer(CodeBuffer);
-
-        ShowMessages("\n");
-    }
-    else
-    {
-        //
-        // error
-        //
-        ShowMessages("err, you're not connected to any debuggee\n");
-    }
+    ShowMessages("\n");
+  } else {
+    //
+    // error
+    //
+    ShowMessages("err, you're not connected to any debuggee\n");
+  }
 }

@@ -3,8 +3,9 @@ package dism
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/ddkwork/librarygo/src/fynelib/myTable"
-	"github.com/ddkwork/librarygo/src/go-zydis"
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/src/fynelib/myTable"
+	"github.com/ddkwork/golibrary/src/go-zydis"
 )
 
 type (
@@ -23,6 +24,16 @@ type (
 		lines []line
 	}
 )
+
+func (d *disassemblyObject) ColumnLen() int {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *disassemblyObject) ColumnWidths() []float32 {
+	//TODO implement me
+	panic("implement me")
+}
 
 func (d *disassemblyObject) SetLines(lines []line) {
 	major, minor, patch, build := zydis.Version()
@@ -46,7 +57,7 @@ func (d *disassemblyObject) SetLines(lines []line) {
 	// Initialize formatter.
 	// Only required when instruction formatting ("disassembling"), like below.
 	formatter, err := zydis.NewFormatter(zydis.FormatterStyleIntel)
-	if err != nil {
+	if !mylog.Error(err) {
 		panic(err)
 	}
 
@@ -57,13 +68,13 @@ func (d *disassemblyObject) SetLines(lines []line) {
 
 	for len(data) > 0 {
 		instr, err := decoder.Decode(data)
-		if err != nil {
+		if !mylog.Error(err) {
 			break
 		}
 
 		// Format and print the binary instruction structure.
 		str, err := formatter.FormatInstruction(instr, runtimeAddress)
-		if err != nil {
+		if !mylog.Error(err) {
 			panic(err)
 		}
 		//s := fmt.Sprintf(

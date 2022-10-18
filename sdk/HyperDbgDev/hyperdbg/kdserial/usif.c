@@ -18,21 +18,18 @@ Abstract:
 
 // ---------------------------------------------------------------- Definitions
 
-#define USIF_FIFO_STAT       0x00000044 // FIFO status register
+#define USIF_FIFO_STAT 0x00000044       // FIFO status register
 #define USIF_FIFO_STAT_TXFFS 0x00FF0000 // TX filled FIFO stages
 #define USIF_FIFO_STAT_RXFFS 0x000000FF // RX filled FIFO stages
-#define USIF_TXD             0x00040000 // Transmisson data register
-#define USIF_RXD             0x00080000 // Reception data register
+#define USIF_TXD 0x00040000             // Transmisson data register
+#define USIF_RXD 0x00080000             // Reception data register
 
 // ------------------------------------------------------------------ Functions
 
 BOOLEAN
-UsifInitializePort(
-    _In_opt_ _Null_terminated_ PCHAR LoadOptions,
-    _Inout_ PCPPORT                  Port,
-    BOOLEAN                          MemoryMapped,
-    UCHAR                            AccessSize,
-    UCHAR                            BitWidth)
+UsifInitializePort(_In_opt_ _Null_terminated_ PCHAR LoadOptions,
+                   _Inout_ PCPPORT Port, BOOLEAN MemoryMapped, UCHAR AccessSize,
+                   UCHAR BitWidth)
 
 /*++
 
@@ -62,24 +59,21 @@ Return Value:
 --*/
 
 {
-    DbgBreakPoint();
-    UNREFERENCED_PARAMETER(LoadOptions);
-    UNREFERENCED_PARAMETER(AccessSize);
-    UNREFERENCED_PARAMETER(BitWidth);
+  DbgBreakPoint();
+  UNREFERENCED_PARAMETER(LoadOptions);
+  UNREFERENCED_PARAMETER(AccessSize);
+  UNREFERENCED_PARAMETER(BitWidth);
 
-    if (MemoryMapped == FALSE)
-    {
-        return FALSE;
-    }
+  if (MemoryMapped == FALSE) {
+    return FALSE;
+  }
 
-    Port->Flags = 0;
-    return TRUE;
+  Port->Flags = 0;
+  return TRUE;
 }
 
 BOOLEAN
-UsifSetBaud(
-    _Inout_ PCPPORT Port,
-    ULONG           Rate)
+UsifSetBaud(_Inout_ PCPPORT Port, ULONG Rate)
 
 /*++
 
@@ -100,25 +94,22 @@ Return Value:
 --*/
 
 {
-    DbgBreakPoint();
+  DbgBreakPoint();
 
-    if ((Port == NULL) || (Port->Address == NULL))
-    {
-        return FALSE;
-    }
+  if ((Port == NULL) || (Port->Address == NULL)) {
+    return FALSE;
+  }
 
-    //
-    // Remember the baud rate.
-    //
+  //
+  // Remember the baud rate.
+  //
 
-    Port->BaudRate = Rate;
-    return TRUE;
+  Port->BaudRate = Rate;
+  return TRUE;
 }
 
 UART_STATUS
-UsifGetByte(
-    _Inout_ PCPPORT Port,
-    _Out_ PUCHAR    Byte)
+UsifGetByte(_Inout_ PCPPORT Port, _Out_ PUCHAR Byte)
 
 /*++
 
@@ -139,45 +130,40 @@ Return Value:
 --*/
 
 {
-    DbgBreakPoint();
+  DbgBreakPoint();
 
-    ULONG Stat;
-    ULONG Value;
+  ULONG Stat;
+  ULONG Value;
 
-    if ((Port == NULL) || (Port->Address == NULL))
-    {
-        return UartNotReady;
-    }
+  if ((Port == NULL) || (Port->Address == NULL)) {
+    return UartNotReady;
+  }
 
+  //
+  // Get FIFO status.
+  //
+
+  Stat = READ_REGISTER_ULONG((PULONG)(Port->Address + USIF_FIFO_STAT));
+
+  //
+  // Is at least one character available?
+  //
+
+  if ((Stat & USIF_FIFO_STAT_RXFFS) != 0) {
     //
-    // Get FIFO status.
+    // Fetch the data byte.
     //
 
-    Stat = READ_REGISTER_ULONG((PULONG)(Port->Address + USIF_FIFO_STAT));
+    Value = READ_REGISTER_ULONG((PULONG)(Port->Address + USIF_RXD));
+    *Byte = Value & (UCHAR)0xFF;
+    return UartSuccess;
+  }
 
-    //
-    // Is at least one character available?
-    //
-
-    if ((Stat & USIF_FIFO_STAT_RXFFS) != 0)
-    {
-        //
-        // Fetch the data byte.
-        //
-
-        Value = READ_REGISTER_ULONG((PULONG)(Port->Address + USIF_RXD));
-        *Byte = Value & (UCHAR)0xFF;
-        return UartSuccess;
-    }
-
-    return UartNoData;
+  return UartNoData;
 }
 
 UART_STATUS
-UsifPutByte(
-    _Inout_ PCPPORT Port,
-    UCHAR           Byte,
-    BOOLEAN         BusyWait)
+UsifPutByte(_Inout_ PCPPORT Port, UCHAR Byte, BOOLEAN BusyWait)
 
 /*++
 
@@ -201,38 +187,33 @@ Return Value:
 --*/
 
 {
-    if ((Port == NULL) || (Port->Address == NULL))
-    {
-        return UartNotReady;
-    }
+  if ((Port == NULL) || (Port->Address == NULL)) {
+    return UartNotReady;
+  }
 
-    //
-    // Wait for port to be free and FIFO not full.
-    //
+  //
+  // Wait for port to be free and FIFO not full.
+  //
 
-    if (BusyWait != FALSE)
-    {
-        while (READ_REGISTER_ULONG((PULONG)(Port->Address + USIF_FIFO_STAT)) &
-               (USIF_FIFO_STAT_TXFFS))
-            ;
-    }
-    else if (READ_REGISTER_ULONG((PULONG)(Port->Address + USIF_FIFO_STAT)) &
-             (USIF_FIFO_STAT_TXFFS))
-    {
-        return UartNotReady;
-    }
+  if (BusyWait != FALSE) {
+    while (READ_REGISTER_ULONG((PULONG)(Port->Address + USIF_FIFO_STAT)) &
+           (USIF_FIFO_STAT_TXFFS))
+      ;
+  } else if (READ_REGISTER_ULONG((PULONG)(Port->Address + USIF_FIFO_STAT)) &
+             (USIF_FIFO_STAT_TXFFS)) {
+    return UartNotReady;
+  }
 
-    //
-    // Send the byte.
-    //
+  //
+  // Send the byte.
+  //
 
-    WRITE_REGISTER_ULONG((PULONG)(Port->Address + USIF_TXD), (ULONG)Byte);
-    return UartSuccess;
+  WRITE_REGISTER_ULONG((PULONG)(Port->Address + USIF_TXD), (ULONG)Byte);
+  return UartSuccess;
 }
 
 BOOLEAN
-UsifRxReady(
-    _Inout_ PCPPORT Port)
+UsifRxReady(_Inout_ PCPPORT Port)
 
 /*++
 
@@ -251,23 +232,21 @@ Return Value:
 --*/
 
 {
-    ULONG Stat;
+  ULONG Stat;
 
-    if ((Port == NULL) || (Port->Address == NULL))
-    {
-        return FALSE;
-    }
-
-    //
-    // Read the STAT Register to determine if there is any pending
-    // data to read.
-    //
-
-    Stat = READ_REGISTER_ULONG((PULONG)(Port->Address + USIF_FIFO_STAT));
-    if ((Stat & USIF_FIFO_STAT_RXFFS) != 0)
-    {
-        return TRUE;
-    }
-
+  if ((Port == NULL) || (Port->Address == NULL)) {
     return FALSE;
+  }
+
+  //
+  // Read the STAT Register to determine if there is any pending
+  // data to read.
+  //
+
+  Stat = READ_REGISTER_ULONG((PULONG)(Port->Address + USIF_FIFO_STAT));
+  if ((Stat & USIF_FIFO_STAT_RXFFS) != 0) {
+    return TRUE;
+  }
+
+  return FALSE;
 }

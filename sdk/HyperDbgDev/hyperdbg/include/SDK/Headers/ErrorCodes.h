@@ -104,7 +104,7 @@
  *
  */
 #define DEBUGGER_ERROR_EDIT_MEMORY_STATUS_INVALID_ADDRESS_BASED_ON_CURRENT_PROCESS \
-    0xc000000c
+  0xc000000c
 
 /**
  * @brief error, an invalid address is specified based on anotehr process's cr3
@@ -112,7 +112,7 @@
  *
  */
 #define DEBUGGER_ERROR_EDIT_MEMORY_STATUS_INVALID_ADDRESS_BASED_ON_OTHER_PROCESS \
-    0xc000000d
+  0xc000000d
 
 /**
  * @brief error, invalid tag for 'events' command (tag id is unknown for kernel)
@@ -155,15 +155,15 @@
  * @brief error, invalid core selected in changing core in remote debuggee
  *
  */
-#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_INVALID_CORE_IN_REMOTE_DEBUGGE \
-    0xc0000014
+#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_INVALID_CORE_IN_REMOTE_DEBUGGE       \
+  0xc0000014
 
 /**
  * @brief error, invalid process selected in changing process in remote debuggee
  *
  */
-#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_UNABLE_TO_SWITCH_TO_NEW_PROCESS \
-    0xc0000015
+#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_UNABLE_TO_SWITCH_TO_NEW_PROCESS      \
+  0xc0000015
 
 /**
  * @brief error, unable to run script in remote debuggee
@@ -255,7 +255,8 @@
  * 512 entries of 4 KB pages
  *
  */
-#define DEBUGGER_ERROR_EPT_COULD_NOT_SPLIT_THE_LARGE_PAGE_TO_4KB_PAGES 0xc0000024
+#define DEBUGGER_ERROR_EPT_COULD_NOT_SPLIT_THE_LARGE_PAGE_TO_4KB_PAGES         \
+  0xc0000024
 
 /**
  * @brief error, failed to get PML1 entry of the target address
@@ -311,7 +312,8 @@
  * @brief error, the needed routines for debugging is not initialized
  *
  */
-#define DEBUGGER_ERROR_FUNCTIONS_FOR_INITIALIZING_PEB_ADDRESSES_ARE_NOT_INITIALIZED 0xc000002d
+#define DEBUGGER_ERROR_FUNCTIONS_FOR_INITIALIZING_PEB_ADDRESSES_ARE_NOT_INITIALIZED \
+  0xc000002d
 
 /**
  * @brief error, unable to get 32-bit or 64-bit of the target process
@@ -341,7 +343,8 @@
  * @brief error, user debugger already attached to this process
  *
  */
-#define DEBUGGER_ERROR_UNABLE_TO_ATTACH_TO_AN_ALREADY_ATTACHED_PROCESS 0xc0000032
+#define DEBUGGER_ERROR_UNABLE_TO_ATTACH_TO_AN_ALREADY_ATTACHED_PROCESS         \
+  0xc0000032
 
 /**
  * @brief error, the user debugger is not attached to the target process
@@ -356,16 +359,20 @@
 #define DEBUGGER_ERROR_UNABLE_TO_DETACH_AS_THERE_ARE_PAUSED_THREADS 0xc0000034
 
 /**
- * @brief error, cannot switch to new thread as the process id or thread id is not found
+ * @brief error, cannot switch to new thread as the process id or thread id is
+ * not found
  *
  */
-#define DEBUGGER_ERROR_UNABLE_TO_SWITCH_PROCESS_ID_OR_THREAD_ID_IS_INVALID 0xc0000035
+#define DEBUGGER_ERROR_UNABLE_TO_SWITCH_PROCESS_ID_OR_THREAD_ID_IS_INVALID     \
+  0xc0000035
 
 /**
- * @brief error, cannot switch to new thread the process doesn't contain an active thread
+ * @brief error, cannot switch to new thread the process doesn't contain an
+ * active thread
  *
  */
-#define DEBUGGER_ERROR_UNABLE_TO_SWITCH_THERE_IS_NO_THREAD_ON_THE_PROCESS 0xc0000036
+#define DEBUGGER_ERROR_UNABLE_TO_SWITCH_THERE_IS_NO_THREAD_ON_THE_PROCESS      \
+  0xc0000036
 
 /**
  * @brief error, unable to get modules

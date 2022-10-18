@@ -3,12 +3,12 @@ package pageCpu
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"github.com/ddkwork/golibrary/src/fynelib/canvasobjectapi"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageCpu/ImmediateData"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageCpu/dism"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageCpu/dump"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageCpu/reg"
 	"github.com/ddkwork/hyperdbgui/src/fnTable/pageCpu/stack"
-	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
 )
 
 type (

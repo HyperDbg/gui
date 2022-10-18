@@ -5,9 +5,9 @@
  * @details
  * @version 0.1
  * @date 2020-04-11
- * 
+ *
  * @copyright This project is released under the GNU Public License v3.
- * 
+ *
  */
 #pragma once
 
@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////
 
 UCHAR
-EptInvept(_In_ UINT32 Type, _In_ INVEPT_DESCRIPTOR * Descriptor);
+EptInvept(_In_ UINT32 Type, _In_ INVEPT_DESCRIPTOR *Descriptor);
 
 UCHAR
 EptInveptAllContexts();

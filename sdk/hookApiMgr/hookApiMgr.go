@@ -1,11 +1,10 @@
 package hookApiMgr
 
 import (
-	"github.com/ddkwork/librarygo/src/clang"
-	"github.com/ddkwork/librarygo/src/mycheck"
-	"github.com/ddkwork/librarygo/src/mylog"
-	"github.com/ddkwork/librarygo/src/stream"
-	"github.com/ddkwork/librarygo/src/stream/tool"
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/src/clang"
+	"github.com/ddkwork/golibrary/src/stream"
+	"github.com/ddkwork/golibrary/src/stream/tool"
 	"os"
 	"path/filepath"
 	"strings"
@@ -190,7 +189,7 @@ kq l 60
 	dsName := api + ".ds"
 	tool.File().WriteTruncate(dsName, s.String())
 	abs, err := filepath.Abs(dsName)
-	if !mycheck.Error(err) {
+	if !mylog.Error(err) {
 		return
 	}
 	c := clang.New()
@@ -201,7 +200,7 @@ kq l 60
 		return
 	}
 	b, err := os.ReadFile(abs)
-	if !mycheck.Error(err) {
+	if !mylog.Error(err) {
 		return
 	}
 	all := strings.ReplaceAll(string(b), " nt !", " nt!")

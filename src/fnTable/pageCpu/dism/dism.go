@@ -2,10 +2,9 @@ package dism
 
 import (
 	"fyne.io/fyne/v2"
-	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
-	"github.com/ddkwork/librarygo/src/fynelib/myTable"
-	"github.com/ddkwork/librarygo/src/mycheck"
-	"github.com/ddkwork/librarygo/src/mylog"
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/src/fynelib/canvasobjectapi"
+	"github.com/ddkwork/golibrary/src/fynelib/myTable"
 )
 
 type (
@@ -24,7 +23,7 @@ func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 		l := d.Lines()[id]
 		mylog.Struct(l)
 	}))
-	if !mycheck.Error(err) {
+	if !mylog.Error(err) {
 		return nil
 	}
 	return list

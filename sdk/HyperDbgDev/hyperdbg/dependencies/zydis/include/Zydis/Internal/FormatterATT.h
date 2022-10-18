@@ -11,7 +11,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+all
  * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -40,55 +41,74 @@
 extern "C" {
 #endif
 
-/* ============================================================================================== */
-/* Formatter functions                                                                            */
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
+/* Formatter functions */
+/* ==============================================================================================
+ */
 
-/* ---------------------------------------------------------------------------------------------- */
-/* Instruction                                                                                    */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* Instruction */
+/* ----------------------------------------------------------------------------------------------
+ */
 
-ZyanStatus ZydisFormatterATTFormatInstruction(const ZydisFormatter* formatter,
-    ZydisFormatterBuffer* buffer, ZydisFormatterContext* context);
+ZyanStatus ZydisFormatterATTFormatInstruction(const ZydisFormatter *formatter,
+                                              ZydisFormatterBuffer *buffer,
+                                              ZydisFormatterContext *context);
 
-/* ---------------------------------------------------------------------------------------------- */
-/* Operands                                                                                       */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* Operands */
+/* ----------------------------------------------------------------------------------------------
+ */
 
-ZyanStatus ZydisFormatterATTFormatOperandMEM(const ZydisFormatter* formatter,
-    ZydisFormatterBuffer* buffer, ZydisFormatterContext* context);
+ZyanStatus ZydisFormatterATTFormatOperandMEM(const ZydisFormatter *formatter,
+                                             ZydisFormatterBuffer *buffer,
+                                             ZydisFormatterContext *context);
 
-/* ---------------------------------------------------------------------------------------------- */
-/* Elemental tokens                                                                               */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* Elemental tokens */
+/* ----------------------------------------------------------------------------------------------
+ */
 
-ZyanStatus ZydisFormatterATTPrintMnemonic(const ZydisFormatter* formatter,
-    ZydisFormatterBuffer* buffer, ZydisFormatterContext* context);
+ZyanStatus ZydisFormatterATTPrintMnemonic(const ZydisFormatter *formatter,
+                                          ZydisFormatterBuffer *buffer,
+                                          ZydisFormatterContext *context);
 
-ZyanStatus ZydisFormatterATTPrintRegister(const ZydisFormatter* formatter,
-    ZydisFormatterBuffer* buffer, ZydisFormatterContext* context, ZydisRegister reg);
+ZyanStatus ZydisFormatterATTPrintRegister(const ZydisFormatter *formatter,
+                                          ZydisFormatterBuffer *buffer,
+                                          ZydisFormatterContext *context,
+                                          ZydisRegister reg);
 
-ZyanStatus ZydisFormatterATTPrintDISP(const ZydisFormatter* formatter,
-    ZydisFormatterBuffer* buffer, ZydisFormatterContext* context);
+ZyanStatus ZydisFormatterATTPrintDISP(const ZydisFormatter *formatter,
+                                      ZydisFormatterBuffer *buffer,
+                                      ZydisFormatterContext *context);
 
-ZyanStatus ZydisFormatterATTPrintIMM(const ZydisFormatter* formatter,
-    ZydisFormatterBuffer* buffer, ZydisFormatterContext* context);
+ZyanStatus ZydisFormatterATTPrintIMM(const ZydisFormatter *formatter,
+                                     ZydisFormatterBuffer *buffer,
+                                     ZydisFormatterContext *context);
 
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
 
-/* ============================================================================================== */
-/* Fomatter presets                                                                               */
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
+/* Fomatter presets */
+/* ==============================================================================================
+ */
 
-/* ---------------------------------------------------------------------------------------------- */
-/* AT&T                                                                                           */
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
+/* AT&T */
+/* ----------------------------------------------------------------------------------------------
+ */
 
 /**
  * The default formatter configuration for `AT&T` style disassembly.
  */
-static const ZydisFormatter FORMATTER_ATT =
-{
+static const ZydisFormatter FORMATTER_ATT = {
     /* style                   */ ZYDIS_FORMATTER_STYLE_ATT,
     /* force_memory_size       */ ZYAN_FALSE,
     /* force_memory_seg        */ ZYAN_FALSE,
@@ -113,39 +133,34 @@ static const ZydisFormatter FORMATTER_ATT =
     /* case_decorators         */ ZYDIS_LETTER_CASE_DEFAULT,
     /* hex_uppercase           */ ZYAN_TRUE,
     /* number_format           */
-    {
-        // ZYDIS_NUMERIC_BASE_DEC
-        {
-            // Prefix
-            {
-                /* string      */ ZYAN_NULL,
-                /* string_data */ ZYAN_DEFINE_STRING_VIEW(""),
-                /* buffer      */ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            },
-            // Suffix
-            {
-                /* string      */ ZYAN_NULL,
-                /* string_data */ ZYAN_DEFINE_STRING_VIEW(""),
-                /* buffer      */ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            }
-        },
-        // ZYDIS_NUMERIC_BASE_HEX
-        {
-            // Prefix
-            {
-                /* string      */ &FORMATTER_ATT.number_format[
-                                    ZYDIS_NUMERIC_BASE_HEX][0].string_data,
-                /* string_data */ ZYAN_DEFINE_STRING_VIEW("0x"),
-                /* buffer      */ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            },
-            // Suffix
-            {
-                /* string      */ ZYAN_NULL,
-                /* string_data */ ZYAN_DEFINE_STRING_VIEW(""),
-                /* buffer      */ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            }
-        }
-    },
+    { // ZYDIS_NUMERIC_BASE_DEC
+     {// Prefix
+      {
+          /* string      */ ZYAN_NULL,
+          /* string_data */ ZYAN_DEFINE_STRING_VIEW(""),
+          /* buffer      */ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      },
+      // Suffix
+      {
+          /* string      */ ZYAN_NULL,
+          /* string_data */ ZYAN_DEFINE_STRING_VIEW(""),
+          /* buffer      */ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      }},
+     // ZYDIS_NUMERIC_BASE_HEX
+     {// Prefix
+      {
+          /* string      */ &FORMATTER_ATT
+              .number_format[ZYDIS_NUMERIC_BASE_HEX][0]
+              .string_data,
+          /* string_data */ ZYAN_DEFINE_STRING_VIEW("0x"),
+          /* buffer      */ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      },
+      // Suffix
+      {
+          /* string      */ ZYAN_NULL,
+          /* string_data */ ZYAN_DEFINE_STRING_VIEW(""),
+          /* buffer      */ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+      }}},
     /* func_pre_instruction    */ ZYAN_NULL,
     /* func_post_instruction   */ ZYAN_NULL,
     /* func_format_instruction */ &ZydisFormatterATTFormatInstruction,
@@ -164,12 +179,13 @@ static const ZydisFormatter FORMATTER_ATT =
     /* func_print_typecast     */ ZYAN_NULL,
     /* func_print_segment      */ &ZydisFormatterBasePrintSegment,
     /* func_print_prefixes     */ &ZydisFormatterBasePrintPrefixes,
-    /* func_print_decorator    */ &ZydisFormatterBasePrintDecorator
-};
+    /* func_print_decorator    */ &ZydisFormatterBasePrintDecorator};
 
-/* ---------------------------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------------------------
+ */
 
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
 
 #ifdef __cplusplus
 }

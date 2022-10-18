@@ -1,0 +1,11 @@
+[http "https://github.com"]
+	proxy = http://127.0.0.1:9080
+[https "https://github.com"]
+	proxy = http://127.0.0.1:9080
+[http]
+	sslCAInfo = /home/ddk/mitmproxy/mitmproxy-ca-cert.pem
+[user]
+	name = ddk
+	email = 2762713521@qq.com
+[core]
+	autocrlf = input

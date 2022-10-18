@@ -11,7 +11,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
+ * The above copyright notice and this permission notice shall be included in
+all
  * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -26,43 +27,42 @@
 
 #include <Zydis/MetaInfo.h>
 
-/* ============================================================================================== */
-/* Enum strings                                                                                   */
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
+/* Enum strings */
+/* ==============================================================================================
+ */
 
-#include <Generated/EnumInstructionCategory.inc>
-#include <Generated/EnumISASet.inc>
 #include <Generated/EnumISAExt.inc>
+#include <Generated/EnumISASet.inc>
+#include <Generated/EnumInstructionCategory.inc>
 
-/* ============================================================================================== */
-/* Exported functions                                                                             */
-/* ============================================================================================== */
+/* ==============================================================================================
+ */
+/* Exported functions */
+/* ==============================================================================================
+ */
 
-const char* ZydisCategoryGetString(ZydisInstructionCategory category)
-{
-    if ((ZyanUSize)category >= ZYAN_ARRAY_LENGTH(STR_INSTRUCTIONCATEGORY))
-    {
-        return ZYAN_NULL;
-    }
-    return STR_INSTRUCTIONCATEGORY[category];
+const char *ZydisCategoryGetString(ZydisInstructionCategory category) {
+  if ((ZyanUSize)category >= ZYAN_ARRAY_LENGTH(STR_INSTRUCTIONCATEGORY)) {
+    return ZYAN_NULL;
+  }
+  return STR_INSTRUCTIONCATEGORY[category];
 }
 
-const char* ZydisISASetGetString(ZydisISASet isa_set)
-{
-    if ((ZyanUSize)isa_set >= ZYAN_ARRAY_LENGTH(STR_ISASET))
-    {
-        return ZYAN_NULL;
-    }
-    return STR_ISASET[isa_set];
+const char *ZydisISASetGetString(ZydisISASet isa_set) {
+  if ((ZyanUSize)isa_set >= ZYAN_ARRAY_LENGTH(STR_ISASET)) {
+    return ZYAN_NULL;
+  }
+  return STR_ISASET[isa_set];
 }
 
-const char* ZydisISAExtGetString(ZydisISAExt isa_ext)
-{
-    if ((ZyanUSize)isa_ext >= ZYAN_ARRAY_LENGTH(STR_ISAEXT))
-    {
-        return ZYAN_NULL;
-    }
-    return STR_ISAEXT[isa_ext];
+const char *ZydisISAExtGetString(ZydisISAExt isa_ext) {
+  if ((ZyanUSize)isa_ext >= ZYAN_ARRAY_LENGTH(STR_ISAEXT)) {
+    return ZYAN_NULL;
+  }
+  return STR_ISAEXT[isa_ext];
 }
 
-/* ============================================================================================== */
+/* ==============================================================================================
+ */

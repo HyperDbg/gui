@@ -21,11 +21,7 @@ Abstract:
 // -------------------------------------------------------------------- Globals
 
 UART_HARDWARE_DRIVER UsifHardwareDriver = {
-    UsifInitializePort,
-    UsifSetBaud,
-    UsifGetByte,
-    UsifPutByte,
-    UsifRxReady};
+    UsifInitializePort, UsifSetBaud, UsifGetByte, UsifPutByte, UsifRxReady};
 
 //
 // The array order here is the serial subtype as specified
@@ -80,7 +76,7 @@ PUART_HARDWARE_DRIVER UartHardwareDrivers[] = {
 
 #else
 
-#    error "Unknown Processor Architecture"
+#error "Unknown Processor Architecture"
 
 #endif
 

@@ -3,10 +3,10 @@ package hyperdbgui
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"github.com/ddkwork/golibrary/src/fynelib/canvasobjectapi"
 	"github.com/ddkwork/hyperdbgui/src/fnTable"
 	"github.com/ddkwork/hyperdbgui/src/meau"
 	"github.com/ddkwork/hyperdbgui/src/toolbar"
-	"github.com/ddkwork/librarygo/src/fynelib/canvasobjectapi"
 	"github.com/fpabl0/sparky-go/swid"
 )
 

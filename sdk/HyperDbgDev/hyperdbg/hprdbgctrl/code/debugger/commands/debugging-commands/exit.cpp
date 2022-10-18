@@ -21,13 +21,11 @@ extern HANDLE g_DeviceHandle;
  *
  * @return VOID
  */
-VOID
-CommandExitHelp()
-{
-    ShowMessages(
-        "exit : unloads and uninstalls the drivers and closes the debugger.\n\n");
+VOID CommandExitHelp() {
+  ShowMessages(
+      "exit : unloads and uninstalls the drivers and closes the debugger.\n\n");
 
-    ShowMessages("syntax : \texit\n");
+  ShowMessages("syntax : \texit\n");
 }
 
 /**
@@ -37,23 +35,19 @@ CommandExitHelp()
  * @param Command
  * @return VOID
  */
-VOID
-CommandExit(vector<string> SplittedCommand, string Command)
-{
-    if (SplittedCommand.size() != 1)
-    {
-        ShowMessages("incorrect use of 'exit'\n\n");
-        CommandExitHelp();
-        return;
-    }
+VOID CommandExit(vector<string> SplittedCommand, string Command) {
+  if (SplittedCommand.size() != 1) {
+    ShowMessages("incorrect use of 'exit'\n\n");
+    CommandExitHelp();
+    return;
+  }
 
-    //
-    // unload and exit if the vmm module is loaded
-    //
-    if (g_DeviceHandle)
-    {
-        HyperDbgUnloadVmm();
-    }
+  //
+  // unload and exit if the vmm module is loaded
+  //
+  if (g_DeviceHandle) {
+    HyperDbgUnloadVmm();
+  }
 
-    exit(0);
+  exit(0);
 }

@@ -5,102 +5,106 @@
  * @details
  * @version 0.1
  * @date 2020-04-11
- * 
+ *
  * @copyright This project is released under the GNU Public License v3.
- * 
+ *
  */
 
 #pragma once
 
 //////////////////////////////////////////////////
-//					Structures					//
+//					Structures
+////
 //////////////////////////////////////////////////
 
 /**
  * @brief The usermode request
- * 
+ *
  */
-typedef struct _NOTIFY_RECORD
-{
-    NOTIFY_TYPE Type;
+typedef struct _NOTIFY_RECORD {
+  NOTIFY_TYPE Type;
 
-    union
-    {
-        PKEVENT Event;
-        PIRP    PendingIrp;
-    } Message;
+  union {
+    PKEVENT Event;
+    PIRP PendingIrp;
+  } Message;
 
-    KDPC    Dpc;
-    BOOLEAN CheckVmxRootMessagePool; // Set so that notify callback can understand where to check (Vmx root or Vmx non-root)
+  KDPC Dpc;
+  BOOLEAN CheckVmxRootMessagePool; // Set so that notify callback can understand
+                                   // where to check (Vmx root or Vmx non-root)
 } NOTIFY_RECORD, *PNOTIFY_RECORD;
 
 /**
  * @brief Message buffer structure
- * 
+ *
  */
-typedef struct _BUFFER_HEADER
-{
-    UINT32  OpeationNumber; // Operation ID to user-mode
-    UINT32  BufferLength;   // The actual length
-    BOOLEAN Valid;          // Determine whether the buffer was valid to send or not
+typedef struct _BUFFER_HEADER {
+  UINT32 OpeationNumber; // Operation ID to user-mode
+  UINT32 BufferLength;   // The actual length
+  BOOLEAN Valid; // Determine whether the buffer was valid to send or not
 } BUFFER_HEADER, *PBUFFER_HEADER;
 
 /**
  * @brief Core-specific buffers
- * 
+ *
  */
-typedef struct _LOG_BUFFER_INFORMATION
-{
-    KSPIN_LOCK BufferLock;                 // SpinLock to protect access to the queue
-    KSPIN_LOCK BufferLockForNonImmMessage; // SpinLock to protect access to the queue of non-imm messages
+typedef struct _LOG_BUFFER_INFORMATION {
+  KSPIN_LOCK BufferLock; // SpinLock to protect access to the queue
+  KSPIN_LOCK BufferLockForNonImmMessage; // SpinLock to protect access to the
+                                         // queue of non-imm messages
 
-    UINT64 BufferForMultipleNonImmediateMessage; // Start address of the buffer for accumulating non-immadiate messages
-    UINT32 CurrentLengthOfNonImmBuffer;          // the current size of the buffer for accumulating non-immadiate messages
+  UINT64 BufferForMultipleNonImmediateMessage; // Start address of the buffer
+                                               // for accumulating non-immadiate
+                                               // messages
+  UINT32 CurrentLengthOfNonImmBuffer; // the current size of the buffer for
+                                      // accumulating non-immadiate messages
 
-    //
-    // Regular buffers
-    //
-    UINT64 BufferStartAddress; // Start address of the buffer
-    UINT64 BufferEndAddress;   // End address of the buffer
+  //
+  // Regular buffers
+  //
+  UINT64 BufferStartAddress; // Start address of the buffer
+  UINT64 BufferEndAddress;   // End address of the buffer
 
-    UINT32 CurrentIndexToSend;  // Current buffer index to send to user-mode
-    UINT32 CurrentIndexToWrite; // Current buffer index to write new messages
+  UINT32 CurrentIndexToSend;  // Current buffer index to send to user-mode
+  UINT32 CurrentIndexToWrite; // Current buffer index to write new messages
 
-    //
-    // Priority buffers
-    //
-    UINT64 BufferStartAddressPriority; // Start address of the buffer
-    UINT64 BufferEndAddressPriority;   // End address of the buffer
+  //
+  // Priority buffers
+  //
+  UINT64 BufferStartAddressPriority; // Start address of the buffer
+  UINT64 BufferEndAddressPriority;   // End address of the buffer
 
-    UINT32 CurrentIndexToSendPriority;  // Current buffer index to send to user-mode for priority buffers
-    UINT32 CurrentIndexToWritePriority; // Current buffer index to write new messages for priority buffers
+  UINT32 CurrentIndexToSendPriority;  // Current buffer index to send to
+                                      // user-mode for priority buffers
+  UINT32 CurrentIndexToWritePriority; // Current buffer index to write new
+                                      // messages for priority buffers
 
 } LOG_BUFFER_INFORMATION, *PLOG_BUFFER_INFORMATION;
 
 //////////////////////////////////////////////////
-//				Global Variables				//
+//				Global Variables //
 //////////////////////////////////////////////////
 
 /**
  * @brief Global Variable for buffer on all cores
- * 
+ *
  */
-LOG_BUFFER_INFORMATION * MessageBufferInformation;
+LOG_BUFFER_INFORMATION *MessageBufferInformation;
 
 /**
  * @brief Vmx-root lock for logging
- * 
+ *
  */
 volatile LONG VmxRootLoggingLock;
 
 /**
  * @brief Vmx-root lock for logging
- * 
+ *
  */
 volatile LONG VmxRootLoggingLockForNonImmBuffers;
 
 //////////////////////////////////////////////////
-//					Illustration				//
+//					Illustration //
 //////////////////////////////////////////////////
 
 /*
@@ -145,44 +149,43 @@ each chunk has PacketChunkSize + sizeof(BUFFER_HEADER) size
             | size = PacketChunkSize  |
             |                         |
             |_________________________|
-            
+
 */
 
 //////////////////////////////////////////////////
-//					Functions					//
+//					Functions
+////
 //////////////////////////////////////////////////
 
 BOOLEAN
 LogInitialize();
 
-VOID
-LogUnInitialize();
+VOID LogUnInitialize();
 
 BOOLEAN
-LogSendBuffer(_In_ UINT32                          OperationCode,
+LogSendBuffer(_In_ UINT32 OperationCode,
               _In_reads_bytes_(BufferLength) PVOID Buffer,
-              _In_ UINT32                          BufferLength,
-              _In_ BOOLEAN                         Priority);
+              _In_ UINT32 BufferLength, _In_ BOOLEAN Priority);
 
 UINT32
 LogMarkAllAsRead(BOOLEAN IsVmxRoot);
 
 BOOLEAN
-LogReadBuffer(BOOLEAN IsVmxRoot, PVOID BufferToSaveMessage, UINT32 * ReturnedLength);
+LogReadBuffer(BOOLEAN IsVmxRoot, PVOID BufferToSaveMessage,
+              UINT32 *ReturnedLength);
 
 BOOLEAN
-LogPrepareAndSendMessageToQueue(UINT32       OperationCode,
-                                BOOLEAN      IsImmediateMessage,
-                                BOOLEAN      ShowCurrentSystemTime,
-                                BOOLEAN      Priority,
-                                const char * Fmt,
-                                ...);
+LogPrepareAndSendMessageToQueue(UINT32 OperationCode,
+                                BOOLEAN IsImmediateMessage,
+                                BOOLEAN ShowCurrentSystemTime, BOOLEAN Priority,
+                                const char *Fmt, ...);
 
 BOOLEAN
-LogSendMessageToQueue(UINT32 OperationCode, BOOLEAN IsImmediateMessage, CHAR * LogMessage, UINT32 BufferLen, BOOLEAN Priority);
+LogSendMessageToQueue(UINT32 OperationCode, BOOLEAN IsImmediateMessage,
+                      CHAR *LogMessage, UINT32 BufferLen, BOOLEAN Priority);
 
-VOID
-LogNotifyUsermodeCallback(PKDPC Dpc, PVOID DeferredContext, PVOID SystemArgument1, PVOID SystemArgument2);
+VOID LogNotifyUsermodeCallback(PKDPC Dpc, PVOID DeferredContext,
+                               PVOID SystemArgument1, PVOID SystemArgument2);
 
 NTSTATUS
 LogRegisterEventBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);

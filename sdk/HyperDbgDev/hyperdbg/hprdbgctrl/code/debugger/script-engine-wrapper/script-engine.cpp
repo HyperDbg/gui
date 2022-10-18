@@ -14,8 +14,8 @@
 //
 // Global Variables
 //
-extern UINT64  g_ResultOfEvaluatedExpression;
-extern UINT32  g_ErrorStateOfResultOfEvaluatedExpression;
+extern UINT64 g_ResultOfEvaluatedExpression;
+extern UINT32 g_ErrorStateOfResultOfEvaluatedExpression;
 extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
 
 /**
@@ -27,99 +27,92 @@ extern BOOLEAN g_IsSerialConnectedToRemoteDebuggee;
  * @return UINT64
  */
 UINT64
-ScriptEngineEvalSingleExpression(string Expr, PBOOLEAN HasError)
-{
-    PVOID  CodeBuffer;
-    UINT64 BufferAddress;
-    UINT32 BufferLength;
-    UINT32 Pointer;
-    UINT64 Result = NULL;
+ScriptEngineEvalSingleExpression(string Expr, PBOOLEAN HasError) {
+  PVOID CodeBuffer;
+  UINT64 BufferAddress;
+  UINT32 BufferLength;
+  UINT32 Pointer;
+  UINT64 Result = NULL;
+
+  //
+  // Prepend and append 'formats(' and ')'
+  //
+  Expr.insert(0, "formats(");
+  Expr.append(");");
+
+  //
+  // Run script engine handler
+  //
+  CodeBuffer = ScriptEngineParseWrapper((char *)Expr.c_str(), FALSE);
+
+  if (CodeBuffer == NULL) {
+    //
+    // return to show that this item contains an script
+    //
+    *HasError = TRUE;
+    return NULL;
+  }
+
+  //
+  // Print symbols (test)
+  //
+  // PrintSymbolBufferWrapper(CodeBuffer);
+
+  //
+  // Set the buffer and length
+  //
+  BufferAddress = ScriptEngineWrapperGetHead(CodeBuffer);
+  BufferLength = ScriptEngineWrapperGetSize(CodeBuffer);
+  Pointer = ScriptEngineWrapperGetPointer(CodeBuffer);
+
+  //
+  // Check if it's connected over remote debuggee (in the Debugger Mode)
+  //
+  if (g_IsSerialConnectedToRemoteDebuggee) {
+    //
+    // Send over serial
+    //
 
     //
-    // Prepend and append 'formats(' and ')'
+    // Send it to the remote debuggee
     //
-    Expr.insert(0, "formats(");
-    Expr.append(");");
+    KdSendScriptPacketToDebuggee(BufferAddress, BufferLength, Pointer, TRUE);
 
     //
-    // Run script engine handler
+    // Check whether there was an error in evaluation or not
     //
-    CodeBuffer = ScriptEngineParseWrapper((char *)Expr.c_str(), FALSE);
+    if (g_ErrorStateOfResultOfEvaluatedExpression ==
+        DEBUGGER_OPERATION_WAS_SUCCESSFULL) {
+      //
+      // Everything was fine, return the result of the evaluated
+      // expression and null the global holders
+      //
+      Result = g_ResultOfEvaluatedExpression;
+      g_ErrorStateOfResultOfEvaluatedExpression = NULL;
+      g_ResultOfEvaluatedExpression = NULL;
+      *HasError = FALSE;
+    } else {
+      //
+      // There was an error evaluating the expression from the kernel (debuggee)
+      //
+      g_ErrorStateOfResultOfEvaluatedExpression = NULL;
+      g_ResultOfEvaluatedExpression = NULL;
 
-    if (CodeBuffer == NULL)
-    {
-        //
-        // return to show that this item contains an script
-        //
-        *HasError = TRUE;
-        return NULL;
+      *HasError = TRUE;
+      Result = NULL;
     }
-
+  } else {
     //
-    // Print symbols (test)
+    // It's in vmi-mode,
+    // execute it locally with regs set to ZERO
     //
-    // PrintSymbolBufferWrapper(CodeBuffer);
+    Result = ScriptEngineEvalUInt64StyleExpressionWrapper(Expr, HasError);
+  }
 
-    //
-    // Set the buffer and length
-    //
-    BufferAddress = ScriptEngineWrapperGetHead(CodeBuffer);
-    BufferLength  = ScriptEngineWrapperGetSize(CodeBuffer);
-    Pointer       = ScriptEngineWrapperGetPointer(CodeBuffer);
+  //
+  // Remove the buffer of script engine interpreted code
+  //
+  ScriptEngineWrapperRemoveSymbolBuffer(CodeBuffer);
 
-    //
-    // Check if it's connected over remote debuggee (in the Debugger Mode)
-    //
-    if (g_IsSerialConnectedToRemoteDebuggee)
-    {
-        //
-        // Send over serial
-        //
-
-        //
-        // Send it to the remote debuggee
-        //
-        KdSendScriptPacketToDebuggee(BufferAddress, BufferLength, Pointer, TRUE);
-
-        //
-        // Check whether there was an error in evaluation or not
-        //
-        if (g_ErrorStateOfResultOfEvaluatedExpression == DEBUGGER_OPERATION_WAS_SUCCESSFULL)
-        {
-            //
-            // Everything was fine, return the result of the evaluated
-            // expression and null the global holders
-            //
-            Result                                    = g_ResultOfEvaluatedExpression;
-            g_ErrorStateOfResultOfEvaluatedExpression = NULL;
-            g_ResultOfEvaluatedExpression             = NULL;
-            *HasError                                 = FALSE;
-        }
-        else
-        {
-            //
-            // There was an error evaluating the expression from the kernel (debuggee)
-            //
-            g_ErrorStateOfResultOfEvaluatedExpression = NULL;
-            g_ResultOfEvaluatedExpression             = NULL;
-
-            *HasError = TRUE;
-            Result    = NULL;
-        }
-    }
-    else
-    {
-        //
-        // It's in vmi-mode,
-        // execute it locally with regs set to ZERO
-        //
-        Result = ScriptEngineEvalUInt64StyleExpressionWrapper(Expr, HasError);
-    }
-
-    //
-    // Remove the buffer of script engine interpreted code
-    //
-    ScriptEngineWrapperRemoveSymbolBuffer(CodeBuffer);
-
-    return Result;
+  return Result;
 }

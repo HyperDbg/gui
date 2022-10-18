@@ -5,9 +5,9 @@
  * @details
  * @version 0.1
  * @date 2020-04-11
- * 
+ *
  * @copyright This project is released under the GNU Public License v3.
- * 
+ *
  */
 #pragma once
 
@@ -17,9 +17,9 @@
 
 /**
  * @brief Maximum Pool Requests (while not allocated)
- * 
+ *
  */
-#define MaximumRequestsQueueDepth   100
+#define MaximumRequestsQueueDepth 100
 #define NumberOfPreAllocatedBuffers 10
 
 //////////////////////////////////////////////////
@@ -28,16 +28,15 @@
 
 /**
  * @brief Inum of intentions for buffers (buffer tag)
- * 
+ *
  */
-typedef enum _POOL_ALLOCATION_INTENTION
-{
-    TRACKING_HOOKED_PAGES,
-    EXEC_TRAMPOLINE,
-    SPLIT_2MB_PAGING_TO_4KB_PAGE,
-    DETOUR_HOOK_DETAILS,
-    BREAKPOINT_DEFINITION_STRUCTURE,
-    PROCESS_THREAD_HOLDER,
+typedef enum _POOL_ALLOCATION_INTENTION {
+  TRACKING_HOOKED_PAGES,
+  EXEC_TRAMPOLINE,
+  SPLIT_2MB_PAGING_TO_4KB_PAGE,
+  DETOUR_HOOK_DETAILS,
+  BREAKPOINT_DEFINITION_STRUCTURE,
+  PROCESS_THREAD_HOLDER,
 
 } POOL_ALLOCATION_INTENTION;
 
@@ -47,29 +46,28 @@ typedef enum _POOL_ALLOCATION_INTENTION
 
 /**
  * @brief Table of holding pools detail structure
- * 
+ *
  */
-typedef struct _POOL_TABLE
-{
-    UINT64                    Address; // Should be the start of the list as we compute it as the start address
-    SIZE_T                    Size;
-    POOL_ALLOCATION_INTENTION Intention;
-    LIST_ENTRY                PoolsList;
-    BOOLEAN                   IsBusy;
-    BOOLEAN                   ShouldBeFreed;
-    BOOLEAN                   AlreadyFreed;
+typedef struct _POOL_TABLE {
+  UINT64 Address; // Should be the start of the list as we compute it as the
+                  // start address
+  SIZE_T Size;
+  POOL_ALLOCATION_INTENTION Intention;
+  LIST_ENTRY PoolsList;
+  BOOLEAN IsBusy;
+  BOOLEAN ShouldBeFreed;
+  BOOLEAN AlreadyFreed;
 
 } POOL_TABLE, *PPOOL_TABLE;
 
 /**
  * @brief Manage the requests for new allocations
- * 
+ *
  */
-typedef struct _REQUEST_NEW_ALLOCATION
-{
-    SIZE_T                    Size;
-    UINT32                    Count;
-    POOL_ALLOCATION_INTENTION Intention;
+typedef struct _REQUEST_NEW_ALLOCATION {
+  SIZE_T Size;
+  UINT32 Count;
+  POOL_ALLOCATION_INTENTION Intention;
 
 } REQUEST_NEW_ALLOCATION, *PREQUEST_NEW_ALLOCATION;
 
@@ -78,38 +76,39 @@ typedef struct _REQUEST_NEW_ALLOCATION
 //////////////////////////////////////////////////
 
 /**
- * @brief If sb wants allocation from vmx root, adds it's request to this structure
- * 
+ * @brief If sb wants allocation from vmx root, adds it's request to this
+ * structure
+ *
  */
-REQUEST_NEW_ALLOCATION * g_RequestNewAllocation;
+REQUEST_NEW_ALLOCATION *g_RequestNewAllocation;
 
 /**
  * @brief Request allocation Spinlock
- * 
+ *
  */
 volatile LONG LockForRequestAllocation;
 
 /**
  * @brief Spinlock for reading pool
- * 
+ *
  */
 volatile LONG LockForReadingPool;
 
 /**
  * @brief We set it when there is a new allocation
- * 
+ *
  */
 BOOLEAN g_IsNewRequestForAllocationReceived;
 
 /**
  * @brief We set it when there is a new allocation
- * 
+ *
  */
 BOOLEAN g_IsNewRequestForDeAllocation;
 
 /**
  * @brief Create a list from all pools
- * 
+ *
  */
 LIST_ENTRY g_ListOfAllocatedPoolsHead;
 
@@ -124,8 +123,7 @@ LIST_ENTRY g_ListOfAllocatedPoolsHead;
 /// @brief Allocate global requesting variable
 /// @param NumberOfBytes
 /// @return
-static BOOLEAN
-PlmgrAllocateRequestNewAllocation(SIZE_T NumberOfBytes);
+static BOOLEAN PlmgrAllocateRequestNewAllocation(SIZE_T NumberOfBytes);
 
 static VOID PlmgrFreeRequestNewAllocation(VOID);
 
@@ -135,60 +133,62 @@ static VOID PlmgrFreeRequestNewAllocation(VOID);
 
 /**
  * @brief Initializes the Pool Manager and pre-allocate some pools
- * 
- * @return BOOLEAN 
+ *
+ * @return BOOLEAN
  */
 BOOLEAN
 PoolManagerInitialize();
 
 /**
- * @brief Should be called in PASSIVE_LEVEL (vmx non-root), it tries to see whether
- * a new pool request is available, if availabe then allocates it 
- * 
- * @return BOOLEAN 
+ * @brief Should be called in PASSIVE_LEVEL (vmx non-root), it tries to see
+ * whether a new pool request is available, if availabe then allocates it
+ *
+ * @return BOOLEAN
  */
 BOOLEAN
 PoolManagerCheckAndPerformAllocationAndDeallocation();
 
 /**
  * @brief If we have request to allocate new pool
- * @details we can call this function (should be called from vmx-root), it stores the requests
- * somewhere then when it's safe (IRQL PASSIVE_LEVEL) it allocates the requested pool
- * 
- * @param Size 
- * @param Count 
- * @param Intention 
- * @return BOOLEAN 
+ * @details we can call this function (should be called from vmx-root), it
+ * stores the requests somewhere then when it's safe (IRQL PASSIVE_LEVEL) it
+ * allocates the requested pool
+ *
+ * @param Size
+ * @param Count
+ * @param Intention
+ * @return BOOLEAN
  */
 BOOLEAN
-PoolManagerRequestAllocation(SIZE_T Size, UINT32 Count, POOL_ALLOCATION_INTENTION Intention);
+PoolManagerRequestAllocation(SIZE_T Size, UINT32 Count,
+                             POOL_ALLOCATION_INTENTION Intention);
 
 /**
  * @brief From vmx-root if we need a safe pool address immediately we call it
  * it also request a new pool if we set RequestNewPool to TRUE
  * next time it's safe the pool will be allocated
- * 
- * @param Intention 
- * @param RequestNewPool 
- * @param Size 
- * @return UINT64 
+ *
+ * @param Intention
+ * @param RequestNewPool
+ * @param Size
+ * @return UINT64
  */
 UINT64
-PoolManagerRequestPool(POOL_ALLOCATION_INTENTION Intention, BOOLEAN RequestNewPool, UINT32 Size);
+PoolManagerRequestPool(POOL_ALLOCATION_INTENTION Intention,
+                       BOOLEAN RequestNewPool, UINT32 Size);
 
 /**
  * @brief De-allocate all the allocated pools
- * 
- * @return VOID 
+ *
+ * @return VOID
  */
-VOID
-PoolManagerUninitialize();
+VOID PoolManagerUninitialize();
 
 /**
  * @brief Deallocate a special pool in the next IOCTL
- * 
- * @param AddressToFree 
- * @return BOOLEAN 
+ *
+ * @param AddressToFree
+ * @return BOOLEAN
  */
 BOOLEAN
 PoolManagerFreePool(UINT64 AddressToFree);

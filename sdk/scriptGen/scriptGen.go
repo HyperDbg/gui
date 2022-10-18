@@ -2,8 +2,8 @@ package scriptGen
 
 import (
 	"fmt"
-	"github.com/ddkwork/librarygo/src/mylog"
-	"github.com/ddkwork/librarygo/src/stream"
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/src/stream"
 	"path/filepath"
 )
 

@@ -22,27 +22,23 @@
 //				    Functions                   //
 //////////////////////////////////////////////////
 
-void
-GuassianGenerateRandom(vector<double> Data, UINT64 * AverageOfData, UINT64 * StandardDeviationOfData, UINT64 * MedianOfData);
+void GuassianGenerateRandom(vector<double> Data, UINT64 *AverageOfData,
+                            UINT64 *StandardDeviationOfData,
+                            UINT64 *MedianOfData);
 
 BOOLEAN
-TransparentModeCheckHypervisorPresence(UINT64 * Average,
-                                       UINT64 * StandardDeviation,
-                                       UINT64 * Median);
+TransparentModeCheckHypervisorPresence(UINT64 *Average,
+                                       UINT64 *StandardDeviation,
+                                       UINT64 *Median);
 
 BOOLEAN
-TransparentModeCheckRdtscpVmexit(UINT64 * Average,
-                                 UINT64 * StandardDeviation,
-                                 UINT64 * Median);
+TransparentModeCheckRdtscpVmexit(UINT64 *Average, UINT64 *StandardDeviation,
+                                 UINT64 *Median);
 
-double
-Randn(double mu, double sigma);
+double Randn(double mu, double sigma);
 
-double
-Median(vector<double> Cases);
+double Median(vector<double> Cases);
 
-unsigned long long
-TransparentModeRdtscDiffVmexit();
+unsigned long long TransparentModeRdtscDiffVmexit();
 
-unsigned long long
-TransparentModeRdtscVmexitTracing();
+unsigned long long TransparentModeRdtscVmexitTracing();
