@@ -4,10 +4,10 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"github.com/ddkwork/golibrary/src/fynelib/canvasobjectapi"
-	"github.com/ddkwork/hyperdbgui/src/fnTable/pageSymbol/exportApi"
-	"github.com/ddkwork/hyperdbgui/src/fnTable/pageSymbol/module"
-	"github.com/ddkwork/hyperdbgui/src/fnTable/pageSymbol/symbolChoose"
-	"github.com/ddkwork/hyperdbgui/src/fnTable/pageSymbol/symbolLog"
+	"github.com/ddkwork/hyperdbgui/fnTable/pageSymbol/exportApi"
+	"github.com/ddkwork/hyperdbgui/fnTable/pageSymbol/module"
+	"github.com/ddkwork/hyperdbgui/fnTable/pageSymbol/symbolChoose"
+	"github.com/ddkwork/hyperdbgui/fnTable/pageSymbol/symbolLog"
 )
 
 type (
