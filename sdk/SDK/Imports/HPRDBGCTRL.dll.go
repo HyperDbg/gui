@@ -16,7 +16,7 @@ import (
 type (
 	void    uintptr
 	handler uintptr
-	api     interface {
+	Dll     interface {
 		// VMM Module
 		HyperDbgLoadVmm() int
 		HyperDbgUnloadVmm() int
@@ -32,7 +32,68 @@ type (
 		HyperDbgContinuePreviousCommand() bool
 		HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool
 	}
+	dll struct {
+	}
 )
+
+func (d *dll) HyperDbgLoadVmm() int {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *dll) HyperDbgUnloadVmm() int {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *dll) HyperDbgInstallVmmDriver() int {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *dll) HyperDbgUninstallVmmDriver() int {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *dll) HyperDbgStopVmmDriver() int {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *dll) HyperDbgInterpreter(Command string) int {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *dll) HyperDbgShowSignature() void {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *dll) HyperDbgSetTextMessageCallback(Callback handler) void {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *dll) HyperDbgScriptReadFileAndExecuteCommandline(argc int, argv []string) int {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *dll) HyperDbgContinuePreviousCommand() bool {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d *dll) HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool {
+	//TODO implement me
+	panic("implement me")
+}
+
+func newDll() Dll {
+	return &dll{}
+}
 
 var (
 	//go:embed HPRDBGCTRL.dll
