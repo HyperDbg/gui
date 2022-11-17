@@ -16,22 +16,7 @@ import (
 type (
 	void    uintptr
 	handler uintptr
-	Dll     interface {
-		// VMM Module
-		HyperDbgLoadVmm() int
-		HyperDbgUnloadVmm() int
-		HyperDbgInstallVmmDriver() int
-		HyperDbgUninstallVmmDriver() int
-		HyperDbgStopVmmDriver() int
 
-		// General imports
-		HyperDbgInterpreter(Command string) int
-		HyperDbgShowSignature() void
-		HyperDbgSetTextMessageCallback(Callback handler) void
-		HyperDbgScriptReadFileAndExecuteCommandline(argc int, argv []string) int
-		HyperDbgContinuePreviousCommand() bool
-		HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool
-	}
 	dll struct {
 	}
 )
@@ -91,7 +76,7 @@ func (d *dll) HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) b
 	panic("implement me")
 }
 
-func newDll() Dll {
+func newDll() HyperDbgCtrlImports {
 	return &dll{}
 }
 
