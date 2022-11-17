@@ -2,42 +2,26 @@ package Imports
 
 type (
 	HyperDbgScriptImports interface {
-		__declspec(dllimport) PSYMBOL_BUFFER ScriptEngineParse(char * str);
-__declspec(dllimport) void PrintSymbolBuffer(const PSYMBOL_BUFFER SymbolBuffer);
-__declspec(dllimport) void PrintSymbol(PSYMBOL Symbol);
-__declspec(dllimport) void RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer);
+		 //PSYMBOL_BUFFER ScriptEngineParse(char * str);
+ //void PrintSymbolBuffer(const PSYMBOL_BUFFER SymbolBuffer);
+ // PrintSymbol(PSYMBOL Symbol)VOID
+ // RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer)VOID
 
-//
+
 // pdb parser
-//
-__declspec(dllimport) VOID
-ScriptEngineSetTextMessageCallback(PVOID Handler);
-__declspec(dllimport) VOID
-ScriptEngineSymbolAbortLoading();
-__declspec(dllimport) UINT64
-ScriptEngineConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
-__declspec(dllimport) UINT32
-ScriptEngineLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName);
-__declspec(dllimport) UINT32
-ScriptEngineUnloadAllSymbols();
-__declspec(dllimport) UINT32
-ScriptEngineUnloadModuleSymbol(char * ModuleName);
-__declspec(dllimport) UINT32
-ScriptEngineSearchSymbolForMask(const char * SearchMask);
-__declspec(dllimport) BOOLEAN
-ScriptEngineGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
-__declspec(dllimport) BOOLEAN
-ScriptEngineGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
-__declspec(dllimport) BOOLEAN
-ScriptEngineCreateSymbolTableForDisassembler(void * CallbackFunction);
-__declspec(dllimport) BOOLEAN
-ScriptEngineConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
-__declspec(dllimport) BOOLEAN
-ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath, char * PdbFilePath, char * GuidAndAgeDetails);
-__declspec(dllimport) BOOLEAN
-ScriptEngineSymbolInitLoad(PVOID BufferToStoreDetails, UINT32 StoredLength, BOOLEAN DownloadIfAvailable, const char * SymbolPath, BOOLEAN IsSilentLoad);
-__declspec(dllimport) BOOLEAN
-ScriptEngineShowDataBasedOnSymbolTypes(const char * TypeName, UINT64 Address, BOOLEAN IsStruct, PVOID BufferAddress, const char * AdditionalParameters);
-
+ScriptEngineSetTextMessageCallback(PVOID Handler)VOID
+ScriptEngineSymbolAbortLoading()VOID
+//ScriptEngineConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound)uont64
+//ScriptEngineLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName)UINT32
+ScriptEngineUnloadAllSymbols()uint32
+//ScriptEngineUnloadModuleSymbol(char * ModuleName)uint32
+//ScriptEngineSearchSymbolForMask(const char * SearchMask)uint32
+ScriptEngineGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset)bool
+ScriptEngineGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize)bool
+ScriptEngineCreateSymbolTableForDisassembler(void * CallbackFunction)bool
+ScriptEngineConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath)bool
+ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath, char * PdbFilePath, char * GuidAndAgeDetails)bool
+ScriptEngineSymbolInitLoad(PVOID BufferToStoreDetails, UINT32 StoredLength, BOOLEAN DownloadIfAvailable, const char * SymbolPath, BOOLEAN IsSilentLoad)bool
+ScriptEngineShowDataBasedOnSymbolTypes(const char * TypeName, UINT64 Address, BOOLEAN IsStruct, PVOID BufferAddress, const char * AdditionalParameters)bool
 }
 )
