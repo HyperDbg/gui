@@ -1,8 +1,0 @@
-{
-    outdata = "__cpp_scanner.c.c\
-D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\script-engine\\header\\script-engine.h(35): warning C4273: 'ScriptEngineGetFieldOffset': inconsistent dll linkage\
-D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\script-engine\\header\\script-engine.h(21): note: see previous definition of 'ScriptEngineGetFieldOffset'\
-D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\script-engine\\header\\script-engine.h(37): warning C4273: 'ScriptEngineGetDataTypeSize': inconsistent dll linkage\
-D:\\codespace\\gui\\sdk\\HyperDbgDev\\hyperdbg\\script-engine\\header\\script-engine.h(23): note: see previous definition of 'ScriptEngineGetDataTypeSize'\
-"
-}
