@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"encoding/base64"
 	"fmt"
+	"github.com/ddkwork/golibrary/mylog"
 	"golang.org/x/sys/windows"
 	"os"
 	"path/filepath"
@@ -21,15 +22,25 @@ var (
 
 func init() {
 	dir, err := os.UserCacheDir()
-	jot.FatalIfErr(err)
-	dir = filepath.Join(dir, "unison", "dll_cache")
-	jot.FatalIfErr(os.MkdirAll(dir, 0755))
+	if !mylog.Error(err) {
+		return
+	}
+	dir = filepath.Join(dir, "hyperdbg", "dll_cache")
+	if !mylog.Error(os.MkdirAll(dir, 0755)) {
+		return
+	}
 	windows.SetDllDirectory(dir)
 	sha := sha256.Sum256(dllData)
 	dllName := fmt.Sprintf("skia-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
 	filePath := filepath.Join(dir, dllName)
-	if !fs.FileExists(filePath) {
-		jot.FatalIfErr(os.WriteFile(filePath, dllData, 0644))
+	_, err = os.Stat(filePath)
+	if !mylog.Error(err) {
+		if err == os.ErrNotExist {
+			if !mylog.Error(os.WriteFile(filePath, dllData, 0644)) {
+				return
+			}
+		}
+		return
 	}
 	skia := syscall.MustLoadDLL(dllName)
 	grBackendRenderTargetNewGLProc = skia.MustFindProc("gr_backendrendertarget_new_gl")
