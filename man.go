@@ -28,10 +28,10 @@ func main() {
 }
 
 var (
-	//go:embed 1786555.png
+	//go:embed dbg.png
 	ico1 []byte
 
-	//go:embed stock-illustration-debugger.jpg
+	//go:embed debugger.jpg
 	ico2 []byte
 )
 

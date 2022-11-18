@@ -1,4 +1,4 @@
-package sdk
+package Headers
 
 import "github.com/ddkwork/golibrary/src/cpp2go/delete/myc2go/windef"
 
@@ -12,7 +12,7 @@ const (
 	FILE_ANY_ACCESS     = windef.FILE_ANY_ACCESS
 )
 
-var (
+var ( //todo sort io code
 	IOCTL_DEBUGGER_ADD_ACTION_TO_EVENT                         = CTL_CODE(FILE_DEVICE_UNKNOWN, 0x807, METHOD_BUFFERED, FILE_ANY_ACCESS)
 	IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS             = CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80e, METHOD_BUFFERED, FILE_ANY_ACCESS)
 	IOCTL_DEBUGGER_EDIT_MEMORY                                 = CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80a, METHOD_BUFFERED, FILE_ANY_ACCESS)
