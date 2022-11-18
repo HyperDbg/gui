@@ -2,9 +2,11 @@ package Headers
 
 import (
 	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/src/caseconv"
 	"github.com/ddkwork/golibrary/src/stream"
 	"github.com/ddkwork/golibrary/src/stream/tool"
 	"go/format"
+	"strconv"
 	"strings"
 	"sync"
 	"testing"
@@ -13,6 +15,7 @@ import (
 func TestGenErrorCodes(t *testing.T) {
 	body := stream.New()
 	body.WriteStringLn("package Headers")
+	body.WriteStringLn("import \"fmt\"")
 	body.WriteStringLn("type ErrorCodes int")
 	body.WriteStringLn("const (")
 	file := stream.NewReadFile("ErrorCodes.h")
@@ -27,10 +30,11 @@ func TestGenErrorCodes(t *testing.T) {
 	}
 	const define = "#define"
 	once := sync.Once{}
-
+	var codes []string
 	for _, line := range lines {
 		if strings.Contains(line, define) {
 			fields := strings.Fields(line)
+			codes = append(codes, fields[1])
 			//line = strings.TrimPrefix(line, define)
 			body.WriteString(fields[1])
 			once.Do(func() {
@@ -43,6 +47,17 @@ func TestGenErrorCodes(t *testing.T) {
 	body.WriteStringLn(")")
 	body.WriteStringLn("func (e ErrorCodes)String()string{")
 
+	body.WriteStringLn("switch e {")
+	for _, code := range codes {
+		body.WriteString("case ")
+		body.WriteString(code)
+		body.WriteStringLn(":")
+		body.WriteString("return ")
+		body.WriteStringLn(strconv.Quote(caseconv.ToCamelUpper(code, false)))
+	}
+	body.WriteStringLn("default:")
+	body.WriteStringLn("return fmt.Sprint(\"known error code \" + fmt.Sprintf(\"%d\",e))")
+	body.WriteStringLn("}")
 	body.WriteStringLn("}")
 	mylog.Json("gen error code", body.String())
 	source, err := format.Source(body.Bytes())
