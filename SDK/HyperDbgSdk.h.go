@@ -1,6 +1,8 @@
 package HyperDbgSdk
 
-import "github.com/ddkwork/hyperdbgui/sdk/SDK/Imports"
+import (
+	"github.com/ddkwork/hyperdbgui/SDK/Imports"
+)
 
 type (
 	HyperDbgSdk interface {
