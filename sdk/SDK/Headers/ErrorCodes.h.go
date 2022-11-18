@@ -1,5 +1,1 @@
 package Headers
-
-func m() {
-
-}

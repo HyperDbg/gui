@@ -4,13 +4,13 @@ go 1.19
 
 require (
 	fyne.io/fyne/v2 v2.2.4
-	github.com/ddkwork/golibrary v0.0.0-20221113204534-53f156e65729
 	github.com/fpabl0/sparky-go v0.0.0-20220803072144-1a0971955531
 )
 
 require (
 	fyne.io/systray v1.10.1-0.20220621085403-9a2652634e93 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/dc0d/caseconv v0.5.0 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fredbi/uri v0.0.0-20221002085739-62643c0df0c8 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
