@@ -1,7 +1,5 @@
 package Headers
 
-import "fmt"
-
 type DEBUGGEE_PAUSING_REASON byte
 
 const (
@@ -28,7 +26,7 @@ const (
 )
 
 // add for decode status by error codes
-func (pr DEBUGGEE_PAUSING_REASON) String() string { return fmt.Sprint(pr) }
+//func (pr DEBUGGEE_PAUSING_REASON) String() string { return fmt.Sprint(pr) }
 
 type DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION byte
 type DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT byte //todo rename
@@ -123,7 +121,8 @@ const (
 
 )
 
-func (pr DEBUGGER_REMOTE_PA) String() string { return fmt.Sprint(pr) }
+//
+//func (pr DEBUGGER_REMOTE_PA) String() string { return fmt.Sprint(pr) }
 
 type (
 	DEBUGGER_REMOTE_PACKET struct {
