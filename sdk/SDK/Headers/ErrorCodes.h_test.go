@@ -4,6 +4,7 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/src/stream"
 	"strings"
+	"sync"
 	"testing"
 )
 
@@ -17,14 +18,16 @@ func TestGenErrorCodes(t *testing.T) {
 		return
 	}
 	const define = "#define"
+	once := sync.Once{}
+
 	for _, line := range lines {
 		if strings.Contains(line, define) {
 			fields := strings.Fields(line)
 			//line = strings.TrimPrefix(line, define)
 			body.WriteString(fields[1])
-			if fields[2] == "0xFFFFFFFF" {
+			once.Do(func() {
 				body.WriteString(" ErrorCodes ")
-			}
+			})
 			body.WriteString("=")
 			body.WriteStringLn(fields[2])
 		}
