@@ -24,11 +24,12 @@ type (
 	}
 )
 
-// todo goto windows
-func (h *hyperDbgSymImports) SymSetTextMessageCallback(PVOID Handler) Headers.VOID {
+func (h *hyperDbgSymImports) SymSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
 	//TODO implement me
 	panic("implement me")
 }
+
+// todo goto windows
 
 func (h *hyperDbgSymImports) SymConvertNameToAddress(FunctionOrVariableName *byte, WasFound *bool) uint64 {
 	//TODO implement me
