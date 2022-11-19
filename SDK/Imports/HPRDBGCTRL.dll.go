@@ -1,5 +1,7 @@
 package Imports
 
+//todo goto windows modfy this file
+
 //
 //import (
 //	"crypto/sha256"

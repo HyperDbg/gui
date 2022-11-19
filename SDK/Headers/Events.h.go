@@ -75,7 +75,6 @@ type (
 		KernelStatus uint64                      // Kerenl put the status in this field
 		TypeOfAction DEBUGGER_MODIFY_EVENTS_TYPE // Determines what's the action (enable | disable | clear)
 		IsEnabled    bool                        // Determines what's the action (enable | disable | clear)
-
 	}
 	PDEBUGGER_MODIFY_EVENTS *DEBUGGER_MODIFY_EVENTS
 )
@@ -85,6 +84,5 @@ type (
 		KernelStatus      uint64 // Kerenl put the status in this field
 		IsShortCircuiting bool   // Determines whether to perform short circuting (on | off)
 	}
-
 	PDEBUGGER_SHORT_CIRCUITING_EVENT *DEBUGGER_SHORT_CIRCUITING_EVENT
 )
