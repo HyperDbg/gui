@@ -20,9 +20,10 @@ type (
 		SymQuerySizeof(StructNameOrTypeName *int8, SizeOfField *uint32) bool
 		SymCastingQueryForFiledsAndTypes(StructName *int8, FiledOfStructName *int8, IsStructNamePointerOrNot bool, IsFiledOfStructNamePointerOrNot bool, NewStructOrTypeName **int8, OffsetOfFieldFromTop *uint32, SizeOfField *uint32) bool
 	}
-	hyperDbgSymImports struct {
-	}
+	hyperDbgSymImports struct{}
 )
+
+func NewHyperDbgSymImports() HyperDbgSymImports { return &hyperDbgSymImports{} }
 
 func (h *hyperDbgSymImports) SymSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
 	api.Proc(SymSetTextMessageCallback).Call()
@@ -82,8 +83,4 @@ func (h *hyperDbgSymImports) SymQuerySizeof(StructNameOrTypeName *int8, SizeOfFi
 
 func (h *hyperDbgSymImports) SymCastingQueryForFiledsAndTypes(StructName *int8, FiledOfStructName *int8, IsStructNamePointerOrNot bool, IsFiledOfStructNamePointerOrNot bool, NewStructOrTypeName **int8, OffsetOfFieldFromTop *uint32, SizeOfField *uint32) bool {
 	api.Proc(SymCastingQueryForFiledsAndTypes).Call()
-}
-
-func newHyperDbgSymImports() HyperDbgSymImports {
-	return &hyperDbgSymImports{}
 }

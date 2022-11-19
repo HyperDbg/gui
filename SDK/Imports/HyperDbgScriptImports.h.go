@@ -26,9 +26,10 @@ type (
 		RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer) Headers.VOID
 		pdbParser
 	}
-	hyperDbgScriptImports struct {
-	}
+	hyperDbgScriptImports struct{}
 )
+
+func NewHyperDbgScriptImports() HyperDbgScriptImports { return &hyperDbgScriptImports{} }
 
 func (h *hyperDbgScriptImports) ScriptEngineParse(str *int8) interface{} {
 	api.Proc(ScriptEngineParse).Call()
@@ -100,8 +101,4 @@ func (h *hyperDbgScriptImports) ScriptEngineSymbolInitLoad(BufferToStoreDetails 
 
 func (h *hyperDbgScriptImports) ScriptEngineShowDataBasedOnSymbolTypes(TypeName *int8, Address uint64, IsStruct bool, BufferAddress Headers.PVOID, AdditionalParameters *int8) bool {
 	api.Proc(ScriptEngineShowDataBasedOnSymbolTypes).Call()
-}
-
-func newHyperDbgScriptImports() HyperDbgScriptImports {
-	return &hyperDbgScriptImports{}
 }

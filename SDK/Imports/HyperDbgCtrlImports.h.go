@@ -22,9 +22,10 @@ type (
 		VmmModule
 		GeneralImports
 	}
-	hyperDbgCtrlImports struct {
-	}
+	hyperDbgCtrlImports struct{}
 )
+
+func NewHyperDbgCtrlImports() HyperDbgCtrlImports { return &hyperDbgCtrlImports{} }
 
 func (h *hyperDbgCtrlImports) HyperDbgShowSignature() Headers.VOID {
 	call, u, err := api.Proc(HyperDbgShowSignature).Call()
@@ -85,8 +86,4 @@ func (h *hyperDbgCtrlImports) HyperDbgContinuePreviousCommand() bool {
 func (h *hyperDbgCtrlImports) HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool {
 	api.Proc(HyperDbgCheckMultilineCommand).Call()
 
-}
-
-func newHyperDbgCtrlImports() HyperDbgCtrlImports {
-	return &hyperDbgCtrlImports{}
 }
