@@ -45,13 +45,8 @@ type (
 	}
 )
 
-func New() Interface {
-	return &object{
-		mainMenu: fyne.NewMainMenu(),
-	}
-}
+func New() Interface                       { return &object{mainMenu: fyne.NewMainMenu()} }
 func (o *object) MainMenu() *fyne.MainMenu { return o.mainMenu }
-
 func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 	topMeau := meau.New()
 	o.mainMenu.Items = make([]*fyne.Menu, 0)
