@@ -33,11 +33,8 @@ func (h *hyperDbgCtrlImports) HyperDbgSetTextMessageCallback(handler Headers.Cal
 	panic("implement me")
 }
 
-// todo come to windows init dll and write call dll method
-func (h *hyperDbgCtrlImports) HyperDbgLoadVmm() int {
-	//TODO implement me
-	panic("implement me")
-}
+// todo test on windows
+func (h *hyperDbgCtrlImports) HyperDbgLoadVmm() int { return HyperDbgLoadVmmProc.Call() }
 
 func (h *hyperDbgCtrlImports) HyperDbgUnloadVmm() int {
 	//TODO implement me

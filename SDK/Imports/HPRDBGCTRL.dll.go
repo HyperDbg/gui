@@ -12,7 +12,6 @@ import (
 	"os"
 	"path/filepath"
 	"syscall"
-	"unsafe"
 )
 
 type api byte
@@ -152,7 +151,7 @@ func init() {
 	HyperDbgStopVmmDriverProc = hyperdbg.MustFindProc(HyperDbgStopVmmDriver.String())
 	HyperDbgInterpreterProc = hyperdbg.MustFindProc(HyperDbgInterpreter.String())
 	HyperDbgShowSignatureProc = hyperdbg.MustFindProc(HyperDbgShowSignature.String())
-	HyperDbgSetTextMessageCallbackProc = hyperdbg.MustFindProc("")
+	HyperDbgSetTextMessageCallbackProc = hyperdbg.MustFindProc("") //todo gen another
 	HyperDbgScriptReadFileAndExecuteCommandlineProc = hyperdbg.MustFindProc("")
 	HyperDbgContinuePreviousCommandProc = hyperdbg.MustFindProc("")
 	HyperDbgCheckMultilineCommandProc = hyperdbg.MustFindProc("")
@@ -190,45 +189,3 @@ func init() {
 	SymQuerySizeofProc = hyperdbg.MustFindProc("")
 	SymCastingQueryForFiledsAndTypesProc = hyperdbg.MustFindProc("")
 }
-
-type (
-	BackendRenderTarget  unsafe.Pointer
-	DirectContext        unsafe.Pointer
-	GLInterface          unsafe.Pointer
-	Canvas               unsafe.Pointer
-	ColorFilter          unsafe.Pointer
-	ColorSpace           unsafe.Pointer
-	Data                 unsafe.Pointer
-	Document             unsafe.Pointer
-	DynamicMemoryWStream unsafe.Pointer
-	FileWStream          unsafe.Pointer
-	Font                 unsafe.Pointer
-	FontMgr              unsafe.Pointer
-	FontStyle            unsafe.Pointer
-	FontStyleSet         unsafe.Pointer
-	Image                unsafe.Pointer
-	ImageFilter          unsafe.Pointer
-	MaskFilter           unsafe.Pointer
-	OpBuilder            unsafe.Pointer
-	Paint                unsafe.Pointer
-	Path                 unsafe.Pointer
-	PathEffect           unsafe.Pointer
-	SamplingOptions      uintptr
-	Shader               unsafe.Pointer
-	String               unsafe.Pointer
-	Surface              unsafe.Pointer
-	SurfaceProps         unsafe.Pointer
-	TextBlob             unsafe.Pointer
-	TextBlobBuilder      unsafe.Pointer
-	TypeFace             unsafe.Pointer
-	WStream              unsafe.Pointer
-)
-
-func BackendRenderTargetDelete(backend BackendRenderTarget) {
-	grBackendRenderTargetDeleteProc.Call(uintptr(backend))
-}
-
-//func ContextMakeGL(gl GLInterface) DirectContext {
-//	r1, _, _ := grContextMakeGLProc.Call(uintptr(gl))
-//	return DirectContext(r1)
-//}
