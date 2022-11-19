@@ -39,21 +39,21 @@ func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 
 	})
 	return container.NewAppTabs(
-		container.NewTabItemWithIcon("cpu", ico.cpu(), pageCpu.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("log", ico.log(), widget.NewMultiLineEntry()),
-		container.NewTabItemWithIcon("notes", ico.notes(), pageNotes.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("breaks", ico.breaks(), pageBreaks.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("memory", ico.memory(), pageMemory.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("stack", ico.stack(), pageStack.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("sehList", ico.sehList(), pageSehList.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("script", ico.script(), pageScript.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("symbols", ico.symbols(), pageSymbol.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("source", ico.source(), widget.NewButton("source", nil)),
-		container.NewTabItemWithIcon("xFrom", ico.xFrom(), widget.NewButton("xFrom", nil)),
-		container.NewTabItemWithIcon("thead", ico.thead(), pageThead.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("handle", ico.handle(), pageHandle.New().CanvasObject(window)),
-		container.NewTabItemWithIcon("trace", ico.trace(), widget.NewButton("trace", nil)),
-		container.NewTabItemWithIcon("driver control", ico.vt(), driver.CanvasObject(window)),
+		container.NewTabItemWithIcon(ico.cpu().Name(), ico.cpu(), pageCpu.New().CanvasObject(window)),
+		container.NewTabItemWithIcon(ico.log().Name(), ico.log(), widget.NewMultiLineEntry()),
+		container.NewTabItemWithIcon(ico.notes().Name(), ico.notes(), pageNotes.New().CanvasObject(window)),
+		container.NewTabItemWithIcon(ico.breaks().Name(), ico.breaks(), pageBreaks.New().CanvasObject(window)),
+		container.NewTabItemWithIcon(ico.memory().Name(), ico.memory(), pageMemory.New().CanvasObject(window)),
+		container.NewTabItemWithIcon(ico.stack().Name(), ico.stack(), pageStack.New().CanvasObject(window)),
+		container.NewTabItemWithIcon(ico.sehList().Name(), ico.sehList(), pageSehList.New().CanvasObject(window)),
+		container.NewTabItemWithIcon(ico.script().Name(), ico.script(), pageScript.New().CanvasObject(window)),
+		container.NewTabItemWithIcon(ico.symbols().Name(), ico.symbols(), pageSymbol.New().CanvasObject(window)),
+		container.NewTabItemWithIcon(ico.source().Name(), ico.source(), widget.NewButton("source", nil)),
+		container.NewTabItemWithIcon(ico.xFrom().Name(), ico.xFrom(), widget.NewButton("xFrom", nil)),
+		container.NewTabItemWithIcon(ico.thead().Name(), ico.thead(), pageThead.New().CanvasObject(window)),
+		container.NewTabItemWithIcon(ico.handle().Name(), ico.handle(), pageHandle.New().CanvasObject(window)),
+		container.NewTabItemWithIcon(ico.trace().Name(), ico.trace(), widget.NewButton("trace", nil)),
+		container.NewTabItemWithIcon(ico.vt().Name(), ico.vt(), driver.CanvasObject(window)),
 	)
 }
 
