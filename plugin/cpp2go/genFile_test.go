@@ -1,4 +1,4 @@
-package Headers
+package cpp2go
 
 //
 //func TestGengo(t *testing.T) {
