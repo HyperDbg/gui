@@ -41,10 +41,8 @@ type (
 		i26() fyne.Resource
 		i27() fyne.Resource
 	} //todo delete
-	resObj struct {
-	}
-	object struct {
-	}
+	resObj struct{}
+	object struct{}
 )
 
 func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
