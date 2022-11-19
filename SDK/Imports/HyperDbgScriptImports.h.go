@@ -49,27 +49,6 @@ func (h *hyperDbgScriptImports) RemoveSymbolBuffer(PSYMBOL_BUFFER interface{}) H
 	panic("implement me")
 }
 
-// todo goto windows write code
-func (h *hyperDbgScriptImports) ScriptEngineParse(str *int8) interface{} {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (h *hyperDbgScriptImports) PrintSymbolBuffer(SymbolBuffer interface{}) Headers.VOID {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (h *hyperDbgScriptImports) PrintSymbol(PSYMBOL interface{}) Headers.VOID {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (h *hyperDbgScriptImports) RemoveSymbolBuffer(PSYMBOL_BUFFER interface{}) Headers.VOID {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (h *hyperDbgScriptImports) ScriptEngineSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
 	//TODO implement me
 	panic("implement me")
