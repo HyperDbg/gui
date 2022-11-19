@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/hyperdbgui/SDK/Headers"
 	"golang.org/x/sys/windows"
 	"os"
 	"path/filepath"
@@ -212,6 +213,25 @@ type (
 )
 
 var api = newApi()
+
+func DecodeErrorCode(code uintptr) string {
+	status := Headers.ErrorCodes(code).String() //todo return to ui ?
+	if status != "" {
+		mylog.Error(status)
+	}
+	return status
+}
+func Call(p *syscall.Proc, a ...uintptr) (valu uintptr) {
+	value, statusCode, err := p.Call(a...)
+	if !mylog.Error(err) {
+		return
+	}
+	if statusCode == 0 {
+		mylog.Error("statusCode == 0") //?
+		return
+	}
+	return value
+}
 
 func newApi() *Api {
 	p := &Api{
