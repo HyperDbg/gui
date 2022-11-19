@@ -7,7 +7,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"github.com/ddkwork/golibrary/src/fynelib/canvasobjectapi"
 	"github.com/ddkwork/golibrary/src/fynelib/fyneTheme"
-	HyperDbgSdk "github.com/ddkwork/hyperdbgui/SDK"
+	"github.com/ddkwork/hyperdbgui/SDK"
 	"github.com/ddkwork/hyperdbgui/fnTable"
 	"github.com/ddkwork/hyperdbgui/meau"
 	"github.com/ddkwork/hyperdbgui/toolbar"
@@ -15,7 +15,7 @@ import (
 )
 
 func noGui() { //dll load test
-	sdk := HyperDbgSdk.New()
+	sdk := SDK.New()
 	sdk.Ctrl().HyperDbgInstallVmmDriver() //TODO decode error codes
 	sdk.Ctrl().HyperDbgLoadVmm()
 	sdk.Ctrl().HyperDbgUnloadVmm()

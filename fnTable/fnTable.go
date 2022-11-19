@@ -20,10 +20,8 @@ import (
 )
 
 type (
-	Interface interface {
-		canvasobjectapi.Interface
-	}
-	object struct{}
+	Interface interface{ canvasobjectapi.Interface }
+	object    struct{}
 )
 
 func New() Interface { return &object{} }

@@ -15,7 +15,8 @@ const (
 	UsermodeBufferSize             = unsafe.Sizeof(uint32(0)) + PacketChunkSize + 1
 
 	//todo fix this
-	MaxSerialPacketSize                                   = UsermodeBufferSize             //+ sizeof(DEBUGGER_REMOTE_PACKET) + SERIAL_END_OF_BUFFER_CHARS_COUNT
+	MaxSerialPacketSize = UsermodeBufferSize +
+		unsafe.Sizeof(DEBUGGER_REMOTE_PACKET) + SERIAL_END_OF_BUFFER_CHARS_COUNT
 	LogBufferSize                                         = MaximumPacketsCapacity         //* (PacketChunkSize + sizeof(BUFFER_HEADER))
 	LogBufferSizePriority                                 = MaximumPacketsCapacityPriority // * (PacketChunkSize + sizeof(BUFFER_HEADER))
 	DbgPrintLimitation                                    = 512

@@ -14,9 +14,7 @@ type (
 	object    struct{}
 )
 
-func New() Interface {
-	return &object{}
-}
+func New() Interface { return &object{} }
 
 func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 	d := newDisassemblyObject()

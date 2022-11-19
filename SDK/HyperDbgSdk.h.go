@@ -1,4 +1,4 @@
-package HyperDbgSdk
+package SDK
 
 import (
 	"github.com/ddkwork/hyperdbgui/SDK/Imports"
