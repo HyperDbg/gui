@@ -2,6 +2,7 @@ package Imports
 
 import (
 	"github.com/ddkwork/hyperdbgui/SDK/Headers"
+	"unsafe"
 )
 
 type (
@@ -22,10 +23,10 @@ type (
 		ScriptEngineShowDataBasedOnSymbolTypes(TypeName *int8, Address uint64, IsStruct bool, BufferAddress Headers.PVOID, AdditionalParameters *int8) bool
 	}
 	Script interface {
-		ScriptEngineParse(str *int8) PSYMBOL_BUFFER
-		PrintSymbolBuffer(SymbolBuffer PSYMBOL_BUFFER) Headers.VOID
-		PrintSymbol(PSYMBOL Symbol) Headers.VOID
-		RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer) Headers.VOID
+		//ScriptEngineParse(str *int8) PSYMBOL_BUFFER
+		//PrintSymbolBuffer(SymbolBuffer PSYMBOL_BUFFER) Headers.VOID
+		//PrintSymbol(PSYMBOL Symbol) Headers.VOID
+		//RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer) Headers.VOID
 		pdbParser
 	}
 	script struct{}
@@ -33,74 +34,95 @@ type (
 
 func NewScript() Script { return &script{} }
 
-func (s *script) ScriptEngineParse(str *int8) interface{} {
-	api.Proc(ScriptEngineParse).Call(str)
-}
-
-func (s *script) PrintSymbolBuffer(SymbolBuffer interface{}) Headers.VOID {
-	api.Proc(PrintSymbolBuffer).Call(SymbolBuffer)
-}
-
-func (s *script) PrintSymbol(PSYMBOL interface{}) Headers.VOID {
-	api.Proc(PrintSymbol).Call(PSYMBOL)
-}
-
-func (s *script) RemoveSymbolBuffer(PSYMBOL_BUFFER interface{}) Headers.VOID {
-	api.Proc(RemoveSymbolBuffer).Call(PSYMBOL_BUFFER)
-}
-
 func (s *script) ScriptEngineSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
-	api.Proc(ScriptEngineSetTextMessageCallback).Call(Handler)
+	valu := Call(api.Proc(ScriptEngineSetTextMessageCallback), uintptr(Handler))
+	//DecodeErrorCode(valu)
+	return Headers.VOID(unsafe.Pointer(valu))
 }
 
 func (s *script) ScriptEngineSymbolAbortLoading() Headers.VOID {
-	api.Proc(ScriptEngineSymbolAbortLoading).Call()
+	valu := Call(api.Proc(ScriptEngineSymbolAbortLoading))
+	//DecodeErrorCode(valu)
+	return Headers.VOID(unsafe.Pointer(valu))
 }
 
 func (s *script) ScriptEngineConvertNameToAddress(FunctionOrVariableName *int8, WasFound bool) uint64 {
-	api.Proc(ScriptEngineConvertNameToAddress).Call(FunctionOrVariableName, WasFound)
+	//WasFound need input a point value ?
+	v := 1
+	if WasFound {
+		v = 0
+	}
+	valu := Call(api.Proc(ScriptEngineConvertNameToAddress), uintptr(unsafe.Pointer(FunctionOrVariableName)), uintptr(v))
+	//DecodeErrorCode(valu)
+	return uint64(valu)
 }
 
 func (s *script) ScriptEngineLoadFileSymbol(BaseAddress uint64, PdbFileName *int8) uint32 {
-	api.Proc(ScriptEngineLoadFileSymbol).Call(BaseAddress, PdbFileName)
+	valu := Call(api.Proc(ScriptEngineLoadFileSymbol), uintptr(BaseAddress), uintptr(unsafe.Pointer(PdbFileName)))
+	//DecodeErrorCode(valu)
+	return uint32(valu)
 }
 
 func (s *script) ScriptEngineUnloadAllSymbols() uint32 {
-	api.Proc(ScriptEngineUnloadAllSymbols).Call()
+	valu := Call(api.Proc(ScriptEngineUnloadAllSymbols))
+	//DecodeErrorCode(valu)
+	return uint32(valu)
 }
 
 func (s *script) ScriptEngineUnloadModuleSymbol(ModuleName *int8) uint32 {
-	api.Proc(ScriptEngineUnloadModuleSymbol).Call(ModuleName)
+	valu := Call(api.Proc(ScriptEngineUnloadModuleSymbol), uintptr(unsafe.Pointer(ModuleName)))
+	//DecodeErrorCode(valu)
+	return uint32(valu)
 }
 
 func (s *script) ScriptEngineSearchSymbolForMask(SearchMask *int8) uint32 {
-	api.Proc(ScriptEngineSearchSymbolForMask).Call(SearchMask)
+	valu := Call(api.Proc(ScriptEngineSearchSymbolForMask), uintptr(unsafe.Pointer(SearchMask)))
+	//DecodeErrorCode(valu)
+	return uint32(valu)
 }
 
 func (s *script) ScriptEngineGetFieldOffset(TypeName, FieldName *int8, FieldOffset *uint32) bool {
-	api.Proc(ScriptEngineGetFieldOffset).Call(TypeName, FieldName, FieldOffset)
+	valu := Call(api.Proc(ScriptEngineGetFieldOffset),
+		uintptr(unsafe.Pointer(TypeName)),
+		uintptr(unsafe.Pointer(FieldName)),
+		uintptr(unsafe.Pointer(FieldOffset)),
+	)
+	//DecodeErrorCode(valu)
+	return valu == 0
 }
 
 func (s *script) ScriptEngineGetDataTypeSize(TypeName *int8, TypeSize *uint64) bool {
-	api.Proc(ScriptEngineGetDataTypeSize).Call(TypeName, TypeSize)
+	valu := Call(api.Proc(ScriptEngineGetDataTypeSize), uintptr(Handler))
+	DecodeErrorCode(valu)
+	return Headers.VOID(unsafe.Pointer(valu))
 }
 
 func (s *script) ScriptEngineCreateSymbolTableForDisassembler(CallbackFunction Headers.PVOID) bool {
-	api.Proc(ScriptEngineCreateSymbolTableForDisassembler).Call(CallbackFunction)
+	valu := Call(api.Proc(ScriptEngineCreateSymbolTableForDisassembler), uintptr(Handler))
+	DecodeErrorCode(valu)
+	return Headers.VOID(unsafe.Pointer(valu))
 }
 
 func (s *script) ScriptEngineConvertFileToPdbPath(LocalFilePath, ResultPath *int8) bool {
-	api.Proc(ScriptEngineConvertFileToPdbPath).Call(LocalFilePath, ResultPath)
+	valu := Call(api.Proc(ScriptEngineConvertFileToPdbPath), uintptr(Handler))
+	DecodeErrorCode(valu)
+	return Headers.VOID(unsafe.Pointer(valu))
 }
 
 func (s *script) ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath, PdbFilePath, GuidAndAgeDetails *int8) bool {
-	api.Proc(ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails).Call(LocalFilePath, PdbFilePath, GuidAndAgeDetails)
+	valu := Call(api.Proc(ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails), uintptr(Handler))
+	DecodeErrorCode(valu)
+	return Headers.VOID(unsafe.Pointer(valu))
 }
 
 func (s *script) ScriptEngineSymbolInitLoad(BufferToStoreDetails Headers.PVOID, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *int8, IsSilentLoad bool) bool {
-	api.Proc(ScriptEngineSymbolInitLoad).Call(BufferToStoreDetails, StoredLength, DownloadIfAvailable, SymbolPath, IsSilentLoad)
+	valu := Call(api.Proc(ScriptEngineSymbolInitLoad), uintptr(Handler))
+	DecodeErrorCode(valu)
+	return Headers.VOID(unsafe.Pointer(valu))
 }
 
 func (s *script) ScriptEngineShowDataBasedOnSymbolTypes(TypeName *int8, Address uint64, IsStruct bool, BufferAddress Headers.PVOID, AdditionalParameters *int8) bool {
-	api.Proc(ScriptEngineShowDataBasedOnSymbolTypes).Call(TypeName, Address, IsStruct, BufferAddress, AdditionalParameters)
+	valu := Call(api.Proc(ScriptEngineShowDataBasedOnSymbolTypes), uintptr(Handler))
+	DecodeErrorCode(valu)
+	return Headers.VOID(unsafe.Pointer(valu))
 }
