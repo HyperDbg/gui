@@ -3,13 +3,7 @@ package Imports
 import "github.com/ddkwork/hyperdbgui/SDK/Headers"
 
 type (
-	HyperDbgScriptImports interface {
-		ScriptEngineParse(str *int8) PSYMBOL_BUFFER
-		PrintSymbolBuffer(SymbolBuffer PSYMBOL_BUFFER) Headers.VOID
-		PrintSymbol(PSYMBOL Symbol) Headers.VOID
-		RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer) Headers.VOID
-
-		// pdb parser
+	pdbParser interface {
 		ScriptEngineSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID
 		ScriptEngineSymbolAbortLoading() Headers.VOID
 		ScriptEngineConvertNameToAddress(FunctionOrVariableName *int8, WasFound bool) uint64
@@ -24,6 +18,13 @@ type (
 		ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath, PdbFilePath, GuidAndAgeDetails *int8) bool
 		ScriptEngineSymbolInitLoad(BufferToStoreDetails Headers.PVOID, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *int8, IsSilentLoad bool) bool
 		ScriptEngineShowDataBasedOnSymbolTypes(TypeName *int8, Address uint64, IsStruct bool, BufferAddress Headers.PVOID, AdditionalParameters *int8) bool
+	}
+	HyperDbgScriptImports interface {
+		ScriptEngineParse(str *int8) PSYMBOL_BUFFER
+		PrintSymbolBuffer(SymbolBuffer PSYMBOL_BUFFER) Headers.VOID
+		PrintSymbol(PSYMBOL Symbol) Headers.VOID
+		RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer) Headers.VOID
+		pdbParser
 	}
 	hyperDbgScriptImports struct {
 	}

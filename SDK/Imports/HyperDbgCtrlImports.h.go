@@ -3,15 +3,14 @@ package Imports
 import "github.com/ddkwork/hyperdbgui/SDK/Headers"
 
 type (
-	HyperDbgCtrlImports interface {
-		// VMM Module
+	VmmModule interface {
 		HyperDbgLoadVmm() int
 		HyperDbgUnloadVmm() int
 		HyperDbgInstallVmmDriver() int
 		HyperDbgUninstallVmmDriver() int
 		HyperDbgStopVmmDriver() int
-
-		// General imports
+	}
+	GeneralImports interface {
 		HyperDbgInterpreter(Command *string) int
 		HyperDbgShowSignature() Headers.VOID
 		HyperDbgSetTextMessageCallback(handler Headers.CallBack) Headers.VOID
@@ -19,12 +18,19 @@ type (
 		HyperDbgContinuePreviousCommand() bool
 		HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool
 	}
+	HyperDbgCtrlImports interface {
+		VmmModule
+		GeneralImports
+	}
 	hyperDbgCtrlImports struct {
 	}
 )
 
 func (h *hyperDbgCtrlImports) HyperDbgShowSignature() Headers.VOID {
-	api.Proc(HyperDbgShowSignature).Call()
+	call, u, err := api.Proc(HyperDbgShowSignature).Call()
+	if err != nil {
+		return nil
+	}
 
 }
 
@@ -43,42 +49,42 @@ func (h *hyperDbgCtrlImports) HyperDbgLoadVmm() int {
 
 func (h *hyperDbgCtrlImports) HyperDbgUnloadVmm() int {
 	api.Proc(HyperDbgUnloadVmm).Call()
-	panic("implement me")
+
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgInstallVmmDriver() int {
 	api.Proc(HyperDbgInstallVmmDriver).Call()
-	panic("implement me")
+
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgUninstallVmmDriver() int {
 	api.Proc(HyperDbgUninstallVmmDriver).Call()
-	panic("implement me")
+
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgStopVmmDriver() int {
 	api.Proc(HyperDbgStopVmmDriver).Call()
-	panic("implement me")
+
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgInterpreter(Command *string) int {
 	api.Proc(HyperDbgInterpreter).Call()
-	panic("implement me")
+
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgScriptReadFileAndExecuteCommandline(argc int, argv []string) int {
 	api.Proc(HyperDbgScriptReadFileAndExecuteCommandline).Call()
-	panic("implement me")
+
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgContinuePreviousCommand() bool {
 	api.Proc(HyperDbgContinuePreviousCommand).Call()
-	panic("implement me")
+
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool {
 	api.Proc(HyperDbgCheckMultilineCommand).Call()
-	panic("implement me")
+
 }
 
 func newHyperDbgCtrlImports() HyperDbgCtrlImports {
