@@ -1,5 +1,7 @@
 package Imports
 
+import "github.com/ddkwork/hyperdbgui/SDK/Headers"
+
 type (
 	HyperDbgCtrlImports interface {
 		// VMM Module
@@ -10,9 +12,9 @@ type (
 		HyperDbgStopVmmDriver() int
 
 		// General imports
-		HyperDbgInterpreter(Command string) int //todo *string ?
-		//HyperDbgShowSignature() void
-		//HyperDbgSetTextMessageCallback(Callback handler) void
+		HyperDbgInterpreter(Command *string) int
+		HyperDbgShowSignature() Headers.VOID
+		HyperDbgSetTextMessageCallback(handler Headers.CallBack) Headers.VOID
 		HyperDbgScriptReadFileAndExecuteCommandline(argc int, argv []string) int
 		HyperDbgContinuePreviousCommand() bool
 		HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool
@@ -21,11 +23,18 @@ type (
 	}
 )
 
-// todo come to windows init dll and write call dll method
-func (h *hyperDbgCtrlImports) HyperDbgLoadVmm() int {
+func (h *hyperDbgCtrlImports) HyperDbgShowSignature() Headers.VOID {
 	//TODO implement me
 	panic("implement me")
 }
+
+func (h *hyperDbgCtrlImports) HyperDbgSetTextMessageCallback(handler Headers.CallBack) Headers.VOID {
+	//TODO implement me
+	panic("implement me")
+}
+
+// todo test on windows
+func (h *hyperDbgCtrlImports) HyperDbgLoadVmm() int { return HyperDbgLoadVmmProc.Call() }
 
 func (h *hyperDbgCtrlImports) HyperDbgUnloadVmm() int {
 	//TODO implement me
@@ -47,7 +56,7 @@ func (h *hyperDbgCtrlImports) HyperDbgStopVmmDriver() int {
 	panic("implement me")
 }
 
-func (h *hyperDbgCtrlImports) HyperDbgInterpreter(Command string) int {
+func (h *hyperDbgCtrlImports) HyperDbgInterpreter(Command *string) int {
 	//TODO implement me
 	panic("implement me")
 }

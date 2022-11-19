@@ -1,4 +1,4 @@
-package Headers
+package cpp2go
 
 import (
 	"github.com/ddkwork/golibrary/mylog"

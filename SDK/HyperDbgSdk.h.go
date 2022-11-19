@@ -7,7 +7,9 @@ import (
 type (
 	HyperDbgSdk interface {
 		Imports.HyperDbgCtrlImports
-		//Imports.HyperDbgScriptImports
-		//Imports.HyperDbgSymImports
+		Imports.HyperDbgScriptImports
+		Imports.HyperDbgSymImports
 	}
 )
+
+//todo add a object merge them ?
