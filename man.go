@@ -40,9 +40,7 @@ type (
 		canvasobjectapi.Interface //ui show and event finish
 		MainMenu() *fyne.MainMenu
 	}
-	object struct {
-		mainMenu *fyne.MainMenu
-	}
+	object struct{ mainMenu *fyne.MainMenu }
 )
 
 func New() Interface                       { return &object{mainMenu: fyne.NewMainMenu()} }
