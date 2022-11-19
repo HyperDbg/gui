@@ -68,7 +68,7 @@ func (a api) String() string {
 	case HyperDbgLoadVmm:
 		return "HyperDbgLoadVmm"
 	default:
-		return "error fn name from dll, please check update"
+		return "error fn name from dll, please check update" //this should panic?
 	}
 }
 
