@@ -23,6 +23,16 @@ type (
 	}
 )
 
+func (h *hyperDbgCtrlImports) HyperDbgShowSignature() Headers.VOID {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (h *hyperDbgCtrlImports) HyperDbgSetTextMessageCallback(handler Headers.CallBack) Headers.VOID {
+	//TODO implement me
+	panic("implement me")
+}
+
 // todo come to windows init dll and write call dll method
 func (h *hyperDbgCtrlImports) HyperDbgLoadVmm() int {
 	//TODO implement me
@@ -49,7 +59,7 @@ func (h *hyperDbgCtrlImports) HyperDbgStopVmmDriver() int {
 	panic("implement me")
 }
 
-func (h *hyperDbgCtrlImports) HyperDbgInterpreter(Command string) int {
+func (h *hyperDbgCtrlImports) HyperDbgInterpreter(Command *string) int {
 	//TODO implement me
 	panic("implement me")
 }
