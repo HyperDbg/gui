@@ -1,7 +1,5 @@
 package Imports
 
-//todo goto windows modify this file
-
 import (
 	"crypto/sha256"
 	_ "embed"
@@ -14,10 +12,10 @@ import (
 	"syscall"
 )
 
-type api byte
+type nameKind byte
 
 const ( //todo gen it
-	HyperDbgLoadVmm api = iota
+	HyperDbgLoadVmm nameKind = iota
 	HyperDbgUnloadVmm
 	HyperDbgInstallVmmDriver
 	HyperDbgUninstallVmmDriver
@@ -63,62 +61,176 @@ const ( //todo gen it
 	SymCastingQueryForFiledsAndTypes
 )
 
-func (a api) String() string {
+func (a nameKind) Names() []nameKind {
+	return []nameKind{
+		HyperDbgLoadVmm,
+		HyperDbgUnloadVmm,
+		HyperDbgInstallVmmDriver,
+		HyperDbgUninstallVmmDriver,
+		HyperDbgStopVmmDriver,
+		HyperDbgInterpreter,
+		HyperDbgShowSignature,
+		HyperDbgSetTextMessageCallback,
+		HyperDbgScriptReadFileAndExecuteCommandline,
+		HyperDbgContinuePreviousCommand,
+		HyperDbgCheckMultilineCommand,
+		ScriptEngineParse,
+		PrintSymbolBuffer,
+		PrintSymbol,
+		RemoveSymbolBuffer,
+		ScriptEngineSetTextMessageCallback,
+		ScriptEngineSymbolAbortLoading,
+		ScriptEngineConvertNameToAddress,
+		ScriptEngineLoadFileSymbol,
+		ScriptEngineUnloadAllSymbols,
+		ScriptEngineUnloadModuleSymbol,
+		ScriptEngineSearchSymbolForMask,
+		ScriptEngineGetFieldOffset,
+		ScriptEngineGetDataTypeSize,
+		ScriptEngineCreateSymbolTableForDisassembler,
+		ScriptEngineConvertFileToPdbPath,
+		ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails,
+		ScriptEngineSymbolInitLoad,
+		ScriptEngineShowDataBasedOnSymbolTypes,
+		SymSetTextMessageCallback,
+		SymConvertNameToAddress,
+		SymLoadFileSymbol,
+		SymUnloadAllSymbols,
+		SymUnloadModuleSymbol,
+		SymSearchSymbolForMask,
+		SymGetFieldOffset,
+		SymGetDataTypeSize,
+		SymCreateSymbolTableForDisassembler,
+		SymConvertFileToPdbPath,
+		SymConvertFileToPdbFileAndGuidAndAgeDetails,
+		SymbolInitLoad,
+		SymShowDataBasedOnSymbolTypes,
+		SymQuerySizeof,
+		SymCastingQueryForFiledsAndTypes,
+	}
+}
+func (a nameKind) Len() int { return len(a.Names()) } //means dll export ? number of api
+func (a nameKind) String() string {
 	switch a {
 	case HyperDbgLoadVmm:
 		return "HyperDbgLoadVmm"
+	case HyperDbgUnloadVmm:
+		return "HyperDbgUnloadVmm"
+	case HyperDbgInstallVmmDriver:
+		return "HyperDbgInstallVmmDriver"
+	case HyperDbgUninstallVmmDriver:
+		return "HyperDbgUninstallVmmDriver"
+	case HyperDbgStopVmmDriver:
+		return "HyperDbgStopVmmDriver"
+	case HyperDbgInterpreter:
+		return "HyperDbgInterpreter"
+	case HyperDbgShowSignature:
+		return "HyperDbgShowSignature"
+	case HyperDbgSetTextMessageCallback:
+		return "HyperDbgSetTextMessageCallback"
+	case HyperDbgScriptReadFileAndExecuteCommandline:
+		return "HyperDbgScriptReadFileAndExecuteCommandline"
+	case HyperDbgContinuePreviousCommand:
+		return "HyperDbgContinuePreviousCommand"
+	case HyperDbgCheckMultilineCommand:
+		return "HyperDbgCheckMultilineCommand"
+	case ScriptEngineParse:
+		return "ScriptEngineParse"
+	case PrintSymbolBuffer:
+		return "PrintSymbolBuffer"
+	case PrintSymbol:
+		return "PrintSymbol"
+	case RemoveSymbolBuffer:
+		return "RemoveSymbolBuffer"
+	case ScriptEngineSetTextMessageCallback:
+		return "ScriptEngineSetTextMessageCallback"
+	case ScriptEngineSymbolAbortLoading:
+		return "ScriptEngineSymbolAbortLoading"
+	case ScriptEngineConvertNameToAddress:
+		return "ScriptEngineConvertNameToAddress"
+	case ScriptEngineLoadFileSymbol:
+		return "ScriptEngineLoadFileSymbol"
+	case ScriptEngineUnloadAllSymbols:
+		return "ScriptEngineUnloadAllSymbols"
+	case ScriptEngineUnloadModuleSymbol:
+		return "ScriptEngineUnloadModuleSymbol"
+	case ScriptEngineSearchSymbolForMask:
+		return "ScriptEngineSearchSymbolForMask"
+	case ScriptEngineGetFieldOffset:
+		return "ScriptEngineGetFieldOffset"
+	case ScriptEngineGetDataTypeSize:
+		return "ScriptEngineGetDataTypeSize"
+	case ScriptEngineCreateSymbolTableForDisassembler:
+		return "ScriptEngineCreateSymbolTableForDisassembler"
+	case ScriptEngineConvertFileToPdbPath:
+		return "ScriptEngineConvertFileToPdbPath"
+	case ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails:
+		return "ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails"
+	case ScriptEngineSymbolInitLoad:
+		return "ScriptEngineSymbolInitLoad"
+	case ScriptEngineShowDataBasedOnSymbolTypes:
+		return "ScriptEngineShowDataBasedOnSymbolTypes"
+	case SymSetTextMessageCallback:
+		return "SymSetTextMessageCallback"
+	case SymConvertNameToAddress:
+		return "SymConvertNameToAddress"
+	case SymLoadFileSymbol:
+		return "SymLoadFileSymbol"
+	case SymUnloadAllSymbols:
+		return "SymUnloadAllSymbols"
+	case SymUnloadModuleSymbol:
+		return "SymUnloadModuleSymbol"
+	case SymSearchSymbolForMask:
+		return "SymSearchSymbolForMask"
+	case SymGetFieldOffset:
+		return "SymGetFieldOffset"
+	case SymGetDataTypeSize:
+		return "SymGetDataTypeSize"
+	case SymCreateSymbolTableForDisassembler:
+		return "SymCreateSymbolTableForDisassembler"
+	case SymConvertFileToPdbPath:
+		return "SymConvertFileToPdbPath"
+	case SymConvertFileToPdbFileAndGuidAndAgeDetails:
+		return "SymConvertFileToPdbFileAndGuidAndAgeDetails"
+	case SymbolInitLoad:
+		return "SymbolInitLoad"
+	case SymShowDataBasedOnSymbolTypes:
+		return "SymShowDataBasedOnSymbolTypes"
+	case SymQuerySizeof:
+		return "SymQuerySizeof"
+	case SymCastingQueryForFiledsAndTypes:
+		return "SymCastingQueryForFiledsAndTypes"
 	default:
 		return "error fn name from dll, please check update" //this should panic?
 	}
 }
 
+type (
+	Proc interface {
+	}
+	proc struct {
+		procMap map[nameKind]*syscall.Proc
+	}
+)
+
+func newProc() *proc {
+	p := &proc{
+		procMap: make(map[nameKind]*syscall.Proc, HyperDbgLoadVmm.Len()),
+	}
+	for _, kind := range HyperDbgLoadVmm.Names() {
+		p.SetProc(kind)
+	}
+	return p
+}
+func (p *proc) Proc(name nameKind) *syscall.Proc { return p.procMap[name] }
+func (p *proc) SetProc(name nameKind) {
+	p.procMap[name] = dll.MustFindProc(name.String())
+}
+
 var (
 	//go:embed HPRDBGCTRL.dll
-	dllData                                                  []byte
-	HyperDbgLoadVmmProc                                      *syscall.Proc
-	HyperDbgUnloadVmmProc                                    *syscall.Proc
-	HyperDbgInstallVmmDriverProc                             *syscall.Proc
-	HyperDbgUninstallVmmDriverProc                           *syscall.Proc
-	HyperDbgStopVmmDriverProc                                *syscall.Proc
-	HyperDbgInterpreterProc                                  *syscall.Proc
-	HyperDbgShowSignatureProc                                *syscall.Proc
-	HyperDbgSetTextMessageCallbackProc                       *syscall.Proc
-	HyperDbgScriptReadFileAndExecuteCommandlineProc          *syscall.Proc
-	HyperDbgContinuePreviousCommandProc                      *syscall.Proc
-	HyperDbgCheckMultilineCommandProc                        *syscall.Proc
-	ScriptEngineParseProc                                    *syscall.Proc
-	PrintSymbolBufferProc                                    *syscall.Proc
-	PrintSymbolProc                                          *syscall.Proc
-	RemoveSymbolBufferProc                                   *syscall.Proc
-	ScriptEngineSetTextMessageCallbackProc                   *syscall.Proc
-	ScriptEngineSymbolAbortLoadingProc                       *syscall.Proc
-	ScriptEngineConvertNameToAddressProc                     *syscall.Proc
-	ScriptEngineLoadFileSymbolProc                           *syscall.Proc
-	ScriptEngineUnloadAllSymbolsProc                         *syscall.Proc
-	ScriptEngineUnloadModuleSymbolProc                       *syscall.Proc
-	ScriptEngineSearchSymbolForMaskProc                      *syscall.Proc
-	ScriptEngineGetFieldOffsetProc                           *syscall.Proc
-	ScriptEngineGetDataTypeSizeProc                          *syscall.Proc
-	ScriptEngineCreateSymbolTableForDisassemblerProc         *syscall.Proc
-	ScriptEngineConvertFileToPdbPathProc                     *syscall.Proc
-	ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetailsProc *syscall.Proc
-	ScriptEngineSymbolInitLoadProc                           *syscall.Proc
-	ScriptEngineShowDataBasedOnSymbolTypesProc               *syscall.Proc
-	SymSetTextMessageCallbackProc                            *syscall.Proc
-	SymConvertNameToAddressProc                              *syscall.Proc
-	SymLoadFileSymbolProc                                    *syscall.Proc
-	SymUnloadAllSymbolsProc                                  *syscall.Proc
-	SymUnloadModuleSymbolProc                                *syscall.Proc
-	SymSearchSymbolForMaskProc                               *syscall.Proc
-	SymGetFieldOffsetProc                                    *syscall.Proc
-	SymGetDataTypeSizeProc                                   *syscall.Proc
-	SymCreateSymbolTableForDisassemblerProc                  *syscall.Proc
-	SymConvertFileToPdbPathProc                              *syscall.Proc
-	SymConvertFileToPdbFileAndGuidAndAgeDetailsProc          *syscall.Proc
-	SymbolInitLoadProc                                       *syscall.Proc
-	SymShowDataBasedOnSymbolTypesProc                        *syscall.Proc
-	SymQuerySizeofProc                                       *syscall.Proc
-	SymCastingQueryForFiledsAndTypesProc                     *syscall.Proc
+	dllData []byte
+	dll     *syscall.DLL
 )
 
 func init() {
@@ -126,13 +238,13 @@ func init() {
 	if !mylog.Error(err) {
 		return
 	}
-	dir = filepath.Join(dir, "hyperdbg", "dll_cache")
+	dir = filepath.Join(dir, "hyperdbgDll", "dll_cache")
 	if !mylog.Error(os.MkdirAll(dir, 0755)) {
 		return
 	}
 	windows.SetDllDirectory(dir)
 	sha := sha256.Sum256(dllData)
-	dllName := fmt.Sprintf("hyperdbg-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
+	dllName := fmt.Sprintf("hyperdbgDll-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
 	filePath := filepath.Join(dir, dllName)
 	_, err = os.Stat(filePath)
 	if !mylog.Error(err) {
@@ -143,49 +255,5 @@ func init() {
 		}
 		return
 	}
-	hyperdbg := syscall.MustLoadDLL(dllName)
-	HyperDbgLoadVmmProc = hyperdbg.MustFindProc(HyperDbgLoadVmm.String())
-	HyperDbgUnloadVmmProc = hyperdbg.MustFindProc(HyperDbgUnloadVmm.String())
-	HyperDbgInstallVmmDriverProc = hyperdbg.MustFindProc(HyperDbgInstallVmmDriver.String())
-	HyperDbgUninstallVmmDriverProc = hyperdbg.MustFindProc(HyperDbgUninstallVmmDriver.String())
-	HyperDbgStopVmmDriverProc = hyperdbg.MustFindProc(HyperDbgStopVmmDriver.String())
-	HyperDbgInterpreterProc = hyperdbg.MustFindProc(HyperDbgInterpreter.String())
-	HyperDbgShowSignatureProc = hyperdbg.MustFindProc(HyperDbgShowSignature.String())
-	HyperDbgSetTextMessageCallbackProc = hyperdbg.MustFindProc("") //todo gen another
-	HyperDbgScriptReadFileAndExecuteCommandlineProc = hyperdbg.MustFindProc("")
-	HyperDbgContinuePreviousCommandProc = hyperdbg.MustFindProc("")
-	HyperDbgCheckMultilineCommandProc = hyperdbg.MustFindProc("")
-	ScriptEngineParseProc = hyperdbg.MustFindProc("")
-	PrintSymbolBufferProc = hyperdbg.MustFindProc("")
-	PrintSymbolProc = hyperdbg.MustFindProc("")
-	RemoveSymbolBufferProc = hyperdbg.MustFindProc("")
-	ScriptEngineSetTextMessageCallbackProc = hyperdbg.MustFindProc("")
-	ScriptEngineSymbolAbortLoadingProc = hyperdbg.MustFindProc("")
-	ScriptEngineConvertNameToAddressProc = hyperdbg.MustFindProc("")
-	ScriptEngineLoadFileSymbolProc = hyperdbg.MustFindProc("")
-	ScriptEngineUnloadAllSymbolsProc = hyperdbg.MustFindProc("")
-	ScriptEngineUnloadModuleSymbolProc = hyperdbg.MustFindProc("")
-	ScriptEngineSearchSymbolForMaskProc = hyperdbg.MustFindProc("")
-	ScriptEngineGetFieldOffsetProc = hyperdbg.MustFindProc("")
-	ScriptEngineGetDataTypeSizeProc = hyperdbg.MustFindProc("")
-	ScriptEngineCreateSymbolTableForDisassemblerProc = hyperdbg.MustFindProc("")
-	ScriptEngineConvertFileToPdbPathProc = hyperdbg.MustFindProc("")
-	ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetailsProc = hyperdbg.MustFindProc("")
-	ScriptEngineSymbolInitLoadProc = hyperdbg.MustFindProc("")
-	ScriptEngineShowDataBasedOnSymbolTypesProc = hyperdbg.MustFindProc("")
-	SymSetTextMessageCallbackProc = hyperdbg.MustFindProc("")
-	SymConvertNameToAddressProc = hyperdbg.MustFindProc("")
-	SymLoadFileSymbolProc = hyperdbg.MustFindProc("")
-	SymUnloadAllSymbolsProc = hyperdbg.MustFindProc("")
-	SymUnloadModuleSymbolProc = hyperdbg.MustFindProc("")
-	SymSearchSymbolForMaskProc = hyperdbg.MustFindProc("")
-	SymGetFieldOffsetProc = hyperdbg.MustFindProc("")
-	SymGetDataTypeSizeProc = hyperdbg.MustFindProc("")
-	SymCreateSymbolTableForDisassemblerProc = hyperdbg.MustFindProc("")
-	SymConvertFileToPdbPathProc = hyperdbg.MustFindProc("")
-	SymConvertFileToPdbFileAndGuidAndAgeDetailsProc = hyperdbg.MustFindProc("")
-	SymbolInitLoadProc = hyperdbg.MustFindProc("")
-	SymShowDataBasedOnSymbolTypesProc = hyperdbg.MustFindProc("")
-	SymQuerySizeofProc = hyperdbg.MustFindProc("")
-	SymCastingQueryForFiledsAndTypesProc = hyperdbg.MustFindProc("")
+	dll = syscall.MustLoadDLL(dllName)
 }

@@ -34,7 +34,12 @@ func (h *hyperDbgCtrlImports) HyperDbgSetTextMessageCallback(handler Headers.Cal
 }
 
 // todo test on windows
-func (h *hyperDbgCtrlImports) HyperDbgLoadVmm() int { return HyperDbgLoadVmmProc.Call() }
+func (h *hyperDbgCtrlImports) HyperDbgLoadVmm() int {
+	call, u, err := HyperDbgLoadVmmProc.Call()
+	if err != nil {
+		return 0
+	}
+}
 
 func (h *hyperDbgCtrlImports) HyperDbgUnloadVmm() int {
 	//TODO implement me
