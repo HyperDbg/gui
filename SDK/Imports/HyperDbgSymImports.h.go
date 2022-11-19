@@ -25,80 +25,63 @@ type (
 )
 
 func (h *hyperDbgSymImports) SymSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymSetTextMessageCallback).Call()
 }
 
-// todo goto windows
-
 func (h *hyperDbgSymImports) SymConvertNameToAddress(FunctionOrVariableName *byte, WasFound *bool) uint64 {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymConvertNameToAddress).Call()
 }
 
 func (h *hyperDbgSymImports) SymLoadFileSymbol(BaseAddress uint64, PdbFileName *byte) uint32 {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymLoadFileSymbol).Call()
 }
 
 func (h *hyperDbgSymImports) SymUnloadAllSymbols() uint32 {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymUnloadAllSymbols).Call()
 }
 
 func (h *hyperDbgSymImports) SymUnloadModuleSymbol(ModuleName *byte) uint32 {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymUnloadModuleSymbol).Call()
 }
 
 func (h *hyperDbgSymImports) SymSearchSymbolForMask(SearchMask *byte) uint32 {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymSearchSymbolForMask).Call()
 }
 
 func (h *hyperDbgSymImports) SymGetFieldOffset(TypeName, FieldName *int8, FieldOffset *uint32) bool {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymGetFieldOffset).Call()
 }
 
 func (h *hyperDbgSymImports) SymGetDataTypeSize(TypeName *int8, TypeSize *uint64) bool {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymGetDataTypeSize).Call()
 }
 
 func (h *hyperDbgSymImports) SymCreateSymbolTableForDisassembler(CallbackFunction Headers.PVOID) bool {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymCreateSymbolTableForDisassembler).Call()
 }
 
 func (h *hyperDbgSymImports) SymConvertFileToPdbPath(LocalFilePath, ResultPath *int8) bool {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymConvertFileToPdbPath).Call()
 }
 
 func (h *hyperDbgSymImports) SymConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath, PdbFilePath, GuidAndAgeDetails *int8) {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymConvertFileToPdbFileAndGuidAndAgeDetails).Call()
 }
 
 func (h *hyperDbgSymImports) SymbolInitLoad(BufferToStoreDetails Headers.PVOID, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *int8, IsSilentLoad bool) bool {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymbolInitLoad).Call()
 }
 
 func (h *hyperDbgSymImports) SymShowDataBasedOnSymbolTypes(TypeName *int8, Address uint64, IsStruct bool, BufferAddress Headers.PVOID, AdditionalParameters *int8) bool {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymShowDataBasedOnSymbolTypes).Call()
 }
 
 func (h *hyperDbgSymImports) SymQuerySizeof(StructNameOrTypeName *int8, SizeOfField *uint32) bool {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymQuerySizeof).Call()
 }
 
 func (h *hyperDbgSymImports) SymCastingQueryForFiledsAndTypes(StructName *int8, FiledOfStructName *int8, IsStructNamePointerOrNot bool, IsFiledOfStructNamePointerOrNot bool, NewStructOrTypeName **int8, OffsetOfFieldFromTop *uint32, SizeOfField *uint32) bool {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(SymCastingQueryForFiledsAndTypes).Call()
 }
 
 func newHyperDbgSymImports() HyperDbgSymImports {

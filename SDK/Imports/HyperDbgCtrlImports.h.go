@@ -24,13 +24,13 @@ type (
 )
 
 func (h *hyperDbgCtrlImports) HyperDbgShowSignature() Headers.VOID {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(HyperDbgShowSignature).Call()
+
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgSetTextMessageCallback(handler Headers.CallBack) Headers.VOID {
-	//TODO implement me
-	panic("implement me")
+	api.Proc(HyperDbgSetTextMessageCallback).Call()
+
 }
 
 // todo gen it and test on windows
@@ -47,37 +47,37 @@ func (h *hyperDbgCtrlImports) HyperDbgUnloadVmm() int {
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgInstallVmmDriver() int {
-	//TODO implement me
+	api.Proc(HyperDbgInstallVmmDriver).Call()
 	panic("implement me")
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgUninstallVmmDriver() int {
-	//TODO implement me
+	api.Proc(HyperDbgUninstallVmmDriver).Call()
 	panic("implement me")
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgStopVmmDriver() int {
-	//TODO implement me
+	api.Proc(HyperDbgStopVmmDriver).Call()
 	panic("implement me")
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgInterpreter(Command *string) int {
-	//TODO implement me
+	api.Proc(HyperDbgInterpreter).Call()
 	panic("implement me")
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgScriptReadFileAndExecuteCommandline(argc int, argv []string) int {
-	//TODO implement me
+	api.Proc(HyperDbgScriptReadFileAndExecuteCommandline).Call()
 	panic("implement me")
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgContinuePreviousCommand() bool {
-	//TODO implement me
+	api.Proc(HyperDbgContinuePreviousCommand).Call()
 	panic("implement me")
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool {
-	//TODO implement me
+	api.Proc(HyperDbgCheckMultilineCommand).Call()
 	panic("implement me")
 }
 
