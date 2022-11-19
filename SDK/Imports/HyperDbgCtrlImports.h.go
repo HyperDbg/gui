@@ -93,11 +93,7 @@ func (c *ctrl) HyperDbgContinuePreviousCommand() bool {
 }
 
 func (c *ctrl) HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool {
-	v := 1
-	if Reset { //todo test it
-		v = 0
-	}
-	valu := Call(api.Proc(HyperDbgCheckMultilineCommand), uintptr(unsafe.Pointer(&CurrentCommand)), uintptr(v))
+	valu := Call(api.Proc(HyperDbgCheckMultilineCommand), uintptr(unsafe.Pointer(&CurrentCommand)), uintptr(Bool2UintPtr(Reset)))
 	//DecodeErrorCode(valu)
 	return valu == 0
 }

@@ -214,6 +214,14 @@ type (
 
 var api = newApi()
 
+func Bool2UintPtr(b bool) uintptr {
+	v := 1
+	if b {
+		v = 1
+	}
+	return uintptr(v)
+}
+
 func DecodeErrorCode(code uintptr) string {
 	status := Headers.ErrorCodes(code).String() //todo return to ui ?
 	if status != "" {
