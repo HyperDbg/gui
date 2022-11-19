@@ -36,7 +36,10 @@ func (c *ctrl) HyperDbgShowSignature() Headers.VOID {
 }
 
 func (c *ctrl) HyperDbgSetTextMessageCallback(handler Headers.CallBack) Headers.VOID {
-	api.Proc(HyperDbgSetTextMessageCallback).Call()
+	call, u, err := api.Proc(HyperDbgSetTextMessageCallback).Call(handler) //todo how to convert fn to unit ptr ?
+	if err != nil {
+		return nil
+	}
 
 }
 
@@ -69,12 +72,12 @@ func (c *ctrl) HyperDbgStopVmmDriver() int {
 }
 
 func (c *ctrl) HyperDbgInterpreter(Command *string) int {
-	api.Proc(HyperDbgInterpreter).Call()
+	api.Proc(HyperDbgInterpreter).Call(comparable())
 
 }
 
 func (c *ctrl) HyperDbgScriptReadFileAndExecuteCommandline(argc int, argv []string) int {
-	api.Proc(HyperDbgScriptReadFileAndExecuteCommandline).Call()
+	api.Proc(HyperDbgScriptReadFileAndExecuteCommandline).Call(argc, argv)
 
 }
 
@@ -84,6 +87,6 @@ func (c *ctrl) HyperDbgContinuePreviousCommand() bool {
 }
 
 func (c *ctrl) HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool {
-	api.Proc(HyperDbgCheckMultilineCommand).Call()
+	api.Proc(HyperDbgCheckMultilineCommand).Call(CurrentCommand, Reset)
 
 }

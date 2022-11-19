@@ -1,6 +1,8 @@
 package Imports
 
-import "github.com/ddkwork/hyperdbgui/SDK/Headers"
+import (
+	"github.com/ddkwork/hyperdbgui/SDK/Headers"
+)
 
 type (
 	pdbParser interface {
@@ -32,23 +34,23 @@ type (
 func NewScript() Script { return &script{} }
 
 func (s *script) ScriptEngineParse(str *int8) interface{} {
-	api.Proc(ScriptEngineParse).Call()
+	api.Proc(ScriptEngineParse).Call(str)
 }
 
 func (s *script) PrintSymbolBuffer(SymbolBuffer interface{}) Headers.VOID {
-	api.Proc(PrintSymbolBuffer).Call()
+	api.Proc(PrintSymbolBuffer).Call(SymbolBuffer)
 }
 
 func (s *script) PrintSymbol(PSYMBOL interface{}) Headers.VOID {
-	api.Proc(PrintSymbol).Call()
+	api.Proc(PrintSymbol).Call(PSYMBOL)
 }
 
 func (s *script) RemoveSymbolBuffer(PSYMBOL_BUFFER interface{}) Headers.VOID {
-	api.Proc(RemoveSymbolBuffer).Call()
+	api.Proc(RemoveSymbolBuffer).Call(PSYMBOL_BUFFER)
 }
 
 func (s *script) ScriptEngineSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
-	api.Proc(ScriptEngineSetTextMessageCallback).Call()
+	api.Proc(ScriptEngineSetTextMessageCallback).Call(Handler)
 }
 
 func (s *script) ScriptEngineSymbolAbortLoading() Headers.VOID {
@@ -56,11 +58,11 @@ func (s *script) ScriptEngineSymbolAbortLoading() Headers.VOID {
 }
 
 func (s *script) ScriptEngineConvertNameToAddress(FunctionOrVariableName *int8, WasFound bool) uint64 {
-	api.Proc(ScriptEngineConvertNameToAddress).Call()
+	api.Proc(ScriptEngineConvertNameToAddress).Call(FunctionOrVariableName, WasFound)
 }
 
 func (s *script) ScriptEngineLoadFileSymbol(BaseAddress uint64, PdbFileName *int8) uint32 {
-	api.Proc(ScriptEngineLoadFileSymbol).Call()
+	api.Proc(ScriptEngineLoadFileSymbol).Call(BaseAddress, PdbFileName)
 }
 
 func (s *script) ScriptEngineUnloadAllSymbols() uint32 {
@@ -68,37 +70,37 @@ func (s *script) ScriptEngineUnloadAllSymbols() uint32 {
 }
 
 func (s *script) ScriptEngineUnloadModuleSymbol(ModuleName *int8) uint32 {
-	api.Proc(ScriptEngineUnloadModuleSymbol).Call()
+	api.Proc(ScriptEngineUnloadModuleSymbol).Call(ModuleName)
 }
 
 func (s *script) ScriptEngineSearchSymbolForMask(SearchMask *int8) uint32 {
-	api.Proc(ScriptEngineSearchSymbolForMask).Call()
+	api.Proc(ScriptEngineSearchSymbolForMask).Call(SearchMask)
 }
 
 func (s *script) ScriptEngineGetFieldOffset(TypeName, FieldName *int8, FieldOffset *uint32) bool {
-	api.Proc(ScriptEngineGetFieldOffset).Call()
+	api.Proc(ScriptEngineGetFieldOffset).Call(TypeName, FieldName, FieldOffset)
 }
 
 func (s *script) ScriptEngineGetDataTypeSize(TypeName *int8, TypeSize *uint64) bool {
-	api.Proc(ScriptEngineGetDataTypeSize).Call()
+	api.Proc(ScriptEngineGetDataTypeSize).Call(TypeName, TypeSize)
 }
 
 func (s *script) ScriptEngineCreateSymbolTableForDisassembler(CallbackFunction Headers.PVOID) bool {
-	api.Proc(ScriptEngineCreateSymbolTableForDisassembler).Call()
+	api.Proc(ScriptEngineCreateSymbolTableForDisassembler).Call(CallbackFunction)
 }
 
 func (s *script) ScriptEngineConvertFileToPdbPath(LocalFilePath, ResultPath *int8) bool {
-	api.Proc(ScriptEngineConvertFileToPdbPath).Call()
+	api.Proc(ScriptEngineConvertFileToPdbPath).Call(LocalFilePath, ResultPath)
 }
 
 func (s *script) ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath, PdbFilePath, GuidAndAgeDetails *int8) bool {
-	api.Proc(ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails).Call()
+	api.Proc(ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails).Call(LocalFilePath, PdbFilePath, GuidAndAgeDetails)
 }
 
 func (s *script) ScriptEngineSymbolInitLoad(BufferToStoreDetails Headers.PVOID, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *int8, IsSilentLoad bool) bool {
-	api.Proc(ScriptEngineSymbolInitLoad).Call()
+	api.Proc(ScriptEngineSymbolInitLoad).Call(BufferToStoreDetails, StoredLength, DownloadIfAvailable, SymbolPath, IsSilentLoad)
 }
 
 func (s *script) ScriptEngineShowDataBasedOnSymbolTypes(TypeName *int8, Address uint64, IsStruct bool, BufferAddress Headers.PVOID, AdditionalParameters *int8) bool {
-	api.Proc(ScriptEngineShowDataBasedOnSymbolTypes).Call()
+	api.Proc(ScriptEngineShowDataBasedOnSymbolTypes).Call(TypeName, Address, IsStruct, BufferAddress, AdditionalParameters)
 }

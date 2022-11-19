@@ -26,15 +26,15 @@ type (
 func NewSymbol() Symbol { return &symbol{} }
 
 func (s *symbol) SymSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
-	api.Proc(SymSetTextMessageCallback).Call()
+	api.Proc(SymSetTextMessageCallback).Call(Handler)
 }
 
 func (s *symbol) SymConvertNameToAddress(FunctionOrVariableName *byte, WasFound *bool) uint64 {
-	api.Proc(SymConvertNameToAddress).Call()
+	api.Proc(SymConvertNameToAddress).Call(FunctionOrVariableName, WasFound)
 }
 
 func (s *symbol) SymLoadFileSymbol(BaseAddress uint64, PdbFileName *byte) uint32 {
-	api.Proc(SymLoadFileSymbol).Call()
+	api.Proc(SymLoadFileSymbol).Call(BaseAddress, PdbFileName)
 }
 
 func (s *symbol) SymUnloadAllSymbols() uint32 {
@@ -42,45 +42,46 @@ func (s *symbol) SymUnloadAllSymbols() uint32 {
 }
 
 func (s *symbol) SymUnloadModuleSymbol(ModuleName *byte) uint32 {
-	api.Proc(SymUnloadModuleSymbol).Call()
+	api.Proc(SymUnloadModuleSymbol).Call(ModuleName)
 }
 
 func (s *symbol) SymSearchSymbolForMask(SearchMask *byte) uint32 {
-	api.Proc(SymSearchSymbolForMask).Call()
+	api.Proc(SymSearchSymbolForMask).Call(SearchMask)
 }
 
+// todo this arg is wrong
 func (s *symbol) SymGetFieldOffset(TypeName, FieldName *int8, FieldOffset *uint32) bool {
-	api.Proc(SymGetFieldOffset).Call()
+	api.Proc(SymGetFieldOffset).Call(TypeName, FieldOffset)
 }
 
 func (s *symbol) SymGetDataTypeSize(TypeName *int8, TypeSize *uint64) bool {
-	api.Proc(SymGetDataTypeSize).Call()
+	api.Proc(SymGetDataTypeSize).Call(TypeName, TypeSize)
 }
 
 func (s *symbol) SymCreateSymbolTableForDisassembler(CallbackFunction Headers.PVOID) bool {
-	api.Proc(SymCreateSymbolTableForDisassembler).Call()
+	api.Proc(SymCreateSymbolTableForDisassembler).Call(CallbackFunction)
 }
 
 func (s *symbol) SymConvertFileToPdbPath(LocalFilePath, ResultPath *int8) bool {
-	api.Proc(SymConvertFileToPdbPath).Call()
+	api.Proc(SymConvertFileToPdbPath).Call(LocalFilePath, ResultPath)
 }
 
 func (s *symbol) SymConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath, PdbFilePath, GuidAndAgeDetails *int8) {
-	api.Proc(SymConvertFileToPdbFileAndGuidAndAgeDetails).Call()
+	api.Proc(SymConvertFileToPdbFileAndGuidAndAgeDetails).Call(LocalFilePath, PdbFilePath, GuidAndAgeDetails)
 }
 
 func (s *symbol) SymbolInitLoad(BufferToStoreDetails Headers.PVOID, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *int8, IsSilentLoad bool) bool {
-	api.Proc(SymbolInitLoad).Call()
+	api.Proc(SymbolInitLoad).Call(BufferToStoreDetails, StoredLength, DownloadIfAvailable, SymbolPath, IsSilentLoad)
 }
 
 func (s *symbol) SymShowDataBasedOnSymbolTypes(TypeName *int8, Address uint64, IsStruct bool, BufferAddress Headers.PVOID, AdditionalParameters *int8) bool {
-	api.Proc(SymShowDataBasedOnSymbolTypes).Call()
+	api.Proc(SymShowDataBasedOnSymbolTypes).Call(TypeName, Address, IsStruct, BufferAddress, AdditionalParameters)
 }
 
 func (s *symbol) SymQuerySizeof(StructNameOrTypeName *int8, SizeOfField *uint32) bool {
-	api.Proc(SymQuerySizeof).Call()
+	api.Proc(SymQuerySizeof).Call(StructNameOrTypeName, SizeOfField)
 }
 
 func (s *symbol) SymCastingQueryForFiledsAndTypes(StructName *int8, FiledOfStructName *int8, IsStructNamePointerOrNot bool, IsFiledOfStructNamePointerOrNot bool, NewStructOrTypeName **int8, OffsetOfFieldFromTop *uint32, SizeOfField *uint32) bool {
-	api.Proc(SymCastingQueryForFiledsAndTypes).Call()
+	api.Proc(SymCastingQueryForFiledsAndTypes).Call(StructName, FiledOfStructName, IsFiledOfStructNamePointerOrNot, IsFiledOfStructNamePointerOrNot, NewStructOrTypeName, OffsetOfFieldFromTop, SizeOfField)
 }
