@@ -1,7 +1,7 @@
 package Headers
 
 type (
-	xxooCallBack func(Text *int8) int
+	CallBack func(Text *int8) int
 )
 
 type (

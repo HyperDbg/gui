@@ -1,5 +1,7 @@
 package Imports
 
+import "github.com/ddkwork/hyperdbgui/SDK/Headers"
+
 type (
 	HyperDbgCtrlImports interface {
 		// VMM Module
@@ -10,9 +12,9 @@ type (
 		HyperDbgStopVmmDriver() int
 
 		// General imports
-		HyperDbgInterpreter(Command string) int //todo *string ?
-		//HyperDbgShowSignature() void
-		//HyperDbgSetTextMessageCallback(Callback handler) void
+		HyperDbgInterpreter(Command *string) int
+		HyperDbgShowSignature() Headers.VOID
+		HyperDbgSetTextMessageCallback(handler Headers.CallBack) Headers.VOID
 		HyperDbgScriptReadFileAndExecuteCommandline(argc int, argv []string) int
 		HyperDbgContinuePreviousCommand() bool
 		HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool

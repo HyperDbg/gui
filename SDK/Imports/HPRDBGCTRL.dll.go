@@ -1,6 +1,6 @@
 package Imports
 
-//todo goto windows modfy this file
+//todo goto windows modify this file
 
 //
 //import (

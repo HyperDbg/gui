@@ -3,9 +3,8 @@ package Imports
 import "github.com/ddkwork/hyperdbgui/SDK/Headers"
 
 type (
-	Handler            uintptr //todo ?
 	HyperDbgSymImports interface {
-		SymSetTextMessageCallback(PVOID Handler) Headers.VOID
+		SymSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID
 		SymConvertNameToAddress(FunctionOrVariableName *byte, WasFound *bool) uint64
 		SymLoadFileSymbol(BaseAddress uint64, PdbFileName *byte) uint32
 		SymUnloadAllSymbols() uint32
