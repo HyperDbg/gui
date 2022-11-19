@@ -61,7 +61,7 @@ const ( //todo gen it
 	SymCastingQueryForFiledsAndTypes
 )
 
-func (a nameKind) Names() []nameKind {
+func (k nameKind) Names() []nameKind {
 	return []nameKind{
 		HyperDbgLoadVmm,
 		HyperDbgUnloadVmm,
@@ -109,9 +109,9 @@ func (a nameKind) Names() []nameKind {
 		SymCastingQueryForFiledsAndTypes,
 	}
 }
-func (a nameKind) Len() int { return len(a.Names()) } //means dll export ? number of api
-func (a nameKind) String() string {
-	switch a {
+func (k nameKind) Len() int { return len(k.Names()) } //means dll export ? number of api
+func (k nameKind) String() string {
+	switch k {
 	case HyperDbgLoadVmm:
 		return "HyperDbgLoadVmm"
 	case HyperDbgUnloadVmm:
