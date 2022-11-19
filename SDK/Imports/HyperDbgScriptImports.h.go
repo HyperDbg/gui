@@ -1,15 +1,11 @@
 package Imports
 
-import "github.com/ddkwork/hyperdbgui/SDK/Headers"
+import (
+	"github.com/ddkwork/hyperdbgui/SDK/Headers"
+)
 
 type (
-	HyperDbgScriptImports interface {
-		ScriptEngineParse(str *int8) PSYMBOL_BUFFER
-		PrintSymbolBuffer(SymbolBuffer PSYMBOL_BUFFER) Headers.VOID
-		PrintSymbol(PSYMBOL Symbol) Headers.VOID
-		RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer) Headers.VOID
-
-		// pdb parser
+	pdbParser interface {
 		ScriptEngineSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID
 		ScriptEngineSymbolAbortLoading() Headers.VOID
 		ScriptEngineConvertNameToAddress(FunctionOrVariableName *int8, WasFound bool) uint64
@@ -25,100 +21,86 @@ type (
 		ScriptEngineSymbolInitLoad(BufferToStoreDetails Headers.PVOID, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *int8, IsSilentLoad bool) bool
 		ScriptEngineShowDataBasedOnSymbolTypes(TypeName *int8, Address uint64, IsStruct bool, BufferAddress Headers.PVOID, AdditionalParameters *int8) bool
 	}
-	hyperDbgScriptImports struct {
+	Script interface {
+		ScriptEngineParse(str *int8) PSYMBOL_BUFFER
+		PrintSymbolBuffer(SymbolBuffer PSYMBOL_BUFFER) Headers.VOID
+		PrintSymbol(PSYMBOL Symbol) Headers.VOID
+		RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer) Headers.VOID
+		pdbParser
 	}
+	script struct{}
 )
 
-func (h *hyperDbgScriptImports) ScriptEngineParse(str *int8) interface{} {
-	//TODO implement me
-	panic("implement me")
+func NewScript() Script { return &script{} }
+
+func (s *script) ScriptEngineParse(str *int8) interface{} {
+	api.Proc(ScriptEngineParse).Call(str)
 }
 
-func (h *hyperDbgScriptImports) PrintSymbolBuffer(SymbolBuffer interface{}) Headers.VOID {
-	//TODO implement me
-	panic("implement me")
+func (s *script) PrintSymbolBuffer(SymbolBuffer interface{}) Headers.VOID {
+	api.Proc(PrintSymbolBuffer).Call(SymbolBuffer)
 }
 
-func (h *hyperDbgScriptImports) PrintSymbol(PSYMBOL interface{}) Headers.VOID {
-	//TODO implement me
-	panic("implement me")
+func (s *script) PrintSymbol(PSYMBOL interface{}) Headers.VOID {
+	api.Proc(PrintSymbol).Call(PSYMBOL)
 }
 
-func (h *hyperDbgScriptImports) RemoveSymbolBuffer(PSYMBOL_BUFFER interface{}) Headers.VOID {
-	//TODO implement me
-	panic("implement me")
+func (s *script) RemoveSymbolBuffer(PSYMBOL_BUFFER interface{}) Headers.VOID {
+	api.Proc(RemoveSymbolBuffer).Call(PSYMBOL_BUFFER)
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
+	api.Proc(ScriptEngineSetTextMessageCallback).Call(Handler)
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineSymbolAbortLoading() Headers.VOID {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineSymbolAbortLoading() Headers.VOID {
+	api.Proc(ScriptEngineSymbolAbortLoading).Call()
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineConvertNameToAddress(FunctionOrVariableName *int8, WasFound bool) uint64 {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineConvertNameToAddress(FunctionOrVariableName *int8, WasFound bool) uint64 {
+	api.Proc(ScriptEngineConvertNameToAddress).Call(FunctionOrVariableName, WasFound)
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineLoadFileSymbol(BaseAddress uint64, PdbFileName *int8) uint32 {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineLoadFileSymbol(BaseAddress uint64, PdbFileName *int8) uint32 {
+	api.Proc(ScriptEngineLoadFileSymbol).Call(BaseAddress, PdbFileName)
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineUnloadAllSymbols() uint32 {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineUnloadAllSymbols() uint32 {
+	api.Proc(ScriptEngineUnloadAllSymbols).Call()
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineUnloadModuleSymbol(ModuleName *int8) uint32 {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineUnloadModuleSymbol(ModuleName *int8) uint32 {
+	api.Proc(ScriptEngineUnloadModuleSymbol).Call(ModuleName)
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineSearchSymbolForMask(SearchMask *int8) uint32 {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineSearchSymbolForMask(SearchMask *int8) uint32 {
+	api.Proc(ScriptEngineSearchSymbolForMask).Call(SearchMask)
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineGetFieldOffset(TypeName, FieldName *int8, FieldOffset *uint32) bool {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineGetFieldOffset(TypeName, FieldName *int8, FieldOffset *uint32) bool {
+	api.Proc(ScriptEngineGetFieldOffset).Call(TypeName, FieldName, FieldOffset)
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineGetDataTypeSize(TypeName *int8, TypeSize *uint64) bool {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineGetDataTypeSize(TypeName *int8, TypeSize *uint64) bool {
+	api.Proc(ScriptEngineGetDataTypeSize).Call(TypeName, TypeSize)
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineCreateSymbolTableForDisassembler(CallbackFunction Headers.PVOID) bool {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineCreateSymbolTableForDisassembler(CallbackFunction Headers.PVOID) bool {
+	api.Proc(ScriptEngineCreateSymbolTableForDisassembler).Call(CallbackFunction)
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineConvertFileToPdbPath(LocalFilePath, ResultPath *int8) bool {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineConvertFileToPdbPath(LocalFilePath, ResultPath *int8) bool {
+	api.Proc(ScriptEngineConvertFileToPdbPath).Call(LocalFilePath, ResultPath)
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath, PdbFilePath, GuidAndAgeDetails *int8) bool {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath, PdbFilePath, GuidAndAgeDetails *int8) bool {
+	api.Proc(ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails).Call(LocalFilePath, PdbFilePath, GuidAndAgeDetails)
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineSymbolInitLoad(BufferToStoreDetails Headers.PVOID, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *int8, IsSilentLoad bool) bool {
-	//TODO implement me
-	panic("implement me")
+func (s *script) ScriptEngineSymbolInitLoad(BufferToStoreDetails Headers.PVOID, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *int8, IsSilentLoad bool) bool {
+	api.Proc(ScriptEngineSymbolInitLoad).Call(BufferToStoreDetails, StoredLength, DownloadIfAvailable, SymbolPath, IsSilentLoad)
 }
 
-func (h *hyperDbgScriptImports) ScriptEngineShowDataBasedOnSymbolTypes(TypeName *int8, Address uint64, IsStruct bool, BufferAddress Headers.PVOID, AdditionalParameters *int8) bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func newHyperDbgScriptImports() HyperDbgScriptImports {
-	return &hyperDbgScriptImports{}
+func (s *script) ScriptEngineShowDataBasedOnSymbolTypes(TypeName *int8, Address uint64, IsStruct bool, BufferAddress Headers.PVOID, AdditionalParameters *int8) bool {
+	api.Proc(ScriptEngineShowDataBasedOnSymbolTypes).Call(TypeName, Address, IsStruct, BufferAddress, AdditionalParameters)
 }

@@ -7,13 +7,28 @@ import (
 	"fyne.io/fyne/v2/container"
 	"github.com/ddkwork/golibrary/src/fynelib/canvasobjectapi"
 	"github.com/ddkwork/golibrary/src/fynelib/fyneTheme"
+	HyperDbgSdk "github.com/ddkwork/hyperdbgui/SDK"
 	"github.com/ddkwork/hyperdbgui/fnTable"
 	"github.com/ddkwork/hyperdbgui/meau"
 	"github.com/ddkwork/hyperdbgui/toolbar"
 	"github.com/fpabl0/sparky-go/swid"
 )
 
+func noGui() { //dll load test
+	sdk := HyperDbgSdk.New()
+	sdk.Ctrl().HyperDbgInstallVmmDriver() //TODO decode error codes
+	sdk.Ctrl().HyperDbgLoadVmm()
+	sdk.Ctrl().HyperDbgUnloadVmm()
+
+	//sdk.Script().PrintSymbol()
+	//sdk.Script().ScriptEngineParse()
+
+	//sdk.Symbol().SymbolInitLoad()
+	select {}
+}
+
 func main() {
+	noGui()
 	a := app.NewWithID("org.hyperdbg")
 	a.SetIcon(fyne.NewStaticResource("ico1", ico1))
 	fyneTheme.Dark()
@@ -46,6 +61,8 @@ type (
 func New() Interface                       { return &object{mainMenu: fyne.NewMainMenu()} }
 func (o *object) MainMenu() *fyne.MainMenu { return o.mainMenu }
 func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
+	//todo init dll herw
+
 	topMeau := meau.New()
 	o.mainMenu.Items = make([]*fyne.Menu, 0)
 	o.mainMenu.Items = append(o.mainMenu.Items,

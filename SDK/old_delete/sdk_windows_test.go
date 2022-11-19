@@ -4,18 +4,12 @@ import (
 	_ "embed"
 	"github.com/ddkwork/golibrary/src/stream"
 	"github.com/ddkwork/golibrary/src/stream/tool/cmd"
-	"github.com/ddkwork/hyperdbgui/sdk"
 	"io/fs"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
 )
-
-func TestLoadVmm(t *testing.T) {
-	s := sdk.New()
-	s.LoadVmm()
-}
 
 func TestXmake(t *testing.T) {
 	targets := stream.New()

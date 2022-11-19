@@ -3,15 +3,14 @@ package Imports
 import "github.com/ddkwork/hyperdbgui/SDK/Headers"
 
 type (
-	HyperDbgCtrlImports interface {
-		// VMM Module
+	VmmModule interface {
 		HyperDbgLoadVmm() int
 		HyperDbgUnloadVmm() int
 		HyperDbgInstallVmmDriver() int
 		HyperDbgUninstallVmmDriver() int
 		HyperDbgStopVmmDriver() int
-
-		// General imports
+	}
+	General interface {
 		HyperDbgInterpreter(Command *string) int
 		HyperDbgShowSignature() Headers.VOID
 		HyperDbgSetTextMessageCallback(handler Headers.CallBack) Headers.VOID
@@ -19,63 +18,75 @@ type (
 		HyperDbgContinuePreviousCommand() bool
 		HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool
 	}
-	hyperDbgCtrlImports struct {
+	Ctrl interface {
+		VmmModule
+		General
 	}
+	ctrl struct{}
 )
 
-func (h *hyperDbgCtrlImports) HyperDbgShowSignature() Headers.VOID {
-	//TODO implement me
-	panic("implement me")
+func NewCtrl() Ctrl { return &ctrl{} }
+
+func (c *ctrl) HyperDbgShowSignature() Headers.VOID {
+	call, u, err := api.Proc(HyperDbgShowSignature).Call()
+	if err != nil {
+		return nil
+	}
+
 }
 
-func (h *hyperDbgCtrlImports) HyperDbgSetTextMessageCallback(handler Headers.CallBack) Headers.VOID {
-	//TODO implement me
-	panic("implement me")
+func (c *ctrl) HyperDbgSetTextMessageCallback(handler Headers.CallBack) Headers.VOID {
+	call, u, err := api.Proc(HyperDbgSetTextMessageCallback).Call(handler) //todo how to convert fn to unit ptr ?
+	if err != nil {
+		return nil
+	}
+
 }
 
-// todo test on windows
-func (h *hyperDbgCtrlImports) HyperDbgLoadVmm() int { return HyperDbgLoadVmmProc.Call() }
-
-func (h *hyperDbgCtrlImports) HyperDbgUnloadVmm() int {
-	//TODO implement me
-	panic("implement me")
+// todo gen it and test on windows
+func (c *ctrl) HyperDbgLoadVmm() int {
+	call, u, err := api.Proc(HyperDbgLoadVmm).Call() //todo cut long name as HyperDbg+ api name
+	if err != nil {
+		return 0
+	}
 }
 
-func (h *hyperDbgCtrlImports) HyperDbgInstallVmmDriver() int {
-	//TODO implement me
-	panic("implement me")
+func (c *ctrl) HyperDbgUnloadVmm() int {
+	api.Proc(HyperDbgUnloadVmm).Call()
+
 }
 
-func (h *hyperDbgCtrlImports) HyperDbgUninstallVmmDriver() int {
-	//TODO implement me
-	panic("implement me")
+func (c *ctrl) HyperDbgInstallVmmDriver() int {
+	api.Proc(HyperDbgInstallVmmDriver).Call()
+
 }
 
-func (h *hyperDbgCtrlImports) HyperDbgStopVmmDriver() int {
-	//TODO implement me
-	panic("implement me")
+func (c *ctrl) HyperDbgUninstallVmmDriver() int {
+	api.Proc(HyperDbgUninstallVmmDriver).Call()
+
 }
 
-func (h *hyperDbgCtrlImports) HyperDbgInterpreter(Command *string) int {
-	//TODO implement me
-	panic("implement me")
+func (c *ctrl) HyperDbgStopVmmDriver() int {
+	api.Proc(HyperDbgStopVmmDriver).Call()
+
 }
 
-func (h *hyperDbgCtrlImports) HyperDbgScriptReadFileAndExecuteCommandline(argc int, argv []string) int {
-	//TODO implement me
-	panic("implement me")
+func (c *ctrl) HyperDbgInterpreter(Command *string) int {
+	api.Proc(HyperDbgInterpreter).Call(comparable())
+
 }
 
-func (h *hyperDbgCtrlImports) HyperDbgContinuePreviousCommand() bool {
-	//TODO implement me
-	panic("implement me")
+func (c *ctrl) HyperDbgScriptReadFileAndExecuteCommandline(argc int, argv []string) int {
+	api.Proc(HyperDbgScriptReadFileAndExecuteCommandline).Call(argc, argv)
+
 }
 
-func (h *hyperDbgCtrlImports) HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool {
-	//TODO implement me
-	panic("implement me")
+func (c *ctrl) HyperDbgContinuePreviousCommand() bool {
+	api.Proc(HyperDbgContinuePreviousCommand).Call()
+
 }
 
-func newHyperDbgCtrlImports() HyperDbgCtrlImports {
-	return &hyperDbgCtrlImports{}
+func (c *ctrl) HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool {
+	api.Proc(HyperDbgCheckMultilineCommand).Call(CurrentCommand, Reset)
+
 }
