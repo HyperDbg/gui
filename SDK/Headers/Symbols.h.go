@@ -1,5 +1,9 @@
 package Headers
 
+const (
+	MAX_PATH = 260
+)
+
 type (
 	MODULE_SYMBOL_DETAIL struct {
 		IsSymbolDetailsFound bool // TRUE if the details of symbols found, FALSE if not found
