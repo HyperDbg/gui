@@ -54,8 +54,8 @@ func (o *object) MainMenu() *fyne.MainMenu { return o.mainMenu }
 
 func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 	topMeau := meau.New()
-	Items := make([]*fyne.Menu, 0)
-	Items = append(Items,
+	o.mainMenu.Items = make([]*fyne.Menu, 0)
+	o.mainMenu.Items = append(o.mainMenu.Items,
 		topMeau.File(),
 		topMeau.View(),
 		topMeau.Debug(),
@@ -65,8 +65,6 @@ func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
 		topMeau.Option(),
 		topMeau.Help(),
 	)
-	o.mainMenu.Items = Items
-	//todo
 	// ImmediateData   window and register window redesign
 	// hide all table header,need api set
 	command := swid.NewSelectEntryFormField("command", "", []string{"default", "script"})
