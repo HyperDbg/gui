@@ -33,16 +33,16 @@ func (h *hyperDbgCtrlImports) HyperDbgSetTextMessageCallback(handler Headers.Cal
 	panic("implement me")
 }
 
-// todo test on windows
+// todo gen it and test on windows
 func (h *hyperDbgCtrlImports) HyperDbgLoadVmm() int {
-	call, u, err := HyperDbgLoadVmmProc.Call()
+	call, u, err := api.Proc(HyperDbgLoadVmm).Call()
 	if err != nil {
 		return 0
 	}
 }
 
 func (h *hyperDbgCtrlImports) HyperDbgUnloadVmm() int {
-	//TODO implement me
+	api.Proc(HyperDbgUnloadVmm).Call()
 	panic("implement me")
 }
 

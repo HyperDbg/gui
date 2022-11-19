@@ -109,7 +109,7 @@ func (k nameKind) Names() []nameKind {
 		SymCastingQueryForFiledsAndTypes,
 	}
 }
-func (k nameKind) Len() int { return len(k.Names()) } //means dll export ? number of api
+func (k nameKind) Len() int { return len(k.Names()) } //means dll export ? number of Api
 func (k nameKind) String() string {
 	switch k {
 	case HyperDbgLoadVmm:
@@ -206,15 +206,15 @@ func (k nameKind) String() string {
 }
 
 type (
-	Proc interface {
-	}
-	proc struct {
+	Api struct {
 		procMap map[nameKind]*syscall.Proc
 	}
 )
 
-func newProc() *proc {
-	p := &proc{
+var api = newApi()
+
+func newApi() *Api {
+	p := &Api{
 		procMap: make(map[nameKind]*syscall.Proc, HyperDbgLoadVmm.Len()),
 	}
 	for _, kind := range HyperDbgLoadVmm.Names() {
@@ -222,10 +222,8 @@ func newProc() *proc {
 	}
 	return p
 }
-func (p *proc) Proc(name nameKind) *syscall.Proc { return p.procMap[name] }
-func (p *proc) SetProc(name nameKind) {
-	p.procMap[name] = dll.MustFindProc(name.String())
-}
+func (a *Api) Proc(name nameKind) *syscall.Proc { return a.procMap[name] }
+func (a *Api) SetProc(name nameKind)            { a.procMap[name] = dll.MustFindProc(name.String()) }
 
 var (
 	//go:embed HPRDBGCTRL.dll
