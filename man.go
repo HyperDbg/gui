@@ -19,6 +19,11 @@ func noGui() { //dll load test
 	sdk.Ctrl().HyperDbgInstallVmmDriver() //TODO decode error codes
 	sdk.Ctrl().HyperDbgLoadVmm()
 	sdk.Ctrl().HyperDbgUnloadVmm()
+
+	//sdk.Script().PrintSymbol()
+	//sdk.Script().ScriptEngineParse()
+
+	//sdk.Symbol().SymbolInitLoad()
 	select {}
 }
 
