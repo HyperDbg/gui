@@ -98,10 +98,6 @@ const ( //if merge the value is wrong
 	// hardware debugger to debuggee
 )
 
-const (
-	name = iota
-)
-
 type (
 	DEBUGGER_REMOTE_PA          byte
 	DEBUGGER_REMOTE_PACKET_TYPE DEBUGGER_REMOTE_PA
