@@ -217,7 +217,7 @@ var api = newApi()
 func Bool2UintPtr(b bool) uintptr {
 	v := 1
 	if b {
-		v = 1
+		v = 0
 	}
 	return uintptr(v)
 }
