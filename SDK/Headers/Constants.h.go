@@ -102,13 +102,7 @@ const (
 	DEBUGGEE_SHOW_ALL_REGISTERS                           = 0xffffffff
 )
 
-//	func ss() {
-//		LOWORD(l) = ((WORD)(l))
-//		HIWORD(l) = ((WORD)(((DWORD)(l) >> 16) & 0xFFFF))
-//		LOBYTE(w) = ((BYTE)(w))
-//		HIBYTE(w) = ((BYTE)(((WORD)(w) >> 8) & 0xFF))
-//	}
 func LOWORD(l uint32) uint16 { return uint16(l) }
 func LOBYTE(l uint32) uint8  { return (byte(l)) }
 func HIWORD(l uint32) uint16 { return uint16(l >> 16) }
-func HIBYTE(l uint32) uint8  { return byte(l >> 8) }
+func HIBYTE(l uint32) uint8  { return byte(l >> 24) }
