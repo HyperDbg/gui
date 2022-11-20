@@ -1,7 +1,5 @@
 package Headers
 
-import "syscall"
-
 type (
 	MODULE_SYMBOL_DETAIL struct {
 		IsSymbolDetailsFound bool // TRUE if the details of symbols found, FALSE if not found
@@ -10,8 +8,8 @@ type (
 		IsSymbolPDBAvaliable   bool // TRUE if the module's pdb is avilable(if exists in the sympath)
 		IsUserMode             bool // TRUE if the module is a user-mode module
 		BaseAddress            uint64
-		FilePath               [syscall.MAX_PATH]int8
-		ModuleSymbolPath       [syscall.MAX_PATH]int8
+		FilePath               [MAX_PATH]int8
+		ModuleSymbolPath       [MAX_PATH]int8
 		ModuleSymbolGuidAndAge [MAXIMUM_GUID_AND_AGE_SIZE]int8
 	}
 	PMODULE_SYMBOL_DETAIL *MODULE_SYMBOL_DETAIL
@@ -20,7 +18,7 @@ type (
 	USERMODE_LOADED_MODULE_SYMBOLS struct {
 		BaseAddress uint64
 		Entrypoint  uint64
-		FilePath    [syscall.MAX_PATH]rune
+		FilePath    [MAX_PATH]rune
 	}
 	PUSERMODE_LOADED_MODULE_SYMBOLS *USERMODE_LOADED_MODULE_SYMBOLS
 )
