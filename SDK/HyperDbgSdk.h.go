@@ -5,26 +5,26 @@ import (
 )
 
 type (
-	HyperDbgSdk interface {
+	SDK interface {
 		Ctrl() Imports.Ctrl
 		Script() Imports.Script
 		Symbol() Imports.Symbol
 	}
-	hyperDbgSdk struct {
+	sdk struct {
 		ctrl   Imports.Ctrl
 		script Imports.Script
 		symbol Imports.Symbol
 	}
 )
 
-func New() HyperDbgSdk {
-	return &hyperDbgSdk{
+func New() SDK {
+	return &sdk{
 		ctrl:   Imports.NewCtrl(),
 		script: Imports.NewScript(),
 		symbol: Imports.NewSymbol(),
 	}
 }
 
-func (h *hyperDbgSdk) Ctrl() Imports.Ctrl     { return h.ctrl }
-func (h *hyperDbgSdk) Script() Imports.Script { return h.script }
-func (h *hyperDbgSdk) Symbol() Imports.Symbol { return h.symbol }
+func (s *sdk) Ctrl() Imports.Ctrl     { return s.ctrl }
+func (s *sdk) Script() Imports.Script { return s.script }
+func (s *sdk) Symbol() Imports.Symbol { return s.symbol }

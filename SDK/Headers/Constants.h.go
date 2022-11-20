@@ -15,8 +15,7 @@ const (
 	UsermodeBufferSize             = unsafe.Sizeof(uint32(0)) + PacketChunkSize + 1
 
 	//todo fix this
-	MaxSerialPacketSize = UsermodeBufferSize +
-		unsafe.Sizeof(DEBUGGER_REMOTE_PACKET) + SERIAL_END_OF_BUFFER_CHARS_COUNT
+	MaxSerialPacketSize                                   = UsermodeBufferSize             // + unsafe.Sizeof(DEBUGGER_REMOTE_PACKET) + SERIAL_END_OF_BUFFER_CHARS_COUNT
 	LogBufferSize                                         = MaximumPacketsCapacity         //* (PacketChunkSize + sizeof(BUFFER_HEADER))
 	LogBufferSizePriority                                 = MaximumPacketsCapacityPriority // * (PacketChunkSize + sizeof(BUFFER_HEADER))
 	DbgPrintLimitation                                    = 512
@@ -109,9 +108,7 @@ const (
 //		LOBYTE(w) = ((BYTE)(w))
 //		HIBYTE(w) = ((BYTE)(((WORD)(w) >> 8) & 0xFF))
 //	}
-//
-// todo add unit test
-func LOWORD(l uint32) uint32 { return uint32(uint16(l)) }
-func LOBYTE(l uint32) uint32 { return uint32(byte(l)) }
-func HIWORD(l uint32) uint32 { return uint32(uint16(l >> 16)) }
-func HIBYTE(l uint32) uint32 { return uint32(byte(l >> 8)) }
+func LOWORD(l uint32) uint16 { return uint16(l) }
+func LOBYTE(l uint32) uint8  { return (byte(l)) }
+func HIWORD(l uint32) uint16 { return uint16(l >> 16) }
+func HIBYTE(l uint32) uint8  { return byte(l >> 8) }
