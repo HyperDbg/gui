@@ -5,26 +5,26 @@ import (
 )
 
 type (
-	SDK interface {
+	Interface interface {
 		Ctrl() Imports.Ctrl
 		Script() Imports.Script
 		Symbol() Imports.Symbol
 	}
-	sdk struct {
+	object struct {
 		ctrl   Imports.Ctrl
 		script Imports.Script
 		symbol Imports.Symbol
 	}
 )
 
-func New() SDK {
-	return &sdk{
+func New() Interface {
+	return &object{
 		ctrl:   Imports.NewCtrl(),
 		script: Imports.NewScript(),
 		symbol: Imports.NewSymbol(),
 	}
 }
 
-func (s *sdk) Ctrl() Imports.Ctrl     { return s.ctrl }
-func (s *sdk) Script() Imports.Script { return s.script }
-func (s *sdk) Symbol() Imports.Symbol { return s.symbol }
+func (s *object) Ctrl() Imports.Ctrl     { return s.ctrl }
+func (s *object) Script() Imports.Script { return s.script }
+func (s *object) Symbol() Imports.Symbol { return s.symbol }
