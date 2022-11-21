@@ -208,7 +208,7 @@ func Bool2UintPtr(b bool) uintptr {
 }
 
 func DecodeErrorCode(code uintptr) string {
-	status := Headers.ErrorCodes(code).String() //todo return to ui ?
+	status := Headers.ErrorCodes(code).String()
 	if status != "" {
 		mylog.Error(status)
 	}

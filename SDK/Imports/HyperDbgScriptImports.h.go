@@ -21,6 +21,7 @@ type (
 		ScriptEngineSymbolInitLoad(BufferToStoreDetails Headers.PVOID, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *int8, IsSilentLoad bool) bool
 		ScriptEngineShowDataBasedOnSymbolTypes(TypeName *int8, Address uint64, IsStruct bool, BufferAddress Headers.PVOID, AdditionalParameters *int8) bool
 	}
+	//todo bind it
 	Script interface {
 		//ScriptEngineParse(str *int8) PSYMBOL_BUFFER
 		//PrintSymbolBuffer(SymbolBuffer PSYMBOL_BUFFER) Headers.VOID
