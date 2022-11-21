@@ -8,7 +8,7 @@ import (
 
 type nameKind byte
 
-const ( //todo gen it with rename, api name is too long
+const ( //todo gen it
 	HyperDbgLoadVmm nameKind = iota
 	HyperDbgUnloadVmm
 	HyperDbgInstallVmmDriver
