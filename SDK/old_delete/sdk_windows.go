@@ -93,7 +93,7 @@ package sdk
 //}
 //func (o *object) Handle() (ok bool) {
 //	if o.handle != syscall.InvalidHandle {
-//		return true //? //todo change to as open state
+//		return true //?
 //	}
 //	name, err := o.LinkName()
 //	if !mylog.Error(err) {
@@ -128,7 +128,7 @@ package sdk
 //		return
 //	}
 //	go func() {
-//		o.ReadIrpBasedBuffer() //todo with channel
+//		o.ReadIrpBasedBuffer()
 //		//select {
 //		//}
 //	}()

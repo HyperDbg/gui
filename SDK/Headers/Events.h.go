@@ -1,9 +1,11 @@
 package Headers
 
+import "encoding/binary"
+
 type DEBUGGER_EVENT_TYPE_ENUM byte
 
 const (
-	HIDDEN_HOOK_READ_AND_WRITE DEBUGGER_EVENT_TYPE_ENUM = iota //todo check this value is 0 in c?
+	HIDDEN_HOOK_READ_AND_WRITE DEBUGGER_EVENT_TYPE_ENUM = iota
 	HIDDEN_HOOK_READ
 	HIDDEN_HOOK_WRITE
 
@@ -57,8 +59,7 @@ const (
 	DEBUGGER_EVENT_SYSCALL_SYSRET_HANDLE_ALL_UD                                         = 1
 )
 
-//todo
-//#define SIZEOF_DEBUGGER_MODIFY_EVENTS sizeof(DEBUGGER_MODIFY_EVENTS)
+var SIZEOF_DEBUGGER_MODIFY_EVENTS = binary.Size(DEBUGGER_MODIFY_EVENTS{})
 
 type DEBUGGER_MODIFY_EVENTS_TYPE byte
 

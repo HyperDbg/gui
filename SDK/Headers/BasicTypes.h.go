@@ -44,8 +44,8 @@ type (
 	UINT64  uint64
 	PUINT64 *uint64
 
-	PVOID unsafe.Pointer  //todo test
-	VOID  *unsafe.Pointer //todo test
+	PVOID unsafe.Pointer
+	VOID  *unsafe.Pointer
 )
 
 const (

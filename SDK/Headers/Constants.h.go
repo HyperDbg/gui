@@ -1,8 +1,26 @@
 package Headers
 
-import "unsafe"
+import (
+	"encoding/binary"
+	"unsafe"
+)
+
+type (
+	BUFFER_HEADER struct {
+		OpeationNumber uint32
+		BufferLength   uint32
+		Valid          bool
+	}
+	PBUFFER_HEADER *BUFFER_HEADER
+)
 
 type ConstantsVar int
+
+var (
+	MaxSerialPacketSize   = UsermodeBufferSize + binary.Size(DEBUGGER_REMOTE_PACKET{}) + SERIAL_END_OF_BUFFER_CHARS_COUNT
+	LogBufferSize         = MaximumPacketsCapacity * (PacketChunkSize + binary.Size(BUFFER_HEADER{}))
+	LogBufferSizePriority = MaximumPacketsCapacityPriority * (PacketChunkSize + binary.Size(BUFFER_HEADER{}))
+)
 
 const (
 	VERSION_MAJOR ConstantsVar = 0
@@ -12,12 +30,8 @@ const (
 	MaximumPacketsCapacity         = 1000
 	MaximumPacketsCapacityPriority = 10
 	PacketChunkSize                = 4096 // PAGE_SIZE
-	UsermodeBufferSize             = unsafe.Sizeof(uint32(0)) + PacketChunkSize + 1
+	UsermodeBufferSize             = int(unsafe.Sizeof(uint32(0)) + PacketChunkSize + 1)
 
-	//todo fix this
-	MaxSerialPacketSize                                   = UsermodeBufferSize             // + unsafe.Sizeof(DEBUGGER_REMOTE_PACKET) + SERIAL_END_OF_BUFFER_CHARS_COUNT
-	LogBufferSize                                         = MaximumPacketsCapacity         //* (PacketChunkSize + sizeof(BUFFER_HEADER))
-	LogBufferSizePriority                                 = MaximumPacketsCapacityPriority // * (PacketChunkSize + sizeof(BUFFER_HEADER))
 	DbgPrintLimitation                                    = 512
 	DebuggerEventTagStartSeed                             = 0x1000000
 	DebuggerThreadDebuggingTagStartSeed                   = 0x1000000
@@ -102,13 +116,7 @@ const (
 	DEBUGGEE_SHOW_ALL_REGISTERS                           = 0xffffffff
 )
 
-//	func ss() {
-//		LOWORD(l) = ((WORD)(l))
-//		HIWORD(l) = ((WORD)(((DWORD)(l) >> 16) & 0xFFFF))
-//		LOBYTE(w) = ((BYTE)(w))
-//		HIBYTE(w) = ((BYTE)(((WORD)(w) >> 8) & 0xFF))
-//	}
 func LOWORD(l uint32) uint16 { return uint16(l) }
 func LOBYTE(l uint32) uint8  { return (byte(l)) }
 func HIWORD(l uint32) uint16 { return uint16(l >> 16) }
-func HIBYTE(l uint32) uint8  { return byte(l >> 8) }
+func HIBYTE(l uint32) uint8  { return byte(l >> 24) }

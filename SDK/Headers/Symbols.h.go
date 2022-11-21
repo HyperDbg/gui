@@ -1,6 +1,9 @@
 package Headers
 
-import "syscall"
+import (
+	"encoding/binary"
+	"github.com/ddkwork/golibrary/mylog"
+)
 
 type (
 	MODULE_SYMBOL_DETAIL struct {
@@ -10,8 +13,8 @@ type (
 		IsSymbolPDBAvaliable   bool // TRUE if the module's pdb is avilable(if exists in the sympath)
 		IsUserMode             bool // TRUE if the module is a user-mode module
 		BaseAddress            uint64
-		FilePath               [syscall.MAX_PATH]int8
-		ModuleSymbolPath       [syscall.MAX_PATH]int8
+		FilePath               [MAX_PATH]int8
+		ModuleSymbolPath       [MAX_PATH]int8
 		ModuleSymbolGuidAndAge [MAXIMUM_GUID_AND_AGE_SIZE]int8
 	}
 	PMODULE_SYMBOL_DETAIL *MODULE_SYMBOL_DETAIL
@@ -20,7 +23,7 @@ type (
 	USERMODE_LOADED_MODULE_SYMBOLS struct {
 		BaseAddress uint64
 		Entrypoint  uint64
-		FilePath    [syscall.MAX_PATH]rune
+		FilePath    [MAX_PATH]rune
 	}
 	PUSERMODE_LOADED_MODULE_SYMBOLS *USERMODE_LOADED_MODULE_SYMBOLS
 )
@@ -47,9 +50,13 @@ type (
 	PDEBUGGER_UPDATE_SYMBOL_TABLE *DEBUGGER_UPDATE_SYMBOL_TABLE
 )
 
-// todo make a init fn check ?
-// static_assert(sizeof(DEBUGGER_UPDATE_SYMBOL_TABLE) < PacketChunkSize,
-// "err (static_assert), size of PacketChunkSize should be bigger than DEBUGGER_UPDATE_SYMBOL_TABLE (MODULE_SYMBOL_DETAIL)");
+// mock static_assert
+func init() {
+	if binary.Size(DEBUGGER_UPDATE_SYMBOL_TABLE{}) < PacketChunkSize {
+		mylog.Error("err (static_assert), size of PacketChunkSize should be bigger than DEBUGGER_UPDATE_SYMBOL_TABLE (MODULE_SYMBOL_DETAIL)")
+	}
+}
+
 type (
 	DEBUGGEE_SYMBOL_UPDATE_RESULT struct {
 		KernelStatus uint64

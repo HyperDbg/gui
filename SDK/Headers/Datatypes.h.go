@@ -1,5 +1,7 @@
 package Headers
 
+import "encoding/binary"
+
 type (
 	CallBack func(Text *int8) int
 )
@@ -20,9 +22,7 @@ type (
 	PDEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET *DEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET
 )
 
-//todo add a const with a unit test
-//SIZEOF_DEBUGGER_PAUSE_PACKET_RECEIVED \
-//    sizeof(DEBUGGER_PAUSE_PACKET_RECEIVED)
+var SIZEOF_DEBUGGER_PAUSE_PACKET_RECEIVED = binary.Size(DEBUGGER_PAUSE_PACKET_RECEIVED{})
 
 type (
 	DEBUGGER_PAUSE_PACKET_RECEIVED struct {
