@@ -1,13 +1,16 @@
 package Headers
 
-import "unsafe"
+import (
+	"encoding/binary"
+	"unsafe"
+)
 
 type ConstantsVar int
 
 var (
-	MaxSerialPacketSize   = UsermodeBufferSize + SizeOf(DEBUGGER_REMOTE_PACKET{}) + SERIAL_END_OF_BUFFER_CHARS_COUNT
-	LogBufferSize         = MaximumPacketsCapacity * (PacketChunkSize + SizeOf(BUFFER_HEADER))
-	LogBufferSizePriority = MaximumPacketsCapacityPriority * (PacketChunkSize + SizeOf(BUFFER_HEADER))
+	MaxSerialPacketSize   = UsermodeBufferSize + binary.Size(DEBUGGER_REMOTE_PACKET{}) + SERIAL_END_OF_BUFFER_CHARS_COUNT
+	LogBufferSize         = MaximumPacketsCapacity * (PacketChunkSize + binary.Size(BUFFER_HEADER))
+	LogBufferSizePriority = MaximumPacketsCapacityPriority * (PacketChunkSize + binary.Size(BUFFER_HEADER))
 )
 
 const (

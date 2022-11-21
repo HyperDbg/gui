@@ -1,3 +1,5 @@
 package Headers
 
-var BUFFER_HEADER = SizeOf(10) //todo add struct
+import "encoding/binary"
+
+var BUFFER_HEADER = binary.Size(10) //todo add struct

@@ -1,12 +1,13 @@
 package Headers
 
 import (
+	"encoding/binary"
 	"github.com/ddkwork/golibrary/mylog"
 	"testing"
 )
 
 func TestSizeof(t *testing.T) {
-	mylog.Assert(t).Equal(11, SizeOf(DEBUGGER_REMOTE_PACKET{}))
+	mylog.Assert(t).Equal(11, binary.Size(DEBUGGER_REMOTE_PACKET{}))
 }
 
 func TestHIBYTE(t *testing.T) {
