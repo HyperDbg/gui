@@ -1,5 +1,10 @@
 package Imports
 
+import (
+	"github.com/ddkwork/hyperdbgui/SDK/Headers"
+	"unsafe"
+)
+
 func (c *ctrl) HyperDbgShowSignature() Headers.VOID {
 	valu := Call(api.Proc(HyperDbgShowSignature))
 	DecodeErrorCode(valu)

@@ -1,5 +1,10 @@
 package Imports
 
+import (
+	"github.com/ddkwork/hyperdbgui/SDK/Headers"
+	"unsafe"
+)
+
 func (s *script) ScriptEngineSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
 	valu := Call(api.Proc(ScriptEngineSetTextMessageCallback), uintptr(Handler))
 	//DecodeErrorCode(valu)

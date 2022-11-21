@@ -1,5 +1,17 @@
 package Imports
 
+import (
+	"crypto/sha256"
+	_ "embed"
+	"encoding/base64"
+	"fmt"
+	"github.com/ddkwork/golibrary/mylog"
+	"golang.org/x/sys/windows"
+	"os"
+	"path/filepath"
+	"syscall"
+)
+
 type (
 	Api struct{ procMap map[nameKind]*syscall.Proc }
 )

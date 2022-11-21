@@ -1,5 +1,10 @@
 package Imports
 
+import (
+	"github.com/ddkwork/hyperdbgui/SDK/Headers"
+	"unsafe"
+)
+
 func (s *symbol) SymSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
 	valu := Call(api.Proc(SymSetTextMessageCallback), uintptr(Handler))
 	//DecodeErrorCode(valu)
