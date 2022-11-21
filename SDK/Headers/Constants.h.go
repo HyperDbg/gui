@@ -2,7 +2,6 @@ package Headers
 
 import (
 	"encoding/binary"
-	"unsafe"
 )
 
 type (
@@ -20,6 +19,7 @@ var (
 	MaxSerialPacketSize   = UsermodeBufferSize + binary.Size(DEBUGGER_REMOTE_PACKET{}) + SERIAL_END_OF_BUFFER_CHARS_COUNT
 	LogBufferSize         = MaximumPacketsCapacity * (PacketChunkSize + binary.Size(BUFFER_HEADER{}))
 	LogBufferSizePriority = MaximumPacketsCapacityPriority * (PacketChunkSize + binary.Size(BUFFER_HEADER{}))
+	UsermodeBufferSize    = binary.Size(uint32(0)) + PacketChunkSize + 1
 )
 
 const (
@@ -30,7 +30,6 @@ const (
 	MaximumPacketsCapacity         = 1000
 	MaximumPacketsCapacityPriority = 10
 	PacketChunkSize                = 4096 // PAGE_SIZE
-	UsermodeBufferSize             = int(unsafe.Sizeof(uint32(0)) + PacketChunkSize + 1)
 
 	DbgPrintLimitation                                    = 512
 	DebuggerEventTagStartSeed                             = 0x1000000
