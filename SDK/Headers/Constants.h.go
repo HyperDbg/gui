@@ -4,8 +4,6 @@ import "unsafe"
 
 type ConstantsVar int
 
-var BUFFER_HEADER = SizeOf(10) //todo add struct
-
 var (
 	MaxSerialPacketSize   = UsermodeBufferSize + SizeOf(DEBUGGER_REMOTE_PACKET{}) + SERIAL_END_OF_BUFFER_CHARS_COUNT
 	LogBufferSize         = MaximumPacketsCapacity * (PacketChunkSize + SizeOf(BUFFER_HEADER))
