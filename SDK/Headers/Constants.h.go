@@ -5,12 +5,21 @@ import (
 	"unsafe"
 )
 
+type (
+	BUFFER_HEADER struct {
+		OpeationNumber uint32
+		BufferLength   uint32
+		Valid          bool
+	}
+	PBUFFER_HEADER *BUFFER_HEADER
+)
+
 type ConstantsVar int
 
 var (
 	MaxSerialPacketSize   = UsermodeBufferSize + binary.Size(DEBUGGER_REMOTE_PACKET{}) + SERIAL_END_OF_BUFFER_CHARS_COUNT
-	LogBufferSize         = MaximumPacketsCapacity * (PacketChunkSize + binary.Size(BUFFER_HEADER))
-	LogBufferSizePriority = MaximumPacketsCapacityPriority * (PacketChunkSize + binary.Size(BUFFER_HEADER))
+	LogBufferSize         = MaximumPacketsCapacity * (PacketChunkSize + binary.Size(BUFFER_HEADER{}))
+	LogBufferSizePriority = MaximumPacketsCapacityPriority * (PacketChunkSize + binary.Size(BUFFER_HEADER{}))
 )
 
 const (
