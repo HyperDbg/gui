@@ -18,7 +18,7 @@ type (
 
 var api = newApi()
 
-func Call(p *syscall.Proc, a ...uintptr) (valu uintptr) {
+func Call(p *syscall.Proc, a ...uintptr) (value uintptr) {
 	value, statusCode, err := p.Call(a...)
 	if !mylog.Error(err) {
 		return
@@ -57,7 +57,9 @@ func init() {
 	if !mylog.Error(os.MkdirAll(dir, 0755)) {
 		return
 	}
-	windows.SetDllDirectory(dir)
+	if !mylog.Error(windows.SetDllDirectory(dir)) {
+		return
+	}
 	sha := sha256.Sum256(dllData)
 	dllName := fmt.Sprintf("hyperdbgDll-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
 	filePath := filepath.Join(dir, dllName)

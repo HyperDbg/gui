@@ -6,90 +6,89 @@ import (
 )
 
 func (s *script) ScriptEngineSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
-	valu := Call(api.Proc(ScriptEngineSetTextMessageCallback), uintptr(Handler))
-	//DecodeErrorCode(valu)
-	return Headers.VOID(unsafe.Pointer(valu))
+	value := Call(api.Proc(ScriptEngineSetTextMessageCallback), uintptr(Handler))
+	//DecodeErrorCode(value)
+	return Headers.VOID(unsafe.Pointer(value))
 }
 
 func (s *script) ScriptEngineSymbolAbortLoading() Headers.VOID {
-	valu := Call(api.Proc(ScriptEngineSymbolAbortLoading))
-	//DecodeErrorCode(valu)
-	return Headers.VOID(unsafe.Pointer(valu))
+	value := Call(api.Proc(ScriptEngineSymbolAbortLoading))
+	//DecodeErrorCode(value)
+	return Headers.VOID(unsafe.Pointer(value))
 }
 
 func (s *script) ScriptEngineConvertNameToAddress(FunctionOrVariableName *int8, WasFound bool) uint64 {
 	//WasFound need input a point value ?
-	valu := Call(api.Proc(ScriptEngineConvertNameToAddress), uintptr(unsafe.Pointer(FunctionOrVariableName)), Bool2UintPtr(WasFound))
-	//DecodeErrorCode(valu)
-	return uint64(valu)
+	value := Call(api.Proc(ScriptEngineConvertNameToAddress), uintptr(unsafe.Pointer(FunctionOrVariableName)), Bool2UintPtr(WasFound))
+	//DecodeErrorCode(value)
+	return uint64(value)
 }
 
 func (s *script) ScriptEngineLoadFileSymbol(BaseAddress uint64, PdbFileName *int8) uint32 {
-	valu := Call(api.Proc(ScriptEngineLoadFileSymbol), uintptr(BaseAddress), uintptr(unsafe.Pointer(PdbFileName)))
-	//DecodeErrorCode(valu)
-	return uint32(valu)
+	value := Call(api.Proc(ScriptEngineLoadFileSymbol), uintptr(BaseAddress), uintptr(unsafe.Pointer(PdbFileName)))
+	//DecodeErrorCode(value)
+	return uint32(value)
 }
 
 func (s *script) ScriptEngineUnloadAllSymbols() uint32 {
-	valu := Call(api.Proc(ScriptEngineUnloadAllSymbols))
-	//DecodeErrorCode(valu)
-	return uint32(valu)
+	value := Call(api.Proc(ScriptEngineUnloadAllSymbols))
+	//DecodeErrorCode(value)
+	return uint32(value)
 }
 
 func (s *script) ScriptEngineUnloadModuleSymbol(ModuleName *int8) uint32 {
-	valu := Call(api.Proc(ScriptEngineUnloadModuleSymbol), uintptr(unsafe.Pointer(ModuleName)))
-	//DecodeErrorCode(valu)
-	return uint32(valu)
+	value := Call(api.Proc(ScriptEngineUnloadModuleSymbol), uintptr(unsafe.Pointer(ModuleName)))
+	//DecodeErrorCode(value)
+	return uint32(value)
 }
 
 func (s *script) ScriptEngineSearchSymbolForMask(SearchMask *int8) uint32 {
-	valu := Call(api.Proc(ScriptEngineSearchSymbolForMask), uintptr(unsafe.Pointer(SearchMask)))
-	//DecodeErrorCode(valu)
-	return uint32(valu)
+	value := Call(api.Proc(ScriptEngineSearchSymbolForMask), uintptr(unsafe.Pointer(SearchMask)))
+	//DecodeErrorCode(value)
+	return uint32(value)
 }
 
 func (s *script) ScriptEngineGetFieldOffset(TypeName, FieldName *int8, FieldOffset *uint32) bool {
-	valu := Call(api.Proc(ScriptEngineGetFieldOffset),
+	value := Call(api.Proc(ScriptEngineGetFieldOffset),
 		uintptr(unsafe.Pointer(TypeName)),
 		uintptr(unsafe.Pointer(FieldName)),
 		uintptr(unsafe.Pointer(FieldOffset)),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	//DecodeErrorCode(value)
+	return value == 0
 }
 
 func (s *script) ScriptEngineGetDataTypeSize(TypeName *int8, TypeSize *uint64) bool {
-	valu := Call(api.Proc(ScriptEngineGetDataTypeSize),
+	value := Call(api.Proc(ScriptEngineGetDataTypeSize),
 		uintptr(unsafe.Pointer(TypeName)),
 		uintptr(unsafe.Pointer(TypeSize)),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	return value == 0
 }
 
 func (s *script) ScriptEngineCreateSymbolTableForDisassembler(CallbackFunction Headers.PVOID) bool {
-	valu := Call(api.Proc(ScriptEngineCreateSymbolTableForDisassembler), uintptr(CallbackFunction))
-	//DecodeErrorCode(valu)
-	return valu == 0
+	value := Call(api.Proc(ScriptEngineCreateSymbolTableForDisassembler), uintptr(CallbackFunction))
+	//DecodeErrorCode(value)
+	return value == 0
 }
 
 func (s *script) ScriptEngineConvertFileToPdbPath(LocalFilePath, ResultPath *int8) bool {
-	valu := Call(api.Proc(ScriptEngineConvertFileToPdbPath),
+	value := Call(api.Proc(ScriptEngineConvertFileToPdbPath),
 		uintptr(unsafe.Pointer(LocalFilePath)),
 		uintptr(unsafe.Pointer(ResultPath)),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	//DecodeErrorCode(value)
+	return value == 0
 }
 
 func (s *script) ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath, PdbFilePath, GuidAndAgeDetails *int8) bool {
-	valu := Call(api.Proc(ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails),
+	value := Call(api.Proc(ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails),
 		uintptr(unsafe.Pointer(LocalFilePath)),
 		uintptr(unsafe.Pointer(PdbFilePath)),
 		uintptr(unsafe.Pointer(GuidAndAgeDetails)),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	//DecodeErrorCode(value)
+	return value == 0
 }
 
 func (s *script) ScriptEngineSymbolInitLoad(
@@ -99,15 +98,15 @@ func (s *script) ScriptEngineSymbolInitLoad(
 	SymbolPath *int8,
 	IsSilentLoad bool,
 ) bool {
-	valu := Call(api.Proc(ScriptEngineSymbolInitLoad),
+	value := Call(api.Proc(ScriptEngineSymbolInitLoad),
 		uintptr(BufferToStoreDetails),
 		uintptr(StoredLength),
 		Bool2UintPtr(DownloadIfAvailable),
 		uintptr(unsafe.Pointer(SymbolPath)),
 		Bool2UintPtr(IsSilentLoad),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	//DecodeErrorCode(value)
+	return value == 0
 }
 
 func (s *script) ScriptEngineShowDataBasedOnSymbolTypes(
@@ -117,13 +116,13 @@ func (s *script) ScriptEngineShowDataBasedOnSymbolTypes(
 	BufferAddress Headers.PVOID,
 	AdditionalParameters *int8,
 ) bool {
-	valu := Call(api.Proc(ScriptEngineShowDataBasedOnSymbolTypes),
+	value := Call(api.Proc(ScriptEngineShowDataBasedOnSymbolTypes),
 		uintptr(unsafe.Pointer(TypeName)),
 		uintptr(Address),
 		Bool2UintPtr(IsStruct),
 		uintptr(BufferAddress),
 		uintptr(unsafe.Pointer(AdditionalParameters)),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	//DecodeErrorCode(value)
+	return value == 0
 }

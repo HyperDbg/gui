@@ -21,15 +21,29 @@ type (
 		ScriptEngineSymbolInitLoad(BufferToStoreDetails Headers.PVOID, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *int8, IsSilentLoad bool) bool
 		ScriptEngineShowDataBasedOnSymbolTypes(TypeName *int8, Address uint64, IsStruct bool, BufferAddress Headers.PVOID, AdditionalParameters *int8) bool
 	}
-	//todo bind it
 	Script interface {
-		//ScriptEngineParse(str *int8) PSYMBOL_BUFFER
-		//PrintSymbolBuffer(SymbolBuffer PSYMBOL_BUFFER) Headers.VOID
-		//PrintSymbol(PSYMBOL Symbol) Headers.VOID
-		//RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer) Headers.VOID
+		ScriptEngineParse(str *int8) PSYMBOL_BUFFER
+		PrintSymbolBuffer(SymbolBuffer PSYMBOL_BUFFER) Headers.VOID
+		PrintSymbol(Symbol PSYMBOL) Headers.VOID
+		RemoveSymbolBuffer(SymbolBuffer PSYMBOL_BUFFER) Headers.VOID
 		pdbParser
 	}
 	script struct{}
 )
 
 func NewScript() Script { return &script{} }
+
+type (
+	SYMBOL struct {
+		Type  uint64
+		Value uint64
+	}
+	PSYMBOL       *SYMBOL
+	SYMBOL_BUFFER struct {
+		Head    PSYMBOL
+		Pointer uint
+		Size    uint
+		Message *byte
+	}
+	PSYMBOL_BUFFER *SYMBOL_BUFFER
+)

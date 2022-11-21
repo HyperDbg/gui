@@ -6,69 +6,67 @@ import (
 )
 
 func (c *ctrl) HyperDbgShowSignature() Headers.VOID {
-	valu := Call(api.Proc(HyperDbgShowSignature))
-	DecodeErrorCode(valu)
-	return Headers.VOID(unsafe.Pointer(valu))
+	value := Call(api.Proc(HyperDbgShowSignature))
+	DecodeErrorCode(value)
+	return Headers.VOID(unsafe.Pointer(value))
 }
 
 func (c *ctrl) HyperDbgSetTextMessageCallback(handler Headers.CallBack) Headers.VOID {
-	valu := Call(api.Proc(HyperDbgSetTextMessageCallback), uintptr(unsafe.Pointer(&handler)))
-	DecodeErrorCode(valu)
-	return Headers.VOID(unsafe.Pointer(valu))
+	value := Call(api.Proc(HyperDbgSetTextMessageCallback), uintptr(unsafe.Pointer(&handler)))
+	DecodeErrorCode(value)
+	return Headers.VOID(unsafe.Pointer(value))
 }
 
-// todo gen it and test on windows
 func (c *ctrl) HyperDbgLoadVmm() int {
-	valu := Call(api.Proc(HyperDbgLoadVmm))
-	DecodeErrorCode(valu)
-	return int(valu)
+	value := Call(api.Proc(HyperDbgLoadVmm))
+	DecodeErrorCode(value)
+	return int(value)
 }
 
 func (c *ctrl) HyperDbgUnloadVmm() int {
-	valu := Call(api.Proc(HyperDbgUnloadVmm))
-	DecodeErrorCode(valu)
-	return int(valu)
+	value := Call(api.Proc(HyperDbgUnloadVmm))
+	DecodeErrorCode(value)
+	return int(value)
 }
 
 func (c *ctrl) HyperDbgInstallVmmDriver() int {
-	valu := Call(api.Proc(HyperDbgInstallVmmDriver))
-	DecodeErrorCode(valu)
-	return int(valu)
+	value := Call(api.Proc(HyperDbgInstallVmmDriver))
+	DecodeErrorCode(value)
+	return int(value)
 }
 
 func (c *ctrl) HyperDbgUninstallVmmDriver() int {
-	valu := Call(api.Proc(HyperDbgUninstallVmmDriver))
-	DecodeErrorCode(valu)
-	return int(valu)
+	value := Call(api.Proc(HyperDbgUninstallVmmDriver))
+	DecodeErrorCode(value)
+	return int(value)
 }
 
 func (c *ctrl) HyperDbgStopVmmDriver() int {
-	valu := Call(api.Proc(HyperDbgStopVmmDriver))
-	DecodeErrorCode(valu)
-	return int(valu)
+	value := Call(api.Proc(HyperDbgStopVmmDriver))
+	DecodeErrorCode(value)
+	return int(value)
 }
 
 func (c *ctrl) HyperDbgInterpreter(Command *string) int {
-	valu := Call(api.Proc(HyperDbgInterpreter), uintptr(unsafe.Pointer(Command)))
-	DecodeErrorCode(valu)
-	return int(valu)
+	value := Call(api.Proc(HyperDbgInterpreter), uintptr(unsafe.Pointer(Command)))
+	DecodeErrorCode(value)
+	return int(value)
 }
 
 func (c *ctrl) HyperDbgScriptReadFileAndExecuteCommandline(argc int, argv []string) int {
-	valu := Call(api.Proc(HyperDbgScriptReadFileAndExecuteCommandline), uintptr(argc), uintptr(unsafe.Pointer(&argv)))
-	DecodeErrorCode(valu)
-	return int(valu)
+	value := Call(api.Proc(HyperDbgScriptReadFileAndExecuteCommandline), uintptr(argc), uintptr(unsafe.Pointer(&argv)))
+	DecodeErrorCode(value)
+	return int(value)
 }
 
 func (c *ctrl) HyperDbgContinuePreviousCommand() bool {
-	api.Proc(HyperDbgContinuePreviousCommand).Call()
-	valu := Call(api.Proc(HyperDbgContinuePreviousCommand))
-	//DecodeErrorCode(valu) //this is not status code ?
-	return valu == 0
+	value := Call(api.Proc(HyperDbgContinuePreviousCommand))
+	//DecodeErrorCode(value) //this is not status code ?
+	return value == 0
 }
 
 func (c *ctrl) HyperDbgCheckMultilineCommand(CurrentCommand string, Reset bool) bool {
-	valu := Call(api.Proc(HyperDbgCheckMultilineCommand), uintptr(unsafe.Pointer(&CurrentCommand)), uintptr(Bool2UintPtr(Reset)))
-	//DecodeErrorCode(valu)
-	return valu == 0
+	value := Call(api.Proc(HyperDbgCheckMultilineCommand), uintptr(unsafe.Pointer(&CurrentCommand)), uintptr(Bool2UintPtr(Reset)))
+	//DecodeErrorCode(value)
+	return value == 0
 }

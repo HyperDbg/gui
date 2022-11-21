@@ -6,93 +6,92 @@ import (
 )
 
 func (s *symbol) SymSetTextMessageCallback(Handler Headers.PVOID) Headers.VOID {
-	valu := Call(api.Proc(SymSetTextMessageCallback), uintptr(Handler))
-	//DecodeErrorCode(valu)
-	return Headers.VOID(unsafe.Pointer(valu))
+	value := Call(api.Proc(SymSetTextMessageCallback), uintptr(Handler))
+	//DecodeErrorCode(value)
+	return Headers.VOID(unsafe.Pointer(value))
 }
 
 func (s *symbol) SymConvertNameToAddress(FunctionOrVariableName *byte, WasFound *bool) uint64 {
-	valu := Call(api.Proc(SymConvertNameToAddress),
+	value := Call(api.Proc(SymConvertNameToAddress),
 		uintptr(unsafe.Pointer(FunctionOrVariableName)),
 		uintptr(unsafe.Pointer(WasFound)),
 	)
-	//DecodeErrorCode(valu)
-	return uint64(valu)
+	//DecodeErrorCode(value)
+	return uint64(value)
 }
 
 func (s *symbol) SymLoadFileSymbol(BaseAddress uint64, PdbFileName *byte) uint32 {
-	valu := Call(api.Proc(SymLoadFileSymbol),
+	value := Call(api.Proc(SymLoadFileSymbol),
 		uintptr(BaseAddress),
 		uintptr(unsafe.Pointer(PdbFileName)),
 	)
-	//DecodeErrorCode(valu)
-	return uint32(valu)
+	//DecodeErrorCode(value)
+	return uint32(value)
 }
 
 func (s *symbol) SymUnloadAllSymbols() uint32 {
-	valu := Call(api.Proc(SymUnloadAllSymbols))
-	//DecodeErrorCode(valu)
-	return uint32(valu)
+	value := Call(api.Proc(SymUnloadAllSymbols))
+	//DecodeErrorCode(value)
+	return uint32(value)
 }
 
 func (s *symbol) SymUnloadModuleSymbol(ModuleName *byte) uint32 {
-	valu := Call(api.Proc(SymUnloadModuleSymbol), uintptr(unsafe.Pointer(ModuleName)))
-	//DecodeErrorCode(valu)
-	return uint32(valu)
+	value := Call(api.Proc(SymUnloadModuleSymbol), uintptr(unsafe.Pointer(ModuleName)))
+	//DecodeErrorCode(value)
+	return uint32(value)
 }
 
 func (s *symbol) SymSearchSymbolForMask(SearchMask *byte) uint32 {
-	valu := Call(api.Proc(SymSearchSymbolForMask), uintptr(unsafe.Pointer(SearchMask)))
-	//DecodeErrorCode(valu)
-	return uint32(valu)
+	value := Call(api.Proc(SymSearchSymbolForMask), uintptr(unsafe.Pointer(SearchMask)))
+	//DecodeErrorCode(value)
+	return uint32(value)
 }
 
-// todo this arg is wrong
 func (s *symbol) SymGetFieldOffset(TypeName, FieldName *int8, FieldOffset *uint32) bool {
-	valu := Call(api.Proc(SymGetFieldOffset),
+	value := Call(api.Proc(SymGetFieldOffset),
 		uintptr(unsafe.Pointer(TypeName)),
 		uintptr(unsafe.Pointer(FieldName)),
 		uintptr(unsafe.Pointer(FieldOffset)),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	//DecodeErrorCode(value)
+	return value == 0
 }
 
 func (s *symbol) SymGetDataTypeSize(TypeName *int8, TypeSize *uint64) bool {
-	valu := Call(api.Proc(SymGetDataTypeSize),
+	value := Call(api.Proc(SymGetDataTypeSize),
 		uintptr(unsafe.Pointer(TypeName)),
 		uintptr(unsafe.Pointer(TypeSize)),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	//DecodeErrorCode(value)
+	return value == 0
 }
 
 func (s *symbol) SymCreateSymbolTableForDisassembler(CallbackFunction Headers.PVOID) bool {
-	valu := Call(api.Proc(SymCreateSymbolTableForDisassembler), uintptr(CallbackFunction))
-	//DecodeErrorCode(valu) //todo need decode r2 as error code ?
-	return valu == 0
+	value := Call(api.Proc(SymCreateSymbolTableForDisassembler), uintptr(CallbackFunction))
+	//DecodeErrorCode(value) //todo need decode r2 as error code ?
+	return value == 0
 }
 
 func (s *symbol) SymConvertFileToPdbPath(LocalFilePath, ResultPath *int8) bool {
-	valu := Call(api.Proc(SymConvertFileToPdbPath),
+	value := Call(api.Proc(SymConvertFileToPdbPath),
 		uintptr(unsafe.Pointer(LocalFilePath)),
 		uintptr(unsafe.Pointer(ResultPath)),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	//DecodeErrorCode(value)
+	return value == 0
 }
 
 func (s *symbol) SymConvertFileToPdbFileAndGuidAndAgeDetails(
 	LocalFilePath,
 	PdbFilePath,
 	GuidAndAgeDetails *int8) {
-	valu := Call(api.Proc(SymConvertFileToPdbFileAndGuidAndAgeDetails),
+	value := Call(api.Proc(SymConvertFileToPdbFileAndGuidAndAgeDetails),
 		uintptr(unsafe.Pointer(LocalFilePath)),
 		uintptr(unsafe.Pointer(PdbFilePath)),
 		uintptr(unsafe.Pointer(GuidAndAgeDetails)),
 	)
-	DecodeErrorCode(valu)
-	return //todonot ret code ?
+	DecodeErrorCode(value)
+	return
 }
 
 func (s *symbol) SymbolInitLoad(
@@ -102,15 +101,15 @@ func (s *symbol) SymbolInitLoad(
 	SymbolPath *int8,
 	IsSilentLoad bool,
 ) bool {
-	valu := Call(api.Proc(SymbolInitLoad),
+	value := Call(api.Proc(SymbolInitLoad),
 		uintptr(BufferToStoreDetails),
 		uintptr(StoredLength),
 		Bool2UintPtr(DownloadIfAvailable),
 		uintptr(unsafe.Pointer(SymbolPath)),
 		Bool2UintPtr(IsSilentLoad),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	//DecodeErrorCode(value)
+	return value == 0
 }
 
 func (s *symbol) SymShowDataBasedOnSymbolTypes(
@@ -120,26 +119,26 @@ func (s *symbol) SymShowDataBasedOnSymbolTypes(
 	BufferAddress Headers.PVOID,
 	AdditionalParameters *int8,
 ) bool {
-	valu := Call(api.Proc(SymShowDataBasedOnSymbolTypes),
+	value := Call(api.Proc(SymShowDataBasedOnSymbolTypes),
 		uintptr(unsafe.Pointer(TypeName)),
 		uintptr(Address),
 		Bool2UintPtr(IsStruct),
 		uintptr(BufferAddress),
 		uintptr(unsafe.Pointer(AdditionalParameters)),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	//DecodeErrorCode(value)
+	return value == 0
 }
 
 func (s *symbol) SymQuerySizeof(
 	StructNameOrTypeName *int8,
 	SizeOfField *uint32) bool {
-	valu := Call(api.Proc(SymQuerySizeof),
+	value := Call(api.Proc(SymQuerySizeof),
 		uintptr(unsafe.Pointer(StructNameOrTypeName)),
 		uintptr(unsafe.Pointer(SizeOfField)),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	//DecodeErrorCode(value)
+	return value == 0
 }
 
 func (s *symbol) SymCastingQueryForFiledsAndTypes(
@@ -151,7 +150,7 @@ func (s *symbol) SymCastingQueryForFiledsAndTypes(
 	OffsetOfFieldFromTop *uint32,
 	SizeOfField *uint32,
 ) bool {
-	valu := Call(api.Proc(SymCastingQueryForFiledsAndTypes),
+	value := Call(api.Proc(SymCastingQueryForFiledsAndTypes),
 		uintptr(unsafe.Pointer(StructName)),
 		uintptr(unsafe.Pointer(FiledOfStructName)),
 		Bool2UintPtr(IsStructNamePointerOrNot),
@@ -160,6 +159,29 @@ func (s *symbol) SymCastingQueryForFiledsAndTypes(
 		uintptr(unsafe.Pointer(OffsetOfFieldFromTop)),
 		uintptr(unsafe.Pointer(SizeOfField)),
 	)
-	//DecodeErrorCode(valu)
-	return valu == 0
+	//DecodeErrorCode(value)
+	return value == 0
+}
+func (s *script) ScriptEngineParse(str *int8) PSYMBOL_BUFFER {
+	value := Call(api.Proc(ScriptEngineParse), uintptr(unsafe.Pointer(str)))
+	//DecodeErrorCode(value)
+	return PSYMBOL_BUFFER(unsafe.Pointer(value))
+}
+
+func (s *script) PrintSymbolBuffer(SymbolBuffer PSYMBOL_BUFFER) Headers.VOID {
+	value := Call(api.Proc(PrintSymbolBuffer), uintptr(unsafe.Pointer(SymbolBuffer)))
+	//DecodeErrorCode(value)
+	return Headers.VOID(unsafe.Pointer(value))
+}
+
+func (s *script) PrintSymbol(Symbol PSYMBOL) Headers.VOID {
+	value := Call(api.Proc(PrintSymbol), uintptr(unsafe.Pointer(Symbol)))
+	//DecodeErrorCode(value)
+	return Headers.VOID(unsafe.Pointer(value))
+}
+
+func (s *script) RemoveSymbolBuffer(SymbolBuffer PSYMBOL_BUFFER) Headers.VOID {
+	value := Call(api.Proc(RemoveSymbolBuffer), uintptr(unsafe.Pointer(SymbolBuffer)))
+	//DecodeErrorCode(value)
+	return Headers.VOID(unsafe.Pointer(value))
 }
