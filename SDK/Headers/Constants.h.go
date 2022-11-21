@@ -4,6 +4,14 @@ import "unsafe"
 
 type ConstantsVar int
 
+var BUFFER_HEADER = SizeOf(10) //todo add struct
+
+var (
+	MaxSerialPacketSize   = UsermodeBufferSize + SizeOf(DEBUGGER_REMOTE_PACKET{}) + SERIAL_END_OF_BUFFER_CHARS_COUNT
+	LogBufferSize         = MaximumPacketsCapacity * (PacketChunkSize + SizeOf(BUFFER_HEADER))
+	LogBufferSizePriority = MaximumPacketsCapacityPriority * (PacketChunkSize + SizeOf(BUFFER_HEADER))
+)
+
 const (
 	VERSION_MAJOR ConstantsVar = 0
 	VERSION_MINOR              = 2
@@ -12,12 +20,8 @@ const (
 	MaximumPacketsCapacity         = 1000
 	MaximumPacketsCapacityPriority = 10
 	PacketChunkSize                = 4096 // PAGE_SIZE
-	UsermodeBufferSize             = unsafe.Sizeof(uint32(0)) + PacketChunkSize + 1
+	UsermodeBufferSize             = int(unsafe.Sizeof(uint32(0)) + PacketChunkSize + 1)
 
-	//todo fix this
-	MaxSerialPacketSize                                   = UsermodeBufferSize             // + unsafe.Sizeof(DEBUGGER_REMOTE_PACKET) + SERIAL_END_OF_BUFFER_CHARS_COUNT
-	LogBufferSize                                         = MaximumPacketsCapacity         //* (PacketChunkSize + sizeof(BUFFER_HEADER))
-	LogBufferSizePriority                                 = MaximumPacketsCapacityPriority // * (PacketChunkSize + sizeof(BUFFER_HEADER))
 	DbgPrintLimitation                                    = 512
 	DebuggerEventTagStartSeed                             = 0x1000000
 	DebuggerThreadDebuggingTagStartSeed                   = 0x1000000
