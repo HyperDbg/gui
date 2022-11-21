@@ -13,22 +13,22 @@ import (
 )
 
 func TestGen_CTL_CODE(t *testing.T) {
-	Define2Enum(EnumInfo{
-		File:    "ErrorCodes.h",
+	Define2CtlCode(CtlCodeInfo{
+		File:    "Ioctls.h",
 		Package: "Headers",
-		Type:    "ErrorCodes",
+		Type:    "IoctlsKind",
 	})
 }
 
 type (
-	EnumInfo struct {
+	CtlCodeInfo struct {
 		File    string
 		Package string
 		Type    string
 	}
 )
 
-func Define2Enum(info EnumInfo) {
+func Define2CtlCode(info CtlCodeInfo) {
 	body := stream.New()
 	body.WriteStringLn("package " + info.Package)
 	body.WriteStringLn("import \"fmt\"")
