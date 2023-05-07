@@ -4,13 +4,13 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/src/clang"
 	"github.com/ddkwork/golibrary/src/stream"
-	"github.com/ddkwork/hyperdbgui/sdk/scriptGen"
+	"github.com/ddkwork/hyperdbgui/plugin/scriptGen"
 	"testing"
 )
 
 func TestName(t *testing.T) {
 	h := scriptGen.New()
-	h.ProcessNameFilter("ssd.exe")
+	h.ProcessNameFilter("ssd.exe", "")
 	clang.New().Format(`C:\Users\Admin\Desktop\gui\sdk\scriptGen\cpuid.ds`)
 	//h := hookApiMgr.New()
 	//h.TestIopXxxControlFile()

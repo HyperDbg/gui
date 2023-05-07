@@ -307,7 +307,7 @@ type (
 		Baudrate            uint32
 		NtoskrnlBaseAddress uint64
 		Result              uint32 // Result from the kernel
-		//OsName[MAXIMUM_CHARACTER_FOR_OS_NAME]int8 //todo
+		OsName              [MAXIMUM_CHARACTER_FOR_OS_NAME]int8
 	}
 	PDEBUGGER_PREPARE_DEBUGGEE *DEBUGGER_PREPARE_DEBUGGEE
 )
@@ -414,11 +414,11 @@ type (
 
 type (
 	DEBUGGER_SINGLE_CALLSTACK_FRAME struct {
-		IsStackAddressValid bool
-		IsValidAddress      bool
-		IsExecutable        bool
-		Value               uint64
-		//InstructionBytesOnRip[MAXIMUM_CALL_INSTR_SIZE]byte //todo
+		IsStackAddressValid   bool
+		IsValidAddress        bool
+		IsExecutable          bool
+		Value                 uint64
+		InstructionBytesOnRip [MAXIMUM_CALL_INSTR_SIZE]byte
 	}
 	PDEBUGGER_SINGLE_CALLSTACK_FRAME *DEBUGGER_SINGLE_CALLSTACK_FRAME
 )
