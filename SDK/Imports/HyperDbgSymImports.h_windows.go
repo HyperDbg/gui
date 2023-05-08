@@ -68,7 +68,7 @@ func (s *symbol) SymGetDataTypeSize(TypeName *int8, TypeSize *uint64) bool {
 
 func (s *symbol) SymCreateSymbolTableForDisassembler(CallbackFunction Headers.PVOID) bool {
 	value := Call(api.Proc(SymCreateSymbolTableForDisassembler), uintptr(CallbackFunction))
-	//DecodeErrorCode(value) //todo need decode r2 as error code ?
+	DecodeErrorCode(value)
 	return value == 0
 }
 

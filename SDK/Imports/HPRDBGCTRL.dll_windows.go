@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/src/stream/tool"
 	"golang.org/x/sys/windows"
 	"os"
 	"path/filepath"
@@ -31,6 +32,10 @@ func Call(p *syscall.Proc, a ...uintptr) (value uintptr) {
 }
 
 func newApi() *Api {
+	if dll == nil {
+		return nil
+		Init()
+	}
 	p := &Api{
 		procMap: make(map[nameKind]*syscall.Proc, HyperDbgLoadVmm.Len()),
 	}
@@ -48,7 +53,12 @@ var (
 	dll     *syscall.DLL
 )
 
-func init() {
+func Init() {
+	defer func() {
+		if dll == nil {
+			//panic("dll not load")
+		}
+	}()
 	dir, err := os.UserCacheDir()
 	if !mylog.Error(err) {
 		return
@@ -63,14 +73,8 @@ func init() {
 	sha := sha256.Sum256(dllData)
 	dllName := fmt.Sprintf("hyperdbgDll-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
 	filePath := filepath.Join(dir, dllName)
-	_, err = os.Stat(filePath)
-	if !mylog.Error(err) {
-		if err == os.ErrNotExist {
-			if !mylog.Error(os.WriteFile(filePath, dllData, 0644)) {
-				return
-			}
-		}
+	if !tool.File().WriteTruncate(filePath, dllData) {
 		return
 	}
-	dll = syscall.MustLoadDLL(dllName)
+	dll = syscall.MustLoadDLL(filePath)
 }

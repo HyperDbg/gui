@@ -1,6 +1,9 @@
 package Headers
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+	"github.com/ddkwork/golibrary/mylog"
+)
 
 type (
 	CallBack func(Text *int8) int
@@ -33,14 +36,14 @@ type (
 
 type (
 	DEBUGGEE_KD_PAUSED_PACKET struct {
-		Rip            uint64
-		Is32BitAddress bool // if true shows that the address should be interpreted in 32-bit mode
-		PausingReason  DEBUGGEE_PAUSING_REASON
-		CurrentCore    uint32
-		EventTag       uint64
-		Rflags         uint64
-		//InstructionBytesOnRip[MAXIMUM_INSTR_SIZE]byte       //todo
-		ReadInstructionLen uint16
+		Rip                   uint64
+		Is32BitAddress        bool // if true shows that the address should be interpreted in 32-bit mode
+		PausingReason         DEBUGGEE_PAUSING_REASON
+		CurrentCore           uint32
+		EventTag              uint64
+		Rflags                uint64
+		InstructionBytesOnRip [MAXIMUM_INSTR_SIZE]byte
+		ReadInstructionLen    uint16
 	}
 	PDEBUGGEE_KD_PAUSED_PACKET *DEBUGGEE_KD_PAUSED_PACKET
 )
@@ -55,21 +58,26 @@ type (
 		ThreadId              uint32
 		EventTag              uint64
 		Rflags                uint64
-		//InstructionBytesOnRip[MAXIMUM_INSTR_SIZE]byte   //todo make fn get it ?
-		ReadInstructionLen uint16
-		GuestRegs          GUEST_REGS
+		InstructionBytesOnRip [MAXIMUM_INSTR_SIZE]byte
+		ReadInstructionLen    uint16
+		GuestRegs             GUEST_REGS
 	}
 	PDEBUGGEE_UD_PAUSED_PACKET *DEBUGGEE_UD_PAUSED_PACKET
 )
 
-//todo
 //static_assert(sizeof(DEBUGGEE_UD_PAUSED_PACKET) < PacketChunkSize,
 //   "err (static_assert), size of PacketChunkSize should be bigger than DEBUGGEE_UD_PAUSED_PACKET");
+
+func init() {
+	if binary.Size(DEBUGGEE_UD_PAUSED_PACKET{}) < PacketChunkSize {
+		mylog.Error("err (static_assert), size of PacketChunkSize should be bigger than DEBUGGEE_UD_PAUSED_PACKET")
+	}
+}
 
 type (
 	DEBUGGEE_MESSAGE_PACKET struct {
 		OperationCode uint32
-		//Message[PacketChunkSize]   byte      //todo
+		Message       [PacketChunkSize]byte
 	}
 	PDEBUGGEE_MESSAGE_PACKET *PDEBUGGEE_MESSAGE_PACKET
 )
