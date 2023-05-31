@@ -1,10 +1,9 @@
 package ImmediateData
 
 import (
-	"fyne.io/fyne/v2"
-	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/src/fynelib/canvasobjectapi"
-	"github.com/ddkwork/golibrary/src/fynelib/myTable"
+	"github.com/ddkwork/golibrary/skiaLib/widget/canvasobjectapi"
+	"github.com/ddkwork/hyperdbgui/ux/tabs/pageLog"
+	"github.com/richardwilkes/unison"
 )
 
 type (
@@ -12,19 +11,16 @@ type (
 	object    struct{}
 )
 
-func New() Interface {
-	return &object{}
+func (o *object) CanvasObject(window *unison.Window) *unison.Panel {
+	panel := pageLog.New().CanvasObject(window)
+	panel.SetSizer(func(_ unison.Size) (min, pref, max unison.Size) {
+		pref.Width = 220
+		pref.Height = 220
+		return min, pref, unison.MaxSize(max)
+	})
+	return panel
 }
 
-func (o *object) CanvasObject(window fyne.Window) fyne.CanvasObject {
-	d := newDisassemblyObject()
-	d.SetLines(nil)
-	list, err := myTable.NewTable(d, myTable.WithSelectionHandler(func(id int, selected bool) {
-		l := d.Lines()[id]
-		mylog.Struct(l)
-	}))
-	if !mylog.Error(err) {
-		return nil
-	}
-	return list
+func New() Interface {
+	return &object{}
 }

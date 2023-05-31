@@ -7,6 +7,8 @@ import (
 	"github.com/ddkwork/golibrary/skiaLib/widget"
 	"github.com/ddkwork/golibrary/skiaLib/widget/canvasobjectapi"
 	"github.com/ddkwork/golibrary/skiaLib/widget/tabbar"
+	"github.com/ddkwork/hyperdbgui/ux/tabs/pageCpu"
+	"github.com/ddkwork/hyperdbgui/ux/tabs/pageLog"
 	"github.com/richardwilkes/unison"
 )
 
@@ -77,28 +79,54 @@ func (o *object) CanvasObject(window *unison.Window) *unison.Panel {
 	o.breakpointButton = widget.CreateImageButton(breakpointKind.Image(), breakpointKind.String(), panel)
 	o.handlesButton = widget.CreateImageButton(handlesKind.Image(), handlesKind.String(), panel)
 	o.memoryMapButton = widget.CreateImageButton(memoryMapKind.Image(), memoryMapKind.String(), panel)
-	return CreateBodyView().AsPanel()
+	return CreateBodyView(window).AsPanel()
 	return panel
 }
 
-func CreateBodyView() *unison.Dock {
+func CreateBodyView(window *unison.Window) *unison.Dock {
 	var dock = unison.NewDock()
-	yellow := tabbar.New(processorCpuKind.Name(), "main debugger view", unison.Yellow) //todo set TitleIcon
-	dock.DockTo(yellow, nil, unison.BottomSide)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(logKind.Name(), "", unison.Yellow), -1)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(notesKind.Name(), "", unison.Yellow), -1)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(breakpointKind.Name(), "", unison.Yellow), -1)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(memoryMapKind.Name(), "", unison.Yellow), -1)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(stackKind.Name(), "", unison.Yellow), -1)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(sehChainKind.Name(), "", unison.Yellow), -1)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(scriptCodeKind.Name(), "", unison.Yellow), -1)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(downloadSymbolsKind.Name(), "", unison.Yellow), -1)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(sourceKind.Name(), "", unison.Yellow), -1)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(vt1Kind.Name(), "", unison.Yellow), -1) //todo
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(threadSwitchKind.Name(), "", unison.Yellow), -1)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(handlesKind.Name(), "", unison.Yellow), -1)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(traceKind.Name(), "", unison.Yellow), -1)
-	unison.Ancestor[*unison.DockContainer](yellow).Stack(tabbar.New(vtKind.Name(), "", unison.Yellow), -1)
+	cpu := tabbar.New(processorCpuKind.Name(), "main debugger view", unison.Green) //todo set TitleIcon
+	cpupanel := cpu.AsPanel()
+	cpupanel.SetLayout(&unison.FlexLayout{
+		Columns:      1,
+		HSpacing:     0,
+		VSpacing:     0,
+		HAlign:       0,
+		VAlign:       0,
+		EqualColumns: false,
+	})
+	cpupanel.AddChild(pageCpu.New().CanvasObject(window))
+	dock.DockTo(cpu, nil, unison.BottomSide)
+
+	log := tabbar.New(logKind.Name(), "main debug log", unison.Green)
+	logpanel := log.AsPanel()
+	logpanel.SetLayout(&unison.FlexLayout{
+		Columns:      1,
+		HSpacing:     0,
+		VSpacing:     0,
+		HAlign:       0,
+		VAlign:       0,
+		EqualColumns: false,
+	})
+	logpanel.AddChild(pageLog.New().CanvasObject(window))
+	//todo another
+
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(log, -1)
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(notesKind.Name(), "", unison.Green), -1)
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(breakpointKind.Name(), "", unison.Green), -1)
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(memoryMapKind.Name(), "", unison.Green), -1)
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(stackKind.Name(), "", unison.Green), -1)
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(sehChainKind.Name(), "", unison.Green), -1)
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(scriptCodeKind.Name(), "", unison.Green), -1)
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(downloadSymbolsKind.Name(), "", unison.Green), -1)
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(sourceKind.Name(), "", unison.Green), -1)
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(vt1Kind.Name(), "", unison.Green), -1) //todo
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(threadSwitchKind.Name(), "", unison.Green), -1)
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(handlesKind.Name(), "", unison.Green), -1)
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(traceKind.Name(), "", unison.Green), -1)
+	unison.Ancestor[*unison.DockContainer](cpu).Stack(tabbar.New(vtKind.Name(), "", unison.Green), -1)
+	unison.Ancestor[*unison.DockContainer](cpu).SetCurrentDockable(cpu)
+
 	dock.SetLayoutData(&unison.FlexLayoutData{
 		HSpan:  1,
 		VSpan:  200,
