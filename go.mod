@@ -6,8 +6,8 @@ require (
 	fyne.io/fyne/v2 v2.3.4
 	github.com/ddkwork/golibrary v0.0.0-20230207161811-549ea7412a10
 	github.com/fpabl0/sparky-go v0.0.0-20220803072144-1a0971955531
-	github.com/richardwilkes/toolbox v1.84.0
-	github.com/richardwilkes/unison v0.54.1
+	github.com/richardwilkes/toolbox v1.85.0
+	github.com/richardwilkes/unison v0.55.0
 	golang.org/x/sys v0.8.0
 )
 
@@ -45,17 +45,17 @@ require (
 	github.com/richardwilkes/json v0.1.0 // indirect
 	github.com/srwiley/oksvg v0.0.0-20220731023508-a61f04f16b76 // indirect
 	github.com/srwiley/rasterx v0.0.0-20210519020934-456a8d69b780 // indirect
-	github.com/stretchr/testify v1.8.2 // indirect
+	github.com/stretchr/testify v1.8.3 // indirect
 	github.com/tevino/abool v1.2.0 // indirect
 	github.com/yookoala/realpath v1.0.0 // indirect
 	github.com/yuin/goldmark v1.5.4 // indirect
-	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
-	golang.org/x/image v0.6.0 // indirect
+	golang.org/x/exp v0.0.0-20230519143937-03e91628a987 // indirect
+	golang.org/x/image v0.7.0 // indirect
 	golang.org/x/mobile v0.0.0-20211207041440-4e6c2922fdee // indirect
-	golang.org/x/mod v0.9.0 // indirect
-	golang.org/x/net v0.8.0 // indirect
-	golang.org/x/text v0.8.0 // indirect
-	golang.org/x/tools v0.7.0 // indirect
+	golang.org/x/mod v0.10.0 // indirect
+	golang.org/x/net v0.10.0 // indirect
+	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/tools v0.9.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/js/dom v0.0.0-20210725211120-f030747120f2 // indirect
 )
