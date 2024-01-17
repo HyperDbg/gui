@@ -2,7 +2,7 @@ package sdk_test
 
 import (
 	_ "embed"
-	"github.com/ddkwork/golibrary/src/stream"
+
 	"github.com/ddkwork/golibrary/src/stream/tool/cmd"
 	"io/fs"
 	"path/filepath"
@@ -12,7 +12,7 @@ import (
 )
 
 func TestXmake(t *testing.T) {
-	targets := stream.New()
+	targets := stream.New("")
 	targets.WriteStringLn("add_rules(\"mode.debug\", \"mode.release\")\n")
 	filepath.Walk("./HyperDbgDev", func(path string, info fs.FileInfo, err error) error {
 		ext := filepath.Ext(path)
@@ -24,7 +24,7 @@ func TestXmake(t *testing.T) {
 				ast := cmd.MakeArg("/analyze", "/d1Aprintast", ">", project+".ast")
 				println(ast)
 
-				s := stream.New()
+				s := stream.New("")
 				s.WriteStringLn("--" + filepath.Dir(path))
 				s.WriteStringLn("target(" + strconv.Quote(project) + ")")
 				if strings.Contains(path, "hyperdbg-cli") {
@@ -41,5 +41,5 @@ func TestXmake(t *testing.T) {
 		}
 		return err
 	})
-	//tool.File().WriteTruncate("./HyperDbgDev/xmake.lua", targets.String())
+	//stream.WriteTruncate("./HyperDbgDev/xmake.lua", targets.String())
 }

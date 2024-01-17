@@ -1,6 +1,6 @@
 package hookApiMgr
 
-import "github.com/ddkwork/golibrary/src/stream"
+import "github.com/ddkwork/golibrary/stream"
 
 type (
 	cpu1 struct { //todo merge to hardware pkg add get  and set for hook
@@ -30,8 +30,8 @@ func MyNotBookHook() *hookInfo {
 			edx: 0xBFEBFBFF,
 		},
 		ssdNumber: ssdNumber{
-			mod:    stream.NewString("Hitachi HTS545050A7E380"), //tigo SSD
-			serial: stream.NewString("TEA55A3Q2NTK8R"),          //TA1591503892
+			mod:    stream.New("Hitachi HTS545050A7E380"), //tigo SSD
+			serial: stream.New("TEA55A3Q2NTK8R"),          //TA1591503892
 		},
 		mac0: mac0{
 			addr: stream.NewHexString("D4BED97952EB"), //D4BED96EFE43 修过笔记本

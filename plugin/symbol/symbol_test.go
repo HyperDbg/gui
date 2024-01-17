@@ -1,20 +1,15 @@
 package symbol
 
 import (
-	"github.com/ddkwork/golibrary/src/stream"
-	"github.com/ddkwork/golibrary/src/stream/tool"
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/stream"
 	"go/format"
-	"os"
 	"strings"
 	"testing"
 )
 
 func TestName(t *testing.T) {
-	b, err := os.ReadFile(`ssdtTable.txt`)
-	if !mylog.Error(err) {
-		return
-	}
-	lines, ok := tool.New().File().ToLines(b)
+	lines, ok := stream.ReadFileToLines(`ssdtTable.txt`)
 	if !ok {
 		return
 	}
@@ -61,7 +56,7 @@ func TestName(t *testing.T) {
 	ntdlls := fnSaveObj(ntdll)
 	win32us := fnSaveObj(win32u)
 	fnGenGo := func(name, packageName string, obj []NtApiInfo) (ok bool) {
-		buffer := stream.New()
+		buffer := stream.New("")
 		buffer.WriteStringLn(`package ` + packageName)
 		buffer.WriteStringLn(`type (`)
 		buffer.WriteStringLn(`	Interface` + name + ` interface {`)
@@ -77,7 +72,7 @@ func TestName(t *testing.T) {
 		if !mylog.Error(err2) {
 			return
 		}
-		return tool.File().WriteTruncate(goFileName, source)
+		return stream.WriteTruncate(goFileName, source)
 	}
 	fnGenGo(`Ntdll`, `symbol`, ntdlls)
 	fnGenGo(`Win32u`, `symbol`, win32us)

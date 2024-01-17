@@ -2,8 +2,8 @@ package hookApiMgr_test
 
 import (
 	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/src/clang"
-	"github.com/ddkwork/golibrary/src/stream"
+	"github.com/ddkwork/golibrary/stream"
+	"github.com/ddkwork/golibrary/stream/clang"
 	"github.com/ddkwork/hyperdbgui/plugin/scriptGen"
 	"testing"
 )
@@ -42,8 +42,8 @@ func TestName1(t *testing.T) {
 
 			    }
 	*/
-	ABCDE := stream.NewString("ABCDE")
-	ssd := stream.NewString("ssd.exe")
+	ABCDE := stream.New("ABCDE")
+	ssd := stream.New("ssd.exe")
 	mylog.HexDump("ABCDE", ABCDE.Buffer.Bytes())
 	mylog.HexDump("ssd.exe", ssd.Buffer.Bytes())
 

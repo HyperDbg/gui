@@ -2,7 +2,7 @@ package Headers
 
 import (
 	"fmt"
-	"github.com/ddkwork/golibrary/src/cpp2go/delete/myc2go/windef"
+	"github.com/winlabs/gowin32/wrappers"
 )
 
 func CTL_CODE(deviceType, function, method, access uint32) uint32 {
@@ -10,9 +10,9 @@ func CTL_CODE(deviceType, function, method, access uint32) uint32 {
 }
 
 const (
-	FILE_DEVICE_UNKNOWN = windef.FILE_DEVICE_UNKNOWN
-	METHOD_BUFFERED     = windef.METHOD_BUFFERED
-	FILE_ANY_ACCESS     = windef.FILE_ANY_ACCESS
+	FILE_DEVICE_UNKNOWN = wrappers.FILE_DEVICE_UNKNOWN
+	METHOD_BUFFERED     = wrappers.METHOD_BUFFERED
+	FILE_ANY_ACCESS     = wrappers.FILE_ANY_ACCESS
 )
 
 type IoctlsKind uint32

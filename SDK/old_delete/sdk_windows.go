@@ -2,7 +2,7 @@ package sdk
 
 //
 //import (
-//	"github.com/ddkwork/golibrary/mylog"
+//
 //	"github.com/ddkwork/golibrary/src/bitfield"
 //	"github.com/ddkwork/golibrary/src/hardwareIndo"
 //	"syscall"
