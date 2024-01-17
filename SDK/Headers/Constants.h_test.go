@@ -2,7 +2,7 @@ package Headers
 
 import (
 	"encoding/binary"
-	"github.com/ddkwork/golibrary/mylog"
+
 	"testing"
 )
 

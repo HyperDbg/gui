@@ -2,9 +2,8 @@ package hookApiMgr
 
 import (
 	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/src/clang"
-	"github.com/ddkwork/golibrary/src/stream"
-	"github.com/ddkwork/golibrary/src/stream/tool"
+	"github.com/ddkwork/golibrary/stream"
+	"github.com/ddkwork/golibrary/stream/clang"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,7 +12,7 @@ import (
 type (
 	Interface interface {
 		DecodeStack(api, stack string, args ...string) (argList []ArgList, ok bool)
-		//canvasobjectapi.Interface
+
 		IopXxxControlFile() (ok bool)
 		IopQueryXxxInformation() (ok bool)
 		IopCreateFile() (ok bool) //NtCreateFile
@@ -65,10 +64,10 @@ type (
 	object struct{}
 )
 
-func New() Interface { return &object{} }
+func New() *object { return &object{} }
 
 func (o *object) DecodeStack(api, stack string, argsInput ...string) (argList []ArgList, ok bool) {
-	lines, ok := tool.File().ToLines(stack)
+	lines, ok := stream.New(stack).ToLines()
 	if !ok {
 		return
 	}
@@ -157,7 +156,7 @@ func (o *object) TestIopXxxControlFile() (ok bool) {
 	if !ok {
 		return
 	}
-	s := stream.New()
+	s := stream.New("")
 	s.WriteStringLn("void format() {")
 	s.WriteStringLn("!epthook nt!" + api + " script {")
 	pname := `printf("pname\t%s\n",$pname);`
@@ -187,7 +186,7 @@ g
 kq l 60
 */`)
 	dsName := api + ".ds"
-	tool.File().WriteTruncate(dsName, s.String())
+	stream.WriteTruncate(dsName, s.String())
 	abs, err := filepath.Abs(dsName)
 	if !mylog.Error(err) {
 		return
@@ -204,7 +203,7 @@ kq l 60
 		return
 	}
 	all := strings.ReplaceAll(string(b), " nt !", " nt!")
-	return tool.File().WriteTruncate(abs, all)
+	return stream.WriteTruncate(abs, all)
 }
 
 /*

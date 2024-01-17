@@ -2,9 +2,7 @@ package cpp2go
 
 import (
 	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/src/caseconv"
-	"github.com/ddkwork/golibrary/src/stream"
-	"github.com/ddkwork/golibrary/src/stream/tool"
+	"github.com/ddkwork/golibrary/stream"
 	"go/format"
 	"strconv"
 	"strings"
@@ -26,7 +24,7 @@ func TestGenErrorCodes(t *testing.T) {
 	})
 	return
 
-	body := stream.New()
+	body := stream.New("")
 	body.WriteStringLn("package Headers")
 	body.WriteStringLn("import \"fmt\"")
 	body.WriteStringLn("type ErrorCodes int")
@@ -36,8 +34,8 @@ func TestGenErrorCodes(t *testing.T) {
    `, "")
 	file.Reset()
 	file.WriteString(all)
-	lines, ok := file.ToLines(file.Bytes())
-	//lines, ok := stream.New().ReadToLines("ErrorCodes.h")
+	lines, ok := file.ToLines()
+	//lines, ok := stream.New("").ReadToLines("ErrorCodes.h")
 	if !ok {
 		return
 	}
@@ -66,7 +64,7 @@ func TestGenErrorCodes(t *testing.T) {
 		body.WriteString(code)
 		body.WriteStringLn(":")
 		body.WriteString("return ")
-		body.WriteStringLn(strconv.Quote(caseconv.ToCamelUpper(code, false)))
+		body.WriteStringLn(strconv.Quote(stream.ToCamelUpper(code, false)))
 	}
 	body.WriteStringLn("default:")
 	body.WriteStringLn("return fmt.Sprint(\"known error code \" + fmt.Sprintf(\"%d\",e))")
@@ -75,10 +73,10 @@ func TestGenErrorCodes(t *testing.T) {
 	mylog.Json("gen error code", body.String())
 	source, err := format.Source(body.Bytes())
 	if !mylog.Error(err) {
-		tool.File().WriteTruncate("ErrorCodes.h.go", body.Bytes())
+		stream.WriteTruncate("ErrorCodes.h.go", body.Bytes())
 		return
 	}
-	tool.File().WriteTruncate("ErrorCodes.h.go", source)
+	stream.WriteTruncate("ErrorCodes.h.go", source)
 }
 
 func TestRemoveNewline(t *testing.T) {
@@ -98,7 +96,7 @@ type (
 )
 
 func Define2Enum(info EnumInfo) {
-	body := stream.New()
+	body := stream.New("")
 	body.WriteStringLn("package " + info.Package)
 	body.WriteStringLn("import \"fmt\"")
 	body.WriteStringLn("type " + info.Type + " int")
@@ -108,7 +106,7 @@ func Define2Enum(info EnumInfo) {
    `, "")
 	file.Reset()
 	file.WriteString(all)
-	lines, ok := file.ToLines(file.Bytes())
+	lines, ok := file.ToLines()
 	if !ok {
 		return
 	}
@@ -136,7 +134,7 @@ func Define2Enum(info EnumInfo) {
 		body.WriteString(code)
 		body.WriteStringLn(":")
 		body.WriteString("return ")
-		body.WriteStringLn(strconv.Quote(caseconv.ToCamelUpper(code, false)))
+		body.WriteStringLn(strconv.Quote(stream.ToCamelUpper(code, false)))
 	}
 	body.WriteStringLn("default:")
 	body.WriteStringLn("return fmt.Sprint(\"known error code \" + fmt.Sprintf(\"%d\",e))")
@@ -145,8 +143,8 @@ func Define2Enum(info EnumInfo) {
 	mylog.Json("gen error code", body.String())
 	source, err := format.Source(body.Bytes())
 	if !mylog.Error(err) {
-		tool.File().WriteTruncate(info.File+".go", body.Bytes())
+		stream.WriteTruncate(info.File+".go", body.Bytes())
 		return
 	}
-	tool.File().WriteTruncate(info.File+".go", source)
+	stream.WriteTruncate(info.File+".go", source)
 }

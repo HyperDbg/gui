@@ -6,7 +6,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/src/stream/tool"
+	"github.com/ddkwork/golibrary/stream"
 	"golang.org/x/sys/windows"
 	"os"
 	"path/filepath"
@@ -73,7 +73,7 @@ func Init() {
 	sha := sha256.Sum256(dllData)
 	dllName := fmt.Sprintf("hyperdbgDll-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
 	filePath := filepath.Join(dir, dllName)
-	if !tool.File().WriteTruncate(filePath, dllData) {
+	if !stream.WriteTruncate(filePath, dllData) {
 		return
 	}
 	dll = syscall.MustLoadDLL(filePath)

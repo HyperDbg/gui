@@ -2,9 +2,7 @@ package Headers
 
 import (
 	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/src/caseconv"
-	"github.com/ddkwork/golibrary/src/stream"
-	"github.com/ddkwork/golibrary/src/stream/tool"
+	"github.com/ddkwork/golibrary/stream"
 	"go/format"
 	"strconv"
 	"strings"
@@ -48,7 +46,7 @@ type (
 )
 
 func Define2CtlCode(info CtlCodeInfo) {
-	body := stream.New()
+	body := stream.New("")
 	body.WriteStringLn("package " + info.Package)
 
 	body.WriteStringLn("import (")
@@ -72,7 +70,7 @@ func Define2CtlCode(info CtlCodeInfo) {
    `, "")
 	file.Reset()
 	file.WriteString(all)
-	lines, ok := file.ToLines(file.Bytes())
+	lines, ok := file.ToLines()
 	if !ok {
 		return
 	}
@@ -105,7 +103,7 @@ func Define2CtlCode(info CtlCodeInfo) {
 		body.WriteString(code)
 		body.WriteStringLn(":")
 		body.WriteString("return ")
-		body.WriteStringLn(strconv.Quote(caseconv.ToCamelUpper(code, false)))
+		body.WriteStringLn(strconv.Quote(stream.ToCamelUpper(code, false)))
 	}
 	body.WriteStringLn("default:")
 	body.WriteStringLn("return fmt.Sprint(\"known error code \" + fmt.Sprintf(\"%d\",e))")
@@ -114,8 +112,8 @@ func Define2CtlCode(info CtlCodeInfo) {
 	mylog.Json("gen error code", body.String())
 	source, err := format.Source(body.Bytes())
 	if !mylog.Error(err) {
-		tool.File().WriteTruncate(info.File+".go", body.Bytes())
+		stream.WriteTruncate(info.File+".go", body.Bytes())
 		return
 	}
-	tool.File().WriteTruncate(info.File+".go", source)
+	stream.WriteTruncate(info.File+".go", source)
 }

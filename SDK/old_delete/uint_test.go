@@ -1,7 +1,6 @@
 package sdk
 
 import (
-	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/src/cpp2go"
 	"github.com/ddkwork/golibrary/src/stream/tool/cmd"
 	"strings"
