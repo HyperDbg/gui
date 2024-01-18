@@ -187,7 +187,6 @@ func pageCpu(parent *gi.Frame) {
 	hexEditBuf.SetText([]byte(hex.Dump(testHexDat)))
 	hexEditEditor.SetBuf(hexEditBuf)
 
-	tabs.NewTab("memory1")
 	tabs.NewTab("memory2")
 	tabs.NewTab("memory3")
 	tabs.NewTab("memory4")
