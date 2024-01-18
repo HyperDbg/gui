@@ -6,7 +6,7 @@ import (
 	"cogentcore.org/core/gti"
 )
 
-var _ = gti.AddType(&gti.Type{Name: "main.FastCall", IDName: "fast-call", Directives: []gti.Directive{{Tool: "gti", Directive: "add"}}, Fields: []gti.Field{{Name: "Index"}, {Name: "Register"}, {Name: "Address"}, {Name: "Data"}}})
+var _ = gti.AddType(&gti.Type{Name: "main.FastCall", IDName: "fast-call", Directives: []gti.Directive{{Tool: "gti", Directive: "add"}}, Fields: []gti.Field{{Name: "Register", Doc: "Index    int"}, {Name: "Address"}, {Name: "Data"}}})
 
 var _ = gti.AddType(&gti.Type{Name: "main.Disassembly", IDName: "disassembly", Directives: []gti.Directive{{Tool: "gti", Directive: "add"}}, Fields: []gti.Field{{Name: "Icon"}, {Name: "Address"}, {Name: "Opcode"}, {Name: "Instruction"}, {Name: "Comment"}}})
 
