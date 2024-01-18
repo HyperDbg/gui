@@ -22,7 +22,9 @@ func pageCpu(parent *gi.Frame) {
 	splits := widget.NewVSplits(topSplits) //top is dismTable,bottom is Immediately count the list view window
 	dismFrame := gi.NewFrame(splits)
 	Immediately := gi.NewFrame(splits)
-	giv.NewSliceView(Immediately).SetSlice([]string{
+	v := giv.NewSliceView(Immediately)
+	//todo call dism fill pop menu title and calkback func
+	v.SetSlice([]string{
 		"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
 		"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
 		"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
