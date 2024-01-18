@@ -3,7 +3,6 @@ package main
 import (
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"
-	"cogentcore.org/core/states"
 )
 
 func pageSymbol(parent *gi.Frame) {
@@ -31,7 +30,7 @@ func SymbolTable(frame *gi.Frame) *giv.TableView {
 		breaks[i] = ts
 	}
 	tv := giv.NewTableView(frame, "tv")
-	tv.SetState(true, states.ReadOnly)
+	tv.SetReadOnly(true)
 	tv.SetSlice(&breaks)
 	return tv
 }

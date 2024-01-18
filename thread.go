@@ -3,7 +3,6 @@ package main
 import (
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"
-	"cogentcore.org/core/states"
 	"time"
 )
 
@@ -48,7 +47,7 @@ func ThreadTable(frame *gi.Frame) *giv.TableView {
 		threads[i] = ts
 	}
 	tv := giv.NewTableView(frame, "tv")
-	tv.SetState(true, states.ReadOnly)
+	tv.SetReadOnly(true)
 	tv.SetSlice(&threads)
 	return tv
 }

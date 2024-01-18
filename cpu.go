@@ -284,7 +284,7 @@ func pageCpu(parent *gi.Frame) {
 //	}
 //
 //	tv := giv.NewTableView(parent, "tv")
-//	tv.SetState(true, states.ReadOnly)
+//	tv.SetReadOnly(true)
 //	tv.SetSlice(&fastCalls)
 //	return tv
 //}
@@ -337,13 +337,13 @@ func stackTable(frame *gi.Frame) *giv.TableView {
 		stacks[i] = ts
 	}
 	tv := giv.NewTableView(frame, "tv")
-	tv.SetState(true, states.ReadOnly)
+	tv.SetReadOnly(true)
 	tv.SetSlice(&stacks)
 	return tv
 }
 
 type Register struct { //gti:add
-	RAX            int `format:"%016X",width:"50"`
+	RAX            int `width:"50" format:"%016X"`
 	RBX            int `format:"%016X"`
 	RCX            int `format:"%016X"`
 	RDX            int `format:"%016X"`
