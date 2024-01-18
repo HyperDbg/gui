@@ -12,7 +12,7 @@ func pageBreak(parent *gi.Frame) {
 
 type Break struct {
 	Type             int
-	Address          int
+	Address          int `format:"%016X"`
 	ModuleLabelAndEx string
 	Status           string
 	Disassembly      string //Assemble Disassembly

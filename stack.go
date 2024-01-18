@@ -12,9 +12,9 @@ func pageCallStack(parent *gi.Frame) {
 
 type CallStack struct {
 	ThreadId   int
-	Address    int
-	ReturnTo   int
-	ReturnFrom int
+	Address    int `format:"%016X"`
+	ReturnTo   int `format:"%016X"`
+	ReturnFrom int `format:"%016X"`
 	Size       int
 	Level      string
 	Notes      string

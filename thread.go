@@ -14,9 +14,9 @@ func pageThread(parent *gi.Frame) {
 type Thread struct {
 	IndexName        string
 	Id               int
-	Entry            int
-	Teb              int
-	Rip              int
+	Entry            int `format:"%016X"`
+	Teb              int `format:"%016X"`
+	Rip              int `format:"%016X"`
 	PendingCount     int
 	Priority         string
 	WaitForTheReason string
@@ -24,7 +24,7 @@ type Thread struct {
 	UserTime         time.Time
 	KernelTime       time.Time
 	CreatTime        time.Time
-	CPUCycles        int
+	CPUCycles        int `format:"%016X"`
 }
 
 func ThreadTable(frame *gi.Frame) *giv.TableView {

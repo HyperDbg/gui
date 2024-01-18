@@ -11,7 +11,7 @@ func pageMemory(parent *gi.Frame) {
 }
 
 type Memory struct {
-	Address           int
+	Address           int `format:"%016X"`
 	Size              int
 	Level             string
 	PageInfo          string

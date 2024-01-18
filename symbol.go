@@ -11,11 +11,11 @@ func pageSymbol(parent *gi.Frame) {
 }
 
 type Symbol struct {
-	BaseAddress int
+	BaseAddress int `format:"%016X"`
 	Module      string
 	Level       string
 	Path        string
-	Address     int
+	Address     int `format:"%016X"`
 }
 
 func SymbolTable(frame *gi.Frame) *giv.TableView {

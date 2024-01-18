@@ -11,7 +11,7 @@ func pageCallSeh(parent *gi.Frame) {
 }
 
 type Seh struct {
-	Address                   int
+	Address                   int `format:"%016X"`
 	ExceptionHandlingRoutines string
 	Label                     string
 	Notes                     string

@@ -16,7 +16,7 @@ import ( //
 ////go:embed Fleet.ico
 //var icon []byte
 
-//go:generate goki generate
+//go:generate core generate
 //go:generate goki build -v -t android/arm64
 //go:generate goki build -v -t windows/amd64
 
