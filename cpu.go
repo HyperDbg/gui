@@ -19,12 +19,17 @@ func pageCpu(parent *gi.Frame) {
 	downSplits := widget.NewHSplits(vSplits)
 	vSplits.SetSplits(.7, .3)
 
-	dismFrame := gi.NewFrame(topSplits)
+	splits := widget.NewVSplits(topSplits) //top is dismTable,bottom is Immediately count the list view window
+	dismFrame := gi.NewFrame(splits)
+	Immediately := gi.NewFrame(splits)
+	gi.NewButton(Immediately) //todo there need a list widget
+
 	dismFrame.Style(func(s *styles.Style) {
 		//s.Direction = styles.Row
 		s.Background = colors.C(colors.Scheme.SurfaceContainerLow)
 	})
 	dismTable(dismFrame)
+	splits.SetSplits(.9, .1)
 
 	registerFrame := gi.NewFrame(topSplits)
 	registerFrame.Style(func(s *styles.Style) {
