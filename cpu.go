@@ -309,10 +309,15 @@ func dismTable(frame *gi.Frame) *giv.TableView {
 		}
 		disassemblies[i] = ts
 	}
-	tv := giv.NewTableView(frame, "tv")
-	tv.SetState(true, states.ReadOnly)
-	tv.SetSlice(&disassemblies)
-	return tv
+	tableView := giv.NewTableView(frame, "tableView")
+	tableView.SetState(true, states.ReadOnly)
+	tableView.SetSlice(&disassemblies)
+	tableView.AddContextMenu(func(m *gi.Scene) {
+		gi.NewButton(m).SetText("goto 0x00007FF838E51030") //取出tableView选中的元素得到Address，按钮回调调用它
+		gi.NewButton(m).SetText("goto 0x00007FF838E51030")
+		gi.NewButton(m).SetText("goto 0x00007FF838E51030")
+	})
+	return tableView
 }
 
 type Stack struct { //gti:add
