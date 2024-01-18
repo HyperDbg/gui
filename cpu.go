@@ -4,7 +4,6 @@ import (
 	"cogentcore.org/core/colors"
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"
-	"cogentcore.org/core/ki"
 	"cogentcore.org/core/states"
 	"cogentcore.org/core/styles"
 	"cogentcore.org/core/texteditor"
@@ -178,7 +177,16 @@ func pageCpu(parent *gi.Frame) {
 		DR6:            0,
 		DR7:            0,
 	}).SetReadOnly(true)
-	fastCallTable(newVSplits)
+	//fastCallTable(newVSplits)
+	fastCall := giv.NewSliceView(newVSplits)
+	fastCall.SetReadOnly(true)
+	fastCall.SetSlice([]string{
+		"rcx 00007FF884F6F814 ntdll.00007FF884F6F814", //1:
+		"rdx 0000000000000000 0000000000000000",       //2:
+		"r8  0000008F09EFEFB8 0000008F09EFEFB8",       //3:
+		"r9  0000000000000000 0000000000000000",       //4:
+		"[rsp+28] 0000000000000000 0000000000000000",  //5:
+	})
 	newVSplits.SetSplits(.7, .3)
 
 	topSplits.SetSplits(.7, .3)
@@ -208,67 +216,67 @@ func pageCpu(parent *gi.Frame) {
 	downSplits.SetSplits(.6, .4)
 }
 
-type FastCall struct { //gti:add
-	//Index    int
-	Register string
-	Address  int `format:"%016X"`
-	Data     string
-}
+//type FastCall struct { //gti:add
+//	//Index    int
+//	Register string
+//	Address  int `format:"%016X"`
+//	Data     string
+//}
 
-func fastCallTable(parent ki.Ki) *giv.TableView {
-	fastCalls := make([]*FastCall, 0)
-	f := new(FastCall)
-	for i := 0; i < 5; i++ {
-		//1: rcx 00007FF884F6F814 ntdll.00007FF884F6F814
-		//2: rdx 0000000000000000 0000000000000000
-		//3: r8 0000008F09EFEFB8 0000008F09EFEFB8
-		//4: r9 0000000000000000 0000000000000000
-		//5: [rsp+28] 0000000000000000 0000000000000000
-		switch i { //mock
-		case 0:
-			f = &FastCall{
-				//Index:    i + 1,
-				Register: "rcx",
-				Address:  0x00007FF884F6F814,
-				Data:     "ntdll.00007FF884F6F814",
-			}
-		case 1:
-			f = &FastCall{
-				//Index:    i + 1,
-				Register: "rdx",
-				Address:  0x0000000000000000,
-				Data:     "0000000000000000",
-			}
-		case 2:
-			f = &FastCall{
-				//Index:    i + 1,
-				Register: "r8",
-				Address:  0x0000008F09EFEFB8,
-				Data:     "0000008F09EFEFB8",
-			}
-		case 3:
-			f = &FastCall{
-				//Index:    i + 1,
-				Register: "r9",
-				Address:  0x0000000000000000,
-				Data:     "0000000000000000",
-			}
-		case 4:
-			f = &FastCall{
-				//Index:    i + 1,
-				Register: "[rsp+28]",
-				Address:  0x0000000000000000,
-				Data:     "0000000000000000",
-			}
-		}
-		fastCalls = append(fastCalls, f)
-	}
-
-	tv := giv.NewTableView(parent, "tv")
-	tv.SetState(true, states.ReadOnly)
-	tv.SetSlice(&fastCalls)
-	return tv
-}
+//func fastCallTable(parent ki.Ki) *giv.TableView {
+//	fastCalls := make([]*FastCall, 0)
+//	f := new(FastCall)
+//	for i := 0; i < 5; i++ {
+//		//1: rcx 00007FF884F6F814 ntdll.00007FF884F6F814
+//		//2: rdx 0000000000000000 0000000000000000
+//		//3: r8 0000008F09EFEFB8 0000008F09EFEFB8
+//		//4: r9 0000000000000000 0000000000000000
+//		//5: [rsp+28] 0000000000000000 0000000000000000
+//		switch i { //mock
+//		case 0:
+//			f = &FastCall{
+//				//Index:    i + 1,
+//				Register: "rcx",
+//				Address:  0x00007FF884F6F814,
+//				Data:     "ntdll.00007FF884F6F814",
+//			}
+//		case 1:
+//			f = &FastCall{
+//				//Index:    i + 1,
+//				Register: "rdx",
+//				Address:  0x0000000000000000,
+//				Data:     "0000000000000000",
+//			}
+//		case 2:
+//			f = &FastCall{
+//				//Index:    i + 1,
+//				Register: "r8",
+//				Address:  0x0000008F09EFEFB8,
+//				Data:     "0000008F09EFEFB8",
+//			}
+//		case 3:
+//			f = &FastCall{
+//				//Index:    i + 1,
+//				Register: "r9",
+//				Address:  0x0000000000000000,
+//				Data:     "0000000000000000",
+//			}
+//		case 4:
+//			f = &FastCall{
+//				//Index:    i + 1,
+//				Register: "[rsp+28]",
+//				Address:  0x0000000000000000,
+//				Data:     "0000000000000000",
+//			}
+//		}
+//		fastCalls = append(fastCalls, f)
+//	}
+//
+//	tv := giv.NewTableView(parent, "tv")
+//	tv.SetState(true, states.ReadOnly)
+//	tv.SetSlice(&fastCalls)
+//	return tv
+//}
 
 type Disassembly struct { //gti:add
 	Icon        string
