@@ -22,14 +22,20 @@ func pageCpu(parent *gi.Frame) {
 	splits := widget.NewVSplits(topSplits) //top is dismTable,bottom is Immediately count the list view window
 	dismFrame := gi.NewFrame(splits)
 	Immediately := gi.NewFrame(splits)
-	gi.NewButton(Immediately) //todo there need a list widget
+	giv.NewSliceView(Immediately).SetSlice([]string{
+		"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
+		"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
+		"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
+		"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
+	}).SetReadOnly(true)
+	//gi.NewButton(Immediately) //todo there need a list widget
 
 	dismFrame.Style(func(s *styles.Style) {
 		//s.Direction = styles.Row
 		s.Background = colors.C(colors.Scheme.SurfaceContainerLow)
 	})
 	dismTable(dismFrame)
-	splits.SetSplits(.9, .1)
+	splits.SetSplits(.85, .15)
 
 	registerFrame := gi.NewFrame(topSplits)
 	registerFrame.Style(func(s *styles.Style) {
