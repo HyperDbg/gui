@@ -22,7 +22,13 @@ func pageCpu(parent *gi.Frame) {
 	dismFrame := gi.NewFrame(splits)
 	Immediately := gi.NewFrame(splits)
 	v := giv.NewSliceView(Immediately)
-	//todo call dism fill pop menu title and calkback func
+	v.AddContextMenu(func(m *gi.Scene) {
+		gi.NewButton(m).SetText("goto 00007FF885007C08")
+		gi.NewButton(m).SetText("goto 00007FF885007C08")
+		gi.NewButton(m).SetText("goto 00007FF885007C08")
+		gi.NewButton(m).SetText("goto 00007FF885007C08")
+		gi.NewButton(m).SetText("goto 00007FF885007C08")
+	})
 	v.SetSlice([]string{
 		"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
 		"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
@@ -180,6 +186,11 @@ func pageCpu(parent *gi.Frame) {
 	//fastCallTable(newVSplits)
 	fastCall := giv.NewSliceView(newVSplits)
 	fastCall.SetReadOnly(true)
+	fastCall.AddContextMenu(func(m *gi.Scene) {
+		gi.NewButton(m).SetText("go 00007FF884F6F814")
+		gi.NewButton(m).SetText("go 00007FF884F6F814")
+		gi.NewButton(m).SetText("go 00007FF884F6F814")
+	})
 	fastCall.SetSlice([]string{
 		"rcx 00007FF884F6F814 ntdll.00007FF884F6F814", //1:
 		"rdx 0000000000000000 0000000000000000",       //2:
@@ -327,7 +338,7 @@ func stackTable(frame *gi.Frame) *giv.TableView {
 }
 
 type Register struct { //gti:add
-	RAX            int `format:"%016X"`
+	RAX            int `format:"%016X",width:"50"`
 	RBX            int `format:"%016X"`
 	RCX            int `format:"%016X"`
 	RDX            int `format:"%016X"`
