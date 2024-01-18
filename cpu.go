@@ -175,7 +175,9 @@ func pageCpu(parent *gi.Frame) {
 
 	topSplits.SetSplits(.7, .3)
 
-	hexEditFrame := gi.NewFrame(downSplits)
+	tabs := gi.NewTabs(downSplits)
+	mem1Tab := tabs.NewTab("memory1")
+	hexEditFrame := gi.NewFrame(mem1Tab)
 	hexEditFrame.Style(func(s *styles.Style) {
 		//s.Direction = styles.Row
 		s.Background = colors.C(colors.Scheme.SurfaceContainerLow)
@@ -184,6 +186,15 @@ func pageCpu(parent *gi.Frame) {
 	hexEditBuf := texteditor.NewBuf()
 	hexEditBuf.SetText([]byte(hex.Dump(testHexDat)))
 	hexEditEditor.SetBuf(hexEditBuf)
+
+	tabs.NewTab("memory1")
+	tabs.NewTab("memory2")
+	tabs.NewTab("memory3")
+	tabs.NewTab("memory4")
+	tabs.NewTab("memory5")
+	tabs.NewTab("watch1")
+	tabs.NewTab("var")
+	tabs.NewTab("struct")
 
 	stackFrame := gi.NewFrame(downSplits)
 	stackTable(stackFrame) //stack
