@@ -12,7 +12,7 @@ require (
 )
 
 require (
-	cogentcore.org/core v0.0.3-0.20240119004004-0e24729679a0 // indirect
+	cogentcore.org/core v0.0.3-0.20240119063323-0b9b5d493225 // indirect
 	github.com/Masterminds/vcs v1.13.3 // indirect
 	github.com/OpenPrinting/goipp v1.0.0 // indirect
 	github.com/akutz/sortfold v0.2.1 // indirect
@@ -32,7 +32,7 @@ require (
 	github.com/containerd/console v1.0.4-0.20230313162750-1ae8d489ac81 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dc0d/caseconv v0.5.0 // indirect
-	github.com/ddkwork/golibrary v0.0.0-20240119084931-340a425aa354 // indirect
+	github.com/ddkwork/golibrary v0.0.0-20240119090835-37e1ffc213d0 // indirect
 	github.com/dlclark/regexp2 v1.10.0 // indirect
 	github.com/dop251/goja v0.0.0-20231027120936-b396bb4c349d // indirect
 	github.com/expr-lang/expr v1.15.8 // indirect
