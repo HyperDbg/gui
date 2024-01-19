@@ -64,8 +64,6 @@ func main() {
 
 	tabs := gi.NewTabs(b)
 
-	//todo add svg,设计寄存器垂直拆分布局，
-	// 反汇编和立即数的垂直拆分布局以及cpu页面的嵌套垂直拆分布局，底部的命令栏和状态栏
 	pageCpu(tabs.NewTab("cpu"))
 
 	pageLog(tabs.NewTab("log"))
