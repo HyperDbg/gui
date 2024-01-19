@@ -12,7 +12,7 @@ require (
 )
 
 require (
-	cogentcore.org/core v0.0.3-0.20240118014054-cc3480dc68bf // indirect
+	cogentcore.org/core v0.0.3-0.20240119004004-0e24729679a0 // indirect
 	github.com/Masterminds/vcs v1.13.3 // indirect
 	github.com/OpenPrinting/goipp v1.0.0 // indirect
 	github.com/akutz/sortfold v0.2.1 // indirect
