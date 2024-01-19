@@ -32,7 +32,7 @@ require (
 	github.com/containerd/console v1.0.4-0.20230313162750-1ae8d489ac81 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dc0d/caseconv v0.5.0 // indirect
-	github.com/ddkwork/golibrary v0.0.0-20240117064013-245fedcdbd84 // indirect
+	github.com/ddkwork/golibrary v0.0.0-20240119084931-340a425aa354 // indirect
 	github.com/dlclark/regexp2 v1.10.0 // indirect
 	github.com/dop251/goja v0.0.0-20231027120936-b396bb4c349d // indirect
 	github.com/expr-lang/expr v1.15.8 // indirect
