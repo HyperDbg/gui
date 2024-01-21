@@ -46,6 +46,8 @@ cogentcore.org/core v0.0.3-0.20240119004004-0e24729679a0 h1:MzqWhou9foHwS46S72zu
 cogentcore.org/core v0.0.3-0.20240119004004-0e24729679a0/go.mod h1:uIBPkWoDm49IN9riSeCopcL4NZvPptPCneKogVU/eO4=
 cogentcore.org/core v0.0.3-0.20240119063323-0b9b5d493225 h1:yZ43d4FYSsYSHJC2j7ejhPHrF0DK1z1enLq8EpZumHc=
 cogentcore.org/core v0.0.3-0.20240119063323-0b9b5d493225/go.mod h1:JJ6NEF/Ig6kQ4SUc/ApTwZ0XbyUxzNuw9IhonSRbV00=
+cogentcore.org/core v0.0.3-0.20240121024051-38966543041d h1:7VIdNJgU9amhw/t3OrUbYU8fIw9Cn6J0jcFYPNkmdT8=
+cogentcore.org/core v0.0.3-0.20240121024051-38966543041d/go.mod h1:JJ6NEF/Ig6kQ4SUc/ApTwZ0XbyUxzNuw9IhonSRbV00=
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
 fyne.io/fyne/v2 v2.1.4/go.mod h1:p+E/Dh+wPW8JwR2DVcsZ9iXgR9ZKde80+Y+40Is54AQ=
 fyne.io/fyne/v2 v2.4.3 h1:v2wncjEAcwXZ8UNmTCWTGL9+sGyPc5RuzBvM96GcC78=
