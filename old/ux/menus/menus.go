@@ -1,7 +1,6 @@
 package menus
 
 import (
-	"github.com/ddkwork/golibrary/skiaLib/widget"
 	"github.com/ddkwork/hyperdbgui/ux/about"
 	"github.com/richardwilkes/unison"
 )
