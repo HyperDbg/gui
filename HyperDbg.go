@@ -45,7 +45,7 @@ func main() {
 		//	o.ApplyStylePrefs()
 		//})
 
-		o := gi.NewButton(tb).SetText("open").SetIcon(icons.FolderOpen)
+		o := gi.NewButton(tb).SetText("open").SetIcon("1")
 		o.OnWidgetAdded(func(w gi.Widget) {
 			if lb, ok := w.(*gi.Label); ok {
 				lb.Style(func(s *styles.Style) {
@@ -58,16 +58,16 @@ func main() {
 			}
 		})
 
-		gi.NewButton(tb).SetText("reload").SetIcon(icons.FrameReload)
-		gi.NewButton(tb).SetText("stop").SetIcon(icons.StopCircle)
-		gi.NewButton(tb).SetText("f7")
-		gi.NewButton(tb).SetText("f8")
-		gi.NewButton(tb).SetText("f9")
-		gi.NewButton(tb).SetText("scylla")
-		gi.NewButton(tb).SetText("path")
-		gi.NewButton(tb).SetText("calc")
-		gi.NewButton(tb).SetText("setting").SetIcon(icons.Settings)
-		gi.NewButton(tb).SetText("about")
+		gi.NewButton(tb).SetText("reload").SetIcon("1")
+		gi.NewButton(tb).SetText("stop").SetIcon("1")
+		gi.NewButton(tb).SetText("f7").SetIcon("1")
+		gi.NewButton(tb).SetText("f8").SetIcon("1")
+		gi.NewButton(tb).SetText("f9").SetIcon("1")
+		gi.NewButton(tb).SetText("scylla").SetIcon("1")
+		gi.NewButton(tb).SetText("path").SetIcon("1")
+		gi.NewButton(tb).SetText("calc").SetIcon("1")
+		gi.NewButton(tb).SetText("setting").SetIcon("1")
+		gi.NewButton(tb).SetText("about").SetIcon("1")
 	})
 
 	tabs := gi.NewTabs(b)
