@@ -11,7 +11,7 @@ require (
 	golang.org/x/sys v0.16.0
 )
 
-require cogentcore.org/core v0.0.3-0.20240122174820-ecaa2ec15068 // indirect
+require cogentcore.org/core v0.0.3-0.20240122175333-9e2e62e0bb4f // indirect
 
 require (
 	github.com/Masterminds/vcs v1.13.3 // indirect
