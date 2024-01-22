@@ -3,12 +3,15 @@ package main
 import ( //
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/goosi/driver/desktop"
+	"cogentcore.org/core/grr"
 	"cogentcore.org/core/icons"
 	"cogentcore.org/core/states"
 	"cogentcore.org/core/styles"
 	"cogentcore.org/core/units"
+	"embed"
 	_ "embed"
 	"github.com/go-gl/glfw/v3.3/glfw"
+	"io/fs"
 	"os"
 	"path/filepath"
 )
@@ -21,7 +24,12 @@ import ( //
 //go:generate goki build -v -t android/arm64
 //go:generate goki build -v -t windows/amd64
 
+//go:embed ICON/*.svg
+var myIcons embed.FS
+
 func main() {
+	icons.AddFS(grr.Log1(fs.Sub(myIcons, "ICON")))
+
 	b := gi.NewAppBody("HyperDbg")
 	//b.App().SetIconBytes(icon)
 	b.AddAppBar(func(tb *gi.Toolbar) {
