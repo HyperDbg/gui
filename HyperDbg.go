@@ -79,21 +79,21 @@ func main() {
 	pageCpu(tabs.NewTab("cpu", "Cpu.svg"))
 
 	pageLog(tabs.NewTab("log", "log"))
-	pageNotes(tabs.NewTab("notes"))
+	pageNotes(tabs.NewTab("notes", "notes"))
 
-	pageBreak(tabs.NewTab("break"))
-	pageMemory(tabs.NewTab("memory"))
-	pageCallStack(tabs.NewTab("stack"))
-	pageCallSeh(tabs.NewTab("seh"))
-	pageScript(tabs.NewTab("script"))
-	pageSymbol(tabs.NewTab("symbol"))
-	pageSource(tabs.NewTab("source"))
+	pageBreak(tabs.NewTab("break", "breakpoint"))
+	pageMemory(tabs.NewTab("memory", "memory"))
+	pageCallStack(tabs.NewTab("stack", "stack"))
+	pageCallSeh(tabs.NewTab("seh", "seh"))
+	pageScript(tabs.NewTab("script", "script"))
+	pageSymbol(tabs.NewTab("symbol", "Symbols"))
+	pageSource(tabs.NewTab("source", "source"))
 
 	tabs.NewTab("references")
-	pageThread(tabs.NewTab("thread"))
+	pageThread(tabs.NewTab("thread", "thread"))
 
-	tabs.NewTab("handle")
-	tabs.NewTab("trace")
+	tabs.NewTab("handle", "handles")
+	tabs.NewTab("trace", "traceinto")
 
 	c := gi.NewTextField(b).SetPlaceholder("command")
 	c.Style(func(s *styles.Style) {
