@@ -27,8 +27,12 @@ import ( //
 //go:embed ICON/*.svg
 var myIcons embed.FS
 
+//go:embed pageIco/*.svg
+var pageIco embed.FS
+
 func main() {
 	icons.AddFS(grr.Log1(fs.Sub(myIcons, "ICON")))
+	icons.AddFS(grr.Log1(fs.Sub(pageIco, "pageIco")))
 
 	b := gi.NewAppBody("HyperDbg")
 	//b.App().SetIconBytes(icon)
@@ -72,9 +76,9 @@ func main() {
 
 	tabs := gi.NewTabs(b)
 
-	pageCpu(tabs.NewTab("cpu"))
+	pageCpu(tabs.NewTab("cpu", "Cpu.svg"))
 
-	pageLog(tabs.NewTab("log"))
+	pageLog(tabs.NewTab("log", "log"))
 	pageNotes(tabs.NewTab("notes"))
 
 	pageBreak(tabs.NewTab("break"))
