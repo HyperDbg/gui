@@ -9,7 +9,9 @@ import (
 )
 
 func TestName(t *testing.T) {
-	decode, s, err := image.Decode(stream.NewReadFile("bmp/WINDOWS.bmp"))
+	path := "D:\\workspace\\workspace\\gui\\BITMAP\\MODULES.bmp"
+	//path="bmp/WINDOWS.bmp"
+	decode, s, err := image.Decode(stream.NewReadFile(path))
 	if !mylog.Error(err) {
 		return
 	}
