@@ -1,17 +1,30 @@
 package hyper
 
-var application *Application
+import (
+	"fmt"
+
+	"fyne.io/fyne/v2"
+	fyne_app "fyne.io/fyne/v2/app"
+)
+
+var app *Application
 
 func init() {
-	application = &Application{
-		Window{
-			Title: "Hyper Debugger",
-		},
+	app = &Application{
+		gui: fyne_app.New(),
+	}
+
+	app.Scaffold = Scaffold{
+		ToolBar:   ToolBar{},
+		SideBar:   SideBar{},
+		Pages:     []Page{},
+		StatusBar: StatusBar{},
+		Window:    app.gui.NewWindow("Hyper Debugger"),
 	}
 }
 
 func Get() *Application {
-	return application
+	return app
 }
 
 // TODO
@@ -19,9 +32,15 @@ func Get() *Application {
 //  2. Add plugin loader/manager
 
 type Application struct {
-	Window Window
+	Scaffold Scaffold
+	gui      fyne.App
 }
 
 func (a *Application) Run() error {
-	return a.Window.Show()
+	if err := a.Scaffold.Show(); err != nil {
+		return fmt.Errorf("show window: %v", err)
+	}
+
+	a.gui.Run()
+	return nil
 }
