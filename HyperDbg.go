@@ -21,8 +21,8 @@ import ( //
 
 //go:generate go get cogentcore.org/core@main
 //go:generate core generate
-//go:generate goki build -v -t android/arm64
-//go:generate goki build -v -t windows/amd64
+//go:generate core build -v -t android/arm64
+//go:generate core build -v -t windows/amd64
 
 //go:embed ICON/*.svg
 var myIcons embed.FS
