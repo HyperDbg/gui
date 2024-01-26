@@ -34,7 +34,7 @@ func main() {
 	icons.AddFS(grr.Log1(fs.Sub(myIcons, "ICON")))
 	icons.AddFS(grr.Log1(fs.Sub(pageIco, "pageIco")))
 
-	b := gi.NewAppBody("HyperDbg")
+	b := gi.NewBody("HyperDbg")
 	//b.App().SetIconBytes(icon)
 	b.AddAppBar(func(tb *gi.Toolbar) {
 		//o := gi.NewButton(tb).SetText("open").SetIcon(icons.FolderOpen)
