@@ -5,7 +5,6 @@ import (
 	_ "embed"
 	"github.com/ddkwork/GolandProjects/ui/widget"
 
-	"github.com/richardwilkes/unison"
 	"strings"
 )
 

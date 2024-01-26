@@ -6,7 +6,6 @@ import (
 	_ "embed"
 	"github.com/ddkwork/golibrary/skiaLib/widget"
 	"github.com/ddkwork/golibrary/skiaLib/widget/canvasobjectapi"
-	"github.com/richardwilkes/unison"
 )
 
 type (

@@ -2,7 +2,6 @@ package toolbar
 
 import (
 	_ "embed"
-	"github.com/richardwilkes/unison"
 )
 
 type (

@@ -2,7 +2,6 @@ package menus
 
 import (
 	"github.com/ddkwork/hyperdbgui/ux/about"
-	"github.com/richardwilkes/unison"
 )
 
 func New(wnd *unison.Window) {

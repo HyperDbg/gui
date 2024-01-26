@@ -7,7 +7,6 @@ import (
 	//"github.com/ddkwork/hyperdbgui/ux/tabs"
 	//"github.com/ddkwork/hyperdbgui/ux/toolbar"
 	"github.com/ddkwork/hyperdbgui/old/ux/tabs"
-	"github.com/richardwilkes/unison"
 )
 
 //go:generate  go build .

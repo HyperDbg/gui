@@ -5,7 +5,6 @@ package tabs
 import (
 	_ "embed"
 	"github.com/ddkwork/golibrary/skiaLib/widget"
-	"github.com/richardwilkes/unison"
 )
 
 type kind byte

@@ -8,7 +8,6 @@ import (
 
 	"github.com/ddkwork/hyperdbgui/ux/tabs/pageCpu"
 	"github.com/ddkwork/hyperdbgui/ux/tabs/pageLog"
-	"github.com/richardwilkes/unison"
 )
 
 type (

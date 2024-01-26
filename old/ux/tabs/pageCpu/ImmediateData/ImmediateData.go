@@ -3,7 +3,7 @@ package ImmediateData
 import (
 	"fmt"
 	"github.com/richardwilkes/toolbox/log/jot"
-	"github.com/richardwilkes/unison"
+
 	"github.com/richardwilkes/unison/enums/align"
 	"github.com/richardwilkes/unison/enums/behavior"
 	"strings"

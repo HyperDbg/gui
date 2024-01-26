@@ -3,7 +3,6 @@ package dism
 import (
 	"github.com/ddkwork/hyperdbgui/ux/tabs/pageCpu/ImmediateData"
 	"github.com/ddkwork/hyperdbgui/ux/tabs/pageLog"
-	"github.com/richardwilkes/unison"
 )
 
 type (

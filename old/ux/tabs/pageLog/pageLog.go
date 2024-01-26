@@ -3,7 +3,6 @@ package pageLog
 import (
 	"github.com/google/uuid"
 	"github.com/richardwilkes/toolbox/log/jot"
-	"github.com/richardwilkes/unison"
 )
 
 type (

@@ -6,7 +6,7 @@ import (
 	"github.com/ddkwork/hyperdbgui/ux/tabs/pageCpu/dump"
 	"github.com/ddkwork/hyperdbgui/ux/tabs/pageCpu/reg"
 	"github.com/ddkwork/hyperdbgui/ux/tabs/pageCpu/stack"
-	"github.com/richardwilkes/unison"
+
 	"github.com/richardwilkes/unison/enums/side"
 )
 

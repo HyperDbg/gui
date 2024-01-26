@@ -3,7 +3,6 @@ package about
 import (
 	"github.com/richardwilkes/toolbox/cmdline"
 	"github.com/richardwilkes/toolbox/log/jot"
-	"github.com/richardwilkes/unison"
 )
 
 var aboutWindow *unison.Window

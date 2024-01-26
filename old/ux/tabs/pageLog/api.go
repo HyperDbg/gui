@@ -3,7 +3,7 @@ package pageLog
 import (
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/richardwilkes/unison"
+
 	"github.com/richardwilkes/unison/enums/align"
 	"github.com/richardwilkes/unison/enums/behavior"
 )

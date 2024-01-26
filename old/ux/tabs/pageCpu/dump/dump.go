@@ -2,7 +2,6 @@ package dump
 
 import (
 	"github.com/ddkwork/hyperdbgui/ux/tabs/pageLog"
-	"github.com/richardwilkes/unison"
 )
 
 type (

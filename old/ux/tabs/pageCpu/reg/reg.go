@@ -2,7 +2,6 @@ package reg
 
 import (
 	"github.com/ddkwork/GolandProjects/ui/widget"
-	"github.com/richardwilkes/unison"
 )
 
 type (
