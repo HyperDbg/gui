@@ -10,6 +10,7 @@ import ( //
 	"cogentcore.org/core/units"
 	"embed"
 	_ "embed"
+	"github.com/ddkwork/golibrary/widget"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"io/fs"
 	"os"
@@ -49,7 +50,7 @@ func main() {
 		//	o.ApplyStylePrefs()
 		//})
 
-		o := gi.NewButton(tb).SetTooltip("open").SetIcon("1")
+		o := widget.NewButton(tb).SetTooltip("open").SetIcon("1")
 		o.OnWidgetAdded(func(w gi.Widget) {
 			if lb, ok := w.(*gi.Label); ok {
 				lb.Style(func(s *styles.Style) {
@@ -62,16 +63,16 @@ func main() {
 			}
 		})
 
-		gi.NewButton(tb).SetTooltip("reload").SetIcon("2")
-		gi.NewButton(tb).SetTooltip("stop").SetIcon("3")
-		gi.NewButton(tb).SetTooltip("f7").SetIcon("4")
-		gi.NewButton(tb).SetTooltip("f8").SetIcon("5")
-		gi.NewButton(tb).SetTooltip("f9").SetIcon("6")
-		gi.NewButton(tb).SetTooltip("scylla").SetIcon("7")
-		gi.NewButton(tb).SetTooltip("path").SetIcon("8")
-		gi.NewButton(tb).SetTooltip("calc").SetIcon("9")
-		gi.NewButton(tb).SetTooltip("setting").SetIcon("10")
-		gi.NewButton(tb).SetTooltip("about").SetIcon("11")
+		widget.NewButton(tb).SetTooltip("reload").SetIcon("2")
+		widget.NewButton(tb).SetTooltip("stop").SetIcon("3")
+		widget.NewButton(tb).SetTooltip("f7").SetIcon("4")
+		widget.NewButton(tb).SetTooltip("f8").SetIcon("5")
+		widget.NewButton(tb).SetTooltip("f9").SetIcon("6")
+		widget.NewButton(tb).SetTooltip("scylla").SetIcon("7")
+		widget.NewButton(tb).SetTooltip("path").SetIcon("8")
+		widget.NewButton(tb).SetTooltip("calc").SetIcon("9")
+		widget.NewButton(tb).SetTooltip("setting").SetIcon("10")
+		widget.NewButton(tb).SetTooltip("about").SetIcon("11")
 	})
 
 	tabs := gi.NewTabs(b)
