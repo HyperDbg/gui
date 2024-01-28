@@ -2,8 +2,8 @@ package sdk_test
 
 import (
 	_ "embed"
-
-	"github.com/ddkwork/golibrary/src/stream/tool/cmd"
+	"github.com/ddkwork/golibrary/stream"
+	"github.com/ddkwork/golibrary/stream/cmd"
 	"io/fs"
 	"path/filepath"
 	"strconv"

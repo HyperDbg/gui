@@ -29,28 +29,28 @@ var mainIcons []byte
 //go:embed SND/ICO/*.svg
 var myIcons embed.FS
 
-//go:embed SND/png/*.svg
+//go:embed png/*.svg
 var mypngs embed.FS
 
 //go:embed SND/pageIco/*.svg
 var pageIco embed.FS
 
 func main() {
-	icons.AddFS(grr.Log1(fs.Sub(myIcons, "SND/ICO")))
-	icons.AddFS(grr.Log1(fs.Sub(myIcons, "SND/png")))
-	icons.AddFS(grr.Log1(fs.Sub(pageIco, "SND/pageIco")))
+	//icons.AddFS(grr.Log1(fs.Sub(myIcons, "SND/ICO")))
+	icons.AddFS(grr.Log1(fs.Sub(myIcons, "png")))
+	//icons.AddFS(grr.Log1(fs.Sub(pageIco, "SND/pageIco")))
 	gi.TheApp.SetIconBytes(mainIcons)
 	b := gi.NewBody("HyperDbg")
 	b.AddAppBar(func(tb *gi.Toolbar) {
-		widget.NewButton(tb).SetTooltip("open").SetIcon("OPEN")
-		widget.NewButton(tb).SetTooltip("RESTART").SetIcon("RESTART")
-		widget.NewButton(tb).SetTooltip("CLOSE").SetIcon("CLOSE")
-		widget.NewButton(tb).SetTooltip("RUN").SetIcon("RUN") //.SetShortcut()//todo
-		widget.NewButton(tb).SetTooltip("RUNTHREAD").SetIcon("RUNTHREAD")
-		widget.NewButton(tb).SetTooltip("PAUSE").SetIcon("PAUSE")
+		widget.NewButton(tb).SetTooltip("open").SetIcon("openopen")
+		widget.NewButton(tb).SetTooltip("RESTART").SetIcon("restart")
+		widget.NewButton(tb).SetTooltip("CLOSE").SetIcon("close")
+		widget.NewButton(tb).SetTooltip("RUN").SetIcon("run") //.SetShortcut()//todo
+		widget.NewButton(tb).SetTooltip("RUNTHREAD").SetIcon("runthread")
+		widget.NewButton(tb).SetTooltip("PAUSE").SetIcon("pause")
 		gi.NewSeparator(tb)
-		widget.NewButton(tb).SetTooltip("STEPIN").SetIcon("STEPIN")
-		widget.NewButton(tb).SetTooltip("STEPOVER").SetIcon("STEPOVER")
+		widget.NewButton(tb).SetTooltip("STEPIN").SetIcon("stepin")
+		widget.NewButton(tb).SetTooltip("STEPOVER").SetIcon("stepover")
 		widget.NewButton(tb).SetTooltip("STEPIN").SetIcon("STEPIN")
 		widget.NewButton(tb).SetTooltip("TRIN").SetIcon("TRIN")
 		widget.NewButton(tb).SetTooltip("TROVER").SetIcon("TROVER")
@@ -61,7 +61,7 @@ func main() {
 		widget.NewButton(tb).SetTooltip("MODULES").SetIcon("MODULES")
 		widget.NewButton(tb).SetTooltip("WINDOWS").SetIcon("WINDOWS")
 		widget.NewButton(tb).SetTooltip("THREADS").SetIcon("THREADS")
-		widget.NewButton(tb).SetTooltip("CPU").SetIcon("CPU")
+		widget.NewButton(tb).SetTooltip("CPU").SetIcon("cpu")
 		widget.NewButton(tb).SetTooltip("SEARCH").SetIcon("SEARCH")
 		widget.NewButton(tb).SetTooltip("TRACE").SetIcon("TRACE")
 		gi.NewSeparator(tb)
@@ -75,7 +75,7 @@ func main() {
 
 	tabs := gi.NewTabs(b)
 
-	pageCpu(tabs.NewTab("cpu", "Cpu.svg"))
+	pageCpu(tabs.NewTab("cpu", "cpu"))
 
 	pageLog(tabs.NewTab("log", "log"))
 	pageNotes(tabs.NewTab("notes", "notes"))

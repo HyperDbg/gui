@@ -1,8 +1,8 @@
 package sdk
 
 import (
-	"github.com/ddkwork/golibrary/src/cpp2go"
-	"github.com/ddkwork/golibrary/src/stream/tool/cmd"
+	"github.com/ddkwork/cpp2go"
+	"github.com/ddkwork/golibrary/stream/cmd"
 	"strings"
 	"testing"
 )
@@ -51,10 +51,7 @@ sudo systemctl start  vmware-networks.service
 sudo pacman -Sy open-vm-tools
 */
 func TestName(t *testing.T) {
-	run, err := cmd.Run("uname -a")
-	if !mylog.Error(err) {
-		return
-	}
+	run := cmd.Run("uname -a")
 	split := strings.Split(run, " ")
 	s := split[2]
 	before, _, found := strings.Cut(s, "-")
@@ -64,9 +61,6 @@ func TestName(t *testing.T) {
 	index := strings.LastIndex(before, ".")
 	before = before[:index]
 	before = strings.ReplaceAll(before, ".", "")
-	run, err = cmd.Run(`sudo pacman  -Sy linux` + before + `-headers`)
-	if !mylog.Error(err) {
-		return
-	}
+	run = cmd.Run(`sudo pacman  -Sy linux` + before + `-headers`)
 	println(run)
 }
