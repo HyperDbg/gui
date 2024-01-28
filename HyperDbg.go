@@ -5,9 +5,7 @@ import ( //
 	"cogentcore.org/core/goosi/driver/desktop"
 	"cogentcore.org/core/grr"
 	"cogentcore.org/core/icons"
-	"cogentcore.org/core/states"
 	"cogentcore.org/core/styles"
-	"cogentcore.org/core/units"
 	"embed"
 	_ "embed"
 	"github.com/ddkwork/golibrary/widget"
@@ -25,44 +23,22 @@ import ( //
 //go:generate core build -v -t android/arm64
 //go:generate core build -v -t windows/amd64
 
-//go:embed ICON/*.svg
+//go:embed SND/ICO/*.ico
 var myIcons embed.FS
 
-//go:embed pageIco/*.svg
+//go:embed SND/ICO/ICO_AAAMAIN.svg
+var mainIcons []byte
+
+//go:embed SND/pageIco/*.svg
 var pageIco embed.FS
 
 func main() {
-	icons.AddFS(grr.Log1(fs.Sub(myIcons, "ICON")))
-	icons.AddFS(grr.Log1(fs.Sub(pageIco, "pageIco")))
-
+	icons.AddFS(grr.Log1(fs.Sub(myIcons, "SND/ICO")))
+	icons.AddFS(grr.Log1(fs.Sub(pageIco, "SND/pageIco")))
+	gi.TheApp.SetIconBytes(mainIcons)
 	b := gi.NewBody("HyperDbg")
-	//b.App().SetIconBytes(icon)
 	b.AddAppBar(func(tb *gi.Toolbar) {
-		//o := gi.NewButton(tb).SetText("open").SetIcon(icons.FolderOpen)
-		//o.On(events.MouseEnter, func(e events.Event) {
-		//	println("MouseEnter")
-		//	o.Styles.Font.Face.Size += 3 //todo放大字体和刷新
-		//	o.ApplyStylePrefs()
-		//})
-		//o.On(events.MouseLeave, func(e events.Event) {
-		//	println("MouseLeave")
-		//	o.Styles.Font.Face.Size -= 3
-		//	o.ApplyStylePrefs()
-		//})
-
-		o := widget.NewButton(tb).SetTooltip("open").SetIcon("1")
-		o.OnWidgetAdded(func(w gi.Widget) {
-			if lb, ok := w.(*gi.Label); ok {
-				lb.Style(func(s *styles.Style) {
-					if o.StateIs(states.Hovered) {
-						s.Font.Size = units.Dp(17)
-					} else {
-						s.Font.Size = units.Dp(14)
-					}
-				})
-			}
-		})
-
+		widget.NewButton(tb).SetTooltip("open").SetIcon("1")
 		widget.NewButton(tb).SetTooltip("reload").SetIcon("2")
 		widget.NewButton(tb).SetTooltip("stop").SetIcon("3")
 		widget.NewButton(tb).SetTooltip("f7").SetIcon("4")

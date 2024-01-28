@@ -9,6 +9,10 @@ import (
 )
 
 func TestName(t *testing.T) {
+	stream.Ico2PngAll("SND/ICO")
+	stream.Png2SvgAll("SND/ICO")
+	stream.Png2SvgAll("SND/png")
+	return
 	path := "D:\\workspace\\workspace\\gui\\BITMAP\\MODULES.bmp"
 	//path="bmp/WINDOWS.bmp"
 	decode, s, err := image.Decode(stream.NewReadFile(path))
