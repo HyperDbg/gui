@@ -78,7 +78,7 @@ func Run() {
 	pageCallStack(tabs.NewTab("stack", "stack"))
 	pageCallSeh(tabs.NewTab("seh", "seh"))
 	pageScript(tabs.NewTab("script", "script"))
-	pageSymbol(tabs.NewTab("symbol", "Symbols"))
+	pageSymbol(tabs.NewTab("symbol", "symbols"))
 	pageSource(tabs.NewTab("source", "source"))
 
 	tabs.NewTab("references")
