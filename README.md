@@ -1,7 +1,7 @@
 # gui
 HyperDbg's Graphical User Interface (GUI)
 
-![image](dmeo.png)
+![image](demo.png)
 
  
 how to build ?

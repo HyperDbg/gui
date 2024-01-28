@@ -35,7 +35,7 @@ func main() {
 	gi.TheApp.SetIconBytes(mainIcons)
 	b := gi.NewBody("HyperDbg")
 	b.AddAppBar(func(tb *gi.Toolbar) {
-		widget.NewButton(tb).SetTooltip("open").SetIcon("openopen")
+		widget.NewButton(tb).SetTooltip("open").SetIcon("open")
 		widget.NewButton(tb).SetTooltip("restart").SetIcon("restart")
 		widget.NewButton(tb).SetTooltip("close").SetIcon("close")
 		widget.NewButton(tb).SetTooltip("run").SetIcon("run") //.SetShortcut()//todo
@@ -62,7 +62,7 @@ func main() {
 		widget.NewButton(tb).SetTooltip("bpmem").SetIcon("bpmem")
 		widget.NewButton(tb).SetTooltip("bphard").SetIcon("bphard")
 		widget.NewButton(tb).SetTooltip("options").SetIcon("options")
-		widget.NewButton(tb).SetTooltip("scylla").SetIcon("scylla")
+		widget.NewButton(tb).SetTooltip("scylla").SetIcon("terminal")
 		widget.NewButton(tb).SetTooltip("about").SetIcon("about")
 	})
 
