@@ -5,6 +5,8 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 	"image"
+	"io/fs"
+	"path/filepath"
 	"testing"
 )
 
@@ -21,4 +23,14 @@ func TestName(t *testing.T) {
 	}
 	println(s)
 	fmt.Println(decode.Bounds())
+}
+
+func TestName2(t *testing.T) {
+	filepath.Walk("asserts", func(path string, info fs.FileInfo, err error) error {
+		if info.IsDir() {
+			return nil
+		}
+		println(path)
+		return err
+	})
 }

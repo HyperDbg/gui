@@ -1,9 +1,9 @@
 package main
 
-import "github.com/ddkwork/hyperdbgui/SDK"
+import "github.com/ddkwork/hyperdbgui/sdk"
 
 func NoGui() { //dll load test
-	sdk := SDK.New()
+	sdk := sdk.New()
 	sdk.Ctrl().HyperDbgInstallVmmDriver() //TODO decode error codes
 	sdk.Ctrl().HyperDbgLoadVmm()
 	sdk.Ctrl().HyperDbgUnloadVmm()

@@ -195,9 +195,7 @@ kq l 60
 	if !c.WriteClangFormatBody(filepath.Dir(abs)) {
 		return
 	}
-	if !c.Format(abs) {
-		return
-	}
+	c.Format(abs)
 	b, err := os.ReadFile(abs)
 	if !mylog.Error(err) {
 		return

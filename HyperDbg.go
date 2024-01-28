@@ -1,17 +1,10 @@
 package main
 
-import ( //
+import (
 	"cogentcore.org/core/gi"
-	"cogentcore.org/core/goosi/driver/desktop"
-	"cogentcore.org/core/grr"
-	"cogentcore.org/core/icons"
 	"cogentcore.org/core/styles"
-	"embed"
-	_ "embed"
+	"github.com/ddkwork/golibrary/stream"
 	"github.com/ddkwork/golibrary/widget"
-	"github.com/go-gl/glfw/v3.3/glfw"
-	"io/fs"
-	"os"
 	"path/filepath"
 )
 
@@ -23,23 +16,23 @@ import ( //
 //go:generate core build -v -t android/arm64
 //go:generate core build -v -t windows/amd64
 
-//go:embed SND/ICO/ICO_AAAMAIN.svg
-var mainIcons []byte
+////go:embed SND/ICO/ICO_AAAMAIN.svg
+//var mainIcons []byte
 
-//go:embed SND/ICO/*.svg
-var myIcons embed.FS
+////go:embed SND/ICO/*.svg
+//var myIcons embed.FS
 
-//go:embed png/*.svg
-var mypngs embed.FS
+////go:embed png/*.svg
+//var mypngs embed.FS
 
-//go:embed SND/pageIco/*.svg
-var pageIco embed.FS
+////go:embed SND/pageIco/*.svg
+//var pageIco embed.FS
 
 func main() {
 	//icons.AddFS(grr.Log1(fs.Sub(myIcons, "SND/ICO")))
-	icons.AddFS(grr.Log1(fs.Sub(myIcons, "png")))
+	//icons.AddFS(grr.Log1(fs.Sub(myIcons, "png")))
 	//icons.AddFS(grr.Log1(fs.Sub(pageIco, "SND/pageIco")))
-	gi.TheApp.SetIconBytes(mainIcons)
+	//gi.TheApp.SetIconBytes(mainIcons)
 	b := gi.NewBody("HyperDbg")
 	b.AddAppBar(func(tb *gi.Toolbar) {
 		widget.NewButton(tb).SetTooltip("open").SetIcon("openopen")
@@ -100,27 +93,12 @@ func main() {
 		//s.Max.X.Pw(300)//todo 取屏幕宽度为最大宽度
 		//s.Display = styles.Grid
 	})
-	w := b.NewWindow().Run()
-	win := w.MainMgr.RenderWin.GoosiWin
-	ww, ok := win.(*desktop.Window)
-	if ok {
-		ww.Glw.SetDropCallback(func(w *glfw.Window, names []string) {
-			for _, name := range names {
-				println(name)
-				ext := filepath.Ext(name)
-				switch ext {
-				case ".go", ".js":
-					file, err := os.ReadFile(name)
-					if err != nil {
-						panic(err.Error())
-					}
-					println(file)
-					//txbuf.SetText(file)
-					//txed1.SetBuf(txbuf)
-					//txed2.SetBuf(txbuf)
-				}
+
+	widget.NewWindowRunAndWait(b, func(names []string) {
+		for _, name := range names {
+			if filepath.Ext(name) == ".json" {
+				stream.NewReadFile(name)
 			}
-		})
-	}
-	w.Wait()
+		}
+	})
 }
