@@ -7,8 +7,13 @@ HyperDbg's Graphical User Interface (GUI)
 how to build ?
 
 ```go
-git clone https://github.com/HyperDbg/gui.git
-go build .
-or
-go run .
+1. git clone https://github.com/HyperDbg/gui.git
+
+2. install golang from https://go.dev/dl/
+
+3. install gcc
+
+4. go build .
+	
+5. go run .
 ```
