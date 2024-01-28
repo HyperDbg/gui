@@ -2,9 +2,13 @@ package main
 
 import (
 	"cogentcore.org/core/gi"
+	"cogentcore.org/core/grr"
+	"cogentcore.org/core/icons"
 	"cogentcore.org/core/styles"
+	"embed"
 	"github.com/ddkwork/golibrary/stream"
 	"github.com/ddkwork/golibrary/widget"
+	"io/fs"
 	"path/filepath"
 )
 
@@ -16,52 +20,48 @@ import (
 //go:generate core build -v -t android/arm64
 //go:generate core build -v -t windows/amd64
 
-////go:embed SND/ICO/ICO_AAAMAIN.svg
-//var mainIcons []byte
+//go:embed asserts/ico/ico_aaamain.svg
+var mainIcons []byte
 
-////go:embed SND/ICO/*.svg
-//var myIcons embed.FS
+//go:embed asserts/bar/*.svg
+var bar embed.FS
 
-////go:embed png/*.svg
-//var mypngs embed.FS
-
-////go:embed SND/pageIco/*.svg
-//var pageIco embed.FS
+//go:embed asserts/pageico/*.svg
+var pageIco embed.FS
 
 func main() {
-	//icons.AddFS(grr.Log1(fs.Sub(myIcons, "SND/ICO")))
-	//icons.AddFS(grr.Log1(fs.Sub(myIcons, "png")))
-	//icons.AddFS(grr.Log1(fs.Sub(pageIco, "SND/pageIco")))
-	//gi.TheApp.SetIconBytes(mainIcons)
+	icons.AddFS(grr.Log1(fs.Sub(bar, "asserts/bar")))
+	icons.AddFS(grr.Log1(fs.Sub(pageIco, "asserts/pageico")))
+	gi.TheApp.SetIconBytes(mainIcons)
 	b := gi.NewBody("HyperDbg")
 	b.AddAppBar(func(tb *gi.Toolbar) {
 		widget.NewButton(tb).SetTooltip("open").SetIcon("openopen")
-		widget.NewButton(tb).SetTooltip("RESTART").SetIcon("restart")
-		widget.NewButton(tb).SetTooltip("CLOSE").SetIcon("close")
-		widget.NewButton(tb).SetTooltip("RUN").SetIcon("run") //.SetShortcut()//todo
-		widget.NewButton(tb).SetTooltip("RUNTHREAD").SetIcon("runthread")
-		widget.NewButton(tb).SetTooltip("PAUSE").SetIcon("pause")
+		widget.NewButton(tb).SetTooltip("restart").SetIcon("restart")
+		widget.NewButton(tb).SetTooltip("close").SetIcon("close")
+		widget.NewButton(tb).SetTooltip("run").SetIcon("run") //.SetShortcut()//todo
+		widget.NewButton(tb).SetTooltip("runthread").SetIcon("runthread")
+		widget.NewButton(tb).SetTooltip("pause").SetIcon("pause")
 		gi.NewSeparator(tb)
-		widget.NewButton(tb).SetTooltip("STEPIN").SetIcon("stepin")
-		widget.NewButton(tb).SetTooltip("STEPOVER").SetIcon("stepover")
-		widget.NewButton(tb).SetTooltip("STEPIN").SetIcon("STEPIN")
-		widget.NewButton(tb).SetTooltip("TRIN").SetIcon("TRIN")
-		widget.NewButton(tb).SetTooltip("TROVER").SetIcon("TROVER")
-		widget.NewButton(tb).SetTooltip("TILLRET").SetIcon("TILLRET")
-		widget.NewButton(tb).SetTooltip("TILLUSER").SetIcon("TILLUSER")
+		widget.NewButton(tb).SetTooltip("stepin").SetIcon("stepin")
+		widget.NewButton(tb).SetTooltip("stepover").SetIcon("stepover")
+		widget.NewButton(tb).SetTooltip("stepin").SetIcon("stepin")
+		widget.NewButton(tb).SetTooltip("trin").SetIcon("trin")
+		widget.NewButton(tb).SetTooltip("trover").SetIcon("trover")
+		widget.NewButton(tb).SetTooltip("tillret").SetIcon("tillret")
+		widget.NewButton(tb).SetTooltip("tilluser").SetIcon("tilluser")
 		gi.NewSeparator(tb)
-		widget.NewButton(tb).SetTooltip("LOG").SetIcon("LOG")
-		widget.NewButton(tb).SetTooltip("MODULES").SetIcon("MODULES")
-		widget.NewButton(tb).SetTooltip("WINDOWS").SetIcon("WINDOWS")
-		widget.NewButton(tb).SetTooltip("THREADS").SetIcon("THREADS")
-		widget.NewButton(tb).SetTooltip("CPU").SetIcon("cpu")
-		widget.NewButton(tb).SetTooltip("SEARCH").SetIcon("SEARCH")
-		widget.NewButton(tb).SetTooltip("TRACE").SetIcon("TRACE")
+		widget.NewButton(tb).SetTooltip("log").SetIcon("log")
+		widget.NewButton(tb).SetTooltip("modules").SetIcon("modules")
+		widget.NewButton(tb).SetTooltip("windows").SetIcon("windows")
+		widget.NewButton(tb).SetTooltip("threads").SetIcon("threads")
+		widget.NewButton(tb).SetTooltip("cpu").SetIcon("cpu")
+		widget.NewButton(tb).SetTooltip("search").SetIcon("search")
+		widget.NewButton(tb).SetTooltip("trace").SetIcon("trace")
 		gi.NewSeparator(tb)
-		widget.NewButton(tb).SetTooltip("BPOINTS").SetIcon("BPOINTS")
-		widget.NewButton(tb).SetTooltip("BPMEM").SetIcon("BPMEM")
-		widget.NewButton(tb).SetTooltip("BPHARD").SetIcon("BPHARD")
-		widget.NewButton(tb).SetTooltip("OPTIONS").SetIcon("OPTIONS")
+		widget.NewButton(tb).SetTooltip("bpoints").SetIcon("bpoints")
+		widget.NewButton(tb).SetTooltip("bpmem").SetIcon("bpmem")
+		widget.NewButton(tb).SetTooltip("bphard").SetIcon("bphard")
+		widget.NewButton(tb).SetTooltip("options").SetIcon("options")
 		widget.NewButton(tb).SetTooltip("scylla").SetIcon("scylla")
 		widget.NewButton(tb).SetTooltip("about").SetIcon("about")
 	})

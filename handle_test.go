@@ -6,14 +6,15 @@ import (
 	"github.com/ddkwork/golibrary/stream"
 	"image"
 	"io/fs"
+	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
 func TestName(t *testing.T) {
-	stream.Ico2PngAll("SND/ICO")
-	stream.Png2SvgAll("SND/ICO")
-	stream.Png2SvgAll("SND/png")
+	stream.Ico2PngAll("asserts")
+	stream.Png2SvgAll("asserts")
 	return
 	path := "D:\\workspace\\workspace\\gui\\BITMAP\\MODULES.bmp"
 	//path="bmp/WINDOWS.bmp"
@@ -30,7 +31,7 @@ func TestName2(t *testing.T) {
 		if info.IsDir() {
 			return nil
 		}
-		println(path)
+		mylog.Error(os.Rename(path, strings.ToLower(path)))
 		return err
 	})
 }
