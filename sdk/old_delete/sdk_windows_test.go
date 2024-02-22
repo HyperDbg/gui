@@ -15,7 +15,7 @@ import (
 func TestXmake(t *testing.T) {
 	targets := stream.New("")
 	targets.WriteStringLn("add_rules(\"mode.debug\", \"mode.release\")\n")
-	filepath.Walk("./HyperDbgDev", func(path string, info fs.FileInfo, err error) error {
+	filepath.WalkDir("./HyperDbgDev", func(path string, info fs.DirEntry, err error) error {
 		ext := filepath.Ext(path)
 		if ext == ".vcxproj" {
 			if !strings.Contains(path, "dependencies") {

@@ -28,7 +28,7 @@ func TestName(t *testing.T) {
 }
 
 func TestName2(t *testing.T) {
-	filepath.Walk("asserts", func(path string, info fs.FileInfo, err error) error {
+	filepath.WalkDir("asserts", func(path string, info fs.DirEntry, err error) error {
 		if info.IsDir() {
 			return nil
 		}

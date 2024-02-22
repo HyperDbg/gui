@@ -7,7 +7,7 @@ import (
 
 //
 //func TestGengo(t *testing.T) {
-//	filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
+//	filepath.WalkDir(".", func(path string, info fs.DirEntry, err error) error {
 //		switch filepath.Ext(path) {
 //		case ".h":
 //			println(path)
