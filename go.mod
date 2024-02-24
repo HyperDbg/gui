@@ -10,7 +10,7 @@ require (
 
 require (
 	cogentcore.org/core v0.0.4-0.20240128040514-d30c67e8d80b
-	github.com/ddkwork/golibrary v0.0.0-20240222080053-75e7bc1b25a1
+	github.com/ddkwork/golibrary v0.0.0-20240224135132-8248200840b1
 )
 
 require (
@@ -39,7 +39,7 @@ require (
 	github.com/hack-pad/safejs v0.1.1 // indirect
 	github.com/iancoleman/strcase v0.3.0 // indirect
 	github.com/jinzhu/copier v0.4.0 // indirect
-	github.com/klauspost/compress v1.17.7 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -52,7 +52,6 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/stretchr/testify v1.8.4 // indirect
 	github.com/zzl/go-win32api/v2 v2.1.0 // indirect
-	go.uber.org/nilaway v0.0.0-20240221165226-a488bd0b67b3 // indirect
 	golang.org/x/exp v0.0.0-20240213143201-ec583247a57a // indirect
 	golang.org/x/image v0.15.0 // indirect
 	golang.org/x/mod v0.15.0 // indirect
