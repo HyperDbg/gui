@@ -1,4 +1,4 @@
-cogentcore.org/core v0.0.6 h1:/nU1JlIdE6KiUGeeR6Rh1r9IHP3lZKUCxdgZv7CnAdg=
+cogentcore.org/core v0.0.7-0.20240225011527-4851878d7879 h1:ka3wxCJ9M8rmXe7QX1u0WC1eHBhRB3tOOR8BUaByRx0=
 github.com/Bios-Marcel/wastebasket v0.0.4-0.20240213135800-f26f1ae0a7c4 h1:6lx9xzJAhdjq0LvVfbITeC3IH9Fzvo1aBahyPu2FuG8=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Masterminds/vcs v1.13.3 h1:IIA2aBdXvfbIM+yl/eTnL4hb1XwdpvuQLglAix1gweE=
@@ -40,8 +40,7 @@ github.com/fsnotify/fsnotify v1.7.0 h1:8JEhPFa5W2WU7YfeZzPNqzMP6Lwt7L2715Ggo0nos
 github.com/fsnotify/fsnotify v1.7.0/go.mod h1:40Bi/Hjc2AVfZrqy+aj+yEI+/bRxZnMJyTJwOpGvigM=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240118000515-a250818d05e3 h1:nanQfMsOs3gnuKRm0E5jXWomedE/9YIFXdmHJNZYeqc=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240118000515-a250818d05e3/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
-github.com/goki/freetype v1.0.4 h1:Uy/EhSGL0MvF33s2D15DhvPywF9yEfbiNJwoSn9wkjQ=
-github.com/goki/freetype v1.0.4/go.mod h1:wKmKxddbzKmeci9K96Wknn5kjTWLyfC8tKOqAFbEX8E=
+github.com/goki/freetype v1.0.5 h1:yi2lQeUhXnBgSMqYd0vVmPw6RnnfIeTP3N4uvaJXd7A=
 github.com/goki/vulkan v1.0.7 h1:gd5a91pOle+icW7CS9U2SYas15TfPu+hV96Vqb/qq2w=
 github.com/goki/vulkan v1.0.7/go.mod h1:xPwQgSdRep28xG1Tn4yysNGFORyCsAZcf9DcljIxGRs=
 github.com/gorilla/css v1.0.1 h1:ntNaBIghp6JmvWnxbZKANoLyuXTPZ4cAMlo6RyhlbO8=

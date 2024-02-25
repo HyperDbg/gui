@@ -27,7 +27,7 @@ require (
 	github.com/dlclark/regexp2 v1.10.0 // indirect
 	github.com/fatih/color v1.16.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/goki/freetype v1.0.4 // indirect
+	github.com/goki/freetype v1.0.5 // indirect
 	github.com/goki/vulkan v1.0.7 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/h2non/filetype v1.1.3 // indirect
