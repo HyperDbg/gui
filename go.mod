@@ -1,6 +1,6 @@
 module github.com/ddkwork/hyperdbgui
 
-go 1.22.0
+go 1.22.1
 
 require (
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240118000515-a250818d05e3 // indirect
