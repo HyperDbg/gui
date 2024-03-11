@@ -1,6 +1,7 @@
 package sdk
 
 import (
+	"github.com/ddkwork/cpp2go"
 	"strings"
 	"testing"
 
@@ -52,7 +53,7 @@ sudo pacman -Sy open-vm-tools
 */
 func TestName(t *testing.T) {
 	run := cmd.Run("uname -a")
-	split := strings.Split(run, " ")
+	split := strings.Split(run.Result, " ")
 	s := split[2]
 	before, _, found := strings.Cut(s, "-")
 	if !found {
@@ -61,6 +62,5 @@ func TestName(t *testing.T) {
 	index := strings.LastIndex(before, ".")
 	before = before[:index]
 	before = strings.ReplaceAll(before, ".", "")
-	run = cmd.Run(`sudo pacman  -Sy linux` + before + `-headers`)
-	println(run)
+	cmd.Run(`sudo pacman  -Sy linux` + before + `-headers`)
 }
