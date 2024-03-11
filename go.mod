@@ -9,7 +9,7 @@ require (
 )
 
 require (
-	cogentcore.org/core v0.0.8-0.20240309010543-9eb35d11ca28
+cogentcore.org/core v0.0.8-0.20240309213453-422cbc2cd1f1
 github.com/ddkwork/golibrary v0.0.0-20240309015738-9f5008ac7548
 )
 
