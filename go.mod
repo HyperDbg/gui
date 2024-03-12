@@ -1,15 +1,15 @@
 module github.com/ddkwork/hyperdbgui
 
-go 1.22.1
+go 1.22
 
 require (
-	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240118000515-a250818d05e3 // indirect
+	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240307211618-a69d953ea142 // indirect
 	github.com/winlabs/gowin32 v0.0.0-20221003142512-0d265587d3c9
 	golang.org/x/sys v0.18.0
 )
 
 require (
-	cogentcore.org/core v0.0.8-0.20240312041954-1380c137a49a
+	cogentcore.org/core v0.0.8-0.20240312043521-bdafc24c3306
 	github.com/ddkwork/golibrary v0.0.0-20240311060313-28c000994697
 )
 
