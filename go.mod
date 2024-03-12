@@ -9,7 +9,7 @@ require (
 )
 
 require (
-	cogentcore.org/core v0.0.8-0.20240312043521-bdafc24c3306
+cogentcore.org/core v0.0.8-0.20240312043521-bdafc24c3306
 github.com/ddkwork/golibrary v0.0.0-20240312064312-8e47990a38cf
 )
 
@@ -18,12 +18,8 @@ require (
 	github.com/Masterminds/vcs v1.13.3 // indirect
 	github.com/alecthomas/chroma/v2 v2.12.0 // indirect
 	github.com/anthonynsimon/bild v0.13.0 // indirect
-	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394 // indirect
-	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/chewxy/math32 v1.10.1 // indirect
-	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
-	github.com/dc0d/caseconv v0.5.0 // indirect
 	github.com/dlclark/regexp2 v1.10.0 // indirect
 	github.com/fatih/color v1.16.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
@@ -35,19 +31,10 @@ require (
 	github.com/hack-pad/hackpadfs v0.2.1 // indirect
 	github.com/hack-pad/safejs v0.1.1 // indirect
 	github.com/jinzhu/copier v0.4.0 // indirect
-	github.com/kr/text v0.2.0 // indirect
-	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mattn/go-runewidth v0.0.15 // indirect
-	github.com/mattn/go-shellwords v1.0.12 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
-	github.com/muesli/termenv v0.15.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.2-0.20240227203013-2b69615b5d55 // indirect
-	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/stretchr/testify v1.9.0 // indirect
-	github.com/zzl/go-win32api/v2 v2.1.0 // indirect
 	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
 	golang.org/x/image v0.15.0 // indirect
 	golang.org/x/mod v0.15.0 // indirect
