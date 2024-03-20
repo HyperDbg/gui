@@ -1,9 +1,10 @@
 package sdk
 
 import (
-	"github.com/ddkwork/cpp2go"
 	"strings"
 	"testing"
+
+	"github.com/ddkwork/cpp2go"
 
 	"github.com/ddkwork/golibrary/stream/cmd"
 )
@@ -20,7 +21,7 @@ func TestCpp2Go(t *testing.T) {
 	//	return
 	//}
 	//o.Convert()
-	//o.Format()
+	//o.String()
 }
 
 /*
