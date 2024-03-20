@@ -233,7 +233,7 @@ func pageCpu(parent *gi.Frame) {
 //	//Index    int
 //	Register string
 //	Address  int `format:"%016X"`
-//	Data     string
+//	MetaData     string
 //}
 
 //func fastCallTable(parent ki.Ki) *giv.TableView {
@@ -251,35 +251,35 @@ func pageCpu(parent *gi.Frame) {
 //				//Index:    i + 1,
 //				Register: "rcx",
 //				Address:  0x00007FF884F6F814,
-//				Data:     "ntdll.00007FF884F6F814",
+//				MetaData:     "ntdll.00007FF884F6F814",
 //			}
 //		case 1:
 //			f = &FastCall{
 //				//Index:    i + 1,
 //				Register: "rdx",
 //				Address:  0x0000000000000000,
-//				Data:     "0000000000000000",
+//				MetaData:     "0000000000000000",
 //			}
 //		case 2:
 //			f = &FastCall{
 //				//Index:    i + 1,
 //				Register: "r8",
 //				Address:  0x0000008F09EFEFB8,
-//				Data:     "0000008F09EFEFB8",
+//				MetaData:     "0000008F09EFEFB8",
 //			}
 //		case 3:
 //			f = &FastCall{
 //				//Index:    i + 1,
 //				Register: "r9",
 //				Address:  0x0000000000000000,
-//				Data:     "0000000000000000",
+//				MetaData:     "0000000000000000",
 //			}
 //		case 4:
 //			f = &FastCall{
 //				//Index:    i + 1,
 //				Register: "[rsp+28]",
 //				Address:  0x0000000000000000,
-//				Data:     "0000000000000000",
+//				MetaData:     "0000000000000000",
 //			}
 //		}
 //		fastCalls = append(fastCalls, f)
