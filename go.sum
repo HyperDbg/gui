@@ -1,5 +1,3 @@
-cogentcore.org/core v0.0.9 h1:Ird5o4wewSe8/dvsmd47YvkP5JZCiaE9hUSrb2692N8=
-cogentcore.org/core v0.0.9/go.mod h1:SAJedgd5nd0iB2cHl//DyCO+rugd/u7KCHXHNjnQOmA=
 cogentcore.org/core v0.0.10-0.20240327060721-da0f626c53da h1:LeF4+HeyLcGlAyW7h4pdt+3hD56KtZSWJfX84XOqM5s=
 cogentcore.org/core v0.0.10-0.20240327060721-da0f626c53da/go.mod h1:SAJedgd5nd0iB2cHl//DyCO+rugd/u7KCHXHNjnQOmA=
 github.com/Bios-Marcel/wastebasket v0.0.4-0.20240213135800-f26f1ae0a7c4 h1:6lx9xzJAhdjq0LvVfbITeC3IH9Fzvo1aBahyPu2FuG8=
@@ -33,13 +31,6 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dc0d/caseconv v0.5.0 h1:z3Ki2zszD03beetWyNAGa3NOAbnDJk+bX0tvcx9BKjQ=
 github.com/dc0d/caseconv v0.5.0/go.mod h1:/CrBBNtMoPTPf0INHrwyyhDrDjAJ9PFE+WuxSJHU0ZE=
-github.com/ddkwork/golibrary v0.0.0-20240321190600-4773d14981ae h1:ltxc1y1G5f3zi3m+KwFa2s6Pjp7Czhpz51Cd/sobZjY=
-github.com/ddkwork/golibrary v0.0.0-20240327081416-5ed3cf0edba2 h1:EbwVjgmPJelUl9hUvV9ZHNj5CPB5/Bi1tmUPSj3W8HM=
-github.com/ddkwork/golibrary v0.0.0-20240327081416-5ed3cf0edba2/go.mod h1:VUXd2pCe1ghKvU3g1dmTF6zPQwbUi24G+7JluamJy3Y=
-github.com/ddkwork/golibrary v0.0.0-20240327092250-75d7ae2ff493 h1:PeprsM8IbsAJJ4jfOl04D7WkoE+sU8zW8+jtHwJaZxk=
-github.com/ddkwork/golibrary v0.0.0-20240327092250-75d7ae2ff493/go.mod h1:VUXd2pCe1ghKvU3g1dmTF6zPQwbUi24G+7JluamJy3Y=
-github.com/ddkwork/golibrary v0.0.0-20240327094144-66d1453f6483 h1:qVQ2eHgYWRkNEARPaziTW6d/GkBO1Ktrwt25pRchVIg=
-github.com/ddkwork/golibrary v0.0.0-20240327094144-66d1453f6483/go.mod h1:+xk9EdoHvSZo9gwKb/WLjg7QwK1f3ZAHXMRp6vcXHRk=
 github.com/ddkwork/golibrary v0.0.0-20240327131616-3ef7822aa2d3 h1:V/CHxR/t7V66SwtBAEZ6pNjafNIr69xbaSPC6kZ+hK4=
 github.com/ddkwork/golibrary v0.0.0-20240327131616-3ef7822aa2d3/go.mod h1:DThy9GAmL8d/06FanE7eDAQEvEhUJ+t2JvKmOclBpAo=
 github.com/dlclark/regexp2 v1.11.0 h1:G/nrcoOa7ZXlpoa/91N3X7mM3r8eIlMBBJZvsz/mxKI=
@@ -129,7 +120,6 @@ github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:
 github.com/zzl/go-win32api/v2 v2.1.0 h1:BwXsEl3iycRhG4lpe3JsnNACyQH/U7RTBhJwyCaIB/g=
 github.com/zzl/go-win32api/v2 v2.1.0/go.mod h1:doi6ewHPdh9tDmqe837Ro7IwqtB9yE+1fC8suK/Ssj0=
 golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
-golang.org/x/exp v0.0.0-20240318143956-a85f2c67cd81 h1:6R2FC06FonbXQ8pK11/PDFY6N6LWlf9KlzibaCapmqc=
 golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8 h1:aAcj0Da7eBAtrTp03QXWvm88pSyOt+UgdZw2BFZ+lEw=
 golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8/go.mod h1:CQ1k9gNrJ50XIzaKCRR2hssIjF07kZFEiieALBM/ARQ=
 golang.org/x/image v0.0.0-20190703141733-d6a02ce849c9/go.mod h1:FeLwcggjj3mMvU+oOTbSwawSJRM1uh48EjtB4UJZlP0=
