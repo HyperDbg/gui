@@ -9,8 +9,8 @@ require (
 )
 
 require (
-	cogentcore.org/core v0.0.10-0.20240327060721-da0f626c53da
-	github.com/ddkwork/golibrary v0.0.0-20240327131616-3ef7822aa2d3
+	cogentcore.org/core v0.0.10-0.20240330171712-17511011859c
+	github.com/ddkwork/golibrary v0.0.0-20240331124940-41e15869ad41
 )
 
 require (
@@ -28,6 +28,7 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/goki/freetype v1.0.5 // indirect
 	github.com/goki/vulkan v1.0.7 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/h2non/filetype v1.1.3 // indirect
 	github.com/hack-pad/go-indexeddb v0.3.2 // indirect
