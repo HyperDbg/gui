@@ -4,6 +4,8 @@ cogentcore.org/core v0.0.10-0.20240330171712-17511011859c h1:WwYTn5/TtXvMW/ibdfR
 cogentcore.org/core v0.0.10-0.20240330171712-17511011859c/go.mod h1:SAJedgd5nd0iB2cHl//DyCO+rugd/u7KCHXHNjnQOmA=
 gioui.org v0.6.0 h1:ZSXO/AbpFZJ2L9NU69uFQfDI3BKIH+YEJElrn0B+aZI=
 gioui.org v0.6.0/go.mod h1:eUvGo6FAzA7jUqeSu5a+M1W03yc9r1nanIBS8A5+Nng=
+gioui.org v0.6.1-0.20240412213418-98d3a2eb24ac h1:rQj0+/mthhtNf19cTK58DHI3gcVvsxSL8HO5kw3HxmY=
+gioui.org v0.6.1-0.20240412213418-98d3a2eb24ac/go.mod h1:eUvGo6FAzA7jUqeSu5a+M1W03yc9r1nanIBS8A5+Nng=
 gioui.org/cmd v0.0.0-20220818080936-02068d6340fc h1:KfVMY8YBF6OBlkw2WgCySAilfsyjtPtZaWaBAKSofo8=
 gioui.org/cmd v0.0.0-20220818080936-02068d6340fc/go.mod h1:sOPHaz5lc8CQuJqPyX/YTFdcs5+XKNXXa03qxFIln6w=
 gioui.org/example v0.6.1 h1:x9PZQrJHSnZYarQ7IZTR1/KjXOn4Ei366ow9UZy3+ZE=
@@ -57,6 +59,8 @@ github.com/ddkwork/golibrary v0.0.0-20240411144604-45cdffa50581 h1:4ML+jZWX+7L/Y
 github.com/ddkwork/golibrary v0.0.0-20240411144604-45cdffa50581/go.mod h1:kk6/KiaFaTdIVaMZuRHJNoCrXaWjlQdA0nF9FYb1reo=
 github.com/ddkwork/golibrary v0.0.0-20240411151549-3e9e1445af92 h1:OH3iFPzfAqmzjh8se8p2gRHGUQZ3/fW9mjFIUf3+sIw=
 github.com/ddkwork/golibrary v0.0.0-20240411151549-3e9e1445af92/go.mod h1:FziwX5x/e7qW0QtKZInG0zappIk4ZBa6nbBfXiRIJOo=
+github.com/ddkwork/golibrary v0.0.0-20240413202644-3a111ce9513d h1:NFocRfIFNrB+vDRHEnTo/qlgmrgMEssFzTNSjlFd6XI=
+github.com/ddkwork/golibrary v0.0.0-20240413202644-3a111ce9513d/go.mod h1:dBOvqd2v6Wua2U/H5c+sF5QmJFtasISjPeYCoTZ/lLk=
 github.com/dlclark/regexp2 v1.11.0 h1:G/nrcoOa7ZXlpoa/91N3X7mM3r8eIlMBBJZvsz/mxKI=
 github.com/dlclark/regexp2 v1.11.0/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
 github.com/fatih/color v1.16.0 h1:zmkK9Ngbjj+K0yRhTVONQh1p/HknKYSlNT+vZCzyokM=
