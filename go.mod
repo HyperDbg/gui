@@ -1,6 +1,8 @@
 module github.com/ddkwork/hyperdbgui
 
-go 1.22
+go 1.22.1
+
+toolchain go1.22.2
 
 require (
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240307211618-a69d953ea142 // indirect
@@ -10,7 +12,7 @@ require (
 
 require (
 	cogentcore.org/core v0.0.10-0.20240330171712-17511011859c
-	github.com/ddkwork/golibrary v0.0.0-20240413202644-3a111ce9513d
+	github.com/ddkwork/golibrary v0.0.0-20240416061909-ff2afc8704c3
 )
 
 require (
