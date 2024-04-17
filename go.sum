@@ -73,6 +73,8 @@ github.com/ddkwork/golibrary v0.0.0-20240416180436-eff04b20ce82 h1:8i9/3zmWVUN8E
 github.com/ddkwork/golibrary v0.0.0-20240416180436-eff04b20ce82/go.mod h1:Baad3QKgBKKfcf4t5xETA5xdAfUw8OsgLom0TxlK1vU=
 github.com/ddkwork/golibrary v0.0.0-20240417094556-601f5e6bbb9a h1:pBnvQsO2Nru0TQ534bQd4SbemOmaiBB7hn1hltnNjVA=
 github.com/ddkwork/golibrary v0.0.0-20240417094556-601f5e6bbb9a/go.mod h1:AuN2CIECOQsdUElvOZXDIRfZCHB8sQXGCumWIV+8QpA=
+github.com/ddkwork/golibrary v0.0.0-20240417102459-574c991e4041 h1:r0/FOXG0hdDm5djET76iYJewuTvE37nkUxPVHekQjg8=
+github.com/ddkwork/golibrary v0.0.0-20240417102459-574c991e4041/go.mod h1:AuN2CIECOQsdUElvOZXDIRfZCHB8sQXGCumWIV+8QpA=
 github.com/dlclark/regexp2 v1.11.0 h1:G/nrcoOa7ZXlpoa/91N3X7mM3r8eIlMBBJZvsz/mxKI=
 github.com/dlclark/regexp2 v1.11.0/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
 github.com/fatih/color v1.16.0 h1:zmkK9Ngbjj+K0yRhTVONQh1p/HknKYSlNT+vZCzyokM=

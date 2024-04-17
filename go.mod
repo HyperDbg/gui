@@ -12,7 +12,7 @@ require (
 
 require (
 	cogentcore.org/core v0.0.10-0.20240330171712-17511011859c
-	github.com/ddkwork/golibrary v0.0.0-20240417094556-601f5e6bbb9a
+	github.com/ddkwork/golibrary v0.0.0-20240417102459-574c991e4041
 )
 
 require (
