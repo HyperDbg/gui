@@ -68,10 +68,8 @@ type (
 func New() *object { return &object{} }
 
 func (o *object) DecodeStack(api, stack string, argsInput ...string) (argList []ArgList, ok bool) {
-	lines, ok := stream.New(stack).ToLines()
-	if !ok {
-		return
-	}
+	lines := stream.New(stack).ToLines()
+
 	argList = make([]ArgList, 0)
 
 	fnCut := func(orig string) (list []string) {

@@ -35,11 +35,9 @@ func TestGenErrorCodes(t *testing.T) {
    `, "")
 	file.Reset()
 	file.WriteString(all)
-	lines, ok := file.ToLines()
+	lines := file.ToLines()
 	// lines, ok := stream.New("").ReadToLines("ErrorCodes.h")
-	if !ok {
-		return
-	}
+
 	const define = "#define"
 	once := sync.Once{}
 	var codes []string
@@ -107,10 +105,7 @@ func Define2Enum(info EnumInfo) {
    `, "")
 	file.Reset()
 	file.WriteString(all)
-	lines, ok := file.ToLines()
-	if !ok {
-		return
-	}
+	lines := file.ToLines()
 	const define = "#define"
 	once := sync.Once{}
 	var codes []string

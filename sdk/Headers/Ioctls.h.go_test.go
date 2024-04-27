@@ -71,10 +71,8 @@ func Define2CtlCode(info CtlCodeInfo) {
    `, "")
 	file.Reset()
 	file.WriteString(all)
-	lines, ok := file.ToLines()
-	if !ok {
-		return
-	}
+	lines := file.ToLines()
+
 	const define = "#define"
 	once := sync.Once{}
 	var codes []string

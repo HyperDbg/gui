@@ -10,11 +10,7 @@ import (
 )
 
 func TestName(t *testing.T) {
-	lines, ok := stream.ReadFileToLines(`ssdtTable.txt`)
-	if !ok {
-		return
-	}
-
+	lines := stream.ReadFileToLines(`ssdtTable.txt`)
 	ntdll := make([]string, 0)
 	win32u := make([]string, 0)
 	for i, line := range lines {
