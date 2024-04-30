@@ -188,18 +188,14 @@ kq l 60
 	dsName := api + ".ds"
 	stream.WriteTruncate(dsName, s.String())
 	abs, err := filepath.Abs(dsName)
-	if !mylog.Error(err) {
-		return
-	}
+	mylog.Check(err)
 	c := clang.New()
 	if !c.WriteClangFormatBody(filepath.Dir(abs)) {
 		return
 	}
 	c.Format(abs)
 	b, err := os.ReadFile(abs)
-	if !mylog.Error(err) {
-		return
-	}
+	mylog.Check(err)
 	all := strings.ReplaceAll(string(b), " nt !", " nt!")
 	return stream.WriteTruncate(abs, all)
 }
