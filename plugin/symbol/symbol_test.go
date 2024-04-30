@@ -66,9 +66,7 @@ func TestName(t *testing.T) {
 		buffer.WriteStringLn(`func New` + name + `() Interface` + name + ` { return &object` + name + `{} }`)
 		goFileName := name + `.go`
 		source, err2 := format.Source(buffer.Bytes())
-		if !mylog.Error(err2) {
-			return
-		}
+		mylog.Check(err2)
 		return stream.WriteTruncate(goFileName, source)
 	}
 	fnGenGo(`Ntdll`, `symbol`, ntdlls)

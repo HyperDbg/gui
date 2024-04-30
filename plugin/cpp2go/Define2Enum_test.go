@@ -71,7 +71,7 @@ func TestGenErrorCodes(t *testing.T) {
 	body.WriteStringLn("}")
 	mylog.Json("gen error code", body.String())
 	source, err := format.Source(body.Bytes())
-	if !mylog.Error(err) {
+	if !mylog.Check(err) {
 		stream.WriteTruncate("ErrorCodes.h.go", body.Bytes())
 		return
 	}
@@ -138,7 +138,7 @@ func Define2Enum(info EnumInfo) {
 	body.WriteStringLn("}")
 	mylog.Json("gen error code", body.String())
 	source, err := format.Source(body.Bytes())
-	if !mylog.Error(err) {
+	if !mylog.Check(err) {
 		stream.WriteTruncate(info.File+".go", body.Bytes())
 		return
 	}

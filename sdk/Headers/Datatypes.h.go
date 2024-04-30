@@ -69,7 +69,7 @@ type (
 
 func init() {
 	if binary.Size(DEBUGGEE_UD_PAUSED_PACKET{}) < PacketChunkSize {
-		// mylog.Error("err (static_assert), size of PacketChunkSize should be bigger than DEBUGGEE_UD_PAUSED_PACKET")
+		// mylog.Check("err (static_assert), size of PacketChunkSize should be bigger than DEBUGGEE_UD_PAUSED_PACKET")
 	}
 }
 

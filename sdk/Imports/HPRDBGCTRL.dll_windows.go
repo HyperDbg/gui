@@ -9,9 +9,10 @@ import (
 	"path/filepath"
 	"syscall"
 
+	"golang.org/x/sys/windows"
+
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
-	"golang.org/x/sys/windows"
 )
 
 type (
@@ -24,7 +25,7 @@ func Call(p *syscall.Proc, a ...uintptr) (value uintptr) {
 	value, statusCode, err := p.Call(a...)
 	mylog.Check(err)
 	if statusCode == 0 {
-		mylog.Error("statusCode == 0") //?
+		mylog.Check("statusCode == 0") //?
 		return
 	}
 	return value
@@ -61,10 +62,10 @@ func Init() {
 	dir, err := os.UserCacheDir()
 	mylog.Check(err)
 	dir = filepath.Join(dir, "hyperdbgDll", "dll_cache")
-	if !mylog.Error(os.MkdirAll(dir, 0o755)) {
+	if !mylog.Check(os.MkdirAll(dir, 0o755)) {
 		return
 	}
-	if !mylog.Error(windows.SetDllDirectory(dir)) {
+	if !mylog.Check(windows.SetDllDirectory(dir)) {
 		return
 	}
 	sha := sha256.Sum256(dllData)

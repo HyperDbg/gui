@@ -30,7 +30,7 @@ func TestName2(t *testing.T) {
 		if info.IsDir() {
 			return nil
 		}
-		mylog.Error(os.Rename(path, strings.ToLower(path)))
+		mylog.Check(os.Rename(path, strings.ToLower(path)))
 		return err
 	})
 }

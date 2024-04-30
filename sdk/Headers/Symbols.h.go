@@ -53,7 +53,7 @@ type (
 // mock static_assert
 func init() {
 	if binary.Size(DEBUGGER_UPDATE_SYMBOL_TABLE{}) < PacketChunkSize {
-		// mylog.Error("err (static_assert), size of PacketChunkSize should be bigger than DEBUGGER_UPDATE_SYMBOL_TABLE (MODULE_SYMBOL_DETAIL)")
+		// mylog.Check("err (static_assert), size of PacketChunkSize should be bigger than DEBUGGER_UPDATE_SYMBOL_TABLE (MODULE_SYMBOL_DETAIL)")
 	}
 }
 

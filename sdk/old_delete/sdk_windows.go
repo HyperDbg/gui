@@ -26,7 +26,7 @@ package sdk
 //	outBuffer := make([]byte, UsermodeBufferSize)
 //	time.Sleep(DefaultSpeedOfReadingKernelMessages) //need seasoned ?
 //	OperationCode := 0
-//	if !mylog.Error(syscall.DeviceIoControl(
+//	if !mylog.Check(syscall.DeviceIoControl(
 //		o.handle,
 //		IOCTL_REGISTER_EVENT,
 //		//RegisterEvent
@@ -37,7 +37,7 @@ package sdk
 //		nil,
 //		nil,
 //	)) {
-//		return mylog.Error(syscall.GetLastError())
+//		return mylog.Check(syscall.GetLastError())
 //	}
 //	//copy()
 //	switch OperationCode {
@@ -56,7 +56,7 @@ package sdk
 //	case OPERATION_NOTIFICATION_FROM_USER_DEBUGGER_PAUSE:
 //	default:
 //		outBuffer = outBuffer[:0]
-//		return mylog.Error(syscall.CloseHandle(o.handle))
+//		return mylog.Check(syscall.CloseHandle(o.handle))
 //	}
 //	return true
 //}
@@ -76,12 +76,12 @@ package sdk
 //		return
 //	}
 //	if hard.CpuInfo.Vendor != "GenuineIntel" {
-//		return mylog.Error("this program is not designed to run in a non-VT-x environemnt !")
+//		mylog.Check("this program is not designed to run in a non-VT-x environemnt !")
 //	}
 //	mylog.Info("", "virtualization technology is vt-x")
 //	field := bitfield.NewFromUint32(hard.CpuInfo.Cpu1.Ecx)
 //	if !field.Test(5) {
-//		return mylog.Error("vmx operation is not supported by your processor")
+//		mylog.Check("vmx operation is not supported by your processor")
 //	}
 //	mylog.Info("", "vmx operation is supported by your processor")
 //	return true
@@ -96,7 +96,7 @@ package sdk
 //		return true //?
 //	}
 //	name, err := o.LinkName()
-//	if !mylog.Error(err) {
+//	if !mylog.Check(err) {
 //		return
 //	}
 //	handle, err := syscall.CreateFile(
@@ -108,12 +108,12 @@ package sdk
 //		syscall.FILE_ATTRIBUTE_NORMAL|syscall.FILE_FLAG_OVERLAPPED,
 //		0,
 //	)
-//	if !mylog.Error(err) {
+//	if !mylog.Check(err) {
 //		//e := `a device attached to the system is not functioning,vmx feature might be disabled from BIOS or VBS/HVCI is active`
-//		return mylog.Error(syscall.GetLastError())
+//		return mylog.Check(syscall.GetLastError())
 //	}
 //	if handle == syscall.InvalidHandle {
-//		return mylog.Error("handle == syscall.InvalidHandle")
+//		mylog.Check("handle == syscall.InvalidHandle")
 //	}
 //	o.handle = handle
 //	return true
@@ -143,7 +143,7 @@ package sdk
 //	if !o.Handle() {
 //		return
 //	}
-//	if !mylog.Error(syscall.DeviceIoControl(
+//	if !mylog.Check(syscall.DeviceIoControl(
 //		o.handle,
 //		IOCTL_TERMINATE_VMX,
 //		nil,
@@ -153,7 +153,7 @@ package sdk
 //		nil,
 //		nil,
 //	)) {
-//		return mylog.Error(syscall.GetLastError())
+//		return mylog.Check(syscall.GetLastError())
 //	}
 //	return true
 //}
