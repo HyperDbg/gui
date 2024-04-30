@@ -1,8 +1,6 @@
 module github.com/ddkwork/hyperdbgui
 
-go 1.22.1
-
-toolchain go1.22.2
+go 1.22.2
 
 require (
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240307211618-a69d953ea142 // indirect
@@ -12,12 +10,17 @@ require (
 
 require (
 	cogentcore.org/core v0.0.10-0.20240330171712-17511011859c
-	github.com/ddkwork/golibrary v0.0.0-20240418080933-af0c86bab931
+	github.com/ddkwork/golibrary v0.0.0-20240430085019-ec9f9dc999eb
 )
 
 require (
+	gioui.org v0.6.1-0.20240412213418-98d3a2eb24ac // indirect
+	gioui.org/cmd v0.0.0-20220818080936-02068d6340fc // indirect
+	gioui.org/example v0.6.1 // indirect
+	gioui.org/x v0.6.1 // indirect
 	github.com/Bios-Marcel/wastebasket v0.0.4-0.20240213135800-f26f1ae0a7c4 // indirect
 	github.com/Masterminds/vcs v1.13.3 // indirect
+	github.com/akavel/rsrc v0.10.1 // indirect
 	github.com/alecthomas/chroma/v2 v2.13.0 // indirect
 	github.com/anthonynsimon/bild v0.13.0 // indirect
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394 // indirect
