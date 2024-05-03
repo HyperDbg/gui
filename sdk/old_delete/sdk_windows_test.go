@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/ddkwork/golibrary/stream"
-	"github.com/ddkwork/golibrary/stream/cmd"
 )
 
 func TestXmake(t *testing.T) {
