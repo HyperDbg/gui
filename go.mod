@@ -14,13 +14,8 @@ require (
 )
 
 require (
-	gioui.org v0.6.1-0.20240412213418-98d3a2eb24ac // indirect
-	gioui.org/cmd v0.0.0-20220818080936-02068d6340fc // indirect
-	gioui.org/example v0.6.1 // indirect
-	gioui.org/x v0.6.1 // indirect
 	github.com/Bios-Marcel/wastebasket v0.0.4-0.20240213135800-f26f1ae0a7c4 // indirect
 	github.com/Masterminds/vcs v1.13.3 // indirect
-	github.com/akavel/rsrc v0.10.1 // indirect
 	github.com/alecthomas/chroma/v2 v2.13.0 // indirect
 	github.com/anthonynsimon/bild v0.13.0 // indirect
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394 // indirect
@@ -44,7 +39,6 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/zzl/go-win32api/v2 v2.1.0 // indirect
 	golang.org/x/exp v0.0.0-20240416160154-fe59bbe5cc7f // indirect
 	golang.org/x/image v0.15.0 // indirect
 	golang.org/x/mod v0.17.0 // indirect

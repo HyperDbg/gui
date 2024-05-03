@@ -47,7 +47,7 @@ type (
 )
 
 func Define2CtlCode(info CtlCodeInfo) {
-	body := stream.New("")
+	body := stream.NewBuffer("")
 	body.WriteStringLn("package " + info.Package)
 
 	body.WriteStringLn("import (")
@@ -66,7 +66,7 @@ func Define2CtlCode(info CtlCodeInfo) {
 
 	}
 	body.WriteStringLn("var (")
-	file := stream.NewReadFile(info.File)
+	file := stream.NewBuffer(info.File)
 	all := strings.ReplaceAll(file.String(), `\
    `, "")
 	file.Reset()

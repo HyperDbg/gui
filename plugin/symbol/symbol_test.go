@@ -53,7 +53,7 @@ func TestName(t *testing.T) {
 	ntdlls := fnSaveObj(ntdll)
 	win32us := fnSaveObj(win32u)
 	fnGenGo := func(name, packageName string, obj []NtApiInfo) (ok bool) {
-		buffer := stream.New("")
+		buffer := stream.NewBuffer("")
 		buffer.WriteStringLn(`package ` + packageName)
 		buffer.WriteStringLn(`type (`)
 		buffer.WriteStringLn(`	Interface` + name + ` interface {`)

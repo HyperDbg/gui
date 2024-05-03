@@ -43,8 +43,8 @@ func TestName1(t *testing.T) {
 
 			    }
 	*/
-	ABCDE := stream.New("ABCDE")
-	ssd := stream.New("ssd.exe")
+	ABCDE := stream.NewBuffer("ABCDE")
+	ssd := stream.NewBuffer("ssd.exe")
 	mylog.HexDump("ABCDE", ABCDE.Buffer.Bytes())
 	mylog.HexDump("ssd.exe", ssd.Buffer.Bytes())
 }

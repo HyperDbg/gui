@@ -68,7 +68,7 @@ type (
 func New() *object { return &object{} }
 
 func (o *object) DecodeStack(api, stack string, argsInput ...string) (argList []ArgList, ok bool) {
-	lines := stream.New(stack).ToLines()
+	lines := stream.NewBuffer(stack).ToLines()
 
 	argList = make([]ArgList, 0)
 
@@ -156,7 +156,7 @@ func (o *object) TestIopXxxControlFile() (ok bool) {
 	if !ok {
 		return
 	}
-	s := stream.New("")
+	s := stream.NewBuffer("")
 	s.WriteStringLn("void format() {")
 	s.WriteStringLn("!epthook nt!" + api + " script {")
 	pname := `printf("pname\t%s\n",$pname);`

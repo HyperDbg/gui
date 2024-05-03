@@ -25,18 +25,18 @@ func TestGenErrorCodes(t *testing.T) {
 	})
 	return
 
-	body := stream.New("")
+	body := stream.NewBuffer("")
 	body.WriteStringLn("package Headers")
 	body.WriteStringLn("import \"fmt\"")
 	body.WriteStringLn("type ErrorCodes int")
 	body.WriteStringLn("const (")
-	file := stream.NewReadFile("ErrorCodes.h")
+	file := stream.NewBuffer("ErrorCodes.h")
 	all := strings.ReplaceAll(file.String(), `\
    `, "")
 	file.Reset()
 	file.WriteString(all)
 	lines := file.ToLines()
-	// lines, ok := stream.New("").ReadToLines("ErrorCodes.h")
+	// lines, ok := stream.NewBuffer("").ReadToLines("ErrorCodes.h")
 
 	const define = "#define"
 	once := sync.Once{}
@@ -95,12 +95,12 @@ type (
 )
 
 func Define2Enum(info EnumInfo) {
-	body := stream.New("")
+	body := stream.NewBuffer("")
 	body.WriteStringLn("package " + info.Package)
 	body.WriteStringLn("import \"fmt\"")
 	body.WriteStringLn("type " + info.Type + " int")
 	body.WriteStringLn("const (")
-	file := stream.NewReadFile(info.File)
+	file := stream.NewBuffer(info.File)
 	all := strings.ReplaceAll(file.String(), `\
    `, "")
 	file.Reset()

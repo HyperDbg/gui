@@ -53,14 +53,14 @@ type (
 
 func New() *object {
 	return &object{
-		s: stream.New(""),
+		s: stream.NewBuffer(""),
 	}
 }
 
 func (o *object) ProcessNameFilter(processName string, fn string) (ok bool) {
 	o.s.WriteStringLn("\nif(")
 	processName = processName[:len(processName)-len(filepath.Ext(processName))]
-	b := stream.New(processName)
+	b := stream.NewBuffer(processName)
 	mylog.HexDump("pname test", b.Bytes())
 	for i, b2 := range b.Bytes() {
 		s := `db($pname +` + fmt.Sprint(i) + `) ==` + fmt.Sprintf("%x", b2)

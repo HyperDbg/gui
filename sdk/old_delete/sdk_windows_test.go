@@ -13,7 +13,7 @@ import (
 )
 
 func TestXmake(t *testing.T) {
-	targets := stream.New("")
+	targets := stream.NewBuffer("")
 	targets.WriteStringLn("add_rules(\"mode.debug\", \"mode.release\")\n")
 	filepath.WalkDir("./HyperDbgDev", func(path string, info fs.DirEntry, err error) error {
 		ext := filepath.Ext(path)
@@ -25,7 +25,7 @@ func TestXmake(t *testing.T) {
 				ast := cmd.MakeArg("/analyze", "/d1Aprintast", ">", project+".ast")
 				println(ast)
 
-				s := stream.New("")
+				s := stream.NewBuffer("")
 				s.WriteStringLn("--" + filepath.Dir(path))
 				s.WriteStringLn("target(" + strconv.Quote(project) + ")")
 				if strings.Contains(path, "hyperdbg-cli") {

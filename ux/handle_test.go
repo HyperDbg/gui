@@ -19,7 +19,7 @@ func TestName(t *testing.T) {
 	return
 	path := "D:\\workspace\\workspace\\gui\\BITMAP\\MODULES.bmp"
 	// path="bmp/WINDOWS.bmp"
-	decode, s, err := image.Decode(stream.NewReadFile(path))
+	decode, s, err := image.Decode(stream.NewBuffer(path))
 	mylog.Check(err)
 	println(s)
 	fmt.Println(decode.Bounds())

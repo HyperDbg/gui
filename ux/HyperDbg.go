@@ -94,7 +94,7 @@ func Run() {
 	widget.NewWindowRunAndWait(b, func(names []string) {
 		for _, name := range names {
 			if filepath.Ext(name) == ".json" {
-				stream.NewReadFile(name)
+				stream.NewBuffer(name)
 			}
 		}
 	})
