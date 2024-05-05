@@ -47,7 +47,7 @@ type (
 		ProcessNameFilter(processName string, fn string) (ok bool)
 	}
 	object struct {
-		s *stream.Stream
+		s *stream.Buffer
 	}
 )
 
