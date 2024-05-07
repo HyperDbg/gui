@@ -51,7 +51,7 @@ sudo systemctl start  vmware-networks.service
 sudo pacman -Sy open-vm-tools
 */
 func TestName(t *testing.T) {
-	run := stream.Run("uname -a")
+	run := stream.RunCommand("uname -a")
 	split := strings.Split(run.Result, " ")
 	s := split[2]
 	before, _, found := strings.Cut(s, "-")
@@ -61,5 +61,5 @@ func TestName(t *testing.T) {
 	index := strings.LastIndex(before, ".")
 	before = before[:index]
 	before = strings.ReplaceAll(before, ".", "")
-	stream.Run(`sudo pacman  -Sy linux` + before + `-headers`)
+	stream.RunCommand(`sudo pacman  -Sy linux` + before + `-headers`)
 }
