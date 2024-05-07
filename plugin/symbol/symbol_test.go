@@ -63,7 +63,7 @@ func TestName(t *testing.T) {
 		buffer.WriteStringLn(`	}`)
 		buffer.WriteStringLn(`	object` + name + ` struct{}`)
 		buffer.WriteStringLn(`)`)
-		buffer.WriteStringLn(`func New` + name + `() Interface` + name + ` { return &object` + name + `{} }`)
+		buffer.WriteStringLn(`func NewGen` + name + `() Interface` + name + ` { return &object` + name + `{} }`)
 		goFileName := name + `.go`
 		source, err2 := format.Source(buffer.Bytes())
 		mylog.Check(err2)
