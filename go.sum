@@ -42,6 +42,8 @@ github.com/ddkwork/golibrary v0.0.11 h1:p+zFVeYvJVTu0ywietqXzGS60h7iT6ALgJq5bxh1
 github.com/ddkwork/golibrary v0.0.11/go.mod h1:ZeIyO3O7oO/2enRmks3lgBPB7Zop6MniGEALFBZI0wE=
 github.com/ddkwork/golibrary v0.0.12 h1:EUoccNqGaDMb5rqEjMySJe8FrQGueikVgRkaKlzFO/0=
 github.com/ddkwork/golibrary v0.0.12/go.mod h1:ZeIyO3O7oO/2enRmks3lgBPB7Zop6MniGEALFBZI0wE=
+github.com/ddkwork/golibrary v0.0.13 h1:KHyH5Q7AbVuuDcbear3ykW9Q0YP4ODgJovIPac25ETI=
+github.com/ddkwork/golibrary v0.0.13/go.mod h1:ZeIyO3O7oO/2enRmks3lgBPB7Zop6MniGEALFBZI0wE=
 github.com/dlclark/regexp2 v1.11.0 h1:G/nrcoOa7ZXlpoa/91N3X7mM3r8eIlMBBJZvsz/mxKI=
 github.com/dlclark/regexp2 v1.11.0/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
 github.com/fatih/color v1.16.0 h1:zmkK9Ngbjj+K0yRhTVONQh1p/HknKYSlNT+vZCzyokM=
