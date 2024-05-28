@@ -96,7 +96,7 @@ package sdk
 //		return true //?
 //	}
 //	name, err := o.LinkName()
-//	if !mylog.Check(err) {
+//	if ! {
 //		return
 //	}
 //	handle, err := syscall.CreateFile(
@@ -108,7 +108,7 @@ package sdk
 //		syscall.FILE_ATTRIBUTE_NORMAL|syscall.FILE_FLAG_OVERLAPPED,
 //		0,
 //	)
-//	if !mylog.Check(err) {
+//	if ! {
 //		//e := `a device attached to the system is not functioning,vmx feature might be disabled from BIOS or VBS/HVCI is active`
 //		return mylog.Check(syscall.GetLastError())
 //	}

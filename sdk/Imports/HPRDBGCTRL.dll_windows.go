@@ -23,7 +23,7 @@ var api = newApi()
 
 func Call(p *syscall.Proc, a ...uintptr) (value uintptr) {
 	value, statusCode := mylog.Check3(p.Call(a...))
-	mylog.Check(err)
+	
 	if statusCode == 0 {
 		mylog.Check("statusCode == 0") //?
 		return
@@ -60,7 +60,7 @@ func Init() {
 		}
 	}()
 	dir := mylog.Check2(os.UserCacheDir())
-	mylog.Check(err)
+	
 	dir = filepath.Join(dir, "hyperdbgDll", "dll_cache")
 	if !mylog.Check(os.MkdirAll(dir, 0o755)) {
 		return
