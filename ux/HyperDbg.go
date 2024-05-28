@@ -11,7 +11,6 @@ import (
 	"cogentcore.org/core/styles"
 
 	"github.com/ddkwork/golibrary/stream"
-	"github.com/ddkwork/golibrary/widget"
 )
 
 ////go:embed Fleet.ico

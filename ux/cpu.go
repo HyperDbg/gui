@@ -11,7 +11,7 @@ import (
 	"cogentcore.org/core/styles"
 	"cogentcore.org/core/texteditor"
 
-	"github.com/ddkwork/golibrary/widget"
+	
 )
 
 func pageCpu(parent *gi.Frame) {
