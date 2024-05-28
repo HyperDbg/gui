@@ -109,8 +109,8 @@ func Define2CtlCode(info CtlCodeInfo) {
 	body.WriteStringLn("}")
 	body.WriteStringLn("}")
 	mylog.Json("gen error code", body.String())
-	source := mylog.Check2(format.Source(body.Bytes()))
-	if ! {
+	source, e := (format.Source(body.Bytes()))
+	if e != nil {
 		stream.WriteTruncate(info.File+".go", body.Bytes())
 		return
 	}

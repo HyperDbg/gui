@@ -4,7 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ddkwork/cpp2go"
+	"github.com/branch/pkg/cpp2go"
+	"github.com/ddkwork/golibrary/stream"
 )
 
 func TestCpp2Go(t *testing.T) {

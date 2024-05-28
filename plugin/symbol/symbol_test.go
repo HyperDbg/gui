@@ -52,7 +52,7 @@ func TestName(t *testing.T) {
 	}
 	ntdlls := fnSaveObj(ntdll)
 	win32us := fnSaveObj(win32u)
-	fnGenGo := func(name, packageName string, obj []NtApiInfo) (ok bool) {
+	fnGenGo := func(name, packageName string, obj []NtApiInfo) {
 		buffer := stream.NewBuffer("")
 		buffer.WriteStringLn(`package ` + packageName)
 		buffer.WriteStringLn(`type (`)
@@ -67,7 +67,7 @@ func TestName(t *testing.T) {
 		goFileName := name + `.go`
 		source, err2 := format.Source(buffer.Bytes())
 		mylog.Check(err2)
-		return stream.WriteTruncate(goFileName, source)
+		stream.WriteTruncate(goFileName, source)
 	}
 	fnGenGo(`Ntdll`, `symbol`, ntdlls)
 	fnGenGo(`Win32u`, `symbol`, win32us)
