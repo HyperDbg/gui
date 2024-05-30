@@ -10,8 +10,6 @@ import (
 	"cogentcore.org/core/states"
 	"cogentcore.org/core/styles"
 	"cogentcore.org/core/texteditor"
-
-	
 )
 
 func pageCpu(parent *gi.Frame) {

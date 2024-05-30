@@ -20,7 +20,7 @@ func TestName(t *testing.T) {
 	path := "D:\\workspace\\workspace\\gui\\BITMAP\\MODULES.bmp"
 	// path="bmp/WINDOWS.bmp"
 	decode, s := mylog.Check3(image.Decode(stream.NewBuffer(path)))
-	
+
 	println(s)
 	fmt.Println(decode.Bounds())
 }
