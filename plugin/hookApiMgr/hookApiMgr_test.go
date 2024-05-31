@@ -13,7 +13,7 @@ func TestName(t *testing.T) {
 	h := scriptGen.New()
 	h.ProcessNameFilter("ssd.exe", "")
 	clang.New().Format(`C:\Users\Admin\Desktop\gui\sdk\scriptGen\cpuid.ds`)
-	// h := hookApiMgr.NewGen()
+	// h := hookApiMgr.NewGeneratedFile()
 	// h.TestIopXxxControlFile()
 }
 
