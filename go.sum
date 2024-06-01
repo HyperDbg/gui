@@ -28,8 +28,6 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dc0d/caseconv v0.5.0 h1:z3Ki2zszD03beetWyNAGa3NOAbnDJk+bX0tvcx9BKjQ=
 github.com/dc0d/caseconv v0.5.0/go.mod h1:/CrBBNtMoPTPf0INHrwyyhDrDjAJ9PFE+WuxSJHU0ZE=
-github.com/ddkwork/golibrary v0.0.53 h1:44fy3bLH2Tm9g62mDM4MMcj4ve3d6UjBxY6dEnL3qDo=
-github.com/ddkwork/golibrary v0.0.53/go.mod h1:f5jZd249HgqcWzNOpDSY9DguI1bdwSJjuX7k9pLTf8E=
 github.com/ddkwork/golibrary v0.0.58 h1:v8bXgseiE69BU8ljCvxBE6SGHaBExIih1PYPucmBMUY=
 github.com/ddkwork/golibrary v0.0.58/go.mod h1:wnz6yMtdcIDWr30n2pVWgbZip5KU3O1DI0WgcQpfFg4=
 github.com/dlclark/regexp2 v1.11.0 h1:G/nrcoOa7ZXlpoa/91N3X7mM3r8eIlMBBJZvsz/mxKI=
