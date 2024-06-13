@@ -6,5 +6,6 @@ import (
 )
 
 func LayoutSource(parent unison.Paneler) unison.Paneler {
+	return unison.NewPanel()
 	return widget.NewCodeView("log.log")
 }

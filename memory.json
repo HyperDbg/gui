@@ -1,0 +1,1581 @@
+{
+ "id": "17c62ea0-71b0-4deb-a3a9-781444b2cf1e",
+ "type": "root_container",
+ "Data": {
+  "Address": 0,
+  "Size": 0,
+  "Level": "",
+  "PageInfo": "",
+  "AssignmentType": "",
+  "PageProtection": "",
+  "InitialProtection": ""
+ },
+ "children": [
+  {
+   "id": "4155cc04-7fc2-4fed-ad82-fbb752196e93",
+   "type": "",
+   "Data": {
+    "Address": 1110198845440,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "2de0210a-963f-47b9-9011-61e68cbf6f8c",
+   "type": "",
+   "Data": {
+    "Address": 1110198845441,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f9a64271-97c6-4ec0-9f91-c9f89b08f008",
+   "type": "",
+   "Data": {
+    "Address": 1110198845442,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3a665e31-6105-44c1-a9ed-9a7c72744952",
+   "type": "",
+   "Data": {
+    "Address": 1110198845443,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a52dd48c-f2fa-4994-b359-abacffd51aeb",
+   "type": "",
+   "Data": {
+    "Address": 1110198845444,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "04b34b79-88d2-4cfa-8737-d7f33b956c16",
+   "type": "",
+   "Data": {
+    "Address": 1110198845445,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7a03e850-f6bc-4554-9fc9-c51008c73fa2",
+   "type": "",
+   "Data": {
+    "Address": 1110198845446,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "de1ca4c0-13eb-4e1c-be51-27fea3b60c23",
+   "type": "",
+   "Data": {
+    "Address": 1110198845447,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "53cedc7f-aa8b-46de-a464-767eae0ea2ee",
+   "type": "",
+   "Data": {
+    "Address": 1110198845448,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "1811455a-b1f4-49fb-bf1d-4f8d2ed4156b",
+   "type": "",
+   "Data": {
+    "Address": 1110198845449,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "b78d3cbf-9607-48f4-83f9-d1ddbda3bc3d",
+   "type": "",
+   "Data": {
+    "Address": 1110198845450,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "e7cfe389-88d2-436b-b8f1-b6e704b12d35",
+   "type": "",
+   "Data": {
+    "Address": 1110198845451,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "947c6f39-cd8b-4ede-a616-714890b83411",
+   "type": "",
+   "Data": {
+    "Address": 1110198845452,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c61a3dce-4dcb-446b-97db-76205822f7e7",
+   "type": "",
+   "Data": {
+    "Address": 1110198845453,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "59829a36-99b1-4de3-ba15-90de4b2d8d89",
+   "type": "",
+   "Data": {
+    "Address": 1110198845454,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c1cc5e26-e83b-4f5a-bdec-1fca6cd95977",
+   "type": "",
+   "Data": {
+    "Address": 1110198845455,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6bb5ac93-b74a-4853-9e57-c88c9b32b9c1",
+   "type": "",
+   "Data": {
+    "Address": 1110198845456,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "8f79be94-c497-4faa-94cd-0a7d9a2bc935",
+   "type": "",
+   "Data": {
+    "Address": 1110198845457,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "b7e63e34-dd37-4951-aca8-282a315ade98",
+   "type": "",
+   "Data": {
+    "Address": 1110198845458,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4d6edc9c-81be-42b5-b37f-24a045a5f86a",
+   "type": "",
+   "Data": {
+    "Address": 1110198845459,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "58a10c74-311b-4629-a006-38b4a8c74849",
+   "type": "",
+   "Data": {
+    "Address": 1110198845460,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "fb61b666-027e-4b18-8bf6-9ba83a0766b6",
+   "type": "",
+   "Data": {
+    "Address": 1110198845461,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "44550612-d9c4-43e2-a53b-5473068f407b",
+   "type": "",
+   "Data": {
+    "Address": 1110198845462,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c592606d-23cc-4427-a7e5-44b9fc929f94",
+   "type": "",
+   "Data": {
+    "Address": 1110198845463,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c942f184-155e-4d09-b54b-757a1f735aeb",
+   "type": "",
+   "Data": {
+    "Address": 1110198845464,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "78503547-cb1c-4262-bf97-ce6af0723c30",
+   "type": "",
+   "Data": {
+    "Address": 1110198845465,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "cc060c93-497d-426f-8eb7-363a4d55e838",
+   "type": "",
+   "Data": {
+    "Address": 1110198845466,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "288b8e07-0c68-431c-a1b6-fcb13f44af95",
+   "type": "",
+   "Data": {
+    "Address": 1110198845467,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6392ee6e-65e8-4d6d-a066-7bf75cd90022",
+   "type": "",
+   "Data": {
+    "Address": 1110198845468,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "936a9ee8-174e-40e7-9475-34ae9f0bf6fd",
+   "type": "",
+   "Data": {
+    "Address": 1110198845469,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "721e0395-2c2e-4511-b94f-6c8bb88dbcf7",
+   "type": "",
+   "Data": {
+    "Address": 1110198845470,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "b2f339e9-666a-49f5-b4b6-b6dba083d1cb",
+   "type": "",
+   "Data": {
+    "Address": 1110198845471,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "16425a4f-e136-4b1b-a024-2a33b597f742",
+   "type": "",
+   "Data": {
+    "Address": 1110198845472,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "507a5583-d275-4b74-9513-e505b1f8b0f3",
+   "type": "",
+   "Data": {
+    "Address": 1110198845473,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "642b0ed2-cadd-48b2-bd51-27f31777b31b",
+   "type": "",
+   "Data": {
+    "Address": 1110198845474,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "268155bb-bc26-44b3-a383-8e0fec9d8d07",
+   "type": "",
+   "Data": {
+    "Address": 1110198845475,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "429d37a0-116f-4ff2-8211-b0389cdfd4fc",
+   "type": "",
+   "Data": {
+    "Address": 1110198845476,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "efea11ac-04d6-4c08-bdc8-d6359248a41a",
+   "type": "",
+   "Data": {
+    "Address": 1110198845477,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "cd013fac-5dce-449c-af94-51d389abd6cd",
+   "type": "",
+   "Data": {
+    "Address": 1110198845478,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f5487cb1-617a-4c69-9ca5-5e300af7c5bc",
+   "type": "",
+   "Data": {
+    "Address": 1110198845479,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4727fa60-8cac-494a-8963-2dc457ccc42b",
+   "type": "",
+   "Data": {
+    "Address": 1110198845480,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "295128b6-f9cd-4638-82ed-c4d3c49bc5c0",
+   "type": "",
+   "Data": {
+    "Address": 1110198845481,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "deb0604a-7c53-421d-975c-00740eaee4a3",
+   "type": "",
+   "Data": {
+    "Address": 1110198845482,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4a18f6cb-d560-42f4-97d9-30541c181dba",
+   "type": "",
+   "Data": {
+    "Address": 1110198845483,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "8aea9aa8-8a47-4da3-8445-c57c2c0b0df1",
+   "type": "",
+   "Data": {
+    "Address": 1110198845484,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "1b1fb566-2eee-40aa-8b44-70eb696b1c36",
+   "type": "",
+   "Data": {
+    "Address": 1110198845485,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "45c9994f-6462-4422-8055-811d3b6bad3c",
+   "type": "",
+   "Data": {
+    "Address": 1110198845486,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c0151388-33b6-46d2-9a7d-818e17c52ff9",
+   "type": "",
+   "Data": {
+    "Address": 1110198845487,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "287e70d4-4b1f-4eab-bbb2-e5bd31a6504b",
+   "type": "",
+   "Data": {
+    "Address": 1110198845488,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "bb1ba207-5181-48f2-89e3-70e2bbe14288",
+   "type": "",
+   "Data": {
+    "Address": 1110198845489,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "04c0ba79-594b-4a7e-8433-141f33fd27c7",
+   "type": "",
+   "Data": {
+    "Address": 1110198845490,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3c8cbc5d-e60f-472a-b98b-843a7e98283c",
+   "type": "",
+   "Data": {
+    "Address": 1110198845491,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6f6a9a16-89c8-495b-8028-25d0dd3b037b",
+   "type": "",
+   "Data": {
+    "Address": 1110198845492,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "e20a6372-610b-4364-bb15-0b2a42771c44",
+   "type": "",
+   "Data": {
+    "Address": 1110198845493,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "fd323402-b294-4580-900c-e0c35e3194db",
+   "type": "",
+   "Data": {
+    "Address": 1110198845494,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c013dc1d-f097-4af7-b89c-b793b9bb2e25",
+   "type": "",
+   "Data": {
+    "Address": 1110198845495,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "e36d126c-0142-4858-9ed4-f8b8065ca5e6",
+   "type": "",
+   "Data": {
+    "Address": 1110198845496,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "b4bf022e-95c9-4e3b-ad4b-7f279a0bc06e",
+   "type": "",
+   "Data": {
+    "Address": 1110198845497,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "1bbcc557-a7d6-4691-915a-5bfbc91185d7",
+   "type": "",
+   "Data": {
+    "Address": 1110198845498,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "d704db4f-a79a-4fc5-b181-0f652bffacf6",
+   "type": "",
+   "Data": {
+    "Address": 1110198845499,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "9405871b-7123-4a83-98b4-8aa78cef07ac",
+   "type": "",
+   "Data": {
+    "Address": 1110198845500,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "28f9aac6-1661-40e9-87c4-84c56b6fa323",
+   "type": "",
+   "Data": {
+    "Address": 1110198845501,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "127fcd21-2b3d-4322-8a2c-ae196b128bdd",
+   "type": "",
+   "Data": {
+    "Address": 1110198845502,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "91d9ab7e-0260-45ab-9c5c-aee9320300fa",
+   "type": "",
+   "Data": {
+    "Address": 1110198845503,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "975fba39-981f-4cff-a736-c3e3f429383d",
+   "type": "",
+   "Data": {
+    "Address": 1110198845504,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "8179e25e-55ce-44b6-80c9-626a736d55a8",
+   "type": "",
+   "Data": {
+    "Address": 1110198845505,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7d9c04de-fecc-4f8e-915f-6faf669a17a6",
+   "type": "",
+   "Data": {
+    "Address": 1110198845506,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "1e749dde-b0f9-491d-828f-dd71a43070e2",
+   "type": "",
+   "Data": {
+    "Address": 1110198845507,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "45f6c60d-2a99-41bc-aa9b-0b2b51fc0794",
+   "type": "",
+   "Data": {
+    "Address": 1110198845508,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ad8b4eaf-3563-4eb9-8362-0a2cc43a4ff3",
+   "type": "",
+   "Data": {
+    "Address": 1110198845509,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "72c2c69e-bf01-4282-a9fd-55fb3b32379f",
+   "type": "",
+   "Data": {
+    "Address": 1110198845510,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "2113c17f-f72e-48f0-92e3-cb885e9502f5",
+   "type": "",
+   "Data": {
+    "Address": 1110198845511,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f2579b35-3712-4349-9dfc-8e75facb6aa9",
+   "type": "",
+   "Data": {
+    "Address": 1110198845512,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4c507b7b-0180-48c0-8edd-3dd3dd5a2534",
+   "type": "",
+   "Data": {
+    "Address": 1110198845513,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3ba79179-8c77-4a4b-8c52-73607284b615",
+   "type": "",
+   "Data": {
+    "Address": 1110198845514,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7d21a6bb-810e-4678-8bbb-dfc36bc7b069",
+   "type": "",
+   "Data": {
+    "Address": 1110198845515,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a9bc5d2d-a5fa-4f22-8a83-5b2a08299925",
+   "type": "",
+   "Data": {
+    "Address": 1110198845516,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "fd9d1af2-77f0-4719-bb3d-6c2ffaf55eb1",
+   "type": "",
+   "Data": {
+    "Address": 1110198845517,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4ca7b53d-a681-4f93-ad02-5b04e38c5551",
+   "type": "",
+   "Data": {
+    "Address": 1110198845518,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f59b99c3-7404-4cfa-acb1-8ef95ca5d62a",
+   "type": "",
+   "Data": {
+    "Address": 1110198845519,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "bd662e94-67fd-40b5-816a-fb700dcccc25",
+   "type": "",
+   "Data": {
+    "Address": 1110198845520,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7e14069f-bef7-4abe-9408-cce8381e0730",
+   "type": "",
+   "Data": {
+    "Address": 1110198845521,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7d9ce331-b642-424b-a24d-5acbccc3cc9c",
+   "type": "",
+   "Data": {
+    "Address": 1110198845522,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f9f8e7fe-dd20-49b6-94f1-e4bb7e012279",
+   "type": "",
+   "Data": {
+    "Address": 1110198845523,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6ec9420d-29e6-46aa-8eaa-f75acb927405",
+   "type": "",
+   "Data": {
+    "Address": 1110198845524,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "8f3f4c67-3cdd-4659-8e8e-e9b3977b7d61",
+   "type": "",
+   "Data": {
+    "Address": 1110198845525,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "94a87ce9-6200-4bf1-b781-d36dabb2651f",
+   "type": "",
+   "Data": {
+    "Address": 1110198845526,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3573e49d-ada6-4b66-80fd-ab3578e41974",
+   "type": "",
+   "Data": {
+    "Address": 1110198845527,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4d4d3c01-ee0a-4175-9bf6-c4df1140cbd4",
+   "type": "",
+   "Data": {
+    "Address": 1110198845528,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "087db9fb-7616-4b7c-b8b3-95e01d602ea6",
+   "type": "",
+   "Data": {
+    "Address": 1110198845529,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "98ada1c3-d246-45ec-9e96-209a31b4e684",
+   "type": "",
+   "Data": {
+    "Address": 1110198845530,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "873d33db-aafd-4772-9121-60bc5fc67ddd",
+   "type": "",
+   "Data": {
+    "Address": 1110198845531,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "980c60f6-f37c-48c8-93d7-82608478efc9",
+   "type": "",
+   "Data": {
+    "Address": 1110198845532,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "eeaf6b50-54b6-4d9a-a710-7b98a6c1f42a",
+   "type": "",
+   "Data": {
+    "Address": 1110198845533,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c0d600dd-92c8-4b5c-9d9b-3db47f723adc",
+   "type": "",
+   "Data": {
+    "Address": 1110198845534,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "0f460755-e8a2-4ddf-9bd3-d58640965e78",
+   "type": "",
+   "Data": {
+    "Address": 1110198845535,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c528a519-b328-4151-bddf-05b32968d45d",
+   "type": "",
+   "Data": {
+    "Address": 1110198845536,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "d008e2c9-fa84-4f4b-a36d-abb97cbb57c5",
+   "type": "",
+   "Data": {
+    "Address": 1110198845537,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "2ada9769-0539-4718-9340-daad367d2cab",
+   "type": "",
+   "Data": {
+    "Address": 1110198845538,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "e13bcd4a-49c9-466d-a5d3-a5d2e6261021",
+   "type": "",
+   "Data": {
+    "Address": 1110198845539,
+    "Size": 4608,
+    "Level": "用户模块",
+    "PageInfo": "\\Device\\HarddiskVolume3\\Windows\\System32\\C_1252.NLS",
+    "AssignmentType": "MAP",
+    "PageProtection": "-R---",
+    "InitialProtection": "-R---"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  }
+ ],
+ "Columns": [
+  {
+   "ID": 0,
+   "Current": 131,
+   "Minimum": 59.515625,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Address"
+  },
+  {
+   "ID": 1,
+   "Current": 40,
+   "Minimum": 34.058594,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Size"
+  },
+  {
+   "ID": 2,
+   "Current": 59,
+   "Minimum": 40.5459,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Level"
+  },
+  {
+   "ID": 3,
+   "Current": 386,
+   "Minimum": 64.0957,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "PageInfo"
+  },
+  {
+   "ID": 4,
+   "Current": 112.78125,
+   "Minimum": 112.78125,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "AssignmentType"
+  },
+  {
+   "ID": 5,
+   "Current": 104.27051,
+   "Minimum": 104.27051,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "PageProtection"
+  },
+  {
+   "ID": 6,
+   "Current": 106.46484,
+   "Minimum": 106.46484,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "InitialProtection"
+  }
+ ],
+ "PreventUserColumnResize": false
+}

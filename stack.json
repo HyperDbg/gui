@@ -1,0 +1,1581 @@
+{
+ "id": "9b63c2a0-2835-48b1-9f23-dfdc9db16910",
+ "type": "root_container",
+ "Data": {
+  "ThreadId": 0,
+  "Address": 0,
+  "ReturnTo": 0,
+  "ReturnFrom": 0,
+  "Size": 0,
+  "Level": "",
+  "Notes": ""
+ },
+ "children": [
+  {
+   "id": "62e8e75c-3fd5-4589-8b2d-ef49b57c9441",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452344,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ba31bf1e-b9ba-47ef-907f-7e6cd1feb9d5",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452345,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "338fd7d6-a54c-4745-97ee-28adc029c2e8",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452346,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f8c73af6-93da-4d15-beab-774617be69dc",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452347,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "2950b2c0-bb47-4eef-a719-cd8f71dd60b9",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452348,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "25b4320d-5ff6-480d-9c0e-ea4f5277cf64",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452349,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "b7dc1c5d-3f19-4f7e-8677-c268dcbf477e",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452350,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ce4a2dca-419e-4a4f-8080-69abc1c695df",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452351,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "382717fe-4a6f-4397-bc91-c416686f6be0",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452352,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "aeaf83a2-39fc-44ea-9c51-45990e9249d3",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452353,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "9986a0ae-7169-4e8d-8af7-fc4a3bb77d14",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452354,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "bf07273c-9a3a-4b4a-8f3e-a624d9d2ac84",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452355,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "b0f29e75-7220-4e89-9b70-f6cf0a020e66",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452356,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "69aca06d-6be1-46f2-ae94-1203eb176e23",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452357,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "1e03aa89-f84e-4e51-a4db-e3987a015c05",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452358,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "cbd9c0c1-b204-44e2-807b-3e41f0250c91",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452359,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "be987b3b-48c9-4b45-818f-9f753c6055e5",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452360,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "12e87127-88e3-4a8f-a69a-c18f289ae817",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452361,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "dfcb9005-23f0-4be8-a252-01baee8d4ad4",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452362,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4a062834-a648-4abc-98af-156fc1550a7a",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452363,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "aabeb2ca-569f-4843-88a1-3004fb5f4315",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452364,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "97b054e8-441e-4803-a0f1-882e7dfaaca0",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452365,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "e6f26847-69c1-4fc2-a9bd-0b96e7e3f825",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452366,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "8c7ef6a8-022f-4463-ba2a-8d79120d12a6",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452367,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "977f0604-f963-47bb-b124-9fa3525affdd",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452368,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "193a2c21-1ed5-44cb-a2be-f36aaf5a12d3",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452369,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "9417a1a2-73ee-49ab-b43e-e839742d7572",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452370,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "d4cd9dc6-dd68-4364-8011-1c852dbefb67",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452371,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "aaec43e6-53d8-4547-a7a4-dfacc67b40f2",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452372,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "bc90a93b-df99-42d3-847b-b5b681f117bb",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452373,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a68831c6-a1fc-48d3-be87-59fc9490cee0",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452374,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4dba40e0-fcf0-48cc-ab6a-c8af3226212f",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452375,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "cf98fe5d-e2f2-4c01-b9ee-033638b1c45b",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452376,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "be930e7a-b474-4152-a133-f7d40f22834e",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452377,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "157196da-f5f7-4323-9285-7de33b7bbc8b",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452378,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "581f94d8-685d-4ade-8bd4-2e174f9c8119",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452379,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "79cd696e-8f98-4162-b1da-182436c3e401",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452380,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c93adc4a-a4d1-4c3b-ac12-673d5c6a65c6",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452381,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "785f1dc8-c7ad-4140-8258-35b70fdd8446",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452382,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c66ac59f-f6c0-4977-96a1-708df8abc283",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452383,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7bacd919-5b69-4df4-892c-684ca9bce8cf",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452384,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ac3fbba5-f538-43d2-bb7b-d71587c87bfb",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452385,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "85c212c5-4a60-405e-9ebf-b60bc92aeb94",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452386,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "68fa071d-5e36-44ba-b43a-44d89ec3c09f",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452387,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c0fead57-9dc4-4545-81e1-77d6a0582e4a",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452388,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3a21b0b3-fd34-420d-bd99-f661599f2a3b",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452389,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "5703a3b3-215e-4624-bc61-a591c36fd28b",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452390,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "8585457c-b45c-4518-8d93-dba329f0934a",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452391,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7752a61f-9426-4909-b3ba-c056c9ed8ed1",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452392,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "efaff705-6a22-4b91-a230-584e742b38e6",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452393,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "5de164af-8262-4e04-adc6-e0440ee019d5",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452394,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f1907f93-98d2-4cf3-b69f-28fc050a915d",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452395,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "39dd8346-7813-4590-bdb9-e6c647cb623e",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452396,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "945be348-4233-484a-b3a8-56df9ffa0817",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452397,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6129149a-c68d-4256-b496-dafe0948a8be",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452398,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a2827eda-ea3e-4c2a-bd7d-b45e9aca7d2b",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452399,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "e19039fa-cd6b-4d6a-9081-08755628160c",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452400,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "8aab804f-16ca-45b5-8170-0e0cf77778f6",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452401,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3ac9b6a9-9458-4318-9d6c-6ef8658d969a",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452402,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "627d6630-2ebd-474d-94e4-7a91e7c172b2",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452403,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "5970ef0c-3aee-4d25-b022-f6e8d35b7577",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452404,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "bb3b7feb-b42f-4e6c-88a7-30850a317c1c",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452405,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ac74c863-68c1-42c4-9a70-da9ac41d1eed",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452406,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f7b61fc7-be30-4188-8eb7-953fa392ed31",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452407,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ba2e5a06-6037-49f8-82d7-ae28abf5e395",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452408,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "55552e3d-5baf-4ddb-8c7f-b36b9e8b71f9",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452409,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3304b678-ce2c-4da5-bc17-3917010c3803",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452410,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c50aa7f0-535f-4936-b46b-d15138856281",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452411,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "fe5881f1-9863-4b09-b13d-3fd98c0cde15",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452412,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6117e126-f55b-4614-a004-a4aaf230f9d6",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452413,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "9d26e395-3c81-4ac0-9384-f873f9d2cbb4",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452414,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "87807fd0-99a4-47df-9aa5-0ffbb52a0022",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452415,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f6c78915-21fa-462e-8409-c74f2f306d8b",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452416,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4dac6c73-ce87-45cc-b3a1-79e560bf3285",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452417,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "d81b0d51-767f-4747-a7e1-fba0a2e4deb0",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452418,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "0a6e2957-8820-4b37-8ed5-f3a5c99b4289",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452419,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "e8128770-bef5-4bbe-875b-47099014e521",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452420,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "bc1b6d5f-fb53-43e4-a825-fe0460ec6397",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452421,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "fa316131-5109-4298-bddd-ac4c063bca01",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452422,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "66395e30-d7c1-45f0-b655-b6230bde90a3",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452423,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7d6fc738-199b-4e3c-8534-05917f5913b4",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452424,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "30efd9c7-1f7a-4e5f-b440-5542982b2002",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452425,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "95e2dffa-b518-499c-a526-6a21878bef4e",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452426,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "59239e57-04f7-43d3-9810-cc62f006f852",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452427,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ec572608-6f0e-4b3b-a9fd-8e0c151666a4",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452428,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "9f64b9ac-6fd5-4b2e-ad63-6c851e8b1504",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452429,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f532056c-4544-417f-bdc2-cd42588948e0",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452430,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "904b9b77-9824-45e5-b7d7-15fdbb16f315",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452431,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "22c1ee85-16fd-49a7-b354-ed54c33b3ad0",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452432,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "d7413f43-19f9-46c4-ae90-e882887667b5",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452433,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "89c0e0d0-edde-4e8f-9720-57e0160f05aa",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452434,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "40c47f61-e387-493a-a556-4a0610561692",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452435,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "d1a60209-1e9f-4e00-b8bd-62a06db6b94d",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452436,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "9955d412-1ee1-47f0-932a-2c766beac261",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452437,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ae6b7bee-d02b-4204-92f9-d45ffcb04e6d",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452438,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "2d610f57-4910-4bef-bd64-fabf663f2860",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452439,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3d4d619f-cb4d-4dcc-bec9-d1f366b5c28d",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452440,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "5355bc4c-e4ad-4e4d-aac0-1ae7704770fa",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452441,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7398e1b8-90bf-4348-abb6-489e76289946",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452442,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "928bf799-9aa0-4fa6-9424-ca665a46a255",
+   "type": "",
+   "Data": {
+    "ThreadId": 0,
+    "Address": 9707452443,
+    "ReturnTo": 140705359216307,
+    "ReturnFrom": 140705359569284,
+    "Size": 280,
+    "Level": "系统模块",
+    "Notes": "ntdll.EtwLogTraceEvent+19F74"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  }
+ ],
+ "Columns": [
+  {
+   "ID": 0,
+   "Current": 154,
+   "Minimum": 63.432617,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "ThreadId"
+  },
+  {
+   "ID": 1,
+   "Current": 138,
+   "Minimum": 59.515625,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Address"
+  },
+  {
+   "ID": 2,
+   "Current": 135,
+   "Minimum": 65.12793,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "ReturnTo"
+  },
+  {
+   "ID": 3,
+   "Current": 135,
+   "Minimum": 81.52051,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "ReturnFrom"
+  },
+  {
+   "ID": 4,
+   "Current": 34.058594,
+   "Minimum": 34.058594,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Size"
+  },
+  {
+   "ID": 5,
+   "Current": 59,
+   "Minimum": 40.5459,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Level"
+  },
+  {
+   "ID": 6,
+   "Current": 203,
+   "Minimum": 45.17383,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Notes"
+  }
+ ],
+ "PreventUserColumnResize": false
+}

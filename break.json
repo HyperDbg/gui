@@ -1,0 +1,1581 @@
+{
+ "id": "afaf298a-0c1b-45b8-bfc2-5002e8ab972f",
+ "type": "root_container",
+ "Data": {
+  "Type": 0,
+  "Address": 0,
+  "ModuleLabelAndEx": "",
+  "Status": "",
+  "Disassembly": "",
+  "Hit": 0,
+  "Summary": ""
+ },
+ "children": [
+  {
+   "id": "47f46dff-c727-4e71-b18d-c131b34a4779",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152944,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "769b953f-e13c-4494-88ad-ec7c4263e34b",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152945,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c58fff47-364d-47ea-8398-28b35cce2d33",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152946,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a80971c2-d563-4b29-9d56-7edcb458f775",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152947,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "021bd714-c1b7-47fe-aa05-5a44c0a76611",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152948,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "793bd783-e260-4539-8d58-efd592ba15ba",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152949,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "dde25c84-9465-4922-a413-9aeea595c3b9",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152950,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "72e02ced-5c7b-4ac4-bcd1-12a3ad63bb6d",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152951,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "8f6f8078-2302-4602-8dab-eef99deae239",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152952,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "24e5230a-1bb7-48d8-8ffc-9e48b601a4e8",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152953,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4223ce00-e319-4678-9d72-dbd01d9facbe",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152954,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "99982106-5580-48ff-95db-c39203c96a28",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152955,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "81d6ae99-7906-45b8-9cf1-d56a0981c306",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152956,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "d59de795-a5db-47dd-91b9-675549ee5767",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152957,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "0abba153-de10-4c50-b489-e46923841896",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152958,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "1b4f1a5e-1ee7-4906-9274-57bf87a7b57f",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152959,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "23a23577-cb50-467b-8e24-5ffc463a58ba",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152960,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "688ea488-256e-44cd-9a07-03c5b0670bd3",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152961,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a7a48e09-2206-4926-87a3-0ee9ee04c6e2",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152962,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "50124dc8-9d5f-4305-843f-1ccbe46999f9",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152963,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "cc271886-31aa-4e95-aec1-6e0e6dedb30a",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152964,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "bfb32a1e-acc4-4cb1-9c3c-e85c2a45d07f",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152965,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6874085b-8ee8-4137-a4a5-73b010ba6008",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152966,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "9af0d0fc-527f-4e4f-b3aa-bcc74559a5fb",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152967,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "09ffec14-bcfb-40c2-95e0-8ef7e578ae2c",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152968,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "08ed887e-5120-46be-870e-2548203d5825",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152969,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "69487d5a-6cbc-4a5a-95ad-01bc6fea55d3",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152970,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "cca68c6c-b794-4832-a400-7f6eeb250a20",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152971,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7b791a33-12af-4dd0-9729-780a7b2aa178",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152972,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "197971ee-f0b5-4275-ad8b-d6d48f4a4f4e",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152973,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ad550664-b340-44b7-a461-bc80d98d2240",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152974,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3cbd3be9-9f3c-4e0c-bd84-a237a845aed7",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152975,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "193a974f-af12-4a30-888d-180ece7fd5d8",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152976,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "cfffd115-6001-4136-9dc6-fe40fbb72884",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152977,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6726f683-bba4-4bfe-8de2-91d7ee0e550d",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152978,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "b0c5aa11-bc8a-4a54-8e53-d931d2736358",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152979,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3a8d7ef0-c6c5-4059-a3d9-eaaa9ddde2b3",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152980,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "365cf1bb-fff5-4389-9465-33cd8caeb83d",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152981,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ee21c3b7-6cb1-492a-b892-76bcc646a248",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152982,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "135ab93a-3de5-4291-b3e7-cb29d06e181e",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152983,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "e8c977bc-6ade-4ed1-b3a9-f498c4cabe63",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152984,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "790d0977-16d5-4333-b4a4-c919be2c64f2",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152985,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "77c0ff22-b17b-402d-8e2c-35fbb3e38247",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152986,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3eb52fb5-ea6a-46b3-bf32-ddb9d91e2798",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152987,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c08af1b2-961e-4f8d-84e4-fd94e20089ee",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152988,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "55aa2ac9-3b50-4cdd-b65a-d15cb2c0714f",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152989,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "d4d5ff63-d67b-43ce-9bcb-32980c1a1c9e",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152990,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "aecd5a33-efb1-44a5-88cf-72e70ee06117",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152991,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "af3405b0-364a-468b-9f46-74c199f582d5",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152992,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "b9886f0f-0794-4855-96a8-1dda92c54cc7",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152993,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "458c60d7-6d7b-4876-8c64-a1c91e9bcde5",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152994,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ffbd159b-c2d4-41e7-92e0-e689593d35de",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152995,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "34d2363a-c91a-4172-b5d5-4af09263eb86",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152996,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "083b6411-0dd7-445a-a257-3cef32789bbc",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152997,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "8eab0722-9164-49ae-8b19-8f16631404ac",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152998,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a77ad2cf-3f84-4242-a102-f12d1514bb11",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083152999,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "fb7e9809-4bac-4f21-b2bf-5e86553a8ab0",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153000,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ffde4626-d4e8-4def-a72f-5bd28e54a40d",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153001,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c3203901-9662-4cc6-ad29-29f772626341",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153002,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "0d4f8a7f-6ca7-45bd-8aa4-d2cb87fece76",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153003,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a056d347-0f6b-48a7-b3d7-ab7a1bcbc9d4",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153004,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "dd4b1398-a63e-48fd-9854-640a33fdd80e",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153005,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "48fd8af7-6eb9-43d5-bd47-fef6543944aa",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153006,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3ec0006a-9c01-4f34-9e57-b8527be9101f",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153007,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ccccf298-82fd-460b-8354-52d257ed0b36",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153008,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7671fac8-0ab6-48dc-9d75-33dc2404f710",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153009,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "801d81ed-1e7b-403d-8847-97fe389c8ef5",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153010,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "2a06b4c6-ba45-4a94-a80c-4ad5d2a95036",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153011,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "908acfda-6045-4fce-ac6c-8902086f3aa1",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153012,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "0bcd53b4-d19c-4f60-ad6c-139c480ba55e",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153013,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "2f9a6ffe-1f70-424f-93c3-960ee7198ce4",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153014,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "66486fbb-0e44-4706-94bf-5c39d874c22d",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153015,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "0cd74138-5f9e-4661-9cb3-5f157f5f14ed",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153016,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "d83f548c-3747-44f5-b237-e42dda1d251c",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153017,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "d6178a55-240f-4816-a09f-4ab96e45b81b",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153018,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "dd45c676-127c-475b-9295-3e921d3d41c2",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153019,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "85ba4aa1-def7-4f6c-8d62-c00694748771",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153020,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "d5b151e5-06f4-45e9-84d8-088da84494db",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153021,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "0a6735ce-d13a-4954-83fc-fa7b88eb7ca7",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153022,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "d25c954f-6637-4a47-b766-6bb73b083c2e",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153023,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "482c2075-faa1-4898-852a-9b4a3ca81ecc",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153024,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3f27fc4a-d249-4664-a204-927783bbdbd2",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153025,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "9ff84cc1-ac65-4ce2-9071-29e35c1f177d",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153026,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f1755e9e-e417-4db4-ad4d-ec46b812a6ae",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153027,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ea92d563-ad9e-4920-8ba6-fc4708ef36a0",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153028,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ac1a999e-dd85-4a02-aebd-7006c790f8a7",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153029,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c8745bba-887a-49d7-b894-ec38a6b51f3e",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153030,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "bad1d38c-f813-47ef-8376-3dba7ee72867",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153031,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "295a6e6c-7a84-46c5-9444-1a60037227fc",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153032,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ded074aa-7cd2-42ce-a974-60a8b3116e55",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153033,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "cfa1cb19-ca70-4de7-95c9-52343566ae61",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153034,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "55380bad-df77-4c13-a845-e3bf06efc76f",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153035,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "9c739f5d-41d1-4568-8414-0db5185d1fbd",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153036,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "472b869b-c187-4c18-9d53-d3765f1b2530",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153037,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ba4f91d4-6c5f-4365-929a-69e3b8710dde",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153038,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "de36c69f-c883-45c7-81a8-c53987629aff",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153039,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "daa646de-ffa3-4f02-b98a-eae8180509a8",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153040,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "5e373e4f-06f9-40dc-b8a5-fb23e6b4cfe0",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153041,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ead568a9-d821-451c-aad7-677b96ae1375",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153042,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "aa9a84db-90c0-4756-bce1-00bd61e143fe",
+   "type": "",
+   "Data": {
+    "Type": 1,
+    "Address": 140704083153043,
+    "ModuleLabelAndEx": "\u003cx64dbg.exe.OptionalHeader.AddressOfEntryPoint\u003e",
+    "Status": "一次性",
+    "Disassembly": "sub rsp,28",
+    "Hit": 0,
+    "Summary": "入口断点"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  }
+ ],
+ "Columns": [
+  {
+   "ID": 0,
+   "Current": 154,
+   "Minimum": 38.249023,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Type"
+  },
+  {
+   "ID": 1,
+   "Current": 135,
+   "Minimum": 59.515625,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Address"
+  },
+  {
+   "ID": 2,
+   "Current": 329,
+   "Minimum": 128.10059,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "ModuleLabelAndEx"
+  },
+  {
+   "ID": 3,
+   "Current": 48.003906,
+   "Minimum": 48.003906,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Status"
+  },
+  {
+   "ID": 4,
+   "Current": 87.413086,
+   "Minimum": 87.413086,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Disassembly"
+  },
+  {
+   "ID": 5,
+   "Current": 25.951172,
+   "Minimum": 25.951172,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Hit"
+  },
+  {
+   "ID": 6,
+   "Current": 67.541016,
+   "Minimum": 67.541016,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Summary"
+  }
+ ],
+ "PreventUserColumnResize": false
+}
