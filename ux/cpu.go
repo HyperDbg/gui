@@ -1,18 +1,15 @@
 package ux
 
 import (
-	"encoding/hex"
-	"fmt"
-	"github.com/richardwilkes/unison"
-
-	widget "github.com/ddkwork/app/widget/corewidget"
-
 	"cogentcore.org/core/colors"
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"
 	"cogentcore.org/core/states"
 	"cogentcore.org/core/styles"
 	"cogentcore.org/core/texteditor"
+	"encoding/hex"
+	"fmt"
+	"github.com/richardwilkes/unison"
 )
 
 // left := widget.NewTabWithTable(table, header, "left", "left table", true)
