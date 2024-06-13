@@ -20,7 +20,7 @@ var bar embed.FS
 //go:embed asserts/pageico/*.png
 var pageIco embed.FS
 
-func main() {
+func Run() {
 	app.RunWithIco("HyperDbg", mainIcons, func(w *unison.Window) {
 		Layout(w.Content())
 	})

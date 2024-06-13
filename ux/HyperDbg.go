@@ -14,7 +14,7 @@ import (
 	"github.com/ddkwork/golibrary/stream"
 )
 
-func Run() {
+func Run1() {
 	icons.AddFS(grr.Log1(fs.Sub(bar, "asserts/bar")))
 	icons.AddFS(grr.Log1(fs.Sub(pageIco, "asserts/pageico")))
 	gi.TheApp.SetIconBytes(mainIcons)
