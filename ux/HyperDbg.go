@@ -2,6 +2,7 @@ package ux
 
 import (
 	"embed"
+
 	"github.com/ddkwork/app"
 	"github.com/ddkwork/app/widget"
 	"github.com/ddkwork/golibrary/mylog"
@@ -29,7 +30,7 @@ func Run() {
 
 func Layout(parent unison.Paneler) unison.Paneler {
 	t := newToolbar()
-	widget.NewToolBar(parent, t.Elems()...) //make toolbar
+	widget.NewToolBar(parent, t.Elems()...) // make toolbar
 
 	///make tabs
 	left := widget.NewTab("cpu", "", false, nil)
@@ -38,7 +39,7 @@ func Layout(parent unison.Paneler) unison.Paneler {
 	parent.AsPanel().AddChild(hSplit.Dock)
 
 	mylog.Todo("set tab ico")
-	//tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
+	// tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
 	hSplit.AddLeftItem(widget.NewTab("cpu", "", false, LayoutCpu(hSplit)))
 	hSplit.AddRightItem(widget.NewTab("log", "", false, LayoutLog(hSplit)))
 	hSplit.AddRightItem(widget.NewTab("notes", "", false, LayoutNotes(hSplit)))

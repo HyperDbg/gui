@@ -30,7 +30,7 @@ func LayoutSeh(parent unison.Paneler) unison.Paneler {
 				root.AddChildByData(ts)
 			}
 		},
-		JsonName:   "",
+		JsonName:   "seh",
 		IsDocument: false,
 	})
 	return widget.NewTableScrollPanel(parent, table, header)

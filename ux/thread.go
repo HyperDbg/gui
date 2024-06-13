@@ -49,7 +49,7 @@ func LayoutThread(parent unison.Paneler) unison.Paneler {
 				root.AddChildByData(ts)
 			}
 		},
-		JsonName:   "",
+		JsonName:   "thread",
 		IsDocument: false,
 	})
 	return widget.NewTableScrollPanel(parent, table, header)

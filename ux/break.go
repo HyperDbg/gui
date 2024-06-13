@@ -36,7 +36,7 @@ func LayoutBreak(parent unison.Paneler) unison.Paneler {
 				root.AddChildByData(ts)
 			}
 		},
-		JsonName:   "",
+		JsonName:   "break",
 		IsDocument: false,
 	})
 	return widget.NewTableScrollPanel(parent, table, header)

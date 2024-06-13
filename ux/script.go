@@ -28,7 +28,7 @@ func LayoutScript(parent unison.Paneler) unison.Paneler {
 				root.AddChildByData(ts)
 			}
 		},
-		JsonName:   "",
+		JsonName:   "script",
 		IsDocument: false,
 	})
 	return widget.NewTableScrollPanel(parent, table, header)

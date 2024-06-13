@@ -36,7 +36,7 @@ func LayoutStack(parent unison.Paneler) unison.Paneler {
 				root.AddChildByData(ts)
 			}
 		},
-		JsonName:   "",
+		JsonName:   "stack",
 		IsDocument: false,
 	})
 	return widget.NewTableScrollPanel(parent, table, header)

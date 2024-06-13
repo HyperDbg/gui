@@ -337,7 +337,7 @@ func LayoutDismTable(parent unison.Paneler) unison.Paneler {
 				root.AddChildByData(ts)
 			}
 		},
-		JsonName:   "",
+		JsonName:   "cpu_dism_table",
 		IsDocument: false,
 	})
 	return widget.NewTableScrollPanel(parent, table, header)
@@ -371,7 +371,7 @@ func LayoutStackTable(parent unison.Paneler) unison.Paneler {
 				root.AddChildByData(ts)
 			}
 		},
-		JsonName:   "",
+		JsonName:   "cpu_stack_table",
 		IsDocument: false,
 	})
 	return widget.NewTableScrollPanel(parent, table, header)

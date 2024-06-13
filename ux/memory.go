@@ -47,7 +47,7 @@ func LayoutMemory(parent unison.Paneler) unison.Paneler {
 				root.AddChildByData(ts)
 			}
 		},
-		JsonName:   "",
+		JsonName:   "memory",
 		IsDocument: false,
 	})
 	return widget.NewTableScrollPanel(parent, table, header)
