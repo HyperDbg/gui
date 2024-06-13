@@ -1,15 +1,58 @@
 package ux
 
 import (
+	"fmt"
+	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
 	"time"
-
-	"cogentcore.org/core/gi"
-	"cogentcore.org/core/giv"
 )
 
 func LayoutThread(parent unison.Paneler) unison.Paneler {
-	ThreadTable(parent)
+	table, header := widget.NewTable(Thread{}, widget.TableContext[Thread]{
+		ContextMenuItems: nil,
+		MarshalRow: func(node *widget.Node[Thread]) (cells []widget.CellData) {
+			return []widget.CellData{
+				{Text: node.Data.IndexName},
+				{Text: fmt.Sprintf("%d", node.Data.Id)},
+				{Text: fmt.Sprintf("%016X", node.Data.Entry)},
+				{Text: fmt.Sprintf("%016X", node.Data.Teb)},
+				{Text: fmt.Sprintf("%016X", node.Data.Rip)},
+				{Text: fmt.Sprintf("%d", node.Data.PendingCount)},
+				{Text: node.Data.Priority},
+				{Text: node.Data.WaitForTheReason},
+				{Text: node.Data.LastError},
+				{Text: node.Data.UserTime.Format("2006-01-02 15:04:05")},
+				{Text: node.Data.KernelTime.Format("2006-01-02 15:04:05")},
+				{Text: node.Data.CreatTime.Format("2006-01-02 15:04:05")},
+				{Text: fmt.Sprintf("%016X", node.Data.CPUCycles)},
+			}
+		},
+		UnmarshalRow:             nil,
+		SelectionChangedCallback: nil,
+		SetRootRowsCallBack: func(root *widget.Node[Thread]) {
+			for range 100 {
+				ts := Thread{
+					IndexName:        "主线程",
+					Id:               12364,
+					Entry:            0x00007FF7967E55C8,
+					Teb:              0x000000F4B0A8A000,
+					Rip:              0x00007FF884FAB785,
+					PendingCount:     1,
+					Priority:         "标准",
+					WaitForTheReason: "Executive",
+					LastError:        "",
+					UserTime:         time.Now(),
+					KernelTime:       time.Now(),
+					CreatTime:        time.Now(),
+					CPUCycles:        0x11A39874,
+				}
+				root.AddChildByData(ts)
+			}
+		},
+		JsonName:   "",
+		IsDocument: false,
+	})
+	return widget.NewTableScrollPanel(parent, table, header)
 }
 
 type Thread struct {
@@ -26,30 +69,4 @@ type Thread struct {
 	KernelTime       time.Time
 	CreatTime        time.Time
 	CPUCycles        int `format:"%016X"`
-}
-
-func ThreadTable(frame *gi.Frame) *giv.TableView {
-	threads := make([]*Thread, 100)
-	for i := range threads {
-		ts := &Thread{
-			IndexName:        "主线程",
-			Id:               12364,
-			Entry:            0x00007FF7967E55C8,
-			Teb:              0x000000F4B0A8A000,
-			Rip:              0x00007FF884FAB785,
-			PendingCount:     1,
-			Priority:         "标准",
-			WaitForTheReason: "Executive",
-			LastError:        "",
-			UserTime:         time.Now(),
-			KernelTime:       time.Now(),
-			CreatTime:        time.Now(),
-			CPUCycles:        0x11A39874,
-		}
-		threads[i] = ts
-	}
-	tv := giv.NewTableView(frame, "tv")
-	tv.SetReadOnly(true)
-	tv.SetSlice(&threads)
-	return tv
 }
