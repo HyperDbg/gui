@@ -2,6 +2,7 @@ package ux
 
 import (
 	"fmt"
+
 	"github.com/ddkwork/app/widget"
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/richardwilkes/unison"
@@ -230,7 +231,6 @@ func LayoutCpu(parent unison.Paneler) unison.Paneler {
 		stackTable(stackFrame) // stack
 		downSplits.SetSplits(.6, .4)
 	*/
-
 }
 
 //type FastCall struct { //gti:add
@@ -351,7 +351,7 @@ type Stack struct { //gti:add
 
 func LayoutStackTable(parent unison.Paneler) unison.Paneler {
 	table, header := widget.NewTable(Stack{}, widget.TableContext[Stack]{
-		ContextMenuItems: nil, //todo goto 0x00007FF838E51030
+		ContextMenuItems: nil, // todo goto 0x00007FF838E51030
 		MarshalRow: func(node *widget.Node[Stack]) (cells []widget.CellData) {
 			return []widget.CellData{
 				{Text: fmt.Sprintf("%016X", node.Data.Address)},

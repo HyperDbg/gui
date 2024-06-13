@@ -2,6 +2,7 @@ package ux
 
 import (
 	"fmt"
+
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
 )
@@ -17,7 +18,6 @@ type Memory struct {
 }
 
 func LayoutMemory(parent unison.Paneler) unison.Paneler {
-
 	table, header := widget.NewTable(Memory{}, widget.TableContext[Memory]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[Memory]) (cells []widget.CellData) {

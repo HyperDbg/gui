@@ -2,9 +2,10 @@ package ux
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
-	"time"
 )
 
 func LayoutThread(parent unison.Paneler) unison.Paneler {

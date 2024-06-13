@@ -1,0 +1,1141 @@
+{
+ "id": "5643fc16-c6c3-4aaf-89b0-b789ca069b24",
+ "type": "root_container",
+ "Data": {
+  "Address": 0,
+  "Data": 0,
+  "Context": ""
+ },
+ "children": [
+  {
+   "id": "09d82e0a-13b7-4f6a-9839-27806987a9ee",
+   "type": "",
+   "Data": {
+    "Address": 140704083152944,
+    "Data": 140704083152944,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ec2e8cc0-0b23-48ae-8ba2-e6ffc541e349",
+   "type": "",
+   "Data": {
+    "Address": 140704083152945,
+    "Data": 140704083152945,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a47d4d2e-f8e2-4332-ab0b-af91bfd71f10",
+   "type": "",
+   "Data": {
+    "Address": 140704083152946,
+    "Data": 140704083152946,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "12834b5b-1513-48cb-9efe-a6da2f6c89df",
+   "type": "",
+   "Data": {
+    "Address": 140704083152947,
+    "Data": 140704083152947,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "cb40cc37-c7b7-4375-85f1-484987493fe8",
+   "type": "",
+   "Data": {
+    "Address": 140704083152948,
+    "Data": 140704083152948,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c6ed214e-c64c-449d-b9cb-3a58a21ebe2b",
+   "type": "",
+   "Data": {
+    "Address": 140704083152949,
+    "Data": 140704083152949,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "512fb0e5-5cbe-4bb2-bfab-18e29f155321",
+   "type": "",
+   "Data": {
+    "Address": 140704083152950,
+    "Data": 140704083152950,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "50b5e1bf-dc80-4031-8bf5-5dd161688689",
+   "type": "",
+   "Data": {
+    "Address": 140704083152951,
+    "Data": 140704083152951,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "17597741-befb-4385-8364-54227c5b16b2",
+   "type": "",
+   "Data": {
+    "Address": 140704083152952,
+    "Data": 140704083152952,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f1c32bdb-8b53-45d0-878e-f7900def3900",
+   "type": "",
+   "Data": {
+    "Address": 140704083152953,
+    "Data": 140704083152953,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "461387d2-db80-4d22-b396-1f160254eb1b",
+   "type": "",
+   "Data": {
+    "Address": 140704083152954,
+    "Data": 140704083152954,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6461ddca-44a7-48e7-9d85-4bb3d5cf4b2b",
+   "type": "",
+   "Data": {
+    "Address": 140704083152955,
+    "Data": 140704083152955,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "689a355a-09a7-4351-b2bc-a51b6c37219d",
+   "type": "",
+   "Data": {
+    "Address": 140704083152956,
+    "Data": 140704083152956,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c1d77d48-1958-4e78-bc14-cfd2ed867936",
+   "type": "",
+   "Data": {
+    "Address": 140704083152957,
+    "Data": 140704083152957,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "896b5be5-83b5-4e87-af3a-175bfbd86ce6",
+   "type": "",
+   "Data": {
+    "Address": 140704083152958,
+    "Data": 140704083152958,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "88816cf6-f550-4ed3-90a9-87e8c1f0369c",
+   "type": "",
+   "Data": {
+    "Address": 140704083152959,
+    "Data": 140704083152959,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a6a3e039-43e5-4511-88a1-205f70615317",
+   "type": "",
+   "Data": {
+    "Address": 140704083152960,
+    "Data": 140704083152960,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "b75ff7bd-a209-4885-857c-839cdf0b9331",
+   "type": "",
+   "Data": {
+    "Address": 140704083152961,
+    "Data": 140704083152961,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "9f5e5dd7-549e-4b21-83fb-1d9de7fe5f74",
+   "type": "",
+   "Data": {
+    "Address": 140704083152962,
+    "Data": 140704083152962,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "15624dd7-04c2-4c4e-9c87-cba26953e0e5",
+   "type": "",
+   "Data": {
+    "Address": 140704083152963,
+    "Data": 140704083152963,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c1bf2284-fd1e-482e-9d56-c28f2064b3db",
+   "type": "",
+   "Data": {
+    "Address": 140704083152964,
+    "Data": 140704083152964,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "8c438aa6-3463-4dcb-9055-7f795eb69f45",
+   "type": "",
+   "Data": {
+    "Address": 140704083152965,
+    "Data": 140704083152965,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "812a3c8d-db1b-461e-9806-02f20ae153b3",
+   "type": "",
+   "Data": {
+    "Address": 140704083152966,
+    "Data": 140704083152966,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "56fd20b5-f4c1-450b-b72c-9bc3db0e082a",
+   "type": "",
+   "Data": {
+    "Address": 140704083152967,
+    "Data": 140704083152967,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6a967c3e-83d0-4771-8187-34451f6221b3",
+   "type": "",
+   "Data": {
+    "Address": 140704083152968,
+    "Data": 140704083152968,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "58731d18-69e4-48ed-8c44-0183b8c2ba44",
+   "type": "",
+   "Data": {
+    "Address": 140704083152969,
+    "Data": 140704083152969,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a48d3acd-c43a-4eca-b4a3-7bfd908e9234",
+   "type": "",
+   "Data": {
+    "Address": 140704083152970,
+    "Data": 140704083152970,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "90765105-a01e-47af-b125-890145e3c4fc",
+   "type": "",
+   "Data": {
+    "Address": 140704083152971,
+    "Data": 140704083152971,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "52b8d8b0-697a-46b7-a0ef-831389d1385d",
+   "type": "",
+   "Data": {
+    "Address": 140704083152972,
+    "Data": 140704083152972,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3511bbc5-4c47-4fa4-94c4-9c5a4c1729ba",
+   "type": "",
+   "Data": {
+    "Address": 140704083152973,
+    "Data": 140704083152973,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "140bc51e-6190-4e04-b7a4-74199b514914",
+   "type": "",
+   "Data": {
+    "Address": 140704083152974,
+    "Data": 140704083152974,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "62986d8d-a22d-4e7f-9f07-22877e179e6f",
+   "type": "",
+   "Data": {
+    "Address": 140704083152975,
+    "Data": 140704083152975,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "05c4b20c-5a56-4fa1-a8f5-bae8d8274d15",
+   "type": "",
+   "Data": {
+    "Address": 140704083152976,
+    "Data": 140704083152976,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "29cf8345-79db-40e3-b9da-44e689141be0",
+   "type": "",
+   "Data": {
+    "Address": 140704083152977,
+    "Data": 140704083152977,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "b959543b-bb0c-4a5a-91d5-001885ce499c",
+   "type": "",
+   "Data": {
+    "Address": 140704083152978,
+    "Data": 140704083152978,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ee60f977-1cf3-4e19-98a5-6918b4c88288",
+   "type": "",
+   "Data": {
+    "Address": 140704083152979,
+    "Data": 140704083152979,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f9ff7492-29e6-43ee-a600-147ef781ae3f",
+   "type": "",
+   "Data": {
+    "Address": 140704083152980,
+    "Data": 140704083152980,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "e985c5b9-29b0-4ed0-b9a7-82be1e307ccf",
+   "type": "",
+   "Data": {
+    "Address": 140704083152981,
+    "Data": 140704083152981,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4afce6d8-c36a-4b46-8a07-79a03959847c",
+   "type": "",
+   "Data": {
+    "Address": 140704083152982,
+    "Data": 140704083152982,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "967f2640-70a1-4c74-8466-24739e389bed",
+   "type": "",
+   "Data": {
+    "Address": 140704083152983,
+    "Data": 140704083152983,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f7394a96-d8c1-4985-92bf-ffd1ec2707c8",
+   "type": "",
+   "Data": {
+    "Address": 140704083152984,
+    "Data": 140704083152984,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "48714694-9b73-4084-9d5d-ed354eeab623",
+   "type": "",
+   "Data": {
+    "Address": 140704083152985,
+    "Data": 140704083152985,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "88771dfe-e080-4b45-8e70-3a5eee46cfd2",
+   "type": "",
+   "Data": {
+    "Address": 140704083152986,
+    "Data": 140704083152986,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7d5f1faf-fba3-4d74-a33a-51aacbdba42f",
+   "type": "",
+   "Data": {
+    "Address": 140704083152987,
+    "Data": 140704083152987,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "191a2216-f097-4fa0-935c-9dc6a1b4d45e",
+   "type": "",
+   "Data": {
+    "Address": 140704083152988,
+    "Data": 140704083152988,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "ad191143-6839-4f60-aa9f-bfb90ded05f9",
+   "type": "",
+   "Data": {
+    "Address": 140704083152989,
+    "Data": 140704083152989,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "25018277-8946-490f-9140-4e5cacbf46ff",
+   "type": "",
+   "Data": {
+    "Address": 140704083152990,
+    "Data": 140704083152990,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a7453ab4-6a72-4054-8b73-17b13190570a",
+   "type": "",
+   "Data": {
+    "Address": 140704083152991,
+    "Data": 140704083152991,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "99c52a7f-8eab-4a43-895b-637343af56c8",
+   "type": "",
+   "Data": {
+    "Address": 140704083152992,
+    "Data": 140704083152992,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "eea66536-d810-4d0b-b657-3c71b385b8a6",
+   "type": "",
+   "Data": {
+    "Address": 140704083152993,
+    "Data": 140704083152993,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7e91c24b-30c9-4661-960b-14db289ed25d",
+   "type": "",
+   "Data": {
+    "Address": 140704083152994,
+    "Data": 140704083152994,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "55bb1652-db52-4f0f-ba65-9af1a7db38d5",
+   "type": "",
+   "Data": {
+    "Address": 140704083152995,
+    "Data": 140704083152995,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f111d51a-1912-4d2f-9c92-88ff9abf7697",
+   "type": "",
+   "Data": {
+    "Address": 140704083152996,
+    "Data": 140704083152996,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "dfda3413-cb4d-4daa-850b-cfc55f10b177",
+   "type": "",
+   "Data": {
+    "Address": 140704083152997,
+    "Data": 140704083152997,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "74187b24-458d-4926-9e0d-b0a90f4ef720",
+   "type": "",
+   "Data": {
+    "Address": 140704083152998,
+    "Data": 140704083152998,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "662f4562-2810-451d-b65b-66928af1785d",
+   "type": "",
+   "Data": {
+    "Address": 140704083152999,
+    "Data": 140704083152999,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "05c6963d-4ba2-4b8a-895e-e0b022c316bd",
+   "type": "",
+   "Data": {
+    "Address": 140704083153000,
+    "Data": 140704083153000,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6a91f67a-3243-4544-a09e-f0028d4fff23",
+   "type": "",
+   "Data": {
+    "Address": 140704083153001,
+    "Data": 140704083153001,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3bd6fc92-37aa-4f17-b117-0ecd9576faab",
+   "type": "",
+   "Data": {
+    "Address": 140704083153002,
+    "Data": 140704083153002,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "2780bbad-f8fb-4b04-8b07-7e65964a16de",
+   "type": "",
+   "Data": {
+    "Address": 140704083153003,
+    "Data": 140704083153003,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "0391724b-10df-46e5-bb25-e1edff6f1ae9",
+   "type": "",
+   "Data": {
+    "Address": 140704083153004,
+    "Data": 140704083153004,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "79e22557-9d4e-46ce-aac6-0c41354e71cb",
+   "type": "",
+   "Data": {
+    "Address": 140704083153005,
+    "Data": 140704083153005,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "5dcf0197-0a1c-4c62-8663-6c7b25eb909b",
+   "type": "",
+   "Data": {
+    "Address": 140704083153006,
+    "Data": 140704083153006,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a4f28e59-a54f-40d3-9ba0-a1fdc3d51e0c",
+   "type": "",
+   "Data": {
+    "Address": 140704083153007,
+    "Data": 140704083153007,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "24767ad1-37ba-4c89-ba32-0052e1b74bfc",
+   "type": "",
+   "Data": {
+    "Address": 140704083153008,
+    "Data": 140704083153008,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "1fc8e253-f1f3-44d4-9286-34cc929789f2",
+   "type": "",
+   "Data": {
+    "Address": 140704083153009,
+    "Data": 140704083153009,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "31cef413-dbd4-4290-8c95-07aa80e692ac",
+   "type": "",
+   "Data": {
+    "Address": 140704083153010,
+    "Data": 140704083153010,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "a64a34f3-4397-4aa4-9f45-7862ad96b4cc",
+   "type": "",
+   "Data": {
+    "Address": 140704083153011,
+    "Data": 140704083153011,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "5f4b82b2-9dc5-4659-b895-dccd18cd80de",
+   "type": "",
+   "Data": {
+    "Address": 140704083153012,
+    "Data": 140704083153012,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "e4737d30-9842-49b1-871d-7da58735426b",
+   "type": "",
+   "Data": {
+    "Address": 140704083153013,
+    "Data": 140704083153013,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "7da53d22-af98-4289-ba5b-4982fee20e57",
+   "type": "",
+   "Data": {
+    "Address": 140704083153014,
+    "Data": 140704083153014,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "0387ade5-a0a4-4ccc-805e-0fa94bee981f",
+   "type": "",
+   "Data": {
+    "Address": 140704083153015,
+    "Data": 140704083153015,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "17006687-0eaf-48a2-8db9-2f1d4f6e57b1",
+   "type": "",
+   "Data": {
+    "Address": 140704083153016,
+    "Data": 140704083153016,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "5b4c4017-2e37-4b98-b10c-8a760b07c25c",
+   "type": "",
+   "Data": {
+    "Address": 140704083153017,
+    "Data": 140704083153017,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "40e511f7-ca89-4bb0-9dac-74a0d5bb55b0",
+   "type": "",
+   "Data": {
+    "Address": 140704083153018,
+    "Data": 140704083153018,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "0cd415de-09b2-4c57-8a7b-de03a1b417b7",
+   "type": "",
+   "Data": {
+    "Address": 140704083153019,
+    "Data": 140704083153019,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "2a2661a6-904a-45a6-af2a-e93e5b2c875b",
+   "type": "",
+   "Data": {
+    "Address": 140704083153020,
+    "Data": 140704083153020,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "fe32c71d-c2f2-4197-b3a6-8e6bd7017637",
+   "type": "",
+   "Data": {
+    "Address": 140704083153021,
+    "Data": 140704083153021,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "78427e3a-029a-47b7-8005-37db5cf4ca12",
+   "type": "",
+   "Data": {
+    "Address": 140704083153022,
+    "Data": 140704083153022,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "8260f728-455b-4526-8eda-8e9b80a2c799",
+   "type": "",
+   "Data": {
+    "Address": 140704083153023,
+    "Data": 140704083153023,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6d7f7760-af6e-4677-951b-85e9478be402",
+   "type": "",
+   "Data": {
+    "Address": 140704083153024,
+    "Data": 140704083153024,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4410fcdc-7658-4a26-9fd5-18ae7754b5b8",
+   "type": "",
+   "Data": {
+    "Address": 140704083153025,
+    "Data": 140704083153025,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "c4c78bd7-f84b-415f-b532-646790cd2fd7",
+   "type": "",
+   "Data": {
+    "Address": 140704083153026,
+    "Data": 140704083153026,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "18b9a27b-99d4-4cb9-b629-e9f48699781d",
+   "type": "",
+   "Data": {
+    "Address": 140704083153027,
+    "Data": 140704083153027,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "8a7eb448-01d7-4442-bb51-607b8aca0136",
+   "type": "",
+   "Data": {
+    "Address": 140704083153028,
+    "Data": 140704083153028,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "28843fca-68d8-40db-beb0-4a12479ba1b2",
+   "type": "",
+   "Data": {
+    "Address": 140704083153029,
+    "Data": 140704083153029,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "f2cef2c2-bd1c-473c-967c-8c135b5323a1",
+   "type": "",
+   "Data": {
+    "Address": 140704083153030,
+    "Data": 140704083153030,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3bab8377-ffca-49b9-9cc0-c3e2b0aea3d1",
+   "type": "",
+   "Data": {
+    "Address": 140704083153031,
+    "Data": 140704083153031,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "4f97f34d-8cf5-4931-8401-5165e4d90803",
+   "type": "",
+   "Data": {
+    "Address": 140704083153032,
+    "Data": 140704083153032,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "0d42cbd0-3b06-4ebf-a953-91e3d5275458",
+   "type": "",
+   "Data": {
+    "Address": 140704083153033,
+    "Data": 140704083153033,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "58aa1f0f-43f4-4d76-af2d-ee28b7f51974",
+   "type": "",
+   "Data": {
+    "Address": 140704083153034,
+    "Data": 140704083153034,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6641d8ef-0752-4d35-a8d9-fe91dc74e68c",
+   "type": "",
+   "Data": {
+    "Address": 140704083153035,
+    "Data": 140704083153035,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "6b5299b7-2f2b-4b53-b97f-982e62d44f9e",
+   "type": "",
+   "Data": {
+    "Address": 140704083153036,
+    "Data": 140704083153036,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "519eba47-c271-4931-9ee7-c4ca5c3d7578",
+   "type": "",
+   "Data": {
+    "Address": 140704083153037,
+    "Data": 140704083153037,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "898f662c-4d29-40e6-835f-53724b41971d",
+   "type": "",
+   "Data": {
+    "Address": 140704083153038,
+    "Data": 140704083153038,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "23f840b8-f4d1-4cb3-a371-5292031e4cc7",
+   "type": "",
+   "Data": {
+    "Address": 140704083153039,
+    "Data": 140704083153039,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "87d2bd1d-c1d6-44eb-8be2-e5385cdb5209",
+   "type": "",
+   "Data": {
+    "Address": 140704083153040,
+    "Data": 140704083153040,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "b42117f2-b658-4aa8-bfc7-07cb56ae138c",
+   "type": "",
+   "Data": {
+    "Address": 140704083153041,
+    "Data": 140704083153041,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "1e746799-cde2-4453-9a26-d1a5f5983c4d",
+   "type": "",
+   "Data": {
+    "Address": 140704083153042,
+    "Data": 140704083153042,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  },
+  {
+   "id": "3e8534de-ef77-4fb8-97f4-7c88a83c5a1b",
+   "type": "",
+   "Data": {
+    "Address": 140704083153043,
+    "Data": 140704083153043,
+    "Context": "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap"
+   },
+   "Columns": null,
+   "PreventUserColumnResize": false
+  }
+ ],
+ "Columns": [
+  {
+   "ID": 0,
+   "Current": 155,
+   "Minimum": 59.515625,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Address"
+  },
+  {
+   "ID": 1,
+   "Current": 135,
+   "Minimum": 36.984375,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Data"
+  },
+  {
+   "ID": 2,
+   "Current": 423,
+   "Minimum": 56.323242,
+   "Maximum": 10000,
+   "AutoMinimum": 0,
+   "AutoMaximum": 0,
+   "Cell": "Context"
+  }
+ ],
+ "PreventUserColumnResize": false
+}
