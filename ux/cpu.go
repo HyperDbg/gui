@@ -4,6 +4,8 @@ import (
 	"encoding/hex"
 	"fmt"
 
+	widget "github.com/ddkwork/app/widget/corewidget"
+
 	"cogentcore.org/core/colors"
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"

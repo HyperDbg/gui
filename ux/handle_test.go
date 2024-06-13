@@ -14,8 +14,7 @@ import (
 )
 
 func TestName(t *testing.T) {
-	stream.Ico2PngAll("asserts")
-	stream.Png2SvgAll("asserts")
+
 	return
 	path := "D:\\workspace\\workspace\\gui\\BITMAP\\MODULES.bmp"
 	// path="bmp/WINDOWS.bmp"

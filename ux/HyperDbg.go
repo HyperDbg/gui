@@ -1,9 +1,10 @@
 package ux
 
 import (
-	"embed"
 	"io/fs"
 	"path/filepath"
+
+	widget "github.com/ddkwork/app/widget/corewidget"
 
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/grr"
@@ -12,18 +13,6 @@ import (
 
 	"github.com/ddkwork/golibrary/stream"
 )
-
-////go:embed Fleet.ico
-//var icon []byte
-
-//go:embed asserts/ico/ico_aaamain.svg
-var mainIcons []byte
-
-//go:embed asserts/bar/*.svg
-var bar embed.FS
-
-//go:embed asserts/pageico/*.svg
-var pageIco embed.FS
 
 func Run() {
 	icons.AddFS(grr.Log1(fs.Sub(bar, "asserts/bar")))
