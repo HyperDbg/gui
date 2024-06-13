@@ -1,89 +1,154 @@
 package ux
 
 import (
-	"io/fs"
-	"path/filepath"
-
-	widget "github.com/ddkwork/app/widget/corewidget"
-
-	"cogentcore.org/core/gi"
-	"cogentcore.org/core/grr"
-	"cogentcore.org/core/icons"
-	"cogentcore.org/core/styles"
-
+	"embed"
+	"github.com/ddkwork/app"
+	"github.com/ddkwork/app/widget"
+	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
+	"github.com/richardwilkes/unison"
 )
 
-func Run1() {
-	icons.AddFS(grr.Log1(fs.Sub(bar, "asserts/bar")))
-	icons.AddFS(grr.Log1(fs.Sub(pageIco, "asserts/pageico")))
-	gi.TheApp.SetIconBytes(mainIcons)
-	b := gi.NewBody("HyperDbg")
-	b.AddAppBar(func(tb *gi.Toolbar) {
-		widget.NewButton(tb).SetTooltip("open").SetIcon("open")
-		widget.NewButton(tb).SetTooltip("restart").SetIcon("restart")
-		widget.NewButton(tb).SetTooltip("close").SetIcon("close")
-		widget.NewButton(tb).SetTooltip("run").SetIcon("run") //.SetShortcut()//todo
-		widget.NewButton(tb).SetTooltip("runthread").SetIcon("runthread")
-		widget.NewButton(tb).SetTooltip("pause").SetIcon("pause")
-		gi.NewSeparator(tb)
-		widget.NewButton(tb).SetTooltip("stepin").SetIcon("stepin")
-		widget.NewButton(tb).SetTooltip("stepover").SetIcon("stepover")
-		widget.NewButton(tb).SetTooltip("stepin").SetIcon("stepin")
-		widget.NewButton(tb).SetTooltip("trin").SetIcon("trin")
-		widget.NewButton(tb).SetTooltip("trover").SetIcon("trover")
-		widget.NewButton(tb).SetTooltip("tillret").SetIcon("tillret")
-		widget.NewButton(tb).SetTooltip("tilluser").SetIcon("tilluser")
-		gi.NewSeparator(tb)
-		widget.NewButton(tb).SetTooltip("log").SetIcon("log")
-		widget.NewButton(tb).SetTooltip("modules").SetIcon("modules")
-		widget.NewButton(tb).SetTooltip("windows").SetIcon("windows")
-		widget.NewButton(tb).SetTooltip("threads").SetIcon("threads")
-		widget.NewButton(tb).SetTooltip("cpu").SetIcon("cpu")
-		widget.NewButton(tb).SetTooltip("search").SetIcon("search")
-		widget.NewButton(tb).SetTooltip("trace").SetIcon("trace")
-		gi.NewSeparator(tb)
-		widget.NewButton(tb).SetTooltip("bpoints").SetIcon("bpoints")
-		widget.NewButton(tb).SetTooltip("bpmem").SetIcon("bpmem")
-		widget.NewButton(tb).SetTooltip("bphard").SetIcon("bphard")
-		widget.NewButton(tb).SetTooltip("options").SetIcon("options")
-		widget.NewButton(tb).SetTooltip("scylla").SetIcon("scylla")
-		widget.NewButton(tb).SetTooltip("about").SetIcon("about")
-	})
+////go:embed Fleet.ico
+//var icon []byte
 
-	tabs := gi.NewTabs(b)
+//go:embed asserts/ico/ico_aaamain.png
+var mainIcons []byte
 
-	pageCpu(tabs.NewTab("cpu", "cpu"))
+//go:embed asserts/bar/*.png
+var bar embed.FS
 
-	pageLog(tabs.NewTab("log", "log"))
-	pageNotes(tabs.NewTab("notes", "notes"))
+//go:embed asserts/pageico/*.png
+var pageIco embed.FS
 
-	pageBreak(tabs.NewTab("break", "breakpoint"))
-	pageMemory(tabs.NewTab("memory", "memory"))
-	pageCallStack(tabs.NewTab("stack", "stack"))
-	pageCallSeh(tabs.NewTab("seh", "seh"))
-	pageScript(tabs.NewTab("script", "script"))
-	pageSymbol(tabs.NewTab("symbol", "symbols"))
-	pageSource(tabs.NewTab("source", "source"))
-
-	tabs.NewTab("references")
-	pageThread(tabs.NewTab("thread", "thread"))
-
-	tabs.NewTab("handle", "handles")
-	tabs.NewTab("trace", "traceinto")
-
-	c := gi.NewTextField(b).SetPlaceholder("command")
-	c.Style(func(s *styles.Style) {
-		s.Min.X.Pw(300)
-		// s.Max.X.Pw(300)//todo 取屏幕宽度为最大宽度
-		// s.Display = styles.Grid
-	})
-
-	widget.NewWindowRunAndWait(b, func(names []string) {
-		for _, name := range names {
-			if filepath.Ext(name) == ".json" {
-				stream.NewBuffer(name)
-			}
-		}
+func Run() {
+	app.RunWithIco("HyperDbg", mainIcons, func(w *unison.Window) {
+		Layout(w.Content())
 	})
 }
+
+func Layout(parent unison.Paneler) unison.Paneler {
+	t := newToolbar()
+	widget.NewToolBar(parent, t.Elems()...) //make toolbar
+
+	///make tabs
+	left := widget.NewTab("cpu", "", false, nil)
+	right := widget.NewTab("log", "", false, nil)
+	hSplit := widget.NewHSplit(left, right, 0.3)
+	parent.AsPanel().AddChild(hSplit.Dock)
+	mylog.Todo("set tab ico")
+	//tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
+	tabs := widget.NewTabs(
+		widget.TabContent{Title: "cpu", Tooltip: "", Closeable: false, Panel: widget.NewButton("1")},
+		widget.TabContent{Title: "log", Tooltip: "", Closeable: false, Panel: widget.NewButton("2")},
+		widget.TabContent{Title: "notes", Tooltip: "", Closeable: false, Panel: widget.NewButton("3")},
+		widget.TabContent{Title: "break", Tooltip: "", Closeable: false, Panel: widget.NewButton("4")},
+		widget.TabContent{Title: "memory", Tooltip: "", Closeable: false, Panel: widget.NewButton("5")},
+		widget.TabContent{Title: "stack", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "seh", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "script", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "symbol", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "source", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "references", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "thread", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "handle", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "trace", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+	)
+	for _, tab := range tabs {
+		hSplit.AddLeftItem(tab)
+		hSplit.AddLeftItem(widget.)
+	}
+	parent.AsPanel().AddChild(hSplit)
+	return nil
+}
+
+func (t *toolbar) Elems() []*unison.Button {
+	return []*unison.Button{
+		t.open,
+		t.restart,
+		t.close,
+		t.run,
+		t.runthread,
+		t.pause,
+		t.stepin,
+		t.stepover,
+		t.trin,
+		t.trover,
+		t.tillret,
+		t.tilluser,
+		t.log,
+		t.modules,
+		t.windows,
+		t.threads,
+		t.cpu,
+		t.search,
+		t.trace,
+		t.bpoints,
+		t.bpmem,
+		t.bphard,
+		t.options,
+		t.scylla,
+		t.about,
+	}
+}
+
+func newToolbar() *toolbar {
+	m := stream.ReadEmbedFileMap(bar, "asserts/bar")
+	return &toolbar{
+		open:      widget.NewImageButton(m.Get("open.png"), func() {}),
+		restart:   widget.NewImageButton(m.Get("restart.png"), func() {}),
+		close:     widget.NewImageButton(m.Get("close.png"), func() {}),
+		run:       widget.NewImageButton(m.Get("run.png"), func() {}),
+		runthread: widget.NewImageButton(m.Get("runthread.png"), func() {}),
+		pause:     widget.NewImageButton(m.Get("pause.png"), func() {}),
+		stepin:    widget.NewImageButton(m.Get("stepin.png"), func() {}),
+		stepover:  widget.NewImageButton(m.Get("stepover.png"), func() {}),
+		trin:      widget.NewImageButton(m.Get("trin.png"), func() {}),
+		trover:    widget.NewImageButton(m.Get("trover.png"), func() {}),
+		tillret:   widget.NewImageButton(m.Get("tillret.png"), func() {}),
+		tilluser:  widget.NewImageButton(m.Get("tilluser.png"), func() {}),
+		log:       widget.NewImageButton(m.Get("log.png"), func() {}),
+		modules:   widget.NewImageButton(m.Get("modules.png"), func() {}),
+		windows:   widget.NewImageButton(m.Get("windows.png"), func() {}),
+		threads:   widget.NewImageButton(m.Get("threads.png"), func() {}),
+		cpu:       widget.NewImageButton(m.Get("cpu.png"), func() {}),
+		search:    widget.NewImageButton(m.Get("search.png"), func() {}),
+		trace:     widget.NewImageButton(m.Get("trace.png"), func() {}),
+		bpoints:   widget.NewImageButton(m.Get("bpoints.png"), func() {}),
+		bpmem:     widget.NewImageButton(m.Get("bpmem.png"), func() {}),
+		bphard:    widget.NewImageButton(m.Get("bphard.png"), func() {}),
+		options:   widget.NewImageButton(m.Get("options.png"), func() {}),
+		scylla:    widget.NewImageButton(m.Get("scylla.png"), func() {}),
+		about:     widget.NewImageButton(m.Get("about.png"), func() {}),
+	}
+}
+
+type (
+	toolbar struct {
+		open      *unison.Button
+		restart   *unison.Button
+		close     *unison.Button
+		run       *unison.Button
+		runthread *unison.Button
+		pause     *unison.Button
+		stepin    *unison.Button
+		stepover  *unison.Button
+		trin      *unison.Button
+		trover    *unison.Button
+		tillret   *unison.Button
+		tilluser  *unison.Button
+		log       *unison.Button
+		modules   *unison.Button
+		windows   *unison.Button
+		threads   *unison.Button
+		cpu       *unison.Button
+		search    *unison.Button
+		trace     *unison.Button
+		bpoints   *unison.Button
+		bpmem     *unison.Button
+		bphard    *unison.Button
+		options   *unison.Button
+		scylla    *unison.Button
+		about     *unison.Button
+	}
+)
