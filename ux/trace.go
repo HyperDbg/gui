@@ -5,4 +5,5 @@ import (
 )
 
 func LayoutTrace(parent unison.Paneler) unison.Paneler {
+	return unison.NewPanel()
 }

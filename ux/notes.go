@@ -5,5 +5,5 @@ import (
 )
 
 func LayoutNotes(parent unison.Paneler) unison.Paneler {
-
+	return unison.NewPanel()
 }
