@@ -14,6 +14,16 @@ import (
 	"cogentcore.org/core/texteditor"
 )
 
+//left := widget.NewTabWithTable(table, header, "left", "left table", true)
+//right := widget.NewTab("right", "right view request and response", true, nil)
+//
+//hSplit := widget.NewHSplit(left, right, 0.3)
+//
+//top := widget.NewTab("top", "top request", true, codeViewEx)
+//bottom := widget.NewTab("bottom", "bottom response", true, codeViewEx2)
+//
+//vSplit := widget.NewVSplit(top, bottom, 0)
+
 func pageCpu(parent *gi.Frame) {
 	vSplits := widget.NewVSplits(parent)
 	topSplits := gi.NewSplits(vSplits)

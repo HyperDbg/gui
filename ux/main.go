@@ -4,6 +4,7 @@ import (
 	"embed"
 	"github.com/ddkwork/app"
 	"github.com/ddkwork/app/widget"
+	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 	"github.com/richardwilkes/unison"
 )
@@ -28,12 +29,36 @@ func Run() {
 
 func Layout(parent unison.Paneler) unison.Paneler {
 	t := newToolbar()
-	widget.NewToolBar(parent, t.Elems()...)
+	widget.NewToolBar(parent, t.Elems()...) //make toolbar
 
+	///make tabs
+	left := widget.NewTab("cpu", "", false, nil)
+	right := widget.NewTab("log", "", false, nil)
+	hSplit := widget.NewHSplit(left, right, 0.3)
+	parent.AsPanel().AddChild(hSplit.Dock)
+	mylog.Todo("set tab ico")
 	//tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
-
-	//TODO implement me
-	panic("implement me")
+	tabs := widget.NewTabs(
+		widget.TabContent{Title: "cpu", Tooltip: "", Closeable: false, Panel: widget.NewButton("1")},
+		widget.TabContent{Title: "log", Tooltip: "", Closeable: false, Panel: widget.NewButton("2")},
+		widget.TabContent{Title: "notes", Tooltip: "", Closeable: false, Panel: widget.NewButton("3")},
+		widget.TabContent{Title: "break", Tooltip: "", Closeable: false, Panel: widget.NewButton("4")},
+		widget.TabContent{Title: "memory", Tooltip: "", Closeable: false, Panel: widget.NewButton("5")},
+		widget.TabContent{Title: "stack", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "seh", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "script", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "symbol", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "source", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "references", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "thread", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "handle", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+		widget.TabContent{Title: "trace", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
+	)
+	for _, tab := range tabs {
+		hSplit.AddLeftItem(tab)
+	}
+	parent.AsPanel().AddChild(hSplit)
+	return nil
 }
 
 func (t *toolbar) Elems() []*unison.Button {
