@@ -1,6 +1,9 @@
 package ux
 
-import "cogentcore.org/core/gi"
+import (
+	"github.com/richardwilkes/unison"
+)
 
-func pageNotes(parent *gi.Frame) {
+func LayoutNotes(parent unison.Paneler) unison.Paneler {
+
 }

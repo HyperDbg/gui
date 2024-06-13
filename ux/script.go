@@ -3,9 +3,10 @@ package ux
 import (
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"
+	"github.com/richardwilkes/unison"
 )
 
-func pageScript(parent *gi.Frame) {
+func LayoutScript(parent unison.Paneler) unison.Paneler {
 	ScriptTable(parent)
 }
 

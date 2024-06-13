@@ -1,13 +1,14 @@
 package ux
 
 import (
+	"github.com/richardwilkes/unison"
 	"time"
 
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"
 )
 
-func pageThread(parent *gi.Frame) {
+func LayoutThread(parent unison.Paneler) unison.Paneler {
 	ThreadTable(parent)
 }
 

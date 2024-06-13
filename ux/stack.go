@@ -3,9 +3,10 @@ package ux
 import (
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"
+	"github.com/richardwilkes/unison"
 )
 
-func pageCallStack(parent *gi.Frame) {
+func LayoutStack(parent unison.Paneler) unison.Paneler {
 	CallStackTable(parent)
 }
 

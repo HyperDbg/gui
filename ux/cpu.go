@@ -3,6 +3,7 @@ package ux
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/richardwilkes/unison"
 
 	widget "github.com/ddkwork/app/widget/corewidget"
 
@@ -14,17 +15,16 @@ import (
 	"cogentcore.org/core/texteditor"
 )
 
-//left := widget.NewTabWithTable(table, header, "left", "left table", true)
-//right := widget.NewTab("right", "right view request and response", true, nil)
+// left := widget.NewTabWithTable(table, header, "left", "left table", true)
+// right := widget.NewTab("right", "right view request and response", true, nil)
 //
-//hSplit := widget.NewHSplit(left, right, 0.3)
+// hSplit := widget.NewHSplit(left, right, 0.3)
 //
-//top := widget.NewTab("top", "top request", true, codeViewEx)
-//bottom := widget.NewTab("bottom", "bottom response", true, codeViewEx2)
+// top := widget.NewTab("top", "top request", true, codeViewEx)
+// bottom := widget.NewTab("bottom", "bottom response", true, codeViewEx2)
 //
-//vSplit := widget.NewVSplit(top, bottom, 0)
-
-func pageCpu(parent *gi.Frame) {
+// vSplit := widget.NewVSplit(top, bottom, 0)
+func LayoutCpu(parent unison.Paneler) unison.Paneler {
 	vSplits := widget.NewVSplits(parent)
 	topSplits := gi.NewSplits(vSplits)
 	downSplits := gi.NewSplits(vSplits)

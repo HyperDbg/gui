@@ -3,9 +3,10 @@ package ux
 import (
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"
+	"github.com/richardwilkes/unison"
 )
 
-func pageBreak(parent *gi.Frame) {
+func LayoutBreak(parent unison.Paneler) unison.Paneler {
 	breakTable(parent)
 }
 

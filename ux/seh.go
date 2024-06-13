@@ -3,9 +3,10 @@ package ux
 import (
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"
+	"github.com/richardwilkes/unison"
 )
 
-func pageCallSeh(parent *gi.Frame) {
+func LayoutSeh(parent unison.Paneler) unison.Paneler {
 	SehTable(parent)
 }
 

@@ -3,9 +3,10 @@ package ux
 import (
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"
+	"github.com/richardwilkes/unison"
 )
 
-func pageSymbol(parent *gi.Frame) {
+func LayoutSymbol(parent unison.Paneler) unison.Paneler {
 	SymbolTable(parent) // todo 左右都是标，适合树形表格
 }
 

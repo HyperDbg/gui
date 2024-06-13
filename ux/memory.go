@@ -1,13 +1,9 @@
 package ux
 
 import (
-	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"
+	"github.com/richardwilkes/unison"
 )
-
-func pageMemory(parent *gi.Frame) {
-	MemoryTable(parent)
-}
 
 type Memory struct {
 	Address           int `format:"%016X"`
@@ -19,7 +15,7 @@ type Memory struct {
 	InitialProtection string
 }
 
-func MemoryTable(frame *gi.Frame) *giv.TableView {
+func LayoutMemory(parent unison.Paneler) unison.Paneler {
 	breaks := make([]*Memory, 100)
 	for i := range breaks {
 		ts := &Memory{
