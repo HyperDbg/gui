@@ -36,28 +36,24 @@ func Layout(parent unison.Paneler) unison.Paneler {
 	right := widget.NewTab("log", "", false, nil)
 	hSplit := widget.NewHSplit(left, right, 0.3)
 	parent.AsPanel().AddChild(hSplit.Dock)
+
 	mylog.Todo("set tab ico")
 	//tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
-	tabs := widget.NewTabs(
-		widget.TabContent{Title: "cpu", Tooltip: "", Closeable: false, Panel: widget.NewButton("1")},
-		widget.TabContent{Title: "log", Tooltip: "", Closeable: false, Panel: widget.NewButton("2")},
-		widget.TabContent{Title: "notes", Tooltip: "", Closeable: false, Panel: widget.NewButton("3")},
-		widget.TabContent{Title: "break", Tooltip: "", Closeable: false, Panel: widget.NewButton("4")},
-		widget.TabContent{Title: "memory", Tooltip: "", Closeable: false, Panel: widget.NewButton("5")},
-		widget.TabContent{Title: "stack", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
-		widget.TabContent{Title: "seh", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
-		widget.TabContent{Title: "script", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
-		widget.TabContent{Title: "symbol", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
-		widget.TabContent{Title: "source", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
-		widget.TabContent{Title: "references", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
-		widget.TabContent{Title: "thread", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
-		widget.TabContent{Title: "handle", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
-		widget.TabContent{Title: "trace", Tooltip: "", Closeable: false, Panel: widget.NewButton("6")},
-	)
-	for _, tab := range tabs {
-		hSplit.AddLeftItem(tab)
-		hSplit.AddLeftItem(widget.)
-	}
+	hSplit.AddLeftItem(widget.NewTab("cpu", "", false, LayoutCpu(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("log", "", false, LayoutLog(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("notes", "", false, LayoutNotes(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("break", "", false, LayoutBreak(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("memory", "", false, LayoutMemory(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("stack", "", false, LayoutStack(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("seh", "", false, LayoutSeh(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("script", "", false, LayoutScript(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("symbol", "", false, LayoutSymbol(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("source", "", false, LayoutSource(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("references", "", false, LayoutReferences(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("thread", "", false, LayoutThread(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("handle", "", false, LayoutHandle(hSplit)))
+	hSplit.AddRightItem(widget.NewTab("trace", "", false, LayoutTrace(hSplit)))
+
 	parent.AsPanel().AddChild(hSplit)
 	return nil
 }
