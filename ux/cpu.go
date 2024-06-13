@@ -4,28 +4,26 @@ import (
 	"cogentcore.org/core/colors"
 	"cogentcore.org/core/gi"
 	"cogentcore.org/core/giv"
-	"cogentcore.org/core/states"
 	"cogentcore.org/core/styles"
 	"cogentcore.org/core/texteditor"
 	"encoding/hex"
 	"fmt"
+	"github.com/ddkwork/app/widget"
+	"github.com/ddkwork/golibrary/mylog"
 	"github.com/richardwilkes/unison"
 )
 
-// left := widget.NewTabWithTable(table, header, "left", "left table", true)
-// right := widget.NewTab("right", "right view request and response", true, nil)
-//
-// hSplit := widget.NewHSplit(left, right, 0.3)
-//
-// top := widget.NewTab("top", "top request", true, codeViewEx)
-// bottom := widget.NewTab("bottom", "bottom response", true, codeViewEx2)
-//
-// vSplit := widget.NewVSplit(top, bottom, 0)
 func LayoutCpu(parent unison.Paneler) unison.Paneler {
-	vSplits := widget.NewVSplits(parent)
-	topSplits := gi.NewSplits(vSplits)
-	downSplits := gi.NewSplits(vSplits)
-	vSplits.SetSplits(.7, .3)
+
+	cpu := widget.NewTabWithTable(table, header, "left", "left table", true)
+	right := widget.NewTab("right", "right view request and response", true, nil)
+
+	TophSplit := widget.NewHSplit(left, right, 0.3)
+	BottomhSplit := widget.NewHSplit(TophSplit, nil, 0.7)
+
+	top := widget.NewTab("top", "top request", true, codeViewEx)
+	bottom := widget.NewTab("bottom", "bottom response", true, codeViewEx2)
+	vSplit := widget.NewVSplit(top, bottom, 0.7)
 
 	splits := widget.NewVSplits(topSplits) // top is dismTable,bottom is Immediately count the list view window
 	dismFrame := gi.NewFrame(splits)
@@ -306,27 +304,44 @@ type Disassembly struct { //gti:add
 	Comment     string
 }
 
-func dismTable(frame *gi.Frame) *giv.TableView {
-	disassemblies := make([]*Disassembly, 100)
-	for i := range disassemblies {
-		ts := &Disassembly{
-			Icon:        "",
-			Address:     0x00007FF838E51030 + i,
-			Opcode:      []byte{1, 2, 3},
-			Instruction: "mov qword ptr ss:[rsp+0x18], rsi",
-			Comment:     "comment " + fmt.Sprint(i),
-		}
-		disassemblies[i] = ts
-	}
-	tableView := giv.NewTableView(frame, "tableView")
-	tableView.SetState(true, states.ReadOnly)
-	tableView.SetSlice(&disassemblies)
-	tableView.AddContextMenu(func(m *gi.Scene) {
-		widget.NewButton(m).SetText("goto 0x00007FF838E51030") // 取出tableView选中的元素得到Address，按钮回调调用它
-		widget.NewButton(m).SetText("goto 0x00007FF838E51030")
-		widget.NewButton(m).SetText("goto 0x00007FF838E51030")
+func LayoutDismTable(parent unison.Paneler) unison.Paneler {
+	table, header := widget.NewTable(Disassembly{}, widget.TableContext[Disassembly]{
+		ContextMenuItems: func(node *widget.Node[Disassembly]) []widget.ContextMenuItem {
+			return []widget.ContextMenuItem{
+				{
+					Title: "goto",
+					Can:   func(any) bool { return true },
+					Do:    func(a any) { mylog.Todo("goto 0x00007FF838E51030") },
+				},
+			}
+		},
+		MarshalRow: func(node *widget.Node[Disassembly]) (cells []widget.CellData) {
+			return []widget.CellData{
+				{Text: node.Data.Icon},
+				{Text: fmt.Sprintf("%016X", node.Data.Address)},
+				{Text: fmt.Sprintf("% X", node.Data.Opcode)},
+				{Text: node.Data.Instruction},
+				{Text: node.Data.Comment},
+			}
+		},
+		UnmarshalRow:             nil,
+		SelectionChangedCallback: nil,
+		SetRootRowsCallBack: func(root *widget.Node[Disassembly]) {
+			for i := range 100 {
+				ts := Disassembly{
+					Icon:        "",
+					Address:     0x00007FF838E51030 + i,
+					Opcode:      []byte{1, 2, 3},
+					Instruction: "mov qword ptr ss:[rsp+0x18], rsi",
+					Comment:     "comment " + fmt.Sprint(i),
+				}
+				root.AddChildByData(ts)
+			}
+		},
+		JsonName:   "",
+		IsDocument: false,
 	})
-	return tableView
+	return widget.NewTableScrollPanel(parent, table, header)
 }
 
 type Stack struct { //gti:add
@@ -335,20 +350,32 @@ type Stack struct { //gti:add
 	Context string
 }
 
-func stackTable(frame *gi.Frame) *giv.TableView {
-	stacks := make([]*Stack, 100)
-	for i := range stacks {
-		ts := &Stack{
-			Address: 0x00007FF838E51030 + i,
-			Data:    0x00007FF838E51030 + i,
-			Context: "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap",
-		}
-		stacks[i] = ts
-	}
-	tv := giv.NewTableView(frame, "tv")
-	tv.SetReadOnly(true)
-	tv.SetSlice(&stacks)
-	return tv
+func LayoutStackTable(parent unison.Paneler) unison.Paneler {
+	table, header := widget.NewTable(Stack{}, widget.TableContext[Stack]{
+		ContextMenuItems: nil, //todo goto 0x00007FF838E51030
+		MarshalRow: func(node *widget.Node[Stack]) (cells []widget.CellData) {
+			return []widget.CellData{
+				{Text: fmt.Sprintf("%016X", node.Data.Address)},
+				{Text: fmt.Sprintf("%016X", node.Data.Data)},
+				{Text: node.Data.Context},
+			}
+		},
+		UnmarshalRow:             nil,
+		SelectionChangedCallback: nil,
+		SetRootRowsCallBack: func(root *widget.Node[Stack]) {
+			for i := range 100 {
+				ts := Stack{
+					Address: 0x00007FF838E51030 + i,
+					Data:    0x00007FF838E51030 + i,
+					Context: "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap",
+				}
+				root.AddChildByData(ts)
+			}
+		},
+		JsonName:   "",
+		IsDocument: false,
+	})
+	return widget.NewTableScrollPanel(parent, table, header)
 }
 
 type Register struct { //gti:add
