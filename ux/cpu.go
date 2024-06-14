@@ -9,7 +9,21 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
+type (
+	ImmData struct {
+		reg     Register
+		address uint64
+		mem     []byte
+	}
+)
+
 func LayoutCpu(parent unison.Paneler) unison.Paneler {
+
+	////fastCallLayout := unison.NewList[ImmData]()
+	//RegisterView, panel := widget.NewStructView(parent.AsPanel().Window(), Register{}, func(data Register) (values []widget.CellData) {
+	//
+	//})
+
 	TopHSplit := widget.NewHSplit(
 		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDismTable(parent)),
 		widget.NewTab("reg", "todo reg", true, unison.NewPanel()),
