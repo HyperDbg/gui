@@ -2,9 +2,10 @@ package ux
 
 import (
 	"fmt"
+	"ms/xed"
+
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
-	"ms/xed"
 )
 
 type PeView struct {
@@ -13,7 +14,7 @@ type PeView struct {
 	Address uint32
 	Size    uint32
 	Is64Bit bool
-	//overlay *pe.Overlay todo
+	// overlay *pe.Overlay todo
 }
 
 func layoutPeView(name string, parent unison.Paneler) unison.Paneler {
@@ -58,7 +59,7 @@ func layoutPeView(name string, parent unison.Paneler) unison.Paneler {
 						node.AddChildByData(PeView{
 							Name:   v.Name,
 							Offset: v.Offset,
-							//Address: v.,
+							// Address: v.,
 							Size:    0,
 							Is64Bit: pe.Is64,
 						})
