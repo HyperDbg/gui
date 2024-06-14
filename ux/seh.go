@@ -38,7 +38,7 @@ func LayoutSeh(parent unison.Paneler) unison.Paneler {
 }
 
 type Seh struct {
-	Address                   int `format:"%016X"`
+	Address                   int
 	ExceptionHandlingRoutines string
 	Label                     string
 	Notes                     string

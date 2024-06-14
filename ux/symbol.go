@@ -40,9 +40,9 @@ func LayoutSymbol(parent unison.Paneler) unison.Paneler {
 }
 
 type Symbol struct {
-	BaseAddress int `format:"%016X"`
+	BaseAddress int
 	Module      string
 	Level       string
 	Path        string
-	Address     int `format:"%016X"`
+	Address     int
 }

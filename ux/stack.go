@@ -45,9 +45,9 @@ func LayoutStack(parent unison.Paneler) unison.Paneler {
 
 type CallStack struct {
 	ThreadId   int
-	Address    int `format:"%016X"`
-	ReturnTo   int `format:"%016X"`
-	ReturnFrom int `format:"%016X"`
+	Address    int
+	ReturnTo   int
+	ReturnFrom int
 	Size       int
 	Level      string
 	Notes      string

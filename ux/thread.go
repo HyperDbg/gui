@@ -59,9 +59,9 @@ func LayoutThread(parent unison.Paneler) unison.Paneler {
 type Thread struct {
 	IndexName        string
 	Id               int
-	Entry            int `format:"%016X"`
-	Teb              int `format:"%016X"`
-	Rip              int `format:"%016X"`
+	Entry            int
+	Teb              int
+	Rip              int
 	PendingCount     int
 	Priority         string
 	WaitForTheReason string
@@ -69,5 +69,5 @@ type Thread struct {
 	UserTime         time.Time
 	KernelTime       time.Time
 	CreatTime        time.Time
-	CPUCycles        int `format:"%016X"`
+	CPUCycles        int
 }

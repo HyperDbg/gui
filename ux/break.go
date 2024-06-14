@@ -45,7 +45,7 @@ func LayoutBreak(parent unison.Paneler) unison.Paneler {
 
 type Break struct {
 	Type             int
-	Address          int `format:"%016X"`
+	Address          int
 	ModuleLabelAndEx string
 	Status           string
 	Disassembly      string // Assemble Disassembly

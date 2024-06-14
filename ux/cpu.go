@@ -236,7 +236,7 @@ func LayoutCpu(parent unison.Paneler) unison.Paneler {
 //type FastCall struct { //gti:add
 //	//Index    int
 //	Register string
-//	Address  int `format:"%016X"`
+//	Address  int
 //	MetaData     string
 //}
 
@@ -297,7 +297,7 @@ func LayoutCpu(parent unison.Paneler) unison.Paneler {
 
 type Disassembly struct { //gti:add
 	Icon        string
-	Address     int `format:"%016X"`
+	Address     int
 	Opcode      []byte
 	Instruction string
 	Comment     string
@@ -344,8 +344,8 @@ func LayoutDismTable(parent unison.Paneler) unison.Paneler {
 }
 
 type Stack struct { //gti:add
-	Address int `format:"%016X"`
-	Data    int `format:"%016X"`
+	Address int
+	Data    int
 	Context string
 }
 
@@ -379,136 +379,136 @@ func LayoutStackTable(parent unison.Paneler) unison.Paneler {
 
 type Register struct { //gti:add
 	RAX            int `width:"50" format:"%016X"`
-	RBX            int `format:"%016X"`
-	RCX            int `format:"%016X"`
-	RDX            int `format:"%016X"`
-	RBP            int `format:"%016X"`
-	RSP            int `format:"%016X"`
-	RSI            int `format:"%016X"`
-	RDI            int `format:"%016X"`
-	R8             int `format:"%016X"`
-	R9             int `format:"%016X"`
-	R10            int `format:"%016X"`
-	R11            int `format:"%016X"`
-	R12            int `format:"%016X"`
-	R13            int `format:"%016X"`
-	R14            int `format:"%016X"`
-	R15            int `format:"%016X"`
-	RIP            int `format:"%016X"`
-	RFLAGS         int `format:"%016X"`
-	ZF             int `format:"%016X"`
-	OF             int `format:"%016X"`
-	CF             int `format:"%016X"`
-	PF             int `format:"%016X"`
-	SF             int `format:"%016X"`
-	TF             int `format:"%016X"`
-	AF             int `format:"%016X"`
-	DF             int `format:"%016X"`
-	IF             int `format:"%016X"`
-	LastError      int `format:"%016X"`
-	LastStatus     int `format:"%016X"`
-	GS             int `format:"%016X"`
-	ES             int `format:"%016X"`
-	CS             int `format:"%016X"`
-	FS             int `format:"%016X"`
-	DS             int `format:"%016X"`
-	SS             int `format:"%016X"`
-	ST0            int `format:"%016X"`
-	ST1            int `format:"%016X"`
-	ST2            int `format:"%016X"`
-	ST3            int `format:"%016X"`
-	ST4            int `format:"%016X"`
-	ST5            int `format:"%016X"`
-	ST6            int `format:"%016X"`
-	ST7            int `format:"%016X"`
-	x87TagWord     int `format:"%016X"`
-	x87ControlWord int `format:"%016X"`
-	x87StatusWord  int `format:"%016X"`
-	x87TW_0        int `format:"%016X"`
-	x87TW_1        int `format:"%016X"`
-	x87TW_2        int `format:"%016X"`
-	x87TW_3        int `format:"%016X"`
-	x87TW_4        int `format:"%016X"`
-	x87TW_5        int `format:"%016X"`
-	x87TW_6        int `format:"%016X"`
-	x87TW_7        int `format:"%016X"`
-	x87SW_B        int `format:"%016X"`
-	x87SW_C3       int `format:"%016X"`
-	x87SW_TOP      int `format:"%016X"`
-	x87SW_C2       int `format:"%016X"`
-	x87SW_C1       int `format:"%016X"`
-	x87SW_O        int `format:"%016X"`
-	x87SW_ES       int `format:"%016X"`
-	x87SW_SF       int `format:"%016X"`
-	x87SW_P        int `format:"%016X"`
-	x87SW_U        int `format:"%016X"`
-	x87SW_Z        int `format:"%016X"`
-	x87SW_D        int `format:"%016X"`
-	x87SW_I        int `format:"%016X"`
-	x87SW_C0       int `format:"%016X"`
-	x87CW_IC       int `format:"%016X"`
-	x87CW_RC       int `format:"%016X"`
-	x87CW_PC       int `format:"%016X"`
-	x87CW_PM       int `format:"%016X"`
-	x87CW_UM       int `format:"%016X"`
-	x87CW_OM       int `format:"%016X"`
-	x87CW_ZM       int `format:"%016X"`
-	x87CW_DM       int `format:"%016X"`
-	x87CW_IM       int `format:"%016X"`
-	MxCsr          int `format:"%016X"`
-	MxCsr_FZ       int `format:"%016X"`
-	MxCsr_PM       int `format:"%016X"`
-	MxCsr_UM       int `format:"%016X"`
-	MxCsr_OM       int `format:"%016X"`
-	MxCsr_ZM       int `format:"%016X"`
-	MxCsr_IM       int `format:"%016X"`
-	MxCsr_DM       int `format:"%016X"`
-	MxCsr_D        int `format:"%016X"`
-	MxCsr_PE       int `format:"%016X"`
-	MxCsr_UE       int `format:"%016X"`
-	MxCsr_OE       int `format:"%016X"`
-	MxCsr_ZE       int `format:"%016X"`
-	MxCsr_DE       int `format:"%016X"`
-	MxCsr_IE       int `format:"%016X"`
-	MxCsr_RC       int `format:"%016X"`
-	XMM0           int `format:"%016X"`
-	XMM1           int `format:"%016X"`
-	XMM2           int `format:"%016X"`
-	XMM3           int `format:"%016X"`
-	XMM4           int `format:"%016X"`
-	XMM5           int `format:"%016X"`
-	XMM6           int `format:"%016X"`
-	XMM7           int `format:"%016X"`
-	XMM8           int `format:"%016X"`
-	XMM9           int `format:"%016X"`
-	XMM10          int `format:"%016X"`
-	XMM11          int `format:"%016X"`
-	XMM12          int `format:"%016X"`
-	XMM13          int `format:"%016X"`
-	XMM14          int `format:"%016X"`
-	XMM15          int `format:"%016X"`
-	YMM0           int `format:"%016X"`
-	YMM1           int `format:"%016X"`
-	YMM2           int `format:"%016X"`
-	YMM3           int `format:"%016X"`
-	YMM4           int `format:"%016X"`
-	YMM5           int `format:"%016X"`
-	YMM6           int `format:"%016X"`
-	YMM7           int `format:"%016X"`
-	YMM8           int `format:"%016X"`
-	YMM9           int `format:"%016X"`
-	YMM10          int `format:"%016X"`
-	YMM11          int `format:"%016X"`
-	YMM12          int `format:"%016X"`
-	YMM13          int `format:"%016X"`
-	YMM14          int `format:"%016X"`
-	YMM15          int `format:"%016X"`
-	DR0            int `format:"%016X"`
-	DR1            int `format:"%016X"`
-	DR2            int `format:"%016X"`
-	DR3            int `format:"%016X"`
-	DR6            int `format:"%016X"`
-	DR7            int `format:"%016X"`
+	RBX            int
+	RCX            int
+	RDX            int
+	RBP            int
+	RSP            int
+	RSI            int
+	RDI            int
+	R8             int
+	R9             int
+	R10            int
+	R11            int
+	R12            int
+	R13            int
+	R14            int
+	R15            int
+	RIP            int
+	RFLAGS         int
+	ZF             int
+	OF             int
+	CF             int
+	PF             int
+	SF             int
+	TF             int
+	AF             int
+	DF             int
+	IF             int
+	LastError      int
+	LastStatus     int
+	GS             int
+	ES             int
+	CS             int
+	FS             int
+	DS             int
+	SS             int
+	ST0            int
+	ST1            int
+	ST2            int
+	ST3            int
+	ST4            int
+	ST5            int
+	ST6            int
+	ST7            int
+	x87TagWord     int
+	x87ControlWord int
+	x87StatusWord  int
+	x87TW_0        int
+	x87TW_1        int
+	x87TW_2        int
+	x87TW_3        int
+	x87TW_4        int
+	x87TW_5        int
+	x87TW_6        int
+	x87TW_7        int
+	x87SW_B        int
+	x87SW_C3       int
+	x87SW_TOP      int
+	x87SW_C2       int
+	x87SW_C1       int
+	x87SW_O        int
+	x87SW_ES       int
+	x87SW_SF       int
+	x87SW_P        int
+	x87SW_U        int
+	x87SW_Z        int
+	x87SW_D        int
+	x87SW_I        int
+	x87SW_C0       int
+	x87CW_IC       int
+	x87CW_RC       int
+	x87CW_PC       int
+	x87CW_PM       int
+	x87CW_UM       int
+	x87CW_OM       int
+	x87CW_ZM       int
+	x87CW_DM       int
+	x87CW_IM       int
+	MxCsr          int
+	MxCsr_FZ       int
+	MxCsr_PM       int
+	MxCsr_UM       int
+	MxCsr_OM       int
+	MxCsr_ZM       int
+	MxCsr_IM       int
+	MxCsr_DM       int
+	MxCsr_D        int
+	MxCsr_PE       int
+	MxCsr_UE       int
+	MxCsr_OE       int
+	MxCsr_ZE       int
+	MxCsr_DE       int
+	MxCsr_IE       int
+	MxCsr_RC       int
+	XMM0           int
+	XMM1           int
+	XMM2           int
+	XMM3           int
+	XMM4           int
+	XMM5           int
+	XMM6           int
+	XMM7           int
+	XMM8           int
+	XMM9           int
+	XMM10          int
+	XMM11          int
+	XMM12          int
+	XMM13          int
+	XMM14          int
+	XMM15          int
+	YMM0           int
+	YMM1           int
+	YMM2           int
+	YMM3           int
+	YMM4           int
+	YMM5           int
+	YMM6           int
+	YMM7           int
+	YMM8           int
+	YMM9           int
+	YMM10          int
+	YMM11          int
+	YMM12          int
+	YMM13          int
+	YMM14          int
+	YMM15          int
+	DR0            int
+	DR1            int
+	DR2            int
+	DR3            int
+	DR6            int
+	DR7            int
 }
 
 var testHexDat = []byte{

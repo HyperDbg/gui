@@ -8,7 +8,7 @@ import (
 )
 
 type Memory struct {
-	Address           int `format:"%016X"`
+	Address           int
 	Size              int
 	Level             string
 	PageInfo          string
