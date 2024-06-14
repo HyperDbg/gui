@@ -28,23 +28,82 @@ var pageIco embed.FS
 
 func Run() {
 	app.RunWithIco("HyperDbg", mainIcons, func(w *unison.Window) {
+		pages := NewPage()
 		w.Content().FileDropCallback = func(files []string) {
 			switch filepath.Ext(files[0]) {
 			case ".exe", ".dll", ".sys":
 				mylog.Trace("dropped file", files[0])
 			default:
 				mylog.Check("not support file type")
+				pages.pe.SetContent(layoutPeView(pages.dock)) //todo test is dock or cpu tab page
 			}
 		}
-		Layout(w.Content())
+
+		pages.Layout(w.Content())
 	})
 }
 
-func Layout(parent unison.Paneler) unison.Paneler {
+type (
+	Page struct {
+		dock   *unison.Dock
+		cpu    *widget.Tab
+		pe     *widget.Tab
+		log    *widget.Tab
+		notes  *widget.Tab
+		breakp *widget.Tab
+		memory *widget.Tab
+		stack  *widget.Tab
+		seh    *widget.Tab
+		script *widget.Tab
+		symbol *widget.Tab
+		source *widget.Tab
+		ref    *widget.Tab
+		thread *widget.Tab
+		handle *widget.Tab
+		trace  *widget.Tab
+	}
+)
+
+func (p *Page) Elems() []*widget.Tab {
+	return []*widget.Tab{
+		p.cpu,
+		p.pe,
+		p.log,
+		p.notes,
+		p.breakp,
+		p.memory,
+		p.stack,
+		p.seh,
+		p.script,
+		p.symbol,
+		p.source,
+		p.ref,
+		p.thread,
+		p.handle,
+		p.trace,
+	}
+}
+
+func (p *Page) Layout(parent unison.Paneler) unison.Paneler {
 	t := newToolbar()
 	widget.NewToolBar(parent, t.Elems()...) // make toolbar
 
 	///make tabs
+	cpuTab := widget.NewTab("cpu", "", false, LayoutCpu(p.dock))
+	p.dock.DockTo(cpuTab, nil, side.Left)
+	parent.AsPanel().AddChild(p.dock)
+	LeftContainer := widget.NewDockContainer(cpuTab)
+
+	mylog.Todo("set tab ico")
+	// tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
+	for _, tab := range p.Elems() {
+		LeftContainer.Stack(tab, -1)
+	}
+	LeftContainer.SetCurrentDockable(cpuTab)
+	return nil
+}
+
+func NewPage() *Page {
 	dock := unison.NewDock()
 	dock.AsPanel().SetLayoutData(&unison.FlexLayoutData{
 		HSpan:  1,
@@ -54,36 +113,25 @@ func Layout(parent unison.Paneler) unison.Paneler {
 		HGrab:  true,
 		VGrab:  true,
 	})
-	cpuTab := widget.NewTab("cpu", "", false, LayoutCpu(dock))
-	dock.DockTo(cpuTab, nil, side.Left)
-	parent.AsPanel().AddChild(dock)
-	LeftContainer := widget.NewDockContainer(cpuTab)
-
-	mylog.Todo("set tab ico")
-	// tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
-
-	tabs := widget.NewTabs(
-		//	widget.TabContent{Title: "cpu", Tooltip: "", Closeable: false, Panel: LayoutCpu(LeftContainer)},
-		widget.TabContent{Title: "peView", Tooltip: "", Closeable: false, Panel: LayoutLog(LeftContainer)},
-		widget.TabContent{Title: "log", Tooltip: "", Closeable: false, Panel: LayoutLog(LeftContainer)},
-		widget.TabContent{Title: "notes", Tooltip: "", Closeable: false, Panel: LayoutNotes(LeftContainer)},
-		widget.TabContent{Title: "break", Tooltip: "", Closeable: false, Panel: LayoutBreak(LeftContainer)},
-		widget.TabContent{Title: "memory", Tooltip: "", Closeable: false, Panel: LayoutMemory(LeftContainer)},
-		widget.TabContent{Title: "stack", Tooltip: "", Closeable: false, Panel: LayoutStack(LeftContainer)},
-		widget.TabContent{Title: "seh", Tooltip: "", Closeable: false, Panel: LayoutSeh(LeftContainer)},
-		widget.TabContent{Title: "script", Tooltip: "", Closeable: false, Panel: LayoutScript(LeftContainer)},
-		widget.TabContent{Title: "symbol", Tooltip: "", Closeable: false, Panel: LayoutSymbol(LeftContainer)},
-		widget.TabContent{Title: "source", Tooltip: "", Closeable: false, Panel: LayoutSource(LeftContainer)},
-		widget.TabContent{Title: "references", Tooltip: "", Closeable: false, Panel: LayoutReferences(LeftContainer)},
-		widget.TabContent{Title: "thread", Tooltip: "", Closeable: false, Panel: LayoutThread(LeftContainer)},
-		widget.TabContent{Title: "handle", Tooltip: "", Closeable: false, Panel: LayoutHandle(LeftContainer)},
-		widget.TabContent{Title: "trace", Tooltip: "", Closeable: false, Panel: LayoutTrace(LeftContainer)},
-	)
-	for _, tab := range tabs {
-		LeftContainer.Stack(tab, -1)
+	p := &Page{
+		dock:   dock,
+		cpu:    widget.NewTab("cpu", "", false, LayoutCpu(dock)),
+		pe:     widget.NewTab("peView", "", false, layoutPeView(dock)),
+		log:    widget.NewTab("log", "", false, LayoutLog(dock)),
+		notes:  widget.NewTab("notes", "", false, LayoutNotes(dock)),
+		breakp: widget.NewTab("break", "", false, LayoutBreak(dock)),
+		memory: widget.NewTab("memory", "", false, LayoutMemory(dock)),
+		stack:  widget.NewTab("stack", "", false, LayoutStack(dock)),
+		seh:    widget.NewTab("seh", "", false, LayoutSeh(dock)),
+		script: widget.NewTab("script", "", false, LayoutScript(dock)),
+		symbol: widget.NewTab("symbol", "", false, LayoutSymbol(dock)),
+		source: widget.NewTab("source", "", false, LayoutSource(dock)),
+		ref:    widget.NewTab("references", "", false, LayoutReferences(dock)),
+		thread: widget.NewTab("thread", "", false, LayoutThread(dock)),
+		handle: widget.NewTab("handle", "", false, LayoutHandle(dock)),
+		trace:  widget.NewTab("trace", "", false, LayoutTrace(dock)),
 	}
-	LeftContainer.SetCurrentDockable(cpuTab)
-	return nil
+	return p
 }
 
 func (t *toolbar) Elems() []*unison.Button {

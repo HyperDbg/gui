@@ -1,5 +1,10 @@
 package ux
 
+import "github.com/richardwilkes/unison"
+
 type PeView struct {
-	// TODO: Implement this
+}
+
+func layoutPeView(parent unison.Paneler) unison.Paneler {
+
 }
