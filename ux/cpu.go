@@ -233,7 +233,7 @@ func LayoutCpu(parent unison.Paneler) unison.Paneler {
 	*/
 }
 
-//type FastCall struct { //gti:add
+//type FastCall struct {
 //	//Index    int
 //	Register string
 //	Address  int
@@ -295,7 +295,7 @@ func LayoutCpu(parent unison.Paneler) unison.Paneler {
 //	return tv
 //}
 
-type Disassembly struct { //gti:add
+type Disassembly struct {
 	Icon        string
 	Address     int
 	Opcode      []byte
@@ -343,7 +343,7 @@ func LayoutDismTable(parent unison.Paneler) unison.Paneler {
 	return widget.NewTableScrollPanel(parent, table, header)
 }
 
-type Stack struct { //gti:add
+type Stack struct {
 	Address int
 	Data    int
 	Context string
@@ -377,7 +377,7 @@ func LayoutStackTable(parent unison.Paneler) unison.Paneler {
 	return widget.NewTableScrollPanel(parent, table, header)
 }
 
-type Register struct { //gti:add
+type Register struct {
 	RAX            int `width:"50" format:"%016X"`
 	RBX            int
 	RCX            int
