@@ -34,6 +34,7 @@ func Run() {
 			case ".exe", ".dll", ".sys":
 				mylog.Trace("dropped file", files[0])
 				pages.pe.SetContent(layoutPeView(files[0], pages.dock)) // todo test parent panel is dock or cpu tab page
+				w.Content().MarkForRedraw()
 			default:
 				mylog.Check("not support file type")
 			}
