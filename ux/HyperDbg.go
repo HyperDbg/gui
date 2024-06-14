@@ -2,6 +2,7 @@ package ux
 
 import (
 	"embed"
+	"path/filepath"
 
 	"github.com/richardwilkes/unison/enums/align"
 	"github.com/richardwilkes/unison/enums/side"
@@ -27,6 +28,14 @@ var pageIco embed.FS
 
 func Run() {
 	app.RunWithIco("HyperDbg", mainIcons, func(w *unison.Window) {
+		w.Content().FileDropCallback = func(files []string) {
+			switch filepath.Ext(files[0]) {
+			case ".exe", ".dll", ".sys":
+				mylog.Trace("dropped file", files[0])
+			default:
+				mylog.Check("not support file type")
+			}
+		}
 		Layout(w.Content())
 	})
 }
@@ -55,6 +64,7 @@ func Layout(parent unison.Paneler) unison.Paneler {
 
 	tabs := widget.NewTabs(
 		//	widget.TabContent{Title: "cpu", Tooltip: "", Closeable: false, Panel: LayoutCpu(LeftContainer)},
+		widget.TabContent{Title: "peView", Tooltip: "", Closeable: false, Panel: LayoutLog(LeftContainer)},
 		widget.TabContent{Title: "log", Tooltip: "", Closeable: false, Panel: LayoutLog(LeftContainer)},
 		widget.TabContent{Title: "notes", Tooltip: "", Closeable: false, Panel: LayoutNotes(LeftContainer)},
 		widget.TabContent{Title: "break", Tooltip: "", Closeable: false, Panel: LayoutBreak(LeftContainer)},
