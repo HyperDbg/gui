@@ -33,6 +33,8 @@ func Layout(parent unison.Paneler) unison.Paneler {
 	widget.NewToolBar(parent, t.Elems()...) // make toolbar
 
 	///make tabs
+	widget.NewTabs()
+
 	left := widget.NewTab("cpu", "", false, nil)
 	right := widget.NewTab("log", "", false, nil)
 	hSplit := widget.NewHSplit(left, right, 0.3)
