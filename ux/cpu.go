@@ -13,18 +13,18 @@ func LayoutCpu(parent unison.Paneler) unison.Paneler {
 	TopHSplit := widget.NewHSplit(
 		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDismTable(parent)),
 		widget.NewTab("reg", "todo reg", true, unison.NewPanel()),
-		0.7)
+		0.3)
 
 	hexEditor := unison.NewField()
 	hexEditor.SetText(hex.Dump(testHexDat))
 	BottomHSplit := widget.NewHSplit(
 		widget.NewTab(" hex editor", "todo hex editor", true, hexEditor),
 		widget.NewTab("stack", "todo stack test", true, LayoutStackTable(parent)),
-		0.6)
+		0.3)
 
 	top := widget.NewTab("cpu and reg", "", true, TopHSplit)
 	bottom := widget.NewTab("hex editor and stack", "", true, BottomHSplit)
-	vSplit := widget.NewVSplit(top, bottom, 0.7)
+	vSplit := widget.NewVSplit(top, bottom, 0.2)
 	return vSplit
 	/*
 		splits := widget.NewVSplits(topSplits) // top is dismTable,bottom is Immediately count the list view window
