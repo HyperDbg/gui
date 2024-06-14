@@ -10,7 +10,6 @@ import (
 )
 
 func LayoutCpu(parent unison.Paneler) unison.Paneler {
-
 	////fastCallLayout := unison.NewList[ImmData]()
 	//widget.NewButton(m).SetText("goto 00007FF885007C08")
 	//"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
@@ -194,15 +193,16 @@ var testRegData = Register{
 	DR7:            0,
 }
 
-type ( //todo delete
+type ( // todo delete
 	ImmData struct {
 		reg     Register
 		address uint64
 		mem     []byte
 	}
 )
+
 type FastCall struct {
-	//Index    int
+	// Index    int
 	Register string
 	Address  int
 	MetaData string
