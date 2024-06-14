@@ -40,8 +40,8 @@ func Layout(parent unison.Paneler) unison.Paneler {
 
 	mylog.Todo("set tab ico")
 	// tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
-	hSplit.AddLeftItem(widget.NewTab("cpu", "", false, LayoutCpu(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("log", "", false, LayoutLog(hSplit)))
+	// hSplit.AddLeftItem(widget.NewTab("cpu", "", false, LayoutCpu(hSplit)))
+	// hSplit.AddRightItem(widget.NewTab("log", "", false, LayoutLog(hSplit)))
 	hSplit.AddRightItem(widget.NewTab("notes", "", false, LayoutNotes(hSplit)))
 	hSplit.AddRightItem(widget.NewTab("break", "", false, LayoutBreak(hSplit)))
 	hSplit.AddRightItem(widget.NewTab("memory", "", false, LayoutMemory(hSplit)))
