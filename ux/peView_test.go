@@ -4,13 +4,15 @@ import (
 	"ms/xed"
 	"testing"
 
+	"github.com/ddkwork/golibrary/stream"
+
 	"github.com/ddkwork/golibrary/mylog"
 )
 
 func TestParserSys(t *testing.T) {
 	path := "../bin/debug/hprdbgkd.sys"
 	file := xed.ParserPe(path)
-	mylog.Struct(file)
+	stream.MarshalJsonToFile(file, "hprdbgkd")
 }
 
 func TestParserExe(t *testing.T) {
