@@ -31,171 +31,167 @@ func LayoutCpu(parent unison.Paneler) unison.Paneler {
 		widget.NewTab(" hex editor", "todo hex editor", true, hexEditor),
 		widget.NewTab("stack", "todo stack test", true, LayoutStackTable(parent)),
 		0.3)
+	//todo add tab into hex editor and stack layout
+	/*
+		tabs := gi.NewTabs(downSplits)
+		mem1Tab := tabs.NewTab("memory1")
+		hexEditFrame := gi.NewFrame(mem1Tab)
+		hexEditFrame.Style(func(s *styles.Style) {
+			// s.Direction = styles.Row
+			s.Background = colors.C(colors.Scheme.SurfaceContainerLow)
+		})
+		hexEditEditor := texteditor.NewEditor(hexEditFrame)
+		hexEditBuf := texteditor.NewBuf()
+		hexEditBuf.SetText([]byte(hex.Dump(testHexDat)))
+		hexEditEditor.SetBuf(hexEditBuf)
+
+		tabs.NewTab("memory2")
+		tabs.NewTab("memory3")
+		tabs.NewTab("memory4")
+		tabs.NewTab("memory5")
+		tabs.NewTab("watch1")
+		tabs.NewTab("var")
+		tabs.NewTab("struct")
+	*/
 
 	top := widget.NewTab("cpu and reg", "", true, TopHSplit)
 	bottom := widget.NewTab("hex editor and stack", "", true, BottomHSplit)
 	vSplit := widget.NewVSplit(top, bottom, 0.2)
 	return vSplit
-	/*
-		giv.NewStructView(newVSplits).SetStruct(&Register{
-				RAX:            0,
-				RBX:            0x00007FF88500B7F0, //"LdrpInitializeProcess"
-				RCX:            0x00007FF884F6F814, // ntdll.00007FF884F6F814
-				RDX:            0,
-				RBP:            0,
-				RSP:            0x000000F4B095EBB0,
-				RSI:            0x000000F4B0A89000,
-				RDI:            0x00007FF885007C08,
-				R8:             0,
-				R9:             0,
-				R10:            0,
-				R11:            0,
-				R12:            0,
-				R13:            0,
-				R14:            0,
-				R15:            0,
-				RIP:            0x00007FF884FAB785,
-				RFLAGS:         0,
-				ZF:             0,
-				OF:             0,
-				CF:             0,
-				PF:             0,
-				SF:             0,
-				TF:             0,
-				AF:             0,
-				DF:             0,
-				IF:             0,
-				LastError:      0,
-				LastStatus:     0,
-				GS:             0,
-				ES:             0,
-				CS:             0,
-				FS:             0,
-				DS:             0,
-				SS:             0,
-				ST0:            0,
-				ST1:            0,
-				ST2:            0,
-				ST3:            0,
-				ST4:            0,
-				ST5:            0,
-				ST6:            0,
-				ST7:            0,
-				x87TagWord:     0,
-				x87ControlWord: 0,
-				x87StatusWord:  0,
-				x87TW_0:        0,
-				x87TW_1:        0,
-				x87TW_2:        0,
-				x87TW_3:        0,
-				x87TW_4:        0,
-				x87TW_5:        0,
-				x87TW_6:        0,
-				x87TW_7:        0,
-				x87SW_B:        0,
-				x87SW_C3:       0,
-				x87SW_TOP:      0,
-				x87SW_C2:       0,
-				x87SW_C1:       0,
-				x87SW_O:        0,
-				x87SW_ES:       0,
-				x87SW_SF:       0,
-				x87SW_P:        0,
-				x87SW_U:        0,
-				x87SW_Z:        0,
-				x87SW_D:        0,
-				x87SW_I:        0,
-				x87SW_C0:       0,
-				x87CW_IC:       0,
-				x87CW_RC:       0,
-				x87CW_PC:       0,
-				x87CW_PM:       0,
-				x87CW_UM:       0,
-				x87CW_OM:       0,
-				x87CW_ZM:       0,
-				x87CW_DM:       0,
-				x87CW_IM:       0,
-				MxCsr:          0,
-				MxCsr_FZ:       0,
-				MxCsr_PM:       0,
-				MxCsr_UM:       0,
-				MxCsr_OM:       0,
-				MxCsr_ZM:       0,
-				MxCsr_IM:       0,
-				MxCsr_DM:       0,
-				MxCsr_D:        0,
-				MxCsr_PE:       0,
-				MxCsr_UE:       0,
-				MxCsr_OE:       0,
-				MxCsr_ZE:       0,
-				MxCsr_DE:       0,
-				MxCsr_IE:       0,
-				MxCsr_RC:       0,
-				XMM0:           0,
-				XMM1:           0,
-				XMM2:           0,
-				XMM3:           0,
-				XMM4:           0,
-				XMM5:           0,
-				XMM6:           0,
-				XMM7:           0,
-				XMM8:           0,
-				XMM9:           0,
-				XMM10:          0,
-				XMM11:          0,
-				XMM12:          0,
-				XMM13:          0,
-				XMM14:          0,
-				XMM15:          0,
-				YMM0:           0,
-				YMM1:           0,
-				YMM2:           0,
-				YMM3:           0,
-				YMM4:           0,
-				YMM5:           0,
-				YMM6:           0,
-				YMM7:           0,
-				YMM8:           0,
-				YMM9:           0,
-				YMM10:          0,
-				YMM11:          0,
-				YMM12:          0,
-				YMM13:          0,
-				YMM14:          0,
-				YMM15:          0,
-				DR0:            0,
-				DR1:            0,
-				DR2:            0,
-				DR3:            0,
-				DR6:            0,
-				DR7:            0,
-			}).SetReadOnly(true)
+}
 
-
-			tabs := gi.NewTabs(downSplits)
-			mem1Tab := tabs.NewTab("memory1")
-			hexEditFrame := gi.NewFrame(mem1Tab)
-			hexEditFrame.Style(func(s *styles.Style) {
-				// s.Direction = styles.Row
-				s.Background = colors.C(colors.Scheme.SurfaceContainerLow)
-			})
-			hexEditEditor := texteditor.NewEditor(hexEditFrame)
-			hexEditBuf := texteditor.NewBuf()
-			hexEditBuf.SetText([]byte(hex.Dump(testHexDat)))
-			hexEditEditor.SetBuf(hexEditBuf)
-
-			tabs.NewTab("memory2")
-			tabs.NewTab("memory3")
-			tabs.NewTab("memory4")
-			tabs.NewTab("memory5")
-			tabs.NewTab("watch1")
-			tabs.NewTab("var")
-			tabs.NewTab("struct")
-
-			stackFrame := gi.NewFrame(downSplits)
-			stackTable(stackFrame) // stack
-			downSplits.SetSplits(.6, .4)
-	*/
+var testRegData = Register{
+	RAX:            0,
+	RBX:            0x00007FF88500B7F0, //"LdrpInitializeProcess"
+	RCX:            0x00007FF884F6F814, // ntdll.00007FF884F6F814
+	RDX:            0,
+	RBP:            0,
+	RSP:            0x000000F4B095EBB0,
+	RSI:            0x000000F4B0A89000,
+	RDI:            0x00007FF885007C08,
+	R8:             0,
+	R9:             0,
+	R10:            0,
+	R11:            0,
+	R12:            0,
+	R13:            0,
+	R14:            0,
+	R15:            0,
+	RIP:            0x00007FF884FAB785,
+	RFLAGS:         0,
+	ZF:             0,
+	OF:             0,
+	CF:             0,
+	PF:             0,
+	SF:             0,
+	TF:             0,
+	AF:             0,
+	DF:             0,
+	IF:             0,
+	LastError:      0,
+	LastStatus:     0,
+	GS:             0,
+	ES:             0,
+	CS:             0,
+	FS:             0,
+	DS:             0,
+	SS:             0,
+	ST0:            0,
+	ST1:            0,
+	ST2:            0,
+	ST3:            0,
+	ST4:            0,
+	ST5:            0,
+	ST6:            0,
+	ST7:            0,
+	x87TagWord:     0,
+	x87ControlWord: 0,
+	x87StatusWord:  0,
+	x87TW_0:        0,
+	x87TW_1:        0,
+	x87TW_2:        0,
+	x87TW_3:        0,
+	x87TW_4:        0,
+	x87TW_5:        0,
+	x87TW_6:        0,
+	x87TW_7:        0,
+	x87SW_B:        0,
+	x87SW_C3:       0,
+	x87SW_TOP:      0,
+	x87SW_C2:       0,
+	x87SW_C1:       0,
+	x87SW_O:        0,
+	x87SW_ES:       0,
+	x87SW_SF:       0,
+	x87SW_P:        0,
+	x87SW_U:        0,
+	x87SW_Z:        0,
+	x87SW_D:        0,
+	x87SW_I:        0,
+	x87SW_C0:       0,
+	x87CW_IC:       0,
+	x87CW_RC:       0,
+	x87CW_PC:       0,
+	x87CW_PM:       0,
+	x87CW_UM:       0,
+	x87CW_OM:       0,
+	x87CW_ZM:       0,
+	x87CW_DM:       0,
+	x87CW_IM:       0,
+	MxCsr:          0,
+	MxCsr_FZ:       0,
+	MxCsr_PM:       0,
+	MxCsr_UM:       0,
+	MxCsr_OM:       0,
+	MxCsr_ZM:       0,
+	MxCsr_IM:       0,
+	MxCsr_DM:       0,
+	MxCsr_D:        0,
+	MxCsr_PE:       0,
+	MxCsr_UE:       0,
+	MxCsr_OE:       0,
+	MxCsr_ZE:       0,
+	MxCsr_DE:       0,
+	MxCsr_IE:       0,
+	MxCsr_RC:       0,
+	XMM0:           0,
+	XMM1:           0,
+	XMM2:           0,
+	XMM3:           0,
+	XMM4:           0,
+	XMM5:           0,
+	XMM6:           0,
+	XMM7:           0,
+	XMM8:           0,
+	XMM9:           0,
+	XMM10:          0,
+	XMM11:          0,
+	XMM12:          0,
+	XMM13:          0,
+	XMM14:          0,
+	XMM15:          0,
+	YMM0:           0,
+	YMM1:           0,
+	YMM2:           0,
+	YMM3:           0,
+	YMM4:           0,
+	YMM5:           0,
+	YMM6:           0,
+	YMM7:           0,
+	YMM8:           0,
+	YMM9:           0,
+	YMM10:          0,
+	YMM11:          0,
+	YMM12:          0,
+	YMM13:          0,
+	YMM14:          0,
+	YMM15:          0,
+	DR0:            0,
+	DR1:            0,
+	DR2:            0,
+	DR3:            0,
+	DR6:            0,
+	DR7:            0,
 }
 
 type ( //todo delete
