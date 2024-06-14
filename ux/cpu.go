@@ -1,6 +1,7 @@
 package ux
 
 import (
+	"encoding/hex"
 	"fmt"
 
 	"github.com/ddkwork/app/widget"
@@ -13,8 +14,11 @@ func LayoutCpu(parent unison.Paneler) unison.Paneler {
 		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDismTable(parent)),
 		widget.NewTab("reg", "todo reg", true, unison.NewPanel()),
 		0.7)
+
+	hexEditor := unison.NewField()
+	hexEditor.SetText(hex.Dump(testHexDat))
 	BottomHSplit := widget.NewHSplit(
-		widget.NewTab(" hex editor", "todo hex editor", true, unison.NewField()),
+		widget.NewTab(" hex editor", "todo hex editor", true, hexEditor),
 		widget.NewTab("stack", "todo stack test", true, LayoutStackTable(parent)),
 		0.6)
 
