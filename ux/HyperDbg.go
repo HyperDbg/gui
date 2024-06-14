@@ -2,6 +2,7 @@ package ux
 
 import (
 	"embed"
+
 	"github.com/richardwilkes/unison/enums/align"
 	"github.com/richardwilkes/unison/enums/side"
 
@@ -44,36 +45,34 @@ func Layout(parent unison.Paneler) unison.Paneler {
 		HGrab:  true,
 		VGrab:  true,
 	})
-	left := widget.NewTab("cpu", "", false, nil)
-	dock.DockTo(left, nil, side.Left)
+	cpuTab := widget.NewTab("cpu", "", false, LayoutCpu(dock))
+	dock.DockTo(cpuTab, nil, side.Left)
 	parent.AsPanel().AddChild(dock)
-	LeftContainer := widget.NewDockContainer(left)
-	LeftContainer.Stack()
-
-	log := widget.NewTab("log", "", false, nil)
+	LeftContainer := widget.NewDockContainer(cpuTab)
 
 	mylog.Todo("set tab ico")
 	// tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
-	// hSplit.AddLeftItem(widget.NewTab("cpu", "", false, LayoutCpu(hSplit)))
-	// hSplit.AddRightItem(widget.NewTab("log", "", false, LayoutLog(hSplit)))
-	LeftContainer.Stack(widget.NewTab("notes", "", false, LayoutNotes(LeftContainer)))
-	hSplit.AddRightItem(widget.NewTab("break", "", false, LayoutBreak(LeftContainer)))
-	hSplit.AddRightItem(widget.NewTab("memory", "", false, LayoutMemory(LeftContainer)))
-	hSplit.AddRightItem(widget.NewTab("stack", "", false, LayoutStack(LeftContainer)))
-	hSplit.AddRightItem(widget.NewTab("seh", "", false, LayoutSeh(LeftContainer)))
-	hSplit.AddRightItem(widget.NewTab("script", "", false, LayoutScript(LeftContainer)))
-	hSplit.AddRightItem(widget.NewTab("symbol", "", false, LayoutSymbol(LeftContainer)))
-	hSplit.AddRightItem(widget.NewTab("source", "", false, LayoutSource(LeftContainer)))
-	hSplit.AddRightItem(widget.NewTab("references", "", false, LayoutReferences(LeftContainer)))
-	hSplit.AddRightItem(widget.NewTab("thread", "", false, LayoutThread(LeftContainer)))
-	hSplit.AddRightItem(widget.NewTab("handle", "", false, LayoutHandle(LeftContainer)))
-	hSplit.AddRightItem(widget.NewTab("trace", "", false, LayoutTrace(LeftContainer)))
 
-	widget.NewTabs(
-		widget.TabContent{Title: "log", Tooltip: "", Closeable: false, Panel: LayoutNotes(LeftContainer)},
+	tabs := widget.NewTabs(
+		//	widget.TabContent{Title: "cpu", Tooltip: "", Closeable: false, Panel: LayoutCpu(LeftContainer)},
+		widget.TabContent{Title: "log", Tooltip: "", Closeable: false, Panel: LayoutLog(LeftContainer)},
+		widget.TabContent{Title: "notes", Tooltip: "", Closeable: false, Panel: LayoutNotes(LeftContainer)},
+		widget.TabContent{Title: "break", Tooltip: "", Closeable: false, Panel: LayoutBreak(LeftContainer)},
+		widget.TabContent{Title: "memory", Tooltip: "", Closeable: false, Panel: LayoutMemory(LeftContainer)},
+		widget.TabContent{Title: "stack", Tooltip: "", Closeable: false, Panel: LayoutStack(LeftContainer)},
+		widget.TabContent{Title: "seh", Tooltip: "", Closeable: false, Panel: LayoutSeh(LeftContainer)},
+		widget.TabContent{Title: "script", Tooltip: "", Closeable: false, Panel: LayoutScript(LeftContainer)},
+		widget.TabContent{Title: "symbol", Tooltip: "", Closeable: false, Panel: LayoutSymbol(LeftContainer)},
+		widget.TabContent{Title: "source", Tooltip: "", Closeable: false, Panel: LayoutSource(LeftContainer)},
+		widget.TabContent{Title: "references", Tooltip: "", Closeable: false, Panel: LayoutReferences(LeftContainer)},
+		widget.TabContent{Title: "thread", Tooltip: "", Closeable: false, Panel: LayoutThread(LeftContainer)},
+		widget.TabContent{Title: "handle", Tooltip: "", Closeable: false, Panel: LayoutHandle(LeftContainer)},
+		widget.TabContent{Title: "trace", Tooltip: "", Closeable: false, Panel: LayoutTrace(LeftContainer)},
 	)
-
-	parent.AsPanel().AddChild(hSplit)
+	for _, tab := range tabs {
+		LeftContainer.Stack(tab, -1)
+	}
+	LeftContainer.SetCurrentDockable(cpuTab)
 	return nil
 }
 
