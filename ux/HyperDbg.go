@@ -2,6 +2,8 @@ package ux
 
 import (
 	"embed"
+	"github.com/richardwilkes/unison/enums/align"
+	"github.com/richardwilkes/unison/enums/side"
 
 	"github.com/ddkwork/app"
 	"github.com/ddkwork/app/widget"
@@ -33,29 +35,43 @@ func Layout(parent unison.Paneler) unison.Paneler {
 	widget.NewToolBar(parent, t.Elems()...) // make toolbar
 
 	///make tabs
-	widget.NewTabs()
-
+	dock := unison.NewDock()
+	dock.AsPanel().SetLayoutData(&unison.FlexLayoutData{
+		HSpan:  1,
+		VSpan:  1,
+		HAlign: align.Fill,
+		VAlign: align.Fill,
+		HGrab:  true,
+		VGrab:  true,
+	})
 	left := widget.NewTab("cpu", "", false, nil)
-	right := widget.NewTab("log", "", false, nil)
-	hSplit := widget.NewHSplit(left, right, 0.3)
-	parent.AsPanel().AddChild(hSplit.Dock)
+	dock.DockTo(left, nil, side.Left)
+	parent.AsPanel().AddChild(dock)
+	LeftContainer := widget.NewDockContainer(left)
+	LeftContainer.Stack()
+
+	log := widget.NewTab("log", "", false, nil)
 
 	mylog.Todo("set tab ico")
 	// tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
 	// hSplit.AddLeftItem(widget.NewTab("cpu", "", false, LayoutCpu(hSplit)))
 	// hSplit.AddRightItem(widget.NewTab("log", "", false, LayoutLog(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("notes", "", false, LayoutNotes(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("break", "", false, LayoutBreak(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("memory", "", false, LayoutMemory(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("stack", "", false, LayoutStack(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("seh", "", false, LayoutSeh(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("script", "", false, LayoutScript(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("symbol", "", false, LayoutSymbol(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("source", "", false, LayoutSource(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("references", "", false, LayoutReferences(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("thread", "", false, LayoutThread(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("handle", "", false, LayoutHandle(hSplit)))
-	hSplit.AddRightItem(widget.NewTab("trace", "", false, LayoutTrace(hSplit)))
+	LeftContainer.Stack(widget.NewTab("notes", "", false, LayoutNotes(LeftContainer)))
+	hSplit.AddRightItem(widget.NewTab("break", "", false, LayoutBreak(LeftContainer)))
+	hSplit.AddRightItem(widget.NewTab("memory", "", false, LayoutMemory(LeftContainer)))
+	hSplit.AddRightItem(widget.NewTab("stack", "", false, LayoutStack(LeftContainer)))
+	hSplit.AddRightItem(widget.NewTab("seh", "", false, LayoutSeh(LeftContainer)))
+	hSplit.AddRightItem(widget.NewTab("script", "", false, LayoutScript(LeftContainer)))
+	hSplit.AddRightItem(widget.NewTab("symbol", "", false, LayoutSymbol(LeftContainer)))
+	hSplit.AddRightItem(widget.NewTab("source", "", false, LayoutSource(LeftContainer)))
+	hSplit.AddRightItem(widget.NewTab("references", "", false, LayoutReferences(LeftContainer)))
+	hSplit.AddRightItem(widget.NewTab("thread", "", false, LayoutThread(LeftContainer)))
+	hSplit.AddRightItem(widget.NewTab("handle", "", false, LayoutHandle(LeftContainer)))
+	hSplit.AddRightItem(widget.NewTab("trace", "", false, LayoutTrace(LeftContainer)))
+
+	widget.NewTabs(
+		widget.TabContent{Title: "log", Tooltip: "", Closeable: false, Panel: LayoutNotes(LeftContainer)},
+	)
 
 	parent.AsPanel().AddChild(hSplit)
 	return nil
