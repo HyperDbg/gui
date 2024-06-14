@@ -9,17 +9,13 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-type (
-	ImmData struct {
-		reg     Register
-		address uint64
-		mem     []byte
-	}
-)
-
 func LayoutCpu(parent unison.Paneler) unison.Paneler {
 
 	////fastCallLayout := unison.NewList[ImmData]()
+	//widget.NewButton(m).SetText("goto 00007FF885007C08")
+	//"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
+	//todo make unit test for fast call layout
+
 	//RegisterView, panel := widget.NewStructView(parent.AsPanel().Window(), Register{}, func(data Register) (values []widget.CellData) {
 	//
 	//})
@@ -41,277 +37,180 @@ func LayoutCpu(parent unison.Paneler) unison.Paneler {
 	vSplit := widget.NewVSplit(top, bottom, 0.2)
 	return vSplit
 	/*
-		splits := widget.NewVSplits(topSplits) // top is dismTable,bottom is Immediately count the list view window
-		dismFrame := gi.NewFrame(splits)
-		Immediately := gi.NewFrame(splits)
-		v := giv.NewSliceView(Immediately)
-		v.AddContextMenu(func(m *gi.Scene) {
-			widget.NewButton(m).SetText("goto 00007FF885007C08")
-			widget.NewButton(m).SetText("goto 00007FF885007C08")
-			widget.NewButton(m).SetText("goto 00007FF885007C08")
-			widget.NewButton(m).SetText("goto 00007FF885007C08")
-			widget.NewButton(m).SetText("goto 00007FF885007C08")
-		})
-		v.SetSlice([]string{
-			"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
-			"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
-			"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
-			"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
-		}).SetReadOnly(true)
-		// widget.NewButton(Immediately) //todo there need a list widget
-
-		dismFrame.Style(func(s *styles.Style) {
-			// s.Direction = styles.Row
-			s.Background = colors.C(colors.Scheme.SurfaceContainerLow)
-		})
-		dismTable(dismFrame)
-		splits.SetSplits(.85, .15)
-
-		registerFrame := gi.NewFrame(topSplits)
-		registerFrame.Style(func(s *styles.Style) {
-			// s.Direction = styles.Row
-			s.Background = colors.C(colors.Scheme.SurfaceContainerLow)
-		})
-		newVSplits := widget.NewVSplits(registerFrame) // top is register,bottom is fastCall layout
 		giv.NewStructView(newVSplits).SetStruct(&Register{
-			RAX:            0,
-			RBX:            0x00007FF88500B7F0, //"LdrpInitializeProcess"
-			RCX:            0x00007FF884F6F814, // ntdll.00007FF884F6F814
-			RDX:            0,
-			RBP:            0,
-			RSP:            0x000000F4B095EBB0,
-			RSI:            0x000000F4B0A89000,
-			RDI:            0x00007FF885007C08,
-			R8:             0,
-			R9:             0,
-			R10:            0,
-			R11:            0,
-			R12:            0,
-			R13:            0,
-			R14:            0,
-			R15:            0,
-			RIP:            0x00007FF884FAB785,
-			RFLAGS:         0,
-			ZF:             0,
-			OF:             0,
-			CF:             0,
-			PF:             0,
-			SF:             0,
-			TF:             0,
-			AF:             0,
-			DF:             0,
-			IF:             0,
-			LastError:      0,
-			LastStatus:     0,
-			GS:             0,
-			ES:             0,
-			CS:             0,
-			FS:             0,
-			DS:             0,
-			SS:             0,
-			ST0:            0,
-			ST1:            0,
-			ST2:            0,
-			ST3:            0,
-			ST4:            0,
-			ST5:            0,
-			ST6:            0,
-			ST7:            0,
-			x87TagWord:     0,
-			x87ControlWord: 0,
-			x87StatusWord:  0,
-			x87TW_0:        0,
-			x87TW_1:        0,
-			x87TW_2:        0,
-			x87TW_3:        0,
-			x87TW_4:        0,
-			x87TW_5:        0,
-			x87TW_6:        0,
-			x87TW_7:        0,
-			x87SW_B:        0,
-			x87SW_C3:       0,
-			x87SW_TOP:      0,
-			x87SW_C2:       0,
-			x87SW_C1:       0,
-			x87SW_O:        0,
-			x87SW_ES:       0,
-			x87SW_SF:       0,
-			x87SW_P:        0,
-			x87SW_U:        0,
-			x87SW_Z:        0,
-			x87SW_D:        0,
-			x87SW_I:        0,
-			x87SW_C0:       0,
-			x87CW_IC:       0,
-			x87CW_RC:       0,
-			x87CW_PC:       0,
-			x87CW_PM:       0,
-			x87CW_UM:       0,
-			x87CW_OM:       0,
-			x87CW_ZM:       0,
-			x87CW_DM:       0,
-			x87CW_IM:       0,
-			MxCsr:          0,
-			MxCsr_FZ:       0,
-			MxCsr_PM:       0,
-			MxCsr_UM:       0,
-			MxCsr_OM:       0,
-			MxCsr_ZM:       0,
-			MxCsr_IM:       0,
-			MxCsr_DM:       0,
-			MxCsr_D:        0,
-			MxCsr_PE:       0,
-			MxCsr_UE:       0,
-			MxCsr_OE:       0,
-			MxCsr_ZE:       0,
-			MxCsr_DE:       0,
-			MxCsr_IE:       0,
-			MxCsr_RC:       0,
-			XMM0:           0,
-			XMM1:           0,
-			XMM2:           0,
-			XMM3:           0,
-			XMM4:           0,
-			XMM5:           0,
-			XMM6:           0,
-			XMM7:           0,
-			XMM8:           0,
-			XMM9:           0,
-			XMM10:          0,
-			XMM11:          0,
-			XMM12:          0,
-			XMM13:          0,
-			XMM14:          0,
-			XMM15:          0,
-			YMM0:           0,
-			YMM1:           0,
-			YMM2:           0,
-			YMM3:           0,
-			YMM4:           0,
-			YMM5:           0,
-			YMM6:           0,
-			YMM7:           0,
-			YMM8:           0,
-			YMM9:           0,
-			YMM10:          0,
-			YMM11:          0,
-			YMM12:          0,
-			YMM13:          0,
-			YMM14:          0,
-			YMM15:          0,
-			DR0:            0,
-			DR1:            0,
-			DR2:            0,
-			DR3:            0,
-			DR6:            0,
-			DR7:            0,
-		}).SetReadOnly(true)
-		// fastCallTable(newVSplits)
-		fastCall := giv.NewSliceView(newVSplits)
-		fastCall.SetReadOnly(true)
-		fastCall.AddContextMenu(func(m *gi.Scene) {
-			widget.NewButton(m).SetText("go 00007FF884F6F814")
-			widget.NewButton(m).SetText("go 00007FF884F6F814")
-			widget.NewButton(m).SetText("go 00007FF884F6F814")
-		})
-		fastCall.SetSlice([]string{
-			"rcx 00007FF884F6F814 ntdll.00007FF884F6F814", // 1:
-			"rdx 0000000000000000 0000000000000000",       // 2:
-			"r8  0000008F09EFEFB8 0000008F09EFEFB8",       // 3:
-			"r9  0000000000000000 0000000000000000",       // 4:
-			"[rsp+28] 0000000000000000 0000000000000000",  // 5:
-		})
-		newVSplits.SetSplits(.7, .3)
+				RAX:            0,
+				RBX:            0x00007FF88500B7F0, //"LdrpInitializeProcess"
+				RCX:            0x00007FF884F6F814, // ntdll.00007FF884F6F814
+				RDX:            0,
+				RBP:            0,
+				RSP:            0x000000F4B095EBB0,
+				RSI:            0x000000F4B0A89000,
+				RDI:            0x00007FF885007C08,
+				R8:             0,
+				R9:             0,
+				R10:            0,
+				R11:            0,
+				R12:            0,
+				R13:            0,
+				R14:            0,
+				R15:            0,
+				RIP:            0x00007FF884FAB785,
+				RFLAGS:         0,
+				ZF:             0,
+				OF:             0,
+				CF:             0,
+				PF:             0,
+				SF:             0,
+				TF:             0,
+				AF:             0,
+				DF:             0,
+				IF:             0,
+				LastError:      0,
+				LastStatus:     0,
+				GS:             0,
+				ES:             0,
+				CS:             0,
+				FS:             0,
+				DS:             0,
+				SS:             0,
+				ST0:            0,
+				ST1:            0,
+				ST2:            0,
+				ST3:            0,
+				ST4:            0,
+				ST5:            0,
+				ST6:            0,
+				ST7:            0,
+				x87TagWord:     0,
+				x87ControlWord: 0,
+				x87StatusWord:  0,
+				x87TW_0:        0,
+				x87TW_1:        0,
+				x87TW_2:        0,
+				x87TW_3:        0,
+				x87TW_4:        0,
+				x87TW_5:        0,
+				x87TW_6:        0,
+				x87TW_7:        0,
+				x87SW_B:        0,
+				x87SW_C3:       0,
+				x87SW_TOP:      0,
+				x87SW_C2:       0,
+				x87SW_C1:       0,
+				x87SW_O:        0,
+				x87SW_ES:       0,
+				x87SW_SF:       0,
+				x87SW_P:        0,
+				x87SW_U:        0,
+				x87SW_Z:        0,
+				x87SW_D:        0,
+				x87SW_I:        0,
+				x87SW_C0:       0,
+				x87CW_IC:       0,
+				x87CW_RC:       0,
+				x87CW_PC:       0,
+				x87CW_PM:       0,
+				x87CW_UM:       0,
+				x87CW_OM:       0,
+				x87CW_ZM:       0,
+				x87CW_DM:       0,
+				x87CW_IM:       0,
+				MxCsr:          0,
+				MxCsr_FZ:       0,
+				MxCsr_PM:       0,
+				MxCsr_UM:       0,
+				MxCsr_OM:       0,
+				MxCsr_ZM:       0,
+				MxCsr_IM:       0,
+				MxCsr_DM:       0,
+				MxCsr_D:        0,
+				MxCsr_PE:       0,
+				MxCsr_UE:       0,
+				MxCsr_OE:       0,
+				MxCsr_ZE:       0,
+				MxCsr_DE:       0,
+				MxCsr_IE:       0,
+				MxCsr_RC:       0,
+				XMM0:           0,
+				XMM1:           0,
+				XMM2:           0,
+				XMM3:           0,
+				XMM4:           0,
+				XMM5:           0,
+				XMM6:           0,
+				XMM7:           0,
+				XMM8:           0,
+				XMM9:           0,
+				XMM10:          0,
+				XMM11:          0,
+				XMM12:          0,
+				XMM13:          0,
+				XMM14:          0,
+				XMM15:          0,
+				YMM0:           0,
+				YMM1:           0,
+				YMM2:           0,
+				YMM3:           0,
+				YMM4:           0,
+				YMM5:           0,
+				YMM6:           0,
+				YMM7:           0,
+				YMM8:           0,
+				YMM9:           0,
+				YMM10:          0,
+				YMM11:          0,
+				YMM12:          0,
+				YMM13:          0,
+				YMM14:          0,
+				YMM15:          0,
+				DR0:            0,
+				DR1:            0,
+				DR2:            0,
+				DR3:            0,
+				DR6:            0,
+				DR7:            0,
+			}).SetReadOnly(true)
 
-		topSplits.SetSplits(.7, .3)
 
-		tabs := gi.NewTabs(downSplits)
-		mem1Tab := tabs.NewTab("memory1")
-		hexEditFrame := gi.NewFrame(mem1Tab)
-		hexEditFrame.Style(func(s *styles.Style) {
-			// s.Direction = styles.Row
-			s.Background = colors.C(colors.Scheme.SurfaceContainerLow)
-		})
-		hexEditEditor := texteditor.NewEditor(hexEditFrame)
-		hexEditBuf := texteditor.NewBuf()
-		hexEditBuf.SetText([]byte(hex.Dump(testHexDat)))
-		hexEditEditor.SetBuf(hexEditBuf)
+			tabs := gi.NewTabs(downSplits)
+			mem1Tab := tabs.NewTab("memory1")
+			hexEditFrame := gi.NewFrame(mem1Tab)
+			hexEditFrame.Style(func(s *styles.Style) {
+				// s.Direction = styles.Row
+				s.Background = colors.C(colors.Scheme.SurfaceContainerLow)
+			})
+			hexEditEditor := texteditor.NewEditor(hexEditFrame)
+			hexEditBuf := texteditor.NewBuf()
+			hexEditBuf.SetText([]byte(hex.Dump(testHexDat)))
+			hexEditEditor.SetBuf(hexEditBuf)
 
-		tabs.NewTab("memory2")
-		tabs.NewTab("memory3")
-		tabs.NewTab("memory4")
-		tabs.NewTab("memory5")
-		tabs.NewTab("watch1")
-		tabs.NewTab("var")
-		tabs.NewTab("struct")
+			tabs.NewTab("memory2")
+			tabs.NewTab("memory3")
+			tabs.NewTab("memory4")
+			tabs.NewTab("memory5")
+			tabs.NewTab("watch1")
+			tabs.NewTab("var")
+			tabs.NewTab("struct")
 
-		stackFrame := gi.NewFrame(downSplits)
-		stackTable(stackFrame) // stack
-		downSplits.SetSplits(.6, .4)
+			stackFrame := gi.NewFrame(downSplits)
+			stackTable(stackFrame) // stack
+			downSplits.SetSplits(.6, .4)
 	*/
 }
 
-//type FastCall struct {
-//	//Index    int
-//	Register string
-//	Address  int
-//	MetaData     string
-//}
-
-//func fastCallTable(parent ki.Ki) *giv.TableView {
-//	fastCalls := make([]*FastCall, 0)
-//	f := new(FastCall)
-//	for i := 0; i < 5; i++ {
-//		//1: rcx 00007FF884F6F814 ntdll.00007FF884F6F814
-//		//2: rdx 0000000000000000 0000000000000000
-//		//3: r8 0000008F09EFEFB8 0000008F09EFEFB8
-//		//4: r9 0000000000000000 0000000000000000
-//		//5: [rsp+28] 0000000000000000 0000000000000000
-//		switch i { //mock
-//		case 0:
-//			f = &FastCall{
-//				//Index:    i + 1,
-//				Register: "rcx",
-//				Address:  0x00007FF884F6F814,
-//				MetaData:     "ntdll.00007FF884F6F814",
-//			}
-//		case 1:
-//			f = &FastCall{
-//				//Index:    i + 1,
-//				Register: "rdx",
-//				Address:  0x0000000000000000,
-//				MetaData:     "0000000000000000",
-//			}
-//		case 2:
-//			f = &FastCall{
-//				//Index:    i + 1,
-//				Register: "r8",
-//				Address:  0x0000008F09EFEFB8,
-//				MetaData:     "0000008F09EFEFB8",
-//			}
-//		case 3:
-//			f = &FastCall{
-//				//Index:    i + 1,
-//				Register: "r9",
-//				Address:  0x0000000000000000,
-//				MetaData:     "0000000000000000",
-//			}
-//		case 4:
-//			f = &FastCall{
-//				//Index:    i + 1,
-//				Register: "[rsp+28]",
-//				Address:  0x0000000000000000,
-//				MetaData:     "0000000000000000",
-//			}
-//		}
-//		fastCalls = append(fastCalls, f)
-//	}
-//
-//	tv := giv.NewTableView(parent, "tv")
-//	tv.SetReadOnly(true)
-//	tv.SetSlice(&fastCalls)
-//	return tv
-//}
+type ( //todo delete
+	ImmData struct {
+		reg     Register
+		address uint64
+		mem     []byte
+	}
+)
+type FastCall struct {
+	//Index    int
+	Register string
+	Address  int
+	MetaData string
+}
 
 type Disassembly struct {
 	Icon        string
