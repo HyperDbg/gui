@@ -5,8 +5,6 @@ import (
 	"testing"
 
 	"github.com/ddkwork/golibrary/stream"
-
-	"github.com/ddkwork/golibrary/mylog"
 )
 
 func TestParserSys(t *testing.T) {
@@ -18,11 +16,11 @@ func TestParserSys(t *testing.T) {
 func TestParserExe(t *testing.T) {
 	path := "../bin/debug/hyperdbg-cli.exe"
 	file := xed.ParserPe(path)
-	mylog.Struct(file)
+	stream.MarshalJsonToFile(file, "hyperdbg-cli")
 }
 
 func TestParserDll(t *testing.T) {
 	path := "../bin/debug/msdia140.dll"
 	file := xed.ParserPe(path)
-	mylog.Struct(file)
+	stream.MarshalJsonToFile(file, "msdia140")
 }
