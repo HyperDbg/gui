@@ -24,7 +24,7 @@ type (
 // 3 registry editor
 // etc.
 func LayoutArk(parent unison.Paneler) unison.Paneler {
-
+	//todo merge branch/gui/plugin/symbol into here
 	ms.DecodeTableByDll()
 	println(winver.WindowVersion())
 	ms.MiGetPteAddress()
