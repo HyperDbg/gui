@@ -61,6 +61,7 @@ type (
 		thread *widget.Tab
 		handle *widget.Tab
 		trace  *widget.Tab
+		ark    *widget.Tab
 	}
 )
 
@@ -81,6 +82,7 @@ func (p *Page) Elems() []*widget.Tab {
 		p.thread,
 		p.handle,
 		p.trace,
+		p.ark,
 	}
 }
 
@@ -130,6 +132,7 @@ func NewPage() *Page {
 		thread: widget.NewTab("thread", "", false, LayoutThread(dock)),
 		handle: widget.NewTab("handle", "", false, LayoutHandle(dock)),
 		trace:  widget.NewTab("trace", "", false, LayoutTrace(dock)),
+		ark:    widget.NewTab("ark", "", false, LayoutArk(dock)),
 	}
 	return p
 }
