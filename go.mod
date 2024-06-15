@@ -3,7 +3,7 @@ module github.com/ddkwork/hyperdbgui
 go 1.22.3
 
 require (
-	github.com/ddkwork/app v0.0.0-20240615140632-acdad7498240
+	github.com/ddkwork/app v0.0.0-20240615144850-a0989c4851f0
 	github.com/ddkwork/golibrary v0.0.62
 	github.com/richardwilkes/unison v0.70.1
 	github.com/stretchr/testify v1.9.0

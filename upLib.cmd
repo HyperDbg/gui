@@ -1,1 +1,1 @@
-go get github.com/ddkwork/app@acdad7498240ee2e8cf636c9f52665ec3576f77c
+go get github.com/ddkwork/app@a0989c4851f0808e63b63687033143116e03fa45
