@@ -18,7 +18,7 @@ type PeView struct {
 	// overlay *pe.Overlay todo
 }
 
-func LayoutPeView(name string, parent unison.Paneler) unison.Paneler {
+func LayoutPeView(fileName string, parent unison.Paneler) unison.Paneler {
 	table, header := widget.NewTable(PeView{}, widget.TableContext[PeView]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[PeView]) (cells []widget.CellData) {
@@ -41,10 +41,10 @@ func LayoutPeView(name string, parent unison.Paneler) unison.Paneler {
 				Import  = "Import"
 				Export  = "Export"
 			)
-			if name == "" {
+			if fileName == "" {
 				return
 			}
-			pe := xed.ParserPe(name)
+			pe := xed.ParserPe(fileName)
 			containerNodes := widget.NewContainerNodes[PeView]([]string{Section, Import, Export})
 			for _, node := range containerNodes {
 				t := node.Type

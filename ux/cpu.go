@@ -12,7 +12,7 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutCpu(name string, parent unison.Paneler) unison.Paneler {
+func LayoutCpu(fileName string, parent unison.Paneler) unison.Paneler {
 	////fastCallLayout := unison.NewList[ImmData]()
 	//widget.NewButton(m).SetText("goto 00007FF885007C08")
 	//"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
@@ -23,7 +23,7 @@ func LayoutCpu(name string, parent unison.Paneler) unison.Paneler {
 	//})
 
 	TopHSplit := widget.NewHSplit(
-		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDisassemblyTable(name, parent)),
+		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDisassemblyTable(fileName, parent)),
 		widget.NewTab("reg", "todo reg", true, unison.NewPanel()),
 		0.3)
 
@@ -211,7 +211,7 @@ type FastCall struct {
 	ImmData  string
 }
 
-func LayoutDisassemblyTable(name string, parent unison.Paneler) unison.Paneler {
+func LayoutDisassemblyTable(fileName string, parent unison.Paneler) unison.Paneler {
 	table, header := widget.NewTable(xed.Disassembly{}, widget.TableContext[xed.Disassembly]{
 		ContextMenuItems: func(node *widget.Node[xed.Disassembly]) []widget.ContextMenuItem {
 			return []widget.ContextMenuItem{
@@ -233,8 +233,8 @@ func LayoutDisassemblyTable(name string, parent unison.Paneler) unison.Paneler {
 		UnmarshalRow:             nil,
 		SelectionChangedCallback: nil,
 		SetRootRowsCallBack: func(root *widget.Node[xed.Disassembly]) {
-			f := xed.ParserPe(name)
-			b := stream.NewBuffer(name).Bytes()
+			f := xed.ParserPe(fileName)
+			b := stream.NewBuffer(fileName).Bytes()
 			b = b[:1024]
 			x := xed.New(b)
 			if f.Is64 {
