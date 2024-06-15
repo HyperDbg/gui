@@ -1,5 +1,6 @@
 package control
 
+// Control is the controller all using golang
 type Control struct {
 }
 
