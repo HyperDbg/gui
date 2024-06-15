@@ -2,6 +2,7 @@ package ux
 
 import (
 	"fmt"
+	"github.com/ddkwork/app/ms"
 
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
@@ -20,6 +21,9 @@ type (
 // 3 registry editor,todo
 // etc.
 func LayoutArk(parent unison.Paneler) unison.Paneler {
+
+	ms.DecodeTableByDll()
+
 	table, header := widget.NewTable(Seh{}, widget.TableContext[Seh]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[Seh]) (cells []widget.CellData) {
