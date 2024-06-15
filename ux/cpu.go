@@ -224,9 +224,8 @@ func LayoutDismTable(name string, parent unison.Paneler) unison.Paneler {
 		},
 		MarshalRow: func(node *widget.Node[xed.Disassembly]) (cells []widget.CellData) {
 			return []widget.CellData{
-				{Text: node.Data.Icon},
 				{Text: fmt.Sprintf("%016X", node.Data.Address)},
-				{Text: fmt.Sprintf("% X", node.Data.Opcode)},
+				{Text: fmt.Sprintf("%X", node.Data.Opcode)},
 				{Text: node.Data.Instruction},
 				{Text: node.Data.Comment},
 			}
