@@ -30,6 +30,7 @@ func LayoutArk(parent unison.Paneler) unison.Paneler {
 	ms.DecodeTableByDisassembly()
 	ms.NtDeviceIoControlFile()
 	//IopXxxControlFile()
+	widget.NewExplorer(parent, ".")
 
 	table, header := widget.NewTable(Seh{}, widget.TableContext[Seh]{
 		ContextMenuItems: nil,
