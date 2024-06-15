@@ -23,7 +23,7 @@ func LayoutCpu(name string, parent unison.Paneler) unison.Paneler {
 	//})
 
 	TopHSplit := widget.NewHSplit(
-		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDismTable(name, parent)),
+		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDisassemblyTable(name, parent)),
 		widget.NewTab("reg", "todo reg", true, unison.NewPanel()),
 		0.3)
 
@@ -211,7 +211,7 @@ type FastCall struct {
 	ImmData  string
 }
 
-func LayoutDismTable(name string, parent unison.Paneler) unison.Paneler {
+func LayoutDisassemblyTable(name string, parent unison.Paneler) unison.Paneler {
 	table, header := widget.NewTable(xed.Disassembly{}, widget.TableContext[xed.Disassembly]{
 		ContextMenuItems: func(node *widget.Node[xed.Disassembly]) []widget.ContextMenuItem {
 			return []widget.ContextMenuItem{
