@@ -3,12 +3,11 @@ package ux
 import (
 	"encoding/hex"
 	"fmt"
-	"ms/xed"
 
-	"github.com/ddkwork/golibrary/stream"
-
+	"github.com/ddkwork/app/ms/xed"
 	"github.com/ddkwork/app/widget"
 	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/stream"
 	"github.com/richardwilkes/unison"
 )
 
@@ -235,7 +234,7 @@ func LayoutDisassemblyTable(fileName string, parent unison.Paneler) unison.Panel
 		SetRootRowsCallBack: func(root *widget.Node[xed.Disassembly]) {
 			f := xed.ParserPe(fileName)
 			b := stream.NewBuffer(fileName).Bytes()
-			b = b[:1024] //4kb? need skip mz pe header ?
+			b = b[:1024] // 4kb? need skip mz pe header ?
 			x := xed.New(b)
 			if f.Is64 {
 				x.Decode64()

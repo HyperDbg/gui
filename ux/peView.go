@@ -2,8 +2,9 @@ package ux
 
 import (
 	"fmt"
-	"ms/xed"
 	"strings"
+
+	"github.com/ddkwork/app/ms/xed"
 
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
