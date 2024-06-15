@@ -3,6 +3,7 @@ package ux
 import (
 	"fmt"
 	"github.com/ddkwork/app/ms"
+	"github.com/ddkwork/app/ms/driverTool/environment"
 	"github.com/ddkwork/app/ms/hook/winver"
 	"github.com/ddkwork/golibrary/mylog"
 
@@ -33,6 +34,7 @@ func LayoutArk(parent unison.Paneler) unison.Paneler {
 	//IopXxxControlFile()
 	widget.NewExplorer(parent, ".")
 	//taskexplorer todo call here
+	environment.New()
 	mylog.Todo("implement registry editor")
 
 	table, header := widget.NewTable(Seh{}, widget.TableContext[Seh]{
