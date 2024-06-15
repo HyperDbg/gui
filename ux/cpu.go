@@ -55,7 +55,7 @@ func LayoutCpu(parent unison.Paneler) unison.Paneler {
 
 	top := widget.NewTab("cpu and reg", "", true, TopHSplit)
 	bottom := widget.NewTab("hex editor and stack", "", true, BottomHSplit)
-	vSplit := widget.NewVSplit(top, bottom, 0.2)
+	vSplit := widget.NewVSplit(top, bottom, 0.1)
 	return vSplit
 }
 
