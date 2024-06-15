@@ -111,7 +111,7 @@ func NewPage() *Page {
 		HGrab:  true,
 		VGrab:  true,
 	})
-	path := "D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\hprdbgkd.sys"
+	path := "D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\HPRDBGCTRL.dll"
 	p := &Page{
 		dock:   dock,
 		cpu:    widget.NewTab("cpu", "", false, LayoutCpu(dock)),

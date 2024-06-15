@@ -8,6 +8,6 @@ import (
 
 func main() {
 	app.Run("pe", func(w *unison.Window) {
-		ux.LayoutPeView("D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\hprdbgkd.sys", w.Content())
+		ux.LayoutPeView("D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\HPRDBGCTRL.dll", w.Content())
 	})
 }
