@@ -40,8 +40,12 @@ func LayoutArk(parent unison.Paneler) unison.Paneler {
 	table, header := widget.NewTable(ms.NtApi{}, widget.TableContext[ms.NtApi]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[ms.NtApi]) (cells []widget.CellData) {
+			KernelBase := fmt.Sprintf("%016X", node.Data.KernelBase)
+			if node.Container() {
+				KernelBase = node.Type
+			}
 			return []widget.CellData{
-				{Text: fmt.Sprintf("%016X", node.Data.KernelBase)},
+				{Text: KernelBase},
 				{Text: fmt.Sprintf("%016X", node.Data.ArgValue)},
 				{Text: node.Data.Name},
 				{Text: fmt.Sprintf("%04d / %016X", node.Data.Index, node.Data.Index)},
