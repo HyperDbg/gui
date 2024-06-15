@@ -1,7 +1,11 @@
 package ux
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/ddkwork/golibrary/mylog"
+)
 
 func TestNoGui(t *testing.T) {
-	NoGui()
+	mylog.Call(NoGui)
 }
