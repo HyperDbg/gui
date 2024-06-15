@@ -196,7 +196,7 @@ var testRegData = Register{
 	DR7:            0,
 }
 
-type ( // todo delete
+type ( // todo merge into FastCall
 	ImmData struct {
 		reg     Register
 		address uint64
@@ -208,7 +208,7 @@ type FastCall struct {
 	// Index    int
 	Register string
 	Address  int
-	MetaData string
+	ImmData  string
 }
 
 func LayoutDismTable(name string, parent unison.Paneler) unison.Paneler {
