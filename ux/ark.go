@@ -28,6 +28,7 @@ func LayoutArk(parent unison.Paneler) unison.Paneler {
 	// hook random for aes key
 	// add hardware info show and hook panel
 	// vstart panel for quick start cracking tookBox ?
+	// crypt tool merge here?
 	ms.DecodeTableByDll()
 	println(winver.WindowVersion())
 	ms.MiGetPteAddress()
