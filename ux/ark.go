@@ -26,7 +26,7 @@ type (
 func LayoutArk(parent unison.Paneler) unison.Paneler {
 	//todo merge plugin/symbol into here
 	// hook random for aes key
-	// add hardware info hook panel
+	// add hardware info show and hook panel
 	ms.DecodeTableByDll()
 	println(winver.WindowVersion())
 	ms.MiGetPteAddress()
