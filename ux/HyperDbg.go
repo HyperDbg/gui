@@ -33,8 +33,7 @@ func Run() {
 			switch filepath.Ext(files[0]) {
 			case ".exe", ".dll", ".sys":
 				mylog.Trace("dropped file", files[0])
-				pages.pe.SetContent(layoutPeView(files[0], pages.dock)) // todo test parent panel is dock or cpu tab page
-				w.MarkForRedraw()
+				pages.pe.SetContent(LayoutPeView(files[0], pages.dock)) // todo test parent panel is dock or cpu tab page
 			default:
 				mylog.Check("not support file type")
 			}
@@ -112,10 +111,11 @@ func NewPage() *Page {
 		HGrab:  true,
 		VGrab:  true,
 	})
+	path := "D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\hprdbgkd.sys"
 	p := &Page{
 		dock:   dock,
 		cpu:    widget.NewTab("cpu", "", false, LayoutCpu(dock)),
-		pe:     widget.NewTab("peView", "", false, layoutPeView("", dock)),
+		pe:     widget.NewTab("peView", "", false, LayoutPeView(path, dock)),
 		log:    widget.NewTab("log", "", false, LayoutLog(dock)),
 		notes:  widget.NewTab("notes", "", false, LayoutNotes(dock)),
 		breakp: widget.NewTab("break", "", false, LayoutBreak(dock)),

@@ -17,7 +17,7 @@ type PeView struct {
 	// overlay *pe.Overlay todo
 }
 
-func layoutPeView(name string, parent unison.Paneler) unison.Paneler {
+func LayoutPeView(name string, parent unison.Paneler) unison.Paneler {
 	table, header := widget.NewTable(PeView{}, widget.TableContext[PeView]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[PeView]) (cells []widget.CellData) {
