@@ -4,13 +4,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/branch/pkg/cpp2go"
 	"github.com/ddkwork/golibrary/stream"
 )
 
 func TestCpp2Go(t *testing.T) {
-	cpp2go.New().RemoveComment("HyperDbgDev/hyperdbg")
-	return
+	//cpp2go.New().RemoveComment("HyperDbgDev/hyperdbg")
+	//return
 	//o := cpp2go.New()
 	//object := o.Src("./HyperDbgDev/hyperdbg").
 	//	Dst("binding").
