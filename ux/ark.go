@@ -10,13 +10,6 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-type Ark struct{}
-
-type (
-	NtTable     struct{}
-	Win32kTable struct{}
-)
-
 func arkTodo() {
 	// todo merge plugin/symbol into here
 	// hook random for aes key
@@ -43,29 +36,32 @@ func arkTodo() {
 // 3 registry editor
 // etc.
 func LayoutArk(parent unison.Paneler) unison.Paneler {
-
 	table, header := widget.NewTable(ms.NtApi{}, widget.TableContext[ms.NtApi]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[ms.NtApi]) (cells []widget.CellData) {
 			return []widget.CellData{
-				{Text: fmt.Sprintf("%016X", node.Data.Address)},
-				{Text: node.Data.ExceptionHandlingRoutines},
-				{Text: node.Data.Label},
-				{Text: node.Data.Notes},
+				{Text: fmt.Sprintf("%016X", node.Data.KernelBase)},
+				{Text: fmt.Sprintf("%016X", node.Data.ArgValue)},
+				{Text: node.Data.Name},
+				{Text: fmt.Sprintf("%d / %016X", node.Data.Index, node.Data.Index)},
 			}
 		},
 		UnmarshalRow:             nil,
 		SelectionChangedCallback: nil,
 		SetRootRowsCallBack: func(root *widget.Node[ms.NtApi]) {
-			for i := range 100 {
-				ts := ms.NtApi{
-					Address:                   0x00000002429BF7B8 + i,
-					ExceptionHandlingRoutines: "xxx",
-					Label:                     "www",
-					Notes:                     "this is notes",
-				}
-				root.AddChildByData(ts)
+			sysCall := ms.NewSysCall(0)
+			sysCall.KeServiceDescriptorTable = ms.DecodeNtApi("C:\\Windows\\System32\\ntdll.dll")
+			sysCall.KeServiceDescriptorTableShadow = ms.DecodeNtApi("C:\\Windows\\System32\\win32u.dll")
+			NtTableContainer := widget.NewContainerNode("NtTable", ms.NtApi{})
+			Win32kTableContainer := widget.NewContainerNode("Win32kTable", ms.NtApi{})
+			for _, api := range sysCall.KeServiceDescriptorTable {
+				NtTableContainer.AddChildByData(api)
 			}
+			for _, api := range sysCall.KeServiceDescriptorTableShadow {
+				Win32kTableContainer.AddChildByData(api)
+			}
+			root.AddChild(NtTableContainer)
+			root.AddChild(Win32kTableContainer)
 		},
 		JsonName:   "ms.NtApi",
 		IsDocument: false,
