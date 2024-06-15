@@ -60,9 +60,11 @@ func LayoutArk(parent unison.Paneler) unison.Paneler {
 			NtTableContainer := widget.NewContainerNode("NtTable", ms.NtApi{})
 			Win32kTableContainer := widget.NewContainerNode("Win32kTable", ms.NtApi{})
 			for _, api := range sysCall.KeServiceDescriptorTable {
+				api.Index++
 				NtTableContainer.AddChildByData(api)
 			}
 			for _, api := range sysCall.KeServiceDescriptorTableShadow {
+				api.Index++
 				Win32kTableContainer.AddChildByData(api)
 			}
 			root.AddChild(NtTableContainer)
