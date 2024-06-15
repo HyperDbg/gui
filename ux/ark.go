@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/ddkwork/app/ms"
 	"github.com/ddkwork/app/ms/hook/winver"
+	"github.com/ddkwork/golibrary/mylog"
 
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
@@ -19,7 +20,7 @@ type (
 // LayoutArk ark panel is show
 // 1 nt and win32k table,finished
 // 2 file explorer,finished
-// 3 registry editor,todo
+// 3 registry editor
 // etc.
 func LayoutArk(parent unison.Paneler) unison.Paneler {
 
@@ -31,6 +32,7 @@ func LayoutArk(parent unison.Paneler) unison.Paneler {
 	ms.NtDeviceIoControlFile()
 	//IopXxxControlFile()
 	widget.NewExplorer(parent, ".")
+	mylog.Todo("implement registry editor")
 
 	table, header := widget.NewTable(Seh{}, widget.TableContext[Seh]{
 		ContextMenuItems: nil,
