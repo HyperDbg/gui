@@ -16,3 +16,7 @@ g
 kq l 60
 */
 
+.start path hyperdbg-cli.exe
+or if you want to pass parameters:
+0: kHyperDbg> .start path "C:\my files\my file.exe" -m 1 -o out.txt
+
