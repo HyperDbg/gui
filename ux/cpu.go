@@ -11,7 +11,7 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutCpu(parent unison.Paneler) unison.Paneler {
+func LayoutCpu(name string, parent unison.Paneler) unison.Paneler {
 	////fastCallLayout := unison.NewList[ImmData]()
 	//widget.NewButton(m).SetText("goto 00007FF885007C08")
 	//"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
@@ -22,7 +22,7 @@ func LayoutCpu(parent unison.Paneler) unison.Paneler {
 	//})
 
 	TopHSplit := widget.NewHSplit(
-		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDismTable(parent)),
+		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDismTable(name, parent)),
 		widget.NewTab("reg", "todo reg", true, unison.NewPanel()),
 		0.3)
 
@@ -210,17 +210,9 @@ type FastCall struct {
 	MetaData string
 }
 
-type Disassembly struct {
-	Icon        string
-	Address     int
-	Opcode      []byte
-	Instruction string
-	Comment     string
-}
-
 func LayoutDismTable(name string, parent unison.Paneler) unison.Paneler {
-	table, header := widget.NewTable(Disassembly{}, widget.TableContext[Disassembly]{
-		ContextMenuItems: func(node *widget.Node[Disassembly]) []widget.ContextMenuItem {
+	table, header := widget.NewTable(xed.Disassembly{}, widget.TableContext[xed.Disassembly]{
+		ContextMenuItems: func(node *widget.Node[xed.Disassembly]) []widget.ContextMenuItem {
 			return []widget.ContextMenuItem{
 				{
 					Title: "goto",
@@ -229,7 +221,7 @@ func LayoutDismTable(name string, parent unison.Paneler) unison.Paneler {
 				},
 			}
 		},
-		MarshalRow: func(node *widget.Node[Disassembly]) (cells []widget.CellData) {
+		MarshalRow: func(node *widget.Node[xed.Disassembly]) (cells []widget.CellData) {
 			return []widget.CellData{
 				{Text: node.Data.Icon},
 				{Text: fmt.Sprintf("%016X", node.Data.Address)},
@@ -240,7 +232,7 @@ func LayoutDismTable(name string, parent unison.Paneler) unison.Paneler {
 		},
 		UnmarshalRow:             nil,
 		SelectionChangedCallback: nil,
-		SetRootRowsCallBack: func(root *widget.Node[Disassembly]) {
+		SetRootRowsCallBack: func(root *widget.Node[xed.Disassembly]) {
 			f := xed.ParserPe(name)
 			b := stream.NewBuffer(name).Bytes()
 			b = b[:1024]
@@ -250,16 +242,8 @@ func LayoutDismTable(name string, parent unison.Paneler) unison.Paneler {
 			} else {
 				x.Decode32()
 			}
-
-			for i := range 100 {
-				ts := Disassembly{
-					Icon:        "",
-					Address:     0x00007FF838E51030 + i,
-					Opcode:      []byte{1, 2, 3},
-					Instruction: "mov qword ptr ss:[rsp+0x18], rsi",
-					Comment:     "comment " + fmt.Sprint(i),
-				}
-				root.AddChildByData(ts)
+			for _, object := range x.AsmObjects {
+				root.AddChildByData(object)
 			}
 		},
 		JsonName:   "cpu_dism_table",

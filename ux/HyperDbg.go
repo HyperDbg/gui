@@ -114,7 +114,7 @@ func NewPage() *Page {
 	path := "D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\HPRDBGCTRL.dll"
 	p := &Page{
 		dock:   dock,
-		cpu:    widget.NewTab("cpu", "", false, LayoutCpu(dock)),
+		cpu:    widget.NewTab("cpu", "", false, LayoutCpu(path, dock)),
 		pe:     widget.NewTab("peView", "", false, LayoutPeView(path, dock)),
 		log:    widget.NewTab("log", "", false, LayoutLog(dock)),
 		notes:  widget.NewTab("notes", "", false, LayoutNotes(dock)),
