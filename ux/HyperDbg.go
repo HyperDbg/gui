@@ -112,7 +112,7 @@ func NewPage() *Page {
 		HGrab:  true,
 		VGrab:  true,
 	})
-	path := "D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\hyperdbg-cli.exe"
+	path := "bin/debug/hyperdbg-cli.exe"
 	p := &Page{
 		dock:   dock,
 		cpu:    widget.NewTab("cpu", "", false, LayoutCpu(path, dock)),
