@@ -1,8 +1,9 @@
 package ux
 
 import (
-	"ms/xed"
 	"testing"
+
+	"github.com/ddkwork/app/ms/xed"
 
 	"github.com/ddkwork/golibrary/stream"
 )
