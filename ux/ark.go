@@ -3,6 +3,7 @@ package ux
 import (
 	"fmt"
 	"github.com/ddkwork/app/ms"
+	"github.com/ddkwork/app/ms/hook/winver"
 
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
@@ -23,6 +24,12 @@ type (
 func LayoutArk(parent unison.Paneler) unison.Paneler {
 
 	ms.DecodeTableByDll()
+	println(winver.WindowVersion())
+	ms.MiGetPteAddress()
+	ms.DecodeTableByDll()
+	ms.DecodeTableByDisassembly()
+	ms.NtDeviceIoControlFile()
+	//IopXxxControlFile()
 
 	table, header := widget.NewTable(Seh{}, widget.TableContext[Seh]{
 		ContextMenuItems: nil,
