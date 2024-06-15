@@ -1,7 +1,6 @@
 package ux
 
-type Ark struct {
-}
+type Ark struct{}
 
 type (
 	NtTable     struct{}

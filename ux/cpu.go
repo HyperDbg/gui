@@ -3,8 +3,9 @@ package ux
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/ddkwork/golibrary/stream"
 	"ms/xed"
+
+	"github.com/ddkwork/golibrary/stream"
 
 	"github.com/ddkwork/app/widget"
 	"github.com/ddkwork/golibrary/mylog"
