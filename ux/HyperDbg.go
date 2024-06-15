@@ -89,17 +89,16 @@ func (p *Page) Layout(parent unison.Paneler) unison.Paneler {
 	widget.NewToolBar(parent, t.Elems()...) // make toolbar
 
 	///make tabs
-	cpuTab := widget.NewTab("cpu", "", false, LayoutCpu(p.dock))
-	p.dock.DockTo(cpuTab, nil, side.Left)
+	p.dock.DockTo(p.cpu, nil, side.Left)
 	parent.AsPanel().AddChild(p.dock)
-	LeftContainer := widget.NewDockContainer(cpuTab)
+	LeftContainer := widget.NewDockContainer(p.cpu)
 
 	mylog.Todo("set tab ico")
 	// tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
 	for _, tab := range p.Elems() {
 		LeftContainer.Stack(tab, -1)
 	}
-	LeftContainer.SetCurrentDockable(cpuTab)
+	LeftContainer.SetCurrentDockable(p.cpu)
 	return nil
 }
 
