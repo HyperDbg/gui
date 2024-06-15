@@ -287,7 +287,7 @@ func LayoutStackTable(parent unison.Paneler) unison.Paneler {
 }
 
 type Register struct {
-	RAX            int `width:"50" format:"%016X"`
+	RAX            int
 	RBX            int
 	RCX            int
 	RDX            int
