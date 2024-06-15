@@ -3,6 +3,7 @@ package ux
 import (
 	"fmt"
 	"ms/xed"
+	"strings"
 
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
@@ -43,7 +44,9 @@ func LayoutPeView(name string, parent unison.Paneler) unison.Paneler {
 			pe := xed.ParserPe(name)
 			containerNodes := widget.NewContainerNodes[PeView]([]string{Section, Import, Export})
 			for _, node := range containerNodes {
-				switch node.Type {
+				t := node.Type
+				t = strings.TrimSuffix(t, widget.ContainerKeyPostfix)
+				switch t {
 				case Section:
 					for _, section := range pe.Sections {
 						node.AddChildByData(PeView{
