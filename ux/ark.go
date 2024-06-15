@@ -13,7 +13,11 @@ type (
 	Win32kTable struct{}
 )
 
-// LayoutArk ark panel is show nt and win32k table,file explorer,registry editor,etc.
+// LayoutArk ark panel is show
+// 1 nt and win32k table,finished
+// 2 file explorer,finished
+// 3 registry editor,todo
+// etc.
 func LayoutArk(parent unison.Paneler) unison.Paneler {
 	table, header := widget.NewTable(Seh{}, widget.TableContext[Seh]{
 		ContextMenuItems: nil,
