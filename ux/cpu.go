@@ -3,6 +3,8 @@ package ux
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/ddkwork/golibrary/stream"
+	"ms/xed"
 
 	"github.com/ddkwork/app/widget"
 	"github.com/ddkwork/golibrary/mylog"
@@ -216,7 +218,7 @@ type Disassembly struct {
 	Comment     string
 }
 
-func LayoutDismTable(parent unison.Paneler) unison.Paneler {
+func LayoutDismTable(name string, parent unison.Paneler) unison.Paneler {
 	table, header := widget.NewTable(Disassembly{}, widget.TableContext[Disassembly]{
 		ContextMenuItems: func(node *widget.Node[Disassembly]) []widget.ContextMenuItem {
 			return []widget.ContextMenuItem{
@@ -239,6 +241,16 @@ func LayoutDismTable(parent unison.Paneler) unison.Paneler {
 		UnmarshalRow:             nil,
 		SelectionChangedCallback: nil,
 		SetRootRowsCallBack: func(root *widget.Node[Disassembly]) {
+			f := xed.ParserPe(name)
+			b := stream.NewBuffer(name).Bytes()
+			b = b[:1024]
+			x := xed.New(b)
+			if f.Is64 {
+				x.Decode64()
+			} else {
+				x.Decode32()
+			}
+
 			for i := range 100 {
 				ts := Disassembly{
 					Icon:        "",
