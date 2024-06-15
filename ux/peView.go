@@ -22,6 +22,9 @@ func LayoutPeView(name string, parent unison.Paneler) unison.Paneler {
 	table, header := widget.NewTable(PeView{}, widget.TableContext[PeView]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[PeView]) (cells []widget.CellData) {
+			if node.Container() {
+				node.Data.Name = node.Type
+			}
 			return []widget.CellData{
 				{Text: node.Data.Name},
 				{Text: fmt.Sprintf("%08X", node.Data.Offset)},
