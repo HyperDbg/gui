@@ -44,7 +44,7 @@ func LayoutArk(parent unison.Paneler) unison.Paneler {
 				{Text: fmt.Sprintf("%016X", node.Data.KernelBase)},
 				{Text: fmt.Sprintf("%016X", node.Data.ArgValue)},
 				{Text: node.Data.Name},
-				{Text: fmt.Sprintf("%d / %016X", node.Data.Index, node.Data.Index)},
+				{Text: fmt.Sprintf("%04d / %016X", node.Data.Index, node.Data.Index)},
 			}
 		},
 		UnmarshalRow:             nil,
