@@ -21,7 +21,7 @@ func TestXmake(t *testing.T) {
 				project := filepath.Base(filepath.Dir(path))
 				// println(project)
 				// cl /analyze /d1Aprintast *.cpp > 1.ast
-				ast := cmd.MakeArg("/analyze", "/d1Aprintast", ">", project+".ast")
+				ast := stream.MakeCommandArg("/analyze", "/d1Aprintast", ">", project+".ast")
 				println(ast)
 
 				s := stream.NewBuffer("")
