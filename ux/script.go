@@ -7,6 +7,5 @@ import (
 
 func LayoutScript(parent unison.Paneler) unison.Paneler {
 	path := "ux/send_version.scala"
-	codeEditor := widget.NewCodeEditor(parent, path)
-	return codeEditor
+	return widget.NewCodeEditor(parent, path)
 }
