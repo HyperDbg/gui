@@ -19,6 +19,8 @@ github.com/ddkwork/app v0.0.0-20240615203649-904521728d42 h1:x0LbaWi2iqZDPAyXO6+
 github.com/ddkwork/app v0.0.0-20240615203649-904521728d42/go.mod h1:Tig31QrKOMkcmKoMkBkZO2kQ1Kbe1GPugrzkwMDBgHo=
 github.com/ddkwork/app v0.0.0-20240616060912-8cfc4bd12e9c h1:F74JABh0LLmo7sNuk4b8MHiki+uQ8guP8vnCB7qQSME=
 github.com/ddkwork/app v0.0.0-20240616060912-8cfc4bd12e9c/go.mod h1:Tig31QrKOMkcmKoMkBkZO2kQ1Kbe1GPugrzkwMDBgHo=
+github.com/ddkwork/app v0.0.0-20240616062853-40514ddec053 h1:Dz7gP/pWzPVZXVjYKXwnIyu8k4Bim5ckwGsW9Avot2g=
+github.com/ddkwork/app v0.0.0-20240616062853-40514ddec053/go.mod h1:Tig31QrKOMkcmKoMkBkZO2kQ1Kbe1GPugrzkwMDBgHo=
 github.com/ddkwork/golibrary v0.0.63-0.20240615190006-ce26f19ff2e5 h1:Wp4/RRgshjEEomCYViKpAX1ISbYIjJgEQHizxV6JgUI=
 github.com/ddkwork/golibrary v0.0.63-0.20240615190006-ce26f19ff2e5/go.mod h1:MMMnWxnGz4HrmuXpXIbj/zm1wZXx4p6L4WzcFk8AFxw=
 github.com/dlclark/regexp2 v1.11.0 h1:G/nrcoOa7ZXlpoa/91N3X7mM3r8eIlMBBJZvsz/mxKI=
