@@ -1,11 +1,12 @@
 package sdk
 
 import (
+	"syscall"
+	"time"
+
 	"github.com/ddkwork/app/ms/hardwareIndo"
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream/bitfield"
-	"syscall"
-	"time"
 )
 
 type (
@@ -23,20 +24,20 @@ func (o *object) ReadIrpBasedBuffer() (ok bool) {
 		return
 	}
 	outBuffer := make([]byte, UsermodeBufferSize)
-	time.Sleep(DefaultSpeedOfReadingKernelMessages) //need seasoned ?
+	time.Sleep(DefaultSpeedOfReadingKernelMessages) // need seasoned ?
 	OperationCode := 0
 	mylog.Check(syscall.DeviceIoControl(
 		o.handle,
 		IOCTL_REGISTER_EVENT,
-		//RegisterEvent
+		// RegisterEvent
 		nil,
 		0,
 		nil,
 		0,
 		nil,
 		nil,
-	)
-	//copy()
+	))
+	// copy()
 	switch OperationCode {
 	case OPERATION_LOG_NON_IMMEDIATE_MESSAGE:
 	case OPERATION_LOG_INFO_MESSAGE:
@@ -88,6 +89,7 @@ func (o *object) DeviceName() string { return "HyperdbgHypervisorDevice" }
 func (o *object) LinkName() (*uint16, error) {
 	return syscall.UTF16PtrFromString(`\\\\.\\` + o.DeviceName())
 }
+
 func (o *object) Handle() (ok bool) {
 	if o.handle != syscall.InvalidHandle {
 		return true //?
@@ -124,13 +126,14 @@ func (o *object) LoadVmm() (ok bool) {
 		//}
 	}()
 	return true
-	//l := list.New() //InitializeListHead(&g_EventTrace);
-	//ntdll := syscall.NewLazyDLL("ntdll.dll")
-	//ntCreateThread := ntdll.NewProc("NtCreateThread")
+	// l := list.New() //InitializeListHead(&g_EventTrace);
+	// ntdll := syscall.NewLazyDLL("ntdll.dll")
+	// ntCreateThread := ntdll.NewProc("NtCreateThread")
 }
+
 func (o *object) UnLoadVmm() (ok bool) {
 	mylog.Info("", "start terminating...")
-	//remove list ?    UdUninitializeUserDebugger();
+	// remove list ?    UdUninitializeUserDebugger();
 	if !o.Handle() {
 		return
 	}
