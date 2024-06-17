@@ -23,7 +23,7 @@ func TestRemoveComment(t *testing.T) {
 			if ext == ".cpp" {
 				all := strings.ReplaceAll(path, ".cpp", ".go")
 				join := filepath.Join("tmp", all)
-				mylog.Warning(all)
+				// mylog.Warning(all)
 				name := "package main"
 				stream.WriteGoFile(join, name)
 			}
@@ -50,9 +50,19 @@ func removeCommentsFromFile(filename string) {
 		}
 		comment := "//" + filename + ":" + fmt.Sprint(i+1)
 		if line[0] != ' ' && line[len(line)-1] == '{' {
-			mylog.Success("func", line)
-		}
+			// VOID PrintBits(const UINT32 Size, const void * Ptr){
 
+			before, found := strings.CutSuffix(line, "(")
+			if found {
+				after, found2 := strings.CutPrefix(before, " ")
+				if found2 {
+					signature := "func " + after + "(){ " + comment
+					signature += "\n"
+					signature += "}"
+					mylog.Success("", signature)
+				}
+			}
+		}
 		f.WriteStringLn(line)
 	}
 	for _, returnType := range returnTypes {
