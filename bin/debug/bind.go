@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/ddkwork/golibrary/mylog"
 	"syscall"
 	"unsafe"
 )
@@ -54,61 +55,55 @@ func main() {
 }
 
 func HyperDbgVmxSupportDetection() {
-	_HyperDbgVmxSupportDetection.Call()
+	mylog.Check3(_HyperDbgVmxSupportDetection.Call())
 }
 
 func HyperDbgReadVendorString() {
 	//void HyperDbgReadVendorString(char *)
 	vendorString := "GenericIntel"
-	// 调用HyperDbgReadVendorString函数并传递字符串参数
-	ret, _, _ := _HyperDbgReadVendorString.Call(uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(vendorString))))
-
-	// 检查返回值
-	if ret != 0 {
-		// 处理错误
-	}
+	mylog.Check3(_HyperDbgReadVendorString.Call(uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(vendorString)))))
 }
 
 func HyperDbgLoadVmm() {
-	_HyperDbgLoadVmm.Call()
+	mylog.Check3(_HyperDbgLoadVmm.Call())
 }
 
 func HyperDbgUnloadVmm() {
-	_HyperDbgUnloadVmm.Call()
+	mylog.Check3(_HyperDbgUnloadVmm.Call())
 }
 
 func HyperDbgInstallVmmDriver() {
-	_HyperDbgInstallVmmDriver.Call()
+	mylog.Check3(_HyperDbgInstallVmmDriver.Call())
 }
 
 func HyperDbgUninstallVmmDriver() {
-	_HyperDbgUninstallVmmDriver.Call()
+	mylog.Check3(_HyperDbgUninstallVmmDriver.Call())
 }
 
 func HyperDbgStopVmmDriver() {
-	_HyperDbgStopVmmDriver.Call()
+	mylog.Check3(_HyperDbgStopVmmDriver.Call())
 }
 
 func HyperDbgInterpreter() {
-	_HyperDbgInterpreter.Call()
+	mylog.Check3(_HyperDbgInterpreter.Call())
 }
 
 func HyperDbgShowSignature() {
-	_HyperDbgShowSignature.Call()
+	mylog.Check3(_HyperDbgShowSignature.Call())
 }
 
 func HyperDbgSetTextMessageCallback() {
-	_HyperDbgSetTextMessageCallback.Call()
+	mylog.Check3(_HyperDbgSetTextMessageCallback.Call())
 }
 
 func HyperDbgScriptReadFileAndExecuteCommandline() {
-	_HyperDbgScriptReadFileAndExecuteCommandline.Call()
+	mylog.Check3(_HyperDbgCheckMultilineCommand.Call())
 }
 
 func HyperDbgContinuePreviousCommand() {
-	_HyperDbgContinuePreviousCommand.Call()
+	mylog.Check3(_HyperDbgCheckMultilineCommand.Call())
 }
 
 func HyperDbgCheckMultilineCommand() {
-	_HyperDbgCheckMultilineCommand.Call()
+	mylog.Check3(_HyperDbgCheckMultilineCommand.Call())
 }
