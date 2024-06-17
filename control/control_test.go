@@ -47,7 +47,7 @@ func removeCommentsFromFile(filename string) {
 			// VOID PrintBits(const UINT32 Size, const void * Ptr){
 			before, _, found := strings.Cut(line, "(")
 			if found {
-				index := strings.LastIndex(before, " ") //todo get return type
+				index := strings.LastIndex(before, " ") // todo get return type
 				if index != -1 {
 					before = before[index:]
 					before = strings.TrimSpace(before)
