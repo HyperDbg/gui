@@ -24,7 +24,6 @@ func TestRemoveComment(t *testing.T) {
 				all := strings.ReplaceAll(path, ".cpp", ".go")
 				join := filepath.Join("tmp", all)
 				mylog.Warning(all)
-				// path = strings.ReplaceAll(stream.BaseName(path), "-", "_")
 				name := "package main"
 				stream.WriteGoFile(join, name)
 			}
