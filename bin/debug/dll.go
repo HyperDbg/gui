@@ -16,41 +16,39 @@ func main() {
 	dll := syscall.MustLoadDLL(dllPath)
 
 	// Support Detection
-	HyperDbgVmxSupportDetection := dll.MustFindProc("HyperDbgVmxSupportDetection")
-	HyperDbgReadVendorString := dll.MustFindProc("HyperDbgReadVendorString")
+	_HyperDbgVmxSupportDetection := dll.MustFindProc("HyperDbgVmxSupportDetection")
+	_HyperDbgReadVendorString := dll.MustFindProc("HyperDbgReadVendorString")
 
 	// VMM Module
-	HyperDbgLoadVmm := dll.MustFindProc("HyperDbgLoadVmm")
-	HyperDbgUnloadVmm := dll.MustFindProc("HyperDbgUnloadVmm")
-	HyperDbgInstallVmmDriver := dll.MustFindProc("HyperDbgInstallVmmDriver")
-	HyperDbgUninstallVmmDriver := dll.MustFindProc("HyperDbgUninstallVmmDriver")
-	HyperDbgStopVmmDriver := dll.MustFindProc("HyperDbgStopVmmDriver")
+	_HyperDbgLoadVmm := dll.MustFindProc("HyperDbgLoadVmm")
+	_HyperDbgUnloadVmm := dll.MustFindProc("HyperDbgUnloadVmm")
+	_HyperDbgInstallVmmDriver := dll.MustFindProc("HyperDbgInstallVmmDriver")
+	_HyperDbgUninstallVmmDriver := dll.MustFindProc("HyperDbgUninstallVmmDriver")
+	_HyperDbgStopVmmDriver := dll.MustFindProc("HyperDbgStopVmmDriver")
 
 	// General imports
-	HyperDbgInterpreter := dll.MustFindProc("HyperDbgInterpreter")
-	HyperDbgShowSignature := dll.MustFindProc("HyperDbgShowSignature")
-	HyperDbgSetTextMessageCallback := dll.MustFindProc("HyperDbgSetTextMessageCallback")
-	HyperDbgScriptReadFileAndExecuteCommandline := dll.MustFindProc("HyperDbgScriptReadFileAndExecuteCommandline")
-	HyperDbgContinuePreviousCommand := dll.MustFindProc("HyperDbgContinuePreviousCommand")
-	HyperDbgCheckMultilineCommand := dll.MustFindProc("HyperDbgCheckMultilineCommand")
+	_HyperDbgInterpreter := dll.MustFindProc("HyperDbgInterpreter")
+	_HyperDbgShowSignature := dll.MustFindProc("HyperDbgShowSignature")
+	_HyperDbgSetTextMessageCallback := dll.MustFindProc("HyperDbgSetTextMessageCallback")
+	_HyperDbgScriptReadFileAndExecuteCommandline := dll.MustFindProc("HyperDbgScriptReadFileAndExecuteCommandline")
+	_HyperDbgContinuePreviousCommand := dll.MustFindProc("HyperDbgContinuePreviousCommand")
+	_HyperDbgCheckMultilineCommand := dll.MustFindProc("HyperDbgCheckMultilineCommand")
 
-	mylog.Check3(HyperDbgVmxSupportDetection.Call())
-	mylog.Check3(HyperDbgReadVendorString.Call())
+	mylog.Check3(_HyperDbgVmxSupportDetection.Call())
+	mylog.Check3(_HyperDbgReadVendorString.Call())
 
 	return
 
-	mylog.Check3(HyperDbgLoadVmm.Call())
-	mylog.Check3(HyperDbgUnloadVmm.Call())
-	mylog.Check3(HyperDbgInstallVmmDriver.Call())
-	mylog.Check3(HyperDbgUninstallVmmDriver.Call())
-	mylog.Check3(HyperDbgStopVmmDriver.Call())
+	mylog.Check3(_HyperDbgLoadVmm.Call())
+	mylog.Check3(_HyperDbgUnloadVmm.Call())
+	mylog.Check3(_HyperDbgInstallVmmDriver.Call())
+	mylog.Check3(_HyperDbgUninstallVmmDriver.Call())
+	mylog.Check3(_HyperDbgStopVmmDriver.Call())
 
-	mylog.Check3(HyperDbgInterpreter.Call())
-	mylog.Check3(HyperDbgShowSignature.Call())
-	mylog.Check3(HyperDbgSetTextMessageCallback.Call())
-	mylog.Check3(HyperDbgScriptReadFileAndExecuteCommandline.Call())
-	mylog.Check3(HyperDbgContinuePreviousCommand.Call())
-	mylog.Check3(HyperDbgCheckMultilineCommand.Call())
-
-	select {}
+	mylog.Check3(_HyperDbgInterpreter.Call())
+	mylog.Check3(_HyperDbgShowSignature.Call())
+	mylog.Check3(_HyperDbgSetTextMessageCallback.Call())
+	mylog.Check3(_HyperDbgScriptReadFileAndExecuteCommandline.Call())
+	mylog.Check3(_HyperDbgContinuePreviousCommand.Call())
+	mylog.Check3(_HyperDbgCheckMultilineCommand.Call())
 }
