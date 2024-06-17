@@ -39,7 +39,7 @@ func main() {
 
 	// todo please tell me the all function setups and fix all todo in this file
 
-	HyperDbgVmxSupportDetection()
+	mylog.Check(HyperDbgVmxSupportDetection())
 	HyperDbgReadVendorString()
 
 	// todo HyperDbgInstallVmmDriver first?
