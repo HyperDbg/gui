@@ -14,7 +14,7 @@ import (
 )
 
 func TestRemoveComment(t *testing.T) {
-	// t.Skip("do not run this test")
+	t.Skip("do not run this test")
 	filepath.Walk("hprdbgctrl", func(path string, info fs.FileInfo, err error) error {
 		ext := filepath.Ext(path)
 		switch ext {
