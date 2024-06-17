@@ -20,13 +20,6 @@ func TestRemoveComment(t *testing.T) {
 		switch ext {
 		case ".c", ".cpp", ".h":
 			removeCommentsFromFile(path)
-			if ext == ".cpp" {
-				all := strings.ReplaceAll(path, ".cpp", ".go")
-				join := filepath.Join("tmp", all)
-				// mylog.Warning(all)
-				name := "package main"
-				stream.WriteGoFile(join, name)
-			}
 		}
 		return err
 	})
@@ -51,15 +44,23 @@ func removeCommentsFromFile(filename string) {
 		comment := "//" + filename + ":" + fmt.Sprint(i+1)
 		if line[0] != ' ' && line[len(line)-1] == '{' {
 			// VOID PrintBits(const UINT32 Size, const void * Ptr){
-
-			before, found := strings.CutSuffix(line, "(")
+			before, after, found := strings.Cut(line, "(")
 			if found {
-				after, found2 := strings.CutPrefix(before, " ")
-				if found2 {
+				before, after, found = strings.Cut(before, " ")
+				if found {
 					signature := "func " + after + "(){ " + comment
 					signature += "\n"
 					signature += "}"
 					mylog.Success("", signature)
+					if filepath.Ext(filename) == ".cpp" {
+						all := strings.ReplaceAll(filename, ".cpp", ".go")
+						join := filepath.Join("tmp", all)
+						// mylog.Warning(all)
+						src := stream.NewBuffer("")
+						src.WriteStringLn("package main")
+						src.WriteStringLn(signature)
+						stream.WriteGoFile(join, src)
+					}
 				}
 			}
 		}
