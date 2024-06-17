@@ -28,8 +28,11 @@ func removeCommentsFromFile(filename string) {
 	lines := stream.NewBuffer(processedContent).ToLines()
 	f := stream.NewBuffer("")
 	for _, line := range lines {
-		if strings.TrimSpace(line) == "" {
+		switch strings.TrimSpace(line) {
+		case "":
 			line = ""
+		case "{":
+			line = "{"
 		}
 		if line == "" {
 			continue
