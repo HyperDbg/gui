@@ -4,6 +4,7 @@ import (
 	"io/fs"
 	"path/filepath"
 	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/ddkwork/golibrary/stream"
@@ -27,8 +28,7 @@ func removeCommentsFromFile(filename string) {
 	lines := stream.NewBuffer(processedContent).ToLines()
 	f := stream.NewBuffer("")
 	for _, line := range lines {
-		switch line {
-		case "    ", "        ":
+		if strings.TrimSpace(line) == "" {
 			line = ""
 		}
 		if line == "" {
