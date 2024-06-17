@@ -37,7 +37,7 @@ func main() {
 		load vmm
 	*/
 
-	//todo please tell me the all function status and fix all todo in this file
+	//todo please tell me the all function setups and fix all todo in this file
 
 	HyperDbgVmxSupportDetection()
 	HyperDbgReadVendorString()
