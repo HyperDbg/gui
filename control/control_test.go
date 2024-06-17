@@ -42,6 +42,8 @@ func removeCommentsFromFile(filename string) {
 	f.ReplaceAll("VOID\n", "VOID ")
 	f.ReplaceAll("BOOLEAN\n", "BOOLEAN ")
 	f.ReplaceAll("BOOL\n", "BOOL ")
+	f.ReplaceAll("double\n", "double ")
+	f.ReplaceAll("unsigned long long\n", "unsigned long long ")
 	f.ReplaceAll("int\n", "int ")
 	f.ReplaceAll("void\n", "void ")
 	f.ReplaceAll("\n{", "{")
