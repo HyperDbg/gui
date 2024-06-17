@@ -27,9 +27,7 @@ func extractFunctionNamesFromFile(filename string) ([]string, error) {
 
 func TestName(t *testing.T) {
 	filename := "D:\\workspace\\workspace\\branch\\gui\\control\\hprdbgctrl\\code\\common\\common.cpp"
-
 	functionNames := mylog.Check2(extractFunctionNamesFromFile(filename))
-
 	fmt.Println("Extracted function names:")
 	for _, name := range functionNames {
 		fmt.Println(name)
