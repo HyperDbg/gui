@@ -1,6 +1,7 @@
 package control
 
 import (
+	"fmt"
 	"io/fs"
 	"path/filepath"
 	"regexp"
@@ -37,7 +38,7 @@ func removeCommentsFromFile(filename string) {
 	processedContent := re.ReplaceAllString(b.String(), "")
 	lines := stream.NewBuffer(processedContent).ToLines()
 	f := stream.NewBuffer("")
-	for _, line := range lines {
+	for i, line := range lines {
 		switch strings.TrimSpace(line) {
 		case "":
 			line = ""
@@ -47,36 +48,42 @@ func removeCommentsFromFile(filename string) {
 		if line == "" {
 			continue
 		}
-
+		comment := "//" + filename + ":" + fmt.Sprint(i+1)
 		if line[0] != ' ' && line[len(line)-1] == '{' {
 			mylog.Success("func", line)
 		}
 
 		f.WriteStringLn(line)
 	}
-	f.ReplaceAll("VOID\n", "VOID ")
-	f.ReplaceAll("BOOLEAN\n", "BOOLEAN ")
-	f.ReplaceAll("BOOL\n", "BOOL ")
-	f.ReplaceAll("UINT64\n", "UINT64 ")
-	f.ReplaceAll("UINT32\n", "UINT32 ")
-	f.ReplaceAll("double\n", "double ")
-	f.ReplaceAll("BYTE\n", "BYTE ")
-	f.ReplaceAll("HANDLE\n", "HANDLE ")
-	f.ReplaceAll("char *\n", "char * ")
-	f.ReplaceAll("size_t\n", "size_t ")
-	f.ReplaceAll("std::vector<std::string>\n", "std::vector<std::string> ")
-	f.ReplaceAll("vector<char>\n", "vector<char> ")
-	f.ReplaceAll("HPRDBGCTRL_API bool\n", "HPRDBGCTRL_API bool ")
-	f.ReplaceAll("string\n", "string ")
-	f.ReplaceAll("const vector<string>\n", "const vector<string> ")
-	f.ReplaceAll("VOID *\n", "VOID * ")
-	f.ReplaceAll("DEBUGGER_OUTPUT_SOURCE_STATUS\n", "DEBUGGER_OUTPUT_SOURCE_STATUS ")
-	f.ReplaceAll("static ZyanStatus\n", "static ZyanStatus ")
-	f.ReplaceAll("unsigned long long\n", "unsigned long long ")
-	f.ReplaceAll("int\n", "int ")
-	f.ReplaceAll("void\n", "void ")
+	for _, returnType := range returnTypes {
+		f.ReplaceAll(returnType+"\n", returnType+" ")
+	}
 	f.ReplaceAll("\n{", "{")
-	f.ReplaceAll("DEBUGGER_CONDITIONAL_JUMP_STATUS\n", "DEBUGGER_CONDITIONAL_JUMP_STATUS ")
 
 	stream.WriteTruncate(filename, f.String())
+}
+
+var returnTypes = []string{
+	"VOID",
+	"BOOLEAN",
+	"BOOL",
+	"UINT64",
+	"UINT32",
+	"double",
+	"BYTE",
+	"HANDLE",
+	"char *",
+	"size_t",
+	"std::vector<std::string>",
+	"vector<char>",
+	"HPRDBGCTRL_API bool",
+	"string",
+	"const vector<string>",
+	"VOID *",
+	"DEBUGGER_OUTPUT_SOURCE_STATUS",
+	"static ZyanStatus",
+	"unsigned long long",
+	"int",
+	"void",
+	"DEBUGGER_CONDITIONAL_JUMP_STATUS",
 }
