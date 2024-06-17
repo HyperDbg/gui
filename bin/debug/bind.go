@@ -69,10 +69,12 @@ func HyperDbgVmxSupportDetection() {
 func HyperDbgReadVendorString() {
 	// void HyperDbgReadVendorString(char *)
 	vendorString := "" // todo what arg need put ?
-	r1, r2 := mylog.Check3(_HyperDbgReadVendorString.Call(uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(vendorString)))))
-	mylog.Trace("r1", r1)     // todo return 1 is true or false ?
-	mylog.Trace("r2", r2)     // return 8389720? what meaning?
-	syscall.UTF16ToString(r2) // todo what meaning?
+	u := mylog.Check2(syscall.UTF16FromString(vendorString))
+	r1, r2 := mylog.Check3(_HyperDbgReadVendorString.Call(uintptr(unsafe.Pointer(&u))))
+	mylog.Trace("r1", r1)
+
+	vendorString = syscall.UTF16ToString((*[32]uint16)(unsafe.Pointer(r2))[:])
+	mylog.Trace("vendorString", vendorString) // todo not working
 }
 
 func HyperDbgLoadVmm() {
