@@ -92,7 +92,7 @@ func HyperDbgStopVmmDriver() {
 	mylog.Check3(_HyperDbgStopVmmDriver.Call())
 }
 
-func HyperDbgInterpreter() {
+func HyperDbgInterpreter() { //todo set arg
 	mylog.Check3(_HyperDbgInterpreter.Call())
 }
 
@@ -104,7 +104,7 @@ func HyperDbgSetTextMessageCallback() {
 	mylog.Check3(_HyperDbgSetTextMessageCallback.Call())
 }
 
-func HyperDbgScriptReadFileAndExecuteCommandline() {
+func HyperDbgScriptReadFileAndExecuteCommandline() { //todo set arg
 	mylog.Check3(_HyperDbgCheckMultilineCommand.Call())
 }
 
@@ -112,6 +112,6 @@ func HyperDbgContinuePreviousCommand() {
 	mylog.Check3(_HyperDbgCheckMultilineCommand.Call())
 }
 
-func HyperDbgCheckMultilineCommand() {
+func HyperDbgCheckMultilineCommand() { //todo set arg
 	mylog.Check3(_HyperDbgCheckMultilineCommand.Call())
 }
