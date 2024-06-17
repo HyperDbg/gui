@@ -39,6 +39,8 @@ func main() {
 	HyperDbgVmxSupportDetection()
 	HyperDbgReadVendorString()
 
+	//todo HyperDbgInstallVmmDriver first?
+
 	return
 
 	HyperDbgLoadVmm()
