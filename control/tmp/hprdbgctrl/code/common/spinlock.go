@@ -1,6 +1,6 @@
 package control
 
-func SpinlockTryLock() { // hprdbgctrl\code\common\spinlock.cpp:3
+func SpinlockTryLock() bool { // hprdbgctrl\code\common\spinlock.cpp:3
 }
 
 func SpinlockLock() { // hprdbgctrl\code\common\spinlock.cpp:6

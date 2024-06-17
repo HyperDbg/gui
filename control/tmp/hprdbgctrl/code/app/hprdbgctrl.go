@@ -9,23 +9,23 @@ func ShowMessages() { // hprdbgctrl\code\app\hprdbgctrl.cpp:20
 func ReadIrpBasedBuffer() { // hprdbgctrl\code\app\hprdbgctrl.cpp:50
 }
 
-func HyperDbgInstallVmmDriver() { // hprdbgctrl\code\app\hprdbgctrl.cpp:203
+func HyperDbgInstallVmmDriver() int { // hprdbgctrl\code\app\hprdbgctrl.cpp:203
 }
 
-func HyperDbgStopDriver() { // hprdbgctrl\code\app\hprdbgctrl.cpp:214
+func HyperDbgStopDriver() int { // hprdbgctrl\code\app\hprdbgctrl.cpp:214
 }
 
-func HyperDbgStopVmmDriver() { // hprdbgctrl\code\app\hprdbgctrl.cpp:222
+func HyperDbgStopVmmDriver() int { // hprdbgctrl\code\app\hprdbgctrl.cpp:222
 }
 
-func HyperDbgUninstallDriver() { // hprdbgctrl\code\app\hprdbgctrl.cpp:225
+func HyperDbgUninstallDriver() int { // hprdbgctrl\code\app\hprdbgctrl.cpp:225
 }
 
-func HyperDbgUninstallVmmDriver() { // hprdbgctrl\code\app\hprdbgctrl.cpp:233
+func HyperDbgUninstallVmmDriver() int { // hprdbgctrl\code\app\hprdbgctrl.cpp:233
 }
 
-func HyperDbgLoadVmm() { // hprdbgctrl\code\app\hprdbgctrl.cpp:236
+func HyperDbgLoadVmm() int { // hprdbgctrl\code\app\hprdbgctrl.cpp:236
 }
 
-func HyperDbgUnloadVmm() { // hprdbgctrl\code\app\hprdbgctrl.cpp:293
+func HyperDbgUnloadVmm() int { // hprdbgctrl\code\app\hprdbgctrl.cpp:293
 }

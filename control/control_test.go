@@ -56,7 +56,7 @@ func removeCommentsFromFile(filename string) {
 					before = before[index:]
 					before = strings.TrimSpace(before)
 					comment := "//" + filename + ":" + fmt.Sprint(i+1)
-					signature := "func " + before + "(){ " + comment
+					signature := "func " + before + "()" + returnType + "{ " + comment
 					signature += "\n"
 					signature += "}"
 					mylog.Success("", signature)
