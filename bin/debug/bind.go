@@ -2,6 +2,7 @@ package main
 
 import (
 	"syscall"
+	"unsafe"
 )
 
 var (
@@ -57,7 +58,15 @@ func HyperDbgVmxSupportDetection() {
 }
 
 func HyperDbgReadVendorString() {
-	_HyperDbgReadVendorString.Call()
+	//void HyperDbgReadVendorString(char *)
+	vendorString := "YourVendorString"
+	// 调用HyperDbgReadVendorString函数并传递字符串参数
+	ret, _, _ := _HyperDbgReadVendorString.Call(uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(vendorString))))
+
+	// 检查返回值
+	if ret != 0 {
+		// 处理错误
+	}
 }
 
 func HyperDbgLoadVmm() {
