@@ -16,6 +16,11 @@ func TestRemoveComment(t *testing.T) {
 		switch ext {
 		case ".c", ".cpp", ".h":
 			removeCommentsFromFile(path)
+			if ext == ".cpp" {
+				all := strings.ReplaceAll(path, ".cpp", ".go")
+				join := filepath.Join("tmp", all)
+				stream.BaseName(path)
+			}
 		}
 		return err
 	})
