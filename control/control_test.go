@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ddkwork/golibrary/mylog"
+
 	"github.com/ddkwork/golibrary/stream"
 )
 
@@ -19,8 +21,9 @@ func TestRemoveComment(t *testing.T) {
 			if ext == ".cpp" {
 				all := strings.ReplaceAll(path, ".cpp", ".go")
 				join := filepath.Join("tmp", all)
-				path = strings.ReplaceAll(stream.BaseName(path), "-", "_")
-				name := "package " + path
+				mylog.Warning(all)
+				// path = strings.ReplaceAll(stream.BaseName(path), "-", "_")
+				name := "package main"
 				stream.WriteGoFile(join, name)
 			}
 		}
