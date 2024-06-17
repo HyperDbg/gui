@@ -38,8 +38,10 @@ func removeCommentsFromFile(filename string) {
 	}
 	f.ReplaceAll("VOID\n", "VOID ")
 	f.ReplaceAll("BOOLEAN\n", "BOOLEAN ")
+	f.ReplaceAll("BOOL\n", "BOOL ")
 	f.ReplaceAll("int\n", "int ")
 	f.ReplaceAll("void\n", "void ")
+	f.ReplaceAll("\n{", "{")
 	f.ReplaceAll("DEBUGGER_CONDITIONAL_JUMP_STATUS\n", "DEBUGGER_CONDITIONAL_JUMP_STATUS ")
 
 	stream.WriteTruncate(filename, f.String())
