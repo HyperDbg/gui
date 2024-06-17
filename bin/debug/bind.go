@@ -37,12 +37,12 @@ func main() {
 		load vmm
 	*/
 
-	//todo please tell me the all function setups and fix all todo in this file
+	// todo please tell me the all function setups and fix all todo in this file
 
 	HyperDbgVmxSupportDetection()
 	HyperDbgReadVendorString()
 
-	//todo HyperDbgInstallVmmDriver first?
+	// todo HyperDbgInstallVmmDriver first?
 
 	return
 
@@ -62,14 +62,17 @@ func main() {
 
 func HyperDbgVmxSupportDetection() {
 	r1, r2 := mylog.Check3(_HyperDbgVmxSupportDetection.Call())
-	mylog.Trace("r1", r1) //todo return 1 is true or false ?
-	mylog.Trace("r2", r2) //return 8389720? what meaning?
+	mylog.Trace("r1", r1) // todo return 1 is true or false ?
+	mylog.Trace("r2", r2) // return 8389720? what meaning?
 }
 
 func HyperDbgReadVendorString() {
 	// void HyperDbgReadVendorString(char *)
-	vendorString := "GenericIntel" // todo what arg need put ?
-	mylog.Check3(_HyperDbgReadVendorString.Call(uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(vendorString)))))
+	vendorString := "" // todo what arg need put ?
+	r1, r2 := mylog.Check3(_HyperDbgReadVendorString.Call(uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(vendorString)))))
+	mylog.Trace("r1", r1)     // todo return 1 is true or false ?
+	mylog.Trace("r2", r2)     // return 8389720? what meaning?
+	syscall.UTF16ToString(r2) // todo what meaning?
 }
 
 func HyperDbgLoadVmm() {
@@ -92,7 +95,7 @@ func HyperDbgStopVmmDriver() {
 	mylog.Check3(_HyperDbgStopVmmDriver.Call())
 }
 
-func HyperDbgInterpreter() { //todo set arg
+func HyperDbgInterpreter() { // todo set arg
 	mylog.Check3(_HyperDbgInterpreter.Call())
 }
 
@@ -104,7 +107,7 @@ func HyperDbgSetTextMessageCallback() {
 	mylog.Check3(_HyperDbgSetTextMessageCallback.Call())
 }
 
-func HyperDbgScriptReadFileAndExecuteCommandline() { //todo set arg
+func HyperDbgScriptReadFileAndExecuteCommandline() { // todo set arg
 	mylog.Check3(_HyperDbgCheckMultilineCommand.Call())
 }
 
@@ -112,6 +115,6 @@ func HyperDbgContinuePreviousCommand() {
 	mylog.Check3(_HyperDbgCheckMultilineCommand.Call())
 }
 
-func HyperDbgCheckMultilineCommand() { //todo set arg
+func HyperDbgCheckMultilineCommand() { // todo set arg
 	mylog.Check3(_HyperDbgCheckMultilineCommand.Call())
 }
