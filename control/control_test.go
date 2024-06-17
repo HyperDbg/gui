@@ -31,6 +31,8 @@ func removeCommentsFromFile(filename string) {
 	processedContent := re.ReplaceAllString(b.String(), "")
 	lines := stream.NewBuffer(processedContent).ToLines()
 	f := stream.NewBuffer("")
+	src := stream.NewBuffer("")
+	src.WriteStringLn("package control")
 	for i, line := range lines {
 		switch strings.TrimSpace(line) {
 		case "":
@@ -52,15 +54,7 @@ func removeCommentsFromFile(filename string) {
 					signature += "\n"
 					signature += "}"
 					mylog.Success("", signature)
-					if filepath.Ext(filename) == ".cpp" { //todo bug
-						all := strings.ReplaceAll(filename, ".cpp", ".go")
-						join := filepath.Join("tmp", all)
-						// mylog.Warning(all)
-						src := stream.NewBuffer("")
-						src.WriteStringLn("package main")
-						src.WriteStringLn(signature)
-						stream.WriteGoFile(join, src)
-					}
+					src.WriteStringLn(signature)
 				}
 			}
 		}
@@ -70,8 +64,14 @@ func removeCommentsFromFile(filename string) {
 		f.ReplaceAll(returnType+"\n", returnType+" ")
 	}
 	f.ReplaceAll("\n{", "{")
-
 	stream.WriteTruncate(filename, f.String())
+
+	if filepath.Ext(filename) == ".cpp" {
+		all := strings.ReplaceAll(filename, ".cpp", ".go")
+		join := filepath.Join("tmp", all)
+		// mylog.Warning(all)
+		stream.WriteGoFile(join, src)
+	}
 }
 
 var returnTypes = []string{
