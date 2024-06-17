@@ -49,6 +49,10 @@ func removeCommentsFromFile(filename string) {
 			if found {
 				index := strings.LastIndex(before, " ") // todo get return type
 				if index != -1 {
+
+					returnType := getReturnType(before[:index])
+					println(returnType)
+
 					before = before[index:]
 					before = strings.TrimSpace(before)
 					comment := "//" + filename + ":" + fmt.Sprint(i+1)
@@ -90,6 +94,7 @@ var returnTypes = []string{
 	"std::vector<std::string>",
 	"vector<char>",
 	"HPRDBGCTRL_API bool",
+	"HPRDBGCTRL_API int",
 	"string",
 	"const vector<string>",
 	"VOID *",
@@ -105,7 +110,7 @@ func getReturnType(pre string) string {
 	pre = strings.TrimSuffix(pre, " ")
 	switch pre {
 	case "VOID":
-		return "void"
+		return ""
 	case "BOOLEAN":
 		return "bool"
 	case "BOOL":
@@ -119,35 +124,37 @@ func getReturnType(pre string) string {
 	case "BYTE":
 		return "byte"
 	case "HANDLE":
-		return "handle"
+		return "syscall.Handle" // todo test
 	case "char *":
 		return "string"
 	case "size_t":
 		return "int"
 	case "std::vector<std::string>":
-		return "[]string"
+		return "string"
 	case "vector<char>":
-		return "[]byte"
+		return "byte"
 	case "HPRDBGCTRL_API bool":
 		return "bool"
+	case "HPRDBGCTRL_API int":
+		return "int"
 	case "string":
 		return "string"
 	case "const vector<string>":
-		return "[]string"
+		return "string"
 	case "VOID *":
-		return "unsafe.Pointer"
+		return ""
 	case "DEBUGGER_OUTPUT_SOURCE_STATUS":
-		return "debugger.OutputSourceStatus"
+		return "int"
 	case "static ZyanStatus":
-		return "zyan.Status"
+		return "int"
 	case "unsigned long long":
 		return "uint64"
 	case "int":
 		return "int"
 	case "void":
-		return "void"
+		return ""
 	case "DEBUGGER_CONDITIONAL_JUMP_STATUS":
-		return "debugger.ConditionalJumpStatus"
+		return "int"
 	default:
 		return ""
 	}
