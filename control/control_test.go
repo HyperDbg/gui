@@ -13,8 +13,7 @@ import (
 )
 
 func TestRemoveComment(t *testing.T) {
-	t.Skip("do not run this test")
-	return
+	// t.Skip("do not run this test")
 	filepath.Walk("hprdbgctrl", func(path string, info fs.FileInfo, err error) error {
 		ext := filepath.Ext(path)
 		switch ext {
@@ -48,6 +47,11 @@ func removeCommentsFromFile(filename string) {
 		if line == "" {
 			continue
 		}
+
+		if line[0] != ' ' && line[len(line)-1] == '{' {
+			mylog.Success("func", line)
+		}
+
 		f.WriteStringLn(line)
 	}
 	f.ReplaceAll("VOID\n", "VOID ")
