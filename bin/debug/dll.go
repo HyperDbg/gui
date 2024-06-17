@@ -7,8 +7,6 @@ import (
 )
 
 func main() {
-	mylog.Todo("merge bin into sdk dir")
-
 	/*
 		.connect local  is HyperDbgInstallVmmDriver ???
 		load vmm
