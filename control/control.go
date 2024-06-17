@@ -62,7 +62,7 @@ func HyperDbgUninstallVmmDriver() {
 func HyperDbgStopVmmDriver() {
 }
 
-func HyperDbgInterpreter() { // todo set arg
+func HyperDbgInterpreter() {
 }
 
 func HyperDbgShowSignature() {
@@ -71,11 +71,11 @@ func HyperDbgShowSignature() {
 func HyperDbgSetTextMessageCallback() {
 }
 
-func HyperDbgScriptReadFileAndExecuteCommandline() { // todo set arg
+func HyperDbgScriptReadFileAndExecuteCommandline() {
 }
 
 func HyperDbgContinuePreviousCommand() {
 }
 
-func HyperDbgCheckMultilineCommand() { // todo set arg
+func HyperDbgCheckMultilineCommand() {
 }

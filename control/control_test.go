@@ -27,11 +27,20 @@ func removeCommentsFromFile(filename string) {
 	lines := stream.NewBuffer(processedContent).ToLines()
 	f := stream.NewBuffer("")
 	for _, line := range lines {
+		switch line {
+		case "    ", "         ":
+			line = ""
+		}
 		if line == "" {
 			continue
 		}
 		f.WriteStringLn(line)
 	}
 	f.ReplaceAll("VOID\n", "VOID ")
+	f.ReplaceAll("BOOLEAN\n", "BOOLEAN ")
+	f.ReplaceAll("int\n", "int ")
+	f.ReplaceAll("void\n", "void ")
+	f.ReplaceAll("DEBUGGER_CONDITIONAL_JUMP_STATUS\n", "DEBUGGER_CONDITIONAL_JUMP_STATUS ")
+
 	stream.WriteTruncate(filename, f.String())
 }
