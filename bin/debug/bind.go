@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"syscall"
+	"unicode/utf8"
 	"unsafe"
 
 	"github.com/ddkwork/golibrary/mylog"
@@ -43,17 +45,17 @@ func main() {
 	HyperDbgReadVendorString()
 
 	// todo HyperDbgInstallVmmDriver first?
-
-	return
-
+	HyperDbgShowSignature()
 	HyperDbgLoadVmm()
 	HyperDbgUnloadVmm()
+
+	return
 	HyperDbgInstallVmmDriver()
 	HyperDbgUninstallVmmDriver()
 	HyperDbgStopVmmDriver()
 
 	HyperDbgInterpreter()
-	HyperDbgShowSignature()
+
 	HyperDbgSetTextMessageCallback()
 	HyperDbgScriptReadFileAndExecuteCommandline()
 	HyperDbgContinuePreviousCommand()
@@ -62,7 +64,7 @@ func main() {
 
 func HyperDbgVmxSupportDetection() bool {
 	r1, r2 := mylog.Check3(_HyperDbgVmxSupportDetection.Call())
-	mylog.Trace("r2", r2) // return 8389720? what meaning?
+	mylog.Trace("r2", r2) // return 12191304? what meaning?
 	return r1 == 1
 }
 
@@ -73,7 +75,14 @@ func HyperDbgReadVendorString() {
 	r1, r2 := mylog.Check3(_HyperDbgReadVendorString.Call(uintptr(unsafe.Pointer(&u))))
 	mylog.Trace("r1", r1)
 	mylog.Trace("r2 meta", r2)
-	vendorString = syscall.UTF16ToString((*[32]uint16)(unsafe.Pointer(r2))[:])
+
+	var buf [utf8.UTFMax]byte
+	n := utf8.EncodeRune(buf[:], rune(r2))
+	str := string(buf[:n])
+	fmt.Println(str)
+
+	r := rune(r2)
+	vendorString = string(r)
 	mylog.Trace("vendorString", vendorString) // todo not working
 }
 
