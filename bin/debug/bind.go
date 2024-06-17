@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/ddkwork/golibrary/mylog"
 	"syscall"
 	"unsafe"
+
+	"github.com/ddkwork/golibrary/mylog"
 )
 
 var (
@@ -55,12 +56,14 @@ func main() {
 }
 
 func HyperDbgVmxSupportDetection() {
-	mylog.Check3(_HyperDbgVmxSupportDetection.Call())
+	r1, r2 := mylog.Check3(_HyperDbgVmxSupportDetection.Call())
+	mylog.Trace("r1", r1) //todo return 1 is true or false ?
+	mylog.Trace("r2", r2) //return 8389720? what meaning?
 }
 
 func HyperDbgReadVendorString() {
-	//void HyperDbgReadVendorString(char *)
-	vendorString := "GenericIntel" //todo what arg need put ?
+	// void HyperDbgReadVendorString(char *)
+	vendorString := "GenericIntel" // todo what arg need put ?
 	mylog.Check3(_HyperDbgReadVendorString.Call(uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(vendorString)))))
 }
 
