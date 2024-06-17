@@ -60,10 +60,10 @@ func main() {
 	HyperDbgCheckMultilineCommand()
 }
 
-func HyperDbgVmxSupportDetection() {
+func HyperDbgVmxSupportDetection() bool {
 	r1, r2 := mylog.Check3(_HyperDbgVmxSupportDetection.Call())
-	mylog.Trace("r1", r1) // todo return 1 is true or false ?
 	mylog.Trace("r2", r2) // return 8389720? what meaning?
+	return r1 == 1
 }
 
 func HyperDbgReadVendorString() {
