@@ -1,2 +1,2 @@
-go get github.com/ddkwork/app@40514ddec0538bf72d2b9b198a4e6c7995491959
+go get github.com/ddkwork/app@c98b03ddf42cbf08d26fd67c2499c9a2d6e4f4a3
 go get github.com/ddkwork/golibrary@ce26f19ff2e5888064e5b1dd0ee6537e69da6c7a
