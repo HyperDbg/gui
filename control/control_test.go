@@ -51,7 +51,7 @@ func removeCommentsFromFile(filename string) {
 				if index != -1 {
 					before = before[index:]
 					before = strings.TrimSpace(before)
-					comment := "//" + filename + ":" + fmt.Sprint(i+1) // todo bug not add to every func
+					comment := "//" + filename + ":" + fmt.Sprint(i+1)
 					signature := "func " + before + "(){ " + comment
 					signature += "\n"
 					signature += "}"
