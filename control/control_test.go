@@ -43,13 +43,13 @@ func removeCommentsFromFile(filename string) {
 		if line == "" {
 			continue
 		}
-		comment := "//" + filename + ":" + fmt.Sprint(i+1)
 		if line[0] != ' ' && line[len(line)-1] == '{' {
 			// VOID PrintBits(const UINT32 Size, const void * Ptr){
 			before, after, found := strings.Cut(line, "(")
 			if found {
-				before, after, found = strings.Cut(before, " ")
+				before, after, found = strings.Cut(before, " ") //todo bug need cut last space
 				if found {
+					comment := "//" + filename + ":" + fmt.Sprint(i+1) //todo bug not add to every func
 					signature := "func " + after + "(){ " + comment
 					signature += "\n"
 					signature += "}"
