@@ -52,7 +52,7 @@ func removeCommentsFromFile(filename string) {
 					signature += "\n"
 					signature += "}"
 					mylog.Success("", signature)
-					if filepath.Ext(filename) == ".cpp" {
+					if filepath.Ext(filename) == ".cpp" { //todo bug
 						all := strings.ReplaceAll(filename, ".cpp", ".go")
 						join := filepath.Join("tmp", all)
 						// mylog.Warning(all)
