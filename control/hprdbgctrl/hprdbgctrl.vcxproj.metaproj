@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <MSBuildFileVersion>17.10.4.21802</MSBuildFileVersion>
+    <MSBuildSemanticVersion>17.10.4+10fbfbf2e</MSBuildSemanticVersion>
+    <MSBuildExtensionsPath32>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild</MSBuildExtensionsPath32>
+    <MSBuildExtensionsPath>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild</MSBuildExtensionsPath>
+    <MSBuildToolsPath32>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin</MSBuildToolsPath32>
+    <MSBuildToolsPath64>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\amd64</MSBuildToolsPath64>
+    <MSBuildSDKsPath>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Sdks</MSBuildSDKsPath>
+    <FrameworkSDKRoot />
+    <MSBuildRuntimeVersion>4.0.30319</MSBuildRuntimeVersion>
+    <MSBuildFrameworkToolsPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\</MSBuildFrameworkToolsPath>
+    <MSBuildFrameworkToolsPath32>C:\Windows\Microsoft.NET\Framework\v4.0.30319\</MSBuildFrameworkToolsPath32>
+    <MSBuildFrameworkToolsPath64>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\</MSBuildFrameworkToolsPath64>
+    <MSBuildFrameworkToolsPathArm64>C:\Windows\Microsoft.NET\FrameworkArm64\v4.0.30319\</MSBuildFrameworkToolsPathArm64>
+    <MSBuildFrameworkToolsRoot>C:\Windows\Microsoft.NET\Framework\</MSBuildFrameworkToolsRoot>
+    <SDK35ToolsPath />
+    <SDK40ToolsPath>C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8.1 Tools\</SDK40ToolsPath>
+    <WindowsSDK80Path />
+    <VsInstallRoot>C:\Program Files\Microsoft Visual Studio\2022\Enterprise</VsInstallRoot>
+    <MSBuildToolsRoot>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild</MSBuildToolsRoot>
+    <RoslynTargetsPath>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\Roslyn</RoslynTargetsPath>
+    <VCTargetsPath>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170\</VCTargetsPath>
+    <VCTargetsPath14>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\</VCTargetsPath14>
+    <VCTargetsPath12>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\</VCTargetsPath12>
+    <VCTargetsPath11>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\</VCTargetsPath11>
+    <VCTargetsPath10>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\</VCTargetsPath10>
+    <AndroidTargetsPath>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\MDD\Android\V150\</AndroidTargetsPath>
+    <iOSTargetsPath>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\MDD\iOS\V150\</iOSTargetsPath>
+    <_DirectorySolutionPropsFile>Directory.Solution.props</_DirectorySolutionPropsFile>
+    <_DirectorySolutionPropsBasePath />
+    <AspNetConfiguration>Debug</AspNetConfiguration>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <NuGetRestoreTargets>C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\..\Common7\IDE\CommonExtensions\Microsoft\NuGet\NuGet.targets</NuGetRestoreTargets>
+    <IsRestoreTargetsFileLoaded>true</IsRestoreTargetsFileLoaded>
+    <RestoreTaskAssemblyFile>NuGet.Build.Tasks.dll</RestoreTaskAssemblyFile>
+    <HideWarningsAndErrors>false</HideWarningsAndErrors>
+    <RestoreRecursive>true</RestoreRecursive>
+    <RestoreUseSkipNonexistentTargets>true</RestoreUseSkipNonexistentTargets>
+    <ValidateRuntimeIdentifierCompatibility>false</ValidateRuntimeIdentifierCompatibility>
+    <RestoreContinueOnError>WarnAndContinue</RestoreContinueOnError>
+    <RestoreBuildInParallel>true</RestoreBuildInParallel>
+    <_RestoreSolutionFileUsed>true</_RestoreSolutionFileUsed>
+    <NuGetInteractive />
+    <PackageDownloadSupported>true</PackageDownloadSupported>
+    <GetReferenceNearestTargetFrameworkTaskSupportsTargetPlatformParameter>true</GetReferenceNearestTargetFrameworkTaskSupportsTargetPlatformParameter>
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
+    <NuGetAuditMode>direct</NuGetAuditMode>
+    <_GenerateRestoreGraphProjectEntryInputProperties>
+      ExcludeRestorePackageImports=true;
+      _RestoreSolutionFileUsed=true;
+      SolutionDir=D:\fork\HyperDbg\hyperdbg\;
+      SolutionName=hyperdbg;
+      SolutionFileName=hyperdbg.sln;
+      SolutionPath=D:\fork\HyperDbg\hyperdbg\hyperdbg.sln;
+      SolutionExt=.sln;
+    </_GenerateRestoreGraphProjectEntryInputProperties>
+    <_DirectorySolutionTargetsFile>Directory.Solution.targets</_DirectorySolutionTargetsFile>
+    <_DirectorySolutionTargetsBasePath />
+    <MSBuildAllProjects>D:\fork\HyperDbg\hyperdbg\hyperdbg.sln.metaproj</MSBuildAllProjects>
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup>
+    <ProjectReference Include="D:\fork\HyperDbg\hyperdbg\hprdbgkd\hprdbgkd.vcxproj.metaproj">
+      <AdditionalProperties>Configuration=Debug; Platform=x64</AdditionalProperties>
+      <Platform>x64</Platform>
+      <Configuration>debug</Configuration>
+      <ToolsVersion>Current</ToolsVersion>
+      <SkipNonexistentProjects>Build</SkipNonexistentProjects>
+    </ProjectReference>
+    <ProjectReference Include="D:\fork\HyperDbg\hyperdbg\script-engine\script-engine.vcxproj.metaproj">
+      <AdditionalProperties>Configuration=Debug; Platform=x64</AdditionalProperties>
+      <Platform>x64</Platform>
+      <Configuration>debug</Configuration>
+      <ToolsVersion>Current</ToolsVersion>
+      <SkipNonexistentProjects>Build</SkipNonexistentProjects>
+    </ProjectReference>
+  </ItemGroup>
+  <Target Name="Clean">
+    <MSBuild BuildInParallel="True" Projects="@(ProjectReference-&gt;Reverse())" Targets="Clean" Properties="BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+    <MSBuild ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="True" Projects="D:\fork\HyperDbg\hyperdbg\hprdbgctrl\hprdbgctrl.vcxproj" Targets="Clean" Properties="Configuration=debug; Platform=x64;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="Build" Outputs="@(hprdbgctrlBuildOutput)">
+    <MSBuild BuildInParallel="True" Projects="@(ProjectReference)" Properties="BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+    <MSBuild ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="True" Projects="D:\fork\HyperDbg\hyperdbg\hprdbgctrl\hprdbgctrl.vcxproj" Properties="Configuration=debug; Platform=x64;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="hprdbgctrlBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="Rebuild" Outputs="@(hprdbgctrlBuildOutput)">
+    <MSBuild BuildInParallel="True" Projects="@(ProjectReference)" Targets="Rebuild" Properties="BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+    <MSBuild ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="True" Projects="D:\fork\HyperDbg\hyperdbg\hprdbgctrl\hprdbgctrl.vcxproj" Targets="Rebuild" Properties="Configuration=debug; Platform=x64;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="hprdbgctrlBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="Publish">
+    <MSBuild BuildInParallel="True" Projects="@(ProjectReference)" Targets="Publish" Properties="BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+    <MSBuild ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="True" Projects="D:\fork\HyperDbg\hyperdbg\hprdbgctrl\hprdbgctrl.vcxproj" Targets="Publish" Properties="Configuration=debug; Platform=x64;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+</Project>
