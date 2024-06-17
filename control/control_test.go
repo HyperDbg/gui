@@ -100,3 +100,55 @@ var returnTypes = []string{
 	"void",
 	"DEBUGGER_CONDITIONAL_JUMP_STATUS",
 }
+
+func getReturnType(pre string) string {
+	pre = strings.TrimSuffix(pre, " ")
+	switch pre {
+	case "VOID":
+		return "void"
+	case "BOOLEAN":
+		return "bool"
+	case "BOOL":
+		return "bool"
+	case "UINT64":
+		return "uint64"
+	case "UINT32":
+		return "uint32"
+	case "double":
+		return "float64"
+	case "BYTE":
+		return "byte"
+	case "HANDLE":
+		return "handle"
+	case "char *":
+		return "string"
+	case "size_t":
+		return "int"
+	case "std::vector<std::string>":
+		return "[]string"
+	case "vector<char>":
+		return "[]byte"
+	case "HPRDBGCTRL_API bool":
+		return "bool"
+	case "string":
+		return "string"
+	case "const vector<string>":
+		return "[]string"
+	case "VOID *":
+		return "unsafe.Pointer"
+	case "DEBUGGER_OUTPUT_SOURCE_STATUS":
+		return "debugger.OutputSourceStatus"
+	case "static ZyanStatus":
+		return "zyan.Status"
+	case "unsigned long long":
+		return "uint64"
+	case "int":
+		return "int"
+	case "void":
+		return "void"
+	case "DEBUGGER_CONDITIONAL_JUMP_STATUS":
+		return "debugger.ConditionalJumpStatus"
+	default:
+		return ""
+	}
+}
