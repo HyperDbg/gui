@@ -72,7 +72,7 @@ func HyperDbgReadVendorString() {
 	u := mylog.Check2(syscall.UTF16FromString(vendorString))
 	r1, r2 := mylog.Check3(_HyperDbgReadVendorString.Call(uintptr(unsafe.Pointer(&u))))
 	mylog.Trace("r1", r1)
-
+	mylog.Trace("r2 meta", r2)
 	vendorString = syscall.UTF16ToString((*[32]uint16)(unsafe.Pointer(r2))[:])
 	mylog.Trace("vendorString", vendorString) // todo not working
 }
