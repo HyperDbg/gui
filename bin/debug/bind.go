@@ -59,7 +59,7 @@ func HyperDbgVmxSupportDetection() {
 
 func HyperDbgReadVendorString() {
 	//void HyperDbgReadVendorString(char *)
-	vendorString := "YourVendorString"
+	vendorString := "GenericIntel"
 	// 调用HyperDbgReadVendorString函数并传递字符串参数
 	ret, _, _ := _HyperDbgReadVendorString.Call(uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(vendorString))))
 
