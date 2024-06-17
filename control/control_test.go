@@ -19,7 +19,9 @@ func TestRemoveComment(t *testing.T) {
 			if ext == ".cpp" {
 				all := strings.ReplaceAll(path, ".cpp", ".go")
 				join := filepath.Join("tmp", all)
-				stream.BaseName(path)
+				path = strings.ReplaceAll(stream.BaseName(path), "-", "_")
+				name := "package " + path
+				stream.WriteGoFile(join, name)
 			}
 		}
 		return err
