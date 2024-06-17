@@ -36,6 +36,9 @@ func main() {
 		.connect local  is HyperDbgInstallVmmDriver ???
 		load vmm
 	*/
+
+	//todo please tell me the all function status and fix all todo in this file
+
 	HyperDbgVmxSupportDetection()
 	HyperDbgReadVendorString()
 
