@@ -60,7 +60,7 @@ func HyperDbgVmxSupportDetection() {
 
 func HyperDbgReadVendorString() {
 	//void HyperDbgReadVendorString(char *)
-	vendorString := "GenericIntel"
+	vendorString := "GenericIntel" //todo what arg need put ?
 	mylog.Check3(_HyperDbgReadVendorString.Call(uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(vendorString)))))
 }
 
