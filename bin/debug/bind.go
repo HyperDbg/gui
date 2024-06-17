@@ -2,8 +2,6 @@ package main
 
 import (
 	"syscall"
-
-	"github.com/ddkwork/golibrary/mylog"
 )
 
 var (
@@ -35,24 +33,23 @@ func main() {
 		.connect local  is HyperDbgInstallVmmDriver ???
 		load vmm
 	*/
-
-	mylog.Check3(_HyperDbgVmxSupportDetection.Call())
-	mylog.Check3(_HyperDbgReadVendorString.Call())
+	HyperDbgVmxSupportDetection()
+	HyperDbgReadVendorString()
 
 	return
 
-	mylog.Check3(_HyperDbgLoadVmm.Call())
-	mylog.Check3(_HyperDbgUnloadVmm.Call())
-	mylog.Check3(_HyperDbgInstallVmmDriver.Call())
-	mylog.Check3(_HyperDbgUninstallVmmDriver.Call())
-	mylog.Check3(_HyperDbgStopVmmDriver.Call())
+	HyperDbgLoadVmm()
+	HyperDbgUnloadVmm()
+	HyperDbgInstallVmmDriver()
+	HyperDbgUninstallVmmDriver()
+	HyperDbgStopVmmDriver()
 
-	mylog.Check3(_HyperDbgInterpreter.Call())
-	mylog.Check3(_HyperDbgShowSignature.Call())
-	mylog.Check3(_HyperDbgSetTextMessageCallback.Call())
-	mylog.Check3(_HyperDbgScriptReadFileAndExecuteCommandline.Call())
-	mylog.Check3(_HyperDbgContinuePreviousCommand.Call())
-	mylog.Check3(_HyperDbgCheckMultilineCommand.Call())
+	HyperDbgInterpreter()
+	HyperDbgShowSignature()
+	HyperDbgSetTextMessageCallback()
+	HyperDbgScriptReadFileAndExecuteCommandline()
+	HyperDbgContinuePreviousCommand()
+	HyperDbgCheckMultilineCommand()
 }
 
 func HyperDbgVmxSupportDetection() {
