@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
-project(untitled)
+project(demo)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(untitled SHARED library.cpp)
+add_library(demo SHARED library.cpp)
