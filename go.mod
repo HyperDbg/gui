@@ -1,6 +1,6 @@
 module github.com/ddkwork/hyperdbgui
 
-go 1.22.3
+go 1.22.4
 
 require (
 	github.com/ddkwork/app v0.0.0-20240617071638-c98b03ddf42c
