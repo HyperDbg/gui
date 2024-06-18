@@ -28,7 +28,7 @@ func TestRemoveComment(t *testing.T) {
 
 func removeCommentsFromFile(filename string) {
 	b := stream.NewBuffer(filename)
-	re := regexp.MustCompile(`/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/|//.*`) //seems has a little bug
+	re := regexp.MustCompile(`/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/|//.*`) // seems has a little bug
 	processedContent := re.ReplaceAllString(b.String(), "")
 	lines := stream.NewBuffer(processedContent).ToLines()
 	cppBody := stream.NewBuffer("")

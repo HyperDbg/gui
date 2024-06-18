@@ -1,10 +1,11 @@
 package main
 
 import (
+	"testing"
+
 	"github.com/can1357/gengo/clang"
 	"github.com/can1357/gengo/gengo"
 	"github.com/ddkwork/golibrary/mylog"
-	"testing"
 )
 
 func TestDemoDll(t *testing.T) {

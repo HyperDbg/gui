@@ -4,7 +4,7 @@ go 1.22.4
 
 require (
 	github.com/ddkwork/app v0.0.0-20240617071638-c98b03ddf42c
-	github.com/ddkwork/golibrary v0.0.63-0.20240615190006-ce26f19ff2e5
+	github.com/ddkwork/golibrary v0.0.65
 	github.com/richardwilkes/unison v0.71.0
 	github.com/stretchr/testify v1.9.0
 	github.com/winlabs/gowin32 v0.0.0-20221003142512-0d265587d3c9

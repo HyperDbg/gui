@@ -2,7 +2,6 @@ module github.com/can1357/gengo
 
 go 1.22.4
 
-
 require (
 	github.com/ebitengine/purego v0.7.1
 	golang.org/x/sys v0.21.0
@@ -26,7 +25,7 @@ require (
 
 require (
 	github.com/dave/dst v0.27.3
-	github.com/ddkwork/golibrary v0.0.62
+	github.com/ddkwork/golibrary v0.0.65
 	github.com/valyala/fastjson v1.6.4
 	golang.org/x/sync v0.7.0
 )
