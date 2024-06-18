@@ -3,3 +3,4 @@ log.log
 reset git.cmd
 *.txt
 *.json
+/bin/
