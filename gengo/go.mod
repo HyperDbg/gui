@@ -1,8 +1,7 @@
 module github.com/can1357/gengo
 
-go 1.22.3
+go 1.22.4
 
-toolchain go1.22.4
 
 require (
 	github.com/ebitengine/purego v0.7.1
