@@ -36,6 +36,9 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/saferwall/pe v1.5.3 // indirect
 	github.com/secDre4mer/pkcs7 v0.0.0-20240322103146-665324a4461d // indirect
+	github.com/spf13/afero v1.11.0 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spyre-project/spyre v1.2.5 // indirect
 	github.com/yuin/goldmark v1.7.2 // indirect
 	github.com/zzl/go-win32api/v2 v2.2.0 // indirect
 	golang.org/x/arch v0.8.0 // indirect
