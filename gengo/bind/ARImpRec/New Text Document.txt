@@ -1,0 +1,11 @@
+  UnpackPdataSection@12
+  GetNameFileOptimized@8
+  RebuildSectionsFromArmadillo@12
+  TryGetImportedFunction@24
+  SearchAndRebuildImportsNoNewSection@28
+  SearchAndRebuildImportsIATOptimized@28
+  SearchAndRebuildImports@28
+  GetProcNameAndOrdinal@20
+  GetProcOrdinal@8
+  GetProcName@16
+  GetAllVAddressesOfImports@16
