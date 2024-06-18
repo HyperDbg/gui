@@ -10,7 +10,8 @@ typedef RFLAGS * PRFLAGS;
 #endif 
 #define USE__NATIVE_PHNT_HEADERS
 #if defined(USE__NATIVE_PHNT_HEADERS)
-typedef con*LPCWCHAR, *PCWCHAR;
+typedef const wchar_t *LPCWCHAR, *PCWCHAR;
+
 #    define PHNT_MODE               PHNT_MODE_USER
 #    define PHNT_VERSION            PHNT_WIN11 
 #    define PHNT_PATCH_FOR_HYPERDBG TRUE

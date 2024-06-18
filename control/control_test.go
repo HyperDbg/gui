@@ -30,9 +30,9 @@ func removeCommentsFromFile(filename string) {
 	re := regexp.MustCompile(`/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/|//.*`)
 	processedContent := re.ReplaceAllString(b.String(), "")
 	lines := stream.NewBuffer(processedContent).ToLines()
-	f := stream.NewBuffer("")
-	src := stream.NewBuffer("")
-	src.WriteStringLn("package control")
+	cppBody := stream.NewBuffer("")
+	goBody := stream.NewBuffer("")
+	goBody.WriteStringLn("package control")
 	for i, line := range lines {
 		switch strings.TrimSpace(line) {
 		case "":
@@ -60,23 +60,23 @@ func removeCommentsFromFile(filename string) {
 					signature += "\n"
 					signature += "}"
 					mylog.Success("", signature)
-					src.WriteStringLn(signature)
+					goBody.WriteStringLn(signature)
 				}
 			}
 		}
-		f.WriteStringLn(line)
+		cppBody.WriteStringLn(line)
 	}
 	for _, returnType := range returnTypes {
-		f.ReplaceAll(returnType+"\n", returnType+" ")
+		cppBody.ReplaceAll(returnType+"\n", returnType+" ")
 	}
-	f.ReplaceAll("\n{", "{")
-	stream.WriteTruncate(filename, f.String())
+	cppBody.ReplaceAll("\n{", "{")
+	stream.WriteTruncate(filename, cppBody.String())
 
 	if filepath.Ext(filename) == ".cpp" {
 		all := strings.ReplaceAll(filename, ".cpp", ".go")
 		join := filepath.Join("tmp", all)
 		// mylog.Warning(all)
-		stream.WriteGoFile(join, src)
+		stream.WriteGoFile(join, goBody)
 	}
 }
 
