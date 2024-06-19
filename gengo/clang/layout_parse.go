@@ -65,6 +65,8 @@ type RecordLayout struct {
 func (r *RecordLayout) UnmarshalString(data string) error {
 	// mylog.Check(errors.New("improperly terminated layout"))
 	first := true
+	offset := 0
+
 	for _, line := range strings.Split(data, "\n") {
 		before, after, found := strings.Cut(line, "|")
 		if !found {
@@ -83,10 +85,16 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 		if strings.Contains(before, ":") && strings.Contains(before, "-") {
 			mylog.Todo("bitset bug")
 			//continue
+			split := strings.Split(before, ":")
+			bitRange := strings.Split(split[1], "-")
+			start, end := mylog.Check2(strconv.Atoi(bitRange[0])), mylog.Check2(strconv.Atoi(bitRange[1]))
+			println(offset)
+			offset += end - start + 1
+			//offset = mylog.Check2(strconv.Atoi(bitRange[0]))
+		} else {
+			// Parse offset
+			offset = mylog.Check2Ignore(strconv.Atoi(strings.TrimSpace(before)))
 		}
-
-		// Parse offset
-		offset := mylog.Check2Ignore(strconv.Atoi(strings.TrimSpace(before)))
 
 		// Determine indentation level
 		indent := len(after)

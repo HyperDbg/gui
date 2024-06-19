@@ -1,4 +1,5 @@
 //#include <windows.h>
+typedef unsigned __int64   UINT64, *PUINT64;
 
 	#define X86_FLAGS_RESERVED_BITS 0xffc38028
 	#define X86_FLAGS_FIXED         0x00000002
@@ -6,22 +7,22 @@
 	#define IOCTL_PREACTIVATE_FUNCTIONALITY \
 	CTL_CODE(FILE_DEVICE_UNKNOWN, 0x820, METHOD_BUFFERED, FILE_ANY_ACCESS)
 
-//	typedef struct _CR3_TYPE
-//	{
-//	    union
-//	    {
-//	        UINT64 Flags;
-//
-//	        struct
-//	        {
-//	            UINT64 Pcid : 12;
-//	            UINT64 PageFrameNumber : 36;
-//	            UINT64 Reserved1 : 12;
-//	            UINT64 Reserved_2 : 3;
-//	            UINT64 PcidInvalidate : 1;
-//	        } Fields;
-//	    };
-//	} CR3_TYPE, *PCR3_TYPE;
+	typedef struct _CR3_TYPE
+	{
+	    union
+	    {
+	        UINT64 Flags;
+
+	        struct
+	        {
+	            UINT64 Pcid : 12;
+	            UINT64 PageFrameNumber : 36;
+	            UINT64 Reserved1 : 12;
+	            UINT64 Reserved_2 : 3;
+	            UINT64 PcidInvalidate : 1;
+	        } Fields;
+	    };
+	} CR3_TYPE, *PCR3_TYPE;
 
 //typedef union
 //{
@@ -80,10 +81,10 @@
 
 
 //	typedef struct xed_immdis_s {
-////        union xed_immdis_values_t value;
+//        union xed_immdis_values_t value;
 //        unsigned int currently_used_space :4; // current number of assigned bytes
 //        unsigned int max_allocated_space :4; // max allocation, 4 or 8
-//        int present : 1;
-//                int immediate_is_unsigned : 1;
+//        bool present : 1;
+//        bool immediate_is_unsigned : 1;
 //    } xed_immdis_t;
 //

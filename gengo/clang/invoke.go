@@ -40,23 +40,27 @@ func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
 	mylog.CheckIgnore(cmd.Run())
 	println(Stderr.String())
 	stream.WriteTruncate("astError.log", Stderr)
-	stream.WriteAppend("ast.log", Stdout)
+	stream.WriteTruncate("ast.log", Stdout)
 	return Stdout.Bytes(), nil
 }
 
 func CreateAST(opt *Options) ([]byte, error) {
 	return opt.ClangCommand(
-		"-fsyntax-only",
+		"-E",
+		"-dM",
+		//"-fsyntax-only",
 		"-nobuiltininc",
 		"-Xclang",
 		"-ast-dump=json",
-		"-Xclang",
-		"-fmacro-backtrace-limit=0",
+		//"-Xclang",
+		//"-fmacro-backtrace-limit=0",
 	)
 }
 
 func CreateLayoutMap(opt *Options) ([]byte, error) {
 	return opt.ClangCommand(
+		//"-E",
+		//"-dM",
 		"-fsyntax-only",
 		"-nobuiltininc",
 		"-emit-llvm",
@@ -64,8 +68,8 @@ func CreateLayoutMap(opt *Options) ([]byte, error) {
 		"-fdump-record-layouts",
 		"-Xclang",
 		"-fdump-record-layouts-complete",
-		"-Xclang",
-		"-fmacro-backtrace-limit=0",
+		//"-Xclang",
+		//"-fmacro-backtrace-limit=0",
 	)
 }
 
@@ -81,6 +85,7 @@ func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 	})
 	errg.Go(func() error {
 		res, e := CreateLayoutMap(opt)
+		stream.WriteTruncate("astLayout.log", res)
 		if e != nil {
 			return e
 		}

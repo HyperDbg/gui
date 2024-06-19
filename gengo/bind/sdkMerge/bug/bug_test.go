@@ -16,5 +16,5 @@ func TestDemoDll(t *testing.T) {
 		AdditionalParams: []string{},
 	}),
 	)
-	mylog.Check(pkg.WriteToDir("."))
+	mylog.Check(pkg.WriteToDir("./tmp"))
 }
