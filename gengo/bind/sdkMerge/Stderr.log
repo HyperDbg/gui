@@ -1,9 +1,0 @@
-combined_headers.h:1851:1: warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
- 1851 | static_assert(sizeof(DEBUGGEE_UD_PAUSED_PACKET) < PacketChunkSize,
-      | ^~~~~~~~~~~~~
-      | _Static_assert
-combined_headers.h:4013:1: warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
- 4013 | static_assert(sizeof(DEBUGGER_UPDATE_SYMBOL_TABLE) < PacketChunkSize,
-      | ^~~~~~~~~~~~~
-      | _Static_assert
-2 warnings generated.

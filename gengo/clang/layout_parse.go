@@ -80,8 +80,13 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 			break
 		}
 
+		if strings.Contains(before, ":") && strings.Contains(before, "-") {
+			mylog.Todo("bitset bug")
+			//continue
+		}
+
 		// Parse offset
-		offset := mylog.Check2(strconv.Atoi(strings.TrimSpace(before))) //todo bitset bug
+		offset := mylog.Check2Ignore(strconv.Atoi(strings.TrimSpace(before)))
 
 		// Determine indentation level
 		indent := len(after)

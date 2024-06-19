@@ -1,7 +1,9 @@
 package sdk
 
 import (
+	"io"
 	"io/fs"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -90,8 +92,8 @@ func bindOne(path string) {
 			//"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies\\phnt",
 		},
 	}))
-	mylog.Check(pkg.WriteToDir("."))
-	//pkg.Fprint(func(path_ string) (io.WriteCloser, error) {
-	//	return os.Create(path + ".go")
-	//})
+	// mylog.Check(pkg.WriteToDir("."))
+	pkg.Fprint(func(path_ string) (io.WriteCloser, error) {
+		return os.Create(path + ".go")
+	})
 }
