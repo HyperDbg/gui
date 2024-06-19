@@ -1,61 +1,61 @@
-..\..\..\bin\debug\SDK\Headers\Events.h:243:5: error: unknown type name 'UINT64'
-  243 |     UINT64 Tag;          // Tag of the target event that we want to modify
+In file included from ..\..\..\bin\debug\SDK\HyperDbgSdk.h:4:
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/BasicTypes.h:32:9: error: unknown type name 'wchar_t'
+   32 | typedef wchar_t            WCHAR;
+      |         ^
+In file included from ..\..\..\bin\debug\SDK\HyperDbgSdk.h:7:
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/DataTypes.h:187:5: error: unknown type name 'PVOID'
+  187 |     PVOID                                 Context;
       |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:244:5: error: unknown type name 'UINT64'
-  244 |     UINT64 KernelStatus; // Kernel put the status in this field
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/DataTypes.h:242:1: warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
+  242 | static_assert(sizeof(DEBUGGEE_UD_PAUSED_PACKET) < PacketChunkSize,
+      | ^~~~~~~~~~~~~
+      | _Static_assert
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/DataTypes.h:281:5: error: unknown type name 'HANDLE'
+  281 |     HANDLE      hEvent;
       |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:247:5: error: unknown type name 'BOOLEAN'
-  247 |     BOOLEAN IsEnabled; // Determines what's the action (enable | disable | clear)
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/DataTypes.h:348:5: error: unknown type name 'PVOID'
+  348 |     PVOID TargetAddress;
       |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:257:5: error: unknown type name 'UINT64'
-  257 |     UINT64  KernelStatus;      // Kernel put the status in this field
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/DataTypes.h:349:5: error: unknown type name 'PVOID'
+  349 |     PVOID HookFunction;
       |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:258:5: error: unknown type name 'BOOLEAN'
-  258 |     BOOLEAN IsShortCircuiting; // Determines whether to perform short circuting (on | off)
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/DataTypes.h:361:5: error: unknown type name 'SIZE_T'
+  361 |     SIZE_T                      PhysicalAddress;
       |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:272:5: error: unknown type name 'UINT64'
-  272 |     UINT64 OptionalParam1; // Optional parameter
-      |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:273:5: error: unknown type name 'UINT64'
-  273 |     UINT64 OptionalParam2; // Optional parameter
-      |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:274:5: error: unknown type name 'UINT64'
-  274 |     UINT64 OptionalParam3; // Optional parameter
-      |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:275:5: error: unknown type name 'UINT64'
-  275 |     UINT64 OptionalParam4; // Optional parameter
-      |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:276:5: error: unknown type name 'UINT64'
-  276 |     UINT64 OptionalParam5; // Optional parameter
-      |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:277:5: error: unknown type name 'UINT64'
-  277 |     UINT64 OptionalParam6; // Optional parameter
-      |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:351:5: error: unknown type name 'LIST_ENTRY'
+In file included from ..\..\..\bin\debug\SDK\HyperDbgSdk.h:9:
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Events.h:351:5: error: unknown type name 'LIST_ENTRY'
   351 |     LIST_ENTRY
       |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:355:5: error: unknown type name 'time_t'; did you mean 'size_t'?
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Events.h:355:5: error: unknown type name 'time_t'; did you mean 'size_t'?
   355 |     time_t CreationTime; // Date of creating this event
       |     ^~~~~~
       |     size_t
 note: 'size_t' declared here
-..\..\..\bin\debug\SDK\Headers\Events.h:357:5: error: unknown type name 'UINT32'
-  357 |     UINT32 CoreId; // determines the core index to apply this event to, if it's
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Events.h:393:5: error: unknown type name 'PVOID'
+  393 |     PVOID CommandStringBuffer;
       |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:360:5: error: unknown type name 'UINT32'
-  360 |     UINT32 ProcessId; // determines the process id to apply this to
+In file included from ..\..\..\bin\debug\SDK\HyperDbgSdk.h:10:
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/RequestStructures.h:140:5: error: unknown type name 'PVOID'
+  140 |     PVOID        BufferAddress;
       |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:364:5: error: unknown type name 'BOOLEAN'
-  364 |     BOOLEAN IsEnabled;
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/RequestStructures.h:845:5: error: unknown type name 'PVOID'
+  845 |     PVOID  CustomCodeBufferAddress;
       |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:366:5: error: unknown type name 'BOOLEAN'
-  366 |     BOOLEAN EnableShortCircuiting; // indicates whether the short-circuiting event
+In file included from ..\..\..\bin\debug\SDK\HyperDbgSdk.h:11:
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Symbols.h:32:22: error: use of undeclared identifier 'MAX_PATH'
+   32 |     char    FilePath[MAX_PATH];
+      |                      ^
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Symbols.h:33:30: error: use of undeclared identifier 'MAX_PATH'
+   33 |     char    ModuleSymbolPath[MAX_PATH];
+      |                              ^
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Symbols.h:42:5: error: unknown type name 'wchar_t'
+   42 |     wchar_t FilePath[MAX_PATH];
       |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:369:5: error: unknown type name 'VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE'
-  369 |     VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE EventStage; // reveals the calling stage of the event
-      |     ^
-..\..\..\bin\debug\SDK\Headers\Events.h:372:5: error: unknown type name 'BOOLEAN'
-  372 |     BOOLEAN HasCustomOutput; // Shows whether this event has a custom output
-      |     ^
-fatal error: too many errors emitted, stopping now [-ferror-limit=]
-20 errors generated.
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Symbols.h:42:22: error: use of undeclared identifier 'MAX_PATH'
+   42 |     wchar_t FilePath[MAX_PATH];
+      |                      ^
+D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Symbols.h:84:1: warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
+   84 | static_assert(sizeof(DEBUGGER_UPDATE_SYMBOL_TABLE) < PacketChunkSize,
+      | ^~~~~~~~~~~~~
+      | _Static_assert
+2 warnings and 15 errors generated.

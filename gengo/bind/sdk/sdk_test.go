@@ -21,7 +21,7 @@ func TestBindAll(t *testing.T) {
 				return err
 			}
 			mylog.Trace("binding", path)
-			bindOne(path)
+			mylog.Call(func() { bindOne(path) })
 		}
 		return err
 	})
@@ -50,6 +50,7 @@ func bindOne(path string) {
 			//"-DZYAN_NO_LIBC",
 			//"-DZYAN_STATIC_ASSERT",
 			//"-DZYDIS_STATIC_BUILD",
+			"-DHYPERDBG_HPRDBGCTRL",
 
 			//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\shared",
 			//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\ucrt",
