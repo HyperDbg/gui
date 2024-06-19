@@ -1,61 +1,59 @@
-In file included from ..\..\..\bin\debug\SDK\HyperDbgSdk.h:4:
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/BasicTypes.h:32:9: error: unknown type name 'wchar_t'
-   32 | typedef wchar_t            WCHAR;
-      |         ^
-In file included from ..\..\..\bin\debug\SDK\HyperDbgSdk.h:7:
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/DataTypes.h:187:5: error: unknown type name 'PVOID'
-  187 |     PVOID                                 Context;
-      |     ^
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/DataTypes.h:242:1: warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
-  242 | static_assert(sizeof(DEBUGGEE_UD_PAUSED_PACKET) < PacketChunkSize,
-      | ^~~~~~~~~~~~~
-      | _Static_assert
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/DataTypes.h:281:5: error: unknown type name 'HANDLE'
-  281 |     HANDLE      hEvent;
-      |     ^
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/DataTypes.h:348:5: error: unknown type name 'PVOID'
-  348 |     PVOID TargetAddress;
-      |     ^
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/DataTypes.h:349:5: error: unknown type name 'PVOID'
-  349 |     PVOID HookFunction;
-      |     ^
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/DataTypes.h:361:5: error: unknown type name 'SIZE_T'
-  361 |     SIZE_T                      PhysicalAddress;
-      |     ^
-In file included from ..\..\..\bin\debug\SDK\HyperDbgSdk.h:9:
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Events.h:351:5: error: unknown type name 'LIST_ENTRY'
-  351 |     LIST_ENTRY
-      |     ^
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Events.h:355:5: error: unknown type name 'time_t'; did you mean 'size_t'?
-  355 |     time_t CreationTime; // Date of creating this event
-      |     ^~~~~~
-      |     size_t
-note: 'size_t' declared here
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Events.h:393:5: error: unknown type name 'PVOID'
-  393 |     PVOID CommandStringBuffer;
-      |     ^
-In file included from ..\..\..\bin\debug\SDK\HyperDbgSdk.h:10:
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/RequestStructures.h:140:5: error: unknown type name 'PVOID'
-  140 |     PVOID        BufferAddress;
-      |     ^
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/RequestStructures.h:845:5: error: unknown type name 'PVOID'
-  845 |     PVOID  CustomCodeBufferAddress;
-      |     ^
-In file included from ..\..\..\bin\debug\SDK\HyperDbgSdk.h:11:
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Symbols.h:32:22: error: use of undeclared identifier 'MAX_PATH'
-   32 |     char    FilePath[MAX_PATH];
-      |                      ^
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Symbols.h:33:30: error: use of undeclared identifier 'MAX_PATH'
-   33 |     char    ModuleSymbolPath[MAX_PATH];
-      |                              ^
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Symbols.h:42:5: error: unknown type name 'wchar_t'
-   42 |     wchar_t FilePath[MAX_PATH];
-      |     ^
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Symbols.h:42:22: error: use of undeclared identifier 'MAX_PATH'
-   42 |     wchar_t FilePath[MAX_PATH];
-      |                      ^
-D:\fork\HyperDbg\hyperdbg\include\SDK/Headers/Symbols.h:84:1: warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
-   84 | static_assert(sizeof(DEBUGGER_UPDATE_SYMBOL_TABLE) < PacketChunkSize,
-      | ^~~~~~~~~~~~~
-      | _Static_assert
-2 warnings and 15 errors generated.
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:23:19: error: unknown type name 'NTSTATUS'
+   23 | IMPORT_EXPORT_VMM NTSTATUS
+      |                   ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:29:19: error: unknown type name 'VOID'
+   29 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:30:27: error: unknown type name 'UINT32'
+   30 | VmFuncPerformRipIncrement(UINT32 CoreId);
+      |                           ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:32:19: error: unknown type name 'VOID'
+   32 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:33:28: error: unknown type name 'UINT32'
+   33 | VmFuncSuppressRipIncrement(UINT32 CoreId);
+      |                            ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:35:19: error: unknown type name 'VOID'
+   35 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:36:31: error: unknown type name 'UINT32'
+   36 | VmFuncChangeMtfUnsettingState(UINT32 CoreId, BOOLEAN Set);
+      |                               ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:36:46: error: unknown type name 'BOOLEAN'
+   36 | VmFuncChangeMtfUnsettingState(UINT32 CoreId, BOOLEAN Set);
+      |                                              ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:38:19: error: unknown type name 'VOID'
+   38 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:39:31: error: unknown type name 'UINT32'
+   39 | VmFuncChangeIgnoreOneMtfState(UINT32 CoreId, BOOLEAN Set);
+      |                               ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:39:46: error: unknown type name 'BOOLEAN'
+   39 | VmFuncChangeIgnoreOneMtfState(UINT32 CoreId, BOOLEAN Set);
+      |                                              ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:41:19: error: unknown type name 'VOID'
+   41 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:42:26: error: unknown type name 'BOOLEAN'
+   42 | VmFuncSetMonitorTrapFlag(BOOLEAN Set);
+      |                          ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:44:19: error: unknown type name 'VOID'
+   44 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:45:24: error: unknown type name 'BOOLEAN'
+   45 | VmFuncSetRflagTrapFlag(BOOLEAN Set);
+      |                        ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:47:19: error: unknown type name 'VOID'
+   47 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:48:24: error: unknown type name 'UINT32'
+   48 | VmFuncRegisterMtfBreak(UINT32 CoreId);
+      |                        ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:50:19: error: unknown type name 'VOID'
+   50 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+D:\workspace\workspace\branch\gui\bin\debug\SDK\Imports\HyperDbgVmmImports.h:51:26: error: unknown type name 'UINT32'
+   51 | VmFuncUnRegisterMtfBreak(UINT32 CoreId);
+      |                          ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.

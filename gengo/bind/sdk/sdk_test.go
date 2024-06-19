@@ -35,7 +35,9 @@ func TestName(t *testing.T) {
 
 func TestBindAll(t *testing.T) {
 	mylog.Warning("cpp stl not supported")
-	filepath.Walk("../../../bin/debug", func(path string, info fs.FileInfo, err error) error {
+	root := "../../../bin/debug"
+	root = "D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\SDK\\Imports"
+	filepath.Walk(root, func(path string, info fs.FileInfo, err error) error {
 		if filepath.Ext(path) == ".h" {
 			if strings.Contains(path, "Examples") {
 				return err
