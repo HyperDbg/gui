@@ -39,8 +39,8 @@ func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
 	cmd.Stderr = Stderr
 	mylog.CheckIgnore(cmd.Run())
 	println(Stderr.String())
-	stream.WriteTruncate("Stderr.log", Stderr)
-	stream.WriteTruncate("Stdout.log", Stdout)
+	stream.WriteTruncate("astError.log", Stderr)
+	stream.WriteAppend("ast.log", Stdout)
 	return Stdout.Bytes(), nil
 }
 
@@ -87,8 +87,6 @@ func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 		layout, e = ParseLayoutMap(res)
 		return e
 	})
-	if mylog.Check(errg.Wait()); err != nil {
-		return nil, nil, err
-	}
+	mylog.Check(errg.Wait())
 	return ast, layout, nil
 }

@@ -1,4 +1,0 @@
-D:\workspace\workspace\branch\gui\bin\debug\SDK\HyperDbgSdk.h:3:10: fatal error: 'SDK/Headers/Constants.h' file not found
-    3 | #include "SDK/Headers/Constants.h"
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~
-1 error generated.

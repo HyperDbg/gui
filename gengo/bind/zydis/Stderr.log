@@ -1,7 +1,0 @@
-amalgamated-dist/Zydis.h:335:12: warning: 'ZYAN_STATIC_ASSERT' macro redefined [-Wmacro-redefined]
-  335 | #   define ZYAN_STATIC_ASSERT(x) _Static_assert(x, #x)
-      |            ^
-<command line>:2:9: note: previous definition is here
-    2 | #define ZYAN_STATIC_ASSERT 1
-      |         ^
-1 warning generated.
