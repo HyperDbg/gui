@@ -3588,9 +3588,9 @@ type DecodedOperand struct {
 	Attributes   OperandAttributes
 	// The type of the operand.
 	Type OperandType
-	Anon5339_5
+	Anon5338_5
 }
-type Anon5339_5 struct {
+type Anon5338_5 struct {
 	Raw [5]int64
 }
 type AccessedFlags struct {
@@ -3785,7 +3785,7 @@ type DecodedInstructionRaw struct {
 	PrefixCount U8
 	Prefixes    [15]DecodedInstructionRawPrefixes_
 	Encoding2   InstructionEncoding
-	Anon6218_5
+	Anon6217_5
 	Modrm DecodedInstructionModRm_
 	Sib   DecodedInstructionRawSib_
 	Disp  DecodedInstructionRawDisp_
@@ -3797,7 +3797,7 @@ type DecodedInstructionRawPrefixes_ struct {
 	// The prefix byte.
 	Value U8
 }
-type Anon6218_5 struct {
+type Anon6217_5 struct {
 	Raw [15]byte
 }
 type DecodedInstructionModRm_ struct {
@@ -3904,14 +3904,14 @@ type DecoderContext struct {
 	// Contains the effective address-size index.
 	// 0 = 16 bit, 1 = 32 bit, 2 = 64 bit
 	EaszIndex     U8
-	VectorUnified Anon6452_5
-	RegInfo       Anon6468_5
-	Evex          Anon6505_5
-	Mvex          Anon6519_5
+	VectorUnified Anon6451_5
+	RegInfo       Anon6467_5
+	Evex          Anon6504_5
+	Mvex          Anon6518_5
 	// The scale factor for EVEX/MVEX compressed 8-bit displacement values.
 	Cd8Scale U8
 }
-type Anon6452_5 struct {
+type Anon6451_5 struct {
 	W    U8
 	R    U8
 	X    U8
@@ -3923,7 +3923,7 @@ type Anon6452_5 struct {
 	Vvvv U8
 	Mask U8
 }
-type Anon6468_5 struct {
+type Anon6467_5 struct {
 	// Signals if the `modrm.mod == 3` or `reg` form is forced for the instruction.
 	IsModReg Bool
 	// The final register id for the `reg` encoded register.
@@ -3941,13 +3941,13 @@ type Anon6468_5 struct {
 	// is present.
 	IdIndex U8
 }
-type Anon6505_5 struct {
+type Anon6504_5 struct {
 	// The EVEX tuple-type.
 	TupleType U8
 	// The EVEX element-size.
 	ElementSize U8
 }
-type Anon6519_5 struct {
+type Anon6518_5 struct {
 	// The MVEX functionality.
 	Functionality U8
 }
@@ -4195,7 +4195,7 @@ type Formatter struct {
 	HexUppercase Bool
 	// The `ZYDIS_FORMATTER_PROP_HEX_FORCE_LEADING_NUMBER` property.
 	HexForceLeadingNumber Bool
-	NumberFormat          [2][2]Anon11277_5
+	NumberFormat          [2][2]Anon11276_5
 	// The `ZYDIS_FORMATTER_FUNC_PRE_INSTRUCTION` function.
 	FuncPreInstruction FormatterFunc
 	// The `ZYDIS_FORMATTER_FUNC_POST_INSTRUCTION` function.
@@ -4235,7 +4235,7 @@ type Formatter struct {
 	// The `ZYDIS_FORMATTER_FUNC_PRINT_DECORATOR` function.
 	FuncPrintDecorator FormatterDecoratorFunc
 }
-type Anon11277_5 struct {
+type Anon11276_5 struct {
 	// A pointer to the `ZyanStringView` to use as prefix/suffix.
 	String *StringView
 	// The `ZyanStringView` to use as prefix/suffix
@@ -4246,9 +4246,9 @@ type Anon11277_5 struct {
 type InstructionSegments struct {
 	// The number of logical instruction segments.
 	Count    U8
-	Segments [9]Anon11688_5
+	Segments [9]Anon11687_5
 }
-type Anon11688_5 struct {
+type Anon11687_5 struct {
 	// The type of the segment.
 	Type InstructionSegment
 	// The offset of the segment relative to the start of the instruction (in bytes).
@@ -4643,7 +4643,7 @@ func init() {
 	gengort.Validate((*DecodedOperandImm)(nil), 0x10, 0x8, "IsSigned", 0x0, "IsRelative", 0x1, "Value", 0x8)
 	gengort.Validate((*DecodedOperandImmValue_)(nil), 0x8, 0x8)
 	gengort.Validate((*DecodedOperand)(nil), 0x50, 0x8, "Id", 0x0, "Visibility", 0x4, "Actions", 0x8, "Encoding", 0xc, "Size", 0x10, "ElementType", 0x14, "ElementSize", 0x18, "ElementCount", 0x1a, "Attributes", 0x1c, "Type", 0x20)
-	gengort.Validate((*Anon5339_5)(nil), 0x28, 0x8)
+	gengort.Validate((*Anon5338_5)(nil), 0x28, 0x8)
 	gengort.Validate((*AccessedFlags)(nil), 0x14, 0x4, "Tested", 0x0, "Modified", 0x4, "Set0", 0x8, "Set1", 0xc, "Undefined", 0x10)
 	gengort.Validate((*DecodedInstructionRawRex)(nil), 0x5, 0x1, "W", 0x0, "R", 0x1, "X", 0x2, "B", 0x3, "Offset", 0x4)
 	gengort.Validate((*DecodedInstructionRawXop)(nil), 0x9, 0x1, "R", 0x0, "X", 0x1, "B", 0x2, "MMmmm", 0x3, "W", 0x4, "Vvvv", 0x5, "L", 0x6, "Pp", 0x7, "Offset", 0x8)
@@ -4659,7 +4659,7 @@ func init() {
 	gengort.Validate((*DecodedInstructionMeta)(nil), 0x14, 0x4, "Category", 0x0, "IsaSet", 0x4, "IsaExt", 0x8, "BranchType", 0xc, "ExceptionClass", 0x10)
 	gengort.Validate((*DecodedInstructionRaw)(nil), 0xd8, 0x8, "PrefixCount", 0x0, "Prefixes", 0x4, "Encoding2", 0x7c, "Modrm", 0x8f, "Sib", 0x93, "Disp", 0x98, "Imm", 0xa8)
 	gengort.Validate((*DecodedInstructionRawPrefixes_)(nil), 0x8, 0x4, "Type", 0x0, "Value", 0x4)
-	gengort.Validate((*Anon6218_5)(nil), 0xf, 0x1)
+	gengort.Validate((*Anon6217_5)(nil), 0xf, 0x1)
 	gengort.Validate((*DecodedInstructionModRm_)(nil), 0x4, 0x1, "Mod", 0x0, "Reg", 0x1, "Rm", 0x2, "Offset", 0x3)
 	gengort.Validate((*DecodedInstructionRawSib_)(nil), 0x4, 0x1, "Scale", 0x0, "Index", 0x1, "Base", 0x2, "Offset", 0x3)
 	gengort.Validate((*DecodedInstructionRawDisp_)(nil), 0x10, 0x8, "Value", 0x0, "Size", 0x8, "Offset", 0x9)
@@ -4667,10 +4667,10 @@ func init() {
 	gengort.Validate((*DecodedInstructionRawImmValue_)(nil), 0x8, 0x8)
 	gengort.Validate((*DecodedInstruction)(nil), 0x148, 0x8, "MachineMode", 0x0, "Mnemonic", 0x4, "Length", 0x8, "Encoding", 0xc, "OpcodeMap", 0x10, "Opcode", 0x14, "StackWidth", 0x15, "OperandWidth", 0x16, "AddressWidth", 0x17, "OperandCount", 0x18, "OperandCountVisible", 0x19, "Attributes", 0x20, "CpuFlags", 0x28, "FpuFlags", 0x30, "Avx", 0x38, "Meta", 0x5c, "Raw", 0x70)
 	gengort.Validate((*DecoderContext)(nil), 0x20, 0x8, "Definition", 0x0, "EoszIndex", 0x8, "EaszIndex", 0x9, "VectorUnified", 0xa, "RegInfo", 0x14, "Evex", 0x1a, "Mvex", 0x1c, "Cd8Scale", 0x1d)
-	gengort.Validate((*Anon6452_5)(nil), 0xa, 0x1, "W", 0x0, "R", 0x1, "X", 0x2, "B", 0x3, "L", 0x4, "Ll", 0x5, "R2", 0x6, "V2", 0x7, "Vvvv", 0x8, "Mask", 0x9)
-	gengort.Validate((*Anon6468_5)(nil), 0x6, 0x1, "IsModReg", 0x0, "IdReg", 0x1, "IdRm", 0x2, "IdNdsndd", 0x3, "IdBase", 0x4, "IdIndex", 0x5)
-	gengort.Validate((*Anon6505_5)(nil), 0x2, 0x1, "TupleType", 0x0, "ElementSize", 0x1)
-	gengort.Validate((*Anon6519_5)(nil), 0x1, 0x1, "Functionality", 0x0)
+	gengort.Validate((*Anon6451_5)(nil), 0xa, 0x1, "W", 0x0, "R", 0x1, "X", 0x2, "B", 0x3, "L", 0x4, "Ll", 0x5, "R2", 0x6, "V2", 0x7, "Vvvv", 0x8, "Mask", 0x9)
+	gengort.Validate((*Anon6467_5)(nil), 0x6, 0x1, "IsModReg", 0x0, "IdReg", 0x1, "IdRm", 0x2, "IdNdsndd", 0x3, "IdBase", 0x4, "IdIndex", 0x5)
+	gengort.Validate((*Anon6504_5)(nil), 0x2, 0x1, "TupleType", 0x0, "ElementSize", 0x1)
+	gengort.Validate((*Anon6518_5)(nil), 0x1, 0x1, "Functionality", 0x0)
 	gengort.Validate((*Decoder)(nil), 0xc, 0x4, "MachineMode", 0x0, "StackWidth", 0x4, "DecoderMode", 0x8)
 	gengort.Validate((*EncoderOperand)(nil), 0x40, 0x8, "Type", 0x0, "Reg", 0x4, "Mem", 0x10, "Ptr", 0x30, "Imm", 0x38)
 	gengort.Validate((*EncoderOperandReg_)(nil), 0x8, 0x4, "Value", 0x0, "Is4", 0x4)
@@ -4688,9 +4688,9 @@ func init() {
 	gengort.Validate((*FormatterBuffer)(nil), 0x50, 0x8, "IsTokenList", 0x0, "Capacity", 0x8, "String", 0x10)
 	gengort.Validate((*FormatterContext)(nil), 0x28, 0x8, "Instruction", 0x0, "Operands", 0x8, "Operand", 0x10, "RuntimeAddress", 0x18, "UserData", 0x20)
 	gengort.Validate((*Formatter)(nil), 0x248, 0x8, "Style", 0x0, "ForceMemorySize", 0x4, "ForceMemorySegment", 0x5, "ForceMemoryScale", 0x6, "ForceRelativeBranches", 0x7, "ForceRelativeRiprel", 0x8, "PrintBranchSize", 0x9, "DetailedPrefixes", 0xa, "AddrBase", 0xc, "AddrSignedness", 0x10, "AddrPaddingAbsolute", 0x14, "AddrPaddingRelative", 0x18, "DispBase", 0x1c, "DispSignedness", 0x20, "DispPadding", 0x24, "ImmBase", 0x28, "ImmSignedness", 0x2c, "ImmPadding", 0x30, "CasePrefixes", 0x34, "CaseMnemonic", 0x38, "CaseRegisters", 0x3c, "CaseTypecasts", 0x40, "CaseDecorators", 0x44, "HexUppercase", 0x48, "HexForceLeadingNumber", 0x49, "NumberFormat", 0x50, "FuncPreInstruction", 0x1b0, "FuncPostInstruction", 0x1b8, "FuncFormatInstruction", 0x1c0, "FuncPreOperand", 0x1c8, "FuncPostOperand", 0x1d0, "FuncFormatOperandReg", 0x1d8, "FuncFormatOperandMem", 0x1e0, "FuncFormatOperandPtr", 0x1e8, "FuncFormatOperandImm", 0x1f0, "FuncPrintMnemonic", 0x1f8, "FuncPrintRegister", 0x200, "FuncPrintAddressAbs", 0x208, "FuncPrintAddressRel", 0x210, "FuncPrintDisp", 0x218, "FuncPrintImm", 0x220, "FuncPrintTypecast", 0x228, "FuncPrintSegment", 0x230, "FuncPrintPrefixes", 0x238, "FuncPrintDecorator", 0x240)
-	gengort.Validate((*Anon11277_5)(nil), 0x58, 0x8, "String", 0x0, "StringData", 0x8, "Buffer", 0x48)
+	gengort.Validate((*Anon11276_5)(nil), 0x58, 0x8, "String", 0x0, "StringData", 0x8, "Buffer", 0x48)
 	gengort.Validate((*InstructionSegments)(nil), 0x4c, 0x4, "Count", 0x0, "Segments", 0x4)
-	gengort.Validate((*Anon11688_5)(nil), 0x8, 0x4, "Type", 0x0, "Offset", 0x4, "Size", 0x5)
+	gengort.Validate((*Anon11687_5)(nil), 0x8, 0x4, "Type", 0x0, "Offset", 0x4, "Size", 0x5)
 	gengort.Validate((*DisassembledInstruction)(nil), 0x4d0, 0x8, "RuntimeAddress", 0x0, "Info", 0x8, "Operands", 0x150, "Text", 0x470)
 }
 
@@ -4706,6 +4706,11 @@ func (category InstructionCategory) GetString() *byte {
 
 var __imp_ZydisISASetGetString gengort.PreloadProc
 
+// Returns the specified isa-set string.
+//
+// @param isa_set The isa-set.
+//
+// @return The isa-set string or `ZYAN_NULL`, if an invalid isa-set was passed.
 func (isa_set ISASet) GetString() *byte {
 	__res := gengort.CCall1(__imp_ZydisISASetGetString.Addr(), gengort.MarshallSyscall(isa_set))
 	return gengort.UnmarshallSyscall[*byte](__res)
@@ -6986,75 +6991,75 @@ func (s *DecodedOperandImmValue_) SetS(v I64) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon5339_5) Reg() DecodedOperandReg {
+func (s Anon5338_5) Reg() DecodedOperandReg {
 	return gengort.ReadBitcast[DecodedOperandReg](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon5339_5) SetReg(v DecodedOperandReg) {
+func (s *Anon5338_5) SetReg(v DecodedOperandReg) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon5339_5) Mem() DecodedOperandMem {
+func (s Anon5338_5) Mem() DecodedOperandMem {
 	return gengort.ReadBitcast[DecodedOperandMem](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon5339_5) SetMem(v DecodedOperandMem) {
+func (s *Anon5338_5) SetMem(v DecodedOperandMem) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon5339_5) Ptr() DecodedOperandPtr {
+func (s Anon5338_5) Ptr() DecodedOperandPtr {
 	return gengort.ReadBitcast[DecodedOperandPtr](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon5339_5) SetPtr(v DecodedOperandPtr) {
+func (s *Anon5338_5) SetPtr(v DecodedOperandPtr) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon5339_5) Imm() DecodedOperandImm {
+func (s Anon5338_5) Imm() DecodedOperandImm {
 	return gengort.ReadBitcast[DecodedOperandImm](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon5339_5) SetImm(v DecodedOperandImm) {
+func (s *Anon5338_5) SetImm(v DecodedOperandImm) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon6218_5) Rex() DecodedInstructionRawRex {
+func (s Anon6217_5) Rex() DecodedInstructionRawRex {
 	return gengort.ReadBitcast[DecodedInstructionRawRex](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon6218_5) SetRex(v DecodedInstructionRawRex) {
+func (s *Anon6217_5) SetRex(v DecodedInstructionRawRex) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon6218_5) Xop() DecodedInstructionRawXop {
+func (s Anon6217_5) Xop() DecodedInstructionRawXop {
 	return gengort.ReadBitcast[DecodedInstructionRawXop](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon6218_5) SetXop(v DecodedInstructionRawXop) {
+func (s *Anon6217_5) SetXop(v DecodedInstructionRawXop) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon6218_5) Vex() DecodedInstructionRawVex {
+func (s Anon6217_5) Vex() DecodedInstructionRawVex {
 	return gengort.ReadBitcast[DecodedInstructionRawVex](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon6218_5) SetVex(v DecodedInstructionRawVex) {
+func (s *Anon6217_5) SetVex(v DecodedInstructionRawVex) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon6218_5) Evex() DecodedInstructionRawEvex {
+func (s Anon6217_5) Evex() DecodedInstructionRawEvex {
 	return gengort.ReadBitcast[DecodedInstructionRawEvex](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon6218_5) SetEvex(v DecodedInstructionRawEvex) {
+func (s *Anon6217_5) SetEvex(v DecodedInstructionRawEvex) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon6218_5) Mvex() DecodedInstructionRawMvex {
+func (s Anon6217_5) Mvex() DecodedInstructionRawMvex {
 	return gengort.ReadBitcast[DecodedInstructionRawMvex](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon6218_5) SetMvex(v DecodedInstructionRawMvex) {
+func (s *Anon6217_5) SetMvex(v DecodedInstructionRawMvex) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
