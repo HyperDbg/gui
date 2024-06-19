@@ -9,7 +9,9 @@ import (
 )
 
 func TestSdk(t *testing.T) {
-	mylog.Todo("需要实现处理多个dll导出函数的头文件问题，是像zydis一样合并头文件还是修改gengo支持的方案好?不确定，都需要尝试一下")
+	mylog.Todo("需要实现处理多个dll导出函数的头文件问题，" +
+		"是像zydis一样合并头文件还是修改gengo支持的方案好?不确定，都需要尝试一下," +
+		"问题是输出文件是一个而不是多个")
 	pkg := gengo.NewPackage("sdk",
 		gengo.WithRemovePrefix(
 		//"Zydis_", "Zyan_", "Zycore_",
@@ -63,5 +65,5 @@ func TestSdk(t *testing.T) {
 			//"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies\\phnt",
 		},
 	}))
-	mylog.Check(pkg.WriteToDir("../../../bin"))
+	mylog.Check(pkg.WriteToDir("../../../bin/debug"))
 }
