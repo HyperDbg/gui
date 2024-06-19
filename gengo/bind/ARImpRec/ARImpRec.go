@@ -9,19 +9,55 @@ const GengoLibraryName = "ARImpRec"
 
 var GengoLibrary = gengort.NewLibrary(GengoLibraryName)
 
-type (
-	_Int128T           = any
-	_Uint128T          = any
-	__NSConstantString = any
-	SizeT              = uint64
-	_BuiltinMsVaList   = *byte
-	_BuiltinVaList     = *byte
-)
+type _Int128T = any
+type _Uint128T = any
+type __NSConstantString = any
+type SizeT = uint64
+type _BuiltinMsVaList = *byte
+type _BuiltinVaList = *byte
+type UintptrT = uint64
+type VaList = *byte
+//type SizeT = uint64
+type PtrdiffT = int64
+type IntptrT = int64
+type _VcrtBool = bool
+type WcharT = uint16
+type Int8T = int8
+type Int16T = int16
+type Int32T = int32
+type Int64T = int64
+type Uint8T = uint8
+type Uint16T = uint16
+type Uint32T = uint32
+type Uint64T = uint64
+type IntLeast8T = int8
+type IntLeast16T = int16
+type IntLeast32T = int32
+type IntLeast64T = int64
+type UintLeast8T = uint8
+type UintLeast16T = uint16
+type UintLeast32T = uint32
+type UintLeast64T = uint64
+type IntFast8T = int8
+type IntFast16T = int32
+type IntFast32T = int32
+type IntFast64T = int64
+type UintFast8T = uint8
+type UintFast16T = uint32
+type UintFast32T = uint32
+type UintFast64T = uint64
+type IntmaxT = int64
+type UintmaxT = uint64
 
-var __imp_UnpackPdataSection gengort.PreloadProc
+//var __imp___va_start gengort.PreloadProc
 
-// Gengo init function.
+//  Gengo init function.
 func init() {
+	__imp___va_start = GengoLibrary.ImportNow("__va_start")
+	__imp___va_start = GengoLibrary.ImportNow("__va_start")
+	__imp___security_init_cookie = GengoLibrary.ImportNow("__security_init_cookie")
+	__imp___security_check_cookie = GengoLibrary.ImportNow("__security_check_cookie")
+	__imp___report_gsfailure = GengoLibrary.ImportNow("__report_gsfailure")
 	__imp_UnpackPdataSection = GengoLibrary.ImportNow("UnpackPdataSection")
 	__imp_GetNameFileOptimized = GengoLibrary.ImportNow("GetNameFileOptimized")
 	__imp_RebuildSectionsFromArmadillo = GengoLibrary.ImportNow("RebuildSectionsFromArmadillo")
@@ -34,47 +70,97 @@ func init() {
 	__imp_GetProcName = GengoLibrary.ImportNow("GetProcName")
 	__imp_GetAllVAddressesOfImports = GengoLibrary.ImportNow("GetAllVAddressesOfImports")
 }
-func UnpackPdataSection() { gengort.CCall0(__imp_UnpackPdataSection.Addr()) }
+func _VaStart( **byte) { gengort.CCall1(__imp___va_start.Addr(), gengort.MarshallSyscall("")) }
+
+var __imp___va_start gengort.PreloadProc
+
+//func _VaStart( *VaList) { gengort.CCall1(__imp___va_start.Addr(), gengort.MarshallSyscall()) }
+
+var __imp___security_init_cookie gengort.PreloadProc
+
+func _SecurityInitCookie() { gengort.CCall0(__imp___security_init_cookie.Addr()) }
+
+var __imp___security_check_cookie gengort.PreloadProc
+
+func _SecurityCheckCookie(_StackCookie uintptr) {
+	gengort.CCall1(__imp___security_check_cookie.Addr(), gengort.MarshallSyscall(_StackCookie))
+}
+
+var __imp___report_gsfailure gengort.PreloadProc
+
+func _ReportGsfailure(_StackCookie uintptr) {
+	gengort.CCall1(__imp___report_gsfailure.Addr(), gengort.MarshallSyscall(_StackCookie))
+}
+
+var __imp_UnpackPdataSection gengort.PreloadProc
+
+func UnpackPdataSection(MSNameOfProtected *byte, MSNameOfDumped *byte, MSWarning *byte) int32 {
+	__res := gengort.CCall3(__imp_UnpackPdataSection.Addr(), gengort.MarshallSyscall(MSNameOfProtected), gengort.MarshallSyscall(MSNameOfDumped), gengort.MarshallSyscall(MSWarning))
+	return gengort.UnmarshallSyscall[int32](__res)
+}
 
 var __imp_GetNameFileOptimized gengort.PreloadProc
 
-func GetNameFileOptimized() { gengort.CCall0(__imp_GetNameFileOptimized.Addr()) }
+func GetNameFileOptimized(MSFileNameOrig *byte, MSFileNameOptimized *byte) int32 {
+	__res := gengort.CCall2(__imp_GetNameFileOptimized.Addr(), gengort.MarshallSyscall(MSFileNameOrig), gengort.MarshallSyscall(MSFileNameOptimized))
+	return gengort.UnmarshallSyscall[int32](__res)
+}
 
 var __imp_RebuildSectionsFromArmadillo gengort.PreloadProc
 
-func RebuildSectionsFromArmadillo() { gengort.CCall0(__imp_RebuildSectionsFromArmadillo.Addr()) }
+func RebuildSectionsFromArmadillo(MSNameOfProtected *byte, MSNameOfDumped *byte, MSWarning *byte) int32 {
+	__res := gengort.CCall3(__imp_RebuildSectionsFromArmadillo.Addr(), gengort.MarshallSyscall(MSNameOfProtected), gengort.MarshallSyscall(MSNameOfDumped), gengort.MarshallSyscall(MSWarning))
+	return gengort.UnmarshallSyscall[int32](__res)
+}
 
 var __imp_TryGetImportedFunction gengort.PreloadProc
 
-func TryGetImportedFunction() { gengort.CCall0(__imp_TryGetImportedFunction.Addr()) }
+func TryGetImportedFunction(IRProcessId uint32, IRVAddress uint32, IROrdinal uint32, IRHint *uint32, IRFunctionName *byte, IRModule *byte) int32 {
+	__res := gengort.CCall6(__imp_TryGetImportedFunction.Addr(), gengort.MarshallSyscall(IRProcessId), gengort.MarshallSyscall(IRVAddress), gengort.MarshallSyscall(IROrdinal), gengort.MarshallSyscall(IRHint), gengort.MarshallSyscall(IRFunctionName), gengort.MarshallSyscall(IRModule))
+	return gengort.UnmarshallSyscall[int32](__res)
+}
 
 var __imp_SearchAndRebuildImportsNoNewSection gengort.PreloadProc
 
-func SearchAndRebuildImportsNoNewSection() {
-	gengort.CCall0(__imp_SearchAndRebuildImportsNoNewSection.Addr())
+func SearchAndRebuildImportsNoNewSection(IRProcessId uint32, IRNameOfDumped *byte, IROEP uint32, IRSaveOEPToFile uint32, IRIATRVA *uint32, IRIATSize *uint32, IRWarning *byte) int32 {
+	__res := gengort.CCall7(__imp_SearchAndRebuildImportsNoNewSection.Addr(), gengort.MarshallSyscall(IRProcessId), gengort.MarshallSyscall(IRNameOfDumped), gengort.MarshallSyscall(IROEP), gengort.MarshallSyscall(IRSaveOEPToFile), gengort.MarshallSyscall(IRIATRVA), gengort.MarshallSyscall(IRIATSize), gengort.MarshallSyscall(IRWarning))
+	return gengort.UnmarshallSyscall[int32](__res)
 }
 
 var __imp_SearchAndRebuildImportsIATOptimized gengort.PreloadProc
 
-func SearchAndRebuildImportsIATOptimized() {
-	gengort.CCall0(__imp_SearchAndRebuildImportsIATOptimized.Addr())
+func SearchAndRebuildImportsIATOptimized(IRProcessId uint32, IRNameOfDumped *byte, IROEP uint32, IRSaveOEPToFile uint32, IRIATRVA *uint32, IRIATSize *uint32, IRWarning *byte) int32 {
+	__res := gengort.CCall7(__imp_SearchAndRebuildImportsIATOptimized.Addr(), gengort.MarshallSyscall(IRProcessId), gengort.MarshallSyscall(IRNameOfDumped), gengort.MarshallSyscall(IROEP), gengort.MarshallSyscall(IRSaveOEPToFile), gengort.MarshallSyscall(IRIATRVA), gengort.MarshallSyscall(IRIATSize), gengort.MarshallSyscall(IRWarning))
+	return gengort.UnmarshallSyscall[int32](__res)
 }
 
 var __imp_SearchAndRebuildImports gengort.PreloadProc
 
-func SearchAndRebuildImports() { gengort.CCall0(__imp_SearchAndRebuildImports.Addr()) }
+func SearchAndRebuildImports(IRProcessId uint32, IRNameOfDumped *byte, IROEP uint32, IRSaveOEPToFile uint32, IRIATRVA *uint32, IRIATSize *uint32, IRWarning *byte) int32 {
+	__res := gengort.CCall7(__imp_SearchAndRebuildImports.Addr(), gengort.MarshallSyscall(IRProcessId), gengort.MarshallSyscall(IRNameOfDumped), gengort.MarshallSyscall(IROEP), gengort.MarshallSyscall(IRSaveOEPToFile), gengort.MarshallSyscall(IRIATRVA), gengort.MarshallSyscall(IRIATSize), gengort.MarshallSyscall(IRWarning))
+	return gengort.UnmarshallSyscall[int32](__res)
+}
 
 var __imp_GetProcNameAndOrdinal gengort.PreloadProc
 
-func GetProcNameAndOrdinal() { gengort.CCall0(__imp_GetProcNameAndOrdinal.Addr()) }
+func GetProcNameAndOrdinal(IRHModule uint32, IRAddress uint32, IROrdinal *uint32, IRHint *uint32, IRProcName *byte) int32 {
+	__res := gengort.CCall5(__imp_GetProcNameAndOrdinal.Addr(), gengort.MarshallSyscall(IRHModule), gengort.MarshallSyscall(IRAddress), gengort.MarshallSyscall(IROrdinal), gengort.MarshallSyscall(IRHint), gengort.MarshallSyscall(IRProcName))
+	return gengort.UnmarshallSyscall[int32](__res)
+}
 
 var __imp_GetProcOrdinal gengort.PreloadProc
 
-func GetProcOrdinal() { gengort.CCall0(__imp_GetProcOrdinal.Addr()) }
+func GetProcOrdinal(IRHModule uint32, IRAddress uint32) uint32 {
+	__res := gengort.CCall2(__imp_GetProcOrdinal.Addr(), gengort.MarshallSyscall(IRHModule), gengort.MarshallSyscall(IRAddress))
+	return gengort.UnmarshallSyscall[uint32](__res)
+}
 
 var __imp_GetProcName gengort.PreloadProc
 
-func GetProcName() { gengort.CCall0(__imp_GetProcName.Addr()) }
+func GetProcName(IRHModule uint32, IRAddress uint32, IRHInt *uint32, IRProcName *byte) int32 {
+	__res := gengort.CCall4(__imp_GetProcName.Addr(), gengort.MarshallSyscall(IRHModule), gengort.MarshallSyscall(IRAddress), gengort.MarshallSyscall(IRHInt), gengort.MarshallSyscall(IRProcName))
+	return gengort.UnmarshallSyscall[int32](__res)
+}
 
 var __imp_GetAllVAddressesOfImports gengort.PreloadProc
 
