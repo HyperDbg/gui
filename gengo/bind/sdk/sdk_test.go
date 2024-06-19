@@ -39,7 +39,7 @@ func TestBindAll(t *testing.T) {
 	root = "D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\SDK\\Imports"
 	filepath.Walk(root, func(path string, info fs.FileInfo, err error) error {
 		if filepath.Ext(path) == ".h" {
-			if strings.Contains(path, "Examples") {
+			if strings.Contains(path, "Examples") { //todo bug:Imports dir was skipped
 				return err
 			}
 			mylog.Trace("binding", path)
