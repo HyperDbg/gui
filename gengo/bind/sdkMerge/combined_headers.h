@@ -744,7 +744,7 @@ const unsigned char BuildSignature[] = {
 
 //#include <wchar.h>//for wchar_t
 //#include <Windows.h>//for PVOID
-#include <assert.h>//warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
+//#include <assert.h>//warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
 
 typedef struct _LIST_ENTRY {
    struct _LIST_ENTRY *Flink;

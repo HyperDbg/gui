@@ -609,20 +609,6 @@ const (
 	HWDBG_ERROR_INVALID_PACKET     HwdbgSuccessOrErrorEnums = 1
 )
 
-type _CrtLocaleDataPublic struct {
-	_LocalePctype     *uint16
-	_LocaleMbCurMax   int32
-	_LocaleLcCodepage uint32
-}
-type _CrtLocalePointers struct {
-	Locinfo unsafe.Pointer
-	Mbcinfo unsafe.Pointer
-}
-type MbstateT struct {
-	_Wchar uint64
-	_Byte  uint16
-	_State uint16
-}
 type ListEntry struct {
 	Flink *ListEntry
 	Blink *ListEntry
@@ -809,7 +795,7 @@ type DebuggerEventOptions struct {
 }
 type DebuggerGeneralEventDetail struct {
 	CommandsEventList     ListEntry
-	CreationTime          TimeT
+	CreationTime          uint
 	CoreId                Uint32
 	ProcessId             Uint32
 	IsEnabled             Boolean
@@ -1150,7 +1136,7 @@ type ModuleSymbolDetail struct {
 type UsermodeLoadedModuleSymbols struct {
 	BaseAddress Uint64
 	Entrypoint  Uint64
-	FilePath    [260]WcharT
+	FilePath    [260]int32
 }
 type UsermodeLoadedModuleDetails struct {
 	ProcessId        Uint32
@@ -1217,21 +1203,6 @@ type __NSConstantString = any
 type SizeT = uint64
 type _BuiltinMsVaList = *byte
 type _BuiltinVaList = *byte
-type UintptrT = uint64
-type VaList = *byte
-type SizeT = uint64
-type PtrdiffT = int64
-type IntptrT = int64
-type _VcrtBool = bool
-type WcharT = uint16
-type _CrtBool = bool
-type ErrnoT = int32
-type WintT = uint16
-type WctypeT = uint16
-type _Time32T = int64
-type TimeT = int64
-type _LocaleT = *_CrtLocalePointers
-type RsizeT = uint
 type PlistEntry = *ListEntry
 type Qword = uint64
 type Uint64 = uint64
@@ -1530,22 +1501,33 @@ type PhwdbgInstanceInformation = *HwdbgInstanceInformation
 // @brief The structure of script buffer in hwdbg
 type PhwdbgScriptBuffer = *HwdbgScriptBuffer
 
-var __imp___va_start gengort.PreloadProc
+func (s Anon872_5) Flags() Uint64 {
+	return gengort.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+}
+func (s *Anon872_5) SetFlags(v Uint64) {
+	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
+}
+func (s Anon872_5) Fields() Anon876_9 {
+	return gengort.ReadBitcast[Anon876_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+}
+func (s *Anon872_5) SetFields(v Anon876_9) {
+	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
+}
+func (s Anon1998_9) () Anon2000_5 {
+	return gengort.ReadBitcast[Anon2000_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+}
+func (s *Anon1998_9) Set(v Anon2000_5) {
+	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
+}
+func (s Anon1998_9) AsUInt() Uint32 {
+	return gengort.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+}
+func (s *Anon1998_9) SetAsUInt(v Uint32) {
+	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
+}
 
 //  Gengo init function.
 func init() {
-	__imp___va_start = GengoLibrary.ImportNow("__va_start")
-	__imp___va_start = GengoLibrary.ImportNow("__va_start")
-	__imp___security_init_cookie = GengoLibrary.ImportNow("__security_init_cookie")
-	__imp___security_check_cookie = GengoLibrary.ImportNow("__security_check_cookie")
-	__imp___report_gsfailure = GengoLibrary.ImportNow("__report_gsfailure")
-	__imp__invalid_parameter_noinfo = GengoLibrary.ImportNow("_invalid_parameter_noinfo")
-	__imp__invalid_parameter_noinfo_noreturn = GengoLibrary.ImportNow("_invalid_parameter_noinfo_noreturn")
-	__imp__invoke_watson = GengoLibrary.ImportNow("_invoke_watson")
-	__imp__wassert = GengoLibrary.ImportNow("_wassert")
-	gengort.Validate((*_CrtLocaleDataPublic)(nil), 0x10, 0x8, "_LocalePctype", 0x0, "_LocaleMbCurMax", 0x8, "_LocaleLcCodepage", 0xc)
-	gengort.Validate((*_CrtLocalePointers)(nil), 0x10, 0x8, "Locinfo", 0x0, "Mbcinfo", 0x8)
-	gengort.Validate((*MbstateT)(nil), 0x8, 0x4, "_Wchar", 0x0, "_Byte", 0x4, "_State", 0x6)
 	gengort.Validate((*ListEntry)(nil), 0x10, 0x8, "Flink", 0x0, "Blink", 0x8)
 	gengort.Validate((*GuestRegs)(nil), 0x80, 0x8, "Rax", 0x0, "Rcx", 0x8, "Rdx", 0x10, "Rbx", 0x18, "Rsp", 0x20, "Rbp", 0x28, "Rsi", 0x30, "Rdi", 0x38, "R8", 0x40, "R9", 0x48, "R10", 0x50, "R11", 0x58, "R12", 0x60, "R13", 0x68, "R14", 0x70, "R15", 0x78)
 	gengort.Validate((*GuestExtraRegisters)(nil), 0x20, 0x8, "Cs", 0x0, "Ds", 0x2, "Fs", 0x4, "Gs", 0x6, "Es", 0x8, "Ss", 0xa, "Rflags", 0x10, "Rip", 0x18)
@@ -1621,7 +1603,7 @@ func init() {
 	gengort.Validate((*DebuggeeResultOfSearchPacket)(nil), 0x8, 0x4, "CountOfResults", 0x0, "Result", 0x4)
 	gengort.Validate((*DebuggeeRegisterReadDescription)(nil), 0x18, 0x8, "RegisterID", 0x0, "Value", 0x8, "KernelStatus", 0x10)
 	gengort.Validate((*ModuleSymbolDetail)(nil), 0x258, 0x8, "IsSymbolDetailsFound", 0x0, "IsLocalSymbolPath", 0x1, "IsSymbolPDBAvaliable", 0x2, "IsUserMode", 0x3, "Is32Bit", 0x4, "BaseAddress", 0x8, "FilePath", 0x10, "ModuleSymbolPath", 0x114, "ModuleSymbolGuidAndAge", 0x218)
-	gengort.Validate((*UsermodeLoadedModuleSymbols)(nil), 0x218, 0x8, "BaseAddress", 0x0, "Entrypoint", 0x8, "FilePath", 0x10)
+	gengort.Validate((*UsermodeLoadedModuleSymbols)(nil), 0x420, 0x8, "BaseAddress", 0x0, "Entrypoint", 0x8, "FilePath", 0x10)
 	gengort.Validate((*UsermodeLoadedModuleDetails)(nil), 0x10, 0x4, "ProcessId", 0x0, "OnlyCountModules", 0x4, "Is32Bit", 0x5, "ModulesCount", 0x8, "Result", 0xc)
 	gengort.Validate((*DebuggerUpdateSymbolTable)(nil), 0x260, 0x8, "TotalSymbols", 0x0, "CurrentSymbolIndex", 0x4, "SymbolDetailPacket", 0x8)
 	gengort.Validate((*DebuggeeSymbolUpdateResult)(nil), 0x8, 0x8, "KernelStatus", 0x0)
@@ -1629,71 +1611,4 @@ func init() {
 	gengort.Validate((*HwdbgInstanceInformation)(nil), 0x38, 0x8, "Version", 0x0, "maximumNumberOfStages", 0x4, "scriptVariableLength", 0x8, "maximumNumberOfSupportedGetScriptOperators", 0xc, "maximumNumberOfSupportedSetScriptOperators", 0x10, "sharedMemorySize", 0x14, "debuggerAreaOffset", 0x18, "debuggeeAreaOffset", 0x1c, "numberOfPins", 0x20, "numberOfPorts", 0x24, "scriptCapabilities", 0x28, "bramAddrWidth", 0x30, "bramDataWidth", 0x34)
 	gengort.Validate((*_HwdbgScriptCapabilities)(nil), 0x8, 0x8, "FuncOr", 0x1, "FuncXor", 0x2, "FuncAnd", 0x3, "FuncAsr", 0x4, "FuncAsl", 0x5, "FuncAdd", 0x6, "FuncSub", 0x7, "FuncMul", 0x8, "FuncDiv", 0x9, "FuncMod", 0xa, "FuncGt", 0xb, "FuncLt", 0xc, "FuncEgt", 0xd, "FuncElt", 0xe, "FuncEqual", 0xf, "FuncNeq", 0x10, "FuncJmp", 0x11, "FuncJz", 0x12, "FuncJnz", 0x13, "FuncMov", 0x14, "FuncPrintf", 0x15)
 	gengort.Validate((*HwdbgScriptBuffer)(nil), 0x4, 0x4, "scriptNumberOfSymbols", 0x0)
-}
-func _VaStart( **byte) { gengort.CCall1(__imp___va_start.Addr(), gengort.MarshallSyscall()) }
-
-var __imp___va_start gengort.PreloadProc
-
-func _VaStart( *VaList) { gengort.CCall1(__imp___va_start.Addr(), gengort.MarshallSyscall()) }
-
-var __imp___security_init_cookie gengort.PreloadProc
-
-func _SecurityInitCookie() { gengort.CCall0(__imp___security_init_cookie.Addr()) }
-
-var __imp___security_check_cookie gengort.PreloadProc
-
-func _SecurityCheckCookie(_StackCookie uintptr) {
-	gengort.CCall1(__imp___security_check_cookie.Addr(), gengort.MarshallSyscall(_StackCookie))
-}
-
-var __imp___report_gsfailure gengort.PreloadProc
-
-func _ReportGsfailure(_StackCookie uintptr) {
-	gengort.CCall1(__imp___report_gsfailure.Addr(), gengort.MarshallSyscall(_StackCookie))
-}
-
-var __imp__invalid_parameter_noinfo gengort.PreloadProc
-
-func _InvalidParameterNoinfo() { gengort.CCall0(__imp__invalid_parameter_noinfo.Addr()) }
-
-var __imp__invalid_parameter_noinfo_noreturn gengort.PreloadProc
-
-func _InvalidParameterNoinfoNoreturn() {
-	gengort.CCall0(__imp__invalid_parameter_noinfo_noreturn.Addr())
-}
-
-var __imp__invoke_watson gengort.PreloadProc
-
-func _InvokeWatson(_Expression *WcharT, _FunctionName *WcharT, _FileName *WcharT, _LineNo uint32, _Reserved uintptr) {
-	gengort.CCall5(__imp__invoke_watson.Addr(), gengort.MarshallSyscall(_Expression), gengort.MarshallSyscall(_FunctionName), gengort.MarshallSyscall(_FileName), gengort.MarshallSyscall(_LineNo), gengort.MarshallSyscall(_Reserved))
-}
-
-var __imp__wassert gengort.PreloadProc
-
-func _Wassert(_Message *WcharT, _File *WcharT, _Line uint32) {
-	gengort.CCall3(__imp__wassert.Addr(), gengort.MarshallSyscall(_Message), gengort.MarshallSyscall(_File), gengort.MarshallSyscall(_Line))
-}
-func (s Anon872_5) Flags() Uint64 {
-	return gengort.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
-}
-func (s *Anon872_5) SetFlags(v Uint64) {
-	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
-}
-func (s Anon872_5) Fields() Anon876_9 {
-	return gengort.ReadBitcast[Anon876_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
-}
-func (s *Anon872_5) SetFields(v Anon876_9) {
-	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
-}
-func (s Anon1998_9) () Anon2000_5 {
-	return gengort.ReadBitcast[Anon2000_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
-}
-func (s *Anon1998_9) Set(v Anon2000_5) {
-	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
-}
-func (s Anon1998_9) AsUInt() Uint32 {
-	return gengort.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
-}
-func (s *Anon1998_9) SetAsUInt(v Uint32) {
-	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
