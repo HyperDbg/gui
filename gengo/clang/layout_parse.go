@@ -75,8 +75,8 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 		before = strings.TrimSpace(before)
 		if before == "" {
 			after = strings.TrimSpace(after)
-			_ = mylog.Check2(fmt.Sscanf(after, "[sizeof=%d, align=%d]", &r.Size, &r.Align))
-
+			//mylog.Check2(fmt.Sscanf(after, "[sizeof=%d, align=%d]", &r.Size, &r.Align))
+			mylog.Check2(fmt.Sscanf(after, "[sizeof=%d, align=%d", &r.Size, &r.Align))
 			break
 		}
 
