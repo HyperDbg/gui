@@ -13,6 +13,7 @@ import (
 )
 
 func TestBindAll(t *testing.T) {
+	mylog.Warning("cpp stl not supported")
 	filepath.Walk("../../../bin/debug", func(path string, info fs.FileInfo, err error) error {
 		if filepath.Ext(path) == ".h" {
 			bindOne(path)
@@ -22,7 +23,7 @@ func TestBindAll(t *testing.T) {
 }
 
 func bindOne(path string) {
-	//todo "需要实现处理多个dll导出函数的头文件问题，"
+	// todo "需要实现处理多个dll导出函数的头文件问题，"
 	// "是像zydis一样合并头文件还是修改gengo支持的方案好?不确定，都需要尝试一下,"
 	// "问题是输出文件是一个而不是多个"
 	pkg := gengo.NewPackage("sdk",
