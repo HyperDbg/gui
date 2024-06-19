@@ -1,0 +1,59 @@
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:23:19: error: unknown type name 'NTSTATUS'
+   23 | IMPORT_EXPORT_VMM NTSTATUS
+      |                   ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:29:19: error: unknown type name 'VOID'
+   29 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:30:27: error: unknown type name 'UINT32'
+   30 | VmFuncPerformRipIncrement(UINT32 CoreId);
+      |                           ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:32:19: error: unknown type name 'VOID'
+   32 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:33:28: error: unknown type name 'UINT32'
+   33 | VmFuncSuppressRipIncrement(UINT32 CoreId);
+      |                            ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:35:19: error: unknown type name 'VOID'
+   35 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:36:31: error: unknown type name 'UINT32'
+   36 | VmFuncChangeMtfUnsettingState(UINT32 CoreId, BOOLEAN Set);
+      |                               ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:36:46: error: unknown type name 'BOOLEAN'
+   36 | VmFuncChangeMtfUnsettingState(UINT32 CoreId, BOOLEAN Set);
+      |                                              ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:38:19: error: unknown type name 'VOID'
+   38 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:39:31: error: unknown type name 'UINT32'
+   39 | VmFuncChangeIgnoreOneMtfState(UINT32 CoreId, BOOLEAN Set);
+      |                               ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:39:46: error: unknown type name 'BOOLEAN'
+   39 | VmFuncChangeIgnoreOneMtfState(UINT32 CoreId, BOOLEAN Set);
+      |                                              ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:41:19: error: unknown type name 'VOID'
+   41 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:42:26: error: unknown type name 'BOOLEAN'
+   42 | VmFuncSetMonitorTrapFlag(BOOLEAN Set);
+      |                          ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:44:19: error: unknown type name 'VOID'
+   44 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:45:24: error: unknown type name 'BOOLEAN'
+   45 | VmFuncSetRflagTrapFlag(BOOLEAN Set);
+      |                        ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:47:19: error: unknown type name 'VOID'
+   47 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:48:24: error: unknown type name 'UINT32'
+   48 | VmFuncRegisterMtfBreak(UINT32 CoreId);
+      |                        ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:50:19: error: unknown type name 'VOID'
+   50 | IMPORT_EXPORT_VMM VOID
+      |                   ^
+../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h:51:26: error: unknown type name 'UINT32'
+   51 | VmFuncUnRegisterMtfBreak(UINT32 CoreId);
+      |                          ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
