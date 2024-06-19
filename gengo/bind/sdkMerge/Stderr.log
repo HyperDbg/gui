@@ -1,45 +1,9 @@
-combined_headers.h:1795:5: error: unknown type name 'PVOID'
- 1795 |     PVOID                                 Context;
-      |     ^
-combined_headers.h:1850:1: warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
- 1850 | static_assert(sizeof(DEBUGGEE_UD_PAUSED_PACKET) < PacketChunkSize,
+combined_headers.h:1851:1: warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
+ 1851 | static_assert(sizeof(DEBUGGEE_UD_PAUSED_PACKET) < PacketChunkSize,
       | ^~~~~~~~~~~~~
       | _Static_assert
-combined_headers.h:1889:5: error: unknown type name 'HANDLE'
- 1889 |     HANDLE      hEvent;
-      |     ^
-combined_headers.h:1956:5: error: unknown type name 'PVOID'
- 1956 |     PVOID TargetAddress;
-      |     ^
-combined_headers.h:1957:5: error: unknown type name 'PVOID'
- 1957 |     PVOID HookFunction;
-      |     ^
-combined_headers.h:1969:5: error: unknown type name 'SIZE_T'
- 1969 |     SIZE_T                      PhysicalAddress;
-      |     ^
-combined_headers.h:2692:5: error: unknown type name 'LIST_ENTRY'
- 2692 |     LIST_ENTRY
-      |     ^
-combined_headers.h:2734:5: error: unknown type name 'PVOID'
- 2734 |     PVOID CommandStringBuffer;
-      |     ^
-combined_headers.h:2911:5: error: unknown type name 'PVOID'
- 2911 |     PVOID        BufferAddress;
-      |     ^
-combined_headers.h:3616:5: error: unknown type name 'PVOID'
- 3616 |     PVOID  CustomCodeBufferAddress;
-      |     ^
-combined_headers.h:3960:22: error: use of undeclared identifier 'MAX_PATH'
- 3960 |     char    FilePath[MAX_PATH];
-      |                      ^
-combined_headers.h:3961:30: error: use of undeclared identifier 'MAX_PATH'
- 3961 |     char    ModuleSymbolPath[MAX_PATH];
-      |                              ^
-combined_headers.h:3970:22: error: use of undeclared identifier 'MAX_PATH'
- 3970 |     wchar_t FilePath[MAX_PATH];
-      |                      ^
-combined_headers.h:4012:1: warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
- 4012 | static_assert(sizeof(DEBUGGER_UPDATE_SYMBOL_TABLE) < PacketChunkSize,
+combined_headers.h:4013:1: warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
+ 4013 | static_assert(sizeof(DEBUGGER_UPDATE_SYMBOL_TABLE) < PacketChunkSize,
       | ^~~~~~~~~~~~~
       | _Static_assert
-2 warnings and 12 errors generated.
+2 warnings generated.
