@@ -1,0 +1,3805 @@
+{
+  "id": "0x1cfd73340a0",
+  "kind": "TranslationUnitDecl",
+  "loc": {},
+  "range": {
+    "begin": {},
+    "end": {}
+  },
+  "inner": [
+    {
+      "id": "0x1cfd73348b8",
+      "kind": "RecordDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "_GUID",
+      "tagUsed": "struct",
+      "inner": [
+        {
+          "id": "0x1cfd7334960",
+          "kind": "TypeVisibilityAttr",
+          "range": {
+            "begin": {},
+            "end": {}
+          },
+          "implicit": true
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd73349d8",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__int128_t",
+      "type": {
+        "qualType": "__int128"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334670",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "__int128"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd7334a48",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__uint128_t",
+      "type": {
+        "qualType": "unsigned __int128"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334690",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned __int128"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd7334d68",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__NSConstantString",
+      "type": {
+        "qualType": "struct __NSConstantString_tag"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334b20",
+          "kind": "RecordType",
+          "type": {
+            "qualType": "struct __NSConstantString_tag"
+          },
+          "decl": {
+            "id": "0x1cfd7334aa0",
+            "kind": "RecordDecl",
+            "name": "__NSConstantString_tag"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd7334dd8",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "size_t",
+      "type": {
+        "qualType": "unsigned long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334290",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd7334e70",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__builtin_ms_va_list",
+      "type": {
+        "qualType": "char *"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334e30",
+          "kind": "PointerType",
+          "type": {
+            "qualType": "char *"
+          },
+          "inner": [
+            {
+              "id": "0x1cfd7334150",
+              "kind": "BuiltinType",
+              "type": {
+                "qualType": "char"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd7334ee0",
+      "kind": "TypedefDecl",
+      "loc": {},
+      "range": {
+        "begin": {},
+        "end": {}
+      },
+      "isImplicit": true,
+      "name": "__builtin_va_list",
+      "type": {
+        "qualType": "char *"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334e30",
+          "kind": "PointerType",
+          "type": {
+            "qualType": "char *"
+          },
+          "inner": [
+            {
+              "id": "0x1cfd7334150",
+              "kind": "BuiltinType",
+              "type": {
+                "qualType": "char"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd7334f78",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 1948,
+        "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vadefs.h",
+        "line": 61,
+        "col": 35,
+        "tokLen": 9,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 1922,
+          "col": 9,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+          }
+        },
+        "end": {
+          "offset": 1948,
+          "col": 35,
+          "tokLen": 9,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+          }
+        }
+      },
+      "isReferenced": true,
+      "name": "uintptr_t",
+      "type": {
+        "qualType": "unsigned long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334290",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd7334fe8",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 2193,
+        "line": 72,
+        "col": 23,
+        "tokLen": 7,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 2179,
+          "col": 9,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+          }
+        },
+        "end": {
+          "offset": 2193,
+          "col": 23,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+          }
+        }
+      },
+      "isReferenced": true,
+      "name": "va_list",
+      "type": {
+        "qualType": "char *"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334e30",
+          "kind": "PointerType",
+          "type": {
+            "qualType": "char *"
+          },
+          "inner": [
+            {
+              "id": "0x1cfd7334150",
+              "kind": "BuiltinType",
+              "type": {
+                "qualType": "char"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a5d50",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 6076,
+        "line": 155,
+        "col": 18,
+        "tokLen": 10,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 6076,
+          "col": 18,
+          "tokLen": 10,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+          }
+        },
+        "end": {
+          "offset": 6076,
+          "col": 18,
+          "tokLen": 10,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+          }
+        }
+      },
+      "isImplicit": true,
+      "name": "__va_start",
+      "mangledName": "__va_start",
+      "type": {
+        "qualType": "void (char **, ...)"
+      },
+      "storageClass": "extern",
+      "variadic": true,
+      "inner": [
+        {
+          "id": "0x1cfd74a5e58",
+          "kind": "ParmVarDecl",
+          "loc": {},
+          "range": {
+            "begin": {},
+            "end": {}
+          },
+          "type": {
+            "qualType": "char **"
+          }
+        },
+        {
+          "id": "0x1cfd74a5df8",
+          "kind": "BuiltinAttr",
+          "range": {
+            "begin": {},
+            "end": {}
+          },
+          "implicit": true
+        },
+        {
+          "id": "0x1cfd74a5ec8",
+          "kind": "NoThrowAttr",
+          "range": {
+            "begin": {
+              "offset": 6076,
+              "col": 18,
+              "tokLen": 10,
+              "includedFrom": {
+                "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+              }
+            },
+            "end": {
+              "offset": 6076,
+              "col": 18,
+              "tokLen": 10,
+              "includedFrom": {
+                "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+              }
+            }
+          },
+          "implicit": true
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a5ef0",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 6076,
+        "col": 18,
+        "tokLen": 10,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 6063,
+          "col": 5,
+          "tokLen": 4,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+          }
+        },
+        "end": {
+          "offset": 6101,
+          "col": 43,
+          "tokLen": 1,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+          }
+        }
+      },
+      "previousDecl": "0x1cfd74a5d50",
+      "name": "__va_start",
+      "mangledName": "__va_start",
+      "type": {
+        "qualType": "void (char **, ...)"
+      },
+      "variadic": true,
+      "inner": [
+        {
+          "id": "0x1cfd74a5be0",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 6096,
+            "col": 38,
+            "tokLen": 1,
+            "includedFrom": {
+              "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+            }
+          },
+          "range": {
+            "begin": {
+              "offset": 6087,
+              "col": 29,
+              "tokLen": 7,
+              "includedFrom": {
+                "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+              }
+            },
+            "end": {
+              "offset": 6094,
+              "col": 36,
+              "tokLen": 1,
+              "includedFrom": {
+                "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+              }
+            }
+          },
+          "type": {
+            "qualType": "va_list *"
+          }
+        },
+        {
+          "id": "0x1cfd74a5fd0",
+          "kind": "BuiltinAttr",
+          "range": {
+            "begin": {},
+            "end": {}
+          },
+          "inherited": true,
+          "implicit": true
+        },
+        {
+          "id": "0x1cfd74a6000",
+          "kind": "NoThrowAttr",
+          "range": {
+            "begin": {
+              "offset": 6076,
+              "col": 18,
+              "tokLen": 10,
+              "includedFrom": {
+                "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+              }
+            },
+            "end": {
+              "offset": 6076,
+              "col": 18,
+              "tokLen": 10,
+              "includedFrom": {
+                "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h"
+              }
+            }
+          },
+          "inherited": true,
+          "implicit": true
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a6068",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 5207,
+        "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\vcruntime.h",
+        "line": 188,
+        "col": 30,
+        "tokLen": 6,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 5182,
+          "col": 5,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        },
+        "end": {
+          "offset": 5207,
+          "col": 30,
+          "tokLen": 6,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        }
+      },
+      "previousDecl": "0x1cfd7334dd8",
+      "name": "size_t",
+      "type": {
+        "qualType": "unsigned long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334290",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a60d8",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 5245,
+        "line": 189,
+        "col": 30,
+        "tokLen": 9,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 5220,
+          "col": 5,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        },
+        "end": {
+          "offset": 5245,
+          "col": 30,
+          "tokLen": 9,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        }
+      },
+      "name": "ptrdiff_t",
+      "type": {
+        "qualType": "long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd73341f0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a6148",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 5286,
+        "line": 190,
+        "col": 30,
+        "tokLen": 8,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 5261,
+          "col": 5,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        },
+        "end": {
+          "offset": 5286,
+          "col": 30,
+          "tokLen": 8,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        }
+      },
+      "name": "intptr_t",
+      "type": {
+        "qualType": "long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd73341f0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a61b0",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 5705,
+        "line": 204,
+        "col": 19,
+        "tokLen": 11,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 5691,
+          "col": 5,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        },
+        "end": {
+          "offset": 5705,
+          "col": 19,
+          "tokLen": 11,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        }
+      },
+      "name": "__vcrt_bool",
+      "type": {
+        "qualType": "_Bool"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334130",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "_Bool"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a6220",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 6124,
+        "line": 223,
+        "col": 28,
+        "tokLen": 7,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 6101,
+          "col": 5,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        },
+        "end": {
+          "offset": 6124,
+          "col": 28,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        }
+      },
+      "name": "wchar_t",
+      "type": {
+        "qualType": "unsigned short"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334230",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned short"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a6398",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 10627,
+        "line": 378,
+        "col": 18,
+        "tokLen": 22,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 10614,
+          "col": 5,
+          "tokLen": 4,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        },
+        "end": {
+          "offset": 10654,
+          "col": 45,
+          "tokLen": 1,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        }
+      },
+      "name": "__security_init_cookie",
+      "mangledName": "__security_init_cookie",
+      "type": {
+        "desugaredQualType": "void (void)",
+        "qualType": "void (void) __attribute__((cdecl))"
+      }
+    },
+    {
+      "id": "0x1cfd74a6660",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 11073,
+        "line": 387,
+        "col": 22,
+        "tokLen": 23,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 11060,
+          "col": 9,
+          "tokLen": 4,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        },
+        "end": {
+          "offset": 11124,
+          "col": 73,
+          "tokLen": 1,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        }
+      },
+      "name": "__security_check_cookie",
+      "mangledName": "__security_check_cookie",
+      "type": {
+        "desugaredQualType": "void (uintptr_t)",
+        "qualType": "void (uintptr_t) __attribute__((cdecl))"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74a6500",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 11112,
+            "col": 61,
+            "tokLen": 12,
+            "includedFrom": {
+              "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+            }
+          },
+          "range": {
+            "begin": {
+              "offset": 11102,
+              "col": 51,
+              "tokLen": 9,
+              "includedFrom": {
+                "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+              }
+            },
+            "end": {
+              "offset": 11112,
+              "col": 61,
+              "tokLen": 12,
+              "includedFrom": {
+                "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+              }
+            }
+          },
+          "name": "_StackCookie",
+          "type": {
+            "desugaredQualType": "unsigned long long",
+            "qualType": "uintptr_t",
+            "typeAliasDeclId": "0x1cfd7334f78"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a6880",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 11170,
+        "line": 388,
+        "col": 43,
+        "tokLen": 18,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 11136,
+          "col": 9,
+          "tokLen": 10,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        },
+        "end": {
+          "offset": 11216,
+          "col": 89,
+          "tokLen": 1,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        }
+      },
+      "name": "__report_gsfailure",
+      "mangledName": "__report_gsfailure",
+      "type": {
+        "desugaredQualType": "void (uintptr_t) __attribute__((noreturn))",
+        "qualType": "void (uintptr_t) __attribute__((noreturn)) __attribute__((cdecl))"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74a6720",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 11204,
+            "col": 77,
+            "tokLen": 12,
+            "includedFrom": {
+              "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+            }
+          },
+          "range": {
+            "begin": {
+              "offset": 11194,
+              "col": 67,
+              "tokLen": 9,
+              "includedFrom": {
+                "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+              }
+            },
+            "end": {
+              "offset": 11204,
+              "col": 77,
+              "tokLen": 12,
+              "includedFrom": {
+                "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+              }
+            }
+          },
+          "name": "_StackCookie",
+          "type": {
+            "desugaredQualType": "unsigned long long",
+            "qualType": "uintptr_t",
+            "typeAliasDeclId": "0x1cfd7334f78"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a6940",
+      "kind": "VarDecl",
+      "loc": {
+        "offset": 11259,
+        "line": 392,
+        "col": 18,
+        "tokLen": 17,
+        "includedFrom": {
+          "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 11242,
+          "col": 1,
+          "tokLen": 6,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        },
+        "end": {
+          "offset": 11259,
+          "col": 18,
+          "tokLen": 17,
+          "includedFrom": {
+            "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h"
+          }
+        }
+      },
+      "name": "__security_cookie",
+      "mangledName": "__security_cookie",
+      "type": {
+        "desugaredQualType": "unsigned long long",
+        "qualType": "uintptr_t",
+        "typeAliasDeclId": "0x1cfd7334f78"
+      },
+      "storageClass": "extern"
+    },
+    {
+      "id": "0x1cfd74a69c0",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 344,
+        "file": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include\\stdint.h",
+        "line": 18,
+        "col": 28,
+        "tokLen": 6,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 317,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 344,
+          "col": 28,
+          "tokLen": 6,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "int8_t",
+      "type": {
+        "qualType": "signed char"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334170",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "signed char"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a6a30",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 380,
+        "line": 19,
+        "col": 28,
+        "tokLen": 7,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 353,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 380,
+          "col": 28,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "int16_t",
+      "type": {
+        "qualType": "short"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334190",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "short"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a6aa0",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 417,
+        "line": 20,
+        "col": 28,
+        "tokLen": 7,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 390,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 417,
+          "col": 28,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "int32_t",
+      "type": {
+        "qualType": "int"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd73341b0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "int"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a7d58",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 454,
+        "line": 21,
+        "col": 28,
+        "tokLen": 7,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 427,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 454,
+          "col": 28,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "int64_t",
+      "type": {
+        "qualType": "long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd73341f0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a7dc8",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 491,
+        "line": 22,
+        "col": 28,
+        "tokLen": 7,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 464,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 491,
+          "col": 28,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "uint8_t",
+      "type": {
+        "qualType": "unsigned char"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334210",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned char"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a7e38",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 528,
+        "line": 23,
+        "col": 28,
+        "tokLen": 8,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 501,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 528,
+          "col": 28,
+          "tokLen": 8,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "uint16_t",
+      "type": {
+        "qualType": "unsigned short"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334230",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned short"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a7ea8",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 566,
+        "line": 24,
+        "col": 28,
+        "tokLen": 8,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 539,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 566,
+          "col": 28,
+          "tokLen": 8,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "isReferenced": true,
+      "name": "uint32_t",
+      "type": {
+        "qualType": "unsigned int"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334250",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned int"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a7f18",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 604,
+        "line": 25,
+        "col": 28,
+        "tokLen": 8,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 577,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 604,
+          "col": 28,
+          "tokLen": 8,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "uint64_t",
+      "type": {
+        "qualType": "unsigned long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334290",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a7f88",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 644,
+        "line": 27,
+        "col": 28,
+        "tokLen": 12,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 617,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 644,
+          "col": 28,
+          "tokLen": 12,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "int_least8_t",
+      "type": {
+        "qualType": "signed char"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334170",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "signed char"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a7ff8",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 686,
+        "line": 28,
+        "col": 28,
+        "tokLen": 13,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 659,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 686,
+          "col": 28,
+          "tokLen": 13,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "int_least16_t",
+      "type": {
+        "qualType": "short"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334190",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "short"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a8068",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 729,
+        "line": 29,
+        "col": 28,
+        "tokLen": 13,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 702,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 729,
+          "col": 28,
+          "tokLen": 13,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "int_least32_t",
+      "type": {
+        "qualType": "int"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd73341b0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "int"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a80d8",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 772,
+        "line": 30,
+        "col": 28,
+        "tokLen": 13,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 745,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 772,
+          "col": 28,
+          "tokLen": 13,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "int_least64_t",
+      "type": {
+        "qualType": "long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd73341f0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a8148",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 815,
+        "line": 31,
+        "col": 28,
+        "tokLen": 13,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 788,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 815,
+          "col": 28,
+          "tokLen": 13,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "uint_least8_t",
+      "type": {
+        "qualType": "unsigned char"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334210",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned char"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a81b8",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 858,
+        "line": 32,
+        "col": 28,
+        "tokLen": 14,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 831,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 858,
+          "col": 28,
+          "tokLen": 14,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "uint_least16_t",
+      "type": {
+        "qualType": "unsigned short"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334230",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned short"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a8228",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 902,
+        "line": 33,
+        "col": 28,
+        "tokLen": 14,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 875,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 902,
+          "col": 28,
+          "tokLen": 14,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "uint_least32_t",
+      "type": {
+        "qualType": "unsigned int"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334250",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned int"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a8298",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 946,
+        "line": 34,
+        "col": 28,
+        "tokLen": 14,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 919,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 946,
+          "col": 28,
+          "tokLen": 14,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "uint_least64_t",
+      "type": {
+        "qualType": "unsigned long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334290",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a8308",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 992,
+        "line": 36,
+        "col": 28,
+        "tokLen": 11,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 965,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 992,
+          "col": 28,
+          "tokLen": 11,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "int_fast8_t",
+      "type": {
+        "qualType": "signed char"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334170",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "signed char"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a8378",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 1033,
+        "line": 37,
+        "col": 28,
+        "tokLen": 12,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 1006,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 1033,
+          "col": 28,
+          "tokLen": 12,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "int_fast16_t",
+      "type": {
+        "qualType": "int"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd73341b0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "int"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a83e8",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 1075,
+        "line": 38,
+        "col": 28,
+        "tokLen": 12,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 1048,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 1075,
+          "col": 28,
+          "tokLen": 12,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "int_fast32_t",
+      "type": {
+        "qualType": "int"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd73341b0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "int"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a8458",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 1117,
+        "line": 39,
+        "col": 28,
+        "tokLen": 12,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 1090,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 1117,
+          "col": 28,
+          "tokLen": 12,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "int_fast64_t",
+      "type": {
+        "qualType": "long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd73341f0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a84c8",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 1159,
+        "line": 40,
+        "col": 28,
+        "tokLen": 12,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 1132,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 1159,
+          "col": 28,
+          "tokLen": 12,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "uint_fast8_t",
+      "type": {
+        "qualType": "unsigned char"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334210",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned char"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a8538",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 1201,
+        "line": 41,
+        "col": 28,
+        "tokLen": 13,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 1174,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 1201,
+          "col": 28,
+          "tokLen": 13,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "uint_fast16_t",
+      "type": {
+        "qualType": "unsigned int"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334250",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned int"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a85a8",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 1244,
+        "line": 42,
+        "col": 28,
+        "tokLen": 13,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 1217,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 1244,
+          "col": 28,
+          "tokLen": 13,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "uint_fast32_t",
+      "type": {
+        "qualType": "unsigned int"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334250",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned int"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a8618",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 1287,
+        "line": 43,
+        "col": 28,
+        "tokLen": 13,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 1260,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 1287,
+          "col": 28,
+          "tokLen": 13,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "uint_fast64_t",
+      "type": {
+        "qualType": "unsigned long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334290",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a8688",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 1332,
+        "line": 45,
+        "col": 28,
+        "tokLen": 8,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 1305,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 1332,
+          "col": 28,
+          "tokLen": 8,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "intmax_t",
+      "type": {
+        "qualType": "long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd73341f0",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a86f8",
+      "kind": "TypedefDecl",
+      "loc": {
+        "offset": 1370,
+        "line": 46,
+        "col": 28,
+        "tokLen": 9,
+        "includedFrom": {
+          "file": "ARImpRec.h"
+        }
+      },
+      "range": {
+        "begin": {
+          "offset": 1343,
+          "col": 1,
+          "tokLen": 7,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        },
+        "end": {
+          "offset": 1370,
+          "col": 28,
+          "tokLen": 9,
+          "includedFrom": {
+            "file": "ARImpRec.h"
+          }
+        }
+      },
+      "name": "uintmax_t",
+      "type": {
+        "qualType": "unsigned long long"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd7334290",
+          "kind": "BuiltinType",
+          "type": {
+            "qualType": "unsigned long long"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a89b8",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 59,
+        "file": "ARImpRec.h",
+        "line": 3,
+        "col": 37,
+        "tokLen": 18
+      },
+      "range": {
+        "begin": {
+          "offset": 23,
+          "col": 1,
+          "tokLen": 10
+        },
+        "end": {
+          "offset": 140,
+          "col": 118,
+          "tokLen": 1
+        }
+      },
+      "name": "UnpackPdataSection",
+      "mangledName": "UnpackPdataSection",
+      "type": {
+        "desugaredQualType": "int (char *, char *, char *)",
+        "qualType": "int (char *, char *, char *) __attribute__((stdcall))"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74a8768",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 84,
+            "col": 62,
+            "tokLen": 17
+          },
+          "range": {
+            "begin": {
+              "offset": 78,
+              "col": 56,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 84,
+              "col": 62,
+              "tokLen": 17
+            }
+          },
+          "name": "MSNameOfProtected",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74a87e8",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 109,
+            "col": 87,
+            "tokLen": 14
+          },
+          "range": {
+            "begin": {
+              "offset": 103,
+              "col": 81,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 109,
+              "col": 87,
+              "tokLen": 14
+            }
+          },
+          "name": "MSNameOfDumped",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74a8868",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 131,
+            "col": 109,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 125,
+              "col": 103,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 131,
+              "col": 109,
+              "tokLen": 9
+            }
+          },
+          "name": "MSWarning",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74a8a78",
+          "kind": "DLLExportAttr",
+          "range": {
+            "begin": {
+              "offset": 34,
+              "col": 12,
+              "tokLen": 9
+            },
+            "end": {
+              "offset": 34,
+              "col": 12,
+              "tokLen": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74a8ca0",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 182,
+        "line": 5,
+        "col": 37,
+        "tokLen": 20
+      },
+      "range": {
+        "begin": {
+          "offset": 146,
+          "col": 1,
+          "tokLen": 10
+        },
+        "end": {
+          "offset": 250,
+          "col": 105,
+          "tokLen": 1
+        }
+      },
+      "name": "GetNameFileOptimized",
+      "mangledName": "GetNameFileOptimized",
+      "type": {
+        "desugaredQualType": "int (char *, char *)",
+        "qualType": "int (char *, char *) __attribute__((stdcall))"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74a8ae8",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 209,
+            "col": 64,
+            "tokLen": 14
+          },
+          "range": {
+            "begin": {
+              "offset": 203,
+              "col": 58,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 209,
+              "col": 64,
+              "tokLen": 14
+            }
+          },
+          "name": "MSFileNameOrig",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74a8b68",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 231,
+            "col": 86,
+            "tokLen": 19
+          },
+          "range": {
+            "begin": {
+              "offset": 225,
+              "col": 80,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 231,
+              "col": 86,
+              "tokLen": 19
+            }
+          },
+          "name": "MSFileNameOptimized",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74a9f78",
+          "kind": "DLLExportAttr",
+          "range": {
+            "begin": {
+              "offset": 157,
+              "col": 12,
+              "tokLen": 9
+            },
+            "end": {
+              "offset": 157,
+              "col": 12,
+              "tokLen": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74aa1c0",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 293,
+        "line": 8,
+        "col": 11,
+        "tokLen": 28
+      },
+      "range": {
+        "begin": {
+          "offset": 256,
+          "line": 7,
+          "col": 1,
+          "tokLen": 10
+        },
+        "end": {
+          "offset": 384,
+          "line": 8,
+          "col": 102,
+          "tokLen": 1
+        }
+      },
+      "name": "RebuildSectionsFromArmadillo",
+      "mangledName": "RebuildSectionsFromArmadillo",
+      "type": {
+        "desugaredQualType": "int (char *, char *, char *)",
+        "qualType": "int (char *, char *, char *) __attribute__((stdcall))"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74a9fe8",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 328,
+            "col": 46,
+            "tokLen": 17
+          },
+          "range": {
+            "begin": {
+              "offset": 322,
+              "col": 40,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 328,
+              "col": 46,
+              "tokLen": 17
+            }
+          },
+          "name": "MSNameOfProtected",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74aa068",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 353,
+            "col": 71,
+            "tokLen": 14
+          },
+          "range": {
+            "begin": {
+              "offset": 347,
+              "col": 65,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 353,
+              "col": 71,
+              "tokLen": 14
+            }
+          },
+          "name": "MSNameOfDumped",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74aa0e8",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 375,
+            "col": 93,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 369,
+              "col": 87,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 375,
+              "col": 93,
+              "tokLen": 9
+            }
+          },
+          "name": "MSWarning",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74aa280",
+          "kind": "DLLExportAttr",
+          "range": {
+            "begin": {
+              "offset": 267,
+              "line": 7,
+              "col": 12,
+              "tokLen": 9
+            },
+            "end": {
+              "offset": 267,
+              "col": 12,
+              "tokLen": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74aa800",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 427,
+        "line": 11,
+        "col": 11,
+        "tokLen": 22
+      },
+      "range": {
+        "begin": {
+          "offset": 390,
+          "line": 10,
+          "col": 1,
+          "tokLen": 10
+        },
+        "end": {
+          "offset": 601,
+          "line": 12,
+          "col": 70,
+          "tokLen": 1
+        }
+      },
+      "name": "TryGetImportedFunction",
+      "mangledName": "TryGetImportedFunction",
+      "type": {
+        "desugaredQualType": "int (uint32_t, uint32_t, uint32_t, uint32_t *, char *, char *)",
+        "qualType": "int (uint32_t, uint32_t, uint32_t, uint32_t *, char *, char *) __attribute__((stdcall))"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74aa350",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 459,
+            "line": 11,
+            "col": 43,
+            "tokLen": 11
+          },
+          "range": {
+            "begin": {
+              "offset": 450,
+              "col": 34,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 459,
+              "col": 43,
+              "tokLen": 11
+            }
+          },
+          "name": "IRProcessId",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74aa3c8",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 481,
+            "col": 65,
+            "tokLen": 10
+          },
+          "range": {
+            "begin": {
+              "offset": 472,
+              "col": 56,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 481,
+              "col": 65,
+              "tokLen": 10
+            }
+          },
+          "name": "IRVAddress",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74aa440",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 502,
+            "col": 86,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 493,
+              "col": 77,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 502,
+              "col": 86,
+              "tokLen": 9
+            }
+          },
+          "name": "IROrdinal",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74aa520",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 523,
+            "col": 107,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 513,
+              "col": 97,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 523,
+              "col": 107,
+              "tokLen": 6
+            }
+          },
+          "name": "IRHint",
+          "type": {
+            "qualType": "uint32_t *"
+          }
+        },
+        {
+          "id": "0x1cfd74aa5a0",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 571,
+            "line": 12,
+            "col": 40,
+            "tokLen": 14
+          },
+          "range": {
+            "begin": {
+              "offset": 565,
+              "col": 34,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 571,
+              "col": 40,
+              "tokLen": 14
+            }
+          },
+          "name": "IRFunctionName",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74aa620",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 593,
+            "col": 62,
+            "tokLen": 8
+          },
+          "range": {
+            "begin": {
+              "offset": 587,
+              "col": 56,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 593,
+              "col": 62,
+              "tokLen": 8
+            }
+          },
+          "name": "IRModule",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74aa8d8",
+          "kind": "DLLExportAttr",
+          "range": {
+            "begin": {
+              "offset": 401,
+              "line": 10,
+              "col": 12,
+              "tokLen": 9
+            },
+            "end": {
+              "offset": 401,
+              "col": 12,
+              "tokLen": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74aae28",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 644,
+        "line": 15,
+        "col": 11,
+        "tokLen": 35
+      },
+      "range": {
+        "begin": {
+          "offset": 607,
+          "line": 14,
+          "col": 1,
+          "tokLen": 10
+        },
+        "end": {
+          "offset": 916,
+          "line": 17,
+          "col": 62,
+          "tokLen": 1
+        }
+      },
+      "name": "SearchAndRebuildImportsNoNewSection",
+      "mangledName": "SearchAndRebuildImportsNoNewSection",
+      "type": {
+        "desugaredQualType": "int (uint32_t, char *, uint32_t, uint32_t, uint32_t *, uint32_t *, char *)",
+        "qualType": "int (uint32_t, char *, uint32_t, uint32_t, uint32_t *, uint32_t *, char *) __attribute__((stdcall))"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74aa940",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 689,
+            "line": 15,
+            "col": 56,
+            "tokLen": 11
+          },
+          "range": {
+            "begin": {
+              "offset": 680,
+              "col": 47,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 689,
+              "col": 56,
+              "tokLen": 11
+            }
+          },
+          "name": "IRProcessId",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74aa9c0",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 708,
+            "col": 75,
+            "tokLen": 14
+          },
+          "range": {
+            "begin": {
+              "offset": 702,
+              "col": 69,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 708,
+              "col": 75,
+              "tokLen": 14
+            }
+          },
+          "name": "IRNameOfDumped",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74aaa38",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 733,
+            "col": 100,
+            "tokLen": 5
+          },
+          "range": {
+            "begin": {
+              "offset": 724,
+              "col": 91,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 733,
+              "col": 100,
+              "tokLen": 5
+            }
+          },
+          "name": "IROEP",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74aaab0",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 796,
+            "line": 16,
+            "col": 56,
+            "tokLen": 15
+          },
+          "range": {
+            "begin": {
+              "offset": 787,
+              "col": 47,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 796,
+              "col": 56,
+              "tokLen": 15
+            }
+          },
+          "name": "IRSaveOEPToFile",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74aab30",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 823,
+            "col": 83,
+            "tokLen": 8
+          },
+          "range": {
+            "begin": {
+              "offset": 813,
+              "col": 73,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 823,
+              "col": 83,
+              "tokLen": 8
+            }
+          },
+          "name": "IRIATRVA",
+          "type": {
+            "qualType": "uint32_t *"
+          }
+        },
+        {
+          "id": "0x1cfd74aabb0",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 843,
+            "col": 103,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 833,
+              "col": 93,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 843,
+              "col": 103,
+              "tokLen": 9
+            }
+          },
+          "name": "IRIATSize",
+          "type": {
+            "qualType": "uint32_t *"
+          }
+        },
+        {
+          "id": "0x1cfd74aac30",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 907,
+            "line": 17,
+            "col": 53,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 901,
+              "col": 47,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 907,
+              "col": 53,
+              "tokLen": 9
+            }
+          },
+          "name": "IRWarning",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74aaf08",
+          "kind": "DLLExportAttr",
+          "range": {
+            "begin": {
+              "offset": 618,
+              "line": 14,
+              "col": 12,
+              "tokLen": 9
+            },
+            "end": {
+              "offset": 618,
+              "col": 12,
+              "tokLen": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74b09c0",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 959,
+        "line": 20,
+        "col": 11,
+        "tokLen": 35
+      },
+      "range": {
+        "begin": {
+          "offset": 922,
+          "line": 19,
+          "col": 1,
+          "tokLen": 10
+        },
+        "end": {
+          "offset": 1231,
+          "line": 22,
+          "col": 62,
+          "tokLen": 1
+        }
+      },
+      "name": "SearchAndRebuildImportsIATOptimized",
+      "mangledName": "SearchAndRebuildImportsIATOptimized",
+      "type": {
+        "desugaredQualType": "int (uint32_t, char *, uint32_t, uint32_t, uint32_t *, uint32_t *, char *)",
+        "qualType": "int (uint32_t, char *, uint32_t, uint32_t, uint32_t *, uint32_t *, char *) __attribute__((stdcall))"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74b05d8",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1004,
+            "line": 20,
+            "col": 56,
+            "tokLen": 11
+          },
+          "range": {
+            "begin": {
+              "offset": 995,
+              "col": 47,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1004,
+              "col": 56,
+              "tokLen": 11
+            }
+          },
+          "name": "IRProcessId",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74b0658",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1023,
+            "col": 75,
+            "tokLen": 14
+          },
+          "range": {
+            "begin": {
+              "offset": 1017,
+              "col": 69,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 1023,
+              "col": 75,
+              "tokLen": 14
+            }
+          },
+          "name": "IRNameOfDumped",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74b06d0",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1048,
+            "col": 100,
+            "tokLen": 5
+          },
+          "range": {
+            "begin": {
+              "offset": 1039,
+              "col": 91,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1048,
+              "col": 100,
+              "tokLen": 5
+            }
+          },
+          "name": "IROEP",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74b0748",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1111,
+            "line": 21,
+            "col": 56,
+            "tokLen": 15
+          },
+          "range": {
+            "begin": {
+              "offset": 1102,
+              "col": 47,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1111,
+              "col": 56,
+              "tokLen": 15
+            }
+          },
+          "name": "IRSaveOEPToFile",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74b07c8",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1138,
+            "col": 83,
+            "tokLen": 8
+          },
+          "range": {
+            "begin": {
+              "offset": 1128,
+              "col": 73,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1138,
+              "col": 83,
+              "tokLen": 8
+            }
+          },
+          "name": "IRIATRVA",
+          "type": {
+            "qualType": "uint32_t *"
+          }
+        },
+        {
+          "id": "0x1cfd74b0848",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1158,
+            "col": 103,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 1148,
+              "col": 93,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1158,
+              "col": 103,
+              "tokLen": 9
+            }
+          },
+          "name": "IRIATSize",
+          "type": {
+            "qualType": "uint32_t *"
+          }
+        },
+        {
+          "id": "0x1cfd74b08c8",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1222,
+            "line": 22,
+            "col": 53,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 1216,
+              "col": 47,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 1222,
+              "col": 53,
+              "tokLen": 9
+            }
+          },
+          "name": "IRWarning",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74b0aa0",
+          "kind": "DLLExportAttr",
+          "range": {
+            "begin": {
+              "offset": 933,
+              "line": 19,
+              "col": 12,
+              "tokLen": 9
+            },
+            "end": {
+              "offset": 933,
+              "col": 12,
+              "tokLen": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74b0ef0",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 1274,
+        "line": 25,
+        "col": 11,
+        "tokLen": 23
+      },
+      "range": {
+        "begin": {
+          "offset": 1237,
+          "line": 24,
+          "col": 1,
+          "tokLen": 10
+        },
+        "end": {
+          "offset": 1475,
+          "line": 26,
+          "col": 91,
+          "tokLen": 1
+        }
+      },
+      "name": "SearchAndRebuildImports",
+      "mangledName": "SearchAndRebuildImports",
+      "type": {
+        "desugaredQualType": "int (uint32_t, char *, uint32_t, uint32_t, uint32_t *, uint32_t *, char *)",
+        "qualType": "int (uint32_t, char *, uint32_t, uint32_t, uint32_t *, uint32_t *, char *) __attribute__((stdcall))"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74b0b08",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1307,
+            "line": 25,
+            "col": 44,
+            "tokLen": 11
+          },
+          "range": {
+            "begin": {
+              "offset": 1298,
+              "col": 35,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1307,
+              "col": 44,
+              "tokLen": 11
+            }
+          },
+          "name": "IRProcessId",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74b0b88",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1326,
+            "col": 63,
+            "tokLen": 14
+          },
+          "range": {
+            "begin": {
+              "offset": 1320,
+              "col": 57,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 1326,
+              "col": 63,
+              "tokLen": 14
+            }
+          },
+          "name": "IRNameOfDumped",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74b0c00",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1351,
+            "col": 88,
+            "tokLen": 5
+          },
+          "range": {
+            "begin": {
+              "offset": 1342,
+              "col": 79,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1351,
+              "col": 88,
+              "tokLen": 5
+            }
+          },
+          "name": "IROEP",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74b0c78",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1367,
+            "col": 104,
+            "tokLen": 15
+          },
+          "range": {
+            "begin": {
+              "offset": 1358,
+              "col": 95,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1367,
+              "col": 104,
+              "tokLen": 15
+            }
+          },
+          "name": "IRSaveOEPToFile",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74b0cf8",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1429,
+            "line": 26,
+            "col": 45,
+            "tokLen": 8
+          },
+          "range": {
+            "begin": {
+              "offset": 1419,
+              "col": 35,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1429,
+              "col": 45,
+              "tokLen": 8
+            }
+          },
+          "name": "IRIATRVA",
+          "type": {
+            "qualType": "uint32_t *"
+          }
+        },
+        {
+          "id": "0x1cfd74b0d78",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1449,
+            "col": 65,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 1439,
+              "col": 55,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1449,
+              "col": 65,
+              "tokLen": 9
+            }
+          },
+          "name": "IRIATSize",
+          "type": {
+            "qualType": "uint32_t *"
+          }
+        },
+        {
+          "id": "0x1cfd74b0df8",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1466,
+            "col": 82,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 1460,
+              "col": 76,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 1466,
+              "col": 82,
+              "tokLen": 9
+            }
+          },
+          "name": "IRWarning",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74b0fd0",
+          "kind": "DLLExportAttr",
+          "range": {
+            "begin": {
+              "offset": 1248,
+              "line": 24,
+              "col": 12,
+              "tokLen": 9
+            },
+            "end": {
+              "offset": 1248,
+              "col": 12,
+              "tokLen": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74b13f8",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 1518,
+        "line": 29,
+        "col": 11,
+        "tokLen": 21
+      },
+      "range": {
+        "begin": {
+          "offset": 1481,
+          "line": 28,
+          "col": 1,
+          "tokLen": 10
+        },
+        "end": {
+          "offset": 1668,
+          "line": 30,
+          "col": 49,
+          "tokLen": 1
+        }
+      },
+      "name": "GetProcNameAndOrdinal",
+      "mangledName": "GetProcNameAndOrdinal",
+      "type": {
+        "desugaredQualType": "int (uint32_t, uint32_t, uint32_t *, uint32_t *, char *)",
+        "qualType": "int (uint32_t, uint32_t, uint32_t *, uint32_t *, char *) __attribute__((stdcall))"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74b1038",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1549,
+            "line": 29,
+            "col": 42,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 1540,
+              "col": 33,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1549,
+              "col": 42,
+              "tokLen": 9
+            }
+          },
+          "name": "IRHModule",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74b10b0",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1569,
+            "col": 62,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 1560,
+              "col": 53,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1569,
+              "col": 62,
+              "tokLen": 9
+            }
+          },
+          "name": "IRAddress",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74b1130",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1590,
+            "col": 83,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 1580,
+              "col": 73,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1590,
+              "col": 83,
+              "tokLen": 9
+            }
+          },
+          "name": "IROrdinal",
+          "type": {
+            "qualType": "uint32_t *"
+          }
+        },
+        {
+          "id": "0x1cfd74b11b0",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1611,
+            "col": 104,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 1601,
+              "col": 94,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1611,
+              "col": 104,
+              "tokLen": 6
+            }
+          },
+          "name": "IRHint",
+          "type": {
+            "qualType": "uint32_t *"
+          }
+        },
+        {
+          "id": "0x1cfd74b1230",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1658,
+            "line": 30,
+            "col": 39,
+            "tokLen": 10
+          },
+          "range": {
+            "begin": {
+              "offset": 1652,
+              "col": 33,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 1658,
+              "col": 39,
+              "tokLen": 10
+            }
+          },
+          "name": "IRProcName",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74b14c8",
+          "kind": "DLLExportAttr",
+          "range": {
+            "begin": {
+              "offset": 1492,
+              "line": 28,
+              "col": 12,
+              "tokLen": 9
+            },
+            "end": {
+              "offset": 1492,
+              "col": 12,
+              "tokLen": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74ab1f8",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 1715,
+        "line": 32,
+        "col": 42,
+        "tokLen": 14
+      },
+      "range": {
+        "begin": {
+          "offset": 1674,
+          "col": 1,
+          "tokLen": 10
+        },
+        "end": {
+          "offset": 1768,
+          "col": 95,
+          "tokLen": 1
+        }
+      },
+      "name": "GetProcOrdinal",
+      "mangledName": "GetProcOrdinal",
+      "type": {
+        "desugaredQualType": "uint32_t (uint32_t, uint32_t)",
+        "qualType": "uint32_t (uint32_t, uint32_t) __attribute__((stdcall))"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74b1530",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1739,
+            "col": 66,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 1730,
+              "col": 57,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1739,
+              "col": 66,
+              "tokLen": 9
+            }
+          },
+          "name": "IRHModule",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74ab088",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1759,
+            "col": 86,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 1750,
+              "col": 77,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1759,
+              "col": 86,
+              "tokLen": 9
+            }
+          },
+          "name": "IRAddress",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74ab2b0",
+          "kind": "DLLExportAttr",
+          "range": {
+            "begin": {
+              "offset": 1685,
+              "col": 12,
+              "tokLen": 9
+            },
+            "end": {
+              "offset": 1685,
+              "col": 12,
+              "tokLen": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74ab640",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 1811,
+        "line": 35,
+        "col": 11,
+        "tokLen": 11
+      },
+      "range": {
+        "begin": {
+          "offset": 1774,
+          "line": 34,
+          "col": 1,
+          "tokLen": 10
+        },
+        "end": {
+          "offset": 1897,
+          "line": 35,
+          "col": 97,
+          "tokLen": 1
+        }
+      },
+      "name": "GetProcName",
+      "mangledName": "GetProcName",
+      "type": {
+        "desugaredQualType": "int (uint32_t, uint32_t, uint32_t *, char *)",
+        "qualType": "int (uint32_t, uint32_t, uint32_t *, char *) __attribute__((stdcall))"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74ab318",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1832,
+            "col": 32,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 1823,
+              "col": 23,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1832,
+              "col": 32,
+              "tokLen": 9
+            }
+          },
+          "name": "IRHModule",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74ab390",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1852,
+            "col": 52,
+            "tokLen": 9
+          },
+          "range": {
+            "begin": {
+              "offset": 1843,
+              "col": 43,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1852,
+              "col": 52,
+              "tokLen": 9
+            }
+          },
+          "name": "IRAddress",
+          "type": {
+            "desugaredQualType": "unsigned int",
+            "qualType": "uint32_t",
+            "typeAliasDeclId": "0x1cfd74a7ea8"
+          }
+        },
+        {
+          "id": "0x1cfd74ab410",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1873,
+            "col": 73,
+            "tokLen": 6
+          },
+          "range": {
+            "begin": {
+              "offset": 1863,
+              "col": 63,
+              "tokLen": 8
+            },
+            "end": {
+              "offset": 1873,
+              "col": 73,
+              "tokLen": 6
+            }
+          },
+          "name": "IRHInt",
+          "type": {
+            "qualType": "uint32_t *"
+          }
+        },
+        {
+          "id": "0x1cfd74ab490",
+          "kind": "ParmVarDecl",
+          "loc": {
+            "offset": 1887,
+            "col": 87,
+            "tokLen": 10
+          },
+          "range": {
+            "begin": {
+              "offset": 1881,
+              "col": 81,
+              "tokLen": 4
+            },
+            "end": {
+              "offset": 1887,
+              "col": 87,
+              "tokLen": 10
+            }
+          },
+          "name": "IRProcName",
+          "type": {
+            "qualType": "char *"
+          }
+        },
+        {
+          "id": "0x1cfd74ab708",
+          "kind": "DLLExportAttr",
+          "range": {
+            "begin": {
+              "offset": 1785,
+              "line": 34,
+              "col": 12,
+              "tokLen": 9
+            },
+            "end": {
+              "offset": 1785,
+              "col": 12,
+              "tokLen": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "0x1cfd74ab7a8",
+      "kind": "FunctionDecl",
+      "loc": {
+        "offset": 1930,
+        "line": 37,
+        "col": 28,
+        "tokLen": 25
+      },
+      "range": {
+        "begin": {
+          "offset": 1903,
+          "col": 1,
+          "tokLen": 10
+        },
+        "end": {
+          "offset": 1956,
+          "col": 54,
+          "tokLen": 1
+        }
+      },
+      "name": "GetAllVAddressesOfImports",
+      "mangledName": "GetAllVAddressesOfImports",
+      "type": {
+        "qualType": "void ()"
+      },
+      "inner": [
+        {
+          "id": "0x1cfd74ab850",
+          "kind": "DLLExportAttr",
+          "range": {
+            "begin": {
+              "offset": 1914,
+              "col": 12,
+              "tokLen": 9
+            },
+            "end": {
+              "offset": 1914,
+              "col": 12,
+              "tokLen": 9
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
