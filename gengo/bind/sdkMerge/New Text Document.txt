@@ -1,0 +1,18 @@
+func Test_transFile(t *testing.T) {
+	includePaths := []string{
+		"D:/fork/cpp2go/test/hyperdbg/dependencies",
+		"D:/fork/cpp2go/test/hyperdbg/hprdbgctrl",
+		"D:/fork/cpp2go/test/hyperdbg/hprdbgctrl/header",
+		"D:/fork/cpp2go/test/hyperdbg/include",
+		"C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.40.33807/include",
+		"C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.40.33807/atlmfc/include",
+		"C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/VS/include",
+		"C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/ucrt",
+		"C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/um",
+		"C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/shared",
+		"C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/winrt",
+		"C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0/cppwinrt",
+		"C:/Program Files (x86)/Windows Kits/NETFXSDK/4.8.1/Include/um",
+	}
+
+	path := "D:\\fork\\cpp2go\\test\\hyperdbg\\hprdbgctrl\\code\\app\\hprdbgctrl"
