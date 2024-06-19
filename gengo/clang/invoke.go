@@ -38,6 +38,7 @@ func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
 	cmd.Stdout = Stdout
 	cmd.Stderr = Stderr
 	mylog.CheckIgnore(cmd.Run())
+	println(Stderr.String())
 	stream.WriteTruncate("Stderr.log", Stderr)
 	stream.WriteTruncate("Stdout.log", Stdout)
 	return Stdout.Bytes(), nil
