@@ -2,6 +2,7 @@
 package HPRDBGCTRL
 
 import (
+	"unsafe"
 	"github.com/can1357/gengo/gengort"
 )
 

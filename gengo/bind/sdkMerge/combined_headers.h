@@ -744,7 +744,13 @@ const unsigned char BuildSignature[] = {
 
 //#include <wchar.h>//for wchar_t
 //#include <Windows.h>//for PVOID
-//#include <assert.h>//warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
+#include <assert.h>//warning: use of 'static_assert' without inclusion of <assert.h> is a Microsoft extension [-Wmicrosoft-static-assert]
+
+typedef struct _LIST_ENTRY {
+   struct _LIST_ENTRY *Flink;
+   struct _LIST_ENTRY *Blink;
+} LIST_ENTRY, *PLIST_ENTRY;//, *RESTRICTED_POINTER PRLIST_ENTRY;
+
 
 typedef unsigned long long QWORD;
 typedef unsigned __int64   UINT64, *PUINT64;
@@ -758,8 +764,13 @@ typedef unsigned int *     PUINT;
 typedef unsigned __int64   ULONG64, *PULONG64;
 typedef unsigned __int64   DWORD64, *PDWORD64;
 typedef char               CHAR;
-typedef wchar_t            WCHAR;
+//typedef wchar_t            WCHAR;
+typedef short              WCHAR;
+typedef size_t             SIZE_T;
 #define VOID void
+#define PVOID void *
+#define LPVOID void *
+#define HANDLE void *
 
 typedef unsigned char  UCHAR;
 typedef unsigned short USHORT;
@@ -777,6 +788,7 @@ typedef unsigned short   UINT16, *PUINT16;
 typedef unsigned int     UINT32, *PUINT32;
 typedef unsigned __int64 UINT64, *PUINT64;
 
+#define MAX_PATH   260
 #define NULL_ZERO   0
 #define NULL64_ZERO 0ull
 
