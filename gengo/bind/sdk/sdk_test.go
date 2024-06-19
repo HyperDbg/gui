@@ -13,6 +13,26 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 )
 
+func TestName(t *testing.T) {
+	mylog.Todo("test bind bitset")
+	//typedef struct _CR3_TYPE
+	//{
+	//    union
+	//    {
+	//        UINT64 Flags;
+	//
+	//        struct
+	//        {
+	//            UINT64 Pcid : 12;
+	//            UINT64 PageFrameNumber : 36;
+	//            UINT64 Reserved1 : 12;
+	//            UINT64 Reserved_2 : 3;
+	//            UINT64 PcidInvalidate : 1;
+	//        } Fields;
+	//    };
+	//} CR3_TYPE, *PCR3_TYPE;
+}
+
 func TestBindAll(t *testing.T) {
 	mylog.Warning("cpp stl not supported")
 	filepath.Walk("../../../bin/debug", func(path string, info fs.FileInfo, err error) error {
