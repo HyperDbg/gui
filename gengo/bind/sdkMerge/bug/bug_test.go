@@ -8,7 +8,7 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 )
 
-func TestDemoDll(t *testing.T) {
+func TestBug(t *testing.T) {
 	pkg := gengo.NewPackage("bug")
 	path := "bug.h"
 	mylog.Check(pkg.Transform("bug", &clang.Options{
