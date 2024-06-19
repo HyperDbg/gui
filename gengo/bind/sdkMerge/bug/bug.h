@@ -13,7 +13,7 @@ typedef unsigned int *     PUINT;
 typedef unsigned __int64   ULONG64, *PULONG64;
 typedef unsigned __int64   DWORD64, *PDWORD64;
 typedef char               CHAR;
-typedef wchar_t            WCHAR;
+//typedef wchar_t            WCHAR;
 #define VOID void
 //#define PVOID void*
 //#define LPVOID void*

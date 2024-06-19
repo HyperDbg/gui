@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"github.com/ddkwork/golibrary/stream"
 
@@ -33,6 +34,7 @@ func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
 	cmd := exec.Command(o.ClangPath(), opt...)
 	cmd.Args = append(cmd.Args, o.AdditionalParams...)
 	cmd.Args = append(cmd.Args, o.Sources...)
+	println(strings.Join(cmd.Args, " "))
 	Stdout := &bytes.Buffer{}
 	Stderr := &bytes.Buffer{}
 	cmd.Stdout = Stdout
@@ -46,9 +48,9 @@ func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
 
 func CreateAST(opt *Options) ([]byte, error) {
 	return opt.ClangCommand(
-		"-E",
-		"-dM",
-		//"-fsyntax-only",
+		//"-E",
+		//"-dM",
+		"-fsyntax-only",
 		"-nobuiltininc",
 		"-Xclang",
 		"-ast-dump=json",
