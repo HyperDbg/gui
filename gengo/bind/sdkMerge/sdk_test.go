@@ -13,6 +13,18 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 )
 
+func mergeHeader() {
+
+}
+
+func handleDefileVars() {
+
+}
+
+func fixBitset() {
+
+}
+
 func TestName(t *testing.T) {
 	mylog.Todo("test bind bitset")
 	//typedef struct _CR3_TYPE
@@ -56,19 +68,19 @@ func bindOne(path string) {
 	// "问题是输出文件是一个而不是多个"
 	pkg := gengo.NewPackage("HPRDBGCTRL",
 		gengo.WithRemovePrefix(
-		//"Zydis_", "Zyan_", "Zycore_",
-		//"Zydis", "Zyan", "Zycore",
+			//"Zydis_", "Zyan_", "Zycore_",
+			//"Zydis", "Zyan", "Zycore",
 		),
 		gengo.WithInferredMethods([]gengo.MethodInferenceRule{
 			//{Name: "ZydisDecoder", Receiver: "Decoder"},
 		}),
 		gengo.WithForcedSynthetic(
-		//"ZydisShortString_",
-		//"struct ZydisShortString_",
+			//"ZydisShortString_",
+			//"struct ZydisShortString_",
 		),
 	)
 	mylog.Check(pkg.Transform("HPRDBGCTRL", &clang.Options{
-		Sources:          []string{path},
+		Sources: []string{path},
 		AdditionalParams: []string{
 			//"-DZYAN_NO_LIBC",
 			//"-DZYAN_STATIC_ASSERT",

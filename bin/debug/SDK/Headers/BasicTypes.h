@@ -17,7 +17,8 @@
 //               Basic Datatypes                //
 //////////////////////////////////////////////////
 
-#include <wchar.h>
+//#include <wchar.h>
+#include <windows.h>
 
 
 typedef unsigned long long QWORD;
@@ -34,6 +35,9 @@ typedef unsigned __int64   DWORD64, *PDWORD64;
 typedef char               CHAR;
 typedef wchar_t            WCHAR;
 #define VOID void
+//#define PVOID void*
+//#define LPVOID void*
+//#define HANDLE void*
 
 typedef unsigned char  UCHAR;
 typedef unsigned short USHORT;

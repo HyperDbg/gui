@@ -1,7 +1,6 @@
 package sdk
 
 import (
-	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -36,20 +35,25 @@ func TestName(t *testing.T) {
 func TestBindAll(t *testing.T) {
 	mylog.Warning("cpp stl not supported")
 	root := "../../../bin/debug"
-	root = "D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\SDK\\Imports"
+	root = "D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\SDK\\HyperDbgSdk.h"
+	// root = "D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\SDK\\Imports"
+	Sources := []string{}
 	filepath.Walk(root, func(path string, info fs.FileInfo, err error) error {
 		if filepath.Ext(path) == ".h" {
-			if strings.Contains(path, "Examples") { //todo bug:Imports dir was skipped
+			if strings.Contains(path, "Examples") { // todo bug:Imports dir was skipped
 				return err
 			}
-			mylog.Trace("binding", path)
-			mylog.Call(func() { bindOne(path) })
+			// mylog.Trace("binding", path)
+			// mylog.Call(func() { bindOne(path) })
+			Sources = append(Sources, path)
 		}
 		return err
 	})
+	mylog.Check(os.Chdir("../../../bin/debug"))
+	mylog.Call(func() { bindOne(Sources) })
 }
 
-func bindOne(path string) {
+func bindOne(Sources []string) {
 	// todo "需要实现处理多个dll导出函数的头文件问题，"
 	// "是像zydis一样合并头文件还是修改gengo支持的方案好?不确定，都需要尝试一下,"
 	// "问题是输出文件是一个而不是多个"
@@ -67,7 +71,7 @@ func bindOne(path string) {
 		),
 	)
 	mylog.Check(pkg.Transform("HPRDBGCTRL", &clang.Options{
-		Sources: []string{path},
+		Sources: Sources,
 		AdditionalParams: []string{
 			//"-DZYAN_NO_LIBC",
 			//"-DZYAN_STATIC_ASSERT",
@@ -83,16 +87,20 @@ func bindOne(path string) {
 			//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\winrt",
 			//"-IC:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include",
 
-			"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbgctrl",
-			"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbghv",
-			"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbgctrl\\header",
-			"-ID:\\fork\\HyperDbg\\hyperdbg\\include",
-			"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies",
-			"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies\\phnt",
+			//"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbgctrl",
+			//"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbghv",
+			//"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbgctrl\\header",
+			//"-ID:\\fork\\HyperDbg\\hyperdbg\\include",
+			//"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies",
+			//"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies\\phnt",
+			//"-ID:\\workspace\\workspace\\branch\\gui\\bin\\debug\\SDK",
+			"-I.",
 		},
 	}))
-	// mylog.Check(pkg.WriteToDir("../../../bin/debug"))
-	pkg.Fprint(func(path_ string) (io.WriteCloser, error) {
-		return os.Create(path + ".go")
-	})
+	return
+	mylog.Check(pkg.WriteToDir("../../../bin/debug"))
+	//return
+	//pkg.Fprint(func(path_ string) (io.WriteCloser, error) {
+	//	return os.Create(path + ".go")
+	//})
 }
