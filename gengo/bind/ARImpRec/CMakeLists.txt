@@ -3,5 +3,4 @@ project(demo)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(demo SHARED library.cpp
-        ARImpRec.h)
+add_library(demo SHARED ARImpRec.h)
