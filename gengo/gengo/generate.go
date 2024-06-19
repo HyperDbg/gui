@@ -69,7 +69,7 @@ func (mod Module) EmitEnum(n *clang.EnumDecl) {
 				if cval, ok := ival.(clang.ConstValueNode); ok {
 					val, _ = strconv.Atoi(cval.Value())
 				} else {
-					panic(fmt.Sprintf("unhandled value node: %T", ival))
+					mylog.Check(fmt.Sprintf("unhandled value node: %T", ival))
 				}
 			}
 

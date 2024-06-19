@@ -3,6 +3,7 @@ package bug
 
 import (
 	"unsafe"
+
 	"github.com/can1357/gengo/gengort"
 )
 
@@ -54,79 +55,91 @@ type XedImmdisS struct {
 	Present             int32
 	ImmediateIsUnsigned int32
 }
-type _Int128T = any
-type _Uint128T = any
-type __NSConstantString = any
-type SizeT = uint64
-type _BuiltinMsVaList = *byte
-type _BuiltinVaList = *byte
-type Qword = uint64
-type Uint64 = uint64
-type Puint64 = *uint64
-type Dword = uint64
-type Bool = int32
-type Byte = uint8
-type Word = uint16
-type Int = int32
-type Uint = uint32
-type Puint = *uint32
-type Ulong64 = uint64
-type Pulong64 = *uint64
-type Dword64 = uint64
-type Pdword64 = *uint64
-type Char = byte
-type Wchar = int32
-type Uchar = uint8
-type Ushort = uint16
-type Ulong = uint64
-type Boolean = Uchar
-type Pboolean = *Boolean
-type Int8 = int8
-type Pint8 = *int8
-type Int16 = int16
-type Pint16 = *int16
-type Int32 = int32
-type Pint32 = *int32
-type Int64 = int64
-type Pint64 = *int64
-type Uint8 = uint8
-type Puint8 = *uint8
-type Uint16 = uint16
-type Puint16 = *uint16
-type Uint32 = uint32
-type Puint32 = *uint32
-//type Uint64 = uint64
-//type Puint64 = *uint64
-type Pcr3Type = *Cr3Type
-type VmxSegmentAccessRightsType = any
-type XedImmdisT = XedImmdisS
+type (
+	_Int128T           = any
+	_Uint128T          = any
+	__NSConstantString = any
+	SizeT              = uint64
+	_BuiltinMsVaList   = *byte
+	_BuiltinVaList     = *byte
+	Qword              = uint64
+	Uint64             = uint64
+	Puint64            = *uint64
+	Dword              = uint64
+	Bool               = int32
+	Byte               = uint8
+	Word               = uint16
+	Int                = int32
+	Uint               = uint32
+	Puint              = *uint32
+	Ulong64            = uint64
+	Pulong64           = *uint64
+	Dword64            = uint64
+	Pdword64           = *uint64
+	Char               = byte
+	Wchar              = int32
+	Uchar              = uint8
+	Ushort             = uint16
+	Ulong              = uint64
+	Boolean            = Uchar
+	Pboolean           = *Boolean
+	Int8               = int8
+	Pint8              = *int8
+	Int16              = int16
+	Pint16             = *int16
+	Int32              = int32
+	Pint32             = *int32
+	Int64              = int64
+	Pint64             = *int64
+	Uint8              = uint8
+	Puint8             = *uint8
+	Uint16             = uint16
+	Puint16            = *uint16
+	Uint32             = uint32
+	Puint32            = *uint32
+)
+
+// type Uint64 = uint64
+// type Puint64 = *uint64
+type (
+	Pcr3Type                   = *Cr3Type
+	VmxSegmentAccessRightsType = any
+	XedImmdisT                 = XedImmdisS
+)
 
 func (s Anon46_6) Flags() Uint64 {
 	return gengort.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
+
 func (s *Anon46_6) SetFlags(v Uint64) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
+
 func (s Anon46_6) Fields() Anon50_10 {
 	return gengort.ReadBitcast[Anon50_10](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
+
 func (s *Anon46_6) SetFields(v Anon50_10) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
-func (s Anon61_9)Get () Anon63_5 {
+
+func (s Anon61_9) Get() Anon63_5 {
 	return gengort.ReadBitcast[Anon63_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
+
 func (s *Anon61_9) Set(v Anon63_5) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
+
 func (s Anon61_9) AsUInt() Uint32 {
 	return gengort.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
+
 func (s *Anon61_9) SetAsUInt(v Uint32) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-//  Gengo init function.
+// Gengo init function.
 func init() {
 	gengort.Validate((*Cr3Type)(nil), 0x8, 0x8)
 	gengort.Validate((*Anon46_6)(nil), 0x8, 0x8)

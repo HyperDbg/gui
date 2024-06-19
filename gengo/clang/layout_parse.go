@@ -82,17 +82,13 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 			break
 		}
 
+		// Parse offset
 		if strings.Contains(before, ":") && strings.Contains(before, "-") {
-			mylog.Todo("bitset bug")
-			//continue
 			split := strings.Split(before, ":")
 			bitRange := strings.Split(split[1], "-")
 			start, end := mylog.Check2(strconv.Atoi(bitRange[0])), mylog.Check2(strconv.Atoi(bitRange[1]))
-			println(offset)
 			offset += end - start + 1
-			//offset = mylog.Check2(strconv.Atoi(bitRange[0]))
 		} else {
-			// Parse offset
 			offset = mylog.Check2Ignore(strconv.Atoi(strings.TrimSpace(before)))
 		}
 
