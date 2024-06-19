@@ -81,7 +81,7 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 		}
 
 		// Parse offset
-		offset := mylog.Check2(strconv.Atoi(strings.TrimSpace(before)))
+		offset := mylog.Check2(strconv.Atoi(strings.TrimSpace(before))) //todo bitset bug
 
 		// Determine indentation level
 		indent := len(after)
