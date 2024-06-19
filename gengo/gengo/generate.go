@@ -2,6 +2,7 @@ package gengo
 
 import (
 	"fmt"
+	"github.com/ddkwork/golibrary/mylog"
 	"go/token"
 	"strconv"
 	"strings"
@@ -636,6 +637,8 @@ func (mod Module) EmitFrom(ast clang.Node, layouts *clang.LayoutMap) {
 		}
 		return true
 	})
+
+	mylog.Todo("clang ast dumped define vars?")
 
 	// Define typedefs.
 	clang.Visit(ast, func(td *clang.TypedefDecl) bool {
