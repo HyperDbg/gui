@@ -135,7 +135,7 @@ func (n *baseNode) unmarshal(rt *refTracker, data *fastjson.Value) (err error) {
 	arr := data.GetArray("inner")
 	n.Inner = make([]Node, len(arr))
 	for i, v := range arr {
-		n.Inner[i] = mylog.Check2(unmarshalNode(rt, v))
+		n.Inner[i] = mylog.Check2Ignore(unmarshalNode(rt, v))
 	}
 	return nil
 }

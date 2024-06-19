@@ -31,7 +31,7 @@ func bindOne(path string) {
 	// todo "需要实现处理多个dll导出函数的头文件问题，"
 	// "是像zydis一样合并头文件还是修改gengo支持的方案好?不确定，都需要尝试一下,"
 	// "问题是输出文件是一个而不是多个"
-	pkg := gengo.NewPackage("sdk",
+	pkg := gengo.NewPackage("HPRDBGCTRL",
 		gengo.WithRemovePrefix(
 		//"Zydis_", "Zyan_", "Zycore_",
 		//"Zydis", "Zyan", "Zycore",
@@ -44,7 +44,7 @@ func bindOne(path string) {
 		//"struct ZydisShortString_",
 		),
 	)
-	mylog.Check(pkg.Transform("sdk", &clang.Options{
+	mylog.Check(pkg.Transform("HPRDBGCTRL", &clang.Options{
 		Sources: []string{path},
 		AdditionalParams: []string{
 			//"-DZYAN_NO_LIBC",
@@ -70,6 +70,6 @@ func bindOne(path string) {
 	}))
 	// mylog.Check(pkg.WriteToDir("../../../bin/debug"))
 	pkg.Fprint(func(path_ string) (io.WriteCloser, error) {
-		return os.Create(path)
+		return os.Create(path + ".go")
 	})
 }

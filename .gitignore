@@ -2,6 +2,8 @@ log.log
 .idea
 reset git.cmd
 *.json
-bin
+*.pdb
+*.exp
+*.lib
 cmake-build-debug
 Stdout.log
