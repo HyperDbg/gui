@@ -1,5 +1,5 @@
 {
-  "id": "0x1f6d25f9380",
+  "id": "0x27d582700a0",
   "kind": "TranslationUnitDecl",
   "loc": {},
   "range": {
@@ -8,7 +8,7 @@
   },
   "inner": [
     {
-      "id": "0x1f6d25f9bd8",
+      "id": "0x27d582708f8",
       "kind": "CXXRecordDecl",
       "loc": {},
       "range": {
@@ -20,7 +20,7 @@
       "tagUsed": "struct",
       "inner": [
         {
-          "id": "0x1f6d25f9c90",
+          "id": "0x27d582709b0",
           "kind": "TypeVisibilityAttr",
           "range": {
             "begin": {},
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "id": "0x1f6d25f9d08",
+      "id": "0x27d58270a28",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -45,7 +45,7 @@
       },
       "inner": [
         {
-          "id": "0x1f6d25f9950",
+          "id": "0x27d58270670",
           "kind": "BuiltinType",
           "type": {
             "qualType": "__int128"
@@ -54,7 +54,7 @@
       ]
     },
     {
-      "id": "0x1f6d25f9d78",
+      "id": "0x27d58270a98",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -68,7 +68,7 @@
       },
       "inner": [
         {
-          "id": "0x1f6d25f9970",
+          "id": "0x27d58270690",
           "kind": "BuiltinType",
           "type": {
             "qualType": "unsigned __int128"
@@ -77,7 +77,7 @@
       ]
     },
     {
-      "id": "0x1f6d25fa118",
+      "id": "0x27d58270e38",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -91,13 +91,13 @@
       },
       "inner": [
         {
-          "id": "0x1f6d25f9e60",
+          "id": "0x27d58270b80",
           "kind": "RecordType",
           "type": {
             "qualType": "__NSConstantString_tag"
           },
           "decl": {
-            "id": "0x1f6d25f9dd0",
+            "id": "0x27d58270af0",
             "kind": "CXXRecordDecl",
             "name": "__NSConstantString_tag"
           }
@@ -105,7 +105,7 @@
       ]
     },
     {
-      "id": "0x1f6d25fa170",
+      "id": "0x27d58270e90",
       "kind": "CXXRecordDecl",
       "loc": {},
       "range": {
@@ -117,7 +117,7 @@
       "tagUsed": "class",
       "inner": [
         {
-          "id": "0x1f6d25fa220",
+          "id": "0x27d58270f40",
           "kind": "TypeVisibilityAttr",
           "range": {
             "begin": {},
@@ -128,7 +128,7 @@
       ]
     },
     {
-      "id": "0x1f6d25fa298",
+      "id": "0x27d58270fb8",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -142,7 +142,7 @@
       },
       "inner": [
         {
-          "id": "0x1f6d25f9570",
+          "id": "0x27d58270290",
           "kind": "BuiltinType",
           "type": {
             "qualType": "unsigned long long"
@@ -151,7 +151,7 @@
       ]
     },
     {
-      "id": "0x1f6d3fd2238",
+      "id": "0x27d582aaeb8",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -165,14 +165,14 @@
       },
       "inner": [
         {
-          "id": "0x1f6d25fa2f0",
+          "id": "0x27d58271010",
           "kind": "PointerType",
           "type": {
             "qualType": "char *"
           },
           "inner": [
             {
-              "id": "0x1f6d25f9430",
+              "id": "0x27d58270150",
               "kind": "BuiltinType",
               "type": {
                 "qualType": "char"
@@ -183,7 +183,7 @@
       ]
     },
     {
-      "id": "0x1f6d3fd22a8",
+      "id": "0x27d582aaf28",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -197,14 +197,14 @@
       },
       "inner": [
         {
-          "id": "0x1f6d25fa2f0",
+          "id": "0x27d58271010",
           "kind": "PointerType",
           "type": {
             "qualType": "char *"
           },
           "inner": [
             {
-              "id": "0x1f6d25f9430",
+              "id": "0x27d58270150",
               "kind": "BuiltinType",
               "type": {
                 "qualType": "char"
@@ -215,7 +215,7 @@
       ]
     },
     {
-      "id": "0x1f6d3fd2348",
+      "id": "0x27d582aafc8",
       "kind": "FunctionDecl",
       "loc": {
         "offset": 82,
@@ -243,7 +243,7 @@
       },
       "inner": [
         {
-          "id": "0x1f6d3fd23f0",
+          "id": "0x27d582ab070",
           "kind": "DLLExportAttr",
           "range": {
             "begin": {

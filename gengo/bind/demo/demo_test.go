@@ -13,11 +13,7 @@ func TestHello(t *testing.T) {
 }
 
 func TestDemoDll(t *testing.T) {
-	pkg := gengo.NewPackage("demo",
-		gengo.WithForcedSynthetic(
-			"ZydisShortString_",
-			"struct ZydisShortString_",
-		))
+	pkg := gengo.NewPackage("demo")
 	path := "cpp\\library.hpp"
 	mylog.Check(pkg.Transform("demo", &clang.Options{
 		Sources:          []string{path},
