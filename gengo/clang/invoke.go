@@ -50,6 +50,8 @@ func CreateAST(opt *Options) ([]byte, error) {
 		"-nobuiltininc",
 		"-Xclang",
 		"-ast-dump=json",
+		"-Xclang",
+		"-fmacro-backtrace-limit=0",
 	)
 }
 
@@ -62,6 +64,8 @@ func CreateLayoutMap(opt *Options) ([]byte, error) {
 		"-fdump-record-layouts",
 		"-Xclang",
 		"-fdump-record-layouts-complete",
+		"-Xclang",
+		"-fmacro-backtrace-limit=0",
 	)
 }
 
