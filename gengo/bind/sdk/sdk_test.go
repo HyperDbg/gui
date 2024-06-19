@@ -1,12 +1,17 @@
 package sdk
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/can1357/gengo/clang"
 	"github.com/can1357/gengo/gengo"
 	"github.com/ddkwork/golibrary/mylog"
 )
+
+func TestBindAll(t *testing.T) {
+	filepath.Walk()
+}
 
 func TestSdk(t *testing.T) {
 	mylog.Todo("需要实现处理多个dll导出函数的头文件问题，" +
