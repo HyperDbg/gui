@@ -9,6 +9,7 @@ import (
 )
 
 func TestSdk(t *testing.T) {
+	mylog.Todo("需要实现处理多个dll导出函数的头文件问题，是像zydis一样合并头文件还是修改gengo支持的方案好?不确定，都需要尝试一下")
 	pkg := gengo.NewPackage("sdk",
 		gengo.WithRemovePrefix(
 		//"Zydis_", "Zyan_", "Zycore_",
