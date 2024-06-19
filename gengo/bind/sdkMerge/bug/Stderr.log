@@ -1,0 +1,19 @@
+bug.h:11:10: error: unknown type name 'UINT64'
+   11 |                 UINT64 Flags;
+      |                 ^
+bug.h:15:14: error: unknown type name 'UINT64'
+   15 |                     UINT64 Pcid : 12;
+      |                     ^
+bug.h:16:14: error: unknown type name 'UINT64'
+   16 |                     UINT64 PageFrameNumber : 36;
+      |                     ^
+bug.h:17:14: error: unknown type name 'UINT64'
+   17 |                     UINT64 Reserved1 : 12;
+      |                     ^
+bug.h:18:14: error: unknown type name 'UINT64'
+   18 |                     UINT64 Reserved_2 : 3;
+      |                     ^
+bug.h:19:14: error: unknown type name 'UINT64'
+   19 |                     UINT64 PcidInvalidate : 1;
+      |                     ^
+6 errors generated.
