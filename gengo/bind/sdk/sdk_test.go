@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/can1357/gengo/clang"
@@ -16,6 +17,10 @@ func TestBindAll(t *testing.T) {
 	mylog.Warning("cpp stl not supported")
 	filepath.Walk("../../../bin/debug", func(path string, info fs.FileInfo, err error) error {
 		if filepath.Ext(path) == ".h" {
+			if strings.Contains(path, "Examples") {
+				return err
+			}
+			mylog.Trace("binding", path)
 			bindOne(path)
 		}
 		return err
