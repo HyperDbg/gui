@@ -742,6 +742,8 @@ const unsigned char BuildSignature[] = {
 //               Basic Datatypes                //
 //////////////////////////////////////////////////
 
+#include <wchar.h>
+
 typedef unsigned long long QWORD;
 typedef unsigned __int64   UINT64, *PUINT64;
 typedef unsigned long      DWORD;
