@@ -2,4 +2,5 @@ log.log
 .idea
 reset git.cmd
 *.json
-/bin/
+bin
+cmake-build-debug
