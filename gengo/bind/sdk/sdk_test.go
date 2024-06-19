@@ -11,30 +11,18 @@ import (
 func TestSdk(t *testing.T) {
 	pkg := gengo.NewPackage("sdk",
 		gengo.WithRemovePrefix(
-			"Zydis_", "Zyan_", "Zycore_",
-			"Zydis", "Zyan", "Zycore",
+		//"Zydis_", "Zyan_", "Zycore_",
+		//"Zydis", "Zyan", "Zycore",
 		),
 		gengo.WithInferredMethods([]gengo.MethodInferenceRule{
-			{Name: "ZydisDecoder", Receiver: "Decoder"},
-			{Name: "ZydisEncoder", Receiver: "EncoderRequest"},
-			{Name: "ZydisFormatterBuffer", Receiver: "FormatterBuffer"},
-			{Name: "ZydisFormatter", Receiver: "ZydisFormatter *"},
-			{Name: "ZyanVector", Receiver: "Vector"},
-			{Name: "ZyanStringView", Receiver: "StringView"},
-			{Name: "ZyanString", Receiver: "String"},
-			{Name: "ZydisRegister", Receiver: "Register"},
-			{Name: "ZydisMnemonic", Receiver: "Mnemonic"},
-			{Name: "ZydisISASet", Receiver: "ISASet"},
-			{Name: "ZydisISAExt", Receiver: "ISAExt"},
-			{Name: "ZydisCategory", Receiver: "Category"},
+			//{Name: "ZydisDecoder", Receiver: "Decoder"},
 		}),
 		gengo.WithForcedSynthetic(
-			"ZydisShortString_",
-			"struct ZydisShortString_",
+		//"ZydisShortString_",
+		//"struct ZydisShortString_",
 		),
 	)
-	path := "D:\\fork\\HyperDbg\\hyperdbg\\build\\bin\\debug\\SDK\\Headers\\BasicTypes.h"
-	path = "D:\\fork\\HyperDbg\\hyperdbg\\hprdbghv\\code\\vmm\\ept\\Ept.c"
+	path := "../../../bin/debug/SDK/Imports/HyperDbgVmmImports.h"
 	mylog.Check(pkg.Transform("sdk", &clang.Options{
 		Sources: []string{path},
 		// Sources: []string{"./Zydis.h"},
@@ -60,20 +48,19 @@ func TestSdk(t *testing.T) {
 			//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\shared",
 			//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\ucrt",
 			//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\um",
-			"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\km",
-			"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\km\\crt",
+			//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\km",
+			//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\km\\crt",
 
 			//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\winrt",
 			//"-IC:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include",
 
 			//"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbgctrl",
-			"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbghv",
-			"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbgctrl\\header",
-			"-ID:\\fork\\HyperDbg\\hyperdbg\\include",
-			"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies",
-			"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies\\phnt",
+			//"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbghv",
+			//"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbgctrl\\header",
+			//"-ID:\\fork\\HyperDbg\\hyperdbg\\include",
+			//"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies",
+			//"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies\\phnt",
 		},
 	}))
-
-	mylog.Check(pkg.WriteToDir("sdk"))
+	mylog.Check(pkg.WriteToDir("../../../bin"))
 }
