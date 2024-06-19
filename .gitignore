@@ -4,3 +4,4 @@ reset git.cmd
 *.json
 bin
 cmake-build-debug
+Stdout.log
