@@ -1681,8 +1681,7 @@ ZYDIS_EXPORT const char* ZydisCategoryGetString(ZydisInstructionCategory categor
  *
  * @return  The isa-set string or `ZYAN_NULL`, if an invalid isa-set was passed.
  */
-//ZYDIS_EXPORT const char* ZydisISASetGetString(ZydisISASet isa_set);
-__declspec(dllexport) const char* ZydisISASetGetString(ZydisISASet isa_set);
+ZYDIS_EXPORT const char* ZydisISASetGetString(ZydisISASet isa_set);
 
 /**
  * Returns the specified isa-extension string.
