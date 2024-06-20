@@ -642,6 +642,10 @@ func (mod Module) EmitFrom(ast clang.Node, layouts *clang.LayoutMap) {
 	mylog.Todo("TypedefDecl cpp model not working")
 	// Define typedefs.
 	clang.Visit(ast, func(td *clang.TypedefDecl) bool {
+		mylog.Warning("TypedefDecl "+td.Name, td.Type.QualType)
+		if td.Name == "CR3_TYPE" {
+			println()
+		}
 		mod.EmitTypedef(td)
 		return true
 	})

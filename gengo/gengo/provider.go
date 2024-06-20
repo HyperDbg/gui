@@ -346,7 +346,7 @@ func (p *BaseProvider) ConvertQualType(q string) dst.Expr {
 	}
 
 	// Unknown type.
-	fmt.Printf("[WARN] Unknown type: %s\n", q)
+	mylog.Trace("Unknown type", q)
 	return BuiltinAny.Ref()
 }
 
