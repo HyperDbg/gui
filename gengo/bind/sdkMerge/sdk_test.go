@@ -3,6 +3,7 @@ package sdk
 import (
 	"strings"
 	"testing"
+	"unicode"
 
 	"github.com/ddkwork/golibrary/stream"
 
@@ -15,12 +16,27 @@ import (
 func mergeHeader() {
 }
 
+// ContainsLetter 检查字符串中是否包含字母
+func ContainsLetter(s string) bool {
+	if strings.HasPrefix(s, "0x") {
+		return false
+	}
+	for _, char := range s {
+		if unicode.IsLetter(char) {
+			return true
+		}
+	}
+	return false
+}
+
 func TestBindMacros(t *testing.T) {
 	mylog.Todo("handle macros func like CTL_CODE(DeviceType,Function,Method,Access) ( ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method)) ")
 
 	vars := stream.NewBuffer("")
 	vars.WriteStringLn("package sdk")
 	vars.WriteStringLn("var (")
+	vars.WriteStringLn("MaxSerialPacketSize =10 * NORMAL_PAGE_SIZE") // todo need first define NORMAL_PAGE_SIZE
+	vars.WriteStringLn("PAGE_SIZE = 4096")
 
 	skips := []string{
 		"BUILD_",
@@ -29,6 +45,9 @@ func TestBindMacros(t *testing.T) {
 		"FALSE",
 		"TRUE",
 		"_",
+		"LO",
+		"VOID",
+		"time_t",
 		//"",
 		//"",
 	}
@@ -44,9 +63,19 @@ func TestBindMacros(t *testing.T) {
 			}
 		}
 		if !stop {
+			line = strings.TrimSpace(line)
+			line = strings.TrimSuffix(line, " ")
 			println(line)
 			if strings.Count(line, " ") == 1 {
 				split := strings.Split(line, " ")
+				split[1] = strings.TrimSuffix(split[1], "ull")
+				split[1] = strings.TrimSuffix(split[1], "U")
+
+				if ContainsLetter(split[1]) {
+					mylog.Todo(split[1])
+					continue
+				}
+
 				vars.WriteStringLn(split[0] + "=" + split[1])
 			}
 		}
