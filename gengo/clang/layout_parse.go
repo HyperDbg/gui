@@ -142,6 +142,7 @@ type LayoutMap struct {
 const layoutMarker = "*** Dumping AST Record Layout"
 
 func (l *LayoutMap) UnmarshalString(data string) error {
+	mylog.Todo("bug _CR3_TYPE not decode into type map")
 	data = strings.TrimSpace(data)
 	data, found := strings.CutPrefix(data, layoutMarker)
 	if !found {
