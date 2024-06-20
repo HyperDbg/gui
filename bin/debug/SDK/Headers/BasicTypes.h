@@ -17,7 +17,8 @@
 //               Basic Datatypes                //
 //////////////////////////////////////////////////
 
-#include <wchar.h>
+#include <wchar.h> // 或者 #include <cwchar>
+
 
 typedef unsigned long long QWORD;
 typedef unsigned __int64   UINT64, *PUINT64;
@@ -33,9 +34,6 @@ typedef unsigned __int64   DWORD64, *PDWORD64;
 typedef char               CHAR;
 typedef wchar_t            WCHAR;
 #define VOID void
-//#define PVOID void*
-//#define LPVOID void*
-//#define HANDLE void*
 
 typedef unsigned char  UCHAR;
 typedef unsigned short USHORT;
@@ -131,19 +129,19 @@ typedef struct _SCRIPT_ENGINE_VARIABLES_LIST
  * @brief CR3 Structure
  *
  */
-//typedef struct _CR3_TYPE
-//{
-//    union
-//    {
-//        UINT64 Flags;
-//
-//        struct
-//        {
-//            UINT64 Pcid : 12;
-//            UINT64 PageFrameNumber : 36;
-//            UINT64 Reserved1 : 12;
-//            UINT64 Reserved_2 : 3;
-//            UINT64 PcidInvalidate : 1;
-//        } Fields;
-//    };
-//} CR3_TYPE, *PCR3_TYPE;
+typedef struct _CR3_TYPE
+{
+    union
+    {
+        UINT64 Flags;
+
+        struct
+        {
+            UINT64 Pcid : 12;
+            UINT64 PageFrameNumber : 36;
+            UINT64 Reserved1 : 12;
+            UINT64 Reserved_2 : 3;
+            UINT64 PcidInvalidate : 1;
+        } Fields;
+    };
+} CR3_TYPE, *PCR3_TYPE;
