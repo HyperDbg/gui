@@ -1,1 +1,2 @@
-go get github.com/ddkwork/app@bd28c7f7b73942e5ba4c6c7f7cc682e41870ea6b
+go get github.com/ddkwork/app@df6a2637531300d8832b4c9db420e331ad3b2090
+pause
