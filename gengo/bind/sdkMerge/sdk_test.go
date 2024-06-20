@@ -80,13 +80,19 @@ func TestBindMacros(t *testing.T) {
 				return true
 			}
 
-			vars.WriteStringLn(split[0] + "=" + split[1])
+			g.P(split[0] + "=" + split[1])
+			allVars.Delete(k)
 		}
 		return true
 	})
 
 	g.P(")")
 	stream.WriteGoFile("tmp/vars.go", g.Buffer)
+
+	allVars.Range(func(k string, v bool) bool {
+		mylog.Todo(k)
+		return true
+	})
 }
 
 func TestBind(t *testing.T) {
