@@ -90,7 +90,7 @@ func TestBindMacros(t *testing.T) {
 	stream.WriteGoFile("tmp/vars.go", g.Buffer)
 
 	allVars.Range(func(k string, v bool) bool {
-		mylog.Todo(k)
+		mylog.Todo(k + " need handle")
 		return true
 	})
 }
