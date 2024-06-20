@@ -74,18 +74,14 @@ func TestBindMacros(t *testing.T) {
 			split := strings.Split(line, " ")
 			split[1] = strings.TrimSuffix(split[1], "ull")
 			split[1] = strings.TrimSuffix(split[1], "U")
-
 			if ContainsLetter(split[1]) {
-				mylog.Todo(split[1])
 				return true
 			}
-
 			g.P(split[0] + "=" + split[1])
 			allVars.Delete(k)
 		}
 		return true
 	})
-
 	g.P(")")
 	stream.WriteGoFile("tmp/vars.go", g.Buffer)
 
