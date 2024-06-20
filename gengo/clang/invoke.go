@@ -35,7 +35,7 @@ func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
 	cmd.Args = append(cmd.Args, o.AdditionalParams...)
 	cmd.Args = append(cmd.Args, o.Sources...)
 
-	return []byte(stream.RunCommandArgs(cmd.Args...).Result), nil
+	return stream.RunCommandArgs(cmd.Args...).Output.Bytes(), nil
 
 	//cmd.Args = append(cmd.Args, "2>&1")
 	mylog.Trace("commands", strings.Join(cmd.Args, " "))
