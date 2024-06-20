@@ -22,12 +22,12 @@ type Options struct {
 func (o *Options) ClangPath() string {
 	if o.ToolkitPath != "" {
 		if stat, e := os.Stat(o.ToolkitPath); e == nil && stat.IsDir() {
-			return filepath.Join(o.ToolkitPath, "clang")
+			return filepath.Join(o.ToolkitPath, "clang++")
 		} else {
 			return o.ToolkitPath
 		}
 	}
-	return "clang"
+	return "clang++"
 }
 
 func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
