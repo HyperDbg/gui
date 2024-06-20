@@ -3,6 +3,7 @@ package gengo
 import (
 	"bytes"
 	"fmt"
+	"github.com/ddkwork/golibrary/stream"
 	"go/ast"
 	"go/token"
 	"io"
@@ -54,10 +55,11 @@ func (p *Package) Transform(module string, opt *clang.Options) error {
 func (p *Package) Fprint(fn func(path string) (io.WriteCloser, error)) error {
 	p.Restorer.Extras = true
 	for k, f := range p.Files {
-		file := mylog.Check2(fn(k + ".go"))
-
+		name := k + ".go"
+		file := mylog.Check2(fn(name))
 		p.Restorer.Fprint(file, f)
 		mylog.Check(file.Close())
+		stream.WriteGoFile(name, stream.NewBuffer(name))
 	}
 	return nil
 }
@@ -149,7 +151,7 @@ func (p *Package) Print() {
 }
 
 func (p *Package) WriteToDir(dir string) error {
-	os.Mkdir(dir, 0755)
+	mylog.Check(os.Mkdir(dir, 0755))
 	return p.Fprint(func(path string) (io.WriteCloser, error) {
 		return os.Create(filepath.Join(dir, path))
 	})

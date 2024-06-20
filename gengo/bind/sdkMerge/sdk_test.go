@@ -1,6 +1,7 @@
 package sdk
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/ddkwork/golibrary/stream"
@@ -15,9 +16,30 @@ func mergeHeader() {
 }
 
 func TestBindMacros(t *testing.T) {
+	skips := []string{
+		"BUILD_",
+		"FILE_DEVICE_UNKNOWN",
+		"FILE_ANY_ACCESS",
+		"FALSE",
+		"TRUE",
+		"_",
+		//"",
+		//"",
+	}
 	lines := stream.NewBuffer("macros.log").ToLines()
 	for _, line := range lines {
-		println(line)
+		line = strings.TrimPrefix(line, "#define ")
+		//line = strings.TrimSpace(line)
+		stop := false
+		for _, skip := range skips {
+			if strings.HasPrefix(line, skip) {
+				stop = true
+				continue
+			}
+		}
+		if !stop {
+			println(line)
+		}
 	}
 }
 
