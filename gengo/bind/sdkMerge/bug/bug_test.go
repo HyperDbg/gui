@@ -10,7 +10,7 @@ import (
 
 func TestBug(t *testing.T) {
 	pkg := gengo.NewPackage("bug")
-	path := "bug.h"
+	path := "bug.hpp"
 	mylog.Check(pkg.Transform("bug", &clang.Options{
 		Sources:          []string{path},
 		AdditionalParams: []string{},

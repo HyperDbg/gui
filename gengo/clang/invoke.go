@@ -39,7 +39,7 @@ func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
 	Stderr := &bytes.Buffer{}
 	cmd.Stdout = Stdout
 	cmd.Stderr = Stderr
-	mylog.Check(cmd.Run())
+	mylog.CheckIgnore(cmd.Run())
 	mylog.Check(Stderr.Bytes())
 	return Stdout.Bytes(), nil
 }
@@ -86,6 +86,6 @@ func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 		return e
 	})
 	mylog.Check(errg.Wait())
-	mylog.Check2(opt.ClangCommand("-E -dM test.hpp > macros.txt"))
+	stream.RunCommand("clang++ -E -dM " + opt.Sources[0] + " > macros.log")
 	return ast, layout, nil
 }
