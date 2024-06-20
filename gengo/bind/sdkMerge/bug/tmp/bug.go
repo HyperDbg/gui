@@ -31,6 +31,7 @@ type Pulong64 = *uint64
 type Dword64 = uint64
 type Pdword64 = *uint64
 type Char = byte
+type Wchar = any
 type Uchar = uint8
 type Ushort = uint16
 type Ulong = uint64
@@ -54,8 +55,8 @@ type Uint64 = uint64
 type Puint64 = *uint64
 type Cr3Type = any
 type Pcr3Type = unsafe.Pointer
-type VmxSegmentAccessRightsType = any
 type XedImmdisT = any
+type VmxSegmentAccessRightsType = any
 
 //  Gengo init function.
 func init() {}
