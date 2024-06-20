@@ -37,7 +37,7 @@ func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
 
 	return stream.RunCommandArgs(cmd.Args...).Output.Bytes(), nil
 
-	//cmd.Args = append(cmd.Args, "2>&1")
+	// cmd.Args = append(cmd.Args, "2>&1")
 	mylog.Trace("commands", strings.Join(cmd.Args, " "))
 	Stdout := &bytes.Buffer{}
 	Stderr := &bytes.Buffer{}
@@ -84,6 +84,6 @@ func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 		return nil
 	})
 	mylog.Check(errg.Wait())
-	stream.RunCommand("clang -E -dM " + opt.Sources[0] + " > macros.log") //2>&1
+	stream.RunCommand("clang -E -dM " + opt.Sources[0] + " > macros.log") // 2>&1
 	return ast, layout, nil
 }

@@ -67,8 +67,8 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 
 	switch {
 	case strings.Contains(data, "__NSConstantString_tag"):
-		//mylog.Warning("skip unmarshal RecordLayout", data)
-		//return nil
+		// mylog.Warning("skip unmarshal RecordLayout", data)
+		// return nil
 	}
 
 	first := true
@@ -87,7 +87,7 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 		before = strings.TrimSpace(before)
 		if before == "" {
 			after = strings.TrimSpace(after)
-			//mylog.Check2(fmt.Sscanf(after, "[sizeof=%d, align=%d]", &r.Size, &r.Align))
+			// mylog.Check2(fmt.Sscanf(after, "[sizeof=%d, align=%d]", &r.Size, &r.Align))
 			mylog.Check2(fmt.Sscanf(after, "[sizeof=%d, align=%d", &r.Size, &r.Align))
 			break
 		}
@@ -109,12 +109,12 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 		after = strings.TrimSpace(after)
 
 		// Parse name and type
-		name := "" //todo test
+		name := "" // todo test
 
 		typen := after
-		//save strut type todo test
+		// save strut type todo test
 		if strings.HasPrefix(typen, "struct ") {
-			//typen = "struct "
+			// typen = "struct "
 		}
 		if lastSpace := strings.LastIndex(after, " "); lastSpace != -1 {
 			// If the last space is followed by a closing parenthesis, then it is part of the type.
@@ -128,7 +128,7 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 		}
 
 		if name == "" {
-			//continue
+			// continue
 		}
 
 		// Create node
@@ -147,7 +147,7 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 			})
 		}
 	}
-	//mylog.Json("layout", r.layout.Fields)
+	// mylog.Json("layout", r.layout.Fields)
 	// Group fields
 	r.regroup()
 	return nil

@@ -9,49 +9,54 @@ const GengoLibraryName = "ARImpRec"
 
 var GengoLibrary = gengort.NewLibrary(GengoLibraryName)
 
-type _Int128T = any
-type _Uint128T = any
-type __NSConstantString = any
-type SizeT = uint64
-type _BuiltinMsVaList = *byte
-type _BuiltinVaList = *byte
-type UintptrT = uint64
-type VaList = *byte
-//type SizeT = uint64
-type PtrdiffT = int64
-type IntptrT = int64
-type _VcrtBool = bool
-type WcharT = uint16
-type Int8T = int8
-type Int16T = int16
-type Int32T = int32
-type Int64T = int64
-type Uint8T = uint8
-type Uint16T = uint16
-type Uint32T = uint32
-type Uint64T = uint64
-type IntLeast8T = int8
-type IntLeast16T = int16
-type IntLeast32T = int32
-type IntLeast64T = int64
-type UintLeast8T = uint8
-type UintLeast16T = uint16
-type UintLeast32T = uint32
-type UintLeast64T = uint64
-type IntFast8T = int8
-type IntFast16T = int32
-type IntFast32T = int32
-type IntFast64T = int64
-type UintFast8T = uint8
-type UintFast16T = uint32
-type UintFast32T = uint32
-type UintFast64T = uint64
-type IntmaxT = int64
-type UintmaxT = uint64
+type (
+	_Int128T           = any
+	_Uint128T          = any
+	__NSConstantString = any
+	SizeT              = uint64
+	_BuiltinMsVaList   = *byte
+	_BuiltinVaList     = *byte
+	UintptrT           = uint64
+	VaList             = *byte
+)
 
-//var __imp___va_start gengort.PreloadProc
+// type SizeT = uint64
+type (
+	PtrdiffT     = int64
+	IntptrT      = int64
+	_VcrtBool    = bool
+	WcharT       = uint16
+	Int8T        = int8
+	Int16T       = int16
+	Int32T       = int32
+	Int64T       = int64
+	Uint8T       = uint8
+	Uint16T      = uint16
+	Uint32T      = uint32
+	Uint64T      = uint64
+	IntLeast8T   = int8
+	IntLeast16T  = int16
+	IntLeast32T  = int32
+	IntLeast64T  = int64
+	UintLeast8T  = uint8
+	UintLeast16T = uint16
+	UintLeast32T = uint32
+	UintLeast64T = uint64
+	IntFast8T    = int8
+	IntFast16T   = int32
+	IntFast32T   = int32
+	IntFast64T   = int64
+	UintFast8T   = uint8
+	UintFast16T  = uint32
+	UintFast32T  = uint32
+	UintFast64T  = uint64
+	IntmaxT      = int64
+	UintmaxT     = uint64
+)
 
-//  Gengo init function.
+// var __imp___va_start gengort.PreloadProc
+
+// Gengo init function.
 func init() {
 	__imp___va_start = GengoLibrary.ImportNow("__va_start")
 	__imp___va_start = GengoLibrary.ImportNow("__va_start")
@@ -70,12 +75,11 @@ func init() {
 	__imp_GetProcName = GengoLibrary.ImportNow("GetProcName")
 	__imp_GetAllVAddressesOfImports = GengoLibrary.ImportNow("GetAllVAddressesOfImports")
 }
-func _VaStart( **byte) { gengort.CCall1(__imp___va_start.Addr(), gengort.MarshallSyscall("")) }
+func _VaStart(**byte) { gengort.CCall1(__imp___va_start.Addr(), gengort.MarshallSyscall("")) }
 
 var __imp___va_start gengort.PreloadProc
 
-//func _VaStart( *VaList) { gengort.CCall1(__imp___va_start.Addr(), gengort.MarshallSyscall()) }
-
+// func _VaStart( *VaList) { gengort.CCall1(__imp___va_start.Addr(), gengort.MarshallSyscall()) }
 var __imp___security_init_cookie gengort.PreloadProc
 
 func _SecurityInitCookie() { gengort.CCall0(__imp___security_init_cookie.Addr()) }

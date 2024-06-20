@@ -14,6 +14,8 @@ github.com/ddkwork/golibrary v0.0.62 h1:1FykFpwByIEtR6l7tm7sa2MmZDjuoMEcZwY3tB1J
 github.com/ddkwork/golibrary v0.0.62/go.mod h1:aLG0o5decT3ocB5SWY94n55ynRpVcL8OInSo2p0o5UA=
 github.com/ddkwork/golibrary v0.0.65 h1:/WyTQzoVywAlCbNQgVhnoPXQ91NS6KclXvUBLc1ZDlQ=
 github.com/ddkwork/golibrary v0.0.65/go.mod h1:/55gYXaVeq2QkSTCaBk3sL0yzbg+DDPr9u3AvyFJblU=
+github.com/ddkwork/golibrary v0.0.66 h1:8tsV0lUHZ0sfoqFTl6fF43GL4Kt+ttB0vyLc7LVbrEg=
+github.com/ddkwork/golibrary v0.0.66/go.mod h1:/55gYXaVeq2QkSTCaBk3sL0yzbg+DDPr9u3AvyFJblU=
 github.com/ebitengine/purego v0.7.1 h1:6/55d26lG3o9VCZX8lping+bZcmShseiqlh2bnUDiPA=
 github.com/ebitengine/purego v0.7.1/go.mod h1:ah1In8AOtksoNK6yk5z1HTJeUkC1Ez4Wk2idgGslMwQ=
 github.com/fatih/color v1.17.0 h1:GlRw1BRJxkpqUCBKzKOw098ed57fEsKeNjpTe3cSjK4=

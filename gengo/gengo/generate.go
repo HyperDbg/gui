@@ -2,10 +2,11 @@ package gengo
 
 import (
 	"fmt"
-	"github.com/ddkwork/golibrary/mylog"
 	"go/token"
 	"strconv"
 	"strings"
+
+	"github.com/ddkwork/golibrary/mylog"
 
 	"github.com/can1357/gengo/clang"
 	"github.com/dave/dst"
@@ -641,7 +642,7 @@ func (mod Module) EmitFrom(ast clang.Node, layouts *clang.LayoutMap) {
 
 	// Define typedefs.
 	clang.Visit(ast, func(td *clang.TypedefDecl) bool {
-		//mylog.Warning(td.Name, td.Type.QualType)
+		// mylog.Warning(td.Name, td.Type.QualType)
 		mod.EmitTypedef(td)
 		return true
 	})

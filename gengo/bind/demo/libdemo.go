@@ -3,6 +3,7 @@ package libdemo
 
 import (
 	"unsafe"
+
 	"github.com/can1357/gengo/gengort"
 )
 
@@ -10,15 +11,17 @@ const GengoLibraryName = "libdemo"
 
 var GengoLibrary = gengort.NewLibrary(GengoLibraryName)
 
-type _Int128T = any
-type _Uint128T = any
-type __NSConstantString = any
-type SizeT = uint64
-type _BuiltinMsVaList = *byte
-type _BuiltinVaList = *byte
+type (
+	_Int128T           = any
+	_Uint128T          = any
+	__NSConstantString = any
+	SizeT              = uint64
+	_BuiltinMsVaList   = *byte
+	_BuiltinVaList     = *byte
+)
 
 var __imp_hello gengort.PreloadProc
 
-//  Gengo init function.
+// Gengo init function.
 func init()  { __imp_hello = GengoLibrary.ImportNow("hello") }
 func Hello() { gengort.CCall0(__imp_hello.Addr()) }
