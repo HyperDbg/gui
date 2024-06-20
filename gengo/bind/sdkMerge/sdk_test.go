@@ -46,7 +46,7 @@ func MacrosInHeader() (m *maps.SafeMap[string, bool]) {
 func TestBindMacros(t *testing.T) {
 	mylog.Todo("handle macros func like CTL_CODE(DeviceType,Function,Method,Access) ( ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method)) ")
 	mustPrefixs := MacrosInHeader()
-	mylog.Trace("number of macros: %d", mustPrefixs.Len())
+	mylog.Trace("number of macros", mustPrefixs.Len())
 
 	g := stream.NewGeneratedFile()
 	g.P("package sdk")
