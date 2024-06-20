@@ -56,34 +56,34 @@ func TestBindMacros(t *testing.T) {
 	g.P("PAGE_SIZE = 4096")
 	g.P(")")
 
-	handledVars := new(maps.SafeMap[string, bool])
-	todoVars := new(maps.SafeMap[string, bool])
+	allVars := new(maps.SafeMap[string, bool])
 
 	for _, line := range stream.NewBuffer("macros.log").ToLines() {
 		for _, sure := range mustPrefixs.Keys() {
 			if strings.HasPrefix(line, sure) {
-				handledVars.Set(sure, true)
+				allVars.Set(line, true)
 			}
 		}
 	}
 
-	/*
-		//	line = strings.TrimPrefix(line, "#define ")
-			line = strings.TrimSpace(line)
-			line = strings.TrimSuffix(line, " ")
-			if strings.Count(line, " ") == 1 {
-				split := strings.Split(line, " ")
-				split[1] = strings.TrimSuffix(split[1], "ull")
-				split[1] = strings.TrimSuffix(split[1], "U")
+	allVars.Range(func(k string, v bool) bool {
+		line := strings.TrimPrefix(k, "#define ")
+		line = strings.TrimSpace(line)
+		line = strings.TrimSuffix(line, " ")
+		if strings.Count(line, " ") == 1 {
+			split := strings.Split(line, " ")
+			split[1] = strings.TrimSuffix(split[1], "ull")
+			split[1] = strings.TrimSuffix(split[1], "U")
 
-				if ContainsLetter(split[1]) {
-					mylog.Todo(split[1])
-					continue
-				}
-
-				vars.WriteStringLn(split[0] + "=" + split[1])
+			if ContainsLetter(split[1]) {
+				mylog.Todo(split[1])
+				return true
 			}
-	*/
+
+			vars.WriteStringLn(split[0] + "=" + split[1])
+		}
+		return true
+	})
 
 	g.P(")")
 	stream.WriteGoFile("tmp/vars.go", g.Buffer)
