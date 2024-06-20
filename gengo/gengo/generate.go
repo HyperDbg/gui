@@ -639,6 +639,7 @@ func (mod Module) EmitFrom(ast clang.Node, layouts *clang.LayoutMap) {
 		return true
 	})
 
+	mylog.Todo("cpp model not working")
 	// Define typedefs.
 	clang.Visit(ast, func(td *clang.TypedefDecl) bool {
 		mod.EmitTypedef(td)
