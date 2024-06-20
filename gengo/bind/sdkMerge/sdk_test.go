@@ -15,7 +15,7 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 )
 
-func mergeHeader() {
+func mergeHeader() { // todo need merge func
 }
 
 // ContainsLetter 检查字符串中是否包含字母
@@ -31,8 +31,22 @@ func ContainsLetter(s string) bool {
 	return false
 }
 
+func MacrosInHeader() (lines []string) {
+	lines = make([]string, 0)
+	for _, s := range stream.NewBuffer("macros.log").ToLines() {
+		for _, s2 := range stream.NewBuffer("combined_headers.h").ToLines() {
+			if strings.Contains(s2, s) {
+				lines = append(lines, s)
+			}
+		}
+	}
+	return
+}
+
 func TestBindMacros(t *testing.T) {
 	mylog.Todo("handle macros func like CTL_CODE(DeviceType,Function,Method,Access) ( ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method)) ")
+
+	mustPrefixs := MacrosInHeader()
 
 	vars := stream.NewBuffer("")
 	vars.WriteStringLn("package sdk")
@@ -45,7 +59,7 @@ func TestBindMacros(t *testing.T) {
 	m := new(maps.SafeMap[string, bool])
 	toLines := stream.NewBuffer("combined_headers.h").ToLines()
 	for _, line := range toLines {
-		m.Range(func(k string, v bool) bool { //todo bug
+		m.Range(func(k string, v bool) bool { // todo bug
 			if strings.HasPrefix(line, k) {
 				newVarsBody.WriteStringLn(line)
 				return true
@@ -54,45 +68,25 @@ func TestBindMacros(t *testing.T) {
 		})
 	}
 
-	skips := []string{ // todo 读取 combined_headers.h 保存 #define 开头的到一个map，这样原始问津的特征就完美匹配了
-		"BUILD_",
-		"FILE_DEVICE_UNKNOWN",
-		"FILE_ANY_ACCESS",
-		"FALSE",
-		"TRUE",
-		"_",
-		"LO",
-		"VOID",
-		"time_t",
-		//"",
-		//"",
-	}
 	lines := stream.NewBuffer("macros.log").ToLines()
 	for _, line := range lines {
 		line = strings.TrimPrefix(line, "#define ")
-		//line = strings.TrimSpace(line)
-		stop := false
-		for _, skip := range skips {
+		for _, skip := range mustPrefixs {
 			if strings.HasPrefix(line, skip) {
-				stop = true
-				continue
-			}
-		}
-		if !stop {
-			line = strings.TrimSpace(line)
-			line = strings.TrimSuffix(line, " ")
-			println(line)
-			if strings.Count(line, " ") == 1 {
-				split := strings.Split(line, " ")
-				split[1] = strings.TrimSuffix(split[1], "ull")
-				split[1] = strings.TrimSuffix(split[1], "U")
+				line = strings.TrimSpace(line)
+				line = strings.TrimSuffix(line, " ")
+				if strings.Count(line, " ") == 1 {
+					split := strings.Split(line, " ")
+					split[1] = strings.TrimSuffix(split[1], "ull")
+					split[1] = strings.TrimSuffix(split[1], "U")
 
-				if ContainsLetter(split[1]) {
-					mylog.Todo(split[1])
-					continue
+					if ContainsLetter(split[1]) {
+						mylog.Todo(split[1])
+						continue
+					}
+
+					vars.WriteStringLn(split[0] + "=" + split[1])
 				}
-
-				vars.WriteStringLn(split[0] + "=" + split[1])
 			}
 		}
 	}
