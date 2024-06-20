@@ -31,12 +31,12 @@ func ContainsLetter(s string) bool {
 	return false
 }
 
-func MacrosInHeader() (lines []string) {
-	lines = make([]string, 0)
+func MacrosInHeader() (m *maps.SafeMap[string, bool]) {
+	m = new(maps.SafeMap[string, bool])
 	for _, s := range stream.NewBuffer("macros.log").ToLines() {
 		for _, s2 := range stream.NewBuffer("combined_headers.h").ToLines() {
-			if strings.Contains(s2, s) {
-				lines = append(lines, s)
+			if strings.HasPrefix(s, s2) {
+				m.Set(s, true)
 			}
 		}
 	}
@@ -45,8 +45,8 @@ func MacrosInHeader() (lines []string) {
 
 func TestBindMacros(t *testing.T) {
 	mylog.Todo("handle macros func like CTL_CODE(DeviceType,Function,Method,Access) ( ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method)) ")
-
 	mustPrefixs := MacrosInHeader()
+	mylog.Trace("number of macros: %d", mustPrefixs.Len())
 
 	vars := stream.NewBuffer("")
 	vars.WriteStringLn("package sdk")
@@ -71,7 +71,7 @@ func TestBindMacros(t *testing.T) {
 	lines := stream.NewBuffer("macros.log").ToLines()
 	for _, line := range lines {
 		line = strings.TrimPrefix(line, "#define ")
-		for _, skip := range mustPrefixs {
+		for _, skip := range mustPrefixs.Keys() {
 			if strings.HasPrefix(line, skip) {
 				line = strings.TrimSpace(line)
 				line = strings.TrimSuffix(line, " ")
