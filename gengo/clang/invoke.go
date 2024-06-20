@@ -22,18 +22,19 @@ type Options struct {
 func (o *Options) ClangPath() string {
 	if o.ToolkitPath != "" {
 		if stat, e := os.Stat(o.ToolkitPath); e == nil && stat.IsDir() {
-			return filepath.Join(o.ToolkitPath, "clang++")
+			return filepath.Join(o.ToolkitPath, "clang")
 		} else {
 			return o.ToolkitPath
 		}
 	}
-	return "clang++"
+	return "clang"
 }
 
 func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
 	cmd := exec.Command(o.ClangPath(), opt...)
 	cmd.Args = append(cmd.Args, o.AdditionalParams...)
 	cmd.Args = append(cmd.Args, o.Sources...)
+	//cmd.Args = append(cmd.Args, "2>&1")
 	mylog.Trace("commands", strings.Join(cmd.Args, " "))
 	Stdout := &bytes.Buffer{}
 	Stderr := &bytes.Buffer{}
@@ -86,6 +87,6 @@ func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 		return e
 	})
 	mylog.Check(errg.Wait())
-	stream.RunCommand("clang++ -E -dM " + opt.Sources[0] + " > macros.log")
+	stream.RunCommand("clang -E -dM " + opt.Sources[0] + " > macros.log") //2>&1
 	return ast, layout, nil
 }

@@ -14,7 +14,7 @@ func TestHello(t *testing.T) {
 
 func TestDemoDll(t *testing.T) {
 	pkg := gengo.NewPackage("demo")
-	path := "cpp\\library.hpp"
+	path := "cpp\\library.h"
 	mylog.Check(pkg.Transform("demo", &clang.Options{
 		Sources:          []string{path},
 		AdditionalParams: []string{},

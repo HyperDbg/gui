@@ -147,7 +147,7 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 			})
 		}
 	}
-	mylog.Json("layout", r.layout.Fields)
+	//mylog.Json("layout", r.layout.Fields)
 	// Group fields
 	r.regroup()
 	return nil
@@ -161,7 +161,6 @@ type LayoutMap struct {
 const layoutMarker = "*** Dumping AST Record Layout"
 
 func (l *LayoutMap) UnmarshalString(data string) error {
-	mylog.Todo("bug _CR3_TYPE not decode into type map")
 	data = strings.TrimSpace(data)
 	data, found := strings.CutPrefix(data, layoutMarker)
 	if !found {
