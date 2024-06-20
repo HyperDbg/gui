@@ -3,6 +3,8 @@ package sdk
 import (
 	"testing"
 
+	"github.com/ddkwork/golibrary/stream"
+
 	"github.com/can1357/gengo/clang"
 	"github.com/can1357/gengo/gengo"
 
@@ -12,7 +14,11 @@ import (
 func mergeHeader() {
 }
 
-func handleDefileVars() {
+func TestBindMacros(t *testing.T) {
+	lines := stream.NewBuffer("macros.log").ToLines()
+	for _, line := range lines {
+		println(line)
+	}
 }
 
 func TestBind(t *testing.T) {

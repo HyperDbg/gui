@@ -3,6 +3,7 @@ package sdk
 
 import (
 	"unsafe"
+
 	"github.com/can1357/gengo/gengort"
 )
 
@@ -1197,59 +1198,64 @@ type _HwdbgScriptCapabilities struct {
 type HwdbgScriptBuffer struct {
 	scriptNumberOfSymbols Uint32
 }
-type _Int128T = any
-type _Uint128T = any
-type __NSConstantString = any
-type SizeT = uint64
-type _BuiltinMsVaList = *byte
-type _BuiltinVaList = *byte
+type (
+	_Int128T           = any
+	_Uint128T          = any
+	__NSConstantString = any
+	SizeT              = uint64
+	_BuiltinMsVaList   = *byte
+	_BuiltinVaList     = *byte
+)
 
 // ///////////////////////////////////////////////
-type Qword = uint64
-type Uint64 = uint64
-type Puint64 = *uint64
-type Dword = uint64
-type Bool = int32
-type Byte = uint8
-type Word = uint16
-type Int = int32
-type Uint = uint32
-type Puint = *uint32
-type Ulong64 = uint64
-type Pulong64 = *uint64
-type Dword64 = uint64
-type Pdword64 = *uint64
-type Char = byte
-type WcharT = int16
-type Wchar = int16
-type PlistEntry = *ListEntry
-type PrlistEntry = ListEntry
-type Uchar = uint8
-type Ushort = uint16
-type Ulong = uint64
-type Boolean = Uchar
-type Pboolean = *Boolean
-type Int8 = int8
-type Pint8 = *int8
-type Int16 = int16
-type Pint16 = *int16
-type Int32 = int32
-type Pint32 = *int32
-type Int64 = int64
-type Pint64 = *int64
-type Uint8 = uint8
-type Puint8 = *uint8
-type Uint16 = uint16
-type Puint16 = *uint16
-type Uint32 = uint32
-type Puint32 = *uint32
-//type Uint64 = uint64
-//type Puint64 = *uint64
-//type GuestRegs = GuestRegs
+type (
+	Qword       = uint64
+	Uint64      = uint64
+	Puint64     = *uint64
+	Dword       = uint64
+	Bool        = int32
+	Byte        = uint8
+	Word        = uint16
+	Int         = int32
+	Uint        = uint32
+	Puint       = *uint32
+	Ulong64     = uint64
+	Pulong64    = *uint64
+	Dword64     = uint64
+	Pdword64    = *uint64
+	Char        = byte
+	WcharT      = int16
+	Wchar       = int16
+	PlistEntry  = *ListEntry
+	PrlistEntry = ListEntry
+	Uchar       = uint8
+	Ushort      = uint16
+	Ulong       = uint64
+	Boolean     = Uchar
+	Pboolean    = *Boolean
+	Int8        = int8
+	Pint8       = *int8
+	Int16       = int16
+	Pint16      = *int16
+	Int32       = int32
+	Pint32      = *int32
+	Int64       = int64
+	Pint64      = *int64
+	Uint8       = uint8
+	Puint8      = *uint8
+	Uint16      = uint16
+	Puint16     = *uint16
+	Uint32      = uint32
+	Puint32     = *uint32
+)
+
+// type Uint64 = uint64
+// type Puint64 = *uint64
+// type GuestRegs = GuestRegs
 type PguestRegs = *GuestRegs
 
 // @brief struct for extra registers
-//type GuestExtraRegisters = GuestExtraRegisters
+// type GuestExtraRegisters = GuestExtraRegisters
 
 // @brief struct for extra registers
 type PguestExtraRegisters = *GuestExtraRegisters
@@ -1428,8 +1434,10 @@ type PdebuggerQueryActiveProcessesOrThreads = *DebuggerQueryActiveProcessesOrThr
 type PdebuggerSingleCallstackFrame = *DebuggerSingleCallstackFrame
 
 // @brief request for callstack frames
-type PdebuggerCallstackRequest = *DebuggerCallstackRequest
-type PusermodeDebuggingThreadOrProcessStateDetails = *UsermodeDebuggingThreadOrProcessStateDetails
+type (
+	PdebuggerCallstackRequest                     = *DebuggerCallstackRequest
+	PusermodeDebuggingThreadOrProcessStateDetails = *UsermodeDebuggingThreadOrProcessStateDetails
+)
 
 // @brief Used for run the script
 type PdebuggerEventActionRunScriptConfiguration = *DebuggerEventActionRunScriptConfiguration
@@ -1480,9 +1488,11 @@ type PdebuggeeRegisterReadDescription = *DebuggeeRegisterReadDescription
 
 // @brief structures for sending and saving details
 // about each module and symbols details
-type PmoduleSymbolDetail = *ModuleSymbolDetail
-type PusermodeLoadedModuleSymbols = *UsermodeLoadedModuleSymbols
-type PusermodeLoadedModuleDetails = *UsermodeLoadedModuleDetails
+type (
+	PmoduleSymbolDetail          = *ModuleSymbolDetail
+	PusermodeLoadedModuleSymbols = *UsermodeLoadedModuleSymbols
+	PusermodeLoadedModuleDetails = *UsermodeLoadedModuleDetails
+)
 
 // @brief Callback type that should be used to add
 // list of Addresses to ObjectNames
@@ -1507,29 +1517,36 @@ type PhwdbgScriptBuffer = *HwdbgScriptBuffer
 func (s Anon870_5) Flags() Uint64 {
 	return gengort.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
+
 func (s *Anon870_5) SetFlags(v Uint64) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
+
 func (s Anon870_5) Fields() Anon874_9 {
 	return gengort.ReadBitcast[Anon874_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
+
 func (s *Anon870_5) SetFields(v Anon874_9) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
-func (s Anon1996_9)Get () Anon1998_5 {
+
+func (s Anon1996_9) Get() Anon1998_5 {
 	return gengort.ReadBitcast[Anon1998_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
+
 func (s *Anon1996_9) Set(v Anon1998_5) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
+
 func (s Anon1996_9) AsUInt() Uint32 {
 	return gengort.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
+
 func (s *Anon1996_9) SetAsUInt(v Uint32) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-//  Gengo init function.
+// Gengo init function.
 func init() {
 	gengort.Validate((*ListEntry)(nil), 0x10, 0x8, "Flink", 0x0, "Blink", 0x8)
 	gengort.Validate((*GuestRegs)(nil), 0x80, 0x8, "Rax", 0x0, "Rcx", 0x8, "Rdx", 0x10, "Rbx", 0x18, "Rsp", 0x20, "Rbp", 0x28, "Rsi", 0x30, "Rdi", 0x38, "R8", 0x40, "R9", 0x48, "R10", 0x50, "R11", 0x58, "R12", 0x60, "R13", 0x68, "R14", 0x70, "R15", 0x78)
