@@ -2,8 +2,6 @@
 package libdemo
 
 import (
-	"unsafe"
-
 	"github.com/can1357/gengo/gengort"
 )
 
