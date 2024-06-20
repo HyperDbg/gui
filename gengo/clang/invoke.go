@@ -34,6 +34,9 @@ func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
 	cmd := exec.Command(o.ClangPath(), opt...)
 	cmd.Args = append(cmd.Args, o.AdditionalParams...)
 	cmd.Args = append(cmd.Args, o.Sources...)
+
+	return []byte(stream.RunCommandArgs(cmd.Args...).Result), nil
+
 	//cmd.Args = append(cmd.Args, "2>&1")
 	mylog.Trace("commands", strings.Join(cmd.Args, " "))
 	Stdout := &bytes.Buffer{}
@@ -69,22 +72,16 @@ func CreateLayoutMap(opt *Options) ([]byte, error) {
 func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 	errg := &errgroup.Group{}
 	errg.Go(func() error {
-		res, e := CreateAST(opt)
+		res := mylog.Check2(CreateAST(opt))
 		stream.WriteTruncate("ast.json", res)
-		if e != nil {
-			return e
-		}
-		ast, e = ParseAST(res)
-		return e
+		ast = mylog.Check2(ParseAST(res))
+		return nil
 	})
 	errg.Go(func() error {
-		res, e := CreateLayoutMap(opt)
+		res := mylog.Check2(CreateLayoutMap(opt))
 		stream.WriteTruncate("astLayout.log", res)
-		if e != nil {
-			return e
-		}
-		layout, e = ParseLayoutMap(res)
-		return e
+		layout = mylog.Check2(ParseLayoutMap(res))
+		return nil
 	})
 	mylog.Check(errg.Wait())
 	stream.RunCommand("clang -E -dM " + opt.Sources[0] + " > macros.log") //2>&1

@@ -1,4 +1,4 @@
-package demo
+package libdemo
 
 import (
 	"testing"
@@ -13,9 +13,9 @@ func TestHello(t *testing.T) {
 }
 
 func TestDemoDll(t *testing.T) {
-	pkg := gengo.NewPackage("demo")
+	pkg := gengo.NewPackage("libdemo")
 	path := "cpp\\library.h"
-	mylog.Check(pkg.Transform("demo", &clang.Options{
+	mylog.Check(pkg.Transform("libdemo", &clang.Options{
 		Sources:          []string{path},
 		AdditionalParams: []string{},
 	}),

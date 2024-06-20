@@ -3,4 +3,4 @@ project(demo)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(demo SHARED library.cpp)
+add_library(demo SHARED library.c)
