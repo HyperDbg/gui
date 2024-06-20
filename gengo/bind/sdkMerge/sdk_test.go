@@ -54,7 +54,6 @@ func TestBindMacros(t *testing.T) {
 	g.P("const (")
 	g.P("MaxSerialPacketSize =10 * NORMAL_PAGE_SIZE") // todo need first define NORMAL_PAGE_SIZE
 	g.P("PAGE_SIZE = 4096")
-	g.P(")")
 
 	allVars := new(maps.SafeMap[string, bool])
 
