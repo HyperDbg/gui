@@ -631,6 +631,7 @@ func (mod Module) EmitFrom(ast clang.Node, layouts *clang.LayoutMap) {
 		return true
 	})
 
+	mylog.Todo("EmitStruct not working")
 	// Define structs and unions.
 	clang.Visit(ast, func(rd *clang.RecordDecl) bool {
 		if rd.CompleteDefinition {
