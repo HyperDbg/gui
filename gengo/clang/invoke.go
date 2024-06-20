@@ -34,35 +34,27 @@ func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
 	cmd := exec.Command(o.ClangPath(), opt...)
 	cmd.Args = append(cmd.Args, o.AdditionalParams...)
 	cmd.Args = append(cmd.Args, o.Sources...)
-	println(strings.Join(cmd.Args, " "))
+	mylog.Trace("commands", strings.Join(cmd.Args, " "))
 	Stdout := &bytes.Buffer{}
 	Stderr := &bytes.Buffer{}
 	cmd.Stdout = Stdout
 	cmd.Stderr = Stderr
-	mylog.CheckIgnore(cmd.Run())
-	println(Stderr.String())
-	stream.WriteTruncate("astError.log", Stderr)
-	stream.WriteTruncate("ast.log", Stdout)
+	mylog.Check(cmd.Run())
+	mylog.Check(Stderr.Bytes())
 	return Stdout.Bytes(), nil
 }
 
 func CreateAST(opt *Options) ([]byte, error) {
 	return opt.ClangCommand(
-		//"-E",
-		//"-dM",
 		"-fsyntax-only",
 		"-nobuiltininc",
 		"-Xclang",
 		"-ast-dump=json",
-		//"-Xclang",
-		//"-fmacro-backtrace-limit=0",
 	)
 }
 
 func CreateLayoutMap(opt *Options) ([]byte, error) {
 	return opt.ClangCommand(
-		//"-E",
-		//"-dM",
 		"-fsyntax-only",
 		"-nobuiltininc",
 		"-emit-llvm",
@@ -70,8 +62,6 @@ func CreateLayoutMap(opt *Options) ([]byte, error) {
 		"-fdump-record-layouts",
 		"-Xclang",
 		"-fdump-record-layouts-complete",
-		//"-Xclang",
-		//"-fmacro-backtrace-limit=0",
 	)
 }
 
@@ -79,6 +69,7 @@ func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 	errg := &errgroup.Group{}
 	errg.Go(func() error {
 		res, e := CreateAST(opt)
+		stream.WriteTruncate("ast.json", res)
 		if e != nil {
 			return e
 		}
@@ -95,5 +86,6 @@ func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 		return e
 	})
 	mylog.Check(errg.Wait())
+	mylog.Check2(opt.ClangCommand("-E -dM test.hpp > macros.txt"))
 	return ast, layout, nil
 }
