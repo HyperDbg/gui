@@ -48,50 +48,45 @@ func TestBindMacros(t *testing.T) {
 	mustPrefixs := MacrosInHeader()
 	mylog.Trace("number of macros: %d", mustPrefixs.Len())
 
-	vars := stream.NewBuffer("")
-	vars.WriteStringLn("package sdk")
-	vars.WriteStringLn("var (")
-	vars.WriteStringLn("MaxSerialPacketSize =10 * NORMAL_PAGE_SIZE") // todo need first define NORMAL_PAGE_SIZE
-	vars.WriteStringLn("PAGE_SIZE = 4096")
+	g := stream.NewGeneratedFile()
+	g.P("package sdk")
+	g.P()
+	g.P("const (")
+	g.P("MaxSerialPacketSize =10 * NORMAL_PAGE_SIZE") // todo need first define NORMAL_PAGE_SIZE
+	g.P("PAGE_SIZE = 4096")
+	g.P(")")
 
-	newVarsBody := stream.NewBuffer("")
+	handledVars := new(maps.SafeMap[string, bool])
+	todoVars := new(maps.SafeMap[string, bool])
 
-	m := new(maps.SafeMap[string, bool])
-	toLines := stream.NewBuffer("combined_headers.h").ToLines()
-	for _, line := range toLines {
-		m.Range(func(k string, v bool) bool { // todo bug
-			if strings.HasPrefix(line, k) {
-				newVarsBody.WriteStringLn(line)
-				return true
-			}
-			return false
-		})
-	}
-
-	lines := stream.NewBuffer("macros.log").ToLines()
-	for _, line := range lines {
-		line = strings.TrimPrefix(line, "#define ")
-		for _, skip := range mustPrefixs.Keys() {
-			if strings.HasPrefix(line, skip) {
-				line = strings.TrimSpace(line)
-				line = strings.TrimSuffix(line, " ")
-				if strings.Count(line, " ") == 1 {
-					split := strings.Split(line, " ")
-					split[1] = strings.TrimSuffix(split[1], "ull")
-					split[1] = strings.TrimSuffix(split[1], "U")
-
-					if ContainsLetter(split[1]) {
-						mylog.Todo(split[1])
-						continue
-					}
-
-					vars.WriteStringLn(split[0] + "=" + split[1])
-				}
+	for _, line := range stream.NewBuffer("macros.log").ToLines() {
+		for _, sure := range mustPrefixs.Keys() {
+			if strings.HasPrefix(line, sure) {
+				handledVars.Set(sure, true)
 			}
 		}
 	}
-	vars.WriteStringLn(")")
-	stream.WriteGoFile("tmp/vars.go", vars)
+
+	/*
+		//	line = strings.TrimPrefix(line, "#define ")
+			line = strings.TrimSpace(line)
+			line = strings.TrimSuffix(line, " ")
+			if strings.Count(line, " ") == 1 {
+				split := strings.Split(line, " ")
+				split[1] = strings.TrimSuffix(split[1], "ull")
+				split[1] = strings.TrimSuffix(split[1], "U")
+
+				if ContainsLetter(split[1]) {
+					mylog.Todo(split[1])
+					continue
+				}
+
+				vars.WriteStringLn(split[0] + "=" + split[1])
+			}
+	*/
+
+	g.P(")")
+	stream.WriteGoFile("tmp/vars.go", g.Buffer)
 }
 
 func TestBind(t *testing.T) {
