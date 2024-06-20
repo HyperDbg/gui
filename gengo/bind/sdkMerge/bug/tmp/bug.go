@@ -55,8 +55,6 @@ type Uint64 = uint64
 type Puint64 = *uint64
 type Cr3Type = any
 type Pcr3Type = unsafe.Pointer
-type XedImmdisT = any
-type VmxSegmentAccessRightsType = any
 
 //  Gengo init function.
 func init() {}

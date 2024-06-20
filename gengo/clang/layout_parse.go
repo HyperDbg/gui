@@ -66,12 +66,9 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 	// mylog.Check(errors.New("improperly terminated layout"))
 
 	switch {
-	case strings.Contains(data, "unnamed at"):
-		//return nil
-		//mylog.Warning("skip unmarshal RecordLayout", data)
 	case strings.Contains(data, "__NSConstantString_tag"):
-		mylog.Warning("skip unmarshal RecordLayout", data)
-		return nil
+		//mylog.Warning("skip unmarshal RecordLayout", data)
+		//return nil
 	}
 
 	first := true
@@ -117,7 +114,7 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 		typen := after
 		//save strut type todo test
 		if strings.HasPrefix(typen, "struct ") {
-			typen = "struct "
+			//typen = "struct "
 		}
 		if lastSpace := strings.LastIndex(after, " "); lastSpace != -1 {
 			// If the last space is followed by a closing parenthesis, then it is part of the type.
@@ -131,7 +128,7 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 		}
 
 		if name == "" {
-			continue
+			//continue
 		}
 
 		// Create node

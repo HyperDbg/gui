@@ -57,64 +57,64 @@ typedef unsigned __int64 UINT64, *PUINT64;
 
 
 
-	typedef struct xed_immdis_s {
-        unsigned int currently_used_space :4; // current number of assigned bytes
-        unsigned int max_allocated_space :4; // max allocation, 4 or 8
-        int present : 1;
-        int immediate_is_unsigned : 1;
-    } xed_immdis_t;
+//	typedef struct xed_immdis_s {
+//        unsigned int currently_used_space :4; // current number of assigned bytes
+//        unsigned int max_allocated_space :4; // max allocation, 4 or 8
+//        int present : 1;
+//        int immediate_is_unsigned : 1;
+//    } xed_immdis_t;
 
-typedef union
-{
-    struct VMX_SEGMENT_ACCESS_RIGHTS_TYPE
-    {
-        /**
-         * [Bits 3:0] Segment type.
-         */
-        UINT32 Type : 4;
-
-        /**
-         * [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
-         */
-        UINT32 DescriptorType : 1;
-
-        /**
-         * [Bits 6:5] DPL - Descriptor privilege level.
-         */
-        UINT32 DescriptorPrivilegeLevel : 2;
-
-        /**
-         * [Bit 7] P - Segment present.
-         */
-        UINT32 Present : 1;
-
-        UINT32 Reserved1 : 4;
-
-        /**
-         * [Bit 12] AVL - Available for use by system software.
-         */
-        UINT32 AvailableBit : 1;
-
-        /**
-         * [Bit 13] Reserved (except for CS). L - 64-bit mode active (for CS only).
-         */
-        UINT32 LongMode : 1;
-
-        /**
-         * [Bit 14] D/B - Default operation size (0 = 16-bit segment; 1 = 32-bit segment).
-         */
-        UINT32 DefaultBig : 1;
-
-        /**
-         * [Bit 15] G - Granularity.
-         */
-        UINT32 Granularity : 1;
-        /**
-         * [Bit 16] Segment unusable (0 = usable; 1 = unusable).
-         */
-        UINT32 Unusable : 1;
-        UINT32 Reserved2 : 15;
-    };
-
-    UINT32 AsUInt;
-} VMX_SEGMENT_ACCESS_RIGHTS_TYPE;
+//typedef union
+//{
+//    struct VMX_SEGMENT_ACCESS_RIGHTS_TYPE
+//    {
+//        /**
+//         * [Bits 3:0] Segment type.
+//         */
+//        UINT32 Type : 4;
+//
+//        /**
+//         * [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
+//         */
+//        UINT32 DescriptorType : 1;
+//
+//        /**
+//         * [Bits 6:5] DPL - Descriptor privilege level.
+//         */
+//        UINT32 DescriptorPrivilegeLevel : 2;
+//
+//        /**
+//         * [Bit 7] P - Segment present.
+//         */
+//        UINT32 Present : 1;
+//
+//        UINT32 Reserved1 : 4;
+//
+//        /**
+//         * [Bit 12] AVL - Available for use by system software.
+//         */
+//        UINT32 AvailableBit : 1;
+//
+//        /**
+//         * [Bit 13] Reserved (except for CS). L - 64-bit mode active (for CS only).
+//         */
+//        UINT32 LongMode : 1;
+//
+//        /**
+//         * [Bit 14] D/B - Default operation size (0 = 16-bit segment; 1 = 32-bit segment).
+//         */
+//        UINT32 DefaultBig : 1;
+//
+//        /**
+//         * [Bit 15] G - Granularity.
+//         */
+//        UINT32 Granularity : 1;
+//        /**
+//         * [Bit 16] Segment unusable (0 = usable; 1 = unusable).
+//         */
+//        UINT32 Unusable : 1;
+//        UINT32 Reserved2 : 15;
+//    };
+//
+//    UINT32 AsUInt;
+//} VMX_SEGMENT_ACCESS_RIGHTS_TYPE;
