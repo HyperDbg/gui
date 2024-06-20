@@ -16,6 +16,12 @@ func mergeHeader() {
 }
 
 func TestBindMacros(t *testing.T) {
+	mylog.Todo("handle macros func like CTL_CODE(DeviceType,Function,Method,Access) ( ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method)) ")
+
+	vars := stream.NewBuffer("")
+	vars.WriteStringLn("package sdk")
+	vars.WriteStringLn("var (")
+
 	skips := []string{
 		"BUILD_",
 		"FILE_DEVICE_UNKNOWN",
@@ -39,8 +45,14 @@ func TestBindMacros(t *testing.T) {
 		}
 		if !stop {
 			println(line)
+			if strings.Count(line, " ") == 1 {
+				split := strings.Split(line, " ")
+				vars.WriteStringLn(split[0] + "=" + split[1])
+			}
 		}
 	}
+	vars.WriteStringLn(")")
+	stream.WriteGoFile("tmp/vars.go", vars)
 }
 
 func TestBind(t *testing.T) {
