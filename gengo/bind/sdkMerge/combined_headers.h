@@ -754,8 +754,22 @@ typedef unsigned int *     PUINT;
 typedef unsigned __int64   ULONG64, *PULONG64;
 typedef unsigned __int64   DWORD64, *PDWORD64;
 typedef char               CHAR;
-typedef wchar_t            WCHAR;
+//typedef wchar_t            WCHAR;
+typedef short wchar_t            ;
+typedef short            WCHAR;
 #define VOID void
+#define PVOID void *
+#define LPVOID void *
+#define HANDLE void *
+#define SIZE_T int
+#define time_t UINT64
+#define MAX_PATH 260
+typedef struct _LIST_ENTRY {
+  struct _LIST_ENTRY *Flink;
+  struct _LIST_ENTRY *Blink;
+} LIST_ENTRY, *PLIST_ENTRY, PRLIST_ENTRY;
+
+//#define static_assert(cond, msg) typedef char static_assertion_##msg[(!!(cond))*2-1]//todo bug,mock error
 
 typedef unsigned char  UCHAR;
 typedef unsigned short USHORT;
@@ -1845,8 +1859,8 @@ typedef struct _DEBUGGEE_UD_PAUSED_PACKET
  * @brief check so the DEBUGGEE_UD_PAUSED_PACKET should be smaller than packet size
  *
  */
-static_assert(sizeof(DEBUGGEE_UD_PAUSED_PACKET) < PacketChunkSize,
-              "err (static_assert), size of PacketChunkSize should be bigger than DEBUGGEE_UD_PAUSED_PACKET");
+//static_assert(sizeof(DEBUGGEE_UD_PAUSED_PACKET) < PacketChunkSize,
+//              "err (static_assert), size of PacketChunkSize should be bigger than DEBUGGEE_UD_PAUSED_PACKET");
 
 //////////////////////////////////////////////////
 //            Message Tracing Enums             //
@@ -4007,8 +4021,8 @@ typedef struct _DEBUGGER_UPDATE_SYMBOL_TABLE
  * @brief check so the DEBUGGER_UPDATE_SYMBOL_TABLE should be smaller than packet size
  *
  */
-static_assert(sizeof(DEBUGGER_UPDATE_SYMBOL_TABLE) < PacketChunkSize,
-              "err (static_assert), size of PacketChunkSize should be bigger than DEBUGGER_UPDATE_SYMBOL_TABLE (MODULE_SYMBOL_DETAIL)");
+//static_assert(sizeof(DEBUGGER_UPDATE_SYMBOL_TABLE) < PacketChunkSize,
+//              "err (static_assert), size of PacketChunkSize should be bigger than DEBUGGER_UPDATE_SYMBOL_TABLE (MODULE_SYMBOL_DETAIL)");
 
 /*
 ==============================================================================================
