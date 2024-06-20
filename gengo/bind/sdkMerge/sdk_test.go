@@ -5,6 +5,8 @@ import (
 	"testing"
 	"unicode"
 
+	"github.com/ddkwork/golibrary/stream/maps"
+
 	"github.com/ddkwork/golibrary/stream"
 
 	"github.com/can1357/gengo/clang"
@@ -38,7 +40,21 @@ func TestBindMacros(t *testing.T) {
 	vars.WriteStringLn("MaxSerialPacketSize =10 * NORMAL_PAGE_SIZE") // todo need first define NORMAL_PAGE_SIZE
 	vars.WriteStringLn("PAGE_SIZE = 4096")
 
-	skips := []string{ //todo 读取 combined_headers.h 保存 #define 开头的到一个map，这样原始问津的特征就完美匹配了
+	newVarsBody := stream.NewBuffer("")
+
+	m := new(maps.SafeMap[string, bool])
+	toLines := stream.NewBuffer("combined_headers.h").ToLines()
+	for _, line := range toLines {
+		m.Range(func(k string, v bool) bool { //todo bug
+			if strings.HasPrefix(line, k) {
+				newVarsBody.WriteStringLn(line)
+				return true
+			}
+			return false
+		})
+	}
+
+	skips := []string{ // todo 读取 combined_headers.h 保存 #define 开头的到一个map，这样原始问津的特征就完美匹配了
 		"BUILD_",
 		"FILE_DEVICE_UNKNOWN",
 		"FILE_ANY_ACCESS",
