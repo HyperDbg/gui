@@ -5,6 +5,8 @@ import (
 	"testing"
 	"unicode"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/ddkwork/golibrary/stream/maps"
 
 	"github.com/ddkwork/golibrary/stream"
@@ -64,6 +66,8 @@ func TestBindMacros(t *testing.T) {
 			}
 		}
 	}
+
+	assert.Equal(t, mustPrefixs.Len(), allVars.Len())
 
 	allVars.Range(func(k string, v bool) bool {
 		line := strings.TrimPrefix(k, "#define ")
