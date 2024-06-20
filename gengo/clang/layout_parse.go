@@ -64,10 +64,23 @@ type RecordLayout struct {
 
 func (r *RecordLayout) UnmarshalString(data string) error {
 	// mylog.Check(errors.New("improperly terminated layout"))
+
+	switch {
+	case strings.Contains(data, "unnamed at"):
+		//return nil
+		//mylog.Warning("skip unmarshal RecordLayout", data)
+	case strings.Contains(data, "__NSConstantString_tag"):
+		mylog.Warning("skip unmarshal RecordLayout", data)
+		return nil
+	}
+
 	first := true
 	offset := 0
 
 	for _, line := range strings.Split(data, "\n") {
+		if line == "" {
+			continue
+		}
 		before, after, found := strings.Cut(line, "|")
 		if !found {
 			continue
@@ -99,8 +112,13 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 		after = strings.TrimSpace(after)
 
 		// Parse name and type
-		name := ""
+		name := "" //todo test
+
 		typen := after
+		//save strut type todo test
+		if strings.HasPrefix(typen, "struct ") {
+			typen = "struct "
+		}
 		if lastSpace := strings.LastIndex(after, " "); lastSpace != -1 {
 			// If the last space is followed by a closing parenthesis, then it is part of the type.
 			if !strings.Contains(after[lastSpace+1:], ")") {
@@ -110,6 +128,10 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 					name = after[lastSpace+1:]
 				}
 			}
+		}
+
+		if name == "" {
+			continue
 		}
 
 		// Create node
@@ -128,7 +150,7 @@ func (r *RecordLayout) UnmarshalString(data string) error {
 			})
 		}
 	}
-
+	mylog.Json("layout", r.layout.Fields)
 	// Group fields
 	r.regroup()
 	return nil
