@@ -60,6 +60,13 @@ func TestMergeHeader(t *testing.T) {
 		}
 	}
 
+	//todo merge step
+	//bugfix
+	//BasicTypes
+	//Headers 删除BasicTypes
+	//Modules
+	//Imports
+
 	g.P("//bugfix.h")
 	g.P(bugfix)
 	g.P()

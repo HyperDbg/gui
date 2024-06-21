@@ -161,63 +161,6 @@ typedef struct _CR3_TYPE
 } CR3_TYPE, *PCR3_TYPE;
 
 
-//..\..\..\bin\debug\SDK\Modules\HyperLog.h
-/**
- * @file HyperLog.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's SDK for HyperLog project
- * @details This file contains definitions of HyperLog routines
- * @version 0.2
- * @date 2023-01-15
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//////////////////////////////////////////////////
-//			     Callback Types                 //
-//////////////////////////////////////////////////
-
-/**
- * @brief A function that checks whether the current operation
- * is on vmx-root mode or not
- *
- */
-typedef BOOLEAN (*CHECK_VMX_OPERATION)();
-
-/**
- * @brief A function that checks whether the immediate message
- * sending is needed or not
- *
- */
-typedef BOOLEAN (*CHECK_IMMEDIATE_MESSAGE_SENDING)(UINT32 OperationCode);
-
-/**
- * @brief A function that sends immediate messages
- *
- */
-typedef BOOLEAN (*SEND_IMMEDIATE_MESSAGE)(CHAR * OptionalBuffer,
-                                          UINT32 OptionalBufferLength,
-                                          UINT32 OperationCode);
-
-//////////////////////////////////////////////////
-//			   Callback Structure               //
-//////////////////////////////////////////////////
-
-/**
- * @brief Prototype of each function needed by message tracer
- *
- */
-typedef struct _MESSAGE_TRACING_CALLBACKS
-{
-    CHECK_VMX_OPERATION             VmxOperationCheck;
-    CHECK_IMMEDIATE_MESSAGE_SENDING CheckImmediateMessageSending;
-    SEND_IMMEDIATE_MESSAGE          SendImmediateMessage;
-
-} MESSAGE_TRACING_CALLBACKS, *PMESSAGE_TRACING_CALLBACKS;
-
-
 //..\..\..\bin\debug\SDK\Modules\VMM.h
 /**
  * @file VMM.h
@@ -443,6 +386,1722 @@ typedef struct _VMM_CALLBACKS
     KD_QUERY_DEBUGGER_THREAD_OR_PROCESS_TRACING_DETAILS_BY_CORE_ID KdQueryDebuggerQueryThreadOrProcessTracingDetailsByCoreId;
 
 } VMM_CALLBACKS, *PVMM_CALLBACKS;
+
+
+//..\..\..\bin\debug\SDK\Modules\HyperLog.h
+/**
+ * @file HyperLog.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK for HyperLog project
+ * @details This file contains definitions of HyperLog routines
+ * @version 0.2
+ * @date 2023-01-15
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//			     Callback Types                 //
+//////////////////////////////////////////////////
+
+/**
+ * @brief A function that checks whether the current operation
+ * is on vmx-root mode or not
+ *
+ */
+typedef BOOLEAN (*CHECK_VMX_OPERATION)();
+
+/**
+ * @brief A function that checks whether the immediate message
+ * sending is needed or not
+ *
+ */
+typedef BOOLEAN (*CHECK_IMMEDIATE_MESSAGE_SENDING)(UINT32 OperationCode);
+
+/**
+ * @brief A function that sends immediate messages
+ *
+ */
+typedef BOOLEAN (*SEND_IMMEDIATE_MESSAGE)(CHAR * OptionalBuffer,
+                                          UINT32 OptionalBufferLength,
+                                          UINT32 OperationCode);
+
+//////////////////////////////////////////////////
+//			   Callback Structure               //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Prototype of each function needed by message tracer
+ *
+ */
+typedef struct _MESSAGE_TRACING_CALLBACKS
+{
+    CHECK_VMX_OPERATION             VmxOperationCheck;
+    CHECK_IMMEDIATE_MESSAGE_SENDING CheckImmediateMessageSending;
+    SEND_IMMEDIATE_MESSAGE          SendImmediateMessage;
+
+} MESSAGE_TRACING_CALLBACKS, *PMESSAGE_TRACING_CALLBACKS;
+
+
+//..\..\..\bin\debug\SDK\Headers\HardwareDebugger.h
+/**
+ * @file HardwareDebugger.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's Hardware Debugger (hwdbg) types and constants
+ * @details This file contains definitions of hwdbg elements
+ * used in HyperDbg
+ * @version 0.9
+ * @date 2024-04-28
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//                 Definitions                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Initial debuggee to debugger offset
+ *
+ */
+#define DEFAULT_INITIAL_DEBUGGEE_TO_DEBUGGER_OFFSET 0x200
+
+/**
+ * @brief Initial debugger to debuggee offset
+ *
+ */
+#define DEFAULT_INITIAL_DEBUGGER_TO_DEBUGGEE_OFFSET 0x0
+
+//////////////////////////////////////////////////
+//                   Enums                      //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Different action of hwdbg
+ * @warning This file should be changed along with hwdbg files
+ *
+ */
+typedef enum _HWDBG_ACTION_ENUMS
+{
+    hwdbgActionSendInstanceInfo      = 1,
+    hwdbgActionConfigureScriptBuffer = 2,
+
+} HWDBG_ACTION_ENUMS;
+
+/**
+ * @brief Different responses come from hwdbg
+ * @warning This file should be changed along with hwdbg files
+ *
+ */
+typedef enum _HWDBG_RESPONSE_ENUMS
+{
+    hwdbgResponseSuccessOrErrorMessage = 1,
+    hwdbgResponseInstanceInfo          = 2,
+
+} HWDBG_RESPONSE_ENUMS;
+
+/**
+ * @brief Different success or error codes in hwdbg
+ * @warning This file should be changed along with hwdbg files
+ *
+ */
+typedef enum _HWDBG_SUCCESS_OR_ERROR_ENUMS
+{
+    hwdbgOperationWasSuccessful = 0x7FFFFFFF,
+    hwdbgErrorInvalidPacket     = 1,
+
+} HWDBG_SUCCESS_OR_ERROR_ENUMS;
+
+//////////////////////////////////////////////////
+//                   Structures                 //
+//////////////////////////////////////////////////
+
+/**
+ * @brief The structure of port information (each item) in hwdbg
+ *
+ */
+typedef struct _HWDBG_PORT_INFORMATION_ITEMS
+{
+    UINT32 PortSize;
+
+} HWDBG_PORT_INFORMATION_ITEMS, *PHWDBG_PORT_INFORMATION_ITEMS;
+
+/**
+ * @brief The structure of script capabilities information in hwdbg
+ *
+ */
+typedef struct _HWDBG_INSTANCE_INFORMATION
+{
+    //
+    // ANY ADDITION TO THIS STRUCTURE SHOULD BE SYNCHRONIZED WITH SCALA AND INSTANCE INFO SENDER MODULE
+    //
+    UINT32 version;                                    // Target version of HyperDbg (same as hwdbg)
+    UINT32 maximumNumberOfStages;                      // Number of stages that this instance of hwdbg supports (NumberOfSupportedStages == 0 means script engine is disabled)
+    UINT32 scriptVariableLength;                       // maximum length of variables (and other script elements)
+    UINT32 maximumNumberOfSupportedGetScriptOperators; // Maximum supported GET operators in a single func
+    UINT32 maximumNumberOfSupportedSetScriptOperators; // Maximum supported SET operators in a single func
+    UINT32 sharedMemorySize;                           // Size of shared memory
+    UINT32 debuggerAreaOffset;                         // The memory offset of debugger
+    UINT32 debuggeeAreaOffset;                         // The memory offset of debuggee
+    UINT32 numberOfPins;                               // Number of pins
+    UINT32 numberOfPorts;                              // Number of ports
+
+    //
+    // ANY ADDITION TO THIS STRUCTURE SHOULD BE SYNCHRONIZED WITH SCALA AND INSTANCE INFO SENDER MODULE
+    //
+
+    struct _HWDBG_SCRIPT_CAPABILITIES
+    {
+        //
+        // ANY ADDITION TO THIS MASK SHOULD BE ADDED TO HwdbgInterpreterShowScriptCapabilities
+        // and HwdbgInterpreterCheckScriptBufferWithScriptCapabilities as well Scala file
+        //
+        UINT64 func_or : 1;
+        UINT64 func_xor : 1;
+        UINT64 func_and : 1;
+        UINT64 func_asr : 1;
+        UINT64 func_asl : 1;
+        UINT64 func_add : 1;
+        UINT64 func_sub : 1;
+        UINT64 func_mul : 1;
+        UINT64 func_div : 1;
+        UINT64 func_mod : 1;
+        UINT64 func_gt : 1;
+        UINT64 func_lt : 1;
+        UINT64 func_egt : 1;
+        UINT64 func_elt : 1;
+        UINT64 func_equal : 1;
+        UINT64 func_neq : 1;
+        UINT64 func_jmp : 1;
+        UINT64 func_jz : 1;
+        UINT64 func_jnz : 1;
+        UINT64 func_mov : 1;
+        UINT64 func_printf : 1;
+
+        //
+        // ANY ADDITION TO THIS MASK SHOULD BE ADDED TO HwdbgInterpreterShowScriptCapabilities
+        // and HwdbgInterpreterCheckScriptBufferWithScriptCapabilities as well Scala file
+        //
+
+    } scriptCapabilities;
+
+    UINT32 bramAddrWidth; // BRAM address width
+    UINT32 bramDataWidth; // BRAM data width
+
+    //
+    // Here the details of port arrangements are located (HWDBG_PORT_INFORMATION_ITEMS)
+    // As the following type:
+    //   HWDBG_PORT_INFORMATION_ITEMS portsConfiguration[numberOfPorts]   ; Port arrangement
+    //
+
+} HWDBG_INSTANCE_INFORMATION, *PHWDBG_INSTANCE_INFORMATION;
+
+/**
+ * @brief The structure of script buffer in hwdbg
+ *
+ */
+typedef struct _HWDBG_SCRIPT_BUFFER
+{
+    UINT32 scriptNumberOfSymbols; // Number of symbols in the script
+
+    //
+    // Here the script buffer is located
+    //
+    // UINT8 scriptBuffer[scriptNumberOfSymbols]; // The script buffer
+    //
+
+} HWDBG_SCRIPT_BUFFER, *PHWDBG_SCRIPT_BUFFER;
+
+
+//..\..\..\bin\debug\SDK\Headers\Symbols.h
+/**
+ * @file Symbols.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK Header Files For Symbol Parsing
+ * @details This file contains definitions of symbol parsers
+ * @version 0.2
+ * @date 2022-06-24
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//              Symbols Details                 //
+//////////////////////////////////////////////////
+
+/**
+ * @brief structures for sending and saving details
+ * about each module and symbols details
+ *
+ */
+typedef struct _MODULE_SYMBOL_DETAIL
+{
+    BOOLEAN IsSymbolDetailsFound; // TRUE if the details of symbols found, FALSE if not found
+    BOOLEAN IsLocalSymbolPath;    // TRUE if the ModuleSymbolPath is a real path
+                                  // and FALSE if ModuleSymbolPath is just a module name
+    BOOLEAN IsSymbolPDBAvaliable; // TRUE if the module's pdb is available(if exists in the sympath)
+    BOOLEAN IsUserMode;           // TRUE if the module is a user-mode module
+    BOOLEAN Is32Bit;              // TRUE if the module is a 32-bit
+    UINT64  BaseAddress;
+    char    FilePath[MAX_PATH];
+    char    ModuleSymbolPath[MAX_PATH];
+    char    ModuleSymbolGuidAndAge[MAXIMUM_GUID_AND_AGE_SIZE];
+
+} MODULE_SYMBOL_DETAIL, *PMODULE_SYMBOL_DETAIL;
+
+typedef struct _USERMODE_LOADED_MODULE_SYMBOLS
+{
+    UINT64  BaseAddress;
+    UINT64  Entrypoint;
+    wchar_t FilePath[MAX_PATH];
+
+} USERMODE_LOADED_MODULE_SYMBOLS, *PUSERMODE_LOADED_MODULE_SYMBOLS;
+
+typedef struct _USERMODE_LOADED_MODULE_DETAILS
+{
+    UINT32  ProcessId;
+    BOOLEAN OnlyCountModules;
+    BOOLEAN Is32Bit;
+    UINT32  ModulesCount;
+    UINT32  Result;
+
+    //
+    // Here is a list of USERMODE_LOADED_MODULE_SYMBOLS (appended)
+    //
+
+} USERMODE_LOADED_MODULE_DETAILS, *PUSERMODE_LOADED_MODULE_DETAILS;
+
+/**
+ * @brief Callback type that should be used to add
+ * list of Addresses to ObjectNames
+ *
+ */
+typedef VOID (*SymbolMapCallback)(UINT64 Address, char * ModuleName, char * ObjectName, unsigned int ObjectSize);
+
+/**
+ * @brief request to add new symbol detail or update a previous
+ * symbol table entry
+ *
+ */
+typedef struct _DEBUGGER_UPDATE_SYMBOL_TABLE
+{
+    UINT32               TotalSymbols;
+    UINT32               CurrentSymbolIndex;
+    MODULE_SYMBOL_DETAIL SymbolDetailPacket;
+
+} DEBUGGER_UPDATE_SYMBOL_TABLE, *PDEBUGGER_UPDATE_SYMBOL_TABLE;
+
+/*
+==============================================================================================
+ */
+
+/**
+ * @brief request that shows, symbol reload process is finished
+ *
+ */
+typedef struct _DEBUGGEE_SYMBOL_UPDATE_RESULT
+{
+    UINT64 KernelStatus; // Kernel put the status in this field
+
+} DEBUGGEE_SYMBOL_UPDATE_RESULT, *PDEBUGGEE_SYMBOL_UPDATE_RESULT;
+
+/*
+==============================================================================================
+ */
+
+
+//..\..\..\bin\debug\SDK\Imports\HyperDbgHyperLogIntrinsics.h
+/**
+ * @file HyperDbgHyperLogIntrinsics.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers relating exported functions from hyperlog project
+ * @version 0.1
+ * @date 2023-01-15
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//					Enums						//
+//////////////////////////////////////////////////
+
+/**
+ * @brief Types of log messages
+ *
+ */
+typedef enum _LOG_TYPE
+{
+    LOG_INFO,
+    LOG_WARNING,
+    LOG_ERROR
+
+} LOG_TYPE;
+
+//////////////////////////////////////////////////
+//					Logging						//
+//////////////////////////////////////////////////
+
+/**
+ * @brief Define log variables
+ *
+ */
+#if UseDbgPrintInsteadOfUsermodeMessageTracking
+/* Use DbgPrint */
+#    define Logformat, ...)                           \
+        DbgPrint("[+] Information (%s:%d) | " format "\n", \
+                 __func__,                                 \
+                 __LINE__,                                 \
+                 __VA_ARGS__)
+
+#    define LogWarning(format, ...)                    \
+        DbgPrint("[-] Warning (%s:%d) | " format "\n", \
+                 __func__,                             \
+                 __LINE__,                             \
+                 __VA_ARGS__)
+
+#    define LogError(format, ...)                    \
+        DbgPrint("[!] Error (%s:%d) | " format "\n", \
+                 __func__,                           \
+                 __LINE__,                           \
+                 __VA_ARGS__);                       \
+        DbgBreakPoint()
+
+/**
+ * @brief Log without any prefix
+ *
+ */
+#    define Log(format, ...) \
+        DbgPrint(format, __VA_ARGS__)
+
+#else
+
+/**
+ * @brief Log, general
+ *
+ */
+#    define LogInfo(format, ...)                                                          \
+        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
+                                                UseImmediateMessaging,                    \
+                                                ShowSystemTimeOnDebugMessages,            \
+                                                FALSE,                                    \
+                                                "[+] Information (%s:%d) | " format "\n", \
+                                                __func__,                                 \
+                                                __LINE__,                                 \
+                                                __VA_ARGS__)
+
+/**
+ * @brief Log in the case of priority message
+ *
+ */
+#    define LogInfoPriority(format, ...)                                                  \
+        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
+                                                TRUE,                                     \
+                                                ShowSystemTimeOnDebugMessages,            \
+                                                TRUE,                                     \
+                                                "[+] Information (%s:%d) | " format "\n", \
+                                                __func__,                                 \
+                                                __LINE__,                                 \
+                                                __VA_ARGS__)
+
+/**
+ * @brief Log in the case of warning
+ *
+ */
+#    define LogWarning(format, ...)                                                   \
+        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_WARNING_MESSAGE,        \
+                                                UseImmediateMessaging,                \
+                                                ShowSystemTimeOnDebugMessages,        \
+                                                TRUE,                                 \
+                                                "[-] Warning (%s:%d) | " format "\n", \
+                                                __func__,                             \
+                                                __LINE__,                             \
+                                                __VA_ARGS__)
+
+/**
+ * @brief Log in the case of error
+ *
+ */
+#    define LogError(format, ...)                                                   \
+        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_ERROR_MESSAGE,        \
+                                                UseImmediateMessaging,              \
+                                                ShowSystemTimeOnDebugMessages,      \
+                                                TRUE,                               \
+                                                "[!] Error (%s:%d) | " format "\n", \
+                                                __func__,                           \
+                                                __LINE__,                           \
+                                                __VA_ARGS__);                       \
+        if (DebugMode)                                                              \
+        DbgBreakPoint()
+
+/**
+ * @brief Log without any prefix
+ *
+ */
+#    define Log(format, ...)                                                \
+        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE, \
+                                                TRUE,                       \
+                                                FALSE,                      \
+                                                FALSE,                      \
+                                                format,                     \
+                                                __VA_ARGS__)
+
+/**
+ * @brief Log without any prefix and bypass the stack
+ * problem (getting two temporary stacks in preparing phase)
+ *
+ */
+#    define LogSimpleWithTag(tag, isimmdte, buffer, len) \
+        LogCallbackSendMessageToQueue(tag,               \
+                                      isimmdte,          \
+                                      buffer,            \
+                                      len,               \
+                                      FALSE)
+
+#endif // UseDbgPrintInsteadOfUsermodeMessageTracking
+
+/**
+ * @brief Log, initialize boot information and debug information
+ *
+ */
+#define LogDebugInfo(format, ...)                                                     \
+    if (DebugMode)                                                                    \
+    LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
+                                            UseImmediateMessaging,                    \
+                                            ShowSystemTimeOnDebugMessages,            \
+                                            FALSE,                                    \
+                                            "[+] Information (%s:%d) | " format "\n", \
+                                            __func__,                                 \
+                                            __LINE__,                                 \
+                                            __VA_ARGS__)
+
+
+//..\..\..\bin\debug\SDK\Imports\HyperDbgVmmImports.h
+/**
+ * @file HyperDbgVmmImports.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers relating exported functions from hypervisor
+ * @version 0.1
+ * @date 2022-12-09
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+#ifdef HYPERDBG_VMM
+#    define IMPORT_EXPORT_VMM __declspec(dllexport)
+#else
+#    define IMPORT_EXPORT_VMM __declspec(dllimport)
+#endif
+
+//////////////////////////////////////////////////
+//                 VM Functions 	    		//
+//////////////////////////////////////////////////
+
+IMPORT_EXPORT_VMM NTSTATUS
+VmFuncVmxVmcall(unsigned long long VmcallNumber,
+                unsigned long long OptionalParam1,
+                unsigned long long OptionalParam2,
+                unsigned long long OptionalParam3);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncPerformRipIncrement(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSuppressRipIncrement(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncChangeMtfUnsettingState(UINT32 CoreId, BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncChangeIgnoreOneMtfState(UINT32 CoreId, BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetMonitorTrapFlag(BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetRflagTrapFlag(BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncRegisterMtfBreak(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncUnRegisterMtfBreak(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetLoadDebugControls(BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetSaveDebugControls(BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetPmcVmexit(BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetMovControlRegsExiting(BOOLEAN Set, UINT64 ControlRegister, UINT64 MaskRegister);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetMovToCr3Vmexit(UINT32 CoreId, BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncWriteExceptionBitmap(UINT32 BitmapMask);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetInterruptWindowExiting(BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetNmiWindowExiting(BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetNmiExiting(BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetExceptionBitmap(UINT32 CoreId, UINT32 IdtIndex);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncUnsetExceptionBitmap(UINT32 CoreId, UINT32 IdtIndex);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetExternalInterruptExiting(UINT32 CoreId, BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetRdtscExiting(UINT32 CoreId, BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetMovDebugRegsExiting(UINT32 CoreId, BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncInjectPendingExternalInterrupts(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetRflags(UINT64 Rflags);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetRip(UINT64 Rip);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetTriggerEventForVmcalls(BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetTriggerEventForCpuids(BOOLEAN Set);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncSetInterruptibilityState(UINT64 InterruptibilityState);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncCheckAndEnableExternalInterrupts(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncDisableExternalInterruptsAndInterruptWindow(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncEventInjectPageFaultWithCr2(UINT32 CoreId, UINT64 Address, UINT32 PageFaultCode);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncEventInjectPageFaultRangeAddress(UINT32 CoreId,
+                                       UINT64 AddressFrom,
+                                       UINT64 AddressTo,
+                                       UINT32 PageFaultCode);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncEventInjectInterruption(UINT32  InterruptionType,
+                              UINT32  Vector,
+                              BOOLEAN DeliverErrorCode,
+                              UINT32  ErrorCode);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncVmxBroadcastInitialize();
+
+IMPORT_EXPORT_VMM VOID
+VmFuncVmxBroadcastUninitialize();
+
+IMPORT_EXPORT_VMM VOID
+VmFuncEventInjectBreakpoint();
+
+IMPORT_EXPORT_VMM VOID
+VmFuncInvalidateEptSingleContext(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncInvalidateEptAllContexts();
+
+IMPORT_EXPORT_VMM VOID
+VmFuncUninitVmm();
+
+IMPORT_EXPORT_VMM VOID
+VmFuncEnableMtfAndChangeExternalInterruptState(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM VOID
+VmFuncEnableAndCheckForPreviousExternalInterrupts(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM UINT16
+VmFuncGetCsSelector();
+
+IMPORT_EXPORT_VMM UINT32
+VmFuncReadExceptionBitmap();
+
+IMPORT_EXPORT_VMM UINT64
+VmFuncGetLastVmexitRip(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM UINT64
+VmFuncGetRflags();
+
+IMPORT_EXPORT_VMM UINT64
+VmFuncGetRip();
+
+IMPORT_EXPORT_VMM UINT64
+VmFuncGetInterruptibilityState();
+
+IMPORT_EXPORT_VMM UINT64
+VmFuncClearSteppingBits(UINT64 Interruptibility);
+
+IMPORT_EXPORT_VMM BOOLEAN
+VmFuncInitVmm(VMM_CALLBACKS * VmmCallbacks);
+
+IMPORT_EXPORT_VMM UINT32
+VmFuncVmxCompatibleStrlen(const CHAR * s);
+
+IMPORT_EXPORT_VMM UINT32
+VmFuncVmxCompatibleWcslen(const wchar_t * s);
+
+IMPORT_EXPORT_VMM BOOLEAN
+VmFuncNmiBroadcastRequest(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM BOOLEAN
+VmFuncNmiBroadcastInvalidateEptSingleContext(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM BOOLEAN
+VmFuncNmiBroadcastInvalidateEptAllContexts(UINT32 CoreId);
+
+IMPORT_EXPORT_VMM BOOLEAN
+VmFuncVmxGetCurrentExecutionMode();
+
+IMPORT_EXPORT_VMM BOOLEAN
+VmFuncQueryModeExecTrap();
+
+IMPORT_EXPORT_VMM INT32
+VmFuncVmxCompatibleStrcmp(const CHAR * Address1, const CHAR * Address2);
+
+IMPORT_EXPORT_VMM INT32
+VmFuncVmxCompatibleStrncmp(const CHAR * Address1, const CHAR * Address2, SIZE_T Num);
+
+IMPORT_EXPORT_VMM INT32
+VmFuncVmxCompatibleWcscmp(const wchar_t * Address1, const wchar_t * Address2);
+
+IMPORT_EXPORT_VMM INT32
+VmFuncVmxCompatibleWcsncmp(const wchar_t * Address1, const wchar_t * Address2, SIZE_T Num);
+
+IMPORT_EXPORT_VMM INT32
+VmFuncVmxCompatibleMemcmp(const CHAR * Address1, const CHAR * Address2, size_t Count);
+
+//////////////////////////////////////////////////
+//            Configuration Functions 	   		//
+//////////////////////////////////////////////////
+
+IMPORT_EXPORT_VMM VOID
+ConfigureEnableMovToCr3ExitingOnAllProcessors();
+
+IMPORT_EXPORT_VMM VOID
+ConfigureDisableMovToCr3ExitingOnAllProcessors();
+
+IMPORT_EXPORT_VMM VOID
+ConfigureEnableEferSyscallEventsOnAllProcessors();
+
+IMPORT_EXPORT_VMM VOID
+ConfigureDisableEferSyscallEventsOnAllProcessors();
+
+IMPORT_EXPORT_VMM VOID
+ConfigureSetExternalInterruptExitingOnSingleCore(UINT32 TargetCoreId);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureEnableRdtscExitingOnSingleCore(UINT32 TargetCoreId);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureEnableRdpmcExitingOnSingleCore(UINT32 TargetCoreId);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureEnableMovToDebugRegistersExitingOnSingleCore(UINT32 TargetCoreId);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureSetExceptionBitmapOnSingleCore(UINT32 TargetCoreId, UINT32 BitMask);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureEnableMovToControlRegisterExitingOnSingleCore(UINT32 TargetCoreId, DEBUGGER_EVENT_OPTIONS * BroadcastingOption);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureChangeMsrBitmapWriteOnSingleCore(UINT32 TargetCoreId, UINT64 MsrMask);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureChangeMsrBitmapReadOnSingleCore(UINT32 TargetCoreId, UINT64 MsrMask);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureChangeIoBitmapOnSingleCore(UINT32 TargetCoreId, UINT64 Port);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureEnableEferSyscallHookOnSingleCore(UINT32 TargetCoreId);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureSetEferSyscallOrSysretHookType(DEBUGGER_EVENT_SYSCALL_SYSRET_TYPE SyscallHookType);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureDirtyLoggingInitializeOnAllProcessors();
+
+IMPORT_EXPORT_VMM VOID
+ConfigureDirtyLoggingUninitializeOnAllProcessors();
+
+IMPORT_EXPORT_VMM VOID
+ConfigureModeBasedExecHookUninitializeOnAllProcessors();
+
+IMPORT_EXPORT_VMM VOID
+ConfigureUninitializeExecTrapOnAllProcessors();
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureInitializeExecTrapOnAllProcessors();
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureEptHook(PVOID TargetAddress, UINT32 ProcessId);
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureEptHookFromVmxRoot(PVOID TargetAddress);
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureEptHook2(UINT32 CoreId,
+                  PVOID  TargetAddress,
+                  PVOID  HookFunction,
+                  UINT32 ProcessId);
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureEptHook2FromVmxRoot(UINT32 CoreId,
+                             PVOID  TargetAddress,
+                             PVOID  HookFunction);
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureEptHookMonitor(UINT32                                         CoreId,
+                        EPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR * HookingDetails,
+                        UINT32                                         ProcessId);
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureEptHookMonitorFromVmxRoot(UINT32                                         CoreId,
+                                   EPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR * MemoryAddressDetails);
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureEptHookModifyInstructionFetchState(UINT32  CoreId,
+                                            PVOID   PhysicalAddress,
+                                            BOOLEAN IsUnset);
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureEptHookModifyPageReadState(UINT32  CoreId,
+                                    PVOID   PhysicalAddress,
+                                    BOOLEAN IsUnset);
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureEptHookModifyPageWriteState(UINT32  CoreId,
+                                     PVOID   PhysicalAddress,
+                                     BOOLEAN IsUnset);
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureEptHookUnHookSingleAddress(UINT64 VirtualAddress,
+                                    UINT64 PhysAddress,
+                                    UINT32 ProcessId);
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureEptHookUnHookSingleAddressFromVmxRoot(UINT64                              VirtualAddress,
+                                               UINT64                              PhysAddress,
+                                               EPT_SINGLE_HOOK_UNHOOKING_DETAILS * TargetUnhookingDetails);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureEptHookAllocateExtraHookingPagesForMemoryMonitorsAndExecEptHooks(UINT32 Count);
+
+IMPORT_EXPORT_VMM VOID
+ConfigureEptHookReservePreallocatedPoolsForEptHooks(UINT32 Count);
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureExecTrapAddProcessToWatchingList(UINT32 ProcessId);
+
+IMPORT_EXPORT_VMM BOOLEAN
+ConfigureExecTrapRemoveProcessFromWatchingList(UINT32 ProcessId);
+
+//////////////////////////////////////////////////
+//           Direct VMCALL Functions 	   		//
+//////////////////////////////////////////////////
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallTest(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallPerformVmcall(UINT32 CoreId, UINT64 VmcallNumber, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallChangeMsrBitmapRead(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallChangeMsrBitmapWrite(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallChangeIoBitmap(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallEnableRdpmcExiting(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallEnableRdtscpExiting(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallEnableMov2DebugRegsExiting(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallSetExceptionBitmap(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallEnableExternalInterruptExiting(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallEnableMovToCrExiting(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallEnableEferSyscall(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallSetHiddenBreakpointHook(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallInvalidateEptAllContexts(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallInvalidateSingleContext(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallUnsetExceptionBitmap(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallUnhookSinglePage(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallSetDisableExternalInterruptExitingOnlyOnClearingInterruptEvents(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallResetMsrBitmapRead(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallResetMsrBitmapWrite(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallResetExceptionBitmapOnlyOnClearingExceptionEvents(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallResetIoBitmap(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallDisableRdtscExitingForClearingTscEvents(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallDisableRdpmcExiting(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallDisableEferSyscallEvents(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallDisableMov2DrExitingForClearingDrEvents(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+IMPORT_EXPORT_VMM NTSTATUS
+DirectVmcallDisableMov2CrExitingForClearingCrEvents(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
+
+//////////////////////////////////////////////////
+//                 Disassembler 	    		//
+//////////////////////////////////////////////////
+
+IMPORT_EXPORT_VMM BOOLEAN
+DisassemblerShowInstructionsInVmxNonRootMode(PVOID Address, UINT32 Length, BOOLEAN Is32Bit);
+
+IMPORT_EXPORT_VMM BOOLEAN
+DisassemblerShowOneInstructionInVmxNonRootMode(PVOID Address, UINT64 ActualRip, BOOLEAN Is32Bit);
+
+IMPORT_EXPORT_VMM UINT32
+DisassemblerShowOneInstructionInVmxRootMode(PVOID Address, BOOLEAN Is32Bit);
+
+//////////////////////////////////////////////////
+//                General Functions 	   		//
+//////////////////////////////////////////////////
+
+// ----------------------------------------------------------------------------
+// Exported Interfaces For Virtual Addresses
+//
+
+IMPORT_EXPORT_VMM UINT64
+VirtualAddressToPhysicalAddress(_In_ PVOID VirtualAddress);
+
+IMPORT_EXPORT_VMM UINT64
+VirtualAddressToPhysicalAddressByProcessId(_In_ PVOID  VirtualAddress,
+                                           _In_ UINT32 ProcessId);
+
+IMPORT_EXPORT_VMM UINT64
+VirtualAddressToPhysicalAddressByProcessCr3(_In_ PVOID    VirtualAddress,
+                                            _In_ CR3_TYPE TargetCr3);
+
+IMPORT_EXPORT_VMM UINT64
+VirtualAddressToPhysicalAddressOnTargetProcess(_In_ PVOID VirtualAddress);
+
+// ----------------------------------------------------------------------------
+// Exported Interfaces For Physical Addresses
+//
+IMPORT_EXPORT_VMM UINT64
+PhysicalAddressToVirtualAddress(_In_ UINT64 PhysicalAddress);
+
+IMPORT_EXPORT_VMM UINT64
+PhysicalAddressToVirtualAddressByProcessId(_In_ PVOID PhysicalAddress, _In_ UINT32 ProcessId);
+
+IMPORT_EXPORT_VMM UINT64
+PhysicalAddressToVirtualAddressByCr3(_In_ PVOID PhysicalAddress, _In_ CR3_TYPE TargetCr3);
+
+IMPORT_EXPORT_VMM UINT64
+PhysicalAddressToVirtualAddressOnTargetProcess(_In_ PVOID PhysicalAddress);
+
+// ----------------------------------------------------------------------------
+// Exported Interfaces For Layout Switching Functions
+//
+IMPORT_EXPORT_VMM CR3_TYPE
+SwitchToProcessMemoryLayout(_In_ UINT32 ProcessId);
+
+IMPORT_EXPORT_VMM CR3_TYPE
+SwitchToCurrentProcessMemoryLayout();
+
+IMPORT_EXPORT_VMM CR3_TYPE
+SwitchToProcessMemoryLayoutByCr3(_In_ CR3_TYPE TargetCr3);
+
+IMPORT_EXPORT_VMM VOID
+SwitchToPreviousProcess(_In_ CR3_TYPE PreviousProcess);
+
+// ----------------------------------------------------------------------------
+// Exported Interfaces For Check Validity of Addresses
+//
+IMPORT_EXPORT_VMM BOOLEAN
+CheckAddressValidityUsingTsx(CHAR * Address);
+
+IMPORT_EXPORT_VMM BOOLEAN
+CheckAccessValidityAndSafety(UINT64 TargetAddress, UINT32 Size);
+
+IMPORT_EXPORT_VMM BOOLEAN
+CheckAddressPhysical(UINT64 PAddr);
+
+IMPORT_EXPORT_VMM UINT32
+CheckAddressMaximumInstructionLength(PVOID Address);
+
+// ----------------------------------------------------------------------------
+// Exported Interfaces For Layout Functions
+//
+IMPORT_EXPORT_VMM CR3_TYPE
+LayoutGetCurrentProcessCr3();
+
+IMPORT_EXPORT_VMM CR3_TYPE
+LayoutGetExactGuestProcessCr3();
+
+//////////////////////////////////////////////////
+//         Memory Management Functions 	   		//
+//////////////////////////////////////////////////
+
+// ----------------------------------------------------------------------------
+// PTE-related Functions
+//
+
+IMPORT_EXPORT_VMM PVOID
+MemoryMapperGetPteVa(_In_ PVOID        Va,
+                     _In_ PAGING_LEVEL Level);
+
+IMPORT_EXPORT_VMM PVOID
+MemoryMapperGetPteVaByCr3(_In_ PVOID        Va,
+                          _In_ PAGING_LEVEL Level,
+                          _In_ CR3_TYPE     TargetCr3);
+
+IMPORT_EXPORT_VMM PVOID
+MemoryMapperGetPteVaWithoutSwitchingByCr3(_In_ PVOID        Va,
+                                          _In_ PAGING_LEVEL Level,
+                                          _In_ CR3_TYPE     TargetCr3);
+
+IMPORT_EXPORT_VMM PVOID
+MemoryMapperGetPteVaOnTargetProcess(_In_ PVOID        Va,
+                                    _In_ PAGING_LEVEL Level);
+
+IMPORT_EXPORT_VMM PVOID
+MemoryMapperSetExecuteDisableToPteOnTargetProcess(_In_ PVOID   Va,
+                                                  _In_ BOOLEAN Set);
+
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryMapperCheckPteIsPresentOnTargetProcess(PVOID        Va,
+                                             PAGING_LEVEL Level);
+
+// ----------------------------------------------------------------------------
+// Reading Memory Functions
+//
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryMapperReadMemorySafe(_In_ UINT64   VaAddressToRead,
+                           _Inout_ PVOID BufferToSaveMemory,
+                           _In_ SIZE_T   SizeToRead);
+
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryMapperReadMemorySafeByPhysicalAddress(_In_ UINT64    PaAddressToRead,
+                                            _Inout_ UINT64 BufferToSaveMemory,
+                                            _In_ SIZE_T    SizeToRead);
+
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryMapperReadMemorySafeOnTargetProcess(_In_ UINT64   VaAddressToRead,
+                                          _Inout_ PVOID BufferToSaveMemory,
+                                          _In_ SIZE_T   SizeToRead);
+
+// ----------------------------------------------------------------------------
+// Disassembler Functions
+//
+IMPORT_EXPORT_VMM UINT32
+DisassemblerLengthDisassembleEngine(PVOID Address, BOOLEAN Is32Bit);
+
+IMPORT_EXPORT_VMM UINT32
+DisassemblerLengthDisassembleEngineInVmxRootOnTargetProcess(PVOID Address, BOOLEAN Is32Bit);
+
+// ----------------------------------------------------------------------------
+// Writing Memory Functions
+//
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryMapperWriteMemorySafe(_Inout_ UINT64 Destination,
+                            _In_ PVOID     Source,
+                            _In_ SIZE_T    SizeToWrite,
+                            _In_ CR3_TYPE  TargetProcessCr3);
+
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryMapperWriteMemorySafeOnTargetProcess(_Inout_ UINT64 Destination,
+                                           _In_ PVOID     Source,
+                                           _In_ SIZE_T    Size);
+
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryMapperWriteMemorySafeByPhysicalAddress(_Inout_ UINT64 DestinationPa,
+                                             _In_ UINT64    Source,
+                                             _In_ SIZE_T    SizeToWrite);
+
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryMapperWriteMemoryUnsafe(_Inout_ UINT64 Destination,
+                              _In_ PVOID     Source,
+                              _In_ SIZE_T    SizeToWrite,
+                              _In_ UINT32    TargetProcessId);
+
+// ----------------------------------------------------------------------------
+// Reserving Memory Functions
+//
+IMPORT_EXPORT_VMM UINT64
+MemoryMapperReserveUsermodeAddressOnTargetProcess(_In_ UINT32  ProcessId,
+                                                  _In_ BOOLEAN Allocate);
+
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryMapperFreeMemoryOnTargetProcess(_In_ UINT32   ProcessId,
+                                      _Inout_ PVOID BaseAddress);
+
+// ----------------------------------------------------------------------------
+// Miscellaneous Memory Functions
+//
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryMapperSetSupervisorBitWithoutSwitchingByCr3(_In_ PVOID        Va,
+                                                  _In_ BOOLEAN      Set,
+                                                  _In_ PAGING_LEVEL Level,
+                                                  _In_ CR3_TYPE     TargetCr3);
+
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryMapperCheckIfPageIsNxBitSetOnTargetProcess(_In_ PVOID Va);
+
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryMapperCheckIfPdeIsLargePageOnTargetProcess(_In_ PVOID Va);
+
+//////////////////////////////////////////////////
+//				Memory Manager		    		//
+//////////////////////////////////////////////////
+
+IMPORT_EXPORT_VMM BOOLEAN
+MemoryManagerReadProcessMemoryNormal(HANDLE PID, PVOID Address, DEBUGGER_READ_MEMORY_TYPE MemType, PVOID UserBuffer, SIZE_T Size, PSIZE_T ReturnSize);
+
+//////////////////////////////////////////////////
+//                 Pool Manager     	   		//
+//////////////////////////////////////////////////
+
+IMPORT_EXPORT_VMM BOOLEAN
+PoolManagerCheckAndPerformAllocationAndDeallocation();
+
+IMPORT_EXPORT_VMM BOOLEAN
+PoolManagerRequestAllocation(SIZE_T Size, UINT32 Count, POOL_ALLOCATION_INTENTION Intention);
+
+IMPORT_EXPORT_VMM UINT64
+PoolManagerRequestPool(POOL_ALLOCATION_INTENTION Intention, BOOLEAN RequestNewPool, UINT32 Size);
+
+IMPORT_EXPORT_VMM BOOLEAN
+PoolManagerFreePool(UINT64 AddressToFree);
+
+IMPORT_EXPORT_VMM VOID
+PoolManagerShowPreAllocatedPools();
+
+//////////////////////////////////////////////////
+//          VMX Registers Modification  		//
+//////////////////////////////////////////////////
+
+IMPORT_EXPORT_VMM VOID
+SetGuestCsSel(PVMX_SEGMENT_SELECTOR Cs);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestCs(PVMX_SEGMENT_SELECTOR Cs);
+
+IMPORT_EXPORT_VMM VMX_SEGMENT_SELECTOR
+GetGuestCs();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestSsSel(PVMX_SEGMENT_SELECTOR Ss);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestSs(PVMX_SEGMENT_SELECTOR Ss);
+
+IMPORT_EXPORT_VMM VMX_SEGMENT_SELECTOR
+GetGuestSs();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestDsSel(PVMX_SEGMENT_SELECTOR Ds);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestDs(PVMX_SEGMENT_SELECTOR Ds);
+
+IMPORT_EXPORT_VMM VMX_SEGMENT_SELECTOR
+GetGuestDs();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestFsSel(PVMX_SEGMENT_SELECTOR Fs);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestFs(PVMX_SEGMENT_SELECTOR Fs);
+
+IMPORT_EXPORT_VMM VMX_SEGMENT_SELECTOR
+GetGuestFs();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestGsSel(PVMX_SEGMENT_SELECTOR Gs);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestGs(PVMX_SEGMENT_SELECTOR Gs);
+
+IMPORT_EXPORT_VMM VMX_SEGMENT_SELECTOR
+GetGuestGs();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestEsSel(PVMX_SEGMENT_SELECTOR Es);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestEs(PVMX_SEGMENT_SELECTOR Es);
+
+IMPORT_EXPORT_VMM VMX_SEGMENT_SELECTOR
+GetGuestEs();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestIdtr(UINT64 Idtr);
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestIdtr();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestLdtr(UINT64 Ldtr);
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestLdtr();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestGdtr(UINT64 Gdtr);
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestGdtr();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestTr(UINT64 Tr);
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestTr();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestRFlags(UINT64 RFlags);
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestRFlags();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestRIP(UINT64 RIP);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestRSP(UINT64 RSP);
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestRIP();
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestCr0();
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestCr2();
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestCr3();
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestCr4();
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestCr8();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestCr0(UINT64 Cr0);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestCr2(UINT64 Cr2);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestCr3(UINT64 Cr3);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestCr4(UINT64 Cr4);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestCr8(UINT64 Cr8);
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestDr0();
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestDr1();
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestDr2();
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestDr3();
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestDr6();
+
+IMPORT_EXPORT_VMM UINT64
+GetGuestDr7();
+
+IMPORT_EXPORT_VMM VOID
+SetGuestDr0(UINT64 value);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestDr1(UINT64 value);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestDr2(UINT64 value);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestDr3(UINT64 value);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestDr6(UINT64 value);
+
+IMPORT_EXPORT_VMM VOID
+SetGuestDr7(UINT64 value);
+
+IMPORT_EXPORT_VMM BOOLEAN
+SetDebugRegisters(UINT32 DebugRegNum, DEBUG_REGISTER_TYPE ActionType, BOOLEAN ApplyToVmcs, UINT64 TargetAddress);
+
+//////////////////////////////////////////////////
+//              Transparent Mode        		//
+//////////////////////////////////////////////////
+
+IMPORT_EXPORT_VMM NTSTATUS
+TransparentHideDebugger(PDEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE Measurements);
+
+IMPORT_EXPORT_VMM NTSTATUS
+TransparentUnhideDebugger();
+
+//////////////////////////////////////////////////
+//     Non-internal Broadcasting Functions    	//
+//////////////////////////////////////////////////
+
+IMPORT_EXPORT_VMM VOID
+BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastEnableDbAndBpExitingAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastDisableDbAndBpExitingAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastEnableRdtscExitingAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastDisableRdtscExitingAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastChangeAllMsrBitmapReadAllCores(UINT64 BitmapMask);
+
+IMPORT_EXPORT_VMM VOID
+BroadcastResetChangeAllMsrBitmapReadAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastChangeAllMsrBitmapWriteAllCores(UINT64 BitmapMask);
+
+IMPORT_EXPORT_VMM VOID
+BroadcastResetAllMsrBitmapWriteAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastDisableRdtscExitingForClearingEventsAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastDisableMov2ControlRegsExitingForClearingEventsAllCores(PDEBUGGER_EVENT_OPTIONS BroadcastingOption);
+
+IMPORT_EXPORT_VMM VOID
+BroadcastDisableMov2DebugRegsExitingForClearingEventsAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastEnableRdpmcExitingAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastDisableRdpmcExitingAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastSetExceptionBitmapAllCores(UINT64 ExceptionIndex);
+
+IMPORT_EXPORT_VMM VOID
+BroadcastUnsetExceptionBitmapAllCores(UINT64 ExceptionIndex);
+
+IMPORT_EXPORT_VMM VOID
+BroadcastResetExceptionBitmapAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastEnableMovControlRegisterExitingAllCores(PDEBUGGER_EVENT_OPTIONS BroadcastingOption);
+
+IMPORT_EXPORT_VMM VOID
+BroadcastDisableMovToControlRegistersExitingAllCores(PDEBUGGER_EVENT_OPTIONS BroadcastingOption);
+
+IMPORT_EXPORT_VMM VOID
+BroadcastEnableMovDebugRegistersExitingAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastDisableMovDebugRegistersExitingAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastSetExternalInterruptExitingAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastUnsetExternalInterruptExitingOnlyOnClearingInterruptEventsAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastIoBitmapChangeAllCores(UINT64 Port);
+
+IMPORT_EXPORT_VMM VOID
+BroadcastIoBitmapResetAllCores();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastEnableMovToCr3ExitingOnAllProcessors();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastDisableMovToCr3ExitingOnAllProcessors();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastEnableEferSyscallEventsOnAllProcessors();
+
+IMPORT_EXPORT_VMM VOID
+BroadcastDisableEferSyscallEventsOnAllProcessors();
+
+
+//..\..\..\bin\debug\SDK\Headers\Ioctls.h
+/**
+ * @file Ioctls.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK IOCTL codes
+ * @details This file contains definitions of IOCTLs used in HyperDbg
+ * @version 0.2
+ * @date 2022-06-24
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//                 Definitions                  //
+//////////////////////////////////////////////////
+
+//
+// The following controls are mainly defined in <winioctl.h>
+//
+
+//
+// Macro definition for defining IOCTL and FSCTL function control codes.  Note
+// that function codes 0-2047 are reserved for Microsoft Corporation, and
+// 2048-4095 are reserved for customers.
+//
+#ifndef CTL_CODE
+
+#    define CTL_CODE(DeviceType, Function, Method, Access) ( \
+        ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method))
+
+#endif // ! CTL_CODE
+
+#ifndef FILE_ANY_ACCESS
+
+#    define FILE_ANY_ACCESS 0
+
+#endif // !FILE_ANY_ACCESS
+
+//
+// Define the method codes for how buffers are passed for I/O and FS controls
+//
+
+#ifndef METHOD_BUFFERED
+
+#    define METHOD_BUFFERED 0
+
+#endif // !METHOD_BUFFERED
+
+#ifndef FILE_DEVICE_UNKNOWN
+
+#    define FILE_DEVICE_UNKNOWN 0x00000022
+
+#endif // !FILE_DEVICE_UNKNOWN
+
+//////////////////////////////////////////////////
+//                   IOCTLs                     //
+//////////////////////////////////////////////////
+
+/**
+ * @brief ioctl, register a new event
+ *
+ */
+#define IOCTL_REGISTER_EVENT \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, irp pending mechanism for reading from message tracing buffers
+ *
+ */
+#define IOCTL_RETURN_IRP_PENDING_PACKETS_AND_DISALLOW_IOCTL \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, to terminate vmx and exit form debugger
+ *
+ */
+#define IOCTL_TERMINATE_VMX \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x802, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, request to read memory
+ *
+ */
+#define IOCTL_DEBUGGER_READ_MEMORY \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x803, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, request to read or write on a special MSR
+ *
+ */
+#define IOCTL_DEBUGGER_READ_OR_WRITE_MSR \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x804, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, request to read page table entries
+ *
+ */
+#define IOCTL_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x805, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, register an event
+ *
+ */
+#define IOCTL_DEBUGGER_REGISTER_EVENT \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x806, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, add action to event
+ *
+ */
+#define IOCTL_DEBUGGER_ADD_ACTION_TO_EVENT \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x807, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, request to enable or disable transparent-mode
+ *
+ */
+#define IOCTL_DEBUGGER_HIDE_AND_UNHIDE_TO_TRANSPARENT_THE_DEBUGGER \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x808, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, for !va2pa and !pa2va commands
+ *
+ */
+#define IOCTL_DEBUGGER_VA2PA_AND_PA2VA_COMMANDS \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x809, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, request to edit virtual and physical memory
+ *
+ */
+#define IOCTL_DEBUGGER_EDIT_MEMORY \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80a, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, request to search virtual and physical memory
+ *
+ */
+#define IOCTL_DEBUGGER_SEARCH_MEMORY \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80b, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, request to modify an event (enable/disable/clear)
+ *
+ */
+#define IOCTL_DEBUGGER_MODIFY_EVENTS \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80c, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, flush the kernel buffers
+ *
+ */
+#define IOCTL_DEBUGGER_FLUSH_LOGGING_BUFFERS \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80d, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, attach or detach user-mode processes
+ *
+ */
+#define IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80e, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, print states (Deprecated)
+ *
+ *
+ */
+#define IOCTL_DEBUGGER_PRINT \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80f, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, prepare debuggee
+ *
+ */
+#define IOCTL_PREPARE_DEBUGGEE \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x810, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, pause and halt the system
+ *
+ */
+#define IOCTL_PAUSE_PACKET_RECEIVED \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x811, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, send a signal that execution of command finished
+ *
+ */
+#define IOCTL_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x812, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, send user-mode messages to the debugger
+ *
+ */
+#define IOCTL_SEND_USERMODE_MESSAGES_TO_DEBUGGER \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x813, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, send general buffer from debuggee to debugger
+ *
+ */
+#define IOCTL_SEND_GENERAL_BUFFER_FROM_DEBUGGEE_TO_DEBUGGER \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x814, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, to perform kernel-side tests
+ *
+ */
+#define IOCTL_PERFROM_KERNEL_SIDE_TESTS \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x815, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, to reserve pre-allocated pools
+ *
+ */
+#define IOCTL_RESERVE_PRE_ALLOCATED_POOLS \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x816, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, to send user debugger commands
+ *
+ */
+#define IOCTL_SEND_USER_DEBUGGER_COMMANDS \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x817, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, to get active threads/processes that are debugging
+ *
+ */
+#define IOCTL_GET_DETAIL_OF_ACTIVE_THREADS_AND_PROCESSES \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x818, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, to get user mode modules details
+ *
+ */
+#define IOCTL_GET_USER_MODE_MODULE_DETAILS \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x819, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, query count of active threads or processes
+ *
+ */
+#define IOCTL_QUERY_COUNT_OF_ACTIVE_PROCESSES_OR_THREADS \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x81a, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, to get list threads/processes
+ *
+ */
+#define IOCTL_GET_LIST_OF_THREADS_AND_PROCESSES \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x81b, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, query the current process details
+ *
+ */
+#define IOCTL_QUERY_CURRENT_PROCESS \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x81c, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, query the current thread details
+ *
+ */
+#define IOCTL_QUERY_CURRENT_THREAD \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x81d, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, request service from the reversing machine
+ *
+ */
+#define IOCTL_REQUEST_REV_MACHINE_SERVICE \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x81e, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, request to bring pages in
+ *
+ */
+#define IOCTL_DEBUGGER_BRING_PAGES_IN \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x81f, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, to preactivate a functionality
+ *
+ */
+#define IOCTL_PREACTIVATE_FUNCTIONALITY \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x820, METHOD_BUFFERED, FILE_ANY_ACCESS)
 
 
 //..\..\..\bin\debug\SDK\Headers\RequestStructures.h
@@ -1604,178 +3263,11 @@ typedef struct _DEBUGGEE_REGISTER_READ_DESCRIPTION
  */
 
 
-//..\..\..\bin\debug\SDK\Imports\HyperDbgHyperLogIntrinsics.h
+//..\..\..\bin\debug\SDK\Imports\HyperDbgSymImports.h
 /**
- * @file HyperDbgHyperLogIntrinsics.h
+ * @file HyperDbgSymImports.h
  * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from hyperlog project
- * @version 0.1
- * @date 2023-01-15
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//////////////////////////////////////////////////
-//					Enums						//
-//////////////////////////////////////////////////
-
-/**
- * @brief Types of log messages
- *
- */
-typedef enum _LOG_TYPE
-{
-    LOG_INFO,
-    LOG_WARNING,
-    LOG_ERROR
-
-} LOG_TYPE;
-
-//////////////////////////////////////////////////
-//					Logging						//
-//////////////////////////////////////////////////
-
-/**
- * @brief Define log variables
- *
- */
-#if UseDbgPrintInsteadOfUsermodeMessageTracking
-/* Use DbgPrint */
-#    define Logformat, ...)                           \
-        DbgPrint("[+] Information (%s:%d) | " format "\n", \
-                 __func__,                                 \
-                 __LINE__,                                 \
-                 __VA_ARGS__)
-
-#    define LogWarning(format, ...)                    \
-        DbgPrint("[-] Warning (%s:%d) | " format "\n", \
-                 __func__,                             \
-                 __LINE__,                             \
-                 __VA_ARGS__)
-
-#    define LogError(format, ...)                    \
-        DbgPrint("[!] Error (%s:%d) | " format "\n", \
-                 __func__,                           \
-                 __LINE__,                           \
-                 __VA_ARGS__);                       \
-        DbgBreakPoint()
-
-/**
- * @brief Log without any prefix
- *
- */
-#    define Log(format, ...) \
-        DbgPrint(format, __VA_ARGS__)
-
-#else
-
-/**
- * @brief Log, general
- *
- */
-#    define LogInfo(format, ...)                                                          \
-        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
-                                                UseImmediateMessaging,                    \
-                                                ShowSystemTimeOnDebugMessages,            \
-                                                FALSE,                                    \
-                                                "[+] Information (%s:%d) | " format "\n", \
-                                                __func__,                                 \
-                                                __LINE__,                                 \
-                                                __VA_ARGS__)
-
-/**
- * @brief Log in the case of priority message
- *
- */
-#    define LogInfoPriority(format, ...)                                                  \
-        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
-                                                TRUE,                                     \
-                                                ShowSystemTimeOnDebugMessages,            \
-                                                TRUE,                                     \
-                                                "[+] Information (%s:%d) | " format "\n", \
-                                                __func__,                                 \
-                                                __LINE__,                                 \
-                                                __VA_ARGS__)
-
-/**
- * @brief Log in the case of warning
- *
- */
-#    define LogWarning(format, ...)                                                   \
-        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_WARNING_MESSAGE,        \
-                                                UseImmediateMessaging,                \
-                                                ShowSystemTimeOnDebugMessages,        \
-                                                TRUE,                                 \
-                                                "[-] Warning (%s:%d) | " format "\n", \
-                                                __func__,                             \
-                                                __LINE__,                             \
-                                                __VA_ARGS__)
-
-/**
- * @brief Log in the case of error
- *
- */
-#    define LogError(format, ...)                                                   \
-        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_ERROR_MESSAGE,        \
-                                                UseImmediateMessaging,              \
-                                                ShowSystemTimeOnDebugMessages,      \
-                                                TRUE,                               \
-                                                "[!] Error (%s:%d) | " format "\n", \
-                                                __func__,                           \
-                                                __LINE__,                           \
-                                                __VA_ARGS__);                       \
-        if (DebugMode)                                                              \
-        DbgBreakPoint()
-
-/**
- * @brief Log without any prefix
- *
- */
-#    define Log(format, ...)                                                \
-        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE, \
-                                                TRUE,                       \
-                                                FALSE,                      \
-                                                FALSE,                      \
-                                                format,                     \
-                                                __VA_ARGS__)
-
-/**
- * @brief Log without any prefix and bypass the stack
- * problem (getting two temporary stacks in preparing phase)
- *
- */
-#    define LogSimpleWithTag(tag, isimmdte, buffer, len) \
-        LogCallbackSendMessageToQueue(tag,               \
-                                      isimmdte,          \
-                                      buffer,            \
-                                      len,               \
-                                      FALSE)
-
-#endif // UseDbgPrintInsteadOfUsermodeMessageTracking
-
-/**
- * @brief Log, initialize boot information and debug information
- *
- */
-#define LogDebugInfo(format, ...)                                                     \
-    if (DebugMode)                                                                    \
-    LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
-                                            UseImmediateMessaging,                    \
-                                            ShowSystemTimeOnDebugMessages,            \
-                                            FALSE,                                    \
-                                            "[+] Information (%s:%d) | " format "\n", \
-                                            __func__,                                 \
-                                            __LINE__,                                 \
-                                            __VA_ARGS__)
-
-
-//..\..\..\bin\debug\SDK\Imports\HyperDbgRevImports.h
-/**
- * @file HyperDbgRevImports.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from reversing machine interface
+ * @brief Headers relating exported functions from symbol parser
  * @version 0.2
  * @date 2023-02-02
  *
@@ -1785,18 +3277,62 @@ typedef enum _LOG_TYPE
 #pragma once
 
 //
-// Header file of hpr
+// Header file of symbol-parser
 // Imports
 //
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-//
-// Reversing Machine Module
-//
-__declspec(dllimport) int ReversingMachineStart();
-__declspec(dllimport) int ReversingMachineStop();
+__declspec(dllimport) VOID
+    SymSetTextMessageCallback(PVOID Handler);
+__declspec(dllimport) VOID
+    SymbolAbortLoading();
+__declspec(dllimport) UINT64
+    SymConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
+__declspec(dllimport) UINT32
+    SymLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
+__declspec(dllimport) UINT32
+    SymUnloadAllSymbols();
+__declspec(dllimport) UINT32
+    SymUnloadModuleSymbol(char * ModuleName);
+__declspec(dllimport) UINT32
+    SymSearchSymbolForMask(const char * SearchMask);
+__declspec(dllimport) BOOLEAN
+    SymGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
+__declspec(dllimport) BOOLEAN
+    SymGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
+__declspec(dllimport) BOOLEAN
+    SymCreateSymbolTableForDisassembler(void * CallbackFunction);
+__declspec(dllimport) BOOLEAN
+    SymConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
+__declspec(dllimport) BOOLEAN
+    SymConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath,
+                                                char *       PdbFilePath,
+                                                char *       GuidAndAgeDetails,
+                                                BOOLEAN      Is32BitModule);
+__declspec(dllimport) BOOLEAN
+    SymbolInitLoad(PVOID        BufferToStoreDetails,
+                   UINT32       StoredLength,
+                   BOOLEAN      DownloadIfAvailable,
+                   const char * SymbolPath,
+                   BOOLEAN      IsSilentLoad);
+__declspec(dllimport) BOOLEAN
+    SymShowDataBasedOnSymbolTypes(const char * TypeName,
+                                  UINT64       Address,
+                                  BOOLEAN      IsStruct,
+                                  PVOID        BufferAddress,
+                                  const char * AdditionalParameters);
+__declspec(dllimport) BOOLEAN
+    SymQuerySizeof(_In_ const char * StructNameOrTypeName, _Out_ UINT32 * SizeOfField);
+__declspec(dllimport) BOOLEAN
+    SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
+                                     _In_ const char * FiledOfStructName,
+                                     _Out_ PBOOLEAN    IsStructNamePointerOrNot,
+                                     _Out_ PBOOLEAN    IsFiledOfStructNamePointerOrNot,
+                                     _Out_ char **     NewStructOrTypeName,
+                                     _Out_ UINT32 *    OffsetOfFieldFromTop,
+                                     _Out_ UINT32 *    SizeOfField);
 
 #ifdef __cplusplus
 }
@@ -1991,6 +3527,875 @@ typedef struct _DEBUGGER_REMOTE_PACKET
     DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION RequestedActionOfThePacket;
 
 } DEBUGGER_REMOTE_PACKET, *PDEBUGGER_REMOTE_PACKET;
+
+
+//..\..\..\bin\debug\SDK\Headers\DataTypes.h
+/**
+ * @file DataTypes.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK data type definitions
+ * @details This file contains definitions of structures, enums, etc.
+ * used in HyperDbg
+ * @version 0.2
+ * @date 2022-06-22
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//               Memory Stages                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Different levels of paging
+ *
+ */
+typedef enum _PAGING_LEVEL
+{
+    PagingLevelPageTable = 0,
+    PagingLevelPageDirectory,
+    PagingLevelPageDirectoryPointerTable,
+    PagingLevelPageMapLevel4
+} PAGING_LEVEL;
+
+//////////////////////////////////////////////////
+//                 Pool Manager      			//
+//////////////////////////////////////////////////
+
+/**
+ * @brief Inum of intentions for buffers (buffer tag)
+ *
+ */
+typedef enum _POOL_ALLOCATION_INTENTION
+{
+    TRACKING_HOOKED_PAGES,
+    EXEC_TRAMPOLINE,
+    SPLIT_2MB_PAGING_TO_4KB_PAGE,
+    DETOUR_HOOK_DETAILS,
+    BREAKPOINT_DEFINITION_STRUCTURE,
+    PROCESS_THREAD_HOLDER,
+
+    //
+    // Instant event buffers
+    //
+    INSTANT_REGULAR_EVENT_BUFFER,
+    INSTANT_BIG_EVENT_BUFFER,
+    INSTANT_REGULAR_EVENT_ACTION_BUFFER,
+    INSTANT_BIG_EVENT_ACTION_BUFFER,
+
+    //
+    // Use for request safe buffers of the event
+    //
+    INSTANT_REGULAR_SAFE_BUFFER_FOR_EVENTS,
+    INSTANT_BIG_SAFE_BUFFER_FOR_EVENTS,
+
+} POOL_ALLOCATION_INTENTION;
+
+//////////////////////////////////////////////////
+//	   	Debug Registers Modifications 	    	//
+//////////////////////////////////////////////////
+
+typedef enum _DEBUG_REGISTER_TYPE
+{
+    BREAK_ON_INSTRUCTION_FETCH,
+    BREAK_ON_WRITE_ONLY,
+    BREAK_ON_IO_READ_OR_WRITE_NOT_SUPPORTED,
+    BREAK_ON_READ_AND_WRITE_BUT_NOT_FETCH
+} DEBUG_REGISTER_TYPE;
+
+//////////////////////////////////////////////////
+//              Execution Stages                //
+//////////////////////////////////////////////////
+
+typedef enum _VMX_EXECUTION_MODE
+{
+    VmxExecutionModeNonRoot = FALSE,
+    VmxExecutionModeRoot    = TRUE
+} VMX_EXECUTION_MODE;
+
+/**
+ * @brief Type of calling the event
+ *
+ */
+typedef enum _VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE
+{
+    VMM_CALLBACK_CALLING_STAGE_INVALID_EVENT_EMULATION = 0,
+    VMM_CALLBACK_CALLING_STAGE_PRE_EVENT_EMULATION     = 1,
+    VMM_CALLBACK_CALLING_STAGE_POST_EVENT_EMULATION    = 2,
+    VMM_CALLBACK_CALLING_STAGE_ALL_EVENT_EMULATION     = 3
+
+} VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE;
+
+/**
+ * @brief enum to query different process and thread interception mechanisms
+ *
+ */
+typedef enum _DEBUGGER_THREAD_PROCESS_TRACING
+{
+
+    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_INTERRUPTS_FOR_THREAD_CHANGE,
+    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_INTERRUPTS_FOR_PROCESS_CHANGE,
+    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_DEBUG_REGISTER_INTERCEPTION,
+    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_WAITING_FOR_MOV_CR3_VM_EXITS,
+
+} DEBUGGER_THREAD_PROCESS_TRACING;
+
+//////////////////////////////////////////////////
+//            Callback Definitions              //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Callback type that can be used to be used
+ * as a custom ShowMessages function
+ *
+ */
+typedef int (*Callback)(const char * Text);
+
+//////////////////////////////////////////////////
+//                Communications                //
+//////////////////////////////////////////////////
+
+/**
+ * @brief The structure of user-input packet in HyperDbg
+ *
+ */
+typedef struct _DEBUGGEE_USER_INPUT_PACKET
+{
+    UINT32  CommandLen;
+    BOOLEAN IgnoreFinishedSignal;
+    UINT32  Result;
+
+    //
+    // The user's input is here
+    //
+
+} DEBUGGEE_USER_INPUT_PACKET, *PDEBUGGEE_USER_INPUT_PACKET;
+
+/**
+ * @brief The structure of user-input packet in HyperDbg
+ *
+ */
+typedef struct _DEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET
+{
+    UINT32 Length;
+
+    //
+    // The buffer for event and action is here
+    //
+
+} DEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET,
+    *PDEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET;
+
+//////////////////////////////////////////////////
+//                  Pausing                    //
+//////////////////////////////////////////////////
+
+#define SIZEOF_DEBUGGER_PAUSE_PACKET_RECEIVED \
+    sizeof(DEBUGGER_PAUSE_PACKET_RECEIVED)
+
+/**
+ * @brief request to pause and halt the system
+ *
+ */
+typedef struct _DEBUGGER_PAUSE_PACKET_RECEIVED
+{
+    UINT32 Result; // Result from kernel
+
+} DEBUGGER_PAUSE_PACKET_RECEIVED, *PDEBUGGER_PAUSE_PACKET_RECEIVED;
+
+/* ==============================================================================================
+ */
+
+/**
+ * @brief The structure of detail of a triggered event in HyperDbg
+ * @details This structure is also used for transferring breakpoint ids, RIP as the context, etc.
+ *
+ */
+typedef struct _DEBUGGER_TRIGGERED_EVENT_DETAILS
+{
+    UINT64                                Tag; /* in breakpoints Tag is breakpoint id, not event tag */
+    PVOID                                 Context;
+    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE Stage;
+
+} DEBUGGER_TRIGGERED_EVENT_DETAILS, *PDEBUGGER_TRIGGERED_EVENT_DETAILS;
+
+/* ==============================================================================================
+ */
+
+/**
+ * @brief The structure of pausing packet in kHyperDbg
+ *
+ */
+typedef struct _DEBUGGEE_KD_PAUSED_PACKET
+{
+    UINT64                                Rip;
+    BOOLEAN                               IsProcessorOn32BitMode; // if true shows that the address should be interpreted in 32-bit mode
+    BOOLEAN                               IgnoreDisassembling;    // if check if diassembling should be ignored or not
+    DEBUGGEE_PAUSING_REASON               PausingReason;
+    ULONG                                 CurrentCore;
+    UINT64                                EventTag;
+    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE EventCallingStage;
+    UINT64                                Rflags;
+    BYTE                                  InstructionBytesOnRip[MAXIMUM_INSTR_SIZE];
+    UINT16                                ReadInstructionLen;
+
+} DEBUGGEE_KD_PAUSED_PACKET, *PDEBUGGEE_KD_PAUSED_PACKET;
+
+/* ==============================================================================================
+ */
+
+/**
+ * @brief The structure of pausing packet in uHyperDbg
+ *
+ */
+typedef struct _DEBUGGEE_UD_PAUSED_PACKET
+{
+    UINT64                                Rip;
+    UINT64                                ProcessDebuggingToken;
+    BOOLEAN                               Is32Bit; // if true shows that the address should be interpreted in 32-bit mode
+    DEBUGGEE_PAUSING_REASON               PausingReason;
+    UINT32                                ProcessId;
+    UINT32                                ThreadId;
+    UINT64                                Rflags;
+    UINT64                                EventTag;
+    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE EventCallingStage;
+    BYTE                                  InstructionBytesOnRip[MAXIMUM_INSTR_SIZE];
+    UINT16                                ReadInstructionLen;
+    GUEST_REGS                            GuestRegs;
+
+} DEBUGGEE_UD_PAUSED_PACKET, *PDEBUGGEE_UD_PAUSED_PACKET;
+
+//////////////////////////////////////////////////
+//            Message Tracing Enums             //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Type of transferring buffer between user-to-kernel
+ *
+ */
+typedef enum _NOTIFY_TYPE
+{
+    IRP_BASED,
+    EVENT_BASED
+} NOTIFY_TYPE;
+
+//////////////////////////////////////////////////
+//                  Structures                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief The structure of message packet in HyperDbg
+ *
+ */
+typedef struct _DEBUGGEE_MESSAGE_PACKET
+{
+    UINT32 OperationCode;
+    CHAR   Message[PacketChunkSize];
+
+} DEBUGGEE_MESSAGE_PACKET, *PDEBUGGEE_MESSAGE_PACKET;
+
+/**
+ * @brief Used to register event for transferring buffer between user-to-kernel
+ *
+ */
+typedef struct _REGISTER_NOTIFY_BUFFER
+{
+    NOTIFY_TYPE Type;
+    HANDLE      hEvent;
+
+} REGISTER_NOTIFY_BUFFER, *PREGISTER_NOTIFY_BUFFER;
+
+//////////////////////////////////////////////////
+//                 Direct VMCALL                //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Used for sending direct VMCALLs on the VMX root-mode
+ *
+ */
+typedef struct _DIRECT_VMCALL_PARAMETERS
+{
+    UINT64 OptionalParam1;
+    UINT64 OptionalParam2;
+    UINT64 OptionalParam3;
+
+} DIRECT_VMCALL_PARAMETERS, *PDIRECT_VMCALL_PARAMETERS;
+
+//////////////////////////////////////////////////
+//                  EPT Hook                    //
+//////////////////////////////////////////////////
+
+/**
+ * @brief different type of memory addresses
+ *
+ */
+typedef enum _DEBUGGER_HOOK_MEMORY_TYPE
+{
+    DEBUGGER_MEMORY_HOOK_VIRTUAL_ADDRESS,
+    DEBUGGER_MEMORY_HOOK_PHYSICAL_ADDRESS
+} DEBUGGER_HOOK_MEMORY_TYPE;
+
+/**
+ * @brief Temporary $context used in some EPT hook commands
+ *
+ */
+typedef struct _EPT_HOOKS_CONTEXT
+{
+    UINT64 HookingTag; // This is same as the event tag
+    UINT64 PhysicalAddress;
+    UINT64 VirtualAddress;
+} EPT_HOOKS_CONTEXT, *PEPT_HOOKS_CONTEXT;
+
+/**
+ * @brief Setting details for EPT Hooks (!monitor)
+ *
+ */
+typedef struct _EPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR
+{
+    UINT64                    StartAddress;
+    UINT64                    EndAddress;
+    BOOLEAN                   SetHookForRead;
+    BOOLEAN                   SetHookForWrite;
+    BOOLEAN                   SetHookForExec;
+    DEBUGGER_HOOK_MEMORY_TYPE MemoryType;
+    UINT64                    Tag;
+
+} EPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR, *PEPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR;
+
+/**
+ * @brief Setting details for EPT Hooks (!epthook2)
+ *
+ */
+typedef struct _EPT_HOOKS_ADDRESS_DETAILS_FOR_EPTHOOK2
+{
+    PVOID TargetAddress;
+    PVOID HookFunction;
+
+} EPT_HOOKS_ADDRESS_DETAILS_FOR_EPTHOOK2, *PEPT_HOOKS_ADDRESS_DETAILS_FOR_EPTHOOK2;
+
+/**
+ * @brief Details of unhooking single EPT hooks
+ *
+ */
+typedef struct _EPT_SINGLE_HOOK_UNHOOKING_DETAILS
+{
+    BOOLEAN                     CallerNeedsToRestoreEntryAndInvalidateEpt;
+    BOOLEAN                     RemoveBreakpointInterception;
+    SIZE_T                      PhysicalAddress;
+    UINT64 /* EPT_PML1_ENTRY */ OriginalEntry;
+
+} EPT_SINGLE_HOOK_UNHOOKING_DETAILS, *PEPT_SINGLE_HOOK_UNHOOKING_DETAILS;
+
+//////////////////////////////////////////////////
+//                 Segment Types                //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Describe segment selector in VMX
+ * @details This structure is copied from ia32.h to the SDK to
+ * be used as a data type for functions
+ *
+ */
+typedef union
+{
+    struct
+    {
+        /**
+         * [Bits 3:0] Segment type.
+         */
+        UINT32 Type : 4;
+
+        /**
+         * [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
+         */
+        UINT32 DescriptorType : 1;
+
+        /**
+         * [Bits 6:5] DPL - Descriptor privilege level.
+         */
+        UINT32 DescriptorPrivilegeLevel : 2;
+
+        /**
+         * [Bit 7] P - Segment present.
+         */
+        UINT32 Present : 1;
+
+        UINT32 Reserved1 : 4;
+
+        /**
+         * [Bit 12] AVL - Available for use by system software.
+         */
+        UINT32 AvailableBit : 1;
+
+        /**
+         * [Bit 13] Reserved (except for CS). L - 64-bit mode active (for CS only).
+         */
+        UINT32 LongMode : 1;
+
+        /**
+         * [Bit 14] D/B - Default operation size (0 = 16-bit segment; 1 = 32-bit segment).
+         */
+        UINT32 DefaultBig : 1;
+
+        /**
+         * [Bit 15] G - Granularity.
+         */
+        UINT32 Granularity : 1;
+        /**
+         * [Bit 16] Segment unusable (0 = usable; 1 = unusable).
+         */
+        UINT32 Unusable : 1;
+        UINT32 Reserved2 : 15;
+    };
+
+    UINT32 AsUInt;
+} VMX_SEGMENT_ACCESS_RIGHTS_TYPE;
+
+/**
+ * @brief Segment selector
+ *
+ */
+typedef struct _VMX_SEGMENT_SELECTOR
+{
+    UINT16                         Selector;
+    VMX_SEGMENT_ACCESS_RIGHTS_TYPE Attributes;
+    UINT32                         Limit;
+    UINT64                         Base;
+} VMX_SEGMENT_SELECTOR, *PVMX_SEGMENT_SELECTOR;
+
+
+//..\..\..\bin\debug\SDK\Headers\Events.h
+/**
+ * @file Events.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK Headers for Events
+ * @details This file contains definitions of event datatypes
+ * @version 0.2
+ * @date 2022-06-28
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//               System Events                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Exceptions enum
+ *
+ */
+typedef enum _EXCEPTION_VECTORS
+{
+    EXCEPTION_VECTOR_DIVIDE_ERROR,
+    EXCEPTION_VECTOR_DEBUG_BREAKPOINT,
+    EXCEPTION_VECTOR_NMI,
+    EXCEPTION_VECTOR_BREAKPOINT,
+    EXCEPTION_VECTOR_OVERFLOW,
+    EXCEPTION_VECTOR_BOUND_RANGE_EXCEEDED,
+    EXCEPTION_VECTOR_UNDEFINED_OPCODE,
+    EXCEPTION_VECTOR_NO_MATH_COPROCESSOR,
+    EXCEPTION_VECTOR_DOUBLE_FAULT,
+    EXCEPTION_VECTOR_RESERVED0,
+    EXCEPTION_VECTOR_INVALID_TASK_SEGMENT_SELECTOR,
+    EXCEPTION_VECTOR_SEGMENT_NOT_PRESENT,
+    EXCEPTION_VECTOR_STACK_SEGMENT_FAULT,
+    EXCEPTION_VECTOR_GENERAL_PROTECTION_FAULT,
+    EXCEPTION_VECTOR_PAGE_FAULT,
+    EXCEPTION_VECTOR_RESERVED1,
+    EXCEPTION_VECTOR_MATH_FAULT,
+    EXCEPTION_VECTOR_ALIGNMENT_CHECK,
+    EXCEPTION_VECTOR_MACHINE_CHECK,
+    EXCEPTION_VECTOR_SIMD_FLOATING_POINT_NUMERIC_ERROR,
+    EXCEPTION_VECTOR_VIRTUAL_EXCEPTION,
+    EXCEPTION_VECTOR_RESERVED2,
+    EXCEPTION_VECTOR_RESERVED3,
+    EXCEPTION_VECTOR_RESERVED4,
+    EXCEPTION_VECTOR_RESERVED5,
+    EXCEPTION_VECTOR_RESERVED6,
+    EXCEPTION_VECTOR_RESERVED7,
+    EXCEPTION_VECTOR_RESERVED8,
+    EXCEPTION_VECTOR_RESERVED9,
+    EXCEPTION_VECTOR_RESERVED10,
+    EXCEPTION_VECTOR_RESERVED11,
+    EXCEPTION_VECTOR_RESERVED12,
+
+    //
+    // NT (Windows) specific exception vectors.
+    //
+    APC_INTERRUPT   = 31,
+    DPC_INTERRUPT   = 47,
+    CLOCK_INTERRUPT = 209,
+    IPI_INTERRUPT   = 225,
+    PMI_INTERRUPT   = 254,
+
+} EXCEPTION_VECTORS;
+
+//////////////////////////////////////////////////
+//			     Callback Enums                 //
+//////////////////////////////////////////////////
+
+/**
+ * @brief The status of triggering events
+ *
+ */
+typedef enum _VMM_CALLBACK_TRIGGERING_EVENT_STATUS_TYPE
+{
+    VMM_CALLBACK_TRIGGERING_EVENT_STATUS_SUCCESSFUL_NO_INITIALIZED = 0,
+    VMM_CALLBACK_TRIGGERING_EVENT_STATUS_SUCCESSFUL                = 0,
+    VMM_CALLBACK_TRIGGERING_EVENT_STATUS_SUCCESSFUL_IGNORE_EVENT   = 1,
+    VMM_CALLBACK_TRIGGERING_EVENT_STATUS_DEBUGGER_NOT_ENABLED      = 2,
+    VMM_CALLBACK_TRIGGERING_EVENT_STATUS_INVALID_EVENT_TYPE        = 3,
+
+} VMM_CALLBACK_TRIGGERING_EVENT_STATUS_TYPE;
+
+//////////////////////////////////////////////////
+//               Event Details                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief enum to show type of all HyperDbg events
+ *
+ */
+typedef enum _VMM_EVENT_TYPE_ENUM
+{
+
+    //
+    // EPT Memory Monitoring Events
+    //
+    HIDDEN_HOOK_READ_AND_WRITE_AND_EXECUTE,
+    HIDDEN_HOOK_READ_AND_WRITE,
+    HIDDEN_HOOK_READ_AND_EXECUTE,
+    HIDDEN_HOOK_WRITE_AND_EXECUTE,
+    HIDDEN_HOOK_READ,
+    HIDDEN_HOOK_WRITE,
+    HIDDEN_HOOK_EXECUTE,
+
+    //
+    // EPT Hook Events
+    //
+    HIDDEN_HOOK_EXEC_DETOURS,
+    HIDDEN_HOOK_EXEC_CC,
+
+    //
+    // System-call Events
+    //
+    SYSCALL_HOOK_EFER_SYSCALL,
+    SYSCALL_HOOK_EFER_SYSRET,
+
+    //
+    // CPUID Instruction Execution Events
+    //
+    CPUID_INSTRUCTION_EXECUTION,
+
+    //
+    // Model-Specific Registers (MSRs) Reads/Modifications Events
+    //
+    RDMSR_INSTRUCTION_EXECUTION,
+    WRMSR_INSTRUCTION_EXECUTION,
+
+    //
+    // PMIO Events
+    //
+    IN_INSTRUCTION_EXECUTION,
+    OUT_INSTRUCTION_EXECUTION,
+
+    //
+    // Interrupts/Exceptions/Faults Events
+    //
+    EXCEPTION_OCCURRED,
+    EXTERNAL_INTERRUPT_OCCURRED,
+
+    //
+    // Debug Registers Events
+    //
+    DEBUG_REGISTERS_ACCESSED,
+
+    //
+    // Timing & Performance Events
+    //
+    TSC_INSTRUCTION_EXECUTION,
+    PMC_INSTRUCTION_EXECUTION,
+
+    //
+    // VMCALL Instruction Execution Events
+    //
+    VMCALL_INSTRUCTION_EXECUTION,
+
+    //
+    // Control Registers Events
+    //
+    CONTROL_REGISTER_MODIFIED,
+    CONTROL_REGISTER_READ,
+    CONTROL_REGISTER_3_MODIFIED,
+
+    //
+    // Execution Trap Events
+    //
+    TRAP_EXECUTION_MODE_CHANGED,
+    TRAP_EXECUTION_INSTRUCTION_TRACE,
+
+} VMM_EVENT_TYPE_ENUM;
+
+/**
+ * @brief Type of Actions
+ *
+ */
+typedef enum _DEBUGGER_EVENT_ACTION_TYPE_ENUM
+{
+    BREAK_TO_DEBUGGER,
+    RUN_SCRIPT,
+    RUN_CUSTOM_CODE
+
+} DEBUGGER_EVENT_ACTION_TYPE_ENUM;
+
+/**
+ * @brief Type of handling !syscall or !sysret
+ *
+ */
+typedef enum _DEBUGGER_EVENT_SYSCALL_SYSRET_TYPE
+{
+    DEBUGGER_EVENT_SYSCALL_SYSRET_SAFE_ACCESS_MEMORY = 0,
+    DEBUGGER_EVENT_SYSCALL_SYSRET_HANDLE_ALL_UD      = 1,
+
+} DEBUGGER_EVENT_SYSCALL_SYSRET_TYPE;
+
+#define SIZEOF_DEBUGGER_MODIFY_EVENTS sizeof(DEBUGGER_MODIFY_EVENTS)
+
+/**
+ * @brief Type of mode change traps
+ *
+ */
+typedef enum _DEBUGGER_EVENT_MODE_TYPE
+{
+    DEBUGGER_EVENT_MODE_TYPE_USER_MODE_AND_KERNEL_MODE = 1,
+    DEBUGGER_EVENT_MODE_TYPE_USER_MODE                 = 3,
+    DEBUGGER_EVENT_MODE_TYPE_KERNEL_MODE               = 0,
+    DEBUGGER_EVENT_MODE_TYPE_INVALID                   = 0xffffffff,
+
+} DEBUGGER_EVENT_MODE_TYPE;
+
+/**
+ * @brief Type of tracing events
+ *
+ */
+typedef enum _DEBUGGER_EVENT_TRACE_TYPE
+{
+    DEBUGGER_EVENT_TRACE_TYPE_INVALID                 = 0,
+    DEBUGGER_EVENT_TRACE_TYPE_STEP_IN                 = 1,
+    DEBUGGER_EVENT_TRACE_TYPE_STEP_OUT                = 2,
+    DEBUGGER_EVENT_TRACE_TYPE_INSTRUMENTATION_STEP_IN = 3,
+
+} DEBUGGER_EVENT_TRACE_TYPE;
+
+/**
+ * @brief different types of modifying events request (enable/disable/clear)
+ *
+ */
+typedef enum _DEBUGGER_MODIFY_EVENTS_TYPE
+{
+    DEBUGGER_MODIFY_EVENTS_QUERY_STATE,
+    DEBUGGER_MODIFY_EVENTS_ENABLE,
+    DEBUGGER_MODIFY_EVENTS_DISABLE,
+    DEBUGGER_MODIFY_EVENTS_CLEAR,
+} DEBUGGER_MODIFY_EVENTS_TYPE;
+
+/**
+ * @brief request for modifying events (enable/disable/clear)
+ *
+ */
+typedef struct _DEBUGGER_MODIFY_EVENTS
+{
+    UINT64 Tag;          // Tag of the target event that we want to modify
+    UINT64 KernelStatus; // Kernel put the status in this field
+    DEBUGGER_MODIFY_EVENTS_TYPE
+    TypeOfAction;      // Determines what's the action (enable | disable | clear)
+    BOOLEAN IsEnabled; // Determines what's the action (enable | disable | clear)
+
+} DEBUGGER_MODIFY_EVENTS, *PDEBUGGER_MODIFY_EVENTS;
+
+/**
+ * @brief request for performing a short-circuiting event
+ *
+ */
+typedef struct _DEBUGGER_SHORT_CIRCUITING_EVENT
+{
+    UINT64  KernelStatus;      // Kernel put the status in this field
+    BOOLEAN IsShortCircuiting; // Determines whether to perform short circuting (on | off)
+
+} DEBUGGER_SHORT_CIRCUITING_EVENT, *PDEBUGGER_SHORT_CIRCUITING_EVENT;
+
+//////////////////////////////////////////////////
+//                Event Options                 //
+//////////////////////////////////////////////////
+
+/**
+ * @brief request for performing a short-circuiting event
+ *
+ */
+typedef struct _DEBUGGER_EVENT_OPTIONS
+{
+    UINT64 OptionalParam1; // Optional parameter
+    UINT64 OptionalParam2; // Optional parameter
+    UINT64 OptionalParam3; // Optional parameter
+    UINT64 OptionalParam4; // Optional parameter
+    UINT64 OptionalParam5; // Optional parameter
+    UINT64 OptionalParam6; // Optional parameter
+
+} DEBUGGER_EVENT_OPTIONS, *PDEBUGGER_EVENT_OPTIONS;
+
+//////////////////////////////////////////////////
+//    Enums For Event And Debugger Resources    //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Things to consider when applying resources
+ *
+ */
+typedef enum _PROTECTED_HV_RESOURCES_PASSING_OVERS
+{
+    //
+    // for exception bitmap
+    //
+    PASSING_OVER_NONE                                  = 0,
+    PASSING_OVER_UD_EXCEPTIONS_FOR_SYSCALL_SYSRET_HOOK = 1,
+    PASSING_OVER_EXCEPTION_EVENTS,
+
+    //
+    // for external interupts-exitings
+    //
+    PASSING_OVER_INTERRUPT_EVENTS,
+
+    //
+    // for external rdtsc/p exitings
+    //
+    PASSING_OVER_TSC_EVENTS,
+
+    //
+    // for external mov to hardware debug registers exitings
+    //
+    PASSING_OVER_MOV_TO_HW_DEBUG_REGS_EVENTS,
+
+    //
+    // for external mov to control registers exitings
+    //
+    PASSING_OVER_MOV_TO_CONTROL_REGS_EVENTS,
+
+} PROTECTED_HV_RESOURCES_PASSING_OVERS;
+
+/**
+ * @brief Type of protected (multi-used) resources
+ *
+ */
+typedef enum _PROTECTED_HV_RESOURCES_TYPE
+{
+    PROTECTED_HV_RESOURCES_EXCEPTION_BITMAP,
+
+    PROTECTED_HV_RESOURCES_EXTERNAL_INTERRUPT_EXITING,
+
+    PROTECTED_HV_RESOURCES_RDTSC_RDTSCP_EXITING,
+
+    PROTECTED_HV_RESOURCES_MOV_TO_DEBUG_REGISTER_EXITING,
+
+    PROTECTED_HV_RESOURCES_MOV_CONTROL_REGISTER_EXITING,
+
+    PROTECTED_HV_RESOURCES_MOV_TO_CR3_EXITING,
+
+} PROTECTED_HV_RESOURCES_TYPE;
+
+//////////////////////////////////////////////////
+//               Event Details                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Each command is like the following struct, it also used for
+ * tracing works in user mode and sending it to the kernl mode
+ * @details THIS IS NOT WHAT HYPERDBG SAVES FOR EVENTS IN KERNEL-MODE
+ */
+typedef struct _DEBUGGER_GENERAL_EVENT_DETAIL
+{
+    LIST_ENTRY
+    CommandsEventList; // Linked-list of commands list (used for tracing purpose
+                       // in user mode)
+
+    time_t CreationTime; // Date of creating this event
+
+    UINT32 CoreId; // determines the core index to apply this event to, if it's
+                   // 0xffffffff means that we have to apply it to all cores
+
+    UINT32 ProcessId; // determines the process id to apply this to
+                      // only that 0xffffffff means that we have to
+                      // apply it to all processes
+
+    BOOLEAN IsEnabled;
+
+    BOOLEAN EnableShortCircuiting; // indicates whether the short-circuiting event
+                                   // is enabled or not for this event
+
+    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE EventStage; // reveals the calling stage of the event
+    // (whether it's a all- pre- or post- event)
+
+    BOOLEAN HasCustomOutput; // Shows whether this event has a custom output
+                             // source or not
+
+    UINT64
+    OutputSourceTags
+        [DebuggerOutputSourceMaximumRemoteSourceForSingleEvent]; // tags of
+                                                                 // multiple
+                                                                 // sources which
+                                                                 // can be used to
+                                                                 // send the event
+                                                                 // results of
+                                                                 // scripts to
+                                                                 // remote sources
+
+    UINT32 CountOfActions;
+
+    UINT64              Tag; // is same as operation code
+    VMM_EVENT_TYPE_ENUM EventType;
+
+    DEBUGGER_EVENT_OPTIONS Options;
+
+    PVOID CommandStringBuffer;
+
+    UINT32 ConditionBufferSize;
+
+} DEBUGGER_GENERAL_EVENT_DETAIL, *PDEBUGGER_GENERAL_EVENT_DETAIL;
+
+/**
+ * @brief Each event can have multiple actions
+ * @details THIS STRUCTURE IS ONLY USED IN USER MODE
+ * WE USE SEPARATE STRUCTURE FOR ACTIONS IN
+ * KERNEL MODE
+ */
+typedef struct _DEBUGGER_GENERAL_ACTION
+{
+    UINT64                          EventTag;
+    DEBUGGER_EVENT_ACTION_TYPE_ENUM ActionType;
+    BOOLEAN                         ImmediateMessagePassing;
+    UINT32                          PreAllocatedBuffer;
+
+    UINT32 CustomCodeBufferSize;
+    UINT32 ScriptBufferSize;
+    UINT32 ScriptBufferPointer;
+
+} DEBUGGER_GENERAL_ACTION, *PDEBUGGER_GENERAL_ACTION;
+
+/**
+ * @brief Status of register buffers
+ *
+ */
+typedef struct _DEBUGGER_EVENT_AND_ACTION_RESULT
+{
+    BOOLEAN IsSuccessful;
+    UINT32  Error; // If IsSuccessful was, FALSE
+
+} DEBUGGER_EVENT_AND_ACTION_RESULT, *PDEBUGGER_EVENT_AND_ACTION_RESULT;
+
+#define SIZEOF_REGISTER_EVENT sizeof(REGISTER_NOTIFY_BUFFER)
 
 
 //..\..\..\bin\debug\SDK\Headers\Constants.h
@@ -2719,1356 +5124,11 @@ const unsigned char BuildSignature[] = {
 #define DEBUGGEE_SHOW_ALL_REGISTERS 0xffffffff
 
 
-//..\..\..\bin\debug\SDK\Headers\Ioctls.h
+//..\..\..\bin\debug\SDK\Imports\HyperDbgScriptImports.h
 /**
- * @file Ioctls.h
+ * @file HyperDbgScriptImports.h
  * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's SDK IOCTL codes
- * @details This file contains definitions of IOCTLs used in HyperDbg
- * @version 0.2
- * @date 2022-06-24
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//////////////////////////////////////////////////
-//                 Definitions                  //
-//////////////////////////////////////////////////
-
-//
-// The following controls are mainly defined in <winioctl.h>
-//
-
-//
-// Macro definition for defining IOCTL and FSCTL function control codes.  Note
-// that function codes 0-2047 are reserved for Microsoft Corporation, and
-// 2048-4095 are reserved for customers.
-//
-#ifndef CTL_CODE
-
-#    define CTL_CODE(DeviceType, Function, Method, Access) ( \
-        ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method))
-
-#endif // ! CTL_CODE
-
-#ifndef FILE_ANY_ACCESS
-
-#    define FILE_ANY_ACCESS 0
-
-#endif // !FILE_ANY_ACCESS
-
-//
-// Define the method codes for how buffers are passed for I/O and FS controls
-//
-
-#ifndef METHOD_BUFFERED
-
-#    define METHOD_BUFFERED 0
-
-#endif // !METHOD_BUFFERED
-
-#ifndef FILE_DEVICE_UNKNOWN
-
-#    define FILE_DEVICE_UNKNOWN 0x00000022
-
-#endif // !FILE_DEVICE_UNKNOWN
-
-//////////////////////////////////////////////////
-//                   IOCTLs                     //
-//////////////////////////////////////////////////
-
-/**
- * @brief ioctl, register a new event
- *
- */
-#define IOCTL_REGISTER_EVENT \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, irp pending mechanism for reading from message tracing buffers
- *
- */
-#define IOCTL_RETURN_IRP_PENDING_PACKETS_AND_DISALLOW_IOCTL \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, to terminate vmx and exit form debugger
- *
- */
-#define IOCTL_TERMINATE_VMX \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x802, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, request to read memory
- *
- */
-#define IOCTL_DEBUGGER_READ_MEMORY \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x803, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, request to read or write on a special MSR
- *
- */
-#define IOCTL_DEBUGGER_READ_OR_WRITE_MSR \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x804, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, request to read page table entries
- *
- */
-#define IOCTL_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x805, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, register an event
- *
- */
-#define IOCTL_DEBUGGER_REGISTER_EVENT \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x806, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, add action to event
- *
- */
-#define IOCTL_DEBUGGER_ADD_ACTION_TO_EVENT \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x807, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, request to enable or disable transparent-mode
- *
- */
-#define IOCTL_DEBUGGER_HIDE_AND_UNHIDE_TO_TRANSPARENT_THE_DEBUGGER \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x808, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, for !va2pa and !pa2va commands
- *
- */
-#define IOCTL_DEBUGGER_VA2PA_AND_PA2VA_COMMANDS \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x809, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, request to edit virtual and physical memory
- *
- */
-#define IOCTL_DEBUGGER_EDIT_MEMORY \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80a, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, request to search virtual and physical memory
- *
- */
-#define IOCTL_DEBUGGER_SEARCH_MEMORY \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80b, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, request to modify an event (enable/disable/clear)
- *
- */
-#define IOCTL_DEBUGGER_MODIFY_EVENTS \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80c, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, flush the kernel buffers
- *
- */
-#define IOCTL_DEBUGGER_FLUSH_LOGGING_BUFFERS \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80d, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, attach or detach user-mode processes
- *
- */
-#define IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80e, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, print states (Deprecated)
- *
- *
- */
-#define IOCTL_DEBUGGER_PRINT \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x80f, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, prepare debuggee
- *
- */
-#define IOCTL_PREPARE_DEBUGGEE \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x810, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, pause and halt the system
- *
- */
-#define IOCTL_PAUSE_PACKET_RECEIVED \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x811, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, send a signal that execution of command finished
- *
- */
-#define IOCTL_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x812, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, send user-mode messages to the debugger
- *
- */
-#define IOCTL_SEND_USERMODE_MESSAGES_TO_DEBUGGER \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x813, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, send general buffer from debuggee to debugger
- *
- */
-#define IOCTL_SEND_GENERAL_BUFFER_FROM_DEBUGGEE_TO_DEBUGGER \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x814, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, to perform kernel-side tests
- *
- */
-#define IOCTL_PERFROM_KERNEL_SIDE_TESTS \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x815, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, to reserve pre-allocated pools
- *
- */
-#define IOCTL_RESERVE_PRE_ALLOCATED_POOLS \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x816, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, to send user debugger commands
- *
- */
-#define IOCTL_SEND_USER_DEBUGGER_COMMANDS \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x817, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, to get active threads/processes that are debugging
- *
- */
-#define IOCTL_GET_DETAIL_OF_ACTIVE_THREADS_AND_PROCESSES \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x818, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, to get user mode modules details
- *
- */
-#define IOCTL_GET_USER_MODE_MODULE_DETAILS \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x819, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, query count of active threads or processes
- *
- */
-#define IOCTL_QUERY_COUNT_OF_ACTIVE_PROCESSES_OR_THREADS \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x81a, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, to get list threads/processes
- *
- */
-#define IOCTL_GET_LIST_OF_THREADS_AND_PROCESSES \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x81b, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, query the current process details
- *
- */
-#define IOCTL_QUERY_CURRENT_PROCESS \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x81c, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, query the current thread details
- *
- */
-#define IOCTL_QUERY_CURRENT_THREAD \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x81d, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, request service from the reversing machine
- *
- */
-#define IOCTL_REQUEST_REV_MACHINE_SERVICE \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x81e, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, request to bring pages in
- *
- */
-#define IOCTL_DEBUGGER_BRING_PAGES_IN \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x81f, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-/**
- * @brief ioctl, to preactivate a functionality
- *
- */
-#define IOCTL_PREACTIVATE_FUNCTIONALITY \
-    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x820, METHOD_BUFFERED, FILE_ANY_ACCESS)
-
-
-//..\..\..\bin\debug\SDK\Imports\HyperDbgCtrlImports.h
-/**
- * @file HyperDbgCtrlImports.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from controller interface
- * @version 0.2
- * @date 2023-02-02
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-#ifdef HYPERDBG_HPRDBGCTRL
-#    define IMPORT_EXPORT_CTRL __declspec(dllexport)
-#else
-#    define IMPORT_EXPORT_CTRL __declspec(dllimport)
-#endif
-
-//
-// Header file of HPRDBGCTRL
-// Imports
-//
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-//
-// Support Detection
-//
-IMPORT_EXPORT_CTRL bool HyperDbgVmxSupportDetection();
-IMPORT_EXPORT_CTRL void HyperDbgReadVendorString(char *);
-
-//
-// VMM Module
-//
-IMPORT_EXPORT_CTRL int HyperDbgLoadVmm();
-IMPORT_EXPORT_CTRL int HyperDbgUnloadVmm();
-IMPORT_EXPORT_CTRL int HyperDbgInstallVmmDriver();
-IMPORT_EXPORT_CTRL int HyperDbgUninstallVmmDriver();
-IMPORT_EXPORT_CTRL int HyperDbgStopVmmDriver();
-
-//
-// General imports
-//
-IMPORT_EXPORT_CTRL int HyperDbgInterpreter(char * Command);
-IMPORT_EXPORT_CTRL void HyperDbgShowSignature();
-IMPORT_EXPORT_CTRL void HyperDbgSetTextMessageCallback(Callback handler);
-IMPORT_EXPORT_CTRL int HyperDbgScriptReadFileAndExecuteCommandline(int argc, char * argv[]);
-IMPORT_EXPORT_CTRL bool HyperDbgContinuePreviousCommand();
-IMPORT_EXPORT_CTRL bool HyperDbgCheckMultilineCommand(char * CurrentCommand, bool Reset);
-
-#ifdef __cplusplus
-}
-#endif
-
-
-//..\..\..\bin\debug\SDK\Imports\HyperDbgHyperLogImports.h
-/**
- * @file HyperDbgHyperLogImports.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from hyperlog project
- * @version 0.1
- * @date 2023-01-15
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-#ifdef HYPERDBG_HYPER_LOG
-#    define IMPORT_EXPORT_HYPERLOG __declspec(dllexport)
-#else
-#    define IMPORT_EXPORT_HYPERLOG __declspec(dllimport)
-#endif
-
-//////////////////////////////////////////////////
-//				   Functions					//
-//////////////////////////////////////////////////
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogInitialize(MESSAGE_TRACING_CALLBACKS * MsgTracingCallbacks);
-
-IMPORT_EXPORT_HYPERLOG VOID
-LogUnInitialize();
-
-IMPORT_EXPORT_HYPERLOG UINT32
-LogMarkAllAsRead(BOOLEAN IsVmxRoot);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackPrepareAndSendMessageToQueue(UINT32       OperationCode,
-                                        BOOLEAN      IsImmediateMessage,
-                                        BOOLEAN      ShowCurrentSystemTime,
-                                        BOOLEAN      Priority,
-                                        const char * Fmt,
-                                        ...);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackPrepareAndSendMessageToQueueWrapper(UINT32       OperationCode,
-                                               BOOLEAN      IsImmediateMessage,
-                                               BOOLEAN      ShowCurrentSystemTime,
-                                               BOOLEAN      Priority,
-                                               const char * Fmt,
-                                               va_list      ArgList);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackSendBuffer(_In_ UINT32                          OperationCode,
-                      _In_reads_bytes_(BufferLength) PVOID Buffer,
-                      _In_ UINT32                          BufferLength,
-                      _In_ BOOLEAN                         Priority);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackCheckIfBufferIsFull(BOOLEAN Priority);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackSendMessageToQueue(UINT32 OperationCode, BOOLEAN IsImmediateMessage, CHAR * LogMessage, UINT32 BufferLen, BOOLEAN Priority);
-
-IMPORT_EXPORT_HYPERLOG NTSTATUS
-LogRegisterEventBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
-
-IMPORT_EXPORT_HYPERLOG NTSTATUS
-LogRegisterIrpBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
-
-
-//..\..\..\bin\debug\SDK\Imports\HyperDbgVmmImports.h
-/**
- * @file HyperDbgVmmImports.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from hypervisor
- * @version 0.1
- * @date 2022-12-09
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-#ifdef HYPERDBG_VMM
-#    define IMPORT_EXPORT_VMM __declspec(dllexport)
-#else
-#    define IMPORT_EXPORT_VMM __declspec(dllimport)
-#endif
-
-//////////////////////////////////////////////////
-//                 VM Functions 	    		//
-//////////////////////////////////////////////////
-
-IMPORT_EXPORT_VMM NTSTATUS
-VmFuncVmxVmcall(unsigned long long VmcallNumber,
-                unsigned long long OptionalParam1,
-                unsigned long long OptionalParam2,
-                unsigned long long OptionalParam3);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncPerformRipIncrement(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSuppressRipIncrement(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncChangeMtfUnsettingState(UINT32 CoreId, BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncChangeIgnoreOneMtfState(UINT32 CoreId, BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetMonitorTrapFlag(BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetRflagTrapFlag(BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncRegisterMtfBreak(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncUnRegisterMtfBreak(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetLoadDebugControls(BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetSaveDebugControls(BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetPmcVmexit(BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetMovControlRegsExiting(BOOLEAN Set, UINT64 ControlRegister, UINT64 MaskRegister);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetMovToCr3Vmexit(UINT32 CoreId, BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncWriteExceptionBitmap(UINT32 BitmapMask);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetInterruptWindowExiting(BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetNmiWindowExiting(BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetNmiExiting(BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetExceptionBitmap(UINT32 CoreId, UINT32 IdtIndex);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncUnsetExceptionBitmap(UINT32 CoreId, UINT32 IdtIndex);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetExternalInterruptExiting(UINT32 CoreId, BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetRdtscExiting(UINT32 CoreId, BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetMovDebugRegsExiting(UINT32 CoreId, BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncInjectPendingExternalInterrupts(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetRflags(UINT64 Rflags);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetRip(UINT64 Rip);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetTriggerEventForVmcalls(BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetTriggerEventForCpuids(BOOLEAN Set);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncSetInterruptibilityState(UINT64 InterruptibilityState);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncCheckAndEnableExternalInterrupts(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncDisableExternalInterruptsAndInterruptWindow(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncEventInjectPageFaultWithCr2(UINT32 CoreId, UINT64 Address, UINT32 PageFaultCode);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncEventInjectPageFaultRangeAddress(UINT32 CoreId,
-                                       UINT64 AddressFrom,
-                                       UINT64 AddressTo,
-                                       UINT32 PageFaultCode);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncEventInjectInterruption(UINT32  InterruptionType,
-                              UINT32  Vector,
-                              BOOLEAN DeliverErrorCode,
-                              UINT32  ErrorCode);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncVmxBroadcastInitialize();
-
-IMPORT_EXPORT_VMM VOID
-VmFuncVmxBroadcastUninitialize();
-
-IMPORT_EXPORT_VMM VOID
-VmFuncEventInjectBreakpoint();
-
-IMPORT_EXPORT_VMM VOID
-VmFuncInvalidateEptSingleContext(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncInvalidateEptAllContexts();
-
-IMPORT_EXPORT_VMM VOID
-VmFuncUninitVmm();
-
-IMPORT_EXPORT_VMM VOID
-VmFuncEnableMtfAndChangeExternalInterruptState(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM VOID
-VmFuncEnableAndCheckForPreviousExternalInterrupts(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM UINT16
-VmFuncGetCsSelector();
-
-IMPORT_EXPORT_VMM UINT32
-VmFuncReadExceptionBitmap();
-
-IMPORT_EXPORT_VMM UINT64
-VmFuncGetLastVmexitRip(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM UINT64
-VmFuncGetRflags();
-
-IMPORT_EXPORT_VMM UINT64
-VmFuncGetRip();
-
-IMPORT_EXPORT_VMM UINT64
-VmFuncGetInterruptibilityState();
-
-IMPORT_EXPORT_VMM UINT64
-VmFuncClearSteppingBits(UINT64 Interruptibility);
-
-IMPORT_EXPORT_VMM BOOLEAN
-VmFuncInitVmm(VMM_CALLBACKS * VmmCallbacks);
-
-IMPORT_EXPORT_VMM UINT32
-VmFuncVmxCompatibleStrlen(const CHAR * s);
-
-IMPORT_EXPORT_VMM UINT32
-VmFuncVmxCompatibleWcslen(const wchar_t * s);
-
-IMPORT_EXPORT_VMM BOOLEAN
-VmFuncNmiBroadcastRequest(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM BOOLEAN
-VmFuncNmiBroadcastInvalidateEptSingleContext(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM BOOLEAN
-VmFuncNmiBroadcastInvalidateEptAllContexts(UINT32 CoreId);
-
-IMPORT_EXPORT_VMM BOOLEAN
-VmFuncVmxGetCurrentExecutionMode();
-
-IMPORT_EXPORT_VMM BOOLEAN
-VmFuncQueryModeExecTrap();
-
-IMPORT_EXPORT_VMM INT32
-VmFuncVmxCompatibleStrcmp(const CHAR * Address1, const CHAR * Address2);
-
-IMPORT_EXPORT_VMM INT32
-VmFuncVmxCompatibleStrncmp(const CHAR * Address1, const CHAR * Address2, SIZE_T Num);
-
-IMPORT_EXPORT_VMM INT32
-VmFuncVmxCompatibleWcscmp(const wchar_t * Address1, const wchar_t * Address2);
-
-IMPORT_EXPORT_VMM INT32
-VmFuncVmxCompatibleWcsncmp(const wchar_t * Address1, const wchar_t * Address2, SIZE_T Num);
-
-IMPORT_EXPORT_VMM INT32
-VmFuncVmxCompatibleMemcmp(const CHAR * Address1, const CHAR * Address2, size_t Count);
-
-//////////////////////////////////////////////////
-//            Configuration Functions 	   		//
-//////////////////////////////////////////////////
-
-IMPORT_EXPORT_VMM VOID
-ConfigureEnableMovToCr3ExitingOnAllProcessors();
-
-IMPORT_EXPORT_VMM VOID
-ConfigureDisableMovToCr3ExitingOnAllProcessors();
-
-IMPORT_EXPORT_VMM VOID
-ConfigureEnableEferSyscallEventsOnAllProcessors();
-
-IMPORT_EXPORT_VMM VOID
-ConfigureDisableEferSyscallEventsOnAllProcessors();
-
-IMPORT_EXPORT_VMM VOID
-ConfigureSetExternalInterruptExitingOnSingleCore(UINT32 TargetCoreId);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureEnableRdtscExitingOnSingleCore(UINT32 TargetCoreId);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureEnableRdpmcExitingOnSingleCore(UINT32 TargetCoreId);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureEnableMovToDebugRegistersExitingOnSingleCore(UINT32 TargetCoreId);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureSetExceptionBitmapOnSingleCore(UINT32 TargetCoreId, UINT32 BitMask);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureEnableMovToControlRegisterExitingOnSingleCore(UINT32 TargetCoreId, DEBUGGER_EVENT_OPTIONS * BroadcastingOption);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureChangeMsrBitmapWriteOnSingleCore(UINT32 TargetCoreId, UINT64 MsrMask);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureChangeMsrBitmapReadOnSingleCore(UINT32 TargetCoreId, UINT64 MsrMask);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureChangeIoBitmapOnSingleCore(UINT32 TargetCoreId, UINT64 Port);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureEnableEferSyscallHookOnSingleCore(UINT32 TargetCoreId);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureSetEferSyscallOrSysretHookType(DEBUGGER_EVENT_SYSCALL_SYSRET_TYPE SyscallHookType);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureDirtyLoggingInitializeOnAllProcessors();
-
-IMPORT_EXPORT_VMM VOID
-ConfigureDirtyLoggingUninitializeOnAllProcessors();
-
-IMPORT_EXPORT_VMM VOID
-ConfigureModeBasedExecHookUninitializeOnAllProcessors();
-
-IMPORT_EXPORT_VMM VOID
-ConfigureUninitializeExecTrapOnAllProcessors();
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureInitializeExecTrapOnAllProcessors();
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureEptHook(PVOID TargetAddress, UINT32 ProcessId);
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureEptHookFromVmxRoot(PVOID TargetAddress);
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureEptHook2(UINT32 CoreId,
-                  PVOID  TargetAddress,
-                  PVOID  HookFunction,
-                  UINT32 ProcessId);
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureEptHook2FromVmxRoot(UINT32 CoreId,
-                             PVOID  TargetAddress,
-                             PVOID  HookFunction);
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureEptHookMonitor(UINT32                                         CoreId,
-                        EPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR * HookingDetails,
-                        UINT32                                         ProcessId);
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureEptHookMonitorFromVmxRoot(UINT32                                         CoreId,
-                                   EPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR * MemoryAddressDetails);
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureEptHookModifyInstructionFetchState(UINT32  CoreId,
-                                            PVOID   PhysicalAddress,
-                                            BOOLEAN IsUnset);
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureEptHookModifyPageReadState(UINT32  CoreId,
-                                    PVOID   PhysicalAddress,
-                                    BOOLEAN IsUnset);
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureEptHookModifyPageWriteState(UINT32  CoreId,
-                                     PVOID   PhysicalAddress,
-                                     BOOLEAN IsUnset);
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureEptHookUnHookSingleAddress(UINT64 VirtualAddress,
-                                    UINT64 PhysAddress,
-                                    UINT32 ProcessId);
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureEptHookUnHookSingleAddressFromVmxRoot(UINT64                              VirtualAddress,
-                                               UINT64                              PhysAddress,
-                                               EPT_SINGLE_HOOK_UNHOOKING_DETAILS * TargetUnhookingDetails);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureEptHookAllocateExtraHookingPagesForMemoryMonitorsAndExecEptHooks(UINT32 Count);
-
-IMPORT_EXPORT_VMM VOID
-ConfigureEptHookReservePreallocatedPoolsForEptHooks(UINT32 Count);
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureExecTrapAddProcessToWatchingList(UINT32 ProcessId);
-
-IMPORT_EXPORT_VMM BOOLEAN
-ConfigureExecTrapRemoveProcessFromWatchingList(UINT32 ProcessId);
-
-//////////////////////////////////////////////////
-//           Direct VMCALL Functions 	   		//
-//////////////////////////////////////////////////
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallTest(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallPerformVmcall(UINT32 CoreId, UINT64 VmcallNumber, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallChangeMsrBitmapRead(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallChangeMsrBitmapWrite(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallChangeIoBitmap(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallEnableRdpmcExiting(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallEnableRdtscpExiting(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallEnableMov2DebugRegsExiting(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallSetExceptionBitmap(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallEnableExternalInterruptExiting(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallEnableMovToCrExiting(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallEnableEferSyscall(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallSetHiddenBreakpointHook(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallInvalidateEptAllContexts(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallInvalidateSingleContext(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallUnsetExceptionBitmap(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallUnhookSinglePage(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallSetDisableExternalInterruptExitingOnlyOnClearingInterruptEvents(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallResetMsrBitmapRead(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallResetMsrBitmapWrite(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallResetExceptionBitmapOnlyOnClearingExceptionEvents(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallResetIoBitmap(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallDisableRdtscExitingForClearingTscEvents(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallDisableRdpmcExiting(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallDisableEferSyscallEvents(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallDisableMov2DrExitingForClearingDrEvents(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-IMPORT_EXPORT_VMM NTSTATUS
-DirectVmcallDisableMov2CrExitingForClearingCrEvents(UINT32 CoreId, DIRECT_VMCALL_PARAMETERS * DirectVmcallOptions);
-
-//////////////////////////////////////////////////
-//                 Disassembler 	    		//
-//////////////////////////////////////////////////
-
-IMPORT_EXPORT_VMM BOOLEAN
-DisassemblerShowInstructionsInVmxNonRootMode(PVOID Address, UINT32 Length, BOOLEAN Is32Bit);
-
-IMPORT_EXPORT_VMM BOOLEAN
-DisassemblerShowOneInstructionInVmxNonRootMode(PVOID Address, UINT64 ActualRip, BOOLEAN Is32Bit);
-
-IMPORT_EXPORT_VMM UINT32
-DisassemblerShowOneInstructionInVmxRootMode(PVOID Address, BOOLEAN Is32Bit);
-
-//////////////////////////////////////////////////
-//                General Functions 	   		//
-//////////////////////////////////////////////////
-
-// ----------------------------------------------------------------------------
-// Exported Interfaces For Virtual Addresses
-//
-
-IMPORT_EXPORT_VMM UINT64
-VirtualAddressToPhysicalAddress(_In_ PVOID VirtualAddress);
-
-IMPORT_EXPORT_VMM UINT64
-VirtualAddressToPhysicalAddressByProcessId(_In_ PVOID  VirtualAddress,
-                                           _In_ UINT32 ProcessId);
-
-IMPORT_EXPORT_VMM UINT64
-VirtualAddressToPhysicalAddressByProcessCr3(_In_ PVOID    VirtualAddress,
-                                            _In_ CR3_TYPE TargetCr3);
-
-IMPORT_EXPORT_VMM UINT64
-VirtualAddressToPhysicalAddressOnTargetProcess(_In_ PVOID VirtualAddress);
-
-// ----------------------------------------------------------------------------
-// Exported Interfaces For Physical Addresses
-//
-IMPORT_EXPORT_VMM UINT64
-PhysicalAddressToVirtualAddress(_In_ UINT64 PhysicalAddress);
-
-IMPORT_EXPORT_VMM UINT64
-PhysicalAddressToVirtualAddressByProcessId(_In_ PVOID PhysicalAddress, _In_ UINT32 ProcessId);
-
-IMPORT_EXPORT_VMM UINT64
-PhysicalAddressToVirtualAddressByCr3(_In_ PVOID PhysicalAddress, _In_ CR3_TYPE TargetCr3);
-
-IMPORT_EXPORT_VMM UINT64
-PhysicalAddressToVirtualAddressOnTargetProcess(_In_ PVOID PhysicalAddress);
-
-// ----------------------------------------------------------------------------
-// Exported Interfaces For Layout Switching Functions
-//
-IMPORT_EXPORT_VMM CR3_TYPE
-SwitchToProcessMemoryLayout(_In_ UINT32 ProcessId);
-
-IMPORT_EXPORT_VMM CR3_TYPE
-SwitchToCurrentProcessMemoryLayout();
-
-IMPORT_EXPORT_VMM CR3_TYPE
-SwitchToProcessMemoryLayoutByCr3(_In_ CR3_TYPE TargetCr3);
-
-IMPORT_EXPORT_VMM VOID
-SwitchToPreviousProcess(_In_ CR3_TYPE PreviousProcess);
-
-// ----------------------------------------------------------------------------
-// Exported Interfaces For Check Validity of Addresses
-//
-IMPORT_EXPORT_VMM BOOLEAN
-CheckAddressValidityUsingTsx(CHAR * Address);
-
-IMPORT_EXPORT_VMM BOOLEAN
-CheckAccessValidityAndSafety(UINT64 TargetAddress, UINT32 Size);
-
-IMPORT_EXPORT_VMM BOOLEAN
-CheckAddressPhysical(UINT64 PAddr);
-
-IMPORT_EXPORT_VMM UINT32
-CheckAddressMaximumInstructionLength(PVOID Address);
-
-// ----------------------------------------------------------------------------
-// Exported Interfaces For Layout Functions
-//
-IMPORT_EXPORT_VMM CR3_TYPE
-LayoutGetCurrentProcessCr3();
-
-IMPORT_EXPORT_VMM CR3_TYPE
-LayoutGetExactGuestProcessCr3();
-
-//////////////////////////////////////////////////
-//         Memory Management Functions 	   		//
-//////////////////////////////////////////////////
-
-// ----------------------------------------------------------------------------
-// PTE-related Functions
-//
-
-IMPORT_EXPORT_VMM PVOID
-MemoryMapperGetPteVa(_In_ PVOID        Va,
-                     _In_ PAGING_LEVEL Level);
-
-IMPORT_EXPORT_VMM PVOID
-MemoryMapperGetPteVaByCr3(_In_ PVOID        Va,
-                          _In_ PAGING_LEVEL Level,
-                          _In_ CR3_TYPE     TargetCr3);
-
-IMPORT_EXPORT_VMM PVOID
-MemoryMapperGetPteVaWithoutSwitchingByCr3(_In_ PVOID        Va,
-                                          _In_ PAGING_LEVEL Level,
-                                          _In_ CR3_TYPE     TargetCr3);
-
-IMPORT_EXPORT_VMM PVOID
-MemoryMapperGetPteVaOnTargetProcess(_In_ PVOID        Va,
-                                    _In_ PAGING_LEVEL Level);
-
-IMPORT_EXPORT_VMM PVOID
-MemoryMapperSetExecuteDisableToPteOnTargetProcess(_In_ PVOID   Va,
-                                                  _In_ BOOLEAN Set);
-
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryMapperCheckPteIsPresentOnTargetProcess(PVOID        Va,
-                                             PAGING_LEVEL Level);
-
-// ----------------------------------------------------------------------------
-// Reading Memory Functions
-//
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryMapperReadMemorySafe(_In_ UINT64   VaAddressToRead,
-                           _Inout_ PVOID BufferToSaveMemory,
-                           _In_ SIZE_T   SizeToRead);
-
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryMapperReadMemorySafeByPhysicalAddress(_In_ UINT64    PaAddressToRead,
-                                            _Inout_ UINT64 BufferToSaveMemory,
-                                            _In_ SIZE_T    SizeToRead);
-
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryMapperReadMemorySafeOnTargetProcess(_In_ UINT64   VaAddressToRead,
-                                          _Inout_ PVOID BufferToSaveMemory,
-                                          _In_ SIZE_T   SizeToRead);
-
-// ----------------------------------------------------------------------------
-// Disassembler Functions
-//
-IMPORT_EXPORT_VMM UINT32
-DisassemblerLengthDisassembleEngine(PVOID Address, BOOLEAN Is32Bit);
-
-IMPORT_EXPORT_VMM UINT32
-DisassemblerLengthDisassembleEngineInVmxRootOnTargetProcess(PVOID Address, BOOLEAN Is32Bit);
-
-// ----------------------------------------------------------------------------
-// Writing Memory Functions
-//
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryMapperWriteMemorySafe(_Inout_ UINT64 Destination,
-                            _In_ PVOID     Source,
-                            _In_ SIZE_T    SizeToWrite,
-                            _In_ CR3_TYPE  TargetProcessCr3);
-
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryMapperWriteMemorySafeOnTargetProcess(_Inout_ UINT64 Destination,
-                                           _In_ PVOID     Source,
-                                           _In_ SIZE_T    Size);
-
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryMapperWriteMemorySafeByPhysicalAddress(_Inout_ UINT64 DestinationPa,
-                                             _In_ UINT64    Source,
-                                             _In_ SIZE_T    SizeToWrite);
-
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryMapperWriteMemoryUnsafe(_Inout_ UINT64 Destination,
-                              _In_ PVOID     Source,
-                              _In_ SIZE_T    SizeToWrite,
-                              _In_ UINT32    TargetProcessId);
-
-// ----------------------------------------------------------------------------
-// Reserving Memory Functions
-//
-IMPORT_EXPORT_VMM UINT64
-MemoryMapperReserveUsermodeAddressOnTargetProcess(_In_ UINT32  ProcessId,
-                                                  _In_ BOOLEAN Allocate);
-
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryMapperFreeMemoryOnTargetProcess(_In_ UINT32   ProcessId,
-                                      _Inout_ PVOID BaseAddress);
-
-// ----------------------------------------------------------------------------
-// Miscellaneous Memory Functions
-//
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryMapperSetSupervisorBitWithoutSwitchingByCr3(_In_ PVOID        Va,
-                                                  _In_ BOOLEAN      Set,
-                                                  _In_ PAGING_LEVEL Level,
-                                                  _In_ CR3_TYPE     TargetCr3);
-
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryMapperCheckIfPageIsNxBitSetOnTargetProcess(_In_ PVOID Va);
-
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryMapperCheckIfPdeIsLargePageOnTargetProcess(_In_ PVOID Va);
-
-//////////////////////////////////////////////////
-//				Memory Manager		    		//
-//////////////////////////////////////////////////
-
-IMPORT_EXPORT_VMM BOOLEAN
-MemoryManagerReadProcessMemoryNormal(HANDLE PID, PVOID Address, DEBUGGER_READ_MEMORY_TYPE MemType, PVOID UserBuffer, SIZE_T Size, PSIZE_T ReturnSize);
-
-//////////////////////////////////////////////////
-//                 Pool Manager     	   		//
-//////////////////////////////////////////////////
-
-IMPORT_EXPORT_VMM BOOLEAN
-PoolManagerCheckAndPerformAllocationAndDeallocation();
-
-IMPORT_EXPORT_VMM BOOLEAN
-PoolManagerRequestAllocation(SIZE_T Size, UINT32 Count, POOL_ALLOCATION_INTENTION Intention);
-
-IMPORT_EXPORT_VMM UINT64
-PoolManagerRequestPool(POOL_ALLOCATION_INTENTION Intention, BOOLEAN RequestNewPool, UINT32 Size);
-
-IMPORT_EXPORT_VMM BOOLEAN
-PoolManagerFreePool(UINT64 AddressToFree);
-
-IMPORT_EXPORT_VMM VOID
-PoolManagerShowPreAllocatedPools();
-
-//////////////////////////////////////////////////
-//          VMX Registers Modification  		//
-//////////////////////////////////////////////////
-
-IMPORT_EXPORT_VMM VOID
-SetGuestCsSel(PVMX_SEGMENT_SELECTOR Cs);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestCs(PVMX_SEGMENT_SELECTOR Cs);
-
-IMPORT_EXPORT_VMM VMX_SEGMENT_SELECTOR
-GetGuestCs();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestSsSel(PVMX_SEGMENT_SELECTOR Ss);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestSs(PVMX_SEGMENT_SELECTOR Ss);
-
-IMPORT_EXPORT_VMM VMX_SEGMENT_SELECTOR
-GetGuestSs();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestDsSel(PVMX_SEGMENT_SELECTOR Ds);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestDs(PVMX_SEGMENT_SELECTOR Ds);
-
-IMPORT_EXPORT_VMM VMX_SEGMENT_SELECTOR
-GetGuestDs();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestFsSel(PVMX_SEGMENT_SELECTOR Fs);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestFs(PVMX_SEGMENT_SELECTOR Fs);
-
-IMPORT_EXPORT_VMM VMX_SEGMENT_SELECTOR
-GetGuestFs();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestGsSel(PVMX_SEGMENT_SELECTOR Gs);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestGs(PVMX_SEGMENT_SELECTOR Gs);
-
-IMPORT_EXPORT_VMM VMX_SEGMENT_SELECTOR
-GetGuestGs();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestEsSel(PVMX_SEGMENT_SELECTOR Es);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestEs(PVMX_SEGMENT_SELECTOR Es);
-
-IMPORT_EXPORT_VMM VMX_SEGMENT_SELECTOR
-GetGuestEs();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestIdtr(UINT64 Idtr);
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestIdtr();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestLdtr(UINT64 Ldtr);
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestLdtr();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestGdtr(UINT64 Gdtr);
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestGdtr();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestTr(UINT64 Tr);
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestTr();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestRFlags(UINT64 RFlags);
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestRFlags();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestRIP(UINT64 RIP);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestRSP(UINT64 RSP);
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestRIP();
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestCr0();
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestCr2();
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestCr3();
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestCr4();
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestCr8();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestCr0(UINT64 Cr0);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestCr2(UINT64 Cr2);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestCr3(UINT64 Cr3);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestCr4(UINT64 Cr4);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestCr8(UINT64 Cr8);
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestDr0();
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestDr1();
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestDr2();
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestDr3();
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestDr6();
-
-IMPORT_EXPORT_VMM UINT64
-GetGuestDr7();
-
-IMPORT_EXPORT_VMM VOID
-SetGuestDr0(UINT64 value);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestDr1(UINT64 value);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestDr2(UINT64 value);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestDr3(UINT64 value);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestDr6(UINT64 value);
-
-IMPORT_EXPORT_VMM VOID
-SetGuestDr7(UINT64 value);
-
-IMPORT_EXPORT_VMM BOOLEAN
-SetDebugRegisters(UINT32 DebugRegNum, DEBUG_REGISTER_TYPE ActionType, BOOLEAN ApplyToVmcs, UINT64 TargetAddress);
-
-//////////////////////////////////////////////////
-//              Transparent Mode        		//
-//////////////////////////////////////////////////
-
-IMPORT_EXPORT_VMM NTSTATUS
-TransparentHideDebugger(PDEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE Measurements);
-
-IMPORT_EXPORT_VMM NTSTATUS
-TransparentUnhideDebugger();
-
-//////////////////////////////////////////////////
-//     Non-internal Broadcasting Functions    	//
-//////////////////////////////////////////////////
-
-IMPORT_EXPORT_VMM VOID
-BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastEnableDbAndBpExitingAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastDisableDbAndBpExitingAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastEnableRdtscExitingAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastDisableRdtscExitingAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastChangeAllMsrBitmapReadAllCores(UINT64 BitmapMask);
-
-IMPORT_EXPORT_VMM VOID
-BroadcastResetChangeAllMsrBitmapReadAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastChangeAllMsrBitmapWriteAllCores(UINT64 BitmapMask);
-
-IMPORT_EXPORT_VMM VOID
-BroadcastResetAllMsrBitmapWriteAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastDisableRdtscExitingForClearingEventsAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastDisableMov2ControlRegsExitingForClearingEventsAllCores(PDEBUGGER_EVENT_OPTIONS BroadcastingOption);
-
-IMPORT_EXPORT_VMM VOID
-BroadcastDisableMov2DebugRegsExitingForClearingEventsAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastEnableRdpmcExitingAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastDisableRdpmcExitingAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastSetExceptionBitmapAllCores(UINT64 ExceptionIndex);
-
-IMPORT_EXPORT_VMM VOID
-BroadcastUnsetExceptionBitmapAllCores(UINT64 ExceptionIndex);
-
-IMPORT_EXPORT_VMM VOID
-BroadcastResetExceptionBitmapAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastEnableMovControlRegisterExitingAllCores(PDEBUGGER_EVENT_OPTIONS BroadcastingOption);
-
-IMPORT_EXPORT_VMM VOID
-BroadcastDisableMovToControlRegistersExitingAllCores(PDEBUGGER_EVENT_OPTIONS BroadcastingOption);
-
-IMPORT_EXPORT_VMM VOID
-BroadcastEnableMovDebugRegistersExitingAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastDisableMovDebugRegistersExitingAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastSetExternalInterruptExitingAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastUnsetExternalInterruptExitingOnlyOnClearingInterruptEventsAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastIoBitmapChangeAllCores(UINT64 Port);
-
-IMPORT_EXPORT_VMM VOID
-BroadcastIoBitmapResetAllCores();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastEnableMovToCr3ExitingOnAllProcessors();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastDisableMovToCr3ExitingOnAllProcessors();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastEnableEferSyscallEventsOnAllProcessors();
-
-IMPORT_EXPORT_VMM VOID
-BroadcastDisableEferSyscallEventsOnAllProcessors();
-
-
-//..\..\..\bin\debug\SDK\Imports\HyperDbgSymImports.h
-/**
- * @file HyperDbgSymImports.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from symbol parser
+ * @brief Headers relating exported functions from script engine
  * @version 0.2
  * @date 2023-02-02
  *
@@ -4078,62 +5138,62 @@ BroadcastDisableEferSyscallEventsOnAllProcessors();
 #pragma once
 
 //
-// Header file of symbol-parser
+// Header file of script-engine
 // Imports
 //
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+//
+// Script engine
+//
+__declspec(dllimport) PSYMBOL_BUFFER
+ScriptEngineParse(char * str);
+__declspec(dllimport) void
+PrintSymbolBuffer(const PSYMBOL_BUFFER SymbolBuffer);
+__declspec(dllimport) void
+PrintSymbol(PSYMBOL Symbol);
+__declspec(dllimport) void
+RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer);
+__declspec(dllimport) BOOLEAN
+FuncGetNumberOfOperands(UINT64 FuncType, UINT32 * NumberOfGetOperands, UINT32 * NumberOfSetOperands);
+__declspec(dllimport) BOOLEAN
+ScriptEngineSetHwdbgInstanceInfo(HWDBG_INSTANCE_INFORMATION * InstancInfo);
+
+;
+
+//
+// pdb parser
+//
 __declspec(dllimport) VOID
-    SymSetTextMessageCallback(PVOID Handler);
+ScriptEngineSetTextMessageCallback(PVOID Handler);
 __declspec(dllimport) VOID
-    SymbolAbortLoading();
+ScriptEngineSymbolAbortLoading();
 __declspec(dllimport) UINT64
-    SymConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
+ScriptEngineConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
 __declspec(dllimport) UINT32
-    SymLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
+ScriptEngineLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
 __declspec(dllimport) UINT32
-    SymUnloadAllSymbols();
+ScriptEngineUnloadAllSymbols();
 __declspec(dllimport) UINT32
-    SymUnloadModuleSymbol(char * ModuleName);
+ScriptEngineUnloadModuleSymbol(char * ModuleName);
 __declspec(dllimport) UINT32
-    SymSearchSymbolForMask(const char * SearchMask);
+ScriptEngineSearchSymbolForMask(const char * SearchMask);
 __declspec(dllimport) BOOLEAN
-    SymGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
+ScriptEngineGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
 __declspec(dllimport) BOOLEAN
-    SymGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
+ScriptEngineGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
 __declspec(dllimport) BOOLEAN
-    SymCreateSymbolTableForDisassembler(void * CallbackFunction);
+ScriptEngineCreateSymbolTableForDisassembler(void * CallbackFunction);
 __declspec(dllimport) BOOLEAN
-    SymConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
+ScriptEngineConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
 __declspec(dllimport) BOOLEAN
-    SymConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath,
-                                                char *       PdbFilePath,
-                                                char *       GuidAndAgeDetails,
-                                                BOOLEAN      Is32BitModule);
+ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath, char * PdbFilePath, char * GuidAndAgeDetails, BOOLEAN Is32BitModule);
 __declspec(dllimport) BOOLEAN
-    SymbolInitLoad(PVOID        BufferToStoreDetails,
-                   UINT32       StoredLength,
-                   BOOLEAN      DownloadIfAvailable,
-                   const char * SymbolPath,
-                   BOOLEAN      IsSilentLoad);
+ScriptEngineSymbolInitLoad(PVOID BufferToStoreDetails, UINT32 StoredLength, BOOLEAN DownloadIfAvailable, const char * SymbolPath, BOOLEAN IsSilentLoad);
 __declspec(dllimport) BOOLEAN
-    SymShowDataBasedOnSymbolTypes(const char * TypeName,
-                                  UINT64       Address,
-                                  BOOLEAN      IsStruct,
-                                  PVOID        BufferAddress,
-                                  const char * AdditionalParameters);
-__declspec(dllimport) BOOLEAN
-    SymQuerySizeof(_In_ const char * StructNameOrTypeName, _Out_ UINT32 * SizeOfField);
-__declspec(dllimport) BOOLEAN
-    SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
-                                     _In_ const char * FiledOfStructName,
-                                     _Out_ PBOOLEAN    IsStructNamePointerOrNot,
-                                     _Out_ PBOOLEAN    IsFiledOfStructNamePointerOrNot,
-                                     _Out_ char **     NewStructOrTypeName,
-                                     _Out_ UINT32 *    OffsetOfFieldFromTop,
-                                     _Out_ UINT32 *    SizeOfField);
+ScriptEngineShowDataBasedOnSymbolTypes(const char * TypeName, UINT64 Address, BOOLEAN IsStruct, PVOID BufferAddress, const char * AdditionalParameters);
 
 #ifdef __cplusplus
 }
@@ -4689,615 +5749,135 @@ __declspec(dllimport) BOOLEAN
 //
 
 
-//..\..\..\bin\debug\SDK\Headers\Events.h
+//..\..\..\bin\debug\SDK\Imports\HyperDbgCtrlImports.h
 /**
- * @file Events.h
+ * @file HyperDbgCtrlImports.h
  * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's SDK Headers for Events
- * @details This file contains definitions of event datatypes
+ * @brief Headers relating exported functions from controller interface
  * @version 0.2
- * @date 2022-06-28
+ * @date 2023-02-02
  *
  * @copyright This project is released under the GNU Public License v3.
  *
  */
 #pragma once
 
-//////////////////////////////////////////////////
-//               System Events                  //
-//////////////////////////////////////////////////
+#ifdef HYPERDBG_HPRDBGCTRL
+#    define IMPORT_EXPORT_CTRL __declspec(dllexport)
+#else
+#    define IMPORT_EXPORT_CTRL __declspec(dllimport)
+#endif
 
+//
+// Header file of HPRDBGCTRL
+// Imports
+//
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//
+// Support Detection
+//
+IMPORT_EXPORT_CTRL bool HyperDbgVmxSupportDetection();
+IMPORT_EXPORT_CTRL void HyperDbgReadVendorString(char *);
+
+//
+// VMM Module
+//
+IMPORT_EXPORT_CTRL int HyperDbgLoadVmm();
+IMPORT_EXPORT_CTRL int HyperDbgUnloadVmm();
+IMPORT_EXPORT_CTRL int HyperDbgInstallVmmDriver();
+IMPORT_EXPORT_CTRL int HyperDbgUninstallVmmDriver();
+IMPORT_EXPORT_CTRL int HyperDbgStopVmmDriver();
+
+//
+// General imports
+//
+IMPORT_EXPORT_CTRL int HyperDbgInterpreter(char * Command);
+IMPORT_EXPORT_CTRL void HyperDbgShowSignature();
+IMPORT_EXPORT_CTRL void HyperDbgSetTextMessageCallback(Callback handler);
+IMPORT_EXPORT_CTRL int HyperDbgScriptReadFileAndExecuteCommandline(int argc, char * argv[]);
+IMPORT_EXPORT_CTRL bool HyperDbgContinuePreviousCommand();
+IMPORT_EXPORT_CTRL bool HyperDbgCheckMultilineCommand(char * CurrentCommand, bool Reset);
+
+#ifdef __cplusplus
+}
+#endif
+
+
+//..\..\..\bin\debug\SDK\Imports\HyperDbgHyperLogImports.h
 /**
- * @brief Exceptions enum
- *
- */
-typedef enum _EXCEPTION_VECTORS
-{
-    EXCEPTION_VECTOR_DIVIDE_ERROR,
-    EXCEPTION_VECTOR_DEBUG_BREAKPOINT,
-    EXCEPTION_VECTOR_NMI,
-    EXCEPTION_VECTOR_BREAKPOINT,
-    EXCEPTION_VECTOR_OVERFLOW,
-    EXCEPTION_VECTOR_BOUND_RANGE_EXCEEDED,
-    EXCEPTION_VECTOR_UNDEFINED_OPCODE,
-    EXCEPTION_VECTOR_NO_MATH_COPROCESSOR,
-    EXCEPTION_VECTOR_DOUBLE_FAULT,
-    EXCEPTION_VECTOR_RESERVED0,
-    EXCEPTION_VECTOR_INVALID_TASK_SEGMENT_SELECTOR,
-    EXCEPTION_VECTOR_SEGMENT_NOT_PRESENT,
-    EXCEPTION_VECTOR_STACK_SEGMENT_FAULT,
-    EXCEPTION_VECTOR_GENERAL_PROTECTION_FAULT,
-    EXCEPTION_VECTOR_PAGE_FAULT,
-    EXCEPTION_VECTOR_RESERVED1,
-    EXCEPTION_VECTOR_MATH_FAULT,
-    EXCEPTION_VECTOR_ALIGNMENT_CHECK,
-    EXCEPTION_VECTOR_MACHINE_CHECK,
-    EXCEPTION_VECTOR_SIMD_FLOATING_POINT_NUMERIC_ERROR,
-    EXCEPTION_VECTOR_VIRTUAL_EXCEPTION,
-    EXCEPTION_VECTOR_RESERVED2,
-    EXCEPTION_VECTOR_RESERVED3,
-    EXCEPTION_VECTOR_RESERVED4,
-    EXCEPTION_VECTOR_RESERVED5,
-    EXCEPTION_VECTOR_RESERVED6,
-    EXCEPTION_VECTOR_RESERVED7,
-    EXCEPTION_VECTOR_RESERVED8,
-    EXCEPTION_VECTOR_RESERVED9,
-    EXCEPTION_VECTOR_RESERVED10,
-    EXCEPTION_VECTOR_RESERVED11,
-    EXCEPTION_VECTOR_RESERVED12,
-
-    //
-    // NT (Windows) specific exception vectors.
-    //
-    APC_INTERRUPT   = 31,
-    DPC_INTERRUPT   = 47,
-    CLOCK_INTERRUPT = 209,
-    IPI_INTERRUPT   = 225,
-    PMI_INTERRUPT   = 254,
-
-} EXCEPTION_VECTORS;
-
-//////////////////////////////////////////////////
-//			     Callback Enums                 //
-//////////////////////////////////////////////////
-
-/**
- * @brief The status of triggering events
- *
- */
-typedef enum _VMM_CALLBACK_TRIGGERING_EVENT_STATUS_TYPE
-{
-    VMM_CALLBACK_TRIGGERING_EVENT_STATUS_SUCCESSFUL_NO_INITIALIZED = 0,
-    VMM_CALLBACK_TRIGGERING_EVENT_STATUS_SUCCESSFUL                = 0,
-    VMM_CALLBACK_TRIGGERING_EVENT_STATUS_SUCCESSFUL_IGNORE_EVENT   = 1,
-    VMM_CALLBACK_TRIGGERING_EVENT_STATUS_DEBUGGER_NOT_ENABLED      = 2,
-    VMM_CALLBACK_TRIGGERING_EVENT_STATUS_INVALID_EVENT_TYPE        = 3,
-
-} VMM_CALLBACK_TRIGGERING_EVENT_STATUS_TYPE;
-
-//////////////////////////////////////////////////
-//               Event Details                  //
-//////////////////////////////////////////////////
-
-/**
- * @brief enum to show type of all HyperDbg events
- *
- */
-typedef enum _VMM_EVENT_TYPE_ENUM
-{
-
-    //
-    // EPT Memory Monitoring Events
-    //
-    HIDDEN_HOOK_READ_AND_WRITE_AND_EXECUTE,
-    HIDDEN_HOOK_READ_AND_WRITE,
-    HIDDEN_HOOK_READ_AND_EXECUTE,
-    HIDDEN_HOOK_WRITE_AND_EXECUTE,
-    HIDDEN_HOOK_READ,
-    HIDDEN_HOOK_WRITE,
-    HIDDEN_HOOK_EXECUTE,
-
-    //
-    // EPT Hook Events
-    //
-    HIDDEN_HOOK_EXEC_DETOURS,
-    HIDDEN_HOOK_EXEC_CC,
-
-    //
-    // System-call Events
-    //
-    SYSCALL_HOOK_EFER_SYSCALL,
-    SYSCALL_HOOK_EFER_SYSRET,
-
-    //
-    // CPUID Instruction Execution Events
-    //
-    CPUID_INSTRUCTION_EXECUTION,
-
-    //
-    // Model-Specific Registers (MSRs) Reads/Modifications Events
-    //
-    RDMSR_INSTRUCTION_EXECUTION,
-    WRMSR_INSTRUCTION_EXECUTION,
-
-    //
-    // PMIO Events
-    //
-    IN_INSTRUCTION_EXECUTION,
-    OUT_INSTRUCTION_EXECUTION,
-
-    //
-    // Interrupts/Exceptions/Faults Events
-    //
-    EXCEPTION_OCCURRED,
-    EXTERNAL_INTERRUPT_OCCURRED,
-
-    //
-    // Debug Registers Events
-    //
-    DEBUG_REGISTERS_ACCESSED,
-
-    //
-    // Timing & Performance Events
-    //
-    TSC_INSTRUCTION_EXECUTION,
-    PMC_INSTRUCTION_EXECUTION,
-
-    //
-    // VMCALL Instruction Execution Events
-    //
-    VMCALL_INSTRUCTION_EXECUTION,
-
-    //
-    // Control Registers Events
-    //
-    CONTROL_REGISTER_MODIFIED,
-    CONTROL_REGISTER_READ,
-    CONTROL_REGISTER_3_MODIFIED,
-
-    //
-    // Execution Trap Events
-    //
-    TRAP_EXECUTION_MODE_CHANGED,
-    TRAP_EXECUTION_INSTRUCTION_TRACE,
-
-} VMM_EVENT_TYPE_ENUM;
-
-/**
- * @brief Type of Actions
- *
- */
-typedef enum _DEBUGGER_EVENT_ACTION_TYPE_ENUM
-{
-    BREAK_TO_DEBUGGER,
-    RUN_SCRIPT,
-    RUN_CUSTOM_CODE
-
-} DEBUGGER_EVENT_ACTION_TYPE_ENUM;
-
-/**
- * @brief Type of handling !syscall or !sysret
- *
- */
-typedef enum _DEBUGGER_EVENT_SYSCALL_SYSRET_TYPE
-{
-    DEBUGGER_EVENT_SYSCALL_SYSRET_SAFE_ACCESS_MEMORY = 0,
-    DEBUGGER_EVENT_SYSCALL_SYSRET_HANDLE_ALL_UD      = 1,
-
-} DEBUGGER_EVENT_SYSCALL_SYSRET_TYPE;
-
-#define SIZEOF_DEBUGGER_MODIFY_EVENTS sizeof(DEBUGGER_MODIFY_EVENTS)
-
-/**
- * @brief Type of mode change traps
- *
- */
-typedef enum _DEBUGGER_EVENT_MODE_TYPE
-{
-    DEBUGGER_EVENT_MODE_TYPE_USER_MODE_AND_KERNEL_MODE = 1,
-    DEBUGGER_EVENT_MODE_TYPE_USER_MODE                 = 3,
-    DEBUGGER_EVENT_MODE_TYPE_KERNEL_MODE               = 0,
-    DEBUGGER_EVENT_MODE_TYPE_INVALID                   = 0xffffffff,
-
-} DEBUGGER_EVENT_MODE_TYPE;
-
-/**
- * @brief Type of tracing events
- *
- */
-typedef enum _DEBUGGER_EVENT_TRACE_TYPE
-{
-    DEBUGGER_EVENT_TRACE_TYPE_INVALID                 = 0,
-    DEBUGGER_EVENT_TRACE_TYPE_STEP_IN                 = 1,
-    DEBUGGER_EVENT_TRACE_TYPE_STEP_OUT                = 2,
-    DEBUGGER_EVENT_TRACE_TYPE_INSTRUMENTATION_STEP_IN = 3,
-
-} DEBUGGER_EVENT_TRACE_TYPE;
-
-/**
- * @brief different types of modifying events request (enable/disable/clear)
- *
- */
-typedef enum _DEBUGGER_MODIFY_EVENTS_TYPE
-{
-    DEBUGGER_MODIFY_EVENTS_QUERY_STATE,
-    DEBUGGER_MODIFY_EVENTS_ENABLE,
-    DEBUGGER_MODIFY_EVENTS_DISABLE,
-    DEBUGGER_MODIFY_EVENTS_CLEAR,
-} DEBUGGER_MODIFY_EVENTS_TYPE;
-
-/**
- * @brief request for modifying events (enable/disable/clear)
- *
- */
-typedef struct _DEBUGGER_MODIFY_EVENTS
-{
-    UINT64 Tag;          // Tag of the target event that we want to modify
-    UINT64 KernelStatus; // Kernel put the status in this field
-    DEBUGGER_MODIFY_EVENTS_TYPE
-    TypeOfAction;      // Determines what's the action (enable | disable | clear)
-    BOOLEAN IsEnabled; // Determines what's the action (enable | disable | clear)
-
-} DEBUGGER_MODIFY_EVENTS, *PDEBUGGER_MODIFY_EVENTS;
-
-/**
- * @brief request for performing a short-circuiting event
- *
- */
-typedef struct _DEBUGGER_SHORT_CIRCUITING_EVENT
-{
-    UINT64  KernelStatus;      // Kernel put the status in this field
-    BOOLEAN IsShortCircuiting; // Determines whether to perform short circuting (on | off)
-
-} DEBUGGER_SHORT_CIRCUITING_EVENT, *PDEBUGGER_SHORT_CIRCUITING_EVENT;
-
-//////////////////////////////////////////////////
-//                Event Options                 //
-//////////////////////////////////////////////////
-
-/**
- * @brief request for performing a short-circuiting event
- *
- */
-typedef struct _DEBUGGER_EVENT_OPTIONS
-{
-    UINT64 OptionalParam1; // Optional parameter
-    UINT64 OptionalParam2; // Optional parameter
-    UINT64 OptionalParam3; // Optional parameter
-    UINT64 OptionalParam4; // Optional parameter
-    UINT64 OptionalParam5; // Optional parameter
-    UINT64 OptionalParam6; // Optional parameter
-
-} DEBUGGER_EVENT_OPTIONS, *PDEBUGGER_EVENT_OPTIONS;
-
-//////////////////////////////////////////////////
-//    Enums For Event And Debugger Resources    //
-//////////////////////////////////////////////////
-
-/**
- * @brief Things to consider when applying resources
- *
- */
-typedef enum _PROTECTED_HV_RESOURCES_PASSING_OVERS
-{
-    //
-    // for exception bitmap
-    //
-    PASSING_OVER_NONE                                  = 0,
-    PASSING_OVER_UD_EXCEPTIONS_FOR_SYSCALL_SYSRET_HOOK = 1,
-    PASSING_OVER_EXCEPTION_EVENTS,
-
-    //
-    // for external interupts-exitings
-    //
-    PASSING_OVER_INTERRUPT_EVENTS,
-
-    //
-    // for external rdtsc/p exitings
-    //
-    PASSING_OVER_TSC_EVENTS,
-
-    //
-    // for external mov to hardware debug registers exitings
-    //
-    PASSING_OVER_MOV_TO_HW_DEBUG_REGS_EVENTS,
-
-    //
-    // for external mov to control registers exitings
-    //
-    PASSING_OVER_MOV_TO_CONTROL_REGS_EVENTS,
-
-} PROTECTED_HV_RESOURCES_PASSING_OVERS;
-
-/**
- * @brief Type of protected (multi-used) resources
- *
- */
-typedef enum _PROTECTED_HV_RESOURCES_TYPE
-{
-    PROTECTED_HV_RESOURCES_EXCEPTION_BITMAP,
-
-    PROTECTED_HV_RESOURCES_EXTERNAL_INTERRUPT_EXITING,
-
-    PROTECTED_HV_RESOURCES_RDTSC_RDTSCP_EXITING,
-
-    PROTECTED_HV_RESOURCES_MOV_TO_DEBUG_REGISTER_EXITING,
-
-    PROTECTED_HV_RESOURCES_MOV_CONTROL_REGISTER_EXITING,
-
-    PROTECTED_HV_RESOURCES_MOV_TO_CR3_EXITING,
-
-} PROTECTED_HV_RESOURCES_TYPE;
-
-//////////////////////////////////////////////////
-//               Event Details                  //
-//////////////////////////////////////////////////
-
-/**
- * @brief Each command is like the following struct, it also used for
- * tracing works in user mode and sending it to the kernl mode
- * @details THIS IS NOT WHAT HYPERDBG SAVES FOR EVENTS IN KERNEL-MODE
- */
-typedef struct _DEBUGGER_GENERAL_EVENT_DETAIL
-{
-    LIST_ENTRY
-    CommandsEventList; // Linked-list of commands list (used for tracing purpose
-                       // in user mode)
-
-    time_t CreationTime; // Date of creating this event
-
-    UINT32 CoreId; // determines the core index to apply this event to, if it's
-                   // 0xffffffff means that we have to apply it to all cores
-
-    UINT32 ProcessId; // determines the process id to apply this to
-                      // only that 0xffffffff means that we have to
-                      // apply it to all processes
-
-    BOOLEAN IsEnabled;
-
-    BOOLEAN EnableShortCircuiting; // indicates whether the short-circuiting event
-                                   // is enabled or not for this event
-
-    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE EventStage; // reveals the calling stage of the event
-    // (whether it's a all- pre- or post- event)
-
-    BOOLEAN HasCustomOutput; // Shows whether this event has a custom output
-                             // source or not
-
-    UINT64
-    OutputSourceTags
-        [DebuggerOutputSourceMaximumRemoteSourceForSingleEvent]; // tags of
-                                                                 // multiple
-                                                                 // sources which
-                                                                 // can be used to
-                                                                 // send the event
-                                                                 // results of
-                                                                 // scripts to
-                                                                 // remote sources
-
-    UINT32 CountOfActions;
-
-    UINT64              Tag; // is same as operation code
-    VMM_EVENT_TYPE_ENUM EventType;
-
-    DEBUGGER_EVENT_OPTIONS Options;
-
-    PVOID CommandStringBuffer;
-
-    UINT32 ConditionBufferSize;
-
-} DEBUGGER_GENERAL_EVENT_DETAIL, *PDEBUGGER_GENERAL_EVENT_DETAIL;
-
-/**
- * @brief Each event can have multiple actions
- * @details THIS STRUCTURE IS ONLY USED IN USER MODE
- * WE USE SEPARATE STRUCTURE FOR ACTIONS IN
- * KERNEL MODE
- */
-typedef struct _DEBUGGER_GENERAL_ACTION
-{
-    UINT64                          EventTag;
-    DEBUGGER_EVENT_ACTION_TYPE_ENUM ActionType;
-    BOOLEAN                         ImmediateMessagePassing;
-    UINT32                          PreAllocatedBuffer;
-
-    UINT32 CustomCodeBufferSize;
-    UINT32 ScriptBufferSize;
-    UINT32 ScriptBufferPointer;
-
-} DEBUGGER_GENERAL_ACTION, *PDEBUGGER_GENERAL_ACTION;
-
-/**
- * @brief Status of register buffers
- *
- */
-typedef struct _DEBUGGER_EVENT_AND_ACTION_RESULT
-{
-    BOOLEAN IsSuccessful;
-    UINT32  Error; // If IsSuccessful was, FALSE
-
-} DEBUGGER_EVENT_AND_ACTION_RESULT, *PDEBUGGER_EVENT_AND_ACTION_RESULT;
-
-#define SIZEOF_REGISTER_EVENT sizeof(REGISTER_NOTIFY_BUFFER)
-
-
-//..\..\..\bin\debug\SDK\Headers\HardwareDebugger.h
-/**
- * @file HardwareDebugger.h
+ * @file HyperDbgHyperLogImports.h
  * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's Hardware Debugger (hwdbg) types and constants
- * @details This file contains definitions of hwdbg elements
- * used in HyperDbg
- * @version 0.9
- * @date 2024-04-28
+ * @brief Headers relating exported functions from hyperlog project
+ * @version 0.1
+ * @date 2023-01-15
  *
  * @copyright This project is released under the GNU Public License v3.
  *
  */
 #pragma once
 
-//////////////////////////////////////////////////
-//                 Definitions                  //
-//////////////////////////////////////////////////
-
-/**
- * @brief Initial debuggee to debugger offset
- *
- */
-#define DEFAULT_INITIAL_DEBUGGEE_TO_DEBUGGER_OFFSET 0x200
-
-/**
- * @brief Initial debugger to debuggee offset
- *
- */
-#define DEFAULT_INITIAL_DEBUGGER_TO_DEBUGGEE_OFFSET 0x0
+#ifdef HYPERDBG_HYPER_LOG
+#    define IMPORT_EXPORT_HYPERLOG __declspec(dllexport)
+#else
+#    define IMPORT_EXPORT_HYPERLOG __declspec(dllimport)
+#endif
 
 //////////////////////////////////////////////////
-//                   Enums                      //
+//				   Functions					//
 //////////////////////////////////////////////////
 
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogInitialize(MESSAGE_TRACING_CALLBACKS * MsgTracingCallbacks);
+
+IMPORT_EXPORT_HYPERLOG VOID
+LogUnInitialize();
+
+IMPORT_EXPORT_HYPERLOG UINT32
+LogMarkAllAsRead(BOOLEAN IsVmxRoot);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackPrepareAndSendMessageToQueue(UINT32       OperationCode,
+                                        BOOLEAN      IsImmediateMessage,
+                                        BOOLEAN      ShowCurrentSystemTime,
+                                        BOOLEAN      Priority,
+                                        const char * Fmt,
+                                        ...);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackPrepareAndSendMessageToQueueWrapper(UINT32       OperationCode,
+                                               BOOLEAN      IsImmediateMessage,
+                                               BOOLEAN      ShowCurrentSystemTime,
+                                               BOOLEAN      Priority,
+                                               const char * Fmt,
+                                               va_list      ArgList);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackSendBuffer(_In_ UINT32                          OperationCode,
+                      _In_reads_bytes_(BufferLength) PVOID Buffer,
+                      _In_ UINT32                          BufferLength,
+                      _In_ BOOLEAN                         Priority);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackCheckIfBufferIsFull(BOOLEAN Priority);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackSendMessageToQueue(UINT32 OperationCode, BOOLEAN IsImmediateMessage, CHAR * LogMessage, UINT32 BufferLen, BOOLEAN Priority);
+
+IMPORT_EXPORT_HYPERLOG NTSTATUS
+LogRegisterEventBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
+
+IMPORT_EXPORT_HYPERLOG NTSTATUS
+LogRegisterIrpBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
+
+
+//..\..\..\bin\debug\SDK\Imports\HyperDbgRevImports.h
 /**
- * @brief Different action of hwdbg
- * @warning This file should be changed along with hwdbg files
- *
- */
-typedef enum _HWDBG_ACTION_ENUMS
-{
-    hwdbgActionSendInstanceInfo      = 1,
-    hwdbgActionConfigureScriptBuffer = 2,
-
-} HWDBG_ACTION_ENUMS;
-
-/**
- * @brief Different responses come from hwdbg
- * @warning This file should be changed along with hwdbg files
- *
- */
-typedef enum _HWDBG_RESPONSE_ENUMS
-{
-    hwdbgResponseSuccessOrErrorMessage = 1,
-    hwdbgResponseInstanceInfo          = 2,
-
-} HWDBG_RESPONSE_ENUMS;
-
-/**
- * @brief Different success or error codes in hwdbg
- * @warning This file should be changed along with hwdbg files
- *
- */
-typedef enum _HWDBG_SUCCESS_OR_ERROR_ENUMS
-{
-    hwdbgOperationWasSuccessful = 0x7FFFFFFF,
-    hwdbgErrorInvalidPacket     = 1,
-
-} HWDBG_SUCCESS_OR_ERROR_ENUMS;
-
-//////////////////////////////////////////////////
-//                   Structures                 //
-//////////////////////////////////////////////////
-
-/**
- * @brief The structure of port information (each item) in hwdbg
- *
- */
-typedef struct _HWDBG_PORT_INFORMATION_ITEMS
-{
-    UINT32 PortSize;
-
-} HWDBG_PORT_INFORMATION_ITEMS, *PHWDBG_PORT_INFORMATION_ITEMS;
-
-/**
- * @brief The structure of script capabilities information in hwdbg
- *
- */
-typedef struct _HWDBG_INSTANCE_INFORMATION
-{
-    //
-    // ANY ADDITION TO THIS STRUCTURE SHOULD BE SYNCHRONIZED WITH SCALA AND INSTANCE INFO SENDER MODULE
-    //
-    UINT32 version;                                    // Target version of HyperDbg (same as hwdbg)
-    UINT32 maximumNumberOfStages;                      // Number of stages that this instance of hwdbg supports (NumberOfSupportedStages == 0 means script engine is disabled)
-    UINT32 scriptVariableLength;                       // maximum length of variables (and other script elements)
-    UINT32 maximumNumberOfSupportedGetScriptOperators; // Maximum supported GET operators in a single func
-    UINT32 maximumNumberOfSupportedSetScriptOperators; // Maximum supported SET operators in a single func
-    UINT32 sharedMemorySize;                           // Size of shared memory
-    UINT32 debuggerAreaOffset;                         // The memory offset of debugger
-    UINT32 debuggeeAreaOffset;                         // The memory offset of debuggee
-    UINT32 numberOfPins;                               // Number of pins
-    UINT32 numberOfPorts;                              // Number of ports
-
-    //
-    // ANY ADDITION TO THIS STRUCTURE SHOULD BE SYNCHRONIZED WITH SCALA AND INSTANCE INFO SENDER MODULE
-    //
-
-    struct _HWDBG_SCRIPT_CAPABILITIES
-    {
-        //
-        // ANY ADDITION TO THIS MASK SHOULD BE ADDED TO HwdbgInterpreterShowScriptCapabilities
-        // and HwdbgInterpreterCheckScriptBufferWithScriptCapabilities as well Scala file
-        //
-        UINT64 func_or : 1;
-        UINT64 func_xor : 1;
-        UINT64 func_and : 1;
-        UINT64 func_asr : 1;
-        UINT64 func_asl : 1;
-        UINT64 func_add : 1;
-        UINT64 func_sub : 1;
-        UINT64 func_mul : 1;
-        UINT64 func_div : 1;
-        UINT64 func_mod : 1;
-        UINT64 func_gt : 1;
-        UINT64 func_lt : 1;
-        UINT64 func_egt : 1;
-        UINT64 func_elt : 1;
-        UINT64 func_equal : 1;
-        UINT64 func_neq : 1;
-        UINT64 func_jmp : 1;
-        UINT64 func_jz : 1;
-        UINT64 func_jnz : 1;
-        UINT64 func_mov : 1;
-        UINT64 func_printf : 1;
-
-        //
-        // ANY ADDITION TO THIS MASK SHOULD BE ADDED TO HwdbgInterpreterShowScriptCapabilities
-        // and HwdbgInterpreterCheckScriptBufferWithScriptCapabilities as well Scala file
-        //
-
-    } scriptCapabilities;
-
-    UINT32 bramAddrWidth; // BRAM address width
-    UINT32 bramDataWidth; // BRAM data width
-
-    //
-    // Here the details of port arrangements are located (HWDBG_PORT_INFORMATION_ITEMS)
-    // As the following type:
-    //   HWDBG_PORT_INFORMATION_ITEMS portsConfiguration[numberOfPorts]   ; Port arrangement
-    //
-
-} HWDBG_INSTANCE_INFORMATION, *PHWDBG_INSTANCE_INFORMATION;
-
-/**
- * @brief The structure of script buffer in hwdbg
- *
- */
-typedef struct _HWDBG_SCRIPT_BUFFER
-{
-    UINT32 scriptNumberOfSymbols; // Number of symbols in the script
-
-    //
-    // Here the script buffer is located
-    //
-    // UINT8 scriptBuffer[scriptNumberOfSymbols]; // The script buffer
-    //
-
-} HWDBG_SCRIPT_BUFFER, *PHWDBG_SCRIPT_BUFFER;
-
-
-//..\..\..\bin\debug\SDK\Imports\HyperDbgScriptImports.h
-/**
- * @file HyperDbgScriptImports.h
+ * @file HyperDbgRevImports.h
  * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from script engine
+ * @brief Headers relating exported functions from reversing machine interface
  * @version 0.2
  * @date 2023-02-02
  *
@@ -5307,7 +5887,7 @@ typedef struct _HWDBG_SCRIPT_BUFFER
 #pragma once
 
 //
-// Header file of script-engine
+// Header file of hpr
 // Imports
 //
 #ifdef __cplusplus
@@ -5315,593 +5895,13 @@ extern "C" {
 #endif
 
 //
-// Script engine
+// Reversing Machine Module
 //
-__declspec(dllimport) PSYMBOL_BUFFER
-ScriptEngineParse(char * str);
-__declspec(dllimport) void
-PrintSymbolBuffer(const PSYMBOL_BUFFER SymbolBuffer);
-__declspec(dllimport) void
-PrintSymbol(PSYMBOL Symbol);
-__declspec(dllimport) void
-RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer);
-__declspec(dllimport) BOOLEAN
-FuncGetNumberOfOperands(UINT64 FuncType, UINT32 * NumberOfGetOperands, UINT32 * NumberOfSetOperands);
-__declspec(dllimport) BOOLEAN
-ScriptEngineSetHwdbgInstanceInfo(HWDBG_INSTANCE_INFORMATION * InstancInfo);
-
-;
-
-//
-// pdb parser
-//
-__declspec(dllimport) VOID
-ScriptEngineSetTextMessageCallback(PVOID Handler);
-__declspec(dllimport) VOID
-ScriptEngineSymbolAbortLoading();
-__declspec(dllimport) UINT64
-ScriptEngineConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
-__declspec(dllimport) UINT32
-ScriptEngineLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
-__declspec(dllimport) UINT32
-ScriptEngineUnloadAllSymbols();
-__declspec(dllimport) UINT32
-ScriptEngineUnloadModuleSymbol(char * ModuleName);
-__declspec(dllimport) UINT32
-ScriptEngineSearchSymbolForMask(const char * SearchMask);
-__declspec(dllimport) BOOLEAN
-ScriptEngineGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
-__declspec(dllimport) BOOLEAN
-ScriptEngineGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
-__declspec(dllimport) BOOLEAN
-ScriptEngineCreateSymbolTableForDisassembler(void * CallbackFunction);
-__declspec(dllimport) BOOLEAN
-ScriptEngineConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
-__declspec(dllimport) BOOLEAN
-ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath, char * PdbFilePath, char * GuidAndAgeDetails, BOOLEAN Is32BitModule);
-__declspec(dllimport) BOOLEAN
-ScriptEngineSymbolInitLoad(PVOID BufferToStoreDetails, UINT32 StoredLength, BOOLEAN DownloadIfAvailable, const char * SymbolPath, BOOLEAN IsSilentLoad);
-__declspec(dllimport) BOOLEAN
-ScriptEngineShowDataBasedOnSymbolTypes(const char * TypeName, UINT64 Address, BOOLEAN IsStruct, PVOID BufferAddress, const char * AdditionalParameters);
+__declspec(dllimport) int ReversingMachineStart();
+__declspec(dllimport) int ReversingMachineStop();
 
 #ifdef __cplusplus
 }
 #endif
-
-
-//..\..\..\bin\debug\SDK\Headers\DataTypes.h
-/**
- * @file DataTypes.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's SDK data type definitions
- * @details This file contains definitions of structures, enums, etc.
- * used in HyperDbg
- * @version 0.2
- * @date 2022-06-22
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//////////////////////////////////////////////////
-//               Memory Stages                  //
-//////////////////////////////////////////////////
-
-/**
- * @brief Different levels of paging
- *
- */
-typedef enum _PAGING_LEVEL
-{
-    PagingLevelPageTable = 0,
-    PagingLevelPageDirectory,
-    PagingLevelPageDirectoryPointerTable,
-    PagingLevelPageMapLevel4
-} PAGING_LEVEL;
-
-//////////////////////////////////////////////////
-//                 Pool Manager      			//
-//////////////////////////////////////////////////
-
-/**
- * @brief Inum of intentions for buffers (buffer tag)
- *
- */
-typedef enum _POOL_ALLOCATION_INTENTION
-{
-    TRACKING_HOOKED_PAGES,
-    EXEC_TRAMPOLINE,
-    SPLIT_2MB_PAGING_TO_4KB_PAGE,
-    DETOUR_HOOK_DETAILS,
-    BREAKPOINT_DEFINITION_STRUCTURE,
-    PROCESS_THREAD_HOLDER,
-
-    //
-    // Instant event buffers
-    //
-    INSTANT_REGULAR_EVENT_BUFFER,
-    INSTANT_BIG_EVENT_BUFFER,
-    INSTANT_REGULAR_EVENT_ACTION_BUFFER,
-    INSTANT_BIG_EVENT_ACTION_BUFFER,
-
-    //
-    // Use for request safe buffers of the event
-    //
-    INSTANT_REGULAR_SAFE_BUFFER_FOR_EVENTS,
-    INSTANT_BIG_SAFE_BUFFER_FOR_EVENTS,
-
-} POOL_ALLOCATION_INTENTION;
-
-//////////////////////////////////////////////////
-//	   	Debug Registers Modifications 	    	//
-//////////////////////////////////////////////////
-
-typedef enum _DEBUG_REGISTER_TYPE
-{
-    BREAK_ON_INSTRUCTION_FETCH,
-    BREAK_ON_WRITE_ONLY,
-    BREAK_ON_IO_READ_OR_WRITE_NOT_SUPPORTED,
-    BREAK_ON_READ_AND_WRITE_BUT_NOT_FETCH
-} DEBUG_REGISTER_TYPE;
-
-//////////////////////////////////////////////////
-//              Execution Stages                //
-//////////////////////////////////////////////////
-
-typedef enum _VMX_EXECUTION_MODE
-{
-    VmxExecutionModeNonRoot = FALSE,
-    VmxExecutionModeRoot    = TRUE
-} VMX_EXECUTION_MODE;
-
-/**
- * @brief Type of calling the event
- *
- */
-typedef enum _VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE
-{
-    VMM_CALLBACK_CALLING_STAGE_INVALID_EVENT_EMULATION = 0,
-    VMM_CALLBACK_CALLING_STAGE_PRE_EVENT_EMULATION     = 1,
-    VMM_CALLBACK_CALLING_STAGE_POST_EVENT_EMULATION    = 2,
-    VMM_CALLBACK_CALLING_STAGE_ALL_EVENT_EMULATION     = 3
-
-} VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE;
-
-/**
- * @brief enum to query different process and thread interception mechanisms
- *
- */
-typedef enum _DEBUGGER_THREAD_PROCESS_TRACING
-{
-
-    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_INTERRUPTS_FOR_THREAD_CHANGE,
-    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_INTERRUPTS_FOR_PROCESS_CHANGE,
-    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_DEBUG_REGISTER_INTERCEPTION,
-    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_WAITING_FOR_MOV_CR3_VM_EXITS,
-
-} DEBUGGER_THREAD_PROCESS_TRACING;
-
-//////////////////////////////////////////////////
-//            Callback Definitions              //
-//////////////////////////////////////////////////
-
-/**
- * @brief Callback type that can be used to be used
- * as a custom ShowMessages function
- *
- */
-typedef int (*Callback)(const char * Text);
-
-//////////////////////////////////////////////////
-//                Communications                //
-//////////////////////////////////////////////////
-
-/**
- * @brief The structure of user-input packet in HyperDbg
- *
- */
-typedef struct _DEBUGGEE_USER_INPUT_PACKET
-{
-    UINT32  CommandLen;
-    BOOLEAN IgnoreFinishedSignal;
-    UINT32  Result;
-
-    //
-    // The user's input is here
-    //
-
-} DEBUGGEE_USER_INPUT_PACKET, *PDEBUGGEE_USER_INPUT_PACKET;
-
-/**
- * @brief The structure of user-input packet in HyperDbg
- *
- */
-typedef struct _DEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET
-{
-    UINT32 Length;
-
-    //
-    // The buffer for event and action is here
-    //
-
-} DEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET,
-    *PDEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET;
-
-//////////////////////////////////////////////////
-//                  Pausing                    //
-//////////////////////////////////////////////////
-
-#define SIZEOF_DEBUGGER_PAUSE_PACKET_RECEIVED \
-    sizeof(DEBUGGER_PAUSE_PACKET_RECEIVED)
-
-/**
- * @brief request to pause and halt the system
- *
- */
-typedef struct _DEBUGGER_PAUSE_PACKET_RECEIVED
-{
-    UINT32 Result; // Result from kernel
-
-} DEBUGGER_PAUSE_PACKET_RECEIVED, *PDEBUGGER_PAUSE_PACKET_RECEIVED;
-
-/* ==============================================================================================
- */
-
-/**
- * @brief The structure of detail of a triggered event in HyperDbg
- * @details This structure is also used for transferring breakpoint ids, RIP as the context, etc.
- *
- */
-typedef struct _DEBUGGER_TRIGGERED_EVENT_DETAILS
-{
-    UINT64                                Tag; /* in breakpoints Tag is breakpoint id, not event tag */
-    PVOID                                 Context;
-    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE Stage;
-
-} DEBUGGER_TRIGGERED_EVENT_DETAILS, *PDEBUGGER_TRIGGERED_EVENT_DETAILS;
-
-/* ==============================================================================================
- */
-
-/**
- * @brief The structure of pausing packet in kHyperDbg
- *
- */
-typedef struct _DEBUGGEE_KD_PAUSED_PACKET
-{
-    UINT64                                Rip;
-    BOOLEAN                               IsProcessorOn32BitMode; // if true shows that the address should be interpreted in 32-bit mode
-    BOOLEAN                               IgnoreDisassembling;    // if check if diassembling should be ignored or not
-    DEBUGGEE_PAUSING_REASON               PausingReason;
-    ULONG                                 CurrentCore;
-    UINT64                                EventTag;
-    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE EventCallingStage;
-    UINT64                                Rflags;
-    BYTE                                  InstructionBytesOnRip[MAXIMUM_INSTR_SIZE];
-    UINT16                                ReadInstructionLen;
-
-} DEBUGGEE_KD_PAUSED_PACKET, *PDEBUGGEE_KD_PAUSED_PACKET;
-
-/* ==============================================================================================
- */
-
-/**
- * @brief The structure of pausing packet in uHyperDbg
- *
- */
-typedef struct _DEBUGGEE_UD_PAUSED_PACKET
-{
-    UINT64                                Rip;
-    UINT64                                ProcessDebuggingToken;
-    BOOLEAN                               Is32Bit; // if true shows that the address should be interpreted in 32-bit mode
-    DEBUGGEE_PAUSING_REASON               PausingReason;
-    UINT32                                ProcessId;
-    UINT32                                ThreadId;
-    UINT64                                Rflags;
-    UINT64                                EventTag;
-    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE EventCallingStage;
-    BYTE                                  InstructionBytesOnRip[MAXIMUM_INSTR_SIZE];
-    UINT16                                ReadInstructionLen;
-    GUEST_REGS                            GuestRegs;
-
-} DEBUGGEE_UD_PAUSED_PACKET, *PDEBUGGEE_UD_PAUSED_PACKET;
-
-//////////////////////////////////////////////////
-//            Message Tracing Enums             //
-//////////////////////////////////////////////////
-
-/**
- * @brief Type of transferring buffer between user-to-kernel
- *
- */
-typedef enum _NOTIFY_TYPE
-{
-    IRP_BASED,
-    EVENT_BASED
-} NOTIFY_TYPE;
-
-//////////////////////////////////////////////////
-//                  Structures                  //
-//////////////////////////////////////////////////
-
-/**
- * @brief The structure of message packet in HyperDbg
- *
- */
-typedef struct _DEBUGGEE_MESSAGE_PACKET
-{
-    UINT32 OperationCode;
-    CHAR   Message[PacketChunkSize];
-
-} DEBUGGEE_MESSAGE_PACKET, *PDEBUGGEE_MESSAGE_PACKET;
-
-/**
- * @brief Used to register event for transferring buffer between user-to-kernel
- *
- */
-typedef struct _REGISTER_NOTIFY_BUFFER
-{
-    NOTIFY_TYPE Type;
-    HANDLE      hEvent;
-
-} REGISTER_NOTIFY_BUFFER, *PREGISTER_NOTIFY_BUFFER;
-
-//////////////////////////////////////////////////
-//                 Direct VMCALL                //
-//////////////////////////////////////////////////
-
-/**
- * @brief Used for sending direct VMCALLs on the VMX root-mode
- *
- */
-typedef struct _DIRECT_VMCALL_PARAMETERS
-{
-    UINT64 OptionalParam1;
-    UINT64 OptionalParam2;
-    UINT64 OptionalParam3;
-
-} DIRECT_VMCALL_PARAMETERS, *PDIRECT_VMCALL_PARAMETERS;
-
-//////////////////////////////////////////////////
-//                  EPT Hook                    //
-//////////////////////////////////////////////////
-
-/**
- * @brief different type of memory addresses
- *
- */
-typedef enum _DEBUGGER_HOOK_MEMORY_TYPE
-{
-    DEBUGGER_MEMORY_HOOK_VIRTUAL_ADDRESS,
-    DEBUGGER_MEMORY_HOOK_PHYSICAL_ADDRESS
-} DEBUGGER_HOOK_MEMORY_TYPE;
-
-/**
- * @brief Temporary $context used in some EPT hook commands
- *
- */
-typedef struct _EPT_HOOKS_CONTEXT
-{
-    UINT64 HookingTag; // This is same as the event tag
-    UINT64 PhysicalAddress;
-    UINT64 VirtualAddress;
-} EPT_HOOKS_CONTEXT, *PEPT_HOOKS_CONTEXT;
-
-/**
- * @brief Setting details for EPT Hooks (!monitor)
- *
- */
-typedef struct _EPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR
-{
-    UINT64                    StartAddress;
-    UINT64                    EndAddress;
-    BOOLEAN                   SetHookForRead;
-    BOOLEAN                   SetHookForWrite;
-    BOOLEAN                   SetHookForExec;
-    DEBUGGER_HOOK_MEMORY_TYPE MemoryType;
-    UINT64                    Tag;
-
-} EPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR, *PEPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR;
-
-/**
- * @brief Setting details for EPT Hooks (!epthook2)
- *
- */
-typedef struct _EPT_HOOKS_ADDRESS_DETAILS_FOR_EPTHOOK2
-{
-    PVOID TargetAddress;
-    PVOID HookFunction;
-
-} EPT_HOOKS_ADDRESS_DETAILS_FOR_EPTHOOK2, *PEPT_HOOKS_ADDRESS_DETAILS_FOR_EPTHOOK2;
-
-/**
- * @brief Details of unhooking single EPT hooks
- *
- */
-typedef struct _EPT_SINGLE_HOOK_UNHOOKING_DETAILS
-{
-    BOOLEAN                     CallerNeedsToRestoreEntryAndInvalidateEpt;
-    BOOLEAN                     RemoveBreakpointInterception;
-    SIZE_T                      PhysicalAddress;
-    UINT64 /* EPT_PML1_ENTRY */ OriginalEntry;
-
-} EPT_SINGLE_HOOK_UNHOOKING_DETAILS, *PEPT_SINGLE_HOOK_UNHOOKING_DETAILS;
-
-//////////////////////////////////////////////////
-//                 Segment Types                //
-//////////////////////////////////////////////////
-
-/**
- * @brief Describe segment selector in VMX
- * @details This structure is copied from ia32.h to the SDK to
- * be used as a data type for functions
- *
- */
-typedef union
-{
-    struct
-    {
-        /**
-         * [Bits 3:0] Segment type.
-         */
-        UINT32 Type : 4;
-
-        /**
-         * [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
-         */
-        UINT32 DescriptorType : 1;
-
-        /**
-         * [Bits 6:5] DPL - Descriptor privilege level.
-         */
-        UINT32 DescriptorPrivilegeLevel : 2;
-
-        /**
-         * [Bit 7] P - Segment present.
-         */
-        UINT32 Present : 1;
-
-        UINT32 Reserved1 : 4;
-
-        /**
-         * [Bit 12] AVL - Available for use by system software.
-         */
-        UINT32 AvailableBit : 1;
-
-        /**
-         * [Bit 13] Reserved (except for CS). L - 64-bit mode active (for CS only).
-         */
-        UINT32 LongMode : 1;
-
-        /**
-         * [Bit 14] D/B - Default operation size (0 = 16-bit segment; 1 = 32-bit segment).
-         */
-        UINT32 DefaultBig : 1;
-
-        /**
-         * [Bit 15] G - Granularity.
-         */
-        UINT32 Granularity : 1;
-        /**
-         * [Bit 16] Segment unusable (0 = usable; 1 = unusable).
-         */
-        UINT32 Unusable : 1;
-        UINT32 Reserved2 : 15;
-    };
-
-    UINT32 AsUInt;
-} VMX_SEGMENT_ACCESS_RIGHTS_TYPE;
-
-/**
- * @brief Segment selector
- *
- */
-typedef struct _VMX_SEGMENT_SELECTOR
-{
-    UINT16                         Selector;
-    VMX_SEGMENT_ACCESS_RIGHTS_TYPE Attributes;
-    UINT32                         Limit;
-    UINT64                         Base;
-} VMX_SEGMENT_SELECTOR, *PVMX_SEGMENT_SELECTOR;
-
-
-//..\..\..\bin\debug\SDK\Headers\Symbols.h
-/**
- * @file Symbols.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's SDK Header Files For Symbol Parsing
- * @details This file contains definitions of symbol parsers
- * @version 0.2
- * @date 2022-06-24
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//////////////////////////////////////////////////
-//              Symbols Details                 //
-//////////////////////////////////////////////////
-
-/**
- * @brief structures for sending and saving details
- * about each module and symbols details
- *
- */
-typedef struct _MODULE_SYMBOL_DETAIL
-{
-    BOOLEAN IsSymbolDetailsFound; // TRUE if the details of symbols found, FALSE if not found
-    BOOLEAN IsLocalSymbolPath;    // TRUE if the ModuleSymbolPath is a real path
-                                  // and FALSE if ModuleSymbolPath is just a module name
-    BOOLEAN IsSymbolPDBAvaliable; // TRUE if the module's pdb is available(if exists in the sympath)
-    BOOLEAN IsUserMode;           // TRUE if the module is a user-mode module
-    BOOLEAN Is32Bit;              // TRUE if the module is a 32-bit
-    UINT64  BaseAddress;
-    char    FilePath[MAX_PATH];
-    char    ModuleSymbolPath[MAX_PATH];
-    char    ModuleSymbolGuidAndAge[MAXIMUM_GUID_AND_AGE_SIZE];
-
-} MODULE_SYMBOL_DETAIL, *PMODULE_SYMBOL_DETAIL;
-
-typedef struct _USERMODE_LOADED_MODULE_SYMBOLS
-{
-    UINT64  BaseAddress;
-    UINT64  Entrypoint;
-    wchar_t FilePath[MAX_PATH];
-
-} USERMODE_LOADED_MODULE_SYMBOLS, *PUSERMODE_LOADED_MODULE_SYMBOLS;
-
-typedef struct _USERMODE_LOADED_MODULE_DETAILS
-{
-    UINT32  ProcessId;
-    BOOLEAN OnlyCountModules;
-    BOOLEAN Is32Bit;
-    UINT32  ModulesCount;
-    UINT32  Result;
-
-    //
-    // Here is a list of USERMODE_LOADED_MODULE_SYMBOLS (appended)
-    //
-
-} USERMODE_LOADED_MODULE_DETAILS, *PUSERMODE_LOADED_MODULE_DETAILS;
-
-/**
- * @brief Callback type that should be used to add
- * list of Addresses to ObjectNames
- *
- */
-typedef VOID (*SymbolMapCallback)(UINT64 Address, char * ModuleName, char * ObjectName, unsigned int ObjectSize);
-
-/**
- * @brief request to add new symbol detail or update a previous
- * symbol table entry
- *
- */
-typedef struct _DEBUGGER_UPDATE_SYMBOL_TABLE
-{
-    UINT32               TotalSymbols;
-    UINT32               CurrentSymbolIndex;
-    MODULE_SYMBOL_DETAIL SymbolDetailPacket;
-
-} DEBUGGER_UPDATE_SYMBOL_TABLE, *PDEBUGGER_UPDATE_SYMBOL_TABLE;
-
-/*
-==============================================================================================
- */
-
-/**
- * @brief request that shows, symbol reload process is finished
- *
- */
-typedef struct _DEBUGGEE_SYMBOL_UPDATE_RESULT
-{
-    UINT64 KernelStatus; // Kernel put the status in this field
-
-} DEBUGGEE_SYMBOL_UPDATE_RESULT, *PDEBUGGEE_SYMBOL_UPDATE_RESULT;
-
-/*
-==============================================================================================
- */
 
 
