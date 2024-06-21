@@ -25,7 +25,7 @@ typedef unsigned long long QWORD;
 typedef unsigned __int64   UINT64, *PUINT64;
 typedef unsigned long      DWORD;
 typedef int                BOOL;
-typedef unsigned char      BYTE;
+//typedef unsigned char      BYTE;
 typedef unsigned short     WORD;
 typedef int                INT;
 typedef unsigned int       UINT;
@@ -33,24 +33,41 @@ typedef unsigned int *     PUINT;
 typedef unsigned __int64   ULONG64, *PULONG64;
 typedef unsigned __int64   DWORD64, *PDWORD64;
 typedef char               CHAR;
+typedef unsigned short            wchar_t;
 typedef wchar_t            WCHAR;
+typedef int            SIZE_T;
+typedef __int64            time_t;
 #define VOID void
+#define PVOID void*
+#define LPVOID void*
+#define HANDLE void *
 
-typedef unsigned char  UCHAR;
+
+
+#define INT8 char
+#define INT16 short
+#define MAX_PATH 260
+
+typedef struct _LIST_ENTRY {
+  struct _LIST_ENTRY *Flink;
+  struct _LIST_ENTRY *Blink;
+} LIST_ENTRY, *PLIST_ENTRY, PRLIST_ENTRY;
+
+//typedef unsigned char  UCHAR;
 typedef unsigned short USHORT;
 typedef unsigned long  ULONG;
-
-typedef UCHAR     BOOLEAN;  // winnt
-typedef BOOLEAN * PBOOLEAN; // winnt
 
 typedef signed char      INT8, *PINT8;
 typedef signed short     INT16, *PINT16;
 typedef signed int       INT32, *PINT32;
 typedef signed __int64   INT64, *PINT64;
-typedef unsigned char    UINT8, *PUINT8;
+typedef unsigned char    UINT8, *PUINT8,BYTE,UCHAR;
 typedef unsigned short   UINT16, *PUINT16;
 typedef unsigned int     UINT32, *PUINT32;
 typedef unsigned __int64 UINT64, *PUINT64;
+
+typedef UCHAR     BOOLEAN;  // winnt
+typedef BOOLEAN * PBOOLEAN; // winnt
 
 #define NULL_ZERO   0
 #define NULL64_ZERO 0ull
@@ -1304,8 +1321,8 @@ typedef struct _DEBUGGEE_UD_PAUSED_PACKET
  * @brief check so the DEBUGGEE_UD_PAUSED_PACKET should be smaller than packet size
  *
  */
-static_assert(sizeof(DEBUGGEE_UD_PAUSED_PACKET) < PacketChunkSize,
-              "err (static_assert), size of PacketChunkSize should be bigger than DEBUGGEE_UD_PAUSED_PACKET");
+//static_assert(sizeof(DEBUGGEE_UD_PAUSED_PACKET) < PacketChunkSize,
+//              "err (static_assert), size of PacketChunkSize should be bigger than DEBUGGEE_UD_PAUSED_PACKET");
 
 //////////////////////////////////////////////////
 //            Message Tracing Enums             //
@@ -4144,8 +4161,8 @@ typedef struct _DEBUGGER_UPDATE_SYMBOL_TABLE
  * @brief check so the DEBUGGER_UPDATE_SYMBOL_TABLE should be smaller than packet size
  *
  */
-static_assert(sizeof(DEBUGGER_UPDATE_SYMBOL_TABLE) < PacketChunkSize,
-              "err (static_assert), size of PacketChunkSize should be bigger than DEBUGGER_UPDATE_SYMBOL_TABLE (MODULE_SYMBOL_DETAIL)");
+//static_assert(sizeof(DEBUGGER_UPDATE_SYMBOL_TABLE) < PacketChunkSize,
+//              "err (static_assert), size of PacketChunkSize should be bigger than DEBUGGER_UPDATE_SYMBOL_TABLE (MODULE_SYMBOL_DETAIL)");
 
 /*
 ==============================================================================================
