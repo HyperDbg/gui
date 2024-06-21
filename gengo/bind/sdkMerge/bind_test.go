@@ -69,6 +69,7 @@ func TestMergeHeader(t *testing.T) {
 	for _, s := range Modules.Keys() {
 		if strings.Contains(s, "BasicTypes") {
 			BasicTypes = s
+			Modules.Delete(s)
 			break
 		}
 	}
