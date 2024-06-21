@@ -328,6 +328,6 @@ func TestBindSdk(t *testing.T) {
 				//"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies\\phnt",
 			},
 		}))
-		mylog.Check(pkg.WriteToDir("C:\\Users\\Admin\\Desktop\\New folder"))
+		mylog.Check(pkg.WriteToDir("./tmp"))
 	})
 }
