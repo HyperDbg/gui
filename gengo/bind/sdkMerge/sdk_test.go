@@ -1,6 +1,8 @@
 package sdk
 
 import (
+	"io/fs"
+	"path/filepath"
 	"strings"
 	"testing"
 	"unicode"
@@ -17,7 +19,13 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 )
 
-func mergeHeader() { // todo need merge func
+func TestMergeHeader(t *testing.T) {
+	filepath.Walk("../../../bin", func(path string, info fs.FileInfo, err error) error {
+		if filepath.Ext(path) == ".h" {
+			println(path)
+		}
+		return err
+	})
 }
 
 // ContainsLetter 检查字符串中是否包含字母
@@ -49,7 +57,7 @@ func MacrosInHeader() (m *maps.SafeMap[string, bool]) {
 	println(m2.Len())
 
 	for _, s := range m.Keys() {
-		if !m2.HasPrefix(s) { //todo bug
+		if !m2.HasPrefix(s) { // todo bug
 			m.Delete(s)
 			mylog.Trace("delete macro", s)
 		}
