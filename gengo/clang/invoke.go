@@ -1,8 +1,13 @@
 package clang
 
 import (
+	"bytes"
+	"fmt"
+	"golang.org/x/sync/errgroup"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"github.com/ddkwork/golibrary/stream"
 
@@ -27,25 +32,39 @@ func (o *Options) ClangPath() string {
 }
 
 func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
-	// cmd := exec.Command(o.ClangPath(), opt...)
-	// cmd.Args = append(cmd.Args, o.AdditionalParams...)
-	// cmd.Args = append(cmd.Args, o.Sources...)
-	c := make([]string, 0)
-	c = append(c, o.ClangPath())
-	c = append(c, opt...)
-	c = append(c, o.AdditionalParams...)
-	c = append(c, o.Sources...)
-	return stream.RunCommandArgs(c...).Output.Bytes(), nil
+	cmd := exec.Command(o.ClangPath(), opt...)
+	cmd.Args = append(cmd.Args, o.AdditionalParams...)
+	cmd.Args = append(cmd.Args, o.Sources...)
+	buf := &bytes.Buffer{}
+	cmd.Stdout = buf
+	err := cmd.Run()
+	if err != nil {
+		return nil, fmt.Errorf("failed to run clang: %w", err)
+	}
+	return buf.Bytes(), nil
 
-	// cmd.Args = append(cmd.Args, "2>&1")
-	// mylog.Trace("commands", strings.Join(cmd.Args, " "))
-	// Stdout := &bytes.Buffer{}
-	// Stderr := &bytes.Buffer{}
-	// cmd.Stdout = Stdout
-	// cmd.Stderr = Stderr
-	// mylog.CheckIgnore(cmd.Run())
-	// mylog.Check(Stderr.Bytes())
-	// return Stdout.Bytes(), nil
+	//todo bug download
+	/*
+		c := make([]string, 0)
+		c = append(c, o.ClangPath())
+		c = append(c, opt...)
+		c = append(c, o.AdditionalParams...)
+		c = append(c, o.Sources...)
+		return stream.RunCommandArgs(c...).Output.Bytes(), nil
+	*/
+	cmd = exec.Command(o.ClangPath(), opt...)
+	cmd.Args = append(cmd.Args, o.AdditionalParams...)
+	cmd.Args = append(cmd.Args, o.Sources...)
+	cmd.Args = append(cmd.Args, "2>&1")
+	mylog.Trace("commands", strings.Join(cmd.Args, " "))
+	Stdout := &bytes.Buffer{}
+	Stderr := &bytes.Buffer{}
+	cmd.Stdout = Stdout
+	cmd.Stderr = Stderr
+	mylog.CheckIgnore(cmd.Run())
+	//println(Stderr.String())
+	mylog.Check(Stderr.Bytes())
+	return Stdout.Bytes(), nil
 }
 
 func CreateAST(opt *Options) ([]byte, error) {
@@ -71,6 +90,29 @@ func CreateLayoutMap(opt *Options) ([]byte, error) {
 
 func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 	stream.RunCommand("clang -E -dM " + opt.Sources[0] + " > macros.log") // 2>&1
+
+	errg := &errgroup.Group{}
+	errg.Go(func() error {
+		res, e := CreateAST(opt)
+		if e != nil {
+			return e
+		}
+		ast, e = ParseAST(res)
+		return e
+	})
+	errg.Go(func() error {
+		res, e := CreateLayoutMap(opt)
+		if e != nil {
+			return e
+		}
+		layout, e = ParseLayoutMap(res)
+		return e
+	})
+	if err := errg.Wait(); err != nil {
+		return nil, nil, err
+	}
+	return ast, layout, nil
+
 	// errg := &errgroup.Group{}
 
 	// errg.Go(func() error {
@@ -91,6 +133,6 @@ func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 	//return nil
 	//})
 
-	// mylog.Check(errg.Wait())
+	//mylog.Check(errg.Wait())
 	return ast, layout, nil
 }

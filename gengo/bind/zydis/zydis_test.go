@@ -14,7 +14,7 @@ func TestGetVersion(t *testing.T) {
 }
 
 func TestZydis(t *testing.T) {
-	mylog.SetDebug(false)
+	// mylog.SetDebug(false)
 	pkg := gengo.NewPackage("zydis",
 		gengo.WithRemovePrefix(
 			"Zydis_", "Zyan_", "Zycore_",
