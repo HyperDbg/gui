@@ -59,8 +59,8 @@ func MacrosInHeader() (m *maps.SafeMap[string, bool]) {
 	}
 
 	m2 := new(maps.SafeMap[string, bool])
-	//for _, s := range stream.NewBuffer("combined_headers.h").ToLines() {
-	for _, s := range stream.NewBuffer("merged_headers.h.h").ToLines() {
+	// for _, s := range stream.NewBuffer("combined_headers.h").ToLines() {
+	for _, s := range stream.NewBuffer("merged_headers.h").ToLines() {
 		if strings.HasPrefix(s, "#define ") {
 			m2.Set(s, true)
 		}
@@ -150,7 +150,8 @@ func TestBindSdk(t *testing.T) {
 			),
 		)
 		mylog.Check(pkg.Transform("HPRDBGCTRL", &clang.Options{
-			Sources:          []string{"combined_headers.h"},
+			// Sources:          []string{"combined_headers.h"},
+			Sources:          []string{"merged_headers.h"},
 			AdditionalParams: []string{
 				//"-DZYAN_NO_LIBC",
 				//"-DZYAN_STATIC_ASSERT",
