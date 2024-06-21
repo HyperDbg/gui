@@ -59,7 +59,8 @@ func MacrosInHeader() (m *maps.SafeMap[string, bool]) {
 	}
 
 	m2 := new(maps.SafeMap[string, bool])
-	for _, s := range stream.NewBuffer("combined_headers.h").ToLines() {
+	//for _, s := range stream.NewBuffer("combined_headers.h").ToLines() {
+	for _, s := range stream.NewBuffer("merged_headers.h.h").ToLines() {
 		if strings.HasPrefix(s, "#define ") {
 			m2.Set(s, true)
 		}
@@ -132,7 +133,7 @@ func TestBindMacros(t *testing.T) {
 	})
 }
 
-func TestBind(t *testing.T) {
+func TestBindSdk(t *testing.T) {
 	mylog.SetDebug(false)
 	mylog.Call(func() {
 		pkg := gengo.NewPackage("HPRDBGCTRL",
