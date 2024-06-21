@@ -3,13 +3,14 @@ package gengo
 import (
 	"bytes"
 	"fmt"
-	"github.com/ddkwork/golibrary/stream"
 	"go/ast"
 	"go/token"
 	"io"
 	"os"
 	"path/filepath"
 	"strconv"
+
+	"github.com/ddkwork/golibrary/stream"
 
 	"github.com/can1357/gengo/clang"
 	"github.com/dave/dst"

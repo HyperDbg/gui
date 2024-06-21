@@ -1,9 +1,10 @@
 package clang
 
 import (
-	"github.com/ddkwork/golibrary/stream"
 	"os"
 	"path/filepath"
+
+	"github.com/ddkwork/golibrary/stream"
 
 	"github.com/ddkwork/golibrary/mylog"
 )
@@ -26,9 +27,9 @@ func (o *Options) ClangPath() string {
 }
 
 func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
-	//cmd := exec.Command(o.ClangPath(), opt...)
-	//cmd.Args = append(cmd.Args, o.AdditionalParams...)
-	//cmd.Args = append(cmd.Args, o.Sources...)
+	// cmd := exec.Command(o.ClangPath(), opt...)
+	// cmd.Args = append(cmd.Args, o.AdditionalParams...)
+	// cmd.Args = append(cmd.Args, o.Sources...)
 	c := make([]string, 0)
 	c = append(c, o.ClangPath())
 	c = append(c, opt...)
@@ -37,14 +38,14 @@ func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
 	return stream.RunCommandArgs(c...).Output.Bytes(), nil
 
 	// cmd.Args = append(cmd.Args, "2>&1")
-	//mylog.Trace("commands", strings.Join(cmd.Args, " "))
-	//Stdout := &bytes.Buffer{}
-	//Stderr := &bytes.Buffer{}
-	//cmd.Stdout = Stdout
-	//cmd.Stderr = Stderr
-	//mylog.CheckIgnore(cmd.Run())
-	//mylog.Check(Stderr.Bytes())
-	//return Stdout.Bytes(), nil
+	// mylog.Trace("commands", strings.Join(cmd.Args, " "))
+	// Stdout := &bytes.Buffer{}
+	// Stderr := &bytes.Buffer{}
+	// cmd.Stdout = Stdout
+	// cmd.Stderr = Stderr
+	// mylog.CheckIgnore(cmd.Run())
+	// mylog.Check(Stderr.Bytes())
+	// return Stdout.Bytes(), nil
 }
 
 func CreateAST(opt *Options) ([]byte, error) {
@@ -70,9 +71,9 @@ func CreateLayoutMap(opt *Options) ([]byte, error) {
 
 func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 	stream.RunCommand("clang -E -dM " + opt.Sources[0] + " > macros.log") // 2>&1
-	//errg := &errgroup.Group{}
+	// errg := &errgroup.Group{}
 
-	//errg.Go(func() error {
+	// errg.Go(func() error {
 	res := mylog.Check2(CreateLayoutMap(opt))
 
 	stream.WriteTruncate("astLayout.log", res)
@@ -87,6 +88,6 @@ func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 	//return nil
 	//})
 
-	//mylog.Check(errg.Wait())
+	// mylog.Check(errg.Wait())
 	return ast, layout, nil
 }
