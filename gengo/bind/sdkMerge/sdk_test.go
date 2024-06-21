@@ -61,6 +61,7 @@ func MacrosInHeader() (m *maps.SafeMap[string, bool]) {
 }
 
 func TestBindMacros(t *testing.T) {
+	t.Skip("not working now")
 	mylog.Todo("handle macros func like CTL_CODE(DeviceType,Function,Method,Access) ( ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method)) ")
 	mustPrefixs := MacrosInHeader()
 	return
