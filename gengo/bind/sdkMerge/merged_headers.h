@@ -18,14 +18,11 @@
 //               Basic Datatypes                //
 //////////////////////////////////////////////////
 
-//#include <wchar.h> // 或者 #include <cwchar>
-
-
 typedef unsigned long long QWORD;
 typedef unsigned __int64   UINT64, *PUINT64;
 typedef unsigned long      DWORD;
 typedef int                BOOL;
-//typedef unsigned char      BYTE;
+typedef unsigned char      BYTE;
 typedef unsigned short     WORD;
 typedef int                INT;
 typedef unsigned int       UINT;
@@ -33,41 +30,24 @@ typedef unsigned int *     PUINT;
 typedef unsigned __int64   ULONG64, *PULONG64;
 typedef unsigned __int64   DWORD64, *PDWORD64;
 typedef char               CHAR;
-typedef unsigned short            wchar_t;
 typedef wchar_t            WCHAR;
-typedef int            SIZE_T;
-typedef __int64            time_t;
 #define VOID void
-#define PVOID void*
-#define LPVOID void*
-#define HANDLE void *
 
-
-
-#define INT8 char
-#define INT16 short
-#define MAX_PATH 260
-
-typedef struct _LIST_ENTRY {
-  struct _LIST_ENTRY *Flink;
-  struct _LIST_ENTRY *Blink;
-} LIST_ENTRY, *PLIST_ENTRY, PRLIST_ENTRY;
-
-//typedef unsigned char  UCHAR;
+typedef unsigned char  UCHAR;
 typedef unsigned short USHORT;
 typedef unsigned long  ULONG;
+
+typedef UCHAR     BOOLEAN;  // winnt
+typedef BOOLEAN * PBOOLEAN; // winnt
 
 typedef signed char      INT8, *PINT8;
 typedef signed short     INT16, *PINT16;
 typedef signed int       INT32, *PINT32;
 typedef signed __int64   INT64, *PINT64;
-typedef unsigned char    UINT8, *PUINT8,BYTE,UCHAR;
+typedef unsigned char    UINT8, *PUINT8;
 typedef unsigned short   UINT16, *PUINT16;
 typedef unsigned int     UINT32, *PUINT32;
 typedef unsigned __int64 UINT64, *PUINT64;
-
-typedef UCHAR     BOOLEAN;  // winnt
-typedef BOOLEAN * PBOOLEAN; // winnt
 
 #define NULL_ZERO   0
 #define NULL64_ZERO 0ull
@@ -374,8 +354,8 @@ typedef struct _DEBUGGER_REMOTE_PACKET
 //			 Version Information                //
 //////////////////////////////////////////////////
 
-#define VERSION_MAJOR 0
-#define VERSION_MINOR 9
+#define VERSION_MAJOR 1
+#define VERSION_MINOR 0
 #define VERSION_PATCH 0
 
 //
@@ -983,6 +963,8 @@ const unsigned char BuildSignature[] = {
 
 #define MAX_TEMP_COUNT 128
 
+#define MAX_STACK_BUFFER_COUNT 128
+
 // TODO: Extract number of variables from input of ScriptEngine
 // and allocate variableList Dynamically.
 #define MAX_VAR_COUNT 512
@@ -1316,13 +1298,6 @@ typedef struct _DEBUGGEE_UD_PAUSED_PACKET
     GUEST_REGS                            GuestRegs;
 
 } DEBUGGEE_UD_PAUSED_PACKET, *PDEBUGGEE_UD_PAUSED_PACKET;
-
-/**
- * @brief check so the DEBUGGEE_UD_PAUSED_PACKET should be smaller than packet size
- *
- */
-//static_assert(sizeof(DEBUGGEE_UD_PAUSED_PACKET) < PacketChunkSize,
-//              "err (static_assert), size of PacketChunkSize should be bigger than DEBUGGEE_UD_PAUSED_PACKET");
 
 //////////////////////////////////////////////////
 //            Message Tracing Enums             //
@@ -2520,6 +2495,22 @@ typedef struct _DEBUGGER_EVENT_AND_ACTION_RESULT
 #pragma once
 
 //////////////////////////////////////////////////
+//                 Definitions                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Initial debuggee to debugger offset
+ *
+ */
+#define DEFAULT_INITIAL_DEBUGGEE_TO_DEBUGGER_OFFSET 0x200
+
+/**
+ * @brief Initial debugger to debuggee offset
+ *
+ */
+#define DEFAULT_INITIAL_DEBUGGER_TO_DEBUGGEE_OFFSET 0x0
+
+//////////////////////////////////////////////////
 //                   Enums                      //
 //////////////////////////////////////////////////
 
@@ -2530,9 +2521,8 @@ typedef struct _DEBUGGER_EVENT_AND_ACTION_RESULT
  */
 typedef enum _HWDBG_ACTION_ENUMS
 {
-    hwdbgActionSendVersion           = 1,
-    hwdbgActionSendPinInformation    = 2,
-    hwdbgActionConfigureScriptBuffer = 3,
+    hwdbgActionSendInstanceInfo      = 1,
+    hwdbgActionConfigureScriptBuffer = 2,
 
 } HWDBG_ACTION_ENUMS;
 
@@ -2543,23 +2533,22 @@ typedef enum _HWDBG_ACTION_ENUMS
  */
 typedef enum _HWDBG_RESPONSE_ENUMS
 {
-    hwdbgResponseInvalidPacketOrError            = 1,
-    hwdbgResponseVersion                         = 2,
-    hwdbgResponsePinInformation                  = 3,
-    hwdbgResponseScriptBufferConfigurationResult = 4,
+    hwdbgResponseSuccessOrErrorMessage = 1,
+    hwdbgResponseInstanceInfo          = 2,
 
 } HWDBG_RESPONSE_ENUMS;
 
 /**
- * @brief Different error codes in hwdbg
+ * @brief Different success or error codes in hwdbg
  * @warning This file should be changed along with hwdbg files
  *
  */
-typedef enum _HWDBG_ERROR_ENUMS
+typedef enum _HWDBG_SUCCESS_OR_ERROR_ENUMS
 {
-    hwdbgErrorInvalidPacket = 1,
+    hwdbgOperationWasSuccessful = 0x7FFFFFFF,
+    hwdbgErrorInvalidPacket     = 1,
 
-} HWDBG_ERROR_ENUMS;
+} HWDBG_SUCCESS_OR_ERROR_ENUMS;
 
 //////////////////////////////////////////////////
 //                   Structures                 //
@@ -2581,40 +2570,61 @@ typedef struct _HWDBG_PORT_INFORMATION_ITEMS
  */
 typedef struct _HWDBG_INSTANCE_INFORMATION
 {
-    UINT32 Version;                                 // Target version of HyperDbg (same as hwdbg)
-    UINT32 MaximumNumberOfStages;                   // Number of stages that this instance of hwdbg supports (NumberOfSupportedStages == 0 means script engine is disabled)
-    UINT32 scriptVariableLength;                    // maximum length of variables (and other script elements)
-    UINT32 maximumNumberOfSupportedScriptOperators; // maximum supported operators in a single func
-    UINT32 numberOfPins;                            // Number of pins
-    UINT32 numberOfPorts;                           // Number of ports
+    //
+    // ANY ADDITION TO THIS STRUCTURE SHOULD BE SYNCHRONIZED WITH SCALA AND INSTANCE INFO SENDER MODULE
+    //
+    UINT32 version;                                    // Target version of HyperDbg (same as hwdbg)
+    UINT32 maximumNumberOfStages;                      // Number of stages that this instance of hwdbg supports (NumberOfSupportedStages == 0 means script engine is disabled)
+    UINT32 scriptVariableLength;                       // maximum length of variables (and other script elements)
+    UINT32 maximumNumberOfSupportedGetScriptOperators; // Maximum supported GET operators in a single func
+    UINT32 maximumNumberOfSupportedSetScriptOperators; // Maximum supported SET operators in a single func
+    UINT32 sharedMemorySize;                           // Size of shared memory
+    UINT32 debuggerAreaOffset;                         // The memory offset of debugger
+    UINT32 debuggeeAreaOffset;                         // The memory offset of debuggee
+    UINT32 numberOfPins;                               // Number of pins
+    UINT32 numberOfPorts;                              // Number of ports
+
+    //
+    // ANY ADDITION TO THIS STRUCTURE SHOULD BE SYNCHRONIZED WITH SCALA AND INSTANCE INFO SENDER MODULE
+    //
 
     struct _HWDBG_SCRIPT_CAPABILITIES
     {
-        UINT64 inc : 1;
-        UINT64 dec : 1;
-        UINT64 or : 1;
-        UINT64 xor : 1;
-        UINT64 and : 1;
-        UINT64 asr : 1;
-        UINT64 asl : 1;
-        UINT64 add : 1;
-        UINT64 sub : 1;
-        UINT64 mul : 1;
-        UINT64 div : 1;
-        UINT64 mod : 1;
-        UINT64 gt : 1;
-        UINT64 lt : 1;
-        UINT64 egt : 1;
-        UINT64 elt : 1;
-        UINT64 equal : 1;
-        UINT64 neq : 1;
-        UINT64 jmp : 1;
-        UINT64 jz : 1;
-        UINT64 jnz : 1;
-        UINT64 mov : 1;
-        UINT64 printf : 1;
+        //
+        // ANY ADDITION TO THIS MASK SHOULD BE ADDED TO HwdbgInterpreterShowScriptCapabilities
+        // and HwdbgInterpreterCheckScriptBufferWithScriptCapabilities as well Scala file
+        //
+        UINT64 func_or : 1;
+        UINT64 func_xor : 1;
+        UINT64 func_and : 1;
+        UINT64 func_asr : 1;
+        UINT64 func_asl : 1;
+        UINT64 func_add : 1;
+        UINT64 func_sub : 1;
+        UINT64 func_mul : 1;
+        UINT64 func_div : 1;
+        UINT64 func_mod : 1;
+        UINT64 func_gt : 1;
+        UINT64 func_lt : 1;
+        UINT64 func_egt : 1;
+        UINT64 func_elt : 1;
+        UINT64 func_equal : 1;
+        UINT64 func_neq : 1;
+        UINT64 func_jmp : 1;
+        UINT64 func_jz : 1;
+        UINT64 func_jnz : 1;
+        UINT64 func_mov : 1;
+        UINT64 func_printf : 1;
+
+        //
+        // ANY ADDITION TO THIS MASK SHOULD BE ADDED TO HwdbgInterpreterShowScriptCapabilities
+        // and HwdbgInterpreterCheckScriptBufferWithScriptCapabilities as well Scala file
+        //
 
     } scriptCapabilities;
+
+    UINT32 bramAddrWidth; // BRAM address width
+    UINT32 bramDataWidth; // BRAM data width
 
     //
     // Here the details of port arrangements are located (HWDBG_PORT_INFORMATION_ITEMS)
@@ -2622,7 +2632,23 @@ typedef struct _HWDBG_INSTANCE_INFORMATION
     //   HWDBG_PORT_INFORMATION_ITEMS portsConfiguration[numberOfPorts]   ; Port arrangement
     //
 
-} HWDBG_SCRIPT_CAPABILITIES_INFORMATION, *PHWDBG_SCRIPT_CAPABILITIES_INFORMATION;
+} HWDBG_INSTANCE_INFORMATION, *PHWDBG_INSTANCE_INFORMATION;
+
+/**
+ * @brief The structure of script buffer in hwdbg
+ *
+ */
+typedef struct _HWDBG_SCRIPT_BUFFER
+{
+    UINT32 scriptNumberOfSymbols; // Number of symbols in the script
+
+    //
+    // Here the script buffer is located
+    //
+    // UINT8 scriptBuffer[scriptNumberOfSymbols]; // The script buffer
+    //
+
+} HWDBG_SCRIPT_BUFFER, *PHWDBG_SCRIPT_BUFFER;
 
 
 //..\..\..\bin\debug\SDK\Headers\Ioctls.h
@@ -4157,13 +4183,6 @@ typedef struct _DEBUGGER_UPDATE_SYMBOL_TABLE
 
 } DEBUGGER_UPDATE_SYMBOL_TABLE, *PDEBUGGER_UPDATE_SYMBOL_TABLE;
 
-/**
- * @brief check so the DEBUGGER_UPDATE_SYMBOL_TABLE should be smaller than packet size
- *
- */
-//static_assert(sizeof(DEBUGGER_UPDATE_SYMBOL_TABLE) < PacketChunkSize,
-//              "err (static_assert), size of PacketChunkSize should be bigger than DEBUGGER_UPDATE_SYMBOL_TABLE (MODULE_SYMBOL_DETAIL)");
-
 /*
 ==============================================================================================
  */
@@ -4527,43 +4546,55 @@ __declspec(dllimport) int ReversingMachineStop();
 extern "C" {
 #endif
 
-__declspec(dllimport) PSYMBOL_BUFFER ScriptEngineParse(char * str);
-__declspec(dllimport) PSYMBOL_BUFFER GetStackBuffer();
-__declspec(dllimport) void PrintSymbolBuffer(const PSYMBOL_BUFFER SymbolBuffer);
-__declspec(dllimport) void PrintSymbol(PSYMBOL Symbol);
-__declspec(dllimport) void RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer);
+//
+// Script engine
+//
+__declspec(dllimport) PSYMBOL_BUFFER
+ScriptEngineParse(char * str);
+__declspec(dllimport) void
+PrintSymbolBuffer(const PSYMBOL_BUFFER SymbolBuffer);
+__declspec(dllimport) void
+PrintSymbol(PSYMBOL Symbol);
+__declspec(dllimport) void
+RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer);
+__declspec(dllimport) BOOLEAN
+FuncGetNumberOfOperands(UINT64 FuncType, UINT32 * NumberOfGetOperands, UINT32 * NumberOfSetOperands);
+__declspec(dllimport) BOOLEAN
+ScriptEngineSetHwdbgInstanceInfo(HWDBG_INSTANCE_INFORMATION * InstancInfo);
+
+;
 
 //
 // pdb parser
 //
 __declspec(dllimport) VOID
-    ScriptEngineSetTextMessageCallback(PVOID Handler);
+ScriptEngineSetTextMessageCallback(PVOID Handler);
 __declspec(dllimport) VOID
-    ScriptEngineSymbolAbortLoading();
+ScriptEngineSymbolAbortLoading();
 __declspec(dllimport) UINT64
-    ScriptEngineConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
+ScriptEngineConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
 __declspec(dllimport) UINT32
-    ScriptEngineLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
+ScriptEngineLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
 __declspec(dllimport) UINT32
-    ScriptEngineUnloadAllSymbols();
+ScriptEngineUnloadAllSymbols();
 __declspec(dllimport) UINT32
-    ScriptEngineUnloadModuleSymbol(char * ModuleName);
+ScriptEngineUnloadModuleSymbol(char * ModuleName);
 __declspec(dllimport) UINT32
-    ScriptEngineSearchSymbolForMask(const char * SearchMask);
+ScriptEngineSearchSymbolForMask(const char * SearchMask);
 __declspec(dllimport) BOOLEAN
-    ScriptEngineGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
+ScriptEngineGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
 __declspec(dllimport) BOOLEAN
-    ScriptEngineGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
+ScriptEngineGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
 __declspec(dllimport) BOOLEAN
-    ScriptEngineCreateSymbolTableForDisassembler(void * CallbackFunction);
+ScriptEngineCreateSymbolTableForDisassembler(void * CallbackFunction);
 __declspec(dllimport) BOOLEAN
-    ScriptEngineConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
+ScriptEngineConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
 __declspec(dllimport) BOOLEAN
-    ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath, char * PdbFilePath, char * GuidAndAgeDetails, BOOLEAN Is32BitModule);
+ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath, char * PdbFilePath, char * GuidAndAgeDetails, BOOLEAN Is32BitModule);
 __declspec(dllimport) BOOLEAN
-    ScriptEngineSymbolInitLoad(PVOID BufferToStoreDetails, UINT32 StoredLength, BOOLEAN DownloadIfAvailable, const char * SymbolPath, BOOLEAN IsSilentLoad);
+ScriptEngineSymbolInitLoad(PVOID BufferToStoreDetails, UINT32 StoredLength, BOOLEAN DownloadIfAvailable, const char * SymbolPath, BOOLEAN IsSilentLoad);
 __declspec(dllimport) BOOLEAN
-    ScriptEngineShowDataBasedOnSymbolTypes(const char * TypeName, UINT64 Address, BOOLEAN IsStruct, PVOID BufferAddress, const char * AdditionalParameters);
+ScriptEngineShowDataBasedOnSymbolTypes(const char * TypeName, UINT64 Address, BOOLEAN IsStruct, PVOID BufferAddress, const char * AdditionalParameters);
 
 #ifdef __cplusplus
 }

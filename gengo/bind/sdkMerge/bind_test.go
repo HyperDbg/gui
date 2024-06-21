@@ -25,7 +25,8 @@ func TestMergeHeader(t *testing.T) {
 		if strings.Contains(path, "Examples") {
 			return err
 		}
-		if stream.BaseName(path) == "HyperDbgSdk" {
+		switch stream.BaseName(path) {
+		case "Assertions", "HyperDbgSdk":
 			return err
 		}
 		if filepath.Ext(path) == ".h" {

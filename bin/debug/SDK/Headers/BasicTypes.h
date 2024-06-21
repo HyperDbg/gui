@@ -17,9 +17,6 @@
 //               Basic Datatypes                //
 //////////////////////////////////////////////////
 
-//#include <wchar.h> // 或者 #include <cwchar>
-
-
 typedef unsigned long long QWORD;
 typedef unsigned __int64   UINT64, *PUINT64;
 typedef unsigned long      DWORD;
