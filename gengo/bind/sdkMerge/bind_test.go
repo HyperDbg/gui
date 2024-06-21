@@ -72,18 +72,14 @@ func TestMergeHeader(t *testing.T) {
 	g.P()
 	mylog.Trace("merge", "bugfix.h")
 
-	g.P("//" + BasicTypes)
-	g.P(stream.NewBuffer(BasicTypes))
-	g.P()
-	mylog.Trace("merge", BasicTypes)
-
 	fnDo := func(path string) {
 		g.P("//" + path)
-		g.P(stream.NewBuffer(path))
+		g.P(stream.NewBuffer(path)) //todo remove #pragma once ?
 		g.P()
 		mylog.Trace("merge", path)
 	}
 
+	fnDo(BasicTypes)
 	for _, s := range Headers.Keys() {
 		fnDo(s)
 	}
@@ -192,7 +188,7 @@ func TestBindMacros(t *testing.T) {
 }
 
 func TestBindSdk(t *testing.T) {
-	mylog.SetDebug(false)
+	// mylog.SetDebug(false)
 	mylog.Call(func() {
 		pkg := gengo.NewPackage("HPRDBGCTRL",
 			gengo.WithRemovePrefix(
