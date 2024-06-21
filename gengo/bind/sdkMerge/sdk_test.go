@@ -21,6 +21,9 @@ import (
 
 func TestMergeHeader(t *testing.T) {
 	filepath.Walk("../../../bin", func(path string, info fs.FileInfo, err error) error {
+		if strings.Contains(path, "Examples") {
+			return err
+		}
 		if filepath.Ext(path) == ".h" {
 			println(path)
 		}
