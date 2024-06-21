@@ -31,12 +31,14 @@ func (o *Options) ClangPath() string {
 }
 
 func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
+	//todo bug,破坏了json的完整性，难道是乱序问题还存在？
+	// 只能能捕获error，可以增加一个费流模式费方法
 	//c := make([]string, 0)
 	//c = append(c, o.ClangPath())
 	//c = append(c, opt...)
 	//c = append(c, o.AdditionalParams...)
 	//c = append(c, o.Sources...)
-	//return stream.RunCommandArgs(c...).Output.Bytes(), nil//todo bug
+	//return stream.RunCommandArgs(c...).Output.Bytes(), nil
 
 	cmd := exec.Command(o.ClangPath(), opt...)
 	cmd.Args = append(cmd.Args, o.AdditionalParams...)
