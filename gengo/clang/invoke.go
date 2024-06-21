@@ -1,16 +1,11 @@
 package clang
 
 import (
-	"bytes"
-	"os"
-	"os/exec"
-	"path/filepath"
-	"strings"
-
 	"github.com/ddkwork/golibrary/stream"
+	"os"
+	"path/filepath"
 
 	"github.com/ddkwork/golibrary/mylog"
-	"golang.org/x/sync/errgroup"
 )
 
 type Options struct {
@@ -31,21 +26,25 @@ func (o *Options) ClangPath() string {
 }
 
 func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
-	cmd := exec.Command(o.ClangPath(), opt...)
-	cmd.Args = append(cmd.Args, o.AdditionalParams...)
-	cmd.Args = append(cmd.Args, o.Sources...)
-
-	return stream.RunCommandArgs(cmd.Args...).Output.Bytes(), nil
+	//cmd := exec.Command(o.ClangPath(), opt...)
+	//cmd.Args = append(cmd.Args, o.AdditionalParams...)
+	//cmd.Args = append(cmd.Args, o.Sources...)
+	c := make([]string, 0)
+	c = append(c, o.ClangPath())
+	c = append(c, opt...)
+	c = append(c, o.AdditionalParams...)
+	c = append(c, o.Sources...)
+	return stream.RunCommandArgs(c...).Output.Bytes(), nil
 
 	// cmd.Args = append(cmd.Args, "2>&1")
-	mylog.Trace("commands", strings.Join(cmd.Args, " "))
-	Stdout := &bytes.Buffer{}
-	Stderr := &bytes.Buffer{}
-	cmd.Stdout = Stdout
-	cmd.Stderr = Stderr
-	mylog.CheckIgnore(cmd.Run())
-	mylog.Check(Stderr.Bytes())
-	return Stdout.Bytes(), nil
+	//mylog.Trace("commands", strings.Join(cmd.Args, " "))
+	//Stdout := &bytes.Buffer{}
+	//Stderr := &bytes.Buffer{}
+	//cmd.Stdout = Stdout
+	//cmd.Stderr = Stderr
+	//mylog.CheckIgnore(cmd.Run())
+	//mylog.Check(Stderr.Bytes())
+	//return Stdout.Bytes(), nil
 }
 
 func CreateAST(opt *Options) ([]byte, error) {
@@ -71,19 +70,23 @@ func CreateLayoutMap(opt *Options) ([]byte, error) {
 
 func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 	stream.RunCommand("clang -E -dM " + opt.Sources[0] + " > macros.log") // 2>&1
-	errg := &errgroup.Group{}
-	errg.Go(func() error {
-		res := mylog.Check2(CreateAST(opt))
-		stream.WriteTruncate("ast.json", res)
-		ast = mylog.Check2(ParseAST(res))
-		return nil
-	})
-	errg.Go(func() error {
-		res := mylog.Check2(CreateLayoutMap(opt))
-		stream.WriteTruncate("astLayout.log", res)
-		layout = mylog.Check2(ParseLayoutMap(res))
-		return nil
-	})
-	mylog.Check(errg.Wait())
+	//errg := &errgroup.Group{}
+
+	//errg.Go(func() error {
+	res := mylog.Check2(CreateLayoutMap(opt))
+
+	stream.WriteTruncate("astLayout.log", res)
+	layout = mylog.Check2(ParseLayoutMap(res))
+	//return nil
+	//})
+	//mylog.Check(errg.Wait())
+	//errg.Go(func() error {
+	res = mylog.Check2(CreateAST(opt))
+	stream.WriteTruncate("ast.json", res)
+	ast = mylog.Check2(ParseAST(res))
+	//return nil
+	//})
+
+	//mylog.Check(errg.Wait())
 	return ast, layout, nil
 }

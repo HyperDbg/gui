@@ -151,7 +151,7 @@ func (p *Package) Print() {
 }
 
 func (p *Package) WriteToDir(dir string) error {
-	mylog.Check(os.Mkdir(dir, 0755))
+	mylog.CheckIgnore(os.Mkdir(dir, 0755))
 	return p.Fprint(func(path string) (io.WriteCloser, error) {
 		return os.Create(filepath.Join(dir, path))
 	})
