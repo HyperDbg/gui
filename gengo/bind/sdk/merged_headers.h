@@ -1547,7 +1547,7 @@ typedef struct _EPT_SINGLE_HOOK_UNHOOKING_DETAILS
  */
 typedef union
 {
-    struct VMX_SEGMENT_ACCESS_RIGHTS_TYPE
+    struct
     {
         /**
          * [Bits 3:0] Segment type.

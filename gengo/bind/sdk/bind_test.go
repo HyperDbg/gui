@@ -73,20 +73,7 @@ func TestMergeHeader(t *testing.T) {
 	for _, s := range Imports.Keys() {
 		fnDo(s)
 	}
-
 	stream.WriteBinaryFile("merged_headers.h", g.Buffer)
-
-	b := stream.NewBuffer("merged_headers.h")
-	lines := b.ToLines()
-	b.Reset()
-	for i := 0; i < len(lines); i++ {
-		if lines[i] == "typedef union" {
-			println(lines[i])
-			lines[i+2] = "    struct VMX_SEGMENT_ACCESS_RIGHTS_TYPE"
-		}
-		b.WriteStringLn(lines[i])
-	}
-	stream.WriteBinaryFile("merged_headers.h", b.Buffer)
 }
 
 // ContainsLetter 检查字符串中是否包含字母
