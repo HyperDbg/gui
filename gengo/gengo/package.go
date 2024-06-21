@@ -20,6 +20,7 @@ import (
 
 type Package struct {
 	Name     string
+	path     string
 	Restorer *decorator.Restorer
 	Files    map[string]*dst.File
 	Provider
@@ -60,7 +61,7 @@ func (p *Package) Fprint(fn func(path string) (io.WriteCloser, error)) error {
 		file := mylog.Check2(fn(name))
 		p.Restorer.Fprint(file, f)
 		mylog.Check(file.Close())
-		stream.WriteGoFile(name, stream.NewBuffer(name))
+		stream.WriteGoFile(p.path, stream.NewBuffer(p.path))
 	}
 	return nil
 }
@@ -154,7 +155,8 @@ func (p *Package) Print() {
 func (p *Package) WriteToDir(dir string) error {
 	mylog.CheckIgnore(os.Mkdir(dir, 0755))
 	return p.Fprint(func(path string) (io.WriteCloser, error) {
-		return os.Create(filepath.Join(dir, path))
+		p.path = filepath.Join(dir, path)
+		return os.Create(p.path)
 	})
 }
 
