@@ -33,7 +33,6 @@ typedef struct _LIST_ENTRY {
 `
 
 func TestMergeHeader(t *testing.T) {
-	BasicTypes := ""
 	Headers := orderedmap.New[string, bool]()
 	Modules := orderedmap.New[string, bool]()
 	Imports := orderedmap.New[string, bool]()
@@ -50,8 +49,6 @@ func TestMergeHeader(t *testing.T) {
 		if filepath.Ext(path) == ".h" {
 			println(path)
 			switch {
-			case stream.BaseName(path) == "BasicTypes":
-				BasicTypes = path
 			case strings.Contains(path, "Headers"):
 				Headers.Set(path, true)
 			case strings.Contains(path, "Imports"):
@@ -82,8 +79,6 @@ func TestMergeHeader(t *testing.T) {
 		g.P()
 		mylog.Trace("merge", path)
 	}
-
-	fnDo(BasicTypes)
 
 	for _, s := range Headers.Keys() {
 		fnDo(s)
@@ -193,7 +188,7 @@ func TestBindMacros(t *testing.T) {
 }
 
 func TestBindSdk(t *testing.T) {
-	// mylog.SetDebug(false)
+	mylog.SetDebug(false)
 	mylog.Call(func() {
 		pkg := gengo.NewPackage("HPRDBGCTRL",
 			gengo.WithRemovePrefix(
