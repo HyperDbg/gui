@@ -125,7 +125,7 @@ func TestBindMacros(t *testing.T) {
 	mylog.Trace("number of macros", mustPrefixs.Len())
 
 	g := stream.NewGeneratedFile()
-	g.P("package sdk")
+	g.P("package HPRDBGCTRL")
 	g.P()
 	g.P("const (")
 	g.P("MaxSerialPacketSize =10 * NORMAL_PAGE_SIZE") // todo need first define NORMAL_PAGE_SIZE
