@@ -7,6 +7,8 @@ import (
 	"testing"
 	"unicode"
 
+	"github.com/ddkwork/golibrary/stream/orderedmap"
+
 	"github.com/can1357/gengo/clang"
 	"github.com/can1357/gengo/gengo"
 	"github.com/ddkwork/golibrary/mylog"
@@ -32,9 +34,9 @@ typedef struct _LIST_ENTRY {
 
 func TestMergeHeader(t *testing.T) {
 	BasicTypes := ""
-	Headers := new(maps.SliceMap[string, bool])
-	Modules := new(maps.SliceMap[string, bool])
-	Imports := new(maps.SliceMap[string, bool])
+	Headers := orderedmap.New[string, bool]()
+	Modules := orderedmap.New[string, bool]()
+	Imports := orderedmap.New[string, bool]()
 
 	g := stream.NewGeneratedFile()
 	filepath.Walk("../../../bin", func(path string, info fs.FileInfo, err error) error {
@@ -46,6 +48,7 @@ func TestMergeHeader(t *testing.T) {
 			return err
 		}
 		if filepath.Ext(path) == ".h" {
+			println(path)
 			switch {
 			case stream.BaseName(path) == "BasicTypes":
 				BasicTypes = path
@@ -74,12 +77,13 @@ func TestMergeHeader(t *testing.T) {
 
 	fnDo := func(path string) {
 		g.P("//" + path)
-		g.P(stream.NewBuffer(path)) //todo remove #pragma once ?
+		g.P(stream.NewBuffer(path)) // todo remove #pragma once ?
 		g.P()
 		mylog.Trace("merge", path)
 	}
 
 	fnDo(BasicTypes)
+
 	for _, s := range Headers.Keys() {
 		fnDo(s)
 	}
@@ -188,7 +192,7 @@ func TestBindMacros(t *testing.T) {
 }
 
 func TestBindSdk(t *testing.T) {
-	// mylog.SetDebug(false)
+	mylog.SetDebug(false)
 	mylog.Call(func() {
 		pkg := gengo.NewPackage("HPRDBGCTRL",
 			gengo.WithRemovePrefix(

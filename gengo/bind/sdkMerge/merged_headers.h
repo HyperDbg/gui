@@ -161,6 +161,196 @@ typedef struct _CR3_TYPE
 } CR3_TYPE, *PCR3_TYPE;
 
 
+//..\..\..\bin\debug\SDK\Headers\Connection.h
+/**
+ * @file Connection.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK Headers For Native Structures, Enums and Constants
+ * @details These datatypes are used in all devices like HDL (FPGAs)
+ * @version 0.2
+ * @date 2022-07-14
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+/**
+ * @brief enum for reasons why debuggee is paused
+ *
+ */
+typedef enum _DEBUGGEE_PAUSING_REASON
+{
+
+    //
+    // For both kernel & user debugger
+    //
+    DEBUGGEE_PAUSING_REASON_NOT_PAUSED = 0,
+    DEBUGGEE_PAUSING_REASON_PAUSE,
+    DEBUGGEE_PAUSING_REASON_REQUEST_FROM_DEBUGGER,
+    DEBUGGEE_PAUSING_REASON_DEBUGGEE_STEPPED,
+    DEBUGGEE_PAUSING_REASON_DEBUGGEE_TRACKING_STEPPED,
+    DEBUGGEE_PAUSING_REASON_DEBUGGEE_SOFTWARE_BREAKPOINT_HIT,
+    DEBUGGEE_PAUSING_REASON_DEBUGGEE_HARDWARE_DEBUG_REGISTER_HIT,
+    DEBUGGEE_PAUSING_REASON_DEBUGGEE_CORE_SWITCHED,
+    DEBUGGEE_PAUSING_REASON_DEBUGGEE_PROCESS_SWITCHED,
+    DEBUGGEE_PAUSING_REASON_DEBUGGEE_THREAD_SWITCHED,
+    DEBUGGEE_PAUSING_REASON_DEBUGGEE_COMMAND_EXECUTION_FINISHED,
+    DEBUGGEE_PAUSING_REASON_DEBUGGEE_EVENT_TRIGGERED,
+    DEBUGGEE_PAUSING_REASON_DEBUGGEE_STARTING_MODULE_LOADED,
+
+    //
+    // Only for user-debugger
+    //
+    DEBUGGEE_PAUSING_REASON_DEBUGGEE_GENERAL_DEBUG_BREAK,
+    DEBUGGEE_PAUSING_REASON_DEBUGGEE_GENERAL_THREAD_INTERCEPTED,
+
+    //
+    // Only used for hardware debugging
+    //
+    DEBUGGEE_PAUSING_REASON_HARDWARE_BASED_DEBUGGEE_GENERAL_BREAK,
+
+} DEBUGGEE_PAUSING_REASON;
+
+/**
+ * @brief enum for requested action for HyperDbg packet
+ *
+ */
+typedef enum _DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION
+{
+
+    //
+    // Debugger to debuggee (user-mode execution)
+    //
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_USER_MODE_PAUSE = 1,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_USER_MODE_DO_NOT_READ_ANY_PACKET,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_USER_MODE_DEBUGGER_VERSION,
+
+    //
+    // Debuggee to debugger (user-mode execution)
+    //
+    DEBUGGER_REMOTE_PACKET_PING_AND_SEND_SUPPORTED_VERSION,
+
+    //
+    // Debugger to debuggee (vmx-root mode execution)
+    //
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_STEP,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_CONTINUE,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_CLOSE_AND_UNLOAD_DEBUGGEE,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_CHANGE_CORE,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_FLUSH_BUFFERS,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_CALLSTACK,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_TEST_QUERY,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_CHANGE_PROCESS,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_CHANGE_THREAD,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_RUN_SCRIPT,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_USER_INPUT_BUFFER,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_SEARCH_QUERY,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_REGISTER_EVENT,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_ADD_ACTION_TO_EVENT,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_QUERY_AND_MODIFY_EVENT,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_READ_REGISTERS,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_READ_MEMORY,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_EDIT_MEMORY,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_BP,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_LIST_OR_MODIFY_BREAKPOINTS,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_SYMBOL_RELOAD,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_QUERY_PA2VA_AND_VA2PA,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_SYMBOL_QUERY_PTE,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_SET_SHORT_CIRCUITING_STATE,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_INJECT_PAGE_FAULT,
+
+    //
+    // Debuggee to debugger
+    //
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_NO_ACTION,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_STARTED,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_LOGGING_MECHANISM,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_PAUSED_AND_CURRENT_INSTRUCTION,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_CORE,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_PROCESS,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_THREAD,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_RUNNING_SCRIPT,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_FORMATS,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_FLUSH,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CALLSTACK,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_TEST_QUERY,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_REGISTERING_EVENT,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_ADDING_ACTION_TO_EVENT,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_QUERY_AND_MODIFY_EVENT,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_SHORT_CIRCUITING_EVENT,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_READING_REGISTERS,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_READING_MEMORY,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_EDITING_MEMORY,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BP,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_SHORT_CIRCUITING_STATE,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_LIST_OR_MODIFY_BREAKPOINTS,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_UPDATE_SYMBOL_INFO,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RELOAD_SYMBOL_FINISHED,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RELOAD_SEARCH_QUERY,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_PTE,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_VA2PA_AND_PA2VA,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BRINGING_PAGES_IN,
+
+    //
+    // hardware debuggee to debugger
+    //
+
+    //
+    // hardware debugger to debuggee
+    //
+
+} DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION;
+
+/**
+ * @brief enum for different packet types in HyperDbg packets
+ * @warning used in hwdbg
+ *
+ */
+typedef enum _DEBUGGER_REMOTE_PACKET_TYPE
+{
+
+    //
+    // Debugger to debuggee (vmx-root)
+    //
+    DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGER_TO_DEBUGGEE_EXECUTE_ON_VMX_ROOT = 1,
+
+    //
+    // Debugger to debuggee (user-mode)
+    //
+    DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGER_TO_DEBUGGEE_EXECUTE_ON_USER_MODE = 2,
+
+    //
+    // Debuggee to debugger (user-mode and kernel-mode, vmx-root mode)
+    //
+    DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGEE_TO_DEBUGGER = 3,
+
+    //
+    // Debugger to debuggee (hardware), used in hwdbg
+    //
+    DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGER_TO_DEBUGGEE_HARDWARE_LEVEL = 4,
+
+    //
+    // Debuggee to debugger (hardware), used in hwdbg
+    //
+    DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGEE_TO_DEBUGGER_HARDWARE_LEVEL = 5,
+
+} DEBUGGER_REMOTE_PACKET_TYPE;
+
+/**
+ * @brief The structure of remote packets in HyperDbg
+ *
+ */
+typedef struct _DEBUGGER_REMOTE_PACKET
+{
+    BYTE                                    Checksum;
+    UINT64                                  Indicator; /* Shows the type of the packet */
+    DEBUGGER_REMOTE_PACKET_TYPE             TypeOfThePacket;
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION RequestedActionOfThePacket;
+
+} DEBUGGER_REMOTE_PACKET, *PDEBUGGER_REMOTE_PACKET;
+
+
 //..\..\..\bin\debug\SDK\Headers\Constants.h
 /**
  * @file Constants.h
@@ -887,6 +1077,443 @@ const unsigned char BuildSignature[] = {
 #define DEBUGGEE_SHOW_ALL_REGISTERS 0xffffffff
 
 
+//..\..\..\bin\debug\SDK\Headers\DataTypes.h
+/**
+ * @file DataTypes.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK data type definitions
+ * @details This file contains definitions of structures, enums, etc.
+ * used in HyperDbg
+ * @version 0.2
+ * @date 2022-06-22
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//               Memory Stages                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Different levels of paging
+ *
+ */
+typedef enum _PAGING_LEVEL
+{
+    PagingLevelPageTable = 0,
+    PagingLevelPageDirectory,
+    PagingLevelPageDirectoryPointerTable,
+    PagingLevelPageMapLevel4
+} PAGING_LEVEL;
+
+//////////////////////////////////////////////////
+//                 Pool Manager      			//
+//////////////////////////////////////////////////
+
+/**
+ * @brief Inum of intentions for buffers (buffer tag)
+ *
+ */
+typedef enum _POOL_ALLOCATION_INTENTION
+{
+    TRACKING_HOOKED_PAGES,
+    EXEC_TRAMPOLINE,
+    SPLIT_2MB_PAGING_TO_4KB_PAGE,
+    DETOUR_HOOK_DETAILS,
+    BREAKPOINT_DEFINITION_STRUCTURE,
+    PROCESS_THREAD_HOLDER,
+
+    //
+    // Instant event buffers
+    //
+    INSTANT_REGULAR_EVENT_BUFFER,
+    INSTANT_BIG_EVENT_BUFFER,
+    INSTANT_REGULAR_EVENT_ACTION_BUFFER,
+    INSTANT_BIG_EVENT_ACTION_BUFFER,
+
+    //
+    // Use for request safe buffers of the event
+    //
+    INSTANT_REGULAR_SAFE_BUFFER_FOR_EVENTS,
+    INSTANT_BIG_SAFE_BUFFER_FOR_EVENTS,
+
+} POOL_ALLOCATION_INTENTION;
+
+//////////////////////////////////////////////////
+//	   	Debug Registers Modifications 	    	//
+//////////////////////////////////////////////////
+
+typedef enum _DEBUG_REGISTER_TYPE
+{
+    BREAK_ON_INSTRUCTION_FETCH,
+    BREAK_ON_WRITE_ONLY,
+    BREAK_ON_IO_READ_OR_WRITE_NOT_SUPPORTED,
+    BREAK_ON_READ_AND_WRITE_BUT_NOT_FETCH
+} DEBUG_REGISTER_TYPE;
+
+//////////////////////////////////////////////////
+//              Execution Stages                //
+//////////////////////////////////////////////////
+
+typedef enum _VMX_EXECUTION_MODE
+{
+    VmxExecutionModeNonRoot = FALSE,
+    VmxExecutionModeRoot    = TRUE
+} VMX_EXECUTION_MODE;
+
+/**
+ * @brief Type of calling the event
+ *
+ */
+typedef enum _VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE
+{
+    VMM_CALLBACK_CALLING_STAGE_INVALID_EVENT_EMULATION = 0,
+    VMM_CALLBACK_CALLING_STAGE_PRE_EVENT_EMULATION     = 1,
+    VMM_CALLBACK_CALLING_STAGE_POST_EVENT_EMULATION    = 2,
+    VMM_CALLBACK_CALLING_STAGE_ALL_EVENT_EMULATION     = 3
+
+} VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE;
+
+/**
+ * @brief enum to query different process and thread interception mechanisms
+ *
+ */
+typedef enum _DEBUGGER_THREAD_PROCESS_TRACING
+{
+
+    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_INTERRUPTS_FOR_THREAD_CHANGE,
+    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_INTERRUPTS_FOR_PROCESS_CHANGE,
+    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_DEBUG_REGISTER_INTERCEPTION,
+    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_WAITING_FOR_MOV_CR3_VM_EXITS,
+
+} DEBUGGER_THREAD_PROCESS_TRACING;
+
+//////////////////////////////////////////////////
+//            Callback Definitions              //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Callback type that can be used to be used
+ * as a custom ShowMessages function
+ *
+ */
+typedef int (*Callback)(const char * Text);
+
+//////////////////////////////////////////////////
+//                Communications                //
+//////////////////////////////////////////////////
+
+/**
+ * @brief The structure of user-input packet in HyperDbg
+ *
+ */
+typedef struct _DEBUGGEE_USER_INPUT_PACKET
+{
+    UINT32  CommandLen;
+    BOOLEAN IgnoreFinishedSignal;
+    UINT32  Result;
+
+    //
+    // The user's input is here
+    //
+
+} DEBUGGEE_USER_INPUT_PACKET, *PDEBUGGEE_USER_INPUT_PACKET;
+
+/**
+ * @brief The structure of user-input packet in HyperDbg
+ *
+ */
+typedef struct _DEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET
+{
+    UINT32 Length;
+
+    //
+    // The buffer for event and action is here
+    //
+
+} DEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET,
+    *PDEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET;
+
+//////////////////////////////////////////////////
+//                  Pausing                    //
+//////////////////////////////////////////////////
+
+#define SIZEOF_DEBUGGER_PAUSE_PACKET_RECEIVED \
+    sizeof(DEBUGGER_PAUSE_PACKET_RECEIVED)
+
+/**
+ * @brief request to pause and halt the system
+ *
+ */
+typedef struct _DEBUGGER_PAUSE_PACKET_RECEIVED
+{
+    UINT32 Result; // Result from kernel
+
+} DEBUGGER_PAUSE_PACKET_RECEIVED, *PDEBUGGER_PAUSE_PACKET_RECEIVED;
+
+/* ==============================================================================================
+ */
+
+/**
+ * @brief The structure of detail of a triggered event in HyperDbg
+ * @details This structure is also used for transferring breakpoint ids, RIP as the context, etc.
+ *
+ */
+typedef struct _DEBUGGER_TRIGGERED_EVENT_DETAILS
+{
+    UINT64                                Tag; /* in breakpoints Tag is breakpoint id, not event tag */
+    PVOID                                 Context;
+    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE Stage;
+
+} DEBUGGER_TRIGGERED_EVENT_DETAILS, *PDEBUGGER_TRIGGERED_EVENT_DETAILS;
+
+/* ==============================================================================================
+ */
+
+/**
+ * @brief The structure of pausing packet in kHyperDbg
+ *
+ */
+typedef struct _DEBUGGEE_KD_PAUSED_PACKET
+{
+    UINT64                                Rip;
+    BOOLEAN                               IsProcessorOn32BitMode; // if true shows that the address should be interpreted in 32-bit mode
+    BOOLEAN                               IgnoreDisassembling;    // if check if diassembling should be ignored or not
+    DEBUGGEE_PAUSING_REASON               PausingReason;
+    ULONG                                 CurrentCore;
+    UINT64                                EventTag;
+    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE EventCallingStage;
+    UINT64                                Rflags;
+    BYTE                                  InstructionBytesOnRip[MAXIMUM_INSTR_SIZE];
+    UINT16                                ReadInstructionLen;
+
+} DEBUGGEE_KD_PAUSED_PACKET, *PDEBUGGEE_KD_PAUSED_PACKET;
+
+/* ==============================================================================================
+ */
+
+/**
+ * @brief The structure of pausing packet in uHyperDbg
+ *
+ */
+typedef struct _DEBUGGEE_UD_PAUSED_PACKET
+{
+    UINT64                                Rip;
+    UINT64                                ProcessDebuggingToken;
+    BOOLEAN                               Is32Bit; // if true shows that the address should be interpreted in 32-bit mode
+    DEBUGGEE_PAUSING_REASON               PausingReason;
+    UINT32                                ProcessId;
+    UINT32                                ThreadId;
+    UINT64                                Rflags;
+    UINT64                                EventTag;
+    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE EventCallingStage;
+    BYTE                                  InstructionBytesOnRip[MAXIMUM_INSTR_SIZE];
+    UINT16                                ReadInstructionLen;
+    GUEST_REGS                            GuestRegs;
+
+} DEBUGGEE_UD_PAUSED_PACKET, *PDEBUGGEE_UD_PAUSED_PACKET;
+
+//////////////////////////////////////////////////
+//            Message Tracing Enums             //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Type of transferring buffer between user-to-kernel
+ *
+ */
+typedef enum _NOTIFY_TYPE
+{
+    IRP_BASED,
+    EVENT_BASED
+} NOTIFY_TYPE;
+
+//////////////////////////////////////////////////
+//                  Structures                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief The structure of message packet in HyperDbg
+ *
+ */
+typedef struct _DEBUGGEE_MESSAGE_PACKET
+{
+    UINT32 OperationCode;
+    CHAR   Message[PacketChunkSize];
+
+} DEBUGGEE_MESSAGE_PACKET, *PDEBUGGEE_MESSAGE_PACKET;
+
+/**
+ * @brief Used to register event for transferring buffer between user-to-kernel
+ *
+ */
+typedef struct _REGISTER_NOTIFY_BUFFER
+{
+    NOTIFY_TYPE Type;
+    HANDLE      hEvent;
+
+} REGISTER_NOTIFY_BUFFER, *PREGISTER_NOTIFY_BUFFER;
+
+//////////////////////////////////////////////////
+//                 Direct VMCALL                //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Used for sending direct VMCALLs on the VMX root-mode
+ *
+ */
+typedef struct _DIRECT_VMCALL_PARAMETERS
+{
+    UINT64 OptionalParam1;
+    UINT64 OptionalParam2;
+    UINT64 OptionalParam3;
+
+} DIRECT_VMCALL_PARAMETERS, *PDIRECT_VMCALL_PARAMETERS;
+
+//////////////////////////////////////////////////
+//                  EPT Hook                    //
+//////////////////////////////////////////////////
+
+/**
+ * @brief different type of memory addresses
+ *
+ */
+typedef enum _DEBUGGER_HOOK_MEMORY_TYPE
+{
+    DEBUGGER_MEMORY_HOOK_VIRTUAL_ADDRESS,
+    DEBUGGER_MEMORY_HOOK_PHYSICAL_ADDRESS
+} DEBUGGER_HOOK_MEMORY_TYPE;
+
+/**
+ * @brief Temporary $context used in some EPT hook commands
+ *
+ */
+typedef struct _EPT_HOOKS_CONTEXT
+{
+    UINT64 HookingTag; // This is same as the event tag
+    UINT64 PhysicalAddress;
+    UINT64 VirtualAddress;
+} EPT_HOOKS_CONTEXT, *PEPT_HOOKS_CONTEXT;
+
+/**
+ * @brief Setting details for EPT Hooks (!monitor)
+ *
+ */
+typedef struct _EPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR
+{
+    UINT64                    StartAddress;
+    UINT64                    EndAddress;
+    BOOLEAN                   SetHookForRead;
+    BOOLEAN                   SetHookForWrite;
+    BOOLEAN                   SetHookForExec;
+    DEBUGGER_HOOK_MEMORY_TYPE MemoryType;
+    UINT64                    Tag;
+
+} EPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR, *PEPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR;
+
+/**
+ * @brief Setting details for EPT Hooks (!epthook2)
+ *
+ */
+typedef struct _EPT_HOOKS_ADDRESS_DETAILS_FOR_EPTHOOK2
+{
+    PVOID TargetAddress;
+    PVOID HookFunction;
+
+} EPT_HOOKS_ADDRESS_DETAILS_FOR_EPTHOOK2, *PEPT_HOOKS_ADDRESS_DETAILS_FOR_EPTHOOK2;
+
+/**
+ * @brief Details of unhooking single EPT hooks
+ *
+ */
+typedef struct _EPT_SINGLE_HOOK_UNHOOKING_DETAILS
+{
+    BOOLEAN                     CallerNeedsToRestoreEntryAndInvalidateEpt;
+    BOOLEAN                     RemoveBreakpointInterception;
+    SIZE_T                      PhysicalAddress;
+    UINT64 /* EPT_PML1_ENTRY */ OriginalEntry;
+
+} EPT_SINGLE_HOOK_UNHOOKING_DETAILS, *PEPT_SINGLE_HOOK_UNHOOKING_DETAILS;
+
+//////////////////////////////////////////////////
+//                 Segment Types                //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Describe segment selector in VMX
+ * @details This structure is copied from ia32.h to the SDK to
+ * be used as a data type for functions
+ *
+ */
+typedef union
+{
+    struct
+    {
+        /**
+         * [Bits 3:0] Segment type.
+         */
+        UINT32 Type : 4;
+
+        /**
+         * [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
+         */
+        UINT32 DescriptorType : 1;
+
+        /**
+         * [Bits 6:5] DPL - Descriptor privilege level.
+         */
+        UINT32 DescriptorPrivilegeLevel : 2;
+
+        /**
+         * [Bit 7] P - Segment present.
+         */
+        UINT32 Present : 1;
+
+        UINT32 Reserved1 : 4;
+
+        /**
+         * [Bit 12] AVL - Available for use by system software.
+         */
+        UINT32 AvailableBit : 1;
+
+        /**
+         * [Bit 13] Reserved (except for CS). L - 64-bit mode active (for CS only).
+         */
+        UINT32 LongMode : 1;
+
+        /**
+         * [Bit 14] D/B - Default operation size (0 = 16-bit segment; 1 = 32-bit segment).
+         */
+        UINT32 DefaultBig : 1;
+
+        /**
+         * [Bit 15] G - Granularity.
+         */
+        UINT32 Granularity : 1;
+        /**
+         * [Bit 16] Segment unusable (0 = usable; 1 = unusable).
+         */
+        UINT32 Unusable : 1;
+        UINT32 Reserved2 : 15;
+    };
+
+    UINT32 AsUInt;
+} VMX_SEGMENT_ACCESS_RIGHTS_TYPE;
+
+/**
+ * @brief Segment selector
+ *
+ */
+typedef struct _VMX_SEGMENT_SELECTOR
+{
+    UINT16                         Selector;
+    VMX_SEGMENT_ACCESS_RIGHTS_TYPE Attributes;
+    UINT32                         Limit;
+    UINT64                         Base;
+} VMX_SEGMENT_SELECTOR, *PVMX_SEGMENT_SELECTOR;
+
+
 //..\..\..\bin\debug\SDK\Headers\ErrorCodes.h
 /**
  * @file ErrorCodes.h
@@ -1434,732 +2061,6 @@ const unsigned char BuildSignature[] = {
 // MAKE SURE TO ADD AN ERROR MESSAGE TO ShowErrorMessage(UINT32 Error)
 // FUNCTION
 //
-
-
-//..\..\..\bin\debug\SDK\Headers\Symbols.h
-/**
- * @file Symbols.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's SDK Header Files For Symbol Parsing
- * @details This file contains definitions of symbol parsers
- * @version 0.2
- * @date 2022-06-24
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//////////////////////////////////////////////////
-//              Symbols Details                 //
-//////////////////////////////////////////////////
-
-/**
- * @brief structures for sending and saving details
- * about each module and symbols details
- *
- */
-typedef struct _MODULE_SYMBOL_DETAIL
-{
-    BOOLEAN IsSymbolDetailsFound; // TRUE if the details of symbols found, FALSE if not found
-    BOOLEAN IsLocalSymbolPath;    // TRUE if the ModuleSymbolPath is a real path
-                                  // and FALSE if ModuleSymbolPath is just a module name
-    BOOLEAN IsSymbolPDBAvaliable; // TRUE if the module's pdb is available(if exists in the sympath)
-    BOOLEAN IsUserMode;           // TRUE if the module is a user-mode module
-    BOOLEAN Is32Bit;              // TRUE if the module is a 32-bit
-    UINT64  BaseAddress;
-    char    FilePath[MAX_PATH];
-    char    ModuleSymbolPath[MAX_PATH];
-    char    ModuleSymbolGuidAndAge[MAXIMUM_GUID_AND_AGE_SIZE];
-
-} MODULE_SYMBOL_DETAIL, *PMODULE_SYMBOL_DETAIL;
-
-typedef struct _USERMODE_LOADED_MODULE_SYMBOLS
-{
-    UINT64  BaseAddress;
-    UINT64  Entrypoint;
-    wchar_t FilePath[MAX_PATH];
-
-} USERMODE_LOADED_MODULE_SYMBOLS, *PUSERMODE_LOADED_MODULE_SYMBOLS;
-
-typedef struct _USERMODE_LOADED_MODULE_DETAILS
-{
-    UINT32  ProcessId;
-    BOOLEAN OnlyCountModules;
-    BOOLEAN Is32Bit;
-    UINT32  ModulesCount;
-    UINT32  Result;
-
-    //
-    // Here is a list of USERMODE_LOADED_MODULE_SYMBOLS (appended)
-    //
-
-} USERMODE_LOADED_MODULE_DETAILS, *PUSERMODE_LOADED_MODULE_DETAILS;
-
-/**
- * @brief Callback type that should be used to add
- * list of Addresses to ObjectNames
- *
- */
-typedef VOID (*SymbolMapCallback)(UINT64 Address, char * ModuleName, char * ObjectName, unsigned int ObjectSize);
-
-/**
- * @brief request to add new symbol detail or update a previous
- * symbol table entry
- *
- */
-typedef struct _DEBUGGER_UPDATE_SYMBOL_TABLE
-{
-    UINT32               TotalSymbols;
-    UINT32               CurrentSymbolIndex;
-    MODULE_SYMBOL_DETAIL SymbolDetailPacket;
-
-} DEBUGGER_UPDATE_SYMBOL_TABLE, *PDEBUGGER_UPDATE_SYMBOL_TABLE;
-
-/*
-==============================================================================================
- */
-
-/**
- * @brief request that shows, symbol reload process is finished
- *
- */
-typedef struct _DEBUGGEE_SYMBOL_UPDATE_RESULT
-{
-    UINT64 KernelStatus; // Kernel put the status in this field
-
-} DEBUGGEE_SYMBOL_UPDATE_RESULT, *PDEBUGGEE_SYMBOL_UPDATE_RESULT;
-
-/*
-==============================================================================================
- */
-
-
-//..\..\..\bin\debug\SDK\Headers\Connection.h
-/**
- * @file Connection.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's SDK Headers For Native Structures, Enums and Constants
- * @details These datatypes are used in all devices like HDL (FPGAs)
- * @version 0.2
- * @date 2022-07-14
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-/**
- * @brief enum for reasons why debuggee is paused
- *
- */
-typedef enum _DEBUGGEE_PAUSING_REASON
-{
-
-    //
-    // For both kernel & user debugger
-    //
-    DEBUGGEE_PAUSING_REASON_NOT_PAUSED = 0,
-    DEBUGGEE_PAUSING_REASON_PAUSE,
-    DEBUGGEE_PAUSING_REASON_REQUEST_FROM_DEBUGGER,
-    DEBUGGEE_PAUSING_REASON_DEBUGGEE_STEPPED,
-    DEBUGGEE_PAUSING_REASON_DEBUGGEE_TRACKING_STEPPED,
-    DEBUGGEE_PAUSING_REASON_DEBUGGEE_SOFTWARE_BREAKPOINT_HIT,
-    DEBUGGEE_PAUSING_REASON_DEBUGGEE_HARDWARE_DEBUG_REGISTER_HIT,
-    DEBUGGEE_PAUSING_REASON_DEBUGGEE_CORE_SWITCHED,
-    DEBUGGEE_PAUSING_REASON_DEBUGGEE_PROCESS_SWITCHED,
-    DEBUGGEE_PAUSING_REASON_DEBUGGEE_THREAD_SWITCHED,
-    DEBUGGEE_PAUSING_REASON_DEBUGGEE_COMMAND_EXECUTION_FINISHED,
-    DEBUGGEE_PAUSING_REASON_DEBUGGEE_EVENT_TRIGGERED,
-    DEBUGGEE_PAUSING_REASON_DEBUGGEE_STARTING_MODULE_LOADED,
-
-    //
-    // Only for user-debugger
-    //
-    DEBUGGEE_PAUSING_REASON_DEBUGGEE_GENERAL_DEBUG_BREAK,
-    DEBUGGEE_PAUSING_REASON_DEBUGGEE_GENERAL_THREAD_INTERCEPTED,
-
-    //
-    // Only used for hardware debugging
-    //
-    DEBUGGEE_PAUSING_REASON_HARDWARE_BASED_DEBUGGEE_GENERAL_BREAK,
-
-} DEBUGGEE_PAUSING_REASON;
-
-/**
- * @brief enum for requested action for HyperDbg packet
- *
- */
-typedef enum _DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION
-{
-
-    //
-    // Debugger to debuggee (user-mode execution)
-    //
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_USER_MODE_PAUSE = 1,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_USER_MODE_DO_NOT_READ_ANY_PACKET,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_USER_MODE_DEBUGGER_VERSION,
-
-    //
-    // Debuggee to debugger (user-mode execution)
-    //
-    DEBUGGER_REMOTE_PACKET_PING_AND_SEND_SUPPORTED_VERSION,
-
-    //
-    // Debugger to debuggee (vmx-root mode execution)
-    //
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_STEP,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_CONTINUE,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_CLOSE_AND_UNLOAD_DEBUGGEE,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_CHANGE_CORE,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_FLUSH_BUFFERS,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_CALLSTACK,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_TEST_QUERY,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_CHANGE_PROCESS,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_MODE_CHANGE_THREAD,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_RUN_SCRIPT,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_USER_INPUT_BUFFER,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_SEARCH_QUERY,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_REGISTER_EVENT,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_ADD_ACTION_TO_EVENT,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_QUERY_AND_MODIFY_EVENT,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_READ_REGISTERS,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_READ_MEMORY,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_EDIT_MEMORY,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_BP,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_LIST_OR_MODIFY_BREAKPOINTS,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_SYMBOL_RELOAD,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_QUERY_PA2VA_AND_VA2PA,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_SYMBOL_QUERY_PTE,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_SET_SHORT_CIRCUITING_STATE,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_INJECT_PAGE_FAULT,
-
-    //
-    // Debuggee to debugger
-    //
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_NO_ACTION,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_STARTED,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_LOGGING_MECHANISM,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_PAUSED_AND_CURRENT_INSTRUCTION,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_CORE,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_PROCESS,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_THREAD,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_RUNNING_SCRIPT,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_FORMATS,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_FLUSH,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CALLSTACK,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_TEST_QUERY,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_REGISTERING_EVENT,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_ADDING_ACTION_TO_EVENT,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_QUERY_AND_MODIFY_EVENT,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_SHORT_CIRCUITING_EVENT,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_READING_REGISTERS,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_READING_MEMORY,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_EDITING_MEMORY,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BP,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_SHORT_CIRCUITING_STATE,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_LIST_OR_MODIFY_BREAKPOINTS,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_UPDATE_SYMBOL_INFO,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RELOAD_SYMBOL_FINISHED,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RELOAD_SEARCH_QUERY,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_PTE,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_VA2PA_AND_PA2VA,
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BRINGING_PAGES_IN,
-
-    //
-    // hardware debuggee to debugger
-    //
-
-    //
-    // hardware debugger to debuggee
-    //
-
-} DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION;
-
-/**
- * @brief enum for different packet types in HyperDbg packets
- * @warning used in hwdbg
- *
- */
-typedef enum _DEBUGGER_REMOTE_PACKET_TYPE
-{
-
-    //
-    // Debugger to debuggee (vmx-root)
-    //
-    DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGER_TO_DEBUGGEE_EXECUTE_ON_VMX_ROOT = 1,
-
-    //
-    // Debugger to debuggee (user-mode)
-    //
-    DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGER_TO_DEBUGGEE_EXECUTE_ON_USER_MODE = 2,
-
-    //
-    // Debuggee to debugger (user-mode and kernel-mode, vmx-root mode)
-    //
-    DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGEE_TO_DEBUGGER = 3,
-
-    //
-    // Debugger to debuggee (hardware), used in hwdbg
-    //
-    DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGER_TO_DEBUGGEE_HARDWARE_LEVEL = 4,
-
-    //
-    // Debuggee to debugger (hardware), used in hwdbg
-    //
-    DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGEE_TO_DEBUGGER_HARDWARE_LEVEL = 5,
-
-} DEBUGGER_REMOTE_PACKET_TYPE;
-
-/**
- * @brief The structure of remote packets in HyperDbg
- *
- */
-typedef struct _DEBUGGER_REMOTE_PACKET
-{
-    BYTE                                    Checksum;
-    UINT64                                  Indicator; /* Shows the type of the packet */
-    DEBUGGER_REMOTE_PACKET_TYPE             TypeOfThePacket;
-    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION RequestedActionOfThePacket;
-
-} DEBUGGER_REMOTE_PACKET, *PDEBUGGER_REMOTE_PACKET;
-
-
-//..\..\..\bin\debug\SDK\Headers\DataTypes.h
-/**
- * @file DataTypes.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's SDK data type definitions
- * @details This file contains definitions of structures, enums, etc.
- * used in HyperDbg
- * @version 0.2
- * @date 2022-06-22
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//////////////////////////////////////////////////
-//               Memory Stages                  //
-//////////////////////////////////////////////////
-
-/**
- * @brief Different levels of paging
- *
- */
-typedef enum _PAGING_LEVEL
-{
-    PagingLevelPageTable = 0,
-    PagingLevelPageDirectory,
-    PagingLevelPageDirectoryPointerTable,
-    PagingLevelPageMapLevel4
-} PAGING_LEVEL;
-
-//////////////////////////////////////////////////
-//                 Pool Manager      			//
-//////////////////////////////////////////////////
-
-/**
- * @brief Inum of intentions for buffers (buffer tag)
- *
- */
-typedef enum _POOL_ALLOCATION_INTENTION
-{
-    TRACKING_HOOKED_PAGES,
-    EXEC_TRAMPOLINE,
-    SPLIT_2MB_PAGING_TO_4KB_PAGE,
-    DETOUR_HOOK_DETAILS,
-    BREAKPOINT_DEFINITION_STRUCTURE,
-    PROCESS_THREAD_HOLDER,
-
-    //
-    // Instant event buffers
-    //
-    INSTANT_REGULAR_EVENT_BUFFER,
-    INSTANT_BIG_EVENT_BUFFER,
-    INSTANT_REGULAR_EVENT_ACTION_BUFFER,
-    INSTANT_BIG_EVENT_ACTION_BUFFER,
-
-    //
-    // Use for request safe buffers of the event
-    //
-    INSTANT_REGULAR_SAFE_BUFFER_FOR_EVENTS,
-    INSTANT_BIG_SAFE_BUFFER_FOR_EVENTS,
-
-} POOL_ALLOCATION_INTENTION;
-
-//////////////////////////////////////////////////
-//	   	Debug Registers Modifications 	    	//
-//////////////////////////////////////////////////
-
-typedef enum _DEBUG_REGISTER_TYPE
-{
-    BREAK_ON_INSTRUCTION_FETCH,
-    BREAK_ON_WRITE_ONLY,
-    BREAK_ON_IO_READ_OR_WRITE_NOT_SUPPORTED,
-    BREAK_ON_READ_AND_WRITE_BUT_NOT_FETCH
-} DEBUG_REGISTER_TYPE;
-
-//////////////////////////////////////////////////
-//              Execution Stages                //
-//////////////////////////////////////////////////
-
-typedef enum _VMX_EXECUTION_MODE
-{
-    VmxExecutionModeNonRoot = FALSE,
-    VmxExecutionModeRoot    = TRUE
-} VMX_EXECUTION_MODE;
-
-/**
- * @brief Type of calling the event
- *
- */
-typedef enum _VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE
-{
-    VMM_CALLBACK_CALLING_STAGE_INVALID_EVENT_EMULATION = 0,
-    VMM_CALLBACK_CALLING_STAGE_PRE_EVENT_EMULATION     = 1,
-    VMM_CALLBACK_CALLING_STAGE_POST_EVENT_EMULATION    = 2,
-    VMM_CALLBACK_CALLING_STAGE_ALL_EVENT_EMULATION     = 3
-
-} VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE;
-
-/**
- * @brief enum to query different process and thread interception mechanisms
- *
- */
-typedef enum _DEBUGGER_THREAD_PROCESS_TRACING
-{
-
-    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_INTERRUPTS_FOR_THREAD_CHANGE,
-    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_INTERRUPTS_FOR_PROCESS_CHANGE,
-    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_DEBUG_REGISTER_INTERCEPTION,
-    DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_WAITING_FOR_MOV_CR3_VM_EXITS,
-
-} DEBUGGER_THREAD_PROCESS_TRACING;
-
-//////////////////////////////////////////////////
-//            Callback Definitions              //
-//////////////////////////////////////////////////
-
-/**
- * @brief Callback type that can be used to be used
- * as a custom ShowMessages function
- *
- */
-typedef int (*Callback)(const char * Text);
-
-//////////////////////////////////////////////////
-//                Communications                //
-//////////////////////////////////////////////////
-
-/**
- * @brief The structure of user-input packet in HyperDbg
- *
- */
-typedef struct _DEBUGGEE_USER_INPUT_PACKET
-{
-    UINT32  CommandLen;
-    BOOLEAN IgnoreFinishedSignal;
-    UINT32  Result;
-
-    //
-    // The user's input is here
-    //
-
-} DEBUGGEE_USER_INPUT_PACKET, *PDEBUGGEE_USER_INPUT_PACKET;
-
-/**
- * @brief The structure of user-input packet in HyperDbg
- *
- */
-typedef struct _DEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET
-{
-    UINT32 Length;
-
-    //
-    // The buffer for event and action is here
-    //
-
-} DEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET,
-    *PDEBUGGEE_EVENT_AND_ACTION_HEADER_FOR_REMOTE_PACKET;
-
-//////////////////////////////////////////////////
-//                  Pausing                    //
-//////////////////////////////////////////////////
-
-#define SIZEOF_DEBUGGER_PAUSE_PACKET_RECEIVED \
-    sizeof(DEBUGGER_PAUSE_PACKET_RECEIVED)
-
-/**
- * @brief request to pause and halt the system
- *
- */
-typedef struct _DEBUGGER_PAUSE_PACKET_RECEIVED
-{
-    UINT32 Result; // Result from kernel
-
-} DEBUGGER_PAUSE_PACKET_RECEIVED, *PDEBUGGER_PAUSE_PACKET_RECEIVED;
-
-/* ==============================================================================================
- */
-
-/**
- * @brief The structure of detail of a triggered event in HyperDbg
- * @details This structure is also used for transferring breakpoint ids, RIP as the context, etc.
- *
- */
-typedef struct _DEBUGGER_TRIGGERED_EVENT_DETAILS
-{
-    UINT64                                Tag; /* in breakpoints Tag is breakpoint id, not event tag */
-    PVOID                                 Context;
-    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE Stage;
-
-} DEBUGGER_TRIGGERED_EVENT_DETAILS, *PDEBUGGER_TRIGGERED_EVENT_DETAILS;
-
-/* ==============================================================================================
- */
-
-/**
- * @brief The structure of pausing packet in kHyperDbg
- *
- */
-typedef struct _DEBUGGEE_KD_PAUSED_PACKET
-{
-    UINT64                                Rip;
-    BOOLEAN                               IsProcessorOn32BitMode; // if true shows that the address should be interpreted in 32-bit mode
-    BOOLEAN                               IgnoreDisassembling;    // if check if diassembling should be ignored or not
-    DEBUGGEE_PAUSING_REASON               PausingReason;
-    ULONG                                 CurrentCore;
-    UINT64                                EventTag;
-    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE EventCallingStage;
-    UINT64                                Rflags;
-    BYTE                                  InstructionBytesOnRip[MAXIMUM_INSTR_SIZE];
-    UINT16                                ReadInstructionLen;
-
-} DEBUGGEE_KD_PAUSED_PACKET, *PDEBUGGEE_KD_PAUSED_PACKET;
-
-/* ==============================================================================================
- */
-
-/**
- * @brief The structure of pausing packet in uHyperDbg
- *
- */
-typedef struct _DEBUGGEE_UD_PAUSED_PACKET
-{
-    UINT64                                Rip;
-    UINT64                                ProcessDebuggingToken;
-    BOOLEAN                               Is32Bit; // if true shows that the address should be interpreted in 32-bit mode
-    DEBUGGEE_PAUSING_REASON               PausingReason;
-    UINT32                                ProcessId;
-    UINT32                                ThreadId;
-    UINT64                                Rflags;
-    UINT64                                EventTag;
-    VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE EventCallingStage;
-    BYTE                                  InstructionBytesOnRip[MAXIMUM_INSTR_SIZE];
-    UINT16                                ReadInstructionLen;
-    GUEST_REGS                            GuestRegs;
-
-} DEBUGGEE_UD_PAUSED_PACKET, *PDEBUGGEE_UD_PAUSED_PACKET;
-
-//////////////////////////////////////////////////
-//            Message Tracing Enums             //
-//////////////////////////////////////////////////
-
-/**
- * @brief Type of transferring buffer between user-to-kernel
- *
- */
-typedef enum _NOTIFY_TYPE
-{
-    IRP_BASED,
-    EVENT_BASED
-} NOTIFY_TYPE;
-
-//////////////////////////////////////////////////
-//                  Structures                  //
-//////////////////////////////////////////////////
-
-/**
- * @brief The structure of message packet in HyperDbg
- *
- */
-typedef struct _DEBUGGEE_MESSAGE_PACKET
-{
-    UINT32 OperationCode;
-    CHAR   Message[PacketChunkSize];
-
-} DEBUGGEE_MESSAGE_PACKET, *PDEBUGGEE_MESSAGE_PACKET;
-
-/**
- * @brief Used to register event for transferring buffer between user-to-kernel
- *
- */
-typedef struct _REGISTER_NOTIFY_BUFFER
-{
-    NOTIFY_TYPE Type;
-    HANDLE      hEvent;
-
-} REGISTER_NOTIFY_BUFFER, *PREGISTER_NOTIFY_BUFFER;
-
-//////////////////////////////////////////////////
-//                 Direct VMCALL                //
-//////////////////////////////////////////////////
-
-/**
- * @brief Used for sending direct VMCALLs on the VMX root-mode
- *
- */
-typedef struct _DIRECT_VMCALL_PARAMETERS
-{
-    UINT64 OptionalParam1;
-    UINT64 OptionalParam2;
-    UINT64 OptionalParam3;
-
-} DIRECT_VMCALL_PARAMETERS, *PDIRECT_VMCALL_PARAMETERS;
-
-//////////////////////////////////////////////////
-//                  EPT Hook                    //
-//////////////////////////////////////////////////
-
-/**
- * @brief different type of memory addresses
- *
- */
-typedef enum _DEBUGGER_HOOK_MEMORY_TYPE
-{
-    DEBUGGER_MEMORY_HOOK_VIRTUAL_ADDRESS,
-    DEBUGGER_MEMORY_HOOK_PHYSICAL_ADDRESS
-} DEBUGGER_HOOK_MEMORY_TYPE;
-
-/**
- * @brief Temporary $context used in some EPT hook commands
- *
- */
-typedef struct _EPT_HOOKS_CONTEXT
-{
-    UINT64 HookingTag; // This is same as the event tag
-    UINT64 PhysicalAddress;
-    UINT64 VirtualAddress;
-} EPT_HOOKS_CONTEXT, *PEPT_HOOKS_CONTEXT;
-
-/**
- * @brief Setting details for EPT Hooks (!monitor)
- *
- */
-typedef struct _EPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR
-{
-    UINT64                    StartAddress;
-    UINT64                    EndAddress;
-    BOOLEAN                   SetHookForRead;
-    BOOLEAN                   SetHookForWrite;
-    BOOLEAN                   SetHookForExec;
-    DEBUGGER_HOOK_MEMORY_TYPE MemoryType;
-    UINT64                    Tag;
-
-} EPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR, *PEPT_HOOKS_ADDRESS_DETAILS_FOR_MEMORY_MONITOR;
-
-/**
- * @brief Setting details for EPT Hooks (!epthook2)
- *
- */
-typedef struct _EPT_HOOKS_ADDRESS_DETAILS_FOR_EPTHOOK2
-{
-    PVOID TargetAddress;
-    PVOID HookFunction;
-
-} EPT_HOOKS_ADDRESS_DETAILS_FOR_EPTHOOK2, *PEPT_HOOKS_ADDRESS_DETAILS_FOR_EPTHOOK2;
-
-/**
- * @brief Details of unhooking single EPT hooks
- *
- */
-typedef struct _EPT_SINGLE_HOOK_UNHOOKING_DETAILS
-{
-    BOOLEAN                     CallerNeedsToRestoreEntryAndInvalidateEpt;
-    BOOLEAN                     RemoveBreakpointInterception;
-    SIZE_T                      PhysicalAddress;
-    UINT64 /* EPT_PML1_ENTRY */ OriginalEntry;
-
-} EPT_SINGLE_HOOK_UNHOOKING_DETAILS, *PEPT_SINGLE_HOOK_UNHOOKING_DETAILS;
-
-//////////////////////////////////////////////////
-//                 Segment Types                //
-//////////////////////////////////////////////////
-
-/**
- * @brief Describe segment selector in VMX
- * @details This structure is copied from ia32.h to the SDK to
- * be used as a data type for functions
- *
- */
-typedef union
-{
-    struct
-    {
-        /**
-         * [Bits 3:0] Segment type.
-         */
-        UINT32 Type : 4;
-
-        /**
-         * [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
-         */
-        UINT32 DescriptorType : 1;
-
-        /**
-         * [Bits 6:5] DPL - Descriptor privilege level.
-         */
-        UINT32 DescriptorPrivilegeLevel : 2;
-
-        /**
-         * [Bit 7] P - Segment present.
-         */
-        UINT32 Present : 1;
-
-        UINT32 Reserved1 : 4;
-
-        /**
-         * [Bit 12] AVL - Available for use by system software.
-         */
-        UINT32 AvailableBit : 1;
-
-        /**
-         * [Bit 13] Reserved (except for CS). L - 64-bit mode active (for CS only).
-         */
-        UINT32 LongMode : 1;
-
-        /**
-         * [Bit 14] D/B - Default operation size (0 = 16-bit segment; 1 = 32-bit segment).
-         */
-        UINT32 DefaultBig : 1;
-
-        /**
-         * [Bit 15] G - Granularity.
-         */
-        UINT32 Granularity : 1;
-        /**
-         * [Bit 16] Segment unusable (0 = usable; 1 = unusable).
-         */
-        UINT32 Unusable : 1;
-        UINT32 Reserved2 : 15;
-    };
-
-    UINT32 AsUInt;
-} VMX_SEGMENT_ACCESS_RIGHTS_TYPE;
-
-/**
- * @brief Segment selector
- *
- */
-typedef struct _VMX_SEGMENT_SELECTOR
-{
-    UINT16                         Selector;
-    VMX_SEGMENT_ACCESS_RIGHTS_TYPE Attributes;
-    UINT32                         Limit;
-    UINT64                         Base;
-} VMX_SEGMENT_SELECTOR, *PVMX_SEGMENT_SELECTOR;
 
 
 //..\..\..\bin\debug\SDK\Headers\Events.h
@@ -4218,6 +4119,105 @@ typedef struct _DEBUGGEE_REGISTER_READ_DESCRIPTION
  */
 
 
+//..\..\..\bin\debug\SDK\Headers\Symbols.h
+/**
+ * @file Symbols.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK Header Files For Symbol Parsing
+ * @details This file contains definitions of symbol parsers
+ * @version 0.2
+ * @date 2022-06-24
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//              Symbols Details                 //
+//////////////////////////////////////////////////
+
+/**
+ * @brief structures for sending and saving details
+ * about each module and symbols details
+ *
+ */
+typedef struct _MODULE_SYMBOL_DETAIL
+{
+    BOOLEAN IsSymbolDetailsFound; // TRUE if the details of symbols found, FALSE if not found
+    BOOLEAN IsLocalSymbolPath;    // TRUE if the ModuleSymbolPath is a real path
+                                  // and FALSE if ModuleSymbolPath is just a module name
+    BOOLEAN IsSymbolPDBAvaliable; // TRUE if the module's pdb is available(if exists in the sympath)
+    BOOLEAN IsUserMode;           // TRUE if the module is a user-mode module
+    BOOLEAN Is32Bit;              // TRUE if the module is a 32-bit
+    UINT64  BaseAddress;
+    char    FilePath[MAX_PATH];
+    char    ModuleSymbolPath[MAX_PATH];
+    char    ModuleSymbolGuidAndAge[MAXIMUM_GUID_AND_AGE_SIZE];
+
+} MODULE_SYMBOL_DETAIL, *PMODULE_SYMBOL_DETAIL;
+
+typedef struct _USERMODE_LOADED_MODULE_SYMBOLS
+{
+    UINT64  BaseAddress;
+    UINT64  Entrypoint;
+    wchar_t FilePath[MAX_PATH];
+
+} USERMODE_LOADED_MODULE_SYMBOLS, *PUSERMODE_LOADED_MODULE_SYMBOLS;
+
+typedef struct _USERMODE_LOADED_MODULE_DETAILS
+{
+    UINT32  ProcessId;
+    BOOLEAN OnlyCountModules;
+    BOOLEAN Is32Bit;
+    UINT32  ModulesCount;
+    UINT32  Result;
+
+    //
+    // Here is a list of USERMODE_LOADED_MODULE_SYMBOLS (appended)
+    //
+
+} USERMODE_LOADED_MODULE_DETAILS, *PUSERMODE_LOADED_MODULE_DETAILS;
+
+/**
+ * @brief Callback type that should be used to add
+ * list of Addresses to ObjectNames
+ *
+ */
+typedef VOID (*SymbolMapCallback)(UINT64 Address, char * ModuleName, char * ObjectName, unsigned int ObjectSize);
+
+/**
+ * @brief request to add new symbol detail or update a previous
+ * symbol table entry
+ *
+ */
+typedef struct _DEBUGGER_UPDATE_SYMBOL_TABLE
+{
+    UINT32               TotalSymbols;
+    UINT32               CurrentSymbolIndex;
+    MODULE_SYMBOL_DETAIL SymbolDetailPacket;
+
+} DEBUGGER_UPDATE_SYMBOL_TABLE, *PDEBUGGER_UPDATE_SYMBOL_TABLE;
+
+/*
+==============================================================================================
+ */
+
+/**
+ * @brief request that shows, symbol reload process is finished
+ *
+ */
+typedef struct _DEBUGGEE_SYMBOL_UPDATE_RESULT
+{
+    UINT64 KernelStatus; // Kernel put the status in this field
+
+} DEBUGGEE_SYMBOL_UPDATE_RESULT, *PDEBUGGEE_SYMBOL_UPDATE_RESULT;
+
+/*
+==============================================================================================
+ */
+
+
 //..\..\..\bin\debug\SDK\Modules\HyperLog.h
 /**
  * @file HyperLog.h
@@ -4500,6 +4500,130 @@ typedef struct _VMM_CALLBACKS
     KD_QUERY_DEBUGGER_THREAD_OR_PROCESS_TRACING_DETAILS_BY_CORE_ID KdQueryDebuggerQueryThreadOrProcessTracingDetailsByCoreId;
 
 } VMM_CALLBACKS, *PVMM_CALLBACKS;
+
+
+//..\..\..\bin\debug\SDK\Imports\HyperDbgCtrlImports.h
+/**
+ * @file HyperDbgCtrlImports.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers relating exported functions from controller interface
+ * @version 0.2
+ * @date 2023-02-02
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+#ifdef HYPERDBG_HPRDBGCTRL
+#    define IMPORT_EXPORT_CTRL __declspec(dllexport)
+#else
+#    define IMPORT_EXPORT_CTRL __declspec(dllimport)
+#endif
+
+//
+// Header file of HPRDBGCTRL
+// Imports
+//
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//
+// Support Detection
+//
+IMPORT_EXPORT_CTRL bool HyperDbgVmxSupportDetection();
+IMPORT_EXPORT_CTRL void HyperDbgReadVendorString(char *);
+
+//
+// VMM Module
+//
+IMPORT_EXPORT_CTRL int HyperDbgLoadVmm();
+IMPORT_EXPORT_CTRL int HyperDbgUnloadVmm();
+IMPORT_EXPORT_CTRL int HyperDbgInstallVmmDriver();
+IMPORT_EXPORT_CTRL int HyperDbgUninstallVmmDriver();
+IMPORT_EXPORT_CTRL int HyperDbgStopVmmDriver();
+
+//
+// General imports
+//
+IMPORT_EXPORT_CTRL int HyperDbgInterpreter(char * Command);
+IMPORT_EXPORT_CTRL void HyperDbgShowSignature();
+IMPORT_EXPORT_CTRL void HyperDbgSetTextMessageCallback(Callback handler);
+IMPORT_EXPORT_CTRL int HyperDbgScriptReadFileAndExecuteCommandline(int argc, char * argv[]);
+IMPORT_EXPORT_CTRL bool HyperDbgContinuePreviousCommand();
+IMPORT_EXPORT_CTRL bool HyperDbgCheckMultilineCommand(char * CurrentCommand, bool Reset);
+
+#ifdef __cplusplus
+}
+#endif
+
+
+//..\..\..\bin\debug\SDK\Imports\HyperDbgHyperLogImports.h
+/**
+ * @file HyperDbgHyperLogImports.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers relating exported functions from hyperlog project
+ * @version 0.1
+ * @date 2023-01-15
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+#ifdef HYPERDBG_HYPER_LOG
+#    define IMPORT_EXPORT_HYPERLOG __declspec(dllexport)
+#else
+#    define IMPORT_EXPORT_HYPERLOG __declspec(dllimport)
+#endif
+
+//////////////////////////////////////////////////
+//				   Functions					//
+//////////////////////////////////////////////////
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogInitialize(MESSAGE_TRACING_CALLBACKS * MsgTracingCallbacks);
+
+IMPORT_EXPORT_HYPERLOG VOID
+LogUnInitialize();
+
+IMPORT_EXPORT_HYPERLOG UINT32
+LogMarkAllAsRead(BOOLEAN IsVmxRoot);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackPrepareAndSendMessageToQueue(UINT32       OperationCode,
+                                        BOOLEAN      IsImmediateMessage,
+                                        BOOLEAN      ShowCurrentSystemTime,
+                                        BOOLEAN      Priority,
+                                        const char * Fmt,
+                                        ...);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackPrepareAndSendMessageToQueueWrapper(UINT32       OperationCode,
+                                               BOOLEAN      IsImmediateMessage,
+                                               BOOLEAN      ShowCurrentSystemTime,
+                                               BOOLEAN      Priority,
+                                               const char * Fmt,
+                                               va_list      ArgList);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackSendBuffer(_In_ UINT32                          OperationCode,
+                      _In_reads_bytes_(BufferLength) PVOID Buffer,
+                      _In_ UINT32                          BufferLength,
+                      _In_ BOOLEAN                         Priority);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackCheckIfBufferIsFull(BOOLEAN Priority);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackSendMessageToQueue(UINT32 OperationCode, BOOLEAN IsImmediateMessage, CHAR * LogMessage, UINT32 BufferLen, BOOLEAN Priority);
+
+IMPORT_EXPORT_HYPERLOG NTSTATUS
+LogRegisterEventBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
+
+IMPORT_EXPORT_HYPERLOG NTSTATUS
+LogRegisterIrpBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
 
 
 //..\..\..\bin\debug\SDK\Imports\HyperDbgHyperLogIntrinsics.h
@@ -5779,129 +5903,5 @@ BroadcastEnableEferSyscallEventsOnAllProcessors();
 
 IMPORT_EXPORT_VMM VOID
 BroadcastDisableEferSyscallEventsOnAllProcessors();
-
-
-//..\..\..\bin\debug\SDK\Imports\HyperDbgCtrlImports.h
-/**
- * @file HyperDbgCtrlImports.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from controller interface
- * @version 0.2
- * @date 2023-02-02
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-#ifdef HYPERDBG_HPRDBGCTRL
-#    define IMPORT_EXPORT_CTRL __declspec(dllexport)
-#else
-#    define IMPORT_EXPORT_CTRL __declspec(dllimport)
-#endif
-
-//
-// Header file of HPRDBGCTRL
-// Imports
-//
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-//
-// Support Detection
-//
-IMPORT_EXPORT_CTRL bool HyperDbgVmxSupportDetection();
-IMPORT_EXPORT_CTRL void HyperDbgReadVendorString(char *);
-
-//
-// VMM Module
-//
-IMPORT_EXPORT_CTRL int HyperDbgLoadVmm();
-IMPORT_EXPORT_CTRL int HyperDbgUnloadVmm();
-IMPORT_EXPORT_CTRL int HyperDbgInstallVmmDriver();
-IMPORT_EXPORT_CTRL int HyperDbgUninstallVmmDriver();
-IMPORT_EXPORT_CTRL int HyperDbgStopVmmDriver();
-
-//
-// General imports
-//
-IMPORT_EXPORT_CTRL int HyperDbgInterpreter(char * Command);
-IMPORT_EXPORT_CTRL void HyperDbgShowSignature();
-IMPORT_EXPORT_CTRL void HyperDbgSetTextMessageCallback(Callback handler);
-IMPORT_EXPORT_CTRL int HyperDbgScriptReadFileAndExecuteCommandline(int argc, char * argv[]);
-IMPORT_EXPORT_CTRL bool HyperDbgContinuePreviousCommand();
-IMPORT_EXPORT_CTRL bool HyperDbgCheckMultilineCommand(char * CurrentCommand, bool Reset);
-
-#ifdef __cplusplus
-}
-#endif
-
-
-//..\..\..\bin\debug\SDK\Imports\HyperDbgHyperLogImports.h
-/**
- * @file HyperDbgHyperLogImports.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from hyperlog project
- * @version 0.1
- * @date 2023-01-15
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-#ifdef HYPERDBG_HYPER_LOG
-#    define IMPORT_EXPORT_HYPERLOG __declspec(dllexport)
-#else
-#    define IMPORT_EXPORT_HYPERLOG __declspec(dllimport)
-#endif
-
-//////////////////////////////////////////////////
-//				   Functions					//
-//////////////////////////////////////////////////
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogInitialize(MESSAGE_TRACING_CALLBACKS * MsgTracingCallbacks);
-
-IMPORT_EXPORT_HYPERLOG VOID
-LogUnInitialize();
-
-IMPORT_EXPORT_HYPERLOG UINT32
-LogMarkAllAsRead(BOOLEAN IsVmxRoot);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackPrepareAndSendMessageToQueue(UINT32       OperationCode,
-                                        BOOLEAN      IsImmediateMessage,
-                                        BOOLEAN      ShowCurrentSystemTime,
-                                        BOOLEAN      Priority,
-                                        const char * Fmt,
-                                        ...);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackPrepareAndSendMessageToQueueWrapper(UINT32       OperationCode,
-                                               BOOLEAN      IsImmediateMessage,
-                                               BOOLEAN      ShowCurrentSystemTime,
-                                               BOOLEAN      Priority,
-                                               const char * Fmt,
-                                               va_list      ArgList);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackSendBuffer(_In_ UINT32                          OperationCode,
-                      _In_reads_bytes_(BufferLength) PVOID Buffer,
-                      _In_ UINT32                          BufferLength,
-                      _In_ BOOLEAN                         Priority);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackCheckIfBufferIsFull(BOOLEAN Priority);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackSendMessageToQueue(UINT32 OperationCode, BOOLEAN IsImmediateMessage, CHAR * LogMessage, UINT32 BufferLen, BOOLEAN Priority);
-
-IMPORT_EXPORT_HYPERLOG NTSTATUS
-LogRegisterEventBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
-
-IMPORT_EXPORT_HYPERLOG NTSTATUS
-LogRegisterIrpBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
 
 
