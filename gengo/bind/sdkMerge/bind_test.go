@@ -7,16 +7,12 @@ import (
 	"testing"
 	"unicode"
 
-	"github.com/stretchr/testify/assert"
-
-	"github.com/ddkwork/golibrary/stream/maps"
-
-	"github.com/ddkwork/golibrary/stream"
-
 	"github.com/can1357/gengo/clang"
 	"github.com/can1357/gengo/gengo"
-
 	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/stream"
+	"github.com/ddkwork/golibrary/stream/maps"
+	"github.com/stretchr/testify/assert"
 )
 
 const bugfix = `
@@ -35,7 +31,11 @@ typedef struct _LIST_ENTRY {
 `
 
 func TestMergeHeader(t *testing.T) {
-	paths := new(maps.SliceMap[string, bool])
+	Headers := new(maps.SliceMap[string, bool])
+	Imports := new(maps.SliceMap[string, bool])
+	Modules := new(maps.SliceMap[string, bool])
+	BasicTypes := ""
+
 	g := stream.NewGeneratedFile()
 	filepath.Walk("../../../bin", func(path string, info fs.FileInfo, err error) error {
 		if strings.Contains(path, "Examples") {
@@ -46,7 +46,16 @@ func TestMergeHeader(t *testing.T) {
 			return err
 		}
 		if filepath.Ext(path) == ".h" {
-			paths.Set(path, true)
+			switch {
+			case stream.BaseName(path) == "BasicTypes":
+				BasicTypes = path
+			case strings.Contains(path, "Headers"):
+				Headers.Set(path, true)
+			case strings.Contains(path, "Imports"):
+				Imports.Set(path, true)
+			case strings.Contains(path, "Modules"):
+				Modules.Set(path, true)
+			}
 		}
 		return err
 	})
@@ -72,7 +81,6 @@ func TestMergeHeader(t *testing.T) {
 	g.P()
 	mylog.Trace("merge", "bugfix.h")
 
-	BasicTypes := ""
 	for _, s := range Modules.Keys() {
 		if strings.Contains(s, "BasicTypes") {
 			BasicTypes = s
