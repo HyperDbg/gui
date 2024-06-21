@@ -31,10 +31,10 @@ typedef struct _LIST_ENTRY {
 `
 
 func TestMergeHeader(t *testing.T) {
-	Headers := new(maps.SliceMap[string, bool])
-	Imports := new(maps.SliceMap[string, bool])
-	Modules := new(maps.SliceMap[string, bool])
 	BasicTypes := ""
+	Headers := new(maps.SliceMap[string, bool])
+	Modules := new(maps.SliceMap[string, bool])
+	Imports := new(maps.SliceMap[string, bool])
 
 	g := stream.NewGeneratedFile()
 	filepath.Walk("../../../bin", func(path string, info fs.FileInfo, err error) error {
@@ -60,52 +60,38 @@ func TestMergeHeader(t *testing.T) {
 		return err
 	})
 
-	Modules := new(maps.SliceMap[string, bool])
-	for _, path := range paths.Keys() {
-		switch {
-		case strings.Contains(path, "BasicTypes"), strings.Contains(path, "Modules"):
-			Modules.Set(path, true)
-			paths.Delete(path)
-		}
-	}
-
-	//todo merge step
-	//bugfix
-	//BasicTypes
-	//Headers 删除BasicTypes
-	//Modules
-	//Imports
+	// todo merge step
+	// bugfix
+	// BasicTypes
+	// Headers 删除BasicTypes
+	// Modules
+	// Imports
 
 	g.P("//bugfix.h")
 	g.P(bugfix)
 	g.P()
 	mylog.Trace("merge", "bugfix.h")
 
-	for _, s := range Modules.Keys() {
-		if strings.Contains(s, "BasicTypes") {
-			BasicTypes = s
-			Modules.Delete(s)
-			break
-		}
-	}
-
 	g.P("//" + BasicTypes)
 	g.P(stream.NewBuffer(BasicTypes))
 	g.P()
 	mylog.Trace("merge", BasicTypes)
 
-	for _, s := range Modules.Keys() {
-		g.P("//" + s)
-		g.P(stream.NewBuffer(s))
+	fnDo := func(path string) {
+		g.P("//" + path)
+		g.P(stream.NewBuffer(path))
 		g.P()
-		mylog.Trace("merge", s)
+		mylog.Trace("merge", path)
 	}
 
-	for _, s := range paths.Keys() {
-		g.P("//" + s)
-		g.P(stream.NewBuffer(s))
-		g.P()
-		mylog.Trace("merge", s)
+	for _, s := range Headers.Keys() {
+		fnDo(s)
+	}
+	for _, s := range Modules.Keys() {
+		fnDo(s)
+	}
+	for _, s := range Imports.Keys() {
+		fnDo(s)
 	}
 
 	stream.WriteBinaryFile("merged_headers.h", g.Buffer)
