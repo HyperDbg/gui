@@ -70,6 +70,7 @@ func CreateLayoutMap(opt *Options) ([]byte, error) {
 }
 
 func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
+	stream.RunCommand("clang -E -dM " + opt.Sources[0] + " > macros.log") // 2>&1
 	errg := &errgroup.Group{}
 	errg.Go(func() error {
 		res := mylog.Check2(CreateAST(opt))
@@ -84,6 +85,5 @@ func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 		return nil
 	})
 	mylog.Check(errg.Wait())
-	stream.RunCommand("clang -E -dM " + opt.Sources[0] + " > macros.log") // 2>&1
 	return ast, layout, nil
 }
