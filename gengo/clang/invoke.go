@@ -81,7 +81,7 @@ func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 	//errg.Go(func() error {
 	res := mylog.Check2(CreateAST(opt))
 	stream.WriteTruncate("ast.json", res)
-	ast = mylog.Check2(ParseAST(res))
+	ast = mylog.Check2(ParseAST(res)) //must ok
 
 	res = mylog.Check2(CreateLayoutMap(opt))
 	stream.WriteTruncate("astLayout.log", res)
