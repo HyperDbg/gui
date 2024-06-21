@@ -258,7 +258,7 @@ func TestBindMacros(t *testing.T) {
 		}
 	}
 
-	return
+	// return
 
 	assert.Equal(t, mustPrefixs.Len(), allVars.Len())
 
