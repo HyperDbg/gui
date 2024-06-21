@@ -3689,7 +3689,7 @@ type DecodedInstructionRawEvex struct {
 	// Vector-length specifier or rounding-control (least significant bit).
 	L U8
 	// Broadcast/RC/SAE context.
-	B U8
+	// B U8
 	// High-16 `NDS`/`VIDX` register specifier.
 	V2 U8
 	// Embedded opmask register specifier.
@@ -4336,7 +4336,7 @@ type OperandAttributes = U8
 type AccessedFlagsMask = U32
 
 // Detailed info about the `EVEX` prefix.
-type DecodedInstructionRawEvex = DecodedInstructionRawEvex
+// type DecodedInstructionRawEvex = DecodedInstructionRawEvex
 
 // Defines the `ZyanStatus` data type.
 type Status = U32

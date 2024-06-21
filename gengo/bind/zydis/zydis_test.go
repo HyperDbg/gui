@@ -8,11 +8,6 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 )
 
-func TestGetVersion(t *testing.T) {
-	mylog.Todo("panic: Failed to find ZydisCategoryGetString procedure in zydis: The specified procedure could not be found.")
-	// GetVersion()
-}
-
 func TestZydis(t *testing.T) {
 	// mylog.SetDebug(false)
 	pkg := gengo.NewPackage("zydis",
