@@ -47,7 +47,7 @@ func TestMergeHeader(t *testing.T) {
 			return err
 		}
 		if filepath.Ext(path) == ".h" {
-			println(path)
+			// println(path)
 			switch {
 			case strings.Contains(path, "Headers"):
 				Headers.Set(path, true)
