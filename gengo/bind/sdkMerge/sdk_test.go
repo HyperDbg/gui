@@ -36,18 +36,34 @@ func ContainsLetter(s string) bool {
 func MacrosInHeader() (m *maps.SafeMap[string, bool]) {
 	m = new(maps.SafeMap[string, bool])
 	for _, s := range stream.NewBuffer("macros.log").ToLines() {
-		for _, s2 := range stream.NewBuffer("combined_headers.h").ToLines() {
-			if strings.HasPrefix(s, s2) {
-				m.Set(s, true)
-			}
+		m.Set(s, true)
+	}
+
+	m2 := new(maps.SafeMap[string, bool])
+	for _, s := range stream.NewBuffer("combined_headers.h").ToLines() {
+		if strings.HasPrefix(s, "#define ") {
+			m2.Set(s, true)
 		}
 	}
+	println(m.Len())
+	println(m2.Len())
+
+	for _, s := range m.Keys() {
+		if !m2.HasPrefix(s) { //todo bug
+			m.Delete(s)
+			mylog.Trace("delete macro", s)
+		}
+	}
+	println(m.Len())
+	println(m2.Len())
+
 	return
 }
 
 func TestBindMacros(t *testing.T) {
 	mylog.Todo("handle macros func like CTL_CODE(DeviceType,Function,Method,Access) ( ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method)) ")
 	mustPrefixs := MacrosInHeader()
+	return
 	mylog.Trace("number of macros", mustPrefixs.Len())
 
 	g := stream.NewGeneratedFile()
