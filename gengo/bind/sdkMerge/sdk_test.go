@@ -20,15 +20,20 @@ import (
 )
 
 func TestMergeHeader(t *testing.T) {
+	g := stream.NewGeneratedFile()
 	filepath.Walk("../../../bin", func(path string, info fs.FileInfo, err error) error {
 		if strings.Contains(path, "Examples") {
 			return err
 		}
 		if filepath.Ext(path) == ".h" {
 			println(path)
+			g.P("//" + path)
+			g.P(stream.NewBuffer(path))
+			g.P()
 		}
 		return err
 	})
+	stream.WriteBinaryFile("merged_headers.h", g.Buffer)
 }
 
 // ContainsLetter 检查字符串中是否包含字母
