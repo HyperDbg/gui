@@ -19,7 +19,23 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 )
 
+const bugfix = `
+typedef unsigned short wchar_t;
+typedef int bool ;
+#define PVOID void*
+#define HANDLE void*
+#define MAX_PATH 260
+typedef unsigned __int64   SIZE_T;
+typedef unsigned __int64   time_t;
+
+typedef struct _LIST_ENTRY {
+  struct _LIST_ENTRY *Flink;
+  struct _LIST_ENTRY *Blink;
+} LIST_ENTRY, *PLIST_ENTRY, PRLIST_ENTRY;
+`
+
 func TestMergeHeader(t *testing.T) {
+	paths := new(maps.SliceMap[string, bool])
 	g := stream.NewGeneratedFile()
 	filepath.Walk("../../../bin", func(path string, info fs.FileInfo, err error) error {
 		if strings.Contains(path, "Examples") {
@@ -30,13 +46,52 @@ func TestMergeHeader(t *testing.T) {
 			return err
 		}
 		if filepath.Ext(path) == ".h" {
-			println(path)
-			g.P("//" + path)
-			g.P(stream.NewBuffer(path))
-			g.P()
+			paths.Set(path, true)
 		}
 		return err
 	})
+
+	Modules := new(maps.SliceMap[string, bool])
+	for _, path := range paths.Keys() {
+		switch {
+		case strings.Contains(path, "BasicTypes"), strings.Contains(path, "Modules"):
+			Modules.Set(path, true)
+			paths.Delete(path)
+		}
+	}
+
+	g.P("//bugfix.h")
+	g.P(bugfix)
+	g.P()
+	mylog.Trace("merge", "bugfix.h")
+
+	BasicTypes := ""
+	for _, s := range Modules.Keys() {
+		if strings.Contains(s, "BasicTypes") {
+			BasicTypes = s
+			break
+		}
+	}
+
+	g.P("//" + BasicTypes)
+	g.P(stream.NewBuffer(BasicTypes))
+	g.P()
+	mylog.Trace("merge", BasicTypes)
+
+	for _, s := range Modules.Keys() {
+		g.P("//" + s)
+		g.P(stream.NewBuffer(s))
+		g.P()
+		mylog.Trace("merge", s)
+	}
+
+	for _, s := range paths.Keys() {
+		g.P("//" + s)
+		g.P(stream.NewBuffer(s))
+		g.P()
+		mylog.Trace("merge", s)
+	}
+
 	stream.WriteBinaryFile("merged_headers.h", g.Buffer)
 }
 

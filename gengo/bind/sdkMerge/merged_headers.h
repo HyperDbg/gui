@@ -1,3 +1,450 @@
+//bugfix.h
+
+typedef unsigned short wchar_t;
+typedef int bool ;
+#define PVOID void*
+#define HANDLE void*
+#define MAX_PATH 260
+typedef unsigned __int64   SIZE_T;
+typedef unsigned __int64   time_t;
+
+typedef struct _LIST_ENTRY {
+  struct _LIST_ENTRY *Flink;
+  struct _LIST_ENTRY *Blink;
+} LIST_ENTRY, *PLIST_ENTRY, PRLIST_ENTRY;
+
+
+//..\..\..\bin\debug\SDK\Headers\BasicTypes.h
+/**
+ * @file BasicTypes.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK Headers For Basic Datatypes
+ * @details This file contains definitions of basic datatypes
+ * @version 0.2
+ * @date 2022-06-28
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+#pragma warning(disable : 4201) // Suppress nameless struct/union warning
+
+//////////////////////////////////////////////////
+//               Basic Datatypes                //
+//////////////////////////////////////////////////
+
+typedef unsigned long long QWORD;
+typedef unsigned __int64   UINT64, *PUINT64;
+typedef unsigned long      DWORD;
+typedef int                BOOL;
+typedef unsigned char      BYTE;
+typedef unsigned short     WORD;
+typedef int                INT;
+typedef unsigned int       UINT;
+typedef unsigned int *     PUINT;
+typedef unsigned __int64   ULONG64, *PULONG64;
+typedef unsigned __int64   DWORD64, *PDWORD64;
+typedef char               CHAR;
+typedef wchar_t            WCHAR;
+#define VOID void
+
+typedef unsigned char  UCHAR;
+typedef unsigned short USHORT;
+typedef unsigned long  ULONG;
+
+typedef UCHAR     BOOLEAN;  // winnt
+typedef BOOLEAN * PBOOLEAN; // winnt
+
+typedef signed char      INT8, *PINT8;
+typedef signed short     INT16, *PINT16;
+typedef signed int       INT32, *PINT32;
+typedef signed __int64   INT64, *PINT64;
+typedef unsigned char    UINT8, *PUINT8;
+typedef unsigned short   UINT16, *PUINT16;
+typedef unsigned int     UINT32, *PUINT32;
+typedef unsigned __int64 UINT64, *PUINT64;
+
+#define NULL_ZERO   0
+#define NULL64_ZERO 0ull
+
+#define FALSE 0
+#define TRUE  1
+
+#define UPPER_56_BITS                  0xffffffffffffff00
+#define UPPER_48_BITS                  0xffffffffffff0000
+#define UPPER_32_BITS                  0xffffffff00000000
+#define LOWER_32_BITS                  0x00000000ffffffff
+#define LOWER_16_BITS                  0x000000000000ffff
+#define LOWER_8_BITS                   0x00000000000000ff
+#define SECOND_LOWER_8_BITS            0x000000000000ff00
+#define UPPER_48_BITS_AND_LOWER_8_BITS 0xffffffffffff00ff
+
+//
+// DO NOT FUCKING TOUCH THIS STRUCTURE WITHOUT COORDINATION WITH SINA
+//
+typedef struct GUEST_REGS
+{
+    //
+    // DO NOT FUCKING TOUCH THIS STRUCTURE WITHOUT COORDINATION WITH SINA
+    //
+
+    UINT64 rax; // 0x00
+    UINT64 rcx; // 0x08
+    UINT64 rdx; // 0x10
+    UINT64 rbx; // 0x18
+    UINT64 rsp; // 0x20
+    UINT64 rbp; // 0x28
+    UINT64 rsi; // 0x30
+    UINT64 rdi; // 0x38
+    UINT64 r8;  // 0x40
+    UINT64 r9;  // 0x48
+    UINT64 r10; // 0x50
+    UINT64 r11; // 0x58
+    UINT64 r12; // 0x60
+    UINT64 r13; // 0x68
+    UINT64 r14; // 0x70
+    UINT64 r15; // 0x78
+
+    //
+    // DO NOT FUCKING TOUCH THIS STRUCTURE WITHOUT COORDINATION WITH SINA
+    //
+
+} GUEST_REGS, *PGUEST_REGS;
+
+/**
+ * @brief struct for extra registers
+ *
+ */
+typedef struct GUEST_EXTRA_REGISTERS
+{
+    UINT16 CS;
+    UINT16 DS;
+    UINT16 FS;
+    UINT16 GS;
+    UINT16 ES;
+    UINT16 SS;
+    UINT64 RFLAGS;
+    UINT64 RIP;
+} GUEST_EXTRA_REGISTERS, *PGUEST_EXTRA_REGISTERS;
+
+/**
+ * @brief List of different variables
+ */
+typedef struct _SCRIPT_ENGINE_VARIABLES_LIST
+{
+    UINT64 * TempList;
+    UINT64 * GlobalVariablesList;
+    UINT64 * LocalVariablesList;
+
+} SCRIPT_ENGINE_VARIABLES_LIST, *PSCRIPT_ENGINE_VARIABLES_LIST;
+
+/**
+ * @brief CR3 Structure
+ *
+ */
+typedef struct _CR3_TYPE
+{
+    union
+    {
+        UINT64 Flags;
+
+        struct
+        {
+            UINT64 Pcid : 12;
+            UINT64 PageFrameNumber : 36;
+            UINT64 Reserved1 : 12;
+            UINT64 Reserved_2 : 3;
+            UINT64 PcidInvalidate : 1;
+        } Fields;
+    };
+} CR3_TYPE, *PCR3_TYPE;
+
+
+//..\..\..\bin\debug\SDK\Modules\VMM.h
+/**
+ * @file VMM.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK for VMM project
+ * @details This file contains definitions of HyperLog routines
+ * @version 0.2
+ * @date 2023-01-15
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//			     Callback Types                 //
+//////////////////////////////////////////////////
+
+/**
+ * @brief A function from the message tracer that send the inputs to the
+ * queue of the messages
+ *
+ */
+typedef BOOLEAN (*LOG_CALLBACK_PREPARE_AND_SEND_MESSAGE_TO_QUEUE)(UINT32       OperationCode,
+                                                                  BOOLEAN      IsImmediateMessage,
+                                                                  BOOLEAN      ShowCurrentSystemTime,
+                                                                  BOOLEAN      Priority,
+                                                                  const char * Fmt,
+                                                                  va_list      ArgList);
+
+/**
+ * @brief A function that sends the messages to message tracer buffers
+ *
+ */
+typedef BOOLEAN (*LOG_CALLBACK_SEND_MESSAGE_TO_QUEUE)(UINT32 OperationCode, BOOLEAN IsImmediateMessage, CHAR * LogMessage, UINT32 BufferLen, BOOLEAN Priority);
+
+/**
+ * @brief A function that sends the messages to message tracer buffers
+ *
+ */
+typedef BOOLEAN (*LOG_CALLBACK_SEND_BUFFER)(_In_ UINT32                          OperationCode,
+                                            _In_reads_bytes_(BufferLength) PVOID Buffer,
+                                            _In_ UINT32                          BufferLength,
+                                            _In_ BOOLEAN                         Priority);
+
+/**
+ * @brief A function that checks whether the priority or regular buffer is full or not
+ *
+ */
+typedef BOOLEAN (*LOG_CALLBACK_CHECK_IF_BUFFER_IS_FULL)(BOOLEAN Priority);
+
+/**
+ * @brief A function that handles trigger events
+ *
+ */
+typedef VMM_CALLBACK_TRIGGERING_EVENT_STATUS_TYPE (*VMM_CALLBACK_TRIGGER_EVENTS)(VMM_EVENT_TYPE_ENUM                   EventType,
+                                                                                 VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE CallingStage,
+                                                                                 PVOID                                 Context,
+                                                                                 BOOLEAN *                             PostEventRequired,
+                                                                                 GUEST_REGS *                          Regs);
+
+/**
+ * @brief A function that checks and handles breakpoints
+ *
+ */
+typedef BOOLEAN (*DEBUGGING_CALLBACK_HANDLE_BREAKPOINT_EXCEPTION)(UINT32 CoreId);
+
+/**
+ * @brief A function that checks and handles debug breakpoints
+ *
+ */
+typedef BOOLEAN (*DEBUGGING_CALLBACK_HANDLE_DEBUG_BREAKPOINT_EXCEPTION)(UINT32 CoreId);
+
+/**
+ * @brief Check for page-faults in user-debugger
+ *
+ */
+typedef BOOLEAN (*DEBUGGING_CALLBACK_CONDITIONAL_PAGE_FAULT_EXCEPTION)(UINT32 CoreId,
+                                                                       UINT64 Address,
+                                                                       UINT32 PageFaultErrorCode);
+
+/**
+ * @brief Check for commands in user-debugger
+ *
+ */
+typedef BOOLEAN (*UD_CHECK_FOR_COMMAND)();
+
+/**
+ * @brief Handle registered MTF callback
+ *
+ */
+typedef VOID (*VMM_CALLBACK_REGISTERED_MTF_HANDLER)(UINT32 CoreId);
+
+/**
+ * @brief Check for user-mode access for loaded module details
+ *
+ */
+typedef BOOLEAN (*VMM_CALLBACK_RESTORE_EPT_STATE)(UINT32 CoreId);
+
+/**
+ * @brief Check for unhandled EPT violations
+ *
+ */
+typedef BOOLEAN (*VMM_CALLBACK_CHECK_UNHANDLED_EPT_VIOLATION)(UINT32 CoreId, UINT64 ViolationQualification, UINT64 GuestPhysicalAddr);
+
+/**
+ * @brief Handle cr3 process change callbacks
+ *
+ */
+typedef VOID (*INTERCEPTION_CALLBACK_TRIGGER_CR3_CHANGE)(UINT32 CoreId);
+
+/**
+ * @brief Check for process or thread change callback
+ *
+ */
+typedef BOOLEAN (*INTERCEPTION_CALLBACK_TRIGGER_CLOCK_AND_IPI)(_In_ UINT32 CoreId);
+
+/**
+ * @brief Check to handle cr3 events for thread interception
+ *
+ */
+typedef BOOLEAN (*ATTACHING_HANDLE_CR3_EVENTS_FOR_THREAD_INTERCEPTION)(UINT32 CoreId, CR3_TYPE NewCr3);
+
+/**
+ * @brief Check and handle reapplying breakpoint
+ *
+ */
+typedef BOOLEAN (*BREAKPOINT_CHECK_AND_HANDLE_REAPPLYING_BREAKPOINT)(UINT32 CoreId);
+
+/**
+ * @brief Handle NMI broadcast
+ *
+ */
+typedef VOID (*VMM_CALLBACK_NMI_BROADCAST_REQUEST_HANDLER)(UINT32 CoreId, BOOLEAN IsOnVmxNmiHandler);
+
+/**
+ * @brief Check and handle NMI callbacks
+ *
+ */
+typedef BOOLEAN (*KD_CHECK_AND_HANDLE_NMI_CALLBACK)(UINT32 CoreId);
+
+/**
+ * @brief Set the top-level driver's error status
+ *
+ */
+typedef VOID (*VMM_CALLBACK_SET_LAST_ERROR)(UINT32 LastError);
+
+/**
+ * @brief Check and modify the protected resources of the hypervisor
+ *
+ */
+typedef BOOLEAN (*VMM_CALLBACK_QUERY_TERMINATE_PROTECTED_RESOURCE)(UINT32                               CoreId,
+                                                                   PROTECTED_HV_RESOURCES_TYPE          ResourceType,
+                                                                   PVOID                                Context,
+                                                                   PROTECTED_HV_RESOURCES_PASSING_OVERS PassOver);
+
+/**
+ * @brief Query debugger thread or process tracing details by core ID
+ *
+ */
+typedef BOOLEAN (*KD_QUERY_DEBUGGER_THREAD_OR_PROCESS_TRACING_DETAILS_BY_CORE_ID)(UINT32                          CoreId,
+                                                                                  DEBUGGER_THREAD_PROCESS_TRACING TracingType);
+/**
+ * @brief Handler of debugger specific VMCALLs
+ *
+ */
+typedef BOOLEAN (*VMM_CALLBACK_VMCALL_HANDLER)(UINT32 CoreId,
+                                               UINT64 VmcallNumber,
+                                               UINT64 OptionalParam1,
+                                               UINT64 OptionalParam2,
+                                               UINT64 OptionalParam3);
+
+//////////////////////////////////////////////////
+//			   Callback Structure               //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Prototype of each function needed by VMM module
+ *
+ */
+typedef struct _VMM_CALLBACKS
+{
+    //
+    // Log (Hyperlog) callbacks
+    //
+    LOG_CALLBACK_PREPARE_AND_SEND_MESSAGE_TO_QUEUE LogCallbackPrepareAndSendMessageToQueueWrapper; // Fixed
+    LOG_CALLBACK_SEND_MESSAGE_TO_QUEUE             LogCallbackSendMessageToQueue;                  // Fixed
+    LOG_CALLBACK_SEND_BUFFER                       LogCallbackSendBuffer;                          // Fixed
+    LOG_CALLBACK_CHECK_IF_BUFFER_IS_FULL           LogCallbackCheckIfBufferIsFull;                 // Fixed
+
+    //
+    // VMM callbacks
+    //
+    VMM_CALLBACK_TRIGGER_EVENTS                     VmmCallbackTriggerEvents;                   // Fixed
+    VMM_CALLBACK_SET_LAST_ERROR                     VmmCallbackSetLastError;                    // Fixed
+    VMM_CALLBACK_VMCALL_HANDLER                     VmmCallbackVmcallHandler;                   // Fixed
+    VMM_CALLBACK_NMI_BROADCAST_REQUEST_HANDLER      VmmCallbackNmiBroadcastRequestHandler;      // Fixed
+    VMM_CALLBACK_QUERY_TERMINATE_PROTECTED_RESOURCE VmmCallbackQueryTerminateProtectedResource; // Fixed
+    VMM_CALLBACK_RESTORE_EPT_STATE                  VmmCallbackRestoreEptState;                 // Fixed
+    VMM_CALLBACK_CHECK_UNHANDLED_EPT_VIOLATION      VmmCallbackCheckUnhandledEptViolations;     // Fixed
+
+    //
+    // Debugging callbacks
+    //
+    DEBUGGING_CALLBACK_HANDLE_BREAKPOINT_EXCEPTION       DebuggingCallbackHandleBreakpointException;      // Fixed
+    DEBUGGING_CALLBACK_HANDLE_DEBUG_BREAKPOINT_EXCEPTION DebuggingCallbackHandleDebugBreakpointException; // Fixed
+    DEBUGGING_CALLBACK_CONDITIONAL_PAGE_FAULT_EXCEPTION  DebuggingCallbackConditionalPageFaultException;  // Fixed
+
+    //
+    // Interception callbacks
+    //
+    INTERCEPTION_CALLBACK_TRIGGER_CR3_CHANGE InterceptionCallbackTriggerCr3ProcessChange; // Fixed
+
+    //
+    // Callbacks to be removed
+    //
+    BREAKPOINT_CHECK_AND_HANDLE_REAPPLYING_BREAKPOINT              BreakpointCheckAndHandleReApplyingBreakpoint;
+    UD_CHECK_FOR_COMMAND                                           UdCheckForCommand;
+    KD_CHECK_AND_HANDLE_NMI_CALLBACK                               KdCheckAndHandleNmiCallback;
+    VMM_CALLBACK_REGISTERED_MTF_HANDLER                            VmmCallbackRegisteredMtfHandler; // Fixed but not good
+    INTERCEPTION_CALLBACK_TRIGGER_CLOCK_AND_IPI                    DebuggerCheckProcessOrThreadChange;
+    ATTACHING_HANDLE_CR3_EVENTS_FOR_THREAD_INTERCEPTION            AttachingHandleCr3VmexitsForThreadInterception;
+    KD_QUERY_DEBUGGER_THREAD_OR_PROCESS_TRACING_DETAILS_BY_CORE_ID KdQueryDebuggerQueryThreadOrProcessTracingDetailsByCoreId;
+
+} VMM_CALLBACKS, *PVMM_CALLBACKS;
+
+
+//..\..\..\bin\debug\SDK\Modules\HyperLog.h
+/**
+ * @file HyperLog.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK for HyperLog project
+ * @details This file contains definitions of HyperLog routines
+ * @version 0.2
+ * @date 2023-01-15
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//			     Callback Types                 //
+//////////////////////////////////////////////////
+
+/**
+ * @brief A function that checks whether the current operation
+ * is on vmx-root mode or not
+ *
+ */
+typedef BOOLEAN (*CHECK_VMX_OPERATION)();
+
+/**
+ * @brief A function that checks whether the immediate message
+ * sending is needed or not
+ *
+ */
+typedef BOOLEAN (*CHECK_IMMEDIATE_MESSAGE_SENDING)(UINT32 OperationCode);
+
+/**
+ * @brief A function that sends immediate messages
+ *
+ */
+typedef BOOLEAN (*SEND_IMMEDIATE_MESSAGE)(CHAR * OptionalBuffer,
+                                          UINT32 OptionalBufferLength,
+                                          UINT32 OperationCode);
+
+//////////////////////////////////////////////////
+//			   Callback Structure               //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Prototype of each function needed by message tracer
+ *
+ */
+typedef struct _MESSAGE_TRACING_CALLBACKS
+{
+    CHECK_VMX_OPERATION             VmxOperationCheck;
+    CHECK_IMMEDIATE_MESSAGE_SENDING CheckImmediateMessageSending;
+    SEND_IMMEDIATE_MESSAGE          SendImmediateMessage;
+
+} MESSAGE_TRACING_CALLBACKS, *PMESSAGE_TRACING_CALLBACKS;
+
+
 //..\..\..\bin\debug\SDK\Headers\BasicTypes.h
 /**
  * @file BasicTypes.h
@@ -333,6 +780,894 @@ typedef struct _DEBUGGER_REMOTE_PACKET
     DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION RequestedActionOfThePacket;
 
 } DEBUGGER_REMOTE_PACKET, *PDEBUGGER_REMOTE_PACKET;
+
+
+//..\..\..\bin\debug\SDK\Headers\ErrorCodes.h
+/**
+ * @file ErrorCodes.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK Error codes
+ * @details This file contains definitions of error codes used in HyperDbg
+ * @version 0.2
+ * @date 2022-06-24
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//		    	  Success Codes                 //
+//////////////////////////////////////////////////
+
+/**
+ * @brief General value to indicate that the operation or
+ * request was successful
+ *
+ */
+#define DEBUGGER_OPERATION_WAS_SUCCESSFUL 0xFFFFFFFF
+
+//////////////////////////////////////////////////
+//		    	   Error Codes                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief error, the tag not exist
+ *
+ */
+#define DEBUGGER_ERROR_TAG_NOT_EXISTS 0xc0000000
+
+/**
+ * @brief error, invalid type of action
+ *
+ */
+#define DEBUGGER_ERROR_INVALID_ACTION_TYPE 0xc0000001
+
+/**
+ * @brief error, the action buffer size is invalid
+ *
+ */
+#define DEBUGGER_ERROR_ACTION_BUFFER_SIZE_IS_ZERO 0xc0000002
+
+/**
+ * @brief error, the event type is unknown
+ *
+ */
+#define DEBUGGER_ERROR_EVENT_TYPE_IS_INVALID 0xc0000003
+
+/**
+ * @brief error, enable to create event
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_CREATE_EVENT 0xc0000004
+
+/**
+ * @brief error, invalid address specified for debugger
+ *
+ */
+#define DEBUGGER_ERROR_INVALID_ADDRESS 0xc0000005
+
+/**
+ * @brief error, the core id is invalid
+ *
+ */
+#define DEBUGGER_ERROR_INVALID_CORE_ID 0xc0000006
+
+/**
+ * @brief error, the index is greater than 32 in !exception command
+ *
+ */
+#define DEBUGGER_ERROR_EXCEPTION_INDEX_EXCEED_FIRST_32_ENTRIES 0xc0000007
+
+/**
+ * @brief error, the index for !interrupt command is not between 32 to 256
+ *
+ */
+#define DEBUGGER_ERROR_INTERRUPT_INDEX_IS_NOT_VALID 0xc0000008
+
+/**
+ * @brief error, unable to hide the debugger and enter to transparent-mode
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_HIDE_OR_UNHIDE_DEBUGGER 0xc0000009
+
+/**
+ * @brief error, the debugger is already in transparent-mode
+ *
+ */
+#define DEBUGGER_ERROR_DEBUGGER_ALREADY_UHIDE 0xc000000a
+
+/**
+ * @brief error, invalid parameters in !e* e* commands
+ *
+ */
+#define DEBUGGER_ERROR_EDIT_MEMORY_STATUS_INVALID_PARAMETER 0xc000000b
+
+/**
+ * @brief error, an invalid address is specified based on current cr3
+ * in !e* or e* commands
+ *
+ */
+#define DEBUGGER_ERROR_EDIT_MEMORY_STATUS_INVALID_ADDRESS_BASED_ON_CURRENT_PROCESS \
+    0xc000000c
+
+/**
+ * @brief error, an invalid address is specified based on anotehr process's cr3
+ * in !e* or e* commands
+ *
+ */
+#define DEBUGGER_ERROR_EDIT_MEMORY_STATUS_INVALID_ADDRESS_BASED_ON_OTHER_PROCESS \
+    0xc000000d
+
+/**
+ * @brief error, invalid tag for 'events' command (tag id is unknown for kernel)
+ *
+ */
+#define DEBUGGER_ERROR_MODIFY_EVENTS_INVALID_TAG 0xc000000e
+
+/**
+ * @brief error, type of action (enable/disable/clear) is wrong
+ *
+ */
+#define DEBUGGER_ERROR_MODIFY_EVENTS_INVALID_TYPE_OF_ACTION 0xc000000f
+
+/**
+ * @brief error, invalid parameters steppings actions
+ *
+ */
+#define DEBUGGER_ERROR_STEPPING_INVALID_PARAMETER 0xc0000010
+
+/**
+ * @brief error, thread is invalid (not found) or disabled in
+ * stepping (step-in & step-out) requests
+ *
+ */
+#define DEBUGGER_ERROR_STEPPINGS_EITHER_THREAD_NOT_FOUND_OR_DISABLED 0xc0000011
+
+/**
+ * @brief error, baud rate is invalid
+ *
+ */
+#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_INVALID_BAUDRATE 0xc0000012
+
+/**
+ * @brief error, serial port address is invalid
+ *
+ */
+#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_INVALID_SERIAL_PORT 0xc0000013
+
+/**
+ * @brief error, invalid core selected in changing core in remote debuggee
+ *
+ */
+#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_INVALID_CORE_IN_REMOTE_DEBUGGE \
+    0xc0000014
+
+/**
+ * @brief error, invalid process selected in changing process in remote debuggee
+ *
+ */
+#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_UNABLE_TO_SWITCH_TO_NEW_PROCESS \
+    0xc0000015
+
+/**
+ * @brief error, unable to run script in remote debuggee
+ *
+ */
+#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_TO_RUN_SCRIPT 0xc0000016
+
+/**
+ * @brief error, invalid register number
+ *
+ */
+#define DEBUGGER_ERROR_INVALID_REGISTER_NUMBER 0xc0000017
+
+/**
+ * @brief error, maximum pools were used without continuing debuggee
+ *
+ */
+#define DEBUGGER_ERROR_MAXIMUM_BREAKPOINT_WITHOUT_CONTINUE 0xc0000018
+
+/**
+ * @brief error, breakpoint already exists on the target address
+ *
+ */
+#define DEBUGGER_ERROR_BREAKPOINT_ALREADY_EXISTS_ON_THE_ADDRESS 0xc0000019
+
+/**
+ * @brief error, breakpoint id not found
+ *
+ */
+#define DEBUGGER_ERROR_BREAKPOINT_ID_NOT_FOUND 0xc000001a
+
+/**
+ * @brief error, breakpoint already disabled
+ *
+ */
+#define DEBUGGER_ERROR_BREAKPOINT_ALREADY_DISABLED 0xc000001b
+
+/**
+ * @brief error, breakpoint already enabled
+ *
+ */
+#define DEBUGGER_ERROR_BREAKPOINT_ALREADY_ENABLED 0xc000001c
+
+/**
+ * @brief error, memory type is invalid
+ *
+ */
+#define DEBUGGER_ERROR_MEMORY_TYPE_INVALID 0xc000001d
+
+/**
+ * @brief error, the process id is invalid
+ *
+ */
+#define DEBUGGER_ERROR_INVALID_PROCESS_ID 0xc000001e
+
+/**
+ * @brief error, for event specific reasons the event is not
+ * applied
+ *
+ */
+#define DEBUGGER_ERROR_EVENT_IS_NOT_APPLIED 0xc000001f
+
+/**
+ * @brief error, for process switch or process details, invalid parameter
+ *
+ */
+#define DEBUGGER_ERROR_DETAILS_OR_SWITCH_PROCESS_INVALID_PARAMETER 0xc0000020
+
+/**
+ * @brief error, for thread switch or thread details, invalid parameter
+ *
+ */
+#define DEBUGGER_ERROR_DETAILS_OR_SWITCH_THREAD_INVALID_PARAMETER 0xc0000021
+
+/**
+ * @brief error, maximum breakpoint for a single page is hit
+ *
+ */
+#define DEBUGGER_ERROR_MAXIMUM_BREAKPOINT_FOR_A_SINGLE_PAGE_IS_HIT 0xc0000022
+
+/**
+ * @brief error, there is no pre-allocated buffer
+ *
+ */
+#define DEBUGGER_ERROR_PRE_ALLOCATED_BUFFER_IS_EMPTY 0xc0000023
+
+/**
+ * @brief error, in the EPT handler, it could not split the 2MB pages to
+ * 512 entries of 4 KB pages
+ *
+ */
+#define DEBUGGER_ERROR_EPT_COULD_NOT_SPLIT_THE_LARGE_PAGE_TO_4KB_PAGES 0xc0000024
+
+/**
+ * @brief error, failed to get PML1 entry of the target address
+ *
+ */
+#define DEBUGGER_ERROR_EPT_FAILED_TO_GET_PML1_ENTRY_OF_TARGET_ADDRESS 0xc0000025
+
+/**
+ * @brief error, multiple EPT Hooks or Monitors are applied on a single page
+ *
+ */
+#define DEBUGGER_ERROR_EPT_MULTIPLE_HOOKS_IN_A_SINGLE_PAGE 0xc0000026
+
+/**
+ * @brief error, could not build the EPT Hook
+ *
+ */
+#define DEBUGGER_ERROR_COULD_NOT_BUILD_THE_EPT_HOOK 0xc0000027
+
+/**
+ * @brief error, could not find the type of allocation
+ *
+ */
+#define DEBUGGER_ERROR_COULD_NOT_FIND_ALLOCATION_TYPE 0xc0000028
+
+/**
+ * @brief error, could not find the index of test query
+ *
+ */
+#define DEBUGGER_ERROR_INVALID_TEST_QUERY_INDEX 0xc0000029
+
+/**
+ * @brief error, failed to attach to the target user-mode process
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_ATTACH_TO_TARGET_USER_MODE_PROCESS 0xc000002a
+
+/**
+ * @brief error, failed to remove hooks as entrypoint is not reached yet
+ * @details The caller of this functionality should keep sending the previous
+ * IOCTL until the hook is remove successfully
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_REMOVE_HOOKS_ENTRYPOINT_NOT_REACHED 0xc000002b
+
+/**
+ * @brief error, could not remove the previous hook
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_REMOVE_HOOKS 0xc000002c
+
+/**
+ * @brief error, the needed routines for debugging is not initialized
+ *
+ */
+#define DEBUGGER_ERROR_FUNCTIONS_FOR_INITIALIZING_PEB_ADDRESSES_ARE_NOT_INITIALIZED 0xc000002d
+
+/**
+ * @brief error, unable to get 32-bit or 64-bit of the target process
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_DETECT_32_BIT_OR_64_BIT_PROCESS 0xc000002e
+
+/**
+ * @brief error, unable to kill the target process
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_KILL_THE_PROCESS 0xc000002f
+
+/**
+ * @brief error, invalid thread debugging token
+ *
+ */
+#define DEBUGGER_ERROR_INVALID_THREAD_DEBUGGING_TOKEN 0xc0000030
+
+/**
+ * @brief error, unable to pause the process's threads
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_PAUSE_THE_PROCESS_THREADS 0xc0000031
+
+/**
+ * @brief error, user debugger already attached to this process
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_ATTACH_TO_AN_ALREADY_ATTACHED_PROCESS 0xc0000032
+
+/**
+ * @brief error, the user debugger is not attached to the target process
+ *
+ */
+#define DEBUGGER_ERROR_THE_USER_DEBUGGER_NOT_ATTACHED_TO_THE_PROCESS 0xc0000033
+
+/**
+ * @brief error, cannot detach from the process as there are paused threads
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_DETACH_AS_THERE_ARE_PAUSED_THREADS 0xc0000034
+
+/**
+ * @brief error, cannot switch to new thread as the process id or thread id is not found
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_SWITCH_PROCESS_ID_OR_THREAD_ID_IS_INVALID 0xc0000035
+
+/**
+ * @brief error, cannot switch to new thread the process doesn't contain an active thread
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_SWITCH_THERE_IS_NO_THREAD_ON_THE_PROCESS 0xc0000036
+
+/**
+ * @brief error, unable to get modules
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_GET_MODULES_OF_THE_PROCESS 0xc0000037
+
+/**
+ * @brief error, unable to get the callstack
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_GET_CALLSTACK 0xc0000038
+
+/**
+ * @brief error, unable to query count of processes or threads
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_QUERY_COUNT_OF_PROCESSES_OR_THREADS 0xc0000039
+
+/**
+ * @brief error, using short-circuiting event with post-event mode is
+ * not supported in HyperDbg
+ *
+ */
+#define DEBUGGER_ERROR_USING_SHORT_CIRCUITING_EVENT_WITH_POST_EVENT_MODE_IS_FORBIDDEDN 0xc000003a
+
+/**
+ * @brief error, unknown test query is received
+ *
+ */
+#define DEBUGGER_ERROR_UNKNOWN_TEST_QUERY_RECEIVED 0xc000003b
+
+/**
+ * @brief error, for reading from memory in case of invalid parameters
+ *
+ */
+#define DEBUGGER_ERROR_READING_MEMORY_INVALID_PARAMETER 0xc000003c
+
+/**
+ * @brief error, the list of threads/process trap flag is full
+ *
+ */
+#define DEBUGGER_ERROR_THE_TRAP_FLAG_LIST_IS_FULL 0xc000003d
+
+/**
+ * @brief error, unable to kill the target process. process does not exists
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_KILL_THE_PROCESS_DOES_NOT_EXISTS 0xc000003e
+
+/**
+ * @brief error, the execution mode is incorrect
+ *
+ */
+#define DEBUGGER_ERROR_MODE_EXECUTION_IS_INVALID 0xc000003f
+
+/**
+ * @brief error, the process id cannot be specified while the debugger is in VMX-root mode
+ *
+ */
+#define DEBUGGER_ERROR_PROCESS_ID_CANNOT_BE_SPECIFIED_WHILE_APPLYING_EVENT_FROM_VMX_ROOT_MODE 0xc0000040
+
+/**
+ * @brief error, the preallocated buffer is not enough for storing event+conditional buffer
+ *
+ */
+#define DEBUGGER_ERROR_INSTANT_EVENT_PREALLOCATED_BUFFER_IS_NOT_ENOUGH_FOR_EVENT_AND_CONDITIONALS 0xc0000041
+
+/**
+ * @brief error, the regular preallocated buffer not found
+ *
+ */
+#define DEBUGGER_ERROR_INSTANT_EVENT_REGULAR_PREALLOCATED_BUFFER_NOT_FOUND 0xc0000042
+
+/**
+ * @brief error, the big preallocated buffer not found
+ *
+ */
+#define DEBUGGER_ERROR_INSTANT_EVENT_BIG_PREALLOCATED_BUFFER_NOT_FOUND 0xc0000043
+
+/**
+ * @brief error, enable to create action (cannot allocate buffer)
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_CREATE_ACTION_CANNOT_ALLOCATE_BUFFER 0xc0000044
+
+/**
+ * @brief error, the regular preallocated buffer not found (for action)
+ *
+ */
+#define DEBUGGER_ERROR_INSTANT_EVENT_ACTION_REGULAR_PREALLOCATED_BUFFER_NOT_FOUND 0xc0000045
+
+/**
+ * @brief error, the big preallocated buffer not found (for action)
+ *
+ */
+#define DEBUGGER_ERROR_INSTANT_EVENT_ACTION_BIG_PREALLOCATED_BUFFER_NOT_FOUND 0xc0000046
+
+/**
+ * @brief error, the preallocated buffer is not enough for storing action buffer
+ *
+ */
+#define DEBUGGER_ERROR_INSTANT_EVENT_PREALLOCATED_BUFFER_IS_NOT_ENOUGH_FOR_ACTION_BUFFER 0xc0000047
+
+/**
+ * @brief error, the requested optional buffer is bigger than send/receive stack of the debugger
+ *
+ */
+#define DEBUGGER_ERROR_INSTANT_EVENT_REQUESTED_OPTIONAL_BUFFER_IS_BIGGER_THAN_DEBUGGERS_SEND_RECEIVE_STACK 0xc0000048
+
+/**
+ * @brief error, the requested safe buffer does not exist (regular)
+ *
+ */
+#define DEBUGGER_ERROR_INSTANT_EVENT_REGULAR_REQUESTED_SAFE_BUFFER_NOT_FOUND 0xc0000049
+
+/**
+ * @brief error, the requested safe buffer does not exists (big)
+ *
+ */
+#define DEBUGGER_ERROR_INSTANT_EVENT_BIG_REQUESTED_SAFE_BUFFER_NOT_FOUND 0xc000004a
+
+/**
+ * @brief error, the preallocated buffer is not enough for storing safe requested buffer
+ *
+ */
+#define DEBUGGER_ERROR_INSTANT_EVENT_PREALLOCATED_BUFFER_IS_NOT_ENOUGH_FOR_REQUESTED_SAFE_BUFFER 0xc000004b
+
+/**
+ * @brief error, enable to create requested safe buffer (cannot allocate buffer)
+ *
+ */
+#define DEBUGGER_ERROR_UNABLE_TO_ALLOCATE_REQUESTED_SAFE_BUFFER 0xc000004c
+
+/**
+ * @brief error, could not find the type of preactivation
+ *
+ */
+#define DEBUGGER_ERROR_COULD_NOT_FIND_PREACTIVATION_TYPE 0xc000004d
+
+/**
+ * @brief error, the mode exec trap is not already initialized
+ *
+ */
+#define DEBUGGER_ERROR_THE_MODE_EXEC_TRAP_IS_NOT_INITIALIZED 0xc000004e
+
+/**
+ * @brief error, the target event(s) is/are disabled but cannot clear them because the buffer of the user-mode
+ * priority is full
+ *
+ */
+#define DEBUGGER_ERROR_THE_TARGET_EVENT_IS_DISABLED_BUT_CANNOT_BE_CLEARED_PRIRITY_BUFFER_IS_FULL 0xc000004f
+
+/**
+ * @brief error, not all cores are locked (probably due to a race condition in HyperDbg) in
+ * instant-event mechanism
+ *
+ */
+#define DEBUGGER_ERROR_NOT_ALL_CORES_ARE_LOCKED_FOR_APPLYING_INSTANT_EVENT 0xc0000050
+
+/**
+ * @brief error, switching to the target core is not possible because core is not locked
+ * (probably due to a race condition in HyperDbg)
+ *
+ */
+#define DEBUGGER_ERROR_TARGET_SWITCHING_CORE_IS_NOT_LOCKED 0xc0000051
+
+/**
+ * @brief error, invalid physical address
+ *
+ */
+#define DEBUGGER_ERROR_INVALID_PHYSICAL_ADDRESS 0xc0000052
+
+//
+// WHEN YOU ADD ANYTHING TO THIS LIST OF ERRORS, THEN
+// MAKE SURE TO ADD AN ERROR MESSAGE TO ShowErrorMessage(UINT32 Error)
+// FUNCTION
+//
+
+
+//..\..\..\bin\debug\SDK\Headers\HardwareDebugger.h
+/**
+ * @file HardwareDebugger.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's Hardware Debugger (hwdbg) types and constants
+ * @details This file contains definitions of hwdbg elements
+ * used in HyperDbg
+ * @version 0.9
+ * @date 2024-04-28
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//                 Definitions                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Initial debuggee to debugger offset
+ *
+ */
+#define DEFAULT_INITIAL_DEBUGGEE_TO_DEBUGGER_OFFSET 0x200
+
+/**
+ * @brief Initial debugger to debuggee offset
+ *
+ */
+#define DEFAULT_INITIAL_DEBUGGER_TO_DEBUGGEE_OFFSET 0x0
+
+//////////////////////////////////////////////////
+//                   Enums                      //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Different action of hwdbg
+ * @warning This file should be changed along with hwdbg files
+ *
+ */
+typedef enum _HWDBG_ACTION_ENUMS
+{
+    hwdbgActionSendInstanceInfo      = 1,
+    hwdbgActionConfigureScriptBuffer = 2,
+
+} HWDBG_ACTION_ENUMS;
+
+/**
+ * @brief Different responses come from hwdbg
+ * @warning This file should be changed along with hwdbg files
+ *
+ */
+typedef enum _HWDBG_RESPONSE_ENUMS
+{
+    hwdbgResponseSuccessOrErrorMessage = 1,
+    hwdbgResponseInstanceInfo          = 2,
+
+} HWDBG_RESPONSE_ENUMS;
+
+/**
+ * @brief Different success or error codes in hwdbg
+ * @warning This file should be changed along with hwdbg files
+ *
+ */
+typedef enum _HWDBG_SUCCESS_OR_ERROR_ENUMS
+{
+    hwdbgOperationWasSuccessful = 0x7FFFFFFF,
+    hwdbgErrorInvalidPacket     = 1,
+
+} HWDBG_SUCCESS_OR_ERROR_ENUMS;
+
+//////////////////////////////////////////////////
+//                   Structures                 //
+//////////////////////////////////////////////////
+
+/**
+ * @brief The structure of port information (each item) in hwdbg
+ *
+ */
+typedef struct _HWDBG_PORT_INFORMATION_ITEMS
+{
+    UINT32 PortSize;
+
+} HWDBG_PORT_INFORMATION_ITEMS, *PHWDBG_PORT_INFORMATION_ITEMS;
+
+/**
+ * @brief The structure of script capabilities information in hwdbg
+ *
+ */
+typedef struct _HWDBG_INSTANCE_INFORMATION
+{
+    //
+    // ANY ADDITION TO THIS STRUCTURE SHOULD BE SYNCHRONIZED WITH SCALA AND INSTANCE INFO SENDER MODULE
+    //
+    UINT32 version;                                    // Target version of HyperDbg (same as hwdbg)
+    UINT32 maximumNumberOfStages;                      // Number of stages that this instance of hwdbg supports (NumberOfSupportedStages == 0 means script engine is disabled)
+    UINT32 scriptVariableLength;                       // maximum length of variables (and other script elements)
+    UINT32 maximumNumberOfSupportedGetScriptOperators; // Maximum supported GET operators in a single func
+    UINT32 maximumNumberOfSupportedSetScriptOperators; // Maximum supported SET operators in a single func
+    UINT32 sharedMemorySize;                           // Size of shared memory
+    UINT32 debuggerAreaOffset;                         // The memory offset of debugger
+    UINT32 debuggeeAreaOffset;                         // The memory offset of debuggee
+    UINT32 numberOfPins;                               // Number of pins
+    UINT32 numberOfPorts;                              // Number of ports
+
+    //
+    // ANY ADDITION TO THIS STRUCTURE SHOULD BE SYNCHRONIZED WITH SCALA AND INSTANCE INFO SENDER MODULE
+    //
+
+    struct _HWDBG_SCRIPT_CAPABILITIES
+    {
+        //
+        // ANY ADDITION TO THIS MASK SHOULD BE ADDED TO HwdbgInterpreterShowScriptCapabilities
+        // and HwdbgInterpreterCheckScriptBufferWithScriptCapabilities as well Scala file
+        //
+        UINT64 func_or : 1;
+        UINT64 func_xor : 1;
+        UINT64 func_and : 1;
+        UINT64 func_asr : 1;
+        UINT64 func_asl : 1;
+        UINT64 func_add : 1;
+        UINT64 func_sub : 1;
+        UINT64 func_mul : 1;
+        UINT64 func_div : 1;
+        UINT64 func_mod : 1;
+        UINT64 func_gt : 1;
+        UINT64 func_lt : 1;
+        UINT64 func_egt : 1;
+        UINT64 func_elt : 1;
+        UINT64 func_equal : 1;
+        UINT64 func_neq : 1;
+        UINT64 func_jmp : 1;
+        UINT64 func_jz : 1;
+        UINT64 func_jnz : 1;
+        UINT64 func_mov : 1;
+        UINT64 func_printf : 1;
+
+        //
+        // ANY ADDITION TO THIS MASK SHOULD BE ADDED TO HwdbgInterpreterShowScriptCapabilities
+        // and HwdbgInterpreterCheckScriptBufferWithScriptCapabilities as well Scala file
+        //
+
+    } scriptCapabilities;
+
+    UINT32 bramAddrWidth; // BRAM address width
+    UINT32 bramDataWidth; // BRAM data width
+
+    //
+    // Here the details of port arrangements are located (HWDBG_PORT_INFORMATION_ITEMS)
+    // As the following type:
+    //   HWDBG_PORT_INFORMATION_ITEMS portsConfiguration[numberOfPorts]   ; Port arrangement
+    //
+
+} HWDBG_INSTANCE_INFORMATION, *PHWDBG_INSTANCE_INFORMATION;
+
+/**
+ * @brief The structure of script buffer in hwdbg
+ *
+ */
+typedef struct _HWDBG_SCRIPT_BUFFER
+{
+    UINT32 scriptNumberOfSymbols; // Number of symbols in the script
+
+    //
+    // Here the script buffer is located
+    //
+    // UINT8 scriptBuffer[scriptNumberOfSymbols]; // The script buffer
+    //
+
+} HWDBG_SCRIPT_BUFFER, *PHWDBG_SCRIPT_BUFFER;
+
+
+//..\..\..\bin\debug\SDK\Imports\HyperDbgHyperLogIntrinsics.h
+/**
+ * @file HyperDbgHyperLogIntrinsics.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers relating exported functions from hyperlog project
+ * @version 0.1
+ * @date 2023-01-15
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//					Enums						//
+//////////////////////////////////////////////////
+
+/**
+ * @brief Types of log messages
+ *
+ */
+typedef enum _LOG_TYPE
+{
+    LOG_INFO,
+    LOG_WARNING,
+    LOG_ERROR
+
+} LOG_TYPE;
+
+//////////////////////////////////////////////////
+//					Logging						//
+//////////////////////////////////////////////////
+
+/**
+ * @brief Define log variables
+ *
+ */
+#if UseDbgPrintInsteadOfUsermodeMessageTracking
+/* Use DbgPrint */
+#    define Logformat, ...)                           \
+        DbgPrint("[+] Information (%s:%d) | " format "\n", \
+                 __func__,                                 \
+                 __LINE__,                                 \
+                 __VA_ARGS__)
+
+#    define LogWarning(format, ...)                    \
+        DbgPrint("[-] Warning (%s:%d) | " format "\n", \
+                 __func__,                             \
+                 __LINE__,                             \
+                 __VA_ARGS__)
+
+#    define LogError(format, ...)                    \
+        DbgPrint("[!] Error (%s:%d) | " format "\n", \
+                 __func__,                           \
+                 __LINE__,                           \
+                 __VA_ARGS__);                       \
+        DbgBreakPoint()
+
+/**
+ * @brief Log without any prefix
+ *
+ */
+#    define Log(format, ...) \
+        DbgPrint(format, __VA_ARGS__)
+
+#else
+
+/**
+ * @brief Log, general
+ *
+ */
+#    define LogInfo(format, ...)                                                          \
+        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
+                                                UseImmediateMessaging,                    \
+                                                ShowSystemTimeOnDebugMessages,            \
+                                                FALSE,                                    \
+                                                "[+] Information (%s:%d) | " format "\n", \
+                                                __func__,                                 \
+                                                __LINE__,                                 \
+                                                __VA_ARGS__)
+
+/**
+ * @brief Log in the case of priority message
+ *
+ */
+#    define LogInfoPriority(format, ...)                                                  \
+        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
+                                                TRUE,                                     \
+                                                ShowSystemTimeOnDebugMessages,            \
+                                                TRUE,                                     \
+                                                "[+] Information (%s:%d) | " format "\n", \
+                                                __func__,                                 \
+                                                __LINE__,                                 \
+                                                __VA_ARGS__)
+
+/**
+ * @brief Log in the case of warning
+ *
+ */
+#    define LogWarning(format, ...)                                                   \
+        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_WARNING_MESSAGE,        \
+                                                UseImmediateMessaging,                \
+                                                ShowSystemTimeOnDebugMessages,        \
+                                                TRUE,                                 \
+                                                "[-] Warning (%s:%d) | " format "\n", \
+                                                __func__,                             \
+                                                __LINE__,                             \
+                                                __VA_ARGS__)
+
+/**
+ * @brief Log in the case of error
+ *
+ */
+#    define LogError(format, ...)                                                   \
+        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_ERROR_MESSAGE,        \
+                                                UseImmediateMessaging,              \
+                                                ShowSystemTimeOnDebugMessages,      \
+                                                TRUE,                               \
+                                                "[!] Error (%s:%d) | " format "\n", \
+                                                __func__,                           \
+                                                __LINE__,                           \
+                                                __VA_ARGS__);                       \
+        if (DebugMode)                                                              \
+        DbgBreakPoint()
+
+/**
+ * @brief Log without any prefix
+ *
+ */
+#    define Log(format, ...)                                                \
+        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE, \
+                                                TRUE,                       \
+                                                FALSE,                      \
+                                                FALSE,                      \
+                                                format,                     \
+                                                __VA_ARGS__)
+
+/**
+ * @brief Log without any prefix and bypass the stack
+ * problem (getting two temporary stacks in preparing phase)
+ *
+ */
+#    define LogSimpleWithTag(tag, isimmdte, buffer, len) \
+        LogCallbackSendMessageToQueue(tag,               \
+                                      isimmdte,          \
+                                      buffer,            \
+                                      len,               \
+                                      FALSE)
+
+#endif // UseDbgPrintInsteadOfUsermodeMessageTracking
+
+/**
+ * @brief Log, initialize boot information and debug information
+ *
+ */
+#define LogDebugInfo(format, ...)                                                     \
+    if (DebugMode)                                                                    \
+    LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
+                                            UseImmediateMessaging,                    \
+                                            ShowSystemTimeOnDebugMessages,            \
+                                            FALSE,                                    \
+                                            "[+] Information (%s:%d) | " format "\n", \
+                                            __func__,                                 \
+                                            __LINE__,                                 \
+                                            __VA_ARGS__)
 
 
 //..\..\..\bin\debug\SDK\Headers\Constants.h
@@ -1498,555 +2833,6 @@ typedef struct _VMX_SEGMENT_SELECTOR
 } VMX_SEGMENT_SELECTOR, *PVMX_SEGMENT_SELECTOR;
 
 
-//..\..\..\bin\debug\SDK\Headers\ErrorCodes.h
-/**
- * @file ErrorCodes.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's SDK Error codes
- * @details This file contains definitions of error codes used in HyperDbg
- * @version 0.2
- * @date 2022-06-24
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//////////////////////////////////////////////////
-//		    	  Success Codes                 //
-//////////////////////////////////////////////////
-
-/**
- * @brief General value to indicate that the operation or
- * request was successful
- *
- */
-#define DEBUGGER_OPERATION_WAS_SUCCESSFUL 0xFFFFFFFF
-
-//////////////////////////////////////////////////
-//		    	   Error Codes                  //
-//////////////////////////////////////////////////
-
-/**
- * @brief error, the tag not exist
- *
- */
-#define DEBUGGER_ERROR_TAG_NOT_EXISTS 0xc0000000
-
-/**
- * @brief error, invalid type of action
- *
- */
-#define DEBUGGER_ERROR_INVALID_ACTION_TYPE 0xc0000001
-
-/**
- * @brief error, the action buffer size is invalid
- *
- */
-#define DEBUGGER_ERROR_ACTION_BUFFER_SIZE_IS_ZERO 0xc0000002
-
-/**
- * @brief error, the event type is unknown
- *
- */
-#define DEBUGGER_ERROR_EVENT_TYPE_IS_INVALID 0xc0000003
-
-/**
- * @brief error, enable to create event
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_CREATE_EVENT 0xc0000004
-
-/**
- * @brief error, invalid address specified for debugger
- *
- */
-#define DEBUGGER_ERROR_INVALID_ADDRESS 0xc0000005
-
-/**
- * @brief error, the core id is invalid
- *
- */
-#define DEBUGGER_ERROR_INVALID_CORE_ID 0xc0000006
-
-/**
- * @brief error, the index is greater than 32 in !exception command
- *
- */
-#define DEBUGGER_ERROR_EXCEPTION_INDEX_EXCEED_FIRST_32_ENTRIES 0xc0000007
-
-/**
- * @brief error, the index for !interrupt command is not between 32 to 256
- *
- */
-#define DEBUGGER_ERROR_INTERRUPT_INDEX_IS_NOT_VALID 0xc0000008
-
-/**
- * @brief error, unable to hide the debugger and enter to transparent-mode
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_HIDE_OR_UNHIDE_DEBUGGER 0xc0000009
-
-/**
- * @brief error, the debugger is already in transparent-mode
- *
- */
-#define DEBUGGER_ERROR_DEBUGGER_ALREADY_UHIDE 0xc000000a
-
-/**
- * @brief error, invalid parameters in !e* e* commands
- *
- */
-#define DEBUGGER_ERROR_EDIT_MEMORY_STATUS_INVALID_PARAMETER 0xc000000b
-
-/**
- * @brief error, an invalid address is specified based on current cr3
- * in !e* or e* commands
- *
- */
-#define DEBUGGER_ERROR_EDIT_MEMORY_STATUS_INVALID_ADDRESS_BASED_ON_CURRENT_PROCESS \
-    0xc000000c
-
-/**
- * @brief error, an invalid address is specified based on anotehr process's cr3
- * in !e* or e* commands
- *
- */
-#define DEBUGGER_ERROR_EDIT_MEMORY_STATUS_INVALID_ADDRESS_BASED_ON_OTHER_PROCESS \
-    0xc000000d
-
-/**
- * @brief error, invalid tag for 'events' command (tag id is unknown for kernel)
- *
- */
-#define DEBUGGER_ERROR_MODIFY_EVENTS_INVALID_TAG 0xc000000e
-
-/**
- * @brief error, type of action (enable/disable/clear) is wrong
- *
- */
-#define DEBUGGER_ERROR_MODIFY_EVENTS_INVALID_TYPE_OF_ACTION 0xc000000f
-
-/**
- * @brief error, invalid parameters steppings actions
- *
- */
-#define DEBUGGER_ERROR_STEPPING_INVALID_PARAMETER 0xc0000010
-
-/**
- * @brief error, thread is invalid (not found) or disabled in
- * stepping (step-in & step-out) requests
- *
- */
-#define DEBUGGER_ERROR_STEPPINGS_EITHER_THREAD_NOT_FOUND_OR_DISABLED 0xc0000011
-
-/**
- * @brief error, baud rate is invalid
- *
- */
-#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_INVALID_BAUDRATE 0xc0000012
-
-/**
- * @brief error, serial port address is invalid
- *
- */
-#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_INVALID_SERIAL_PORT 0xc0000013
-
-/**
- * @brief error, invalid core selected in changing core in remote debuggee
- *
- */
-#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_INVALID_CORE_IN_REMOTE_DEBUGGE \
-    0xc0000014
-
-/**
- * @brief error, invalid process selected in changing process in remote debuggee
- *
- */
-#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_UNABLE_TO_SWITCH_TO_NEW_PROCESS \
-    0xc0000015
-
-/**
- * @brief error, unable to run script in remote debuggee
- *
- */
-#define DEBUGGER_ERROR_PREPARING_DEBUGGEE_TO_RUN_SCRIPT 0xc0000016
-
-/**
- * @brief error, invalid register number
- *
- */
-#define DEBUGGER_ERROR_INVALID_REGISTER_NUMBER 0xc0000017
-
-/**
- * @brief error, maximum pools were used without continuing debuggee
- *
- */
-#define DEBUGGER_ERROR_MAXIMUM_BREAKPOINT_WITHOUT_CONTINUE 0xc0000018
-
-/**
- * @brief error, breakpoint already exists on the target address
- *
- */
-#define DEBUGGER_ERROR_BREAKPOINT_ALREADY_EXISTS_ON_THE_ADDRESS 0xc0000019
-
-/**
- * @brief error, breakpoint id not found
- *
- */
-#define DEBUGGER_ERROR_BREAKPOINT_ID_NOT_FOUND 0xc000001a
-
-/**
- * @brief error, breakpoint already disabled
- *
- */
-#define DEBUGGER_ERROR_BREAKPOINT_ALREADY_DISABLED 0xc000001b
-
-/**
- * @brief error, breakpoint already enabled
- *
- */
-#define DEBUGGER_ERROR_BREAKPOINT_ALREADY_ENABLED 0xc000001c
-
-/**
- * @brief error, memory type is invalid
- *
- */
-#define DEBUGGER_ERROR_MEMORY_TYPE_INVALID 0xc000001d
-
-/**
- * @brief error, the process id is invalid
- *
- */
-#define DEBUGGER_ERROR_INVALID_PROCESS_ID 0xc000001e
-
-/**
- * @brief error, for event specific reasons the event is not
- * applied
- *
- */
-#define DEBUGGER_ERROR_EVENT_IS_NOT_APPLIED 0xc000001f
-
-/**
- * @brief error, for process switch or process details, invalid parameter
- *
- */
-#define DEBUGGER_ERROR_DETAILS_OR_SWITCH_PROCESS_INVALID_PARAMETER 0xc0000020
-
-/**
- * @brief error, for thread switch or thread details, invalid parameter
- *
- */
-#define DEBUGGER_ERROR_DETAILS_OR_SWITCH_THREAD_INVALID_PARAMETER 0xc0000021
-
-/**
- * @brief error, maximum breakpoint for a single page is hit
- *
- */
-#define DEBUGGER_ERROR_MAXIMUM_BREAKPOINT_FOR_A_SINGLE_PAGE_IS_HIT 0xc0000022
-
-/**
- * @brief error, there is no pre-allocated buffer
- *
- */
-#define DEBUGGER_ERROR_PRE_ALLOCATED_BUFFER_IS_EMPTY 0xc0000023
-
-/**
- * @brief error, in the EPT handler, it could not split the 2MB pages to
- * 512 entries of 4 KB pages
- *
- */
-#define DEBUGGER_ERROR_EPT_COULD_NOT_SPLIT_THE_LARGE_PAGE_TO_4KB_PAGES 0xc0000024
-
-/**
- * @brief error, failed to get PML1 entry of the target address
- *
- */
-#define DEBUGGER_ERROR_EPT_FAILED_TO_GET_PML1_ENTRY_OF_TARGET_ADDRESS 0xc0000025
-
-/**
- * @brief error, multiple EPT Hooks or Monitors are applied on a single page
- *
- */
-#define DEBUGGER_ERROR_EPT_MULTIPLE_HOOKS_IN_A_SINGLE_PAGE 0xc0000026
-
-/**
- * @brief error, could not build the EPT Hook
- *
- */
-#define DEBUGGER_ERROR_COULD_NOT_BUILD_THE_EPT_HOOK 0xc0000027
-
-/**
- * @brief error, could not find the type of allocation
- *
- */
-#define DEBUGGER_ERROR_COULD_NOT_FIND_ALLOCATION_TYPE 0xc0000028
-
-/**
- * @brief error, could not find the index of test query
- *
- */
-#define DEBUGGER_ERROR_INVALID_TEST_QUERY_INDEX 0xc0000029
-
-/**
- * @brief error, failed to attach to the target user-mode process
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_ATTACH_TO_TARGET_USER_MODE_PROCESS 0xc000002a
-
-/**
- * @brief error, failed to remove hooks as entrypoint is not reached yet
- * @details The caller of this functionality should keep sending the previous
- * IOCTL until the hook is remove successfully
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_REMOVE_HOOKS_ENTRYPOINT_NOT_REACHED 0xc000002b
-
-/**
- * @brief error, could not remove the previous hook
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_REMOVE_HOOKS 0xc000002c
-
-/**
- * @brief error, the needed routines for debugging is not initialized
- *
- */
-#define DEBUGGER_ERROR_FUNCTIONS_FOR_INITIALIZING_PEB_ADDRESSES_ARE_NOT_INITIALIZED 0xc000002d
-
-/**
- * @brief error, unable to get 32-bit or 64-bit of the target process
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_DETECT_32_BIT_OR_64_BIT_PROCESS 0xc000002e
-
-/**
- * @brief error, unable to kill the target process
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_KILL_THE_PROCESS 0xc000002f
-
-/**
- * @brief error, invalid thread debugging token
- *
- */
-#define DEBUGGER_ERROR_INVALID_THREAD_DEBUGGING_TOKEN 0xc0000030
-
-/**
- * @brief error, unable to pause the process's threads
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_PAUSE_THE_PROCESS_THREADS 0xc0000031
-
-/**
- * @brief error, user debugger already attached to this process
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_ATTACH_TO_AN_ALREADY_ATTACHED_PROCESS 0xc0000032
-
-/**
- * @brief error, the user debugger is not attached to the target process
- *
- */
-#define DEBUGGER_ERROR_THE_USER_DEBUGGER_NOT_ATTACHED_TO_THE_PROCESS 0xc0000033
-
-/**
- * @brief error, cannot detach from the process as there are paused threads
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_DETACH_AS_THERE_ARE_PAUSED_THREADS 0xc0000034
-
-/**
- * @brief error, cannot switch to new thread as the process id or thread id is not found
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_SWITCH_PROCESS_ID_OR_THREAD_ID_IS_INVALID 0xc0000035
-
-/**
- * @brief error, cannot switch to new thread the process doesn't contain an active thread
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_SWITCH_THERE_IS_NO_THREAD_ON_THE_PROCESS 0xc0000036
-
-/**
- * @brief error, unable to get modules
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_GET_MODULES_OF_THE_PROCESS 0xc0000037
-
-/**
- * @brief error, unable to get the callstack
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_GET_CALLSTACK 0xc0000038
-
-/**
- * @brief error, unable to query count of processes or threads
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_QUERY_COUNT_OF_PROCESSES_OR_THREADS 0xc0000039
-
-/**
- * @brief error, using short-circuiting event with post-event mode is
- * not supported in HyperDbg
- *
- */
-#define DEBUGGER_ERROR_USING_SHORT_CIRCUITING_EVENT_WITH_POST_EVENT_MODE_IS_FORBIDDEDN 0xc000003a
-
-/**
- * @brief error, unknown test query is received
- *
- */
-#define DEBUGGER_ERROR_UNKNOWN_TEST_QUERY_RECEIVED 0xc000003b
-
-/**
- * @brief error, for reading from memory in case of invalid parameters
- *
- */
-#define DEBUGGER_ERROR_READING_MEMORY_INVALID_PARAMETER 0xc000003c
-
-/**
- * @brief error, the list of threads/process trap flag is full
- *
- */
-#define DEBUGGER_ERROR_THE_TRAP_FLAG_LIST_IS_FULL 0xc000003d
-
-/**
- * @brief error, unable to kill the target process. process does not exists
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_KILL_THE_PROCESS_DOES_NOT_EXISTS 0xc000003e
-
-/**
- * @brief error, the execution mode is incorrect
- *
- */
-#define DEBUGGER_ERROR_MODE_EXECUTION_IS_INVALID 0xc000003f
-
-/**
- * @brief error, the process id cannot be specified while the debugger is in VMX-root mode
- *
- */
-#define DEBUGGER_ERROR_PROCESS_ID_CANNOT_BE_SPECIFIED_WHILE_APPLYING_EVENT_FROM_VMX_ROOT_MODE 0xc0000040
-
-/**
- * @brief error, the preallocated buffer is not enough for storing event+conditional buffer
- *
- */
-#define DEBUGGER_ERROR_INSTANT_EVENT_PREALLOCATED_BUFFER_IS_NOT_ENOUGH_FOR_EVENT_AND_CONDITIONALS 0xc0000041
-
-/**
- * @brief error, the regular preallocated buffer not found
- *
- */
-#define DEBUGGER_ERROR_INSTANT_EVENT_REGULAR_PREALLOCATED_BUFFER_NOT_FOUND 0xc0000042
-
-/**
- * @brief error, the big preallocated buffer not found
- *
- */
-#define DEBUGGER_ERROR_INSTANT_EVENT_BIG_PREALLOCATED_BUFFER_NOT_FOUND 0xc0000043
-
-/**
- * @brief error, enable to create action (cannot allocate buffer)
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_CREATE_ACTION_CANNOT_ALLOCATE_BUFFER 0xc0000044
-
-/**
- * @brief error, the regular preallocated buffer not found (for action)
- *
- */
-#define DEBUGGER_ERROR_INSTANT_EVENT_ACTION_REGULAR_PREALLOCATED_BUFFER_NOT_FOUND 0xc0000045
-
-/**
- * @brief error, the big preallocated buffer not found (for action)
- *
- */
-#define DEBUGGER_ERROR_INSTANT_EVENT_ACTION_BIG_PREALLOCATED_BUFFER_NOT_FOUND 0xc0000046
-
-/**
- * @brief error, the preallocated buffer is not enough for storing action buffer
- *
- */
-#define DEBUGGER_ERROR_INSTANT_EVENT_PREALLOCATED_BUFFER_IS_NOT_ENOUGH_FOR_ACTION_BUFFER 0xc0000047
-
-/**
- * @brief error, the requested optional buffer is bigger than send/receive stack of the debugger
- *
- */
-#define DEBUGGER_ERROR_INSTANT_EVENT_REQUESTED_OPTIONAL_BUFFER_IS_BIGGER_THAN_DEBUGGERS_SEND_RECEIVE_STACK 0xc0000048
-
-/**
- * @brief error, the requested safe buffer does not exist (regular)
- *
- */
-#define DEBUGGER_ERROR_INSTANT_EVENT_REGULAR_REQUESTED_SAFE_BUFFER_NOT_FOUND 0xc0000049
-
-/**
- * @brief error, the requested safe buffer does not exists (big)
- *
- */
-#define DEBUGGER_ERROR_INSTANT_EVENT_BIG_REQUESTED_SAFE_BUFFER_NOT_FOUND 0xc000004a
-
-/**
- * @brief error, the preallocated buffer is not enough for storing safe requested buffer
- *
- */
-#define DEBUGGER_ERROR_INSTANT_EVENT_PREALLOCATED_BUFFER_IS_NOT_ENOUGH_FOR_REQUESTED_SAFE_BUFFER 0xc000004b
-
-/**
- * @brief error, enable to create requested safe buffer (cannot allocate buffer)
- *
- */
-#define DEBUGGER_ERROR_UNABLE_TO_ALLOCATE_REQUESTED_SAFE_BUFFER 0xc000004c
-
-/**
- * @brief error, could not find the type of preactivation
- *
- */
-#define DEBUGGER_ERROR_COULD_NOT_FIND_PREACTIVATION_TYPE 0xc000004d
-
-/**
- * @brief error, the mode exec trap is not already initialized
- *
- */
-#define DEBUGGER_ERROR_THE_MODE_EXEC_TRAP_IS_NOT_INITIALIZED 0xc000004e
-
-/**
- * @brief error, the target event(s) is/are disabled but cannot clear them because the buffer of the user-mode
- * priority is full
- *
- */
-#define DEBUGGER_ERROR_THE_TARGET_EVENT_IS_DISABLED_BUT_CANNOT_BE_CLEARED_PRIRITY_BUFFER_IS_FULL 0xc000004f
-
-/**
- * @brief error, not all cores are locked (probably due to a race condition in HyperDbg) in
- * instant-event mechanism
- *
- */
-#define DEBUGGER_ERROR_NOT_ALL_CORES_ARE_LOCKED_FOR_APPLYING_INSTANT_EVENT 0xc0000050
-
-/**
- * @brief error, switching to the target core is not possible because core is not locked
- * (probably due to a race condition in HyperDbg)
- *
- */
-#define DEBUGGER_ERROR_TARGET_SWITCHING_CORE_IS_NOT_LOCKED 0xc0000051
-
-/**
- * @brief error, invalid physical address
- *
- */
-#define DEBUGGER_ERROR_INVALID_PHYSICAL_ADDRESS 0xc0000052
-
-//
-// WHEN YOU ADD ANYTHING TO THIS LIST OF ERRORS, THEN
-// MAKE SURE TO ADD AN ERROR MESSAGE TO ShowErrorMessage(UINT32 Error)
-// FUNCTION
-//
-
-
 //..\..\..\bin\debug\SDK\Headers\Events.h
 /**
  * @file Events.h
@@ -2479,176 +3265,204 @@ typedef struct _DEBUGGER_EVENT_AND_ACTION_RESULT
 #define SIZEOF_REGISTER_EVENT sizeof(REGISTER_NOTIFY_BUFFER)
 
 
-//..\..\..\bin\debug\SDK\Headers\HardwareDebugger.h
+//..\..\..\bin\debug\SDK\Imports\HyperDbgCtrlImports.h
 /**
- * @file HardwareDebugger.h
+ * @file HyperDbgCtrlImports.h
  * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's Hardware Debugger (hwdbg) types and constants
- * @details This file contains definitions of hwdbg elements
- * used in HyperDbg
- * @version 0.9
- * @date 2024-04-28
+ * @brief Headers relating exported functions from controller interface
+ * @version 0.2
+ * @date 2023-02-02
  *
  * @copyright This project is released under the GNU Public License v3.
  *
  */
 #pragma once
 
+#ifdef HYPERDBG_HPRDBGCTRL
+#    define IMPORT_EXPORT_CTRL __declspec(dllexport)
+#else
+#    define IMPORT_EXPORT_CTRL __declspec(dllimport)
+#endif
+
+//
+// Header file of HPRDBGCTRL
+// Imports
+//
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//
+// Support Detection
+//
+IMPORT_EXPORT_CTRL bool HyperDbgVmxSupportDetection();
+IMPORT_EXPORT_CTRL void HyperDbgReadVendorString(char *);
+
+//
+// VMM Module
+//
+IMPORT_EXPORT_CTRL int HyperDbgLoadVmm();
+IMPORT_EXPORT_CTRL int HyperDbgUnloadVmm();
+IMPORT_EXPORT_CTRL int HyperDbgInstallVmmDriver();
+IMPORT_EXPORT_CTRL int HyperDbgUninstallVmmDriver();
+IMPORT_EXPORT_CTRL int HyperDbgStopVmmDriver();
+
+//
+// General imports
+//
+IMPORT_EXPORT_CTRL int HyperDbgInterpreter(char * Command);
+IMPORT_EXPORT_CTRL void HyperDbgShowSignature();
+IMPORT_EXPORT_CTRL void HyperDbgSetTextMessageCallback(Callback handler);
+IMPORT_EXPORT_CTRL int HyperDbgScriptReadFileAndExecuteCommandline(int argc, char * argv[]);
+IMPORT_EXPORT_CTRL bool HyperDbgContinuePreviousCommand();
+IMPORT_EXPORT_CTRL bool HyperDbgCheckMultilineCommand(char * CurrentCommand, bool Reset);
+
+#ifdef __cplusplus
+}
+#endif
+
+
+//..\..\..\bin\debug\SDK\Imports\HyperDbgHyperLogImports.h
+/**
+ * @file HyperDbgHyperLogImports.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers relating exported functions from hyperlog project
+ * @version 0.1
+ * @date 2023-01-15
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+#ifdef HYPERDBG_HYPER_LOG
+#    define IMPORT_EXPORT_HYPERLOG __declspec(dllexport)
+#else
+#    define IMPORT_EXPORT_HYPERLOG __declspec(dllimport)
+#endif
+
 //////////////////////////////////////////////////
-//                 Definitions                  //
+//				   Functions					//
 //////////////////////////////////////////////////
 
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogInitialize(MESSAGE_TRACING_CALLBACKS * MsgTracingCallbacks);
+
+IMPORT_EXPORT_HYPERLOG VOID
+LogUnInitialize();
+
+IMPORT_EXPORT_HYPERLOG UINT32
+LogMarkAllAsRead(BOOLEAN IsVmxRoot);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackPrepareAndSendMessageToQueue(UINT32       OperationCode,
+                                        BOOLEAN      IsImmediateMessage,
+                                        BOOLEAN      ShowCurrentSystemTime,
+                                        BOOLEAN      Priority,
+                                        const char * Fmt,
+                                        ...);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackPrepareAndSendMessageToQueueWrapper(UINT32       OperationCode,
+                                               BOOLEAN      IsImmediateMessage,
+                                               BOOLEAN      ShowCurrentSystemTime,
+                                               BOOLEAN      Priority,
+                                               const char * Fmt,
+                                               va_list      ArgList);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackSendBuffer(_In_ UINT32                          OperationCode,
+                      _In_reads_bytes_(BufferLength) PVOID Buffer,
+                      _In_ UINT32                          BufferLength,
+                      _In_ BOOLEAN                         Priority);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackCheckIfBufferIsFull(BOOLEAN Priority);
+
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogCallbackSendMessageToQueue(UINT32 OperationCode, BOOLEAN IsImmediateMessage, CHAR * LogMessage, UINT32 BufferLen, BOOLEAN Priority);
+
+IMPORT_EXPORT_HYPERLOG NTSTATUS
+LogRegisterEventBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
+
+IMPORT_EXPORT_HYPERLOG NTSTATUS
+LogRegisterIrpBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
+
+
+//..\..\..\bin\debug\SDK\Imports\HyperDbgSymImports.h
 /**
- * @brief Initial debuggee to debugger offset
+ * @file HyperDbgSymImports.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers relating exported functions from symbol parser
+ * @version 0.2
+ * @date 2023-02-02
+ *
+ * @copyright This project is released under the GNU Public License v3.
  *
  */
-#define DEFAULT_INITIAL_DEBUGGEE_TO_DEBUGGER_OFFSET 0x200
+#pragma once
 
-/**
- * @brief Initial debugger to debuggee offset
- *
- */
-#define DEFAULT_INITIAL_DEBUGGER_TO_DEBUGGEE_OFFSET 0x0
+//
+// Header file of symbol-parser
+// Imports
+//
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-//////////////////////////////////////////////////
-//                   Enums                      //
-//////////////////////////////////////////////////
+__declspec(dllimport) VOID
+    SymSetTextMessageCallback(PVOID Handler);
+__declspec(dllimport) VOID
+    SymbolAbortLoading();
+__declspec(dllimport) UINT64
+    SymConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
+__declspec(dllimport) UINT32
+    SymLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
+__declspec(dllimport) UINT32
+    SymUnloadAllSymbols();
+__declspec(dllimport) UINT32
+    SymUnloadModuleSymbol(char * ModuleName);
+__declspec(dllimport) UINT32
+    SymSearchSymbolForMask(const char * SearchMask);
+__declspec(dllimport) BOOLEAN
+    SymGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
+__declspec(dllimport) BOOLEAN
+    SymGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
+__declspec(dllimport) BOOLEAN
+    SymCreateSymbolTableForDisassembler(void * CallbackFunction);
+__declspec(dllimport) BOOLEAN
+    SymConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
+__declspec(dllimport) BOOLEAN
+    SymConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath,
+                                                char *       PdbFilePath,
+                                                char *       GuidAndAgeDetails,
+                                                BOOLEAN      Is32BitModule);
+__declspec(dllimport) BOOLEAN
+    SymbolInitLoad(PVOID        BufferToStoreDetails,
+                   UINT32       StoredLength,
+                   BOOLEAN      DownloadIfAvailable,
+                   const char * SymbolPath,
+                   BOOLEAN      IsSilentLoad);
+__declspec(dllimport) BOOLEAN
+    SymShowDataBasedOnSymbolTypes(const char * TypeName,
+                                  UINT64       Address,
+                                  BOOLEAN      IsStruct,
+                                  PVOID        BufferAddress,
+                                  const char * AdditionalParameters);
+__declspec(dllimport) BOOLEAN
+    SymQuerySizeof(_In_ const char * StructNameOrTypeName, _Out_ UINT32 * SizeOfField);
+__declspec(dllimport) BOOLEAN
+    SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
+                                     _In_ const char * FiledOfStructName,
+                                     _Out_ PBOOLEAN    IsStructNamePointerOrNot,
+                                     _Out_ PBOOLEAN    IsFiledOfStructNamePointerOrNot,
+                                     _Out_ char **     NewStructOrTypeName,
+                                     _Out_ UINT32 *    OffsetOfFieldFromTop,
+                                     _Out_ UINT32 *    SizeOfField);
 
-/**
- * @brief Different action of hwdbg
- * @warning This file should be changed along with hwdbg files
- *
- */
-typedef enum _HWDBG_ACTION_ENUMS
-{
-    hwdbgActionSendInstanceInfo      = 1,
-    hwdbgActionConfigureScriptBuffer = 2,
-
-} HWDBG_ACTION_ENUMS;
-
-/**
- * @brief Different responses come from hwdbg
- * @warning This file should be changed along with hwdbg files
- *
- */
-typedef enum _HWDBG_RESPONSE_ENUMS
-{
-    hwdbgResponseSuccessOrErrorMessage = 1,
-    hwdbgResponseInstanceInfo          = 2,
-
-} HWDBG_RESPONSE_ENUMS;
-
-/**
- * @brief Different success or error codes in hwdbg
- * @warning This file should be changed along with hwdbg files
- *
- */
-typedef enum _HWDBG_SUCCESS_OR_ERROR_ENUMS
-{
-    hwdbgOperationWasSuccessful = 0x7FFFFFFF,
-    hwdbgErrorInvalidPacket     = 1,
-
-} HWDBG_SUCCESS_OR_ERROR_ENUMS;
-
-//////////////////////////////////////////////////
-//                   Structures                 //
-//////////////////////////////////////////////////
-
-/**
- * @brief The structure of port information (each item) in hwdbg
- *
- */
-typedef struct _HWDBG_PORT_INFORMATION_ITEMS
-{
-    UINT32 PortSize;
-
-} HWDBG_PORT_INFORMATION_ITEMS, *PHWDBG_PORT_INFORMATION_ITEMS;
-
-/**
- * @brief The structure of script capabilities information in hwdbg
- *
- */
-typedef struct _HWDBG_INSTANCE_INFORMATION
-{
-    //
-    // ANY ADDITION TO THIS STRUCTURE SHOULD BE SYNCHRONIZED WITH SCALA AND INSTANCE INFO SENDER MODULE
-    //
-    UINT32 version;                                    // Target version of HyperDbg (same as hwdbg)
-    UINT32 maximumNumberOfStages;                      // Number of stages that this instance of hwdbg supports (NumberOfSupportedStages == 0 means script engine is disabled)
-    UINT32 scriptVariableLength;                       // maximum length of variables (and other script elements)
-    UINT32 maximumNumberOfSupportedGetScriptOperators; // Maximum supported GET operators in a single func
-    UINT32 maximumNumberOfSupportedSetScriptOperators; // Maximum supported SET operators in a single func
-    UINT32 sharedMemorySize;                           // Size of shared memory
-    UINT32 debuggerAreaOffset;                         // The memory offset of debugger
-    UINT32 debuggeeAreaOffset;                         // The memory offset of debuggee
-    UINT32 numberOfPins;                               // Number of pins
-    UINT32 numberOfPorts;                              // Number of ports
-
-    //
-    // ANY ADDITION TO THIS STRUCTURE SHOULD BE SYNCHRONIZED WITH SCALA AND INSTANCE INFO SENDER MODULE
-    //
-
-    struct _HWDBG_SCRIPT_CAPABILITIES
-    {
-        //
-        // ANY ADDITION TO THIS MASK SHOULD BE ADDED TO HwdbgInterpreterShowScriptCapabilities
-        // and HwdbgInterpreterCheckScriptBufferWithScriptCapabilities as well Scala file
-        //
-        UINT64 func_or : 1;
-        UINT64 func_xor : 1;
-        UINT64 func_and : 1;
-        UINT64 func_asr : 1;
-        UINT64 func_asl : 1;
-        UINT64 func_add : 1;
-        UINT64 func_sub : 1;
-        UINT64 func_mul : 1;
-        UINT64 func_div : 1;
-        UINT64 func_mod : 1;
-        UINT64 func_gt : 1;
-        UINT64 func_lt : 1;
-        UINT64 func_egt : 1;
-        UINT64 func_elt : 1;
-        UINT64 func_equal : 1;
-        UINT64 func_neq : 1;
-        UINT64 func_jmp : 1;
-        UINT64 func_jz : 1;
-        UINT64 func_jnz : 1;
-        UINT64 func_mov : 1;
-        UINT64 func_printf : 1;
-
-        //
-        // ANY ADDITION TO THIS MASK SHOULD BE ADDED TO HwdbgInterpreterShowScriptCapabilities
-        // and HwdbgInterpreterCheckScriptBufferWithScriptCapabilities as well Scala file
-        //
-
-    } scriptCapabilities;
-
-    UINT32 bramAddrWidth; // BRAM address width
-    UINT32 bramDataWidth; // BRAM data width
-
-    //
-    // Here the details of port arrangements are located (HWDBG_PORT_INFORMATION_ITEMS)
-    // As the following type:
-    //   HWDBG_PORT_INFORMATION_ITEMS portsConfiguration[numberOfPorts]   ; Port arrangement
-    //
-
-} HWDBG_INSTANCE_INFORMATION, *PHWDBG_INSTANCE_INFORMATION;
-
-/**
- * @brief The structure of script buffer in hwdbg
- *
- */
-typedef struct _HWDBG_SCRIPT_BUFFER
-{
-    UINT32 scriptNumberOfSymbols; // Number of symbols in the script
-
-    //
-    // Here the script buffer is located
-    //
-    // UINT8 scriptBuffer[scriptNumberOfSymbols]; // The script buffer
-    //
-
-} HWDBG_SCRIPT_BUFFER, *PHWDBG_SCRIPT_BUFFER;
+#ifdef __cplusplus
+}
+#endif
 
 
 //..\..\..\bin\debug\SDK\Headers\Ioctls.h
@@ -2942,6 +3756,105 @@ typedef struct _HWDBG_SCRIPT_BUFFER
  */
 #define IOCTL_PREACTIVATE_FUNCTIONALITY \
     CTL_CODE(FILE_DEVICE_UNKNOWN, 0x820, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+
+//..\..\..\bin\debug\SDK\Headers\Symbols.h
+/**
+ * @file Symbols.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief HyperDbg's SDK Header Files For Symbol Parsing
+ * @details This file contains definitions of symbol parsers
+ * @version 0.2
+ * @date 2022-06-24
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//              Symbols Details                 //
+//////////////////////////////////////////////////
+
+/**
+ * @brief structures for sending and saving details
+ * about each module and symbols details
+ *
+ */
+typedef struct _MODULE_SYMBOL_DETAIL
+{
+    BOOLEAN IsSymbolDetailsFound; // TRUE if the details of symbols found, FALSE if not found
+    BOOLEAN IsLocalSymbolPath;    // TRUE if the ModuleSymbolPath is a real path
+                                  // and FALSE if ModuleSymbolPath is just a module name
+    BOOLEAN IsSymbolPDBAvaliable; // TRUE if the module's pdb is available(if exists in the sympath)
+    BOOLEAN IsUserMode;           // TRUE if the module is a user-mode module
+    BOOLEAN Is32Bit;              // TRUE if the module is a 32-bit
+    UINT64  BaseAddress;
+    char    FilePath[MAX_PATH];
+    char    ModuleSymbolPath[MAX_PATH];
+    char    ModuleSymbolGuidAndAge[MAXIMUM_GUID_AND_AGE_SIZE];
+
+} MODULE_SYMBOL_DETAIL, *PMODULE_SYMBOL_DETAIL;
+
+typedef struct _USERMODE_LOADED_MODULE_SYMBOLS
+{
+    UINT64  BaseAddress;
+    UINT64  Entrypoint;
+    wchar_t FilePath[MAX_PATH];
+
+} USERMODE_LOADED_MODULE_SYMBOLS, *PUSERMODE_LOADED_MODULE_SYMBOLS;
+
+typedef struct _USERMODE_LOADED_MODULE_DETAILS
+{
+    UINT32  ProcessId;
+    BOOLEAN OnlyCountModules;
+    BOOLEAN Is32Bit;
+    UINT32  ModulesCount;
+    UINT32  Result;
+
+    //
+    // Here is a list of USERMODE_LOADED_MODULE_SYMBOLS (appended)
+    //
+
+} USERMODE_LOADED_MODULE_DETAILS, *PUSERMODE_LOADED_MODULE_DETAILS;
+
+/**
+ * @brief Callback type that should be used to add
+ * list of Addresses to ObjectNames
+ *
+ */
+typedef VOID (*SymbolMapCallback)(UINT64 Address, char * ModuleName, char * ObjectName, unsigned int ObjectSize);
+
+/**
+ * @brief request to add new symbol detail or update a previous
+ * symbol table entry
+ *
+ */
+typedef struct _DEBUGGER_UPDATE_SYMBOL_TABLE
+{
+    UINT32               TotalSymbols;
+    UINT32               CurrentSymbolIndex;
+    MODULE_SYMBOL_DETAIL SymbolDetailPacket;
+
+} DEBUGGER_UPDATE_SYMBOL_TABLE, *PDEBUGGER_UPDATE_SYMBOL_TABLE;
+
+/*
+==============================================================================================
+ */
+
+/**
+ * @brief request that shows, symbol reload process is finished
+ *
+ */
+typedef struct _DEBUGGEE_SYMBOL_UPDATE_RESULT
+{
+    UINT64 KernelStatus; // Kernel put the status in this field
+
+} DEBUGGEE_SYMBOL_UPDATE_RESULT, *PDEBUGGEE_SYMBOL_UPDATE_RESULT;
+
+/*
+==============================================================================================
+ */
 
 
 //..\..\..\bin\debug\SDK\Headers\RequestStructures.h
@@ -4103,396 +5016,6 @@ typedef struct _DEBUGGEE_REGISTER_READ_DESCRIPTION
  */
 
 
-//..\..\..\bin\debug\SDK\Headers\Symbols.h
-/**
- * @file Symbols.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's SDK Header Files For Symbol Parsing
- * @details This file contains definitions of symbol parsers
- * @version 0.2
- * @date 2022-06-24
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//////////////////////////////////////////////////
-//              Symbols Details                 //
-//////////////////////////////////////////////////
-
-/**
- * @brief structures for sending and saving details
- * about each module and symbols details
- *
- */
-typedef struct _MODULE_SYMBOL_DETAIL
-{
-    BOOLEAN IsSymbolDetailsFound; // TRUE if the details of symbols found, FALSE if not found
-    BOOLEAN IsLocalSymbolPath;    // TRUE if the ModuleSymbolPath is a real path
-                                  // and FALSE if ModuleSymbolPath is just a module name
-    BOOLEAN IsSymbolPDBAvaliable; // TRUE if the module's pdb is available(if exists in the sympath)
-    BOOLEAN IsUserMode;           // TRUE if the module is a user-mode module
-    BOOLEAN Is32Bit;              // TRUE if the module is a 32-bit
-    UINT64  BaseAddress;
-    char    FilePath[MAX_PATH];
-    char    ModuleSymbolPath[MAX_PATH];
-    char    ModuleSymbolGuidAndAge[MAXIMUM_GUID_AND_AGE_SIZE];
-
-} MODULE_SYMBOL_DETAIL, *PMODULE_SYMBOL_DETAIL;
-
-typedef struct _USERMODE_LOADED_MODULE_SYMBOLS
-{
-    UINT64  BaseAddress;
-    UINT64  Entrypoint;
-    wchar_t FilePath[MAX_PATH];
-
-} USERMODE_LOADED_MODULE_SYMBOLS, *PUSERMODE_LOADED_MODULE_SYMBOLS;
-
-typedef struct _USERMODE_LOADED_MODULE_DETAILS
-{
-    UINT32  ProcessId;
-    BOOLEAN OnlyCountModules;
-    BOOLEAN Is32Bit;
-    UINT32  ModulesCount;
-    UINT32  Result;
-
-    //
-    // Here is a list of USERMODE_LOADED_MODULE_SYMBOLS (appended)
-    //
-
-} USERMODE_LOADED_MODULE_DETAILS, *PUSERMODE_LOADED_MODULE_DETAILS;
-
-/**
- * @brief Callback type that should be used to add
- * list of Addresses to ObjectNames
- *
- */
-typedef VOID (*SymbolMapCallback)(UINT64 Address, char * ModuleName, char * ObjectName, unsigned int ObjectSize);
-
-/**
- * @brief request to add new symbol detail or update a previous
- * symbol table entry
- *
- */
-typedef struct _DEBUGGER_UPDATE_SYMBOL_TABLE
-{
-    UINT32               TotalSymbols;
-    UINT32               CurrentSymbolIndex;
-    MODULE_SYMBOL_DETAIL SymbolDetailPacket;
-
-} DEBUGGER_UPDATE_SYMBOL_TABLE, *PDEBUGGER_UPDATE_SYMBOL_TABLE;
-
-/*
-==============================================================================================
- */
-
-/**
- * @brief request that shows, symbol reload process is finished
- *
- */
-typedef struct _DEBUGGEE_SYMBOL_UPDATE_RESULT
-{
-    UINT64 KernelStatus; // Kernel put the status in this field
-
-} DEBUGGEE_SYMBOL_UPDATE_RESULT, *PDEBUGGEE_SYMBOL_UPDATE_RESULT;
-
-/*
-==============================================================================================
- */
-
-
-//..\..\..\bin\debug\SDK\Imports\HyperDbgCtrlImports.h
-/**
- * @file HyperDbgCtrlImports.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from controller interface
- * @version 0.2
- * @date 2023-02-02
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-#ifdef HYPERDBG_HPRDBGCTRL
-#    define IMPORT_EXPORT_CTRL __declspec(dllexport)
-#else
-#    define IMPORT_EXPORT_CTRL __declspec(dllimport)
-#endif
-
-//
-// Header file of HPRDBGCTRL
-// Imports
-//
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-//
-// Support Detection
-//
-IMPORT_EXPORT_CTRL bool HyperDbgVmxSupportDetection();
-IMPORT_EXPORT_CTRL void HyperDbgReadVendorString(char *);
-
-//
-// VMM Module
-//
-IMPORT_EXPORT_CTRL int HyperDbgLoadVmm();
-IMPORT_EXPORT_CTRL int HyperDbgUnloadVmm();
-IMPORT_EXPORT_CTRL int HyperDbgInstallVmmDriver();
-IMPORT_EXPORT_CTRL int HyperDbgUninstallVmmDriver();
-IMPORT_EXPORT_CTRL int HyperDbgStopVmmDriver();
-
-//
-// General imports
-//
-IMPORT_EXPORT_CTRL int HyperDbgInterpreter(char * Command);
-IMPORT_EXPORT_CTRL void HyperDbgShowSignature();
-IMPORT_EXPORT_CTRL void HyperDbgSetTextMessageCallback(Callback handler);
-IMPORT_EXPORT_CTRL int HyperDbgScriptReadFileAndExecuteCommandline(int argc, char * argv[]);
-IMPORT_EXPORT_CTRL bool HyperDbgContinuePreviousCommand();
-IMPORT_EXPORT_CTRL bool HyperDbgCheckMultilineCommand(char * CurrentCommand, bool Reset);
-
-#ifdef __cplusplus
-}
-#endif
-
-
-//..\..\..\bin\debug\SDK\Imports\HyperDbgHyperLogImports.h
-/**
- * @file HyperDbgHyperLogImports.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from hyperlog project
- * @version 0.1
- * @date 2023-01-15
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-#ifdef HYPERDBG_HYPER_LOG
-#    define IMPORT_EXPORT_HYPERLOG __declspec(dllexport)
-#else
-#    define IMPORT_EXPORT_HYPERLOG __declspec(dllimport)
-#endif
-
-//////////////////////////////////////////////////
-//				   Functions					//
-//////////////////////////////////////////////////
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogInitialize(MESSAGE_TRACING_CALLBACKS * MsgTracingCallbacks);
-
-IMPORT_EXPORT_HYPERLOG VOID
-LogUnInitialize();
-
-IMPORT_EXPORT_HYPERLOG UINT32
-LogMarkAllAsRead(BOOLEAN IsVmxRoot);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackPrepareAndSendMessageToQueue(UINT32       OperationCode,
-                                        BOOLEAN      IsImmediateMessage,
-                                        BOOLEAN      ShowCurrentSystemTime,
-                                        BOOLEAN      Priority,
-                                        const char * Fmt,
-                                        ...);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackPrepareAndSendMessageToQueueWrapper(UINT32       OperationCode,
-                                               BOOLEAN      IsImmediateMessage,
-                                               BOOLEAN      ShowCurrentSystemTime,
-                                               BOOLEAN      Priority,
-                                               const char * Fmt,
-                                               va_list      ArgList);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackSendBuffer(_In_ UINT32                          OperationCode,
-                      _In_reads_bytes_(BufferLength) PVOID Buffer,
-                      _In_ UINT32                          BufferLength,
-                      _In_ BOOLEAN                         Priority);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackCheckIfBufferIsFull(BOOLEAN Priority);
-
-IMPORT_EXPORT_HYPERLOG BOOLEAN
-LogCallbackSendMessageToQueue(UINT32 OperationCode, BOOLEAN IsImmediateMessage, CHAR * LogMessage, UINT32 BufferLen, BOOLEAN Priority);
-
-IMPORT_EXPORT_HYPERLOG NTSTATUS
-LogRegisterEventBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
-
-IMPORT_EXPORT_HYPERLOG NTSTATUS
-LogRegisterIrpBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
-
-
-//..\..\..\bin\debug\SDK\Imports\HyperDbgHyperLogIntrinsics.h
-/**
- * @file HyperDbgHyperLogIntrinsics.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from hyperlog project
- * @version 0.1
- * @date 2023-01-15
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//////////////////////////////////////////////////
-//					Enums						//
-//////////////////////////////////////////////////
-
-/**
- * @brief Types of log messages
- *
- */
-typedef enum _LOG_TYPE
-{
-    LOG_INFO,
-    LOG_WARNING,
-    LOG_ERROR
-
-} LOG_TYPE;
-
-//////////////////////////////////////////////////
-//					Logging						//
-//////////////////////////////////////////////////
-
-/**
- * @brief Define log variables
- *
- */
-#if UseDbgPrintInsteadOfUsermodeMessageTracking
-/* Use DbgPrint */
-#    define Logformat, ...)                           \
-        DbgPrint("[+] Information (%s:%d) | " format "\n", \
-                 __func__,                                 \
-                 __LINE__,                                 \
-                 __VA_ARGS__)
-
-#    define LogWarning(format, ...)                    \
-        DbgPrint("[-] Warning (%s:%d) | " format "\n", \
-                 __func__,                             \
-                 __LINE__,                             \
-                 __VA_ARGS__)
-
-#    define LogError(format, ...)                    \
-        DbgPrint("[!] Error (%s:%d) | " format "\n", \
-                 __func__,                           \
-                 __LINE__,                           \
-                 __VA_ARGS__);                       \
-        DbgBreakPoint()
-
-/**
- * @brief Log without any prefix
- *
- */
-#    define Log(format, ...) \
-        DbgPrint(format, __VA_ARGS__)
-
-#else
-
-/**
- * @brief Log, general
- *
- */
-#    define LogInfo(format, ...)                                                          \
-        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
-                                                UseImmediateMessaging,                    \
-                                                ShowSystemTimeOnDebugMessages,            \
-                                                FALSE,                                    \
-                                                "[+] Information (%s:%d) | " format "\n", \
-                                                __func__,                                 \
-                                                __LINE__,                                 \
-                                                __VA_ARGS__)
-
-/**
- * @brief Log in the case of priority message
- *
- */
-#    define LogInfoPriority(format, ...)                                                  \
-        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
-                                                TRUE,                                     \
-                                                ShowSystemTimeOnDebugMessages,            \
-                                                TRUE,                                     \
-                                                "[+] Information (%s:%d) | " format "\n", \
-                                                __func__,                                 \
-                                                __LINE__,                                 \
-                                                __VA_ARGS__)
-
-/**
- * @brief Log in the case of warning
- *
- */
-#    define LogWarning(format, ...)                                                   \
-        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_WARNING_MESSAGE,        \
-                                                UseImmediateMessaging,                \
-                                                ShowSystemTimeOnDebugMessages,        \
-                                                TRUE,                                 \
-                                                "[-] Warning (%s:%d) | " format "\n", \
-                                                __func__,                             \
-                                                __LINE__,                             \
-                                                __VA_ARGS__)
-
-/**
- * @brief Log in the case of error
- *
- */
-#    define LogError(format, ...)                                                   \
-        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_ERROR_MESSAGE,        \
-                                                UseImmediateMessaging,              \
-                                                ShowSystemTimeOnDebugMessages,      \
-                                                TRUE,                               \
-                                                "[!] Error (%s:%d) | " format "\n", \
-                                                __func__,                           \
-                                                __LINE__,                           \
-                                                __VA_ARGS__);                       \
-        if (DebugMode)                                                              \
-        DbgBreakPoint()
-
-/**
- * @brief Log without any prefix
- *
- */
-#    define Log(format, ...)                                                \
-        LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE, \
-                                                TRUE,                       \
-                                                FALSE,                      \
-                                                FALSE,                      \
-                                                format,                     \
-                                                __VA_ARGS__)
-
-/**
- * @brief Log without any prefix and bypass the stack
- * problem (getting two temporary stacks in preparing phase)
- *
- */
-#    define LogSimpleWithTag(tag, isimmdte, buffer, len) \
-        LogCallbackSendMessageToQueue(tag,               \
-                                      isimmdte,          \
-                                      buffer,            \
-                                      len,               \
-                                      FALSE)
-
-#endif // UseDbgPrintInsteadOfUsermodeMessageTracking
-
-/**
- * @brief Log, initialize boot information and debug information
- *
- */
-#define LogDebugInfo(format, ...)                                                     \
-    if (DebugMode)                                                                    \
-    LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
-                                            UseImmediateMessaging,                    \
-                                            ShowSystemTimeOnDebugMessages,            \
-                                            FALSE,                                    \
-                                            "[+] Information (%s:%d) | " format "\n", \
-                                            __func__,                                 \
-                                            __LINE__,                                 \
-                                            __VA_ARGS__)
-
-
 //..\..\..\bin\debug\SDK\Imports\HyperDbgRevImports.h
 /**
  * @file HyperDbgRevImports.h
@@ -4595,82 +5118,6 @@ __declspec(dllimport) BOOLEAN
 ScriptEngineSymbolInitLoad(PVOID BufferToStoreDetails, UINT32 StoredLength, BOOLEAN DownloadIfAvailable, const char * SymbolPath, BOOLEAN IsSilentLoad);
 __declspec(dllimport) BOOLEAN
 ScriptEngineShowDataBasedOnSymbolTypes(const char * TypeName, UINT64 Address, BOOLEAN IsStruct, PVOID BufferAddress, const char * AdditionalParameters);
-
-#ifdef __cplusplus
-}
-#endif
-
-
-//..\..\..\bin\debug\SDK\Imports\HyperDbgSymImports.h
-/**
- * @file HyperDbgSymImports.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from symbol parser
- * @version 0.2
- * @date 2023-02-02
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//
-// Header file of symbol-parser
-// Imports
-//
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-__declspec(dllimport) VOID
-    SymSetTextMessageCallback(PVOID Handler);
-__declspec(dllimport) VOID
-    SymbolAbortLoading();
-__declspec(dllimport) UINT64
-    SymConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
-__declspec(dllimport) UINT32
-    SymLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
-__declspec(dllimport) UINT32
-    SymUnloadAllSymbols();
-__declspec(dllimport) UINT32
-    SymUnloadModuleSymbol(char * ModuleName);
-__declspec(dllimport) UINT32
-    SymSearchSymbolForMask(const char * SearchMask);
-__declspec(dllimport) BOOLEAN
-    SymGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
-__declspec(dllimport) BOOLEAN
-    SymGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
-__declspec(dllimport) BOOLEAN
-    SymCreateSymbolTableForDisassembler(void * CallbackFunction);
-__declspec(dllimport) BOOLEAN
-    SymConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
-__declspec(dllimport) BOOLEAN
-    SymConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath,
-                                                char *       PdbFilePath,
-                                                char *       GuidAndAgeDetails,
-                                                BOOLEAN      Is32BitModule);
-__declspec(dllimport) BOOLEAN
-    SymbolInitLoad(PVOID        BufferToStoreDetails,
-                   UINT32       StoredLength,
-                   BOOLEAN      DownloadIfAvailable,
-                   const char * SymbolPath,
-                   BOOLEAN      IsSilentLoad);
-__declspec(dllimport) BOOLEAN
-    SymShowDataBasedOnSymbolTypes(const char * TypeName,
-                                  UINT64       Address,
-                                  BOOLEAN      IsStruct,
-                                  PVOID        BufferAddress,
-                                  const char * AdditionalParameters);
-__declspec(dllimport) BOOLEAN
-    SymQuerySizeof(_In_ const char * StructNameOrTypeName, _Out_ UINT32 * SizeOfField);
-__declspec(dllimport) BOOLEAN
-    SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
-                                     _In_ const char * FiledOfStructName,
-                                     _Out_ PBOOLEAN    IsStructNamePointerOrNot,
-                                     _Out_ PBOOLEAN    IsFiledOfStructNamePointerOrNot,
-                                     _Out_ char **     NewStructOrTypeName,
-                                     _Out_ UINT32 *    OffsetOfFieldFromTop,
-                                     _Out_ UINT32 *    SizeOfField);
 
 #ifdef __cplusplus
 }
@@ -5603,289 +6050,5 @@ BroadcastEnableEferSyscallEventsOnAllProcessors();
 
 IMPORT_EXPORT_VMM VOID
 BroadcastDisableEferSyscallEventsOnAllProcessors();
-
-
-//..\..\..\bin\debug\SDK\Modules\HyperLog.h
-/**
- * @file HyperLog.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's SDK for HyperLog project
- * @details This file contains definitions of HyperLog routines
- * @version 0.2
- * @date 2023-01-15
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//////////////////////////////////////////////////
-//			     Callback Types                 //
-//////////////////////////////////////////////////
-
-/**
- * @brief A function that checks whether the current operation
- * is on vmx-root mode or not
- *
- */
-typedef BOOLEAN (*CHECK_VMX_OPERATION)();
-
-/**
- * @brief A function that checks whether the immediate message
- * sending is needed or not
- *
- */
-typedef BOOLEAN (*CHECK_IMMEDIATE_MESSAGE_SENDING)(UINT32 OperationCode);
-
-/**
- * @brief A function that sends immediate messages
- *
- */
-typedef BOOLEAN (*SEND_IMMEDIATE_MESSAGE)(CHAR * OptionalBuffer,
-                                          UINT32 OptionalBufferLength,
-                                          UINT32 OperationCode);
-
-//////////////////////////////////////////////////
-//			   Callback Structure               //
-//////////////////////////////////////////////////
-
-/**
- * @brief Prototype of each function needed by message tracer
- *
- */
-typedef struct _MESSAGE_TRACING_CALLBACKS
-{
-    CHECK_VMX_OPERATION             VmxOperationCheck;
-    CHECK_IMMEDIATE_MESSAGE_SENDING CheckImmediateMessageSending;
-    SEND_IMMEDIATE_MESSAGE          SendImmediateMessage;
-
-} MESSAGE_TRACING_CALLBACKS, *PMESSAGE_TRACING_CALLBACKS;
-
-
-//..\..\..\bin\debug\SDK\Modules\VMM.h
-/**
- * @file VMM.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief HyperDbg's SDK for VMM project
- * @details This file contains definitions of HyperLog routines
- * @version 0.2
- * @date 2023-01-15
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-//////////////////////////////////////////////////
-//			     Callback Types                 //
-//////////////////////////////////////////////////
-
-/**
- * @brief A function from the message tracer that send the inputs to the
- * queue of the messages
- *
- */
-typedef BOOLEAN (*LOG_CALLBACK_PREPARE_AND_SEND_MESSAGE_TO_QUEUE)(UINT32       OperationCode,
-                                                                  BOOLEAN      IsImmediateMessage,
-                                                                  BOOLEAN      ShowCurrentSystemTime,
-                                                                  BOOLEAN      Priority,
-                                                                  const char * Fmt,
-                                                                  va_list      ArgList);
-
-/**
- * @brief A function that sends the messages to message tracer buffers
- *
- */
-typedef BOOLEAN (*LOG_CALLBACK_SEND_MESSAGE_TO_QUEUE)(UINT32 OperationCode, BOOLEAN IsImmediateMessage, CHAR * LogMessage, UINT32 BufferLen, BOOLEAN Priority);
-
-/**
- * @brief A function that sends the messages to message tracer buffers
- *
- */
-typedef BOOLEAN (*LOG_CALLBACK_SEND_BUFFER)(_In_ UINT32                          OperationCode,
-                                            _In_reads_bytes_(BufferLength) PVOID Buffer,
-                                            _In_ UINT32                          BufferLength,
-                                            _In_ BOOLEAN                         Priority);
-
-/**
- * @brief A function that checks whether the priority or regular buffer is full or not
- *
- */
-typedef BOOLEAN (*LOG_CALLBACK_CHECK_IF_BUFFER_IS_FULL)(BOOLEAN Priority);
-
-/**
- * @brief A function that handles trigger events
- *
- */
-typedef VMM_CALLBACK_TRIGGERING_EVENT_STATUS_TYPE (*VMM_CALLBACK_TRIGGER_EVENTS)(VMM_EVENT_TYPE_ENUM                   EventType,
-                                                                                 VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE CallingStage,
-                                                                                 PVOID                                 Context,
-                                                                                 BOOLEAN *                             PostEventRequired,
-                                                                                 GUEST_REGS *                          Regs);
-
-/**
- * @brief A function that checks and handles breakpoints
- *
- */
-typedef BOOLEAN (*DEBUGGING_CALLBACK_HANDLE_BREAKPOINT_EXCEPTION)(UINT32 CoreId);
-
-/**
- * @brief A function that checks and handles debug breakpoints
- *
- */
-typedef BOOLEAN (*DEBUGGING_CALLBACK_HANDLE_DEBUG_BREAKPOINT_EXCEPTION)(UINT32 CoreId);
-
-/**
- * @brief Check for page-faults in user-debugger
- *
- */
-typedef BOOLEAN (*DEBUGGING_CALLBACK_CONDITIONAL_PAGE_FAULT_EXCEPTION)(UINT32 CoreId,
-                                                                       UINT64 Address,
-                                                                       UINT32 PageFaultErrorCode);
-
-/**
- * @brief Check for commands in user-debugger
- *
- */
-typedef BOOLEAN (*UD_CHECK_FOR_COMMAND)();
-
-/**
- * @brief Handle registered MTF callback
- *
- */
-typedef VOID (*VMM_CALLBACK_REGISTERED_MTF_HANDLER)(UINT32 CoreId);
-
-/**
- * @brief Check for user-mode access for loaded module details
- *
- */
-typedef BOOLEAN (*VMM_CALLBACK_RESTORE_EPT_STATE)(UINT32 CoreId);
-
-/**
- * @brief Check for unhandled EPT violations
- *
- */
-typedef BOOLEAN (*VMM_CALLBACK_CHECK_UNHANDLED_EPT_VIOLATION)(UINT32 CoreId, UINT64 ViolationQualification, UINT64 GuestPhysicalAddr);
-
-/**
- * @brief Handle cr3 process change callbacks
- *
- */
-typedef VOID (*INTERCEPTION_CALLBACK_TRIGGER_CR3_CHANGE)(UINT32 CoreId);
-
-/**
- * @brief Check for process or thread change callback
- *
- */
-typedef BOOLEAN (*INTERCEPTION_CALLBACK_TRIGGER_CLOCK_AND_IPI)(_In_ UINT32 CoreId);
-
-/**
- * @brief Check to handle cr3 events for thread interception
- *
- */
-typedef BOOLEAN (*ATTACHING_HANDLE_CR3_EVENTS_FOR_THREAD_INTERCEPTION)(UINT32 CoreId, CR3_TYPE NewCr3);
-
-/**
- * @brief Check and handle reapplying breakpoint
- *
- */
-typedef BOOLEAN (*BREAKPOINT_CHECK_AND_HANDLE_REAPPLYING_BREAKPOINT)(UINT32 CoreId);
-
-/**
- * @brief Handle NMI broadcast
- *
- */
-typedef VOID (*VMM_CALLBACK_NMI_BROADCAST_REQUEST_HANDLER)(UINT32 CoreId, BOOLEAN IsOnVmxNmiHandler);
-
-/**
- * @brief Check and handle NMI callbacks
- *
- */
-typedef BOOLEAN (*KD_CHECK_AND_HANDLE_NMI_CALLBACK)(UINT32 CoreId);
-
-/**
- * @brief Set the top-level driver's error status
- *
- */
-typedef VOID (*VMM_CALLBACK_SET_LAST_ERROR)(UINT32 LastError);
-
-/**
- * @brief Check and modify the protected resources of the hypervisor
- *
- */
-typedef BOOLEAN (*VMM_CALLBACK_QUERY_TERMINATE_PROTECTED_RESOURCE)(UINT32                               CoreId,
-                                                                   PROTECTED_HV_RESOURCES_TYPE          ResourceType,
-                                                                   PVOID                                Context,
-                                                                   PROTECTED_HV_RESOURCES_PASSING_OVERS PassOver);
-
-/**
- * @brief Query debugger thread or process tracing details by core ID
- *
- */
-typedef BOOLEAN (*KD_QUERY_DEBUGGER_THREAD_OR_PROCESS_TRACING_DETAILS_BY_CORE_ID)(UINT32                          CoreId,
-                                                                                  DEBUGGER_THREAD_PROCESS_TRACING TracingType);
-/**
- * @brief Handler of debugger specific VMCALLs
- *
- */
-typedef BOOLEAN (*VMM_CALLBACK_VMCALL_HANDLER)(UINT32 CoreId,
-                                               UINT64 VmcallNumber,
-                                               UINT64 OptionalParam1,
-                                               UINT64 OptionalParam2,
-                                               UINT64 OptionalParam3);
-
-//////////////////////////////////////////////////
-//			   Callback Structure               //
-//////////////////////////////////////////////////
-
-/**
- * @brief Prototype of each function needed by VMM module
- *
- */
-typedef struct _VMM_CALLBACKS
-{
-    //
-    // Log (Hyperlog) callbacks
-    //
-    LOG_CALLBACK_PREPARE_AND_SEND_MESSAGE_TO_QUEUE LogCallbackPrepareAndSendMessageToQueueWrapper; // Fixed
-    LOG_CALLBACK_SEND_MESSAGE_TO_QUEUE             LogCallbackSendMessageToQueue;                  // Fixed
-    LOG_CALLBACK_SEND_BUFFER                       LogCallbackSendBuffer;                          // Fixed
-    LOG_CALLBACK_CHECK_IF_BUFFER_IS_FULL           LogCallbackCheckIfBufferIsFull;                 // Fixed
-
-    //
-    // VMM callbacks
-    //
-    VMM_CALLBACK_TRIGGER_EVENTS                     VmmCallbackTriggerEvents;                   // Fixed
-    VMM_CALLBACK_SET_LAST_ERROR                     VmmCallbackSetLastError;                    // Fixed
-    VMM_CALLBACK_VMCALL_HANDLER                     VmmCallbackVmcallHandler;                   // Fixed
-    VMM_CALLBACK_NMI_BROADCAST_REQUEST_HANDLER      VmmCallbackNmiBroadcastRequestHandler;      // Fixed
-    VMM_CALLBACK_QUERY_TERMINATE_PROTECTED_RESOURCE VmmCallbackQueryTerminateProtectedResource; // Fixed
-    VMM_CALLBACK_RESTORE_EPT_STATE                  VmmCallbackRestoreEptState;                 // Fixed
-    VMM_CALLBACK_CHECK_UNHANDLED_EPT_VIOLATION      VmmCallbackCheckUnhandledEptViolations;     // Fixed
-
-    //
-    // Debugging callbacks
-    //
-    DEBUGGING_CALLBACK_HANDLE_BREAKPOINT_EXCEPTION       DebuggingCallbackHandleBreakpointException;      // Fixed
-    DEBUGGING_CALLBACK_HANDLE_DEBUG_BREAKPOINT_EXCEPTION DebuggingCallbackHandleDebugBreakpointException; // Fixed
-    DEBUGGING_CALLBACK_CONDITIONAL_PAGE_FAULT_EXCEPTION  DebuggingCallbackConditionalPageFaultException;  // Fixed
-
-    //
-    // Interception callbacks
-    //
-    INTERCEPTION_CALLBACK_TRIGGER_CR3_CHANGE InterceptionCallbackTriggerCr3ProcessChange; // Fixed
-
-    //
-    // Callbacks to be removed
-    //
-    BREAKPOINT_CHECK_AND_HANDLE_REAPPLYING_BREAKPOINT              BreakpointCheckAndHandleReApplyingBreakpoint;
-    UD_CHECK_FOR_COMMAND                                           UdCheckForCommand;
-    KD_CHECK_AND_HANDLE_NMI_CALLBACK                               KdCheckAndHandleNmiCallback;
-    VMM_CALLBACK_REGISTERED_MTF_HANDLER                            VmmCallbackRegisteredMtfHandler; // Fixed but not good
-    INTERCEPTION_CALLBACK_TRIGGER_CLOCK_AND_IPI                    DebuggerCheckProcessOrThreadChange;
-    ATTACHING_HANDLE_CR3_EVENTS_FOR_THREAD_INTERCEPTION            AttachingHandleCr3VmexitsForThreadInterception;
-    KD_QUERY_DEBUGGER_THREAD_OR_PROCESS_TRACING_DETAILS_BY_CORE_ID KdQueryDebuggerQueryThreadOrProcessTracingDetailsByCoreId;
-
-} VMM_CALLBACKS, *PVMM_CALLBACKS;
 
 
