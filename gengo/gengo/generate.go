@@ -226,6 +226,7 @@ func (mod Module) EmitSyntheticStruct(n *clang.RecordDecl, layout *clang.RecordL
 		if name == "" {
 			name = "emptyFieldName"
 			mylog.Todo("dd accessors for each field name is empty")
+			mylog.Todo(c.Type)
 		}
 		var funcDec dst.FuncDeclDecorations
 		for _, f := range n.Children() {
