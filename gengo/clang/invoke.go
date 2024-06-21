@@ -74,17 +74,19 @@ func Parse(opt *Options) (ast Node, layout *LayoutMap, err error) {
 	// errg := &errgroup.Group{}
 
 	// errg.Go(func() error {
-	res := mylog.Check2(CreateLayoutMap(opt))
 
-	stream.WriteTruncate("astLayout.log", res)
-	layout = mylog.Check2(ParseLayoutMap(res))
 	//return nil
 	//})
 	//mylog.Check(errg.Wait())
 	//errg.Go(func() error {
-	res = mylog.Check2(CreateAST(opt))
+	res := mylog.Check2(CreateAST(opt))
 	stream.WriteTruncate("ast.json", res)
 	ast = mylog.Check2(ParseAST(res))
+
+	res = mylog.Check2(CreateLayoutMap(opt))
+	stream.WriteTruncate("astLayout.log", res)
+	layout = mylog.Check2(ParseLayoutMap(res))
+
 	//return nil
 	//})
 
