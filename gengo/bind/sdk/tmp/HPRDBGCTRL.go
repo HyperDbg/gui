@@ -1213,10 +1213,10 @@ type MessageTracingCallbacks struct {
 	SendImmediateMessage         SendImmediateMessage
 }
 type VmmCallbacks struct {
-	//LogCallbackPrepareAndSendMessageToQueueWrapper            LogCallbackPrepareAndSendMessageToQueue
-	//LogCallbackSendMessageToQueue                             LogCallbackSendMessageToQueue
-	//LogCallbackSendBuffer                                     LogCallbackSendBuffer
-	//LogCallbackCheckIfBufferIsFull                            LogCallbackCheckIfBufferIsFull
+	// LogCallbackPrepareAndSendMessageToQueueWrapper            LogCallbackPrepareAndSendMessageToQueue
+	// LogCallbackSendMessageToQueue                             LogCallbackSendMessageToQueue
+	// LogCallbackSendBuffer                                     LogCallbackSendBuffer
+	// LogCallbackCheckIfBufferIsFull                            LogCallbackCheckIfBufferIsFull
 	VmmCallbackTriggerEvents                                  VmmCallbackTriggerEvents
 	VmmCallbackSetLastError                                   VmmCallbackSetLastError
 	VmmCallbackVmcallHandler                                  VmmCallbackVmcallHandler
@@ -1244,61 +1244,61 @@ type (
 	_BuiltinMsVaList   = *byte
 	_BuiltinVaList     = *byte
 	WcharT             = uint16
-	//Bool               = int32
-	//SizeT              = uint64
-	PsizeT             = *uint64
-	TimeT              = uint64
-	Ntstatus           = uint64
-	VaList             = *byte
-	PlistEntry         = *ListEntry
-	PrlistEntry        = ListEntry
+	// Bool               = int32
+	// SizeT              = uint64
+	PsizeT      = *uint64
+	TimeT       = uint64
+	Ntstatus    = uint64
+	VaList      = *byte
+	PlistEntry  = *ListEntry
+	PrlistEntry = ListEntry
 )
 
 // ///////////////////////////////////////////////
 type (
-	Qword      = uint64
-	Uint64     = uint64
-	Puint64    = *uint64
-	Dword      = uint64
-	Bool       = int32
-	Byte       = uint8
-	Word       = uint16
-	Int        = int32
-	Uint       = uint32
-	Puint      = *uint32
-	Ulong64    = uint64
-	Pulong64   = *uint64
-	Dword64    = uint64
-	Pdword64   = *uint64
-	Char       = byte
-	Wchar      = WcharT
-	Uchar      = uint8
-	Ushort     = uint16
-	Ulong      = uint64
-	Boolean    = Uchar
-	Pboolean   = *Boolean
-	Int8       = int8
-	Pint8      = *int8
-	Int16      = int16
-	Pint16     = *int16
-	Int32      = int32
-	Pint32     = *int32
-	Int64      = int64
-	Pint64     = *int64
-	Uint8      = uint8
-	Puint8     = *uint8
-	Uint16     = uint16
-	Puint16    = *uint16
-	Uint32     = uint32
-	Puint32    = *uint32
-	//Uint64     = uint64
-	//Puint64    = *uint64
-	//GuestRegs  = GuestRegs
+	Qword    = uint64
+	Uint64   = uint64
+	Puint64  = *uint64
+	Dword    = uint64
+	Bool     = int32
+	Byte     = uint8
+	Word     = uint16
+	Int      = int32
+	Uint     = uint32
+	Puint    = *uint32
+	Ulong64  = uint64
+	Pulong64 = *uint64
+	Dword64  = uint64
+	Pdword64 = *uint64
+	Char     = byte
+	Wchar    = WcharT
+	Uchar    = uint8
+	Ushort   = uint16
+	Ulong    = uint64
+	Boolean  = Uchar
+	Pboolean = *Boolean
+	Int8     = int8
+	Pint8    = *int8
+	Int16    = int16
+	Pint16   = *int16
+	Int32    = int32
+	Pint32   = *int32
+	Int64    = int64
+	Pint64   = *int64
+	Uint8    = uint8
+	Puint8   = *uint8
+	Uint16   = uint16
+	Puint16  = *uint16
+	Uint32   = uint32
+	Puint32  = *uint32
+	// Uint64     = uint64
+	// Puint64    = *uint64
+	// GuestRegs  = GuestRegs
 	PguestRegs = *GuestRegs
 )
 
 // @brief struct for extra registers
-//type GuestExtraRegisters = GuestExtraRegisters
+// type GuestExtraRegisters = GuestExtraRegisters
 
 // @brief struct for extra registers
 type PguestExtraRegisters = *GuestExtraRegisters
@@ -1573,16 +1573,16 @@ type PmessageTracingCallbacks = *MessageTracingCallbacks
 
 // @brief A function from the message tracer that send the inputs to the
 // queue of the messages
-//type LogCallbackPrepareAndSendMessageToQueue = unsafe.Pointer
+// type LogCallbackPrepareAndSendMessageToQueue = unsafe.Pointer
 
 // @brief A function that sends the messages to message tracer buffers
-//type LogCallbackSendMessageToQueue = unsafe.Pointer
+// type LogCallbackSendMessageToQueue = unsafe.Pointer
 
 // @brief A function that sends the messages to message tracer buffers
-//type LogCallbackSendBuffer = unsafe.Pointer
+// type LogCallbackSendBuffer = unsafe.Pointer
 
 // @brief A function that checks whether the priority or regular buffer is full or not
-//type LogCallbackCheckIfBufferIsFull = unsafe.Pointer
+// type LogCallbackCheckIfBufferIsFull = unsafe.Pointer
 
 // @brief A function that handles trigger events
 type VmmCallbackTriggerEvents = unsafe.Pointer
@@ -2057,7 +2057,7 @@ func HyperDbgVmxSupportDetection() bool {
 
 var __imp_HyperDbgReadVendorString gengort.PreloadProc
 
-func HyperDbgReadVendorString(b*byte) {
+func HyperDbgReadVendorString(b *byte) {
 	gengort.CCall1(__imp_HyperDbgReadVendorString.Addr(), gengort.MarshallSyscall(b))
 }
 

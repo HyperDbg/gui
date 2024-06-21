@@ -131,7 +131,7 @@ func TestBindMacros(t *testing.T) {
 	g.P("MaxSerialPacketSize =10 * NORMAL_PAGE_SIZE") // todo need first define NORMAL_PAGE_SIZE
 	g.P("PAGE_SIZE = 4096")
 
-	allVars := new(maps.SafeMap[string, bool])
+	allVars := new(maps.SliceMap[string, bool])
 
 	for _, line := range stream.NewBuffer("macros.log").ToLines() {
 		for _, sure := range mustPrefixs.Keys() {
