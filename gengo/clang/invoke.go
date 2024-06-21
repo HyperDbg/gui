@@ -2,7 +2,6 @@ package clang
 
 import (
 	"bytes"
-	"fmt"
 	"golang.org/x/sync/errgroup"
 	"os"
 	"os/exec"
@@ -32,30 +31,16 @@ func (o *Options) ClangPath() string {
 }
 
 func (o *Options) ClangCommand(opt ...string) ([]byte, error) {
+	//c := make([]string, 0)
+	//c = append(c, o.ClangPath())
+	//c = append(c, opt...)
+	//c = append(c, o.AdditionalParams...)
+	//c = append(c, o.Sources...)
+	//return stream.RunCommandArgs(c...).Output.Bytes(), nil//todo bug
+
 	cmd := exec.Command(o.ClangPath(), opt...)
 	cmd.Args = append(cmd.Args, o.AdditionalParams...)
 	cmd.Args = append(cmd.Args, o.Sources...)
-	buf := &bytes.Buffer{}
-	cmd.Stdout = buf
-	err := cmd.Run()
-	if err != nil {
-		return nil, fmt.Errorf("failed to run clang: %w", err)
-	}
-	return buf.Bytes(), nil
-
-	//todo bug download
-	/*
-		c := make([]string, 0)
-		c = append(c, o.ClangPath())
-		c = append(c, opt...)
-		c = append(c, o.AdditionalParams...)
-		c = append(c, o.Sources...)
-		return stream.RunCommandArgs(c...).Output.Bytes(), nil
-	*/
-	cmd = exec.Command(o.ClangPath(), opt...)
-	cmd.Args = append(cmd.Args, o.AdditionalParams...)
-	cmd.Args = append(cmd.Args, o.Sources...)
-	cmd.Args = append(cmd.Args, "2>&1")
 	mylog.Trace("commands", strings.Join(cmd.Args, " "))
 	Stdout := &bytes.Buffer{}
 	Stderr := &bytes.Buffer{}

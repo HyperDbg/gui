@@ -3,6 +3,7 @@ package sdk
 
 import (
 	"unsafe"
+
 	"github.com/can1357/gengo/gengort"
 )
 
@@ -1235,62 +1236,66 @@ type VmmCallbacks struct {
 	AttachingHandleCr3VmexitsForThreadInterception            AttachingHandleCr3EventsForThreadInterception
 	KdQueryDebuggerQueryThreadOrProcessTracingDetailsByCoreId KdQueryDebuggerThreadOrProcessTracingDetailsByCoreId
 }
-type _Int128T = any
-type _Uint128T = any
-type __NSConstantString = any
-type SizeT = uint64
-type _BuiltinMsVaList = *byte
-type _BuiltinVaList = *byte
-type WcharT = uint16
-type Bool = int32
-type SizeT = uint64
-type PsizeT = *uint64
-type TimeT = uint64
-type Ntstatus = uint64
-type VaList = *byte
-type PlistEntry = *ListEntry
-type PrlistEntry = ListEntry
+type (
+	_Int128T           = any
+	_Uint128T          = any
+	__NSConstantString = any
+	SizeT              = uint64
+	_BuiltinMsVaList   = *byte
+	_BuiltinVaList     = *byte
+	WcharT             = uint16
+	Bool               = int32
+	SizeT              = uint64
+	PsizeT             = *uint64
+	TimeT              = uint64
+	Ntstatus           = uint64
+	VaList             = *byte
+	PlistEntry         = *ListEntry
+	PrlistEntry        = ListEntry
+)
 
 // ///////////////////////////////////////////////
-type Qword = uint64
-type Uint64 = uint64
-type Puint64 = *uint64
-type Dword = uint64
-type Bool = int32
-type Byte = uint8
-type Word = uint16
-type Int = int32
-type Uint = uint32
-type Puint = *uint32
-type Ulong64 = uint64
-type Pulong64 = *uint64
-type Dword64 = uint64
-type Pdword64 = *uint64
-type Char = byte
-type Wchar = WcharT
-type Uchar = uint8
-type Ushort = uint16
-type Ulong = uint64
-type Boolean = Uchar
-type Pboolean = *Boolean
-type Int8 = int8
-type Pint8 = *int8
-type Int16 = int16
-type Pint16 = *int16
-type Int32 = int32
-type Pint32 = *int32
-type Int64 = int64
-type Pint64 = *int64
-type Uint8 = uint8
-type Puint8 = *uint8
-type Uint16 = uint16
-type Puint16 = *uint16
-type Uint32 = uint32
-type Puint32 = *uint32
-type Uint64 = uint64
-type Puint64 = *uint64
-type GuestRegs = GuestRegs
-type PguestRegs = *GuestRegs
+type (
+	Qword      = uint64
+	Uint64     = uint64
+	Puint64    = *uint64
+	Dword      = uint64
+	Bool       = int32
+	Byte       = uint8
+	Word       = uint16
+	Int        = int32
+	Uint       = uint32
+	Puint      = *uint32
+	Ulong64    = uint64
+	Pulong64   = *uint64
+	Dword64    = uint64
+	Pdword64   = *uint64
+	Char       = byte
+	Wchar      = WcharT
+	Uchar      = uint8
+	Ushort     = uint16
+	Ulong      = uint64
+	Boolean    = Uchar
+	Pboolean   = *Boolean
+	Int8       = int8
+	Pint8      = *int8
+	Int16      = int16
+	Pint16     = *int16
+	Int32      = int32
+	Pint32     = *int32
+	Int64      = int64
+	Pint64     = *int64
+	Uint8      = uint8
+	Puint8     = *uint8
+	Uint16     = uint16
+	Puint16    = *uint16
+	Uint32     = uint32
+	Puint32    = *uint32
+	Uint64     = uint64
+	Puint64    = *uint64
+	GuestRegs  = GuestRegs
+	PguestRegs = *GuestRegs
+)
 
 // @brief struct for extra registers
 type GuestExtraRegisters = GuestExtraRegisters
@@ -1481,8 +1486,10 @@ type PdebuggerQueryActiveProcessesOrThreads = *DebuggerQueryActiveProcessesOrThr
 type PdebuggerSingleCallstackFrame = *DebuggerSingleCallstackFrame
 
 // @brief request for callstack frames
-type PdebuggerCallstackRequest = *DebuggerCallstackRequest
-type PusermodeDebuggingThreadOrProcessStateDetails = *UsermodeDebuggingThreadOrProcessStateDetails
+type (
+	PdebuggerCallstackRequest                     = *DebuggerCallstackRequest
+	PusermodeDebuggingThreadOrProcessStateDetails = *UsermodeDebuggingThreadOrProcessStateDetails
+)
 
 // @brief Used for run the script
 type PdebuggerEventActionRunScriptConfiguration = *DebuggerEventActionRunScriptConfiguration
@@ -1533,9 +1540,11 @@ type PdebuggeeRegisterReadDescription = *DebuggeeRegisterReadDescription
 
 // @brief structures for sending and saving details
 // about each module and symbols details
-type PmoduleSymbolDetail = *ModuleSymbolDetail
-type PusermodeLoadedModuleSymbols = *UsermodeLoadedModuleSymbols
-type PusermodeLoadedModuleDetails = *UsermodeLoadedModuleDetails
+type (
+	PmoduleSymbolDetail          = *ModuleSymbolDetail
+	PusermodeLoadedModuleSymbols = *UsermodeLoadedModuleSymbols
+	PusermodeLoadedModuleDetails = *UsermodeLoadedModuleDetails
+)
 
 // @brief Callback type that should be used to add
 // list of Addresses to ObjectNames
@@ -1634,7 +1643,7 @@ type PvmmCallbacks = *VmmCallbacks
 
 var __imp_HyperDbgVmxSupportDetection gengort.PreloadProc
 
-//  Gengo init function.
+// Gengo init function.
 func init() {
 	__imp_HyperDbgVmxSupportDetection = GengoLibrary.ImportNow("HyperDbgVmxSupportDetection")
 	__imp_HyperDbgReadVendorString = GengoLibrary.ImportNow("HyperDbgReadVendorString")
@@ -2040,6 +2049,7 @@ func init() {
 	gengort.Validate((*MessageTracingCallbacks)(nil), 0x18, 0x8, "VmxOperationCheck", 0x0, "CheckImmediateMessageSending", 0x8, "SendImmediateMessage", 0x10)
 	gengort.Validate((*VmmCallbacks)(nil), 0xb0, 0x8, "LogCallbackPrepareAndSendMessageToQueueWrapper", 0x0, "LogCallbackSendMessageToQueue", 0x8, "LogCallbackSendBuffer", 0x10, "LogCallbackCheckIfBufferIsFull", 0x18, "VmmCallbackTriggerEvents", 0x20, "VmmCallbackSetLastError", 0x28, "VmmCallbackVmcallHandler", 0x30, "VmmCallbackNmiBroadcastRequestHandler", 0x38, "VmmCallbackQueryTerminateProtectedResource", 0x40, "VmmCallbackRestoreEptState", 0x48, "VmmCallbackCheckUnhandledEptViolations", 0x50, "DebuggingCallbackHandleBreakpointException", 0x58, "DebuggingCallbackHandleDebugBreakpointException", 0x60, "DebuggingCallbackConditionalPageFaultException", 0x68, "InterceptionCallbackTriggerCr3ProcessChange", 0x70, "BreakpointCheckAndHandleReApplyingBreakpoint", 0x78, "UdCheckForCommand", 0x80, "KdCheckAndHandleNmiCallback", 0x88, "VmmCallbackRegisteredMtfHandler", 0x90, "DebuggerCheckProcessOrThreadChange", 0x98, "AttachingHandleCr3VmexitsForThreadInterception", 0xa0, "KdQueryDebuggerQueryThreadOrProcessTracingDetailsByCoreId", 0xa8)
 }
+
 func HyperDbgVmxSupportDetection() bool {
 	__res := gengort.CCall0(__imp_HyperDbgVmxSupportDetection.Addr())
 	return gengort.UnmarshallSyscall[bool](__res)
@@ -2047,7 +2057,7 @@ func HyperDbgVmxSupportDetection() bool {
 
 var __imp_HyperDbgReadVendorString gengort.PreloadProc
 
-func HyperDbgReadVendorString( *byte) {
+func HyperDbgReadVendorString(*byte) {
 	gengort.CCall1(__imp_HyperDbgReadVendorString.Addr(), gengort.MarshallSyscall())
 }
 
@@ -4104,27 +4114,35 @@ var __imp_BroadcastDisableEferSyscallEventsOnAllProcessors gengort.PreloadProc
 func BroadcastDisableEferSyscallEventsOnAllProcessors() {
 	gengort.CCall0(__imp_BroadcastDisableEferSyscallEventsOnAllProcessors.Addr())
 }
+
 func (s Anon249_5) Flags() Uint64 {
 	return gengort.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
+
 func (s *Anon249_5) SetFlags(v Uint64) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
+
 func (s Anon249_5) Fields() Anon253_9 {
 	return gengort.ReadBitcast[Anon253_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
+
 func (s *Anon249_5) SetFields(v Anon253_9) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
-func (s Anon1550_9)Get () Anon1552_5 {
+
+func (s Anon1550_9) Get() Anon1552_5 {
 	return gengort.ReadBitcast[Anon1552_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
+
 func (s *Anon1550_9) Set(v Anon1552_5) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
+
 func (s Anon1550_9) AsUInt() Uint32 {
 	return gengort.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
+
 func (s *Anon1550_9) SetAsUInt(v Uint32) {
 	gengort.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
