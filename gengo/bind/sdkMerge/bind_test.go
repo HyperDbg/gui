@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const bugfix = `
+var bugfix = `
 typedef unsigned short wchar_t;
 typedef int bool ;
 #define PVOID void*
@@ -70,6 +70,7 @@ func TestMergeHeader(t *testing.T) {
 	// Modules
 	// Imports
 
+	bugfix = strings.TrimPrefix(bugfix, "\n")
 	g.P("//bugfix.h")
 	g.P(bugfix)
 	g.P()
@@ -192,7 +193,7 @@ func TestBindMacros(t *testing.T) {
 }
 
 func TestBindSdk(t *testing.T) {
-	mylog.SetDebug(false)
+	// mylog.SetDebug(false)
 	mylog.Call(func() {
 		pkg := gengo.NewPackage("HPRDBGCTRL",
 			gengo.WithRemovePrefix(

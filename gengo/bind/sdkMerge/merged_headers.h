@@ -1,5 +1,4 @@
 //bugfix.h
-
 typedef unsigned short wchar_t;
 typedef int bool ;
 #define PVOID void*
