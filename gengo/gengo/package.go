@@ -153,7 +153,7 @@ func (p *Package) Print() {
 }
 
 func (p *Package) WriteToDir(dir string) error {
-	mylog.CheckIgnore(os.Mkdir(dir, 0755))
+	stream.CreatDirectory(dir)
 	return p.Fprint(func(path string) (io.WriteCloser, error) {
 		p.path = filepath.Join(dir, path)
 		return os.Create(p.path)
