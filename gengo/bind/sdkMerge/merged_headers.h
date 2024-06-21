@@ -18,7 +18,7 @@
 //               Basic Datatypes                //
 //////////////////////////////////////////////////
 
-#include <wchar.h> // 或者 #include <cwchar>
+//#include <wchar.h> // 或者 #include <cwchar>
 
 
 typedef unsigned long long QWORD;
@@ -4164,20 +4164,6 @@ typedef struct _DEBUGGEE_SYMBOL_UPDATE_RESULT
 /*
 ==============================================================================================
  */
-
-
-//..\..\..\bin\debug\SDK\HyperDbgSdk.h
-#pragma once
-
-#include "SDK/Headers/Constants.h"
-#include "SDK/Headers/BasicTypes.h"
-#include "SDK/Headers/ErrorCodes.h"
-#include "SDK/Headers/Connection.h"
-#include "SDK/Headers/DataTypes.h"
-#include "SDK/Headers/Ioctls.h"
-#include "SDK/Headers/Events.h"
-#include "SDK/Headers/RequestStructures.h"
-#include "SDK/Headers/Symbols.h"
 
 
 //..\..\..\bin\debug\SDK\Imports\HyperDbgCtrlImports.h
