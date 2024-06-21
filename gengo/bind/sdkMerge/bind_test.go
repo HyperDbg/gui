@@ -63,7 +63,7 @@ func TestMergeHeader(t *testing.T) {
 	// todo merge step
 	// bugfix
 	// BasicTypes
-	// Headers 删除BasicTypes
+	// Headers
 	// Modules
 	// Imports
 
