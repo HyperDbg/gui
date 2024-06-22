@@ -1,18 +1,16 @@
 package sdk
 
 import (
-	"io/fs"
-	"path/filepath"
-	"strconv"
-	"strings"
-	"testing"
-	"unicode"
-
 	"github.com/ddkwork/app/bindgen/clang"
 	"github.com/ddkwork/app/bindgen/gengo"
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 	"github.com/ddkwork/golibrary/stream/orderedmap"
+	"io/fs"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"testing"
 )
 
 func TestMergeHeader(t *testing.T) {
@@ -72,19 +70,6 @@ func TestMergeHeader(t *testing.T) {
 		fnDo(s)
 	}
 	stream.WriteBinaryFile("merged_headers.h", g.Buffer)
-}
-
-// ContainsLetter 检查字符串中是否包含字母
-func ContainsLetter(s string) bool {
-	if strings.HasPrefix(s, "0x") {
-		return false
-	}
-	for _, char := range s {
-		if unicode.IsLetter(char) {
-			return true
-		}
-	}
-	return false
 }
 
 func TestBindMacros(t *testing.T) {
