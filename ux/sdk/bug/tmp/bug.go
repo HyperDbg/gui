@@ -18,12 +18,8 @@ type (
 	SizeT              = uint64
 	_BuiltinMsVaList   = *byte
 	_BuiltinVaList     = *byte
-	Uchar              = uint8
-	Boolean            = Uchar
-	Pboolean           = *Boolean
-	// CheckVmxOperation  = unsafe.Pointer
+	CheckVmxOperation  = unsafe.Pointer
 )
-type CHECK_VMX_OPERATION = func() uint8
 
 // Gengo init function.
 func init() {}
