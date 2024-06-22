@@ -6,6 +6,7 @@ require (
 	github.com/ddkwork/app v0.0.0-20240622063127-e8c8ea20e197
 	github.com/ddkwork/golibrary v0.0.69
 	github.com/richardwilkes/unison v0.71.0
+	github.com/stretchr/testify v1.9.0
 	github.com/winlabs/gowin32 v0.0.0-20221003142512-0d265587d3c9
 )
 
@@ -15,6 +16,7 @@ require (
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dave/dst v0.27.3 // indirect
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dc0d/caseconv v0.5.0 // indirect
 	github.com/dlclark/regexp2 v1.11.0 // indirect
 	github.com/ebitengine/purego v0.7.1 // indirect
@@ -29,11 +31,13 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/pkg/term v1.2.0-beta.2 // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/richardwilkes/json v0.2.0 // indirect
 	github.com/richardwilkes/toolbox v1.114.1 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/saferwall/pe v1.5.3 // indirect
 	github.com/secDre4mer/pkcs7 v0.0.0-20240322103146-665324a4461d // indirect
+	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spyre-project/spyre v1.2.5 // indirect
