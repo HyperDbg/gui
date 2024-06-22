@@ -2,9 +2,9 @@ package HPRDBGCTRL
 
 import "fmt"
 
-type ErrorCodes int
+type debuggerErrorType int
 
-func (e ErrorCodes) String() string {
+func (e debuggerErrorType) String() string {
 	switch e {
 	case DEBUGGER_OPERATION_WAS_SUCCESSFUL:
 		return "DebuggerOperationWasSuccessful"

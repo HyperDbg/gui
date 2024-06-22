@@ -126,7 +126,7 @@ func TestBindMacros(t *testing.T) {
 		p.Value = strings.TrimSuffix(p.Value, "ull")
 
 		if p.Key == "DEBUGGER_OPERATION_WAS_SUCCESSFUL" || strings.HasPrefix(p.Key, "DEBUGGER_ERROR") {
-			p.Key += " ErrorCodes"
+			p.Key += " debuggerErrorType"
 		}
 		if strings.HasPrefix(p.Key, "IOCTL_") {
 			// p.Key += " IoctlsKind"
