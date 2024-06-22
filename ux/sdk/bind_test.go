@@ -125,12 +125,14 @@ func TestBindMacros(t *testing.T) {
 		p.Value = strings.TrimSuffix(p.Value, "U")
 		p.Value = strings.TrimSuffix(p.Value, "ull")
 
-		if strings.HasPrefix(p.Value, "CTL_CODE") {
-			p.Value = "IoctlsKind(" + p.Value + ")"
-		}
 		if p.Key == "DEBUGGER_OPERATION_WAS_SUCCESSFUL" || strings.HasPrefix(p.Key, "DEBUGGER_ERROR") {
 			p.Key += " ErrorCodes"
 		}
+		if strings.HasPrefix(p.Key, "IOCTL_") {
+			// p.Key += " IoctlsKind"
+			p.Value = "IoctlsKind(" + p.Value + ")"
+		}
+
 		if p.Value[0] == '(' && p.Value[len(p.Value)-1] == ')' {
 			p.Value = p.Value[1 : len(p.Value)-1]
 		}
