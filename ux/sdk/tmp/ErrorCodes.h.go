@@ -127,7 +127,6 @@ func (e ErrorCodes) String() string {
 	case DEBUGGER_ERROR_USING_SHORT_CIRCUITING_EVENT_WITH_POST_EVENT_MODE_IS_FORBIDDEDN:
 		return "DebuggerErrorUsingShortCircuitingEventWithPostEventModeIsForbiddedn"
 	default:
-		return ""
 		return fmt.Sprint("unknown error code " + fmt.Sprintf("%d", e))
 	}
 }
