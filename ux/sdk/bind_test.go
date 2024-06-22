@@ -128,10 +128,6 @@ func TestBindMacros(t *testing.T) {
 		if p.Key == "DEBUGGER_OPERATION_WAS_SUCCESSFUL" || strings.HasPrefix(p.Key, "DEBUGGER_ERROR") {
 			p.Key += " debuggerErrorType"
 		}
-		if strings.HasPrefix(p.Key, "IOCTL_") {
-			// p.Key += " IoctlsKind"
-			p.Value = "IoctlsKind(" + p.Value + ")"
-		}
 
 		if p.Value[0] == '(' && p.Value[len(p.Value)-1] == ')' {
 			p.Value = p.Value[1 : len(p.Value)-1]
@@ -153,20 +149,20 @@ func TestBindSdk(t *testing.T) {
 	mylog.Call(func() {
 		pkg := gengo.NewPackage("HPRDBGCTRL",
 			gengo.WithRemovePrefix(
-			//"Zydis_", "Zyan_", "Zycore_",
-			//"Zydis", "Zyan", "Zycore",
+				//"Zydis_", "Zyan_", "Zycore_",
+				//"Zydis", "Zyan", "Zycore",
 			),
 			gengo.WithInferredMethods([]gengo.MethodInferenceRule{
 				//{Name: "ZydisDecoder", Receiver: "Decoder"},
 			}),
 			gengo.WithForcedSynthetic(
-			//"ZydisShortString_",
-			//"struct ZydisShortString_",
+				//"ZydisShortString_",
+				//"struct ZydisShortString_",
 			),
 		)
 		mylog.Check(pkg.Transform("HPRDBGCTRL", &clang.Options{
 			// Sources:          []string{"combined_headers.h"},
-			Sources:          []string{"merged_headers.h"},
+			Sources: []string{"merged_headers.h"},
 			AdditionalParams: []string{
 				//"-DZYAN_NO_LIBC",
 				//"-DZYAN_STATIC_ASSERT",

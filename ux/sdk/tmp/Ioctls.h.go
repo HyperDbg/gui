@@ -14,8 +14,8 @@ import (
 	"github.com/winlabs/gowin32/wrappers"
 )
 
-func CTL_CODE(deviceType, function, method, access uint32) uint32 {
-	return ((deviceType) << 16) | ((access) << 14) | ((function) << 2) | (method)
+func CTL_CODE(deviceType, function, method, access uint32) IoctlsKind {
+	return IoctlsKind(((deviceType) << 16) | ((access) << 14) | ((function) << 2) | (method))
 }
 
 const (
