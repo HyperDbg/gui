@@ -1,7 +1,11 @@
 package sdk
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/ddkwork/golibrary/mylog"
+)
 
 func TestName(t *testing.T) {
-	main()
+	mylog.Call(main)
 }

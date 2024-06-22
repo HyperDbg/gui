@@ -6,6 +6,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ddkwork/golibrary/stream"
+
 	"github.com/ddkwork/golibrary/mylog"
 )
 
@@ -122,5 +124,14 @@ func main() {
 	}
 	mylog.Check(writeLines(filteredLines, outputFile))
 
+	if macroCount(headerFile) != macroCount(outputFile) {
+		mylog.Check("macro count mismatch")
+	}
+
 	fmt.Println("Macro definitions filtered successfully.")
+}
+
+func macroCount(path string) int {
+	s := stream.NewBuffer(path).String()
+	return strings.Count(s, "#define ")
 }
