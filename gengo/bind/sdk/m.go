@@ -97,6 +97,9 @@ func main() {
 
 	headerMacros := extractMacros(headerLines)
 	dmMacros := extractMacros(macroLines)
+	mylog.Trace(headerFile, len(headerMacros))
+	mylog.Trace(macroFile, len(dmMacros))
+	return
 
 	// Filter dmMacros based on headerMacros
 	for name, headerValue := range headerMacros {
@@ -132,6 +135,5 @@ func main() {
 }
 
 func macroCount(path string) int {
-	s := stream.NewBuffer(path).String()
-	return strings.Count(s, "#define ")
+	return strings.Count(stream.NewBuffer(path).String(), "#define ")
 }
