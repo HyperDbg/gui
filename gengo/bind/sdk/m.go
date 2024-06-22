@@ -121,6 +121,18 @@ func main() {
 					if len(s) < 2 {
 						continue
 					}
+					if strings.Contains(s, "//") {
+						before, _, found := strings.Cut(s, "//")
+						if found {
+							s = before
+							s = strings.TrimSuffix(s, " ")
+							if normalizedDmValue == s {
+								keep = true
+								break
+							}
+						}
+
+					}
 					if strings.Contains(normalizedDmValue, s) {
 						keep = true
 						break
