@@ -6,5 +6,5 @@ import "github.com/ddkwork/hyperdbgui/ux"
 //go:generate go install .
 
 func main() {
-	ux.Run() //sync test
+	ux.Run()
 }
