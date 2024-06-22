@@ -139,10 +139,12 @@ func main() {
 					}
 				}
 				if !keep {
+					mylog.Warning("delete macro", kv.Key)
 					dmMacros.Delete(kv.Key)
 				}
 			default:
 				if normalizedDmValue != normalizedHeaderValue {
+					mylog.Warning("delete macro", kv.Key)
 					dmMacros.Delete(kv.Key)
 				}
 			}
