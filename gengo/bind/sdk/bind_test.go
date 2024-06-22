@@ -118,10 +118,13 @@ func TestBindMacros(t *testing.T) {
 	g.P("package HPRDBGCTRL")
 	g.P()
 	g.P("const (")
-	g.P("MaxSerialPacketSize =10 * NORMAL_PAGE_SIZE") // todo need first define NORMAL_PAGE_SIZE
+	g.P("NORMAL_PAGE_SIZE=4096")
+	// g.P("MaxSerialPacketSize =10 * NORMAL_PAGE_SIZE") // todo need first define NORMAL_PAGE_SIZE
 	g.P("PAGE_SIZE = 4096")
 
 	for _, p := range macros.List() {
+		p.Value = strings.ReplaceAll(p.Value, "sizeof(UINT32)", "4")
+		p.Value = strings.ReplaceAll(p.Value, "\\", "")
 		g.P(p.Key + "=" + p.Value)
 		macros.Delete(p.Key)
 	}
