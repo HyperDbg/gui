@@ -67,7 +67,7 @@ func TestMergeHeader(t *testing.T) {
 	stream.WriteBinaryFile("merged_headers.h", g.Buffer)
 }
 
-func TestBindMacros(t *testing.T) {
+func TestBindMacros(t *testing.T) { //todo bites end and DEBUGGER_MODIFY_EVENTS_APPLY_TO_ALL_TAG need uint64
 	headerFile := "merged_headers.h"
 	macros := extractMacros(stream.NewBuffer(headerFile).ToLines())
 	mylog.Trace("number of macros", macros.Len())
