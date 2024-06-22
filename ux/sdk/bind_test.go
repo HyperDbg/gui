@@ -42,12 +42,6 @@ func TestMergeHeader(t *testing.T) {
 		return err
 	})
 
-	// todo merge step
-	// bugfix
-	// Headers
-	// Modules
-	// Imports
-
 	bugfix = strings.TrimPrefix(bugfix, "\n")
 	g.P("//bugfix.h")
 	g.P(bugfix)
