@@ -2,6 +2,10 @@ package HPRDBGCTRL
 
 import (
 	"fmt"
+	"github.com/ddkwork/app/ms/hardwareIndo"
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/stream/bitfield"
+	"syscall"
 
 	"github.com/winlabs/gowin32/wrappers"
 )
@@ -136,4 +140,26 @@ func TestHIBYTE(t *testing.T) {
 	assert.Equal(t, uint16(0x1122), HIWORD(v))
 	assert.Equal(t, byte(0x44), LOBYTE(v))
 	assert.Equal(t, uint16(0x3344), LOWORD(v))
+}
+
+func VmxSupportDetection() (ok bool) {
+	hard := hardwareIndo.New()
+	if !hard.CpuInfo.Get() {
+		return
+	}
+	if hard.CpuInfo.Vendor != "GenuineIntel" {
+		mylog.Check("this program is not designed to run in a non-VT-x environemnt !")
+	}
+	mylog.Info("", "virtualization technology is vt-x")
+	field := bitfield.NewFromUint32(hard.CpuInfo.Cpu1.Ecx)
+	if !field.Test(5) {
+		mylog.Check("vmx operation is not supported by your processor")
+	}
+	mylog.Info("", "vmx operation is supported by your processor")
+	return true
+}
+
+func DeviceName() string { return "HyperdbgHypervisorDevice" }
+func LinkName() (*uint16, error) {
+	return syscall.UTF16PtrFromString(`\\\\.\\` + DeviceName())
 }
