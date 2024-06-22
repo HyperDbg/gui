@@ -657,12 +657,12 @@ type ScriptEngineVariablesList struct {
 	LocalVariablesList  *Uint64
 }
 type Cr3Type struct {
-	Anon247_5
+	Anon267_5
 }
-type Anon247_5 struct {
+type Anon267_5 struct {
 	Raw [1]int64
 }
-type Anon251_9 struct {
+type Anon271_9 struct {
 	Pcid            Uint64
 	PageFrameNumber Uint64
 	Reserved1       Uint64
@@ -754,10 +754,10 @@ type EptSingleHookUnhookingDetails struct {
 	PhysicalAddress                           SizeT
 	OriginalEntry                             Uint64
 }
-type Anon1548_9 struct {
+type Anon1568_9 struct {
 	Raw [1]int32
 }
-type Anon1550_5 struct {
+type Anon1570_5 struct {
 	// [Bits 3:0] Segment type.
 	Type Uint32
 	// [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
@@ -1190,7 +1190,7 @@ type ModuleSymbolDetail struct {
 type UsermodeLoadedModuleSymbols struct {
 	BaseAddress Uint64
 	Entrypoint  Uint64
-	FilePath    [260]WcharT
+	FilePath    [260]Rune
 }
 type UsermodeLoadedModuleDetails struct {
 	ProcessId        Uint32
@@ -1243,7 +1243,8 @@ type (
 	SizeT              = uint64
 	_BuiltinMsVaList   = *byte
 	_BuiltinVaList     = *byte
-	WcharT             = uint16
+	Rune               = int32
+	WintT              = int32
 	Bool               = int32
 	SizeT              = uint64
 	PsizeT             = *uint64
@@ -1271,7 +1272,7 @@ type (
 	Dword64    = uint64
 	Pdword64   = *uint64
 	Char       = byte
-	Wchar      = WcharT
+	Wchar      = Rune
 	Uchar      = uint8
 	Ushort     = uint16
 	Ulong      = uint64
@@ -1968,8 +1969,8 @@ func init() {
 	bindlib.Validate((*GuestExtraRegisters)(nil), 0x20, 0x8, "Cs", 0x0, "Ds", 0x2, "Fs", 0x4, "Gs", 0x6, "Es", 0x8, "Ss", 0xa, "Rflags", 0x10, "Rip", 0x18)
 	bindlib.Validate((*ScriptEngineVariablesList)(nil), 0x18, 0x8, "TempList", 0x0, "GlobalVariablesList", 0x8, "LocalVariablesList", 0x10)
 	bindlib.Validate((*Cr3Type)(nil), 0x8, 0x8)
-	bindlib.Validate((*Anon247_5)(nil), 0x8, 0x8)
-	bindlib.Validate((*Anon251_9)(nil), 0x8, 0x8, "Pcid", 0xc, "PageFrameNumber", 0x30, "Reserved1", 0x3c, "Reserved_2", 0x3f, "PcidInvalidate", 0x40)
+	bindlib.Validate((*Anon267_5)(nil), 0x8, 0x8)
+	bindlib.Validate((*Anon271_9)(nil), 0x8, 0x8, "Pcid", 0xc, "PageFrameNumber", 0x30, "Reserved1", 0x3c, "Reserved_2", 0x3f, "PcidInvalidate", 0x40)
 	bindlib.Validate((*DebuggerRemotePacket)(nil), 0x18, 0x8, "Checksum", 0x0, "Indicator", 0x8, "TypeOfThePacket", 0x10, "RequestedActionOfThePacket", 0x14)
 	bindlib.Validate((*DebuggeeUserInputPacket)(nil), 0xc, 0x4, "CommandLen", 0x0, "IgnoreFinishedSignal", 0x4, "Result", 0x8)
 	bindlib.Validate((*DebuggeeEventAndActionHeaderForRemotePacket)(nil), 0x4, 0x4, "Length", 0x0)
@@ -1984,8 +1985,8 @@ func init() {
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 0x20, 0x8, "StartAddress", 0x0, "EndAddress", 0x8, "SetHookForRead", 0x10, "SetHookForWrite", 0x11, "SetHookForExec", 0x12, "MemoryType", 0x14, "Tag", 0x18)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 0x10, 0x8, "TargetAddress", 0x0, "HookFunction", 0x8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 0x18, 0x8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0x0, "RemoveBreakpointInterception", 0x1, "PhysicalAddress", 0x8, "OriginalEntry", 0x10)
-	bindlib.Validate((*Anon1548_9)(nil), 0x4, 0x4)
-	bindlib.Validate((*Anon1550_5)(nil), 0x4, 0x4, "Type", 0x4, "DescriptorType", 0x5, "DescriptorPrivilegeLevel", 0x7, "Present", 0x8, "Reserved1", 0xc, "AvailableBit", 0xd, "LongMode", 0xe, "DefaultBig", 0xf, "Granularity", 0x10, "Unusable", 0x11, "Reserved2", 0x20)
+	bindlib.Validate((*Anon1568_9)(nil), 0x4, 0x4)
+	bindlib.Validate((*Anon1570_5)(nil), 0x4, 0x4, "Type", 0x4, "DescriptorType", 0x5, "DescriptorPrivilegeLevel", 0x7, "Present", 0x8, "Reserved1", 0xc, "AvailableBit", 0xd, "LongMode", 0xe, "DefaultBig", 0xf, "Granularity", 0x10, "Unusable", 0x11, "Reserved2", 0x20)
 	bindlib.Validate((*VmxSegmentSelector)(nil), 0x18, 0x8, "Selector", 0x0, "Attributes", 0x4, "Limit", 0x8, "Base", 0x10)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 0x18, 0x8, "Tag", 0x0, "KernelStatus", 0x8, "TypeOfAction", 0x10, "IsEnabled", 0x14)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 0x10, 0x8, "KernelStatus", 0x0, "IsShortCircuiting", 0x8)
@@ -2042,7 +2043,7 @@ func init() {
 	bindlib.Validate((*DebuggeeResultOfSearchPacket)(nil), 0x8, 0x4, "CountOfResults", 0x0, "Result", 0x4)
 	bindlib.Validate((*DebuggeeRegisterReadDescription)(nil), 0x18, 0x8, "RegisterID", 0x0, "Value", 0x8, "KernelStatus", 0x10)
 	bindlib.Validate((*ModuleSymbolDetail)(nil), 0x258, 0x8, "IsSymbolDetailsFound", 0x0, "IsLocalSymbolPath", 0x1, "IsSymbolPDBAvaliable", 0x2, "IsUserMode", 0x3, "Is32Bit", 0x4, "BaseAddress", 0x8, "FilePath", 0x10, "ModuleSymbolPath", 0x114, "ModuleSymbolGuidAndAge", 0x218)
-	bindlib.Validate((*UsermodeLoadedModuleSymbols)(nil), 0x218, 0x8, "BaseAddress", 0x0, "Entrypoint", 0x8, "FilePath", 0x10)
+	bindlib.Validate((*UsermodeLoadedModuleSymbols)(nil), 0x420, 0x8, "BaseAddress", 0x0, "Entrypoint", 0x8, "FilePath", 0x10)
 	bindlib.Validate((*UsermodeLoadedModuleDetails)(nil), 0x10, 0x4, "ProcessId", 0x0, "OnlyCountModules", 0x4, "Is32Bit", 0x5, "ModulesCount", 0x8, "Result", 0xc)
 	bindlib.Validate((*DebuggerUpdateSymbolTable)(nil), 0x260, 0x8, "TotalSymbols", 0x0, "CurrentSymbolIndex", 0x4, "SymbolDetailPacket", 0x8)
 	bindlib.Validate((*DebuggeeSymbolUpdateResult)(nil), 0x8, 0x8, "KernelStatus", 0x0)
@@ -2766,7 +2767,7 @@ func VmFuncVmxCompatibleStrlen(s *Char) Uint32 {
 
 var __imp_VmFuncVmxCompatibleWcslen bindlib.PreloadProc
 
-func VmFuncVmxCompatibleWcslen(s *WcharT) Uint32 {
+func VmFuncVmxCompatibleWcslen(s *Rune) Uint32 {
 	__res := bindlib.CCall1(__imp_VmFuncVmxCompatibleWcslen.Addr(), bindlib.MarshallSyscall(s))
 	return bindlib.UnmarshallSyscall[Uint32](__res)
 }
@@ -2822,21 +2823,21 @@ func VmFuncVmxCompatibleStrncmp(Address1 *Char, Address2 *Char, Num SizeT) Int32
 
 var __imp_VmFuncVmxCompatibleWcscmp bindlib.PreloadProc
 
-func VmFuncVmxCompatibleWcscmp(Address1 *WcharT, Address2 *WcharT) Int32 {
+func VmFuncVmxCompatibleWcscmp(Address1 *Rune, Address2 *Rune) Int32 {
 	__res := bindlib.CCall2(__imp_VmFuncVmxCompatibleWcscmp.Addr(), bindlib.MarshallSyscall(Address1), bindlib.MarshallSyscall(Address2))
 	return bindlib.UnmarshallSyscall[Int32](__res)
 }
 
 var __imp_VmFuncVmxCompatibleWcsncmp bindlib.PreloadProc
 
-func VmFuncVmxCompatibleWcsncmp(Address1 *WcharT, Address2 *WcharT, Num SizeT) Int32 {
+func VmFuncVmxCompatibleWcsncmp(Address1 *Rune, Address2 *Rune, Num SizeT) Int32 {
 	__res := bindlib.CCall3(__imp_VmFuncVmxCompatibleWcsncmp.Addr(), bindlib.MarshallSyscall(Address1), bindlib.MarshallSyscall(Address2), bindlib.MarshallSyscall(Num))
 	return bindlib.UnmarshallSyscall[Int32](__res)
 }
 
 var __imp_VmFuncVmxCompatibleMemcmp bindlib.PreloadProc
 
-func VmFuncVmxCompatibleMemcmp(Address1 *Char, Address2 *Char, Count uint) Int32 {
+func VmFuncVmxCompatibleMemcmp(Address1 *Char, Address2 *Char, Count int32) Int32 {
 	__res := bindlib.CCall3(__imp_VmFuncVmxCompatibleMemcmp.Addr(), bindlib.MarshallSyscall(Address1), bindlib.MarshallSyscall(Address2), bindlib.MarshallSyscall(Count))
 	return bindlib.UnmarshallSyscall[Int32](__res)
 }
@@ -4115,34 +4116,34 @@ func BroadcastDisableEferSyscallEventsOnAllProcessors() {
 	bindlib.CCall0(__imp_BroadcastDisableEferSyscallEventsOnAllProcessors.Addr())
 }
 
-func (s Anon247_5) Flags() Uint64 {
+func (s Anon267_5) Flags() Uint64 {
 	return bindlib.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon247_5) SetFlags(v Uint64) {
+func (s *Anon267_5) SetFlags(v Uint64) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon247_5) Fields() Anon251_9 {
-	return bindlib.ReadBitcast[Anon251_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon267_5) Fields() Anon271_9 {
+	return bindlib.ReadBitcast[Anon271_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon247_5) SetFields(v Anon251_9) {
+func (s *Anon267_5) SetFields(v Anon271_9) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1548_9) Fields() Anon1550_5 {
-	return bindlib.ReadBitcast[Anon1550_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon1568_9) Fields() Anon1570_5 {
+	return bindlib.ReadBitcast[Anon1570_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1548_9) SetFields(v Anon1550_5) {
+func (s *Anon1568_9) SetFields(v Anon1570_5) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1548_9) AsUInt() Uint32 {
+func (s Anon1568_9) AsUInt() Uint32 {
 	return bindlib.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1548_9) SetAsUInt(v Uint32) {
+func (s *Anon1568_9) SetAsUInt(v Uint32) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }

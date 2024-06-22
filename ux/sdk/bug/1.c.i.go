@@ -2,49 +2,54 @@
 
 package main
 
-type UCHAR = uint8
-type BOOLEAN = uint8
-type PBOOLEAN = *uint8
-type CHECK_VMX_OPERATION = func() uint8
-type QWORD = uint64
-type UINT64 = uint64
-type PUINT64 = *uint64
-type DWORD = uint64
-type BOOL = int32
-type BYTE = uint8
-type WORD = uint16
-type INT = int32
-type UINT = uint32
-type PUINT = *uint32
-type ULONG64 = uint64
-type PULONG64 = *uint64
-type DWORD64 = uint64
-type PDWORD64 = *uint64
-type CHAR = int8
-type USHORT = uint16
-type ULONG = uint64
-type INT8 = int8
-type PINT8 = *int8
-type INT16 = int16
-type PINT16 = *int16
-type INT32 = int32
-type PINT32 = *int32
-type INT64 = int64
-type PINT64 = *int64
-type UINT8 = uint8
-type PUINT8 = *uint8
-type UINT16 = uint16
-type PUINT16 = *uint16
-type UINT32 = uint32
-type PUINT32 = *uint32
-type struct__CR3_TYPE struct {
-	_cgoa_1_1
-}
+type (
+	UCHAR               = uint8
+	BOOLEAN             = uint8
+	PBOOLEAN            = *uint8
+	CHECK_VMX_OPERATION = func() uint8
+	QWORD               = uint64
+	UINT64              = uint64
+	PUINT64             = *uint64
+	DWORD               = uint64
+	BOOL                = int32
+	BYTE                = uint8
+	WORD                = uint16
+	INT                 = int32
+	UINT                = uint32
+	PUINT               = *uint32
+	ULONG64             = uint64
+	PULONG64            = *uint64
+	DWORD64             = uint64
+	PDWORD64            = *uint64
+	CHAR                = int8
+	USHORT              = uint16
+	ULONG               = uint64
+	INT8                = int8
+	PINT8               = *int8
+	INT16               = int16
+	PINT16              = *int16
+	INT32               = int32
+	PINT32              = *int32
+	INT64               = int64
+	PINT64              = *int64
+	UINT8               = uint8
+	PUINT8              = *uint8
+	UINT16              = uint16
+	PUINT16             = *uint16
+	UINT32              = uint32
+	PUINT32             = *uint32
+	struct__CR3_TYPE    struct {
+		_cgoa_1_1
+	}
+)
+
 type _cgoa_1_1 struct {
 	Flags uint64
 }
 type _cgoa_2_1 struct {
 	Xbf_0 uint64
 }
-type CR3_TYPE = struct__CR3_TYPE
-type PCR3_TYPE = *struct__CR3_TYPE
+type (
+	CR3_TYPE  = struct__CR3_TYPE
+	PCR3_TYPE = *struct__CR3_TYPE
+)

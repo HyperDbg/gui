@@ -145,7 +145,7 @@ func TestBindMacros(t *testing.T) {
 }
 
 func TestBindSdk(t *testing.T) {
-	// mylog.SetDebug(false)
+	mylog.SetDebug(false)
 	mylog.Call(func() {
 		pkg := gengo.NewPackage("HPRDBGCTRL",
 			gengo.WithRemovePrefix(
@@ -191,7 +191,27 @@ func TestBindSdk(t *testing.T) {
 }
 
 var bugfix = `
-typedef unsigned short wchar_t;
+#ifndef size_t
+#define size_t int
+#endif
+
+#ifndef wchar_t
+typedef int rune;
+#define wchar_t rune
+#endif
+
+#ifndef _WINT_T_DEFINED_
+ #define _WINT_T_DEFINED_
+ typedef int wint_t;
+#endif
+
+#undef WCHAR_MIN
+#undef WCHAR_MAX
+#define WCHAR_MIN   0
+#define WCHAR_MAX   65535
+
+//typedef unsigned short wchar_t;
+
 typedef int bool ;
 #define PVOID void*
 #define HANDLE void*

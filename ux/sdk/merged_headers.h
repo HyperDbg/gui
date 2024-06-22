@@ -1,5 +1,25 @@
 //bugfix.h
-typedef unsigned short wchar_t;
+#ifndef size_t
+#define size_t int
+#endif
+
+#ifndef wchar_t
+typedef int rune;
+#define wchar_t rune
+#endif
+
+#ifndef _WINT_T_DEFINED_
+ #define _WINT_T_DEFINED_
+ typedef int wint_t;
+#endif
+
+#undef WCHAR_MIN
+#undef WCHAR_MAX
+#define WCHAR_MIN   0
+#define WCHAR_MAX   65535
+
+//typedef unsigned short wchar_t;
+
 typedef int bool ;
 #define PVOID void*
 #define HANDLE void*

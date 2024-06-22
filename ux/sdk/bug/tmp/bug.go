@@ -21,7 +21,7 @@ type (
 	Uchar              = uint8
 	Boolean            = Uchar
 	Pboolean           = *Boolean
-	//CheckVmxOperation  = unsafe.Pointer
+	// CheckVmxOperation  = unsafe.Pointer
 )
 type CHECK_VMX_OPERATION = func() uint8
 
