@@ -131,6 +131,10 @@ func TestBindMacros(t *testing.T) {
 		if p.Key == "DEBUGGER_OPERATION_WAS_SUCCESSFUL" || strings.HasPrefix(p.Key, "DEBUGGER_ERROR") {
 			p.Key += " ErrorCodes"
 		}
+		if p.Value[0] == '(' && p.Value[len(p.Value)-1] == ')' {
+			p.Value = p.Value[1 : len(p.Value)-1]
+		}
+
 		g.P(p.Key + "=" + p.Value)
 		macros.Delete(p.Key)
 	}
