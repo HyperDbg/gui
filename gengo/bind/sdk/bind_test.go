@@ -122,18 +122,8 @@ func TestBindMacros(t *testing.T) {
 	g.P("PAGE_SIZE = 4096")
 
 	for _, p := range macros.List() {
-		line := strings.TrimPrefix(p.Key, "#define ")
-		line = strings.TrimSpace(line)
-		if strings.Count(line, " ") == 1 {
-			split := strings.Split(line, " ")
-			split[1] = strings.TrimSuffix(split[1], "ull")
-			split[1] = strings.TrimSuffix(split[1], "U")
-			if ContainsLetter(split[1]) {
-				break
-			}
-			g.P(split[0] + "=" + split[1])
-			macros.Delete(p.Key)
-		}
+		g.P(p.Key + "=" + p.Value)
+		macros.Delete(p.Key)
 	}
 	g.P(")")
 	stream.WriteGoFile("tmp/vars.go", g.Buffer)
