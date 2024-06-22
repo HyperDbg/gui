@@ -128,6 +128,9 @@ func TestBindMacros(t *testing.T) {
 		if strings.HasPrefix(p.Value, "CTL_CODE") {
 			p.Value = "IoctlsKind(" + p.Value + ")"
 		}
+		if p.Key == "DEBUGGER_OPERATION_WAS_SUCCESSFUL" || strings.HasPrefix(p.Key, "DEBUGGER_ERROR") {
+			p.Key += " ErrorCodes"
+		}
 		g.P(p.Key + "=" + p.Value)
 		macros.Delete(p.Key)
 	}
