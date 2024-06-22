@@ -20,7 +20,7 @@ func TestMergeHeader(t *testing.T) {
 	Imports := orderedmap.New[string, bool]()
 
 	g := stream.NewGeneratedFile()
-	filepath.Walk("../../bin", func(path string, info fs.FileInfo, err error) error {
+	filepath.Walk("../bin", func(path string, info fs.FileInfo, err error) error {
 		if strings.Contains(path, "Examples") {
 			return err
 		}
