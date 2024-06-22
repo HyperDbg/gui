@@ -6,6 +6,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ddkwork/golibrary/stream/orderedmap"
+
 	"github.com/ddkwork/golibrary/stream"
 
 	"github.com/ddkwork/golibrary/mylog"
@@ -39,8 +41,8 @@ func writeLines(lines []string, path string) error {
 }
 
 // extractMacros extracts macros from a file, handling multi-line macros.
-func extractMacros(lines []string) map[string]string {
-	macros := make(map[string]string)
+func extractMacros(lines []string) *orderedmap.OrderedMap[string, string] {
+	macros := orderedmap.New[string, string]()
 	var macroName string
 	var macroValue strings.Builder
 	inMacro := false
@@ -49,7 +51,7 @@ func extractMacros(lines []string) map[string]string {
 		if strings.HasPrefix(line, "#define") {
 			if inMacro {
 				// Finish the previous macro
-				macros[macroName] = macroValue.String()
+				macros.Set(macroName, macroValue.String())
 			}
 			inMacro = true
 			parts := strings.Fields(line)
@@ -67,14 +69,14 @@ func extractMacros(lines []string) map[string]string {
 				macroValue.WriteString(strings.TrimSpace(line))
 			} else {
 				// Finish the current macro
-				macros[macroName] = macroValue.String()
+				macros.Set(macroName, macroValue.String())
 				inMacro = false
 			}
 		}
 	}
 
 	if inMacro {
-		macros[macroName] = macroValue.String()
+		macros.Set(macroName, macroValue.String())
 	}
 
 	return macros
@@ -97,17 +99,17 @@ func main() {
 
 	headerMacros := extractMacros(headerLines)
 	dmMacros := extractMacros(macroLines)
-	mylog.Trace(headerFile, len(headerMacros))
-	mylog.Trace(macroFile, len(dmMacros))
+	mylog.Trace(headerFile, headerMacros.Len())
+	mylog.Trace(macroFile, dmMacros.Len())
 	return
 
 	// Filter dmMacros based on headerMacros
-	for name, headerValue := range headerMacros {
-		normalizedHeaderValue := normalizeMacro(headerValue)
-		if dmValue, exists := dmMacros[name]; exists {
+	for _, kv := range headerMacros.List() {
+		normalizedHeaderValue := normalizeMacro(kv.Value)
+		if dmValue, exists := dmMacros.Get(kv.Key); exists {
 			normalizedDmValue := normalizeMacro(dmValue)
 			if !strings.Contains(normalizedDmValue, normalizedHeaderValue) {
-				delete(dmMacros, name)
+				dmMacros.Delete(kv.Key)
 			}
 		}
 	}
@@ -117,7 +119,8 @@ func main() {
 		if strings.HasPrefix(line, "#define") {
 			parts := strings.Fields(line)
 			if len(parts) > 1 {
-				if _, exists := dmMacros[parts[1]]; exists {
+				_, exists := dmMacros.Get(parts[1])
+				if exists {
 					filteredLines = append(filteredLines, line)
 				}
 			}
