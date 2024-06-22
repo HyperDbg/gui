@@ -123,17 +123,20 @@ func TestBindMacros(t *testing.T) {
 	g.P("PAGE_SIZE = 4096")
 
 	for _, p := range macros.List() {
-		if strings.Contains(p.Key, "sizeof") {
+		p.Value = strings.TrimSpace(p.Value)
+		if strings.HasPrefix(p.Value, "sizeof") {
 			continue
 		}
-
-		p.Value = strings.ReplaceAll(p.Value, "sizeof(UINT32)", "4")
-		p.Value = strings.ReplaceAll(p.Value, "sizeof(BUFFER_HEADER)", "128")                  // todo
-		p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_EVENT)", "128")                 // todo
-		p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_EVENT_ACTION)", "128")          // todo
-		p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_PAUSE_PACKET_RECEIVED)", "128") // todo
-		p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_MODIFY_EVENTS)", "128")         // todo
-		p.Value = strings.ReplaceAll(p.Value, "sizeof(REGISTER_NOTIFY_BUFFER)", "128")         // todo
+		if strings.Contains(p.Value, "sizeof") {
+			continue
+		}
+		// p.Value = strings.ReplaceAll(p.Value, "sizeof(UINT32)", "4")
+		// p.Value = strings.ReplaceAll(p.Value, "sizeof(BUFFER_HEADER)", "128")                  // todo
+		// p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_EVENT)", "128")                 // todo
+		// p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_EVENT_ACTION)", "128")          // todo
+		// p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_PAUSE_PACKET_RECEIVED)", "128") // todo
+		// p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_MODIFY_EVENTS)", "128")         // todo
+		// p.Value = strings.ReplaceAll(p.Value, "sizeof(REGISTER_NOTIFY_BUFFER)", "128")         // todo
 		p.Value = strings.ReplaceAll(p.Value, "\\", "")
 		p.Value = strings.Replace(p.Value, "6U", "6", 1)
 		p.Value = strings.Replace(p.Value, "7U", "7", 1)
@@ -149,7 +152,6 @@ func TestBindMacros(t *testing.T) {
 		p.Value = strings.Replace(p.Value, "17U", "17", 1)
 		p.Value = strings.TrimSuffix(p.Value, "U")
 		p.Value = strings.TrimSuffix(p.Value, "ull")
-		p.Value = strings.TrimSpace(p.Value)
 
 		if strings.HasPrefix(p.Value, "CTL_CODE") {
 			p.Value = "IoctlsKind(" + p.Value + ")"
