@@ -124,7 +124,27 @@ func TestBindMacros(t *testing.T) {
 
 	for _, p := range macros.List() {
 		p.Value = strings.ReplaceAll(p.Value, "sizeof(UINT32)", "4")
+		p.Value = strings.ReplaceAll(p.Value, "sizeof(BUFFER_HEADER)", "128")                  // todo
+		p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_EVENT)", "128")                 // todo
+		p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_EVENT_ACTION)", "128")          // todo
+		p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_PAUSE_PACKET_RECEIVED)", "128") // todo
+		p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_MODIFY_EVENTS)", "128")         // todo
+		p.Value = strings.ReplaceAll(p.Value, "sizeof(REGISTER_NOTIFY_BUFFER)", "128")         // todo
 		p.Value = strings.ReplaceAll(p.Value, "\\", "")
+		p.Value = strings.Replace(p.Value, "6U", "6", 1)
+		p.Value = strings.Replace(p.Value, "7U", "7", 1)
+		p.Value = strings.Replace(p.Value, "8U", "8", 1)
+		p.Value = strings.Replace(p.Value, "9U", "9", 1)
+		p.Value = strings.Replace(p.Value, "10U", "10", 1)
+		p.Value = strings.Replace(p.Value, "11U", "11", 1)
+		p.Value = strings.Replace(p.Value, "12U", "12", 1)
+		p.Value = strings.Replace(p.Value, "13U", "13", 1)
+		p.Value = strings.Replace(p.Value, "14U", "14", 1)
+		p.Value = strings.Replace(p.Value, "15U", "15", 1)
+		p.Value = strings.Replace(p.Value, "16U", "16", 1)
+		p.Value = strings.Replace(p.Value, "17U", "17", 1)
+		p.Value = strings.TrimSuffix(p.Value, "U")
+		p.Value = strings.TrimSuffix(p.Value, "ull")
 		g.P(p.Key + "=" + p.Value)
 		macros.Delete(p.Key)
 	}
