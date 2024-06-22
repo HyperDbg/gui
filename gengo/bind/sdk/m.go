@@ -101,16 +101,37 @@ func main() {
 	dmMacros := extractMacros(macroLines)
 	mylog.Trace(headerFile, headerMacros.Len())
 	mylog.Trace(macroFile, dmMacros.Len())
-	return
 
 	// Filter dmMacros based on headerMacros
 	for _, kv := range headerMacros.List() {
 		normalizedHeaderValue := normalizeMacro(kv.Value)
+		normalizedHeaderValue = strings.ReplaceAll(normalizedHeaderValue, "//todo", "")
 		if dmValue, exists := dmMacros.Get(kv.Key); exists {
 			normalizedDmValue := normalizeMacro(dmValue)
-			if !strings.Contains(normalizedDmValue, normalizedHeaderValue) {
-				dmMacros.Delete(kv.Key)
+
+			switch {
+			case strings.Contains(normalizedHeaderValue, "\\"):
+				split := strings.Split(normalizedHeaderValue, "\\")
+				keep := false
+				for _, s := range split {
+					s = strings.TrimSpace(s)
+					if len(s) < 2 {
+						continue
+					}
+					if strings.Contains(normalizedDmValue, s) {
+						keep = true
+						break
+					}
+				}
+				if !keep {
+					dmMacros.Delete(kv.Key)
+				}
+			default:
+				if normalizedDmValue != normalizedHeaderValue {
+					dmMacros.Delete(kv.Key)
+				}
 			}
+
 		}
 	}
 
