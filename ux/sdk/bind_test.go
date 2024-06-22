@@ -149,20 +149,20 @@ func TestBindSdk(t *testing.T) {
 	mylog.Call(func() {
 		pkg := gengo.NewPackage("HPRDBGCTRL",
 			gengo.WithRemovePrefix(
-				//"Zydis_", "Zyan_", "Zycore_",
-				//"Zydis", "Zyan", "Zycore",
+			//"Zydis_", "Zyan_", "Zycore_",
+			//"Zydis", "Zyan", "Zycore",
 			),
 			gengo.WithInferredMethods([]gengo.MethodInferenceRule{
 				//{Name: "ZydisDecoder", Receiver: "Decoder"},
 			}),
 			gengo.WithForcedSynthetic(
-				//"ZydisShortString_",
-				//"struct ZydisShortString_",
+			//"ZydisShortString_",
+			//"struct ZydisShortString_",
 			),
 		)
 		mylog.Check(pkg.Transform("HPRDBGCTRL", &clang.Options{
 			// Sources:          []string{"combined_headers.h"},
-			Sources: []string{"merged_headers.h"},
+			Sources:          []string{"merged_headers.h"},
 			AdditionalParams: []string{
 				//"-DZYAN_NO_LIBC",
 				//"-DZYAN_STATIC_ASSERT",
