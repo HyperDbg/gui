@@ -2,9 +2,10 @@ package HPRDBGCTRL
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"syscall"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	"github.com/ddkwork/app/ms/hardwareIndo"
 	"github.com/ddkwork/golibrary/mylog"
@@ -69,7 +70,7 @@ func (e IoctlsKind) String() string {
 		return "IoctlSendUsermodeMessagesToDebugger"
 	case IOCTL_SEND_GENERAL_BUFFER_FROM_DEBUGGEE_TO_DEBUGGER:
 		return "IoctlSendGeneralBufferFromDebuggeeToDebugger"
-	//case IOCTL_SEND_GET_KERNEL_SIDE_TEST_INFORMATION://removed ?
+	// case IOCTL_SEND_GET_KERNEL_SIDE_TEST_INFORMATION://removed ?
 	//	return "IoctlSendGetKernelSideTestInformation"
 	case IOCTL_PERFROM_KERNEL_SIDE_TESTS:
 		return "IoctlPerfromKernelSideTests"
@@ -100,7 +101,7 @@ func HIWORD(l uint32) uint16 { return uint16(l >> 16) }
 func HIBYTE(l uint32) uint8  { return byte(l >> 24) }
 
 func TestSizeof(t *testing.T) {
-	//assert.Equal(t, 11, binary.Size(DEBUGGER_REMOTE_PACKET{}))
+	// assert.Equal(t, 11, binary.Size(DEBUGGER_REMOTE_PACKET{}))
 }
 
 func TestHIBYTE(t *testing.T) {
