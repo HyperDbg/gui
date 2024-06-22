@@ -7,6 +7,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+//how to test?
+//1 go to D:\workspace\workspace\branch\gui\ux\bin\debug
+//run cmd "go test ." or make main pkg and cody this test code into main func
+//need export all function to test,now only 1-7 function can be export
+// more error found in test ...
+
 func TestHyperDbgVmxSupportDetection(t *testing.T) {
 	assert.True(t, HyperDbgVmxSupportDetection()) // ok
 	s := make([]byte, 0, 100)
