@@ -89,8 +89,7 @@ func ContainsLetter(s string) bool {
 
 func TestBindMacros(t *testing.T) {
 	headerFile := "merged_headers.h"
-	headerLines := mylog.Check2(readLines(headerFile))
-	macros := extractMacros(headerLines)
+	macros := extractMacros(stream.NewBuffer(headerFile).ToLines())
 	mylog.Trace("number of macros", macros.Len())
 
 	for _, p := range macros.List() {
