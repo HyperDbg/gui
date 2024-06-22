@@ -117,12 +117,16 @@ func TestBindMacros(t *testing.T) {
 	g := stream.NewGeneratedFile()
 	g.P("package HPRDBGCTRL")
 	g.P()
-	g.P("const (")
+	g.P("var (")
 	g.P("NORMAL_PAGE_SIZE=4096")
 	// g.P("MaxSerialPacketSize =10 * NORMAL_PAGE_SIZE") // todo need first define NORMAL_PAGE_SIZE
 	g.P("PAGE_SIZE = 4096")
 
 	for _, p := range macros.List() {
+		if strings.Contains(p.Key, "sizeof") {
+			continue
+		}
+
 		p.Value = strings.ReplaceAll(p.Value, "sizeof(UINT32)", "4")
 		p.Value = strings.ReplaceAll(p.Value, "sizeof(BUFFER_HEADER)", "128")                  // todo
 		p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_EVENT)", "128")                 // todo
@@ -145,12 +149,18 @@ func TestBindMacros(t *testing.T) {
 		p.Value = strings.Replace(p.Value, "17U", "17", 1)
 		p.Value = strings.TrimSuffix(p.Value, "U")
 		p.Value = strings.TrimSuffix(p.Value, "ull")
+		p.Value = strings.TrimSpace(p.Value)
+
+		if strings.HasPrefix(p.Value, "CTL_CODE") {
+			p.Value = "IoctlsKind(" + p.Value + ")"
+		}
 		g.P(p.Key + "=" + p.Value)
 		macros.Delete(p.Key)
 	}
 	g.P(")")
 	stream.WriteGoFile("tmp/vars.go", g.Buffer)
 
+	return
 	for _, p := range macros.List() {
 		mylog.Todo(p.Key + " need handle")
 	}
