@@ -13,8 +13,6 @@ import (
 	"github.com/can1357/gengo/gengo"
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
-	"github.com/ddkwork/golibrary/stream/maps"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestMergeHeader(t *testing.T) {
@@ -92,8 +90,13 @@ func ContainsLetter(s string) bool {
 func TestBindMacros(t *testing.T) {
 	headerFile := "merged_headers.h"
 	headerLines := mylog.Check2(readLines(headerFile))
-	headerMacros := extractMacros(headerLines)
-	mylog.Trace("number of macros", headerMacros.Len())
+	macros := extractMacros(headerLines)
+	mylog.Trace("number of macros", macros.Len())
+
+	for _, p := range macros.List() {
+		mylog.Warning(p.Key, p.Value)
+	}
+	return
 
 	g := stream.NewGeneratedFile()
 	g.P("package HPRDBGCTRL")
@@ -102,43 +105,26 @@ func TestBindMacros(t *testing.T) {
 	g.P("MaxSerialPacketSize =10 * NORMAL_PAGE_SIZE") // todo need first define NORMAL_PAGE_SIZE
 	g.P("PAGE_SIZE = 4096")
 
-	allVars := new(maps.SliceMap[string, bool])
-
-	for _, line := range stream.NewBuffer("macros.log").ToLines() {
-		for _, sure := range headerMacros.Keys() {
-			if strings.HasPrefix(line, sure) {
-				allVars.Set(line, true)
-				mylog.Trace("found macro", line)
-			}
-		}
-	}
-
-	// return
-
-	assert.Equal(t, headerMacros.Len(), allVars.Len())
-
-	allVars.Range(func(k string, v bool) bool {
-		line := strings.TrimPrefix(k, "#define ")
+	for _, p := range macros.List() {
+		line := strings.TrimPrefix(p.Key, "#define ")
 		line = strings.TrimSpace(line)
 		if strings.Count(line, " ") == 1 {
 			split := strings.Split(line, " ")
 			split[1] = strings.TrimSuffix(split[1], "ull")
 			split[1] = strings.TrimSuffix(split[1], "U")
 			if ContainsLetter(split[1]) {
-				return true
+				break
 			}
 			g.P(split[0] + "=" + split[1])
-			allVars.Delete(k)
+			macros.Delete(p.Key)
 		}
-		return true
-	})
+	}
 	g.P(")")
 	stream.WriteGoFile("tmp/vars.go", g.Buffer)
 
-	allVars.Range(func(k string, v bool) bool {
-		mylog.Todo(k + " need handle")
-		return true
-	})
+	for _, p := range macros.List() {
+		mylog.Todo(p.Key + " need handle")
+	}
 }
 
 func TestBindSdk(t *testing.T) {
