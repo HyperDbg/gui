@@ -111,6 +111,9 @@ func main() {
 
 			switch {
 			case strings.Contains(normalizedHeaderValue, "\\"):
+				if normalizedDmValue == "0x4859504552444247" {
+					mylog.Todo("debug")
+				}
 				split := strings.Split(normalizedHeaderValue, "\\")
 				keep := false
 				for _, s := range split {
