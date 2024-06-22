@@ -89,40 +89,11 @@ func ContainsLetter(s string) bool {
 	return false
 }
 
-func MacrosInHeader() (m *maps.SafeMap[string, bool]) {
-	m = new(maps.SafeMap[string, bool])
-	for _, s := range stream.NewBuffer("macros.log").ToLines() {
-		m.Set(s, true)
-	}
-
-	m2 := new(maps.SafeMap[string, bool])
-	// for _, s := range stream.NewBuffer("combined_headers.h").ToLines() {
-	for _, s := range stream.NewBuffer("merged_headers.h").ToLines() {
-		if strings.HasPrefix(s, "#define ") {
-			m2.Set(s, true)
-		}
-	}
-	println(m.Len())
-	println(m2.Len())
-
-	for _, s := range m.Keys() {
-		if !m2.HasPrefix(s) { // todo bug
-			m.Delete(s)
-			mylog.Trace("delete macro", s)
-		}
-	}
-	println(m.Len())
-	println(m2.Len())
-
-	return
-}
-
 func TestBindMacros(t *testing.T) {
-	// t.Skip("not working now")
-	// mylog.Todo("handle macros func like CTL_CODE(DeviceType,Function,Method,Access) ( ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method)) ")
-	mustPrefixs := MacrosInHeader()
-	// return
-	mylog.Trace("number of macros", mustPrefixs.Len())
+	headerFile := "merged_headers.h"
+	headerLines := mylog.Check2(readLines(headerFile))
+	headerMacros := extractMacros(headerLines)
+	mylog.Trace("number of macros", headerMacros.Len())
 
 	g := stream.NewGeneratedFile()
 	g.P("package HPRDBGCTRL")
@@ -134,7 +105,7 @@ func TestBindMacros(t *testing.T) {
 	allVars := new(maps.SliceMap[string, bool])
 
 	for _, line := range stream.NewBuffer("macros.log").ToLines() {
-		for _, sure := range mustPrefixs.Keys() {
+		for _, sure := range headerMacros.Keys() {
 			if strings.HasPrefix(line, sure) {
 				allVars.Set(line, true)
 				mylog.Trace("found macro", line)
@@ -144,7 +115,7 @@ func TestBindMacros(t *testing.T) {
 
 	// return
 
-	assert.Equal(t, mustPrefixs.Len(), allVars.Len())
+	assert.Equal(t, headerMacros.Len(), allVars.Len())
 
 	allVars.Range(func(k string, v bool) bool {
 		line := strings.TrimPrefix(k, "#define ")
