@@ -107,7 +107,7 @@ func TestBindMacros(t *testing.T) {
 			}
 		}
 		if ok {
-			mylog.Warning(p.Key, p.Value)
+			// mylog.Warning(p.Key, p.Value)
 		}
 	}
 	j.P("}")
@@ -130,13 +130,6 @@ func TestBindMacros(t *testing.T) {
 		if strings.Contains(p.Value, "sizeof") {
 			continue
 		}
-		// p.Value = strings.ReplaceAll(p.Value, "sizeof(UINT32)", "4")
-		// p.Value = strings.ReplaceAll(p.Value, "sizeof(BUFFER_HEADER)", "128")                  // todo
-		// p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_EVENT)", "128")                 // todo
-		// p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_EVENT_ACTION)", "128")          // todo
-		// p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_PAUSE_PACKET_RECEIVED)", "128") // todo
-		// p.Value = strings.ReplaceAll(p.Value, "sizeof(DEBUGGER_MODIFY_EVENTS)", "128")         // todo
-		// p.Value = strings.ReplaceAll(p.Value, "sizeof(REGISTER_NOTIFY_BUFFER)", "128")         // todo
 		p.Value = strings.ReplaceAll(p.Value, "\\", "")
 		p.Value = strings.Replace(p.Value, "6U", "6", 1)
 		p.Value = strings.Replace(p.Value, "7U", "7", 1)
@@ -162,9 +155,8 @@ func TestBindMacros(t *testing.T) {
 	g.P(")")
 	stream.WriteGoFile("tmp/vars.go", g.Buffer)
 
-	return
 	for _, p := range macros.List() {
-		mylog.Todo(p.Key + " need handle")
+		mylog.Todo(p.Key + " = " + p.Value)
 	}
 }
 
