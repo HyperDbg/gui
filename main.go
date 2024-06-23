@@ -17,8 +17,7 @@ func main() {
 }
 
 func Release() {
-	stream.RunCommand("go build .")
-	stream.CopyDir("hyperdbgui.exe", "bin/debug")
+	// build release
 	stream.RunCommand("git clone --recursive https://github.com/HyperDbg/HyperDbg.git")
 	stream.RunCommand("HyperDbg/utils/msvc-build.bat")
 	filepath.Walk("bin/debug", func(path string, info fs.FileInfo, err error) error {
@@ -29,7 +28,15 @@ func Release() {
 		return err
 	})
 	mylog.Todo("remove outer files or dirs")
+
+	// build gui
+	stream.RunCommand("go build .")
+	stream.CopyDir("hyperdbgui.exe", "bin/debug")
+
+	//release
 	stream.RunCommand("tar -zcvf hyperdbgui.tar.gz bin/debug")
 	mylog.Todo("now post to github release use action")
+
+	// clean
 	mylog.Check(os.RemoveAll("bin"))
 }
