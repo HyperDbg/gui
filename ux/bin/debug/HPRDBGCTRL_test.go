@@ -14,7 +14,7 @@ import (
 func TestSdk(t *testing.T) {
 	sysName := "hprdbgkd.sys"
 	path := filepath.Join("C:\\Windows\\System32\\drivers", sysName)
-	mylog.Call(func() { //todo Exception 0xc00000fd 堆栈溢出（Stack Overflow
+	mylog.Call(func() { // todo Exception 0xc00000fd 堆栈溢出（Stack Overflow
 		mylog.Check(os.Remove(path))
 		stream.CopyFile(sysName, path)
 
@@ -25,6 +25,7 @@ func TestSdk(t *testing.T) {
 
 		HyperDbgInstallVmmDriver()
 		// HyperDbgStartVmmDriver()
+		//RemoteConnectionConnect todo need export into dll
 
 		// missing connection local or start ?
 		HyperDbgLoadVmm()
