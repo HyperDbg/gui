@@ -17,7 +17,7 @@ func main() {
 }
 
 func Release() { //todo let sdk work first
-	// build release
+	// build HyperDbg
 	stream.RunCommand("git clone --recursive https://github.com/HyperDbg/HyperDbg.git")
 	stream.RunCommand("HyperDbg/utils/msvc-build.bat")
 	filepath.Walk("bin/debug", func(path string, info fs.FileInfo, err error) error {
@@ -31,9 +31,9 @@ func Release() { //todo let sdk work first
 
 	// build gui
 	stream.RunCommand("go build .")
-	stream.CopyDir("hyperdbgui.exe", "bin/debug")
+	stream.CopyFile("hyperdbgui.exe", "bin/debug")
 
-	//release
+	//release to github
 	stream.RunCommand("tar -zcvf hyperdbgui.tar.gz bin/debug")
 	mylog.Todo("now post to github release use action")
 
