@@ -1,5 +1,7 @@
 package constants
 
+import "fmt"
+
 type IoctlKind int
 
 const (
@@ -1910,7 +1912,7 @@ func (k IoctlKind) String() string {
 	case 0x00442000:
 		return "IoctlBiometricVendor"
 	default:
-		return "unknown"
+		return "unknown IoctlKind " + fmt.Sprint(k)
 	}
 }
 

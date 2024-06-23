@@ -38,6 +38,7 @@ func genConstants(fileName string) {
 
 	g := stream.NewGeneratedFile()
 	g.P("package constants")
+	g.P("import \"fmt\"")
 	g.P("type ", kind, " int")
 	g.P("const (")
 	for i, p := range m.List() {
@@ -57,7 +58,7 @@ func genConstants(fileName string) {
 		g.P("return ", strconv.Quote(stream.ToCamelUpper(p.Key, false)))
 	}
 	g.P("default:")
-	g.P("return \"unknown\"")
+	g.P("return \"unknown ", kind, " \"+fmt.Sprint(k)")
 	g.P("}")
 	g.P("}")
 	g.P()

@@ -1,5 +1,7 @@
 package constants
 
+import "fmt"
+
 type NtstatusKind int
 
 const (
@@ -6026,7 +6028,7 @@ func (k NtstatusKind) String() string {
 	case 0xC03C0004:
 		return "StatusDisPartialData"
 	default:
-		return "unknown"
+		return "unknown NtstatusKind " + fmt.Sprint(k)
 	}
 }
 

@@ -1,5 +1,7 @@
 package constants
 
+import "fmt"
+
 type ErrorsKind int
 
 const (
@@ -14348,7 +14350,7 @@ func (k ErrorsKind) String() string {
 	case 0x802A010A:
 		return "UiETimerClientAlreadyConnected"
 	default:
-		return "unknown"
+		return "unknown ErrorsKind " + fmt.Sprint(k)
 	}
 }
 
