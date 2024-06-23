@@ -6024,3 +6024,3574 @@ IMPORT_EXPORT_VMM VOID
 BroadcastDisableEferSyscallEventsOnAllProcessors();
 
 
+//..\bin\debug\headerAll\commands.h
+/**
+ * @file commands.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @author Alee Amini (alee@hyperdbg.org)
+ * @brief The hyperdbg command interpreter and driver connector
+ * @details
+ * @version 0.1
+ * @date 2020-04-11
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+using namespace std;
+
+//////////////////////////////////////////////////
+//                    Externs                   //
+//////////////////////////////////////////////////
+
+extern HANDLE g_DeviceHandle;
+
+//////////////////////////////////////////////////
+//                  Settings                    //
+//////////////////////////////////////////////////
+
+VOID
+CommandSettingsLoadDefaultValuesFromConfigFile();
+
+VOID
+CommandSettingsSetValueFromConfigFile(std::string OptionName, std::string OptionValue);
+
+BOOLEAN
+CommandSettingsGetValueFromConfigFile(std::string OptionName, std::string & OptionValue);
+
+//////////////////////////////////////////////////
+//                  Functions                   //
+//////////////////////////////////////////////////
+
+int
+ReadCpuDetails();
+
+VOID
+ShowMessages(const char * Fmt, ...);
+
+string
+SeparateTo64BitValue(UINT64 Value);
+
+void
+ShowMemoryCommandDB(unsigned char * OutputBuffer, UINT32 Size, UINT64 Address, DEBUGGER_READ_MEMORY_TYPE MemoryType, UINT64 Length);
+
+void
+ShowMemoryCommandDD(unsigned char * OutputBuffer, UINT32 Size, UINT64 Address, DEBUGGER_READ_MEMORY_TYPE MemoryType, UINT64 Length);
+
+void
+ShowMemoryCommandDC(unsigned char * OutputBuffer, UINT32 Size, UINT64 Address, DEBUGGER_READ_MEMORY_TYPE MemoryType, UINT64 Length);
+
+void
+ShowMemoryCommandDQ(unsigned char * OutputBuffer, UINT32 Size, UINT64 Address, DEBUGGER_READ_MEMORY_TYPE MemoryType, UINT64 Length);
+
+VOID
+CommandPteShowResults(UINT64 TargetVa, PDEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS PteRead);
+
+DEBUGGER_CONDITIONAL_JUMP_STATUS
+HyperDbgIsConditionalJumpTaken(unsigned char * BufferToDisassemble,
+                               UINT64          BuffLength,
+                               RFLAGS          Rflags,
+                               BOOLEAN         Isx86_64);
+
+int
+HyperDbgDisassembler64(unsigned char * BufferToDisassemble,
+                       UINT64          BaseAddress,
+                       UINT64          Size,
+                       UINT32          MaximumInstrDecoded,
+                       BOOLEAN         ShowBranchIsTakenOrNot,
+                       PRFLAGS         Rflags);
+
+int
+HyperDbgDisassembler32(unsigned char * BufferToDisassemble,
+                       UINT64          BaseAddress,
+                       UINT64          Size,
+                       UINT32          MaximumInstrDecoded,
+                       BOOLEAN         ShowBranchIsTakenOrNot,
+                       PRFLAGS         Rflags);
+
+UINT32
+HyperDbgLengthDisassemblerEngine(
+    unsigned char * BufferToDisassemble,
+    UINT64          BuffLength,
+    BOOLEAN         Isx86_64);
+
+BOOLEAN
+HyperDbgCheckWhetherTheCurrentInstructionIsCall(
+    unsigned char * BufferToDisassemble,
+    UINT64          BuffLength,
+    BOOLEAN         Isx86_64,
+    PUINT32         CallLength);
+
+BOOLEAN
+HyperDbgCheckWhetherTheCurrentInstructionIsCallOrRet(
+    unsigned char * BufferToDisassemble,
+    UINT64          CurrentRip,
+    UINT32          BuffLength,
+    BOOLEAN         Isx86_64,
+    PBOOLEAN        IsRet);
+
+BOOLEAN
+HyperDbgCheckWhetherTheCurrentInstructionIsRet(
+    unsigned char * BufferToDisassemble,
+    UINT64          BuffLength,
+    BOOLEAN         Isx86_64);
+
+VOID
+HyperDbgReadMemoryAndDisassemble(DEBUGGER_SHOW_MEMORY_STYLE   Style,
+                                 UINT64                       Address,
+                                 DEBUGGER_READ_MEMORY_TYPE    MemoryType,
+                                 DEBUGGER_READ_READING_TYPE   ReadingType,
+                                 UINT32                       Pid,
+                                 UINT32                       Size,
+                                 PDEBUGGER_DT_COMMAND_OPTIONS DtDetails);
+
+VOID
+InitializeCommandsDictionary();
+
+VOID
+InitializeDebugger();
+
+VOID
+CommandDumpSaveIntoFile(PVOID Buffer, UINT32 Length);
+
+//////////////////////////////////////////////////
+//              Type of Commands                //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Command's function type
+ *
+ */
+typedef VOID (*CommandFuncType)(vector<string> SplitCommand, string Command);
+
+/**
+ * @brief Command's help function type
+ *
+ */
+typedef VOID (*CommandHelpFuncType)();
+
+/**
+ * @brief Details of each command
+ *
+ */
+typedef struct _COMMAND_DETAIL
+{
+    CommandFuncType     CommandFunction;
+    CommandHelpFuncType CommandHelpFunction;
+    UINT64              CommandAttrib;
+
+} COMMAND_DETAIL, *PCOMMAND_DETAIL;
+
+/**
+ * @brief Type saving commands and mapping to command string
+ *
+ */
+typedef std::map<std::string, COMMAND_DETAIL> CommandType;
+
+/**
+ * @brief Different attributes of commands
+ *
+ */
+#define DEBUGGER_COMMAND_ATTRIBUTE_EVENT \
+    0x1 | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+#define DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE     0x2
+#define DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_REMOTE_CONNECTION 0x4
+#define DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE               0x8
+#define DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER                    0x10
+#define DEBUGGER_COMMAND_ATTRIBUTE_WONT_STOP_DEBUGGER_AGAIN           0x20
+#define DEBUGGER_COMMAND_ATTRIBUTE_HWDBG                              0x40
+
+/**
+ * @brief Absolute local commands
+ *
+ */
+#define DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL               \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | \
+        DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_REMOTE_CONNECTION
+
+/**
+ * @brief Command's attributes
+ *
+ */
+#define DEBUGGER_COMMAND_CLEAR_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL
+
+#define DEBUGGER_COMMAND_HELP_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL
+
+#define DEBUGGER_COMMAND_CONNECT_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL
+
+#define DEBUGGER_COMMAND_LISTEN_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL
+
+#define DEBUGGER_COMMAND_G_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL | DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER
+
+#define DEBUGGER_COMMAND_ATTACH_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_DETACH_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_SWITCH_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_START_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_WONT_STOP_DEBUGGER_AGAIN
+
+#define DEBUGGER_COMMAND_RESTART_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_WONT_STOP_DEBUGGER_AGAIN
+
+#define DEBUGGER_COMMAND_KILL_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_PROCESS_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_THREAD_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_SLEEP_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL
+
+#define DEBUGGER_COMMAND_EVENTS_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_SETTINGS_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_DISCONNECT_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL
+
+#define DEBUGGER_COMMAND_DEBUG_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_DOT_STATUS_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL
+
+#define DEBUGGER_COMMAND_STATUS_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_LOAD_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_EXIT_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL
+
+#define DEBUGGER_COMMAND_FLUSH_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_PAUSE_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL
+
+#define DEBUGGER_COMMAND_UNLOAD_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_SCRIPT_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_OUTPUT_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_PRINT_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE | DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER
+
+#define DEBUGGER_COMMAND_EVAL_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE | DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER
+
+#define DEBUGGER_COMMAND_LOGOPEN_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_LOGCLOSE_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_ABSOLUTE_LOCAL
+
+#define DEBUGGER_COMMAND_TEST_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_CPU_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_WRMSR_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_RDMSR_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_VA2PA_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_PA2VA_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_FORMATS_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE | DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER
+
+#define DEBUGGER_COMMAND_PTE_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_CORE_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_MONITOR_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_VMCALL_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_EPTHOOK_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_EPTHOOK2_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_CPUID_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_MSRREAD_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_MSRWRITE_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_TSC_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_PMC_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_CRWRITE_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_DR_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_IOIN_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_IOOUT_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_EXCEPTION_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_INTERRUPT_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_SYSCALL_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_SYSRET_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_MODE_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_TRACE_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_EVENT
+
+#define DEBUGGER_COMMAND_HIDE_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_UNHIDE_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_MEASURE_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_LM_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_P_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER
+
+#define DEBUGGER_COMMAND_T_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER
+
+#define DEBUGGER_COMMAND_I_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER
+
+#define DEBUGGER_COMMAND_D_AND_U_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE | DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER
+
+#define DEBUGGER_COMMAND_E_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_S_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_R_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE | DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER
+
+#define DEBUGGER_COMMAND_BP_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_BE_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_BD_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_BC_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_BL_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_SYMPATH_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_SYM_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_X_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_PREALLOC_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_PREACTIVATE_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_K_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_DT_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE | DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER
+
+#define DEBUGGER_COMMAND_STRUCT_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_PE_ATTRIBUTES NULL
+
+// #define DEBUGGER_COMMAND_REV_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_WONT_STOP_DEBUGGER_AGAIN
+#define DEBUGGER_COMMAND_REV_ATTRIBUTES NULL
+
+#define DEBUGGER_COMMAND_TRACK_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_PAGEIN_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE
+
+#define DEBUGGER_COMMAND_DUMP_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_CASE_SENSITIVE
+
+#define DEBUGGER_COMMAND_GU_ATTRIBUTES \
+    DEBUGGER_COMMAND_ATTRIBUTE_LOCAL_COMMAND_IN_DEBUGGER_MODE | DEBUGGER_COMMAND_ATTRIBUTE_REPEAT_ON_ENTER
+
+#define DEBUGGER_COMMAND_HWDBG_HW_CLK_ATTRIBUTES DEBUGGER_COMMAND_ATTRIBUTE_HWDBG
+
+//////////////////////////////////////////////////
+//             Command Functions                //
+//////////////////////////////////////////////////
+
+VOID
+CommandTest(vector<string> SplitCommand, string Command);
+
+VOID
+CommandClearScreen(vector<string> SplitCommand, string Command);
+
+VOID
+CommandReadMemoryAndDisassembler(vector<string> SplitCommand,
+                                 string         Command);
+
+VOID
+CommandConnect(vector<string> SplitCommand, string Command);
+
+VOID
+CommandLoad(vector<string> SplitCommand, string Command);
+
+VOID
+CommandUnload(vector<string> SplitCommand, string Command);
+
+VOID
+CommandScript(vector<string> SplitCommand, string Command);
+
+VOID
+CommandCpu(vector<string> SplitCommand, string Command);
+
+VOID
+CommandExit(vector<string> SplitCommand, string Command);
+
+VOID
+CommandDisconnect(vector<string> SplitCommand, string Command);
+
+VOID
+CommandFormats(vector<string> SplitCommand, string Command);
+
+VOID
+CommandRdmsr(vector<string> SplitCommand, string Command);
+
+VOID
+CommandWrmsr(vector<string> SplitCommand, string Command);
+
+VOID
+CommandPte(vector<string> SplitCommand, string Command);
+
+VOID
+CommandMonitor(vector<string> SplitCommand, string Command);
+
+VOID
+CommandSyscallAndSysret(vector<string> SplitCommand, string Command);
+
+VOID
+CommandEptHook(vector<string> SplitCommand, string Command);
+
+VOID
+CommandEptHook2(vector<string> SplitCommand, string Command);
+
+VOID
+CommandCpuid(vector<string> SplitCommand, string Command);
+
+VOID
+CommandMsrread(vector<string> SplitCommand, string Command);
+
+VOID
+CommandMsrwrite(vector<string> SplitCommand, string Command);
+
+VOID
+CommandTsc(vector<string> SplitCommand, string Command);
+
+VOID
+CommandPmc(vector<string> SplitCommand, string Command);
+
+VOID
+CommandException(vector<string> SplitCommand, string Command);
+
+VOID
+CommandCrwrite(vector<string> SplitCommand, string Command);
+
+VOID
+CommandDr(vector<string> SplitCommand, string Command);
+
+VOID
+CommandInterrupt(vector<string> SplitCommand, string Command);
+
+VOID
+CommandIoin(vector<string> SplitCommand, string Command);
+
+VOID
+CommandIoout(vector<string> SplitCommand, string Command);
+
+VOID
+CommandVmcall(vector<string> SplitCommand, string Command);
+
+VOID
+CommandMode(vector<string> SplitCommand, string Command);
+
+VOID
+CommandTrace(vector<string> SplitCommand, string Command);
+
+VOID
+CommandHide(vector<string> SplitCommand, string Command);
+
+VOID
+CommandUnhide(vector<string> SplitCommand, string Command);
+
+VOID
+CommandLogopen(vector<string> SplitCommand, string Command);
+
+VOID
+CommandLogclose(vector<string> SplitCommand, string Command);
+
+VOID
+CommandVa2pa(vector<string> SplitCommand, string Command);
+
+VOID
+CommandPa2va(vector<string> SplitCommand, string Command);
+
+VOID
+CommandEvents(vector<string> SplitCommand, string Command);
+
+VOID
+CommandG(vector<string> SplitCommand, string Command);
+
+VOID
+CommandLm(vector<string> SplitCommand, string Command);
+
+VOID
+CommandSleep(vector<string> SplitCommand, string Command);
+
+VOID
+CommandEditMemory(vector<string> SplitCommand, string Command);
+
+VOID
+CommandSearchMemory(vector<string> SplitCommand, string Command);
+
+VOID
+CommandMeasure(vector<string> SplitCommand, string Command);
+
+VOID
+CommandSettings(vector<string> SplitCommand, string Command);
+
+VOID
+CommandFlush(vector<string> SplitCommand, string Command);
+
+VOID
+CommandPause(vector<string> SplitCommand, string Command);
+
+VOID
+CommandListen(vector<string> SplitCommand, string Command);
+
+VOID
+CommandStatus(vector<string> SplitCommand, string Command);
+
+VOID
+CommandAttach(vector<string> SplitCommand, string Command);
+
+VOID
+CommandDetach(vector<string> SplitCommand, string Command);
+
+VOID
+CommandStart(vector<string> SplitCommand, string Command);
+
+VOID
+CommandRestart(vector<string> SplitCommand, string Command);
+
+VOID
+CommandSwitch(vector<string> SplitCommand, string Command);
+
+VOID
+CommandKill(vector<string> SplitCommand, string Command);
+
+VOID
+CommandT(vector<string> SplitCommand, string Command);
+
+VOID
+CommandI(vector<string> SplitCommand, string Command);
+
+VOID
+CommandPrint(vector<string> SplitCommand, string Command);
+
+VOID
+CommandOutput(vector<string> SplitCommand, string Command);
+
+VOID
+CommandDebug(vector<string> SplitCommand, string Command);
+
+VOID
+CommandP(vector<string> SplitCommand, string Command);
+
+VOID
+CommandCore(vector<string> SplitCommand, string Command);
+
+VOID
+CommandProcess(vector<string> SplitCommand, string Command);
+
+VOID
+CommandThread(vector<string> SplitCommand, string Command);
+
+VOID
+CommandEval(vector<string> SplitCommand, string Command);
+
+VOID
+CommandR(vector<string> SplitCommand, string Command);
+
+VOID
+CommandBp(vector<string> SplitCommand, string Command);
+
+VOID
+CommandBl(vector<string> SplitCommand, string Command);
+
+VOID
+CommandBe(vector<string> SplitCommand, string Command);
+
+VOID
+CommandBd(vector<string> SplitCommand, string Command);
+
+VOID
+CommandBc(vector<string> SplitCommand, string Command);
+
+VOID
+CommandSympath(vector<string> SplitCommand, string Command);
+
+VOID
+CommandSym(vector<string> SplitCommand, string Command);
+
+VOID
+CommandX(vector<string> SplitCommand, string Command);
+
+VOID
+CommandPrealloc(vector<string> SplitCommand, string Command);
+
+VOID
+CommandPreactivate(vector<string> SplitCommand, string Command);
+
+VOID
+CommandDtAndStruct(vector<string> SplitCommand, string Command);
+
+VOID
+CommandK(vector<string> SplitCommand, string Command);
+
+VOID
+CommandPe(vector<string> SplitCommand, string Command);
+
+VOID
+CommandRev(vector<string> SplitCommand, string Command);
+
+VOID
+CommandTrack(vector<string> SplitCommand, string Command);
+
+VOID
+CommandPagein(vector<string> SplitCommand, string Command);
+
+VOID
+CommandDump(vector<string> SplitCommand, string Command);
+
+VOID
+CommandGu(vector<string> SplitCommand, string Command);
+
+//
+// hwdbg commands
+//
+VOID
+CommandHwClk(vector<string> SplitCommand, string Command);
+
+
+//..\bin\debug\headerAll\common.h
+/**
+ * @file common.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief header for HyperDbg's general functions for reading and converting and
+ * etc
+ * @details
+ * @version 0.1
+ * @date 2020-05-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//			    	 Definitions                //
+//////////////////////////////////////////////////
+
+#define AssertReturn return;
+
+#define AssertReturnFalse return FALSE;
+
+#define AssertReturnOne return 1;
+
+#define ASSERT_MESSAGE_DRIVER_NOT_LOADED "handle of the driver not found, probably the driver is not loaded. Did you use 'load' command?\n"
+
+#define ASSERT_MESSAGE_BUILD_SIGNATURE_DOESNT_MATCH "the handshaking process was successful; however, there is a mismatch between " \
+                                                    "the version/build of the debuggee and the debugger. please use the same "      \
+                                                    "version/build for both the debuggee and debugger\n"
+
+#define ASSERT_MESSAGE_CANNOT_SPECIFY_PID "err, since HyperDbg won't context-switch to keep the system in a halted state, "                       \
+                                          "you cannot specify 'pid' for this command in the debugger mode. You can switch to the target process " \
+                                          "memory layout using the '.process' or the '.thread' command. After that, you can use "                 \
+                                          "this command without specifying the process ID. Alternatively, you can modify the current "            \
+                                          "CR3 register to achieve the same functionality\n"
+
+#define AssertReturnStmt(expr, stmt, rc) \
+    do                                   \
+    {                                    \
+        if (expr)                        \
+        {                                \
+            /* likely */                 \
+        }                                \
+        else                             \
+        {                                \
+            stmt;                        \
+            rc;                          \
+        }                                \
+    } while (0)
+
+#define AssertShowMessageReturnStmt(expr, message, rc) \
+    do                                                 \
+    {                                                  \
+        if (expr)                                      \
+        {                                              \
+            /* likely */                               \
+        }                                              \
+        else                                           \
+        {                                              \
+            ShowMessages(message);                     \
+            rc;                                        \
+        }                                              \
+    } while (0)
+
+/**
+ * @brief Size of each page (4096 bytes)
+ *
+ */
+#define PAGE_SIZE 0x1000
+
+/**
+ * @brief Aligning a page
+ *
+ */
+#define PAGE_ALIGN(Va) ((PVOID)((ULONG_PTR)(Va) & ~(PAGE_SIZE - 1)))
+
+/**
+ * @brief Cpuid to get virtual address width
+ *
+ */
+#define CPUID_ADDR_WIDTH 0x80000008
+
+//////////////////////////////////////////////////
+//			  Assembly Functions                //
+//////////////////////////////////////////////////
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern bool
+AsmVmxSupportDetection();
+
+#ifdef __cplusplus
+}
+#endif
+
+//////////////////////////////////////////////////
+//			    	 Spinlocks                  //
+//////////////////////////////////////////////////
+
+void
+SpinlockLock(volatile LONG * Lock);
+
+void
+SpinlockLockWithCustomWait(volatile LONG * Lock, unsigned MaximumWait);
+
+void
+SpinlockUnlock(volatile LONG * Lock);
+
+//////////////////////////////////////////////////
+//			    	 Functions                  //
+//////////////////////////////////////////////////
+
+VOID
+PrintBits(const UINT32 size, const void * ptr);
+
+BOOL
+Replace(std::string & str, const std::string & from, const std::string & to);
+
+VOID
+ReplaceAll(string & str, const string & from, const string & to);
+
+const vector<string>
+Split(const string & s, const char & c);
+
+BOOLEAN
+IsNumber(const string & str);
+
+vector<string>
+SplitIp(const string & str, char delim);
+
+BOOLEAN
+IsHexNotation(const string & s);
+
+vector<char>
+HexToBytes(const string & hex);
+
+BOOLEAN
+ConvertStringToUInt64(string TextToConvert, PUINT64 Result);
+
+BOOLEAN
+ConvertStringToUInt32(string TextToConvert, PUINT32 Result);
+
+BOOLEAN
+HasEnding(string const & fullString, string const & ending);
+
+BOOLEAN
+ValidateIP(const string & ip);
+
+BOOL
+SetPrivilege(HANDLE  Token,          // access token handle
+             LPCTSTR Privilege,      // name of privilege to enable/disable
+             BOOL    EnablePrivilege // to enable or disable privilege
+);
+
+void
+Trim(std::string & s);
+
+std::string
+RemoveSpaces(std::string str);
+
+BOOLEAN
+IsFileExistA(const char * FileName);
+
+BOOLEAN
+IsFileExistW(const wchar_t * FileName);
+
+VOID
+GetConfigFilePath(PWCHAR ConfigPath);
+
+VOID
+StringToWString(std::wstring & ws, const std::string & s);
+
+VOID
+SplitPathAndArgs(std::vector<std::string> & Qargs, const std::string & Command);
+
+size_t
+FindCaseInsensitive(std::string Input, std::string ToSearch, size_t Pos);
+
+size_t
+FindCaseInsensitiveW(std::wstring Input, std::wstring ToSearch, size_t Pos);
+
+char *
+ConvertStringVectorToCharPointerArray(const std::string & s);
+
+std::vector<std::string>
+ListDirectory(const std::string & Directory, const std::string & Extension);
+
+BOOLEAN
+IsEmptyString(char * Text);
+
+VOID
+CommonCpuidInstruction(UINT32 Func, UINT32 SubFunc, int * CpuInfo);
+
+BOOLEAN
+CheckCpuSupportRtm();
+
+UINT32
+Getx86VirtualAddressWidth();
+
+BOOLEAN
+CheckAccessValidityAndSafety(UINT64 TargetAddress, UINT32 Size);
+
+
+//..\bin\debug\headerAll\communication.h
+/**
+ * @file tcpcommunication.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Communication over TCP (header)
+ * @details
+ * @version 0.1
+ * @date 2020-08-21
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////
+//			Serial Constants             //
+//////////////////////////////////////////
+
+#define COM1_PORT 0x03F8
+#define COM2_PORT 0x02F8
+#define COM3_PORT 0x03E8
+#define COM4_PORT 0x02E8
+
+//////////////////////////////////////////
+//			   	Server 		            //
+//////////////////////////////////////////
+
+int
+CommunicationServerCreateServerAndWaitForClient(PCSTR    Port,
+                                                SOCKET * ClientSocketArg,
+                                                SOCKET * ListenSocketArg);
+
+int
+CommunicationServerReceiveMessage(SOCKET ClientSocket, char * recvbuf, int recvbuflen);
+
+int
+CommunicationServerSendMessage(SOCKET ClientSocket, const char * sendbuf, int length);
+
+int
+CommunicationServerShutdownAndCleanupConnection(SOCKET ClientSocket,
+                                                SOCKET ListenSocket);
+
+//////////////////////////////////////////
+//                Client                //
+//////////////////////////////////////////
+
+int
+CommunicationClientConnectToServer(PCSTR Ip, PCSTR Port, SOCKET * ConnectSocketArg);
+
+int
+CommunicationClientSendMessage(SOCKET ConnectSocket, const char * sendbuf, int buflen);
+
+int
+CommunicationClientShutdownConnection(SOCKET ConnectSocket);
+
+int
+CommunicationClientReceiveMessage(SOCKET ConnectSocket, CHAR * RecvBuf, UINT32 MaxBuffLen, PUINT32 BuffLenRecvd);
+
+int
+CommunicationClientCleanup(SOCKET ConnectSocket);
+
+//////////////////////////////////////////
+//     Handle Remote Connection         //
+//////////////////////////////////////////
+
+VOID
+RemoteConnectionListen(PCSTR Port);
+
+VOID
+RemoteConnectionConnect(PCSTR Ip, PCSTR Port);
+
+int
+RemoteConnectionSendCommand(const char * sendbuf, int len);
+
+int
+RemoteConnectionSendResultsToHost(const char * sendbuf, int len);
+
+int
+RemoteConnectionCloseTheConnectionWithDebuggee();
+
+
+//..\bin\debug\headerAll\debugger.h
+/**
+ * @file debugger.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief General debugger functions
+ * @details
+ * @version 0.1
+ * @date 2020-05-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//		Debugger Synchronization Objects        //
+//////////////////////////////////////////////////
+
+/**
+ * @brief maximum number of event handles in kernel-debugger
+ */
+#define DEBUGGER_MAXIMUM_SYNCRONIZATION_KERNEL_DEBUGGER_OBJECTS 0x40
+
+/**
+ * @brief An event to show whether the debugger is running
+ * or not in kernel-debugger
+ *
+ */
+
+//
+// Kernel-debugger
+//
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_IS_DEBUGGER_RUNNING                 0x0
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_STARTED_PACKET_RECEIVED             0x1
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_PAUSED_DEBUGGEE_DETAILS             0x2
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_CORE_SWITCHING_RESULT               0x3
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_PROCESS_SWITCHING_RESULT            0x4
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_THREAD_SWITCHING_RESULT             0x5
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_SCRIPT_RUNNING_RESULT               0x6
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_SCRIPT_FORMATS_RESULT               0x7
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_DEBUGGEE_FINISHED_COMMAND_EXECUTION 0x8
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_FLUSH_RESULT                        0x9
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_REGISTER_EVENT                      0xa
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_ADD_ACTION_TO_EVENT                 0xb
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_MODIFY_AND_QUERY_EVENT              0xc
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_READ_REGISTERS                      0xd
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_BP                                  0xe
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_LIST_OR_MODIFY_BREAKPOINTS          0xf
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_READ_MEMORY                         0x10
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_EDIT_MEMORY                         0x11
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_SYMBOL_RELOAD                       0x12
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_TEST_QUERY                          0x13
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_CALLSTACK_RESULT                    0x14
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_SEARCH_QUERY_RESULT                 0x15
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_VA2PA_AND_PA2VA_RESULT              0x16
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_PTE_RESULT                          0x17
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_SHORT_CIRCUITING_EVENT_STATE        0x18
+#define DEBUGGER_SYNCRONIZATION_OBJECT_KERNEL_DEBUGGER_PAGE_IN_STATE                       0x19
+
+//////////////////////////////////////////////////
+//               Event Details                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Reason for error in parsing commands
+ *
+ */
+typedef enum _DEBUGGER_EVENT_PARSING_ERROR_CAUSE
+{
+    DEBUGGER_EVENT_PARSING_ERROR_CAUSE_SUCCESSFUL_NO_ERROR                          = 0,
+    DEBUGGER_EVENT_PARSING_ERROR_CAUSE_SCRIPT_SYNTAX_ERROR                          = 1,
+    DEBUGGER_EVENT_PARSING_ERROR_CAUSE_NO_INPUT                                     = 2,
+    DEBUGGER_EVENT_PARSING_ERROR_CAUSE_MAXIMUM_INPUT_REACHED                        = 3,
+    DEBUGGER_EVENT_PARSING_ERROR_CAUSE_OUTPUT_NAME_NOT_FOUND                        = 4,
+    DEBUGGER_EVENT_PARSING_ERROR_CAUSE_OUTPUT_SOURCE_ALREADY_CLOSED                 = 5,
+    DEBUGGER_EVENT_PARSING_ERROR_CAUSE_ALLOCATION_ERROR                             = 6,
+    DEBUGGER_EVENT_PARSING_ERROR_CAUSE_FORMAT_ERROR                                 = 7,
+    DEBUGGER_EVENT_PARSING_ERROR_CAUSE_ATTEMPT_TO_BREAK_ON_VMI_MODE                 = 8,
+    DEBUGGER_EVENT_PARSING_ERROR_CAUSE_IMMEDIATE_MESSAGING_IN_EVENT_FORWARDING_MODE = 9,
+    DEBUGGER_EVENT_PARSING_ERROR_CAUSE_USING_SHORT_CIRCUITING_IN_POST_EVENTS        = 10,
+
+} DEBUGGER_EVENT_PARSING_ERROR_CAUSE,
+    *PDEBUGGER_EVENT_PARSING_ERROR_CAUSE;
+
+/**
+ * @brief Maximum number of event handles in user-debugger
+ */
+#define DEBUGGER_MAXIMUM_SYNCRONIZATION_USER_DEBUGGER_OBJECTS 0x40
+
+/**
+ * @brief An event to show whether the debugger is running
+ * or not in user-debugger
+ *
+ */
+
+//
+// User-debugger
+//
+#define DEBUGGER_SYNCRONIZATION_OBJECT_USER_DEBUGGER_IS_DEBUGGER_RUNNING 0x30
+
+//////////////////////////////////////////////////
+//            	   Event Details                //
+//////////////////////////////////////////////////
+
+/**
+ * @brief In debugger holds the state of events
+ *
+ */
+typedef struct _DEBUGGER_SYNCRONIZATION_EVENTS_STATE
+{
+    HANDLE  EventHandle;
+    BOOLEAN IsOnWaitingState;
+} DEBUGGER_SYNCRONIZATION_EVENTS_STATE, *PDEBUGGER_SYNCRONIZATION_EVENTS_STATE;
+
+//////////////////////////////////////////////////
+//				    Functions                   //
+//////////////////////////////////////////////////
+
+VOID
+InterpreterRemoveComments(char * CommandText);
+
+BOOLEAN
+ShowErrorMessage(UINT32 Error);
+
+BOOLEAN
+IsConnectedToAnyInstanceOfDebuggerOrDebuggee();
+
+BOOLEAN
+IsTagExist(UINT64 Tag);
+
+UINT64
+DebuggerGetNtoskrnlBase();
+
+BOOLEAN
+DebuggerPauseDebuggee();
+
+BOOLEAN
+InterpretConditionsAndCodes(vector<string> * SplitCommand,
+                            vector<string> * SplitCommandCaseSensitive,
+                            BOOLEAN          IsConditionBuffer,
+                            PUINT64          BufferAddress,
+                            PUINT32          BufferLength);
+
+VOID
+FreeEventsAndActionsMemory(PDEBUGGER_GENERAL_EVENT_DETAIL Event,
+                           PDEBUGGER_GENERAL_ACTION       ActionBreakToDebugger,
+                           PDEBUGGER_GENERAL_ACTION       ActionCustomCode,
+                           PDEBUGGER_GENERAL_ACTION       ActionScript);
+
+BOOLEAN
+SendEventToKernel(PDEBUGGER_GENERAL_EVENT_DETAIL Event,
+                  UINT32                         EventBufferLength);
+
+BOOLEAN
+RegisterActionToEvent(PDEBUGGER_GENERAL_EVENT_DETAIL Event,
+                      PDEBUGGER_GENERAL_ACTION       ActionBreakToDebugger,
+                      UINT32                         ActionBreakToDebuggerLength,
+                      PDEBUGGER_GENERAL_ACTION       ActionCustomCode,
+                      UINT32                         ActionCustomCodeLength,
+                      PDEBUGGER_GENERAL_ACTION       ActionScript,
+                      UINT32                         ActionScriptLength);
+
+BOOLEAN
+InterpretGeneralEventAndActionsFields(
+    vector<string> *                    SplitCommand,
+    vector<string> *                    SplitCommandCaseSensitive,
+    VMM_EVENT_TYPE_ENUM                 EventType,
+    PDEBUGGER_GENERAL_EVENT_DETAIL *    EventDetailsToFill,
+    PUINT32                             EventBufferLength,
+    PDEBUGGER_GENERAL_ACTION *          ActionDetailsToFillBreakToDebugger,
+    PUINT32                             ActionBufferLengthBreakToDebugger,
+    PDEBUGGER_GENERAL_ACTION *          ActionDetailsToFillCustomCode,
+    PUINT32                             ActionBufferLengthCustomCode,
+    PDEBUGGER_GENERAL_ACTION *          ActionDetailsToFillScript,
+    PUINT32                             ActionBufferLengthScript,
+    PDEBUGGER_EVENT_PARSING_ERROR_CAUSE ReasonForErrorInParsing);
+
+BOOLEAN
+CallstackReturnAddressToCallingAddress(UCHAR * ReturnAddress, PUINT32 IndexOfCallFromReturnAddress);
+
+VOID
+CallstackShowFrames(PDEBUGGER_SINGLE_CALLSTACK_FRAME  CallstackFrames,
+                    UINT32                            FrameCount,
+                    DEBUGGER_CALLSTACK_DISPLAY_METHOD DisplayMethod,
+                    BOOLEAN                           Is32Bit);
+
+UINT64
+GetNewDebuggerEventTag();
+
+DWORD WINAPI
+ListeningSerialPauseDebuggeeThread(PVOID Param);
+
+DWORD WINAPI
+ListeningSerialPauseDebuggerThread(PVOID Param);
+
+VOID
+LogopenSaveToFile(const char * Text);
+
+BOOL
+BreakController(DWORD CtrlType);
+
+VOID
+CommandEventsShowEvents();
+
+BOOLEAN
+CommandEventsModifyAndQueryEvents(UINT64                      Tag,
+                                  DEBUGGER_MODIFY_EVENTS_TYPE TypeOfAction);
+
+VOID
+CommandEventsHandleModifiedEvent(
+    UINT64                  Tag,
+    PDEBUGGER_MODIFY_EVENTS ModifyEventRequest);
+
+VOID
+CommandEventsClearAllEventsAndResetTags();
+
+VOID
+CommandFlushRequestFlush();
+
+UINT64
+GetCommandAttributes(const string & FirstCommand);
+
+VOID
+DetachFromProcess();
+
+BOOLEAN
+CommandLoadVmmModule();
+
+VOID
+ShowAllRegisters();
+
+VOID
+CommandPauseRequest();
+
+VOID
+CommandGRequest();
+
+VOID
+CommandTrackHandleReceivedInstructions(unsigned char * BufferToDisassemble,
+                                       UINT32          BuffLength,
+                                       BOOLEAN         Isx86_64,
+                                       UINT64          RipAddress);
+
+VOID
+CommandTrackHandleReceivedCallInstructions(const char * NameOfFunctionFromSymbols,
+                                           UINT64       ComputedAbsoluteAddress);
+
+VOID
+CommandTrackHandleReceivedRetInstructions(UINT64 CurrentRip);
+
+
+//..\bin\debug\headerAll\forwarding.h
+/**
+ * @file forwarding.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers for event source forwarding
+ * @details
+ * @version 0.1
+ * @date 2020-11-16
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////
+//           Forwarding Types           //
+//////////////////////////////////////////
+
+/**
+ * @brief maximum characters for event forwarding source names
+ *
+ */
+typedef void (*hyperdbg_event_forwarding_t)(const char *, unsigned int);
+
+//////////////////////////////////////////
+//     Output Source Forwarding         //
+//////////////////////////////////////////
+
+/**
+ * @brief maximum characters for event forwarding source names
+ *
+ */
+#define MAXIMUM_CHARACTERS_FOR_EVENT_FORWARDING_NAME 50
+
+/**
+ * @brief event forwarding type
+ *
+ */
+typedef enum _DEBUGGER_EVENT_FORWARDING_TYPE
+{
+    EVENT_FORWARDING_NAMEDPIPE,
+    EVENT_FORWARDING_FILE,
+    EVENT_FORWARDING_TCP,
+    EVENT_FORWARDING_MODULE,
+
+} DEBUGGER_EVENT_FORWARDING_TYPE;
+
+/**
+ * @brief event forwarding states
+ *
+ */
+typedef enum _DEBUGGER_EVENT_FORWARDING_STATE
+{
+    EVENT_FORWARDING_STATE_NOT_OPENED,
+    EVENT_FORWARDING_STATE_OPENED,
+    EVENT_FORWARDING_CLOSED,
+
+} DEBUGGER_EVENT_FORWARDING_STATE;
+
+/**
+ * @brief output source status
+ *
+ * @details this enum is used as the result returned from
+ * the functions that work with opening and closing sources
+ */
+typedef enum _DEBUGGER_OUTPUT_SOURCE_STATUS
+{
+    DEBUGGER_OUTPUT_SOURCE_STATUS_SUCCESSFULLY_OPENED,
+    DEBUGGER_OUTPUT_SOURCE_STATUS_SUCCESSFULLY_CLOSED,
+    DEBUGGER_OUTPUT_SOURCE_STATUS_ALREADY_OPENED,
+    DEBUGGER_OUTPUT_SOURCE_STATUS_ALREADY_CLOSED,
+    DEBUGGER_OUTPUT_SOURCE_STATUS_UNKNOWN_ERROR,
+
+} DEBUGGER_OUTPUT_SOURCE_STATUS;
+
+/**
+ * @brief structures hold the detail of event forwarding
+ *
+ */
+typedef struct _DEBUGGER_EVENT_FORWARDING
+{
+    DEBUGGER_EVENT_FORWARDING_TYPE  Type;
+    DEBUGGER_EVENT_FORWARDING_STATE State;
+    VOID *                          Handle;
+    SOCKET                          Socket;
+    HMODULE                         Module;
+    UINT64                          OutputUniqueTag;
+    LIST_ENTRY
+    OutputSourcesList; // Linked-list of output sources list
+    CHAR Name[MAXIMUM_CHARACTERS_FOR_EVENT_FORWARDING_NAME];
+
+} DEBUGGER_EVENT_FORWARDING, *PDEBUGGER_EVENT_FORWARDING;
+
+//////////////////////////////////////////
+//              Functions	            //
+//////////////////////////////////////////
+
+UINT64
+ForwardingGetNewOutputSourceTag();
+
+DEBUGGER_OUTPUT_SOURCE_STATUS
+ForwardingOpenOutputSource(PDEBUGGER_EVENT_FORWARDING SourceDescriptor);
+
+DEBUGGER_OUTPUT_SOURCE_STATUS
+ForwardingCloseOutputSource(PDEBUGGER_EVENT_FORWARDING SourceDescriptor);
+
+BOOLEAN
+ForwardingCheckAndPerformEventForwarding(UINT32 OperationCode,
+                                         CHAR * Message,
+                                         UINT32 MessageLength);
+
+BOOLEAN
+ForwardingWriteToFile(HANDLE FileHandle, CHAR * Message, UINT32 MessageLength);
+
+BOOLEAN
+ForwardingSendToNamedPipe(HANDLE NamedPipeHandle, CHAR * Message, UINT32 MessageLength);
+
+BOOLEAN
+ForwardingSendToTcpSocket(SOCKET TcpSocket, CHAR * Message, UINT32 MessageLength);
+
+VOID *
+ForwardingCreateOutputSource(DEBUGGER_EVENT_FORWARDING_TYPE SourceType,
+                             const string &                 Description,
+                             SOCKET *                       Socket,
+                             HMODULE *                      Module);
+
+
+//..\bin\debug\headerAll\globals.h
+/**
+ * @file globals.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Global Variables for user-mode interface
+ * @details
+ * @version 0.1
+ * @date 2020-07-13
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//	            Feature Indicators              //
+//////////////////////////////////////////////////
+
+/**
+ * @brief check for RTM support
+ *
+ */
+BOOLEAN g_RtmSupport = FALSE;
+
+/**
+ * @brief Virtual address width for x86 processors
+ *
+ */
+UINT32 g_VirtualAddressWidth = 0;
+
+//////////////////////////////////////////////////
+//	         Interpreter Variables              //
+//////////////////////////////////////////////////
+
+/**
+ * @brief shows whether the interpreter is currently on a string or not
+ */
+BOOLEAN g_IsInterpreterOnString = FALSE;
+
+/**
+ * @brief Is interpreter encountered a back slash at previous run
+ */
+BOOLEAN g_IsInterpreterPreviousCharacterABackSlash = FALSE;
+
+/**
+ * @brief Keeps the trace of curly brackets in the interpreter
+ */
+UINT32 g_InterpreterCountOfOpenCurlyBrackets = 0;
+
+//////////////////////////////////////////////////
+//		 Remote and Local Connection            //
+//////////////////////////////////////////////////
+
+/**
+ * @brief the buffer that we set at the end of buffers for tcp connection
+ */
+BYTE g_EndOfBufferCheckTcp[TCP_END_OF_BUFFER_CHARS_COUNT] = {
+    TCP_END_OF_BUFFER_CHAR_1,
+    TCP_END_OF_BUFFER_CHAR_2,
+    TCP_END_OF_BUFFER_CHAR_3,
+    TCP_END_OF_BUFFER_CHAR_4};
+
+/**
+ * @brief Shows whether the user is allowed to use 'load' command
+ * to load modules locally in VMI (virtual machine introspection) mode
+ *
+ */
+BOOLEAN g_IsConnectedToHyperDbgLocally = FALSE;
+
+/**
+ * @brief Shows whether the current debugger is the host and
+ * connected to a remote debuggee (guest)
+ *
+ */
+BOOLEAN g_IsConnectedToRemoteDebuggee = FALSE;
+
+/**
+ * @brief  Shows whether the current system is a guest (debuggee)
+ * and a remote debugger is connected to this system
+ *
+ */
+BOOLEAN g_IsConnectedToRemoteDebugger = FALSE;
+
+/**
+ * @brief The socket object of host debugger (not debuggee)
+ * it is because in HyperDbg, debuggee is server and debugger
+ * is a client
+ *
+ */
+SOCKET g_ClientConnectSocket = {0};
+
+/**
+ * @brief The socket object of guest debuggee (not debugger)
+ * it is because in HyperDbg, debugger is client and debuggee
+ * is a server
+ *
+ */
+SOCKET g_SeverSocket = {0};
+
+/**
+ * @brief Server in debuggee needs an extra socket
+ *
+ */
+SOCKET g_ServerListenSocket = {0};
+
+/**
+ * @brief In debugger (not debuggee), we save the port of server
+ * debuggee in this variable to use it later e.g, in signature
+ *
+ */
+string g_ServerPort = "";
+
+/**
+ * @brief In debugger (not debuggee), we save the port of server
+ * debuggee in this variable to use it later e.g, in signature
+ *
+ */
+string g_ServerIp = "";
+
+/**
+ * @brief In debugger (not debuggee), we save the ip of server
+ * debuggee in this variable to use it later e.g, in signature
+ *
+ */
+HANDLE g_RemoteDebuggeeListeningThread = NULL;
+
+/**
+ * @brief Handle to show that if the debugger is loaded successfully
+ *
+ */
+HANDLE g_IsDriverLoadedSuccessfully = NULL;
+
+/**
+ * @brief Handle to if the end of the message received (for showing
+ * signature)
+ *
+ */
+HANDLE g_EndOfMessageReceivedEvent = NULL;
+
+/**
+ * @brief variable to keep track if the end of the message received
+ * (for showing signature)
+ *
+ */
+BOOLEAN g_IsEndOfMessageReceived = FALSE;
+
+/**
+ * @brief In both debuggee and debugger we save the state of
+ * the closed connection to avoid double close
+ *
+ */
+BOOLEAN g_SerialConnectionAlreadyClosed = FALSE;
+
+/**
+ * @brief Show whether the pause request (CTRL+C or CTRL+BREAK)
+ * should be ignored or not
+ *
+ */
+BOOLEAN g_IgnorePauseRequests = FALSE;
+
+//////////////////////////////////////////////////
+//		 User Debugging Variables             //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Whether the user debugger is initialized or not
+ */
+BOOLEAN g_IsUserDebuggerInitialized = FALSE;
+
+/**
+ * @brief In debugger (not debuggee), we save the handle
+ * of the user-mode listening thread for pauses here for user debugger
+ *
+ */
+
+DEBUGGER_SYNCRONIZATION_EVENTS_STATE g_UserSyncronizationObjectsHandleTable
+    [DEBUGGER_MAXIMUM_SYNCRONIZATION_USER_DEBUGGER_OBJECTS] = {0};
+
+//////////////////////////////////////////////////
+//		 Serial Debugging Variables             //
+//////////////////////////////////////////////////
+
+/**
+ * @brief the buffer that we set at the end of buffers for serial
+ */
+BYTE g_EndOfBufferCheckSerial[SERIAL_END_OF_BUFFER_CHARS_COUNT] = {
+    SERIAL_END_OF_BUFFER_CHAR_1,
+    SERIAL_END_OF_BUFFER_CHAR_2,
+    SERIAL_END_OF_BUFFER_CHAR_3,
+    SERIAL_END_OF_BUFFER_CHAR_4};
+
+/**
+ * @brief In debugger (not debuggee), we save the handle
+ * of the user-mode listening thread for pauses here for kernel debugger
+ *
+ */
+
+DEBUGGER_SYNCRONIZATION_EVENTS_STATE g_KernelSyncronizationObjectsHandleTable
+    [DEBUGGER_MAXIMUM_SYNCRONIZATION_KERNEL_DEBUGGER_OBJECTS] = {0};
+
+/**
+ * @brief Current executing instructions
+ *
+ */
+BYTE g_CurrentRunningInstruction[MAXIMUM_INSTR_SIZE] = {0};
+
+/**
+ * @brief whether the Current executing instructions is 32-bit or 64 bit
+ *
+ */
+BOOLEAN g_IsRunningInstruction32Bit = FALSE;
+
+/**
+ * @brief In debuggee and debugger, we save the handle
+ * of the user-mode listening thread for pauses here
+ *
+ */
+HANDLE g_SerialListeningThreadHandle = NULL;
+
+/**
+ * @brief In debugger (not debuggee), we save the handle
+ * of the user-mode listening thread for remote system here
+ *
+ */
+HANDLE g_SerialRemoteComPortHandle = NULL;
+
+/**
+ * @brief Shows if the debugger was connected to
+ * remote debuggee over (A remote guest)
+ *
+ */
+BOOLEAN g_IsSerialConnectedToRemoteDebuggee = FALSE;
+
+/**
+ * @brief Shows if the debugger was connected to
+ * remote debugger (A remote host)
+ *
+ */
+BOOLEAN g_IsSerialConnectedToRemoteDebugger = FALSE;
+
+/**
+ * @brief Shows if the debuggee is in the handshake phase or not
+ *
+ */
+BOOLEAN g_IsDebuggeeInHandshakingPhase = FALSE;
+
+/**
+ * @brief Shows if the debuggee is running or not
+ *
+ */
+BOOLEAN g_IsDebuggeeRunning = FALSE;
+
+/**
+ * @brief Shows if the debugger should show debuggee's messages
+ * or not
+ *
+ */
+BOOLEAN g_IgnoreNewLoggingMessages = FALSE;
+
+/**
+ * @brief Current core that the debuggee is debugging
+ *
+ */
+ULONG g_CurrentRemoteCore = DEBUGGER_DEBUGGEE_IS_RUNNING_NO_CORE;
+
+/**
+ * @brief Shows if the debugger is connected to the
+ * guest using named pipe
+ *
+ */
+BOOLEAN g_IsDebuggerConntectedToNamedPipe = FALSE;
+
+/**
+ * @brief An event to make sure that the user won't give any command in debuggee
+ * and all the commands are coming from just the debugger
+ *
+ */
+HANDLE g_DebuggeeStopCommandEventHandle = NULL;
+
+/**
+ * @brief Holds the result of registering events from the remote debuggee
+ *
+ */
+DEBUGGER_EVENT_AND_ACTION_RESULT g_DebuggeeResultOfRegisteringEvent = {0};
+
+/**
+ * @brief Holds the result of adding action to events from the remote debuggee
+ *
+ */
+DEBUGGER_EVENT_AND_ACTION_RESULT g_DebuggeeResultOfAddingActionsToEvent = {
+    0};
+
+/**
+ * @brief This is an OVERLAPPED structure for managing simultaneous
+ * read and writes for debugger (in current design debuggee is not needed
+ * to write simultaneously but it's needed for write)
+ *
+ */
+OVERLAPPED g_OverlappedIoStructureForReadDebugger  = {0};
+OVERLAPPED g_OverlappedIoStructureForWriteDebugger = {0};
+
+OVERLAPPED g_OverlappedIoStructureForReadDebuggee = {0};
+
+/**
+ * @brief Shows whether the queried event is enabled or disabled
+ *
+ */
+BOOLEAN g_SharedEventStatus = FALSE;
+
+//////////////////////////////////////////////////
+//				 Global Variables               //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Shows whether the previous command should be
+ * continued or not
+ *
+ */
+BOOLEAN g_ShouldPreviousCommandBeContinued;
+
+/**
+ * @brief List of command and attributes
+ *
+ */
+CommandType g_CommandsList;
+
+/**
+ * @brief Holder of global variables for script engine
+ *
+ */
+UINT64 * g_ScriptGlobalVariables;
+
+/**
+ * @brief Holder of local variables for script engine
+ *
+ */
+UINT64 * g_ScriptLocalVariables;
+
+/**
+ * @brief Holder of temp variables for script engine
+ *
+ */
+UINT64 * g_ScriptTempVariables;
+
+/**
+ * @brief Is list of command initialized
+ *
+ */
+BOOLEAN g_IsCommandListInitialized = FALSE;
+
+/**
+ * @brief this variable is used to indicate that modules
+ * are loaded so we make sure to later use a trace of
+ * loading in 'unload' command (used in Debugger VMM)
+ *
+ */
+BOOLEAN g_IsDebuggerModulesLoaded = FALSE;
+
+/**
+ * @brief State of active debugging thread
+ *
+ */
+ACTIVE_DEBUGGING_PROCESS g_ActiveProcessDebuggingState = {0};
+
+/**
+ * @brief The process id of the latest starting process
+ *
+ */
+UINT32 g_ProcessIdOfLatestStartingProcess = NULL;
+
+/**
+ * @brief This variable holds the trace and generate numbers
+ * for new tags of events
+ *
+ */
+UINT64 g_EventTag = DebuggerEventTagStartSeed;
+
+/**
+ * @brief This variable holds the trace and generate numbers
+ * for unique tag of the output resources
+ *
+ */
+UINT64 g_OutputSourceTag = DebuggerOutputSourceTagStartSeed;
+
+/**
+ * @brief it shows whether the debugger started using
+ * events or not or in other words, is g_EventTrace
+ * initialized with a variable or it is empty
+ *
+ */
+BOOLEAN g_EventTraceInitialized = FALSE;
+
+/**
+ * @brief Holds a list of events in kernel and the state of events
+ * and the commands to show the state of each command (disabled/enabled)
+ *
+ * @details this list is not have any relation with the things that HyperDbg
+ * holds for each event in the kernel
+ *
+ */
+LIST_ENTRY g_EventTrace = {0};
+
+/**
+ * @brief it shows whether the debugger started using
+ * output sources or not or in other words, is g_OutputSources
+ * initialized with a variable or it is empty
+ *
+ */
+BOOLEAN g_OutputSourcesInitialized = FALSE;
+
+/**
+ * @brief Holds a list of output sources created by output command
+ *
+ * @details user-mode events and output sources are two separate things
+ * in HyperDbg
+ *
+ */
+LIST_ENTRY g_OutputSources = {0};
+
+/**
+ * @brief Holds the location driver to install it
+ *
+ */
+TCHAR g_DriverLocation[MAX_PATH] = {0};
+
+/**
+ * @brief Holds the location test-hyperdbg.exe
+ *
+ */
+TCHAR g_TestLocation[MAX_PATH] = {0};
+
+/**
+ * @brief The handler for ShowMessages function
+ * this is because the user might choose not to use
+ * printf and instead use his/her handler for showing
+ * messages
+ *
+ */
+Callback g_MessageHandler = 0;
+
+/**
+ * @brief Shows whether the vmxoff process start or not
+ *
+ */
+BOOLEAN g_IsVmxOffProcessStart;
+
+/**
+ * @brief Holds the global handle of device which is used
+ * to send the request to the kernel by IOCTL, this
+ * handle is not used for IRP Pending of message tracing
+ * this handle is used in KD VMM
+ *
+ */
+HANDLE g_DeviceHandle;
+
+/**
+ * @brief Shows whether the '.logopen' command is executed
+ * and the log file is open or not
+ *
+ */
+BOOLEAN g_LogOpened = FALSE;
+
+/**
+ * @brief The object of log file ('.logopen' command)
+ *
+ */
+ofstream g_LogOpenFile;
+
+/**
+ * @brief Shows whether the target is executing a script
+ * form '.script' command or executing script by an
+ * argument
+ *
+ */
+BOOLEAN g_ExecutingScript = FALSE;
+
+/**
+ * @brief Shows whether the pause command or CTRL+C
+ * or CTRL+Break is executed or not
+ *
+ */
+BOOLEAN g_BreakPrintingOutput = FALSE;
+
+/**
+ * @brief Executing symbol reloading or downloading
+ * routines
+ *
+ */
+BOOLEAN g_IsExecutingSymbolLoadingRoutines = FALSE;
+
+/**
+ * @brief Symbol table for disassembler
+ *
+ */
+std::map<UINT64, LOCAL_FUNCTION_DESCRIPTION> g_DisassemblerSymbolMap;
+
+/**
+ * @brief Shows whether the user executed and mesaured '!measure'
+ * command or not, it is because we want to use these measurements
+ * later in '!hide' command
+ *
+ */
+BOOLEAN g_TransparentResultsMeasured = FALSE;
+
+/**
+ * @brief The average calculated from the measurements of cpuid
+ * '!measure' command
+ */
+UINT64 g_CpuidAverage = 0;
+
+/**
+ * @brief The standard deviation calculated from the measurements of cpuid
+ * '!measure' command
+ */
+UINT64 g_CpuidStandardDeviation = 0;
+
+/**
+ * @brief The median calculated from the measurements of cpuid
+ * '!measure' command
+ */
+UINT64 g_CpuidMedian = 0;
+
+/**
+ * @brief The average calculated from the measurements of rdtsc/p
+ * '!measure' command
+ */
+UINT64 g_RdtscAverage = 0;
+
+/**
+ * @brief The standard deviation calculated from the measurements
+ *  of rdtsc/p '!measure' command
+ */
+UINT64 g_RdtscStandardDeviation = 0;
+
+/**
+ * @brief The median calculated from the measurements of rdtsc/p
+ * '!measure' command
+ */
+UINT64 g_RdtscMedian = 0;
+
+/**
+ * @brief Shows whether the user is running 't', 'p', or 'i' command
+ */
+BOOLEAN g_IsInstrumentingInstructions = FALSE;
+
+//////////////////////////////////////////////////
+//			     	 Settings			        //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Whether auto-unpause mode is enabled or not enabled
+ * @details it is enabled by default
+ *
+ */
+BOOLEAN g_AutoUnpause = TRUE;
+
+/**
+ * @brief Whether converting addresses to object names or not
+ * @details it is enabled by default
+ *
+ */
+BOOLEAN g_AddressConversion = TRUE;
+
+/**
+ * @brief Whether auto-flush mode is enabled or not enabled
+ * @details it is disabled by default
+ *
+ */
+BOOLEAN g_AutoFlush = FALSE;
+
+/**
+ * @brief Shows the syntax used in !u !u2 u u2 commands
+ * @details INTEL = 1, ATT = 2, MASM = 3
+ *
+ */
+UINT32 g_DisassemblerSyntax = 1;
+
+//////////////////////////////////////////////////
+//			   	 Symbol Table			        //
+//////////////////////////////////////////////////
+
+/**
+ * @brief The buffer that stores the details of
+ * symbol table
+ *
+ */
+PMODULE_SYMBOL_DETAIL g_SymbolTable = NULL;
+
+/**
+ * @brief The buffer that stores size of the
+ * details of symbol table
+ *
+ */
+UINT32 g_SymbolTableSize = NULL;
+
+/**
+ * @brief The index to hold the track of
+ * added symbols
+ *
+ */
+UINT32 g_SymbolTableCurrentIndex = NULL;
+
+/**
+ * @brief Result of the expression that is evaluated in the
+ * debuggee
+ *
+ */
+UINT64 g_ResultOfEvaluatedExpression = NULL;
+
+/**
+ * @brief Shows the state of the evaluation of expression which
+ * whether contains error or not
+ *
+ */
+UINT32 g_ErrorStateOfResultOfEvaluatedExpression = NULL;
+
+//////////////////////////////////////////////////
+//			 User mode Debugging		        //
+//////////////////////////////////////////////////
+
+/**
+ * @brief the start path used in .start command
+ *
+ */
+std::wstring g_StartCommandPath = L"";
+
+/**
+ * @brief the start arguments used in .start command
+ *
+ */
+std::wstring g_StartCommandPathAndArguments = L"";
+
+//////////////////////////////////////////////////
+//			 Script engine tests		        //
+//////////////////////////////////////////////////
+
+/**
+ * @brief global variable to save the result of script-engine statement
+ * tests
+ *
+ */
+UINT64 g_CurrentExprEvalResult;
+
+/**
+ * @brief global variable to detect if there was an error in the result
+ *  of script-engine statement tests
+ *
+ */
+BOOLEAN g_CurrentExprEvalResultHasError;
+
+//////////////////////////////////////////////////
+//				      hwdbg                     //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Instance information of the current hwdbg debuggee
+ *
+ */
+HWDBG_INSTANCE_INFORMATION g_HwdbgInstanceInfo;
+
+/**
+ * @brief Shows whether the instance info is valid (received) or not
+ *
+ */
+BOOLEAN g_HwdbgInstanceInfoIsValid;
+
+/**
+ * @brief Ports configuration of hwdbg
+ *
+ */
+std::vector<UINT32> g_HwdbgPortConfiguration;
+
+
+//..\bin\debug\headerAll\help.h
+/**
+ * @file help.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief help of commands header
+ * @details
+ * @version 0.1
+ * @date 2020-05-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//					Help commands               //
+//////////////////////////////////////////////////
+
+VOID
+CommandHelpHelp();
+
+VOID
+CommandReadMemoryAndDisassemblerHelp();
+
+VOID
+CommandConnectHelp();
+
+VOID
+CommandDisconnectHelp();
+
+VOID
+CommandExitHelp();
+
+VOID
+CommandCpuHelp();
+
+VOID
+CommandUnloadHelp();
+
+VOID
+CommandLoadHelp();
+
+VOID
+CommandConnectHelp();
+
+VOID
+CommandScriptHelp();
+
+VOID
+CommandFormatsHelp();
+
+VOID
+CommandRdmsrHelp();
+
+VOID
+CommandWrmsrHelp();
+
+VOID
+CommandPteHelp();
+
+VOID
+CommandMonitorHelp();
+
+VOID
+CommandSyscallHelp();
+
+VOID
+CommandSysretHelp();
+
+VOID
+CommandEptHookHelp();
+
+VOID
+CommandEptHook2Help();
+
+VOID
+CommandCpuidHelp();
+
+VOID
+CommandMsrreadHelp();
+
+VOID
+CommandMsrwriteHelp();
+
+VOID
+CommandTscHelp();
+
+VOID
+CommandPmcHelp();
+
+VOID
+CommandExceptionHelp();
+
+VOID
+CommandCrwriteHelp();
+
+VOID
+CommandDrHelp();
+
+VOID
+CommandInterruptHelp();
+
+VOID
+CommandIooutHelp();
+
+VOID
+CommandIoinHelp();
+
+VOID
+CommandVmcallHelp();
+
+VOID
+CommandModeHelp();
+
+VOID
+CommandTraceHelp();
+
+VOID
+CommandHideHelp();
+
+VOID
+CommandUnhideHelp();
+
+VOID
+CommandTestHelp();
+
+VOID
+CommandLogopenHelp();
+
+VOID
+CommandLogcloseHelp();
+
+VOID
+CommandVa2paHelp();
+
+VOID
+CommandPa2vaHelp();
+
+VOID
+CommandEventsHelp();
+
+VOID
+CommandGHelp();
+
+VOID
+CommandClearScreenHelp();
+
+VOID
+CommandSleepHelp();
+
+VOID
+CommandEditMemoryHelp();
+
+VOID
+CommandSearchMemoryHelp();
+
+VOID
+CommandMeasureHelp();
+
+VOID
+CommandLmHelp();
+
+VOID
+CommandSettingsHelp();
+
+VOID
+CommandFlushHelp();
+
+VOID
+CommandPauseHelp();
+
+VOID
+CommandListenHelp();
+
+VOID
+CommandStatusHelp();
+
+VOID
+CommandAttachHelp();
+
+VOID
+CommandDetachHelp();
+
+VOID
+CommandStartHelp();
+
+VOID
+CommandRestartHelp();
+
+VOID
+CommandSwitchHelp();
+
+VOID
+CommandKillHelp();
+
+VOID
+CommandTHelp();
+
+VOID
+CommandIHelp();
+
+VOID
+CommandPrintHelp();
+
+VOID
+CommandOutputHelp();
+
+VOID
+CommandDebugHelp();
+
+VOID
+CommandPHelp();
+
+VOID
+CommandCoreHelp();
+
+VOID
+CommandProcessHelp();
+
+VOID
+CommandThreadHelp();
+
+VOID
+CommandEvalHelp();
+
+VOID
+CommandRHelp();
+
+VOID
+CommandBpHelp();
+
+VOID
+CommandBlHelp();
+
+VOID
+CommandBeHelp();
+
+VOID
+CommandBdHelp();
+
+VOID
+CommandBcHelp();
+
+VOID
+CommandSympathHelp();
+
+VOID
+CommandSymHelp();
+
+VOID
+CommandXHelp();
+
+VOID
+CommandPreallocHelp();
+
+VOID
+CommandPreactivateHelp();
+
+VOID
+CommandDtHelp();
+
+VOID
+CommandStructHelp();
+
+VOID
+CommandKHelp();
+
+VOID
+CommandPeHelp();
+
+VOID
+CommandRevHelp();
+
+VOID
+CommandTrackHelp();
+
+VOID
+CommandPageinHelp();
+
+VOID
+CommandDumpHelp();
+
+VOID
+CommandGuHelp();
+
+//
+// hwdbg commands
+//
+VOID
+CommandHwClkHelp();
+
+
+//..\bin\debug\headerAll\hwdbg-interpreter.h
+/**
+ * @file hwdbg-interpreter.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers for the interpreter of hwdbg packets and requests
+ * @details
+ * @version 1.0
+ * @date 2024-06-11
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//				   Definitions                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Path to read the sample of the instance info
+ *
+ */
+#define HWDBG_TEST_READ_INSTANCE_INFO_PATH "..\\..\\..\\..\\hwdbg\\sim\\hwdbg\\DebuggerModuleTestingBRAM\\bram_instance_info.txt"
+
+/**
+ * @brief Path to write the sample of the script buffer
+ *
+ */
+#define HWDBG_TEST_WRITE_SCRIPT_BUFFER_PATH "..\\..\\..\\..\\hwdbg\\src\\test\\bram\\script_buffer.hex.txt"
+
+/**
+ * @brief Path to write the sample of the instance info requests
+ *
+ */
+#define HWDBG_TEST_WRITE_INSTANCE_INFO_PATH "..\\..\\..\\..\\hwdbg\\src\\test\\bram\\instance_info.hex.txt"
+
+//////////////////////////////////////////////////
+//				    Functions                   //
+//////////////////////////////////////////////////
+
+BOOLEAN
+HwdbgInterpretPacket(PVOID BufferReceived, UINT32 LengthReceived);
+
+BOOLEAN
+HwdbgInterpreterFillFileFromMemory(
+    HWDBG_INSTANCE_INFORMATION * InstanceInfo,
+    const TCHAR *                FileName,
+    UINT32 *                     MemoryBuffer,
+    size_t                       BufferSize,
+    HWDBG_ACTION_ENUMS           RequestedAction);
+
+BOOLEAN
+HwdbgInterpreterFillMemoryFromFile(const TCHAR * FileName, UINT32 * MemoryBuffer, size_t BufferSize);
+
+BOOLEAN
+HwdbgInterpreterConvertSymbolToHwdbgShortSymbolBuffer(
+    HWDBG_INSTANCE_INFORMATION * InstanceInfo,
+    SYMBOL *                     SymbolBuffer,
+    size_t                       SymbolBufferLength,
+    UINT32                       NumberOfStages,
+    HWDBG_SHORT_SYMBOL **        NewShortSymbolBuffer,
+    size_t *                     NewBufferSize);
+
+BOOLEAN
+HwdbgInterpreterCompressBuffer(UINT64 * Buffer,
+                               size_t   BufferLength,
+                               UINT32   ScriptVariableLength,
+                               UINT32   BramDataWidth,
+                               size_t * NewBufferSize,
+                               size_t * NumberOfBytesPerChunk);
+
+VOID
+HwdbgInterpreterShowScriptCapabilities(HWDBG_INSTANCE_INFORMATION * InstanceInfo);
+
+BOOLEAN
+HwdbgInterpreterCheckScriptBufferWithScriptCapabilities(HWDBG_INSTANCE_INFORMATION * InstanceInfo,
+                                                        PVOID                        ScriptBuffer,
+                                                        UINT32                       CountOfScriptSymbolChunks,
+                                                        UINT32 *                     NumberOfStages,
+                                                        UINT32 *                     NumberOfOperands);
+
+BOOLEAN
+HwdbgInterpreterSendPacketAndBufferToHwdbg(HWDBG_INSTANCE_INFORMATION * InstanceInfo,
+                                           const TCHAR *                FileName,
+                                           DEBUGGER_REMOTE_PACKET_TYPE  PacketType,
+                                           HWDBG_ACTION_ENUMS           RequestedAction,
+                                           CHAR *                       Buffer,
+                                           UINT32                       BufferLength);
+
+BOOLEAN
+HwdbgInterpreterSendScriptPacket(HWDBG_INSTANCE_INFORMATION * InstanceInfo,
+                                 const TCHAR *                FileName,
+                                 UINT32                       NumberOfSymbols,
+                                 HWDBG_SHORT_SYMBOL *         Buffer,
+                                 UINT32                       BufferLength);
+
+
+//..\bin\debug\headerAll\inipp.h
+/*
+MIT License
+
+Copyright (c) 2017-2020 Matthias C. M. Troffaes
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+#pragma once
+
+#include <algorithm>
+#include <cctype>
+#include <cstring>
+#include <functional>
+#include <iostream>
+#include <list>
+#include <vector>
+#include <locale>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <string>
+
+namespace inipp {
+
+namespace detail {
+
+// trim functions based on http://stackoverflow.com/a/217605
+
+template <class CharT>
+inline void
+ltrim(std::basic_string<CharT> & s, const std::locale & loc)
+{
+    s.erase(s.begin(),
+            std::find_if(s.begin(), s.end(), [&loc](CharT ch) { return !std::isspace(ch, loc); }));
+}
+
+template <class CharT>
+inline void
+rtrim(std::basic_string<CharT> & s, const std::locale & loc)
+{
+    s.erase(std::find_if(s.rbegin(), s.rend(), [&loc](CharT ch) { return !std::isspace(ch, loc); }).base(),
+            s.end());
+}
+
+template <class CharT, class UnaryPredicate>
+inline void
+rtrim2(std::basic_string<CharT> & s, UnaryPredicate pred)
+{
+    s.erase(std::find_if(s.begin(), s.end(), pred), s.end());
+}
+
+// string replacement function based on http://stackoverflow.com/a/3418285
+
+template <class CharT>
+inline bool
+replace(std::basic_string<CharT> & str, const std::basic_string<CharT> & from, const std::basic_string<CharT> & to)
+{
+    auto   changed   = false;
+    size_t start_pos = 0;
+    while ((start_pos = str.find(from, start_pos)) != std::basic_string<CharT>::npos)
+    {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length();
+        changed = true;
+    }
+    return changed;
+}
+
+} // namespace detail
+
+template <typename CharT, typename T>
+inline bool
+extract(const std::basic_string<CharT> & value, T & dst)
+{
+    CharT                           c;
+    std::basic_istringstream<CharT> is {value};
+    T                               result;
+    if ((is >> std::boolalpha >> result) && !(is >> c))
+    {
+        dst = result;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+template <typename CharT>
+inline bool
+extract(const std::basic_string<CharT> & value, std::basic_string<CharT> & dst)
+{
+    dst = value;
+    return true;
+}
+
+template <typename CharT, typename T>
+inline bool
+get_value(const std::map<std::basic_string<CharT>, std::basic_string<CharT>> & sec, const std::basic_string<CharT> & key, T & dst)
+{
+    const auto it = sec.find(key);
+    if (it == sec.end())
+        return false;
+    return extract(it->second, dst);
+}
+
+template <typename CharT, typename T>
+inline bool
+get_value(const std::map<std::basic_string<CharT>, std::basic_string<CharT>> & sec, const CharT * key, T & dst)
+{
+    return get_value(sec, std::basic_string<CharT>(key), dst);
+}
+
+template <class CharT>
+class Format
+{
+public:
+    // used for generating
+    const CharT char_section_start;
+    const CharT char_section_end;
+    const CharT char_assign;
+    const CharT char_comment;
+
+    // used for parsing
+    virtual bool is_section_start(CharT ch) const { return ch == char_section_start; }
+    virtual bool is_section_end(CharT ch) const { return ch == char_section_end; }
+    virtual bool is_assign(CharT ch) const { return ch == char_assign; }
+    virtual bool is_comment(CharT ch) const { return ch == char_comment; }
+
+    // used for interpolation
+    const CharT char_interpol;
+    const CharT char_interpol_start;
+    const CharT char_interpol_sep;
+    const CharT char_interpol_end;
+
+    Format(CharT section_start, CharT section_end, CharT assign, CharT comment, CharT interpol, CharT interpol_start, CharT interpol_sep, CharT interpol_end) :
+        char_section_start(section_start), char_section_end(section_end), char_assign(assign), char_comment(comment), char_interpol(interpol), char_interpol_start(interpol_start), char_interpol_sep(interpol_sep), char_interpol_end(interpol_end) { }
+
+    Format() :
+        Format('[', ']', '=', ';', '$', '{', ':', '}') { }
+
+    const std::basic_string<CharT> local_symbol(const std::basic_string<CharT> & name) const
+    {
+        return char_interpol + (char_interpol_start + name + char_interpol_end);
+    }
+
+    const std::basic_string<CharT> global_symbol(const std::basic_string<CharT> & sec_name, const std::basic_string<CharT> & name) const
+    {
+        return local_symbol(sec_name + char_interpol_sep + name);
+    }
+};
+
+template <class CharT>
+class Ini
+{
+public:
+    using String   = std::basic_string<CharT>;
+    using Section  = std::map<String, String>;
+    using Sections = std::map<String, Section>;
+
+    Sections                       sections;
+    std::list<String>              errors;
+    std::shared_ptr<Format<CharT>> format;
+
+    static const int max_interpolation_depth = 10;
+
+    Ini() :
+        format(std::make_shared<Format<CharT>>()) {};
+    Ini(std::shared_ptr<Format<CharT>> fmt) :
+        format(fmt) {};
+
+    void generate(std::basic_ostream<CharT> & os) const
+    {
+        for (auto const & sec : sections)
+        {
+            os << format->char_section_start << sec.first << format->char_section_end << std::endl;
+            for (auto const & val : sec.second)
+            {
+                os << val.first << format->char_assign << val.second << std::endl;
+            }
+            os << std::endl;
+        }
+    }
+
+    void parse(std::basic_istream<CharT> & is)
+    {
+        String            line;
+        String            section;
+        const std::locale loc {"C"};
+        while (std::getline(is, line))
+        {
+            detail::ltrim(line, loc);
+            detail::rtrim(line, loc);
+            const auto length = line.length();
+            if (length > 0)
+            {
+                const auto   pos   = std::find_if(line.begin(), line.end(), [this](CharT ch) { return format->is_assign(ch); });
+                const auto & front = line.front();
+                if (format->is_comment(front))
+                {
+                }
+                else if (format->is_section_start(front))
+                {
+                    if (format->is_section_end(line.back()))
+                        section = line.substr(1, length - 2);
+                    else
+                        errors.push_back(line);
+                }
+                else if (pos != line.begin() && pos != line.end())
+                {
+                    String variable(line.begin(), pos);
+                    String value(pos + 1, line.end());
+                    detail::rtrim(variable, loc);
+                    detail::ltrim(value, loc);
+                    auto & sec = sections[section];
+                    if (sec.find(variable) == sec.end())
+                        sec.emplace(variable, value);
+                    else
+                        errors.push_back(line);
+                }
+                else
+                {
+                    errors.push_back(line);
+                }
+            }
+        }
+    }
+
+    void interpolate()
+    {
+        int  global_iteration = 0;
+        auto changed          = false;
+        // replace each "${variable}" by "${section:variable}"
+        for (auto & sec : sections)
+            replace_symbols(local_symbols(sec.first, sec.second), sec.second);
+        // replace each "${section:variable}" by its value
+        do
+        {
+            changed         = false;
+            const auto syms = global_symbols();
+            for (auto & sec : sections)
+                changed |= replace_symbols(syms, sec.second);
+        } while (changed && (max_interpolation_depth > global_iteration++));
+    }
+
+    void default_section(const Section & sec)
+    {
+        for (auto & sec2 : sections)
+            for (const auto & val : sec)
+                sec2.second.insert(val);
+    }
+
+    void strip_trailing_comments()
+    {
+        const std::locale loc {"C"};
+        for (auto & sec : sections)
+            for (auto & val : sec.second)
+            {
+                detail::rtrim2(val.second, [this](CharT ch) { return format->is_comment(ch); });
+                detail::rtrim(val.second, loc);
+            }
+    }
+
+    void clear()
+    {
+        sections.clear();
+        errors.clear();
+    }
+
+private:
+    using Symbols = std::vector<std::pair<String, String>>;
+
+    const Symbols local_symbols(const String & sec_name, const Section & sec) const
+    {
+        Symbols result;
+        for (const auto & val : sec)
+            result.emplace_back(format->local_symbol(val.first), format->global_symbol(sec_name, val.first));
+        return result;
+    }
+
+    const Symbols global_symbols() const
+    {
+        Symbols result;
+        for (const auto & sec : sections)
+            for (const auto & val : sec.second)
+                result.emplace_back(format->global_symbol(sec.first, val.first), val.second);
+        return result;
+    }
+
+    bool replace_symbols(const Symbols & syms, Section & sec) const
+    {
+        auto changed = false;
+        for (auto & sym : syms)
+            for (auto & val : sec)
+                changed |= detail::replace(val.second, sym.first, sym.second);
+        return changed;
+    }
+};
+
+} // namespace inipp
+
+
+//..\bin\debug\headerAll\install.h
+/**
+ * @file hprdbgctrl.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Main interface to connect applications to driver headers
+ * @details
+ * @version 0.1
+ * @date 2020-04-11
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//
+// The following ifdef block is the standard way of creating macros which make
+// exporting from a DLL simpler. All files within this DLL are compiled with the
+// HPRDBGCTRL_EXPORTS symbol defined on the command line. This symbol should not
+// be defined on any project that uses this DLL. This way any other project
+// whose source files include this file see HPRDBGCTRL_API functions as being
+// imported from a DLL, whereas this DLL sees symbols defined with this macro as
+// being exported.
+//
+
+#ifdef HPRDBGCTRL_EXPORTS
+#    define HPRDBGCTRL_API __declspec(dllexport)
+#else
+#    define HPRDBGCTRL_API __declspec(dllimport)
+#endif
+
+//////////////////////////////////////////////////
+//					Installer                   //
+//////////////////////////////////////////////////
+
+#define DRIVER_FUNC_INSTALL 0x01
+#define DRIVER_FUNC_STOP    0x02
+#define DRIVER_FUNC_REMOVE  0x03
+
+BOOLEAN
+ManageDriver(_In_ LPCTSTR DriverName, _In_ LPCTSTR ServiceName, _In_ UINT16 Function);
+
+BOOLEAN
+SetupPathForFileName(const CHAR *                                  FileName,
+                     _Inout_updates_bytes_all_(BufferLength) PCHAR FileLocation,
+                     ULONG                                         BufferLength,
+                     BOOLEAN                                       CheckFileExists);
+
+
+//..\bin\debug\headerAll\kd.h
+/**
+ * @file kd.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief routines for remote kernel debugging
+ * @details
+ * @version 0.1
+ * @date 2020-12-22
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//		            Definitions                 //
+//////////////////////////////////////////////////
+
+#define DbgWaitForKernelResponse(KernelSyncObjectId)                       \
+    do                                                                     \
+    {                                                                      \
+        DEBUGGER_SYNCRONIZATION_EVENTS_STATE * SyncronizationObject =      \
+            &g_KernelSyncronizationObjectsHandleTable[KernelSyncObjectId]; \
+                                                                           \
+        SyncronizationObject->IsOnWaitingState = TRUE;                     \
+        WaitForSingleObject(SyncronizationObject->EventHandle, INFINITE);  \
+    } while (FALSE);
+
+#define DbgReceivedKernelResponse(KernelSyncObjectId)                      \
+    do                                                                     \
+    {                                                                      \
+        DEBUGGER_SYNCRONIZATION_EVENTS_STATE * SyncronizationObject =      \
+            &g_KernelSyncronizationObjectsHandleTable[KernelSyncObjectId]; \
+                                                                           \
+        SyncronizationObject->IsOnWaitingState = FALSE;                    \
+        SetEvent(SyncronizationObject->EventHandle);                       \
+    } while (FALSE);
+
+//////////////////////////////////////////////////
+//		    Display Windows Details             //
+//////////////////////////////////////////////////
+
+struct HKeyHolder
+{
+private:
+    HKEY m_Key;
+
+public:
+    HKeyHolder() :
+        m_Key(nullptr) { }
+
+    HKeyHolder(const HKeyHolder &)             = delete;
+    HKeyHolder & operator=(const HKeyHolder &) = delete;
+
+    ~HKeyHolder()
+    {
+        if (m_Key != nullptr)
+            RegCloseKey(m_Key);
+    }
+
+    operator HKEY() const { return m_Key; }
+
+    HKEY * operator&() { return &m_Key; }
+};
+
+//////////////////////////////////////////////////
+//			    	 Functions                  //
+//////////////////////////////////////////////////
+
+BOOLEAN
+KdCommandPacketToDebuggee(
+    DEBUGGER_REMOTE_PACKET_TYPE             PacketType,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION RequestedAction);
+
+BOOLEAN
+KdCommandPacketAndBufferToDebuggee(
+    DEBUGGER_REMOTE_PACKET_TYPE             PacketType,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION RequestedAction,
+    CHAR *                                  Buffer,
+    UINT32                                  BufferLength);
+
+BOOLEAN
+KdPrepareSerialConnectionToRemoteSystem(HANDLE  SerialHandle,
+                                        BOOLEAN IsNamedPipe);
+
+BOOLEAN
+KdPrepareAndConnectDebugPort(const char * PortName, DWORD Baudrate, UINT32 Port, BOOLEAN IsPreparing, BOOLEAN IsNamedPipe);
+
+BOOLEAN
+KdSendPacketToDebuggee(const CHAR * Buffer, UINT32 Length, BOOLEAN SendEndOfBuffer);
+
+BOOLEAN
+KdReceivePacketFromDebuggee(CHAR * BufferToSave, UINT32 * LengthReceived);
+
+BOOLEAN
+KdReceivePacketFromDebugger(CHAR * BufferToSave, UINT32 * LengthReceived);
+
+BOOLEAN
+KdCheckForTheEndOfTheBuffer(PUINT32 CurrentLoopIndex, BYTE * Buffer);
+
+BOOLEAN
+KdSendSwitchCorePacketToDebuggee(UINT32 NewCore);
+
+BOOLEAN
+KdSendShortCircuitingEventToDebuggee(BOOLEAN IsEnabled);
+
+BOOLEAN
+KdSendEventQueryAndModifyPacketToDebuggee(
+    UINT64                      Tag,
+    DEBUGGER_MODIFY_EVENTS_TYPE TypeOfAction,
+    BOOLEAN *                   IsEnabled);
+
+BOOLEAN
+KdSendFlushPacketToDebuggee();
+
+BOOLEAN
+KdSendCallStackPacketToDebuggee(UINT64                            BaseAddress,
+                                UINT32                            Size,
+                                DEBUGGER_CALLSTACK_DISPLAY_METHOD DisplayMethod,
+                                BOOLEAN                           Is32Bit);
+
+BOOLEAN
+KdSendTestQueryPacketToDebuggee(DEBUGGER_TEST_QUERY_STATE Type);
+
+BOOLEAN
+KdSendTestQueryPacketWithContextToDebuggee(DEBUGGER_TEST_QUERY_STATE Type, UINT64 Context);
+
+BOOLEAN
+KdSendSymbolReloadPacketToDebuggee(UINT32 ProcessId);
+
+BOOLEAN KdSendReadRegisterPacketToDebuggee(PDEBUGGEE_REGISTER_READ_DESCRIPTION);
+
+BOOLEAN
+KdSendReadMemoryPacketToDebuggee(PDEBUGGER_READ_MEMORY ReadMem);
+
+BOOLEAN
+KdSendEditMemoryPacketToDebuggee(PDEBUGGER_EDIT_MEMORY EditMem, UINT32 Size);
+
+PDEBUGGER_EVENT_AND_ACTION_RESULT
+KdSendRegisterEventPacketToDebuggee(PDEBUGGER_GENERAL_EVENT_DETAIL Event,
+                                    UINT32                         EventBufferLength);
+
+PDEBUGGER_EVENT_AND_ACTION_RESULT
+KdSendAddActionToEventPacketToDebuggee(PDEBUGGER_GENERAL_ACTION GeneralAction,
+                                       UINT32                   GeneralActionLength);
+
+BOOLEAN
+KdSendSwitchProcessPacketToDebuggee(DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_TYPE ActionType,
+                                    UINT32                                   NewPid,
+                                    UINT64                                   NewProcess,
+                                    BOOLEAN                                  SetChangeByClockInterrupt,
+                                    PDEBUGGEE_PROCESS_LIST_NEEDED_DETAILS    SymDetailsForProcessList);
+
+BOOLEAN
+KdSendSwitchThreadPacketToDebuggee(DEBUGGEE_DETAILS_AND_SWITCH_THREAD_TYPE ActionType,
+                                   UINT32                                  NewTid,
+                                   UINT64                                  NewThread,
+                                   BOOLEAN                                 CheckByClockInterrupt,
+                                   PDEBUGGEE_THREAD_LIST_NEEDED_DETAILS    SymDetailsForThreadList);
+
+BOOLEAN
+KdSendBpPacketToDebuggee(PDEBUGGEE_BP_PACKET BpPacket);
+
+BOOLEAN
+KdSendVa2paAndPa2vaPacketToDebuggee(PDEBUGGER_VA2PA_AND_PA2VA_COMMANDS Va2paAndPa2vaPacket);
+
+BOOLEAN
+KdSendPtePacketToDebuggee(PDEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS PtePacket);
+
+BOOLEAN
+KdSendPageinPacketToDebuggee(PDEBUGGER_PAGE_IN_REQUEST PageinPacket);
+
+BOOLEAN
+KdSendListOrModifyPacketToDebuggee(
+    PDEBUGGEE_BP_LIST_OR_MODIFY_PACKET ListOrModifyPacket);
+
+BOOLEAN
+KdSendScriptPacketToDebuggee(UINT64 BufferAddress, UINT32 BufferLength, UINT32 Pointer, BOOLEAN IsFormat);
+
+BOOLEAN
+KdSendUserInputPacketToDebuggee(const char * Sendbuf, int Len, BOOLEAN IgnoreBreakingAgain);
+
+BOOLEAN
+KdSendSearchRequestPacketToDebuggee(UINT64 * SearchRequestBuffer, UINT32 SearchRequestBufferSize);
+
+BOOLEAN
+KdSendStepPacketToDebuggee(DEBUGGER_REMOTE_STEPPING_REQUEST StepRequestType);
+
+BYTE
+KdComputeDataChecksum(PVOID Buffer, UINT32 Length);
+
+BOOLEAN
+KdRegisterEventInDebuggee(PDEBUGGER_GENERAL_EVENT_DETAIL EventRegBuffer,
+                          UINT32                         Length);
+
+BOOLEAN
+KdAddActionToEventInDebuggee(PDEBUGGER_GENERAL_ACTION ActionAddingBuffer,
+                             UINT32                   Length);
+
+BOOLEAN
+KdSendModifyEventInDebuggee(PDEBUGGER_MODIFY_EVENTS ModifyEvent, BOOLEAN SendTheResultBackToDebugger);
+
+BOOLEAN
+KdSendGeneralBuffersFromDebuggeeToDebugger(
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION RequestedAction,
+    PVOID                                   Buffer,
+    UINT32                                  BufferLength,
+    BOOLEAN                                 PauseDebuggeeWhenSent);
+
+BOOLEAN
+KdCloseConnection();
+
+BOOLEAN
+KdReloadSymbolsInDebuggee(BOOLEAN PauseDebuggee, UINT32 UserProcessId);
+
+BOOLEAN
+KdSendResponseOfThePingPacket();
+
+VOID
+KdUninitializeConnection();
+
+VOID
+KdSendUsermodePrints(CHAR * Input, UINT32 Length);
+
+VOID
+KdSendSymbolDetailPacket(PMODULE_SYMBOL_DETAIL SymbolDetailPacket,
+                         UINT32                CurrentSymbolInfoIndex,
+                         UINT32                TotalSymbols);
+
+VOID
+KdHandleUserInputInDebuggee(DEBUGGEE_USER_INPUT_PACKET * Descriptor);
+
+VOID
+KdTheRemoteSystemIsRunning();
+
+VOID
+KdBreakControlCheckAndPauseDebugger();
+
+VOID
+KdBreakControlCheckAndContinueDebugger();
+
+VOID
+KdSetStatusAndWaitForPause();
+
+
+//..\bin\debug\headerAll\list.h
+/**
+ * @file list.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief The list working functions headers
+ * @details
+ * @version 0.1
+ * @date 2020-04-11
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+/*
+#define CONTAINING_RECORD(address, type, field) \
+    ((type *)((char *)(address) - (unsigned long)(&((type *)0)->field)))
+*/
+
+
+//..\bin\debug\headerAll\namedpipe.h
+/**
+ * @file namedpipe.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Named pipe communication headers
+ * @details
+ * @version 0.1
+ * @date 2020-04-11
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+////////////////////////////////////////////////////////////////////////////
+//                            Server Side                                 //
+////////////////////////////////////////////////////////////////////////////
+
+HANDLE
+NamedPipeServerCreatePipe(LPCSTR PipeName, UINT32 OutputBufferSize, UINT32 InputBufferSize);
+
+BOOLEAN
+NamedPipeServerWaitForClientConntection(HANDLE PipeHandle);
+
+UINT32
+NamedPipeServerReadClientMessage(HANDLE PipeHandle, char * BufferToSave, int MaximumReadBufferLength);
+
+BOOLEAN
+NamedPipeServerSendMessageToClient(HANDLE PipeHandle,
+                                   char * BufferToSend,
+                                   int    BufferSize);
+
+VOID
+NamedPipeServerCloseHandle(HANDLE PipeHandle);
+
+////////////////////////////////////////////////////////////////////////////
+//                            Client Side                                 //
+////////////////////////////////////////////////////////////////////////////
+
+HANDLE
+NamedPipeClientCreatePipe(LPCSTR PipeName);
+
+HANDLE
+NamedPipeClientCreatePipeOverlappedIo(LPCSTR PipeName);
+
+BOOLEAN
+NamedPipeClientSendMessage(HANDLE PipeHandle, char * BufferToSend, int BufferSize);
+
+UINT32
+NamedPipeClientReadMessage(HANDLE PipeHandle, char * BufferToRead, int MaximumSizeOfBuffer);
+
+VOID
+NamedPipeClientClosePipe(HANDLE PipeHandle);
+
+
+//..\bin\debug\headerAll\objects.h
+/**
+ * @file objects.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Header for routines related to objects
+ * @details
+ * @version 0.1
+ * @date 2022-05-06
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////
+//				Functions 		     	//
+//////////////////////////////////////////
+
+BOOLEAN
+ObjectShowProcessesOrThreadList(BOOLEAN                               IsProcess,
+                                PDEBUGGEE_PROCESS_LIST_NEEDED_DETAILS SymDetailsForProcessList,
+                                UINT64                                Eprocess,
+                                PDEBUGGEE_THREAD_LIST_NEEDED_DETAILS  SymDetailsForThreadList);
+
+BOOLEAN
+ObjectShowProcessesOrThreadDetails(BOOLEAN IsProcess);
+
+
+//..\bin\debug\headerAll\pe-parser.h
+/**
+ * @file pe-parser.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Header for Portable Executable parser
+ * @details
+ * @version 0.1
+ * @date 2021-12-26
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//					  Functions                 //
+//////////////////////////////////////////////////
+
+BOOLEAN
+PeShowSectionInformationAndDump(const WCHAR * AddressOfFile, const CHAR * SectionToShow, BOOLEAN Is32Bit);
+
+BOOLEAN
+PeIsPE32BitOr64Bit(const WCHAR * AddressOfFile, PBOOLEAN Is32Bit);
+
+
+//..\bin\debug\headerAll\rev-ctrl.h
+/**
+ * @file rev-ctrl.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief headers for controller of the reversing machine's module
+ * @details
+ * @version 0.2
+ * @date 2023-03-23
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//            	    Functions                   //
+//////////////////////////////////////////////////
+
+BOOLEAN
+RevRequestService(REVERSING_MACHINE_RECONSTRUCT_MEMORY_REQUEST * RevRequest);
+
+
+//..\bin\debug\headerAll\script-engine.h
+/**
+ * @file script-engine.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief General script-engine functions and wrappers
+ * @details
+ * @version 0.1
+ * @date 2021-09-23
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//    Pdb Parser Wrapper (from script-engine)   //
+//////////////////////////////////////////////////
+UINT64
+ScriptEngineConvertNameToAddressWrapper(const char * FunctionOrVariableName, PBOOLEAN WasFound);
+
+UINT32
+ScriptEngineLoadFileSymbolWrapper(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
+
+VOID
+ScriptEngineSetTextMessageCallbackWrapper(PVOID Handler);
+
+UINT32
+ScriptEngineUnloadAllSymbolsWrapper();
+
+UINT32
+ScriptEngineUnloadModuleSymbolWrapper(char * ModuleName);
+
+UINT32
+ScriptEngineSearchSymbolForMaskWrapper(const char * SearchMask);
+
+BOOLEAN
+ScriptEngineGetFieldOffsetWrapper(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
+
+BOOLEAN
+ScriptEngineGetDataTypeSizeWrapper(CHAR * TypeName, UINT64 * TypeSize);
+
+BOOLEAN
+ScriptEngineCreateSymbolTableForDisassemblerWrapper(void * CallbackFunction);
+
+BOOLEAN
+ScriptEngineConvertFileToPdbPathWrapper(const char * LocalFilePath, char * ResultPath);
+
+BOOLEAN
+ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetailsWrapper(const char * LocalFilePath,
+                                                            char *       PdbFilePath,
+                                                            char *       GuidAndAgeDetails,
+                                                            BOOLEAN      Is32BitModule);
+
+BOOLEAN
+ScriptEngineSymbolInitLoadWrapper(PMODULE_SYMBOL_DETAIL BufferToStoreDetails,
+                                  UINT32                StoredLength,
+                                  BOOLEAN               DownloadIfAvailable,
+                                  const char *          SymbolPath,
+                                  BOOLEAN               IsSilentLoad);
+
+BOOLEAN
+ScriptEngineShowDataBasedOnSymbolTypesWrapper(
+    const char * TypeName,
+    UINT64       Address,
+    BOOLEAN      IsStruct,
+    PVOID        BufferAddress,
+    const char * AdditionalParameters);
+
+VOID
+ScriptEngineSymbolAbortLoadingWrapper();
+
+//////////////////////////////////////////////////
+//          Script Engine Wrapper               //
+//////////////////////////////////////////////////
+
+VOID
+ScriptEngineWrapperTestParser(const string & Expr);
+
+BOOLEAN
+ScriptAutomaticStatementsTestWrapper(const string & Expr, UINT64 ExpectationValue, BOOLEAN ExceptError);
+
+PVOID
+ScriptEngineParseWrapper(char * Expr, BOOLEAN ShowErrorMessageIfAny);
+
+VOID
+PrintSymbolBufferWrapper(PVOID SymbolBuffer);
+
+UINT64
+ScriptEngineWrapperGetHead(PVOID SymbolBuffer);
+
+UINT32
+ScriptEngineWrapperGetSize(PVOID SymbolBuffer);
+
+UINT32
+ScriptEngineWrapperGetPointer(PVOID SymbolBuffer);
+
+VOID
+ScriptEngineWrapperRemoveSymbolBuffer(PVOID SymbolBuffer);
+
+BOOLEAN
+ScriptEngineFuncNumberOfOperands(UINT64 FuncType, UINT32 * NumberOfGetOperands, UINT32 * NumberOfSetOperands);
+
+UINT64
+ScriptEngineEvalUInt64StyleExpressionWrapper(const string & Expr, PBOOLEAN HasError);
+
+//////////////////////////////////////////////////
+//          Script Engine Functions             //
+//////////////////////////////////////////////////
+
+UINT64
+ScriptEngineEvalSingleExpression(string Expr, PBOOLEAN HasError);
+
+
+//..\bin\debug\headerAll\symbol.h
+/**
+ * @file symbol.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Symbol related functions header
+ * @details
+ * @version 0.1
+ * @date 2021-06-09
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//			        Structures		            //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Save the local function symbols' description
+ *
+ */
+typedef struct _LOCAL_FUNCTION_DESCRIPTION
+{
+    std::string ObjectName;
+    UINT32      ObjectSize;
+
+} LOCAL_FUNCTION_DESCRIPTION, *PLOCAL_FUNCTION_DESCRIPTION;
+
+//////////////////////////////////////////////////
+//			    	    Pdbex                   //
+//////////////////////////////////////////////////
+
+#define PDBEX_DEFAULT_CONFIGURATION "-j- -k- -e n -i"
+
+//////////////////////////////////////////////////
+//			 For symbol (pdb) parsing		    //
+//////////////////////////////////////////////////
+
+VOID
+SymbolBuildAndShowSymbolTable();
+
+BOOLEAN
+SymbolShowFunctionNameBasedOnAddress(UINT64 Address, PUINT64 UsedBaseAddress);
+
+BOOLEAN
+SymbolLoadOrDownloadSymbols(BOOLEAN IsDownload, BOOLEAN SilentLoad);
+
+BOOLEAN
+SymbolConvertNameOrExprToAddress(const string & TextToConvert, PUINT64 Result);
+
+BOOLEAN
+SymbolDeleteSymTable();
+
+BOOLEAN
+SymbolBuildSymbolTable(PMODULE_SYMBOL_DETAIL * BufferToStoreDetails,
+                       PUINT32                 StoredLength,
+                       UINT32                  UserProcessId,
+                       BOOLEAN                 SendOverSerial);
+
+BOOLEAN
+SymbolBuildAndUpdateSymbolTable(PMODULE_SYMBOL_DETAIL SymbolDetail);
+
+VOID
+SymbolInitialReload();
+
+BOOLEAN
+SymbolLocalReload(UINT32 UserProcessId);
+
+VOID
+SymbolPrepareDebuggerWithSymbolInfo(UINT32 UserProcessId);
+
+BOOLEAN
+SymbolReloadSymbolTableInDebuggerMode(UINT32 ProcessId);
+
+
+//..\bin\debug\headerAll\tests.h
+/**
+ * @file tests.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief headers for test functions
+ * @details
+ * @version 0.1
+ * @date 2020-05-27
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//					Constants                   //
+//////////////////////////////////////////////////
+
+/**
+ * @brief exe name of test process
+ *
+ */
+#define TEST_PROCESS_NAME "hyperdbg-test.exe"
+
+//////////////////////////////////////////////////
+//					Functions                   //
+//////////////////////////////////////////////////
+
+BOOLEAN
+CreateProcessAndOpenPipeConnection(PHANDLE ConnectionPipeHandle,
+                                   PHANDLE ThreadHandle,
+                                   PHANDLE ProcessHandle);
+VOID
+CloseProcessAndClosePipeConnection(HANDLE ConnectionPipeHandle,
+                                   HANDLE ThreadHandle,
+                                   HANDLE ProcessHandle);
+
+
+//..\bin\debug\headerAll\transparency.h
+/**
+ * @file transparency.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief headers for test functions
+ * @details
+ * @version 0.1
+ * @date 2020-07-30
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//				  Definitions                   //
+//////////////////////////////////////////////////
+
+/**
+ * @brief Number of tests for each instruction sets
+ * @details used to generate test cases for rdts+cpuid+rdtsc
+ * and rdtsc+rdtsc commands
+ */
+#define TestCount 1000
+
+//////////////////////////////////////////////////
+//				    Functions                   //
+//////////////////////////////////////////////////
+
+void
+GuassianGenerateRandom(vector<double> Data, UINT64 * AverageOfData, UINT64 * StandardDeviationOfData, UINT64 * MedianOfData);
+
+BOOLEAN
+TransparentModeCheckHypervisorPresence(UINT64 * Average,
+                                       UINT64 * StandardDeviation,
+                                       UINT64 * Median);
+
+BOOLEAN
+TransparentModeCheckRdtscpVmexit(UINT64 * Average,
+                                 UINT64 * StandardDeviation,
+                                 UINT64 * Median);
+
+double
+Randn(double mu, double sigma);
+
+double
+Median(vector<double> Cases);
+
+unsigned long long
+TransparentModeRdtscDiffVmexit();
+
+unsigned long long
+TransparentModeRdtscVmexitTracing();
+
+
+//..\bin\debug\headerAll\ud.h
+/**
+ * @file ud.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief headers for user-mode debugging routines
+ * @details
+ * @version 0.1
+ * @date 2021-12-28
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//		            Definitions                 //
+//////////////////////////////////////////////////
+
+#define DbgWaitForUserResponse(UserSyncObjectId)                          \
+    do                                                                    \
+    {                                                                     \
+        DEBUGGER_SYNCRONIZATION_EVENTS_STATE * SyncronizationObject =     \
+            &g_UserSyncronizationObjectsHandleTable[UserSyncObjectId];    \
+                                                                          \
+        SyncronizationObject->IsOnWaitingState = TRUE;                    \
+        WaitForSingleObject(SyncronizationObject->EventHandle, INFINITE); \
+    } while (FALSE);
+
+#define DbgReceivedUserResponse(UserSyncObjectId)                      \
+    do                                                                 \
+    {                                                                  \
+        DEBUGGER_SYNCRONIZATION_EVENTS_STATE * SyncronizationObject =  \
+            &g_UserSyncronizationObjectsHandleTable[UserSyncObjectId]; \
+                                                                       \
+        SyncronizationObject->IsOnWaitingState = FALSE;                \
+        SetEvent(SyncronizationObject->EventHandle);                   \
+    } while (FALSE);
+
+//////////////////////////////////////////////////
+//            	    Structures                  //
+//////////////////////////////////////////////////
+
+/**
+ * @brief structures related to current thread debugging
+ * state
+ *
+ */
+typedef struct _ACTIVE_DEBUGGING_PROCESS
+{
+    BOOLEAN    IsActive;
+    UINT64     ProcessDebuggingToken;
+    UINT32     ProcessId;
+    UINT32     ThreadId;
+    BOOLEAN    IsPaused;
+    GUEST_REGS Registers; // thread registers
+    UINT64     Context;   // $context
+    BOOLEAN    Is32Bit;
+} ACTIVE_DEBUGGING_PROCESS, *PACTIVE_DEBUGGING_PROCESS;
+
+//////////////////////////////////////////////////
+//            	    Functions                  //
+//////////////////////////////////////////////////
+
+VOID
+UdInitializeUserDebugger();
+
+VOID
+UdUninitializeUserDebugger();
+
+VOID
+UdRemoveActiveDebuggingProcess(BOOLEAN DontSwitchToNewProcess);
+
+VOID
+UdHandleUserDebuggerPausing(PDEBUGGEE_UD_PAUSED_PACKET PausePacket);
+
+VOID
+UdContinueDebuggee(UINT64 ProcessDetailToken);
+
+VOID
+UdSendStepPacketToDebuggee(UINT64 ThreadDetailToken, UINT32 TargetThreadId, DEBUGGER_REMOTE_STEPPING_REQUEST StepType);
+
+VOID
+UdSetActiveDebuggingProcess(UINT64  DebuggingId,
+                            UINT32  ProcessId,
+                            UINT32  ThreadId,
+                            BOOLEAN Is32Bit,
+                            BOOLEAN IsPaused);
+BOOLEAN
+UdSetActiveDebuggingThreadByPidOrTid(UINT32 TargetPidOrTid, BOOLEAN IsTid);
+
+BOOLEAN
+UdSetActiveDebuggingThreadByPidOrTid(UINT32 TargetPidOrTid, BOOLEAN IsTid);
+
+BOOLEAN
+UdShowListActiveDebuggingProcessesAndThreads();
+
+BOOL
+UdListProcessThreads(DWORD OwnerPID);
+
+BOOLEAN
+UdCheckThreadByProcessId(DWORD Pid, DWORD Tid);
+
+BOOLEAN
+UdAttachToProcess(UINT32        TargetPid,
+                  const WCHAR * TargetFileAddress,
+                  WCHAR *       CommandLine,
+                  BOOLEAN       RunCallbackAtTheFirstInstruction);
+
+BOOLEAN
+UdKillProcess(UINT32 TargetPid);
+
+BOOLEAN
+UdDetachProcess(UINT32 TargetPid, UINT64 ProcessDetailToken);
+
+BOOLEAN
+UdPauseProcess(UINT64 ProcessDebuggingToken);
+
+

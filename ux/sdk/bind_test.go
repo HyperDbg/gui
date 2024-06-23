@@ -17,6 +17,7 @@ func TestMergeHeader(t *testing.T) {
 	Headers := orderedmap.New[string, bool]()
 	Modules := orderedmap.New[string, bool]()
 	Imports := orderedmap.New[string, bool]()
+	headerAll := orderedmap.New[string, bool]()
 
 	g := stream.NewGeneratedFile()
 	filepath.Walk("../bin", func(path string, info fs.FileInfo, err error) error {
@@ -36,6 +37,8 @@ func TestMergeHeader(t *testing.T) {
 				Imports.Set(path, true)
 			case strings.Contains(path, "Modules"):
 				Modules.Set(path, true)
+			case strings.Contains(path, "headerAll"):
+				headerAll.Set(path, true)
 			}
 		}
 		return err
@@ -61,6 +64,9 @@ func TestMergeHeader(t *testing.T) {
 		fnDo(s)
 	}
 	for _, s := range Imports.Keys() {
+		fnDo(s)
+	}
+	for _, s := range headerAll.Keys() {
 		fnDo(s)
 	}
 	stream.WriteBinaryFile("merged_headers.h", g.Buffer)
