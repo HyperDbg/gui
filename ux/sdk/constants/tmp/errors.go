@@ -12,13 +12,13 @@ const (
 func (k ErrorsKind) String() string {
 	switch k {
 	case 0:
-		return "ERROR_SUCCESS"
+		return "ErrorSuccess"
 	case 1:
-		return "ERROR_INVALID_FUNCTION"
+		return "ErrorInvalidFunction"
 	case 2:
-		return "ERROR_FILE_NOT_FOUND"
+		return "ErrorFileNotFound"
 	case 3:
-		return "ERROR_PATH_NOT_FOUND"
+		return "ErrorPathNotFound"
 	default:
 		return "unknown"
 	}

@@ -12,13 +12,13 @@ const (
 func (k NtstatusKind) String() string {
 	switch k {
 	case 0x00000000:
-		return "STATUS_SUCCESS"
+		return "StatusSuccess"
 	case 0x00000001:
-		return "STATUS_WAIT_1"
+		return "StatusWait1"
 	case 0x00000002:
-		return "STATUS_WAIT_2"
+		return "StatusWait2"
 	case 0x00000003:
-		return "STATUS_WAIT_3"
+		return "StatusWait3"
 	default:
 		return "unknown"
 	}

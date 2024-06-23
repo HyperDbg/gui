@@ -12,13 +12,13 @@ const (
 func (k IoctlKind) String() string {
 	switch k {
 	case 0x00120004:
-		return "MONITOR_IOCTL_ENABLE_MONITOR"
+		return "MonitorIoctlEnableMonitor"
 	case 0x00120008:
-		return "MONITOR_IOCTL_DISABLE_MONITOR"
+		return "MonitorIoctlDisableMonitor"
 	case 0x000B0203:
-		return "IOCTL_INTERNAL_KEYBOARD_CONNECT"
+		return "IoctlInternalKeyboardConnect"
 	case 0x000B0403:
-		return "IOCTL_INTERNAL_KEYBOARD_DISCONNECT"
+		return "IoctlInternalKeyboardDisconnect"
 	default:
 		return "unknown"
 	}

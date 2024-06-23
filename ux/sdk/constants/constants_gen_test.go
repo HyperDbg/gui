@@ -54,7 +54,7 @@ func genConstants(fileName string) {
 	g.P("switch k {")
 	for _, p := range m.List() {
 		g.P("case ", p.Value, ":")
-		g.P("return ", strconv.Quote(p.Key)) // todo rename
+		g.P("return ", strconv.Quote(stream.ToCamelUpper(p.Key, false))) // todo rename
 	}
 	g.P("default:")
 	g.P("return \"unknown\"")
