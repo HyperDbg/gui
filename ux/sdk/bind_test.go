@@ -81,7 +81,7 @@ func TestBindMacros(t *testing.T) {
 
 	for _, p := range macros.List() {
 		if !m.Contains(p.Key) {
-			mylog.Warning(p.Key, p.Value)
+			// mylog.Warning(p.Key, p.Value)
 			macros.Delete(p.Key)
 			continue
 		}
@@ -147,6 +147,8 @@ func TestBindMacros(t *testing.T) {
 }
 
 func TestBindSdk(t *testing.T) {
+	TestMergeHeader(t)
+	TestBindMacros(t)
 	mylog.SetDebug(false)
 	mylog.Call(func() {
 		pkg := gengo.NewPackage("HPRDBGCTRL",
