@@ -66,7 +66,6 @@ func TestMergeHeader(t *testing.T) {
 	stream.WriteBinaryFile("merged_headers.h", g.Buffer)
 }
 
-// todo 复制驱动加载
 func TestBindMacros(t *testing.T) {
 	headerFile := "merged_headers.h"
 	macros := extractMacros(stream.NewBuffer(headerFile).ToLines())
