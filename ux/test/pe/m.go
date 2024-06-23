@@ -9,6 +9,6 @@ import (
 func main() {
 	return
 	app.Run("pe", func(w *unison.Window) {
-		ux.LayoutPeView("D:\\workspace\\workspace\\branch\\gui\\bin\\debug\\HPRDBGCTRL.dll", w.Content())
+		ux.LayoutPeView("ux\\bin\\debug\\HPRDBGCTRL.dll", w.Content())
 	})
 }
