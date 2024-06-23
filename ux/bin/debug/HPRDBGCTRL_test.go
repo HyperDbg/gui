@@ -25,7 +25,7 @@ func TestSdk(t *testing.T) {
 
 		HyperDbgInstallVmmDriver()
 		// HyperDbgStartVmmDriver()
-		//RemoteConnectionConnect todo need export into dll
+		// RemoteConnectionConnect todo need export into dll
 
 		// missing connection local or start ?
 		HyperDbgLoadVmm()

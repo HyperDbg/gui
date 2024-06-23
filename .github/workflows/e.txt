@@ -1,0 +1,5 @@
+v1.0.0-pre.1
+v2.3.4-pre.2
+v3.1.2-pre.alpha
+v4.5.6-pre.beta
+v5.0.0-pre.rc1

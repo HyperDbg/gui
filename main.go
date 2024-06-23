@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/stream"
-	"github.com/ddkwork/hyperdbgui/ux"
 	"io/fs"
 	"os"
 	"path/filepath"
+
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/stream"
+	"github.com/ddkwork/hyperdbgui/ux"
 )
 
 //go:generate go build .
@@ -16,7 +17,7 @@ func main() {
 	ux.Run()
 }
 
-func Release() { //todo let sdk work first
+func Release() { // todo let sdk work first
 	// build HyperDbg
 	stream.RunCommand("git clone --recursive https://github.com/HyperDbg/HyperDbg.git")
 	stream.RunCommand("HyperDbg/utils/msvc-build.bat")
@@ -33,7 +34,7 @@ func Release() { //todo let sdk work first
 	stream.RunCommand("go build .")
 	stream.CopyFile("hyperdbgui.exe", "bin/debug")
 
-	//release to github
+	// release to github
 	stream.RunCommand("tar -zcvf hyperdbgui.tar.gz bin/debug")
 	mylog.Todo("now post to github release use action")
 

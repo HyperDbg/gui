@@ -1,0 +1,76 @@
+name: Pre-release HyperDbg and GUI
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*-pre.*'
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Go unit tests
+        run: go test ./...
+
+  build-and-release:
+    runs-on: windows-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Clone HyperDbg repository
+        run: git clone --recursive https://github.com/HyperDbg/HyperDbg.git
+
+      - name: Build HyperDbg
+        run: HyperDbg/utils/msvc-build.bat
+
+      - name: Remove unnecessary files
+        run: |
+          Get-ChildItem -Path bin/debug -Recurse | Where-Object { $_.Extension -in @(".pdb", ".exp", ".lib") } | Remove-Item -Force
+
+      - name: Build GUI
+        run: go build .
+
+      - name: Copy GUI executable to debug directory
+        run: Copy-Item hyperdbgui.exe bin/debug
+
+      - name: Create release archive
+        run: tar -zcvf hyperdbgui.tar.gz bin/debug
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: hyperdbgui-prerelease
+          path: hyperdbgui.tar.gz
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Pre-release ${{ github.ref }}
+          draft: false
+          prerelease: true
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./hyperdbgui.tar.gz
+          asset_name: hyperdbgui.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Clean up
+        run: Remove-Item -Recurse -Force bin
