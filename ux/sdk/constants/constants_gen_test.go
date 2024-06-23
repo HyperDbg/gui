@@ -6,14 +6,18 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ddkwork/golibrary/mylog"
+
 	"github.com/ddkwork/golibrary/stream"
 	"github.com/ddkwork/golibrary/stream/orderedmap"
 )
 
 func TestGenConstants(t *testing.T) {
-	genConstants("errors.txt")
-	genConstants("ioctl.txt")
-	genConstants("ntstatus.txt")
+	mylog.Call(func() {
+		genConstants("errors.txt")
+		genConstants("ioctl.txt")
+		genConstants("ntstatus.txt")
+	})
 }
 
 func genConstants(fileName string) {
