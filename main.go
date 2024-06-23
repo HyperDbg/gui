@@ -16,7 +16,7 @@ func main() {
 	ux.Run()
 }
 
-func Release() {
+func Release() { //todo let sdk work first
 	// build release
 	stream.RunCommand("git clone --recursive https://github.com/HyperDbg/HyperDbg.git")
 	stream.RunCommand("HyperDbg/utils/msvc-build.bat")
