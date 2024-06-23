@@ -24,7 +24,7 @@ func genConstants(fileName string) {
 	m := orderedmap.New[string, string]()
 	for i, s := range stream.NewBuffer(fileName).ToLines() {
 		if i == 4 {
-			// break // test
+			break // test
 		}
 		split := strings.Split(s, " ")
 		v := split[1]
@@ -53,8 +53,8 @@ func genConstants(fileName string) {
 	g.P("func (k ", kind, ") String() string {")
 	g.P("switch k {")
 	for _, p := range m.List() {
-		g.P("case ", p.Key, ":")
-		g.P("return ", strconv.Quote(p.Value)) // todo rename
+		g.P("case ", p.Value, ":")
+		g.P("return ", strconv.Quote(p.Key)) // todo rename
 	}
 	g.P("default:")
 	g.P("return \"unknown\"")
