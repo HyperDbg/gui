@@ -1,19 +1,28 @@
 package HPRDBGCTRL
 
 var (
-	NORMAL_PAGE_SIZE                                                                                                     = 4096
 	PAGE_SIZE                                                                                                            = 4096
+	WCHAR_MIN                                                                                                            = 0
+	WCHAR_MAX                                                                                                            = 65535
 	MAX_PATH                                                                                                             = 260
-	UPPER_56_BITS                                                                                                        = 0xffffffffffffff00
-	UPPER_48_BITS                                                                                                        = 0xffffffffffff0000
-	UPPER_32_BITS                                                                                                        = 0xffffffff00000000
-	LOWER_32_BITS                                                                                                        = 0x00000000ffffffff
-	LOWER_16_BITS                                                                                                        = 0x000000000000ffff
-	LOWER_8_BITS                                                                                                         = 0x00000000000000ff
-	SECOND_LOWER_8_BITS                                                                                                  = 0x000000000000ff00
-	UPPER_48_BITS_AND_LOWER_8_BITS                                                                                       = 0xffffffffffff00ff
+	NULL_ZERO                                                                                                            = 0
+	NULL64_ZERO                                                                                                          = 0
+	FALSE                                                                                                                = 0
+	TRUE                                                                                                                 = 1
+	UPPER_56_BITS                                                                                                        = uint64(0xffffffffffffff00)
+	UPPER_48_BITS                                                                                                        = uint64(0xffffffffffff0000)
+	UPPER_32_BITS                                                                                                        = uint64(0xffffffff00000000)
+	LOWER_32_BITS                                                                                                        = uint64(0x00000000ffffffff)
+	LOWER_16_BITS                                                                                                        = uint64(0x000000000000ffff)
+	LOWER_8_BITS                                                                                                         = uint64(0x00000000000000ff)
+	SECOND_LOWER_8_BITS                                                                                                  = uint64(0x000000000000ff00)
+	UPPER_48_BITS_AND_LOWER_8_BITS                                                                                       = uint64(0xffffffffffff00ff)
+	VERSION_MAJOR                                                                                                        = 1
+	VERSION_MINOR                                                                                                        = 0
+	VERSION_PATCH                                                                                                        = 0
 	MaximumPacketsCapacity                                                                                               = 1000
 	MaximumPacketsCapacityPriority                                                                                       = 50
+	NORMAL_PAGE_SIZE                                                                                                     = 4096 // PAGE_SIZE
 	PacketChunkSize                                                                                                      = NORMAL_PAGE_SIZE
 	MaxSerialPacketSize                                                                                                  = 10 * NORMAL_PAGE_SIZE
 	DbgPrintLimitation                                                                                                   = 512
@@ -95,7 +104,7 @@ var (
 	MAX_STACK_BUFFER_COUNT                                                                                               = 128
 	MAX_VAR_COUNT                                                                                                        = 512
 	MAX_FUNCTION_NAME_LENGTH                                                                                             = 32
-	DEBUGGER_MODIFY_EVENTS_APPLY_TO_ALL_TAG                                                                              = 0xffffffffffffffff
+	DEBUGGER_MODIFY_EVENTS_APPLY_TO_ALL_TAG                                                                              = uint64(0xffffffffffffffff)
 	DISASSEMBLY_MAXIMUM_DISTANCE_FROM_OBJECT_NAME                                                                        = 0xffff
 	DEBUGGER_READ_AND_WRITE_ON_MSR_APPLY_ALL_CORES                                                                       = 0xffffffff
 	DEBUGGER_DEBUGGEE_IS_RUNNING_NO_CORE                                                                                 = 0xffffffff
