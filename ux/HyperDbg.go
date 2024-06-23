@@ -50,7 +50,7 @@ type (
 		pe     *widget.Tab
 		log    *widget.Tab
 		notes  *widget.Tab
-		breakp *widget.Tab
+		breaks *widget.Tab
 		memory *widget.Tab
 		stack  *widget.Tab
 		seh    *widget.Tab
@@ -71,7 +71,7 @@ func (p *Page) Elems() []*widget.Tab {
 		p.pe,
 		p.log,
 		p.notes,
-		p.breakp,
+		p.breaks,
 		p.memory,
 		p.stack,
 		p.seh,
@@ -121,7 +121,7 @@ func NewPage() *Page {
 		pe:     widget.NewTab("peView", "", false, LayoutPeView(path, dock)),
 		log:    widget.NewTab("log", "", false, LayoutLog(dock)),
 		notes:  widget.NewTab("notes", "", false, LayoutNotes(dock)),
-		breakp: widget.NewTab("break", "", false, LayoutBreak(dock)),
+		breaks: widget.NewTab("break", "", false, LayoutBreak(dock)),
 		memory: widget.NewTab("memory", "", false, LayoutMemory(dock)),
 		stack:  widget.NewTab("stack", "", false, LayoutStack(dock)),
 		seh:    widget.NewTab("seh", "", false, LayoutSeh(dock)),
