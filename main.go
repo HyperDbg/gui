@@ -30,6 +30,6 @@ func Release() {
 	})
 	mylog.Todo("remove outer files or dirs")
 	stream.RunCommand("tar -zcvf hyperdbgui.tar.gz bin/debug")
-	mylog.Todo("now post to github release")
+	mylog.Todo("now post to github release use action")
 	mylog.Check(os.RemoveAll("bin"))
 }
