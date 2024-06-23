@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-	return
 	app.Run("pe", func(w *unison.Window) {
 		ux.LayoutPeView("ux\\bin\\debug\\HPRDBGCTRL.dll", w.Content())
 	})

@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-	return
 	app.Run("asm", func(w *unison.Window) {
 		ux.LayoutDisassemblyTable("ux\\bin\\debug\\hyperdbg-cli.exe", w.Content())
 	})

@@ -28,7 +28,7 @@ var pageIco embed.FS
 
 func Run() {
 	app.RunWithIco("HyperDbg", mainIcons, func(w *unison.Window) {
-		pages := NewPage()
+		pages := NewPage(w.Content())
 		w.Content().FileDropCallback = func(files []string) {
 			switch filepath.Ext(files[0]) {
 			case ".exe", ".dll", ".sys":
@@ -87,9 +87,6 @@ func (p *Page) Elems() []*widget.Tab {
 }
 
 func (p *Page) Layout(parent unison.Paneler) unison.Paneler {
-	t := newToolbar()
-	widget.NewToolBar(parent, t.Elems()...) // make toolbar
-
 	///make tabs
 	p.dock.DockTo(p.cpu, nil, side.Left)
 	parent.AsPanel().AddChild(p.dock)
@@ -104,8 +101,11 @@ func (p *Page) Layout(parent unison.Paneler) unison.Paneler {
 	return nil
 }
 
-func NewPage() *Page {
+func NewPage(parent unison.Paneler) *Page {
+	t := newToolbar()
+	widget.NewToolBar(parent, t.Elems()...)
 	dock := unison.NewDock()
+	// toolBar.AsPanel().AddChild(dock)
 	dock.AsPanel().SetLayoutData(&unison.FlexLayoutData{
 		HSpan:  1,
 		VSpan:  1,
