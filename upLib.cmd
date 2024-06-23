@@ -1,2 +1,0 @@
-go get github.com/ddkwork/app@d6e0f072731899087b5fc507e4d4c6fd28321624
-pause
