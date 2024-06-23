@@ -24,14 +24,14 @@ func genConstants(fileName string) {
 	m := orderedmap.New[string, string]()
 	for i, s := range stream.NewBuffer(fileName).ToLines() {
 		if i == 4 {
-			break // test
+			// break // test
 		}
 		split := strings.Split(s, " ")
 		v := split[1]
 		if fileName == "ioctl.txt" {
 			v = "0x" + v
 		}
-		m.Set(split[0], v)
+		m.Set(stream.ToCamelUpper(split[0], false), v)
 	}
 
 	kind := stream.ToCamelUpper(stream.BaseName(fileName), false) + "Kind"
@@ -54,7 +54,7 @@ func genConstants(fileName string) {
 	g.P("switch k {")
 	for _, p := range m.List() {
 		g.P("case ", p.Value, ":")
-		g.P("return ", strconv.Quote(stream.ToCamelUpper(p.Key, false))) // todo rename
+		g.P("return ", strconv.Quote(stream.ToCamelUpper(p.Key, false)))
 	}
 	g.P("default:")
 	g.P("return \"unknown\"")
