@@ -1,8 +1,9 @@
 package hookApiMgr_test
 
 import (
-	"github.com/ddkwork/hyperdbgui/ux/plugin/scriptGen"
 	"testing"
+
+	"github.com/ddkwork/hyperdbgui/ux/plugin/scriptGen"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"

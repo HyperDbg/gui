@@ -16,7 +16,7 @@ func TestHyperDbgVmxSupportDetection(t *testing.T) {
 	// missing connection local or start ?
 	HyperDbgLoadVmm()
 
-	//unloading vmm driver before need wait 1 second?
+	// unloading vmm driver before need wait 1 second?
 	// HyperDbgStopVmmDriver()
 	HyperDbgUnloadVmm()
 	HyperDbgUninstallVmmDriver()
