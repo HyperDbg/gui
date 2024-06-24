@@ -211,6 +211,7 @@ typedef int rune;
 //typedef unsigned short wchar_t;
 
 typedef int bool ;
+typedef long LONG ;
 #define PVOID void*
 #define HANDLE void*
 #define PIRP void*//todo

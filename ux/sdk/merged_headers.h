@@ -21,6 +21,7 @@ typedef int rune;
 //typedef unsigned short wchar_t;
 
 typedef int bool ;
+typedef long LONG ;
 #define PVOID void*
 #define HANDLE void*
 #define PIRP void*//todo
@@ -489,9 +490,9 @@ typedef struct _DEBUGGER_REMOTE_PACKET
 //			 Version Information                //
 //////////////////////////////////////////////////
 
-#define VERSION_MAJOR 1
-#define VERSION_MINOR 0
-#define VERSION_PATCH 0
+#define VERSION_MAJOR 0
+#define VERSION_MINOR 9
+#define VERSION_PATCH 1
 
 //
 // Example of __DATE__ string: "Jul 27 2012"
@@ -2703,6 +2704,7 @@ typedef struct _HWDBG_PORT_INFORMATION_ITEMS
  * @brief The structure of script capabilities information in hwdbg
  *
  */
+#pragma pack(push, 4) // This is to make sure the structure is packed (without padding alignment)
 typedef struct _HWDBG_INSTANCE_INFORMATION
 {
     //
@@ -2710,7 +2712,10 @@ typedef struct _HWDBG_INSTANCE_INFORMATION
     //
     UINT32 version;                                    // Target version of HyperDbg (same as hwdbg)
     UINT32 maximumNumberOfStages;                      // Number of stages that this instance of hwdbg supports (NumberOfSupportedStages == 0 means script engine is disabled)
-    UINT32 scriptVariableLength;                       // maximum length of variables (and other script elements)
+    UINT32 scriptVariableLength;                       // Maximum length of variables (and other script elements)
+    UINT32 numberOfSupportedLocalVariables;            // Number of supported local variables
+    UINT32 numberOfSupportedGlobalVariables;           // Number of supported global variables
+    UINT32 numberOfSupportedTemporaryVariables;        // Number of supported temporary variables
     UINT32 maximumNumberOfSupportedGetScriptOperators; // Maximum supported GET operators in a single func
     UINT32 maximumNumberOfSupportedSetScriptOperators; // Maximum supported SET operators in a single func
     UINT32 sharedMemorySize;                           // Size of shared memory
@@ -2768,6 +2773,7 @@ typedef struct _HWDBG_INSTANCE_INFORMATION
     //
 
 } HWDBG_INSTANCE_INFORMATION, *PHWDBG_INSTANCE_INFORMATION;
+#pragma pack(pop) // This is to make sure the structure is packed (without padding alignment)
 
 /**
  * @brief The structure of script buffer in hwdbg
@@ -4621,63 +4627,6 @@ typedef struct _VMM_CALLBACKS
 } VMM_CALLBACKS, *PVMM_CALLBACKS;
 
 
-//..\bin\debug\SDK\Imports\HyperDbgCtrlImports.h
-/**
- * @file HyperDbgCtrlImports.h
- * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from controller interface
- * @version 0.2
- * @date 2023-02-02
- *
- * @copyright This project is released under the GNU Public License v3.
- *
- */
-#pragma once
-
-#ifdef HYPERDBG_HPRDBGCTRL
-#    define IMPORT_EXPORT_CTRL __declspec(dllexport)
-#else
-#    define IMPORT_EXPORT_CTRL __declspec(dllimport)
-#endif
-
-//
-// Header file of HPRDBGCTRL
-// Imports
-//
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-//
-// Support Detection
-//
-IMPORT_EXPORT_CTRL bool HyperDbgVmxSupportDetection();
-IMPORT_EXPORT_CTRL void HyperDbgReadVendorString(char *);
-
-//
-// VMM Module
-//
-IMPORT_EXPORT_CTRL int HyperDbgLoadVmm();
-IMPORT_EXPORT_CTRL int HyperDbgUnloadVmm();
-IMPORT_EXPORT_CTRL int HyperDbgInstallVmmDriver();
-IMPORT_EXPORT_CTRL int HyperDbgUninstallVmmDriver();
-IMPORT_EXPORT_CTRL int HyperDbgStopVmmDriver();
-
-//
-// General imports
-//
-IMPORT_EXPORT_CTRL int HyperDbgInterpreter(char * Command);
-IMPORT_EXPORT_CTRL void HyperDbgShowSignature();
-IMPORT_EXPORT_CTRL void HyperDbgSetTextMessageCallback(Callback handler);
-IMPORT_EXPORT_CTRL int HyperDbgScriptReadFileAndExecuteCommandline(int argc, char * argv[]);
-IMPORT_EXPORT_CTRL bool HyperDbgContinuePreviousCommand();
-IMPORT_EXPORT_CTRL bool HyperDbgCheckMultilineCommand(char * CurrentCommand, bool Reset);
-
-#ifdef __cplusplus
-}
-#endif
-
-
 //..\bin\debug\SDK\Imports\HyperDbgHyperLogImports.h
 /**
  * @file HyperDbgHyperLogImports.h
@@ -4738,11 +4687,11 @@ LogCallbackCheckIfBufferIsFull(BOOLEAN Priority);
 IMPORT_EXPORT_HYPERLOG BOOLEAN
 LogCallbackSendMessageToQueue(UINT32 OperationCode, BOOLEAN IsImmediateMessage, CHAR * LogMessage, UINT32 BufferLen, BOOLEAN Priority);
 
-IMPORT_EXPORT_HYPERLOG NTSTATUS
-LogRegisterEventBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogRegisterEventBasedNotification(PVOID TargetIrp);
 
-IMPORT_EXPORT_HYPERLOG NTSTATUS
-LogRegisterIrpBasedNotification(PDEVICE_OBJECT DeviceObject, PIRP Irp);
+IMPORT_EXPORT_HYPERLOG BOOLEAN
+LogRegisterIrpBasedNotification(PVOID TargetIrp, LONG * Status);
 
 
 //..\bin\debug\SDK\Imports\HyperDbgHyperLogIntrinsics.h
@@ -4912,11 +4861,11 @@ typedef enum _LOG_TYPE
                                             __VA_ARGS__)
 
 
-//..\bin\debug\SDK\Imports\HyperDbgRevImports.h
+//..\bin\debug\SDK\Imports\HyperDbgLibImports.h
 /**
- * @file HyperDbgRevImports.h
+ * @file HyperDbgLibImports.h
  * @author Sina Karvandi (sina@hyperdbg.org)
- * @brief Headers relating exported functions from reversing machine interface
+ * @brief Headers relating exported functions from controller interface
  * @version 0.2
  * @date 2023-02-02
  *
@@ -4925,8 +4874,14 @@ typedef enum _LOG_TYPE
  */
 #pragma once
 
+#ifdef HYPERDBG_LIBHYPERDBG
+#    define IMPORT_EXPORT_LIBHYPERDBG __declspec(dllexport)
+#else
+#    define IMPORT_EXPORT_LIBHYPERDBG __declspec(dllimport)
+#endif
+
 //
-// Header file of hpr
+// Header file of libhyperdbg
 // Imports
 //
 #ifdef __cplusplus
@@ -4934,10 +4889,52 @@ extern "C" {
 #endif
 
 //
-// Reversing Machine Module
+// Support Detection
 //
-__declspec(dllimport) int ReversingMachineStart();
-__declspec(dllimport) int ReversingMachineStop();
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_detect_vmx_support();
+
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_read_vendor_string(CHAR *);
+
+//
+// VMM Module
+//
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_load_vmm();
+
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_unload_vmm();
+
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_install_vmm_driver();
+
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_uninstall_vmm_driver();
+
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_stop_vmm_driver();
+
+//
+// General imports
+//
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_interpreter(CHAR * command);
+
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_show_signature();
+
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_set_text_message_callback(Callback handler);
+
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_script_read_file_and_execute_commandline(INT argc, CHAR * argv[]);
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_continue_previous_command();
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_check_multiline_command(CHAR * current_command, BOOLEAN reset);
 
 #ifdef __cplusplus
 }
@@ -4968,20 +4965,18 @@ extern "C" {
 //
 // Script engine
 //
-__declspec(dllimport) PSYMBOL_BUFFER
+__declspec(dllimport) PVOID
 ScriptEngineParse(char * str);
 __declspec(dllimport) void
-PrintSymbolBuffer(const PSYMBOL_BUFFER SymbolBuffer);
+PrintSymbolBuffer(const PVOID SymbolBuffer);
 __declspec(dllimport) void
-PrintSymbol(PSYMBOL Symbol);
+PrintSymbol(PVOID Symbol);
 __declspec(dllimport) void
-RemoveSymbolBuffer(PSYMBOL_BUFFER SymbolBuffer);
+RemoveSymbolBuffer(PVOID SymbolBuffer);
 __declspec(dllimport) BOOLEAN
 FuncGetNumberOfOperands(UINT64 FuncType, UINT32 * NumberOfGetOperands, UINT32 * NumberOfSetOperands);
 __declspec(dllimport) BOOLEAN
 ScriptEngineSetHwdbgInstanceInfo(HWDBG_INSTANCE_INFORMATION * InstancInfo);
-
-;
 
 //
 // pdb parser

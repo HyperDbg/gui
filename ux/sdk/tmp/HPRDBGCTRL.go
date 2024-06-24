@@ -657,12 +657,12 @@ type ScriptEngineVariablesList struct {
 	LocalVariablesList  *Uint64
 }
 type Cr3Type struct {
-	Anon267_5
+	Anon268_5
 }
-type Anon267_5 struct {
+type Anon268_5 struct {
 	Raw [1]int64
 }
-type Anon271_9 struct {
+type Anon272_9 struct {
 	Pcid            Uint64
 	PageFrameNumber Uint64
 	Reserved1       Uint64
@@ -754,10 +754,10 @@ type EptSingleHookUnhookingDetails struct {
 	PhysicalAddress                           SizeT
 	OriginalEntry                             Uint64
 }
-type Anon1568_9 struct {
+type Anon1569_9 struct {
 	Raw [1]int32
 }
-type Anon1570_5 struct {
+type Anon1571_5 struct {
 	// [Bits 3:0] Segment type.
 	Type Uint32
 	// [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
@@ -840,6 +840,9 @@ type HwdbgInstanceInformation struct {
 	Version                                    Uint32
 	maximumNumberOfStages                      Uint32
 	scriptVariableLength                       Uint32
+	numberOfSupportedLocalVariables            Uint32
+	numberOfSupportedGlobalVariables           Uint32
+	numberOfSupportedTemporaryVariables        Uint32
 	maximumNumberOfSupportedGetScriptOperators Uint32
 	maximumNumberOfSupportedSetScriptOperators Uint32
 	sharedMemorySize                           Uint32
@@ -1246,6 +1249,7 @@ type (
 	Rune               = int32
 	WintT              = int32
 	Bool               = int32
+	Long               = int64
 	SizeT              = uint64
 	PsizeT             = *uint64
 	TimeT              = uint64
@@ -1393,10 +1397,10 @@ type PdebuggerGeneralAction = *DebuggerGeneralAction
 type PdebuggerEventAndActionResult = *DebuggerEventAndActionResult
 
 // @brief The structure of port information (each item) in hwdbg
-type PhwdbgPortInformationItems = *HwdbgPortInformationItems
-
-// @brief The structure of script capabilities information in hwdbg
-type PhwdbgInstanceInformation = *HwdbgInstanceInformation
+type (
+	PhwdbgPortInformationItems = *HwdbgPortInformationItems
+	PhwdbgInstanceInformation  = *HwdbgInstanceInformation
+)
 
 // @brief The structure of script buffer in hwdbg
 type PhwdbgScriptBuffer = *HwdbgScriptBuffer
@@ -1642,23 +1646,10 @@ type VmmCallbackVmcallHandler = unsafe.Pointer
 // @brief Prototype of each function needed by VMM module
 type PvmmCallbacks = *VmmCallbacks
 
-var __imp_HyperDbgVmxSupportDetection bindlib.PreloadProc
+var __imp_LogInitialize bindlib.PreloadProc
 
 // Gengo init function.
 func init() {
-	__imp_HyperDbgVmxSupportDetection = GengoLibrary.ImportNow("HyperDbgVmxSupportDetection")
-	__imp_HyperDbgReadVendorString = GengoLibrary.ImportNow("HyperDbgReadVendorString")
-	__imp_HyperDbgLoadVmm = GengoLibrary.ImportNow("HyperDbgLoadVmm")
-	__imp_HyperDbgUnloadVmm = GengoLibrary.ImportNow("HyperDbgUnloadVmm")
-	__imp_HyperDbgInstallVmmDriver = GengoLibrary.ImportNow("HyperDbgInstallVmmDriver")
-	__imp_HyperDbgUninstallVmmDriver = GengoLibrary.ImportNow("HyperDbgUninstallVmmDriver")
-	__imp_HyperDbgStopVmmDriver = GengoLibrary.ImportNow("HyperDbgStopVmmDriver")
-	__imp_HyperDbgInterpreter = GengoLibrary.ImportNow("HyperDbgInterpreter")
-	__imp_HyperDbgShowSignature = GengoLibrary.ImportNow("HyperDbgShowSignature")
-	__imp_HyperDbgSetTextMessageCallback = GengoLibrary.ImportNow("HyperDbgSetTextMessageCallback")
-	__imp_HyperDbgScriptReadFileAndExecuteCommandline = GengoLibrary.ImportNow("HyperDbgScriptReadFileAndExecuteCommandline")
-	__imp_HyperDbgContinuePreviousCommand = GengoLibrary.ImportNow("HyperDbgContinuePreviousCommand")
-	__imp_HyperDbgCheckMultilineCommand = GengoLibrary.ImportNow("HyperDbgCheckMultilineCommand")
 	__imp_LogInitialize = GengoLibrary.ImportNow("LogInitialize")
 	__imp_LogUnInitialize = GengoLibrary.ImportNow("LogUnInitialize")
 	__imp_LogMarkAllAsRead = GengoLibrary.ImportNow("LogMarkAllAsRead")
@@ -1669,8 +1660,19 @@ func init() {
 	__imp_LogCallbackSendMessageToQueue = GengoLibrary.ImportNow("LogCallbackSendMessageToQueue")
 	__imp_LogRegisterEventBasedNotification = GengoLibrary.ImportNow("LogRegisterEventBasedNotification")
 	__imp_LogRegisterIrpBasedNotification = GengoLibrary.ImportNow("LogRegisterIrpBasedNotification")
-	__imp_ReversingMachineStart = GengoLibrary.ImportNow("ReversingMachineStart")
-	__imp_ReversingMachineStop = GengoLibrary.ImportNow("ReversingMachineStop")
+	__imp_hyperdbg_u_detect_vmx_support = GengoLibrary.ImportNow("hyperdbg_u_detect_vmx_support")
+	__imp_hyperdbg_u_read_vendor_string = GengoLibrary.ImportNow("hyperdbg_u_read_vendor_string")
+	__imp_hyperdbg_u_load_vmm = GengoLibrary.ImportNow("hyperdbg_u_load_vmm")
+	__imp_hyperdbg_u_unload_vmm = GengoLibrary.ImportNow("hyperdbg_u_unload_vmm")
+	__imp_hyperdbg_u_install_vmm_driver = GengoLibrary.ImportNow("hyperdbg_u_install_vmm_driver")
+	__imp_hyperdbg_u_uninstall_vmm_driver = GengoLibrary.ImportNow("hyperdbg_u_uninstall_vmm_driver")
+	__imp_hyperdbg_u_stop_vmm_driver = GengoLibrary.ImportNow("hyperdbg_u_stop_vmm_driver")
+	__imp_hyperdbg_u_interpreter = GengoLibrary.ImportNow("hyperdbg_u_interpreter")
+	__imp_hyperdbg_u_show_signature = GengoLibrary.ImportNow("hyperdbg_u_show_signature")
+	__imp_hyperdbg_u_set_text_message_callback = GengoLibrary.ImportNow("hyperdbg_u_set_text_message_callback")
+	__imp_hyperdbg_u_script_read_file_and_execute_commandline = GengoLibrary.ImportNow("hyperdbg_u_script_read_file_and_execute_commandline")
+	__imp_hyperdbg_u_continue_previous_command = GengoLibrary.ImportNow("hyperdbg_u_continue_previous_command")
+	__imp_hyperdbg_u_check_multiline_command = GengoLibrary.ImportNow("hyperdbg_u_check_multiline_command")
 	__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")
 	__imp_PrintSymbolBuffer = GengoLibrary.ImportNow("PrintSymbolBuffer")
 	__imp_PrintSymbol = GengoLibrary.ImportNow("PrintSymbol")
@@ -1969,8 +1971,8 @@ func init() {
 	bindlib.Validate((*GuestExtraRegisters)(nil), 0x20, 0x8, "Cs", 0x0, "Ds", 0x2, "Fs", 0x4, "Gs", 0x6, "Es", 0x8, "Ss", 0xa, "Rflags", 0x10, "Rip", 0x18)
 	bindlib.Validate((*ScriptEngineVariablesList)(nil), 0x18, 0x8, "TempList", 0x0, "GlobalVariablesList", 0x8, "LocalVariablesList", 0x10)
 	bindlib.Validate((*Cr3Type)(nil), 0x8, 0x8)
-	bindlib.Validate((*Anon267_5)(nil), 0x8, 0x8)
-	bindlib.Validate((*Anon271_9)(nil), 0x8, 0x8, "Pcid", 0xc, "PageFrameNumber", 0x30, "Reserved1", 0x3c, "Reserved_2", 0x3f, "PcidInvalidate", 0x40)
+	bindlib.Validate((*Anon268_5)(nil), 0x8, 0x8)
+	bindlib.Validate((*Anon272_9)(nil), 0x8, 0x8, "Pcid", 0xc, "PageFrameNumber", 0x30, "Reserved1", 0x3c, "Reserved_2", 0x3f, "PcidInvalidate", 0x40)
 	bindlib.Validate((*DebuggerRemotePacket)(nil), 0x18, 0x8, "Checksum", 0x0, "Indicator", 0x8, "TypeOfThePacket", 0x10, "RequestedActionOfThePacket", 0x14)
 	bindlib.Validate((*DebuggeeUserInputPacket)(nil), 0xc, 0x4, "CommandLen", 0x0, "IgnoreFinishedSignal", 0x4, "Result", 0x8)
 	bindlib.Validate((*DebuggeeEventAndActionHeaderForRemotePacket)(nil), 0x4, 0x4, "Length", 0x0)
@@ -1985,8 +1987,8 @@ func init() {
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 0x20, 0x8, "StartAddress", 0x0, "EndAddress", 0x8, "SetHookForRead", 0x10, "SetHookForWrite", 0x11, "SetHookForExec", 0x12, "MemoryType", 0x14, "Tag", 0x18)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 0x10, 0x8, "TargetAddress", 0x0, "HookFunction", 0x8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 0x18, 0x8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0x0, "RemoveBreakpointInterception", 0x1, "PhysicalAddress", 0x8, "OriginalEntry", 0x10)
-	bindlib.Validate((*Anon1568_9)(nil), 0x4, 0x4)
-	bindlib.Validate((*Anon1570_5)(nil), 0x4, 0x4, "Type", 0x4, "DescriptorType", 0x5, "DescriptorPrivilegeLevel", 0x7, "Present", 0x8, "Reserved1", 0xc, "AvailableBit", 0xd, "LongMode", 0xe, "DefaultBig", 0xf, "Granularity", 0x10, "Unusable", 0x11, "Reserved2", 0x20)
+	bindlib.Validate((*Anon1569_9)(nil), 0x4, 0x4)
+	bindlib.Validate((*Anon1571_5)(nil), 0x4, 0x4, "Type", 0x4, "DescriptorType", 0x5, "DescriptorPrivilegeLevel", 0x7, "Present", 0x8, "Reserved1", 0xc, "AvailableBit", 0xd, "LongMode", 0xe, "DefaultBig", 0xf, "Granularity", 0x10, "Unusable", 0x11, "Reserved2", 0x20)
 	bindlib.Validate((*VmxSegmentSelector)(nil), 0x18, 0x8, "Selector", 0x0, "Attributes", 0x4, "Limit", 0x8, "Base", 0x10)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 0x18, 0x8, "Tag", 0x0, "KernelStatus", 0x8, "TypeOfAction", 0x10, "IsEnabled", 0x14)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 0x10, 0x8, "KernelStatus", 0x0, "IsShortCircuiting", 0x8)
@@ -1995,8 +1997,8 @@ func init() {
 	bindlib.Validate((*DebuggerGeneralAction)(nil), 0x20, 0x8, "EventTag", 0x0, "ActionType", 0x8, "ImmediateMessagePassing", 0xc, "PreAllocatedBuffer", 0x10, "CustomCodeBufferSize", 0x14, "ScriptBufferSize", 0x18, "ScriptBufferPointer", 0x1c)
 	bindlib.Validate((*DebuggerEventAndActionResult)(nil), 0x8, 0x4, "IsSuccessful", 0x0, "Error", 0x4)
 	bindlib.Validate((*HwdbgPortInformationItems)(nil), 0x4, 0x4, "PortSize", 0x0)
-	bindlib.Validate((*HwdbgInstanceInformation)(nil), 0x38, 0x8, "Version", 0x0, "maximumNumberOfStages", 0x4, "scriptVariableLength", 0x8, "maximumNumberOfSupportedGetScriptOperators", 0xc, "maximumNumberOfSupportedSetScriptOperators", 0x10, "sharedMemorySize", 0x14, "debuggerAreaOffset", 0x18, "debuggeeAreaOffset", 0x1c, "numberOfPins", 0x20, "numberOfPorts", 0x24, "scriptCapabilities", 0x28, "bramAddrWidth", 0x30, "bramDataWidth", 0x34)
-	bindlib.Validate((*_HwdbgScriptCapabilities)(nil), 0x8, 0x8, "FuncOr", 0x1, "FuncXor", 0x2, "FuncAnd", 0x3, "FuncAsr", 0x4, "FuncAsl", 0x5, "FuncAdd", 0x6, "FuncSub", 0x7, "FuncMul", 0x8, "FuncDiv", 0x9, "FuncMod", 0xa, "FuncGt", 0xb, "FuncLt", 0xc, "FuncEgt", 0xd, "FuncElt", 0xe, "FuncEqual", 0xf, "FuncNeq", 0x10, "FuncJmp", 0x11, "FuncJz", 0x12, "FuncJnz", 0x13, "FuncMov", 0x14, "FuncPrintf", 0x15)
+	bindlib.Validate((*HwdbgInstanceInformation)(nil), 0x44, 0x4, "Version", 0x0, "maximumNumberOfStages", 0x4, "scriptVariableLength", 0x8, "numberOfSupportedLocalVariables", 0xc, "numberOfSupportedGlobalVariables", 0x10, "numberOfSupportedTemporaryVariables", 0x14, "maximumNumberOfSupportedGetScriptOperators", 0x18, "maximumNumberOfSupportedSetScriptOperators", 0x1c, "sharedMemorySize", 0x20, "debuggerAreaOffset", 0x24, "debuggeeAreaOffset", 0x28, "numberOfPins", 0x2c, "numberOfPorts", 0x30, "scriptCapabilities", 0x34, "bramAddrWidth", 0x3c, "bramDataWidth", 0x40)
+	bindlib.Validate((*_HwdbgScriptCapabilities)(nil), 0x8, 0x4, "FuncOr", 0x1, "FuncXor", 0x2, "FuncAnd", 0x3, "FuncAsr", 0x4, "FuncAsl", 0x5, "FuncAdd", 0x6, "FuncSub", 0x7, "FuncMul", 0x8, "FuncDiv", 0x9, "FuncMod", 0xa, "FuncGt", 0xb, "FuncLt", 0xc, "FuncEgt", 0xd, "FuncElt", 0xe, "FuncEqual", 0xf, "FuncNeq", 0x10, "FuncJmp", 0x11, "FuncJz", 0x12, "FuncJnz", 0x13, "FuncMov", 0x14, "FuncPrintf", 0x15)
 	bindlib.Validate((*HwdbgScriptBuffer)(nil), 0x4, 0x4, "scriptNumberOfSymbols", 0x0)
 	bindlib.Validate((*DebuggerReadPageTableEntriesDetails)(nil), 0x58, 0x8, "VirtualAddress", 0x0, "ProcessId", 0x8, "Pml4eVirtualAddress", 0x10, "Pml4eValue", 0x18, "PdpteVirtualAddress", 0x20, "PdpteValue", 0x28, "PdeVirtualAddress", 0x30, "PdeValue", 0x38, "PteVirtualAddress", 0x40, "PteValue", 0x48, "KernelStatus", 0x50)
 	bindlib.Validate((*DebuggerVa2paAndPa2vaCommands)(nil), 0x20, 0x8, "VirtualAddress", 0x0, "PhysicalAddress", 0x8, "ProcessId", 0x10, "IsVirtual2Physical", 0x14, "KernelStatus", 0x18)
@@ -2050,92 +2052,6 @@ func init() {
 	bindlib.Validate((*MessageTracingCallbacks)(nil), 0x18, 0x8, "VmxOperationCheck", 0x0, "CheckImmediateMessageSending", 0x8, "SendImmediateMessage", 0x10)
 	bindlib.Validate((*VmmCallbacks)(nil), 0xb0, 0x8, "LogCallbackPrepareAndSendMessageToQueueWrapper", 0x0, "LogCallbackSendMessageToQueue", 0x8, "LogCallbackSendBuffer", 0x10, "LogCallbackCheckIfBufferIsFull", 0x18, "VmmCallbackTriggerEvents", 0x20, "VmmCallbackSetLastError", 0x28, "VmmCallbackVmcallHandler", 0x30, "VmmCallbackNmiBroadcastRequestHandler", 0x38, "VmmCallbackQueryTerminateProtectedResource", 0x40, "VmmCallbackRestoreEptState", 0x48, "VmmCallbackCheckUnhandledEptViolations", 0x50, "DebuggingCallbackHandleBreakpointException", 0x58, "DebuggingCallbackHandleDebugBreakpointException", 0x60, "DebuggingCallbackConditionalPageFaultException", 0x68, "InterceptionCallbackTriggerCr3ProcessChange", 0x70, "BreakpointCheckAndHandleReApplyingBreakpoint", 0x78, "UdCheckForCommand", 0x80, "KdCheckAndHandleNmiCallback", 0x88, "VmmCallbackRegisteredMtfHandler", 0x90, "DebuggerCheckProcessOrThreadChange", 0x98, "AttachingHandleCr3VmexitsForThreadInterception", 0xa0, "KdQueryDebuggerQueryThreadOrProcessTracingDetailsByCoreId", 0xa8)
 }
-
-func HyperDbgVmxSupportDetection() bool {
-	__res := bindlib.CCall0(__imp_HyperDbgVmxSupportDetection.Addr())
-	return bindlib.UnmarshallSyscall[bool](__res)
-}
-
-var __imp_HyperDbgReadVendorString bindlib.PreloadProc
-
-func HyperDbgReadVendorString(*byte) {
-	bindlib.CCall1(__imp_HyperDbgReadVendorString.Addr(), bindlib.MarshallSyscall())
-}
-
-var __imp_HyperDbgLoadVmm bindlib.PreloadProc
-
-func HyperDbgLoadVmm() int32 {
-	__res := bindlib.CCall0(__imp_HyperDbgLoadVmm.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgUnloadVmm bindlib.PreloadProc
-
-func HyperDbgUnloadVmm() int32 {
-	__res := bindlib.CCall0(__imp_HyperDbgUnloadVmm.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgInstallVmmDriver bindlib.PreloadProc
-
-func HyperDbgInstallVmmDriver() int32 {
-	__res := bindlib.CCall0(__imp_HyperDbgInstallVmmDriver.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgUninstallVmmDriver bindlib.PreloadProc
-
-func HyperDbgUninstallVmmDriver() int32 {
-	__res := bindlib.CCall0(__imp_HyperDbgUninstallVmmDriver.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgStopVmmDriver bindlib.PreloadProc
-
-func HyperDbgStopVmmDriver() int32 {
-	__res := bindlib.CCall0(__imp_HyperDbgStopVmmDriver.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgInterpreter bindlib.PreloadProc
-
-func HyperDbgInterpreter(Command *byte) int32 {
-	__res := bindlib.CCall1(__imp_HyperDbgInterpreter.Addr(), bindlib.MarshallSyscall(Command))
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgShowSignature bindlib.PreloadProc
-
-func HyperDbgShowSignature() { bindlib.CCall0(__imp_HyperDbgShowSignature.Addr()) }
-
-var __imp_HyperDbgSetTextMessageCallback bindlib.PreloadProc
-
-func HyperDbgSetTextMessageCallback(handler Callback) {
-	bindlib.CCall1(__imp_HyperDbgSetTextMessageCallback.Addr(), bindlib.MarshallSyscall(handler))
-}
-
-var __imp_HyperDbgScriptReadFileAndExecuteCommandline bindlib.PreloadProc
-
-func HyperDbgScriptReadFileAndExecuteCommandline(argc int32, argv **byte) int32 {
-	__res := bindlib.CCall2(__imp_HyperDbgScriptReadFileAndExecuteCommandline.Addr(), bindlib.MarshallSyscall(argc), bindlib.MarshallSyscall(argv))
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgContinuePreviousCommand bindlib.PreloadProc
-
-func HyperDbgContinuePreviousCommand() bool {
-	__res := bindlib.CCall0(__imp_HyperDbgContinuePreviousCommand.Addr())
-	return bindlib.UnmarshallSyscall[bool](__res)
-}
-
-var __imp_HyperDbgCheckMultilineCommand bindlib.PreloadProc
-
-func HyperDbgCheckMultilineCommand(CurrentCommand *byte, Reset bool) bool {
-	__res := bindlib.CCall2(__imp_HyperDbgCheckMultilineCommand.Addr(), bindlib.MarshallSyscall(CurrentCommand), bindlib.MarshallSyscall(Reset))
-	return bindlib.UnmarshallSyscall[bool](__res)
-}
-
-var __imp_LogInitialize bindlib.PreloadProc
 
 // ///////////////////////////////////////////////
 func LogInitialize(MsgTracingCallbacks *MessageTracingCallbacks) Boolean {
@@ -2191,30 +2107,102 @@ func LogCallbackSendMessageToQueue(OperationCode Uint32, IsImmediateMessage Bool
 
 var __imp_LogRegisterEventBasedNotification bindlib.PreloadProc
 
-func LogRegisterEventBasedNotification(DeviceObject unsafe.Pointer, Irp unsafe.Pointer) Ntstatus {
-	__res := bindlib.CCall2(__imp_LogRegisterEventBasedNotification.Addr(), bindlib.MarshallSyscall(DeviceObject), bindlib.MarshallSyscall(Irp))
-	return bindlib.UnmarshallSyscall[Ntstatus](__res)
+func LogRegisterEventBasedNotification(TargetIrp unsafe.Pointer) Boolean {
+	__res := bindlib.CCall1(__imp_LogRegisterEventBasedNotification.Addr(), bindlib.MarshallSyscall(TargetIrp))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_LogRegisterIrpBasedNotification bindlib.PreloadProc
 
-func LogRegisterIrpBasedNotification(DeviceObject unsafe.Pointer, Irp unsafe.Pointer) Ntstatus {
-	__res := bindlib.CCall2(__imp_LogRegisterIrpBasedNotification.Addr(), bindlib.MarshallSyscall(DeviceObject), bindlib.MarshallSyscall(Irp))
-	return bindlib.UnmarshallSyscall[Ntstatus](__res)
+func LogRegisterIrpBasedNotification(TargetIrp unsafe.Pointer, Status *Long) Boolean {
+	__res := bindlib.CCall2(__imp_LogRegisterIrpBasedNotification.Addr(), bindlib.MarshallSyscall(TargetIrp), bindlib.MarshallSyscall(Status))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
-var __imp_ReversingMachineStart bindlib.PreloadProc
+var __imp_hyperdbg_u_detect_vmx_support bindlib.PreloadProc
 
-func ReversingMachineStart() int32 {
-	__res := bindlib.CCall0(__imp_ReversingMachineStart.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
+func HyperdbgUDetectVmxSupport() Boolean {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_detect_vmx_support.Addr())
+	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
-var __imp_ReversingMachineStop bindlib.PreloadProc
+var __imp_hyperdbg_u_read_vendor_string bindlib.PreloadProc
 
-func ReversingMachineStop() int32 {
-	__res := bindlib.CCall0(__imp_ReversingMachineStop.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
+func HyperdbgUReadVendorString(*Char) {
+	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall())
+}
+
+var __imp_hyperdbg_u_load_vmm bindlib.PreloadProc
+
+func HyperdbgULoadVmm() Int {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_load_vmm.Addr())
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_unload_vmm bindlib.PreloadProc
+
+func HyperdbgUUnloadVmm() Int {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_unload_vmm.Addr())
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_install_vmm_driver bindlib.PreloadProc
+
+func HyperdbgUInstallVmmDriver() Int {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_install_vmm_driver.Addr())
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_uninstall_vmm_driver bindlib.PreloadProc
+
+func HyperdbgUUninstallVmmDriver() Int {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_uninstall_vmm_driver.Addr())
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_stop_vmm_driver bindlib.PreloadProc
+
+func HyperdbgUStopVmmDriver() Int {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_stop_vmm_driver.Addr())
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_interpreter bindlib.PreloadProc
+
+func HyperdbgUInterpreter(command *Char) Int {
+	__res := bindlib.CCall1(__imp_hyperdbg_u_interpreter.Addr(), bindlib.MarshallSyscall(command))
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_show_signature bindlib.PreloadProc
+
+func HyperdbgUShowSignature() { bindlib.CCall0(__imp_hyperdbg_u_show_signature.Addr()) }
+
+var __imp_hyperdbg_u_set_text_message_callback bindlib.PreloadProc
+
+func HyperdbgUSetTextMessageCallback(handler Callback) {
+	bindlib.CCall1(__imp_hyperdbg_u_set_text_message_callback.Addr(), bindlib.MarshallSyscall(handler))
+}
+
+var __imp_hyperdbg_u_script_read_file_and_execute_commandline bindlib.PreloadProc
+
+func HyperdbgUScriptReadFileAndExecuteCommandline(argc Int, argv **Char) Int {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_script_read_file_and_execute_commandline.Addr(), bindlib.MarshallSyscall(argc), bindlib.MarshallSyscall(argv))
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_continue_previous_command bindlib.PreloadProc
+
+func HyperdbgUContinuePreviousCommand() Boolean {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_continue_previous_command.Addr())
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_check_multiline_command bindlib.PreloadProc
+
+func HyperdbgUCheckMultilineCommand(current_command *Char, reset Boolean) Boolean {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_check_multiline_command.Addr(), bindlib.MarshallSyscall(current_command), bindlib.MarshallSyscall(reset))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_ScriptEngineParse bindlib.PreloadProc
@@ -4116,34 +4104,34 @@ func BroadcastDisableEferSyscallEventsOnAllProcessors() {
 	bindlib.CCall0(__imp_BroadcastDisableEferSyscallEventsOnAllProcessors.Addr())
 }
 
-func (s Anon267_5) Flags() Uint64 {
+func (s Anon268_5) Flags() Uint64 {
 	return bindlib.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon267_5) SetFlags(v Uint64) {
+func (s *Anon268_5) SetFlags(v Uint64) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon267_5) Fields() Anon271_9 {
-	return bindlib.ReadBitcast[Anon271_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon268_5) Fields() Anon272_9 {
+	return bindlib.ReadBitcast[Anon272_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon267_5) SetFields(v Anon271_9) {
+func (s *Anon268_5) SetFields(v Anon272_9) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1568_9) Fields() Anon1570_5 {
-	return bindlib.ReadBitcast[Anon1570_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon1569_9) Fields() Anon1571_5 {
+	return bindlib.ReadBitcast[Anon1571_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1568_9) SetFields(v Anon1570_5) {
+func (s *Anon1569_9) SetFields(v Anon1571_5) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1568_9) AsUInt() Uint32 {
+func (s Anon1569_9) AsUInt() Uint32 {
 	return bindlib.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1568_9) SetAsUInt(v Uint32) {
+func (s *Anon1569_9) SetAsUInt(v Uint32) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }

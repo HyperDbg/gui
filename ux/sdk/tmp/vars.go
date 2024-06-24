@@ -17,9 +17,9 @@ var (
 	LOWER_8_BITS                                                                                                         = uint64(0x00000000000000ff)
 	SECOND_LOWER_8_BITS                                                                                                  = uint64(0x000000000000ff00)
 	UPPER_48_BITS_AND_LOWER_8_BITS                                                                                       = uint64(0xffffffffffff00ff)
-	VERSION_MAJOR                                                                                                        = 1
-	VERSION_MINOR                                                                                                        = 0
-	VERSION_PATCH                                                                                                        = 0
+	VERSION_MAJOR                                                                                                        = 0
+	VERSION_MINOR                                                                                                        = 9
+	VERSION_PATCH                                                                                                        = 1
 	MaximumPacketsCapacity                                                                                               = 1000
 	MaximumPacketsCapacityPriority                                                                                       = 50
 	NORMAL_PAGE_SIZE                                                                                                     = 4096 // PAGE_SIZE
