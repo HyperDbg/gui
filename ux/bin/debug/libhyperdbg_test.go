@@ -20,6 +20,7 @@ func TestSdk(t *testing.T) {
 		ConnectLocalDebugger()
 		LoadVmm()
 
+		// time.Sleep(1 * time.Second) // wait for debugger to connect
 		// todo:
 		// start debugger
 		// read memory(? address buffer for disassembly)
