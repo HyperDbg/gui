@@ -1,6 +1,10 @@
 package ux
 
-import "io"
+import (
+	"io"
+
+	"github.com/ddkwork/golibrary/mylog"
+)
 
 const pageSize = 1024 * 1024
 
@@ -40,7 +44,6 @@ func (p *PagedWriter) Bytes() []byte {
 	return out
 }
 
-/*
 func (p *PagedWriter) ToReader() *PagedReader {
 	return &PagedReader{src: p, curr: p.getPage(0)}
 }
@@ -51,9 +54,6 @@ func (p *PagedWriter) getPage(ipage int) []byte {
 	}
 	return p.pages[ipage][:]
 }
-*/
-
-// -----------------------------------------------------------------------------
 
 type PagedReader struct {
 	src   *PagedWriter
@@ -63,11 +63,9 @@ type PagedReader struct {
 }
 
 func (p *PagedReader) WriteTo(w io.Writer) (written int64, err error) {
-	n, err := w.Write(p.curr[p.off:])
+	n := mylog.Check2(w.Write(p.curr[p.off:]))
 	written = int64(n)
-	if err != nil {
-		return
-	}
+
 	src, ipage := p.src, p.ipage
 	for {
 		if ipage == len(src.pages) { // last page
@@ -99,6 +97,6 @@ func (p *PagedReader) Read(buf []byte) (nread int, err error) {
 			return
 		}
 		p.ipage++
-		//p.curr, p.off = src.getPage(p.ipage), 0//todo: optimize this
+		// p.curr, p.off = src.getPage(p.ipage), 0//todo: optimize this
 	}
 }
