@@ -25,11 +25,11 @@ func TestSdk(t *testing.T) {
 		// fmt.Println(s)
 
 		HyperdbgUInstallVmmDriver()
+		HyperdbgUConnectLocalDebugger()
 		HyperdbgULoadVmm()
-		// HyperdbgUstartVmm()//?
 
-		HyperdbgUStopVmmDriver()
 		HyperdbgUUnloadVmm()
+		HyperdbgUStopVmmDriver()
 		HyperdbgUUninstallVmmDriver()
 	})
 }
