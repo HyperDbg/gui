@@ -1,7 +1,6 @@
 package sdk
 
 import (
-	"io/fs"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -15,33 +14,9 @@ import (
 )
 
 func TestMergeHeader(t *testing.T) {
-	Headers := orderedmap.New[string, bool]()
-	Modules := orderedmap.New[string, bool]()
-	Imports := orderedmap.New[string, bool]()
-
+	Headers := mylog.Check2(filepath.Glob("../bin/debug/SDK/Headers/*.h"))
+	User := mylog.Check2(filepath.Glob("../bin/debug/SDK/Imports/User/*.h"))
 	g := stream.NewGeneratedFile()
-	filepath.Walk("../bin", func(path string, info fs.FileInfo, err error) error {
-		if strings.Contains(path, "Examples") || strings.Contains(path, "Kernel") {
-			return err
-		}
-		switch stream.BaseName(path) {
-		case "Assertions", "HyperDbgSdk":
-			return err
-		}
-		if filepath.Ext(path) == ".h" {
-			// println(path)
-			switch {
-			case strings.Contains(path, "Headers"):
-				Headers.Set(path, true)
-			case strings.Contains(path, "Imports"):
-				Imports.Set(path, true)
-			case strings.Contains(path, "Modules"):
-				Modules.Set(path, true)
-			}
-		}
-		return err
-	})
-
 	bugfix = strings.TrimPrefix(bugfix, "\n")
 	g.P("//bugfix.h")
 	g.P(bugfix)
@@ -50,18 +25,17 @@ func TestMergeHeader(t *testing.T) {
 
 	fnDo := func(path string) {
 		g.P("//" + path)
-		g.P(stream.NewBuffer(path)) // todo remove #pragma once ?
+		g.P(stream.NewBuffer(path))
 		g.P()
 		mylog.Trace("merge", path)
 	}
-
-	for _, s := range Headers.Keys() {
+	for _, s := range Headers {
+		if stream.BaseName(s) == "Assertions" {
+			continue
+		}
 		fnDo(s)
 	}
-	for _, s := range Modules.Keys() {
-		fnDo(s)
-	}
-	for _, s := range Imports.Keys() {
+	for _, s := range User {
 		fnDo(s)
 	}
 	stream.WriteBinaryFile("merged_headers.h", g.Buffer)
@@ -183,6 +157,7 @@ const (
 	stream.NewGeneratedFile().SetPackageName("libhyperdbg").SetFilePath("tmp").Enum("ioctl", enumIoctls.Keys(), nil)
 
 	for _, p := range macros.List() {
+		return
 		mylog.Todo(p.Key + " = " + p.Value)
 	}
 }
