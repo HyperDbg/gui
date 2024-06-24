@@ -1216,10 +1216,10 @@ type MessageTracingCallbacks struct {
 	SendImmediateMessage         SendImmediateMessage
 }
 type VmmCallbacks struct {
-	LogCallbackPrepareAndSendMessageToQueueWrapper            LogCallbackPrepareAndSendMessageToQueue
-	LogCallbackSendMessageToQueue                             LogCallbackSendMessageToQueue
-	LogCallbackSendBuffer                                     LogCallbackSendBuffer
-	LogCallbackCheckIfBufferIsFull                            LogCallbackCheckIfBufferIsFull
+	//LogCallbackPrepareAndSendMessageToQueueWrapper            LogCallbackPrepareAndSendMessageToQueue
+	//LogCallbackSendMessageToQueue                             LogCallbackSendMessageToQueue
+	//LogCallbackSendBuffer                                     LogCallbackSendBuffer
+	//LogCallbackCheckIfBufferIsFull                            LogCallbackCheckIfBufferIsFull
 	VmmCallbackTriggerEvents                                  VmmCallbackTriggerEvents
 	VmmCallbackSetLastError                                   VmmCallbackSetLastError
 	VmmCallbackVmcallHandler                                  VmmCallbackVmcallHandler
@@ -1243,7 +1243,7 @@ type (
 	_Int128T           = any
 	_Uint128T          = any
 	__NSConstantString = any
-	SizeT              = uint64
+	//SizeT              = uint64
 	_BuiltinMsVaList   = *byte
 	_BuiltinVaList     = *byte
 	Rune               = int32
@@ -1265,7 +1265,7 @@ type (
 	Uint64     = uint64
 	Puint64    = *uint64
 	Dword      = uint64
-	Bool       = int32
+	//Bool       = int32
 	Byte       = uint8
 	Word       = uint16
 	Int        = int32
@@ -1296,14 +1296,14 @@ type (
 	Puint16    = *uint16
 	Uint32     = uint32
 	Puint32    = *uint32
-	Uint64     = uint64
-	Puint64    = *uint64
-	GuestRegs  = GuestRegs
+	//Uint64     = uint64
+	//Puint64    = *uint64
+	//GuestRegs  = GuestRegs
 	PguestRegs = *GuestRegs
 )
 
 // @brief struct for extra registers
-type GuestExtraRegisters = GuestExtraRegisters
+//type GuestExtraRegisters = GuestExtraRegisters
 
 // @brief struct for extra registers
 type PguestExtraRegisters = *GuestExtraRegisters
@@ -1578,16 +1578,16 @@ type PmessageTracingCallbacks = *MessageTracingCallbacks
 
 // @brief A function from the message tracer that send the inputs to the
 // queue of the messages
-type LogCallbackPrepareAndSendMessageToQueue = unsafe.Pointer
+//type LogCallbackPrepareAndSendMessageToQueue = unsafe.Pointer
 
 // @brief A function that sends the messages to message tracer buffers
-type LogCallbackSendMessageToQueue = unsafe.Pointer
+//type LogCallbackSendMessageToQueue = unsafe.Pointer
 
 // @brief A function that sends the messages to message tracer buffers
-type LogCallbackSendBuffer = unsafe.Pointer
+//type LogCallbackSendBuffer = unsafe.Pointer
 
 // @brief A function that checks whether the priority or regular buffer is full or not
-type LogCallbackCheckIfBufferIsFull = unsafe.Pointer
+//type LogCallbackCheckIfBufferIsFull = unsafe.Pointer
 
 // @brief A function that handles trigger events
 type VmmCallbackTriggerEvents = unsafe.Pointer

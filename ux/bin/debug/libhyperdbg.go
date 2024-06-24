@@ -1243,7 +1243,7 @@ type (
 	_Int128T           = any
 	_Uint128T          = any
 	__NSConstantString = any
-	SizeT              = uint64
+	//SizeT              = uint64
 	_BuiltinMsVaList   = *byte
 	_BuiltinVaList     = *byte
 	Rune               = int32
@@ -1265,7 +1265,7 @@ type (
 	Uint64     = uint64
 	Puint64    = *uint64
 	Dword      = uint64
-	Bool       = int32
+	//Bool       = int32
 	Byte       = uint8
 	Word       = uint16
 	Int        = int32
@@ -1296,8 +1296,8 @@ type (
 	Puint16    = *uint16
 	Uint32     = uint32
 	Puint32    = *uint32
-	Uint64     = uint64
-	Puint64    = *uint64
+	//Uint64     = uint64
+	//Puint64    = *uint64
 	//GuestRegs  = GuestRegs
 	PguestRegs = *GuestRegs
 )
@@ -1578,16 +1578,16 @@ type PmessageTracingCallbacks = *MessageTracingCallbacks
 
 // @brief A function from the message tracer that send the inputs to the
 // queue of the messages
-type LogCallbackPrepareAndSendMessageToQueue = unsafe.Pointer
+//type LogCallbackPrepareAndSendMessageToQueue = unsafe.Pointer
 
 // @brief A function that sends the messages to message tracer buffers
-type LogCallbackSendMessageToQueue = unsafe.Pointer
+//type LogCallbackSendMessageToQueue = unsafe.Pointer
 
 // @brief A function that sends the messages to message tracer buffers
-type LogCallbackSendBuffer = unsafe.Pointer
+//type LogCallbackSendBuffer = unsafe.Pointer
 
 // @brief A function that checks whether the priority or regular buffer is full or not
-type LogCallbackCheckIfBufferIsFull = unsafe.Pointer
+//type LogCallbackCheckIfBufferIsFull = unsafe.Pointer
 
 // @brief A function that handles trigger events
 type VmmCallbackTriggerEvents = unsafe.Pointer
@@ -2179,8 +2179,8 @@ func HyperdbgUDetectVmxSupport() Boolean {
 
 var __imp_hyperdbg_u_read_vendor_string bindlib.PreloadProc
 
-func HyperdbgUReadVendorString(b*Char) {
-	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
+func HyperdbgUReadVendorString(*Char) {
+	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall())
 }
 
 var __imp_hyperdbg_u_load_vmm bindlib.PreloadProc
