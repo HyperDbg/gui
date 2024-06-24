@@ -1,6 +1,6 @@
 package ux
 
-// -----------------------------------------------------------------------------
+import "io"
 
 const pageSize = 1024 * 1024
 
@@ -51,6 +51,7 @@ func (p *PagedWriter) getPage(ipage int) []byte {
 	}
 	return p.pages[ipage][:]
 }
+*/
 
 // -----------------------------------------------------------------------------
 
@@ -74,13 +75,13 @@ func (p *PagedReader) WriteTo(w io.Writer) (written int64, err error) {
 			return
 		}
 		ipage++
-		page := src.getPage(ipage)
-		n, err = w.Write(page)
-		written += int64(n)
-		if err != nil {
-			p.ipage, p.curr, p.off = ipage, page, n
-			return
-		}
+		//page := src.getPage(ipage)//todo: optimize this
+		//n, err = w.Write(page)
+		//written += int64(n)
+		//if err != nil {
+		//	p.ipage, p.curr, p.off = ipage, page, n
+		//	return
+		//}
 	}
 }
 
@@ -98,9 +99,6 @@ func (p *PagedReader) Read(buf []byte) (nread int, err error) {
 			return
 		}
 		p.ipage++
-		p.curr, p.off = src.getPage(p.ipage), 0
+		//p.curr, p.off = src.getPage(p.ipage), 0//todo: optimize this
 	}
 }
-*/
-
-// -----------------------------------------------------------------------------
