@@ -1650,16 +1650,16 @@ var __imp_LogInitialize bindlib.PreloadProc
 
 // Gengo init function.
 func init() {
-	__imp_LogInitialize = GengoLibrary.ImportNow("LogInitialize")
-	__imp_LogUnInitialize = GengoLibrary.ImportNow("LogUnInitialize")
-	__imp_LogMarkAllAsRead = GengoLibrary.ImportNow("LogMarkAllAsRead")
-	__imp_LogCallbackPrepareAndSendMessageToQueue = GengoLibrary.ImportNow("LogCallbackPrepareAndSendMessageToQueue")
-	__imp_LogCallbackPrepareAndSendMessageToQueueWrapper = GengoLibrary.ImportNow("LogCallbackPrepareAndSendMessageToQueueWrapper")
-	__imp_LogCallbackSendBuffer = GengoLibrary.ImportNow("LogCallbackSendBuffer")
-	__imp_LogCallbackCheckIfBufferIsFull = GengoLibrary.ImportNow("LogCallbackCheckIfBufferIsFull")
-	__imp_LogCallbackSendMessageToQueue = GengoLibrary.ImportNow("LogCallbackSendMessageToQueue")
-	__imp_LogRegisterEventBasedNotification = GengoLibrary.ImportNow("LogRegisterEventBasedNotification")
-	__imp_LogRegisterIrpBasedNotification = GengoLibrary.ImportNow("LogRegisterIrpBasedNotification")
+	//__imp_LogInitialize = GengoLibrary.ImportNow("LogInitialize")
+	//__imp_LogUnInitialize = GengoLibrary.ImportNow("LogUnInitialize")
+	//__imp_LogMarkAllAsRead = GengoLibrary.ImportNow("LogMarkAllAsRead")
+	//__imp_LogCallbackPrepareAndSendMessageToQueue = GengoLibrary.ImportNow("LogCallbackPrepareAndSendMessageToQueue")
+	//__imp_LogCallbackPrepareAndSendMessageToQueueWrapper = GengoLibrary.ImportNow("LogCallbackPrepareAndSendMessageToQueueWrapper")
+	//__imp_LogCallbackSendBuffer = GengoLibrary.ImportNow("LogCallbackSendBuffer")
+	//__imp_LogCallbackCheckIfBufferIsFull = GengoLibrary.ImportNow("LogCallbackCheckIfBufferIsFull")
+	//__imp_LogCallbackSendMessageToQueue = GengoLibrary.ImportNow("LogCallbackSendMessageToQueue")
+	//__imp_LogRegisterEventBasedNotification = GengoLibrary.ImportNow("LogRegisterEventBasedNotification")
+	//__imp_LogRegisterIrpBasedNotification = GengoLibrary.ImportNow("LogRegisterIrpBasedNotification")
 	__imp_hyperdbg_u_detect_vmx_support = GengoLibrary.ImportNow("hyperdbg_u_detect_vmx_support")
 	__imp_hyperdbg_u_read_vendor_string = GengoLibrary.ImportNow("hyperdbg_u_read_vendor_string")
 	__imp_hyperdbg_u_load_vmm = GengoLibrary.ImportNow("hyperdbg_u_load_vmm")
@@ -1673,6 +1673,8 @@ func init() {
 	__imp_hyperdbg_u_script_read_file_and_execute_commandline = GengoLibrary.ImportNow("hyperdbg_u_script_read_file_and_execute_commandline")
 	__imp_hyperdbg_u_continue_previous_command = GengoLibrary.ImportNow("hyperdbg_u_continue_previous_command")
 	__imp_hyperdbg_u_check_multiline_command = GengoLibrary.ImportNow("hyperdbg_u_check_multiline_command")
+
+	return
 	__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")
 	__imp_PrintSymbolBuffer = GengoLibrary.ImportNow("PrintSymbolBuffer")
 	__imp_PrintSymbol = GengoLibrary.ImportNow("PrintSymbol")
