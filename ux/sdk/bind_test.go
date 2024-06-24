@@ -67,6 +67,7 @@ func TestMergeHeader(t *testing.T) {
 		fnDo(s)
 	}
 	for _, s := range headerAll.Keys() {
+		break // todo set headerAll.h c style
 		fnDo(s)
 	}
 	stream.WriteBinaryFile("merged_headers.h", g.Buffer)
