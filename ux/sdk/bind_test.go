@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"unicode"
 
 	"github.com/ddkwork/app/bindgen/clang"
 	"github.com/ddkwork/app/bindgen/gengo"
@@ -73,6 +74,11 @@ func TestBindMacros(t *testing.T) {
 	// return
 	mylog.Trace("number of macros", macros.Len())
 
+	var (
+		enumDebuggers = orderedmap.New[string, bool]()
+		enumIoctls    = orderedmap.New[string, bool]()
+	)
+
 	for _, p := range macros.List() {
 		if !m.Contains(p.Key) {
 			// mylog.Warning(p.Key, p.Value)
@@ -83,19 +89,29 @@ func TestBindMacros(t *testing.T) {
 	}
 
 	g := stream.NewGeneratedFile()
-	g.P("package libhyperdbg") // todo rename pkg
+	g.P("package libhyperdbg")
 	g.P()
-	g.P("var (")
-	g.P("PAGE_SIZE = 4096")
 
+	g.P("import \"github.com/winlabs/gowin32/wrappers\"")
+	g.P()
+
+	g.P("var (")
 	for _, p := range macros.List() {
 		p.Value = strings.TrimSpace(p.Value)
 		if strings.HasPrefix(p.Value, "sizeof") {
 			continue
 		}
+		if strings.HasSuffix(p.Value, "OPERATION_MANDATORY_DEBUGGEE_BIT") {
+			continue
+		}
+
 		if strings.Contains(p.Value, "sizeof") {
 			continue
 		}
+		if strings.Contains(p.Value, "TOP_LEVEL_DRIVERS_VMCALL_STARTING_NUMBER") {
+			continue
+		}
+
 		p.Value = strings.ReplaceAll(p.Value, "\\", "")
 		p.Value = strings.Replace(p.Value, "6U", "6", 1)
 		p.Value = strings.Replace(p.Value, "7U", "7", 1)
@@ -109,6 +125,7 @@ func TestBindMacros(t *testing.T) {
 		p.Value = strings.Replace(p.Value, "15U", "15", 1)
 		p.Value = strings.Replace(p.Value, "16U", "16", 1)
 		p.Value = strings.Replace(p.Value, "17U", "17", 1)
+		p.Value = strings.Replace(p.Value, "NORMAL_PAGE_SIZE", "NormalPageSize", 1)
 		p.Value = strings.TrimSuffix(p.Value, "U")
 		p.Value = strings.TrimSuffix(p.Value, "ull")
 
@@ -126,18 +143,58 @@ func TestBindMacros(t *testing.T) {
 		}
 
 		key := p.Key
-		if p.Key == "DEBUGGER_OPERATION_WAS_SUCCESSFUL" || strings.HasPrefix(p.Key, "DEBUGGER_ERROR") {
-			key += " debuggerErrorType" // todo remove
+		//if key == "DEBUGGER_OPERATION_WAS_SUCCESSFUL" || strings.HasPrefix(key, "DEBUGGER_ERROR") {
+		//	key += " debuggerErrorType"
+		//}
+		value := p.Value
+		if isAlphabetOrUnderscore(value) {
+			value = stream.ToCamelUpper(value, false)
 		}
-		g.P(key + "=" + p.Value)
+
+		key = stream.ToCamelUpper(key, false)
+		// DEBUGGER_ERROR  IOCTL_
+		switch {
+		case strings.HasPrefix(p.Key, "DEBUGGER_ERROR"):
+			enumDebuggers.Set(key, true)
+		case strings.HasPrefix(p.Key, "IOCTL_"):
+			enumIoctls.Set(key, true)
+		}
+
+		g.P(stream.ToCamelUpper(key, false) + "=" + value)
 		macros.Delete(p.Key)
 	}
 	g.P(")")
+
+	g.P(`
+func CTL_CODE(deviceType, function, method, access uint32) IoctlKind {
+	return IoctlKind(((deviceType) << 16) | ((access) << 14) | ((function) << 2) | (method))
+}
+
+const (
+	FILE_DEVICE_UNKNOWN = wrappers.FILE_DEVICE_UNKNOWN
+	METHOD_BUFFERED     = wrappers.METHOD_BUFFERED
+	FILE_ANY_ACCESS     = wrappers.FILE_ANY_ACCESS
+)
+`)
+
 	stream.WriteGoFile("tmp/vars.go", g.Buffer)
+
+	stream.NewGeneratedFile().SetPackageName("libhyperdbg").SetFilePath("tmp").Enum("debuggerError", enumDebuggers.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("libhyperdbg").SetFilePath("tmp").Enum("ioctl", enumIoctls.Keys(), nil)
 
 	for _, p := range macros.List() {
 		mylog.Todo(p.Key + " = " + p.Value)
 	}
+}
+
+// isAlphabetOrUnderscore 检查字符串是否仅由字母或下划线组成
+func isAlphabetOrUnderscore(s string) bool {
+	for _, r := range s {
+		if !unicode.IsLetter(r) && r != '_' {
+			return false
+		}
+	}
+	return true
 }
 
 func TestBindSdk(t *testing.T) {
@@ -327,6 +384,8 @@ typedef struct _IRP {
 var m = orderedmap.New[string, string]()
 
 func init() {
+	m.Set("PAGE_SIZE", "4096")
+	m.Set("NORMAL_PAGE_SIZE", "4096")
 	// m.Set("size_t", "int")
 	// m.Set("wchar_t", "rune")
 	m.Set("WCHAR_MIN", "0")
@@ -388,7 +447,7 @@ func init() {
 	// m.Set("BUILD_SEC_CH1", "(__TIME__[7])")
 	m.Set("MaximumPacketsCapacity", "1000")
 	m.Set("MaximumPacketsCapacityPriority", "50")
-	m.Set("NORMAL_PAGE_SIZE", "4096 // PAGE_SIZE")
+	// m.Set("NORMAL_PAGE_SIZE", "4096 // PAGE_SIZE")
 	m.Set("PacketChunkSize", "NORMAL_PAGE_SIZE")
 	m.Set("UsermodeBufferSize", "sizeof(UINT32) + PacketChunkSize + 1")
 	m.Set("MaxSerialPacketSize", "10 * NORMAL_PAGE_SIZE")

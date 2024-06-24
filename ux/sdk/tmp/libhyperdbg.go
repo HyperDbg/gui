@@ -1216,10 +1216,10 @@ type MessageTracingCallbacks struct {
 	SendImmediateMessage         SendImmediateMessage
 }
 type VmmCallbacks struct {
-	//LogCallbackPrepareAndSendMessageToQueueWrapper            LogCallbackPrepareAndSendMessageToQueue
-	//LogCallbackSendMessageToQueue                             LogCallbackSendMessageToQueue
-	//LogCallbackSendBuffer                                     LogCallbackSendBuffer
-	//LogCallbackCheckIfBufferIsFull                            LogCallbackCheckIfBufferIsFull
+	LogCallbackPrepareAndSendMessageToQueueWrapper            LogCallbackPrepareAndSendMessageToQueue
+	LogCallbackSendMessageToQueue                             LogCallbackSendMessageToQueue
+	LogCallbackSendBuffer                                     LogCallbackSendBuffer
+	LogCallbackCheckIfBufferIsFull                            LogCallbackCheckIfBufferIsFull
 	VmmCallbackTriggerEvents                                  VmmCallbackTriggerEvents
 	VmmCallbackSetLastError                                   VmmCallbackSetLastError
 	VmmCallbackVmcallHandler                                  VmmCallbackVmcallHandler
@@ -1298,12 +1298,12 @@ type (
 	Puint32    = *uint32
 	Uint64     = uint64
 	Puint64    = *uint64
-	//GuestRegs  = GuestRegs
+	GuestRegs  = GuestRegs
 	PguestRegs = *GuestRegs
 )
 
 // @brief struct for extra registers
-//type GuestExtraRegisters = GuestExtraRegisters
+type GuestExtraRegisters = GuestExtraRegisters
 
 // @brief struct for extra registers
 type PguestExtraRegisters = *GuestExtraRegisters
@@ -2179,8 +2179,8 @@ func HyperdbgUDetectVmxSupport() Boolean {
 
 var __imp_hyperdbg_u_read_vendor_string bindlib.PreloadProc
 
-func HyperdbgUReadVendorString(b*Char) {
-	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
+func HyperdbgUReadVendorString(*Char) {
+	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall())
 }
 
 var __imp_hyperdbg_u_load_vmm bindlib.PreloadProc

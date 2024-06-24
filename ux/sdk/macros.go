@@ -8,6 +8,7 @@ import (
 
 func extractMacros(lines []string) *orderedmap.OrderedMap[string, string] {
 	macros := orderedmap.New[string, string]()
+	macros.Set("PAGE_SIZE", "4096")
 	var macroName string
 	var macroValue strings.Builder
 	inMacro := false
