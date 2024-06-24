@@ -1205,14 +1205,12 @@ type (
 	_Int128T           = any
 	_Uint128T          = any
 	__NSConstantString = any
-	//SizeT              = uint64
+	SizeT              = uint64
 	_BuiltinMsVaList   = *byte
 	_BuiltinVaList     = *byte
 	Rune               = int32
 	WintT              = int32
-	//Bool               = int32
 	Long               = int64
-	SizeT              = uint64
 	PsizeT             = *uint64
 	TimeT              = uint64
 	Ntstatus           = uint64
@@ -1223,49 +1221,44 @@ type (
 
 // ///////////////////////////////////////////////
 type (
-	Qword      = uint64
-	Uint64     = uint64
-	Puint64    = *uint64
-	Dword      = uint64
-	Bool       = int32
-	Byte       = uint8
-	Word       = uint16
-	Int        = int32
-	Uint       = uint32
-	Puint      = *uint32
-	Ulong64    = uint64
-	Pulong64   = *uint64
-	Dword64    = uint64
-	Pdword64   = *uint64
-	Char       = byte
-	Wchar      = Rune
-	Uchar      = uint8
-	Ushort     = uint16
-	Ulong      = uint64
-	Boolean    = Uchar
-	Pboolean   = *Boolean
-	Int8       = int8
-	Pint8      = *int8
-	Int16      = int16
-	Pint16     = *int16
-	Int32      = int32
-	Pint32     = *int32
-	Int64      = int64
-	Pint64     = *int64
-	Uint8      = uint8
-	Puint8     = *uint8
-	Uint16     = uint16
-	Puint16    = *uint16
-	Uint32     = uint32
-	Puint32    = *uint32
-	//Uint64     = uint64
-	//Puint64    = *uint64
-	//GuestRegs  = GuestRegs
+	Qword    = uint64
+	Uint64   = uint64
+	Puint64  = *uint64
+	Dword    = uint64
+	Bool     = int32
+	Byte     = uint8
+	Word     = uint16
+	Int      = int32
+	Uint     = uint32
+	Puint    = *uint32
+	Ulong64  = uint64
+	Pulong64 = *uint64
+	Dword64  = uint64
+	Pdword64 = *uint64
+	Char     = byte
+	Wchar    = Rune
+	Uchar    = uint8
+	Ushort   = uint16
+	Ulong    = uint64
+	Boolean  = Uchar
+	Pboolean = *Boolean
+	Int8     = int8
+	Pint8    = *int8
+	Int16    = int16
+	Pint16   = *int16
+	Int32    = int32
+	Pint32   = *int32
+	Int64    = int64
+	Pint64   = *int64
+	Uint8    = uint8
+	Puint8   = *uint8
+	Uint16   = uint16
+	Puint16  = *uint16
+	Uint32   = uint32
+	Puint32  = *uint32
+
 	PguestRegs = *GuestRegs
 )
-
-// @brief struct for extra registers
-//type GuestExtraRegisters = GuestExtraRegisters
 
 // @brief struct for extra registers
 type PguestExtraRegisters = *GuestExtraRegisters
@@ -1664,97 +1657,97 @@ func init() {
 	bindlib.Validate((*DebuggeeSymbolUpdateResult)(nil), 0x8, 0x8, "KernelStatus", 0x0)
 }
 
-func HyperdbgUDetectVmxSupport() Boolean {
+func DetectVmxSupport() Boolean {
 	__res := bindlib.CCall0(__imp_hyperdbg_u_detect_vmx_support.Addr())
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_hyperdbg_u_read_vendor_string bindlib.PreloadProc
 
-func HyperdbgUReadVendorString(b*Char) {
+func ReadVendorString(b *Char) {
 	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
 }
 
 var __imp_hyperdbg_u_load_vmm bindlib.PreloadProc
 
-func HyperdbgULoadVmm() Int {
+func LoadVmm() Int {
 	__res := bindlib.CCall0(__imp_hyperdbg_u_load_vmm.Addr())
 	return bindlib.UnmarshallSyscall[Int](__res)
 }
 
 var __imp_hyperdbg_u_unload_vmm bindlib.PreloadProc
 
-func HyperdbgUUnloadVmm() Int {
+func UnloadVmm() Int {
 	__res := bindlib.CCall0(__imp_hyperdbg_u_unload_vmm.Addr())
 	return bindlib.UnmarshallSyscall[Int](__res)
 }
 
 var __imp_hyperdbg_u_install_vmm_driver bindlib.PreloadProc
 
-func HyperdbgUInstallVmmDriver() Int {
+func InstallVmmDriver() Int {
 	__res := bindlib.CCall0(__imp_hyperdbg_u_install_vmm_driver.Addr())
 	return bindlib.UnmarshallSyscall[Int](__res)
 }
 
 var __imp_hyperdbg_u_uninstall_vmm_driver bindlib.PreloadProc
 
-func HyperdbgUUninstallVmmDriver() Int {
+func UninstallVmmDriver() Int {
 	__res := bindlib.CCall0(__imp_hyperdbg_u_uninstall_vmm_driver.Addr())
 	return bindlib.UnmarshallSyscall[Int](__res)
 }
 
 var __imp_hyperdbg_u_stop_vmm_driver bindlib.PreloadProc
 
-func HyperdbgUStopVmmDriver() Int {
+func StopVmmDriver() Int {
 	__res := bindlib.CCall0(__imp_hyperdbg_u_stop_vmm_driver.Addr())
 	return bindlib.UnmarshallSyscall[Int](__res)
 }
 
 var __imp_hyperdbg_u_interpreter bindlib.PreloadProc
 
-func HyperdbgUInterpreter(command *Char) Int {
+func Interpreter(command *Char) Int {
 	__res := bindlib.CCall1(__imp_hyperdbg_u_interpreter.Addr(), bindlib.MarshallSyscall(command))
 	return bindlib.UnmarshallSyscall[Int](__res)
 }
 
 var __imp_hyperdbg_u_show_signature bindlib.PreloadProc
 
-func HyperdbgUShowSignature() { bindlib.CCall0(__imp_hyperdbg_u_show_signature.Addr()) }
+func ShowSignature() { bindlib.CCall0(__imp_hyperdbg_u_show_signature.Addr()) }
 
 var __imp_hyperdbg_u_set_text_message_callback bindlib.PreloadProc
 
-func HyperdbgUSetTextMessageCallback(handler Callback) {
+func SetTextMessageCallback(handler Callback) {
 	bindlib.CCall1(__imp_hyperdbg_u_set_text_message_callback.Addr(), bindlib.MarshallSyscall(handler))
 }
 
 var __imp_hyperdbg_u_script_read_file_and_execute_commandline bindlib.PreloadProc
 
-func HyperdbgUScriptReadFileAndExecuteCommandline(argc Int, argv **Char) Int {
+func ScriptReadFileAndExecuteCommandline(argc Int, argv **Char) Int {
 	__res := bindlib.CCall2(__imp_hyperdbg_u_script_read_file_and_execute_commandline.Addr(), bindlib.MarshallSyscall(argc), bindlib.MarshallSyscall(argv))
 	return bindlib.UnmarshallSyscall[Int](__res)
 }
 
 var __imp_hyperdbg_u_continue_previous_command bindlib.PreloadProc
 
-func HyperdbgUContinuePreviousCommand() Boolean {
+func ContinuePreviousCommand() Boolean {
 	__res := bindlib.CCall0(__imp_hyperdbg_u_continue_previous_command.Addr())
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_hyperdbg_u_check_multiline_command bindlib.PreloadProc
 
-func HyperdbgUCheckMultilineCommand(current_command *Char, reset Boolean) Boolean {
+func CheckMultilineCommand(current_command *Char, reset Boolean) Boolean {
 	__res := bindlib.CCall2(__imp_hyperdbg_u_check_multiline_command.Addr(), bindlib.MarshallSyscall(current_command), bindlib.MarshallSyscall(reset))
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_hyperdbg_u_connect_local_debugger bindlib.PreloadProc
 
-func HyperdbgUConnectLocalDebugger() { bindlib.CCall0(__imp_hyperdbg_u_connect_local_debugger.Addr()) }
+func ConnectLocalDebugger() { bindlib.CCall0(__imp_hyperdbg_u_connect_local_debugger.Addr()) }
 
 var __imp_hyperdbg_u_connect_remote_debugger bindlib.PreloadProc
 
-func HyperdbgUConnectRemoteDebugger(ip *Char, port *Char) Boolean {
+func ConnectRemoteDebugger(ip *Char, port *Char) Boolean {
 	__res := bindlib.CCall2(__imp_hyperdbg_u_connect_remote_debugger.Addr(), bindlib.MarshallSyscall(ip), bindlib.MarshallSyscall(port))
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }

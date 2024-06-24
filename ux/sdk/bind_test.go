@@ -179,8 +179,7 @@ func TestBindSdk(t *testing.T) {
 	mylog.Call(func() {
 		pkg := gengo.NewPackage("libhyperdbg",
 			gengo.WithRemovePrefix(
-			//"Zydis_", "Zyan_", "Zycore_",
-			//"Zydis", "Zyan", "Zycore",
+				"hyperdbg_u_",
 			),
 			gengo.WithInferredMethods([]gengo.MethodInferenceRule{
 				//{Name: "ZydisDecoder", Receiver: "Decoder"},
@@ -191,32 +190,36 @@ func TestBindSdk(t *testing.T) {
 			),
 		)
 		mylog.Check(pkg.Transform("libhyperdbg", &clang.Options{
-			// Sources:          []string{"combined_headers.h"},
 			Sources:          []string{"merged_headers.h"},
-			AdditionalParams: []string{
-				//"-DZYAN_NO_LIBC",
-				//"-DZYAN_STATIC_ASSERT",
-				//"-DZYDIS_STATIC_BUILD",
-				//"-DHYPERDBG_libhyperdbg",
-
-				//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\shared",
-				//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\ucrt",
-				//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\um",
-				//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\km",
-				//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\km\\crt",
-
-				//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\winrt",
-				//"-IC:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include",
-
-				//"-ID:\\fork\\HyperDbg\\hyperdbg\\libhyperdbg",
-				//"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbghv",
-				//"-ID:\\fork\\HyperDbg\\hyperdbg\\libhyperdbg\\header",
-				//"-ID:\\fork\\HyperDbg\\hyperdbg\\include",
-				//"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies",
-				//"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies\\phnt",
-			},
+			AdditionalParams: []string{},
 		}))
 		mylog.Check(pkg.WriteToDir("./tmp"))
+
+		// generate bug fix
+		fixs := []string{
+			`	Uint64     = uint64
+	Puint64    = *uint64
+	GuestRegs  = GuestRegs`,
+			`// @brief struct for extra registers
+type GuestExtraRegisters = GuestExtraRegisters`,
+		}
+
+		b := stream.NewBuffer("tmp/libhyperdbg.go")
+		for _, fix := range fixs {
+			b.ReplaceAll(fix, "")
+		}
+		b.Replace("\nSizeT              = uint64", "", 1)
+		b.Replace("\nBool               = int32", "", 1)
+		b.Replace(`	Bool               = int32
+	Long               = int64
+	SizeT              = uint64`, `	Long               = int64`, 1)
+		b.ReplaceAll(`func ReadVendorString(*Char) {
+	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall())
+}`, `func ReadVendorString(b*Char) {
+	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
+}`)
+
+		stream.WriteGoFile("tmp/libhyperdbg.go", b)
 	})
 }
 
