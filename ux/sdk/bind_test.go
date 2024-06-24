@@ -20,7 +20,7 @@ func TestMergeHeader(t *testing.T) {
 
 	g := stream.NewGeneratedFile()
 	filepath.Walk("../bin", func(path string, info fs.FileInfo, err error) error {
-		if strings.Contains(path, "Examples") {
+		if strings.Contains(path, "Examples") || strings.Contains(path, "Kernel") {
 			return err
 		}
 		switch stream.BaseName(path) {

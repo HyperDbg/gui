@@ -6019,3 +6019,243 @@ IMPORT_EXPORT_VMM VOID
 BroadcastDisableEferSyscallEventsOnAllProcessors();
 
 
+//..\bin\debug\SDK\Imports\User\HyperDbgLibImports.h
+/**
+ * @file HyperDbgLibImports.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers relating exported functions from controller interface
+ * @version 0.2
+ * @date 2023-02-02
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+#ifdef HYPERDBG_LIBHYPERDBG
+#    define IMPORT_EXPORT_LIBHYPERDBG __declspec(dllexport)
+#else
+#    define IMPORT_EXPORT_LIBHYPERDBG __declspec(dllimport)
+#endif
+
+//
+// Header file of libhyperdbg
+// Imports
+//
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//
+// Support Detection
+//
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_detect_vmx_support();
+
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_read_vendor_string(CHAR *);
+
+//
+// VMM Module
+//
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_load_vmm();
+
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_unload_vmm();
+
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_install_vmm_driver();
+
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_uninstall_vmm_driver();
+
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_stop_vmm_driver();
+
+//
+// General imports
+//
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_interpreter(CHAR * command);
+
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_show_signature();
+
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_set_text_message_callback(Callback handler);
+
+IMPORT_EXPORT_LIBHYPERDBG INT
+hyperdbg_u_script_read_file_and_execute_commandline(INT argc, CHAR * argv[]);
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_continue_previous_command();
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_check_multiline_command(CHAR * current_command, BOOLEAN reset);
+
+//
+// Connect to local or remote debugger
+// Exoported functionality of the '.connect' command
+//
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_connect_local_debugger();
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_connect_remote_debugger(const CHAR * ip, const CHAR * port);
+
+#ifdef __cplusplus
+}
+#endif
+
+
+//..\bin\debug\SDK\Imports\User\HyperDbgScriptImports.h
+/**
+ * @file HyperDbgScriptImports.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers relating exported functions from script engine
+ * @version 0.2
+ * @date 2023-02-02
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//
+// Header file of script-engine
+// Imports
+//
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//
+// Script engine
+//
+__declspec(dllimport) PVOID
+ScriptEngineParse(char * str);
+__declspec(dllimport) void
+PrintSymbolBuffer(const PVOID SymbolBuffer);
+__declspec(dllimport) void
+PrintSymbol(PVOID Symbol);
+__declspec(dllimport) void
+RemoveSymbolBuffer(PVOID SymbolBuffer);
+__declspec(dllimport) BOOLEAN
+FuncGetNumberOfOperands(UINT64 FuncType, UINT32 * NumberOfGetOperands, UINT32 * NumberOfSetOperands);
+__declspec(dllimport) BOOLEAN
+ScriptEngineSetHwdbgInstanceInfo(HWDBG_INSTANCE_INFORMATION * InstancInfo);
+
+//
+// pdb parser
+//
+__declspec(dllimport) VOID
+ScriptEngineSetTextMessageCallback(PVOID Handler);
+__declspec(dllimport) VOID
+ScriptEngineSymbolAbortLoading();
+__declspec(dllimport) UINT64
+ScriptEngineConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
+__declspec(dllimport) UINT32
+ScriptEngineLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
+__declspec(dllimport) UINT32
+ScriptEngineUnloadAllSymbols();
+__declspec(dllimport) UINT32
+ScriptEngineUnloadModuleSymbol(char * ModuleName);
+__declspec(dllimport) UINT32
+ScriptEngineSearchSymbolForMask(const char * SearchMask);
+__declspec(dllimport) BOOLEAN
+ScriptEngineGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
+__declspec(dllimport) BOOLEAN
+ScriptEngineGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
+__declspec(dllimport) BOOLEAN
+ScriptEngineCreateSymbolTableForDisassembler(void * CallbackFunction);
+__declspec(dllimport) BOOLEAN
+ScriptEngineConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
+__declspec(dllimport) BOOLEAN
+ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath, char * PdbFilePath, char * GuidAndAgeDetails, BOOLEAN Is32BitModule);
+__declspec(dllimport) BOOLEAN
+ScriptEngineSymbolInitLoad(PVOID BufferToStoreDetails, UINT32 StoredLength, BOOLEAN DownloadIfAvailable, const char * SymbolPath, BOOLEAN IsSilentLoad);
+__declspec(dllimport) BOOLEAN
+ScriptEngineShowDataBasedOnSymbolTypes(const char * TypeName, UINT64 Address, BOOLEAN IsStruct, PVOID BufferAddress, const char * AdditionalParameters);
+
+#ifdef __cplusplus
+}
+#endif
+
+
+//..\bin\debug\SDK\Imports\User\HyperDbgSymImports.h
+/**
+ * @file HyperDbgSymImports.h
+ * @author Sina Karvandi (sina@hyperdbg.org)
+ * @brief Headers relating exported functions from symbol parser
+ * @version 0.2
+ * @date 2023-02-02
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//
+// Header file of symbol-parser
+// Imports
+//
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+__declspec(dllimport) VOID
+    SymSetTextMessageCallback(PVOID Handler);
+__declspec(dllimport) VOID
+    SymbolAbortLoading();
+__declspec(dllimport) UINT64
+    SymConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
+__declspec(dllimport) UINT32
+    SymLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
+__declspec(dllimport) UINT32
+    SymUnloadAllSymbols();
+__declspec(dllimport) UINT32
+    SymUnloadModuleSymbol(char * ModuleName);
+__declspec(dllimport) UINT32
+    SymSearchSymbolForMask(const char * SearchMask);
+__declspec(dllimport) BOOLEAN
+    SymGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
+__declspec(dllimport) BOOLEAN
+    SymGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
+__declspec(dllimport) BOOLEAN
+    SymCreateSymbolTableForDisassembler(void * CallbackFunction);
+__declspec(dllimport) BOOLEAN
+    SymConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
+__declspec(dllimport) BOOLEAN
+    SymConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath,
+                                                char *       PdbFilePath,
+                                                char *       GuidAndAgeDetails,
+                                                BOOLEAN      Is32BitModule);
+__declspec(dllimport) BOOLEAN
+    SymbolInitLoad(PVOID        BufferToStoreDetails,
+                   UINT32       StoredLength,
+                   BOOLEAN      DownloadIfAvailable,
+                   const char * SymbolPath,
+                   BOOLEAN      IsSilentLoad);
+__declspec(dllimport) BOOLEAN
+    SymShowDataBasedOnSymbolTypes(const char * TypeName,
+                                  UINT64       Address,
+                                  BOOLEAN      IsStruct,
+                                  PVOID        BufferAddress,
+                                  const char * AdditionalParameters);
+__declspec(dllimport) BOOLEAN
+    SymQuerySizeof(_In_ const char * StructNameOrTypeName, _Out_ UINT32 * SizeOfField);
+__declspec(dllimport) BOOLEAN
+    SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
+                                     _In_ const char * FiledOfStructName,
+                                     _Out_ PBOOLEAN    IsStructNamePointerOrNot,
+                                     _Out_ PBOOLEAN    IsFiledOfStructNamePointerOrNot,
+                                     _Out_ char **     NewStructOrTypeName,
+                                     _Out_ UINT32 *    OffsetOfFieldFromTop,
+                                     _Out_ UINT32 *    SizeOfField);
+
+#ifdef __cplusplus
+}
+#endif
+
+
