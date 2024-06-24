@@ -20,6 +20,16 @@ func TestSdk(t *testing.T) {
 		HyperdbgUConnectLocalDebugger()
 		HyperdbgULoadVmm()
 
+		//todo:
+		//start debugger
+		//read memory(? address buffer for disassembly)
+		//read registers
+		//set breakpoints
+		//step over/into/out
+		//continue
+		//read stack
+		//stop debugger
+
 		HyperdbgUUnloadVmm()
 		HyperdbgUStopVmmDriver()
 		HyperdbgUUninstallVmmDriver()
