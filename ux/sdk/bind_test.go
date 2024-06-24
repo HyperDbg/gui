@@ -129,6 +129,10 @@ func TestBindMacros(t *testing.T) {
 		// DEBUGGER_ERROR  IOCTL_
 		switch {
 		case strings.HasPrefix(p.Key, "DEBUGGER_ERROR"):
+			after, found := strings.CutPrefix(p.Key, "DEBUGGER_ERROR")
+			if found {
+				key = after
+			}
 			enumDebuggers.Set(key, true)
 		case strings.HasPrefix(p.Key, "IOCTL_"):
 			enumIoctls.Set(key, true)

@@ -11,89 +11,89 @@ import (
 type DebuggerErrorKind byte
 
 const (
-	DebuggerErrorTagNotExistsKind DebuggerErrorKind = iota
-	DebuggerErrorInvalidActionTypeKind
-	DebuggerErrorActionBufferSizeIsZeroKind
-	DebuggerErrorEventTypeIsInvalidKind
-	DebuggerErrorUnableToCreateEventKind
-	DebuggerErrorInvalidAddressKind
-	DebuggerErrorInvalidCoreIdKind
-	DebuggerErrorExceptionIndexExceedFirst32EntriesKind
-	DebuggerErrorInterruptIndexIsNotValidKind
-	DebuggerErrorUnableToHideOrUnhideDebuggerKind
-	DebuggerErrorDebuggerAlreadyUhideKind
-	DebuggerErrorEditMemoryStatusInvalidParameterKind
-	DebuggerErrorEditMemoryStatusInvalidAddressBasedOnCurrentProcessKind
-	DebuggerErrorEditMemoryStatusInvalidAddressBasedOnOtherProcessKind
-	DebuggerErrorModifyEventsInvalidTagKind
-	DebuggerErrorModifyEventsInvalidTypeOfActionKind
-	DebuggerErrorSteppingInvalidParameterKind
-	DebuggerErrorSteppingsEitherThreadNotFoundOrDisabledKind
-	DebuggerErrorPreparingDebuggeeInvalidBaudrateKind
-	DebuggerErrorPreparingDebuggeeInvalidSerialPortKind
-	DebuggerErrorPreparingDebuggeeInvalidCoreInRemoteDebuggeKind
-	DebuggerErrorPreparingDebuggeeUnableToSwitchToNewProcessKind
-	DebuggerErrorPreparingDebuggeeToRunScriptKind
-	DebuggerErrorInvalidRegisterNumberKind
-	DebuggerErrorMaximumBreakpointWithoutContinueKind
-	DebuggerErrorBreakpointAlreadyExistsOnTheAddressKind
-	DebuggerErrorBreakpointIdNotFoundKind
-	DebuggerErrorBreakpointAlreadyDisabledKind
-	DebuggerErrorBreakpointAlreadyEnabledKind
-	DebuggerErrorMemoryTypeInvalidKind
-	DebuggerErrorInvalidProcessIdKind
-	DebuggerErrorEventIsNotAppliedKind
-	DebuggerErrorDetailsOrSwitchProcessInvalidParameterKind
-	DebuggerErrorDetailsOrSwitchThreadInvalidParameterKind
-	DebuggerErrorMaximumBreakpointForASinglePageIsHitKind
-	DebuggerErrorPreAllocatedBufferIsEmptyKind
-	DebuggerErrorEptCouldNotSplitTheLargePageTo4KbPagesKind
-	DebuggerErrorEptFailedToGetPml1EntryOfTargetAddressKind
-	DebuggerErrorEptMultipleHooksInASinglePageKind
-	DebuggerErrorCouldNotBuildTheEptHookKind
-	DebuggerErrorCouldNotFindAllocationTypeKind
-	DebuggerErrorInvalidTestQueryIndexKind
-	DebuggerErrorUnableToAttachToTargetUserModeProcessKind
-	DebuggerErrorUnableToRemoveHooksEntrypointNotReachedKind
-	DebuggerErrorUnableToRemoveHooksKind
-	DebuggerErrorFunctionsForInitializingPebAddressesAreNotInitializedKind
-	DebuggerErrorUnableToDetect32BitOr64BitProcessKind
-	DebuggerErrorUnableToKillTheProcessKind
-	DebuggerErrorInvalidThreadDebuggingTokenKind
-	DebuggerErrorUnableToPauseTheProcessThreadsKind
-	DebuggerErrorUnableToAttachToAnAlreadyAttachedProcessKind
-	DebuggerErrorTheUserDebuggerNotAttachedToTheProcessKind
-	DebuggerErrorUnableToDetachAsThereArePausedThreadsKind
-	DebuggerErrorUnableToSwitchProcessIdOrThreadIdIsInvalidKind
-	DebuggerErrorUnableToSwitchThereIsNoThreadOnTheProcessKind
-	DebuggerErrorUnableToGetModulesOfTheProcessKind
-	DebuggerErrorUnableToGetCallstackKind
-	DebuggerErrorUnableToQueryCountOfProcessesOrThreadsKind
-	DebuggerErrorUsingShortCircuitingEventWithPostEventModeIsForbiddednKind
-	DebuggerErrorUnknownTestQueryReceivedKind
-	DebuggerErrorReadingMemoryInvalidParameterKind
-	DebuggerErrorTheTrapFlagListIsFullKind
-	DebuggerErrorUnableToKillTheProcessDoesNotExistsKind
-	DebuggerErrorModeExecutionIsInvalidKind
-	DebuggerErrorProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootModeKind
-	DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForEventAndConditionalsKind
-	DebuggerErrorInstantEventRegularPreallocatedBufferNotFoundKind
-	DebuggerErrorInstantEventBigPreallocatedBufferNotFoundKind
-	DebuggerErrorUnableToCreateActionCannotAllocateBufferKind
-	DebuggerErrorInstantEventActionRegularPreallocatedBufferNotFoundKind
-	DebuggerErrorInstantEventActionBigPreallocatedBufferNotFoundKind
-	DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForActionBufferKind
-	DebuggerErrorInstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStackKind
-	DebuggerErrorInstantEventRegularRequestedSafeBufferNotFoundKind
-	DebuggerErrorInstantEventBigRequestedSafeBufferNotFoundKind
-	DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBufferKind
-	DebuggerErrorUnableToAllocateRequestedSafeBufferKind
-	DebuggerErrorCouldNotFindPreactivationTypeKind
-	DebuggerErrorTheModeExecTrapIsNotInitializedKind
-	DebuggerErrorTheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFullKind
-	DebuggerErrorNotAllCoresAreLockedForApplyingInstantEventKind
-	DebuggerErrorTargetSwitchingCoreIsNotLockedKind
-	DebuggerErrorInvalidPhysicalAddressKind
+	TagNotExistsKind DebuggerErrorKind = iota
+	InvalidActionTypeKind
+	ActionBufferSizeIsZeroKind
+	EventTypeIsInvalidKind
+	UnableToCreateEventKind
+	InvalidAddressKind
+	InvalidCoreIdKind
+	ExceptionIndexExceedFirst32EntriesKind
+	InterruptIndexIsNotValidKind
+	UnableToHideOrUnhideDebuggerKind
+	DebuggerAlreadyUhideKind
+	EditMemoryStatusInvalidParameterKind
+	EditMemoryStatusInvalidAddressBasedOnCurrentProcessKind
+	EditMemoryStatusInvalidAddressBasedOnOtherProcessKind
+	ModifyEventsInvalidTagKind
+	ModifyEventsInvalidTypeOfActionKind
+	SteppingInvalidParameterKind
+	SteppingsEitherThreadNotFoundOrDisabledKind
+	PreparingDebuggeeInvalidBaudrateKind
+	PreparingDebuggeeInvalidSerialPortKind
+	PreparingDebuggeeInvalidCoreInRemoteDebuggeKind
+	PreparingDebuggeeUnableToSwitchToNewProcessKind
+	PreparingDebuggeeToRunScriptKind
+	InvalidRegisterNumberKind
+	MaximumBreakpointWithoutContinueKind
+	BreakpointAlreadyExistsOnTheAddressKind
+	BreakpointIdNotFoundKind
+	BreakpointAlreadyDisabledKind
+	BreakpointAlreadyEnabledKind
+	MemoryTypeInvalidKind
+	InvalidProcessIdKind
+	EventIsNotAppliedKind
+	DetailsOrSwitchProcessInvalidParameterKind
+	DetailsOrSwitchThreadInvalidParameterKind
+	MaximumBreakpointForASinglePageIsHitKind
+	PreAllocatedBufferIsEmptyKind
+	EptCouldNotSplitTheLargePageTo4KbPagesKind
+	EptFailedToGetPml1EntryOfTargetAddressKind
+	EptMultipleHooksInASinglePageKind
+	CouldNotBuildTheEptHookKind
+	CouldNotFindAllocationTypeKind
+	InvalidTestQueryIndexKind
+	UnableToAttachToTargetUserModeProcessKind
+	UnableToRemoveHooksEntrypointNotReachedKind
+	UnableToRemoveHooksKind
+	FunctionsForInitializingPebAddressesAreNotInitializedKind
+	UnableToDetect32BitOr64BitProcessKind
+	UnableToKillTheProcessKind
+	InvalidThreadDebuggingTokenKind
+	UnableToPauseTheProcessThreadsKind
+	UnableToAttachToAnAlreadyAttachedProcessKind
+	TheUserDebuggerNotAttachedToTheProcessKind
+	UnableToDetachAsThereArePausedThreadsKind
+	UnableToSwitchProcessIdOrThreadIdIsInvalidKind
+	UnableToSwitchThereIsNoThreadOnTheProcessKind
+	UnableToGetModulesOfTheProcessKind
+	UnableToGetCallstackKind
+	UnableToQueryCountOfProcessesOrThreadsKind
+	UsingShortCircuitingEventWithPostEventModeIsForbiddednKind
+	UnknownTestQueryReceivedKind
+	ReadingMemoryInvalidParameterKind
+	TheTrapFlagListIsFullKind
+	UnableToKillTheProcessDoesNotExistsKind
+	ModeExecutionIsInvalidKind
+	ProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootModeKind
+	InstantEventPreallocatedBufferIsNotEnoughForEventAndConditionalsKind
+	InstantEventRegularPreallocatedBufferNotFoundKind
+	InstantEventBigPreallocatedBufferNotFoundKind
+	UnableToCreateActionCannotAllocateBufferKind
+	InstantEventActionRegularPreallocatedBufferNotFoundKind
+	InstantEventActionBigPreallocatedBufferNotFoundKind
+	InstantEventPreallocatedBufferIsNotEnoughForActionBufferKind
+	InstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStackKind
+	InstantEventRegularRequestedSafeBufferNotFoundKind
+	InstantEventBigRequestedSafeBufferNotFoundKind
+	InstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBufferKind
+	UnableToAllocateRequestedSafeBufferKind
+	CouldNotFindPreactivationTypeKind
+	TheModeExecTrapIsNotInitializedKind
+	TheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFullKind
+	NotAllCoresAreLockedForApplyingInstantEventKind
+	TargetSwitchingCoreIsNotLockedKind
+	InvalidPhysicalAddressKind
 	InvalidDebuggerErrorKind
 )
 
@@ -112,172 +112,172 @@ func (k DebuggerErrorKind) AssertKind(kinds string) DebuggerErrorKind {
 
 func (k DebuggerErrorKind) String() string {
 	switch k {
-	case DebuggerErrorTagNotExistsKind:
-		return "DebuggerErrorTagNotExists"
-	case DebuggerErrorInvalidActionTypeKind:
-		return "DebuggerErrorInvalidActionType"
-	case DebuggerErrorActionBufferSizeIsZeroKind:
-		return "DebuggerErrorActionBufferSizeIsZero"
-	case DebuggerErrorEventTypeIsInvalidKind:
-		return "DebuggerErrorEventTypeIsInvalid"
-	case DebuggerErrorUnableToCreateEventKind:
-		return "DebuggerErrorUnableToCreateEvent"
-	case DebuggerErrorInvalidAddressKind:
-		return "DebuggerErrorInvalidAddress"
-	case DebuggerErrorInvalidCoreIdKind:
-		return "DebuggerErrorInvalidCoreId"
-	case DebuggerErrorExceptionIndexExceedFirst32EntriesKind:
-		return "DebuggerErrorExceptionIndexExceedFirst32Entries"
-	case DebuggerErrorInterruptIndexIsNotValidKind:
-		return "DebuggerErrorInterruptIndexIsNotValid"
-	case DebuggerErrorUnableToHideOrUnhideDebuggerKind:
-		return "DebuggerErrorUnableToHideOrUnhideDebugger"
-	case DebuggerErrorDebuggerAlreadyUhideKind:
-		return "DebuggerErrorDebuggerAlreadyUhide"
-	case DebuggerErrorEditMemoryStatusInvalidParameterKind:
-		return "DebuggerErrorEditMemoryStatusInvalidParameter"
-	case DebuggerErrorEditMemoryStatusInvalidAddressBasedOnCurrentProcessKind:
-		return "DebuggerErrorEditMemoryStatusInvalidAddressBasedOnCurrentProcess"
-	case DebuggerErrorEditMemoryStatusInvalidAddressBasedOnOtherProcessKind:
-		return "DebuggerErrorEditMemoryStatusInvalidAddressBasedOnOtherProcess"
-	case DebuggerErrorModifyEventsInvalidTagKind:
-		return "DebuggerErrorModifyEventsInvalidTag"
-	case DebuggerErrorModifyEventsInvalidTypeOfActionKind:
-		return "DebuggerErrorModifyEventsInvalidTypeOfAction"
-	case DebuggerErrorSteppingInvalidParameterKind:
-		return "DebuggerErrorSteppingInvalidParameter"
-	case DebuggerErrorSteppingsEitherThreadNotFoundOrDisabledKind:
-		return "DebuggerErrorSteppingsEitherThreadNotFoundOrDisabled"
-	case DebuggerErrorPreparingDebuggeeInvalidBaudrateKind:
-		return "DebuggerErrorPreparingDebuggeeInvalidBaudrate"
-	case DebuggerErrorPreparingDebuggeeInvalidSerialPortKind:
-		return "DebuggerErrorPreparingDebuggeeInvalidSerialPort"
-	case DebuggerErrorPreparingDebuggeeInvalidCoreInRemoteDebuggeKind:
-		return "DebuggerErrorPreparingDebuggeeInvalidCoreInRemoteDebugge"
-	case DebuggerErrorPreparingDebuggeeUnableToSwitchToNewProcessKind:
-		return "DebuggerErrorPreparingDebuggeeUnableToSwitchToNewProcess"
-	case DebuggerErrorPreparingDebuggeeToRunScriptKind:
-		return "DebuggerErrorPreparingDebuggeeToRunScript"
-	case DebuggerErrorInvalidRegisterNumberKind:
-		return "DebuggerErrorInvalidRegisterNumber"
-	case DebuggerErrorMaximumBreakpointWithoutContinueKind:
-		return "DebuggerErrorMaximumBreakpointWithoutContinue"
-	case DebuggerErrorBreakpointAlreadyExistsOnTheAddressKind:
-		return "DebuggerErrorBreakpointAlreadyExistsOnTheAddress"
-	case DebuggerErrorBreakpointIdNotFoundKind:
-		return "DebuggerErrorBreakpointIdNotFound"
-	case DebuggerErrorBreakpointAlreadyDisabledKind:
-		return "DebuggerErrorBreakpointAlreadyDisabled"
-	case DebuggerErrorBreakpointAlreadyEnabledKind:
-		return "DebuggerErrorBreakpointAlreadyEnabled"
-	case DebuggerErrorMemoryTypeInvalidKind:
-		return "DebuggerErrorMemoryTypeInvalid"
-	case DebuggerErrorInvalidProcessIdKind:
-		return "DebuggerErrorInvalidProcessId"
-	case DebuggerErrorEventIsNotAppliedKind:
-		return "DebuggerErrorEventIsNotApplied"
-	case DebuggerErrorDetailsOrSwitchProcessInvalidParameterKind:
-		return "DebuggerErrorDetailsOrSwitchProcessInvalidParameter"
-	case DebuggerErrorDetailsOrSwitchThreadInvalidParameterKind:
-		return "DebuggerErrorDetailsOrSwitchThreadInvalidParameter"
-	case DebuggerErrorMaximumBreakpointForASinglePageIsHitKind:
-		return "DebuggerErrorMaximumBreakpointForASinglePageIsHit"
-	case DebuggerErrorPreAllocatedBufferIsEmptyKind:
-		return "DebuggerErrorPreAllocatedBufferIsEmpty"
-	case DebuggerErrorEptCouldNotSplitTheLargePageTo4KbPagesKind:
-		return "DebuggerErrorEptCouldNotSplitTheLargePageTo4KbPages"
-	case DebuggerErrorEptFailedToGetPml1EntryOfTargetAddressKind:
-		return "DebuggerErrorEptFailedToGetPml1EntryOfTargetAddress"
-	case DebuggerErrorEptMultipleHooksInASinglePageKind:
-		return "DebuggerErrorEptMultipleHooksInASinglePage"
-	case DebuggerErrorCouldNotBuildTheEptHookKind:
-		return "DebuggerErrorCouldNotBuildTheEptHook"
-	case DebuggerErrorCouldNotFindAllocationTypeKind:
-		return "DebuggerErrorCouldNotFindAllocationType"
-	case DebuggerErrorInvalidTestQueryIndexKind:
-		return "DebuggerErrorInvalidTestQueryIndex"
-	case DebuggerErrorUnableToAttachToTargetUserModeProcessKind:
-		return "DebuggerErrorUnableToAttachToTargetUserModeProcess"
-	case DebuggerErrorUnableToRemoveHooksEntrypointNotReachedKind:
-		return "DebuggerErrorUnableToRemoveHooksEntrypointNotReached"
-	case DebuggerErrorUnableToRemoveHooksKind:
-		return "DebuggerErrorUnableToRemoveHooks"
-	case DebuggerErrorFunctionsForInitializingPebAddressesAreNotInitializedKind:
-		return "DebuggerErrorFunctionsForInitializingPebAddressesAreNotInitialized"
-	case DebuggerErrorUnableToDetect32BitOr64BitProcessKind:
-		return "DebuggerErrorUnableToDetect32BitOr64BitProcess"
-	case DebuggerErrorUnableToKillTheProcessKind:
-		return "DebuggerErrorUnableToKillTheProcess"
-	case DebuggerErrorInvalidThreadDebuggingTokenKind:
-		return "DebuggerErrorInvalidThreadDebuggingToken"
-	case DebuggerErrorUnableToPauseTheProcessThreadsKind:
-		return "DebuggerErrorUnableToPauseTheProcessThreads"
-	case DebuggerErrorUnableToAttachToAnAlreadyAttachedProcessKind:
-		return "DebuggerErrorUnableToAttachToAnAlreadyAttachedProcess"
-	case DebuggerErrorTheUserDebuggerNotAttachedToTheProcessKind:
-		return "DebuggerErrorTheUserDebuggerNotAttachedToTheProcess"
-	case DebuggerErrorUnableToDetachAsThereArePausedThreadsKind:
-		return "DebuggerErrorUnableToDetachAsThereArePausedThreads"
-	case DebuggerErrorUnableToSwitchProcessIdOrThreadIdIsInvalidKind:
-		return "DebuggerErrorUnableToSwitchProcessIdOrThreadIdIsInvalid"
-	case DebuggerErrorUnableToSwitchThereIsNoThreadOnTheProcessKind:
-		return "DebuggerErrorUnableToSwitchThereIsNoThreadOnTheProcess"
-	case DebuggerErrorUnableToGetModulesOfTheProcessKind:
-		return "DebuggerErrorUnableToGetModulesOfTheProcess"
-	case DebuggerErrorUnableToGetCallstackKind:
-		return "DebuggerErrorUnableToGetCallstack"
-	case DebuggerErrorUnableToQueryCountOfProcessesOrThreadsKind:
-		return "DebuggerErrorUnableToQueryCountOfProcessesOrThreads"
-	case DebuggerErrorUsingShortCircuitingEventWithPostEventModeIsForbiddednKind:
-		return "DebuggerErrorUsingShortCircuitingEventWithPostEventModeIsForbiddedn"
-	case DebuggerErrorUnknownTestQueryReceivedKind:
-		return "DebuggerErrorUnknownTestQueryReceived"
-	case DebuggerErrorReadingMemoryInvalidParameterKind:
-		return "DebuggerErrorReadingMemoryInvalidParameter"
-	case DebuggerErrorTheTrapFlagListIsFullKind:
-		return "DebuggerErrorTheTrapFlagListIsFull"
-	case DebuggerErrorUnableToKillTheProcessDoesNotExistsKind:
-		return "DebuggerErrorUnableToKillTheProcessDoesNotExists"
-	case DebuggerErrorModeExecutionIsInvalidKind:
-		return "DebuggerErrorModeExecutionIsInvalid"
-	case DebuggerErrorProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootModeKind:
-		return "DebuggerErrorProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootMode"
-	case DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForEventAndConditionalsKind:
-		return "DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForEventAndConditionals"
-	case DebuggerErrorInstantEventRegularPreallocatedBufferNotFoundKind:
-		return "DebuggerErrorInstantEventRegularPreallocatedBufferNotFound"
-	case DebuggerErrorInstantEventBigPreallocatedBufferNotFoundKind:
-		return "DebuggerErrorInstantEventBigPreallocatedBufferNotFound"
-	case DebuggerErrorUnableToCreateActionCannotAllocateBufferKind:
-		return "DebuggerErrorUnableToCreateActionCannotAllocateBuffer"
-	case DebuggerErrorInstantEventActionRegularPreallocatedBufferNotFoundKind:
-		return "DebuggerErrorInstantEventActionRegularPreallocatedBufferNotFound"
-	case DebuggerErrorInstantEventActionBigPreallocatedBufferNotFoundKind:
-		return "DebuggerErrorInstantEventActionBigPreallocatedBufferNotFound"
-	case DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForActionBufferKind:
-		return "DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForActionBuffer"
-	case DebuggerErrorInstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStackKind:
-		return "DebuggerErrorInstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStack"
-	case DebuggerErrorInstantEventRegularRequestedSafeBufferNotFoundKind:
-		return "DebuggerErrorInstantEventRegularRequestedSafeBufferNotFound"
-	case DebuggerErrorInstantEventBigRequestedSafeBufferNotFoundKind:
-		return "DebuggerErrorInstantEventBigRequestedSafeBufferNotFound"
-	case DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBufferKind:
-		return "DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBuffer"
-	case DebuggerErrorUnableToAllocateRequestedSafeBufferKind:
-		return "DebuggerErrorUnableToAllocateRequestedSafeBuffer"
-	case DebuggerErrorCouldNotFindPreactivationTypeKind:
-		return "DebuggerErrorCouldNotFindPreactivationType"
-	case DebuggerErrorTheModeExecTrapIsNotInitializedKind:
-		return "DebuggerErrorTheModeExecTrapIsNotInitialized"
-	case DebuggerErrorTheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFullKind:
-		return "DebuggerErrorTheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFull"
-	case DebuggerErrorNotAllCoresAreLockedForApplyingInstantEventKind:
-		return "DebuggerErrorNotAllCoresAreLockedForApplyingInstantEvent"
-	case DebuggerErrorTargetSwitchingCoreIsNotLockedKind:
-		return "DebuggerErrorTargetSwitchingCoreIsNotLocked"
-	case DebuggerErrorInvalidPhysicalAddressKind:
-		return "DebuggerErrorInvalidPhysicalAddress"
+	case TagNotExistsKind:
+		return "TagNotExists"
+	case InvalidActionTypeKind:
+		return "InvalidActionType"
+	case ActionBufferSizeIsZeroKind:
+		return "ActionBufferSizeIsZero"
+	case EventTypeIsInvalidKind:
+		return "EventTypeIsInvalid"
+	case UnableToCreateEventKind:
+		return "UnableToCreateEvent"
+	case InvalidAddressKind:
+		return "InvalidAddress"
+	case InvalidCoreIdKind:
+		return "InvalidCoreId"
+	case ExceptionIndexExceedFirst32EntriesKind:
+		return "ExceptionIndexExceedFirst32Entries"
+	case InterruptIndexIsNotValidKind:
+		return "InterruptIndexIsNotValid"
+	case UnableToHideOrUnhideDebuggerKind:
+		return "UnableToHideOrUnhideDebugger"
+	case DebuggerAlreadyUhideKind:
+		return "DebuggerAlreadyUhide"
+	case EditMemoryStatusInvalidParameterKind:
+		return "EditMemoryStatusInvalidParameter"
+	case EditMemoryStatusInvalidAddressBasedOnCurrentProcessKind:
+		return "EditMemoryStatusInvalidAddressBasedOnCurrentProcess"
+	case EditMemoryStatusInvalidAddressBasedOnOtherProcessKind:
+		return "EditMemoryStatusInvalidAddressBasedOnOtherProcess"
+	case ModifyEventsInvalidTagKind:
+		return "ModifyEventsInvalidTag"
+	case ModifyEventsInvalidTypeOfActionKind:
+		return "ModifyEventsInvalidTypeOfAction"
+	case SteppingInvalidParameterKind:
+		return "SteppingInvalidParameter"
+	case SteppingsEitherThreadNotFoundOrDisabledKind:
+		return "SteppingsEitherThreadNotFoundOrDisabled"
+	case PreparingDebuggeeInvalidBaudrateKind:
+		return "PreparingDebuggeeInvalidBaudrate"
+	case PreparingDebuggeeInvalidSerialPortKind:
+		return "PreparingDebuggeeInvalidSerialPort"
+	case PreparingDebuggeeInvalidCoreInRemoteDebuggeKind:
+		return "PreparingDebuggeeInvalidCoreInRemoteDebugge"
+	case PreparingDebuggeeUnableToSwitchToNewProcessKind:
+		return "PreparingDebuggeeUnableToSwitchToNewProcess"
+	case PreparingDebuggeeToRunScriptKind:
+		return "PreparingDebuggeeToRunScript"
+	case InvalidRegisterNumberKind:
+		return "InvalidRegisterNumber"
+	case MaximumBreakpointWithoutContinueKind:
+		return "MaximumBreakpointWithoutContinue"
+	case BreakpointAlreadyExistsOnTheAddressKind:
+		return "BreakpointAlreadyExistsOnTheAddress"
+	case BreakpointIdNotFoundKind:
+		return "BreakpointIdNotFound"
+	case BreakpointAlreadyDisabledKind:
+		return "BreakpointAlreadyDisabled"
+	case BreakpointAlreadyEnabledKind:
+		return "BreakpointAlreadyEnabled"
+	case MemoryTypeInvalidKind:
+		return "MemoryTypeInvalid"
+	case InvalidProcessIdKind:
+		return "InvalidProcessId"
+	case EventIsNotAppliedKind:
+		return "EventIsNotApplied"
+	case DetailsOrSwitchProcessInvalidParameterKind:
+		return "DetailsOrSwitchProcessInvalidParameter"
+	case DetailsOrSwitchThreadInvalidParameterKind:
+		return "DetailsOrSwitchThreadInvalidParameter"
+	case MaximumBreakpointForASinglePageIsHitKind:
+		return "MaximumBreakpointForASinglePageIsHit"
+	case PreAllocatedBufferIsEmptyKind:
+		return "PreAllocatedBufferIsEmpty"
+	case EptCouldNotSplitTheLargePageTo4KbPagesKind:
+		return "EptCouldNotSplitTheLargePageTo4KbPages"
+	case EptFailedToGetPml1EntryOfTargetAddressKind:
+		return "EptFailedToGetPml1EntryOfTargetAddress"
+	case EptMultipleHooksInASinglePageKind:
+		return "EptMultipleHooksInASinglePage"
+	case CouldNotBuildTheEptHookKind:
+		return "CouldNotBuildTheEptHook"
+	case CouldNotFindAllocationTypeKind:
+		return "CouldNotFindAllocationType"
+	case InvalidTestQueryIndexKind:
+		return "InvalidTestQueryIndex"
+	case UnableToAttachToTargetUserModeProcessKind:
+		return "UnableToAttachToTargetUserModeProcess"
+	case UnableToRemoveHooksEntrypointNotReachedKind:
+		return "UnableToRemoveHooksEntrypointNotReached"
+	case UnableToRemoveHooksKind:
+		return "UnableToRemoveHooks"
+	case FunctionsForInitializingPebAddressesAreNotInitializedKind:
+		return "FunctionsForInitializingPebAddressesAreNotInitialized"
+	case UnableToDetect32BitOr64BitProcessKind:
+		return "UnableToDetect32BitOr64BitProcess"
+	case UnableToKillTheProcessKind:
+		return "UnableToKillTheProcess"
+	case InvalidThreadDebuggingTokenKind:
+		return "InvalidThreadDebuggingToken"
+	case UnableToPauseTheProcessThreadsKind:
+		return "UnableToPauseTheProcessThreads"
+	case UnableToAttachToAnAlreadyAttachedProcessKind:
+		return "UnableToAttachToAnAlreadyAttachedProcess"
+	case TheUserDebuggerNotAttachedToTheProcessKind:
+		return "TheUserDebuggerNotAttachedToTheProcess"
+	case UnableToDetachAsThereArePausedThreadsKind:
+		return "UnableToDetachAsThereArePausedThreads"
+	case UnableToSwitchProcessIdOrThreadIdIsInvalidKind:
+		return "UnableToSwitchProcessIdOrThreadIdIsInvalid"
+	case UnableToSwitchThereIsNoThreadOnTheProcessKind:
+		return "UnableToSwitchThereIsNoThreadOnTheProcess"
+	case UnableToGetModulesOfTheProcessKind:
+		return "UnableToGetModulesOfTheProcess"
+	case UnableToGetCallstackKind:
+		return "UnableToGetCallstack"
+	case UnableToQueryCountOfProcessesOrThreadsKind:
+		return "UnableToQueryCountOfProcessesOrThreads"
+	case UsingShortCircuitingEventWithPostEventModeIsForbiddednKind:
+		return "UsingShortCircuitingEventWithPostEventModeIsForbiddedn"
+	case UnknownTestQueryReceivedKind:
+		return "UnknownTestQueryReceived"
+	case ReadingMemoryInvalidParameterKind:
+		return "ReadingMemoryInvalidParameter"
+	case TheTrapFlagListIsFullKind:
+		return "TheTrapFlagListIsFull"
+	case UnableToKillTheProcessDoesNotExistsKind:
+		return "UnableToKillTheProcessDoesNotExists"
+	case ModeExecutionIsInvalidKind:
+		return "ModeExecutionIsInvalid"
+	case ProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootModeKind:
+		return "ProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootMode"
+	case InstantEventPreallocatedBufferIsNotEnoughForEventAndConditionalsKind:
+		return "InstantEventPreallocatedBufferIsNotEnoughForEventAndConditionals"
+	case InstantEventRegularPreallocatedBufferNotFoundKind:
+		return "InstantEventRegularPreallocatedBufferNotFound"
+	case InstantEventBigPreallocatedBufferNotFoundKind:
+		return "InstantEventBigPreallocatedBufferNotFound"
+	case UnableToCreateActionCannotAllocateBufferKind:
+		return "UnableToCreateActionCannotAllocateBuffer"
+	case InstantEventActionRegularPreallocatedBufferNotFoundKind:
+		return "InstantEventActionRegularPreallocatedBufferNotFound"
+	case InstantEventActionBigPreallocatedBufferNotFoundKind:
+		return "InstantEventActionBigPreallocatedBufferNotFound"
+	case InstantEventPreallocatedBufferIsNotEnoughForActionBufferKind:
+		return "InstantEventPreallocatedBufferIsNotEnoughForActionBuffer"
+	case InstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStackKind:
+		return "InstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStack"
+	case InstantEventRegularRequestedSafeBufferNotFoundKind:
+		return "InstantEventRegularRequestedSafeBufferNotFound"
+	case InstantEventBigRequestedSafeBufferNotFoundKind:
+		return "InstantEventBigRequestedSafeBufferNotFound"
+	case InstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBufferKind:
+		return "InstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBuffer"
+	case UnableToAllocateRequestedSafeBufferKind:
+		return "UnableToAllocateRequestedSafeBuffer"
+	case CouldNotFindPreactivationTypeKind:
+		return "CouldNotFindPreactivationType"
+	case TheModeExecTrapIsNotInitializedKind:
+		return "TheModeExecTrapIsNotInitialized"
+	case TheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFullKind:
+		return "TheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFull"
+	case NotAllCoresAreLockedForApplyingInstantEventKind:
+		return "NotAllCoresAreLockedForApplyingInstantEvent"
+	case TargetSwitchingCoreIsNotLockedKind:
+		return "TargetSwitchingCoreIsNotLocked"
+	case InvalidPhysicalAddressKind:
+		return "InvalidPhysicalAddress"
 	default:
 		return "InvalidDebuggerErrorKind"
 	}
@@ -285,350 +285,350 @@ func (k DebuggerErrorKind) String() string {
 
 func (k DebuggerErrorKind) Keys() []string {
 	return []string{
-		"DebuggerErrorTagNotExists",
-		"DebuggerErrorInvalidActionType",
-		"DebuggerErrorActionBufferSizeIsZero",
-		"DebuggerErrorEventTypeIsInvalid",
-		"DebuggerErrorUnableToCreateEvent",
-		"DebuggerErrorInvalidAddress",
-		"DebuggerErrorInvalidCoreId",
-		"DebuggerErrorExceptionIndexExceedFirst32Entries",
-		"DebuggerErrorInterruptIndexIsNotValid",
-		"DebuggerErrorUnableToHideOrUnhideDebugger",
-		"DebuggerErrorDebuggerAlreadyUhide",
-		"DebuggerErrorEditMemoryStatusInvalidParameter",
-		"DebuggerErrorEditMemoryStatusInvalidAddressBasedOnCurrentProcess",
-		"DebuggerErrorEditMemoryStatusInvalidAddressBasedOnOtherProcess",
-		"DebuggerErrorModifyEventsInvalidTag",
-		"DebuggerErrorModifyEventsInvalidTypeOfAction",
-		"DebuggerErrorSteppingInvalidParameter",
-		"DebuggerErrorSteppingsEitherThreadNotFoundOrDisabled",
-		"DebuggerErrorPreparingDebuggeeInvalidBaudrate",
-		"DebuggerErrorPreparingDebuggeeInvalidSerialPort",
-		"DebuggerErrorPreparingDebuggeeInvalidCoreInRemoteDebugge",
-		"DebuggerErrorPreparingDebuggeeUnableToSwitchToNewProcess",
-		"DebuggerErrorPreparingDebuggeeToRunScript",
-		"DebuggerErrorInvalidRegisterNumber",
-		"DebuggerErrorMaximumBreakpointWithoutContinue",
-		"DebuggerErrorBreakpointAlreadyExistsOnTheAddress",
-		"DebuggerErrorBreakpointIdNotFound",
-		"DebuggerErrorBreakpointAlreadyDisabled",
-		"DebuggerErrorBreakpointAlreadyEnabled",
-		"DebuggerErrorMemoryTypeInvalid",
-		"DebuggerErrorInvalidProcessId",
-		"DebuggerErrorEventIsNotApplied",
-		"DebuggerErrorDetailsOrSwitchProcessInvalidParameter",
-		"DebuggerErrorDetailsOrSwitchThreadInvalidParameter",
-		"DebuggerErrorMaximumBreakpointForASinglePageIsHit",
-		"DebuggerErrorPreAllocatedBufferIsEmpty",
-		"DebuggerErrorEptCouldNotSplitTheLargePageTo4KbPages",
-		"DebuggerErrorEptFailedToGetPml1EntryOfTargetAddress",
-		"DebuggerErrorEptMultipleHooksInASinglePage",
-		"DebuggerErrorCouldNotBuildTheEptHook",
-		"DebuggerErrorCouldNotFindAllocationType",
-		"DebuggerErrorInvalidTestQueryIndex",
-		"DebuggerErrorUnableToAttachToTargetUserModeProcess",
-		"DebuggerErrorUnableToRemoveHooksEntrypointNotReached",
-		"DebuggerErrorUnableToRemoveHooks",
-		"DebuggerErrorFunctionsForInitializingPebAddressesAreNotInitialized",
-		"DebuggerErrorUnableToDetect32BitOr64BitProcess",
-		"DebuggerErrorUnableToKillTheProcess",
-		"DebuggerErrorInvalidThreadDebuggingToken",
-		"DebuggerErrorUnableToPauseTheProcessThreads",
-		"DebuggerErrorUnableToAttachToAnAlreadyAttachedProcess",
-		"DebuggerErrorTheUserDebuggerNotAttachedToTheProcess",
-		"DebuggerErrorUnableToDetachAsThereArePausedThreads",
-		"DebuggerErrorUnableToSwitchProcessIdOrThreadIdIsInvalid",
-		"DebuggerErrorUnableToSwitchThereIsNoThreadOnTheProcess",
-		"DebuggerErrorUnableToGetModulesOfTheProcess",
-		"DebuggerErrorUnableToGetCallstack",
-		"DebuggerErrorUnableToQueryCountOfProcessesOrThreads",
-		"DebuggerErrorUsingShortCircuitingEventWithPostEventModeIsForbiddedn",
-		"DebuggerErrorUnknownTestQueryReceived",
-		"DebuggerErrorReadingMemoryInvalidParameter",
-		"DebuggerErrorTheTrapFlagListIsFull",
-		"DebuggerErrorUnableToKillTheProcessDoesNotExists",
-		"DebuggerErrorModeExecutionIsInvalid",
-		"DebuggerErrorProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootMode",
-		"DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForEventAndConditionals",
-		"DebuggerErrorInstantEventRegularPreallocatedBufferNotFound",
-		"DebuggerErrorInstantEventBigPreallocatedBufferNotFound",
-		"DebuggerErrorUnableToCreateActionCannotAllocateBuffer",
-		"DebuggerErrorInstantEventActionRegularPreallocatedBufferNotFound",
-		"DebuggerErrorInstantEventActionBigPreallocatedBufferNotFound",
-		"DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForActionBuffer",
-		"DebuggerErrorInstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStack",
-		"DebuggerErrorInstantEventRegularRequestedSafeBufferNotFound",
-		"DebuggerErrorInstantEventBigRequestedSafeBufferNotFound",
-		"DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBuffer",
-		"DebuggerErrorUnableToAllocateRequestedSafeBuffer",
-		"DebuggerErrorCouldNotFindPreactivationType",
-		"DebuggerErrorTheModeExecTrapIsNotInitialized",
-		"DebuggerErrorTheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFull",
-		"DebuggerErrorNotAllCoresAreLockedForApplyingInstantEvent",
-		"DebuggerErrorTargetSwitchingCoreIsNotLocked",
-		"DebuggerErrorInvalidPhysicalAddress",
+		"TagNotExists",
+		"InvalidActionType",
+		"ActionBufferSizeIsZero",
+		"EventTypeIsInvalid",
+		"UnableToCreateEvent",
+		"InvalidAddress",
+		"InvalidCoreId",
+		"ExceptionIndexExceedFirst32Entries",
+		"InterruptIndexIsNotValid",
+		"UnableToHideOrUnhideDebugger",
+		"DebuggerAlreadyUhide",
+		"EditMemoryStatusInvalidParameter",
+		"EditMemoryStatusInvalidAddressBasedOnCurrentProcess",
+		"EditMemoryStatusInvalidAddressBasedOnOtherProcess",
+		"ModifyEventsInvalidTag",
+		"ModifyEventsInvalidTypeOfAction",
+		"SteppingInvalidParameter",
+		"SteppingsEitherThreadNotFoundOrDisabled",
+		"PreparingDebuggeeInvalidBaudrate",
+		"PreparingDebuggeeInvalidSerialPort",
+		"PreparingDebuggeeInvalidCoreInRemoteDebugge",
+		"PreparingDebuggeeUnableToSwitchToNewProcess",
+		"PreparingDebuggeeToRunScript",
+		"InvalidRegisterNumber",
+		"MaximumBreakpointWithoutContinue",
+		"BreakpointAlreadyExistsOnTheAddress",
+		"BreakpointIdNotFound",
+		"BreakpointAlreadyDisabled",
+		"BreakpointAlreadyEnabled",
+		"MemoryTypeInvalid",
+		"InvalidProcessId",
+		"EventIsNotApplied",
+		"DetailsOrSwitchProcessInvalidParameter",
+		"DetailsOrSwitchThreadInvalidParameter",
+		"MaximumBreakpointForASinglePageIsHit",
+		"PreAllocatedBufferIsEmpty",
+		"EptCouldNotSplitTheLargePageTo4KbPages",
+		"EptFailedToGetPml1EntryOfTargetAddress",
+		"EptMultipleHooksInASinglePage",
+		"CouldNotBuildTheEptHook",
+		"CouldNotFindAllocationType",
+		"InvalidTestQueryIndex",
+		"UnableToAttachToTargetUserModeProcess",
+		"UnableToRemoveHooksEntrypointNotReached",
+		"UnableToRemoveHooks",
+		"FunctionsForInitializingPebAddressesAreNotInitialized",
+		"UnableToDetect32BitOr64BitProcess",
+		"UnableToKillTheProcess",
+		"InvalidThreadDebuggingToken",
+		"UnableToPauseTheProcessThreads",
+		"UnableToAttachToAnAlreadyAttachedProcess",
+		"TheUserDebuggerNotAttachedToTheProcess",
+		"UnableToDetachAsThereArePausedThreads",
+		"UnableToSwitchProcessIdOrThreadIdIsInvalid",
+		"UnableToSwitchThereIsNoThreadOnTheProcess",
+		"UnableToGetModulesOfTheProcess",
+		"UnableToGetCallstack",
+		"UnableToQueryCountOfProcessesOrThreads",
+		"UsingShortCircuitingEventWithPostEventModeIsForbiddedn",
+		"UnknownTestQueryReceived",
+		"ReadingMemoryInvalidParameter",
+		"TheTrapFlagListIsFull",
+		"UnableToKillTheProcessDoesNotExists",
+		"ModeExecutionIsInvalid",
+		"ProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootMode",
+		"InstantEventPreallocatedBufferIsNotEnoughForEventAndConditionals",
+		"InstantEventRegularPreallocatedBufferNotFound",
+		"InstantEventBigPreallocatedBufferNotFound",
+		"UnableToCreateActionCannotAllocateBuffer",
+		"InstantEventActionRegularPreallocatedBufferNotFound",
+		"InstantEventActionBigPreallocatedBufferNotFound",
+		"InstantEventPreallocatedBufferIsNotEnoughForActionBuffer",
+		"InstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStack",
+		"InstantEventRegularRequestedSafeBufferNotFound",
+		"InstantEventBigRequestedSafeBufferNotFound",
+		"InstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBuffer",
+		"UnableToAllocateRequestedSafeBuffer",
+		"CouldNotFindPreactivationType",
+		"TheModeExecTrapIsNotInitialized",
+		"TheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFull",
+		"NotAllCoresAreLockedForApplyingInstantEvent",
+		"TargetSwitchingCoreIsNotLocked",
+		"InvalidPhysicalAddress",
 		"InvalidDebuggerErrorKind",
 	}
 }
 
 func (k DebuggerErrorKind) Kinds() []DebuggerErrorKind {
 	return []DebuggerErrorKind{
-		DebuggerErrorTagNotExistsKind,
-		DebuggerErrorInvalidActionTypeKind,
-		DebuggerErrorActionBufferSizeIsZeroKind,
-		DebuggerErrorEventTypeIsInvalidKind,
-		DebuggerErrorUnableToCreateEventKind,
-		DebuggerErrorInvalidAddressKind,
-		DebuggerErrorInvalidCoreIdKind,
-		DebuggerErrorExceptionIndexExceedFirst32EntriesKind,
-		DebuggerErrorInterruptIndexIsNotValidKind,
-		DebuggerErrorUnableToHideOrUnhideDebuggerKind,
-		DebuggerErrorDebuggerAlreadyUhideKind,
-		DebuggerErrorEditMemoryStatusInvalidParameterKind,
-		DebuggerErrorEditMemoryStatusInvalidAddressBasedOnCurrentProcessKind,
-		DebuggerErrorEditMemoryStatusInvalidAddressBasedOnOtherProcessKind,
-		DebuggerErrorModifyEventsInvalidTagKind,
-		DebuggerErrorModifyEventsInvalidTypeOfActionKind,
-		DebuggerErrorSteppingInvalidParameterKind,
-		DebuggerErrorSteppingsEitherThreadNotFoundOrDisabledKind,
-		DebuggerErrorPreparingDebuggeeInvalidBaudrateKind,
-		DebuggerErrorPreparingDebuggeeInvalidSerialPortKind,
-		DebuggerErrorPreparingDebuggeeInvalidCoreInRemoteDebuggeKind,
-		DebuggerErrorPreparingDebuggeeUnableToSwitchToNewProcessKind,
-		DebuggerErrorPreparingDebuggeeToRunScriptKind,
-		DebuggerErrorInvalidRegisterNumberKind,
-		DebuggerErrorMaximumBreakpointWithoutContinueKind,
-		DebuggerErrorBreakpointAlreadyExistsOnTheAddressKind,
-		DebuggerErrorBreakpointIdNotFoundKind,
-		DebuggerErrorBreakpointAlreadyDisabledKind,
-		DebuggerErrorBreakpointAlreadyEnabledKind,
-		DebuggerErrorMemoryTypeInvalidKind,
-		DebuggerErrorInvalidProcessIdKind,
-		DebuggerErrorEventIsNotAppliedKind,
-		DebuggerErrorDetailsOrSwitchProcessInvalidParameterKind,
-		DebuggerErrorDetailsOrSwitchThreadInvalidParameterKind,
-		DebuggerErrorMaximumBreakpointForASinglePageIsHitKind,
-		DebuggerErrorPreAllocatedBufferIsEmptyKind,
-		DebuggerErrorEptCouldNotSplitTheLargePageTo4KbPagesKind,
-		DebuggerErrorEptFailedToGetPml1EntryOfTargetAddressKind,
-		DebuggerErrorEptMultipleHooksInASinglePageKind,
-		DebuggerErrorCouldNotBuildTheEptHookKind,
-		DebuggerErrorCouldNotFindAllocationTypeKind,
-		DebuggerErrorInvalidTestQueryIndexKind,
-		DebuggerErrorUnableToAttachToTargetUserModeProcessKind,
-		DebuggerErrorUnableToRemoveHooksEntrypointNotReachedKind,
-		DebuggerErrorUnableToRemoveHooksKind,
-		DebuggerErrorFunctionsForInitializingPebAddressesAreNotInitializedKind,
-		DebuggerErrorUnableToDetect32BitOr64BitProcessKind,
-		DebuggerErrorUnableToKillTheProcessKind,
-		DebuggerErrorInvalidThreadDebuggingTokenKind,
-		DebuggerErrorUnableToPauseTheProcessThreadsKind,
-		DebuggerErrorUnableToAttachToAnAlreadyAttachedProcessKind,
-		DebuggerErrorTheUserDebuggerNotAttachedToTheProcessKind,
-		DebuggerErrorUnableToDetachAsThereArePausedThreadsKind,
-		DebuggerErrorUnableToSwitchProcessIdOrThreadIdIsInvalidKind,
-		DebuggerErrorUnableToSwitchThereIsNoThreadOnTheProcessKind,
-		DebuggerErrorUnableToGetModulesOfTheProcessKind,
-		DebuggerErrorUnableToGetCallstackKind,
-		DebuggerErrorUnableToQueryCountOfProcessesOrThreadsKind,
-		DebuggerErrorUsingShortCircuitingEventWithPostEventModeIsForbiddednKind,
-		DebuggerErrorUnknownTestQueryReceivedKind,
-		DebuggerErrorReadingMemoryInvalidParameterKind,
-		DebuggerErrorTheTrapFlagListIsFullKind,
-		DebuggerErrorUnableToKillTheProcessDoesNotExistsKind,
-		DebuggerErrorModeExecutionIsInvalidKind,
-		DebuggerErrorProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootModeKind,
-		DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForEventAndConditionalsKind,
-		DebuggerErrorInstantEventRegularPreallocatedBufferNotFoundKind,
-		DebuggerErrorInstantEventBigPreallocatedBufferNotFoundKind,
-		DebuggerErrorUnableToCreateActionCannotAllocateBufferKind,
-		DebuggerErrorInstantEventActionRegularPreallocatedBufferNotFoundKind,
-		DebuggerErrorInstantEventActionBigPreallocatedBufferNotFoundKind,
-		DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForActionBufferKind,
-		DebuggerErrorInstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStackKind,
-		DebuggerErrorInstantEventRegularRequestedSafeBufferNotFoundKind,
-		DebuggerErrorInstantEventBigRequestedSafeBufferNotFoundKind,
-		DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBufferKind,
-		DebuggerErrorUnableToAllocateRequestedSafeBufferKind,
-		DebuggerErrorCouldNotFindPreactivationTypeKind,
-		DebuggerErrorTheModeExecTrapIsNotInitializedKind,
-		DebuggerErrorTheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFullKind,
-		DebuggerErrorNotAllCoresAreLockedForApplyingInstantEventKind,
-		DebuggerErrorTargetSwitchingCoreIsNotLockedKind,
-		DebuggerErrorInvalidPhysicalAddressKind,
+		TagNotExistsKind,
+		InvalidActionTypeKind,
+		ActionBufferSizeIsZeroKind,
+		EventTypeIsInvalidKind,
+		UnableToCreateEventKind,
+		InvalidAddressKind,
+		InvalidCoreIdKind,
+		ExceptionIndexExceedFirst32EntriesKind,
+		InterruptIndexIsNotValidKind,
+		UnableToHideOrUnhideDebuggerKind,
+		DebuggerAlreadyUhideKind,
+		EditMemoryStatusInvalidParameterKind,
+		EditMemoryStatusInvalidAddressBasedOnCurrentProcessKind,
+		EditMemoryStatusInvalidAddressBasedOnOtherProcessKind,
+		ModifyEventsInvalidTagKind,
+		ModifyEventsInvalidTypeOfActionKind,
+		SteppingInvalidParameterKind,
+		SteppingsEitherThreadNotFoundOrDisabledKind,
+		PreparingDebuggeeInvalidBaudrateKind,
+		PreparingDebuggeeInvalidSerialPortKind,
+		PreparingDebuggeeInvalidCoreInRemoteDebuggeKind,
+		PreparingDebuggeeUnableToSwitchToNewProcessKind,
+		PreparingDebuggeeToRunScriptKind,
+		InvalidRegisterNumberKind,
+		MaximumBreakpointWithoutContinueKind,
+		BreakpointAlreadyExistsOnTheAddressKind,
+		BreakpointIdNotFoundKind,
+		BreakpointAlreadyDisabledKind,
+		BreakpointAlreadyEnabledKind,
+		MemoryTypeInvalidKind,
+		InvalidProcessIdKind,
+		EventIsNotAppliedKind,
+		DetailsOrSwitchProcessInvalidParameterKind,
+		DetailsOrSwitchThreadInvalidParameterKind,
+		MaximumBreakpointForASinglePageIsHitKind,
+		PreAllocatedBufferIsEmptyKind,
+		EptCouldNotSplitTheLargePageTo4KbPagesKind,
+		EptFailedToGetPml1EntryOfTargetAddressKind,
+		EptMultipleHooksInASinglePageKind,
+		CouldNotBuildTheEptHookKind,
+		CouldNotFindAllocationTypeKind,
+		InvalidTestQueryIndexKind,
+		UnableToAttachToTargetUserModeProcessKind,
+		UnableToRemoveHooksEntrypointNotReachedKind,
+		UnableToRemoveHooksKind,
+		FunctionsForInitializingPebAddressesAreNotInitializedKind,
+		UnableToDetect32BitOr64BitProcessKind,
+		UnableToKillTheProcessKind,
+		InvalidThreadDebuggingTokenKind,
+		UnableToPauseTheProcessThreadsKind,
+		UnableToAttachToAnAlreadyAttachedProcessKind,
+		TheUserDebuggerNotAttachedToTheProcessKind,
+		UnableToDetachAsThereArePausedThreadsKind,
+		UnableToSwitchProcessIdOrThreadIdIsInvalidKind,
+		UnableToSwitchThereIsNoThreadOnTheProcessKind,
+		UnableToGetModulesOfTheProcessKind,
+		UnableToGetCallstackKind,
+		UnableToQueryCountOfProcessesOrThreadsKind,
+		UsingShortCircuitingEventWithPostEventModeIsForbiddednKind,
+		UnknownTestQueryReceivedKind,
+		ReadingMemoryInvalidParameterKind,
+		TheTrapFlagListIsFullKind,
+		UnableToKillTheProcessDoesNotExistsKind,
+		ModeExecutionIsInvalidKind,
+		ProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootModeKind,
+		InstantEventPreallocatedBufferIsNotEnoughForEventAndConditionalsKind,
+		InstantEventRegularPreallocatedBufferNotFoundKind,
+		InstantEventBigPreallocatedBufferNotFoundKind,
+		UnableToCreateActionCannotAllocateBufferKind,
+		InstantEventActionRegularPreallocatedBufferNotFoundKind,
+		InstantEventActionBigPreallocatedBufferNotFoundKind,
+		InstantEventPreallocatedBufferIsNotEnoughForActionBufferKind,
+		InstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStackKind,
+		InstantEventRegularRequestedSafeBufferNotFoundKind,
+		InstantEventBigRequestedSafeBufferNotFoundKind,
+		InstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBufferKind,
+		UnableToAllocateRequestedSafeBufferKind,
+		CouldNotFindPreactivationTypeKind,
+		TheModeExecTrapIsNotInitializedKind,
+		TheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFullKind,
+		NotAllCoresAreLockedForApplyingInstantEventKind,
+		TargetSwitchingCoreIsNotLockedKind,
+		InvalidPhysicalAddressKind,
 		InvalidDebuggerErrorKind,
 	}
 }
 
 func (k DebuggerErrorKind) SvgFileName() string {
 	switch k {
-	case DebuggerErrorTagNotExistsKind:
-		return "DebuggerErrorTagNotExists"
-	case DebuggerErrorInvalidActionTypeKind:
-		return "DebuggerErrorInvalidActionType"
-	case DebuggerErrorActionBufferSizeIsZeroKind:
-		return "DebuggerErrorActionBufferSizeIsZero"
-	case DebuggerErrorEventTypeIsInvalidKind:
-		return "DebuggerErrorEventTypeIsInvalid"
-	case DebuggerErrorUnableToCreateEventKind:
-		return "DebuggerErrorUnableToCreateEvent"
-	case DebuggerErrorInvalidAddressKind:
-		return "DebuggerErrorInvalidAddress"
-	case DebuggerErrorInvalidCoreIdKind:
-		return "DebuggerErrorInvalidCoreId"
-	case DebuggerErrorExceptionIndexExceedFirst32EntriesKind:
-		return "DebuggerErrorExceptionIndexExceedFirst32Entries"
-	case DebuggerErrorInterruptIndexIsNotValidKind:
-		return "DebuggerErrorInterruptIndexIsNotValid"
-	case DebuggerErrorUnableToHideOrUnhideDebuggerKind:
-		return "DebuggerErrorUnableToHideOrUnhideDebugger"
-	case DebuggerErrorDebuggerAlreadyUhideKind:
-		return "DebuggerErrorDebuggerAlreadyUhide"
-	case DebuggerErrorEditMemoryStatusInvalidParameterKind:
-		return "DebuggerErrorEditMemoryStatusInvalidParameter"
-	case DebuggerErrorEditMemoryStatusInvalidAddressBasedOnCurrentProcessKind:
-		return "DebuggerErrorEditMemoryStatusInvalidAddressBasedOnCurrentProcess"
-	case DebuggerErrorEditMemoryStatusInvalidAddressBasedOnOtherProcessKind:
-		return "DebuggerErrorEditMemoryStatusInvalidAddressBasedOnOtherProcess"
-	case DebuggerErrorModifyEventsInvalidTagKind:
-		return "DebuggerErrorModifyEventsInvalidTag"
-	case DebuggerErrorModifyEventsInvalidTypeOfActionKind:
-		return "DebuggerErrorModifyEventsInvalidTypeOfAction"
-	case DebuggerErrorSteppingInvalidParameterKind:
-		return "DebuggerErrorSteppingInvalidParameter"
-	case DebuggerErrorSteppingsEitherThreadNotFoundOrDisabledKind:
-		return "DebuggerErrorSteppingsEitherThreadNotFoundOrDisabled"
-	case DebuggerErrorPreparingDebuggeeInvalidBaudrateKind:
-		return "DebuggerErrorPreparingDebuggeeInvalidBaudrate"
-	case DebuggerErrorPreparingDebuggeeInvalidSerialPortKind:
-		return "DebuggerErrorPreparingDebuggeeInvalidSerialPort"
-	case DebuggerErrorPreparingDebuggeeInvalidCoreInRemoteDebuggeKind:
-		return "DebuggerErrorPreparingDebuggeeInvalidCoreInRemoteDebugge"
-	case DebuggerErrorPreparingDebuggeeUnableToSwitchToNewProcessKind:
-		return "DebuggerErrorPreparingDebuggeeUnableToSwitchToNewProcess"
-	case DebuggerErrorPreparingDebuggeeToRunScriptKind:
-		return "DebuggerErrorPreparingDebuggeeToRunScript"
-	case DebuggerErrorInvalidRegisterNumberKind:
-		return "DebuggerErrorInvalidRegisterNumber"
-	case DebuggerErrorMaximumBreakpointWithoutContinueKind:
-		return "DebuggerErrorMaximumBreakpointWithoutContinue"
-	case DebuggerErrorBreakpointAlreadyExistsOnTheAddressKind:
-		return "DebuggerErrorBreakpointAlreadyExistsOnTheAddress"
-	case DebuggerErrorBreakpointIdNotFoundKind:
-		return "DebuggerErrorBreakpointIdNotFound"
-	case DebuggerErrorBreakpointAlreadyDisabledKind:
-		return "DebuggerErrorBreakpointAlreadyDisabled"
-	case DebuggerErrorBreakpointAlreadyEnabledKind:
-		return "DebuggerErrorBreakpointAlreadyEnabled"
-	case DebuggerErrorMemoryTypeInvalidKind:
-		return "DebuggerErrorMemoryTypeInvalid"
-	case DebuggerErrorInvalidProcessIdKind:
-		return "DebuggerErrorInvalidProcessId"
-	case DebuggerErrorEventIsNotAppliedKind:
-		return "DebuggerErrorEventIsNotApplied"
-	case DebuggerErrorDetailsOrSwitchProcessInvalidParameterKind:
-		return "DebuggerErrorDetailsOrSwitchProcessInvalidParameter"
-	case DebuggerErrorDetailsOrSwitchThreadInvalidParameterKind:
-		return "DebuggerErrorDetailsOrSwitchThreadInvalidParameter"
-	case DebuggerErrorMaximumBreakpointForASinglePageIsHitKind:
-		return "DebuggerErrorMaximumBreakpointForASinglePageIsHit"
-	case DebuggerErrorPreAllocatedBufferIsEmptyKind:
-		return "DebuggerErrorPreAllocatedBufferIsEmpty"
-	case DebuggerErrorEptCouldNotSplitTheLargePageTo4KbPagesKind:
-		return "DebuggerErrorEptCouldNotSplitTheLargePageTo4KbPages"
-	case DebuggerErrorEptFailedToGetPml1EntryOfTargetAddressKind:
-		return "DebuggerErrorEptFailedToGetPml1EntryOfTargetAddress"
-	case DebuggerErrorEptMultipleHooksInASinglePageKind:
-		return "DebuggerErrorEptMultipleHooksInASinglePage"
-	case DebuggerErrorCouldNotBuildTheEptHookKind:
-		return "DebuggerErrorCouldNotBuildTheEptHook"
-	case DebuggerErrorCouldNotFindAllocationTypeKind:
-		return "DebuggerErrorCouldNotFindAllocationType"
-	case DebuggerErrorInvalidTestQueryIndexKind:
-		return "DebuggerErrorInvalidTestQueryIndex"
-	case DebuggerErrorUnableToAttachToTargetUserModeProcessKind:
-		return "DebuggerErrorUnableToAttachToTargetUserModeProcess"
-	case DebuggerErrorUnableToRemoveHooksEntrypointNotReachedKind:
-		return "DebuggerErrorUnableToRemoveHooksEntrypointNotReached"
-	case DebuggerErrorUnableToRemoveHooksKind:
-		return "DebuggerErrorUnableToRemoveHooks"
-	case DebuggerErrorFunctionsForInitializingPebAddressesAreNotInitializedKind:
-		return "DebuggerErrorFunctionsForInitializingPebAddressesAreNotInitialized"
-	case DebuggerErrorUnableToDetect32BitOr64BitProcessKind:
-		return "DebuggerErrorUnableToDetect32BitOr64BitProcess"
-	case DebuggerErrorUnableToKillTheProcessKind:
-		return "DebuggerErrorUnableToKillTheProcess"
-	case DebuggerErrorInvalidThreadDebuggingTokenKind:
-		return "DebuggerErrorInvalidThreadDebuggingToken"
-	case DebuggerErrorUnableToPauseTheProcessThreadsKind:
-		return "DebuggerErrorUnableToPauseTheProcessThreads"
-	case DebuggerErrorUnableToAttachToAnAlreadyAttachedProcessKind:
-		return "DebuggerErrorUnableToAttachToAnAlreadyAttachedProcess"
-	case DebuggerErrorTheUserDebuggerNotAttachedToTheProcessKind:
-		return "DebuggerErrorTheUserDebuggerNotAttachedToTheProcess"
-	case DebuggerErrorUnableToDetachAsThereArePausedThreadsKind:
-		return "DebuggerErrorUnableToDetachAsThereArePausedThreads"
-	case DebuggerErrorUnableToSwitchProcessIdOrThreadIdIsInvalidKind:
-		return "DebuggerErrorUnableToSwitchProcessIdOrThreadIdIsInvalid"
-	case DebuggerErrorUnableToSwitchThereIsNoThreadOnTheProcessKind:
-		return "DebuggerErrorUnableToSwitchThereIsNoThreadOnTheProcess"
-	case DebuggerErrorUnableToGetModulesOfTheProcessKind:
-		return "DebuggerErrorUnableToGetModulesOfTheProcess"
-	case DebuggerErrorUnableToGetCallstackKind:
-		return "DebuggerErrorUnableToGetCallstack"
-	case DebuggerErrorUnableToQueryCountOfProcessesOrThreadsKind:
-		return "DebuggerErrorUnableToQueryCountOfProcessesOrThreads"
-	case DebuggerErrorUsingShortCircuitingEventWithPostEventModeIsForbiddednKind:
-		return "DebuggerErrorUsingShortCircuitingEventWithPostEventModeIsForbiddedn"
-	case DebuggerErrorUnknownTestQueryReceivedKind:
-		return "DebuggerErrorUnknownTestQueryReceived"
-	case DebuggerErrorReadingMemoryInvalidParameterKind:
-		return "DebuggerErrorReadingMemoryInvalidParameter"
-	case DebuggerErrorTheTrapFlagListIsFullKind:
-		return "DebuggerErrorTheTrapFlagListIsFull"
-	case DebuggerErrorUnableToKillTheProcessDoesNotExistsKind:
-		return "DebuggerErrorUnableToKillTheProcessDoesNotExists"
-	case DebuggerErrorModeExecutionIsInvalidKind:
-		return "DebuggerErrorModeExecutionIsInvalid"
-	case DebuggerErrorProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootModeKind:
-		return "DebuggerErrorProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootMode"
-	case DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForEventAndConditionalsKind:
-		return "DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForEventAndConditionals"
-	case DebuggerErrorInstantEventRegularPreallocatedBufferNotFoundKind:
-		return "DebuggerErrorInstantEventRegularPreallocatedBufferNotFound"
-	case DebuggerErrorInstantEventBigPreallocatedBufferNotFoundKind:
-		return "DebuggerErrorInstantEventBigPreallocatedBufferNotFound"
-	case DebuggerErrorUnableToCreateActionCannotAllocateBufferKind:
-		return "DebuggerErrorUnableToCreateActionCannotAllocateBuffer"
-	case DebuggerErrorInstantEventActionRegularPreallocatedBufferNotFoundKind:
-		return "DebuggerErrorInstantEventActionRegularPreallocatedBufferNotFound"
-	case DebuggerErrorInstantEventActionBigPreallocatedBufferNotFoundKind:
-		return "DebuggerErrorInstantEventActionBigPreallocatedBufferNotFound"
-	case DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForActionBufferKind:
-		return "DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForActionBuffer"
-	case DebuggerErrorInstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStackKind:
-		return "DebuggerErrorInstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStack"
-	case DebuggerErrorInstantEventRegularRequestedSafeBufferNotFoundKind:
-		return "DebuggerErrorInstantEventRegularRequestedSafeBufferNotFound"
-	case DebuggerErrorInstantEventBigRequestedSafeBufferNotFoundKind:
-		return "DebuggerErrorInstantEventBigRequestedSafeBufferNotFound"
-	case DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBufferKind:
-		return "DebuggerErrorInstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBuffer"
-	case DebuggerErrorUnableToAllocateRequestedSafeBufferKind:
-		return "DebuggerErrorUnableToAllocateRequestedSafeBuffer"
-	case DebuggerErrorCouldNotFindPreactivationTypeKind:
-		return "DebuggerErrorCouldNotFindPreactivationType"
-	case DebuggerErrorTheModeExecTrapIsNotInitializedKind:
-		return "DebuggerErrorTheModeExecTrapIsNotInitialized"
-	case DebuggerErrorTheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFullKind:
-		return "DebuggerErrorTheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFull"
-	case DebuggerErrorNotAllCoresAreLockedForApplyingInstantEventKind:
-		return "DebuggerErrorNotAllCoresAreLockedForApplyingInstantEvent"
-	case DebuggerErrorTargetSwitchingCoreIsNotLockedKind:
-		return "DebuggerErrorTargetSwitchingCoreIsNotLocked"
-	case DebuggerErrorInvalidPhysicalAddressKind:
-		return "DebuggerErrorInvalidPhysicalAddress"
+	case TagNotExistsKind:
+		return "TagNotExists"
+	case InvalidActionTypeKind:
+		return "InvalidActionType"
+	case ActionBufferSizeIsZeroKind:
+		return "ActionBufferSizeIsZero"
+	case EventTypeIsInvalidKind:
+		return "EventTypeIsInvalid"
+	case UnableToCreateEventKind:
+		return "UnableToCreateEvent"
+	case InvalidAddressKind:
+		return "InvalidAddress"
+	case InvalidCoreIdKind:
+		return "InvalidCoreId"
+	case ExceptionIndexExceedFirst32EntriesKind:
+		return "ExceptionIndexExceedFirst32Entries"
+	case InterruptIndexIsNotValidKind:
+		return "InterruptIndexIsNotValid"
+	case UnableToHideOrUnhideDebuggerKind:
+		return "UnableToHideOrUnhideDebugger"
+	case DebuggerAlreadyUhideKind:
+		return "DebuggerAlreadyUhide"
+	case EditMemoryStatusInvalidParameterKind:
+		return "EditMemoryStatusInvalidParameter"
+	case EditMemoryStatusInvalidAddressBasedOnCurrentProcessKind:
+		return "EditMemoryStatusInvalidAddressBasedOnCurrentProcess"
+	case EditMemoryStatusInvalidAddressBasedOnOtherProcessKind:
+		return "EditMemoryStatusInvalidAddressBasedOnOtherProcess"
+	case ModifyEventsInvalidTagKind:
+		return "ModifyEventsInvalidTag"
+	case ModifyEventsInvalidTypeOfActionKind:
+		return "ModifyEventsInvalidTypeOfAction"
+	case SteppingInvalidParameterKind:
+		return "SteppingInvalidParameter"
+	case SteppingsEitherThreadNotFoundOrDisabledKind:
+		return "SteppingsEitherThreadNotFoundOrDisabled"
+	case PreparingDebuggeeInvalidBaudrateKind:
+		return "PreparingDebuggeeInvalidBaudrate"
+	case PreparingDebuggeeInvalidSerialPortKind:
+		return "PreparingDebuggeeInvalidSerialPort"
+	case PreparingDebuggeeInvalidCoreInRemoteDebuggeKind:
+		return "PreparingDebuggeeInvalidCoreInRemoteDebugge"
+	case PreparingDebuggeeUnableToSwitchToNewProcessKind:
+		return "PreparingDebuggeeUnableToSwitchToNewProcess"
+	case PreparingDebuggeeToRunScriptKind:
+		return "PreparingDebuggeeToRunScript"
+	case InvalidRegisterNumberKind:
+		return "InvalidRegisterNumber"
+	case MaximumBreakpointWithoutContinueKind:
+		return "MaximumBreakpointWithoutContinue"
+	case BreakpointAlreadyExistsOnTheAddressKind:
+		return "BreakpointAlreadyExistsOnTheAddress"
+	case BreakpointIdNotFoundKind:
+		return "BreakpointIdNotFound"
+	case BreakpointAlreadyDisabledKind:
+		return "BreakpointAlreadyDisabled"
+	case BreakpointAlreadyEnabledKind:
+		return "BreakpointAlreadyEnabled"
+	case MemoryTypeInvalidKind:
+		return "MemoryTypeInvalid"
+	case InvalidProcessIdKind:
+		return "InvalidProcessId"
+	case EventIsNotAppliedKind:
+		return "EventIsNotApplied"
+	case DetailsOrSwitchProcessInvalidParameterKind:
+		return "DetailsOrSwitchProcessInvalidParameter"
+	case DetailsOrSwitchThreadInvalidParameterKind:
+		return "DetailsOrSwitchThreadInvalidParameter"
+	case MaximumBreakpointForASinglePageIsHitKind:
+		return "MaximumBreakpointForASinglePageIsHit"
+	case PreAllocatedBufferIsEmptyKind:
+		return "PreAllocatedBufferIsEmpty"
+	case EptCouldNotSplitTheLargePageTo4KbPagesKind:
+		return "EptCouldNotSplitTheLargePageTo4KbPages"
+	case EptFailedToGetPml1EntryOfTargetAddressKind:
+		return "EptFailedToGetPml1EntryOfTargetAddress"
+	case EptMultipleHooksInASinglePageKind:
+		return "EptMultipleHooksInASinglePage"
+	case CouldNotBuildTheEptHookKind:
+		return "CouldNotBuildTheEptHook"
+	case CouldNotFindAllocationTypeKind:
+		return "CouldNotFindAllocationType"
+	case InvalidTestQueryIndexKind:
+		return "InvalidTestQueryIndex"
+	case UnableToAttachToTargetUserModeProcessKind:
+		return "UnableToAttachToTargetUserModeProcess"
+	case UnableToRemoveHooksEntrypointNotReachedKind:
+		return "UnableToRemoveHooksEntrypointNotReached"
+	case UnableToRemoveHooksKind:
+		return "UnableToRemoveHooks"
+	case FunctionsForInitializingPebAddressesAreNotInitializedKind:
+		return "FunctionsForInitializingPebAddressesAreNotInitialized"
+	case UnableToDetect32BitOr64BitProcessKind:
+		return "UnableToDetect32BitOr64BitProcess"
+	case UnableToKillTheProcessKind:
+		return "UnableToKillTheProcess"
+	case InvalidThreadDebuggingTokenKind:
+		return "InvalidThreadDebuggingToken"
+	case UnableToPauseTheProcessThreadsKind:
+		return "UnableToPauseTheProcessThreads"
+	case UnableToAttachToAnAlreadyAttachedProcessKind:
+		return "UnableToAttachToAnAlreadyAttachedProcess"
+	case TheUserDebuggerNotAttachedToTheProcessKind:
+		return "TheUserDebuggerNotAttachedToTheProcess"
+	case UnableToDetachAsThereArePausedThreadsKind:
+		return "UnableToDetachAsThereArePausedThreads"
+	case UnableToSwitchProcessIdOrThreadIdIsInvalidKind:
+		return "UnableToSwitchProcessIdOrThreadIdIsInvalid"
+	case UnableToSwitchThereIsNoThreadOnTheProcessKind:
+		return "UnableToSwitchThereIsNoThreadOnTheProcess"
+	case UnableToGetModulesOfTheProcessKind:
+		return "UnableToGetModulesOfTheProcess"
+	case UnableToGetCallstackKind:
+		return "UnableToGetCallstack"
+	case UnableToQueryCountOfProcessesOrThreadsKind:
+		return "UnableToQueryCountOfProcessesOrThreads"
+	case UsingShortCircuitingEventWithPostEventModeIsForbiddednKind:
+		return "UsingShortCircuitingEventWithPostEventModeIsForbiddedn"
+	case UnknownTestQueryReceivedKind:
+		return "UnknownTestQueryReceived"
+	case ReadingMemoryInvalidParameterKind:
+		return "ReadingMemoryInvalidParameter"
+	case TheTrapFlagListIsFullKind:
+		return "TheTrapFlagListIsFull"
+	case UnableToKillTheProcessDoesNotExistsKind:
+		return "UnableToKillTheProcessDoesNotExists"
+	case ModeExecutionIsInvalidKind:
+		return "ModeExecutionIsInvalid"
+	case ProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootModeKind:
+		return "ProcessIdCannotBeSpecifiedWhileApplyingEventFromVmxRootMode"
+	case InstantEventPreallocatedBufferIsNotEnoughForEventAndConditionalsKind:
+		return "InstantEventPreallocatedBufferIsNotEnoughForEventAndConditionals"
+	case InstantEventRegularPreallocatedBufferNotFoundKind:
+		return "InstantEventRegularPreallocatedBufferNotFound"
+	case InstantEventBigPreallocatedBufferNotFoundKind:
+		return "InstantEventBigPreallocatedBufferNotFound"
+	case UnableToCreateActionCannotAllocateBufferKind:
+		return "UnableToCreateActionCannotAllocateBuffer"
+	case InstantEventActionRegularPreallocatedBufferNotFoundKind:
+		return "InstantEventActionRegularPreallocatedBufferNotFound"
+	case InstantEventActionBigPreallocatedBufferNotFoundKind:
+		return "InstantEventActionBigPreallocatedBufferNotFound"
+	case InstantEventPreallocatedBufferIsNotEnoughForActionBufferKind:
+		return "InstantEventPreallocatedBufferIsNotEnoughForActionBuffer"
+	case InstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStackKind:
+		return "InstantEventRequestedOptionalBufferIsBiggerThanDebuggersSendReceiveStack"
+	case InstantEventRegularRequestedSafeBufferNotFoundKind:
+		return "InstantEventRegularRequestedSafeBufferNotFound"
+	case InstantEventBigRequestedSafeBufferNotFoundKind:
+		return "InstantEventBigRequestedSafeBufferNotFound"
+	case InstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBufferKind:
+		return "InstantEventPreallocatedBufferIsNotEnoughForRequestedSafeBuffer"
+	case UnableToAllocateRequestedSafeBufferKind:
+		return "UnableToAllocateRequestedSafeBuffer"
+	case CouldNotFindPreactivationTypeKind:
+		return "CouldNotFindPreactivationType"
+	case TheModeExecTrapIsNotInitializedKind:
+		return "TheModeExecTrapIsNotInitialized"
+	case TheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFullKind:
+		return "TheTargetEventIsDisabledButCannotBeClearedPrirityBufferIsFull"
+	case NotAllCoresAreLockedForApplyingInstantEventKind:
+		return "NotAllCoresAreLockedForApplyingInstantEvent"
+	case TargetSwitchingCoreIsNotLockedKind:
+		return "TargetSwitchingCoreIsNotLocked"
+	case InvalidPhysicalAddressKind:
+		return "InvalidPhysicalAddress"
 	default:
 		return "InvalidDebuggerErrorKind"
 	}
