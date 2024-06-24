@@ -233,8 +233,13 @@ func LayoutDisassemblyTable(fileName string, parent unison.Paneler) unison.Panel
 		SelectionChangedCallback: nil,
 		SetRootRowsCallBack: func(root *widget.Node[xed.Disassembly]) {
 			f := xed.ParserPe(fileName)
+
+			// hyperdbg-cli.exe size is 2mb
+			//now 1-2s need
+			//todo get oep rva from pe header
 			b := stream.NewBuffer(fileName).Bytes()
 			b = b[0xda305 : 0xda305+1000] // 4kb? need skip mz pe header ?
+
 			x := xed.New(b)
 			if f.Is64 {
 				x.Decode64()
