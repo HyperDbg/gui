@@ -1,7 +1,6 @@
 package HPRDBGCTRL
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -18,22 +17,20 @@ func TestSdk(t *testing.T) {
 		mylog.Check(os.Remove(path))
 		stream.CopyFile(sysName, path)
 
-		assert.True(t, HyperDbgVmxSupportDetection()) // ok
-		s := make([]byte, 0, 100)
-		HyperDbgReadVendorString(s) // todo bug
-		fmt.Println(s)
+		assert.Equal(t, 1, HyperdbgUDetectVmxSupport()) // todo convert to return type as bool
 
-		HyperDbgInstallVmmDriver()
-		// HyperDbgStartVmmDriver()
-		// RemoteConnectionConnect todo need export into dll
+		//s := make([]byte, 0, 100)
+		//HyperdbgUReadVendorString(s) // todo bug
+		//fmt.Println(s)
 
-		// missing connection local or start ?
-		HyperDbgLoadVmm()
+		HyperdbgUInstallVmmDriver()
+		HyperdbgULoadVmm()
+		//HyperdbgUstartVmm()//?
 
-		// unloading vmm driver before need wait 1 second?
-		// HyperDbgStopVmmDriver()
-		HyperDbgUnloadVmm()
-		HyperDbgUninstallVmmDriver()
+		HyperdbgUStopVmmDriver()
+		HyperdbgUUnloadVmm()
+		HyperdbgUUninstallVmmDriver()
+
 	})
 }
 

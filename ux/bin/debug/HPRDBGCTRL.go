@@ -657,12 +657,12 @@ type ScriptEngineVariablesList struct {
 	LocalVariablesList  *Uint64
 }
 type Cr3Type struct {
-	Anon267_5
+	Anon268_5
 }
-type Anon267_5 struct {
+type Anon268_5 struct {
 	Raw [1]int64
 }
-type Anon271_9 struct {
+type Anon272_9 struct {
 	Pcid            Uint64
 	PageFrameNumber Uint64
 	Reserved1       Uint64
@@ -754,10 +754,10 @@ type EptSingleHookUnhookingDetails struct {
 	PhysicalAddress                           SizeT
 	OriginalEntry                             Uint64
 }
-type Anon1568_9 struct {
+type Anon1569_9 struct {
 	Raw [1]int32
 }
-type Anon1570_5 struct {
+type Anon1571_5 struct {
 	// [Bits 3:0] Segment type.
 	Type Uint32
 	// [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
@@ -840,6 +840,9 @@ type HwdbgInstanceInformation struct {
 	Version                                    Uint32
 	maximumNumberOfStages                      Uint32
 	scriptVariableLength                       Uint32
+	numberOfSupportedLocalVariables            Uint32
+	numberOfSupportedGlobalVariables           Uint32
+	numberOfSupportedTemporaryVariables        Uint32
 	maximumNumberOfSupportedGetScriptOperators Uint32
 	maximumNumberOfSupportedSetScriptOperators Uint32
 	sharedMemorySize                           Uint32
@@ -1213,10 +1216,10 @@ type MessageTracingCallbacks struct {
 	SendImmediateMessage         SendImmediateMessage
 }
 type VmmCallbacks struct {
-	LogCallbackPrepareAndSendMessageToQueueWrapper            func() Boolean // LogCallbackPrepareAndSendMessageToQueue
-	LogCallbackSendMessageToQueue                             func() Boolean // LogCallbackSendMessageToQueue
-	LogCallbackSendBuffer                                     func() Boolean // LogCallbackSendBuffer
-	LogCallbackCheckIfBufferIsFull                            func() Boolean // LogCallbackCheckIfBufferIsFull
+	//LogCallbackPrepareAndSendMessageToQueueWrapper            LogCallbackPrepareAndSendMessageToQueue
+	//LogCallbackSendMessageToQueue                             LogCallbackSendMessageToQueue
+	//LogCallbackSendBuffer                                     LogCallbackSendBuffer
+	//LogCallbackCheckIfBufferIsFull                            LogCallbackCheckIfBufferIsFull
 	VmmCallbackTriggerEvents                                  VmmCallbackTriggerEvents
 	VmmCallbackSetLastError                                   VmmCallbackSetLastError
 	VmmCallbackVmcallHandler                                  VmmCallbackVmcallHandler
@@ -1240,66 +1243,67 @@ type (
 	_Int128T           = any
 	_Uint128T          = any
 	__NSConstantString = any
-	// SizeT              = uint64
-	_BuiltinMsVaList = *byte
-	_BuiltinVaList   = *byte
-	Rune             = int32
-	WintT            = int32
-	// Bool               = int32
-	SizeT       = uint64
-	PsizeT      = *uint64
-	TimeT       = uint64
-	Ntstatus    = uint64
-	VaList      = *byte
-	PlistEntry  = *ListEntry
-	PrlistEntry = ListEntry
+	//SizeT              = uint64
+	_BuiltinMsVaList   = *byte
+	_BuiltinVaList     = *byte
+	Rune               = int32
+	WintT              = int32
+	//Bool               = int32
+	Long               = int64
+	SizeT              = uint64
+	PsizeT             = *uint64
+	TimeT              = uint64
+	Ntstatus           = uint64
+	VaList             = *byte
+	PlistEntry         = *ListEntry
+	PrlistEntry        = ListEntry
 )
 
 // ///////////////////////////////////////////////
 type (
-	Qword    = uint64
-	Uint64   = uint64
-	Puint64  = *uint64
-	Dword    = uint64
-	Bool     = int32
-	Byte     = uint8
-	Word     = uint16
-	Int      = int32
-	Uint     = uint32
-	Puint    = *uint32
-	Ulong64  = uint64
-	Pulong64 = *uint64
-	Dword64  = uint64
-	Pdword64 = *uint64
-	Char     = byte
-	Wchar    = Rune
-	Uchar    = uint8
-	Ushort   = uint16
-	Ulong    = uint64
-	Boolean  = Uchar
-	Pboolean = *Boolean
-	Int8     = int8
-	Pint8    = *int8
-	Int16    = int16
-	Pint16   = *int16
-	Int32    = int32
-	Pint32   = *int32
-	Int64    = int64
-	Pint64   = *int64
-	Uint8    = uint8
-	Puint8   = *uint8
-	Uint16   = uint16
-	Puint16  = *uint16
-	Uint32   = uint32
-	Puint32  = *uint32
-	// Uint64     = uint64
-	// Puint64    = *uint64
-	// GuestRegs  = GuestRegs
+	Qword      = uint64
+	Uint64     = uint64
+	Puint64    = *uint64
+	Dword      = uint64
+	Bool       = int32
+	Byte       = uint8
+	Word       = uint16
+	Int        = int32
+	Uint       = uint32
+	Puint      = *uint32
+	Ulong64    = uint64
+	Pulong64   = *uint64
+	Dword64    = uint64
+	Pdword64   = *uint64
+	Char       = byte
+	Wchar      = Rune
+	Uchar      = uint8
+	Ushort     = uint16
+	Ulong      = uint64
+	Boolean    = Uchar
+	Pboolean   = *Boolean
+	Int8       = int8
+	Pint8      = *int8
+	Int16      = int16
+	Pint16     = *int16
+	Int32      = int32
+	Pint32     = *int32
+	Int64      = int64
+	Pint64     = *int64
+	Uint8      = uint8
+	Puint8     = *uint8
+	Uint16     = uint16
+	Puint16    = *uint16
+	Uint32     = uint32
+	Puint32    = *uint32
+	//Uint64     = uint64
+	//Puint64    = *uint64
+	//GuestRegs  = GuestRegs
 	PguestRegs = *GuestRegs
 )
 
 // @brief struct for extra registers
-// type GuestExtraRegisters = GuestExtraRegisters
+//type GuestExtraRegisters = GuestExtraRegisters
 
 // @brief struct for extra registers
 type PguestExtraRegisters = *GuestExtraRegisters
@@ -1393,10 +1397,10 @@ type PdebuggerGeneralAction = *DebuggerGeneralAction
 type PdebuggerEventAndActionResult = *DebuggerEventAndActionResult
 
 // @brief The structure of port information (each item) in hwdbg
-type PhwdbgPortInformationItems = *HwdbgPortInformationItems
-
-// @brief The structure of script capabilities information in hwdbg
-type PhwdbgInstanceInformation = *HwdbgInstanceInformation
+type (
+	PhwdbgPortInformationItems = *HwdbgPortInformationItems
+	PhwdbgInstanceInformation  = *HwdbgInstanceInformation
+)
 
 // @brief The structure of script buffer in hwdbg
 type PhwdbgScriptBuffer = *HwdbgScriptBuffer
@@ -1574,16 +1578,16 @@ type PmessageTracingCallbacks = *MessageTracingCallbacks
 
 // @brief A function from the message tracer that send the inputs to the
 // queue of the messages
-// type LogCallbackPrepareAndSendMessageToQueue = func()Boolean
+//type LogCallbackPrepareAndSendMessageToQueue = unsafe.Pointer
 
 // @brief A function that sends the messages to message tracer buffers
-// type LogCallbackSendMessageToQueue = func()Boolean
+//type LogCallbackSendMessageToQueue = unsafe.Pointer
 
 // @brief A function that sends the messages to message tracer buffers
-// type LogCallbackSendBuffer = unsafe.Pointer
+//type LogCallbackSendBuffer = unsafe.Pointer
 
 // @brief A function that checks whether the priority or regular buffer is full or not
-// type LogCallbackCheckIfBufferIsFull = unsafe.Pointer
+//type LogCallbackCheckIfBufferIsFull = unsafe.Pointer
 
 // @brief A function that handles trigger events
 type VmmCallbackTriggerEvents = unsafe.Pointer
@@ -1642,335 +1646,333 @@ type VmmCallbackVmcallHandler = unsafe.Pointer
 // @brief Prototype of each function needed by VMM module
 type PvmmCallbacks = *VmmCallbacks
 
-var __imp_HyperDbgVmxSupportDetection bindlib.PreloadProc
+var __imp_LogInitialize bindlib.PreloadProc
 
 // Gengo init function.
 func init() {
-	__imp_HyperDbgVmxSupportDetection = GengoLibrary.ImportNow("HyperDbgVmxSupportDetection")
-	__imp_HyperDbgReadVendorString = GengoLibrary.ImportNow("HyperDbgReadVendorString")
-	__imp_HyperDbgLoadVmm = GengoLibrary.ImportNow("HyperDbgLoadVmm")
-	__imp_HyperDbgUnloadVmm = GengoLibrary.ImportNow("HyperDbgUnloadVmm")
-	__imp_HyperDbgInstallVmmDriver = GengoLibrary.ImportNow("HyperDbgInstallVmmDriver")
-	__imp_HyperDbgUninstallVmmDriver = GengoLibrary.ImportNow("HyperDbgUninstallVmmDriver")
-	__imp_HyperDbgStopVmmDriver = GengoLibrary.ImportNow("HyperDbgStopVmmDriver")
-	__imp_HyperDbgInterpreter = GengoLibrary.ImportNow("HyperDbgInterpreter")
-	__imp_HyperDbgShowSignature = GengoLibrary.ImportNow("HyperDbgShowSignature")
-	__imp_HyperDbgSetTextMessageCallback = GengoLibrary.ImportNow("HyperDbgSetTextMessageCallback")
-	__imp_HyperDbgScriptReadFileAndExecuteCommandline = GengoLibrary.ImportNow("HyperDbgScriptReadFileAndExecuteCommandline")
-	__imp_HyperDbgContinuePreviousCommand = GengoLibrary.ImportNow("HyperDbgContinuePreviousCommand")
-	__imp_HyperDbgCheckMultilineCommand = GengoLibrary.ImportNow("HyperDbgCheckMultilineCommand")
-	//__imp_LogInitialize = GengoLibrary.ImportNow("LogInitialize")//todo bug,can not find method
-	//__imp_LogUnInitialize = GengoLibrary.ImportNow("LogUnInitialize")
-	//__imp_LogMarkAllAsRead = GengoLibrary.ImportNow("LogMarkAllAsRead")
-	//__imp_LogCallbackPrepareAndSendMessageToQueue = GengoLibrary.ImportNow("LogCallbackPrepareAndSendMessageToQueue")
-	//__imp_LogCallbackPrepareAndSendMessageToQueueWrapper = GengoLibrary.ImportNow("LogCallbackPrepareAndSendMessageToQueueWrapper")
-	//__imp_LogCallbackSendBuffer = GengoLibrary.ImportNow("LogCallbackSendBuffer")
-	//__imp_LogCallbackCheckIfBufferIsFull = GengoLibrary.ImportNow("LogCallbackCheckIfBufferIsFull")
-	//__imp_LogCallbackSendMessageToQueue = GengoLibrary.ImportNow("LogCallbackSendMessageToQueue")
-	//__imp_LogRegisterEventBasedNotification = GengoLibrary.ImportNow("LogRegisterEventBasedNotification")
-	//__imp_LogRegisterIrpBasedNotification = GengoLibrary.ImportNow("LogRegisterIrpBasedNotification")
-	//__imp_ReversingMachineStart = GengoLibrary.ImportNow("ReversingMachineStart")
-	//__imp_ReversingMachineStop = GengoLibrary.ImportNow("ReversingMachineStop")
-	//__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")
-	//__imp_PrintSymbolBuffer = GengoLibrary.ImportNow("PrintSymbolBuffer")
-	//__imp_PrintSymbol = GengoLibrary.ImportNow("PrintSymbol")
-	//__imp_RemoveSymbolBuffer = GengoLibrary.ImportNow("RemoveSymbolBuffer")
-	//__imp_FuncGetNumberOfOperands = GengoLibrary.ImportNow("FuncGetNumberOfOperands")
-	//__imp_ScriptEngineSetHwdbgInstanceInfo = GengoLibrary.ImportNow("ScriptEngineSetHwdbgInstanceInfo")
-	//__imp_ScriptEngineSetTextMessageCallback = GengoLibrary.ImportNow("ScriptEngineSetTextMessageCallback")
-	//__imp_ScriptEngineSymbolAbortLoading = GengoLibrary.ImportNow("ScriptEngineSymbolAbortLoading")
-	//__imp_ScriptEngineConvertNameToAddress = GengoLibrary.ImportNow("ScriptEngineConvertNameToAddress")
-	//__imp_ScriptEngineLoadFileSymbol = GengoLibrary.ImportNow("ScriptEngineLoadFileSymbol")
-	//__imp_ScriptEngineUnloadAllSymbols = GengoLibrary.ImportNow("ScriptEngineUnloadAllSymbols")
-	//__imp_ScriptEngineUnloadModuleSymbol = GengoLibrary.ImportNow("ScriptEngineUnloadModuleSymbol")
-	//__imp_ScriptEngineSearchSymbolForMask = GengoLibrary.ImportNow("ScriptEngineSearchSymbolForMask")
-	//__imp_ScriptEngineGetFieldOffset = GengoLibrary.ImportNow("ScriptEngineGetFieldOffset")
-	//__imp_ScriptEngineGetDataTypeSize = GengoLibrary.ImportNow("ScriptEngineGetDataTypeSize")
-	//__imp_ScriptEngineCreateSymbolTableForDisassembler = GengoLibrary.ImportNow("ScriptEngineCreateSymbolTableForDisassembler")
-	//__imp_ScriptEngineConvertFileToPdbPath = GengoLibrary.ImportNow("ScriptEngineConvertFileToPdbPath")
-	//__imp_ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails = GengoLibrary.ImportNow("ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails")
-	//__imp_ScriptEngineSymbolInitLoad = GengoLibrary.ImportNow("ScriptEngineSymbolInitLoad")
-	//__imp_ScriptEngineShowDataBasedOnSymbolTypes = GengoLibrary.ImportNow("ScriptEngineShowDataBasedOnSymbolTypes")
-	//__imp_SymSetTextMessageCallback = GengoLibrary.ImportNow("SymSetTextMessageCallback")
-	//__imp_SymbolAbortLoading = GengoLibrary.ImportNow("SymbolAbortLoading")
-	//__imp_SymConvertNameToAddress = GengoLibrary.ImportNow("SymConvertNameToAddress")
-	//__imp_SymLoadFileSymbol = GengoLibrary.ImportNow("SymLoadFileSymbol")
-	//__imp_SymUnloadAllSymbols = GengoLibrary.ImportNow("SymUnloadAllSymbols")
-	//__imp_SymUnloadModuleSymbol = GengoLibrary.ImportNow("SymUnloadModuleSymbol")
-	//__imp_SymSearchSymbolForMask = GengoLibrary.ImportNow("SymSearchSymbolForMask")
-	//__imp_SymGetFieldOffset = GengoLibrary.ImportNow("SymGetFieldOffset")
-	//__imp_SymGetDataTypeSize = GengoLibrary.ImportNow("SymGetDataTypeSize")
-	//__imp_SymCreateSymbolTableForDisassembler = GengoLibrary.ImportNow("SymCreateSymbolTableForDisassembler")
-	//__imp_SymConvertFileToPdbPath = GengoLibrary.ImportNow("SymConvertFileToPdbPath")
-	//__imp_SymConvertFileToPdbFileAndGuidAndAgeDetails = GengoLibrary.ImportNow("SymConvertFileToPdbFileAndGuidAndAgeDetails")
-	//__imp_SymbolInitLoad = GengoLibrary.ImportNow("SymbolInitLoad")
-	//__imp_SymShowDataBasedOnSymbolTypes = GengoLibrary.ImportNow("SymShowDataBasedOnSymbolTypes")
-	//__imp_SymQuerySizeof = GengoLibrary.ImportNow("SymQuerySizeof")
-	//__imp_SymCastingQueryForFiledsAndTypes = GengoLibrary.ImportNow("SymCastingQueryForFiledsAndTypes")
-	//__imp_VmFuncVmxVmcall = GengoLibrary.ImportNow("VmFuncVmxVmcall")
-	//__imp_VmFuncPerformRipIncrement = GengoLibrary.ImportNow("VmFuncPerformRipIncrement")
-	//__imp_VmFuncSuppressRipIncrement = GengoLibrary.ImportNow("VmFuncSuppressRipIncrement")
-	//__imp_VmFuncChangeMtfUnsettingState = GengoLibrary.ImportNow("VmFuncChangeMtfUnsettingState")
-	//__imp_VmFuncChangeIgnoreOneMtfState = GengoLibrary.ImportNow("VmFuncChangeIgnoreOneMtfState")
-	//__imp_VmFuncSetMonitorTrapFlag = GengoLibrary.ImportNow("VmFuncSetMonitorTrapFlag")
-	//__imp_VmFuncSetRflagTrapFlag = GengoLibrary.ImportNow("VmFuncSetRflagTrapFlag")
-	//__imp_VmFuncRegisterMtfBreak = GengoLibrary.ImportNow("VmFuncRegisterMtfBreak")
-	//__imp_VmFuncUnRegisterMtfBreak = GengoLibrary.ImportNow("VmFuncUnRegisterMtfBreak")
-	//__imp_VmFuncSetLoadDebugControls = GengoLibrary.ImportNow("VmFuncSetLoadDebugControls")
-	//__imp_VmFuncSetSaveDebugControls = GengoLibrary.ImportNow("VmFuncSetSaveDebugControls")
-	//__imp_VmFuncSetPmcVmexit = GengoLibrary.ImportNow("VmFuncSetPmcVmexit")
-	//__imp_VmFuncSetMovControlRegsExiting = GengoLibrary.ImportNow("VmFuncSetMovControlRegsExiting")
-	//__imp_VmFuncSetMovToCr3Vmexit = GengoLibrary.ImportNow("VmFuncSetMovToCr3Vmexit")
-	//__imp_VmFuncWriteExceptionBitmap = GengoLibrary.ImportNow("VmFuncWriteExceptionBitmap")
-	//__imp_VmFuncSetInterruptWindowExiting = GengoLibrary.ImportNow("VmFuncSetInterruptWindowExiting")
-	//__imp_VmFuncSetNmiWindowExiting = GengoLibrary.ImportNow("VmFuncSetNmiWindowExiting")
-	//__imp_VmFuncSetNmiExiting = GengoLibrary.ImportNow("VmFuncSetNmiExiting")
-	//__imp_VmFuncSetExceptionBitmap = GengoLibrary.ImportNow("VmFuncSetExceptionBitmap")
-	//__imp_VmFuncUnsetExceptionBitmap = GengoLibrary.ImportNow("VmFuncUnsetExceptionBitmap")
-	//__imp_VmFuncSetExternalInterruptExiting = GengoLibrary.ImportNow("VmFuncSetExternalInterruptExiting")
-	//__imp_VmFuncSetRdtscExiting = GengoLibrary.ImportNow("VmFuncSetRdtscExiting")
-	//__imp_VmFuncSetMovDebugRegsExiting = GengoLibrary.ImportNow("VmFuncSetMovDebugRegsExiting")
-	//__imp_VmFuncInjectPendingExternalInterrupts = GengoLibrary.ImportNow("VmFuncInjectPendingExternalInterrupts")
-	//__imp_VmFuncSetRflags = GengoLibrary.ImportNow("VmFuncSetRflags")
-	//__imp_VmFuncSetRip = GengoLibrary.ImportNow("VmFuncSetRip")
-	//__imp_VmFuncSetTriggerEventForVmcalls = GengoLibrary.ImportNow("VmFuncSetTriggerEventForVmcalls")
-	//__imp_VmFuncSetTriggerEventForCpuids = GengoLibrary.ImportNow("VmFuncSetTriggerEventForCpuids")
-	//__imp_VmFuncSetInterruptibilityState = GengoLibrary.ImportNow("VmFuncSetInterruptibilityState")
-	//__imp_VmFuncCheckAndEnableExternalInterrupts = GengoLibrary.ImportNow("VmFuncCheckAndEnableExternalInterrupts")
-	//__imp_VmFuncDisableExternalInterruptsAndInterruptWindow = GengoLibrary.ImportNow("VmFuncDisableExternalInterruptsAndInterruptWindow")
-	//__imp_VmFuncEventInjectPageFaultWithCr2 = GengoLibrary.ImportNow("VmFuncEventInjectPageFaultWithCr2")
-	//__imp_VmFuncEventInjectPageFaultRangeAddress = GengoLibrary.ImportNow("VmFuncEventInjectPageFaultRangeAddress")
-	//__imp_VmFuncEventInjectInterruption = GengoLibrary.ImportNow("VmFuncEventInjectInterruption")
-	//__imp_VmFuncVmxBroadcastInitialize = GengoLibrary.ImportNow("VmFuncVmxBroadcastInitialize")
-	//__imp_VmFuncVmxBroadcastUninitialize = GengoLibrary.ImportNow("VmFuncVmxBroadcastUninitialize")
-	//__imp_VmFuncEventInjectBreakpoint = GengoLibrary.ImportNow("VmFuncEventInjectBreakpoint")
-	//__imp_VmFuncInvalidateEptSingleContext = GengoLibrary.ImportNow("VmFuncInvalidateEptSingleContext")
-	//__imp_VmFuncInvalidateEptAllContexts = GengoLibrary.ImportNow("VmFuncInvalidateEptAllContexts")
-	//__imp_VmFuncUninitVmm = GengoLibrary.ImportNow("VmFuncUninitVmm")
-	//__imp_VmFuncEnableMtfAndChangeExternalInterruptState = GengoLibrary.ImportNow("VmFuncEnableMtfAndChangeExternalInterruptState")
-	//__imp_VmFuncEnableAndCheckForPreviousExternalInterrupts = GengoLibrary.ImportNow("VmFuncEnableAndCheckForPreviousExternalInterrupts")
-	//__imp_VmFuncGetCsSelector = GengoLibrary.ImportNow("VmFuncGetCsSelector")
-	//__imp_VmFuncReadExceptionBitmap = GengoLibrary.ImportNow("VmFuncReadExceptionBitmap")
-	//__imp_VmFuncGetLastVmexitRip = GengoLibrary.ImportNow("VmFuncGetLastVmexitRip")
-	//__imp_VmFuncGetRflags = GengoLibrary.ImportNow("VmFuncGetRflags")
-	//__imp_VmFuncGetRip = GengoLibrary.ImportNow("VmFuncGetRip")
-	//__imp_VmFuncGetInterruptibilityState = GengoLibrary.ImportNow("VmFuncGetInterruptibilityState")
-	//__imp_VmFuncClearSteppingBits = GengoLibrary.ImportNow("VmFuncClearSteppingBits")
-	//__imp_VmFuncInitVmm = GengoLibrary.ImportNow("VmFuncInitVmm")
-	//__imp_VmFuncVmxCompatibleStrlen = GengoLibrary.ImportNow("VmFuncVmxCompatibleStrlen")
-	//__imp_VmFuncVmxCompatibleWcslen = GengoLibrary.ImportNow("VmFuncVmxCompatibleWcslen")
-	//__imp_VmFuncNmiBroadcastRequest = GengoLibrary.ImportNow("VmFuncNmiBroadcastRequest")
-	//__imp_VmFuncNmiBroadcastInvalidateEptSingleContext = GengoLibrary.ImportNow("VmFuncNmiBroadcastInvalidateEptSingleContext")
-	//__imp_VmFuncNmiBroadcastInvalidateEptAllContexts = GengoLibrary.ImportNow("VmFuncNmiBroadcastInvalidateEptAllContexts")
-	//__imp_VmFuncVmxGetCurrentExecutionMode = GengoLibrary.ImportNow("VmFuncVmxGetCurrentExecutionMode")
-	//__imp_VmFuncQueryModeExecTrap = GengoLibrary.ImportNow("VmFuncQueryModeExecTrap")
-	//__imp_VmFuncVmxCompatibleStrcmp = GengoLibrary.ImportNow("VmFuncVmxCompatibleStrcmp")
-	//__imp_VmFuncVmxCompatibleStrncmp = GengoLibrary.ImportNow("VmFuncVmxCompatibleStrncmp")
-	//__imp_VmFuncVmxCompatibleWcscmp = GengoLibrary.ImportNow("VmFuncVmxCompatibleWcscmp")
-	//__imp_VmFuncVmxCompatibleWcsncmp = GengoLibrary.ImportNow("VmFuncVmxCompatibleWcsncmp")
-	//__imp_VmFuncVmxCompatibleMemcmp = GengoLibrary.ImportNow("VmFuncVmxCompatibleMemcmp")
-	//__imp_ConfigureEnableMovToCr3ExitingOnAllProcessors = GengoLibrary.ImportNow("ConfigureEnableMovToCr3ExitingOnAllProcessors")
-	//__imp_ConfigureDisableMovToCr3ExitingOnAllProcessors = GengoLibrary.ImportNow("ConfigureDisableMovToCr3ExitingOnAllProcessors")
-	//__imp_ConfigureEnableEferSyscallEventsOnAllProcessors = GengoLibrary.ImportNow("ConfigureEnableEferSyscallEventsOnAllProcessors")
-	//__imp_ConfigureDisableEferSyscallEventsOnAllProcessors = GengoLibrary.ImportNow("ConfigureDisableEferSyscallEventsOnAllProcessors")
-	//__imp_ConfigureSetExternalInterruptExitingOnSingleCore = GengoLibrary.ImportNow("ConfigureSetExternalInterruptExitingOnSingleCore")
-	//__imp_ConfigureEnableRdtscExitingOnSingleCore = GengoLibrary.ImportNow("ConfigureEnableRdtscExitingOnSingleCore")
-	//__imp_ConfigureEnableRdpmcExitingOnSingleCore = GengoLibrary.ImportNow("ConfigureEnableRdpmcExitingOnSingleCore")
-	//__imp_ConfigureEnableMovToDebugRegistersExitingOnSingleCore = GengoLibrary.ImportNow("ConfigureEnableMovToDebugRegistersExitingOnSingleCore")
-	//__imp_ConfigureSetExceptionBitmapOnSingleCore = GengoLibrary.ImportNow("ConfigureSetExceptionBitmapOnSingleCore")
-	//__imp_ConfigureEnableMovToControlRegisterExitingOnSingleCore = GengoLibrary.ImportNow("ConfigureEnableMovToControlRegisterExitingOnSingleCore")
-	//__imp_ConfigureChangeMsrBitmapWriteOnSingleCore = GengoLibrary.ImportNow("ConfigureChangeMsrBitmapWriteOnSingleCore")
-	//__imp_ConfigureChangeMsrBitmapReadOnSingleCore = GengoLibrary.ImportNow("ConfigureChangeMsrBitmapReadOnSingleCore")
-	//__imp_ConfigureChangeIoBitmapOnSingleCore = GengoLibrary.ImportNow("ConfigureChangeIoBitmapOnSingleCore")
-	//__imp_ConfigureEnableEferSyscallHookOnSingleCore = GengoLibrary.ImportNow("ConfigureEnableEferSyscallHookOnSingleCore")
-	//__imp_ConfigureSetEferSyscallOrSysretHookType = GengoLibrary.ImportNow("ConfigureSetEferSyscallOrSysretHookType")
-	//__imp_ConfigureDirtyLoggingInitializeOnAllProcessors = GengoLibrary.ImportNow("ConfigureDirtyLoggingInitializeOnAllProcessors")
-	//__imp_ConfigureDirtyLoggingUninitializeOnAllProcessors = GengoLibrary.ImportNow("ConfigureDirtyLoggingUninitializeOnAllProcessors")
-	//__imp_ConfigureModeBasedExecHookUninitializeOnAllProcessors = GengoLibrary.ImportNow("ConfigureModeBasedExecHookUninitializeOnAllProcessors")
-	//__imp_ConfigureUninitializeExecTrapOnAllProcessors = GengoLibrary.ImportNow("ConfigureUninitializeExecTrapOnAllProcessors")
-	//__imp_ConfigureInitializeExecTrapOnAllProcessors = GengoLibrary.ImportNow("ConfigureInitializeExecTrapOnAllProcessors")
-	//__imp_ConfigureEptHook = GengoLibrary.ImportNow("ConfigureEptHook")
-	//__imp_ConfigureEptHookFromVmxRoot = GengoLibrary.ImportNow("ConfigureEptHookFromVmxRoot")
-	//__imp_ConfigureEptHook2 = GengoLibrary.ImportNow("ConfigureEptHook2")
-	//__imp_ConfigureEptHook2FromVmxRoot = GengoLibrary.ImportNow("ConfigureEptHook2FromVmxRoot")
-	//__imp_ConfigureEptHookMonitor = GengoLibrary.ImportNow("ConfigureEptHookMonitor")
-	//__imp_ConfigureEptHookMonitorFromVmxRoot = GengoLibrary.ImportNow("ConfigureEptHookMonitorFromVmxRoot")
-	//__imp_ConfigureEptHookModifyInstructionFetchState = GengoLibrary.ImportNow("ConfigureEptHookModifyInstructionFetchState")
-	//__imp_ConfigureEptHookModifyPageReadState = GengoLibrary.ImportNow("ConfigureEptHookModifyPageReadState")
-	//__imp_ConfigureEptHookModifyPageWriteState = GengoLibrary.ImportNow("ConfigureEptHookModifyPageWriteState")
-	//__imp_ConfigureEptHookUnHookSingleAddress = GengoLibrary.ImportNow("ConfigureEptHookUnHookSingleAddress")
-	//__imp_ConfigureEptHookUnHookSingleAddressFromVmxRoot = GengoLibrary.ImportNow("ConfigureEptHookUnHookSingleAddressFromVmxRoot")
-	//__imp_ConfigureEptHookAllocateExtraHookingPagesForMemoryMonitorsAndExecEptHooks = GengoLibrary.ImportNow("ConfigureEptHookAllocateExtraHookingPagesForMemoryMonitorsAndExecEptHooks")
-	//__imp_ConfigureEptHookReservePreallocatedPoolsForEptHooks = GengoLibrary.ImportNow("ConfigureEptHookReservePreallocatedPoolsForEptHooks")
-	//__imp_ConfigureExecTrapAddProcessToWatchingList = GengoLibrary.ImportNow("ConfigureExecTrapAddProcessToWatchingList")
-	//__imp_ConfigureExecTrapRemoveProcessFromWatchingList = GengoLibrary.ImportNow("ConfigureExecTrapRemoveProcessFromWatchingList")
-	//__imp_DirectVmcallTest = GengoLibrary.ImportNow("DirectVmcallTest")
-	//__imp_DirectVmcallPerformVmcall = GengoLibrary.ImportNow("DirectVmcallPerformVmcall")
-	//__imp_DirectVmcallChangeMsrBitmapRead = GengoLibrary.ImportNow("DirectVmcallChangeMsrBitmapRead")
-	//__imp_DirectVmcallChangeMsrBitmapWrite = GengoLibrary.ImportNow("DirectVmcallChangeMsrBitmapWrite")
-	//__imp_DirectVmcallChangeIoBitmap = GengoLibrary.ImportNow("DirectVmcallChangeIoBitmap")
-	//__imp_DirectVmcallEnableRdpmcExiting = GengoLibrary.ImportNow("DirectVmcallEnableRdpmcExiting")
-	//__imp_DirectVmcallEnableRdtscpExiting = GengoLibrary.ImportNow("DirectVmcallEnableRdtscpExiting")
-	//__imp_DirectVmcallEnableMov2DebugRegsExiting = GengoLibrary.ImportNow("DirectVmcallEnableMov2DebugRegsExiting")
-	//__imp_DirectVmcallSetExceptionBitmap = GengoLibrary.ImportNow("DirectVmcallSetExceptionBitmap")
-	//__imp_DirectVmcallEnableExternalInterruptExiting = GengoLibrary.ImportNow("DirectVmcallEnableExternalInterruptExiting")
-	//__imp_DirectVmcallEnableMovToCrExiting = GengoLibrary.ImportNow("DirectVmcallEnableMovToCrExiting")
-	//__imp_DirectVmcallEnableEferSyscall = GengoLibrary.ImportNow("DirectVmcallEnableEferSyscall")
-	//__imp_DirectVmcallSetHiddenBreakpointHook = GengoLibrary.ImportNow("DirectVmcallSetHiddenBreakpointHook")
-	//__imp_DirectVmcallInvalidateEptAllContexts = GengoLibrary.ImportNow("DirectVmcallInvalidateEptAllContexts")
-	//__imp_DirectVmcallInvalidateSingleContext = GengoLibrary.ImportNow("DirectVmcallInvalidateSingleContext")
-	//__imp_DirectVmcallUnsetExceptionBitmap = GengoLibrary.ImportNow("DirectVmcallUnsetExceptionBitmap")
-	//__imp_DirectVmcallUnhookSinglePage = GengoLibrary.ImportNow("DirectVmcallUnhookSinglePage")
-	//__imp_DirectVmcallSetDisableExternalInterruptExitingOnlyOnClearingInterruptEvents = GengoLibrary.ImportNow("DirectVmcallSetDisableExternalInterruptExitingOnlyOnClearingInterruptEvents")
-	//__imp_DirectVmcallResetMsrBitmapRead = GengoLibrary.ImportNow("DirectVmcallResetMsrBitmapRead")
-	//__imp_DirectVmcallResetMsrBitmapWrite = GengoLibrary.ImportNow("DirectVmcallResetMsrBitmapWrite")
-	//__imp_DirectVmcallResetExceptionBitmapOnlyOnClearingExceptionEvents = GengoLibrary.ImportNow("DirectVmcallResetExceptionBitmapOnlyOnClearingExceptionEvents")
-	//__imp_DirectVmcallResetIoBitmap = GengoLibrary.ImportNow("DirectVmcallResetIoBitmap")
-	//__imp_DirectVmcallDisableRdtscExitingForClearingTscEvents = GengoLibrary.ImportNow("DirectVmcallDisableRdtscExitingForClearingTscEvents")
-	//__imp_DirectVmcallDisableRdpmcExiting = GengoLibrary.ImportNow("DirectVmcallDisableRdpmcExiting")
-	//__imp_DirectVmcallDisableEferSyscallEvents = GengoLibrary.ImportNow("DirectVmcallDisableEferSyscallEvents")
-	//__imp_DirectVmcallDisableMov2DrExitingForClearingDrEvents = GengoLibrary.ImportNow("DirectVmcallDisableMov2DrExitingForClearingDrEvents")
-	//__imp_DirectVmcallDisableMov2CrExitingForClearingCrEvents = GengoLibrary.ImportNow("DirectVmcallDisableMov2CrExitingForClearingCrEvents")
-	//__imp_DisassemblerShowInstructionsInVmxNonRootMode = GengoLibrary.ImportNow("DisassemblerShowInstructionsInVmxNonRootMode")
-	//__imp_DisassemblerShowOneInstructionInVmxNonRootMode = GengoLibrary.ImportNow("DisassemblerShowOneInstructionInVmxNonRootMode")
-	//__imp_DisassemblerShowOneInstructionInVmxRootMode = GengoLibrary.ImportNow("DisassemblerShowOneInstructionInVmxRootMode")
-	//__imp_VirtualAddressToPhysicalAddress = GengoLibrary.ImportNow("VirtualAddressToPhysicalAddress")
-	//__imp_VirtualAddressToPhysicalAddressByProcessId = GengoLibrary.ImportNow("VirtualAddressToPhysicalAddressByProcessId")
-	//__imp_VirtualAddressToPhysicalAddressByProcessCr3 = GengoLibrary.ImportNow("VirtualAddressToPhysicalAddressByProcessCr3")
-	//__imp_VirtualAddressToPhysicalAddressOnTargetProcess = GengoLibrary.ImportNow("VirtualAddressToPhysicalAddressOnTargetProcess")
-	//__imp_PhysicalAddressToVirtualAddress = GengoLibrary.ImportNow("PhysicalAddressToVirtualAddress")
-	//__imp_PhysicalAddressToVirtualAddressByProcessId = GengoLibrary.ImportNow("PhysicalAddressToVirtualAddressByProcessId")
-	//__imp_PhysicalAddressToVirtualAddressByCr3 = GengoLibrary.ImportNow("PhysicalAddressToVirtualAddressByCr3")
-	//__imp_PhysicalAddressToVirtualAddressOnTargetProcess = GengoLibrary.ImportNow("PhysicalAddressToVirtualAddressOnTargetProcess")
-	//__imp_SwitchToProcessMemoryLayout = GengoLibrary.ImportNow("SwitchToProcessMemoryLayout")
-	//__imp_SwitchToCurrentProcessMemoryLayout = GengoLibrary.ImportNow("SwitchToCurrentProcessMemoryLayout")
-	//__imp_SwitchToProcessMemoryLayoutByCr3 = GengoLibrary.ImportNow("SwitchToProcessMemoryLayoutByCr3")
-	//__imp_SwitchToPreviousProcess = GengoLibrary.ImportNow("SwitchToPreviousProcess")
-	//__imp_CheckAddressValidityUsingTsx = GengoLibrary.ImportNow("CheckAddressValidityUsingTsx")
-	//__imp_CheckAccessValidityAndSafety = GengoLibrary.ImportNow("CheckAccessValidityAndSafety")
-	//__imp_CheckAddressPhysical = GengoLibrary.ImportNow("CheckAddressPhysical")
-	//__imp_CheckAddressMaximumInstructionLength = GengoLibrary.ImportNow("CheckAddressMaximumInstructionLength")
-	//__imp_LayoutGetCurrentProcessCr3 = GengoLibrary.ImportNow("LayoutGetCurrentProcessCr3")
-	//__imp_LayoutGetExactGuestProcessCr3 = GengoLibrary.ImportNow("LayoutGetExactGuestProcessCr3")
-	//__imp_MemoryMapperGetPteVa = GengoLibrary.ImportNow("MemoryMapperGetPteVa")
-	//__imp_MemoryMapperGetPteVaByCr3 = GengoLibrary.ImportNow("MemoryMapperGetPteVaByCr3")
-	//__imp_MemoryMapperGetPteVaWithoutSwitchingByCr3 = GengoLibrary.ImportNow("MemoryMapperGetPteVaWithoutSwitchingByCr3")
-	//__imp_MemoryMapperGetPteVaOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperGetPteVaOnTargetProcess")
-	//__imp_MemoryMapperSetExecuteDisableToPteOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperSetExecuteDisableToPteOnTargetProcess")
-	//__imp_MemoryMapperCheckPteIsPresentOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperCheckPteIsPresentOnTargetProcess")
-	//__imp_MemoryMapperReadMemorySafe = GengoLibrary.ImportNow("MemoryMapperReadMemorySafe")
-	//__imp_MemoryMapperReadMemorySafeByPhysicalAddress = GengoLibrary.ImportNow("MemoryMapperReadMemorySafeByPhysicalAddress")
-	//__imp_MemoryMapperReadMemorySafeOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperReadMemorySafeOnTargetProcess")
-	//__imp_DisassemblerLengthDisassembleEngine = GengoLibrary.ImportNow("DisassemblerLengthDisassembleEngine")
-	//__imp_DisassemblerLengthDisassembleEngineInVmxRootOnTargetProcess = GengoLibrary.ImportNow("DisassemblerLengthDisassembleEngineInVmxRootOnTargetProcess")
-	//__imp_MemoryMapperWriteMemorySafe = GengoLibrary.ImportNow("MemoryMapperWriteMemorySafe")
-	//__imp_MemoryMapperWriteMemorySafeOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperWriteMemorySafeOnTargetProcess")
-	//__imp_MemoryMapperWriteMemorySafeByPhysicalAddress = GengoLibrary.ImportNow("MemoryMapperWriteMemorySafeByPhysicalAddress")
-	//__imp_MemoryMapperWriteMemoryUnsafe = GengoLibrary.ImportNow("MemoryMapperWriteMemoryUnsafe")
-	//__imp_MemoryMapperReserveUsermodeAddressOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperReserveUsermodeAddressOnTargetProcess")
-	//__imp_MemoryMapperFreeMemoryOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperFreeMemoryOnTargetProcess")
-	//__imp_MemoryMapperSetSupervisorBitWithoutSwitchingByCr3 = GengoLibrary.ImportNow("MemoryMapperSetSupervisorBitWithoutSwitchingByCr3")
-	//__imp_MemoryMapperCheckIfPageIsNxBitSetOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperCheckIfPageIsNxBitSetOnTargetProcess")
-	//__imp_MemoryMapperCheckIfPdeIsLargePageOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperCheckIfPdeIsLargePageOnTargetProcess")
-	//__imp_MemoryManagerReadProcessMemoryNormal = GengoLibrary.ImportNow("MemoryManagerReadProcessMemoryNormal")
-	//__imp_PoolManagerCheckAndPerformAllocationAndDeallocation = GengoLibrary.ImportNow("PoolManagerCheckAndPerformAllocationAndDeallocation")
-	//__imp_PoolManagerRequestAllocation = GengoLibrary.ImportNow("PoolManagerRequestAllocation")
-	//__imp_PoolManagerRequestPool = GengoLibrary.ImportNow("PoolManagerRequestPool")
-	//__imp_PoolManagerFreePool = GengoLibrary.ImportNow("PoolManagerFreePool")
-	//__imp_PoolManagerShowPreAllocatedPools = GengoLibrary.ImportNow("PoolManagerShowPreAllocatedPools")
-	//__imp_SetGuestCsSel = GengoLibrary.ImportNow("SetGuestCsSel")
-	//__imp_SetGuestCs = GengoLibrary.ImportNow("SetGuestCs")
-	//__imp_GetGuestCs = GengoLibrary.ImportNow("GetGuestCs")
-	//__imp_SetGuestSsSel = GengoLibrary.ImportNow("SetGuestSsSel")
-	//__imp_SetGuestSs = GengoLibrary.ImportNow("SetGuestSs")
-	//__imp_GetGuestSs = GengoLibrary.ImportNow("GetGuestSs")
-	//__imp_SetGuestDsSel = GengoLibrary.ImportNow("SetGuestDsSel")
-	//__imp_SetGuestDs = GengoLibrary.ImportNow("SetGuestDs")
-	//__imp_GetGuestDs = GengoLibrary.ImportNow("GetGuestDs")
-	//__imp_SetGuestFsSel = GengoLibrary.ImportNow("SetGuestFsSel")
-	//__imp_SetGuestFs = GengoLibrary.ImportNow("SetGuestFs")
-	//__imp_GetGuestFs = GengoLibrary.ImportNow("GetGuestFs")
-	//__imp_SetGuestGsSel = GengoLibrary.ImportNow("SetGuestGsSel")
-	//__imp_SetGuestGs = GengoLibrary.ImportNow("SetGuestGs")
-	//__imp_GetGuestGs = GengoLibrary.ImportNow("GetGuestGs")
-	//__imp_SetGuestEsSel = GengoLibrary.ImportNow("SetGuestEsSel")
-	//__imp_SetGuestEs = GengoLibrary.ImportNow("SetGuestEs")
-	//__imp_GetGuestEs = GengoLibrary.ImportNow("GetGuestEs")
-	//__imp_SetGuestIdtr = GengoLibrary.ImportNow("SetGuestIdtr")
-	//__imp_GetGuestIdtr = GengoLibrary.ImportNow("GetGuestIdtr")
-	//__imp_SetGuestLdtr = GengoLibrary.ImportNow("SetGuestLdtr")
-	//__imp_GetGuestLdtr = GengoLibrary.ImportNow("GetGuestLdtr")
-	//__imp_SetGuestGdtr = GengoLibrary.ImportNow("SetGuestGdtr")
-	//__imp_GetGuestGdtr = GengoLibrary.ImportNow("GetGuestGdtr")
-	//__imp_SetGuestTr = GengoLibrary.ImportNow("SetGuestTr")
-	//__imp_GetGuestTr = GengoLibrary.ImportNow("GetGuestTr")
-	//__imp_SetGuestRFlags = GengoLibrary.ImportNow("SetGuestRFlags")
-	//__imp_GetGuestRFlags = GengoLibrary.ImportNow("GetGuestRFlags")
-	//__imp_SetGuestRIP = GengoLibrary.ImportNow("SetGuestRIP")
-	//__imp_SetGuestRSP = GengoLibrary.ImportNow("SetGuestRSP")
-	//__imp_GetGuestRIP = GengoLibrary.ImportNow("GetGuestRIP")
-	//__imp_GetGuestCr0 = GengoLibrary.ImportNow("GetGuestCr0")
-	//__imp_GetGuestCr2 = GengoLibrary.ImportNow("GetGuestCr2")
-	//__imp_GetGuestCr3 = GengoLibrary.ImportNow("GetGuestCr3")
-	//__imp_GetGuestCr4 = GengoLibrary.ImportNow("GetGuestCr4")
-	//__imp_GetGuestCr8 = GengoLibrary.ImportNow("GetGuestCr8")
-	//__imp_SetGuestCr0 = GengoLibrary.ImportNow("SetGuestCr0")
-	//__imp_SetGuestCr2 = GengoLibrary.ImportNow("SetGuestCr2")
-	//__imp_SetGuestCr3 = GengoLibrary.ImportNow("SetGuestCr3")
-	//__imp_SetGuestCr4 = GengoLibrary.ImportNow("SetGuestCr4")
-	//__imp_SetGuestCr8 = GengoLibrary.ImportNow("SetGuestCr8")
-	//__imp_GetGuestDr0 = GengoLibrary.ImportNow("GetGuestDr0")
-	//__imp_GetGuestDr1 = GengoLibrary.ImportNow("GetGuestDr1")
-	//__imp_GetGuestDr2 = GengoLibrary.ImportNow("GetGuestDr2")
-	//__imp_GetGuestDr3 = GengoLibrary.ImportNow("GetGuestDr3")
-	//__imp_GetGuestDr6 = GengoLibrary.ImportNow("GetGuestDr6")
-	//__imp_GetGuestDr7 = GengoLibrary.ImportNow("GetGuestDr7")
-	//__imp_SetGuestDr0 = GengoLibrary.ImportNow("SetGuestDr0")
-	//__imp_SetGuestDr1 = GengoLibrary.ImportNow("SetGuestDr1")
-	//__imp_SetGuestDr2 = GengoLibrary.ImportNow("SetGuestDr2")
-	//__imp_SetGuestDr3 = GengoLibrary.ImportNow("SetGuestDr3")
-	//__imp_SetGuestDr6 = GengoLibrary.ImportNow("SetGuestDr6")
-	//__imp_SetGuestDr7 = GengoLibrary.ImportNow("SetGuestDr7")
-	//__imp_SetDebugRegisters = GengoLibrary.ImportNow("SetDebugRegisters")
-	//__imp_TransparentHideDebugger = GengoLibrary.ImportNow("TransparentHideDebugger")
-	//__imp_TransparentUnhideDebugger = GengoLibrary.ImportNow("TransparentUnhideDebugger")
-	//__imp_BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores = GengoLibrary.ImportNow("BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores")
-	//__imp_BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores = GengoLibrary.ImportNow("BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores")
-	//__imp_BroadcastEnableDbAndBpExitingAllCores = GengoLibrary.ImportNow("BroadcastEnableDbAndBpExitingAllCores")
-	//__imp_BroadcastDisableDbAndBpExitingAllCores = GengoLibrary.ImportNow("BroadcastDisableDbAndBpExitingAllCores")
-	//__imp_BroadcastEnableRdtscExitingAllCores = GengoLibrary.ImportNow("BroadcastEnableRdtscExitingAllCores")
-	//__imp_BroadcastDisableRdtscExitingAllCores = GengoLibrary.ImportNow("BroadcastDisableRdtscExitingAllCores")
-	//__imp_BroadcastChangeAllMsrBitmapReadAllCores = GengoLibrary.ImportNow("BroadcastChangeAllMsrBitmapReadAllCores")
-	//__imp_BroadcastResetChangeAllMsrBitmapReadAllCores = GengoLibrary.ImportNow("BroadcastResetChangeAllMsrBitmapReadAllCores")
-	//__imp_BroadcastChangeAllMsrBitmapWriteAllCores = GengoLibrary.ImportNow("BroadcastChangeAllMsrBitmapWriteAllCores")
-	//__imp_BroadcastResetAllMsrBitmapWriteAllCores = GengoLibrary.ImportNow("BroadcastResetAllMsrBitmapWriteAllCores")
-	//__imp_BroadcastDisableRdtscExitingForClearingEventsAllCores = GengoLibrary.ImportNow("BroadcastDisableRdtscExitingForClearingEventsAllCores")
-	//__imp_BroadcastDisableMov2ControlRegsExitingForClearingEventsAllCores = GengoLibrary.ImportNow("BroadcastDisableMov2ControlRegsExitingForClearingEventsAllCores")
-	//__imp_BroadcastDisableMov2DebugRegsExitingForClearingEventsAllCores = GengoLibrary.ImportNow("BroadcastDisableMov2DebugRegsExitingForClearingEventsAllCores")
-	//__imp_BroadcastEnableRdpmcExitingAllCores = GengoLibrary.ImportNow("BroadcastEnableRdpmcExitingAllCores")
-	//__imp_BroadcastDisableRdpmcExitingAllCores = GengoLibrary.ImportNow("BroadcastDisableRdpmcExitingAllCores")
-	//__imp_BroadcastSetExceptionBitmapAllCores = GengoLibrary.ImportNow("BroadcastSetExceptionBitmapAllCores")
-	//__imp_BroadcastUnsetExceptionBitmapAllCores = GengoLibrary.ImportNow("BroadcastUnsetExceptionBitmapAllCores")
-	//__imp_BroadcastResetExceptionBitmapAllCores = GengoLibrary.ImportNow("BroadcastResetExceptionBitmapAllCores")
-	//__imp_BroadcastEnableMovControlRegisterExitingAllCores = GengoLibrary.ImportNow("BroadcastEnableMovControlRegisterExitingAllCores")
-	//__imp_BroadcastDisableMovToControlRegistersExitingAllCores = GengoLibrary.ImportNow("BroadcastDisableMovToControlRegistersExitingAllCores")
-	//__imp_BroadcastEnableMovDebugRegistersExitingAllCores = GengoLibrary.ImportNow("BroadcastEnableMovDebugRegistersExitingAllCores")
-	//__imp_BroadcastDisableMovDebugRegistersExitingAllCores = GengoLibrary.ImportNow("BroadcastDisableMovDebugRegistersExitingAllCores")
-	//__imp_BroadcastSetExternalInterruptExitingAllCores = GengoLibrary.ImportNow("BroadcastSetExternalInterruptExitingAllCores")
-	//__imp_BroadcastUnsetExternalInterruptExitingOnlyOnClearingInterruptEventsAllCores = GengoLibrary.ImportNow("BroadcastUnsetExternalInterruptExitingOnlyOnClearingInterruptEventsAllCores")
-	//__imp_BroadcastIoBitmapChangeAllCores = GengoLibrary.ImportNow("BroadcastIoBitmapChangeAllCores")
-	//__imp_BroadcastIoBitmapResetAllCores = GengoLibrary.ImportNow("BroadcastIoBitmapResetAllCores")
-	//__imp_BroadcastEnableMovToCr3ExitingOnAllProcessors = GengoLibrary.ImportNow("BroadcastEnableMovToCr3ExitingOnAllProcessors")
-	//__imp_BroadcastDisableMovToCr3ExitingOnAllProcessors = GengoLibrary.ImportNow("BroadcastDisableMovToCr3ExitingOnAllProcessors")
-	//__imp_BroadcastEnableEferSyscallEventsOnAllProcessors = GengoLibrary.ImportNow("BroadcastEnableEferSyscallEventsOnAllProcessors")
-	//__imp_BroadcastDisableEferSyscallEventsOnAllProcessors = GengoLibrary.ImportNow("BroadcastDisableEferSyscallEventsOnAllProcessors")
+	__imp_LogInitialize = GengoLibrary.ImportNow("LogInitialize")
+	__imp_LogUnInitialize = GengoLibrary.ImportNow("LogUnInitialize")
+	__imp_LogMarkAllAsRead = GengoLibrary.ImportNow("LogMarkAllAsRead")
+	__imp_LogCallbackPrepareAndSendMessageToQueue = GengoLibrary.ImportNow("LogCallbackPrepareAndSendMessageToQueue")
+	__imp_LogCallbackPrepareAndSendMessageToQueueWrapper = GengoLibrary.ImportNow("LogCallbackPrepareAndSendMessageToQueueWrapper")
+	__imp_LogCallbackSendBuffer = GengoLibrary.ImportNow("LogCallbackSendBuffer")
+	__imp_LogCallbackCheckIfBufferIsFull = GengoLibrary.ImportNow("LogCallbackCheckIfBufferIsFull")
+	__imp_LogCallbackSendMessageToQueue = GengoLibrary.ImportNow("LogCallbackSendMessageToQueue")
+	__imp_LogRegisterEventBasedNotification = GengoLibrary.ImportNow("LogRegisterEventBasedNotification")
+	__imp_LogRegisterIrpBasedNotification = GengoLibrary.ImportNow("LogRegisterIrpBasedNotification")
+	__imp_hyperdbg_u_detect_vmx_support = GengoLibrary.ImportNow("hyperdbg_u_detect_vmx_support")
+	__imp_hyperdbg_u_read_vendor_string = GengoLibrary.ImportNow("hyperdbg_u_read_vendor_string")
+	__imp_hyperdbg_u_load_vmm = GengoLibrary.ImportNow("hyperdbg_u_load_vmm")
+	__imp_hyperdbg_u_unload_vmm = GengoLibrary.ImportNow("hyperdbg_u_unload_vmm")
+	__imp_hyperdbg_u_install_vmm_driver = GengoLibrary.ImportNow("hyperdbg_u_install_vmm_driver")
+	__imp_hyperdbg_u_uninstall_vmm_driver = GengoLibrary.ImportNow("hyperdbg_u_uninstall_vmm_driver")
+	__imp_hyperdbg_u_stop_vmm_driver = GengoLibrary.ImportNow("hyperdbg_u_stop_vmm_driver")
+	__imp_hyperdbg_u_interpreter = GengoLibrary.ImportNow("hyperdbg_u_interpreter")
+	__imp_hyperdbg_u_show_signature = GengoLibrary.ImportNow("hyperdbg_u_show_signature")
+	__imp_hyperdbg_u_set_text_message_callback = GengoLibrary.ImportNow("hyperdbg_u_set_text_message_callback")
+	__imp_hyperdbg_u_script_read_file_and_execute_commandline = GengoLibrary.ImportNow("hyperdbg_u_script_read_file_and_execute_commandline")
+	__imp_hyperdbg_u_continue_previous_command = GengoLibrary.ImportNow("hyperdbg_u_continue_previous_command")
+	__imp_hyperdbg_u_check_multiline_command = GengoLibrary.ImportNow("hyperdbg_u_check_multiline_command")
+	__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")
+	__imp_PrintSymbolBuffer = GengoLibrary.ImportNow("PrintSymbolBuffer")
+	__imp_PrintSymbol = GengoLibrary.ImportNow("PrintSymbol")
+	__imp_RemoveSymbolBuffer = GengoLibrary.ImportNow("RemoveSymbolBuffer")
+	__imp_FuncGetNumberOfOperands = GengoLibrary.ImportNow("FuncGetNumberOfOperands")
+	__imp_ScriptEngineSetHwdbgInstanceInfo = GengoLibrary.ImportNow("ScriptEngineSetHwdbgInstanceInfo")
+	__imp_ScriptEngineSetTextMessageCallback = GengoLibrary.ImportNow("ScriptEngineSetTextMessageCallback")
+	__imp_ScriptEngineSymbolAbortLoading = GengoLibrary.ImportNow("ScriptEngineSymbolAbortLoading")
+	__imp_ScriptEngineConvertNameToAddress = GengoLibrary.ImportNow("ScriptEngineConvertNameToAddress")
+	__imp_ScriptEngineLoadFileSymbol = GengoLibrary.ImportNow("ScriptEngineLoadFileSymbol")
+	__imp_ScriptEngineUnloadAllSymbols = GengoLibrary.ImportNow("ScriptEngineUnloadAllSymbols")
+	__imp_ScriptEngineUnloadModuleSymbol = GengoLibrary.ImportNow("ScriptEngineUnloadModuleSymbol")
+	__imp_ScriptEngineSearchSymbolForMask = GengoLibrary.ImportNow("ScriptEngineSearchSymbolForMask")
+	__imp_ScriptEngineGetFieldOffset = GengoLibrary.ImportNow("ScriptEngineGetFieldOffset")
+	__imp_ScriptEngineGetDataTypeSize = GengoLibrary.ImportNow("ScriptEngineGetDataTypeSize")
+	__imp_ScriptEngineCreateSymbolTableForDisassembler = GengoLibrary.ImportNow("ScriptEngineCreateSymbolTableForDisassembler")
+	__imp_ScriptEngineConvertFileToPdbPath = GengoLibrary.ImportNow("ScriptEngineConvertFileToPdbPath")
+	__imp_ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails = GengoLibrary.ImportNow("ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails")
+	__imp_ScriptEngineSymbolInitLoad = GengoLibrary.ImportNow("ScriptEngineSymbolInitLoad")
+	__imp_ScriptEngineShowDataBasedOnSymbolTypes = GengoLibrary.ImportNow("ScriptEngineShowDataBasedOnSymbolTypes")
+	__imp_SymSetTextMessageCallback = GengoLibrary.ImportNow("SymSetTextMessageCallback")
+	__imp_SymbolAbortLoading = GengoLibrary.ImportNow("SymbolAbortLoading")
+	__imp_SymConvertNameToAddress = GengoLibrary.ImportNow("SymConvertNameToAddress")
+	__imp_SymLoadFileSymbol = GengoLibrary.ImportNow("SymLoadFileSymbol")
+	__imp_SymUnloadAllSymbols = GengoLibrary.ImportNow("SymUnloadAllSymbols")
+	__imp_SymUnloadModuleSymbol = GengoLibrary.ImportNow("SymUnloadModuleSymbol")
+	__imp_SymSearchSymbolForMask = GengoLibrary.ImportNow("SymSearchSymbolForMask")
+	__imp_SymGetFieldOffset = GengoLibrary.ImportNow("SymGetFieldOffset")
+	__imp_SymGetDataTypeSize = GengoLibrary.ImportNow("SymGetDataTypeSize")
+	__imp_SymCreateSymbolTableForDisassembler = GengoLibrary.ImportNow("SymCreateSymbolTableForDisassembler")
+	__imp_SymConvertFileToPdbPath = GengoLibrary.ImportNow("SymConvertFileToPdbPath")
+	__imp_SymConvertFileToPdbFileAndGuidAndAgeDetails = GengoLibrary.ImportNow("SymConvertFileToPdbFileAndGuidAndAgeDetails")
+	__imp_SymbolInitLoad = GengoLibrary.ImportNow("SymbolInitLoad")
+	__imp_SymShowDataBasedOnSymbolTypes = GengoLibrary.ImportNow("SymShowDataBasedOnSymbolTypes")
+	__imp_SymQuerySizeof = GengoLibrary.ImportNow("SymQuerySizeof")
+	__imp_SymCastingQueryForFiledsAndTypes = GengoLibrary.ImportNow("SymCastingQueryForFiledsAndTypes")
+	__imp_VmFuncVmxVmcall = GengoLibrary.ImportNow("VmFuncVmxVmcall")
+	__imp_VmFuncPerformRipIncrement = GengoLibrary.ImportNow("VmFuncPerformRipIncrement")
+	__imp_VmFuncSuppressRipIncrement = GengoLibrary.ImportNow("VmFuncSuppressRipIncrement")
+	__imp_VmFuncChangeMtfUnsettingState = GengoLibrary.ImportNow("VmFuncChangeMtfUnsettingState")
+	__imp_VmFuncChangeIgnoreOneMtfState = GengoLibrary.ImportNow("VmFuncChangeIgnoreOneMtfState")
+	__imp_VmFuncSetMonitorTrapFlag = GengoLibrary.ImportNow("VmFuncSetMonitorTrapFlag")
+	__imp_VmFuncSetRflagTrapFlag = GengoLibrary.ImportNow("VmFuncSetRflagTrapFlag")
+	__imp_VmFuncRegisterMtfBreak = GengoLibrary.ImportNow("VmFuncRegisterMtfBreak")
+	__imp_VmFuncUnRegisterMtfBreak = GengoLibrary.ImportNow("VmFuncUnRegisterMtfBreak")
+	__imp_VmFuncSetLoadDebugControls = GengoLibrary.ImportNow("VmFuncSetLoadDebugControls")
+	__imp_VmFuncSetSaveDebugControls = GengoLibrary.ImportNow("VmFuncSetSaveDebugControls")
+	__imp_VmFuncSetPmcVmexit = GengoLibrary.ImportNow("VmFuncSetPmcVmexit")
+	__imp_VmFuncSetMovControlRegsExiting = GengoLibrary.ImportNow("VmFuncSetMovControlRegsExiting")
+	__imp_VmFuncSetMovToCr3Vmexit = GengoLibrary.ImportNow("VmFuncSetMovToCr3Vmexit")
+	__imp_VmFuncWriteExceptionBitmap = GengoLibrary.ImportNow("VmFuncWriteExceptionBitmap")
+	__imp_VmFuncSetInterruptWindowExiting = GengoLibrary.ImportNow("VmFuncSetInterruptWindowExiting")
+	__imp_VmFuncSetNmiWindowExiting = GengoLibrary.ImportNow("VmFuncSetNmiWindowExiting")
+	__imp_VmFuncSetNmiExiting = GengoLibrary.ImportNow("VmFuncSetNmiExiting")
+	__imp_VmFuncSetExceptionBitmap = GengoLibrary.ImportNow("VmFuncSetExceptionBitmap")
+	__imp_VmFuncUnsetExceptionBitmap = GengoLibrary.ImportNow("VmFuncUnsetExceptionBitmap")
+	__imp_VmFuncSetExternalInterruptExiting = GengoLibrary.ImportNow("VmFuncSetExternalInterruptExiting")
+	__imp_VmFuncSetRdtscExiting = GengoLibrary.ImportNow("VmFuncSetRdtscExiting")
+	__imp_VmFuncSetMovDebugRegsExiting = GengoLibrary.ImportNow("VmFuncSetMovDebugRegsExiting")
+	__imp_VmFuncInjectPendingExternalInterrupts = GengoLibrary.ImportNow("VmFuncInjectPendingExternalInterrupts")
+	__imp_VmFuncSetRflags = GengoLibrary.ImportNow("VmFuncSetRflags")
+	__imp_VmFuncSetRip = GengoLibrary.ImportNow("VmFuncSetRip")
+	__imp_VmFuncSetTriggerEventForVmcalls = GengoLibrary.ImportNow("VmFuncSetTriggerEventForVmcalls")
+	__imp_VmFuncSetTriggerEventForCpuids = GengoLibrary.ImportNow("VmFuncSetTriggerEventForCpuids")
+	__imp_VmFuncSetInterruptibilityState = GengoLibrary.ImportNow("VmFuncSetInterruptibilityState")
+	__imp_VmFuncCheckAndEnableExternalInterrupts = GengoLibrary.ImportNow("VmFuncCheckAndEnableExternalInterrupts")
+	__imp_VmFuncDisableExternalInterruptsAndInterruptWindow = GengoLibrary.ImportNow("VmFuncDisableExternalInterruptsAndInterruptWindow")
+	__imp_VmFuncEventInjectPageFaultWithCr2 = GengoLibrary.ImportNow("VmFuncEventInjectPageFaultWithCr2")
+	__imp_VmFuncEventInjectPageFaultRangeAddress = GengoLibrary.ImportNow("VmFuncEventInjectPageFaultRangeAddress")
+	__imp_VmFuncEventInjectInterruption = GengoLibrary.ImportNow("VmFuncEventInjectInterruption")
+	__imp_VmFuncVmxBroadcastInitialize = GengoLibrary.ImportNow("VmFuncVmxBroadcastInitialize")
+	__imp_VmFuncVmxBroadcastUninitialize = GengoLibrary.ImportNow("VmFuncVmxBroadcastUninitialize")
+	__imp_VmFuncEventInjectBreakpoint = GengoLibrary.ImportNow("VmFuncEventInjectBreakpoint")
+	__imp_VmFuncInvalidateEptSingleContext = GengoLibrary.ImportNow("VmFuncInvalidateEptSingleContext")
+	__imp_VmFuncInvalidateEptAllContexts = GengoLibrary.ImportNow("VmFuncInvalidateEptAllContexts")
+	__imp_VmFuncUninitVmm = GengoLibrary.ImportNow("VmFuncUninitVmm")
+	__imp_VmFuncEnableMtfAndChangeExternalInterruptState = GengoLibrary.ImportNow("VmFuncEnableMtfAndChangeExternalInterruptState")
+	__imp_VmFuncEnableAndCheckForPreviousExternalInterrupts = GengoLibrary.ImportNow("VmFuncEnableAndCheckForPreviousExternalInterrupts")
+	__imp_VmFuncGetCsSelector = GengoLibrary.ImportNow("VmFuncGetCsSelector")
+	__imp_VmFuncReadExceptionBitmap = GengoLibrary.ImportNow("VmFuncReadExceptionBitmap")
+	__imp_VmFuncGetLastVmexitRip = GengoLibrary.ImportNow("VmFuncGetLastVmexitRip")
+	__imp_VmFuncGetRflags = GengoLibrary.ImportNow("VmFuncGetRflags")
+	__imp_VmFuncGetRip = GengoLibrary.ImportNow("VmFuncGetRip")
+	__imp_VmFuncGetInterruptibilityState = GengoLibrary.ImportNow("VmFuncGetInterruptibilityState")
+	__imp_VmFuncClearSteppingBits = GengoLibrary.ImportNow("VmFuncClearSteppingBits")
+	__imp_VmFuncInitVmm = GengoLibrary.ImportNow("VmFuncInitVmm")
+	__imp_VmFuncVmxCompatibleStrlen = GengoLibrary.ImportNow("VmFuncVmxCompatibleStrlen")
+	__imp_VmFuncVmxCompatibleWcslen = GengoLibrary.ImportNow("VmFuncVmxCompatibleWcslen")
+	__imp_VmFuncNmiBroadcastRequest = GengoLibrary.ImportNow("VmFuncNmiBroadcastRequest")
+	__imp_VmFuncNmiBroadcastInvalidateEptSingleContext = GengoLibrary.ImportNow("VmFuncNmiBroadcastInvalidateEptSingleContext")
+	__imp_VmFuncNmiBroadcastInvalidateEptAllContexts = GengoLibrary.ImportNow("VmFuncNmiBroadcastInvalidateEptAllContexts")
+	__imp_VmFuncVmxGetCurrentExecutionMode = GengoLibrary.ImportNow("VmFuncVmxGetCurrentExecutionMode")
+	__imp_VmFuncQueryModeExecTrap = GengoLibrary.ImportNow("VmFuncQueryModeExecTrap")
+	__imp_VmFuncVmxCompatibleStrcmp = GengoLibrary.ImportNow("VmFuncVmxCompatibleStrcmp")
+	__imp_VmFuncVmxCompatibleStrncmp = GengoLibrary.ImportNow("VmFuncVmxCompatibleStrncmp")
+	__imp_VmFuncVmxCompatibleWcscmp = GengoLibrary.ImportNow("VmFuncVmxCompatibleWcscmp")
+	__imp_VmFuncVmxCompatibleWcsncmp = GengoLibrary.ImportNow("VmFuncVmxCompatibleWcsncmp")
+	__imp_VmFuncVmxCompatibleMemcmp = GengoLibrary.ImportNow("VmFuncVmxCompatibleMemcmp")
+	__imp_ConfigureEnableMovToCr3ExitingOnAllProcessors = GengoLibrary.ImportNow("ConfigureEnableMovToCr3ExitingOnAllProcessors")
+	__imp_ConfigureDisableMovToCr3ExitingOnAllProcessors = GengoLibrary.ImportNow("ConfigureDisableMovToCr3ExitingOnAllProcessors")
+	__imp_ConfigureEnableEferSyscallEventsOnAllProcessors = GengoLibrary.ImportNow("ConfigureEnableEferSyscallEventsOnAllProcessors")
+	__imp_ConfigureDisableEferSyscallEventsOnAllProcessors = GengoLibrary.ImportNow("ConfigureDisableEferSyscallEventsOnAllProcessors")
+	__imp_ConfigureSetExternalInterruptExitingOnSingleCore = GengoLibrary.ImportNow("ConfigureSetExternalInterruptExitingOnSingleCore")
+	__imp_ConfigureEnableRdtscExitingOnSingleCore = GengoLibrary.ImportNow("ConfigureEnableRdtscExitingOnSingleCore")
+	__imp_ConfigureEnableRdpmcExitingOnSingleCore = GengoLibrary.ImportNow("ConfigureEnableRdpmcExitingOnSingleCore")
+	__imp_ConfigureEnableMovToDebugRegistersExitingOnSingleCore = GengoLibrary.ImportNow("ConfigureEnableMovToDebugRegistersExitingOnSingleCore")
+	__imp_ConfigureSetExceptionBitmapOnSingleCore = GengoLibrary.ImportNow("ConfigureSetExceptionBitmapOnSingleCore")
+	__imp_ConfigureEnableMovToControlRegisterExitingOnSingleCore = GengoLibrary.ImportNow("ConfigureEnableMovToControlRegisterExitingOnSingleCore")
+	__imp_ConfigureChangeMsrBitmapWriteOnSingleCore = GengoLibrary.ImportNow("ConfigureChangeMsrBitmapWriteOnSingleCore")
+	__imp_ConfigureChangeMsrBitmapReadOnSingleCore = GengoLibrary.ImportNow("ConfigureChangeMsrBitmapReadOnSingleCore")
+	__imp_ConfigureChangeIoBitmapOnSingleCore = GengoLibrary.ImportNow("ConfigureChangeIoBitmapOnSingleCore")
+	__imp_ConfigureEnableEferSyscallHookOnSingleCore = GengoLibrary.ImportNow("ConfigureEnableEferSyscallHookOnSingleCore")
+	__imp_ConfigureSetEferSyscallOrSysretHookType = GengoLibrary.ImportNow("ConfigureSetEferSyscallOrSysretHookType")
+	__imp_ConfigureDirtyLoggingInitializeOnAllProcessors = GengoLibrary.ImportNow("ConfigureDirtyLoggingInitializeOnAllProcessors")
+	__imp_ConfigureDirtyLoggingUninitializeOnAllProcessors = GengoLibrary.ImportNow("ConfigureDirtyLoggingUninitializeOnAllProcessors")
+	__imp_ConfigureModeBasedExecHookUninitializeOnAllProcessors = GengoLibrary.ImportNow("ConfigureModeBasedExecHookUninitializeOnAllProcessors")
+	__imp_ConfigureUninitializeExecTrapOnAllProcessors = GengoLibrary.ImportNow("ConfigureUninitializeExecTrapOnAllProcessors")
+	__imp_ConfigureInitializeExecTrapOnAllProcessors = GengoLibrary.ImportNow("ConfigureInitializeExecTrapOnAllProcessors")
+	__imp_ConfigureEptHook = GengoLibrary.ImportNow("ConfigureEptHook")
+	__imp_ConfigureEptHookFromVmxRoot = GengoLibrary.ImportNow("ConfigureEptHookFromVmxRoot")
+	__imp_ConfigureEptHook2 = GengoLibrary.ImportNow("ConfigureEptHook2")
+	__imp_ConfigureEptHook2FromVmxRoot = GengoLibrary.ImportNow("ConfigureEptHook2FromVmxRoot")
+	__imp_ConfigureEptHookMonitor = GengoLibrary.ImportNow("ConfigureEptHookMonitor")
+	__imp_ConfigureEptHookMonitorFromVmxRoot = GengoLibrary.ImportNow("ConfigureEptHookMonitorFromVmxRoot")
+	__imp_ConfigureEptHookModifyInstructionFetchState = GengoLibrary.ImportNow("ConfigureEptHookModifyInstructionFetchState")
+	__imp_ConfigureEptHookModifyPageReadState = GengoLibrary.ImportNow("ConfigureEptHookModifyPageReadState")
+	__imp_ConfigureEptHookModifyPageWriteState = GengoLibrary.ImportNow("ConfigureEptHookModifyPageWriteState")
+	__imp_ConfigureEptHookUnHookSingleAddress = GengoLibrary.ImportNow("ConfigureEptHookUnHookSingleAddress")
+	__imp_ConfigureEptHookUnHookSingleAddressFromVmxRoot = GengoLibrary.ImportNow("ConfigureEptHookUnHookSingleAddressFromVmxRoot")
+	__imp_ConfigureEptHookAllocateExtraHookingPagesForMemoryMonitorsAndExecEptHooks = GengoLibrary.ImportNow("ConfigureEptHookAllocateExtraHookingPagesForMemoryMonitorsAndExecEptHooks")
+	__imp_ConfigureEptHookReservePreallocatedPoolsForEptHooks = GengoLibrary.ImportNow("ConfigureEptHookReservePreallocatedPoolsForEptHooks")
+	__imp_ConfigureExecTrapAddProcessToWatchingList = GengoLibrary.ImportNow("ConfigureExecTrapAddProcessToWatchingList")
+	__imp_ConfigureExecTrapRemoveProcessFromWatchingList = GengoLibrary.ImportNow("ConfigureExecTrapRemoveProcessFromWatchingList")
+	__imp_DirectVmcallTest = GengoLibrary.ImportNow("DirectVmcallTest")
+	__imp_DirectVmcallPerformVmcall = GengoLibrary.ImportNow("DirectVmcallPerformVmcall")
+	__imp_DirectVmcallChangeMsrBitmapRead = GengoLibrary.ImportNow("DirectVmcallChangeMsrBitmapRead")
+	__imp_DirectVmcallChangeMsrBitmapWrite = GengoLibrary.ImportNow("DirectVmcallChangeMsrBitmapWrite")
+	__imp_DirectVmcallChangeIoBitmap = GengoLibrary.ImportNow("DirectVmcallChangeIoBitmap")
+	__imp_DirectVmcallEnableRdpmcExiting = GengoLibrary.ImportNow("DirectVmcallEnableRdpmcExiting")
+	__imp_DirectVmcallEnableRdtscpExiting = GengoLibrary.ImportNow("DirectVmcallEnableRdtscpExiting")
+	__imp_DirectVmcallEnableMov2DebugRegsExiting = GengoLibrary.ImportNow("DirectVmcallEnableMov2DebugRegsExiting")
+	__imp_DirectVmcallSetExceptionBitmap = GengoLibrary.ImportNow("DirectVmcallSetExceptionBitmap")
+	__imp_DirectVmcallEnableExternalInterruptExiting = GengoLibrary.ImportNow("DirectVmcallEnableExternalInterruptExiting")
+	__imp_DirectVmcallEnableMovToCrExiting = GengoLibrary.ImportNow("DirectVmcallEnableMovToCrExiting")
+	__imp_DirectVmcallEnableEferSyscall = GengoLibrary.ImportNow("DirectVmcallEnableEferSyscall")
+	__imp_DirectVmcallSetHiddenBreakpointHook = GengoLibrary.ImportNow("DirectVmcallSetHiddenBreakpointHook")
+	__imp_DirectVmcallInvalidateEptAllContexts = GengoLibrary.ImportNow("DirectVmcallInvalidateEptAllContexts")
+	__imp_DirectVmcallInvalidateSingleContext = GengoLibrary.ImportNow("DirectVmcallInvalidateSingleContext")
+	__imp_DirectVmcallUnsetExceptionBitmap = GengoLibrary.ImportNow("DirectVmcallUnsetExceptionBitmap")
+	__imp_DirectVmcallUnhookSinglePage = GengoLibrary.ImportNow("DirectVmcallUnhookSinglePage")
+	__imp_DirectVmcallSetDisableExternalInterruptExitingOnlyOnClearingInterruptEvents = GengoLibrary.ImportNow("DirectVmcallSetDisableExternalInterruptExitingOnlyOnClearingInterruptEvents")
+	__imp_DirectVmcallResetMsrBitmapRead = GengoLibrary.ImportNow("DirectVmcallResetMsrBitmapRead")
+	__imp_DirectVmcallResetMsrBitmapWrite = GengoLibrary.ImportNow("DirectVmcallResetMsrBitmapWrite")
+	__imp_DirectVmcallResetExceptionBitmapOnlyOnClearingExceptionEvents = GengoLibrary.ImportNow("DirectVmcallResetExceptionBitmapOnlyOnClearingExceptionEvents")
+	__imp_DirectVmcallResetIoBitmap = GengoLibrary.ImportNow("DirectVmcallResetIoBitmap")
+	__imp_DirectVmcallDisableRdtscExitingForClearingTscEvents = GengoLibrary.ImportNow("DirectVmcallDisableRdtscExitingForClearingTscEvents")
+	__imp_DirectVmcallDisableRdpmcExiting = GengoLibrary.ImportNow("DirectVmcallDisableRdpmcExiting")
+	__imp_DirectVmcallDisableEferSyscallEvents = GengoLibrary.ImportNow("DirectVmcallDisableEferSyscallEvents")
+	__imp_DirectVmcallDisableMov2DrExitingForClearingDrEvents = GengoLibrary.ImportNow("DirectVmcallDisableMov2DrExitingForClearingDrEvents")
+	__imp_DirectVmcallDisableMov2CrExitingForClearingCrEvents = GengoLibrary.ImportNow("DirectVmcallDisableMov2CrExitingForClearingCrEvents")
+	__imp_DisassemblerShowInstructionsInVmxNonRootMode = GengoLibrary.ImportNow("DisassemblerShowInstructionsInVmxNonRootMode")
+	__imp_DisassemblerShowOneInstructionInVmxNonRootMode = GengoLibrary.ImportNow("DisassemblerShowOneInstructionInVmxNonRootMode")
+	__imp_DisassemblerShowOneInstructionInVmxRootMode = GengoLibrary.ImportNow("DisassemblerShowOneInstructionInVmxRootMode")
+	__imp_VirtualAddressToPhysicalAddress = GengoLibrary.ImportNow("VirtualAddressToPhysicalAddress")
+	__imp_VirtualAddressToPhysicalAddressByProcessId = GengoLibrary.ImportNow("VirtualAddressToPhysicalAddressByProcessId")
+	__imp_VirtualAddressToPhysicalAddressByProcessCr3 = GengoLibrary.ImportNow("VirtualAddressToPhysicalAddressByProcessCr3")
+	__imp_VirtualAddressToPhysicalAddressOnTargetProcess = GengoLibrary.ImportNow("VirtualAddressToPhysicalAddressOnTargetProcess")
+	__imp_PhysicalAddressToVirtualAddress = GengoLibrary.ImportNow("PhysicalAddressToVirtualAddress")
+	__imp_PhysicalAddressToVirtualAddressByProcessId = GengoLibrary.ImportNow("PhysicalAddressToVirtualAddressByProcessId")
+	__imp_PhysicalAddressToVirtualAddressByCr3 = GengoLibrary.ImportNow("PhysicalAddressToVirtualAddressByCr3")
+	__imp_PhysicalAddressToVirtualAddressOnTargetProcess = GengoLibrary.ImportNow("PhysicalAddressToVirtualAddressOnTargetProcess")
+	__imp_SwitchToProcessMemoryLayout = GengoLibrary.ImportNow("SwitchToProcessMemoryLayout")
+	__imp_SwitchToCurrentProcessMemoryLayout = GengoLibrary.ImportNow("SwitchToCurrentProcessMemoryLayout")
+	__imp_SwitchToProcessMemoryLayoutByCr3 = GengoLibrary.ImportNow("SwitchToProcessMemoryLayoutByCr3")
+	__imp_SwitchToPreviousProcess = GengoLibrary.ImportNow("SwitchToPreviousProcess")
+	__imp_CheckAddressValidityUsingTsx = GengoLibrary.ImportNow("CheckAddressValidityUsingTsx")
+	__imp_CheckAccessValidityAndSafety = GengoLibrary.ImportNow("CheckAccessValidityAndSafety")
+	__imp_CheckAddressPhysical = GengoLibrary.ImportNow("CheckAddressPhysical")
+	__imp_CheckAddressMaximumInstructionLength = GengoLibrary.ImportNow("CheckAddressMaximumInstructionLength")
+	__imp_LayoutGetCurrentProcessCr3 = GengoLibrary.ImportNow("LayoutGetCurrentProcessCr3")
+	__imp_LayoutGetExactGuestProcessCr3 = GengoLibrary.ImportNow("LayoutGetExactGuestProcessCr3")
+	__imp_MemoryMapperGetPteVa = GengoLibrary.ImportNow("MemoryMapperGetPteVa")
+	__imp_MemoryMapperGetPteVaByCr3 = GengoLibrary.ImportNow("MemoryMapperGetPteVaByCr3")
+	__imp_MemoryMapperGetPteVaWithoutSwitchingByCr3 = GengoLibrary.ImportNow("MemoryMapperGetPteVaWithoutSwitchingByCr3")
+	__imp_MemoryMapperGetPteVaOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperGetPteVaOnTargetProcess")
+	__imp_MemoryMapperSetExecuteDisableToPteOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperSetExecuteDisableToPteOnTargetProcess")
+	__imp_MemoryMapperCheckPteIsPresentOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperCheckPteIsPresentOnTargetProcess")
+	__imp_MemoryMapperReadMemorySafe = GengoLibrary.ImportNow("MemoryMapperReadMemorySafe")
+	__imp_MemoryMapperReadMemorySafeByPhysicalAddress = GengoLibrary.ImportNow("MemoryMapperReadMemorySafeByPhysicalAddress")
+	__imp_MemoryMapperReadMemorySafeOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperReadMemorySafeOnTargetProcess")
+	__imp_DisassemblerLengthDisassembleEngine = GengoLibrary.ImportNow("DisassemblerLengthDisassembleEngine")
+	__imp_DisassemblerLengthDisassembleEngineInVmxRootOnTargetProcess = GengoLibrary.ImportNow("DisassemblerLengthDisassembleEngineInVmxRootOnTargetProcess")
+	__imp_MemoryMapperWriteMemorySafe = GengoLibrary.ImportNow("MemoryMapperWriteMemorySafe")
+	__imp_MemoryMapperWriteMemorySafeOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperWriteMemorySafeOnTargetProcess")
+	__imp_MemoryMapperWriteMemorySafeByPhysicalAddress = GengoLibrary.ImportNow("MemoryMapperWriteMemorySafeByPhysicalAddress")
+	__imp_MemoryMapperWriteMemoryUnsafe = GengoLibrary.ImportNow("MemoryMapperWriteMemoryUnsafe")
+	__imp_MemoryMapperReserveUsermodeAddressOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperReserveUsermodeAddressOnTargetProcess")
+	__imp_MemoryMapperFreeMemoryOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperFreeMemoryOnTargetProcess")
+	__imp_MemoryMapperSetSupervisorBitWithoutSwitchingByCr3 = GengoLibrary.ImportNow("MemoryMapperSetSupervisorBitWithoutSwitchingByCr3")
+	__imp_MemoryMapperCheckIfPageIsNxBitSetOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperCheckIfPageIsNxBitSetOnTargetProcess")
+	__imp_MemoryMapperCheckIfPdeIsLargePageOnTargetProcess = GengoLibrary.ImportNow("MemoryMapperCheckIfPdeIsLargePageOnTargetProcess")
+	__imp_MemoryManagerReadProcessMemoryNormal = GengoLibrary.ImportNow("MemoryManagerReadProcessMemoryNormal")
+	__imp_PoolManagerCheckAndPerformAllocationAndDeallocation = GengoLibrary.ImportNow("PoolManagerCheckAndPerformAllocationAndDeallocation")
+	__imp_PoolManagerRequestAllocation = GengoLibrary.ImportNow("PoolManagerRequestAllocation")
+	__imp_PoolManagerRequestPool = GengoLibrary.ImportNow("PoolManagerRequestPool")
+	__imp_PoolManagerFreePool = GengoLibrary.ImportNow("PoolManagerFreePool")
+	__imp_PoolManagerShowPreAllocatedPools = GengoLibrary.ImportNow("PoolManagerShowPreAllocatedPools")
+	__imp_SetGuestCsSel = GengoLibrary.ImportNow("SetGuestCsSel")
+	__imp_SetGuestCs = GengoLibrary.ImportNow("SetGuestCs")
+	__imp_GetGuestCs = GengoLibrary.ImportNow("GetGuestCs")
+	__imp_SetGuestSsSel = GengoLibrary.ImportNow("SetGuestSsSel")
+	__imp_SetGuestSs = GengoLibrary.ImportNow("SetGuestSs")
+	__imp_GetGuestSs = GengoLibrary.ImportNow("GetGuestSs")
+	__imp_SetGuestDsSel = GengoLibrary.ImportNow("SetGuestDsSel")
+	__imp_SetGuestDs = GengoLibrary.ImportNow("SetGuestDs")
+	__imp_GetGuestDs = GengoLibrary.ImportNow("GetGuestDs")
+	__imp_SetGuestFsSel = GengoLibrary.ImportNow("SetGuestFsSel")
+	__imp_SetGuestFs = GengoLibrary.ImportNow("SetGuestFs")
+	__imp_GetGuestFs = GengoLibrary.ImportNow("GetGuestFs")
+	__imp_SetGuestGsSel = GengoLibrary.ImportNow("SetGuestGsSel")
+	__imp_SetGuestGs = GengoLibrary.ImportNow("SetGuestGs")
+	__imp_GetGuestGs = GengoLibrary.ImportNow("GetGuestGs")
+	__imp_SetGuestEsSel = GengoLibrary.ImportNow("SetGuestEsSel")
+	__imp_SetGuestEs = GengoLibrary.ImportNow("SetGuestEs")
+	__imp_GetGuestEs = GengoLibrary.ImportNow("GetGuestEs")
+	__imp_SetGuestIdtr = GengoLibrary.ImportNow("SetGuestIdtr")
+	__imp_GetGuestIdtr = GengoLibrary.ImportNow("GetGuestIdtr")
+	__imp_SetGuestLdtr = GengoLibrary.ImportNow("SetGuestLdtr")
+	__imp_GetGuestLdtr = GengoLibrary.ImportNow("GetGuestLdtr")
+	__imp_SetGuestGdtr = GengoLibrary.ImportNow("SetGuestGdtr")
+	__imp_GetGuestGdtr = GengoLibrary.ImportNow("GetGuestGdtr")
+	__imp_SetGuestTr = GengoLibrary.ImportNow("SetGuestTr")
+	__imp_GetGuestTr = GengoLibrary.ImportNow("GetGuestTr")
+	__imp_SetGuestRFlags = GengoLibrary.ImportNow("SetGuestRFlags")
+	__imp_GetGuestRFlags = GengoLibrary.ImportNow("GetGuestRFlags")
+	__imp_SetGuestRIP = GengoLibrary.ImportNow("SetGuestRIP")
+	__imp_SetGuestRSP = GengoLibrary.ImportNow("SetGuestRSP")
+	__imp_GetGuestRIP = GengoLibrary.ImportNow("GetGuestRIP")
+	__imp_GetGuestCr0 = GengoLibrary.ImportNow("GetGuestCr0")
+	__imp_GetGuestCr2 = GengoLibrary.ImportNow("GetGuestCr2")
+	__imp_GetGuestCr3 = GengoLibrary.ImportNow("GetGuestCr3")
+	__imp_GetGuestCr4 = GengoLibrary.ImportNow("GetGuestCr4")
+	__imp_GetGuestCr8 = GengoLibrary.ImportNow("GetGuestCr8")
+	__imp_SetGuestCr0 = GengoLibrary.ImportNow("SetGuestCr0")
+	__imp_SetGuestCr2 = GengoLibrary.ImportNow("SetGuestCr2")
+	__imp_SetGuestCr3 = GengoLibrary.ImportNow("SetGuestCr3")
+	__imp_SetGuestCr4 = GengoLibrary.ImportNow("SetGuestCr4")
+	__imp_SetGuestCr8 = GengoLibrary.ImportNow("SetGuestCr8")
+	__imp_GetGuestDr0 = GengoLibrary.ImportNow("GetGuestDr0")
+	__imp_GetGuestDr1 = GengoLibrary.ImportNow("GetGuestDr1")
+	__imp_GetGuestDr2 = GengoLibrary.ImportNow("GetGuestDr2")
+	__imp_GetGuestDr3 = GengoLibrary.ImportNow("GetGuestDr3")
+	__imp_GetGuestDr6 = GengoLibrary.ImportNow("GetGuestDr6")
+	__imp_GetGuestDr7 = GengoLibrary.ImportNow("GetGuestDr7")
+	__imp_SetGuestDr0 = GengoLibrary.ImportNow("SetGuestDr0")
+	__imp_SetGuestDr1 = GengoLibrary.ImportNow("SetGuestDr1")
+	__imp_SetGuestDr2 = GengoLibrary.ImportNow("SetGuestDr2")
+	__imp_SetGuestDr3 = GengoLibrary.ImportNow("SetGuestDr3")
+	__imp_SetGuestDr6 = GengoLibrary.ImportNow("SetGuestDr6")
+	__imp_SetGuestDr7 = GengoLibrary.ImportNow("SetGuestDr7")
+	__imp_SetDebugRegisters = GengoLibrary.ImportNow("SetDebugRegisters")
+	__imp_TransparentHideDebugger = GengoLibrary.ImportNow("TransparentHideDebugger")
+	__imp_TransparentUnhideDebugger = GengoLibrary.ImportNow("TransparentUnhideDebugger")
+	__imp_BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores = GengoLibrary.ImportNow("BroadcastEnableBreakpointExitingOnExceptionBitmapAllCores")
+	__imp_BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores = GengoLibrary.ImportNow("BroadcastDisableBreakpointExitingOnExceptionBitmapAllCores")
+	__imp_BroadcastEnableDbAndBpExitingAllCores = GengoLibrary.ImportNow("BroadcastEnableDbAndBpExitingAllCores")
+	__imp_BroadcastDisableDbAndBpExitingAllCores = GengoLibrary.ImportNow("BroadcastDisableDbAndBpExitingAllCores")
+	__imp_BroadcastEnableRdtscExitingAllCores = GengoLibrary.ImportNow("BroadcastEnableRdtscExitingAllCores")
+	__imp_BroadcastDisableRdtscExitingAllCores = GengoLibrary.ImportNow("BroadcastDisableRdtscExitingAllCores")
+	__imp_BroadcastChangeAllMsrBitmapReadAllCores = GengoLibrary.ImportNow("BroadcastChangeAllMsrBitmapReadAllCores")
+	__imp_BroadcastResetChangeAllMsrBitmapReadAllCores = GengoLibrary.ImportNow("BroadcastResetChangeAllMsrBitmapReadAllCores")
+	__imp_BroadcastChangeAllMsrBitmapWriteAllCores = GengoLibrary.ImportNow("BroadcastChangeAllMsrBitmapWriteAllCores")
+	__imp_BroadcastResetAllMsrBitmapWriteAllCores = GengoLibrary.ImportNow("BroadcastResetAllMsrBitmapWriteAllCores")
+	__imp_BroadcastDisableRdtscExitingForClearingEventsAllCores = GengoLibrary.ImportNow("BroadcastDisableRdtscExitingForClearingEventsAllCores")
+	__imp_BroadcastDisableMov2ControlRegsExitingForClearingEventsAllCores = GengoLibrary.ImportNow("BroadcastDisableMov2ControlRegsExitingForClearingEventsAllCores")
+	__imp_BroadcastDisableMov2DebugRegsExitingForClearingEventsAllCores = GengoLibrary.ImportNow("BroadcastDisableMov2DebugRegsExitingForClearingEventsAllCores")
+	__imp_BroadcastEnableRdpmcExitingAllCores = GengoLibrary.ImportNow("BroadcastEnableRdpmcExitingAllCores")
+	__imp_BroadcastDisableRdpmcExitingAllCores = GengoLibrary.ImportNow("BroadcastDisableRdpmcExitingAllCores")
+	__imp_BroadcastSetExceptionBitmapAllCores = GengoLibrary.ImportNow("BroadcastSetExceptionBitmapAllCores")
+	__imp_BroadcastUnsetExceptionBitmapAllCores = GengoLibrary.ImportNow("BroadcastUnsetExceptionBitmapAllCores")
+	__imp_BroadcastResetExceptionBitmapAllCores = GengoLibrary.ImportNow("BroadcastResetExceptionBitmapAllCores")
+	__imp_BroadcastEnableMovControlRegisterExitingAllCores = GengoLibrary.ImportNow("BroadcastEnableMovControlRegisterExitingAllCores")
+	__imp_BroadcastDisableMovToControlRegistersExitingAllCores = GengoLibrary.ImportNow("BroadcastDisableMovToControlRegistersExitingAllCores")
+	__imp_BroadcastEnableMovDebugRegistersExitingAllCores = GengoLibrary.ImportNow("BroadcastEnableMovDebugRegistersExitingAllCores")
+	__imp_BroadcastDisableMovDebugRegistersExitingAllCores = GengoLibrary.ImportNow("BroadcastDisableMovDebugRegistersExitingAllCores")
+	__imp_BroadcastSetExternalInterruptExitingAllCores = GengoLibrary.ImportNow("BroadcastSetExternalInterruptExitingAllCores")
+	__imp_BroadcastUnsetExternalInterruptExitingOnlyOnClearingInterruptEventsAllCores = GengoLibrary.ImportNow("BroadcastUnsetExternalInterruptExitingOnlyOnClearingInterruptEventsAllCores")
+	__imp_BroadcastIoBitmapChangeAllCores = GengoLibrary.ImportNow("BroadcastIoBitmapChangeAllCores")
+	__imp_BroadcastIoBitmapResetAllCores = GengoLibrary.ImportNow("BroadcastIoBitmapResetAllCores")
+	__imp_BroadcastEnableMovToCr3ExitingOnAllProcessors = GengoLibrary.ImportNow("BroadcastEnableMovToCr3ExitingOnAllProcessors")
+	__imp_BroadcastDisableMovToCr3ExitingOnAllProcessors = GengoLibrary.ImportNow("BroadcastDisableMovToCr3ExitingOnAllProcessors")
+	__imp_BroadcastEnableEferSyscallEventsOnAllProcessors = GengoLibrary.ImportNow("BroadcastEnableEferSyscallEventsOnAllProcessors")
+	__imp_BroadcastDisableEferSyscallEventsOnAllProcessors = GengoLibrary.ImportNow("BroadcastDisableEferSyscallEventsOnAllProcessors")
 	bindlib.Validate((*ListEntry)(nil), 0x10, 0x8, "Flink", 0x0, "Blink", 0x8)
 	bindlib.Validate((*GuestRegs)(nil), 0x80, 0x8, "Rax", 0x0, "Rcx", 0x8, "Rdx", 0x10, "Rbx", 0x18, "Rsp", 0x20, "Rbp", 0x28, "Rsi", 0x30, "Rdi", 0x38, "R8", 0x40, "R9", 0x48, "R10", 0x50, "R11", 0x58, "R12", 0x60, "R13", 0x68, "R14", 0x70, "R15", 0x78)
 	bindlib.Validate((*GuestExtraRegisters)(nil), 0x20, 0x8, "Cs", 0x0, "Ds", 0x2, "Fs", 0x4, "Gs", 0x6, "Es", 0x8, "Ss", 0xa, "Rflags", 0x10, "Rip", 0x18)
 	bindlib.Validate((*ScriptEngineVariablesList)(nil), 0x18, 0x8, "TempList", 0x0, "GlobalVariablesList", 0x8, "LocalVariablesList", 0x10)
 	bindlib.Validate((*Cr3Type)(nil), 0x8, 0x8)
-	bindlib.Validate((*Anon267_5)(nil), 0x8, 0x8)
-	// bindlib.Validate((*Anon271_9)(nil), 0x8, 0x8, "Pcid", 0xc, "PageFrameNumber", 0x30, "Reserved1", 0x3c, "Reserved_2", 0x3f, "PcidInvalidate", 0x40)
+	bindlib.Validate((*Anon268_5)(nil), 0x8, 0x8)
+	bindlib.Validate((*Anon272_9)(nil), 0x8, 0x8, "Pcid", 0xc, "PageFrameNumber", 0x30, "Reserved1", 0x3c, "Reserved_2", 0x3f, "PcidInvalidate", 0x40)
 	bindlib.Validate((*DebuggerRemotePacket)(nil), 0x18, 0x8, "Checksum", 0x0, "Indicator", 0x8, "TypeOfThePacket", 0x10, "RequestedActionOfThePacket", 0x14)
 	bindlib.Validate((*DebuggeeUserInputPacket)(nil), 0xc, 0x4, "CommandLen", 0x0, "IgnoreFinishedSignal", 0x4, "Result", 0x8)
 	bindlib.Validate((*DebuggeeEventAndActionHeaderForRemotePacket)(nil), 0x4, 0x4, "Length", 0x0)
@@ -1985,9 +1987,9 @@ func init() {
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 0x20, 0x8, "StartAddress", 0x0, "EndAddress", 0x8, "SetHookForRead", 0x10, "SetHookForWrite", 0x11, "SetHookForExec", 0x12, "MemoryType", 0x14, "Tag", 0x18)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 0x10, 0x8, "TargetAddress", 0x0, "HookFunction", 0x8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 0x18, 0x8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0x0, "RemoveBreakpointInterception", 0x1, "PhysicalAddress", 0x8, "OriginalEntry", 0x10)
-	bindlib.Validate((*Anon1568_9)(nil), 0x4, 0x4)
-	// bindlib.Validate((*Anon1570_5)(nil), 0x4, 0x4, "Type", 0x4, "DescriptorType", 0x5, "DescriptorPrivilegeLevel", 0x7, "Present", 0x8, "Reserved1", 0xc, "AvailableBit", 0xd, "LongMode", 0xe, "DefaultBig", 0xf, "Granularity", 0x10, "Unusable", 0x11, "Reserved2", 0x20)
-	// bindlib.Validate((*VmxSegmentSelector)(nil), 0x18, 0x8, "Selector", 0x0, "Attributes", 0x4, "Limit", 0x8, "Base", 0x10)
+	bindlib.Validate((*Anon1569_9)(nil), 0x4, 0x4)
+	bindlib.Validate((*Anon1571_5)(nil), 0x4, 0x4, "Type", 0x4, "DescriptorType", 0x5, "DescriptorPrivilegeLevel", 0x7, "Present", 0x8, "Reserved1", 0xc, "AvailableBit", 0xd, "LongMode", 0xe, "DefaultBig", 0xf, "Granularity", 0x10, "Unusable", 0x11, "Reserved2", 0x20)
+	bindlib.Validate((*VmxSegmentSelector)(nil), 0x18, 0x8, "Selector", 0x0, "Attributes", 0x4, "Limit", 0x8, "Base", 0x10)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 0x18, 0x8, "Tag", 0x0, "KernelStatus", 0x8, "TypeOfAction", 0x10, "IsEnabled", 0x14)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 0x10, 0x8, "KernelStatus", 0x0, "IsShortCircuiting", 0x8)
 	bindlib.Validate((*DebuggerEventOptions)(nil), 0x30, 0x8, "OptionalParam1", 0x0, "OptionalParam2", 0x8, "OptionalParam3", 0x10, "OptionalParam4", 0x18, "OptionalParam5", 0x20, "OptionalParam6", 0x28)
@@ -1995,10 +1997,9 @@ func init() {
 	bindlib.Validate((*DebuggerGeneralAction)(nil), 0x20, 0x8, "EventTag", 0x0, "ActionType", 0x8, "ImmediateMessagePassing", 0xc, "PreAllocatedBuffer", 0x10, "CustomCodeBufferSize", 0x14, "ScriptBufferSize", 0x18, "ScriptBufferPointer", 0x1c)
 	bindlib.Validate((*DebuggerEventAndActionResult)(nil), 0x8, 0x4, "IsSuccessful", 0x0, "Error", 0x4)
 	bindlib.Validate((*HwdbgPortInformationItems)(nil), 0x4, 0x4, "PortSize", 0x0)
-	// bindlib.Validate((*HwdbgInstanceInformation)(nil), 0x38, 0x8, "Version", 0x0, "maximumNumberOfStages", 0x4, "scriptVariableLength", 0x8, "maximumNumberOfSupportedGetScriptOperators", 0xc, "maximumNumberOfSupportedSetScriptOperators", 0x10, "sharedMemorySize", 0x14, "debuggerAreaOffset", 0x18, "debuggeeAreaOffset", 0x1c, "numberOfPins", 0x20, "numberOfPorts", 0x24, "scriptCapabilities", 0x28, "bramAddrWidth", 0x30, "bramDataWidth", 0x34)
-	// bindlib.Validate((*_HwdbgScriptCapabilities)(nil), 0x8, 0x8, "FuncOr", 0x1, "FuncXor", 0x2, "FuncAnd", 0x3, "FuncAsr", 0x4, "FuncAsl", 0x5, "FuncAdd", 0x6, "FuncSub", 0x7, "FuncMul", 0x8, "FuncDiv", 0x9, "FuncMod", 0xa, "FuncGt", 0xb, "FuncLt", 0xc, "FuncEgt", 0xd, "FuncElt", 0xe, "FuncEqual", 0xf, "FuncNeq", 0x10, "FuncJmp", 0x11, "FuncJz", 0x12, "FuncJnz", 0x13, "FuncMov", 0x14, "FuncPrintf", 0x15)
-	// bindlib.Validate((*HwdbgScriptBuffer)(nil), 0x4, 0x4, "scriptNumberOfSymbols", 0x0)
-	return
+	bindlib.Validate((*HwdbgInstanceInformation)(nil), 0x44, 0x4, "Version", 0x0, "maximumNumberOfStages", 0x4, "scriptVariableLength", 0x8, "numberOfSupportedLocalVariables", 0xc, "numberOfSupportedGlobalVariables", 0x10, "numberOfSupportedTemporaryVariables", 0x14, "maximumNumberOfSupportedGetScriptOperators", 0x18, "maximumNumberOfSupportedSetScriptOperators", 0x1c, "sharedMemorySize", 0x20, "debuggerAreaOffset", 0x24, "debuggeeAreaOffset", 0x28, "numberOfPins", 0x2c, "numberOfPorts", 0x30, "scriptCapabilities", 0x34, "bramAddrWidth", 0x3c, "bramDataWidth", 0x40)
+	bindlib.Validate((*_HwdbgScriptCapabilities)(nil), 0x8, 0x4, "FuncOr", 0x1, "FuncXor", 0x2, "FuncAnd", 0x3, "FuncAsr", 0x4, "FuncAsl", 0x5, "FuncAdd", 0x6, "FuncSub", 0x7, "FuncMul", 0x8, "FuncDiv", 0x9, "FuncMod", 0xa, "FuncGt", 0xb, "FuncLt", 0xc, "FuncEgt", 0xd, "FuncElt", 0xe, "FuncEqual", 0xf, "FuncNeq", 0x10, "FuncJmp", 0x11, "FuncJz", 0x12, "FuncJnz", 0x13, "FuncMov", 0x14, "FuncPrintf", 0x15)
+	bindlib.Validate((*HwdbgScriptBuffer)(nil), 0x4, 0x4, "scriptNumberOfSymbols", 0x0)
 	bindlib.Validate((*DebuggerReadPageTableEntriesDetails)(nil), 0x58, 0x8, "VirtualAddress", 0x0, "ProcessId", 0x8, "Pml4eVirtualAddress", 0x10, "Pml4eValue", 0x18, "PdpteVirtualAddress", 0x20, "PdpteValue", 0x28, "PdeVirtualAddress", 0x30, "PdeValue", 0x38, "PteVirtualAddress", 0x40, "PteValue", 0x48, "KernelStatus", 0x50)
 	bindlib.Validate((*DebuggerVa2paAndPa2vaCommands)(nil), 0x20, 0x8, "VirtualAddress", 0x0, "PhysicalAddress", 0x8, "ProcessId", 0x10, "IsVirtual2Physical", 0x14, "KernelStatus", 0x18)
 	bindlib.Validate((*DebuggerPageInRequest)(nil), 0x20, 0x8, "VirtualAddressFrom", 0x0, "VirtualAddressTo", 0x8, "ProcessId", 0x10, "PageFaultErrorCode", 0x14, "KernelStatus", 0x18)
@@ -2051,92 +2052,6 @@ func init() {
 	bindlib.Validate((*MessageTracingCallbacks)(nil), 0x18, 0x8, "VmxOperationCheck", 0x0, "CheckImmediateMessageSending", 0x8, "SendImmediateMessage", 0x10)
 	bindlib.Validate((*VmmCallbacks)(nil), 0xb0, 0x8, "LogCallbackPrepareAndSendMessageToQueueWrapper", 0x0, "LogCallbackSendMessageToQueue", 0x8, "LogCallbackSendBuffer", 0x10, "LogCallbackCheckIfBufferIsFull", 0x18, "VmmCallbackTriggerEvents", 0x20, "VmmCallbackSetLastError", 0x28, "VmmCallbackVmcallHandler", 0x30, "VmmCallbackNmiBroadcastRequestHandler", 0x38, "VmmCallbackQueryTerminateProtectedResource", 0x40, "VmmCallbackRestoreEptState", 0x48, "VmmCallbackCheckUnhandledEptViolations", 0x50, "DebuggingCallbackHandleBreakpointException", 0x58, "DebuggingCallbackHandleDebugBreakpointException", 0x60, "DebuggingCallbackConditionalPageFaultException", 0x68, "InterceptionCallbackTriggerCr3ProcessChange", 0x70, "BreakpointCheckAndHandleReApplyingBreakpoint", 0x78, "UdCheckForCommand", 0x80, "KdCheckAndHandleNmiCallback", 0x88, "VmmCallbackRegisteredMtfHandler", 0x90, "DebuggerCheckProcessOrThreadChange", 0x98, "AttachingHandleCr3VmexitsForThreadInterception", 0xa0, "KdQueryDebuggerQueryThreadOrProcessTracingDetailsByCoreId", 0xa8)
 }
-
-func HyperDbgVmxSupportDetection() bool {
-	__res := bindlib.CCall0(__imp_HyperDbgVmxSupportDetection.Addr())
-	return bindlib.UnmarshallSyscall[bool](__res)
-}
-
-var __imp_HyperDbgReadVendorString bindlib.PreloadProc
-
-func HyperDbgReadVendorString(b []byte) {
-	bindlib.CCall1(__imp_HyperDbgReadVendorString.Addr(), bindlib.MarshallSyscall(b))
-}
-
-var __imp_HyperDbgLoadVmm bindlib.PreloadProc
-
-func HyperDbgLoadVmm() int32 {
-	__res := bindlib.CCall0(__imp_HyperDbgLoadVmm.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgUnloadVmm bindlib.PreloadProc
-
-func HyperDbgUnloadVmm() int32 {
-	__res := bindlib.CCall0(__imp_HyperDbgUnloadVmm.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgInstallVmmDriver bindlib.PreloadProc
-
-func HyperDbgInstallVmmDriver() int32 {
-	__res := bindlib.CCall0(__imp_HyperDbgInstallVmmDriver.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgUninstallVmmDriver bindlib.PreloadProc
-
-func HyperDbgUninstallVmmDriver() int32 {
-	__res := bindlib.CCall0(__imp_HyperDbgUninstallVmmDriver.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgStopVmmDriver bindlib.PreloadProc
-
-func HyperDbgStopVmmDriver() int32 {
-	__res := bindlib.CCall0(__imp_HyperDbgStopVmmDriver.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgInterpreter bindlib.PreloadProc
-
-func HyperDbgInterpreter(Command *byte) int32 {
-	__res := bindlib.CCall1(__imp_HyperDbgInterpreter.Addr(), bindlib.MarshallSyscall(Command))
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgShowSignature bindlib.PreloadProc
-
-func HyperDbgShowSignature() { bindlib.CCall0(__imp_HyperDbgShowSignature.Addr()) }
-
-var __imp_HyperDbgSetTextMessageCallback bindlib.PreloadProc
-
-func HyperDbgSetTextMessageCallback(handler Callback) {
-	bindlib.CCall1(__imp_HyperDbgSetTextMessageCallback.Addr(), bindlib.MarshallSyscall(handler))
-}
-
-var __imp_HyperDbgScriptReadFileAndExecuteCommandline bindlib.PreloadProc
-
-func HyperDbgScriptReadFileAndExecuteCommandline(argc int32, argv **byte) int32 {
-	__res := bindlib.CCall2(__imp_HyperDbgScriptReadFileAndExecuteCommandline.Addr(), bindlib.MarshallSyscall(argc), bindlib.MarshallSyscall(argv))
-	return bindlib.UnmarshallSyscall[int32](__res)
-}
-
-var __imp_HyperDbgContinuePreviousCommand bindlib.PreloadProc
-
-func HyperDbgContinuePreviousCommand() bool {
-	__res := bindlib.CCall0(__imp_HyperDbgContinuePreviousCommand.Addr())
-	return bindlib.UnmarshallSyscall[bool](__res)
-}
-
-var __imp_HyperDbgCheckMultilineCommand bindlib.PreloadProc
-
-func HyperDbgCheckMultilineCommand(CurrentCommand *byte, Reset bool) bool {
-	__res := bindlib.CCall2(__imp_HyperDbgCheckMultilineCommand.Addr(), bindlib.MarshallSyscall(CurrentCommand), bindlib.MarshallSyscall(Reset))
-	return bindlib.UnmarshallSyscall[bool](__res)
-}
-
-var __imp_LogInitialize bindlib.PreloadProc
 
 // ///////////////////////////////////////////////
 func LogInitialize(MsgTracingCallbacks *MessageTracingCallbacks) Boolean {
@@ -2192,30 +2107,102 @@ func LogCallbackSendMessageToQueue(OperationCode Uint32, IsImmediateMessage Bool
 
 var __imp_LogRegisterEventBasedNotification bindlib.PreloadProc
 
-func LogRegisterEventBasedNotification(DeviceObject unsafe.Pointer, Irp unsafe.Pointer) Ntstatus {
-	__res := bindlib.CCall2(__imp_LogRegisterEventBasedNotification.Addr(), bindlib.MarshallSyscall(DeviceObject), bindlib.MarshallSyscall(Irp))
-	return bindlib.UnmarshallSyscall[Ntstatus](__res)
+func LogRegisterEventBasedNotification(TargetIrp unsafe.Pointer) Boolean {
+	__res := bindlib.CCall1(__imp_LogRegisterEventBasedNotification.Addr(), bindlib.MarshallSyscall(TargetIrp))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_LogRegisterIrpBasedNotification bindlib.PreloadProc
 
-func LogRegisterIrpBasedNotification(DeviceObject unsafe.Pointer, Irp unsafe.Pointer) Ntstatus {
-	__res := bindlib.CCall2(__imp_LogRegisterIrpBasedNotification.Addr(), bindlib.MarshallSyscall(DeviceObject), bindlib.MarshallSyscall(Irp))
-	return bindlib.UnmarshallSyscall[Ntstatus](__res)
+func LogRegisterIrpBasedNotification(TargetIrp unsafe.Pointer, Status *Long) Boolean {
+	__res := bindlib.CCall2(__imp_LogRegisterIrpBasedNotification.Addr(), bindlib.MarshallSyscall(TargetIrp), bindlib.MarshallSyscall(Status))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
-var __imp_ReversingMachineStart bindlib.PreloadProc
+var __imp_hyperdbg_u_detect_vmx_support bindlib.PreloadProc
 
-func ReversingMachineStart() int32 {
-	__res := bindlib.CCall0(__imp_ReversingMachineStart.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
+func HyperdbgUDetectVmxSupport() Boolean {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_detect_vmx_support.Addr())
+	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
-var __imp_ReversingMachineStop bindlib.PreloadProc
+var __imp_hyperdbg_u_read_vendor_string bindlib.PreloadProc
 
-func ReversingMachineStop() int32 {
-	__res := bindlib.CCall0(__imp_ReversingMachineStop.Addr())
-	return bindlib.UnmarshallSyscall[int32](__res)
+func HyperdbgUReadVendorString(b *Char) {
+	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
+}
+
+var __imp_hyperdbg_u_load_vmm bindlib.PreloadProc
+
+func HyperdbgULoadVmm() Int {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_load_vmm.Addr())
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_unload_vmm bindlib.PreloadProc
+
+func HyperdbgUUnloadVmm() Int {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_unload_vmm.Addr())
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_install_vmm_driver bindlib.PreloadProc
+
+func HyperdbgUInstallVmmDriver() Int {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_install_vmm_driver.Addr())
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_uninstall_vmm_driver bindlib.PreloadProc
+
+func HyperdbgUUninstallVmmDriver() Int {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_uninstall_vmm_driver.Addr())
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_stop_vmm_driver bindlib.PreloadProc
+
+func HyperdbgUStopVmmDriver() Int {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_stop_vmm_driver.Addr())
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_interpreter bindlib.PreloadProc
+
+func HyperdbgUInterpreter(command *Char) Int {
+	__res := bindlib.CCall1(__imp_hyperdbg_u_interpreter.Addr(), bindlib.MarshallSyscall(command))
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_show_signature bindlib.PreloadProc
+
+func HyperdbgUShowSignature() { bindlib.CCall0(__imp_hyperdbg_u_show_signature.Addr()) }
+
+var __imp_hyperdbg_u_set_text_message_callback bindlib.PreloadProc
+
+func HyperdbgUSetTextMessageCallback(handler Callback) {
+	bindlib.CCall1(__imp_hyperdbg_u_set_text_message_callback.Addr(), bindlib.MarshallSyscall(handler))
+}
+
+var __imp_hyperdbg_u_script_read_file_and_execute_commandline bindlib.PreloadProc
+
+func HyperdbgUScriptReadFileAndExecuteCommandline(argc Int, argv **Char) Int {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_script_read_file_and_execute_commandline.Addr(), bindlib.MarshallSyscall(argc), bindlib.MarshallSyscall(argv))
+	return bindlib.UnmarshallSyscall[Int](__res)
+}
+
+var __imp_hyperdbg_u_continue_previous_command bindlib.PreloadProc
+
+func HyperdbgUContinuePreviousCommand() Boolean {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_continue_previous_command.Addr())
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_check_multiline_command bindlib.PreloadProc
+
+func HyperdbgUCheckMultilineCommand(current_command *Char, reset Boolean) Boolean {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_check_multiline_command.Addr(), bindlib.MarshallSyscall(current_command), bindlib.MarshallSyscall(reset))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_ScriptEngineParse bindlib.PreloadProc
@@ -4117,34 +4104,34 @@ func BroadcastDisableEferSyscallEventsOnAllProcessors() {
 	bindlib.CCall0(__imp_BroadcastDisableEferSyscallEventsOnAllProcessors.Addr())
 }
 
-func (s Anon267_5) Flags() Uint64 {
+func (s Anon268_5) Flags() Uint64 {
 	return bindlib.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon267_5) SetFlags(v Uint64) {
+func (s *Anon268_5) SetFlags(v Uint64) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon267_5) Fields() Anon271_9 {
-	return bindlib.ReadBitcast[Anon271_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon268_5) Fields() Anon272_9 {
+	return bindlib.ReadBitcast[Anon272_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon267_5) SetFields(v Anon271_9) {
+func (s *Anon268_5) SetFields(v Anon272_9) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1568_9) Fields() Anon1570_5 {
-	return bindlib.ReadBitcast[Anon1570_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon1569_9) Fields() Anon1571_5 {
+	return bindlib.ReadBitcast[Anon1571_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1568_9) SetFields(v Anon1570_5) {
+func (s *Anon1569_9) SetFields(v Anon1571_5) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1568_9) AsUInt() Uint32 {
+func (s Anon1569_9) AsUInt() Uint32 {
 	return bindlib.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1568_9) SetAsUInt(v Uint32) {
+func (s *Anon1569_9) SetAsUInt(v Uint32) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
