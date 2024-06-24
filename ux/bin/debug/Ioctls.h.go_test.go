@@ -1,4 +1,4 @@
-package HPRDBGCTRL
+package libhyperdbg
 
 import (
 	"go/format"

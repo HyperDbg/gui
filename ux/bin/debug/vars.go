@@ -1,4 +1,4 @@
-package HPRDBGCTRL
+package libhyperdbg
 
 var (
 	PAGE_SIZE                                                                                                            = 4096
