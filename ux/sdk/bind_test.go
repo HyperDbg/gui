@@ -210,6 +210,8 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 		}
 		b.Replace("\nSizeT              = uint64", "", 1)
 		b.Replace("\nBool               = int32", "", 1)
+		b.Replace(`__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")`, `	return
+	__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")`, 1)
 		b.Replace(`	Bool               = int32
 	Long               = int64
 	SizeT              = uint64`, `	Long               = int64`, 1)
