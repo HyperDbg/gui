@@ -246,8 +246,11 @@ func LayoutDisassemblyTable(fileName string, parent unison.Paneler) unison.Panel
 					root.AddChildByData(object)
 				}
 			case pe.ImageOptionalHeader64:
-				// oep := o.ImageBase + uint64(o.AddressOfEntryPoint)
-				x := xed.New(b.Bytes()[o.AddressOfEntryPoint:])
+				oep := o.ImageBase + uint64(o.AddressOfEntryPoint)
+				mylog.Struct(o)
+				mylog.Hex("oep", oep)
+				x := xed.New(b.Bytes()[o.ImageBase:])
+				// x := xed.New(b.Bytes()[o.AddressOfEntryPoint:])
 				x.Decode64()
 				for _, object := range x.AsmObjects {
 					root.AddChildByData(object)
