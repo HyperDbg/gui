@@ -19,18 +19,17 @@ func TestSdk(t *testing.T) {
 
 		assert.Equal(t, 1, HyperdbgUDetectVmxSupport()) // todo convert to return type as bool
 
-		//s := make([]byte, 0, 100)
-		//HyperdbgUReadVendorString(s) // todo bug
-		//fmt.Println(s)
+		// s := make([]byte, 0, 100)
+		// HyperdbgUReadVendorString(s) // todo bug
+		// fmt.Println(s)
 
 		HyperdbgUInstallVmmDriver()
 		HyperdbgULoadVmm()
-		//HyperdbgUstartVmm()//?
+		// HyperdbgUstartVmm()//?
 
 		HyperdbgUStopVmmDriver()
 		HyperdbgUUnloadVmm()
 		HyperdbgUUninstallVmmDriver()
-
 	})
 }
 

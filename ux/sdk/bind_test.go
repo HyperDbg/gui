@@ -83,7 +83,7 @@ func TestBindMacros(t *testing.T) {
 	}
 
 	g := stream.NewGeneratedFile()
-	g.P("package HPRDBGCTRL") // todo rename pkg
+	g.P("package libhyperdbg") // todo rename pkg
 	g.P()
 	g.P("var (")
 	g.P("PAGE_SIZE = 4096")
@@ -145,7 +145,7 @@ func TestBindSdk(t *testing.T) {
 	TestBindMacros(t)
 	mylog.SetDebug(false)
 	mylog.Call(func() {
-		pkg := gengo.NewPackage("HPRDBGCTRL",
+		pkg := gengo.NewPackage("libhyperdbg",
 			gengo.WithRemovePrefix(
 			//"Zydis_", "Zyan_", "Zycore_",
 			//"Zydis", "Zyan", "Zycore",
@@ -158,14 +158,14 @@ func TestBindSdk(t *testing.T) {
 			//"struct ZydisShortString_",
 			),
 		)
-		mylog.Check(pkg.Transform("HPRDBGCTRL", &clang.Options{
+		mylog.Check(pkg.Transform("libhyperdbg", &clang.Options{
 			// Sources:          []string{"combined_headers.h"},
 			Sources:          []string{"merged_headers.h"},
 			AdditionalParams: []string{
 				//"-DZYAN_NO_LIBC",
 				//"-DZYAN_STATIC_ASSERT",
 				//"-DZYDIS_STATIC_BUILD",
-				//"-DHYPERDBG_HPRDBGCTRL",
+				//"-DHYPERDBG_libhyperdbg",
 
 				//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\shared",
 				//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\ucrt",
@@ -176,9 +176,9 @@ func TestBindSdk(t *testing.T) {
 				//"-IC:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\winrt",
 				//"-IC:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.40.33807\\include",
 
-				//"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbgctrl",
+				//"-ID:\\fork\\HyperDbg\\hyperdbg\\libhyperdbg",
 				//"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbghv",
-				//"-ID:\\fork\\HyperDbg\\hyperdbg\\hprdbgctrl\\header",
+				//"-ID:\\fork\\HyperDbg\\hyperdbg\\libhyperdbg\\header",
 				//"-ID:\\fork\\HyperDbg\\hyperdbg\\include",
 				//"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies",
 				//"-ID:\\fork\\HyperDbg\\hyperdbg\\dependencies\\phnt",
