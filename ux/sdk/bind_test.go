@@ -126,7 +126,6 @@ func TestBindMacros(t *testing.T) {
 		}
 
 		key = stream.ToCamelUpper(key, false)
-		// DEBUGGER_ERROR  IOCTL_
 		switch {
 		case strings.HasPrefix(p.Key, "DEBUGGER_ERROR"):
 			after, found := strings.CutPrefix(p.Key, "DEBUGGER_ERROR")
