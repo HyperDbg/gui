@@ -3,6 +3,7 @@ package ux
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/saferwall/pe"
 
 	"github.com/ddkwork/app/ms/xed"
 	"github.com/ddkwork/app/widget"
@@ -233,10 +234,17 @@ func LayoutDisassemblyTable(fileName string, parent unison.Paneler) unison.Panel
 		SelectionChangedCallback: nil,
 		SetRootRowsCallBack: func(root *widget.Node[xed.Disassembly]) {
 			f := xed.ParserPe(fileName)
+			optionalHeader := f.NtHeader.OptionalHeader
+			switch o := optionalHeader.(type) {
+			case pe.ImageOptionalHeader32:
 
+				oep := o.ImageBase + o.AddressOfEntryPoint
+			case pe.ImageOptionalHeader64:
+				oep := o.ImageBase + uint64(o.AddressOfEntryPoint)
+			}
 			// hyperdbg-cli.exe size is 2mb
 			// now 1-2s need
-			// todo get oep rva from pe header
+			// todo show iat table,dump overlay
 			b := stream.NewBuffer(fileName)
 			b.Grow(pageSize * 10)
 			buf := b.Bytes()
