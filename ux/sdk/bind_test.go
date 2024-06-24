@@ -281,6 +281,12 @@ kq l 60
 */
 
 `)
+
+		// copy bind file into bin dir
+		bindFiles := mylog.Check2(filepath.Glob("tmp/*.go"))
+		for _, file := range bindFiles {
+			stream.CopyFile(file, filepath.Join("../bin", "debug", filepath.Base(file)))
+		}
 	})
 }
 
