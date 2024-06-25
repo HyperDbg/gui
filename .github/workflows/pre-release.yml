@@ -73,7 +73,7 @@ jobs:
       - name: Create binaries archive
         run: zip -r binaries-${{ github.ref_name }}.zip *.dll *.sys *.exe
 
-      - name: Release
+      - name: Release #todo pre-release
         uses: softprops/action-gh-release@v1
         with:
           files: |
