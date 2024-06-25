@@ -178,7 +178,6 @@ func isAlphabetOrUnderscore(s string) bool {
 func TestBindSdk(t *testing.T) {
 	TestMergeHeader(t)
 	TestBindMacros(t)
-	mylog.SetDebug(false)
 	mylog.Call(func() {
 		pkg := gengo.NewPackage("libhyperdbg",
 			gengo.WithRemovePrefix(
