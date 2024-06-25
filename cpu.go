@@ -249,7 +249,7 @@ func LayoutDisassemblyTable(fileName string, parent unison.Paneler) unison.Panel
 				oep := o.ImageBase + uint64(o.AddressOfEntryPoint)
 				mylog.Struct(o)
 				mylog.Hex("oep", oep)
-				x := xed.New(b.Bytes()[o.ImageBase:])
+				x := xed.New(b.Bytes()[o.AddressOfEntryPoint:]) //todo bug
 				// x := xed.New(b.Bytes()[o.AddressOfEntryPoint:])
 				x.Decode64()
 				for _, object := range x.AsmObjects {

@@ -6,12 +6,13 @@ import (
 )
 
 func main() {
-	testDisassembly()
+	Run()
 	return
+	//testDisassembly()
+	//return
 	testParsePe()
 	testScript()
-	return
-	Run()
+
 }
 
 func testDisassembly() {
