@@ -245,23 +245,23 @@ func TestSdk(t *testing.T) {
 		// assert.Equal(t, 1, HyperdbgUDetectVmxSupport()) // todo convert to return type as bool
 		// fmt.Println(HyperdbgUDetectVmxSupport())
 
-		InstallVmmDriver()
-		ConnectLocalDebugger()
-		LoadVmm()
+		mylog.Trace("InstallVmmDriver", InstallVmmDriver()) // not working ? return 1
+		ConnectLocalDebugger()                              // not working,need return status string for check error
+		mylog.Trace("LoadVmm", LoadVmm())                   // not working
 
-		//todo:
-		//start debugger
-		//read memory(? address buffer for disassembly)
-		//read registers
-		//set breakpoints
-		//step over/into/out
-		//continue
-		//read stack
-		//stop debugger
-
-		UnloadVmm()
-		StopVmmDriver()
-		UninstallVmmDriver()
+		// time.Sleep(1 * time.Second) // wait for debugger to connect
+		// todo:
+		// start debugger
+		// read memory(? address buffer for disassembly)
+		// read registers
+		// set breakpoints
+		// step over/into/out
+		// continue
+		// read stack
+		// stop debugger
+		mylog.Trace("UnloadVmm", UnloadVmm())
+		mylog.Trace("StopVmmDriver", StopVmmDriver())
+		mylog.Trace("UninstallVmmDriver", UninstallVmmDriver())
 	})
 }
 
