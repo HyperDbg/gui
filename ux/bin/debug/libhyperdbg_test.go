@@ -17,7 +17,7 @@ func TestSdk(t *testing.T) {
 		// fmt.Println(HyperdbgUDetectVmxSupport())
 
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver()) // not working ? return 1
-		ConnectLocalDebugger()                              // not working
+		ConnectLocalDebugger()                              // not working,need return status string for check error
 		mylog.Trace("LoadVmm", LoadVmm())                   // not working
 
 		// time.Sleep(1 * time.Second) // wait for debugger to connect
