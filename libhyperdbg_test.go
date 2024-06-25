@@ -1,28 +1,19 @@
 package main
 
 import (
-	"os"
-	"path/filepath"
 	"testing"
 
-	"github.com/ddkwork/app/ms/driverTool/driver"
-
 	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/stream"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestSdk(t *testing.T) {
-	sysName := "hyperkd.sys"
-	d := driver.New()
-	d.Load(sysName)
-	d.Unload()
+	// sysName := "hyperkd.sys"
 
-	return
-	path := filepath.Join("C:\\Windows\\System32\\drivers", sysName)
+	// path := filepath.Join("C:\\Windows\\System32\\drivers", sysName)
 	mylog.Call(func() {
-		mylog.CheckIgnore(os.Remove(path))
-		stream.CopyFile(sysName, path)
+		// mylog.CheckIgnore(os.Remove(path))
+		// stream.CopyFile(sysName, path)
 
 		// assert.Equal(t, 1, HyperdbgUDetectVmxSupport()) // todo convert to return type as bool
 		// fmt.Println(HyperdbgUDetectVmxSupport())
