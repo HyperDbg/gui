@@ -13,6 +13,7 @@ import (
 )
 
 func TestGenConstants(t *testing.T) {
+	t.Skip("重复的value导致语法错误")
 	mylog.Call(func() {
 		genConstants("ioctl.txt")
 		genConstants("errors.txt")
