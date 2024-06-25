@@ -8,9 +8,8 @@ import (
 )
 
 func TestSdk(t *testing.T) {
-	t.Skip()
-	// sysName := "hyperkd.sys"
-
+	t.Skip("")
+	// sysName := "hprdbgkd.sys"
 	// path := filepath.Join("C:\\Windows\\System32\\drivers", sysName)
 	mylog.Call(func() {
 		// mylog.CheckIgnore(os.Remove(path))
@@ -33,7 +32,6 @@ func TestSdk(t *testing.T) {
 		// continue
 		// read stack
 		// stop debugger
-
 		mylog.Trace("UnloadVmm", UnloadVmm())
 		mylog.Trace("StopVmmDriver", StopVmmDriver())
 		mylog.Trace("UninstallVmmDriver", UninstallVmmDriver())

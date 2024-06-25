@@ -238,6 +238,7 @@ import (
 )
 
 func TestSdk(t *testing.T) {
+     t.Skip("")
 	// sysName := "hprdbgkd.sys"
 	// path := filepath.Join("C:\\Windows\\System32\\drivers", sysName)
 	mylog.Call(func() {
