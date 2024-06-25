@@ -187,8 +187,8 @@ func TestBindSdk(t *testing.T) {
 				//{Name: "ZydisDecoder", Receiver: "Decoder"},
 			}),
 			gengo.WithForcedSynthetic(
-			//"ZydisShortString_",
-			//"struct ZydisShortString_",
+				//"ZydisShortString_",
+				//"struct ZydisShortString_",
 			),
 		)
 		mylog.Check(pkg.Transform("libhyperdbg", &clang.Options{
@@ -339,11 +339,6 @@ func LinkName() (*uint16, error) {
 
 `)
 
-		// copy bind file into bin dir
-		//bindFiles := mylog.Check2(filepath.Glob("tmp/*.go"))
-		//for _, file := range bindFiles {
-		//	stream.CopyFile(file, filepath.Join("../bin", "debug", filepath.Base(file)))
-		//}
 	})
 }
 
