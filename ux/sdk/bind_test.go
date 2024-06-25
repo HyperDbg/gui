@@ -229,9 +229,9 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 package libhyperdbg
 
 import (
-	"testing"
-
 	"github.com/ddkwork/golibrary/mylog"
+	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestSdk(t *testing.T) {
@@ -339,7 +339,6 @@ func LinkName() (*uint16, error) {
 }
 
 `)
-
 	})
 }
 

@@ -3,9 +3,8 @@ package libhyperdbg
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/ddkwork/golibrary/mylog"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSdk(t *testing.T) {
@@ -18,7 +17,6 @@ func TestSdk(t *testing.T) {
 		// assert.Equal(t, 1, HyperdbgUDetectVmxSupport()) // todo convert to return type as bool
 		// fmt.Println(HyperdbgUDetectVmxSupport())
 		assert.True(t, VmxSupportDetection())
-
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver()) // not working ? return 1
 		ConnectLocalDebugger()                              // not working,need return status string for check error
 		mylog.Trace("LoadVmm", LoadVmm())                   // not working
