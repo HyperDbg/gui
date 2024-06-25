@@ -22,8 +22,6 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8Yc
 github.com/daviddengcn/go-colortext v1.0.0/go.mod h1:zDqEI5NVUop5QPpVJUxE9UO10hRnmkD5G4Pmri9+m4c=
 github.com/dc0d/caseconv v0.5.0 h1:z3Ki2zszD03beetWyNAGa3NOAbnDJk+bX0tvcx9BKjQ=
 github.com/dc0d/caseconv v0.5.0/go.mod h1:/CrBBNtMoPTPf0INHrwyyhDrDjAJ9PFE+WuxSJHU0ZE=
-github.com/ddkwork/app v0.0.0-20240625135325-1e4dd56501f0 h1:I1NM1aoCRF2AgpQQQbUl0A15VHYnKjff2WlMk1XQI8g=
-github.com/ddkwork/app v0.0.0-20240625135325-1e4dd56501f0/go.mod h1:aK618fJL+1+zcJty8EEJIacmn+/f93aAt4MMI5QP1QQ=
 github.com/ddkwork/app v0.0.0-20240625154516-bb97921bf25a h1:S8xTholX1H+IZaxJVhEUPvACLuxxWdsENScAKhjpvag=
 github.com/ddkwork/app v0.0.0-20240625154516-bb97921bf25a/go.mod h1:K7IlwkFpvAlRuYO76wXhtUZmlNKvNajkE/zcB6WiM68=
 github.com/ddkwork/golibrary v0.0.83 h1:/13WdcrIM9paJXmg8fpxFceuhzoHBpsbCr0IAuZuQoQ=
