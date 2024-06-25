@@ -1,0 +1,37 @@
+void
+format() {
+    !epthook nt!IopXxxControlFile script {
+        printf("pname\t%s\n", $pname);
+        printf("FileHandle\t%llx\n", dq(rsp + 008));
+        printf("Event\t%llx\n", dq(rsp + 010));
+        printf("ApcRoutine\t%llx\n", dq(rsp + 018));
+        printf("ApcContext\t%llx\n", dq(rsp + 020));
+        printf("IoStatusBlock\t%llx\n", dq(rsp + 028));
+        printf("IoControlCode\t%llx\n", dq(rsp + 030));
+        printf("InputBuffer\t%llx\n", dq(rsp + 038));
+        printf("InputBufferLength\t%llx\n", dq(rsp + 040));
+        printf("OutputBuffer\t%llx\n", dq(rsp + 048));
+        printf("OutputBufferLength\t%llx\n", dq(rsp + 050));
+        printf("DeviceIoControl\t%llx\n", dq(rsp + 058));
+        printf("\n");
+    }
+}
+
+/*
+.connect local
+load vmm
+.sympath SRV*c:\Symbols*https://msdl.microsoft.com/download/symbol
+.sym load
+.sym reload
+.sym download
+unload vmm
+
+first in get stack on debug module
+.debug remote namedpipe \\.\pipe\HyperDbgDebug
+.debug prepare serial 115200 com1
+u nt!IopXxxControlFile l 74f
+bp nt!IopXxxControlFile
+g
+kq l 60
+*/
+

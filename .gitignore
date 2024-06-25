@@ -1,0 +1,11 @@
+.idea
+*.json
+*.txt
+*.pdb
+*.exp
+*.lib
+*.log
+reset git.cmd
+upLib.cmd
+cmake-build-debug
+bin

@@ -1,0 +1,90 @@
+name: Pre-release HyperDbg and GUI
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*-pre.*'
+
+env:
+  RELEASE_ZIP_FILE_NAME: hyperdbgui
+
+jobs:
+  test-on-multiple-os:
+    name: Test on multiple OS
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22.4'
+
+      - name: Install GCC on Windows
+        run: choco install mingw
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Run tests
+        run: go test ./...
+
+      - name: Build project
+        run: go build .
+
+  package-and-release:
+    needs: test-on-multiple-os
+    runs-on: windows-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22.4'
+
+      - name: Install GCC on Windows
+        run: choco install mingw
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Build project
+        run: go build .
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0.0'
+
+      - name: Install GitHub Changelog Generator
+        run: gem install github_changelog_generator
+
+      - name: Generate Changelog
+        run: github_changelog_generator --user ${{ github.repository_owner }} --project ${{ github.event.repository.name }} --token ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create source code archive
+        run: powershell -Command "Get-ChildItem -Recurse | Where-Object { $_.FullName -notmatch '\.git' -and $_.Extension -notmatch '\.dll|\.sys|\.exe' } | Compress-Archive -DestinationPath ${env:RELEASE_ZIP_FILE_NAME}-${{ github.ref_name }}.zip -CompressionLevel Optimal"
+
+      - name: Create binaries archive
+        run: powershell -Command "Get-ChildItem -Recurse -Include '*.dll', '*.sys', '*.exe' | Compress-Archive -DestinationPath binaries-${{ github.ref_name }}.zip"
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ${{ env.RELEASE_ZIP_FILE_NAME }}-${{ github.ref_name }}.zip
+            binaries-${{ github.ref_name }}.zip
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.tk }}
