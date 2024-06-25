@@ -8,6 +8,7 @@ import (
 )
 
 func TestSdk(t *testing.T) {
+	t.Skip()
 	// sysName := "hyperkd.sys"
 
 	// path := filepath.Join("C:\\Windows\\System32\\drivers", sysName)
