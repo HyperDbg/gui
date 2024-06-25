@@ -1,20 +1,19 @@
 package main
 
 import (
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/stream"
+	"github.com/ddkwork/hyperdbgui/libhyperdbg"
 	"io/fs"
 	"os"
 	"path/filepath"
-
-	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/stream"
-	"github.com/ddkwork/hyperdbgui/ux"
 )
 
 //go:generate go build .
 //go:generate go install .
 
 func main() {
-	ux.Run()
+	libhyperdbg.Run()
 }
 
 func Release() { // todo let sdk work first
