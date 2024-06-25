@@ -6,6 +6,5 @@
 *.lib
 *.log
 reset git.cmd
-upLib.cmd
 cmake-build-debug
 bin
