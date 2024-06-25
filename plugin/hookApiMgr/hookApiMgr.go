@@ -123,7 +123,7 @@ func (o *object) IopXxxControlFile() (ok bool) {
 	panic("implement me")
 }
 
-func (o *object) TestIopXxxControlFile() (ok bool) {
+func (o *object) TestIopXxxControlFile() {
 	api := "IopXxxControlFile"
 	stack := `
 [$+000]   fffff8032f4c8811    (from nt!NtDeviceIoControlFile+0x51 <fffff8032f4c8811>)
@@ -190,14 +190,12 @@ kq l 60
 	abs := mylog.Check2(filepath.Abs(dsName))
 
 	c := clang.New()
-	if !c.WriteClangFormatBody(filepath.Dir(abs)) {
-		return
-	}
+	c.WriteClangFormatBody(filepath.Dir(abs))
 	c.Format(abs)
 	b := mylog.Check2(os.ReadFile(abs))
 
 	all := strings.ReplaceAll(string(b), " nt !", " nt!")
-	return stream.WriteTruncate(abs, all)
+	stream.WriteTruncate(abs, all)
 }
 
 /*
