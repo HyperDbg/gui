@@ -134,7 +134,7 @@ typedef struct _IRP {
 */
 
 
-//..\bin\debug\SDK\Headers\BasicTypes.h
+//SDK\Headers\BasicTypes.h
 /**
  * @file BasicTypes.h
  * @author Sina Karvandi (sina@hyperdbg.org)
@@ -281,7 +281,7 @@ typedef struct _CR3_TYPE
 } CR3_TYPE, *PCR3_TYPE;
 
 
-//..\bin\debug\SDK\Headers\Connection.h
+//SDK\Headers\Connection.h
 /**
  * @file Connection.h
  * @author Sina Karvandi (sina@hyperdbg.org)
@@ -471,7 +471,7 @@ typedef struct _DEBUGGER_REMOTE_PACKET
 } DEBUGGER_REMOTE_PACKET, *PDEBUGGER_REMOTE_PACKET;
 
 
-//..\bin\debug\SDK\Headers\Constants.h
+//SDK\Headers\Constants.h
 /**
  * @file Constants.h
  * @author Sina Karvandi (sina@hyperdbg.org)
@@ -1197,7 +1197,7 @@ const unsigned char BuildSignature[] = {
 #define DEBUGGEE_SHOW_ALL_REGISTERS 0xffffffff
 
 
-//..\bin\debug\SDK\Headers\DataTypes.h
+//SDK\Headers\DataTypes.h
 /**
  * @file DataTypes.h
  * @author Sina Karvandi (sina@hyperdbg.org)
@@ -1634,7 +1634,7 @@ typedef struct _VMX_SEGMENT_SELECTOR
 } VMX_SEGMENT_SELECTOR, *PVMX_SEGMENT_SELECTOR;
 
 
-//..\bin\debug\SDK\Headers\ErrorCodes.h
+//SDK\Headers\ErrorCodes.h
 /**
  * @file ErrorCodes.h
  * @author Sina Karvandi (sina@hyperdbg.org)
@@ -2183,7 +2183,7 @@ typedef struct _VMX_SEGMENT_SELECTOR
 //
 
 
-//..\bin\debug\SDK\Headers\Events.h
+//SDK\Headers\Events.h
 /**
  * @file Events.h
  * @author Sina Karvandi (sina@hyperdbg.org)
@@ -2615,7 +2615,7 @@ typedef struct _DEBUGGER_EVENT_AND_ACTION_RESULT
 #define SIZEOF_REGISTER_EVENT sizeof(REGISTER_NOTIFY_BUFFER)
 
 
-//..\bin\debug\SDK\Headers\HardwareDebugger.h
+//SDK\Headers\HardwareDebugger.h
 /**
  * @file HardwareDebugger.h
  * @author Sina Karvandi (sina@hyperdbg.org)
@@ -2792,7 +2792,7 @@ typedef struct _HWDBG_SCRIPT_BUFFER
 } HWDBG_SCRIPT_BUFFER, *PHWDBG_SCRIPT_BUFFER;
 
 
-//..\bin\debug\SDK\Headers\Ioctls.h
+//SDK\Headers\Ioctls.h
 /**
  * @file Ioctls.h
  * @author Sina Karvandi (sina@hyperdbg.org)
@@ -3085,7 +3085,7 @@ typedef struct _HWDBG_SCRIPT_BUFFER
     CTL_CODE(FILE_DEVICE_UNKNOWN, 0x820, METHOD_BUFFERED, FILE_ANY_ACCESS)
 
 
-//..\bin\debug\SDK\Headers\RequestStructures.h
+//SDK\Headers\RequestStructures.h
 /**
  * @file RequestStructures.h
  * @author Sina Karvandi (sina@hyperdbg.org)
@@ -4244,7 +4244,7 @@ typedef struct _DEBUGGEE_REGISTER_READ_DESCRIPTION
  */
 
 
-//..\bin\debug\SDK\Headers\Symbols.h
+//SDK\Headers\Symbols.h
 /**
  * @file Symbols.h
  * @author Sina Karvandi (sina@hyperdbg.org)
@@ -4343,7 +4343,7 @@ typedef struct _DEBUGGEE_SYMBOL_UPDATE_RESULT
  */
 
 
-//..\bin\debug\SDK\Imports\User\HyperDbgLibImports.h
+//SDK\Imports\User\HyperDbgLibImports.h
 /**
  * @file HyperDbgLibImports.h
  * @author Sina Karvandi (sina@hyperdbg.org)
@@ -4433,7 +4433,7 @@ hyperdbg_u_connect_remote_debugger(const CHAR * ip, const CHAR * port);
 #endif
 
 
-//..\bin\debug\SDK\Imports\User\HyperDbgScriptImports.h
+//SDK\Imports\User\HyperDbgScriptImports.h
 /**
  * @file HyperDbgScriptImports.h
  * @author Sina Karvandi (sina@hyperdbg.org)
@@ -4507,7 +4507,7 @@ ScriptEngineShowDataBasedOnSymbolTypes(const char * TypeName, UINT64 Address, BO
 #endif
 
 
-//..\bin\debug\SDK\Imports\User\HyperDbgSymImports.h
+//SDK\Imports\User\HyperDbgSymImports.h
 /**
  * @file HyperDbgSymImports.h
  * @author Sina Karvandi (sina@hyperdbg.org)

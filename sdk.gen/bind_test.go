@@ -14,8 +14,8 @@ import (
 )
 
 func TestMergeHeader(t *testing.T) {
-	Headers := mylog.Check2(filepath.Glob("../bin/debug/SDK/Headers/*.h"))
-	User := mylog.Check2(filepath.Glob("../bin/debug/SDK/Imports/User/*.h"))
+	Headers := mylog.Check2(filepath.Glob("SDK/Headers/*.h"))
+	User := mylog.Check2(filepath.Glob("SDK/Imports/User/*.h"))
 	g := stream.NewGeneratedFile()
 	bugfix = strings.TrimPrefix(bugfix, "\n")
 	g.P("//bugfix.h")
@@ -63,7 +63,7 @@ func TestBindMacros(t *testing.T) {
 	}
 
 	g := stream.NewGeneratedFile()
-	g.P("package libhyperdbg")
+	g.P("package main")
 	g.P()
 
 	g.P("import \"github.com/winlabs/gowin32/wrappers\"")
@@ -154,10 +154,10 @@ const (
 )
 `)
 
-	stream.WriteGoFile("../bin/debug/vars.go", g.Buffer)
+	stream.WriteGoFile("../vars.go", g.Buffer)
 
-	stream.NewGeneratedFile().SetPackageName("libhyperdbg").SetFilePath("../bin/debug").Enum("debuggerError", enumDebuggers.Keys(), nil)
-	stream.NewGeneratedFile().SetPackageName("libhyperdbg").SetFilePath("../bin/debug").Enum("ioctl", enumIoctls.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("main").SetFilePath("../").Enum("debuggerError", enumDebuggers.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("main").SetFilePath("../").Enum("ioctl", enumIoctls.Keys(), nil)
 
 	for _, p := range macros.List() {
 		return
@@ -195,7 +195,7 @@ func TestBindSdk(t *testing.T) {
 			Sources:          []string{"merged_headers.h"},
 			AdditionalParams: []string{},
 		}))
-		mylog.Check(pkg.WriteToDir("../bin/debug"))
+		mylog.Check(pkg.WriteToDir("../"))
 
 		// generate bug fix
 		fixs := []string{
@@ -206,10 +206,11 @@ func TestBindSdk(t *testing.T) {
 type GuestExtraRegisters = GuestExtraRegisters`,
 		}
 
-		b := stream.NewBuffer("../bin/debug/libhyperdbg.go")
+		b := stream.NewBuffer("../libhyperdbg.go")
 		for _, fix := range fixs {
 			b.ReplaceAll(fix, "")
 		}
+		b.Replace("package libhyperdbg", "package main", 1)
 		b.Replace("\nSizeT              = uint64", "", 1)
 		b.Replace("\nBool               = int32", "", 1)
 		b.Replace(`__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")`, `	return
@@ -223,10 +224,10 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
 }`)
 
-		stream.WriteGoFile("../bin/debug/libhyperdbg.go", b)
+		stream.WriteGoFile("../libhyperdbg.go", b)
 
-		stream.WriteGoFile("../bin/debug/libhyperdbg_test.go", `
-package libhyperdbg
+		stream.WriteGoFile("../libhyperdbg_test.go", `
+package main
 
 import (
 	"github.com/ddkwork/golibrary/mylog"
@@ -284,8 +285,8 @@ kq l 60
 
 `)
 
-		stream.WriteGoFile("../bin/debug/util.go", `
-package libhyperdbg
+		stream.WriteGoFile("../util.go", `
+package main
 
 import (
 	"syscall"
