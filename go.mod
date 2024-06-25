@@ -6,8 +6,10 @@ require (
 	github.com/ddkwork/app v0.0.0-20240625135325-1e4dd56501f0
 	github.com/ddkwork/golibrary v0.0.83
 	github.com/richardwilkes/unison v0.71.0
+	github.com/saferwall/pe v1.5.3
 	github.com/stretchr/testify v1.9.0
 	github.com/winlabs/gowin32 v0.0.0-20221003142512-0d265587d3c9
+	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8
 )
 
 require (
@@ -35,9 +37,7 @@ require (
 	github.com/richardwilkes/json v0.2.0 // indirect
 	github.com/richardwilkes/toolbox v1.114.1 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/saferwall/pe v1.5.3 // indirect
 	github.com/secDre4mer/pkcs7 v0.0.0-20240322103146-665324a4461d // indirect
-	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spyre-project/spyre v1.2.5 // indirect
@@ -45,7 +45,6 @@ require (
 	github.com/yuin/goldmark v1.7.2 // indirect
 	github.com/zzl/go-win32api/v2 v2.2.0 // indirect
 	golang.org/x/arch v0.8.0 // indirect
-	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 // indirect
 	golang.org/x/image v0.17.0 // indirect
 	golang.org/x/mod v0.18.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
