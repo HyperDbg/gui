@@ -114,7 +114,7 @@ func NewPage(parent unison.Paneler) *Page {
 		HGrab:  true,
 		VGrab:  true,
 	})
-	path := "ux/bin/debug/hyperdbg-cli.exe"
+	path := "hyperdbg-cli.exe"
 	p := &Page{
 		dock:   dock,
 		cpu:    widget.NewTab("cpu", "", false, LayoutCpu(path, dock)),
