@@ -4,6 +4,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"syscall"
 	"testing"
@@ -11,6 +12,12 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 )
+
+func TestUpAppLiB(t *testing.T) {
+	mylog.Check(os.Chdir("../../"))
+	session := stream.RunCommand("git log -1 --format=\"%H\"")
+	stream.RunCommand("go get github.com/ddkwork/app@" + mylog.Check2(strconv.Unquote(session.Output.String())))
+}
 
 func TestLoadDll(t *testing.T) {
 	syscall.MustLoadDLL("libhyperdbg")
