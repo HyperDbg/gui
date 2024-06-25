@@ -8,7 +8,7 @@ on:
       - 'v*.*.*-pre.*'
 
 env:
-  RELEASE_ZIP_FILE_NAME: golibrary
+  RELEASE_ZIP_FILE_NAME: hyperdbgui
 
 jobs:
   test-on-multiple-os:
@@ -74,10 +74,10 @@ jobs:
         run: github_changelog_generator --user ${{ github.repository_owner }} --project ${{ github.event.repository.name }} --token ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create source code archive
-        run: powershell -c "Compress-Archive -Path * -DestinationPath $env:RELEASE_ZIP_FILE_NAME-${{ github.ref_name }}.zip -CompressionLevel Optimal -Exclude '.git/**','*.dll','*.sys','*.exe'"
+        run: powershell -Command "Get-ChildItem -Recurse | Where-Object { $_.FullName -notmatch '\.git' -and $_.Extension -notmatch '\.dll|\.sys|\.exe' } | Compress-Archive -DestinationPath ${env:RELEASE_ZIP_FILE_NAME}-${{ github.ref_name }}.zip -CompressionLevel Optimal"
 
       - name: Create binaries archive
-        run: powershell -c "Compress-Archive -Path *.dll, *.sys, *.exe -DestinationPath binaries-${{ github.ref_name }}.zip"
+        run: powershell -Command "Get-ChildItem -Recurse -Include '*.dll', '*.sys', '*.exe' | Compress-Archive -DestinationPath binaries-${{ github.ref_name }}.zip"
 
       - name: Release
         uses: softprops/action-gh-release@v1
