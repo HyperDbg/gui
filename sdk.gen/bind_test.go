@@ -210,6 +210,8 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 		for _, fix := range fixs {
 			b.ReplaceAll(fix, "")
 		}
+		b.Replace(`func init() {`, `func init() {
+	SetDllDirectory(".")`, 1)
 		b.Replace("package libhyperdbg", "package main", 1)
 		b.Replace("\nSizeT              = uint64", "", 1)
 		b.Replace("\nBool               = int32", "", 1)
@@ -291,6 +293,7 @@ package main
 import (
 	"syscall"
 	"testing"
+	"unsafe"
 
 	"github.com/stretchr/testify/assert"
 
@@ -298,6 +301,13 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream/bitfield"
 )
+
+func SetDllDirectory(path string) {
+	kernel32 := syscall.NewLazyDLL("kernel32.dll")
+	setDllDirectory := kernel32.NewProc("SetDllDirectoryW")
+	utf16Ptr := mylog.Check2(syscall.UTF16PtrFromString(path))
+	mylog.Check3(setDllDirectory.Call(uintptr(unsafe.Pointer(utf16Ptr))))
+}
 
 func LOWORD(l uint32) uint16 { return uint16(l) }
 func LOBYTE(l uint32) uint8  { return byte(l) }

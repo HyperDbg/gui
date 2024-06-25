@@ -5,11 +5,16 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"testing"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 )
+
+func TestLoadDll(t *testing.T) {
+	syscall.MustLoadDLL("libhyperdbg")
+}
 
 func TestClearAll(t *testing.T) {
 	filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
