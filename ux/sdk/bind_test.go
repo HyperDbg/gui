@@ -187,8 +187,8 @@ func TestBindSdk(t *testing.T) {
 				//{Name: "ZydisDecoder", Receiver: "Decoder"},
 			}),
 			gengo.WithForcedSynthetic(
-				//"ZydisShortString_",
-				//"struct ZydisShortString_",
+			//"ZydisShortString_",
+			//"struct ZydisShortString_",
 			),
 		)
 		mylog.Check(pkg.Transform("libhyperdbg", &clang.Options{
@@ -243,7 +243,7 @@ func TestSdk(t *testing.T) {
 
 		// assert.Equal(t, 1, HyperdbgUDetectVmxSupport()) // todo convert to return type as bool
 		// fmt.Println(HyperdbgUDetectVmxSupport())
-
+        assert.True(t, VmxSupportDetection())
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver()) // not working ? return 1
 		ConnectLocalDebugger()                              // not working,need return status string for check error
 		mylog.Trace("LoadVmm", LoadVmm())                   // not working
@@ -324,6 +324,7 @@ func VmxSupportDetection() (ok bool) {
 		mylog.Check("this program is not designed to run in a non-VT-x environemnt !")
 	}
 	mylog.Info("", "virtualization technology is vt-x")
+    mylog.Struct(hard.CpuInfo)
 	field := bitfield.NewFromUint32(hard.CpuInfo.Cpu1.Ecx)
 	if !field.Test(5) {
 		mylog.Check("vmx operation is not supported by your processor")
