@@ -55,7 +55,7 @@ func readBuffer(hFileMapping syscall.Handle, address uintptr, size int) ([]byte,
 	return buffer, nil
 }
 
-func main() {
+func main2() {
 	// 打开PE文件
 	file := mylog.Check2(os.Open("path_to_your_pe_file.exe"))
 
