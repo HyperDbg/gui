@@ -16,9 +16,9 @@ func TestSdk(t *testing.T) {
 		// assert.Equal(t, 1, HyperdbgUDetectVmxSupport()) // todo convert to return type as bool
 		// fmt.Println(HyperdbgUDetectVmxSupport())
 
-		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
-		ConnectLocalDebugger()
-		mylog.Trace("LoadVmm", LoadVmm())
+		mylog.Trace("InstallVmmDriver", InstallVmmDriver()) // not working ? return 1
+		ConnectLocalDebugger()                              // not working
+		mylog.Trace("LoadVmm", LoadVmm())                   // not working
 
 		// time.Sleep(1 * time.Second) // wait for debugger to connect
 		// todo:
