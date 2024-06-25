@@ -154,10 +154,10 @@ const (
 )
 `)
 
-	stream.WriteGoFile("tmp/vars.go", g.Buffer)
+	stream.WriteGoFile("../bin/debug/vars.go", g.Buffer)
 
-	stream.NewGeneratedFile().SetPackageName("libhyperdbg").SetFilePath("tmp").Enum("debuggerError", enumDebuggers.Keys(), nil)
-	stream.NewGeneratedFile().SetPackageName("libhyperdbg").SetFilePath("tmp").Enum("ioctl", enumIoctls.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("libhyperdbg").SetFilePath("../bin/debug").Enum("debuggerError", enumDebuggers.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("libhyperdbg").SetFilePath("../bin/debug").Enum("ioctl", enumIoctls.Keys(), nil)
 
 	for _, p := range macros.List() {
 		return
@@ -196,7 +196,7 @@ func TestBindSdk(t *testing.T) {
 			Sources:          []string{"merged_headers.h"},
 			AdditionalParams: []string{},
 		}))
-		mylog.Check(pkg.WriteToDir("./tmp"))
+		mylog.Check(pkg.WriteToDir("../bin/debug"))
 
 		// generate bug fix
 		fixs := []string{
@@ -207,7 +207,7 @@ func TestBindSdk(t *testing.T) {
 type GuestExtraRegisters = GuestExtraRegisters`,
 		}
 
-		b := stream.NewBuffer("tmp/libhyperdbg.go")
+		b := stream.NewBuffer("../bin/debug/libhyperdbg.go")
 		for _, fix := range fixs {
 			b.ReplaceAll(fix, "")
 		}
@@ -224,9 +224,9 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
 }`)
 
-		stream.WriteGoFile("tmp/libhyperdbg.go", b)
+		stream.WriteGoFile("../bin/debug/libhyperdbg.go", b)
 
-		stream.WriteGoFile("tmp/libhyperdbg_test.go", `
+		stream.WriteGoFile("../bin/debug/libhyperdbg_test.go", `
 package libhyperdbg
 
 import (
@@ -285,11 +285,66 @@ kq l 60
 
 `)
 
+		stream.WriteGoFile("../bin/debug/util.go", `
+package libhyperdbg
+
+import (
+	"syscall"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/ddkwork/app/ms/hardwareIndo"
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/stream/bitfield"
+)
+
+func LOWORD(l uint32) uint16 { return uint16(l) }
+func LOBYTE(l uint32) uint8  { return byte(l) }
+func HIWORD(l uint32) uint16 { return uint16(l >> 16) }
+func HIBYTE(l uint32) uint8  { return byte(l >> 24) }
+
+func TestSizeof(t *testing.T) {
+	// assert.Equal(t, 11, binary.Size(DEBUGGER_REMOTE_PACKET{}))
+}
+
+func TestHIBYTE(t *testing.T) {
+	v := uint32(0x11223344)
+	assert.Equal(t, byte(0x11), HIBYTE(v))
+	assert.Equal(t, uint16(0x1122), HIWORD(v))
+	assert.Equal(t, byte(0x44), LOBYTE(v))
+	assert.Equal(t, uint16(0x3344), LOWORD(v))
+}
+
+func VmxSupportDetection() (ok bool) {
+	hard := hardwareIndo.New()
+	if !hard.CpuInfo.Get() {
+		return
+	}
+	if hard.CpuInfo.Vendor != "GenuineIntel" {
+		mylog.Check("this program is not designed to run in a non-VT-x environemnt !")
+	}
+	mylog.Info("", "virtualization technology is vt-x")
+	field := bitfield.NewFromUint32(hard.CpuInfo.Cpu1.Ecx)
+	if !field.Test(5) {
+		mylog.Check("vmx operation is not supported by your processor")
+	}
+	mylog.Info("", "vmx operation is supported by your processor")
+	return true
+}
+
+func DeviceName() string { return "HyperdbgHypervisorDevice" }
+func LinkName() (*uint16, error) {
+	return syscall.UTF16PtrFromString("\\\\\\\\.\\\\" + DeviceName())
+}
+
+`)
+
 		// copy bind file into bin dir
-		bindFiles := mylog.Check2(filepath.Glob("tmp/*.go"))
-		for _, file := range bindFiles {
-			stream.CopyFile(file, filepath.Join("../bin", "debug", filepath.Base(file)))
-		}
+		//bindFiles := mylog.Check2(filepath.Glob("tmp/*.go"))
+		//for _, file := range bindFiles {
+		//	stream.CopyFile(file, filepath.Join("../bin", "debug", filepath.Base(file)))
+		//}
 	})
 }
 

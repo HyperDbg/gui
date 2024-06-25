@@ -47,5 +47,5 @@ func VmxSupportDetection() (ok bool) {
 
 func DeviceName() string { return "HyperdbgHypervisorDevice" }
 func LinkName() (*uint16, error) {
-	return syscall.UTF16PtrFromString(`\\\\.\\` + DeviceName())
+	return syscall.UTF16PtrFromString("\\\\\\\\.\\\\" + DeviceName())
 }
