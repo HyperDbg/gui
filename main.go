@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/stream"
-	"github.com/ddkwork/hyperdbgui/libhyperdbg"
 	"io/fs"
 	"os"
 	"path/filepath"
+
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/stream"
+	"github.com/ddkwork/hyperdbgui/libhyperdbg"
 )
 
 //go:generate go build .
