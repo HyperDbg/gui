@@ -10,13 +10,13 @@ func main() {
 }
 func testDisassembly() {
 	app.Run("asm", func(w *unison.Window) {
-		LayoutDisassemblyTable("ux\\bin\\debug\\hyperdbg-cli.exe", w.Content())
+		LayoutDisassemblyTable("hyperdbg-cli.exe", w.Content())
 	})
 }
 
 func testParsePe() {
 	app.Run("pe", func(w *unison.Window) {
-		LayoutPeView("ux\\bin\\debug\\HPRDBGCTRL.dll", w.Content())
+		LayoutPeView("HPRDBGCTRL.dll", w.Content())
 	})
 }
 func testScript() {
