@@ -22,7 +22,7 @@ echo 正在创建标签 %VERSION% ...
 git tag %VERSION%
 
 echo 正在推送到远程仓库（包括标签）...
-git push origin master --tags
+git push origin main --tags
 
 echo 发布流程完成。
 
