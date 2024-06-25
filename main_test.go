@@ -11,9 +11,24 @@ import (
 	"github.com/ddkwork/golibrary/stream"
 )
 
-func TestClear(t *testing.T) {
+func TestClearAll(t *testing.T) {
 	filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
-		if info.IsDir() {
+		ext := filepath.Ext(path)
+		switch ext {
+		case ".json", ".txt", ".pdb", ".exp", ".lib", ".cer", ".inf":
+			if strings.Contains(path, "constants") {
+				return err
+			}
+			mylog.Info("clear file", path)
+			mylog.Check(os.Remove(path))
+		}
+		return err
+	})
+}
+
+func TestClear(t *testing.T) {
+	filepath.Walk("bin", func(path string, info fs.FileInfo, err error) error {
+		if info != nil && info.IsDir() {
 			if strings.HasPrefix(path, ".git") {
 				return nil
 			}
@@ -28,15 +43,7 @@ func TestClear(t *testing.T) {
 				return err
 			}
 		}
-		ext := filepath.Ext(path)
-		switch ext {
-		case ".json", ".txt", ".pdb", ".exp", ".lib", ".cer", ".inf":
-			if strings.Contains(path, "constants") {
-				return err
-			}
-			mylog.Info("clear file", path)
-			mylog.Check(os.Remove(path))
-		}
+		TestClearAll(t)
 		return err
 	})
 	if stream.IsDir("bin/debug/SDK") {
