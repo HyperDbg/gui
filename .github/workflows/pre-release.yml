@@ -6,71 +6,93 @@ on:
       - main
     tags:
       - 'v*.*.*-pre.*'
+    paths-ignore:
+      - '.gitignore'
+      - '.gitattributes'
+      - '**/*.cmd'
+      - '**/*.bat'
+      - '**/*.md'
+
+  pull_request:
+    paths-ignore:
+      - '.gitignore'
+      - '.gitattributes'
+      - '**/*.cmd'
+      - '**/*.bat'
+      - '**/*.md'
+
+env:
+  RELEASE_ZIP_FILE_NAME: golibrary
 
 jobs:
-  test:
-    runs-on: windows-latest
+  test-on-multiple-os:
+    name: Test on multiple OS
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Run Go unit tests
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22.4'
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Run tests
         run: go test ./...
 
-  build-and-release:
-    runs-on: windows-latest
-    needs: test
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Clone HyperDbg repository
-        run: git clone --recursive https://github.com/HyperDbg/HyperDbg.git
-
-      - name: Build HyperDbg
-        run: HyperDbg/utils/msvc-build.bat
-
-      - name: Remove unnecessary files
-        run: |
-          Get-ChildItem -Path bin/debug -Recurse | Where-Object { $_.Extension -in @(".pdb", ".exp", ".lib") } | Remove-Item -Force
-
-      - name: Build GUI
+      - name: Build project
         run: go build .
 
-      - name: Copy GUI executable to debug directory
-        run: Copy-Item hyperdbgui.exe bin/debug
+  package-and-release:
+    needs: test-on-multiple-os
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
 
-      - name: Create release archive
-        run: tar -zcvf hyperdbgui.tar.gz bin/debug
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Upload release artifact
-        uses: actions/upload-artifact@v2
+      - name: Setup Go
+        uses: actions/setup-go@v4
         with:
-          name: hyperdbgui-prerelease
-          path: hyperdbgui.tar.gz
+          go-version: '1.22.4'
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Build project
+        run: go build .
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0.0'
+
+      - name: Install GitHub Changelog Generator
+        run: gem install github_changelog_generator
+
+      - name: Generate Changelog
+        run: github_changelog_generator --user ${{ github.repository_owner }} --project ${{ github.event.repository.name }} --token ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create source code archive
+        run: zip -r ${{ env.RELEASE_ZIP_FILE_NAME }}-${{ github.ref_name }}.zip . -x '.git/**' '*.dll' '*.sys' '*.exe'
+
+      - name: Create binaries archive
+        run: zip -r binaries-${{ github.ref_name }}.zip *.dll *.sys *.exe
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ${{ env.RELEASE_ZIP_FILE_NAME }}-${{ github.ref_name }}.zip
+            binaries-${{ github.ref_name }}.zip
+          body_path: CHANGELOG.md
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Pre-release ${{ github.ref }}
-          draft: false
-          prerelease: true
-
-      - name: Upload release asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./hyperdbgui.tar.gz
-          asset_name: hyperdbgui.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Clean up
-        run: Remove-Item -Recurse -Force bin
+          GITHUB_TOKEN: ${{ secrets.tk }}

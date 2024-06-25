@@ -8,11 +8,10 @@ import (
 func main() {
 	Run()
 	return
-	//testDisassembly()
-	//return
+	// testDisassembly()
+	// return
 	testParsePe()
 	testScript()
-
 }
 
 func testDisassembly() {
