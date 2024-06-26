@@ -13,7 +13,7 @@ import (
 	"github.com/ddkwork/golibrary/stream"
 )
 
-func TestUpAppLiB(t *testing.T) {
+func TestUpdateAppModule(t *testing.T) {
 	t.Skip()
 	mylog.Check(os.Chdir("D:\\workspace\\workspace\\app"))
 	session := stream.RunCommand("git log -1 --format=\"%H\"")
