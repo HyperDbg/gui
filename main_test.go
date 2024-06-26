@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"syscall"
 	"testing"
 
 	"github.com/ddkwork/golibrary/mylog"
@@ -21,10 +20,6 @@ func TestUpdateAppModule(t *testing.T) {
 	id := mylog.Check2(strconv.Unquote(session.Output.String()))
 	mylog.Info("id", id)
 	stream.RunCommand("go get github.com/ddkwork/app@" + id)
-}
-
-func TestLoadDll(t *testing.T) {
-	syscall.MustLoadDLL("libhyperdbg")
 }
 
 func TestClearAll(t *testing.T) {
