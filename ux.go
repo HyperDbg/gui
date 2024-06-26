@@ -4,6 +4,8 @@ import (
 	"embed"
 	"path/filepath"
 
+	"github.com/ddkwork/app/ms/hook/winver"
+
 	"github.com/richardwilkes/unison/enums/align"
 	"github.com/richardwilkes/unison/enums/side"
 
@@ -27,7 +29,7 @@ var bar embed.FS
 var pageIco embed.FS
 
 func Run() {
-	app.RunWithIco("HyperDbg", mainIcons, func(w *unison.Window) {
+	app.RunWithIco("HyperDbg "+winver.WindowVersion(), mainIcons, func(w *unison.Window) {
 		pages := NewPage(w.Content())
 		w.Content().FileDropCallback = func(files []string) {
 			switch filepath.Ext(files[0]) {
