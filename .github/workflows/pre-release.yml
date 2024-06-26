@@ -5,7 +5,8 @@ on:
     branches:
       - main
     tags:
-      - 'v*.*.*-pre.*'
+      #      - 'v*.*.*-pre.*'
+      - 'v*'
 
 env:
   RELEASE_ZIP_FILE_NAME: hyperdbgui
@@ -16,7 +17,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ windows-latest ]
 
     steps:
       - name: Checkout repository
@@ -38,6 +39,11 @@ jobs:
 
       - name: Build project
         run: go build .
+
+      - name: Debug - Check GITHUB_REF
+        run: |
+          echo "GITHUB_REF is: ${{ github.ref }}"
+          echo "GITHUB_EVENT_REF is: ${{ github.event.ref }}"
 
   package-and-release:
     needs: test-on-multiple-os
