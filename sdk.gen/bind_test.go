@@ -179,7 +179,7 @@ func TestBindSdk(t *testing.T) {
 	TestMergeHeader(t)
 	TestBindMacros(t)
 	mylog.Call(func() {
-		pkg := gengo.NewPackage("libhyperdbg", //如果改了dll名字也改了呵呵，在不打断内嵌二进制之前但是保留这个操作
+		pkg := gengo.NewPackage("libhyperdbg", //如果改了dll名字也改了呵呵，在不打算内嵌二进制之前但是保留这个操作
 			gengo.WithRemovePrefix(
 				"hyperdbg_u_",
 			),
