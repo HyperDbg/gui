@@ -40,13 +40,15 @@ jobs:
       - name: Build project
         run: go build .
 
-      - name: Output github.ref for debugging
-        run: echo "github.event.ref is ${GITHUB_REF}"
+      - name: Debug - Check GITHUB_REF
+        run: |
+          echo "GITHUB_REF is: ${{ github.ref }}"
+          echo "GITHUB_EVENT_REF is: ${{ github.event.ref }}"
 
   package-and-release:
     needs: test-on-multiple-os
     runs-on: windows-latest
-#    if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/')
 
     steps:
       - name: Checkout repository
