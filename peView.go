@@ -19,7 +19,7 @@ type PeView struct {
 	// overlay *pe.Overlay todo
 }
 
-func LayoutPeView(fileName string, parent unison.Paneler) unison.Paneler {
+func LayoutPeView(fileName string) unison.Paneler {
 	table, header := widget.NewTable(PeView{}, widget.TableContext[PeView]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[PeView]) (cells []widget.CellData) {
@@ -88,5 +88,5 @@ func LayoutPeView(fileName string, parent unison.Paneler) unison.Paneler {
 		JsonName:   "PeView",
 		IsDocument: false,
 	})
-	return widget.NewTableScrollPanel(parent, table, header)
+	return widget.NewTableScrollPanel(table, header)
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutBreak(parent unison.Paneler) unison.Paneler {
+func LayoutBreak() unison.Paneler {
 	table, header := widget.NewTable(Break{}, widget.TableContext[Break]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[Break]) (cells []widget.CellData) {
@@ -40,7 +40,7 @@ func LayoutBreak(parent unison.Paneler) unison.Paneler {
 		JsonName:   "break",
 		IsDocument: false,
 	})
-	return widget.NewTableScrollPanel(parent, table, header)
+	return widget.NewTableScrollPanel(table, header)
 }
 
 type Break struct {

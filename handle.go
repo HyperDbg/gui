@@ -2,6 +2,6 @@ package main
 
 import "github.com/richardwilkes/unison"
 
-func LayoutHandle(parent unison.Paneler) unison.Paneler {
+func LayoutHandle() unison.Paneler {
 	return unison.NewPanel()
 }

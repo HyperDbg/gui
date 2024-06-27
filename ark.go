@@ -24,7 +24,7 @@ func arkTodo() {
 	ms.DecodeTableByDisassembly()
 	ms.NtDeviceIoControlFile()
 	// IopXxxControlFile()
-	widget.NewExplorer(nil, ".")
+	widget.NewExplorer(".")
 	environment.New()
 	// driverLoader.New()
 
@@ -37,7 +37,7 @@ func arkTodo() {
 // 2 file explorer,finished
 // 3 registry editor
 // etc.
-func LayoutArk(parent unison.Paneler) unison.Paneler {
+func LayoutArk() unison.Paneler {
 	table, header := widget.NewTable(ms.NtApi{}, widget.TableContext[ms.NtApi]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[ms.NtApi]) (cells []widget.CellData) {
@@ -74,5 +74,5 @@ func LayoutArk(parent unison.Paneler) unison.Paneler {
 		JsonName:   "ms.NtApi",
 		IsDocument: false,
 	})
-	return widget.NewTableScrollPanel(parent, table, header)
+	return widget.NewTableScrollPanel(table, header)
 }

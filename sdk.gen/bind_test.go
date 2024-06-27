@@ -490,7 +490,7 @@ typedef struct _IRP {
 */
 `
 
-var m = orderedmap.New[string, string]()
+var m = orderedmap.New("", "")
 
 func init() {
 	m.Set("PAGE_SIZE", "4096")

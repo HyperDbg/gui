@@ -13,7 +13,10 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutCpu(fileName string, parent unison.Paneler) unison.Paneler {
+func LayoutCpu(fileName string) unison.Paneler {
+	// asm := LayoutDisassemblyTable(fileName)
+	// return asm
+
 	////fastCallLayout := unison.NewList[ImmData]()
 	//widget.NewButton(m).SetText("goto 00007FF885007C08")
 	//"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
@@ -24,15 +27,17 @@ func LayoutCpu(fileName string, parent unison.Paneler) unison.Paneler {
 	//})
 
 	TopHSplit := widget.NewHSplit(
-		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDisassemblyTable(fileName, parent)),
+		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDisassemblyTable(fileName)),
 		widget.NewTab("reg", "todo reg", true, unison.NewPanel()),
 		0.3)
+	// parent.AsPanel().AddChild(TopHSplit) //todo bug
+	return TopHSplit
 
-	hexEditor := widget.NewCodeEditor(parent, "")
+	hexEditor := widget.NewCodeEditor("")
 	hexEditor.Editor.SetText(hex.Dump(testHexDat))
 	BottomHSplit := widget.NewHSplit(
 		widget.NewTab(" hex editor", "todo hex editor", true, hexEditor),
-		widget.NewTab("stack", "todo stack test", true, LayoutStackTable(parent)),
+		widget.NewTab("stack", "todo stack test", true, LayoutStackTable()),
 		0.3)
 	//todo add tab into hex editor and stack layout
 	/*
@@ -212,7 +217,7 @@ type FastCall struct {
 	ImmData  string
 }
 
-func LayoutDisassemblyTable(fileName string, parent unison.Paneler) unison.Paneler {
+func LayoutDisassemblyTable(fileName string) unison.Paneler {
 	table, header := widget.NewTable(xed.Disassembly{}, widget.TableContext[xed.Disassembly]{
 		ContextMenuItems: func(node *widget.Node[xed.Disassembly]) []widget.ContextMenuItem {
 			return []widget.ContextMenuItem{
@@ -270,7 +275,7 @@ func LayoutDisassemblyTable(fileName string, parent unison.Paneler) unison.Panel
 		JsonName:   "cpu_dism_table",
 		IsDocument: false,
 	})
-	return widget.NewTableScrollPanel(parent, table, header)
+	return widget.NewTableScrollPanel(table, header)
 }
 
 type Stack struct {
@@ -279,7 +284,7 @@ type Stack struct {
 	Context string
 }
 
-func LayoutStackTable(parent unison.Paneler) unison.Paneler {
+func LayoutStackTable() unison.Paneler {
 	table, header := widget.NewTable(Stack{}, widget.TableContext[Stack]{
 		ContextMenuItems: nil, // todo goto 0x00007FF838E51030
 		MarshalRow: func(node *widget.Node[Stack]) (cells []widget.CellData) {
@@ -304,7 +309,7 @@ func LayoutStackTable(parent unison.Paneler) unison.Paneler {
 		JsonName:   "cpu_stack_table",
 		IsDocument: false,
 	})
-	return widget.NewTableScrollPanel(parent, table, header)
+	return widget.NewTableScrollPanel(table, header)
 }
 
 type Register struct {

@@ -8,7 +8,7 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutThread(parent unison.Paneler) unison.Paneler {
+func LayoutThread() unison.Paneler {
 	table, header := widget.NewTable(Thread{}, widget.TableContext[Thread]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[Thread]) (cells []widget.CellData) {
@@ -53,7 +53,7 @@ func LayoutThread(parent unison.Paneler) unison.Paneler {
 		JsonName:   "thread",
 		IsDocument: false,
 	})
-	return widget.NewTableScrollPanel(parent, table, header)
+	return widget.NewTableScrollPanel(table, header)
 }
 
 type Thread struct {

@@ -5,7 +5,7 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutSource(parent unison.Paneler) unison.Paneler {
+func LayoutSource() unison.Paneler {
 	return unison.NewPanel()
 	return widget.NewCodeView("log.log")
 }

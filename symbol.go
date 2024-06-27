@@ -7,7 +7,7 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutSymbol(parent unison.Paneler) unison.Paneler {
+func LayoutSymbol() unison.Paneler {
 	table, header := widget.NewTable(Symbol{}, widget.TableContext[Symbol]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[Symbol]) (cells []widget.CellData) {
@@ -36,7 +36,7 @@ func LayoutSymbol(parent unison.Paneler) unison.Paneler {
 		JsonName:   "symbols",
 		IsDocument: false,
 	})
-	return widget.NewTableScrollPanel(parent, table, header)
+	return widget.NewTableScrollPanel(table, header)
 }
 
 type Symbol struct {

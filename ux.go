@@ -4,9 +4,10 @@ import (
 	"embed"
 	"path/filepath"
 
+	"github.com/richardwilkes/unison/enums/align"
+
 	"github.com/ddkwork/app/ms/hook/winver"
 
-	"github.com/richardwilkes/unison/enums/align"
 	"github.com/richardwilkes/unison/enums/side"
 
 	"github.com/ddkwork/app"
@@ -30,18 +31,18 @@ var pageIco embed.FS
 
 func Run() {
 	app.RunWithIco("HyperDbg "+winver.WindowVersion(), mainIcons, func(w *unison.Window) {
-		pages := NewPage(w.Content())
+		pages := NewPage()
 		w.Content().FileDropCallback = func(files []string) {
 			switch filepath.Ext(files[0]) {
 			case ".exe", ".dll", ".sys":
 				mylog.Trace("dropped file", files[0])
-				pages.pe.SetContent(LayoutPeView(files[0], pages.dock)) // todo test parent panel is dock or cpu tab page
-				pages.cpu.SetContent(LayoutCpu(files[0], pages.dock))   // todo test parent panel is dock or cpu tab page
+				pages.pe.SetContent(LayoutPeView(files[0])) // todo test parent panel is dock or cpu tab page
+				pages.cpu.SetContent(LayoutCpu(files[0]))   // todo test parent panel is dock or cpu tab page
 			default:
 				mylog.Check("not support file type")
 			}
 		}
-		pages.Layout(w.Content())
+		pages.Layout()
 	})
 }
 
@@ -88,10 +89,10 @@ func (p *Page) Elems() []*widget.Tab {
 	}
 }
 
-func (p *Page) Layout(parent unison.Paneler) unison.Paneler {
+func (p *Page) Layout() unison.Paneler {
 	///make tabs
 	p.dock.DockTo(p.cpu, nil, side.Left)
-	parent.AsPanel().AddChild(p.dock)
+
 	LeftContainer := widget.NewDockContainer(p.cpu)
 
 	mylog.Todo("set tab ico")
@@ -103,11 +104,10 @@ func (p *Page) Layout(parent unison.Paneler) unison.Paneler {
 	return nil
 }
 
-func NewPage(parent unison.Paneler) *Page {
+func NewPage() *Page {
 	t := newToolbar()
-	widget.NewToolBar(parent, t.Elems()...)
+	widget.NewToolBar(t.Elems()...)
 	dock := unison.NewDock()
-	// toolBar.AsPanel().AddChild(dock)
 	dock.AsPanel().SetLayoutData(&unison.FlexLayoutData{
 		HSpan:  1,
 		VSpan:  1,
@@ -117,25 +117,27 @@ func NewPage(parent unison.Paneler) *Page {
 		VGrab:  true,
 	})
 	path := "hyperdbg-cli.exe"
+	cpu := LayoutCpu(path)
 	p := &Page{
 		dock:   dock,
-		cpu:    widget.NewTab("cpu", "", false, LayoutCpu(path, dock)),
-		pe:     widget.NewTab("peView", "", false, LayoutPeView(path, dock)),
-		log:    widget.NewTab("log", "", false, LayoutLog(dock)),
-		notes:  widget.NewTab("notes", "", false, LayoutNotes(dock)),
-		breaks: widget.NewTab("break", "", false, LayoutBreak(dock)),
-		memory: widget.NewTab("memory", "", false, LayoutMemory(dock)),
-		stack:  widget.NewTab("stack", "", false, LayoutStack(dock)),
-		seh:    widget.NewTab("seh", "", false, LayoutSeh(dock)),
-		script: widget.NewTab("script", "", false, LayoutScript(dock)),
-		symbol: widget.NewTab("symbol", "", false, LayoutSymbol(dock)),
-		source: widget.NewTab("source", "", false, LayoutSource(dock)),
-		ref:    widget.NewTab("references", "", false, LayoutReferences(dock)),
-		thread: widget.NewTab("thread", "", false, LayoutThread(dock)),
-		handle: widget.NewTab("handle", "", false, LayoutHandle(dock)),
-		trace:  widget.NewTab("trace", "", false, LayoutTrace(dock)),
-		ark:    widget.NewTab("ark", "", false, LayoutArk(dock)),
+		cpu:    widget.NewTab("cpu", "", false, cpu),
+		pe:     widget.NewTab("peView", "", false, LayoutPeView(path)),
+		log:    widget.NewTab("log", "", false, LayoutLog()),
+		notes:  widget.NewTab("notes", "", false, LayoutNotes()),
+		breaks: widget.NewTab("break", "", false, LayoutBreak()),
+		memory: widget.NewTab("memory", "", false, LayoutMemory()),
+		stack:  widget.NewTab("stack", "", false, LayoutStack()),
+		seh:    widget.NewTab("seh", "", false, LayoutSeh()),
+		script: widget.NewTab("script", "", false, LayoutScript()),
+		symbol: widget.NewTab("symbol", "", false, LayoutSymbol()),
+		source: widget.NewTab("source", "", false, LayoutSource()),
+		ref:    widget.NewTab("references", "", false, LayoutReferences()),
+		thread: widget.NewTab("thread", "", false, LayoutThread()),
+		handle: widget.NewTab("handle", "", false, LayoutHandle()),
+		trace:  widget.NewTab("trace", "", false, LayoutTrace()),
+		ark:    widget.NewTab("ark", "", false, LayoutArk()),
 	}
+
 	return p
 }
 

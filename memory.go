@@ -17,7 +17,7 @@ type Memory struct {
 	InitialProtection string
 }
 
-func LayoutMemory(parent unison.Paneler) unison.Paneler {
+func LayoutMemory() unison.Paneler {
 	table, header := widget.NewTable(Memory{}, widget.TableContext[Memory]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[Memory]) (cells []widget.CellData) {
@@ -50,5 +50,5 @@ func LayoutMemory(parent unison.Paneler) unison.Paneler {
 		JsonName:   "memory",
 		IsDocument: false,
 	})
-	return widget.NewTableScrollPanel(parent, table, header)
+	return widget.NewTableScrollPanel(table, header)
 }
