@@ -15,6 +15,8 @@ github.com/ddkwork/app v0.0.0-20240627181536-d70aa73bd6d0 h1:1tkkVE+xo4uqSl/aDqg
 github.com/ddkwork/app v0.0.0-20240627181536-d70aa73bd6d0/go.mod h1:Mi0a78DdcE5Yi/7yfSNLJPB3Ip1AEzXbXJIYf3n7BZU=
 github.com/ddkwork/golibrary v0.0.84-0.20240627173943-eddb080cb496 h1:dQMoale9N6LVy20B0ACxeqruZHXjPwdldgisdCjyK34=
 github.com/ddkwork/golibrary v0.0.84-0.20240627173943-eddb080cb496/go.mod h1:GlLX0w5HQ9dhHS5hhwcOJNSoLUO8ud4WnrbKa41MmcE=
+github.com/ddkwork/golibrary v0.0.85 h1:JyR3G/8Om6B7LpCyBjSryFxhspNjCsZyBc+AJbS4hww=
+github.com/ddkwork/golibrary v0.0.85/go.mod h1:GlLX0w5HQ9dhHS5hhwcOJNSoLUO8ud4WnrbKa41MmcE=
 github.com/dlclark/regexp2 v1.11.0/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
 github.com/ebitengine/purego v0.7.1/go.mod h1:ah1In8AOtksoNK6yk5z1HTJeUkC1Ez4Wk2idgGslMwQ=
 github.com/edsrzf/mmap-go v1.1.0/go.mod h1:19H/e8pUPLicwkyNgOykDXkJ9F0MHE+Z52B8EIth78Q=
