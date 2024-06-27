@@ -26,14 +26,11 @@ func LayoutCpu(fileName string) unison.Paneler {
 	//
 	//})
 
-	// return LayoutDisassemblyTable(fileName)
-
+	asm := LayoutDisassemblyTable(fileName)
 	TopHSplit := widget.NewHSplit(
-		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDisassemblyTable(fileName)),
+		widget.NewTab("cpu with fast call", "todo fast call layout", true, asm),
 		widget.NewTab("reg", "todo reg", true, unison.NewPanel()),
 		0.3)
-	// parent.AsPanel().AddChild(TopHSplit) //todo bug
-	return TopHSplit
 
 	hexEditor := widget.NewCodeEditor("")
 	hexEditor.Editor.SetText(hex.Dump(testHexDat))
@@ -67,7 +64,7 @@ func LayoutCpu(fileName string) unison.Paneler {
 	top := widget.NewTab("cpu and reg", "", true, TopHSplit)
 	bottom := widget.NewTab("hex editor and stack", "", true, BottomHSplit)
 	vSplit := widget.NewVSplit(top, bottom, 0.1)
-	return vSplit
+	return vSplit.Dock
 }
 
 var testRegData = Register{

@@ -4,7 +4,6 @@ import (
 	"github.com/ddkwork/app"
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
-	"github.com/richardwilkes/unison/enums/align"
 )
 
 func main() {
@@ -21,25 +20,25 @@ func main() {
 
 func testLayoutCpu() {
 	app.Run("cpu", func(w *unison.Window) {
-		parent := w.Content()
-
+		content := w.Content()
+		content.SetLayout(&unison.FlexLayout{Columns: 1})
 		t := newToolbar()
 		toolBar := widget.NewToolBar(t.Elems()...)
-		parent.AddChild(toolBar)
+		content.AddChild(toolBar)
 
-		dock := unison.NewDock()
-		dock.AsPanel().SetLayoutData(&unison.FlexLayoutData{
-			HSpan:  1,
-			VSpan:  1,
-			HAlign: align.Fill,
-			VAlign: align.Fill,
-			HGrab:  true,
-			VGrab:  true,
-		})
+		//dock := unison.NewDock()
+		//dock.AsPanel().SetLayoutData(&unison.FlexLayoutData{
+		//	HSpan:  1,
+		//	VSpan:  1,
+		//	HAlign: align.Fill,
+		//	VAlign: align.Fill,
+		//	HGrab:  true,
+		//	VGrab:  true,
+		//})
 
 		path := "hyperdbg-cli.exe"
 		cpu := LayoutCpu(path)
-		parent.AddChild(cpu)
+		content.AddChild(cpu)
 	})
 }
 
