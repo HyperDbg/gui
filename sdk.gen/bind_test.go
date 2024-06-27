@@ -49,8 +49,8 @@ func TestBindMacros(t *testing.T) {
 	mylog.Trace("number of macros", macros.Len())
 
 	var (
-		enumDebuggers = orderedmap.New[string, bool]()
-		enumIoctls    = orderedmap.New[string, bool]()
+		enumDebuggers = orderedmap.New("", false)
+		enumIoctls    = orderedmap.New("", false)
 	)
 
 	for _, p := range macros.List() {

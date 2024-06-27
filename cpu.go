@@ -26,6 +26,8 @@ func LayoutCpu(fileName string) unison.Paneler {
 	//
 	//})
 
+	// return LayoutDisassemblyTable(fileName)
+
 	TopHSplit := widget.NewHSplit(
 		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDisassemblyTable(fileName)),
 		widget.NewTab("reg", "todo reg", true, unison.NewPanel()),
