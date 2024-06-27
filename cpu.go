@@ -34,9 +34,10 @@ func LayoutCpu(fileName string) unison.Paneler {
 
 	hexEditor := widget.NewCodeEditor("")
 	hexEditor.Editor.SetText(hex.Dump(testHexDat))
+	stackTable := LayoutStackTable()
 	BottomHSplit := widget.NewHSplit(
 		widget.NewTab(" hex editor", "todo hex editor", true, hexEditor),
-		widget.NewTab("stack", "todo stack test", true, LayoutStackTable()),
+		widget.NewTab("stack", "todo stack test", true, stackTable),
 		0.3)
 	//todo add tab into hex editor and stack layout
 	/*
@@ -64,7 +65,7 @@ func LayoutCpu(fileName string) unison.Paneler {
 	top := widget.NewTab("cpu and reg", "", true, TopHSplit)
 	bottom := widget.NewTab("hex editor and stack", "", true, BottomHSplit)
 	vSplit := widget.NewVSplit(top, bottom, 0.1)
-	return vSplit.Dock
+	return vSplit
 }
 
 var testRegData = Register{
