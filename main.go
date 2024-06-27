@@ -8,13 +8,14 @@ import (
 )
 
 func main() {
-	// testLayoutCpu()
-	// return
+	testLayoutCpu()
+	return
 	// Run()
 	// return
-	testDisassembly()
-	return
-	testParsePe()
+	// testDisassembly()
+	// return
+	// testParsePe()
+	// return
 	testScript()
 }
 
@@ -50,12 +51,12 @@ func testDisassembly() {
 
 func testParsePe() {
 	app.Run("pe", func(w *unison.Window) {
-		LayoutPeView("HPRDBGCTRL.dll")
+		w.Content().AddChild(LayoutPeView("hyperlog.dll"))
 	})
 }
 
 func testScript() {
 	app.Run("script", func(w *unison.Window) {
-		LayoutScript()
+		w.Content().AddChild(LayoutScript())
 	})
 }

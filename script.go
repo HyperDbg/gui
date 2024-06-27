@@ -6,7 +6,7 @@ import (
 )
 
 func LayoutScript() unison.Paneler {
-	path := "ux/send_version.scala"
-	// path = "ux/plugin/scriptGen/cpuid.ds"
+	path := "send_version.scala"
+	// path = "plugin/scriptGen/cpuid.ds"
 	return widget.NewCodeEditor(path)
 }
