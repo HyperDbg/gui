@@ -36,8 +36,18 @@ func testLayoutCpu() {
 		//	VGrab:  true,
 		//})
 
-		path := "hyperdbg-cli.exe"
-		cpu := LayoutCpu(path)
+		fileName := "hyperdbg-cli.exe"
+		asm := LayoutDisassemblyTable(fileName)
+		TopHSplit := widget.NewHSplit(
+			widget.NewTab("cpu with fast call", "todo fast call layout", true, asm),
+			widget.NewTab("reg", "todo reg", true, widget.NewButton("todo reg")),
+			0.3)
+		content.AddChild(asm)
+		return
+		content.AddChild(TopHSplit) // todo bug
+
+		return
+		cpu := LayoutCpu(fileName)
 		content.AddChild(cpu)
 	})
 }

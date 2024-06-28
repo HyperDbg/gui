@@ -106,7 +106,7 @@ func (p *TagPage) Layout() unison.Paneler {
 
 func NewTabPage() *TagPage {
 	t := newToolbar()
-	widget.NewToolBar(t.Elems()...) //todo return canvas ?
+	widget.NewToolBar(t.Elems()...) // todo return canvas ?
 	dock := unison.NewDock()
 	dock.AsPanel().SetLayoutData(&unison.FlexLayoutData{
 		HSpan:  1,
