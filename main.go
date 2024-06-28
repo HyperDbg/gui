@@ -13,10 +13,10 @@ import (
 )
 
 func main() {
-	testLayoutCpu()
-	return
-	// Run()
+	// testLayoutCpu()
 	// return
+	Run()
+	return
 	// testDisassembly()
 	// return
 	// testParsePe()
@@ -61,18 +61,18 @@ func testLayoutCpu() {
 		pos := float32(0)
 
 		dock.DockTo(left, nil, side.Left)
-		// LeftContainer := widget.NewDockContainer(left)
-		LeftContainer := unison.Ancestor[*unison.DockContainer](left)
+		LeftContainer := widget.NewDockContainer(left)
+		// LeftContainer := unison.Ancestor[*unison.DockContainer](left)
 		dock.DockTo(right, LeftContainer, side.Right)
-		RightContainer := widget.NewDockContainer(right)
+		// RightContainer := widget.NewDockContainer(right)
 		scale := float32(0.3)
 		pos = (r.Width/(display.ScaleX*1000)/2 + scale) * 1000
-		RightContainer.Stack(right, -1)
+		LeftContainer.Stack(left, -1)
 		dock.RootDockLayout().SetDividerPosition(pos)
 		unison.InvokeTaskAfter(func() { dock.RootDockLayout().SetDividerPosition(pos) }, time.Millisecond)
 
-		LeftContainer.SetCurrentDockable(left)   // left not work
-		RightContainer.SetCurrentDockable(right) // right not work
+		LeftContainer.SetCurrentDockable(left) // left not work
+		// RightContainer.SetCurrentDockable(right) // right not work
 		content.AddChild(dock)
 
 		return

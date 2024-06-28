@@ -27,17 +27,16 @@ func LayoutCpu(fileName string) unison.Paneler {
 
 	asm := LayoutDisassemblyTable(fileName)
 	TopHSplit := widget.NewHSplit(
-		widget.NewTab("cpu with fast call", "todo fast call layout", true, asm),
-		widget.NewTab("reg", "todo reg", true, widget.NewButton("todo reg")),
+		widget.NewTab("cpu with fast call", "todo fast call layout", false, asm),
+		widget.NewTab("reg", "todo reg", false, widget.NewButton("todo reg")),
 		0.3)
-	return TopHSplit.Dock
 
 	hexEditor := widget.NewCodeEditor("main.go")
 	// hexEditor.Editor.SetText(hex.Dump(testHexDat))
 	stackTable := LayoutStackTable()
 	BottomHSplit := widget.NewHSplit(
-		widget.NewTab(" hex editor", "todo hex editor", true, hexEditor),
-		widget.NewTab("stack", "todo stack test", true, stackTable),
+		widget.NewTab(" hex editor", "todo hex editor", false, hexEditor),
+		widget.NewTab("stack", "todo stack test", false, stackTable),
 		0.3)
 	//todo add tab into hex editor and stack layout
 	/*
@@ -62,10 +61,10 @@ func LayoutCpu(fileName string) unison.Paneler {
 		tabs.NewTab("struct")
 	*/
 
-	top := widget.NewTab("cpu and reg", "", true, TopHSplit)
-	bottom := widget.NewTab("hex editor and stack", "", true, BottomHSplit)
+	top := widget.NewTab("cpu and reg", "", false, TopHSplit)
+	bottom := widget.NewTab("hex editor and stack", "", false, BottomHSplit)
 	vSplit := widget.NewVSplit(top, bottom, 0.1)
-	return vSplit
+	return vSplit.Dock
 }
 
 var testRegData = Register{

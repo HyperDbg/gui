@@ -42,7 +42,7 @@ func Run() {
 				mylog.Check("not support file type")
 			}
 		}
-		pages.Layout()
+		w.Content().AddChild(pages.Layout())
 	})
 }
 
