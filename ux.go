@@ -180,10 +180,12 @@ func (t *toolbar) Elems() []*unison.Button {
 func newToolbar() *toolbar {
 	m := stream.ReadEmbedFileMap(bar, "asserts/bar")
 	return &toolbar{
-		open:      widget.NewImageButton("open", m.Get("open.png"), func() {}),
-		restart:   widget.NewImageButton("restart", m.Get("restart.png"), func() {}),
-		close:     widget.NewImageButton("close", m.Get("close.png"), func() {}),
-		run:       widget.NewImageButton("run", m.Get("run.png"), func() {}),
+		open:    widget.NewImageButton("open", m.Get("open.png"), func() {}),
+		restart: widget.NewImageButton("restart", m.Get("restart.png"), func() {}),
+		close:   widget.NewImageButton("close", m.Get("close.png"), func() {}),
+		run: widget.NewImageButton("run", m.Get("run.png"), func() {
+			mylog.Todo("start command here, need local debug support")
+		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
 		pause:     widget.NewImageButton("pause", m.Get("pause.png"), func() {}),
 		stepin:    widget.NewImageButton("stepin", m.Get("stepin.png"), func() {}),
