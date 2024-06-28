@@ -26,7 +26,7 @@ func stringToBytePointer(s string) *byte {
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
 	// SetDllDirectory(".")
-	// SetCustomDriverPath(stringToBytePointer("."))
+	SetCustomDriverPath(stringToBytePointer("."), stringToBytePointer("hyperkd.sys"))
 	if isGithubCI() {
 		mylog.Info("github ci windows not support vt-x nested virtualization,skip test")
 		return
