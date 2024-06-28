@@ -9,20 +9,12 @@ import (
 
 func TestSdk(t *testing.T) {
 	t.Skip("")
-	// sysName := "hprdbgkd.sys"
-	// path := filepath.Join("C:\\Windows\\System32\\drivers", sysName)
 	mylog.Call(func() {
-		// mylog.CheckIgnore(os.Remove(path))
-		// stream.CopyFile(sysName, path)
-
-		// assert.Equal(t, 1, HyperdbgUDetectVmxSupport()) // todo convert to return type as bool
-		// fmt.Println(HyperdbgUDetectVmxSupport())
 		assert.True(t, VmxSupportDetection())
-		mylog.Trace("InstallVmmDriver", InstallVmmDriver()) // not working ? return 1
-		ConnectLocalDebugger()                              // not working,need return status string for check error
-		mylog.Trace("LoadVmm", LoadVmm())                   // not working
+		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
+		ConnectLocalDebugger()
+		mylog.Trace("LoadVmm", LoadVmm())
 
-		// time.Sleep(1 * time.Second) // wait for debugger to connect
 		// todo:
 		// start debugger
 		// read memory(todo bug read address buffer for disassembly,see cpu.go LayoutDisassemblyTable ,oep buf seems error)
@@ -32,6 +24,7 @@ func TestSdk(t *testing.T) {
 		// continue
 		// read stack
 		// stop debugger
+
 		mylog.Trace("UnloadVmm", UnloadVmm())
 		mylog.Trace("StopVmmDriver", StopVmmDriver())
 		mylog.Trace("UninstallVmmDriver", UninstallVmmDriver())
