@@ -8,7 +8,7 @@ import (
 )
 
 func TestSdk(t *testing.T) {
-	t.Skip("")
+	t.Skip("github ci windows not support vt-x nested virtualization")
 	mylog.Call(func() {
 		assert.True(t, VmxSupportDetection())
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
