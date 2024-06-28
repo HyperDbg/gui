@@ -22,10 +22,6 @@ func LayoutCpu(fileName string) unison.Paneler {
 	//"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
 	//todo make unit test for fast call layout
 
-	//RegisterView, panel := widget.NewStructView(parent.AsPanel().Window(), Register{}, func(data Register) (values []widget.CellData) {
-	//
-	//})
-
 	asm := LayoutDisassemblyTable(fileName)
 
 	structView, _ := widget.NewStructView(testRegData, func(data Register) (values []widget.CellData) {
@@ -165,7 +161,7 @@ func LayoutCpu(fileName string) unison.Paneler {
 	})
 	TopHSplit := widget.NewHSplit(
 		widget.NewTab("cpu with fast call", "todo fast call layout", false, asm),
-		widget.NewTab("reg", "Register", false, widget.NewScrollPanelFill(structView)),
+		widget.NewTab("Register", "Register", false, widget.NewScrollPanelFill(structView)),
 		0.3)
 
 	hexEditor := widget.NewCodeEditor("")
