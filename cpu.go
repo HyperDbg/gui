@@ -14,9 +14,6 @@ import (
 )
 
 func LayoutCpu(fileName string) unison.Paneler {
-	// asm := LayoutDisassemblyTable(fileName)
-	// return asm
-
 	////fastCallLayout := unison.NewList[ImmData]()
 	//widget.NewButton(m).SetText("goto 00007FF885007C08")
 	//"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
@@ -170,7 +167,7 @@ func LayoutCpu(fileName string) unison.Paneler {
 	BottomHSplit := widget.NewHSplit(
 		widget.NewTab(" hex editor", "todo hex editor", false, hexEditor),
 		widget.NewTab("stack", "todo stack test", false, stackTable),
-		0.3)
+		0.1)
 	//todo add tab into hex editor and stack layout
 	/*
 		tabs := gi.NewTabs(downSplits)
