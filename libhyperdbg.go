@@ -648,12 +648,12 @@ type ScriptEngineVariablesList struct {
 	LocalVariablesList  *Uint64
 }
 type Cr3Type struct {
-	Anon268_5
+	Anon196_5
 }
-type Anon268_5 struct {
+type Anon196_5 struct {
 	Raw [1]int64
 }
-type Anon272_9 struct {
+type Anon200_9 struct {
 	Pcid            Uint64
 	PageFrameNumber Uint64
 	Reserved1       Uint64
@@ -745,10 +745,10 @@ type EptSingleHookUnhookingDetails struct {
 	PhysicalAddress                           SizeT
 	OriginalEntry                             Uint64
 }
-type Anon1569_9 struct {
+type Anon1497_9 struct {
 	Raw [1]int32
 }
-type Anon1571_5 struct {
+type Anon1499_5 struct {
 	// [Bits 3:0] Segment type.
 	Type Uint32
 	// [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
@@ -1538,13 +1538,14 @@ func init() {
 	__imp_hyperdbg_u_script_read_file_and_execute_commandline = GengoLibrary.ImportNow("hyperdbg_u_script_read_file_and_execute_commandline")
 	__imp_hyperdbg_u_continue_previous_command = GengoLibrary.ImportNow("hyperdbg_u_continue_previous_command")
 	__imp_hyperdbg_u_check_multiline_command = GengoLibrary.ImportNow("hyperdbg_u_check_multiline_command")
+	__imp_hyperdbg_u_set_custom_driver_path = GengoLibrary.ImportNow("hyperdbg_u_set_custom_driver_path")
+	__imp_hyperdbg_u_use_default_driver_path = GengoLibrary.ImportNow("hyperdbg_u_use_default_driver_path")
 	__imp_hyperdbg_u_connect_local_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_local_debugger")
 	__imp_hyperdbg_u_connect_remote_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_remote_debugger")
-	return
 	__imp_hyperdbg_u_continue_debuggee = GengoLibrary.ImportNow("hyperdbg_u_continue_debuggee")
 	__imp_hyperdbg_u_pause_debuggee = GengoLibrary.ImportNow("hyperdbg_u_pause_debuggee")
 	__imp_hyperdbg_u_set_breakpoint = GengoLibrary.ImportNow("hyperdbg_u_set_breakpoint")
-
+	return
 	__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")
 	__imp_PrintSymbolBuffer = GengoLibrary.ImportNow("PrintSymbolBuffer")
 	__imp_PrintSymbol = GengoLibrary.ImportNow("PrintSymbol")
@@ -1586,8 +1587,8 @@ func init() {
 	bindlib.Validate((*GuestExtraRegisters)(nil), 0x20, 0x8, "Cs", 0x0, "Ds", 0x2, "Fs", 0x4, "Gs", 0x6, "Es", 0x8, "Ss", 0xa, "Rflags", 0x10, "Rip", 0x18)
 	bindlib.Validate((*ScriptEngineVariablesList)(nil), 0x18, 0x8, "TempList", 0x0, "GlobalVariablesList", 0x8, "LocalVariablesList", 0x10)
 	bindlib.Validate((*Cr3Type)(nil), 0x8, 0x8)
-	bindlib.Validate((*Anon268_5)(nil), 0x8, 0x8)
-	bindlib.Validate((*Anon272_9)(nil), 0x8, 0x8, "Pcid", 0xc, "PageFrameNumber", 0x30, "Reserved1", 0x3c, "Reserved_2", 0x3f, "PcidInvalidate", 0x40)
+	bindlib.Validate((*Anon196_5)(nil), 0x8, 0x8)
+	bindlib.Validate((*Anon200_9)(nil), 0x8, 0x8, "Pcid", 0xc, "PageFrameNumber", 0x30, "Reserved1", 0x3c, "Reserved_2", 0x3f, "PcidInvalidate", 0x40)
 	bindlib.Validate((*DebuggerRemotePacket)(nil), 0x18, 0x8, "Checksum", 0x0, "Indicator", 0x8, "TypeOfThePacket", 0x10, "RequestedActionOfThePacket", 0x14)
 	bindlib.Validate((*DebuggeeUserInputPacket)(nil), 0xc, 0x4, "CommandLen", 0x0, "IgnoreFinishedSignal", 0x4, "Result", 0x8)
 	bindlib.Validate((*DebuggeeEventAndActionHeaderForRemotePacket)(nil), 0x4, 0x4, "Length", 0x0)
@@ -1602,8 +1603,8 @@ func init() {
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 0x20, 0x8, "StartAddress", 0x0, "EndAddress", 0x8, "SetHookForRead", 0x10, "SetHookForWrite", 0x11, "SetHookForExec", 0x12, "MemoryType", 0x14, "Tag", 0x18)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 0x10, 0x8, "TargetAddress", 0x0, "HookFunction", 0x8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 0x18, 0x8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0x0, "RemoveBreakpointInterception", 0x1, "PhysicalAddress", 0x8, "OriginalEntry", 0x10)
-	bindlib.Validate((*Anon1569_9)(nil), 0x4, 0x4)
-	bindlib.Validate((*Anon1571_5)(nil), 0x4, 0x4, "Type", 0x4, "DescriptorType", 0x5, "DescriptorPrivilegeLevel", 0x7, "Present", 0x8, "Reserved1", 0xc, "AvailableBit", 0xd, "LongMode", 0xe, "DefaultBig", 0xf, "Granularity", 0x10, "Unusable", 0x11, "Reserved2", 0x20)
+	bindlib.Validate((*Anon1497_9)(nil), 0x4, 0x4)
+	bindlib.Validate((*Anon1499_5)(nil), 0x4, 0x4, "Type", 0x4, "DescriptorType", 0x5, "DescriptorPrivilegeLevel", 0x7, "Present", 0x8, "Reserved1", 0xc, "AvailableBit", 0xd, "LongMode", 0xe, "DefaultBig", 0xf, "Granularity", 0x10, "Unusable", 0x11, "Reserved2", 0x20)
 	bindlib.Validate((*VmxSegmentSelector)(nil), 0x18, 0x8, "Selector", 0x0, "Attributes", 0x4, "Limit", 0x8, "Base", 0x10)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 0x18, 0x8, "Tag", 0x0, "KernelStatus", 0x8, "TypeOfAction", 0x10, "IsEnabled", 0x14)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 0x10, 0x8, "KernelStatus", 0x0, "IsShortCircuiting", 0x8)
@@ -1749,6 +1750,17 @@ func CheckMultilineCommand(current_command *Char, reset Boolean) Boolean {
 	__res := bindlib.CCall2(__imp_hyperdbg_u_check_multiline_command.Addr(), bindlib.MarshallSyscall(current_command), bindlib.MarshallSyscall(reset))
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
+
+var __imp_hyperdbg_u_set_custom_driver_path bindlib.PreloadProc
+
+func SetCustomDriverPath(DriverPath *Char) Boolean {
+	__res := bindlib.CCall1(__imp_hyperdbg_u_set_custom_driver_path.Addr(), bindlib.MarshallSyscall(DriverPath))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_use_default_driver_path bindlib.PreloadProc
+
+func UseDefaultDriverPath() { bindlib.CCall0(__imp_hyperdbg_u_use_default_driver_path.Addr()) }
 
 var __imp_hyperdbg_u_connect_local_debugger bindlib.PreloadProc
 
@@ -2016,34 +2028,34 @@ func SymCastingQueryForFiledsAndTypes(StructName *byte, FiledOfStructName *byte,
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
-func (s Anon268_5) Flags() Uint64 {
+func (s Anon196_5) Flags() Uint64 {
 	return bindlib.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon268_5) SetFlags(v Uint64) {
+func (s *Anon196_5) SetFlags(v Uint64) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon268_5) Fields() Anon272_9 {
-	return bindlib.ReadBitcast[Anon272_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon196_5) Fields() Anon200_9 {
+	return bindlib.ReadBitcast[Anon200_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon268_5) SetFields(v Anon272_9) {
+func (s *Anon196_5) SetFields(v Anon200_9) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1569_9) Fields() Anon1571_5 {
-	return bindlib.ReadBitcast[Anon1571_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon1497_9) Fields() Anon1499_5 {
+	return bindlib.ReadBitcast[Anon1499_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1569_9) SetFields(v Anon1571_5) {
+func (s *Anon1497_9) SetFields(v Anon1499_5) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1569_9) AsUInt() Uint32 {
+func (s Anon1497_9) AsUInt() Uint32 {
 	return bindlib.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1569_9) SetAsUInt(v Uint32) {
+func (s *Anon1497_9) SetAsUInt(v Uint32) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }

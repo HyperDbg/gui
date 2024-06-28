@@ -14,15 +14,25 @@ func isGithubCI() bool {
 	return strings.Contains(GOPATH, "runneradmin")
 }
 
+func stringToBytePointer(s string) *byte {
+	bytes := []byte(s)
+	ptr := &bytes[0]
+	return ptr
+}
+
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
-	SetDllDirectory(".")
+	// SetDllDirectory(".")
+	SetCustomDriverPath(stringToBytePointer("."))
 	if isGithubCI() {
 		mylog.Info("github ci windows not support vt-x nested virtualization,skip test")
 		return
 	}
 	mylog.Call(func() {
 		assert.True(t, VmxSupportDetection())
+
+		mylog.Check(os.Chdir("D:\\workspace\\workspace\\branch\\gui"))
+
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 		ConnectLocalDebugger()
 		mylog.Trace("LoadVmm", LoadVmm())
