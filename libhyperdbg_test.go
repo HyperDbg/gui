@@ -16,6 +16,7 @@ func isGithubCI() bool {
 
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
+	SetDllDirectory(".")
 	if isGithubCI() {
 		mylog.Info("github ci windows not support vt-x nested virtualization,skip test")
 		return
