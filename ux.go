@@ -30,6 +30,9 @@ var bar embed.FS
 var pageIco embed.FS
 
 func Run() {
+	if !VmxSupportDetection() {
+		return
+	}
 	app.RunWithIco("HyperDbg "+winver.WindowVersion(), mainIcons, func(w *unison.Window) {
 		pages := NewTabPage()
 		w.Content().FileDropCallback = func(files []string) {
