@@ -187,14 +187,14 @@ func newToolbar() *toolbar {
 		close: widget.NewImageButton("close", m.Get("close.png"), func() {}),
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
 			mylog.Todo("start command here, need local debug support")
-			//todo start process api here
+			// todo start process api here
 		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
 		pause: widget.NewImageButton("pause", m.Get("pause.png"), func() {
 			mylog.Todo("pause command here, need local debug support")
 		}),
 		stepin: widget.NewImageButton("stepin", m.Get("stepin.png"), func() {
-			//todo set F7 shortcut
+			// todo set F7 shortcut
 			mylog.Todo("stepin command here, need local debug support")
 		}),
 		stepover: widget.NewImageButton("stepover", m.Get("stepover.png"), func() {
