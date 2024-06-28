@@ -27,7 +27,7 @@ func LayoutCpu(fileName string) unison.Paneler {
 
 	asm := LayoutDisassemblyTable(fileName)
 
-	structView, kvPanel := widget.NewStructView(Register{}, func(data Register) (values []widget.CellData) {
+	structView, _ := widget.NewStructView(Register{}, func(data Register) (values []widget.CellData) {
 		return []widget.CellData{
 			{Text: fmt.Sprintf("RAX: %016x", data.RAX)},
 			{Text: fmt.Sprintf("RBX: %016x", data.RBX)},
@@ -162,7 +162,6 @@ func LayoutCpu(fileName string) unison.Paneler {
 			{Text: fmt.Sprintf("DR7: %016x", data.DR7)},
 		}
 	})
-	kvPanel = kvPanel
 	TopHSplit := widget.NewHSplit(
 		widget.NewTab("cpu with fast call", "todo fast call layout", false, asm),
 		widget.NewTab("reg", "Register", false, widget.NewScrollPanelFill(structView)),
