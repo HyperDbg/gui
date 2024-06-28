@@ -383,7 +383,12 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 			case pe.ImageOptionalHeader64:
 				oep := o.ImageBase + uint64(o.AddressOfEntryPoint)
 				mylog.Struct(o)
-				mylog.Hex("oep", oep)
+				/*
+					00007FFE4F8AB305 | EB 00                    | jmp ntdll.7FFE4F8AB307                  |
+					00007FFE4F8AB307 | 48:83C4 38               | add rsp,38                              |
+					00007FFE4F8AB30B | C3                       | ret                                     |
+				*/
+				mylog.Hex("oep", oep)                           //todo bug for hyperdbg-cli.exe
 				x := xed.New(b.Bytes()[o.AddressOfEntryPoint:]) // todo bug
 				// x := xed.New(b.Bytes()[o.AddressOfEntryPoint:])
 				x.Decode64()
