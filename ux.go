@@ -174,6 +174,9 @@ func (t *toolbar) Elems() []*unison.Button {
 	}
 }
 
+// todo add remote debug support setting panel into toolbar
+// .debug remote namedpipe \\.\pipe\HyperDbgDebug
+// .debug prepare serial 115200 com1
 func newToolbar() *toolbar {
 	m := stream.ReadEmbedFileMap(bar, "asserts/bar")
 	return &toolbar{
