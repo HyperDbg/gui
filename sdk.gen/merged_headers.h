@@ -18,8 +18,6 @@ typedef int rune;
 #define WCHAR_MIN   0
 #define WCHAR_MAX   65535
 
-//typedef unsigned short wchar_t;
-
 typedef int bool ;
 typedef long LONG ;
 #define PVOID void*
@@ -62,76 +60,6 @@ typedef struct _LIST_ENTRY {
 #ifndef _In_reads_bytes_
 #define _In_reads_bytes_(x)
 #endif
-
-/*
-typedef struct _IRP {
-  CSHORT                    Type;
-  USHORT                    Size;
-  PMDL                      MdlAddress;
-  ULONG                     Flags;
-  union {
-    struct _IRP     *MasterIrp;
-    __volatile LONG IrpCount;
-    PVOID           SystemBuffer;
-  } AssociatedIrp;
-  LIST_ENTRY                ThreadListEntry;
-  IO_STATUS_BLOCK           IoStatus;
-  KPROCESSOR_MODE           RequestorMode;
-  BOOLEAN                   PendingReturned;
-  CHAR                      StackCount;
-  CHAR                      CurrentLocation;
-  BOOLEAN                   Cancel;
-  KIRQL                     CancelIrql;
-  CCHAR                     ApcEnvironment;
-  UCHAR                     AllocationFlags;
-  union {
-    PIO_STATUS_BLOCK UserIosb;
-    PVOID            IoRingContext;
-  };
-  PKEVENT                   UserEvent;
-  union {
-    struct {
-      union {
-        PIO_APC_ROUTINE UserApcRoutine;
-        PVOID           IssuingProcess;
-      };
-      union {
-        PVOID                 UserApcContext;
-#if ...
-        _IORING_OBJECT        *IoRing;
-#else
-        struct _IORING_OBJECT *IoRing;
-#endif
-      };
-    } AsynchronousParameters;
-    LARGE_INTEGER AllocationSize;
-  } Overlay;
-  __volatile PDRIVER_CANCEL CancelRoutine;
-  PVOID                     UserBuffer;
-  union {
-    struct {
-      union {
-        KDEVICE_QUEUE_ENTRY DeviceQueueEntry;
-        struct {
-          PVOID DriverContext[4];
-        };
-      };
-      PETHREAD     Thread;
-      PCHAR        AuxiliaryBuffer;
-      struct {
-        LIST_ENTRY ListEntry;
-        union {
-          struct _IO_STACK_LOCATION *CurrentStackLocation;
-          ULONG                     PacketType;
-        };
-      };
-      PFILE_OBJECT OriginalFileObject;
-    } Overlay;
-    KAPC  Apc;
-    PVOID CompletionKey;
-  } Tail;
-} IRP;
-*/
 
 
 //SDK\Headers\BasicTypes.h
@@ -4421,6 +4349,12 @@ hyperdbg_u_continue_previous_command();
 
 IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
 hyperdbg_u_check_multiline_command(CHAR * current_command, BOOLEAN reset);
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_set_custom_driver_path(CHAR * DriverPath);
+
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_use_default_driver_path();
 
 //
 // Connect to local or remote debugger
