@@ -31,7 +31,7 @@ var pageIco embed.FS
 
 func Run() {
 	app.RunWithIco("HyperDbg "+winver.WindowVersion(), mainIcons, func(w *unison.Window) {
-		pages := NewPage()
+		pages := NewTabPage()
 		w.Content().FileDropCallback = func(files []string) {
 			switch filepath.Ext(files[0]) {
 			case ".exe", ".dll", ".sys":
@@ -47,7 +47,7 @@ func Run() {
 }
 
 type (
-	Page struct {
+	TagPage struct {
 		dock   *unison.Dock
 		cpu    *widget.Tab
 		pe     *widget.Tab
@@ -68,7 +68,7 @@ type (
 	}
 )
 
-func (p *Page) Elems() []*widget.Tab {
+func (p *TagPage) Elems() []*widget.Tab {
 	return []*widget.Tab{
 		p.cpu,
 		p.pe,
@@ -89,7 +89,7 @@ func (p *Page) Elems() []*widget.Tab {
 	}
 }
 
-func (p *Page) Layout() unison.Paneler {
+func (p *TagPage) Layout() unison.Paneler {
 	///make tabs
 	p.dock.DockTo(p.cpu, nil, side.Left)
 
@@ -104,9 +104,9 @@ func (p *Page) Layout() unison.Paneler {
 	return nil
 }
 
-func NewPage() *Page {
+func NewTabPage() *TagPage {
 	t := newToolbar()
-	widget.NewToolBar(t.Elems()...)
+	widget.NewToolBar(t.Elems()...) //todo return canvas ?
 	dock := unison.NewDock()
 	dock.AsPanel().SetLayoutData(&unison.FlexLayoutData{
 		HSpan:  1,
@@ -118,7 +118,7 @@ func NewPage() *Page {
 	})
 	path := "hyperdbg-cli.exe"
 	cpu := LayoutCpu(path)
-	p := &Page{
+	p := &TagPage{
 		dock:   dock,
 		cpu:    widget.NewTab("cpu", "", false, cpu),
 		pe:     widget.NewTab("peView", "", false, LayoutPeView(path)),
@@ -137,7 +137,6 @@ func NewPage() *Page {
 		trace:  widget.NewTab("trace", "", false, LayoutTrace()),
 		ark:    widget.NewTab("ark", "", false, LayoutArk()),
 	}
-
 	return p
 }
 
