@@ -2713,8 +2713,7 @@ typedef struct _HWDBG_INSTANCE_INFORMATION
     UINT32 version;                                    // Target version of HyperDbg (same as hwdbg)
     UINT32 maximumNumberOfStages;                      // Number of stages that this instance of hwdbg supports (NumberOfSupportedStages == 0 means script engine is disabled)
     UINT32 scriptVariableLength;                       // Maximum length of variables (and other script elements)
-    UINT32 numberOfSupportedLocalVariables;            // Number of supported local variables
-    UINT32 numberOfSupportedGlobalVariables;           // Number of supported global variables
+    UINT32 numberOfSupportedLocalAndGlobalVariables;   // Number of supported local (and global) variables
     UINT32 numberOfSupportedTemporaryVariables;        // Number of supported temporary variables
     UINT32 maximumNumberOfSupportedGetScriptOperators; // Maximum supported GET operators in a single func
     UINT32 maximumNumberOfSupportedSetScriptOperators; // Maximum supported SET operators in a single func
@@ -2734,6 +2733,11 @@ typedef struct _HWDBG_INSTANCE_INFORMATION
         // ANY ADDITION TO THIS MASK SHOULD BE ADDED TO HwdbgInterpreterShowScriptCapabilities
         // and HwdbgInterpreterCheckScriptBufferWithScriptCapabilities as well Scala file
         //
+        UINT64 assign_local_global_var : 1;
+        UINT64 assign_registers : 1;
+        UINT64 assign_pseudo_registers : 1;
+        UINT64 conditional_statements_and_comparison_operators : 1;
+
         UINT64 func_or : 1;
         UINT64 func_xor : 1;
         UINT64 func_and : 1;
@@ -4420,13 +4424,34 @@ hyperdbg_u_check_multiline_command(CHAR * current_command, BOOLEAN reset);
 
 //
 // Connect to local or remote debugger
-// Exoported functionality of the '.connect' command
+// Exported functionality of the '.connect' command
 //
 IMPORT_EXPORT_LIBHYPERDBG VOID
 hyperdbg_u_connect_local_debugger();
 
 IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
 hyperdbg_u_connect_remote_debugger(const CHAR * ip, const CHAR * port);
+
+//
+// Continue debuggee
+// Exported functionality of the 'g' command
+//
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_continue_debuggee();
+
+//
+// Pause debuggee
+// Exported functionality of the 'pause' command or CTRL+C
+//
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_pause_debuggee();
+
+//
+// Set breakpoint
+// Exported functionality of the 'bp' command
+//
+VOID
+hyperdbg_u_set_breakpoint(UINT64 Address, UINT32 Pid, UINT32 Tid, UINT32 CoreNumer);
 
 #ifdef __cplusplus
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutSeh(parent unison.Paneler) unison.Paneler {
+func LayoutSeh() unison.Paneler {
 	table, header := widget.NewTable(Seh{}, widget.TableContext[Seh]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[Seh]) (cells []widget.CellData) {
@@ -34,7 +34,7 @@ func LayoutSeh(parent unison.Paneler) unison.Paneler {
 		JsonName:   "seh",
 		IsDocument: false,
 	})
-	return widget.NewTableScrollPanel(parent, table, header)
+	return widget.NewTableScrollPanel(table, header)
 }
 
 type Seh struct {

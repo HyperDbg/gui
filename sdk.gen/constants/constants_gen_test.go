@@ -22,7 +22,7 @@ func TestGenConstants(t *testing.T) {
 }
 
 func genConstants(fileName string) {
-	m := orderedmap.New[string, string]()
+	m := orderedmap.New("", "")
 	for i, s := range stream.NewBuffer(fileName).ToLines() {
 		if i == 4 {
 			// break // test

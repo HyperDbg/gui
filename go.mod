@@ -3,8 +3,8 @@ module github.com/ddkwork/hyperdbgui
 go 1.22.4
 
 require (
-	github.com/ddkwork/app v0.0.0-20240625154516-bb97921bf25a
-	github.com/ddkwork/golibrary v0.0.83
+	github.com/ddkwork/app v0.0.0-20240628082811-22a7326e81d0
+	github.com/ddkwork/golibrary v0.0.85
 	github.com/richardwilkes/unison v0.71.0
 	github.com/saferwall/pe v1.5.3
 	github.com/stretchr/testify v1.9.0
@@ -45,7 +45,7 @@ require (
 	github.com/yuin/goldmark v1.7.2 // indirect
 	github.com/zzl/go-win32api/v2 v2.2.0 // indirect
 	golang.org/x/arch v0.8.0 // indirect
-	golang.org/x/image v0.17.0 // indirect
+	golang.org/x/image v0.18.0 // indirect
 	golang.org/x/mod v0.18.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.21.0 // indirect

@@ -6,25 +6,22 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"syscall"
 	"testing"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 )
 
-func TestUpAppLiB(t *testing.T) {
-	t.Skip()
+func TestUpdateAppModule(t *testing.T) {
+	if !stream.IsDir("D:\\workspace\\workspace\\app") {
+		return
+	}
 	mylog.Check(os.Chdir("D:\\workspace\\workspace\\app"))
 	session := stream.RunCommand("git log -1 --format=\"%H\"")
 	mylog.Check(os.Chdir("D:\\workspace\\workspace\\branch\\gui"))
 	id := mylog.Check2(strconv.Unquote(session.Output.String()))
 	mylog.Info("id", id)
 	stream.RunCommand("go get github.com/ddkwork/app@" + id)
-}
-
-func TestLoadDll(t *testing.T) {
-	syscall.MustLoadDLL("libhyperdbg")
 }
 
 func TestClearAll(t *testing.T) {
@@ -76,6 +73,5 @@ func TestClear(t *testing.T) {
 			return err
 		})
 	}
-
 	mylog.Check(os.RemoveAll("bin"))
 }

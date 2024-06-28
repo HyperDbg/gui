@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/hex"
 	"fmt"
 
 	"github.com/saferwall/pe"
@@ -13,7 +12,10 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutCpu(fileName string, parent unison.Paneler) unison.Paneler {
+func LayoutCpu(fileName string) unison.Paneler {
+	// asm := LayoutDisassemblyTable(fileName)
+	// return asm
+
 	////fastCallLayout := unison.NewList[ImmData]()
 	//widget.NewButton(m).SetText("goto 00007FF885007C08")
 	//"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
@@ -23,16 +25,18 @@ func LayoutCpu(fileName string, parent unison.Paneler) unison.Paneler {
 	//
 	//})
 
+	asm := LayoutDisassemblyTable(fileName)
 	TopHSplit := widget.NewHSplit(
-		widget.NewTab("cpu with fast call", "todo fast call layout", true, LayoutDisassemblyTable(fileName, parent)),
-		widget.NewTab("reg", "todo reg", true, unison.NewPanel()),
+		widget.NewTab("cpu with fast call", "todo fast call layout", false, asm),
+		widget.NewTab("reg", "todo reg", false, widget.NewButton("todo reg")),
 		0.3)
 
-	hexEditor := widget.NewCodeEditor(parent, "")
-	hexEditor.Editor.SetText(hex.Dump(testHexDat))
+	hexEditor := widget.NewCodeEditor("main.go")
+	// hexEditor.Editor.SetText(hex.Dump(testHexDat))
+	stackTable := LayoutStackTable()
 	BottomHSplit := widget.NewHSplit(
-		widget.NewTab(" hex editor", "todo hex editor", true, hexEditor),
-		widget.NewTab("stack", "todo stack test", true, LayoutStackTable(parent)),
+		widget.NewTab(" hex editor", "todo hex editor", false, hexEditor),
+		widget.NewTab("stack", "todo stack test", false, stackTable),
 		0.3)
 	//todo add tab into hex editor and stack layout
 	/*
@@ -57,10 +61,10 @@ func LayoutCpu(fileName string, parent unison.Paneler) unison.Paneler {
 		tabs.NewTab("struct")
 	*/
 
-	top := widget.NewTab("cpu and reg", "", true, TopHSplit)
-	bottom := widget.NewTab("hex editor and stack", "", true, BottomHSplit)
+	top := widget.NewTab("cpu and reg", "", false, TopHSplit)
+	bottom := widget.NewTab("hex editor and stack", "", false, BottomHSplit)
 	vSplit := widget.NewVSplit(top, bottom, 0.1)
-	return vSplit
+	return vSplit.Dock
 }
 
 var testRegData = Register{
@@ -212,7 +216,7 @@ type FastCall struct {
 	ImmData  string
 }
 
-func LayoutDisassemblyTable(fileName string, parent unison.Paneler) unison.Paneler {
+func LayoutDisassemblyTable(fileName string) unison.Paneler {
 	table, header := widget.NewTable(xed.Disassembly{}, widget.TableContext[xed.Disassembly]{
 		ContextMenuItems: func(node *widget.Node[xed.Disassembly]) []widget.ContextMenuItem {
 			return []widget.ContextMenuItem{
@@ -270,7 +274,7 @@ func LayoutDisassemblyTable(fileName string, parent unison.Paneler) unison.Panel
 		JsonName:   "cpu_dism_table",
 		IsDocument: false,
 	})
-	return widget.NewTableScrollPanel(parent, table, header)
+	return widget.NewTableScrollPanel(table, header)
 }
 
 type Stack struct {
@@ -279,7 +283,7 @@ type Stack struct {
 	Context string
 }
 
-func LayoutStackTable(parent unison.Paneler) unison.Paneler {
+func LayoutStackTable() unison.Paneler {
 	table, header := widget.NewTable(Stack{}, widget.TableContext[Stack]{
 		ContextMenuItems: nil, // todo goto 0x00007FF838E51030
 		MarshalRow: func(node *widget.Node[Stack]) (cells []widget.CellData) {
@@ -304,7 +308,7 @@ func LayoutStackTable(parent unison.Paneler) unison.Paneler {
 		JsonName:   "cpu_stack_table",
 		IsDocument: false,
 	})
-	return widget.NewTableScrollPanel(parent, table, header)
+	return widget.NewTableScrollPanel(table, header)
 }
 
 type Register struct {

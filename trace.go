@@ -4,6 +4,6 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutTrace(parent unison.Paneler) unison.Paneler {
+func LayoutTrace() unison.Paneler {
 	return unison.NewPanel()
 }

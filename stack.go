@@ -7,7 +7,7 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutStack(parent unison.Paneler) unison.Paneler {
+func LayoutStack() unison.Paneler {
 	table, header := widget.NewTable(CallStack{}, widget.TableContext[CallStack]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[CallStack]) (cells []widget.CellData) {
@@ -40,7 +40,7 @@ func LayoutStack(parent unison.Paneler) unison.Paneler {
 		JsonName:   "stack",
 		IsDocument: false,
 	})
-	return widget.NewTableScrollPanel(parent, table, header)
+	return widget.NewTableScrollPanel(table, header)
 }
 
 type CallStack struct {

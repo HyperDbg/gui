@@ -5,6 +5,9 @@ import (
 	"path/filepath"
 
 	"github.com/richardwilkes/unison/enums/align"
+
+	"github.com/ddkwork/app/ms/hook/winver"
+
 	"github.com/richardwilkes/unison/enums/side"
 
 	"github.com/ddkwork/app"
@@ -27,24 +30,24 @@ var bar embed.FS
 var pageIco embed.FS
 
 func Run() {
-	app.RunWithIco("HyperDbg", mainIcons, func(w *unison.Window) {
-		pages := NewPage(w.Content())
+	app.RunWithIco("HyperDbg "+winver.WindowVersion(), mainIcons, func(w *unison.Window) {
+		pages := NewTabPage()
 		w.Content().FileDropCallback = func(files []string) {
 			switch filepath.Ext(files[0]) {
 			case ".exe", ".dll", ".sys":
 				mylog.Trace("dropped file", files[0])
-				pages.pe.SetContent(LayoutPeView(files[0], pages.dock)) // todo test parent panel is dock or cpu tab page
-				pages.cpu.SetContent(LayoutCpu(files[0], pages.dock))   // todo test parent panel is dock or cpu tab page
+				// pages.pe.SetContent(LayoutPeView(files[0])) // right action is remove all children
+				// pages.cpu.SetContent(LayoutCpu(files[0]))   // todo test parent panel is dock or cpu tab page
 			default:
 				mylog.Check("not support file type")
 			}
 		}
-		pages.Layout(w.Content())
+		w.Content().AddChild(pages.Layout())
 	})
 }
 
 type (
-	Page struct {
+	TagPage struct {
 		dock   *unison.Dock
 		cpu    *widget.Tab
 		pe     *widget.Tab
@@ -65,7 +68,7 @@ type (
 	}
 )
 
-func (p *Page) Elems() []*widget.Tab {
+func (p *TagPage) Elems() []*widget.Tab {
 	return []*widget.Tab{
 		p.cpu,
 		p.pe,
@@ -86,10 +89,12 @@ func (p *Page) Elems() []*widget.Tab {
 	}
 }
 
-func (p *Page) Layout(parent unison.Paneler) unison.Paneler {
-	///make tabs
+func (p *TagPage) Layout() unison.Paneler {
+	panel := widget.NewPanel()
+	t := newToolbar()
+	panel.AddChild(widget.NewToolBar(t.Elems()...))
 	p.dock.DockTo(p.cpu, nil, side.Left)
-	parent.AsPanel().AddChild(p.dock)
+
 	LeftContainer := widget.NewDockContainer(p.cpu)
 
 	mylog.Todo("set tab ico")
@@ -98,14 +103,12 @@ func (p *Page) Layout(parent unison.Paneler) unison.Paneler {
 		LeftContainer.Stack(tab, -1)
 	}
 	LeftContainer.SetCurrentDockable(p.cpu)
-	return nil
+	panel.AddChild(p.dock)
+	return panel
 }
 
-func NewPage(parent unison.Paneler) *Page {
-	t := newToolbar()
-	widget.NewToolBar(parent, t.Elems()...)
+func NewTabPage() *TagPage {
 	dock := unison.NewDock()
-	// toolBar.AsPanel().AddChild(dock)
 	dock.AsPanel().SetLayoutData(&unison.FlexLayoutData{
 		HSpan:  1,
 		VSpan:  1,
@@ -115,24 +118,25 @@ func NewPage(parent unison.Paneler) *Page {
 		VGrab:  true,
 	})
 	path := "hyperdbg-cli.exe"
-	p := &Page{
+	cpu := LayoutCpu(path)
+	p := &TagPage{
 		dock:   dock,
-		cpu:    widget.NewTab("cpu", "", false, LayoutCpu(path, dock)),
-		pe:     widget.NewTab("peView", "", false, LayoutPeView(path, dock)),
-		log:    widget.NewTab("log", "", false, LayoutLog(dock)),
-		notes:  widget.NewTab("notes", "", false, LayoutNotes(dock)),
-		breaks: widget.NewTab("break", "", false, LayoutBreak(dock)),
-		memory: widget.NewTab("memory", "", false, LayoutMemory(dock)),
-		stack:  widget.NewTab("stack", "", false, LayoutStack(dock)),
-		seh:    widget.NewTab("seh", "", false, LayoutSeh(dock)),
-		script: widget.NewTab("script", "", false, LayoutScript(dock)),
-		symbol: widget.NewTab("symbol", "", false, LayoutSymbol(dock)),
-		source: widget.NewTab("source", "", false, LayoutSource(dock)),
-		ref:    widget.NewTab("references", "", false, LayoutReferences(dock)),
-		thread: widget.NewTab("thread", "", false, LayoutThread(dock)),
-		handle: widget.NewTab("handle", "", false, LayoutHandle(dock)),
-		trace:  widget.NewTab("trace", "", false, LayoutTrace(dock)),
-		ark:    widget.NewTab("ark", "", false, LayoutArk(dock)),
+		cpu:    widget.NewTab("cpu", "", false, cpu),
+		pe:     widget.NewTab("peView", "", false, LayoutPeView(path)),
+		log:    widget.NewTab("log", "", false, LayoutLog()),
+		notes:  widget.NewTab("notes", "", false, LayoutNotes()),
+		breaks: widget.NewTab("break", "", false, LayoutBreak()),
+		memory: widget.NewTab("memory", "", false, LayoutMemory()),
+		stack:  widget.NewTab("stack", "", false, LayoutStack()),
+		seh:    widget.NewTab("seh", "", false, LayoutSeh()),
+		script: widget.NewTab("script", "", false, LayoutScript()),
+		symbol: widget.NewTab("symbol", "", false, LayoutSymbol()),
+		source: widget.NewTab("source", "", false, LayoutSource()),
+		ref:    widget.NewTab("references", "", false, LayoutReferences()),
+		thread: widget.NewTab("thread", "", false, LayoutThread()),
+		handle: widget.NewTab("handle", "", false, LayoutHandle()),
+		trace:  widget.NewTab("trace", "", false, LayoutTrace()),
+		ark:    widget.NewTab("ark", "", false, LayoutArk()),
 	}
 	return p
 }
@@ -170,31 +174,31 @@ func (t *toolbar) Elems() []*unison.Button {
 func newToolbar() *toolbar {
 	m := stream.ReadEmbedFileMap(bar, "asserts/bar")
 	return &toolbar{
-		open:      widget.NewImageButton(m.Get("open.png"), func() {}),
-		restart:   widget.NewImageButton(m.Get("restart.png"), func() {}),
-		close:     widget.NewImageButton(m.Get("close.png"), func() {}),
-		run:       widget.NewImageButton(m.Get("run.png"), func() {}),
-		runthread: widget.NewImageButton(m.Get("runthread.png"), func() {}),
-		pause:     widget.NewImageButton(m.Get("pause.png"), func() {}),
-		stepin:    widget.NewImageButton(m.Get("stepin.png"), func() {}),
-		stepover:  widget.NewImageButton(m.Get("stepover.png"), func() {}),
-		trin:      widget.NewImageButton(m.Get("trin.png"), func() {}),
-		trover:    widget.NewImageButton(m.Get("trover.png"), func() {}),
-		tillret:   widget.NewImageButton(m.Get("tillret.png"), func() {}),
-		tilluser:  widget.NewImageButton(m.Get("tilluser.png"), func() {}),
-		log:       widget.NewImageButton(m.Get("log.png"), func() {}),
-		modules:   widget.NewImageButton(m.Get("modules.png"), func() {}),
-		windows:   widget.NewImageButton(m.Get("windows.png"), func() {}),
-		threads:   widget.NewImageButton(m.Get("threads.png"), func() {}),
-		cpu:       widget.NewImageButton(m.Get("cpu.png"), func() {}),
-		search:    widget.NewImageButton(m.Get("search.png"), func() {}),
-		trace:     widget.NewImageButton(m.Get("trace.png"), func() {}),
-		bpoints:   widget.NewImageButton(m.Get("bpoints.png"), func() {}),
-		bpmem:     widget.NewImageButton(m.Get("bpmem.png"), func() {}),
-		bphard:    widget.NewImageButton(m.Get("bphard.png"), func() {}),
-		options:   widget.NewImageButton(m.Get("options.png"), func() {}),
-		scylla:    widget.NewImageButton(m.Get("scylla.png"), func() {}),
-		about:     widget.NewImageButton(m.Get("about.png"), func() {}),
+		open:      widget.NewImageButton("open", m.Get("open.png"), func() {}),
+		restart:   widget.NewImageButton("restart", m.Get("restart.png"), func() {}),
+		close:     widget.NewImageButton("close", m.Get("close.png"), func() {}),
+		run:       widget.NewImageButton("run", m.Get("run.png"), func() {}),
+		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
+		pause:     widget.NewImageButton("pause", m.Get("pause.png"), func() {}),
+		stepin:    widget.NewImageButton("stepin", m.Get("stepin.png"), func() {}),
+		stepover:  widget.NewImageButton("stepover", m.Get("stepover.png"), func() {}),
+		trin:      widget.NewImageButton("trin", m.Get("trin.png"), func() {}),
+		trover:    widget.NewImageButton("trover", m.Get("trover.png"), func() {}),
+		tillret:   widget.NewImageButton("tillret", m.Get("tillret.png"), func() {}),
+		tilluser:  widget.NewImageButton("tilluser", m.Get("tilluser.png"), func() {}),
+		log:       widget.NewImageButton("log", m.Get("log.png"), func() {}),
+		modules:   widget.NewImageButton("modules", m.Get("modules.png"), func() {}),
+		windows:   widget.NewImageButton("windows", m.Get("windows.png"), func() {}),
+		threads:   widget.NewImageButton("threads", m.Get("threads.png"), func() {}),
+		cpu:       widget.NewImageButton("cpu", m.Get("cpu.png"), func() {}),
+		search:    widget.NewImageButton("search", m.Get("search.png"), func() {}),
+		trace:     widget.NewImageButton("trace", m.Get("trace.png"), func() {}),
+		bpoints:   widget.NewImageButton("bpoints", m.Get("bpoints.png"), func() {}),
+		bpmem:     widget.NewImageButton("bpmem", m.Get("bpmem.png"), func() {}),
+		bphard:    widget.NewImageButton("bphard", m.Get("bphard.png"), func() {}),
+		options:   widget.NewImageButton("options", m.Get("options.png"), func() {}),
+		scylla:    widget.NewImageButton("scylla", m.Get("scylla.png"), func() {}),
+		about:     widget.NewImageButton("about", m.Get("about.png"), func() {}),
 	}
 }
 

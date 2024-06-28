@@ -831,8 +831,7 @@ type HwdbgInstanceInformation struct {
 	Version                                    Uint32
 	maximumNumberOfStages                      Uint32
 	scriptVariableLength                       Uint32
-	numberOfSupportedLocalVariables            Uint32
-	numberOfSupportedGlobalVariables           Uint32
+	numberOfSupportedLocalAndGlobalVariables   Uint32
 	numberOfSupportedTemporaryVariables        Uint32
 	maximumNumberOfSupportedGetScriptOperators Uint32
 	maximumNumberOfSupportedSetScriptOperators Uint32
@@ -846,27 +845,31 @@ type HwdbgInstanceInformation struct {
 	bramDataWidth                              Uint32
 }
 type _HwdbgScriptCapabilities struct {
-	FuncOr     Uint64
-	FuncXor    Uint64
-	FuncAnd    Uint64
-	FuncAsr    Uint64
-	FuncAsl    Uint64
-	FuncAdd    Uint64
-	FuncSub    Uint64
-	FuncMul    Uint64
-	FuncDiv    Uint64
-	FuncMod    Uint64
-	FuncGt     Uint64
-	FuncLt     Uint64
-	FuncEgt    Uint64
-	FuncElt    Uint64
-	FuncEqual  Uint64
-	FuncNeq    Uint64
-	FuncJmp    Uint64
-	FuncJz     Uint64
-	FuncJnz    Uint64
-	FuncMov    Uint64
-	FuncPrintf Uint64
+	AssignLocalGlobalVar                        Uint64
+	AssignRegisters                             Uint64
+	AssignPseudoRegisters                       Uint64
+	ConditionalStatementsAndComparisonOperators Uint64
+	FuncOr                                      Uint64
+	FuncXor                                     Uint64
+	FuncAnd                                     Uint64
+	FuncAsr                                     Uint64
+	FuncAsl                                     Uint64
+	FuncAdd                                     Uint64
+	FuncSub                                     Uint64
+	FuncMul                                     Uint64
+	FuncDiv                                     Uint64
+	FuncMod                                     Uint64
+	FuncGt                                      Uint64
+	FuncLt                                      Uint64
+	FuncEgt                                     Uint64
+	FuncElt                                     Uint64
+	FuncEqual                                   Uint64
+	FuncNeq                                     Uint64
+	FuncJmp                                     Uint64
+	FuncJz                                      Uint64
+	FuncJnz                                     Uint64
+	FuncMov                                     Uint64
+	FuncPrintf                                  Uint64
 }
 type HwdbgScriptBuffer struct {
 	scriptNumberOfSymbols Uint32
@@ -1538,6 +1541,10 @@ func init() {
 	__imp_hyperdbg_u_connect_local_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_local_debugger")
 	__imp_hyperdbg_u_connect_remote_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_remote_debugger")
 	return
+	__imp_hyperdbg_u_continue_debuggee = GengoLibrary.ImportNow("hyperdbg_u_continue_debuggee")
+	__imp_hyperdbg_u_pause_debuggee = GengoLibrary.ImportNow("hyperdbg_u_pause_debuggee")
+	__imp_hyperdbg_u_set_breakpoint = GengoLibrary.ImportNow("hyperdbg_u_set_breakpoint")
+
 	__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")
 	__imp_PrintSymbolBuffer = GengoLibrary.ImportNow("PrintSymbolBuffer")
 	__imp_PrintSymbol = GengoLibrary.ImportNow("PrintSymbol")
@@ -1605,8 +1612,8 @@ func init() {
 	bindlib.Validate((*DebuggerGeneralAction)(nil), 0x20, 0x8, "EventTag", 0x0, "ActionType", 0x8, "ImmediateMessagePassing", 0xc, "PreAllocatedBuffer", 0x10, "CustomCodeBufferSize", 0x14, "ScriptBufferSize", 0x18, "ScriptBufferPointer", 0x1c)
 	bindlib.Validate((*DebuggerEventAndActionResult)(nil), 0x8, 0x4, "IsSuccessful", 0x0, "Error", 0x4)
 	bindlib.Validate((*HwdbgPortInformationItems)(nil), 0x4, 0x4, "PortSize", 0x0)
-	bindlib.Validate((*HwdbgInstanceInformation)(nil), 0x44, 0x4, "Version", 0x0, "maximumNumberOfStages", 0x4, "scriptVariableLength", 0x8, "numberOfSupportedLocalVariables", 0xc, "numberOfSupportedGlobalVariables", 0x10, "numberOfSupportedTemporaryVariables", 0x14, "maximumNumberOfSupportedGetScriptOperators", 0x18, "maximumNumberOfSupportedSetScriptOperators", 0x1c, "sharedMemorySize", 0x20, "debuggerAreaOffset", 0x24, "debuggeeAreaOffset", 0x28, "numberOfPins", 0x2c, "numberOfPorts", 0x30, "scriptCapabilities", 0x34, "bramAddrWidth", 0x3c, "bramDataWidth", 0x40)
-	bindlib.Validate((*_HwdbgScriptCapabilities)(nil), 0x8, 0x4, "FuncOr", 0x1, "FuncXor", 0x2, "FuncAnd", 0x3, "FuncAsr", 0x4, "FuncAsl", 0x5, "FuncAdd", 0x6, "FuncSub", 0x7, "FuncMul", 0x8, "FuncDiv", 0x9, "FuncMod", 0xa, "FuncGt", 0xb, "FuncLt", 0xc, "FuncEgt", 0xd, "FuncElt", 0xe, "FuncEqual", 0xf, "FuncNeq", 0x10, "FuncJmp", 0x11, "FuncJz", 0x12, "FuncJnz", 0x13, "FuncMov", 0x14, "FuncPrintf", 0x15)
+	bindlib.Validate((*HwdbgInstanceInformation)(nil), 0x40, 0x4, "Version", 0x0, "maximumNumberOfStages", 0x4, "scriptVariableLength", 0x8, "numberOfSupportedLocalAndGlobalVariables", 0xc, "numberOfSupportedTemporaryVariables", 0x10, "maximumNumberOfSupportedGetScriptOperators", 0x14, "maximumNumberOfSupportedSetScriptOperators", 0x18, "sharedMemorySize", 0x1c, "debuggerAreaOffset", 0x20, "debuggeeAreaOffset", 0x24, "numberOfPins", 0x28, "numberOfPorts", 0x2c, "scriptCapabilities", 0x30, "bramAddrWidth", 0x38, "bramDataWidth", 0x3c)
+	bindlib.Validate((*_HwdbgScriptCapabilities)(nil), 0x8, 0x4, "AssignLocalGlobalVar", 0x1, "AssignRegisters", 0x2, "AssignPseudoRegisters", 0x3, "ConditionalStatementsAndComparisonOperators", 0x4, "FuncOr", 0x5, "FuncXor", 0x6, "FuncAnd", 0x7, "FuncAsr", 0x8, "FuncAsl", 0x9, "FuncAdd", 0xa, "FuncSub", 0xb, "FuncMul", 0xc, "FuncDiv", 0xd, "FuncMod", 0xe, "FuncGt", 0xf, "FuncLt", 0x10, "FuncEgt", 0x11, "FuncElt", 0x12, "FuncEqual", 0x13, "FuncNeq", 0x14, "FuncJmp", 0x15, "FuncJz", 0x16, "FuncJnz", 0x17, "FuncMov", 0x18, "FuncPrintf", 0x19)
 	bindlib.Validate((*HwdbgScriptBuffer)(nil), 0x4, 0x4, "scriptNumberOfSymbols", 0x0)
 	bindlib.Validate((*DebuggerReadPageTableEntriesDetails)(nil), 0x58, 0x8, "VirtualAddress", 0x0, "ProcessId", 0x8, "Pml4eVirtualAddress", 0x10, "Pml4eValue", 0x18, "PdpteVirtualAddress", 0x20, "PdpteValue", 0x28, "PdeVirtualAddress", 0x30, "PdeValue", 0x38, "PteVirtualAddress", 0x40, "PteValue", 0x48, "KernelStatus", 0x50)
 	bindlib.Validate((*DebuggerVa2paAndPa2vaCommands)(nil), 0x20, 0x8, "VirtualAddress", 0x0, "PhysicalAddress", 0x8, "ProcessId", 0x10, "IsVirtual2Physical", 0x14, "KernelStatus", 0x18)
@@ -1752,6 +1759,20 @@ var __imp_hyperdbg_u_connect_remote_debugger bindlib.PreloadProc
 func ConnectRemoteDebugger(ip *Char, port *Char) Boolean {
 	__res := bindlib.CCall2(__imp_hyperdbg_u_connect_remote_debugger.Addr(), bindlib.MarshallSyscall(ip), bindlib.MarshallSyscall(port))
 	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_continue_debuggee bindlib.PreloadProc
+
+func ContinueDebuggee() { bindlib.CCall0(__imp_hyperdbg_u_continue_debuggee.Addr()) }
+
+var __imp_hyperdbg_u_pause_debuggee bindlib.PreloadProc
+
+func PauseDebuggee() { bindlib.CCall0(__imp_hyperdbg_u_pause_debuggee.Addr()) }
+
+var __imp_hyperdbg_u_set_breakpoint bindlib.PreloadProc
+
+func SetBreakpoint(Address Uint64, Pid Uint32, Tid Uint32, CoreNumer Uint32) {
+	bindlib.CCall4(__imp_hyperdbg_u_set_breakpoint.Addr(), bindlib.MarshallSyscall(Address), bindlib.MarshallSyscall(Pid), bindlib.MarshallSyscall(Tid), bindlib.MarshallSyscall(CoreNumer))
 }
 
 var __imp_ScriptEngineParse bindlib.PreloadProc

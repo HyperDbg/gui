@@ -4,6 +4,6 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutNotes(parent unison.Paneler) unison.Paneler {
+func LayoutNotes() unison.Paneler {
 	return unison.NewPanel()
 }

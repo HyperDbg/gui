@@ -5,8 +5,8 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutScript(parent unison.Paneler) unison.Paneler {
-	path := "ux/send_version.scala"
-	// path = "ux/plugin/scriptGen/cpuid.ds"
-	return widget.NewCodeEditor(parent, path)
+func LayoutScript() unison.Paneler {
+	path := "send_version.scala"
+	// path = "plugin/scriptGen/cpuid.ds"
+	return widget.NewCodeEditor(path)
 }

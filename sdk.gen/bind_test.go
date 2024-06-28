@@ -49,8 +49,8 @@ func TestBindMacros(t *testing.T) {
 	mylog.Trace("number of macros", macros.Len())
 
 	var (
-		enumDebuggers = orderedmap.New[string, bool]()
-		enumIoctls    = orderedmap.New[string, bool]()
+		enumDebuggers = orderedmap.New("", false)
+		enumIoctls    = orderedmap.New("", false)
 	)
 
 	for _, p := range macros.List() {
@@ -179,7 +179,7 @@ func TestBindSdk(t *testing.T) {
 	TestMergeHeader(t)
 	TestBindMacros(t)
 	mylog.Call(func() {
-		pkg := gengo.NewPackage("libhyperdbg",
+		pkg := gengo.NewPackage("libhyperdbg", // 如果改了dll名字也改了呵呵，在不打算内嵌二进制之前但是保留这个操作
 			gengo.WithRemovePrefix(
 				"hyperdbg_u_",
 			),
@@ -227,130 +227,6 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 }`)
 
 		stream.WriteGoFile("../libhyperdbg.go", b)
-
-		stream.WriteGoFile("../libhyperdbg_test.go", `
-package main
-
-import (
-	"github.com/ddkwork/golibrary/mylog"
-	"github.com/stretchr/testify/assert"
-	"testing"
-)
-
-func TestSdk(t *testing.T) {
-     t.Skip("")
-	// sysName := "hprdbgkd.sys"
-	// path := filepath.Join("C:\\Windows\\System32\\drivers", sysName)
-	mylog.Call(func() {
-		// mylog.CheckIgnore(os.Remove(path))
-		// stream.CopyFile(sysName, path)
-
-		// assert.Equal(t, 1, HyperdbgUDetectVmxSupport()) // todo convert to return type as bool
-		// fmt.Println(HyperdbgUDetectVmxSupport())
-        assert.True(t, VmxSupportDetection())
-		mylog.Trace("InstallVmmDriver", InstallVmmDriver()) // not working ? return 1
-		ConnectLocalDebugger()                              // not working,need return status string for check error
-		mylog.Trace("LoadVmm", LoadVmm())                   // not working
-
-		// time.Sleep(1 * time.Second) // wait for debugger to connect
-		// todo:
-		// start debugger
-		// read memory(? address buffer for disassembly)
-		// read registers
-		// set breakpoints
-		// step over/into/out
-		// continue
-		// read stack
-		// stop debugger
-		mylog.Trace("UnloadVmm", UnloadVmm())
-		mylog.Trace("StopVmmDriver", StopVmmDriver())
-		mylog.Trace("UninstallVmmDriver", UninstallVmmDriver())
-	})
-}
-
-/*
-.connect local
-load vmm
-.sympath SRV*c:\Symbols*https://msdl.microsoft.com/download/symbol
-.sym load
-.sym reload
-.sym download
-unload vmm
-
-first in get stack on debug module
-.debug remote namedpipe \\.\pipe\HyperDbgDebug
-.debug prepare serial 115200 com1
-u nt!IopXxxControlFile l 74f
-bp nt!IopXxxControlFile
-g
-kq l 60
-*/
-
-`)
-
-		stream.WriteGoFile("../util.go", `
-package main
-
-import (
-	"syscall"
-	"testing"
-	"unsafe"
-
-	"github.com/stretchr/testify/assert"
-
-	"github.com/ddkwork/app/ms/hardwareIndo"
-	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/stream/bitfield"
-)
-
-func SetDllDirectory(path string) {
-	kernel32 := syscall.NewLazyDLL("kernel32.dll")
-	setDllDirectory := kernel32.NewProc("SetDllDirectoryW")
-	utf16Ptr := mylog.Check2(syscall.UTF16PtrFromString(path))
-	mylog.Check3(setDllDirectory.Call(uintptr(unsafe.Pointer(utf16Ptr))))
-}
-
-func LOWORD(l uint32) uint16 { return uint16(l) }
-func LOBYTE(l uint32) uint8  { return byte(l) }
-func HIWORD(l uint32) uint16 { return uint16(l >> 16) }
-func HIBYTE(l uint32) uint8  { return byte(l >> 24) }
-
-func TestSizeof(t *testing.T) {
-	// assert.Equal(t, 11, binary.Size(DEBUGGER_REMOTE_PACKET{}))
-}
-
-func TestHIBYTE(t *testing.T) {
-	v := uint32(0x11223344)
-	assert.Equal(t, byte(0x11), HIBYTE(v))
-	assert.Equal(t, uint16(0x1122), HIWORD(v))
-	assert.Equal(t, byte(0x44), LOBYTE(v))
-	assert.Equal(t, uint16(0x3344), LOWORD(v))
-}
-
-func VmxSupportDetection() (ok bool) {
-	hard := hardwareIndo.New()
-	if !hard.CpuInfo.Get() {
-		return
-	}
-	if hard.CpuInfo.Vendor != "GenuineIntel" {
-		mylog.Check("this program is not designed to run in a non-VT-x environemnt !")
-	}
-	mylog.Info("", "virtualization technology is vt-x")
-    mylog.Struct(hard.CpuInfo)
-	field := bitfield.NewFromUint32(hard.CpuInfo.Cpu1.Ecx)
-	if !field.Test(5) {
-		mylog.Check("vmx operation is not supported by your processor")
-	}
-	mylog.Info("", "vmx operation is supported by your processor")
-	return true
-}
-
-func DeviceName() string { return "HyperdbgHypervisorDevice" }
-func LinkName() (*uint16, error) {
-	return syscall.UTF16PtrFromString("\\\\\\\\.\\\\" + DeviceName())
-}
-
-`)
 	})
 }
 
@@ -373,8 +249,6 @@ typedef int rune;
 #undef WCHAR_MAX
 #define WCHAR_MIN   0
 #define WCHAR_MAX   65535
-
-//typedef unsigned short wchar_t;
 
 typedef int bool ;
 typedef long LONG ;
@@ -418,79 +292,9 @@ typedef struct _LIST_ENTRY {
 #ifndef _In_reads_bytes_
 #define _In_reads_bytes_(x)
 #endif
-
-/*
-typedef struct _IRP {
-  CSHORT                    Type;
-  USHORT                    Size;
-  PMDL                      MdlAddress;
-  ULONG                     Flags;
-  union {
-    struct _IRP     *MasterIrp;
-    __volatile LONG IrpCount;
-    PVOID           SystemBuffer;
-  } AssociatedIrp;
-  LIST_ENTRY                ThreadListEntry;
-  IO_STATUS_BLOCK           IoStatus;
-  KPROCESSOR_MODE           RequestorMode;
-  BOOLEAN                   PendingReturned;
-  CHAR                      StackCount;
-  CHAR                      CurrentLocation;
-  BOOLEAN                   Cancel;
-  KIRQL                     CancelIrql;
-  CCHAR                     ApcEnvironment;
-  UCHAR                     AllocationFlags;
-  union {
-    PIO_STATUS_BLOCK UserIosb;
-    PVOID            IoRingContext;
-  };
-  PKEVENT                   UserEvent;
-  union {
-    struct {
-      union {
-        PIO_APC_ROUTINE UserApcRoutine;
-        PVOID           IssuingProcess;
-      };
-      union {
-        PVOID                 UserApcContext;
-#if ...
-        _IORING_OBJECT        *IoRing;
-#else
-        struct _IORING_OBJECT *IoRing;
-#endif
-      };
-    } AsynchronousParameters;
-    LARGE_INTEGER AllocationSize;
-  } Overlay;
-  __volatile PDRIVER_CANCEL CancelRoutine;
-  PVOID                     UserBuffer;
-  union {
-    struct {
-      union {
-        KDEVICE_QUEUE_ENTRY DeviceQueueEntry;
-        struct {
-          PVOID DriverContext[4];
-        };
-      };
-      PETHREAD     Thread;
-      PCHAR        AuxiliaryBuffer;
-      struct {
-        LIST_ENTRY ListEntry;
-        union {
-          struct _IO_STACK_LOCATION *CurrentStackLocation;
-          ULONG                     PacketType;
-        };
-      };
-      PFILE_OBJECT OriginalFileObject;
-    } Overlay;
-    KAPC  Apc;
-    PVOID CompletionKey;
-  } Tail;
-} IRP;
-*/
 `
 
-var m = orderedmap.New[string, string]()
+var m = orderedmap.New("", "")
 
 func init() {
 	m.Set("PAGE_SIZE", "4096")
