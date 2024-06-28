@@ -162,10 +162,10 @@ func LayoutCpu(fileName string) unison.Paneler {
 			{Text: fmt.Sprintf("DR7: %016x", data.DR7)},
 		}
 	})
-
+	kvPanel = kvPanel
 	TopHSplit := widget.NewHSplit(
 		widget.NewTab("cpu with fast call", "todo fast call layout", false, asm),
-		widget.NewTab("reg", "todo reg", false, widget.NewButton("todo reg")),
+		widget.NewTab("reg", "Register", false, widget.NewScrollPanelFill(structView)),
 		0.3)
 
 	hexEditor := widget.NewCodeEditor("")
