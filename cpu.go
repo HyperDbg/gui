@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/hex"
 	"fmt"
+
 	"github.com/saferwall/pe"
 
 	"github.com/ddkwork/app/ms/xed"
@@ -27,7 +28,7 @@ func LayoutCpu(fileName string) unison.Paneler {
 
 	asm := LayoutDisassemblyTable(fileName)
 
-	structView, _ := widget.NewStructView(Register{}, func(data Register) (values []widget.CellData) {
+	structView, _ := widget.NewStructView(testRegData, func(data Register) (values []widget.CellData) {
 		return []widget.CellData{
 			{Text: fmt.Sprintf("RAX: %016x", data.RAX)},
 			{Text: fmt.Sprintf("RBX: %016x", data.RBX)},
@@ -72,40 +73,40 @@ func LayoutCpu(fileName string) unison.Paneler {
 			{Text: fmt.Sprintf("ST5: %016x", data.ST5)},
 			{Text: fmt.Sprintf("ST6: %016x", data.ST6)},
 			{Text: fmt.Sprintf("ST7: %016x", data.ST7)},
-			{Text: fmt.Sprintf("x87TagWord: %016x", data.x87TagWord)},
-			{Text: fmt.Sprintf("x87ControlWord: %016x", data.x87ControlWord)},
-			{Text: fmt.Sprintf("x87StatusWord: %016x", data.x87StatusWord)},
-			{Text: fmt.Sprintf("x87TW_0: %016x", data.x87TW_0)},
-			{Text: fmt.Sprintf("x87TW_1: %016x", data.x87TW_1)},
-			{Text: fmt.Sprintf("x87TW_2: %016x", data.x87TW_2)},
-			{Text: fmt.Sprintf("x87TW_3: %016x", data.x87TW_3)},
-			{Text: fmt.Sprintf("x87TW_4: %016x", data.x87TW_4)},
-			{Text: fmt.Sprintf("x87TW_5: %016x", data.x87TW_5)},
-			{Text: fmt.Sprintf("x87TW_6: %016x", data.x87TW_6)},
-			{Text: fmt.Sprintf("x87TW_7: %016x", data.x87TW_7)},
-			{Text: fmt.Sprintf("x87SW_B: %016x", data.x87SW_B)},
-			{Text: fmt.Sprintf("x87SW_C3: %016x", data.x87SW_C3)},
-			{Text: fmt.Sprintf("x87SW_TOP: %016x", data.x87SW_TOP)},
-			{Text: fmt.Sprintf("x87SW_C2: %016x", data.x87SW_C2)},
-			{Text: fmt.Sprintf("x87SW_C1: %016x", data.x87SW_C1)},
-			{Text: fmt.Sprintf("x87SW_O: %016x", data.x87SW_O)},
-			{Text: fmt.Sprintf("x87SW_ES: %016x", data.x87SW_ES)},
-			{Text: fmt.Sprintf("x87SW_SF: %016x", data.x87SW_SF)},
-			{Text: fmt.Sprintf("x87SW_P: %016x", data.x87SW_P)},
-			{Text: fmt.Sprintf("x87SW_U: %016x", data.x87SW_U)},
-			{Text: fmt.Sprintf("x87SW_Z: %016x", data.x87SW_Z)},
-			{Text: fmt.Sprintf("x87SW_D: %016x", data.x87SW_D)},
-			{Text: fmt.Sprintf("x87SW_I: %016x", data.x87SW_I)},
-			{Text: fmt.Sprintf("x87SW_C0: %016x", data.x87SW_C0)},
-			{Text: fmt.Sprintf("x87CW_IC: %016x", data.x87CW_IC)},
-			{Text: fmt.Sprintf("x87CW_RC: %016x", data.x87CW_RC)},
-			{Text: fmt.Sprintf("x87CW_PC: %016x", data.x87CW_PC)},
-			{Text: fmt.Sprintf("x87CW_PM: %016x", data.x87CW_PM)},
-			{Text: fmt.Sprintf("x87CW_UM: %016x", data.x87CW_UM)},
-			{Text: fmt.Sprintf("x87CW_OM: %016x", data.x87CW_OM)},
-			{Text: fmt.Sprintf("x87CW_ZM: %016x", data.x87CW_ZM)},
-			{Text: fmt.Sprintf("x87CW_DM: %016x", data.x87CW_DM)},
-			{Text: fmt.Sprintf("x87CW_IM: %016x", data.x87CW_IM)},
+			{Text: fmt.Sprintf("x87TagWord: %016x", data.X87TagWord)},
+			{Text: fmt.Sprintf("x87ControlWord: %016x", data.X87ControlWord)},
+			{Text: fmt.Sprintf("x87StatusWord: %016x", data.X87StatusWord)},
+			{Text: fmt.Sprintf("x87TW_0: %016x", data.X87TW_0)},
+			{Text: fmt.Sprintf("x87TW_1: %016x", data.X87TW_1)},
+			{Text: fmt.Sprintf("x87TW_2: %016x", data.X87TW_2)},
+			{Text: fmt.Sprintf("x87TW_3: %016x", data.X87TW_3)},
+			{Text: fmt.Sprintf("x87TW_4: %016x", data.X87TW_4)},
+			{Text: fmt.Sprintf("x87TW_5: %016x", data.X87TW_5)},
+			{Text: fmt.Sprintf("x87TW_6: %016x", data.X87TW_6)},
+			{Text: fmt.Sprintf("x87TW_7: %016x", data.X87TW_7)},
+			{Text: fmt.Sprintf("x87SW_B: %016x", data.X87SW_B)},
+			{Text: fmt.Sprintf("x87SW_C3: %016x", data.X87SW_C3)},
+			{Text: fmt.Sprintf("x87SW_TOP: %016x", data.X87SW_TOP)},
+			{Text: fmt.Sprintf("x87SW_C2: %016x", data.X87SW_C2)},
+			{Text: fmt.Sprintf("x87SW_C1: %016x", data.X87SW_C1)},
+			{Text: fmt.Sprintf("x87SW_O: %016x", data.X87SW_O)},
+			{Text: fmt.Sprintf("x87SW_ES: %016x", data.X87SW_ES)},
+			{Text: fmt.Sprintf("x87SW_SF: %016x", data.X87SW_SF)},
+			{Text: fmt.Sprintf("x87SW_P: %016x", data.X87SW_P)},
+			{Text: fmt.Sprintf("x87SW_U: %016x", data.X87SW_U)},
+			{Text: fmt.Sprintf("x87SW_Z: %016x", data.X87SW_Z)},
+			{Text: fmt.Sprintf("x87SW_D: %016x", data.X87SW_D)},
+			{Text: fmt.Sprintf("x87SW_I: %016x", data.X87SW_I)},
+			{Text: fmt.Sprintf("x87SW_C0: %016x", data.X87SW_C0)},
+			{Text: fmt.Sprintf("x87CW_IC: %016x", data.X87CW_IC)},
+			{Text: fmt.Sprintf("x87CW_RC: %016x", data.X87CW_RC)},
+			{Text: fmt.Sprintf("x87CW_PC: %016x", data.X87CW_PC)},
+			{Text: fmt.Sprintf("x87CW_PM: %016x", data.X87CW_PM)},
+			{Text: fmt.Sprintf("x87CW_UM: %016x", data.X87CW_UM)},
+			{Text: fmt.Sprintf("x87CW_OM: %016x", data.X87CW_OM)},
+			{Text: fmt.Sprintf("x87CW_ZM: %016x", data.X87CW_ZM)},
+			{Text: fmt.Sprintf("x87CW_DM: %016x", data.X87CW_DM)},
+			{Text: fmt.Sprintf("x87CW_IM: %016x", data.X87CW_IM)},
 			{Text: fmt.Sprintf("MxCsr: %016x", data.MxCsr)},
 			{Text: fmt.Sprintf("MxCsr_FZ: %016x", data.MxCsr_FZ)},
 			{Text: fmt.Sprintf("MxCsr_PM: %016x", data.MxCsr_PM)},
@@ -248,40 +249,40 @@ var testRegData = Register{
 	ST5:            0,
 	ST6:            0,
 	ST7:            0,
-	x87TagWord:     0,
-	x87ControlWord: 0,
-	x87StatusWord:  0,
-	x87TW_0:        0,
-	x87TW_1:        0,
-	x87TW_2:        0,
-	x87TW_3:        0,
-	x87TW_4:        0,
-	x87TW_5:        0,
-	x87TW_6:        0,
-	x87TW_7:        0,
-	x87SW_B:        0,
-	x87SW_C3:       0,
-	x87SW_TOP:      0,
-	x87SW_C2:       0,
-	x87SW_C1:       0,
-	x87SW_O:        0,
-	x87SW_ES:       0,
-	x87SW_SF:       0,
-	x87SW_P:        0,
-	x87SW_U:        0,
-	x87SW_Z:        0,
-	x87SW_D:        0,
-	x87SW_I:        0,
-	x87SW_C0:       0,
-	x87CW_IC:       0,
-	x87CW_RC:       0,
-	x87CW_PC:       0,
-	x87CW_PM:       0,
-	x87CW_UM:       0,
-	x87CW_OM:       0,
-	x87CW_ZM:       0,
-	x87CW_DM:       0,
-	x87CW_IM:       0,
+	X87TagWord:     0,
+	X87ControlWord: 0,
+	X87StatusWord:  0,
+	X87TW_0:        0,
+	X87TW_1:        0,
+	X87TW_2:        0,
+	X87TW_3:        0,
+	X87TW_4:        0,
+	X87TW_5:        0,
+	X87TW_6:        0,
+	X87TW_7:        0,
+	X87SW_B:        0,
+	X87SW_C3:       0,
+	X87SW_TOP:      0,
+	X87SW_C2:       0,
+	X87SW_C1:       0,
+	X87SW_O:        0,
+	X87SW_ES:       0,
+	X87SW_SF:       0,
+	X87SW_P:        0,
+	X87SW_U:        0,
+	X87SW_Z:        0,
+	X87SW_D:        0,
+	X87SW_I:        0,
+	X87SW_C0:       0,
+	X87CW_IC:       0,
+	X87CW_RC:       0,
+	X87CW_PC:       0,
+	X87CW_PM:       0,
+	X87CW_UM:       0,
+	X87CW_OM:       0,
+	X87CW_ZM:       0,
+	X87CW_DM:       0,
+	X87CW_IM:       0,
 	MxCsr:          0,
 	MxCsr_FZ:       0,
 	MxCsr_PM:       0,
@@ -492,40 +493,40 @@ type Register struct {
 	ST5            int
 	ST6            int
 	ST7            int
-	x87TagWord     int
-	x87ControlWord int
-	x87StatusWord  int
-	x87TW_0        int
-	x87TW_1        int
-	x87TW_2        int
-	x87TW_3        int
-	x87TW_4        int
-	x87TW_5        int
-	x87TW_6        int
-	x87TW_7        int
-	x87SW_B        int
-	x87SW_C3       int
-	x87SW_TOP      int
-	x87SW_C2       int
-	x87SW_C1       int
-	x87SW_O        int
-	x87SW_ES       int
-	x87SW_SF       int
-	x87SW_P        int
-	x87SW_U        int
-	x87SW_Z        int
-	x87SW_D        int
-	x87SW_I        int
-	x87SW_C0       int
-	x87CW_IC       int
-	x87CW_RC       int
-	x87CW_PC       int
-	x87CW_PM       int
-	x87CW_UM       int
-	x87CW_OM       int
-	x87CW_ZM       int
-	x87CW_DM       int
-	x87CW_IM       int
+	X87TagWord     int
+	X87ControlWord int
+	X87StatusWord  int
+	X87TW_0        int
+	X87TW_1        int
+	X87TW_2        int
+	X87TW_3        int
+	X87TW_4        int
+	X87TW_5        int
+	X87TW_6        int
+	X87TW_7        int
+	X87SW_B        int
+	X87SW_C3       int
+	X87SW_TOP      int
+	X87SW_C2       int
+	X87SW_C1       int
+	X87SW_O        int
+	X87SW_ES       int
+	X87SW_SF       int
+	X87SW_P        int
+	X87SW_U        int
+	X87SW_Z        int
+	X87SW_D        int
+	X87SW_I        int
+	X87SW_C0       int
+	X87CW_IC       int
+	X87CW_RC       int
+	X87CW_PC       int
+	X87CW_PM       int
+	X87CW_UM       int
+	X87CW_OM       int
+	X87CW_ZM       int
+	X87CW_DM       int
+	X87CW_IM       int
 	MxCsr          int
 	MxCsr_FZ       int
 	MxCsr_PM       int
