@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 
 	"github.com/saferwall/pe"
@@ -31,8 +32,8 @@ func LayoutCpu(fileName string) unison.Paneler {
 		widget.NewTab("reg", "todo reg", false, widget.NewButton("todo reg")),
 		0.3)
 
-	hexEditor := widget.NewCodeEditor("main.go")
-	// hexEditor.Editor.SetText(hex.Dump(testHexDat))
+	hexEditor := widget.NewCodeEditor("")
+	hexEditor.Editor.SetText(hex.Dump(testHexDat))
 	stackTable := LayoutStackTable()
 	BottomHSplit := widget.NewHSplit(
 		widget.NewTab(" hex editor", "todo hex editor", false, hexEditor),
