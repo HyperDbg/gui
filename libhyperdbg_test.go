@@ -25,7 +25,7 @@ func TestSdk(t *testing.T) {
 		// time.Sleep(1 * time.Second) // wait for debugger to connect
 		// todo:
 		// start debugger
-		// read memory(? address buffer for disassembly)
+		// read memory(todo bug read address buffer for disassembly,see cpu.go LayoutDisassemblyTable ,oep buf seems error)
 		// read registers
 		// set breakpoints
 		// step over/into/out

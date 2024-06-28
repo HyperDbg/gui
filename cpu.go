@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/hex"
 	"fmt"
 
 	"github.com/saferwall/pe"
@@ -29,11 +28,12 @@ func LayoutCpu(fileName string) unison.Paneler {
 	asm := LayoutDisassemblyTable(fileName)
 	TopHSplit := widget.NewHSplit(
 		widget.NewTab("cpu with fast call", "todo fast call layout", true, asm),
-		widget.NewTab("reg", "todo reg", true, unison.NewPanel()),
+		widget.NewTab("reg", "todo reg", true, widget.NewButton("todo reg")),
 		0.3)
+	return TopHSplit.Dock
 
-	hexEditor := widget.NewCodeEditor("")
-	hexEditor.Editor.SetText(hex.Dump(testHexDat))
+	hexEditor := widget.NewCodeEditor("main.go")
+	// hexEditor.Editor.SetText(hex.Dump(testHexDat))
 	stackTable := LayoutStackTable()
 	BottomHSplit := widget.NewHSplit(
 		widget.NewTab(" hex editor", "todo hex editor", true, hexEditor),
