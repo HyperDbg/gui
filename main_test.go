@@ -13,7 +13,9 @@ import (
 )
 
 func TestUpdateAppModule(t *testing.T) {
-	t.Skip("action not supported")
+	if !stream.IsDir("D:\\workspace\\workspace\\app") {
+		return
+	}
 	mylog.Check(os.Chdir("D:\\workspace\\workspace\\app"))
 	session := stream.RunCommand("git log -1 --format=\"%H\"")
 	mylog.Check(os.Chdir("D:\\workspace\\workspace\\branch\\gui"))
