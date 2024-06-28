@@ -185,6 +185,7 @@ func newToolbar() *toolbar {
 		close:   widget.NewImageButton("close", m.Get("close.png"), func() {}),
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
 			mylog.Todo("start command here, need local debug support")
+			//todo start process api here
 		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
 		pause:     widget.NewImageButton("pause", m.Get("pause.png"), func() {}),
