@@ -4,6 +4,7 @@ import (
 	"github.com/ddkwork/app"
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
+	"github.com/richardwilkes/unison/enums/align"
 )
 
 func main() {
@@ -21,7 +22,14 @@ func main() {
 func testLayoutCpu() {
 	app.Run("cpu", func(w *unison.Window) {
 		content := w.Content()
-		content.SetLayout(&unison.FlexLayout{Columns: 1})
+		content.SetLayout(&unison.FlexLayout{
+			Columns:      1,
+			HSpacing:     0,
+			VSpacing:     0,
+			HAlign:       align.Fill,
+			VAlign:       align.Fill,
+			EqualColumns: false,
+		})
 		t := newToolbar()
 		toolBar := widget.NewToolBar(t.Elems()...)
 		content.AddChild(toolBar)
@@ -38,12 +46,15 @@ func testLayoutCpu() {
 
 		fileName := "hyperdbg-cli.exe"
 		asm := LayoutDisassemblyTable(fileName)
+		leftTab := widget.NewTab("cpu with fast call", "todo fast call layout", true, asm)
+		//content.AddChild(leftTab)
+		//return
 		TopHSplit := widget.NewHSplit(
-			widget.NewTab("cpu with fast call", "todo fast call layout", true, asm),
+			leftTab,
 			widget.NewTab("reg", "todo reg", true, widget.NewButton("todo reg")),
 			0.3)
-		content.AddChild(asm)
-		return
+		// content.AddChild(asm)
+		// return
 		content.AddChild(TopHSplit) // todo bug
 
 		return
