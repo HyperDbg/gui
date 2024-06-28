@@ -28,15 +28,15 @@ func LayoutCpu(fileName string) unison.Paneler {
 
 	asm := LayoutDisassemblyTable(fileName)
 
-	//	widget.NewStructView(Register{}, func(data Register) (values []widget.CellData) {
-	//		return []widget.CellData{
-	//			widget.NewTextCellData(fmt.Sprintf("RAX: %x", data.RAX)),
-	//			widget.NewTextCellData(fmt.Sprintf("RBX: %x", data.RBX)),
-	//			widget.NewTextCellData(fmt.Sprintf("RCX: %x", data.RCX)),
-	//			widget.NewTextCellData(fmt.Sprintf("RDX: %x", data.RDX)),
-	//			widget.NewTextCellData(fmt.Sprintf("RBP: %x", data.RBP)),
-	//}
-	//	})
+	widget.NewStructView(Register{}, func(data Register) (values []widget.CellData) {
+		return []widget.CellData{
+			widget.NewTextCellData(fmt.Sprintf("RAX: %x", data.RAX)),
+			widget.NewTextCellData(fmt.Sprintf("RBX: %x", data.RBX)),
+			widget.NewTextCellData(fmt.Sprintf("RCX: %x", data.RCX)),
+			widget.NewTextCellData(fmt.Sprintf("RDX: %x", data.RDX)),
+			widget.NewTextCellData(fmt.Sprintf("RBP: %x", data.RBP)),
+		}
+	})
 
 	TopHSplit := widget.NewHSplit(
 		widget.NewTab("cpu with fast call", "todo fast call layout", false, asm),
