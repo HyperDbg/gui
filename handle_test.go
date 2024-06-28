@@ -15,6 +15,9 @@ import (
 
 func TestName(t *testing.T) {
 	path := "D:\\workspace\\workspace\\gui\\BITMAP\\MODULES.bmp"
+	if !stream.IsFilePath(path) {
+		return
+	}
 	// path="bmp/WINDOWS.bmp"
 	decode, s := mylog.Check3(image.Decode(stream.NewBuffer(path)))
 	println(s)
