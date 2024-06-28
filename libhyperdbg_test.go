@@ -1,15 +1,27 @@
 package main
 
 import (
+	"os"
+	"strings"
 	"testing"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
 )
 
+// set GOPATH=C:\Users\runneradmin\go
+// C:\Users\Admin\go
+func isGithubCI() bool {
+	GOPATH := os.Getenv("GOPATH")
+	return strings.Contains(GOPATH, "runneradmin")
+}
+
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
-	// t.Skip("github ci windows not support vt-x nested virtualization")
+	if isGithubCI() {
+		mylog.Info("github ci windows not support vt-x nested virtualization,skip test")
+		return
+	}
 	mylog.Call(func() {
 		assert.True(t, VmxSupportDetection())
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
