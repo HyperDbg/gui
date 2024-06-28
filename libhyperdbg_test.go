@@ -7,8 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
-	t.Skip("github ci windows not support vt-x nested virtualization")
+	// t.Skip("github ci windows not support vt-x nested virtualization")
 	mylog.Call(func() {
 		assert.True(t, VmxSupportDetection())
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())

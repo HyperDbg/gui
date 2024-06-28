@@ -36,8 +36,8 @@ func Run() {
 			switch filepath.Ext(files[0]) {
 			case ".exe", ".dll", ".sys":
 				mylog.Trace("dropped file", files[0])
-				pages.pe.SetContent(LayoutPeView(files[0])) // right action is remove all children
-				pages.cpu.SetContent(LayoutCpu(files[0]))   // todo test parent panel is dock or cpu tab page
+				// pages.pe.SetContent(LayoutPeView(files[0])) // right action is remove all children
+				// pages.cpu.SetContent(LayoutCpu(files[0]))   // todo test parent panel is dock or cpu tab page
 			default:
 				mylog.Check("not support file type")
 			}
