@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"syscall"
 	"testing"
 	"unsafe"
@@ -17,6 +18,18 @@ func SetDllDirectory(path string) {
 	setDllDirectory := kernel32.NewProc("SetDllDirectoryW")
 	utf16Ptr := mylog.Check2(syscall.UTF16PtrFromString(path))
 	mylog.Check3(setDllDirectory.Call(uintptr(unsafe.Pointer(utf16Ptr))))
+}
+
+func AddDllDirectory(path string) (uintptr, error) {
+	kernel32 := syscall.NewLazyDLL("kernel32.dll")
+	addDllDirectory := kernel32.NewProc("AddDllDirectory")
+	utf16Ptr := mylog.Check2(syscall.UTF16PtrFromString(path))
+
+	// 调用 AddDllDirectory 函数
+	handle, _ := mylog.Check3(addDllDirectory.Call(uintptr(unsafe.Pointer(utf16Ptr))))
+
+	fmt.Println("Successfully added DLL directory")
+	return handle, nil
 }
 
 func LOWORD(l uint32) uint16 { return uint16(l) }

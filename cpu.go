@@ -414,7 +414,7 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 
 				x := xed.New(buffer[:100])
 				x.SetBaseAddress(oepVA)
-				x.Decode64() //todo 解码符号表--> 00007FF74F824868 <h | E9 C3E70800   | jmp <hyperdbg-cli.mainCRTStartup>,目前是 jmp .+0x8e7c3
+				x.Decode64() // todo 解码符号表--> 00007FF74F824868 <h | E9 C3E70800   | jmp <hyperdbg-cli.mainCRTStartup>,目前是 jmp .+0x8e7c3
 				/*
 					  ├───00000001400C4868         │E9C3E70800 │jmp .+0x8e7c3
 					  ├───00000001400C486D         │E9FEB80600 │jmp .+0x6b8fe
