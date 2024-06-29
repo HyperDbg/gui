@@ -22,8 +22,6 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8Yc
 github.com/daviddengcn/go-colortext v1.0.0/go.mod h1:zDqEI5NVUop5QPpVJUxE9UO10hRnmkD5G4Pmri9+m4c=
 github.com/dc0d/caseconv v0.5.0 h1:z3Ki2zszD03beetWyNAGa3NOAbnDJk+bX0tvcx9BKjQ=
 github.com/dc0d/caseconv v0.5.0/go.mod h1:/CrBBNtMoPTPf0INHrwyyhDrDjAJ9PFE+WuxSJHU0ZE=
-github.com/ddkwork/app v0.0.0-20240628084736-48b15c010f0e h1:2vD2vlK2c3jdX1xmAVAWf7hYxFyMJ+sWMKr95m6tJLw=
-github.com/ddkwork/app v0.0.0-20240628084736-48b15c010f0e/go.mod h1:LQKOizN6zWjwp+vvQNVGoVZ/2ad2bAwkB88UVY/drGc=
 github.com/ddkwork/app v0.0.0-20240628165034-b845f64e08cb h1:JRYjfKGdJHJgVh2Sj6jwKr7uRo6qhyFM4DYcT8qdtb8=
 github.com/ddkwork/app v0.0.0-20240628165034-b845f64e08cb/go.mod h1:LQKOizN6zWjwp+vvQNVGoVZ/2ad2bAwkB88UVY/drGc=
 github.com/ddkwork/golibrary v0.0.85 h1:JyR3G/8Om6B7LpCyBjSryFxhspNjCsZyBc+AJbS4hww=
