@@ -382,31 +382,35 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 				}
 			case pe.ImageOptionalHeader64:
 				oep := o.ImageBase + uint64(o.AddressOfEntryPoint)
-				oep = 0x00007FFFFFFFFFFF + uint64(o.AddressOfEntryPoint)
+				// oep = 0x00007FFFFFFFFFFF + uint64(o.AddressOfEntryPoint)
 				mylog.Struct(o)
 				/*
 					00007FFE4F8AB305 | EB 00                    | jmp ntdll.7FFE4F8AB307                  |
 					00007FFE4F8AB307 | 48:83C4 38               | add rsp,38                              |
 					00007FFE4F8AB30B | C3                       | ret                                     |
 				*/
-				mylog.Hex("oep", oep)                           // todo bug for hyperdbg-cli.exe
-				x := xed.New(b.Bytes()[o.AddressOfEntryPoint:]) // todo bug
+				mylog.Hex("oep", oep) // todo bug for hyperdbg-cli.exe
+				mylog.Hex("ImageBase", o.ImageBase)
+				mylog.Hex("AddressOfEntryPoint", o.AddressOfEntryPoint)
+
+				DisassemblyAddress := uint64(0)
+				for _, section := range f.Sections {
+					if section.String() == ".text" {
+						DisassemblyAddress = oep - uint64(section.Header.VirtualAddress) //??
+						break
+					}
+				}
+
+				x := xed.New(b.Bytes()[DisassemblyAddress:]) // 是这样吗？
+				x = xed.New(b.Bytes()[804368 : 804368+200])  // todo bug
+				// x = xed.New(stream.NewHexString("e9c3e70800e9feb80600e929d20700e914ef1200e91f400e00e99a8d0200e935f61600e950b00900e99b491100e9a6b00f00").Bytes())
 				// x := xed.New(b.Bytes()[o.AddressOfEntryPoint:])
+				x.SetBaseAddress(oep)
 				x.Decode64()
 				for _, object := range x.AsmObjects {
 					root.AddChildByData(object)
 				}
 			}
-			// hyperdbg-cli.exe size is 2mb
-			// now 1-2s need
-			// todo show iat table,dump overlay
-
-			//x := xed.New(buf)
-			//if f.Is64 {
-			//	x.Decode64()
-			//} else {
-			//	x.Decode32()
-			//}
 		},
 		JsonName:   "cpu_dism_table",
 		IsDocument: false,
