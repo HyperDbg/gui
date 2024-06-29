@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/hex"
 	"fmt"
+	"os"
 
 	"github.com/saferwall/pe"
 
@@ -381,35 +382,83 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 					root.AddChildByData(object)
 				}
 			case pe.ImageOptionalHeader64:
-				oep := o.ImageBase + uint64(o.AddressOfEntryPoint)
-				// oep = 0x00007FFFFFFFFFFF + uint64(o.AddressOfEntryPoint)
-				mylog.Struct(o)
-				/*
-					00007FFE4F8AB305 | EB 00                    | jmp ntdll.7FFE4F8AB307                  |
-					00007FFE4F8AB307 | 48:83C4 38               | add rsp,38                              |
-					00007FFE4F8AB30B | C3                       | ret                                     |
-				*/
-				mylog.Hex("oep", oep) // todo bug for hyperdbg-cli.exe
-				mylog.Hex("ImageBase", o.ImageBase)
-				mylog.Hex("AddressOfEntryPoint", o.AddressOfEntryPoint)
 
-				DisassemblyAddress := uint64(0)
+				oepRVA := o.AddressOfEntryPoint
+				imageBase := o.ImageBase
+				oepVA := imageBase + uint64(oepRVA)
+				var oepFileOffset uint64
+
 				for _, section := range f.Sections {
 					if section.String() == ".text" {
-						DisassemblyAddress = oep - uint64(section.Header.VirtualAddress) //??
+						oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
 						break
 					}
 				}
 
-				x := xed.New(b.Bytes()[DisassemblyAddress:]) // 是这样吗？
-				x = xed.New(b.Bytes()[804368 : 804368+200])  // todo bug
-				// x = xed.New(stream.NewHexString("e9c3e70800e9feb80600e929d20700e914ef1200e91f400e00e99a8d0200e935f61600e950b00900e99b491100e9a6b00f00").Bytes())
-				// x := xed.New(b.Bytes()[o.AddressOfEntryPoint:])
-				x.SetBaseAddress(oep)
+				if oepFileOffset == 0 {
+					fmt.Println("未找到包含OEP节区或计算偏移不正确")
+					return
+				}
+
+				buffer := make([]byte, 200)
+				file := mylog.Check2(os.Open(fileName))
+
+				defer file.Close()
+
+				_ = mylog.Check2(file.ReadAt(buffer, int64(oepFileOffset)))
+
+				fmt.Printf("OEP File Off %x\n", oepFileOffset)
+				fmt.Printf("OEP VA %x\n", oepVA)
+				fmt.Printf("Entry Point RVA %x\n", oepRVA)
+				fmt.Printf("OEP Data %x\n", buffer[:100])
+
+				x := xed.New(buffer[:100])
+				x.SetBaseAddress(oepVA)
 				x.Decode64()
 				for _, object := range x.AsmObjects {
 					root.AddChildByData(object)
 				}
+				//oep_rva := uint64(o.AddressOfEntryPoint)
+				//image_base := uint64(o.ImageBase)
+				//oep_va := image_base + oep_rva
+				//var oep_file_offset uint64
+				//
+				//// 查找 .text 节区
+				//for _, section := range f.Sections {
+				//	if section.String() == ".text" {
+				//		oep_file_offset = uint64(section.Header.PointerToRawData) + (oep_rva - uint64(section.Header.VirtualAddress))
+				//		mylog.Struct(section)
+				//		break
+				//	}
+				//}
+				//
+				//if oep_file_offset == 0 {
+				//	mylog.Check("未找到 .text 节区信息或计算偏移不正确")
+				//}
+				//
+				//// 确定文件中的偏移位置
+				//buffer := stream.NewBuffer(fileName)
+				//if oep_file_offset+200 > uint64(len(buffer.Bytes())) {
+				//	mylog.Check("计算出的文件偏移超出文件大小")
+				//}
+				//
+				//// 确认调试信息：
+				//mylog.Hex("oep_file_offset", oep_file_offset)
+				//mylog.Hex("oep_va", oep_va)
+				//mylog.Hex("entry_point_rva", oep_rva)
+				//
+				//// 读取指定文件偏移二进制数据：
+				//oep_data := buffer.Bytes()[oep_file_offset : oep_file_offset+200]
+				//
+				//fmt.Printf("oep_data: %x\n", oep_data[:20])
+				//// 使用反汇编工具解析数据
+				//x := xed.New(oep_data)
+				//x.SetBaseAddress(oep_va)
+				//x.Decode64()
+				//for _, object := range x.AsmObjects {
+				//	root.AddChildByData(object)
+				//}
+
 			}
 		},
 		JsonName:   "cpu_dism_table",
