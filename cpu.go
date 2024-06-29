@@ -388,7 +388,7 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 					00007FFE4F8AB307 | 48:83C4 38               | add rsp,38                              |
 					00007FFE4F8AB30B | C3                       | ret                                     |
 				*/
-				mylog.Hex("oep", oep)                           //todo bug for hyperdbg-cli.exe
+				mylog.Hex("oep", oep)                           // todo bug for hyperdbg-cli.exe
 				x := xed.New(b.Bytes()[o.AddressOfEntryPoint:]) // todo bug
 				// x := xed.New(b.Bytes()[o.AddressOfEntryPoint:])
 				x.Decode64()
