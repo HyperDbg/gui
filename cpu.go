@@ -415,6 +415,29 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 				x := xed.New(buffer[:100])
 				x.SetBaseAddress(oepVA)
 				x.Decode64() //todo 解码符号表--> 00007FF74F824868 <h | E9 C3E70800   | jmp <hyperdbg-cli.mainCRTStartup>,目前是 jmp .+0x8e7c3
+				/*
+					  ├───00000001400C4868         │E9C3E70800 │jmp .+0x8e7c3
+					  ├───00000001400C486D         │E9FEB80600 │jmp .+0x6b8fe
+					  ├───00000001400C4872         │E929D20700 │jmp .+0x7d229
+					  ├───00000001400C4877         │E914EF1200 │jmp .+0x12ef14
+					  ├───00000001400C487C         │E91F400E00 │jmp .+0xe401f
+					  ├───00000001400C4881         │E99A8D0200 │jmp .+0x28d9a
+					  ├───00000001400C4886         │E935F61600 │jmp .+0x16f635
+					  ├───00000001400C488B         │E950B00900 │jmp .+0x9b050
+
+					00007FF74F824868 <h | E9 C3E70800              | jmp <hyperdbg-cli.mainCRTStartup>                                                                          |
+					00007FF74F82486D    | E9 FEB80600              | jmp <hyperdbg-cli.private: void __cdecl std::basic_string<unsigned short, struct std::char_traits<unsigned |
+					00007FF74F824872    | E9 29D20700              | jmp <hyperdbg-cli.public: class std::istreambuf_iterator<unsigned short, struct std::char_traits<unsigned  |
+					00007FF74F824877    | E9 14EF1200              | jmp <hyperdbg-cli.__acrt_initialize_thread_local_exit_callback>                                            |
+					00007FF74F82487C    | E9 1F400E00              | jmp <hyperdbg-cli.private: static enum __crt_stdio_output::positional_parameter_base<wchar_t, class __crt_ |
+					00007FF74F824881    | E9 9A8D0200              | jmp <hyperdbg-cli.public: class std::basic_string<char, struct std::char_traits<char>, class std::allocato |
+					00007FF74F824886    | E9 35F61600              | jmp <hyperdbg-cli.__acrt_get_qualified_locale>                                                             |
+					00007FF74F82488B    | E9 50B00900              | jmp <hyperdbg-cli.public: static void * __cdecl __FrameHandler3::CxxCallCatchBlock(struct _EXCEPTION_RECOR |
+					00007FF74F824890    | E9 9B491100              | jmp <hyperdbg-cli._ungetc_nolock>                                                                          |
+					00007FF74F824895    | E9 A6B00F00              | jmp <hyperdbg-cli.private: bool __cdecl __crt_stdio_output::output_processor<wchar_t, class __crt_stdio_ou |
+					00007FF74F82489A    | E9 215F0400              | jmp <hyperdbg-cli.__std_find_last_trivial_2>                                                               |
+					00007FF74F82489F    | E9 5C500E00              | jmp <hyperdbg-cli.private: static char * __cdecl __crt_stdio_output::output_processor<char, class __crt_st |
+				*/
 				for _, object := range x.AsmObjects {
 					root.AddChildByData(object)
 				}
