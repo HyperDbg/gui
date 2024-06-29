@@ -376,12 +376,13 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 			case pe.ImageOptionalHeader32:
 				oep := o.ImageBase + o.AddressOfEntryPoint
 				x := xed.New(b.Bytes()[oep:])
-				x.Decode64()
+				x.Decode32()
 				for _, object := range x.AsmObjects {
 					root.AddChildByData(object)
 				}
 			case pe.ImageOptionalHeader64:
 				oep := o.ImageBase + uint64(o.AddressOfEntryPoint)
+				oep = 0x00007FFFFFFFFFFF + uint64(o.AddressOfEntryPoint)
 				mylog.Struct(o)
 				/*
 					00007FFE4F8AB305 | EB 00                    | jmp ntdll.7FFE4F8AB307                  |
