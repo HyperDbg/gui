@@ -5,7 +5,9 @@ on:
     branches:
       - main
     tags:
-      - 'v*'
+      - v.**
+      - weekly.**
+      - 0.**
 
 env:
   RELEASE_ZIP_FILE_NAME: hyperdbgui
