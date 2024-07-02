@@ -104,7 +104,7 @@ func (p *TagPage) Layout() unison.Paneler {
 	// tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
 	for _, tab := range p.Elems() {
 		if tab == p.cpu {
-			continue //todo test
+			continue // todo test
 		}
 		LeftContainer.Stack(tab, -1)
 	}

@@ -23,6 +23,7 @@ func stringToBytePointer(s string) *byte {
 	return ptr
 }
 
+// run now will bsod
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
 	// SetCustomDriverPath(stringToBytePointer("."), stringToBytePointer("hyperkd.sys"))

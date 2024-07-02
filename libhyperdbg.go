@@ -1543,8 +1543,9 @@ func init() {
 	__imp_hyperdbg_u_connect_local_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_local_debugger")
 	__imp_hyperdbg_u_connect_remote_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_remote_debugger")
 	__imp_hyperdbg_u_continue_debuggee = GengoLibrary.ImportNow("hyperdbg_u_continue_debuggee")
-	__imp_hyperdbg_u_pause_debuggee = GengoLibrary.ImportNow("hyperdbg_u_pause_debuggee")
 	return
+
+	__imp_hyperdbg_u_pause_debuggee = GengoLibrary.ImportNow("hyperdbg_u_pause_debuggee")
 	__imp_hyperdbg_u_set_breakpoint = GengoLibrary.ImportNow("hyperdbg_u_set_breakpoint")
 	__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")
 	__imp_PrintSymbolBuffer = GengoLibrary.ImportNow("PrintSymbolBuffer")
