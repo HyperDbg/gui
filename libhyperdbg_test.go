@@ -38,8 +38,8 @@ func TestSdk(t *testing.T) {
 
 		assert.True(t, VmxSupportDetection())
 
-		d := driver.NewObject()
-		d.Load("hyperkd.sys")
+		d := driver.NewObject("hyperkd.sys", "HyperdbgHypervisorDevice")
+		d.Load("")
 		d.Unload()
 		return
 
