@@ -33,9 +33,6 @@ func TestSdk(t *testing.T) {
 	}
 	mylog.Call(func() {
 		assert.True(t, VmxSupportDetection())
-
-		mylog.Check(os.Chdir("D:\\workspace\\workspace\\branch\\gui"))
-
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 		ConnectLocalDebugger()
 		mylog.Trace("LoadVmm", LoadVmm())
