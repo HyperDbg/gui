@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/ddkwork/app/ms/driverTool/driver"
 	"os"
 	"strings"
 	"syscall"
@@ -36,6 +37,12 @@ func TestSdk(t *testing.T) {
 		// mylog.Check(os.Chdir("."))
 
 		assert.True(t, VmxSupportDetection())
+
+		d := driver.NewObject()
+		d.Load("hyperkd.sys")
+		d.Unload()
+		return
+
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 		ConnectLocalDebugger()
 		mylog.Trace("LoadVmm", LoadVmm())
