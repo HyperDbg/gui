@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 	"syscall"
 	"testing"
@@ -36,7 +38,11 @@ func TestSdk(t *testing.T) {
 	mylog.Call(func() {
 		// SetDllDirectory("D:\\workspace\\workspace\\branch\\gui")
 		// mylog.Check(os.Chdir("."))
-		SetDllDirectory(".")
+		// SetDllDirectory(".")
+
+		currentPath := mylog.Check2(filepath.Abs("."))
+		mylog.Check(exec.Command("setx", "PATH", "%PATH%;"+currentPath).Run())
+
 		assert.True(t, VmxSupportDetection())
 
 		d := driver.NewObject("hyperkd.sys", "HyperdbgHypervisorDevice")
