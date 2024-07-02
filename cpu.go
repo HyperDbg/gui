@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
+	"os"
 
 	"github.com/saferwall/pe"
 
@@ -13,31 +15,160 @@ import (
 )
 
 func LayoutCpu(fileName string) unison.Paneler {
-	// asm := LayoutDisassemblyTable(fileName)
-	// return asm
-
 	////fastCallLayout := unison.NewList[ImmData]()
 	//widget.NewButton(m).SetText("goto 00007FF885007C08")
 	//"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
 	//todo make unit test for fast call layout
 
-	//RegisterView, panel := widget.NewStructView(parent.AsPanel().Window(), Register{}, func(data Register) (values []widget.CellData) {
-	//
-	//})
-
 	asm := LayoutDisassemblyTable(fileName)
+
+	structView, _ := widget.NewStructView(testRegData, func(data Register) (values []widget.CellData) {
+		return []widget.CellData{
+			{Text: fmt.Sprintf("%016x", data.RAX)},
+			{Text: fmt.Sprintf("%016x", data.RBX)},
+			{Text: fmt.Sprintf("%016x", data.RCX)},
+			{Text: fmt.Sprintf("%016x", data.RDX)},
+			{Text: fmt.Sprintf("%016x", data.RBP)},
+			{Text: fmt.Sprintf("%016x", data.RSP)},
+			{Text: fmt.Sprintf("%016x", data.RSI)},
+			{Text: fmt.Sprintf("%016x", data.RDI)},
+			{Text: fmt.Sprintf("%016x", data.R8)},
+			{Text: fmt.Sprintf("%016x", data.R9)},
+			{Text: fmt.Sprintf("%016x", data.R10)},
+			{Text: fmt.Sprintf("%016x", data.R11)},
+			{Text: fmt.Sprintf("%016x", data.R12)},
+			{Text: fmt.Sprintf("%016x", data.R13)},
+			{Text: fmt.Sprintf("%016x", data.R14)},
+			{Text: fmt.Sprintf("%016x", data.R15)},
+			{Text: fmt.Sprintf("%016x", data.RIP)},
+			{Text: fmt.Sprintf("%016x", data.RFLAGS)},
+			{Text: fmt.Sprintf("%016x", data.ZF)},
+			{Text: fmt.Sprintf("%016x", data.OF)},
+			{Text: fmt.Sprintf("%016x", data.CF)},
+			{Text: fmt.Sprintf("%016x", data.PF)},
+			{Text: fmt.Sprintf("%016x", data.SF)},
+			{Text: fmt.Sprintf("%016x", data.TF)},
+			{Text: fmt.Sprintf("%016x", data.AF)},
+			{Text: fmt.Sprintf("%016x", data.DF)},
+			{Text: fmt.Sprintf("%016x", data.IF)},
+			{Text: fmt.Sprintf("%016x", data.LastError)},
+			{Text: fmt.Sprintf("%016x", data.LastStatus)},
+			{Text: fmt.Sprintf("%016x", data.GS)},
+			{Text: fmt.Sprintf("%016x", data.ES)},
+			{Text: fmt.Sprintf("%016x", data.CS)},
+			{Text: fmt.Sprintf("%016x", data.FS)},
+			{Text: fmt.Sprintf("%016x", data.DS)},
+			{Text: fmt.Sprintf("%016x", data.SS)},
+			{Text: fmt.Sprintf("%016x", data.ST0)},
+			{Text: fmt.Sprintf("%016x", data.ST1)},
+			{Text: fmt.Sprintf("%016x", data.ST2)},
+			{Text: fmt.Sprintf("%016x", data.ST3)},
+			{Text: fmt.Sprintf("%016x", data.ST4)},
+			{Text: fmt.Sprintf("%016x", data.ST5)},
+			{Text: fmt.Sprintf("%016x", data.ST6)},
+			{Text: fmt.Sprintf("%016x", data.ST7)},
+			{Text: fmt.Sprintf("%016x", data.X87TagWord)},
+			{Text: fmt.Sprintf("%016x", data.X87ControlWord)},
+			{Text: fmt.Sprintf("%016x", data.X87StatusWord)},
+			{Text: fmt.Sprintf("%016x", data.X87TW_0)},
+			{Text: fmt.Sprintf("%016x", data.X87TW_1)},
+			{Text: fmt.Sprintf("%016x", data.X87TW_2)},
+			{Text: fmt.Sprintf("%016x", data.X87TW_3)},
+			{Text: fmt.Sprintf("%016x", data.X87TW_4)},
+			{Text: fmt.Sprintf("%016x", data.X87TW_5)},
+			{Text: fmt.Sprintf("%016x", data.X87TW_6)},
+			{Text: fmt.Sprintf("%016x", data.X87TW_7)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_B)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_C3)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_TOP)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_C2)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_C1)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_O)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_ES)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_SF)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_P)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_U)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_Z)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_D)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_I)},
+			{Text: fmt.Sprintf("%016x", data.X87SW_C0)},
+			{Text: fmt.Sprintf("%016x", data.X87CW_IC)},
+			{Text: fmt.Sprintf("%016x", data.X87CW_RC)},
+			{Text: fmt.Sprintf("%016x", data.X87CW_PC)},
+			{Text: fmt.Sprintf("%016x", data.X87CW_PM)},
+			{Text: fmt.Sprintf("%016x", data.X87CW_UM)},
+			{Text: fmt.Sprintf("%016x", data.X87CW_OM)},
+			{Text: fmt.Sprintf("%016x", data.X87CW_ZM)},
+			{Text: fmt.Sprintf("%016x", data.X87CW_DM)},
+			{Text: fmt.Sprintf("%016x", data.X87CW_IM)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_FZ)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_PM)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_UM)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_OM)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_ZM)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_IM)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_DM)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_D)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_PE)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_UE)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_OE)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_ZE)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_DE)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_IE)},
+			{Text: fmt.Sprintf("%016x", data.MxCsr_RC)},
+			{Text: fmt.Sprintf("%016x", data.XMM0)},
+			{Text: fmt.Sprintf("%016x", data.XMM1)},
+			{Text: fmt.Sprintf("%016x", data.XMM2)},
+			{Text: fmt.Sprintf("%016x", data.XMM3)},
+			{Text: fmt.Sprintf("%016x", data.XMM4)},
+			{Text: fmt.Sprintf("%016x", data.XMM5)},
+			{Text: fmt.Sprintf("%016x", data.XMM6)},
+			{Text: fmt.Sprintf("%016x", data.XMM7)},
+			{Text: fmt.Sprintf("%016x", data.XMM8)},
+			{Text: fmt.Sprintf("%016x", data.XMM9)},
+			{Text: fmt.Sprintf("%016x", data.XMM10)},
+			{Text: fmt.Sprintf("%016x", data.XMM11)},
+			{Text: fmt.Sprintf("%016x", data.XMM12)},
+			{Text: fmt.Sprintf("%016x", data.XMM13)},
+			{Text: fmt.Sprintf("%016x", data.XMM14)},
+			{Text: fmt.Sprintf("%016x", data.XMM15)},
+			{Text: fmt.Sprintf("%016x", data.YMM0)},
+			{Text: fmt.Sprintf("%016x", data.YMM1)},
+			{Text: fmt.Sprintf("%016x", data.YMM2)},
+			{Text: fmt.Sprintf("%016x", data.YMM3)},
+			{Text: fmt.Sprintf("%016x", data.YMM4)},
+			{Text: fmt.Sprintf("%016x", data.YMM5)},
+			{Text: fmt.Sprintf("%016x", data.YMM6)},
+			{Text: fmt.Sprintf("%016x", data.YMM7)},
+			{Text: fmt.Sprintf("%016x", data.YMM8)},
+			{Text: fmt.Sprintf("%016x", data.YMM9)},
+			{Text: fmt.Sprintf("%016x", data.YMM10)},
+			{Text: fmt.Sprintf("%016x", data.YMM11)},
+			{Text: fmt.Sprintf("%016x", data.YMM12)},
+			{Text: fmt.Sprintf("%016x", data.YMM13)},
+			{Text: fmt.Sprintf("%016x", data.YMM14)},
+			{Text: fmt.Sprintf("%016x", data.YMM15)},
+			{Text: fmt.Sprintf("%016x", data.DR0)},
+			{Text: fmt.Sprintf("%016x", data.DR1)},
+			{Text: fmt.Sprintf("%016x", data.DR2)},
+			{Text: fmt.Sprintf("%016x", data.DR3)},
+			{Text: fmt.Sprintf("%016x", data.DR6)},
+			{Text: fmt.Sprintf("%016x", data.DR7)},
+		}
+	})
 	TopHSplit := widget.NewHSplit(
 		widget.NewTab("cpu with fast call", "todo fast call layout", false, asm),
-		widget.NewTab("reg", "todo reg", false, widget.NewButton("todo reg")),
+		widget.NewTab("Register", "Register", false, widget.NewScrollPanelFill(structView)),
 		0.3)
 
-	hexEditor := widget.NewCodeEditor("main.go")
-	// hexEditor.Editor.SetText(hex.Dump(testHexDat))
+	hexEditor := widget.NewCodeEditor("")
+	hexEditor.Editor.SetText(hex.Dump(testHexDat))
 	stackTable := LayoutStackTable()
 	BottomHSplit := widget.NewHSplit(
 		widget.NewTab(" hex editor", "todo hex editor", false, hexEditor),
 		widget.NewTab("stack", "todo stack test", false, stackTable),
-		0.3)
+		0.1)
 	//todo add tab into hex editor and stack layout
 	/*
 		tabs := gi.NewTabs(downSplits)
@@ -67,6 +198,7 @@ func LayoutCpu(fileName string) unison.Paneler {
 	return vSplit.Dock
 }
 
+// todo D:\desk\go\golang.org\x\arch@v0.8.0\x86\x86asm\inst.go :L150
 var testRegData = Register{
 	RAX:            0,
 	RBX:            0x00007FF88500B7F0, //"LdrpInitializeProcess"
@@ -111,40 +243,40 @@ var testRegData = Register{
 	ST5:            0,
 	ST6:            0,
 	ST7:            0,
-	x87TagWord:     0,
-	x87ControlWord: 0,
-	x87StatusWord:  0,
-	x87TW_0:        0,
-	x87TW_1:        0,
-	x87TW_2:        0,
-	x87TW_3:        0,
-	x87TW_4:        0,
-	x87TW_5:        0,
-	x87TW_6:        0,
-	x87TW_7:        0,
-	x87SW_B:        0,
-	x87SW_C3:       0,
-	x87SW_TOP:      0,
-	x87SW_C2:       0,
-	x87SW_C1:       0,
-	x87SW_O:        0,
-	x87SW_ES:       0,
-	x87SW_SF:       0,
-	x87SW_P:        0,
-	x87SW_U:        0,
-	x87SW_Z:        0,
-	x87SW_D:        0,
-	x87SW_I:        0,
-	x87SW_C0:       0,
-	x87CW_IC:       0,
-	x87CW_RC:       0,
-	x87CW_PC:       0,
-	x87CW_PM:       0,
-	x87CW_UM:       0,
-	x87CW_OM:       0,
-	x87CW_ZM:       0,
-	x87CW_DM:       0,
-	x87CW_IM:       0,
+	X87TagWord:     0,
+	X87ControlWord: 0,
+	X87StatusWord:  0,
+	X87TW_0:        0,
+	X87TW_1:        0,
+	X87TW_2:        0,
+	X87TW_3:        0,
+	X87TW_4:        0,
+	X87TW_5:        0,
+	X87TW_6:        0,
+	X87TW_7:        0,
+	X87SW_B:        0,
+	X87SW_C3:       0,
+	X87SW_TOP:      0,
+	X87SW_C2:       0,
+	X87SW_C1:       0,
+	X87SW_O:        0,
+	X87SW_ES:       0,
+	X87SW_SF:       0,
+	X87SW_P:        0,
+	X87SW_U:        0,
+	X87SW_Z:        0,
+	X87SW_D:        0,
+	X87SW_I:        0,
+	X87SW_C0:       0,
+	X87CW_IC:       0,
+	X87CW_RC:       0,
+	X87CW_PC:       0,
+	X87CW_PM:       0,
+	X87CW_UM:       0,
+	X87CW_OM:       0,
+	X87CW_ZM:       0,
+	X87CW_DM:       0,
+	X87CW_IM:       0,
 	MxCsr:          0,
 	MxCsr_FZ:       0,
 	MxCsr_PM:       0,
@@ -245,31 +377,112 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 			case pe.ImageOptionalHeader32:
 				oep := o.ImageBase + o.AddressOfEntryPoint
 				x := xed.New(b.Bytes()[oep:])
-				x.Decode64()
+				x.Decode32()
 				for _, object := range x.AsmObjects {
 					root.AddChildByData(object)
 				}
 			case pe.ImageOptionalHeader64:
-				oep := o.ImageBase + uint64(o.AddressOfEntryPoint)
-				mylog.Struct(o)
-				mylog.Hex("oep", oep)
-				x := xed.New(b.Bytes()[o.AddressOfEntryPoint:]) // todo bug
-				// x := xed.New(b.Bytes()[o.AddressOfEntryPoint:])
-				x.Decode64()
+
+				oepRVA := o.AddressOfEntryPoint
+				imageBase := o.ImageBase
+				oepVA := imageBase + uint64(oepRVA)
+				var oepFileOffset uint64
+
+				for _, section := range f.Sections {
+					if section.String() == ".text" {
+						oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
+						break
+					}
+				}
+
+				if oepFileOffset == 0 {
+					fmt.Println("未找到包含OEP节区或计算偏移不正确")
+					return
+				}
+
+				buffer := make([]byte, 200)
+				file := mylog.Check2(os.Open(fileName))
+
+				defer file.Close()
+
+				_ = mylog.Check2(file.ReadAt(buffer, int64(oepFileOffset)))
+
+				fmt.Printf("OEP File Off %x\n", oepFileOffset)
+				fmt.Printf("OEP VA %x\n", oepVA)
+				fmt.Printf("Entry Point RVA %x\n", oepRVA)
+				fmt.Printf("OEP Data %x\n", buffer[:100])
+
+				x := xed.New(buffer[:100])
+				x.SetBaseAddress(oepVA)
+				x.Decode64() // todo 解码符号表--> 00007FF74F824868 <h | E9 C3E70800   | jmp <hyperdbg-cli.mainCRTStartup>,目前是 jmp .+0x8e7c3
+				/*
+					  ├───00000001400C4868         │E9C3E70800 │jmp .+0x8e7c3
+					  ├───00000001400C486D         │E9FEB80600 │jmp .+0x6b8fe
+					  ├───00000001400C4872         │E929D20700 │jmp .+0x7d229
+					  ├───00000001400C4877         │E914EF1200 │jmp .+0x12ef14
+					  ├───00000001400C487C         │E91F400E00 │jmp .+0xe401f
+					  ├───00000001400C4881         │E99A8D0200 │jmp .+0x28d9a
+					  ├───00000001400C4886         │E935F61600 │jmp .+0x16f635
+					  ├───00000001400C488B         │E950B00900 │jmp .+0x9b050
+
+					00007FF74F824868 <h | E9 C3E70800              | jmp <hyperdbg-cli.mainCRTStartup>                                                                          |
+					00007FF74F82486D    | E9 FEB80600              | jmp <hyperdbg-cli.private: void __cdecl std::basic_string<unsigned short, struct std::char_traits<unsigned |
+					00007FF74F824872    | E9 29D20700              | jmp <hyperdbg-cli.public: class std::istreambuf_iterator<unsigned short, struct std::char_traits<unsigned  |
+					00007FF74F824877    | E9 14EF1200              | jmp <hyperdbg-cli.__acrt_initialize_thread_local_exit_callback>                                            |
+					00007FF74F82487C    | E9 1F400E00              | jmp <hyperdbg-cli.private: static enum __crt_stdio_output::positional_parameter_base<wchar_t, class __crt_ |
+					00007FF74F824881    | E9 9A8D0200              | jmp <hyperdbg-cli.public: class std::basic_string<char, struct std::char_traits<char>, class std::allocato |
+					00007FF74F824886    | E9 35F61600              | jmp <hyperdbg-cli.__acrt_get_qualified_locale>                                                             |
+					00007FF74F82488B    | E9 50B00900              | jmp <hyperdbg-cli.public: static void * __cdecl __FrameHandler3::CxxCallCatchBlock(struct _EXCEPTION_RECOR |
+					00007FF74F824890    | E9 9B491100              | jmp <hyperdbg-cli._ungetc_nolock>                                                                          |
+					00007FF74F824895    | E9 A6B00F00              | jmp <hyperdbg-cli.private: bool __cdecl __crt_stdio_output::output_processor<wchar_t, class __crt_stdio_ou |
+					00007FF74F82489A    | E9 215F0400              | jmp <hyperdbg-cli.__std_find_last_trivial_2>                                                               |
+					00007FF74F82489F    | E9 5C500E00              | jmp <hyperdbg-cli.private: static char * __cdecl __crt_stdio_output::output_processor<char, class __crt_st |
+				*/
 				for _, object := range x.AsmObjects {
 					root.AddChildByData(object)
 				}
-			}
-			// hyperdbg-cli.exe size is 2mb
-			// now 1-2s need
-			// todo show iat table,dump overlay
+				//oep_rva := uint64(o.AddressOfEntryPoint)
+				//image_base := uint64(o.ImageBase)
+				//oep_va := image_base + oep_rva
+				//var oep_file_offset uint64
+				//
+				//// 查找 .text 节区
+				//for _, section := range f.Sections {
+				//	if section.String() == ".text" {
+				//		oep_file_offset = uint64(section.Header.PointerToRawData) + (oep_rva - uint64(section.Header.VirtualAddress))
+				//		mylog.Struct(section)
+				//		break
+				//	}
+				//}
+				//
+				//if oep_file_offset == 0 {
+				//	mylog.Check("未找到 .text 节区信息或计算偏移不正确")
+				//}
+				//
+				//// 确定文件中的偏移位置
+				//buffer := stream.NewBuffer(fileName)
+				//if oep_file_offset+200 > uint64(len(buffer.Bytes())) {
+				//	mylog.Check("计算出的文件偏移超出文件大小")
+				//}
+				//
+				//// 确认调试信息：
+				//mylog.Hex("oep_file_offset", oep_file_offset)
+				//mylog.Hex("oep_va", oep_va)
+				//mylog.Hex("entry_point_rva", oep_rva)
+				//
+				//// 读取指定文件偏移二进制数据：
+				//oep_data := buffer.Bytes()[oep_file_offset : oep_file_offset+200]
+				//
+				//fmt.Printf("oep_data: %x\n", oep_data[:20])
+				//// 使用反汇编工具解析数据
+				//x := xed.New(oep_data)
+				//x.SetBaseAddress(oep_va)
+				//x.Decode64()
+				//for _, object := range x.AsmObjects {
+				//	root.AddChildByData(object)
+				//}
 
-			//x := xed.New(buf)
-			//if f.Is64 {
-			//	x.Decode64()
-			//} else {
-			//	x.Decode32()
-			//}
+			}
 		},
 		JsonName:   "cpu_dism_table",
 		IsDocument: false,
@@ -355,40 +568,40 @@ type Register struct {
 	ST5            int
 	ST6            int
 	ST7            int
-	x87TagWord     int
-	x87ControlWord int
-	x87StatusWord  int
-	x87TW_0        int
-	x87TW_1        int
-	x87TW_2        int
-	x87TW_3        int
-	x87TW_4        int
-	x87TW_5        int
-	x87TW_6        int
-	x87TW_7        int
-	x87SW_B        int
-	x87SW_C3       int
-	x87SW_TOP      int
-	x87SW_C2       int
-	x87SW_C1       int
-	x87SW_O        int
-	x87SW_ES       int
-	x87SW_SF       int
-	x87SW_P        int
-	x87SW_U        int
-	x87SW_Z        int
-	x87SW_D        int
-	x87SW_I        int
-	x87SW_C0       int
-	x87CW_IC       int
-	x87CW_RC       int
-	x87CW_PC       int
-	x87CW_PM       int
-	x87CW_UM       int
-	x87CW_OM       int
-	x87CW_ZM       int
-	x87CW_DM       int
-	x87CW_IM       int
+	X87TagWord     int
+	X87ControlWord int
+	X87StatusWord  int
+	X87TW_0        int
+	X87TW_1        int
+	X87TW_2        int
+	X87TW_3        int
+	X87TW_4        int
+	X87TW_5        int
+	X87TW_6        int
+	X87TW_7        int
+	X87SW_B        int
+	X87SW_C3       int
+	X87SW_TOP      int
+	X87SW_C2       int
+	X87SW_C1       int
+	X87SW_O        int
+	X87SW_ES       int
+	X87SW_SF       int
+	X87SW_P        int
+	X87SW_U        int
+	X87SW_Z        int
+	X87SW_D        int
+	X87SW_I        int
+	X87SW_C0       int
+	X87CW_IC       int
+	X87CW_RC       int
+	X87CW_PC       int
+	X87CW_PM       int
+	X87CW_UM       int
+	X87CW_OM       int
+	X87CW_ZM       int
+	X87CW_DM       int
+	X87CW_IM       int
 	MxCsr          int
 	MxCsr_FZ       int
 	MxCsr_PM       int

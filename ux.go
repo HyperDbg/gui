@@ -30,6 +30,9 @@ var bar embed.FS
 var pageIco embed.FS
 
 func Run() {
+	if !VmxSupportDetection() {
+		return
+	}
 	app.RunWithIco("HyperDbg "+winver.WindowVersion(), mainIcons, func(w *unison.Window) {
 		pages := NewTabPage()
 		w.Content().FileDropCallback = func(files []string) {
@@ -100,6 +103,9 @@ func (p *TagPage) Layout() unison.Paneler {
 	mylog.Todo("set tab ico")
 	// tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
 	for _, tab := range p.Elems() {
+		if tab == p.cpu {
+			continue //todo test
+		}
 		LeftContainer.Stack(tab, -1)
 	}
 	LeftContainer.SetCurrentDockable(p.cpu)
@@ -171,34 +177,49 @@ func (t *toolbar) Elems() []*unison.Button {
 	}
 }
 
+// todo add remote debug support setting panel into toolbar
+// .debug remote namedpipe \\.\pipe\HyperDbgDebug
+// .debug prepare serial 115200 com1
 func newToolbar() *toolbar {
 	m := stream.ReadEmbedFileMap(bar, "asserts/bar")
 	return &toolbar{
-		open:      widget.NewImageButton("open", m.Get("open.png"), func() {}),
-		restart:   widget.NewImageButton("restart", m.Get("restart.png"), func() {}),
-		close:     widget.NewImageButton("close", m.Get("close.png"), func() {}),
-		run:       widget.NewImageButton("run", m.Get("run.png"), func() {}),
+		open: widget.NewImageButton("open", m.Get("open.png"), func() {}),
+		restart: widget.NewImageButton("restart", m.Get("restart.png"), func() {
+			mylog.Todo("oep address is wrong? see asm panel")
+		}),
+		close: widget.NewImageButton("close", m.Get("close.png"), func() {}),
+		run: widget.NewImageButton("run", m.Get("run.png"), func() {
+			mylog.Todo("start command here, need local debug support")
+			// todo start process api here
+		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
-		pause:     widget.NewImageButton("pause", m.Get("pause.png"), func() {}),
-		stepin:    widget.NewImageButton("stepin", m.Get("stepin.png"), func() {}),
-		stepover:  widget.NewImageButton("stepover", m.Get("stepover.png"), func() {}),
-		trin:      widget.NewImageButton("trin", m.Get("trin.png"), func() {}),
-		trover:    widget.NewImageButton("trover", m.Get("trover.png"), func() {}),
-		tillret:   widget.NewImageButton("tillret", m.Get("tillret.png"), func() {}),
-		tilluser:  widget.NewImageButton("tilluser", m.Get("tilluser.png"), func() {}),
-		log:       widget.NewImageButton("log", m.Get("log.png"), func() {}),
-		modules:   widget.NewImageButton("modules", m.Get("modules.png"), func() {}),
-		windows:   widget.NewImageButton("windows", m.Get("windows.png"), func() {}),
-		threads:   widget.NewImageButton("threads", m.Get("threads.png"), func() {}),
-		cpu:       widget.NewImageButton("cpu", m.Get("cpu.png"), func() {}),
-		search:    widget.NewImageButton("search", m.Get("search.png"), func() {}),
-		trace:     widget.NewImageButton("trace", m.Get("trace.png"), func() {}),
-		bpoints:   widget.NewImageButton("bpoints", m.Get("bpoints.png"), func() {}),
-		bpmem:     widget.NewImageButton("bpmem", m.Get("bpmem.png"), func() {}),
-		bphard:    widget.NewImageButton("bphard", m.Get("bphard.png"), func() {}),
-		options:   widget.NewImageButton("options", m.Get("options.png"), func() {}),
-		scylla:    widget.NewImageButton("scylla", m.Get("scylla.png"), func() {}),
-		about:     widget.NewImageButton("about", m.Get("about.png"), func() {}),
+		pause: widget.NewImageButton("pause", m.Get("pause.png"), func() {
+			mylog.Todo("pause command here, need local debug support")
+		}),
+		stepin: widget.NewImageButton("stepin", m.Get("stepin.png"), func() {
+			// todo set F7 shortcut
+			mylog.Todo("stepin command here, need local debug support")
+		}),
+		stepover: widget.NewImageButton("stepover", m.Get("stepover.png"), func() {
+			mylog.Todo("stepover command here, need local debug support")
+		}),
+		trin:     widget.NewImageButton("trin", m.Get("trin.png"), func() {}),
+		trover:   widget.NewImageButton("trover", m.Get("trover.png"), func() {}),
+		tillret:  widget.NewImageButton("tillret", m.Get("tillret.png"), func() {}),
+		tilluser: widget.NewImageButton("tilluser", m.Get("tilluser.png"), func() {}),
+		log:      widget.NewImageButton("log", m.Get("log.png"), func() {}),
+		modules:  widget.NewImageButton("modules", m.Get("modules.png"), func() {}),
+		windows:  widget.NewImageButton("windows", m.Get("windows.png"), func() {}),
+		threads:  widget.NewImageButton("threads", m.Get("threads.png"), func() {}),
+		cpu:      widget.NewImageButton("cpu", m.Get("cpu.png"), func() {}),
+		search:   widget.NewImageButton("search", m.Get("search.png"), func() {}),
+		trace:    widget.NewImageButton("trace", m.Get("trace.png"), func() {}),
+		bpoints:  widget.NewImageButton("bpoints", m.Get("bpoints.png"), func() {}),
+		bpmem:    widget.NewImageButton("bpmem", m.Get("bpmem.png"), func() {}),
+		bphard:   widget.NewImageButton("bphard", m.Get("bphard.png"), func() {}),
+		options:  widget.NewImageButton("options", m.Get("options.png"), func() {}),
+		scylla:   widget.NewImageButton("scylla", m.Get("scylla.png"), func() {}),
+		about:    widget.NewImageButton("about", m.Get("about.png"), func() {}),
 	}
 }
 
