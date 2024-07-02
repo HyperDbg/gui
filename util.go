@@ -58,7 +58,7 @@ func VmxSupportDetection() (ok bool) {
 		mylog.Check("this program is not designed to run in a non-VT-x environemnt !")
 	}
 	mylog.Info("", "virtualization technology is vt-x")
-	mylog.Struct(hard.CpuInfo)
+	// mylog.Struct(hard.CpuInfo)
 	field := bitfield.NewFromUint32(hard.CpuInfo.Cpu1.Ecx)
 	if !field.Test(5) {
 		mylog.Check("vmx operation is not supported by your processor")

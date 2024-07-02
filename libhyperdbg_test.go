@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/ddkwork/app/ms/driverTool/driver"
 	"os"
 	"strings"
 	"syscall"
 	"testing"
 	"unsafe"
+
+	"github.com/ddkwork/app/ms/driverTool/driver"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
@@ -35,7 +36,7 @@ func TestSdk(t *testing.T) {
 	mylog.Call(func() {
 		// SetDllDirectory("D:\\workspace\\workspace\\branch\\gui")
 		// mylog.Check(os.Chdir("."))
-
+		SetDllDirectory(".")
 		assert.True(t, VmxSupportDetection())
 
 		d := driver.NewObject("hyperkd.sys", "HyperdbgHypervisorDevice")
