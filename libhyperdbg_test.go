@@ -16,8 +16,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-//sync test
-
 func isGithubCI() bool {
 	GOPATH := os.Getenv("GOPATH")
 	return strings.Contains(GOPATH, "runneradmin")
