@@ -103,6 +103,9 @@ func (p *TagPage) Layout() unison.Paneler {
 	mylog.Todo("set tab ico")
 	// tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
 	for _, tab := range p.Elems() {
+		if tab == p.cpu {
+			continue //todo test
+		}
 		LeftContainer.Stack(tab, -1)
 	}
 	LeftContainer.SetCurrentDockable(p.cpu)
