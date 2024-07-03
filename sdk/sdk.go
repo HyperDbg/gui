@@ -2,8 +2,9 @@
 package sdk
 
 import (
-	"github.com/ddkwork/app/bindgen/bindlib"
 	"unsafe"
+
+	"github.com/ddkwork/app/bindgen/bindlib"
 )
 
 const GengoLibraryName = "libhyperdbg"

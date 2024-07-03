@@ -3,11 +3,12 @@ package sdk
 import (
 	"embed"
 	_ "embed"
+	"os"
+	"path/filepath"
+
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 	"golang.org/x/sys/windows"
-	"os"
-	"path/filepath"
 )
 
 //go:embed Libraries/*
@@ -20,7 +21,7 @@ func init() {
 	dir := mylog.Check2(os.UserCacheDir())
 	dir = filepath.Join(dir, "hyperdbg", "cache")
 
-	mylog.CheckIgnore(os.RemoveAll(dir)) //todo test
+	mylog.CheckIgnore(os.RemoveAll(dir)) // todo test
 	mylog.Check(os.MkdirAll(dir, 0755))
 
 	dllData := m.Get("libhyperdbg.dll")
@@ -28,7 +29,7 @@ func init() {
 
 	SetCustomDriverPath(stringToBytePointer(dir), stringToBytePointer(stream.BaseName(dir)))
 
-	m.Range(func(k string, v []byte) bool { //copy sys files to cache dir
+	m.Range(func(k string, v []byte) bool { // copy sys files to cache dir
 		if k == "hyperkd.sys" {
 			sysPath = filepath.Join(dir, k)
 		}
@@ -36,7 +37,7 @@ func init() {
 		return true
 	})
 
-	mylog.Check(windows.SetDllDirectory(dir)) //todo what another dep dll names ?
+	mylog.Check(windows.SetDllDirectory(dir)) // todo what another dep dll names ?
 
 	//sha := sha256.Sum256(dllData)
 	//dllName := fmt.Sprintf("libhyperdbg-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))

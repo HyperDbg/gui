@@ -27,7 +27,7 @@ func TestClear(t *testing.T) {
 	mylog.Check(os.RemoveAll("sdk/Libraries"))
 	stream.CopyDir("bin/debug/SDK/Libraries", "sdk/Libraries")
 	stream.WriteTruncate("sdk/Libraries/hyperkd.sys", stream.NewBuffer("bin/debug/hyperkd.sys"))
-	mylog.Check(os.RemoveAll("bin"))
+	// mylog.Check(os.RemoveAll("bin"))
 }
 
 func TestClearTemp(t *testing.T) {
