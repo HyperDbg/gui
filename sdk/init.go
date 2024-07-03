@@ -33,6 +33,6 @@ func init() {
 }
 
 func init() {
-	//windows.SetDllDirectory("../sdk.gen/SDK/Libraries")//seems need abs?
-	//SetDllDirectory("D:\\workspace\\workspace\\branch\\gui\\sdk.gen\\SDK\\Libraries") // seems need abs?
+	//windows.SetDllDirectory("../sdk.gen/SDK/Libraries")// abs not work,need temp dir
+	//SetDllDirectory("D:\\workspace\\workspace\\branch\\gui\\sdk.gen\\SDK\\Libraries")
 }
