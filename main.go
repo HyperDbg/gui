@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-	// testSdk()
-	// return
+	testSdk()
+	return
 	Run()
 	return
 	// testDisassembly()

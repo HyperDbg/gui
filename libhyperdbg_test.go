@@ -16,7 +16,6 @@ func TestSdk(t *testing.T) {
 		mylog.Info("github ci windows not support vt-x nested virtualization,skip test")
 		return
 	}
-	mylog.Check("bsod now,need vmware")
 	mylog.Call(func() {
 		absPath := mylog.Check2(filepath.Abs("hyperkd.sys"))
 		SetCustomDriverPath(stringToBytePointer(absPath), stringToBytePointer(stream.BaseName(absPath)))
