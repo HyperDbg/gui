@@ -210,8 +210,6 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 		for _, fix := range fixs {
 			b.ReplaceAll(fix, "")
 		}
-		b.Replace(`func init() {`, `func init() {
-	SetDllDirectory("../sdk.gen/SDK/Libraries")`, 1)
 		b.Replace("\nSizeT              = uint64", "", 1)
 		b.Replace("\nBool               = int32", "", 1)
 		b.Replace(`__imp_hyperdbg_u_continue_debuggee = GengoLibrary.ImportNow("hyperdbg_u_continue_debuggee")`, `	return
