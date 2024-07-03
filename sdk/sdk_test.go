@@ -58,6 +58,10 @@ kq l 60
 */
 
 func Test2(t *testing.T) {
+	if isGithubCI() {
+		mylog.Info("github ci windows not support vt-x nested virtualization,skip test")
+		return
+	}
 	//Dependencies := []string{
 	//	"hyperhv.dll",
 	//	"hyperlog.dll",
