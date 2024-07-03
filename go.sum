@@ -26,10 +26,14 @@ github.com/ddkwork/app v0.0.0-20240630085841-6c40495df2a2 h1:A/JFL8WfgL6auEwVk77
 github.com/ddkwork/app v0.0.0-20240630085841-6c40495df2a2/go.mod h1:HrJpR8z7SMRIPZD3p7Ejno6I38gyLuMtR6adHKcHGPI=
 github.com/ddkwork/app v0.0.0-20240701170559-fc9654ab64e5 h1:1bN2BOy+0iADV27yZqXoGrSdSG+bdcx61QE79m1Cc7M=
 github.com/ddkwork/app v0.0.0-20240701170559-fc9654ab64e5/go.mod h1:GHTyL+2g7LS4/88quvvy+Q1EL4+/k+iZ0O++OuMdQQI=
+github.com/ddkwork/app v0.0.0-20240703051939-43f64ece97a0 h1:1GyEl1gHdPM4ytYwt1mBSvjugOjrjMVRw4Hu6Yskodg=
+github.com/ddkwork/app v0.0.0-20240703051939-43f64ece97a0/go.mod h1:l05oId4lVGENj3f1yM7mSx+o7Qdjc9gejVJdFvxMZRY=
 github.com/ddkwork/golibrary v0.0.86 h1:uw9EkT1l/1H8wGtIMmW37rtNwb++c0qDGuisT5j5p1Y=
 github.com/ddkwork/golibrary v0.0.86/go.mod h1:GlLX0w5HQ9dhHS5hhwcOJNSoLUO8ud4WnrbKa41MmcE=
 github.com/ddkwork/golibrary v0.0.87-0.20240630161900-eee095645e09 h1:5rNRLCeQyl2NyGijN1EPyhtlq/LImHJMqabmhG68aoQ=
 github.com/ddkwork/golibrary v0.0.87-0.20240630161900-eee095645e09/go.mod h1:GlLX0w5HQ9dhHS5hhwcOJNSoLUO8ud4WnrbKa41MmcE=
+github.com/ddkwork/golibrary v0.0.87-0.20240702163621-2cf263045441 h1:l1Go1jhuACTLIlX3aTQZRK8SAuMtA1sir2uQRkPIyCE=
+github.com/ddkwork/golibrary v0.0.87-0.20240702163621-2cf263045441/go.mod h1:GlLX0w5HQ9dhHS5hhwcOJNSoLUO8ud4WnrbKa41MmcE=
 github.com/dlclark/regexp2 v1.11.0 h1:G/nrcoOa7ZXlpoa/91N3X7mM3r8eIlMBBJZvsz/mxKI=
 github.com/dlclark/regexp2 v1.11.0/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
 github.com/ebitengine/purego v0.7.1 h1:6/55d26lG3o9VCZX8lping+bZcmShseiqlh2bnUDiPA=
