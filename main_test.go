@@ -40,6 +40,19 @@ func TestClearAll(t *testing.T) {
 }
 
 func TestClear(t *testing.T) {
+	filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
+		if path == "bin" {
+			return nil
+		}
+		ext := filepath.Ext(path)
+		switch ext {
+		case ".sys", ".dll", ".exe":
+			mylog.Info("clear old file", path)
+			mylog.Check(os.Remove(path))
+		}
+		return err
+	})
+
 	filepath.Walk("bin", func(path string, info fs.FileInfo, err error) error {
 		if info != nil && info.IsDir() {
 			if strings.HasPrefix(path, ".git") {
