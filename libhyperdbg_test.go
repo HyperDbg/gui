@@ -26,15 +26,14 @@ func stringToBytePointer(s string) *byte {
 
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
-	absPath := mylog.Check2(filepath.Abs("hyperkd.sys"))
-	SetCustomDriverPath(stringToBytePointer(absPath), stringToBytePointer(stream.BaseName(absPath)))
 	if isGithubCI() {
 		mylog.Info("github ci windows not support vt-x nested virtualization,skip test")
 		return
 	}
 	mylog.Call(func() {
+		absPath := mylog.Check2(filepath.Abs("hyperkd.sys"))
+		SetCustomDriverPath(stringToBytePointer(absPath), stringToBytePointer(stream.BaseName(absPath)))
 		assert.True(t, VmxSupportDetection())
-
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 		ConnectLocalDebugger()
 		mylog.Trace("LoadVmm", LoadVmm())
@@ -72,6 +71,7 @@ bp nt!IopXxxControlFile
 g
 kq l 60
 */
+
 func Test2(t *testing.T) {
 	absPath := mylog.Check2(filepath.Abs("hyperkd.sys"))
 	SetCustomDriverPath(stringToBytePointer(absPath), stringToBytePointer(stream.BaseName(absPath)))
