@@ -24,9 +24,13 @@ func TestUpdateAppModule(t *testing.T) {
 }
 
 func TestClear(t *testing.T) {
-	mylog.Check(os.RemoveAll("sdk/Libraries"))
-	stream.CopyDir("bin/debug/SDK/Libraries", "sdk/Libraries")
-	stream.WriteTruncate("sdk/Libraries/hyperkd.sys", stream.NewBuffer("bin/debug/hyperkd.sys"))
+	filepath.Walk("bin", func(path string, info fs.FileInfo, err error) error {
+		switch filepath.Ext(path) {
+		case ".exe", ".dll", ".sys":
+			stream.WriteTruncate(filepath.Join("sdk/bin", filepath.Base(path)), stream.NewBuffer(path))
+		}
+		return err
+	})
 	// mylog.Check(os.RemoveAll("bin"))
 }
 

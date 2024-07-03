@@ -3,6 +3,8 @@ package sdk
 import (
 	"testing"
 
+	"github.com/ddkwork/golibrary/stream"
+
 	"github.com/ddkwork/app/ms/driverTool/driver"
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
@@ -15,6 +17,7 @@ func TestSdk(t *testing.T) {
 		return
 	}
 	mylog.Call(func() {
+		SetCustomDriverPath(stringToBytePointer(sysPath), stringToBytePointer(stream.BaseName(sysPath)))
 		assert.True(t, VmxSupportDetection())
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 		ConnectLocalDebugger()
@@ -60,6 +63,7 @@ func Test2(t *testing.T) {
 	//	"hyperlog.dll",
 	//	"kdserial.dll",
 	//}
+	SetCustomDriverPath(stringToBytePointer(sysPath), stringToBytePointer(stream.BaseName(sysPath)))
 	d := driver.NewObject("HyperdbgHypervisorDevice", sysPath)
 	// d.SetDependencies(Dependencies)
 	d.Load(sysPath)

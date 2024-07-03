@@ -6,38 +6,36 @@ import (
 	"os"
 	"path/filepath"
 
+	"golang.org/x/sys/windows"
+
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
-	"golang.org/x/sys/windows"
 )
 
-//go:embed Libraries/*
+//go:embed bin/*
 var data embed.FS
 
 var sysPath = ""
 
 func init() {
-	m := stream.ReadEmbedFileMap(data, "Libraries")
+	m := stream.ReadEmbedFileMap(data, "bin")
 	dir := mylog.Check2(os.UserCacheDir())
 	dir = filepath.Join(dir, "hyperdbg", "cache")
 
-	mylog.CheckIgnore(os.RemoveAll(dir)) // todo test
+	// mylog.CheckIgnore(os.RemoveAll(dir)) // todo test
 	mylog.Check(os.MkdirAll(dir, 0755))
 
-	dllData := m.Get("libhyperdbg.dll")
-	mylog.Check2(GengoLibrary.LoadEmbed(dllData))
-
-	SetCustomDriverPath(stringToBytePointer(dir), stringToBytePointer(stream.BaseName(dir)))
-
-	m.Range(func(k string, v []byte) bool { // copy sys files to cache dir
+	m.Range(func(k string, v []byte) bool {
+		join := filepath.Join(dir, k)
 		if k == "hyperkd.sys" {
-			sysPath = filepath.Join(dir, k)
+			sysPath = join
 		}
-		stream.WriteTruncate(filepath.Join(dir, k), v)
+		stream.WriteTruncate(join, v)
 		return true
 	})
-
-	mylog.Check(windows.SetDllDirectory(dir)) // todo what another dep dll names ?
+	mylog.Check(windows.SetDllDirectory(dir))
+	mylog.Check2(GengoLibrary.LoadFrom(filepath.Join(dir, "libhyperdbg.dll")))
+	mylog.Trace("sysPath", sysPath)
 
 	//sha := sha256.Sum256(dllData)
 	//dllName := fmt.Sprintf("libhyperdbg-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
