@@ -14,24 +14,7 @@ import (
 
 	"github.com/ddkwork/app/bindgen/bindlib"
 )
-func init() {
-	dir, err := os.UserCacheDir()
-	fatal.IfErr(err)
-	dir = filepath.Join(dir, "hyperdbg", "dll_cache")
-	fatal.IfErr(os.MkdirAll(dir, 0755))
-	fatal.IfErr(windows.SetDllDirectory(dir))
-	sha := sha256.Sum256(dllData)
-	dllName := fmt.Sprintf("libhyperdbg-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
-	filePath := filepath.Join(dir, dllName)
-	if !fs.FileExists(filePath) {
-		fatal.IfErr(os.WriteFile(filePath, dllData, 0644))
-	}
-}
 
-func init() {
-	//windows.SetDllDirectory("../sdk.gen/SDK/Libraries")//seems need abs?
-	//SetDllDirectory("D:\\workspace\\workspace\\branch\\gui\\sdk.gen\\SDK\\Libraries") // seems need abs?
-}
 
 const GengoLibraryName = "libhyperdbg" // todo
 
