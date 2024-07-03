@@ -24,7 +24,7 @@ func init() {
 	mylog.Check(os.MkdirAll(dir, 0755))
 
 	dllData := m.Get("libhyperdbg.dll")
-	GengoLibrary.LoadEmbed(dllData)
+	mylog.Check2(GengoLibrary.LoadEmbed(dllData))
 
 	SetCustomDriverPath(stringToBytePointer(dir), stringToBytePointer(stream.BaseName(dir)))
 
