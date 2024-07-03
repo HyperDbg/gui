@@ -8,8 +8,6 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/ddkwork/app/ms/driverTool/driver"
-
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
 )
@@ -37,10 +35,10 @@ func TestSdk(t *testing.T) {
 
 		assert.True(t, VmxSupportDetection())
 
-		d := driver.NewObject("hyperkd.sys", "HyperdbgHypervisorDevice")
-		d.Load("")
-		d.Unload()
-		return
+		//d := driver.NewObject("hyperkd.sys", "HyperdbgHypervisorDevice")
+		//d.Load("")
+		//d.Unload()
+		//return
 
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 		ConnectLocalDebugger()
