@@ -1,13 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
-	"syscall"
 	"testing"
-	"unsafe"
 
 	"github.com/ddkwork/golibrary/stream"
 
@@ -26,7 +23,6 @@ func stringToBytePointer(s string) *byte {
 	return ptr
 }
 
-// run now will bsod
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
 	absPath := mylog.Check2(filepath.Abs("hyperkd.sys"))
@@ -58,34 +54,11 @@ func TestSdk(t *testing.T) {
 	})
 }
 
-// AddCurrentDirToPath 将当前目录加入到PATH环境变量中
-func AddCurrentDirToPath() error {
-	// 获取当前路径
+func AddCurrentDirToPath() {
 	currentPath := mylog.Check2(filepath.Abs("."))
-
-	// 获取当前的PATH环境变量
 	pathEnv := os.Getenv("PATH")
-
-	// 将当前路径加入到PATH中
 	newPath := strings.Join([]string{currentPath, pathEnv}, string(os.PathListSeparator))
-
-	// 设置新的PATH环境变量
 	mylog.Check(os.Setenv("PATH", newPath))
-
-	return nil
-}
-
-func TestLoadDll(t *testing.T) {
-	t.Skip("unknown error")
-	dll := syscall.NewLazyDLL("libhyperdbg.dll")
-	proc := dll.NewProc("hyperdbg_u_set_custom_driver_path")
-	mylog.Check(dll.Load())
-	ret, _, callErr := proc.Call(uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr("driver_path"))))
-	if callErr != nil && callErr.Error() != "The operation completed successfully." {
-		fmt.Printf("Failed to call procedure: %v\n", callErr)
-	} else {
-		fmt.Printf("Procedure called successfully, return value: %v\n", ret)
-	}
 }
 
 func Test2(t *testing.T) {
