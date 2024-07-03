@@ -48,7 +48,7 @@ func TestClear(t *testing.T) {
 		switch ext {
 		case ".sys", ".dll", ".exe":
 			mylog.Info("clear old file", path)
-			mylog.Check(os.Remove(path))
+			mylog.CheckIgnore(os.Remove(path))
 		}
 		return err
 	})
