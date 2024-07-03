@@ -31,7 +31,7 @@ func TestClear(t *testing.T) {
 		}
 		return err
 	})
-	// mylog.Check(os.RemoveAll("bin"))
+	mylog.Check(os.RemoveAll("bin"))
 }
 
 func TestClearTemp(t *testing.T) {
