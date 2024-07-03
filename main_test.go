@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
-	"strings"
 	"testing"
 
 	"github.com/ddkwork/golibrary/mylog"
@@ -24,54 +23,7 @@ func TestUpdateAppModule(t *testing.T) {
 	stream.RunCommand("go get github.com/ddkwork/app@" + id)
 }
 
-func TestClearAll(t *testing.T) {
-	filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
-		ext := filepath.Ext(path)
-		switch ext {
-		case ".json", ".txt", ".pdb", ".exp", ".lib", ".cer", ".inf":
-			if strings.Contains(path, "constants") {
-				return err
-			}
-			mylog.Info("clear file", path)
-			mylog.Check(os.Remove(path))
-		}
-		return err
-	})
-}
-
-func TestClear(t *testing.T) {
-	filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
-		if strings.Contains(path, "bin") {
-			return err
-		}
-		ext := filepath.Ext(path)
-		switch ext {
-		case ".sys", ".dll", ".exe":
-			mylog.Info("clear old file", path)
-			mylog.Check(os.Remove(path)) //todo must success
-		}
-		return err
-	})
-
-	filepath.Walk("bin", func(path string, info fs.FileInfo, err error) error {
-		if info != nil && info.IsDir() {
-			if strings.HasPrefix(path, ".git") {
-				return nil
-			}
-			switch path {
-			case "bin\\debug\\SDK\\Examples",
-				"bin\\debug\\SDK\\Libraries",
-				"bin\\debug\\hyperhv",
-				"bin\\debug\\hyperkd",
-				"bin\\debug\\hyperlog":
-				mylog.Info("clear dir", path)
-				mylog.Check(os.RemoveAll(path))
-				return err
-			}
-		}
-		TestClearAll(t)
-		return err
-	})
+func TestClear(t *testing.T) { //todo copy sys
 	if stream.IsDir("bin/debug/SDK") {
 		stream.CopyDir("sdk.gen\\SDK", "bin/debug/SDK")
 		mylog.Check(os.RemoveAll("bin/debug/SDK"))
@@ -87,4 +39,16 @@ func TestClear(t *testing.T) {
 		})
 	}
 	mylog.Check(os.RemoveAll("bin"))
+}
+
+func TestClearTemp(t *testing.T) {
+	filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
+		ext := filepath.Ext(path)
+		switch ext {
+		case ".json", ".txt":
+			mylog.Info("clear file", path)
+			mylog.Check(os.Remove(path))
+		}
+		return err
+	})
 }
