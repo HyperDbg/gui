@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"syscall"
 	"testing"
@@ -26,6 +27,7 @@ func stringToBytePointer(s string) *byte {
 // run now will bsod
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
+	AddCurrentDirToPath()
 	SetCustomDriverPath(stringToBytePointer("."), stringToBytePointer("hyperkd.sys"))
 	if isGithubCI() {
 		mylog.Info("github ci windows not support vt-x nested virtualization,skip test")
@@ -33,17 +35,6 @@ func TestSdk(t *testing.T) {
 	}
 	mylog.Call(func() {
 		assert.True(t, VmxSupportDetection())
-
-		//Dependencies := []string{
-		//	"C:\\Windows\\System32\\drivers\\hyperhv.dll",
-		//	"C:\\Windows\\system32\\drivers\\hyperlog.dll",
-		//	"C:\\Windows\\system32\\drivers\\kdserial.dll",
-		//}
-		//d := driver.NewObject("HyperdbgHypervisorDevice", "C:\\Windows\\System32\\drivers\\hyperkd.sys")
-		//d.SetDependencies(Dependencies)
-		//d.Load("C:\\Windows\\System32\\drivers\\hyperkd.sys")
-		//d.Unload()
-		//return
 
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 		ConnectLocalDebugger()
@@ -65,6 +56,23 @@ func TestSdk(t *testing.T) {
 	})
 }
 
+// AddCurrentDirToPath 将当前目录加入到PATH环境变量中
+func AddCurrentDirToPath() error {
+	// 获取当前路径
+	currentPath := mylog.Check2(filepath.Abs("."))
+
+	// 获取当前的PATH环境变量
+	pathEnv := os.Getenv("PATH")
+
+	// 将当前路径加入到PATH中
+	newPath := strings.Join([]string{currentPath, pathEnv}, string(os.PathListSeparator))
+
+	// 设置新的PATH环境变量
+	mylog.Check(os.Setenv("PATH", newPath))
+
+	return nil
+}
+
 func TestLoadDll(t *testing.T) {
 	t.Skip("unknown error")
 	dll := syscall.NewLazyDLL("libhyperdbg.dll")
@@ -76,6 +84,19 @@ func TestLoadDll(t *testing.T) {
 	} else {
 		fmt.Printf("Procedure called successfully, return value: %v\n", ret)
 	}
+}
+
+func Test2(t *testing.T) {
+	//Dependencies := []string{
+	//	"C:\\Windows\\System32\\drivers\\hyperhv.dll",
+	//	"C:\\Windows\\system32\\drivers\\hyperlog.dll",
+	//	"C:\\Windows\\system32\\drivers\\kdserial.dll",
+	//}
+	//d := driver.NewObject("HyperdbgHypervisorDevice", "C:\\Windows\\System32\\drivers\\hyperkd.sys")
+	//d.SetDependencies(Dependencies)
+	//d.Load("C:\\Windows\\System32\\drivers\\hyperkd.sys")
+	//d.Unload()
+	//return
 }
 
 /*
