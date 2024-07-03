@@ -36,6 +36,12 @@ func TestSdk(t *testing.T) {
 	mylog.Call(func() {
 		assert.True(t, VmxSupportDetection())
 
+		Dependencies := []string{
+			"hyperhv.dll",
+			"hyperlog.dll",
+			"kdserial.dll",
+		}
+
 		d := driver.NewObject("HyperdbgHypervisorDevice", "hyperkd.sys")
 		d.Load("hyperkd.sys")
 		d.Unload()
