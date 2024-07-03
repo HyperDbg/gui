@@ -7,7 +7,11 @@ import (
 	"github.com/ddkwork/app/bindgen/bindlib"
 )
 
-const GengoLibraryName = "../sdk.gen/SDK/Libraries/libhyperdbg.dll" // todo
+func init() {
+	SetDllDirectory("../sdk.gen/SDK/Libraries")
+}
+
+const GengoLibraryName = "libhyperdbg" // todo
 
 var GengoLibrary = bindlib.NewLibrary(GengoLibraryName)
 
@@ -1524,7 +1528,6 @@ var __imp_hyperdbg_u_detect_vmx_support bindlib.PreloadProc
 
 // Gengo init function.
 func init() {
-	SetDllDirectory("../sdk.gen/SDK/Libraries")
 	__imp_hyperdbg_u_detect_vmx_support = GengoLibrary.ImportNow("hyperdbg_u_detect_vmx_support")
 	__imp_hyperdbg_u_read_vendor_string = GengoLibrary.ImportNow("hyperdbg_u_read_vendor_string")
 	__imp_hyperdbg_u_load_vmm = GengoLibrary.ImportNow("hyperdbg_u_load_vmm")
