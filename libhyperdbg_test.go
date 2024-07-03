@@ -37,9 +37,9 @@ func TestSdk(t *testing.T) {
 		assert.True(t, VmxSupportDetection())
 
 		Dependencies := []string{
-			"hyperhv.dll",
-			"hyperlog.dll",
-			"kdserial.dll",
+			"C:\\Windows\\System32\\drivers\\hyperhv.dll",
+			"C:\\Windows\\system32\\drivers\\hyperlog.dll",
+			"C:\\Windows\\system32\\drivers\\kdserial.dll",
 		}
 		d := driver.NewObject("HyperdbgHypervisorDevice", "hyperkd.sys")
 		d.SetDependencies(Dependencies)
