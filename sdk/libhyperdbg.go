@@ -9,6 +9,7 @@ import (
 
 func init() {
 	SetDllDirectory("../sdk.gen/SDK/Libraries")//seems need abs?
+	//SetDllDirectory("D:\\workspace\\workspace\\branch\\gui\\sdk.gen\\SDK\\Libraries") // seems need abs?
 }
 
 const GengoLibraryName = "libhyperdbg" // todo
