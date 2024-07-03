@@ -41,9 +41,9 @@ func TestSdk(t *testing.T) {
 			"C:\\Windows\\system32\\drivers\\hyperlog.dll",
 			"C:\\Windows\\system32\\drivers\\kdserial.dll",
 		}
-		d := driver.NewObject("HyperdbgHypervisorDevice", "hyperkd.sys")
+		d := driver.NewObject("HyperdbgHypervisorDevice", "C:\\Windows\\System32\\drivers\\hyperkd.sys")
 		d.SetDependencies(Dependencies)
-		d.Load("hyperkd.sys")
+		d.Load("C:\\Windows\\System32\\drivers\\hyperkd.sys")
 		d.Unload()
 		return
 
