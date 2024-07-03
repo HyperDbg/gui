@@ -154,7 +154,7 @@ const (
 )
 `)
 
-	stream.WriteGoFile("../vars.go", g.Buffer)
+	stream.WriteGoFile("../sdk/vars.go", g.Buffer)
 
 	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum("debuggerError", enumDebuggers.Keys(), nil)
 	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum("ioctl", enumIoctls.Keys(), nil)
