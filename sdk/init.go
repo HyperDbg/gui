@@ -27,7 +27,7 @@ func init() {
 	dllData := m.Get("libhyperdbg.dll")
 	GengoLibrary.LoadEmbed(dllData)
 
-	mylog.Check(windows.SetDllDirectory(dir))
+	mylog.Check(windows.SetDllDirectory(dir)) //another dll names ? what ?
 
 	sha := sha256.Sum256(dllData)
 	dllName := fmt.Sprintf("libhyperdbg-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
