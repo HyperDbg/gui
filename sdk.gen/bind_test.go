@@ -210,6 +210,8 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 		for _, fix := range fixs {
 			b.ReplaceAll(fix, "")
 		}
+		b.Replace(`func init() {`, `func init() {
+	SetDllDirectory(".")`, 1)
 		b.Replace("package libhyperdbg", "package main", 1)
 		b.Replace("\nSizeT              = uint64", "", 1)
 		b.Replace("\nBool               = int32", "", 1)

@@ -5,10 +5,8 @@ import (
 	"testing"
 
 	"github.com/ddkwork/app/ms/driverTool/driver"
-
-	"github.com/ddkwork/golibrary/stream"
-
 	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/stream"
 	"github.com/stretchr/testify/assert"
 )
 
