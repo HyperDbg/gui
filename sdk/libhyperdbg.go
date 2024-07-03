@@ -7,7 +7,7 @@ import (
 	"github.com/ddkwork/app/bindgen/bindlib"
 )
 
-const GengoLibraryName = "libhyperdbg"
+const GengoLibraryName = "../sdk.gen/SDK/Libraries/libhyperdbg"//todo
 
 var GengoLibrary = bindlib.NewLibrary(GengoLibraryName)
 
