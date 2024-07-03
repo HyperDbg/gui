@@ -2,8 +2,9 @@ package ux
 
 import (
 	"embed"
-	"github.com/ddkwork/hyperdbgui/sdk"
 	"path/filepath"
+
+	"github.com/ddkwork/hyperdbgui/sdk"
 
 	"github.com/richardwilkes/unison/enums/align"
 

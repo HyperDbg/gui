@@ -1524,6 +1524,7 @@ var __imp_hyperdbg_u_detect_vmx_support bindlib.PreloadProc
 
 // Gengo init function.
 func init() {
+	return
 	SetDllDirectory(".")
 	__imp_hyperdbg_u_detect_vmx_support = GengoLibrary.ImportNow("hyperdbg_u_detect_vmx_support")
 	__imp_hyperdbg_u_read_vendor_string = GengoLibrary.ImportNow("hyperdbg_u_read_vendor_string")
