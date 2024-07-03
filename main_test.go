@@ -41,8 +41,8 @@ func TestClearAll(t *testing.T) {
 
 func TestClear(t *testing.T) {
 	filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
-		if path == "bin" {
-			return nil
+		if strings.Contains(path, "bin") {
+			return err
 		}
 		ext := filepath.Ext(path)
 		switch ext {
