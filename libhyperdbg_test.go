@@ -8,8 +8,6 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/ddkwork/app/ms/driverTool/driver"
-
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
 )
@@ -36,16 +34,16 @@ func TestSdk(t *testing.T) {
 	mylog.Call(func() {
 		assert.True(t, VmxSupportDetection())
 
-		Dependencies := []string{
-			"C:\\Windows\\System32\\drivers\\hyperhv.dll",
-			"C:\\Windows\\system32\\drivers\\hyperlog.dll",
-			"C:\\Windows\\system32\\drivers\\kdserial.dll",
-		}
-		d := driver.NewObject("HyperdbgHypervisorDevice", "C:\\Windows\\System32\\drivers\\hyperkd.sys")
-		d.SetDependencies(Dependencies)
-		d.Load("C:\\Windows\\System32\\drivers\\hyperkd.sys")
-		d.Unload()
-		return
+		//Dependencies := []string{
+		//	"C:\\Windows\\System32\\drivers\\hyperhv.dll",
+		//	"C:\\Windows\\system32\\drivers\\hyperlog.dll",
+		//	"C:\\Windows\\system32\\drivers\\kdserial.dll",
+		//}
+		//d := driver.NewObject("HyperdbgHypervisorDevice", "C:\\Windows\\System32\\drivers\\hyperkd.sys")
+		//d.SetDependencies(Dependencies)
+		//d.Load("C:\\Windows\\System32\\drivers\\hyperkd.sys")
+		//d.Unload()
+		//return
 
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 		ConnectLocalDebugger()
