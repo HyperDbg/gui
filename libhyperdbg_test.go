@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/ddkwork/app/ms/driverTool/driver"
 	"os"
 	"path/filepath"
 	"strings"
@@ -54,19 +55,6 @@ func TestSdk(t *testing.T) {
 	})
 }
 
-func Test2(t *testing.T) {
-	//Dependencies := []string{
-	//	"C:\\Windows\\System32\\drivers\\hyperhv.dll",
-	//	"C:\\Windows\\system32\\drivers\\hyperlog.dll",
-	//	"C:\\Windows\\system32\\drivers\\kdserial.dll",
-	//}
-	//d := driver.NewObject("HyperdbgHypervisorDevice", "C:\\Windows\\System32\\drivers\\hyperkd.sys")
-	//d.SetDependencies(Dependencies)
-	//d.Load("C:\\Windows\\System32\\drivers\\hyperkd.sys")
-	//d.Unload()
-	//return
-}
-
 /*
 .connect local
 load vmm
@@ -84,3 +72,16 @@ bp nt!IopXxxControlFile
 g
 kq l 60
 */
+func Test2(t *testing.T) {
+	absPath := mylog.Check2(filepath.Abs("hyperkd.sys"))
+	SetCustomDriverPath(stringToBytePointer(absPath), stringToBytePointer(stream.BaseName(absPath)))
+	//Dependencies := []string{
+	//	"hyperhv.dll",
+	//	"hyperlog.dll",
+	//	"kdserial.dll",
+	//}
+	d := driver.NewObject("HyperdbgHypervisorDevice", "hyperkd.sys")
+	//d.SetDependencies(Dependencies)
+	d.Load("hyperkd.sys")
+	d.Unload()
+}
