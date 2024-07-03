@@ -17,11 +17,11 @@ import (
 func init() {
 	dir, err := os.UserCacheDir()
 	fatal.IfErr(err)
-	dir = filepath.Join(dir, "unison", "dll_cache")
+	dir = filepath.Join(dir, "hyperdbg", "dll_cache")
 	fatal.IfErr(os.MkdirAll(dir, 0755))
 	fatal.IfErr(windows.SetDllDirectory(dir))
 	sha := sha256.Sum256(dllData)
-	dllName := fmt.Sprintf("skia-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
+	dllName := fmt.Sprintf("libhyperdbg-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
 	filePath := filepath.Join(dir, dllName)
 	if !fs.FileExists(filePath) {
 		fatal.IfErr(os.WriteFile(filePath, dllData, 0644))
