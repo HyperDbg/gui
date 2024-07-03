@@ -32,13 +32,12 @@ func TestSdk(t *testing.T) {
 		return
 	}
 	mylog.Call(func() {
-
 		assert.True(t, VmxSupportDetection())
 
-		//d := driver.NewObject("hyperkd.sys", "HyperdbgHypervisorDevice")
-		//d.Load("")
-		//d.Unload()
-		//return
+		// d := driver.NewObject("hyperkd.sys", "HyperdbgHypervisorDevice")
+		// d.Load("")
+		// d.Unload()
+		// return
 
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 		ConnectLocalDebugger()
