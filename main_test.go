@@ -23,21 +23,15 @@ func TestUpdateAppModule(t *testing.T) {
 	stream.RunCommand("go get github.com/ddkwork/app@" + id)
 }
 
-func TestClear(t *testing.T) { //todo copy sys
-	if stream.IsDir("bin/debug/SDK") {
-		stream.CopyDir("sdk.gen\\SDK", "bin/debug/SDK")
-		mylog.Check(os.RemoveAll("bin/debug/SDK"))
-	}
-	if stream.IsDir("bin/debug") {
-		filepath.Walk("bin/debug", func(path string, info fs.FileInfo, err error) error {
-			if info.IsDir() {
-				return err
-			}
-			stream.CopyFile(path, filepath.Base(path))
-			mylog.Info("copy file", path)
-			return err
-		})
-	}
+func TestClear(t *testing.T) {
+	src := "bin/debug/SDK"
+	dst := "sdk.gen/SDK"
+	sysSrc := "bin/debug/hyperkd.sys"
+	sysDst := "sdk.gen/SDK/Libraries/hyperkd.sys"
+
+	mylog.Check(os.RemoveAll(dst))
+	stream.CopyDir(dst, src)
+	stream.WriteTruncate(sysDst, stream.NewBuffer(sysSrc))
 	mylog.Check(os.RemoveAll("bin"))
 }
 
