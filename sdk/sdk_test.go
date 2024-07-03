@@ -17,7 +17,7 @@ func TestSdk(t *testing.T) {
 		return
 	}
 	mylog.Call(func() {
-		SetCustomDriverPath(stringToBytePointer(sysPath), stringToBytePointer(stream.BaseName(sysPath)))
+		SetCustomDriverPath(stringToBytePointer(SysPath), stringToBytePointer(stream.BaseName(SysPath)))
 		assert.True(t, VmxSupportDetection())
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 		ConnectLocalDebugger()
@@ -63,9 +63,9 @@ func Test2(t *testing.T) {
 	//	"hyperlog.dll",
 	//	"kdserial.dll",
 	//}
-	SetCustomDriverPath(stringToBytePointer(sysPath), stringToBytePointer(stream.BaseName(sysPath)))
-	d := driver.NewObject("HyperdbgHypervisorDevice", sysPath)
+	SetCustomDriverPath(stringToBytePointer(SysPath), stringToBytePointer(stream.BaseName(SysPath)))
+	d := driver.NewObject("HyperdbgHypervisorDevice", SysPath)
 	// d.SetDependencies(Dependencies)
-	d.Load(sysPath)
+	d.Load(SysPath)
 	d.Unload()
 }

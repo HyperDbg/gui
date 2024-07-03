@@ -15,7 +15,7 @@ import (
 //go:embed bin/*
 var data embed.FS
 
-var sysPath = ""
+var SysPath = ""
 
 func init() {
 	m := stream.ReadEmbedFileMap(data, "bin")
@@ -28,12 +28,12 @@ func init() {
 	m.Range(func(k string, v []byte) bool {
 		join := filepath.Join(dir, k)
 		if k == "hyperkd.sys" {
-			sysPath = join
+			SysPath = join
 		}
 		stream.WriteTruncate(join, v)
 		return true
 	})
 	mylog.Check(windows.SetDllDirectory(dir))
 	mylog.Check2(GengoLibrary.LoadFrom(filepath.Join(dir, "libhyperdbg.dll")))
-	mylog.Trace("sysPath", sysPath)
+	mylog.Trace("sysPath", SysPath)
 }

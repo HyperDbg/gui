@@ -125,7 +125,7 @@ func NewTabPage() *TagPage {
 		HGrab:  true,
 		VGrab:  true,
 	})
-	path := "hyperdbg-cli.exe"
+	path := sdk.SysPath
 	cpu := LayoutCpu(path)
 	p := &TagPage{
 		dock:   dock,
