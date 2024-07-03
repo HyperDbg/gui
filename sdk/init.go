@@ -22,6 +22,8 @@ func init() {
 	m := stream.ReadEmbedFileMap(data, "Libraries")
 	dir := mylog.Check2(os.UserCacheDir())
 	dir = filepath.Join(dir, "hyperdbg", "cache")
+
+	mylog.CheckIgnore(os.RemoveAll(dir)) //todo test
 	mylog.Check(os.MkdirAll(dir, 0755))
 
 	dllData := m.Get("libhyperdbg.dll")
