@@ -2,6 +2,9 @@ package main
 
 import (
 	"github.com/stretchr/testify/assert"
+	"os"
+	"path/filepath"
+	"strings"
 	"syscall"
 	"testing"
 
@@ -48,4 +51,11 @@ func VmxSupportDetection() (ok bool) {
 func DeviceName() string { return "HyperdbgHypervisorDevice" }
 func LinkName() (*uint16, error) {
 	return syscall.UTF16PtrFromString("\\\\\\\\.\\\\" + DeviceName())
+}
+
+func AddCurrentDirToPath() {
+	currentPath := mylog.Check2(filepath.Abs("."))
+	pathEnv := os.Getenv("PATH")
+	newPath := strings.Join([]string{currentPath, pathEnv}, string(os.PathListSeparator))
+	mylog.Check(os.Setenv("PATH", newPath))
 }

@@ -54,13 +54,6 @@ func TestSdk(t *testing.T) {
 	})
 }
 
-func AddCurrentDirToPath() {
-	currentPath := mylog.Check2(filepath.Abs("."))
-	pathEnv := os.Getenv("PATH")
-	newPath := strings.Join([]string{currentPath, pathEnv}, string(os.PathListSeparator))
-	mylog.Check(os.Setenv("PATH", newPath))
-}
-
 func Test2(t *testing.T) {
 	//Dependencies := []string{
 	//	"C:\\Windows\\System32\\drivers\\hyperhv.dll",
