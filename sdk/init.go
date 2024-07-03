@@ -13,6 +13,8 @@ import (
 //go:embed Libraries/*
 var data embed.FS
 
+var sysPath = ""
+
 func init() {
 	m := stream.ReadEmbedFileMap(data, "Libraries")
 	dir := mylog.Check2(os.UserCacheDir())
@@ -27,6 +29,9 @@ func init() {
 	SetCustomDriverPath(stringToBytePointer(dir), stringToBytePointer(stream.BaseName(dir)))
 
 	m.Range(func(k string, v []byte) bool { //copy sys files to cache dir
+		if k == "hyperkd.sys" {
+			sysPath = filepath.Join(dir, k)
+		}
 		stream.WriteTruncate(filepath.Join(dir, k), v)
 		return true
 	})

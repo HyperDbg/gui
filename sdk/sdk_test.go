@@ -1,12 +1,10 @@
 package sdk
 
 import (
-	"path/filepath"
 	"testing"
 
 	"github.com/ddkwork/app/ms/driverTool/driver"
 	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/stream"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -57,15 +55,13 @@ kq l 60
 */
 
 func Test2(t *testing.T) {
-	absPath := mylog.Check2(filepath.Abs("hyperkd.sys"))
-	SetCustomDriverPath(stringToBytePointer(absPath), stringToBytePointer(stream.BaseName(absPath)))
 	//Dependencies := []string{
 	//	"hyperhv.dll",
 	//	"hyperlog.dll",
 	//	"kdserial.dll",
 	//}
-	d := driver.NewObject("HyperdbgHypervisorDevice", "hyperkd.sys")
+	d := driver.NewObject("HyperdbgHypervisorDevice", sysPath)
 	// d.SetDependencies(Dependencies)
-	d.Load("hyperkd.sys")
+	d.Load(sysPath)
 	d.Unload()
 }
