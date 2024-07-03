@@ -8,3 +8,4 @@
 reset git.cmd
 cmake-build-debug
 bin
+/hyperdbgui.exe
