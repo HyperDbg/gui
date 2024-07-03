@@ -206,7 +206,7 @@ func TestBindSdk(t *testing.T) {
 type GuestExtraRegisters = GuestExtraRegisters`,
 		}
 
-		b := stream.NewBuffer("../libhyperdbg.go")
+		b := stream.NewBuffer("../sdk/libhyperdbg.go")
 		for _, fix := range fixs {
 			b.ReplaceAll(fix, "")
 		}
