@@ -63,7 +63,7 @@ func TestBindMacros(t *testing.T) {
 	}
 
 	g := stream.NewGeneratedFile()
-	g.P("package main")
+	g.P("package sdk")
 	g.P()
 
 	g.P("import \"github.com/winlabs/gowin32/wrappers\"")
@@ -156,8 +156,8 @@ const (
 
 	stream.WriteGoFile("../vars.go", g.Buffer)
 
-	stream.NewGeneratedFile().SetPackageName("main").SetFilePath("../").Enum("debuggerError", enumDebuggers.Keys(), nil)
-	stream.NewGeneratedFile().SetPackageName("main").SetFilePath("../").Enum("ioctl", enumIoctls.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum("debuggerError", enumDebuggers.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum("ioctl", enumIoctls.Keys(), nil)
 
 	for _, p := range macros.List() {
 		return
@@ -195,7 +195,7 @@ func TestBindSdk(t *testing.T) {
 			Sources:          []string{"merged_headers.h"},
 			AdditionalParams: []string{},
 		}))
-		mylog.Check(pkg.WriteToDir("../"))
+		mylog.Check(pkg.WriteToDir("../sdk"))
 
 		// generate bug fix
 		fixs := []string{
@@ -211,8 +211,8 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 			b.ReplaceAll(fix, "")
 		}
 		b.Replace(`func init() {`, `func init() {
-	SetDllDirectory(".")`, 1)
-		b.Replace("package libhyperdbg", "package main", 1)
+	SetDllDirectory("../sdk.gen/SDK/Libraries")`, 1)
+		b.Replace("package libhyperdbg", "package sdk", 1)
 		b.Replace("\nSizeT              = uint64", "", 1)
 		b.Replace("\nBool               = int32", "", 1)
 		b.Replace(`__imp_hyperdbg_u_continue_debuggee = GengoLibrary.ImportNow("hyperdbg_u_continue_debuggee")`, `	return
@@ -226,7 +226,7 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
 }`)
 
-		stream.WriteGoFile("../libhyperdbg.go", b)
+		stream.WriteGoFile("../sdk/libhyperdbg.go", b)
 	})
 }
 
