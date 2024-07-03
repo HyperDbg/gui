@@ -68,6 +68,7 @@ func TestClear(t *testing.T) {
 			if info.IsDir() {
 				return err
 			}
+			mylog.Check("CopyFile need remove orig file")
 			stream.CopyFile(path, filepath.Base(path))
 			mylog.Info("copy file", path)
 			return err
