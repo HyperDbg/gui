@@ -18,13 +18,13 @@ func main() {
 
 func testDisassembly() {
 	app.Run("asm", func(w *unison.Window) {
-		w.Content().AddChild(ux.LayoutDisassemblyTable("../sdk/bin/hyperdbg-cli.exe"))
+		w.Content().AddChild(ux.LayoutDisassemblyTable("sdk/bin/hyperdbg-cli.exe"))
 	})
 }
 
 func testParsePe() {
 	app.Run("pe", func(w *unison.Window) {
-		w.Content().AddChild(ux.LayoutPeView("../sdk/bin/hyperlog.dll"))
+		w.Content().AddChild(ux.LayoutPeView("sdk/bin/hyperlog.dll"))
 	})
 }
 
