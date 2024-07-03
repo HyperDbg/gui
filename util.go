@@ -53,6 +53,17 @@ func LinkName() (*uint16, error) {
 	return syscall.UTF16PtrFromString("\\\\\\\\.\\\\" + DeviceName())
 }
 
+func isGithubCI() bool {
+	GOPATH := os.Getenv("GOPATH")
+	return strings.Contains(GOPATH, "runneradmin")
+}
+
+func stringToBytePointer(s string) *byte {
+	bytes := []byte(s)
+	ptr := &bytes[0]
+	return ptr
+}
+
 func AddCurrentDirToPath() {
 	currentPath := mylog.Check2(filepath.Abs("."))
 	pathEnv := os.Getenv("PATH")

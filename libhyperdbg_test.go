@@ -2,9 +2,7 @@ package main
 
 import (
 	"github.com/ddkwork/app/ms/driverTool/driver"
-	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/ddkwork/golibrary/stream"
@@ -12,17 +10,6 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
 )
-
-func isGithubCI() bool {
-	GOPATH := os.Getenv("GOPATH")
-	return strings.Contains(GOPATH, "runneradmin")
-}
-
-func stringToBytePointer(s string) *byte {
-	bytes := []byte(s)
-	ptr := &bytes[0]
-	return ptr
-}
 
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
