@@ -24,14 +24,9 @@ func TestUpdateAppModule(t *testing.T) {
 }
 
 func TestClear(t *testing.T) {
-	src := "bin/debug/SDK"
-	dst := "sdk.gen/SDK"
-	sysSrc := "bin/debug/hyperkd.sys"
-	sysDst := "sdk.gen/SDK/Libraries/hyperkd.sys"
-
-	mylog.Check(os.RemoveAll(dst))
-	stream.CopyDir(dst, src)
-	stream.WriteTruncate(sysDst, stream.NewBuffer(sysSrc))
+	mylog.Check(os.RemoveAll("sdk/Libraries"))
+	stream.CopyDir("bin/debug/SDK/Libraries", "sdk/Libraries")
+	stream.WriteTruncate("sdk/Libraries/hyperkd.sys", stream.NewBuffer("bin/debug/hyperkd.sys"))
 	mylog.Check(os.RemoveAll("bin"))
 }
 
