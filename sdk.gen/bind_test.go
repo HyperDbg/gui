@@ -179,7 +179,7 @@ func TestBindSdk(t *testing.T) {
 	TestMergeHeader(t)
 	TestBindMacros(t)
 	mylog.Call(func() {
-		pkg := gengo.NewPackage("libhyperdbg", // 如果改了dll名字也改了呵呵，在不打算内嵌二进制之前但是保留这个操作
+		pkg := gengo.NewPackage("sdk", // 如果改了dll名字也改了呵呵，在不打算内嵌二进制之前但是保留这个操作
 			gengo.WithRemovePrefix(
 				"hyperdbg_u_",
 			),
@@ -191,7 +191,7 @@ func TestBindSdk(t *testing.T) {
 			//"struct ZydisShortString_",
 			),
 		)
-		mylog.Check(pkg.Transform("libhyperdbg", &clang.Options{
+		mylog.Check(pkg.Transform("sdk", &clang.Options{
 			Sources:          []string{"merged_headers.h"},
 			AdditionalParams: []string{},
 		}))
@@ -206,13 +206,12 @@ func TestBindSdk(t *testing.T) {
 type GuestExtraRegisters = GuestExtraRegisters`,
 		}
 
-		b := stream.NewBuffer("../sdk/libhyperdbg.go")
+		b := stream.NewBuffer("../sdk/sdk.go")
 		for _, fix := range fixs {
 			b.ReplaceAll(fix, "")
 		}
 		b.Replace(`func init() {`, `func init() {
 	SetDllDirectory("../sdk.gen/SDK/Libraries")`, 1)
-		b.Replace("package libhyperdbg", "package sdk", 1)
 		b.Replace("\nSizeT              = uint64", "", 1)
 		b.Replace("\nBool               = int32", "", 1)
 		b.Replace(`__imp_hyperdbg_u_continue_debuggee = GengoLibrary.ImportNow("hyperdbg_u_continue_debuggee")`, `	return
@@ -226,7 +225,7 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
 }`)
 
-		stream.WriteGoFile("../sdk/libhyperdbg.go", b)
+		stream.WriteGoFile("../sdk/sdk.go", b)
 	})
 }
 
