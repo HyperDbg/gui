@@ -1,1 +1,1 @@
-sdk.gen linguist-vendored
+sdk.gen/** linguist-vendored
