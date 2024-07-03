@@ -6,7 +6,7 @@ import (
 	"unsafe"
 )
 
-const GengoLibraryName = "libhyperdbg" // todo
+const GengoLibraryName = "libhyperdbg"
 
 var GengoLibrary = bindlib.NewLibrary(GengoLibraryName)
 
