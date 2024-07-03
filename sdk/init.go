@@ -27,6 +27,13 @@ func init() {
 	dllData := m.Get("libhyperdbg.dll")
 	GengoLibrary.LoadEmbed(dllData)
 
+	SetCustomDriverPath(stringToBytePointer(dir), stringToBytePointer(stream.BaseName(dir)))
+
+	m.Range(func(k string, v []byte) bool { //copy sys to cache dir
+		stream.WriteTruncate(filepath.Join(dir, k), v)
+		return true
+	})
+
 	mylog.Check(windows.SetDllDirectory(dir)) //another dll names ? what ?
 
 	sha := sha256.Sum256(dllData)

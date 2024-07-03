@@ -17,8 +17,6 @@ func TestSdk(t *testing.T) {
 		return
 	}
 	mylog.Call(func() {
-		absPath := mylog.Check2(filepath.Abs("../sdk.gen/SDK/Libraries/hyperkd.sys"))
-		SetCustomDriverPath(stringToBytePointer(absPath), stringToBytePointer(stream.BaseName(absPath)))
 		assert.True(t, VmxSupportDetection())
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 		ConnectLocalDebugger()
