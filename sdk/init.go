@@ -36,7 +36,7 @@ func init() {
 		return true
 	})
 
-	mylog.Check(windows.SetDllDirectory(dir)) //another dll names ? what ?
+	mylog.Check(windows.SetDllDirectory(dir)) //todo what another dep dll names ?
 
 	sha := sha256.Sum256(dllData)
 	dllName := fmt.Sprintf("libhyperdbg-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
