@@ -2,19 +2,9 @@
 package sdk
 
 import (
-	"crypto/sha256"
-	"encoding/base64"
-	"fmt"
-	"github.com/richardwilkes/toolbox/fatal"
-	"github.com/richardwilkes/toolbox/xio/fs"
-	"golang.org/x/sys/windows"
-	"os"
-	"path/filepath"
-	"unsafe"
-
 	"github.com/ddkwork/app/bindgen/bindlib"
+	"unsafe"
 )
-
 
 const GengoLibraryName = "libhyperdbg" // todo
 

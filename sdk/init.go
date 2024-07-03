@@ -6,6 +6,7 @@ import (
 	_ "embed"
 	"encoding/base64"
 	"fmt"
+	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 	"github.com/richardwilkes/toolbox/fatal"
 	"github.com/richardwilkes/toolbox/xio/fs"
@@ -18,17 +19,17 @@ import (
 var data embed.FS
 
 func init() {
-	stream.ReadEmbedFileMap(data, "Libraries")
-	dir, err := os.UserCacheDir()
-	fatal.IfErr(err)
-	dir = filepath.Join(dir, "hyperdbg", "dll_cache")
-	fatal.IfErr(os.MkdirAll(dir, 0755))
-	fatal.IfErr(windows.SetDllDirectory(dir))
-	sha := sha256.Sum256(data)
+	m := stream.ReadEmbedFileMap(data, "Libraries")
+	dir := mylog.Check2(os.UserCacheDir())
+	dir = filepath.Join(dir, "hyperdbg", "cache")
+	mylog.Check(os.MkdirAll(dir, 0755))
+	mylog.Check(windows.SetDllDirectory(dir))
+
+	sha := sha256.Sum256(m.Get("libhyperdbg.dll"))
 	dllName := fmt.Sprintf("libhyperdbg-%s.dll", base64.RawURLEncoding.EncodeToString(sha[:]))
 	filePath := filepath.Join(dir, dllName)
 	if !fs.FileExists(filePath) {
-		fatal.IfErr(os.WriteFile(filePath, data, 0644))
+		fatal.IfErr(os.WriteFile(filePath, m.Get("libhyperdbg.dll"), 0644))
 	}
 }
 
