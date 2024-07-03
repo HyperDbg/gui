@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/stretchr/testify/assert"
 	"os"
 	"path/filepath"
 	"strings"
 	"syscall"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	"github.com/ddkwork/app/ms/hardwareIndo"
 	"github.com/ddkwork/golibrary/mylog"

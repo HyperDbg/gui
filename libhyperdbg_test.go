@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/ddkwork/app/ms/driverTool/driver"
 	"path/filepath"
 	"testing"
+
+	"github.com/ddkwork/app/ms/driverTool/driver"
 
 	"github.com/ddkwork/golibrary/stream"
 
@@ -17,6 +18,7 @@ func TestSdk(t *testing.T) {
 		mylog.Info("github ci windows not support vt-x nested virtualization,skip test")
 		return
 	}
+	mylog.Check("bsod now,need vmware")
 	mylog.Call(func() {
 		absPath := mylog.Check2(filepath.Abs("hyperkd.sys"))
 		SetCustomDriverPath(stringToBytePointer(absPath), stringToBytePointer(stream.BaseName(absPath)))
@@ -68,7 +70,7 @@ func Test2(t *testing.T) {
 	//	"kdserial.dll",
 	//}
 	d := driver.NewObject("HyperdbgHypervisorDevice", "hyperkd.sys")
-	//d.SetDependencies(Dependencies)
+	// d.SetDependencies(Dependencies)
 	d.Load("hyperkd.sys")
 	d.Unload()
 }

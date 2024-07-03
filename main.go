@@ -1,16 +1,17 @@
 package main
 
 import (
+	"path/filepath"
+
 	"github.com/ddkwork/app"
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 	"github.com/richardwilkes/unison"
-	"path/filepath"
 )
 
 func main() {
-	testSdk()
-	return
+	// testSdk()
+	// return
 	Run()
 	return
 	// testDisassembly()

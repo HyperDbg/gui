@@ -2,9 +2,6 @@
 package main
 
 import (
-	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/stream"
-	"path/filepath"
 	"unsafe"
 
 	"github.com/ddkwork/app/bindgen/bindlib"
@@ -1527,8 +1524,6 @@ var __imp_hyperdbg_u_detect_vmx_support bindlib.PreloadProc
 
 // Gengo init function.
 func init() {
-	absPath := mylog.Check2(filepath.Abs("hyperkd.sys"))
-	SetCustomDriverPath(stringToBytePointer(absPath), stringToBytePointer(stream.BaseName(absPath)))
 	__imp_hyperdbg_u_detect_vmx_support = GengoLibrary.ImportNow("hyperdbg_u_detect_vmx_support")
 	__imp_hyperdbg_u_read_vendor_string = GengoLibrary.ImportNow("hyperdbg_u_read_vendor_string")
 	__imp_hyperdbg_u_load_vmm = GengoLibrary.ImportNow("hyperdbg_u_load_vmm")
