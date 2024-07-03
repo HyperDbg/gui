@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/ddkwork/golibrary/stream"
 	"os"
 	"path/filepath"
 	"strings"
 	"syscall"
 	"testing"
 	"unsafe"
+
+	"github.com/ddkwork/golibrary/stream"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
