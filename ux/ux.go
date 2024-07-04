@@ -191,6 +191,7 @@ func newToolbar() *toolbar {
 		}),
 		close: widget.NewImageButton("close", m.Get("close.png"), func() {}),
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
+			//."start path C:\users\whatever.exe"
 			cmd := ".\"start path " +
 				"C:\\users\\whatever.exe" + //todo set target path into object field
 				"\""
