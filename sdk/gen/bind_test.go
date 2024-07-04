@@ -1,4 +1,4 @@
-package sdk_gen
+package gen
 
 import (
 	"path/filepath"
@@ -154,10 +154,10 @@ const (
 )
 `)
 
-	stream.WriteGoFile("../sdk/vars.go", g.Buffer)
+	stream.WriteGoFile("../vars.go", g.Buffer)
 
-	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../sdk").Enum("debuggerError", enumDebuggers.Keys(), nil)
-	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../sdk").Enum("ioctl", enumIoctls.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum("debuggerError", enumDebuggers.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum("ioctl", enumIoctls.Keys(), nil)
 
 	for _, p := range macros.List() {
 		return
@@ -195,7 +195,7 @@ func TestBindSdk(t *testing.T) {
 			Sources:          []string{"merged_headers.h"},
 			AdditionalParams: []string{},
 		}))
-		mylog.Check(pkg.WriteToDir("../sdk"))
+		mylog.Check(pkg.WriteToDir("../"))
 
 		// generate bug fix
 		fixs := []string{
@@ -206,7 +206,7 @@ func TestBindSdk(t *testing.T) {
 type GuestExtraRegisters = GuestExtraRegisters`,
 		}
 
-		b := stream.NewBuffer("../sdk/sdk.go")
+		b := stream.NewBuffer("../sdk.go")
 		for _, fix := range fixs {
 			b.ReplaceAll(fix, "")
 		}
@@ -223,7 +223,7 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
 }`)
 
-		stream.WriteGoFile("../sdk/sdk.go", b)
+		stream.WriteGoFile("../sdk.go", b)
 	})
 }
 

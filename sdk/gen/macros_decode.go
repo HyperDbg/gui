@@ -1,4 +1,4 @@
-package sdk_gen
+package gen
 
 import (
 	"strings"
