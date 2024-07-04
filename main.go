@@ -8,12 +8,9 @@ import (
 
 func main() {
 	ux.Run()
-	return
 	// testDisassembly()
-	// return
 	// testParsePe()
-	// return
-	testScript()
+	//testScript()
 }
 
 func testDisassembly() {
