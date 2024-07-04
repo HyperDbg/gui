@@ -158,16 +158,16 @@ func LayoutCpu(fileName string) unison.Paneler {
 		}
 	})
 	TopHSplit := widget.NewHSplit(
-		widget.NewTab("cpu with fast call", "todo fast call layout", false, asm),
-		widget.NewTab("Register", "Register", false, widget.NewScrollPanelFill(structView)),
+		widget.NewTab("cpu with fast call", "todo fast call layout", asm),
+		widget.NewTab("Register", "Register", widget.NewScrollPanelFill(structView)),
 		0.3)
 
 	hexEditor := widget.NewCodeEditor("")
 	hexEditor.Editor.SetText(hex.Dump(testHexDat))
 	stackTable := LayoutStackTable()
 	BottomHSplit := widget.NewHSplit(
-		widget.NewTab(" hex editor", "todo hex editor", false, hexEditor),
-		widget.NewTab("stack", "todo stack test", false, stackTable),
+		widget.NewTab(" hex editor", "todo hex editor", hexEditor),
+		widget.NewTab("stack", "todo stack test", stackTable),
 		0.1)
 	//todo add tab into hex editor and stack layout
 	/*
@@ -192,8 +192,8 @@ func LayoutCpu(fileName string) unison.Paneler {
 		tabs.NewTab("struct")
 	*/
 
-	top := widget.NewTab("cpu and reg", "", false, TopHSplit)
-	bottom := widget.NewTab("hex editor and stack", "", false, BottomHSplit)
+	top := widget.NewTab("cpu and reg", "", TopHSplit)
+	bottom := widget.NewTab("hex editor and stack", "", BottomHSplit)
 	vSplit := widget.NewVSplit(top, bottom, 0.1)
 	return vSplit.Dock
 }

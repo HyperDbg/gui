@@ -129,22 +129,22 @@ func NewTabPage() *TagPage {
 	cpu := LayoutCpu(path)
 	p := &TagPage{
 		dock:   dock,
-		cpu:    widget.NewTab("cpu", "", false, cpu),
-		pe:     widget.NewTab("peView", "", false, LayoutPeView(path)),
-		log:    widget.NewTab("log", "", false, LayoutLog()),
-		notes:  widget.NewTab("notes", "", false, LayoutNotes()),
-		breaks: widget.NewTab("break", "", false, LayoutBreak()),
-		memory: widget.NewTab("memory", "", false, LayoutMemory()),
-		stack:  widget.NewTab("stack", "", false, LayoutStack()),
-		seh:    widget.NewTab("seh", "", false, LayoutSeh()),
-		script: widget.NewTab("script", "", false, LayoutScript()),
-		symbol: widget.NewTab("symbol", "", false, LayoutSymbol()),
-		source: widget.NewTab("source", "", false, LayoutSource()),
-		ref:    widget.NewTab("references", "", false, LayoutReferences()),
-		thread: widget.NewTab("thread", "", false, LayoutThread()),
-		handle: widget.NewTab("handle", "", false, LayoutHandle()),
-		trace:  widget.NewTab("trace", "", false, LayoutTrace()),
-		ark:    widget.NewTab("ark", "", false, LayoutArk()),
+		cpu:    widget.NewTab("cpu", "", cpu),
+		pe:     widget.NewTab("peView", "", LayoutPeView(path)),
+		log:    widget.NewTab("log", "", LayoutLog()),
+		notes:  widget.NewTab("notes", "", LayoutNotes()),
+		breaks: widget.NewTab("break", "", LayoutBreak()),
+		memory: widget.NewTab("memory", "", LayoutMemory()),
+		stack:  widget.NewTab("stack", "", LayoutStack()),
+		seh:    widget.NewTab("seh", "", LayoutSeh()),
+		script: widget.NewTab("script", "", LayoutScript()),
+		symbol: widget.NewTab("symbol", "", LayoutSymbol()),
+		source: widget.NewTab("source", "", LayoutSource()),
+		ref:    widget.NewTab("references", "", LayoutReferences()),
+		thread: widget.NewTab("thread", "", LayoutThread()),
+		handle: widget.NewTab("handle", "", LayoutHandle()),
+		trace:  widget.NewTab("trace", "", LayoutTrace()),
+		ark:    widget.NewTab("ark", "", LayoutArk()),
 	}
 	return p
 }
@@ -193,7 +193,7 @@ func newToolbar() *toolbar {
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
 			//."start path C:\users\whatever.exe"
 			cmd := ".\"start path " +
-				"C:\\users\\whatever.exe" + //todo set target path into object field
+				"C:\\users\\whatever.exe" + // todo set target path into object field
 				"\""
 			mylog.Warning(".start", sdk.Interpreter(sdk.StringToBytePointer(cmd)))
 		}),
