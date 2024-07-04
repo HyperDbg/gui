@@ -2,14 +2,11 @@ package sdk
 
 import (
 	"embed"
-	_ "embed"
-	"os"
-	"path/filepath"
-
-	"golang.org/x/sys/windows"
-
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
+	"golang.org/x/sys/windows"
+	"os"
+	"path/filepath"
 )
 
 //go:embed bin/*
