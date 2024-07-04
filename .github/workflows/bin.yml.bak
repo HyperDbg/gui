@@ -1,0 +1,47 @@
+name: Download Release Asset on Windows
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  download-artifact:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up PowerShell
+      shell: pwsh
+      run: |
+        # 获取发布的资产信息
+        $token = "${{ secrets.GITHUB_TOKEN }}"
+        $headers = @{
+          Authorization = "token $token"
+        }
+        $owner = "owner"  # 仓库拥有者
+        $repo = "repo"    # 仓库名称
+        $tag = "v1.0.0"   # 你要下载的发布版本标签
+
+        $releasesUrl = "https://api.github.com/repos/$owner/$repo/releases"
+        $releases = Invoke-RestMethod -Uri $releasesUrl -Headers $headers
+        $release = $releases | Where-Object { $_.tag_name -eq $tag }
+
+        if (-not $release) {
+          throw "Release not found"
+        }
+
+        $asset = $release.assets | Where-Object { $_.name -eq "your_asset_name.zip" }  # 你要下载的资产名称
+
+        if (-not $asset) {
+          throw "Asset not found"
+        }
+
+        # 下载资产
+        $assetUrl = $asset.browser_download_url
+        Invoke-RestMethod -Uri $assetUrl -Headers $headers -OutFile "downloaded_asset.zip"
+
+    - name: Unzip the asset
+      run: Expand-Archive -Path downloaded_asset.zip -DestinationPath ./unzipped
