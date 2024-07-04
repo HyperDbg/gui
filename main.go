@@ -10,7 +10,7 @@ func main() {
 	ux.Run()
 	// testDisassembly()
 	// testParsePe()
-	//testScript()
+	// testScript()
 }
 
 func testDisassembly() {
