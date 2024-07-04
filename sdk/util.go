@@ -59,7 +59,7 @@ func isGithubCI() bool {
 	return strings.Contains(GOPATH, "runneradmin") || strings.Contains(GOPATH, "hostedtoolcache") // why?
 }
 
-func stringToBytePointer(s string) *byte {
+func StringToBytePointer(s string) *byte {
 	bytes := []byte(s)
 	ptr := &bytes[0]
 	return ptr
