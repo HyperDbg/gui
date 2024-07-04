@@ -190,7 +190,7 @@ func newToolbar() *toolbar {
 			mylog.Todo("oep address is wrong? see asm panel")
 		}),
 		close: widget.NewImageButton("close", m.Get("close.png"), func() {
-			mylog.Warning(".kill", sdk.Interpreter(sdk.StringToBytePointer("kill"))) //todo need pid ?
+			mylog.Warning(".kill", sdk.Interpreter(sdk.StringToBytePointer(".kill"))) // todo need pid ?
 		}),
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
 			//."start path C:\users\whatever.exe"

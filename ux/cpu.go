@@ -3,6 +3,7 @@ package ux
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/ddkwork/hyperdbgui/sdk"
 	"os"
 
 	"github.com/saferwall/pe"
@@ -356,6 +357,13 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 					Title: "goto",
 					Can:   func(any) bool { return true },
 					Do:    func(a any) { mylog.Todo("goto 0x00007FF838E51030") },
+				},
+				{
+					Title: "set breakpoint",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning(".bp", sdk.Interpreter(sdk.StringToBytePointer(".bp"))) //todo need addresses argument?
+					},
 				},
 			}
 		},
