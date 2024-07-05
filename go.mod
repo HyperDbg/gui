@@ -20,6 +20,7 @@ require (
 	github.com/dave/dst v0.27.3 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dc0d/caseconv v0.5.0 // indirect
+	github.com/ddkwork/app v0.0.0-20240705135651-15a49d4b48bd // indirect
 	github.com/dlclark/regexp2 v1.11.0 // indirect
 	github.com/ebitengine/purego v0.7.1 // indirect
 	github.com/edsrzf/mmap-go v1.1.0 // indirect
