@@ -1,0 +1,47 @@
+name: Build and Test on Windows
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Download latest HyperDbg release
+      run: |
+        curl -s https://api.github.com/repos/HyperDbg/HyperDbg/releases/latest `
+        | jq -r '.assets[] | select(.name | test("\\.zip$")) | .browser_download_url' `
+        | % { Invoke-WebRequest $_ -OutFile 'hyperdbg.zip' }
+
+    - name: Unzip HyperDbg
+      run: |
+        Expand-Archive -Path hyperdbg.zip -DestinationPath hyperdbg
+
+    - name: List contents of HyperDbg
+      run: |
+        Get-ChildItem -Path hyperdbg -Recurse
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.22.4'
+
+    - name: Install dependencies
+      run: go mod tidy
+
+    - name: Copy SDK directory to target path
+      run: |
+        xcopy hyperdbg\SDK\* .\gui\sdk\bindgen\SDK\ /E /H /Y
+
+    - name: Build the project
+      run: go build ./...
+
+    - name: Run tests
+      run: go test ./...
