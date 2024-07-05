@@ -57,8 +57,7 @@ func LinkName() (*uint16, error) {
 }
 
 func isGithubCI() bool {
-	GOPATH := os.Getenv("GOPATH")
-	return strings.Contains(GOPATH, "runneradmin") || strings.Contains(GOPATH, "hostedtoolcache") // why?
+	return os.Getenv("GITHUB_ACTIONS") == "true"
 }
 
 func StringToBytePointer(s string) *byte {
