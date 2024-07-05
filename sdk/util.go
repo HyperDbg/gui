@@ -56,7 +56,7 @@ func LinkName() (*uint16, error) {
 	return syscall.UTF16PtrFromString("\\\\\\\\.\\\\" + DeviceName())
 }
 
-func isGithubCI() bool {
+func isRunningOnGitHubActions() bool {
 	return os.Getenv("GITHUB_ACTIONS") == "true"
 }
 
