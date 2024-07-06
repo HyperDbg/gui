@@ -3,17 +3,15 @@ package internal
 import (
 	"archive/zip"
 	"fmt"
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/tc-hib/winres"
+	"github.com/tc-hib/winres/version"
+	"golang.org/x/image/draw"
 	"image"
 	"io"
 	"os"
 	"strings"
 	"time"
-
-	"golang.org/x/image/draw"
-
-	"github.com/ddkwork/golibrary/mylog"
-	"github.com/tc-hib/winres"
-	"github.com/tc-hib/winres/version"
 )
 
 const (
@@ -35,9 +33,7 @@ func platformPackage() {
 	})
 	addWindowsIcon(rs)
 	addWindowsVersion(rs)
-	var f *os.File
-	f = mylog.Check2(os.Create("rsrc_windows_amd64.syso"))
-
+	f := mylog.Check2(os.Create("rsrc_windows_amd64.syso"))
 	defer func() { mylog.Check(f.Close()) }()
 	mylog.Check(rs.WriteObject(f, winres.ArchAMD64))
 }
