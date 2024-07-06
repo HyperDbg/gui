@@ -6,7 +6,7 @@ require (
 	github.com/ddkwork/app v0.0.0-20240706125505-42bb67bfcdee
 	github.com/ddkwork/golibrary v0.0.0-20240706124243-7ed34ae5fd52
 	github.com/richardwilkes/unison v0.71.0
-	github.com/saferwall/pe v1.5.3
+	github.com/saferwall/pe v1.5.4
 	github.com/stretchr/testify v1.9.0
 	github.com/tc-hib/winres v0.3.1
 	github.com/winlabs/gowin32 v0.0.0-20221003142512-0d265587d3c9
