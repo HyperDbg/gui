@@ -1,6 +1,1009 @@
 [
     [
         {
+            "Name": "Bc",
+            "Description": "bc : clears a breakpoint using breakpoint id.\n\n",
+            "Syntax": ["bc [BreakpointId (hex)]"],
+            "Examples": ["bc 0", "bc 2"],
+            "Notes": [],
+            "FullName": "Bc:ClearsBreakpointBreakpointId."
+        },
+        {
+            "Name": "Bd",
+            "Description": "bd : disables a breakpoint using breakpoint id.\n\n",
+            "Syntax": ["bd [BreakpointId (hex)]"],
+            "Examples": ["bd 0", "bd 2"],
+            "Notes": [],
+            "FullName": "Bd:DisablesBreakpointBreakpointId."
+        },
+        {
+            "Name": "Be",
+            "Description": "be : enables a breakpoint using breakpoint id.\n\n",
+            "Syntax": ["be [BreakpointId (hex)]"],
+            "Examples": ["be 0", "be 2"],
+            "Notes": [],
+            "FullName": "Be:EnablesBreakpointBreakpointId."
+        },
+        {
+            "Name": "Bl",
+            "Description": "bl : lists all the enabled and disabled breakpoints.\n\n",
+            "Syntax": ["bl"],
+            "Examples": [],
+            "Notes": [],
+            "FullName": "Bl:ListsAllEnabledAndDisabledBreakpoints."
+        },
+        {
+            "Name": "Bp",
+            "Description": "bp : puts a breakpoint (0xcc).\n",
+            "Syntax": ["bp [Address (hex)] [pid ProcessId (hex)] [tid ThreadId (hex)] [core CoreId (hex)]"],
+            "Examples": [
+                "bp nt!ExAllocatePoolWithTag",
+                "bp nt!ExAllocatePoolWithTag+5",
+                "bp nt!ExAllocatePoolWithTag+@rcx+rbx",
+                "bp fffff8077356f010",
+                "bp fffff8077356f010 pid 0x4",
+                "bp fffff8077356f010 tid 0x1000",
+                "bp fffff8077356f010 pid 0x4 core 2"
+            ],
+            "Notes": ["'bp' is not an event, if you want to use an event version "],
+            "FullName": "Bp:PutsBreakpoint(0xcc)."
+        },
+        {
+            "Name": "Core",
+            "Description": "~ : shows and changes the operating processor.\n\n",
+            "Syntax": ["~", "~ [CoreNumber (hex)]"],
+            "Examples": ["~ ", "~ 2 "],
+            "Notes": [],
+            "FullName": "~:ShowsAndChangesOperatingProcessor."
+        },
+        {
+            "Name": "Cpu",
+            "Description": "cpu : collects a report from cpu features.\n\n",
+            "Syntax": ["cpu "],
+            "Examples": [
+                "dt nt!_EPROCESS",
+                "dt nt!_EPROCESS fffff8077356f010",
+                "dt nt!_EPROCESS $proc",
+                "dt nt!_KPROCESS @rax+@rbx+c0",
+                "!dt nt!_EPROCESS 1f0300",
+                "dt nt!_MY_STRUCT 7ff00040 pid 1420",
+                "dt nt!_EPROCESS $proc inline all",
+                "dt nt!_EPROCESS fffff8077356f010 inline no"
+            ],
+            "Notes": [],
+            "FullName": "Cpu:CollectsReportFromCpuFeatures."
+        }
+    ],
+    [
+        {
+            "Name": "flush",
+            "Description": "removes all the buffer and messages from kernel-mode buffers.",
+            "Syntax": ["flush"],
+            "Examples": [],
+            "Notes": [],
+            "FullName": "RemoveKernelModeBuffers"
+        },
+        {
+            "Name": "g",
+            "Description": "continues debuggee or continues processing kernel messages.",
+            "Syntax": ["g"],
+            "Examples": [],
+            "Notes": [],
+            "FullName": "ContinueDebuggee"
+        },
+        {
+            "Name": "gu",
+            "Description": "executes a single instruction (step-out) and optionally displays the resulting values of all registers and flags.",
+            "Syntax": ["gu", "gu [Count (hex)]"],
+            "Examples": ["gu", "gu 10000"],
+            "Notes": [],
+            "FullName": "ExecuteSingleInstructionStepOut"
+        },
+        {
+            "Name": "i",
+            "Description": "executes a single instruction (step-in) and guarantees that no other instruction is executed other than the displayed instruction including user to the kernel (syscalls) and kernel to the user (sysrets) and exceptions and page-faults and optionally displays all registers and flags' resulting values.",
+            "Syntax": ["i", "i [Count (hex)]", "ir", "ir [Count (hex)]"],
+            "Examples": ["i", "ir", "ir 1f"],
+            "Notes": [],
+            "FullName": "ExecuteSingleInstructionStepIn"
+        },
+        {
+            "Name": "k, kd, kq",
+            "Description": "shows the callstack of the thread.",
+            "Syntax": ["k", "kd", "kq", "k [base StackAddress (hex)] [l Length (hex)]", "kd [base StackAddress (hex)] [l Length (hex)]", "kq [base StackAddress (hex)] [l Length (hex)]"],
+            "Examples": ["k", "k l 100", "kd base 0x77356f010", "kq base fffff8077356f010", "kq base @rbx-10", "kq base fffff8077356f010 l 100"],
+            "Notes": [],
+            "FullName": "ShowThreadCallstack"
+        },
+        {
+            "Name": "lm",
+            "Description": "lists user/kernel modules' base address, size, name and path.",
+            "Syntax": ["lm [m Name (string)] [pid ProcessId (hex)] [Filter (string)]"],
+            "Examples": ["lm", "lm km", "lm um", "lm m nt", "lm km m ntos", "lm um m kernel32", "lm um m kernel32 pid 1240"],
+            "Notes": [],
+            "FullName": "ListModules"
+        },
+        {
+            "Name": "load",
+            "Description": "installs the drivers and load the modules.",
+            "Syntax": ["load [ModuleName (string)]"],
+            "Examples": ["load vmm"],
+            "Notes": [],
+            "FullName": "InstallDriversAndLoadModules"
+        },
+        {
+            "Name": "output",
+            "Description": "creates an output instance that can be used in event forwarding.",
+            "Syntax": ["output [create Name (string)] [file|namedpipe|tcp Address (string)]", "output [open|close Name (string)]"],
+            "Examples": ["output create MyOutputName1 file c:\\rev\\output.txt", "output create MyOutputName2 tcp 192.168.1.10:8080", "output create MyOutputName3 namedpipe \\\\.\\Pipe\\HyperDbgOutput", "output create MyOutputName1 module c:\\rev\\event_forwarding.dll", "output open MyOutputName1", "output close MyOutputName1"],
+            "Notes": [],
+            "FullName": "CreateEventForwardingOutputInstance"
+        },
+        {
+            "Name": "p",
+            "Description": "executes a single instruction (step) and optionally displays the resulting values of all registers and flags.",
+            "Syntax": ["p", "p [Count (hex)]", "pr", "pr [Count (hex)]"],
+            "Examples": ["p", "pr", "pr 1f"],
+            "Notes": [],
+            "FullName": "ExecuteSingleInstructionStep"
+        },
+        {
+            "Name": "pause",
+            "Description": "pauses the kernel events.",
+            "Syntax": ["pause"],
+            "Examples": [],
+            "Notes": [],
+            "FullName": "PauseKernelEvents"
+        },
+        {
+            "Name": "preactivate",
+            "Description": "preactivates a special functionality.",
+            "Syntax": ["preactivate  [Type (string)]"],
+            "Examples": ["preactivate mode"],
+            "Notes": ["type of activations: mode: used for preactivation of the '!mode' event"],
+            "FullName": "PreactivateSpecialFunctionality"
+        }
+    ],
+    [
+        {
+            "Name": "prealloc",
+            "Description": "pre-allocates buffer for special purposes.",
+            "Syntax": [
+                "prealloc [Type (string)] [Count (hex)]"
+            ],
+            "Examples": [
+                "prealloc thread-interception 8",
+                "prealloc monitor 10",
+                "prealloc epthook 5",
+                "prealloc epthook2 3",
+                "prealloc regular-event 12",
+                "prealloc big-safe-buffer 1"
+            ],
+            "Notes": [
+                "thread-interception: used for pre-allocations of the thread holders for the thread interception mechanism",
+                "monitor: used for pre-allocations of the '!monitor' EPT hooks",
+                "epthook: used for pre-allocations of the '!epthook' EPT hooks",
+                "epthook2: used for pre-allocations of the '!epthook2' EPT hooks",
+                "regular-event: used for pre-allocations of regular instant events",
+                "big-event: used for pre-allocations of big instant events",
+                "regular-safe-buffer: used for pre-allocations of the regular event safe buffers ($buffer) for instant events",
+                "big-safe-buffer: used for pre-allocations of the big event safe buffers ($buffer) for instant events"
+            ],
+            "FullName": "PreallocateBuffer"
+        },
+        {
+            "Name": "print",
+            "Description": "evaluates expressions.",
+            "Syntax": [
+                "print [Expression (string)]"
+            ],
+            "Examples": [
+                "print dq(poi(@rcx))"
+            ],
+            "Notes": [],
+            "FullName": "EvaluateExpressions"
+        },
+        {
+            "Name": "r",
+            "Description": "reads or modifies registers.",
+            "Syntax": [
+                "r",
+                "r [Register (string)] [= Expr (string)]"
+            ],
+            "Examples": [
+                "r",
+                "r @rax",
+                "r rax",
+                "r rax = 0x55",
+                "r rax = @rbx + @rcx + 0n10"
+            ],
+            "Notes": [],
+            "FullName": "ReadModifyRegisters"
+        },
+        {
+            "Name": "rdmsr",
+            "Description": "reads a model-specific register (MSR).",
+            "Syntax": [
+                "rdmsr [Msr (hex)] [core CoreNumber (hex)]"
+            ],
+            "Examples": [
+                "rdmsr c0000082",
+                "rdmsr c0000082 core 2"
+            ],
+            "Notes": [],
+            "FullName": "ReadModelSpecificRegister"
+        },
+        {
+            "Name": "sb, !sb, sd, !sd, sq, !sq",
+            "Description": "searches a contiguous memory for a special byte pattern.",
+            "Syntax": [
+                "sb [StartAddress (hex)] [l Length (hex)] [BytePattern (hex)] [pid ProcessId (hex)]",
+                "sd [StartAddress (hex)] [l Length (hex)] [BytePattern (hex)] [pid ProcessId (hex)]",
+                "sq [StartAddress (hex)] [l Length (hex)] [BytePattern (hex)] [pid ProcessId (hex)]"
+            ],
+            "Examples": [
+                "sb nt!ExAllocatePoolWithTag 90 85 95 l ffff",
+                "sb nt!ExAllocatePoolWithTag+5 90 85 95 l ffff",
+                "sb @rcx+5 90 85 95 l ffff",
+                "sb fffff8077356f010 90 85 95 l ffff",
+                "sd fffff8077356f010 90423580 l ffff pid 1c0",
+                "!sq 100000 9090909090909090 l ffff",
+                "!sq @rdx+r12 9090909090909090 l ffff",
+                "!sq 100000 9090909090909090 9090909090909090 9090909090909090 l ffffff"
+            ],
+            "Notes": [
+                "If you want to search in physical (address) memory then add '!' at the start of the command"
+            ],
+            "FullName": "SearchMemoryPattern"
+        },
+        {
+            "Name": "settings",
+            "Description": "queries, sets, or changes a value for a special settings option.",
+            "Syntax": [
+                "settings [OptionName (string)]",
+                "settings [OptionName (string)] [Value (hex)]",
+                "settings [OptionName (string)] [Value (string)]",
+                "settings [OptionName (string)] [on|off]"
+            ],
+            "Examples": [
+                "settings autounpause",
+                "settings autounpause on",
+                "settings autounpause off",
+                "settings addressconversion on",
+                "settings addressconversion off",
+                "settings autoflush on",
+                "settings autoflush off",
+                "settings syntax intel",
+                "settings syntax att",
+                "settings syntax masm"
+            ],
+            "Notes": [],
+            "FullName": "SettingsManagement"
+        },
+        {
+            "Name": "sleep",
+            "Description": "sleeps the debugger; this command is used in scripts, it doesn't breaks the debugger but the debugger still shows the buffers received from kernel.",
+            "Syntax": [
+                "sleep [MillisecondsTime (hex)]"
+            ],
+            "Examples": [],
+            "Notes": [],
+            "FullName": "DebuggerSleep"
+        },
+        {
+            "Name": "t",
+            "Description": "executes a single instruction (step-in) and optionally displays the resulting values of all registers and flags.",
+            "Syntax": [
+                "t",
+                "t [Count (hex)]",
+                "tr",
+                "tr [Count (hex)]"
+            ],
+            "Examples": [
+                "t",
+                "tr",
+                "tr 1f"
+            ],
+            "Notes": [],
+            "FullName": "ExecuteStepIn"
+        },
+        {
+            "Name": "test",
+            "Description": "tests essential features of HyperDbg in current machine.",
+            "Syntax": [
+                "test [Task (string)]"
+            ],
+            "Examples": [
+                "test",
+                "test query",
+                "test trap-status",
+                "test pool",
+                "test query",
+                "test breakpoint on",
+                "test breakpoint off",
+                "test trap on",
+                "test trap off"
+            ],
+            "Notes": [],
+            "FullName": "TestHyperDbgFeatures"
+        },
+        {
+            "Name": "unload",
+            "Description": "unloads the kernel modules and uninstalls the drivers.",
+            "Syntax": [
+                "unload [remove] [ModuleName (string)]"
+            ],
+            "Examples": [
+                "unload vmm",
+                "unload remove vmm"
+            ],
+            "Notes": [],
+            "FullName": "UnloadKernelModules"
+        },
+        {
+            "Name": "x",
+            "Description": "searches and shows symbols (wildcard) and corresponding addresses.",
+            "Syntax": [
+                "x [Module!Name (wildcard string)]"
+            ],
+            "Examples": [
+                "x nt!ExAllocatePoolWithTag",
+                "x nt!ExAllocatePool*",
+                "x nt!*"
+            ],
+            "Notes": [],
+            "FullName": "SearchSymbols"
+        },
+        {
+            "Name": "!cpuid",
+            "Description": "monitors execution of a special cpuid index or all cpuids instructions.",
+            "Syntax": [
+                "!cpuid [Eax (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!cpuid",
+                "!cpuid 1",
+                "!cpuid pid 400",
+                "!cpuid core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "MonitorCpuidExecution"
+        }
+    ],
+    [
+        {
+            "Name": "!crwrite",
+            "Description": "monitors modification of control registers (CR0 / CR4).",
+            "Syntax": [
+                "!crwrite [Cr (hex)] [mask Mask (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!crwrite 0",
+                "!crwrite 0 0x10000",
+                "!crwrite 4 pid 400",
+                "!crwrite 4 core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "MonitorControlRegisterModification"
+        },
+        {
+            "Name": "!dr",
+            "Description": "monitors any access to debug registers.",
+            "Syntax": [
+                "!dr [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!dr",
+                "!dr pid 400",
+                "!dr core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "MonitorDebugRegisters"
+        },
+        {
+            "Name": "!epthook",
+            "Description": "puts a hidden-hook EPT (hidden breakpoints).",
+            "Syntax": [
+                "!epthook [Address (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!epthook nt!ExAllocatePoolWithTag",
+                "!epthook nt!ExAllocatePoolWithTag+5",
+                "!epthook fffff801deadb000",
+                "!epthook fffff801deadb000 pid 400",
+                "!epthook fffff801deadb000 core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "HiddenHookEPTBreakpoints"
+        },
+        {
+            "Name": "!epthook2",
+            "Description": "puts a hidden-hook EPT (detours).",
+            "Syntax": [
+                "!epthook2 [Address (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!epthook2 nt!ExAllocatePoolWithTag",
+                "!epthook2 nt!ExAllocatePoolWithTag+5",
+                "!epthook2 fffff801deadb000",
+                "!epthook2 fffff801deadb000 pid 400",
+                "!epthook2 fffff801deadb000 core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "HiddenHookEPTDetours"
+        },
+        {
+            "Name": "!exception",
+            "Description": "monitors the first 32 entry of IDT (starting from zero).",
+            "Syntax": [
+                "!exception [IdtIndex (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!exception",
+                "!exception 0xe",
+                "!exception pid 400",
+                "!exception core 2 pid 400"
+            ],
+            "Notes": [
+                "monitoring page-faults (entry 0xe) is implemented differently."
+            ],
+            "FullName": "MonitorIDTEntries"
+        },
+        {
+            "Name": "!hide",
+            "Description": "tries to make HyperDbg transparent from anti-debugging and anti-hypervisor methods.",
+            "Syntax": [
+                "!hide",
+                "!hide [pid ProcessId (hex)]",
+                "!hide [name ProcessName (string)]"
+            ],
+            "Examples": [
+                "!hide",
+                "!hide pid b60",
+                "!hide name procexp.exe"
+            ],
+            "Notes": [
+                "process names are case sensitive and you can use this command multiple times."
+            ],
+            "FullName": "HideHyperDbg"
+        },
+        {
+            "Name": "!interrupt",
+            "Description": "monitors the external interrupt (IDT >= 32).",
+            "Syntax": [
+                "[IdtIndex (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!interrupt 0x2f",
+                "!interrupt 0x2f pid 400",
+                "!interrupt 0x2f core 2 pid 400"
+            ],
+            "Notes": [
+                "The index should be greater than 0x20 (32) and less than 0xFF (255) - starting from zero."
+            ],
+            "FullName": "MonitorExternalInterrupts"
+        },
+        {
+            "Name": "!ioin",
+            "Description": "detects the execution of IN (I/O instructions) instructions.",
+            "Syntax": [
+                "!ioin [Port (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!ioin",
+                "!ioin 0x64",
+                "!ioin pid 400",
+                "!ioin core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "DetectIOInstructionsIn"
+        },
+        {
+            "Name": "!ioout",
+            "Description": "detects the execution of OUT (I/O instructions) instructions.",
+            "Syntax": [
+                "!ioout [Port (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!ioout",
+                "!ioout 0x64",
+                "!ioout pid 400",
+                "!ioout core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "DetectIOInstructionsOut"
+        },
+        {
+            "Name": "!measure",
+            "Description": "measures the arguments needs for the '!hide' command.",
+            "Syntax": [
+                "!measure [default]"
+            ],
+            "Examples": [
+                "!measure",
+                "!measure default"
+            ],
+            "Notes": [],
+            "FullName": "MeasureArgumentsForHide"
+        },
+        {
+            "Name": "!mode",
+            "Description": "traps (and possibly blocks) the execution of user-mode/kernel-mode instructions.",
+            "Syntax": [
+                "!mode [Mode (string)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!mode u pid 1c0",
+                "!mode k pid 1c0",
+                "!mode ku pid 1c0",
+                "!mode ku core 2 pid 400"
+            ],
+            "Notes": [
+                "this event applies to the target process; thus, you need to specify the process id"
+            ],
+            "FullName": "TrapModeInstructions"
+        },
+        {
+            "Name": "!monitor",
+            "Description": "monitors address range for read and writes.",
+            "Syntax": [
+                "!monitor [MemoryType (vapa)] [Attribute (string)] [FromAddress (hex)] [ToAddress (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]",
+                "!monitor [MemoryType (vapa)] [Attribute (string)] [FromAddress (hex)] [l Length (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!monitor rw fffff801deadb000 fffff801deadbfff",
+                "!monitor rw fffff801deadb000 l 1000",
+                "!monitor pa rw c01000 l 1000",
+                "!monitor rwx fffff801deadb000 fffff801deadbfff",
+                "!monitor rwx fffff801deadb000 l 230d0",
+                "!monitor rw nt!Kd_DEFAULT_Mask Kd_DEFAULT_Mask+5",
+                "!monitor r fffff801deadb000 fffff801deadbfff pid 400",
+                "!monitor w fffff801deadb000 fffff801deadbfff core 2 pid 400",
+                "!monitor w c01000 c01000+2500 core 2 pid 400",
+                "!monitor x fffff801deadb000 fffff801deadbfff core 2 pid 400",
+                "!monitor x fffff801deadb000 l 500 core 2 pid 400",
+                "!monitor wx fffff801deadb000 fffff801deadbfff core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "MonitorMemoryAccess"
+        },
+        {
+            "Name": "!msrread",
+            "Description": "detects the execution of rdmsr instructions.",
+            "Syntax": [
+                "!msrread [Msr (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!msrread",
+                "!msrread 0xc0000082",
+                "!msread pid 400",
+                "!msrread core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "DetectRdmsrExecution"
+        },
+        {
+            "Name": "!msrwrite",
+            "Description": "detects the execution of wrmsr instructions.",
+            "Syntax": [
+                "!msrwrite [Msr (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!msrwrite",
+                "!msrwrite 0xc0000082",
+                "!msrwrite pid 400",
+                "!msrwrite core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "DetectWrmsrExecution"
+        },
+        {
+            "Name": "!pa2va",
+            "Description": "converts virtual address to physical address.",
+            "Syntax": [
+                "!pa2va [PhysicalAddress (hex)] [pid ProcessId (hex)]"
+            ],
+            "Examples": [
+                "!pa2va nt!ExAllocatePoolWithTag",
+                "!pa2va nt!ExAllocatePoolWithTag+5",
+                "!pa2va @rax+5",
+                "!pa2va fffff801deadbeef",
+                "!pa2va fffff801deadbeef pid 0xc8"
+            ],
+            "Notes": [],
+            "FullName": "ConvertPhysicalToVirtual"
+        },
+        {
+            "Name": "!pmc",
+            "Description": "monitors execution of rdpmc instructions.",
+            "Syntax": [
+                "!pmc [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!pmc",
+                "!pmc pid 400",
+                "!pmc core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "MonitorRdpmcExecution"
+        },
+        {
+            "Name": "!pte",
+            "Description": "finds virtual addresses of different paging-levels.",
+            "Syntax": [
+                "!pte [VirtualAddress (hex)] [pid ProcessId (hex)]"
+            ],
+            "Examples": [
+                "!pte nt!ExAllocatePoolWithTag",
+                "!pte nt!ExAllocatePoolWithTag+5",
+                "!pte fffff801deadbeef",
+                "!pte 0x400021000 pid 1c0"
+            ],
+            "Notes": [],
+            "FullName": "FindVirtualAddressPagingLevels"
+        },
+        {
+            "Name": "!rev",
+            "Description": "uses the reversing machine module in order to reconstruct the programmer/memory assumptions.",
+            "Syntax": [
+                "!rev [config] [pid ProcessId (hex)]",
+                "!rev [path Path (string)] [Parameters (string)]"
+            ],
+            "Examples": [
+                "!rev path c:\\reverse eng\\my_file.exe",
+                "!rev pattern",
+                "!rev reconstruct",
+                "!rev pattern pid 1c0",
+                "!rev reconstruct pid 1c0"
+            ],
+            "Notes": [],
+            "FullName": "UseReversingMachineModule"
+        },
+        {
+            "Name": "!syscall",
+            "Description": "monitors and hooks all execution of syscall instructions (by accessing memory and checking for instructions).",
+            "Syntax": [
+                "!syscall [SyscallNumber (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]",
+                "!syscall2 [SyscallNumber (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!syscall",
+                "!syscall2",
+                "!syscall 0x55",
+                "!syscall2 0x55",
+                "!syscall 0x55 pid 400",
+                "!syscall 0x55 core 2 pid 400",
+                "!syscall2 0x55 core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "MonitorSyscallExecution"
+        },
+        {
+            "Name": "!sysret",
+            "Description": "monitors and hooks all execution of sysret instructions (by accessing memory and checking for instructions).",
+            "Syntax": [
+                "!sysret [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }]"
+            ],
+            "Examples": [
+                "!sysret",
+                "!sysret2",
+                "!sysret pid 400",
+                "!sysret2 pid 400",
+                "!sysret core 2 pid 400",
+                "!sysret2 core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "MonitorSysretExecution"
+        },
+        {
+            "Name": "!trace",
+            "Description": "traces the execution of user-mode/kernel-mode instructions.",
+            "Syntax": [
+                "!trace [TraceType (string)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!trace step-out",
+                "!trace step-in pid 1c0",
+                "!trace instrument-step core 2 pid 400"
+            ],
+            "Notes": [
+                "valid trace types: ",
+                "step-in : single step-in (regular)",
+                "step-out : single step-out (regular)",
+                "instrument-step : single step-in (instrumentation)"
+            ],
+            "FullName": "TraceExecution"
+        },
+        {
+            "Name": "!track",
+            "Description": "tracks instructions from user-mode to kernel-mode or kernel-mode to user-mode to create call tree. Please note that it's highly recommended to configure symbols before using this command as it maps addresses to corresponding function names.",
+            "Syntax": [
+                "!track [tree] [Count (hex)]",
+                "!track [reg] [Count (hex)]"
+            ],
+            "Examples": [
+                "!track tree 10000",
+                "!track reg 10000"
+            ],
+            "Notes": [],
+            "FullName": "TrackModeTransitionInstructions"
+        },
+        {
+            "Name": "!tsc",
+            "Description": "monitors execution of rdtsc/rdtscp instructions.",
+            "Syntax": [
+                "!tsc [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+            ],
+            "Examples": [
+                "!tsc",
+                "!tsc pid 400",
+                "!tsc core 2 pid 400"
+            ],
+            "Notes": [],
+            "FullName": "MonitorRdtscInstructions"
+        },
+        {
+            "Name": "!unhide",
+            "Description": "reverts the transparency measures of the '!hide' command.",
+            "Syntax": [
+                "!unhide"
+            ],
+            "Examples": [
+                "!unhide"
+            ],
+            "Notes": [],
+            "FullName": "RevertHide"
+        },
+        {
+            "Name": "!va2pa",
+            "Description": "converts virtual address to physical address.",
+            "Syntax": [
+                "!va2pa [VirtualAddress (hex)] [pid ProcessId (hex)]"
+            ],
+            "Examples": [
+                "!va2pa nt!ExAllocatePoolWithTag",
+                "!va2pa nt!ExAllocatePoolWithTag+5",
+                "!va2pa @rcx",
+                "!va2pa @rcx+5",
+                "!va2pa fffff801deadbeef",
+                "!va2pa fffff801deadbeef pid 0xc8"
+            ],
+            "Notes": [],
+            "FullName": "ConvertVirtualToPhysical"
+        }
+    ],
+    {
+        "commands": [
+            {
+                "Name": "!vmcall",
+                "Description": "monitors execution of VMCALL instruction.",
+                "Syntax": [
+                    "!vmcall [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]"
+                ],
+                "Examples": [
+                    "!vmcall",
+                    "!vmcall pid 400",
+                    "!vmcall core 2 pid 400"
+                ],
+                "Notes": [],
+                "FullName": "MonitorVmcallExecution"
+            },
+            {
+                "Name": "!hw_clk",
+                "Description": "performs actions related to hwdbg hardware debugging events for each clock cycle.",
+                "Syntax": [
+                    "!hw_clk  [script { Script (string) }]"
+                ],
+                "Examples": [
+                    "!hw_clk script { @hw_pin1 = 0; }"
+                ],
+                "Notes": [],
+                "FullName": "HardwareClockDebugging"
+            },
+            {
+                "Name": ".attach",
+                "Description": "attaches to debug a thread in VMI Mode.",
+                "Syntax": [
+                    ".attach [pid ProcessId (hex)]"
+                ],
+                "Examples": [
+                    ".attach pid b60"
+                ],
+                "Notes": [],
+                "FullName": "AttachDebugThread"
+            },
+            {
+                "Name": ".cls",
+                "Description": "clears the screen.",
+                "Syntax": [
+                    ".cls"
+                ],
+                "Examples": [],
+                "Notes": [],
+                "FullName": "ClearScreen"
+            },
+            {
+                "Name": ".connect",
+                "Description": "connects to a remote or local machine to start debugging.",
+                "Syntax": [
+                    ".connect [local]",
+                    ".connect [Ip (string)] [Port (decimal)]"
+                ],
+                "Examples": [
+                    ".connect local",
+                    ".connect 192.168.1.5 50000"
+                ],
+                "Notes": [],
+                "FullName": "ConnectToMachine"
+            },
+            {
+                "Name": ".debug",
+                "Description": "debugs a target machine or makes this machine a debuggee.",
+                "Syntax": [
+                    ".debug [remote] [serial|namedpipe] [Baudrate (decimal)] [Address (string)]",
+                    ".debug [prepare] [serial] [Baudrate (decimal)] [Address (string)]",
+                    ".debug [close]"
+                ],
+                "Examples": [
+                    ".debug remote serial 115200 com2",
+                    ".debug remote namedpipe \\\\\\.\\pipe\\HyperDbgPipe",
+                    ".debug prepare serial 115200 com1",
+                    ".debug prepare serial 115200 com2",
+                    ".debug close"
+                ],
+                "Notes": [
+                    "valid baud rates (decimal): 110, 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 38400, 56000, 57600, 115200, 128000, 256000",
+                    "valid COM ports: COM1, COM2, COM3, COM4"
+                ],
+                "FullName": "DebugMachine"
+            },
+            {
+                "Name": ".detach",
+                "Description": "detaches from debugging a user-mode process.",
+                "Syntax": [
+                    ".detach"
+                ],
+                "Examples": [],
+                "Notes": [],
+                "FullName": "DetachDebugging"
+            },
+            {
+                "Name": ".disconnect",
+                "Description": "disconnects from a debugging session (it won't unload the modules).",
+                "Syntax": [
+                    ".disconnect"
+                ],
+                "Examples": [],
+                "Notes": [],
+                "FullName": "DisconnectSession"
+            },
+            {
+                "Name": ".dump",
+                "Description": "saves memory context into a file.",
+                "Syntax": [
+                    ".dump [FromAddress (hex)] [ToAddress (hex)] [pid ProcessId (hex)] [path Path (string)]"
+                ],
+                "Examples": [
+                    ".dump 401000 40b000 path c:\\\\rev\\\\dump1.dmp",
+                    ".dump 401000 40b000 pid 1c0 path c:\\\\rev\\\\desktop\\\\dump2.dmp",
+                    ".dump fffff801deadb000 fffff801deade054 path c:\\\\rev\\\\dump3.dmp",
+                    ".dump fffff801deadb000 fffff801deade054 path c:\\\\rev\\\\dump4.dmp",
+                    ".dump 00007ff8349f2000 00007ff8349f8000 path c:\\\\rev\\\\dump5.dmp",
+                    ".dump @rax+@rcx @rax+@rcx+1000 path c:\\\\rev\\\\dump6.dmp",
+                    "!dump 1000 2100 path c:\\\\rev\\\\dump7.dmp"
+                ],
+                "Notes": [
+                    "If you want to dump physical memory then add '!' at the start of the command"
+                ],
+                "FullName": "SaveMemoryContext"
+            }
+        ]
+    },
+    [
+        {
+            "Name": ".formats",
+            "Description": "shows a value or register in different formats",
+            "Syntax": [".formats [Expression (string)]"],
+            "Examples": [
+                ".formats nt!ExAllocatePoolWithTag",
+                ".formats nt!Kd_DEFAULT_Mask",
+                ".formats nt!Kd_DEFAULT_Mask+5",
+                ".formats 55",
+                ".formats @rax",
+                ".formats @rbx+@rcx",
+                ".formats $pid"
+            ],
+            "Notes": [],
+            "FullName": "ShowValueInDifferentFormats"
+        },
+        {
+            "Name": ".help",
+            "Description": "shows help and example(s) of a specific command",
+            "Syntax": [".help [Command (string)]"],
+            "Examples": [".help !monitor"],
+            "Notes": [],
+            "FullName": "ShowCommandHelp"
+        },
+        {
+            "Name": ".kill",
+            "Description": "terminates the current running process",
+            "Syntax": [".kill"],
+            "Examples": [],
+            "Notes": [],
+            "FullName": "TerminateProcess"
+        },
+        {
+            "Name": ".listen",
+            "Description": "listens for a client to connect to HyperDbg (works as a guest server)",
+            "Syntax": [".listen [Port (decimal)]"],
+            "Examples": [
+                ".listen",
+                ".listen 50000"
+            ],
+            "Notes": ["if you don't specify port then HyperDbg uses the default port"],
+            "FullName": "ListenForClientConnection"
+        },
+        {
+            "Name": ".logclose",
+            "Description": "closes the previously opened log",
+            "Syntax": [".logclose"],
+            "Examples": [],
+            "Notes": [],
+            "FullName": "CloseLog"
+        },
+        {
+            "Name": ".logopen",
+            "Description": "saves commands and results in a file",
+            "Syntax": [".logopen [FilePath (string)]"],
+            "Examples": [],
+            "Notes": [],
+            "FullName": "OpenLog"
+        },
+        {
+            "Name": ".pagein",
+            "Description": "brings the page in, making it available in the RAM",
+            "Syntax": [
+                ".pagein [Mode (string)] [l Length (hex)]",
+                ".pagein [Mode (string)] [VirtualAddress (hex)] [l Length (hex)]"
+            ],
+            "Examples": [
+                ".pagein fffff801deadbeef",
+                ".pagein 00007ff8349f2224 l 1a000",
+                ".pagein u 00007ff8349f2224",
+                ".pagein w 00007ff8349f2224",
+                ".pagein f 00007ff8349f2224",
+                ".pagein pw 00007ff8349f2224",
+                ".pagein wu 00007ff8349f2224",
+                ".pagein wu 00007ff8349f2224 l 6000",
+                ".pagein pf @rax",
+                ".pagein uf @rip+@rcx",
+                ".pagein pwu @rax+5",
+                ".pagein pwu @rax l 2000"
+            ],
+            "Notes": [
+                "valid mode formats: present (p), write (w), user (u), fetch (f), protection key (k), shadow stack (s), hlat (h), sgx (g)",
+                "common page-fault codes: 0x0 (default), 0x2 (w), 0x3 (pw), 0x4 (u), 0x6 (wu), 0x7 (pwu), 0x10 (f), 0x11 (pf), 0x14 (uf)"
+            ],
+            "FullName": "MakePageAvailableInRAM"
+        },
+        {
+            "Name": ".pe",
+            "Description": "parses portable executable (PE) files and dump sections",
+            "Syntax": [
+                ".pe [header] [FilePath (string)]",
+                ".pe [section] [SectionName (string)] [FilePath (string)]"
+            ],
+            "Examples": [
+                ".pe header c:\\reverse files\\myfile.exe",
+                ".pe section .text c:\\reverse files\\myfile.exe",
+                ".pe section .rdata c:\\reverse files\\myfile.exe"
+            ],
+            "Notes": [],
+            "FullName": "ParseExecutableFiles"
+        }
+    ],
+    [
+        {
             "Name": ".process",
             "Description": "shows and changes the processes. This command needs public symbols for ntoskrnl.exe if you want to see the processes list. Please visit the documentation to know about the difference between '.process' and '.process2'.",
             "Syntax": [
