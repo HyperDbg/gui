@@ -3,15 +3,16 @@ package internal
 import (
 	"archive/zip"
 	"fmt"
-	"github.com/ddkwork/golibrary/mylog"
-	"github.com/tc-hib/winres"
-	"github.com/tc-hib/winres/version"
-	"golang.org/x/image/draw"
 	"image"
 	"io"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/tc-hib/winres"
+	"github.com/tc-hib/winres/version"
+	"golang.org/x/image/draw"
 )
 
 const (
