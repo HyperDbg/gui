@@ -1,3 +1,4 @@
+package sdk
 func Bc:ClearsBreakpointBreakpointId.() {
 Interpreter(StringToBytePointer("Bc")) 
 }
