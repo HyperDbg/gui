@@ -1,0 +1,156 @@
+[
+    [
+        {
+            "Name": ".process",
+            "Description": "shows and changes the processes. This command needs public symbols for ntoskrnl.exe if you want to see the processes list. Please visit the documentation to know about the difference between '.process' and '.process2'.",
+            "Syntax": [
+                ".process",
+                ".process [list]",
+                ".process [pid ProcessId (hex)]",
+                ".process [process Eprocess (hex)]",
+                ".process2 [pid ProcessId (hex)]",
+                ".process2 [process Eprocess (hex)]"
+            ],
+            "Examples": [
+                ".process",
+                ".process list",
+                ".process pid 4",
+                ".process2 pid 4",
+                ".process process ffff948cc2349280"
+            ],
+            "Notes": [],
+            "FullName": "ShowChangeProcesses"
+        },
+        {
+            "Name": ".restart",
+            "Description": "restarts the previously started process using '.start' command.",
+            "Syntax": [
+                ".restart"
+            ],
+            "Examples": [],
+            "Notes": [],
+            "FullName": "RestartProcess"
+        },
+        {
+            "Name": ".script",
+            "Description": "runs a HyperDbg script.",
+            "Syntax": [
+                ".script [FilePath (string)] [Args (string)]"
+            ],
+            "Examples": [
+                ".script C:\\scripts\\script.ds",
+                ".script C:\\scripts\\script.ds 95 85 @rsp",
+                ".script \"C:\\scripts\\hello world.ds\"",
+                ".script \"C:\\scripts\\hello world.ds\" @rax",
+                ".script \"C:\\scripts\\hello world.ds\" @rax @rcx+55 $pid",
+                ".script \"C:\\scripts\\hello world.ds\" 12 55 @rip"
+            ],
+            "Notes": [],
+            "FullName": "RunScript"
+        }
+    ],
+    [
+        {
+            "Name": ".start",
+            "Description": "runs a user-mode process",
+            "Syntax": [
+                ".start [path Path (string)] [Parameters (string)]"
+            ],
+            "Examples": [
+                ".start path c:\\reverse eng\\my_file.exe"
+            ],
+            "Notes": [],
+            "FullName": "RunsAUser-modeProcess"
+        },
+        {
+            "Name": ".status",
+            "Description": "gets the status of current debugger in local system",
+            "Syntax": [
+                ".status",
+                "status"
+            ],
+            "Examples": [],
+            "Notes": [
+                "If connected to a remote system, '.status' shows the state of current debugger, while 'status' shows the state of remote debuggee."
+            ],
+            "FullName": "GetsTheStatusOf"
+        },
+        {
+            "Name": ".switch",
+            "Description": "shows the list of active debugging threads and switches between processes and threads in VMI Mode",
+            "Syntax": [
+                ".switch",
+                ".switch [pid ProcessId (hex)]",
+                ".switch [tid ThreadId (hex)]"
+            ],
+            "Examples": [
+                ".switch list",
+                ".switch pid b60",
+                ".switch tid b60"
+            ],
+            "Notes": [],
+            "FullName": "ShowsTheListOf"
+        },
+        {
+            "Name": ".sym",
+            "Description": "performs the symbol actions",
+            "Syntax": [
+                ".sym [table]",
+                ".sym [reload] [pid ProcessId (hex)]",
+                ".sym [download]",
+                ".sym [load]",
+                ".sym [unload]",
+                ".sym [add] [base Address (hex)] [path Path (string)]"
+            ],
+            "Examples": [
+                ".sym table",
+                ".sym reload",
+                ".sym load",
+                ".sym download",
+                ".sym add base fffff8077356000 path c:\\symbols\\my_dll.pdb",
+                ".sym unload"
+            ],
+            "Notes": [],
+            "FullName": "PerformsTheSymbolActions"
+        },
+        {
+            "Name": ".sympath",
+            "Description": "shows and sets the symbol server and path",
+            "Syntax": [
+                ".sympath",
+                ".sympath [SymServer (string)]"
+            ],
+            "Examples": [
+                ".sympath",
+                ".sympath SRV*c:\\Symbols*https://msdl.microsoft.com/download/symbols"
+            ],
+            "Notes": [],
+            "FullName": "ShowsAndSetsThe"
+        },
+        {
+            "Name": ".thread",
+            "Description": "shows and changes the threads",
+            "Syntax": [
+                ".thread",
+                ".thread [list] [process Eprocess (hex)]",
+                ".thread [tid ThreadId (hex)]",
+                ".thread [thread Ethread (hex)]",
+                ".thread2 [tid ThreadId (hex)]",
+                ".thread2 [thread Ethread (hex)]"
+            ],
+            "Examples": [
+                ".thread",
+                ".thread tid 48a4",
+                ".thread2 tid 48a4",
+                ".thread thread ffff948c`c8970200",
+                ".thread list",
+                ".thread list process ffff948c`a1279880"
+            ],
+            "Notes": [
+                "This command needs public symbols for 'ntoskrnl.exe' if you want to see the threads list. Please visit the documentation to know about the difference between '.thread' and '.thread2'."
+            ],
+            "FullName": "ShowsAndChangesThe"
+        }
+    ]
+]
+  
