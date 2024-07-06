@@ -33,7 +33,7 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		FullName    string   `json:"FullName"`
 	}
 	generated := []any{}
-	// mylog.Check(json.Unmarshal(stream.NewBuffer(src).Bytes(), &generated))//
+	// mylog.Check(json.Unmarshal(stream.NewBuffer(src).Bytes(), &generated))
 	mylog.Check(json.Unmarshal(stream.NewBuffer("sina.json").Bytes(), &generated))
 	mylog.Struct(generated)
 }
