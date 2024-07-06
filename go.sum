@@ -26,6 +26,8 @@ github.com/ddkwork/app v0.0.0-20240705135651-15a49d4b48bd h1:HEXxT5UmsvlhqPot0By
 github.com/ddkwork/app v0.0.0-20240705135651-15a49d4b48bd/go.mod h1:eeUwZGa+7bLU/AdlxdqtVGFWzkWGSdhReFmwT4GHrMg=
 github.com/ddkwork/app v0.0.0-20240706125505-42bb67bfcdee h1:BX5KJJV/ixpYJiSsEy/50MOYu1+P+poblc3eApYbcl0=
 github.com/ddkwork/app v0.0.0-20240706125505-42bb67bfcdee/go.mod h1:w/Q0AzBGqPQ4SD235dmV1xlO8Bq7BXlQlCEGY9LfAbo=
+github.com/ddkwork/app v0.0.0-20240706150436-11f235921053 h1:QIXm+vIb7KEHTyMeCj/LG2XIUMF2eMbZ7zjle9wxzwo=
+github.com/ddkwork/app v0.0.0-20240706150436-11f235921053/go.mod h1:OnJb3rE3DVu8EzTua/0wW+NfXwH99qKSn8agwhaJvcU=
 github.com/ddkwork/golibrary v0.0.0-20240705133929-5aa35acd51d0 h1:XPUeWUhsU7mT5Boi/bus9kOAXm27P5YsIHTxiqyUmyE=
 github.com/ddkwork/golibrary v0.0.0-20240705133929-5aa35acd51d0/go.mod h1:GlLX0w5HQ9dhHS5hhwcOJNSoLUO8ud4WnrbKa41MmcE=
 github.com/ddkwork/golibrary v0.0.0-20240706124243-7ed34ae5fd52 h1:L2owqtBooxnEntnWOttOcY6+yIVNPe8tYNWwylw879o=
@@ -160,6 +162,8 @@ golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab/go.mod h1:oPkhp1MJrh7nUepCBc
 golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.21.0 h1:rF+pYz3DAGSQAxAu1CbC7catZg4ebC4UIeIhKxBZvws=
 golang.org/x/sys v0.21.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
+golang.org/x/sys v0.22.0 h1:RI27ohtqKCnwULzJLqkv897zojh5/DwS/ENaMzUOaWI=
+golang.org/x/sys v0.22.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
 golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
 golang.org/x/term v0.0.0-20210927222741-03fcf44c2211/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=
 golang.org/x/term v0.21.0 h1:WVXCp+/EBEHOj53Rvu+7KiT/iElMrO8ACK16SMZ3jaA=

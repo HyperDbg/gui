@@ -3,7 +3,7 @@ module github.com/ddkwork/HyperDbg
 go 1.22.4
 
 require (
-	github.com/ddkwork/app v0.0.0-20240706125505-42bb67bfcdee
+	github.com/ddkwork/app v0.0.0-20240706150436-11f235921053
 	github.com/ddkwork/golibrary v0.0.0-20240706124243-7ed34ae5fd52
 	github.com/richardwilkes/unison v0.71.0
 	github.com/saferwall/pe v1.5.4
@@ -12,7 +12,7 @@ require (
 	github.com/winlabs/gowin32 v0.0.0-20221003142512-0d265587d3c9
 	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8
 	golang.org/x/image v0.18.0
-	golang.org/x/sys v0.21.0
+	golang.org/x/sys v0.22.0
 )
 
 require (
