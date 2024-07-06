@@ -48,7 +48,10 @@ func generateRegistryFile() {
 	g.P("[HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg\\command]")
 	g.P("@=\"", path, "HyperDbg.exe \\\"%1\\\"\"")
 	g.P("")
-	stream.WriteTruncate("open.reg", g.Buffer) // todo dynamic generate register reg file
+	stream.WriteTruncate("open.reg", g.Buffer)
+	// reg import open.reg
+	// reg export HKEY_CLASSES_ROOT HKCR_backup.reg
+	stream.RunCommand("reg import open.reg")
 }
 
 func testSdkCommands() {
