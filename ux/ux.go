@@ -4,7 +4,7 @@ import (
 	"embed"
 	"path/filepath"
 
-	"github.com/ddkwork/hyperdbgui/sdk"
+	"github.com/ddkwork/HyperDbg/sdk"
 
 	"github.com/richardwilkes/unison/enums/align"
 

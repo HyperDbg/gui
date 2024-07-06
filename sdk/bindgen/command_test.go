@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ddkwork/hyperdbgui/sdk"
+	"github.com/ddkwork/HyperDbg/sdk"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"

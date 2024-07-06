@@ -10,7 +10,7 @@ on:
       - 0.**
 
 env:
-  RELEASE_ZIP_FILE_NAME: hyperdbgui
+  RELEASE_ZIP_FILE_NAME: HyperDbg
 
 jobs:
   test-on-multiple-os:

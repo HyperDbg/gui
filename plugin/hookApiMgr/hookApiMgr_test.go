@@ -3,10 +3,10 @@ package hookApiMgr_test
 import (
 	"testing"
 
+	"github.com/ddkwork/HyperDbg/plugin/scriptGen"
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 	"github.com/ddkwork/golibrary/stream/clang"
-	"github.com/ddkwork/hyperdbgui/plugin/scriptGen"
 )
 
 func TestName(t *testing.T) {

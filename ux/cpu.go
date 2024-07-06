@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ddkwork/hyperdbgui/sdk"
+	"github.com/ddkwork/HyperDbg/sdk"
 
 	"github.com/saferwall/pe"
 

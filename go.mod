@@ -1,14 +1,17 @@
-module github.com/ddkwork/hyperdbgui
+module github.com/ddkwork/HyperDbg
 
 go 1.22.4
 
 require (
+	github.com/ddkwork/app v0.0.0-20240705135651-15a49d4b48bd
 	github.com/ddkwork/golibrary v0.0.0-20240705133929-5aa35acd51d0
 	github.com/richardwilkes/unison v0.71.0
 	github.com/saferwall/pe v1.5.3
 	github.com/stretchr/testify v1.9.0
+	github.com/tc-hib/winres v0.3.1
 	github.com/winlabs/gowin32 v0.0.0-20221003142512-0d265587d3c9
 	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8
+	golang.org/x/image v0.18.0
 	golang.org/x/sys v0.21.0
 )
 
@@ -20,7 +23,6 @@ require (
 	github.com/dave/dst v0.27.3 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dc0d/caseconv v0.5.0 // indirect
-	github.com/ddkwork/app v0.0.0-20240705135651-15a49d4b48bd // indirect
 	github.com/dlclark/regexp2 v1.11.0 // indirect
 	github.com/ebitengine/purego v0.7.1 // indirect
 	github.com/edsrzf/mmap-go v1.1.0 // indirect
@@ -33,6 +35,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/pkg/term v1.2.0-beta.2 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/richardwilkes/json v0.2.0 // indirect
@@ -46,7 +49,6 @@ require (
 	github.com/yuin/goldmark v1.7.2 // indirect
 	github.com/zzl/go-win32api/v2 v2.2.0 // indirect
 	golang.org/x/arch v0.8.0 // indirect
-	golang.org/x/image v0.18.0 // indirect
 	golang.org/x/mod v0.18.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/term v0.21.0 // indirect
