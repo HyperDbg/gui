@@ -3251,6 +3251,17 @@ typedef enum _DEBUGGER_READ_MEMORY_TYPE
 } DEBUGGER_READ_MEMORY_TYPE;
 
 /**
+ * @brief different address mode
+ *
+ */
+typedef enum _DEBUGGER_READ_MEMORY_ADDRESS_MODE
+{
+    DEBUGGER_READ_ADDRESS_MODE_32_BIT,
+    DEBUGGER_READ_ADDRESS_MODE_64_BIT
+
+} DEBUGGER_READ_MEMORY_ADDRESS_MODE;
+
+/**
  * @brief the way that debugger should show
  * the details of memory or disassemble them
  *
@@ -3273,17 +3284,15 @@ typedef enum _DEBUGGER_SHOW_MEMORY_STYLE
  */
 typedef struct _DEBUGGER_READ_MEMORY
 {
-    UINT32                       Pid; // Read from cr3 of what process
-    UINT64                       Address;
-    UINT32                       Size;
-    BOOLEAN                      IsForDisasm;    // Debugger sets whether the read memory is for diassembler or not
-    BOOLEAN                      Is32BitAddress; // Debuggee sets the status of address
-    DEBUGGER_READ_MEMORY_TYPE    MemoryType;
-    DEBUGGER_READ_READING_TYPE   ReadingType;
-    PDEBUGGER_DT_COMMAND_OPTIONS DtDetails;
-    DEBUGGER_SHOW_MEMORY_STYLE   Style;        // not used in local debugging
-    UINT32                       ReturnLength; // not used in local debugging
-    UINT32                       KernelStatus; // not used in local debugging
+    UINT32                            Pid; // Read from cr3 of what process
+    UINT64                            Address;
+    UINT32                            Size;
+    BOOLEAN                           GetAddressMode; // Debugger sets whether the read memory is for diassembler or not
+    DEBUGGER_READ_MEMORY_ADDRESS_MODE AddressMode;    // Debuggee sets the mode of address
+    DEBUGGER_READ_MEMORY_TYPE         MemoryType;
+    DEBUGGER_READ_READING_TYPE        ReadingType;
+    UINT32                            ReturnLength; // not used in local debugging
+    UINT32                            KernelStatus; // not used in local debugging
 
     //
     // Here is the target buffer (actual memory)
@@ -4351,10 +4360,33 @@ IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
 hyperdbg_u_check_multiline_command(CHAR * current_command, BOOLEAN reset);
 
 IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
-hyperdbg_u_set_custom_driver_path(CHAR * DriverFilePath, CHAR * DriverName);
+hyperdbg_u_set_custom_driver_path(CHAR * driver_file_path, CHAR * driver_name);
 
 IMPORT_EXPORT_LIBHYPERDBG VOID
 hyperdbg_u_use_default_driver_path();
+
+//
+// Reading memory
+//
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_read_memory(UINT64                              target_address,
+                       DEBUGGER_READ_MEMORY_TYPE           memory_type,
+                       DEBUGGER_READ_READING_TYPE          reading_Type,
+                       UINT32                              pid,
+                       UINT32                              size,
+                       BOOLEAN                             get_address_mode,
+                       DEBUGGER_READ_MEMORY_ADDRESS_MODE * address_mode,
+                       BYTE *                              target_buffer_to_store,
+                       UINT32 *                            return_length);
+
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_show_memory_or_disassemble(DEBUGGER_SHOW_MEMORY_STYLE   style,
+                                      UINT64                       address,
+                                      DEBUGGER_READ_MEMORY_TYPE    memory_type,
+                                      DEBUGGER_READ_READING_TYPE   reading_type,
+                                      UINT32                       pid,
+                                      UINT32                       size,
+                                      PDEBUGGER_DT_COMMAND_OPTIONS dt_details);
 
 //
 // Connect to local or remote debugger
@@ -4385,7 +4417,7 @@ hyperdbg_u_pause_debuggee();
 // Exported functionality of the 'bp' command
 //
 VOID
-hyperdbg_u_set_breakpoint(UINT64 Address, UINT32 Pid, UINT32 Tid, UINT32 CoreNumer);
+hyperdbg_u_set_breakpoint(UINT64 address, UINT32 pid, UINT32 tid, UINT32 core_numer);
 
 #ifdef __cplusplus
 }

@@ -432,6 +432,14 @@ const (
 	DEBUGGER_READ_VIRTUAL_ADDRESS  DebuggerReadMemoryType = 1
 )
 
+// @brief different address mode
+type DebuggerReadMemoryAddressMode int32
+
+const (
+	DEBUGGER_READ_ADDRESS_MODE_32_BIT DebuggerReadMemoryAddressMode = 0
+	DEBUGGER_READ_ADDRESS_MODE_64_BIT DebuggerReadMemoryAddressMode = 1
+)
+
 // @brief the way that debugger should show
 // the details of memory or disassemble them
 type DebuggerShowMemoryStyle int32
@@ -930,12 +938,10 @@ type DebuggerReadMemory struct {
 	Pid            Uint32
 	Address        Uint64
 	Size           Uint32
-	IsForDisasm    Boolean
-	Is32BitAddress Boolean
+	GetAddressMode Boolean
+	AddressMode    DebuggerReadMemoryAddressMode
 	MemoryType     DebuggerReadMemoryType
 	ReadingType    DebuggerReadReadingType
-	DtDetails      PdebuggerDtCommandOptions
-	Style          DebuggerShowMemoryStyle
 	ReturnLength   Uint32
 	KernelStatus   Uint32
 }
@@ -1539,6 +1545,8 @@ func init() {
 	__imp_hyperdbg_u_check_multiline_command = GengoLibrary.ImportNow("hyperdbg_u_check_multiline_command")
 	__imp_hyperdbg_u_set_custom_driver_path = GengoLibrary.ImportNow("hyperdbg_u_set_custom_driver_path")
 	__imp_hyperdbg_u_use_default_driver_path = GengoLibrary.ImportNow("hyperdbg_u_use_default_driver_path")
+	__imp_hyperdbg_u_read_memory = GengoLibrary.ImportNow("hyperdbg_u_read_memory")
+	__imp_hyperdbg_u_show_memory_or_disassemble = GengoLibrary.ImportNow("hyperdbg_u_show_memory_or_disassemble")
 	__imp_hyperdbg_u_connect_local_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_local_debugger")
 	__imp_hyperdbg_u_connect_remote_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_remote_debugger")
 	return
@@ -1622,7 +1630,7 @@ func init() {
 	bindlib.Validate((*DebuggerDtCommandOptions)(nil), 0x38, 0x8, "TypeName", 0x0, "SizeOfTypeName", 0x8, "Address", 0x10, "IsStruct", 0x18, "BufferAddress", 0x20, "TargetPid", 0x28, "AdditionalParameters", 0x30)
 	bindlib.Validate((*DebuggerPreallocCommand)(nil), 0xc, 0x4, "Type", 0x0, "Count", 0x4, "KernelStatus", 0x8)
 	bindlib.Validate((*DebuggerPreactivateCommand)(nil), 0x8, 0x4, "Type", 0x0, "KernelStatus", 0x4)
-	bindlib.Validate((*DebuggerReadMemory)(nil), 0x38, 0x8, "Pid", 0x0, "Address", 0x8, "Size", 0x10, "IsForDisasm", 0x14, "Is32BitAddress", 0x15, "MemoryType", 0x18, "ReadingType", 0x1c, "DtDetails", 0x20, "Style", 0x28, "ReturnLength", 0x2c, "KernelStatus", 0x30)
+	bindlib.Validate((*DebuggerReadMemory)(nil), 0x30, 0x8, "Pid", 0x0, "Address", 0x8, "Size", 0x10, "GetAddressMode", 0x14, "AddressMode", 0x18, "MemoryType", 0x1c, "ReadingType", 0x20, "ReturnLength", 0x24, "KernelStatus", 0x28)
 	bindlib.Validate((*DebuggerFlushLoggingBuffers)(nil), 0xc, 0x4, "KernelStatus", 0x0, "CountOfMessagesThatSetAsReadFromVmxRoot", 0x4, "CountOfMessagesThatSetAsReadFromVmxNonRoot", 0x8)
 	bindlib.Validate((*DebuggerDebuggerTestQueryBuffer)(nil), 0x18, 0x8, "RequestType", 0x0, "Context", 0x8, "KernelStatus", 0x10)
 	bindlib.Validate((*DebuggerPerformKernelTests)(nil), 0x4, 0x4, "KernelStatus", 0x0)
@@ -1752,14 +1760,27 @@ func CheckMultilineCommand(current_command *Char, reset Boolean) Boolean {
 
 var __imp_hyperdbg_u_set_custom_driver_path bindlib.PreloadProc
 
-func SetCustomDriverPath(DriverFilePath *Char, DriverName *Char) Boolean {
-	__res := bindlib.CCall2(__imp_hyperdbg_u_set_custom_driver_path.Addr(), bindlib.MarshallSyscall(DriverFilePath), bindlib.MarshallSyscall(DriverName))
+func SetCustomDriverPath(driver_file_path *Char, driver_name *Char) Boolean {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_set_custom_driver_path.Addr(), bindlib.MarshallSyscall(driver_file_path), bindlib.MarshallSyscall(driver_name))
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_hyperdbg_u_use_default_driver_path bindlib.PreloadProc
 
 func UseDefaultDriverPath() { bindlib.CCall0(__imp_hyperdbg_u_use_default_driver_path.Addr()) }
+
+var __imp_hyperdbg_u_read_memory bindlib.PreloadProc
+
+func ReadMemory(target_address Uint64, memory_type DebuggerReadMemoryType, reading_Type DebuggerReadReadingType, pid Uint32, size Uint32, get_address_mode Boolean, address_mode *DebuggerReadMemoryAddressMode, target_buffer_to_store *Byte, return_length *Uint32) Boolean {
+	__res := bindlib.CCall9(__imp_hyperdbg_u_read_memory.Addr(), bindlib.MarshallSyscall(target_address), bindlib.MarshallSyscall(memory_type), bindlib.MarshallSyscall(reading_Type), bindlib.MarshallSyscall(pid), bindlib.MarshallSyscall(size), bindlib.MarshallSyscall(get_address_mode), bindlib.MarshallSyscall(address_mode), bindlib.MarshallSyscall(target_buffer_to_store), bindlib.MarshallSyscall(return_length))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_show_memory_or_disassemble bindlib.PreloadProc
+
+func ShowMemoryOrDisassemble(style DebuggerShowMemoryStyle, address Uint64, memory_type DebuggerReadMemoryType, reading_type DebuggerReadReadingType, pid Uint32, size Uint32, dt_details PdebuggerDtCommandOptions) {
+	bindlib.CCall7(__imp_hyperdbg_u_show_memory_or_disassemble.Addr(), bindlib.MarshallSyscall(style), bindlib.MarshallSyscall(address), bindlib.MarshallSyscall(memory_type), bindlib.MarshallSyscall(reading_type), bindlib.MarshallSyscall(pid), bindlib.MarshallSyscall(size), bindlib.MarshallSyscall(dt_details))
+}
 
 var __imp_hyperdbg_u_connect_local_debugger bindlib.PreloadProc
 
@@ -1782,8 +1803,8 @@ func PauseDebuggee() { bindlib.CCall0(__imp_hyperdbg_u_pause_debuggee.Addr()) }
 
 var __imp_hyperdbg_u_set_breakpoint bindlib.PreloadProc
 
-func SetBreakpoint(Address Uint64, Pid Uint32, Tid Uint32, CoreNumer Uint32) {
-	bindlib.CCall4(__imp_hyperdbg_u_set_breakpoint.Addr(), bindlib.MarshallSyscall(Address), bindlib.MarshallSyscall(Pid), bindlib.MarshallSyscall(Tid), bindlib.MarshallSyscall(CoreNumer))
+func SetBreakpoint(address Uint64, pid Uint32, tid Uint32, core_numer Uint32) {
+	bindlib.CCall4(__imp_hyperdbg_u_set_breakpoint.Addr(), bindlib.MarshallSyscall(address), bindlib.MarshallSyscall(pid), bindlib.MarshallSyscall(tid), bindlib.MarshallSyscall(core_numer))
 }
 
 var __imp_ScriptEngineParse bindlib.PreloadProc
