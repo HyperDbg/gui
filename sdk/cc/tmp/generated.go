@@ -1,325 +1,325 @@
 package sdk
 
 func ClearsBreakpointBreakpointId() {
-	Interpreter(StringToBytePointer("bc"))
+	InterpreterEx("bc")
 }
 
 func DisablesBreakpointBreakpointId() {
-	Interpreter(StringToBytePointer("bd"))
+	InterpreterEx("bd")
 }
 
 func EnablesBreakpointBreakpointId() {
-	Interpreter(StringToBytePointer("be"))
+	InterpreterEx("be")
 }
 
 func ListsAllEnabledAndDisabledBreakpoints() {
-	Interpreter(StringToBytePointer("bl"))
+	InterpreterEx("bl")
 }
 
 func PutsBreakpoint0xcc() {
-	Interpreter(StringToBytePointer("bp"))
+	InterpreterEx("bp")
 }
 
 func ShowsAndChangesOperatingProcessor() {
-	Interpreter(StringToBytePointer("core"))
+	InterpreterEx("core")
 }
 
 func CollectsReportFromCpuFeatures() {
-	Interpreter(StringToBytePointer("cpu"))
+	InterpreterEx("cpu")
 }
 
 func RemoveKernelModeBuffers() {
-	Interpreter(StringToBytePointer("flush"))
+	InterpreterEx("flush")
 }
 
 func ContinueDebuggee() {
-	Interpreter(StringToBytePointer("g"))
+	InterpreterEx("g")
 }
 
 func ExecuteSingleInstructionStepOut() {
-	Interpreter(StringToBytePointer("gu"))
+	InterpreterEx("gu")
 }
 
 func ExecuteSingleInstructionStepIn() {
-	Interpreter(StringToBytePointer("i"))
+	InterpreterEx("i")
 }
 
 func ShowThreadCallstack() {
-	Interpreter(StringToBytePointer("k, kd, kq"))
+	InterpreterEx("k, kd, kq")
 }
 
 func ListModules() {
-	Interpreter(StringToBytePointer("lm"))
+	InterpreterEx("lm")
 }
 
 func InstallDriversAndLoadModules() {
-	Interpreter(StringToBytePointer("load"))
+	InterpreterEx("load")
 }
 
 func CreateEventForwardingOutputInstance() {
-	Interpreter(StringToBytePointer("output"))
+	InterpreterEx("output")
 }
 
 func ExecuteSingleInstructionStep() {
-	Interpreter(StringToBytePointer("p"))
+	InterpreterEx("p")
 }
 
 func PauseKernelEvents() {
-	Interpreter(StringToBytePointer("pause"))
+	InterpreterEx("pause")
 }
 
 func PreactivateSpecialFunctionality() {
-	Interpreter(StringToBytePointer("preactivate"))
+	InterpreterEx("preactivate")
 }
 
 func PreallocateBuffer() {
-	Interpreter(StringToBytePointer("prealloc"))
+	InterpreterEx("prealloc")
 }
 
 func EvaluateExpressions() {
-	Interpreter(StringToBytePointer("print"))
+	InterpreterEx("print")
 }
 
 func ReadModifyRegisters() {
-	Interpreter(StringToBytePointer("r"))
+	InterpreterEx("r")
 }
 
 func ReadModelSpecificRegister() {
-	Interpreter(StringToBytePointer("rdmsr"))
+	InterpreterEx("rdmsr")
 }
 
 func SearchMemoryPattern() {
-	Interpreter(StringToBytePointer("sb, !sb, sd, !sd, sq, !sq"))
+	InterpreterEx("sb, !sb, sd, !sd, sq, !sq")
 }
 
 func SettingsManagement() {
-	Interpreter(StringToBytePointer("settings"))
+	InterpreterEx("settings")
 }
 
 func DebuggerSleep() {
-	Interpreter(StringToBytePointer("sleep"))
+	InterpreterEx("sleep")
 }
 
 func ExecuteStepIn() {
-	Interpreter(StringToBytePointer("t"))
+	InterpreterEx("t")
 }
 
 func TestHyperDbgFeatures() {
-	Interpreter(StringToBytePointer("test"))
+	InterpreterEx("test")
 }
 
 func UnloadKernelModules() {
-	Interpreter(StringToBytePointer("unload"))
+	InterpreterEx("unload")
 }
 
 func SearchSymbols() {
-	Interpreter(StringToBytePointer("x"))
+	InterpreterEx("x")
 }
 
 func MonitorCpuidExecution() {
-	Interpreter(StringToBytePointer("!cpuid"))
+	InterpreterEx("!cpuid")
 }
 
 func MonitorControlRegisterModification() {
-	Interpreter(StringToBytePointer("!crwrite"))
+	InterpreterEx("!crwrite")
 }
 
 func MonitorDebugRegisters() {
-	Interpreter(StringToBytePointer("!dr"))
+	InterpreterEx("!dr")
 }
 
 func HiddenHookEptBreakpoints() {
-	Interpreter(StringToBytePointer("!epthook"))
+	InterpreterEx("!epthook")
 }
 
 func HiddenHookEptDetours() {
-	Interpreter(StringToBytePointer("!epthook2"))
+	InterpreterEx("!epthook2")
 }
 
 func MonitorIdtEntries() {
-	Interpreter(StringToBytePointer("!exception"))
+	InterpreterEx("!exception")
 }
 
 func HideHyperDbg() {
-	Interpreter(StringToBytePointer("!hide"))
+	InterpreterEx("!hide")
 }
 
 func MonitorExternalInterrupts() {
-	Interpreter(StringToBytePointer("!interrupt"))
+	InterpreterEx("!interrupt")
 }
 
 func DetectIoInstructionsIn() {
-	Interpreter(StringToBytePointer("!ioin"))
+	InterpreterEx("!ioin")
 }
 
 func DetectIoInstructionsOut() {
-	Interpreter(StringToBytePointer("!ioout"))
+	InterpreterEx("!ioout")
 }
 
 func MeasureArgumentsForHide() {
-	Interpreter(StringToBytePointer("!measure"))
+	InterpreterEx("!measure")
 }
 
 func TrapModeInstructions() {
-	Interpreter(StringToBytePointer("!mode"))
+	InterpreterEx("!mode")
 }
 
 func MonitorMemoryAccess() {
-	Interpreter(StringToBytePointer("!monitor"))
+	InterpreterEx("!monitor")
 }
 
 func DetectRdmsrExecution() {
-	Interpreter(StringToBytePointer("!msrread"))
+	InterpreterEx("!msrread")
 }
 
 func DetectWrmsrExecution() {
-	Interpreter(StringToBytePointer("!msrwrite"))
+	InterpreterEx("!msrwrite")
 }
 
 func ConvertPhysicalToVirtual() {
-	Interpreter(StringToBytePointer("!pa2va"))
+	InterpreterEx("!pa2va")
 }
 
 func MonitorRdpmcExecution() {
-	Interpreter(StringToBytePointer("!pmc"))
+	InterpreterEx("!pmc")
 }
 
 func FindVirtualAddressPagingLevels() {
-	Interpreter(StringToBytePointer("!pte"))
+	InterpreterEx("!pte")
 }
 
 func UseReversingMachineModule() {
-	Interpreter(StringToBytePointer("!rev"))
+	InterpreterEx("!rev")
 }
 
 func MonitorSyscallExecution() {
-	Interpreter(StringToBytePointer("!syscall"))
+	InterpreterEx("!syscall")
 }
 
 func MonitorSysretExecution() {
-	Interpreter(StringToBytePointer("!sysret"))
+	InterpreterEx("!sysret")
 }
 
 func TraceExecution() {
-	Interpreter(StringToBytePointer("!trace"))
+	InterpreterEx("!trace")
 }
 
 func TrackModeTransitionInstructions() {
-	Interpreter(StringToBytePointer("!track"))
+	InterpreterEx("!track")
 }
 
 func MonitorRdtscInstructions() {
-	Interpreter(StringToBytePointer("!tsc"))
+	InterpreterEx("!tsc")
 }
 
 func RevertHide() {
-	Interpreter(StringToBytePointer("!unhide"))
+	InterpreterEx("!unhide")
 }
 
 func ConvertVirtualToPhysical() {
-	Interpreter(StringToBytePointer("!va2pa"))
+	InterpreterEx("!va2pa")
 }
 
 func MonitorVmcallExecution() {
-	Interpreter(StringToBytePointer("!vmcall"))
+	InterpreterEx("!vmcall")
 }
 
 func HardwareClockDebugging() {
-	Interpreter(StringToBytePointer("!hw_clk"))
+	InterpreterEx("!hw_clk")
 }
 
 func AttachDebugThread() {
-	Interpreter(StringToBytePointer(".attach"))
+	InterpreterEx(".attach")
 }
 
 func ClearScreen() {
-	Interpreter(StringToBytePointer(".cls"))
+	InterpreterEx(".cls")
 }
 
 func ConnectToMachine() {
-	Interpreter(StringToBytePointer(".connect"))
+	InterpreterEx(".connect")
 }
 
 func DebugMachine() {
-	Interpreter(StringToBytePointer(".debug"))
+	InterpreterEx(".debug")
 }
 
 func DetachDebugging() {
-	Interpreter(StringToBytePointer(".detach"))
+	InterpreterEx(".detach")
 }
 
 func DisconnectSession() {
-	Interpreter(StringToBytePointer(".disconnect"))
+	InterpreterEx(".disconnect")
 }
 
 func SaveMemoryContext() {
-	Interpreter(StringToBytePointer(".dump"))
+	InterpreterEx(".dump")
 }
 
 func ShowValueInDifferentFormats() {
-	Interpreter(StringToBytePointer(".formats"))
+	InterpreterEx(".formats")
 }
 
 func ShowCommandHelp() {
-	Interpreter(StringToBytePointer(".help"))
+	InterpreterEx(".help")
 }
 
 func TerminateProcess() {
-	Interpreter(StringToBytePointer(".kill"))
+	InterpreterEx(".kill")
 }
 
 func ListenForClientConnection() {
-	Interpreter(StringToBytePointer(".listen"))
+	InterpreterEx(".listen")
 }
 
 func CloseLog() {
-	Interpreter(StringToBytePointer(".logclose"))
+	InterpreterEx(".logclose")
 }
 
 func OpenLog() {
-	Interpreter(StringToBytePointer(".logopen"))
+	InterpreterEx(".logopen")
 }
 
 func MakePageAvailableInRam() {
-	Interpreter(StringToBytePointer(".pagein"))
+	InterpreterEx(".pagein")
 }
 
 func ParseExecutableFiles() {
-	Interpreter(StringToBytePointer(".pe"))
+	InterpreterEx(".pe")
 }
 
 func ShowChangeProcesses() {
-	Interpreter(StringToBytePointer(".process"))
+	InterpreterEx(".process")
 }
 
 func RestartProcess() {
-	Interpreter(StringToBytePointer(".restart"))
+	InterpreterEx(".restart")
 }
 
 func RunScript() {
-	Interpreter(StringToBytePointer(".script"))
+	InterpreterEx(".script")
 }
 
 func RunsAUserModeProcess() {
-	Interpreter(StringToBytePointer(".start"))
+	InterpreterEx(".start")
 }
 
 func GetsTheStatusOf() {
-	Interpreter(StringToBytePointer(".status"))
+	InterpreterEx(".status")
 }
 
 func ShowsTheListOf() {
-	Interpreter(StringToBytePointer(".switch"))
+	InterpreterEx(".switch")
 }
 
 func PerformsTheSymbolActions() {
-	Interpreter(StringToBytePointer(".sym"))
+	InterpreterEx(".sym")
 }
 
 func ShowsAndSetsThe() {
-	Interpreter(StringToBytePointer(".sympath"))
+	InterpreterEx(".sympath")
 }
 
 func ShowsAndChangesThe() {
-	Interpreter(StringToBytePointer(".thread"))
+	InterpreterEx(".thread")
 }

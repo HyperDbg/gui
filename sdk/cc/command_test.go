@@ -49,7 +49,7 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		before = stream.ToCamelUpper(before, false)
 		before = strings.TrimSuffix(before, ".")
 		g.P("func ", before, "() {")
-		g.P("Interpreter(StringToBytePointer(", strconv.Quote(s.Name), ")) ")
+		g.P("InterpreterEx(", strconv.Quote(s.Name), ") ")
 		g.P("}")
 		g.P()
 	}
