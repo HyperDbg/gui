@@ -4,9 +4,10 @@ import (
 	"crypto/sha256"
 	"embed"
 	"encoding/base64"
-	"golang.org/x/sys/windows"
 	"os"
 	"path/filepath"
+
+	"golang.org/x/sys/windows"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
@@ -25,7 +26,7 @@ func init() {
 	SysPath = filepath.Join(dir, "hyperkd.sys")
 	mylog.Trace("sysPath", SysPath)
 	if !stream.IsDir(dir) {
-		mylog.Check(os.MkdirAll(dir, 0755))
+		stream.CreatDirectory(dir)
 		m.Range(func(k string, v []byte) bool {
 			stream.WriteTruncate(filepath.Join(dir, k), v)
 			return true
