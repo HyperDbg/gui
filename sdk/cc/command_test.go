@@ -41,10 +41,15 @@ func TestUnmarshalCommandJson(t *testing.T) {
 	g.P("package sdk")
 	g.P()
 	for _, s := range generated {
-		s.FullName = strings.ReplaceAll(s.FullName, "ContinueDebuggee", "ContinueDebuggee_")
-		s.FullName = strings.ReplaceAll(s.FullName, "-", "_")
-		s.FullName = stream.ToCamelUpper(s.FullName, false)
-		g.P("func ", s.FullName, "() {")
+		fullName := s.FullName
+		if fullName == "ContinueDebuggee" {
+			println()
+		}
+		println(fullName)
+		fullName = strings.ReplaceAll(fullName, "ContinueDebuggee", "ContinueDebuggee_")
+		fullName = strings.ReplaceAll(fullName, "-", "_")
+		// fullName = stream.ToCamelUpper(fullName, false)
+		g.P("func ", fullName, "() {")
 		g.P("InterpreterEx(", strconv.Quote(s.Name), ") ")
 		g.P("}")
 		g.P()
