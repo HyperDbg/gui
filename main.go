@@ -13,9 +13,9 @@ import (
 func main() {
 	// generateRegistryFile()
 	// testSdkCommands()
-	// ux.Run()
-	testDisassembly()
-	// testParsePe()
+	//ux.Run()
+	// testDisassembly()
+	testParsePe()
 	// testScript()
 }
 
