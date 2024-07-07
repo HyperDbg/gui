@@ -42,10 +42,6 @@ func TestUnmarshalCommandJson(t *testing.T) {
 	g.P()
 	for _, s := range generated {
 		fullName := s.FullName
-		if fullName == "ContinueDebuggee" {
-			println()
-		}
-		println(fullName)
 		fullName = strings.ReplaceAll(fullName, "ContinueDebuggee", "ContinueDebuggee_")
 		fullName = strings.ReplaceAll(fullName, "-", "_")
 		// fullName = stream.ToCamelUpper(fullName, false)
@@ -55,5 +51,4 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		g.P()
 	}
 	stream.WriteGoFile("../commandWrapper.go", g.Bytes())
-	println(g.String())
 }
