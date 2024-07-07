@@ -41,18 +41,14 @@ func TestUnmarshalCommandJson(t *testing.T) {
 	g.P("package sdk")
 	g.P()
 	for _, s := range generated {
-		before, after, found := strings.Cut(s.FullName, ":")
-		if found {
-			before = after
-		}
-		before = strings.ReplaceAll(before, "-", "_")
-		before = stream.ToCamelUpper(before, false)
-		before = strings.TrimSuffix(before, ".")
-		g.P("func ", before, "() {")
+		s.FullName = strings.ReplaceAll(s.FullName, "ContinueDebuggee", "ContinueDebuggee_")
+		s.FullName = strings.ReplaceAll(s.FullName, "-", "_")
+		s.FullName = stream.ToCamelUpper(s.FullName, false)
+		g.P("func ", s.FullName, "() {")
 		g.P("InterpreterEx(", strconv.Quote(s.Name), ") ")
 		g.P("}")
 		g.P()
 	}
-	stream.WriteGoFile("tmp/generated.go", g.Bytes())
+	stream.WriteGoFile("../commandWrapper.go", g.Bytes())
 	println(g.String())
 }
