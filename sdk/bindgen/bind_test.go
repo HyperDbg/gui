@@ -168,7 +168,7 @@ const (
 // isAlphabetOrUnderscore 检查字符串是否仅由字母或下划线组成
 func isAlphabetOrUnderscore(s string) bool {
 	for _, r := range s {
-		if !unicode.IsLetter(r) && r != '_' {
+		if !unicode.IsLetter(r) && r != '_' && r != ' ' && r != '|' {
 			return false
 		}
 	}
