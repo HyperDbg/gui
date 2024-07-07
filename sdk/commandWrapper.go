@@ -128,15 +128,15 @@ func MonitorDebugRegisters() {
 	InterpreterEx("!dr")
 }
 
-func HiddenHookEPTBreakpoints() {
+func HiddenHookEptBreakpoints() {
 	InterpreterEx("!epthook")
 }
 
-func HiddenHookEPTDetours() {
+func HiddenHookEptDetours() {
 	InterpreterEx("!epthook2")
 }
 
-func MonitorIDTEntries() {
+func MonitorIdtEntries() {
 	InterpreterEx("!exception")
 }
 
@@ -148,11 +148,11 @@ func MonitorExternalInterrupts() {
 	InterpreterEx("!interrupt")
 }
 
-func DetectIOInstructionsIn() {
+func DetectIoInstructionsIn() {
 	InterpreterEx("!ioin")
 }
 
-func DetectIOInstructionsOut() {
+func DetectIoInstructionsOut() {
 	InterpreterEx("!ioout")
 }
 
@@ -280,7 +280,7 @@ func OpenLog() {
 	InterpreterEx(".logopen")
 }
 
-func MakePageAvailableInRAM() {
+func MakePageAvailableInRam() {
 	InterpreterEx(".pagein")
 }
 
@@ -300,7 +300,7 @@ func RunScript() {
 	InterpreterEx(".script")
 }
 
-func RunsAUser_modeProcess() {
+func RunsAUserModeProcess() {
 	InterpreterEx(".start")
 }
 

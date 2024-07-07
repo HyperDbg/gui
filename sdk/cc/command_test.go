@@ -42,9 +42,11 @@ func TestUnmarshalCommandJson(t *testing.T) {
 	g.P()
 	for _, s := range generated {
 		fullName := s.FullName
-		fullName = strings.ReplaceAll(fullName, "ContinueDebuggee", "ContinueDebuggee_")
 		fullName = strings.ReplaceAll(fullName, "-", "_")
-		// fullName = stream.ToCamelUpper(fullName, false)
+		if fullName != "ContinueDebuggee" {
+			fullName = stream.ToCamelUpper(fullName, false)
+		}
+		fullName = strings.ReplaceAll(fullName, "ContinueDebuggee", "ContinueDebuggee_")
 		g.P("func ", fullName, "() {")
 		g.P("InterpreterEx(", strconv.Quote(s.Name), ") ")
 		g.P("}")
