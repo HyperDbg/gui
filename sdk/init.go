@@ -1,13 +1,15 @@
 package sdk
 
 import (
+	"crypto/sha256"
 	"embed"
+	"encoding/base64"
+	"golang.org/x/sys/windows"
 	"os"
 	"path/filepath"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
-	"golang.org/x/sys/windows"
 )
 
 //go:embed bin/*
@@ -17,19 +19,17 @@ var SysPath = ""
 
 func init() {
 	m := stream.ReadEmbedFileMap(data, "bin")
-	dir := mylog.Check2(os.UserCacheDir())
-	dir = filepath.Join(dir, "hyperdbg", "cache")
-	mylog.Check(os.RemoveAll(dir))
-	mylog.Check(os.MkdirAll(dir, 0755))
-	m.Range(func(k string, v []byte) bool {
-		join := filepath.Join(dir, k)
-		if k == "hyperkd.sys" {
-			SysPath = join
-		}
-		stream.WriteTruncate(join, v)
-		return true
-	})
+	sha := sha256.Sum256(m.Get("libhyperdbg.dll"))
+	dir := filepath.Join(mylog.Check2(os.UserCacheDir()), "hyperdbg", "cache", base64.RawURLEncoding.EncodeToString(sha[:]))
 	mylog.Check(windows.SetDllDirectory(dir))
-	mylog.Check2(GengoLibrary.LoadFrom(filepath.Join(dir, "libhyperdbg.dll")))
+	SysPath = filepath.Join(dir, "hyperkd.sys")
 	mylog.Trace("sysPath", SysPath)
+	if !stream.IsDir(dir) {
+		mylog.Check(os.MkdirAll(dir, 0755))
+		m.Range(func(k string, v []byte) bool {
+			stream.WriteTruncate(filepath.Join(dir, k), v)
+			return true
+		})
+	}
+	mylog.Check2(GengoLibrary.LoadFrom(filepath.Join(dir, "libhyperdbg.dll")))
 }
