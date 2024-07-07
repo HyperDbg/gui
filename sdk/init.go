@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"golang.org/x/sys/windows"
 
@@ -19,6 +20,7 @@ var data embed.FS
 var SysPath = ""
 
 func init() {
+	runtime.LockOSThread()
 	m := stream.ReadEmbedFileMap(data, "bin")
 	sha := sha256.Sum256(m.Get("libhyperdbg.dll"))
 	dir := filepath.Join(mylog.Check2(os.UserCacheDir()), "hyperdbg", "cache", base64.RawURLEncoding.EncodeToString(sha[:]))
