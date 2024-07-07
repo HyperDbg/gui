@@ -12,7 +12,6 @@ import (
 	"github.com/ddkwork/app/ms/xed"
 	"github.com/ddkwork/app/widget"
 	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/stream"
 	"github.com/richardwilkes/unison"
 )
 
@@ -383,27 +382,35 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 		SelectionChangedCallback: nil,
 		SetRootRowsCallBack: func(root *widget.Node[xed.Disassembly]) {
 			f := xed.ParserPe(fileName)
-			b := stream.NewBuffer(fileName)
+			// b := stream.NewBuffer(fileName)
 			optionalHeader := f.NtHeader.OptionalHeader
 			switch o := optionalHeader.(type) {
 			case pe.ImageOptionalHeader32:
-				oep := o.ImageBase + o.AddressOfEntryPoint
-				x := xed.New(b.Bytes()[oep:])
-				x.Decode32()
-				for _, object := range x.AsmObjects {
-					root.AddChildByData(object)
-				}
-			case pe.ImageOptionalHeader64:
-
 				oepRVA := o.AddressOfEntryPoint
 				imageBase := o.ImageBase
-				oepVA := imageBase + uint64(oepRVA)
+				oepVA := imageBase + oepRVA
 				var oepFileOffset uint64
 
+				//for _, section := range f.Sections {
+				//	if section.String() == ".text" {
+				//		oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
+				//		break
+				//	}
+				//}
+
+				//for _, section := range f.Sections {
+				//	if section.Header.Characteristics&section.Header.Characteristics == pe.ImageSectionMemExecute {
+				//		oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
+				//		break
+				//	}
+				//}
 				for _, section := range f.Sections {
-					if section.String() == ".text" {
-						oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
-						break
+					mylog.Info("PrettySectionFlags", section.PrettySectionFlags())
+					for _, s := range section.PrettySectionFlags() {
+						if s == "Executable" {
+							oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
+							break
+						}
 					}
 				}
 
@@ -411,14 +418,40 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 					fmt.Println("未找到包含OEP节区或计算偏移不正确")
 					return
 				}
-
 				buffer := make([]byte, 200)
 				file := mylog.Check2(os.Open(fileName))
-
 				defer file.Close()
+				mylog.Check2(file.ReadAt(buffer, int64(oepFileOffset)))
+				fmt.Printf("OEP File Off %x\n", oepFileOffset)
+				fmt.Printf("OEP VA %x\n", oepVA)
+				fmt.Printf("Entry Point RVA %x\n", oepRVA)
+				fmt.Printf("OEP Data %x\n", buffer[:100])
 
-				_ = mylog.Check2(file.ReadAt(buffer, int64(oepFileOffset)))
-
+				x := xed.New(buffer[:100])
+				x.SetBaseAddress(uint64(oepVA))
+				x.Decode32()
+				for _, object := range x.AsmObjects {
+					root.AddChildByData(object)
+				}
+			case pe.ImageOptionalHeader64:
+				oepRVA := o.AddressOfEntryPoint
+				imageBase := o.ImageBase
+				oepVA := imageBase + uint64(oepRVA)
+				var oepFileOffset uint64
+				for _, section := range f.Sections {
+					if section.String() == ".text" {
+						oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
+						break
+					}
+				}
+				if oepFileOffset == 0 {
+					fmt.Println("未找到包含OEP节区或计算偏移不正确")
+					return
+				}
+				buffer := make([]byte, 200)
+				file := mylog.Check2(os.Open(fileName))
+				defer file.Close()
+				mylog.Check2(file.ReadAt(buffer, int64(oepFileOffset)))
 				fmt.Printf("OEP File Off %x\n", oepFileOffset)
 				fmt.Printf("OEP VA %x\n", oepVA)
 				fmt.Printf("Entry Point RVA %x\n", oepRVA)
@@ -426,30 +459,7 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 
 				x := xed.New(buffer[:100])
 				x.SetBaseAddress(oepVA)
-				x.Decode64() // todo 解码符号表--> 00007FF74F824868 <h | E9 C3E70800   | jmp <hyperdbg-cli.mainCRTStartup>,目前是 jmp .+0x8e7c3
-				/*
-					  ├───00000001400C4868         │E9C3E70800 │jmp .+0x8e7c3
-					  ├───00000001400C486D         │E9FEB80600 │jmp .+0x6b8fe
-					  ├───00000001400C4872         │E929D20700 │jmp .+0x7d229
-					  ├───00000001400C4877         │E914EF1200 │jmp .+0x12ef14
-					  ├───00000001400C487C         │E91F400E00 │jmp .+0xe401f
-					  ├───00000001400C4881         │E99A8D0200 │jmp .+0x28d9a
-					  ├───00000001400C4886         │E935F61600 │jmp .+0x16f635
-					  ├───00000001400C488B         │E950B00900 │jmp .+0x9b050
-
-					00007FF74F824868 <h | E9 C3E70800              | jmp <hyperdbg-cli.mainCRTStartup>                                                                          |
-					00007FF74F82486D    | E9 FEB80600              | jmp <hyperdbg-cli.private: void __cdecl std::basic_string<unsigned short, struct std::char_traits<unsigned |
-					00007FF74F824872    | E9 29D20700              | jmp <hyperdbg-cli.public: class std::istreambuf_iterator<unsigned short, struct std::char_traits<unsigned  |
-					00007FF74F824877    | E9 14EF1200              | jmp <hyperdbg-cli.__acrt_initialize_thread_local_exit_callback>                                            |
-					00007FF74F82487C    | E9 1F400E00              | jmp <hyperdbg-cli.private: static enum __crt_stdio_output::positional_parameter_base<wchar_t, class __crt_ |
-					00007FF74F824881    | E9 9A8D0200              | jmp <hyperdbg-cli.public: class std::basic_string<char, struct std::char_traits<char>, class std::allocato |
-					00007FF74F824886    | E9 35F61600              | jmp <hyperdbg-cli.__acrt_get_qualified_locale>                                                             |
-					00007FF74F82488B    | E9 50B00900              | jmp <hyperdbg-cli.public: static void * __cdecl __FrameHandler3::CxxCallCatchBlock(struct _EXCEPTION_RECOR |
-					00007FF74F824890    | E9 9B491100              | jmp <hyperdbg-cli._ungetc_nolock>                                                                          |
-					00007FF74F824895    | E9 A6B00F00              | jmp <hyperdbg-cli.private: bool __cdecl __crt_stdio_output::output_processor<wchar_t, class __crt_stdio_ou |
-					00007FF74F82489A    | E9 215F0400              | jmp <hyperdbg-cli.__std_find_last_trivial_2>                                                               |
-					00007FF74F82489F    | E9 5C500E00              | jmp <hyperdbg-cli.private: static char * __cdecl __crt_stdio_output::output_processor<char, class __crt_st |
-				*/
+				x.Decode64()
 				for _, object := range x.AsmObjects {
 					root.AddChildByData(object)
 				}
