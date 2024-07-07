@@ -6,6 +6,7 @@ import (
 	"strings"
 	"syscall"
 	"testing"
+	"unsafe"
 
 	"github.com/ddkwork/golibrary/stream"
 
@@ -64,6 +65,15 @@ func StringToBytePointer(s string) *byte {
 	bytes := []byte(s)
 	ptr := &bytes[0]
 	return ptr
+}
+
+func BytePointerToString(ptr *byte) string {
+	var bytes []byte
+	for *ptr != 0 {
+		bytes = append(bytes, *ptr)
+		ptr = (*byte)(unsafe.Pointer(uintptr(unsafe.Pointer(ptr)) + 1))
+	}
+	return string(bytes)
 }
 
 func SetCustomDriverPathEx(DriverFilePath string) bool {
