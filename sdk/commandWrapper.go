@@ -168,11 +168,11 @@ func MonitorMemoryAccess() {
 	InterpreterEx("!monitor")
 }
 
-func DetectRdmsrExecution() {
+func ReadMsr() {
 	InterpreterEx("!msrread")
 }
 
-func DetectWrmsrExecution() {
+func WriteMsr() {
 	InterpreterEx("!msrwrite")
 }
 

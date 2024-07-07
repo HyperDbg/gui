@@ -42,6 +42,10 @@ func TestUnmarshalCommandJson(t *testing.T) {
 	g.P()
 	for _, s := range generated {
 		fullName := s.FullName
+
+		fullName = strings.ReplaceAll(fullName, "DetectRdmsrExecution", "ReadMsr")
+		fullName = strings.ReplaceAll(fullName, "DetectWrmsrExecution", "WriteMsr")
+
 		fullName = strings.ReplaceAll(fullName, "-", "_")
 		if fullName != "ContinueDebuggee" {
 			fullName = stream.ToCamelUpper(fullName, false)
