@@ -120,23 +120,23 @@ func MonitorCpuidExecution() {
 	InterpreterEx("!cpuid")
 }
 
-func MonitorControlRegisterModification() {
+func ControlRegisterModificationMonitor() {
 	InterpreterEx("!crwrite")
 }
 
-func MonitorDebugRegisters() {
+func DebugRegistersMonitor() {
 	InterpreterEx("!dr")
 }
 
-func HiddenHookEptBreakpoints() {
+func EptHook() {
 	InterpreterEx("!epthook")
 }
 
-func HiddenHookEptDetours() {
+func EptHook2() {
 	InterpreterEx("!epthook2")
 }
 
-func MonitorIdtEntries() {
+func IdtEntriesMonitor() {
 	InterpreterEx("!exception")
 }
 
@@ -144,11 +144,11 @@ func HideHyperDbg() {
 	InterpreterEx("!hide")
 }
 
-func MonitorExternalInterrupts() {
+func ExternalInterruptsMonitor() {
 	InterpreterEx("!interrupt")
 }
 
-func DetectIoInstructionsIn() {
+func IoInstructionsInDetect() {
 	InterpreterEx("!ioin")
 }
 
@@ -168,35 +168,35 @@ func MonitorMemoryAccess() {
 	InterpreterEx("!monitor")
 }
 
-func ReadMsr() {
+func MsrRead() {
 	InterpreterEx("!msrread")
 }
 
-func WriteMsr() {
+func MsrWrite() {
 	InterpreterEx("!msrwrite")
 }
 
-func ConvertPhysicalToVirtual() {
+func Pa2Va() {
 	InterpreterEx("!pa2va")
 }
 
-func MonitorRdpmcExecution() {
+func PmcExecutionMonitor() {
 	InterpreterEx("!pmc")
 }
 
-func FindVirtualAddressPagingLevels() {
+func Pte() {
 	InterpreterEx("!pte")
 }
 
-func UseReversingMachineModule() {
+func ReversingMachineModuleUse() {
 	InterpreterEx("!rev")
 }
 
-func MonitorSyscallExecution() {
+func Syscall() {
 	InterpreterEx("!syscall")
 }
 
-func MonitorSysretExecution() {
+func SysRet() {
 	InterpreterEx("!sysret")
 }
 
@@ -208,19 +208,19 @@ func TrackModeTransitionInstructions() {
 	InterpreterEx("!track")
 }
 
-func MonitorRdtscInstructions() {
+func TscInstructionsMonitor() {
 	InterpreterEx("!tsc")
 }
 
-func RevertHide() {
+func UnHide() {
 	InterpreterEx("!unhide")
 }
 
-func ConvertVirtualToPhysical() {
+func Va2Pa() {
 	InterpreterEx("!va2pa")
 }
 
-func MonitorVmcallExecution() {
+func VmCall() {
 	InterpreterEx("!vmcall")
 }
 
@@ -252,19 +252,19 @@ func DisconnectSession() {
 	InterpreterEx(".disconnect")
 }
 
-func SaveMemoryContext() {
+func DumpMemoryContext() {
 	InterpreterEx(".dump")
 }
 
-func ShowValueInDifferentFormats() {
+func FormatsDiff() {
 	InterpreterEx(".formats")
 }
 
-func ShowCommandHelp() {
+func HelpForCommand() {
 	InterpreterEx(".help")
 }
 
-func TerminateProcess() {
+func KillProcess() {
 	InterpreterEx(".kill")
 }
 
@@ -272,15 +272,15 @@ func ListenForClientConnection() {
 	InterpreterEx(".listen")
 }
 
-func CloseLog() {
+func LogClose() {
 	InterpreterEx(".logclose")
 }
 
-func OpenLog() {
+func LogOpen() {
 	InterpreterEx(".logopen")
 }
 
-func MakePageAvailableInRam() {
+func PageAvailableInRam() {
 	InterpreterEx(".pagein")
 }
 
@@ -288,7 +288,7 @@ func ParseExecutableFiles() {
 	InterpreterEx(".pe")
 }
 
-func ShowChangeProcesses() {
+func ProcessesView() {
 	InterpreterEx(".process")
 }
 
@@ -296,30 +296,30 @@ func RestartProcess() {
 	InterpreterEx(".restart")
 }
 
-func RunScript() {
+func Script() {
 	InterpreterEx(".script")
 }
 
-func RunsAUserModeProcess() {
+func StartProcess() {
 	InterpreterEx(".start")
 }
 
-func GetsTheStatusOf() {
+func Status() {
 	InterpreterEx(".status")
 }
 
-func ShowsTheListOf() {
+func SwitchThread() {
 	InterpreterEx(".switch")
 }
 
-func PerformsTheSymbolActions() {
+func Symbol() {
 	InterpreterEx(".sym")
 }
 
-func ShowsAndSetsThe() {
+func SymbolPath() {
 	InterpreterEx(".sympath")
 }
 
-func ShowsAndChangesThe() {
+func Thread() {
 	InterpreterEx(".thread")
 }

@@ -42,14 +42,46 @@ func TestUnmarshalCommandJson(t *testing.T) {
 	g.P()
 	for _, s := range generated {
 		fullName := s.FullName
-
-		fullName = strings.ReplaceAll(fullName, "DetectRdmsrExecution", "ReadMsr")
-		fullName = strings.ReplaceAll(fullName, "DetectWrmsrExecution", "WriteMsr")
-
 		fullName = strings.ReplaceAll(fullName, "-", "_")
 		if fullName != "ContinueDebuggee" {
 			fullName = stream.ToCamelUpper(fullName, false)
 		}
+
+		fullName = strings.ReplaceAll(fullName, "DetectRdmsrExecution", "MsrRead")
+		fullName = strings.ReplaceAll(fullName, "DetectWrmsrExecution", "MsrWrite")
+		fullName = strings.ReplaceAll(fullName, "MonitorSyscallExecution", "Syscall")
+		fullName = strings.ReplaceAll(fullName, "MonitorSysretExecution", "SysRet")
+		fullName = strings.ReplaceAll(fullName, "ShowsAndChangesThe", "Thread")
+		fullName = strings.ReplaceAll(fullName, "ShowsAndSetsThe", "SymbolPath")
+		fullName = strings.ReplaceAll(fullName, "PerformsTheSymbolActions", "Symbol")
+		fullName = strings.ReplaceAll(fullName, "ShowsTheListOf", "SwitchThread")
+		fullName = strings.ReplaceAll(fullName, "GetsTheStatusOf", "Status")
+		fullName = strings.ReplaceAll(fullName, "RunsAUserModeProcess", "StartProcess")
+		fullName = strings.ReplaceAll(fullName, "RunScript", "Script")
+		fullName = strings.ReplaceAll(fullName, "ShowChangeProcesses", "ProcessesView")
+		fullName = strings.ReplaceAll(fullName, "MakePageAvailableInRam", "PageAvailableInRam")
+		fullName = strings.ReplaceAll(fullName, "OpenLog", "LogOpen")   //?
+		fullName = strings.ReplaceAll(fullName, "CloseLog", "LogClose") //?
+		fullName = strings.ReplaceAll(fullName, "TerminateProcess", "KillProcess")
+		fullName = strings.ReplaceAll(fullName, "ShowCommandHelp", "HelpForCommand")
+		fullName = strings.ReplaceAll(fullName, "ShowValueInDifferentFormats", "FormatsDiff")
+		fullName = strings.ReplaceAll(fullName, "SaveMemoryContext", "DumpMemoryContext")
+		fullName = strings.ReplaceAll(fullName, "MonitorVmcallExecution", "VmCall")
+		fullName = strings.ReplaceAll(fullName, "ConvertVirtualToPhysical", "Va2Pa")
+		fullName = strings.ReplaceAll(fullName, "ConvertPhysicalToVirtual", "Pa2Va")
+		fullName = strings.ReplaceAll(fullName, "RevertHide", "UnHide")
+		fullName = strings.ReplaceAll(fullName, "MonitorRdtscInstructions", "TscInstructionsMonitor")
+		fullName = strings.ReplaceAll(fullName, "UseReversingMachineModule", "ReversingMachineModuleUse")
+		fullName = strings.ReplaceAll(fullName, "FindVirtualAddressPagingLevels", "Pte")
+		fullName = strings.ReplaceAll(fullName, "MonitorRdpmcExecution", "PmcExecutionMonitor")
+		fullName = strings.ReplaceAll(fullName, "DetectIoInstructionsIn", "IoInstructionsInDetect")
+		fullName = strings.ReplaceAll(fullName, "MonitorExternalInterrupts", "ExternalInterruptsMonitor")
+		fullName = strings.ReplaceAll(fullName, "MonitorIdtEntries", "IdtEntriesMonitor")
+		fullName = strings.ReplaceAll(fullName, "HiddenHookEptDetours", "EptHook2")    // cc
+		fullName = strings.ReplaceAll(fullName, "HiddenHookEptBreakpoints", "EptHook") // inline
+		fullName = strings.ReplaceAll(fullName, "MonitorDebugRegisters", "DebugRegistersMonitor")
+		fullName = strings.ReplaceAll(fullName, "MonitorControlRegisterModification", "ControlRegisterModificationMonitor") //too long
+
 		fullName = strings.ReplaceAll(fullName, "ContinueDebuggee", "ContinueDebuggee_")
 		g.P("func ", fullName, "() {")
 		g.P("InterpreterEx(", strconv.Quote(s.Name), ") ")
