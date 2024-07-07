@@ -13,7 +13,7 @@ import (
 func main() {
 	// generateRegistryFile()
 	// testSdkCommands()
-	//ux.Run()
+	// ux.Run()
 	// testDisassembly()
 	testParsePe()
 	// testScript()
