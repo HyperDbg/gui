@@ -40,7 +40,6 @@ jobs:
       run: |
 #        remove HyperDbg/release/SDK/Libraries
 #        xcopy hyperdbg\SDK\* .\gui\sdk\bindgen\SDK\ /E /H /Y
-        xcopy HyperDbg\SDK\* .\gui\sdk\bindgen\SDK\ /E /H /Y
 #        copy  ".exe", ".dll", ".sys" from HyperDbg/release into sdk/bin
 #    remove HyperDbg.zip and HyperDbg folder
 # now merge into pre-release.yml for generating GitHub Changelog Generator  and release etc
