@@ -222,6 +222,33 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 }`, `func ReadVendorString(b*Char) {
 	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
 }`)
+		b.ReplaceAll(`type (
+	PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
+	Symbol                            = Symbol
+	Psymbol                           = *Symbol
+	HwdbgShortSymbol                  = HwdbgShortSymbol
+	PhwdbgShortSymbol                 = *HwdbgShortSymbol
+	SymbolBuffer                      = SymbolBuffer
+	PsymbolBuffer                     = *SymbolBuffer
+	SymbolMap                         = SymbolMap
+	PsymbolMap                        = *SymbolMap
+	ActionBuffer                      = ActionBuffer
+	PactionBuffer                     = *ActionBuffer
+	RegsEnum                          = RegsEnum
+)`, `type (
+	PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
+	//Symbol                            = Symbol
+	Psymbol                           = *Symbol
+	//HwdbgShortSymbol                  = HwdbgShortSymbol
+	PhwdbgShortSymbol                 = *HwdbgShortSymbol
+	//SymbolBuffer                      = SymbolBuffer
+	PsymbolBuffer                     = *SymbolBuffer
+	//SymbolMap                         = SymbolMap
+	PsymbolMap                        = *SymbolMap
+	//ActionBuffer                      = ActionBuffer
+	PactionBuffer                     = *ActionBuffer
+	//RegsEnum                          = RegsEnum
+)`)
 
 		stream.WriteGoFile("../sdk.go", b)
 	})
