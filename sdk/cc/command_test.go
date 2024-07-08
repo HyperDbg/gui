@@ -109,6 +109,16 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		for _, syntax := range s.Syntax {
 			g.P("//", syntax)
 		}
+		g.P("//", "Examples:")
+		for _, example := range s.Examples {
+			g.P("//", example)
+		}
+		if len(s.Notes) > 0 {
+			g.P("//", "Notes:")
+			for _, note := range s.Notes {
+				g.P("//", note)
+			}
+		}
 
 		g.P("func ", fullName, "() { //", s.Description)
 		g.P("InterpreterEx(", strconv.Quote(s.Name), ") ")
