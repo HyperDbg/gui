@@ -3,7 +3,6 @@ package main
 import (
 	"path/filepath"
 
-	"github.com/ddkwork/HyperDbg/sdk"
 	"github.com/ddkwork/HyperDbg/ux"
 	"github.com/ddkwork/app"
 	"github.com/ddkwork/golibrary/stream"
@@ -13,9 +12,9 @@ import (
 func main() {
 	// generateRegistryFile()
 	// testSdkCommands()
-	// ux.Run()
+	ux.Run()
 	// testDisassembly()
-	testParsePe()
+	// testParsePe()
 	// testScript()
 }
 
@@ -56,7 +55,7 @@ func generateRegistryFile() {
 
 func testSdkCommands() {
 	app.Run("commands", func(w *unison.Window) {
-		w.Content().AddChild(sdk.LayoutCommands())
+		// w.Content().AddChild(sdk.LayoutCommands())
 	})
 }
 

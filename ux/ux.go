@@ -187,10 +187,10 @@ func newToolbar() *toolbar {
 	return &toolbar{
 		open: widget.NewImageButton("open", m.Get("open.png"), func() {}),
 		restart: widget.NewImageButton("restart", m.Get("restart.png"), func() {
-			mylog.Warning(sdk.RestartKind.String(), sdk.RestartKind.RunCommand())
+			mylog.Warning("RestartProcess", sdk.RestartProcess)
 		}),
 		close: widget.NewImageButton("close", m.Get("close.png"), func() { // exit command ?
-			mylog.Warning(sdk.KillKind.String(), sdk.KillKind.RunCommand()) // todo need pid ?
+			mylog.Warning("KillProcess", sdk.KillProcess) // todo need pid ?
 		}),
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
 			//."start path C:\users\whatever.exe"
@@ -198,11 +198,11 @@ func newToolbar() *toolbar {
 				"C:\\users\\whatever.exe" + // todo set target path into object field
 				"\""
 			cmd = cmd
-			mylog.Warning(sdk.StartKind.String(), sdk.StartKind.RunCommand())
+			mylog.Warning("StartProcess", sdk.StartProcess)
 		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
 		pause: widget.NewImageButton("pause", m.Get("pause.png"), func() {
-			mylog.Warning(sdk.PauseKind.String(), sdk.PauseKind.RunCommand())
+			mylog.Warning("PauseDebuggee", sdk.PauseDebuggee)
 		}),
 		stepin: widget.NewImageButton("stepin", m.Get("stepin.png"), func() {
 			// todo set F7 shortcut
