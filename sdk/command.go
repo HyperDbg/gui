@@ -1,16 +1,23 @@
 package sdk
 
-import (
-	"fmt"
-	"strconv"
-	"strings"
-
-	"github.com/ddkwork/app/widget"
-	"github.com/richardwilkes/unison"
+type (
+	Command struct {
+		Name        string   `json:"Name"`
+		Description string   `json:"Description"`
+		Syntax      []string `json:"Syntax"`
+		Examples    []string `json:"Examples"`
+		Notes       []any    `json:"Notes"`
+		FullName    string   `json:"FullName"`
+	}
+	Commands struct {
+		Debugging []Command
+		Extension []Command
+		Hwdbg     []Command
+		Meta      []Command
+	}
 )
 
-// m := orderedmap.New(InvalidCommandsKind, []Command{})
-// m.Set(DebuggingKind, commands)
+/*
 func LayoutCommands() unison.Paneler {
 	return widget.NewTableScroll(Command{}, widget.TableContext[Command]{
 		ContextMenuItems: nil,
@@ -30,6 +37,8 @@ func LayoutCommands() unison.Paneler {
 		UnmarshalRow:             nil,
 		SelectionChangedCallback: nil,
 		SetRootRowsCallBack: func(root *widget.Node[Command]) {
+			// m := orderedmap.New(InvalidCommandsKind, []Command{})
+			// m.Set(DebuggingKind, commands)
 			containerNodes := widget.NewContainerNodes[Command](InvalidCommandsKind.Keys())
 			root.SetChildren(containerNodes)
 			for _, node := range containerNodes {
@@ -86,14 +95,4 @@ func LayoutCommands() unison.Paneler {
 		IsDocument: false,
 	})
 }
-
-type (
-	Command struct {
-		MethodName string
-		Cmd        string // todo replace with kind
-		Args       []string
-		DoFunc     string
-		Usage      string
-		Demo       []string
-	}
-)
+*/

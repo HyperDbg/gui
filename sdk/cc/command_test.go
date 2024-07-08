@@ -6,29 +6,14 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ddkwork/HyperDbg/sdk"
+
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 )
 
-type (
-	Command struct {
-		Name        string   `json:"Name"`
-		Description string   `json:"Description"`
-		Syntax      []string `json:"Syntax"`
-		Examples    []string `json:"Examples"`
-		Notes       []any    `json:"Notes"`
-		FullName    string   `json:"FullName"`
-	}
-	Commands struct {
-		Debugging []Command
-		Extension []Command
-		Hwdbg     []Command
-		Meta      []Command
-	}
-)
-
 func TestUnmarshalCommandJson(t *testing.T) {
-	var generated []Command
+	var generated []sdk.Command
 	mylog.Check(json.Unmarshal(stream.NewBuffer("sina2.json").Bytes(), &generated))
 	// mylog.Struct(generated)
 	g := stream.NewGeneratedFile()
