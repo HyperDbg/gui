@@ -221,7 +221,7 @@ func newToolbar() *toolbar {
 		windows:  widget.NewImageButton("windows", m.Get("windows.png"), func() {}),
 		threads:  widget.NewImageButton("threads", m.Get("threads.png"), func() {}),
 		cpu: widget.NewImageButton("cpu", m.Get("cpu.png"), func() {
-			mylog.Todo("goto cpu tab page") //dock.SetCurrentDockable(p.cpu)
+			mylog.Todo("goto cpu tab page") // dock.SetCurrentDockable(p.cpu)
 		}),
 		search: widget.NewImageButton("search", m.Get("search.png"), func() {}),
 		trace:  widget.NewImageButton("trace", m.Get("trace.png"), func() {}),

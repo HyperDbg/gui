@@ -369,14 +369,14 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 					Title: "EptHook",
 					Can:   func(any) bool { return true },
 					Do: func(a any) {
-						mylog.Warning("EptHook", sdk.EptHook()) //todo make args with type
+						mylog.Warning("EptHook", sdk.EptHook()) // todo make args with type
 					},
 				},
 				{
 					Title: "EptHook2",
 					Can:   func(any) bool { return true },
 					Do: func(a any) {
-						mylog.Warning("EptHook2", sdk.EptHook2()) //todo make args with type
+						mylog.Warning("EptHook2", sdk.EptHook2()) // todo make args with type
 					},
 				},
 			}
