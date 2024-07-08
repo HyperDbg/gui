@@ -43,12 +43,12 @@ func TestClearTemp(t *testing.T) {
 	filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
 		ext := filepath.Ext(path)
 		switch ext {
-		case ".json", ".txt":
+		case ".json", ".txt", ".log":
 			if filepath.Base(path) == "sina2.json" {
 				return nil
 			}
 			mylog.Info("clear file", path)
-			mylog.Check(os.Remove(path))
+			mylog.Call(func() { mylog.Check(os.Remove(path)) })
 		}
 		return err
 	})
