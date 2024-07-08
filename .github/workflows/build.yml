@@ -36,12 +36,12 @@ jobs:
     - name: Install dependencies
       run: go mod tidy
 
-#    - name: Copy SDK directory to target path
-#      run: |
-#        xcopy hyperdbg\SDK\* .\gui\sdk\bindgen\SDK\ /E /H /Y
-#
-#    - name: Build the project
-#      run: go build ./...
-#
-#    - name: Run tests
-#      run: go test ./...
+    - name: Copy SDK directory to target path
+      run: |
+        xcopy hyperdbg\SDK\* .\gui\sdk\bindgen\SDK\ /E /H /Y
+
+    - name: Run tests
+      run: go test ./...
+
+    - name: Build the project
+      run: go build ./...
