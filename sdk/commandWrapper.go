@@ -1,50 +1,50 @@
 package sdk
 
-func ClearsBreakpointBreakpointId() {
+func BreakpointClearByID() {
 	InterpreterEx("bc")
 }
 
-func DisablesBreakpointBreakpointId() {
+func BreakpointDisableByID() {
 	InterpreterEx("bd")
 }
 
-func EnablesBreakpointBreakpointId() {
+func BreakpointEnableByID() {
 	InterpreterEx("be")
 }
 
-func ListsAllEnabledAndDisabledBreakpoints() {
+func BreakpointList() {
 	InterpreterEx("bl")
 }
 
-func PutsBreakpoint0xcc() {
+func SetBreakpoint0xcc() {
 	InterpreterEx("bp")
 }
 
-func ShowsAndChangesOperatingProcessor() {
+func CoreOperatingProcessorForShowsAndChanges() {
 	InterpreterEx("core")
 }
 
-func CollectsReportFromCpuFeatures() {
+func CpuFeaturesForCollectsReport() {
 	InterpreterEx("cpu")
 }
 
-func RemoveKernelModeBuffers() {
+func FlushKernelModeBuffers() {
 	InterpreterEx("flush")
 }
 
-func ContinueDebuggee_() {
+func ContinueDebugger() {
 	InterpreterEx("g")
 }
 
-func ExecuteSingleInstructionStepOut() {
+func StepOut() {
 	InterpreterEx("gu")
 }
 
-func ExecuteSingleInstructionStepIn() {
+func StepIn() {
 	InterpreterEx("i")
 }
 
-func ShowThreadCallstack() {
+func CallstackOrThreadView() {
 	InterpreterEx("k, kd, kq")
 }
 
@@ -52,7 +52,7 @@ func ListModules() {
 	InterpreterEx("lm")
 }
 
-func InstallDriversAndLoadModules() {
+func LoadDriversAndLoadModules() {
 	InterpreterEx("load")
 }
 
@@ -76,11 +76,11 @@ func PreallocateBuffer() {
 	InterpreterEx("prealloc")
 }
 
-func EvaluateExpressions() {
+func PrintEvaluateExpressions() {
 	InterpreterEx("print")
 }
 
-func ReadModifyRegisters() {
+func RegistersReadOrModify() {
 	InterpreterEx("r")
 }
 

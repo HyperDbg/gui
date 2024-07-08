@@ -43,10 +43,22 @@ func TestUnmarshalCommandJson(t *testing.T) {
 	for _, s := range generated {
 		fullName := s.FullName
 		fullName = strings.ReplaceAll(fullName, "-", "_")
-		if fullName != "ContinueDebuggee" {
-			fullName = stream.ToCamelUpper(fullName, false)
-		}
-
+		fullName = stream.ToCamelUpper(fullName, false)
+		fullName = strings.ReplaceAll(fullName, "ClearsBreakpointBreakpointId", "BreakpointClearByID")
+		fullName = strings.ReplaceAll(fullName, "DisablesBreakpointBreakpointId", "BreakpointDisableByID")
+		fullName = strings.ReplaceAll(fullName, "EnablesBreakpointBreakpointId", "BreakpointEnableByID")
+		fullName = strings.ReplaceAll(fullName, "ListsAllEnabledAndDisabledBreakpoints", "BreakpointList")
+		fullName = strings.ReplaceAll(fullName, "PutsBreakpoint0xcc", "SetBreakpoint0xcc")
+		fullName = strings.ReplaceAll(fullName, "ShowsAndChangesOperatingProcessor", "CoreOperatingProcessorForShowsAndChanges") // too long
+		fullName = strings.ReplaceAll(fullName, "CollectsReportFromCpuFeatures", "CpuFeaturesForCollectsReport")
+		fullName = strings.ReplaceAll(fullName, "RemoveKernelModeBuffers", "FlushKernelModeBuffers")
+		fullName = strings.ReplaceAll(fullName, "ContinueDebuggee", "ContinueDebugger")
+		fullName = strings.ReplaceAll(fullName, "ExecuteSingleInstructionStepOut", "StepOut")
+		fullName = strings.ReplaceAll(fullName, "ExecuteSingleInstructionStepIn", "StepIn") // repeated with StepInExecute? "t"
+		fullName = strings.ReplaceAll(fullName, "ShowThreadCallstack", "CallstackOrThreadView")
+		fullName = strings.ReplaceAll(fullName, "InstallDriversAndLoadModules", "LoadDriversAndLoadModules")
+		fullName = strings.ReplaceAll(fullName, "EvaluateExpressions", "PrintEvaluateExpressions")
+		fullName = strings.ReplaceAll(fullName, "ReadModifyRegisters", "RegistersReadOrModify")
 		fullName = strings.ReplaceAll(fullName, "ReadModelSpecificRegister", "ReadMsr") //?? repeated?
 		fullName = strings.ReplaceAll(fullName, "DetectRdmsrExecution", "MsrRead")
 		fullName = strings.ReplaceAll(fullName, "DetectWrmsrExecution", "MsrWrite")
@@ -88,7 +100,6 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		fullName = strings.ReplaceAll(fullName, "TrapModeInstructions", "ModeInstructionsTrap")
 		fullName = strings.ReplaceAll(fullName, "DetectIoInstructionsOut", "IoInstructionsOutDetect")
 
-		fullName = strings.ReplaceAll(fullName, "ContinueDebuggee", "ContinueDebuggee_")
 		g.P("func ", fullName, "() {")
 		g.P("InterpreterEx(", strconv.Quote(s.Name), ") ")
 		g.P("}")
