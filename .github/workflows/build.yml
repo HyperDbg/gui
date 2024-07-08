@@ -50,6 +50,6 @@ jobs:
 #      run: go test ./...
 #
 #    - name: Build the project
-#      run: go build ./...
+#      run: go build .
 #      pack HyperDbg.exe to HyperDbg.zip
 #      upload HyperDbg.zip to release
