@@ -187,10 +187,10 @@ func newToolbar() *toolbar {
 	return &toolbar{
 		open: widget.NewImageButton("open", m.Get("open.png"), func() {}),
 		restart: widget.NewImageButton("restart", m.Get("restart.png"), func() {
-			mylog.Warning("RestartProcess", sdk.RestartProcess)
+			mylog.Warning("RestartProcess", sdk.RestartProcess())
 		}),
 		close: widget.NewImageButton("close", m.Get("close.png"), func() { // exit command ?
-			mylog.Warning("KillProcess", sdk.KillProcess) // todo need pid ?
+			mylog.Warning("KillProcess", sdk.KillProcess()) // todo need pid ?
 		}),
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
 			//."start path C:\users\whatever.exe"

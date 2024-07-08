@@ -12,8 +12,8 @@ import (
 func main() {
 	// generateRegistryFile()
 	// testSdkCommands()
-	ux.Run()
-	// testDisassembly()
+	// ux.Run()
+	testDisassembly()
 	// testParsePe()
 	// testScript()
 }
@@ -61,8 +61,8 @@ func testSdkCommands() {
 
 func testDisassembly() {
 	app.Run("asm", func(w *unison.Window) {
-		w.Content().AddChild(ux.LayoutDisassemblyTable("C:\\Users\\Admin\\Desktop\\tutorial1.exe"))
-		// w.Content().AddChild(ux.LayoutDisassemblyTable("sdk/bin/hyperdbg-cli.exe"))
+		// w.Content().AddChild(ux.LayoutDisassemblyTable("C:\\Users\\Admin\\Desktop\\tutorial1.exe"))//32 bit not work
+		w.Content().AddChild(ux.LayoutDisassemblyTable("sdk/bin/hyperdbg-cli.exe"))
 	})
 }
 
