@@ -1,2 +1,2 @@
-clang -fsyntax-only -nobuiltininc -Xclang -ast-dump=json ARImpRec.h
-clang -fsyntax-only -nobuiltininc -emit-llvm -Xclang -fdump-record-layouts -Xclang -fdump-record-layouts-complete ARImpRec.h
+clang -fsyntax-only -nobuiltininc -Xclang -ast-dump=json xxoo.h
+clang -fsyntax-only -nobuiltininc -emit-llvm -Xclang -fdump-record-layouts -Xclang -fdump-record-layouts-complete xxoo.h
