@@ -43,8 +43,9 @@ jobs:
         xcopy HyperDbg\SDK\* .\gui\sdk\bindgen\SDK\ /E /H /Y
 #        copy  ".exe", ".dll", ".sys" from HyperDbg/release into sdk/bin
 #    remove HyperDbg.zip and HyperDbg folder
-
 # now merge into pre-release.yml for generating GitHub Changelog Generator  and release etc
+# Additionally, currently only bin sums from builds on the dev branch will allow gui builds to succeed
+
 
 #    - name: Run tests for auto bind sdk
 #      run: go test ./...
