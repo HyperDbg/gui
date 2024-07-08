@@ -38,10 +38,10 @@ jobs:
 
     - name: Copy SDK directory and bin to target path,latest remove
       run: |
-#        remove HyperDbg/release/SDK/Libraries
-#        xcopy hyperdbg\SDK\* .\gui\sdk\bindgen\SDK\ /E /H /Y
-#        copy  ".exe", ".dll", ".sys" from HyperDbg/release into sdk/bin
-#    remove HyperDbg.zip and HyperDbg folder
+# 1  remove HyperDbg/release/SDK/Libraries
+# 2  xcopy hyperdbg\SDK\* .\gui\sdk\bindgen\SDK\ /E /H /Y
+# 3  copy  ".exe", ".dll", ".sys" from HyperDbg/release into sdk/bin
+# 4  remove HyperDbg.zip and HyperDbg folder
 # now merge into pre-release.yml for generating GitHub Changelog Generator  and release etc
 # Additionally, currently only bin sums from builds on the dev branch will allow gui builds to succeed
 
