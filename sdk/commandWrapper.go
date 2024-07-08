@@ -84,7 +84,7 @@ func ReadModifyRegisters() {
 	InterpreterEx("r")
 }
 
-func ReadModelSpecificRegister() {
+func ReadMsr() {
 	InterpreterEx("rdmsr")
 }
 
@@ -96,11 +96,11 @@ func SettingsManagement() {
 	InterpreterEx("settings")
 }
 
-func DebuggerSleep() {
+func SleepDebugger() {
 	InterpreterEx("sleep")
 }
 
-func ExecuteStepIn() {
+func StepInExecute() {
 	InterpreterEx("t")
 }
 
@@ -116,7 +116,7 @@ func SearchSymbols() {
 	InterpreterEx("x")
 }
 
-func MonitorCpuidExecution() {
+func CpuidExecutionMonitor() {
 	InterpreterEx("!cpuid")
 }
 
@@ -152,7 +152,7 @@ func IoInstructionsInDetect() {
 	InterpreterEx("!ioin")
 }
 
-func DetectIoInstructionsOut() {
+func IoInstructionsOutDetect() {
 	InterpreterEx("!ioout")
 }
 
@@ -160,7 +160,7 @@ func MeasureArgumentsForHide() {
 	InterpreterEx("!measure")
 }
 
-func TrapModeInstructions() {
+func ModeInstructionsTrap() {
 	InterpreterEx("!mode")
 }
 

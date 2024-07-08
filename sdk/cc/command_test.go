@@ -47,6 +47,7 @@ func TestUnmarshalCommandJson(t *testing.T) {
 			fullName = stream.ToCamelUpper(fullName, false)
 		}
 
+		fullName = strings.ReplaceAll(fullName, "ReadModelSpecificRegister", "ReadMsr") //?? repeated?
 		fullName = strings.ReplaceAll(fullName, "DetectRdmsrExecution", "MsrRead")
 		fullName = strings.ReplaceAll(fullName, "DetectWrmsrExecution", "MsrWrite")
 		fullName = strings.ReplaceAll(fullName, "MonitorSyscallExecution", "Syscall")
@@ -80,7 +81,12 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		fullName = strings.ReplaceAll(fullName, "HiddenHookEptDetours", "EptHook2")    // cc
 		fullName = strings.ReplaceAll(fullName, "HiddenHookEptBreakpoints", "EptHook") // inline
 		fullName = strings.ReplaceAll(fullName, "MonitorDebugRegisters", "DebugRegistersMonitor")
-		fullName = strings.ReplaceAll(fullName, "MonitorControlRegisterModification", "ControlRegisterModificationMonitor") //too long
+		fullName = strings.ReplaceAll(fullName, "MonitorControlRegisterModification", "ControlRegisterModificationMonitor") // too long
+		fullName = strings.ReplaceAll(fullName, "MonitorCpuidExecution", "CpuidExecutionMonitor")
+		fullName = strings.ReplaceAll(fullName, "ExecuteStepIn", "StepInExecute") // f7
+		fullName = strings.ReplaceAll(fullName, "DebuggerSleep", "SleepDebugger")
+		fullName = strings.ReplaceAll(fullName, "TrapModeInstructions", "ModeInstructionsTrap")
+		fullName = strings.ReplaceAll(fullName, "DetectIoInstructionsOut", "IoInstructionsOutDetect")
 
 		fullName = strings.ReplaceAll(fullName, "ContinueDebuggee", "ContinueDebuggee_")
 		g.P("func ", fullName, "() {")
