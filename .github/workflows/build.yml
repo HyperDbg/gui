@@ -36,12 +36,18 @@ jobs:
     - name: Install dependencies
       run: go mod tidy
 
-    - name: Copy SDK directory to target path
+    - name: Copy SDK directory and bin to target path,latest remove
       run: |
-        xcopy hyperdbg\SDK\* .\gui\sdk\bindgen\SDK\ /E /H /Y
+#        remove HyperDbg/release/SDK/Libraries
+#        xcopy hyperdbg\SDK\* .\gui\sdk\bindgen\SDK\ /E /H /Y
+        xcopy HyperDbg\SDK\* .\gui\sdk\bindgen\SDK\ /E /H /Y
+#        copy  ".exe", ".dll", ".sys" from HyperDbg/release into sdk/bin
+#    remove HyperDbg.zip and HyperDbg folder
 
-    - name: Run tests
+    - name: Run tests for auto bind sdk
       run: go test ./...
 
     - name: Build the project
       run: go build ./...
+#      pack HyperDbg.exe to HyperDbg.zip
+#      upload HyperDbg.zip to release
