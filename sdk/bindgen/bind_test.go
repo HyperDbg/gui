@@ -251,8 +251,6 @@ typedef int bool ;
 typedef long LONG ;
 #define PVOID void*
 #define HANDLE void*
-#define PIRP void*//todo
-#define PDEVICE_OBJECT void*//todo
 #define MAX_PATH 260
 typedef unsigned __int64   SIZE_T,*PSIZE_T;
 typedef unsigned __int64   time_t;
