@@ -9,3 +9,4 @@ reset git.cmd
 cmake-build-debug
 /hyperdbgui.exe
 /binaries-bin.zip
+/hyperdbg-v0.9.1.zip
