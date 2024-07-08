@@ -354,6 +354,16 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 		ContextMenuItems: func(node *widget.Node[xed.Disassembly]) []widget.ContextMenuItem {
 			return []widget.ContextMenuItem{
 				{
+					Title: "copy address",
+					Can:   func(any) bool { return true },
+					Do:    func(a any) { mylog.Todo("copy address 0x00007FF838E51030") },
+				},
+				{
+					Title: "copy row",
+					Can:   func(any) bool { return true },
+					Do:    func(a any) { mylog.Todo("copy row 0x00007FF838E51030") },
+				},
+				{
 					Title: "goto",
 					Can:   func(any) bool { return true },
 					Do:    func(a any) { mylog.Todo("goto 0x00007FF838E51030") },
