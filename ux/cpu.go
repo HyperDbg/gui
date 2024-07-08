@@ -362,7 +362,7 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 					Title: "set breakpoint",
 					Can:   func(any) bool { return true },
 					Do: func(a any) {
-						mylog.Warning("SetBreakpoint0xcc", sdk.SetBreakpoint0xcc) // todo use SetBreakpoint
+						mylog.Warning("SetBreakpoint0xcc", sdk.SetBreakpoint0xcc()) // todo use SetBreakpoint
 					},
 				},
 			}

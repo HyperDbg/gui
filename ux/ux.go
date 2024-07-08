@@ -202,7 +202,7 @@ func newToolbar() *toolbar {
 		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
 		pause: widget.NewImageButton("pause", m.Get("pause.png"), func() {
-			mylog.Warning("PauseDebuggee", sdk.PauseKernelEvents())
+			mylog.Warning("PauseKernelEvents", sdk.PauseKernelEvents())
 		}),
 		stepin: widget.NewImageButton("stepin", m.Get("stepin.png"), func() {
 			// todo set F7 shortcut
@@ -210,6 +210,7 @@ func newToolbar() *toolbar {
 		}),
 		stepover: widget.NewImageButton("stepover", m.Get("stepover.png"), func() {
 			mylog.Todo("stepover command here, need local debug support")
+			mylog.Warning("StepOut", sdk.StepOut()) //?
 		}),
 		trin:     widget.NewImageButton("trin", m.Get("trin.png"), func() {}),
 		trover:   widget.NewImageButton("trover", m.Get("trover.png"), func() {}),
@@ -219,15 +220,19 @@ func newToolbar() *toolbar {
 		modules:  widget.NewImageButton("modules", m.Get("modules.png"), func() {}),
 		windows:  widget.NewImageButton("windows", m.Get("windows.png"), func() {}),
 		threads:  widget.NewImageButton("threads", m.Get("threads.png"), func() {}),
-		cpu:      widget.NewImageButton("cpu", m.Get("cpu.png"), func() {}),
-		search:   widget.NewImageButton("search", m.Get("search.png"), func() {}),
-		trace:    widget.NewImageButton("trace", m.Get("trace.png"), func() {}),
-		bpoints:  widget.NewImageButton("bpoints", m.Get("bpoints.png"), func() {}),
-		bpmem:    widget.NewImageButton("bpmem", m.Get("bpmem.png"), func() {}),
-		bphard:   widget.NewImageButton("bphard", m.Get("bphard.png"), func() {}),
-		options:  widget.NewImageButton("options", m.Get("options.png"), func() {}),
-		scylla:   widget.NewImageButton("scylla", m.Get("scylla.png"), func() {}),
-		about:    widget.NewImageButton("about", m.Get("about.png"), func() {}),
+		cpu: widget.NewImageButton("cpu", m.Get("cpu.png"), func() {
+			mylog.Todo("goto cpu tab page") //dock.SetCurrentDockable(p.cpu)
+		}),
+		search: widget.NewImageButton("search", m.Get("search.png"), func() {}),
+		trace:  widget.NewImageButton("trace", m.Get("trace.png"), func() {}),
+		bpoints: widget.NewImageButton("bpoints", m.Get("bpoints.png"), func() {
+			mylog.Warning("breakpoint list", sdk.BreakpointList())
+		}),
+		bpmem:   widget.NewImageButton("bpmem", m.Get("bpmem.png"), func() {}),
+		bphard:  widget.NewImageButton("bphard", m.Get("bphard.png"), func() {}),
+		options: widget.NewImageButton("options", m.Get("options.png"), func() {}),
+		scylla:  widget.NewImageButton("scylla", m.Get("scylla.png"), func() {}),
+		about:   widget.NewImageButton("about", m.Get("about.png"), func() {}),
 	}
 }
 
