@@ -11,7 +11,7 @@ import (
 	"github.com/ddkwork/golibrary/stream"
 )
 
-func TestOpenWith(t *testing.T) {
+func TestGenerateRegistryFile(t *testing.T) {
 	generateRegistryFile()
 }
 
