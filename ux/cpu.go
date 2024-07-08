@@ -390,6 +390,649 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 						mylog.Warning("EptHook2", sdk.EptHook2()) // todo make args with type
 					},
 				},
+				/*
+					BreakpointClearByID
+						BreakpointDisableByID
+						BreakpointEnableByID
+						BreakpointList
+						SetBreakpoint0xcc
+						CoreOperatingProcessorForShowsAndChanges
+						CpuFeaturesForCollectsReport
+						FlushKernelModeBuffers
+						ContinueDebugger
+						StepOut
+						StepIn
+						CallstackOrThreadView //跟随当前地址的堆栈，同时刷新右下角的堆栈panel
+						ListModules
+						LoadDriversAndModules
+						OutputEventForwardingInstance
+						StepExecuteSingleInstruction
+						PauseKernelEvents
+						PreactivateSpecialFunctionality
+						PreallocateBuffer
+						PrintEvaluateExpressions
+						RegistersReadOrModify
+						ReadMsr
+						SearchMemoryPattern
+						SettingsManagement
+						SleepDebugger
+						StepInExecute
+						TestHyperDbgFeatures
+						UnloadKernelModules
+						SearchSymbols
+						CpuidExecutionMonitor
+						ControlRegisterModificationMonitor
+						DebugRegistersMonitor
+						EptHook
+						EptHook2
+						IdtEntriesMonitor
+						HideHyperDbg
+						InterruptExternalMonitor
+						IoInDetect
+						IoOutDetect
+						MeasureArgumentsForHide
+						ModeInstructionsTrap
+						MonitorMemoryAccess
+						MsrRead
+						MsrWrite
+						Pa2Va
+						PmcExecutionMonitor
+						Pte
+						ReversingMachineModuleUse
+						Syscall
+						SysRet
+						TraceExecution
+						TrackModeTransitionInstructions
+						TscInstructionsMonitor
+						UnHide
+						Va2Pa
+						VmCall
+						HardwareClockDebugging
+						AttachDebugThread
+						ClearScreen
+						ConnectToMachine
+						DebugMachine
+						DetachDebugging
+						DisconnectSession
+						DumpMemoryContext
+						FormatsDiff
+						HelpForCommand
+						KillProcess
+						ListenForClientConnection
+						LogClose
+						LogOpen
+						PageAvailableInRam
+						ParseExecutableFiles
+						ProcessesView
+						RestartProcess
+						Script
+						StartProcess
+						Status
+						SwitchThread
+						Symbol
+						SymbolPath
+						Thread
+				*/
+				{
+					Title: "BreakpointClearByID",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("BreakpointClearByID", sdk.BreakpointClearByID())
+					},
+				},
+				{
+					Title: "BreakpointDisableByID",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("BreakpointDisableByID", sdk.BreakpointDisableByID())
+					},
+				},
+				{
+					Title: "BreakpointEnableByID",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("BreakpointEnableByID", sdk.BreakpointEnableByID())
+					},
+				},
+				{
+					Title: "BreakpointList",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("BreakpointList", sdk.BreakpointList())
+					},
+				},
+				{
+					Title: "CoreOperatingProcessorForShowsAndChanges",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("CoreOperatingProcessorForShowsAndChanges", sdk.CoreOperatingProcessorForShowsAndChanges())
+					},
+				},
+				{
+					Title: "CpuFeaturesForCollectsReport",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("CpuFeaturesForCollectsReport", sdk.CpuFeaturesForCollectsReport())
+					},
+				},
+				{
+					Title: "FlushKernelModeBuffers",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("FlushKernelModeBuffers", sdk.FlushKernelModeBuffers())
+					},
+				},
+				{
+					Title: "ContinueDebugger",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("ContinueDebugger", sdk.ContinueDebugger())
+					},
+				},
+				{
+					Title: "StepOut",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("StepOut", sdk.StepOut())
+					},
+				},
+				{
+					Title: "StepIn",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("StepIn", sdk.StepIn())
+					},
+				},
+				{
+					Title: "CallstackOrThreadView",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("CallstackOrThreadView", sdk.CallstackOrThreadView())
+					},
+				},
+				{
+					Title: "ListModules",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("ListModules", sdk.ListModules())
+					},
+				},
+				{
+					Title: "LoadDriversAndModules",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("LoadDriversAndModules", sdk.LoadDriversAndModules())
+					},
+				},
+				{
+					Title: "OutputEventForwardingInstance",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("OutputEventForwardingInstance", sdk.OutputEventForwardingInstance())
+					},
+				},
+				{
+					Title: "StepExecuteSingleInstruction",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("StepExecuteSingleInstruction", sdk.StepExecuteSingleInstruction())
+					},
+				},
+				{
+					Title: "PauseKernelEvents",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("PauseKernelEvents", sdk.PauseKernelEvents())
+					},
+				},
+				{
+					Title: "PreactivateSpecialFunctionality",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("PreactivateSpecialFunctionality", sdk.PreactivateSpecialFunctionality())
+					},
+				},
+				{
+					Title: "PreallocateBuffer",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("PreallocateBuffer", sdk.PreallocateBuffer())
+					},
+				},
+				{
+					Title: "PrintEvaluateExpressions",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("PrintEvaluateExpressions", sdk.PrintEvaluateExpressions())
+					},
+				},
+				{
+					Title: "RegistersReadOrModify",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("RegistersReadOrModify", sdk.RegistersReadOrModify())
+					},
+				},
+				{
+					Title: "ReadMsr",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("ReadMsr", sdk.ReadMsr())
+					},
+				},
+				{
+					Title: "SearchMemoryPattern",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("SearchMemoryPattern", sdk.SearchMemoryPattern())
+					},
+				},
+				{
+					Title: "SettingsManagement",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("SettingsManagement", sdk.SettingsManagement())
+					},
+				},
+				{
+					Title: "SleepDebugger",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("SleepDebugger", sdk.SleepDebugger())
+					},
+				},
+				{
+					Title: "StepInExecute",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("StepInExecute", sdk.StepInExecute())
+					},
+				},
+				{
+					Title: "TestHyperDbgFeatures",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("TestHyperDbgFeatures", sdk.TestHyperDbgFeatures())
+					},
+				},
+				{
+					Title: "UnloadKernelModules",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("UnloadKernelModules", sdk.UnloadKernelModules())
+					},
+				},
+				{
+					Title: "SearchSymbols",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("SearchSymbols", sdk.SearchSymbols())
+					},
+				},
+				{
+					Title: "CpuidExecutionMonitor",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("CpuidExecutionMonitor", sdk.CpuidExecutionMonitor())
+					},
+				},
+				{
+					Title: "ControlRegisterModificationMonitor",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("ControlRegisterModificationMonitor", sdk.ControlRegisterModificationMonitor())
+					},
+				},
+				{
+					Title: "DebugRegistersMonitor",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("DebugRegistersMonitor", sdk.DebugRegistersMonitor())
+					},
+				},
+				{
+					Title: "EptHook",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("EptHook", sdk.EptHook())
+					},
+				},
+				{
+					Title: "EptHook2",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("EptHook2", sdk.EptHook2())
+					},
+				},
+				{
+					Title: "IdtEntriesMonitor",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("IdtEntriesMonitor", sdk.IdtEntriesMonitor())
+					},
+				},
+				{
+					Title: "HideHyperDbg",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("HideHyperDbg", sdk.HideHyperDbg())
+					},
+				},
+				{
+					Title: "InterruptExternalMonitor",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("InterruptExternalMonitor", sdk.InterruptExternalMonitor())
+					},
+				},
+				{
+					Title: "IoInDetect",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("IoInDetect", sdk.IoInDetect())
+					},
+				},
+				{
+					Title: "IoOutDetect",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("IoOutDetect", sdk.IoOutDetect())
+					},
+				},
+				{
+					Title: "MeasureArgumentsForHide",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("MeasureArgumentsForHide", sdk.MeasureArgumentsForHide())
+					},
+				},
+				{
+					Title: "ModeInstructionsTrap",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("ModeInstructionsTrap", sdk.ModeInstructionsTrap())
+					},
+				},
+				{
+					Title: "MonitorMemoryAccess",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("MonitorMemoryAccess", sdk.MonitorMemoryAccess())
+					},
+				},
+				{
+					Title: "MsrRead",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("MsrRead", sdk.MsrRead())
+					},
+				},
+				{
+					Title: "MsrWrite",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("MsrWrite", sdk.MsrWrite())
+					},
+				},
+				{
+					Title: "Pa2Va",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("Pa2Va", sdk.Pa2Va())
+					},
+				},
+				{
+					Title: "PmcExecutionMonitor",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("PmcExecutionMonitor", sdk.PmcExecutionMonitor())
+					},
+				},
+				{
+					Title: "Pte",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("Pte", sdk.Pte())
+					},
+				},
+				{
+					Title: "ReversingMachineModuleUse",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("ReversingMachineModuleUse", sdk.ReversingMachineModuleUse())
+					},
+				},
+				{
+					Title: "Syscall",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("Syscall", sdk.Syscall())
+					},
+				},
+				{
+					Title: "SysRet",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("SysRet", sdk.SysRet())
+					},
+				},
+				{
+					Title: "TraceExecution",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("TraceExecution", sdk.TraceExecution())
+					},
+				},
+				{
+					Title: "TrackModeTransitionInstructions",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("TrackModeTransitionInstructions", sdk.TrackModeTransitionInstructions())
+					},
+				},
+				{
+					Title: "TscInstructionsMonitor",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("TscInstructionsMonitor", sdk.TscInstructionsMonitor())
+					},
+				},
+				{
+					Title: "UnHide",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("UnHide", sdk.UnHide())
+					},
+				},
+				{
+					Title: "Va2Pa",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("Va2Pa", sdk.Va2Pa())
+					},
+				},
+				{
+					Title: "VmCall",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("VmCall", sdk.VmCall())
+					},
+				},
+				{
+					Title: "HardwareClockDebugging",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("HardwareClockDebugging", sdk.HardwareClockDebugging())
+					},
+				},
+				{
+					Title: "AttachDebugThread",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("AttachDebugThread", sdk.AttachDebugThread())
+					},
+				},
+				{
+					Title: "ClearScreen",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("ClearScreen", sdk.ClearScreen())
+					},
+				},
+				{
+					Title: "ConnectToMachine",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("ConnectToMachine", sdk.ConnectToMachine())
+					},
+				},
+				{
+					Title: "DebugMachine",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("DebugMachine", sdk.DebugMachine())
+					},
+				},
+				{
+					Title: "DetachDebugging",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("DetachDebugging", sdk.DetachDebugging())
+					},
+				},
+				{
+					Title: "DisconnectSession",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("DisconnectSession", sdk.DisconnectSession())
+					},
+				},
+				{
+					Title: "DumpMemoryContext",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("DumpMemoryContext", sdk.DumpMemoryContext())
+					},
+				},
+				{
+					Title: "FormatsDiff",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("FormatsDiff", sdk.FormatsDiff())
+					},
+				},
+				{
+					Title: "HelpForCommand",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("HelpForCommand", sdk.HelpForCommand())
+					},
+				},
+				{
+					Title: "KillProcess",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("KillProcess", sdk.KillProcess())
+					},
+				},
+				{
+					Title: "ListenForClientConnection",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("ListenForClientConnection", sdk.ListenForClientConnection())
+					},
+				},
+				{
+					Title: "LogClose",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("LogClose", sdk.LogClose())
+					},
+				},
+				{
+					Title: "LogOpen",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("LogOpen", sdk.LogOpen())
+					},
+				},
+				{
+					Title: "PageAvailableInRam",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("PageAvailableInRam", sdk.PageAvailableInRam())
+					},
+				},
+				{
+					Title: "ParseExecutableFiles",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("ParseExecutableFiles", sdk.ParseExecutableFiles())
+					},
+				},
+				{
+					Title: "ProcessesView",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("ProcessesView", sdk.ProcessesView())
+					},
+				},
+				{
+					Title: "RestartProcess",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("RestartProcess", sdk.RestartProcess())
+					},
+				},
+				{
+					Title: "Script",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("Script", sdk.Script())
+					},
+				},
+				{
+					Title: "StartProcess",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("StartProcess", sdk.StartProcess())
+					},
+				},
+				{
+					Title: "Status",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("Status", sdk.Status())
+					},
+				},
+				{
+					Title: "SwitchThread",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("SwitchThread", sdk.SwitchThread())
+					},
+				},
+				{
+					Title: "Symbol",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("Symbol", sdk.Symbol())
+					},
+				},
+				{
+					Title: "SymbolPath",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("SymbolPath", sdk.SymbolPath())
+					},
+				},
+				{
+					Title: "Thread",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("Thread", sdk.Thread())
+					},
+				},
 			}
 		},
 		MarshalRow: func(node *widget.Node[xed.Disassembly]) (cells []widget.CellData) {
