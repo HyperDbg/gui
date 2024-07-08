@@ -66,34 +66,36 @@ const (
 	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_SYMBOL_QUERY_PTE                  DebuggerRemotePacketRequestedAction = 27
 	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_SET_SHORT_CIRCUITING_STATE        DebuggerRemotePacketRequestedAction = 28
 	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_INJECT_PAGE_FAULT                 DebuggerRemotePacketRequestedAction = 29
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_NO_ACTION                                     DebuggerRemotePacketRequestedAction = 30
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_STARTED                              DebuggerRemotePacketRequestedAction = 31
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_LOGGING_MECHANISM                    DebuggerRemotePacketRequestedAction = 32
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_PAUSED_AND_CURRENT_INSTRUCTION       DebuggerRemotePacketRequestedAction = 33
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_CORE              DebuggerRemotePacketRequestedAction = 34
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_PROCESS           DebuggerRemotePacketRequestedAction = 35
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_THREAD            DebuggerRemotePacketRequestedAction = 36
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_RUNNING_SCRIPT             DebuggerRemotePacketRequestedAction = 37
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_FORMATS                    DebuggerRemotePacketRequestedAction = 38
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_FLUSH                      DebuggerRemotePacketRequestedAction = 39
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CALLSTACK                  DebuggerRemotePacketRequestedAction = 40
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_TEST_QUERY                    DebuggerRemotePacketRequestedAction = 41
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_REGISTERING_EVENT          DebuggerRemotePacketRequestedAction = 42
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_ADDING_ACTION_TO_EVENT     DebuggerRemotePacketRequestedAction = 43
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_QUERY_AND_MODIFY_EVENT     DebuggerRemotePacketRequestedAction = 44
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_SHORT_CIRCUITING_EVENT     DebuggerRemotePacketRequestedAction = 45
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_READING_REGISTERS          DebuggerRemotePacketRequestedAction = 46
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_READING_MEMORY             DebuggerRemotePacketRequestedAction = 47
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_EDITING_MEMORY             DebuggerRemotePacketRequestedAction = 48
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BP                         DebuggerRemotePacketRequestedAction = 49
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_SHORT_CIRCUITING_STATE     DebuggerRemotePacketRequestedAction = 50
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_LIST_OR_MODIFY_BREAKPOINTS DebuggerRemotePacketRequestedAction = 51
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_UPDATE_SYMBOL_INFO                   DebuggerRemotePacketRequestedAction = 52
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RELOAD_SYMBOL_FINISHED               DebuggerRemotePacketRequestedAction = 53
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RELOAD_SEARCH_QUERY                  DebuggerRemotePacketRequestedAction = 54
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_PTE                        DebuggerRemotePacketRequestedAction = 55
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_VA2PA_AND_PA2VA            DebuggerRemotePacketRequestedAction = 56
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BRINGING_PAGES_IN          DebuggerRemotePacketRequestedAction = 57
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_WRITE_REGISTER                    DebuggerRemotePacketRequestedAction = 30
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_NO_ACTION                                     DebuggerRemotePacketRequestedAction = 31
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_STARTED                              DebuggerRemotePacketRequestedAction = 32
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_LOGGING_MECHANISM                    DebuggerRemotePacketRequestedAction = 33
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_PAUSED_AND_CURRENT_INSTRUCTION       DebuggerRemotePacketRequestedAction = 34
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_CORE              DebuggerRemotePacketRequestedAction = 35
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_PROCESS           DebuggerRemotePacketRequestedAction = 36
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_THREAD            DebuggerRemotePacketRequestedAction = 37
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_RUNNING_SCRIPT             DebuggerRemotePacketRequestedAction = 38
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_FORMATS                    DebuggerRemotePacketRequestedAction = 39
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_FLUSH                      DebuggerRemotePacketRequestedAction = 40
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CALLSTACK                  DebuggerRemotePacketRequestedAction = 41
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_TEST_QUERY                    DebuggerRemotePacketRequestedAction = 42
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_REGISTERING_EVENT          DebuggerRemotePacketRequestedAction = 43
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_ADDING_ACTION_TO_EVENT     DebuggerRemotePacketRequestedAction = 44
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_QUERY_AND_MODIFY_EVENT     DebuggerRemotePacketRequestedAction = 45
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_SHORT_CIRCUITING_EVENT     DebuggerRemotePacketRequestedAction = 46
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_READING_REGISTERS          DebuggerRemotePacketRequestedAction = 47
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_READING_MEMORY             DebuggerRemotePacketRequestedAction = 48
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_EDITING_MEMORY             DebuggerRemotePacketRequestedAction = 49
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BP                         DebuggerRemotePacketRequestedAction = 50
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_SHORT_CIRCUITING_STATE     DebuggerRemotePacketRequestedAction = 51
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_LIST_OR_MODIFY_BREAKPOINTS DebuggerRemotePacketRequestedAction = 52
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_UPDATE_SYMBOL_INFO                   DebuggerRemotePacketRequestedAction = 53
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RELOAD_SYMBOL_FINISHED               DebuggerRemotePacketRequestedAction = 54
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RELOAD_SEARCH_QUERY                  DebuggerRemotePacketRequestedAction = 55
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_PTE                        DebuggerRemotePacketRequestedAction = 56
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_VA2PA_AND_PA2VA            DebuggerRemotePacketRequestedAction = 57
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BRINGING_PAGES_IN          DebuggerRemotePacketRequestedAction = 58
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_WRITE_REGISTER             DebuggerRemotePacketRequestedAction = 59
 )
 
 // @brief enum for different packet types in HyperDbg packets
@@ -618,6 +620,131 @@ const (
 	DEBUGGER_CONDITIONAL_JUMP_STATUS_JUMP_IS_NOT_TAKEN    DebuggerConditionalJumpStatus = 3
 )
 
+type RegsEnum int32
+
+const (
+	REGISTER_RAX    RegsEnum = 0
+	REGISTER_EAX    RegsEnum = 1
+	REGISTER_AX     RegsEnum = 2
+	REGISTER_AH     RegsEnum = 3
+	REGISTER_AL     RegsEnum = 4
+	REGISTER_RCX    RegsEnum = 5
+	REGISTER_ECX    RegsEnum = 6
+	REGISTER_CX     RegsEnum = 7
+	REGISTER_CH     RegsEnum = 8
+	REGISTER_CL     RegsEnum = 9
+	REGISTER_RDX    RegsEnum = 10
+	REGISTER_EDX    RegsEnum = 11
+	REGISTER_DX     RegsEnum = 12
+	REGISTER_DH     RegsEnum = 13
+	REGISTER_DL     RegsEnum = 14
+	REGISTER_RBX    RegsEnum = 15
+	REGISTER_EBX    RegsEnum = 16
+	REGISTER_BX     RegsEnum = 17
+	REGISTER_BH     RegsEnum = 18
+	REGISTER_BL     RegsEnum = 19
+	REGISTER_RSP    RegsEnum = 20
+	REGISTER_ESP    RegsEnum = 21
+	REGISTER_SP     RegsEnum = 22
+	REGISTER_SPL    RegsEnum = 23
+	REGISTER_RBP    RegsEnum = 24
+	REGISTER_EBP    RegsEnum = 25
+	REGISTER_BP     RegsEnum = 26
+	REGISTER_BPL    RegsEnum = 27
+	REGISTER_RSI    RegsEnum = 28
+	REGISTER_ESI    RegsEnum = 29
+	REGISTER_SI     RegsEnum = 30
+	REGISTER_SIL    RegsEnum = 31
+	REGISTER_RDI    RegsEnum = 32
+	REGISTER_EDI    RegsEnum = 33
+	REGISTER_DI     RegsEnum = 34
+	REGISTER_DIL    RegsEnum = 35
+	REGISTER_R8     RegsEnum = 36
+	REGISTER_R8D    RegsEnum = 37
+	REGISTER_R8W    RegsEnum = 38
+	REGISTER_R8H    RegsEnum = 39
+	REGISTER_R8L    RegsEnum = 40
+	REGISTER_R9     RegsEnum = 41
+	REGISTER_R9D    RegsEnum = 42
+	REGISTER_R9W    RegsEnum = 43
+	REGISTER_R9H    RegsEnum = 44
+	REGISTER_R9L    RegsEnum = 45
+	REGISTER_R10    RegsEnum = 46
+	REGISTER_R10D   RegsEnum = 47
+	REGISTER_R10W   RegsEnum = 48
+	REGISTER_R10H   RegsEnum = 49
+	REGISTER_R10L   RegsEnum = 50
+	REGISTER_R11    RegsEnum = 51
+	REGISTER_R11D   RegsEnum = 52
+	REGISTER_R11W   RegsEnum = 53
+	REGISTER_R11H   RegsEnum = 54
+	REGISTER_R11L   RegsEnum = 55
+	REGISTER_R12    RegsEnum = 56
+	REGISTER_R12D   RegsEnum = 57
+	REGISTER_R12W   RegsEnum = 58
+	REGISTER_R12H   RegsEnum = 59
+	REGISTER_R12L   RegsEnum = 60
+	REGISTER_R13    RegsEnum = 61
+	REGISTER_R13D   RegsEnum = 62
+	REGISTER_R13W   RegsEnum = 63
+	REGISTER_R13H   RegsEnum = 64
+	REGISTER_R13L   RegsEnum = 65
+	REGISTER_R14    RegsEnum = 66
+	REGISTER_R14D   RegsEnum = 67
+	REGISTER_R14W   RegsEnum = 68
+	REGISTER_R14H   RegsEnum = 69
+	REGISTER_R14L   RegsEnum = 70
+	REGISTER_R15    RegsEnum = 71
+	REGISTER_R15D   RegsEnum = 72
+	REGISTER_R15W   RegsEnum = 73
+	REGISTER_R15H   RegsEnum = 74
+	REGISTER_R15L   RegsEnum = 75
+	REGISTER_DS     RegsEnum = 76
+	REGISTER_ES     RegsEnum = 77
+	REGISTER_FS     RegsEnum = 78
+	REGISTER_GS     RegsEnum = 79
+	REGISTER_CS     RegsEnum = 80
+	REGISTER_SS     RegsEnum = 81
+	REGISTER_RFLAGS RegsEnum = 82
+	REGISTER_EFLAGS RegsEnum = 83
+	REGISTER_FLAGS  RegsEnum = 84
+	REGISTER_CF     RegsEnum = 85
+	REGISTER_PF     RegsEnum = 86
+	REGISTER_AF     RegsEnum = 87
+	REGISTER_ZF     RegsEnum = 88
+	REGISTER_SF     RegsEnum = 89
+	REGISTER_TF     RegsEnum = 90
+	REGISTER_IF     RegsEnum = 91
+	REGISTER_DF     RegsEnum = 92
+	REGISTER_OF     RegsEnum = 93
+	REGISTER_IOPL   RegsEnum = 94
+	REGISTER_NT     RegsEnum = 95
+	REGISTER_RF     RegsEnum = 96
+	REGISTER_VM     RegsEnum = 97
+	REGISTER_AC     RegsEnum = 98
+	REGISTER_VIF    RegsEnum = 99
+	REGISTER_VIP    RegsEnum = 100
+	REGISTER_ID     RegsEnum = 101
+	REGISTER_RIP    RegsEnum = 102
+	REGISTER_EIP    RegsEnum = 103
+	REGISTER_IP     RegsEnum = 104
+	REGISTER_IDTR   RegsEnum = 105
+	REGISTER_LDTR   RegsEnum = 106
+	REGISTER_GDTR   RegsEnum = 107
+	REGISTER_TR     RegsEnum = 108
+	REGISTER_CR0    RegsEnum = 109
+	REGISTER_CR2    RegsEnum = 110
+	REGISTER_CR3    RegsEnum = 111
+	REGISTER_CR4    RegsEnum = 112
+	REGISTER_CR8    RegsEnum = 113
+	REGISTER_DR0    RegsEnum = 114
+	REGISTER_DR1    RegsEnum = 115
+	REGISTER_DR2    RegsEnum = 116
+	REGISTER_DR3    RegsEnum = 117
+	REGISTER_DR6    RegsEnum = 118
+	REGISTER_DR7    RegsEnum = 119
+)
+
 type ListEntry struct {
 	Flink *ListEntry
 	Blink *ListEntry
@@ -656,12 +783,12 @@ type ScriptEngineVariablesList struct {
 	LocalVariablesList  *Uint64
 }
 type Cr3Type struct {
-	Anon196_5
+	Anon192_5
 }
-type Anon196_5 struct {
+type Anon192_5 struct {
 	Raw [1]int64
 }
-type Anon200_9 struct {
+type Anon196_9 struct {
 	Pcid            Uint64
 	PageFrameNumber Uint64
 	Reserved1       Uint64
@@ -753,10 +880,10 @@ type EptSingleHookUnhookingDetails struct {
 	PhysicalAddress                           SizeT
 	OriginalEntry                             Uint64
 }
-type Anon1497_9 struct {
+type Anon1495_9 struct {
 	Raw [1]int32
 }
-type Anon1499_5 struct {
+type Anon1497_5 struct {
 	// [Bits 3:0] Segment type.
 	Type Uint32
 	// [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
@@ -1175,9 +1302,41 @@ type DebuggeeResultOfSearchPacket struct {
 	Result         Uint32
 }
 type DebuggeeRegisterReadDescription struct {
-	RegisterID   Uint32
+	RegisterId   Uint32
 	Value        Uint64
 	KernelStatus Uint32
+}
+type DebuggeeRegisterWriteDescription struct {
+	RegisterId   Uint32
+	Value        Uint64
+	KernelStatus Uint32
+}
+type Symbol struct {
+	Type         uint64
+	Len          uint64
+	VariableType uint64
+	Value        uint64
+}
+type HwdbgShortSymbol struct {
+	Type  uint64
+	Value uint64
+}
+type SymbolBuffer struct {
+	Head    Psymbol
+	Pointer uint32
+	Size    uint32
+	Message *byte
+}
+type SymbolMap struct {
+	Name *byte
+	Type uint64
+}
+type ActionBuffer struct {
+	Tag                       uint64
+	CurrentAction             uint64
+	ImmediatelySendTheResults byte
+	Context                   uint64
+	CallingStage              byte
 }
 type ModuleSymbolDetail struct {
 	IsSymbolDetailsFound   Boolean
@@ -1507,6 +1666,22 @@ type PdebuggeeResultOfSearchPacket = *DebuggeeResultOfSearchPacket
 // @brief Register Descriptor Structure to use in r command.
 type PdebuggeeRegisterReadDescription = *DebuggeeRegisterReadDescription
 
+// @brief Register Descriptor Structure to write on registers.
+type (
+	PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
+	Symbol                            = Symbol
+	Psymbol                           = *Symbol
+	HwdbgShortSymbol                  = HwdbgShortSymbol
+	PhwdbgShortSymbol                 = *HwdbgShortSymbol
+	SymbolBuffer                      = SymbolBuffer
+	PsymbolBuffer                     = *SymbolBuffer
+	SymbolMap                         = SymbolMap
+	PsymbolMap                        = *SymbolMap
+	ActionBuffer                      = ActionBuffer
+	PactionBuffer                     = *ActionBuffer
+	RegsEnum                          = RegsEnum
+)
+
 // @brief structures for sending and saving details
 // about each module and symbols details
 type (
@@ -1547,11 +1722,13 @@ func init() {
 	__imp_hyperdbg_u_use_default_driver_path = GengoLibrary.ImportNow("hyperdbg_u_use_default_driver_path")
 	__imp_hyperdbg_u_read_memory = GengoLibrary.ImportNow("hyperdbg_u_read_memory")
 	__imp_hyperdbg_u_show_memory_or_disassemble = GengoLibrary.ImportNow("hyperdbg_u_show_memory_or_disassemble")
+	__imp_hyperdbg_u_read_all_registers = GengoLibrary.ImportNow("hyperdbg_u_read_all_registers")
+	__imp_hyperdbg_u_read_target_register = GengoLibrary.ImportNow("hyperdbg_u_read_target_register")
+	__imp_hyperdbg_u_write_target_register = GengoLibrary.ImportNow("hyperdbg_u_write_target_register")
+	__imp_hyperdbg_u_show_all_registers = GengoLibrary.ImportNow("hyperdbg_u_show_all_registers")
+	__imp_hyperdbg_u_show_target_register = GengoLibrary.ImportNow("hyperdbg_u_show_target_register")
 	__imp_hyperdbg_u_connect_local_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_local_debugger")
 	__imp_hyperdbg_u_connect_remote_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_remote_debugger")
-	return
-	return
-	return
 	return
 	__imp_hyperdbg_u_continue_debuggee = GengoLibrary.ImportNow("hyperdbg_u_continue_debuggee")
 	__imp_hyperdbg_u_pause_debuggee = GengoLibrary.ImportNow("hyperdbg_u_pause_debuggee")
@@ -1597,8 +1774,8 @@ func init() {
 	bindlib.Validate((*GuestExtraRegisters)(nil), 0x20, 0x8, "Cs", 0x0, "Ds", 0x2, "Fs", 0x4, "Gs", 0x6, "Es", 0x8, "Ss", 0xa, "Rflags", 0x10, "Rip", 0x18)
 	bindlib.Validate((*ScriptEngineVariablesList)(nil), 0x18, 0x8, "TempList", 0x0, "GlobalVariablesList", 0x8, "LocalVariablesList", 0x10)
 	bindlib.Validate((*Cr3Type)(nil), 0x8, 0x8)
-	bindlib.Validate((*Anon196_5)(nil), 0x8, 0x8)
-	bindlib.Validate((*Anon200_9)(nil), 0x8, 0x8, "Pcid", 0xc, "PageFrameNumber", 0x30, "Reserved1", 0x3c, "Reserved_2", 0x3f, "PcidInvalidate", 0x40)
+	bindlib.Validate((*Anon192_5)(nil), 0x8, 0x8)
+	bindlib.Validate((*Anon196_9)(nil), 0x8, 0x8, "Pcid", 0xc, "PageFrameNumber", 0x30, "Reserved1", 0x3c, "Reserved_2", 0x3f, "PcidInvalidate", 0x40)
 	bindlib.Validate((*DebuggerRemotePacket)(nil), 0x18, 0x8, "Checksum", 0x0, "Indicator", 0x8, "TypeOfThePacket", 0x10, "RequestedActionOfThePacket", 0x14)
 	bindlib.Validate((*DebuggeeUserInputPacket)(nil), 0xc, 0x4, "CommandLen", 0x0, "IgnoreFinishedSignal", 0x4, "Result", 0x8)
 	bindlib.Validate((*DebuggeeEventAndActionHeaderForRemotePacket)(nil), 0x4, 0x4, "Length", 0x0)
@@ -1613,8 +1790,8 @@ func init() {
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 0x20, 0x8, "StartAddress", 0x0, "EndAddress", 0x8, "SetHookForRead", 0x10, "SetHookForWrite", 0x11, "SetHookForExec", 0x12, "MemoryType", 0x14, "Tag", 0x18)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 0x10, 0x8, "TargetAddress", 0x0, "HookFunction", 0x8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 0x18, 0x8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0x0, "RemoveBreakpointInterception", 0x1, "PhysicalAddress", 0x8, "OriginalEntry", 0x10)
-	bindlib.Validate((*Anon1497_9)(nil), 0x4, 0x4)
-	bindlib.Validate((*Anon1499_5)(nil), 0x4, 0x4, "Type", 0x4, "DescriptorType", 0x5, "DescriptorPrivilegeLevel", 0x7, "Present", 0x8, "Reserved1", 0xc, "AvailableBit", 0xd, "LongMode", 0xe, "DefaultBig", 0xf, "Granularity", 0x10, "Unusable", 0x11, "Reserved2", 0x20)
+	bindlib.Validate((*Anon1495_9)(nil), 0x4, 0x4)
+	bindlib.Validate((*Anon1497_5)(nil), 0x4, 0x4, "Type", 0x4, "DescriptorType", 0x5, "DescriptorPrivilegeLevel", 0x7, "Present", 0x8, "Reserved1", 0xc, "AvailableBit", 0xd, "LongMode", 0xe, "DefaultBig", 0xf, "Granularity", 0x10, "Unusable", 0x11, "Reserved2", 0x20)
 	bindlib.Validate((*VmxSegmentSelector)(nil), 0x18, 0x8, "Selector", 0x0, "Attributes", 0x4, "Limit", 0x8, "Base", 0x10)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 0x18, 0x8, "Tag", 0x0, "KernelStatus", 0x8, "TypeOfAction", 0x10, "IsEnabled", 0x14)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 0x10, 0x8, "KernelStatus", 0x0, "IsShortCircuiting", 0x8)
@@ -1669,7 +1846,13 @@ func init() {
 	bindlib.Validate((*DebuggeeBpListOrModifyPacket)(nil), 0x10, 0x8, "BreakpointId", 0x0, "Request", 0x8, "Result", 0xc)
 	bindlib.Validate((*DebuggeeScriptPacket)(nil), 0x10, 0x4, "ScriptBufferSize", 0x0, "ScriptBufferPointer", 0x4, "IsFormat", 0x8, "Result", 0xc)
 	bindlib.Validate((*DebuggeeResultOfSearchPacket)(nil), 0x8, 0x4, "CountOfResults", 0x0, "Result", 0x4)
-	bindlib.Validate((*DebuggeeRegisterReadDescription)(nil), 0x18, 0x8, "RegisterID", 0x0, "Value", 0x8, "KernelStatus", 0x10)
+	bindlib.Validate((*DebuggeeRegisterReadDescription)(nil), 0x18, 0x8, "RegisterId", 0x0, "Value", 0x8, "KernelStatus", 0x10)
+	bindlib.Validate((*DebuggeeRegisterWriteDescription)(nil), 0x18, 0x8, "RegisterId", 0x0, "Value", 0x8, "KernelStatus", 0x10)
+	bindlib.Validate((*Symbol)(nil), 0x20, 0x8, "Type", 0x0, "Len", 0x8, "VariableType", 0x10, "Value", 0x18)
+	bindlib.Validate((*HwdbgShortSymbol)(nil), 0x10, 0x8, "Type", 0x0, "Value", 0x8)
+	bindlib.Validate((*SymbolBuffer)(nil), 0x18, 0x8, "Head", 0x0, "Pointer", 0x8, "Size", 0xc, "Message", 0x10)
+	bindlib.Validate((*SymbolMap)(nil), 0x10, 0x8, "Name", 0x0, "Type", 0x8)
+	bindlib.Validate((*ActionBuffer)(nil), 0x28, 0x8, "Tag", 0x0, "CurrentAction", 0x8, "ImmediatelySendTheResults", 0x10, "Context", 0x18, "CallingStage", 0x20)
 	bindlib.Validate((*ModuleSymbolDetail)(nil), 0x258, 0x8, "IsSymbolDetailsFound", 0x0, "IsLocalSymbolPath", 0x1, "IsSymbolPDBAvaliable", 0x2, "IsUserMode", 0x3, "Is32Bit", 0x4, "BaseAddress", 0x8, "FilePath", 0x10, "ModuleSymbolPath", 0x114, "ModuleSymbolGuidAndAge", 0x218)
 	bindlib.Validate((*UsermodeLoadedModuleSymbols)(nil), 0x420, 0x8, "BaseAddress", 0x0, "Entrypoint", 0x8, "FilePath", 0x10)
 	bindlib.Validate((*UsermodeLoadedModuleDetails)(nil), 0x10, 0x4, "ProcessId", 0x0, "OnlyCountModules", 0x4, "Is32Bit", 0x5, "ModulesCount", 0x8, "Result", 0xc)
@@ -1783,6 +1966,41 @@ var __imp_hyperdbg_u_show_memory_or_disassemble bindlib.PreloadProc
 
 func ShowMemoryOrDisassemble(style DebuggerShowMemoryStyle, address Uint64, memory_type DebuggerReadMemoryType, reading_type DebuggerReadReadingType, pid Uint32, size Uint32, dt_details PdebuggerDtCommandOptions) {
 	bindlib.CCall7(__imp_hyperdbg_u_show_memory_or_disassemble.Addr(), bindlib.MarshallSyscall(style), bindlib.MarshallSyscall(address), bindlib.MarshallSyscall(memory_type), bindlib.MarshallSyscall(reading_type), bindlib.MarshallSyscall(pid), bindlib.MarshallSyscall(size), bindlib.MarshallSyscall(dt_details))
+}
+
+var __imp_hyperdbg_u_read_all_registers bindlib.PreloadProc
+
+func ReadAllRegisters(guest_registers *GuestRegs, extra_registers *GuestExtraRegisters) Boolean {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_read_all_registers.Addr(), bindlib.MarshallSyscall(guest_registers), bindlib.MarshallSyscall(extra_registers))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_read_target_register bindlib.PreloadProc
+
+func ReadTargetRegister(register_id RegsEnum, target_register *Uint64) Boolean {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_read_target_register.Addr(), bindlib.MarshallSyscall(register_id), bindlib.MarshallSyscall(target_register))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_write_target_register bindlib.PreloadProc
+
+func WriteTargetRegister(register_id RegsEnum, value Uint64) Boolean {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_write_target_register.Addr(), bindlib.MarshallSyscall(register_id), bindlib.MarshallSyscall(value))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_show_all_registers bindlib.PreloadProc
+
+func ShowAllRegisters() Boolean {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_show_all_registers.Addr())
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_show_target_register bindlib.PreloadProc
+
+func ShowTargetRegister(register_id RegsEnum) Boolean {
+	__res := bindlib.CCall1(__imp_hyperdbg_u_show_target_register.Addr(), bindlib.MarshallSyscall(register_id))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_hyperdbg_u_connect_local_debugger bindlib.PreloadProc
@@ -2051,34 +2269,34 @@ func SymCastingQueryForFiledsAndTypes(StructName *byte, FiledOfStructName *byte,
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
-func (s Anon196_5) Flags() Uint64 {
+func (s Anon192_5) Flags() Uint64 {
 	return bindlib.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon196_5) SetFlags(v Uint64) {
+func (s *Anon192_5) SetFlags(v Uint64) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon196_5) Fields() Anon200_9 {
-	return bindlib.ReadBitcast[Anon200_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon192_5) Fields() Anon196_9 {
+	return bindlib.ReadBitcast[Anon196_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon196_5) SetFields(v Anon200_9) {
+func (s *Anon192_5) SetFields(v Anon196_9) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1497_9) Fields() Anon1499_5 {
-	return bindlib.ReadBitcast[Anon1499_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon1495_9) Fields() Anon1497_5 {
+	return bindlib.ReadBitcast[Anon1497_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1497_9) SetFields(v Anon1499_5) {
+func (s *Anon1495_9) SetFields(v Anon1497_5) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1497_9) AsUInt() Uint32 {
+func (s Anon1495_9) AsUInt() Uint32 {
 	return bindlib.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1497_9) SetAsUInt(v Uint32) {
+func (s *Anon1495_9) SetAsUInt(v Uint32) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
