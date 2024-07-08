@@ -1041,7 +1041,7 @@ func SwitchThread() (status string) {
 	return InterpreterEx(".switch")
 }
 
-// Symbol
+// SymbolActions
 // Description:performs the symbol actions
 // Syntax:
 // .sym [table]
@@ -1057,7 +1057,7 @@ func SwitchThread() (status string) {
 // .sym download
 // .sym add base fffff8077356000 path c:\symbols\my_dll.pdb
 // .sym unload
-func Symbol() (status string) {
+func SymbolActions() (status string) {
 	return InterpreterEx(".sym")
 }
 

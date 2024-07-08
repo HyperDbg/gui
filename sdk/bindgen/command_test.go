@@ -52,7 +52,7 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		fullName = strings.ReplaceAll(fullName, "MonitorSysretExecution", "SysRet")
 		fullName = strings.ReplaceAll(fullName, "ShowsAndChangesThe", "Thread")
 		fullName = strings.ReplaceAll(fullName, "ShowsAndSetsThe", "SymbolPath")
-		fullName = strings.ReplaceAll(fullName, "PerformsTheSymbolActions", "Symbol")
+		fullName = strings.ReplaceAll(fullName, "PerformsTheSymbolActions", "SymbolActions")
 		fullName = strings.ReplaceAll(fullName, "ShowsTheListOf", "SwitchThread")
 		fullName = strings.ReplaceAll(fullName, "GetsTheStatusOf", "Status")
 		fullName = strings.ReplaceAll(fullName, "RunsAUserModeProcess", "StartProcess")

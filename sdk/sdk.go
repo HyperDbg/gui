@@ -1669,17 +1669,17 @@ type PdebuggeeRegisterReadDescription = *DebuggeeRegisterReadDescription
 // @brief Register Descriptor Structure to write on registers.
 type (
 	PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
-	Symbol                            = Symbol
-	Psymbol                           = *Symbol
-	HwdbgShortSymbol                  = HwdbgShortSymbol
-	PhwdbgShortSymbol                 = *HwdbgShortSymbol
-	SymbolBuffer                      = SymbolBuffer
-	PsymbolBuffer                     = *SymbolBuffer
-	SymbolMap                         = SymbolMap
-	PsymbolMap                        = *SymbolMap
-	ActionBuffer                      = ActionBuffer
-	PactionBuffer                     = *ActionBuffer
-	RegsEnum                          = RegsEnum
+	// Symbol                            = Symbol
+	Psymbol = *Symbol
+	// HwdbgShortSymbol                  = HwdbgShortSymbol
+	PhwdbgShortSymbol = *HwdbgShortSymbol
+	// SymbolBuffer                      = SymbolBuffer
+	PsymbolBuffer = *SymbolBuffer
+	// SymbolMap                         = SymbolMap
+	PsymbolMap = *SymbolMap
+	// ActionBuffer                      = ActionBuffer
+	PactionBuffer = *ActionBuffer
+	// RegsEnum                          = RegsEnum
 )
 
 // @brief structures for sending and saving details

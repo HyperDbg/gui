@@ -1016,7 +1016,7 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 					Title: "Symbol",
 					Can:   func(any) bool { return true },
 					Do: func(a any) {
-						mylog.Warning("Symbol", sdk.Symbol())
+						mylog.Warning("Symbol", sdk.SymbolActions())
 					},
 				},
 				{
