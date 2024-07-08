@@ -36,11 +36,11 @@ func ContinueDebugger() {
 	InterpreterEx("g")
 }
 
-func StepOut() {
+func StepExecuteSingleInstructionOut() {
 	InterpreterEx("gu")
 }
 
-func StepIn() {
+func StepExecuteSingleInstructionIn() {
 	InterpreterEx("i")
 }
 
@@ -56,11 +56,11 @@ func LoadDriversAndModules() {
 	InterpreterEx("load")
 }
 
-func CreateEventForwardingOutputInstance() {
+func OutputEventForwardingInstance() {
 	InterpreterEx("output")
 }
 
-func ExecuteSingleInstructionStep() {
+func StepExecuteSingleInstruction() {
 	InterpreterEx("p")
 }
 
@@ -144,15 +144,15 @@ func HideHyperDbg() {
 	InterpreterEx("!hide")
 }
 
-func ExternalInterruptsMonitor() {
+func InterruptExternalMonitor() {
 	InterpreterEx("!interrupt")
 }
 
-func IoInstructionsInDetect() {
+func IoInDetect() {
 	InterpreterEx("!ioin")
 }
 
-func IoInstructionsOutDetect() {
+func IoOutDetect() {
 	InterpreterEx("!ioout")
 }
 

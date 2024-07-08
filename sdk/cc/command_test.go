@@ -44,6 +44,8 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		fullName := s.FullName
 		fullName = strings.ReplaceAll(fullName, "-", "_")
 		fullName = stream.ToCamelUpper(fullName, false)
+		fullName = strings.ReplaceAll(fullName, "ExecuteSingleInstructionStep", "StepExecuteSingleInstruction") //? not well
+		fullName = strings.ReplaceAll(fullName, "CreateEventForwardingOutputInstance", "OutputEventForwardingInstance")
 		fullName = strings.ReplaceAll(fullName, "ClearsBreakpointBreakpointId", "BreakpointClearByID")
 		fullName = strings.ReplaceAll(fullName, "DisablesBreakpointBreakpointId", "BreakpointDisableByID")
 		fullName = strings.ReplaceAll(fullName, "EnablesBreakpointBreakpointId", "BreakpointEnableByID")
@@ -87,8 +89,8 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		fullName = strings.ReplaceAll(fullName, "UseReversingMachineModule", "ReversingMachineModuleUse")
 		fullName = strings.ReplaceAll(fullName, "FindVirtualAddressPagingLevels", "Pte")
 		fullName = strings.ReplaceAll(fullName, "MonitorRdpmcExecution", "PmcExecutionMonitor")
-		fullName = strings.ReplaceAll(fullName, "DetectIoInstructionsIn", "IoInstructionsInDetect")
-		fullName = strings.ReplaceAll(fullName, "MonitorExternalInterrupts", "ExternalInterruptsMonitor")
+		fullName = strings.ReplaceAll(fullName, "DetectIoInstructionsIn", "IoInDetect")
+		fullName = strings.ReplaceAll(fullName, "MonitorExternalInterrupts", "InterruptExternalMonitor")
 		fullName = strings.ReplaceAll(fullName, "MonitorIdtEntries", "IdtEntriesMonitor")
 		fullName = strings.ReplaceAll(fullName, "HiddenHookEptDetours", "EptHook2")    // cc
 		fullName = strings.ReplaceAll(fullName, "HiddenHookEptBreakpoints", "EptHook") // inline
@@ -98,7 +100,7 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		fullName = strings.ReplaceAll(fullName, "ExecuteStepIn", "StepInExecute") // f7
 		fullName = strings.ReplaceAll(fullName, "DebuggerSleep", "SleepDebugger")
 		fullName = strings.ReplaceAll(fullName, "TrapModeInstructions", "ModeInstructionsTrap")
-		fullName = strings.ReplaceAll(fullName, "DetectIoInstructionsOut", "IoInstructionsOutDetect")
+		fullName = strings.ReplaceAll(fullName, "DetectIoInstructionsOut", "IoOutDetect")
 
 		g.P("func ", fullName, "() {")
 		g.P("InterpreterEx(", strconv.Quote(s.Name), ") ")
