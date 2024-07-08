@@ -80,10 +80,10 @@ func SetCustomDriverPathEx(DriverFilePath string) bool {
 	return SetCustomDriverPath(StringToBytePointer(DriverFilePath), StringToBytePointer(stream.BaseName(DriverFilePath))) == 0
 }
 
-func InterpreterEx(command string) int32 { // todo decode command return status code as error string
+func InterpreterEx(command string) (status string) { // todo decode command return status code as error string
 	mylog.Info("InterpreterEx", "command: "+command)
 	code := Interpreter(StringToBytePointer(command))
-	return code
+	return string(code)
 }
 
 func AddCurrentDirToPath() {

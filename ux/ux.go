@@ -198,15 +198,15 @@ func newToolbar() *toolbar {
 				"C:\\users\\whatever.exe" + // todo set target path into object field
 				"\""
 			cmd = cmd
-			mylog.Warning("StartProcess", sdk.StartProcess)
+			mylog.Warning("StartProcess", sdk.StartProcess())
 		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
 		pause: widget.NewImageButton("pause", m.Get("pause.png"), func() {
-			mylog.Warning("PauseDebuggee", sdk.PauseDebuggee)
+			mylog.Warning("PauseDebuggee", sdk.PauseKernelEvents())
 		}),
 		stepin: widget.NewImageButton("stepin", m.Get("stepin.png"), func() {
 			// todo set F7 shortcut
-			mylog.Todo("stepin command here, need local debug support")
+			mylog.Warning("StepInto", sdk.StepIn())
 		}),
 		stepover: widget.NewImageButton("stepover", m.Get("stepover.png"), func() {
 			mylog.Todo("stepover command here, need local debug support")

@@ -7,8 +7,8 @@ package sdk
 // Examples:
 // bc 0
 // bc 2
-func BreakpointClearByID() {
-	InterpreterEx("bc")
+func BreakpointClearByID() (status string) {
+	return InterpreterEx("bc")
 }
 
 // BreakpointDisableByID
@@ -18,8 +18,8 @@ func BreakpointClearByID() {
 // Examples:
 // bd 0
 // bd 2
-func BreakpointDisableByID() {
-	InterpreterEx("bd")
+func BreakpointDisableByID() (status string) {
+	return InterpreterEx("bd")
 }
 
 // BreakpointEnableByID
@@ -29,16 +29,16 @@ func BreakpointDisableByID() {
 // Examples:
 // be 0
 // be 2
-func BreakpointEnableByID() {
-	InterpreterEx("be")
+func BreakpointEnableByID() (status string) {
+	return InterpreterEx("be")
 }
 
 // BreakpointList
 // Description:bl : lists all the enabled and disabled breakpoints.
 // Syntax:
 // bl
-func BreakpointList() {
-	InterpreterEx("bl")
+func BreakpointList() (status string) {
+	return InterpreterEx("bl")
 }
 
 // SetBreakpoint0xcc
@@ -55,8 +55,8 @@ func BreakpointList() {
 // bp fffff8077356f010 pid 0x4 core 2
 // Notes:
 // 'bp' is not an event, if you want to use an event version
-func SetBreakpoint0xcc() {
-	InterpreterEx("bp")
+func SetBreakpoint0xcc() (status string) {
+	return InterpreterEx("bp")
 }
 
 // CoreOperatingProcessorForShowsAndChanges
@@ -67,8 +67,8 @@ func SetBreakpoint0xcc() {
 // Examples:
 // ~
 // ~ 2
-func CoreOperatingProcessorForShowsAndChanges() {
-	InterpreterEx("core")
+func CoreOperatingProcessorForShowsAndChanges() (status string) {
+	return InterpreterEx("core")
 }
 
 // CpuFeaturesForCollectsReport
@@ -84,24 +84,24 @@ func CoreOperatingProcessorForShowsAndChanges() {
 // dt nt!_MY_STRUCT 7ff00040 pid 1420
 // dt nt!_EPROCESS $proc inline all
 // dt nt!_EPROCESS fffff8077356f010 inline no
-func CpuFeaturesForCollectsReport() {
-	InterpreterEx("cpu")
+func CpuFeaturesForCollectsReport() (status string) {
+	return InterpreterEx("cpu")
 }
 
 // FlushKernelModeBuffers
 // Description:removes all the buffer and messages from kernel-mode buffers.
 // Syntax:
 // flush
-func FlushKernelModeBuffers() {
-	InterpreterEx("flush")
+func FlushKernelModeBuffers() (status string) {
+	return InterpreterEx("flush")
 }
 
 // ContinueDebugger
 // Description:continues debuggee or continues processing kernel messages.
 // Syntax:
 // g
-func ContinueDebugger() {
-	InterpreterEx("g")
+func ContinueDebugger() (status string) {
+	return InterpreterEx("g")
 }
 
 // StepOut
@@ -112,8 +112,8 @@ func ContinueDebugger() {
 // Examples:
 // gu
 // gu 10000
-func StepOut() {
-	InterpreterEx("gu")
+func StepOut() (status string) {
+	return InterpreterEx("gu")
 }
 
 // StepIn
@@ -127,8 +127,8 @@ func StepOut() {
 // i
 // ir
 // ir 1f
-func StepIn() {
-	InterpreterEx("i")
+func StepIn() (status string) {
+	return InterpreterEx("i")
 }
 
 // CallstackOrThreadView
@@ -147,8 +147,8 @@ func StepIn() {
 // kq base fffff8077356f010
 // kq base @rbx-10
 // kq base fffff8077356f010 l 100
-func CallstackOrThreadView() {
-	InterpreterEx("k, kd, kq")
+func CallstackOrThreadView() (status string) {
+	return InterpreterEx("k, kd, kq")
 }
 
 // ListModules
@@ -163,8 +163,8 @@ func CallstackOrThreadView() {
 // lm km m ntos
 // lm um m kernel32
 // lm um m kernel32 pid 1240
-func ListModules() {
-	InterpreterEx("lm")
+func ListModules() (status string) {
+	return InterpreterEx("lm")
 }
 
 // LoadDriversAndModules
@@ -173,8 +173,8 @@ func ListModules() {
 // load [ModuleName (string)]
 // Examples:
 // load vmm
-func LoadDriversAndModules() {
-	InterpreterEx("load")
+func LoadDriversAndModules() (status string) {
+	return InterpreterEx("load")
 }
 
 // OutputEventForwardingInstance
@@ -189,8 +189,8 @@ func LoadDriversAndModules() {
 // output create MyOutputName1 module c:\rev\event_forwarding.dll
 // output open MyOutputName1
 // output close MyOutputName1
-func OutputEventForwardingInstance() {
-	InterpreterEx("output")
+func OutputEventForwardingInstance() (status string) {
+	return InterpreterEx("output")
 }
 
 // StepExecuteSingleInstruction
@@ -204,16 +204,16 @@ func OutputEventForwardingInstance() {
 // p
 // pr
 // pr 1f
-func StepExecuteSingleInstruction() {
-	InterpreterEx("p")
+func StepExecuteSingleInstruction() (status string) {
+	return InterpreterEx("p")
 }
 
 // PauseKernelEvents
 // Description:pauses the kernel events.
 // Syntax:
 // pause
-func PauseKernelEvents() {
-	InterpreterEx("pause")
+func PauseKernelEvents() (status string) {
+	return InterpreterEx("pause")
 }
 
 // PreactivateSpecialFunctionality
@@ -224,8 +224,8 @@ func PauseKernelEvents() {
 // preactivate mode
 // Notes:
 // type of activations: mode: used for preactivation of the '!mode' event
-func PreactivateSpecialFunctionality() {
-	InterpreterEx("preactivate")
+func PreactivateSpecialFunctionality() (status string) {
+	return InterpreterEx("preactivate")
 }
 
 // PreallocateBuffer
@@ -248,8 +248,8 @@ func PreactivateSpecialFunctionality() {
 // big-event: used for pre-allocations of big instant events
 // regular-safe-buffer: used for pre-allocations of the regular event safe buffers ($buffer) for instant events
 // big-safe-buffer: used for pre-allocations of the big event safe buffers ($buffer) for instant events
-func PreallocateBuffer() {
-	InterpreterEx("prealloc")
+func PreallocateBuffer() (status string) {
+	return InterpreterEx("prealloc")
 }
 
 // PrintEvaluateExpressions
@@ -258,8 +258,8 @@ func PreallocateBuffer() {
 // print [Expression (string)]
 // Examples:
 // print dq(poi(@rcx))
-func PrintEvaluateExpressions() {
-	InterpreterEx("print")
+func PrintEvaluateExpressions() (status string) {
+	return InterpreterEx("print")
 }
 
 // RegistersReadOrModify
@@ -273,8 +273,8 @@ func PrintEvaluateExpressions() {
 // r rax
 // r rax = 0x55
 // r rax = @rbx + @rcx + 0n10
-func RegistersReadOrModify() {
-	InterpreterEx("r")
+func RegistersReadOrModify() (status string) {
+	return InterpreterEx("r")
 }
 
 // ReadMsr
@@ -284,8 +284,8 @@ func RegistersReadOrModify() {
 // Examples:
 // rdmsr c0000082
 // rdmsr c0000082 core 2
-func ReadMsr() {
-	InterpreterEx("rdmsr")
+func ReadMsr() (status string) {
+	return InterpreterEx("rdmsr")
 }
 
 // SearchMemoryPattern
@@ -305,8 +305,8 @@ func ReadMsr() {
 // !sq 100000 9090909090909090 9090909090909090 9090909090909090 l ffffff
 // Notes:
 // If you want to search in physical (address) memory then add '!' at the start of the command
-func SearchMemoryPattern() {
-	InterpreterEx("sb, !sb, sd, !sd, sq, !sq")
+func SearchMemoryPattern() (status string) {
+	return InterpreterEx("sb, !sb, sd, !sd, sq, !sq")
 }
 
 // SettingsManagement
@@ -327,16 +327,16 @@ func SearchMemoryPattern() {
 // settings syntax intel
 // settings syntax att
 // settings syntax masm
-func SettingsManagement() {
-	InterpreterEx("settings")
+func SettingsManagement() (status string) {
+	return InterpreterEx("settings")
 }
 
 // SleepDebugger
 // Description:sleeps the debugger; this command is used in scripts, it doesn't breaks the debugger but the debugger still shows the buffers received from kernel.
 // Syntax:
 // sleep [MillisecondsTime (hex)]
-func SleepDebugger() {
-	InterpreterEx("sleep")
+func SleepDebugger() (status string) {
+	return InterpreterEx("sleep")
 }
 
 // StepInExecute
@@ -350,8 +350,8 @@ func SleepDebugger() {
 // t
 // tr
 // tr 1f
-func StepInExecute() {
-	InterpreterEx("t")
+func StepInExecute() (status string) {
+	return InterpreterEx("t")
 }
 
 // TestHyperDbgFeatures
@@ -368,8 +368,8 @@ func StepInExecute() {
 // test breakpoint off
 // test trap on
 // test trap off
-func TestHyperDbgFeatures() {
-	InterpreterEx("test")
+func TestHyperDbgFeatures() (status string) {
+	return InterpreterEx("test")
 }
 
 // UnloadKernelModules
@@ -379,8 +379,8 @@ func TestHyperDbgFeatures() {
 // Examples:
 // unload vmm
 // unload remove vmm
-func UnloadKernelModules() {
-	InterpreterEx("unload")
+func UnloadKernelModules() (status string) {
+	return InterpreterEx("unload")
 }
 
 // SearchSymbols
@@ -391,8 +391,8 @@ func UnloadKernelModules() {
 // x nt!ExAllocatePoolWithTag
 // x nt!ExAllocatePool*
 // x nt!*
-func SearchSymbols() {
-	InterpreterEx("x")
+func SearchSymbols() (status string) {
+	return InterpreterEx("x")
 }
 
 // CpuidExecutionMonitor
@@ -404,8 +404,8 @@ func SearchSymbols() {
 // !cpuid 1
 // !cpuid pid 400
 // !cpuid core 2 pid 400
-func CpuidExecutionMonitor() {
-	InterpreterEx("!cpuid")
+func CpuidExecutionMonitor() (status string) {
+	return InterpreterEx("!cpuid")
 }
 
 // ControlRegisterModificationMonitor
@@ -417,8 +417,8 @@ func CpuidExecutionMonitor() {
 // !crwrite 0 0x10000
 // !crwrite 4 pid 400
 // !crwrite 4 core 2 pid 400
-func ControlRegisterModificationMonitor() {
-	InterpreterEx("!crwrite")
+func ControlRegisterModificationMonitor() (status string) {
+	return InterpreterEx("!crwrite")
 }
 
 // DebugRegistersMonitor
@@ -429,8 +429,8 @@ func ControlRegisterModificationMonitor() {
 // !dr
 // !dr pid 400
 // !dr core 2 pid 400
-func DebugRegistersMonitor() {
-	InterpreterEx("!dr")
+func DebugRegistersMonitor() (status string) {
+	return InterpreterEx("!dr")
 }
 
 // EptHook
@@ -443,8 +443,8 @@ func DebugRegistersMonitor() {
 // !epthook fffff801deadb000
 // !epthook fffff801deadb000 pid 400
 // !epthook fffff801deadb000 core 2 pid 400
-func EptHook() {
-	InterpreterEx("!epthook")
+func EptHook() (status string) {
+	return InterpreterEx("!epthook")
 }
 
 // EptHook2
@@ -457,8 +457,8 @@ func EptHook() {
 // !epthook2 fffff801deadb000
 // !epthook2 fffff801deadb000 pid 400
 // !epthook2 fffff801deadb000 core 2 pid 400
-func EptHook2() {
-	InterpreterEx("!epthook2")
+func EptHook2() (status string) {
+	return InterpreterEx("!epthook2")
 }
 
 // IdtEntriesMonitor
@@ -472,8 +472,8 @@ func EptHook2() {
 // !exception core 2 pid 400
 // Notes:
 // monitoring page-faults (entry 0xe) is implemented differently.
-func IdtEntriesMonitor() {
-	InterpreterEx("!exception")
+func IdtEntriesMonitor() (status string) {
+	return InterpreterEx("!exception")
 }
 
 // HideHyperDbg
@@ -488,8 +488,8 @@ func IdtEntriesMonitor() {
 // !hide name procexp.exe
 // Notes:
 // process names are case sensitive and you can use this command multiple times.
-func HideHyperDbg() {
-	InterpreterEx("!hide")
+func HideHyperDbg() (status string) {
+	return InterpreterEx("!hide")
 }
 
 // InterruptExternalMonitor
@@ -502,8 +502,8 @@ func HideHyperDbg() {
 // !interrupt 0x2f core 2 pid 400
 // Notes:
 // The index should be greater than 0x20 (32) and less than 0xFF (255) - starting from zero.
-func InterruptExternalMonitor() {
-	InterpreterEx("!interrupt")
+func InterruptExternalMonitor() (status string) {
+	return InterpreterEx("!interrupt")
 }
 
 // IoInDetect
@@ -515,8 +515,8 @@ func InterruptExternalMonitor() {
 // !ioin 0x64
 // !ioin pid 400
 // !ioin core 2 pid 400
-func IoInDetect() {
-	InterpreterEx("!ioin")
+func IoInDetect() (status string) {
+	return InterpreterEx("!ioin")
 }
 
 // IoOutDetect
@@ -528,8 +528,8 @@ func IoInDetect() {
 // !ioout 0x64
 // !ioout pid 400
 // !ioout core 2 pid 400
-func IoOutDetect() {
-	InterpreterEx("!ioout")
+func IoOutDetect() (status string) {
+	return InterpreterEx("!ioout")
 }
 
 // MeasureArgumentsForHide
@@ -539,8 +539,8 @@ func IoOutDetect() {
 // Examples:
 // !measure
 // !measure default
-func MeasureArgumentsForHide() {
-	InterpreterEx("!measure")
+func MeasureArgumentsForHide() (status string) {
+	return InterpreterEx("!measure")
 }
 
 // ModeInstructionsTrap
@@ -554,8 +554,8 @@ func MeasureArgumentsForHide() {
 // !mode ku core 2 pid 400
 // Notes:
 // this event applies to the target process; thus, you need to specify the process id
-func ModeInstructionsTrap() {
-	InterpreterEx("!mode")
+func ModeInstructionsTrap() (status string) {
+	return InterpreterEx("!mode")
 }
 
 // MonitorMemoryAccess
@@ -576,8 +576,8 @@ func ModeInstructionsTrap() {
 // !monitor x fffff801deadb000 fffff801deadbfff core 2 pid 400
 // !monitor x fffff801deadb000 l 500 core 2 pid 400
 // !monitor wx fffff801deadb000 fffff801deadbfff core 2 pid 400
-func MonitorMemoryAccess() {
-	InterpreterEx("!monitor")
+func MonitorMemoryAccess() (status string) {
+	return InterpreterEx("!monitor")
 }
 
 // MsrRead
@@ -589,8 +589,8 @@ func MonitorMemoryAccess() {
 // !msrread 0xc0000082
 // !msread pid 400
 // !msrread core 2 pid 400
-func MsrRead() {
-	InterpreterEx("!msrread")
+func MsrRead() (status string) {
+	return InterpreterEx("!msrread")
 }
 
 // MsrWrite
@@ -602,8 +602,8 @@ func MsrRead() {
 // !msrwrite 0xc0000082
 // !msrwrite pid 400
 // !msrwrite core 2 pid 400
-func MsrWrite() {
-	InterpreterEx("!msrwrite")
+func MsrWrite() (status string) {
+	return InterpreterEx("!msrwrite")
 }
 
 // Pa2Va
@@ -616,8 +616,8 @@ func MsrWrite() {
 // !pa2va @rax+5
 // !pa2va fffff801deadbeef
 // !pa2va fffff801deadbeef pid 0xc8
-func Pa2Va() {
-	InterpreterEx("!pa2va")
+func Pa2Va() (status string) {
+	return InterpreterEx("!pa2va")
 }
 
 // PmcExecutionMonitor
@@ -628,8 +628,8 @@ func Pa2Va() {
 // !pmc
 // !pmc pid 400
 // !pmc core 2 pid 400
-func PmcExecutionMonitor() {
-	InterpreterEx("!pmc")
+func PmcExecutionMonitor() (status string) {
+	return InterpreterEx("!pmc")
 }
 
 // Pte
@@ -641,8 +641,8 @@ func PmcExecutionMonitor() {
 // !pte nt!ExAllocatePoolWithTag+5
 // !pte fffff801deadbeef
 // !pte 0x400021000 pid 1c0
-func Pte() {
-	InterpreterEx("!pte")
+func Pte() (status string) {
+	return InterpreterEx("!pte")
 }
 
 // ReversingMachineModuleUse
@@ -656,8 +656,8 @@ func Pte() {
 // !rev reconstruct
 // !rev pattern pid 1c0
 // !rev reconstruct pid 1c0
-func ReversingMachineModuleUse() {
-	InterpreterEx("!rev")
+func ReversingMachineModuleUse() (status string) {
+	return InterpreterEx("!rev")
 }
 
 // Syscall
@@ -673,8 +673,8 @@ func ReversingMachineModuleUse() {
 // !syscall 0x55 pid 400
 // !syscall 0x55 core 2 pid 400
 // !syscall2 0x55 core 2 pid 400
-func Syscall() {
-	InterpreterEx("!syscall")
+func Syscall() (status string) {
+	return InterpreterEx("!syscall")
 }
 
 // SysRet
@@ -688,8 +688,8 @@ func Syscall() {
 // !sysret2 pid 400
 // !sysret core 2 pid 400
 // !sysret2 core 2 pid 400
-func SysRet() {
-	InterpreterEx("!sysret")
+func SysRet() (status string) {
+	return InterpreterEx("!sysret")
 }
 
 // TraceExecution
@@ -705,8 +705,8 @@ func SysRet() {
 // step-in : single step-in (regular)
 // step-out : single step-out (regular)
 // instrument-step : single step-in (instrumentation)
-func TraceExecution() {
-	InterpreterEx("!trace")
+func TraceExecution() (status string) {
+	return InterpreterEx("!trace")
 }
 
 // TrackModeTransitionInstructions
@@ -717,8 +717,8 @@ func TraceExecution() {
 // Examples:
 // !track tree 10000
 // !track reg 10000
-func TrackModeTransitionInstructions() {
-	InterpreterEx("!track")
+func TrackModeTransitionInstructions() (status string) {
+	return InterpreterEx("!track")
 }
 
 // TscInstructionsMonitor
@@ -729,8 +729,8 @@ func TrackModeTransitionInstructions() {
 // !tsc
 // !tsc pid 400
 // !tsc core 2 pid 400
-func TscInstructionsMonitor() {
-	InterpreterEx("!tsc")
+func TscInstructionsMonitor() (status string) {
+	return InterpreterEx("!tsc")
 }
 
 // UnHide
@@ -739,8 +739,8 @@ func TscInstructionsMonitor() {
 // !unhide
 // Examples:
 // !unhide
-func UnHide() {
-	InterpreterEx("!unhide")
+func UnHide() (status string) {
+	return InterpreterEx("!unhide")
 }
 
 // Va2Pa
@@ -754,8 +754,8 @@ func UnHide() {
 // !va2pa @rcx+5
 // !va2pa fffff801deadbeef
 // !va2pa fffff801deadbeef pid 0xc8
-func Va2Pa() {
-	InterpreterEx("!va2pa")
+func Va2Pa() (status string) {
+	return InterpreterEx("!va2pa")
 }
 
 // VmCall
@@ -766,8 +766,8 @@ func Va2Pa() {
 // !vmcall
 // !vmcall pid 400
 // !vmcall core 2 pid 400
-func VmCall() {
-	InterpreterEx("!vmcall")
+func VmCall() (status string) {
+	return InterpreterEx("!vmcall")
 }
 
 // HardwareClockDebugging
@@ -776,8 +776,8 @@ func VmCall() {
 // !hw_clk  [script { Script (string) }]
 // Examples:
 // !hw_clk script { @hw_pin1 = 0; }
-func HardwareClockDebugging() {
-	InterpreterEx("!hw_clk")
+func HardwareClockDebugging() (status string) {
+	return InterpreterEx("!hw_clk")
 }
 
 // AttachDebugThread
@@ -786,16 +786,16 @@ func HardwareClockDebugging() {
 // .attach [pid ProcessId (hex)]
 // Examples:
 // .attach pid b60
-func AttachDebugThread() {
-	InterpreterEx(".attach")
+func AttachDebugThread() (status string) {
+	return InterpreterEx(".attach")
 }
 
 // ClearScreen
 // Description:clears the screen.
 // Syntax:
 // .cls
-func ClearScreen() {
-	InterpreterEx(".cls")
+func ClearScreen() (status string) {
+	return InterpreterEx(".cls")
 }
 
 // ConnectToMachine
@@ -806,8 +806,8 @@ func ClearScreen() {
 // Examples:
 // .connect local
 // .connect 192.168.1.5 50000
-func ConnectToMachine() {
-	InterpreterEx(".connect")
+func ConnectToMachine() (status string) {
+	return InterpreterEx(".connect")
 }
 
 // DebugMachine
@@ -825,24 +825,24 @@ func ConnectToMachine() {
 // Notes:
 // valid baud rates (decimal): 110, 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 38400, 56000, 57600, 115200, 128000, 256000
 // valid COM ports: COM1, COM2, COM3, COM4
-func DebugMachine() {
-	InterpreterEx(".debug")
+func DebugMachine() (status string) {
+	return InterpreterEx(".debug")
 }
 
 // DetachDebugging
 // Description:detaches from debugging a user-mode process.
 // Syntax:
 // .detach
-func DetachDebugging() {
-	InterpreterEx(".detach")
+func DetachDebugging() (status string) {
+	return InterpreterEx(".detach")
 }
 
 // DisconnectSession
 // Description:disconnects from a debugging session (it won't unload the modules).
 // Syntax:
 // .disconnect
-func DisconnectSession() {
-	InterpreterEx(".disconnect")
+func DisconnectSession() (status string) {
+	return InterpreterEx(".disconnect")
 }
 
 // DumpMemoryContext
@@ -859,8 +859,8 @@ func DisconnectSession() {
 // !dump 1000 2100 path c:\\rev\\dump7.dmp
 // Notes:
 // If you want to dump physical memory then add '!' at the start of the command
-func DumpMemoryContext() {
-	InterpreterEx(".dump")
+func DumpMemoryContext() (status string) {
+	return InterpreterEx(".dump")
 }
 
 // FormatsDiff
@@ -875,8 +875,8 @@ func DumpMemoryContext() {
 // .formats @rax
 // .formats @rbx+@rcx
 // .formats $pid
-func FormatsDiff() {
-	InterpreterEx(".formats")
+func FormatsDiff() (status string) {
+	return InterpreterEx(".formats")
 }
 
 // HelpForCommand
@@ -885,16 +885,16 @@ func FormatsDiff() {
 // .help [Command (string)]
 // Examples:
 // .help !monitor
-func HelpForCommand() {
-	InterpreterEx(".help")
+func HelpForCommand() (status string) {
+	return InterpreterEx(".help")
 }
 
 // KillProcess
 // Description:terminates the current running process
 // Syntax:
 // .kill
-func KillProcess() {
-	InterpreterEx(".kill")
+func KillProcess() (status string) {
+	return InterpreterEx(".kill")
 }
 
 // ListenForClientConnection
@@ -906,24 +906,24 @@ func KillProcess() {
 // .listen 50000
 // Notes:
 // if you don't specify port then HyperDbg uses the default port
-func ListenForClientConnection() {
-	InterpreterEx(".listen")
+func ListenForClientConnection() (status string) {
+	return InterpreterEx(".listen")
 }
 
 // LogClose
 // Description:closes the previously opened log
 // Syntax:
 // .logclose
-func LogClose() {
-	InterpreterEx(".logclose")
+func LogClose() (status string) {
+	return InterpreterEx(".logclose")
 }
 
 // LogOpen
 // Description:saves commands and results in a file
 // Syntax:
 // .logopen [FilePath (string)]
-func LogOpen() {
-	InterpreterEx(".logopen")
+func LogOpen() (status string) {
+	return InterpreterEx(".logopen")
 }
 
 // PageAvailableInRam
@@ -947,8 +947,8 @@ func LogOpen() {
 // Notes:
 // valid mode formats: present (p), write (w), user (u), fetch (f), protection key (k), shadow stack (s), hlat (h), sgx (g)
 // common page-fault codes: 0x0 (default), 0x2 (w), 0x3 (pw), 0x4 (u), 0x6 (wu), 0x7 (pwu), 0x10 (f), 0x11 (pf), 0x14 (uf)
-func PageAvailableInRam() {
-	InterpreterEx(".pagein")
+func PageAvailableInRam() (status string) {
+	return InterpreterEx(".pagein")
 }
 
 // ParseExecutableFiles
@@ -960,8 +960,8 @@ func PageAvailableInRam() {
 // .pe header c:\reverse files\myfile.exe
 // .pe section .text c:\reverse files\myfile.exe
 // .pe section .rdata c:\reverse files\myfile.exe
-func ParseExecutableFiles() {
-	InterpreterEx(".pe")
+func ParseExecutableFiles() (status string) {
+	return InterpreterEx(".pe")
 }
 
 // ProcessesView
@@ -979,16 +979,16 @@ func ParseExecutableFiles() {
 // .process pid 4
 // .process2 pid 4
 // .process process ffff948cc2349280
-func ProcessesView() {
-	InterpreterEx(".process")
+func ProcessesView() (status string) {
+	return InterpreterEx(".process")
 }
 
 // RestartProcess
 // Description:restarts the previously started process using '.start' command.
 // Syntax:
 // .restart
-func RestartProcess() {
-	InterpreterEx(".restart")
+func RestartProcess() (status string) {
+	return InterpreterEx(".restart")
 }
 
 // Script
@@ -1002,8 +1002,8 @@ func RestartProcess() {
 // .script "C:\scripts\hello world.ds" @rax
 // .script "C:\scripts\hello world.ds" @rax @rcx+55 $pid
 // .script "C:\scripts\hello world.ds" 12 55 @rip
-func Script() {
-	InterpreterEx(".script")
+func Script() (status string) {
+	return InterpreterEx(".script")
 }
 
 // StartProcess
@@ -1012,8 +1012,8 @@ func Script() {
 // .start [path Path (string)] [Parameters (string)]
 // Examples:
 // .start path c:\reverse eng\my_file.exe
-func StartProcess() {
-	InterpreterEx(".start")
+func StartProcess() (status string) {
+	return InterpreterEx(".start")
 }
 
 // Status
@@ -1023,8 +1023,8 @@ func StartProcess() {
 // status
 // Notes:
 // If connected to a remote system, '.status' shows the state of current debugger, while 'status' shows the state of remote debuggee.
-func Status() {
-	InterpreterEx(".status")
+func Status() (status string) {
+	return InterpreterEx(".status")
 }
 
 // SwitchThread
@@ -1037,8 +1037,8 @@ func Status() {
 // .switch list
 // .switch pid b60
 // .switch tid b60
-func SwitchThread() {
-	InterpreterEx(".switch")
+func SwitchThread() (status string) {
+	return InterpreterEx(".switch")
 }
 
 // Symbol
@@ -1057,8 +1057,8 @@ func SwitchThread() {
 // .sym download
 // .sym add base fffff8077356000 path c:\symbols\my_dll.pdb
 // .sym unload
-func Symbol() {
-	InterpreterEx(".sym")
+func Symbol() (status string) {
+	return InterpreterEx(".sym")
 }
 
 // SymbolPath
@@ -1069,8 +1069,8 @@ func Symbol() {
 // Examples:
 // .sympath
 // .sympath SRV*c:\Symbols*https://msdl.microsoft.com/download/symbols
-func SymbolPath() {
-	InterpreterEx(".sympath")
+func SymbolPath() (status string) {
+	return InterpreterEx(".sympath")
 }
 
 // Thread
@@ -1091,6 +1091,6 @@ func SymbolPath() {
 // .thread list process ffff948c`a1279880
 // Notes:
 // This command needs public symbols for 'ntoskrnl.exe' if you want to see the threads list. Please visit the documentation to know about the difference between '.thread' and '.thread2'.
-func Thread() {
-	InterpreterEx(".thread")
+func Thread() (status string) {
+	return InterpreterEx(".thread")
 }
