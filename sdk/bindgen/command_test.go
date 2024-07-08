@@ -86,14 +86,18 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		fullName = strings.ReplaceAll(fullName, "TrapModeInstructions", "ModeInstructionsTrap")
 		fullName = strings.ReplaceAll(fullName, "DetectIoInstructionsOut", "IoOutDetect")
 
+		s.Description = strings.TrimSuffix(s.Description, "\n")
 		g.P("//", fullName)
+		g.P("//", "Description:", s.Description)
 		g.P("//", "Syntax:")
 		for _, syntax := range s.Syntax {
 			g.P("//", syntax)
 		}
-		g.P("//", "Examples:")
-		for _, example := range s.Examples {
-			g.P("//", example)
+		if len(s.Examples) > 0 {
+			g.P("//", "Examples:")
+			for _, example := range s.Examples {
+				g.P("//", example)
+			}
 		}
 		if len(s.Notes) > 0 {
 			g.P("//", "Notes:")
@@ -102,7 +106,7 @@ func TestUnmarshalCommandJson(t *testing.T) {
 			}
 		}
 
-		g.P("func ", fullName, "() { //", s.Description)
+		g.P("func ", fullName, "() {")
 		g.P("InterpreterEx(", strconv.Quote(s.Name), ") ")
 		g.P("}")
 		g.P()

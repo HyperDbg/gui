@@ -1,44 +1,48 @@
 package sdk
 
 // BreakpointClearByID
+// Description:bc : clears a breakpoint using breakpoint id.
 // Syntax:
 // bc [BreakpointId (hex)]
 // Examples:
 // bc 0
 // bc 2
-func BreakpointClearByID() { // bc : clears a breakpoint using breakpoint id.
+func BreakpointClearByID() {
 	InterpreterEx("bc")
 }
 
 // BreakpointDisableByID
+// Description:bd : disables a breakpoint using breakpoint id.
 // Syntax:
 // bd [BreakpointId (hex)]
 // Examples:
 // bd 0
 // bd 2
-func BreakpointDisableByID() { // bd : disables a breakpoint using breakpoint id.
+func BreakpointDisableByID() {
 	InterpreterEx("bd")
 }
 
 // BreakpointEnableByID
+// Description:be : enables a breakpoint using breakpoint id.
 // Syntax:
 // be [BreakpointId (hex)]
 // Examples:
 // be 0
 // be 2
-func BreakpointEnableByID() { // be : enables a breakpoint using breakpoint id.
+func BreakpointEnableByID() {
 	InterpreterEx("be")
 }
 
 // BreakpointList
+// Description:bl : lists all the enabled and disabled breakpoints.
 // Syntax:
 // bl
-// Examples:
-func BreakpointList() { // bl : lists all the enabled and disabled breakpoints.
+func BreakpointList() {
 	InterpreterEx("bl")
 }
 
 // SetBreakpoint0xcc
+// Description:bp : puts a breakpoint (0xcc).
 // Syntax:
 // bp [Address (hex)] [pid ProcessId (hex)] [tid ThreadId (hex)] [core CoreId (hex)]
 // Examples:
@@ -51,23 +55,24 @@ func BreakpointList() { // bl : lists all the enabled and disabled breakpoints.
 // bp fffff8077356f010 pid 0x4 core 2
 // Notes:
 // 'bp' is not an event, if you want to use an event version
-func SetBreakpoint0xcc() { // bp : puts a breakpoint (0xcc).
-
+func SetBreakpoint0xcc() {
 	InterpreterEx("bp")
 }
 
 // CoreOperatingProcessorForShowsAndChanges
+// Description:~ : shows and changes the operating processor.
 // Syntax:
 // ~
 // ~ [CoreNumber (hex)]
 // Examples:
 // ~
 // ~ 2
-func CoreOperatingProcessorForShowsAndChanges() { //~ : shows and changes the operating processor.
+func CoreOperatingProcessorForShowsAndChanges() {
 	InterpreterEx("core")
 }
 
 // CpuFeaturesForCollectsReport
+// Description:cpu : collects a report from cpu features.
 // Syntax:
 // cpu
 // Examples:
@@ -79,38 +84,40 @@ func CoreOperatingProcessorForShowsAndChanges() { //~ : shows and changes the op
 // dt nt!_MY_STRUCT 7ff00040 pid 1420
 // dt nt!_EPROCESS $proc inline all
 // dt nt!_EPROCESS fffff8077356f010 inline no
-func CpuFeaturesForCollectsReport() { // cpu : collects a report from cpu features.
+func CpuFeaturesForCollectsReport() {
 	InterpreterEx("cpu")
 }
 
 // FlushKernelModeBuffers
+// Description:removes all the buffer and messages from kernel-mode buffers.
 // Syntax:
 // flush
-// Examples:
-func FlushKernelModeBuffers() { // removes all the buffer and messages from kernel-mode buffers.
+func FlushKernelModeBuffers() {
 	InterpreterEx("flush")
 }
 
 // ContinueDebugger
+// Description:continues debuggee or continues processing kernel messages.
 // Syntax:
 // g
-// Examples:
-func ContinueDebugger() { // continues debuggee or continues processing kernel messages.
+func ContinueDebugger() {
 	InterpreterEx("g")
 }
 
 // StepOut
+// Description:executes a single instruction (step-out) and optionally displays the resulting values of all registers and flags.
 // Syntax:
 // gu
 // gu [Count (hex)]
 // Examples:
 // gu
 // gu 10000
-func StepOut() { // executes a single instruction (step-out) and optionally displays the resulting values of all registers and flags.
+func StepOut() {
 	InterpreterEx("gu")
 }
 
 // StepIn
+// Description:executes a single instruction (step-in) and guarantees that no other instruction is executed other than the displayed instruction including user to the kernel (syscalls) and kernel to the user (sysrets) and exceptions and page-faults and optionally displays all registers and flags' resulting values.
 // Syntax:
 // i
 // i [Count (hex)]
@@ -120,11 +127,12 @@ func StepOut() { // executes a single instruction (step-out) and optionally disp
 // i
 // ir
 // ir 1f
-func StepIn() { // executes a single instruction (step-in) and guarantees that no other instruction is executed other than the displayed instruction including user to the kernel (syscalls) and kernel to the user (sysrets) and exceptions and page-faults and optionally displays all registers and flags' resulting values.
+func StepIn() {
 	InterpreterEx("i")
 }
 
 // CallstackOrThreadView
+// Description:shows the callstack of the thread.
 // Syntax:
 // k
 // kd
@@ -139,11 +147,12 @@ func StepIn() { // executes a single instruction (step-in) and guarantees that n
 // kq base fffff8077356f010
 // kq base @rbx-10
 // kq base fffff8077356f010 l 100
-func CallstackOrThreadView() { // shows the callstack of the thread.
+func CallstackOrThreadView() {
 	InterpreterEx("k, kd, kq")
 }
 
 // ListModules
+// Description:lists user/kernel modules' base address, size, name and path.
 // Syntax:
 // lm [m Name (string)] [pid ProcessId (hex)] [Filter (string)]
 // Examples:
@@ -154,20 +163,22 @@ func CallstackOrThreadView() { // shows the callstack of the thread.
 // lm km m ntos
 // lm um m kernel32
 // lm um m kernel32 pid 1240
-func ListModules() { // lists user/kernel modules' base address, size, name and path.
+func ListModules() {
 	InterpreterEx("lm")
 }
 
 // LoadDriversAndModules
+// Description:installs the drivers and load the modules.
 // Syntax:
 // load [ModuleName (string)]
 // Examples:
 // load vmm
-func LoadDriversAndModules() { // installs the drivers and load the modules.
+func LoadDriversAndModules() {
 	InterpreterEx("load")
 }
 
 // OutputEventForwardingInstance
+// Description:creates an output instance that can be used in event forwarding.
 // Syntax:
 // output [create Name (string)] [file|namedpipe|tcp Address (string)]
 // output [open|close Name (string)]
@@ -178,11 +189,12 @@ func LoadDriversAndModules() { // installs the drivers and load the modules.
 // output create MyOutputName1 module c:\rev\event_forwarding.dll
 // output open MyOutputName1
 // output close MyOutputName1
-func OutputEventForwardingInstance() { // creates an output instance that can be used in event forwarding.
+func OutputEventForwardingInstance() {
 	InterpreterEx("output")
 }
 
 // StepExecuteSingleInstruction
+// Description:executes a single instruction (step) and optionally displays the resulting values of all registers and flags.
 // Syntax:
 // p
 // p [Count (hex)]
@@ -192,30 +204,32 @@ func OutputEventForwardingInstance() { // creates an output instance that can be
 // p
 // pr
 // pr 1f
-func StepExecuteSingleInstruction() { // executes a single instruction (step) and optionally displays the resulting values of all registers and flags.
+func StepExecuteSingleInstruction() {
 	InterpreterEx("p")
 }
 
 // PauseKernelEvents
+// Description:pauses the kernel events.
 // Syntax:
 // pause
-// Examples:
-func PauseKernelEvents() { // pauses the kernel events.
+func PauseKernelEvents() {
 	InterpreterEx("pause")
 }
 
 // PreactivateSpecialFunctionality
+// Description:preactivates a special functionality.
 // Syntax:
 // preactivate  [Type (string)]
 // Examples:
 // preactivate mode
 // Notes:
 // type of activations: mode: used for preactivation of the '!mode' event
-func PreactivateSpecialFunctionality() { // preactivates a special functionality.
+func PreactivateSpecialFunctionality() {
 	InterpreterEx("preactivate")
 }
 
 // PreallocateBuffer
+// Description:pre-allocates buffer for special purposes.
 // Syntax:
 // prealloc [Type (string)] [Count (hex)]
 // Examples:
@@ -234,20 +248,22 @@ func PreactivateSpecialFunctionality() { // preactivates a special functionality
 // big-event: used for pre-allocations of big instant events
 // regular-safe-buffer: used for pre-allocations of the regular event safe buffers ($buffer) for instant events
 // big-safe-buffer: used for pre-allocations of the big event safe buffers ($buffer) for instant events
-func PreallocateBuffer() { // pre-allocates buffer for special purposes.
+func PreallocateBuffer() {
 	InterpreterEx("prealloc")
 }
 
 // PrintEvaluateExpressions
+// Description:evaluates expressions.
 // Syntax:
 // print [Expression (string)]
 // Examples:
 // print dq(poi(@rcx))
-func PrintEvaluateExpressions() { // evaluates expressions.
+func PrintEvaluateExpressions() {
 	InterpreterEx("print")
 }
 
 // RegistersReadOrModify
+// Description:reads or modifies registers.
 // Syntax:
 // r
 // r [Register (string)] [= Expr (string)]
@@ -257,21 +273,23 @@ func PrintEvaluateExpressions() { // evaluates expressions.
 // r rax
 // r rax = 0x55
 // r rax = @rbx + @rcx + 0n10
-func RegistersReadOrModify() { // reads or modifies registers.
+func RegistersReadOrModify() {
 	InterpreterEx("r")
 }
 
 // ReadMsr
+// Description:reads a model-specific register (MSR).
 // Syntax:
 // rdmsr [Msr (hex)] [core CoreNumber (hex)]
 // Examples:
 // rdmsr c0000082
 // rdmsr c0000082 core 2
-func ReadMsr() { // reads a model-specific register (MSR).
+func ReadMsr() {
 	InterpreterEx("rdmsr")
 }
 
 // SearchMemoryPattern
+// Description:searches a contiguous memory for a special byte pattern.
 // Syntax:
 // sb [StartAddress (hex)] [l Length (hex)] [BytePattern (hex)] [pid ProcessId (hex)]
 // sd [StartAddress (hex)] [l Length (hex)] [BytePattern (hex)] [pid ProcessId (hex)]
@@ -287,11 +305,12 @@ func ReadMsr() { // reads a model-specific register (MSR).
 // !sq 100000 9090909090909090 9090909090909090 9090909090909090 l ffffff
 // Notes:
 // If you want to search in physical (address) memory then add '!' at the start of the command
-func SearchMemoryPattern() { // searches a contiguous memory for a special byte pattern.
+func SearchMemoryPattern() {
 	InterpreterEx("sb, !sb, sd, !sd, sq, !sq")
 }
 
 // SettingsManagement
+// Description:queries, sets, or changes a value for a special settings option.
 // Syntax:
 // settings [OptionName (string)]
 // settings [OptionName (string)] [Value (hex)]
@@ -308,19 +327,20 @@ func SearchMemoryPattern() { // searches a contiguous memory for a special byte 
 // settings syntax intel
 // settings syntax att
 // settings syntax masm
-func SettingsManagement() { // queries, sets, or changes a value for a special settings option.
+func SettingsManagement() {
 	InterpreterEx("settings")
 }
 
 // SleepDebugger
+// Description:sleeps the debugger; this command is used in scripts, it doesn't breaks the debugger but the debugger still shows the buffers received from kernel.
 // Syntax:
 // sleep [MillisecondsTime (hex)]
-// Examples:
-func SleepDebugger() { // sleeps the debugger; this command is used in scripts, it doesn't breaks the debugger but the debugger still shows the buffers received from kernel.
+func SleepDebugger() {
 	InterpreterEx("sleep")
 }
 
 // StepInExecute
+// Description:executes a single instruction (step-in) and optionally displays the resulting values of all registers and flags.
 // Syntax:
 // t
 // t [Count (hex)]
@@ -330,11 +350,12 @@ func SleepDebugger() { // sleeps the debugger; this command is used in scripts, 
 // t
 // tr
 // tr 1f
-func StepInExecute() { // executes a single instruction (step-in) and optionally displays the resulting values of all registers and flags.
+func StepInExecute() {
 	InterpreterEx("t")
 }
 
 // TestHyperDbgFeatures
+// Description:tests essential features of HyperDbg in current machine.
 // Syntax:
 // test [Task (string)]
 // Examples:
@@ -347,32 +368,35 @@ func StepInExecute() { // executes a single instruction (step-in) and optionally
 // test breakpoint off
 // test trap on
 // test trap off
-func TestHyperDbgFeatures() { // tests essential features of HyperDbg in current machine.
+func TestHyperDbgFeatures() {
 	InterpreterEx("test")
 }
 
 // UnloadKernelModules
+// Description:unloads the kernel modules and uninstalls the drivers.
 // Syntax:
 // unload [remove] [ModuleName (string)]
 // Examples:
 // unload vmm
 // unload remove vmm
-func UnloadKernelModules() { // unloads the kernel modules and uninstalls the drivers.
+func UnloadKernelModules() {
 	InterpreterEx("unload")
 }
 
 // SearchSymbols
+// Description:searches and shows symbols (wildcard) and corresponding addresses.
 // Syntax:
 // x [Module!Name (wildcard string)]
 // Examples:
 // x nt!ExAllocatePoolWithTag
 // x nt!ExAllocatePool*
 // x nt!*
-func SearchSymbols() { // searches and shows symbols (wildcard) and corresponding addresses.
+func SearchSymbols() {
 	InterpreterEx("x")
 }
 
 // CpuidExecutionMonitor
+// Description:monitors execution of a special cpuid index or all cpuids instructions.
 // Syntax:
 // !cpuid [Eax (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
@@ -380,11 +404,12 @@ func SearchSymbols() { // searches and shows symbols (wildcard) and correspondin
 // !cpuid 1
 // !cpuid pid 400
 // !cpuid core 2 pid 400
-func CpuidExecutionMonitor() { // monitors execution of a special cpuid index or all cpuids instructions.
+func CpuidExecutionMonitor() {
 	InterpreterEx("!cpuid")
 }
 
 // ControlRegisterModificationMonitor
+// Description:monitors modification of control registers (CR0 / CR4).
 // Syntax:
 // !crwrite [Cr (hex)] [mask Mask (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
@@ -392,22 +417,24 @@ func CpuidExecutionMonitor() { // monitors execution of a special cpuid index or
 // !crwrite 0 0x10000
 // !crwrite 4 pid 400
 // !crwrite 4 core 2 pid 400
-func ControlRegisterModificationMonitor() { // monitors modification of control registers (CR0 / CR4).
+func ControlRegisterModificationMonitor() {
 	InterpreterEx("!crwrite")
 }
 
 // DebugRegistersMonitor
+// Description:monitors any access to debug registers.
 // Syntax:
 // !dr [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
 // !dr
 // !dr pid 400
 // !dr core 2 pid 400
-func DebugRegistersMonitor() { // monitors any access to debug registers.
+func DebugRegistersMonitor() {
 	InterpreterEx("!dr")
 }
 
 // EptHook
+// Description:puts a hidden-hook EPT (hidden breakpoints).
 // Syntax:
 // !epthook [Address (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
@@ -416,11 +443,12 @@ func DebugRegistersMonitor() { // monitors any access to debug registers.
 // !epthook fffff801deadb000
 // !epthook fffff801deadb000 pid 400
 // !epthook fffff801deadb000 core 2 pid 400
-func EptHook() { // puts a hidden-hook EPT (hidden breakpoints).
+func EptHook() {
 	InterpreterEx("!epthook")
 }
 
 // EptHook2
+// Description:puts a hidden-hook EPT (detours).
 // Syntax:
 // !epthook2 [Address (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
@@ -429,11 +457,12 @@ func EptHook() { // puts a hidden-hook EPT (hidden breakpoints).
 // !epthook2 fffff801deadb000
 // !epthook2 fffff801deadb000 pid 400
 // !epthook2 fffff801deadb000 core 2 pid 400
-func EptHook2() { // puts a hidden-hook EPT (detours).
+func EptHook2() {
 	InterpreterEx("!epthook2")
 }
 
 // IdtEntriesMonitor
+// Description:monitors the first 32 entry of IDT (starting from zero).
 // Syntax:
 // !exception [IdtIndex (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
@@ -443,11 +472,12 @@ func EptHook2() { // puts a hidden-hook EPT (detours).
 // !exception core 2 pid 400
 // Notes:
 // monitoring page-faults (entry 0xe) is implemented differently.
-func IdtEntriesMonitor() { // monitors the first 32 entry of IDT (starting from zero).
+func IdtEntriesMonitor() {
 	InterpreterEx("!exception")
 }
 
 // HideHyperDbg
+// Description:tries to make HyperDbg transparent from anti-debugging and anti-hypervisor methods.
 // Syntax:
 // !hide
 // !hide [pid ProcessId (hex)]
@@ -458,11 +488,12 @@ func IdtEntriesMonitor() { // monitors the first 32 entry of IDT (starting from 
 // !hide name procexp.exe
 // Notes:
 // process names are case sensitive and you can use this command multiple times.
-func HideHyperDbg() { // tries to make HyperDbg transparent from anti-debugging and anti-hypervisor methods.
+func HideHyperDbg() {
 	InterpreterEx("!hide")
 }
 
 // InterruptExternalMonitor
+// Description:monitors the external interrupt (IDT >= 32).
 // Syntax:
 // [IdtIndex (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
@@ -471,11 +502,12 @@ func HideHyperDbg() { // tries to make HyperDbg transparent from anti-debugging 
 // !interrupt 0x2f core 2 pid 400
 // Notes:
 // The index should be greater than 0x20 (32) and less than 0xFF (255) - starting from zero.
-func InterruptExternalMonitor() { // monitors the external interrupt (IDT >= 32).
+func InterruptExternalMonitor() {
 	InterpreterEx("!interrupt")
 }
 
 // IoInDetect
+// Description:detects the execution of IN (I/O instructions) instructions.
 // Syntax:
 // !ioin [Port (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
@@ -483,11 +515,12 @@ func InterruptExternalMonitor() { // monitors the external interrupt (IDT >= 32)
 // !ioin 0x64
 // !ioin pid 400
 // !ioin core 2 pid 400
-func IoInDetect() { // detects the execution of IN (I/O instructions) instructions.
+func IoInDetect() {
 	InterpreterEx("!ioin")
 }
 
 // IoOutDetect
+// Description:detects the execution of OUT (I/O instructions) instructions.
 // Syntax:
 // !ioout [Port (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
@@ -495,21 +528,23 @@ func IoInDetect() { // detects the execution of IN (I/O instructions) instructio
 // !ioout 0x64
 // !ioout pid 400
 // !ioout core 2 pid 400
-func IoOutDetect() { // detects the execution of OUT (I/O instructions) instructions.
+func IoOutDetect() {
 	InterpreterEx("!ioout")
 }
 
 // MeasureArgumentsForHide
+// Description:measures the arguments needs for the '!hide' command.
 // Syntax:
 // !measure [default]
 // Examples:
 // !measure
 // !measure default
-func MeasureArgumentsForHide() { // measures the arguments needs for the '!hide' command.
+func MeasureArgumentsForHide() {
 	InterpreterEx("!measure")
 }
 
 // ModeInstructionsTrap
+// Description:traps (and possibly blocks) the execution of user-mode/kernel-mode instructions.
 // Syntax:
 // !mode [Mode (string)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
@@ -519,11 +554,12 @@ func MeasureArgumentsForHide() { // measures the arguments needs for the '!hide'
 // !mode ku core 2 pid 400
 // Notes:
 // this event applies to the target process; thus, you need to specify the process id
-func ModeInstructionsTrap() { // traps (and possibly blocks) the execution of user-mode/kernel-mode instructions.
+func ModeInstructionsTrap() {
 	InterpreterEx("!mode")
 }
 
 // MonitorMemoryAccess
+// Description:monitors address range for read and writes.
 // Syntax:
 // !monitor [MemoryType (vapa)] [Attribute (string)] [FromAddress (hex)] [ToAddress (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // !monitor [MemoryType (vapa)] [Attribute (string)] [FromAddress (hex)] [l Length (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
@@ -540,11 +576,12 @@ func ModeInstructionsTrap() { // traps (and possibly blocks) the execution of us
 // !monitor x fffff801deadb000 fffff801deadbfff core 2 pid 400
 // !monitor x fffff801deadb000 l 500 core 2 pid 400
 // !monitor wx fffff801deadb000 fffff801deadbfff core 2 pid 400
-func MonitorMemoryAccess() { // monitors address range for read and writes.
+func MonitorMemoryAccess() {
 	InterpreterEx("!monitor")
 }
 
 // MsrRead
+// Description:detects the execution of rdmsr instructions.
 // Syntax:
 // !msrread [Msr (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
@@ -552,11 +589,12 @@ func MonitorMemoryAccess() { // monitors address range for read and writes.
 // !msrread 0xc0000082
 // !msread pid 400
 // !msrread core 2 pid 400
-func MsrRead() { // detects the execution of rdmsr instructions.
+func MsrRead() {
 	InterpreterEx("!msrread")
 }
 
 // MsrWrite
+// Description:detects the execution of wrmsr instructions.
 // Syntax:
 // !msrwrite [Msr (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
@@ -564,11 +602,12 @@ func MsrRead() { // detects the execution of rdmsr instructions.
 // !msrwrite 0xc0000082
 // !msrwrite pid 400
 // !msrwrite core 2 pid 400
-func MsrWrite() { // detects the execution of wrmsr instructions.
+func MsrWrite() {
 	InterpreterEx("!msrwrite")
 }
 
 // Pa2Va
+// Description:converts virtual address to physical address.
 // Syntax:
 // !pa2va [PhysicalAddress (hex)] [pid ProcessId (hex)]
 // Examples:
@@ -577,22 +616,24 @@ func MsrWrite() { // detects the execution of wrmsr instructions.
 // !pa2va @rax+5
 // !pa2va fffff801deadbeef
 // !pa2va fffff801deadbeef pid 0xc8
-func Pa2Va() { // converts virtual address to physical address.
+func Pa2Va() {
 	InterpreterEx("!pa2va")
 }
 
 // PmcExecutionMonitor
+// Description:monitors execution of rdpmc instructions.
 // Syntax:
 // !pmc [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
 // !pmc
 // !pmc pid 400
 // !pmc core 2 pid 400
-func PmcExecutionMonitor() { // monitors execution of rdpmc instructions.
+func PmcExecutionMonitor() {
 	InterpreterEx("!pmc")
 }
 
 // Pte
+// Description:finds virtual addresses of different paging-levels.
 // Syntax:
 // !pte [VirtualAddress (hex)] [pid ProcessId (hex)]
 // Examples:
@@ -600,11 +641,12 @@ func PmcExecutionMonitor() { // monitors execution of rdpmc instructions.
 // !pte nt!ExAllocatePoolWithTag+5
 // !pte fffff801deadbeef
 // !pte 0x400021000 pid 1c0
-func Pte() { // finds virtual addresses of different paging-levels.
+func Pte() {
 	InterpreterEx("!pte")
 }
 
 // ReversingMachineModuleUse
+// Description:uses the reversing machine module in order to reconstruct the programmer/memory assumptions.
 // Syntax:
 // !rev [config] [pid ProcessId (hex)]
 // !rev [path Path (string)] [Parameters (string)]
@@ -614,11 +656,12 @@ func Pte() { // finds virtual addresses of different paging-levels.
 // !rev reconstruct
 // !rev pattern pid 1c0
 // !rev reconstruct pid 1c0
-func ReversingMachineModuleUse() { // uses the reversing machine module in order to reconstruct the programmer/memory assumptions.
+func ReversingMachineModuleUse() {
 	InterpreterEx("!rev")
 }
 
 // Syscall
+// Description:monitors and hooks all execution of syscall instructions (by accessing memory and checking for instructions).
 // Syntax:
 // !syscall [SyscallNumber (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // !syscall2 [SyscallNumber (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
@@ -630,11 +673,12 @@ func ReversingMachineModuleUse() { // uses the reversing machine module in order
 // !syscall 0x55 pid 400
 // !syscall 0x55 core 2 pid 400
 // !syscall2 0x55 core 2 pid 400
-func Syscall() { // monitors and hooks all execution of syscall instructions (by accessing memory and checking for instructions).
+func Syscall() {
 	InterpreterEx("!syscall")
 }
 
 // SysRet
+// Description:monitors and hooks all execution of sysret instructions (by accessing memory and checking for instructions).
 // Syntax:
 // !sysret [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }]
 // Examples:
@@ -644,11 +688,12 @@ func Syscall() { // monitors and hooks all execution of syscall instructions (by
 // !sysret2 pid 400
 // !sysret core 2 pid 400
 // !sysret2 core 2 pid 400
-func SysRet() { // monitors and hooks all execution of sysret instructions (by accessing memory and checking for instructions).
+func SysRet() {
 	InterpreterEx("!sysret")
 }
 
 // TraceExecution
+// Description:traces the execution of user-mode/kernel-mode instructions.
 // Syntax:
 // !trace [TraceType (string)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
@@ -660,42 +705,46 @@ func SysRet() { // monitors and hooks all execution of sysret instructions (by a
 // step-in : single step-in (regular)
 // step-out : single step-out (regular)
 // instrument-step : single step-in (instrumentation)
-func TraceExecution() { // traces the execution of user-mode/kernel-mode instructions.
+func TraceExecution() {
 	InterpreterEx("!trace")
 }
 
 // TrackModeTransitionInstructions
+// Description:tracks instructions from user-mode to kernel-mode or kernel-mode to user-mode to create call tree. Please note that it's highly recommended to configure symbols before using this command as it maps addresses to corresponding function names.
 // Syntax:
 // !track [tree] [Count (hex)]
 // !track [reg] [Count (hex)]
 // Examples:
 // !track tree 10000
 // !track reg 10000
-func TrackModeTransitionInstructions() { // tracks instructions from user-mode to kernel-mode or kernel-mode to user-mode to create call tree. Please note that it's highly recommended to configure symbols before using this command as it maps addresses to corresponding function names.
+func TrackModeTransitionInstructions() {
 	InterpreterEx("!track")
 }
 
 // TscInstructionsMonitor
+// Description:monitors execution of rdtsc/rdtscp instructions.
 // Syntax:
 // !tsc [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
 // !tsc
 // !tsc pid 400
 // !tsc core 2 pid 400
-func TscInstructionsMonitor() { // monitors execution of rdtsc/rdtscp instructions.
+func TscInstructionsMonitor() {
 	InterpreterEx("!tsc")
 }
 
 // UnHide
+// Description:reverts the transparency measures of the '!hide' command.
 // Syntax:
 // !unhide
 // Examples:
 // !unhide
-func UnHide() { // reverts the transparency measures of the '!hide' command.
+func UnHide() {
 	InterpreterEx("!unhide")
 }
 
 // Va2Pa
+// Description:converts virtual address to physical address.
 // Syntax:
 // !va2pa [VirtualAddress (hex)] [pid ProcessId (hex)]
 // Examples:
@@ -705,59 +754,64 @@ func UnHide() { // reverts the transparency measures of the '!hide' command.
 // !va2pa @rcx+5
 // !va2pa fffff801deadbeef
 // !va2pa fffff801deadbeef pid 0xc8
-func Va2Pa() { // converts virtual address to physical address.
+func Va2Pa() {
 	InterpreterEx("!va2pa")
 }
 
 // VmCall
+// Description:monitors execution of VMCALL instruction.
 // Syntax:
 // !vmcall [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
 // Examples:
 // !vmcall
 // !vmcall pid 400
 // !vmcall core 2 pid 400
-func VmCall() { // monitors execution of VMCALL instruction.
+func VmCall() {
 	InterpreterEx("!vmcall")
 }
 
 // HardwareClockDebugging
+// Description:performs actions related to hwdbg hardware debugging events for each clock cycle.
 // Syntax:
 // !hw_clk  [script { Script (string) }]
 // Examples:
 // !hw_clk script { @hw_pin1 = 0; }
-func HardwareClockDebugging() { // performs actions related to hwdbg hardware debugging events for each clock cycle.
+func HardwareClockDebugging() {
 	InterpreterEx("!hw_clk")
 }
 
 // AttachDebugThread
+// Description:attaches to debug a thread in VMI Mode.
 // Syntax:
 // .attach [pid ProcessId (hex)]
 // Examples:
 // .attach pid b60
-func AttachDebugThread() { // attaches to debug a thread in VMI Mode.
+func AttachDebugThread() {
 	InterpreterEx(".attach")
 }
 
 // ClearScreen
+// Description:clears the screen.
 // Syntax:
 // .cls
-// Examples:
-func ClearScreen() { // clears the screen.
+func ClearScreen() {
 	InterpreterEx(".cls")
 }
 
 // ConnectToMachine
+// Description:connects to a remote or local machine to start debugging.
 // Syntax:
 // .connect [local]
 // .connect [Ip (string)] [Port (decimal)]
 // Examples:
 // .connect local
 // .connect 192.168.1.5 50000
-func ConnectToMachine() { // connects to a remote or local machine to start debugging.
+func ConnectToMachine() {
 	InterpreterEx(".connect")
 }
 
 // DebugMachine
+// Description:debugs a target machine or makes this machine a debuggee.
 // Syntax:
 // .debug [remote] [serial|namedpipe] [Baudrate (decimal)] [Address (string)]
 // .debug [prepare] [serial] [Baudrate (decimal)] [Address (string)]
@@ -771,27 +825,28 @@ func ConnectToMachine() { // connects to a remote or local machine to start debu
 // Notes:
 // valid baud rates (decimal): 110, 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 38400, 56000, 57600, 115200, 128000, 256000
 // valid COM ports: COM1, COM2, COM3, COM4
-func DebugMachine() { // debugs a target machine or makes this machine a debuggee.
+func DebugMachine() {
 	InterpreterEx(".debug")
 }
 
 // DetachDebugging
+// Description:detaches from debugging a user-mode process.
 // Syntax:
 // .detach
-// Examples:
-func DetachDebugging() { // detaches from debugging a user-mode process.
+func DetachDebugging() {
 	InterpreterEx(".detach")
 }
 
 // DisconnectSession
+// Description:disconnects from a debugging session (it won't unload the modules).
 // Syntax:
 // .disconnect
-// Examples:
-func DisconnectSession() { // disconnects from a debugging session (it won't unload the modules).
+func DisconnectSession() {
 	InterpreterEx(".disconnect")
 }
 
 // DumpMemoryContext
+// Description:saves memory context into a file.
 // Syntax:
 // .dump [FromAddress (hex)] [ToAddress (hex)] [pid ProcessId (hex)] [path Path (string)]
 // Examples:
@@ -804,11 +859,12 @@ func DisconnectSession() { // disconnects from a debugging session (it won't unl
 // !dump 1000 2100 path c:\\rev\\dump7.dmp
 // Notes:
 // If you want to dump physical memory then add '!' at the start of the command
-func DumpMemoryContext() { // saves memory context into a file.
+func DumpMemoryContext() {
 	InterpreterEx(".dump")
 }
 
 // FormatsDiff
+// Description:shows a value or register in different formats
 // Syntax:
 // .formats [Expression (string)]
 // Examples:
@@ -819,28 +875,30 @@ func DumpMemoryContext() { // saves memory context into a file.
 // .formats @rax
 // .formats @rbx+@rcx
 // .formats $pid
-func FormatsDiff() { // shows a value or register in different formats
+func FormatsDiff() {
 	InterpreterEx(".formats")
 }
 
 // HelpForCommand
+// Description:shows help and example(s) of a specific command
 // Syntax:
 // .help [Command (string)]
 // Examples:
 // .help !monitor
-func HelpForCommand() { // shows help and example(s) of a specific command
+func HelpForCommand() {
 	InterpreterEx(".help")
 }
 
 // KillProcess
+// Description:terminates the current running process
 // Syntax:
 // .kill
-// Examples:
-func KillProcess() { // terminates the current running process
+func KillProcess() {
 	InterpreterEx(".kill")
 }
 
 // ListenForClientConnection
+// Description:listens for a client to connect to HyperDbg (works as a guest server)
 // Syntax:
 // .listen [Port (decimal)]
 // Examples:
@@ -848,27 +906,28 @@ func KillProcess() { // terminates the current running process
 // .listen 50000
 // Notes:
 // if you don't specify port then HyperDbg uses the default port
-func ListenForClientConnection() { // listens for a client to connect to HyperDbg (works as a guest server)
+func ListenForClientConnection() {
 	InterpreterEx(".listen")
 }
 
 // LogClose
+// Description:closes the previously opened log
 // Syntax:
 // .logclose
-// Examples:
-func LogClose() { // closes the previously opened log
+func LogClose() {
 	InterpreterEx(".logclose")
 }
 
 // LogOpen
+// Description:saves commands and results in a file
 // Syntax:
 // .logopen [FilePath (string)]
-// Examples:
-func LogOpen() { // saves commands and results in a file
+func LogOpen() {
 	InterpreterEx(".logopen")
 }
 
 // PageAvailableInRam
+// Description:brings the page in, making it available in the RAM
 // Syntax:
 // .pagein [Mode (string)] [l Length (hex)]
 // .pagein [Mode (string)] [VirtualAddress (hex)] [l Length (hex)]
@@ -888,11 +947,12 @@ func LogOpen() { // saves commands and results in a file
 // Notes:
 // valid mode formats: present (p), write (w), user (u), fetch (f), protection key (k), shadow stack (s), hlat (h), sgx (g)
 // common page-fault codes: 0x0 (default), 0x2 (w), 0x3 (pw), 0x4 (u), 0x6 (wu), 0x7 (pwu), 0x10 (f), 0x11 (pf), 0x14 (uf)
-func PageAvailableInRam() { // brings the page in, making it available in the RAM
+func PageAvailableInRam() {
 	InterpreterEx(".pagein")
 }
 
 // ParseExecutableFiles
+// Description:parses portable executable (PE) files and dump sections
 // Syntax:
 // .pe [header] [FilePath (string)]
 // .pe [section] [SectionName (string)] [FilePath (string)]
@@ -900,11 +960,12 @@ func PageAvailableInRam() { // brings the page in, making it available in the RA
 // .pe header c:\reverse files\myfile.exe
 // .pe section .text c:\reverse files\myfile.exe
 // .pe section .rdata c:\reverse files\myfile.exe
-func ParseExecutableFiles() { // parses portable executable (PE) files and dump sections
+func ParseExecutableFiles() {
 	InterpreterEx(".pe")
 }
 
 // ProcessesView
+// Description:shows and changes the processes. This command needs public symbols for ntoskrnl.exe if you want to see the processes list. Please visit the documentation to know about the difference between '.process' and '.process2'.
 // Syntax:
 // .process
 // .process [list]
@@ -918,19 +979,20 @@ func ParseExecutableFiles() { // parses portable executable (PE) files and dump 
 // .process pid 4
 // .process2 pid 4
 // .process process ffff948cc2349280
-func ProcessesView() { // shows and changes the processes. This command needs public symbols for ntoskrnl.exe if you want to see the processes list. Please visit the documentation to know about the difference between '.process' and '.process2'.
+func ProcessesView() {
 	InterpreterEx(".process")
 }
 
 // RestartProcess
+// Description:restarts the previously started process using '.start' command.
 // Syntax:
 // .restart
-// Examples:
-func RestartProcess() { // restarts the previously started process using '.start' command.
+func RestartProcess() {
 	InterpreterEx(".restart")
 }
 
 // Script
+// Description:runs a HyperDbg script.
 // Syntax:
 // .script [FilePath (string)] [Args (string)]
 // Examples:
@@ -940,31 +1002,33 @@ func RestartProcess() { // restarts the previously started process using '.start
 // .script "C:\scripts\hello world.ds" @rax
 // .script "C:\scripts\hello world.ds" @rax @rcx+55 $pid
 // .script "C:\scripts\hello world.ds" 12 55 @rip
-func Script() { // runs a HyperDbg script.
+func Script() {
 	InterpreterEx(".script")
 }
 
 // StartProcess
+// Description:runs a user-mode process
 // Syntax:
 // .start [path Path (string)] [Parameters (string)]
 // Examples:
 // .start path c:\reverse eng\my_file.exe
-func StartProcess() { // runs a user-mode process
+func StartProcess() {
 	InterpreterEx(".start")
 }
 
 // Status
+// Description:gets the status of current debugger in local system
 // Syntax:
 // .status
 // status
-// Examples:
 // Notes:
 // If connected to a remote system, '.status' shows the state of current debugger, while 'status' shows the state of remote debuggee.
-func Status() { // gets the status of current debugger in local system
+func Status() {
 	InterpreterEx(".status")
 }
 
 // SwitchThread
+// Description:shows the list of active debugging threads and switches between processes and threads in VMI Mode
 // Syntax:
 // .switch
 // .switch [pid ProcessId (hex)]
@@ -973,11 +1037,12 @@ func Status() { // gets the status of current debugger in local system
 // .switch list
 // .switch pid b60
 // .switch tid b60
-func SwitchThread() { // shows the list of active debugging threads and switches between processes and threads in VMI Mode
+func SwitchThread() {
 	InterpreterEx(".switch")
 }
 
 // Symbol
+// Description:performs the symbol actions
 // Syntax:
 // .sym [table]
 // .sym [reload] [pid ProcessId (hex)]
@@ -992,22 +1057,24 @@ func SwitchThread() { // shows the list of active debugging threads and switches
 // .sym download
 // .sym add base fffff8077356000 path c:\symbols\my_dll.pdb
 // .sym unload
-func Symbol() { // performs the symbol actions
+func Symbol() {
 	InterpreterEx(".sym")
 }
 
 // SymbolPath
+// Description:shows and sets the symbol server and path
 // Syntax:
 // .sympath
 // .sympath [SymServer (string)]
 // Examples:
 // .sympath
 // .sympath SRV*c:\Symbols*https://msdl.microsoft.com/download/symbols
-func SymbolPath() { // shows and sets the symbol server and path
+func SymbolPath() {
 	InterpreterEx(".sympath")
 }
 
 // Thread
+// Description:shows and changes the threads
 // Syntax:
 // .thread
 // .thread [list] [process Eprocess (hex)]
@@ -1024,6 +1091,6 @@ func SymbolPath() { // shows and sets the symbol server and path
 // .thread list process ffff948c`a1279880
 // Notes:
 // This command needs public symbols for 'ntoskrnl.exe' if you want to see the threads list. Please visit the documentation to know about the difference between '.thread' and '.thread2'.
-func Thread() { // shows and changes the threads
+func Thread() {
 	InterpreterEx(".thread")
 }
