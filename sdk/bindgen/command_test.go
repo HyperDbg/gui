@@ -3,7 +3,6 @@ package bindgen
 import (
 	"io/fs"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"testing"
 
@@ -42,12 +41,12 @@ func commandGenerate(kindName, path string) {
 		mylog.Trace(name, path)
 
 		command := sdk.Command{
-			MethodName: name,
-			Cmd:        stream.BaseName(path),
-			Args:       []string{},
-			Usage:      "",
-			Demo:       []string{},
-			DoFunc:     "Interpreter(StringToBytePointer(" + strconv.Quote(stream.BaseName(path)) + "))",
+			Name:        "",
+			Description: "",
+			Syntax:      nil,
+			Examples:    nil,
+			Notes:       nil,
+			FullName:    "",
 		}
 		commands = append(commands, command)
 		return err
@@ -55,7 +54,7 @@ func commandGenerate(kindName, path string) {
 
 	keys := make([]string, 0)
 	for _, command := range commands {
-		keys = append(keys, command.MethodName) // todo this must be use Cmd,then it will return the right command
+		keys = append(keys, command.FullName) // todo this must be use Cmd,then it will return the right command
 	}
 	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum(kindName, keys, nil)
 }
