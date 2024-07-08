@@ -36,11 +36,11 @@ func ContinueDebugger() {
 	InterpreterEx("g")
 }
 
-func StepExecuteSingleInstructionOut() {
+func StepOut() {
 	InterpreterEx("gu")
 }
 
-func StepExecuteSingleInstructionIn() {
+func StepIn() {
 	InterpreterEx("i")
 }
 

@@ -44,6 +44,8 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		fullName := s.FullName
 		fullName = strings.ReplaceAll(fullName, "-", "_")
 		fullName = stream.ToCamelUpper(fullName, false)
+		fullName = strings.ReplaceAll(fullName, "ExecuteSingleInstructionStepIn", "StepIn")
+		fullName = strings.ReplaceAll(fullName, "ExecuteSingleInstructionStepOut", "StepOut")
 		fullName = strings.ReplaceAll(fullName, "ExecuteSingleInstructionStep", "StepExecuteSingleInstruction") //? not well
 		fullName = strings.ReplaceAll(fullName, "CreateEventForwardingOutputInstance", "OutputEventForwardingInstance")
 		fullName = strings.ReplaceAll(fullName, "ClearsBreakpointBreakpointId", "BreakpointClearByID")
