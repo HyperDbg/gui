@@ -379,7 +379,7 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 					Title: "EptHook",
 					Can:   func(any) bool { return true },
 					Do: func(a any) {
-						//todo make a args panel ?
+						// todo make a args panel ?
 						mylog.Warning("EptHook", sdk.EptHook()) // todo make args with type
 					},
 				},
@@ -1046,8 +1046,12 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 				{Text: node.Data.Comment},
 			}
 		},
-		UnmarshalRow:             nil,
-		SelectionChangedCallback: nil,
+		UnmarshalRow: nil,
+		SelectionChangedCallback: func(root *widget.Node[xed.Disassembly]) {
+			for _, n := range root.SelectedRows(false) {
+				mylog.Struct(n.Data)
+			}
+		},
 		SetRootRowsCallBack: func(root *widget.Node[xed.Disassembly]) {
 			f := xed.ParserPe(fileName)
 			// b := stream.NewBuffer(fileName)
