@@ -56,7 +56,7 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		fullName = strings.ReplaceAll(fullName, "ExecuteSingleInstructionStepOut", "StepOut")
 		fullName = strings.ReplaceAll(fullName, "ExecuteSingleInstructionStepIn", "StepIn") // repeated with StepInExecute? "t"
 		fullName = strings.ReplaceAll(fullName, "ShowThreadCallstack", "CallstackOrThreadView")
-		fullName = strings.ReplaceAll(fullName, "InstallDriversAndLoadModules", "LoadDriversAndLoadModules")
+		fullName = strings.ReplaceAll(fullName, "InstallDriversAndLoadModules", "LoadDriversAndModules")
 		fullName = strings.ReplaceAll(fullName, "EvaluateExpressions", "PrintEvaluateExpressions")
 		fullName = strings.ReplaceAll(fullName, "ReadModifyRegisters", "RegistersReadOrModify")
 		fullName = strings.ReplaceAll(fullName, "ReadModelSpecificRegister", "ReadMsr") //?? repeated?

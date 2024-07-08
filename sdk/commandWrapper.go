@@ -52,7 +52,7 @@ func ListModules() {
 	InterpreterEx("lm")
 }
 
-func LoadDriversAndLoadModules() {
+func LoadDriversAndModules() {
 	InterpreterEx("load")
 }
 
