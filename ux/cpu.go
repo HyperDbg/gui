@@ -379,6 +379,7 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 					Title: "EptHook",
 					Can:   func(any) bool { return true },
 					Do: func(a any) {
+						//todo make a args panel ?
 						mylog.Warning("EptHook", sdk.EptHook()) // todo make args with type
 					},
 				},
