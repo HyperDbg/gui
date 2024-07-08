@@ -104,7 +104,7 @@ func TestUnmarshalCommandJson(t *testing.T) {
 		fullName = strings.ReplaceAll(fullName, "TrapModeInstructions", "ModeInstructionsTrap")
 		fullName = strings.ReplaceAll(fullName, "DetectIoInstructionsOut", "IoOutDetect")
 
-		g.P("func ", fullName, "() {")
+		g.P("func ", fullName, "() { //"+s.Description)
 		g.P("InterpreterEx(", strconv.Quote(s.Name), ") ")
 		g.P("}")
 		g.P()
