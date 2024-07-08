@@ -365,6 +365,20 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 						mylog.Warning("SetBreakpoint0xcc", sdk.SetBreakpoint0xcc()) // todo use SetBreakpoint
 					},
 				},
+				{
+					Title: "EptHook",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("EptHook", sdk.EptHook()) //todo make args with type
+					},
+				},
+				{
+					Title: "EptHook2",
+					Can:   func(any) bool { return true },
+					Do: func(a any) {
+						mylog.Warning("EptHook2", sdk.EptHook2()) //todo make args with type
+					},
+				},
 			}
 		},
 		MarshalRow: func(node *widget.Node[xed.Disassembly]) (cells []widget.CellData) {
