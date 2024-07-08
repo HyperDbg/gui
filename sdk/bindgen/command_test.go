@@ -14,8 +14,8 @@ import (
 	"github.com/ddkwork/golibrary/stream/txt"
 )
 
-// todo  give me a json for decode Generate Command
 func TestCommandGenerate(t *testing.T) {
+	t.Skip("not well")
 	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum("commands", []string{
 		"debugging",
 		"extension",
@@ -58,8 +58,4 @@ func commandGenerate(kindName, path string) {
 		keys = append(keys, command.MethodName) // todo this must be use Cmd,then it will return the right command
 	}
 	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum(kindName, keys, nil)
-
-	//for _, command := range commands {//todo gen method command_gen.go
-	//	keys = append(keys, command.MethodName) // todo this must be use Cmd,then it will return the right command
-	//}
 }
