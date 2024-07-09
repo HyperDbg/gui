@@ -433,7 +433,7 @@ func DebugRegistersMonitor() (status string) {
 	return InterpreterEx("!dr")
 }
 
-// IoInDetect
+// EptHook
 // Description:puts a hidden-hook EPT (hidden breakpoints).
 // Syntax:
 // !epthook [Address (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
@@ -443,11 +443,11 @@ func DebugRegistersMonitor() (status string) {
 // !epthook fffff801deadb000
 // !epthook fffff801deadb000 pid 400
 // !epthook fffff801deadb000 core 2 pid 400
-func IoInDetect() (status string) {
+func EptHook() (status string) {
 	return InterpreterEx("!epthook")
 }
 
-// IoInDetect
+// EptHook2
 // Description:puts a hidden-hook EPT (detours).
 // Syntax:
 // !epthook2 [Address (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
@@ -457,7 +457,7 @@ func IoInDetect() (status string) {
 // !epthook2 fffff801deadb000
 // !epthook2 fffff801deadb000 pid 400
 // !epthook2 fffff801deadb000 core 2 pid 400
-func IoInDetect() (status string) {
+func EptHook2() (status string) {
 	return InterpreterEx("!epthook2")
 }
 
