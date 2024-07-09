@@ -4,7 +4,7 @@ go 1.22.4
 
 require (
 	github.com/ddkwork/app v0.0.0-20240709005837-d3006364ffb4
-	github.com/ddkwork/golibrary v0.0.0-20240707213022-2daf1340e44b
+	github.com/ddkwork/golibrary v0.0.0-20240709142820-a5c7470d21ac
 	github.com/richardwilkes/unison v0.71.0
 	github.com/saferwall/pe v1.5.4
 	github.com/stretchr/testify v1.9.0
