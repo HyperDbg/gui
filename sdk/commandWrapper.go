@@ -433,7 +433,7 @@ func DebugRegistersMonitor() (status string) {
 	return InterpreterEx("!dr")
 }
 
-// EptHook
+// IoInDetect
 // Description:puts a hidden-hook EPT (hidden breakpoints).
 // Syntax:
 // !epthook [Address (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
@@ -443,11 +443,11 @@ func DebugRegistersMonitor() (status string) {
 // !epthook fffff801deadb000
 // !epthook fffff801deadb000 pid 400
 // !epthook fffff801deadb000 core 2 pid 400
-func EptHook() (status string) {
+func IoInDetect() (status string) {
 	return InterpreterEx("!epthook")
 }
 
-// EptHook2
+// IoInDetect
 // Description:puts a hidden-hook EPT (detours).
 // Syntax:
 // !epthook2 [Address (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
@@ -457,11 +457,11 @@ func EptHook() (status string) {
 // !epthook2 fffff801deadb000
 // !epthook2 fffff801deadb000 pid 400
 // !epthook2 fffff801deadb000 core 2 pid 400
-func EptHook2() (status string) {
+func IoInDetect() (status string) {
 	return InterpreterEx("!epthook2")
 }
 
-// IdtEntriesMonitor
+// MonitorIDTEntries
 // Description:monitors the first 32 entry of IDT (starting from zero).
 // Syntax:
 // !exception [IdtIndex (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
@@ -472,7 +472,7 @@ func EptHook2() (status string) {
 // !exception core 2 pid 400
 // Notes:
 // monitoring page-faults (entry 0xe) is implemented differently.
-func IdtEntriesMonitor() (status string) {
+func MonitorIDTEntries() (status string) {
 	return InterpreterEx("!exception")
 }
 
@@ -506,7 +506,7 @@ func InterruptExternalMonitor() (status string) {
 	return InterpreterEx("!interrupt")
 }
 
-// IoInDetect
+// DetectIOInstructionsIn
 // Description:detects the execution of IN (I/O instructions) instructions.
 // Syntax:
 // !ioin [Port (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
@@ -515,11 +515,11 @@ func InterruptExternalMonitor() (status string) {
 // !ioin 0x64
 // !ioin pid 400
 // !ioin core 2 pid 400
-func IoInDetect() (status string) {
+func DetectIOInstructionsIn() (status string) {
 	return InterpreterEx("!ioin")
 }
 
-// IoOutDetect
+// DetectIOInstructionsOut
 // Description:detects the execution of OUT (I/O instructions) instructions.
 // Syntax:
 // !ioout [Port (hex)] [pid ProcessId (hex)] [core CoreId (hex)] [imm IsImmediate (yesno)] [sc EnableShortCircuiting (onoff)] [stage CallingStage (prepostall)] [buffer PreAllocatedBuffer (hex)] [script { Script (string) }] [condition { Condition (hex) }] [code { Code (hex) }] [output {OutputName (string)}]
@@ -528,7 +528,7 @@ func IoInDetect() (status string) {
 // !ioout 0x64
 // !ioout pid 400
 // !ioout core 2 pid 400
-func IoOutDetect() (status string) {
+func DetectIOInstructionsOut() (status string) {
 	return InterpreterEx("!ioout")
 }
 
@@ -926,7 +926,7 @@ func LogOpen() (status string) {
 	return InterpreterEx(".logopen")
 }
 
-// PageAvailableInRam
+// MakePageAvailableInRAM
 // Description:brings the page in, making it available in the RAM
 // Syntax:
 // .pagein [Mode (string)] [l Length (hex)]
@@ -947,7 +947,7 @@ func LogOpen() (status string) {
 // Notes:
 // valid mode formats: present (p), write (w), user (u), fetch (f), protection key (k), shadow stack (s), hlat (h), sgx (g)
 // common page-fault codes: 0x0 (default), 0x2 (w), 0x3 (pw), 0x4 (u), 0x6 (wu), 0x7 (pwu), 0x10 (f), 0x11 (pf), 0x14 (uf)
-func PageAvailableInRam() (status string) {
+func MakePageAvailableInRAM() (status string) {
 	return InterpreterEx(".pagein")
 }
 
@@ -1006,13 +1006,13 @@ func Script() (status string) {
 	return InterpreterEx(".script")
 }
 
-// StartProcess
+// RunsAUser_modeProcess
 // Description:runs a user-mode process
 // Syntax:
 // .start [path Path (string)] [Parameters (string)]
 // Examples:
 // .start path c:\reverse eng\my_file.exe
-func StartProcess() (status string) {
+func RunsAUser_modeProcess() (status string) {
 	return InterpreterEx(".start")
 }
 
