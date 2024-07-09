@@ -15,6 +15,7 @@ import (
 	"github.com/ddkwork/golibrary/stream/txt"
 )
 
+// //////////test
 func TestUnmarshalCommandJson(t *testing.T) {
 	var generated []sdk.Command
 	mylog.Check(json.Unmarshal(stream.NewBuffer("commands.json").Bytes(), &generated))
