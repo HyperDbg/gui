@@ -26,19 +26,18 @@ func TestUnmarshalCommandJson(t *testing.T) {
 	m := map[string]string{
 		"HiddenHookEPTBreakpoints": "EptHook",
 		"HiddenHookEPTDetours":     "EptHook2",
-		"MonitorIdtEntries":        "IdtEntriesMonitor",
-		"RunsAUserModeProcess":     "StartProcess",
-		"MakePageAvailableInRam":   "PageAvailableInRam",
-		"DetectIoInstructionsIn":   "IoInDetect",
+		"MonitorIDTEntries":        "IdtEntriesMonitor",
+		"RunsAUser_modeProcess":    "StartProcess",
+		"MakePageAvailableInRAM":   "PageAvailableInRam",
+		"DetectIOInstructionsIn":   "IoInDetect",
+		"DetectIOInstructionsOut":  "IoOutDetect",
 	}
 	for _, s := range generated {
-		s.FullName = strings.TrimSpace(s.FullName)
-		s.FullName = strings.ReplaceAll(s.FullName, " ", "")
-		// println(s.FullName)
 		for k, v := range m {
-			if k == s.FullName { // why not work
+			if k == s.FullName {
 				println(k)
 				s.FullName = v
+				delete(m, k)
 				break
 			}
 		}
