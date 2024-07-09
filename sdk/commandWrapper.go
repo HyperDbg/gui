@@ -517,7 +517,7 @@ func InterruptExternalMonitor() (status string) {
 // !ioin core 2 pid 400
 func DetectIOInstructionsIn() (status string) {
 	return InterpreterEx("!ioin")
-}
+} ////
 
 // DetectIOInstructionsOut
 // Description:detects the execution of OUT (I/O instructions) instructions.
