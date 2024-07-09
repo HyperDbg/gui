@@ -32,6 +32,8 @@ github.com/ddkwork/app v0.0.0-20240708054602-521a0aac29d9 h1:RCH+EUzWgAiBG/8Dt5H
 github.com/ddkwork/app v0.0.0-20240708054602-521a0aac29d9/go.mod h1:AFHaIcCmMV1YJTCQ+BSN3DudJ11eOiG1FIbe9Z0yTag=
 github.com/ddkwork/app v0.0.0-20240709005837-d3006364ffb4 h1:aeFeA7suEdttsIpulh0Yj1h8QyMHfhqd+ObMN8m3VKQ=
 github.com/ddkwork/app v0.0.0-20240709005837-d3006364ffb4/go.mod h1:AFHaIcCmMV1YJTCQ+BSN3DudJ11eOiG1FIbe9Z0yTag=
+github.com/ddkwork/app v0.0.0-20240709143228-b90449991d0f h1:VJbRIpWiia7BhLw2VR9DHQ4gpdlOC8uFOIDcUrbrzSM=
+github.com/ddkwork/app v0.0.0-20240709143228-b90449991d0f/go.mod h1:WRB3aegc5mgBQdYzrnWFDZIqpsm1i6Qcjkaj+Sn7gHI=
 github.com/ddkwork/golibrary v0.0.0-20240705133929-5aa35acd51d0 h1:XPUeWUhsU7mT5Boi/bus9kOAXm27P5YsIHTxiqyUmyE=
 github.com/ddkwork/golibrary v0.0.0-20240705133929-5aa35acd51d0/go.mod h1:GlLX0w5HQ9dhHS5hhwcOJNSoLUO8ud4WnrbKa41MmcE=
 github.com/ddkwork/golibrary v0.0.0-20240706124243-7ed34ae5fd52 h1:L2owqtBooxnEntnWOttOcY6+yIVNPe8tYNWwylw879o=
