@@ -34,7 +34,9 @@ func TestUnmarshalCommandJson(t *testing.T) {
 	for _, s := range generated {
 		// println(s.FullName)
 		for k, v := range m {
-			if k == s.FullName {
+			s.FullName = strings.TrimSpace(s.FullName)
+			s.FullName = strings.ReplaceAll(s.FullName, " ", "")
+			if k == s.FullName { //why not work
 				println(k)
 				s.FullName = v
 				break
