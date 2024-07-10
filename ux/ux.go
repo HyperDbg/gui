@@ -276,7 +276,7 @@ func newToolbar() *toolbar {
 
 func registerContextMenu(enable bool) {
 	remove := ""
-	if enable {
+	if !enable {
 		remove = "-"
 	}
 	path := stream.RunDir()
@@ -285,26 +285,26 @@ func registerContextMenu(enable bool) {
 	g.P("Windows Registry Editor Version 5.00")
 	g.P("")
 
-	g.P(remove, "[HKEY_CLASSES_ROOT\\Directory\\Background\\shell\\HyperDbg]")
+	g.P("[", remove, "HKEY_CLASSES_ROOT\\Directory\\Background\\shell\\HyperDbg]")
 	g.P("@=\"Run HyperDbg Here\"")
 	g.P("")
 
-	g.P(remove, "[HKEY_CLASSES_ROOT\\Directory\\Background\\shell\\HyperDbg\\command]")
+	g.P("[", remove, "HKEY_CLASSES_ROOT\\Directory\\Background\\shell\\HyperDbg\\command]")
 	g.P("@=\"", path, "HyperDbg.exe --cd=\\\"%V\\\"\"")
 	g.P("")
 
-	g.P(remove, "[HKEY_CLASSES_ROOT\\Directory\\shell\\HyperDbg]")
+	g.P("[", remove, "HKEY_CLASSES_ROOT\\Directory\\shell\\HyperDbg]")
 	g.P("@=\"Run HyperDbg Here\"")
 	g.P("")
 
-	g.P(remove, "[HKEY_CLASSES_ROOT\\Directory\\shell\\HyperDbg\\command]")
+	g.P("[", remove, "HKEY_CLASSES_ROOT\\Directory\\shell\\HyperDbg\\command]")
 	g.P("@=\"", path, "HyperDbg.exe --cd=%V\"")
 	g.P("")
 
-	g.P(remove, "[HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg]")
+	g.P("[HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg]")
 	g.P("")
 
-	g.P(remove, "[HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg\\command]")
+	g.P("[", remove, "HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg\\command]")
 	g.P("@=\"", path, "HyperDbg.exe \\\"%1\\\"\"")
 	g.P("")
 	stream.WriteTruncate("open.reg", g.Buffer)
