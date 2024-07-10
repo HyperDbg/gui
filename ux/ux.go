@@ -224,19 +224,33 @@ func newToolbar() *toolbar {
 		about:   widget.NewImageButton("about", m.Get("about.png"), func() {}),
 		settings: widget.NewImageButton("settings", m.Get("settings.png"), func() {
 			app.Run("settings", func(w *unison.Window) {
+				content := w.Content()
 				newPanel := unison.NewPanel()
 				newPanel.SetLayout(&unison.FlexLayout{
 					Columns:      2,
-					HSpacing:     10,
-					VSpacing:     5,
-					HAlign:       5,
-					VAlign:       5,
-					EqualColumns: true,
+					HSpacing:     15,
+					VSpacing:     15,
+					HAlign:       15,
+					VAlign:       15,
+					EqualColumns: false,
 				})
-				w.Content().AddChild(newPanel)
+				newPanel.SetLayoutData(&unison.FlexLayoutData{
+					SizeHint: unison.Size{},
+					MinSize:  unison.Size{},
+					HSpan:    15,
+					VSpan:    15,
+					HAlign:   15,
+					VAlign:   15,
+					HGrab:    false,
+					VGrab:    false,
+				})
+				w.MinMaxContentSizeCallback = func() (minimum, maximum unison.Size) {
+					minimum.Width = 600
+					minimum.Height = 200
+					return minimum, minimum
+				}
+				content.AddChild(newPanel)
 
-				//"Register HyperDbg to Windows Explorer",
-				//	"Remove HyperDbg to Windows Explorer",
 				newPanel.AddChild(widget.NewButton("Load Driver", func() {}))
 				newPanel.AddChild(widget.NewButton("UnLoad Driver", func() {}))
 				newPanel.AddChild(widget.NewButton("Load Vmm", func() {}))
