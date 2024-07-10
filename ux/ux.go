@@ -228,6 +228,18 @@ func newToolbar() *toolbar {
 				newPanel := widget.NewKeyValuePanel()
 				content.AddChild(newPanel)
 
+				type remoteData struct {
+					Host string
+					Port string
+				}
+				remoteEditor, _ := widget.NewStructView(
+					remoteData{Host: "127.0.0.1", Port: "8080"},
+					func(data remoteData) (values []widget.CellData) {
+						return []widget.CellData{{Text: data.Host}, {Text: data.Port}}
+					},
+				)
+				content.AddChild(remoteEditor)
+
 				newPanel.AddChild(widget.NewButton("Install Driver", func() {
 					mylog.Check(sdk.VmxSupportDetection())
 					mylog.Check(sdk.SetCustomDriverPathEx(sdk.SysPath))
@@ -254,19 +266,6 @@ func newToolbar() *toolbar {
 					mylog.Trace("ConnectLocalDebugger")
 					sdk.ConnectLocalDebugger()
 				}))
-
-				type remoteData struct {
-					Host string
-					Port string
-				}
-				remoteEditor, _ := widget.NewStructView(
-					remoteData{Host: "127.0.0.1", Port: "8080"},
-					func(data remoteData) (values []widget.CellData) {
-						return []widget.CellData{{Text: data.Host}, {Text: data.Port}}
-					},
-				)
-				content.AddChild(remoteEditor)
-
 				port := widget.NewButton("ConnectRemoteDebugger", func() { // todo not finished
 					mylog.Trace("ConnectRemoteDebugger")
 					// sdk.ConnectRemoteDebugger(sdk.StringToBytePointer(host.String()), sdk.StringToBytePointer(port.String()))
