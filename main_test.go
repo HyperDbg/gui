@@ -11,10 +11,6 @@ import (
 	"github.com/ddkwork/golibrary/stream"
 )
 
-func TestGenerateRegistryFile(t *testing.T) {
-	generateRegistryFile()
-}
-
 func TestUpdateAppModule(t *testing.T) {
 	if !stream.IsDir("D:\\workspace\\workspace\\app") {
 		return
