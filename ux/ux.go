@@ -40,6 +40,7 @@ func Run() {
 
 type (
 	TagPage struct {
+		path   string
 		dock   *unison.Dock
 		cpu    *widget.Tab
 		pe     *widget.Tab
@@ -83,7 +84,7 @@ func (p *TagPage) Elems() []*widget.Tab {
 
 func (p *TagPage) Layout() unison.Paneler {
 	panel := widget.NewPanel()
-	t := newToolbar()
+	t := newToolbar(p.path)
 	panel.AddChild(widget.NewToolBar(t.Elems()...))
 	p.dock.DockTo(p.cpu, nil, side.Left)
 
@@ -93,7 +94,7 @@ func (p *TagPage) Layout() unison.Paneler {
 	// tabFileMap := stream.ReadEmbedFileMap(bar, "asserts/pageico")
 	for _, tab := range p.Elems() {
 		if tab == p.cpu {
-			continue // todo test
+			continue
 		}
 		LeftContainer.Stack(tab, -1)
 	}
@@ -109,10 +110,9 @@ func NewTabPage(path string) *TagPage {
 		VSpan:  1,
 		HAlign: align.Fill,
 		VAlign: align.Fill,
-		HGrab:  true,
-		VGrab:  true,
 	})
 	p := &TagPage{
+		path:   path,
 		dock:   dock,
 		cpu:    widget.NewTab("cpu", "", LayoutCpu(path)),
 		pe:     widget.NewTab("peView", "", LayoutPeView(path)),
@@ -165,7 +165,7 @@ func (t *toolbar) Elems() []*unison.Button {
 	}
 }
 
-func newToolbar() *toolbar {
+func newToolbar(path string) *toolbar {
 	m := stream.ReadEmbedFileMap(bar, "asserts/bar")
 	return &toolbar{
 		open: widget.NewImageButton("open", m.Get("open.png"), func() {}),
@@ -176,12 +176,7 @@ func newToolbar() *toolbar {
 			mylog.Warning("KillProcess", sdk.KillProcess()) // todo need pid ?
 		}),
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
-			//."start path C:\users\whatever.exe"
-			cmd := ".\"start path " +
-				"C:\\users\\whatever.exe" + // todo set target path into object field
-				"\""
-			cmd = cmd
-			mylog.Warning("StartProcess", sdk.StartProcess())
+			mylog.Warning("StartProcess", sdk.StartProcess(path))
 		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
 		pause: widget.NewImageButton("pause", m.Get("pause.png"), func() {

@@ -1012,8 +1012,8 @@ func Script() (status string) {
 // .start [path Path (string)] [Parameters (string)]
 // Examples:
 // .start path c:\reverse eng\my_file.exe
-func StartProcess() (status string) {
-	return InterpreterEx(".start")
+func StartProcess(path string) (status string) {
+	return InterpreterEx(".start path " + path)
 }
 
 // Status
