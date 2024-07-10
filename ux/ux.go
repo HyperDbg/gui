@@ -185,7 +185,7 @@ func newToolbar() *toolbar {
 			mylog.Warning("StepInto", sdk.StepIn())
 		}),
 		stepover: widget.NewImageButton("stepover", m.Get("stepover.png"), func() {
-			mylog.Warning("StepOut", sdk.StepOut()) //todo set args
+			mylog.Warning("StepOut", sdk.StepOut()) // todo set args
 		}),
 		trin:     widget.NewImageButton("trin", m.Get("trin.png"), func() {}),
 		trover:   widget.NewImageButton("trover", m.Get("trover.png"), func() {}),
