@@ -232,10 +232,10 @@ func newToolbar() *toolbar {
 						"remove HyperDbg to Windows Explorer",
 					},
 					func() {
-						generateRegistryFile()
+						registerContextMenu(true)
 					},
 					func() {
-						//todo remove
+						registerContextMenu(false)
 					},
 				)
 			})
@@ -243,33 +243,37 @@ func newToolbar() *toolbar {
 	}
 }
 
-func generateRegistryFile() {
+func registerContextMenu(enable bool) {
+	remove := ""
+	if enable {
+		remove = "-"
+	}
 	path := stream.RunDir()
 	path += string(filepath.Separator)
 	g := stream.NewGeneratedFile()
 	g.P("Windows Registry Editor Version 5.00")
 	g.P("")
 
-	g.P("[HKEY_CLASSES_ROOT\\Directory\\Background\\shell\\HyperDbg]")
+	g.P(remove, "[HKEY_CLASSES_ROOT\\Directory\\Background\\shell\\HyperDbg]")
 	g.P("@=\"Run HyperDbg Here\"")
 	g.P("")
 
-	g.P("[HKEY_CLASSES_ROOT\\Directory\\Background\\shell\\HyperDbg\\command]")
+	g.P(remove, "[HKEY_CLASSES_ROOT\\Directory\\Background\\shell\\HyperDbg\\command]")
 	g.P("@=\"", path, "HyperDbg.exe --cd=\\\"%V\\\"\"")
 	g.P("")
 
-	g.P("[HKEY_CLASSES_ROOT\\Directory\\shell\\HyperDbg]")
+	g.P(remove, "[HKEY_CLASSES_ROOT\\Directory\\shell\\HyperDbg]")
 	g.P("@=\"Run HyperDbg Here\"")
 	g.P("")
 
-	g.P("[HKEY_CLASSES_ROOT\\Directory\\shell\\HyperDbg\\command]")
+	g.P(remove, "[HKEY_CLASSES_ROOT\\Directory\\shell\\HyperDbg\\command]")
 	g.P("@=\"", path, "HyperDbg.exe --cd=%V\"")
 	g.P("")
 
-	g.P("[HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg]")
+	g.P(remove, "[HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg]")
 	g.P("")
 
-	g.P("[HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg\\command]")
+	g.P(remove, "[HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg\\command]")
 	g.P("@=\"", path, "HyperDbg.exe \\\"%1\\\"\"")
 	g.P("")
 	stream.WriteTruncate("open.reg", g.Buffer)
