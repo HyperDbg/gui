@@ -265,7 +265,6 @@ func newToolbar() *toolbar {
 						return []widget.CellData{{Text: data.Host}, {Text: data.Port}}
 					},
 				)
-				// content.AddChild(widget.NewVSpacer())
 				content.AddChild(remoteEditor)
 
 				port := widget.NewButton("ConnectRemoteDebugger", func() { // todo not finished
@@ -276,7 +275,6 @@ func newToolbar() *toolbar {
 
 				newPanel.AddChild(widget.NewButton("Register context menu", func() { registerContextMenu(true) }))
 				newPanel.AddChild(widget.NewButton("Unregister context menu", func() { registerContextMenu(false) }))
-				// content.AddChild(widget.NewVSpacer())
 			})
 		}),
 	}
