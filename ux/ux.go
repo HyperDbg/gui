@@ -279,7 +279,7 @@ func registerContextMenu(enable bool) {
 	if !enable {
 		remove = "-"
 	}
-	path := stream.RunDir()
+	path := stream.RunDir() // need process location?
 	path += string(filepath.Separator)
 	g := stream.NewGeneratedFile()
 	g.P("Windows Registry Editor Version 5.00")
@@ -301,12 +301,13 @@ func registerContextMenu(enable bool) {
 	g.P("@=\"", path, "HyperDbg.exe --cd=%V\"")
 	g.P("")
 
-	g.P("[HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg]")
+	g.P("[", remove, "HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg]")
 	g.P("")
 
 	g.P("[", remove, "HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg\\command]")
 	g.P("@=\"", path, "HyperDbg.exe \\\"%1\\\"\"")
 	g.P("")
+	// os.TempDir()//todo give it a dir
 	stream.WriteTruncate("open.reg", g.Buffer)
 	// reg import open.reg
 	// reg export HKEY_CLASSES_ROOT HKCR_backup.reg
