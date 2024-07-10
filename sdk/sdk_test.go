@@ -17,6 +17,7 @@ func TestSdk(t *testing.T) {
 	mylog.Call(func() {
 		assert.True(t, VmxSupportDetection())
 		assert.True(t, SetCustomDriverPathEx(SysPath))
+
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 
 		ConnectLocalDebugger()

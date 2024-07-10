@@ -242,17 +242,30 @@ func newToolbar() *toolbar {
 					mylog.Check(sdk.VmxSupportDetection())
 					mylog.Check(sdk.SetCustomDriverPathEx(sdk.SysPath))
 					mylog.Trace("InstallVmmDriver", sdk.InstallVmmDriver())
-
 				}))
 				newPanel.AddChild(widget.NewButton("UnLoad Driver", func() {
-					mylog.Trace("StopVmmDriver", sdk.StopVmmDriver())
+					mylog.Trace("StopVmmDriver", sdk.UninstallVmmDriver())
 				}))
 				newPanel.AddChild(widget.NewButton("Load Vmm", func() {
 					mylog.Trace("LoadVmm", sdk.LoadVmm())
 				}))
+
+				newPanel.AddChild(widget.NewButton("ConnectLocalDebugger", func() {
+					mylog.Trace("ConnectLocalDebugger")
+					sdk.ConnectLocalDebugger()
+				}))
+				newPanel.AddChild(widget.NewButton("ConnectRemoteDebugger", func() {
+					mylog.Trace("ConnectRemoteDebugger")
+					sdk.ConnectRemoteDebugger()
+				}))
+
 				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {
 					mylog.Trace("UnloadVmm", sdk.UnloadVmm())
 				}))
+				newPanel.AddChild(widget.NewButton("Stop Vmm", func() { //?
+					mylog.Trace("StopVmmDriver", sdk.StopVmmDriver())
+				}))
+
 				newPanel.AddChild(widget.NewButton("Register context menu", func() { registerContextMenu(true) }))
 				newPanel.AddChild(widget.NewButton("Unregister context menu", func() { registerContextMenu(false) }))
 			})
