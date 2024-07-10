@@ -1125,7 +1125,7 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 					Title: "StartProcess",
 					Can:   func(any) bool { return true },
 					Do: func(a any) {
-						mylog.Warning("StartProcess", sdk.StartProcess())
+						mylog.Warning("StartProcess", sdk.StartProcess(""))
 					},
 				},
 				{
