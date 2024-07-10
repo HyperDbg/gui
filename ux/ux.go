@@ -222,32 +222,45 @@ func newToolbar() *toolbar {
 		settings: widget.NewImageButton("settings", m.Get("settings.png"), func() {
 			app.Run("settings", func(w *unison.Window) {
 				content := w.Content()
+				content.SetLayout(&unison.FlexLayout{Columns: 1})
+				content.AddChild(widget.NewVSpacer())
+
 				newPanel := unison.NewPanel()
 				newPanel.SetLayout(&unison.FlexLayout{
-					Columns:      2,
-					HSpacing:     15,
-					VSpacing:     15,
-					HAlign:       15,
-					VAlign:       15,
-					EqualColumns: false,
+					Columns:  2,
+					HSpacing: 15,
+					VSpacing: 15,
+					// HAlign:   15,
+					// VAlign:   15,
+					// EqualColumns: true,
 				})
-				w.MinMaxContentSizeCallback = func() (minimum, maximum unison.Size) {
-					minimum.Width = 400
-					minimum.Height = 150
-					return minimum, minimum
-				}
+				//w.MinMaxContentSizeCallback = func() (minimum, maximum unison.Size) {
+				//	minimum.Width = 400
+				//	minimum.Height = 150
+				//	return minimum, minimum
+				//}
 				content.AddChild(newPanel)
 
-				newPanel.AddChild(widget.NewButton("Load Driver", func() {
+				newPanel.AddChild(widget.NewButton("Install Driver", func() {
 					mylog.Check(sdk.VmxSupportDetection())
 					mylog.Check(sdk.SetCustomDriverPathEx(sdk.SysPath))
 					mylog.Trace("InstallVmmDriver", sdk.InstallVmmDriver())
 				}))
-				newPanel.AddChild(widget.NewButton("UnLoad Driver", func() {
-					mylog.Trace("StopVmmDriver", sdk.UninstallVmmDriver())
+				newPanel.AddChild(widget.NewButton("Uninstall Driver", func() {
+					mylog.Trace("UninstallVmmDriver", sdk.UninstallVmmDriver())
 				}))
+
 				newPanel.AddChild(widget.NewButton("Load Vmm", func() {
 					mylog.Trace("LoadVmm", sdk.LoadVmm())
+				}))
+				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {
+					mylog.Trace("UnloadVmm", sdk.UnloadVmm())
+				}))
+				newPanel.AddChild(widget.NewButton("Stop Vmm", func() { //?
+					mylog.Trace("StopVmmDriver", sdk.StopVmmDriver())
+				}))
+				newPanel.AddChild(widget.NewButton("xxxxxxxxxxxxxxxxxoo", func() {
+					// mylog.Trace("StopVmmDriver", sdk.StopVmmDriver())
 				}))
 
 				newPanel.AddChild(widget.NewButton("ConnectLocalDebugger", func() {
@@ -267,22 +280,17 @@ func newToolbar() *toolbar {
 					Value:   "8080",
 					Tooltip: "remote port number",
 				}))
-				newPanel.AddChild(keyValuePanel)
+				content.AddChild(widget.NewVSpacer())
+				content.AddChild(keyValuePanel)
 				port := widget.NewButton("ConnectRemoteDebugger", func() { // todo not finished
 					mylog.Trace("ConnectRemoteDebugger")
 					// sdk.ConnectRemoteDebugger(sdk.StringToBytePointer(host.String()), sdk.StringToBytePointer(port.String()))
 				})
 				newPanel.AddChild(port)
 
-				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {
-					mylog.Trace("UnloadVmm", sdk.UnloadVmm())
-				}))
-				newPanel.AddChild(widget.NewButton("Stop Vmm", func() { //?
-					mylog.Trace("StopVmmDriver", sdk.StopVmmDriver())
-				}))
-
 				newPanel.AddChild(widget.NewButton("Register context menu", func() { registerContextMenu(true) }))
 				newPanel.AddChild(widget.NewButton("Unregister context menu", func() { registerContextMenu(false) }))
+				content.AddChild(widget.NewVSpacer())
 			})
 		}),
 	}
