@@ -5,6 +5,7 @@
 *.exp
 *.lib
 *.log
+*.reg
 reset git.cmd
 cmake-build-debug
 /hyperdbgui.exe

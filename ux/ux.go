@@ -223,9 +223,38 @@ func newToolbar() *toolbar {
 		scylla:  widget.NewImageButton("scylla", m.Get("scylla.png"), func() {}),
 		about:   widget.NewImageButton("about", m.Get("about.png"), func() {}),
 		settings: widget.NewImageButton("settings", m.Get("settings.png"), func() {
-			app.Run("", func(w *unison.Window) {
+			app.Run("settings", func(w *unison.Window) {
+				type Options struct {
+					// EnableContextmenu bool
+					Option1 string
+					Option2 string
+					Option3 string
+					Option4 string
+				}
+
 				content := w.Content()
 				content.AddChild(widget.NewVSpacer())
+
+				SettingsView, kvPanel := widget.NewStructView(
+					Options{
+						Option1: "",
+						Option2: "",
+						Option3: "",
+						Option4: "",
+					},
+					func(data Options) (values []widget.CellData) {
+						return []widget.CellData{
+							{Text: "Option1"},
+							{Text: "Option2"},
+							{Text: "Option3"},
+							{Text: "Option4"},
+						}
+					},
+				)
+				content.AddChild(widget.NewVSpacer())
+				content.AddChild(SettingsView)
+				content.AddChild(kvPanel)
+
 				panel := widget.NewButtonsPanel(
 					[]string{
 						"Register HyperDbg to Windows Explorer",
@@ -238,10 +267,8 @@ func newToolbar() *toolbar {
 						registerContextMenu(false)
 					},
 				)
-				content.AddChild(panel)
+				kvPanel.AddChild(panel)
 				content.AddChild(widget.NewVSpacer())
-				content.AddChild(widget.NewVSpacer())
-
 			})
 		}),
 	}
