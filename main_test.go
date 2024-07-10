@@ -40,7 +40,7 @@ func TestClearTemp(t *testing.T) {
 		ext := filepath.Ext(path)
 		switch ext {
 		case ".json", ".txt", ".log":
-			if filepath.Base(path) == "sina2.json" {
+			if filepath.Base(path) == "commands.json" {
 				return nil
 			}
 			mylog.Info("clear file", path)
