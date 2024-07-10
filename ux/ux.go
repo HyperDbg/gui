@@ -226,7 +226,7 @@ func newToolbar() *toolbar {
 			app.Run("", func(w *unison.Window) {
 				content := w.Content()
 				content.AddChild(widget.NewVSpacer())
-				widget.NewButtonsPanel(
+				panel := widget.NewButtonsPanel(
 					[]string{
 						"register HyperDbg to Windows Explorer",
 						"remove HyperDbg to Windows Explorer",
@@ -238,6 +238,7 @@ func newToolbar() *toolbar {
 						registerContextMenu(false)
 					},
 				)
+				content.AddChild(panel)
 			})
 		}),
 	}
