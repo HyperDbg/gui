@@ -224,51 +224,71 @@ func newToolbar() *toolbar {
 		about:   widget.NewImageButton("about", m.Get("about.png"), func() {}),
 		settings: widget.NewImageButton("settings", m.Get("settings.png"), func() {
 			app.Run("settings", func(w *unison.Window) {
-				type Options struct {
-					// EnableContextmenu bool
-					Option1 string
-					Option2 string
-					Option3 string
-					Option4 string
-				}
+				newPanel := unison.NewPanel()
+				newPanel.SetLayout(&unison.FlexLayout{
+					Columns:      2,
+					HSpacing:     10,
+					VSpacing:     5,
+					HAlign:       5,
+					VAlign:       5,
+					EqualColumns: true,
+				})
+				w.Content().AddChild(newPanel)
 
-				content := w.Content()
-				content.AddChild(widget.NewVSpacer())
+				//"Register HyperDbg to Windows Explorer",
+				//	"Remove HyperDbg to Windows Explorer",
+				newPanel.AddChild(widget.NewButton("Load Driver", func() {}))
+				newPanel.AddChild(widget.NewButton("UnLoad Driver", func() {}))
+				newPanel.AddChild(widget.NewButton("Load Vmm", func() {}))
+				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {}))
+				newPanel.AddChild(widget.NewButton("Register context menu", func() {}))
+				newPanel.AddChild(widget.NewButton("Unregister context menu", func() {}))
 
-				SettingsView, kvPanel := widget.NewStructView(
-					Options{
-						Option1: "",
-						Option2: "",
-						Option3: "",
-						Option4: "",
-					},
-					func(data Options) (values []widget.CellData) {
-						return []widget.CellData{
-							{Text: "Option1"},
-							{Text: "Option2"},
-							{Text: "Option3"},
-							{Text: "Option4"},
-						}
-					},
-				)
-				content.AddChild(widget.NewVSpacer())
-				content.AddChild(SettingsView)
-				content.AddChild(kvPanel)
-
-				panel := widget.NewButtonsPanel(
-					[]string{
-						"Register HyperDbg to Windows Explorer",
-						"Remove HyperDbg to Windows Explorer",
-					},
-					func() {
-						registerContextMenu(true)
-					},
-					func() {
-						registerContextMenu(false)
-					},
-				)
-				kvPanel.AddChild(panel)
-				content.AddChild(widget.NewVSpacer())
+				//type Options struct {
+				//	// EnableContextmenu bool
+				//	Option1 string
+				//	Option2 string
+				//	Option3 string
+				//	Option4 string
+				//}
+				//
+				//content := w.Content()
+				//content.AddChild(widget.NewVSpacer())
+				//
+				//SettingsView, kvPanel := widget.NewStructView(
+				//	Options{
+				//		Option1: "",
+				//		Option2: "",
+				//		Option3: "",
+				//		Option4: "",
+				//	},
+				//	func(data Options) (values []widget.CellData) {
+				//		return []widget.CellData{
+				//			{Text: "Option1"},
+				//			{Text: "Option2"},
+				//			{Text: "Option3"},
+				//			{Text: "Option4"},
+				//		}
+				//	},
+				//)
+				//content.AddChild(widget.NewVSpacer())
+				//content.AddChild(SettingsView)
+				//content.AddChild(kvPanel)
+				//
+				//panel := widget.NewButtonsPanel(
+				//	[]string{
+				//		"Register HyperDbg to Windows Explorer",
+				//		"Remove HyperDbg to Windows Explorer",
+				//	},
+				//	func() {
+				//		registerContextMenu(true)
+				//	},
+				//	func() {
+				//		registerContextMenu(false)
+				//	},
+				//)
+				//kvPanel.AddChild(panel)
+				//content.AddChild(widget.NewVSpacer())
 			})
 		}),
 	}
