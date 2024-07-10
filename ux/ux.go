@@ -266,9 +266,8 @@ func newToolbar() *toolbar {
 					mylog.Trace("ConnectLocalDebugger")
 					sdk.ConnectLocalDebugger()
 				}))
-				port := widget.NewButton("ConnectRemoteDebugger", func() { // todo not finished
-					mylog.Trace("ConnectRemoteDebugger")
-					// sdk.ConnectRemoteDebugger(sdk.StringToBytePointer(host.String()), sdk.StringToBytePointer(port.String()))
+				port := widget.NewButton("ConnectRemoteDebugger", func() {
+					mylog.Trace("ConnectRemoteDebugger", sdk.ConnectRemoteDebugger(sdk.StringToBytePointer(remoteEditor.MetaData.Host), sdk.StringToBytePointer(remoteEditor.MetaData.Port)))
 				})
 				newPanel.AddChild(port)
 
