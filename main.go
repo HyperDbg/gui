@@ -23,13 +23,15 @@ func testSdkCommands() {
 func testDisassembly() {
 	app.Run("asm", func(w *unison.Window) {
 		// w.Content().AddChild(ux.LayoutDisassemblyTable("C:\\Users\\Admin\\Desktop\\tutorial1.exe"))//32 bit not work
-		w.Content().AddChild(ux.LayoutDisassemblyTable("sdk/bin/hyperdbg-cli.exe"))
+		ux.TargetExePath = "sdk/bin/hyperdbg-cli.exe"
+		w.Content().AddChild(ux.LayoutDisassemblyTable())
 	})
 }
 
 func testParsePe() {
 	app.Run("pe", func(w *unison.Window) {
-		w.Content().AddChild(ux.LayoutPeView("sdk/bin/hyperlog.dll"))
+		ux.TargetExePath = "sdk/bin/hyperlog.dll"
+		w.Content().AddChild(ux.LayoutPeView())
 	})
 }
 

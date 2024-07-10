@@ -33,14 +33,13 @@ var pageIco embed.FS
 
 func Run() {
 	app.RunWithIco("HyperDbg "+winver.WindowVersion(), mainIcons, func(w *unison.Window) {
-		pages := NewTabPage(sdk.SysPath)
+		pages := NewTabPage()
 		w.Content().AddChild(pages.Layout())
 	})
 }
 
 type (
 	TagPage struct {
-		path   string
 		dock   *unison.Dock
 		cpu    *widget.Tab
 		pe     *widget.Tab
@@ -84,7 +83,7 @@ func (p *TagPage) Elems() []*widget.Tab {
 
 func (p *TagPage) Layout() unison.Paneler {
 	panel := widget.NewPanel()
-	t := newToolbar(p.path)
+	t := newToolbar()
 	panel.AddChild(widget.NewToolBar(t.Elems()...))
 	p.dock.DockTo(p.cpu, nil, side.Left)
 
@@ -103,7 +102,7 @@ func (p *TagPage) Layout() unison.Paneler {
 	return panel
 }
 
-func NewTabPage(path string) *TagPage {
+func NewTabPage() *TagPage {
 	dock := unison.NewDock()
 	dock.AsPanel().SetLayoutData(&unison.FlexLayoutData{
 		HSpan:  1,
@@ -112,10 +111,9 @@ func NewTabPage(path string) *TagPage {
 		VAlign: align.Fill,
 	})
 	p := &TagPage{
-		path:   path,
 		dock:   dock,
-		cpu:    widget.NewTab("cpu", "", LayoutCpu(path)),
-		pe:     widget.NewTab("peView", "", LayoutPeView(path)),
+		cpu:    widget.NewTab("cpu", "", LayoutCpu()),
+		pe:     widget.NewTab("peView", "", LayoutPeView()),
 		log:    widget.NewTab("log", "", LayoutLog()),
 		notes:  widget.NewTab("notes", "", LayoutNotes()),
 		breaks: widget.NewTab("break", "", LayoutBreak()),
@@ -165,7 +163,7 @@ func (t *toolbar) Elems() []*unison.Button {
 	}
 }
 
-func newToolbar(path string) *toolbar {
+func newToolbar() *toolbar {
 	m := stream.ReadEmbedFileMap(bar, "asserts/bar")
 	return &toolbar{
 		open: widget.NewImageButton("open", m.Get("open.png"), func() {}),
@@ -176,8 +174,8 @@ func newToolbar(path string) *toolbar {
 			mylog.Warning("KillProcess", sdk.KillProcess()) // todo need pid ?
 		}),
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
-			//todo handle drop file path into here,need global var for path?
-			mylog.Warning("StartProcess", sdk.StartProcess(path))
+			// todo handle drop file path into here,need global var for path?
+			mylog.Warning("StartProcess", sdk.StartProcess(TargetExePath))
 		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
 		pause: widget.NewImageButton("pause", m.Get("pause.png"), func() {
@@ -305,8 +303,8 @@ func registerContextMenu(enable bool) {
 	g.P("@=\"", path, "HyperDbg.exe \\\"%1\\\"\"")
 	g.P("")
 
-	//todo bug
-	//powershell -Command "Start-Process cmd -ArgumentList '/c C:\Scripts\MyScript.bat' -Verb RunAs"
+	// todo bug
+	// powershell -Command "Start-Process cmd -ArgumentList '/c C:\Scripts\MyScript.bat' -Verb RunAs"
 	// os.TempDir()//todo give it a dir
 	stream.WriteTruncate("open.reg", g.Buffer)
 	// reg import open.reg

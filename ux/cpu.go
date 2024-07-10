@@ -16,13 +16,13 @@ import (
 	"github.com/richardwilkes/unison"
 )
 
-func LayoutCpu(fileName string) unison.Paneler {
+func LayoutCpu() unison.Paneler {
 	////fastCallLayout := unison.NewList[ImmData]()
 	//widget.NewButton(m).SetText("goto 00007FF885007C08")
 	//"rdi=00007FF885007C08 \"minkernel\\\\ntdll\\\\ldrinit.c\"",
 	//todo make unit test for fast call layout
 
-	asm := LayoutDisassemblyTable(fileName)
+	asm := LayoutDisassemblyTable()
 
 	structView, _ := widget.NewStructView(testRegData, func(data Register) (values []widget.CellData) {
 		return []widget.CellData{
@@ -352,9 +352,9 @@ type FastCall struct {
 	ImmData  string
 }
 
-func LayoutDisassemblyTable(fileName string) unison.Paneler {
+func LayoutDisassemblyTable() unison.Paneler {
 	SetRootRowsCallBack := func(root *widget.Node[xed.Disassembly]) {
-		f := xed.ParserPe(fileName)
+		f := xed.ParserPe(TargetExePath)
 		// b := stream.NewBuffer(fileName)
 		optionalHeader := f.NtHeader.OptionalHeader
 		switch o := optionalHeader.(type) {
@@ -392,7 +392,7 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 				return
 			}
 			buffer := make([]byte, 200)
-			file := mylog.Check2(os.Open(fileName))
+			file := mylog.Check2(os.Open(TargetExePath))
 			defer file.Close()
 			mylog.Check2(file.ReadAt(buffer, int64(oepFileOffset)))
 			fmt.Printf("OEP File Off %x\n", oepFileOffset)
@@ -422,7 +422,7 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 				return
 			}
 			buffer := make([]byte, 200)
-			file := mylog.Check2(os.Open(fileName))
+			file := mylog.Check2(os.Open(TargetExePath))
 			defer file.Close()
 			mylog.Check2(file.ReadAt(buffer, int64(oepFileOffset)))
 			fmt.Printf("OEP File Off %x\n", oepFileOffset)
@@ -1187,17 +1187,16 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 		IsDocument:          false,
 	})
 	table.FileDropCallback = func(files []string) {
-		f := files[0]
-		ext := filepath.Ext(f)
+		TargetExePath = files[0]
+		ext := filepath.Ext(TargetExePath)
 		switch ext {
 		case ".exe", ".dll", ".sys":
-			mylog.Info("dropped file: ", f)
+			mylog.Info("dropped file: ", TargetExePath)
 			table.ResetChildren()
-			fileName = f
 			SetRootRowsCallBack(table)
 			table.SyncToModel()
 		default:
-			mylog.Check(f + " is not a valid file type")
+			mylog.Check(TargetExePath + " is not a valid file type")
 		}
 	}
 	return widget.NewTableScrollPanel(table, header)
@@ -1387,3 +1386,5 @@ var testHexDat = []byte{
 	0x48, 0x8B, 0xC1, 0x48, 0xFF, 0xC9, 0x80, 0x39, 0x5C, 0x74, 0x07, 0x48, 0x3B, 0xCA, 0x77, 0xF0,
 	0xEB, 0x03, 0x48, 0x8B, 0xC8, 0x66, 0x2B, 0x4C, 0x24, 0x38, 0x66, 0x89, 0x4E, 0x26, 0x33, 0xC0,
 }
+
+var TargetExePath = sdk.SysPath
