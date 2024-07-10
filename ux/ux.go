@@ -231,16 +231,6 @@ func newToolbar() *toolbar {
 					VAlign:       15,
 					EqualColumns: false,
 				})
-				newPanel.SetLayoutData(&unison.FlexLayoutData{
-					SizeHint: unison.Size{},
-					MinSize:  unison.Size{},
-					HSpan:    15,
-					VSpan:    15,
-					HAlign:   15,
-					VAlign:   15,
-					HGrab:    false,
-					VGrab:    false,
-				})
 				w.MinMaxContentSizeCallback = func() (minimum, maximum unison.Size) {
 					minimum.Width = 400
 					minimum.Height = 150
@@ -254,11 +244,15 @@ func newToolbar() *toolbar {
 					mylog.Trace("InstallVmmDriver", sdk.InstallVmmDriver())
 
 				}))
-				newPanel.AddChild(widget.NewButton("UnLoad Driver", func() {}))
+				newPanel.AddChild(widget.NewButton("UnLoad Driver", func() {
+					mylog.Trace("StopVmmDriver", StopVmmDriver())
+				}))
 				newPanel.AddChild(widget.NewButton("Load Vmm", func() {
 					mylog.Trace("LoadVmm", sdk.LoadVmm())
 				}))
-				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {}))
+				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {
+					mylog.Trace("UnloadVmm", UnloadVmm())
+				}))
 				newPanel.AddChild(widget.NewButton("Register context menu", func() { registerContextMenu(true) }))
 				newPanel.AddChild(widget.NewButton("Unregister context menu", func() { registerContextMenu(false) }))
 			})
