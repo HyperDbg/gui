@@ -32,9 +32,6 @@ var bar embed.FS
 var pageIco embed.FS
 
 func Run() {
-	if !sdk.VmxSupportDetection() {
-		return
-	}
 	app.RunWithIco("HyperDbg "+winver.WindowVersion(), mainIcons, func(w *unison.Window) {
 		pages := NewTabPage(sdk.SysPath)
 		w.Content().AddChild(pages.Layout())
@@ -245,64 +242,25 @@ func newToolbar() *toolbar {
 					VGrab:    false,
 				})
 				w.MinMaxContentSizeCallback = func() (minimum, maximum unison.Size) {
-					minimum.Width = 600
-					minimum.Height = 200
+					minimum.Width = 400
+					minimum.Height = 150
 					return minimum, minimum
 				}
 				content.AddChild(newPanel)
 
-				newPanel.AddChild(widget.NewButton("Load Driver", func() {}))
-				newPanel.AddChild(widget.NewButton("UnLoad Driver", func() {}))
-				newPanel.AddChild(widget.NewButton("Load Vmm", func() {}))
-				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {}))
-				newPanel.AddChild(widget.NewButton("Register context menu", func() {}))
-				newPanel.AddChild(widget.NewButton("Unregister context menu", func() {}))
+				newPanel.AddChild(widget.NewButton("Load Driver", func() {
+					mylog.Check(sdk.VmxSupportDetection())
+					mylog.Check(sdk.SetCustomDriverPathEx(sdk.SysPath))
+					mylog.Trace("InstallVmmDriver", sdk.InstallVmmDriver())
 
-				//type Options struct {
-				//	// EnableContextmenu bool
-				//	Option1 string
-				//	Option2 string
-				//	Option3 string
-				//	Option4 string
-				//}
-				//
-				//content := w.Content()
-				//content.AddChild(widget.NewVSpacer())
-				//
-				//SettingsView, kvPanel := widget.NewStructView(
-				//	Options{
-				//		Option1: "",
-				//		Option2: "",
-				//		Option3: "",
-				//		Option4: "",
-				//	},
-				//	func(data Options) (values []widget.CellData) {
-				//		return []widget.CellData{
-				//			{Text: "Option1"},
-				//			{Text: "Option2"},
-				//			{Text: "Option3"},
-				//			{Text: "Option4"},
-				//		}
-				//	},
-				//)
-				//content.AddChild(widget.NewVSpacer())
-				//content.AddChild(SettingsView)
-				//content.AddChild(kvPanel)
-				//
-				//panel := widget.NewButtonsPanel(
-				//	[]string{
-				//		"Register HyperDbg to Windows Explorer",
-				//		"Remove HyperDbg to Windows Explorer",
-				//	},
-				//	func() {
-				//		registerContextMenu(true)
-				//	},
-				//	func() {
-				//		registerContextMenu(false)
-				//	},
-				//)
-				//kvPanel.AddChild(panel)
-				//content.AddChild(widget.NewVSpacer())
+				}))
+				newPanel.AddChild(widget.NewButton("UnLoad Driver", func() {}))
+				newPanel.AddChild(widget.NewButton("Load Vmm", func() {
+					mylog.Trace("LoadVmm", sdk.LoadVmm())
+				}))
+				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {}))
+				newPanel.AddChild(widget.NewButton("Register context menu", func() { registerContextMenu(true) }))
+				newPanel.AddChild(widget.NewButton("Unregister context menu", func() { registerContextMenu(false) }))
 			})
 		}),
 	}
