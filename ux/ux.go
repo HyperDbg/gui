@@ -254,10 +254,25 @@ func newToolbar() *toolbar {
 					mylog.Trace("ConnectLocalDebugger")
 					sdk.ConnectLocalDebugger()
 				}))
-				newPanel.AddChild(widget.NewButton("ConnectRemoteDebugger", func() {
-					mylog.Trace("ConnectRemoteDebugger")
-					sdk.ConnectRemoteDebugger()
+
+				keyValuePanel := widget.NewKeyValuePanel()
+				host := widget.NewLabelRightAlign(widget.KeyValueToolTip{
+					Key:     "host",
+					Value:   "127.0.0.1",
+					Tooltip: "remote host ip address",
+				})
+				keyValuePanel.AddChild(host)
+				keyValuePanel.AddChild(widget.NewFieldLeftAlign(widget.KeyValueToolTip{
+					Key:     "port",
+					Value:   "8080",
+					Tooltip: "remote port number",
 				}))
+				newPanel.AddChild(keyValuePanel)
+				port := widget.NewButton("ConnectRemoteDebugger", func() {
+					mylog.Trace("ConnectRemoteDebugger")
+					sdk.ConnectRemoteDebugger(sdk.StringToBytePointer(host.String()), sdk.StringToBytePointer(port.String()))
+				})
+				newPanel.AddChild(port)
 
 				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {
 					mylog.Trace("UnloadVmm", sdk.UnloadVmm())
