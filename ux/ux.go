@@ -304,6 +304,9 @@ func registerContextMenu(enable bool) {
 	g.P("[", remove, "HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg\\command]")
 	g.P("@=\"", path, "HyperDbg.exe \\\"%1\\\"\"")
 	g.P("")
+
+	//todo bug
+	//powershell -Command "Start-Process cmd -ArgumentList '/c C:\Scripts\MyScript.bat' -Verb RunAs"
 	// os.TempDir()//todo give it a dir
 	stream.WriteTruncate("open.reg", g.Buffer)
 	// reg import open.reg
