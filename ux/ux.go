@@ -171,10 +171,9 @@ func newToolbar() *toolbar {
 			mylog.Warning("RestartProcess", sdk.RestartProcess())
 		}),
 		close: widget.NewImageButton("close", m.Get("close.png"), func() { // exit command ?
-			mylog.Warning("KillProcess", sdk.KillProcess()) // todo need pid ?
+			mylog.Warning("KillProcess", sdk.KillProcess())
 		}),
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
-			// todo handle drop file path into here,need global var for path?
 			mylog.Warning("StartProcess", sdk.StartProcess(TargetExePath))
 		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
@@ -186,8 +185,7 @@ func newToolbar() *toolbar {
 			mylog.Warning("StepInto", sdk.StepIn())
 		}),
 		stepover: widget.NewImageButton("stepover", m.Get("stepover.png"), func() {
-			mylog.Todo("stepover command here, need local debug support")
-			mylog.Warning("StepOut", sdk.StepOut()) //?
+			mylog.Warning("StepOut", sdk.StepOut()) //todo set args
 		}),
 		trin:     widget.NewImageButton("trin", m.Get("trin.png"), func() {}),
 		trover:   widget.NewImageButton("trover", m.Get("trover.png"), func() {}),
