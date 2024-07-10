@@ -16,6 +16,7 @@ import (
 )
 
 func TestUnmarshalCommandJson(t *testing.T) {
+	t.Skip("Because the current json does not provide command parameters, this unit test should not be executed, and will override the manually entered parameters")
 	var generated []sdk.Command
 	mylog.Check(json.Unmarshal(stream.NewBuffer("commands.json").Bytes(), &generated))
 	// mylog.Struct(generated)

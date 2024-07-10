@@ -85,6 +85,7 @@ func InterpreterEx(command string) (status string) { // todo decode command retu
 	code := Interpreter(StringToBytePointer(command))
 	return string(code)
 }
+
 func ConnectRemoteDebuggerEx(ip string, port string) bool {
 	return ConnectRemoteDebugger(StringToBytePointer(ip), StringToBytePointer(port)) == 0
 }

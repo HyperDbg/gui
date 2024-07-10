@@ -165,9 +165,6 @@ func (t *toolbar) Elems() []*unison.Button {
 	}
 }
 
-// todo add remote debug support setting panel into toolbar
-// .debug remote namedpipe \\.\pipe\HyperDbgDebug
-// .debug prepare serial 115200 com1
 func newToolbar() *toolbar {
 	m := stream.ReadEmbedFileMap(bar, "asserts/bar")
 	return &toolbar{
@@ -228,6 +225,8 @@ func newToolbar() *toolbar {
 				newPanel := widget.NewKeyValuePanel()
 				content.AddChild(newPanel)
 
+				// .debug remote namedpipe \\.\pipe\HyperDbgDebug
+				// .debug prepare serial 115200 com1
 				type remoteData struct {
 					Host string
 					Port string
@@ -270,7 +269,7 @@ func newToolbar() *toolbar {
 				newPanel.AddChild(port)
 
 				newPanel.AddChild(widget.NewButton("Register context menu", func() { registerContextMenu(true) }))
-				newPanel.AddChild(widget.NewButton("Unregister context menu", func() { registerContextMenu(false) }))
+				newPanel.AddChild(widget.NewButton("UnRegister context menu", func() { registerContextMenu(false) }))
 			})
 		}),
 	}
