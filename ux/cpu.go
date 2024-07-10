@@ -1191,8 +1191,13 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 		ext := filepath.Ext(f)
 		switch ext {
 		case ".exe", ".dll", ".sys":
+			mylog.Info("dropped file: ", f)
+			table.ResetChildren()
 			fileName = f
 			SetRootRowsCallBack(table)
+			table.SyncToModel()
+		default:
+			mylog.Check(f + " is not a valid file type")
 		}
 	}
 	return widget.NewTableScrollPanel(table, header)
