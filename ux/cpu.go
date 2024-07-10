@@ -166,8 +166,10 @@ func LayoutCpu(fileName string) unison.Paneler {
 	hexEditor := widget.NewCodeEditor("")
 	hexEditor.Editor.SetText(hex.Dump(testHexDat))
 	stackTable := LayoutStackTable()
+	HexEditTab := widget.NewTab(" hex editor", "todo hex editor", hexEditor)
+	//dockContainer := widget.NewDockContainer(hexEditor)//todo
 	BottomHSplit := widget.NewHSplit(
-		widget.NewTab(" hex editor", "todo hex editor", hexEditor),
+		HexEditTab,
 		widget.NewTab("stack", "todo stack test", stackTable),
 		0.1)
 	//todo add tab into hex editor and stack layout
