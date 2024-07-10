@@ -18,7 +18,7 @@ func main() {
 	// testScript()
 }
 
-func generateRegistryFile() {
+func generateRegistryFile() { //todo make option for users
 	path := stream.RunDir()
 	path += string(filepath.Separator)
 	g := stream.NewGeneratedFile()
