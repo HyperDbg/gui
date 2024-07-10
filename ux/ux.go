@@ -245,13 +245,13 @@ func newToolbar() *toolbar {
 
 				}))
 				newPanel.AddChild(widget.NewButton("UnLoad Driver", func() {
-					mylog.Trace("StopVmmDriver", StopVmmDriver())
+					mylog.Trace("StopVmmDriver", sdk.StopVmmDriver())
 				}))
 				newPanel.AddChild(widget.NewButton("Load Vmm", func() {
 					mylog.Trace("LoadVmm", sdk.LoadVmm())
 				}))
 				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {
-					mylog.Trace("UnloadVmm", UnloadVmm())
+					mylog.Trace("UnloadVmm", sdk.UnloadVmm())
 				}))
 				newPanel.AddChild(widget.NewButton("Register context menu", func() { registerContextMenu(true) }))
 				newPanel.AddChild(widget.NewButton("Unregister context menu", func() { registerContextMenu(false) }))
