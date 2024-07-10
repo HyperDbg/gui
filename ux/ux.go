@@ -2,6 +2,7 @@ package ux
 
 import (
 	"embed"
+	"path/filepath"
 
 	"github.com/ddkwork/HyperDbg/sdk"
 
@@ -216,13 +217,65 @@ func newToolbar() *toolbar {
 		bpoints: widget.NewImageButton("bpoints", m.Get("bpoints.png"), func() {
 			mylog.Warning("breakpoint list", sdk.BreakpointList())
 		}),
-		bpmem:    widget.NewImageButton("bpmem", m.Get("bpmem.png"), func() {}),
-		bphard:   widget.NewImageButton("bphard", m.Get("bphard.png"), func() {}),
-		options:  widget.NewImageButton("options", m.Get("options.png"), func() {}),
-		scylla:   widget.NewImageButton("scylla", m.Get("scylla.png"), func() {}),
-		about:    widget.NewImageButton("about", m.Get("about.png"), func() {}),
-		settings: widget.NewImageButton("settings", m.Get("settings.png"), func() {}),
+		bpmem:   widget.NewImageButton("bpmem", m.Get("bpmem.png"), func() {}),
+		bphard:  widget.NewImageButton("bphard", m.Get("bphard.png"), func() {}),
+		options: widget.NewImageButton("options", m.Get("options.png"), func() {}),
+		scylla:  widget.NewImageButton("scylla", m.Get("scylla.png"), func() {}),
+		about:   widget.NewImageButton("about", m.Get("about.png"), func() {}),
+		settings: widget.NewImageButton("settings", m.Get("settings.png"), func() {
+			app.Run("", func(w *unison.Window) {
+				content := w.Content()
+				content.AddChild(widget.NewVSpacer())
+				widget.NewButtonsPanel(
+					[]string{
+						"register HyperDbg to Windows Explorer",
+						"remove HyperDbg to Windows Explorer",
+					},
+					func() {
+						generateRegistryFile()
+					},
+					func() {
+						//todo remove
+					},
+				)
+			})
+		}),
 	}
+}
+
+func generateRegistryFile() {
+	path := stream.RunDir()
+	path += string(filepath.Separator)
+	g := stream.NewGeneratedFile()
+	g.P("Windows Registry Editor Version 5.00")
+	g.P("")
+
+	g.P("[HKEY_CLASSES_ROOT\\Directory\\Background\\shell\\HyperDbg]")
+	g.P("@=\"Run HyperDbg Here\"")
+	g.P("")
+
+	g.P("[HKEY_CLASSES_ROOT\\Directory\\Background\\shell\\HyperDbg\\command]")
+	g.P("@=\"", path, "HyperDbg.exe --cd=\\\"%V\\\"\"")
+	g.P("")
+
+	g.P("[HKEY_CLASSES_ROOT\\Directory\\shell\\HyperDbg]")
+	g.P("@=\"Run HyperDbg Here\"")
+	g.P("")
+
+	g.P("[HKEY_CLASSES_ROOT\\Directory\\shell\\HyperDbg\\command]")
+	g.P("@=\"", path, "HyperDbg.exe --cd=%V\"")
+	g.P("")
+
+	g.P("[HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg]")
+	g.P("")
+
+	g.P("[HKEY_CLASSES_ROOT\\*\\shell\\Open with HyperDbg\\command]")
+	g.P("@=\"", path, "HyperDbg.exe \\\"%1\\\"\"")
+	g.P("")
+	stream.WriteTruncate("open.reg", g.Buffer)
+	// reg import open.reg
+	// reg export HKEY_CLASSES_ROOT HKCR_backup.reg
+	stream.RunCommand("reg import open.reg")
 }
 
 type (
