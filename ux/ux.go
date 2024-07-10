@@ -225,20 +225,7 @@ func newToolbar() *toolbar {
 				content.SetLayout(&unison.FlexLayout{Columns: 1})
 				content.AddChild(widget.NewVSpacer())
 
-				newPanel := unison.NewPanel()
-				newPanel.SetLayout(&unison.FlexLayout{
-					Columns:  2,
-					HSpacing: 15,
-					VSpacing: 15,
-					// HAlign:   15,
-					// VAlign:   15,
-					// EqualColumns: true,
-				})
-				//w.MinMaxContentSizeCallback = func() (minimum, maximum unison.Size) {
-				//	minimum.Width = 400
-				//	minimum.Height = 150
-				//	return minimum, minimum
-				//}
+				newPanel := widget.NewKeyValuePanel()
 				content.AddChild(newPanel)
 
 				newPanel.AddChild(widget.NewButton("Install Driver", func() {
@@ -259,7 +246,7 @@ func newToolbar() *toolbar {
 				newPanel.AddChild(widget.NewButton("Stop Vmm", func() { //?
 					mylog.Trace("StopVmmDriver", sdk.StopVmmDriver())
 				}))
-				newPanel.AddChild(widget.NewButton("xxxxxxxxxxxxxxxxxoo", func() {
+				newPanel.AddChild(widget.NewButton("xxxxxxxoo", func() {
 					// mylog.Trace("StopVmmDriver", sdk.StopVmmDriver())
 				}))
 
@@ -268,20 +255,19 @@ func newToolbar() *toolbar {
 					sdk.ConnectLocalDebugger()
 				}))
 
-				keyValuePanel := widget.NewKeyValuePanel()
-				host := widget.NewLabelRightAlign(widget.KeyValueToolTip{
-					Key:     "host",
-					Value:   "127.0.0.1",
-					Tooltip: "remote host ip address",
-				})
-				keyValuePanel.AddChild(host)
-				keyValuePanel.AddChild(widget.NewFieldLeftAlign(widget.KeyValueToolTip{
-					Key:     "port",
-					Value:   "8080",
-					Tooltip: "remote port number",
-				}))
-				content.AddChild(widget.NewVSpacer())
-				content.AddChild(keyValuePanel)
+				type remoteData struct {
+					Host string
+					Port string
+				}
+				remoteEditor, _ := widget.NewStructView(
+					remoteData{Host: "127.0.0.1", Port: "8080"},
+					func(data remoteData) (values []widget.CellData) {
+						return []widget.CellData{{Text: data.Host}, {Text: data.Port}}
+					},
+				)
+				// content.AddChild(widget.NewVSpacer())
+				content.AddChild(remoteEditor)
+
 				port := widget.NewButton("ConnectRemoteDebugger", func() { // todo not finished
 					mylog.Trace("ConnectRemoteDebugger")
 					// sdk.ConnectRemoteDebugger(sdk.StringToBytePointer(host.String()), sdk.StringToBytePointer(port.String()))
@@ -290,7 +276,7 @@ func newToolbar() *toolbar {
 
 				newPanel.AddChild(widget.NewButton("Register context menu", func() { registerContextMenu(true) }))
 				newPanel.AddChild(widget.NewButton("Unregister context menu", func() { registerContextMenu(false) }))
-				content.AddChild(widget.NewVSpacer())
+				// content.AddChild(widget.NewVSpacer())
 			})
 		}),
 	}
