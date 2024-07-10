@@ -228,8 +228,8 @@ func newToolbar() *toolbar {
 				content.AddChild(widget.NewVSpacer())
 				panel := widget.NewButtonsPanel(
 					[]string{
-						"register HyperDbg to Windows Explorer",
-						"remove HyperDbg to Windows Explorer",
+						"Register HyperDbg to Windows Explorer",
+						"Remove HyperDbg to Windows Explorer",
 					},
 					func() {
 						registerContextMenu(true)
@@ -239,6 +239,9 @@ func newToolbar() *toolbar {
 					},
 				)
 				content.AddChild(panel)
+				content.AddChild(widget.NewVSpacer())
+				content.AddChild(widget.NewVSpacer())
+
 			})
 		}),
 	}
