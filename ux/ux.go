@@ -176,6 +176,7 @@ func newToolbar(path string) *toolbar {
 			mylog.Warning("KillProcess", sdk.KillProcess()) // todo need pid ?
 		}),
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
+			//todo handle drop file path into here,need global var for path?
 			mylog.Warning("StartProcess", sdk.StartProcess(path))
 		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
