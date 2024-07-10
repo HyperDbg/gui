@@ -2,8 +2,6 @@ package ux
 
 import (
 	"embed"
-	"path/filepath"
-
 	"github.com/ddkwork/HyperDbg/sdk"
 
 	"github.com/richardwilkes/unison/enums/align"
@@ -36,17 +34,7 @@ func Run() {
 		return
 	}
 	app.RunWithIco("HyperDbg "+winver.WindowVersion(), mainIcons, func(w *unison.Window) {
-		pages := NewTabPage()
-		w.Content().FileDropCallback = func(files []string) {
-			switch filepath.Ext(files[0]) {
-			case ".exe", ".dll", ".sys":
-				mylog.Trace("dropped file", files[0])
-				// pages.pe.SetContent(LayoutPeView(files[0])) // right action is remove all children
-				// pages.cpu.SetContent(LayoutCpu(files[0]))   // todo test parent panel is dock or cpu tab page
-			default:
-				mylog.Check("not support file type")
-			}
-		}
+		pages := NewTabPage(sdk.SysPath)
 		w.Content().AddChild(pages.Layout())
 	})
 }
@@ -115,7 +103,7 @@ func (p *TagPage) Layout() unison.Paneler {
 	return panel
 }
 
-func NewTabPage() *TagPage {
+func NewTabPage(path string) *TagPage {
 	dock := unison.NewDock()
 	dock.AsPanel().SetLayoutData(&unison.FlexLayoutData{
 		HSpan:  1,
@@ -125,11 +113,9 @@ func NewTabPage() *TagPage {
 		HGrab:  true,
 		VGrab:  true,
 	})
-	path := sdk.SysPath
-	cpu := LayoutCpu(path)
 	p := &TagPage{
 		dock:   dock,
-		cpu:    widget.NewTab("cpu", "", cpu),
+		cpu:    widget.NewTab("cpu", "", LayoutCpu(path)),
 		pe:     widget.NewTab("peView", "", LayoutPeView(path)),
 		log:    widget.NewTab("log", "", LayoutLog()),
 		notes:  widget.NewTab("notes", "", LayoutNotes()),

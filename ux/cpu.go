@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/ddkwork/HyperDbg/sdk"
 
@@ -167,7 +168,7 @@ func LayoutCpu(fileName string) unison.Paneler {
 	hexEditor.Editor.SetText(hex.Dump(testHexDat))
 	stackTable := LayoutStackTable()
 	HexEditTab := widget.NewTab(" hex editor", "todo hex editor", hexEditor)
-	//dockContainer := widget.NewDockContainer(hexEditor)//todo
+	// dockContainer := widget.NewDockContainer(hexEditor)//todo
 	BottomHSplit := widget.NewHSplit(
 		HexEditTab,
 		widget.NewTab("stack", "todo stack test", stackTable),
@@ -352,6 +353,133 @@ type FastCall struct {
 }
 
 func LayoutDisassemblyTable(fileName string) unison.Paneler {
+	SetRootRowsCallBack := func(root *widget.Node[xed.Disassembly]) {
+		f := xed.ParserPe(fileName)
+		// b := stream.NewBuffer(fileName)
+		optionalHeader := f.NtHeader.OptionalHeader
+		switch o := optionalHeader.(type) {
+		case pe.ImageOptionalHeader32:
+			oepRVA := o.AddressOfEntryPoint
+			imageBase := o.ImageBase
+			oepVA := imageBase + oepRVA
+			var oepFileOffset uint64
+
+			//for _, section := range f.Sections {
+			//	if section.String() == ".text" {
+			//		oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
+			//		break
+			//	}
+			//}
+
+			//for _, section := range f.Sections {
+			//	if section.Header.Characteristics&section.Header.Characteristics == pe.ImageSectionMemExecute {
+			//		oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
+			//		break
+			//	}
+			//}
+			for _, section := range f.Sections {
+				mylog.Info("PrettySectionFlags", section.PrettySectionFlags())
+				for _, s := range section.PrettySectionFlags() {
+					if s == "Executable" {
+						oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
+						break
+					}
+				}
+			}
+
+			if oepFileOffset == 0 {
+				fmt.Println("未找到包含OEP节区或计算偏移不正确")
+				return
+			}
+			buffer := make([]byte, 200)
+			file := mylog.Check2(os.Open(fileName))
+			defer file.Close()
+			mylog.Check2(file.ReadAt(buffer, int64(oepFileOffset)))
+			fmt.Printf("OEP File Off %x\n", oepFileOffset)
+			fmt.Printf("OEP VA %x\n", oepVA)
+			fmt.Printf("Entry Point RVA %x\n", oepRVA)
+			fmt.Printf("OEP Data %x\n", buffer[:100])
+
+			x := xed.New(buffer[:100])
+			x.SetBaseAddress(uint64(oepVA))
+			x.Decode32()
+			for _, object := range x.AsmObjects {
+				root.AddChildByData(object)
+			}
+		case pe.ImageOptionalHeader64:
+			oepRVA := o.AddressOfEntryPoint
+			imageBase := o.ImageBase
+			oepVA := imageBase + uint64(oepRVA)
+			var oepFileOffset uint64
+			for _, section := range f.Sections {
+				if section.String() == ".text" {
+					oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
+					break
+				}
+			}
+			if oepFileOffset == 0 {
+				fmt.Println("未找到包含OEP节区或计算偏移不正确")
+				return
+			}
+			buffer := make([]byte, 200)
+			file := mylog.Check2(os.Open(fileName))
+			defer file.Close()
+			mylog.Check2(file.ReadAt(buffer, int64(oepFileOffset)))
+			fmt.Printf("OEP File Off %x\n", oepFileOffset)
+			fmt.Printf("OEP VA %x\n", oepVA)
+			fmt.Printf("Entry Point RVA %x\n", oepRVA)
+			fmt.Printf("OEP Data %x\n", buffer[:100])
+
+			x := xed.New(buffer[:100])
+			x.SetBaseAddress(oepVA)
+			x.Decode64()
+			for _, object := range x.AsmObjects {
+				root.AddChildByData(object)
+			}
+			//oep_rva := uint64(o.AddressOfEntryPoint)
+			//image_base := uint64(o.ImageBase)
+			//oep_va := image_base + oep_rva
+			//var oep_file_offset uint64
+			//
+			//// 查找 .text 节区
+			//for _, section := range f.Sections {
+			//	if section.String() == ".text" {
+			//		oep_file_offset = uint64(section.Header.PointerToRawData) + (oep_rva - uint64(section.Header.VirtualAddress))
+			//		mylog.Struct(section)
+			//		break
+			//	}
+			//}
+			//
+			//if oep_file_offset == 0 {
+			//	mylog.Check("未找到 .text 节区信息或计算偏移不正确")
+			//}
+			//
+			//// 确定文件中的偏移位置
+			//buffer := stream.NewBuffer(fileName)
+			//if oep_file_offset+200 > uint64(len(buffer.Bytes())) {
+			//	mylog.Check("计算出的文件偏移超出文件大小")
+			//}
+			//
+			//// 确认调试信息：
+			//mylog.Hex("oep_file_offset", oep_file_offset)
+			//mylog.Hex("oep_va", oep_va)
+			//mylog.Hex("entry_point_rva", oep_rva)
+			//
+			//// 读取指定文件偏移二进制数据：
+			//oep_data := buffer.Bytes()[oep_file_offset : oep_file_offset+200]
+			//
+			//fmt.Printf("oep_data: %x\n", oep_data[:20])
+			//// 使用反汇编工具解析数据
+			//x := xed.New(oep_data)
+			//x.SetBaseAddress(oep_va)
+			//x.Decode64()
+			//for _, object := range x.AsmObjects {
+			//	root.AddChildByData(object)
+			//}
+
+		}
+	}
+
 	table, header := widget.NewTable(xed.Disassembly{}, widget.TableContext[xed.Disassembly]{
 		ContextMenuItems: func(node *widget.Node[xed.Disassembly]) []widget.ContextMenuItem {
 			return []widget.ContextMenuItem{
@@ -1054,135 +1182,19 @@ func LayoutDisassemblyTable(fileName string) unison.Paneler {
 				mylog.Struct(n.Data)
 			}
 		},
-		SetRootRowsCallBack: func(root *widget.Node[xed.Disassembly]) {
-			f := xed.ParserPe(fileName)
-			// b := stream.NewBuffer(fileName)
-			optionalHeader := f.NtHeader.OptionalHeader
-			switch o := optionalHeader.(type) {
-			case pe.ImageOptionalHeader32:
-				oepRVA := o.AddressOfEntryPoint
-				imageBase := o.ImageBase
-				oepVA := imageBase + oepRVA
-				var oepFileOffset uint64
-
-				//for _, section := range f.Sections {
-				//	if section.String() == ".text" {
-				//		oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
-				//		break
-				//	}
-				//}
-
-				//for _, section := range f.Sections {
-				//	if section.Header.Characteristics&section.Header.Characteristics == pe.ImageSectionMemExecute {
-				//		oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
-				//		break
-				//	}
-				//}
-				for _, section := range f.Sections {
-					mylog.Info("PrettySectionFlags", section.PrettySectionFlags())
-					for _, s := range section.PrettySectionFlags() {
-						if s == "Executable" {
-							oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
-							break
-						}
-					}
-				}
-
-				if oepFileOffset == 0 {
-					fmt.Println("未找到包含OEP节区或计算偏移不正确")
-					return
-				}
-				buffer := make([]byte, 200)
-				file := mylog.Check2(os.Open(fileName))
-				defer file.Close()
-				mylog.Check2(file.ReadAt(buffer, int64(oepFileOffset)))
-				fmt.Printf("OEP File Off %x\n", oepFileOffset)
-				fmt.Printf("OEP VA %x\n", oepVA)
-				fmt.Printf("Entry Point RVA %x\n", oepRVA)
-				fmt.Printf("OEP Data %x\n", buffer[:100])
-
-				x := xed.New(buffer[:100])
-				x.SetBaseAddress(uint64(oepVA))
-				x.Decode32()
-				for _, object := range x.AsmObjects {
-					root.AddChildByData(object)
-				}
-			case pe.ImageOptionalHeader64:
-				oepRVA := o.AddressOfEntryPoint
-				imageBase := o.ImageBase
-				oepVA := imageBase + uint64(oepRVA)
-				var oepFileOffset uint64
-				for _, section := range f.Sections {
-					if section.String() == ".text" {
-						oepFileOffset = uint64(section.Header.PointerToRawData) + (uint64(oepRVA) - uint64(section.Header.VirtualAddress))
-						break
-					}
-				}
-				if oepFileOffset == 0 {
-					fmt.Println("未找到包含OEP节区或计算偏移不正确")
-					return
-				}
-				buffer := make([]byte, 200)
-				file := mylog.Check2(os.Open(fileName))
-				defer file.Close()
-				mylog.Check2(file.ReadAt(buffer, int64(oepFileOffset)))
-				fmt.Printf("OEP File Off %x\n", oepFileOffset)
-				fmt.Printf("OEP VA %x\n", oepVA)
-				fmt.Printf("Entry Point RVA %x\n", oepRVA)
-				fmt.Printf("OEP Data %x\n", buffer[:100])
-
-				x := xed.New(buffer[:100])
-				x.SetBaseAddress(oepVA)
-				x.Decode64()
-				for _, object := range x.AsmObjects {
-					root.AddChildByData(object)
-				}
-				//oep_rva := uint64(o.AddressOfEntryPoint)
-				//image_base := uint64(o.ImageBase)
-				//oep_va := image_base + oep_rva
-				//var oep_file_offset uint64
-				//
-				//// 查找 .text 节区
-				//for _, section := range f.Sections {
-				//	if section.String() == ".text" {
-				//		oep_file_offset = uint64(section.Header.PointerToRawData) + (oep_rva - uint64(section.Header.VirtualAddress))
-				//		mylog.Struct(section)
-				//		break
-				//	}
-				//}
-				//
-				//if oep_file_offset == 0 {
-				//	mylog.Check("未找到 .text 节区信息或计算偏移不正确")
-				//}
-				//
-				//// 确定文件中的偏移位置
-				//buffer := stream.NewBuffer(fileName)
-				//if oep_file_offset+200 > uint64(len(buffer.Bytes())) {
-				//	mylog.Check("计算出的文件偏移超出文件大小")
-				//}
-				//
-				//// 确认调试信息：
-				//mylog.Hex("oep_file_offset", oep_file_offset)
-				//mylog.Hex("oep_va", oep_va)
-				//mylog.Hex("entry_point_rva", oep_rva)
-				//
-				//// 读取指定文件偏移二进制数据：
-				//oep_data := buffer.Bytes()[oep_file_offset : oep_file_offset+200]
-				//
-				//fmt.Printf("oep_data: %x\n", oep_data[:20])
-				//// 使用反汇编工具解析数据
-				//x := xed.New(oep_data)
-				//x.SetBaseAddress(oep_va)
-				//x.Decode64()
-				//for _, object := range x.AsmObjects {
-				//	root.AddChildByData(object)
-				//}
-
-			}
-		},
-		JsonName:   "cpu_dism_table",
-		IsDocument: false,
+		SetRootRowsCallBack: SetRootRowsCallBack,
+		JsonName:            "cpu_dism_table",
+		IsDocument:          false,
 	})
+	table.FileDropCallback = func(files []string) {
+		f := files[0]
+		ext := filepath.Ext(f)
+		switch ext {
+		case ".exe", ".dll", ".sys":
+			fileName = f
+			SetRootRowsCallBack(table)
+		}
+	}
 	return widget.NewTableScrollPanel(table, header)
 }
 
