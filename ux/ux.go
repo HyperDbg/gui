@@ -163,6 +163,7 @@ func (t *toolbar) Elems() []*unison.Button {
 		t.options,
 		t.scylla,
 		t.about,
+		t.settings,
 	}
 }
 
@@ -215,11 +216,12 @@ func newToolbar() *toolbar {
 		bpoints: widget.NewImageButton("bpoints", m.Get("bpoints.png"), func() {
 			mylog.Warning("breakpoint list", sdk.BreakpointList())
 		}),
-		bpmem:   widget.NewImageButton("bpmem", m.Get("bpmem.png"), func() {}),
-		bphard:  widget.NewImageButton("bphard", m.Get("bphard.png"), func() {}),
-		options: widget.NewImageButton("options", m.Get("options.png"), func() {}),
-		scylla:  widget.NewImageButton("scylla", m.Get("scylla.png"), func() {}),
-		about:   widget.NewImageButton("about", m.Get("about.png"), func() {}),
+		bpmem:    widget.NewImageButton("bpmem", m.Get("bpmem.png"), func() {}),
+		bphard:   widget.NewImageButton("bphard", m.Get("bphard.png"), func() {}),
+		options:  widget.NewImageButton("options", m.Get("options.png"), func() {}),
+		scylla:   widget.NewImageButton("scylla", m.Get("scylla.png"), func() {}),
+		about:    widget.NewImageButton("about", m.Get("about.png"), func() {}),
+		settings: widget.NewImageButton("settings", m.Get("settings.png"), func() {}),
 	}
 }
 
@@ -250,5 +252,6 @@ type (
 		options   *unison.Button
 		scylla    *unison.Button
 		about     *unison.Button
+		settings  *unison.Button
 	}
 )
