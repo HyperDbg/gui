@@ -3498,14 +3498,13 @@ typedef enum _DEBUGGER_EDIT_MEMORY_BYTE_SIZE
  */
 typedef struct _DEBUGGER_EDIT_MEMORY
 {
-    UINT32                         Result;     // Result from kernel
+    UINT32                         Result;
     UINT64                         Address;    // Target address to modify
     UINT32                         ProcessId;  // specifies the process id
     DEBUGGER_EDIT_MEMORY_TYPE      MemoryType; // Type of memory
     DEBUGGER_EDIT_MEMORY_BYTE_SIZE ByteSize;   // Modification size
     UINT32                         CountOf64Chunks;
     UINT32                         FinalStructureSize;
-    UINT32                         KernelStatus; // not used in local debugging
 
 } DEBUGGER_EDIT_MEMORY, *PDEBUGGER_EDIT_MEMORY;
 
@@ -4737,6 +4736,16 @@ hyperdbg_u_show_memory_or_disassemble(DEBUGGER_SHOW_MEMORY_STYLE   style,
                                       UINT32                       pid,
                                       UINT32                       size,
                                       PDEBUGGER_DT_COMMAND_OPTIONS dt_details);
+
+//
+// Writing memory
+//
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_write_memory(PVOID                     destination_address,
+                        DEBUGGER_EDIT_MEMORY_TYPE memory_type,
+                        UINT32                    process_id,
+                        PVOID                     source_address,
+                        UINT32                    number_of_bytes);
 
 //
 // Reading/Writing registers

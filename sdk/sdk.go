@@ -1112,7 +1112,6 @@ type DebuggerEditMemory struct {
 	ByteSize           DebuggerEditMemoryByteSize
 	CountOf64Chunks    Uint32
 	FinalStructureSize Uint32
-	KernelStatus       Uint32
 }
 type DebuggerSearchMemory struct {
 	Address            Uint64
@@ -1722,6 +1721,7 @@ func init() {
 	__imp_hyperdbg_u_use_default_driver_path = GengoLibrary.ImportNow("hyperdbg_u_use_default_driver_path")
 	__imp_hyperdbg_u_read_memory = GengoLibrary.ImportNow("hyperdbg_u_read_memory")
 	__imp_hyperdbg_u_show_memory_or_disassemble = GengoLibrary.ImportNow("hyperdbg_u_show_memory_or_disassemble")
+	__imp_hyperdbg_u_write_memory = GengoLibrary.ImportNow("hyperdbg_u_write_memory")
 	__imp_hyperdbg_u_read_all_registers = GengoLibrary.ImportNow("hyperdbg_u_read_all_registers")
 	__imp_hyperdbg_u_read_target_register = GengoLibrary.ImportNow("hyperdbg_u_read_target_register")
 	__imp_hyperdbg_u_write_target_register = GengoLibrary.ImportNow("hyperdbg_u_write_target_register")
@@ -1818,7 +1818,7 @@ func init() {
 	bindlib.Validate((*DebuggeeSendGeneralPacketFromDebuggeeToDebugger)(nil), 0x10, 0x4, "RequestedAction", 0x0, "LengthOfBuffer", 0x4, "PauseDebuggeeWhenSent", 0x8, "KernelResult", 0xc)
 	bindlib.Validate((*DebuggerSendUsermodeMessagesToDebugger)(nil), 0x8, 0x4, "KernelStatus", 0x0, "Length", 0x4)
 	bindlib.Validate((*DebuggerReadAndWriteOnMsr)(nil), 0x18, 0x8, "Msr", 0x0, "CoreNumber", 0x8, "ActionType", 0xc, "Value", 0x10)
-	bindlib.Validate((*DebuggerEditMemory)(nil), 0x28, 0x8, "Result", 0x0, "Address", 0x8, "ProcessId", 0x10, "MemoryType", 0x14, "ByteSize", 0x18, "CountOf64Chunks", 0x1c, "FinalStructureSize", 0x20, "KernelStatus", 0x24)
+	bindlib.Validate((*DebuggerEditMemory)(nil), 0x28, 0x8, "Result", 0x0, "Address", 0x8, "ProcessId", 0x10, "MemoryType", 0x14, "ByteSize", 0x18, "CountOf64Chunks", 0x1c, "FinalStructureSize", 0x20)
 	bindlib.Validate((*DebuggerSearchMemory)(nil), 0x28, 0x8, "Address", 0x0, "Length", 0x8, "ProcessId", 0x10, "MemoryType", 0x14, "ByteSize", 0x18, "CountOf64Chunks", 0x1c, "FinalStructureSize", 0x20)
 	bindlib.Validate((*DebuggerHideAndTransparentDebuggerMode)(nil), 0x50, 0x8, "IsHide", 0x0, "CpuidAverage", 0x8, "CpuidStandardDeviation", 0x10, "CpuidMedian", 0x18, "RdtscAverage", 0x20, "RdtscStandardDeviation", 0x28, "RdtscMedian", 0x30, "TrueIfProcessIdAndFalseIfProcessName", 0x38, "ProcId", 0x3c, "LengthOfProcessName", 0x40, "KernelStatus", 0x48)
 	bindlib.Validate((*DebuggerPrepareDebuggee)(nil), 0x118, 0x8, "PortAddress", 0x0, "Baudrate", 0x4, "NtoskrnlBaseAddress", 0x8, "Result", 0x10, "OsName", 0x14)
@@ -1966,6 +1966,13 @@ var __imp_hyperdbg_u_show_memory_or_disassemble bindlib.PreloadProc
 
 func ShowMemoryOrDisassemble(style DebuggerShowMemoryStyle, address Uint64, memory_type DebuggerReadMemoryType, reading_type DebuggerReadReadingType, pid Uint32, size Uint32, dt_details PdebuggerDtCommandOptions) {
 	bindlib.CCall7(__imp_hyperdbg_u_show_memory_or_disassemble.Addr(), bindlib.MarshallSyscall(style), bindlib.MarshallSyscall(address), bindlib.MarshallSyscall(memory_type), bindlib.MarshallSyscall(reading_type), bindlib.MarshallSyscall(pid), bindlib.MarshallSyscall(size), bindlib.MarshallSyscall(dt_details))
+}
+
+var __imp_hyperdbg_u_write_memory bindlib.PreloadProc
+
+func WriteMemory(destination_address unsafe.Pointer, memory_type DebuggerEditMemoryType, process_id Uint32, source_address unsafe.Pointer, number_of_bytes Uint32) Boolean {
+	__res := bindlib.CCall5(__imp_hyperdbg_u_write_memory.Addr(), bindlib.MarshallSyscall(destination_address), bindlib.MarshallSyscall(memory_type), bindlib.MarshallSyscall(process_id), bindlib.MarshallSyscall(source_address), bindlib.MarshallSyscall(number_of_bytes))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_hyperdbg_u_read_all_registers bindlib.PreloadProc

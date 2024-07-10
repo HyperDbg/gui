@@ -268,9 +268,9 @@ func newToolbar() *toolbar {
 					Tooltip: "remote port number",
 				}))
 				newPanel.AddChild(keyValuePanel)
-				port := widget.NewButton("ConnectRemoteDebugger", func() {
+				port := widget.NewButton("ConnectRemoteDebugger", func() { // todo not finished
 					mylog.Trace("ConnectRemoteDebugger")
-					sdk.ConnectRemoteDebugger(sdk.StringToBytePointer(host.String()), sdk.StringToBytePointer(port.String()))
+					// sdk.ConnectRemoteDebugger(sdk.StringToBytePointer(host.String()), sdk.StringToBytePointer(port.String()))
 				})
 				newPanel.AddChild(port)
 
