@@ -258,9 +258,7 @@ func newToolbar() *toolbar {
 				newPanel.AddChild(widget.NewButton("Stop Vmm", func() { //?
 					mylog.Trace("StopVmmDriver", sdk.StopVmmDriver())
 				}))
-				newPanel.AddChild(widget.NewButton("xxxxxxxoo", func() {
-					// mylog.Trace("StopVmmDriver", sdk.StopVmmDriver())
-				}))
+				newPanel.AddChild(widget.NewButton("xxxxxxxoo", func() {}))
 
 				newPanel.AddChild(widget.NewButton("ConnectLocalDebugger", func() {
 					mylog.Trace("ConnectLocalDebugger")
