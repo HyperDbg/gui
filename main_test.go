@@ -23,8 +23,10 @@ func TestUpdateAppModule(t *testing.T) {
 	stream.RunCommand("go get github.com/ddkwork/app@" + id)
 }
 
-// todo update sdk/gen/SDK dir and remove libraries dir
 func TestClear(t *testing.T) {
+	mylog.Check(os.RemoveAll("bin/debug/SDK/Libraries"))
+	mylog.Check(os.RemoveAll("sdk/bindgen/SDK"))
+	mylog.CopyDir("sdk/bindgen/SDK", "bin/debug/SDK")
 	filepath.Walk("bin", func(path string, info fs.FileInfo, err error) error {
 		switch filepath.Ext(path) {
 		case ".exe", ".dll", ".sys":
