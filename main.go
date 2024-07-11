@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	//testSdkCommands()
-	//ux.Run()
+	// testSdkCommands()
+	// ux.Run()
 	testDisassembly()
 	// testParsePe()
 	// testScript()
