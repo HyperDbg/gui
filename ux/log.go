@@ -6,6 +6,5 @@ import (
 )
 
 func LayoutLog() unison.Paneler {
-	return unison.NewPanel()
-	return widget.NewCodeView("log.log")
+	return widget.NewLogView()
 }

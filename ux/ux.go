@@ -3,6 +3,7 @@ package ux
 import (
 	"embed"
 	"path/filepath"
+	"time"
 
 	"github.com/ddkwork/HyperDbg/sdk"
 
@@ -110,11 +111,20 @@ func NewTabPage() *TagPage {
 		HAlign: align.Fill,
 		VAlign: align.Fill,
 	})
+	log := LayoutLog()
+	go func() {
+		ticker := time.NewTicker(time.Second)
+		for range ticker.C {
+			log.AsPanel().RemoveAllChildren()
+			log.AsPanel().AddChild(widget.NewLogView())
+		}
+	}()
+
 	p := &TagPage{
 		dock:   dock,
 		cpu:    widget.NewTab("cpu", "", LayoutCpu()),
 		pe:     widget.NewTab("peView", "", LayoutPeView()),
-		log:    widget.NewTab("log", "", LayoutLog()),
+		log:    widget.NewTab("log", "", log),
 		notes:  widget.NewTab("notes", "", LayoutNotes()),
 		breaks: widget.NewTab("break", "", LayoutBreak()),
 		memory: widget.NewTab("memory", "", LayoutMemory()),
