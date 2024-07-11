@@ -77,7 +77,7 @@ func BytePointerToString(ptr *byte) string {
 }
 
 func SetCustomDriverPathEx(DriverFilePath string) bool {
-	return SetCustomDriverPath(StringToBytePointer(DriverFilePath), StringToBytePointer(stream.BaseName(DriverFilePath))) == 0
+	return SetCustomDriverPath(StringToBytePointer(DriverFilePath), StringToBytePointer(stream.BaseName(DriverFilePath))) == 1
 }
 
 func InterpreterEx(command string) (status string) { // todo decode command return status code as error string
