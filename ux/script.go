@@ -6,7 +6,8 @@ import (
 )
 
 func LayoutScript() unison.Paneler {
-	path := "user-mode-memory-allocations.ds"
+	path := "plugin/scriptGen/user-mode-memory-allocations.ds"
 	path = "plugin/scriptGen/cpuid.ds"
+	path = "plugin/scriptGen/1.carbon"
 	return widget.NewDsScriptView(path)
 }
