@@ -6,7 +6,7 @@ import (
 )
 
 func LayoutScript() unison.Paneler {
-	path := "send_version.scala"
-	// path = "plugin/scriptGen/cpuid.ds"
-	return widget.NewCodeEditor(path)
+	path := "user-mode-memory-allocations.ds"
+	path = "plugin/scriptGen/cpuid.ds"
+	return widget.NewDsScriptView(path)
 }

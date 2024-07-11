@@ -1,0 +1,19 @@
+func NewLogView() *unison.Panel {
+	panel := NewPanel()
+	tokens, style := languages.GetTokens(stream.NewBuffer(mylog.Body()), languages.NasmKind)
+	rowPanel := unison.NewPanel()
+	rowPanel.SetLayout(&unison.FlexLayout{Columns: len(tokens)})
+	panel.AddChild(rowPanel)
+	for _, token := range tokens {
+		colour := style.Get(token.Type).Colour
+		label := unison.NewLabel()
+		label.TextDecoration.OnBackgroundInk = unison.RGB(
+			int(colour.Red()),
+			int(colour.Green()),
+			int(colour.Blue()),
+		)
+		label.SetTitle(token.Value)
+		rowPanel.AddChild(label)
+	}
+	return panel.AsPanel()
+}
