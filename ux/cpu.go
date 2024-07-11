@@ -167,8 +167,7 @@ func LayoutCpu() unison.Paneler {
 		widget.NewTab("Register", "Register", widget.NewScrollPanelFill(structView)),
 		0.3)
 
-	hexEditor := widget.NewCodeEditor("")
-	hexEditor.Editor.SetText(hex.Dump(testHexDat))
+	hexEditor := widget.NewDsScriptView(hex.Dump(testHexDat))
 	stackTable := LayoutStackTable()
 	HexEditTab := widget.NewTab(" hex editor", "todo hex editor", hexEditor)
 	// dockContainer := widget.NewDockContainer(hexEditor)//todo
