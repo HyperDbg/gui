@@ -1175,7 +1175,7 @@ func LayoutDisassemblyTable() unison.Paneler {
 			return []widget.CellData{
 				{Text: fmt.Sprintf("%016X", node.Data.Address)},
 				{Text: fmt.Sprintf("%X", node.Data.Opcode)},
-				{Text: node.Data.Instruction},
+				{Text: node.Data.Instruction, IsNasm: true},
 				{Text: node.Data.Comment},
 			}
 		},
