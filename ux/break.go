@@ -3,6 +3,8 @@ package ux
 import (
 	"fmt"
 
+	"github.com/ddkwork/golibrary/mylog"
+
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
 )
@@ -24,8 +26,12 @@ func LayoutBreak() unison.Paneler {
 				{Text: node.Data.Summary},
 			}
 		},
-		UnmarshalRow:             nil,
-		SelectionChangedCallback: nil,
+		UnmarshalRow: func(node *widget.Node[Break], values []string) {
+			mylog.Todo("UnmarshalRow")
+		},
+		SelectionChangedCallback: func(root *widget.Node[Break]) {
+			mylog.Todo("SelectionChangedCallback")
+		},
 		SetRootRowsCallBack: func(root *widget.Node[Break]) {
 			for i := range 100 {
 				ts := Break{

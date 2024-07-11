@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/ddkwork/golibrary/mylog"
+
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
 )
@@ -31,8 +33,12 @@ func LayoutThread() unison.Paneler {
 				{Text: fmt.Sprintf("%016X", node.Data.CPUCycles)},
 			}
 		},
-		UnmarshalRow:             nil,
-		SelectionChangedCallback: nil,
+		UnmarshalRow: func(node *widget.Node[Thread], values []string) {
+			mylog.Todo("UnmarshalRow")
+		},
+		SelectionChangedCallback: func(root *widget.Node[Thread]) {
+			mylog.Todo("SelectionChangedCallback")
+		},
 		SetRootRowsCallBack: func(root *widget.Node[Thread]) {
 			for range 100 {
 				ts := Thread{

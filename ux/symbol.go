@@ -3,6 +3,8 @@ package ux
 import (
 	"fmt"
 
+	"github.com/ddkwork/golibrary/mylog"
+
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
 )
@@ -22,8 +24,12 @@ func LayoutSymbol() unison.Paneler {
 				{Text: fmt.Sprintf("%016X", node.Data.Address)},
 			}
 		},
-		UnmarshalRow:             nil,
-		SelectionChangedCallback: nil,
+		UnmarshalRow: func(node *widget.Node[Symbol], values []string) {
+			mylog.Todo("UnmarshalRow")
+		},
+		SelectionChangedCallback: func(root *widget.Node[Symbol]) {
+			mylog.Todo("SelectionChangedCallback")
+		},
 		SetRootRowsCallBack: func(root *widget.Node[Symbol]) {
 			for range 100 {
 				ts := Symbol{

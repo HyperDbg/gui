@@ -3,6 +3,8 @@ package ux
 import (
 	"fmt"
 
+	"github.com/ddkwork/golibrary/mylog"
+
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
 )
@@ -21,8 +23,12 @@ func LayoutSeh() unison.Paneler {
 				{Text: node.Data.Notes},
 			}
 		},
-		UnmarshalRow:             nil,
-		SelectionChangedCallback: nil,
+		UnmarshalRow: func(node *widget.Node[Seh], values []string) {
+			mylog.Todo("UnmarshalRow")
+		},
+		SelectionChangedCallback: func(root *widget.Node[Seh]) {
+			mylog.Todo("SelectionChangedCallback")
+		},
 		SetRootRowsCallBack: func(root *widget.Node[Seh]) {
 			for i := range 100 {
 				ts := Seh{

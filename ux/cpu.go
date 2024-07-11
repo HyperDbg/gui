@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
+
+	"github.com/ddkwork/golibrary/stream"
 
 	"github.com/ddkwork/HyperDbg/sdk"
 
@@ -1176,7 +1179,12 @@ func LayoutDisassemblyTable() unison.Paneler {
 				{Text: node.Data.Comment},
 			}
 		},
-		UnmarshalRow: nil,
+		UnmarshalRow: func(node *widget.Node[xed.Disassembly], values []string) {
+			node.Data.Address = mylog.Check2(strconv.ParseUint(values[0], 16, 64))
+			node.Data.Opcode = stream.NewBuffer(stream.HexDumpString(values[1])).Bytes()
+			node.Data.Instruction = values[2]
+			node.Data.Comment = values[3]
+		},
 		SelectionChangedCallback: func(root *widget.Node[xed.Disassembly]) {
 			for _, n := range root.SelectedRows(false) {
 				mylog.Struct(n.Data)
@@ -1221,8 +1229,12 @@ func LayoutStackTable() unison.Paneler {
 				{Text: node.Data.Context},
 			}
 		},
-		UnmarshalRow:             nil,
-		SelectionChangedCallback: nil,
+		UnmarshalRow: func(node *widget.Node[Stack], values []string) {
+			mylog.Todo("UnmarshalRow")
+		},
+		SelectionChangedCallback: func(root *widget.Node[Stack]) {
+			mylog.Todo("SelectionChangedCallback")
+		},
 		SetRootRowsCallBack: func(root *widget.Node[Stack]) {
 			for i := range 100 {
 				ts := Stack{

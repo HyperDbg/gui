@@ -3,6 +3,8 @@ package ux
 import (
 	"fmt"
 
+	"github.com/ddkwork/golibrary/mylog"
+
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
 )
@@ -24,8 +26,12 @@ func LayoutStack() unison.Paneler {
 				{Text: node.Data.Notes},
 			}
 		},
-		UnmarshalRow:             nil,
-		SelectionChangedCallback: nil,
+		UnmarshalRow: func(node *widget.Node[CallStack], values []string) {
+			mylog.Todo("UnmarshalRow")
+		},
+		SelectionChangedCallback: func(root *widget.Node[CallStack]) {
+			mylog.Todo("SelectionChangedCallback")
+		},
 		SetRootRowsCallBack: func(root *widget.Node[CallStack]) {
 			for i := range 100 {
 				ts := CallStack{

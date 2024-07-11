@@ -3,6 +3,8 @@ package ux
 import (
 	"fmt"
 
+	"github.com/ddkwork/golibrary/mylog"
+
 	"github.com/ddkwork/app/widget"
 	"github.com/richardwilkes/unison"
 )
@@ -34,8 +36,12 @@ func LayoutMemory() unison.Paneler {
 				{Text: node.Data.InitialProtection},
 			}
 		},
-		UnmarshalRow:             nil,
-		SelectionChangedCallback: nil,
+		UnmarshalRow: func(node *widget.Node[Memory], values []string) {
+			mylog.Todo("UnmarshalRow")
+		},
+		SelectionChangedCallback: func(root *widget.Node[Memory]) {
+			mylog.Todo("SelectionChangedCallback")
+		},
 		SetRootRowsCallBack: func(root *widget.Node[Memory]) {
 			for i := range 100 {
 				ts := Memory{

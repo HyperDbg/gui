@@ -52,8 +52,12 @@ func LayoutArk() unison.Paneler {
 				{Text: fmt.Sprintf("%04d / %08X", node.Data.Index, node.Data.Index)},
 			}
 		},
-		UnmarshalRow:             nil,
-		SelectionChangedCallback: nil,
+		UnmarshalRow: func(node *widget.Node[ms.NtApi], values []string) {
+			mylog.Todo("UnmarshalRow")
+		},
+		SelectionChangedCallback: func(root *widget.Node[ms.NtApi]) {
+			mylog.Todo("SelectionChangedCallback")
+		},
 		SetRootRowsCallBack: func(root *widget.Node[ms.NtApi]) {
 			sysCall := ms.NewSysCall(0)
 			sysCall.KeServiceDescriptorTable = ms.DecodeNtApi("C:\\Windows\\System32\\ntdll.dll")

@@ -34,8 +34,12 @@ func LayoutCommands() unison.Paneler {
 				{Text: fmt.Sprint(node.Data.Demo)},
 			}
 		},
-		UnmarshalRow:             nil,
-		SelectionChangedCallback: nil,
+		UnmarshalRow: func(node *widget.Node[Command], values []string) {
+			mylog.Todo("UnmarshalRow")
+		},
+		SelectionChangedCallback: func(root *widget.Node[Command]) {
+			mylog.Todo("SelectionChangedCallback")
+		},
 		SetRootRowsCallBack: func(root *widget.Node[Command]) {
 			// m := orderedmap.New(InvalidCommandsKind, []Command{})
 			// m.Set(DebuggingKind, commands)

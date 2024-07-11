@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ddkwork/golibrary/mylog"
+
 	"github.com/ddkwork/app/ms/xed"
 
 	"github.com/ddkwork/app/widget"
@@ -34,8 +36,12 @@ func LayoutPeView() unison.Paneler {
 				{Text: fmt.Sprintf("%t", node.Data.Is64Bit)},
 			}
 		},
-		UnmarshalRow:             nil,
-		SelectionChangedCallback: nil,
+		UnmarshalRow: func(node *widget.Node[PeView], values []string) {
+			mylog.Todo("UnmarshalRow")
+		},
+		SelectionChangedCallback: func(root *widget.Node[PeView]) {
+			mylog.Todo("SelectionChangedCallback")
+		},
 		SetRootRowsCallBack: func(root *widget.Node[PeView]) {
 			const (
 				Section = "Section"
