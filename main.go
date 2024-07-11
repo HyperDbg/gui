@@ -8,8 +8,8 @@ import (
 
 func main() {
 	// testSdkCommands()
-	ux.Run()
-	// testDisassembly()
+	// ux.Run()
+	testDisassembly()
 	// testParsePe()
 	// testScript()
 }

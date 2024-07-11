@@ -410,6 +410,7 @@ func LayoutDisassemblyTable() unison.Paneler {
 				root.AddChildByData(object)
 			}
 		case pe.ImageOptionalHeader64:
+			//todo if has tls replace oep
 			oepRVA := o.AddressOfEntryPoint
 			imageBase := o.ImageBase
 			oepVA := imageBase + uint64(oepRVA)
