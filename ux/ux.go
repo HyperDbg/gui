@@ -209,7 +209,7 @@ func newToolbar() *toolbar {
 		scylla:  widget.NewImageButton("scylla", m.Get("scylla.png"), func() {}),
 		about:   widget.NewImageButton("about", m.Get("about.png"), func() {}),
 		settings: widget.NewImageButton("settings", m.Get("settings.png"), func() {
-			app.Run("settings", func(w *unison.Window) {
+			app.RunWithIco("settings", m.Get("settings.png"), func(w *unison.Window) {
 				content := w.Content()
 				content.SetLayout(&unison.FlexLayout{Columns: 1})
 				content.AddChild(widget.NewVSpacer())
