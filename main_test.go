@@ -23,7 +23,7 @@ func TestUpdateAppModule(t *testing.T) {
 	stream.RunCommand("go get github.com/ddkwork/app@" + id)
 }
 
-func TestClear(t *testing.T) {
+func TestUpdateSDKAndBin(t *testing.T) {
 	mylog.Check(os.RemoveAll("bin/debug/SDK/Libraries"))
 	mylog.Check(os.RemoveAll("sdk/bindgen/SDK"))
 	mylog.CopyDir("sdk/bindgen/SDK", "bin/debug/SDK")
