@@ -88,7 +88,7 @@ func SetCustomDriverPathEx(DriverFilePath string) bool {
 func InterpreterEx(command string) (status string) { // todo decode command return status code as error string
 	mylog.Info("InterpreterEx", "command: "+command)
 	code := Interpreter(StringToBytePointer(command))
-	//SetTextMessageCallback()
+	// SetTextMessageCallback()
 	return string(code)
 }
 
