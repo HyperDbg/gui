@@ -9,7 +9,7 @@ import (
 func main() {
 	// testSdkCommands()
 	ux.Run()
-	// testDisassembly()
+	//testDisassembly()
 	// testParsePe()
 	// testScript()
 }
