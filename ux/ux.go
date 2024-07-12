@@ -117,7 +117,7 @@ func NewTabPage() *TagPage {
 		ticker := time.NewTicker(time.Second)
 		for range ticker.C {
 			log.AsPanel().RemoveAllChildren()
-			logBuffer.WriteString(mylog.Body())
+			logBuffer.WriteStringLn(mylog.Body())
 			log.AsPanel().AddChild(widget.NewLogView(logBuffer.String()))
 		}
 	}()
