@@ -27,7 +27,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.22.4'
+          go-version: '1.22.5'
 
       - name: Install GCC on Windows
         run: choco install mingw
@@ -58,7 +58,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.22.4'
+          go-version: '1.22.5'
 
       - name: Install GCC on Windows
         run: choco install mingw
