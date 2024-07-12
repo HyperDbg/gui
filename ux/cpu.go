@@ -1212,7 +1212,7 @@ func LayoutDisassemblyTable() unison.Paneler {
 type Stack struct {
 	Address int
 	Data    int
-	Context string //api Name from symbol
+	Context string //api Name from symbol or address
 	isApi   bool   //decode args from plugin pkg
 }
 
