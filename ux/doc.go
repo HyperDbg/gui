@@ -13,6 +13,7 @@ func LayoutDoc() unison.Paneler {
 		Description string
 		Implement   bool
 		DemoLink    string
+		//完成度
 	}
 	table, header := widget.NewTable(doc{}, widget.TableContext[doc]{
 		ContextMenuItems: nil,
@@ -34,6 +35,26 @@ func LayoutDoc() unison.Paneler {
 			mylog.Todo("SelectionChangedCallback")
 		},
 		SetRootRowsCallBack: func(root *widget.Node[doc]) {
+			//分类
+			//单个调试器支持x64和x32应用程序
+			//pe解析器
+			//scylla
+			//packer检测，完成themida
+			//ark 完成度 ssdt
+			//硬件信息hook
+			//unicorn binee
+			//ghidra 反编译引擎集成
+			//脱壳脚本 尚未实现编辑功能
+			//脱壳插件 go plugin？ tmd
+			//树形反汇编，目前全部调试器都是格式化为线性反汇编
+			//hex编辑器 未完成
+			//VMware bypass
+			//绑定引擎 80%
+			//注册快捷菜单 bug
+			//解析堆栈参数  未完成
+			//命令api绑定 80%
+			//
+
 			for range 100 {
 				ts := doc{
 					Function:    "",
