@@ -1220,12 +1220,15 @@ func LayoutStackTable() unison.Paneler {
 	table, header := widget.NewTable(Stack{}, widget.TableContext[Stack]{
 		ContextMenuItems: nil, // todo goto 0x00007FF838E51030
 		MarshalRow: func(node *widget.Node[Stack]) (cells []widget.CellData) {
+			addressFmt := fmt.Sprintf("%016X", node.Data.Address)
+			dataFmt := fmt.Sprintf("%016X", node.Data.Data)
 			if node.Container() {
-				node.Sum("todo")
+				addressFmt = node.Sum(addressFmt)
+				dataFmt = ""
 			}
 			return []widget.CellData{
-				{Text: fmt.Sprintf("%016X", node.Data.Address)},
-				{Text: fmt.Sprintf("%016X", node.Data.Data)},
+				{Text: addressFmt},
+				{Text: dataFmt},
 				{Text: node.Data.Context},
 			}
 		},
@@ -1236,28 +1239,28 @@ func LayoutStackTable() unison.Paneler {
 			mylog.Todo("SelectionChangedCallback")
 		},
 		SetRootRowsCallBack: func(root *widget.Node[Stack]) {
-			parent := root
-			for i, stack := range stackMock {
+			for i := 0; i < len(stackMock); i++ {
+				stack := stackMock[i]
 				if stack.isApiOrArg {
-					container := widget.NewContainerNode("", Stack{})
-					parent.AddChild(container)
-
-					parent = container
+					container := widget.NewContainerNode("", Stack{Address: stack.Address, Data: stack.Data, Context: stack.Context, isApiOrArg: true})
+					root.AddChild(container)
+					stacks := stackMock[i:]
+					for j, s := range stacks {
+						container.AddChildByData(s)
+						if !s.isApiOrArg {
+							i += j
+							break
+						}
+					}
 					continue
-				} else {
-					parent = root
 				}
-				parent.AddChildByData(stack)
+				root.AddChildByData(stack)
 			}
 		},
 		JsonName:   "cpu_stack_table",
 		IsDocument: false,
 	})
 	return widget.NewTableScrollPanel(table, header)
-}
-
-func layoutStack(parent *widget.Node[Stack]) {
-
 }
 
 type Register struct {
@@ -1472,7 +1475,7 @@ var TargetExePath = sdk.SysPath
 0019EDD4  |7772E070
 */
 var stackMock = []Stack{
-	{Address: 0x0019ECEC, Data: 0x77715BFE, Context: "/CALL 到 DeviceIoControl 来自 77715BF8", isApiOrArg: true},
+	{Address: 0x0019ECEC, Data: 0x77715BFE, Context: "CALL 到 DeviceIoControl 来自 77715BF8", isApiOrArg: true},
 	{Address: 0x0019ECF0, Data: 0x000001A8, Context: "|hDevice = 000001A8 (window)", isApiOrArg: true},
 	{Address: 0x0019ECF4, Data: 0x00390008, Context: "|IoControlCode = 390008", isApiOrArg: true},
 	{Address: 0x0019ECF8, Data: 0x00390009, Context: "|InBuffer = NULL", isApiOrArg: true},
