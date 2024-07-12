@@ -2,6 +2,7 @@ package ux
 
 import (
 	"fmt"
+	"github.com/ddkwork/HyperDbg/sdk"
 
 	"github.com/ddkwork/app/ms"
 	"github.com/ddkwork/app/widget"
@@ -31,7 +32,7 @@ func LayoutArk() unison.Paneler {
 			mylog.Todo("SelectionChangedCallback")
 		},
 		SetRootRowsCallBack: func(root *widget.Node[ms.NtApi]) {
-			sysCall := ms.NewSysCall(0)
+			sysCall := ms.NewSysCall(int64(sdk.GetKernelBase()))
 			sysCall.KeServiceDescriptorTable = ms.DecodeNtApi("C:\\Windows\\System32\\ntdll.dll")
 			sysCall.KeServiceDescriptorTableShadow = ms.DecodeNtApi("C:\\Windows\\System32\\win32u.dll")
 			NtTableContainer := widget.NewContainerNode("NtTable", ms.NtApi{})
