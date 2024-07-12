@@ -2,6 +2,7 @@ package ux
 
 import (
 	"embed"
+	"github.com/ddkwork/app/ms/ark"
 	"path/filepath"
 	"time"
 
@@ -139,7 +140,7 @@ func NewTabPage() *TagPage {
 		thread: widget.NewTab("thread", "", LayoutThread()),
 		handle: widget.NewTab("handle", "", LayoutHandle()),
 		trace:  widget.NewTab("trace", "", LayoutTrace()),
-		ark:    widget.NewTab("ark", "", LayoutArk()),
+		ark:    widget.NewTab("ark", "", ark.Layout()),
 	}
 	return p
 }
