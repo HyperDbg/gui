@@ -36,6 +36,8 @@ func LayoutDoc() unison.Paneler {
 		},
 		SetRootRowsCallBack: func(root *widget.Node[doc]) {
 			//分类
+			//内存读写
+			//寄存器读写
 			//单个调试器支持x64和x32应用程序
 			//pe解析器
 			//scylla
@@ -53,8 +55,6 @@ func LayoutDoc() unison.Paneler {
 			//注册快捷菜单 bug
 			//解析堆栈参数  未完成
 			//命令api绑定 80%
-			//
-
 			for range 100 {
 				ts := doc{
 					Function:    "",
