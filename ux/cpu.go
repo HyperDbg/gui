@@ -1210,73 +1210,12 @@ func LayoutDisassemblyTable() unison.Paneler {
 }
 
 type Stack struct {
-	Address int
-	Data    int
-	Context string //api Name from symbol or address
-	isApi   bool   //decode args from plugin pkg
+	Address    int
+	Data       int
+	Context    string // api Name from symbol or address
+	isApiOrArg bool   // decode args from plugin pkg
 }
 
-/*
-0019ECEC   77715BFE  /CALL 到 DeviceIoControl 来自 77715BF8
-0019ECF0   000001A8  |hDevice = 000001A8 (window)
-0019ECF4   00390008  |IoControlCode = 390008
-0019ECF8   00000000  |InBuffer = NULL
-0019ECFC   00000000  |InBufferSize = 0
-0019ED00   0019ED5C  |OutBuffer = 0019ED5C
-0019ED04   00000030  |OutBufferSize = 30 (48.)
-0019ED08   0019ED28  |pBytesReturned = 0019ED28
-0019ED0C   00000000  \pOverlapped = NULL
-0019ED10   00000000
-0019ED14   00000030
-0019ED18   0019ED2C
-0019ED1C   0000000F
-0019ED20   00000000
-0019ED24   00000000
-0019ED28   00000030
-0019ED2C  /0019ED90
-0019ED30  |77715B60  返回到 77715B60
-0019ED34  |0019ED5C
-0019ED38  |00000030
-0019ED3C  |0019ED50
-0019ED40  |00000000
-0019ED44  |0019EE58
-0019ED48  |00000000
-0019ED4C  |0019ED68
-0019ED50  |00000000
-0019ED54  |00000000
-0019ED58  |00000000
-0019ED5C  |00000000
-0019ED60  |00000000
-0019ED64  |00000000
-0019ED68  |00000000
-0019ED6C  |00000000
-0019ED70  |00000000
-0019ED74  |00000000
-0019ED78  |00000000
-0019ED7C  |00000000
-0019ED80  |00000000
-0019ED84  |00000000
-0019ED88  |00000000
-0019ED8C  |7F1CF281
-0019ED90  ]0019EE30
-0019ED94  |77715D3A  返回到 77715D3A 来自 77715B12
-0019ED98  |77727520
-0019ED9C  |0019EE58
-0019EDA0  |00000000
-0019EDA4  |0074C301
-0019EDA8  |00000000
-0019EDAC  |0019EDF8
-0019EDB0  |00000000
-0019EDB4  |0019EDE4
-0019EDB8  |00000000
-0019EDBC  |00000000
-0019EDC0  |00000000
-0019EDC4  |00000000
-0019EDC8  |00000001
-0019EDCC  |00000000
-0019EDD0  |777D7B89  返回到 ntdll.777D7B89 来自 ntdll.777E8420
-0019EDD4  |7772E070
-*/
 func LayoutStackTable() unison.Paneler {
 	table, header := widget.NewTable(Stack{}, widget.TableContext[Stack]{
 		ContextMenuItems: nil, // todo goto 0x00007FF838E51030
@@ -1297,19 +1236,28 @@ func LayoutStackTable() unison.Paneler {
 			mylog.Todo("SelectionChangedCallback")
 		},
 		SetRootRowsCallBack: func(root *widget.Node[Stack]) {
-			for i := range 100 {
-				ts := Stack{
-					Address: 0x00007FF838E51030 + i,
-					Data:    0x00007FF838E51030 + i,
-					Context: "返回到 ntdll.RtlGetImageFileMachines+4D9 自 ntdll.RtlAllocateHeap",
+			parent := root
+			for i, stack := range stackMock {
+				if stack.isApiOrArg {
+					container := widget.NewContainerNode("", Stack{})
+					parent.AddChild(container)
+
+					parent = container
+					continue
+				} else {
+					parent = root
 				}
-				root.AddChildByData(ts)
+				parent.AddChildByData(stack)
 			}
 		},
 		JsonName:   "cpu_stack_table",
 		IsDocument: false,
 	})
 	return widget.NewTableScrollPanel(table, header)
+}
+
+func layoutStack(parent *widget.Node[Stack]) {
+
 }
 
 type Register struct {
@@ -1461,3 +1409,126 @@ var testHexDat = []byte{
 }
 
 var TargetExePath = sdk.SysPath
+
+/*
+0019ECEC   77715BFE  /CALL 到 DeviceIoControl 来自 77715BF8
+0019ECF0   000001A8  |hDevice = 000001A8 (window)
+0019ECF4   00390008  |IoControlCode = 390008
+0019ECF8   00000000  |InBuffer = NULL
+0019ECFC   00000000  |InBufferSize = 0
+0019ED00   0019ED5C  |OutBuffer = 0019ED5C
+0019ED04   00000030  |OutBufferSize = 30 (48.)
+0019ED08   0019ED28  |pBytesReturned = 0019ED28
+0019ED0C   00000000  \pOverlapped = NULL
+0019ED10   00000000
+0019ED14   00000030
+0019ED18   0019ED2C
+0019ED1C   0000000F
+0019ED20   00000000
+0019ED24   00000000
+0019ED28   00000030
+0019ED2C  /0019ED90
+0019ED30  |77715B60  返回到 77715B60
+0019ED34  |0019ED5C
+0019ED38  |00000030
+0019ED3C  |0019ED50
+0019ED40  |00000000
+0019ED44  |0019EE58
+0019ED48  |00000000
+0019ED4C  |0019ED68
+0019ED50  |00000000
+0019ED54  |00000000
+0019ED58  |00000000
+0019ED5C  |00000000
+0019ED60  |00000000
+0019ED64  |00000000
+0019ED68  |00000000
+0019ED6C  |00000000
+0019ED70  |00000000
+0019ED74  |00000000
+0019ED78  |00000000
+0019ED7C  |00000000
+0019ED80  |00000000
+0019ED84  |00000000
+0019ED88  |00000000
+0019ED8C  |7F1CF281
+0019ED90  ]0019EE30
+0019ED94  |77715D3A  返回到 77715D3A 来自 77715B12
+0019ED98  |77727520
+0019ED9C  |0019EE58
+0019EDA0  |00000000
+0019EDA4  |0074C301
+0019EDA8  |00000000
+0019EDAC  |0019EDF8
+0019EDB0  |00000000
+0019EDB4  |0019EDE4
+0019EDB8  |00000000
+0019EDBC  |00000000
+0019EDC0  |00000000
+0019EDC4  |00000000
+0019EDC8  |00000001
+0019EDCC  |00000000
+0019EDD0  |777D7B89  返回到 ntdll.777D7B89 来自 ntdll.777E8420
+0019EDD4  |7772E070
+*/
+var stackMock = []Stack{
+	{Address: 0x0019ECEC, Data: 0x77715BFE, Context: "/CALL 到 DeviceIoControl 来自 77715BF8", isApiOrArg: true},
+	{Address: 0x0019ECF0, Data: 0x000001A8, Context: "|hDevice = 000001A8 (window)", isApiOrArg: true},
+	{Address: 0x0019ECF4, Data: 0x00390008, Context: "|IoControlCode = 390008", isApiOrArg: true},
+	{Address: 0x0019ECF8, Data: 0x00390009, Context: "|InBuffer = NULL", isApiOrArg: true},
+	{Address: 0x0019ECFC, Data: 0x00000000, Context: "|InBufferSize = 0", isApiOrArg: true},
+	{Address: 0x0019ED00, Data: 0x0019ED5C, Context: "|OutBuffer = 0019ED5C", isApiOrArg: true},
+	{Address: 0x0019ED04, Data: 0x00000030, Context: "|OutBufferSize = 30 (48.)", isApiOrArg: true},
+	{Address: 0x0019ED08, Data: 0x0019ED28, Context: "|pBytesReturned = 0019ED28", isApiOrArg: true},
+	{Address: 0x0019ED0C, Data: 0x00000000, Context: "pOverlapped = NULL", isApiOrArg: true},
+	{Address: 0x0019ED10, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED14, Data: 0x00000030, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED18, Data: 0x0019ED2C, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED1C, Data: 0x0000000F, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED20, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED24, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED28, Data: 0x00000030, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED2C, Data: 0x0019ED90, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED30, Data: 0x77715B60, Context: "返回到 77715B60", isApiOrArg: true},
+	{Address: 0x0019ED34, Data: 0x0019ED5C, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED38, Data: 0x00000030, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED3C, Data: 0x0019ED50, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED40, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED44, Data: 0x0019EE58, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED48, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED4C, Data: 0x0019ED68, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED50, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED54, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED58, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED5C, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED60, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED64, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED68, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED6C, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED70, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED74, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED78, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED7C, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED80, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED84, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED88, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED8C, Data: 0x7F1CF281, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED90, Data: 0x0019EE30, Context: "]", isApiOrArg: false},
+	{Address: 0x0019ED94, Data: 0x77715D3A, Context: "返回到 77715D3A 来自 77715B12", isApiOrArg: true},
+	{Address: 0x0019ED98, Data: 0x77727520, Context: "", isApiOrArg: false},
+	{Address: 0x0019ED9C, Data: 0x0019EE58, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDA0, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDA4, Data: 0x0074C301, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDA8, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDAC, Data: 0x0019EDF8, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDB0, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDB4, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDB8, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDBC, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDC0, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDC4, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDC8, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDCC, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDD0, Data: 0x00000000, Context: "", isApiOrArg: false},
+	{Address: 0x0019EDD4, Data: 0x00000000, Context: "", isApiOrArg: false},
+}
