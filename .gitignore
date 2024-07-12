@@ -12,3 +12,4 @@ cmake-build-debug
 /binaries-bin.zip
 /hyperdbg-v0.9.1.zip
 HyperDbg.exe
+/cache/
