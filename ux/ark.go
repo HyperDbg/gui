@@ -4,39 +4,11 @@ import (
 	"fmt"
 
 	"github.com/ddkwork/app/ms"
-	"github.com/ddkwork/app/ms/driverTool/environment"
-	"github.com/ddkwork/app/ms/hook/winver"
 	"github.com/ddkwork/app/widget"
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/richardwilkes/unison"
 )
 
-func arkTodo() {
-	// todo merge plugin/symbol into here
-	// hook random for aes key
-	// add hardware info show and hook panel
-	// vstart panel for quick start cracking tookBox ?
-	// crypt tool merge here?
-	ms.DecodeTableByDll()
-	println(winver.WindowVersion())
-	ms.MiGetPteAddress()
-	ms.DecodeTableByDll()
-	ms.DecodeTableByDisassembly()
-	ms.NtDeviceIoControlFile()
-	// IopXxxControlFile()
-	widget.NewExplorer(".")
-	environment.New()
-	// driverLoader.New()
-
-	// taskexplorer todo call here
-	mylog.Todo("implement registry editor")
-}
-
-// LayoutArk ark panel is show
-// 1 nt and win32k table,finished
-// 2 file explorer,finished
-// 3 registry editor
-// etc.
 func LayoutArk() unison.Paneler {
 	table, header := widget.NewTable(ms.NtApi{}, widget.TableContext[ms.NtApi]{
 		ContextMenuItems: nil,
