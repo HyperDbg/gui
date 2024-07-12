@@ -1210,9 +1210,10 @@ func LayoutDisassemblyTable() unison.Paneler {
 }
 
 type Stack struct {
-	Address int
-	Data    int
-	Context string
+	Address    int
+	Data       int
+	Context    string
+	SymbolName string //api Name
 }
 
 /*
@@ -1287,6 +1288,7 @@ func LayoutStackTable() unison.Paneler {
 				{Text: fmt.Sprintf("%016X", node.Data.Address)},
 				{Text: fmt.Sprintf("%016X", node.Data.Data)},
 				{Text: node.Data.Context},
+				{Text: node.Data.SymbolName},
 			}
 		},
 		UnmarshalRow: func(node *widget.Node[Stack], values []string) {
