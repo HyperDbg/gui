@@ -1136,11 +1136,11 @@ type DebuggerHideAndTransparentDebuggerMode struct {
 	KernelStatus                         Uint64
 }
 type DebuggerPrepareDebuggee struct {
-	PortAddress         Uint32
-	Baudrate            Uint32
-	NtoskrnlBaseAddress Uint64
-	Result              Uint32
-	OsName              [256]Char
+	PortAddress       Uint32
+	Baudrate          Uint32
+	KernelBaseAddress Uint64
+	Result            Uint32
+	OsName            [256]Char
 }
 type DebuggeeChangeCorePacket struct {
 	NewCore Uint32
@@ -1719,6 +1719,7 @@ func init() {
 	__imp_hyperdbg_u_check_multiline_command = GengoLibrary.ImportNow("hyperdbg_u_check_multiline_command")
 	__imp_hyperdbg_u_set_custom_driver_path = GengoLibrary.ImportNow("hyperdbg_u_set_custom_driver_path")
 	__imp_hyperdbg_u_use_default_driver_path = GengoLibrary.ImportNow("hyperdbg_u_use_default_driver_path")
+	__imp_hyperdbg_u_get_kernel_base = GengoLibrary.ImportNow("hyperdbg_u_get_kernel_base")
 	__imp_hyperdbg_u_read_memory = GengoLibrary.ImportNow("hyperdbg_u_read_memory")
 	__imp_hyperdbg_u_show_memory_or_disassemble = GengoLibrary.ImportNow("hyperdbg_u_show_memory_or_disassemble")
 	__imp_hyperdbg_u_write_memory = GengoLibrary.ImportNow("hyperdbg_u_write_memory")
@@ -1821,7 +1822,7 @@ func init() {
 	bindlib.Validate((*DebuggerEditMemory)(nil), 0x28, 0x8, "Result", 0x0, "Address", 0x8, "ProcessId", 0x10, "MemoryType", 0x14, "ByteSize", 0x18, "CountOf64Chunks", 0x1c, "FinalStructureSize", 0x20)
 	bindlib.Validate((*DebuggerSearchMemory)(nil), 0x28, 0x8, "Address", 0x0, "Length", 0x8, "ProcessId", 0x10, "MemoryType", 0x14, "ByteSize", 0x18, "CountOf64Chunks", 0x1c, "FinalStructureSize", 0x20)
 	bindlib.Validate((*DebuggerHideAndTransparentDebuggerMode)(nil), 0x50, 0x8, "IsHide", 0x0, "CpuidAverage", 0x8, "CpuidStandardDeviation", 0x10, "CpuidMedian", 0x18, "RdtscAverage", 0x20, "RdtscStandardDeviation", 0x28, "RdtscMedian", 0x30, "TrueIfProcessIdAndFalseIfProcessName", 0x38, "ProcId", 0x3c, "LengthOfProcessName", 0x40, "KernelStatus", 0x48)
-	bindlib.Validate((*DebuggerPrepareDebuggee)(nil), 0x118, 0x8, "PortAddress", 0x0, "Baudrate", 0x4, "NtoskrnlBaseAddress", 0x8, "Result", 0x10, "OsName", 0x14)
+	bindlib.Validate((*DebuggerPrepareDebuggee)(nil), 0x118, 0x8, "PortAddress", 0x0, "Baudrate", 0x4, "KernelBaseAddress", 0x8, "Result", 0x10, "OsName", 0x14)
 	bindlib.Validate((*DebuggeeChangeCorePacket)(nil), 0x8, 0x4, "NewCore", 0x0, "Result", 0x4)
 	bindlib.Validate((*DebuggerAttachDetachUserModeProcess)(nil), 0x28, 0x8, "IsStartingNewProcess", 0x0, "ProcessId", 0x4, "ThreadId", 0x8, "CheckCallbackAtFirstInstruction", 0xc, "Is32Bit", 0xd, "IsPaused", 0xe, "Action", 0x10, "CountOfActiveDebuggingThreadsAndProcesses", 0x14, "Token", 0x18, "Result", 0x20)
 	bindlib.Validate((*DebuggeeProcessListNeededDetails)(nil), 0x18, 0x8, "PsActiveProcessHead", 0x0, "ImageFileNameOffset", 0x8, "UniquePidOffset", 0xc, "ActiveProcessLinksOffset", 0x10)
@@ -1954,6 +1955,13 @@ func SetCustomDriverPath(driver_file_path *Char, driver_name *Char) Boolean {
 var __imp_hyperdbg_u_use_default_driver_path bindlib.PreloadProc
 
 func UseDefaultDriverPath() { bindlib.CCall0(__imp_hyperdbg_u_use_default_driver_path.Addr()) }
+
+var __imp_hyperdbg_u_get_kernel_base bindlib.PreloadProc
+
+func GetKernelBase() Uint64 {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_get_kernel_base.Addr())
+	return bindlib.UnmarshallSyscall[Uint64](__res)
+}
 
 var __imp_hyperdbg_u_read_memory bindlib.PreloadProc
 

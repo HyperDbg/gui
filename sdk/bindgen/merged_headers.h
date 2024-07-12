@@ -3600,7 +3600,7 @@ typedef struct _DEBUGGER_PREPARE_DEBUGGEE
 {
     UINT32 PortAddress;
     UINT32 Baudrate;
-    UINT64 NtoskrnlBaseAddress;
+    UINT64 KernelBaseAddress;
     UINT32 Result; // Result from the kernel
     CHAR   OsName[MAXIMUM_CHARACTER_FOR_OS_NAME];
 
@@ -4713,6 +4713,12 @@ hyperdbg_u_set_custom_driver_path(CHAR * driver_file_path, CHAR * driver_name);
 
 IMPORT_EXPORT_LIBHYPERDBG VOID
 hyperdbg_u_use_default_driver_path();
+
+//
+// Miscalenous functions
+//
+IMPORT_EXPORT_LIBHYPERDBG UINT64
+hyperdbg_u_get_kernel_base();
 
 //
 // Reading memory
