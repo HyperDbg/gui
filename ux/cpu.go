@@ -1242,15 +1242,15 @@ func LayoutStackTable() unison.Paneler {
 			for i := 0; i < len(stackMock); i++ {
 				stack := stackMock[i]
 				if stack.isApiOrArg {
-					container := widget.NewContainerNode("", Stack{Address: stack.Address, Data: stack.Data, Context: stack.Context, isApiOrArg: true})
+					container := widget.NewContainerNode("", stack)
 					root.AddChild(container)
-					stacks := stackMock[i:]
+					stacks := stackMock[i+1:]
 					for j, s := range stacks {
-						container.AddChildByData(s)
 						if !s.isApiOrArg {
 							i += j
 							break
 						}
+						container.AddChildByData(s)
 					}
 					continue
 				}
