@@ -1257,7 +1257,7 @@ func LayoutStackTable() unison.Paneler {
 				root.AddChildByData(stack)
 			}
 		},
-		JsonName:   "cpu_stack_table",
+		JsonName:   "stack",
 		IsDocument: false,
 	})
 	return widget.NewTableScrollPanel(table, header)
