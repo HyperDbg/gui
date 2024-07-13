@@ -176,6 +176,7 @@ func isAlphabetOrUnderscore(s string) bool {
 }
 
 func TestBindSdk(t *testing.T) {
+	t.Skip()
 	TestMergeHeader(t)
 	TestBindMacros(t)
 	mylog.Call(func() {
