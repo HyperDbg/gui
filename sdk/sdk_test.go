@@ -18,11 +18,15 @@ func TestSdk(t *testing.T) {
 		assert.True(t, VmxSupportDetection())
 		assert.True(t, SetCustomDriverPathEx(SysPath))
 
-		SetTextMessageCallback()
+		// SetTextMessageCallback()
 
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 
 		ConnectLocalDebugger()
+		utf16 := []rune("C:\\Windows\\SysWOW64\\notepad.exe")
+		b := StartProcess(&utf16[0])
+		assert.True(t, Boolean2Bool(b))
+
 		mylog.Trace("LoadVmm", LoadVmm())
 
 		// todo:
