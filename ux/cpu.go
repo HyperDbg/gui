@@ -1239,7 +1239,7 @@ func LayoutStackTable() unison.Paneler {
 		SetRootRowsCallBack: func(root *widget.Node[Stack]) {
 			for i := 0; i < len(stackMock); i++ {
 				stack := stackMock[i]
-				if stack.isApiOrArg {
+				if stack.isApiOrArg { //todo decoe args https://docs.hyperdbg.org/commands/debugging-commands/k
 					container := widget.NewContainerNode(fmt.Sprintf("%016X", stack.Address), stack)
 					root.AddChild(container)
 					stacks := stackMock[i+1:]
