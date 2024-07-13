@@ -1221,13 +1221,12 @@ func LayoutStackTable() unison.Paneler {
 		ContextMenuItems: nil, // todo goto 0x00007FF838E51030
 		MarshalRow: func(node *widget.Node[Stack]) (cells []widget.CellData) {
 			addressFmt := fmt.Sprintf("%016X", node.Data.Address)
-			dataFmt := fmt.Sprintf("%016X", node.Data.Data)
 			if node.Container() {
 				addressFmt = node.Sum(addressFmt)
 			}
 			return []widget.CellData{
 				{Text: addressFmt},
-				{Text: dataFmt},
+				{Text: fmt.Sprintf("%016X", node.Data.Data)},
 				{Text: node.Data.Context},
 			}
 		},
