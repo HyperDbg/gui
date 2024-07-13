@@ -1719,6 +1719,11 @@ func init() {
 	__imp_hyperdbg_u_check_multiline_command = GengoLibrary.ImportNow("hyperdbg_u_check_multiline_command")
 	__imp_hyperdbg_u_set_custom_driver_path = GengoLibrary.ImportNow("hyperdbg_u_set_custom_driver_path")
 	__imp_hyperdbg_u_use_default_driver_path = GengoLibrary.ImportNow("hyperdbg_u_use_default_driver_path")
+	__imp_hyperdbg_u_connect_local_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_local_debugger")
+	__imp_hyperdbg_u_connect_remote_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_remote_debugger")
+	//__imp_hyperdbg_u_connect_remote_debugger_using_com_port = GengoLibrary.ImportNow("hyperdbg_u_connect_remote_debugger_using_com_port")
+	//__imp_hyperdbg_u_connect_remote_debugger_using_named_pipe = GengoLibrary.ImportNow("hyperdbg_u_connect_remote_debugger_using_named_pipe")
+	//__imp_hyperdbg_u_connect_current_debugger_using_com_port = GengoLibrary.ImportNow("hyperdbg_u_connect_current_debugger_using_com_port")
 	__imp_hyperdbg_u_get_kernel_base = GengoLibrary.ImportNow("hyperdbg_u_get_kernel_base")
 	__imp_hyperdbg_u_read_memory = GengoLibrary.ImportNow("hyperdbg_u_read_memory")
 	__imp_hyperdbg_u_show_memory_or_disassemble = GengoLibrary.ImportNow("hyperdbg_u_show_memory_or_disassemble")
@@ -1728,12 +1733,12 @@ func init() {
 	__imp_hyperdbg_u_write_target_register = GengoLibrary.ImportNow("hyperdbg_u_write_target_register")
 	__imp_hyperdbg_u_show_all_registers = GengoLibrary.ImportNow("hyperdbg_u_show_all_registers")
 	__imp_hyperdbg_u_show_target_register = GengoLibrary.ImportNow("hyperdbg_u_show_target_register")
-	__imp_hyperdbg_u_connect_local_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_local_debugger")
-	__imp_hyperdbg_u_connect_remote_debugger = GengoLibrary.ImportNow("hyperdbg_u_connect_remote_debugger")
 	return
 	__imp_hyperdbg_u_continue_debuggee = GengoLibrary.ImportNow("hyperdbg_u_continue_debuggee")
 	__imp_hyperdbg_u_pause_debuggee = GengoLibrary.ImportNow("hyperdbg_u_pause_debuggee")
 	__imp_hyperdbg_u_set_breakpoint = GengoLibrary.ImportNow("hyperdbg_u_set_breakpoint")
+	__imp_hyperdbg_u_start_process = GengoLibrary.ImportNow("hyperdbg_u_start_process")
+	__imp_hyperdbg_u_start_process_with_args = GengoLibrary.ImportNow("hyperdbg_u_start_process_with_args")
 	__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")
 	__imp_PrintSymbolBuffer = GengoLibrary.ImportNow("PrintSymbolBuffer")
 	__imp_PrintSymbol = GengoLibrary.ImportNow("PrintSymbol")
@@ -1956,6 +1961,38 @@ var __imp_hyperdbg_u_use_default_driver_path bindlib.PreloadProc
 
 func UseDefaultDriverPath() { bindlib.CCall0(__imp_hyperdbg_u_use_default_driver_path.Addr()) }
 
+var __imp_hyperdbg_u_connect_local_debugger bindlib.PreloadProc
+
+func ConnectLocalDebugger() { bindlib.CCall0(__imp_hyperdbg_u_connect_local_debugger.Addr()) }
+
+var __imp_hyperdbg_u_connect_remote_debugger bindlib.PreloadProc
+
+func ConnectRemoteDebugger(ip *Char, port *Char) Boolean {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_connect_remote_debugger.Addr(), bindlib.MarshallSyscall(ip), bindlib.MarshallSyscall(port))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_connect_remote_debugger_using_com_port bindlib.PreloadProc
+
+func ConnectRemoteDebuggerUsingComPort(port_name *Char, baudrate Dword) Boolean {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_connect_remote_debugger_using_com_port.Addr(), bindlib.MarshallSyscall(port_name), bindlib.MarshallSyscall(baudrate))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_connect_remote_debugger_using_named_pipe bindlib.PreloadProc
+
+func ConnectRemoteDebuggerUsingNamedPipe(named_pipe *Char) Boolean {
+	__res := bindlib.CCall1(__imp_hyperdbg_u_connect_remote_debugger_using_named_pipe.Addr(), bindlib.MarshallSyscall(named_pipe))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_connect_current_debugger_using_com_port bindlib.PreloadProc
+
+func ConnectCurrentDebuggerUsingComPort(port_name *Char, baudrate Dword) Boolean {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_connect_current_debugger_using_com_port.Addr(), bindlib.MarshallSyscall(port_name), bindlib.MarshallSyscall(baudrate))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
 var __imp_hyperdbg_u_get_kernel_base bindlib.PreloadProc
 
 func GetKernelBase() Uint64 {
@@ -2018,17 +2055,6 @@ func ShowTargetRegister(register_id RegsEnum) Boolean {
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
-var __imp_hyperdbg_u_connect_local_debugger bindlib.PreloadProc
-
-func ConnectLocalDebugger() { bindlib.CCall0(__imp_hyperdbg_u_connect_local_debugger.Addr()) }
-
-var __imp_hyperdbg_u_connect_remote_debugger bindlib.PreloadProc
-
-func ConnectRemoteDebugger(ip *Char, port *Char) Boolean {
-	__res := bindlib.CCall2(__imp_hyperdbg_u_connect_remote_debugger.Addr(), bindlib.MarshallSyscall(ip), bindlib.MarshallSyscall(port))
-	return bindlib.UnmarshallSyscall[Boolean](__res)
-}
-
 var __imp_hyperdbg_u_continue_debuggee bindlib.PreloadProc
 
 func ContinueDebuggee() { bindlib.CCall0(__imp_hyperdbg_u_continue_debuggee.Addr()) }
@@ -2041,6 +2067,20 @@ var __imp_hyperdbg_u_set_breakpoint bindlib.PreloadProc
 
 func SetBreakpoint(address Uint64, pid Uint32, tid Uint32, core_numer Uint32) {
 	bindlib.CCall4(__imp_hyperdbg_u_set_breakpoint.Addr(), bindlib.MarshallSyscall(address), bindlib.MarshallSyscall(pid), bindlib.MarshallSyscall(tid), bindlib.MarshallSyscall(core_numer))
+}
+
+var __imp_hyperdbg_u_start_process bindlib.PreloadProc
+
+func StartProcess(path *Wchar) Boolean {
+	__res := bindlib.CCall1(__imp_hyperdbg_u_start_process.Addr(), bindlib.MarshallSyscall(path))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_start_process_with_args bindlib.PreloadProc
+
+func StartProcessWithArgs(path *Wchar, arguments *Wchar) Boolean {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_start_process_with_args.Addr(), bindlib.MarshallSyscall(path), bindlib.MarshallSyscall(arguments))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_ScriptEngineParse bindlib.PreloadProc

@@ -1006,13 +1006,13 @@ func Script() (status string) {
 	return InterpreterEx(".script")
 }
 
-// StartProcess
+// StartProcess_
 // Description:runs a user-mode process
 // Syntax:
 // .start [path Path (string)] [Parameters (string)]
 // Examples:
 // .start path c:\reverse eng\my_file.exe
-func StartProcess(path string) (status string) {
+func StartProcess_(path string) (status string) {
 	return InterpreterEx(".start path " + path)
 }
 

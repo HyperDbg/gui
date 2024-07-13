@@ -188,7 +188,7 @@ func newToolbar() *toolbar {
 			mylog.Warning("KillProcess", sdk.KillProcess())
 		}),
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
-			mylog.Warning("StartProcess", sdk.StartProcess(TargetExePath))
+			mylog.Warning("StartProcess", sdk.StartProcess_(TargetExePath))
 		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
 		pause: widget.NewImageButton("pause", m.Get("pause.png"), func() {
