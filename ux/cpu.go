@@ -1224,7 +1224,6 @@ func LayoutStackTable() unison.Paneler {
 			dataFmt := fmt.Sprintf("%016X", node.Data.Data)
 			if node.Container() {
 				addressFmt = node.Sum(addressFmt)
-				dataFmt = ""
 			}
 			return []widget.CellData{
 				{Text: addressFmt},
@@ -1242,7 +1241,7 @@ func LayoutStackTable() unison.Paneler {
 			for i := 0; i < len(stackMock); i++ {
 				stack := stackMock[i]
 				if stack.isApiOrArg {
-					container := widget.NewContainerNode("", stack)
+					container := widget.NewContainerNode(fmt.Sprintf("%016X", stack.Address), stack)
 					root.AddChild(container)
 					stacks := stackMock[i+1:]
 					for j, s := range stacks {
