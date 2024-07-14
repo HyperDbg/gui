@@ -1454,7 +1454,7 @@ type PdebuggerRemotePacket = *DebuggerRemotePacket
 
 // @brief Callback type that can be used to be used
 // as a custom ShowMessages function
-type Callback = unsafe.Pointer
+type Callback = *Char
 
 // @brief The structure of user-input packet in HyperDbg
 type PdebuggeeUserInputPacket = *DebuggeeUserInputPacket
