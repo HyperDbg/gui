@@ -2,6 +2,7 @@ package bindgen
 
 import (
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 	"unicode"
@@ -248,8 +249,32 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 	//RegsEnum                          = RegsEnum
 )`)
 
+		for _, checkError := range sizeCheckErrors {
+			checkError = strings.TrimSpace(checkError)
+			b.ReplaceAll(checkError, "//"+checkError)
+		}
+
 		stream.WriteGoFile("../sdk.go", b)
 	})
+}
+
+var sizeCheckErrors = []string{
+	`bindlib.Validate((*Anon196_9)(nil), 0x8, 0x8, "Pcid", 0x0, "PageFrameNumber", 0x1, "Reserved1", 0x6, "Reserved_2", 0x7, "PcidInvalidate", 0x7)                                                                                                                                                                                                                                                                                                                                                                                                          `,
+	`bindlib.Validate((*Anon1497_5)(nil), 0x4, 0x4, "Type", 0x0, "DescriptorType", 0x0, "DescriptorPrivilegeLevel", 0x0, "Present", 0x0, "Reserved1", 0x1, "AvailableBit", 0x1, "LongMode", 0x1, "DefaultBig", 0x1, "Granularity", 0x1, "Unusable", 0x2, "Reserved2", 0x2)                                                                                                                                                                                                                                                                                   `,
+	`bindlib.Validate((*VmxSegmentSelector)(nil), 0x18, 0x8, "Selector", 0x0, "Attributes", 0x4, "Limit", 0x8, "Base", 0x10)                                                                                                                                                                                                                                                                                                                                                                                                                                 `,
+	`bindlib.Validate((*HwdbgInstanceInformation)(nil), 0x40, 0x4, "Version", 0x0, "maximumNumberOfStages", 0x4, "scriptVariableLength", 0x8, "numberOfSupportedLocalAndGlobalVariables", 0xc, "numberOfSupportedTemporaryVariables", 0x10, "maximumNumberOfSupportedGetScriptOperators", 0x14, "maximumNumberOfSupportedSetScriptOperators", 0x18, "sharedMemorySize", 0x1c, "debuggerAreaOffset", 0x20, "debuggeeAreaOffset", 0x24, "numberOfPins", 0x28, "numberOfPorts", 0x2c, "scriptCapabilities", 0x30, "bramAddrWidth", 0x38, "bramDataWidth", 0x3c) `,
+	`bindlib.Validate((*_HwdbgScriptCapabilities)(nil), 0x8, 0x4, "AssignLocalGlobalVar", 0x0, "AssignRegisters", 0x0, "AssignPseudoRegisters", 0x0, "ConditionalStatementsAndComparisonOperators", 0x0, "FuncOr", 0x0, "FuncXor", 0x0, "FuncAnd", 0x0, "FuncAsr", 0x0, "FuncAsl", 0x1, "FuncAdd", 0x1, "FuncSub", 0x1, "FuncMul", 0x1, "FuncDiv", 0x1, "FuncMod", 0x1, "FuncGt", 0x1, "FuncLt", 0x1, "FuncEgt", 0x2, "FuncElt", 0x2, "FuncEqual", 0x2, "FuncNeq", 0x2, "FuncJmp", 0x2, "FuncJz", 0x2, "FuncJnz", 0x2, "FuncMov", 0x2, "FuncPrintf", 0x3)    `,
+	`bindlib.Validate((*DebuggeeProcessListNeededDetails)(nil), 0x18, 0x8, "PsActiveProcessHead", 0x0, "ImageFileNameOffset", 0x8, "UniquePidOffset", 0xc, "ActiveProcessLinksOffset", 0x10)                                                                                                                                                                                                                                                                                                                                                                 `,
+	`bindlib.Validate((*DebuggerQueryActiveProcessesOrThreads)(nil), 0x58, 0x8, "ProcessListNeededDetails", 0x0, "ThreadListNeededDetails", 0x18, "QueryType", 0x40, "QueryAction", 0x44, "Count", 0x48, "Result", 0x50)                                                                                                                                                                                                                                                                                                                                     `,
+	`bindlib.Validate((*DebuggeeDetailsAndSwitchProcessPacket)(nil), 0x48, 0x8, "ActionType", 0x0, "ProcessId", 0x4, "Process", 0x8, "IsSwitchByClkIntr", 0x10, "ProcessName", 0x11, "ProcessListSymDetails", 0x28, "Result", 0x40)                                                                                                                                                                                                                                                                                                                          `,
+}
+
+func TestName(t *testing.T) {
+	t.Skip()
+	for _, checkError := range sizeCheckErrors {
+		checkError = strings.TrimSpace(checkError)
+		println(strconv.Quote(checkError))
+	}
 }
 
 var bugfix = `

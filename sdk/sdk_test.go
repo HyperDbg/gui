@@ -18,9 +18,15 @@ func TestSdk(t *testing.T) {
 		assert.True(t, VmxSupportDetection())
 		assert.True(t, SetCustomDriverPathEx(SysPath))
 
-		//not working
-		//log := "x"
-		//SetTextMessageCallback(StringToBytePointer(log))
+		//callback:= func(msgAddress string) {
+		//	pointer := StringToBytePointer(msgAddress)
+		//	SetTextMessageCallback(Callback(pointer))
+		//
+		//}
+
+		// not working
+		log := "x"
+		SetTextMessageCallback(Callback(StringToBytePointer(log)))
 		//go func() {
 		//	for {
 		//		if len(log) > 1 {
