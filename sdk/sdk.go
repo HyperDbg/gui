@@ -786,7 +786,7 @@ type Cr3Type struct {
 	Anon192_5
 }
 type Anon192_5 struct {
-	Raw [1]int64
+	Raw [7]byte
 }
 type Anon196_9 struct {
 	Pcid            Uint64
@@ -881,7 +881,7 @@ type EptSingleHookUnhookingDetails struct {
 	OriginalEntry                             Uint64
 }
 type Anon1495_9 struct {
-	Raw [1]int32
+	Raw [13]byte
 }
 type Anon1497_5 struct {
 	// [Bits 3:0] Segment type.
@@ -1778,9 +1778,9 @@ func init() {
 	bindlib.Validate((*GuestRegs)(nil), 0x80, 0x8, "Rax", 0x0, "Rcx", 0x8, "Rdx", 0x10, "Rbx", 0x18, "Rsp", 0x20, "Rbp", 0x28, "Rsi", 0x30, "Rdi", 0x38, "R8", 0x40, "R9", 0x48, "R10", 0x50, "R11", 0x58, "R12", 0x60, "R13", 0x68, "R14", 0x70, "R15", 0x78)
 	bindlib.Validate((*GuestExtraRegisters)(nil), 0x20, 0x8, "Cs", 0x0, "Ds", 0x2, "Fs", 0x4, "Gs", 0x6, "Es", 0x8, "Ss", 0xa, "Rflags", 0x10, "Rip", 0x18)
 	bindlib.Validate((*ScriptEngineVariablesList)(nil), 0x18, 0x8, "TempList", 0x0, "GlobalVariablesList", 0x8, "LocalVariablesList", 0x10)
-	bindlib.Validate((*Cr3Type)(nil), 0x8, 0x8)
-	bindlib.Validate((*Anon192_5)(nil), 0x8, 0x8)
-	// bindlib.Validate((*Anon196_9)(nil), 0x8, 0x8, "Pcid", 0x0, "PageFrameNumber", 0x1, "Reserved1", 0x6, "Reserved_2", 0x7, "PcidInvalidate", 0x7)
+	bindlib.Validate((*Cr3Type)(nil), 0x8, 0x1)
+	bindlib.Validate((*Anon192_5)(nil), 0x7, 0x1)
+	bindlib.Validate((*Anon196_9)(nil), 0x5, 0x1, "Pcid", 0x0, "PageFrameNumber", 0x1, "Reserved1", 0x6, "Reserved_2", 0x7, "PcidInvalidate", 0x7)
 	bindlib.Validate((*DebuggerRemotePacket)(nil), 0x18, 0x8, "Checksum", 0x0, "Indicator", 0x8, "TypeOfThePacket", 0x10, "RequestedActionOfThePacket", 0x14)
 	bindlib.Validate((*DebuggeeUserInputPacket)(nil), 0xc, 0x4, "CommandLen", 0x0, "IgnoreFinishedSignal", 0x4, "Result", 0x8)
 	bindlib.Validate((*DebuggeeEventAndActionHeaderForRemotePacket)(nil), 0x4, 0x4, "Length", 0x0)
@@ -1795,9 +1795,9 @@ func init() {
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 0x20, 0x8, "StartAddress", 0x0, "EndAddress", 0x8, "SetHookForRead", 0x10, "SetHookForWrite", 0x11, "SetHookForExec", 0x12, "MemoryType", 0x14, "Tag", 0x18)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 0x10, 0x8, "TargetAddress", 0x0, "HookFunction", 0x8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 0x18, 0x8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0x0, "RemoveBreakpointInterception", 0x1, "PhysicalAddress", 0x8, "OriginalEntry", 0x10)
-	bindlib.Validate((*Anon1495_9)(nil), 0x4, 0x4)
-	// bindlib.Validate((*Anon1497_5)(nil), 0x4, 0x4, "Type", 0x0, "DescriptorType", 0x0, "DescriptorPrivilegeLevel", 0x0, "Present", 0x0, "Reserved1", 0x1, "AvailableBit", 0x1, "LongMode", 0x1, "DefaultBig", 0x1, "Granularity", 0x1, "Unusable", 0x2, "Reserved2", 0x2)
-	// bindlib.Validate((*VmxSegmentSelector)(nil), 0x18, 0x8, "Selector", 0x0, "Attributes", 0x4, "Limit", 0x8, "Base", 0x10)
+	bindlib.Validate((*Anon1495_9)(nil), 0xd, 0x1)
+	bindlib.Validate((*Anon1497_5)(nil), 0xb, 0x1, "Type", 0x0, "DescriptorType", 0x0, "DescriptorPrivilegeLevel", 0x0, "Present", 0x0, "Reserved1", 0x1, "AvailableBit", 0x1, "LongMode", 0x1, "DefaultBig", 0x1, "Granularity", 0x1, "Unusable", 0x2, "Reserved2", 0x2)
+	bindlib.Validate((*VmxSegmentSelector)(nil), 0x11, 0x1, "Selector", 0x0, "Attributes", 0x4, "Limit", 0x8, "Base", 0x10)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 0x18, 0x8, "Tag", 0x0, "KernelStatus", 0x8, "TypeOfAction", 0x10, "IsEnabled", 0x14)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 0x10, 0x8, "KernelStatus", 0x0, "IsShortCircuiting", 0x8)
 	bindlib.Validate((*DebuggerEventOptions)(nil), 0x30, 0x8, "OptionalParam1", 0x0, "OptionalParam2", 0x8, "OptionalParam3", 0x10, "OptionalParam4", 0x18, "OptionalParam5", 0x20, "OptionalParam6", 0x28)
@@ -1805,8 +1805,8 @@ func init() {
 	bindlib.Validate((*DebuggerGeneralAction)(nil), 0x20, 0x8, "EventTag", 0x0, "ActionType", 0x8, "ImmediateMessagePassing", 0xc, "PreAllocatedBuffer", 0x10, "CustomCodeBufferSize", 0x14, "ScriptBufferSize", 0x18, "ScriptBufferPointer", 0x1c)
 	bindlib.Validate((*DebuggerEventAndActionResult)(nil), 0x8, 0x4, "IsSuccessful", 0x0, "Error", 0x4)
 	bindlib.Validate((*HwdbgPortInformationItems)(nil), 0x4, 0x4, "PortSize", 0x0)
-	// bindlib.Validate((*HwdbgInstanceInformation)(nil), 0x40, 0x4, "Version", 0x0, "maximumNumberOfStages", 0x4, "scriptVariableLength", 0x8, "numberOfSupportedLocalAndGlobalVariables", 0xc, "numberOfSupportedTemporaryVariables", 0x10, "maximumNumberOfSupportedGetScriptOperators", 0x14, "maximumNumberOfSupportedSetScriptOperators", 0x18, "sharedMemorySize", 0x1c, "debuggerAreaOffset", 0x20, "debuggeeAreaOffset", 0x24, "numberOfPins", 0x28, "numberOfPorts", 0x2c, "scriptCapabilities", 0x30, "bramAddrWidth", 0x38, "bramDataWidth", 0x3c)
-	// bindlib.Validate((*_HwdbgScriptCapabilities)(nil), 0x8, 0x4, "AssignLocalGlobalVar", 0x0, "AssignRegisters", 0x0, "AssignPseudoRegisters", 0x0, "ConditionalStatementsAndComparisonOperators", 0x0, "FuncOr", 0x0, "FuncXor", 0x0, "FuncAnd", 0x0, "FuncAsr", 0x0, "FuncAsl", 0x1, "FuncAdd", 0x1, "FuncSub", 0x1, "FuncMul", 0x1, "FuncDiv", 0x1, "FuncMod", 0x1, "FuncGt", 0x1, "FuncLt", 0x1, "FuncEgt", 0x2, "FuncElt", 0x2, "FuncEqual", 0x2, "FuncNeq", 0x2, "FuncJmp", 0x2, "FuncJz", 0x2, "FuncJnz", 0x2, "FuncMov", 0x2, "FuncPrintf", 0x3)
+	bindlib.Validate((*HwdbgInstanceInformation)(nil), 0x28, 0x1, "Version", 0x0, "maximumNumberOfStages", 0x4, "scriptVariableLength", 0x8, "numberOfSupportedLocalAndGlobalVariables", 0xc, "numberOfSupportedTemporaryVariables", 0x10, "maximumNumberOfSupportedGetScriptOperators", 0x14, "maximumNumberOfSupportedSetScriptOperators", 0x18, "sharedMemorySize", 0x1c, "debuggerAreaOffset", 0x20, "debuggeeAreaOffset", 0x24, "numberOfPins", 0x28, "numberOfPorts", 0x2c, "scriptCapabilities", 0x30, "bramAddrWidth", 0x38, "bramDataWidth", 0x3c)
+	bindlib.Validate((*_HwdbgScriptCapabilities)(nil), 0x19, 0x1, "AssignLocalGlobalVar", 0x0, "AssignRegisters", 0x0, "AssignPseudoRegisters", 0x0, "ConditionalStatementsAndComparisonOperators", 0x0, "FuncOr", 0x0, "FuncXor", 0x0, "FuncAnd", 0x0, "FuncAsr", 0x0, "FuncAsl", 0x1, "FuncAdd", 0x1, "FuncSub", 0x1, "FuncMul", 0x1, "FuncDiv", 0x1, "FuncMod", 0x1, "FuncGt", 0x1, "FuncLt", 0x1, "FuncEgt", 0x2, "FuncElt", 0x2, "FuncEqual", 0x2, "FuncNeq", 0x2, "FuncJmp", 0x2, "FuncJz", 0x2, "FuncJnz", 0x2, "FuncMov", 0x2, "FuncPrintf", 0x3)
 	bindlib.Validate((*HwdbgScriptBuffer)(nil), 0x4, 0x4, "scriptNumberOfSymbols", 0x0)
 	bindlib.Validate((*DebuggerReadPageTableEntriesDetails)(nil), 0x58, 0x8, "VirtualAddress", 0x0, "ProcessId", 0x8, "Pml4eVirtualAddress", 0x10, "Pml4eValue", 0x18, "PdpteVirtualAddress", 0x20, "PdpteValue", 0x28, "PdeVirtualAddress", 0x30, "PdeValue", 0x38, "PteVirtualAddress", 0x40, "PteValue", 0x48, "KernelStatus", 0x50)
 	bindlib.Validate((*DebuggerVa2paAndPa2vaCommands)(nil), 0x20, 0x8, "VirtualAddress", 0x0, "PhysicalAddress", 0x8, "ProcessId", 0x10, "IsVirtual2Physical", 0x14, "KernelStatus", 0x18)
@@ -1829,11 +1829,11 @@ func init() {
 	bindlib.Validate((*DebuggerPrepareDebuggee)(nil), 0x118, 0x8, "PortAddress", 0x0, "Baudrate", 0x4, "KernelBaseAddress", 0x8, "Result", 0x10, "OsName", 0x14)
 	bindlib.Validate((*DebuggeeChangeCorePacket)(nil), 0x8, 0x4, "NewCore", 0x0, "Result", 0x4)
 	bindlib.Validate((*DebuggerAttachDetachUserModeProcess)(nil), 0x28, 0x8, "IsStartingNewProcess", 0x0, "ProcessId", 0x4, "ThreadId", 0x8, "CheckCallbackAtFirstInstruction", 0xc, "Is32Bit", 0xd, "IsPaused", 0xe, "Action", 0x10, "CountOfActiveDebuggingThreadsAndProcesses", 0x14, "Token", 0x18, "Result", 0x20)
-	// bindlib.Validate((*DebuggeeProcessListNeededDetails)(nil), 0x18, 0x8, "PsActiveProcessHead", 0x0, "ImageFileNameOffset", 0x8, "UniquePidOffset", 0xc, "ActiveProcessLinksOffset", 0x10)
+	bindlib.Validate((*DebuggeeProcessListNeededDetails)(nil), 0x18, 0x8, "PsActiveProcessHead", 0x0, "ImageFileNameOffset", 0x8, "UniquePidOffset", 0xc, "ActiveProcessLinksOffset", 0x10)
 	bindlib.Validate((*DebuggeeThreadListNeededDetails)(nil), 0x28, 0x8, "ThreadListHeadOffset", 0x0, "ThreadListEntryOffset", 0x4, "CidOffset", 0x8, "PsActiveProcessHead", 0x10, "ActiveProcessLinksOffset", 0x18, "Process", 0x20)
 	bindlib.Validate((*DebuggeeProcessListDetailsEntry)(nil), 0x28, 0x8, "Eprocess", 0x0, "ProcessId", 0x8, "Cr3", 0x10, "ImageFileName", 0x18)
 	bindlib.Validate((*DebuggeeThreadListDetailsEntry)(nil), 0x28, 0x8, "Eprocess", 0x0, "Ethread", 0x8, "ProcessId", 0x10, "ThreadId", 0x14, "ImageFileName", 0x18)
-	// bindlib.Validate((*DebuggerQueryActiveProcessesOrThreads)(nil), 0x58, 0x8, "ProcessListNeededDetails", 0x0, "ThreadListNeededDetails", 0x18, "QueryType", 0x40, "QueryAction", 0x44, "Count", 0x48, "Result", 0x50)
+	bindlib.Validate((*DebuggerQueryActiveProcessesOrThreads)(nil), 0x58, 0x8, "ProcessListNeededDetails", 0x0, "ThreadListNeededDetails", 0x18, "QueryType", 0x40, "QueryAction", 0x44, "Count", 0x48, "Result", 0x50)
 	bindlib.Validate((*DebuggerSingleCallstackFrame)(nil), 0x18, 0x8, "IsStackAddressValid", 0x0, "IsValidAddress", 0x1, "IsExecutable", 0x2, "Value", 0x8, "InstructionBytesOnRip", 0x10)
 	bindlib.Validate((*DebuggerCallstackRequest)(nil), 0x28, 0x8, "Is32Bit", 0x0, "KernelStatus", 0x4, "DisplayMethod", 0x8, "Size", 0xc, "FrameCount", 0x10, "BaseAddress", 0x18, "BufferSize", 0x20)
 	bindlib.Validate((*UsermodeDebuggingThreadOrProcessStateDetails)(nil), 0xc, 0x4, "ProcessId", 0x0, "ThreadId", 0x4, "IsProcess", 0x8)
@@ -1842,7 +1842,7 @@ func init() {
 	bindlib.Validate((*DebuggerEventRequestCustomCode)(nil), 0x18, 0x8, "CustomCodeBufferSize", 0x0, "CustomCodeBufferAddress", 0x8, "OptionalRequestedBufferSize", 0x10)
 	bindlib.Validate((*DebuggerUdCommandAction)(nil), 0x28, 0x8, "ActionType", 0x0, "OptionalParam1", 0x8, "OptionalParam2", 0x10, "OptionalParam3", 0x18, "OptionalParam4", 0x20)
 	bindlib.Validate((*DebuggerUdCommandPacket)(nil), 0x40, 0x8, "UdAction", 0x0, "ProcessDebuggingDetailToken", 0x28, "TargetThreadId", 0x30, "ApplyToAllPausedThreads", 0x34, "Result", 0x38)
-	// bindlib.Validate((*DebuggeeDetailsAndSwitchProcessPacket)(nil), 0x48, 0x8, "ActionType", 0x0, "ProcessId", 0x4, "Process", 0x8, "IsSwitchByClkIntr", 0x10, "ProcessName", 0x11, "ProcessListSymDetails", 0x28, "Result", 0x40)
+	bindlib.Validate((*DebuggeeDetailsAndSwitchProcessPacket)(nil), 0x48, 0x8, "ActionType", 0x0, "ProcessId", 0x4, "Process", 0x8, "IsSwitchByClkIntr", 0x10, "ProcessName", 0x11, "ProcessListSymDetails", 0x28, "Result", 0x40)
 	bindlib.Validate((*DebuggeeDetailsAndSwitchThreadPacket)(nil), 0x68, 0x8, "ActionType", 0x0, "ThreadId", 0x4, "ProcessId", 0x8, "Thread", 0x10, "Process", 0x18, "CheckByClockInterrupt", 0x20, "ProcessName", 0x21, "ThreadListSymDetails", 0x38, "Result", 0x60)
 	bindlib.Validate((*DebuggeeStepPacket)(nil), 0xc, 0x4, "StepType", 0x0, "IsCurrentInstructionACall", 0x4, "CallLength", 0x8)
 	bindlib.Validate((*DebuggeeFormatsPacket)(nil), 0x10, 0x8, "Value", 0x0, "Result", 0x8)
