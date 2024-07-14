@@ -48,6 +48,7 @@ func TestSdk(t *testing.T) {
 /*
 .connect local
 load vmm
+.start path C:\Windows\SysWOW64\notepad.exe
 .sympath SRV*c:\Symbols*https://msdl.microsoft.com/download/symbol
 .sym load
 .sym reload
