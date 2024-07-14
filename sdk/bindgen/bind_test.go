@@ -176,7 +176,6 @@ func isAlphabetOrUnderscore(s string) bool {
 }
 
 func TestBindSdk(t *testing.T) {
-	t.Skip()
 	TestMergeHeader(t)
 	TestBindMacros(t)
 	mylog.Call(func() {
@@ -213,8 +212,6 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 		}
 		b.Replace("\nSizeT              = uint64", "", 1)
 		b.Replace("\nBool               = int32", "", 1)
-		b.Replace(`__imp_hyperdbg_u_continue_debuggee = GengoLibrary.ImportNow("hyperdbg_u_continue_debuggee")`, `	return
-	__imp_hyperdbg_u_continue_debuggee = GengoLibrary.ImportNow("hyperdbg_u_continue_debuggee")`, 1)
 		b.Replace(`	Bool               = int32
 	Long               = int64
 	SizeT              = uint64`, `	Long               = int64`, 1)
