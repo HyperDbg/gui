@@ -24,10 +24,10 @@ func TestSdk(t *testing.T) {
 
 		// ConnectLocalDebugger()
 		// assert.True(t, Boolean2Bool(ConnectCurrentDebuggerUsingComPort(StringToBytePointer("127.0.0.1"), 8080)))
-		assert.True(t, Boolean2Bool(StartProcess(&[]rune("C:\\Windows\\SysWOW64\\notepad.exe")[0])))
-		// assert.True(t, Boolean2Bool(StartProcessWithArgs(&[]rune("C:\\Windows\\SysWOW64\\notepad.exe")[0], &[]rune("xxoo")[0])))
+		// assert.True(t, Boolean2Bool(StartProcess(&[]rune("C:\\Windows\\SysWOW64\\notepad.exe")[0])))
 
 		mylog.Trace("LoadVmm", LoadVmm())
+		assert.True(t, Boolean2Bool(StartProcessWithArgs(&[]rune("path")[0], &[]rune("C:\\Windows\\SysWOW64\\notepad.exe")[0])))
 
 		// todo:
 		// start debugger
