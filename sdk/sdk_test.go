@@ -31,7 +31,7 @@ func TestSdk(t *testing.T) {
 
 		// todo:
 		// start debugger
-		// read memory(todo bug read address buffer for disassembly,see cpu.go LayoutDisassemblyTable ,oep buf seems error)
+		// read memory
 		// read registers
 		// set breakpoints
 		// step over/into/out
