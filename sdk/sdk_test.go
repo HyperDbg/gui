@@ -18,11 +18,11 @@ func TestSdk(t *testing.T) {
 		assert.True(t, VmxSupportDetection())
 		assert.True(t, SetCustomDriverPathEx(SysPath))
 
-		log := ""
+		log := "x"
 		SetTextMessageCallback(StringToBytePointer(log))
 		go func() {
 			for {
-				if log != "" {
+				if len(log) > 1 {
 					println(log)
 				}
 			}
