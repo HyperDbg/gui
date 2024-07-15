@@ -487,8 +487,8 @@ const (
 type DebuggerEditMemoryType int32
 
 const (
-	EDIT_PHYSICAL_MEMORY DebuggerEditMemoryType = 0
-	EDIT_VIRTUAL_MEMORY  DebuggerEditMemoryType = 1
+	EDIT_VIRTUAL_MEMORY  DebuggerEditMemoryType = 0
+	EDIT_PHYSICAL_MEMORY DebuggerEditMemoryType = 1
 )
 
 // @brief size of editing memory
@@ -880,10 +880,10 @@ type EptSingleHookUnhookingDetails struct {
 	PhysicalAddress                           SizeT
 	OriginalEntry                             Uint64
 }
-type Anon1495_9 struct {
+type Anon1435_9 struct {
 	Raw [1]int32
 }
-type Anon1497_5 struct {
+type Anon1437_5 struct {
 	// [Bits 3:0] Segment type.
 	Type Uint32
 	// [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
@@ -1795,8 +1795,8 @@ func init() {
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 0x20, 0x8, "StartAddress", 0x0, "EndAddress", 0x8, "SetHookForRead", 0x10, "SetHookForWrite", 0x11, "SetHookForExec", 0x12, "MemoryType", 0x14, "Tag", 0x18)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 0x10, 0x8, "TargetAddress", 0x0, "HookFunction", 0x8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 0x18, 0x8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0x0, "RemoveBreakpointInterception", 0x1, "PhysicalAddress", 0x8, "OriginalEntry", 0x10)
-	bindlib.Validate((*Anon1495_9)(nil), 0x4, 0x4)
-	bindlib.Validate((*Anon1497_5)(nil), 0x4, 0x4, "Type", 0x0, "DescriptorType", 0x0, "DescriptorPrivilegeLevel", 0x0, "Present", 0x0, "Reserved1", 0x1, "AvailableBit", 0x1, "LongMode", 0x1, "DefaultBig", 0x1, "Granularity", 0x1, "Unusable", 0x2, "Reserved2", 0x2)
+	bindlib.Validate((*Anon1435_9)(nil), 0x4, 0x4)
+	bindlib.Validate((*Anon1437_5)(nil), 0x4, 0x4, "Type", 0x0, "DescriptorType", 0x0, "DescriptorPrivilegeLevel", 0x0, "Present", 0x0, "Reserved1", 0x1, "AvailableBit", 0x1, "LongMode", 0x1, "DefaultBig", 0x1, "Granularity", 0x1, "Unusable", 0x2, "Reserved2", 0x2)
 	bindlib.Validate((*VmxSegmentSelector)(nil), 0x18, 0x8, "Selector", 0x0, "Attributes", 0x4, "Limit", 0x8, "Base", 0x10)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 0x18, 0x8, "Tag", 0x0, "KernelStatus", 0x8, "TypeOfAction", 0x10, "IsEnabled", 0x14)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 0x10, 0x8, "KernelStatus", 0x0, "IsShortCircuiting", 0x8)
@@ -2339,18 +2339,18 @@ func (s *Anon192_5) SetFields(v Anon196_9) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1495_9) Fields() Anon1497_5 {
-	return bindlib.ReadBitcast[Anon1497_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon1435_9) Fields() Anon1437_5 {
+	return bindlib.ReadBitcast[Anon1437_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1495_9) SetFields(v Anon1497_5) {
+func (s *Anon1435_9) SetFields(v Anon1437_5) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1495_9) AsUInt() Uint32 {
+func (s Anon1435_9) AsUInt() Uint32 {
 	return bindlib.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1495_9) SetAsUInt(v Uint32) {
+func (s *Anon1435_9) SetAsUInt(v Uint32) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
