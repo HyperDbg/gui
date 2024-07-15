@@ -10,6 +10,18 @@ import (
 
 var logMsgAddress = " "
 
+func StringToBytePointer22(s string) *byte {
+	// 为buffer分配4096字节
+	buffer := make([]byte, 4096)
+
+	// 将字符串内容复制到buffer中
+	copy(buffer, s)
+
+	// 返回buffer的第一个字节的指针
+	ptr := &buffer[0]
+	return ptr
+}
+
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
 	if isRunningOnGitHubActions() {
@@ -27,7 +39,7 @@ func TestSdk(t *testing.T) {
 		//}
 
 		// not working
-		SetTextMessageCallback(Callback(StringToBytePointer(logMsgAddress)))
+		SetTextMessageCallback(Callback(StringToBytePointer22(logMsgAddress)))
 		//SetTextMessageCallback(Callback(&[]rune(logMsgAddress)[0]))
 		//go func() {
 		//	for {
