@@ -8,9 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	logBuffer = make([]byte, 1, 4096)
-)
+var logBuffer = make([]byte, 1, 4096)
 
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
@@ -30,7 +28,7 @@ func TestSdk(t *testing.T) {
 
 		// not working
 		SetTextMessageCallback(Callback(&logBuffer[0]))
-		//SetTextMessageCallback(Callback(&[]rune(logMsgAddress)[0]))
+		// SetTextMessageCallback(Callback(&[]rune(logBuffer)[0]))
 		go func() {
 			for {
 				if len(logBuffer) > 1 {
