@@ -3,7 +3,6 @@ package sdk
 import (
 	"testing"
 
-	"github.com/ddkwork/app/ms/driverTool/driver"
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
 )
@@ -83,20 +82,20 @@ g
 kq l 60
 */
 
-func Test2(t *testing.T) {
-	t.Skip()
-	if isRunningOnGitHubActions() {
-		mylog.Info("github ci windows not support vt-x nested virtualization,skip test")
-		return
-	}
-	//Dependencies := []string{
-	//	"hyperhv.dll",
-	//	"hyperlog.dll",
-	//	"kdserial.dll",
-	//}
-	assert.True(t, SetCustomDriverPathEx(SysPath))
-	d := driver.NewObject("HyperdbgHypervisorDevice", SysPath)
-	// d.SetDependencies(Dependencies)
-	d.Load(SysPath)
-	d.Unload()
-}
+//func Test2(t *testing.T) {
+//	t.Skip()
+//	if isRunningOnGitHubActions() {
+//		mylog.Info("github ci windows not support vt-x nested virtualization,skip test")
+//		return
+//	}
+//	//Dependencies := []string{
+//	//	"hyperhv.dll",
+//	//	"hyperlog.dll",
+//	//	"kdserial.dll",
+//	//}
+//	assert.True(t, SetCustomDriverPathEx(SysPath))
+//	d := driver.NewObject("HyperdbgHypervisorDevice", SysPath)
+//	// d.SetDependencies(Dependencies)
+//	d.Load(SysPath)
+//	d.Unload()
+//}
