@@ -1,13 +1,19 @@
 package sdk
 
 import (
+	"reflect"
 	"testing"
+	"unsafe"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
 )
 
 var logBuffer = make([]byte, 1, 4096)
+
+func LogCallback(data *Char) {
+	mylog.Info("", BytePointerToString(data))
+}
 
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
@@ -26,8 +32,12 @@ func TestSdk(t *testing.T) {
 		//}
 
 		// not working
-		//SetTextMessageCallback(Callback(&logBuffer[0]))
-		//// SetTextMessageCallback(Callback(&[]rune(logBuffer)[0]))
+		pointer := unsafe.Pointer(reflect.ValueOf(LogCallback).Pointer())
+		SetTextMessageCallback(pointer)
+
+		LogCallback(&logBuffer[0])
+
+		// SetTextMessageCallback(Callback(&[]rune(logBuffer)[0]))
 		//go func() {
 		//	for {
 		//		if len(logBuffer) > 1 {
