@@ -8,11 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var logMsgAddress = " "
+var logMsgAddress = ""
 
 func StringToBytePointer22(s string) *byte {
 	// 为buffer分配4096字节
-	buffer := make([]byte, 4096)
+	buffer := make([]byte, 1, 4096)
 
 	// 将字符串内容复制到buffer中
 	copy(buffer, s)
