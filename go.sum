@@ -10,8 +10,6 @@ github.com/aquasecurity/table v1.8.0 h1:9ntpSwrUfjrM6/YviArlx/ZBGd6ix8W+MtojQcM7
 github.com/aquasecurity/table v1.8.0/go.mod h1:eqOmvjjB7AhXFgFqpJUEE/ietg7RrMSJZXyTN8E/wZw=
 github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394 h1:OYA+5W64v3OgClL+IrOD63t4i/RW7RqrAVl9LTZ9UqQ=
 github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394/go.mod h1:Q8n74mJTIgjX4RBBcHnJ05h//6/k6foqmgE45jTQtxg=
-github.com/can1357/gengo v0.2.0 h1:ekg3RWWDKaUCmb2Ib+gAYqT0v6v3xSwZreiI133+DMc=
-github.com/can1357/gengo v0.2.0/go.mod h1:XX6FcockCfPXg1ixiUQiU2Nm7gowrIm3YFO2VANLsMA=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/dave/dst v0.27.3 h1:P1HPoMza3cMEquVf9kKy8yXsFirry4zEnWOdYPOoIzY=
@@ -25,12 +23,6 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8Yc
 github.com/daviddengcn/go-colortext v1.0.0/go.mod h1:zDqEI5NVUop5QPpVJUxE9UO10hRnmkD5G4Pmri9+m4c=
 github.com/dc0d/caseconv v0.5.0 h1:z3Ki2zszD03beetWyNAGa3NOAbnDJk+bX0tvcx9BKjQ=
 github.com/dc0d/caseconv v0.5.0/go.mod h1:/CrBBNtMoPTPf0INHrwyyhDrDjAJ9PFE+WuxSJHU0ZE=
-github.com/ddkwork/app v0.0.0-20240714100047-a58a0cb22f9b h1:lDPT36IPcMSFrEA2GJm8djmRr4p0CGgsZ+3ebXFmMno=
-github.com/ddkwork/app v0.0.0-20240714100047-a58a0cb22f9b/go.mod h1:UGm/3eXhjIkM4fE2QYvg696X7UUbTVfZDGQPa3FBubo=
-github.com/ddkwork/app v0.0.0-20240714134356-7234c6254075 h1:7sHu8LgPmhIk4h6Bxt/+ahVdxN/xou8TdxnlRST5G/E=
-github.com/ddkwork/app v0.0.0-20240714134356-7234c6254075/go.mod h1:JfHdnLtPrhDgdcGxW4o/IkAuYa81iXT2Ep5ECY3FEwY=
-github.com/ddkwork/app v0.0.0-20240714153431-7314065aa427 h1:gKKha9RHJgppWeLtscM7kZyb6ZuwNn384ASvLewetew=
-github.com/ddkwork/app v0.0.0-20240714153431-7314065aa427/go.mod h1:7VP9CDuccR0lQBG/pKKKXRC52PaaNq8nWIlr+RgOGsA=
 github.com/ddkwork/app v0.0.0-20240714171558-3b830dbd6c00 h1:78MgVUfTffHeTnxoTYUl4OwNnBz9z3ugkApYvzEaOBU=
 github.com/ddkwork/app v0.0.0-20240714171558-3b830dbd6c00/go.mod h1:7VP9CDuccR0lQBG/pKKKXRC52PaaNq8nWIlr+RgOGsA=
 github.com/ddkwork/golibrary v0.0.0-20240712101659-3e8e94c302a5 h1:6rn0icpHmhadXBtu+NHAcixdzTWLeMrlVXOD9SsmVwQ=

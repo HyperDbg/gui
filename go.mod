@@ -3,7 +3,6 @@ module github.com/ddkwork/HyperDbg
 go 1.22.5
 
 require (
-	github.com/can1357/gengo v0.2.0
 	github.com/ddkwork/app v0.0.0-20240714171558-3b830dbd6c00
 	github.com/ddkwork/golibrary v0.0.0-20240712101659-3e8e94c302a5
 	github.com/richardwilkes/unison v0.72.1
