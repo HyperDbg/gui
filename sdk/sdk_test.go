@@ -26,15 +26,15 @@ func TestSdk(t *testing.T) {
 		//}
 
 		// not working
-		SetTextMessageCallback(Callback(&logBuffer[0]))
-		// SetTextMessageCallback(Callback(&[]rune(logBuffer)[0]))
-		go func() {
-			for {
-				if len(logBuffer) > 1 {
-					println(BytePointerToString(&logBuffer[0]))
-				}
-			}
-		}()
+		//SetTextMessageCallback(Callback(&logBuffer[0]))
+		//// SetTextMessageCallback(Callback(&[]rune(logBuffer)[0]))
+		//go func() {
+		//	for {
+		//		if len(logBuffer) > 1 {
+		//			println(BytePointerToString(&logBuffer[0]))
+		//		}
+		//	}
+		//}()
 
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 
