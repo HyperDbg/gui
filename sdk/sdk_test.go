@@ -8,19 +8,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var logMsgAddress = ""
-
-func StringToBytePointer22(s string) *byte {
-	// 为buffer分配4096字节
-	buffer := make([]byte, 1, 4096)
-
-	// 将字符串内容复制到buffer中
-	copy(buffer, s)
-
-	// 返回buffer的第一个字节的指针
-	ptr := &buffer[0]
-	return ptr
-}
+var (
+	logBuffer = make([]byte, 1, 4096)
+)
 
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
@@ -39,15 +29,15 @@ func TestSdk(t *testing.T) {
 		//}
 
 		// not working
-		SetTextMessageCallback(Callback(StringToBytePointer22(logMsgAddress)))
+		SetTextMessageCallback(Callback(&logBuffer[0]))
 		//SetTextMessageCallback(Callback(&[]rune(logMsgAddress)[0]))
-		//go func() {
-		//	for {
-		//		if len(log) > 2 {
-		//			println(logMsgAddress)
-		//		}
-		//	}
-		//}()
+		go func() {
+			for {
+				if len(logBuffer) > 1 {
+					println(BytePointerToString(&logBuffer[0]))
+				}
+			}
+		}()
 
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 
