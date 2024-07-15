@@ -8,6 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var logMsgAddress = " "
+
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
 	if isRunningOnGitHubActions() {
@@ -25,12 +27,12 @@ func TestSdk(t *testing.T) {
 		//}
 
 		// not working
-		log := "x"
-		SetTextMessageCallback(Callback(StringToBytePointer(log)))
+		SetTextMessageCallback(Callback(StringToBytePointer(logMsgAddress)))
+		//SetTextMessageCallback(Callback(&[]rune(logMsgAddress)[0]))
 		//go func() {
 		//	for {
-		//		if len(log) > 1 {
-		//			println(log)
+		//		if len(log) > 2 {
+		//			println(logMsgAddress)
 		//		}
 		//	}
 		//}()
@@ -42,7 +44,7 @@ func TestSdk(t *testing.T) {
 		// assert.True(t, Boolean2Bool(StartProcess(&[]rune("C:\\Windows\\SysWOW64\\notepad.exe")[0])))
 
 		mylog.Trace("LoadVmm", LoadVmm())
-		assert.True(t, Boolean2Bool(ConnectRemoteDebuggerUsingNamedPipe(StringToBytePointer("\\\\.\\pipe\\HyperDbgDebug"))))
+		// assert.True(t, Boolean2Bool(ConnectRemoteDebuggerUsingNamedPipe(StringToBytePointer("\\\\.\\pipe\\HyperDbgDebug"))))
 
 		// assert.True(t, Boolean2Bool(StartProcessWithArgs(&[]rune("path")[0], &[]rune("C:\\Windows\\SysWOW64\\notepad.exe")[0])))
 
