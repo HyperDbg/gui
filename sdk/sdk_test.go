@@ -1,6 +1,7 @@
 package sdk
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/ddkwork/golibrary/mylog"
@@ -17,8 +18,7 @@ func TestSdk(t *testing.T) {
 		assert.True(t, VmxSupportDetection())
 		assert.True(t, SetCustomDriverPathEx(SysPath))
 
-		//InterpreterEx("1111111111111111111111111111111111111test ")
-		SetTextMessageCallback(Callback(&logBuffer[0]))
+		SetTextMessageCallback(Callback(reflect.ValueOf(LogCallback).Pointer()))
 		//go func() {
 		//	for {
 		//		if len(logBuffer) > 1 {

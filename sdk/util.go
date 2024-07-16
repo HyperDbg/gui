@@ -17,14 +17,7 @@ import (
 	"github.com/ddkwork/golibrary/stream/bitfield"
 )
 
-var logBuffer = make([]byte, 1, 4096)
-
-func LogCallback(data *Char) {
-	mylog.Info("", BytePointerToString(data))
-}
-
-func LogCallback2(data *Char) {
-	mylog.Info("", BytePointerToString(data))
+func LogCallback() {
 }
 
 func LOWORD(l uint32) uint16 { return uint16(l) }
