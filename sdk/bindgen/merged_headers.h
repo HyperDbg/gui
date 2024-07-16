@@ -4811,10 +4811,6 @@ ScriptEngineSetHwdbgInstanceInfo(HWDBG_INSTANCE_INFORMATION * InstancInfo);
 //
 __declspec(dllimport) VOID
 ScriptEngineSetTextMessageCallback(PVOID Handler);
-
-
-
-
 __declspec(dllimport) VOID
 ScriptEngineSymbolAbortLoading();
 __declspec(dllimport) UINT64
