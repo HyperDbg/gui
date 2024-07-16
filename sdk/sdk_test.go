@@ -22,13 +22,13 @@ func TestSdk(t *testing.T) {
 		//	SetTextMessageCallback(Callback(pointer))
 		//
 		//}
-		InterpreterEx("1111111111111111111111111111111111111test ")
+		//InterpreterEx("1111111111111111111111111111111111111test ")
 		// not working
 		// pointer := unsafe.Pointer(reflect.ValueOf(LogCallback).Pointer())
 		// SetTextMessageCallback(StringToBytePointer("11111111111"))
 
 		// logBuffer := make([]byte, 1, 4096)
-		// SetTextMessageCallback(&logBuffer[0])
+		SetTextMessageCallback(Callback(&logBuffer[0]))
 
 		// LogCallback(&logBuffer[0])
 
