@@ -1,19 +1,11 @@
 package sdk
 
 import (
-	"reflect"
 	"testing"
-	"unsafe"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
 )
-
-var logBuffer = make([]byte, 1, 4096)
-
-func LogCallback(data *Char) {
-	mylog.Info("", BytePointerToString(data))
-}
 
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
@@ -30,12 +22,15 @@ func TestSdk(t *testing.T) {
 		//	SetTextMessageCallback(Callback(pointer))
 		//
 		//}
-
+		InterpreterEx("1111111111111111111111111111111111111test ")
 		// not working
-		pointer := unsafe.Pointer(reflect.ValueOf(LogCallback).Pointer())
-		SetTextMessageCallback(pointer)
+		// pointer := unsafe.Pointer(reflect.ValueOf(LogCallback).Pointer())
+		// SetTextMessageCallback(StringToBytePointer("11111111111"))
 
-		LogCallback(&logBuffer[0])
+		// logBuffer := make([]byte, 1, 4096)
+		// SetTextMessageCallback(&logBuffer[0])
+
+		// LogCallback(&logBuffer[0])
 
 		// SetTextMessageCallback(Callback(&[]rune(logBuffer)[0]))
 		//go func() {
