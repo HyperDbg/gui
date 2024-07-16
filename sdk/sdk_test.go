@@ -11,7 +11,7 @@ import (
 // go test -run ^\QTestSdk\E$
 func TestSdk(t *testing.T) {
 	if isRunningOnGitHubActions() {
-		mylog.Info("github ci windows not support nested vt-x virtualization,skip test")
+		mylog.Info("github ci windows machine not support nested vt-x virtualization,skip test")
 		return
 	}
 	mylog.Call(func() {
