@@ -17,7 +17,10 @@ import (
 	"github.com/ddkwork/golibrary/stream/bitfield"
 )
 
-func LogCallback() {}
+func LogCallback() {
+	println("LogCallback")
+	// mylog.Info("test", "LogCallback")
+}
 
 func LOWORD(l uint32) uint16 { return uint16(l) }
 func LOBYTE(l uint32) uint8  { return byte(l) }

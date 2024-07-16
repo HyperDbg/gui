@@ -3,6 +3,7 @@ package ux
 import (
 	"embed"
 	"path/filepath"
+	"reflect"
 	"time"
 
 	"github.com/ddkwork/app/ms/ark"
@@ -248,7 +249,15 @@ func newToolbar() *toolbar {
 				newPanel.AddChild(widget.NewButton("Install Driver", func() {
 					mylog.Check(sdk.VmxSupportDetection())
 					mylog.Check(sdk.SetCustomDriverPathEx(sdk.SysPath))
+
 					mylog.Trace("InstallVmmDriver", sdk.InstallVmmDriver())
+
+					//unison.InvokeTask(func() {
+					//	sdk.SetTextMessageCallback(sdk.Callback(reflect.ValueOf(sdk.LogCallback).Pointer()))
+					//})
+					go func() {
+						sdk.SetTextMessageCallback(sdk.Callback(reflect.ValueOf(sdk.LogCallback).Pointer()))
+					}()
 				}))
 				newPanel.AddChild(widget.NewButton("Uninstall Driver", func() {
 					mylog.Trace("UninstallVmmDriver", sdk.UninstallVmmDriver())
