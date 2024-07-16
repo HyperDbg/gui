@@ -253,10 +253,14 @@ func newToolbar() *toolbar {
 					mylog.Trace("InstallVmmDriver", sdk.InstallVmmDriver())
 
 					//unison.InvokeTask(func() {
+					//mylog.Call(func() {
 					//	sdk.SetTextMessageCallback(sdk.Callback(reflect.ValueOf(sdk.LogCallback).Pointer()))
 					//})
+					//})
 					go func() {
-						sdk.SetTextMessageCallback(sdk.Callback(reflect.ValueOf(sdk.LogCallback).Pointer()))
+						mylog.Call(func() {
+							sdk.SetTextMessageCallback(sdk.Callback(reflect.ValueOf(sdk.LogCallback).Pointer()))
+						})
 					}()
 				}))
 				newPanel.AddChild(widget.NewButton("Uninstall Driver", func() {

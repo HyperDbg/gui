@@ -18,7 +18,9 @@ func TestSdk(t *testing.T) {
 		assert.True(t, VmxSupportDetection())
 		assert.True(t, SetCustomDriverPathEx(SysPath))
 
-		SetTextMessageCallback(Callback(reflect.ValueOf(LogCallback).Pointer()))
+		mylog.Call(func() {
+			SetTextMessageCallback(Callback(reflect.ValueOf(LogCallback).Pointer()))
+		})
 		//go func() {
 		//	for {
 		//		if len(logBuffer) > 1 {
