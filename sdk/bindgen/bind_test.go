@@ -204,6 +204,7 @@ func TestBindSdk(t *testing.T) {
 	GuestRegs  = GuestRegs`,
 			`// @brief struct for extra registers
 type GuestExtraRegisters = GuestExtraRegisters`,
+			`RegsEnum                          = RegsEnum`,
 		}
 
 		b := stream.NewBuffer("../sdk.go")
@@ -221,32 +222,35 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
 }`)
 		b.ReplaceAll(`type (
-	PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
-	Symbol                            = Symbol
-	Psymbol                           = *Symbol
-	HwdbgShortSymbol                  = HwdbgShortSymbol
-	PhwdbgShortSymbol                 = *HwdbgShortSymbol
-	SymbolBuffer                      = SymbolBuffer
-	PsymbolBuffer                     = *SymbolBuffer
-	SymbolMap                         = SymbolMap
-	PsymbolMap                        = *SymbolMap
-	ActionBuffer                      = ActionBuffer
-	PactionBuffer                     = *ActionBuffer
-	RegsEnum                          = RegsEnum
-)`, `type (
-	PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
-	//Symbol                            = Symbol
-	Psymbol                           = *Symbol
-	//HwdbgShortSymbol                  = HwdbgShortSymbol
-	PhwdbgShortSymbol                 = *HwdbgShortSymbol
-	//SymbolBuffer                      = SymbolBuffer
-	PsymbolBuffer                     = *SymbolBuffer
-	//SymbolMap                         = SymbolMap
-	PsymbolMap                        = *SymbolMap
-	//ActionBuffer                      = ActionBuffer
-	PactionBuffer                     = *ActionBuffer
-	//RegsEnum                          = RegsEnum
-)`)
+			PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
+			Symbol                            = Symbol
+			Psymbol                           = *Symbol
+			HwdbgShortSymbol                  = HwdbgShortSymbol
+			PhwdbgShortSymbol                 = *HwdbgShortSymbol
+			SymbolBuffer                      = SymbolBuffer
+			PsymbolBuffer                     = *SymbolBuffer
+			SymbolMap                         = SymbolMap
+			PsymbolMap                        = *SymbolMap
+			ActionBuffer                      = ActionBuffer
+			PactionBuffer                     = *ActionBuffer
+			RegsEnum                          = RegsEnum
+		)`, `type (
+			PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
+			//Symbol                            = Symbol
+			Psymbol                           = *Symbol
+			//HwdbgShortSymbol                  = HwdbgShortSymbol
+			PhwdbgShortSymbol                 = *HwdbgShortSymbol
+			//SymbolBuffer                      = SymbolBuffer
+			PsymbolBuffer                     = *SymbolBuffer
+			//SymbolMap                         = SymbolMap
+			PsymbolMap                        = *SymbolMap
+			//ActionBuffer                      = ActionBuffer
+			PactionBuffer                     = *ActionBuffer
+			//RegsEnum                          = RegsEnum
+		)`)
+		b.ReplaceAll(`	Qword      = uint64
+	Uint64     = uint64
+	Puint64    = *uint64`, `	Qword      = uint64 `)
 		stream.WriteGoFile("../sdk.go", b)
 	})
 }

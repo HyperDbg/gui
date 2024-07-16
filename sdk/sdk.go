@@ -1388,42 +1388,41 @@ type (
 
 // ///////////////////////////////////////////////
 type (
-	Qword    = uint64
-	Uint64   = uint64
-	Puint64  = *uint64
-	Dword    = uint64
-	Bool     = int32
-	Byte     = uint8
-	Word     = uint16
-	Int      = int32
-	Uint     = uint32
-	Puint    = *uint32
-	Ulong64  = uint64
-	Pulong64 = *uint64
-	Dword64  = uint64
-	Pdword64 = *uint64
-	Char     = byte
-	Wchar    = Rune
-	Uchar    = uint8
-	Ushort   = uint16
-	Ulong    = uint64
-	Boolean  = Uchar
-	Pboolean = *Boolean
-	Int8     = int8
-	Pint8    = *int8
-	Int16    = int16
-	Pint16   = *int16
-	Int32    = int32
-	Pint32   = *int32
-	Int64    = int64
-	Pint64   = *int64
-	Uint8    = uint8
-	Puint8   = *uint8
-	Uint16   = uint16
-	Puint16  = *uint16
-	Uint32   = uint32
-	Puint32  = *uint32
-
+	Qword      = uint64
+	Dword      = uint64
+	Bool       = int32
+	Byte       = uint8
+	Word       = uint16
+	Int        = int32
+	Uint       = uint32
+	Puint      = *uint32
+	Ulong64    = uint64
+	Pulong64   = *uint64
+	Dword64    = uint64
+	Pdword64   = *uint64
+	Char       = byte
+	Wchar      = Rune
+	Uchar      = uint8
+	Ushort     = uint16
+	Ulong      = uint64
+	Boolean    = Uchar
+	Pboolean   = *Boolean
+	Int8       = int8
+	Pint8      = *int8
+	Int16      = int16
+	Pint16     = *int16
+	Int32      = int32
+	Pint32     = *int32
+	Int64      = int64
+	Pint64     = *int64
+	Uint8      = uint8
+	Puint8     = *uint8
+	Uint16     = uint16
+	Puint16    = *uint16
+	Uint32     = uint32
+	Puint32    = *uint32
+	Uint64     = uint64
+	Puint64    = *uint64
 	PguestRegs = *GuestRegs
 )
 
@@ -1668,17 +1667,11 @@ type PdebuggeeRegisterReadDescription = *DebuggeeRegisterReadDescription
 // @brief Register Descriptor Structure to write on registers.
 type (
 	PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
-	// Symbol                            = Symbol
-	Psymbol = *Symbol
-	// HwdbgShortSymbol                  = HwdbgShortSymbol
-	PhwdbgShortSymbol = *HwdbgShortSymbol
-	// SymbolBuffer                      = SymbolBuffer
-	PsymbolBuffer = *SymbolBuffer
-	// SymbolMap                         = SymbolMap
-	PsymbolMap = *SymbolMap
-	// ActionBuffer                      = ActionBuffer
-	PactionBuffer = *ActionBuffer
-	// RegsEnum                          = RegsEnum
+	Psymbol                           = *Symbol
+	PhwdbgShortSymbol                 = *HwdbgShortSymbol
+	PsymbolBuffer                     = *SymbolBuffer
+	PsymbolMap                        = *SymbolMap
+	PactionBuffer                     = *ActionBuffer
 )
 
 // @brief structures for sending and saving details
@@ -1872,8 +1865,8 @@ func DetectVmxSupport() Boolean {
 
 var __imp_hyperdbg_u_read_vendor_string bindlib.PreloadProc
 
-func ReadVendorString(arg *Char) {
-	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(arg))
+func ReadVendorString(b *Char) {
+	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
 }
 
 var __imp_hyperdbg_u_load_vmm bindlib.PreloadProc
@@ -2021,7 +2014,7 @@ func WriteMemory(destination_address unsafe.Pointer, memory_type DebuggerEditMem
 
 var __imp_hyperdbg_u_read_all_registers bindlib.PreloadProc
 
-func ReadAllRegisters(guest_registers *GuestRegs, extra_registers *GuestExtraRegisters) Boolean {
+func ReadAllRegisters(guest_registers unsafe.Pointer, extra_registers unsafe.Pointer) Boolean {
 	__res := bindlib.CCall2(__imp_hyperdbg_u_read_all_registers.Addr(), bindlib.MarshallSyscall(guest_registers), bindlib.MarshallSyscall(extra_registers))
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
