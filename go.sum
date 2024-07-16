@@ -27,6 +27,8 @@ github.com/ddkwork/app v0.0.0-20240714171558-3b830dbd6c00 h1:78MgVUfTffHeTnxoTYU
 github.com/ddkwork/app v0.0.0-20240714171558-3b830dbd6c00/go.mod h1:7VP9CDuccR0lQBG/pKKKXRC52PaaNq8nWIlr+RgOGsA=
 github.com/ddkwork/app v0.0.0-20240716104333-4b68d89d9d11 h1:M+2oNfF7pxdoNkX5/oFuV9g9iiS5yIaMd0crIkaC7og=
 github.com/ddkwork/app v0.0.0-20240716104333-4b68d89d9d11/go.mod h1:7VP9CDuccR0lQBG/pKKKXRC52PaaNq8nWIlr+RgOGsA=
+github.com/ddkwork/app v0.0.0-20240716110527-699716c9d650 h1:OM/8g17qtblkAAqG6smVvASob5Lkh5THSx6HOuODvWI=
+github.com/ddkwork/app v0.0.0-20240716110527-699716c9d650/go.mod h1:7VP9CDuccR0lQBG/pKKKXRC52PaaNq8nWIlr+RgOGsA=
 github.com/ddkwork/golibrary v0.0.0-20240712101659-3e8e94c302a5 h1:6rn0icpHmhadXBtu+NHAcixdzTWLeMrlVXOD9SsmVwQ=
 github.com/ddkwork/golibrary v0.0.0-20240712101659-3e8e94c302a5/go.mod h1:OkAuwYE7f9YhHNged3ZYaNPGYuDZWUIvHOgpe+viFXc=
 github.com/dlclark/regexp2 v1.11.0 h1:G/nrcoOa7ZXlpoa/91N3X7mM3r8eIlMBBJZvsz/mxKI=
