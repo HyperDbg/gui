@@ -17,7 +17,17 @@ import (
 	"github.com/ddkwork/golibrary/stream/bitfield"
 )
 
-func LogCallback() {
+var LogBuffer = make([]byte, 1, 1024)
+
+func LogCallbackOk() {
+	LogCallback(&LogBuffer[0])
+}
+func LogCallback(message *Char) {
+	println("LogCallback")
+	// mylog.Info("test", "LogCallback")
+}
+
+func LogCallback_() {
 	println("LogCallback")
 	// mylog.Info("test", "LogCallback")
 }

@@ -19,7 +19,8 @@ func TestSdk(t *testing.T) {
 		assert.True(t, SetCustomDriverPathEx(SysPath))
 
 		mylog.Call(func() {
-			SetTextMessageCallback(Callback(reflect.ValueOf(LogCallback).Pointer()))
+			SetTextMessageCallback(Callback(reflect.ValueOf(LogCallbackOk).Pointer()))
+			// SetTextMessageCallback(Callback(reflect.ValueOf(LogCallback).Pointer()))
 		})
 		//go func() {
 		//	for {
