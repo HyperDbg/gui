@@ -259,7 +259,7 @@ func newToolbar() *toolbar {
 					//})
 					go func() {
 						mylog.Call(func() {
-							sdk.SetTextMessageCallback(sdk.Callback(reflect.ValueOf(sdk.LogCallback).Pointer()))
+							sdk.SetTextMessageCallback(sdk.Callback(reflect.ValueOf(sdk.LogCallbackOk).Pointer()))
 						})
 					}()
 				}))
