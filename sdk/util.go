@@ -17,9 +17,8 @@ import (
 	"github.com/ddkwork/golibrary/stream/bitfield"
 )
 
-var LogBuffer = make([]byte, 1, 1024)
-
 func LogCallbackOk() {
+	LogBuffer := make([]byte, 1, 1024)
 	LogCallback(&LogBuffer[0])
 }
 
