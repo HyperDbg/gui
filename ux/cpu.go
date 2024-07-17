@@ -1169,7 +1169,7 @@ func LayoutDisassemblyTable() unison.Paneler {
 		},
 		MarshalRow: func(node *widget.Node[xed.Disassembly]) (cells []widget.CellData) {
 			if node.Container() {
-				node.Sum("todo")
+				node.Sum()
 			}
 			return []widget.CellData{
 				{Text: fmt.Sprintf("%016X", node.Data.Address)},
@@ -1222,7 +1222,7 @@ func LayoutStackTable() unison.Paneler {
 		MarshalRow: func(node *widget.Node[Stack]) (cells []widget.CellData) {
 			addressFmt := fmt.Sprintf("%016X", node.Data.Address)
 			if node.Container() {
-				addressFmt = node.Sum(addressFmt)
+				addressFmt = node.Sum()
 			}
 			return []widget.CellData{
 				{Text: addressFmt},

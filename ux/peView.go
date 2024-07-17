@@ -26,7 +26,7 @@ func LayoutPeView() unison.Paneler {
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[PeView]) (cells []widget.CellData) {
 			if node.Container() {
-				node.Data.Name = node.Sum(node.Data.Name)
+				node.Data.Name = node.Sum()
 			}
 			return []widget.CellData{
 				{Text: node.Data.Name},

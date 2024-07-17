@@ -23,7 +23,7 @@ func LayoutCommands() unison.Paneler {
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[Command]) (cells []widget.CellData) {
 			if node.Container() {
-				node.Data.MethodName = node.Sum(node.Data.MethodName)
+				node.Data.MethodName = node.Sum()
 			}
 			return []widget.CellData{
 				{Text: node.Data.MethodName},
