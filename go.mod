@@ -3,8 +3,8 @@ module github.com/ddkwork/HyperDbg
 go 1.22.5
 
 require (
-	github.com/ddkwork/app v0.0.0-20240716110527-699716c9d650
-	github.com/ddkwork/golibrary v0.0.0-20240712101659-3e8e94c302a5
+	github.com/ddkwork/app v0.0.0-20240717093853-e49604d06270
+	github.com/ddkwork/golibrary v0.0.0-20240717084633-72ca3d8ddfec
 	github.com/richardwilkes/unison v0.72.1
 	github.com/saferwall/pe v1.5.4
 	github.com/stretchr/testify v1.9.0
@@ -33,6 +33,7 @@ require (
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240506104042-037f3cc74f2a // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
+	github.com/gorpher/gowin32 v0.0.11 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
