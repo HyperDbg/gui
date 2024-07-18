@@ -880,10 +880,10 @@ type EptSingleHookUnhookingDetails struct {
 	PhysicalAddress                           SizeT
 	OriginalEntry                             Uint64
 }
-type Anon1435_9 struct {
+type Anon1442_9 struct {
 	Raw [1]int32
 }
-type Anon1437_5 struct {
+type Anon1444_5 struct {
 	// [Bits 3:0] Segment type.
 	Type Uint32
 	// [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
@@ -1439,8 +1439,12 @@ type Pcr3Type = *Cr3Type
 type PdebuggerRemotePacket = *DebuggerRemotePacket
 
 // @brief Callback type that can be used to be used
-// as a custom ShowMessages function
-type Callback = unsafe.Pointer
+// as a custom ShowMessages function (by passing message as a parameter)
+type SendMessageWithParamCallback = unsafe.Pointer
+
+// @brief Callback type that can be used to be used
+// as a custom ShowMessages function (using shared buffer)
+type SendMessageWWithSharedBufferCallback = unsafe.Pointer
 
 // @brief The structure of user-input packet in HyperDbg
 type PdebuggeeUserInputPacket = *DebuggeeUserInputPacket
@@ -1707,6 +1711,8 @@ func init() {
 	__imp_hyperdbg_u_interpreter = GengoLibrary.ImportNow("hyperdbg_u_interpreter")
 	__imp_hyperdbg_u_show_signature = GengoLibrary.ImportNow("hyperdbg_u_show_signature")
 	__imp_hyperdbg_u_set_text_message_callback = GengoLibrary.ImportNow("hyperdbg_u_set_text_message_callback")
+	__imp_hyperdbg_u_set_text_message_callback_using_shared_buffer = GengoLibrary.ImportNow("hyperdbg_u_set_text_message_callback_using_shared_buffer")
+	__imp_hyperdbg_u_unset_text_message_callback = GengoLibrary.ImportNow("hyperdbg_u_unset_text_message_callback")
 	__imp_hyperdbg_u_script_read_file_and_execute_commandline = GengoLibrary.ImportNow("hyperdbg_u_script_read_file_and_execute_commandline")
 	__imp_hyperdbg_u_continue_previous_command = GengoLibrary.ImportNow("hyperdbg_u_continue_previous_command")
 	__imp_hyperdbg_u_check_multiline_command = GengoLibrary.ImportNow("hyperdbg_u_check_multiline_command")
@@ -1788,8 +1794,8 @@ func init() {
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 32, 8, "StartAddress", 0, "EndAddress", 8, "SetHookForRead", 16, "SetHookForWrite", 17, "SetHookForExec", 18, "MemoryType", 20, "Tag", 24)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 16, 8, "TargetAddress", 0, "HookFunction", 8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 24, 8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0, "RemoveBreakpointInterception", 1, "PhysicalAddress", 8, "OriginalEntry", 16)
-	bindlib.Validate((*Anon1435_9)(nil), 4, 4)
-	bindlib.Validate((*Anon1437_5)(nil), 4, 4, "Type", 0, "DescriptorType", 0, "DescriptorPrivilegeLevel", 0, "Present", 0, "Reserved1", 1, "AvailableBit", 1, "LongMode", 1, "DefaultBig", 1, "Granularity", 1, "Unusable", 2, "Reserved2", 2)
+	bindlib.Validate((*Anon1442_9)(nil), 4, 4)
+	bindlib.Validate((*Anon1444_5)(nil), 4, 4, "Type", 0, "DescriptorType", 0, "DescriptorPrivilegeLevel", 0, "Present", 0, "Reserved1", 1, "AvailableBit", 1, "LongMode", 1, "DefaultBig", 1, "Granularity", 1, "Unusable", 2, "Reserved2", 2)
 	bindlib.Validate((*VmxSegmentSelector)(nil), 24, 8, "Selector", 0, "Attributes", 4, "Limit", 8, "Base", 16)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 24, 8, "Tag", 0, "KernelStatus", 8, "TypeOfAction", 16, "IsEnabled", 20)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 16, 8, "KernelStatus", 0, "IsShortCircuiting", 8)
@@ -1917,9 +1923,19 @@ func ShowSignature() { bindlib.CCall0(__imp_hyperdbg_u_show_signature.Addr()) }
 
 var __imp_hyperdbg_u_set_text_message_callback bindlib.PreloadProc
 
-func SetTextMessageCallback(handler Callback) {
+func SetTextMessageCallback(handler unsafe.Pointer) {
 	bindlib.CCall1(__imp_hyperdbg_u_set_text_message_callback.Addr(), bindlib.MarshallSyscall(handler))
 }
+
+var __imp_hyperdbg_u_set_text_message_callback_using_shared_buffer bindlib.PreloadProc
+
+func SetTextMessageCallbackUsingSharedBuffer(handler unsafe.Pointer, shared_buffer unsafe.Pointer) {
+	bindlib.CCall2(__imp_hyperdbg_u_set_text_message_callback_using_shared_buffer.Addr(), bindlib.MarshallSyscall(handler), bindlib.MarshallSyscall(shared_buffer))
+}
+
+var __imp_hyperdbg_u_unset_text_message_callback bindlib.PreloadProc
+
+func UnsetTextMessageCallback() { bindlib.CCall0(__imp_hyperdbg_u_unset_text_message_callback.Addr()) }
 
 var __imp_hyperdbg_u_script_read_file_and_execute_commandline bindlib.PreloadProc
 
@@ -2332,18 +2348,18 @@ func (s *Anon192_5) SetFields(v Anon196_9) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1435_9) Fields() Anon1437_5 {
-	return bindlib.ReadBitcast[Anon1437_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon1442_9) Fields() Anon1444_5 {
+	return bindlib.ReadBitcast[Anon1444_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1435_9) SetFields(v Anon1437_5) {
+func (s *Anon1442_9) SetFields(v Anon1444_5) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1435_9) AsUInt() Uint32 {
+func (s Anon1442_9) AsUInt() Uint32 {
 	return bindlib.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1435_9) SetAsUInt(v Uint32) {
+func (s *Anon1442_9) SetAsUInt(v Uint32) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }

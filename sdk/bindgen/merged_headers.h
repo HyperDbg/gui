@@ -1182,10 +1182,17 @@ typedef enum _DEBUGGER_THREAD_PROCESS_TRACING
 
 /**
  * @brief Callback type that can be used to be used
- * as a custom ShowMessages function
+ * as a custom ShowMessages function (by passing message as a parameter)
  *
  */
-typedef int (*Callback)(const char * Text);
+typedef int (*SendMessageWithParamCallback)(const char * Text);
+
+/**
+ * @brief Callback type that can be used to be used
+ * as a custom ShowMessages function (using shared buffer)
+ *
+ */
+typedef int (*SendMessageWWithSharedBufferCallback)();
 
 //////////////////////////////////////////////////
 //                Communications                //
@@ -4637,7 +4644,13 @@ IMPORT_EXPORT_LIBHYPERDBG VOID
 hyperdbg_u_show_signature();
 
 IMPORT_EXPORT_LIBHYPERDBG VOID
-hyperdbg_u_set_text_message_callback(Callback handler);
+hyperdbg_u_set_text_message_callback(PVOID handler);
+
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_set_text_message_callback_using_shared_buffer(PVOID handler, PVOID shared_buffer);
+
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_unset_text_message_callback();
 
 IMPORT_EXPORT_LIBHYPERDBG INT
 hyperdbg_u_script_read_file_and_execute_commandline(INT argc, CHAR * argv[]);
