@@ -21,8 +21,8 @@ func TestSdk(t *testing.T) {
 
 		mylog.Call(func() {
 			buffer := SetTextMessageCallbackUsingSharedBuffer(unsafe.Pointer(reflect.ValueOf(LogCallback).Pointer()))
-			gobuffer := BytePointerToString((*byte)(buffer))
-			println(gobuffer)
+			sharedBuffer := BytePointerToString((*byte)(buffer))
+			mylog.Info("SetTextMessageCallbackUsingSharedBuffer", sharedBuffer)
 			// SetTextMessageCallback(Callback(reflect.ValueOf(LogCallback).Pointer()))
 		})
 		//go func() {
