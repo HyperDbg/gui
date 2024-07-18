@@ -251,13 +251,13 @@ func newToolbar() *toolbar {
 					mylog.Check(sdk.VmxSupportDetection())
 					mylog.Check(sdk.SetCustomDriverPathEx(sdk.SysPath))
 
-					mylog.Trace("Install Driver return", sdk.InstallVmmDriver())
+					mylog.Trace("Install Driver", sdk.InstallVmmDriver())
 
 					go func() {
 						mylog.Call(func() {
 							buffer := sdk.SetTextMessageCallbackUsingSharedBuffer(unsafe.Pointer(reflect.ValueOf(sdk.LogCallback).Pointer()))
 							sharedBuffer := sdk.BytePointerToString((*byte)(buffer))
-							mylog.Info("SetTextMessageCallbackUsingSharedBuffer", sharedBuffer)
+							mylog.Info("insall driver return", sharedBuffer)
 						})
 					}()
 				}))
