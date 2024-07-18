@@ -13,7 +13,7 @@ how to build ?
 
 3. install gcc
 
-4. go build .
+4. go build -x .
 	
-5. go run .
+5. go run -x .
 ```

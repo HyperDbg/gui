@@ -39,7 +39,7 @@ jobs:
         run: go test ./...
 
       - name: Build project
-        run: go build .
+        run: go build -x .
 
       - name: Debug - Check GITHUB_REF
         run: |
@@ -67,7 +67,7 @@ jobs:
         run: go mod tidy
 
       - name: Build project
-        run: go build .
+        run: go build -x .
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
