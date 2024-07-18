@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"time"
+	"unsafe"
 
 	"github.com/ddkwork/app/ms/ark"
 
@@ -252,14 +253,9 @@ func newToolbar() *toolbar {
 
 					mylog.Trace("InstallVmmDriver", sdk.InstallVmmDriver())
 
-					//unison.InvokeTask(func() {
-					//mylog.Call(func() {
-					//	sdk.SetTextMessageCallback(sdk.Callback(reflect.ValueOf(sdk.LogCallback).Pointer()))
-					//})
-					//})
 					go func() {
 						mylog.Call(func() {
-							sdk.SetTextMessageCallback(sdk.Callback(reflect.ValueOf(sdk.LogCallbackOk).Pointer()))
+							sdk.SetTextMessageCallbackUsingSharedBuffer(unsafe.Pointer(reflect.ValueOf(sdk.LogCallback).Pointer()), unsafe.Pointer(&sdk.LogBuffer[0]))
 						})
 					}()
 				}))
