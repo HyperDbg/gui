@@ -24,7 +24,7 @@ func LayoutMemory() unison.Paneler {
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[Memory]) (cells []widget.CellData) {
 			if node.Container() {
-				node.Sum("todo")
+				node.Sum()
 			}
 			return []widget.CellData{
 				{Text: fmt.Sprintf("%d", node.Data.Address)},

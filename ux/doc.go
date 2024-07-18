@@ -20,7 +20,7 @@ func LayoutDoc() unison.Paneler {
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[doc]) (cells []widget.CellData) {
 			if node.Container() {
-				node.Sum("todo")
+				node.Sum()
 			}
 			return []widget.CellData{
 				{Text: node.Data.Function},

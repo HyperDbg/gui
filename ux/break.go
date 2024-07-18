@@ -14,7 +14,7 @@ func LayoutBreak() unison.Paneler {
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[Break]) (cells []widget.CellData) {
 			if node.Container() {
-				node.Sum("todo")
+				node.Sum()
 			}
 			return []widget.CellData{
 				{Text: fmt.Sprintf("%016X", node.Data.Type)},

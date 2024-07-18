@@ -15,7 +15,7 @@ func LayoutThread() unison.Paneler {
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[Thread]) (cells []widget.CellData) {
 			if node.Container() {
-				node.Sum("todo")
+				node.Sum()
 			}
 			return []widget.CellData{
 				{Text: node.Data.IndexName},
