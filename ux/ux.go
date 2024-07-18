@@ -267,6 +267,11 @@ func newToolbar() *toolbar {
 
 				newPanel.AddChild(widget.NewButton("Load Vmm", func() {
 					mylog.Trace("LoadVmm", sdk.LoadVmm())
+					mylog.Call(func() {
+						buffer := sdk.SetTextMessageCallbackUsingSharedBuffer(unsafe.Pointer(reflect.ValueOf(sdk.LogCallback).Pointer()))
+						sharedBuffer := sdk.BytePointerToString((*byte)(buffer))
+						mylog.Info("LoadVmm", sharedBuffer)
+					})
 				}))
 				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {
 					mylog.Trace("UnloadVmm", sdk.UnloadVmm())
