@@ -255,7 +255,9 @@ func newToolbar() *toolbar {
 
 					go func() {
 						mylog.Call(func() {
-							sdk.SetTextMessageCallbackUsingSharedBuffer(unsafe.Pointer(reflect.ValueOf(sdk.LogCallback).Pointer()), unsafe.Pointer(&sdk.LogBuffer[0]))
+							buffer := sdk.SetTextMessageCallbackUsingSharedBuffer(unsafe.Pointer(reflect.ValueOf(sdk.LogCallback).Pointer()))
+							gobuffer := sdk.BytePointerToString((*byte)(buffer))
+							println(gobuffer)
 						})
 					}()
 				}))
