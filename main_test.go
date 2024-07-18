@@ -24,6 +24,9 @@ func TestUpdateAppModule(t *testing.T) {
 }
 
 func TestUpdateSDKAndBin(t *testing.T) {
+	if !stream.IsDir("bin") {
+		return
+	}
 	mylog.Check(os.RemoveAll("bin/debug/SDK/Libraries"))
 	mylog.Check(os.RemoveAll("sdk/bindgen/SDK"))
 	mylog.CopyDir("sdk/bindgen/SDK", "bin/debug/SDK")
