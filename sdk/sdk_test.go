@@ -3,6 +3,7 @@ package sdk
 import (
 	"reflect"
 	"testing"
+	"unsafe"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
@@ -19,7 +20,7 @@ func TestSdk(t *testing.T) {
 		assert.True(t, SetCustomDriverPathEx(SysPath))
 
 		mylog.Call(func() {
-			SetTextMessageCallback(Callback(reflect.ValueOf(LogCallbackOk).Pointer()))
+			SetTextMessageCallbackUsingSharedBuffer(unsafe.Pointer(reflect.ValueOf(LogCallback).Pointer()), unsafe.Pointer(&LogBuffer[0]))
 			// SetTextMessageCallback(Callback(reflect.ValueOf(LogCallback).Pointer()))
 		})
 		//go func() {
