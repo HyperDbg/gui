@@ -251,7 +251,7 @@ func newToolbar() *toolbar {
 					mylog.Check(sdk.VmxSupportDetection())
 					mylog.Check(sdk.SetCustomDriverPathEx(sdk.SysPath))
 
-					mylog.Trace("InstallVmmDriver", sdk.InstallVmmDriver())
+					mylog.Trace("Install Driver return", sdk.InstallVmmDriver())
 
 					go func() {
 						mylog.Call(func() {
@@ -270,7 +270,7 @@ func newToolbar() *toolbar {
 					mylog.Call(func() {
 						buffer := sdk.SetTextMessageCallbackUsingSharedBuffer(unsafe.Pointer(reflect.ValueOf(sdk.LogCallback).Pointer()))
 						sharedBuffer := sdk.BytePointerToString((*byte)(buffer))
-						mylog.Info("LoadVmm", sharedBuffer)
+						mylog.Info("LoadVmm return", sharedBuffer)
 					})
 				}))
 				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {
