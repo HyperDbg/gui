@@ -17,14 +17,14 @@ import (
 	"github.com/ddkwork/golibrary/stream/bitfield"
 )
 
-var LogBuffer = make([]byte, 1, 1024)
+var LogBuffer = make([]byte, 1, 1024*8)
 
 func LogCallbackOk() {
 	LogCallback(&LogBuffer[0])
 }
 
 func LogCallback(message *Char) {
-	println("LogCallback")
+	// println("LogCallback")
 	// mylog.Info("test", "LogCallback")
 }
 

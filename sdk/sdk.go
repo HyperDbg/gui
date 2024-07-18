@@ -1929,8 +1929,9 @@ func SetTextMessageCallback(handler unsafe.Pointer) {
 
 var __imp_hyperdbg_u_set_text_message_callback_using_shared_buffer bindlib.PreloadProc
 
-func SetTextMessageCallbackUsingSharedBuffer(handler unsafe.Pointer, shared_buffer unsafe.Pointer) {
-	bindlib.CCall2(__imp_hyperdbg_u_set_text_message_callback_using_shared_buffer.Addr(), bindlib.MarshallSyscall(handler), bindlib.MarshallSyscall(shared_buffer))
+func SetTextMessageCallbackUsingSharedBuffer(handler unsafe.Pointer) unsafe.Pointer {
+	__res := bindlib.CCall1(__imp_hyperdbg_u_set_text_message_callback_using_shared_buffer.Addr(), bindlib.MarshallSyscall(handler))
+	return bindlib.UnmarshallSyscall[unsafe.Pointer](__res)
 }
 
 var __imp_hyperdbg_u_unset_text_message_callback bindlib.PreloadProc
