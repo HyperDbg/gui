@@ -93,15 +93,28 @@ func StringToBytePointer(s string) *byte {
 	return ptr
 }
 
+//func BytePointerToString(ptr *byte) string {
+//	if ptr == nil {
+//		return "ptr == nil"
+//	}
+//	mylog.CheckNil(ptr)
+//	var bytes []byte
+//	for *ptr != 0 {
+//	bytes = append(bytes, *ptr)
+//	ptr = (*byte)(unsafe.Pointer(uintptr(unsafe.Pointer(ptr)) + 1))
+//	}
+//	return string(bytes)
+//}
+
 func BytePointerToString(ptr *byte) string {
-	if ptr == nil {
-		return "ptr == nil"
-	}
-	mylog.CheckNil(ptr)
 	var bytes []byte
+	sizeof := *(*string)(unsafe.Pointer(&ptr))
+	// unreadable: Only part of a ReadProcessMemory or WriteProcessMemory request was completed.
+
+	mylog.Trace("sizeof ptr", unsafe.Sizeof(sizeof))
 	for *ptr != 0 {
-	bytes = append(bytes, *ptr)
-	ptr = (*byte)(unsafe.Pointer(uintptr(unsafe.Pointer(ptr)) + 1))
+		bytes = append(bytes, *ptr)
+		ptr = (*byte)(unsafe.Pointer(uintptr(unsafe.Pointer(ptr)) + 1))
 	}
 	return string(bytes)
 }
