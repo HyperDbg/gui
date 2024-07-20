@@ -1,12 +1,18 @@
 package sdk
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 	"unsafe"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
+)
+
+const (
+	COMMUNICATION_BUFFER_SIZE     = 0x100
+	TCP_END_OF_BUFFER_CHARS_COUNT = 4
 )
 
 // go test -run ^\QTestSdk\E$
@@ -20,14 +26,12 @@ func TestSdk(t *testing.T) {
 		assert.True(t, SetCustomDriverPathEx(SysPath))
 
 		mylog.Call(func() {
-			dragHandler = func(msg *Char) int {
+			dragHandler = func(msg *Char) {
 				if msg == nil {
 					println("msg is nil")
-					return 0
 				}
-				toString := BytePointerToString(msg)
-				mylog.Info("msg", toString)
-				return 0
+				goData := (*[COMMUNICATION_BUFFER_SIZE + TCP_END_OF_BUFFER_CHARS_COUNT]byte)(unsafe.Pointer(&msg))
+				fmt.Println("Received data:", string(goData[:]))
 			}
 
 			SetTextMessageCallback(unsafe.Pointer(reflect.ValueOf(dragHandler).Pointer()))
