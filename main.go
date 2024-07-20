@@ -9,8 +9,8 @@ import (
 // RtlGenRandom
 func main() {
 	// testSdkCommands()
-	ux.Run() // wait ..........................
-	// testDisassembly() // quick show
+	//ux.Run() // wait ..........................
+	testDisassembly() // quick show
 	// testParsePe()
 	// testScript()
 }
