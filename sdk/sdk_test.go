@@ -20,10 +20,14 @@ func TestSdk(t *testing.T) {
 		assert.True(t, SetCustomDriverPathEx(SysPath))
 
 		mylog.Call(func() {
-			dragHandler = func(msg *Char) {
+			dragHandler = func(msg *Char) int {
+				if msg == nil {
+					println("msg is nil")
+					return 0
+				}
 				toString := BytePointerToString(msg)
 				mylog.Info("msg", toString)
-
+				return 0
 			}
 
 			SetTextMessageCallback(unsafe.Pointer(reflect.ValueOf(dragHandler).Pointer()))

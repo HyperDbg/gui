@@ -17,16 +17,16 @@ import (
 	"github.com/ddkwork/golibrary/stream/bitfield"
 )
 
-type FileDropCallbackFunc func(msg *Char)
+type FileDropCallbackFunc func(msg *Char) int
 
 var dragHandler FileDropCallbackFunc
 
 func init() {
 	return
-	dragHandler = func(msg *Char) {
+	dragHandler = func(msg *Char) int {
 		toString := BytePointerToString(msg)
 		mylog.Info("msg", toString)
-
+		return 0
 	}
 }
 func FileDropCallback(fn FileDropCallbackFunc) {
@@ -95,6 +95,10 @@ func StringToBytePointer(s string) *byte {
 }
 
 func BytePointerToString(ptr *byte) string {
+	if ptr == nil {
+		return "ptr == nil"
+	}
+	mylog.CheckNil(ptr)
 	var bytes []byte
 	for *ptr != 0 {
 		bytes = append(bytes, *ptr)
