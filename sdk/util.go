@@ -99,10 +99,10 @@ func BytePointerToString(ptr *byte) string {
 	}
 	mylog.CheckNil(ptr)
 	var bytes []byte
-	//for *ptr != 0 {
+	for *ptr != 0 {
 	bytes = append(bytes, *ptr)
 	ptr = (*byte)(unsafe.Pointer(uintptr(unsafe.Pointer(ptr)) + 1))
-	//}
+	}
 	return string(bytes)
 }
 

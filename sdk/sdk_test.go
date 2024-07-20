@@ -28,7 +28,7 @@ func TestSdk(t *testing.T) {
 		mylog.Call(func() {
 			dragHandler = func(msg *Char) {
 				if msg == nil {
-					println("msg is nil")
+					println("msg is nil,callback not be called")
 				}
 				goData := (*[COMMUNICATION_BUFFER_SIZE + TCP_END_OF_BUFFER_CHARS_COUNT]byte)(unsafe.Pointer(&msg))
 				fmt.Println("Received data:", string(goData[:]))
