@@ -20,9 +20,9 @@ func TestSdk(t *testing.T) {
 		assert.True(t, SetCustomDriverPathEx(SysPath))
 
 		mylog.Call(func() {
-			buffer := SetTextMessageCallbackUsingSharedBuffer(unsafe.Pointer(reflect.ValueOf(LogCallback).Pointer()))
-			sharedBuffer := BytePointerToString((*byte)(buffer))
-			mylog.Info("SetTextMessageCallbackUsingSharedBuffer", sharedBuffer)
+			SetTextMessageCallback(unsafe.Pointer(reflect.ValueOf(dragHandler).Pointer()))
+			//sharedBuffer := BytePointerToString((*byte)(buffer))
+			//mylog.Info("SetTextMessageCallbackUsingSharedBuffer", sharedBuffer)
 			// SetTextMessageCallback(Callback(reflect.ValueOf(LogCallback).Pointer()))
 		})
 		//go func() {

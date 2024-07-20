@@ -17,6 +17,21 @@ import (
 	"github.com/ddkwork/golibrary/stream/bitfield"
 )
 
+type FileDropCallbackFunc func(msg *Char) int
+
+var dragHandler FileDropCallbackFunc
+
+func init() {
+	dragHandler = func(msg *Char) int {
+		toString := BytePointerToString(msg)
+		mylog.Info("msg", toString)
+		return 0
+	}
+}
+func FileDropCallback(fn FileDropCallbackFunc) {
+	dragHandler = fn
+}
+
 var LogBuffer = make([]byte, 1, 1024*8)
 
 func LogCallbackOk() {
@@ -25,11 +40,6 @@ func LogCallbackOk() {
 
 func LogCallback(message *Char) {
 	// println("LogCallback")
-	// mylog.Info("test", "LogCallback")
-}
-
-func LogCallback_() {
-	println("LogCallback")
 	// mylog.Info("test", "LogCallback")
 }
 

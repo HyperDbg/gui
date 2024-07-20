@@ -92,7 +92,7 @@ var (
 	X86FlagsReservedBits                                                     = 0xffc38028
 	X86FlagsFixed                                                            = 0x00000002
 	MaxTempCount                                                             = 128
-	MaxStackBufferCount                                                      = 128
+	MaxStackBufferCount                                                      = 256
 	MaxVarCount                                                              = 512
 	MaxFunctionNameLength                                                    = 32
 	DebuggerModifyEventsApplyToAllTag                                        = uint64(0xffffffffffffffff)

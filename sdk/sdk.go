@@ -880,10 +880,10 @@ type EptSingleHookUnhookingDetails struct {
 	PhysicalAddress                           SizeT
 	OriginalEntry                             Uint64
 }
-type Anon1442_9 struct {
+type Anon1444_9 struct {
 	Raw [1]int32
 }
-type Anon1444_5 struct {
+type Anon1446_5 struct {
 	// [Bits 3:0] Segment type.
 	Type Uint32
 	// [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
@@ -1337,6 +1337,15 @@ type ActionBuffer struct {
 	Context                   uint64
 	CallingStage              byte
 }
+type UserDefinedFunctionNode struct {
+	Name            *byte
+	Address         uint64
+	VariableType    uint64
+	ParameterBuffer PsymbolBuffer
+	ParameterNumber uint64
+	StackTempNumber uint64
+	NextNode        *UserDefinedFunctionNode
+}
 type ModuleSymbolDetail struct {
 	IsSymbolDetailsFound   Boolean
 	IsLocalSymbolPath      Boolean
@@ -1676,6 +1685,7 @@ type (
 	PsymbolBuffer                     = *SymbolBuffer
 	PsymbolMap                        = *SymbolMap
 	PactionBuffer                     = *ActionBuffer
+	PuserDefinedFunctionNode          = *UserDefinedFunctionNode
 )
 
 // @brief structures for sending and saving details
@@ -1794,8 +1804,8 @@ func init() {
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 32, 8, "StartAddress", 0, "EndAddress", 8, "SetHookForRead", 16, "SetHookForWrite", 17, "SetHookForExec", 18, "MemoryType", 20, "Tag", 24)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 16, 8, "TargetAddress", 0, "HookFunction", 8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 24, 8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0, "RemoveBreakpointInterception", 1, "PhysicalAddress", 8, "OriginalEntry", 16)
-	bindlib.Validate((*Anon1442_9)(nil), 4, 4)
-	bindlib.Validate((*Anon1444_5)(nil), 4, 4, "Type", 0, "DescriptorType", 0, "DescriptorPrivilegeLevel", 0, "Present", 0, "Reserved1", 1, "AvailableBit", 1, "LongMode", 1, "DefaultBig", 1, "Granularity", 1, "Unusable", 2, "Reserved2", 2)
+	bindlib.Validate((*Anon1444_9)(nil), 4, 4)
+	bindlib.Validate((*Anon1446_5)(nil), 4, 4, "Type", 0, "DescriptorType", 0, "DescriptorPrivilegeLevel", 0, "Present", 0, "Reserved1", 1, "AvailableBit", 1, "LongMode", 1, "DefaultBig", 1, "Granularity", 1, "Unusable", 2, "Reserved2", 2)
 	bindlib.Validate((*VmxSegmentSelector)(nil), 24, 8, "Selector", 0, "Attributes", 4, "Limit", 8, "Base", 16)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 24, 8, "Tag", 0, "KernelStatus", 8, "TypeOfAction", 16, "IsEnabled", 20)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 16, 8, "KernelStatus", 0, "IsShortCircuiting", 8)
@@ -1857,6 +1867,7 @@ func init() {
 	bindlib.Validate((*SymbolBuffer)(nil), 24, 8, "Head", 0, "Pointer", 8, "Size", 12, "Message", 16)
 	bindlib.Validate((*SymbolMap)(nil), 16, 8, "Name", 0, "Type", 8)
 	bindlib.Validate((*ActionBuffer)(nil), 40, 8, "Tag", 0, "CurrentAction", 8, "ImmediatelySendTheResults", 16, "Context", 24, "CallingStage", 32)
+	bindlib.Validate((*UserDefinedFunctionNode)(nil), 56, 8, "Name", 0, "Address", 8, "VariableType", 16, "ParameterBuffer", 24, "ParameterNumber", 32, "StackTempNumber", 40, "NextNode", 48)
 	bindlib.Validate((*ModuleSymbolDetail)(nil), 600, 8, "IsSymbolDetailsFound", 0, "IsLocalSymbolPath", 1, "IsSymbolPDBAvaliable", 2, "IsUserMode", 3, "Is32Bit", 4, "BaseAddress", 8, "FilePath", 16, "ModuleSymbolPath", 276, "ModuleSymbolGuidAndAge", 536)
 	bindlib.Validate((*UsermodeLoadedModuleSymbols)(nil), 1056, 8, "BaseAddress", 0, "Entrypoint", 8, "FilePath", 16)
 	bindlib.Validate((*UsermodeLoadedModuleDetails)(nil), 16, 4, "ProcessId", 0, "OnlyCountModules", 4, "Is32Bit", 5, "ModulesCount", 8, "Result", 12)
@@ -2349,18 +2360,18 @@ func (s *Anon192_5) SetFields(v Anon196_9) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1442_9) Fields() Anon1444_5 {
-	return bindlib.ReadBitcast[Anon1444_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon1444_9) Fields() Anon1446_5 {
+	return bindlib.ReadBitcast[Anon1446_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1442_9) SetFields(v Anon1444_5) {
+func (s *Anon1444_9) SetFields(v Anon1446_5) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1442_9) AsUInt() Uint32 {
+func (s Anon1444_9) AsUInt() Uint32 {
 	return bindlib.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1442_9) SetAsUInt(v Uint32) {
+func (s *Anon1444_9) SetAsUInt(v Uint32) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
