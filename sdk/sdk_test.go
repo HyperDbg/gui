@@ -2,12 +2,11 @@ package sdk
 
 import (
 	"fmt"
+	"github.com/ddkwork/golibrary/mylog"
+	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
 	"unsafe"
-
-	"github.com/ddkwork/golibrary/mylog"
-	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -22,31 +21,12 @@ func TestSdk(t *testing.T) {
 		return
 	}
 	mylog.Call(func() {
+		pfn := func(msg *byte) {
+			fmt.Println("Received data:", BytePointerToString(msg))
+		}
+		SetTextMessageCallback(unsafe.Pointer(reflect.ValueOf(pfn).Pointer()))
 		assert.True(t, VmxSupportDetection())
 		assert.True(t, SetCustomDriverPathEx(SysPath))
-
-		mylog.Call(func() {
-			dragHandler = func(msg *Char) {
-				if msg == nil {
-					println("msg is nil,callback not be called")
-				}
-				goData := (*[COMMUNICATION_BUFFER_SIZE + TCP_END_OF_BUFFER_CHARS_COUNT]byte)(unsafe.Pointer(&msg))
-				fmt.Println("Received data:", string(goData[:]))
-			}
-
-			SetTextMessageCallback(unsafe.Pointer(reflect.ValueOf(dragHandler).Pointer()))
-			//sharedBuffer := BytePointerToString((*byte)(buffer))
-			//mylog.Info("SetTextMessageCallbackUsingSharedBuffer", sharedBuffer)
-			// SetTextMessageCallback(Callback(reflect.ValueOf(LogCallback).Pointer()))
-		})
-		//go func() {
-		//	for {
-		//		if len(logBuffer) > 1 {
-		//			println(BytePointerToString(&logBuffer[0]))
-		//		}
-		//	}
-		//}()
-
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 
 		// ConnectLocalDebugger()
