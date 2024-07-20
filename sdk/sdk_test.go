@@ -20,6 +20,12 @@ func TestSdk(t *testing.T) {
 		assert.True(t, SetCustomDriverPathEx(SysPath))
 
 		mylog.Call(func() {
+			dragHandler = func(msg *Char) {
+				toString := BytePointerToString(msg)
+				mylog.Info("msg", toString)
+
+			}
+
 			SetTextMessageCallback(unsafe.Pointer(reflect.ValueOf(dragHandler).Pointer()))
 			//sharedBuffer := BytePointerToString((*byte)(buffer))
 			//mylog.Info("SetTextMessageCallbackUsingSharedBuffer", sharedBuffer)
