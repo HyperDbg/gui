@@ -4,13 +4,13 @@ go 1.22.5
 
 require (
 	github.com/ddkwork/app v0.0.0-20240718002212-c6cbd767fae3
-	github.com/ddkwork/golibrary v0.0.0-20240719101804-bb9b0b79db5f
+	github.com/ddkwork/golibrary v0.0.0-20240720061207-4fbe64ed818c
 	github.com/richardwilkes/unison v0.72.1
 	github.com/saferwall/pe v1.5.4
 	github.com/stretchr/testify v1.9.0
 	github.com/tc-hib/winres v0.3.1
 	github.com/winlabs/gowin32 v0.0.0-20221003142512-0d265587d3c9
-	golang.org/x/exp v0.0.0-20240707233637-46b078467d37
+	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
 	golang.org/x/image v0.18.0
 	golang.org/x/sys v0.22.0
 )
@@ -23,7 +23,7 @@ require (
 	github.com/dave/dst v0.27.3 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dc0d/caseconv v0.5.0 // indirect
-	github.com/dlclark/regexp2 v1.11.0 // indirect
+	github.com/dlclark/regexp2 v1.11.2 // indirect
 	github.com/ebitengine/purego v0.7.1 // indirect
 	github.com/edsrzf/mmap-go v1.1.0 // indirect
 	github.com/fatih/color v1.17.0 // indirect
