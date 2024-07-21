@@ -22,7 +22,7 @@ func TestSdk(t *testing.T) {
 	}
 	mylog.Call(func() {
 		pfn := func(msg *byte) { // msg is nil,it from TempMessage
-			fmt.Println("Received data:", BytePointerToString(msg)) //1111111111111111 from dll,
+			fmt.Println("Received data:", BytePointerToString(msg))
 		}
 		SetTextMessageCallback(unsafe.Pointer(reflect.ValueOf(pfn).Pointer()))
 		assert.True(t, VmxSupportDetection())

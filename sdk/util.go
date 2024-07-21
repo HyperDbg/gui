@@ -111,9 +111,6 @@ func BytePointerToString(ptr *byte) string { //so where will be panic
 		return "callback arg is nil,the callback function is not registered"
 	}
 	var bytes []byte
-	//sizeof := *(*string)(unsafe.Pointer(&ptr))
-	// unreadable: Only part of a ReadProcessMemory or WriteProcessMemory request was completed.
-	//mylog.Trace("sizeof ptr", unsafe.Sizeof(sizeof))
 	for *ptr != 0 {
 		bytes = append(bytes, *ptr)
 		ptr = (*byte)(unsafe.Pointer(uintptr(unsafe.Pointer(ptr)) + 1))
