@@ -5,6 +5,7 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/stretchr/testify/assert"
 	"reflect"
+	"syscall"
 	"testing"
 	"unsafe"
 )
@@ -72,3 +73,37 @@ bp nt!IopXxxControlFile
 g
 kq l 60
 */
+
+func TestCallback(t *testing.T) {
+	lib, err := syscall.LoadDLL("libhyperdbg.dll")
+	if err != nil {
+		fmt.Printf("Failed to load libhyperdbg.dll: %v\n", err)
+		return
+	}
+
+	procSetTextMessageCallback, err := lib.FindProc("hyperdbg_u_set_text_message_callback")
+	if err != nil {
+		fmt.Printf("Failed to find hyperdbg_u_set_text_message_callback: %v\n", err)
+		lib.Release()
+		return
+	}
+
+	procInterpreter, err := lib.FindProc("hyperdbg_u_interpreter")
+	if err != nil {
+		fmt.Printf("Failed to find hyperdbg_u_interpreter: %v\n", err)
+		lib.Release()
+		return
+	}
+
+	callback := syscall.NewCallback(func(text *byte) int {
+		fmt.Printf("Test in the handler | ")
+		fmt.Println("Received data:", BytePointerToString(text))
+		return 0
+	})
+
+	_, _, _ = procSetTextMessageCallback.Call(callback)
+
+	text := append([]byte("help !monitor"), 0)
+	_, _, _ = procInterpreter.Call(uintptr(unsafe.Pointer(&text[0])))
+	lib.Release()
+}
