@@ -3,6 +3,7 @@ package sdk
 import (
 	"fmt"
 	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ebitengine/purego"
 	"github.com/stretchr/testify/assert"
 	"syscall"
 	"testing"
@@ -20,7 +21,7 @@ func TestSdk(t *testing.T) {
 		mylog.Info("github ci windows machine not support nested vt-x virtualization,skip test")
 		return
 	}
-	callback := syscall.NewCallback(func(text *byte) int {
+	callback := purego.NewCallback(func(text *byte) int {
 		fmt.Println("Received data:", BytePointerToString(text))
 		return 0
 	})
