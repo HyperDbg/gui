@@ -39,6 +39,11 @@ var bar embed.FS
 var pageIco embed.FS
 
 func Run() {
+	callback := purego.NewCallback(func(text *byte) int {
+		fmt.Println("Received data:", sdk.BytePointerToString(text)) //todo check api name
+		return 0
+	})
+	sdk.SetTextMessageCallback(unsafe.Pointer(callback))
 	app.RunWithIco("HyperDbg "+winver.WindowVersion(), mainIcons, func(w *unison.Window) {
 		pages := NewTabPage()
 		w.Content().AddChild(pages.Layout())
@@ -252,12 +257,6 @@ func newToolbar() *toolbar {
 				content.AddChild(remoteEditor)
 
 				newPanel.AddChild(widget.NewButton("Install Driver", func() {
-					callback := purego.NewCallback(func(text *byte) int {
-						fmt.Println("Received data:", sdk.BytePointerToString(text)) //todo check api name
-						return 0
-					})
-					sdk.SetTextMessageCallback(unsafe.Pointer(callback))
-
 					mylog.Check(sdk.VmxSupportDetection())
 					mylog.Check(sdk.SetCustomDriverPathEx(sdk.SysPath))
 
