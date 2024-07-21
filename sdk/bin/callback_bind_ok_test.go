@@ -8,7 +8,7 @@ import (
 	"unsafe"
 )
 
-func TestName(t *testing.T) {
+func TestCallback(t *testing.T) {
 	lib, err := syscall.LoadDLL("libhyperdbg.dll")
 	if err != nil {
 		fmt.Printf("Failed to load libhyperdbg.dll: %v\n", err)
@@ -29,7 +29,7 @@ func TestName(t *testing.T) {
 		return
 	}
 
-	callback := syscall.NewCallback(func(text *byte) int { //bug in bindgen library
+	callback := syscall.NewCallback(func(text *byte) int {
 		fmt.Printf("Test in the handler | ")
 		fmt.Println("Received data:", sdk.BytePointerToString(text))
 		return 0
@@ -37,7 +37,7 @@ func TestName(t *testing.T) {
 
 	_, _, _ = procSetTextMessageCallback.Call(callback)
 
-	text := append([]byte("help !monitor"), 0) // 确保字符串以NULL结尾
+	text := append([]byte("help !monitor"), 0)
 	_, _, _ = procInterpreter.Call(uintptr(unsafe.Pointer(&text[0])))
 	lib.Release()
 }
