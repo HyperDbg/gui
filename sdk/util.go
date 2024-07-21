@@ -107,6 +107,9 @@ func StringToBytePointer(s string) *byte {
 //}
 
 func BytePointerToString(ptr *byte) string {
+	if ptr == nil {
+		return "callback arg is nil,the callback function is not registered"
+	}
 	var bytes []byte
 	//sizeof := *(*string)(unsafe.Pointer(&ptr))
 	// unreadable: Only part of a ReadProcessMemory or WriteProcessMemory request was completed.
