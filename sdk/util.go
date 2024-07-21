@@ -106,8 +106,8 @@ func StringToBytePointer(s string) *byte {
 //	return string(bytes)
 //}
 
-func BytePointerToString(ptr *byte) string {
-	if ptr == nil {
+func BytePointerToString(ptr *byte) string { //so where will be panic
+	if ptr == nil { // and i debugged it before the ptr is nil
 		return "callback arg is nil,the callback function is not registered"
 	}
 	var bytes []byte

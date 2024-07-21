@@ -26,7 +26,7 @@ var (
 	MaximumPacketsCapacityPriority                                           = 50
 	NormalPageSize                                                           = 4096 // PAGE_SIZE
 	PacketChunkSize                                                          = NormalPageSize
-	MaxSerialPacketSize                                                      = 10 * NormalPageSize
+	MaxSerialPacketSize                                                      = 20 * NormalPageSize
 	DbgPrintLimitation                                                       = 512
 	DebuggerEventTagStartSeed                                                = 0x1000000
 	DebuggerThreadDebuggingTagStartSeed                                      = 0x1000000
