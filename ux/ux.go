@@ -2,8 +2,9 @@ package ux
 
 import (
 	"embed"
+	"fmt"
+	"github.com/ebitengine/purego"
 	"path/filepath"
-	"reflect"
 	"time"
 	"unsafe"
 
@@ -248,18 +249,16 @@ func newToolbar() *toolbar {
 				content.AddChild(remoteEditor)
 
 				newPanel.AddChild(widget.NewButton("Install Driver", func() {
+					callback := purego.NewCallback(func(text *byte) int {
+						fmt.Println("Received data:", sdk.BytePointerToString(text)) //todo check api name
+						return 0
+					})
+					sdk.SetTextMessageCallback(unsafe.Pointer(callback))
+
 					mylog.Check(sdk.VmxSupportDetection())
 					mylog.Check(sdk.SetCustomDriverPathEx(sdk.SysPath))
 
 					mylog.Trace("Install Driver", sdk.InstallVmmDriver())
-
-					go func() {
-						mylog.Call(func() {
-							buffer := sdk.SetTextMessageCallbackUsingSharedBuffer(unsafe.Pointer(reflect.ValueOf(sdk.LogCallback).Pointer()))
-							sharedBuffer := sdk.BytePointerToString((*byte)(buffer))
-							mylog.Info("insall driver return", sharedBuffer)
-						})
-					}()
 				}))
 				newPanel.AddChild(widget.NewButton("Uninstall Driver", func() {
 					mylog.Trace("UninstallVmmDriver", sdk.UninstallVmmDriver())
@@ -267,11 +266,6 @@ func newToolbar() *toolbar {
 
 				newPanel.AddChild(widget.NewButton("Load Vmm", func() {
 					mylog.Trace("LoadVmm", sdk.LoadVmm())
-					mylog.Call(func() {
-						buffer := sdk.SetTextMessageCallbackUsingSharedBuffer(unsafe.Pointer(reflect.ValueOf(sdk.LogCallback).Pointer()))
-						sharedBuffer := sdk.BytePointerToString((*byte)(buffer))
-						mylog.Info("LoadVmm return", sharedBuffer)
-					})
 				}))
 				newPanel.AddChild(widget.NewButton("UnLoad Vmm", func() {
 					mylog.Trace("UnloadVmm", sdk.UnloadVmm())
