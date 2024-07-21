@@ -25,7 +25,7 @@ func TestSdk(t *testing.T) {
 		fmt.Println("Received data:", BytePointerToString(text))
 		return 0
 	})
-	SetTextMessageCallback(callback)
+	SetTextMessageCallback(unsafe.Pointer(callback))
 	InterpreterEx("help !monitor")
 
 	mylog.Call(func() {

@@ -1934,7 +1934,7 @@ func ShowSignature() { bindlib.CCall0(__imp_hyperdbg_u_show_signature.Addr()) }
 
 var __imp_hyperdbg_u_set_text_message_callback bindlib.PreloadProc
 
-func SetTextMessageCallback(handler uintptr) {
+func SetTextMessageCallback(handler unsafe.Pointer) {
 	bindlib.CCall1(__imp_hyperdbg_u_set_text_message_callback.Addr(), bindlib.MarshallSyscall(handler))
 }
 
