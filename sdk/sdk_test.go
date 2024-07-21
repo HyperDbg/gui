@@ -33,7 +33,7 @@ func TestSdk(t *testing.T) {
 
 	//procSetTextMessageCallback := GengoLibrary.Import("hyperdbg_u_set_text_message_callback")
 	//procSetTextMessageCallback.Call1(callback)
-	//SetTextMessageCallback(unsafe.Pointer(callback))
+	SetTextMessageCallback(callback)
 
 	mylog.Call(func() {
 
