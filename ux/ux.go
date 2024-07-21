@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"github.com/ebitengine/purego"
+	"golang.org/x/sys/windows"
 	"path/filepath"
 	"time"
 	"unsafe"
@@ -191,7 +192,9 @@ func newToolbar() *toolbar {
 			mylog.Warning("KillProcess", sdk.KillProcess())
 		}),
 		run: widget.NewImageButton("run", m.Get("run.png"), func() {
-			mylog.Warning("StartProcess", sdk.StartProcess((TargetExePath)))
+			targetExePathPtr := windows.StringToUTF16Ptr(TargetExePath)
+			targetExePathInt32Ptr := (*int32)(unsafe.Pointer(targetExePathPtr))
+			mylog.Warning("StartProcess", sdk.StartProcess(targetExePathInt32Ptr))
 		}),
 		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
 		pause: widget.NewImageButton("pause", m.Get("pause.png"), func() {
