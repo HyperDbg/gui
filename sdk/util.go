@@ -67,23 +67,7 @@ func StringToBytePointer(s string) *byte {
 	return ptr
 }
 
-//func BytePointerToString(ptr *byte) string {
-//	if ptr == nil {
-//		return "ptr == nil"
-//	}
-//	mylog.CheckNil(ptr)
-//	var bytes []byte
-//	for *ptr != 0 {
-//	bytes = append(bytes, *ptr)
-//	ptr = (*byte)(unsafe.Pointer(uintptr(unsafe.Pointer(ptr)) + 1))
-//	}
-//	return string(bytes)
-//}
-
-func BytePointerToString(ptr *byte) string { //so where will be panic
-	if ptr == nil { // and i debugged it before the ptr is nil
-		return "callback arg is nil,the callback function is not registered"
-	}
+func BytePointerToString(ptr *byte) string {
 	var bytes []byte
 	for *ptr != 0 {
 		bytes = append(bytes, *ptr)
@@ -101,10 +85,9 @@ func SetCustomDriverPathEx(DriverFilePath string) bool {
 	return Boolean2Bool(b)
 }
 
-func InterpreterEx(command string) (status string) { // todo decode command return status code as error string
+func InterpreterEx(command string) (status string) {
 	mylog.Info("InterpreterEx", "command: "+command)
 	code := Interpreter(StringToBytePointer(command))
-	// SetTextMessageCallback()
 	return string(code)
 }
 
