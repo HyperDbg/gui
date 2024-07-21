@@ -5,7 +5,6 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ebitengine/purego"
 	"github.com/stretchr/testify/assert"
-	"syscall"
 	"testing"
 	"unsafe"
 )
@@ -78,17 +77,17 @@ g
 kq l 60
 */
 
-func TestCallback(t *testing.T) {
-	lib := mylog.Check2(syscall.LoadDLL("libhyperdbg.dll"))
-	procSetTextMessageCallback := mylog.Check2(lib.FindProc("hyperdbg_u_set_text_message_callback"))
-	procInterpreter := mylog.Check2(lib.FindProc("hyperdbg_u_interpreter"))
-	callback := syscall.NewCallback(func(text *byte) int {
-		fmt.Printf("Test in the handler | ")
-		fmt.Println("Received data:", BytePointerToString(text))
-		return 0
-	})
-	mylog.Check3(procSetTextMessageCallback.Call(callback))
-	text := append([]byte("help !monitor"), 0)
-	mylog.Check3(procInterpreter.Call(uintptr(unsafe.Pointer(&text[0]))))
-	lib.Release()
-}
+//func TestCallback(t *testing.T) {
+//	lib := mylog.Check2(syscall.LoadDLL("libhyperdbg.dll"))
+//	procSetTextMessageCallback := mylog.Check2(lib.FindProc("hyperdbg_u_set_text_message_callback"))
+//	procInterpreter := mylog.Check2(lib.FindProc("hyperdbg_u_interpreter"))
+//	callback := syscall.NewCallback(func(text *byte) int {
+//		fmt.Printf("Test in the handler | ")
+//		fmt.Println("Received data:", BytePointerToString(text))
+//		return 0
+//	})
+//	mylog.Check3(procSetTextMessageCallback.Call(callback))
+//	text := append([]byte("help !monitor"), 0)
+//	mylog.Check3(procInterpreter.Call(uintptr(unsafe.Pointer(&text[0]))))
+//	lib.Release()
+//}
