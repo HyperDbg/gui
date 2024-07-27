@@ -12,7 +12,7 @@ VOID DriverUnload(PDRIVER_OBJECT DriverObject) {
 }
 
 NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath) {
-//    LogInfo("DriverEntry");
+    LogInfo("DriverEntry");
     DriverObject->DriverUnload = DriverUnload;
     DbgPrint("111 DriverEntry\n");
     return STATUS_SUCCESS;

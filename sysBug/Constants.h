@@ -78,28 +78,7 @@
 
 #ifndef HYPERDBG_KERNEL_MODE
 
-const unsigned char BuildDateTime[] = {
-    BUILD_YEAR_CH0,
-    BUILD_YEAR_CH1,
-    BUILD_YEAR_CH2,
-    BUILD_YEAR_CH3,
-    '-',
-    BUILD_MONTH_CH0,
-    BUILD_MONTH_CH1,
-    '-',
-    BUILD_DAY_CH0,
-    BUILD_DAY_CH1,
-    ' ',
-    BUILD_HOUR_CH0,
-    BUILD_HOUR_CH1,
-    ':',
-    BUILD_MIN_CH0,
-    BUILD_MIN_CH1,
-    ':',
-    BUILD_SEC_CH0,
-    BUILD_SEC_CH1,
 
-    '\0'};
 
 // Macro to convert a number to a string
 #    define STRINGIFY(x) #x
@@ -110,45 +89,7 @@ const unsigned char BuildDateTime[] = {
 
 const unsigned char CompleteVersion[] = HYPERDBG_COMPLETE_VERSION;
 
-const unsigned char BuildVersion[] = {
-    BUILD_YEAR_CH0,
-    BUILD_YEAR_CH1,
-    BUILD_YEAR_CH2,
-    BUILD_YEAR_CH3,
-    BUILD_MONTH_CH0,
-    BUILD_MONTH_CH1,
-    BUILD_DAY_CH0,
-    BUILD_DAY_CH1,
-    '.',
-    BUILD_HOUR_CH0,
-    BUILD_HOUR_CH1,
-    BUILD_MIN_CH0,
-    BUILD_MIN_CH1,
 
-    '\0'};
-
-const unsigned char BuildSignature[] = {
-    TOSTRING(VERSION_MAJOR)[0],
-    '.',
-    TOSTRING(VERSION_MINOR)[0],
-    '.',
-    TOSTRING(VERSION_PATCH)[0],
-    '-',
-    BUILD_YEAR_CH0,
-    BUILD_YEAR_CH1,
-    BUILD_YEAR_CH2,
-    BUILD_YEAR_CH3,
-    BUILD_MONTH_CH0,
-    BUILD_MONTH_CH1,
-    BUILD_DAY_CH0,
-    BUILD_DAY_CH1,
-    '.',
-    BUILD_HOUR_CH0,
-    BUILD_HOUR_CH1,
-    BUILD_MIN_CH0,
-    BUILD_MIN_CH1,
-
-    '\0'};
 
 #endif // SCRIPT_ENGINE_KERNEL_MODE
 
