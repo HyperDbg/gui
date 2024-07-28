@@ -1747,6 +1747,8 @@ func init() {
 	__imp_hyperdbg_u_set_breakpoint = GengoLibrary.ImportNow("hyperdbg_u_set_breakpoint")
 	__imp_hyperdbg_u_start_process = GengoLibrary.ImportNow("hyperdbg_u_start_process")
 	__imp_hyperdbg_u_start_process_with_args = GengoLibrary.ImportNow("hyperdbg_u_start_process_with_args")
+	__imp_hyperdbg_u_assemble_get_length = GengoLibrary.ImportNow("hyperdbg_u_assemble_get_length")
+	__imp_hyperdbg_u_assemble = GengoLibrary.ImportNow("hyperdbg_u_assemble")
 	__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")
 	__imp_PrintSymbolBuffer = GengoLibrary.ImportNow("PrintSymbolBuffer")
 	__imp_PrintSymbol = GengoLibrary.ImportNow("PrintSymbol")
@@ -1994,15 +1996,15 @@ func ConnectRemoteDebugger(ip *Char, port *Char) Boolean {
 
 var __imp_hyperdbg_u_connect_remote_debugger_using_com_port bindlib.PreloadProc
 
-func ConnectRemoteDebuggerUsingComPort(port_name *Char, baudrate Dword) Boolean {
-	__res := bindlib.CCall2(__imp_hyperdbg_u_connect_remote_debugger_using_com_port.Addr(), bindlib.MarshallSyscall(port_name), bindlib.MarshallSyscall(baudrate))
+func ConnectRemoteDebuggerUsingComPort(port_name *Char, baudrate Dword, pause_after_connection Boolean) Boolean {
+	__res := bindlib.CCall3(__imp_hyperdbg_u_connect_remote_debugger_using_com_port.Addr(), bindlib.MarshallSyscall(port_name), bindlib.MarshallSyscall(baudrate), bindlib.MarshallSyscall(pause_after_connection))
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_hyperdbg_u_connect_remote_debugger_using_named_pipe bindlib.PreloadProc
 
-func ConnectRemoteDebuggerUsingNamedPipe(named_pipe *Char) Boolean {
-	__res := bindlib.CCall1(__imp_hyperdbg_u_connect_remote_debugger_using_named_pipe.Addr(), bindlib.MarshallSyscall(named_pipe))
+func ConnectRemoteDebuggerUsingNamedPipe(named_pipe *Char, pause_after_connection Boolean) Boolean {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_connect_remote_debugger_using_named_pipe.Addr(), bindlib.MarshallSyscall(named_pipe), bindlib.MarshallSyscall(pause_after_connection))
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
@@ -2100,6 +2102,20 @@ var __imp_hyperdbg_u_start_process_with_args bindlib.PreloadProc
 
 func StartProcessWithArgs(path *Wchar, arguments *Wchar) Boolean {
 	__res := bindlib.CCall2(__imp_hyperdbg_u_start_process_with_args.Addr(), bindlib.MarshallSyscall(path), bindlib.MarshallSyscall(arguments))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_assemble_get_length bindlib.PreloadProc
+
+func AssembleGetLength(assembly_code *Char, start_address Uint64, length *Uint32) Boolean {
+	__res := bindlib.CCall3(__imp_hyperdbg_u_assemble_get_length.Addr(), bindlib.MarshallSyscall(assembly_code), bindlib.MarshallSyscall(start_address), bindlib.MarshallSyscall(length))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_assemble bindlib.PreloadProc
+
+func Assemble(assembly_code *Char, start_address Uint64, buffer_to_store_assembled_data unsafe.Pointer, buffer_size Uint32) Boolean {
+	__res := bindlib.CCall4(__imp_hyperdbg_u_assemble.Addr(), bindlib.MarshallSyscall(assembly_code), bindlib.MarshallSyscall(start_address), bindlib.MarshallSyscall(buffer_to_store_assembled_data), bindlib.MarshallSyscall(buffer_size))
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 

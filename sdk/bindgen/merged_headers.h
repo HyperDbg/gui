@@ -418,7 +418,7 @@ typedef struct _DEBUGGER_REMOTE_PACKET
 
 #define VERSION_MAJOR 0
 #define VERSION_MINOR 10
-#define VERSION_PATCH 0
+#define VERSION_PATCH 1
 
 //
 // Example of __DATE__ string: "Jul 27 2012"
@@ -4820,13 +4820,13 @@ hyperdbg_u_connect_remote_debugger(const CHAR * ip, const CHAR * port);
 //
 // Connect to the debugger in the Debugger Mode
 //
-BOOLEAN
-hyperdbg_u_connect_remote_debugger_using_com_port(const CHAR * port_name, DWORD baudrate);
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_connect_remote_debugger_using_com_port(const CHAR * port_name, DWORD baudrate, BOOLEAN pause_after_connection);
 
-BOOLEAN
-hyperdbg_u_connect_remote_debugger_using_named_pipe(const CHAR * named_pipe);
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_connect_remote_debugger_using_named_pipe(const CHAR * named_pipe, BOOLEAN pause_after_connection);
 
-BOOLEAN
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
 hyperdbg_u_connect_current_debugger_using_com_port(const CHAR * port_name, DWORD baudrate);
 
 //
@@ -4916,6 +4916,16 @@ hyperdbg_u_start_process(const WCHAR * path);
 
 IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
 hyperdbg_u_start_process_with_args(const WCHAR * path, const WCHAR * arguments);
+
+//
+// Assembler
+// Exported functionality of the 'a' command
+//
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_assemble_get_length(const CHAR * assembly_code, UINT64 start_address, UINT32 * length);
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_assemble(const CHAR * assembly_code, UINT64 start_address, PVOID buffer_to_store_assembled_data, UINT32 buffer_size);
 
 #ifdef __cplusplus
 }
