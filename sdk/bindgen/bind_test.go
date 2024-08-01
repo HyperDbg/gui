@@ -196,37 +196,6 @@ func TestBindSdk(t *testing.T) {
 			AdditionalParams: []string{},
 		}))
 		mylog.Check(pkg.WriteToDir("../"))
-
-		// generate bug fix
-		b := stream.NewBuffer("../sdk.go")
-		b.ReplaceAll(`type (
-			PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
-			Symbol                            = Symbol
-			Psymbol                           = *Symbol
-			HwdbgShortSymbol                  = HwdbgShortSymbol
-			PhwdbgShortSymbol                 = *HwdbgShortSymbol
-			SymbolBuffer                      = SymbolBuffer
-			PsymbolBuffer                     = *SymbolBuffer
-			SymbolMap                         = SymbolMap
-			PsymbolMap                        = *SymbolMap
-			ActionBuffer                      = ActionBuffer
-			PactionBuffer                     = *ActionBuffer
-			RegsEnum                          = RegsEnum
-		)`, `type (
-			PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
-			//Symbol                            = Symbol
-			Psymbol                           = *Symbol
-			//HwdbgShortSymbol                  = HwdbgShortSymbol
-			PhwdbgShortSymbol                 = *HwdbgShortSymbol
-			//SymbolBuffer                      = SymbolBuffer
-			PsymbolBuffer                     = *SymbolBuffer
-			//SymbolMap                         = SymbolMap
-			PsymbolMap                        = *SymbolMap
-			//ActionBuffer                      = ActionBuffer
-			PactionBuffer                     = *ActionBuffer
-			//RegsEnum                          = RegsEnum
-		)`)
-		stream.WriteGoFile("../sdk.go", b)
 	})
 }
 
