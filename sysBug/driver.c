@@ -5,6 +5,7 @@
 #include <intrin.h>
 #include "HyperDbgHyperLogIntrinsics.h"
 #include "Constants.h"
+#include "Configuration.h"
 
 
 VOID DriverUnload(PDRIVER_OBJECT DriverObject) {

@@ -9,7 +9,6 @@
  *
  */
 #pragma once
-//#include "Constants.h"
 
 //////////////////////////////////////////////////
 //					Enums						//
@@ -71,8 +70,8 @@ typedef enum _LOG_TYPE
  */
 #    define LogInfo(format, ...)                                                          \
         LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
-                                                TRUE,                    \
-                                                TRUE,            \
+                                                UseImmediateMessaging,                    \
+                                                ShowSystemTimeOnDebugMessages,            \
                                                 FALSE,                                    \
                                                 "[+] Information (%s:%d) | " format "\n", \
                                                 __func__,                                 \
@@ -86,7 +85,7 @@ typedef enum _LOG_TYPE
 #    define LogInfoPriority(format, ...)                                                  \
         LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
                                                 TRUE,                                     \
-                                                TRUE,            \
+                                                ShowSystemTimeOnDebugMessages,            \
                                                 TRUE,                                     \
                                                 "[+] Information (%s:%d) | " format "\n", \
                                                 __func__,                                 \
@@ -99,8 +98,8 @@ typedef enum _LOG_TYPE
  */
 #    define LogWarning(format, ...)                                                   \
         LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_WARNING_MESSAGE,        \
-                                                TRUE,                \
-                                                TRUE,        \
+                                                UseImmediateMessaging,                \
+                                                ShowSystemTimeOnDebugMessages,        \
                                                 TRUE,                                 \
                                                 "[-] Warning (%s:%d) | " format "\n", \
                                                 __func__,                             \
@@ -113,8 +112,8 @@ typedef enum _LOG_TYPE
  */
 #    define LogError(format, ...)                                                   \
         LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_ERROR_MESSAGE,        \
-                                                TRUE,              \
-                                                TRUE,      \
+                                                UseImmediateMessaging,              \
+                                                ShowSystemTimeOnDebugMessages,      \
                                                 TRUE,                               \
                                                 "[!] Error (%s:%d) | " format "\n", \
                                                 __func__,                           \
@@ -156,8 +155,8 @@ typedef enum _LOG_TYPE
 #define LogDebugInfo(format, ...)                                                     \
     if (DebugMode)                                                                    \
     LogCallbackPrepareAndSendMessageToQueue(OPERATION_LOG_INFO_MESSAGE,               \
-                                            TRUE,                    \
-                                            TRUE,            \
+                                            UseImmediateMessaging,                    \
+                                            ShowSystemTimeOnDebugMessages,            \
                                             FALSE,                                    \
                                             "[+] Information (%s:%d) | " format "\n", \
                                             __func__,                                 \
@@ -171,9 +170,6 @@ LogCallbackPrepareAndSendMessageToQueue(UINT32       OperationCode,
                                         BOOLEAN      ShowCurrentSystemTime,
                                         BOOLEAN      Priority,
                                         const char * Fmt,
-                                        ...)
-{
- va_list ArgList;
- BOOLEAN Result=FALSE;
- return Result;
+                                        ...) {
+ return TRUE;
 }
