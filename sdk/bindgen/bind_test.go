@@ -275,7 +275,6 @@ typedef int rune;
 #define WCHAR_MIN   0
 #define WCHAR_MAX   65535
 
-typedef int bool ;
 typedef long LONG ;
 #define PVOID void*
 #define HANDLE void*
@@ -283,11 +282,10 @@ typedef long LONG ;
 typedef unsigned __int64   SIZE_T,*PSIZE_T;
 typedef unsigned __int64   time_t;
 typedef unsigned __int64   NTSTATUS;
-typedef char *  va_list;
 
 typedef struct _LIST_ENTRY {
-  struct _LIST_ENTRY *Flink;
-  struct _LIST_ENTRY *Blink;
+ struct _LIST_ENTRY *Flink;
+ struct _LIST_ENTRY *Blink;
 } LIST_ENTRY, *PLIST_ENTRY, PRLIST_ENTRY;
 
 #ifndef _In_

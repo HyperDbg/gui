@@ -783,12 +783,12 @@ type ScriptEngineVariablesList struct {
 	LocalVariablesList  *Uint64
 }
 type Cr3Type struct {
-	Anon192_5
+	Anon202_5
 }
-type Anon192_5 struct {
+type Anon202_5 struct {
 	Raw [1]int64
 }
-type Anon196_9 struct {
+type Anon206_9 struct {
 	Pcid            Uint64
 	PageFrameNumber Uint64
 	Reserved1       Uint64
@@ -880,10 +880,10 @@ type EptSingleHookUnhookingDetails struct {
 	PhysicalAddress                           SizeT
 	OriginalEntry                             Uint64
 }
-type Anon1444_9 struct {
+type Anon1454_9 struct {
 	Raw [1]int32
 }
-type Anon1446_5 struct {
+type Anon1456_5 struct {
 	// [Bits 3:0] Segment type.
 	Type Uint32
 	// [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
@@ -1384,301 +1384,231 @@ type (
 	SizeT              = uint64
 	_BuiltinMsVaList   = *byte
 	_BuiltinVaList     = *byte
+	Uint8T             = uint8
+	Uint16T            = uint16
+	Uint32T            = uint32
+	Uint64T            = uint64
+	Int8T              = int8
+	Int16T             = int16
+	Int32T             = int32
+	Int64T             = int64
+	Bool               = int32
+	IntptrT            = *int32
 	Rune               = int32
 	WintT              = int32
 	Long               = int64
-	PsizeT             = *uint64
-	TimeT              = uint64
-	Ntstatus           = uint64
-	VaList             = *byte
-	PlistEntry         = *ListEntry
-	PrlistEntry        = ListEntry
-)
-
-// ///////////////////////////////////////////////
-type (
-	Qword      = uint64
-	Dword      = uint64
-	Bool       = int32
-	Byte       = uint8
-	Word       = uint16
-	Int        = int32
-	Uint       = uint32
-	Puint      = *uint32
-	Ulong64    = uint64
-	Pulong64   = *uint64
-	Dword64    = uint64
-	Pdword64   = *uint64
-	Char       = byte
-	Wchar      = Rune
-	Uchar      = uint8
-	Ushort     = uint16
-	Ulong      = uint64
-	Boolean    = Uchar
-	Pboolean   = *Boolean
-	Int8       = int8
-	Pint8      = *int8
-	Int16      = int16
-	Pint16     = *int16
-	Int32      = int32
-	Pint32     = *int32
-	Int64      = int64
-	Pint64     = *int64
-	Uint8      = uint8
-	Puint8     = *uint8
-	Uint16     = uint16
-	Puint16    = *uint16
-	Uint32     = uint32
-	Puint32    = *uint32
-	Uint64     = uint64
-	Puint64    = *uint64
+	// type SizeT = uint64
+	PsizeT      = *uint64
+	TimeT       = uint64
+	Ntstatus    = uint64
+	PlistEntry  = *ListEntry
+	PrlistEntry = ListEntry
+	// ///////////////////////////////////////////////
+	Qword   = uint64
+	Uint64  = uint64
+	Puint64 = *uint64
+	Dword   = uint64
+	// type Bool = int32
+	Byte     = uint8
+	Word     = uint16
+	Int      = int32
+	Uint     = uint32
+	Puint    = *uint32
+	Ulong64  = uint64
+	Pulong64 = *uint64
+	Dword64  = uint64
+	Pdword64 = *uint64
+	Char     = byte
+	Wchar    = Rune
+	Uchar    = uint8
+	Ushort   = uint16
+	Ulong    = uint64
+	Boolean  = Uchar
+	Pboolean = *Boolean
+	Int8     = int8
+	Pint8    = *int8
+	Int16    = int16
+	Pint16   = *int16
+	Int32    = int32
+	Pint32   = *int32
+	Int64    = int64
+	Pint64   = *int64
+	Uint8    = uint8
+	Puint8   = *uint8
+	Uint16   = uint16
+	Puint16  = *uint16
+	Uint32   = uint32
+	Puint32  = *uint32
+	// type Uint64 = uint64
+	// type Puint64 = *uint64
 	PguestRegs = *GuestRegs
-)
-
-// @brief struct for extra registers
-type PguestExtraRegisters = *GuestExtraRegisters
-
-// @brief List of different variables
-type PscriptEngineVariablesList = *ScriptEngineVariablesList
-
-// @brief CR3 Structure
-type Pcr3Type = *Cr3Type
-
-// @brief The structure of remote packets in HyperDbg
-type PdebuggerRemotePacket = *DebuggerRemotePacket
-
-// @brief Callback type that can be used to be used
-// as a custom ShowMessages function (by passing message as a parameter)
-type SendMessageWithParamCallback = unsafe.Pointer
-
-// @brief Callback type that can be used to be used
-// as a custom ShowMessages function (using shared buffer)
-type SendMessageWWithSharedBufferCallback = unsafe.Pointer
-
-// @brief The structure of user-input packet in HyperDbg
-type PdebuggeeUserInputPacket = *DebuggeeUserInputPacket
-
-// @brief The structure of user-input packet in HyperDbg
-type PdebuggeeEventAndActionHeaderForRemotePacket = *DebuggeeEventAndActionHeaderForRemotePacket
-
-// @brief request to pause and halt the system
-type PdebuggerPausePacketReceived = *DebuggerPausePacketReceived
-
-// @brief The structure of detail of a triggered event in HyperDbg
-//
-// @details This structure is also used for transferring breakpoint ids, RIP as the context, etc.
-type PdebuggerTriggeredEventDetails = *DebuggerTriggeredEventDetails
-
-// @brief The structure of pausing packet in kHyperDbg
-type PdebuggeeKdPausedPacket = *DebuggeeKdPausedPacket
-
-// @brief The structure of pausing packet in uHyperDbg
-type PdebuggeeUdPausedPacket = *DebuggeeUdPausedPacket
-
-// @brief The structure of message packet in HyperDbg
-type PdebuggeeMessagePacket = *DebuggeeMessagePacket
-
-// @brief Used to register event for transferring buffer between user-to-kernel
-type PregisterNotifyBuffer = *RegisterNotifyBuffer
-
-// @brief Used for sending direct VMCALLs on the VMX root-mode
-type PdirectVmcallParameters = *DirectVmcallParameters
-
-// @brief Temporary $context used in some EPT hook commands
-type PeptHooksContext = *EptHooksContext
-
-// @brief Setting details for EPT Hooks (!monitor)
-type PeptHooksAddressDetailsForMemoryMonitor = *EptHooksAddressDetailsForMemoryMonitor
-
-// @brief Setting details for EPT Hooks (!epthook2)
-type PeptHooksAddressDetailsForEpthook2 = *EptHooksAddressDetailsForEpthook2
-
-// @brief Details of unhooking single EPT hooks
-type PeptSingleHookUnhookingDetails = *EptSingleHookUnhookingDetails
-
-// @brief Describe segment selector in VMX
-//
-// @details This structure is copied from ia32.h to the SDK to
-// be used as a data type for functions
-type VmxSegmentAccessRightsType = any
-
-// @brief Segment selector
-type PvmxSegmentSelector = *VmxSegmentSelector
-
-// @brief request for modifying events (enable/disable/clear)
-type PdebuggerModifyEvents = *DebuggerModifyEvents
-
-// @brief request for performing a short-circuiting event
-type PdebuggerShortCircuitingEvent = *DebuggerShortCircuitingEvent
-
-// @brief request for performing a short-circuiting event
-type PdebuggerEventOptions = *DebuggerEventOptions
-
-// @brief Each command is like the following struct, it also used for
-// tracing works in user mode and sending it to the kernl mode
-//
-// @details THIS IS NOT WHAT HYPERDBG SAVES FOR EVENTS IN KERNEL-MODE
-type PdebuggerGeneralEventDetail = *DebuggerGeneralEventDetail
-
-// @brief Each event can have multiple actions
-//
-// @details THIS STRUCTURE IS ONLY USED IN USER MODE
-// WE USE SEPARATE STRUCTURE FOR ACTIONS IN
-// KERNEL MODE
-type PdebuggerGeneralAction = *DebuggerGeneralAction
-
-// @brief Status of register buffers
-type PdebuggerEventAndActionResult = *DebuggerEventAndActionResult
-
-// @brief The structure of port information (each item) in hwdbg
-type (
+	// @brief struct for extra registers
+	PguestExtraRegisters = *GuestExtraRegisters
+	// @brief List of different variables
+	PscriptEngineVariablesList = *ScriptEngineVariablesList
+	// @brief CR3 Structure
+	Pcr3Type = *Cr3Type
+	// @brief The structure of remote packets in HyperDbg
+	PdebuggerRemotePacket = *DebuggerRemotePacket
+	// @brief Callback type that can be used to be used
+	// as a custom ShowMessages function (by passing message as a parameter)
+	SendMessageWithParamCallback = unsafe.Pointer
+	// @brief Callback type that can be used to be used
+	// as a custom ShowMessages function (using shared buffer)
+	SendMessageWWithSharedBufferCallback = unsafe.Pointer
+	// @brief The structure of user-input packet in HyperDbg
+	PdebuggeeUserInputPacket = *DebuggeeUserInputPacket
+	// @brief The structure of user-input packet in HyperDbg
+	PdebuggeeEventAndActionHeaderForRemotePacket = *DebuggeeEventAndActionHeaderForRemotePacket
+	// @brief request to pause and halt the system
+	PdebuggerPausePacketReceived = *DebuggerPausePacketReceived
+	// @brief The structure of detail of a triggered event in HyperDbg
+	//
+	// @details This structure is also used for transferring breakpoint ids, RIP as the context, etc.
+	PdebuggerTriggeredEventDetails = *DebuggerTriggeredEventDetails
+	// @brief The structure of pausing packet in kHyperDbg
+	PdebuggeeKdPausedPacket = *DebuggeeKdPausedPacket
+	// @brief The structure of pausing packet in uHyperDbg
+	PdebuggeeUdPausedPacket = *DebuggeeUdPausedPacket
+	// @brief The structure of message packet in HyperDbg
+	PdebuggeeMessagePacket = *DebuggeeMessagePacket
+	// @brief Used to register event for transferring buffer between user-to-kernel
+	PregisterNotifyBuffer = *RegisterNotifyBuffer
+	// @brief Used for sending direct VMCALLs on the VMX root-mode
+	PdirectVmcallParameters = *DirectVmcallParameters
+	// @brief Temporary $context used in some EPT hook commands
+	PeptHooksContext = *EptHooksContext
+	// @brief Setting details for EPT Hooks (!monitor)
+	PeptHooksAddressDetailsForMemoryMonitor = *EptHooksAddressDetailsForMemoryMonitor
+	// @brief Setting details for EPT Hooks (!epthook2)
+	PeptHooksAddressDetailsForEpthook2 = *EptHooksAddressDetailsForEpthook2
+	// @brief Details of unhooking single EPT hooks
+	PeptSingleHookUnhookingDetails = *EptSingleHookUnhookingDetails
+	// @brief Describe segment selector in VMX
+	//
+	// @details This structure is copied from ia32.h to the SDK to
+	// be used as a data type for functions
+	VmxSegmentAccessRightsType = any
+	// @brief Segment selector
+	PvmxSegmentSelector = *VmxSegmentSelector
+	// @brief request for modifying events (enable/disable/clear)
+	PdebuggerModifyEvents = *DebuggerModifyEvents
+	// @brief request for performing a short-circuiting event
+	PdebuggerShortCircuitingEvent = *DebuggerShortCircuitingEvent
+	// @brief request for performing a short-circuiting event
+	PdebuggerEventOptions = *DebuggerEventOptions
+	// @brief Each command is like the following struct, it also used for
+	// tracing works in user mode and sending it to the kernl mode
+	//
+	// @details THIS IS NOT WHAT HYPERDBG SAVES FOR EVENTS IN KERNEL-MODE
+	PdebuggerGeneralEventDetail = *DebuggerGeneralEventDetail
+	// @brief Each event can have multiple actions
+	//
+	// @details THIS STRUCTURE IS ONLY USED IN USER MODE
+	// WE USE SEPARATE STRUCTURE FOR ACTIONS IN
+	// KERNEL MODE
+	PdebuggerGeneralAction = *DebuggerGeneralAction
+	// @brief Status of register buffers
+	PdebuggerEventAndActionResult = *DebuggerEventAndActionResult
+	// @brief The structure of port information (each item) in hwdbg
 	PhwdbgPortInformationItems = *HwdbgPortInformationItems
 	PhwdbgInstanceInformation  = *HwdbgInstanceInformation
-)
-
-// @brief The structure of script buffer in hwdbg
-type PhwdbgScriptBuffer = *HwdbgScriptBuffer
-
-// @brief request for !pte command
-type PdebuggerReadPageTableEntriesDetails = *DebuggerReadPageTableEntriesDetails
-
-// @brief requests for !va2pa and !pa2va commands
-type PdebuggerVa2paAndPa2vaCommands = *DebuggerVa2paAndPa2vaCommands
-
-// @brief requests for the '.pagein' command
-type PdebuggerPageInRequest = *DebuggerPageInRequest
-
-// @brief requests for !rev command
-type PreversingMachineReconstructMemoryRequest = *ReversingMachineReconstructMemoryRequest
-
-// @brief requests options for dt and struct command
-type PdebuggerDtCommandOptions = *DebuggerDtCommandOptions
-
-// @brief requests for the 'prealloc' command
-type PdebuggerPreallocCommand = *DebuggerPreallocCommand
-
-// @brief requests for the 'preactivate' command
-type PdebuggerPreactivateCommand = *DebuggerPreactivateCommand
-
-// @brief request for reading virtual and physical memory
-type PdebuggerReadMemory = *DebuggerReadMemory
-
-// @brief request for flushing buffers
-type PdebuggerFlushLoggingBuffers = *DebuggerFlushLoggingBuffers
-
-// @brief request for test query buffers
-type PdebuggerDebuggerTestQueryBuffer = *DebuggerDebuggerTestQueryBuffer
-
-// @brief request performing kernel tests
-type PdebuggerPerformKernelTests = *DebuggerPerformKernelTests
-
-// @brief request for send a signal that command execution finished
-type PdebuggerSendCommandExecutionFinishedSignal = *DebuggerSendCommandExecutionFinishedSignal
-
-// @brief request for send general packets from debuggee to debugger
-type PdebuggeeSendGeneralPacketFromDebuggeeToDebugger = *DebuggeeSendGeneralPacketFromDebuggeeToDebugger
-
-// @brief request for send a user-mode message to debugger
-type PdebuggerSendUsermodeMessagesToDebugger = *DebuggerSendUsermodeMessagesToDebugger
-
-// @brief request to read or write on MSRs
-type PdebuggerReadAndWriteOnMsr = *DebuggerReadAndWriteOnMsr
-
-// @brief request for edit virtual and physical memory
-type PdebuggerEditMemory = *DebuggerEditMemory
-
-// @brief request for searching memory
-type PdebuggerSearchMemory = *DebuggerSearchMemory
-
-// @brief request for enable or disable transparent-mode
-type PdebuggerHideAndTransparentDebuggerMode = *DebuggerHideAndTransparentDebuggerMode
-
-// @brief request to make this computer to a debuggee
-type PdebuggerPrepareDebuggee = *DebuggerPrepareDebuggee
-
-// @brief The structure of changing core packet in HyperDbg
-type PdebuggeeChangeCorePacket = *DebuggeeChangeCorePacket
-
-// @brief request for attaching user-mode process
-type PdebuggerAttachDetachUserModeProcess = *DebuggerAttachDetachUserModeProcess
-
-// @brief The structure of needed information to get the details
-// of the process from nt!_EPROCESS and location of needed variables
-type PdebuggeeProcessListNeededDetails = *DebuggeeProcessListNeededDetails
-
-// @brief The structure of needed information to get the details
-// of the thread from nt!_ETHREAD and location of needed variables
-type PdebuggeeThreadListNeededDetails = *DebuggeeThreadListNeededDetails
-
-// @brief The structure showing list of processes (details of each
-// entry)
-type PdebuggeeProcessListDetailsEntry = *DebuggeeProcessListDetailsEntry
-
-// @brief The structure showing list of threads (details of each
-// entry)
-type PdebuggeeThreadListDetailsEntry = *DebuggeeThreadListDetailsEntry
-
-// @brief request for query count of active processes and threads
-type PdebuggerQueryActiveProcessesOrThreads = *DebuggerQueryActiveProcessesOrThreads
-
-// @brief The structure for saving the callstack frame of one parameter
-type PdebuggerSingleCallstackFrame = *DebuggerSingleCallstackFrame
-
-// @brief request for callstack frames
-type (
+	// @brief The structure of script buffer in hwdbg
+	PhwdbgScriptBuffer = *HwdbgScriptBuffer
+	// @brief request for !pte command
+	PdebuggerReadPageTableEntriesDetails = *DebuggerReadPageTableEntriesDetails
+	// @brief requests for !va2pa and !pa2va commands
+	PdebuggerVa2paAndPa2vaCommands = *DebuggerVa2paAndPa2vaCommands
+	// @brief requests for the '.pagein' command
+	PdebuggerPageInRequest = *DebuggerPageInRequest
+	// @brief requests for !rev command
+	PreversingMachineReconstructMemoryRequest = *ReversingMachineReconstructMemoryRequest
+	// @brief requests options for dt and struct command
+	PdebuggerDtCommandOptions = *DebuggerDtCommandOptions
+	// @brief requests for the 'prealloc' command
+	PdebuggerPreallocCommand = *DebuggerPreallocCommand
+	// @brief requests for the 'preactivate' command
+	PdebuggerPreactivateCommand = *DebuggerPreactivateCommand
+	// @brief request for reading virtual and physical memory
+	PdebuggerReadMemory = *DebuggerReadMemory
+	// @brief request for flushing buffers
+	PdebuggerFlushLoggingBuffers = *DebuggerFlushLoggingBuffers
+	// @brief request for test query buffers
+	PdebuggerDebuggerTestQueryBuffer = *DebuggerDebuggerTestQueryBuffer
+	// @brief request performing kernel tests
+	PdebuggerPerformKernelTests = *DebuggerPerformKernelTests
+	// @brief request for send a signal that command execution finished
+	PdebuggerSendCommandExecutionFinishedSignal = *DebuggerSendCommandExecutionFinishedSignal
+	// @brief request for send general packets from debuggee to debugger
+	PdebuggeeSendGeneralPacketFromDebuggeeToDebugger = *DebuggeeSendGeneralPacketFromDebuggeeToDebugger
+	// @brief request for send a user-mode message to debugger
+	PdebuggerSendUsermodeMessagesToDebugger = *DebuggerSendUsermodeMessagesToDebugger
+	// @brief request to read or write on MSRs
+	PdebuggerReadAndWriteOnMsr = *DebuggerReadAndWriteOnMsr
+	// @brief request for edit virtual and physical memory
+	PdebuggerEditMemory = *DebuggerEditMemory
+	// @brief request for searching memory
+	PdebuggerSearchMemory = *DebuggerSearchMemory
+	// @brief request for enable or disable transparent-mode
+	PdebuggerHideAndTransparentDebuggerMode = *DebuggerHideAndTransparentDebuggerMode
+	// @brief request to make this computer to a debuggee
+	PdebuggerPrepareDebuggee = *DebuggerPrepareDebuggee
+	// @brief The structure of changing core packet in HyperDbg
+	PdebuggeeChangeCorePacket = *DebuggeeChangeCorePacket
+	// @brief request for attaching user-mode process
+	PdebuggerAttachDetachUserModeProcess = *DebuggerAttachDetachUserModeProcess
+	// @brief The structure of needed information to get the details
+	// of the process from nt!_EPROCESS and location of needed variables
+	PdebuggeeProcessListNeededDetails = *DebuggeeProcessListNeededDetails
+	// @brief The structure of needed information to get the details
+	// of the thread from nt!_ETHREAD and location of needed variables
+	PdebuggeeThreadListNeededDetails = *DebuggeeThreadListNeededDetails
+	// @brief The structure showing list of processes (details of each
+	// entry)
+	PdebuggeeProcessListDetailsEntry = *DebuggeeProcessListDetailsEntry
+	// @brief The structure showing list of threads (details of each
+	// entry)
+	PdebuggeeThreadListDetailsEntry = *DebuggeeThreadListDetailsEntry
+	// @brief request for query count of active processes and threads
+	PdebuggerQueryActiveProcessesOrThreads = *DebuggerQueryActiveProcessesOrThreads
+	// @brief The structure for saving the callstack frame of one parameter
+	PdebuggerSingleCallstackFrame = *DebuggerSingleCallstackFrame
+	// @brief request for callstack frames
 	PdebuggerCallstackRequest                     = *DebuggerCallstackRequest
 	PusermodeDebuggingThreadOrProcessStateDetails = *UsermodeDebuggingThreadOrProcessStateDetails
-)
-
-// @brief Used for run the script
-type PdebuggerEventActionRunScriptConfiguration = *DebuggerEventActionRunScriptConfiguration
-
-// @brief used in the case of requesting a "request buffer"
-type PdebuggerEventRequestBuffer = *DebuggerEventRequestBuffer
-
-// @brief used in the case of custom code requests to the debugger
-type PdebuggerEventRequestCustomCode = *DebuggerEventRequestCustomCode
-
-// @brief Description of user-mode debugging actions
-type PdebuggerUdCommandAction = *DebuggerUdCommandAction
-
-// @brief The structure of command packet in uHyperDbg
-type PdebuggerUdCommandPacket = *DebuggerUdCommandPacket
-
-// @brief The structure of changing process and show process
-// packet in HyperDbg
-type PdebuggeeDetailsAndSwitchProcessPacket = *DebuggeeDetailsAndSwitchProcessPacket
-
-// @brief The structure of changing thead and show thread
-// packet in HyperDbg
-type PdebuggeeDetailsAndSwitchThreadPacket = *DebuggeeDetailsAndSwitchThreadPacket
-
-// @brief The structure of stepping packet in HyperDbg
-type PdebuggeeStepPacket = *DebuggeeStepPacket
-
-// @brief The structure of .formats result packet in HyperDbg
-type PdebuggeeFormatsPacket = *DebuggeeFormatsPacket
-
-// @brief The structure of .sym reload packet in HyperDbg
-type PdebuggeeSymbolRequestPacket = *DebuggeeSymbolRequestPacket
-
-// @brief The structure of bp command packet in HyperDbg
-type PdebuggeeBpPacket = *DebuggeeBpPacket
-
-// @brief The structure of breakpoint modification requests packet in HyperDbg
-type PdebuggeeBpListOrModifyPacket = *DebuggeeBpListOrModifyPacket
-
-// @brief The structure of script packet in HyperDbg
-type PdebuggeeScriptPacket = *DebuggeeScriptPacket
-
-// @brief The structure of result of search packet in HyperDbg
-type PdebuggeeResultOfSearchPacket = *DebuggeeResultOfSearchPacket
-
-// @brief Register Descriptor Structure to use in r command.
-type PdebuggeeRegisterReadDescription = *DebuggeeRegisterReadDescription
-
-// @brief Register Descriptor Structure to write on registers.
-type (
+	// @brief Used for run the script
+	PdebuggerEventActionRunScriptConfiguration = *DebuggerEventActionRunScriptConfiguration
+	// @brief used in the case of requesting a "request buffer"
+	PdebuggerEventRequestBuffer = *DebuggerEventRequestBuffer
+	// @brief used in the case of custom code requests to the debugger
+	PdebuggerEventRequestCustomCode = *DebuggerEventRequestCustomCode
+	// @brief Description of user-mode debugging actions
+	PdebuggerUdCommandAction = *DebuggerUdCommandAction
+	// @brief The structure of command packet in uHyperDbg
+	PdebuggerUdCommandPacket = *DebuggerUdCommandPacket
+	// @brief The structure of changing process and show process
+	// packet in HyperDbg
+	PdebuggeeDetailsAndSwitchProcessPacket = *DebuggeeDetailsAndSwitchProcessPacket
+	// @brief The structure of changing thead and show thread
+	// packet in HyperDbg
+	PdebuggeeDetailsAndSwitchThreadPacket = *DebuggeeDetailsAndSwitchThreadPacket
+	// @brief The structure of stepping packet in HyperDbg
+	PdebuggeeStepPacket = *DebuggeeStepPacket
+	// @brief The structure of .formats result packet in HyperDbg
+	PdebuggeeFormatsPacket = *DebuggeeFormatsPacket
+	// @brief The structure of .sym reload packet in HyperDbg
+	PdebuggeeSymbolRequestPacket = *DebuggeeSymbolRequestPacket
+	// @brief The structure of bp command packet in HyperDbg
+	PdebuggeeBpPacket = *DebuggeeBpPacket
+	// @brief The structure of breakpoint modification requests packet in HyperDbg
+	PdebuggeeBpListOrModifyPacket = *DebuggeeBpListOrModifyPacket
+	// @brief The structure of script packet in HyperDbg
+	PdebuggeeScriptPacket = *DebuggeeScriptPacket
+	// @brief The structure of result of search packet in HyperDbg
+	PdebuggeeResultOfSearchPacket = *DebuggeeResultOfSearchPacket
+	// @brief Register Descriptor Structure to use in r command.
+	PdebuggeeRegisterReadDescription = *DebuggeeRegisterReadDescription
+	// @brief Register Descriptor Structure to write on registers.
 	PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
 	Psymbol                           = *Symbol
 	PhwdbgShortSymbol                 = *HwdbgShortSymbol
@@ -1686,26 +1616,20 @@ type (
 	PsymbolMap                        = *SymbolMap
 	PactionBuffer                     = *ActionBuffer
 	PuserDefinedFunctionNode          = *UserDefinedFunctionNode
-)
-
-// @brief structures for sending and saving details
-// about each module and symbols details
-type (
+	// @brief structures for sending and saving details
+	// about each module and symbols details
 	PmoduleSymbolDetail          = *ModuleSymbolDetail
 	PusermodeLoadedModuleSymbols = *UsermodeLoadedModuleSymbols
 	PusermodeLoadedModuleDetails = *UsermodeLoadedModuleDetails
+	// @brief Callback type that should be used to add
+	// list of Addresses to ObjectNames
+	SymbolMapCallback = unsafe.Pointer
+	// @brief request to add new symbol detail or update a previous
+	// symbol table entry
+	PdebuggerUpdateSymbolTable = *DebuggerUpdateSymbolTable
+	// @brief request that shows, symbol reload process is finished
+	PdebuggeeSymbolUpdateResult = *DebuggeeSymbolUpdateResult
 )
-
-// @brief Callback type that should be used to add
-// list of Addresses to ObjectNames
-type SymbolMapCallback = unsafe.Pointer
-
-// @brief request to add new symbol detail or update a previous
-// symbol table entry
-type PdebuggerUpdateSymbolTable = *DebuggerUpdateSymbolTable
-
-// @brief request that shows, symbol reload process is finished
-type PdebuggeeSymbolUpdateResult = *DebuggeeSymbolUpdateResult
 
 var __imp_hyperdbg_u_detect_vmx_support bindlib.PreloadProc
 
@@ -1790,8 +1714,8 @@ func init() {
 	bindlib.Validate((*GuestExtraRegisters)(nil), 32, 8, "Cs", 0, "Ds", 2, "Fs", 4, "Gs", 6, "Es", 8, "Ss", 10, "Rflags", 16, "Rip", 24)
 	bindlib.Validate((*ScriptEngineVariablesList)(nil), 24, 8, "TempList", 0, "GlobalVariablesList", 8, "LocalVariablesList", 16)
 	bindlib.Validate((*Cr3Type)(nil), 8, 8)
-	bindlib.Validate((*Anon192_5)(nil), 8, 8)
-	bindlib.Validate((*Anon196_9)(nil), 8, 8, "Pcid", 0, "PageFrameNumber", 1, "Reserved1", 6, "Reserved_2", 7, "PcidInvalidate", 7)
+	bindlib.Validate((*Anon202_5)(nil), 8, 8)
+	bindlib.Validate((*Anon206_9)(nil), 8, 8, "Pcid", 0, "PageFrameNumber", 1, "Reserved1", 6, "Reserved_2", 7, "PcidInvalidate", 7)
 	bindlib.Validate((*DebuggerRemotePacket)(nil), 24, 8, "Checksum", 0, "Indicator", 8, "TypeOfThePacket", 16, "RequestedActionOfThePacket", 20)
 	bindlib.Validate((*DebuggeeUserInputPacket)(nil), 12, 4, "CommandLen", 0, "IgnoreFinishedSignal", 4, "Result", 8)
 	bindlib.Validate((*DebuggeeEventAndActionHeaderForRemotePacket)(nil), 4, 4, "Length", 0)
@@ -1806,8 +1730,8 @@ func init() {
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 32, 8, "StartAddress", 0, "EndAddress", 8, "SetHookForRead", 16, "SetHookForWrite", 17, "SetHookForExec", 18, "MemoryType", 20, "Tag", 24)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 16, 8, "TargetAddress", 0, "HookFunction", 8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 24, 8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0, "RemoveBreakpointInterception", 1, "PhysicalAddress", 8, "OriginalEntry", 16)
-	bindlib.Validate((*Anon1444_9)(nil), 4, 4)
-	bindlib.Validate((*Anon1446_5)(nil), 4, 4, "Type", 0, "DescriptorType", 0, "DescriptorPrivilegeLevel", 0, "Present", 0, "Reserved1", 1, "AvailableBit", 1, "LongMode", 1, "DefaultBig", 1, "Granularity", 1, "Unusable", 2, "Reserved2", 2)
+	bindlib.Validate((*Anon1454_9)(nil), 4, 4)
+	bindlib.Validate((*Anon1456_5)(nil), 4, 4, "Type", 0, "DescriptorType", 0, "DescriptorPrivilegeLevel", 0, "Present", 0, "Reserved1", 1, "AvailableBit", 1, "LongMode", 1, "DefaultBig", 1, "Granularity", 1, "Unusable", 2, "Reserved2", 2)
 	bindlib.Validate((*VmxSegmentSelector)(nil), 24, 8, "Selector", 0, "Attributes", 4, "Limit", 8, "Base", 16)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 24, 8, "Tag", 0, "KernelStatus", 8, "TypeOfAction", 16, "IsEnabled", 20)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 16, 8, "KernelStatus", 0, "IsShortCircuiting", 8)
@@ -1884,8 +1808,8 @@ func DetectVmxSupport() Boolean {
 
 var __imp_hyperdbg_u_read_vendor_string bindlib.PreloadProc
 
-func ReadVendorString(b *Char) {
-	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
+func ReadVendorString(arg0 *Char) {
+	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(arg0))
 }
 
 var __imp_hyperdbg_u_load_vmm bindlib.PreloadProc
@@ -2360,34 +2284,34 @@ func SymCastingQueryForFiledsAndTypes(StructName *byte, FiledOfStructName *byte,
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
-func (s Anon192_5) Flags() Uint64 {
+func (s Anon202_5) Flags() Uint64 {
 	return bindlib.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon192_5) SetFlags(v Uint64) {
+func (s *Anon202_5) SetFlags(v Uint64) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon192_5) Fields() Anon196_9 {
-	return bindlib.ReadBitcast[Anon196_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon202_5) Fields() Anon206_9 {
+	return bindlib.ReadBitcast[Anon206_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon192_5) SetFields(v Anon196_9) {
+func (s *Anon202_5) SetFields(v Anon206_9) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1444_9) Fields() Anon1446_5 {
-	return bindlib.ReadBitcast[Anon1446_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon1454_9) Fields() Anon1456_5 {
+	return bindlib.ReadBitcast[Anon1456_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1444_9) SetFields(v Anon1446_5) {
+func (s *Anon1454_9) SetFields(v Anon1456_5) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1444_9) AsUInt() Uint32 {
+func (s Anon1454_9) AsUInt() Uint32 {
 	return bindlib.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1444_9) SetAsUInt(v Uint32) {
+func (s *Anon1454_9) SetAsUInt(v Uint32) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
