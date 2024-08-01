@@ -198,29 +198,7 @@ func TestBindSdk(t *testing.T) {
 		mylog.Check(pkg.WriteToDir("../"))
 
 		// generate bug fix
-		fixs := []string{
-			`	Uint64     = uint64
-	Puint64    = *uint64
-	GuestRegs  = GuestRegs`,
-			`// @brief struct for extra registers
-type GuestExtraRegisters = GuestExtraRegisters`,
-			`RegsEnum                          = RegsEnum`,
-		}
-
 		b := stream.NewBuffer("../sdk.go")
-		for _, fix := range fixs {
-			b.ReplaceAll(fix, "")
-		}
-		b.Replace("\nSizeT              = uint64", "", 1)
-		b.Replace("\nBool               = int32", "", 1)
-		b.Replace(`	Bool               = int32
-	Long               = int64
-	SizeT              = uint64`, `	Long               = int64`, 1)
-		b.ReplaceAll(`func ReadVendorString(*Char) {
-	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall())
-}`, `func ReadVendorString(b*Char) {
-	bindlib.CCall1(__imp_hyperdbg_u_read_vendor_string.Addr(), bindlib.MarshallSyscall(b))
-}`)
 		b.ReplaceAll(`type (
 			PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
 			Symbol                            = Symbol
@@ -248,9 +226,6 @@ type GuestExtraRegisters = GuestExtraRegisters`,
 			PactionBuffer                     = *ActionBuffer
 			//RegsEnum                          = RegsEnum
 		)`)
-		b.ReplaceAll(`	Qword      = uint64
-	Uint64     = uint64
-	Puint64    = *uint64`, `	Qword      = uint64 `)
 		stream.WriteGoFile("../sdk.go", b)
 	})
 }
