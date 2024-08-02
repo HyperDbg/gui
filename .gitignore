@@ -1,6 +1,4 @@
 .idea
-*.json
-*.txt
 *.pdb
 *.exp
 *.lib
