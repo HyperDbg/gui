@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/ddkwork/app v0.0.0-20240718002212-c6cbd767fae3
-	github.com/ddkwork/golibrary v0.0.0-20240801140004-6e106cd76a32
+	github.com/ddkwork/golibrary v0.0.0-20240802082739-ae4f0bcd4079
 	github.com/ebitengine/purego v0.8.0-alpha.3.0.20240717153933-b9dbbd0c9d2c
 	github.com/richardwilkes/unison v0.72.1
 	github.com/saferwall/pe v1.5.4
