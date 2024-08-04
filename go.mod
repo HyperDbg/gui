@@ -42,7 +42,7 @@ require (
 	github.com/pkg/term v1.2.0-beta.2 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/richardwilkes/json v0.3.0 // indirect
-	github.com/richardwilkes/toolbox v1.114.2 // indirect
+	github.com/richardwilkes/toolbox v1.99.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/secDre4mer/pkcs7 v0.0.0-20240322103146-665324a4461d // indirect
 	github.com/spf13/afero v1.11.0 // indirect
