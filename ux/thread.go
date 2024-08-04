@@ -7,7 +7,7 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 
 	"github.com/ddkwork/app/widget"
-	"github.com/richardwilkes/unison"
+	"github.com/ddkwork/unison"
 )
 
 func LayoutThread() unison.Paneler {

@@ -1,7 +1,7 @@
 package ux
 
 import (
-	"github.com/richardwilkes/unison"
+	"github.com/ddkwork/unison"
 )
 
 func LayoutNotes() unison.Paneler {

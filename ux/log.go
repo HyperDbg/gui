@@ -3,7 +3,7 @@ package ux
 import (
 	"github.com/ddkwork/app/widget"
 	"github.com/ddkwork/golibrary/mylog"
-	"github.com/richardwilkes/unison"
+	"github.com/ddkwork/unison"
 )
 
 func LayoutLog() unison.Paneler {
