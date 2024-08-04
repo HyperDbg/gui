@@ -5,8 +5,8 @@ go 1.23
 require (
 	github.com/ddkwork/app v0.0.0-20240718002212-c6cbd767fae3
 	github.com/ddkwork/golibrary v0.0.0-20240802082739-ae4f0bcd4079
+	github.com/ddkwork/unison v0.0.0-20240804153823-3857a2583216
 	github.com/ebitengine/purego v0.8.0-alpha.3.0.20240717153933-b9dbbd0c9d2c
-	github.com/richardwilkes/unison v0.72.1
 	github.com/saferwall/pe v1.5.4
 	github.com/stretchr/testify v1.9.0
 	github.com/tc-hib/winres v0.3.1
@@ -43,6 +43,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/richardwilkes/json v0.3.0 // indirect
 	github.com/richardwilkes/toolbox v1.114.2 // indirect
+	github.com/richardwilkes/unison v0.72.1 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/secDre4mer/pkcs7 v0.0.0-20240322103146-665324a4461d // indirect
 	github.com/spf13/afero v1.11.0 // indirect

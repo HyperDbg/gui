@@ -13,11 +13,11 @@ import (
 
 	"github.com/ddkwork/HyperDbg/sdk"
 
-	"github.com/richardwilkes/unison/enums/align"
+	"github.com/ddkwork/unison/enums/align"
 
 	"github.com/ddkwork/app/ms/hook/winver"
 
-	"github.com/richardwilkes/unison/enums/side"
+	"github.com/ddkwork/unison/enums/side"
 
 	"github.com/ddkwork/app"
 	"github.com/ddkwork/app/widget"
