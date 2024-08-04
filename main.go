@@ -9,10 +9,10 @@ import (
 // RtlGenRandom
 func main() {
 	// testSdkCommands()
-	//ux.Run()
-	testDisassembly()
-	// testParsePe()
-	// testScript()
+	ux.Run()
+	//testDisassembly()
+	//testParsePe()
+	//testScript()
 }
 
 func testSdkCommands() {
