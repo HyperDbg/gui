@@ -174,7 +174,7 @@ func LayoutCpu() unison.Paneler {
 	BottomHSplit := widget.NewHSplit(
 		HexEditTab,
 		widget.NewTab("stack", "todo stack test", stackTable),
-		0.1)
+		0.3)
 	//todo add tab into hex editor and stack layout
 	/*
 		tabs := gi.NewTabs(downSplits)
