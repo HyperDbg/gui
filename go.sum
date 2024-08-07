@@ -27,6 +27,8 @@ github.com/ddkwork/app v0.0.0-20240718002212-c6cbd767fae3 h1:/gxCtpRUSeed27MTqIJ
 github.com/ddkwork/app v0.0.0-20240718002212-c6cbd767fae3/go.mod h1:RmBHcrxQUcz6jbQvc1nSpJmIUkBuQBo64cbo0h/ViRM=
 github.com/ddkwork/golibrary v0.0.0-20240802082739-ae4f0bcd4079 h1:HgUBRxaLsFx6S/bndSYm8gNx4mMiZyLFdtjKMjyLkBw=
 github.com/ddkwork/golibrary v0.0.0-20240802082739-ae4f0bcd4079/go.mod h1:Ym9Q+yayQGbdr7O+p1Br1IoY8MfRhmbluPodt66GZkE=
+github.com/ddkwork/golibrary v0.0.0-20240807032548-2d6a9a212679 h1:YnQ/rrNQ86Jb9MaUmVu95qqTifwEXDP2wGG/mtJRM4U=
+github.com/ddkwork/golibrary v0.0.0-20240807032548-2d6a9a212679/go.mod h1:Ym9Q+yayQGbdr7O+p1Br1IoY8MfRhmbluPodt66GZkE=
 github.com/ddkwork/unison v0.0.0-20240804153823-3857a2583216 h1:YFp2v+x8eiY9Dz05V5CpONtv70g8CFl4tfkiyUK/A/A=
 github.com/ddkwork/unison v0.0.0-20240804153823-3857a2583216/go.mod h1:O2aG+CgYImHuoXG1II/NozVD7kdSTMpQldsvF0uI7Bg=
 github.com/dlclark/regexp2 v1.11.2 h1:/u628IuisSTwri5/UKloiIsH8+qF2Pu7xEQX+yIKg68=
