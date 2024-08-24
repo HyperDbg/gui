@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	github.com/ddkwork/app v0.0.0-20240718002212-c6cbd767fae3
-	github.com/ddkwork/golibrary v0.0.0-20240807032548-2d6a9a212679
+	github.com/ddkwork/golibrary v0.0.0-20240824094649-0784b16f2688
 	github.com/ddkwork/unison v0.0.0-20240804153823-3857a2583216
 	github.com/ebitengine/purego v0.8.0-alpha.3.0.20240717153933-b9dbbd0c9d2c
 	github.com/saferwall/pe v1.5.4
@@ -13,7 +13,7 @@ require (
 	github.com/winlabs/gowin32 v0.0.0-20221003142512-0d265587d3c9
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
 	golang.org/x/image v0.18.0
-	golang.org/x/sys v0.22.0
+	golang.org/x/sys v0.24.0
 )
 
 require (
@@ -52,11 +52,11 @@ require (
 	github.com/valyala/fastjson v1.6.4 // indirect
 	github.com/yuin/goldmark v1.7.4 // indirect
 	golang.org/x/arch v0.8.0 // indirect
-	golang.org/x/mod v0.19.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/term v0.22.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
-	golang.org/x/tools v0.23.0 // indirect
+	golang.org/x/mod v0.20.0 // indirect
+	golang.org/x/sync v0.8.0 // indirect
+	golang.org/x/term v0.23.0 // indirect
+	golang.org/x/text v0.17.0 // indirect
+	golang.org/x/tools v0.24.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	mvdan.cc/gofumpt v0.7.0 // indirect
 )
