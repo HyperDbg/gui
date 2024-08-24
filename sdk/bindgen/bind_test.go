@@ -54,7 +54,7 @@ func TestBindMacros(t *testing.T) {
 	)
 
 	for _, p := range macros.List() {
-		if !m.Contains(p.Key) {
+		if !m.Has(p.Key) {
 			// mylog.Warning(p.Key, p.Value)
 			macros.Delete(p.Key)
 			continue
@@ -187,8 +187,8 @@ func TestBindSdk(t *testing.T) {
 				//{Name: "ZydisDecoder", Receiver: "Decoder"},
 			}),
 			gengo.WithForcedSynthetic(
-			//"ZydisShortString_",
-			//"struct ZydisShortString_",
+				//"ZydisShortString_",
+				//"struct ZydisShortString_",
 			),
 		)
 		mylog.Check(pkg.Transform("sdk", &clang.Options{
