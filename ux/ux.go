@@ -3,13 +3,12 @@ package ux
 import (
 	"embed"
 	"fmt"
+	"github.com/ddkwork/HyperDbg/ux/ark"
 	"github.com/ebitengine/purego"
 	"golang.org/x/sys/windows"
 	"path/filepath"
 	"time"
 	"unsafe"
-
-	"github.com/ddkwork/app/ms/ark"
 
 	"github.com/ddkwork/HyperDbg/sdk"
 
