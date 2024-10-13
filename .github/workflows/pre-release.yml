@@ -41,6 +41,12 @@ jobs:
       - name: Build project
         run: go build -x .
 
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3  # 上传生成的文件
+        with:
+          name: gui-executable
+          path: gui.exe  # 指定需要上传的可执行文件路径
+
       - name: Debug - Check GITHUB_REF
         run: |
           echo "GITHUB_REF is: ${{ github.ref }}"
