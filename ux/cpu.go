@@ -472,7 +472,7 @@ func LayoutDisassemblyTable() unison.Paneler {
 			//
 			//fmt.Printf("oep_data: %x\n", oep_data[:20])
 			//// 使用反汇编工具解析数据
-			//x := xed.New(oep_data)
+			//x := xed.NewOrderedMap(oep_data)
 			//x.SetBaseAddress(oep_va)
 			//x.Decode64()
 			//for _, object := range x.AsmObjects {

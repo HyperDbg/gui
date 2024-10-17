@@ -10,7 +10,6 @@ import (
 	"github.com/ddkwork/app/bindgen/gengo"
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
-	"github.com/ddkwork/golibrary/stream/orderedmap"
 )
 
 func TestMergeHeader(t *testing.T) {
@@ -49,8 +48,8 @@ func TestBindMacros(t *testing.T) {
 	mylog.Trace("number of macros", macros.Len())
 
 	var (
-		enumDebuggers = orderedmap.New("", false)
-		enumIoctls    = orderedmap.New("", false)
+		enumDebuggers = stream.NewOrderedMap("", false)
+		enumIoctls    = stream.NewOrderedMap("", false)
 	)
 
 	for _, p := range macros.List() {
@@ -156,8 +155,8 @@ const (
 
 	stream.WriteGoFile("../vars.go", g.Buffer)
 
-	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum("debuggerError", enumDebuggers.Keys(), nil)
-	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum("ioctl", enumIoctls.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Types("debuggerError", enumDebuggers.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Types("ioctl", enumIoctls.Keys(), nil)
 
 	for _, p := range macros.List() {
 		return
@@ -187,8 +186,8 @@ func TestBindSdk(t *testing.T) {
 				//{Name: "ZydisDecoder", Receiver: "Decoder"},
 			}),
 			gengo.WithForcedSynthetic(
-				//"ZydisShortString_",
-				//"struct ZydisShortString_",
+			//"ZydisShortString_",
+			//"struct ZydisShortString_",
 			),
 		)
 		mylog.Check(pkg.Transform("sdk", &clang.Options{
@@ -257,7 +256,7 @@ typedef struct _LIST_ENTRY {
 #endif
 `
 
-var m = orderedmap.New("", "")
+var m = stream.NewOrderedMap("", "")
 
 func init() {
 	m.Set("PAGE_SIZE", "4096")

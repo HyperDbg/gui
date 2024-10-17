@@ -1,13 +1,12 @@
 package bindgen
 
 import (
+	"github.com/ddkwork/golibrary/stream"
 	"strings"
-
-	"github.com/ddkwork/golibrary/stream/orderedmap"
 )
 
-func extractMacros(lines []string) *orderedmap.OrderedMap[string, string] {
-	macros := orderedmap.New("", "")
+func extractMacros(lines []string) *stream.OrderedMap[string, string] {
+	macros := stream.NewOrderedMap("", "")
 	macros.Set("PAGE_SIZE", "4096")
 	var macroName string
 	var macroValue strings.Builder

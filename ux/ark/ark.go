@@ -2,6 +2,7 @@ package ark
 
 import (
 	"fmt"
+	"github.com/ddkwork/golibrary/stream"
 
 	"github.com/ddkwork/app/ms/packer"
 
@@ -12,7 +13,6 @@ import (
 	"github.com/ddkwork/app/ms/hook/winver"
 	"github.com/ddkwork/app/widget"
 	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/stream/orderedmap"
 	"github.com/ddkwork/unison"
 )
 
@@ -68,7 +68,7 @@ func Layout() *unison.Panel {
 	widget.SetScrollLayout(splitPanel, 2)
 
 	left := widget.NewTableScrollPanel(table, header)
-	layouts := orderedmap.New(InvalidArksKind, func() unison.Paneler { return widget.NewPanel() })
+	layouts := stream.NewOrderedMap(InvalidArksKind, func() unison.Paneler { return widget.NewPanel() })
 	layouts.Set(KernelTablesKind, func() unison.Paneler {
 		table, header := widget.NewTable(ms.NtApi{}, widget.TableContext[ms.NtApi]{
 			ContextMenuItems: nil,

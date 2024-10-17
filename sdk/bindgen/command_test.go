@@ -71,7 +71,7 @@ func TestUnmarshalCommandJson(t *testing.T) {
 
 func TestCommandGenerate(t *testing.T) {
 	t.Skip("not well")
-	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum("commands", []string{
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Types("commands", []string{
 		"debugging",
 		"extension",
 		"hwdbg",
@@ -112,5 +112,5 @@ func commandGenerate(kindName, path string) {
 	for _, command := range commands {
 		keys = append(keys, command.FullName) // todo this must be use Cmd,then it will return the right command
 	}
-	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Enum(kindName, keys, nil)
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Types(kindName, keys, nil)
 }
