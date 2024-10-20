@@ -3,12 +3,13 @@ package ux
 import (
 	"embed"
 	"fmt"
-	"github.com/ddkwork/HyperDbg/ux/ark"
-	"github.com/ebitengine/purego"
-	"golang.org/x/sys/windows"
 	"path/filepath"
 	"time"
 	"unsafe"
+
+	"github.com/ddkwork/HyperDbg/ux/ark"
+	"github.com/ebitengine/purego"
+	"golang.org/x/sys/windows"
 
 	"github.com/ddkwork/HyperDbg/sdk"
 
@@ -39,7 +40,7 @@ var pageIco embed.FS
 
 func Run() {
 	callback := purego.NewCallback(func(text *byte) int {
-		fmt.Println("Received data:", sdk.BytePointerToString(text)) //todo check api name
+		fmt.Println("Received data:", sdk.BytePointerToString(text)) // todo check api name
 		return 0
 	})
 	sdk.SetTextMessageCallback(unsafe.Pointer(callback))

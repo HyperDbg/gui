@@ -1,8 +1,9 @@
 package bindgen
 
 import (
-	"github.com/ddkwork/golibrary/stream"
 	"strings"
+
+	"github.com/ddkwork/golibrary/stream"
 )
 
 func extractMacros(lines []string) *stream.OrderedMap[string, string] {

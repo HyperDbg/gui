@@ -10,9 +10,9 @@ import (
 func main() {
 	// testSdkCommands()
 	ux.Run()
-	//testDisassembly()
-	//testParsePe()
-	//testScript()
+	// testDisassembly()
+	// testParsePe()
+	// testScript()
 }
 
 func testSdkCommands() {

@@ -2,11 +2,12 @@ package sdk
 
 import (
 	"fmt"
+	"testing"
+	"unsafe"
+
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ebitengine/purego"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"unsafe"
 )
 
 const (
@@ -28,13 +29,12 @@ func TestSdk(t *testing.T) {
 	InterpreterEx("help !monitor")
 
 	mylog.Call(func() {
-
 		assert.True(t, VmxSupportDetection())
 		assert.True(t, SetCustomDriverPathEx(SysPath))
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 
 		// ConnectLocalDebugger()
-		//assert.True(t, Boolean2Bool(ConnectCurrentDebuggerUsingComPort(StringToBytePointer("127.0.0.1"), 8080)))
+		// assert.True(t, Boolean2Bool(ConnectCurrentDebuggerUsingComPort(StringToBytePointer("127.0.0.1"), 8080)))
 		assert.True(t, Boolean2Bool(ConnectRemoteDebuggerUsingNamedPipe(StringToBytePointer("\\\\.\\pipe\\HyperDbgPipe"), Boolean(True))))
 		assert.True(t, Boolean2Bool(StartProcess(&[]rune("C:\\Windows\\SysWOW64\\notepad.exe")[0])))
 

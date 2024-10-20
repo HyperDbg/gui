@@ -12,6 +12,7 @@ import (
 )
 
 func TestUpdateAppModule(t *testing.T) {
+	mylog.FormatAllFiles()
 	if !stream.IsDir("D:\\workspace\\workspace\\app") {
 		return
 	}

@@ -4,10 +4,11 @@ import (
 	"crypto/sha256"
 	"embed"
 	"encoding/base64"
-	"golang.org/x/sys/windows"
 	"os"
 	"path/filepath"
 	"runtime"
+
+	"golang.org/x/sys/windows"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
