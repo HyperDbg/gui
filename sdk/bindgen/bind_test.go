@@ -155,8 +155,8 @@ const (
 
 	stream.WriteGoFile("../vars.go", g.Buffer)
 
-	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Types("debuggerError", enumDebuggers.Keys(), nil)
-	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").Types("ioctl", enumIoctls.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("debuggerError", enumDebuggers.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("ioctl", enumIoctls.Keys(), nil)
 
 	for _, p := range macros.List() {
 		return

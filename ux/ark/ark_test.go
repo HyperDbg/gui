@@ -8,7 +8,7 @@ import (
 
 func TestName(t *testing.T) {
 	g := stream.NewGeneratedFile()
-	g.Types("arks", []string{
+	g.EnumTypes("arks", []string{
 		"kernelTables",
 		"explorer",
 		"taskManager",
