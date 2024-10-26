@@ -11,8 +11,10 @@ import (
 	"github.com/ddkwork/golibrary/stream"
 )
 
-func TestUpdateAppModule(t *testing.T) {
+func init() {
 	mylog.FormatAllFiles()
+}
+func TestUpdateAppModule(t *testing.T) {
 	if !stream.IsDir("D:\\workspace\\workspace\\app") {
 		return
 	}
