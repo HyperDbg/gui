@@ -1186,7 +1186,7 @@ func LayoutDisassemblyTable() unison.Paneler {
 		},
 		SelectionChangedCallback: func(root *widget.Node[xed.Disassembly]) {
 			for _, n := range root.SelectedRows(false) {
-				mylog.Struct("todo",n.Data)
+				mylog.Struct("todo", n.Data)
 			}
 		},
 		SetRootRowsCallBack: SetRootRowsCallBack,
