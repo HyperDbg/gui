@@ -447,7 +447,7 @@ func LayoutDisassemblyTable() unison.Paneler {
 			//for _, section := range f.Sections {
 			//	if section.String() == ".text" {
 			//		oep_file_offset = uint64(section.Header.PointerToRawData) + (oep_rva - uint64(section.Header.VirtualAddress))
-			//		mylog.Struct(section)
+			//		mylog.Struct("todo",section)
 			//		break
 			//	}
 			//}
@@ -1186,7 +1186,7 @@ func LayoutDisassemblyTable() unison.Paneler {
 		},
 		SelectionChangedCallback: func(root *widget.Node[xed.Disassembly]) {
 			for _, n := range root.SelectedRows(false) {
-				mylog.Struct(n.Data)
+				mylog.Struct("todo",n.Data)
 			}
 		},
 		SetRootRowsCallBack: SetRootRowsCallBack,
