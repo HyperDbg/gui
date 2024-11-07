@@ -5,9 +5,9 @@ import (
 	"testing"
 	"unsafe"
 
+	"github.com/ddkwork/golibrary/assert"
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ebitengine/purego"
-	"github.com/stretchr/testify/assert"
 )
 
 const (
