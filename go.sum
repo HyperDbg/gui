@@ -36,6 +36,8 @@ github.com/ddkwork/app v0.0.0-20241026164255-6ce9e6cb2eb3 h1:MDWFPte1PFh1q/X2Ogq
 github.com/ddkwork/app v0.0.0-20241026164255-6ce9e6cb2eb3/go.mod h1:PbTemZHpbs+o8nJ9DoIGXSyhgwBV+LfyhcRQqfxFos8=
 github.com/ddkwork/golibrary v0.0.0-20241107065116-cabdcd45ad66 h1:gHbP8X6jzA3K20RrF1fnyIIMkSSsRxpYxK8EnnPXEPo=
 github.com/ddkwork/golibrary v0.0.0-20241107065116-cabdcd45ad66/go.mod h1:yY9wkpVeSyhB6mJ3QQ7Fk4i9utgyaCZvEQ63Ym/SpuY=
+github.com/ddkwork/golibrary v0.0.0-20241109061650-bd3e94f7b3cf h1:KMEqQ0haYTMetpnMCEPC6ziMq2kbCevfr3KW9wnKli0=
+github.com/ddkwork/golibrary v0.0.0-20241109061650-bd3e94f7b3cf/go.mod h1:qiMzDxTwpLJ9hDTOdffR1FHJ44sZbshtVl5fvt2l/Cs=
 github.com/ddkwork/toolbox v0.0.0-20241013161004-026a13407120 h1:SuQKYhUQVHem+0sf44HfaAma/bh8bEk47FlymnrM4UY=
 github.com/ddkwork/toolbox v0.0.0-20241013161004-026a13407120/go.mod h1:RANTAgV00e+arxiVSAzl2dsoaj2+N2vcBZcfqwO3YfM=
 github.com/ddkwork/unison v0.0.0-20241013162326-b9a18ce1a207 h1:wZ/NeuNFKVLjNKxVu4C5x+UL6omuKmBZztwLQF06Sp4=
@@ -86,6 +88,7 @@ github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/mattn/go-runewidth v0.0.16 h1:E5ScNMtiwvlvB5paMFdw9p4kSQzbXFikJ5SQO6TULQc=
+github.com/mattn/go-runewidth v0.0.16/go.mod h1:Jdepj2loyihRzMpdS35Xk/zdY8IAYHsh153qUoGf23w=
 github.com/mitchellh/go-ps v1.0.0/go.mod h1:J4lOc8z8yJs6vUwklHw2XEIiT4z4C40KtWVN3nvg8Pg=
 github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 h1:zYyBkD/k9seD2A7fsi6Oo2LfFZAehjjQMERAvZLEDnQ=
 github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646/go.mod h1:jpp1/29i3P1S/RLdc7JQKbRpFeM1dOBd8T9ki5s+AY8=
@@ -177,6 +180,7 @@ golang.org/x/sys v0.26.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
 golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
 golang.org/x/term v0.0.0-20210927222741-03fcf44c2211/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=
 golang.org/x/term v0.25.0 h1:WtHI/ltw4NvSUig5KARz9h521QvRC8RmF/cuYqifU24=
+golang.org/x/term v0.25.0/go.mod h1:RPyXicDX+6vLxogjjRxjgD2TKtmAO6NZBsBRfrOLu7M=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.3/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=
 golang.org/x/text v0.3.6/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=
