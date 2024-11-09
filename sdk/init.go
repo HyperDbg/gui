@@ -26,7 +26,7 @@ func init() {
 	dir := filepath.Join(mylog.Check2(os.UserCacheDir()), "hyperdbg", "cache", base64.RawURLEncoding.EncodeToString(sha[:]))
 	mylog.Check(windows.SetDllDirectory(dir))
 	TargetFilePath = filepath.Join(dir, "hyperkd.sys")
-	mylog.Trace("sysPath", TargetFilePath)
+	mylog.Trace("TargetFilePath", TargetFilePath)
 	if !stream.IsDir(dir) {
 		stream.CreatDirectory(dir)
 		m.Range(func(k string, v []byte) bool {
