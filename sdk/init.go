@@ -17,7 +17,7 @@ import (
 //go:embed bin/*
 var data embed.FS
 
-var SysPath = ""
+var TargetFilePath = ""
 
 func init() {
 	runtime.LockOSThread()
@@ -25,8 +25,8 @@ func init() {
 	sha := sha256.Sum256(m.Get("libhyperdbg.dll"))
 	dir := filepath.Join(mylog.Check2(os.UserCacheDir()), "hyperdbg", "cache", base64.RawURLEncoding.EncodeToString(sha[:]))
 	mylog.Check(windows.SetDllDirectory(dir))
-	SysPath = filepath.Join(dir, "hyperkd.sys")
-	mylog.Trace("sysPath", SysPath)
+	TargetFilePath = filepath.Join(dir, "hyperkd.sys")
+	mylog.Trace("sysPath", TargetFilePath)
 	if !stream.IsDir(dir) {
 		stream.CreatDirectory(dir)
 		m.Range(func(k string, v []byte) bool {

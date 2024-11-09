@@ -258,7 +258,7 @@ func newToolbar() *toolbar {
 
 				newPanel.AddChild(widget.NewButton("Install Driver", func() {
 					mylog.Check(sdk.VmxSupportDetection())
-					mylog.Check(sdk.SetCustomDriverPathEx(sdk.SysPath))
+					mylog.Check(sdk.SetCustomDriverPathEx(sdk.TargetFilePath))
 
 					mylog.Trace("Install Driver", sdk.InstallVmmDriver())
 				}))

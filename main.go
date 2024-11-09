@@ -10,7 +10,7 @@ import (
 // RtlGenRandom
 func main() {
 	// testSdkCommands()
-	sdk.SysPath = "testdata/asm.exe"
+	sdk.TargetFilePath = "testdata/asm.exe"
 	ux.Run()
 	// testDisassembly()
 	// testParsePe()
