@@ -10,10 +10,6 @@ how to build ?
 1. git clone https://github.com/HyperDbg/gui.git
 
 2. install golang from https://go.dev/dl/
-
-3. install gcc
-
-4. go build -x .
 	
-5. go run -x .
+3. go run -x .
 ```
