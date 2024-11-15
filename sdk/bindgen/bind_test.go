@@ -142,8 +142,8 @@ func TestBindMacros(t *testing.T) {
 	g.P(")")
 
 	g.P(`
-func CTL_CODE(deviceType, function, method, access uint32) IoctlKind {
-	return IoctlKind(((deviceType) << 16) | ((access) << 14) | ((function) << 2) | (method))
+func CTL_CODE(deviceType, function, method, access uint32) IoctlType {
+	return IoctlType(((deviceType) << 16) | ((access) << 14) | ((function) << 2) | (method))
 }
 
 const (

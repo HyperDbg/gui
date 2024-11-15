@@ -185,13 +185,14 @@ typedef struct GUEST_EXTRA_REGISTERS
 /**
  * @brief List of different variables
  */
-typedef struct _SCRIPT_ENGINE_VARIABLES_LIST
+typedef struct _SCRIPT_ENGINE_GENERAL_REGISTERS
 {
-    UINT64 * TempList;
+    UINT64 * StackBuffer;
     UINT64 * GlobalVariablesList;
-    UINT64 * LocalVariablesList;
-
-} SCRIPT_ENGINE_VARIABLES_LIST, *PSCRIPT_ENGINE_VARIABLES_LIST;
+    UINT64   StackIndx;
+    UINT64   StackBaseIndx;
+    UINT64   ReturnValue;
+} SCRIPT_ENGINE_GENERAL_REGISTERS, *PSCRIPT_ENGINE_GENERAL_REGISTERS;
 
 /**
  * @brief CR3 Structure
@@ -314,6 +315,8 @@ typedef enum DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ {
     DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_SET_SHORT_CIRCUITING_STATE,
     DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_INJECT_PAGE_FAULT,
     DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_WRITE_REGISTER,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_QUERY_PCITREE,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_PERFORM_ACTIONS_ON_APIC,
 
     //
     // Debuggee to debugger
@@ -347,6 +350,8 @@ typedef enum DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ {
     DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_VA2PA_AND_PA2VA,
     DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BRINGING_PAGES_IN,
     DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_WRITE_REGISTER,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_PCITREE,
+    DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_APIC_REQUESTS,
 
     //
     // hardware debuggee to debugger
@@ -427,8 +432,8 @@ typedef struct _DEBUGGER_REMOTE_PACKET
 //////////////////////////////////////////////////
 
 #define VERSION_MAJOR 0
-#define VERSION_MINOR 10
-#define VERSION_PATCH 1
+#define VERSION_MINOR 11
+#define VERSION_PATCH 0
 
 //
 // Example of __DATE__ string: "Jul 27 2012"
@@ -486,7 +491,7 @@ typedef struct _DEBUGGER_REMOTE_PACKET
 #define BUILD_SEC_CH0 (__TIME__[6])
 #define BUILD_SEC_CH1 (__TIME__[7])
 
-#ifndef HYPERDBG_KERNEL_MODE
+#ifdef __cplusplus // becasue it's not valid in C
 
 const unsigned char BuildDateTime[] = {
     BUILD_YEAR_CH0,
@@ -560,7 +565,7 @@ const unsigned char BuildSignature[] = {
 
     '\0'};
 
-#endif // SCRIPT_ENGINE_KERNEL_MODE
+#endif
 
 //////////////////////////////////////////////////
 //				Message Tracing                 //
@@ -972,8 +977,6 @@ const unsigned char BuildSignature[] = {
 #ifndef HIBYTE
 #    define HIBYTE(w) ((BYTE)(((WORD)(w) >> 8) & 0xFF))
 #endif // !HIBYTE
-
-#define MAX_TEMP_COUNT 128
 
 #define MAX_STACK_BUFFER_COUNT 256
 
@@ -2061,6 +2064,12 @@ typedef struct _VMX_SEGMENT_SELECTOR
  */
 #define DEBUGGER_ERROR_INVALID_PHYSICAL_ADDRESS 0xc0000052
 
+/**
+ * @brief error, could not perform APIC actions
+ *
+ */
+#define DEBUGGER_ERROR_APIC_ACTIONS_ERROR 0xc0000053
+
 //
 // WHEN YOU ADD ANYTHING TO THIS LIST OF ERRORS, THEN
 // MAKE SURE TO ADD AN ERROR MESSAGE TO ShowErrorMessage(UINT32 Error)
@@ -2531,6 +2540,31 @@ typedef struct _DEBUGGER_EVENT_AND_ACTION_RESULT
  */
 #define DEFAULT_INITIAL_DEBUGGER_TO_DEBUGGEE_OFFSET 0x0
 
+/**
+ * @brief Initial default buffer size (BRAN Size)
+ * @details Number of 4-Byte intergers (256 * 4 Byte * 8 bits = 8-kilobits)
+ *
+ */
+#define DEFAULT_INITIAL_BRAM_BUFFER_SIZE 256
+
+/**
+ * @brief Path to read the sample of the instance info
+ *
+ */
+#define HWDBG_TEST_READ_INSTANCE_INFO_PATH "..\\..\\..\\..\\hwdbg\\sim\\hwdbg\\DebuggerModuleTestingBRAM\\bram_instance_info.txt"
+
+/**
+ * @brief Path to write the sample of the script buffer
+ *
+ */
+#define HWDBG_TEST_WRITE_SCRIPT_BUFFER_PATH "..\\..\\..\\..\\hwdbg\\src\\test\\bram\\script_buffer.hex.txt"
+
+/**
+ * @brief Path to write the sample of the instance info requests
+ *
+ */
+#define HWDBG_TEST_WRITE_INSTANCE_INFO_PATH "..\\..\\..\\..\\hwdbg\\src\\test\\bram\\instance_info.hex.txt"
+
 //////////////////////////////////////////////////
 //                   Enums                      //
 //////////////////////////////////////////////////
@@ -2622,6 +2656,7 @@ typedef struct _HWDBG_INSTANCE_INFORMATION
         UINT64 assign_registers : 1;
         UINT64 assign_pseudo_registers : 1;
         UINT64 conditional_statements_and_comparison_operators : 1;
+        UINT64 stack_assignments : 1;
 
         UINT64 func_or : 1;
         UINT64 func_xor : 1;
@@ -2973,6 +3008,154 @@ typedef struct _HWDBG_SCRIPT_BUFFER
 #define IOCTL_PREACTIVATE_FUNCTIONALITY \
     CTL_CODE(FILE_DEVICE_UNKNOWN, 0x820, METHOD_BUFFERED, FILE_ANY_ACCESS)
 
+/**
+ * @brief ioctl, to enumerate PCIe endpoints
+ *
+ */
+#define IOCTL_PCIE_ENDPOINT_ENUM \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x821, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+/**
+ * @brief ioctl, to perform actions related to APIC
+ *
+ */
+#define IOCTL_PERFROM_ACTIONS_ON_APIC \
+    CTL_CODE(FILE_DEVICE_UNKNOWN, 0x822, METHOD_BUFFERED, FILE_ANY_ACCESS)
+
+
+//SDK\Headers\Pcie.h
+/**
+ * @file Pcie.h
+ * @author Björn Ruytenberg (bjorn@bjornweb.nl)
+ * @brief PCIe-related data structures
+ * @details
+ * @version 0.10.3
+ * @date 2024-10-30
+ *
+ * @copyright This project is released under the GNU Public License v3.
+ *
+ */
+#pragma once
+
+//////////////////////////////////////////////////
+//		        	  Headers                   //
+//////////////////////////////////////////////////
+
+//
+// PCIe Base Specification, Rev. 4.0, Version 1.0, Table 7-59: Link Address for Link Type 1
+// Bus: 0-255 (8 bit)
+// Device: 0-31 (5 bit)
+// Function: 0-7 (3 bit)
+//
+// TODO
+// We're limited to sending fixed buffers, so we'll have to choose some reasonable numbers here instead of assuming spec-mandated maximum numbers.
+// Ensure the following parameters do not result in exceeding MaxSerialPacketSize. Consider sending multiple packets if necessary.
+//
+#define DOMAIN_MAX_NUM   2
+#define BUS_MAX_NUM      10
+#define DEVICE_MAX_NUM   2
+#define FUNCTION_MAX_NUM 1
+
+//
+// TODO
+// We currently limit ourselves to PCI configuration space (i.e. CAM).
+//
+
+/**
+ * @brief PCI Common Header
+ *
+ */
+typedef struct _PORTABLE_PCI_COMMON_HEADER
+{
+    UINT16 VendorId;
+    UINT16 DeviceId;
+    UINT16 Command;
+    UINT16 Status;
+    UINT8  RevisionId;
+    UINT8  ClassCode[3];
+    UINT8  CacheLineSize;
+    UINT8  PrimaryLatencyTimer;
+    UINT8  HeaderType;
+    UINT8  Bist;
+} PORTABLE_PCI_COMMON_HEADER, *PPORTABLE_PCI_COMMON_HEADER;
+
+/**
+ * @brief PCI Device Header
+ *
+ */
+typedef struct _PORTABLE_PCI_DEVICE_HEADER
+{
+    UINT32 Bar[6];          // Base Address Registers
+    UINT32 CardBusCISPtr;   // CardBus CIS Pointer
+    UINT16 SubVendorId;     // Subsystem Vendor ID
+    UINT16 SubSystemId;     // Subsystem ID
+    UINT32 ROMBar;          // Expansion ROM Base Address
+    UINT8  CapabilitiesPtr; // Capabilities Pointer
+    UINT8  Reserved[3];
+    UINT32 Reserved1;
+    UINT8  InterruptLine; // Interrupt Line
+    UINT8  InterruptPin;  // Interrupt Pin
+    UINT8  MinGnt;        // Min_Gnt
+    UINT8  MaxLat;        // Max_Lat
+} PORTABLE_PCI_DEVICE_HEADER, *PPORTABLE_PCI_DEVICE_HEADER;
+
+/**
+ * @brief PCI Configuration Space Header
+ *
+ */
+typedef struct _PORTABLE_PCI_CONFIG_SPACE_HEADER
+{
+    PORTABLE_PCI_COMMON_HEADER CommonHeader;
+    PORTABLE_PCI_DEVICE_HEADER DeviceHeader;
+    // TODO: Add Device Private, Capabilities, Enhanced Capabilities
+} PORTABLE_PCI_CONFIG_SPACE_HEADER, *PPORTABLE_PCI_CONFIG_SPACE_HEADER;
+
+/**
+ * @brief PCI Function Data Structure
+ *
+ */
+typedef struct _PCI_FUNCTION
+{
+    UINT8 Placeholder;
+} PCI_FUNCTION, *PPCI_FUNCTION;
+
+/**
+ * @brief PCI Device Data Structure
+ *
+ */
+typedef struct _PCI_DEVICE
+{
+    PORTABLE_PCI_CONFIG_SPACE_HEADER ConfigSpace[DEVICE_MAX_NUM];
+    PCI_FUNCTION                     Function[FUNCTION_MAX_NUM];
+} PCI_DEVICE, *PPCI_DEVICE;
+
+/**
+ * @brief PCI Bus Data Structure
+ *
+ */
+typedef struct _PCI_BUS
+{
+    PCI_DEVICE Device[DEVICE_MAX_NUM];
+} PCI_BUS, *PPCI_BUS;
+
+/**
+ * @brief PCI Domain Data Structure
+ *
+ */
+typedef struct _PCI_DOMAIN
+{
+    PCI_BUS Bus[BUS_MAX_NUM];
+} PCI_DOMAIN, *PPCI_DOMAIN;
+
+/**
+ * @brief PCI Tree Data Structure
+ *
+ */
+typedef struct _PCI_TREE
+{
+    PCI_DOMAIN Domain[DOMAIN_MAX_NUM];
+} PCI_TREE, *PPCI_TREE;
+
 
 //SDK\Headers\RequestStructures.h
 /**
@@ -2987,6 +3170,7 @@ typedef struct _HWDBG_SCRIPT_BUFFER
  *
  */
 #pragma once
+//#include "Pcie.h"
 
 #define SIZEOF_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS \
     sizeof(DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS)
@@ -4000,6 +4184,139 @@ typedef struct _DEBUGGEE_STEP_PACKET
 #define DEBUGGER_REMOTE_TRACKING_DEFAULT_COUNT_OF_STEPPING 0xffffffff
 
 /* ==============================================================================================
+
+/**
+ * @brief Perform actions related to APIC
+ *
+ */
+typedef enum DEBUGGER_APIC_REQUEST_TYPE_ {
+
+    DEBUGGER_APIC_REQUEST_TYPE_READ_LOCAL_APIC,
+
+} DEBUGGER_APIC_REQUEST_TYPE;
+
+/**
+ * @brief The structure of actions for APIC
+ *
+ */
+typedef struct _DEBUGGER_APIC_REQUEST
+{
+    DEBUGGER_APIC_REQUEST_TYPE ApicType;
+    BOOLEAN                    IsUsingX2APIC;
+    UINT32                     KernelStatus;
+
+} DEBUGGER_APIC_REQUEST, *PDEBUGGER_APIC_REQUEST;
+
+/**
+ * @brief Debugger size of DEBUGGER_APIC_REQUEST
+ *
+ */
+#define SIZEOF_DEBUGGER_APIC_REQUEST \
+    sizeof(DEBUGGER_APIC_REQUEST)
+
+/**
+ * @brief LAPIC structure size
+ */
+#define LAPIC_SIZE 0x400
+
+#define LAPIC_LVT_FLAG_ENTRY_MASKED     (1UL << 16)
+#define LAPIC_LVT_DELIVERY_MODE_EXT_INT (7UL << 8)
+#define LAPIC_SVR_FLAG_SW_ENABLE        (1UL << 8)
+
+/**
+ * @brief LAPIC structure and offsets
+ */
+typedef struct _LAPIC_PAGE
+{
+    UINT8 Reserved000[0x10];
+    UINT8 Reserved010[0x10];
+
+    UINT32 Id; // offset 0x020
+    UINT8  Reserved024[0x0C];
+
+    UINT32 Version; // offset 0x030
+    UINT8  Reserved034[0x0C];
+
+    UINT8 Reserved040[0x40];
+
+    UINT32 TPR; // offset 0x080
+    UINT8  Reserved084[0x0C];
+
+    UINT32 ArbitrationPriority; // offset 0x090
+    UINT8  Reserved094[0x0C];
+
+    UINT32 ProcessorPriority; // offset 0x0A0
+    UINT8  Reserved0A4[0x0C];
+
+    UINT32 EOI; // offset 0x0B0
+    UINT8  Reserved0B4[0x0C];
+
+    UINT32 RemoteRead; // offset 0x0C0
+    UINT8  Reserved0C4[0x0C];
+
+    UINT32 LogicalDestination; // offset 0x0D0
+    UINT8  Reserved0D4[0x0C];
+
+    UINT32 DestinationFormat; // offset 0x0E0
+    UINT8  Reserved0E4[0x0C];
+
+    UINT32 SpuriousInterruptVector; // offset 0x0F0
+    UINT8  Reserved0F4[0x0C];
+
+    UINT32 ISR[32]; // offset 0x100
+
+    UINT32 TMR[32]; // offset 0x180
+
+    UINT32 IRR[32]; // offset 0x200
+
+    UINT32 ErrorStatus; // offset 0x280
+    UINT8  Reserved284[0x0C];
+
+    UINT8 Reserved290[0x60];
+
+    UINT32 LvtCmci; // offset 0x2F0
+    UINT8  Reserved2F4[0x0C];
+
+    UINT32 IcrLow; // offset 0x300
+    UINT8  Reserved304[0x0C];
+
+    UINT32 IcrHigh; // offset 0x310
+    UINT8  Reserved314[0x0C];
+
+    UINT32 LvtTimer; // offset 0x320
+    UINT8  Reserved324[0x0C];
+
+    UINT32 LvtThermalSensor; // offset 0x330
+    UINT8  Reserved334[0x0C];
+
+    UINT32 LvtPerfMonCounters; // offset 0x340
+    UINT8  Reserved344[0x0C];
+
+    UINT32 LvtLINT0; // offset 0x350
+    UINT8  Reserved354[0x0C];
+
+    UINT32 LvtLINT1; // offset 0x360
+    UINT8  Reserved364[0x0C];
+
+    UINT32 LvtError; // offset 0x370
+    UINT8  Reserved374[0x0C];
+
+    UINT32 InitialCount; // offset 0x380
+    UINT8  Reserved384[0x0C];
+
+    UINT32 CurrentCount; // offset 0x390
+    UINT8  Reserved394[0x0C];
+
+    UINT8 Reserved3A0[0x40]; // offset 0x3A0
+
+    UINT32 DivideConfiguration; // offset 0x3E0
+    UINT8  Reserved3E4[0x0C];
+
+    UINT32 SelfIpi;           // offset 0x3F0
+    UINT8  Reserved3F4[0x0C]; // valid only for X2APIC
+} LAPIC_PAGE, *PLAPIC_PAGE;
+
+/* ==============================================================================================
  */
 
 /**
@@ -4155,6 +4472,23 @@ typedef struct _DEBUGGEE_REGISTER_WRITE_DESCRIPTION
 /* ==============================================================================================
  */
 
+#define SIZEOF_DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET \
+    sizeof(DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET)
+
+/**
+ * @brief Pcitree Structure
+ *
+ */
+typedef struct _DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET
+{
+    UINT32   KernelStatus;
+    PCI_TREE PciTree;
+
+} DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET, *PDEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET;
+
+/* ==============================================================================================
+ */
+
 
 //SDK\Headers\ScriptEngineCommonDefinitions.h
 #pragma once
@@ -4165,10 +4499,11 @@ typedef struct SYMBOL
 {
     long long unsigned Type;
     long long unsigned Len;
-    long long unsigned VariableType;
     long long unsigned Value;
     
 } SYMBOL, *PSYMBOL;
+
+#define SIZE_SYMBOL_WITHOUT_LEN sizeof(long long unsigned) * 2
 
 typedef struct HWDBG_SHORT_SYMBOL
 {
@@ -4198,17 +4533,6 @@ typedef struct ACTION_BUFFER {
   char CallingStage;
 } ACTION_BUFFER, *PACTION_BUFFER;
 
-typedef struct USER_DEFINED_FUNCTION_NODE
-{
-    char * Name;
-    long long unsigned Address;
-    long long unsigned VariableType;
-    PSYMBOL_BUFFER	ParameterBuffer;
-    long long unsigned ParameterNumber;
-    long long unsigned StackTempNumber;
-    struct USER_DEFINED_FUNCTION_NODE * NextNode;
-} USER_DEFINED_FUNCTION_NODE, *PUSER_DEFINED_FUNCTION_NODE;
-
 #define SYMBOL_UNDEFINED 0
 #define SYMBOL_GLOBAL_ID_TYPE 1
 #define SYMBOL_LOCAL_ID_TYPE 2
@@ -4223,11 +4547,10 @@ typedef struct USER_DEFINED_FUNCTION_NODE
 #define SYMBOL_WSTRING_TYPE 11
 #define SYMBOL_FUNCTION_PARAMETER_ID_TYPE 12
 #define SYMBOL_RETURN_ADDRESS_TYPE 13
-#define SYMBOL_STACK_TEMP_TYPE 14
-#define SYMBOL_FUNCTION_PARAMETER_TYPE 15
-#define SYMBOL_STACK_INDEX_TYPE 16
-#define SYMBOL_STACK_BASE_INDEX_TYPE 17
-#define SYMBOL_RETURN_VALUE_TYPE 18
+#define SYMBOL_FUNCTION_PARAMETER_TYPE 14
+#define SYMBOL_STACK_INDEX_TYPE 15
+#define SYMBOL_STACK_BASE_INDEX_TYPE 16
+#define SYMBOL_RETURN_VALUE_TYPE 17
 
 static const char *const SymbolTypeNames[] = {
 "SYMBOL_UNDEFINED",
@@ -4244,7 +4567,6 @@ static const char *const SymbolTypeNames[] = {
 "SYMBOL_WSTRING_TYPE",
 "SYMBOL_FUNCTION_PARAMETER_ID_TYPE",
 "SYMBOL_RETURN_ADDRESS_TYPE",
-"SYMBOL_STACK_TEMP_TYPE",
 "SYMBOL_FUNCTION_PARAMETER_TYPE",
 "SYMBOL_STACK_INDEX_TYPE",
 "SYMBOL_STACK_BASE_INDEX_TYPE",
@@ -4278,89 +4600,73 @@ static const char *const SymbolTypeNames[] = {
 #define FUNC_ELT 18
 #define FUNC_EQUAL 19
 #define FUNC_NEQ 20
-#define FUNC_START_OF_IF 21
-#define FUNC_JMP 22
-#define FUNC_JZ 23
-#define FUNC_JNZ 24
-#define FUNC_JMP_TO_END_AND_JZCOMPLETED 25
-#define FUNC_END_OF_IF 26
-#define FUNC_START_OF_WHILE 27
-#define FUNC_END_OF_WHILE 28
-#define FUNC_VARGSTART 29
-#define FUNC_MOV 30
-#define FUNC_START_OF_DO_WHILE 31
-#define FUNC_ 32
-#define FUNC_START_OF_DO_WHILE_COMMANDS 33
-#define FUNC_END_OF_DO_WHILE 34
-#define FUNC_START_OF_FOR 35
-#define FUNC_FOR_INC_DEC 36
-#define FUNC_START_OF_FOR_OMMANDS 37
-#define FUNC_IGNORE_LVALUE 38
-#define FUNC_PUSH 39
-#define FUNC_POP 40
-#define FUNC_CALL 41
-#define FUNC_RET 42
-#define FUNC_VOID 43
-#define FUNC_BOOL 44
-#define FUNC_CHAR 45
-#define FUNC_SHORT 46
-#define FUNC_INT 47
-#define FUNC_LONG 48
-#define FUNC_UNSIGNED 49
-#define FUNC_SIGNED 50
-#define FUNC_FLOAT 51
-#define FUNC_DOUBLE 52
-#define FUNC_PRINT 53
-#define FUNC_FORMATS 54
-#define FUNC_EVENT_ENABLE 55
-#define FUNC_EVENT_DISABLE 56
-#define FUNC_EVENT_CLEAR 57
-#define FUNC_TEST_STATEMENT 58
-#define FUNC_SPINLOCK_LOCK 59
-#define FUNC_SPINLOCK_UNLOCK 60
-#define FUNC_EVENT_SC 61
-#define FUNC_PRINTF 62
-#define FUNC_PAUSE 63
-#define FUNC_FLUSH 64
-#define FUNC_EVENT_TRACE_STEP 65
-#define FUNC_EVENT_TRACE_STEP_IN 66
-#define FUNC_EVENT_TRACE_STEP_OUT 67
-#define FUNC_EVENT_TRACE_INSTRUMENTATION_STEP 68
-#define FUNC_EVENT_TRACE_INSTRUMENTATION_STEP_IN 69
-#define FUNC_SPINLOCK_LOCK_CUSTOM_WAIT 70
-#define FUNC_EVENT_INJECT 71
-#define FUNC_POI 72
-#define FUNC_DB 73
-#define FUNC_DD 74
-#define FUNC_DW 75
-#define FUNC_DQ 76
-#define FUNC_NEG 77
-#define FUNC_HI 78
-#define FUNC_LOW 79
-#define FUNC_NOT 80
-#define FUNC_CHECK_ADDRESS 81
-#define FUNC_DISASSEMBLE_LEN 82
-#define FUNC_DISASSEMBLE_LEN32 83
-#define FUNC_DISASSEMBLE_LEN64 84
-#define FUNC_INTERLOCKED_INCREMENT 85
-#define FUNC_INTERLOCKED_DECREMENT 86
-#define FUNC_PHYSICAL_TO_VIRTUAL 87
-#define FUNC_VIRTUAL_TO_PHYSICAL 88
-#define FUNC_ED 89
-#define FUNC_EB 90
-#define FUNC_EQ 91
-#define FUNC_INTERLOCKED_EXCHANGE 92
-#define FUNC_INTERLOCKED_EXCHANGE_ADD 93
-#define FUNC_INTERLOCKED_COMPARE_EXCHANGE 94
-#define FUNC_STRLEN 95
-#define FUNC_STRCMP 96
-#define FUNC_MEMCMP 97
-#define FUNC_STRNCMP 98
-#define FUNC_WCSLEN 99
-#define FUNC_WCSCMP 100
-#define FUNC_EVENT_INJECT_ERROR_CODE 101
-#define FUNC_MEMCPY 102
-#define FUNC_WCSNCMP 103
+#define FUNC_JMP 21
+#define FUNC_JZ 22
+#define FUNC_JNZ 23
+#define FUNC_MOV 24
+#define FUNC_START_OF_DO_WHILE 25
+#define FUNC_START_OF_DO_WHILE_COMMANDS 26
+#define FUNC_END_OF_DO_WHILE 27
+#define FUNC_START_OF_FOR 28
+#define FUNC_FOR_INC_DEC 29
+#define FUNC_START_OF_FOR_OMMANDS 30
+#define FUNC_END_OF_IF 31
+#define FUNC_IGNORE_LVALUE 32
+#define FUNC_PUSH 33
+#define FUNC_POP 34
+#define FUNC_CALL 35
+#define FUNC_RET 36
+#define FUNC_PRINT 37
+#define FUNC_FORMATS 38
+#define FUNC_EVENT_ENABLE 39
+#define FUNC_EVENT_DISABLE 40
+#define FUNC_EVENT_CLEAR 41
+#define FUNC_TEST_STATEMENT 42
+#define FUNC_SPINLOCK_LOCK 43
+#define FUNC_SPINLOCK_UNLOCK 44
+#define FUNC_EVENT_SC 45
+#define FUNC_PRINTF 46
+#define FUNC_PAUSE 47
+#define FUNC_FLUSH 48
+#define FUNC_EVENT_TRACE_STEP 49
+#define FUNC_EVENT_TRACE_STEP_IN 50
+#define FUNC_EVENT_TRACE_STEP_OUT 51
+#define FUNC_EVENT_TRACE_INSTRUMENTATION_STEP 52
+#define FUNC_EVENT_TRACE_INSTRUMENTATION_STEP_IN 53
+#define FUNC_SPINLOCK_LOCK_CUSTOM_WAIT 54
+#define FUNC_EVENT_INJECT 55
+#define FUNC_POI 56
+#define FUNC_DB 57
+#define FUNC_DD 58
+#define FUNC_DW 59
+#define FUNC_DQ 60
+#define FUNC_NEG 61
+#define FUNC_HI 62
+#define FUNC_LOW 63
+#define FUNC_NOT 64
+#define FUNC_CHECK_ADDRESS 65
+#define FUNC_DISASSEMBLE_LEN 66
+#define FUNC_DISASSEMBLE_LEN32 67
+#define FUNC_DISASSEMBLE_LEN64 68
+#define FUNC_INTERLOCKED_INCREMENT 69
+#define FUNC_INTERLOCKED_DECREMENT 70
+#define FUNC_PHYSICAL_TO_VIRTUAL 71
+#define FUNC_VIRTUAL_TO_PHYSICAL 72
+#define FUNC_ED 73
+#define FUNC_EB 74
+#define FUNC_EQ 75
+#define FUNC_INTERLOCKED_EXCHANGE 76
+#define FUNC_INTERLOCKED_EXCHANGE_ADD 77
+#define FUNC_INTERLOCKED_COMPARE_EXCHANGE 78
+#define FUNC_STRLEN 79
+#define FUNC_STRCMP 80
+#define FUNC_MEMCMP 81
+#define FUNC_STRNCMP 82
+#define FUNC_WCSLEN 83
+#define FUNC_WCSCMP 84
+#define FUNC_EVENT_INJECT_ERROR_CODE 85
+#define FUNC_MEMCPY 86
+#define FUNC_WCSNCMP 87
 
 static const char *const FunctionNames[] = {
 "FUNC_UNDEFINED",
@@ -4384,38 +4690,22 @@ static const char *const FunctionNames[] = {
 "FUNC_ELT",
 "FUNC_EQUAL",
 "FUNC_NEQ",
-"FUNC_START_OF_IF",
 "FUNC_JMP",
 "FUNC_JZ",
 "FUNC_JNZ",
-"FUNC_JMP_TO_END_AND_JZCOMPLETED",
-"FUNC_END_OF_IF",
-"FUNC_START_OF_WHILE",
-"FUNC_END_OF_WHILE",
-"FUNC_VARGSTART",
 "FUNC_MOV",
 "FUNC_START_OF_DO_WHILE",
-"FUNC_",
 "FUNC_START_OF_DO_WHILE_COMMANDS",
 "FUNC_END_OF_DO_WHILE",
 "FUNC_START_OF_FOR",
 "FUNC_FOR_INC_DEC",
 "FUNC_START_OF_FOR_OMMANDS",
+"FUNC_END_OF_IF",
 "FUNC_IGNORE_LVALUE",
 "FUNC_PUSH",
 "FUNC_POP",
 "FUNC_CALL",
 "FUNC_RET",
-"FUNC_VOID",
-"FUNC_BOOL",
-"FUNC_CHAR",
-"FUNC_SHORT",
-"FUNC_INT",
-"FUNC_LONG",
-"FUNC_UNSIGNED",
-"FUNC_SIGNED",
-"FUNC_FLOAT",
-"FUNC_DOUBLE",
 "FUNC_PRINT",
 "FUNC_FORMATS",
 "FUNC_EVENT_ENABLE",
@@ -4785,10 +5075,26 @@ IMPORT_EXPORT_LIBHYPERDBG INT
 hyperdbg_u_stop_vmm_driver();
 
 //
-// General imports
+// Testing parser
 //
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_test_command_parser(CHAR *   command,
+                               UINT32   number_of_tokens,
+                               CHAR **  tokens_list,
+                               UINT32 * failed_token_num,
+                               UINT32 * failed_token_position);
+
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_test_command_parser_show_tokens(CHAR * command);
+
+//
+// General imports/exports
+//
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_setup_path_for_filename(const CHAR * filename, CHAR * file_location, UINT32 buffer_len, BOOLEAN check_file_existence);
+
 IMPORT_EXPORT_LIBHYPERDBG INT
-hyperdbg_u_interpreter(CHAR * command);
+hyperdbg_u_run_command(CHAR * command);
 
 IMPORT_EXPORT_LIBHYPERDBG VOID
 hyperdbg_u_show_signature();
@@ -4838,6 +5144,9 @@ hyperdbg_u_connect_remote_debugger_using_named_pipe(const CHAR * named_pipe, BOO
 
 IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
 hyperdbg_u_connect_current_debugger_using_com_port(const CHAR * port_name, DWORD baudrate);
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_debug_close_remote_debugger();
 
 //
 // Miscalenous functions
@@ -4914,8 +5223,27 @@ hyperdbg_u_pause_debuggee();
 // Set breakpoint
 // Exported functionality of the 'bp' command
 //
-VOID
+IMPORT_EXPORT_LIBHYPERDBG VOID
 hyperdbg_u_set_breakpoint(UINT64 address, UINT32 pid, UINT32 tid, UINT32 core_numer);
+
+//
+// Stepping and tracing instruction
+// Exported functionality of 't', 'p', 'i', '!track', 'gu' commands
+//
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_stepping_instrumentation_step_in();
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_stepping_regular_step_in();
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_stepping_step_over();
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_stepping_instrumentation_step_in_for_tracking();
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_stepping_step_over_for_gu(BOOLEAN last_instruction);
 
 //
 // Start a process
@@ -4928,6 +5256,13 @@ IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
 hyperdbg_u_start_process_with_args(const WCHAR * path, const WCHAR * arguments);
 
 //
+// APIC related command
+// Exported functionality of the '!apic' command
+//
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_command_get_local_apic(PLAPIC_PAGE local_apic, BOOLEAN * is_using_x2apic);
+
+//
 // Assembler
 // Exported functionality of the 'a' command
 //
@@ -4936,6 +5271,19 @@ hyperdbg_u_assemble_get_length(const CHAR * assembly_code, UINT64 start_address,
 
 IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
 hyperdbg_u_assemble(const CHAR * assembly_code, UINT64 start_address, PVOID buffer_to_store_assembled_data, UINT32 buffer_size);
+
+//
+// hwdbg functions
+// Exported functionality of the '!hw' and '!hw_*' commands
+//
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hwdbg_script_run_script(const CHAR * script,
+                        const CHAR * instance_filepath_to_read,
+                        const CHAR * hardware_script_file_path_to_save,
+                        UINT32       initial_bram_buffer_size);
+
+VOID
+hwdbg_script_engine_wrapper_test_parser(const CHAR * Expr);
 
 #ifdef __cplusplus
 }
@@ -4955,6 +5303,12 @@ hyperdbg_u_assemble(const CHAR * assembly_code, UINT64 start_address, PVOID buff
  */
 #pragma once
 
+#ifdef HYPERDBG_SCRIPT_ENGINE
+#    define IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE __declspec(dllexport)
+#else
+#    define IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE __declspec(dllimport)
+#endif
+
 //
 // Header file of script-engine
 // Imports
@@ -4964,52 +5318,95 @@ extern "C" {
 #endif
 
 //
-// Script engine
+// Hardware scripts
 //
-__declspec(dllimport) PVOID
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE VOID
+HardwareScriptInterpreterShowScriptCapabilities(HWDBG_INSTANCE_INFORMATION * InstanceInfo);
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE BOOLEAN
+HardwareScriptInterpreterCheckScriptBufferWithScriptCapabilities(HWDBG_INSTANCE_INFORMATION * InstanceInfo,
+                                                                 PVOID                        ScriptBuffer,
+                                                                 UINT32                       CountOfScriptSymbolChunks,
+                                                                 UINT32 *                     NumberOfStages,
+                                                                 UINT32 *                     NumberOfOperands,
+                                                                 UINT32 *                     NumberOfOperandsImplemented);
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE BOOLEAN
+HardwareScriptInterpreterCompressBuffer(UINT64 * Buffer,
+                                        size_t   BufferLength,
+                                        UINT32   ScriptVariableLength,
+                                        UINT32   BramDataWidth,
+                                        size_t * NewBufferSize,
+                                        size_t * NumberOfBytesPerChunk);
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE BOOLEAN
+HardwareScriptInterpreterConvertSymbolToHwdbgShortSymbolBuffer(
+    HWDBG_INSTANCE_INFORMATION * InstanceInfo,
+    SYMBOL *                     SymbolBuffer,
+    size_t                       SymbolBufferLength,
+    UINT32                       NumberOfStages,
+    HWDBG_SHORT_SYMBOL **        NewShortSymbolBuffer,
+    size_t *                     NewBufferSize);
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE VOID
+HardwareScriptInterpreterFreeHwdbgShortSymbolBuffer(HWDBG_SHORT_SYMBOL * NewShortSymbolBuffer);
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE PVOID
 ScriptEngineParse(char * str);
-__declspec(dllimport) void
-PrintSymbolBuffer(const PVOID SymbolBuffer);
-__declspec(dllimport) void
-PrintSymbol(PVOID Symbol);
-__declspec(dllimport) void
-RemoveSymbolBuffer(PVOID SymbolBuffer);
-__declspec(dllimport) BOOLEAN
-FuncGetNumberOfOperands(UINT64 FuncType, UINT32 * NumberOfGetOperands, UINT32 * NumberOfSetOperands);
-__declspec(dllimport) BOOLEAN
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE BOOLEAN
 ScriptEngineSetHwdbgInstanceInfo(HWDBG_INSTANCE_INFORMATION * InstancInfo);
 
-//
-// pdb parser
-//
-__declspec(dllimport) VOID
-ScriptEngineSetTextMessageCallback(PVOID Handler);
-__declspec(dllimport) VOID
-ScriptEngineSymbolAbortLoading();
-__declspec(dllimport) UINT64
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE void
+PrintSymbolBuffer(const PVOID SymbolBuffer);
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE void
+RemoveSymbolBuffer(PVOID SymbolBuffer);
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE void
+PrintSymbol(PVOID Symbol);
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE UINT64
 ScriptEngineConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
-__declspec(dllimport) UINT32
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE UINT32
 ScriptEngineLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
-__declspec(dllimport) UINT32
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE UINT32
 ScriptEngineUnloadAllSymbols();
-__declspec(dllimport) UINT32
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE UINT32
 ScriptEngineUnloadModuleSymbol(char * ModuleName);
-__declspec(dllimport) UINT32
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE UINT32
 ScriptEngineSearchSymbolForMask(const char * SearchMask);
-__declspec(dllimport) BOOLEAN
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE BOOLEAN
 ScriptEngineGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
-__declspec(dllimport) BOOLEAN
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE BOOLEAN
 ScriptEngineGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
-__declspec(dllimport) BOOLEAN
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE BOOLEAN
 ScriptEngineCreateSymbolTableForDisassembler(void * CallbackFunction);
-__declspec(dllimport) BOOLEAN
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE BOOLEAN
 ScriptEngineConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
-__declspec(dllimport) BOOLEAN
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE BOOLEAN
 ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath, char * PdbFilePath, char * GuidAndAgeDetails, BOOLEAN Is32BitModule);
-__declspec(dllimport) BOOLEAN
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE BOOLEAN
 ScriptEngineSymbolInitLoad(PVOID BufferToStoreDetails, UINT32 StoredLength, BOOLEAN DownloadIfAvailable, const char * SymbolPath, BOOLEAN IsSilentLoad);
-__declspec(dllimport) BOOLEAN
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE BOOLEAN
 ScriptEngineShowDataBasedOnSymbolTypes(const char * TypeName, UINT64 Address, BOOLEAN IsStruct, PVOID BufferAddress, const char * AdditionalParameters);
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE VOID
+ScriptEngineSymbolAbortLoading();
+
+IMPORT_EXPORT_HYPERDBG_SCRIPT_ENGINE VOID
+ScriptEngineSetTextMessageCallback(PVOID Handler);
 
 #ifdef __cplusplus
 }
@@ -5029,6 +5426,12 @@ ScriptEngineShowDataBasedOnSymbolTypes(const char * TypeName, UINT64 Address, BO
  */
 #pragma once
 
+#ifdef HYPERDBG_SYMBOL_PARSER
+#    define IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER __declspec(dllexport)
+#else
+#    define IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER __declspec(dllimport)
+#endif
+
 //
 // Header file of symbol-parser
 // Imports
@@ -5037,55 +5440,69 @@ ScriptEngineShowDataBasedOnSymbolTypes(const char * TypeName, UINT64 Address, BO
 extern "C" {
 #endif
 
-__declspec(dllimport) VOID
-    SymSetTextMessageCallback(PVOID Handler);
-__declspec(dllimport) VOID
-    SymbolAbortLoading();
-__declspec(dllimport) UINT64
-    SymConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
-__declspec(dllimport) UINT32
-    SymLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
-__declspec(dllimport) UINT32
-    SymUnloadAllSymbols();
-__declspec(dllimport) UINT32
-    SymUnloadModuleSymbol(char * ModuleName);
-__declspec(dllimport) UINT32
-    SymSearchSymbolForMask(const char * SearchMask);
-__declspec(dllimport) BOOLEAN
-    SymGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
-__declspec(dllimport) BOOLEAN
-    SymGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
-__declspec(dllimport) BOOLEAN
-    SymCreateSymbolTableForDisassembler(void * CallbackFunction);
-__declspec(dllimport) BOOLEAN
-    SymConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
-__declspec(dllimport) BOOLEAN
-    SymConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath,
-                                                char *       PdbFilePath,
-                                                char *       GuidAndAgeDetails,
-                                                BOOLEAN      Is32BitModule);
-__declspec(dllimport) BOOLEAN
-    SymbolInitLoad(PVOID        BufferToStoreDetails,
-                   UINT32       StoredLength,
-                   BOOLEAN      DownloadIfAvailable,
-                   const char * SymbolPath,
-                   BOOLEAN      IsSilentLoad);
-__declspec(dllimport) BOOLEAN
-    SymShowDataBasedOnSymbolTypes(const char * TypeName,
-                                  UINT64       Address,
-                                  BOOLEAN      IsStruct,
-                                  PVOID        BufferAddress,
-                                  const char * AdditionalParameters);
-__declspec(dllimport) BOOLEAN
-    SymQuerySizeof(_In_ const char * StructNameOrTypeName, _Out_ UINT32 * SizeOfField);
-__declspec(dllimport) BOOLEAN
-    SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
-                                     _In_ const char * FiledOfStructName,
-                                     _Out_ PBOOLEAN    IsStructNamePointerOrNot,
-                                     _Out_ PBOOLEAN    IsFiledOfStructNamePointerOrNot,
-                                     _Out_ char **     NewStructOrTypeName,
-                                     _Out_ UINT32 *    OffsetOfFieldFromTop,
-                                     _Out_ UINT32 *    SizeOfField);
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER VOID
+SymSetTextMessageCallback(PVOID Handler);
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER VOID
+SymbolAbortLoading();
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER UINT64
+SymConvertNameToAddress(const char * FunctionOrVariableName, PBOOLEAN WasFound);
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER UINT32
+SymLoadFileSymbol(UINT64 BaseAddress, const char * PdbFileName, const char * CustomModuleName);
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER UINT32
+SymUnloadAllSymbols();
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER UINT32
+SymUnloadModuleSymbol(char * ModuleName);
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER UINT32
+SymSearchSymbolForMask(const char * SearchMask);
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER BOOLEAN
+SymGetFieldOffset(CHAR * TypeName, CHAR * FieldName, UINT32 * FieldOffset);
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER BOOLEAN
+SymGetDataTypeSize(CHAR * TypeName, UINT64 * TypeSize);
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER BOOLEAN
+SymCreateSymbolTableForDisassembler(void * CallbackFunction);
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER BOOLEAN
+SymConvertFileToPdbPath(const char * LocalFilePath, char * ResultPath);
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER BOOLEAN
+SymConvertFileToPdbFileAndGuidAndAgeDetails(const char * LocalFilePath,
+                                            char *       PdbFilePath,
+                                            char *       GuidAndAgeDetails,
+                                            BOOLEAN      Is32BitModule);
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER BOOLEAN
+SymbolInitLoad(PVOID        BufferToStoreDetails,
+               UINT32       StoredLength,
+               BOOLEAN      DownloadIfAvailable,
+               const char * SymbolPath,
+               BOOLEAN      IsSilentLoad);
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER BOOLEAN
+SymShowDataBasedOnSymbolTypes(const char * TypeName,
+                              UINT64       Address,
+                              BOOLEAN      IsStruct,
+                              PVOID        BufferAddress,
+                              const char * AdditionalParameters);
+
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER BOOLEAN
+SymQuerySizeof(_In_ const char * StructNameOrTypeName, _Out_ UINT32 * SizeOfField);
+IMPORT_EXPORT_HYPERDBG_SYMBOL_PARSER BOOLEAN
+SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
+                                 _In_ const char * FiledOfStructName,
+                                 _Out_ PBOOLEAN    IsStructNamePointerOrNot,
+                                 _Out_ PBOOLEAN    IsFiledOfStructNamePointerOrNot,
+                                 _Out_ char **     NewStructOrTypeName,
+                                 _Out_ UINT32 *    OffsetOfFieldFromTop,
+                                 _Out_ UINT32 *    SizeOfField);
 
 #ifdef __cplusplus
 }

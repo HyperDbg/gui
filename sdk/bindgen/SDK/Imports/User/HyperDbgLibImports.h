@@ -52,10 +52,26 @@ IMPORT_EXPORT_LIBHYPERDBG INT
 hyperdbg_u_stop_vmm_driver();
 
 //
-// General imports
+// Testing parser
 //
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_test_command_parser(CHAR *   command,
+                               UINT32   number_of_tokens,
+                               CHAR **  tokens_list,
+                               UINT32 * failed_token_num,
+                               UINT32 * failed_token_position);
+
+IMPORT_EXPORT_LIBHYPERDBG VOID
+hyperdbg_u_test_command_parser_show_tokens(CHAR * command);
+
+//
+// General imports/exports
+//
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_setup_path_for_filename(const CHAR * filename, CHAR * file_location, UINT32 buffer_len, BOOLEAN check_file_existence);
+
 IMPORT_EXPORT_LIBHYPERDBG INT
-hyperdbg_u_interpreter(CHAR * command);
+hyperdbg_u_run_command(CHAR * command);
 
 IMPORT_EXPORT_LIBHYPERDBG VOID
 hyperdbg_u_show_signature();
@@ -105,6 +121,9 @@ hyperdbg_u_connect_remote_debugger_using_named_pipe(const CHAR * named_pipe, BOO
 
 IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
 hyperdbg_u_connect_current_debugger_using_com_port(const CHAR * port_name, DWORD baudrate);
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_debug_close_remote_debugger();
 
 //
 // Miscalenous functions
@@ -181,8 +200,27 @@ hyperdbg_u_pause_debuggee();
 // Set breakpoint
 // Exported functionality of the 'bp' command
 //
-VOID
+IMPORT_EXPORT_LIBHYPERDBG VOID
 hyperdbg_u_set_breakpoint(UINT64 address, UINT32 pid, UINT32 tid, UINT32 core_numer);
+
+//
+// Stepping and tracing instruction
+// Exported functionality of 't', 'p', 'i', '!track', 'gu' commands
+//
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_stepping_instrumentation_step_in();
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_stepping_regular_step_in();
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_stepping_step_over();
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_stepping_instrumentation_step_in_for_tracking();
+
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_stepping_step_over_for_gu(BOOLEAN last_instruction);
 
 //
 // Start a process
@@ -195,6 +233,13 @@ IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
 hyperdbg_u_start_process_with_args(const WCHAR * path, const WCHAR * arguments);
 
 //
+// APIC related command
+// Exported functionality of the '!apic' command
+//
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hyperdbg_u_command_get_local_apic(PLAPIC_PAGE local_apic, BOOLEAN * is_using_x2apic);
+
+//
 // Assembler
 // Exported functionality of the 'a' command
 //
@@ -203,6 +248,19 @@ hyperdbg_u_assemble_get_length(const CHAR * assembly_code, UINT64 start_address,
 
 IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
 hyperdbg_u_assemble(const CHAR * assembly_code, UINT64 start_address, PVOID buffer_to_store_assembled_data, UINT32 buffer_size);
+
+//
+// hwdbg functions
+// Exported functionality of the '!hw' and '!hw_*' commands
+//
+IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
+hwdbg_script_run_script(const CHAR * script,
+                        const CHAR * instance_filepath_to_read,
+                        const CHAR * hardware_script_file_path_to_save,
+                        UINT32       initial_bram_buffer_size);
+
+VOID
+hwdbg_script_engine_wrapper_test_parser(const CHAR * Expr);
 
 #ifdef __cplusplus
 }

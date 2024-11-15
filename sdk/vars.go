@@ -20,8 +20,8 @@ var (
 	SecondLower8Bits                                                         = uint64(0x000000000000ff00)
 	Upper48BitsAndLower8Bits                                                 = uint64(0xffffffffffff00ff)
 	VersionMajor                                                             = 0
-	VersionMinor                                                             = 10
-	VersionPatch                                                             = 1
+	VersionMinor                                                             = 11
+	VersionPatch                                                             = 0
 	MaximumPacketsCapacity                                                   = 1000
 	MaximumPacketsCapacityPriority                                           = 50
 	NormalPageSize                                                           = 4096 // PAGE_SIZE
@@ -91,7 +91,6 @@ var (
 	X86FlagsReserved                                                         = 0xffc0802a
 	X86FlagsReservedBits                                                     = 0xffc38028
 	X86FlagsFixed                                                            = 0x00000002
-	MaxTempCount                                                             = 128
 	MaxStackBufferCount                                                      = 256
 	MaxVarCount                                                              = 512
 	MaxFunctionNameLength                                                    = 32

@@ -67,35 +67,39 @@ const (
 	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_SET_SHORT_CIRCUITING_STATE        DebuggerRemotePacketRequestedAction = 28
 	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_INJECT_PAGE_FAULT                 DebuggerRemotePacketRequestedAction = 29
 	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_WRITE_REGISTER                    DebuggerRemotePacketRequestedAction = 30
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_NO_ACTION                                     DebuggerRemotePacketRequestedAction = 31
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_STARTED                              DebuggerRemotePacketRequestedAction = 32
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_LOGGING_MECHANISM                    DebuggerRemotePacketRequestedAction = 33
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_PAUSED_AND_CURRENT_INSTRUCTION       DebuggerRemotePacketRequestedAction = 34
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_CORE              DebuggerRemotePacketRequestedAction = 35
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_PROCESS           DebuggerRemotePacketRequestedAction = 36
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_THREAD            DebuggerRemotePacketRequestedAction = 37
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_RUNNING_SCRIPT             DebuggerRemotePacketRequestedAction = 38
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_FORMATS                    DebuggerRemotePacketRequestedAction = 39
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_FLUSH                      DebuggerRemotePacketRequestedAction = 40
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CALLSTACK                  DebuggerRemotePacketRequestedAction = 41
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_TEST_QUERY                    DebuggerRemotePacketRequestedAction = 42
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_REGISTERING_EVENT          DebuggerRemotePacketRequestedAction = 43
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_ADDING_ACTION_TO_EVENT     DebuggerRemotePacketRequestedAction = 44
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_QUERY_AND_MODIFY_EVENT     DebuggerRemotePacketRequestedAction = 45
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_SHORT_CIRCUITING_EVENT     DebuggerRemotePacketRequestedAction = 46
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_READING_REGISTERS          DebuggerRemotePacketRequestedAction = 47
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_READING_MEMORY             DebuggerRemotePacketRequestedAction = 48
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_EDITING_MEMORY             DebuggerRemotePacketRequestedAction = 49
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BP                         DebuggerRemotePacketRequestedAction = 50
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_SHORT_CIRCUITING_STATE     DebuggerRemotePacketRequestedAction = 51
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_LIST_OR_MODIFY_BREAKPOINTS DebuggerRemotePacketRequestedAction = 52
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_UPDATE_SYMBOL_INFO                   DebuggerRemotePacketRequestedAction = 53
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RELOAD_SYMBOL_FINISHED               DebuggerRemotePacketRequestedAction = 54
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RELOAD_SEARCH_QUERY                  DebuggerRemotePacketRequestedAction = 55
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_PTE                        DebuggerRemotePacketRequestedAction = 56
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_VA2PA_AND_PA2VA            DebuggerRemotePacketRequestedAction = 57
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BRINGING_PAGES_IN          DebuggerRemotePacketRequestedAction = 58
-	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_WRITE_REGISTER             DebuggerRemotePacketRequestedAction = 59
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_QUERY_PCITREE                     DebuggerRemotePacketRequestedAction = 31
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ON_VMX_ROOT_PERFORM_ACTIONS_ON_APIC           DebuggerRemotePacketRequestedAction = 32
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_NO_ACTION                                     DebuggerRemotePacketRequestedAction = 33
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_STARTED                              DebuggerRemotePacketRequestedAction = 34
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_LOGGING_MECHANISM                    DebuggerRemotePacketRequestedAction = 35
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_PAUSED_AND_CURRENT_INSTRUCTION       DebuggerRemotePacketRequestedAction = 36
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_CORE              DebuggerRemotePacketRequestedAction = 37
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_PROCESS           DebuggerRemotePacketRequestedAction = 38
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CHANGING_THREAD            DebuggerRemotePacketRequestedAction = 39
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_RUNNING_SCRIPT             DebuggerRemotePacketRequestedAction = 40
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_FORMATS                    DebuggerRemotePacketRequestedAction = 41
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_FLUSH                      DebuggerRemotePacketRequestedAction = 42
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_CALLSTACK                  DebuggerRemotePacketRequestedAction = 43
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_TEST_QUERY                    DebuggerRemotePacketRequestedAction = 44
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_REGISTERING_EVENT          DebuggerRemotePacketRequestedAction = 45
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_ADDING_ACTION_TO_EVENT     DebuggerRemotePacketRequestedAction = 46
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_QUERY_AND_MODIFY_EVENT     DebuggerRemotePacketRequestedAction = 47
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_SHORT_CIRCUITING_EVENT     DebuggerRemotePacketRequestedAction = 48
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_READING_REGISTERS          DebuggerRemotePacketRequestedAction = 49
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_READING_MEMORY             DebuggerRemotePacketRequestedAction = 50
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_EDITING_MEMORY             DebuggerRemotePacketRequestedAction = 51
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BP                         DebuggerRemotePacketRequestedAction = 52
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_SHORT_CIRCUITING_STATE     DebuggerRemotePacketRequestedAction = 53
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_LIST_OR_MODIFY_BREAKPOINTS DebuggerRemotePacketRequestedAction = 54
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_UPDATE_SYMBOL_INFO                   DebuggerRemotePacketRequestedAction = 55
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RELOAD_SYMBOL_FINISHED               DebuggerRemotePacketRequestedAction = 56
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RELOAD_SEARCH_QUERY                  DebuggerRemotePacketRequestedAction = 57
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_PTE                        DebuggerRemotePacketRequestedAction = 58
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_VA2PA_AND_PA2VA            DebuggerRemotePacketRequestedAction = 59
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_BRINGING_PAGES_IN          DebuggerRemotePacketRequestedAction = 60
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_WRITE_REGISTER             DebuggerRemotePacketRequestedAction = 61
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_PCITREE                    DebuggerRemotePacketRequestedAction = 62
+	DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_DEBUGGEE_RESULT_OF_APIC_REQUESTS              DebuggerRemotePacketRequestedAction = 63
 )
 
 // @brief enum for different packet types in HyperDbg packets
@@ -600,6 +604,10 @@ const (
 	DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_OVER_FOR_GU_LAST_INSTRUCTION    DebuggerRemoteSteppingRequest = 5
 )
 
+type DebuggerApicRequestType int32
+
+const DEBUGGER_APIC_REQUEST_TYPE_READ_LOCAL_APIC DebuggerApicRequestType = 0
+
 // @brief breakpoint modification types
 type DebuggeeBreakpointModificationRequest int32
 
@@ -777,18 +785,20 @@ type GuestExtraRegisters struct {
 	Rflags Uint64
 	Rip    Uint64
 }
-type ScriptEngineVariablesList struct {
-	TempList            *Uint64
+type ScriptEngineGeneralRegisters struct {
+	StackBuffer         *Uint64
 	GlobalVariablesList *Uint64
-	LocalVariablesList  *Uint64
+	StackIndx           Uint64
+	StackBaseIndx       Uint64
+	ReturnValue         Uint64
 }
 type Cr3Type struct {
-	Anon202_5
+	Anon203_5
 }
-type Anon202_5 struct {
+type Anon203_5 struct {
 	Raw [1]int64
 }
-type Anon206_9 struct {
+type Anon207_9 struct {
 	Pcid            Uint64
 	PageFrameNumber Uint64
 	Reserved1       Uint64
@@ -880,10 +890,10 @@ type EptSingleHookUnhookingDetails struct {
 	PhysicalAddress                           SizeT
 	OriginalEntry                             Uint64
 }
-type Anon1454_9 struct {
+type Anon1457_9 struct {
 	Raw [1]int32
 }
-type Anon1456_5 struct {
+type Anon1459_5 struct {
 	// [Bits 3:0] Segment type.
 	Type Uint32
 	// [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
@@ -984,6 +994,7 @@ type _HwdbgScriptCapabilities struct {
 	AssignRegisters                             Uint64
 	AssignPseudoRegisters                       Uint64
 	ConditionalStatementsAndComparisonOperators Uint64
+	StackAssignments                            Uint64
 	FuncOr                                      Uint64
 	FuncXor                                     Uint64
 	FuncAnd                                     Uint64
@@ -1008,6 +1019,52 @@ type _HwdbgScriptCapabilities struct {
 }
 type HwdbgScriptBuffer struct {
 	scriptNumberOfSymbols Uint32
+}
+type PortablePciCommonHeader struct {
+	VendorId            Uint16
+	DeviceId            Uint16
+	Command             Uint16
+	Status              Uint16
+	RevisionId          Uint8
+	ClassCode           [3]Uint8
+	CacheLineSize       Uint8
+	PrimaryLatencyTimer Uint8
+	HeaderType          Uint8
+	Bist                Uint8
+}
+type PortablePciDeviceHeader struct {
+	Bar             [6]Uint32
+	CardBusCISPtr   Uint32
+	SubVendorId     Uint16
+	SubSystemId     Uint16
+	ROMBar          Uint32
+	CapabilitiesPtr Uint8
+	Reserved        [3]Uint8
+	Reserved1       Uint32
+	InterruptLine   Uint8
+	InterruptPin    Uint8
+	MinGnt          Uint8
+	MaxLat          Uint8
+}
+type PortablePciConfigSpaceHeader struct {
+	CommonHeader PortablePciCommonHeader
+	DeviceHeader PortablePciDeviceHeader
+}
+type PciFunction struct {
+	Placeholder Uint8
+}
+type PciDevice struct {
+	ConfigSpace [2]PortablePciConfigSpaceHeader
+	Function    [1]PciFunction
+}
+type PciBus struct {
+	Device [2]PciDevice
+}
+type PciDomain struct {
+	Bus [10]PciBus
+}
+type PciTree struct {
+	Domain [2]PciDomain
 }
 type DebuggerReadPageTableEntriesDetails struct {
 	VirtualAddress      Uint64
@@ -1269,6 +1326,69 @@ type DebuggeeStepPacket struct {
 	IsCurrentInstructionACall Boolean
 	CallLength                Uint32
 }
+type DebuggerApicRequest struct {
+	ApicType      DebuggerApicRequestType
+	IsUsingX2APIC Boolean
+	KernelStatus  Uint32
+}
+type LapicPage struct {
+	Reserved000             [16]Uint8
+	Reserved010             [16]Uint8
+	Id                      Uint32
+	Reserved024             [12]Uint8
+	Version                 Uint32
+	Reserved034             [12]Uint8
+	Reserved040             [64]Uint8
+	Tpr                     Uint32
+	Reserved084             [12]Uint8
+	ArbitrationPriority     Uint32
+	Reserved094             [12]Uint8
+	ProcessorPriority       Uint32
+	Reserved0A4             [12]Uint8
+	Eoi                     Uint32
+	Reserved0B4             [12]Uint8
+	RemoteRead              Uint32
+	Reserved0C4             [12]Uint8
+	LogicalDestination      Uint32
+	Reserved0D4             [12]Uint8
+	DestinationFormat       Uint32
+	Reserved0E4             [12]Uint8
+	SpuriousInterruptVector Uint32
+	Reserved0F4             [12]Uint8
+	Isr                     [32]Uint32
+	Tmr                     [32]Uint32
+	Irr                     [32]Uint32
+	ErrorStatus             Uint32
+	Reserved284             [12]Uint8
+	Reserved290             [96]Uint8
+	LvtCmci                 Uint32
+	Reserved2F4             [12]Uint8
+	IcrLow                  Uint32
+	Reserved304             [12]Uint8
+	IcrHigh                 Uint32
+	Reserved314             [12]Uint8
+	LvtTimer                Uint32
+	Reserved324             [12]Uint8
+	LvtThermalSensor        Uint32
+	Reserved334             [12]Uint8
+	LvtPerfMonCounters      Uint32
+	Reserved344             [12]Uint8
+	LvtLINT0                Uint32
+	Reserved354             [12]Uint8
+	LvtLINT1                Uint32
+	Reserved364             [12]Uint8
+	LvtError                Uint32
+	Reserved374             [12]Uint8
+	InitialCount            Uint32
+	Reserved384             [12]Uint8
+	CurrentCount            Uint32
+	Reserved394             [12]Uint8
+	Reserved3A0             [64]Uint8
+	DivideConfiguration     Uint32
+	Reserved3E4             [12]Uint8
+	SelfIpi                 Uint32
+	Reserved3F4             [12]Uint8
+}
 type DebuggeeFormatsPacket struct {
 	Value  Uint64
 	Result Uint32
@@ -1310,11 +1430,14 @@ type DebuggeeRegisterWriteDescription struct {
 	Value        Uint64
 	KernelStatus Uint32
 }
+type DebuggeePcitreeRequestResponsePacket struct {
+	KernelStatus Uint32
+	PciTree      PciTree
+}
 type Symbol struct {
-	Type         uint64
-	Len          uint64
-	VariableType uint64
-	Value        uint64
+	Type  uint64
+	Len   uint64
+	Value uint64
 }
 type HwdbgShortSymbol struct {
 	Type  uint64
@@ -1336,15 +1459,6 @@ type ActionBuffer struct {
 	ImmediatelySendTheResults byte
 	Context                   uint64
 	CallingStage              byte
-}
-type UserDefinedFunctionNode struct {
-	Name            *byte
-	Address         uint64
-	VariableType    uint64
-	ParameterBuffer PsymbolBuffer
-	ParameterNumber uint64
-	StackTempNumber uint64
-	NextNode        *UserDefinedFunctionNode
 }
 type ModuleSymbolDetail struct {
 	IsSymbolDetailsFound   Boolean
@@ -1445,7 +1559,7 @@ type (
 	// @brief struct for extra registers
 	PguestExtraRegisters = *GuestExtraRegisters
 	// @brief List of different variables
-	PscriptEngineVariablesList = *ScriptEngineVariablesList
+	PscriptEngineGeneralRegisters = *ScriptEngineGeneralRegisters
 	// @brief CR3 Structure
 	Pcr3Type = *Cr3Type
 	// @brief The structure of remote packets in HyperDbg
@@ -1515,6 +1629,22 @@ type (
 	PhwdbgInstanceInformation  = *HwdbgInstanceInformation
 	// @brief The structure of script buffer in hwdbg
 	PhwdbgScriptBuffer = *HwdbgScriptBuffer
+	// @brief PCI Common Header
+	PportablePciCommonHeader = *PortablePciCommonHeader
+	// @brief PCI Device Header
+	PportablePciDeviceHeader = *PortablePciDeviceHeader
+	// @brief PCI Configuration Space Header
+	PportablePciConfigSpaceHeader = *PortablePciConfigSpaceHeader
+	// @brief PCI Function Data Structure
+	PpciFunction = *PciFunction
+	// @brief PCI Device Data Structure
+	PpciDevice = *PciDevice
+	// @brief PCI Bus Data Structure
+	PpciBus = *PciBus
+	// @brief PCI Domain Data Structure
+	PpciDomain = *PciDomain
+	// @brief PCI Tree Data Structure
+	PpciTree = *PciTree
 	// @brief request for !pte command
 	PdebuggerReadPageTableEntriesDetails = *DebuggerReadPageTableEntriesDetails
 	// @brief requests for !va2pa and !pa2va commands
@@ -1594,6 +1724,10 @@ type (
 	PdebuggeeDetailsAndSwitchThreadPacket = *DebuggeeDetailsAndSwitchThreadPacket
 	// @brief The structure of stepping packet in HyperDbg
 	PdebuggeeStepPacket = *DebuggeeStepPacket
+	// @brief The structure of actions for APIC
+	PdebuggerApicRequest = *DebuggerApicRequest
+	// @brief LAPIC structure and offsets
+	PlapicPage = *LapicPage
 	// @brief The structure of .formats result packet in HyperDbg
 	PdebuggeeFormatsPacket = *DebuggeeFormatsPacket
 	// @brief The structure of .sym reload packet in HyperDbg
@@ -1610,12 +1744,13 @@ type (
 	PdebuggeeRegisterReadDescription = *DebuggeeRegisterReadDescription
 	// @brief Register Descriptor Structure to write on registers.
 	PdebuggeeRegisterWriteDescription = *DebuggeeRegisterWriteDescription
-	Psymbol                           = *Symbol
-	PhwdbgShortSymbol                 = *HwdbgShortSymbol
-	PsymbolBuffer                     = *SymbolBuffer
-	PsymbolMap                        = *SymbolMap
-	PactionBuffer                     = *ActionBuffer
-	PuserDefinedFunctionNode          = *UserDefinedFunctionNode
+	// @brief Pcitree Structure
+	PdebuggeePcitreeRequestResponsePacket = *DebuggeePcitreeRequestResponsePacket
+	Psymbol                               = *Symbol
+	PhwdbgShortSymbol                     = *HwdbgShortSymbol
+	PsymbolBuffer                         = *SymbolBuffer
+	PsymbolMap                            = *SymbolMap
+	PactionBuffer                         = *ActionBuffer
 	// @brief structures for sending and saving details
 	// about each module and symbols details
 	PmoduleSymbolDetail          = *ModuleSymbolDetail
@@ -1642,7 +1777,10 @@ func init() {
 	__imp_hyperdbg_u_install_vmm_driver = GengoLibrary.ImportNow("hyperdbg_u_install_vmm_driver")
 	__imp_hyperdbg_u_uninstall_vmm_driver = GengoLibrary.ImportNow("hyperdbg_u_uninstall_vmm_driver")
 	__imp_hyperdbg_u_stop_vmm_driver = GengoLibrary.ImportNow("hyperdbg_u_stop_vmm_driver")
-	__imp_hyperdbg_u_interpreter = GengoLibrary.ImportNow("hyperdbg_u_interpreter")
+	__imp_hyperdbg_u_test_command_parser = GengoLibrary.ImportNow("hyperdbg_u_test_command_parser")
+	__imp_hyperdbg_u_test_command_parser_show_tokens = GengoLibrary.ImportNow("hyperdbg_u_test_command_parser_show_tokens")
+	__imp_hyperdbg_u_setup_path_for_filename = GengoLibrary.ImportNow("hyperdbg_u_setup_path_for_filename")
+	__imp_hyperdbg_u_run_command = GengoLibrary.ImportNow("hyperdbg_u_run_command")
 	__imp_hyperdbg_u_show_signature = GengoLibrary.ImportNow("hyperdbg_u_show_signature")
 	__imp_hyperdbg_u_set_text_message_callback = GengoLibrary.ImportNow("hyperdbg_u_set_text_message_callback")
 	__imp_hyperdbg_u_set_text_message_callback_using_shared_buffer = GengoLibrary.ImportNow("hyperdbg_u_set_text_message_callback_using_shared_buffer")
@@ -1657,6 +1795,7 @@ func init() {
 	__imp_hyperdbg_u_connect_remote_debugger_using_com_port = GengoLibrary.ImportNow("hyperdbg_u_connect_remote_debugger_using_com_port")
 	__imp_hyperdbg_u_connect_remote_debugger_using_named_pipe = GengoLibrary.ImportNow("hyperdbg_u_connect_remote_debugger_using_named_pipe")
 	__imp_hyperdbg_u_connect_current_debugger_using_com_port = GengoLibrary.ImportNow("hyperdbg_u_connect_current_debugger_using_com_port")
+	__imp_hyperdbg_u_debug_close_remote_debugger = GengoLibrary.ImportNow("hyperdbg_u_debug_close_remote_debugger")
 	__imp_hyperdbg_u_get_kernel_base = GengoLibrary.ImportNow("hyperdbg_u_get_kernel_base")
 	__imp_hyperdbg_u_read_memory = GengoLibrary.ImportNow("hyperdbg_u_read_memory")
 	__imp_hyperdbg_u_show_memory_or_disassemble = GengoLibrary.ImportNow("hyperdbg_u_show_memory_or_disassemble")
@@ -1669,18 +1808,28 @@ func init() {
 	__imp_hyperdbg_u_continue_debuggee = GengoLibrary.ImportNow("hyperdbg_u_continue_debuggee")
 	__imp_hyperdbg_u_pause_debuggee = GengoLibrary.ImportNow("hyperdbg_u_pause_debuggee")
 	__imp_hyperdbg_u_set_breakpoint = GengoLibrary.ImportNow("hyperdbg_u_set_breakpoint")
+	__imp_hyperdbg_u_stepping_instrumentation_step_in = GengoLibrary.ImportNow("hyperdbg_u_stepping_instrumentation_step_in")
+	__imp_hyperdbg_u_stepping_regular_step_in = GengoLibrary.ImportNow("hyperdbg_u_stepping_regular_step_in")
+	__imp_hyperdbg_u_stepping_step_over = GengoLibrary.ImportNow("hyperdbg_u_stepping_step_over")
+	__imp_hyperdbg_u_stepping_instrumentation_step_in_for_tracking = GengoLibrary.ImportNow("hyperdbg_u_stepping_instrumentation_step_in_for_tracking")
+	__imp_hyperdbg_u_stepping_step_over_for_gu = GengoLibrary.ImportNow("hyperdbg_u_stepping_step_over_for_gu")
 	__imp_hyperdbg_u_start_process = GengoLibrary.ImportNow("hyperdbg_u_start_process")
 	__imp_hyperdbg_u_start_process_with_args = GengoLibrary.ImportNow("hyperdbg_u_start_process_with_args")
+	__imp_hyperdbg_u_command_get_local_apic = GengoLibrary.ImportNow("hyperdbg_u_command_get_local_apic")
 	__imp_hyperdbg_u_assemble_get_length = GengoLibrary.ImportNow("hyperdbg_u_assemble_get_length")
 	__imp_hyperdbg_u_assemble = GengoLibrary.ImportNow("hyperdbg_u_assemble")
+	__imp_hwdbg_script_run_script = GengoLibrary.ImportNow("hwdbg_script_run_script")
+	__imp_hwdbg_script_engine_wrapper_test_parser = GengoLibrary.ImportNow("hwdbg_script_engine_wrapper_test_parser")
+	__imp_HardwareScriptInterpreterShowScriptCapabilities = GengoLibrary.ImportNow("HardwareScriptInterpreterShowScriptCapabilities")
+	__imp_HardwareScriptInterpreterCheckScriptBufferWithScriptCapabilities = GengoLibrary.ImportNow("HardwareScriptInterpreterCheckScriptBufferWithScriptCapabilities")
+	__imp_HardwareScriptInterpreterCompressBuffer = GengoLibrary.ImportNow("HardwareScriptInterpreterCompressBuffer")
+	__imp_HardwareScriptInterpreterConvertSymbolToHwdbgShortSymbolBuffer = GengoLibrary.ImportNow("HardwareScriptInterpreterConvertSymbolToHwdbgShortSymbolBuffer")
+	__imp_HardwareScriptInterpreterFreeHwdbgShortSymbolBuffer = GengoLibrary.ImportNow("HardwareScriptInterpreterFreeHwdbgShortSymbolBuffer")
 	__imp_ScriptEngineParse = GengoLibrary.ImportNow("ScriptEngineParse")
-	__imp_PrintSymbolBuffer = GengoLibrary.ImportNow("PrintSymbolBuffer")
-	__imp_PrintSymbol = GengoLibrary.ImportNow("PrintSymbol")
-	__imp_RemoveSymbolBuffer = GengoLibrary.ImportNow("RemoveSymbolBuffer")
-	__imp_FuncGetNumberOfOperands = GengoLibrary.ImportNow("FuncGetNumberOfOperands")
 	__imp_ScriptEngineSetHwdbgInstanceInfo = GengoLibrary.ImportNow("ScriptEngineSetHwdbgInstanceInfo")
-	__imp_ScriptEngineSetTextMessageCallback = GengoLibrary.ImportNow("ScriptEngineSetTextMessageCallback")
-	__imp_ScriptEngineSymbolAbortLoading = GengoLibrary.ImportNow("ScriptEngineSymbolAbortLoading")
+	__imp_PrintSymbolBuffer = GengoLibrary.ImportNow("PrintSymbolBuffer")
+	__imp_RemoveSymbolBuffer = GengoLibrary.ImportNow("RemoveSymbolBuffer")
+	__imp_PrintSymbol = GengoLibrary.ImportNow("PrintSymbol")
 	__imp_ScriptEngineConvertNameToAddress = GengoLibrary.ImportNow("ScriptEngineConvertNameToAddress")
 	__imp_ScriptEngineLoadFileSymbol = GengoLibrary.ImportNow("ScriptEngineLoadFileSymbol")
 	__imp_ScriptEngineUnloadAllSymbols = GengoLibrary.ImportNow("ScriptEngineUnloadAllSymbols")
@@ -1693,6 +1842,8 @@ func init() {
 	__imp_ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails = GengoLibrary.ImportNow("ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails")
 	__imp_ScriptEngineSymbolInitLoad = GengoLibrary.ImportNow("ScriptEngineSymbolInitLoad")
 	__imp_ScriptEngineShowDataBasedOnSymbolTypes = GengoLibrary.ImportNow("ScriptEngineShowDataBasedOnSymbolTypes")
+	__imp_ScriptEngineSymbolAbortLoading = GengoLibrary.ImportNow("ScriptEngineSymbolAbortLoading")
+	__imp_ScriptEngineSetTextMessageCallback = GengoLibrary.ImportNow("ScriptEngineSetTextMessageCallback")
 	__imp_SymSetTextMessageCallback = GengoLibrary.ImportNow("SymSetTextMessageCallback")
 	__imp_SymbolAbortLoading = GengoLibrary.ImportNow("SymbolAbortLoading")
 	__imp_SymConvertNameToAddress = GengoLibrary.ImportNow("SymConvertNameToAddress")
@@ -1712,10 +1863,10 @@ func init() {
 	bindlib.Validate((*ListEntry)(nil), 16, 8, "Flink", 0, "Blink", 8)
 	bindlib.Validate((*GuestRegs)(nil), 128, 8, "Rax", 0, "Rcx", 8, "Rdx", 16, "Rbx", 24, "Rsp", 32, "Rbp", 40, "Rsi", 48, "Rdi", 56, "R8", 64, "R9", 72, "R10", 80, "R11", 88, "R12", 96, "R13", 104, "R14", 112, "R15", 120)
 	bindlib.Validate((*GuestExtraRegisters)(nil), 32, 8, "Cs", 0, "Ds", 2, "Fs", 4, "Gs", 6, "Es", 8, "Ss", 10, "Rflags", 16, "Rip", 24)
-	bindlib.Validate((*ScriptEngineVariablesList)(nil), 24, 8, "TempList", 0, "GlobalVariablesList", 8, "LocalVariablesList", 16)
+	bindlib.Validate((*ScriptEngineGeneralRegisters)(nil), 40, 8, "StackBuffer", 0, "GlobalVariablesList", 8, "StackIndx", 16, "StackBaseIndx", 24, "ReturnValue", 32)
 	bindlib.Validate((*Cr3Type)(nil), 8, 8)
-	bindlib.Validate((*Anon202_5)(nil), 8, 8)
-	bindlib.Validate((*Anon206_9)(nil), 8, 8, "Pcid", 0, "PageFrameNumber", 1, "Reserved1", 6, "Reserved_2", 7, "PcidInvalidate", 7)
+	bindlib.Validate((*Anon203_5)(nil), 8, 8)
+	bindlib.Validate((*Anon207_9)(nil), 8, 8, "Pcid", 0, "PageFrameNumber", 1, "Reserved1", 6, "Reserved_2", 7, "PcidInvalidate", 7)
 	bindlib.Validate((*DebuggerRemotePacket)(nil), 24, 8, "Checksum", 0, "Indicator", 8, "TypeOfThePacket", 16, "RequestedActionOfThePacket", 20)
 	bindlib.Validate((*DebuggeeUserInputPacket)(nil), 12, 4, "CommandLen", 0, "IgnoreFinishedSignal", 4, "Result", 8)
 	bindlib.Validate((*DebuggeeEventAndActionHeaderForRemotePacket)(nil), 4, 4, "Length", 0)
@@ -1730,8 +1881,8 @@ func init() {
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 32, 8, "StartAddress", 0, "EndAddress", 8, "SetHookForRead", 16, "SetHookForWrite", 17, "SetHookForExec", 18, "MemoryType", 20, "Tag", 24)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 16, 8, "TargetAddress", 0, "HookFunction", 8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 24, 8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0, "RemoveBreakpointInterception", 1, "PhysicalAddress", 8, "OriginalEntry", 16)
-	bindlib.Validate((*Anon1454_9)(nil), 4, 4)
-	bindlib.Validate((*Anon1456_5)(nil), 4, 4, "Type", 0, "DescriptorType", 0, "DescriptorPrivilegeLevel", 0, "Present", 0, "Reserved1", 1, "AvailableBit", 1, "LongMode", 1, "DefaultBig", 1, "Granularity", 1, "Unusable", 2, "Reserved2", 2)
+	bindlib.Validate((*Anon1457_9)(nil), 4, 4)
+	bindlib.Validate((*Anon1459_5)(nil), 4, 4, "Type", 0, "DescriptorType", 0, "DescriptorPrivilegeLevel", 0, "Present", 0, "Reserved1", 1, "AvailableBit", 1, "LongMode", 1, "DefaultBig", 1, "Granularity", 1, "Unusable", 2, "Reserved2", 2)
 	bindlib.Validate((*VmxSegmentSelector)(nil), 24, 8, "Selector", 0, "Attributes", 4, "Limit", 8, "Base", 16)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 24, 8, "Tag", 0, "KernelStatus", 8, "TypeOfAction", 16, "IsEnabled", 20)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 16, 8, "KernelStatus", 0, "IsShortCircuiting", 8)
@@ -1741,8 +1892,16 @@ func init() {
 	bindlib.Validate((*DebuggerEventAndActionResult)(nil), 8, 4, "IsSuccessful", 0, "Error", 4)
 	bindlib.Validate((*HwdbgPortInformationItems)(nil), 4, 4, "PortSize", 0)
 	bindlib.Validate((*HwdbgInstanceInformation)(nil), 64, 4, "Version", 0, "maximumNumberOfStages", 4, "scriptVariableLength", 8, "numberOfSupportedLocalAndGlobalVariables", 12, "numberOfSupportedTemporaryVariables", 16, "maximumNumberOfSupportedGetScriptOperators", 20, "maximumNumberOfSupportedSetScriptOperators", 24, "sharedMemorySize", 28, "debuggerAreaOffset", 32, "debuggeeAreaOffset", 36, "numberOfPins", 40, "numberOfPorts", 44, "scriptCapabilities", 48, "bramAddrWidth", 56, "bramDataWidth", 60)
-	bindlib.Validate((*_HwdbgScriptCapabilities)(nil), 8, 4, "AssignLocalGlobalVar", 0, "AssignRegisters", 0, "AssignPseudoRegisters", 0, "ConditionalStatementsAndComparisonOperators", 0, "FuncOr", 0, "FuncXor", 0, "FuncAnd", 0, "FuncAsr", 0, "FuncAsl", 1, "FuncAdd", 1, "FuncSub", 1, "FuncMul", 1, "FuncDiv", 1, "FuncMod", 1, "FuncGt", 1, "FuncLt", 1, "FuncEgt", 2, "FuncElt", 2, "FuncEqual", 2, "FuncNeq", 2, "FuncJmp", 2, "FuncJz", 2, "FuncJnz", 2, "FuncMov", 2, "FuncPrintf", 3)
+	bindlib.Validate((*_HwdbgScriptCapabilities)(nil), 8, 4, "AssignLocalGlobalVar", 0, "AssignRegisters", 0, "AssignPseudoRegisters", 0, "ConditionalStatementsAndComparisonOperators", 0, "StackAssignments", 0, "FuncOr", 0, "FuncXor", 0, "FuncAnd", 0, "FuncAsr", 1, "FuncAsl", 1, "FuncAdd", 1, "FuncSub", 1, "FuncMul", 1, "FuncDiv", 1, "FuncMod", 1, "FuncGt", 1, "FuncLt", 2, "FuncEgt", 2, "FuncElt", 2, "FuncEqual", 2, "FuncNeq", 2, "FuncJmp", 2, "FuncJz", 2, "FuncJnz", 2, "FuncMov", 3, "FuncPrintf", 3)
 	bindlib.Validate((*HwdbgScriptBuffer)(nil), 4, 4, "scriptNumberOfSymbols", 0)
+	bindlib.Validate((*PortablePciCommonHeader)(nil), 16, 2, "VendorId", 0, "DeviceId", 2, "Command", 4, "Status", 6, "RevisionId", 8, "ClassCode", 9, "CacheLineSize", 12, "PrimaryLatencyTimer", 13, "HeaderType", 14, "Bist", 15)
+	bindlib.Validate((*PortablePciDeviceHeader)(nil), 48, 4, "Bar", 0, "CardBusCISPtr", 24, "SubVendorId", 28, "SubSystemId", 30, "ROMBar", 32, "CapabilitiesPtr", 36, "Reserved", 37, "Reserved1", 40, "InterruptLine", 44, "InterruptPin", 45, "MinGnt", 46, "MaxLat", 47)
+	bindlib.Validate((*PortablePciConfigSpaceHeader)(nil), 64, 4, "CommonHeader", 0, "DeviceHeader", 16)
+	bindlib.Validate((*PciFunction)(nil), 1, 1, "Placeholder", 0)
+	bindlib.Validate((*PciDevice)(nil), 132, 4, "ConfigSpace", 0, "Function", 128)
+	bindlib.Validate((*PciBus)(nil), 264, 4, "Device", 0)
+	bindlib.Validate((*PciDomain)(nil), 2640, 4, "Bus", 0)
+	bindlib.Validate((*PciTree)(nil), 5280, 4, "Domain", 0)
 	bindlib.Validate((*DebuggerReadPageTableEntriesDetails)(nil), 88, 8, "VirtualAddress", 0, "ProcessId", 8, "Pml4eVirtualAddress", 16, "Pml4eValue", 24, "PdpteVirtualAddress", 32, "PdpteValue", 40, "PdeVirtualAddress", 48, "PdeValue", 56, "PteVirtualAddress", 64, "PteValue", 72, "KernelStatus", 80)
 	bindlib.Validate((*DebuggerVa2paAndPa2vaCommands)(nil), 32, 8, "VirtualAddress", 0, "PhysicalAddress", 8, "ProcessId", 16, "IsVirtual2Physical", 20, "KernelStatus", 24)
 	bindlib.Validate((*DebuggerPageInRequest)(nil), 32, 8, "VirtualAddressFrom", 0, "VirtualAddressTo", 8, "ProcessId", 16, "PageFaultErrorCode", 20, "KernelStatus", 24)
@@ -1780,6 +1939,8 @@ func init() {
 	bindlib.Validate((*DebuggeeDetailsAndSwitchProcessPacket)(nil), 72, 8, "ActionType", 0, "ProcessId", 4, "Process", 8, "IsSwitchByClkIntr", 16, "ProcessName", 17, "ProcessListSymDetails", 40, "Result", 64)
 	bindlib.Validate((*DebuggeeDetailsAndSwitchThreadPacket)(nil), 104, 8, "ActionType", 0, "ThreadId", 4, "ProcessId", 8, "Thread", 16, "Process", 24, "CheckByClockInterrupt", 32, "ProcessName", 33, "ThreadListSymDetails", 56, "Result", 96)
 	bindlib.Validate((*DebuggeeStepPacket)(nil), 12, 4, "StepType", 0, "IsCurrentInstructionACall", 4, "CallLength", 8)
+	bindlib.Validate((*DebuggerApicRequest)(nil), 12, 4, "ApicType", 0, "IsUsingX2APIC", 4, "KernelStatus", 8)
+	bindlib.Validate((*LapicPage)(nil), 1024, 4, "Reserved000", 0, "Reserved010", 16, "Id", 32, "Reserved024", 36, "Version", 48, "Reserved034", 52, "Reserved040", 64, "Tpr", 128, "Reserved084", 132, "ArbitrationPriority", 144, "Reserved094", 148, "ProcessorPriority", 160, "Reserved0A4", 164, "Eoi", 176, "Reserved0B4", 180, "RemoteRead", 192, "Reserved0C4", 196, "LogicalDestination", 208, "Reserved0D4", 212, "DestinationFormat", 224, "Reserved0E4", 228, "SpuriousInterruptVector", 240, "Reserved0F4", 244, "Isr", 256, "Tmr", 384, "Irr", 512, "ErrorStatus", 640, "Reserved284", 644, "Reserved290", 656, "LvtCmci", 752, "Reserved2F4", 756, "IcrLow", 768, "Reserved304", 772, "IcrHigh", 784, "Reserved314", 788, "LvtTimer", 800, "Reserved324", 804, "LvtThermalSensor", 816, "Reserved334", 820, "LvtPerfMonCounters", 832, "Reserved344", 836, "LvtLINT0", 848, "Reserved354", 852, "LvtLINT1", 864, "Reserved364", 868, "LvtError", 880, "Reserved374", 884, "InitialCount", 896, "Reserved384", 900, "CurrentCount", 912, "Reserved394", 916, "Reserved3A0", 928, "DivideConfiguration", 992, "Reserved3E4", 996, "SelfIpi", 1008, "Reserved3F4", 1012)
 	bindlib.Validate((*DebuggeeFormatsPacket)(nil), 16, 8, "Value", 0, "Result", 8)
 	bindlib.Validate((*DebuggeeSymbolRequestPacket)(nil), 4, 4, "ProcessId", 0)
 	bindlib.Validate((*DebuggeeBpPacket)(nil), 32, 8, "Address", 0, "Pid", 8, "Tid", 12, "Core", 16, "RemoveAfterHit", 20, "CheckForCallbacks", 21, "Result", 24)
@@ -1788,12 +1949,12 @@ func init() {
 	bindlib.Validate((*DebuggeeResultOfSearchPacket)(nil), 8, 4, "CountOfResults", 0, "Result", 4)
 	bindlib.Validate((*DebuggeeRegisterReadDescription)(nil), 24, 8, "RegisterId", 0, "Value", 8, "KernelStatus", 16)
 	bindlib.Validate((*DebuggeeRegisterWriteDescription)(nil), 24, 8, "RegisterId", 0, "Value", 8, "KernelStatus", 16)
-	bindlib.Validate((*Symbol)(nil), 32, 8, "Type", 0, "Len", 8, "VariableType", 16, "Value", 24)
+	bindlib.Validate((*DebuggeePcitreeRequestResponsePacket)(nil), 5284, 4, "KernelStatus", 0, "PciTree", 4)
+	bindlib.Validate((*Symbol)(nil), 24, 8, "Type", 0, "Len", 8, "Value", 16)
 	bindlib.Validate((*HwdbgShortSymbol)(nil), 16, 8, "Type", 0, "Value", 8)
 	bindlib.Validate((*SymbolBuffer)(nil), 24, 8, "Head", 0, "Pointer", 8, "Size", 12, "Message", 16)
 	bindlib.Validate((*SymbolMap)(nil), 16, 8, "Name", 0, "Type", 8)
 	bindlib.Validate((*ActionBuffer)(nil), 40, 8, "Tag", 0, "CurrentAction", 8, "ImmediatelySendTheResults", 16, "Context", 24, "CallingStage", 32)
-	bindlib.Validate((*UserDefinedFunctionNode)(nil), 56, 8, "Name", 0, "Address", 8, "VariableType", 16, "ParameterBuffer", 24, "ParameterNumber", 32, "StackTempNumber", 40, "NextNode", 48)
 	bindlib.Validate((*ModuleSymbolDetail)(nil), 600, 8, "IsSymbolDetailsFound", 0, "IsLocalSymbolPath", 1, "IsSymbolPDBAvaliable", 2, "IsUserMode", 3, "Is32Bit", 4, "BaseAddress", 8, "FilePath", 16, "ModuleSymbolPath", 276, "ModuleSymbolGuidAndAge", 536)
 	bindlib.Validate((*UsermodeLoadedModuleSymbols)(nil), 1056, 8, "BaseAddress", 0, "Entrypoint", 8, "FilePath", 16)
 	bindlib.Validate((*UsermodeLoadedModuleDetails)(nil), 16, 4, "ProcessId", 0, "OnlyCountModules", 4, "Is32Bit", 5, "ModulesCount", 8, "Result", 12)
@@ -1847,10 +2008,30 @@ func StopVmmDriver() Int {
 	return bindlib.UnmarshallSyscall[Int](__res)
 }
 
-var __imp_hyperdbg_u_interpreter bindlib.PreloadProc
+var __imp_hyperdbg_u_test_command_parser bindlib.PreloadProc
 
-func Interpreter(command *Char) Int {
-	__res := bindlib.CCall1(__imp_hyperdbg_u_interpreter.Addr(), bindlib.MarshallSyscall(command))
+func TestCommandParser(command *Char, number_of_tokens Uint32, tokens_list **Char, failed_token_num *Uint32, failed_token_position *Uint32) Boolean {
+	__res := bindlib.CCall5(__imp_hyperdbg_u_test_command_parser.Addr(), bindlib.MarshallSyscall(command), bindlib.MarshallSyscall(number_of_tokens), bindlib.MarshallSyscall(tokens_list), bindlib.MarshallSyscall(failed_token_num), bindlib.MarshallSyscall(failed_token_position))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_test_command_parser_show_tokens bindlib.PreloadProc
+
+func TestCommandParserShowTokens(command *Char) {
+	bindlib.CCall1(__imp_hyperdbg_u_test_command_parser_show_tokens.Addr(), bindlib.MarshallSyscall(command))
+}
+
+var __imp_hyperdbg_u_setup_path_for_filename bindlib.PreloadProc
+
+func SetupPathForFilename(filename *Char, file_location *Char, buffer_len Uint32, check_file_existence Boolean) Boolean {
+	__res := bindlib.CCall4(__imp_hyperdbg_u_setup_path_for_filename.Addr(), bindlib.MarshallSyscall(filename), bindlib.MarshallSyscall(file_location), bindlib.MarshallSyscall(buffer_len), bindlib.MarshallSyscall(check_file_existence))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_run_command bindlib.PreloadProc
+
+func RunCommand(command *Char) Int {
+	__res := bindlib.CCall1(__imp_hyperdbg_u_run_command.Addr(), bindlib.MarshallSyscall(command))
 	return bindlib.UnmarshallSyscall[Int](__res)
 }
 
@@ -1939,6 +2120,13 @@ func ConnectCurrentDebuggerUsingComPort(port_name *Char, baudrate Dword) Boolean
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
+var __imp_hyperdbg_u_debug_close_remote_debugger bindlib.PreloadProc
+
+func DebugCloseRemoteDebugger() Boolean {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_debug_close_remote_debugger.Addr())
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
 var __imp_hyperdbg_u_get_kernel_base bindlib.PreloadProc
 
 func GetKernelBase() Uint64 {
@@ -2015,6 +2203,41 @@ func SetBreakpoint(address Uint64, pid Uint32, tid Uint32, core_numer Uint32) {
 	bindlib.CCall4(__imp_hyperdbg_u_set_breakpoint.Addr(), bindlib.MarshallSyscall(address), bindlib.MarshallSyscall(pid), bindlib.MarshallSyscall(tid), bindlib.MarshallSyscall(core_numer))
 }
 
+var __imp_hyperdbg_u_stepping_instrumentation_step_in bindlib.PreloadProc
+
+func SteppingInstrumentationStepIn() Boolean {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_stepping_instrumentation_step_in.Addr())
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_stepping_regular_step_in bindlib.PreloadProc
+
+func SteppingRegularStepIn() Boolean {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_stepping_regular_step_in.Addr())
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_stepping_step_over bindlib.PreloadProc
+
+func SteppingStepOver() Boolean {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_stepping_step_over.Addr())
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_stepping_instrumentation_step_in_for_tracking bindlib.PreloadProc
+
+func SteppingInstrumentationStepInForTracking() Boolean {
+	__res := bindlib.CCall0(__imp_hyperdbg_u_stepping_instrumentation_step_in_for_tracking.Addr())
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_stepping_step_over_for_gu bindlib.PreloadProc
+
+func SteppingStepOverForGu(last_instruction Boolean) Boolean {
+	__res := bindlib.CCall1(__imp_hyperdbg_u_stepping_step_over_for_gu.Addr(), bindlib.MarshallSyscall(last_instruction))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
 var __imp_hyperdbg_u_start_process bindlib.PreloadProc
 
 func StartProcess(path *Wchar) Boolean {
@@ -2026,6 +2249,13 @@ var __imp_hyperdbg_u_start_process_with_args bindlib.PreloadProc
 
 func StartProcessWithArgs(path *Wchar, arguments *Wchar) Boolean {
 	__res := bindlib.CCall2(__imp_hyperdbg_u_start_process_with_args.Addr(), bindlib.MarshallSyscall(path), bindlib.MarshallSyscall(arguments))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hyperdbg_u_command_get_local_apic bindlib.PreloadProc
+
+func CommandGetLocalApic(local_apic PlapicPage, is_using_x2apic *Boolean) Boolean {
+	__res := bindlib.CCall2(__imp_hyperdbg_u_command_get_local_apic.Addr(), bindlib.MarshallSyscall(local_apic), bindlib.MarshallSyscall(is_using_x2apic))
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
@@ -2043,36 +2273,57 @@ func Assemble(assembly_code *Char, start_address Uint64, buffer_to_store_assembl
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
+var __imp_hwdbg_script_run_script bindlib.PreloadProc
+
+func HwdbgScriptRunScript(script *Char, instance_filepath_to_read *Char, hardware_script_file_path_to_save *Char, initial_bram_buffer_size Uint32) Boolean {
+	__res := bindlib.CCall4(__imp_hwdbg_script_run_script.Addr(), bindlib.MarshallSyscall(script), bindlib.MarshallSyscall(instance_filepath_to_read), bindlib.MarshallSyscall(hardware_script_file_path_to_save), bindlib.MarshallSyscall(initial_bram_buffer_size))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_hwdbg_script_engine_wrapper_test_parser bindlib.PreloadProc
+
+func HwdbgScriptEngineWrapperTestParser(Expr *Char) {
+	bindlib.CCall1(__imp_hwdbg_script_engine_wrapper_test_parser.Addr(), bindlib.MarshallSyscall(Expr))
+}
+
+var __imp_HardwareScriptInterpreterShowScriptCapabilities bindlib.PreloadProc
+
+func HardwareScriptInterpreterShowScriptCapabilities(InstanceInfo *HwdbgInstanceInformation) {
+	bindlib.CCall1(__imp_HardwareScriptInterpreterShowScriptCapabilities.Addr(), bindlib.MarshallSyscall(InstanceInfo))
+}
+
+var __imp_HardwareScriptInterpreterCheckScriptBufferWithScriptCapabilities bindlib.PreloadProc
+
+func HardwareScriptInterpreterCheckScriptBufferWithScriptCapabilities(InstanceInfo *HwdbgInstanceInformation, ScriptBuffer unsafe.Pointer, CountOfScriptSymbolChunks Uint32, NumberOfStages *Uint32, NumberOfOperands *Uint32, NumberOfOperandsImplemented *Uint32) Boolean {
+	__res := bindlib.CCall6(__imp_HardwareScriptInterpreterCheckScriptBufferWithScriptCapabilities.Addr(), bindlib.MarshallSyscall(InstanceInfo), bindlib.MarshallSyscall(ScriptBuffer), bindlib.MarshallSyscall(CountOfScriptSymbolChunks), bindlib.MarshallSyscall(NumberOfStages), bindlib.MarshallSyscall(NumberOfOperands), bindlib.MarshallSyscall(NumberOfOperandsImplemented))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_HardwareScriptInterpreterCompressBuffer bindlib.PreloadProc
+
+func HardwareScriptInterpreterCompressBuffer(Buffer *Uint64, BufferLength int32, ScriptVariableLength Uint32, BramDataWidth Uint32, NewBufferSize *int32, NumberOfBytesPerChunk *int32) Boolean {
+	__res := bindlib.CCall6(__imp_HardwareScriptInterpreterCompressBuffer.Addr(), bindlib.MarshallSyscall(Buffer), bindlib.MarshallSyscall(BufferLength), bindlib.MarshallSyscall(ScriptVariableLength), bindlib.MarshallSyscall(BramDataWidth), bindlib.MarshallSyscall(NewBufferSize), bindlib.MarshallSyscall(NumberOfBytesPerChunk))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_HardwareScriptInterpreterConvertSymbolToHwdbgShortSymbolBuffer bindlib.PreloadProc
+
+func HardwareScriptInterpreterConvertSymbolToHwdbgShortSymbolBuffer(InstanceInfo *HwdbgInstanceInformation, SymbolBuffer unsafe.Pointer, SymbolBufferLength int32, NumberOfStages Uint32, NewShortSymbolBuffer *unsafe.Pointer, NewBufferSize *int32) Boolean {
+	__res := bindlib.CCall6(__imp_HardwareScriptInterpreterConvertSymbolToHwdbgShortSymbolBuffer.Addr(), bindlib.MarshallSyscall(InstanceInfo), bindlib.MarshallSyscall(SymbolBuffer), bindlib.MarshallSyscall(SymbolBufferLength), bindlib.MarshallSyscall(NumberOfStages), bindlib.MarshallSyscall(NewShortSymbolBuffer), bindlib.MarshallSyscall(NewBufferSize))
+	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_HardwareScriptInterpreterFreeHwdbgShortSymbolBuffer bindlib.PreloadProc
+
+func HardwareScriptInterpreterFreeHwdbgShortSymbolBuffer(NewShortSymbolBuffer unsafe.Pointer) {
+	bindlib.CCall1(__imp_HardwareScriptInterpreterFreeHwdbgShortSymbolBuffer.Addr(), bindlib.MarshallSyscall(NewShortSymbolBuffer))
+}
+
 var __imp_ScriptEngineParse bindlib.PreloadProc
 
 func ScriptEngineParse(str *byte) unsafe.Pointer {
 	__res := bindlib.CCall1(__imp_ScriptEngineParse.Addr(), bindlib.MarshallSyscall(str))
 	return bindlib.UnmarshallSyscall[unsafe.Pointer](__res)
-}
-
-var __imp_PrintSymbolBuffer bindlib.PreloadProc
-
-func PrintSymbolBuffer(SymbolBuffer unsafe.Pointer) {
-	bindlib.CCall1(__imp_PrintSymbolBuffer.Addr(), bindlib.MarshallSyscall(SymbolBuffer))
-}
-
-var __imp_PrintSymbol bindlib.PreloadProc
-
-func PrintSymbol(Symbol unsafe.Pointer) {
-	bindlib.CCall1(__imp_PrintSymbol.Addr(), bindlib.MarshallSyscall(Symbol))
-}
-
-var __imp_RemoveSymbolBuffer bindlib.PreloadProc
-
-func RemoveSymbolBuffer(SymbolBuffer unsafe.Pointer) {
-	bindlib.CCall1(__imp_RemoveSymbolBuffer.Addr(), bindlib.MarshallSyscall(SymbolBuffer))
-}
-
-var __imp_FuncGetNumberOfOperands bindlib.PreloadProc
-
-func FuncGetNumberOfOperands(FuncType Uint64, NumberOfGetOperands *Uint32, NumberOfSetOperands *Uint32) Boolean {
-	__res := bindlib.CCall3(__imp_FuncGetNumberOfOperands.Addr(), bindlib.MarshallSyscall(FuncType), bindlib.MarshallSyscall(NumberOfGetOperands), bindlib.MarshallSyscall(NumberOfSetOperands))
-	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
 var __imp_ScriptEngineSetHwdbgInstanceInfo bindlib.PreloadProc
@@ -2082,15 +2333,23 @@ func ScriptEngineSetHwdbgInstanceInfo(InstancInfo *HwdbgInstanceInformation) Boo
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
-var __imp_ScriptEngineSetTextMessageCallback bindlib.PreloadProc
+var __imp_PrintSymbolBuffer bindlib.PreloadProc
 
-func ScriptEngineSetTextMessageCallback(Handler unsafe.Pointer) {
-	bindlib.CCall1(__imp_ScriptEngineSetTextMessageCallback.Addr(), bindlib.MarshallSyscall(Handler))
+func PrintSymbolBuffer(SymbolBuffer unsafe.Pointer) {
+	bindlib.CCall1(__imp_PrintSymbolBuffer.Addr(), bindlib.MarshallSyscall(SymbolBuffer))
 }
 
-var __imp_ScriptEngineSymbolAbortLoading bindlib.PreloadProc
+var __imp_RemoveSymbolBuffer bindlib.PreloadProc
 
-func ScriptEngineSymbolAbortLoading() { bindlib.CCall0(__imp_ScriptEngineSymbolAbortLoading.Addr()) }
+func RemoveSymbolBuffer(SymbolBuffer unsafe.Pointer) {
+	bindlib.CCall1(__imp_RemoveSymbolBuffer.Addr(), bindlib.MarshallSyscall(SymbolBuffer))
+}
+
+var __imp_PrintSymbol bindlib.PreloadProc
+
+func PrintSymbol(Symbol unsafe.Pointer) {
+	bindlib.CCall1(__imp_PrintSymbol.Addr(), bindlib.MarshallSyscall(Symbol))
+}
 
 var __imp_ScriptEngineConvertNameToAddress bindlib.PreloadProc
 
@@ -2174,6 +2433,16 @@ var __imp_ScriptEngineShowDataBasedOnSymbolTypes bindlib.PreloadProc
 func ScriptEngineShowDataBasedOnSymbolTypes(TypeName *byte, Address Uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) Boolean {
 	__res := bindlib.CCall5(__imp_ScriptEngineShowDataBasedOnSymbolTypes.Addr(), bindlib.MarshallSyscall(TypeName), bindlib.MarshallSyscall(Address), bindlib.MarshallSyscall(IsStruct), bindlib.MarshallSyscall(BufferAddress), bindlib.MarshallSyscall(AdditionalParameters))
 	return bindlib.UnmarshallSyscall[Boolean](__res)
+}
+
+var __imp_ScriptEngineSymbolAbortLoading bindlib.PreloadProc
+
+func ScriptEngineSymbolAbortLoading() { bindlib.CCall0(__imp_ScriptEngineSymbolAbortLoading.Addr()) }
+
+var __imp_ScriptEngineSetTextMessageCallback bindlib.PreloadProc
+
+func ScriptEngineSetTextMessageCallback(Handler unsafe.Pointer) {
+	bindlib.CCall1(__imp_ScriptEngineSetTextMessageCallback.Addr(), bindlib.MarshallSyscall(Handler))
 }
 
 var __imp_SymSetTextMessageCallback bindlib.PreloadProc
@@ -2284,34 +2553,34 @@ func SymCastingQueryForFiledsAndTypes(StructName *byte, FiledOfStructName *byte,
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
-func (s Anon202_5) Flags() Uint64 {
+func (s Anon203_5) Flags() Uint64 {
 	return bindlib.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon202_5) SetFlags(v Uint64) {
+func (s *Anon203_5) SetFlags(v Uint64) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon202_5) Fields() Anon206_9 {
-	return bindlib.ReadBitcast[Anon206_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon203_5) Fields() Anon207_9 {
+	return bindlib.ReadBitcast[Anon207_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon202_5) SetFields(v Anon206_9) {
+func (s *Anon203_5) SetFields(v Anon207_9) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1454_9) Fields() Anon1456_5 {
-	return bindlib.ReadBitcast[Anon1456_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon1457_9) Fields() Anon1459_5 {
+	return bindlib.ReadBitcast[Anon1459_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1454_9) SetFields(v Anon1456_5) {
+func (s *Anon1457_9) SetFields(v Anon1459_5) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1454_9) AsUInt() Uint32 {
+func (s Anon1457_9) AsUInt() Uint32 {
 	return bindlib.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1454_9) SetAsUInt(v Uint32) {
+func (s *Anon1457_9) SetAsUInt(v Uint32) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
