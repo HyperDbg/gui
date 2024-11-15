@@ -48,8 +48,8 @@ func TestBindMacros(t *testing.T) {
 	mylog.Trace("number of macros", macros.Len())
 
 	var (
-		enumDebuggers = stream.NewOrderedMap("", false)
-		enumIoctls    = stream.NewOrderedMap("", false)
+		enumDebuggers = stream.NewOrderedMap("", "")
+		enumIoctls    = stream.NewOrderedMap("", "")
 	)
 
 	for _, p := range macros.List() {
@@ -131,9 +131,9 @@ func TestBindMacros(t *testing.T) {
 			if found {
 				key = after
 			}
-			enumDebuggers.Set(key, true)
+			enumDebuggers.Set(key, key)
 		case strings.HasPrefix(p.Key, "IOCTL_"):
-			enumIoctls.Set(key, true)
+			enumIoctls.Set(key, key)
 		}
 
 		g.P(stream.ToCamelUpper(key, false) + "=" + value)
@@ -155,8 +155,8 @@ const (
 
 	stream.WriteGoFile("../vars.go", g.Buffer)
 
-	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("debuggerError", enumDebuggers.Keys(), nil)
-	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("ioctl", enumIoctls.Keys(), nil)
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("debuggerError", enumDebuggers)
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("ioctl", enumIoctls)
 
 	for _, p := range macros.List() {
 		return

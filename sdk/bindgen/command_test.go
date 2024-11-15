@@ -70,13 +70,13 @@ func TestUnmarshalCommandJson(t *testing.T) {
 }
 
 func TestCommandGenerate(t *testing.T) {
-	t.Skip("not well")
-	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("commands", []string{
-		"debugging",
-		"extension",
-		"hwdbg",
-		"meta",
-	}, nil)
+	// t.Skip("not well")
+	m := stream.NewOrderedMap("", "")
+	m.Set("debugging", "debugging")
+	m.Set("extension", "extension")
+	m.Set("hwdbg", "hwdbg")
+	m.Set("meta", "meta")
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("commands", m)
 
 	commandGenerate("DebuggingCommands", "D:\\fork\\HyperDbg\\hyperdbg\\libhyperdbg\\code\\debugger\\commands\\debugging-commands")
 	commandGenerate("ExtensionCommands", "D:\\fork\\HyperDbg\\hyperdbg\\libhyperdbg\\code\\debugger\\commands\\extension-commands")
@@ -108,9 +108,9 @@ func commandGenerate(kindName, path string) {
 		return err
 	})
 
-	keys := make([]string, 0)
+	m := stream.NewOrderedMap("", "")
 	for _, command := range commands {
-		keys = append(keys, command.FullName) // todo this must be use Cmd,then it will return the right command
+		m.Set(command.FullName, command.FullName) // todo this must be use Cmd,then it will return the right command
 	}
-	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes(kindName, keys, nil)
+	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes(kindName, m)
 }
