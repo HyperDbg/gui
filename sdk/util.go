@@ -64,11 +64,10 @@ func SetCustomDriverPathEx(DriverFilePath string) bool {
 	return Boolean2Bool(b)
 }
 
-func InterpreterEx(command string) (status string) {
-	mylog.Info("InterpreterEx", "command: "+command)
-	// code := Interpreter(StringToBytePointer(command))  //todo: fix this,api name changeded?
-	// return string(code)
-	return ""
+func RunCommandEx(command string) (status string) {
+	mylog.Info("command", command)
+	code := RunCommand(StringToBytePointer(command))
+	return string(code)
 }
 
 func ConnectRemoteDebuggerEx(ip string, port string) bool {

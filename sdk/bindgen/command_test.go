@@ -62,7 +62,7 @@ func TestUnmarshalCommandJson(t *testing.T) {
 			}
 		}
 		g.P("func ", s.FullName, "()(status string) {")
-		g.P("return ", "InterpreterEx(", strconv.Quote(s.Name), ") ")
+		g.P("return ", "RunCommandEx(", strconv.Quote(s.Name), ") ")
 		g.P("}")
 		g.P()
 	}

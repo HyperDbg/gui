@@ -26,7 +26,7 @@ func TestSdk(t *testing.T) {
 		return 0
 	})
 	SetTextMessageCallback(unsafe.Pointer(callback))
-	InterpreterEx("help !monitor")
+	RunCommandEx("help !monitor")
 
 	mylog.Call(func() {
 		assert.True(t, VmxSupportDetection())
