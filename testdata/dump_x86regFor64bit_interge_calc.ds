@@ -1,0 +1,35 @@
+.connect local
+load vmm
+
+.start path asm.exe
+.sympath SRV*c:\Symbols*https://msdl.microsoft.com/download/symbol
+.sym load  //todo load asm.pdb
+.sym reload
+.sym download
+
+bp __allmul
+log 4 args from stack
+make 64bit reg
+print x*y=z
+
+bp __alldiv
+log 4 args from stack
+make 64bit reg
+print x/y=z
+
+save log to file "dump_x86regFor64bit_interge_calc.log" ?
+
+stop debugging
+unload vmm
+
+
+
+
+/////////////////////
+first in get stack on debug module
+.debug remote namedpipe \\.\pipe\HyperDbgDebug
+.debug prepare serial 115200 com1
+u nt!IopXxxControlFile l 74f
+bp nt!IopXxxControlFile
+g
+kq l 60
