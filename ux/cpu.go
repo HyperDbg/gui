@@ -7,16 +7,13 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/ddkwork/golibrary/stream"
-
 	"github.com/ddkwork/HyperDbg/sdk"
-
-	"github.com/saferwall/pe"
-
 	"github.com/ddkwork/app/ms/xed"
 	"github.com/ddkwork/app/widget"
 	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/stream"
 	"github.com/ddkwork/unison"
+	"github.com/saferwall/pe"
 )
 
 func LayoutCpu() unison.Paneler {
@@ -481,7 +478,6 @@ func LayoutDisassemblyTable() unison.Paneler {
 
 		}
 	}
-
 	table, header := widget.NewTable(xed.Disassembly{}, widget.TableContext[xed.Disassembly]{
 		ContextMenuItems: func(node *widget.Node[xed.Disassembly]) []widget.ContextMenuItem {
 			return []widget.ContextMenuItem{
