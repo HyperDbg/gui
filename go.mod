@@ -1,6 +1,6 @@
 module github.com/ddkwork/HyperDbg
 
-go 1.23.0
+go 1.23.3
 
 require (
 	github.com/ddkwork/app v0.0.0-20241026164255-6ce9e6cb2eb3

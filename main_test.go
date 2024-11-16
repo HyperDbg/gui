@@ -23,7 +23,7 @@ func TestUpdateAppModule(t *testing.T) {
 	stream.RunCommand("go get github.com/ddkwork/app@" + id)
 }
 
-func TestUpdateSDKAndBin(t *testing.T) { //todo use abs path, don't copy bin dir to here
+func TestUpdateSDKAndBin(t *testing.T) { // todo use abs path, don't copy bin dir to here
 	if !stream.IsDir("bin") {
 		return
 	}
