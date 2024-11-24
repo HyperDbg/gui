@@ -97,8 +97,13 @@ func TestSdk(t *testing.T) {
 		//}
 
 		for range 20 {
-			RunCommandEx("run") //todo add callback for data trace
+			RunCommandEx("start")
+			//RunCommandEx("run") //todo add callback for data trace
 		}
+
+		//ReadAllRegisters()
+		//ReadMemory()
+		//ReadTargetRegister(REGISTER_RAX)
 
 		// todo: interface signature need clan up
 
