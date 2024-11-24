@@ -9,30 +9,30 @@ import (
 type API interface {
 	init()
 	DetectVmxSupport() bool
-	ReadVendorString(arg0 *Char)
+	ReadVendorString(arg0 string)
 	LoadVmm() Int
 	UnloadVmm() Int
 	InstallVmmDriver() Int
 	UninstallVmmDriver() Int
 	StopVmmDriver() Int
-	TestCommandParser(command *Char, number_of_tokens uint32, tokens_list **Char, failed_token_num *uint32, failed_token_position *uint32) bool
-	TestCommandParserShowTokens(command *Char)
-	SetupPathForFilename(filename *Char, file_location *Char, buffer_len uint32, check_file_existence bool) bool
-	RunCommand(command *Char) Int
+	TestCommandParser(command string, number_of_tokens uint32, tokens_list *string, failed_token_num *uint32, failed_token_position *uint32) bool
+	TestCommandParserShowTokens(command string)
+	SetupPathForFilename(filename string, file_location string, buffer_len uint32, check_file_existence bool) bool
+	RunCommand(command string) Int
 	ShowSignature()
 	SetTextMessageCallback(handler unsafe.Pointer)
 	SetTextMessageCallbackUsingSharedBuffer(handler unsafe.Pointer) unsafe.Pointer
 	UnsetTextMessageCallback()
-	ScriptReadFileAndExecuteCommandline(argc Int, argv **Char) Int
+	ScriptReadFileAndExecuteCommandline(argc Int, argv *string) Int
 	ContinuePreviousCommand() bool
-	CheckMultilineCommand(current_command *Char, reset bool) bool
-	SetCustomDriverPath(driver_file_path *Char, driver_name *Char) bool
+	CheckMultilineCommand(current_command string, reset bool) bool
+	SetCustomDriverPath(driver_file_path string, driver_name string) bool
 	UseDefaultDriverPath()
 	ConnectLocalDebugger()
-	ConnectRemoteDebugger(ip *Char, port *Char) bool
-	ConnectRemoteDebuggerUsingComPort(port_name *Char, baudrate Dword, pause_after_connection bool) bool
-	ConnectRemoteDebuggerUsingNamedPipe(named_pipe *Char, pause_after_connection bool) bool
-	ConnectCurrentDebuggerUsingComPort(port_name *Char, baudrate Dword) bool
+	ConnectRemoteDebugger(ip string, port string) bool
+	ConnectRemoteDebuggerUsingComPort(port_name string, baudrate Dword, pause_after_connection bool) bool
+	ConnectRemoteDebuggerUsingNamedPipe(named_pipe string, pause_after_connection bool) bool
+	ConnectCurrentDebuggerUsingComPort(port_name string, baudrate Dword) bool
 	DebugCloseRemoteDebugger() bool
 	GetKernelBase() uint64
 	ReadMemory(target_address uint64, memory_type DebuggerReadMemoryType, reading_Type DebuggerReadReadingType, pid uint32, size uint32, get_address_mode bool, address_mode *DebuggerReadMemoryAddressMode, target_buffer_to_store *Byte, return_length *uint32) bool
@@ -54,10 +54,10 @@ type API interface {
 	StartProcess(path *Wchar) bool
 	StartProcessWithArgs(path *Wchar, arguments *Wchar) bool
 	CommandGetLocalApic(local_apic PlapicPage, is_using_x2apic *bool) bool
-	AssembleGetLength(assembly_code *Char, start_address uint64, length *uint32) bool
-	Assemble(assembly_code *Char, start_address uint64, buffer_to_store_assembled_data unsafe.Pointer, buffer_size uint32) bool
-	HwdbgScriptRunScript(script *Char, instance_filepath_to_read *Char, hardware_script_file_path_to_save *Char, initial_bram_buffer_size uint32) bool
-	HwdbgScriptEngineWrapperTestParser(Expr *Char)
+	AssembleGetLength(assembly_code string, start_address uint64, length *uint32) bool
+	Assemble(assembly_code string, start_address uint64, buffer_to_store_assembled_data unsafe.Pointer, buffer_size uint32) bool
+	HwdbgScriptRunScript(script string, instance_filepath_to_read string, hardware_script_file_path_to_save string, initial_bram_buffer_size uint32) bool
+	HwdbgScriptEngineWrapperTestParser(Expr string)
 	HardwareScriptInterpreterShowScriptCapabilities(InstanceInfo *HwdbgInstanceInformation)
 	HardwareScriptInterpreterCheckScriptBufferWithScriptCapabilities(InstanceInfo *HwdbgInstanceInformation, ScriptBuffer unsafe.Pointer, CountOfScriptSymbolChunks uint32, NumberOfStages *uint32, NumberOfOperands *uint32, NumberOfOperandsImplemented *uint32) bool
 	HardwareScriptInterpreterCompressBuffer(Buffer *uint64, BufferLength int32, ScriptVariableLength uint32, BramDataWidth uint32, NewBufferSize *int32, NumberOfBytesPerChunk *int32) bool
@@ -73,8 +73,8 @@ type API interface {
 	ScriptEngineUnloadAllSymbols() uint32
 	ScriptEngineUnloadModuleSymbol(ModuleName *byte) uint32
 	ScriptEngineSearchSymbolForMask(SearchMask *byte) uint32
-	ScriptEngineGetFieldOffset(TypeName *Char, FieldName *Char, FieldOffset *uint32) bool
-	ScriptEngineGetDataTypeSize(TypeName *Char, TypeSize *uint64) bool
+	ScriptEngineGetFieldOffset(TypeName string, FieldName string, FieldOffset *uint32) bool
+	ScriptEngineGetDataTypeSize(TypeName string, TypeSize *uint64) bool
 	ScriptEngineCreateSymbolTableForDisassembler(CallbackFunction unsafe.Pointer) bool
 	ScriptEngineConvertFileToPdbPath(LocalFilePath *byte, ResultPath *byte) bool
 	ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath *byte, PdbFilePath *byte, GuidAndAgeDetails *byte, Is32BitModule bool) bool
@@ -89,8 +89,8 @@ type API interface {
 	SymUnloadAllSymbols() uint32
 	SymUnloadModuleSymbol(ModuleName *byte) uint32
 	SymSearchSymbolForMask(SearchMask *byte) uint32
-	SymGetFieldOffset(TypeName *Char, FieldName *Char, FieldOffset *uint32) bool
-	SymGetDataTypeSize(TypeName *Char, TypeSize *uint64) bool
+	SymGetFieldOffset(TypeName string, FieldName string, FieldOffset *uint32) bool
+	SymGetDataTypeSize(TypeName string, TypeSize *uint64) bool
 	SymCreateSymbolTableForDisassembler(CallbackFunction unsafe.Pointer) bool
 	SymConvertFileToPdbPath(LocalFilePath *byte, ResultPath *byte) bool
 	SymConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath *byte, PdbFilePath *byte, GuidAndAgeDetails *byte, Is32BitModule bool) bool
@@ -162,22 +162,22 @@ func (h *hyperDbg) StopVmmDriver() {
 	panic("implement me")
 }
 
-func (h *hyperDbg) TestCommandParser(command *Char, number_of_tokens uint32, tokens_list **Char, failed_token_num *uint32, failed_token_position *uint32) {
+func (h *hyperDbg) TestCommandParser(command string, number_of_tokens uint32, tokens_list *string, failed_token_num *uint32, failed_token_position *uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) TestCommandParserShowTokens(command *Char) {
+func (h *hyperDbg) TestCommandParserShowTokens(command string) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SetupPathForFilename(filename *Char, file_location *Char, buffer_len uint32, check_file_existence bool) {
+func (h *hyperDbg) SetupPathForFilename(filename string, file_location string, buffer_len uint32, check_file_existence bool) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) RunCommand(command *Char) {
+func (h *hyperDbg) RunCommand(command string) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -197,7 +197,7 @@ func (h *hyperDbg) UnsetLogCallback() {
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptReadFileAndExecuteCommandline(argc Int, argv **Char) {
+func (h *hyperDbg) ScriptReadFileAndExecuteCommandline(argc Int, argv *string) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -207,12 +207,12 @@ func (h *hyperDbg) ContinuePreviousCommand() {
 	panic("implement me")
 }
 
-func (h *hyperDbg) CheckMultilineCommand(current_command *Char, reset bool) {
+func (h *hyperDbg) CheckMultilineCommand(current_command string, reset bool) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SetCustomDriverPath(driver_file_path *Char, driver_name *Char) {
+func (h *hyperDbg) SetCustomDriverPath(driver_file_path string, driver_name string) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -227,22 +227,22 @@ func (h *hyperDbg) ConnectLocalDebugger() {
 	panic("implement me")
 }
 
-func (h *hyperDbg) ConnectRemoteDebugger(ip *Char, port *Char) {
+func (h *hyperDbg) ConnectRemoteDebugger(ip string, port string) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ConnectRemoteDebuggerUsingComPort(port_name *Char, baudrate Dword, pause_after_connection bool) {
+func (h *hyperDbg) ConnectRemoteDebuggerUsingComPort(port_name string, baudrate Dword, pause_after_connection bool) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ConnectRemoteDebuggerUsingNamedPipe(named_pipe *Char, pause_after_connection bool) {
+func (h *hyperDbg) ConnectRemoteDebuggerUsingNamedPipe(named_pipe string, pause_after_connection bool) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ConnectCurrentDebuggerUsingComPort(port_name *Char, baudrate Dword) {
+func (h *hyperDbg) ConnectCurrentDebuggerUsingComPort(port_name string, baudrate Dword) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -352,22 +352,22 @@ func (h *hyperDbg) CommandGetLocalApic(local_apic PlapicPage, is_using_x2apic *b
 	panic("implement me")
 }
 
-func (h *hyperDbg) AssembleGetLength(assembly_code *Char, start_address uint64, length *uint32) {
+func (h *hyperDbg) AssembleGetLength(assembly_code string, start_address uint64, length *uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) Assemble(assembly_code *Char, start_address uint64, buffer_to_store_assembled_data unsafe.Pointer, buffer_size uint32) {
+func (h *hyperDbg) Assemble(assembly_code string, start_address uint64, buffer_to_store_assembled_data unsafe.Pointer, buffer_size uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) HwdbgScriptRunScript(script *Char, instance_filepath_to_read *Char, hardware_script_file_path_to_save *Char, initial_bram_buffer_size uint32) {
+func (h *hyperDbg) HwdbgScriptRunScript(script string, instance_filepath_to_read string, hardware_script_file_path_to_save string, initial_bram_buffer_size uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) HwdbgScriptEngineWrapperTestParser(Expr *Char) {
+func (h *hyperDbg) HwdbgScriptEngineWrapperTestParser(Expr string) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -447,12 +447,12 @@ func (h *hyperDbg) ScriptEngineSearchSymbolForMask(SearchMask *byte) uint32 {
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineGetFieldOffset(TypeName *Char, FieldName *Char, FieldOffset *uint32) {
+func (h *hyperDbg) ScriptEngineGetFieldOffset(TypeName string, FieldName string, FieldOffset *uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineGetDataTypeSize(TypeName *Char, TypeSize *uint64) {
+func (h *hyperDbg) ScriptEngineGetDataTypeSize(TypeName string, TypeSize *uint64) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -527,12 +527,12 @@ func (h *hyperDbg) SymSearchSymbolForMask(SearchMask *byte) uint32 {
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymGetFieldOffset(TypeName *Char, FieldName *Char, FieldOffset *uint32) {
+func (h *hyperDbg) SymGetFieldOffset(TypeName string, FieldName string, FieldOffset *uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymGetDataTypeSize(TypeName *Char, TypeSize *uint64) {
+func (h *hyperDbg) SymGetDataTypeSize(TypeName string, TypeSize *uint64) {
 	//TODO implement me
 	panic("implement me")
 }
