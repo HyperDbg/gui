@@ -100,7 +100,7 @@ func TestSdk(t *testing.T) {
 			RunCommandEx("run") //todo add callback for data trace
 		}
 
-		// todo:
+		// todo: interface signature need clan up
 
 		//this api`s arg is too more
 		//	SetBreakpoint(address Uint64, pid Uint32, tid Uint32, core_numer Uint32)
