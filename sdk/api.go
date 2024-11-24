@@ -103,7 +103,7 @@ type API interface {
 type hyperDbg struct {
 }
 
-func New() API {
+func New() *hyperDbg {
 	return &hyperDbg{}
 }
 
@@ -127,42 +127,42 @@ func (h *hyperDbg) init() {
 	panic("implement me")
 }
 
-func (h *hyperDbg) DetectVmxSupport() Boolean {
+func (h *hyperDbg) DetectVmxSupport() bool {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ReadVendorString(arg0 *Char) {
+func (h *hyperDbg) ReadVendorString(arg0 string) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) LoadVmm() Int {
+func (h *hyperDbg) LoadVmm() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) UnloadVmm() Int {
+func (h *hyperDbg) UnloadVmm() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) InstallVmmDriver() Int {
+func (h *hyperDbg) InstallVmmDriver() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) UninstallVmmDriver() Int {
+func (h *hyperDbg) UninstallVmmDriver() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) StopVmmDriver() Int {
+func (h *hyperDbg) StopVmmDriver() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) TestCommandParser(command *Char, number_of_tokens Uint32, tokens_list **Char, failed_token_num *Uint32, failed_token_position *Uint32) Boolean {
+func (h *hyperDbg) TestCommandParser(command *Char, number_of_tokens Uint32, tokens_list **Char, failed_token_num *Uint32, failed_token_position *Uint32) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -172,12 +172,12 @@ func (h *hyperDbg) TestCommandParserShowTokens(command *Char) {
 	panic("implement me")
 }
 
-func (h *hyperDbg) SetupPathForFilename(filename *Char, file_location *Char, buffer_len Uint32, check_file_existence Boolean) Boolean {
+func (h *hyperDbg) SetupPathForFilename(filename *Char, file_location *Char, buffer_len Uint32, check_file_existence Boolean) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) RunCommand(command *Char) Int {
+func (h *hyperDbg) RunCommand(command *Char) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -187,37 +187,32 @@ func (h *hyperDbg) ShowSignature() {
 	panic("implement me")
 }
 
-func (h *hyperDbg) SetTextMessageCallback(handler unsafe.Pointer) {
+func (h *hyperDbg) SetLogCallback(handler func()) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SetTextMessageCallbackUsingSharedBuffer(handler unsafe.Pointer) unsafe.Pointer {
+func (h *hyperDbg) UnsetLogCallback() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) UnsetTextMessageCallback() {
+func (h *hyperDbg) ScriptReadFileAndExecuteCommandline(argc Int, argv **Char) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptReadFileAndExecuteCommandline(argc Int, argv **Char) Int {
+func (h *hyperDbg) ContinuePreviousCommand() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ContinuePreviousCommand() Boolean {
+func (h *hyperDbg) CheckMultilineCommand(current_command *Char, reset Boolean) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) CheckMultilineCommand(current_command *Char, reset Boolean) Boolean {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (h *hyperDbg) SetCustomDriverPath(driver_file_path *Char, driver_name *Char) Boolean {
+func (h *hyperDbg) SetCustomDriverPath(driver_file_path *Char, driver_name *Char) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -232,37 +227,37 @@ func (h *hyperDbg) ConnectLocalDebugger() {
 	panic("implement me")
 }
 
-func (h *hyperDbg) ConnectRemoteDebugger(ip *Char, port *Char) Boolean {
+func (h *hyperDbg) ConnectRemoteDebugger(ip *Char, port *Char) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ConnectRemoteDebuggerUsingComPort(port_name *Char, baudrate Dword, pause_after_connection Boolean) Boolean {
+func (h *hyperDbg) ConnectRemoteDebuggerUsingComPort(port_name *Char, baudrate Dword, pause_after_connection Boolean) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ConnectRemoteDebuggerUsingNamedPipe(named_pipe *Char, pause_after_connection Boolean) Boolean {
+func (h *hyperDbg) ConnectRemoteDebuggerUsingNamedPipe(named_pipe *Char, pause_after_connection Boolean) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ConnectCurrentDebuggerUsingComPort(port_name *Char, baudrate Dword) Boolean {
+func (h *hyperDbg) ConnectCurrentDebuggerUsingComPort(port_name *Char, baudrate Dword) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) DebugCloseRemoteDebugger() Boolean {
+func (h *hyperDbg) DebugCloseRemoteDebugger() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) GetKernelBase() Uint64 {
+func (h *hyperDbg) GetKernelBase() uint64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ReadMemory(target_address Uint64, memory_type DebuggerReadMemoryType, reading_Type DebuggerReadReadingType, pid Uint32, size Uint32, get_address_mode Boolean, address_mode *DebuggerReadMemoryAddressMode, target_buffer_to_store *Byte, return_length *Uint32) Boolean {
+func (h *hyperDbg) ReadMemory(target_address Uint64, memory_type DebuggerReadMemoryType, reading_Type DebuggerReadReadingType, pid Uint32, size Uint32, get_address_mode Boolean, address_mode *DebuggerReadMemoryAddressMode, target_buffer_to_store *Byte, return_length *Uint32) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -272,32 +267,32 @@ func (h *hyperDbg) ShowMemoryOrDisassemble(style DebuggerShowMemoryStyle, addres
 	panic("implement me")
 }
 
-func (h *hyperDbg) WriteMemory(destination_address unsafe.Pointer, memory_type DebuggerEditMemoryType, process_id Uint32, source_address unsafe.Pointer, number_of_bytes Uint32) Boolean {
+func (h *hyperDbg) WriteMemory(destination_address unsafe.Pointer, memory_type DebuggerEditMemoryType, process_id Uint32, source_address unsafe.Pointer, number_of_bytes Uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ReadAllRegisters(guest_registers unsafe.Pointer, extra_registers unsafe.Pointer) Boolean {
+func (h *hyperDbg) ReadAllRegisters(guest_registers unsafe.Pointer, extra_registers unsafe.Pointer) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ReadTargetRegister(register_id RegsEnum, target_register *Uint64) Boolean {
+func (h *hyperDbg) ReadTargetRegister(register_id RegsEnum, target_register *Uint64) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) WriteTargetRegister(register_id RegsEnum, value Uint64) Boolean {
+func (h *hyperDbg) WriteTargetRegister(register_id RegsEnum, value Uint64) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ShowAllRegisters() Boolean {
+func (h *hyperDbg) ShowAllRegisters() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ShowTargetRegister(register_id RegsEnum) Boolean {
+func (h *hyperDbg) ShowTargetRegister(register_id RegsEnum) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -317,57 +312,57 @@ func (h *hyperDbg) SetBreakpoint(address Uint64, pid Uint32, tid Uint32, core_nu
 	panic("implement me")
 }
 
-func (h *hyperDbg) SteppingInstrumentationStepIn() Boolean {
+func (h *hyperDbg) SteppingInstrumentationStepIn() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SteppingRegularStepIn() Boolean {
+func (h *hyperDbg) SteppingRegularStepIn() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SteppingStepOver() Boolean {
+func (h *hyperDbg) SteppingStepOver() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SteppingInstrumentationStepInForTracking() Boolean {
+func (h *hyperDbg) SteppingInstrumentationStepInForTracking() {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SteppingStepOverForGu(last_instruction Boolean) Boolean {
+func (h *hyperDbg) SteppingStepOverForGu(last_instruction Boolean) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) StartProcess(path *Wchar) Boolean {
+func (h *hyperDbg) StartProcess(path *Wchar) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) StartProcessWithArgs(path *Wchar, arguments *Wchar) Boolean {
+func (h *hyperDbg) StartProcessWithArgs(path *Wchar, arguments *Wchar) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) CommandGetLocalApic(local_apic PlapicPage, is_using_x2apic *Boolean) Boolean {
+func (h *hyperDbg) CommandGetLocalApic(local_apic PlapicPage, is_using_x2apic *Boolean) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) AssembleGetLength(assembly_code *Char, start_address Uint64, length *Uint32) Boolean {
+func (h *hyperDbg) AssembleGetLength(assembly_code *Char, start_address Uint64, length *Uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) Assemble(assembly_code *Char, start_address Uint64, buffer_to_store_assembled_data unsafe.Pointer, buffer_size Uint32) Boolean {
+func (h *hyperDbg) Assemble(assembly_code *Char, start_address Uint64, buffer_to_store_assembled_data unsafe.Pointer, buffer_size Uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) HwdbgScriptRunScript(script *Char, instance_filepath_to_read *Char, hardware_script_file_path_to_save *Char, initial_bram_buffer_size Uint32) Boolean {
+func (h *hyperDbg) HwdbgScriptRunScript(script *Char, instance_filepath_to_read *Char, hardware_script_file_path_to_save *Char, initial_bram_buffer_size Uint32) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -382,17 +377,17 @@ func (h *hyperDbg) HardwareScriptInterpreterShowScriptCapabilities(InstanceInfo 
 	panic("implement me")
 }
 
-func (h *hyperDbg) HardwareScriptInterpreterCheckScriptBufferWithScriptCapabilities(InstanceInfo *HwdbgInstanceInformation, ScriptBuffer unsafe.Pointer, CountOfScriptSymbolChunks Uint32, NumberOfStages *Uint32, NumberOfOperands *Uint32, NumberOfOperandsImplemented *Uint32) Boolean {
+func (h *hyperDbg) HardwareScriptInterpreterCheckScriptBufferWithScriptCapabilities(InstanceInfo *HwdbgInstanceInformation, ScriptBuffer unsafe.Pointer, CountOfScriptSymbolChunks Uint32, NumberOfStages *Uint32, NumberOfOperands *Uint32, NumberOfOperandsImplemented *Uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) HardwareScriptInterpreterCompressBuffer(Buffer *Uint64, BufferLength int32, ScriptVariableLength Uint32, BramDataWidth Uint32, NewBufferSize *int32, NumberOfBytesPerChunk *int32) Boolean {
+func (h *hyperDbg) HardwareScriptInterpreterCompressBuffer(Buffer *Uint64, BufferLength int32, ScriptVariableLength Uint32, BramDataWidth Uint32, NewBufferSize *int32, NumberOfBytesPerChunk *int32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) HardwareScriptInterpreterConvertSymbolToHwdbgShortSymbolBuffer(InstanceInfo *HwdbgInstanceInformation, SymbolBuffer unsafe.Pointer, SymbolBufferLength int32, NumberOfStages Uint32, NewShortSymbolBuffer *unsafe.Pointer, NewBufferSize *int32) Boolean {
+func (h *hyperDbg) HardwareScriptInterpreterConvertSymbolToHwdbgShortSymbolBuffer(InstanceInfo *HwdbgInstanceInformation, SymbolBuffer unsafe.Pointer, SymbolBufferLength int32, NumberOfStages Uint32, NewShortSymbolBuffer *unsafe.Pointer, NewBufferSize *int32) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -407,7 +402,7 @@ func (h *hyperDbg) ScriptEngineParse(str *byte) unsafe.Pointer {
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineSetHwdbgInstanceInfo(InstancInfo *HwdbgInstanceInformation) Boolean {
+func (h *hyperDbg) ScriptEngineSetHwdbgInstanceInfo(InstancInfo *HwdbgInstanceInformation) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -452,37 +447,37 @@ func (h *hyperDbg) ScriptEngineSearchSymbolForMask(SearchMask *byte) Uint32 {
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineGetFieldOffset(TypeName *Char, FieldName *Char, FieldOffset *Uint32) Boolean {
+func (h *hyperDbg) ScriptEngineGetFieldOffset(TypeName *Char, FieldName *Char, FieldOffset *Uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineGetDataTypeSize(TypeName *Char, TypeSize *Uint64) Boolean {
+func (h *hyperDbg) ScriptEngineGetDataTypeSize(TypeName *Char, TypeSize *Uint64) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineCreateSymbolTableForDisassembler(CallbackFunction unsafe.Pointer) Boolean {
+func (h *hyperDbg) ScriptEngineCreateSymbolTableForDisassembler(CallbackFunction unsafe.Pointer) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineConvertFileToPdbPath(LocalFilePath *byte, ResultPath *byte) Boolean {
+func (h *hyperDbg) ScriptEngineConvertFileToPdbPath(LocalFilePath *byte, ResultPath *byte) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath *byte, PdbFilePath *byte, GuidAndAgeDetails *byte, Is32BitModule Boolean) Boolean {
+func (h *hyperDbg) ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath *byte, PdbFilePath *byte, GuidAndAgeDetails *byte, Is32BitModule Boolean) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineSymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength Uint32, DownloadIfAvailable Boolean, SymbolPath *byte, IsSilentLoad Boolean) Boolean {
+func (h *hyperDbg) ScriptEngineSymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength Uint32, DownloadIfAvailable Boolean, SymbolPath *byte, IsSilentLoad Boolean) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineShowDataBasedOnSymbolTypes(TypeName *byte, Address Uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) Boolean {
+func (h *hyperDbg) ScriptEngineShowDataBasedOnSymbolTypes(TypeName *byte, Address Uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -532,47 +527,47 @@ func (h *hyperDbg) SymSearchSymbolForMask(SearchMask *byte) Uint32 {
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymGetFieldOffset(TypeName *Char, FieldName *Char, FieldOffset *Uint32) Boolean {
+func (h *hyperDbg) SymGetFieldOffset(TypeName *Char, FieldName *Char, FieldOffset *Uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymGetDataTypeSize(TypeName *Char, TypeSize *Uint64) Boolean {
+func (h *hyperDbg) SymGetDataTypeSize(TypeName *Char, TypeSize *Uint64) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymCreateSymbolTableForDisassembler(CallbackFunction unsafe.Pointer) Boolean {
+func (h *hyperDbg) SymCreateSymbolTableForDisassembler(CallbackFunction unsafe.Pointer) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymConvertFileToPdbPath(LocalFilePath *byte, ResultPath *byte) Boolean {
+func (h *hyperDbg) SymConvertFileToPdbPath(LocalFilePath *byte, ResultPath *byte) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath *byte, PdbFilePath *byte, GuidAndAgeDetails *byte, Is32BitModule Boolean) Boolean {
+func (h *hyperDbg) SymConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath *byte, PdbFilePath *byte, GuidAndAgeDetails *byte, Is32BitModule Boolean) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength Uint32, DownloadIfAvailable Boolean, SymbolPath *byte, IsSilentLoad Boolean) Boolean {
+func (h *hyperDbg) SymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength Uint32, DownloadIfAvailable Boolean, SymbolPath *byte, IsSilentLoad Boolean) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymShowDataBasedOnSymbolTypes(TypeName *byte, Address Uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) Boolean {
+func (h *hyperDbg) SymShowDataBasedOnSymbolTypes(TypeName *byte, Address Uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymQuerySizeof(StructNameOrTypeName *byte, SizeOfField *Uint32) Boolean {
+func (h *hyperDbg) SymQuerySizeof(StructNameOrTypeName *byte, SizeOfField *Uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymCastingQueryForFiledsAndTypes(StructName *byte, FiledOfStructName *byte, IsStructNamePointerOrNot Pboolean, IsFiledOfStructNamePointerOrNot Pboolean, NewStructOrTypeName **byte, OffsetOfFieldFromTop *Uint32, SizeOfField *Uint32) Boolean {
+func (h *hyperDbg) SymCastingQueryForFiledsAndTypes(StructName *byte, FiledOfStructName *byte, IsStructNamePointerOrNot Pboolean, IsFiledOfStructNamePointerOrNot Pboolean, NewStructOrTypeName **byte, OffsetOfFieldFromTop *Uint32, SizeOfField *Uint32) {
 	//TODO implement me
 	panic("implement me")
 }
