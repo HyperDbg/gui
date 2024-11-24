@@ -35,7 +35,7 @@ type API interface {
 	ConnectCurrentDebuggerUsingComPort(port_name string, baudrate Dword) bool
 	DebugCloseRemoteDebugger() bool
 	GetKernelBase() uint64
-	ReadMemory(target_address uint64, memory_type DebuggerReadMemoryType, reading_Type DebuggerReadReadingType, pid uint32, size uint32, get_address_mode bool, address_mode *DebuggerReadMemoryAddressMode, target_buffer_to_store *Byte, return_length *uint32) bool
+	ReadMemory(target_address uint64, memory_type DebuggerReadMemoryType, reading_Type DebuggerReadReadingType, pid uint32, size uint32, get_address_mode bool, address_mode *DebuggerReadMemoryAddressMode, target_buffer_to_store []byte, return_length *uint32) bool
 	ShowMemoryOrDisassemble(style DebuggerShowMemoryStyle, address uint64, memory_type DebuggerReadMemoryType, reading_type DebuggerReadReadingType, pid uint32, size uint32, dt_details PdebuggerDtCommandOptions)
 	WriteMemory(destination_address unsafe.Pointer, memory_type DebuggerEditMemoryType, process_id uint32, source_address unsafe.Pointer, number_of_bytes uint32) bool
 	ReadAllRegisters(guest_registers unsafe.Pointer, extra_registers unsafe.Pointer) bool
@@ -63,41 +63,41 @@ type API interface {
 	HardwareScriptInterpreterCompressBuffer(Buffer *uint64, BufferLength int32, ScriptVariableLength uint32, BramDataWidth uint32, NewBufferSize *int32, NumberOfBytesPerChunk *int32) bool
 	HardwareScriptInterpreterConvertSymbolToHwdbgShortSymbolBuffer(InstanceInfo *HwdbgInstanceInformation, SymbolBuffer unsafe.Pointer, SymbolBufferLength int32, NumberOfStages uint32, NewShortSymbolBuffer *unsafe.Pointer, NewBufferSize *int32) bool
 	HardwareScriptInterpreterFreeHwdbgShortSymbolBuffer(NewShortSymbolBuffer unsafe.Pointer)
-	ScriptEngineParse(str *byte) unsafe.Pointer
+	ScriptEngineParse(str []byte) unsafe.Pointer
 	ScriptEngineSetHwdbgInstanceInfo(InstancInfo *HwdbgInstanceInformation) bool
 	PrintSymbolBuffer(SymbolBuffer unsafe.Pointer)
 	RemoveSymbolBuffer(SymbolBuffer unsafe.Pointer)
 	PrintSymbol(Symbol unsafe.Pointer)
-	ScriptEngineConvertNameToAddress(FunctionOrVariableName *byte, WasFound bool) uint64
-	ScriptEngineLoadFileSymbol(BaseAddress uint64, PdbFileName *byte, CustomModuleName *byte) uint32
+	ScriptEngineConvertNameToAddress(FunctionOrVariableName []byte, WasFound bool) uint64
+	ScriptEngineLoadFileSymbol(BaseAddress uint64, PdbFileName []byte, CustomModuleName []byte) uint32
 	ScriptEngineUnloadAllSymbols() uint32
-	ScriptEngineUnloadModuleSymbol(ModuleName *byte) uint32
-	ScriptEngineSearchSymbolForMask(SearchMask *byte) uint32
+	ScriptEngineUnloadModuleSymbol(ModuleName []byte) uint32
+	ScriptEngineSearchSymbolForMask(SearchMask []byte) uint32
 	ScriptEngineGetFieldOffset(TypeName string, FieldName string, FieldOffset *uint32) bool
 	ScriptEngineGetDataTypeSize(TypeName string, TypeSize *uint64) bool
 	ScriptEngineCreateSymbolTableForDisassembler(CallbackFunction unsafe.Pointer) bool
-	ScriptEngineConvertFileToPdbPath(LocalFilePath *byte, ResultPath *byte) bool
-	ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath *byte, PdbFilePath *byte, GuidAndAgeDetails *byte, Is32BitModule bool) bool
-	ScriptEngineSymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *byte, IsSilentLoad bool) bool
-	ScriptEngineShowDataBasedOnSymbolTypes(TypeName *byte, Address uint64, IsStruct bool, BufferAddress unsafe.Pointer, AdditionalParameters *byte) bool
+	ScriptEngineConvertFileToPdbPath(LocalFilePath []byte, ResultPath []byte) bool
+	ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath []byte, PdbFilePath []byte, GuidAndAgeDetails []byte, Is32BitModule bool) bool
+	ScriptEngineSymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength uint32, DownloadIfAvailable bool, SymbolPath []byte, IsSilentLoad bool) bool
+	ScriptEngineShowDataBasedOnSymbolTypes(TypeName []byte, Address uint64, IsStruct bool, BufferAddress unsafe.Pointer, AdditionalParameters []byte) bool
 	ScriptEngineSymbolAbortLoading()
 	ScriptEngineSetTextMessageCallback(Handler unsafe.Pointer)
 	SymSetTextMessageCallback(Handler unsafe.Pointer)
 	SymbolAbortLoading()
-	SymConvertNameToAddress(FunctionOrVariableName *byte, WasFound bool) uint64
-	SymLoadFileSymbol(BaseAddress uint64, PdbFileName *byte, CustomModuleName *byte) uint32
+	SymConvertNameToAddress(FunctionOrVariableName []byte, WasFound bool) uint64
+	SymLoadFileSymbol(BaseAddress uint64, PdbFileName []byte, CustomModuleName []byte) uint32
 	SymUnloadAllSymbols() uint32
-	SymUnloadModuleSymbol(ModuleName *byte) uint32
-	SymSearchSymbolForMask(SearchMask *byte) uint32
+	SymUnloadModuleSymbol(ModuleName []byte) uint32
+	SymSearchSymbolForMask(SearchMask []byte) uint32
 	SymGetFieldOffset(TypeName string, FieldName string, FieldOffset *uint32) bool
 	SymGetDataTypeSize(TypeName string, TypeSize *uint64) bool
 	SymCreateSymbolTableForDisassembler(CallbackFunction unsafe.Pointer) bool
-	SymConvertFileToPdbPath(LocalFilePath *byte, ResultPath *byte) bool
-	SymConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath *byte, PdbFilePath *byte, GuidAndAgeDetails *byte, Is32BitModule bool) bool
-	SymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *byte, IsSilentLoad bool) bool
-	SymShowDataBasedOnSymbolTypes(TypeName *byte, Address uint64, IsStruct bool, BufferAddress unsafe.Pointer, AdditionalParameters *byte) bool
-	SymQuerySizeof(StructNameOrTypeName *byte, SizeOfField *uint32) bool
-	SymCastingQueryForFiledsAndTypes(StructName *byte, FiledOfStructName *byte, IsStructNamePointerOrNot bool, IsFiledOfStructNamePointerOrNot bool, NewStructOrTypeName **byte, OffsetOfFieldFromTop *uint32, SizeOfField *uint32) bool
+	SymConvertFileToPdbPath(LocalFilePath []byte, ResultPath []byte) bool
+	SymConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath []byte, PdbFilePath []byte, GuidAndAgeDetails []byte, Is32BitModule bool) bool
+	SymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength uint32, DownloadIfAvailable bool, SymbolPath []byte, IsSilentLoad bool) bool
+	SymShowDataBasedOnSymbolTypes(TypeName []byte, Address uint64, IsStruct bool, BufferAddress unsafe.Pointer, AdditionalParameters []byte) bool
+	SymQuerySizeof(StructNameOrTypeName []byte, SizeOfField *uint32) bool
+	SymCastingQueryForFiledsAndTypes(StructName []byte, FiledOfStructName []byte, IsStructNamePointerOrNot bool, IsFiledOfStructNamePointerOrNot bool, NewStructOrTypeName *[]byte, OffsetOfFieldFromTop *uint32, SizeOfField *uint32) bool
 }
 
 type hyperDbg struct {
@@ -257,7 +257,7 @@ func (h *hyperDbg) GetKernelBase() uint64 {
 	panic("implement me")
 }
 
-func (h *hyperDbg) ReadMemory(target_address uint64, memory_type DebuggerReadMemoryType, reading_Type DebuggerReadReadingType, pid uint32, size uint32, get_address_mode bool, address_mode *DebuggerReadMemoryAddressMode, target_buffer_to_store *Byte, return_length *uint32) {
+func (h *hyperDbg) ReadMemory(target_address uint64, memory_type DebuggerReadMemoryType, reading_Type DebuggerReadReadingType, pid uint32, size uint32, get_address_mode bool, address_mode *DebuggerReadMemoryAddressMode, target_buffer_to_store []byte, return_length *uint32) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -397,7 +397,7 @@ func (h *hyperDbg) HardwareScriptInterpreterFreeHwdbgShortSymbolBuffer(NewShortS
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineParse(str *byte) unsafe.Pointer {
+func (h *hyperDbg) ScriptEngineParse(str []byte) unsafe.Pointer {
 	//TODO implement me
 	panic("implement me")
 }
@@ -422,12 +422,12 @@ func (h *hyperDbg) PrintSymbol(Symbol unsafe.Pointer) {
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineConvertNameToAddress(FunctionOrVariableName *byte, WasFound bool) uint64 {
+func (h *hyperDbg) ScriptEngineConvertNameToAddress(FunctionOrVariableName []byte, WasFound bool) uint64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineLoadFileSymbol(BaseAddress uint64, PdbFileName *byte, CustomModuleName *byte) uint32 {
+func (h *hyperDbg) ScriptEngineLoadFileSymbol(BaseAddress uint64, PdbFileName []byte, CustomModuleName []byte) uint32 {
 	//TODO implement me
 	panic("implement me")
 }
@@ -437,12 +437,12 @@ func (h *hyperDbg) ScriptEngineUnloadAllSymbols() uint32 {
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineUnloadModuleSymbol(ModuleName *byte) uint32 {
+func (h *hyperDbg) ScriptEngineUnloadModuleSymbol(ModuleName []byte) uint32 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineSearchSymbolForMask(SearchMask *byte) uint32 {
+func (h *hyperDbg) ScriptEngineSearchSymbolForMask(SearchMask []byte) uint32 {
 	//TODO implement me
 	panic("implement me")
 }
@@ -462,22 +462,22 @@ func (h *hyperDbg) ScriptEngineCreateSymbolTableForDisassembler(CallbackFunction
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineConvertFileToPdbPath(LocalFilePath *byte, ResultPath *byte) {
+func (h *hyperDbg) ScriptEngineConvertFileToPdbPath(LocalFilePath []byte, ResultPath []byte) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath *byte, PdbFilePath *byte, GuidAndAgeDetails *byte, Is32BitModule bool) {
+func (h *hyperDbg) ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath []byte, PdbFilePath []byte, GuidAndAgeDetails []byte, Is32BitModule bool) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineSymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *byte, IsSilentLoad bool) {
+func (h *hyperDbg) ScriptEngineSymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength uint32, DownloadIfAvailable bool, SymbolPath []byte, IsSilentLoad bool) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineShowDataBasedOnSymbolTypes(TypeName *byte, Address uint64, IsStruct bool, BufferAddress unsafe.Pointer, AdditionalParameters *byte) {
+func (h *hyperDbg) ScriptEngineShowDataBasedOnSymbolTypes(TypeName []byte, Address uint64, IsStruct bool, BufferAddress unsafe.Pointer, AdditionalParameters []byte) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -502,12 +502,12 @@ func (h *hyperDbg) SymbolAbortLoading() {
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymConvertNameToAddress(FunctionOrVariableName *byte, WasFound bool) uint64 {
+func (h *hyperDbg) SymConvertNameToAddress(FunctionOrVariableName []byte, WasFound bool) uint64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymLoadFileSymbol(BaseAddress uint64, PdbFileName *byte, CustomModuleName *byte) uint32 {
+func (h *hyperDbg) SymLoadFileSymbol(BaseAddress uint64, PdbFileName []byte, CustomModuleName []byte) uint32 {
 	//TODO implement me
 	panic("implement me")
 }
@@ -517,12 +517,12 @@ func (h *hyperDbg) SymUnloadAllSymbols() uint32 {
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymUnloadModuleSymbol(ModuleName *byte) uint32 {
+func (h *hyperDbg) SymUnloadModuleSymbol(ModuleName []byte) uint32 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymSearchSymbolForMask(SearchMask *byte) uint32 {
+func (h *hyperDbg) SymSearchSymbolForMask(SearchMask []byte) uint32 {
 	//TODO implement me
 	panic("implement me")
 }
@@ -542,32 +542,32 @@ func (h *hyperDbg) SymCreateSymbolTableForDisassembler(CallbackFunction unsafe.P
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymConvertFileToPdbPath(LocalFilePath *byte, ResultPath *byte) {
+func (h *hyperDbg) SymConvertFileToPdbPath(LocalFilePath []byte, ResultPath []byte) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath *byte, PdbFilePath *byte, GuidAndAgeDetails *byte, Is32BitModule bool) {
+func (h *hyperDbg) SymConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath []byte, PdbFilePath []byte, GuidAndAgeDetails []byte, Is32BitModule bool) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength uint32, DownloadIfAvailable bool, SymbolPath *byte, IsSilentLoad bool) {
+func (h *hyperDbg) SymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength uint32, DownloadIfAvailable bool, SymbolPath []byte, IsSilentLoad bool) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymShowDataBasedOnSymbolTypes(TypeName *byte, Address uint64, IsStruct bool, BufferAddress unsafe.Pointer, AdditionalParameters *byte) {
+func (h *hyperDbg) SymShowDataBasedOnSymbolTypes(TypeName []byte, Address uint64, IsStruct bool, BufferAddress unsafe.Pointer, AdditionalParameters []byte) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymQuerySizeof(StructNameOrTypeName *byte, SizeOfField *uint32) {
+func (h *hyperDbg) SymQuerySizeof(StructNameOrTypeName []byte, SizeOfField *uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymCastingQueryForFiledsAndTypes(StructName *byte, FiledOfStructName *byte, IsStructNamePointerOrNot bool, IsFiledOfStructNamePointerOrNot bool, NewStructOrTypeName **byte, OffsetOfFieldFromTop *uint32, SizeOfField *uint32) {
+func (h *hyperDbg) SymCastingQueryForFiledsAndTypes(StructName []byte, FiledOfStructName []byte, IsStructNamePointerOrNot bool, IsFiledOfStructNamePointerOrNot bool, NewStructOrTypeName *[]byte, OffsetOfFieldFromTop *uint32, SizeOfField *uint32) {
 	//TODO implement me
 	panic("implement me")
 }
