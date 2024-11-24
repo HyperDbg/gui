@@ -29,7 +29,7 @@ func TestGenInterface(t *testing.T) {
 					s = before
 				}
 			}
-			s = strings.TrimSuffix(s, "{")
+			s = strings.ReplaceAll(s, "{", "")
 			if strings.Contains(s, "Anon") {
 				continue
 			}
