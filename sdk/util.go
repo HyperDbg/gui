@@ -59,21 +59,6 @@ func Boolean2Bool(b Boolean) bool {
 	return int(b) == True
 }
 
-func SetCustomDriverPathEx(DriverFilePath string) bool {
-	b := SetCustomDriverPath(StringToBytePointer(DriverFilePath), StringToBytePointer(stream.BaseName(DriverFilePath)))
-	return Boolean2Bool(b)
-}
-
-func RunCommandEx(command string) (status string) {
-	mylog.Info("command", command)
-	code := RunCommand(StringToBytePointer(command))
-	return string(code)
-}
-
-func ConnectRemoteDebuggerEx(ip string, port string) bool {
-	return ConnectRemoteDebugger(StringToBytePointer(ip), StringToBytePointer(port)) == 0
-}
-
 func AddCurrentDirToPath() {
 	currentPath := mylog.Check2(filepath.Abs("."))
 	pathEnv := os.Getenv("PATH")

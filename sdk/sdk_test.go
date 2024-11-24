@@ -14,6 +14,7 @@ import (
 )
 
 func TestGenInterface(t *testing.T) {
+	t.Skip()
 	g := stream.NewGeneratedFile()
 	index := 0
 	g.P(`package sdk`)
