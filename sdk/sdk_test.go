@@ -74,6 +74,31 @@ func TestSdk(t *testing.T) {
 
 		TargetFilePath = "../testdata/asm.exe"
 		RunCommandEx("bc") //BreakpointsRemoveAll
+		//get function address from symbol name
+		//PrintSymbol() //? then get function address?
+		//$+19     | E9 4E060000              | jmp <asm._asm1>                         |
+		//$+A7     | E8 99030000              | call <asm.__allmul>                     | main.c:69
+		//$+10B    | E8 70030000              | call <asm.__alldiv>                     | main.c:101
+		//$+50B    | 68 34A03800              | push asm.38A034                         | 38A034:"asm1 for code3"
+
+		//SetBreakpoint(_asm1)
+		//SetBreakpoint(__allmul)
+		//SetBreakpoint(__alldiv)
+		//SetBreakpoint(endTrace)
+
+		//bigNumTrace := func() {
+		//	switch a.Eip() {
+		//	case allmul:
+		//		mul(a.PeekStack(1), a.PeekStack(2), a.PeekStack(3), a.PeekStack(4))
+		//	case alldiv:
+		//		div(a.PeekStack(1), a.PeekStack(2), a.PeekStack(3), a.PeekStack(4))
+		//	case end: // 如何把这个条件传递到RunCommandWithCount的停止条件呢？这样就不会让程序退出了
+		//	}
+		//}
+
+		for range 20 {
+			RunCommandEx("run") //todo add callback for data trace
+		}
 
 		// todo:
 
