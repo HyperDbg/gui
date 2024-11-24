@@ -73,8 +73,13 @@ func TestSdk(t *testing.T) {
 		// assert.True(t, Boolean2Bool(StartProcessWithArgs(&[]rune("path")[0], &[]rune("C:\\Windows\\SysWOW64\\notepad.exe")[0])))
 
 		TargetFilePath = "../testdata/asm.exe"
+		RunCommandEx("bc") //BreakpointsRemoveAll
 
 		// todo:
+
+		//this api`s arg is too more
+		//	SetBreakpoint(address Uint64, pid Uint32, tid Uint32, core_numer Uint32)
+
 		// start debugger
 		// read memory
 		// read registers
