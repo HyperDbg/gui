@@ -74,7 +74,7 @@ func TestSdk(t *testing.T) {
 		// assert.True(t, Boolean2Bool(StartProcessWithArgs(&[]rune("path")[0], &[]rune("C:\\Windows\\SysWOW64\\notepad.exe")[0])))
 
 		TargetFilePath = "../testdata/asm.exe"
-		RunCommandEx("bc") //BreakpointsRemoveAll
+		RunCommandEx("bc") // BreakpointsRemoveAll
 		//get function address from symbol name
 		//PrintSymbol() //? then get function address?
 		//$+19     | E9 4E060000              | jmp <asm._asm1>                         |
@@ -82,10 +82,10 @@ func TestSdk(t *testing.T) {
 		//$+10B    | E8 70030000              | call <asm.__alldiv>                     | main.c:101
 		//$+50B    | 68 34A03800              | push asm.38A034                         | 38A034:"asm1 for code3"
 
-		//SetBreakpoint(_asm1)
-		//SetBreakpoint(__allmul)
-		//SetBreakpoint(__alldiv)
-		//SetBreakpoint(endTrace)
+		// SetBreakpoint(_asm1)
+		// SetBreakpoint(__allmul)
+		// SetBreakpoint(__alldiv)
+		// SetBreakpoint(endTrace)
 
 		//bigNumTrace := func() {
 		//	switch a.Eip() {
@@ -99,16 +99,16 @@ func TestSdk(t *testing.T) {
 
 		for range 20 {
 			RunCommandEx("start")
-			//RunCommandEx("run") //todo add callback for data trace
+			// RunCommandEx("run") //todo add callback for data trace
 		}
 
-		//ReadAllRegisters()
-		//ReadMemory()
-		//ReadTargetRegister(REGISTER_RAX)
+		// ReadAllRegisters()
+		// ReadMemory()
+		// ReadTargetRegister(REGISTER_RAX)
 
 		// todo: interface signature need clan up
 
-		//this api`s arg is too more
+		// this api`s arg is too more
 		//	SetBreakpoint(address Uint64, pid Uint32, tid Uint32, core_numer Uint32)
 
 		// start debugger
