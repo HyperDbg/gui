@@ -9,20 +9,20 @@ type API interface {
 	init()
 	DetectVmxSupport() bool
 	ReadVendorString(arg0 string)
-	LoadVmm() Int
-	UnloadVmm() Int
-	InstallVmmDriver() Int
-	UninstallVmmDriver() Int
-	StopVmmDriver() Int
+	LoadVmm()
+	UnloadVmm()
+	InstallVmmDriver()
+	UninstallVmmDriver()
+	StopVmmDriver()
 	TestCommandParser(command string, number_of_tokens uint32, tokens_list *string, failed_token_num *uint32, failed_token_position *uint32) bool
 	TestCommandParserShowTokens(command string)
 	SetupPathForFilename(filename string, file_location string, buffer_len uint32, check_file_existence bool) bool
-	RunCommand(command string) Int
+	RunCommand(command string)
 	ShowSignature()
 	SetTextMessageCallback(handler uint64)
 	SetTextMessageCallbackUsingSharedBuffer(handler uint64) uint64
 	UnsetTextMessageCallback()
-	ScriptReadFileAndExecuteCommandline(argc Int, argv *string) Int
+	ScriptReadFileAndExecuteCommandline(argc Int, argv *string)
 	ContinuePreviousCommand() bool
 	CheckMultilineCommand(current_command string, reset bool) bool
 	SetCustomDriverPath(driver_file_path string, driver_name string) bool
