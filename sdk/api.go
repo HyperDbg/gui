@@ -34,18 +34,18 @@ type API interface {
 	ConnectRemoteDebuggerUsingNamedPipe(named_pipe *Char, pause_after_connection Boolean) Boolean
 	ConnectCurrentDebuggerUsingComPort(port_name *Char, baudrate Dword) Boolean
 	DebugCloseRemoteDebugger() Boolean
-	GetKernelBase() Uint64
-	ReadMemory(target_address Uint64, memory_type DebuggerReadMemoryType, reading_Type DebuggerReadReadingType, pid uint32, size uint32, get_address_mode Boolean, address_mode *DebuggerReadMemoryAddressMode, target_buffer_to_store *Byte, return_length *uint32) Boolean
-	ShowMemoryOrDisassemble(style DebuggerShowMemoryStyle, address Uint64, memory_type DebuggerReadMemoryType, reading_type DebuggerReadReadingType, pid uint32, size uint32, dt_details PdebuggerDtCommandOptions)
+	GetKernelBase() uint64
+	ReadMemory(target_address uint64, memory_type DebuggerReadMemoryType, reading_Type DebuggerReadReadingType, pid uint32, size uint32, get_address_mode Boolean, address_mode *DebuggerReadMemoryAddressMode, target_buffer_to_store *Byte, return_length *uint32) Boolean
+	ShowMemoryOrDisassemble(style DebuggerShowMemoryStyle, address uint64, memory_type DebuggerReadMemoryType, reading_type DebuggerReadReadingType, pid uint32, size uint32, dt_details PdebuggerDtCommandOptions)
 	WriteMemory(destination_address unsafe.Pointer, memory_type DebuggerEditMemoryType, process_id uint32, source_address unsafe.Pointer, number_of_bytes uint32) Boolean
 	ReadAllRegisters(guest_registers unsafe.Pointer, extra_registers unsafe.Pointer) Boolean
-	ReadTargetRegister(register_id RegsEnum, target_register *Uint64) Boolean
-	WriteTargetRegister(register_id RegsEnum, value Uint64) Boolean
+	ReadTargetRegister(register_id RegsEnum, target_register *uint64) Boolean
+	WriteTargetRegister(register_id RegsEnum, value uint64) Boolean
 	ShowAllRegisters() Boolean
 	ShowTargetRegister(register_id RegsEnum) Boolean
 	ContinueDebuggee()
 	PauseDebuggee()
-	SetBreakpoint(address Uint64, pid uint32, tid uint32, core_numer uint32)
+	SetBreakpoint(address uint64, pid uint32, tid uint32, core_numer uint32)
 	SteppingInstrumentationStepIn() Boolean
 	SteppingRegularStepIn() Boolean
 	SteppingStepOver() Boolean
@@ -54,13 +54,13 @@ type API interface {
 	StartProcess(path *Wchar) Boolean
 	StartProcessWithArgs(path *Wchar, arguments *Wchar) Boolean
 	CommandGetLocalApic(local_apic PlapicPage, is_using_x2apic *Boolean) Boolean
-	AssembleGetLength(assembly_code *Char, start_address Uint64, length *uint32) Boolean
-	Assemble(assembly_code *Char, start_address Uint64, buffer_to_store_assembled_data unsafe.Pointer, buffer_size uint32) Boolean
+	AssembleGetLength(assembly_code *Char, start_address uint64, length *uint32) Boolean
+	Assemble(assembly_code *Char, start_address uint64, buffer_to_store_assembled_data unsafe.Pointer, buffer_size uint32) Boolean
 	HwdbgScriptRunScript(script *Char, instance_filepath_to_read *Char, hardware_script_file_path_to_save *Char, initial_bram_buffer_size uint32) Boolean
 	HwdbgScriptEngineWrapperTestParser(Expr *Char)
 	HardwareScriptInterpreterShowScriptCapabilities(InstanceInfo *HwdbgInstanceInformation)
 	HardwareScriptInterpreterCheckScriptBufferWithScriptCapabilities(InstanceInfo *HwdbgInstanceInformation, ScriptBuffer unsafe.Pointer, CountOfScriptSymbolChunks uint32, NumberOfStages *uint32, NumberOfOperands *uint32, NumberOfOperandsImplemented *uint32) Boolean
-	HardwareScriptInterpreterCompressBuffer(Buffer *Uint64, BufferLength int32, ScriptVariableLength uint32, BramDataWidth uint32, NewBufferSize *int32, NumberOfBytesPerChunk *int32) Boolean
+	HardwareScriptInterpreterCompressBuffer(Buffer *uint64, BufferLength int32, ScriptVariableLength uint32, BramDataWidth uint32, NewBufferSize *int32, NumberOfBytesPerChunk *int32) Boolean
 	HardwareScriptInterpreterConvertSymbolToHwdbgShortSymbolBuffer(InstanceInfo *HwdbgInstanceInformation, SymbolBuffer unsafe.Pointer, SymbolBufferLength int32, NumberOfStages uint32, NewShortSymbolBuffer *unsafe.Pointer, NewBufferSize *int32) Boolean
 	HardwareScriptInterpreterFreeHwdbgShortSymbolBuffer(NewShortSymbolBuffer unsafe.Pointer)
 	ScriptEngineParse(str *byte) unsafe.Pointer
@@ -68,34 +68,34 @@ type API interface {
 	PrintSymbolBuffer(SymbolBuffer unsafe.Pointer)
 	RemoveSymbolBuffer(SymbolBuffer unsafe.Pointer)
 	PrintSymbol(Symbol unsafe.Pointer)
-	ScriptEngineConvertNameToAddress(FunctionOrVariableName *byte, WasFound Pboolean) Uint64
-	ScriptEngineLoadFileSymbol(BaseAddress Uint64, PdbFileName *byte, CustomModuleName *byte) uint32
+	ScriptEngineConvertNameToAddress(FunctionOrVariableName *byte, WasFound Pboolean) uint64
+	ScriptEngineLoadFileSymbol(BaseAddress uint64, PdbFileName *byte, CustomModuleName *byte) uint32
 	ScriptEngineUnloadAllSymbols() uint32
 	ScriptEngineUnloadModuleSymbol(ModuleName *byte) uint32
 	ScriptEngineSearchSymbolForMask(SearchMask *byte) uint32
 	ScriptEngineGetFieldOffset(TypeName *Char, FieldName *Char, FieldOffset *uint32) Boolean
-	ScriptEngineGetDataTypeSize(TypeName *Char, TypeSize *Uint64) Boolean
+	ScriptEngineGetDataTypeSize(TypeName *Char, TypeSize *uint64) Boolean
 	ScriptEngineCreateSymbolTableForDisassembler(CallbackFunction unsafe.Pointer) Boolean
 	ScriptEngineConvertFileToPdbPath(LocalFilePath *byte, ResultPath *byte) Boolean
 	ScriptEngineConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath *byte, PdbFilePath *byte, GuidAndAgeDetails *byte, Is32BitModule Boolean) Boolean
 	ScriptEngineSymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength uint32, DownloadIfAvailable Boolean, SymbolPath *byte, IsSilentLoad Boolean) Boolean
-	ScriptEngineShowDataBasedOnSymbolTypes(TypeName *byte, Address Uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) Boolean
+	ScriptEngineShowDataBasedOnSymbolTypes(TypeName *byte, Address uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) Boolean
 	ScriptEngineSymbolAbortLoading()
 	ScriptEngineSetTextMessageCallback(Handler unsafe.Pointer)
 	SymSetTextMessageCallback(Handler unsafe.Pointer)
 	SymbolAbortLoading()
-	SymConvertNameToAddress(FunctionOrVariableName *byte, WasFound Pboolean) Uint64
-	SymLoadFileSymbol(BaseAddress Uint64, PdbFileName *byte, CustomModuleName *byte) uint32
+	SymConvertNameToAddress(FunctionOrVariableName *byte, WasFound Pboolean) uint64
+	SymLoadFileSymbol(BaseAddress uint64, PdbFileName *byte, CustomModuleName *byte) uint32
 	SymUnloadAllSymbols() uint32
 	SymUnloadModuleSymbol(ModuleName *byte) uint32
 	SymSearchSymbolForMask(SearchMask *byte) uint32
 	SymGetFieldOffset(TypeName *Char, FieldName *Char, FieldOffset *uint32) Boolean
-	SymGetDataTypeSize(TypeName *Char, TypeSize *Uint64) Boolean
+	SymGetDataTypeSize(TypeName *Char, TypeSize *uint64) Boolean
 	SymCreateSymbolTableForDisassembler(CallbackFunction unsafe.Pointer) Boolean
 	SymConvertFileToPdbPath(LocalFilePath *byte, ResultPath *byte) Boolean
 	SymConvertFileToPdbFileAndGuidAndAgeDetails(LocalFilePath *byte, PdbFilePath *byte, GuidAndAgeDetails *byte, Is32BitModule Boolean) Boolean
 	SymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLength uint32, DownloadIfAvailable Boolean, SymbolPath *byte, IsSilentLoad Boolean) Boolean
-	SymShowDataBasedOnSymbolTypes(TypeName *byte, Address Uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) Boolean
+	SymShowDataBasedOnSymbolTypes(TypeName *byte, Address uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) Boolean
 	SymQuerySizeof(StructNameOrTypeName *byte, SizeOfField *uint32) Boolean
 	SymCastingQueryForFiledsAndTypes(StructName *byte, FiledOfStructName *byte, IsStructNamePointerOrNot Pboolean, IsFiledOfStructNamePointerOrNot Pboolean, NewStructOrTypeName **byte, OffsetOfFieldFromTop *uint32, SizeOfField *uint32) Boolean
 }
@@ -257,12 +257,12 @@ func (h *hyperDbg) GetKernelBase() uint64 {
 	panic("implement me")
 }
 
-func (h *hyperDbg) ReadMemory(target_address Uint64, memory_type DebuggerReadMemoryType, reading_Type DebuggerReadReadingType, pid uint32, size uint32, get_address_mode Boolean, address_mode *DebuggerReadMemoryAddressMode, target_buffer_to_store *Byte, return_length *uint32) {
+func (h *hyperDbg) ReadMemory(target_address uint64, memory_type DebuggerReadMemoryType, reading_Type DebuggerReadReadingType, pid uint32, size uint32, get_address_mode Boolean, address_mode *DebuggerReadMemoryAddressMode, target_buffer_to_store *Byte, return_length *uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ShowMemoryOrDisassemble(style DebuggerShowMemoryStyle, address Uint64, memory_type DebuggerReadMemoryType, reading_type DebuggerReadReadingType, pid uint32, size uint32, dt_details PdebuggerDtCommandOptions) {
+func (h *hyperDbg) ShowMemoryOrDisassemble(style DebuggerShowMemoryStyle, address uint64, memory_type DebuggerReadMemoryType, reading_type DebuggerReadReadingType, pid uint32, size uint32, dt_details PdebuggerDtCommandOptions) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -277,12 +277,12 @@ func (h *hyperDbg) ReadAllRegisters(guest_registers unsafe.Pointer, extra_regist
 	panic("implement me")
 }
 
-func (h *hyperDbg) ReadTargetRegister(register_id RegsEnum, target_register *Uint64) {
+func (h *hyperDbg) ReadTargetRegister(register_id RegsEnum, target_register *uint64) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) WriteTargetRegister(register_id RegsEnum, value Uint64) {
+func (h *hyperDbg) WriteTargetRegister(register_id RegsEnum, value uint64) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -307,7 +307,7 @@ func (h *hyperDbg) PauseDebuggee() {
 	panic("implement me")
 }
 
-func (h *hyperDbg) SetBreakpoint(address Uint64, pid uint32, tid uint32, core_numer uint32) {
+func (h *hyperDbg) SetBreakpoint(address uint64, pid uint32, tid uint32, core_numer uint32) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -352,12 +352,12 @@ func (h *hyperDbg) CommandGetLocalApic(local_apic PlapicPage, is_using_x2apic *B
 	panic("implement me")
 }
 
-func (h *hyperDbg) AssembleGetLength(assembly_code *Char, start_address Uint64, length *uint32) {
+func (h *hyperDbg) AssembleGetLength(assembly_code *Char, start_address uint64, length *uint32) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) Assemble(assembly_code *Char, start_address Uint64, buffer_to_store_assembled_data unsafe.Pointer, buffer_size uint32) {
+func (h *hyperDbg) Assemble(assembly_code *Char, start_address uint64, buffer_to_store_assembled_data unsafe.Pointer, buffer_size uint32) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -382,7 +382,7 @@ func (h *hyperDbg) HardwareScriptInterpreterCheckScriptBufferWithScriptCapabilit
 	panic("implement me")
 }
 
-func (h *hyperDbg) HardwareScriptInterpreterCompressBuffer(Buffer *Uint64, BufferLength int32, ScriptVariableLength uint32, BramDataWidth uint32, NewBufferSize *int32, NumberOfBytesPerChunk *int32) {
+func (h *hyperDbg) HardwareScriptInterpreterCompressBuffer(Buffer *uint64, BufferLength int32, ScriptVariableLength uint32, BramDataWidth uint32, NewBufferSize *int32, NumberOfBytesPerChunk *int32) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -422,12 +422,12 @@ func (h *hyperDbg) PrintSymbol(Symbol unsafe.Pointer) {
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineConvertNameToAddress(FunctionOrVariableName *byte, WasFound Pboolean) Uint64 {
+func (h *hyperDbg) ScriptEngineConvertNameToAddress(FunctionOrVariableName *byte, WasFound Pboolean) uint64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineLoadFileSymbol(BaseAddress Uint64, PdbFileName *byte, CustomModuleName *byte) uint32 {
+func (h *hyperDbg) ScriptEngineLoadFileSymbol(BaseAddress uint64, PdbFileName *byte, CustomModuleName *byte) uint32 {
 	//TODO implement me
 	panic("implement me")
 }
@@ -452,7 +452,7 @@ func (h *hyperDbg) ScriptEngineGetFieldOffset(TypeName *Char, FieldName *Char, F
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineGetDataTypeSize(TypeName *Char, TypeSize *Uint64) {
+func (h *hyperDbg) ScriptEngineGetDataTypeSize(TypeName *Char, TypeSize *uint64) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -477,7 +477,7 @@ func (h *hyperDbg) ScriptEngineSymbolInitLoad(BufferToStoreDetails unsafe.Pointe
 	panic("implement me")
 }
 
-func (h *hyperDbg) ScriptEngineShowDataBasedOnSymbolTypes(TypeName *byte, Address Uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) {
+func (h *hyperDbg) ScriptEngineShowDataBasedOnSymbolTypes(TypeName *byte, Address uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -502,12 +502,12 @@ func (h *hyperDbg) SymbolAbortLoading() {
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymConvertNameToAddress(FunctionOrVariableName *byte, WasFound Pboolean) Uint64 {
+func (h *hyperDbg) SymConvertNameToAddress(FunctionOrVariableName *byte, WasFound Pboolean) uint64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymLoadFileSymbol(BaseAddress Uint64, PdbFileName *byte, CustomModuleName *byte) uint32 {
+func (h *hyperDbg) SymLoadFileSymbol(BaseAddress uint64, PdbFileName *byte, CustomModuleName *byte) uint32 {
 	//TODO implement me
 	panic("implement me")
 }
@@ -532,7 +532,7 @@ func (h *hyperDbg) SymGetFieldOffset(TypeName *Char, FieldName *Char, FieldOffse
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymGetDataTypeSize(TypeName *Char, TypeSize *Uint64) {
+func (h *hyperDbg) SymGetDataTypeSize(TypeName *Char, TypeSize *uint64) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -557,7 +557,7 @@ func (h *hyperDbg) SymbolInitLoad(BufferToStoreDetails unsafe.Pointer, StoredLen
 	panic("implement me")
 }
 
-func (h *hyperDbg) SymShowDataBasedOnSymbolTypes(TypeName *byte, Address Uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) {
+func (h *hyperDbg) SymShowDataBasedOnSymbolTypes(TypeName *byte, Address uint64, IsStruct Boolean, BufferAddress unsafe.Pointer, AdditionalParameters *byte) {
 	//TODO implement me
 	panic("implement me")
 }
