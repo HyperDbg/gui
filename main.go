@@ -7,7 +7,6 @@ import (
 	"github.com/ddkwork/unison"
 )
 
-// RtlGenRandom
 func main() {
 	// testSdkCommands()
 	sdk.TargetFilePath = "testdata/asm.exe"

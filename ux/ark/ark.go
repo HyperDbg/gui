@@ -1,8 +1,6 @@
 package ark
 
 import (
-	"fmt"
-
 	"github.com/ddkwork/HyperDbg/sdk"
 	"github.com/ddkwork/app"
 	"github.com/ddkwork/app/ms"
@@ -72,15 +70,15 @@ func Layout() *unison.Panel {
 		table, header := widget.NewTable(ms.NtApi{}, widget.TableContext[ms.NtApi]{
 			ContextMenuItems: nil,
 			MarshalRow: func(node *widget.Node[ms.NtApi]) (cells []widget.CellData) {
-				KernelBase := fmt.Sprintf("%016X", node.Data.KernelBase)
+				KernelBase := stream.FormatIntegerHex(node.Data.KernelBase)
 				if node.Container() {
 					KernelBase = node.Sum()
 				}
 				return []widget.CellData{
 					{Text: KernelBase},
-					{Text: fmt.Sprintf("%016X", node.Data.ArgValue)},
+					{Text: stream.FormatIntegerHex(node.Data.ArgValue)},
 					{Text: node.Data.Name},
-					{Text: fmt.Sprintf("%04d / %08X", node.Data.Index, node.Data.Index)},
+					{Text: stream.FormatInteger(node.Data.Index)},
 				}
 			},
 			UnmarshalRow: func(node *widget.Node[ms.NtApi], values []string) {

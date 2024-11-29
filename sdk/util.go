@@ -9,7 +9,6 @@ import (
 
 	"github.com/ddkwork/app/ms/hardwareIndo"
 	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/stream"
 	"github.com/ddkwork/golibrary/stream/bitfield"
 )
 
