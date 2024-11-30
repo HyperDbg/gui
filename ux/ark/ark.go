@@ -11,6 +11,7 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 	"github.com/ddkwork/unison"
+	"github.com/goradd/maps"
 )
 
 func main() {
@@ -65,8 +66,8 @@ func Layout() *unison.Panel {
 	widget.SetScrollLayout(splitPanel, 2)
 
 	left := widget.NewTableScrollPanel(table, header)
-	layouts := stream.NewOrderedMap(InvalidArksKind, func() unison.Paneler { return widget.NewPanel() })
-	layouts.Set(KernelTablesKind, func() unison.Paneler {
+	layouts := new(maps.SafeSliceMap[ArksType, func() unison.Paneler])
+	layouts.Set(KernelTablesType, func() unison.Paneler {
 		table, header := widget.NewTable(ms.NtApi{}, widget.TableContext[ms.NtApi]{
 			ContextMenuItems: nil,
 			MarshalRow: func(node *widget.Node[ms.NtApi]) (cells []widget.CellData) {
@@ -111,7 +112,7 @@ func Layout() *unison.Panel {
 	})
 
 	right := widget.NewPanel()
-	right.AddChild(mylog.Check2Bool(layouts.Get(KernelTablesKind))()) // todo make a welcoming page
+	right.AddChild((layouts.Get(KernelTablesType))()) // todo make a welcoming page
 	splitPanel.AddChild(left)
 	splitPanel.AddChild(right)
 
@@ -122,13 +123,13 @@ func Layout() *unison.Panel {
 				break
 			}
 			switch n.Data.Name {
-			case KernelTablesKind:
+			case KernelTablesType:
 				right.RemoveAllChildren()
-				paneler := mylog.Check2Bool(layouts.Get(KernelTablesKind))()
+				paneler := (layouts.Get(KernelTablesType))()
 				right.AddChild(paneler)
 				splitPanel.AddChild(right)
 
-			case PackerKind:
+			case PackerType:
 				mylog.Todo("packer")
 				// pe包似乎有个检测壳的，看看全不全
 				// https://github.com/inc0d3/malware/blob/master/tools%2Funpacker%2Fthemida-2.x%2FThemida%20-%20Winlicense%20Ultra%20Unpacker%201.4.txt
