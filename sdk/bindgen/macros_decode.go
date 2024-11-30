@@ -6,7 +6,7 @@ import (
 	"github.com/ddkwork/golibrary/stream"
 )
 
-func extractMacros(lines []string) *stream.OrderedMap[string, string] {
+func extractMacros(lines []string) *maps.SafeSliceMap[string, string] {
 	macros := new(maps.SafeSliceMap[string, string])
 	macros.Set("PAGE_SIZE", "4096")
 	var macroName string
