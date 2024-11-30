@@ -36,7 +36,7 @@ func arkTodo() {
 }
 
 func Layout() *unison.Panel {
-	type ark struct{ Name ArksKind }
+	type ark struct{ Name ArksType }
 	table, header := widget.NewTable(ark{}, widget.TableContext[ark]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[ark]) (cells []widget.CellData) {
@@ -53,7 +53,7 @@ func Layout() *unison.Panel {
 			mylog.Todo("selection changed callback")
 		},
 		SetRootRowsCallBack: func(root *widget.Node[ark]) {
-			for _, kind := range InvalidArksKind.Kinds() {
+			for _, kind := range KernelTablesType.EnumTypes() {
 				root.AddChildByData(ark{kind})
 			}
 		},

@@ -3,7 +3,7 @@ package bindgen
 import (
 	"strings"
 
-	"github.com/ddkwork/golibrary/stream"
+	"github.com/goradd/maps"
 )
 
 func extractMacros(lines []string) *maps.SafeSliceMap[string, string] {

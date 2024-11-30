@@ -6,6 +6,8 @@ import (
 	"testing"
 	"unicode"
 
+	"github.com/goradd/maps"
+
 	"github.com/ddkwork/app/bindgen/clang"
 	"github.com/ddkwork/app/bindgen/gengo"
 	"github.com/ddkwork/golibrary/mylog"
@@ -51,15 +53,15 @@ func TestBindMacros(t *testing.T) {
 		enumDebuggers = new(maps.SafeSliceMap[string, string])
 		enumIoctls    = new(maps.SafeSliceMap[string, string])
 	)
-
-	for _, p := range macros.List() {
-		if !m.Has(p.Key) {
-			// mylog.Warning(p.Key, p.Value)
-			macros.Delete(p.Key)
-			continue
+	macros.Range(func(key string, value string) bool {
+		if !m.Has(key) {
+			// mylog.Warning(key, value)
+			macros.Delete(key)
+			// return true
 		}
-		// mylog.Warning(p.Key, p.Value)
-	}
+		// mylog.Warning(key, value)
+		return true
+	})
 
 	g := stream.NewGeneratedFile()
 	g.P("package sdk")
@@ -69,76 +71,78 @@ func TestBindMacros(t *testing.T) {
 	g.P()
 
 	g.P("var (")
-	for _, p := range macros.List() {
-		p.Value = strings.TrimSpace(p.Value)
-		if strings.HasPrefix(p.Value, "sizeof") {
-			continue
+	macros.Range(func(key string, value string) bool {
+		value = strings.TrimSpace(value)
+		if strings.HasPrefix(value, "sizeof") {
+			return true
 		}
-		if strings.HasSuffix(p.Value, "OPERATION_MANDATORY_DEBUGGEE_BIT") {
-			continue
-		}
-
-		if strings.Contains(p.Value, "sizeof") {
-			continue
-		}
-		if strings.Contains(p.Value, "TOP_LEVEL_DRIVERS_VMCALL_STARTING_NUMBER") {
-			continue
+		if strings.HasSuffix(value, "OPERATION_MANDATORY_DEBUGGEE_BIT") {
+			return true
 		}
 
-		p.Value = strings.ReplaceAll(p.Value, "\\", "")
-		p.Value = strings.Replace(p.Value, "6U", "6", 1)
-		p.Value = strings.Replace(p.Value, "7U", "7", 1)
-		p.Value = strings.Replace(p.Value, "8U", "8", 1)
-		p.Value = strings.Replace(p.Value, "9U", "9", 1)
-		p.Value = strings.Replace(p.Value, "10U", "10", 1)
-		p.Value = strings.Replace(p.Value, "11U", "11", 1)
-		p.Value = strings.Replace(p.Value, "12U", "12", 1)
-		p.Value = strings.Replace(p.Value, "13U", "13", 1)
-		p.Value = strings.Replace(p.Value, "14U", "14", 1)
-		p.Value = strings.Replace(p.Value, "15U", "15", 1)
-		p.Value = strings.Replace(p.Value, "16U", "16", 1)
-		p.Value = strings.Replace(p.Value, "17U", "17", 1)
-		p.Value = strings.Replace(p.Value, "NORMAL_PAGE_SIZE", "NormalPageSize", 1)
-		p.Value = strings.TrimSuffix(p.Value, "U")
-		p.Value = strings.TrimSuffix(p.Value, "ull")
-
-		if len(p.Value) == 0 {
-			mylog.Todo(p.Key + " = " + p.Value)
-			continue
+		if strings.Contains(value, "sizeof") {
+			return true
 		}
-		if p.Value[0] == '(' && p.Value[len(p.Value)-1] == ')' {
-			p.Value = p.Value[1 : len(p.Value)-1]
+		if strings.Contains(value, "TOP_LEVEL_DRIVERS_VMCALL_STARTING_NUMBER") {
+			return true
 		}
 
-		if strings.HasPrefix(p.Value, "0x") && !strings.Contains(p.Value, "//") && len(p.Value) > len("0xffffffff") {
-			// mylog.Todo(p.Key + " = " + p.Value)
-			p.Value = "uint64(" + p.Value + ")"
+		value = strings.ReplaceAll(value, "\\", "")
+		value = strings.Replace(value, "6U", "6", 1)
+		value = strings.Replace(value, "7U", "7", 1)
+		value = strings.Replace(value, "8U", "8", 1)
+		value = strings.Replace(value, "9U", "9", 1)
+		value = strings.Replace(value, "10U", "10", 1)
+		value = strings.Replace(value, "11U", "11", 1)
+		value = strings.Replace(value, "12U", "12", 1)
+		value = strings.Replace(value, "13U", "13", 1)
+		value = strings.Replace(value, "14U", "14", 1)
+		value = strings.Replace(value, "15U", "15", 1)
+		value = strings.Replace(value, "16U", "16", 1)
+		value = strings.Replace(value, "17U", "17", 1)
+		value = strings.Replace(value, "NORMAL_PAGE_SIZE", "NormalPageSize", 1)
+		value = strings.TrimSuffix(value, "U")
+		value = strings.TrimSuffix(value, "ull")
+
+		if len(value) == 0 {
+			mylog.Todo(key + " = " + value)
+			return true
+		}
+		if value[0] == '(' && value[len(value)-1] == ')' {
+			value = value[1 : len(value)-1]
 		}
 
-		key := p.Key
-		//if key == "DEBUGGER_OPERATION_WAS_SUCCESSFUL" || strings.HasPrefix(key, "DEBUGGER_ERROR") {
-		//	key += " debuggerErrorType"
+		if strings.HasPrefix(value, "0x") && !strings.Contains(value, "//") && len(value) > len("0xffffffff") {
+			// mylog.Todo(key + " = " + value)
+			value = "uint64(" + value + ")"
+		}
+
+		k := key
+		//if k == "DEBUGGER_OPERATION_WAS_SUCCESSFUL" || strings.HasPrefix(k, "DEBUGGER_ERROR") {
+		//	k += " debuggerErrorType"
 		//}
-		value := p.Value
-		if isAlphabetOrUnderscore(value) {
-			value = stream.ToCamelUpper(value, false)
+		v := value
+		if isAlphabetOrUnderscore(v) {
+			v = stream.ToCamelUpper(v, false)
 		}
 
-		key = stream.ToCamelUpper(key, false)
+		k = stream.ToCamelUpper(k, false)
 		switch {
-		case strings.HasPrefix(p.Key, "DEBUGGER_ERROR"):
-			after, found := strings.CutPrefix(p.Key, "DEBUGGER_ERROR")
+		case strings.HasPrefix(k, "DEBUGGER_ERROR"):
+			after, found := strings.CutPrefix(k, "DEBUGGER_ERROR")
 			if found {
-				key = after
+				k = after
 			}
-			enumDebuggers.Set(key, key)
-		case strings.HasPrefix(p.Key, "IOCTL_"):
-			enumIoctls.Set(key, key)
+			enumDebuggers.Set(k, k)
+		case strings.HasPrefix(k, "IOCTL_"):
+			enumIoctls.Set(k, k)
 		}
 
-		g.P(stream.ToCamelUpper(key, false) + "=" + value)
-		macros.Delete(p.Key)
-	}
+		g.P(stream.ToCamelUpper(k, false) + "=" + v)
+		macros.Delete(k)
+		return true
+	})
+
 	g.P(")")
 
 	g.P(`
@@ -158,10 +162,11 @@ const (
 	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("debuggerError", enumDebuggers)
 	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("ioctl", enumIoctls)
 
-	for _, p := range macros.List() {
-		return
-		mylog.Todo(p.Key + " = " + p.Value)
-	}
+	macros.Range(func(key string, value string) bool {
+		return true
+		mylog.Todo(key + " = " + value)
+		return true
+	})
 }
 
 // isAlphabetOrUnderscore 检查字符串是否仅由字母或下划线组成
