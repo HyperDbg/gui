@@ -48,8 +48,8 @@ func TestBindMacros(t *testing.T) {
 	mylog.Trace("number of macros", macros.Len())
 
 	var (
-		enumDebuggers = stream.NewOrderedMap("", "")
-		enumIoctls    = stream.NewOrderedMap("", "")
+		enumDebuggers = new(maps.SafeSliceMap[string, string])
+		enumIoctls    = new(maps.SafeSliceMap[string, string])
 	)
 
 	for _, p := range macros.List() {
@@ -256,7 +256,7 @@ typedef struct _LIST_ENTRY {
 #endif
 `
 
-var m = stream.NewOrderedMap("", "")
+var m = new(maps.SafeSliceMap[string, string])
 
 func init() {
 	m.Set("PAGE_SIZE", "4096")

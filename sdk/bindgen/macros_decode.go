@@ -7,7 +7,7 @@ import (
 )
 
 func extractMacros(lines []string) *stream.OrderedMap[string, string] {
-	macros := stream.NewOrderedMap("", "")
+	macros := new(maps.SafeSliceMap[string, string])
 	macros.Set("PAGE_SIZE", "4096")
 	var macroName string
 	var macroValue strings.Builder
