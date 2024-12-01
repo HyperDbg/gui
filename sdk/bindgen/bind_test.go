@@ -2,6 +2,7 @@ package bindgen
 
 import (
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 	"unicode"
@@ -42,6 +43,73 @@ func TestMergeHeader(t *testing.T) {
 	stream.WriteBinaryFile("merged_headers.h", g.Buffer)
 }
 
+func TestName(t *testing.T) {
+	// maps.CollectSafeSliceMap()
+	// maps.CollectSet()
+	safeSliceMap := maps.CollectSafeSliceMap[string, int](func(yield func(string, int) bool) {
+		yield("a", 0)
+		yield("b", 1)
+		yield("c", 2)
+		yield("d", 3)
+		yield("e", 4)
+		yield("f", 5)
+		yield("g", 6)
+		yield("h", 7)
+		yield("i", 8)
+		yield("j", 9)
+		yield("k", 10)
+		yield("l", 11)
+		yield("m", 12)
+		yield("n", 13)
+		yield("o", 14)
+		yield("p", 15)
+		yield("q", 16)
+		yield("r", 17)
+		yield("s", 18)
+		yield("t", 19)
+		yield("u", 20)
+		yield("v", 21)
+		yield("w", 22)
+		yield("x", 23)
+		yield("y", 24)
+		yield("z", 25)
+	})
+	safeSliceMap.Range(func(key string, value int) bool {
+		//println(strconv.Quote(key), value)
+		//safeSliceMap.DeleteFunc(func(s string, i int) bool {//todo bug
+		//	return safeSliceMap.Has(key)
+		//})
+		if safeSliceMap.Has(key) {
+			// safeSliceMap.Delete(key) //ok
+		}
+		return true
+	})
+	println(safeSliceMap.Len())
+	// return
+
+	// safeSliceMap.Set()//todo 增加update empty方法，set的时候key存在的情况下不要更新他，输入信息即可
+
+	for k, v := range safeSliceMap.All() {
+		println(strconv.Quote(k), v)
+		safeSliceMap.Delete(k) // todo bug
+	}
+
+	return
+
+	m := map[string]string{
+		"a": "b",
+		"c": "d",
+	}
+	for k := range m {
+		println(k)
+	}
+	for k, v := range m {
+		println(k, v)
+		delete(m, k)
+	}
+	println(len(m))
+}
+
 func TestBindMacros(t *testing.T) {
 	headerFile := "merged_headers.h"
 	macros := extractMacros(stream.NewBuffer(headerFile).ToLines())
@@ -56,7 +124,9 @@ func TestBindMacros(t *testing.T) {
 	macros.Range(func(key string, value string) bool {
 		if !m.Has(key) {
 			// mylog.Warning(key, value)
+			macros.Lock()
 			macros.Delete(key)
+			macros.Unlock()
 			// return true
 		}
 		// mylog.Warning(key, value)
