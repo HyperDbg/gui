@@ -4,8 +4,8 @@ import (
 	"strings"
 )
 
-func extractMacros(lines []string) *safemap.SafeMap[string, string] {
-	macros := new(safemap.SafeMap[string, string])
+func extractMacros(lines []string) *safemap.M[string, string] {
+	macros := new(safemap.M[string, string])
 	macros.Set("PAGE_SIZE", "4096")
 	var macroName string
 	var macroValue strings.Builder

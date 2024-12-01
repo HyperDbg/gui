@@ -116,8 +116,8 @@ func TestBindMacros(t *testing.T) {
 	mylog.Trace("number of macros", macros.Len())
 
 	var (
-		enumDebuggers = new(safemap.SafeMap[string, string])
-		enumIoctls    = new(safemap.SafeMap[string, string])
+		enumDebuggers = new(safemap.M[string, string])
+		enumIoctls    = new(safemap.M[string, string])
 	)
 	macros.Range(func(key string, value string) bool {
 		if !m.Has(key) {
@@ -329,7 +329,7 @@ typedef struct _LIST_ENTRY {
 #endif
 `
 
-var m = new(safemap.SafeMap[string, string])
+var m = new(safemap.M[string, string])
 
 func init() {
 	m.Set("PAGE_SIZE", "4096")
