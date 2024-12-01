@@ -3,14 +3,12 @@ package ark
 import (
 	"testing"
 
-	"github.com/goradd/maps"
-
 	"github.com/ddkwork/golibrary/stream"
 )
 
 func TestName(t *testing.T) {
 	g := stream.NewGeneratedFile()
-	m := new(maps.SafeSliceMap[string, string])
+	m := safemap.NewOrdered[string, string]()
 	m.Set("kernelTables", "kernelTables")
 	m.Set("explorer", "explorer")
 	m.Set("taskManager", "taskManager")

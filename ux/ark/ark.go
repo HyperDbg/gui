@@ -11,7 +11,6 @@ import (
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 	"github.com/ddkwork/unison"
-	"github.com/goradd/maps"
 )
 
 func main() {
@@ -66,7 +65,7 @@ func Layout() *unison.Panel {
 	widget.SetScrollLayout(splitPanel, 2)
 
 	left := widget.NewTableScrollPanel(table, header)
-	layouts := new(maps.SafeSliceMap[ArksType, func() unison.Paneler])
+	layouts := new(safemap.SafeMap[ArksType, func() unison.Paneler])
 	layouts.Set(KernelTablesType, func() unison.Paneler {
 		table, header := widget.NewTable(ms.NtApi{}, widget.TableContext[ms.NtApi]{
 			ContextMenuItems: nil,

@@ -20,7 +20,7 @@ func TestGenConstants(t *testing.T) {
 }
 
 func genConstants(fileName string) {
-	m := new(maps.SafeSliceMap[string, string])
+	m := safemap.NewOrdered[string, string]()
 	for i, s := range stream.NewBuffer(fileName).ToLines() {
 		if i == 4 {
 			// break // test

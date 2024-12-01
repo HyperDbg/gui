@@ -2,12 +2,10 @@ package bindgen
 
 import (
 	"strings"
-
-	"github.com/goradd/maps"
 )
 
-func extractMacros(lines []string) *maps.SafeSliceMap[string, string] {
-	macros := new(maps.SafeSliceMap[string, string])
+func extractMacros(lines []string) *safemap.SafeMap[string, string] {
+	macros := new(safemap.SafeMap[string, string])
 	macros.Set("PAGE_SIZE", "4096")
 	var macroName string
 	var macroValue strings.Builder

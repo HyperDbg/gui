@@ -7,8 +7,6 @@ import (
 	"testing"
 	"unicode"
 
-	"github.com/goradd/maps"
-
 	"github.com/ddkwork/app/bindgen/clang"
 	"github.com/ddkwork/app/bindgen/gengo"
 	"github.com/ddkwork/golibrary/mylog"
@@ -118,8 +116,8 @@ func TestBindMacros(t *testing.T) {
 	mylog.Trace("number of macros", macros.Len())
 
 	var (
-		enumDebuggers = new(maps.SafeSliceMap[string, string])
-		enumIoctls    = new(maps.SafeSliceMap[string, string])
+		enumDebuggers = new(safemap.SafeMap[string, string])
+		enumIoctls    = new(safemap.SafeMap[string, string])
 	)
 	macros.Range(func(key string, value string) bool {
 		if !m.Has(key) {
@@ -331,7 +329,7 @@ typedef struct _LIST_ENTRY {
 #endif
 `
 
-var m = new(maps.SafeSliceMap[string, string])
+var m = new(safemap.SafeMap[string, string])
 
 func init() {
 	m.Set("PAGE_SIZE", "4096")
