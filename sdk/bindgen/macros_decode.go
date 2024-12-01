@@ -2,6 +2,8 @@ package bindgen
 
 import (
 	"strings"
+
+	"github.com/ddkwork/golibrary/safemap"
 )
 
 func extractMacros(lines []string) *safemap.M[string, string] {

@@ -7,6 +7,8 @@ import (
 	"testing"
 	"unicode"
 
+	"github.com/ddkwork/golibrary/safemap"
+
 	"github.com/ddkwork/app/bindgen/clang"
 	"github.com/ddkwork/app/bindgen/gengo"
 	"github.com/ddkwork/golibrary/mylog"
@@ -44,7 +46,7 @@ func TestMergeHeader(t *testing.T) {
 func TestName(t *testing.T) {
 	// maps.CollectSafeSliceMap()
 	// maps.CollectSet()
-	safeSliceMap := maps.CollectSafeSliceMap[string, int](func(yield func(string, int) bool) {
+	safeSliceMap := safemap.NewOrdered(func(yield func(string, int) bool) {
 		yield("a", 0)
 		yield("b", 1)
 		yield("c", 2)
@@ -122,9 +124,7 @@ func TestBindMacros(t *testing.T) {
 	macros.Range(func(key string, value string) bool {
 		if !m.Has(key) {
 			// mylog.Warning(key, value)
-			macros.Lock()
 			macros.Delete(key)
-			macros.Unlock()
 			// return true
 		}
 		// mylog.Warning(key, value)
