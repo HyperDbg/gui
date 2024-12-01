@@ -9,6 +9,7 @@ import (
 	"github.com/ddkwork/app/ms/packer"
 	"github.com/ddkwork/app/widget"
 	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/safemap"
 	"github.com/ddkwork/golibrary/stream"
 	"github.com/ddkwork/unison"
 )
@@ -111,7 +112,7 @@ func Layout() *unison.Panel {
 	})
 
 	right := widget.NewPanel()
-	right.AddChild((layouts.Get(KernelTablesType))()) // todo make a welcoming page
+	right.AddChild((layouts.GetMust(KernelTablesType))()) // todo make a welcoming page
 	splitPanel.AddChild(left)
 	splitPanel.AddChild(right)
 
@@ -124,7 +125,7 @@ func Layout() *unison.Panel {
 			switch n.Data.Name {
 			case KernelTablesType:
 				right.RemoveAllChildren()
-				paneler := (layouts.Get(KernelTablesType))()
+				paneler := (layouts.GetMust(KernelTablesType))()
 				right.AddChild(paneler)
 				splitPanel.AddChild(right)
 
