@@ -125,11 +125,12 @@ func TestBindMacros(t *testing.T) {
 		if !m.Has(key) {
 			// mylog.Warning(key, value)
 			macros.Delete(key)
-			// return true
+			return true
 		}
 		// mylog.Warning(key, value)
 		return true
 	})
+	return
 
 	g := stream.NewGeneratedFile()
 	g.P("package sdk")

@@ -793,12 +793,12 @@ type ScriptEngineGeneralRegisters struct {
 	ReturnValue         Uint64
 }
 type Cr3Type struct {
-	Anon203_5
+	Anon202_5
 }
-type Anon203_5 struct {
+type Anon202_5 struct {
 	Raw [1]int64
 }
-type Anon207_9 struct {
+type Anon206_9 struct {
 	Pcid            Uint64
 	PageFrameNumber Uint64
 	Reserved1       Uint64
@@ -890,10 +890,10 @@ type EptSingleHookUnhookingDetails struct {
 	PhysicalAddress                           SizeT
 	OriginalEntry                             Uint64
 }
-type Anon1457_9 struct {
+type Anon1456_9 struct {
 	Raw [1]int32
 }
-type Anon1459_5 struct {
+type Anon1458_5 struct {
 	// [Bits 3:0] Segment type.
 	Type Uint32
 	// [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
@@ -1865,8 +1865,8 @@ func init() {
 	bindlib.Validate((*GuestExtraRegisters)(nil), 32, 8, "Cs", 0, "Ds", 2, "Fs", 4, "Gs", 6, "Es", 8, "Ss", 10, "Rflags", 16, "Rip", 24)
 	bindlib.Validate((*ScriptEngineGeneralRegisters)(nil), 40, 8, "StackBuffer", 0, "GlobalVariablesList", 8, "StackIndx", 16, "StackBaseIndx", 24, "ReturnValue", 32)
 	bindlib.Validate((*Cr3Type)(nil), 8, 8)
-	bindlib.Validate((*Anon203_5)(nil), 8, 8)
-	bindlib.Validate((*Anon207_9)(nil), 8, 8, "Pcid", 0, "PageFrameNumber", 1, "Reserved1", 6, "Reserved_2", 7, "PcidInvalidate", 7)
+	bindlib.Validate((*Anon202_5)(nil), 8, 8)
+	bindlib.Validate((*Anon206_9)(nil), 8, 8, "Pcid", 0, "PageFrameNumber", 1, "Reserved1", 6, "Reserved_2", 7, "PcidInvalidate", 7)
 	bindlib.Validate((*DebuggerRemotePacket)(nil), 24, 8, "Checksum", 0, "Indicator", 8, "TypeOfThePacket", 16, "RequestedActionOfThePacket", 20)
 	bindlib.Validate((*DebuggeeUserInputPacket)(nil), 12, 4, "CommandLen", 0, "IgnoreFinishedSignal", 4, "Result", 8)
 	bindlib.Validate((*DebuggeeEventAndActionHeaderForRemotePacket)(nil), 4, 4, "Length", 0)
@@ -1881,8 +1881,8 @@ func init() {
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 32, 8, "StartAddress", 0, "EndAddress", 8, "SetHookForRead", 16, "SetHookForWrite", 17, "SetHookForExec", 18, "MemoryType", 20, "Tag", 24)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 16, 8, "TargetAddress", 0, "HookFunction", 8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 24, 8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0, "RemoveBreakpointInterception", 1, "PhysicalAddress", 8, "OriginalEntry", 16)
-	bindlib.Validate((*Anon1457_9)(nil), 4, 4)
-	bindlib.Validate((*Anon1459_5)(nil), 4, 4, "Type", 0, "DescriptorType", 0, "DescriptorPrivilegeLevel", 0, "Present", 0, "Reserved1", 1, "AvailableBit", 1, "LongMode", 1, "DefaultBig", 1, "Granularity", 1, "Unusable", 2, "Reserved2", 2)
+	bindlib.Validate((*Anon1456_9)(nil), 4, 4)
+	bindlib.Validate((*Anon1458_5)(nil), 4, 4, "Type", 0, "DescriptorType", 0, "DescriptorPrivilegeLevel", 0, "Present", 0, "Reserved1", 1, "AvailableBit", 1, "LongMode", 1, "DefaultBig", 1, "Granularity", 1, "Unusable", 2, "Reserved2", 2)
 	bindlib.Validate((*VmxSegmentSelector)(nil), 24, 8, "Selector", 0, "Attributes", 4, "Limit", 8, "Base", 16)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 24, 8, "Tag", 0, "KernelStatus", 8, "TypeOfAction", 16, "IsEnabled", 20)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 16, 8, "KernelStatus", 0, "IsShortCircuiting", 8)
@@ -2553,34 +2553,34 @@ func SymCastingQueryForFiledsAndTypes(StructName *byte, FiledOfStructName *byte,
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
-func (s Anon203_5) Flags() Uint64 {
+func (s Anon202_5) Flags() Uint64 {
 	return bindlib.ReadBitcast[Uint64](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon203_5) SetFlags(v Uint64) {
+func (s *Anon202_5) SetFlags(v Uint64) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon203_5) Fields() Anon207_9 {
-	return bindlib.ReadBitcast[Anon207_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon202_5) Fields() Anon206_9 {
+	return bindlib.ReadBitcast[Anon206_9](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon203_5) SetFields(v Anon207_9) {
+func (s *Anon202_5) SetFields(v Anon206_9) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1457_9) Fields() Anon1459_5 {
-	return bindlib.ReadBitcast[Anon1459_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon1456_9) Fields() Anon1458_5 {
+	return bindlib.ReadBitcast[Anon1458_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1457_9) SetFields(v Anon1459_5) {
+func (s *Anon1456_9) SetFields(v Anon1458_5) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 
-func (s Anon1457_9) AsUInt() Uint32 {
+func (s Anon1456_9) AsUInt() Uint32 {
 	return bindlib.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
 
-func (s *Anon1457_9) SetAsUInt(v Uint32) {
+func (s *Anon1456_9) SetAsUInt(v Uint32) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }

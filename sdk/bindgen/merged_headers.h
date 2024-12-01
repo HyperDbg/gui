@@ -1,3 +1,15 @@
+
+typedef unsigned char      uint8_t;   // 无符号8位整数
+typedef unsigned short     uint16_t;  // 无符号16位整数
+typedef unsigned int       uint32_t;  // 无符号32位整数
+typedef unsigned long long uint64_t;  // 无符号64位整数
+typedef signed char        int8_t;    // 有符号8位整数
+typedef signed short       int16_t;   // 有符号16位整数
+typedef signed int         int32_t;   // 有符号32位整数
+typedef signed long long   int64_t;   // 有符号64位整数
+typedef int bool;           // 使用 typedef 定义 bool 类型
+
+typedef int* intptr_t;
 //bugfix.h
 #ifndef size_t
 #define size_t int
@@ -221,8 +233,8 @@ typedef struct _CR3_TYPE
  * @brief enum for reasons why debuggee is paused
  *
  */
-typedef enum _DEBUGGEE_PAUSING_REASON
-{
+typedef enum DEBUGGEE_PAUSING_REASON_ {
+
 
     //
     // For both kernel & user debugger
@@ -258,8 +270,8 @@ typedef enum _DEBUGGEE_PAUSING_REASON
  * @brief enum for requested action for HyperDbg packet
  *
  */
-typedef enum _DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION
-{
+typedef enum DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION_ {
+
 
     //
     // Debugger to debuggee (user-mode execution)
@@ -355,8 +367,8 @@ typedef enum _DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION
  * @warning used in hwdbg
  *
  */
-typedef enum _DEBUGGER_REMOTE_PACKET_TYPE
-{
+typedef enum DEBUGGER_REMOTE_PACKET_TYPE_ {
+
 
     //
     // Debugger to debuggee (vmx-root)
@@ -1088,8 +1100,8 @@ const unsigned char BuildSignature[] = {
  * @brief Different levels of paging
  *
  */
-typedef enum _PAGING_LEVEL
-{
+typedef enum PAGING_LEVEL_ {
+
     PagingLevelPageTable = 0,
     PagingLevelPageDirectory,
     PagingLevelPageDirectoryPointerTable,
@@ -1104,8 +1116,8 @@ typedef enum _PAGING_LEVEL
  * @brief Inum of intentions for buffers (buffer tag)
  *
  */
-typedef enum _POOL_ALLOCATION_INTENTION
-{
+typedef enum POOL_ALLOCATION_INTENTION_ {
+
     TRACKING_HOOKED_PAGES,
     EXEC_TRAMPOLINE,
     SPLIT_2MB_PAGING_TO_4KB_PAGE,
@@ -1133,8 +1145,8 @@ typedef enum _POOL_ALLOCATION_INTENTION
 //	   	Debug Registers Modifications 	    	//
 //////////////////////////////////////////////////
 
-typedef enum _DEBUG_REGISTER_TYPE
-{
+typedef enum DEBUG_REGISTER_TYPE_ {
+
     BREAK_ON_INSTRUCTION_FETCH,
     BREAK_ON_WRITE_ONLY,
     BREAK_ON_IO_READ_OR_WRITE_NOT_SUPPORTED,
@@ -1145,8 +1157,8 @@ typedef enum _DEBUG_REGISTER_TYPE
 //              Execution Stages                //
 //////////////////////////////////////////////////
 
-typedef enum _VMX_EXECUTION_MODE
-{
+typedef enum VMX_EXECUTION_MODE_ {
+
     VmxExecutionModeNonRoot = FALSE,
     VmxExecutionModeRoot    = TRUE
 } VMX_EXECUTION_MODE;
@@ -1155,8 +1167,8 @@ typedef enum _VMX_EXECUTION_MODE
  * @brief Type of calling the event
  *
  */
-typedef enum _VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE
-{
+typedef enum VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE_ {
+
     VMM_CALLBACK_CALLING_STAGE_INVALID_EVENT_EMULATION = 0,
     VMM_CALLBACK_CALLING_STAGE_PRE_EVENT_EMULATION     = 1,
     VMM_CALLBACK_CALLING_STAGE_POST_EVENT_EMULATION    = 2,
@@ -1168,8 +1180,8 @@ typedef enum _VMM_CALLBACK_EVENT_CALLING_STAGE_TYPE
  * @brief enum to query different process and thread interception mechanisms
  *
  */
-typedef enum _DEBUGGER_THREAD_PROCESS_TRACING
-{
+typedef enum DEBUGGER_THREAD_PROCESS_TRACING_ {
+
 
     DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_INTERRUPTS_FOR_THREAD_CHANGE,
     DEBUGGER_THREAD_PROCESS_TRACING_INTERCEPT_CLOCK_INTERRUPTS_FOR_PROCESS_CHANGE,
@@ -1318,8 +1330,8 @@ typedef struct _DEBUGGEE_UD_PAUSED_PACKET
  * @brief Type of transferring buffer between user-to-kernel
  *
  */
-typedef enum _NOTIFY_TYPE
-{
+typedef enum NOTIFY_TYPE_ {
+
     IRP_BASED,
     EVENT_BASED
 } NOTIFY_TYPE;
@@ -1374,8 +1386,8 @@ typedef struct _DIRECT_VMCALL_PARAMETERS
  * @brief different type of memory addresses
  *
  */
-typedef enum _DEBUGGER_HOOK_MEMORY_TYPE
-{
+typedef enum DEBUGGER_HOOK_MEMORY_TYPE_ {
+
     DEBUGGER_MEMORY_HOOK_VIRTUAL_ADDRESS,
     DEBUGGER_MEMORY_HOOK_PHYSICAL_ADDRESS
 } DEBUGGER_HOOK_MEMORY_TYPE;
@@ -2086,8 +2098,8 @@ typedef struct _VMX_SEGMENT_SELECTOR
  * @brief Exceptions enum
  *
  */
-typedef enum _EXCEPTION_VECTORS
-{
+typedef enum EXCEPTION_VECTORS_ {
+
     EXCEPTION_VECTOR_DIVIDE_ERROR,
     EXCEPTION_VECTOR_DEBUG_BREAKPOINT,
     EXCEPTION_VECTOR_NMI,
@@ -2140,8 +2152,8 @@ typedef enum _EXCEPTION_VECTORS
  * @brief The status of triggering events
  *
  */
-typedef enum _VMM_CALLBACK_TRIGGERING_EVENT_STATUS_TYPE
-{
+typedef enum VMM_CALLBACK_TRIGGERING_EVENT_STATUS_TYPE_ {
+
     VMM_CALLBACK_TRIGGERING_EVENT_STATUS_SUCCESSFUL_NO_INITIALIZED = 0,
     VMM_CALLBACK_TRIGGERING_EVENT_STATUS_SUCCESSFUL                = 0,
     VMM_CALLBACK_TRIGGERING_EVENT_STATUS_SUCCESSFUL_IGNORE_EVENT   = 1,
@@ -2158,8 +2170,8 @@ typedef enum _VMM_CALLBACK_TRIGGERING_EVENT_STATUS_TYPE
  * @brief enum to show type of all HyperDbg events
  *
  */
-typedef enum _VMM_EVENT_TYPE_ENUM
-{
+typedef enum VMM_EVENT_TYPE_ENUM_ {
+
 
     //
     // EPT Memory Monitoring Events
@@ -2242,8 +2254,8 @@ typedef enum _VMM_EVENT_TYPE_ENUM
  * @brief Type of Actions
  *
  */
-typedef enum _DEBUGGER_EVENT_ACTION_TYPE_ENUM
-{
+typedef enum DEBUGGER_EVENT_ACTION_TYPE_ENUM_ {
+
     BREAK_TO_DEBUGGER,
     RUN_SCRIPT,
     RUN_CUSTOM_CODE
@@ -2254,8 +2266,8 @@ typedef enum _DEBUGGER_EVENT_ACTION_TYPE_ENUM
  * @brief Type of handling !syscall or !sysret
  *
  */
-typedef enum _DEBUGGER_EVENT_SYSCALL_SYSRET_TYPE
-{
+typedef enum DEBUGGER_EVENT_SYSCALL_SYSRET_TYPE_ {
+
     DEBUGGER_EVENT_SYSCALL_SYSRET_SAFE_ACCESS_MEMORY = 0,
     DEBUGGER_EVENT_SYSCALL_SYSRET_HANDLE_ALL_UD      = 1,
 
@@ -2267,8 +2279,8 @@ typedef enum _DEBUGGER_EVENT_SYSCALL_SYSRET_TYPE
  * @brief Type of mode change traps
  *
  */
-typedef enum _DEBUGGER_EVENT_MODE_TYPE
-{
+typedef enum DEBUGGER_EVENT_MODE_TYPE_ {
+
     DEBUGGER_EVENT_MODE_TYPE_USER_MODE_AND_KERNEL_MODE = 1,
     DEBUGGER_EVENT_MODE_TYPE_USER_MODE                 = 3,
     DEBUGGER_EVENT_MODE_TYPE_KERNEL_MODE               = 0,
@@ -2280,8 +2292,8 @@ typedef enum _DEBUGGER_EVENT_MODE_TYPE
  * @brief Type of tracing events
  *
  */
-typedef enum _DEBUGGER_EVENT_TRACE_TYPE
-{
+typedef enum DEBUGGER_EVENT_TRACE_TYPE_ {
+
     DEBUGGER_EVENT_TRACE_TYPE_INVALID                 = 0,
     DEBUGGER_EVENT_TRACE_TYPE_STEP_IN                 = 1,
     DEBUGGER_EVENT_TRACE_TYPE_STEP_OUT                = 2,
@@ -2293,8 +2305,8 @@ typedef enum _DEBUGGER_EVENT_TRACE_TYPE
  * @brief different types of modifying events request (enable/disable/clear)
  *
  */
-typedef enum _DEBUGGER_MODIFY_EVENTS_TYPE
-{
+typedef enum DEBUGGER_MODIFY_EVENTS_TYPE_ {
+
     DEBUGGER_MODIFY_EVENTS_QUERY_STATE,
     DEBUGGER_MODIFY_EVENTS_ENABLE,
     DEBUGGER_MODIFY_EVENTS_DISABLE,
@@ -2353,8 +2365,8 @@ typedef struct _DEBUGGER_EVENT_OPTIONS
  * @brief Things to consider when applying resources
  *
  */
-typedef enum _PROTECTED_HV_RESOURCES_PASSING_OVERS
-{
+typedef enum PROTECTED_HV_RESOURCES_PASSING_OVERS_ {
+
     //
     // for exception bitmap
     //
@@ -2388,8 +2400,8 @@ typedef enum _PROTECTED_HV_RESOURCES_PASSING_OVERS
  * @brief Type of protected (multi-used) resources
  *
  */
-typedef enum _PROTECTED_HV_RESOURCES_TYPE
-{
+typedef enum PROTECTED_HV_RESOURCES_TYPE_ {
+
     PROTECTED_HV_RESOURCES_EXCEPTION_BITMAP,
 
     PROTECTED_HV_RESOURCES_EXTERNAL_INTERRUPT_EXITING,
@@ -2561,8 +2573,8 @@ typedef struct _DEBUGGER_EVENT_AND_ACTION_RESULT
  * @warning This file should be changed along with hwdbg files
  *
  */
-typedef enum _HWDBG_ACTION_ENUMS
-{
+typedef enum HWDBG_ACTION_ENUMS_ {
+
     hwdbgActionSendInstanceInfo      = 1,
     hwdbgActionConfigureScriptBuffer = 2,
 
@@ -2573,8 +2585,8 @@ typedef enum _HWDBG_ACTION_ENUMS
  * @warning This file should be changed along with hwdbg files
  *
  */
-typedef enum _HWDBG_RESPONSE_ENUMS
-{
+typedef enum HWDBG_RESPONSE_ENUMS_ {
+
     hwdbgResponseSuccessOrErrorMessage = 1,
     hwdbgResponseInstanceInfo          = 2,
 
@@ -2585,8 +2597,8 @@ typedef enum _HWDBG_RESPONSE_ENUMS
  * @warning This file should be changed along with hwdbg files
  *
  */
-typedef enum _HWDBG_SUCCESS_OR_ERROR_ENUMS
-{
+typedef enum HWDBG_SUCCESS_OR_ERROR_ENUMS_ {
+
     hwdbgOperationWasSuccessful = 0x7FFFFFFF,
     hwdbgErrorInvalidPacket     = 1,
 
@@ -3157,7 +3169,7 @@ typedef struct _PCI_TREE
  *
  */
 #pragma once
-#include "Pcie.h"
+//#include "Pcie.h"
 
 #define SIZEOF_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS \
     sizeof(DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS)
@@ -3234,8 +3246,8 @@ typedef struct _DEBUGGER_PAGE_IN_REQUEST
  * @brief different modes of reconstruct requests
  *
  */
-typedef enum _REVERSING_MACHINE_RECONSTRUCT_MEMORY_MODE
-{
+typedef enum REVERSING_MACHINE_RECONSTRUCT_MEMORY_MODE_ {
+
     REVERSING_MACHINE_RECONSTRUCT_MEMORY_MODE_UNKNOWN = 0,
     REVERSING_MACHINE_RECONSTRUCT_MEMORY_MODE_USER_MODE,
     REVERSING_MACHINE_RECONSTRUCT_MEMORY_MODE_KERNEL_MODE,
@@ -3245,8 +3257,8 @@ typedef enum _REVERSING_MACHINE_RECONSTRUCT_MEMORY_MODE
  * @brief different types of reconstruct requests
  *
  */
-typedef enum _REVERSING_MACHINE_RECONSTRUCT_MEMORY_TYPE
-{
+typedef enum REVERSING_MACHINE_RECONSTRUCT_MEMORY_TYPE_ {
+
     REVERSING_MACHINE_RECONSTRUCT_MEMORY_TYPE_UNKNOWN = 0,
     REVERSING_MACHINE_RECONSTRUCT_MEMORY_TYPE_RECONSTRUCT,
     REVERSING_MACHINE_RECONSTRUCT_MEMORY_TYPE_PATTERN,
@@ -3298,8 +3310,8 @@ typedef struct _DEBUGGER_DT_COMMAND_OPTIONS
  * @brief different types of prealloc requests
  *
  */
-typedef enum _DEBUGGER_PREALLOC_COMMAND_TYPE
-{
+typedef enum DEBUGGER_PREALLOC_COMMAND_TYPE_ {
+
     DEBUGGER_PREALLOC_COMMAND_TYPE_THREAD_INTERCEPTION,
     DEBUGGER_PREALLOC_COMMAND_TYPE_MONITOR,
     DEBUGGER_PREALLOC_COMMAND_TYPE_EPTHOOK,
@@ -3333,8 +3345,8 @@ typedef struct _DEBUGGER_PREALLOC_COMMAND
  * @brief different types of preactivate requests
  *
  */
-typedef enum _DEBUGGER_PREACTIVATE_COMMAND_TYPE
-{
+typedef enum DEBUGGER_PREACTIVATE_COMMAND_TYPE_ {
+
     DEBUGGER_PREACTIVATE_COMMAND_TYPE_MODE,
 
 } DEBUGGER_PREACTIVATE_COMMAND_TYPE;
@@ -3362,8 +3374,8 @@ typedef struct _DEBUGGER_PREACTIVATE_COMMAND
  * @brief different types of reading memory
  *
  */
-typedef enum _DEBUGGER_READ_READING_TYPE
-{
+typedef enum DEBUGGER_READ_READING_TYPE_ {
+
     READ_FROM_KERNEL,
     READ_FROM_VMX_ROOT
 } DEBUGGER_READ_READING_TYPE;
@@ -3372,8 +3384,8 @@ typedef enum _DEBUGGER_READ_READING_TYPE
  * @brief different type of addresses
  *
  */
-typedef enum _DEBUGGER_READ_MEMORY_TYPE
-{
+typedef enum DEBUGGER_READ_MEMORY_TYPE_ {
+
     DEBUGGER_READ_PHYSICAL_ADDRESS,
     DEBUGGER_READ_VIRTUAL_ADDRESS
 } DEBUGGER_READ_MEMORY_TYPE;
@@ -3382,8 +3394,8 @@ typedef enum _DEBUGGER_READ_MEMORY_TYPE
  * @brief different address mode
  *
  */
-typedef enum _DEBUGGER_READ_MEMORY_ADDRESS_MODE
-{
+typedef enum DEBUGGER_READ_MEMORY_ADDRESS_MODE_ {
+
     DEBUGGER_READ_ADDRESS_MODE_32_BIT,
     DEBUGGER_READ_ADDRESS_MODE_64_BIT
 
@@ -3394,8 +3406,8 @@ typedef enum _DEBUGGER_READ_MEMORY_ADDRESS_MODE
  * the details of memory or disassemble them
  *
  */
-typedef enum _DEBUGGER_SHOW_MEMORY_STYLE
-{
+typedef enum DEBUGGER_SHOW_MEMORY_STYLE_ {
+
     DEBUGGER_SHOW_COMMAND_DT = 1,
     DEBUGGER_SHOW_COMMAND_DISASSEMBLE64,
     DEBUGGER_SHOW_COMMAND_DISASSEMBLE32,
@@ -3456,8 +3468,8 @@ typedef struct _DEBUGGER_FLUSH_LOGGING_BUFFERS
  * @brief test query used for test purposed
  *
  */
-typedef enum _DEBUGGER_TEST_QUERY_STATE
-{
+typedef enum DEBUGGER_TEST_QUERY_STATE_ {
+
     TEST_QUERY_HALTING_CORE_STATUS                                          = 1,  // Query constant to show detail of halting of core
     TEST_QUERY_PREALLOCATED_POOL_STATE                                      = 2,  // Query pre-allocated pool state
     TEST_QUERY_TRAP_STATE                                                   = 3,  // Query trap state
@@ -3574,8 +3586,8 @@ typedef struct _DEBUGGER_SEND_USERMODE_MESSAGES_TO_DEBUGGER
  * @brief different types of actions on MSRs
  *
  */
-typedef enum _DEBUGGER_MSR_ACTION_TYPE
-{
+typedef enum DEBUGGER_MSR_ACTION_TYPE_ {
+
     DEBUGGER_MSR_READ,
     DEBUGGER_MSR_WRITE
 } DEBUGGER_MSR_ACTION_TYPE;
@@ -3605,8 +3617,8 @@ typedef struct _DEBUGGER_READ_AND_WRITE_ON_MSR
  * @brief different type of addresses for editing memory
  *
  */
-typedef enum _DEBUGGER_EDIT_MEMORY_TYPE
-{
+typedef enum DEBUGGER_EDIT_MEMORY_TYPE_ {
+
     EDIT_VIRTUAL_MEMORY,
     EDIT_PHYSICAL_MEMORY
 } DEBUGGER_EDIT_MEMORY_TYPE;
@@ -3615,8 +3627,8 @@ typedef enum _DEBUGGER_EDIT_MEMORY_TYPE
  * @brief size of editing memory
  *
  */
-typedef enum _DEBUGGER_EDIT_MEMORY_BYTE_SIZE
-{
+typedef enum DEBUGGER_EDIT_MEMORY_BYTE_SIZE_ {
+
     EDIT_BYTE,
     EDIT_DWORD,
     EDIT_QWORD
@@ -3647,8 +3659,8 @@ typedef struct _DEBUGGER_EDIT_MEMORY
  * @brief different types of address for searching on memory
  *
  */
-typedef enum _DEBUGGER_SEARCH_MEMORY_TYPE
-{
+typedef enum DEBUGGER_SEARCH_MEMORY_TYPE_ {
+
     SEARCH_PHYSICAL_MEMORY,
     SEARCH_VIRTUAL_MEMORY,
     SEARCH_PHYSICAL_FROM_VIRTUAL_MEMORY,
@@ -3659,8 +3671,8 @@ typedef enum _DEBUGGER_SEARCH_MEMORY_TYPE
  * @brief different sizes on searching memory
  *
  */
-typedef enum _DEBUGGER_SEARCH_MEMORY_BYTE_SIZE
-{
+typedef enum DEBUGGER_SEARCH_MEMORY_BYTE_SIZE_ {
+
     SEARCH_BYTE,
     SEARCH_DWORD,
     SEARCH_QWORD
@@ -3759,8 +3771,8 @@ typedef struct _DEBUGGEE_CHANGE_CORE_PACKET
  * @brief different actions of switchings
  *
  */
-typedef enum _DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_TYPE
-{
+typedef enum DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_TYPE_ {
+
     DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_ATTACH,
     DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_DETACH,
     DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_REMOVE_HOOKS,
@@ -3800,8 +3812,8 @@ typedef struct _DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS
  * @brief different type of process or thread queries
  *
  */
-typedef enum _DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_TYPES
-{
+typedef enum DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_TYPES_ {
+
     DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_QUERY_PROCESS_COUNT   = 1,
     DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_QUERY_THREAD_COUNT    = 2,
     DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_QUERY_PROCESS_LIST    = 3,
@@ -3815,8 +3827,8 @@ typedef enum _DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_TYPES
  * @brief different actions on showing or querying list of process or threads
  *
  */
-typedef enum _DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_ACTIONS
-{
+typedef enum DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_ACTIONS_ {
+
     DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_ACTION_SHOW_INSTANTLY     = 1,
     DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_ACTION_QUERY_COUNT        = 2,
     DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS_ACTION_QUERY_SAVE_DETAILS = 3,
@@ -3922,8 +3934,8 @@ typedef struct _DEBUGGER_SINGLE_CALLSTACK_FRAME
  * @brief callstack showing method
  *
  */
-typedef enum _DEBUGGER_CALLSTACK_DISPLAY_METHOD
-{
+typedef enum DEBUGGER_CALLSTACK_DISPLAY_METHOD_ {
+
     DEBUGGER_CALLSTACK_DISPLAY_METHOD_WITHOUT_PARAMS,
     DEBUGGER_CALLSTACK_DISPLAY_METHOD_WITH_PARAMS,
 
@@ -4010,8 +4022,8 @@ typedef struct _DEBUGGER_EVENT_REQUEST_CUSTOM_CODE
  * @brief User-mode debugging actions
  *
  */
-typedef enum _DEBUGGER_UD_COMMAND_ACTION_TYPE
-{
+typedef enum DEBUGGER_UD_COMMAND_ACTION_TYPE_ {
+
     DEBUGGER_UD_COMMAND_ACTION_TYPE_NONE = 0,
     DEBUGGER_UD_COMMAND_ACTION_TYPE_PAUSE,
     DEBUGGER_UD_COMMAND_ACTION_TYPE_CONTINUE,
@@ -4054,8 +4066,8 @@ typedef struct _DEBUGGER_UD_COMMAND_PACKET
  * @brief Debugger process switch and process details
  *
  */
-typedef enum _DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_TYPE
-{
+typedef enum DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_TYPE_ {
+
 
     DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_GET_PROCESS_DETAILS,
     DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_GET_PROCESS_LIST,
@@ -4094,8 +4106,8 @@ typedef struct _DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_PACKET
  * @brief Debugger thread switch and thread details
  *
  */
-typedef enum _DEBUGGEE_DETAILS_AND_SWITCH_THREAD_TYPE
-{
+typedef enum DEBUGGEE_DETAILS_AND_SWITCH_THREAD_TYPE_ {
+
 
     DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PERFORM_SWITCH,
     DEBUGGEE_DETAILS_AND_SWITCH_THREAD_GET_THREAD_DETAILS,
@@ -4135,8 +4147,8 @@ typedef struct _DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET
  * @brief stepping and tracking types
  *
  */
-typedef enum _DEBUGGER_REMOTE_STEPPING_REQUEST
-{
+typedef enum DEBUGGER_REMOTE_STEPPING_REQUEST_ {
+
     DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_IN,
     DEBUGGER_REMOTE_STEPPING_REQUEST_INSTRUMENTATION_STEP_IN,
     DEBUGGER_REMOTE_STEPPING_REQUEST_INSTRUMENTATION_STEP_IN_FOR_TRACKING,
@@ -4176,8 +4188,8 @@ typedef struct _DEBUGGEE_STEP_PACKET
  * @brief Perform actions related to APIC
  *
  */
-typedef enum _DEBUGGER_APIC_REQUEST_TYPE
-{
+typedef enum DEBUGGER_APIC_REQUEST_TYPE_ {
+
     DEBUGGER_APIC_REQUEST_TYPE_READ_LOCAL_APIC,
 
 } DEBUGGER_APIC_REQUEST_TYPE;
@@ -4353,8 +4365,8 @@ typedef struct _DEBUGGEE_BP_PACKET
  * @brief breakpoint modification types
  *
  */
-typedef enum _DEBUGGEE_BREAKPOINT_MODIFICATION_REQUEST
-{
+typedef enum DEBUGGEE_BREAKPOINT_MODIFICATION_REQUEST_ {
+
 
     DEBUGGEE_BREAKPOINT_MODIFICATION_REQUEST_LIST_BREAKPOINTS,
     DEBUGGEE_BREAKPOINT_MODIFICATION_REQUEST_ENABLE,
@@ -4382,8 +4394,8 @@ typedef struct _DEBUGGEE_BP_LIST_OR_MODIFY_PACKET
  * @brief Whether a jump is taken or not taken
  *
  */
-typedef enum _DEBUGGER_CONDITIONAL_JUMP_STATUS
-{
+typedef enum DEBUGGER_CONDITIONAL_JUMP_STATUS_ {
+
 
     DEBUGGER_CONDITIONAL_JUMP_STATUS_ERROR = 0,
     DEBUGGER_CONDITIONAL_JUMP_STATUS_NOT_CONDITIONAL_JUMP,
@@ -4746,7 +4758,7 @@ static const char *const FunctionNames[] = {
 "FUNC_WCSNCMP",
 };
 
-typedef enum REGS_ENUM {
+typedef enum REGS_ENUM_ {
 	REGISTER_RAX = 0,
 	REGISTER_EAX = 1,
 	REGISTER_AX = 2,
@@ -5494,5 +5506,6 @@ SymCastingQueryForFiledsAndTypes(_In_ const char * StructName,
 #ifdef __cplusplus
 }
 #endif
+
 
 
