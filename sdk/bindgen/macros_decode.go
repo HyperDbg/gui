@@ -3,11 +3,11 @@ package bindgen
 import (
 	"strings"
 
-	"github.com/ddkwork/golibrary/stream"
+	"github.com/ddkwork/golibrary/safemap"
 )
 
-func extractMacros(lines []string) *stream.OrderedMap[string, string] {
-	macros := stream.NewOrderedMap("", "")
+func extractMacros(lines []string) *safemap.M[string, string] {
+	macros := new(safemap.M[string, string])
 	macros.Set("PAGE_SIZE", "4096")
 	var macroName string
 	var macroValue strings.Builder

@@ -2,9 +2,12 @@ package bindgen
 
 import (
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
 	"unicode"
+
+	"github.com/ddkwork/golibrary/safemap"
 
 	"github.com/ddkwork/app/bindgen/clang"
 	"github.com/ddkwork/app/bindgen/gengo"
@@ -40,6 +43,73 @@ func TestMergeHeader(t *testing.T) {
 	stream.WriteBinaryFile("merged_headers.h", g.Buffer)
 }
 
+func TestName(t *testing.T) {
+	// maps.CollectSafeSliceMap()
+	// maps.CollectSet()
+	safeSliceMap := safemap.NewOrdered(func(yield func(string, int) bool) {
+		yield("a", 0)
+		yield("b", 1)
+		yield("c", 2)
+		yield("d", 3)
+		yield("e", 4)
+		yield("f", 5)
+		yield("g", 6)
+		yield("h", 7)
+		yield("i", 8)
+		yield("j", 9)
+		yield("k", 10)
+		yield("l", 11)
+		yield("m", 12)
+		yield("n", 13)
+		yield("o", 14)
+		yield("p", 15)
+		yield("q", 16)
+		yield("r", 17)
+		yield("s", 18)
+		yield("t", 19)
+		yield("u", 20)
+		yield("v", 21)
+		yield("w", 22)
+		yield("x", 23)
+		yield("y", 24)
+		yield("z", 25)
+	})
+	safeSliceMap.Range(func(key string, value int) bool {
+		//println(strconv.Quote(key), value)
+		//safeSliceMap.DeleteFunc(func(s string, i int) bool {//todo bug
+		//	return safeSliceMap.Has(key)
+		//})
+		if safeSliceMap.Has(key) {
+			// safeSliceMap.Delete(key) //ok
+		}
+		return true
+	})
+	println(safeSliceMap.Len())
+	// return
+
+	// safeSliceMap.Set()//todo 增加update empty方法，set的时候key存在的情况下不要更新他，输入信息即可
+
+	for k, v := range safeSliceMap.All() {
+		println(strconv.Quote(k), v)
+		safeSliceMap.Delete(k) // todo bug
+	}
+
+	return
+
+	m := map[string]string{
+		"a": "b",
+		"c": "d",
+	}
+	for k := range m {
+		println(k)
+	}
+	for k, v := range m {
+		println(k, v)
+		delete(m, k)
+	}
+	println(len(m))
+}
+
 func TestBindMacros(t *testing.T) {
 	headerFile := "merged_headers.h"
 	macros := extractMacros(stream.NewBuffer(headerFile).ToLines())
@@ -48,18 +118,19 @@ func TestBindMacros(t *testing.T) {
 	mylog.Trace("number of macros", macros.Len())
 
 	var (
-		enumDebuggers = stream.NewOrderedMap("", "")
-		enumIoctls    = stream.NewOrderedMap("", "")
+		enumDebuggers = new(safemap.M[string, string])
+		enumIoctls    = new(safemap.M[string, string])
 	)
-
-	for _, p := range macros.List() {
-		if !m.Has(p.Key) {
-			// mylog.Warning(p.Key, p.Value)
-			macros.Delete(p.Key)
-			continue
+	macros.Range(func(key string, value string) bool {
+		if !m.Has(key) {
+			// mylog.Warning(key, value)
+			macros.Delete(key)
+			return true
 		}
-		// mylog.Warning(p.Key, p.Value)
-	}
+		// mylog.Warning(key, value)
+		return true
+	})
+	return
 
 	g := stream.NewGeneratedFile()
 	g.P("package sdk")
@@ -69,76 +140,78 @@ func TestBindMacros(t *testing.T) {
 	g.P()
 
 	g.P("var (")
-	for _, p := range macros.List() {
-		p.Value = strings.TrimSpace(p.Value)
-		if strings.HasPrefix(p.Value, "sizeof") {
-			continue
+	macros.Range(func(key string, value string) bool {
+		value = strings.TrimSpace(value)
+		if strings.HasPrefix(value, "sizeof") {
+			return true
 		}
-		if strings.HasSuffix(p.Value, "OPERATION_MANDATORY_DEBUGGEE_BIT") {
-			continue
-		}
-
-		if strings.Contains(p.Value, "sizeof") {
-			continue
-		}
-		if strings.Contains(p.Value, "TOP_LEVEL_DRIVERS_VMCALL_STARTING_NUMBER") {
-			continue
+		if strings.HasSuffix(value, "OPERATION_MANDATORY_DEBUGGEE_BIT") {
+			return true
 		}
 
-		p.Value = strings.ReplaceAll(p.Value, "\\", "")
-		p.Value = strings.Replace(p.Value, "6U", "6", 1)
-		p.Value = strings.Replace(p.Value, "7U", "7", 1)
-		p.Value = strings.Replace(p.Value, "8U", "8", 1)
-		p.Value = strings.Replace(p.Value, "9U", "9", 1)
-		p.Value = strings.Replace(p.Value, "10U", "10", 1)
-		p.Value = strings.Replace(p.Value, "11U", "11", 1)
-		p.Value = strings.Replace(p.Value, "12U", "12", 1)
-		p.Value = strings.Replace(p.Value, "13U", "13", 1)
-		p.Value = strings.Replace(p.Value, "14U", "14", 1)
-		p.Value = strings.Replace(p.Value, "15U", "15", 1)
-		p.Value = strings.Replace(p.Value, "16U", "16", 1)
-		p.Value = strings.Replace(p.Value, "17U", "17", 1)
-		p.Value = strings.Replace(p.Value, "NORMAL_PAGE_SIZE", "NormalPageSize", 1)
-		p.Value = strings.TrimSuffix(p.Value, "U")
-		p.Value = strings.TrimSuffix(p.Value, "ull")
-
-		if len(p.Value) == 0 {
-			mylog.Todo(p.Key + " = " + p.Value)
-			continue
+		if strings.Contains(value, "sizeof") {
+			return true
 		}
-		if p.Value[0] == '(' && p.Value[len(p.Value)-1] == ')' {
-			p.Value = p.Value[1 : len(p.Value)-1]
+		if strings.Contains(value, "TOP_LEVEL_DRIVERS_VMCALL_STARTING_NUMBER") {
+			return true
 		}
 
-		if strings.HasPrefix(p.Value, "0x") && !strings.Contains(p.Value, "//") && len(p.Value) > len("0xffffffff") {
-			// mylog.Todo(p.Key + " = " + p.Value)
-			p.Value = "uint64(" + p.Value + ")"
+		value = strings.ReplaceAll(value, "\\", "")
+		value = strings.Replace(value, "6U", "6", 1)
+		value = strings.Replace(value, "7U", "7", 1)
+		value = strings.Replace(value, "8U", "8", 1)
+		value = strings.Replace(value, "9U", "9", 1)
+		value = strings.Replace(value, "10U", "10", 1)
+		value = strings.Replace(value, "11U", "11", 1)
+		value = strings.Replace(value, "12U", "12", 1)
+		value = strings.Replace(value, "13U", "13", 1)
+		value = strings.Replace(value, "14U", "14", 1)
+		value = strings.Replace(value, "15U", "15", 1)
+		value = strings.Replace(value, "16U", "16", 1)
+		value = strings.Replace(value, "17U", "17", 1)
+		value = strings.Replace(value, "NORMAL_PAGE_SIZE", "NormalPageSize", 1)
+		value = strings.TrimSuffix(value, "U")
+		value = strings.TrimSuffix(value, "ull")
+
+		if len(value) == 0 {
+			mylog.Todo(key + " = " + value)
+			return true
+		}
+		if value[0] == '(' && value[len(value)-1] == ')' {
+			value = value[1 : len(value)-1]
 		}
 
-		key := p.Key
-		//if key == "DEBUGGER_OPERATION_WAS_SUCCESSFUL" || strings.HasPrefix(key, "DEBUGGER_ERROR") {
-		//	key += " debuggerErrorType"
+		if strings.HasPrefix(value, "0x") && !strings.Contains(value, "//") && len(value) > len("0xffffffff") {
+			// mylog.Todo(key + " = " + value)
+			value = "uint64(" + value + ")"
+		}
+
+		k := key
+		//if k == "DEBUGGER_OPERATION_WAS_SUCCESSFUL" || strings.HasPrefix(k, "DEBUGGER_ERROR") {
+		//	k += " debuggerErrorType"
 		//}
-		value := p.Value
-		if isAlphabetOrUnderscore(value) {
-			value = stream.ToCamelUpper(value, false)
+		v := value
+		if isAlphabetOrUnderscore(v) {
+			v = stream.ToCamelUpper(v, false)
 		}
 
-		key = stream.ToCamelUpper(key, false)
+		k = stream.ToCamelUpper(k, false)
 		switch {
-		case strings.HasPrefix(p.Key, "DEBUGGER_ERROR"):
-			after, found := strings.CutPrefix(p.Key, "DEBUGGER_ERROR")
+		case strings.HasPrefix(k, "DEBUGGER_ERROR"):
+			after, found := strings.CutPrefix(k, "DEBUGGER_ERROR")
 			if found {
-				key = after
+				k = after
 			}
-			enumDebuggers.Set(key, key)
-		case strings.HasPrefix(p.Key, "IOCTL_"):
-			enumIoctls.Set(key, key)
+			enumDebuggers.Set(k, k)
+		case strings.HasPrefix(k, "IOCTL_"):
+			enumIoctls.Set(k, k)
 		}
 
-		g.P(stream.ToCamelUpper(key, false) + "=" + value)
-		macros.Delete(p.Key)
-	}
+		g.P(stream.ToCamelUpper(k, false) + "=" + v)
+		macros.Delete(k)
+		return true
+	})
+
 	g.P(")")
 
 	g.P(`
@@ -158,10 +231,11 @@ const (
 	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("debuggerError", enumDebuggers)
 	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("ioctl", enumIoctls)
 
-	for _, p := range macros.List() {
-		return
-		mylog.Todo(p.Key + " = " + p.Value)
-	}
+	macros.Range(func(key string, value string) bool {
+		return true
+		mylog.Todo(key + " = " + value)
+		return true
+	})
 }
 
 // isAlphabetOrUnderscore 检查字符串是否仅由字母或下划线组成
@@ -256,7 +330,7 @@ typedef struct _LIST_ENTRY {
 #endif
 `
 
-var m = stream.NewOrderedMap("", "")
+var m = new(safemap.M[string, string])
 
 func init() {
 	m.Set("PAGE_SIZE", "4096")

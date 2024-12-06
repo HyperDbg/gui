@@ -1,8 +1,6 @@
 package ark
 
 import (
-	"fmt"
-
 	"github.com/ddkwork/HyperDbg/sdk"
 	"github.com/ddkwork/app"
 	"github.com/ddkwork/app/ms"
@@ -11,6 +9,7 @@ import (
 	"github.com/ddkwork/app/ms/packer"
 	"github.com/ddkwork/app/widget"
 	"github.com/ddkwork/golibrary/mylog"
+	"github.com/ddkwork/golibrary/safemap"
 	"github.com/ddkwork/golibrary/stream"
 	"github.com/ddkwork/unison"
 )
@@ -38,7 +37,7 @@ func arkTodo() {
 }
 
 func Layout() *unison.Panel {
-	type ark struct{ Name ArksKind }
+	type ark struct{ Name ArksType }
 	table, header := widget.NewTable(ark{}, widget.TableContext[ark]{
 		ContextMenuItems: nil,
 		MarshalRow: func(node *widget.Node[ark]) (cells []widget.CellData) {
@@ -55,7 +54,7 @@ func Layout() *unison.Panel {
 			mylog.Todo("selection changed callback")
 		},
 		SetRootRowsCallBack: func(root *widget.Node[ark]) {
-			for _, kind := range InvalidArksKind.Kinds() {
+			for _, kind := range KernelTablesType.EnumTypes() {
 				root.AddChildByData(ark{kind})
 			}
 		},
@@ -67,20 +66,20 @@ func Layout() *unison.Panel {
 	widget.SetScrollLayout(splitPanel, 2)
 
 	left := widget.NewTableScrollPanel(table, header)
-	layouts := stream.NewOrderedMap(InvalidArksKind, func() unison.Paneler { return widget.NewPanel() })
-	layouts.Set(KernelTablesKind, func() unison.Paneler {
+	layouts := new(safemap.M[ArksType, func() unison.Paneler])
+	layouts.Set(KernelTablesType, func() unison.Paneler {
 		table, header := widget.NewTable(ms.NtApi{}, widget.TableContext[ms.NtApi]{
 			ContextMenuItems: nil,
 			MarshalRow: func(node *widget.Node[ms.NtApi]) (cells []widget.CellData) {
-				KernelBase := fmt.Sprintf("%016X", node.Data.KernelBase)
+				KernelBase := stream.FormatIntegerHex(node.Data.KernelBase)
 				if node.Container() {
 					KernelBase = node.Sum()
 				}
 				return []widget.CellData{
 					{Text: KernelBase},
-					{Text: fmt.Sprintf("%016X", node.Data.ArgValue)},
+					{Text: stream.FormatIntegerHex(node.Data.ArgValue)},
 					{Text: node.Data.Name},
-					{Text: fmt.Sprintf("%04d / %08X", node.Data.Index, node.Data.Index)},
+					{Text: stream.FormatInteger(node.Data.Index)},
 				}
 			},
 			UnmarshalRow: func(node *widget.Node[ms.NtApi], values []string) {
@@ -113,7 +112,7 @@ func Layout() *unison.Panel {
 	})
 
 	right := widget.NewPanel()
-	right.AddChild(mylog.Check2Bool(layouts.Get(KernelTablesKind))()) // todo make a welcoming page
+	right.AddChild((layouts.GetMust(KernelTablesType))()) // todo make a welcoming page
 	splitPanel.AddChild(left)
 	splitPanel.AddChild(right)
 
@@ -124,13 +123,13 @@ func Layout() *unison.Panel {
 				break
 			}
 			switch n.Data.Name {
-			case KernelTablesKind:
+			case KernelTablesType:
 				right.RemoveAllChildren()
-				paneler := mylog.Check2Bool(layouts.Get(KernelTablesKind))()
+				paneler := (layouts.GetMust(KernelTablesType))()
 				right.AddChild(paneler)
 				splitPanel.AddChild(right)
 
-			case PackerKind:
+			case PackerType:
 				mylog.Todo("packer")
 				// pe包似乎有个检测壳的，看看全不全
 				// https://github.com/inc0d3/malware/blob/master/tools%2Funpacker%2Fthemida-2.x%2FThemida%20-%20Winlicense%20Ultra%20Unpacker%201.4.txt

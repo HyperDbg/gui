@@ -189,52 +189,52 @@ func (t *toolbar) Elems() []*unison.Button {
 func newToolbar() *toolbar {
 	m := stream.ReadEmbedFileMap(bar, "asserts/bar")
 	return &toolbar{
-		open: widget.NewImageButton("open", m.Get("open.png"), func() {}),
-		restart: widget.NewImageButton("restart", m.Get("restart.png"), func() {
+		open: widget.NewImageButton("open", m.GetMust("open.png"), func() {}),
+		restart: widget.NewImageButton("restart", m.GetMust("restart.png"), func() {
 			mylog.Warning("RestartProcess", sdk.RestartProcess())
 		}),
-		close: widget.NewImageButton("close", m.Get("close.png"), func() { // exit command ?
+		close: widget.NewImageButton("close", m.GetMust("close.png"), func() { // exit command ?
 			mylog.Warning("KillProcess", sdk.KillProcess())
 		}),
-		run: widget.NewImageButton("run", m.Get("run.png"), func() {
+		run: widget.NewImageButton("run", m.GetMust("run.png"), func() {
 			targetExePathPtr := windows.StringToUTF16Ptr(TargetExePath)
 			targetExePathInt32Ptr := (*int32)(unsafe.Pointer(targetExePathPtr))
 			mylog.Warning("StartProcess", sdk.StartProcess(targetExePathInt32Ptr))
 		}),
-		runthread: widget.NewImageButton("runthread", m.Get("runthread.png"), func() {}),
-		pause: widget.NewImageButton("pause", m.Get("pause.png"), func() {
+		runthread: widget.NewImageButton("runthread", m.GetMust("runthread.png"), func() {}),
+		pause: widget.NewImageButton("pause", m.GetMust("pause.png"), func() {
 			mylog.Warning("PauseKernelEvents", sdk.PauseKernelEvents())
 		}),
-		stepin: widget.NewImageButton("stepin", m.Get("stepin.png"), func() {
+		stepin: widget.NewImageButton("stepin", m.GetMust("stepin.png"), func() {
 			// todo set F7 shortcut
 			mylog.Warning("StepInto", sdk.StepIn())
 		}),
-		stepover: widget.NewImageButton("stepover", m.Get("stepover.png"), func() {
+		stepover: widget.NewImageButton("stepover", m.GetMust("stepover.png"), func() {
 			mylog.Warning("StepOut", sdk.StepOut()) // todo set args
 		}),
-		trin:     widget.NewImageButton("trin", m.Get("trin.png"), func() {}),
-		trover:   widget.NewImageButton("trover", m.Get("trover.png"), func() {}),
-		tillret:  widget.NewImageButton("tillret", m.Get("tillret.png"), func() {}),
-		tilluser: widget.NewImageButton("tilluser", m.Get("tilluser.png"), func() {}),
-		log:      widget.NewImageButton("log", m.Get("log.png"), func() {}),
-		modules:  widget.NewImageButton("modules", m.Get("modules.png"), func() {}),
-		windows:  widget.NewImageButton("windows", m.Get("windows.png"), func() {}),
-		threads:  widget.NewImageButton("threads", m.Get("threads.png"), func() {}),
-		cpu: widget.NewImageButton("cpu", m.Get("cpu.png"), func() {
+		trin:     widget.NewImageButton("trin", m.GetMust("trin.png"), func() {}),
+		trover:   widget.NewImageButton("trover", m.GetMust("trover.png"), func() {}),
+		tillret:  widget.NewImageButton("tillret", m.GetMust("tillret.png"), func() {}),
+		tilluser: widget.NewImageButton("tilluser", m.GetMust("tilluser.png"), func() {}),
+		log:      widget.NewImageButton("log", m.GetMust("log.png"), func() {}),
+		modules:  widget.NewImageButton("modules", m.GetMust("modules.png"), func() {}),
+		windows:  widget.NewImageButton("windows", m.GetMust("windows.png"), func() {}),
+		threads:  widget.NewImageButton("threads", m.GetMust("threads.png"), func() {}),
+		cpu: widget.NewImageButton("cpu", m.GetMust("cpu.png"), func() {
 			mylog.Todo("goto cpu tab page") // dock.SetCurrentDockable(p.cpu)
 		}),
-		search: widget.NewImageButton("search", m.Get("search.png"), func() {}),
-		trace:  widget.NewImageButton("trace", m.Get("trace.png"), func() {}),
-		bpoints: widget.NewImageButton("bpoints", m.Get("bpoints.png"), func() {
+		search: widget.NewImageButton("search", m.GetMust("search.png"), func() {}),
+		trace:  widget.NewImageButton("trace", m.GetMust("trace.png"), func() {}),
+		bpoints: widget.NewImageButton("bpoints", m.GetMust("bpoints.png"), func() {
 			mylog.Warning("breakpoint list", sdk.BreakpointList())
 		}),
-		bpmem:   widget.NewImageButton("bpmem", m.Get("bpmem.png"), func() {}),
-		bphard:  widget.NewImageButton("bphard", m.Get("bphard.png"), func() {}),
-		options: widget.NewImageButton("options", m.Get("options.png"), func() {}),
-		scylla:  widget.NewImageButton("scylla", m.Get("scylla.png"), func() {}),
-		about:   widget.NewImageButton("about", m.Get("about.png"), func() {}),
-		settings: widget.NewImageButton("settings", m.Get("settings.png"), func() {
-			app.RunWithIco("settings", m.Get("settings.png"), func(w *unison.Window) {
+		bpmem:   widget.NewImageButton("bpmem", m.GetMust("bpmem.png"), func() {}),
+		bphard:  widget.NewImageButton("bphard", m.GetMust("bphard.png"), func() {}),
+		options: widget.NewImageButton("options", m.GetMust("options.png"), func() {}),
+		scylla:  widget.NewImageButton("scylla", m.GetMust("scylla.png"), func() {}),
+		about:   widget.NewImageButton("about", m.GetMust("about.png"), func() {}),
+		settings: widget.NewImageButton("settings", m.GetMust("settings.png"), func() {
+			app.RunWithIco("settings", m.GetMust("settings.png"), func(w *unison.Window) {
 				content := w.Content()
 				content.SetLayout(&unison.FlexLayout{Columns: 1})
 				content.AddChild(widget.NewVSpacer())

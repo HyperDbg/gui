@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/ddkwork/golibrary/mylog"
-
 	"github.com/ddkwork/golibrary/stream"
 )
 
@@ -21,7 +20,7 @@ func TestGenConstants(t *testing.T) {
 }
 
 func genConstants(fileName string) {
-	m := stream.NewOrderedMap("", "")
+	m := safemap.NewOrdered[string, string]()
 	for i, s := range stream.NewBuffer(fileName).ToLines() {
 		if i == 4 {
 			// break // test

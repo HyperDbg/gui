@@ -67,7 +67,6 @@ typedef struct _LIST_ENTRY {
 #define _In_reads_bytes_(x)
 #endif
 
-
 //SDK\Headers\BasicTypes.h
 /**
  * @file BasicTypes.h
