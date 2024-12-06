@@ -7,7 +7,7 @@ require (
 	github.com/ddkwork/golibrary v0.0.0-20241109061650-bd3e94f7b3cf
 	github.com/ddkwork/unison v0.0.0-20241013162326-b9a18ce1a207
 	github.com/ebitengine/purego v0.8.0
-	github.com/saferwall/pe v1.5.4
+	github.com/saferwall/pe v1.5.6
 	github.com/tc-hib/winres v0.3.1
 	github.com/winlabs/gowin32 v0.0.0-20240930213947-f504d7e14639
 	golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c
