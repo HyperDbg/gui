@@ -5,7 +5,7 @@ go 1.23.3
 require (
 	github.com/ddkwork/app v0.0.0-20250101101805-a60d5b5cd452
 	github.com/ddkwork/golibrary v0.0.0-20250101093329-d96f6524ebe4
-	github.com/ddkwork/unison v0.0.0-20241013162326-b9a18ce1a207
+	github.com/ddkwork/unison v0.0.0-20250101110142-818e695fe1c0
 	github.com/ebitengine/purego v0.8.1
 	github.com/saferwall/pe v1.5.6
 	github.com/tc-hib/winres v0.3.1
@@ -22,7 +22,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dave/dst v0.27.3 // indirect
 	github.com/dc0d/caseconv v0.5.0 // indirect
-	github.com/ddkwork/toolbox v0.0.0-20241116165817-883d5d7d379c // indirect
+	github.com/ddkwork/toolbox v0.0.0-20250101105944-e2445f71afc4 // indirect
 	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/edsrzf/mmap-go v1.2.0 // indirect
 	github.com/go-enry/go-enry/v2 v2.9.1 // indirect
