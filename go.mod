@@ -4,15 +4,15 @@ go 1.23.3
 
 require (
 	github.com/ddkwork/app v0.0.0-20241026164255-6ce9e6cb2eb3
-	github.com/ddkwork/golibrary v0.0.0-20241109061650-bd3e94f7b3cf
+	github.com/ddkwork/golibrary v0.0.0-20250101083646-7f7ce7d4075c
 	github.com/ddkwork/unison v0.0.0-20241013162326-b9a18ce1a207
 	github.com/ebitengine/purego v0.8.0
 	github.com/saferwall/pe v1.5.6
 	github.com/tc-hib/winres v0.3.1
 	github.com/winlabs/gowin32 v0.0.0-20240930213947-f504d7e14639
 	golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c
-	golang.org/x/image v0.21.0
-	golang.org/x/sys v0.26.0
+	golang.org/x/image v0.23.0
+	golang.org/x/sys v0.28.0
 
 )
 
@@ -52,11 +52,11 @@ require (
 	github.com/yuin/goldmark v1.7.6 // indirect
 	golang.org/x/arch v0.8.0 // indirect
 	golang.org/x/exp/shiny v0.0.0-20241009180824-f66d83c29e7c // indirect
-	golang.org/x/mod v0.21.0 // indirect
-	golang.org/x/sync v0.8.0 // indirect
+	golang.org/x/mod v0.22.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/term v0.25.0 // indirect
-	golang.org/x/text v0.19.0 // indirect
-	golang.org/x/tools v0.26.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/tools v0.28.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	mvdan.cc/gofumpt v0.7.0 // indirect
 )
