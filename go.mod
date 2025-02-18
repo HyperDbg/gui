@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/ddkwork/app v0.0.0-20250216082845-4869c8b3f227
-	github.com/ddkwork/golibrary v0.0.88-0.20250216081829-938757a0a8d6
+	github.com/ddkwork/golibrary v0.0.90
 	github.com/ddkwork/unison v0.0.0-20250216082844-0412938391e8
 	github.com/ebitengine/purego v0.8.1
 	github.com/saferwall/pe v1.5.6

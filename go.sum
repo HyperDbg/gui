@@ -32,6 +32,8 @@ github.com/ddkwork/golibrary v0.0.0-20250101093329-d96f6524ebe4 h1:V32GfCpHQp5dZ
 github.com/ddkwork/golibrary v0.0.0-20250101093329-d96f6524ebe4/go.mod h1:fzfhl61kUu+Sn22VCEojlYr9lE8X0SZmbOocICR+0s0=
 github.com/ddkwork/golibrary v0.0.88-0.20250216081829-938757a0a8d6 h1:pzAz7RXIGMMSd1MjBbxFCNKN+KdZ14jelGcg7Vc1Ejg=
 github.com/ddkwork/golibrary v0.0.88-0.20250216081829-938757a0a8d6/go.mod h1:XrYTnxQY1W3x6uqco4OMyZtaObXTo0lsC7Tzbf6Ab9Q=
+github.com/ddkwork/golibrary v0.0.90 h1:BAVudgFgkLnunYqnybsgxx3w4pIWrfoc+OJauWjY6/Y=
+github.com/ddkwork/golibrary v0.0.90/go.mod h1:XrYTnxQY1W3x6uqco4OMyZtaObXTo0lsC7Tzbf6Ab9Q=
 github.com/ddkwork/toolbox v0.0.0-20250101105944-e2445f71afc4 h1:e03pkrQ3N74Fzbn5fEwudMnUdANaqUS/5ONQNErkrsI=
 github.com/ddkwork/toolbox v0.0.0-20250101105944-e2445f71afc4/go.mod h1:c5Vq5AcHpAt6sJAT+61PPaxUZB/xKOKT2O3DahvEGHM=
 github.com/ddkwork/toolbox v0.0.0-20250216082843-1298db805727 h1:sBYlmvsxH4OcPQTe8tTlGsHeBoZHn6vzYaUL7XyvrNA=
