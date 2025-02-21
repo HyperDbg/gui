@@ -31,10 +31,10 @@ func genConstants(fileName string) {
 		if fileName == "ioctl.txt" {
 			v = "0x" + v
 		}
-		m.Set(stream.ToCamelUpper(split[0], false), v)
+		m.Set(stream.ToCamelUpper(split[0]), v)
 	}
 
-	kind := stream.ToCamelUpper(stream.BaseName(fileName), false) + "Kind"
+	kind := stream.ToCamelUpper(stream.BaseName(fileName)) + "Kind"
 
 	g := stream.NewGeneratedFile()
 	g.P("package constants")
@@ -55,7 +55,7 @@ func genConstants(fileName string) {
 	g.P("switch k {")
 	for _, p := range m.List() {
 		g.P("case ", p.Value, ":")
-		g.P("return ", strconv.Quote(stream.ToCamelUpper(p.Key, false)))
+		g.P("return ", strconv.Quote(stream.ToCamelUpper(p.Key)))
 	}
 	g.P("default:")
 	g.P("return \"unknown ", kind, " \"+fmt.Sprint(k)")
