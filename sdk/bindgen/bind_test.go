@@ -112,7 +112,7 @@ func TestName(t *testing.T) {
 
 func TestBindMacros(t *testing.T) {
 	headerFile := "merged_headers.h"
-	macros := extractMacros(stream.NewBuffer(headerFile).ToLines())
+	macros := extractMacros(stream.ReadFileToLines(headerFile))
 	// println(macros.GoString())
 	// return
 	mylog.Trace("number of macros", macros.Len())

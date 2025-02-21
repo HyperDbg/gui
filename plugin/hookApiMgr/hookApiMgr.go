@@ -68,10 +68,7 @@ type (
 func New() *object { return &object{} }
 
 func (o *object) DecodeStack(api, stack string, argsInput ...string) (argList []ArgList, ok bool) {
-	lines := stream.NewBuffer(stack).ToLines()
-
 	argList = make([]ArgList, 0)
-
 	fnCut := func(orig string) (list []string) {
 		list = make([]string, 0)
 		orig = strings.TrimSpace(orig)
@@ -85,7 +82,7 @@ func (o *object) DecodeStack(api, stack string, argsInput ...string) (argList []
 		return
 	}
 
-	for _, line := range lines {
+	for line := range strings.Lines(stack) {
 		if line == "" {
 			continue
 		}

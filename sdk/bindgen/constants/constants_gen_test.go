@@ -1,6 +1,7 @@
 package constants
 
 import (
+	"github.com/ddkwork/golibrary/safemap"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -20,11 +21,11 @@ func TestGenConstants(t *testing.T) {
 }
 
 func genConstants(fileName string) {
-	m := safemap.NewOrdered[string, string]()
-	for i, s := range stream.NewBuffer(fileName).ToLines() {
-		if i == 4 {
-			// break // test
-		}
+	m := new(safemap.M[string, string])
+	for s := range stream.ReadFileToLines(fileName) {
+		//if i == 4 {
+		//	// break // test
+		//}
 		split := strings.Split(s, " ")
 		v := split[1]
 		if fileName == "ioctl.txt" {

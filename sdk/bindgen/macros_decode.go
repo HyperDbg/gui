@@ -1,19 +1,20 @@
 package bindgen
 
 import (
+	"iter"
 	"strings"
 
 	"github.com/ddkwork/golibrary/safemap"
 )
 
-func extractMacros(lines []string) *safemap.M[string, string] {
+func extractMacros(lines iter.Seq[string]) *safemap.M[string, string] {
 	macros := new(safemap.M[string, string])
 	macros.Set("PAGE_SIZE", "4096")
 	var macroName string
 	var macroValue strings.Builder
 	inMacro := false
 
-	for _, line := range lines {
+	for line := range lines {
 		if strings.HasPrefix(line, "#define") {
 			if inMacro {
 				// Finish the previous macro

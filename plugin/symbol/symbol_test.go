@@ -10,12 +10,11 @@ import (
 )
 
 func TestName(t *testing.T) {
-	lines := stream.ReadFileToLines(`ssdtTable.txt`)
 	ntdll := make([]string, 0)
 	win32u := make([]string, 0)
-	for i, line := range lines {
+	for line := range stream.ReadFileToLines(`ssdtTable.txt`) {
 		if strings.Contains(line, "win32u") {
-			win32u = append(win32u, lines[i:]...)
+			win32u = append(win32u, line) //todo test
 			break
 		}
 		ntdll = append(ntdll, line)
