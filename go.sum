@@ -34,6 +34,8 @@ github.com/ddkwork/app v0.0.0-20250221064752-588a6259b45f h1:v1qcqWKvIoyMmKaD0uT
 github.com/ddkwork/app v0.0.0-20250221064752-588a6259b45f/go.mod h1:DyDBFU1MIUvhZRulm6INJgbeiQe4UlpihDsAxuREFDY=
 github.com/ddkwork/golibrary v0.0.91-0.20250221042854-2f9e8bc45b92 h1:Be4l8KskZlsUQA4Zim5erRpI9RAWemCJo+lTTKtKXJc=
 github.com/ddkwork/golibrary v0.0.91-0.20250221042854-2f9e8bc45b92/go.mod h1:1gL0UKrg1P09z/AiaAWWtWxMT7a8+X8mWU6Ok9sYc8s=
+github.com/ddkwork/golibrary v0.0.91-0.20250221114559-8a02d569f328 h1:sd23iR6brHy0yWR+rTZ5HiGeqQ2/wQW/8xMq/Nu4IsA=
+github.com/ddkwork/golibrary v0.0.91-0.20250221114559-8a02d569f328/go.mod h1:1gL0UKrg1P09z/AiaAWWtWxMT7a8+X8mWU6Ok9sYc8s=
 github.com/ddkwork/toolbox v0.0.0-20250221043304-e2865d103f34 h1:L7nNbyx/xAtXavCXcnANYUCAMk+sX2UqyB3C17yCyGs=
 github.com/ddkwork/toolbox v0.0.0-20250221043304-e2865d103f34/go.mod h1:y0nLLadZl0tIv9sUOSGL8JjRXSwe0oBEaEWMlhVmMAI=
 github.com/ddkwork/unison v0.0.0-20250221064127-b3a4eae98f92 h1:xonhMPyeIq1LHNbzWTj2OfJ3wHf0B3HuE378SuNQfZQ=

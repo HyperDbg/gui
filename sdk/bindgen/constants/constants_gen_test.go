@@ -1,11 +1,12 @@
 package constants
 
 import (
-	"github.com/ddkwork/golibrary/safemap"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/ddkwork/golibrary/safemap"
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
