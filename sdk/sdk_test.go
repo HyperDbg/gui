@@ -20,7 +20,7 @@ func TestGenInterface(t *testing.T) {
 	g.P(`package sdk`)
 	g.P(`import "unsafe"`)
 	g.P(`type API interface {`)
-	for _, s := range stream.ToLines("sdk.go") {
+	for s := range stream.ReadFileToLines("sdk.go") {
 		if strings.HasPrefix(s, "func ") {
 			s = strings.TrimPrefix(s, "func ")
 			if strings.Contains(s, "{") && strings.Contains(s, "}") {
