@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/ddkwork/app v0.0.0-20250221064752-588a6259b45f
-	github.com/ddkwork/golibrary v0.0.91-0.20250221114559-8a02d569f328
+	github.com/ddkwork/golibrary v0.0.91-0.20250222100916-fc8029a3f592
 	github.com/ddkwork/unison v0.0.0-20250221064127-b3a4eae98f92
 	github.com/ebitengine/purego v0.8.1
 	github.com/saferwall/pe v1.5.6
@@ -29,8 +29,8 @@ require (
 	github.com/edsrzf/mmap-go v1.2.0 // indirect
 	github.com/go-enry/go-enry/v2 v2.9.1 // indirect
 	github.com/go-enry/go-oniguruma v1.2.1 // indirect
-	github.com/go-text/typesetting v0.2.1 // indirect
-	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/go-text/typesetting v0.3.0 // indirect
+	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorpher/gowin32 v0.0.12 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
@@ -46,8 +46,8 @@ require (
 	github.com/valyala/fastjson v1.6.4 // indirect
 	github.com/yuin/goldmark v1.7.8 // indirect
 	golang.org/x/arch v0.12.0 // indirect
-	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 // indirect
-	golang.org/x/exp/shiny v0.0.0-20240707233637-46b078467d37 // indirect
+	golang.org/x/exp v0.0.0-20250218142911-aa4b98e5adaa // indirect
+	golang.org/x/exp/shiny v0.0.0-20250218142911-aa4b98e5adaa // indirect
 	golang.org/x/mod v0.23.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/term v0.27.0 // indirect

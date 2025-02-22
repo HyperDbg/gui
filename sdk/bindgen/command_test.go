@@ -14,7 +14,6 @@ import (
 
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
-	"github.com/ddkwork/golibrary/stream/txt"
 )
 
 func TestUnmarshalCommandJson(t *testing.T) {
@@ -95,7 +94,7 @@ func commandGenerate(kindName, path string) {
 		name := stream.BaseName(path)
 		name = strings.ReplaceAll(name, "-", "_") // not well
 		name = strings.ReplaceAll(name, "~", "unknown")
-		name = txt.ToCamelCase(name)
+		name = stream.ToCamelUpper(name)
 		mylog.Trace(name, path)
 
 		command := sdk.Command{
