@@ -14,7 +14,7 @@ func TestName(t *testing.T) {
 	win32u := make([]string, 0)
 	for line := range stream.ReadFileToLines(`ssdtTable.txt`) {
 		if strings.Contains(line, "win32u") {
-			win32u = append(win32u, line) //todo test
+			win32u = append(win32u, line) // todo test
 			break
 		}
 		ntdll = append(ntdll, line)
