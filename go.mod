@@ -3,7 +3,7 @@ module github.com/ddkwork/HyperDbg
 go 1.24.0
 
 require (
-	github.com/ddkwork/app v0.0.0-20250222103323-9b82ac0ebf17
+	github.com/ddkwork/app v0.0.0-20250222134803-fb1c9c7204e8
 	github.com/ddkwork/golibrary v0.0.91-0.20250222134107-b787fdf70afa
 	github.com/ddkwork/unison v0.0.0-20250221064127-b3a4eae98f92
 	github.com/ebitengine/purego v0.8.1
