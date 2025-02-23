@@ -38,6 +38,8 @@ github.com/ddkwork/app v0.0.0-20250222134803-fb1c9c7204e8 h1:Pc95LonFLwXInXPWm+H
 github.com/ddkwork/app v0.0.0-20250222134803-fb1c9c7204e8/go.mod h1:VJBmbpFOiJAP91FFsFQk4hCNa7f4w+NeDTO9o6Rn9ys=
 github.com/ddkwork/app v0.0.0-20250223132950-a02e16fc9b2e h1:ioqQ41sXsJezurjvge/WNa1wSAWRJVmz+S/6i6RMu70=
 github.com/ddkwork/app v0.0.0-20250223132950-a02e16fc9b2e/go.mod h1:4lpoqyxzvJaw/twQmjTlSUDQoToLHxAil+84/JQrpRg=
+github.com/ddkwork/app v0.0.0-20250223133821-9bca871bb0a6 h1:U8WAs4Ge+lmLmboA5vf76edBQ36tuK3IT6F+vx/cP2A=
+github.com/ddkwork/app v0.0.0-20250223133821-9bca871bb0a6/go.mod h1:jTHxKLgcVUnOqJXeou+rarw09SDgQuxXd+aI1vUh4Tg=
 github.com/ddkwork/golibrary v0.0.91-0.20250221042854-2f9e8bc45b92 h1:Be4l8KskZlsUQA4Zim5erRpI9RAWemCJo+lTTKtKXJc=
 github.com/ddkwork/golibrary v0.0.91-0.20250221042854-2f9e8bc45b92/go.mod h1:1gL0UKrg1P09z/AiaAWWtWxMT7a8+X8mWU6Ok9sYc8s=
 github.com/ddkwork/golibrary v0.0.91-0.20250221114559-8a02d569f328 h1:sd23iR6brHy0yWR+rTZ5HiGeqQ2/wQW/8xMq/Nu4IsA=
@@ -56,6 +58,8 @@ github.com/ddkwork/unison v0.0.0-20250221064127-b3a4eae98f92 h1:xonhMPyeIq1LHNbz
 github.com/ddkwork/unison v0.0.0-20250221064127-b3a4eae98f92/go.mod h1:XnNWXLonAcky/MUM5GsJbXLrSuQknCx/MRbE0aKc1AM=
 github.com/ddkwork/unison v0.0.0-20250223132541-758d7214d111 h1:qAn1jZQ0kmHMKaTYHR7RzISieFFZRqqzE8ny75wyVNY=
 github.com/ddkwork/unison v0.0.0-20250223132541-758d7214d111/go.mod h1:FEhc43efKL0KXlYc/oJ2yYOiYYhqXWBRBSj5IbuiFOQ=
+github.com/ddkwork/unison v0.0.0-20250223133607-c57f5eaea336 h1:LqoymguxwoXEoSdGnPv5u5+30MHDjD0jExYsO80A3nY=
+github.com/ddkwork/unison v0.0.0-20250223133607-c57f5eaea336/go.mod h1:1fBT1XUZ0aDSPGPDrWs+ibH4snNFJvrAeF3IOU5WttU=
 github.com/dlclark/regexp2 v1.11.5 h1:Q/sSnsKerHeCkc/jSTNq1oCm7KiVgUMZRDUoRu0JQZQ=
 github.com/dlclark/regexp2 v1.11.5/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
 github.com/ebitengine/purego v0.8.1 h1:sdRKd6plj7KYW33EH5As6YKfe8m9zbN9JMrOjNVF/BE=
