@@ -74,22 +74,21 @@ func TestName(t *testing.T) {
 		yield("y", 24)
 		yield("z", 25)
 	})
-	safeSliceMap.Range(func(key string, value int) bool {
+	for k := range safeSliceMap.Range() {
 		//println(strconv.Quote(key), value)
 		//safeSliceMap.DeleteFunc(func(s string, i int) bool {//todo bug
 		//	return safeSliceMap.Has(key)
 		//})
-		if safeSliceMap.Has(key) {
+		if safeSliceMap.Has(k) {
 			// safeSliceMap.Delete(key) //ok
 		}
-		return true
-	})
+	}
 	println(safeSliceMap.Len())
 	// return
 
 	// safeSliceMap.Set()//todo 增加update empty方法，set的时候key存在的情况下不要更新他，输入信息即可
 
-	for k, v := range safeSliceMap.All() {
+	for k, v := range safeSliceMap.Range() {
 		println(strconv.Quote(k), v)
 		safeSliceMap.Delete(k) // todo bug
 	}
@@ -121,15 +120,13 @@ func TestBindMacros(t *testing.T) {
 		enumDebuggers = new(safemap.M[string, string])
 		enumIoctls    = new(safemap.M[string, string])
 	)
-	macros.Range(func(key string, value string) bool {
+	for key := range macros.Range() {
 		if !m.Has(key) {
 			// mylog.Warning(key, value)
 			macros.Delete(key)
-			return true
 		}
 		// mylog.Warning(key, value)
-		return true
-	})
+	}
 	return
 
 	g := stream.NewGeneratedFile()
@@ -140,20 +137,20 @@ func TestBindMacros(t *testing.T) {
 	g.P()
 
 	g.P("var (")
-	macros.Range(func(key string, value string) bool {
+	for key, value := range macros.Range() {
 		value = strings.TrimSpace(value)
 		if strings.HasPrefix(value, "sizeof") {
-			return true
+			break
 		}
 		if strings.HasSuffix(value, "OPERATION_MANDATORY_DEBUGGEE_BIT") {
-			return true
+			break
 		}
 
 		if strings.Contains(value, "sizeof") {
-			return true
+			break
 		}
 		if strings.Contains(value, "TOP_LEVEL_DRIVERS_VMCALL_STARTING_NUMBER") {
-			return true
+			break
 		}
 
 		value = strings.ReplaceAll(value, "\\", "")
@@ -175,7 +172,7 @@ func TestBindMacros(t *testing.T) {
 
 		if len(value) == 0 {
 			mylog.Todo(key + " = " + value)
-			return true
+			break
 		}
 		if value[0] == '(' && value[len(value)-1] == ')' {
 			value = value[1 : len(value)-1]
@@ -209,8 +206,7 @@ func TestBindMacros(t *testing.T) {
 
 		g.P(stream.ToCamelUpper(k) + "=" + v)
 		macros.Delete(k)
-		return true
-	})
+	}
 
 	g.P(")")
 
@@ -231,11 +227,10 @@ const (
 	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("debuggerError", enumDebuggers)
 	stream.NewGeneratedFile().SetPackageName("sdk").SetFilePath("../").EnumTypes("ioctl", enumIoctls)
 
-	macros.Range(func(key string, value string) bool {
-		return true
+	for key, value := range macros.Range() {
+		break
 		mylog.Todo(key + " = " + value)
-		return true
-	})
+	}
 }
 
 // isAlphabetOrUnderscore 检查字符串是否仅由字母或下划线组成

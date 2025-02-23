@@ -29,10 +29,9 @@ func init() {
 	mylog.Trace("TargetFilePath", TargetFilePath)
 	if !stream.IsDir(dir) {
 		stream.CreatDirectory(dir)
-		m.Range(func(k string, v []byte) bool {
+		for k, v := range m.Range() {
 			stream.WriteTruncate(filepath.Join(dir, k), v)
-			return true
-		})
+		}
 	}
 	mylog.Check2(GengoLibrary.LoadFrom(filepath.Join(dir, "libhyperdbg.dll")))
 }
