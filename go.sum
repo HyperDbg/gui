@@ -36,6 +36,8 @@ github.com/ddkwork/app v0.0.0-20250222103323-9b82ac0ebf17 h1:xocQsYtvGiyUJiRYSUp
 github.com/ddkwork/app v0.0.0-20250222103323-9b82ac0ebf17/go.mod h1:q8dpwnN223DUk8jzbc9T2dFbnLgviUUQTrCts3Pz9M8=
 github.com/ddkwork/app v0.0.0-20250222134803-fb1c9c7204e8 h1:Pc95LonFLwXInXPWm+HqzKiUij7h8vu/A/wlx8AiVLA=
 github.com/ddkwork/app v0.0.0-20250222134803-fb1c9c7204e8/go.mod h1:VJBmbpFOiJAP91FFsFQk4hCNa7f4w+NeDTO9o6Rn9ys=
+github.com/ddkwork/app v0.0.0-20250223132950-a02e16fc9b2e h1:ioqQ41sXsJezurjvge/WNa1wSAWRJVmz+S/6i6RMu70=
+github.com/ddkwork/app v0.0.0-20250223132950-a02e16fc9b2e/go.mod h1:4lpoqyxzvJaw/twQmjTlSUDQoToLHxAil+84/JQrpRg=
 github.com/ddkwork/golibrary v0.0.91-0.20250221042854-2f9e8bc45b92 h1:Be4l8KskZlsUQA4Zim5erRpI9RAWemCJo+lTTKtKXJc=
 github.com/ddkwork/golibrary v0.0.91-0.20250221042854-2f9e8bc45b92/go.mod h1:1gL0UKrg1P09z/AiaAWWtWxMT7a8+X8mWU6Ok9sYc8s=
 github.com/ddkwork/golibrary v0.0.91-0.20250221114559-8a02d569f328 h1:sd23iR6brHy0yWR+rTZ5HiGeqQ2/wQW/8xMq/Nu4IsA=
@@ -48,12 +50,18 @@ github.com/ddkwork/golibrary v0.0.91-0.20250223131750-a8104c43bca2 h1:AfDriquwTn
 github.com/ddkwork/golibrary v0.0.91-0.20250223131750-a8104c43bca2/go.mod h1:6yNujFwybY0YmjNj7uDegka5mnO2Xg6XMNNtQ9TZ/gI=
 github.com/ddkwork/toolbox v0.0.0-20250221043304-e2865d103f34 h1:L7nNbyx/xAtXavCXcnANYUCAMk+sX2UqyB3C17yCyGs=
 github.com/ddkwork/toolbox v0.0.0-20250221043304-e2865d103f34/go.mod h1:y0nLLadZl0tIv9sUOSGL8JjRXSwe0oBEaEWMlhVmMAI=
+github.com/ddkwork/toolbox v0.0.0-20250223132126-bc1aa33ca017 h1:tIJzTtEiqFChqKf83AZu9wdjXPCAyvF9lWIwJ+gFuS8=
+github.com/ddkwork/toolbox v0.0.0-20250223132126-bc1aa33ca017/go.mod h1:8Smu+JdlrR8LM1aSIe7pLdsMMEB3+28+x7cT21vxYAM=
 github.com/ddkwork/unison v0.0.0-20250221064127-b3a4eae98f92 h1:xonhMPyeIq1LHNbzWTj2OfJ3wHf0B3HuE378SuNQfZQ=
 github.com/ddkwork/unison v0.0.0-20250221064127-b3a4eae98f92/go.mod h1:XnNWXLonAcky/MUM5GsJbXLrSuQknCx/MRbE0aKc1AM=
+github.com/ddkwork/unison v0.0.0-20250223132541-758d7214d111 h1:qAn1jZQ0kmHMKaTYHR7RzISieFFZRqqzE8ny75wyVNY=
+github.com/ddkwork/unison v0.0.0-20250223132541-758d7214d111/go.mod h1:FEhc43efKL0KXlYc/oJ2yYOiYYhqXWBRBSj5IbuiFOQ=
 github.com/dlclark/regexp2 v1.11.5 h1:Q/sSnsKerHeCkc/jSTNq1oCm7KiVgUMZRDUoRu0JQZQ=
 github.com/dlclark/regexp2 v1.11.5/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
 github.com/ebitengine/purego v0.8.1 h1:sdRKd6plj7KYW33EH5As6YKfe8m9zbN9JMrOjNVF/BE=
 github.com/ebitengine/purego v0.8.1/go.mod h1:iIjxzd6CiRiOG0UyXP+V1+jWqUXVjPKLAI0mRfJZTmQ=
+github.com/ebitengine/purego v0.8.2 h1:jPPGWs2sZ1UgOSgD2bClL0MJIqu58nOmIcBuXr62z1I=
+github.com/ebitengine/purego v0.8.2/go.mod h1:iIjxzd6CiRiOG0UyXP+V1+jWqUXVjPKLAI0mRfJZTmQ=
 github.com/edsrzf/mmap-go v1.1.0/go.mod h1:19H/e8pUPLicwkyNgOykDXkJ9F0MHE+Z52B8EIth78Q=
 github.com/edsrzf/mmap-go v1.2.0 h1:hXLYlkbaPzt1SaQk+anYwKSRNhufIDCchSPkUD6dD84=
 github.com/edsrzf/mmap-go v1.2.0/go.mod h1:19H/e8pUPLicwkyNgOykDXkJ9F0MHE+Z52B8EIth78Q=

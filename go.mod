@@ -3,10 +3,10 @@ module github.com/ddkwork/HyperDbg
 go 1.24.0
 
 require (
-	github.com/ddkwork/app v0.0.0-20250222134803-fb1c9c7204e8
+	github.com/ddkwork/app v0.0.0-20250223132950-a02e16fc9b2e
 	github.com/ddkwork/golibrary v0.0.91-0.20250223131750-a8104c43bca2
-	github.com/ddkwork/unison v0.0.0-20250221064127-b3a4eae98f92
-	github.com/ebitengine/purego v0.8.1
+	github.com/ddkwork/unison v0.0.0-20250223132541-758d7214d111
+	github.com/ebitengine/purego v0.8.2
 	github.com/saferwall/pe v1.5.6
 	github.com/tc-hib/winres v0.3.1
 	github.com/winlabs/gowin32 v0.0.0-20240930213947-f504d7e14639
@@ -24,7 +24,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dave/dst v0.27.3 // indirect
 	github.com/dc0d/caseconv v0.5.0 // indirect
-	github.com/ddkwork/toolbox v0.0.0-20250221043304-e2865d103f34 // indirect
+	github.com/ddkwork/toolbox v0.0.0-20250223132126-bc1aa33ca017 // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
 	github.com/edsrzf/mmap-go v1.2.0 // indirect
 	github.com/go-enry/go-enry/v2 v2.9.1 // indirect
