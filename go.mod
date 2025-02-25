@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/ddkwork/app v0.0.0-20250223133821-9bca871bb0a6
-	github.com/ddkwork/golibrary v0.0.91-0.20250224160512-cae108870eee
+	github.com/ddkwork/golibrary v0.0.91-0.20250225120832-ed50dea89457
 	github.com/ddkwork/unison v0.0.0-20250223133607-c57f5eaea336
 	github.com/ebitengine/purego v0.8.2
 	github.com/saferwall/pe v1.5.6
@@ -16,7 +16,7 @@ require (
 )
 
 require (
-	gioui.org v0.8.0 // indirect
+	gioui.org v0.8.1-0.20250223181602-72a72a2bc21a // indirect
 	gioui.org/shader v1.0.8 // indirect
 	github.com/alecthomas/chroma/v2 v2.15.0 // indirect
 	github.com/aquasecurity/table v1.8.0 // indirect
