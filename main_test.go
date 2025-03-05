@@ -7,42 +7,35 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/ddkwork/golibrary/safemap"
+
 	"github.com/ddkwork/golibrary/mylog"
 	"github.com/ddkwork/golibrary/stream"
 )
 
 func TestUpdateAppModule(t *testing.T) {
-	paths := []string{
-		"D:\\workspace\\workspace\\demo\\toolbox",
-		"D:\\workspace\\workspace\\demo\\unison",
-		"D:\\workspace\\workspace\\demo\\app",
-	}
-	for _, path := range paths {
-		mylog.Check(os.Chdir(path))
-		UpdateDependencies() // 执行一次提交一次，直到所有依赖都更新完毕，需要多次提交
+	for k, v := range safemap.NewOrdered[string, string](func(yield func(string, string) bool) {
+		yield("github.com/ddkwork/toolbox", "D:\\workspace\\workspace\\demo\\toolbox")
+		yield("github.com/ddkwork/unison", "D:\\workspace\\workspace\\demo\\unison")
+		yield("github.com/ddkwork/app", "D:\\workspace\\workspace\\demo\\app")
+	}).Range() {
+		hash := stream.GetLastCommitHashLocal(k, v)
+		cmd := "go get -x " + k + "@" + hash
+		mylog.Check(os.Chdir(v))
+		stream.RunCommand(cmd)
+		stream.RunCommand("go mod tidy")
+		cleaner()
 	}
 	mylog.Check(os.Chdir("D:\\workspace\\workspace\\gui"))
-	UpdateDependencies()
+	hash := stream.GetLastCommitHashLocal("github.com/ddkwork/app", "D:\\workspace\\workspace\\demo\\app")
+	cmd := "go get -x " + "github.com/ddkwork/app" + "@" + hash
+	stream.RunCommand(cmd)
+	stream.RunCommand("go mod tidy")
+	cleaner()
 }
 
-func UpdateDependencies() {
+func cleaner() {
 	for s := range strings.Lines(`
-     //go get -x gioui.org@main
-	 //go get -x gioui.org/cmd@main
-	 //go get -x gioui.org/example@main
-	 //go get -x gioui.org/x@main
-	 //go get -x github.com/oligo/gvcode@main
-	 go get -x github.com/ddkwork/golibrary@master
-	 //go get -x github.com/ddkwork/ux@master
-	 go get -x github.com/google/go-cmp@master
-	 go get -x github.com/ddkwork/app@master
-	 go get -x github.com/ddkwork/toolbox@master
-	 go get -x github.com/ddkwork/unison@master
-	 //go get -x github.com/ebitengine/purego@main
-	 //go get -x github.com/saferwall/pe@main
-	 ::go get -u -x all
-	 go mod tidy
-
 	//go install mvdan.cc/gofumpt@latest
 	gofumpt -l -w .
 	//go install honnef.co/go/tools/cmd/staticcheck@latest
