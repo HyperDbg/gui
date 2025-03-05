@@ -57,18 +57,6 @@ func UpdateDependencies() {
 	}
 }
 
-//func TestUpdateAppModule(t *testing.T) {
-//	if !stream.IsDir("D:\\workspace\\workspace\\demo\\app") {
-//		return
-//	}
-//	mylog.Check(os.Chdir("D:\\workspace\\workspace\\demo\\app"))
-//	session := stream.RunCommand("git log -1 --format=\"%H\"")
-//	mylog.Check(os.Chdir("D:\\workspace\\workspace\\gui"))
-//	id := mylog.Check2(strconv.Unquote(session.Output.String()))
-//	mylog.Info("id", id)
-//	stream.RunCommand("go get github.com/ddkwork/app@" + id)
-//}
-
 func TestUpdateSDKAndBin(t *testing.T) { // todo use abs path, don't copy bin dir to here
 	if !stream.IsDir("bin") {
 		return

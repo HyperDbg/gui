@@ -3,7 +3,7 @@
 *.lib
 *.log
 *.reg
-reset git.cmd
+reset_git.cmd
 cmake-build-debug
 /hyperdbgui.exe
 /binaries-bin.zip
