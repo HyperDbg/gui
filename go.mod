@@ -3,10 +3,10 @@ module github.com/ddkwork/HyperDbg
 go 1.24.0
 
 require (
-	github.com/ddkwork/app v0.0.0-20250223133821-9bca871bb0a6
-	github.com/ddkwork/golibrary v0.0.91-0.20250227042052-d984f0dc2c03
-	github.com/ddkwork/unison v0.0.0-20250223133607-c57f5eaea336
-	github.com/ebitengine/purego v0.8.2
+	github.com/ddkwork/app v0.0.0-20250227042441-beebdfdc64cb
+	github.com/ddkwork/golibrary v0.0.91-0.20250305075445-8b9cd41bb9a4
+	github.com/ddkwork/unison v0.0.0-20250227042440-cc1aeb4b8b86
+	github.com/ebitengine/purego v0.9.0-alpha.2.0.20250211193246-e9fe9ab98c53
 	github.com/saferwall/pe v1.5.6
 	github.com/tc-hib/winres v0.3.1
 	github.com/winlabs/gowin32 v0.0.0-20240930213947-f504d7e14639
@@ -20,11 +20,9 @@ require (
 	gioui.org/shader v1.0.8 // indirect
 	github.com/alecthomas/chroma/v2 v2.15.0 // indirect
 	github.com/aquasecurity/table v1.8.0 // indirect
-	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dave/dst v0.27.3 // indirect
-	github.com/dc0d/caseconv v0.5.0 // indirect
-	github.com/ddkwork/toolbox v0.0.0-20250223132126-bc1aa33ca017 // indirect
+	github.com/ddkwork/toolbox v0.0.0-20250227042439-d5b6fa483d45 // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
 	github.com/edsrzf/mmap-go v1.2.0 // indirect
 	github.com/go-enry/go-enry/v2 v2.9.1 // indirect
@@ -34,6 +32,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorpher/gowin32 v0.0.12 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/pkg/term v1.2.0-beta.2 // indirect
@@ -46,13 +45,12 @@ require (
 	github.com/valyala/fastjson v1.6.4 // indirect
 	github.com/yuin/goldmark v1.7.8 // indirect
 	golang.org/x/arch v0.12.0 // indirect
-	golang.org/x/exp v0.0.0-20250218142911-aa4b98e5adaa // indirect
-	golang.org/x/exp/shiny v0.0.0-20250218142911-aa4b98e5adaa // indirect
+	golang.org/x/exp v0.0.0-20250228200357-dead58393ab7 // indirect
+	golang.org/x/exp/shiny v0.0.0-20250228200357-dead58393ab7 // indirect
 	golang.org/x/mod v0.23.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
-	golang.org/x/term v0.27.0 // indirect
+	golang.org/x/term v0.29.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/tools v0.30.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	mvdan.cc/gofumpt v0.7.0 // indirect
 )
