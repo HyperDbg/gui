@@ -22,7 +22,7 @@ require (
 	github.com/aquasecurity/table v1.8.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dave/dst v0.27.3 // indirect
-	github.com/ddkwork/toolbox v0.0.0-20250305101644-ff54d4ae6db5 // indirect
+	github.com/ddkwork/toolbox v0.0.0-20250305193143-9c6c727ef4b0 // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
 	github.com/edsrzf/mmap-go v1.2.0 // indirect
 	github.com/go-enry/go-enry/v2 v2.9.1 // indirect

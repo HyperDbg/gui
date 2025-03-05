@@ -8,26 +8,24 @@ import (
 	"testing"
 
 	"github.com/ddkwork/golibrary/mylog"
-	"github.com/ddkwork/golibrary/safemap"
 	"github.com/ddkwork/golibrary/stream"
 )
 
 func TestUpdateAppModule(t *testing.T) {
-	for k, v := range safemap.NewOrdered[string, string](func(yield func(string, string) bool) {
-		yield("github.com/ddkwork/toolbox", "D:\\workspace\\workspace\\demo\\toolbox")
-		yield("github.com/ddkwork/unison", "D:\\workspace\\workspace\\demo\\unison")
-		yield("github.com/ddkwork/app", "D:\\workspace\\workspace\\demo\\app")
-	}).Range() {
-		hash := stream.GetLastCommitHashLocal(k, v)
-		cmd := "go get -x " + k + "@" + hash
-		mylog.Check(os.Chdir(v))
-		stream.RunCommand(cmd)
-		stream.RunCommand("go mod tidy")
-		cleaner()
-	}
+	mylog.Check(os.Chdir("D:\\workspace\\workspace\\demo\\unison"))
+	cmd := "go get -x " + "github.com/ddkwork/toolbox" + "@" + stream.GetLastCommitHashLocal("D:\\workspace\\workspace\\demo\\toolbox")
+	stream.RunCommand(cmd)
+	stream.RunCommand("go mod tidy")
+	cleaner()
+
+	mylog.Check(os.Chdir("D:\\workspace\\workspace\\demo\\app"))
+	cmd = "go get -x " + "github.com/ddkwork/unison" + "@" + stream.GetLastCommitHashLocal("D:\\workspace\\workspace\\demo\\unison")
+	stream.RunCommand(cmd)
+	stream.RunCommand("go mod tidy")
+	cleaner()
+
 	mylog.Check(os.Chdir("D:\\workspace\\workspace\\gui"))
-	hash := stream.GetLastCommitHashLocal("github.com/ddkwork/app", "D:\\workspace\\workspace\\demo\\app")
-	cmd := "go get -x " + "github.com/ddkwork/app" + "@" + hash
+	cmd = "go get -x " + "github.com/ddkwork/app" + "@" + stream.GetLastCommitHashLocal("D:\\workspace\\workspace\\demo\\app")
 	stream.RunCommand(cmd)
 	stream.RunCommand("go mod tidy")
 	cleaner()

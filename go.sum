@@ -30,8 +30,8 @@ github.com/ddkwork/app v0.0.0-20250305185906-863e065390d6 h1:WLClZzEK5ehI043BiYl
 github.com/ddkwork/app v0.0.0-20250305185906-863e065390d6/go.mod h1:faA28kORprPbb5omMVoZmGx57AdIUc3kydpPlLYbvf4=
 github.com/ddkwork/golibrary v0.0.91-0.20250305180712-ddf6d725a722 h1:hS0HTAtQ/JdDURwLDe0F+c4QvnXxRavvPS99mpL5Gas=
 github.com/ddkwork/golibrary v0.0.91-0.20250305180712-ddf6d725a722/go.mod h1:afs36GEYYsVLFfdeMY6DSQzkKueVsU+2yV4S+GPoImw=
-github.com/ddkwork/toolbox v0.0.0-20250305101644-ff54d4ae6db5 h1:ABW/zoPcZKfR3kb2GXcpXEUSmCX9BbCPAvGoLyX8tHw=
-github.com/ddkwork/toolbox v0.0.0-20250305101644-ff54d4ae6db5/go.mod h1:QXd1ui//O5KYonRw9rl3lFhxLRtzF4U+yPDYSNlUcMo=
+github.com/ddkwork/toolbox v0.0.0-20250305193143-9c6c727ef4b0 h1:9VebrJ1JGmnQlsX1/PtVG/CQcfwatm8oIasC3DVuasI=
+github.com/ddkwork/toolbox v0.0.0-20250305193143-9c6c727ef4b0/go.mod h1:QXd1ui//O5KYonRw9rl3lFhxLRtzF4U+yPDYSNlUcMo=
 github.com/ddkwork/unison v0.0.0-20250305122932-9fffac22edaf h1:y7AxZyFDUAg2S817CaCIpsT3PH96Gt2kfnN7BCBO+I4=
 github.com/ddkwork/unison v0.0.0-20250305122932-9fffac22edaf/go.mod h1:jw4phtkkMTmmZGl4dVberP4z1OX98skoIPGrLB99h1Q=
 github.com/dlclark/regexp2 v1.11.5 h1:Q/sSnsKerHeCkc/jSTNq1oCm7KiVgUMZRDUoRu0JQZQ=
