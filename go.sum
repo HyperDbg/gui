@@ -28,8 +28,8 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8Yc
 github.com/daviddengcn/go-colortext v1.0.0/go.mod h1:zDqEI5NVUop5QPpVJUxE9UO10hRnmkD5G4Pmri9+m4c=
 github.com/ddkwork/app v0.0.0-20250305122938-3f4407a4e5df h1:+HSbVnCtFHjw2nu2SOn+Snns3PaiwEGVyyIKF0tUOGE=
 github.com/ddkwork/app v0.0.0-20250305122938-3f4407a4e5df/go.mod h1:Z3KeAzxewr8j5EXUyzbhCpdFYsYQC9yZ2c+xMFt/IE8=
-github.com/ddkwork/golibrary v0.0.91-0.20250305101647-c0cc7c8860da h1:KfuqFO6s9uhy2vHixAWuPf9qS0A6XhjXtMmlAmz5BLk=
-github.com/ddkwork/golibrary v0.0.91-0.20250305101647-c0cc7c8860da/go.mod h1:QdSy3OBhkrRItL/p20KA/HdfYWO7KlPWYIJH8LQuJgg=
+github.com/ddkwork/golibrary v0.0.91-0.20250305161447-d6e22f9038bf h1:nV7AtFTXXLyUm5/MWlDbKJFwfkAiH7fF6brjDpisC9g=
+github.com/ddkwork/golibrary v0.0.91-0.20250305161447-d6e22f9038bf/go.mod h1:gFkb1XICKQSC4gF3IGGrM6N2Jiv4/3AKOP4K0tLT0wU=
 github.com/ddkwork/toolbox v0.0.0-20250305101644-ff54d4ae6db5 h1:ABW/zoPcZKfR3kb2GXcpXEUSmCX9BbCPAvGoLyX8tHw=
 github.com/ddkwork/toolbox v0.0.0-20250305101644-ff54d4ae6db5/go.mod h1:QXd1ui//O5KYonRw9rl3lFhxLRtzF4U+yPDYSNlUcMo=
 github.com/ddkwork/unison v0.0.0-20250305102820-c625f48dec95 h1:LoLdDRMLIb3AhinAk0xESpNxPR2t0n7vbQyiW30Xq+s=
