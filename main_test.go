@@ -22,7 +22,7 @@ func TestUpdateAppModule(t *testing.T) {
 		UpdateDependencies() // 执行一次提交一次，直到所有依赖都更新完毕，需要多次提交
 	}
 	mylog.Check(os.Chdir("D:\\workspace\\workspace\\gui"))
-	stream.RunCommand("go get -x github.com/ddkwork/app@master")
+	UpdateDependencies()
 }
 
 func UpdateDependencies() {
@@ -35,7 +35,7 @@ func UpdateDependencies() {
 	 go get -x github.com/ddkwork/golibrary@master
 	 //go get -x github.com/ddkwork/ux@master
 	 go get -x github.com/google/go-cmp@master
-	 //go get -x github.com/ddkwork/app@master
+	 go get -x github.com/ddkwork/app@master
 	 go get -x github.com/ddkwork/toolbox@master
 	 go get -x github.com/ddkwork/unison@master
 	 //go get -x github.com/ebitengine/purego@main
