@@ -3,9 +3,9 @@ module github.com/ddkwork/HyperDbg
 go 1.24.0
 
 require (
-	github.com/ddkwork/app v0.0.0-20250305122938-3f4407a4e5df
+	github.com/ddkwork/app v0.0.0-20250305185906-863e065390d6
 	github.com/ddkwork/golibrary v0.0.91-0.20250305180712-ddf6d725a722
-	github.com/ddkwork/unison v0.0.0-20250305102820-c625f48dec95
+	github.com/ddkwork/unison v0.0.0-20250305122932-9fffac22edaf
 	github.com/ebitengine/purego v0.9.0-alpha.2.0.20250211193246-e9fe9ab98c53
 	github.com/saferwall/pe v1.5.6
 	github.com/tc-hib/winres v0.3.1

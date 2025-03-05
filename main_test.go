@@ -35,7 +35,7 @@ func TestUpdateAppModule(t *testing.T) {
 
 func cleaner() {
 	for s := range strings.Lines(`
-	//go install mvdan.cc/gofumpt@latest
+	go install mvdan.cc/gofumpt@latest
 	gofumpt -l -w .
 	//go install honnef.co/go/tools/cmd/staticcheck@latest
 	//staticcheck ./...
