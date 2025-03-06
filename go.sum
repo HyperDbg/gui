@@ -19,8 +19,8 @@ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1VwoXQT9A3Wy9MM3WgvqSxFWenqJduM=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/daviddengcn/go-colortext v1.0.0/go.mod h1:zDqEI5NVUop5QPpVJUxE9UO10hRnmkD5G4Pmri9+m4c=
-github.com/ddkwork/app v0.0.0-20250306061027-fe2ef3009132 h1:nthU9bsuWvBvveot9DP1mapVxnu4ihyXcl98Fvh0gkU=
-github.com/ddkwork/app v0.0.0-20250306061027-fe2ef3009132/go.mod h1:yF3yZJwxjv4mO//QyOCO/wUd2Y9jxngj4VTzMB5SaqY=
+github.com/ddkwork/app v0.0.0-20250306083909-b2a35de5c183 h1:cLAEhqqMP7qHeUTZil78ubBHzJMv8EelroculMwOwi8=
+github.com/ddkwork/app v0.0.0-20250306083909-b2a35de5c183/go.mod h1:YEg9c8Ijcm71AHn3F7hR/bmmNgS9R7fMqpNCG0yLPT4=
 github.com/ddkwork/golibrary v0.0.91-0.20250306083701-983ead031b04 h1:i5LqTlgB9Jv+y9htFwryR+WDy5xAN1NSSS2CnFEorCM=
 github.com/ddkwork/golibrary v0.0.91-0.20250306083701-983ead031b04/go.mod h1:asHnV6kPJrWJ5J2QeDZnQawJ1iroGQVifvC8+UoMaXA=
 github.com/ddkwork/toolbox v0.0.0-20250306061020-57d9d0f8a742 h1:NDwORRjLyLT/J+QC5TYxtgnCReutmwWOPF1m7eRCRCU=
