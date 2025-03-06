@@ -7,5 +7,5 @@ import (
 )
 
 func LayoutLog() unison.Paneler {
-	return widget.NewLogView(mylog.Body())
+	return widget.NewLogView(mylog.Row())
 }

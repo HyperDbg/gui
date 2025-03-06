@@ -123,12 +123,12 @@ func NewTabPage() *TagPage {
 		VAlign: align.Fill,
 	})
 	log := LayoutLog()
-	logBuffer := stream.NewBuffer(mylog.Body())
+	logBuffer := stream.NewBuffer(mylog.Row())
 	go func() {
 		ticker := time.NewTicker(time.Second)
 		for range ticker.C {
 			log.AsPanel().RemoveAllChildren()
-			logBuffer.WriteStringLn(mylog.Body()) // todo append in log pkg ?
+			logBuffer.WriteStringLn(mylog.Row()) // todo append in log pkg ?
 			log.AsPanel().AddChild(widget.NewLogView(logBuffer.String()))
 		}
 	}()
