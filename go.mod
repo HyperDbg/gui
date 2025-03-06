@@ -3,9 +3,9 @@ module github.com/ddkwork/HyperDbg
 go 1.24.0
 
 require (
-	github.com/ddkwork/app v0.0.0-20250305195141-76bdedca301a
-	github.com/ddkwork/golibrary v0.0.91-0.20250306042132-40d12963448a
-	github.com/ddkwork/unison v0.0.0-20250305194627-1e381fd909f9
+	github.com/ddkwork/app v0.0.0-20250305185906-863e065390d6
+	github.com/ddkwork/golibrary v0.0.91-0.20250305180712-ddf6d725a722
+	github.com/ddkwork/unison v0.0.0-20250305185902-8d4bdffe82ef
 	github.com/ebitengine/purego v0.9.0-alpha.2.0.20250211193246-e9fe9ab98c53
 	github.com/saferwall/pe v1.5.6
 	github.com/tc-hib/winres v0.3.1
@@ -22,15 +22,15 @@ require (
 	github.com/aquasecurity/table v1.8.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dave/dst v0.27.3 // indirect
-	github.com/ddkwork/toolbox v0.0.0-20250305193143-9c6c727ef4b0 // indirect
+	github.com/ddkwork/toolbox v0.0.0-20250305101644-ff54d4ae6db5 // indirect
 	github.com/dlclark/regexp2 v1.11.5 // indirect
-	github.com/edsrzf/mmap-go v1.2.0 // indirect
+	github.com/edsrzf/mmap-go v1.1.0 // indirect
 	github.com/go-enry/go-enry/v2 v2.9.1 // indirect
 	github.com/go-enry/go-oniguruma v1.2.1 // indirect
 	github.com/go-text/typesetting v0.3.0 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/gorpher/gowin32 v0.0.12 // indirect
+	github.com/gorpher/gowin32 v0.0.11 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
@@ -48,7 +48,7 @@ require (
 	golang.org/x/exp/shiny v0.0.0-20250228200357-dead58393ab7 // indirect
 	golang.org/x/mod v0.24.0 // indirect
 	golang.org/x/sync v0.12.0 // indirect
-	golang.org/x/term v0.29.0 // indirect
+	golang.org/x/term v0.30.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/tools v0.30.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
