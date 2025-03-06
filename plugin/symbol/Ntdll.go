@@ -1,7 +1,7 @@
 package symbol
 
 type (
-	InterfaceNtdll interface{}
+	InterfaceNtdll any
 	objectNtdll    struct{}
 )
 

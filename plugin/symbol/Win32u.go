@@ -1,7 +1,7 @@
 package symbol
 
 type (
-	InterfaceWin32u interface{}
+	InterfaceWin32u any
 	objectWin32u    struct{}
 )
 
