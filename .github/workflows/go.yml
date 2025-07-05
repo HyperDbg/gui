@@ -22,10 +22,10 @@ jobs:
         include:
           - os: windows-latest
             binary_ext: .exe
-          - os: ubuntu-latest
-            binary_ext: ''
-          - os: macos-latest
-            binary_ext: ''
+#          - os: ubuntu-latest
+#            binary_ext: ''
+#          - os: macos-latest
+#            binary_ext: ''
 
     steps:
       - name: Checkout repository
