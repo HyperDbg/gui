@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/dave/dst"
+	"github.com/ddkwork/HyperDbg/sdk/dll/clang"
 	"github.com/ddkwork/golibrary/std/mylog"
 )
 

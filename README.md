@@ -10,7 +10,7 @@ old version of gui
 how to build ?
 
 ```go
-1. git clone https://github.com/HyperDbg/HyperDbg.git
+1. git clone https://github.com/HyperDbg/gui.git
 
 2. install golang from https://go.dev/dl/
 	
