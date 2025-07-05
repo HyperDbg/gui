@@ -10,54 +10,67 @@ on:
 
 env:
   RELEASE_ZIP_FILE_NAME: ux
+  BINARY_NAME: ux-${{ matrix.os }}-${{ github.ref_name }}${{ matrix.binary_ext }}
 
 jobs:
-  test-on-multiple-os:
-    name: Test on multiple OS
+  test-and-build-on-multiple-os:
+    name: Test and Build on multiple OS
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ windows-latest ]
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
+        include:
+          - os: windows-latest
+            binary_ext: .exe
+          - os: ubuntu-latest
+            binary_ext:
+          - os: macos-latest
+            binary_ext:
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: '1.25.0-rc.1'
 
-      # manjaro linux
-      # gioui提示vulkan构建约束被排除的原因是没有安装gcc，termux可以试试是不是这个原因
-      # sudo pacman -S pkg-config vulkan-headers gcc clang cmake
-      # yay -S android-sdk-build-tools  android-sdk-platform-tools
-      # yay -S android-platform
-      # go env -w GOPROXY=https://goproxy.cn,direct
-      # go run 需要sudo
-
-      - name: Install C library dependencies on Ubuntu
+      # 安装平台特定的依赖
+      - name: Install C library dependencies (Ubuntu)
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt install gcc pkg-config libwayland-dev libx11-dev libx11-xcb-dev libxkbcommon-x11-dev libgles2-mesa-dev libegl1-mesa-dev libffi-dev libxcursor-dev libvulkan-dev
+          sudo apt install gcc pkg-config libwayland-dev libx11-dev libx11-xcb-dev libxkbcommon-x11-dev \
+            libgles2-mesa-dev libegl1-mesa-dev libffi-dev libxcursor-dev libvulkan-dev
 
-      #      - name: Install C library dependencies on macOS
-      #        if: matrix.os == 'macos-latest'
-      #        run: |
-      #          brew update
-      #          brew install xcode
+      - name: Install C library dependencies (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew update
+          brew install pkg-config vulkan-headers
 
-      - name: Install Go dependencies
+      - name: Go mod tidy
         run: go mod tidy
 
-      - name: Run tests
-        run: go run golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@latest -diff ./...  &&  go run golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@latest -fix ./...
+      - name: Run tests and checks
+        run: |
+          go run golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@latest -diff ./...
+          go run golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@latest -fix ./...
 
+      # 新增加的构建和上传步骤
+      - name: Build binary
+        run: go build -o ${{ env.BINARY_NAME }} .
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BINARY_NAME }}
+          path: ${{ env.BINARY_NAME }}
 
   package-and-release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: test-on-multiple-os
+    needs: test-and-build-on-multiple-os
     runs-on: ubuntu-latest
 
     steps:
@@ -68,9 +81,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.25.0-rc.1'
-
-      - name: Install dependencies
-        run: go mod tidy
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -86,11 +96,18 @@ jobs:
       - name: Create source code archive
         run: zip -r ${{ env.RELEASE_ZIP_FILE_NAME }}-${{ github.ref_name }}.zip . -x '.git/**'
 
+      # 下载所有平台的可执行文件
+      - name: Download all binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: binaries
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             ${{ env.RELEASE_ZIP_FILE_NAME }}-${{ github.ref_name }}.zip
+            binaries/*
           body_path: CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ secrets.tk }}
