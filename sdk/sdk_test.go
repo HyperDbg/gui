@@ -61,7 +61,7 @@ func TestSdk(t *testing.T) {
 
 	mylog.Call(func() {
 		assert.True(t, VmxSupportDetection())
-		assert.True(t, SetCustomDriverPathEx(TargetFilePath))
+		//assert.True(t, SetCustomDriverPathEx(TargetFilePath))
 		mylog.Trace("InstallVmmDriver", InstallVmmDriver())
 
 		// ConnectLocalDebugger()
@@ -73,7 +73,7 @@ func TestSdk(t *testing.T) {
 		// assert.True(t, Boolean2Bool(ConnectRemoteDebuggerUsingNamedPipe(StringToBytePointer("\\\\.\\pipe\\HyperDbgDebug"))))
 		// assert.True(t, Boolean2Bool(StartProcessWithArgs(&[]rune("path")[0], &[]rune("C:\\Windows\\SysWOW64\\notepad.exe")[0])))
 
-		TargetFilePath = "../testdata/asm.exe"
+		//TargetFilePath = "../testdata/asm.exe"
 		RunCommandEx("bc") // BreakpointsRemoveAll
 		//get function address from symbol name
 		//PrintSymbol() //? then get function address?

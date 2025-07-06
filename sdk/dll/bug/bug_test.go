@@ -3,6 +3,8 @@ package libdemo
 import (
 	"testing"
 
+	"github.com/ddkwork/HyperDbg/sdk/dll/clang"
+	"github.com/ddkwork/HyperDbg/sdk/dll/gengo"
 	"github.com/ddkwork/golibrary/std/mylog"
 )
 

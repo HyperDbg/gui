@@ -68,7 +68,7 @@ typedef int* intptr_t;
 	c = append(c, opt...)
 	c = append(c, o.AdditionalParams...)
 	c = append(c, o.Sources...)
-	return stream.RunCommandArgs(c...).Output.Bytes(), nil
+	return stream.RunCommand(c...).Bytes(), nil
 }
 
 func CreateAST(opt *Options) ([]byte, error) {

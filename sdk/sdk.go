@@ -119,6 +119,20 @@ const (
 	DEBUGGER_REMOTE_PACKET_TYPE_DEBUGGEE_TO_DEBUGGER_HARDWARE_LEVEL       DebuggerRemotePacketType = 5
 )
 
+// @brief Segment selector registers in x86
+type SegmentRegisters int32
+
+const (
+	ES   SegmentRegisters = 0
+	CS   SegmentRegisters = 1
+	SS   SegmentRegisters = 2
+	DS   SegmentRegisters = 3
+	FS   SegmentRegisters = 4
+	GS   SegmentRegisters = 5
+	LDTR SegmentRegisters = 6
+	TR   SegmentRegisters = 7
+)
+
 // @brief Different levels of paging
 type PagingLevel int32
 
@@ -534,9 +548,10 @@ const (
 	DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_DETACH                                  DebuggerAttachDetachUserModeProcessActionType = 1
 	DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_REMOVE_HOOKS                            DebuggerAttachDetachUserModeProcessActionType = 2
 	DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_KILL_PROCESS                            DebuggerAttachDetachUserModeProcessActionType = 3
-	DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_PAUSE_PROCESS                           DebuggerAttachDetachUserModeProcessActionType = 4
-	DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_SWITCH_BY_PROCESS_OR_THREAD             DebuggerAttachDetachUserModeProcessActionType = 5
-	DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_QUERY_COUNT_OF_ACTIVE_DEBUGGING_THREADS DebuggerAttachDetachUserModeProcessActionType = 6
+	DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_CONTINUE_PROCESS                        DebuggerAttachDetachUserModeProcessActionType = 4
+	DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_PAUSE_PROCESS                           DebuggerAttachDetachUserModeProcessActionType = 5
+	DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_SWITCH_BY_PROCESS_OR_THREAD             DebuggerAttachDetachUserModeProcessActionType = 6
+	DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_QUERY_COUNT_OF_ACTIVE_DEBUGGING_THREADS DebuggerAttachDetachUserModeProcessActionType = 7
 )
 
 // @brief different type of process or thread queries
@@ -574,8 +589,7 @@ type DebuggerUdCommandActionType int32
 const (
 	DEBUGGER_UD_COMMAND_ACTION_TYPE_NONE         DebuggerUdCommandActionType = 0
 	DEBUGGER_UD_COMMAND_ACTION_TYPE_PAUSE        DebuggerUdCommandActionType = 1
-	DEBUGGER_UD_COMMAND_ACTION_TYPE_CONTINUE     DebuggerUdCommandActionType = 2
-	DEBUGGER_UD_COMMAND_ACTION_TYPE_REGULAR_STEP DebuggerUdCommandActionType = 3
+	DEBUGGER_UD_COMMAND_ACTION_TYPE_REGULAR_STEP DebuggerUdCommandActionType = 2
 )
 
 // @brief Debugger process switch and process details
@@ -873,6 +887,12 @@ type DirectVmcallParameters struct {
 	OptionalParam2 Uint64
 	OptionalParam3 Uint64
 }
+type SyscallCallbackContextParams struct {
+	OptionalParam1 Uint64
+	OptionalParam2 Uint64
+	OptionalParam3 Uint64
+	OptionalParam4 Uint64
+}
 type EptHooksContext struct {
 	HookingTag      Uint64
 	PhysicalAddress Uint64
@@ -897,10 +917,10 @@ type EptSingleHookUnhookingDetails struct {
 	PhysicalAddress                           SizeT
 	OriginalEntry                             Uint64
 }
-type Anon1466_9 struct {
+type Anon1593_9 struct {
 	Raw [1]int32
 }
-type Anon1468_5 struct {
+type Anon1595_5 struct {
 	// [Bits 3:0] Segment type.
 	Type Uint32
 	// [Bit 4] S - Descriptor type (0 = system; 1 = code or data).
@@ -1222,9 +1242,30 @@ type DebuggerSearchMemory struct {
 	CountOf64Chunks    Uint32
 	FinalStructureSize Uint32
 }
+type SystemCallNumbersInformation struct {
+	SysNtQuerySystemInformation   Uint32
+	SysNtQuerySystemInformationEx Uint32
+	SysNtSystemDebugControl       Uint32
+	SysNtQueryAttributesFile      Uint32
+	SysNtOpenDirectoryObject      Uint32
+	SysNtQueryDirectoryObject     Uint32
+	SysNtQueryInformationProcess  Uint32
+	SysNtSetInformationProcess    Uint32
+	SysNtQueryInformationThread   Uint32
+	SysNtSetInformationThread     Uint32
+	SysNtOpenFile                 Uint32
+	SysNtOpenKey                  Uint32
+	SysNtOpenKeyEx                Uint32
+	SysNtQueryValueKey            Uint32
+	SysNtEnumerateKey             Uint32
+}
 type DebuggerHideAndTransparentDebuggerMode struct {
-	IsHide       Boolean
-	KernelStatus Uint32
+	IsHide                               Boolean
+	TrueIfProcessIdAndFalseIfProcessName Boolean
+	ProcId                               Uint32
+	LengthOfProcessName                  Uint32
+	SystemCallNumbersInformation         SystemCallNumbersInformation
+	KernelStatus                         Uint32
 }
 type DebuggerPrepareDebuggee struct {
 	PortAddress       Uint32
@@ -1661,6 +1702,9 @@ type PregisterNotifyBuffer = *RegisterNotifyBuffer
 // @brief Used for sending direct VMCALLs on the VMX root-mode
 type PdirectVmcallParameters = *DirectVmcallParameters
 
+// @brief The (optional) context parameters for the transparent-mode
+type PsyscallCallbackContextParams = *SyscallCallbackContextParams
+
 // @brief Temporary $context used in some EPT hook commands
 type PeptHooksContext = *EptHooksContext
 
@@ -1785,6 +1829,12 @@ type PdebuggerEditMemory = *DebuggerEditMemory
 
 // @brief request for searching memory
 type PdebuggerSearchMemory = *DebuggerSearchMemory
+
+// @brief Windows System call values that are intercepted by transparency mode
+// NOTE: Windows system calls can change values on each version
+// This structure is used to keep track of the system call numbers
+// based on the current running Windows version
+type PsystemCallNumbersInformation = *SystemCallNumbersInformation
 
 // @brief request for enable or disable transparent-mode
 type PdebuggerHideAndTransparentDebuggerMode = *DebuggerHideAndTransparentDebuggerMode
@@ -2029,12 +2079,13 @@ func init() {
 	bindlib.Validate((*DebuggeeMessagePacket)(nil), 4100, 4, "OperationCode", 0, "Message", 4)
 	bindlib.Validate((*RegisterNotifyBuffer)(nil), 16, 8, "Type", 0, "hEvent", 8)
 	bindlib.Validate((*DirectVmcallParameters)(nil), 24, 8, "OptionalParam1", 0, "OptionalParam2", 8, "OptionalParam3", 16)
+	bindlib.Validate((*SyscallCallbackContextParams)(nil), 32, 8, "OptionalParam1", 0, "OptionalParam2", 8, "OptionalParam3", 16, "OptionalParam4", 24)
 	bindlib.Validate((*EptHooksContext)(nil), 24, 8, "HookingTag", 0, "PhysicalAddress", 8, "VirtualAddress", 16)
 	bindlib.Validate((*EptHooksAddressDetailsForMemoryMonitor)(nil), 32, 8, "StartAddress", 0, "EndAddress", 8, "SetHookForRead", 16, "SetHookForWrite", 17, "SetHookForExec", 18, "MemoryType", 20, "Tag", 24)
 	bindlib.Validate((*EptHooksAddressDetailsForEpthook2)(nil), 16, 8, "TargetAddress", 0, "HookFunction", 8)
 	bindlib.Validate((*EptSingleHookUnhookingDetails)(nil), 24, 8, "CallerNeedsToRestoreEntryAndInvalidateEpt", 0, "RemoveBreakpointInterception", 1, "PhysicalAddress", 8, "OriginalEntry", 16)
-	bindlib.Validate((*Anon1466_9)(nil), 4, 4)
-	bindlib.Validate((*Anon1468_5)(nil), 4, 4, "Type", 0, "DescriptorType", 0, "DescriptorPrivilegeLevel", 0, "Present", 0, "Reserved1", 1, "AvailableBit", 1, "LongMode", 1, "DefaultBig", 1, "Granularity", 1, "Unusable", 2, "Reserved2", 2)
+	bindlib.Validate((*Anon1593_9)(nil), 4, 4)
+	bindlib.Validate((*Anon1595_5)(nil), 4, 4, "Type", 0, "DescriptorType", 0, "DescriptorPrivilegeLevel", 0, "Present", 0, "Reserved1", 1, "AvailableBit", 1, "LongMode", 1, "DefaultBig", 1, "Granularity", 1, "Unusable", 2, "Reserved2", 2)
 	bindlib.Validate((*VmxSegmentSelector)(nil), 24, 8, "Selector", 0, "Attributes", 4, "Limit", 8, "Base", 16)
 	bindlib.Validate((*DebuggerModifyEvents)(nil), 24, 8, "Tag", 0, "KernelStatus", 8, "TypeOfAction", 16, "IsEnabled", 20)
 	bindlib.Validate((*DebuggerShortCircuitingEvent)(nil), 16, 8, "KernelStatus", 0, "IsShortCircuiting", 8)
@@ -2072,7 +2123,8 @@ func init() {
 	bindlib.Validate((*DebuggerReadAndWriteOnMsr)(nil), 24, 8, "Msr", 0, "CoreNumber", 8, "ActionType", 12, "Value", 16)
 	bindlib.Validate((*DebuggerEditMemory)(nil), 40, 8, "Result", 0, "Address", 8, "ProcessId", 16, "MemoryType", 20, "ByteSize", 24, "CountOf64Chunks", 28, "FinalStructureSize", 32)
 	bindlib.Validate((*DebuggerSearchMemory)(nil), 40, 8, "Address", 0, "Length", 8, "ProcessId", 16, "MemoryType", 20, "ByteSize", 24, "CountOf64Chunks", 28, "FinalStructureSize", 32)
-	bindlib.Validate((*DebuggerHideAndTransparentDebuggerMode)(nil), 8, 4, "IsHide", 0, "KernelStatus", 4)
+	bindlib.Validate((*SystemCallNumbersInformation)(nil), 60, 4, "SysNtQuerySystemInformation", 0, "SysNtQuerySystemInformationEx", 4, "SysNtSystemDebugControl", 8, "SysNtQueryAttributesFile", 12, "SysNtOpenDirectoryObject", 16, "SysNtQueryDirectoryObject", 20, "SysNtQueryInformationProcess", 24, "SysNtSetInformationProcess", 28, "SysNtQueryInformationThread", 32, "SysNtSetInformationThread", 36, "SysNtOpenFile", 40, "SysNtOpenKey", 44, "SysNtOpenKeyEx", 48, "SysNtQueryValueKey", 52, "SysNtEnumerateKey", 56)
+	bindlib.Validate((*DebuggerHideAndTransparentDebuggerMode)(nil), 76, 4, "IsHide", 0, "TrueIfProcessIdAndFalseIfProcessName", 1, "ProcId", 4, "LengthOfProcessName", 8, "SystemCallNumbersInformation", 12, "KernelStatus", 72)
 	bindlib.Validate((*DebuggerPrepareDebuggee)(nil), 280, 8, "PortAddress", 0, "Baudrate", 4, "KernelBaseAddress", 8, "Result", 16, "OsName", 20)
 	bindlib.Validate((*DebuggeeChangeCorePacket)(nil), 8, 4, "NewCore", 0, "Result", 4)
 	bindlib.Validate((*DebuggerAttachDetachUserModeProcess)(nil), 40, 8, "IsStartingNewProcess", 0, "ProcessId", 4, "ThreadId", 8, "CheckCallbackAtFirstInstruction", 12, "Is32Bit", 13, "IsPaused", 14, "Action", 16, "CountOfActiveDebuggingThreadsAndProcesses", 20, "Token", 24, "Result", 32)
@@ -2430,8 +2482,8 @@ func GetIdtEntry(idt_packet *InterruptDescriptorTableEntriesPackets) Boolean {
 
 var __imp_hyperdbg_u_enable_transparent_mode bindlib.PreloadProc
 
-func EnableTransparentMode() Boolean {
-	__res := bindlib.CCall0(__imp_hyperdbg_u_enable_transparent_mode.Addr())
+func EnableTransparentMode(ProcessId Uint32, ProcessName *Char, IsProcessId Boolean) Boolean {
+	__res := bindlib.CCall3(__imp_hyperdbg_u_enable_transparent_mode.Addr(), bindlib.MarshallSyscall(ProcessId), bindlib.MarshallSyscall(ProcessName), bindlib.MarshallSyscall(IsProcessId))
 	return bindlib.UnmarshallSyscall[Boolean](__res)
 }
 
@@ -2747,16 +2799,16 @@ func (s Anon202_5) Fields() Anon206_9 {
 func (s *Anon202_5) SetFields(v Anon206_9) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
-func (s Anon1466_9) Fields() Anon1468_5 {
-	return bindlib.ReadBitcast[Anon1468_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
+func (s Anon1593_9) Fields() Anon1595_5 {
+	return bindlib.ReadBitcast[Anon1595_5](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
-func (s *Anon1466_9) SetFields(v Anon1468_5) {
+func (s *Anon1593_9) SetFields(v Anon1595_5) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
-func (s Anon1466_9) AsUInt() Uint32 {
+func (s Anon1593_9) AsUInt() Uint32 {
 	return bindlib.ReadBitcast[Uint32](unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0))
 }
-func (s *Anon1466_9) SetAsUInt(v Uint32) {
+func (s *Anon1593_9) SetAsUInt(v Uint32) {
 	bindlib.WriteBitcast(unsafe.Add(unsafe.Pointer(unsafe.SliceData(s.Raw[:])), 0), v)
 }
 func (s PortablePciDeviceHeader) ConfigSpaceEp() _PortablePciEpHeader {

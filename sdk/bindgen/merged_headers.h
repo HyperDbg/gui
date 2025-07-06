@@ -435,8 +435,8 @@ typedef struct _DEBUGGER_REMOTE_PACKET
 //////////////////////////////////////////////////
 
 #define VERSION_MAJOR 0
-#define VERSION_MINOR 13
-#define VERSION_PATCH 1
+#define VERSION_MINOR 14
+#define VERSION_PATCH 0
 
 //
 // Example of __DATE__ string: "Jul 27 2012"
@@ -1002,6 +1002,116 @@ const unsigned char BuildSignature[] = {
 //////////////////////////////////////////////////
 
 /**
+ * @brief Segment selector registers in x86
+ *
+ */
+typedef enum SEGMENT_REGISTERS_ {
+
+    ES = 0,
+    CS,
+    SS,
+    DS,
+    FS,
+    GS,
+    LDTR,
+    TR
+} SEGMENT_REGISTERS;
+
+/*
+ * @brief Windows IRQ Levels
+ */
+#define PASSIVE_LEVEL  0  // Passive release level
+#define LOW_LEVEL      0  // Lowest interrupt level
+#define APC_LEVEL      1  // APC interrupt level
+#define DISPATCH_LEVEL 2  // Dispatcher level
+#define CMCI_LEVEL     5  // CMCI handler level
+#define CLOCK_LEVEL    13 // Interval clock level
+#define IPI_LEVEL      14 // Interprocessor interrupt level
+#define DRS_LEVEL      14 // Deferred Recovery Service level
+#define POWER_LEVEL    14 // Power failure level
+#define PROFILE_LEVEL  15 // timer used for profiling.
+#define HIGH_LEVEL     15 // Highest interrupt level
+
+/**
+ * @brief Intel CPU flags in CR0
+ */
+#define X86_CR0_PE 0x00000001 /* Enable Protected Mode    (RW) */
+#define X86_CR0_MP 0x00000002 /* Monitor Coprocessor      (RW) */
+#define X86_CR0_EM 0x00000004 /* Require FPU Emulation    (RO) */
+#define X86_CR0_TS 0x00000008 /* Task Switched            (RW) */
+#define X86_CR0_ET 0x00000010 /* Extension type           (RO) */
+#define X86_CR0_NE 0x00000020 /* Numeric Error Reporting  (RW) */
+#define X86_CR0_WP 0x00010000 /* Supervisor Write Protect (RW) */
+#define X86_CR0_AM 0x00040000 /* Alignment Checking       (RW) */
+#define X86_CR0_NW 0x20000000 /* Not Write-Through        (RW) */
+#define X86_CR0_CD 0x40000000 /* Cache Disable            (RW) */
+#define X86_CR0_PG 0x80000000 /* Paging                         */
+
+/**
+ * @brief Intel CPU features in CR4
+ *
+ */
+#define X86_CR4_VME        0x0001 /* enable vm86 extensions */
+#define X86_CR4_PVI        0x0002 /* virtual interrupts flag enable */
+#define X86_CR4_TSD        0x0004 /* disable time stamp at ipl 3 */
+#define X86_CR4_DE         0x0008 /* enable debugging extensions */
+#define X86_CR4_PSE        0x0010 /* enable page size extensions */
+#define X86_CR4_PAE        0x0020 /* enable physical address extensions */
+#define X86_CR4_MCE        0x0040 /* Machine check enable */
+#define X86_CR4_PGE        0x0080 /* enable global pages */
+#define X86_CR4_PCE        0x0100 /* enable performance counters at ipl 3 */
+#define X86_CR4_OSFXSR     0x0200 /* enable fast FPU save and restore */
+#define X86_CR4_OSXMMEXCPT 0x0400 /* enable unmasked SSE exceptions */
+#define X86_CR4_VMXE       0x2000 /* enable VMX */
+
+/*
+ * @brief Segment register and corresponding GDT meaning in Windows
+ */
+#define KGDT64_NULL      (0 * 16)     // NULL descriptor
+#define KGDT64_R0_CODE   (1 * 16)     // kernel mode 64-bit code
+#define KGDT64_R0_DATA   (1 * 16) + 8 // kernel mode 64-bit data (stack)
+#define KGDT64_R3_CMCODE (2 * 16)     // user mode 32-bit code
+#define KGDT64_R3_DATA   (2 * 16) + 8 // user mode 32-bit data
+#define KGDT64_R3_CODE   (3 * 16)     // user mode 64-bit code
+#define KGDT64_SYS_TSS   (4 * 16)     // kernel mode system task state
+#define KGDT64_R3_CMTEB  (5 * 16)     // user mode 32-bit TEB
+#define KGDT64_R0_CMCODE (6 * 16)     // kernel mode 32-bit code
+#define KGDT64_LAST      (7 * 16)     // last entry
+
+/**
+ * @brief PCID Flags
+ *
+ */
+#define PCID_NONE 0x000
+#define PCID_MASK 0x003
+
+/**
+ * @brief The Microsoft Hypervisor interface defined constants
+ *
+ */
+#define CPUID_HV_VENDOR_AND_MAX_FUNCTIONS 0x40000000
+#define CPUID_HV_INTERFACE                0x40000001
+
+/**
+ * @brief Cpuid to get virtual address width
+ *
+ */
+#define CPUID_ADDR_WIDTH 0x80000008
+
+/**
+ * @brief CPUID Features
+ *
+ */
+#define CPUID_PROCESSOR_AND_PROCESSOR_FEATURE_IDENTIFIERS 0x00000001
+
+/**
+ * @brief Hypervisor reserved range for RDMSR and WRMSR
+ *
+ */
+#define RESERVED_MSR_RANGE_LOW 0x40000000
+#define RESERVED_MSR_RANGE_HI  0x400000F0
+
+/**
  * @brief Apply event modifications to all tags
  *
  */
@@ -1387,6 +1497,23 @@ typedef struct _DIRECT_VMCALL_PARAMETERS
     UINT64 OptionalParam3;
 
 } DIRECT_VMCALL_PARAMETERS, *PDIRECT_VMCALL_PARAMETERS;
+
+//////////////////////////////////////////////////
+//             Syscall Callbacks                //
+//////////////////////////////////////////////////
+
+/**
+ * @brief The (optional) context parameters for the transparent-mode
+ *
+ */
+typedef struct _SYSCALL_CALLBACK_CONTEXT_PARAMS
+{
+    UINT64 OptionalParam1; // Optional parameter
+    UINT64 OptionalParam2; // Optional parameter
+    UINT64 OptionalParam3; // Optional parameter
+    UINT64 OptionalParam4; // Optional parameter
+
+} SYSCALL_CALLBACK_CONTEXT_PARAMS, *PSYSCALL_CALLBACK_CONTEXT_PARAMS;
 
 //////////////////////////////////////////////////
 //                  EPT Hook                    //
@@ -3773,6 +3900,35 @@ typedef struct _DEBUGGER_SEARCH_MEMORY
 /* ==============================================================================================
  */
 
+/**
+ * @brief Windows System call values that are intercepted by transparency mode
+ *
+ * NOTE: Windows system calls can change values on each version
+ * This structure is used to keep track of the system call numbers
+ * based on the current running Windows version
+ *
+ */
+typedef struct _SYSTEM_CALL_NUMBERS_INFORMATION
+{
+    UINT32 SysNtQuerySystemInformation;
+    UINT32 SysNtQuerySystemInformationEx; // On 24H2, changes on each windows version
+
+    UINT32 SysNtSystemDebugControl; // On 24H2, changes on each windows version
+    UINT32 SysNtQueryAttributesFile;
+    UINT32 SysNtOpenDirectoryObject;
+    UINT32 SysNtQueryDirectoryObject; // On 24H2, changes on each windows version
+    UINT32 SysNtQueryInformationProcess;
+    UINT32 SysNtSetInformationProcess;
+    UINT32 SysNtQueryInformationThread;
+    UINT32 SysNtSetInformationThread;
+    UINT32 SysNtOpenFile;
+    UINT32 SysNtOpenKey;
+    UINT32 SysNtOpenKeyEx; // On 24H2, changes on each windows version
+    UINT32 SysNtQueryValueKey;
+    UINT32 SysNtEnumerateKey;
+
+} SYSTEM_CALL_NUMBERS_INFORMATION, *PSYSTEM_CALL_NUMBERS_INFORMATION;
+
 #define SIZEOF_DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE \
     sizeof(DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE)
 
@@ -3792,9 +3948,11 @@ typedef struct _DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE
     // UINT64 RdtscStandardDeviation;
     // UINT64 RdtscMedian;
 
-    // BOOLEAN TrueIfProcessIdAndFalseIfProcessName;
-    // UINT32  ProcId;
-    // UINT32  LengthOfProcessName;
+    BOOLEAN TrueIfProcessIdAndFalseIfProcessName;
+    UINT32  ProcId;
+    UINT32  LengthOfProcessName;
+
+    SYSTEM_CALL_NUMBERS_INFORMATION SystemCallNumbersInformation; // System call numbers information
 
     UINT32 KernelStatus; /* DEBUGGER_OPERATION_WAS_SUCCESSFUL ,
                           DEBUGGER_ERROR_UNABLE_TO_HIDE_OR_UNHIDE_DEBUGGER
@@ -3851,6 +4009,7 @@ typedef enum DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_TYPE_ {
     DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_DETACH,
     DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_REMOVE_HOOKS,
     DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_KILL_PROCESS,
+    DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_CONTINUE_PROCESS,
     DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_PAUSE_PROCESS,
     DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_SWITCH_BY_PROCESS_OR_THREAD,
     DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS_ACTION_QUERY_COUNT_OF_ACTIVE_DEBUGGING_THREADS,
@@ -4100,7 +4259,6 @@ typedef enum DEBUGGER_UD_COMMAND_ACTION_TYPE_ {
 
     DEBUGGER_UD_COMMAND_ACTION_TYPE_NONE = 0,
     DEBUGGER_UD_COMMAND_ACTION_TYPE_PAUSE,
-    DEBUGGER_UD_COMMAND_ACTION_TYPE_CONTINUE,
     DEBUGGER_UD_COMMAND_ACTION_TYPE_REGULAR_STEP,
 
 } DEBUGGER_UD_COMMAND_ACTION_TYPE;
@@ -4800,59 +4958,62 @@ static const char *const SymbolTypeNames[] = {
 #define FUNC_SPINLOCK_LOCK 43
 #define FUNC_SPINLOCK_UNLOCK 44
 #define FUNC_EVENT_SC 45
-#define FUNC_PRINTF 46
-#define FUNC_PAUSE 47
-#define FUNC_FLUSH 48
-#define FUNC_EVENT_TRACE_STEP 49
-#define FUNC_EVENT_TRACE_STEP_IN 50
-#define FUNC_EVENT_TRACE_STEP_OUT 51
-#define FUNC_EVENT_TRACE_INSTRUMENTATION_STEP 52
-#define FUNC_EVENT_TRACE_INSTRUMENTATION_STEP_IN 53
-#define FUNC_SPINLOCK_LOCK_CUSTOM_WAIT 54
-#define FUNC_EVENT_INJECT 55
-#define FUNC_POI 56
-#define FUNC_DB 57
-#define FUNC_DD 58
-#define FUNC_DW 59
-#define FUNC_DQ 60
-#define FUNC_NEG 61
-#define FUNC_HI 62
-#define FUNC_LOW 63
-#define FUNC_NOT 64
-#define FUNC_CHECK_ADDRESS 65
-#define FUNC_DISASSEMBLE_LEN 66
-#define FUNC_DISASSEMBLE_LEN32 67
-#define FUNC_DISASSEMBLE_LEN64 68
-#define FUNC_INTERLOCKED_INCREMENT 69
-#define FUNC_INTERLOCKED_DECREMENT 70
-#define FUNC_PHYSICAL_TO_VIRTUAL 71
-#define FUNC_VIRTUAL_TO_PHYSICAL 72
-#define FUNC_POI_PA 73
-#define FUNC_HI_PA 74
-#define FUNC_LOW_PA 75
-#define FUNC_DB_PA 76
-#define FUNC_DD_PA 77
-#define FUNC_DW_PA 78
-#define FUNC_DQ_PA 79
-#define FUNC_ED 80
-#define FUNC_EB 81
-#define FUNC_EQ 82
-#define FUNC_INTERLOCKED_EXCHANGE 83
-#define FUNC_INTERLOCKED_EXCHANGE_ADD 84
-#define FUNC_EB_PA 85
-#define FUNC_ED_PA 86
-#define FUNC_EQ_PA 87
-#define FUNC_INTERLOCKED_COMPARE_EXCHANGE 88
-#define FUNC_STRLEN 89
-#define FUNC_STRCMP 90
-#define FUNC_MEMCMP 91
-#define FUNC_STRNCMP 92
-#define FUNC_WCSLEN 93
-#define FUNC_WCSCMP 94
-#define FUNC_EVENT_INJECT_ERROR_CODE 95
-#define FUNC_MEMCPY 96
-#define FUNC_MEMCPY_PA 97
-#define FUNC_WCSNCMP 98
+#define FUNC_MICROSLEEP 46
+#define FUNC_PRINTF 47
+#define FUNC_PAUSE 48
+#define FUNC_FLUSH 49
+#define FUNC_EVENT_TRACE_STEP 50
+#define FUNC_EVENT_TRACE_STEP_IN 51
+#define FUNC_EVENT_TRACE_STEP_OUT 52
+#define FUNC_EVENT_TRACE_INSTRUMENTATION_STEP 53
+#define FUNC_EVENT_TRACE_INSTRUMENTATION_STEP_IN 54
+#define FUNC_RDTSC 55
+#define FUNC_RDTSCP 56
+#define FUNC_SPINLOCK_LOCK_CUSTOM_WAIT 57
+#define FUNC_EVENT_INJECT 58
+#define FUNC_POI 59
+#define FUNC_DB 60
+#define FUNC_DD 61
+#define FUNC_DW 62
+#define FUNC_DQ 63
+#define FUNC_NEG 64
+#define FUNC_HI 65
+#define FUNC_LOW 66
+#define FUNC_NOT 67
+#define FUNC_CHECK_ADDRESS 68
+#define FUNC_DISASSEMBLE_LEN 69
+#define FUNC_DISASSEMBLE_LEN32 70
+#define FUNC_DISASSEMBLE_LEN64 71
+#define FUNC_INTERLOCKED_INCREMENT 72
+#define FUNC_INTERLOCKED_DECREMENT 73
+#define FUNC_PHYSICAL_TO_VIRTUAL 74
+#define FUNC_VIRTUAL_TO_PHYSICAL 75
+#define FUNC_POI_PA 76
+#define FUNC_HI_PA 77
+#define FUNC_LOW_PA 78
+#define FUNC_DB_PA 79
+#define FUNC_DD_PA 80
+#define FUNC_DW_PA 81
+#define FUNC_DQ_PA 82
+#define FUNC_ED 83
+#define FUNC_EB 84
+#define FUNC_EQ 85
+#define FUNC_INTERLOCKED_EXCHANGE 86
+#define FUNC_INTERLOCKED_EXCHANGE_ADD 87
+#define FUNC_EB_PA 88
+#define FUNC_ED_PA 89
+#define FUNC_EQ_PA 90
+#define FUNC_INTERLOCKED_COMPARE_EXCHANGE 91
+#define FUNC_STRLEN 92
+#define FUNC_STRCMP 93
+#define FUNC_MEMCMP 94
+#define FUNC_STRNCMP 95
+#define FUNC_WCSLEN 96
+#define FUNC_WCSCMP 97
+#define FUNC_EVENT_INJECT_ERROR_CODE 98
+#define FUNC_MEMCPY 99
+#define FUNC_MEMCPY_PA 100
+#define FUNC_WCSNCMP 101
 
 static const char *const FunctionNames[] = {
 "FUNC_UNDEFINED",
@@ -4901,6 +5062,7 @@ static const char *const FunctionNames[] = {
 "FUNC_SPINLOCK_LOCK",
 "FUNC_SPINLOCK_UNLOCK",
 "FUNC_EVENT_SC",
+"FUNC_MICROSLEEP",
 "FUNC_PRINTF",
 "FUNC_PAUSE",
 "FUNC_FLUSH",
@@ -4909,6 +5071,8 @@ static const char *const FunctionNames[] = {
 "FUNC_EVENT_TRACE_STEP_OUT",
 "FUNC_EVENT_TRACE_INSTRUMENTATION_STEP",
 "FUNC_EVENT_TRACE_INSTRUMENTATION_STEP_IN",
+"FUNC_RDTSC",
+"FUNC_RDTSCP",
 "FUNC_SPINLOCK_LOCK_CUSTOM_WAIT",
 "FUNC_EVENT_INJECT",
 "FUNC_POI",
@@ -5474,7 +5638,7 @@ hyperdbg_u_get_idt_entry(INTERRUPT_DESCRIPTOR_TABLE_ENTRIES_PACKETS * idt_packet
 // Exported functionality of the '!hide', and '!unhide' commands
 //
 IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
-hyperdbg_u_enable_transparent_mode();
+hyperdbg_u_enable_transparent_mode(UINT32 ProcessId, CHAR * ProcessName, BOOLEAN IsProcessId);
 
 IMPORT_EXPORT_LIBHYPERDBG BOOLEAN
 hyperdbg_u_disable_transparent_mode();

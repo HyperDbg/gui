@@ -2,7 +2,6 @@ package constants
 
 import (
 	"path/filepath"
-	"strconv"
 	"strings"
 	"testing"
 
@@ -41,22 +40,22 @@ func genConstants(fileName string) {
 	g.P("import \"fmt\"")
 	g.P("type ", kind, " int")
 	g.P("const (")
-	for i, p := range m.List() {
-		if i == 0 {
-			g.P(p.Key, " ", kind, " = ", p.Value)
-			continue
-		}
-		g.P(p.Key, " = ", p.Value)
-	}
+	//for i, p := range m.Range() {
+	//	if i == 0 {
+	//		g.P(p.Key, " ", kind, " = ", p.Value)
+	//		continue
+	//	}
+	//	g.P(p.Key, " = ", p.Value)
+	//}
 	g.P(")")
 	g.P()
 
 	g.P("func (k ", kind, ") String() string {")
 	g.P("switch k {")
-	for _, p := range m.List() {
-		g.P("case ", p.Value, ":")
-		g.P("return ", strconv.Quote(stream.ToCamelUpper(p.Key)))
-	}
+	//for _, p := range m.List() {
+	//	g.P("case ", p.Value, ":")
+	//	g.P("return ", strconv.Quote(stream.ToCamelUpper(p.Key)))
+	//}
 	g.P("default:")
 	g.P("return \"unknown ", kind, " \"+fmt.Sprint(k)")
 	g.P("}")
@@ -65,9 +64,9 @@ func genConstants(fileName string) {
 
 	g.P("func(k ", kind, ") Elements()[]", kind, " {")
 	g.P("return []", kind, " {")
-	for _, p := range m.List() {
-		g.P(p.Key, ",")
-	}
+	//for _, p := range m.List() {
+	//	g.P(p.Key, ",")
+	//}
 	g.P("}")
 	g.P("}")
 	g.P()
