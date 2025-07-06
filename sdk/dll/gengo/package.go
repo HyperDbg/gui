@@ -70,7 +70,7 @@ func (p *Package) Fprint(fn func(path string) (io.WriteCloser, error)) error {
 // RemoveDuplicates 去除文本中的重复行，同时在重复行前加上//注释
 func RemoveDuplicates(input string) string {
 	lines := strings.Split(input, "\n")
-	seen := make(map[string]bool)
+	//seen := make(map[string]bool)
 	var result []string
 
 	for _, line := range lines {
@@ -80,17 +80,17 @@ func RemoveDuplicates(input string) string {
 		}
 
 		// 检查是否是 type 定义
-		if strings.HasPrefix(line, "type ") {
-			def := strings.TrimPrefix(line, "type ")
-			if seen[def] {
-				result = append(result, "//"+line)
-			} else {
-				seen[def] = true
-				result = append(result, line)
-			}
-		} else {
-			result = append(result, line)
-		}
+		//if strings.CutPrefix(line, "type ") {
+		//	def := strings.TrimPrefix(line, "type ")
+		//	if seen[def] {
+		//		result = append(result, "//"+line)
+		//	} else {
+		//		seen[def] = true
+		//		result = append(result, line)
+		//	}
+		//} else {
+		//	result = append(result, line)
+		//}
 	}
 
 	return strings.Join(result, "\n")

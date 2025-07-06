@@ -449,10 +449,10 @@ func (p *BaseProvider) FindType(name string) (TypeRef, bool) {
 }
 
 func (p *BaseProvider) InferMethod(name string) (rcv string, newName string) {
-	for _, rule := range p.InferredMethods {
-		if strings.HasPrefix(name, rule.Name) {
-			return rule.Receiver, strings.TrimPrefix(name, rule.Name)
-		}
-	}
+	//for _, rule := range p.InferredMethods {
+	//	if strings.HasPrefix(name, rule.Name) {
+	//		return rule.Receiver, strings.TrimPrefix(name, rule.Name)
+	//	}
+	//}
 	return "", name
 }
