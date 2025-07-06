@@ -2,8 +2,9 @@
 package bug
 
 import (
-	"github.com/ddkwork/bindgen/dll/bindlib"
 	"unsafe"
+
+	"github.com/ddkwork/HyperDbg/sdk/dll/bindlib"
 )
 
 const GengoLibraryName = "bug"
