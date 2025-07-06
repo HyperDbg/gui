@@ -18,14 +18,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ windows-latest ]
         include:
           - os: windows-latest
             binary_ext: .exe
-#          - os: ubuntu-latest
-#            binary_ext: ''
-#          - os: macos-latest
-#            binary_ext: ''
+    #          - os: ubuntu-latest
+    #            binary_ext: ''
+    #          - os: macos-latest
+    #            binary_ext: ''
 
     steps:
       - name: Checkout repository
