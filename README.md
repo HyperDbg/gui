@@ -11,5 +11,5 @@ how to build ?
 
 2. install golang from https: //go.dev/dl/
 
-3. go run -x.
+3. go run -x .
 ```
