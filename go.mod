@@ -12,7 +12,7 @@ require (
 	github.com/saferwall/pe v1.5.7
 )
 
-replace gioui.org => github.com/ddkwork/gio v0.0.0-20250717000328-28e463d3d5cd
+replace gioui.org => github.com/ddkwork/gio v0.0.0-20250717015410-0d94b2e174e1
 
 require (
 	gioui.org/shader v1.0.8 // indirect

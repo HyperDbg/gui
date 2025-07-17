@@ -19,8 +19,8 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/ddkwork/ddk v0.0.0-20250616133849-aeec284b7037 h1:Ac7uAAK5E/BpM0fsht3fmn/2aalrnsdh0ASANcn3fVU=
 github.com/ddkwork/ddk v0.0.0-20250616133849-aeec284b7037/go.mod h1:iIOmU1npR2Dcha4+91ABYePm6AnSJdxZ47WVp/Dvpfg=
-github.com/ddkwork/gio v0.0.0-20250717000328-28e463d3d5cd h1:jVCc+/l9naJ3WuImVRSOait4ZV+yR6DLEId0krn4Xl4=
-github.com/ddkwork/gio v0.0.0-20250717000328-28e463d3d5cd/go.mod h1:CjNig0wAhLt9WZxOPAusgFD8x8IRvqt26LdDBa3Jvao=
+github.com/ddkwork/gio v0.0.0-20250717015410-0d94b2e174e1 h1:+2N16JfnjckkrTYuAxsn2ZyIUnAteU1fFnZIiM8uAmA=
+github.com/ddkwork/gio v0.0.0-20250717015410-0d94b2e174e1/go.mod h1:CjNig0wAhLt9WZxOPAusgFD8x8IRvqt26LdDBa3Jvao=
 github.com/ddkwork/golibrary v0.1.5-0.20250714094806-dc6ad63544b1 h1:nhcsfxIAgr2WeI1Ml2rutNp/mrTAW9JerdjKxuLEneo=
 github.com/ddkwork/golibrary v0.1.5-0.20250714094806-dc6ad63544b1/go.mod h1:rE8fVd30F63K+CIqlug63g0sTPdCQ2J/2gFCvYY0tFg=
 github.com/ddkwork/mcp v0.0.0-20250717020901-0612346c7c90 h1:Y0IvcVVt+6y+BtxrweYV5BGf7pADE92bKxGppcdjZWM=
