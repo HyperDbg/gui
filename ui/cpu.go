@@ -1164,8 +1164,7 @@ func LayoutDisassemblyTable() ux.Widget {
 
 				d.ConnectLocalDebugger()
 				d.LoadVmmModule()
-				//d.RunCommandEx("start")
-				d.Interpreter("run") //todo rename
+				d.RunCommand("start")
 			default:
 				mylog.Check(file + " is not a valid file type")
 			}
