@@ -3,7 +3,7 @@ package ui
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/HyperDbg/mcp/bindings/go/sdk"
+	"github.com/ddkwork/mcp/bindings/go/sdk"
 	"iter"
 	"os"
 	"path/filepath"
