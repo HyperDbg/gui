@@ -18,7 +18,7 @@ require (
 	modernc.org/cc/v4 v4.26.2
 )
 
-replace gioui.org => github.com/ddkwork/gio v0.0.0-20250716015338-34bc59a9e244
+replace gioui.org => github.com/ddkwork/gio v0.0.0-20250717000328-28e463d3d5cd
 
 require (
 	gioui.org/shader v1.0.8 // indirect
