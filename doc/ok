@@ -1,0 +1,128 @@
+
+D:\笔记本\p\ux\examples\hypedbg\release>hyperdbg-cli.exe --script vmi_mode_step_debug.ds
+HyperDbg Debugger [version: v0.18.0, build: 20260215.2136]
+Please visit https://docs.hyperdbg.org for more information...
+HyperDbg is released under the GNU Public License v3 (GPLv3).
+
+HyperDbg> // HyperDbg VMI Mode 单步调试脚本
+
+
+HyperDbg> // 在 OEP 设置断点，单步三次，打印 eip、寄存器和堆栈
+
+
+HyperDbg> // 1. 连接到本地系统（VMI Mode）
+
+
+HyperDbg> .connect local
+local debugging (vmi-mode)
+
+HyperDbg> // 2. 加载 VMM 驱动
+
+
+HyperDbg> .load vmm
+loading the vmm driver
+the service (driver) already exists
+trying to remove the old instance of the driver first
+warning, failed to stop the driver. Possible reasons include the driver not currently running or an unsuccessful unload from a previous run. This is not an error, HyperDbg tries to remove the previous driver and load it again (426)
+the old instance of the driver is removed successfully
+installing the driver again
+current processor vendor is : GenuineIntel
+virtualization technology is vt-x
+vmx operation is supported by your processor
+vmm module is running...
+interpreting symbols and creating symbol maps
+please configure the symbol path (use '.help .sympath' for more information)
+
+HyperDbg> // 3. 启动 notepad.exe 进程（VMI Mode 支持 .start）
+
+
+HyperDbg> .start path "c:\windows\system32\notepad.exe"
+the user-mode debugger in VMI Mode is still in the beta version and not stable. we decided to exclude it from this release and release it in future versions. if you want to test the user-mode debugger in VMI Mode, you should build HyperDbg with special instructions. But starting processes is fully supported in the Debugger Mode.
+(it's not recommended to use it in VMI Mode yet!)
+
+HyperDbg> // 4. 等待进程启动并到达 OEP
+
+
+HyperDbg> // 进程会在 OEP 处暂停
+
+
+HyperDbg> // 5. 第一次单步
+
+
+HyperDbg> p
+err, stepping (p) is not valid in the current context, you should connect to a debuggee
+
+HyperDbg> // 6. 打印 eip
+
+
+HyperDbg> r eip
+err, reading registers (r) is not valid in the current context, you should connect to a debuggee or attach to a process
+
+HyperDbg> // 7. 打印所有寄存器
+
+
+HyperDbg> r
+err, reading registers (r) is not valid in the current context, you should connect to a debuggee or attach to a process
+
+HyperDbg> // 8. 打印堆栈
+
+
+HyperDbg> k
+err, tracing callstack is not possible when you're not connected to a debuggee
+
+HyperDbg> // 9. 第二次单步
+
+
+HyperDbg> p
+err, stepping (p) is not valid in the current context, you should connect to a debuggee
+
+HyperDbg> // 10. 打印 eip
+
+
+HyperDbg> r eip
+err, reading registers (r) is not valid in the current context, you should connect to a debuggee or attach to a process
+
+HyperDbg> // 11. 打印所有寄存器
+
+
+HyperDbg> r
+err, reading registers (r) is not valid in the current context, you should connect to a debuggee or attach to a process
+
+HyperDbg> // 12. 打印堆栈
+
+
+HyperDbg> k
+err, tracing callstack is not possible when you're not connected to a debuggee
+
+HyperDbg> // 13. 第三次单步
+
+
+HyperDbg> p
+err, stepping (p) is not valid in the current context, you should connect to a debuggee
+
+HyperDbg> // 14. 打印 eip
+
+
+HyperDbg> r eip
+err, reading registers (r) is not valid in the current context, you should connect to a debuggee or attach to a process
+
+HyperDbg> // 15. 打印所有寄存器
+
+
+HyperDbg> r
+err, reading registers (r) is not valid in the current context, you should connect to a debuggee or attach to a process
+
+HyperDbg> // 16. 打印堆栈
+
+
+HyperDbg> k
+err, tracing callstack is not possible when you're not connected to a debuggee
+
+HyperDbg> // 17. 退出调试器
+
+
+HyperDbg> exit
+start terminating...
+you're not on HyperDbg's hypervisor anymore!
+
+D:\笔记本\p\ux\examples\hypedbg\release>

@@ -1,0 +1,7 @@
+.sympath C:\Users\Admin\Downloads\release
+.symopt+ 0x402
+.symopt+ 0x800
+.reload /f
+!unloaded
+!for_each_frame .frame
+q

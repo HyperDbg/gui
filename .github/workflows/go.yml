@@ -1,0 +1,95 @@
+name: go-mod-ci
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - dev
+    tags:
+      - 'v*'
+
+env:
+  RELEASE_ZIP_FILE_NAME: HyperDbg
+
+jobs:
+  test-and-build-on-multiple-os:
+    name: Test and Build on multiple OS
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ windows-latest ]
+        include:
+          - os: windows-latest
+            binary_ext: .exe
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.1'
+
+      - name: Go mod tidy
+        run: go mod tidy
+
+      - name: Run tests and checks
+        run: |
+          go fix ./...
+
+      - name: Build binary
+        run: |
+          go build -x .
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: HyperDbg
+          path: HyperDbg.exe
+
+  package-and-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test-and-build-on-multiple-os
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.1'
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0.0'
+
+      - name: Install GitHub Changelog Generator
+        run: gem install github_changelog_generator
+
+      - name: Generate Changelog
+        run: github_changelog_generator --user ${{ github.repository_owner }} --project ${{ github.event.repository.name }} --token ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create source code archive
+        run: zip -r ${{ env.RELEASE_ZIP_FILE_NAME }}-${{ github.ref_name }}.zip . -x '.git/**'
+
+      - name: Download binary artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: HyperDbg
+          path: .
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          files: |
+            ${{ env.RELEASE_ZIP_FILE_NAME }}-${{ github.ref_name }}.zip
+            HyperDbg.exe
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

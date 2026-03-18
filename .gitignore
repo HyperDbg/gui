@@ -1,0 +1,10 @@
+.idea
+*.exp
+*.lib
+*.log
+reset_git.cmd
+HyperDbg.exe
+initial commit.cmd
+doc/cpp
+doc/release
+doc/testdata
