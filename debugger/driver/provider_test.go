@@ -31,7 +31,7 @@ func TestProvider(t *testing.T) {
 		p.Start()
 
 		connected := p.IsConnected()
-		mylog.Info("IsConnected", connected)
+		mylog.Info(connected)
 
 		testStrings := []string{"hello", "world", "test", "driver", "communication"}
 		for _, send := range testStrings {

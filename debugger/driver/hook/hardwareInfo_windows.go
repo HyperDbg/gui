@@ -1,0 +1,4 @@
+package hook
+
+func hardInfo() {
+}

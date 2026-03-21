@@ -20,7 +20,7 @@ const (
 // good  C:\Users\Admin\go\pkg\mod\golang.org\x\sys@v0.42.0\windows\zerrors_windows.go
 // C:\Program Files\Go\src\syscall\syscall_windows.go
 // procFormatMessageW                     = modkernel32.NewProc("FormatMessageW")
-type api interface {
+type Api interface {
 	Install()
 	Uninstall()
 	Start()
@@ -39,7 +39,7 @@ type Provider struct {
 	ServiceName  string         // 服务名称，用于在 Windows 服务管理器中标识驱动服务
 }
 
-func New(driverPath, serviceName, deviceName string) api {
+func New(driverPath, serviceName, deviceName string) Api {
 
 	if serviceName == "" {
 		panic("serviceName 不能为空")
@@ -88,19 +88,19 @@ func (p *Provider) Install() {
 	if lastError != nil {
 		switch {
 		case errors.Is(lastError, windows.ERROR_SERVICE_EXISTS):
-			mylog.Info("", "服务（驱动）已存在")
-			mylog.Info("", "尝试先移除旧的驱动实例")
+			mylog.Info("服务（驱动）已存在")
+			mylog.Info("尝试先移除旧的驱动实例")
 
 			p.Stop()
 			p.Uninstall()
 
-			mylog.Info("", "重新安装驱动")
+			mylog.Info("重新安装驱动")
 			p.Install()
 			return
 		case errors.Is(lastError, windows.ERROR_SERVICE_MARKED_FOR_DELETE):
-			mylog.Info("", "服务标记为删除，尝试强制删除")
+			mylog.Info("服务标记为删除，尝试强制删除")
 			p.Uninstall()
-			mylog.Info("", "重新安装驱动")
+			mylog.Info("重新安装驱动")
 			p.Install()
 			return
 		default:
@@ -113,7 +113,7 @@ func (p *Provider) Install() {
 		mylog.Check(windows.CloseServiceHandle(schService))
 	}
 
-	mylog.Success("", "驱动安装成功")
+	mylog.Success("驱动安装成功")
 }
 
 func (p *Provider) Uninstall() {
@@ -132,31 +132,31 @@ func (p *Provider) Uninstall() {
 func (p *Provider) Start() {
 	schService := mylog.Check2(windows.OpenService(p.scManager, windows.StringToUTF16Ptr(p.ServiceName), windows.SERVICE_ALL_ACCESS))
 
-	err := windows.StartService(schService, 0, nil)
-	if err != nil {
+	e := windows.StartService(schService, 0, nil)
+	if e != nil {
 		switch {
-		case errors.Is(err, windows.ERROR_SERVICE_ALREADY_RUNNING):
-		case errors.Is(err, windows.ERROR_PATH_NOT_FOUND):
-			mylog.Info("", "错误，找不到驱动路径，或对驱动文件的访问受限")
-			mylog.Info("", "大多数情况下，这是因为杀毒软件尚未完成对驱动的扫描，")
-			mylog.Info("", "因此，如果您尝试再次加载驱动（重新输入上一个命令），问题将得到解决")
-			mylog.Check(err)
-		case errors.Is(err, windows.ERROR_INVALID_IMAGE_HASH):
-			mylog.Info("", "错误，加载驱动失败")
-			mylog.Info("", "这是因为启用了驱动程序签名强制执行或 HVCI 阻止了驱动程序加载")
-			mylog.Info("", "您应该通过附加 WinDbg 或从启动菜单禁用驱动程序签名强制执行")
-			mylog.Info("", "如果禁用了驱动程序签名强制执行，HVCI 可能会阻止驱动程序加载")
-			mylog.Info("", "HyperDbg 不兼容基于虚拟化的安全性 (VBS)")
-			mylog.Info("", "请遵循以下说明：https://docs.hyperdbg.org/getting-started/build-and-install")
-			mylog.Check(err)
-		case err.Error() == "A certificate was explicitly revoked by its issuer.":
-			mylog.Info("", "错误，驱动证书已被吊销")
-			mylog.Info("", "这是因为驱动程序的数字证书已被吊销，无法加载")
-			mylog.Info("", "请使用有效的签名证书重新编译驱动程序")
-			mylog.Info("", "或者在测试环境中禁用驱动程序签名强制执行")
-			mylog.Check(err)
+		case errors.Is(e, windows.ERROR_SERVICE_ALREADY_RUNNING):
+		case errors.Is(e, windows.ERROR_PATH_NOT_FOUND):
+			mylog.Info("错误，找不到驱动路径，或对驱动文件的访问受限")
+			mylog.Info("大多数情况下，这是因为杀毒软件尚未完成对驱动的扫描，")
+			mylog.Info("因此，如果您尝试再次加载驱动（重新输入上一个命令），问题将得到解决")
+			mylog.Check(e)
+		case errors.Is(e, windows.ERROR_INVALID_IMAGE_HASH):
+			mylog.Info("错误，加载驱动失败")
+			mylog.Info("这是因为启用了驱动程序签名强制执行或 HVCI 阻止了驱动程序加载")
+			mylog.Info("您应该通过附加 WinDbg 或从启动菜单禁用驱动程序签名强制执行")
+			mylog.Info("如果禁用了驱动程序签名强制执行，HVCI 可能会阻止驱动程序加载")
+			mylog.Info("HyperDbg 不兼容基于虚拟化的安全性 (VBS)")
+			mylog.Info("请遵循以下说明：https://docs.hyperdbg.org/getting-started/build-and-install")
+			mylog.Check(e)
+		case e.Error() == "A certificate was explicitly revoked by its issuer.":
+			mylog.Info("错误，驱动证书已被吊销")
+			mylog.Info("这是因为驱动程序的数字证书已被吊销，无法加载")
+			mylog.Info("请使用有效的签名证书重新编译驱动程序")
+			mylog.Info("或者在测试环境中禁用驱动程序签名强制执行")
+			mylog.Check(e)
 		default:
-			mylog.Check(err)
+			mylog.Check(e)
 		}
 	}
 
