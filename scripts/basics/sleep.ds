@@ -1,0 +1,29 @@
+## @file sleep.ds
+# @author HyperDbg Development Team
+# @brief Simulation of sleep function in the script engine
+# @version 0.10
+# @date 2024-07-18
+# @copyright This script is released under the MIT License.
+# 
+# @details In order to run this script, you should use '.script'
+# command. 
+# Use it like: 
+#     .script c:\scripts\basics\sleep.ds
+#
+? {
+void Sleep(int milliseconds) {
+	.count = 0;
+	.delay = milliseconds * 1000; // Convert milliseconds to microseconds
+
+	while (.delay != 0) {
+	.delay--;
+		.count = 1000; // This constant can be adjusted based on the clock speed
+		while (.count != 0) {
+	.count--;
+			// Do nothing, just busy-wait
+		}
+	}
+}
+	
+Sleep(10);
+}

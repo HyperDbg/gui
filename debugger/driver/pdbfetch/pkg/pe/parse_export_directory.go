@@ -3,6 +3,8 @@ package pe
 import (
 	"fmt"
 	"log"
+
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 // Parse the export directory.
@@ -15,9 +17,7 @@ import (
 func (p *PEFile) parseExportDirectory(rva, size uint32) (err error) {
 	exportDir := NewExportDirectory(p.getOffsetFromRva(rva))
 	start, _ := p.getDataBounds(rva, 0)
-	if err = p.parseInterface(&exportDir.ImageExportDirectory, start, exportDir.size); err != nil {
-		return err
-	}
+	mylog.Check(p.parseInterface(&exportDir.ImageExportDirectory, start, exportDir.size))
 	p.ExportDirectory = exportDir
 
 	// log.Println(exportDir)
@@ -46,9 +46,7 @@ func (p *PEFile) parseExportDirectory(rva, size uint32) (err error) {
 		// Name and name offset
 		var symNameAddr uint32
 		sym.NameOffset = startAddrOfNames + (int(i) * 4)
-		if err = p.parseInterface(&symNameAddr, sym.NameOffset, 4); err != nil {
-			return err
-		}
+		mylog.Check(p.parseInterface(&symNameAddr, sym.NameOffset, 4))
 		sym.Name = p.getStringAtRva(symNameAddr)
 		// log.Printf("%s\n", sym.Name)
 		if !validFuncName(sym.Name) {
@@ -58,15 +56,11 @@ func (p *PEFile) parseExportDirectory(rva, size uint32) (err error) {
 
 		// Ordinal
 		sym.OrdinalOffset = startAddrOfOrdinals + (int(i) * 2)
-		if err = p.parseInterface(&sym.Ordinal, sym.OrdinalOffset, 2); err != nil {
-			return err
-		}
+		mylog.Check(p.parseInterface(&sym.Ordinal, sym.OrdinalOffset, 2))
 
 		// Address
 		sym.AddressOffset = startAddrOfFuncs + (int(sym.Ordinal) * 4)
-		if err = p.parseInterface(&sym.Address, sym.AddressOffset, 4); err != nil {
-			return err
-		}
+		mylog.Check(p.parseInterface(&sym.Address, sym.AddressOffset, 4))
 		if sym.Address == 0 {
 			continue
 		}
@@ -102,9 +96,7 @@ func (p *PEFile) parseExportDirectory(rva, size uint32) (err error) {
 
 		// Address
 		sym.AddressOffset = startAddrOfFuncs + (int(sym.Ordinal) * 4)
-		if err = p.parseInterface(&sym.Address, sym.AddressOffset, 4); err != nil {
-			return err
-		}
+		mylog.Check(p.parseInterface(&sym.Address, sym.AddressOffset, 4))
 		if sym.Address == 0 {
 			continue
 		}

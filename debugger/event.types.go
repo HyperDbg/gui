@@ -1,9 +1,14 @@
 package debugger
 
+// EventType 定义事件类型
+// 注意：内核事件类型（VMM_EVENT_TYPE_ENUM）必须与 C++ Events.h 中的 VMM_EVENT_TYPE_ENUM 完全匹配
 type EventType int
 
 const (
-	EventReadMemory EventType = iota
+	// ==================== 内部命令事件类型（用于用户层事件循环）====================
+	// 这些不是内核事件类型，仅用于内部事件处理
+	EventTypeInternalStart EventType = -1000 + iota
+	EventReadMemory
 	EventWriteMemory
 	EventSetBreakpoint
 	EventRemoveBreakpoint
@@ -14,7 +19,6 @@ const (
 	EventRegisterEvent
 	EventUnregisterEvent
 	EventModifyEvent
-
 	EventStep
 	EventBreakpoint
 	EventException
@@ -24,39 +28,81 @@ const (
 	EventThreadExited
 	EventModuleLoaded
 	EventModuleUnloaded
+)
 
-	EptHookReadWriteAndExecute
-	EptHookReadWrite
-	EptHookReadAndExecute
-	EptHookWriteAndExecute
-	EptHookRead
-	EptHookWrite
-	EptHookExecute
-	EptHookExecDetours
-	EptHookExecCC
+// VMM_EVENT_TYPE_ENUM - 内核事件类型（必须与 C++ Events.h 中的 VMM_EVENT_TYPE_ENUM 完全匹配）
+const (
+	// EPT Memory Monitoring Events
+	HiddenHookReadAndWriteAndExecute EventType = iota
+	HiddenHookReadWrite
+	HiddenHookReadAndExecute
+	HiddenHookWriteAndExecute
+	HiddenHookRead
+	HiddenHookWrite
+	HiddenHookExecute
+
+	// EPT Hook Events
+	HiddenHookExecDetours
+	HiddenHookExecCC
+
+	// System-call Events
 	SyscallHookEferSyscall
 	SyscallHookEferSysret
+
+	// CPUID Instruction Execution Events
 	CpuidInstructionExecution
+
+	// Model-Specific Registers (MSRs) Reads/Modifications Events
 	RdmsrInstructionExecution
 	WrmsrInstructionExecution
+
+	// PMIO Events
 	InInstructionExecution
 	OutInstructionExecution
+
+	// Interrupts/Exceptions/Faults Events
 	ExceptionOccurred
 	ExternalInterruptOccurred
+
+	// Debug Registers Events
 	DebugRegistersAccessed
+
+	// Timing & Performance Events
 	TscInstructionExecution
 	PmcInstructionExecution
+
+	// VMCALL Instruction Execution Events
 	VmcallInstructionExecution
+
+	// Control Registers Events
 	ControlRegisterModified
 	ControlRegisterRead
 	ControlRegister3Modified
+
+	// Execution Trap Events
 	TrapExecutionModeChanged
 	TrapExecutionInstructionTrace
+
+	// XSETBV Instruction Execution Events
 	XsetbvInstructionExecution
+)
+
+// 别名（向后兼容）
+const (
+	EptHookReadWriteAndExecute = HiddenHookReadAndWriteAndExecute
+	EptHookReadWrite           = HiddenHookReadWrite
+	EptHookReadAndExecute      = HiddenHookReadAndExecute
+	EptHookWriteAndExecute     = HiddenHookWriteAndExecute
+	EptHookRead                = HiddenHookRead
+	EptHookWrite               = HiddenHookWrite
+	EptHookExecute             = HiddenHookExecute
+	EptHookExecDetours         = HiddenHookExecDetours
+	EptHookExecCC              = HiddenHookExecCC
 )
 
 func (e EventType) String() string {
 	switch e {
+	// 内部命令事件类型
 	case EventReadMemory:
 		return "EventReadMemory"
 	case EventWriteMemory:
@@ -97,24 +143,26 @@ func (e EventType) String() string {
 		return "EventModuleLoaded"
 	case EventModuleUnloaded:
 		return "EventModuleUnloaded"
-	case EptHookReadWriteAndExecute:
-		return "EptHookReadWriteAndExecute"
-	case EptHookReadWrite:
-		return "EptHookReadWrite"
-	case EptHookReadAndExecute:
-		return "EptHookReadAndExecute"
-	case EptHookWriteAndExecute:
-		return "EptHookWriteAndExecute"
-	case EptHookRead:
-		return "EptHookRead"
-	case EptHookWrite:
-		return "EptHookWrite"
-	case EptHookExecute:
-		return "EptHookExecute"
-	case EptHookExecDetours:
-		return "EptHookExecDetours"
-	case EptHookExecCC:
-		return "EptHookExecCC"
+
+	// 内核事件类型（VMM_EVENT_TYPE_ENUM）
+	case HiddenHookReadAndWriteAndExecute:
+		return "HiddenHookReadAndWriteAndExecute"
+	case HiddenHookReadWrite:
+		return "HiddenHookReadWrite"
+	case HiddenHookReadAndExecute:
+		return "HiddenHookReadAndExecute"
+	case HiddenHookWriteAndExecute:
+		return "HiddenHookWriteAndExecute"
+	case HiddenHookRead:
+		return "HiddenHookRead"
+	case HiddenHookWrite:
+		return "HiddenHookWrite"
+	case HiddenHookExecute:
+		return "HiddenHookExecute"
+	case HiddenHookExecDetours:
+		return "HiddenHookExecDetours"
+	case HiddenHookExecCC:
+		return "HiddenHookExecCC"
 	case SyscallHookEferSyscall:
 		return "SyscallHookEferSyscall"
 	case SyscallHookEferSysret:

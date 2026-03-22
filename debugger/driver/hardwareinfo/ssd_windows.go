@@ -64,7 +64,7 @@ func (s *ssdInfo) Get() (ok bool) {
 		nil,
 	))
 	getVersionInParam := (*struct__GETVERSIONINPARAMS)(unsafe.Pointer(&outBuffer[0]))
-	mylog.MarshalJson("getVersionInParam", *getVersionInParam)
+	mylog.MarshalJson(*getVersionInParam)
 	if getVersionInParam.IDEDeviceMap == 1 { // ? <=0
 	}
 	var BytesReturned uint32

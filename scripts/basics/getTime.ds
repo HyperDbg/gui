@@ -1,0 +1,37 @@
+? {
+  void  printTime() {
+    printf("process pid %d \n",$pid);
+    timePtr = $time;
+    printf("TIME PTR %x\n", timePtr);
+    
+    yearPtr = timePtr - 10;
+    year = (db(yearPtr+1) << 8) | db(yearPtr);
+    
+    monthPtr = timePtr - E;
+    month = (db(monthPtr+1) << 8) | db(monthPtr);
+    
+    dayPtr = timePtr - C;
+    day = (db(dayPtr+1) << 8) | db(dayPtr);
+    hourPtr = timePtr - A;
+    hour = (db(hourPtr+1) << 8) | db(hourPtr);
+    minPtr = timePtr - 8;
+    min = (db(minPtr+1) << 8) | db(minPtr);
+    secPtr = timePtr - 6;
+    sec = (db(secPtr+1) << 8) | db(secPtr);
+    msecPtr = timePtr - 4;
+    msec = (db(msecPtr+1) << 8) | db(msecPtr);  
+    printf("FULL TIME : %d %d %d %d %d %d %d\n", year, month, day, hour, min, sec, msec);
+  }
+  printTime();
+}
+
+//sample for sleep for 25 milis
+? {
+    .t2 = getSecMilis();
+    .t1 = getSecMilis();
+            
+    // Wait for 25 milliseconds
+    while (.t1 - .t2 < 25) {
+       .t1 = getSecMilis();
+    }
+}

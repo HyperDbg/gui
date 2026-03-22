@@ -3,6 +3,8 @@ package graph
 import (
 	"fmt"
 
+	"github.com/ddkwork/golibrary/std/mylog"
+
 	"gioui.org/layout"
 	"github.com/ddkwork/HyperDbg/debugger/api"
 	"github.com/ddkwork/golibrary/std/safemap"
@@ -378,10 +380,7 @@ func (m *Manager) AnalyzeFunction(entryAddress uint64, disasmFunc func(uint64) (
 	for !visited[currentAddress] {
 		visited[currentAddress] = true
 
-		instruction, nextAddr, err := disasmFunc(currentAddress)
-		if err != nil {
-			return nil, fmt.Errorf("disassembly error at 0x%X: %v", currentAddress, err)
-		}
+		instruction, nextAddr := mylog.Check3(disasmFunc(currentAddress))
 
 		if nextAddr == 0 {
 			exitNode := graph.AddNode(nodeID, currentAddress, NodeTypeExit, "exit")

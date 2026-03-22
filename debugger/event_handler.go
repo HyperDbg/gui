@@ -1,22 +1,22 @@
 package debugger
 
 import (
+	"bytes"
 	"encoding/binary"
 	"fmt"
-	"log/slog"
 	"unsafe"
 
 	"github.com/ddkwork/HyperDbg/debugger/driver"
-	"github.com/ddkwork/HyperDbg/debugger/process"
 	"github.com/ddkwork/HyperDbg/debugger/register"
 	"github.com/ddkwork/HyperDbg/debugger/thread"
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 type EventHandler struct {
-	driver *driver.Handle
+	driver driver.Api
 }
 
-func NewEventHandler(driverHandle *driver.Handle) *EventHandler {
+func NewEventHandler(driverHandle driver.Api) *EventHandler {
 	return &EventHandler{
 		driver: driverHandle,
 	}
@@ -28,13 +28,9 @@ func (h *EventHandler) HandleSetBreakpoint(event *Event) error {
 	}
 
 	buffer := h.constructBreakpointBuffer(event)
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		slog.Error("Handler: Set breakpoint failed", "error", err)
-		return err
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	slog.Info("Handler: Set breakpoint success", "pid", event.Pid, "address", event.Address)
+	mylog.Info(event.Pid, event.Address)
 	return nil
 }
 
@@ -46,13 +42,9 @@ func (h *EventHandler) HandleRemoveBreakpoint(event *Event) error {
 	eventBuffer := make([]byte, 8)
 	*(*uint64)(unsafe.Pointer(&eventBuffer[0])) = event.Address
 
-	err := h.driver.SendBuffer(eventBuffer, IoctlUnregisterEvent)
-	if err != nil {
-		slog.Error("Handler: Remove breakpoint failed", "error", err)
-		return err
-	}
+	h.driver.Send(bytes.NewBuffer(eventBuffer), IoctlDebuggerModifyEvents)
 
-	slog.Info("Handler: Remove breakpoint success", "pid", event.Pid, "address", event.Address)
+	mylog.Info(event.Pid, event.Address)
 	return nil
 }
 
@@ -65,13 +57,9 @@ func (h *EventHandler) HandleSingleStep(event *Event) error {
 	*(*uint64)(unsafe.Pointer(&buffer[0])) = uint64(event.Type)
 	*(*uint64)(unsafe.Pointer(&buffer[8])) = 0
 
-	err := h.driver.SendBuffer(buffer, 0x222004)
-	if err != nil {
-		slog.Error("Handler: Single step failed", "error", err)
-		return err
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), 0x222004)
 
-	slog.Info("Handler: Single step success", "pid", event.Pid)
+	mylog.Info(event.Pid)
 	return nil
 }
 
@@ -80,9 +68,9 @@ func (h *EventHandler) HandleContinue(event *Event) error {
 		return fmt.Errorf("driver not available")
 	}
 
-	h.driver.SendBuffer(nil, 0x222004)
+	h.driver.Send(bytes.NewBuffer(nil), 0x222004)
 
-	slog.Info("Handler: Continue", "pid", event.Pid)
+	mylog.Info(event.Pid)
 	return nil
 }
 
@@ -102,17 +90,15 @@ func (h *EventHandler) constructBreakpointBuffer(event *Event) []byte {
 }
 
 type DebugEventHandler struct {
-	driver    *driver.Handle
+	driver    driver.Api
 	regMgr    *register.Provider
-	procMgr   *process.Provider
 	threadMgr *thread.Provider
 }
 
-func NewDebugEventHandler(driverHandle *driver.Handle, regMgr *register.Provider, procMgr *process.Provider, threadMgr *thread.Provider) *DebugEventHandler {
+func NewDebugEventHandler(driverHandle driver.Api, regMgr *register.Provider, threadMgr *thread.Provider) *DebugEventHandler {
 	return &DebugEventHandler{
 		driver:    driverHandle,
 		regMgr:    regMgr,
-		procMgr:   procMgr,
 		threadMgr: threadMgr,
 	}
 }
@@ -124,17 +110,10 @@ func (h *DebugEventHandler) RegisterDebugEvent(event *DebugEvent) (uint64, error
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return 0, fmt.Errorf("failed to send event registration: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return 0, fmt.Errorf("failed to receive event registration response: %v", err)
-	}
-
-	tag := binary.LittleEndian.Uint64(response[0:8])
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	tag := binary.LittleEndian.Uint64(response.Bytes()[0:8])
 	return tag, nil
 }
 
@@ -161,17 +140,10 @@ func (h *DebugEventHandler) HandleEptHook(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send EPT hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive EPT hook response: %v", err)
-	}
-
-	h.decodeEptHookResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEptHookResponse(response.Bytes())
 	return nil
 }
 
@@ -182,17 +154,10 @@ func (h *DebugEventHandler) HandleSyscallHook(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send syscall hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive syscall hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -203,17 +168,10 @@ func (h *DebugEventHandler) HandleCpuid(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send CPUID hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive CPUID hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -224,17 +182,10 @@ func (h *DebugEventHandler) HandleRdmsr(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send RDMSR hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive RDMSR hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -245,17 +196,10 @@ func (h *DebugEventHandler) HandleWrmsr(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send WRMSR hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive WRMSR hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -266,17 +210,10 @@ func (h *DebugEventHandler) HandleIn(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send IN hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive IN hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -287,17 +224,10 @@ func (h *DebugEventHandler) HandleOut(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send OUT hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive OUT hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -308,17 +238,10 @@ func (h *DebugEventHandler) HandleException(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send exception hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive exception hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -329,17 +252,10 @@ func (h *DebugEventHandler) HandleInterrupt(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send interrupt hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive interrupt hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -350,17 +266,10 @@ func (h *DebugEventHandler) HandleDebugRegisters(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send debug registers hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive debug registers hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -371,17 +280,10 @@ func (h *DebugEventHandler) HandleTsc(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send TSC hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive TSC hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -392,17 +294,10 @@ func (h *DebugEventHandler) HandlePmc(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send PMC hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive PMC hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -413,17 +308,10 @@ func (h *DebugEventHandler) HandleVmcall(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send VMCALL hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive VMCALL hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -434,17 +322,10 @@ func (h *DebugEventHandler) HandleXsetbv(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send XSETBV hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive XSETBV hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -455,17 +336,10 @@ func (h *DebugEventHandler) HandleControlRegister(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send control register hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive control register hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -476,17 +350,10 @@ func (h *DebugEventHandler) HandleCr3(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send CR3 hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive CR3 hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -497,17 +364,10 @@ func (h *DebugEventHandler) HandleTrap(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send trap hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive trap hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -518,17 +378,10 @@ func (h *DebugEventHandler) HandleStep(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send step hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive step hook response: %v", err)
-	}
-
-	h.decodeStepResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeStepResponse(response.Bytes())
 	return nil
 }
 
@@ -568,17 +421,10 @@ func (h *DebugEventHandler) HandleBreakpoint(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send breakpoint hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive breakpoint hook response: %v", err)
-	}
-
-	h.decodeBreakpointResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeBreakpointResponse(response.Bytes())
 	return nil
 }
 
@@ -618,17 +464,10 @@ func (h *DebugEventHandler) HandleProcessCreated(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send process created hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive process created hook response: %v", err)
-	}
-
-	h.decodeProcessCreatedResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeProcessCreatedResponse(response.Bytes())
 	return nil
 }
 
@@ -649,27 +488,6 @@ func (h *DebugEventHandler) decodeProcessCreatedResponse(buffer []byte) {
 	if len(buffer) >= 36 {
 		copy(processPacket.ProcessName[:], buffer[17:33])
 	}
-
-	if h.procMgr != nil {
-		procName := string(processPacket.ProcessName[:])
-		end := 0
-		for i, b := range processPacket.ProcessName[:] {
-			if b == 0 {
-				end = i
-				break
-			}
-		}
-		if end > 0 {
-			procName = string(processPacket.ProcessName[:end])
-		}
-
-		procInfo := &process.ProcessInfo{
-			PID:  processPacket.ProcessId,
-			Name: procName,
-			Path: fmt.Sprintf("0x%x", processPacket.Process),
-		}
-		h.procMgr.AddProcess(procInfo)
-	}
 }
 
 func (h *DebugEventHandler) HandleProcessExited(event *DebugEvent) error {
@@ -679,17 +497,10 @@ func (h *DebugEventHandler) HandleProcessExited(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send process exited hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive process exited hook response: %v", err)
-	}
-
-	h.decodeProcessExitedResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeProcessExitedResponse(response.Bytes())
 	return nil
 }
 
@@ -710,10 +521,6 @@ func (h *DebugEventHandler) decodeProcessExitedResponse(buffer []byte) {
 	if len(buffer) >= 36 {
 		copy(processPacket.ProcessName[:], buffer[17:33])
 	}
-
-	if h.procMgr != nil {
-		h.procMgr.RemoveProcess(processPacket.ProcessId)
-	}
 }
 
 func (h *DebugEventHandler) HandleThreadCreated(event *DebugEvent) error {
@@ -723,17 +530,10 @@ func (h *DebugEventHandler) HandleThreadCreated(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send thread created hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive thread created hook response: %v", err)
-	}
-
-	h.decodeThreadCreatedResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeThreadCreatedResponse(response.Bytes())
 	return nil
 }
 
@@ -773,17 +573,10 @@ func (h *DebugEventHandler) HandleThreadExited(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send thread exited hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return err
-	}
-
-	h.decodeThreadExitedResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeThreadExitedResponse(response.Bytes())
 	return nil
 }
 
@@ -817,17 +610,10 @@ func (h *DebugEventHandler) HandleModuleLoaded(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send module loaded hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive module loaded hook response: %v", err)
-	}
-
-	h.decodeModuleLoadedResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeModuleLoadedResponse(response.Bytes())
 	return nil
 }
 
@@ -842,9 +628,9 @@ func (h *DebugEventHandler) decodeModuleLoadedResponse(buffer []byte) {
 	}
 
 	if result.IsSuccessful {
-		slog.Info("Module loaded event registered successfully")
+		mylog.Info("Module loaded event registered successfully")
 	} else {
-		slog.Error("Module loaded event registration failed", "error", result.Error)
+		mylog.Check(result.Error)
 	}
 }
 
@@ -855,17 +641,10 @@ func (h *DebugEventHandler) HandleModuleUnloaded(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send module unloaded hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive module unloaded hook response: %v", err)
-	}
-
-	h.decodeModuleUnloadedResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeModuleUnloadedResponse(response.Bytes())
 	return nil
 }
 
@@ -880,9 +659,9 @@ func (h *DebugEventHandler) decodeModuleUnloadedResponse(buffer []byte) {
 	}
 
 	if result.IsSuccessful {
-		slog.Info("Module unloaded event registered successfully")
+		mylog.Info("Module unloaded event registered successfully")
 	} else {
-		slog.Error("Module unloaded event registration failed", "error", result.Error)
+		mylog.Check(result.Error)
 	}
 }
 
@@ -893,17 +672,10 @@ func (h *DebugEventHandler) HandleEptHookReadWrite(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send EPT read-write hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive EPT read-write hook response: %v", err)
-	}
-
-	h.decodeEptHookResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEptHookResponse(response.Bytes())
 	return nil
 }
 
@@ -918,9 +690,9 @@ func (h *DebugEventHandler) decodeEptHookResponse(buffer []byte) {
 	}
 
 	if result.IsSuccessful {
-		slog.Info("EPT hook event registered successfully")
+		mylog.Info("EPT hook event registered successfully")
 	} else {
-		slog.Error("EPT hook event registration failed", "error", result.Error)
+		mylog.Check(result.Error)
 	}
 }
 
@@ -931,17 +703,10 @@ func (h *DebugEventHandler) HandleEptHookReadAndExecute(event *DebugEvent) error
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send EPT read-execute hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive EPT read-execute hook response: %v", err)
-	}
-
-	h.decodeEptHookResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEptHookResponse(response.Bytes())
 	return nil
 }
 
@@ -952,17 +717,10 @@ func (h *DebugEventHandler) HandleEptHookWriteAndExecute(event *DebugEvent) erro
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send EPT write-execute hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive EPT write-execute hook response: %v", err)
-	}
-
-	h.decodeEptHookResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEptHookResponse(response.Bytes())
 	return nil
 }
 
@@ -973,17 +731,10 @@ func (h *DebugEventHandler) HandleEptHookRead(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send EPT read hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive EPT read hook response: %v", err)
-	}
-
-	h.decodeEptHookResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEptHookResponse(response.Bytes())
 	return nil
 }
 
@@ -994,17 +745,10 @@ func (h *DebugEventHandler) HandleEptHookWrite(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send EPT write hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive EPT write hook response: %v", err)
-	}
-
-	h.decodeEptHookResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEptHookResponse(response.Bytes())
 	return nil
 }
 
@@ -1015,17 +759,10 @@ func (h *DebugEventHandler) HandleEptHookExecute(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send EPT execute hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive EPT execute hook response: %v", err)
-	}
-
-	h.decodeEptHookResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEptHookResponse(response.Bytes())
 	return nil
 }
 
@@ -1036,17 +773,10 @@ func (h *DebugEventHandler) HandleEptHookExecDetours(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send EPT exec detours hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive EPT exec detours hook response: %v", err)
-	}
-
-	h.decodeEptHookResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEptHookResponse(response.Bytes())
 	return nil
 }
 
@@ -1057,17 +787,10 @@ func (h *DebugEventHandler) HandleEptHookExecCC(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send EPT exec CC hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive EPT exec CC hook response: %v", err)
-	}
-
-	h.decodeEptHookResponse(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEptHookResponse(response.Bytes())
 	return nil
 }
 
@@ -1078,17 +801,10 @@ func (h *DebugEventHandler) HandleSyscallHookEferSysret(event *DebugEvent) error
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send SYSRET hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive SYSRET hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -1099,17 +815,10 @@ func (h *DebugEventHandler) HandleControlRegisterRead(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send control register read hook request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive control register read hook response: %v", err)
-	}
-
-	h.decodeEventActionResult(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	h.decodeEventActionResult(response.Bytes())
 	return nil
 }
 
@@ -1124,9 +833,9 @@ func (h *DebugEventHandler) decodeEventActionResult(buffer []byte) {
 	}
 
 	if result.IsSuccessful {
-		slog.Info("Event registered successfully")
+		mylog.Info("Event registered successfully")
 	} else {
-		slog.Error("Event registration failed", "error", result.Error)
+		mylog.Check(result.Error)
 	}
 }
 
@@ -1224,17 +933,10 @@ func (h *DebugEventHandler) HandleRegisterEvent(event *DebugEvent, registerMgr *
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	err := h.driver.SendBuffer(buffer, IoctlDebuggerRegisterEvent)
-	if err != nil {
-		return fmt.Errorf("failed to send register event request: %v", err)
-	}
+	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 
-	response, err := h.driver.ReceiveBuffer()
-	if err != nil {
-		return fmt.Errorf("failed to receive register event response: %v", err)
-	}
-
-	regCtx := h.decodeRegisterContext(response)
+	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	regCtx := h.decodeRegisterContext(response.Bytes())
 	registerMgr.SetRegisterContext(regCtx)
 
 	return nil

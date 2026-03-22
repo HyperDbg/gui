@@ -21,12 +21,12 @@ type EventRow struct {
 }
 
 type EventsPage struct {
-	dbg    *debugger.HyperDbg
+	dbg    debugger.Eventer
 	table  *structview.StructView
-	events []*debugger.DebugEvent
+	events []debugger.Event
 }
 
-func NewEvents(dbg *debugger.HyperDbg) *EventsPage {
+func NewEvents(dbg debugger.Eventer) *EventsPage {
 	p := &EventsPage{
 		dbg: dbg,
 	}
@@ -41,30 +41,21 @@ func (p *EventsPage) Self() any {
 }
 
 func (p *EventsPage) refreshEvents() {
-	eventManager := p.dbg.GetEventManager()
-	if eventManager == nil {
-		return
-	}
+	events := p.dbg.Events()
 
-	events := eventManager.GetDebugEvents()
 	p.events = events
 
 	rows := make([]EventRow, len(events))
 	for i, event := range events {
-		enabled := "No"
-		if event.IsEnabled {
-			enabled = "Yes"
-		}
-
 		rows[i] = EventRow{
-			Tag:       fmt.Sprintf("0x%X", event.Tag),
+			Tag:       fmt.Sprintf("0x%X", event.Address),
 			Type:      p.getEventTypeName(event.Type),
-			ProcessId: fmt.Sprintf("%d", event.ProcessId),
-			ThreadId:  fmt.Sprintf("%d", event.ThreadId),
-			CoreId:    fmt.Sprintf("%d", event.CoreId),
-			EIP:       fmt.Sprintf("0x%X", event.EIP),
-			Enabled:   enabled,
-			Actions:   fmt.Sprintf("%d", event.CountOfActions),
+			ProcessId: fmt.Sprintf("%d", event.Pid),
+			ThreadId:  "",
+			CoreId:    "",
+			EIP:       fmt.Sprintf("0x%X", event.Address),
+			Enabled:   "Yes",
+			Actions:   "",
 		}
 	}
 

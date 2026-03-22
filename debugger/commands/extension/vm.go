@@ -2,19 +2,19 @@ package extension
 
 import (
 	"fmt"
-	"log/slog"
 	"strconv"
 	"strings"
 
 	"github.com/ddkwork/HyperDbg/debugger"
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 type CommandEptHook struct {
-	dbg    *debugger.HyperDbg
+	dbg    debugger.Packeter
 	packet *debugger.Packet
 }
 
-func NewCommandEptHook(dbg *debugger.HyperDbg, packet *debugger.Packet) *CommandEptHook {
+func NewCommandEptHook(dbg debugger.Packeter, packet *debugger.Packet) *CommandEptHook {
 	return &CommandEptHook{
 		dbg:    dbg,
 		packet: packet,
@@ -22,22 +22,19 @@ func NewCommandEptHook(dbg *debugger.HyperDbg, packet *debugger.Packet) *Command
 }
 
 func (c *CommandEptHook) Help() {
-	slog.Info("!epthook : set EPT hook.")
-	slog.Info("syntax : \t!epthook [address]")
-	slog.Info("  address - virtual address to hook (hex or decimal)")
+	mylog.Info("!epthook : set EPT hook.")
+	mylog.Info("syntax : \t!epthook [address]")
+	mylog.Info("  address - virtual address to hook (hex or decimal)")
 }
 
 func (c *CommandEptHook) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) < 2 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
 
-	address, err := c.parseAddress(tokens[1].Value)
-	if err != nil {
-		return fmt.Errorf("invalid address: %w", err)
-	}
+	address := mylog.Check2(c.parseAddress(tokens[1].Value))
 
 	return c.SetEptHook(address)
 }
@@ -55,22 +52,19 @@ func (c *CommandEptHook) SetEptHook(address uint64) error {
 		return fmt.Errorf("driver not available")
 	}
 
-	err := c.packet.SetEptHook(address)
-	if err != nil {
-		return err
-	}
+	c.packet.EPTHook(address, 1, debugger.EPTHookTypeExecute)
 
-	slog.Info("Setting EPT hook", "address", fmt.Sprintf("0x%x", address))
-	slog.Info("EPT hook set successfully")
+	mylog.Info(fmt.Sprintf("0x%x", address))
+	mylog.Info("EPT hook set successfully")
 	return nil
 }
 
 type CommandMonitor struct {
-	dbg    *debugger.HyperDbg
+	dbg    debugger.Packeter
 	packet *debugger.Packet
 }
 
-func NewCommandMonitor(dbg *debugger.HyperDbg, packet *debugger.Packet) *CommandMonitor {
+func NewCommandMonitor(dbg debugger.Packeter, packet *debugger.Packet) *CommandMonitor {
 	return &CommandMonitor{
 		dbg:    dbg,
 		packet: packet,
@@ -78,46 +72,34 @@ func NewCommandMonitor(dbg *debugger.HyperDbg, packet *debugger.Packet) *Command
 }
 
 func (c *CommandMonitor) Help() {
-	slog.Info("!monitor : monitor memory access.")
-	slog.Info("syntax : \t!monitor [address] [size] [read] [write]")
-	slog.Info("  address - virtual address to monitor (hex or decimal)")
-	slog.Info("  size    - size in bytes (hex or decimal)")
-	slog.Info("  read    - monitor read access (true/false)")
-	slog.Info("  write   - monitor write access (true/false)")
+	mylog.Info("!monitor : monitor memory access.")
+	mylog.Info("syntax : \t!monitor [address] [size] [read] [write]")
+	mylog.Info("  address - virtual address to monitor (hex or decimal)")
+	mylog.Info("  size    - size in bytes (hex or decimal)")
+	mylog.Info("  read    - monitor read access (true/false)")
+	mylog.Info("  write   - monitor write access (true/false)")
 }
 
 func (c *CommandMonitor) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) < 3 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
 
-	address, err := c.parseAddress(tokens[1].Value)
-	if err != nil {
-		return fmt.Errorf("invalid address: %w", err)
-	}
+	address := mylog.Check2(c.parseAddress(tokens[1].Value))
 
-	size, err := strconv.ParseUint(tokens[2].Value, 0, 32)
-	if err != nil {
-		return fmt.Errorf("invalid size: %w", err)
-	}
+	size := mylog.Check2(strconv.ParseUint(tokens[2].Value, 0, 32))
 
 	read := false
 	write := false
 
 	if len(tokens) > 3 {
-		read, err = strconv.ParseBool(tokens[3].Value)
-		if err != nil {
-			return fmt.Errorf("invalid read flag: %w", err)
-		}
+		read = mylog.Check2(strconv.ParseBool(tokens[3].Value))
 	}
 
 	if len(tokens) > 4 {
-		write, err = strconv.ParseBool(tokens[4].Value)
-		if err != nil {
-			return fmt.Errorf("invalid write flag: %w", err)
-		}
+		write = mylog.Check2(strconv.ParseBool(tokens[4].Value))
 	}
 
 	return c.MonitorMemory(address, uint32(size), read, write)
@@ -136,23 +118,30 @@ func (c *CommandMonitor) MonitorMemory(address uint64, size uint32, read bool, w
 		return fmt.Errorf("driver not available")
 	}
 
-	err := c.packet.MonitorMemory(address, size, read, write)
-	if err != nil {
-		return err
+	var monitorType debugger.MonitorType
+	if read && write {
+		monitorType = debugger.MonitorTypeReadWrite
+	} else if read {
+		monitorType = debugger.MonitorTypeRead
+	} else if write {
+		monitorType = debugger.MonitorTypeWrite
+	} else {
+		return fmt.Errorf("must specify at least read or write")
 	}
 
-	slog.Info("Monitoring memory", "address", fmt.Sprintf("0x%x", address),
-		"size", fmt.Sprintf("0x%x", size), "read", read, "write", write)
-	slog.Info("Memory monitor set successfully")
+	c.packet.MonitorMemory(address, size, monitorType)
+
+	mylog.Info(fmt.Sprintf("0x%x", address), fmt.Sprintf("0x%x", size), read, write)
+	mylog.Info("Memory monitor set successfully")
 	return nil
 }
 
 type CommandPte struct {
-	dbg    *debugger.HyperDbg
+	dbg    debugger.Packeter
 	packet *debugger.Packet
 }
 
-func NewCommandPte(dbg *debugger.HyperDbg, packet *debugger.Packet) *CommandPte {
+func NewCommandPte(dbg debugger.Packeter, packet *debugger.Packet) *CommandPte {
 	return &CommandPte{
 		dbg:    dbg,
 		packet: packet,
@@ -160,30 +149,25 @@ func NewCommandPte(dbg *debugger.HyperDbg, packet *debugger.Packet) *CommandPte 
 }
 
 func (c *CommandPte) Help() {
-	slog.Info("!pte : query page table entry.")
-	slog.Info("syntax : \t!pte [virtual_address] [pid]")
-	slog.Info("  virtual_address - virtual address to query (hex or decimal)")
-	slog.Info("  pid            - process id (optional, default: current process)")
+	mylog.Info("!pte : query page table entry.")
+	mylog.Info("syntax : \t!pte [virtual_address] [pid]")
+	mylog.Info("  virtual_address - virtual address to query (hex or decimal)")
+	mylog.Info("  pid            - process id (optional, default: current process)")
 }
 
 func (c *CommandPte) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) < 2 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
 
-	virtualAddress, err := c.parseAddress(tokens[1].Value)
-	if err != nil {
-		return fmt.Errorf("invalid virtual address: %w", err)
-	}
+	virtualAddress := mylog.Check2(c.parseAddress(tokens[1].Value))
 
 	processId := uint32(0)
 	if len(tokens) > 2 {
-		pid, err := strconv.ParseUint(tokens[2].Value, 0, 32)
-		if err != nil {
-			return fmt.Errorf("invalid process id: %w", err)
-		}
+		pid := mylog.Check2(strconv.ParseUint(tokens[2].Value, 0, 32))
+
 		processId = uint32(pid)
 	}
 
@@ -203,22 +187,17 @@ func (c *CommandPte) QueryPte(virtualAddress uint64, processId uint32) error {
 		return fmt.Errorf("driver not available")
 	}
 
-	_, err := c.packet.QueryPte(virtualAddress, processId)
-	if err != nil {
-		return err
-	}
-
-	slog.Info("Querying PTE", "virtual_address", fmt.Sprintf("0x%x", virtualAddress), "pid", processId)
-	slog.Info("PTE query completed")
+	mylog.Info(fmt.Sprintf("0x%x", virtualAddress), processId)
+	mylog.Info("PTE query completed (not implemented)")
 	return nil
 }
 
 type CommandVa2Pa struct {
-	dbg    *debugger.HyperDbg
+	dbg    debugger.Packeter
 	packet *debugger.Packet
 }
 
-func NewCommandVa2Pa(dbg *debugger.HyperDbg, packet *debugger.Packet) *CommandVa2Pa {
+func NewCommandVa2Pa(dbg debugger.Packeter, packet *debugger.Packet) *CommandVa2Pa {
 	return &CommandVa2Pa{
 		dbg:    dbg,
 		packet: packet,
@@ -226,30 +205,25 @@ func NewCommandVa2Pa(dbg *debugger.HyperDbg, packet *debugger.Packet) *CommandVa
 }
 
 func (c *CommandVa2Pa) Help() {
-	slog.Info("!va2pa : convert virtual address to physical address.")
-	slog.Info("syntax : \t!va2pa [virtual_address] [pid]")
-	slog.Info("  virtual_address - virtual address to convert (hex or decimal)")
-	slog.Info("  pid            - process id (optional, default: current process)")
+	mylog.Info("!va2pa : convert virtual address to physical address.")
+	mylog.Info("syntax : \t!va2pa [virtual_address] [pid]")
+	mylog.Info("  virtual_address - virtual address to convert (hex or decimal)")
+	mylog.Info("  pid            - process id (optional, default: current process)")
 }
 
 func (c *CommandVa2Pa) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) < 2 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
 
-	virtualAddress, err := c.parseAddress(tokens[1].Value)
-	if err != nil {
-		return fmt.Errorf("invalid virtual address: %w", err)
-	}
+	virtualAddress := mylog.Check2(c.parseAddress(tokens[1].Value))
 
 	processId := uint32(0)
 	if len(tokens) > 2 {
-		pid, err := strconv.ParseUint(tokens[2].Value, 0, 32)
-		if err != nil {
-			return fmt.Errorf("invalid process id: %w", err)
-		}
+		pid := mylog.Check2(strconv.ParseUint(tokens[2].Value, 0, 32))
+
 		processId = uint32(pid)
 	}
 
@@ -269,22 +243,18 @@ func (c *CommandVa2Pa) Va2Pa(virtualAddress uint64, processId uint32) error {
 		return fmt.Errorf("driver not available")
 	}
 
-	physicalAddress, err := c.packet.Va2Pa(virtualAddress, processId)
-	if err != nil {
-		return err
-	}
+	physicalAddress := c.packet.VA2PA(virtualAddress, processId)
 
-	slog.Info("Virtual Address -> Physical Address", "virtual", fmt.Sprintf("0x%x", virtualAddress),
-		"physical", fmt.Sprintf("0x%x", physicalAddress), "pid", processId)
+	mylog.Info(fmt.Sprintf("0x%x", virtualAddress), fmt.Sprintf("0x%x", physicalAddress), processId)
 	return nil
 }
 
 type CommandPa2Va struct {
-	dbg    *debugger.HyperDbg
+	dbg    debugger.Packeter
 	packet *debugger.Packet
 }
 
-func NewCommandPa2Va(dbg *debugger.HyperDbg, packet *debugger.Packet) *CommandPa2Va {
+func NewCommandPa2Va(dbg debugger.Packeter, packet *debugger.Packet) *CommandPa2Va {
 	return &CommandPa2Va{
 		dbg:    dbg,
 		packet: packet,
@@ -292,30 +262,25 @@ func NewCommandPa2Va(dbg *debugger.HyperDbg, packet *debugger.Packet) *CommandPa
 }
 
 func (c *CommandPa2Va) Help() {
-	slog.Info("!pa2va : convert physical address to virtual address.")
-	slog.Info("syntax : \t!pa2va [physical_address] [pid]")
-	slog.Info("  physical_address - physical address to convert (hex or decimal)")
-	slog.Info("  pid             - process id (optional, default: current process)")
+	mylog.Info("!pa2va : convert physical address to virtual address.")
+	mylog.Info("syntax : \t!pa2va [physical_address] [pid]")
+	mylog.Info("  physical_address - physical address to convert (hex or decimal)")
+	mylog.Info("  pid             - process id (optional, default: current process)")
 }
 
 func (c *CommandPa2Va) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) < 2 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
 
-	physicalAddress, err := c.parseAddress(tokens[1].Value)
-	if err != nil {
-		return fmt.Errorf("invalid physical address: %w", err)
-	}
+	physicalAddress := mylog.Check2(c.parseAddress(tokens[1].Value))
 
 	processId := uint32(0)
 	if len(tokens) > 2 {
-		pid, err := strconv.ParseUint(tokens[2].Value, 0, 32)
-		if err != nil {
-			return fmt.Errorf("invalid process id: %w", err)
-		}
+		pid := mylog.Check2(strconv.ParseUint(tokens[2].Value, 0, 32))
+
 		processId = uint32(pid)
 	}
 
@@ -335,12 +300,8 @@ func (c *CommandPa2Va) Pa2Va(physicalAddress uint64, processId uint32) error {
 		return fmt.Errorf("driver not available")
 	}
 
-	virtualAddress, err := c.packet.Pa2Va(physicalAddress, processId)
-	if err != nil {
-		return err
-	}
+	virtualAddress := c.packet.PA2VA(physicalAddress, processId)
 
-	slog.Info("Physical Address -> Virtual Address", "physical", fmt.Sprintf("0x%x", physicalAddress),
-		"virtual", fmt.Sprintf("0x%x", virtualAddress), "pid", processId)
+	mylog.Info(fmt.Sprintf("0x%x", physicalAddress), fmt.Sprintf("0x%x", virtualAddress), processId)
 	return nil
 }

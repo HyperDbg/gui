@@ -2,23 +2,24 @@ package debugger
 
 import (
 	"fmt"
-	"log/slog"
 	"sync"
 	"time"
 
 	"github.com/ddkwork/HyperDbg/debugger/driver"
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 type EventCallback func(event *Event) error
 
 type EventManager struct {
-	driver         *driver.Handle
+	driver         driver.Api
 	handlers       map[EventType][]EventCallback
 	mu             sync.RWMutex
 	events         map[uint64]*DebugEvent
 	eventTag       uint64
 	eventCallbacks []DebugEventCallback
 	eventChan      chan *DebugEvent
+	mode           EventMode
 }
 
 const (
@@ -26,7 +27,7 @@ const (
 	DebuggerOutputSourceMaximumRemoteSourceForSingleEvent = 4
 )
 
-func NewEventManager(driverHandle *driver.Handle) *EventManager {
+func NewEventManager(driverHandle driver.Api) *EventManager {
 	return &EventManager{
 		driver:         driverHandle,
 		handlers:       make(map[EventType][]EventCallback),
@@ -42,7 +43,7 @@ func (m *EventManager) RegisterHandler(eventType EventType, handler EventCallbac
 }
 
 func (m *EventManager) TriggerEvent(event *Event) error {
-	slog.Info("Event: Triggering event", "type", event.Type, "pid", event.Pid)
+	mylog.Info(event.Type, event.Pid)
 
 	handlers, ok := m.handlers[event.Type]
 	if !ok {
@@ -50,10 +51,7 @@ func (m *EventManager) TriggerEvent(event *Event) error {
 	}
 
 	for _, handler := range handlers {
-		if err := handler(event); err != nil {
-			slog.Error("Event: Handler error", "error", err)
-			return err
-		}
+		mylog.Check(handler(event))
 	}
 
 	return nil
@@ -63,7 +61,7 @@ func (m *EventManager) SendEvent(event *Event) error {
 	return m.TriggerEvent(event)
 }
 
-func (m *EventManager) RegisterDebugEvent(event *DebugEvent) (uint64, error) {
+func (m *EventManager) RegisterDebugEvent(event *DebugEvent) uint64 {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
@@ -73,33 +71,50 @@ func (m *EventManager) RegisterDebugEvent(event *DebugEvent) (uint64, error) {
 	m.events[event.Tag] = event
 	m.eventTag++
 
-	return event.Tag, nil
+	return event.Tag
 }
 
-func (m *EventManager) ModifyDebugEvent(tag uint64, modifyType EventModifyType) (bool, error) {
+func (m *EventManager) RegisterEvent(event *Event) uint64 {
+	debugEvent := &DebugEvent{
+		Type:      event.Type,
+		ProcessId: event.Pid,
+		IsEnabled: true,
+	}
+
+	if event.Address != 0 {
+		debugEvent.EIP = event.Address
+	}
+	if event.Size != 0 {
+		debugEvent.CountOfActions = event.Size
+	}
+
+	return m.RegisterDebugEvent(debugEvent)
+}
+
+func (m *EventManager) ModifyDebugEvent(tag uint64, modifyType EventModifyType) bool {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
 	event, exists := m.events[tag]
 	if !exists {
-		return false, fmt.Errorf("event with tag %x not found", tag)
+		mylog.Check(fmt.Errorf("event with tag %x not found", tag))
 	}
 
 	switch modifyType {
 	case ModifyEnable:
 		event.IsEnabled = true
-		return true, nil
+		return true
 	case ModifyDisable:
 		event.IsEnabled = false
-		return false, nil
+		return false
 	case ModifyClear:
 		delete(m.events, tag)
-		return true, nil
+		return true
 	case ModifyQueryState:
-		return event.IsEnabled, nil
+		return event.IsEnabled
 	}
 
-	return false, nil
+	return false
 }
 
 func (m *EventManager) ModifyAllDebugEvents(modifyType EventModifyType) error {
@@ -207,4 +222,12 @@ func (m *EventManager) IsDebugEventTagExist(tag uint64) bool {
 
 	_, exists := m.events[tag]
 	return exists
+}
+
+func (m *EventManager) SetEventMode(mode EventMode) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	m.mode = mode
+	return nil
 }

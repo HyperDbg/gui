@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"iter"
 
+	"github.com/ddkwork/golibrary/std/mylog"
+
 	"gioui.org/layout"
 	"github.com/ddkwork/HyperDbg/debugger/api"
 	"github.com/ddkwork/golibrary/std/safemap"
@@ -92,10 +94,7 @@ func (m *Manager) Self() any {
 }
 
 func (m *Manager) ScanImports(baseAddress uint64, peData []byte, moduleName string, regionSize uint64) (*ImportModule, error) {
-	module, err := m.scanModule(baseAddress, peData, moduleName, regionSize)
-	if err != nil {
-		return nil, err
-	}
+	module := mylog.Check2(m.scanModule(baseAddress, peData, moduleName, regionSize))
 
 	m.modules.Update(module.Name, module)
 	return module, nil
@@ -152,8 +151,8 @@ func (m *Manager) scanModule(baseAddress uint64, peData []byte, moduleName strin
 		Imports:  make([]*ImportFunction, 0),
 	}
 
-	imports, err := m.parseImportTable(peData, baseAddress)
-	if err != nil {
+	imports, e := (m.parseImportTable(peData, baseAddress))
+	if e != nil {
 		moduleInfo.Valid = false
 		return moduleInfo, nil
 	}
@@ -165,10 +164,7 @@ func (m *Manager) scanModule(baseAddress uint64, peData []byte, moduleName strin
 func (m *Manager) parseImportTable(peData []byte, baseAddress uint64) ([]*ImportFunction, error) {
 	imports := make([]*ImportFunction, 0)
 
-	ntHeaders, err := parseNTHeaders(peData)
-	if err != nil {
-		return nil, err
-	}
+	ntHeaders := mylog.Check2(parseNTHeaders(peData))
 
 	if ntHeaders.OptionalHeader.Magic != 0x20b {
 		return imports, nil

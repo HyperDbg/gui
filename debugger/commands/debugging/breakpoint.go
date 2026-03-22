@@ -2,11 +2,11 @@ package debugging
 
 import (
 	"fmt"
-	"log/slog"
 	"strconv"
 	"strings"
 
 	"github.com/ddkwork/HyperDbg/debugger"
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 type Breakpoint struct {
@@ -19,13 +19,13 @@ type Breakpoint struct {
 }
 
 type CommandBp struct {
-	dbg         *debugger.HyperDbg
+	dbg         debugger.Packeter
 	breakpoints map[uint32]*Breakpoint
 	nextTag     uint32
 	packet      *debugger.Packet
 }
 
-func NewCommandBp(dbg *debugger.HyperDbg, packet *debugger.Packet) *CommandBp {
+func NewCommandBp(dbg debugger.Packeter, packet *debugger.Packet) *CommandBp {
 	return &CommandBp{
 		dbg:         dbg,
 		breakpoints: make(map[uint32]*Breakpoint),
@@ -35,56 +35,47 @@ func NewCommandBp(dbg *debugger.HyperDbg, packet *debugger.Packet) *CommandBp {
 }
 
 func (c *CommandBp) Help() {
-	slog.Info("bp : set breakpoint.")
-	slog.Info("syntax : \tbp [address] [pid] [core] [type]")
-	slog.Info("  address - breakpoint address (hex or decimal)")
-	slog.Info("  pid     - process id (optional, default: 0)")
-	slog.Info("  core    - core number (optional, default: 0)")
-	slog.Info("  type    - breakpoint type (optional, default: 0)")
-	slog.Info("Breakpoint types:")
-	slog.Info("  0 - Software breakpoint")
-	slog.Info("  1 - Hardware breakpoint (execute)")
-	slog.Info("  2 - Hardware breakpoint (write)")
-	slog.Info("  3 - Hardware breakpoint (read/write)")
+	mylog.Info("bp : set breakpoint.")
+	mylog.Info("syntax : \tbp [address] [pid] [core] [type]")
+	mylog.Info("  address - breakpoint address (hex or decimal)")
+	mylog.Info("  pid     - process id (optional, default: 0)")
+	mylog.Info("  core    - core number (optional, default: 0)")
+	mylog.Info("  type    - breakpoint type (optional, default: 0)")
+	mylog.Info("Breakpoint types:")
+	mylog.Info("  0 - Software breakpoint")
+	mylog.Info("  1 - Hardware breakpoint (execute)")
+	mylog.Info("  2 - Hardware breakpoint (write)")
+	mylog.Info("  3 - Hardware breakpoint (read/write)")
 }
 
 func (c *CommandBp) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) < 2 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
 
-	address, err := c.parseAddress(tokens[1].Value)
-	if err != nil {
-		return fmt.Errorf("invalid address: %w", err)
-	}
+	address := mylog.Check2(c.parseAddress(tokens[1].Value))
 
 	processId := uint32(0)
 	coreNumber := uint32(0)
 	bpType := uint32(0)
 
 	if len(tokens) > 2 {
-		pid, err := strconv.ParseUint(tokens[2].Value, 0, 32)
-		if err != nil {
-			return fmt.Errorf("invalid process id: %w", err)
-		}
+		pid := mylog.Check2(strconv.ParseUint(tokens[2].Value, 0, 32))
+
 		processId = uint32(pid)
 	}
 
 	if len(tokens) > 3 {
-		core, err := strconv.ParseUint(tokens[3].Value, 0, 32)
-		if err != nil {
-			return fmt.Errorf("invalid core number: %w", err)
-		}
+		core := mylog.Check2(strconv.ParseUint(tokens[3].Value, 0, 32))
+
 		coreNumber = uint32(core)
 	}
 
 	if len(tokens) > 4 {
-		typ, err := strconv.ParseUint(tokens[4].Value, 0, 32)
-		if err != nil {
-			return fmt.Errorf("invalid breakpoint type: %w", err)
-		}
+		typ := mylog.Check2(strconv.ParseUint(tokens[4].Value, 0, 32))
+
 		bpType = uint32(typ)
 	}
 
@@ -116,13 +107,17 @@ func (c *CommandBp) SetBreakpoint(address uint64, processId uint32, coreNumber u
 		Enabled:    true,
 	}
 
-	err := c.packet.SetBreakpoint(processId, address, coreNumber, bpType, tag)
-	if err != nil {
-		return fmt.Errorf("failed to set breakpoint: %w", err)
+	switch dbg := c.dbg.(type) {
+	case debugger.UserDebugger:
+		(dbg.SetBreakpoint(address))
+	case debugger.KernelDebugger:
+		(dbg.SetBreakpoint(address, processId))
+	default:
+		return fmt.Errorf("unsupported debugger type")
 	}
 
 	c.breakpoints[tag] = bp
-	slog.Info("Breakpoint set", "address", fmt.Sprintf("0x%x", address), "tag", tag)
+	mylog.Info(fmt.Sprintf("0x%x", address), tag)
 	return nil
 }
 
@@ -140,12 +135,12 @@ func (c *CommandBp) GetAllBreakpoints() []*Breakpoint {
 }
 
 type CommandBc struct {
-	dbg         *debugger.HyperDbg
+	dbg         debugger.Packeter
 	breakpoints map[uint32]*Breakpoint
 	packet      *debugger.Packet
 }
 
-func NewCommandBc(dbg *debugger.HyperDbg, breakpoints map[uint32]*Breakpoint, packet *debugger.Packet) *CommandBc {
+func NewCommandBc(dbg debugger.Packeter, breakpoints map[uint32]*Breakpoint, packet *debugger.Packet) *CommandBc {
 	return &CommandBc{
 		dbg:         dbg,
 		breakpoints: breakpoints,
@@ -154,14 +149,14 @@ func NewCommandBc(dbg *debugger.HyperDbg, breakpoints map[uint32]*Breakpoint, pa
 }
 
 func (c *CommandBc) Help() {
-	slog.Info("bc : clear breakpoint.")
-	slog.Info("syntax : \tbc [tag]")
-	slog.Info("  tag - breakpoint tag to clear (use '*' to clear all)")
+	mylog.Info("bc : clear breakpoint.")
+	mylog.Info("syntax : \tbc [tag]")
+	mylog.Info("  tag - breakpoint tag to clear (use '*' to clear all)")
 }
 
 func (c *CommandBc) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) < 2 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
@@ -170,10 +165,7 @@ func (c *CommandBc) Execute(tokens []debugger.CommandToken, command string) erro
 		return c.ClearAllBreakpoints()
 	}
 
-	tag, err := strconv.ParseUint(tokens[1].Value, 0, 32)
-	if err != nil {
-		return fmt.Errorf("invalid tag: %w", err)
-	}
+	tag := mylog.Check2(strconv.ParseUint(tokens[1].Value, 0, 32))
 
 	return c.ClearBreakpoint(uint32(tag))
 }
@@ -184,14 +176,13 @@ func (c *CommandBc) ClearBreakpoint(tag uint32) error {
 	}
 
 	if c.packet != nil && c.packet.IsConnected() {
-		err := c.packet.RemoveBreakpoint(tag)
-		if err != nil {
-			return fmt.Errorf("failed to clear breakpoint from driver: %w", err)
+		if dbg, ok := c.dbg.(debugger.UserDebugger); ok {
+			(dbg.RemoveBreakpoint(tag))
 		}
 	}
 
 	delete(c.breakpoints, tag)
-	slog.Info("Breakpoint cleared", "tag", tag)
+	mylog.Info(tag)
 	return nil
 }
 
@@ -199,10 +190,9 @@ func (c *CommandBc) ClearAllBreakpoints() error {
 	count := len(c.breakpoints)
 
 	if c.packet != nil && c.packet.IsConnected() {
-		for tag := range c.breakpoints {
-			err := c.packet.RemoveBreakpoint(tag)
-			if err != nil {
-				slog.Warn("Failed to clear breakpoint", "tag", tag, "error", err)
+		if dbg, ok := c.dbg.(debugger.UserDebugger); ok {
+			for tag := range c.breakpoints {
+				(dbg.RemoveBreakpoint(tag))
 			}
 		}
 	}
@@ -210,16 +200,16 @@ func (c *CommandBc) ClearAllBreakpoints() error {
 	for tag := range c.breakpoints {
 		delete(c.breakpoints, tag)
 	}
-	slog.Info("Cleared breakpoints", "count", count)
+	mylog.Info(count)
 	return nil
 }
 
 type CommandBl struct {
-	dbg         *debugger.HyperDbg
+	dbg         debugger.Packeter
 	breakpoints map[uint32]*Breakpoint
 }
 
-func NewCommandBl(dbg *debugger.HyperDbg, breakpoints map[uint32]*Breakpoint) *CommandBl {
+func NewCommandBl(dbg debugger.Packeter, breakpoints map[uint32]*Breakpoint) *CommandBl {
 	return &CommandBl{
 		dbg:         dbg,
 		breakpoints: breakpoints,
@@ -227,13 +217,13 @@ func NewCommandBl(dbg *debugger.HyperDbg, breakpoints map[uint32]*Breakpoint) *C
 }
 
 func (c *CommandBl) Help() {
-	slog.Info("bl : list breakpoints.")
-	slog.Info("syntax : \tbl")
+	mylog.Info("bl : list breakpoints.")
+	mylog.Info("syntax : \tbl")
 }
 
 func (c *CommandBl) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) != 1 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
@@ -243,18 +233,17 @@ func (c *CommandBl) Execute(tokens []debugger.CommandToken, command string) erro
 
 func (c *CommandBl) ListBreakpoints() error {
 	if len(c.breakpoints) == 0 {
-		slog.Info("No breakpoints set")
+		mylog.Info("No breakpoints set")
 		return nil
 	}
 
-	slog.Info("Breakpoints:")
+	mylog.Info("Breakpoints:")
 	for tag, bp := range c.breakpoints {
 		status := "enabled"
 		if !bp.Enabled {
 			status = "disabled"
 		}
-		slog.Info("Breakpoint", "tag", tag, "address", fmt.Sprintf("0x%x", bp.Address),
-			"pid", bp.ProcessId, "core", bp.CoreNumber, "type", bp.Type, "status", status)
+		mylog.Info(tag, fmt.Sprintf("0x%x", bp.Address), bp.ProcessId, bp.CoreNumber, bp.Type, status)
 	}
 
 	return nil

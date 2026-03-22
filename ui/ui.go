@@ -180,7 +180,7 @@ func (t *TipIconButton) Layout(gtx layout.Context) layout.Dimensions {
 var myAppBar = appbar.New()
 
 var (
-	globalDbg        *debugger.HyperDbg
+	globalDbg        debugger.Packeter
 	logPage          *pages.LogPage
 	enableConsoleLog = true
 )
@@ -193,7 +193,7 @@ func SetEnableConsoleLog(enable bool) {
 	enableConsoleLog = enable
 }
 
-func Run(onReady func(*debugger.HyperDbg)) {
+func Run(onReady func(debugger.UserDebugger)) {
 	fmt.Println("=== Starting HyperDbg UI ===")
 
 	app.ExitCallback(func() {
@@ -214,7 +214,7 @@ func RunDriverOnly() {
 
 	fmt.Printf("日志文件: %s\n", logFilePath)
 
-	globalDbg = debugger.NewHyperDbgWithOptions(true)
+	globalDbg = debugger.NewKernelDebuggerWithOptions(true)
 
 	app.ExitCallback(func() {
 		fmt.Println("\n=== Unloading Driver ===")
@@ -235,7 +235,7 @@ func RunDriverOnly() {
 	fmt.Println("=== Driver Unloaded ===")
 }
 
-func runUI(onReady func(*debugger.HyperDbg)) {
+func runUI(onReady func(debugger.UserDebugger)) {
 	p := panel.New()
 	hPanel := panel.NewHPanel()
 	p.AddChild(hPanel)
@@ -245,15 +245,13 @@ func runUI(onReady func(*debugger.HyperDbg)) {
 
 	fmt.Printf("日志文件: %s\n", logFilePath)
 
-	globalDbg = debugger.NewHyperDbgWithOptions(true)
-	globalDbg.OnTitleUpdate = func(title string) {
-		app.SetWindowTitle(title)
-	}
+	globalDbg = debugger.NewUserDebug()
+	packet := globalDbg.Packet()
 
-	NewToolbar(hPanel, globalDbg)
+	NewToolbar(hPanel, packet)
 
 	if onReady != nil {
-		onReady(globalDbg)
+		onReady(globalDbg.(debugger.UserDebugger))
 	}
 
 	app.FileDropCallback(func(files []string) {
@@ -261,10 +259,10 @@ func runUI(onReady func(*debugger.HyperDbg)) {
 			exePath := files[0]
 			go func() {
 				fmt.Printf("Loading process: %s\n", exePath)
-				if err := globalDbg.LoadProcess(exePath); err != nil {
-					fmt.Printf("Failed to load process: %v\n", err)
+				if userDbg, ok := globalDbg.(debugger.UserDebugger); ok {
+					userDbg.StartProcess(exePath)
 				} else {
-					globalDbg.UpdateAllPages()
+					fmt.Printf("Failed to load process: not a user debugger\n")
 				}
 			}()
 		}
@@ -274,11 +272,13 @@ func runUI(onReady func(*debugger.HyperDbg)) {
 		for _, tabType := range CpuType.EnumTypes() {
 			switch tabType {
 			case CpuType:
-				if !yield(tabType, pages.NewCpu(globalDbg).Layout) {
+				if !yield(tabType, func(gtx layout.Context) layout.Dimensions {
+					return pages.NewCpu(globalDbg).Layout(gtx)
+				}) {
 					return
 				}
 			case PeViewType:
-				if !yield(tabType, globalDbg.PeView.Layout()) {
+				if !yield(tabType, packet.PeviewMeta.Layout()) {
 					return
 				}
 			case LogType:
@@ -286,19 +286,19 @@ func runUI(onReady func(*debugger.HyperDbg)) {
 					return
 				}
 			case NotesType:
-				if !yield(tabType, globalDbg.Notes.Layout()) {
+				if !yield(tabType, packet.NotesMeta.Layout()) {
 					return
 				}
 			case BreaksType:
-				if !yield(tabType, globalDbg.Breakpoints.Layout()) {
+				if !yield(tabType, packet.BreakpointsMeta.Layout()) {
 					return
 				}
 			case MemoryType:
-				if !yield(tabType, globalDbg.Memory.Layout()) {
+				if !yield(tabType, packet.MemoryMeta.Layout()) {
 					return
 				}
 			case SehType:
-				if !yield(tabType, globalDbg.Seh.Layout()) {
+				if !yield(tabType, packet.SehMeta.Layout()) {
 					return
 				}
 			case ScriptType:
@@ -306,80 +306,82 @@ func runUI(onReady func(*debugger.HyperDbg)) {
 					return
 				}
 			case SymbolType:
-				if !yield(tabType, globalDbg.Symbols.Layout()) {
+				if !yield(tabType, packet.SymbolsMeta.Layout()) {
 					return
 				}
 			case SourceType:
-				if !yield(tabType, globalDbg.Source.Layout()) {
+				if !yield(tabType, packet.SourceMeta.Layout()) {
 					return
 				}
 			case ReferencesType:
-				if !yield(tabType, globalDbg.References.Layout()) {
+				if !yield(tabType, packet.ReferencesMeta.Layout()) {
 					return
 				}
 			case ThreadType:
-				if !yield(tabType, globalDbg.Threads.Layout()) {
+				if !yield(tabType, packet.ThreadsMeta.Layout()) {
 					return
 				}
 			case HandleType:
-				if !yield(tabType, globalDbg.Handles.Layout()) {
+				if !yield(tabType, packet.HandlesMeta.Layout()) {
 					return
 				}
 			case TraceType:
-				if !yield(tabType, globalDbg.Trace.Layout()) {
+				if !yield(tabType, packet.TraceMeta.Layout()) {
 					return
 				}
 			case ArkType:
-				if !yield(tabType, globalDbg.Ark.Layout()) {
+				if !yield(tabType, packet.ArkMeta.Layout()) {
 					return
 				}
 			case ScyllaType:
-				if !yield(tabType, globalDbg.Scylla.Layout()) {
+				if !yield(tabType, packet.ScyllaMeta.Layout()) {
 					return
 				}
 			case LabelsType:
-				if !yield(tabType, globalDbg.Labels.Layout()) {
+				if !yield(tabType, packet.LabelsMeta.Layout()) {
 					return
 				}
 			case CommentsType:
-				if !yield(tabType, globalDbg.Comments.Layout()) {
+				if !yield(tabType, packet.CommentsMeta.Layout()) {
 					return
 				}
 			case FunctionsType:
-				if !yield(tabType, globalDbg.Functions.Layout()) {
+				if !yield(tabType, packet.FunctionsMeta.Layout()) {
 					return
 				}
 			case XrefsType:
-				if !yield(tabType, globalDbg.Xrefs.Layout()) {
+				if !yield(tabType, packet.XrefsMeta.Layout()) {
 					return
 				}
 			case TypesType:
-				if !yield(tabType, globalDbg.Types.Layout()) {
+				if !yield(tabType, packet.TypesMeta.Layout()) {
 					return
 				}
 			case WatchesType:
-				if !yield(tabType, globalDbg.Watches.Layout()) {
+				if !yield(tabType, packet.WatchesMeta.Layout()) {
 					return
 				}
 			case GraphsType:
-				if !yield(tabType, globalDbg.Graphs.Layout()) {
+				if !yield(tabType, packet.GraphsMeta.Layout()) {
 					return
 				}
 			case ExceptionsType:
-				if !yield(tabType, globalDbg.Exceptions.Layout()) {
+				if !yield(tabType, packet.ExceptionsMeta.Layout()) {
 					return
 				}
 			case BookmarksType:
-				if !yield(tabType, globalDbg.Bookmarks.Layout()) {
+				if !yield(tabType, packet.BookmarksMeta.Layout()) {
 					return
 				}
 			case LoopsType:
-				if !yield(tabType, globalDbg.Loops.Layout()) {
+				if !yield(tabType, packet.LoopsMeta.Layout()) {
 					return
 				}
 			case EventsType:
-				if !yield(tabType, pages.NewEvents(globalDbg).Layout()) {
-					return
+				if eventer, ok := globalDbg.(debugger.Eventer); ok {
+					if !yield(tabType, pages.NewEvents(eventer).Layout()) {
+						return
+					}
 				}
 			}
 		}
@@ -393,17 +395,22 @@ func runUI(onReady func(*debugger.HyperDbg)) {
 	p.AddChild(vtab)
 
 	app.Run("HyperDbg", func(gtx layout.Context) {
-		select {
-		case <-globalDbg.GetEventChan():
-			globalDbg.UpdateAllPages()
-		default:
+		if packeter, ok := globalDbg.(debugger.Packeter); ok {
+			packet := packeter.Packet()
+			if packet != nil {
+				select {
+				case <-packet.GetEventChan():
+					packet.UpdateAllPages()
+				default:
+				}
+			}
 		}
 		p.Layout(gtx)
 		myAppBar.LayoutOverlays(gtx)
 	})
 }
 
-func NewToolbar(hpanel *panel.Panel, dbg *debugger.HyperDbg) {
+func NewToolbar(hpanel *panel.Panel, dbg *debugger.Packet) {
 	m := stream.ReadEmbedFileMap(bar, "asserts/bar")
 	for tipBtn := range toolbarButtons(m, dbg) {
 		action := appbar.Action{
@@ -419,7 +426,7 @@ func NewToolbar(hpanel *panel.Panel, dbg *debugger.HyperDbg) {
 	hpanel.AddChild(myAppBar)
 }
 
-func toolbarButtons(m *safemap.M[string, []byte], dbg *debugger.HyperDbg) iter.Seq[*TipIconButton] {
+func toolbarButtons(m *safemap.M[string, []byte], dbg *debugger.Packet) iter.Seq[*TipIconButton] {
 	return func(yield func(*TipIconButton) bool) {
 		yield(NewTooltipButton(m.GetMust("open.png"), "open", func() {
 			fmt.Println("Open button clicked")

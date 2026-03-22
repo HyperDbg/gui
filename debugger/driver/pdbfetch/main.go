@@ -23,7 +23,6 @@ package main
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -34,6 +33,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/ddkwork/golibrary/std/mylog"
 
 	"github.com/ddkwork/HyperDbg/debugger/driver/pdbfetch/pkg/pe"
 )
@@ -68,10 +69,8 @@ func retry(url string, head bool, probeMethod int) (*http.Response, error) {
 		urlStr = url
 	}
 
-	req, err := http.NewRequest(method, urlStr, nil)
-	if err != nil {
-		return nil, err
-	}
+	req := mylog.Check2(http.NewRequest(method, urlStr, nil))
+
 	const symbolServerUserAgent = "Microsoft-Symbol-Server/10.0.10522.521"
 	req.Header.Set("User-Agent", symbolServerUserAgent)
 
@@ -79,19 +78,14 @@ func retry(url string, head bool, probeMethod int) (*http.Response, error) {
 }
 
 func processFileptrResponse(resp *http.Response) (int64, string) {
-	fileptrBytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
+	fileptrBytes := mylog.Check2(io.ReadAll(resp.Body))
+
 	fileptrString := string(fileptrBytes)
 	log.Println(fileptrString)
 
 	if strings.Contains(fileptrString, "PATH:") {
 		fileptrString = fileptrString[6:] // Removing "PATH:" from the output
-		fileptrInfo, err := os.Stat(fileptrString)
-		if err != nil {
-			return 0, ""
-		}
+		fileptrInfo := mylog.Check2(os.Stat(fileptrString))
 
 		return fileptrInfo.Size(), fileptrString
 	}
@@ -101,25 +95,21 @@ func processFileptrResponse(resp *http.Response) (int64, string) {
 
 // downloadSymbolFile will download the symbol at the given url to a local filepath.
 // TODO: Handle compressed symbols
-func downloadSymbolFile(filepath string, url string) error {
+func downloadSymbolFile(filepath string, url string) {
 	var totalSize int64
 	var probeMethod int
 
 	// Probe 0
 	probeMethod = 0
-	resp, err := retry(url, true, probeMethod)
-	if err != nil {
-		return err
-	}
+	resp := mylog.Check2(retry(url, true, probeMethod))
+
 	defer resp.Body.Close()
 
 	// Probe 1
 	if resp.StatusCode == http.StatusNotFound {
 		probeMethod = 1
-		resp, err := retry(url, true, probeMethod)
-		if err != nil {
-			return err
-		}
+		resp := mylog.Check2(retry(url, true, probeMethod))
+
 		defer resp.Body.Close()
 	}
 
@@ -130,10 +120,8 @@ func downloadSymbolFile(filepath string, url string) error {
 	// Probe 2
 	if resp.StatusCode == http.StatusNotFound {
 		probeMethod = 2
-		resp, err := retry(url, false, probeMethod)
-		if err != nil {
-			return err
-		}
+		resp := mylog.Check2(retry(url, false, probeMethod))
+
 		defer resp.Body.Close()
 
 		if resp.StatusCode == http.StatusOK {
@@ -146,7 +134,7 @@ func downloadSymbolFile(filepath string, url string) error {
 	}
 
 	if totalSize == 0 {
-		return errors.New("symbol not found on server")
+		mylog.Check("symbol not found on server")
 	}
 
 	log.Println("PDB size:", totalSize/1024, "KiB")
@@ -154,28 +142,19 @@ func downloadSymbolFile(filepath string, url string) error {
 	var reader io.Reader
 
 	if probeMethod == 2 {
-		f, err := os.Open(url)
-		if err != nil {
-			return err
-		}
-		info, err := f.Stat()
-		if err != nil {
-			return err
-		}
+		f := mylog.Check2(os.Open(url))
+
+		info := mylog.Check2(f.Stat())
 
 		byteData := make([]byte, 0, info.Size())
-		_, err = f.Read(byteData)
-		if err != nil {
-			return err
-		}
+		mylog.Check2(f.Read(byteData))
+
 		reader = bytes.NewReader(byteData)
 
 	} else {
 
-		resp, err := retry(url, false, probeMethod)
-		if err != nil {
-			return err
-		}
+		resp := mylog.Check2(retry(url, false, probeMethod))
+
 		defer resp.Body.Close()
 
 		reader = resp.Body
@@ -184,15 +163,12 @@ func downloadSymbolFile(filepath string, url string) error {
 	log.Println("Saving PDB to", filepath)
 
 	// Create the file
-	out, err := os.Create(filepath)
-	if err != nil {
-		return err
-	}
+	out := mylog.Check2(os.Create(filepath))
+
 	defer out.Close()
 
 	// Write the body to file
-	_, err = io.Copy(out, reader)
-	return err
+	mylog.Check2(io.Copy(out, reader))
 }
 
 func help() {
@@ -236,23 +212,16 @@ func main() {
 	if nArgs > 2 {
 		saveDirectory = os.Args[2]
 	} else {
-		absPath, err := filepath.Abs(os.Args[0])
-		if err != nil {
-			log.Fatal(err)
-		}
+		absPath := mylog.Check2(filepath.Abs(os.Args[0]))
+
 		saveDirectory = filepath.Dir(absPath)
 	}
 
 	// Check if the given PE path exists.
-	if _, err := os.Stat(pePath); os.IsNotExist(err) {
-		log.Fatal("pe file does not exist")
-	}
+	mylog.Check2(os.Stat(pePath))
 
 	// Parse the PE file of the target.
-	pefile, err := pe.PE(pePath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	pefile := mylog.Check2(pe.PE(pePath))
 
 	// Enumerate the parsed debug directories in the PE.
 	for _, debugDir := range pefile.DebugDirectories {
@@ -265,10 +234,7 @@ func main() {
 		if debugDir.InfoPdb70 != nil {
 			// Get the PDB GUID string.
 			pdbGuid := pe.GuidFromWindowsArray(debugDir.InfoPdb70.Signature)
-			pdbGuidStr, err := pdbGuid.ToString("N")
-			if err != nil {
-				log.Fatal(err)
-			}
+			pdbGuidStr := mylog.Check2(pdbGuid.ToString("N"))
 
 			// Get the PDB filename.
 			fullPdbPath := string(debugDir.SymbolName)
@@ -284,17 +250,12 @@ func main() {
 
 			// Create directory for saving symbol file.
 			downloadDir := filepath.Join(saveDirectory, pdbName, strings.ToUpper(pdbGuidStr)+strings.ToUpper(pdbAgeStr))
-			err = os.MkdirAll(downloadDir, 0o755)
-			if err != nil {
-				log.Fatal(err)
-			}
+			mylog.Check(os.MkdirAll(downloadDir, 0o755))
 
 			// Download the symbol file. FilePath concatenates guid and age
 			downloadPath := filepath.Join(downloadDir, pdbName)
-			err = downloadSymbolFile(downloadPath, downloadURL)
-			if err != nil {
-				log.Fatal(err)
-			}
+			(downloadSymbolFile(downloadPath, downloadURL))
+
 		}
 	}
 }

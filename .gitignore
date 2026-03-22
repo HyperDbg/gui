@@ -2,9 +2,11 @@
 *.exp
 *.lib
 *.log
-reset_git.cmd
+fmt.cmd
 HyperDbg.exe
 initial commit.cmd
 doc/cpp
 doc/release
 doc/testdata
+debugger/mcp/参考
+debugger/driver/sysDemo/build

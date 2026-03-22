@@ -2,28 +2,28 @@ package debugging
 
 import (
 	"fmt"
-	"log/slog"
 	"strings"
 
 	"github.com/ddkwork/HyperDbg/debugger"
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 type CommandG struct {
-	dbg *debugger.HyperDbg
+	dbg debugger.UserDebugger
 }
 
-func NewCommandG(dbg *debugger.HyperDbg) *CommandG {
+func NewCommandG(dbg debugger.UserDebugger) *CommandG {
 	return &CommandG{dbg: dbg}
 }
 
 func (c *CommandG) Help() {
-	slog.Info("g : continues debuggee or continues processing kernel messages.")
-	slog.Info("syntax : \tg")
+	mylog.Info("g : continues debuggee or continues processing kernel messages.")
+	mylog.Info("syntax : \tg")
 }
 
 func (c *CommandG) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) != 1 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
@@ -32,18 +32,16 @@ func (c *CommandG) Execute(tokens []debugger.CommandToken, command string) error
 }
 
 func (c *CommandG) Request() error {
-	c.dbg.SetBreakPrintingOutput(false)
-
-	if c.dbg.IsConnectedToRemoteDebuggee() {
+	if c.dbg.IsConnected() {
 		return c.RemoteConnectionSendCommand("g")
-	} else if c.dbg.GetActiveProcess().IsActive {
-		activeProcess := c.dbg.GetActiveProcess()
+	} else if c.dbg.GetActiveDebuggingProcess().IsActive {
+		activeProcess := c.dbg.GetActiveDebuggingProcess()
 		if activeProcess.IsPaused {
 			c.UdContinueProcess(activeProcess.ProcessId)
 			activeProcess.IsPaused = false
-			c.dbg.SetActiveProcess(activeProcess)
+			c.dbg.SetActiveDebuggingProcess(activeProcess)
 		} else {
-			slog.Warn("the target process is already running")
+			mylog.Warning("the target process is already running")
 		}
 	}
 
@@ -51,66 +49,66 @@ func (c *CommandG) Request() error {
 }
 
 func (c *CommandG) RemoteConnectionSendCommand(cmd string) error {
-	slog.Info("Sending command to remote debuggee", "command", cmd)
+	mylog.Info(cmd)
 	return nil
 }
 
 func (c *CommandG) UdContinueProcess(processId uint32) error {
-	slog.Info("Continuing process", "pid", processId)
+	mylog.Info(processId)
 	return nil
 }
 
 type CommandP struct {
-	dbg *debugger.HyperDbg
+	dbg debugger.UserDebugger
 }
 
-func NewCommandP(dbg *debugger.HyperDbg) *CommandP {
+func NewCommandP(dbg debugger.UserDebugger) *CommandP {
 	return &CommandP{dbg: dbg}
 }
 
 func (c *CommandP) Help() {
-	slog.Info("p : step over (execute one instruction, stepping over function calls).")
-	slog.Info("syntax : \tp")
+	mylog.Info("p : step over (execute one instruction, stepping over function calls).")
+	mylog.Info("syntax : \tp")
 }
 
-func (c *CommandP) Execute(tokens []debugger.CommandToken, command string) error {
+func (c *CommandP) Execute(tokens []debugger.CommandToken, command string) {
 	if len(tokens) != 1 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
-		return fmt.Errorf("invalid arguments")
+		mylog.Check("invalid arguments")
 	}
 
-	return c.dbg.PerformStepOver()
+	c.dbg.StepOver(0)
 }
 
 type CommandT struct {
-	dbg *debugger.HyperDbg
+	dbg debugger.UserDebugger
 }
 
-func NewCommandT(dbg *debugger.HyperDbg) *CommandT {
+func NewCommandT(dbg debugger.UserDebugger) *CommandT {
 	return &CommandT{dbg: dbg}
 }
 
 func (c *CommandT) Help() {
-	slog.Info("t : step in (execute one instruction, stepping into function calls).")
-	slog.Info("syntax : \tt")
+	mylog.Info("t : step in (execute one instruction, stepping into function calls).")
+	mylog.Info("syntax : \tt")
 }
 
-func (c *CommandT) Execute(tokens []debugger.CommandToken, command string) error {
+func (c *CommandT) Execute(tokens []debugger.CommandToken, command string) {
 	if len(tokens) != 1 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
-		return fmt.Errorf("invalid arguments")
+		mylog.Check("invalid arguments")
 	}
 
-	return c.dbg.PerformStepIn()
+	c.dbg.StepInto()
 }
 
 type CommandHelp struct {
-	dbg *debugger.HyperDbg
+	dbg debugger.Packeter
 }
 
-func NewCommandHelp(dbg *debugger.HyperDbg) *CommandHelp {
+func NewCommandHelp(dbg debugger.Packeter) *CommandHelp {
 	return &CommandHelp{dbg: dbg}
 }
 
@@ -126,55 +124,55 @@ func (c *CommandHelp) Execute(tokens []debugger.CommandToken, command string) er
 }
 
 func (c *CommandHelp) ShowGeneralHelp() {
-	slog.Info("HyperDbg Commands:")
-	slog.Info("Debugging Commands:")
-	slog.Info("  g          - Continue execution")
-	slog.Info("  p          - Step over")
-	slog.Info("  t          - Step in")
-	slog.Info("  bp         - Set breakpoint")
-	slog.Info("  bc         - Clear breakpoint")
-	slog.Info("  bl         - List breakpoints")
-	slog.Info("  r          - Read/modify registers")
-	slog.Info("  k          - Show call stack")
-	slog.Info("Meta Commands:")
-	slog.Info("  help       - Show help")
-	slog.Info("  cls        - Clear screen")
-	slog.Info("  connect    - Connect to debuggee")
-	slog.Info("  disconnect - Disconnect from debuggee")
-	slog.Info("  attach     - Attach to process")
-	slog.Info("  detach     - Detach from process")
-	slog.Info("Extension Commands:")
-	slog.Info("  !epthook   - Set EPT hook")
-	slog.Info("  !monitor   - Monitor memory")
-	slog.Info("  !pte       - Query PTE")
-	slog.Info("  !va2pa     - Virtual to physical address")
-	slog.Info("  !pa2va     - Physical to virtual address")
+	mylog.Info("HyperDbg Commands:")
+	mylog.Info("Debugging Commands:")
+	mylog.Info("  g          - Continue execution")
+	mylog.Info("  p          - Step over")
+	mylog.Info("  t          - Step in")
+	mylog.Info("  bp         - Set breakpoint")
+	mylog.Info("  bc         - Clear breakpoint")
+	mylog.Info("  bl         - List breakpoints")
+	mylog.Info("  r          - Read/modify registers")
+	mylog.Info("  k          - Show call stack")
+	mylog.Info("Meta Commands:")
+	mylog.Info("  help       - Show help")
+	mylog.Info("  cls        - Clear screen")
+	mylog.Info("  connect    - Connect to debuggee")
+	mylog.Info("  disconnect - Disconnect from debuggee")
+	mylog.Info("  attach     - Attach to process")
+	mylog.Info("  detach     - Detach from process")
+	mylog.Info("Extension Commands:")
+	mylog.Info("  !epthook   - Set EPT hook")
+	mylog.Info("  !monitor   - Monitor memory")
+	mylog.Info("  !pte       - Query PTE")
+	mylog.Info("  !va2pa     - Virtual to physical address")
+	mylog.Info("  !pa2va     - Physical to virtual address")
 }
 
 func (c *CommandHelp) ShowCommandHelp(cmdName string) {
-	slog.Info("Help for command", "command", cmdName)
+	mylog.Info(cmdName)
 }
 
 type CommandCls struct {
-	dbg *debugger.HyperDbg
+	dbg debugger.Packeter
 }
 
-func NewCommandCls(dbg *debugger.HyperDbg) *CommandCls {
+func NewCommandCls(dbg debugger.Packeter) *CommandCls {
 	return &CommandCls{dbg: dbg}
 }
 
 func (c *CommandCls) Help() {
-	slog.Info("cls : clear screen.")
-	slog.Info("syntax : \tcls")
+	mylog.Info("cls : clear screen.")
+	mylog.Info("syntax : \tcls")
 }
 
 func (c *CommandCls) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) != 1 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
 
-	slog.Info("\033[2J")
+	mylog.Info("\033[2J")
 	return nil
 }

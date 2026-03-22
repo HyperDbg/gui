@@ -1,0 +1,52 @@
+## @file user-mode-memory-allocations.ds
+# @author Sina Karvandi (sina@hyperdbg.org)
+# @brief Gathers memory allocations made by a process
+# @version 0.7
+# @date 2023-11-24
+# @copyright This script is released under the MIT License.
+# 
+# @details In order to run this script, you should use '.script'
+# command. 
+# @param ProcessPath: Please specify the target Process path to start
+#
+# Run it like:
+#     .script c:\users\sina\desktop\user-mode-memory-allocations.ds "C:\Windows\notepad.exe"
+#
+# It gathers different memory allocations (e.g., mallocs) like this:
+#
+#     [SYSCALL] NtAllocateVirtualMemory called from, pid: 3a8, name: Notepad.exe | requested size: 11c0
+#     [SYSRET] NtAllocateVirtualMemory called from, pid: 3a8, name: Notepad.exe | located at: 195a8880000, size: 2000
+#
+
+start path $arg1
+
+? .thread_intercept_thread = 0;
+? .target_pid = $pid;
+? .target_tid = 0;
+? .target_allocation_address = 0;
+? .target_allocation_size = 0;
+
+!sysret script {
+	if ($pid == .target_pid && .thread_intercept_thread == 1 && $tid == .target_tid) {
+		spinlock_unlock(&.thread_intercept_thread);
+		.target_tid = 0;
+		printf("[SYSRET] NtAllocateVirtualMemory called from, pid: %x, name: %s | located at: %llx, actual allocated size: %llx\n", $pid, $pname, dq(.target_allocation_address), dq(.target_allocation_size));
+	}
+}
+
+!syscall 18 script {
+	
+	if ($pid == .target_pid) {
+		spinlock_lock(&.thread_intercept_thread);
+		.target_tid = $tid;
+		.target_allocation_address = @rdx;
+		.target_allocation_size = @r9;
+		
+		if (dq(rdx) == 0) {
+			printf("[SYSCALL] NtAllocateVirtualMemory called from, pid: %x, name: %s | requested size: %llx\n", $pid, $pname, dq(r9));
+		}
+		else {
+			printf("[SYSCALL] NtAllocateVirtualMemory called from, pid: %x, name: %s | requested size: %llx, user-specific addr: %llx\n", $pid, $pname, dq(r9), dq(rdx));
+		}
+	}
+}

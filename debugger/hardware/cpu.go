@@ -3,9 +3,10 @@ package hardware
 import (
 	"encoding/binary"
 	"fmt"
-	"log/slog"
 	"syscall"
 	"unsafe"
+
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 type CpuidResult struct {
@@ -79,9 +80,9 @@ func VmxSupportDetection() bool {
 	vmxSupported := (result.ECX & (1 << 5)) != 0
 
 	if vmxSupported {
-		slog.Info("VMX operation is supported by your processor")
+		mylog.Info("VMX operation is supported by your processor")
 	} else {
-		slog.Error("VMX operation is not supported by your processor")
+		mylog.Warning("VMX operation is not supported by your processor")
 	}
 
 	return vmxSupported
@@ -89,13 +90,13 @@ func VmxSupportDetection() bool {
 
 func CheckCpuVendor() error {
 	vendor := CpuReadVendorString()
-	slog.Info("current processor vendor is", "vendor", vendor)
+	mylog.Info(vendor)
 
 	if vendor == "GenuineIntel" {
-		slog.Info("virtualization technology is vt-x")
+		mylog.Info("vt-x")
 		return nil
 	} else if vendor == "AuthenticAMD" {
-		slog.Info("virtualization technology is AMD-V")
+		mylog.Info("AMD-V")
 		return nil
 	} else {
 		return fmt.Errorf("this program is not designed to run in a non-VT-x environment")

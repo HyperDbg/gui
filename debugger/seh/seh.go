@@ -6,6 +6,8 @@ import (
 	"iter"
 	"sync"
 
+	"github.com/ddkwork/golibrary/std/mylog"
+
 	"gioui.org/layout"
 	"github.com/ddkwork/HyperDbg/debugger/api"
 	"github.com/ddkwork/HyperDbg/debugger/register"
@@ -81,10 +83,7 @@ func (m *Manager) ScanSEH(ctx *register.RegisterContext, readMemory func(uint64,
 		return nil, fmt.Errorf("failed to get thread information block base")
 	}
 
-	tebData, err := readMemory(tebAddress, 0x30)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read TEB: %v", err)
-	}
+	tebData := mylog.Check2(readMemory(tebAddress, 0x30))
 
 	sehListHead := binary.LittleEndian.Uint64(tebData[0x00:0x08])
 
@@ -96,10 +95,7 @@ func (m *Manager) ScanSEH(ctx *register.RegisterContext, readMemory func(uint64,
 			break
 		}
 
-		sehData, err := readMemory(currentSeh, 0x10)
-		if err != nil {
-			break
-		}
+		sehData := mylog.Check2(readMemory(currentSeh, 0x10))
 
 		nextSeh := binary.LittleEndian.Uint64(sehData[0x00:0x08])
 		handler := binary.LittleEndian.Uint64(sehData[0x08:0x10])

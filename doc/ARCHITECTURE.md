@@ -15,110 +15,111 @@
 ```
 hypedbg/
 ├── debugger/              # 调试器核心包
-│   ├── debugger.go        # 调试器主入口（初始化、协调）
-│   ├── steppings.go       # 单步执行
-│   ├── packet.go          # IRP 发送层
+│   ├── interfaces.go      # 核心接口定义（Eventer、DebuggerPublic、KernelDebugger、UserDebugger）
+│   ├── packet.go          # IRP 发送层，实现 DebuggerPublic 接口
 │   ├── ioctl_codes.go     # IOCTL 代码定义
 │   ├── structures.go      # 数据结构定义
 │   ├── event.types.go     # 事件类型定义
 │   ├── event_manager.go   # 事件管理器
 │   ├── event_handler.go   # 事件处理器
 │   ├── event_loop.go      # 事件循环
-│   ├── user_debugger.go   # 用户态调试器
-│   ├── vmm.go             # VMM 管理
-│   ├── api/               # 基础接口层
-│   │   └── interface.go   # 统一接口定义（包括 gio Widget 接口）
+│   ├── kernel_debugger.go # 内核模式调试器（匿名嵌入 Packet）
+│   ├── user_debugger.go   # 用户模式调试器（匿名嵌入 Packet）
+│   ├── steppings.go      # 单步执行
+│   ├── api/              # 基础接口层
+│   │   └── interface.go  # 统一接口定义（包括 gio Widget 接口）
 │   │
-│   ├── driver/            # 驱动管理层
-│   │   ├── handle.go      # 驱动句柄管理
-│   │   ├── provider.go    # 驱动提供者
-│   │   └── config.go      # 配置管理
+│   ├── driver/           # 驱动管理层
+│   │   ├── handle.go     # 驱动句柄管理
+│   │   ├── provider.go   # 驱动提供者
+│   │   └── config.go    # 配置管理
 │   │
-│   ├── breakpoint/        # 断点管理
-│   │   ├── breakpoint.go  # 断点操作
-│   │   └── control.go    # 断点控制
+│   ├── breakpoint/       # 断点管理
+│   │   ├── breakpoint.go # 断点操作
+│   │   └── control.go   # 断点控制
 │   │
-│   ├── memory/            # 内存操作
-│   │   └── memory.go     # 调用 packet 发送 IRP
+│   ├── memory/           # 内存操作
+│   │   └── memory.go    # 调用 packet 发送 IRP
 │   │
-│   ├── thread/            # 线程操作
-│   │   └── thread.go     # 调用 packet 发送 IRP
+│   ├── thread/           # 线程操作
+│   │   └── thread.go    # 调用 packet 发送 IRP
 │   │
-│   ├── process/           # 进程操作
-│   │   └── process.go    # 调用 packet 发送 IRP
+│   ├── register/         # 寄存器操作
+│   │   └── register.go  # 调用 packet 发送 IRP
 │   │
-│   ├── register/          # 寄存器操作
-│   │   └── register.go   # 调用 packet 发送 IRP
-│   │
-│   ├── disassembly/       # 反汇编
+│   ├── disassembly/      # 反汇编
 │   │   └── disassembly.go
 │   │
-│   ├── stack/             # 堆栈跟踪
+│   ├── stack/            # 堆栈跟踪
 │   │   └── stack.go
 │   │
-│   ├── symbol/            # 符号表
+│   ├── symbol/           # 符号表
 │   │   └── symbol.go
 │   │
-│   ├── trace/             # 跟踪
+│   ├── trace/            # 跟踪
 │   │   └── trace.go
 │   │
-│   ├── transparency/      # 透明调试器
+│   ├── transparency/     # 透明调试器
 │   │   └── transparency.go
 │   │
-│   ├── hardware/          # 硬件包
-│   │   ├── cpu.go        # CPU/VMX 检测
+│   ├── hardware/         # 硬件包
+│   │   ├── cpu.go       # CPU/VMX 检测
 │   │   └── cpuid_amd64.s # CPUID 汇编实现
 │   │
-│   ├── commands/          # 命令处理
-│   │   ├── debugging/    # 调试命令（断点、单步等）
-│   │   ├── extension/    # 扩展命令
-│   │   ├── meta/         # 元命令（连接、加载等）
-│   │   └── events.go     # 事件命令
+│   ├── commands/         # 命令处理
+│   │   ├── debugging/   # 调试命令（断点、单步等）
+│   │   ├── extension/   # 扩展命令
+│   │   ├── meta/        # 元命令（连接、加载等）
+│   │   └── events.go    # 事件命令
 │   │
-│   ├── script/            # 脚本引擎
+│   ├── script/          # 脚本引擎
 │   │   └── script_engine.go
 │   │
-│   ├── mcp/               # AI 调试服务器
-│   │   ├── server.go     # MCP 服务器
-│   │   ├── handlers.go   # AI 处理器
-│   │   └── types.go      # MCP 类型定义
+│   ├── mcp/             # AI 调试服务器
+│   │   ├── kernel_mode_mcp.go  # 内核模式 MCP 服务器（自动生成）
+│   │   ├── user_mode_mcp.go    # 用户模式 MCP 服务器（自动生成）
+│   │   └── mcp_gen_test.go     # MCP 测试
 │   │
-│   ├── bookmark/          # 书签管理
-│   ├── comment/           # 注释管理
-│   ├── label/             # 标签管理
-│   ├── function/          # 函数管理
-│   ├── xref/              # 交叉引用
-│   ├── watch/             # 监视点
-│   ├── notes/             # 笔记
-│   ├── source/            # 源代码
-│   ├── reference/         # 引用
-│   ├── handle/            # 句柄管理
-│   ├── peview/            # PE 查看
-│   ├── exception/         # 异常处理
-│   ├── ark/               # ARK 工具
-│   ├── scylla/            # Scylla 工具
-│   ├── graph/             # 图形
-│   ├── type_/             # 类型
-│   ├── loop/              # 循环
-│   ├── seh/               # SEH 处理
-│   ├── remote/            # 远程调试
-│   └── log/               # 日志
-│       └── logger.go      # 日志初始化
+│   ├── cmd/             # 命令工具
+│   │   └── generate/    # 代码生成器
+│   │       └── mcp_generator.go  # MCP 服务器生成器
+│   │
+│   ├── bookmark/         # 书签管理
+│   ├── comment/          # 注释管理
+│   ├── label/            # 标签管理
+│   ├── function/         # 函数管理
+│   ├── xref/             # 交叉引用
+│   ├── watch/            # 监视点
+│   ├── notes/            # 笔记
+│   ├── source/           # 源代码
+│   ├── reference/        # 引用
+│   ├── handle/           # 句柄管理
+│   ├── peview/           # PE 查看
+│   ├── exception/        # 异常处理
+│   ├── ark/              # ARK 工具
+│   ├── scylla/           # Scylla 工具
+│   ├── graph/            # 图形
+│   ├── type_/            # 类型
+│   ├── loop/             # 循环
+│   ├── seh/              # SEH 处理
+│   ├── remote/           # 远程调试
+│   └── log/              # 日志
+│       └── logger.go     # 日志初始化
 │
-├── ui/                   # UI 界面
-│   ├── ui.go             # UI 主入口
-│   └── pages/            # UI 页面
+├── ui/                  # UI 界面
+│   ├── ui.go            # UI 主入口
+│   └── pages/           # UI 页面
 │       ├── cpu.go
 │       ├── events.go
 │       └── log.go
 │
-├── doc/                  # 文档
-│   ├── ARCHITECTURE.md   # 架构文档
-│   ├── README.md         # 项目说明
-│   └── ...               # 其他文档
+├── doc/                 # 文档
+│   ├── ARCHITECTURE.md  # 架构文档
+│   ├── README.md        # 项目说明
+│   └── ...             # 其他文档
 │
-├── main.go               # 程序入口
-└── go.mod                # Go 模块定义
+├── main.go             # 程序入口
+└── go.mod              # Go 模块定义
 
 ```
 
@@ -133,23 +134,27 @@ hypedbg/
 └────────────────────────────┬────────────────────────────────┘
                          │ 调用
 ┌────────────────────────────▼────────────────────────────────┐
-│              调试器主入口 (debugger/debugger.go)          │
+│              调试器主入口 (debugger/)                     │
 │  - 初始化驱动                                                │
-│  - 创建所有业务包（Provider 模式）                             │
+│  - 创建 Packet（实现 DebuggerPublic 接口）                     │
+│  - 创建 UserDebugger 和 KernelDebugger（匿名嵌入 Packet）        │
 │  - 创建事件系统（EventManager、EventHandler、EventLoop）        │
 │  - 协调各组件                                                │
 └────────────────────────────┬────────────────────────────────┘
                          │ 依赖注入
 ┌────────────────────────────▼────────────────────────────────┐
-│              业务层 (debugger/)                           │
-│  所有业务包实现 api.Interface 接口                          │
-│  - memory/, thread/, process/, breakpoint/, register/        │
-│  - disassembly/, stack/, symbol/, trace/                     │
-│  - transparency/, hardware/, vmm/                            │
-│  - bookmark/, comment/, label/, function/, xref/             │
-│  - watch/, notes/, source/, reference/, handle/              │
-│  - peview/, exception/, ark/, scylla/, graph/              │
-│  - type_/, loop/, seh/, remote/                             │
+│              接口层 (debugger/interfaces.go)             │
+│  - Eventer: 事件操作接口                                     │
+│  - DebuggerPublic: 调试器公共接口（由 Packet 实现）            │
+│  - KernelDebugger: 内核模式调试器接口                          │
+│  - UserDebugger: 用户模式调试器接口                            │
+└────────────────────────────┬────────────────────────────────┘
+                         │ 实现
+┌────────────────────────────▼────────────────────────────────┐
+│              实现层 (debugger/)                         │
+│  - Packet: 实现 DebuggerPublic 接口（IRP 发送层）              │
+│  - KernelDebugger: 匿名嵌入 Packet，实现内核模式特定方法          │
+│  - UserDebugger: 匿名嵌入 Packet，实现用户模式特定方法           │
 └────────────────────────────┬────────────────────────────────┘
                          │ 调用
 ┌────────────────────────────▼────────────────────────────────┐
@@ -180,20 +185,22 @@ hypedbg/
 
 ┌─────────────────────────────────────────────────────────────────┐
 │              命令层 (debugger/commands/)                 │
-│  - 解析用户命令，调用业务层方法                                 │
-│  - 不直接发送 IRP，所有操作通过业务层完成                         │
+│  - 解析用户命令，调用调试器接口方法                             │
+│  - 不直接发送 IRP，所有操作通过接口完成                         │
 └─────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────┐
 │              脚本层 (debugger/script/)                    │
-│  - 执行脚本，调用业务层方法                                     │
-│  - 不直接发送 IRP，所有操作通过业务层完成                         │
+│  - 执行脚本，调用调试器接口方法                                 │
+│  - 不直接发送 IRP，所有操作通过接口完成                         │
 └─────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────┐
 │              AI 调试服务器 (debugger/mcp/)                │
-│  - 提供 AI 调试接口，调用业务层方法                              │
-│  - 不直接发送 IRP，所有操作通过业务层完成                         │
+│  - KernelModeMCPServer: 内核模式 MCP 服务器（自动生成）        │
+│  - UserModeMCPServer: 用户模式 MCP 服务器（自动生成）          │
+│  - 提供 AI 调试接口，调用调试器接口方法                         │
+│  - 不直接发送 IRP，所有操作通过接口完成                         │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -202,60 +209,30 @@ hypedbg/
 ```
 main.go
   │
-  ├─> ui.Run(func(dbg *debugger.HyperDbg) { ... })
+  ├─> ui.Run(func(dbg *debugger.Packet) { ... })
   │       │
-  │       └─> debugger.NewHyperDbg()
+  │       └─> debugger.NewPacket(driverHandle)
   │               │
-  │               ├─> 1. 初始化驱动
-  │               │   ├─> driver.NewDriverHandle()
-  │               │   ├─> driver.NewDriverProvider()
-  │               │   └─> loader.Install()
-  │               │
-  │               ├─> 2. 创建 Packet（IRP 发送层）
+  │               ├─> 1. 创建 Packet（实现 DebuggerPublic 接口）
   │               │   └─> debugger.NewPacket(driverHandle)
   │               │
-  │               ├─> 3. 创建 VMM Provider
-  │               │   └─> VmmProviderNew(packet)
-  │               │       └─> vmmProvider.Initialize()
+  │               ├─> 2. 创建 UserDebugger（匿名嵌入 Packet）
+  │               │   └─> debugger.NewUserDebugger(driverHandle)
   │               │
-  │               ├─> 4. 创建所有业务包（Provider 模式）
-  │               │   ├─> register.New()
-  │               │   ├─> memory.New()
-  │               │   ├─> breakpoint.New()
-  │               │   ├─> symbol.New()
-  │               │   ├─> thread.New()
-  │               │   ├─> stack.New()
-  │               │   ├─> disassembly.New()
-  │               │   ├─> trace.New()
-  │               │   ├─> process.New()
-  │               │   ├─> transparency.New()
-  │               │   ├─> bookmark.New()
-  │               │   ├─> comment.New()
-  │               │   ├─> label.New()
-  │               │   ├─> function.New()
-  │               │   ├─> xref.New()
-  │               │   ├─> watch.New()
-  │               │   ├─> notes.New()
-  │               │   ├─> source.New()
-  │               │   ├─> reference.New()
-  │               │   ├─> handle.New()
-  │               │   ├─> peview.New()
-  │               │   ├─> exception.New()
-  │               │   ├─> ark.New()
-  │               │   ├─> scylla.New()
-  │               │   ├─> graph.New()
-  │               │   ├─> type_.New()
-  │               │   ├─> loop.New()
-  │               │   └─> seh.New()
+  │               ├─> 3. 创建 KernelDebugger（匿名嵌入 Packet）
+  │               │   └─> debugger.NewKernelDebugger()
+  │               │
+  │               ├─> 4. 设置事件通道
+  │               │   └─> packet.EventChan = make(chan *DebugEvent, 100)
   │               │
   │               ├─> 5. 创建事件系统
-  │               │   ├─> NewEventManager(driverHandle)
-  │               │   ├─> NewEventHandler(driverHandle)
-  │               │   ├─> NewDebugEventHandler(driverHandle, regMgr, procMgr, threadMgr)
+  │               │   ├─> NewEventManager(packet.driver)
+  │               │   ├─> NewEventHandler(packet.driver)
+  │               │   ├─> NewDebugEventHandler(packet.driver, regMgr, procMgr, threadMgr)
   │               │   └─> NewEventLoop(eventManager)
   │               │
   │               ├─> 6. 注册所有事件处理器
-  │               │   └─> eventLoop.RegisterHandler(...)
+  │               │   └─> packet.RegisterDebugEventHandler(...)
   │               │
   │               └─> 7. 启动事件循环
   │                   └─> eventLoop.Start()
@@ -265,29 +242,62 @@ main.go
 
 ## 各层职责
 
-### debugger/debugger.go - 调试器主入口
+### debugger/interfaces.go - 核心接口定义
 - **职责**：
-  - 初始化驱动（加载、卸载、句柄管理）
-  - 创建所有业务包（Provider 模式）
-  - 创建事件系统（EventManager、EventHandler、EventLoop）
-  - 协调各组件
-  - 管理调试器状态
-- **依赖**：所有业务包、driver/、packet、事件系统
+  - 定义 Eventer 接口（事件操作）
+  - 定义 DebuggerPublic 接口（调试器公共操作，由 Packet 实现）
+  - 定义 KernelDebugger 接口（内核模式调试器）
+  - 定义 UserDebugger 接口（用户模式调试器）
+- **依赖**：无
 
-### debugger/packet.go - IRP 发送层
+### debugger/packet.go - IRP 发送层和事件管理
 - **职责**：
+  - 实现 DebuggerPublic 接口
   - 封装所有 IRP 发送逻辑
   - 提供统一的发送接口（SendBuffer、ReceiveBuffer）
   - 处理驱动返回数据
   - 定义 IOCTL 代码
-- **依赖**：debugger/driver/
+  - 实现 Eventer 接口（事件循环管理）
+  - 管理所有业务包（register、memory、breakpoint、thread、process 等）
+  - 协调事件循环和 UI 更新
+  - 在事件触发时自动刷新所有 UI 页面
+  - 注册事件处理器，处理 37 种事件类型
+  - 提供统一的 UI 组件注册和更新机制
+  - **驱动加载和 VMM 初始化**：
+    - LoadDriver(): 统一管理驱动加载和 VMM 初始化
+    - UnloadDriver(): 统一管理驱动卸载和 VMM 终止
+    - LoadVMM(): VMM 状态检查
+    - UnloadVMM(): VMM 状态检查
+    - CPU 和 VMX 检查在驱动加载之前进行
+    - VMM 在驱动打开时自动初始化
+- **依赖**：debugger/driver/、所有业务包
+
+### debugger/kernel_debugger.go - 内核模式调试器
+- **职责**：
+  - 实现 KernelDebugger 接口
+  - 匿名嵌入 Packet，继承 DebuggerPublic 方法
+  - 实现内核模式特定方法（SetBreakpoint、ReadMemory、WriteMemory 等）
+- **依赖**：debugger/packet.go
+
+### debugger/user_debugger.go - 用户模式调试器
+- **职责**：
+  - 实现 UserDebugger 接口
+  - 匿名嵌入 Packet，继承 DebuggerPublic 方法
+  - 实现用户模式特定方法（AttachProcess、KillProcess、StartProcess 等）
+- **依赖**：debugger/packet.go
 
 ### debugger/driver/ - 驱动管理层
 - **职责**：
   - 管理驱动句柄（DriverHandle）
   - 驱动加载/卸载（DriverProvider）
   - 配置管理（DriverConfig）
+  - CPU 和 VMX 检测
+  - VMM 自动初始化管理
 - **依赖**：Windows API
+- **关键特性**：
+  - 驱动打开时自动初始化 VMM
+  - CPU 和 VMX 检查在驱动加载之前进行
+  - 统一的驱动加载和卸载流程
 
 ### debugger/event_manager.go - 事件管理器
 - **职责**：
@@ -384,10 +394,22 @@ main.go
 ### debugger/mcp/ - AI 调试服务器
 - **职责**：
   - 提供 AI 调试接口
-  - 调用业务层方法
+  - 调用调试器接口方法
   - 不直接发送 IRP
-- **依赖**：debugger/ 下所有业务包
-- **设计原则**：只调用业务层方法，不绕过业务层直接发包
+- **依赖**：debugger/interfaces.go
+- **设计原则**：只调用调试器接口方法，不绕过接口直接发包
+- **自动生成**：
+  - `kernel_mode_mcp.go`: 从 KernelDebugger 接口自动生成
+  - `user_mode_mcp.go`: 从 UserDebugger 接口自动生成
+  - 生成器：`debugger/cmd/generate/mcp_generator.go`
+
+### debugger/cmd/generate/ - 代码生成器
+- **职责**：
+  - 从接口定义自动生成 MCP 服务器代码
+  - 解析 Go 接口 AST
+  - 生成符合 MCP 协议的工具定义
+- **依赖**：Go 标准库（go/ast、go/parser）
+- **使用方法**：`go run debugger/cmd/generate/mcp_generator.go`
 
 ### ui/ - UI 层
 - **职责**：
@@ -418,38 +440,11 @@ main.go
                   ├─> 2. 创建 Packet
                   │   └─> debugger.NewPacket(driverHandle)
                   │
-                  ├─> 3. 创建 VMM Provider
-                  │   └─> VmmProviderNew(packet)
+                  ├─> 3. 创建 UserDebugger
+                  │   └─> debugger.NewUserDebugger(packet)
                   │
-                  ├─> 4. 创建所有业务包
-                  │   ├─> register.New()
-                  │   ├─> memory.New()
-                  │   ├─> breakpoint.New()
-                  │   ├─> symbol.New()
-                  │   ├─> thread.New()
-                  │   ├─> stack.New()
-                  │   ├─> disassembly.New()
-                  │   ├─> trace.New()
-                  │   ├─> process.New()
-                  │   ├─> transparency.New()
-                  │   ├─> bookmark.New()
-                  │   ├─> comment.New()
-                  │   ├─> label.New()
-                  │   ├─> function.New()
-                  │   ├─> xref.New()
-                  │   ├─> watch.New()
-                  │   ├─> notes.New()
-                  │   ├─> source.New()
-                  │   ├─> reference.New()
-                  │   ├─> handle.New()
-                  │   ├─> peview.New()
-                  │   ├─> exception.New()
-                  │   ├─> ark.New()
-                  │   ├─> scylla.New()
-                  │   ├─> graph.New()
-                  │   ├─> type_.New()
-                  │   ├─> loop.New()
-                  │   └─> seh.New()
+                  ├─> 4. 创建 KernelDebugger
+                  │   └─> debugger.NewKernelDebugger(packet)
                   │
                   ├─> 5. 创建事件系统
                   │   ├─> NewEventManager(driverHandle)
@@ -462,6 +457,38 @@ main.go
                   │
                   └─> 7. 启动事件循环
                       └─> eventLoop.Start()
+```
+
+## 接口继承关系
+
+```
+Eventer (事件操作接口)
+    ↓
+DebuggerPublic (调试器公共接口，由 Packet 实现)
+    ↓
+    ├── KernelDebugger (内核模式调试器接口)
+    │       └─> KernelDebugger 结构体（匿名嵌入 Packet）
+    │
+    └── UserDebugger (用户模式调试器接口)
+            └─> UserDebugger 结构体（匿名嵌入 Packet）
+```
+
+## MCP 服务器生成流程
+
+```
+debugger/cmd/generate/mcp_generator.go
+  │
+  ├─> 解析 debugger/interfaces.go
+  │       │
+  │       ├─> 提取 KernelDebugger 接口方法
+  │       │       └─> 生成 kernel_mode_mcp.go
+  │       │
+  │       └─> 提取 UserDebugger 接口方法
+  │               └─> 生成 user_mode_mcp.go
+  │
+  └─> 格式化生成的代码
+          └─> gofumpt -w
+```
 
 业务包依赖关系：
   所有业务包 → debugger/packet.go → debugger/driver/ → Windows 驱动
@@ -472,8 +499,8 @@ main.go
 脚本层依赖关系：
   script/ → 所有业务包
 
-AI 调试服务器依赖关系：
-  mcp/ → 所有业务包
+MCP 层依赖关系：
+  mcp/ → debugger/interfaces.go
 
 UI 层依赖关系：
   ui/ → debugger/
@@ -697,7 +724,7 @@ func (h *EventHandler) HandleSetBreakpoint(event *Event) error {
         return err
     }
 
-    slog.Info("Handler: Set breakpoint success", "pid", event.Pid, "address", event.Address)
+    mylog.Info("Handler: Set breakpoint success", "pid", event.Pid, "address", event.Address)
     return nil
 }
 ```
@@ -756,7 +783,7 @@ func (h *DebugEventHandler) decodeStepResponse(buffer []byte) {
         CurrentCore:           binary.LittleEndian.Uint32(buffer[16:20]),
         EventTag:              binary.LittleEndian.Uint64(buffer[20:28]),
         EventCallingStage:     binary.LittleEndian.Uint32(buffer[28:32]),
-        Rflags:                binary.LittleEndian.Uint64(buffer[32:40]),
+        Flags:                binary.LittleEndian.Uint64(buffer[32:40]),
     }
 
     if len(buffer) >= 48 {
@@ -767,7 +794,7 @@ func (h *DebugEventHandler) decodeStepResponse(buffer []byte) {
     if h.regMgr != nil {
         regCtx := h.regMgr.GetRegisterContext()
         regCtx.RIP = pausedPacket.Rip
-        regCtx.RFLAGS = uint32(pausedPacket.Rflags)
+        regCtx.RFLAGS = uint32(pausedPacket.Flags)
         h.regMgr.SetRegisterContext(regCtx)
     }
 }
@@ -1098,40 +1125,85 @@ type Interface interface {
 
 ### 调试器组件管理
 
-调试器核心 (`debugger.HyperDbg`) 维护所有 UI 组件的引用：
+调试器核心 (`debugger.Packet`) 维护所有 UI 组件的引用：
 
 ```go
-type HyperDbg struct {
-    Registers    api.Interface
-    Memory       api.Interface
-    Breakpoints  api.Interface
-    Symbols      api.Interface
-    Threads      api.Interface
-    Stack        api.Interface
-    Disassembly  api.Interface
-    Trace        api.Interface
-    Process      api.Interface
-    Transparency api.Interface
-    // ... 其他组件
+type Packet struct {
+    EventManager      *EventManager
+    DebugEventHandler *DebugEventHandler
+    UIComponents      []api.Interface
 
-    UIComponents []api.Interface
+    RegistersMeta    api.Interface
+    MemoryMeta       api.Interface
+    BreakpointsMeta  api.Interface
+    SymbolsMeta      api.Interface
+    ThreadsMeta      api.Interface
+    StackMeta        api.Interface
+    DisassemblyMeta  api.Interface
+    TraceMeta        api.Interface
+    TransparencyMeta api.Interface
+    HardwareMeta     api.Interface
+    VmmMeta          api.Interface
+
+    BookmarksMeta  api.Interface
+    CommentsMeta   api.Interface
+    LabelsMeta     api.Interface
+    FunctionsMeta  api.Interface
+    XrefsMeta      api.Interface
+    TypesMeta      api.Interface
+    WatchesMeta    api.Interface
+    GraphsMeta     api.Interface
+    ExceptionsMeta api.Interface
+    NotesMeta      api.Interface
+    SourceMeta     api.Interface
+    ReferencesMeta api.Interface
+    HandlesMeta    api.Interface
+    ScriptMeta     api.Interface
+    ArkMeta        api.Interface
+    ScyllaMeta     api.Interface
+    SehMeta        api.Interface
+    LoopsMeta      api.Interface
+    PeviewMeta     api.Interface
 }
 ```
 
-在 `NewHyperDbg()` 函数中，所有组件被注册到 `UIComponents` 列表：
+在 `NewPacket()` 函数中，所有组件被注册到 `UIComponents` 列表：
 
 ```go
-func NewHyperDbg() *HyperDbg {
-    dbg := &HyperDbg{
-        // ... 初始化各组件
+func NewPacket(dh *driver.Provider) Packeter {
+    p := &Packet{
+        driver: dh,
     }
 
-    dbg.RegisterUIComponent(regMgr)
-    dbg.RegisterUIComponent(memMgr)
-    dbg.RegisterUIComponent(bpMgr)
-    // ... 注册所有组件
+    p.RegistersMeta = register.New()
+    p.MemoryMeta = memory.New()
+    p.BreakpointsMeta = breakpoint.New()
+    p.SymbolsMeta = symbol.New()
+    p.ThreadsMeta = thread.New()
+    p.StackMeta = stack.New()
+    p.DisassemblyMeta = disassembly.New()
+    p.TraceMeta = trace.New()
+    p.TransparencyMeta = transparency.New()
 
-    return dbg
+    p.RegisterUIComponent(p.RegistersMeta)
+    p.RegisterUIComponent(p.MemoryMeta)
+    p.RegisterUIComponent(p.BreakpointsMeta)
+    p.RegisterUIComponent(p.SymbolsMeta)
+    p.RegisterUIComponent(p.ThreadsMeta)
+    p.RegisterUIComponent(p.StackMeta)
+    p.RegisterUIComponent(p.DisassemblyMeta)
+    p.RegisterUIComponent(p.TraceMeta)
+    p.RegisterUIComponent(p.TransparencyMeta)
+
+    // ... 注册其他组件
+
+    return p
+}
+
+func (p *Packet) RegisterUIComponent(component api.Interface) {
+    p.mu.Lock()
+    defer p.mu.Unlock()
+    p.UIComponents = append(p.UIComponents, component)
 }
 ```
 
@@ -1139,36 +1211,39 @@ func NewHyperDbg() *HyperDbg {
 
 #### 1. 调试事件通道
 
-调试器通过 `EventChan` 通道向 UI 发送调试事件：
+调试器核心 (`debugger.Packet`) 通过 `EventChan` 通道向 UI 发送调试事件：
 
 ```go
-type HyperDbg struct {
+type Packet struct {
     EventChan chan *DebugEvent
+    // ... 其他字段
 }
 
-func (h *HyperDbg) GetEventChan() <-chan *DebugEvent {
-    return h.EventChan
+func (p *Packet) GetEventChan() <-chan *DebugEvent {
+    return p.EventChan
 }
 ```
 
 #### 2. UI 事件监听
 
-UI 层在启动时启动一个 goroutine 监听调试事件：
+UI 层在启动时监听调试事件通道，当有事件到达时自动更新所有 UI 组件：
 
 ```go
-func Run(callback func(dbg *debugger.HyperDbg)) {
-    dbg := debugger.NewHyperDbg()
-    
-    go func() {
-        for range dbg.GetEventChan() {
-            dbg.UpdateAllPages()
+app.Run("HyperDbg", func(gtx layout.Context) {
+    var packet *debugger.Packet
+    if userDbg, ok := globalDbg.(*debugger.UserDebug); ok {
+        packet = userDbg.Packet
+    }
+    if packet != nil {
+        select {
+        case <-packet.GetEventChan():
+            packet.UpdateAllPages()
+        default:
         }
-    }()
-    
-    callback(dbg)
-    
-    // ... UI 初始化
-}
+    }
+    p.Layout(gtx)
+    myAppBar.LayoutOverlays(gtx)
+})
 ```
 
 #### 3. 批量更新所有页面
@@ -1176,8 +1251,11 @@ func Run(callback func(dbg *debugger.HyperDbg)) {
 `UpdateAllPages()` 方法遍历所有注册的 UI 组件并调用它们的 `Update()` 方法：
 
 ```go
-func (h *HyperDbg) UpdateAllPages() error {
-    for _, component := range h.UIComponents {
+func (p *Packet) UpdateAllPages() error {
+    p.mu.RLock()
+    defer p.mu.RUnlock()
+
+    for _, component := range p.UIComponents {
         if err := component.Update(); err != nil {
             slog.Error("更新UI组件失败", "error", err)
         }
@@ -1195,7 +1273,7 @@ func (h *HyperDbg) UpdateAllPages() error {
 ```go
 if event.Type == EventBreakpoint || event.Type == EventStep {
     // 处理事件...
-    h.SetState(StatePaused)
+    h.State = StatePaused
     h.UpdateAllPages()
 }
 ```
@@ -1206,7 +1284,7 @@ if event.Type == EventBreakpoint || event.Type == EventStep {
 
 ```go
 if event.Type == EventProcessExited {
-    h.SetState(StateTerminated)
+    h.State = StateTerminated
     h.ClearAllPages()
 }
 ```
@@ -1219,7 +1297,7 @@ if event.Type == EventProcessExited {
 func (h *HyperDbg) AttachProcess(pid uint32) error {
     // 附加进程逻辑...
     
-    h.SetState(StatePaused)
+    h.State = StatePaused
     h.UpdateAllPages()
     
     return nil
@@ -1234,7 +1312,7 @@ func (h *HyperDbg) AttachProcess(pid uint32) error {
 func (h *HyperDbg) DetachProcess() error {
     // 分离进程逻辑...
     
-    h.SetState(StateInitialized)
+    h.State = StateInitialized
     h.ClearAllPages()
     
     return nil

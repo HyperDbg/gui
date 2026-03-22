@@ -33,7 +33,7 @@ func (h HDiskInfo) String() {
 		Serialno: string(h.serialno[:]),
 		Capacity: h.capacity,
 	}
-	mylog.MarshalJson("capacity", i)
+	mylog.MarshalJson(i)
 }
 
 type STORAGE_PROPERTY_QUERY struct {

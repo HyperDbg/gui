@@ -3,6 +3,8 @@ package pe
 import (
 	"errors"
 	"unsafe"
+
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 // Parse the debug directory.
@@ -17,9 +19,7 @@ func (p *PEFile) parseDebugDirectory(rva, size uint32) (err error) {
 	for offset < size {
 		debugDir := NewDebugDirectory(p.getOffsetFromRva(rva + offset))
 		start, _ := p.getDataBounds(rva+offset, 0)
-		if err = p.parseInterface(&debugDir.ImageDebugDirectory, start, debugDir.size); err != nil {
-			return err
-		}
+		mylog.Check(p.parseInterface(&debugDir.ImageDebugDirectory, start, debugDir.size))
 
 		if debugDir.SizeOfData != 0 {
 			dataSize := int(debugDir.SizeOfData)
@@ -38,9 +38,7 @@ func (p *PEFile) parseDebugDirectory(rva, size uint32) (err error) {
 				}
 
 				// Get OMF signature
-				if err = p.parseInterface(&omfSignature, dataOffset, omfSignatureSize); err != nil {
-					return err
-				}
+				mylog.Check(p.parseInterface(&omfSignature, dataOffset, omfSignatureSize))
 
 				if omfSignature.Signature == CV_PDB_70_SIGNATUE {
 					// Signature is "RSDS" - PDB 7.0
@@ -53,9 +51,7 @@ func (p *PEFile) parseDebugDirectory(rva, size uint32) (err error) {
 					}
 
 					// Get CV info
-					if err = p.parseInterface(&cvInfoPdb, dataOffset, cvInfoPdb70Size); err != nil {
-						return err
-					}
+					mylog.Check(p.parseInterface(&cvInfoPdb, dataOffset, cvInfoPdb70Size))
 					debugDir.InfoPdb70 = &cvInfoPdb
 
 					// Get the symbol file name.
@@ -72,9 +68,7 @@ func (p *PEFile) parseDebugDirectory(rva, size uint32) (err error) {
 					}
 
 					// Get CV info
-					if err = p.parseInterface(&cvInfoPdb, dataOffset, cvInfoPdb20Size); err != nil {
-						return err
-					}
+					mylog.Check(p.parseInterface(&cvInfoPdb, dataOffset, cvInfoPdb20Size))
 					debugDir.InfoPdb20 = &cvInfoPdb
 
 					// Get the symbol file name.

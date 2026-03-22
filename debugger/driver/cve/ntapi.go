@@ -26,11 +26,11 @@ func NtQuerySystemInformation[T any](sysInfoClass int32) iter.Seq[T] {
 	var infos []T
 	for size := uint32(128 * 1024); ; {
 		b := make([]byte, size)
-		err := windows.NtQuerySystemInformation(sysInfoClass, unsafe.Pointer(&b[0]), size, &size)
+		e := windows.NtQuerySystemInformation(sysInfoClass, unsafe.Pointer(&b[0]), size, &size)
 		switch {
-		case errors.Is(err, windows.STATUS_INFO_LENGTH_MISMATCH):
+		case errors.Is(e, windows.STATUS_INFO_LENGTH_MISMATCH):
 			continue
-		case err == nil:
+		case e == nil:
 			break
 		default:
 			break

@@ -11,7 +11,7 @@ import (
 )
 
 type CpuPage struct {
-	dbg           *debugger.HyperDbg
+	dbg           debugger.Packeter
 	asmAndImmData split.Split
 	spTop         split.Split
 	spBottom      split.Split
@@ -19,7 +19,7 @@ type CpuPage struct {
 	hexEditor     layout.Widget
 }
 
-func NewCpu(dbg *debugger.HyperDbg) *CpuPage {
+func NewCpu(dbg debugger.Packeter) *CpuPage {
 	disasmLayout := func(gtx layout.Context) layout.Dimensions {
 		return layout.Dimensions{Size: gtx.Constraints.Min}
 	}

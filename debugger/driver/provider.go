@@ -40,7 +40,6 @@ type Provider struct {
 }
 
 func New(driverPath, serviceName, deviceName string) Api {
-
 	if serviceName == "" {
 		panic("serviceName 不能为空")
 	}
@@ -117,11 +116,21 @@ func (p *Provider) Install() {
 }
 
 func (p *Provider) Uninstall() {
-	schService := mylog.Check2(windows.OpenService(p.scManager, windows.StringToUTF16Ptr(p.ServiceName), windows.SERVICE_ALL_ACCESS))
+	if p.scManager == windows.Handle(0) {
+		return
+	}
 
-	err := windows.DeleteService(schService)
-	if err != nil && !errors.Is(err, windows.ERROR_SERVICE_MARKED_FOR_DELETE) {
-		mylog.Check(err)
+	schService, e := windows.OpenService(p.scManager, windows.StringToUTF16Ptr(p.ServiceName), windows.SERVICE_ALL_ACCESS)
+	if e != nil {
+		if errors.Is(e, windows.ERROR_SERVICE_DOES_NOT_EXIST) {
+			return
+		}
+		mylog.Check(e)
+	}
+
+	e = windows.DeleteService(schService)
+	if e != nil && !errors.Is(e, windows.ERROR_SERVICE_MARKED_FOR_DELETE) {
+		mylog.Check(e)
 	}
 
 	if schService != windows.Handle(0) {
@@ -180,12 +189,22 @@ func (p *Provider) Start() {
 }
 
 func (p *Provider) Stop() {
-	schService := mylog.Check2(windows.OpenService(p.scManager, windows.StringToUTF16Ptr(p.ServiceName), windows.SERVICE_ALL_ACCESS))
+	if p.scManager == windows.Handle(0) {
+		return
+	}
+
+	schService, e := windows.OpenService(p.scManager, windows.StringToUTF16Ptr(p.ServiceName), windows.SERVICE_ALL_ACCESS)
+	if e != nil {
+		if errors.Is(e, windows.ERROR_SERVICE_DOES_NOT_EXIST) {
+			return
+		}
+		mylog.Check(e)
+	}
 
 	var serviceStatus windows.SERVICE_STATUS
-	err := windows.ControlService(schService, windows.SERVICE_CONTROL_STOP, &serviceStatus)
-	if err != nil && !errors.Is(err, windows.ERROR_SERVICE_NOT_ACTIVE) {
-		mylog.Check(err)
+	e = windows.ControlService(schService, windows.SERVICE_CONTROL_STOP, &serviceStatus)
+	if e != nil && !errors.Is(e, windows.ERROR_SERVICE_NOT_ACTIVE) {
+		mylog.Check(e)
 	}
 
 	if schService != windows.Handle(0) {

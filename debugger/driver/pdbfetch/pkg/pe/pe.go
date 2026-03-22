@@ -9,6 +9,8 @@ import (
 	"os"
 	"sort"
 
+	"github.com/ddkwork/golibrary/std/mylog"
+
 	"github.com/edsrzf/mmap-go"
 )
 
@@ -44,25 +46,19 @@ func PE(filename string) (pe *PEFile, err error) {
 	// Current file offset.
 	offset := 0
 
-	handle, err := os.Open(pe.Filename)
-	if err != nil {
-		return nil, err
-	}
+	handle := mylog.Check2(os.Open(pe.Filename))
+
 	defer func() {
 		_ = handle.Close()
 	}()
 
-	pe.data, err = mmap.Map(handle, mmap.RDONLY, 0)
-	if err != nil {
-		return nil, err
-	}
+	pe.data = mylog.Check2(mmap.Map(handle, mmap.RDONLY, 0))
+
 	pe.dataLen = len(pe.data)
 	pe.reader = bytes.NewReader(pe.data)
 
 	pe.DosHeader = NewDosHeader(offset)
-	if err = pe.parseInterface(&pe.DosHeader.ImageDosHeader, offset, pe.DosHeader.size); err != nil {
-		return nil, err
-	}
+	mylog.Check(pe.parseInterface(&pe.DosHeader.ImageDosHeader, offset, pe.DosHeader.size))
 
 	if pe.DosHeader.E_magic == IMAGE_DOSZM_SIGNATURE {
 		return nil, errors.New("probably a ZM Executable (not a PE file)")
@@ -79,9 +75,7 @@ func PE(filename string) (pe *PEFile, err error) {
 	offset = int(pe.DosHeader.E_lfanew)
 
 	pe.NTHeader = NewNTHeader(offset)
-	if err = pe.parseInterface(&pe.NTHeader.ImageNTHeader, offset, pe.NTHeader.size); err != nil {
-		return nil, err
-	}
+	mylog.Check(pe.parseInterface(&pe.NTHeader.ImageNTHeader, offset, pe.NTHeader.size))
 
 	if (pe.NTHeader.Signature & 0xFFFF) == IMAGE_NE_SIGNATURE {
 		return nil, errors.New("invalid NT Headers signature (probably a NE file)")
@@ -98,24 +92,18 @@ func PE(filename string) (pe *PEFile, err error) {
 	offset += pe.NTHeader.size
 
 	pe.FileHeader = NewFileHeader(offset)
-	if err = pe.parseInterface(&pe.FileHeader.ImageFileHeader, offset, pe.FileHeader.size); err != nil {
-		return nil, err
-	}
+	mylog.Check(pe.parseInterface(&pe.FileHeader.ImageFileHeader, offset, pe.FileHeader.size))
 	SetFlags(pe.FileHeader.flags, ImageCharacteristics, uint32(pe.FileHeader.Characteristics))
 
 	offset += pe.FileHeader.size
 
 	pe.OptionalHeader = NewOptionalHeader32(offset)
-	if err = pe.parseInterface(&pe.OptionalHeader.ImageOptionalHeader32, offset, pe.OptionalHeader.size); err != nil {
-		return nil, err
-	}
+	mylog.Check(pe.parseInterface(&pe.OptionalHeader.ImageOptionalHeader32, offset, pe.OptionalHeader.size))
 	SetFlags(pe.OptionalHeader.flags, DllCharacteristics, uint32(pe.OptionalHeader.DllCharacteristics))
 
 	if pe.OptionalHeader.Magic == IMAGE_NT_OPTIONAL_HDR64_MAGIC {
 		pe.OptionalHeader64 = NewOptionalHeader64(offset)
-		if err = pe.parseInterface(&pe.OptionalHeader64.ImageOptionalHeader64, offset, pe.OptionalHeader64.size); err != nil {
-			return nil, err
-		}
+		mylog.Check(pe.parseInterface(&pe.OptionalHeader64.ImageOptionalHeader64, offset, pe.OptionalHeader64.size))
 
 		if pe.OptionalHeader64.Magic != IMAGE_NT_OPTIONAL_HDR64_MAGIC {
 			return nil, errors.New("no optional header found - invalid PE32 or PE32+ file")
@@ -129,9 +117,7 @@ func PE(filename string) (pe *PEFile, err error) {
 		pe.SymbolTable = make([]*Symbol, numberOfSymbols)
 		for symbolOffset, i := int(pe.FileHeader.PointerToSymbolTable), 0; i < numberOfSymbols; i++ {
 			pe.SymbolTable[i] = NewSymbol(symbolOffset)
-			if err = pe.parseInterface(&pe.SymbolTable[i].ImageSymbol, symbolOffset, pe.SymbolTable[i].size); err != nil {
-				return nil, err
-			}
+			mylog.Check(pe.parseInterface(&pe.SymbolTable[i].ImageSymbol, symbolOffset, pe.SymbolTable[i].size))
 
 			symbolOffset += IMAGE_SIZEOF_SYMBOL
 		}
@@ -139,9 +125,7 @@ func PE(filename string) (pe *PEFile, err error) {
 		// Read the symbol string table.
 		pe.StringTableOffset = int(pe.FileHeader.PointerToSymbolTable) + (numberOfSymbols * IMAGE_SIZEOF_SYMBOL)
 		var stringTableSize uint32
-		if err = pe.parseInterface(&stringTableSize, pe.StringTableOffset, 4); err != nil {
-			return nil, err
-		}
+		mylog.Check(pe.parseInterface(&stringTableSize, pe.StringTableOffset, 4))
 		pe.StringTable = pe.data[pe.StringTableOffset : pe.StringTableOffset+int(stringTableSize)]
 
 		// Fill in the symbol table names.
@@ -195,9 +179,7 @@ func PE(filename string) (pe *PEFile, err error) {
 		}
 
 		dirEntry := NewDataDirectory(offset)
-		if err = pe.parseInterface(&dirEntry.ImageDataDirectory, offset, dirEntry.size); err != nil {
-			return nil, err
-		}
+		mylog.Check(pe.parseInterface(&dirEntry.ImageDataDirectory, offset, dirEntry.size))
 
 		offset += dirEntry.size
 
@@ -212,10 +194,7 @@ func PE(filename string) (pe *PEFile, err error) {
 		// TODO: add skipped check at L2038
 	}
 
-	offset, err = pe.parseSections(sectionOffset)
-	if err != nil {
-		return nil, err
-	}
+	offset = mylog.Check2(pe.parseSections(sectionOffset))
 
 	pe.calculateHeaderEnd(offset)
 
@@ -230,10 +209,8 @@ func PE(filename string) (pe *PEFile, err error) {
 		}
 	}
 
-	err = pe.parseDataDirectories()
-	if err != nil {
-		return nil, err
-	}
+	mylog.Check(pe.parseDataDirectories())
+
 	//offset, err = pe.parseRichHeader()
 	//if err != nil {
 	//	return nil, err
@@ -248,25 +225,19 @@ func OBJ(filename string) (pe *PEFile, err error) {
 
 	offset := 0
 
-	handle, err := os.Open(pe.Filename)
-	if err != nil {
-		return nil, err
-	}
+	handle := mylog.Check2(os.Open(pe.Filename))
+
 	defer func() {
 		_ = handle.Close()
 	}()
 
-	pe.data, err = mmap.Map(handle, mmap.RDONLY, 0)
-	if err != nil {
-		return nil, err
-	}
+	pe.data = mylog.Check2(mmap.Map(handle, mmap.RDONLY, 0))
+
 	pe.dataLen = len(pe.data)
 	pe.reader = bytes.NewReader(pe.data)
 
 	pe.FileHeader = NewFileHeader(offset)
-	if err = pe.parseInterface(&pe.FileHeader.ImageFileHeader, offset, pe.FileHeader.size); err != nil {
-		return nil, err
-	}
+	mylog.Check(pe.parseInterface(&pe.FileHeader.ImageFileHeader, offset, pe.FileHeader.size))
 
 	// Size of the optional header, which is required for executable files but not for object files.
 	// An object file should have a value of 0 here.
@@ -281,9 +252,7 @@ func OBJ(filename string) (pe *PEFile, err error) {
 		pe.SymbolTable = make([]*Symbol, numberOfSymbols)
 		for symbolOffset, i := int(pe.FileHeader.PointerToSymbolTable), 0; i < numberOfSymbols; i++ {
 			pe.SymbolTable[i] = NewSymbol(symbolOffset)
-			if err = pe.parseInterface(&pe.SymbolTable[i].ImageSymbol, symbolOffset, pe.SymbolTable[i].size); err != nil {
-				return nil, err
-			}
+			mylog.Check(pe.parseInterface(&pe.SymbolTable[i].ImageSymbol, symbolOffset, pe.SymbolTable[i].size))
 
 			symbolOffset += IMAGE_SIZEOF_SYMBOL
 		}
@@ -291,9 +260,7 @@ func OBJ(filename string) (pe *PEFile, err error) {
 		// Read the symbol string table.
 		pe.StringTableOffset = int(pe.FileHeader.PointerToSymbolTable) + (numberOfSymbols * IMAGE_SIZEOF_SYMBOL)
 		var stringTableSize uint32
-		if err = pe.parseInterface(&stringTableSize, pe.StringTableOffset, 4); err != nil {
-			return nil, err
-		}
+		mylog.Check(pe.parseInterface(&stringTableSize, pe.StringTableOffset, 4))
 		pe.StringTable = pe.data[pe.StringTableOffset : pe.StringTableOffset+int(stringTableSize)]
 
 		// Fill in the symbol table names.
@@ -316,10 +283,7 @@ func OBJ(filename string) (pe *PEFile, err error) {
 
 	offset += pe.FileHeader.size
 
-	offset, err = pe.parseSections(offset)
-	if err != nil {
-		return nil, err
-	}
+	offset = mylog.Check2(pe.parseSections(offset))
 
 	pe.calculateHeaderEnd(offset)
 
@@ -352,9 +316,7 @@ func (p *PEFile) parseSections(offset int) (newOffset int, err error) {
 	newOffset = offset
 	for i := uint32(0); i < uint32(p.FileHeader.NumberOfSections); i++ {
 		section := NewSectionHeader(newOffset)
-		if err = p.parseInterface(&section.ImageSectionHeader, newOffset, section.size); err != nil {
-			return 0, err
-		}
+		mylog.Check(p.parseInterface(&section.ImageSectionHeader, newOffset, section.size))
 
 		// Set raw data.
 		section.RawData = make([]byte, section.SizeOfRawData)
@@ -366,9 +328,7 @@ func (p *PEFile) parseSections(offset int) (newOffset int, err error) {
 			section.Relocations = make([]*Relocation, numberOfRelocs)
 			for relocOffset, relocIdx := int(section.PointerToRelocations), 0; relocIdx < numberOfRelocs; relocIdx++ {
 				section.Relocations[relocIdx] = NewRelocation(relocOffset)
-				if err = p.parseInterface(&section.Relocations[relocIdx].ImageRelocation, relocOffset, section.Relocations[relocIdx].size); err != nil {
-					return 0, err
-				}
+				mylog.Check(p.parseInterface(&section.Relocations[relocIdx].ImageRelocation, relocOffset, section.Relocations[relocIdx].size))
 				section.Relocations[relocIdx].Symbol = p.SymbolTable[section.Relocations[relocIdx].SymbolTableIndex]
 
 				relocOffset += IMAGE_SIZEOF_RELOCATION
@@ -402,15 +362,9 @@ func (p *PEFile) parseSections(offset int) (newOffset int, err error) {
 }
 
 func (p *PEFile) parseInterface(iface any, offset, size int) (err error) {
-	_, err = p.reader.Seek(int64(offset), io.SeekStart)
-	if err != nil {
-		return err
-	}
+	mylog.Check2(p.reader.Seek(int64(offset), io.SeekStart))
 
-	err = binary.Read(p.reader, binary.LittleEndian, iface)
-	if err != nil {
-		return err
-	}
+	mylog.Check(binary.Read(p.reader, binary.LittleEndian, iface))
 
 	return nil
 }
@@ -443,10 +397,8 @@ func (p *PEFile) parseDataDirectories() error {
 			if !ok {
 				continue
 			}
-			err := parser.(func(uint32, uint32) error)(dirEntry.VirtualAddress, dirEntry.Size)
-			if err != nil {
-				return err
-			}
+			mylog.Check(parser.(func(uint32, uint32) error)(dirEntry.VirtualAddress, dirEntry.Size))
+
 		}
 	}
 

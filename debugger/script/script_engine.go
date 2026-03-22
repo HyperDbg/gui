@@ -2,11 +2,13 @@ package script
 
 import (
 	"fmt"
-	"log/slog"
 	"maps"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 type ScriptEngine struct {
@@ -39,10 +41,7 @@ func (se *ScriptEngine) ExecuteScript(scriptPath string, commandHandler func(str
 		se.isExecuting = false
 	}()
 
-	lines, err := se.readScriptFile(scriptPath)
-	if err != nil {
-		return fmt.Errorf("failed to read script file: %w", err)
-	}
+	lines := mylog.Check2(se.readScriptFile(scriptPath))
 
 	for i, line := range lines {
 		se.currentLine = i + 1
@@ -54,11 +53,9 @@ func (se *ScriptEngine) ExecuteScript(scriptPath string, commandHandler func(str
 
 		if strings.HasPrefix(line, "eval ") {
 			expr := strings.TrimSpace(line[5:])
-			result, err := se.EvalExpression(expr)
-			if err != nil {
-				return fmt.Errorf("script error at line %d: %w", se.currentLine, err)
-			}
-			slog.Info("eval", "expression", expr, "result", result)
+			result := mylog.Check2(se.EvalExpression(expr))
+
+			mylog.Info(expr, result)
 		} else if strings.HasPrefix(line, "set ") {
 			parts := strings.SplitN(line[4:], "=", 2)
 			if len(parts) != 2 {
@@ -69,22 +66,16 @@ func (se *ScriptEngine) ExecuteScript(scriptPath string, commandHandler func(str
 			se.variables[varName] = varValue
 		} else if strings.HasPrefix(line, "print ") {
 			expr := strings.TrimSpace(line[6:])
-			value, err := se.EvalExpression(expr)
-			if err != nil {
-				return fmt.Errorf("script error at line %d: %w", se.currentLine, err)
-			}
-			slog.Info("print", "expression", expr, "value", value)
+			value := mylog.Check2(se.EvalExpression(expr))
+
+			mylog.Info(expr, value)
 		} else if strings.HasPrefix(line, "formats(") && strings.HasSuffix(line, ");") {
 			expr := strings.TrimSpace(line[8 : len(line)-2])
-			result, err := se.EvalExpression(expr)
-			if err != nil {
-				return fmt.Errorf("script error at line %d: %w", se.currentLine, err)
-			}
-			slog.Info("formats", "expression", expr, "result", result)
+			result := mylog.Check2(se.EvalExpression(expr))
+
+			mylog.Info(expr, result)
 		} else {
-			if err := commandHandler(line); err != nil {
-				return fmt.Errorf("script error at line %d: %w", se.currentLine, err)
-			}
+			mylog.Check(commandHandler(line))
 		}
 	}
 
@@ -92,7 +83,17 @@ func (se *ScriptEngine) ExecuteScript(scriptPath string, commandHandler func(str
 }
 
 func (se *ScriptEngine) readScriptFile(scriptPath string) ([]string, error) {
-	return nil, fmt.Errorf("not implemented")
+	content := mylog.Check2(os.ReadFile(scriptPath))
+
+	lines := strings.Split(string(content), "\n")
+
+	for i := range lines {
+		lines[i] = strings.TrimSpace(lines[i])
+	}
+
+	mylog.Info(scriptPath, len(lines))
+
+	return lines, nil
 }
 
 func (se *ScriptEngine) EvalExpression(expr string) (uint64, error) {
@@ -138,15 +139,9 @@ func (se *ScriptEngine) evalBinaryOp(expr string, op string, operation func(uint
 		return 0, fmt.Errorf("invalid expression")
 	}
 
-	left, err := se.EvalExpression(strings.TrimSpace(parts[0]))
-	if err != nil {
-		return 0, err
-	}
+	left := mylog.Check2(se.EvalExpression(strings.TrimSpace(parts[0])))
 
-	right, err := se.EvalExpression(strings.TrimSpace(parts[1]))
-	if err != nil {
-		return 0, err
-	}
+	right := mylog.Check2(se.EvalExpression(strings.TrimSpace(parts[1])))
 
 	return operation(left, right), nil
 }
@@ -204,20 +199,15 @@ func (se *ScriptEngine) EvalSingleExpression(expr string) (uint64, error) {
 	se.mu.Lock()
 	defer se.mu.Unlock()
 
-	result, err := se.EvalExpression(expr)
-	if err != nil {
-		se.errorState = 1
-		return 0, err
-	}
+	result := mylog.Check2(se.EvalExpression(expr))
 
 	se.evaluationResult = result
 	se.errorState = 0
 	return result, nil
 }
 
-func (se *ScriptEngine) ExecuteSingleExpression(expr string) error {
-	_, err := se.EvalSingleExpression(expr)
-	return err
+func (se *ScriptEngine) ExecuteSingleExpression(expr string) {
+	mylog.Check2(se.EvalSingleExpression(expr))
 }
 
 func (se *ScriptEngine) ClearVariables() {

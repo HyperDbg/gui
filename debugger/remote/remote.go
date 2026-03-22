@@ -5,6 +5,8 @@ import (
 	"net"
 	"sync"
 	"time"
+
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 const (
@@ -27,20 +29,14 @@ func NewNamedPipeServer(pipeName string) *NamedPipeServer {
 }
 
 func (s *NamedPipeServer) Start() error {
-	listener, err := net.Listen("tcp", s.pipeName)
-	if err != nil {
-		return fmt.Errorf("failed to create named pipe server: %w", err)
-	}
+	listener := mylog.Check2(net.Listen("tcp", s.pipeName))
 
 	s.listener = listener
 	return nil
 }
 
 func (s *NamedPipeServer) WaitForClient() (net.Conn, error) {
-	conn, err := s.listener.Accept()
-	if err != nil {
-		return nil, fmt.Errorf("failed to accept client connection: %w", err)
-	}
+	conn := mylog.Check2(s.listener.Accept())
 
 	s.mu.Lock()
 	s.connections[conn] = true
@@ -50,18 +46,14 @@ func (s *NamedPipeServer) WaitForClient() (net.Conn, error) {
 }
 
 func (s *NamedPipeServer) ReadMessage(conn net.Conn, buffer []byte) (int, error) {
-	n, err := conn.Read(buffer)
-	if err != nil {
-		return 0, fmt.Errorf("failed to read from client: %w", err)
-	}
+	n := mylog.Check2(conn.Read(buffer))
+
 	return n, nil
 }
 
 func (s *NamedPipeServer) SendMessage(conn net.Conn, message []byte) error {
-	_, err := conn.Write(message)
-	if err != nil {
-		return fmt.Errorf("failed to send message to client: %w", err)
-	}
+	mylog.Check2(conn.Write(message))
+
 	return nil
 }
 
@@ -87,10 +79,7 @@ type NamedPipeClient struct {
 }
 
 func NewNamedPipeClient(pipeAddress string) (*NamedPipeClient, error) {
-	conn, err := net.Dial("tcp", pipeAddress)
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to named pipe: %w", err)
-	}
+	conn := mylog.Check2(net.Dial("tcp", pipeAddress))
 
 	return &NamedPipeClient{
 		conn: conn,
@@ -101,10 +90,8 @@ func (c *NamedPipeClient) ReadMessage(buffer []byte) (int, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
-	n, err := c.conn.Read(buffer)
-	if err != nil {
-		return 0, fmt.Errorf("failed to read from server: %w", err)
-	}
+	n := mylog.Check2(c.conn.Read(buffer))
+
 	return n, nil
 }
 
@@ -112,10 +99,8 @@ func (c *NamedPipeClient) SendMessage(message []byte) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	_, err := c.conn.Write(message)
-	if err != nil {
-		return fmt.Errorf("failed to send message to server: %w", err)
-	}
+	mylog.Check2(c.conn.Write(message))
+
 	return nil
 }
 
@@ -146,10 +131,7 @@ func NewRemoteConnection() *RemoteConnection {
 }
 
 func (rc *RemoteConnection) Listen(port string) error {
-	listener, err := net.Listen("tcp", ":"+port)
-	if err != nil {
-		return fmt.Errorf("failed to listen on port %s: %w", port, err)
-	}
+	listener := mylog.Check2(net.Listen("tcp", ":"+port))
 
 	rc.listenSocket = listener
 	rc.isServer = true
@@ -162,20 +144,14 @@ func (rc *RemoteConnection) Listen(port string) error {
 }
 
 func (rc *RemoteConnection) WaitForClient() error {
-	conn, err := rc.listenSocket.Accept()
-	if err != nil {
-		return fmt.Errorf("failed to accept client connection: %w", err)
-	}
+	conn := mylog.Check2(rc.listenSocket.Accept())
 
 	rc.clientSocket = conn
 	return nil
 }
 
 func (rc *RemoteConnection) Connect(address string) error {
-	conn, err := net.Dial("tcp", address)
-	if err != nil {
-		return fmt.Errorf("failed to connect to %s: %w", address, err)
-	}
+	conn := mylog.Check2(net.Dial("tcp", address))
 
 	rc.serverSocket = conn
 	rc.isServer = false
@@ -206,10 +182,7 @@ func (rc *RemoteConnection) SendMessage(message string) error {
 		return fmt.Errorf("connection not established")
 	}
 
-	_, err := conn.Write([]byte(message + TcpEndOfBufferChars))
-	if err != nil {
-		return fmt.Errorf("failed to send message: %w", err)
-	}
+	mylog.Check2(conn.Write([]byte(message + TcpEndOfBufferChars)))
 
 	return nil
 }
@@ -234,10 +207,7 @@ func (rc *RemoteConnection) ReceiveMessage(buffer []byte) (int, error) {
 	}
 
 	conn.SetReadDeadline(time.Now().Add(30 * time.Second))
-	n, err := conn.Read(buffer)
-	if err != nil {
-		return 0, fmt.Errorf("failed to receive message: %w", err)
-	}
+	n := mylog.Check2(conn.Read(buffer))
 
 	return n, nil
 }
@@ -279,10 +249,7 @@ type TcpServer struct {
 }
 
 func NewTcpServer(address string) (*TcpServer, error) {
-	listener, err := net.Listen("tcp", address)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create TCP server: %w", err)
-	}
+	listener := mylog.Check2(net.Listen("tcp", address))
 
 	return &TcpServer{
 		listener:    listener,
@@ -291,10 +258,7 @@ func NewTcpServer(address string) (*TcpServer, error) {
 }
 
 func (s *TcpServer) Accept() (net.Conn, error) {
-	conn, err := s.listener.Accept()
-	if err != nil {
-		return nil, fmt.Errorf("failed to accept connection: %w", err)
-	}
+	conn := mylog.Check2(s.listener.Accept())
 
 	s.mu.Lock()
 	s.connections[conn] = true
@@ -304,18 +268,14 @@ func (s *TcpServer) Accept() (net.Conn, error) {
 }
 
 func (s *TcpServer) SendMessage(conn net.Conn, message []byte) error {
-	_, err := conn.Write(message)
-	if err != nil {
-		return fmt.Errorf("failed to send message: %w", err)
-	}
+	mylog.Check2(conn.Write(message))
+
 	return nil
 }
 
 func (s *TcpServer) ReceiveMessage(conn net.Conn, buffer []byte) (int, error) {
-	n, err := conn.Read(buffer)
-	if err != nil {
-		return 0, fmt.Errorf("failed to receive message: %w", err)
-	}
+	n := mylog.Check2(conn.Read(buffer))
+
 	return n, nil
 }
 
@@ -350,10 +310,7 @@ type TcpClient struct {
 }
 
 func NewTcpClient(address string) (*TcpClient, error) {
-	conn, err := net.Dial("tcp", address)
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to TCP server: %w", err)
-	}
+	conn := mylog.Check2(net.Dial("tcp", address))
 
 	return &TcpClient{
 		conn: conn,
@@ -364,10 +321,8 @@ func (c *TcpClient) SendMessage(message []byte) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	_, err := c.conn.Write(message)
-	if err != nil {
-		return fmt.Errorf("failed to send message: %w", err)
-	}
+	mylog.Check2(c.conn.Write(message))
+
 	return nil
 }
 
@@ -375,10 +330,8 @@ func (c *TcpClient) ReceiveMessage(buffer []byte) (int, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
-	n, err := c.conn.Read(buffer)
-	if err != nil {
-		return 0, fmt.Errorf("failed to receive message: %w", err)
-	}
+	n := mylog.Check2(c.conn.Read(buffer))
+
 	return n, nil
 }
 

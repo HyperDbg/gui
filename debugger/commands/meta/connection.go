@@ -2,30 +2,30 @@ package meta
 
 import (
 	"fmt"
-	"log/slog"
 	"strconv"
 	"strings"
 
 	"github.com/ddkwork/HyperDbg/debugger"
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 type CommandConnect struct {
-	dbg *debugger.HyperDbg
+	dbg debugger.Packeter
 }
 
-func NewCommandConnect(dbg *debugger.HyperDbg) *CommandConnect {
+func NewCommandConnect(dbg debugger.Packeter) *CommandConnect {
 	return &CommandConnect{dbg: dbg}
 }
 
 func (c *CommandConnect) Help() {
-	slog.Info("connect : connect to debuggee.")
-	slog.Info("syntax : \tconnect [connection_string]")
-	slog.Info("  connection_string - connection string (e.g., 'com:port=1,baud=115200' or 'tcp:port=50000')")
+	mylog.Info("connect : connect to debuggee.")
+	mylog.Info("syntax : \tconnect [connection_string]")
+	mylog.Info("  connection_string - connection string (e.g., 'com:port=1,baud=115200' or 'tcp:port=50000')")
 }
 
 func (c *CommandConnect) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) < 2 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
@@ -39,28 +39,38 @@ func (c *CommandConnect) Execute(tokens []debugger.CommandToken, command string)
 }
 
 func (c *CommandConnect) Connect(connectionString string) error {
-	c.dbg.SetConnectedToRemoteDebuggee(true)
-	slog.Info("Connecting to", "connection", connectionString)
-	slog.Info("Connected successfully")
+	mylog.Info(connectionString)
+
+	parts := strings.Split(connectionString, ",")
+	if len(parts) == 0 {
+		return fmt.Errorf("invalid connection string")
+	}
+
+	connectionType := strings.TrimSpace(parts[0])
+	if connectionType == "tcp" || connectionType == "com" {
+		c.dbg.ConnectSerial(connectionString, 115200)
+	}
+
+	mylog.Info("Connected successfully")
 	return nil
 }
 
 type CommandDisconnect struct {
-	dbg *debugger.HyperDbg
+	dbg debugger.Packeter
 }
 
-func NewCommandDisconnect(dbg *debugger.HyperDbg) *CommandDisconnect {
+func NewCommandDisconnect(dbg debugger.Packeter) *CommandDisconnect {
 	return &CommandDisconnect{dbg: dbg}
 }
 
 func (c *CommandDisconnect) Help() {
-	slog.Info("disconnect : disconnect from debuggee.")
-	slog.Info("syntax : \tdisconnect")
+	mylog.Info("disconnect : disconnect from debuggee.")
+	mylog.Info("syntax : \tdisconnect")
 }
 
 func (c *CommandDisconnect) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) != 1 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
@@ -69,72 +79,68 @@ func (c *CommandDisconnect) Execute(tokens []debugger.CommandToken, command stri
 }
 
 func (c *CommandDisconnect) Disconnect() error {
-	if !c.dbg.IsConnectedToRemoteDebuggee() {
+	if !c.dbg.IsConnected() {
 		return fmt.Errorf("not connected to debuggee")
 	}
 
-	c.dbg.SetConnectedToRemoteDebuggee(false)
-	slog.Info("Disconnected from debuggee")
+	mylog.Info("Disconnected from debuggee")
 	return nil
 }
 
 type CommandAttach struct {
-	dbg *debugger.HyperDbg
+	dbg debugger.UserDebugger
 }
 
-func NewCommandAttach(dbg *debugger.HyperDbg) *CommandAttach {
+func NewCommandAttach(dbg debugger.UserDebugger) *CommandAttach {
 	return &CommandAttach{dbg: dbg}
 }
 
 func (c *CommandAttach) Help() {
-	slog.Info("attach : attach to a process.")
-	slog.Info("syntax : \tattach [pid]")
-	slog.Info("  pid - process id to attach to")
+	mylog.Info("attach : attach to a process.")
+	mylog.Info("syntax : \tattach [pid]")
+	mylog.Info("  pid - process id to attach to")
 }
 
 func (c *CommandAttach) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) < 2 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
 
-	pid, err := strconv.ParseUint(tokens[1].Value, 0, 32)
-	if err != nil {
-		return fmt.Errorf("invalid process id: %w", err)
-	}
+	pid := mylog.Check2(strconv.ParseUint(tokens[1].Value, 0, 32))
 
 	return c.Attach(uint32(pid))
 }
 
 func (c *CommandAttach) Attach(processId uint32) error {
-	activeProcess := debugger.ActiveDebuggingProcess{
+	activeProcess := debugger.UserActiveDebuggingProcess{
 		IsActive:  true,
 		IsPaused:  true,
 		ProcessId: processId,
 	}
 
-	c.dbg.SetActiveProcess(activeProcess)
-	slog.Info("Attached to process", "pid", processId)
+	c.dbg.SetActiveDebuggingProcess(activeProcess)
+	mylog.Info(processId)
 	return nil
 }
 
 type CommandDetach struct {
-	dbg *debugger.HyperDbg
+	dbg debugger.UserDebugger
 }
 
-func NewCommandDetach(dbg *debugger.HyperDbg) *CommandDetach {
+func NewCommandDetach(dbg debugger.UserDebugger) *CommandDetach {
 	return &CommandDetach{dbg: dbg}
 }
 
 func (c *CommandDetach) Help() {
-	slog.Info("detach : detach from process.")
-	slog.Info("syntax : \tdetach")
+	mylog.Info("detach : detach from process.")
+	mylog.Info("syntax : \tdetach")
 }
 
 func (c *CommandDetach) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) != 1 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
@@ -143,32 +149,32 @@ func (c *CommandDetach) Execute(tokens []debugger.CommandToken, command string) 
 }
 
 func (c *CommandDetach) Detach() error {
-	activeProcess := c.dbg.GetActiveProcess()
+	activeProcess := c.dbg.GetActiveDebuggingProcess()
 	if !activeProcess.IsActive {
 		return fmt.Errorf("not attached to any process")
 	}
 
-	c.dbg.SetActiveProcess(debugger.ActiveDebuggingProcess{})
-	slog.Info("Detached from process")
+	c.dbg.SetActiveDebuggingProcess(debugger.UserActiveDebuggingProcess{})
+	mylog.Info("Detached from process")
 	return nil
 }
 
 type CommandStatus struct {
-	dbg *debugger.HyperDbg
+	dbg debugger.Packeter
 }
 
-func NewCommandStatus(dbg *debugger.HyperDbg) *CommandStatus {
+func NewCommandStatus(dbg debugger.Packeter) *CommandStatus {
 	return &CommandStatus{dbg: dbg}
 }
 
 func (c *CommandStatus) Help() {
-	slog.Info("status : show debugger status.")
-	slog.Info("syntax : \tstatus")
+	mylog.Info("status : show debugger status.")
+	mylog.Info("syntax : \tstatus")
 }
 
 func (c *CommandStatus) Execute(tokens []debugger.CommandToken, command string) error {
 	if len(tokens) != 1 {
-		slog.Warn("incorrect use of command", "command", tokens[0].Value)
+		mylog.Warning(tokens[0].Value)
 		c.Help()
 		return fmt.Errorf("invalid arguments")
 	}
@@ -177,16 +183,16 @@ func (c *CommandStatus) Execute(tokens []debugger.CommandToken, command string) 
 }
 
 func (c *CommandStatus) ShowStatus() error {
-	slog.Info("Debugger Status:")
-	slog.Info("State", "value", c.dbg.GetState())
-	slog.Info("Connected to remote debuggee", "value", c.dbg.IsConnectedToRemoteDebuggee())
-	slog.Info("Serial connected to remote debuggee", "value", c.dbg.IsSerialConnectedToRemoteDebuggee())
+	mylog.Info("Debugger Status:")
+	mylog.Info(c.dbg.IsConnected())
 
-	activeProcess := c.dbg.GetActiveProcess()
-	if activeProcess.IsActive {
-		slog.Info("Active process", "pid", activeProcess.ProcessId, "paused", activeProcess.IsPaused)
-	} else {
-		slog.Info("Active process: none")
+	if userDbg, ok := c.dbg.(debugger.UserDebugger); ok {
+		activeProcess := userDbg.GetActiveDebuggingProcess()
+		if activeProcess.IsActive {
+			mylog.Info(activeProcess.ProcessId, activeProcess.IsPaused)
+		} else {
+			mylog.Info("Active process: none")
+		}
 	}
 
 	return nil

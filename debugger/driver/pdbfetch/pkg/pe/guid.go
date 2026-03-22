@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 // GUID represents a GUID/UUID. It has the same structure as
@@ -136,29 +138,21 @@ func GuidFromString(s string) (GUID, error) {
 
 	var g GUID
 
-	data1, err := strconv.ParseUint(s[0:8], 16, 32)
-	if err != nil {
-		return GUID{}, fmt.Errorf("invalid GUID %q", s)
-	}
+	data1 := mylog.Check2(strconv.ParseUint(s[0:8], 16, 32))
+
 	g.Data1 = uint32(data1)
 
-	data2, err := strconv.ParseUint(s[9:13], 16, 16)
-	if err != nil {
-		return GUID{}, fmt.Errorf("invalid GUID %q", s)
-	}
+	data2 := mylog.Check2(strconv.ParseUint(s[9:13], 16, 16))
+
 	g.Data2 = uint16(data2)
 
-	data3, err := strconv.ParseUint(s[14:18], 16, 16)
-	if err != nil {
-		return GUID{}, fmt.Errorf("invalid GUID %q", s)
-	}
+	data3 := mylog.Check2(strconv.ParseUint(s[14:18], 16, 16))
+
 	g.Data3 = uint16(data3)
 
 	for i, x := range []int{19, 21, 24, 26, 28, 30, 32, 34} {
-		v, err := strconv.ParseUint(s[x:x+2], 16, 8)
-		if err != nil {
-			return GUID{}, fmt.Errorf("invalid GUID %q", s)
-		}
+		v := mylog.Check2(strconv.ParseUint(s[x:x+2], 16, 8))
+
 		g.Data4[i] = uint8(v)
 	}
 
@@ -173,10 +167,8 @@ func (g GUID) MarshalText() ([]byte, error) {
 // UnmarshalText takes the textual representation of a GUID, and unmarhals it
 // into this GUID.
 func (g *GUID) UnmarshalText(text []byte) error {
-	g2, err := GuidFromString(string(text))
-	if err != nil {
-		return err
-	}
+	g2 := mylog.Check2(GuidFromString(string(text)))
+
 	*g = g2
 	return nil
 }

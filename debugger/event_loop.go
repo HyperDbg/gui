@@ -1,8 +1,9 @@
 package debugger
 
 import (
-	"log/slog"
 	"sync"
+
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 type EventLoop struct {
@@ -30,7 +31,7 @@ func (el *EventLoop) Start() {
 	}
 
 	el.running = true
-	slog.Info("EventLoop: Starting")
+	mylog.Info("EventLoop: Starting")
 
 	go el.run()
 }
@@ -44,7 +45,7 @@ func (el *EventLoop) Stop() {
 	}
 
 	el.running = false
-	slog.Info("EventLoop: Stopping")
+	mylog.Info("EventLoop: Stopping")
 	close(el.stopChan)
 }
 
@@ -56,14 +57,14 @@ func (el *EventLoop) run() {
 		case event := <-eventChan:
 			el.handleEvent(event)
 		case <-el.stopChan:
-			slog.Info("EventLoop: Stopped")
+			mylog.Info("EventLoop: Stopped")
 			return
 		}
 	}
 }
 
 func (el *EventLoop) handleEvent(event *DebugEvent) {
-	slog.Info("EventLoop: Handling event", "type", event.Type, "tag", event.Tag, "pid", event.ProcessId)
+	mylog.Info(event.Type, event.Tag, event.ProcessId)
 
 	el.mu.Lock()
 	handlers, ok := el.eventHandlers[event.Type]
@@ -83,7 +84,7 @@ func (el *EventLoop) RegisterHandler(eventType EventType, handler func(*DebugEve
 	defer el.mu.Unlock()
 
 	el.eventHandlers[eventType] = append(el.eventHandlers[eventType], handler)
-	slog.Info("EventLoop: Handler registered", "event", eventType.String())
+	mylog.Info(eventType.String())
 }
 
 func (el *EventLoop) UnregisterHandler(eventType EventType, handler func(*DebugEvent)) {
@@ -96,7 +97,7 @@ func (el *EventLoop) UnregisterHandler(eventType EventType, handler func(*DebugE
 	}
 
 	delete(el.eventHandlers, eventType)
-	slog.Info("EventLoop: All handlers unregistered for type", "type", eventType)
+	mylog.Info(eventType)
 }
 
 func (el *EventLoop) IsRunning() bool {

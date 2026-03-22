@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 // Parse the import directory.
@@ -21,9 +23,7 @@ func (p *PEFile) parseImportDirectory(rva, size uint32) (err error) {
 		fileOffset := p.getOffsetFromRva(rva)
 		importDesc := NewImportDescriptor(fileOffset)
 
-		if err = p.parseInterface(&importDesc.ImageImportDescriptor, fileOffset, importDesc.size); err != nil {
-			return err
-		}
+		mylog.Check(p.parseInterface(&importDesc.ImageImportDescriptor, fileOffset, importDesc.size))
 
 		// log.Printf("0x%x == %s", importDesc.Name, p.getStringAtRva(importDesc.Name))
 		if EmptyStruct(importDesc.ImageImportDescriptor) {
@@ -38,9 +38,7 @@ func (p *PEFile) parseImportDirectory(rva, size uint32) (err error) {
 		}
 
 		if p.OptionalHeader64 != nil {
-			if err := p.parseImports64(importDesc); err != nil {
-				return err
-			}
+			mylog.Check(p.parseImports64(importDesc))
 			// Give pretty names to well known dll files
 			for _, imp := range importDesc.Imports64 {
 				if imp.ImportByOrdinal {
@@ -50,9 +48,7 @@ func (p *PEFile) parseImportDirectory(rva, size uint32) (err error) {
 				}
 			}
 		} else {
-			if err := p.parseImports(importDesc); err != nil {
-				return err
-			}
+			mylog.Check(p.parseImports(importDesc))
 			// Give pretty names to well known dll files
 			for _, imp := range importDesc.Imports {
 				if imp.ImportByOrdinal {
@@ -76,15 +72,9 @@ func (p *PEFile) parseImportDirectory(rva, size uint32) (err error) {
 func (p *PEFile) parseImports(importDesc *ImportDescriptor) (err error) {
 	var table []*ThunkData32
 
-	ilt, err := p.getImportTable(importDesc.Characteristics, importDesc)
-	if err != nil {
-		return err
-	}
+	ilt := mylog.Check2(p.getImportTable(importDesc.Characteristics, importDesc))
 
-	iat, err := p.getImportTable(importDesc.FirstThunk, importDesc)
-	if err != nil {
-		return err
-	}
+	iat := mylog.Check2(p.getImportTable(importDesc.FirstThunk, importDesc))
 
 	if len(iat) == 0 && len(ilt) == 0 {
 		return errors.New("invalid import table information - both ILT and IAT appear to be broken")
@@ -117,9 +107,7 @@ func (p *PEFile) parseImports(importDesc *ImportDescriptor) (err error) {
 				imp.ImportByOrdinal = false
 				imp.HintNameTableRva = table[idx].AddressOfData & addressMask
 
-				if err := p.parseInterface(&imp.Hint, int(imp.HintNameTableRva), 2); err != nil {
-					return err
-				}
+				mylog.Check(p.parseInterface(&imp.Hint, int(imp.HintNameTableRva), 2))
 
 				imp.Name = p.getStringAtRva(table[idx].AddressOfData + 2)
 
@@ -209,11 +197,7 @@ func (p *PEFile) getImportTable(rva uint32, importDesc *ImportDescriptor) ([]*Th
 		}
 
 		thunk := NewThunkData32(p.getOffsetFromRva(rva))
-		if err := p.parseInterface(&thunk.ImageThunkData32, thunk.fileOffset, thunk.size); err != nil {
-			msg := fmt.Sprintf("Error Parsing the import table.\nInvalid data at RVA: 0x%x", rva)
-			log.Println(msg)
-			return []*ThunkData32{}, errors.New(msg)
-		}
+		mylog.Check(p.parseInterface(&thunk.ImageThunkData32, thunk.fileOffset, thunk.size))
 		if EmptyStruct(thunk.ImageThunkData32) {
 			break
 		}

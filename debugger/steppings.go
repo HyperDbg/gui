@@ -1,8 +1,10 @@
 package debugger
 
 import (
-	"log/slog"
+	"bytes"
 	"unsafe"
+
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 const (
@@ -20,45 +22,45 @@ const (
 	StepRequestStepOverForGuLastInstruction
 )
 
-func (h *HyperDbg) SteppingInstrumentationStepIn() error {
-	if h.ActiveProcess.IsActive {
-		slog.Info("the instrumentation step-in is only supported in Debugger Mode")
+func (s *KernelDebug) SteppingInstrumentationStepIn() error {
+	if s.packet.ActiveProcess.IsActive {
+		mylog.Info("the instrumentation step-in is only supported in Debugger Mode")
 		return nil
 	}
 
-	return h.sendStepPacket(StepRequestInstrumentationStepIn)
+	return s.sendStepPacket(StepRequestInstrumentationStepIn)
 }
 
-func (h *HyperDbg) SteppingInstrumentationStepInForTracking() error {
-	if h.ActiveProcess.IsActive {
-		slog.Info("the instrumentation step-in is only supported in Debugger Mode")
+func (s *KernelDebug) SteppingInstrumentationStepInForTracking() error {
+	if s.packet.ActiveProcess.IsActive {
+		mylog.Info("the instrumentation step-in is only supported in Debugger Mode")
 		return nil
 	}
 
-	return h.sendStepPacket(StepRequestInstrumentationStepInForTracking)
+	return s.sendStepPacket(StepRequestInstrumentationStepInForTracking)
 }
 
-func (h *HyperDbg) SteppingRegularStepIn() error {
-	if h.isConnectedToRemoteDebuggee {
-		return h.sendStepPacket(StepRequestStepIn)
+func (s *KernelDebug) SteppingRegularStepIn() error {
+	if s.packet.IsConnectedToRemoteDebuggee {
+		return s.sendStepPacket(StepRequestStepIn)
 	}
-	if h.ActiveProcess.IsActive && h.ActiveProcess.IsPaused {
-		return h.sendStepPacket(StepRequestStepIn)
+	if s.packet.ActiveProcess.IsActive && s.packet.ActiveProcess.IsPaused {
+		return s.sendStepPacket(StepRequestStepIn)
 	}
 	return nil
 }
 
-func (h *HyperDbg) SteppingStepOver() error {
-	if h.isConnectedToRemoteDebuggee {
-		return h.sendStepPacket(StepRequestStepOver)
+func (s *KernelDebug) SteppingStepOver() error {
+	if s.packet.IsConnectedToRemoteDebuggee {
+		return s.sendStepPacket(StepRequestStepOver)
 	}
-	if h.ActiveProcess.IsActive && h.ActiveProcess.IsPaused {
-		return h.sendStepPacket(StepRequestStepOver)
+	if s.packet.ActiveProcess.IsActive && s.packet.ActiveProcess.IsPaused {
+		return s.sendStepPacket(StepRequestStepOver)
 	}
 	return nil
 }
 
-func (h *HyperDbg) SteppingStepOverForGu(lastInstruction bool) error {
+func (s *KernelDebug) SteppingStepOverForGu(lastInstruction bool) error {
 	var requestType StepRequestType
 	if !lastInstruction {
 		requestType = StepRequestStepOverForGu
@@ -66,33 +68,29 @@ func (h *HyperDbg) SteppingStepOverForGu(lastInstruction bool) error {
 		requestType = StepRequestStepOverForGuLastInstruction
 	}
 
-	if h.isConnectedToRemoteDebuggee {
-		return h.sendStepPacket(requestType)
+	if s.packet.IsConnectedToRemoteDebuggee {
+		return s.sendStepPacket(requestType)
 	}
-	if h.ActiveProcess.IsActive && h.ActiveProcess.IsPaused {
-		return h.sendStepPacket(requestType)
+	if s.packet.ActiveProcess.IsActive && s.packet.ActiveProcess.IsPaused {
+		return s.sendStepPacket(requestType)
 	}
 	return nil
 }
 
-func (h *HyperDbg) sendStepPacket(requestType StepRequestType) error {
-	if h.Driver == nil || !h.Driver.IsConnected() {
-		slog.Info("Driver not available, cannot send step packet")
+func (s *KernelDebug) sendStepPacket(requestType StepRequestType) error {
+	if s.packet.driver == nil || !s.packet.driver.IsConnected() {
+		mylog.Info("Driver not available, cannot send step packet")
 		return nil
 	}
 
-	slog.Info("Stepping...")
+	mylog.Info("Stepping...")
 
 	buffer := make([]byte, 16)
 	*(*uint64)(unsafe.Pointer(&buffer[0])) = uint64(requestType)
 	*(*uint64)(unsafe.Pointer(&buffer[8])) = 0
 
-	err := h.Driver.SendBuffer(buffer, IoctlStepRequest)
-	if err != nil {
-		slog.Error("Failed to send step packet", "error", err)
-		return err
-	}
+	s.packet.driver.Send(bytes.NewBuffer(buffer), IoctlStepRequest)
 
-	slog.Info("Sending step packet", "type", requestType, "to debuggee")
+	mylog.Info(requestType)
 	return nil
 }
