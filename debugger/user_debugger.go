@@ -905,16 +905,23 @@ func (s *UserDebug) StartProcess(path string) {
 		buf := attachReq.Serialize()
 		response = s.packeter.DriverProvider.SendReceive(bytes.NewBuffer(buf), IoctlDebuggerAttachDetachUserModeProcess)
 		if response.Len() < 72 {
-			mylog.Warning("内核返回数据不完整")
+			mylog.Warning("内核返回数据不完整", "len", response.Len())
 			time.Sleep(time.Second)
 			continue
 		}
 
+		mylog.Info("REMOVE_HOOKS 原始响应", "hex", fmt.Sprintf("%x", response.Bytes()[:72]))
+
 		attachResp.Deserialize(response.Bytes())
 
-		mylog.Info("REMOVE_HOOKS Rip", attachResp.Rip, "Result", attachResp.Result, "Token", attachResp.Token)
+		mylog.Info("REMOVE_HOOKS 解析后", "Rip", attachResp.Rip, "Result", attachResp.Result, "Token", attachResp.Token, "ProcessId", attachResp.ProcessId, "ThreadId", attachResp.ThreadId)
 
 		if attachResp.Result == uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+			if attachResp.Rip == 0 {
+				mylog.Warning("REMOVE_HOOKS 成功但 Rip 为 0，继续等待")
+				time.Sleep(time.Second)
+				continue
+			}
 			mylog.Info("Hook 移除成功，进程已到达入口点")
 			s.activeProcess.Rip = attachResp.Rip
 			mylog.Info("入口点地址", attachResp.Rip)
@@ -928,6 +935,11 @@ func (s *UserDebug) StartProcess(path string) {
 		}
 
 		mylog.Warning("REMOVE_HOOKS 失败", ShowErrorMessage(uint32(attachResp.Result)), attachResp.Result)
+		return
+	}
+
+	if s.activeProcess.Rip == 0 {
+		mylog.Warning("StartProcess 失败: 无法获取有效的入口点地址")
 		return
 	}
 
