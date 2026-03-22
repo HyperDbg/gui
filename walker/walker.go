@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/ddkwork/HyperDbg/debugger"
-	"github.com/ddkwork/HyperDbg/debugger/driver/hook/testdata"
+	"github.com/ddkwork/HyperDbg/walker/hook/testdata"
 )
 
 const (

@@ -3,7 +3,7 @@ package hook
 import (
 	"testing"
 
-	"github.com/ddkwork/HyperDbg/debugger/driver/hardwareinfo"
+	"github.com/ddkwork/HyperDbg/walker/hardwareinfo"
 	"github.com/ddkwork/golibrary/std/mylog"
 )
 

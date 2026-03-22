@@ -36,7 +36,7 @@ import (
 
 	"github.com/ddkwork/golibrary/std/mylog"
 
-	"github.com/ddkwork/HyperDbg/debugger/driver/pdbfetch/pkg/pe"
+	"github.com/ddkwork/HyperDbg/walker/pdbfetch/pkg/pe"
 )
 
 func probeWithUnderscore(path string) string {

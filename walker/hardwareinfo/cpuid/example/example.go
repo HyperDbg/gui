@@ -9,7 +9,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/ddkwork/HyperDbg/debugger/driver/hardwareinfo/cpuid"
+	"github.com/ddkwork/HyperDbg/walker/hardwareinfo/cpuid"
 )
 
 func main() {

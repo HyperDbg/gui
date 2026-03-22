@@ -6,7 +6,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/ddkwork/HyperDbg/debugger/driver/hardwareinfo/cpuid"
+	"github.com/ddkwork/HyperDbg/walker/hardwareinfo/cpuid"
 	"github.com/ddkwork/golibrary/std/stream"
 )
 
