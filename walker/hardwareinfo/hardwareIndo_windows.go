@@ -7,10 +7,11 @@ type (
 		CpuInfo *cpuInfo
 		SsdInfo *ssdInfo
 	}
+	HardwareInfo = object
 )
 
-func New() *object {
-	return &object{
+func New() *HardwareInfo {
+	return &HardwareInfo{
 		MacInfo: new(systemScanner),
 		CpuInfo: new(cpuInfo),
 		SsdInfo: new(ssdInfo),
