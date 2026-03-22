@@ -441,7 +441,6 @@ func verifyStruct[T any](t *testing.T, layout StructLayout) {
 
 	layout.FieldOffsets = make(map[string]uintptr)
 	for field := range typ.Fields() {
-		field := field
 		if field.IsExported() {
 			offset := field.Offset
 			layout.FieldOffsets[field.Name] = offset

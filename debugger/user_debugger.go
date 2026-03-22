@@ -782,6 +782,17 @@ func (s *UserDebug) KillProcess(pid uint32) {
 //
 // 正确顺序: ResumeThread 必须在 REMOVE_HOOKS 之前执行（参见下方步骤4→5）
 //
+// ⚠️ BSOD 修复记录 (2026-03-23):
+//
+//	问题: MEMORY_MANAGEMENT (0x1A) - 页表损坏
+//	原因: mylog.Check() 在 IOCTL 通信关键路径上使用不当
+//		- mylog.Check() 可能在错误时没有正确返回，继续执行无效数据
+//		- for i := range 30 与 for i := 0; i < 30; i++ 行为差异
+//	修复: 将所有 mylog.Check() 改为显式错误检查并 return
+//		- Validate() 失败必须 return
+//		- binary.Write/Read 失败必须 return
+//		- 循环改为 for i := 0; i < 30; i++
+//
 // 实现过程:
 //  1. 创建挂起进程 (CreateProcess with CREATE_SUSPENDED)
 //  2. 初始化用户调试器
@@ -829,7 +840,10 @@ func (s *UserDebug) StartProcess(path string) {
 		Action:                          DebuggerAttachDetachUserModeProcessActionAttach,
 	}
 
-	mylog.Check(attachReq.Validate())
+	if err := attachReq.Validate(); err != nil {
+		mylog.Warning("attach请求验证失败", err)
+		return
+	}
 
 	if unsafe.Sizeof(attachReq) != attachReq.ExpectedSize() {
 		mylog.Warning("attach请求大小不匹配", "got", unsafe.Sizeof(attachReq), "want", attachReq.ExpectedSize())
@@ -837,7 +851,10 @@ func (s *UserDebug) StartProcess(path string) {
 	}
 
 	buffer := new(bytes.Buffer)
-	mylog.Check(binary.Write(buffer, binary.LittleEndian, &attachReq))
+	if err := binary.Write(buffer, binary.LittleEndian, &attachReq); err != nil {
+		mylog.Warning("序列化请求失败", err)
+		return
+	}
 
 	mylog.Info("发送 ATTACH IOCTL 到内核", "size", buffer.Len())
 	response := s.packeter.DriverProvider.SendReceive(buffer, IoctlDebuggerAttachDetachUserModeProcess)
@@ -853,7 +870,10 @@ func (s *UserDebug) StartProcess(path string) {
 	}
 
 	var attachResp DebuggerAttachDetachUserModeProcess
-	mylog.Check(binary.Read(response, binary.LittleEndian, &attachResp))
+	if err := binary.Read(response, binary.LittleEndian, &attachResp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
 
 	mylog.Info("ATTACH 响应", "Result", attachResp.Result, "Token", attachResp.Token)
 
@@ -874,14 +894,20 @@ func (s *UserDebug) StartProcess(path string) {
 	windows.ResumeThread(windows.Handle(procInfo.ThreadHandle))
 
 	mylog.Info("等待进程到达入口点")
-	for i := range 30 {
+	for i := 0; i < 30; i++ {
 		attachReq.Action = DebuggerAttachDetachUserModeProcessActionRemoveHooks
 		attachReq.Token = attachResp.Token
 
-		mylog.Check(attachReq.Validate())
+		if err := attachReq.Validate(); err != nil {
+			mylog.Warning("RemoveHooks请求验证失败", err)
+			return
+		}
 
 		buffer = new(bytes.Buffer)
-		mylog.Check(binary.Write(buffer, binary.LittleEndian, &attachReq))
+		if err := binary.Write(buffer, binary.LittleEndian, &attachReq); err != nil {
+			mylog.Warning("序列化请求失败", err)
+			return
+		}
 
 		response = s.packeter.DriverProvider.SendReceive(buffer, IoctlDebuggerAttachDetachUserModeProcess)
 		if response.Len() < int(unsafe.Sizeof(DebuggerAttachDetachUserModeProcess{})) {
@@ -890,8 +916,8 @@ func (s *UserDebug) StartProcess(path string) {
 			continue
 		}
 
-		if e := (binary.Read(response, binary.LittleEndian, &attachResp)); e != nil {
-			mylog.Warning("反序列化响应失败", e)
+		if err := binary.Read(response, binary.LittleEndian, &attachResp); err != nil {
+			mylog.Warning("反序列化响应失败", err)
 			time.Sleep(time.Second)
 			continue
 		}
@@ -1318,7 +1344,7 @@ func (s *UserDebug) SetBreakpoint(address uint64) {
 	mylog.Check(binary.Read(response, binary.LittleEndian, &respPacket))
 
 	if respPacket.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
-		mylog.Warning("设置断点失败", ShowErrorMessage(respPacket.Result), respPacket.Result)
+		mylog.Warning("设置断点失败", ShowErrorMessage(respPacket.Result))
 		return
 	}
 

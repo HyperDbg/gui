@@ -209,5 +209,16 @@ func (e ErrorCode) String() string {
 }
 
 func ShowErrorMessage(errorCode uint32) string {
-	return ErrorCode(errorCode).String()
+	e := ErrorCode(errorCode)
+	return e.String() + " (0x" + formatHex(errorCode) + ")"
+}
+
+func formatHex(v uint32) string {
+	const hex = "0123456789ABCDEF"
+	var b [8]byte
+	for i := 7; i >= 0; i-- {
+		b[i] = hex[v&0xF]
+		v >>= 4
+	}
+	return string(b[:])
 }

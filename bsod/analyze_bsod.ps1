@@ -1,45 +1,5 @@
-<#
-.SYNOPSIS
-    分析 BSOD dump 文件，定位崩溃函数和行号
-
-.DESCRIPTION
-    使用 WinDbg kd.exe 分析 minidump 文件，通过 PDB 符号文件定位崩溃位置。
-    特别适用于驱动卸载后的 BSOD 分析。
-
-.PARAMETER DumpFile
-    dump 文件路径，默认为最新的 minidump
-
-.PARAMETER PdbPath
-    PDB 符号文件所在目录
-
-.PARAMETER DriverName
-    驱动名称（不含扩展名），默认为 hyperkd
-
-.PARAMETER WinDbgPath
-    WinDbg 安装路径，默认为 C:\Microsoft.WinDbg_1.2601.12001.0_x64__8wekyb3d8bbwe
-
-.EXAMPLE
-    .\analyze_bsod.ps1
-    分析最新的 minidump，使用默认路径
-
-.EXAMPLE
-    .\analyze_bsod.ps1 -DumpFile "C:\Windows\Minidump\032226-4187-01.dmp" -PdbPath "D:\build\Release"
-    指定 dump 文件和 PDB 路径
-
-.EXAMPLE
-    .\analyze_bsod.ps1 -DriverName "mydriver"
-    分析名为 mydriver.sys 的驱动相关崩溃
-
-.NOTES
-    输出信息包括：
-    - 崩溃模块和偏移
-    - 具体函数名
-    - 调用栈
-#>
-
 param(
     [string]$DumpFile = "",
-    [string]$PdbPath = "",
     [string]$DriverName = "hyperkd",
     [string]$WinDbgPath = "C:\Microsoft.WinDbg_1.2601.12001.0_x64__8wekyb3d8bbwe"
 )
@@ -50,184 +10,136 @@ $kdExe = Join-Path $WinDbgPath "amd64\kd.exe"
 if (-not (Test-Path $kdExe)) {
     $kdExe = Join-Path $WinDbgPath "x64\kd.exe"
 }
-if (-not (Test-Path $kdExe)) {
-    Write-Error "找不到 kd.exe，请检查 WinDbgPath 参数: $WinDbgPath"
-    exit 1
-}
 
 if ([string]::IsNullOrEmpty($DumpFile)) {
-    $minidumpDir = "C:\Windows\Minidump"
-    $DumpFile = Get-ChildItem $minidumpDir -Filter "*.dmp" | 
+    $DumpFile = Get-ChildItem "C:\Windows\Minidump" -Filter "*.dmp" | 
                 Sort-Object LastWriteTime -Descending | 
                 Select-Object -First 1 -ExpandProperty FullName
-    if (-not $DumpFile) {
-        Write-Error "在 $minidumpDir 中找不到 dump 文件"
-        exit 1
+}
+
+$dumpDir = Split-Path $DumpFile
+$buildPath = "D:\笔记本\p\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\build\Release"
+$bsodDir = "d:\笔记本\p\ux\examples\hypedbg\bsod"
+
+Write-Host "=== BSOD 分析 ===" -ForegroundColor Cyan
+Write-Host "Dump: $DumpFile" -ForegroundColor Yellow
+
+Copy-Item "$buildPath\$DriverName.pdb" "$dumpDir\$DriverName.pdb" -Force -ErrorAction SilentlyContinue
+Copy-Item "$buildPath\$DriverName.sys" "$dumpDir\$DriverName.sys" -Force -ErrorAction SilentlyContinue
+
+$env:NT_SYMBOL_PATH = $dumpDir
+$env:_NT_DEBUGGER_EXTENSION_PATH = ""
+
+$output = & $kdExe -z $DumpFile -y $dumpDir -c "lm; .exr -1; k; q" 2>&1 | Out-String
+
+$exceptionCode = ""
+$exceptionAddr = ""
+$unloadedBase = ""
+$unloadedEnd = ""
+$stackOffset = ""
+
+if ($output -match "ExceptionCode:\s*([0-9a-fA-FxX]+)") { $exceptionCode = $matches[1] }
+if ($output -match "ExceptionAddress:\s*([0-9a-fA-F`]+)") { $exceptionAddr = $matches[1] -replace '`', '' }
+
+$driverPattern = '([0-9a-fA-F`]+)\s+([0-9a-fA-F`]+)\s+' + $DriverName + '\.sys'
+$stackPattern = '<Unloaded_' + $DriverName + '\.sys>\+0x([0-9a-fA-F]+)'
+
+$lines = $output -split "`n"
+foreach ($line in $lines) {
+    if ($line -match $driverPattern) {
+        $unloadedBase = $matches[1] -replace '`', ''
+        $unloadedEnd = $matches[2] -replace '`', ''
+        break
+    }
+    if ($line -match $stackPattern) {
+        $stackOffset = "0x" + $matches[1]
     }
 }
 
-if (-not (Test-Path $DumpFile)) {
-    Write-Error "Dump 文件不存在: $DumpFile"
-    exit 1
-}
+Write-Host "`n异常代码: $exceptionCode" -ForegroundColor Red
+Write-Host "异常地址: 0x$exceptionAddr" -ForegroundColor Red
+if ($unloadedBase) { Write-Host "已卸载模块: 0x$unloadedBase - 0x$unloadedEnd" -ForegroundColor Yellow }
 
-Write-Host "=== BSOD Dump 分析工具 ===" -ForegroundColor Cyan
-Write-Host "Dump 文件: $DumpFile" -ForegroundColor Yellow
-Write-Host "WinDbg: $kdExe" -ForegroundColor Yellow
-
-$symPath = "srv*C:\Symbols*https://msdl.microsoft.com/download/symbols"
-if (-not [string]::IsNullOrEmpty($PdbPath)) {
-    $symPath += ";$PdbPath"
-    Write-Host "PDB 路径: $PdbPath" -ForegroundColor Yellow
-}
-
-Write-Host "`n[1/4] 获取已卸载模块列表..." -ForegroundColor Green
-$unloadedCmd = "r; lm; q"
-$unloadedOutput = & $kdExe -z $DumpFile -y $symPath -c $unloadedCmd 2>&1 | Out-String
-
-$unloadedMatch = [regex]::Match($unloadedOutput, "Unloaded modules:\r?\n((?:.*\r?\n)+)")
-if ($unloadedMatch.Success) {
-    Write-Host "`n已卸载的模块:" -ForegroundColor Red
-    $unloadedMatch.Groups[1].Value -split "`n" | Where-Object { $_ -match $DriverName } | ForEach-Object {
-        Write-Host "  $_" -ForegroundColor Red
+$crashOffset = $stackOffset
+if (-not $crashOffset -and $exceptionAddr -and $unloadedBase) {
+    $e = [convert]::ToInt64($exceptionAddr, 16)
+    $b = [convert]::ToInt64($unloadedBase, 16)
+    $end = [convert]::ToInt64($unloadedEnd, 16)
+    if ($e -ge $b -and $e -lt $end) {
+        $crashOffset = "0x{0:X}" -f ($e - $b)
     }
 }
 
-Write-Host "`n[2/4] 获取崩溃调用栈..." -ForegroundColor Green
-$stackCmd = ".exr -1; .ecxr; kv; q"
-$stackOutput = & $kdExe -z $DumpFile -y $symPath -c $stackCmd 2>&1 | Out-String
-
-$stackMatch = [regex]::Match($stackOutput, "# Child-SP\s+RetAddr.*?(?=quit:|NatVis)")
-if ($stackMatch.Success) {
-    Write-Host "`n调用栈:" -ForegroundColor Yellow
-    $stackMatch.Value -split "`n" | ForEach-Object {
-        if ($_ -match "Unloaded_$DriverName") {
-            Write-Host "  $_" -ForegroundColor Red
-        } else {
-            Write-Host "  $_"
-        }
-    }
-}
-
-Write-Host "`n[3/4] 提取崩溃偏移..." -ForegroundColor Green
-$offsetMatch = [regex]::Match($stackOutput, "<Unloaded_$DriverName\.sys>\+0x([0-9a-fA-F]+)")
-$crashOffset = $null
-$unloadedBase = $null
-if ($offsetMatch.Success) {
-    $crashOffset = "0x" + $offsetMatch.Groups[1].Value
-    Write-Host "崩溃偏移: $crashOffset" -ForegroundColor Red
-} else {
-    $offsetMatch = [regex]::Match($stackOutput, "$DriverName\+0x([0-9a-fA-F]+)")
-    if ($offsetMatch.Success) {
-        $crashOffset = "0x" + $offsetMatch.Groups[1].Value
-        Write-Host "崩溃偏移: $crashOffset" -ForegroundColor Red
-    } else {
-        $unloadedModuleMatch = [regex]::Matches($unloadedOutput, "([0-9a-fA-F`]+)\s+([0-9a-fA-F`]+)\s+$DriverName\.sys")
-        if ($unloadedModuleMatch.Count -gt 0) {
-            Write-Host "从已卸载模块地址范围计算偏移..." -ForegroundColor Yellow
-            foreach ($match in $unloadedModuleMatch) {
-                $baseAddr = $match.Groups[1].Value -replace '`', ''
-                $endAddr = $match.Groups[2].Value -replace '`', ''
-                Write-Host "  已卸载模块: 基址=0x$baseAddr, 结束=0x$endAddr" -ForegroundColor Yellow
-            }
-            $firstMatch = $unloadedModuleMatch[0]
-            $unloadedBase = $firstMatch.Groups[1].Value -replace '`', ''
-            Write-Host "  使用第一个已卸载模块基址: 0x$unloadedBase" -ForegroundColor Yellow
-        }
-    }
-}
-
-Write-Host "`n[4/4] 定位崩溃函数..." -ForegroundColor Green
-
-$driverSys = $null
-$pdbDir = $null
-if (-not [string]::IsNullOrEmpty($PdbPath)) {
-    $directPath = Join-Path $PdbPath "$DriverName.sys"
-    if (Test-Path $directPath) {
-        $driverSys = $directPath
-        $pdbDir = $PdbPath
-    } else {
-        $driverSys = Get-ChildItem $PdbPath -Filter "$DriverName.sys" -Recurse -ErrorAction SilentlyContinue | 
-                     Select-Object -First 1 -ExpandProperty FullName
-        if ($driverSys) {
-            $pdbDir = Split-Path $driverSys
-        }
+if ($crashOffset) {
+    $lnOut = & $kdExe -z "$dumpDir\$DriverName.sys" -y $dumpDir -c ".reload /f $DriverName.sys; ln $DriverName+$crashOffset; q" 2>&1 | Out-String
+    
+    $crashFunc = ""
+    $crashFile = ""
+    $crashLine = ""
+    
+    $funcPattern = $DriverName + '!([^\s\(\)]+)'
+    if ($lnOut -match $funcPattern) { $crashFunc = $matches[1] }
+    if ($lnOut -match '\[([^\]]+\.cpp|\.c|\.h)[\s:@]+(\d+)') {
+        $crashFile = $matches[1]
+        $crashLine = $matches[2]
     }
     
-    if (-not $driverSys) {
-        $driverSys = Get-ChildItem (Split-Path $PdbPath) -Filter "$DriverName.sys" -Recurse -ErrorAction SilentlyContinue | 
-                     Select-Object -First 1 -ExpandProperty FullName
-        if ($driverSys) {
-            $pdbDir = Split-Path $driverSys
-        }
+    Write-Host "`n崩溃偏移: $crashOffset" -ForegroundColor Yellow
+    if ($crashFunc) {
+        Write-Host "崩溃函数: $DriverName!$crashFunc" -ForegroundColor Red
+        if ($crashFile) { Write-Host "源文件: $crashFile : $crashLine" -ForegroundColor Red }
     }
-}
-
-if ($crashOffset -and $driverSys -and (Test-Path $driverSys)) {
-    Write-Host "驱动文件: $driverSys" -ForegroundColor Yellow
-    Write-Host "PDB 目录: $pdbDir" -ForegroundColor Yellow
+} elseif ($unloadedBase) {
+    Write-Host "`n驱动已卸载，执行详细分析..." -ForegroundColor Yellow
     
-    $funcCmd = "lm; ln ${DriverName}+$crashOffset; q"
-    $funcOutput = & $kdExe -z $driverSys -y $pdbDir -c $funcCmd 2>&1 | Out-String
+    $analyzeOut = & $kdExe -z $DumpFile -y $dumpDir -c "!analyze -v; q" 2>&1 | Out-String
     
-    $funcMatch = [regex]::Match($funcOutput, "\(${DriverName}!([^)\s]+)")
-    if ($funcMatch.Success) {
-        $funcName = $funcMatch.Groups[1].Value
-        Write-Host "`n========================================" -ForegroundColor Cyan
-        Write-Host "崩溃函数: ${DriverName}!$funcName" -ForegroundColor Red
-        Write-Host "偏移: $crashOffset" -ForegroundColor Red
-        Write-Host "========================================" -ForegroundColor Cyan
-    } else {
-        $funcMatch = [regex]::Match($funcOutput, "Exact matches:\s*\r?\n\s*${DriverName}!([^\s]+)")
-        if ($funcMatch.Success) {
-            $funcName = $funcMatch.Groups[1].Value
-            Write-Host "`n========================================" -ForegroundColor Cyan
-            Write-Host "崩溃函数: ${DriverName}!$funcName" -ForegroundColor Red
-            Write-Host "偏移: $crashOffset" -ForegroundColor Red
-            Write-Host "========================================" -ForegroundColor Cyan
-        }
-    }
-} elseif ($unloadedBase -and $driverSys -and (Test-Path $driverSys)) {
-    Write-Host "驱动文件: $driverSys" -ForegroundColor Yellow
-    Write-Host "分析已卸载模块回调问题..." -ForegroundColor Yellow
+    $bugcheck = ""
+    $image = ""
+    if ($analyzeOut -match "BUGCHECK_CODE:\s*(\S+)") { $bugcheck = $matches[1] }
+    if ($analyzeOut -match "IMAGE_NAME:\s*(\S+)") { $image = $matches[1] }
     
-    $exceptionAddrMatch = [regex]::Match($stackOutput, "ExceptionAddress:\s*([0-9a-fA-F`]+)")
-    if ($exceptionAddrMatch.Success) {
-        $exceptionAddr = $exceptionAddrMatch.Groups[1].Value -replace '`', ''
-        Write-Host "异常地址: 0x$exceptionAddr" -ForegroundColor Yellow
-        
-        $baseInt = [convert]::ToInt64($unloadedBase, 16)
-        $exceptionInt = [convert]::ToInt64($exceptionAddr, 16)
-        
-        if ($exceptionInt -ge $baseInt -and $exceptionInt -lt ($baseInt + 0xD0000)) {
-            $calculatedOffset = "0x{0:X}" -f ($exceptionInt - $baseInt)
-            Write-Host "异常地址在已卸载模块范围内!" -ForegroundColor Red
-            Write-Host "计算偏移: $calculatedOffset" -ForegroundColor Red
+    Write-Host "Bugcheck: $bugcheck" -ForegroundColor Red
+    Write-Host "崩溃模块: $image" -ForegroundColor Red
+    
+    $analyzeLines = $analyzeOut -split "`n"
+    foreach ($line in $analyzeLines) {
+        if ($line -match $stackPattern) {
+            $stackOffset = "0x" + $matches[1]
+            Write-Host "调用栈偏移: $stackOffset" -ForegroundColor Yellow
             
-            $pdbDir = Split-Path $driverSys
-            $funcCmd = "lm; ln ${DriverName}+$calculatedOffset; q"
-            $funcOutput = & $kdExe -z $driverSys -y $pdbDir -c $funcCmd 2>&1 | Out-String
+            $lnOut = & $kdExe -z "$dumpDir\$DriverName.sys" -y $dumpDir -c ".reload /f $DriverName.sys; ln $DriverName+$stackOffset; q" 2>&1 | Out-String
             
-            $funcMatch = [regex]::Match($funcOutput, "\(${DriverName}!([^)\s]+)")
-            if ($funcMatch.Success) {
-                $funcName = $funcMatch.Groups[1].Value
-                Write-Host "`n========================================" -ForegroundColor Cyan
-                Write-Host "崩溃函数: ${DriverName}!$funcName" -ForegroundColor Red
-                Write-Host "偏移: $calculatedOffset" -ForegroundColor Red
-                Write-Host "========================================" -ForegroundColor Cyan
+            $crashFunc = ""
+            $crashFile = ""
+            $crashLine = ""
+            
+            $funcPattern = $DriverName + '!([^\s\(\)]+)'
+            if ($lnOut -match $funcPattern) { $crashFunc = $matches[1] }
+            if ($lnOut -match '\[([^\]]+\.cpp|\.c|\.h)[\s:@]+(\d+)') {
+                $crashFile = $matches[1]
+                $crashLine = $matches[2]
             }
-        } else {
-            Write-Host "异常地址不在已卸载模块范围内" -ForegroundColor Yellow
-            Write-Host "这可能是驱动卸载后回调未清理导致的间接崩溃" -ForegroundColor Yellow
+            
+            if ($crashFunc) {
+                Write-Host "崩溃函数: $DriverName!$crashFunc" -ForegroundColor Red
+                if ($crashFile) { Write-Host "源文件: $crashFile : $crashLine" -ForegroundColor Red }
+            }
+            break
         }
+    }
+    
+    if (-not $stackOffset) {
+        Write-Host "`n调用栈中未找到 $DriverName 偏移信息" -ForegroundColor Yellow
+        Write-Host "可能是驱动卸载后回调未清理导致的间接崩溃" -ForegroundColor Yellow
     }
 } else {
-    Write-Warning "未找到崩溃偏移或驱动文件，跳过函数定位"
+    Write-Host "`n未找到驱动信息" -ForegroundColor Yellow
 }
 
-Write-Host "`n[详细分析输出]" -ForegroundColor Green
-$analyzeCmd = "!analyze -v; q"
-& $kdExe -z $DumpFile -y $symPath -c $analyzeCmd 2>&1 | 
-    Select-String -Pattern "MODULE_NAME|IMAGE_NAME|PROCESS_NAME|FAILURE_BUCKET_ID|STACK_TEXT|ExceptionAddress|ExceptionCode|$DriverName" -Context 0,1
+Remove-Item "$bsodDir\debug_output.txt" -ErrorAction SilentlyContinue
+Remove-Item "$bsodDir\lm_output.txt" -ErrorAction SilentlyContinue
+Remove-Item "$bsodDir\analyze_output.txt" -ErrorAction SilentlyContinue
+Remove-Item "$bsodDir\test_regex.ps1" -ErrorAction SilentlyContinue
 
-Write-Host "`n=== 分析完成 ===" -ForegroundColor Cyan
+Write-Host "`n=== 完成 ===" -ForegroundColor Cyan
