@@ -1771,10 +1771,19 @@ func (s *UserDebug) StepInto() {
 		TargetThreadId:              s.activeProcess.ThreadId,
 	}
 
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
+
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	s.packeter.DriverProvider.Send(buf, IoctlSendUserDebuggerCommands)
-	response := s.packeter.DriverProvider.Receive(IoctlSendUserDebuggerCommands)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSendUserDebuggerCommands)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
 
 	status := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	if status != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {

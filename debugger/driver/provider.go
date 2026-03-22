@@ -227,33 +227,36 @@ func (p *Provider) Close() {
 }
 
 func (p *Provider) Send(buffer *bytes.Buffer, ioctlCode uint32) {
+	outputBuffer := make([]byte, BufferSize)
 	var bytesReturned uint32
 	mylog.Check(windows.DeviceIoControl(
 		windows.Handle(p.deviceHandle),
 		ioctlCode,
 		unsafe.SliceData(buffer.Bytes()),
 		uint32(buffer.Len()),
-		unsafe.SliceData(buffer.Bytes()),
-		uint32(buffer.Len()),
+		unsafe.SliceData(outputBuffer),
+		uint32(len(outputBuffer)),
 		&bytesReturned,
 		nil,
 	))
-	buffer.Truncate(int(bytesReturned))
+	buffer.Reset()
+	buffer.Write(outputBuffer[:bytesReturned])
 }
 
 func (p *Provider) SendReceive(buffer *bytes.Buffer, ioctlCode uint32) *bytes.Buffer {
+	outputBuffer := make([]byte, BufferSize)
 	var bytesReturned uint32
 	mylog.Check(windows.DeviceIoControl(
 		windows.Handle(p.deviceHandle),
 		ioctlCode,
 		unsafe.SliceData(buffer.Bytes()),
 		uint32(buffer.Len()),
-		unsafe.SliceData(buffer.Bytes()),
-		uint32(buffer.Len()),
+		unsafe.SliceData(outputBuffer),
+		uint32(len(outputBuffer)),
 		&bytesReturned,
 		nil,
 	))
-	return bytes.NewBuffer(buffer.Bytes()[:bytesReturned])
+	return bytes.NewBuffer(outputBuffer[:bytesReturned])
 }
 
 func (p *Provider) Receive(ioctlCode uint32) *bytes.Buffer {
