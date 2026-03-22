@@ -1324,8 +1324,8 @@ func (s *UserDebug) SetBreakpoint(address uint64) {
 	mylog.Info("设置断点", address)
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
-	if !ok {
-		mylog.Warning("调试令牌类型无效")
+	if !ok || token == 0 {
+		mylog.Warning("调试令牌无效")
 		return
 	}
 
@@ -1423,8 +1423,8 @@ func (s *UserDebug) Continue() {
 	}
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
-	if !ok {
-		mylog.Warning("调试令牌类型无效")
+	if !ok || token == 0 {
+		mylog.Warning("调试令牌无效")
 		return
 	}
 
@@ -1496,8 +1496,8 @@ func (s *UserDebug) StepOut() {
 	}
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
-	if !ok {
-		mylog.Warning("调试令牌类型无效")
+	if !ok || token == 0 {
+		mylog.Warning("调试令牌无效")
 		return
 	}
 
@@ -1629,8 +1629,8 @@ func (s *UserDebug) Registers() []register.RegisterContext {
 	}
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
-	if !ok {
-		mylog.Warning("调试令牌类型无效")
+	if !ok || token == 0 {
+		mylog.Warning("调试令牌无效")
 		return nil
 	}
 
@@ -1691,8 +1691,8 @@ func (s *UserDebug) SendUserInput(input string) {
 	}
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
-	if !ok {
-		mylog.Warning("调试令牌类型无效")
+	if !ok || token == 0 {
+		mylog.Warning("调试令牌无效")
 		return
 	}
 
@@ -1758,8 +1758,8 @@ func (s *UserDebug) StepInto() {
 	mylog.Info("执行单步进入")
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
-	if !ok {
-		mylog.Warning("调试令牌类型无效")
+	if !ok || token == 0 {
+		mylog.Warning("调试令牌无效")
 		return
 	}
 
@@ -1833,8 +1833,8 @@ func (s *UserDebug) WriteRegisters(regs []register.RegisterContext) {
 	}
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
-	if !ok {
-		mylog.Warning("调试令牌类型无效")
+	if !ok || token == 0 {
+		mylog.Warning("调试令牌无效")
 		return
 	}
 
@@ -1899,9 +1899,9 @@ func (s *UserDebug) ReadMemory(address uint64, size uint32) []byte {
 
 	mylog.Info("读取内存", "address", address, "size", size)
 
-	_, ok := s.activeProcess.DebuggingToken.(uint64)
-	if !ok {
-		mylog.Warning("调试令牌类型无效")
+	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	if !ok || token == 0 {
+		mylog.Warning("调试令牌无效")
 		return nil
 	}
 
@@ -1955,9 +1955,9 @@ func (s *UserDebug) WriteMemory(address uint64, data []byte) {
 
 	mylog.Info("写入内存", "address", address, "size", len(data))
 
-	_, ok := s.activeProcess.DebuggingToken.(uint64)
-	if !ok {
-		mylog.Warning("调试令牌类型无效")
+	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	if !ok || token == 0 {
+		mylog.Warning("调试令牌无效")
 		return
 	}
 
@@ -2010,8 +2010,8 @@ func (s *UserDebug) Modules() []ModuleInfo {
 	}
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
-	if !ok {
-		mylog.Warning("调试令牌类型无效")
+	if !ok || token == 0 {
+		mylog.Warning("调试令牌无效")
 		return nil
 	}
 
@@ -2078,8 +2078,8 @@ func (s *UserDebug) CallStack() []StackFrame {
 	}
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
-	if !ok {
-		mylog.Warning("调试令牌类型无效")
+	if !ok || token == 0 {
+		mylog.Warning("调试令牌无效")
 		return nil
 	}
 
