@@ -903,6 +903,8 @@ func (s *UserDebug) StartProcess(path string) {
 		}
 
 		buf := attachReq.Serialize()
+		mylog.Info("REMOVE_HOOKS 请求", "hex", fmt.Sprintf("%x", buf))
+
 		response = s.packeter.DriverProvider.SendReceive(bytes.NewBuffer(buf), IoctlDebuggerAttachDetachUserModeProcess)
 		if response.Len() < 72 {
 			mylog.Warning("内核返回数据不完整", "len", response.Len())
@@ -918,9 +920,8 @@ func (s *UserDebug) StartProcess(path string) {
 
 		if attachResp.Result == uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 			if attachResp.Rip == 0 {
-				mylog.Warning("REMOVE_HOOKS 成功但 Rip 为 0，继续等待")
-				time.Sleep(time.Second)
-				continue
+				mylog.Warning("REMOVE_HOOKS 成功但 Rip 为 0，入口点检测失败")
+				return
 			}
 			mylog.Info("Hook 移除成功，进程已到达入口点")
 			s.activeProcess.Rip = attachResp.Rip

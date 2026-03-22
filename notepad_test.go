@@ -20,7 +20,7 @@ func TestNotepadDebugging(t *testing.T) {
 			t.Error("无法获取入口点地址")
 			return
 		}
-		mylog.Info("入口点地址", entryPoint)
+		mylog.Hex( entryPoint)
 		dbg.SetBreakpoint(entryPoint)
 		dbg.StepInto()
 		dbg.ReadMemory(entryPoint, 16)
