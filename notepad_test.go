@@ -25,8 +25,7 @@ func TestNotepadDebugging(t *testing.T) {
 		dbg.StepInto()
 		dbg.ReadMemory(entryPoint, 16)
 		dbg.WriteMemory(entryPoint, []byte{0x90, 0x90})
-		// todo killprocess test
-		// dbg.KillProcess()
+		dbg.KillProcess()
 	})
 
 	t.Log("驱动加载/卸载测试通过")
