@@ -1051,22 +1051,30 @@ func (p *Packet) ProcessDetails(pid uint32) []ProcessDetails {
 		return nil
 	}
 
-	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
-	details := make([]ProcessDetails, count)
-	for i := range count {
-		offset := 4 + i*128
-		if offset+128 > uint32(response.Len()) {
-			break
-		}
-		details[i] = ProcessDetails{
-			ProcessId:    binary.LittleEndian.Uint32(response.Bytes()[offset : offset+4]),
-			BaseAddress:  binary.LittleEndian.Uint64(response.Bytes()[offset+8 : offset+16]),
-			EntryPoint:   binary.LittleEndian.Uint64(response.Bytes()[offset+16 : offset+24]),
-			Is32Bit:      binary.LittleEndian.Uint32(response.Bytes()[offset+24:offset+28]) == 1,
-			IsDebugged:   binary.LittleEndian.Uint32(response.Bytes()[offset+28:offset+32]) == 1,
-			KernelStatus: binary.LittleEndian.Uint32(response.Bytes()[offset+32 : offset+36]),
-		}
+	if response.Len() < 72 {
+		mylog.Warning("ProcessDetails 响应长度不足", response.Len())
+		return nil
 	}
+
+	var resp DebuggeeDetailsAndSwitchProcessPacket
+	err := binary.Read(bytes.NewReader(response.Bytes()), binary.LittleEndian, &resp)
+	if err != nil {
+		mylog.Warning("解析 ProcessDetails 响应失败", err)
+		return nil
+	}
+
+	details := []ProcessDetails{
+		{
+			ProcessId:    resp.ProcessId,
+			BaseAddress:  0,
+			EntryPoint:   0,
+			Is32Bit:      false,
+			IsDebugged:   true,
+			KernelStatus: resp.Result,
+		},
+	}
+
+	mylog.Info("ProcessDetails ProcessId", resp.ProcessId, "Result", resp.Result)
 
 	return details
 }

@@ -730,11 +730,22 @@ func (s *UserDebug) KillProcess(pid uint32) {
 		return
 	}
 
+	if s.activeProcess.ProcessId != pid {
+		mylog.Warning("进程ID不匹配，无法终止", "请求pid", pid, "当前pid", s.activeProcess.ProcessId)
+		return
+	}
+
+	if !s.activeProcess.IsActive {
+		mylog.Warning("进程未处于活动状态")
+		return
+	}
+
 	req := DebuggerAttachDetachUserModeProcess{
 		IsStartingNewProcess: 0,
 		ProcessId:            pid,
-		ThreadId:             0,
+		ThreadId:             s.activeProcess.ThreadId,
 		Action:               DebuggerAttachDetachUserModeProcessActionKillProcess,
+		Token:                s.activeProcess.DebuggingToken.(uint64),
 	}
 
 	if err := req.Validate(); err != nil {
@@ -742,28 +753,35 @@ func (s *UserDebug) KillProcess(pid uint32) {
 		return
 	}
 
-	if unsafe.Sizeof(req) != req.ExpectedSize() {
-		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
-		return
-	}
+	buf := make([]byte, 72)
+	buf[0] = req.IsStartingNewProcess
+	binary.LittleEndian.PutUint32(buf[4:], req.ProcessId)
+	binary.LittleEndian.PutUint32(buf[8:], req.ThreadId)
+	buf[12] = req.CheckCallbackAtFirstInstruction
+	buf[13] = req.Is32Bit
+	binary.LittleEndian.PutUint64(buf[16:], req.Rip)
+	copy(buf[24:], req.InstructionBytesOnRip[:])
+	binary.LittleEndian.PutUint32(buf[40:], req.SizeOfInstruction)
+	buf[44] = req.IsPaused
+	binary.LittleEndian.PutUint32(buf[48:], uint32(req.Action))
+	binary.LittleEndian.PutUint32(buf[52:], req.CountOfActiveDebuggingThreadsAndProcesses)
+	binary.LittleEndian.PutUint64(buf[56:], req.Token)
+	binary.LittleEndian.PutUint64(buf[64:], req.Result)
 
-	buf := new(bytes.Buffer)
-	binary.Write(buf, binary.LittleEndian, &req)
-
-	response := s.packeter.DriverProvider.SendReceive(buf, IoctlDebuggerAttachDetachUserModeProcess)
+	response := s.packeter.DriverProvider.SendReceive(bytes.NewBuffer(buf), IoctlDebuggerAttachDetachUserModeProcess)
 	if response.Len() == 0 {
 		mylog.Warning("内核返回空响应")
 		return
 	}
 
-	var resp DebuggerAttachDetachUserModeProcess
-	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
-		mylog.Warning("反序列化响应失败", err)
+	if response.Len() < 72 {
+		mylog.Warning("响应长度不足", response.Len())
 		return
 	}
 
-	if resp.Result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
-		mylog.Warning("终止进程失败", ShowErrorMessage(uint32(resp.Result)), resp.Result)
+	result := binary.LittleEndian.Uint64(response.Bytes()[64:])
+	if result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("终止进程失败", ShowErrorMessage(uint32(result)), result)
 		return
 	}
 
@@ -840,34 +858,43 @@ func (s *UserDebug) StartProcess(path string) {
 		return
 	}
 
-	if unsafe.Sizeof(attachReq) != attachReq.ExpectedSize() {
-		mylog.Warning("attach请求大小不匹配", "got", unsafe.Sizeof(attachReq), "want", attachReq.ExpectedSize())
-		return
-	}
+	buf := make([]byte, 72)
+	buf[0] = attachReq.IsStartingNewProcess
+	binary.LittleEndian.PutUint32(buf[4:], attachReq.ProcessId)
+	binary.LittleEndian.PutUint32(buf[8:], attachReq.ThreadId)
+	buf[12] = attachReq.CheckCallbackAtFirstInstruction
+	buf[13] = attachReq.Is32Bit
+	binary.LittleEndian.PutUint64(buf[16:], attachReq.Rip)
+	copy(buf[24:], attachReq.InstructionBytesOnRip[:])
+	binary.LittleEndian.PutUint32(buf[40:], attachReq.SizeOfInstruction)
+	buf[44] = attachReq.IsPaused
+	binary.LittleEndian.PutUint32(buf[48:], uint32(attachReq.Action))
+	binary.LittleEndian.PutUint32(buf[52:], attachReq.CountOfActiveDebuggingThreadsAndProcesses)
+	binary.LittleEndian.PutUint64(buf[56:], attachReq.Token)
+	binary.LittleEndian.PutUint64(buf[64:], attachReq.Result)
 
-	buffer := new(bytes.Buffer)
-	if err := binary.Write(buffer, binary.LittleEndian, &attachReq); err != nil {
-		mylog.Warning("序列化请求失败", err)
-		return
-	}
-
-	mylog.Info("发送 ATTACH IOCTL 到内核", "size", buffer.Len())
-	response := s.packeter.DriverProvider.SendReceive(buffer, IoctlDebuggerAttachDetachUserModeProcess)
+	mylog.Info("发送 ATTACH IOCTL 到内核", "size", len(buf))
+	response := s.packeter.DriverProvider.SendReceive(bytes.NewBuffer(buf), IoctlDebuggerAttachDetachUserModeProcess)
 
 	if response.Len() == 0 {
 		mylog.Warning("内核返回空响应")
 		return
 	}
 
-	if response.Len() < int(unsafe.Sizeof(DebuggerAttachDetachUserModeProcess{})) {
-		mylog.Warning("内核返回数据不完整", "got", response.Len(), "want", unsafe.Sizeof(DebuggerAttachDetachUserModeProcess{}))
+	if response.Len() < 72 {
+		mylog.Warning("内核返回数据不完整", "got", response.Len(), "want", 72)
 		return
 	}
 
-	var attachResp DebuggerAttachDetachUserModeProcess
-	if err := binary.Read(response, binary.LittleEndian, &attachResp); err != nil {
-		mylog.Warning("反序列化响应失败", err)
-		return
+	attachResp := DebuggerAttachDetachUserModeProcess{
+		ProcessId:         binary.LittleEndian.Uint32(response.Bytes()[4:]),
+		ThreadId:          binary.LittleEndian.Uint32(response.Bytes()[8:]),
+		Rip:               binary.LittleEndian.Uint64(response.Bytes()[16:]),
+		SizeOfInstruction: binary.LittleEndian.Uint32(response.Bytes()[40:]),
+		Action:            DebuggerAttachDetachUserModeProcessActionType(binary.LittleEndian.Uint32(response.Bytes()[48:])),
+		CountOfActiveDebuggingThreadsAndProcesses: binary.LittleEndian.Uint32(response.Bytes()[52:]),
+		Token:  binary.LittleEndian.Uint64(response.Bytes()[56:]),
+		Result: binary.LittleEndian.Uint64(response.Bytes()[64:]),
 	}
 
 	mylog.Info("ATTACH 响应", "Result", attachResp.Result, "Token", attachResp.Token)
@@ -898,27 +925,38 @@ func (s *UserDebug) StartProcess(path string) {
 			return
 		}
 
-		buffer = new(bytes.Buffer)
-		if err := binary.Write(buffer, binary.LittleEndian, &attachReq); err != nil {
-			mylog.Warning("序列化请求失败", err)
-			return
-		}
+		buf := make([]byte, 72)
+		buf[0] = attachReq.IsStartingNewProcess
+		binary.LittleEndian.PutUint32(buf[4:], attachReq.ProcessId)
+		binary.LittleEndian.PutUint32(buf[8:], attachReq.ThreadId)
+		buf[12] = attachReq.CheckCallbackAtFirstInstruction
+		buf[13] = attachReq.Is32Bit
+		binary.LittleEndian.PutUint64(buf[16:], attachReq.Rip)
+		copy(buf[24:], attachReq.InstructionBytesOnRip[:])
+		binary.LittleEndian.PutUint32(buf[40:], attachReq.SizeOfInstruction)
+		buf[44] = attachReq.IsPaused
+		binary.LittleEndian.PutUint32(buf[48:], uint32(attachReq.Action))
+		binary.LittleEndian.PutUint32(buf[52:], attachReq.CountOfActiveDebuggingThreadsAndProcesses)
+		binary.LittleEndian.PutUint64(buf[56:], attachReq.Token)
+		binary.LittleEndian.PutUint64(buf[64:], attachReq.Result)
 
-		response = s.packeter.DriverProvider.SendReceive(buffer, IoctlDebuggerAttachDetachUserModeProcess)
-		if response.Len() < int(unsafe.Sizeof(DebuggerAttachDetachUserModeProcess{})) {
+		response = s.packeter.DriverProvider.SendReceive(bytes.NewBuffer(buf), IoctlDebuggerAttachDetachUserModeProcess)
+		if response.Len() < 72 {
 			mylog.Warning("内核返回数据不完整")
 			time.Sleep(time.Second)
 			continue
 		}
 
-		if err := binary.Read(response, binary.LittleEndian, &attachResp); err != nil {
-			mylog.Warning("反序列化响应失败", err)
-			time.Sleep(time.Second)
-			continue
-		}
+		attachResp.Rip = binary.LittleEndian.Uint64(response.Bytes()[16:])
+		attachResp.Token = binary.LittleEndian.Uint64(response.Bytes()[56:])
+		attachResp.Result = binary.LittleEndian.Uint64(response.Bytes()[64:])
+
+		mylog.Info("REMOVE_HOOKS Rip", attachResp.Rip, "Result", attachResp.Result, "Token", attachResp.Token)
 
 		if attachResp.Result == uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 			mylog.Info("Hook 移除成功，进程已到达入口点")
+			s.activeProcess.Rip = attachResp.Rip
+			mylog.Info("入口点地址", attachResp.Rip)
 			break
 		}
 
@@ -932,14 +970,13 @@ func (s *UserDebug) StartProcess(path string) {
 		return
 	}
 
-	processDetails := s.packeter.ProcessDetails(procInfo.ProcessId)
-	if len(processDetails) > 0 && processDetails[0].EntryPoint != 0 {
-		s.activeProcess.Rip = processDetails[0].EntryPoint
-		mylog.Info("入口点地址", processDetails[0].EntryPoint)
-	}
-
 	mylog.Success("进程已启动并在入口点暂停")
 	mylog.Info("进程ID", procInfo.ProcessId, "线程ID", procInfo.ThreadId)
+
+	s.activeProcess.ProcessId = procInfo.ProcessId
+	s.activeProcess.ThreadId = procInfo.ThreadId
+	s.activeProcess.IsActive = true
+	s.activeProcess.IsPaused = true
 }
 
 type processInfo struct {
