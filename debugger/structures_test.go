@@ -55,7 +55,7 @@ func TestAll(t *testing.T) {
 		layout := StructLayout{
 			Name:            "DebuggeeBpPacket",
 			ExpectedSize:    32,
-			ExpectedSerSize: 28,
+			ExpectedSerSize: 32,
 			ExpectedFields: map[string]uintptr{
 				"Address":           0,
 				"Pid":               8,
@@ -75,6 +75,25 @@ func TestAll(t *testing.T) {
 			RemoveAfterHit:    0,
 			CheckForCallbacks: 0,
 			Result:            0,
+		})
+	})
+
+	t.Run("DebuggeeBpListOrModifyPacket", func(t *testing.T) {
+		layout := StructLayout{
+			Name:            "DebuggeeBpListOrModifyPacket",
+			ExpectedSize:    16,
+			ExpectedSerSize: 16,
+			ExpectedFields: map[string]uintptr{
+				"BreakpointId": 0,
+				"Request":      8,
+				"Result":       12,
+			},
+		}
+		verifyStruct[DebuggeeBpListOrModifyPacket](t, layout)
+		verifySerialize(t, layout, DebuggeeBpListOrModifyPacket{
+			BreakpointId: 1,
+			Request:      DebuggeeBreakpointModificationRequestClear,
+			Result:       0,
 		})
 	})
 
@@ -380,6 +399,30 @@ func TestAll(t *testing.T) {
 			},
 		}
 		verifyStruct[DebuggerSetBreakpointUserDebugger](t, layout)
+	})
+
+	t.Run("DebuggerGetUserModeModuleDetailsRequest", func(t *testing.T) {
+		layout := StructLayout{
+			Name:         "DebuggerGetUserModeModuleDetailsRequest",
+			ExpectedSize: 16,
+			ExpectedFields: map[string]uintptr{
+				"ProcessDebuggingDetailToken": 0,
+			},
+		}
+		verifyStruct[DebuggerGetUserModeModuleDetailsRequest](t, layout)
+	})
+
+	t.Run("DebuggerModuleDetailResponse", func(t *testing.T) {
+		layout := StructLayout{
+			Name:         "DebuggerModuleDetailResponse",
+			ExpectedSize: 16,
+			ExpectedFields: map[string]uintptr{
+				"BaseAddress": 0,
+				"Size":        8,
+				"Is32Bit":     12,
+			},
+		}
+		verifyStruct[DebuggerModuleDetailResponse](t, layout)
 	})
 }
 

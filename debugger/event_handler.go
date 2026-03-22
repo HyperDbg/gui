@@ -53,11 +53,16 @@ func (h *EventHandler) HandleSingleStep(event *Event) error {
 		return fmt.Errorf("driver not available")
 	}
 
-	buffer := make([]byte, 16)
-	*(*uint64)(unsafe.Pointer(&buffer[0])) = uint64(event.Type)
-	*(*uint64)(unsafe.Pointer(&buffer[8])) = 0
+	req := DebuggerGeneralEventDetails{
+		Tag:       0,
+		ProcessId: 0,
+		IsEnabled: false,
+		Type:      uint32(event.Type),
+	}
 
-	h.driver.Send(bytes.NewBuffer(buffer), 0x222004)
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	h.driver.Send(buf, 0x222004)
 
 	mylog.Info(event.Pid)
 	return nil
@@ -75,18 +80,22 @@ func (h *EventHandler) HandleContinue(event *Event) error {
 }
 
 func (h *EventHandler) constructBreakpointBuffer(event *Event) []byte {
-	buffer := make([]byte, 64)
+	req := DebuggerEventRegisterRequest{
+		EventType:      uint32(event.Type),
+		Tag:            0,
+		ProcessId:      event.Pid,
+		CoreId:         0,
+		IsEnabled:      false,
+		EventStage:     0,
+		OptionalParam1: event.Address,
+		OptionalParam2: 0,
+		OptionalParam3: 0,
+		OptionalParam4: 0,
+	}
 
-	binary.LittleEndian.PutUint64(buffer[0:8], uint64(event.Type))
-	binary.LittleEndian.PutUint32(buffer[8:12], event.Pid)
-	binary.LittleEndian.PutUint32(buffer[12:16], 0)
-	binary.LittleEndian.PutUint32(buffer[16:20], 0)
-	binary.LittleEndian.PutUint64(buffer[20:28], event.Address)
-	binary.LittleEndian.PutUint64(buffer[28:36], 0)
-	binary.LittleEndian.PutUint64(buffer[36:44], 0)
-	binary.LittleEndian.PutUint64(buffer[44:52], 0)
-
-	return buffer
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	return buf.Bytes()
 }
 
 type DebugEventHandler struct {
@@ -118,19 +127,22 @@ func (h *DebugEventHandler) RegisterDebugEvent(event *DebugEvent) (uint64, error
 }
 
 func (h *DebugEventHandler) constructDebugEventBuffer(event *DebugEvent) []byte {
-	buffer := make([]byte, 64)
+	req := DebuggerEventRegisterRequest{
+		EventType:      uint32(event.Type),
+		Tag:            0,
+		ProcessId:      event.ProcessId,
+		CoreId:         event.CoreId,
+		IsEnabled:      false,
+		EventStage:     0,
+		OptionalParam1: event.EIP,
+		OptionalParam2: event.Options.OptionalParam1,
+		OptionalParam3: event.Options.OptionalParam2,
+		OptionalParam4: event.Options.OptionalParam3,
+	}
 
-	binary.LittleEndian.PutUint64(buffer[0:8], uint64(IoctlDebuggerRegisterEvent))
-	binary.LittleEndian.PutUint64(buffer[8:16], uint64(event.Type))
-	binary.LittleEndian.PutUint32(buffer[16:20], event.ProcessId)
-	binary.LittleEndian.PutUint32(buffer[20:24], event.ThreadId)
-	binary.LittleEndian.PutUint32(buffer[24:28], event.CoreId)
-	binary.LittleEndian.PutUint64(buffer[28:36], event.EIP)
-	binary.LittleEndian.PutUint64(buffer[36:44], event.Options.OptionalParam1)
-	binary.LittleEndian.PutUint64(buffer[44:52], event.Options.OptionalParam2)
-	binary.LittleEndian.PutUint64(buffer[52:60], event.Options.OptionalParam3)
-
-	return buffer
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	return buf.Bytes()
 }
 
 func (h *DebugEventHandler) HandleEptHook(event *DebugEvent) error {

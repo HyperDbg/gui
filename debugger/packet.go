@@ -408,12 +408,20 @@ func (p *Packet) EPTHook(address uint64, size uint32, hookType EPTHookType) {
 		return
 	}
 
-	buffer := make([]byte, 24)
-	binary.LittleEndian.PutUint64(buffer[0:8], address)
-	binary.LittleEndian.PutUint32(buffer[8:12], size)
-	binary.LittleEndian.PutUint32(buffer[12:16], uint32(hookType))
+	req := DebuggerEpthookRequest{
+		Address:  address,
+		Size:     size,
+		HookType: hookType,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("EPTHook请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第7个签名
@@ -446,10 +454,18 @@ func (p *Packet) HookSyscall(syscallNumber uint32) {
 		return
 	}
 
-	buffer := make([]byte, 8)
-	binary.LittleEndian.PutUint32(buffer[0:4], syscallNumber)
+	req := DebuggerSyscallHookRequest{
+		SyscallNumber: syscallNumber,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("HookSyscall请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第9个签名
@@ -466,10 +482,18 @@ func (p *Packet) HookException(exceptionType uint32) {
 		return
 	}
 
-	buffer := make([]byte, 4)
-	binary.LittleEndian.PutUint32(buffer[0:4], exceptionType)
+	req := DebuggerExceptionHookRequest{
+		ExceptionType: exceptionType,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("HookException请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第10个签名
@@ -486,10 +510,18 @@ func (p *Packet) HookInterrupt(vector uint32) {
 		return
 	}
 
-	buffer := make([]byte, 4)
-	binary.LittleEndian.PutUint32(buffer[0:4], vector)
+	req := DebuggerInterruptHookRequest{
+		Vector: vector,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("HookInterrupt请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第11个签名
@@ -506,11 +538,19 @@ func (p *Packet) HookIO(port uint16, hookType uint32) {
 		return
 	}
 
-	buffer := make([]byte, 8)
-	binary.LittleEndian.PutUint16(buffer[0:2], port)
-	binary.LittleEndian.PutUint32(buffer[4:8], hookType)
+	req := DebuggerIoHookRequest{
+		Port:     port,
+		HookType: hookType,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("HookIO请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第12个签名
@@ -527,10 +567,18 @@ func (p *Packet) HookIOAPIC(apicID uint32) {
 		return
 	}
 
-	buffer := make([]byte, 4)
-	binary.LittleEndian.PutUint32(buffer[0:4], apicID)
+	req := DebuggerApicRequest{
+		ApicID: apicID,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("HookIOAPIC请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第13个签名
@@ -540,13 +588,24 @@ func (p *Packet) ReadMsr(msr uint32) uint64 {
 		return 0
 	}
 
-	buffer := make([]byte, 4)
-	binary.LittleEndian.PutUint32(buffer[0:4], msr)
+	req := DebuggerReadOrWriteMsr{
+		Msr:        msr,
+		ActionType: DebuggerMsrActionRead,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerReadOrWriteMsr)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("ReadMsr请求验证失败", err)
+		return 0
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerReadOrWriteMsr)
 	response := p.driver.Receive(IoctlDebuggerReadOrWriteMsr)
-	value := binary.LittleEndian.Uint64(response.Bytes()[8:16])
-	return value
+
+	var result DebuggerReadOrWriteMsr
+	binary.Read(response, binary.LittleEndian, &result)
+	return result.Value
 }
 
 // 来自接口: Packeter 第14个签名
@@ -556,11 +615,20 @@ func (p *Packet) WriteMsr(msr uint32, value uint64) {
 		return
 	}
 
-	buffer := make([]byte, 12)
-	binary.LittleEndian.PutUint32(buffer[0:4], msr)
-	binary.LittleEndian.PutUint64(buffer[4:12], value)
+	req := DebuggerReadOrWriteMsr{
+		Msr:        msr,
+		ActionType: DebuggerMsrActionWrite,
+		Value:      value,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerReadOrWriteMsr)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("WriteMsr请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerReadOrWriteMsr)
 	p.driver.Receive(IoctlDebuggerReadOrWriteMsr)
 }
 
@@ -578,10 +646,18 @@ func (p *Packet) MeasurePerformance(address uint64) {
 		return
 	}
 
-	buffer := make([]byte, 8)
-	binary.LittleEndian.PutUint64(buffer[0:8], address)
+	req := DebuggerMeasureRequest{
+		Address: address,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("MeasurePerformance请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第16个签名
@@ -602,12 +678,20 @@ func (p *Packet) MonitorMemory(address uint64, size uint32, monitorType MonitorT
 		return
 	}
 
-	buffer := make([]byte, 16)
-	binary.LittleEndian.PutUint64(buffer[0:8], address)
-	binary.LittleEndian.PutUint32(buffer[8:12], size)
-	binary.LittleEndian.PutUint32(buffer[12:16], uint32(monitorType))
+	req := DebuggerMonitorRequest{
+		Address:     address,
+		Size:        size,
+		MonitorType: monitorType,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("MonitorMemory请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第17个签名
@@ -625,12 +709,20 @@ func (p *Packet) PCICam(bus, device, function uint32) PCICamInfo {
 		return result
 	}
 
-	buffer := make([]byte, 12)
-	binary.LittleEndian.PutUint32(buffer[0:4], bus)
-	binary.LittleEndian.PutUint32(buffer[4:8], device)
-	binary.LittleEndian.PutUint32(buffer[8:12], function)
+	req := DebuggerPciCamRequest{
+		Bus:      bus,
+		Device:   device,
+		Function: function,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("PCICam请求验证失败", err)
+		return result
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 	response := p.driver.Receive(IoctlDebuggerRegisterEvent)
 
 	result.Bus = bus
@@ -657,10 +749,18 @@ func (p *Packet) PMC(pmcNumber uint32) uint64 {
 		return 0
 	}
 
-	buffer := make([]byte, 4)
-	binary.LittleEndian.PutUint32(buffer[0:4], pmcNumber)
+	req := DebuggerPmcRequest{
+		PmcNumber: pmcNumber,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("PMC请求验证失败", err)
+		return 0
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 	response := p.driver.Receive(IoctlDebuggerRegisterEvent)
 
 	return binary.LittleEndian.Uint64(response.Bytes()[0:8])
@@ -680,13 +780,21 @@ func (p *Packet) ReconstructMemory(pid uint32, address uint64, size uint32, mode
 		return nil
 	}
 
-	buffer := make([]byte, 20)
-	binary.LittleEndian.PutUint32(buffer[0:4], pid)
-	binary.LittleEndian.PutUint64(buffer[4:12], address)
-	binary.LittleEndian.PutUint32(buffer[12:16], size)
-	binary.LittleEndian.PutUint32(buffer[16:20], uint32(mode))
+	req := DebuggerReconstructMemoryRequest{
+		ProcessId: pid,
+		Size:      size,
+		Mode:      mode,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("ReconstructMemory请求验证失败", err)
+		return nil
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	binary.Write(buf, binary.LittleEndian, address)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 	response := p.driver.Receive(IoctlDebuggerRegisterEvent)
 
 	return response.Bytes()
@@ -711,13 +819,21 @@ func (p *Packet) SearchMemoryPattern(pid uint32, pattern []byte, mode Reconstruc
 		return nil
 	}
 
-	buffer := make([]byte, 16+len(pattern))
-	binary.LittleEndian.PutUint32(buffer[0:4], pid)
-	binary.LittleEndian.PutUint32(buffer[4:8], uint32(len(pattern)))
-	binary.LittleEndian.PutUint32(buffer[8:12], uint32(mode))
-	copy(buffer[12:], pattern)
+	req := DebuggerSearchMemoryPatternRequest{
+		ProcessId:   pid,
+		PatternSize: uint32(len(pattern)),
+		Mode:        mode,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerSearchMemory)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("SearchMemoryPattern请求验证失败", err)
+		return nil
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	binary.Write(buf, binary.LittleEndian, pattern)
+	p.driver.Send(buf, IoctlDebuggerSearchMemory)
 	response := p.driver.Receive(IoctlDebuggerSearchMemory)
 
 	resultCount := binary.LittleEndian.Uint32(response.Bytes()[0:4])
@@ -745,10 +861,18 @@ func (p *Packet) InstructionTrace(address uint64) {
 		return
 	}
 
-	buffer := make([]byte, 8)
-	binary.LittleEndian.PutUint64(buffer[0:8], address)
+	req := DebuggerInstructionTraceRequest{
+		Address: address,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("InstructionTrace请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第22个签名
@@ -765,11 +889,19 @@ func (p *Packet) TrackMemory(address uint64, size uint32) {
 		return
 	}
 
-	buffer := make([]byte, 12)
-	binary.LittleEndian.PutUint64(buffer[0:8], address)
-	binary.LittleEndian.PutUint32(buffer[8:12], size)
+	req := DebuggerTrackMemoryRequest{
+		Address: address,
+		Size:    size,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("TrackMemory请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第23个签名
@@ -841,11 +973,19 @@ func (p *Packet) PTE(virtualAddress uint64, pid uint32) PageTableEntries {
 		return result
 	}
 
-	buffer := make([]byte, 16)
-	binary.LittleEndian.PutUint64(buffer[0:8], virtualAddress)
-	binary.LittleEndian.PutUint32(buffer[8:12], pid)
+	req := DebuggerPteRequest{
+		VirtualAddress: virtualAddress,
+		ProcessId:      pid,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerReadPageTableEntriesDetails)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("PTE请求验证失败", err)
+		return result
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerReadPageTableEntriesDetails)
 	response := p.driver.Receive(IoctlDebuggerReadPageTableEntriesDetails)
 
 	result.VirtualAddress = virtualAddress
@@ -876,15 +1016,25 @@ func (p *Packet) VA2PA(virtualAddress uint64, pid uint32) uint64 {
 		return 0
 	}
 
-	buffer := make([]byte, 20)
-	binary.LittleEndian.PutUint64(buffer[0:8], virtualAddress)
-	binary.LittleEndian.PutUint32(buffer[8:12], pid)
-	binary.LittleEndian.PutUint32(buffer[16:20], 1)
+	req := DebuggerVa2paAndPa2vaCommands{
+		VirtualAddress:     virtualAddress,
+		ProcessId:          pid,
+		IsVirtual2Physical: true,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerVa2paAndPa2vaCommands)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("VA2PA请求验证失败", err)
+		return 0
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerVa2paAndPa2vaCommands)
 	response := p.driver.Receive(IoctlDebuggerVa2paAndPa2vaCommands)
 
-	return binary.LittleEndian.Uint64(response.Bytes()[8:16])
+	var result DebuggerVa2paAndPa2vaCommands
+	binary.Read(response, binary.LittleEndian, &result)
+	return result.PhysicalAddress
 }
 
 // 来自接口: Packeter 第28个签名
@@ -901,14 +1051,25 @@ func (p *Packet) PA2VA(physicalAddress uint64, pid uint32) uint64 {
 		return 0
 	}
 
-	buffer := make([]byte, 20)
-	binary.LittleEndian.PutUint64(buffer[8:16], physicalAddress)
-	binary.LittleEndian.PutUint32(buffer[16:20], 0)
+	req := DebuggerVa2paAndPa2vaCommands{
+		PhysicalAddress:    physicalAddress,
+		ProcessId:          pid,
+		IsVirtual2Physical: false,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerVa2paAndPa2vaCommands)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("PA2VA请求验证失败", err)
+		return 0
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerVa2paAndPa2vaCommands)
 	response := p.driver.Receive(IoctlDebuggerVa2paAndPa2vaCommands)
 
-	return binary.LittleEndian.Uint64(response.Bytes()[0:8])
+	var result DebuggerVa2paAndPa2vaCommands
+	binary.Read(response, binary.LittleEndian, &result)
+	return result.VirtualAddress
 }
 
 // 来自接口: Packeter 第29个签名
@@ -925,10 +1086,18 @@ func (p *Packet) ProcessDetails(pid uint32) []ProcessDetails {
 		return nil
 	}
 
-	buffer := make([]byte, 8)
-	binary.LittleEndian.PutUint32(buffer[0:4], pid)
+	req := DebuggerQueryProcessRequest{
+		ProcessId: pid,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlQueryCurrentProcess)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("ProcessDetails请求验证失败", err)
+		return nil
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlQueryCurrentProcess)
 	response := p.driver.Receive(IoctlQueryCurrentProcess)
 
 	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
@@ -962,10 +1131,18 @@ func (p *Packet) ThreadDetails(tid uint32) []ThreadDetails {
 		return nil
 	}
 
-	buffer := make([]byte, 8)
-	binary.LittleEndian.PutUint32(buffer[0:4], tid)
+	req := DebuggerQueryThreadRequest{
+		ThreadId: tid,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlQueryCurrentThread)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("ThreadDetails请求验证失败", err)
+		return nil
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlQueryCurrentThread)
 	response := p.driver.Receive(IoctlQueryCurrentThread)
 
 	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
@@ -1029,10 +1206,18 @@ func (p *Packet) Threads(pid uint32) []ThreadInfo {
 		return nil
 	}
 
-	buffer := make([]byte, 8)
-	binary.LittleEndian.PutUint32(buffer[0:4], pid)
+	req := DebuggerQueryThreadsRequest{
+		ProcessId: pid,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlGetListOfThreadsAndProcesses)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("Threads请求验证失败", err)
+		return nil
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlGetListOfThreadsAndProcesses)
 	response := p.driver.Receive(IoctlGetListOfThreadsAndProcesses)
 
 	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
@@ -1096,10 +1281,18 @@ func (p *Packet) APIC(apicID uint32) APICInfo {
 		return result
 	}
 
-	buffer := make([]byte, 4)
-	binary.LittleEndian.PutUint32(buffer[0:4], apicID)
+	req := DebuggerApicRequest{
+		ApicID: apicID,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlPerformActionsOnApic)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("APIC请求验证失败", err)
+		return result
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlPerformActionsOnApic)
 	response := p.driver.Receive(IoctlPerformActionsOnApic)
 
 	result.APICID = binary.LittleEndian.Uint32(response.Bytes()[0:4])
@@ -1159,10 +1352,18 @@ func (p *Packet) PerformSMIOperation(operation SMIType) {
 		return
 	}
 
-	buffer := make([]byte, 4)
-	binary.LittleEndian.PutUint32(buffer[0:4], uint32(operation))
+	req := DebuggerSmiRequest{
+		Operation: operation,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlPerformSmiOperation)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("PerformSMIOperation请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlPerformSmiOperation)
 }
 
 // 来自接口: Packeter 第37个签名
@@ -1179,11 +1380,18 @@ func (p *Packet) HideDebugger() {
 		return
 	}
 
-	buffer := make([]byte, 16)
-	binary.LittleEndian.PutUint32(buffer[0:4], 1)
-	binary.LittleEndian.PutUint32(buffer[4:8], 1)
+	req := DebuggerHideRequest{
+		IsHide: true,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerHideAndUnhideToTransparentTheDebugger)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("HideDebugger请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerHideAndUnhideToTransparentTheDebugger)
 }
 
 // 来自接口: Packeter 第38个签名
@@ -1200,11 +1408,18 @@ func (p *Packet) UnhideDebugger() {
 		return
 	}
 
-	buffer := make([]byte, 16)
-	binary.LittleEndian.PutUint32(buffer[0:4], 0)
-	binary.LittleEndian.PutUint32(buffer[4:8], 1)
+	req := DebuggerHideRequest{
+		IsHide: false,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerHideAndUnhideToTransparentTheDebugger)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("UnhideDebugger请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerHideAndUnhideToTransparentTheDebugger)
 }
 
 // 来自接口: Packeter 第39个签名
@@ -1220,12 +1435,20 @@ func (p *Packet) BringPagesIn(fromAddr, toAddr uint64, pid uint32) {
 		mylog.Check("driver not available")
 	}
 
-	buffer := make([]byte, 20)
-	binary.LittleEndian.PutUint64(buffer[0:8], fromAddr)
-	binary.LittleEndian.PutUint64(buffer[8:16], toAddr)
-	binary.LittleEndian.PutUint32(buffer[16:20], pid)
+	req := DebuggerBringPagesInRequest{
+		FromAddress: fromAddr,
+		ToAddress:   toAddr,
+		ProcessId:   pid,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerBringPagesIn)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("BringPagesIn请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerBringPagesIn)
 }
 
 // 来自接口: Packeter 第40个签名
@@ -1242,13 +1465,25 @@ func (p *Packet) EditMemory(pid uint32, address uint64, data []byte) {
 		return
 	}
 
-	buffer := make([]byte, 16+len(data))
-	binary.LittleEndian.PutUint32(buffer[0:4], pid)
-	binary.LittleEndian.PutUint64(buffer[4:12], address)
-	binary.LittleEndian.PutUint32(buffer[12:16], uint32(len(data)))
-	copy(buffer[16:], data)
+	req := DebuggerEditMemoryRequest{
+		ProcessId:      pid,
+		Address:        address,
+		ByteCount:      uint32(len(data)),
+		MemoryType:     MemoryTypeVirtual,
+		IsDebuggee:     true,
+		IsPhysical:     false,
+		Is32BitProcess: false,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerEditMemory)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("EditMemory请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	binary.Write(buf, binary.LittleEndian, data)
+	p.driver.Send(buf, IoctlDebuggerEditMemory)
 }
 
 func (p *Packet) ReadMemory(pid uint32, address uint64, size uint32, memoryType MemoryType) []byte {
@@ -1257,13 +1492,24 @@ func (p *Packet) ReadMemory(pid uint32, address uint64, size uint32, memoryType 
 		return nil
 	}
 
-	buffer := make([]byte, 20)
-	binary.LittleEndian.PutUint32(buffer[0:4], pid)
-	binary.LittleEndian.PutUint64(buffer[4:12], address)
-	binary.LittleEndian.PutUint32(buffer[12:16], size)
-	binary.LittleEndian.PutUint32(buffer[16:20], uint32(memoryType))
+	req := DebuggerReadMemoryRequest{
+		ProcessId:      pid,
+		Address:        address,
+		ByteCount:      size,
+		MemoryType:     memoryType,
+		IsDebuggee:     true,
+		IsPhysical:     memoryType == MemoryTypePhysical,
+		Is32BitProcess: false,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerReadMemory)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("ReadMemory请求验证失败", err)
+		return nil
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerReadMemory)
 	response := p.driver.Receive(IoctlDebuggerReadMemory)
 	return response.Bytes()
 }
@@ -1273,13 +1519,25 @@ func (p *Packet) WriteMemory(pid uint32, address uint64, data []byte) {
 		mylog.Check("driver not available")
 	}
 
-	buffer := make([]byte, 16+len(data))
-	binary.LittleEndian.PutUint32(buffer[0:4], pid)
-	binary.LittleEndian.PutUint64(buffer[4:12], address)
-	binary.LittleEndian.PutUint32(buffer[12:16], uint32(len(data)))
-	copy(buffer[16:], data)
+	req := DebuggerEditMemoryRequest{
+		ProcessId:      pid,
+		Address:        address,
+		ByteCount:      uint32(len(data)),
+		MemoryType:     MemoryTypeVirtual,
+		IsDebuggee:     true,
+		IsPhysical:     false,
+		Is32BitProcess: false,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerEditMemory)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("WriteMemory请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	binary.Write(buf, binary.LittleEndian, data)
+	p.driver.Send(buf, IoctlDebuggerEditMemory)
 }
 
 func (p *Packet) RegisterEvent(event *Event) {
@@ -1296,14 +1554,22 @@ func (p *Packet) SearchMemory(pid uint32, address uint64, size uint32, pattern [
 		mylog.Check("driver not available")
 	}
 
-	buffer := make([]byte, 24+len(pattern))
-	binary.LittleEndian.PutUint32(buffer[0:4], pid)
-	binary.LittleEndian.PutUint64(buffer[4:12], address)
-	binary.LittleEndian.PutUint32(buffer[12:16], size)
-	binary.LittleEndian.PutUint32(buffer[16:20], uint32(len(pattern)))
-	copy(buffer[20:], pattern)
+	req := DebuggerSearchMemoryRequest{
+		ProcessId:   pid,
+		Address:     address,
+		Size:        size,
+		PatternSize: uint32(len(pattern)),
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerSearchMemory)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("SearchMemory请求验证失败", err)
+		return nil
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	binary.Write(buf, binary.LittleEndian, pattern)
+	p.driver.Send(buf, IoctlDebuggerSearchMemory)
 	response := p.driver.Receive(IoctlDebuggerSearchMemory)
 
 	resultCount := binary.LittleEndian.Uint32(response.Bytes()[0:4])
@@ -1339,16 +1605,25 @@ func (p *Packet) AttachProcess(pid uint32) {
 		return
 	}
 
-	buffer := make([]byte, 64)
-	binary.LittleEndian.PutUint32(buffer[0:4], pid)
-	binary.LittleEndian.PutUint32(buffer[4:8], 0)
+	req := DebuggerAttachDetachUserModeProcessRequest{
+		ProcessId: pid,
+		Action:    DebuggerAttachDetachUserModeProcessActionAttach,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerAttachDetachUserModeProcess)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("AttachProcess请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlDebuggerAttachDetachUserModeProcess)
 	response := p.driver.Receive(IoctlDebuggerAttachDetachUserModeProcess)
 
-	status := binary.LittleEndian.Uint32(response.Bytes()[0:4])
-	if status != 0 {
-		mylog.Warning(status)
+	var result DebuggerAttachDetachUserModeProcessResponse
+	binary.Read(response, binary.LittleEndian, &result)
+	if result.KernelStatus != 0 {
+		mylog.Warning(result.KernelStatus)
 		return
 	}
 }
@@ -1380,10 +1655,18 @@ func (p *Packet) ChangeProcess(pid uint32) {
 
 	mylog.Info(pid)
 
-	buffer := make([]byte, 4)
-	binary.LittleEndian.PutUint32(buffer[0:4], pid)
+	req := DebuggerSwitchProcessRequest{
+		ProcessId: pid,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlSwitchProcess)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("ChangeProcess请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlSwitchProcess)
 	p.driver.Receive(IoctlSwitchProcess)
 }
 
@@ -1402,10 +1685,18 @@ func (p *Packet) ChangeThread(tid uint32) {
 
 	mylog.Info(tid)
 
-	buffer := make([]byte, 4)
-	binary.LittleEndian.PutUint32(buffer[0:4], tid)
+	req := DebuggerSwitchThreadRequest{
+		ThreadId: tid,
+	}
 
-	p.driver.Send(bytes.NewBuffer(buffer), IoctlSwitchThread)
+	if err := req.Validate(); err != nil {
+		mylog.Warning("ChangeThread请求验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	p.driver.Send(buf, IoctlSwitchThread)
 	p.driver.Receive(IoctlSwitchThread)
 }
 

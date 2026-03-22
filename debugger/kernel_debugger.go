@@ -828,7 +828,52 @@ func (s *KernelDebug) WriteMemory(pid uint32, address uint64, data []byte) {
 //
 // 注意：UserDebugger 继承了 Public.Modules(pid uint32)，此方法用于获取所有模块
 func (s *KernelDebug) Modules(pid uint32) []ModuleInfo {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packet.IsConnected() {
+		mylog.Warning("驱动未连接")
+		return nil
+	}
+
+	if pid == 0 {
+		req := DebuggerGetUserModeModuleDetailsRequest{
+			ProcessDebuggingDetailToken: 0,
+		}
+
+		if err := req.Validate(); err != nil {
+			mylog.Warning("验证失败", err)
+			return nil
+		}
+
+		buf := new(bytes.Buffer)
+		binary.Write(buf, binary.LittleEndian, &req)
+
+		response := s.packet.driver.SendReceive(buf, IoctlGetUserModeModuleDetails)
+		if response.Len() == 0 {
+			mylog.Warning("内核返回空响应")
+			return nil
+		}
+
+		count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
+		modules := make([]ModuleInfo, count)
+
+		for i := uint32(0); i < count; i++ {
+			offset := 4 + uintptr(i)*16
+			if offset+16 > uintptr(response.Len()) {
+				break
+			}
+			modules[i] = ModuleInfo{
+				BaseAddress: binary.LittleEndian.Uint64(response.Bytes()[offset : offset+8]),
+				Size:        binary.LittleEndian.Uint32(response.Bytes()[offset+8 : offset+12]),
+				Is32Bit:     response.Bytes()[offset+12] == 1,
+			}
+		}
+
+		return modules
+	}
+
+	return nil
 }
 
 // 来自接口: KernelDebugger 第6个签名
@@ -841,11 +886,14 @@ func (s *KernelDebug) Modules(pid uint32) []ModuleInfo {
 // 实现是否相同: ❌ 不适用（仅内核模式支持）
 // 实现过程: 内核模式：用户命令prealloc → KernelDebugger.PreallocatePools() → IOCTL_RESERVE_PRE_ALLOCATED_POOLS → DebuggerCommandReservePreallocatedPools
 func (s *KernelDebug) PreallocatePools(poolType PoolType, count uint32) {
-	buffer := make([]byte, 8)
-	binary.LittleEndian.PutUint32(buffer[0:4], uint32(poolType))
-	binary.LittleEndian.PutUint32(buffer[4:8], count)
+	req := DebuggerPreallocCommand{
+		Type:  DebuggerPreallocCommandType(poolType),
+		Count: count,
+	}
 
-	s.packet.driver.Send(bytes.NewBuffer(buffer), IoctlReservePreAllocatedPools)
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	s.packet.driver.Send(buf, IoctlReservePreAllocatedPools)
 	s.packet.driver.Receive(IoctlReservePreAllocatedPools)
 }
 
@@ -863,10 +911,10 @@ func (s *KernelDebug) RunTests(testType string) TestResults {
 		mylog.Check("driver not available")
 	}
 
-	buffer := make([]byte, 256)
-	copy(buffer, testType)
+	buf := new(bytes.Buffer)
+	buf.WriteString(testType)
 
-	s.packet.driver.Send(bytes.NewBuffer(buffer), IoctlPerformKernelSideTests)
+	s.packet.driver.Send(buf, IoctlPerformKernelSideTests)
 	response := s.packet.driver.Receive(IoctlPerformKernelSideTests)
 
 	totalTests := binary.LittleEndian.Uint32(response.Bytes()[0:4])
@@ -968,10 +1016,13 @@ func (s *KernelDebug) DR(drNumber uint32) uint64 {
 //
 // 注意：不带参数时显示当前核心，带参数时切换到指定核心。此功能仅在Debugger模式（远程调试）下可用。
 func (s *KernelDebug) ChangeCore(coreNumber uint32) {
-	buffer := make([]byte, 4)
-	binary.LittleEndian.PutUint32(buffer[0:4], coreNumber)
+	req := DebuggerApicRequest{
+		ApicID: coreNumber,
+	}
 
-	s.packet.driver.Send(bytes.NewBuffer(buffer), IoctlPerformActionsOnApic)
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	s.packet.driver.Send(buf, IoctlPerformActionsOnApic)
 	s.packet.driver.Receive(IoctlPerformActionsOnApic)
 }
 

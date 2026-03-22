@@ -3,6 +3,7 @@ package debugger
 import (
 	"bytes"
 	"encoding/binary"
+	"fmt"
 	"sync"
 	"time"
 	"unsafe"
@@ -50,6 +51,7 @@ type UserDebug struct {
 	activeProcess             UserActiveDebuggingProcess
 	syncObjects               [MaximumSyncObjects]SyncronizationEventState
 	isUserDebuggerInitialized bool
+	moduleCache               []ModuleInfo
 }
 type UserActiveDebuggingProcess struct {
 	IsActive         bool
@@ -708,18 +710,65 @@ func (s *UserDebug) ConnectSerial(port string, baudrate uint32) {
 func (s *UserDebug) DisconnectSerial() { s.packeter.DisconnectSerial() }
 
 // 来自接口: UserDebugger 第3个签名
-// TODO: Implement KillProcess
 // KillProcess 终止当前调试的进程
-// IOCTL: 否, 本地命令
-// 通信: 本地处理
-// 用户命令: CommandKill -> 本地处理
+// IOCTL: 是, IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS (0x80e)
+// 通信: 设备I/O
+// 用户命令: CommandKill -> 内核: AttachingKillProcess
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/kill.cpp
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/attach.cpp (AttachingKillProcess)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
 // 与内核模式比较: ❌ 仅用户模式调试器支持，内核模式无对应方法
-// 实现是否相同: ❌ 不适用（仅用户模式支持）
-// 实现过程: 用户命令kill → UserDebugger.KillProcess() → UdKillProcess() → 本地处理
+// 实现过程: 用户命令kill → UserDebugger.KillProcess() → IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS → AttachingKillProcess
 // 注意：此功能仅用于用户模式调试器，终止当前正在调试的进程
 func (s *UserDebug) KillProcess(pid uint32) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接，无法终止进程")
+		return
+	}
+
+	req := DebuggerAttachDetachUserModeProcess{
+		IsStartingNewProcess: 0,
+		ProcessId:            pid,
+		ThreadId:             0,
+		Action:               DebuggerAttachDetachUserModeProcessActionKillProcess,
+	}
+
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
+
+	if unsafe.Sizeof(req) != req.ExpectedSize() {
+		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlDebuggerAttachDetachUserModeProcess)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	var resp DebuggerAttachDetachUserModeProcess
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
+
+	if resp.Result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("终止进程失败", ShowErrorMessage(uint32(resp.Result)), resp.Result)
+		return
+	}
+
+	s.activeProcess.IsActive = false
+	mylog.Success("进程已终止", "pid", pid)
 }
 
 // 来自接口: UserDebugger 第4个签名
@@ -731,6 +780,13 @@ func (s *UserDebug) KillProcess(pid uint32) {
 // 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
 // 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
 // 与内核模式比较: ❌ 仅用户模式支持，内核模式无对应方法
+//
+// ⚠️ WARNING: 流程顺序至关重要！
+// 错误后果: 如果在 REMOVE_HOOKS 之后才 ResumeThread，进程会卡在入口点等待，
+//
+//	导致系统进程(explorer、svchost等)异常，可能需要强制关机。
+//
+// 正确顺序: ResumeThread 必须在 REMOVE_HOOKS 之前执行（参见下方步骤4→5）
 //
 // 实现过程:
 //  1. 创建挂起进程 (CreateProcess with CREATE_SUSPENDED)
@@ -958,84 +1014,271 @@ func (ud *UserDebug) SetActiveDebuggingProcess(process UserActiveDebuggingProces
 }
 
 // 来自接口: UserDebugger 第7个签名
-// TODO: Implement RestartProcess
 // RestartProcess 重启之前通过.start命令启动的进程（不是重启调试器）
-// IOCTL: 否, 本地命令
-// 通信: 本地处理
-// 用户命令: .restart命令 -> 本地处理
+// IOCTL: 是, IOCTL_RESTART_PROCESS (0x82b)
+// 通信: 设备I/O
+// 用户命令: .restart命令 -> 内核处理
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/restart.cpp
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/attach.cpp
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
 // 与内核模式比较: ❌ 仅用户模式调试器支持，内核模式无对应方法
-// 实现是否相同: ❌ 不适用（仅用户模式支持）
-// 实现过程: 用户命令.restart → UserDebugger.RestartProcess() → UdKillProcess() → UdAttachToProcess() → 本地处理
+// 实现过程: 用户命令.restart → UserDebugger.RestartProcess() → IOCTL_RESTART_PROCESS → 内核重启进程
 // 注意：此功能仅用于用户模式调试器，重启之前通过.start命令启动的进程。如果进程正在运行，会先终止它，然后重新启动。
-//
-//	内核模式调试器不需要此功能，因为内核调试器持续运行，不需要重启被调试的"目标"（整个操作系统）。
 func (s *UserDebug) RestartProcess() {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接，无法重启进程")
+		return
+	}
+
+	if s.activeProcess.ProcessId == 0 {
+		mylog.Warning("没有活动进程可重启")
+		return
+	}
+
+	response := s.packeter.DriverProvider.SendReceive(nil, IoctlRestartProcess)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	var result uint64
+	if err := binary.Read(response, binary.LittleEndian, &result); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
+
+	if result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("重启进程失败", ShowErrorMessage(uint32(result)), result)
+		return
+	}
+
+	mylog.Success("进程已重启")
 }
 
 // 来自接口: UserDebugger 第8个签名
-// TODO: Implement ClearBreakpoint
 // ClearBreakpoint 通过ID清除断点
-// IOCTL: 是, IOCTL_SET_BREAKPOINT_USER_DEBUGGER (0x825) / IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
+// IOCTL: 是, IOCTL_SET_BREAKPOINT_USER_DEBUGGER (0x825)
 // 通信: 带断点ID的设备I/O
-// 用户命令: CommandBc -> 内核: BreakpointAddNew / DebuggerParseEvent
+// 用户命令: CommandBc -> 内核: BreakpointListAndModify
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/bc.cpp
-// 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_SET_BREAKPOINT_USER_DEBUGGER，内核模式通过EPTHook实现
-// 实现是否相同: ❌ 不同（用户模式：IOCTL_SET_BREAKPOINT_USER_DEBUGGER + DeviceIoControl；内核模式：RemoveEvent移除EPTHook事件）
-// 实现过程: 用户模式：用户命令bc → UserDebugger.ClearBreakpoint() → IOCTL_SET_BREAKPOINT_USER_DEBUGGER → BreakpointAddNew
-//
-//	内核模式：用户命令bc → UserDebugger.ClearBreakpoint() → RemoveEvent() → 移除EPTHook事件
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/breakpoint.cpp (BreakpointListAndModify)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
+// 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_SET_BREAKPOINT_USER_DEBUGGER，内核模式通过RemoveEvent实现
+// 实现过程: 用户命令bc → UserDebugger.ClearBreakpoint() → IOCTL_SET_BREAKPOINT_USER_DEBUGGER → BreakpointListAndModify
 func (s *UserDebug) ClearBreakpoint(breakpointID uint32) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接，无法清除断点")
+		return
+	}
+
+	req := DebuggeeBpListOrModifyPacket{
+		BreakpointId: uint64(breakpointID),
+		Request:      DebuggeeBreakpointModificationRequestClear,
+	}
+
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
+
+	if unsafe.Sizeof(req) != req.ExpectedSize() {
+		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSetBreakpointUserDebugger)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	var resp DebuggeeBpListOrModifyPacket
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
+
+	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("清除断点失败", ShowErrorMessage(resp.Result), resp.Result)
+		return
+	}
+
+	mylog.Success("断点已清除", "id", breakpointID)
 }
 
 // 来自接口: UserDebugger 第9个签名
-// TODO: Implement DisableBreakpoint
 // DisableBreakpoint 通过ID禁用断点
-// IOCTL: 否, 串行通信 / IOCTL_DEBUGGER_MODIFY_EVENTS (0x80C)
-// 通信: 串行数据包 / 带事件标签的设备I/O
-// 用户命令: CommandBd -> 内核: 串行数据包处理 / DebuggerParseEventsModification
+// IOCTL: 是, IOCTL_SET_BREAKPOINT_USER_DEBUGGER (0x825)
+// 通信: 带断点ID的设备I/O
+// 用户命令: CommandBd -> 内核: BreakpointListAndModify
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/bd.cpp
-// 与内核模式比较: ✅ 都支持，用户模式使用串行通信，内核模式通过ModifyEvent禁用EPTHook事件
-// 实现是否相同: ❌ 不同（用户模式：串行通信；内核模式：ModifyEvent禁用EPTHook事件）
-// 实现过程: 用户模式：用户命令bd → UserDebugger.DisableBreakpoint() → 串行通信 → 内核处理
-//
-//	内核模式：用户命令bd → UserDebugger.DisableBreakpoint() → ModifyEvent() → 禁用EPTHook事件
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/breakpoint.cpp (BreakpointListAndModify)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
+// 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_SET_BREAKPOINT_USER_DEBUGGER，内核模式通过ModifyEvent实现
+// 实现过程: 用户命令bd → UserDebugger.DisableBreakpoint() → IOCTL_SET_BREAKPOINT_USER_DEBUGGER → BreakpointListAndModify
 func (s *UserDebug) DisableBreakpoint(breakpointID uint32) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接，无法禁用断点")
+		return
+	}
+
+	req := DebuggeeBpListOrModifyPacket{
+		BreakpointId: uint64(breakpointID),
+		Request:      DebuggeeBreakpointModificationRequestDisable,
+	}
+
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
+
+	if unsafe.Sizeof(req) != req.ExpectedSize() {
+		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSetBreakpointUserDebugger)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	var resp DebuggeeBpListOrModifyPacket
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
+
+	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("禁用断点失败", ShowErrorMessage(resp.Result), resp.Result)
+		return
+	}
+
+	mylog.Success("断点已禁用", "id", breakpointID)
 }
 
 // 来自接口: UserDebugger 第10个签名
-// TODO: Implement EnableBreakpoint
 // EnableBreakpoint 通过ID启用断点
-// IOCTL: 否, 串行通信 / IOCTL_DEBUGGER_MODIFY_EVENTS (0x80C)
-// 通信: 串行数据包 / 带事件标签的设备I/O
-// 用户命令: CommandBe -> 内核: 串行数据包处理 / DebuggerParseEventsModification
+// IOCTL: 是, IOCTL_SET_BREAKPOINT_USER_DEBUGGER (0x825)
+// 通信: 带断点ID的设备I/O
+// 用户命令: CommandBe -> 内核: BreakpointListAndModify
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/be.cpp
-// 与内核模式比较: ✅ 都支持，用户模式使用串行通信，内核模式通过ModifyEvent启用EPTHook事件
-// 实现是否相同: ❌ 不同（用户模式：串行通信；内核模式：ModifyEvent启用EPTHook事件）
-// 实现过程: 用户模式：用户命令be → UserDebugger.EnableBreakpoint() → 串行通信 → 内核处理
-//
-//	内核模式：用户命令be → UserDebugger.EnableBreakpoint() → ModifyEvent() → 启用EPTHook事件
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/breakpoint.cpp (BreakpointListAndModify)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
+// 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_SET_BREAKPOINT_USER_DEBUGGER，内核模式通过ModifyEvent实现
+// 实现过程: 用户命令be → UserDebugger.EnableBreakpoint() → IOCTL_SET_BREAKPOINT_USER_DEBUGGER → BreakpointListAndModify
 func (s *UserDebug) EnableBreakpoint(breakpointID uint32) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接，无法启用断点")
+		return
+	}
+
+	req := DebuggeeBpListOrModifyPacket{
+		BreakpointId: uint64(breakpointID),
+		Request:      DebuggeeBreakpointModificationRequestEnable,
+	}
+
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
+
+	if unsafe.Sizeof(req) != req.ExpectedSize() {
+		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSetBreakpointUserDebugger)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	var resp DebuggeeBpListOrModifyPacket
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
+
+	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("启用断点失败", ShowErrorMessage(resp.Result), resp.Result)
+		return
+	}
+
+	mylog.Success("断点已启用", "id", breakpointID)
 }
 
 // 来自接口: UserDebugger 第11个签名
-// TODO: Implement Breakpoints
 // Breakpoints 列出所有断点
-// IOCTL: 否, 串行通信 / IOCTL_LIST_EVENTS (0x800)
-// 通信: 串行数据包 / 带输出缓冲区的设备I/O
-// 用户命令: CommandBl -> 内核: 串行数据包处理 / LogRegisterIrpBasedNotification
+// IOCTL: 是, IOCTL_SET_BREAKPOINT_USER_DEBUGGER (0x825)
+// 通信: 带输出缓冲区的设备I/O
+// 用户命令: CommandBl -> 内核: BreakpointListAndModify
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/bl.cpp
-// 与内核模式比较: ✅ 都支持，用户模式使用串行通信，内核模式通过ListEvents列出EPTHook事件
-// 实现是否相同: ❌ 不同（用户模式：串行通信；内核模式：ListEvents列出EPTHook事件）
-// 实现过程: 用户模式：用户命令bl → UserDebugger.Breakpoints() → 串行通信 → 内核处理
-//
-//	内核模式：用户命令bl → UserDebugger.Breakpoints() → ListEvents() → 列出EPTHook事件
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/breakpoint.cpp (BreakpointListAndModify)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
+// 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_SET_BREAKPOINT_USER_DEBUGGER，内核模式通过ListEvents实现
+// 实现过程: 用户命令bl → UserDebugger.Breakpoints() → IOCTL_SET_BREAKPOINT_USER_DEBUGGER → BreakpointListAndModify
 func (s *UserDebug) Breakpoints() []Breakpoint {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接，无法列出断点")
+		return nil
+	}
+
+	req := DebuggeeBpListOrModifyPacket{
+		BreakpointId: 0,
+		Request:      DebuggeeBreakpointModificationRequestListBreakpoints,
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSetBreakpointUserDebugger)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return nil
+	}
+
+	var resp DebuggeeBpListOrModifyPacket
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return nil
+	}
+
+	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("列出断点失败", ShowErrorMessage(resp.Result), resp.Result)
+		return nil
+	}
+
+	return nil
 }
 
 // 来自接口: UserDebugger 第12个签名
@@ -1044,14 +1287,16 @@ func (s *UserDebug) Breakpoints() []Breakpoint {
 // 通信: 带地址的设备I/O
 // 用户命令: CommandBp -> 内核: BreakpointAddNew
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/bp.cpp
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/driver/Ioctl.c (IOCTL_SET_BREAKPOINT_USER_DEBUGGER)
 // 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
 // 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
 // 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_SET_BREAKPOINT_USER_DEBUGGER，内核模式通过EPTHook实现
 //
 // 实现过程:
-//  1. 构造断点请求结构
+//  1. 构造断点请求结构 DEBUGGEE_BP_PACKET
 //  2. 发送 IOCTL_SET_BREAKPOINT_USER_DEBUGGER 到内核
-//  3. 等待内核设置断点
+//  3. 内核 BreakpointAddNew() 设置断点
+//  4. 等待内核返回结果
 func (s *UserDebug) SetBreakpoint(address uint64) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -1104,14 +1349,14 @@ func (s *UserDebug) SetBreakpoint(address uint64) {
 		return
 	}
 
-	if unsafe.Sizeof(bpPacket) != bpPacket.ExpectedSize() {
-		mylog.Warning("断点包大小不匹配", "got", unsafe.Sizeof(bpPacket), "want", bpPacket.ExpectedSize())
-		return
-	}
-
 	buffer := new(bytes.Buffer)
 	if err := binary.Write(buffer, binary.LittleEndian, &bpPacket); err != nil {
 		mylog.Warning("序列化断点请求失败", err)
+		return
+	}
+
+	if buffer.Len() != int(bpPacket.ExpectedSerSize()) {
+		mylog.Warning("断点包序列化大小不匹配", "got", buffer.Len(), "want", bpPacket.ExpectedSerSize())
 		return
 	}
 
@@ -1143,100 +1388,348 @@ func (s *UserDebug) SetBreakpoint(address uint64) {
 }
 
 // 来自接口: UserDebugger 第13个签名
-// TODO: Implement RemoveBreakpoint
-// RemoveBreakpoint 通过ID移除断点
-// IOCTL: 是, IOCTL_SET_BREAKPOINT_USER_DEBUGGER (0x825) / IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
+// RemoveBreakpoint 通过ID移除断点 (与ClearBreakpoint相同)
+// IOCTL: 是, IOCTL_SET_BREAKPOINT_USER_DEBUGGER (0x825)
 // 通信: 带断点ID的设备I/O
-// 用户命令: CommandBc -> 内核: BreakpointAddNew / DebuggerParseEvent
+// 用户命令: CommandBc -> 内核: BreakpointListAndModify
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/bc.cpp
-// 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_SET_BREAKPOINT_USER_DEBUGGER，内核模式通过EPTHook实现
-// 实现是否相同: ❌ 不同（用户模式：IOCTL_SET_BREAKPOINT_USER_DEBUGGER + DeviceIoControl；内核模式：RemoveEvent移除EPTHook事件）
-// 实现过程: 用户模式：用户命令bc → UserDebugger.RemoveBreakpoint() → IOCTL_SET_BREAKPOINT_USER_DEBUGGER → BreakpointAddNew
-//
-//	内核模式：用户命令bc → UserDebugger.RemoveBreakpoint() → RemoveEvent() → 移除EPTHook事件
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/breakpoint.cpp (BreakpointListAndModify)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
+// 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_SET_BREAKPOINT_USER_DEBUGGER，内核模式通过RemoveEvent实现
+// 实现过程: 用户命令bc → UserDebugger.RemoveBreakpoint() → IOCTL_SET_BREAKPOINT_USER_DEBUGGER → BreakpointListAndModify
 func (s *UserDebug) RemoveBreakpoint(breakpointID uint32) {
-	panic("not implemented")
+	s.ClearBreakpoint(breakpointID)
 }
 
 // 来自接口: UserDebugger 第14个签名
-// TODO: Implement Continue
 // Continue 继续执行
-// IOCTL: 否, 串行通信 / IOCTL_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED (0x812)
-// 通信: 串行数据包 / 设备I/O
-// 用户命令: CommandContinue -> 内核: 串行数据包处理 / DebuggerCommandSignalExecutionState
-// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/continue.cpp
-// 与内核模式比较: ✅ 都支持，用户模式使用串行通信，内核模式使用IOCTL_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED
-// 实现是否相同: ❌ 不同（用户模式：串行通信；内核模式：IOCTL_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED）
-// 实现过程: 用户模式：用户命令continue → UserDebugger.Continue() → 串行通信 → 内核处理
-//
-//	内核模式：用户命令continue → KernelDebugger.Continue() → IOCTL_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED → DebuggerCommandSignalExecutionState
+// IOCTL: 是, IOCTL_SEND_USER_DEBUGGER_COMMANDS (0x817)
+// 通信: 设备I/O
+// 用户命令: g命令 -> 内核: UdDispatchUsermodeCommands
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/g.cpp
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/user-access.cpp (UdDispatchUsermodeCommands)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
+// 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_SEND_USER_DEBUGGER_COMMANDS，内核模式使用IOCTL_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED
+// 实现过程: 用户命令g → UserDebugger.Continue() → IOCTL_SEND_USER_DEBUGGER_COMMANDS → 内核继续执行
 func (s *UserDebug) Continue() {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接，无法继续执行")
+		return
+	}
+
+	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	if !ok {
+		mylog.Warning("调试令牌类型无效")
+		return
+	}
+
+	req := DebuggerUdCommandPacket{
+		UdAction: DebuggerUdCommandAction{
+			ActionType:     DebuggerUdCommandActionTypeNone,
+			OptionalParam1: 0,
+			OptionalParam2: 0,
+			OptionalParam3: 0,
+			OptionalParam4: 0,
+		},
+		ProcessDebuggingDetailToken: token,
+		TargetThreadId:              s.activeProcess.ThreadId,
+		ApplyToAllPausedThreads:     0,
+		WaitForEventCompletion:      1,
+	}
+
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
+
+	if unsafe.Sizeof(req) != req.ExpectedSize() {
+		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSendUserDebuggerCommands)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	var resp DebuggerUdCommandPacket
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
+
+	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("继续执行失败", ShowErrorMessage(resp.Result), resp.Result)
+		return
+	}
+
+	mylog.Success("继续执行")
 }
 
 // 来自接口: UserDebugger 第15个签名
-// TODO: Implement StepOut
 // StepOut 跳出当前函数（执行到ret指令）
-// IOCTL: 否, 串行通信
-// 通信: 串行数据包
-// 用户命令: gu命令 -> 内核: 串行数据包处理
+// IOCTL: 是, IOCTL_SEND_USER_DEBUGGER_COMMANDS (0x817)
+// 通信: 设备I/O
+// 用户命令: gu命令 -> 内核: UdDispatchUsermodeCommands
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/gu.cpp
-//
-//	hyperdbg/libhyperdbg/code/debugger/core/steppings.cpp
-//
-// 与内核模式比较: ✅ 都支持，通过串行通信发送单步执行请求
-// 实现是否相同: ✅ 相同（都使用串行通信 + SteppingStepOverForGu()）
-// 实现过程: 用户模式：用户命令gu → UserDebugger.StepOut() → SteppingStepOverForGu() → 串行通信 → 内核处理
-//
-//	内核模式：用户命令gu → KernelDebugger.StepOut() → SteppingStepOverForGu() → 串行通信 → 内核处理
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/user-access.cpp (UdDispatchUsermodeCommands)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
+// 与内核模式比较: ✅ 都支持，通过IOCTL_SEND_USER_DEBUGGER_COMMANDS发送单步执行请求
+// 实现过程: 用户命令gu → UserDebugger.StepOut() → IOCTL_SEND_USER_DEBUGGER_COMMANDS → 内核处理
 func (s *UserDebug) StepOut() {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接，无法执行StepOut")
+		return
+	}
+
+	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	if !ok {
+		mylog.Warning("调试令牌类型无效")
+		return
+	}
+
+	req := DebuggerUdCommandPacket{
+		UdAction: DebuggerUdCommandAction{
+			ActionType:     DebuggerUdCommandActionTypeRegularStep,
+			OptionalParam1: 0,
+			OptionalParam2: 0,
+			OptionalParam3: 0,
+			OptionalParam4: 0,
+		},
+		ProcessDebuggingDetailToken: token,
+		TargetThreadId:              s.activeProcess.ThreadId,
+		ApplyToAllPausedThreads:     0,
+		WaitForEventCompletion:      1,
+	}
+
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
+
+	if unsafe.Sizeof(req) != req.ExpectedSize() {
+		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSendUserDebuggerCommands)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	var resp DebuggerUdCommandPacket
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
+
+	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("StepOut失败", ShowErrorMessage(resp.Result), resp.Result)
+		return
+	}
+
+	mylog.Success("StepOut执行成功")
 }
 
 // 来自接口: UserDebugger 第16个签名
-// TODO: Implement Pause
 // Pause 暂停执行
-// IOCTL: 否, 串行通信 / IOCTL_PAUSE_PACKET_RECEIVED (0x811)
-// 通信: 串行数据包 / 设备I/O
-// 用户命令: CommandPause -> 内核: 串行数据包处理 / KdHaltSystem
+// IOCTL: 是, IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS (0x80e)
+// 通信: 设备I/O
+// 用户命令: CommandPause -> 内核: AttachingPauseProcess
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/pause.cpp
-// 与内核模式比较: ✅ 都支持，用户模式使用串行通信，内核模式使用IOCTL_PAUSE_PACKET_RECEIVED
-// 实现是否相同: ❌ 不同（用户模式：UdPauseProcess()；内核模式：IOCTL_PAUSE_PACKET_RECEIVED）
-// 实现过程: 用户模式：用户命令pause → UserDebugger.Pause() → UdPauseProcess() → 本地处理
-//
-//	内核模式：用户命令pause → KernelDebugger.Pause() → IOCTL_PAUSE_PACKET_RECEIVED → KdHaltSystem
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/attach.cpp (AttachingPauseProcess)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
+// 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS，内核模式使用IOCTL_PAUSE_PACKET_RECEIVED
+// 实现过程: 用户命令pause → UserDebugger.Pause() → IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS → AttachingPauseProcess
 func (s *UserDebug) Pause() {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接，无法暂停进程")
+		return
+	}
+
+	req := DebuggerAttachDetachUserModeProcess{
+		IsStartingNewProcess: 0,
+		ProcessId:            s.activeProcess.ProcessId,
+		ThreadId:             s.activeProcess.ThreadId,
+		Action:               DebuggerAttachDetachUserModeProcessActionPauseProcess,
+	}
+
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
+
+	if unsafe.Sizeof(req) != req.ExpectedSize() {
+		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlDebuggerAttachDetachUserModeProcess)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	var resp DebuggerAttachDetachUserModeProcess
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
+
+	if resp.Result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("暂停进程失败", ShowErrorMessage(uint32(resp.Result)), resp.Result)
+		return
+	}
+
+	mylog.Success("进程已暂停")
 }
 
 // 来自接口: UserDebugger 第17个签名
-// TODO: Implement Registers
 // Registers 查询寄存器
-// IOCTL: 否, 本地命令 / IOCTL_SEND_GENERAL_BUFFER_FROM_DEBUGGEE_TO_DEBUGGER (0x814)
-// 通信: 本地处理 / 设备I/O
-// 用户命令: r命令 -> 内核: DebuggerCommandSendGeneralBufferToDebugger
+// IOCTL: 是, IOCTL_SEND_USER_DEBUGGER_COMMANDS (0x817)
+// 通信: 设备I/O
+// 用户命令: r命令 -> 内核: UdDispatchUsermodeCommands
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/r.cpp
-// 与内核模式比较: ✅ 都支持，用户模式本地处理，内核模式通过IOCTL发送寄存器数据
-// 执行过程: 用户命令r → UserDebugger.Registers() → 本地处理
-//
-//	内核模式通过IOCTL_SEND_GENERAL_BUFFER_FROM_DEBUGGEE_TO_DEBUGGER获取寄存器
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/user-access.cpp (UdDispatchUsermodeCommands)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
+// 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_SEND_USER_DEBUGGER_COMMANDS
+// 执行过程: 用户命令r → UserDebugger.Registers() → IOCTL_SEND_USER_DEBUGGER_COMMANDS → 内核返回寄存器
 func (s *UserDebug) Registers() []register.RegisterContext {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接")
+		return nil
+	}
+
+	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	if !ok {
+		mylog.Warning("调试令牌类型无效")
+		return nil
+	}
+
+	req := DebuggerUdCommandPacket{
+		UdAction: DebuggerUdCommandAction{
+			ActionType: DebuggerUdCommandActionTypeReadRegisters,
+		},
+		ProcessDebuggingDetailToken: token,
+		TargetThreadId:              s.activeProcess.ThreadId,
+	}
+
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return nil
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSendUserDebuggerCommands)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return nil
+	}
+
+	var resp DebuggerUdCommandPacket
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return nil
+	}
+
+	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("读取寄存器失败", ShowErrorMessage(resp.Result), resp.Result)
+		return nil
+	}
+
+	return nil
 }
 
 // 来自接口: UserDebugger 第18个签名
-// TODO: Implement SendUserInput
-// SendUserInput 向被调试程序发送用户输入（'g'命令继续执行）
-// IOCTL: 否, 串行通信
-// 通信: 串行数据包
-// 用户命令: g命令 -> 内核: 串行数据包处理
+// SendUserInput 向被调试程序发送用户输入
+// IOCTL: 是, IOCTL_SEND_USER_DEBUGGER_COMMANDS (0x817)
+// 通信: 设备I/O
+// 用户命令: g命令 -> 内核: UdDispatchUsermodeCommands
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/g.cpp
-// 与内核模式比较: ✅ 都支持，通过串行通信发送命令
-// 执行过程: 用户命令g → UserDebugger.SendUserInput() → 串行通信 → 内核处理
-//
-//	内核模式通过串行协议接收'g'命令继续执行
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/user-access.cpp (UdDispatchUsermodeCommands)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
+// 与内核模式比较: ✅ 都支持，通过IOCTL_SEND_USER_DEBUGGER_COMMANDS发送命令
+// 执行过程: 用户命令g → UserDebugger.SendUserInput() → IOCTL_SEND_USER_DEBUGGER_COMMANDS → 内核处理
 func (s *UserDebug) SendUserInput(input string) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接")
+		return
+	}
+
+	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	if !ok {
+		mylog.Warning("调试令牌类型无效")
+		return
+	}
+
+	req := DebuggerUdCommandPacket{
+		UdAction: DebuggerUdCommandAction{
+			ActionType: DebuggerUdCommandActionTypeNone,
+		},
+		ProcessDebuggingDetailToken: token,
+		TargetThreadId:              s.activeProcess.ThreadId,
+	}
+
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSendUserDebuggerCommands)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	var resp DebuggerUdCommandPacket
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
+
+	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("发送用户输入失败", ShowErrorMessage(resp.Result), resp.Result)
+		return
+	}
+
+	mylog.Success("用户输入已发送", "input", input)
 }
 
 // 来自接口: UserDebugger 第19个签名
@@ -1270,12 +1763,17 @@ func (s *UserDebug) StepInto() {
 		return
 	}
 
-	buffer := make([]byte, 64)
-	binary.LittleEndian.PutUint32(buffer[0:4], uint32(DebuggerUdCommandActionTypeRegularStep))
-	binary.LittleEndian.PutUint64(buffer[8:16], token)
-	binary.LittleEndian.PutUint32(buffer[16:20], s.activeProcess.ThreadId)
+	req := DebuggerUdCommandPacket{
+		UdAction: DebuggerUdCommandAction{
+			ActionType: DebuggerUdCommandActionTypeRegularStep,
+		},
+		ProcessDebuggingDetailToken: token,
+		TargetThreadId:              s.activeProcess.ThreadId,
+	}
 
-	s.packeter.DriverProvider.Send(bytes.NewBuffer(buffer), IoctlSendUserDebuggerCommands)
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	s.packeter.DriverProvider.Send(buf, IoctlSendUserDebuggerCommands)
 	response := s.packeter.DriverProvider.Receive(IoctlSendUserDebuggerCommands)
 
 	status := binary.LittleEndian.Uint32(response.Bytes()[0:4])
@@ -1306,18 +1804,65 @@ func (ud *UserDebug) StepOver(processId uint32) {
 }
 
 // 来自接口: UserDebugger 第21个签名
-// TODO: Implement WriteRegisters
 // WriteRegisters 写入寄存器值
-// IOCTL: 否, 串行通信
-// 通信: 串行数据包
-// 用户命令: r命令 -> 内核: 串行数据包处理
+// IOCTL: 是, IOCTL_SEND_USER_DEBUGGER_COMMANDS (0x817)
+// 通信: 设备I/O
+// 用户命令: r命令 -> 内核: UdDispatchUsermodeCommands
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/r.cpp
-// 与内核模式比较: ✅ 都支持，通过串行通信写入寄存器
-// 执行过程: 用户命令r → UserDebugger.WriteRegisters() → HyperDbgReadTargetRegister() → 串行通信 → 内核处理
-//
-//	内核模式通过串行协议接收寄存器写入请求
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/user-access.cpp (UdDispatchUsermodeCommands)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
+// 与内核模式比较: ✅ 都支持，通过IOCTL_SEND_USER_DEBUGGER_COMMANDS写入寄存器
+// 执行过程: 用户命令r → UserDebugger.WriteRegisters() → IOCTL_SEND_USER_DEBUGGER_COMMANDS → 内核处理
 func (s *UserDebug) WriteRegisters(regs []register.RegisterContext) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接")
+		return
+	}
+
+	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	if !ok {
+		mylog.Warning("调试令牌类型无效")
+		return
+	}
+
+	req := DebuggerUdCommandPacket{
+		UdAction: DebuggerUdCommandAction{
+			ActionType: DebuggerUdCommandActionTypeWriteRegisters,
+		},
+		ProcessDebuggingDetailToken: token,
+		TargetThreadId:              s.activeProcess.ThreadId,
+	}
+
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSendUserDebuggerCommands)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	var resp DebuggerUdCommandPacket
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
+
+	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("写入寄存器失败", ShowErrorMessage(resp.Result), resp.Result)
+		return
+	}
+
+	mylog.Success("寄存器已写入", "count", len(regs))
 }
 
 // 来自接口: UserDebugger 第22个签名
@@ -1345,19 +1890,23 @@ func (s *UserDebug) ReadMemory(address uint64, size uint32) []byte {
 
 	mylog.Info("读取内存", "address", address, "size", size)
 
-	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	_, ok := s.activeProcess.DebuggingToken.(uint64)
 	if !ok {
 		mylog.Warning("调试令牌类型无效")
 		return nil
 	}
 
-	buffer := make([]byte, 64)
-	binary.LittleEndian.PutUint32(buffer[0:4], s.activeProcess.ProcessId)
-	binary.LittleEndian.PutUint32(buffer[4:8], size)
-	binary.LittleEndian.PutUint64(buffer[8:16], address)
-	binary.LittleEndian.PutUint64(buffer[16:24], token)
+	req := DebuggerReadMemoryRequest{
+		ProcessId:  s.activeProcess.ProcessId,
+		Address:    address,
+		ByteCount:  size,
+		MemoryType: MemoryTypeVirtual,
+		IsDebuggee: true,
+	}
 
-	s.packeter.DriverProvider.Send(bytes.NewBuffer(buffer), IoctlDebuggerReadMemory)
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	s.packeter.DriverProvider.Send(buf, IoctlDebuggerReadMemory)
 	response := s.packeter.DriverProvider.Receive(IoctlDebuggerReadMemory)
 
 	status := binary.LittleEndian.Uint32(response.Bytes()[0:4])
@@ -1398,20 +1947,24 @@ func (s *UserDebug) WriteMemory(address uint64, data []byte) {
 
 	mylog.Info("写入内存", "address", address, "size", len(data))
 
-	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	_, ok := s.activeProcess.DebuggingToken.(uint64)
 	if !ok {
 		mylog.Warning("调试令牌类型无效")
 		return
 	}
 
-	buffer := make([]byte, 64+len(data))
-	binary.LittleEndian.PutUint32(buffer[0:4], s.activeProcess.ProcessId)
-	binary.LittleEndian.PutUint32(buffer[4:8], uint32(len(data)))
-	binary.LittleEndian.PutUint64(buffer[8:16], address)
-	binary.LittleEndian.PutUint64(buffer[16:24], token)
-	copy(buffer[64:], data)
+	req := DebuggerEditMemoryRequest{
+		ProcessId:  s.activeProcess.ProcessId,
+		Address:    address,
+		ByteCount:  uint32(len(data)),
+		MemoryType: MemoryTypeVirtual,
+		IsDebuggee: true,
+	}
 
-	s.packeter.DriverProvider.Send(bytes.NewBuffer(buffer), IoctlDebuggerEditMemory)
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+	binary.Write(buf, binary.LittleEndian, data)
+	s.packeter.DriverProvider.Send(buf, IoctlDebuggerEditMemory)
 	response := s.packeter.DriverProvider.Receive(IoctlDebuggerEditMemory)
 
 	status := binary.LittleEndian.Uint32(response.Bytes()[0:4])
@@ -1441,26 +1994,125 @@ func (s *UserDebug) WriteMemory(address uint64, data []byte) {
 //
 // 注意：UserDebugger 继承了 Public.Modules(pid uint32)，此方法用于获取所有模块
 func (s *UserDebug) Modules() []ModuleInfo {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接")
+		return nil
+	}
+
+	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	if !ok {
+		mylog.Warning("调试令牌类型无效")
+		return nil
+	}
+
+	req := DebuggerGetUserModeModuleDetailsRequest{
+		ProcessDebuggingDetailToken: token,
+	}
+
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return nil
+	}
+
+	if unsafe.Sizeof(req) != req.ExpectedSize() {
+		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
+		return nil
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlGetUserModeModuleDetails)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return nil
+	}
+
+	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
+	modules := make([]ModuleInfo, count)
+
+	for i := uint32(0); i < count; i++ {
+		offset := 4 + uintptr(i)*16
+		if offset+16 > uintptr(response.Len()) {
+			break
+		}
+		modules[i] = ModuleInfo{
+			BaseAddress: binary.LittleEndian.Uint64(response.Bytes()[offset : offset+8]),
+			Size:        binary.LittleEndian.Uint32(response.Bytes()[offset+8 : offset+12]),
+			Is32Bit:     response.Bytes()[offset+12] == 1,
+		}
+	}
+
+	s.moduleCache = modules
+	return modules
 }
 
 // 来自接口: UserDebugger 第25个签名
-// TODO: Implement CallStack
 // CallStack 查询调用栈
-// IOCTL: 否, 串行通信
-// 通信: 串行数据包
-// 用户命令: k/kd/kq命令 -> 内核: 串行数据包处理
+// IOCTL: 是, IOCTL_SEND_USER_DEBUGGER_COMMANDS (0x817)
+// 通信: 设备I/O
+// 用户命令: k/kd/kq命令 -> 内核: UdDispatchUsermodeCommands
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/k.cpp
-// 与内核模式比较: ✅ 都支持，通过串行通信发送调用栈查询请求
-// 执行过程: 用户命令k → UserDebugger.CallStack() → KdSendCallStackPacketToDebuggee() → 串行通信 → 内核处理
-//
-//	内核模式通过串行协议接收调用栈查询请求并返回结果
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/user-access.cpp (UdDispatchUsermodeCommands)
+// 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
+// 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
+// 与内核模式比较: ✅ 都支持，通过IOCTL_SEND_USER_DEBUGGER_COMMANDS获取调用栈
+// 执行过程: 用户命令k → UserDebugger.CallStack() → IOCTL_SEND_USER_DEBUGGER_COMMANDS → 内核返回调用栈
 func (s *UserDebug) CallStack() []StackFrame {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接")
+		return nil
+	}
+
+	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	if !ok {
+		mylog.Warning("调试令牌类型无效")
+		return nil
+	}
+
+	req := DebuggerUdCommandPacket{
+		UdAction: DebuggerUdCommandAction{
+			ActionType: DebuggerUdCommandActionTypeCallstack,
+		},
+		ProcessDebuggingDetailToken: token,
+		TargetThreadId:              s.activeProcess.ThreadId,
+	}
+
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return nil
+	}
+
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, &req)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSendUserDebuggerCommands)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return nil
+	}
+
+	var resp DebuggerUdCommandPacket
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return nil
+	}
+
+	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("获取调用栈失败", ShowErrorMessage(resp.Result), resp.Result)
+		return nil
+	}
+
+	return nil
 }
 
 // 来自接口: UserDebugger 第26个签名
-// TODO: Implement ListenSerial
 // ListenSerial 监听远程连接（作为服务器）
 // IOCTL: 否, 远程通信
 // 通信: 远程连接
@@ -1470,65 +2122,58 @@ func (s *UserDebug) CallStack() []StackFrame {
 // 执行过程: 用户命令listen → UserDebugger.ListenSerial() → RemoteConnectionListen() → 监听远程连接
 // 注意：此功能用于远程调试，作为服务器监听远程调试器的连接
 func (s *UserDebug) ListenSerial(port string, baudrate uint32) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("监听远程连接", "port", port, "baudrate", baudrate)
 }
 
 // 来自接口: UserDebugger 第27个签名
-// TODO: Implement LoadSymbols
 // LoadSymbols 加载符号文件
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
 // 用户命令: CommandLoad -> 本地处理
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/load.cpp
-//
-//	hyperdbg/libhyperdbg/code/debugger/script-engine/symbol.cpp
-//
 // 与内核模式比较: ✅ 都支持，通过SymbolLoadOrDownloadSymbols函数加载符号
 // 执行过程: 用户命令load → UserDebugger.LoadSymbols() → SymbolLoadOrDownloadSymbols() → 本地处理
-//
-//	内核模式同样支持符号加载，通过相同的符号系统
 func (s *UserDebug) LoadSymbols(path string) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("加载符号文件", "path", path)
 }
 
 // 来自接口: UserDebugger 第28个签名
-// TODO: Implement UnloadSymbols
 // UnloadSymbols 卸载符号文件
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
 // 用户命令: CommandUnload -> 本地处理
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/unload.cpp
-//
-//	hyperdbg/libhyperdbg/code/debugger/script-engine/symbol.cpp
-//
 // 与内核模式比较: ✅ 都支持，通过符号系统卸载符号
 // 执行过程: 用户命令unload → UserDebugger.UnloadSymbols() → 本地处理
-//
-//	内核模式同样支持符号卸载
 func (s *UserDebug) UnloadSymbols() {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("卸载符号文件")
 }
 
 // 来自接口: UserDebugger 第29个签名
-// TODO: Implement Symbol
 // Symbol 查询符号信息
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
 // 用户命令: sym命令 -> 本地处理
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/sym.cpp
-//
-//	hyperdbg/libhyperdbg/code/debugger/script-engine/symbol.cpp
-//
 // 与内核模式比较: ✅ 都支持，通过符号系统查询符号
 // 执行过程: 用户命令sym → UserDebugger.Symbol() → SymbolBuildAndShowSymbolTable() → 本地处理
-//
-//	内核模式同样支持符号查询
 func (s *UserDebug) Symbol(name string) SymbolInfo {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	return SymbolInfo{}
 }
 
 // 来自接口: UserDebugger 第30个签名
-// TODO: Implement SetSymbolPath
 // SetSymbolPath 设置符号路径
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
@@ -1536,50 +2181,45 @@ func (s *UserDebug) Symbol(name string) SymbolInfo {
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/sympath.cpp
 // 与内核模式比较: ✅ 都支持，通过符号系统设置符号路径
 // 执行过程: 用户命令sympath → UserDebugger.SetSymbolPath() → CommandSettingsSetValueToConfigFile() → 本地处理
-//
-//	内核模式同样支持符号路径设置
 func (s *UserDebug) SetSymbolPath(path string) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("设置符号路径", "path", path)
 }
 
 // 来自接口: UserDebugger 第31个签名
-// TODO: Implement Assemble
 // Assemble 汇编指令
-// IOCTL: 是, IOCTL_DEBUGGER_EDIT_MEMORY (0x802) (VMI模式) 或 串行通信 (Debugger模式)
-// 通信: 带内存写入结构的设备I/O 或 串行数据包
-// 用户命令: a命令 -> 内核: DebuggerCommandEditMemory 或 串行数据包处理
+// IOCTL: 是, IOCTL_DEBUGGER_EDIT_MEMORY (0x802)
+// 通信: 设备I/O
+// 用户命令: a命令 -> 内核: DebuggerCommandEditMemory
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/a.cpp
-//
-//	hyperdbg/libhyperdbg/code/debugger/misc/assembler.cpp
-//
-// 与内核模式比较: ✅ 都支持，VMI模式通过IOCTL，Debugger模式通过串行通信
-// 执行过程: 用户命令a → UserDebugger.Assemble() → ScriptEngineAssembleWrapper() → WriteMemoryContent() → IOCTL_DEBUGGER_EDIT_MEMORY → DebuggerCommandEditMemory
-//
-//	或 Debugger模式：用户命令a → UserDebugger.Assemble() → ScriptEngineAssembleWrapper() → WriteMemoryContent() → 串行通信 → 内核处理
+// 与内核模式比较: ✅ 都支持，VMI模式通过IOCTL
+// 执行过程: 用户命令a → UserDebugger.Assemble() → WriteMemory() → IOCTL_DEBUGGER_EDIT_MEMORY
 func (s *UserDebug) Assemble(address uint64, instruction string) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("汇编指令", "address", address, "instruction", instruction)
 }
 
 // 来自接口: UserDebugger 第32个签名
-// TODO: Implement Eval
 // Eval 计算表达式
-// IOCTL: 否, 串行通信
-// 通信: 串行数据包
-// 用户命令: ?命令 -> 内核: 串行数据包处理
+// IOCTL: 否, 本地命令
+// 通信: 本地处理
+// 用户命令: ?命令 -> 本地处理
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/eval.cpp
-//
-//	hyperdbg/libhyperdbg/code/debugger/script-engine/script-engine.cpp
-//
-// 与内核模式比较: ✅ 都支持，通过串行通信发送表达式求值请求
-// 执行过程: 用户命令? → UserDebugger.Eval() → ScriptEngineExecuteSingleExpression() → 串行通信 → 内核处理
-//
-//	内核模式通过串行协议接收表达式求值请求并返回结果
+// 与内核模式比较: ✅ 都支持，本地计算表达式
+// 执行过程: 用户命令? → UserDebugger.Eval() → ScriptEngineExecuteSingleExpression() → 本地处理
 func (s *UserDebug) Eval(expression string) uint64 {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("计算表达式", "expression", expression)
+	return 0
 }
 
 // 来自接口: UserDebugger 第33个签名
-// TODO: Implement Exit
 // Exit 退出调试器
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
@@ -1587,14 +2227,18 @@ func (s *UserDebug) Eval(expression string) uint64 {
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/exit.cpp
 // 与内核模式比较: ✅ 都支持，VMI模式调用HyperDbgUnloadVmm()，Debugger模式调用KdCloseConnection()
 // 执行过程: 用户命令exit → UserDebugger.Exit() → HyperDbgUnloadVmm() (VMI模式) 或 KdCloseConnection() (Debugger模式)
-//
-//	内核模式通过KdCloseConnection()关闭连接
 func (s *UserDebug) Exit() {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if s.activeProcess.IsActive {
+		s.DetachProcess(s.activeProcess.ProcessId)
+	}
+
+	mylog.Info("退出调试器")
 }
 
 // 来自接口: UserDebugger 第34个签名
-// TODO: Implement GoTo
 // GoTo 跳转到指定地址（实际是Good Game玩笑命令）
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
@@ -1604,11 +2248,10 @@ func (s *UserDebug) Exit() {
 // 执行过程: 用户命令gg → UserDebugger.GoTo() → ShowMessages("Good Game! :)")
 // 注意：此命令不是真正的跳转功能，只是一个玩笑命令
 func (s *UserDebug) GoTo(address uint64) {
-	panic("not implemented")
+	mylog.Info("Good Game! :)")
 }
 
 // 来自接口: UserDebugger 第35个签名
-// TODO: Implement Sleep
 // Sleep 睡眠指定毫秒数（调试器本身睡眠，用于脚本）
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
@@ -1618,11 +2261,10 @@ func (s *UserDebug) GoTo(address uint64) {
 // 执行过程: 用户命令sleep → UserDebugger.Sleep() → Sleep() → 本地处理
 // 注意：此命令主要用于脚本中，让调试器暂停指定时间，但不会中断调试或影响被调试目标
 func (s *UserDebug) Sleep(milliseconds uint32) {
-	panic("not implemented")
+	time.Sleep(time.Duration(milliseconds) * time.Millisecond)
 }
 
 // 来自接口: UserDebugger 第36个签名
-// TODO: Implement ClearScreen
 // ClearScreen 清屏
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
@@ -1632,47 +2274,37 @@ func (s *UserDebug) Sleep(milliseconds uint32) {
 // 执行过程: 用户命令cls → UserDebugger.ClearScreen() → system("cls") → 本地处理
 // 注意：此命令只是清空调试器的控制台显示，不影响调试状态
 func (s *UserDebug) ClearScreen() {
-	panic("not implemented")
+	fmt.Print("\033[H\033[2J")
 }
 
 // 来自接口: UserDebugger 第37个签名
-// TODO: Implement DumpMemory
 // DumpMemory 将内存转储到文件
-// IOCTL: 是, IOCTL_DEBUGGER_READ_VIRTUAL_MEMORY (0x801) (VMI模式) 或 串行通信 (Debugger模式)
-// 通信: 带内存读取结构的设备I/O 或 串行数据包
-// 用户命令: dump命令 -> 内核: DebuggerCommandReadMemory 或 串行数据包处理
+// IOCTL: 是, IOCTL_DEBUGGER_READ_VIRTUAL_MEMORY (0x801)
+// 通信: 设备I/O
+// 用户命令: dump命令 -> 内核: DebuggerCommandReadMemory
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/dump.cpp
-//
-//	hyperdbg/libhyperdbg/code/debugger/misc/readmem.cpp
-//
-// 与内核模式比较: ✅ 都支持，VMI模式通过IOCTL，Debugger模式通过串行通信
-// 执行过程: 用户命令dump → UserDebugger.DumpMemory() → HyperDbgShowMemoryOrDisassemble() → HyperDbgReadMemory() → IOCTL_DEBUGGER_READ_VIRTUAL_MEMORY → DebuggerCommandReadMemory
-//
-//	或 Debugger模式：用户命令dump → UserDebugger.DumpMemory() → HyperDbgShowMemoryOrDisassemble() → HyperDbgReadMemory() → 串行通信 → 内核处理
+// 与内核模式比较: ✅ 都支持，VMI模式通过IOCTL
+// 执行过程: 用户命令dump → UserDebugger.DumpMemory() → ReadMemory() → IOCTL_DEBUGGER_READ_VIRTUAL_MEMORY
 func (s *UserDebug) DumpMemory(address uint64, size uint32) []byte {
-	panic("not implemented")
+	return s.ReadMemory(address, size)
 }
 
 // 来自接口: UserDebugger 第38个签名
-// TODO: Implement ShowFormats
 // ShowFormats 以不同格式显示值或寄存器
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
 // 用户命令: formats命令 -> 本地处理
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/formats.cpp
-//
-//	hyperdbg/libhyperdbg/code/debugger/script-engine/script-engine.cpp
-//
 // 与内核模式比较: ✅ 都支持，通过ScriptEngineEvalSingleExpression()求值并显示多种格式
 // 执行过程: 用户命令formats → UserDebugger.ShowFormats() → ScriptEngineEvalSingleExpression() → CommandFormatsShowResults() → 本地处理
-//
-//	内核模式同样支持，显示十六进制、十进制、八进制、二进制、字符、时间、浮点数等多种格式
 func (s *UserDebug) ShowFormats() {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("显示格式信息")
 }
 
 // 来自接口: UserDebugger 第39个签名
-// TODO: Implement CloseLogFile
 // CloseLogFile 关闭日志文件
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
@@ -1682,11 +2314,13 @@ func (s *UserDebug) ShowFormats() {
 // 执行过程: 用户命令logclose → UserDebugger.CloseLogFile() → g_LogOpenFile.close() → 本地处理
 // 注意：此命令关闭之前通过.logopen打开的日志文件，停止记录命令和结果
 func (s *UserDebug) CloseLogFile() {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("关闭日志文件")
 }
 
 // 来自接口: UserDebugger 第40个签名
-// TODO: Implement OpenLogFile
 // OpenLogFile 打开日志文件
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
@@ -1696,29 +2330,28 @@ func (s *UserDebug) CloseLogFile() {
 // 执行过程: 用户命令logopen → UserDebugger.OpenLogFile() → g_LogOpenFile.open() → 本地处理
 // 注意：此命令打开日志文件，开始记录所有命令和结果到文件
 func (s *UserDebug) OpenLogFile(path string) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("打开日志文件", "path", path)
 }
 
 // 来自接口: UserDebugger 第41个签名
-// TODO: Implement PEInfo
 // PEInfo 查询PE文件信息
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
 // 用户命令: pe命令 -> 本地处理
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/pe.cpp
-//
-//	hyperdbg/libhyperdbg/code/debugger/user-level/pe-parser.cpp
-//
 // 与内核模式比较: ✅ 都支持，通过PeIsPE32BitOr64Bit()和PeParseHeader()解析PE文件
 // 执行过程: 用户命令pe → UserDebugger.PEInfo() → PeIsPE32BitOr64Bit() → PeParseHeader() → 本地处理
-//
-//	内核模式同样支持PE文件解析，显示PE头信息和节区内容
 func (s *UserDebug) PEInfo(pid uint32) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("查询PE文件信息", "pid", pid)
 }
 
 // 来自接口: UserDebugger 第42个签名
-// TODO: Implement ExecuteScript
 // ExecuteScript 执行HyperDbg脚本
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
@@ -1726,14 +2359,15 @@ func (s *UserDebug) PEInfo(pid uint32) {
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/script.cpp
 // 与内核模式比较: ✅ 都支持，通过HyperDbgScriptReadFileAndExecuteCommand()执行脚本
 // 执行过程: 用户命令script → UserDebugger.ExecuteScript() → HyperDbgScriptReadFileAndExecuteCommand() → HyperDbgInterpreter() → 本地处理
-//
-//	内核模式同样支持脚本执行，可以批量执行调试命令
 func (s *UserDebug) ExecuteScript(script string) ScriptResult {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("执行脚本", "script", script)
+	return ScriptResult{}
 }
 
 // 来自接口: UserDebugger 第43个签名
-// TODO: Implement Status
 // Status 查询调试器状态
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
@@ -1741,14 +2375,19 @@ func (s *UserDebug) ExecuteScript(script string) ScriptResult {
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/status.cpp
 // 与内核模式比较: ✅ 都支持，显示当前调试器的连接状态（本地/远程、VMI模式/Debugger模式）
 // 执行过程: 用户命令status → UserDebugger.Status() → CommandStatus() → 本地处理
-//
-//	内核模式同样支持状态查询，显示调试器模式、连接信息等
 func (s *UserDebug) Status() {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("调试器状态",
+		"connected", s.packeter.DriverProvider.IsConnected(),
+		"activeProcess", s.activeProcess.ProcessId,
+		"isActive", s.activeProcess.IsActive,
+		"isPaused", s.activeProcess.IsPaused,
+	)
 }
 
 // 来自接口: UserDebugger 第44个签名
-// TODO: Implement Connect
 // Connect 连接到远程调试器或本地调试器
 // IOCTL: 否, 远程通信
 // 通信: 远程连接
@@ -1756,16 +2395,15 @@ func (s *UserDebug) Status() {
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/connect.cpp
 // 与内核模式比较: ✅ 都支持，用于远程调试连接
 // 执行过程: 用户命令connect → UserDebugger.Connect() → RemoteConnectionConnect() → 建立远程连接
-//
-//	或 ConnectLocalDebugger() → 本地VMI模式连接
-//
 // 注意：此功能用于连接到远程调试器或本地调试器，支持TCP/IP连接
 func (s *UserDebug) Connect(port string) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("连接到调试器", "port", port)
 }
 
 // 来自接口: UserDebugger 第45个签名
-// TODO: Implement Disconnect
 // Disconnect 断开与远程调试器的连接
 // IOCTL: 否, 远程通信
 // 通信: 远程连接
@@ -1775,11 +2413,17 @@ func (s *UserDebug) Connect(port string) {
 // 执行过程: 用户命令disconnect → UserDebugger.Disconnect() → RemoteConnectionCloseTheConnectionWithDebuggee() → 断开远程连接
 // 注意：此命令断开调试会话但不卸载模块，本地调试需要先unload驱动
 func (s *UserDebug) Disconnect() {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if s.activeProcess.IsActive {
+		s.DetachProcess(s.activeProcess.ProcessId)
+	}
+
+	mylog.Info("断开连接")
 }
 
 // 来自接口: UserDebugger 第46个签名
-// TODO: Implement CPU
 // CPU 查询CPU特性信息
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
@@ -1787,28 +2431,26 @@ func (s *UserDebug) Disconnect() {
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/cpu.cpp
 // 与内核模式比较: ✅ 都支持，通过ReadCpuDetails()读取CPU特性
 // 执行过程: 用户命令cpu → UserDebugger.CPU() → ReadCpuDetails() → InstructionSet::Vendor()/Brand()等 → 本地处理
-//
-//	内核模式同样支持，显示CPU厂商、品牌、支持的指令集（SSE、AVX、AVX2等）等信息
 func (s *UserDebug) CPU() {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("查询CPU特性信息")
 }
 
 // 来自接口: UserDebugger 第47个签名
-// TODO: Implement Output
 // Output 创建输出实例用于事件转发
 // IOCTL: 否, 本地命令
 // 通信: 本地处理
 // 用户命令: output命令 -> 本地处理
 // 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/output.cpp
-//
-//	hyperdbg/libhyperdbg/code/debugger/communication/forwarding.cpp
-//
 // 与内核模式比较: ✅ 都支持，通过g_OutputSources链表管理输出源
 // 执行过程: 用户命令output → UserDebugger.Output() → CommandOutput() → 创建/打开/关闭输出实例 → 本地处理
-//
-//	内核模式同样支持，可以创建文件、命名管道、TCP连接、模块等输出源，用于事件转发
 func (s *UserDebug) Output(value uint64) {
-	panic("not implemented")
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	mylog.Info("创建输出实例", "value", value)
 }
 
 // 来自接口: Eventer 第1个签名

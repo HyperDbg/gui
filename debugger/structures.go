@@ -38,6 +38,226 @@ const (
 	DebuggerReadReadingTypePml4e    DebuggerReadReadingType = 4
 )
 
+type DebuggerMsrActionType uint32
+
+const (
+	DebuggerMsrActionRead  DebuggerMsrActionType = 0
+	DebuggerMsrActionWrite DebuggerMsrActionType = 1
+)
+
+type DebuggerReadOrWriteMsr struct {
+	Msr        uint32
+	_          [4]byte
+	CoreNumber uint32
+	ActionType DebuggerMsrActionType
+	_          [4]byte
+	Value      uint64
+}
+
+type DebuggerEditMemoryType uint32
+
+const (
+	DebuggerEditMemoryVirtual  DebuggerEditMemoryType = 0
+	DebuggerEditMemoryPhysical DebuggerEditMemoryType = 1
+)
+
+type DebuggerEditMemoryByteSize uint32
+
+const (
+	DebuggerEditMemoryByte  DebuggerEditMemoryByteSize = 0
+	DebuggerEditMemoryDword DebuggerEditMemoryByteSize = 1
+	DebuggerEditMemoryQword DebuggerEditMemoryByteSize = 2
+)
+
+type DebuggerEditMemory struct {
+	Result             uint32
+	_                  [4]byte
+	Address            uint64
+	ProcessId          uint32
+	MemoryType         DebuggerEditMemoryType
+	ByteSize           DebuggerEditMemoryByteSize
+	CountOf64Chunks    uint32
+	FinalStructureSize uint32
+}
+
+type DebuggerSearchMemoryType uint32
+
+const (
+	DebuggerSearchMemoryPhysical            DebuggerSearchMemoryType = 0
+	DebuggerSearchMemoryVirtual             DebuggerSearchMemoryType = 1
+	DebuggerSearchMemoryPhysicalFromVirtual DebuggerSearchMemoryType = 2
+)
+
+type DebuggerSearchMemoryByteSize uint32
+
+const (
+	DebuggerSearchMemoryByte  DebuggerSearchMemoryByteSize = 0
+	DebuggerSearchMemoryDword DebuggerSearchMemoryByteSize = 1
+	DebuggerSearchMemoryQword DebuggerSearchMemoryByteSize = 2
+)
+
+type DebuggerSearchMemory struct {
+	Result             uint32
+	_                  [4]byte
+	Address            uint64
+	ProcessId          uint32
+	MemoryType         DebuggerSearchMemoryType
+	ByteSize           DebuggerSearchMemoryByteSize
+	CountOf64Chunks    uint32
+	FinalStructureSize uint32
+}
+
+type DebuggerPageInRequest struct {
+	VirtualAddressFrom uint64
+	VirtualAddressTo   uint64
+	ProcessId          uint32
+	PageFaultErrorCode uint32
+	KernelStatus       uint32
+	_                  [4]byte
+}
+
+type DebuggerPreallocCommandType uint32
+
+const (
+	DebuggerPreallocCommandTypeThreadInterception DebuggerPreallocCommandType = 0
+	DebuggerPreallocCommandTypeMonitor            DebuggerPreallocCommandType = 1
+	DebuggerPreallocCommandTypeEPTHook            DebuggerPreallocCommandType = 2
+	DebuggerPreallocCommandTypeEPTHook2           DebuggerPreallocCommandType = 3
+	DebuggerPreallocCommandTypeRegularEvent       DebuggerPreallocCommandType = 4
+	DebuggerPreallocCommandTypeBigEvent           DebuggerPreallocCommandType = 5
+	DebuggerPreallocCommandTypeRegularSafeBuffer  DebuggerPreallocCommandType = 6
+	DebuggerPreallocCommandTypeBigSafeBuffer      DebuggerPreallocCommandType = 7
+)
+
+type DebuggerPreallocCommand struct {
+	Type         DebuggerPreallocCommandType
+	Count        uint32
+	KernelStatus uint32
+}
+
+type DebuggerHideDebuggerRequest struct {
+	IsHide       bool
+	IsEnabled    bool
+	_            [6]byte
+	KernelStatus uint32
+	_            [4]byte
+}
+
+type DebuggerPteRequest struct {
+	VirtualAddress uint64
+	ProcessId      uint32
+	_              [4]byte
+}
+
+type DebuggerVa2paRequest struct {
+	VirtualAddress     uint64
+	ProcessId          uint32
+	IsVirtual2Physical bool
+	_                  [3]byte
+}
+
+type DebuggerPa2vaRequest struct {
+	PhysicalAddress    uint64
+	ProcessId          uint32
+	IsVirtual2Physical bool
+	_                  [3]byte
+}
+
+type DebuggerReconstructMemoryRequest struct {
+	ProcessId    uint32
+	Size         uint32
+	Mode         ReconstructMode
+	Type         ReconstructType
+	KernelStatus uint32
+}
+
+type DebuggerEventRegisterRequest struct {
+	EventType      uint32
+	Tag            uint64
+	ProcessId      uint32
+	CoreId         uint32
+	IsEnabled      bool
+	EventStage     uint32
+	OptionalParam1 uint64
+	OptionalParam2 uint64
+	OptionalParam3 uint64
+	OptionalParam4 uint64
+}
+
+type DebuggerEpthookRequest struct {
+	Address   uint64
+	Size      uint32
+	HookType  EPTHookType
+	ProcessId uint32
+}
+
+type DebuggerMonitorRequest struct {
+	Address     uint64
+	Size        uint32
+	MonitorType MonitorType
+	ProcessId   uint32
+}
+
+type DebuggerSyscallHookRequest struct {
+	SyscallNumber uint32
+	HookType      uint32
+}
+
+type DebuggerExceptionHookRequest struct {
+	ExceptionType uint32
+}
+
+type DebuggerInterruptHookRequest struct {
+	Vector uint32
+}
+
+type DebuggerIoHookRequest struct {
+	Port     uint16
+	_        [2]byte
+	HookType uint32
+}
+
+type DebuggerApicRequest struct {
+	ApicID uint32
+}
+
+type DebuggerPciCamRequest struct {
+	Bus      uint32
+	Device   uint32
+	Function uint32
+}
+
+type DebuggerPmcRequest struct {
+	PmcNumber uint32
+}
+
+type DebuggerTrackMemoryRequest struct {
+	Address uint64
+	Size    uint32
+}
+
+type DebuggerMeasureRequest struct {
+	Address uint64
+}
+
+type DebuggerInstructionTraceRequest struct {
+	Address uint64
+}
+
+type DebuggerSwitchThreadRequest struct {
+	ThreadId  uint32
+	ProcessId uint32
+	Action    uint32
+}
+
+type DebuggerQueryProcessThreadRequest struct {
+	QueryType   uint32
+	QueryAction uint32
+	ProcessId   uint32
+	ThreadId    uint32
+	Count       uint32
+}
+
 type DebuggerReadMemory struct {
 	Pid            uint32
 	Address        uint64
@@ -439,6 +659,22 @@ type DebuggeeBpPacket struct {
 	CheckForCallbacks uint8
 	_                 [2]byte
 	Result            uint32
+	_                 [4]byte
+}
+
+type DebuggeeBreakpointModificationRequest uint32
+
+const (
+	DebuggeeBreakpointModificationRequestListBreakpoints DebuggeeBreakpointModificationRequest = 0
+	DebuggeeBreakpointModificationRequestEnable          DebuggeeBreakpointModificationRequest = 1
+	DebuggeeBreakpointModificationRequestDisable         DebuggeeBreakpointModificationRequest = 2
+	DebuggeeBreakpointModificationRequestClear           DebuggeeBreakpointModificationRequest = 3
+)
+
+type DebuggeeBpListOrModifyPacket struct {
+	BreakpointId uint64
+	Request      DebuggeeBreakpointModificationRequest
+	Result       uint32
 }
 
 type CoreInfo struct {
@@ -696,6 +932,8 @@ const (
 	DebuggerUdCommandActionTypeRegularStep         DebuggerUdCommandActionType = 2
 	DebuggerUdCommandActionTypeReadRegisters       DebuggerUdCommandActionType = 3
 	DebuggerUdCommandActionTypeExecuteScriptBuffer DebuggerUdCommandActionType = 4
+	DebuggerUdCommandActionTypeWriteRegisters      DebuggerUdCommandActionType = 5
+	DebuggerUdCommandActionTypeCallstack           DebuggerUdCommandActionType = 6
 )
 
 type DebuggerUdCommandAction struct {
@@ -763,7 +1001,19 @@ func (s *DebuggeeBpPacket) ExpectedSize() uintptr {
 }
 
 func (s *DebuggeeBpPacket) ExpectedSerSize() uintptr {
-	return 28
+	return 32
+}
+
+func (s *DebuggeeBpListOrModifyPacket) Validate() error {
+	return nil
+}
+
+func (s *DebuggeeBpListOrModifyPacket) ExpectedSize() uintptr {
+	return 16
+}
+
+func (s *DebuggeeBpListOrModifyPacket) ExpectedSerSize() uintptr {
+	return 16
 }
 
 func (s *DebuggerUdCommandPacket) Validate() error {
@@ -1022,4 +1272,651 @@ func (s *UserModeProcessDetails) ExpectedSize() uintptr {
 
 func (s *UserModeProcessDetails) ExpectedSerSize() uintptr {
 	return 48
+}
+
+func (s *DebuggerReadOrWriteMsr) Validate() error {
+	return nil
+}
+
+func (s *DebuggerReadOrWriteMsr) ExpectedSize() uintptr {
+	return 32
+}
+
+func (s *DebuggerReadOrWriteMsr) ExpectedSerSize() uintptr {
+	return 32
+}
+
+func (s *DebuggerEditMemory) Validate() error {
+	if s.Address == 0 {
+		return errors.New("Address cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerEditMemory) ExpectedSize() uintptr {
+	return 40
+}
+
+func (s *DebuggerEditMemory) ExpectedSerSize() uintptr {
+	return 40
+}
+
+func (s *DebuggerSearchMemory) Validate() error {
+	if s.Address == 0 {
+		return errors.New("Address cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerSearchMemory) ExpectedSize() uintptr {
+	return 40
+}
+
+func (s *DebuggerSearchMemory) ExpectedSerSize() uintptr {
+	return 40
+}
+
+func (s *DebuggerPageInRequest) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerPageInRequest) ExpectedSize() uintptr {
+	return 32
+}
+
+func (s *DebuggerPageInRequest) ExpectedSerSize() uintptr {
+	return 32
+}
+
+func (s *DebuggerPreallocCommand) Validate() error {
+	return nil
+}
+
+func (s *DebuggerPreallocCommand) ExpectedSize() uintptr {
+	return 12
+}
+
+func (s *DebuggerPreallocCommand) ExpectedSerSize() uintptr {
+	return 12
+}
+
+func (s *DebuggerHideDebuggerRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerHideDebuggerRequest) ExpectedSize() uintptr {
+	return 16
+}
+
+func (s *DebuggerHideDebuggerRequest) ExpectedSerSize() uintptr {
+	return 16
+}
+
+func (s *DebuggerPteRequest) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerPteRequest) ExpectedSize() uintptr {
+	return 16
+}
+
+func (s *DebuggerPteRequest) ExpectedSerSize() uintptr {
+	return 16
+}
+
+func (s *DebuggerVa2paRequest) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerVa2paRequest) ExpectedSize() uintptr {
+	return 16
+}
+
+func (s *DebuggerVa2paRequest) ExpectedSerSize() uintptr {
+	return 16
+}
+
+func (s *DebuggerPa2vaRequest) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerPa2vaRequest) ExpectedSize() uintptr {
+	return 16
+}
+
+func (s *DebuggerPa2vaRequest) ExpectedSerSize() uintptr {
+	return 16
+}
+
+func (s *DebuggerReconstructMemoryRequest) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerReconstructMemoryRequest) ExpectedSize() uintptr {
+	return 20
+}
+
+func (s *DebuggerReconstructMemoryRequest) ExpectedSerSize() uintptr {
+	return 20
+}
+
+func (s *DebuggerEventRegisterRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerEventRegisterRequest) ExpectedSize() uintptr {
+	return 56
+}
+
+func (s *DebuggerEventRegisterRequest) ExpectedSerSize() uintptr {
+	return 56
+}
+
+func (s *DebuggerEpthookRequest) Validate() error {
+	if s.Address == 0 {
+		return errors.New("Address cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerEpthookRequest) ExpectedSize() uintptr {
+	return 24
+}
+
+func (s *DebuggerEpthookRequest) ExpectedSerSize() uintptr {
+	return 24
+}
+
+func (s *DebuggerMonitorRequest) Validate() error {
+	if s.Address == 0 {
+		return errors.New("Address cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerMonitorRequest) ExpectedSize() uintptr {
+	return 24
+}
+
+func (s *DebuggerMonitorRequest) ExpectedSerSize() uintptr {
+	return 24
+}
+
+func (s *DebuggerSyscallHookRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerSyscallHookRequest) ExpectedSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerSyscallHookRequest) ExpectedSerSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerExceptionHookRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerExceptionHookRequest) ExpectedSize() uintptr {
+	return 4
+}
+
+func (s *DebuggerExceptionHookRequest) ExpectedSerSize() uintptr {
+	return 4
+}
+
+func (s *DebuggerInterruptHookRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerInterruptHookRequest) ExpectedSize() uintptr {
+	return 4
+}
+
+func (s *DebuggerInterruptHookRequest) ExpectedSerSize() uintptr {
+	return 4
+}
+
+func (s *DebuggerIoHookRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerIoHookRequest) ExpectedSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerIoHookRequest) ExpectedSerSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerApicRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerApicRequest) ExpectedSize() uintptr {
+	return 4
+}
+
+func (s *DebuggerApicRequest) ExpectedSerSize() uintptr {
+	return 4
+}
+
+func (s *DebuggerPciCamRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerPciCamRequest) ExpectedSize() uintptr {
+	return 12
+}
+
+func (s *DebuggerPciCamRequest) ExpectedSerSize() uintptr {
+	return 12
+}
+
+func (s *DebuggerPmcRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerPmcRequest) ExpectedSize() uintptr {
+	return 4
+}
+
+func (s *DebuggerPmcRequest) ExpectedSerSize() uintptr {
+	return 4
+}
+
+func (s *DebuggerTrackMemoryRequest) Validate() error {
+	if s.Address == 0 {
+		return errors.New("Address cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerTrackMemoryRequest) ExpectedSize() uintptr {
+	return 12
+}
+
+func (s *DebuggerTrackMemoryRequest) ExpectedSerSize() uintptr {
+	return 12
+}
+
+func (s *DebuggerMeasureRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerMeasureRequest) ExpectedSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerMeasureRequest) ExpectedSerSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerInstructionTraceRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerInstructionTraceRequest) ExpectedSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerInstructionTraceRequest) ExpectedSerSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerSwitchThreadRequest) Validate() error {
+	if s.ThreadId == 0 {
+		return errors.New("ThreadId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerSwitchThreadRequest) ExpectedSize() uintptr {
+	return 12
+}
+
+func (s *DebuggerSwitchThreadRequest) ExpectedSerSize() uintptr {
+	return 12
+}
+
+func (s *DebuggerQueryProcessThreadRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerQueryProcessThreadRequest) ExpectedSize() uintptr {
+	return 20
+}
+
+func (s *DebuggerQueryProcessThreadRequest) ExpectedSerSize() uintptr {
+	return 20
+}
+
+type DebuggerSearchMemoryPatternRequest struct {
+	ProcessId   uint32
+	PatternSize uint32
+	Mode        ReconstructMode
+	_           [4]byte
+}
+
+func (s *DebuggerSearchMemoryPatternRequest) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	if s.PatternSize == 0 {
+		return errors.New("PatternSize cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerSearchMemoryPatternRequest) ExpectedSize() uintptr {
+	return 16
+}
+
+func (s *DebuggerSearchMemoryPatternRequest) ExpectedSerSize() uintptr {
+	return 16
+}
+
+type DebuggerQueryProcessRequest struct {
+	ProcessId uint32
+	_         [4]byte
+}
+
+func (s *DebuggerQueryProcessRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerQueryProcessRequest) ExpectedSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerQueryProcessRequest) ExpectedSerSize() uintptr {
+	return 8
+}
+
+type DebuggerQueryThreadRequest struct {
+	ThreadId uint32
+	_        [4]byte
+}
+
+func (s *DebuggerQueryThreadRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerQueryThreadRequest) ExpectedSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerQueryThreadRequest) ExpectedSerSize() uintptr {
+	return 8
+}
+
+type DebuggerQueryThreadsRequest struct {
+	ProcessId uint32
+	_         [4]byte
+}
+
+func (s *DebuggerQueryThreadsRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerQueryThreadsRequest) ExpectedSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerQueryThreadsRequest) ExpectedSerSize() uintptr {
+	return 8
+}
+
+type DebuggerSmiRequest struct {
+	Operation SMIType
+}
+
+func (s *DebuggerSmiRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerSmiRequest) ExpectedSize() uintptr {
+	return 4
+}
+
+func (s *DebuggerSmiRequest) ExpectedSerSize() uintptr {
+	return 4
+}
+
+type DebuggerHideRequest struct {
+	IsHide bool
+}
+
+func (s *DebuggerHideRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerHideRequest) ExpectedSize() uintptr {
+	return 1
+}
+
+func (s *DebuggerHideRequest) ExpectedSerSize() uintptr {
+	return 1
+}
+
+type DebuggerBringPagesInRequest struct {
+	FromAddress uint64
+	ToAddress   uint64
+	ProcessId   uint32
+	_           [4]byte
+}
+
+func (s *DebuggerBringPagesInRequest) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerBringPagesInRequest) ExpectedSize() uintptr {
+	return 24
+}
+
+func (s *DebuggerBringPagesInRequest) ExpectedSerSize() uintptr {
+	return 24
+}
+
+type DebuggerEditMemoryRequest struct {
+	ProcessId      uint32
+	_              [4]byte
+	Address        uint64
+	ByteCount      uint32
+	MemoryType     MemoryType
+	IsDebuggee     bool
+	IsPhysical     bool
+	Is32BitProcess bool
+	_              [1]byte
+}
+
+func (s *DebuggerEditMemoryRequest) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	if s.Address == 0 {
+		return errors.New("Address cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerEditMemoryRequest) ExpectedSize() uintptr {
+	return 32
+}
+
+func (s *DebuggerEditMemoryRequest) ExpectedSerSize() uintptr {
+	return 32
+}
+
+type DebuggerReadMemoryRequest struct {
+	ProcessId      uint32
+	_              [4]byte
+	Address        uint64
+	ByteCount      uint32
+	MemoryType     MemoryType
+	IsDebuggee     bool
+	IsPhysical     bool
+	Is32BitProcess bool
+	_              [1]byte
+}
+
+func (s *DebuggerReadMemoryRequest) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	if s.Address == 0 {
+		return errors.New("Address cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerReadMemoryRequest) ExpectedSize() uintptr {
+	return 32
+}
+
+func (s *DebuggerReadMemoryRequest) ExpectedSerSize() uintptr {
+	return 32
+}
+
+type DebuggerSearchMemoryRequest struct {
+	ProcessId   uint32
+	_           [4]byte
+	Address     uint64
+	Size        uint32
+	PatternSize uint32
+}
+
+func (s *DebuggerSearchMemoryRequest) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	if s.PatternSize == 0 {
+		return errors.New("PatternSize cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerSearchMemoryRequest) ExpectedSize() uintptr {
+	return 24
+}
+
+func (s *DebuggerSearchMemoryRequest) ExpectedSerSize() uintptr {
+	return 24
+}
+
+type DebuggerSwitchProcessRequest struct {
+	ProcessId uint32
+	_         [4]byte
+}
+
+func (s *DebuggerSwitchProcessRequest) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerSwitchProcessRequest) ExpectedSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerSwitchProcessRequest) ExpectedSerSize() uintptr {
+	return 8
+}
+
+type DebuggerAttachDetachUserModeProcessRequest struct {
+	ProcessId uint32
+	Action    DebuggerAttachDetachUserModeProcessActionType
+	_         [4]byte
+}
+
+func (s *DebuggerAttachDetachUserModeProcessRequest) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerAttachDetachUserModeProcessRequest) ExpectedSize() uintptr {
+	return 12
+}
+
+func (s *DebuggerAttachDetachUserModeProcessRequest) ExpectedSerSize() uintptr {
+	return 12
+}
+
+type DebuggerAttachDetachUserModeProcessResponse struct {
+	KernelStatus uint32
+	_            [4]byte
+}
+
+func (s *DebuggerAttachDetachUserModeProcessResponse) Validate() error {
+	return nil
+}
+
+func (s *DebuggerAttachDetachUserModeProcessResponse) ExpectedSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerAttachDetachUserModeProcessResponse) ExpectedSerSize() uintptr {
+	return 8
+}
+
+type DebuggerGetUserModeModuleDetailsRequest struct {
+	ProcessDebuggingDetailToken uint64
+	_                           [8]byte
+}
+
+func (s *DebuggerGetUserModeModuleDetailsRequest) Validate() error {
+	if s.ProcessDebuggingDetailToken == 0 {
+		return errors.New("ProcessDebuggingDetailToken cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerGetUserModeModuleDetailsRequest) ExpectedSize() uintptr {
+	return 16
+}
+
+func (s *DebuggerGetUserModeModuleDetailsRequest) ExpectedSerSize() uintptr {
+	return 16
+}
+
+type DebuggerModuleDetailResponse struct {
+	BaseAddress uint64
+	Size        uint32
+	Is32Bit     uint8
+	_           [3]byte
+}
+
+func (s *DebuggerModuleDetailResponse) Validate() error {
+	return nil
+}
+
+func (s *DebuggerModuleDetailResponse) ExpectedSize() uintptr {
+	return 16
+}
+
+func (s *DebuggerModuleDetailResponse) ExpectedSerSize() uintptr {
+	return 16
+
 }
