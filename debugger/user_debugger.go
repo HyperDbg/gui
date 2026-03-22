@@ -1915,8 +1915,12 @@ func (s *UserDebug) ReadMemory(address uint64, size uint32) []byte {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	s.packeter.DriverProvider.Send(buf, IoctlDebuggerReadMemory)
-	response := s.packeter.DriverProvider.Receive(IoctlDebuggerReadMemory)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlDebuggerReadMemory)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return nil
+	}
 
 	status := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	if status != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
@@ -1973,8 +1977,12 @@ func (s *UserDebug) WriteMemory(address uint64, data []byte) {
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
 	binary.Write(buf, binary.LittleEndian, data)
-	s.packeter.DriverProvider.Send(buf, IoctlDebuggerEditMemory)
-	response := s.packeter.DriverProvider.Receive(IoctlDebuggerEditMemory)
+
+	response := s.packeter.DriverProvider.SendReceive(buf, IoctlDebuggerEditMemory)
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
 
 	status := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	if status != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {

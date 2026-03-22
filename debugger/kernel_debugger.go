@@ -893,8 +893,7 @@ func (s *KernelDebug) PreallocatePools(poolType PoolType, count uint32) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	s.packet.driver.Send(buf, IoctlReservePreAllocatedPools)
-	s.packet.driver.Receive(IoctlReservePreAllocatedPools)
+	s.packet.driver.SendReceive(buf, IoctlReservePreAllocatedPools)
 }
 
 // 来自接口: KernelDebugger 第7个签名
@@ -914,8 +913,11 @@ func (s *KernelDebug) RunTests(testType string) TestResults {
 	buf := new(bytes.Buffer)
 	buf.WriteString(testType)
 
-	s.packet.driver.Send(buf, IoctlPerformKernelSideTests)
-	response := s.packet.driver.Receive(IoctlPerformKernelSideTests)
+	response := s.packet.driver.SendReceive(buf, IoctlPerformKernelSideTests)
+	if response.Len() < 12 {
+		mylog.Warning("内核返回响应长度不足")
+		return TestResults{}
+	}
 
 	totalTests := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	passedTests := binary.LittleEndian.Uint32(response.Bytes()[4:8])
@@ -1022,8 +1024,7 @@ func (s *KernelDebug) ChangeCore(coreNumber uint32) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	s.packet.driver.Send(buf, IoctlPerformActionsOnApic)
-	s.packet.driver.Receive(IoctlPerformActionsOnApic)
+	s.packet.driver.SendReceive(buf, IoctlPerformActionsOnApic)
 }
 
 // 来自接口: Eventer 第1个签名

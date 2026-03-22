@@ -119,9 +119,10 @@ func (h *DebugEventHandler) RegisterDebugEvent(event *DebugEvent) (uint64, error
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
-
-	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	response := h.driver.SendReceive(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
+	if response.Len() < 8 {
+		return 0, fmt.Errorf("invalid response length")
+	}
 	tag := binary.LittleEndian.Uint64(response.Bytes()[0:8])
 	return tag, nil
 }
@@ -152,9 +153,7 @@ func (h *DebugEventHandler) HandleEptHook(event *DebugEvent) error {
 
 	buffer := h.constructDebugEventBuffer(event)
 
-	h.driver.Send(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
-
-	response := h.driver.Receive(IoctlDebuggerRegisterEvent)
+	response := h.driver.SendReceive(bytes.NewBuffer(buffer), IoctlDebuggerRegisterEvent)
 	h.decodeEptHookResponse(response.Bytes())
 	return nil
 }
