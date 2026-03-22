@@ -1024,6 +1024,12 @@ func (p *Packet) ProcessDetails(pid uint32) []ProcessDetails {
 		ProcessId:  pid,
 	}
 
+	// 注意: 不能使用 binary.Write 序列化此结构体
+	// binary.Write 存在 bug，无法正确序列化嵌套结构体 DebuggeeProcessListNeededDetails
+	// 导致只写入 57 字节而不是预期的 72 字节
+	// 内核驱动检查 InputBufferLength >= SIZEOF_DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_PACKET (72字节)
+	// 如果缓冲区太小会返回 STATUS_INVALID_PARAMETER 错误
+	// 因此必须手动序列化确保发送完整的 72 字节缓冲区
 	buf := make([]byte, 72)
 	binary.LittleEndian.PutUint32(buf[0:], req.ActionType)
 	binary.LittleEndian.PutUint32(buf[4:], req.ProcessId)
