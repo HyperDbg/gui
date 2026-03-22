@@ -892,6 +892,9 @@ func (s *UserDebug) StartProcess(path string) {
 	mylog.Info("恢复进程执行")
 	windows.ResumeThread(windows.Handle(procInfo.ThreadHandle))
 
+	// ⚠️ BSOD 问题：如果 REMOVE_HOOKS 返回成功但 Rip=0，继续等待可能导致 BSOD
+	// 原因：驱动卸载后回调未清理导致的间接崩溃
+	// 解决方案：如果 Rip=0，应该直接返回失败而不是继续等待
 	mylog.Info("等待进程到达入口点")
 	for i := range 30 {
 		removeHooksReq := DebuggerAttachDetachUserModeProcess{
