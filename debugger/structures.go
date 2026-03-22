@@ -1,6 +1,9 @@
 package debugger
 
-import "errors"
+import (
+	"encoding/binary"
+	"errors"
+)
 
 type Validator interface {
 	Validate() error
@@ -994,6 +997,43 @@ func (s *DebuggerAttachDetachUserModeProcess) ExpectedSize() uintptr {
 
 func (s *DebuggerAttachDetachUserModeProcess) ExpectedSerSize() uintptr {
 	return 72
+}
+
+func (s *DebuggerAttachDetachUserModeProcess) Serialize() []byte {
+	buf := make([]byte, 72)
+	buf[0] = s.IsStartingNewProcess
+	binary.LittleEndian.PutUint32(buf[4:], s.ProcessId)
+	binary.LittleEndian.PutUint32(buf[8:], s.ThreadId)
+	buf[12] = s.CheckCallbackAtFirstInstruction
+	buf[13] = s.Is32Bit
+	binary.LittleEndian.PutUint64(buf[16:], s.Rip)
+	copy(buf[24:], s.InstructionBytesOnRip[:])
+	binary.LittleEndian.PutUint32(buf[40:], s.SizeOfInstruction)
+	buf[44] = s.IsPaused
+	binary.LittleEndian.PutUint32(buf[48:], uint32(s.Action))
+	binary.LittleEndian.PutUint32(buf[52:], s.CountOfActiveDebuggingThreadsAndProcesses)
+	binary.LittleEndian.PutUint64(buf[56:], s.Token)
+	binary.LittleEndian.PutUint64(buf[64:], s.Result)
+	return buf
+}
+
+func (s *DebuggerAttachDetachUserModeProcess) Deserialize(data []byte) {
+	if len(data) < 72 {
+		return
+	}
+	s.IsStartingNewProcess = data[0]
+	s.ProcessId = binary.LittleEndian.Uint32(data[4:])
+	s.ThreadId = binary.LittleEndian.Uint32(data[8:])
+	s.CheckCallbackAtFirstInstruction = data[12]
+	s.Is32Bit = data[13]
+	s.Rip = binary.LittleEndian.Uint64(data[16:])
+	copy(s.InstructionBytesOnRip[:], data[24:40])
+	s.SizeOfInstruction = binary.LittleEndian.Uint32(data[40:])
+	s.IsPaused = data[44]
+	s.Action = DebuggerAttachDetachUserModeProcessActionType(binary.LittleEndian.Uint32(data[48:]))
+	s.CountOfActiveDebuggingThreadsAndProcesses = binary.LittleEndian.Uint32(data[52:])
+	s.Token = binary.LittleEndian.Uint64(data[56:])
+	s.Result = binary.LittleEndian.Uint64(data[64:])
 }
 
 func (s *DebuggeeBpPacket) Validate() error {
