@@ -63,7 +63,7 @@ func TestParseHex(t *testing.T) {
 }
 
 func TestParseHexStress(t *testing.T) {
-	for i := 0; i < 10000; i++ {
+	for i := range 10000 {
 		input := fmt.Sprintf("0x%X", uint64(i))
 		result := parseHex(input)
 		if result != uint64(i) {
@@ -112,7 +112,7 @@ func TestParseCallSiteStress(t *testing.T) {
 	modules := []string{"nt", "hyperkd", "ntdll", "kernel32", "kernelbase"}
 	functions := []string{"FuncA", "FuncB", "SomeLongFunctionName", "AnotherFunction"}
 
-	for i := 0; i < 5000; i++ {
+	for i := range 5000 {
 		mod := modules[i%len(modules)]
 		fn := functions[i%len(functions)]
 		offset := fmt.Sprintf("+0x%X", i%256)
@@ -151,7 +151,7 @@ func TestParseExceptionInfoStress(t *testing.T) {
 
 	codes := []string{"80000003", "c0000005", "c000001d", "c0000094", "c0000409"}
 
-	for i := 0; i < 1000; i++ {
+	for i := range 1000 {
 		code := codes[i%len(codes)]
 		addr := fmt.Sprintf("fffff800%08x", i)
 
@@ -191,7 +191,7 @@ func TestParseAnalyzeOutput(t *testing.T) {
 func TestParseAnalyzeOutputStress(t *testing.T) {
 	a := &Analyzer{DriverName: "hyperkd"}
 
-	for i := 0; i < 1000; i++ {
+	for i := range 1000 {
 		process := fmt.Sprintf("Process%d", i)
 		image := fmt.Sprintf("driver%d.sys", i%10)
 		bucket := fmt.Sprintf("BUCKET_%d", i%5)
@@ -267,7 +267,7 @@ func TestAnalyzeCrashReasonStress(t *testing.T) {
 
 	codes := []string{"80000003", "c0000005", "c000001d", "c0000094", "c0000409", "c0000374"}
 
-	for i := 0; i < 5000; i++ {
+	for i := range 5000 {
 		code := codes[i%len(codes)]
 		unloadedCount := i % 5
 
@@ -276,7 +276,7 @@ func TestAnalyzeCrashReasonStress(t *testing.T) {
 			UnloadedModules: make([]UnloadedModule, unloadedCount),
 		}
 
-		for j := 0; j < unloadedCount; j++ {
+		for j := range unloadedCount {
 			result.UnloadedModules[j] = UnloadedModule{
 				BaseAddress: fmt.Sprintf("%x", 0x1000+j*0x1000),
 				EndAddress:  fmt.Sprintf("%x", 0x2000+j*0x1000),
@@ -330,7 +330,7 @@ func TestCheckDriverCrash(t *testing.T) {
 func TestCheckDriverCrashStress(t *testing.T) {
 	a := &Analyzer{DriverName: "hyperkd"}
 
-	for i := 0; i < 10000; i++ {
+	for i := range 10000 {
 		base := uint64(0x10000000 + i*0x10000)
 		end := base + 0x10000
 
@@ -401,7 +401,7 @@ func TestBuildReportStress(t *testing.T) {
 		DriverSys:  "C:\\path\\to\\hyperkd.sys",
 	}
 
-	for i := 0; i < 1000; i++ {
+	for i := range 1000 {
 		result := &AnalysisResult{
 			DumpFile:         fmt.Sprintf("C:\\Windows\\Minidump\\test%d.dmp", i),
 			DriverName:       "hyperkd",
@@ -414,7 +414,7 @@ func TestBuildReportStress(t *testing.T) {
 			CallStack:        make([]StackFrame, 10),
 		}
 
-		for j := 0; j < 10; j++ {
+		for j := range 10 {
 			result.CallStack[j] = StackFrame{
 				Index:      j,
 				RetAddr:    fmt.Sprintf("fffff800%08x", i*100+j),
@@ -465,12 +465,12 @@ func TestParseCallStackStress(t *testing.T) {
 	a := &Analyzer{DriverName: "hyperkd"}
 	tick := "`"
 
-	for i := 0; i < 500; i++ {
+	for i := range 500 {
 		var sb strings.Builder
 		sb.WriteString("# Child-SP          RetAddr           Call Site\n")
 
 		frameCount := 10 + i%20
-		for j := 0; j < frameCount; j++ {
+		for j := range frameCount {
 			addr := fmt.Sprintf("fffff800%08x", i*1000+j)
 			if j%3 == 0 {
 				sb.WriteString(fmt.Sprintf("#%02x ffffc781"+tick+"12345678 %s hyperkd!Func%d+0x%x\n", j, addr, j, j*4))
@@ -512,12 +512,12 @@ func TestParseUnloadedModules(t *testing.T) {
 func TestParseUnloadedModulesStress(t *testing.T) {
 	a := &Analyzer{DriverName: "hyperkd"}
 
-	for i := 0; i < 1000; i++ {
+	for i := range 1000 {
 		var sb strings.Builder
 		sb.WriteString("Unloaded modules:\n")
 
 		moduleCount := i % 10
-		for j := 0; j < moduleCount; j++ {
+		for j := range moduleCount {
 			base := uint64(0xfffff80012340000) + uint64(j)*0x10000
 			end := base + 0x10000
 			if j%2 == 0 {
@@ -586,7 +586,7 @@ func TestRunKdCommandStress(t *testing.T) {
 		MaxOutputSize:  1024,
 	}
 
-	for i := 0; i < 100; i++ {
+	for i := range 100 {
 		ctx := context.Background()
 		output := a.runKdCommand(ctx, fmt.Sprintf("stress test %d", i), "NUL", []string{"/c", "echo", fmt.Sprintf("test_%d", i)})
 
@@ -658,7 +658,7 @@ func TestRegexCompilation(t *testing.T) {
 
 func TestRegexCompilationStress(t *testing.T) {
 	tick := "`"
-	for i := 0; i < 10000; i++ {
+	for i := range 10000 {
 		pattern := `ExceptionAddress:\s*([0-9a-fA-F` + tick + `]+)`
 		re := regexp.MustCompile(pattern)
 		if re == nil {
@@ -686,7 +686,7 @@ func TestConcurrentAnalysis(t *testing.T) {
 
 	done := make(chan bool, 10)
 
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		go func(id int) {
 			result := &AnalysisResult{
 				DumpFile:      fmt.Sprintf("test%d.dmp", id),
@@ -705,7 +705,7 @@ func TestConcurrentAnalysis(t *testing.T) {
 		}(i)
 	}
 
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		<-done
 	}
 }
@@ -724,7 +724,7 @@ func TestMemoryUsage(t *testing.T) {
 
 	var results []*AnalysisResult
 
-	for i := 0; i < 1000; i++ {
+	for i := range 1000 {
 		result := &AnalysisResult{
 			DumpFile:         fmt.Sprintf("test%d.dmp", i),
 			DriverName:       a.DriverName,
@@ -733,7 +733,7 @@ func TestMemoryUsage(t *testing.T) {
 			CallStack:        make([]StackFrame, 100),
 		}
 
-		for j := 0; j < 100; j++ {
+		for j := range 100 {
 			result.CallStack[j] = StackFrame{
 				Index:      j,
 				RetAddr:    fmt.Sprintf("%x", 0x1000+j),
@@ -883,7 +883,7 @@ func BenchmarkBuildReport(b *testing.B) {
 		CallStack:     make([]StackFrame, 50),
 	}
 
-	for i := 0; i < 50; i++ {
+	for i := range 50 {
 		result.CallStack[i] = StackFrame{
 			Index:      i,
 			RetAddr:    fmt.Sprintf("%x", 0x1000+i),
@@ -917,7 +917,7 @@ func BenchmarkParseCallStack(b *testing.B) {
 
 	var sb strings.Builder
 	sb.WriteString("# Child-SP          RetAddr           Call Site\n")
-	for i := 0; i < 50; i++ {
+	for i := range 50 {
 		sb.WriteString(fmt.Sprintf("%02x ffffc781"+tick+"12345678 fffff800"+tick+"%08x mod!Func%d+0x%x\n", i, i, i, i))
 	}
 	sb.WriteString("quit:\n")

@@ -889,7 +889,7 @@ func (s *UserDebug) StartProcess(path string) {
 	windows.ResumeThread(windows.Handle(procInfo.ThreadHandle))
 
 	mylog.Info("等待进程到达入口点")
-	for i := 0; i < 30; i++ {
+	for i := range 30 {
 		attachReq.Action = DebuggerAttachDetachUserModeProcessActionRemoveHooks
 		attachReq.Token = attachResp.Token
 
@@ -2047,7 +2047,7 @@ func (s *UserDebug) Modules() []ModuleInfo {
 	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	modules := make([]ModuleInfo, count)
 
-	for i := uint32(0); i < count; i++ {
+	for i := range count {
 		offset := 4 + uintptr(i)*16
 		if offset+16 > uintptr(response.Len()) {
 			break

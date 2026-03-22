@@ -858,7 +858,7 @@ func (s *KernelDebug) Modules(pid uint32) []ModuleInfo {
 		count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 		modules := make([]ModuleInfo, count)
 
-		for i := uint32(0); i < count; i++ {
+		for i := range count {
 			offset := 4 + uintptr(i)*16
 			if offset+16 > uintptr(response.Len()) {
 				break

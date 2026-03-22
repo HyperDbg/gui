@@ -145,7 +145,7 @@ func (a *Analyzer) Run() {
 	fmt.Print(report)
 
 	outputPath := filepath.Join(a.OutputDir, filepath.Base(targetDump)+".txt")
-	os.WriteFile(outputPath, []byte(report), 0644)
+	os.WriteFile(outputPath, []byte(report), 0o644)
 	fmt.Printf("\n分析结果已保存到: %s\n", outputPath)
 }
 
@@ -361,7 +361,7 @@ func (a *Analyzer) parseCallStack(output string, result *AnalysisResult) {
 		endIdx = len(output) - startIdx
 	}
 
-	for _, line := range strings.Split(output[startIdx:startIdx+endIdx], "\n") {
+	for line := range strings.SplitSeq(output[startIdx:startIdx+endIdx], "\n") {
 		line = strings.TrimSpace(line)
 		if !strings.HasPrefix(line, "#") {
 			continue
