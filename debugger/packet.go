@@ -31,10 +31,10 @@ import (
 	"github.com/ddkwork/HyperDbg/debugger/thread"
 	"github.com/ddkwork/HyperDbg/debugger/trace"
 	"github.com/ddkwork/HyperDbg/debugger/transparency"
-	"github.com/ddkwork/HyperDbg/debugger/type_"
 	"github.com/ddkwork/HyperDbg/debugger/watch"
 	"github.com/ddkwork/HyperDbg/debugger/xref"
 	"github.com/ddkwork/HyperDbg/walker/hardware"
+	"github.com/ddkwork/HyperDbg/walker/type_"
 	"github.com/ddkwork/golibrary/std/mylog"
 )
 
