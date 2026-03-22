@@ -898,7 +898,6 @@ func (s *UserDebug) StartProcess(path string) {
 			ProcessId: procInfo.ProcessId,
 			ThreadId:  procInfo.ThreadId,
 			Action:    DebuggerAttachDetachUserModeProcessActionRemoveHooks,
-			Token:     attachResp.Token,
 		}
 
 		if err := removeHooksReq.Validate(); err != nil {
