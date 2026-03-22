@@ -736,8 +736,8 @@ func (s *UserDebug) KillProcess(pid uint32) {
 //  1. 创建挂起进程 (CreateProcess with CREATE_SUSPENDED)
 //  2. 初始化用户调试器
 //  3. 发送 ATTACH IOCTL 到内核
-//  4. 循环发送 REMOVE_HOOKS IOCTL 等待入口点
-//  5. 恢复进程执行 (ResumeThread)
+//  4. 恢复进程执行 (ResumeThread) ← 关键！必须在REMOVE_HOOKS之前
+//  5. 循环发送 REMOVE_HOOKS IOCTL 等待入口点
 func (s *UserDebug) StartProcess(path string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -829,6 +829,9 @@ func (s *UserDebug) StartProcess(path string) {
 	s.activeProcess.DebuggingToken = attachResp.Token
 	mylog.Info("调试令牌", attachResp.Token)
 
+	mylog.Info("恢复进程执行")
+	windows.ResumeThread(windows.Handle(procInfo.ThreadHandle))
+
 	mylog.Info("等待进程到达入口点")
 	for i := 0; i < 30; i++ {
 		attachReq.Action = DebuggerAttachDetachUserModeProcessActionRemoveHooks
@@ -872,9 +875,6 @@ func (s *UserDebug) StartProcess(path string) {
 		mylog.Warning("REMOVE_HOOKS 失败", ShowErrorMessage(uint32(attachResp.Result)), attachResp.Result)
 		return
 	}
-
-	mylog.Info("恢复进程执行")
-	windows.ResumeThread(windows.Handle(procInfo.ThreadHandle))
 
 	mylog.Success("进程已启动并在入口点暂停")
 	mylog.Info("进程ID", procInfo.ProcessId, "线程ID", procInfo.ThreadId)
