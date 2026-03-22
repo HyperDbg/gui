@@ -259,7 +259,7 @@ func TestAll(t *testing.T) {
 				"Process":               8,
 				"IsSwitchByClkIntr":     16,
 				"ProcessName":           17,
-				"ProcessListSymDetails": 33,
+				"ProcessListSymDetails": 40,
 				"Result":                64,
 			},
 		}
