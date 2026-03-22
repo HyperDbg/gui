@@ -912,7 +912,7 @@ func (s *UserDebug) StartProcess(path string) {
 		response = s.packeter.DriverProvider.SendReceive(bytes.NewBuffer(buf), IoctlDebuggerAttachDetachUserModeProcess)
 		if response.Len() < 72 {
 			mylog.Warning("内核返回数据不完整", "len", response.Len())
-			time.Sleep(2 * time.Second)
+			time.Sleep(5 * time.Second)
 			continue
 		}
 
@@ -925,7 +925,7 @@ func (s *UserDebug) StartProcess(path string) {
 		if attachResp.Result == uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 			if attachResp.Rip == 0 {
 				mylog.Warning("REMOVE_HOOKS 成功但 Rip 为 0，继续等待")
-				time.Sleep(2 * time.Second)
+				time.Sleep(5 * time.Second)
 				continue
 			}
 			mylog.Info("Hook 移除成功，进程已到达入口点")
@@ -936,7 +936,7 @@ func (s *UserDebug) StartProcess(path string) {
 
 		if attachResp.Result == uint64(DEBUGGER_ERROR_UNABLE_TO_REMOVE_HOOKS_ENTRYPOINT_NOT_REACHED) {
 			mylog.Info("等待入口点", i+1, "/30")
-			time.Sleep(2 * time.Second)
+			time.Sleep(5 * time.Second)
 			continue
 		}
 
