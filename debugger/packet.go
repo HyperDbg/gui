@@ -399,7 +399,7 @@ func (p *Packet) IsConnected() bool {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandEpthook -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/epthook.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/epthook.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用EPTHook() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) EPTHook(address uint64, size uint32, hookType EPTHookType) {
@@ -421,7 +421,7 @@ func (p *Packet) EPTHook(address uint64, size uint32, hookType EPTHookType) {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandEpthook2 -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/epthook2.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/epthook2.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用EPTHook2() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) EPTHook2(address uint64, size uint32, hookType EPTHookType) {
@@ -433,7 +433,7 @@ func (p *Packet) EPTHook2(address uint64, size uint32, hookType EPTHookType) {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandSyscall -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/syscall-sysret.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/syscall-sysret.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用HookSyscall() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 // 参数说明: syscallNumber - 系统调用号，0表示hook所有系统调用
@@ -457,7 +457,7 @@ func (p *Packet) HookSyscall(syscallNumber uint32) {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandException -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/exception.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/exception.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用HookException() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) HookException(exceptionType uint32) {
@@ -477,7 +477,7 @@ func (p *Packet) HookException(exceptionType uint32) {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandInterrupt -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/interrupt.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/interrupt.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用HookInterrupt() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) HookInterrupt(vector uint32) {
@@ -497,7 +497,7 @@ func (p *Packet) HookInterrupt(vector uint32) {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandIoin/CommandIoout -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/ioin.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/ioin.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用HookIO() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) HookIO(port uint16, hookType uint32) {
@@ -518,7 +518,7 @@ func (p *Packet) HookIO(port uint16, hookType uint32) {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandIoapic -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/ioapic.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/ioapic.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用HookIOAPIC() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) HookIOAPIC(apicID uint32) {
@@ -569,7 +569,7 @@ func (p *Packet) WriteMsr(msr uint32, value uint64) {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandMeasure -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/measure.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/measure.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用MeasurePerformance() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) MeasurePerformance(address uint64) {
@@ -589,7 +589,7 @@ func (p *Packet) MeasurePerformance(address uint64) {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandMonitor -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/monitor.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/monitor.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用MonitorMemory() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 // 参数说明: monitorType - MonitorTypeRead监控读操作，MonitorTypeWrite监控写操作，
@@ -615,7 +615,7 @@ func (p *Packet) MonitorMemory(address uint64, size uint32, monitorType MonitorT
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandPcicam -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/pcicam.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/pcicam.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用PCICam() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) PCICam(bus, device, function uint32) PCICamInfo {
@@ -648,7 +648,7 @@ func (p *Packet) PCICam(bus, device, function uint32) PCICamInfo {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandPmc -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/pmc.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/pmc.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用PMC() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) PMC(pmcNumber uint32) uint64 {
@@ -671,7 +671,7 @@ func (p *Packet) PMC(pmcNumber uint32) uint64 {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandRev -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/rev.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/rev.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用ReconstructMemory() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) ReconstructMemory(pid uint32, address uint64, size uint32, mode ReconstructMode) []byte {
@@ -697,7 +697,7 @@ func (p *Packet) ReconstructMemory(pid uint32, address uint64, size uint32, mode
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandTrack -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/track.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/track.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用SearchMemoryPattern() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 // 参数说明: pid - 进程ID，pattern - 要搜索的字节模式，mode - ReconstructModeUserMode在用户模式内存中搜索，
@@ -734,7 +734,7 @@ func (p *Packet) SearchMemoryPattern(pid uint32, pattern []byte, mode Reconstruc
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandTrace -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/trace.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/trace.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用InstructionTrace() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 // 参数说明: address - 要跟踪的起始地址
@@ -756,7 +756,7 @@ func (p *Packet) InstructionTrace(address uint64) {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandTrack -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/track.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/track.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用TrackMemory() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) TrackMemory(address uint64, size uint32) {
@@ -777,7 +777,7 @@ func (p *Packet) TrackMemory(address uint64, size uint32) {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandTsc -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/tsc.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/tsc.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用TSC() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) TSC() uint64 {
@@ -797,7 +797,7 @@ func (p *Packet) TSC() uint64 {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandVmcall -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/vmcall.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/vmcall.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用VMCallHandler() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) VMCallHandler() {
@@ -814,7 +814,7 @@ func (p *Packet) VMCallHandler() {
 // IOCTL: 是, IOCTL_DEBUGGER_REGISTER_EVENT (0x806)
 // 通信: 带事件结构的设备I/O
 // 用户命令: CommandXsetbv -> 内核: DebuggerParseEvent
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/xsetbv.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/xsetbv.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用HookXSETBV() → IOCTL_DEBUGGER_REGISTER_EVENT → DebuggerParseEvent
 func (p *Packet) HookXSETBV() {
@@ -831,7 +831,7 @@ func (p *Packet) HookXSETBV() {
 // IOCTL: 是, IOCTL_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS (0x805)
 // 通信: 带虚拟地址的设备I/O
 // 用户命令: CommandPte -> 内核: ExtensionCommandPte
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/pte.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/pte.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用PTE() → IOCTL_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS → ExtensionCommandPte
 func (p *Packet) PTE(virtualAddress uint64, pid uint32) PageTableEntries {
@@ -867,7 +867,7 @@ func (p *Packet) PTE(virtualAddress uint64, pid uint32) PageTableEntries {
 // IOCTL: 是, IOCTL_DEBUGGER_VA2PA_AND_PA2VA_COMMANDS (0x809)
 // 通信: 带虚拟地址的设备I/O
 // 用户命令: CommandVa2pa -> 内核: ExtensionCommandVa2paAndPa2va
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/va2pa.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/va2pa.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用VA2PA() → IOCTL_DEBUGGER_VA2PA_AND_PA2VA_COMMANDS → ExtensionCommandVa2paAndPa2va
 func (p *Packet) VA2PA(virtualAddress uint64, pid uint32) uint64 {
@@ -892,7 +892,7 @@ func (p *Packet) VA2PA(virtualAddress uint64, pid uint32) uint64 {
 // IOCTL: 是, IOCTL_DEBUGGER_VA2PA_AND_PA2VA_COMMANDS (0x809)
 // 通信: 带物理地址的设备I/O
 // 用户命令: CommandPa2va -> 内核: ExtensionCommandVa2paAndPa2va
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/pa2va.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/pa2va.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用PA2VA() → IOCTL_DEBUGGER_VA2PA_AND_PA2VA_COMMANDS → ExtensionCommandVa2paAndPa2va
 func (p *Packet) PA2VA(physicalAddress uint64, pid uint32) uint64 {
@@ -916,7 +916,7 @@ func (p *Packet) PA2VA(physicalAddress uint64, pid uint32) uint64 {
 // IOCTL: 是, IOCTL_QUERY_CURRENT_PROCESS (0x81C)
 // 通信: 带进程ID的设备I/O
 // 用户命令: process命令 -> 内核: ProcessQueryDetails
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/process.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/process.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用ProcessDetails() → IOCTL_QUERY_CURRENT_PROCESS → ProcessQueryDetails
 func (p *Packet) ProcessDetails(pid uint32) []ProcessDetails {
@@ -953,7 +953,7 @@ func (p *Packet) ProcessDetails(pid uint32) []ProcessDetails {
 // IOCTL: 是, IOCTL_QUERY_CURRENT_THREAD (0x81D)
 // 通信: 带线程ID的设备I/O
 // 用户命令: thread命令 -> 内核: ThreadQueryDetails
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/thread.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/thread.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用ThreadDetails() → IOCTL_QUERY_CURRENT_THREAD → ThreadQueryDetails
 func (p *Packet) ThreadDetails(tid uint32) []ThreadDetails {
@@ -990,7 +990,7 @@ func (p *Packet) ThreadDetails(tid uint32) []ThreadDetails {
 // IOCTL: 是, IOCTL_GET_LIST_OF_THREADS_AND_PROCESSES (0x81B)
 // 通信: 带输出缓冲区的设备I/O
 // 用户命令: process命令 -> 内核: ProcessQueryList
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/process.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/process.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用Processes() → IOCTL_GET_LIST_OF_THREADS_AND_PROCESSES → ProcessQueryList
 func (p *Packet) Processes() []ProcessInfo {
@@ -1020,7 +1020,7 @@ func (p *Packet) Processes() []ProcessInfo {
 // IOCTL: 是, IOCTL_GET_LIST_OF_THREADS_AND_PROCESSES (0x81B)
 // 通信: 带进程ID的设备I/O
 // 用户命令: thread命令 -> 内核: ThreadQueryList
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/thread.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/thread.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用Threads() → IOCTL_GET_LIST_OF_THREADS_AND_PROCESSES → ThreadQueryList
 func (p *Packet) Threads(pid uint32) []ThreadInfo {
@@ -1054,7 +1054,7 @@ func (p *Packet) Threads(pid uint32) []ThreadInfo {
 // IOCTL: 是, IOCTL_QUERY_IDT_ENTRY (0x824)
 // 通信: 带输出缓冲区的设备I/O
 // 用户命令: CommandIdt -> 内核: ExtensionCommandPerformQueryIdtEntriesRequest
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/idt.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/idt.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用IDTEntries() → IOCTL_QUERY_IDT_ENTRY → ExtensionCommandPerformQueryIdtEntriesRequest
 func (p *Packet) IDTEntries() []IDTEntry {
@@ -1086,7 +1086,7 @@ func (p *Packet) IDTEntries() []IDTEntry {
 // IOCTL: 是, IOCTL_PERFORM_ACTIONS_ON_APIC (0x822)
 // 通信: 带APIC ID的设备I/O
 // 用户命令: CommandApic -> 内核: ExtensionCommandPerformActionsOnApic
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/apic.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/apic.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用APIC() → IOCTL_PERFORM_ACTIONS_ON_APIC → ExtensionCommandPerformActionsOnApic
 func (p *Packet) APIC(apicID uint32) APICInfo {
@@ -1115,7 +1115,7 @@ func (p *Packet) APIC(apicID uint32) APICInfo {
 // IOCTL: 是, IOCTL_PCIE_ENDPOINT_ENUM (0x823)
 // 通信: 带输出缓冲区的设备I/O
 // 用户命令: CommandPci -> 内核: ExtensionCommandPcieEndpointEnum
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/pci.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/pci.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用PCITree() → IOCTL_PCIE_ENDPOINT_ENUM → ExtensionCommandPcieEndpointEnum
 func (p *Packet) PCITree() []PCIDevice {
@@ -1150,7 +1150,7 @@ func (p *Packet) PCITree() []PCIDevice {
 // IOCTL: 是, IOCTL_PERFORM_SMI_OPERATION (0x825)
 // 通信: 带SMI类型的设备I/O
 // 用户命令: CommandSmi -> 内核: ExtensionCommandPerformSmiOperation
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/smi.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/smi.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用PerformSMIOperation() → IOCTL_PERFORM_SMI_OPERATION → ExtensionCommandPerformSmiOperation
 func (p *Packet) PerformSMIOperation(operation SMIType) {
@@ -1170,7 +1170,7 @@ func (p *Packet) PerformSMIOperation(operation SMIType) {
 // IOCTL: 是, IOCTL_DEBUGGER_HIDE_AND_UNHIDE_TO_TRANSPARENT_THE_DEBUGGER (0x826)
 // 通信: 带隐藏标志的设备I/O
 // 用户命令: CommandHide -> 内核: ExtensionCommandHideAndUnhideToTransparentTheDebugger
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/hide.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/hide.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用HideDebugger() → IOCTL_DEBUGGER_HIDE_AND_UNHIDE_TO_TRANSPARENT_THE_DEBUGGER → ExtensionCommandHideAndUnhideToTransparentTheDebugger
 func (p *Packet) HideDebugger() {
@@ -1191,7 +1191,7 @@ func (p *Packet) HideDebugger() {
 // IOCTL: 是, IOCTL_DEBUGGER_HIDE_AND_UNHIDE_TO_TRANSPARENT_THE_DEBUGGER (0x826)
 // 通信: 带取消隐藏标志的设备I/O
 // 用户命令: CommandUnhide -> 内核: ExtensionCommandHideAndUnhideToTransparentTheDebugger
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/hide.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/hide.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用UnhideDebugger() → IOCTL_DEBUGGER_HIDE_AND_UNHIDE_TO_TRANSPARENT_THE_DEBUGGER → ExtensionCommandHideAndUnhideToTransparentTheDebugger
 func (p *Packet) UnhideDebugger() {
@@ -1212,7 +1212,7 @@ func (p *Packet) UnhideDebugger() {
 // IOCTL: 是, IOCTL_DEBUGGER_BRING_PAGES_IN (0x827)
 // 通信: 带地址范围和进程ID的设备I/O
 // 用户命令: CommandBring -> 内核: ExtensionCommandBringPagesIn
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/bring.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/bring.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用BringPagesIn() → IOCTL_DEBUGGER_BRING_PAGES_IN → ExtensionCommandBringPagesIn
 func (p *Packet) BringPagesIn(fromAddr, toAddr uint64, pid uint32) {
@@ -1233,7 +1233,7 @@ func (p *Packet) BringPagesIn(fromAddr, toAddr uint64, pid uint32) {
 // IOCTL: 是, IOCTL_DEBUGGER_EDIT_MEMORY (0x80A)
 // 通信: 带进程ID、地址和数据的设备I/O
 // 用户命令: CommandDbgWrite -> 内核: DebuggerCommandEditMemory
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/dbgwrite.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/dbgwrite.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用EditMemory() → IOCTL_DEBUGGER_EDIT_MEMORY → DebuggerCommandEditMemory
 func (p *Packet) EditMemory(pid uint32, address uint64, data []byte) {
@@ -1358,7 +1358,7 @@ func (p *Packet) AttachProcess(pid uint32) {
 // IOCTL: 是, IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS (0x808)
 // 通信: 带进程ID的设备I/O
 // 用户命令: CommandDetach -> 内核: DebuggerCommandAttachDetachUserModeProcess
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/detach.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/meta-commands/detach.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用DetachProcess() → IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS → DebuggerCommandAttachDetachUserModeProcess
 func (p *Packet) DetachProcess(pid uint32) {
@@ -1370,7 +1370,7 @@ func (p *Packet) DetachProcess(pid uint32) {
 // IOCTL: 是, IOCTL_DEBUGGER_SWITCH_PROCESS (0x828)
 // 通信: 带进程ID的设备I/O
 // 用户命令: CommandProcess -> 内核: ExtensionCommandSwitchProcess
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/process.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/process.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用ChangeProcess() → IOCTL_DEBUGGER_SWITCH_PROCESS → ExtensionCommandSwitchProcess
 func (p *Packet) ChangeProcess(pid uint32) {
@@ -1392,7 +1392,7 @@ func (p *Packet) ChangeProcess(pid uint32) {
 // IOCTL: 是, IOCTL_DEBUGGER_SWITCH_THREAD (0x829)
 // 通信: 带线程ID的设备I/O
 // 用户命令: CommandThread -> 内核: ExtensionCommandSwitchThread
-// 源代码: hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/thread.cpp
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/extension-commands/thread.cpp
 // 与用户模式/内核模式比较: ✅ 一致，两种模式都支持
 // 执行过程: 调用ChangeThread() → IOCTL_DEBUGGER_SWITCH_THREAD → ExtensionCommandSwitchThread
 func (p *Packet) ChangeThread(tid uint32) {

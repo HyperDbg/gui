@@ -633,3 +633,60 @@ type ThreadInfo struct {
 	Priority     int32
 	State        string
 }
+
+type DebuggerAttachDetachUserModeProcessAction uint32
+
+const (
+	DebuggerAttachDetachUserModeProcessActionAttach      DebuggerAttachDetachUserModeProcessAction = 1
+	DebuggerAttachDetachUserModeProcessActionDetach      DebuggerAttachDetachUserModeProcessAction = 2
+	DebuggerAttachDetachUserModeProcessActionRemoveHooks DebuggerAttachDetachUserModeProcessAction = 3
+	DebuggerAttachDetachUserModeProcessActionQueryCount  DebuggerAttachDetachUserModeProcessAction = 4
+	DebuggerAttachDetachUserModeProcessActionKillProcess DebuggerAttachDetachUserModeProcessAction = 5
+	DebuggerAttachDetachUserModeProcessActionPause       DebuggerAttachDetachUserModeProcessAction = 6
+)
+
+type DebuggerAttachDetachUserModeProcess struct {
+	Action                          DebuggerAttachDetachUserModeProcessAction
+	ProcessId                       uint32
+	ThreadId                        uint32
+	IsStartingNewProcess            bool
+	CheckCallbackAtFirstInstruction bool
+	Result                          uint32
+	Token                           uint64
+}
+
+type DebuggerUdCommandActionType uint32
+
+const (
+	DebuggerUdCommandActionTypeNone                DebuggerUdCommandActionType = 0
+	DebuggerUdCommandActionTypePause               DebuggerUdCommandActionType = 1
+	DebuggerUdCommandActionTypeRegularStep         DebuggerUdCommandActionType = 2
+	DebuggerUdCommandActionTypeReadRegisters       DebuggerUdCommandActionType = 3
+	DebuggerUdCommandActionTypeExecuteScriptBuffer DebuggerUdCommandActionType = 4
+)
+
+type DebuggerUdCommandAction struct {
+	ActionType     DebuggerUdCommandActionType
+	OptionalParam1 uint64
+	OptionalParam2 uint64
+	OptionalParam3 uint64
+	OptionalParam4 uint64
+}
+
+type DebuggerUdCommandPacket struct {
+	UdAction                    DebuggerUdCommandAction
+	ProcessDebuggingDetailToken uint64
+	TargetThreadId              uint32
+	ApplyToAllPausedThreads     bool
+	WaitForEventCompletion      bool
+	Result                      uint32
+}
+
+type DebuggerSetBreakpointUserDebugger struct {
+	ProcessId                   uint32
+	ThreadId                    uint32
+	BreakpointType              uint32
+	Address                     uint64
+	ProcessDebuggingDetailToken uint64
+	Result                      uint32
+}

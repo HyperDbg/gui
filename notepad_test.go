@@ -13,12 +13,13 @@ func TestNotepadDebugging(t *testing.T) {
 	dbg := debugger.NewUserDebug()
 	defer dbg.UnloadDriver()
 
-	// TODO: 以下方法尚未实现，实现后再启用测试
-	// dbg.StartProcess("c:\\windows\\system32\\notepad.exe")
-	// dbg.SetBreakpoint(0x401000)
-	// dbg.StepInto()
-	// dbg.ReadMemory(0x401000, 16)
-	// dbg.WriteMemory(0x401000, []byte{0x90, 0x90})
+	mylog.Call(func() {
+		dbg.StartProcess("c:\\windows\\system32\\notepad.exe")
+		dbg.SetBreakpoint(0x401000)
+		dbg.StepInto()
+		dbg.ReadMemory(0x401000, 16)
+		dbg.WriteMemory(0x401000, []byte{0x90, 0x90})
+	})
 
 	t.Log("驱动加载/卸载测试通过")
 }
