@@ -34,7 +34,7 @@ import (
 	"github.com/ddkwork/HyperDbg/debugger/watch"
 	"github.com/ddkwork/HyperDbg/debugger/xref"
 	"github.com/ddkwork/HyperDbg/walker/hardware"
-	"github.com/ddkwork/HyperDbg/walker/type_"
+	type_ "github.com/ddkwork/HyperDbg/walker/types"
 	"github.com/ddkwork/golibrary/std/mylog"
 )
 
