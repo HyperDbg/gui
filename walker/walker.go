@@ -21,6 +21,7 @@ const (
 type Walker interface {
 	Maiter(event *debugger.DebugEvent, do func())
 	Hook(event *debugger.DebugEvent, do func())
+	//todo 通过 walker\winmd 解析pdb和sym文件，以及堆栈的api参数结构，数据类型，实现部分ida和ghidra功能
 }
 
 type ProcessBehaviorLogger struct {
