@@ -347,13 +347,26 @@ type DebuggeeKdPausedPacket struct {
 	ReadInstructionLen     uint16
 }
 
+type DebuggeeProcessListNeededDetails struct {
+	PsActiveProcessHead      uint64
+	ImageFileNameOffset      uint32
+	UniquePidOffset          uint32
+	ActiveProcessLinksOffset uint32
+}
+
+const (
+	DebuggeeDetailsAndSwitchProcessGetProcessDetails uint32 = iota
+	DebuggeeDetailsAndSwitchProcessGetProcessList
+	DebuggeeDetailsAndSwitchProcessPerformSwitch
+)
+
 type DebuggeeDetailsAndSwitchProcessPacket struct {
 	ActionType            uint32
 	ProcessId             uint32
 	Process               uint64
 	IsSwitchByClkIntr     bool
 	ProcessName           [16]byte
-	ProcessListSymDetails uint64
+	ProcessListSymDetails DebuggeeProcessListNeededDetails
 	Result                uint32
 }
 
@@ -1168,11 +1181,11 @@ func (s *DebuggeeDetailsAndSwitchProcessPacket) Validate() error {
 }
 
 func (s *DebuggeeDetailsAndSwitchProcessPacket) ExpectedSize() uintptr {
-	return 56
+	return 72
 }
 
 func (s *DebuggeeDetailsAndSwitchProcessPacket) ExpectedSerSize() uintptr {
-	return 56
+	return 72
 }
 
 func (s *DebuggeeDetailsAndSwitchThreadPacket) Validate() error {

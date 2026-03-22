@@ -252,15 +252,15 @@ func TestAll(t *testing.T) {
 	t.Run("DebuggeeDetailsAndSwitchProcessPacket", func(t *testing.T) {
 		layout := StructLayout{
 			Name:         "DebuggeeDetailsAndSwitchProcessPacket",
-			ExpectedSize: 56,
+			ExpectedSize: 72,
 			ExpectedFields: map[string]uintptr{
 				"ActionType":            0,
 				"ProcessId":             4,
 				"Process":               8,
 				"IsSwitchByClkIntr":     16,
 				"ProcessName":           17,
-				"ProcessListSymDetails": 40,
-				"Result":                48,
+				"ProcessListSymDetails": 33,
+				"Result":                64,
 			},
 		}
 		verifyStruct[DebuggeeDetailsAndSwitchProcessPacket](t, layout)

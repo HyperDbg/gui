@@ -1019,11 +1019,10 @@ func (p *Packet) ProcessDetails(pid uint32) []ProcessDetails {
 		return nil
 	}
 
-	req := DebuggerQueryProcessRequest{
-		ProcessId: pid,
+	req := DebuggeeDetailsAndSwitchProcessPacket{
+		ActionType: DebuggeeDetailsAndSwitchProcessGetProcessDetails,
+		ProcessId:  pid,
 	}
-
-	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
