@@ -1024,9 +1024,21 @@ func (p *Packet) ProcessDetails(pid uint32) []ProcessDetails {
 		ProcessId:  pid,
 	}
 
-	buf := new(bytes.Buffer)
-	binary.Write(buf, binary.LittleEndian, &req)
-	response := p.driver.SendReceive(buf, IoctlQueryCurrentProcess)
+	buf := make([]byte, 72)
+	binary.LittleEndian.PutUint32(buf[0:], req.ActionType)
+	binary.LittleEndian.PutUint32(buf[4:], req.ProcessId)
+	binary.LittleEndian.PutUint64(buf[8:], req.Process)
+	if req.IsSwitchByClkIntr {
+		buf[16] = 1
+	}
+	copy(buf[17:], req.ProcessName[:])
+	binary.LittleEndian.PutUint64(buf[40:], req.ProcessListSymDetails.PsActiveProcessHead)
+	binary.LittleEndian.PutUint32(buf[48:], req.ProcessListSymDetails.ImageFileNameOffset)
+	binary.LittleEndian.PutUint32(buf[52:], req.ProcessListSymDetails.UniquePidOffset)
+	binary.LittleEndian.PutUint32(buf[56:], req.ProcessListSymDetails.ActiveProcessLinksOffset)
+	binary.LittleEndian.PutUint32(buf[64:], req.Result)
+
+	response := p.driver.SendReceive(bytes.NewBuffer(buf), IoctlQueryCurrentProcess)
 
 	if response.Len() == 0 {
 		mylog.Warning("内核返回空响应")
