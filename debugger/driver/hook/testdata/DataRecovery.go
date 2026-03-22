@@ -3,42 +3,42 @@ package testdata
 import "github.com/ddkwork/golibrary/std/stream"
 
 type (
-	cpu1 struct { // todo merge to hardware pkg add get  and set for hook
-		eax int64
-		ecx int64
-		edx int64
+	Cpu1 struct {
+		Eax int64
+		Ecx int64
+		Edx int64
 	}
-	ssdNumber struct {
-		mod    *stream.Buffer // 40
-		serial *stream.Buffer // 20
+	SsdNumber struct {
+		Mod    *stream.Buffer
+		Serial *stream.Buffer
 	}
-	mac0 struct {
-		addr *stream.Buffer // 8
+	Mac0 struct {
+		Addr *stream.Buffer
 	}
-	hookInfo struct {
-		cpu1      cpu1
-		ssdNumber ssdNumber
-		mac0      mac0
+	HookInfo struct {
+		Cpu1      Cpu1
+		SsdNumber SsdNumber
+		Mac0      Mac0
 	}
 )
 
-func MyNotBookHook() *hookInfo {
-	return &hookInfo{
-		cpu1: cpu1{
-			eax: 0x000306A9,
-			ecx: 0x3DBAE3BF,
-			edx: 0xBFEBFBFF,
+func MyNotBookHook() *HookInfo {
+	return &HookInfo{
+		Cpu1: Cpu1{
+			Eax: 0x000306A9,
+			Ecx: 0x3DBAE3BF,
+			Edx: 0xBFEBFBFF,
 		},
-		ssdNumber: ssdNumber{
-			mod:    stream.NewBuffer("Hitachi HTS545050A7E380"), // tigo SSD
-			serial: stream.NewBuffer("TEA55A3Q2NTK8R"),          // TA1591503892
+		SsdNumber: SsdNumber{
+			Mod:    stream.NewBuffer("Hitachi HTS545050A7E380"),
+			Serial: stream.NewBuffer("TEA55A3Q2NTK8R"),
 		},
-		mac0: mac0{
-			addr: stream.NewHexString("D4BED97952EB"), // D4BED96EFE43 修过笔记本
+		Mac0: Mac0{
+			Addr: stream.NewHexString("D4BED97952EB"),
 		},
 	}
 }
 
-func OtherOne() *hookInfo {
-	return &hookInfo{}
+func OtherOne() *HookInfo {
+	return &HookInfo{}
 }

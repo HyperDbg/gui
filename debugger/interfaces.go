@@ -1198,5 +1198,17 @@ type UserDebugger interface {
 	// 注意: 此方法是Go实现特有的，用于访问底层的 Packet 实例
 	Packet() *Packet
 
+	// QueryProcessStatus 查询进程状态
+	// IOCTL: 是, IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS (0x80E)
+	// 通信: 设备I/O
+	// 执行过程: 调用QueryProcessStatus() → IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS → 返回暂停状态和RIP
+	QueryProcessStatus() (isPaused bool, rip uint64)
+
+	// WaitForBreakpoint 等待断点命中
+	// IOCTL: 否, 本地操作（轮询QueryProcessStatus）
+	// 通信: 无
+	// 执行过程: 调用WaitForBreakpoint() → 轮询QueryProcessStatus() → 等待进程暂停
+	WaitForBreakpoint(timeoutMs int) bool
+
 	Eventer
 }

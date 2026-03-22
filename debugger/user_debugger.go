@@ -14,9 +14,97 @@ import (
 )
 
 const (
-	MaximumSyncObjects = 64
-	MaximumInstrSize   = 16
+	MaximumSyncObjects      = 64
+	MaximumInstrSize        = 16
+	CONTEXT_FULL            = 0x10007
+	CONTEXT_DEBUG_REGISTERS = 0x00010000
 )
+
+var (
+	kernel32             = windows.NewLazySystemDLL("kernel32.dll")
+	procGetThreadContext = kernel32.NewProc("GetThreadContext")
+)
+
+type M128A struct {
+	Low  uint64
+	High int64
+}
+
+type FloatingSaveArea struct {
+	ControlWord   uint32
+	StatusWord    uint32
+	TagWord       uint32
+	ErrorOffset   uint32
+	ErrorSelector uint32
+	DataOffset    uint32
+	DataSelector  uint32
+	RegisterArea  [80]byte
+	Cr0NpxState   uint32
+}
+
+type Context struct {
+	P1Home               uint64
+	P2Home               uint64
+	P3Home               uint64
+	P4Home               uint64
+	P5Home               uint64
+	P6Home               uint64
+	ContextFlags         uint32
+	MxCsr                uint32
+	SegCs                uint16
+	SegDs                uint16
+	SegEs                uint16
+	SegFs                uint16
+	SegGs                uint16
+	SegSs                uint16
+	EFlags               uint32
+	Dr0                  uint64
+	Dr1                  uint64
+	Dr2                  uint64
+	Dr3                  uint64
+	Dr6                  uint64
+	Dr7                  uint64
+	Rax                  uint64
+	Rcx                  uint64
+	Rdx                  uint64
+	Rbx                  uint64
+	Rsp                  uint64
+	Rbp                  uint64
+	Rsi                  uint64
+	Rdi                  uint64
+	R8                   uint64
+	R9                   uint64
+	R10                  uint64
+	R11                  uint64
+	R12                  uint64
+	R13                  uint64
+	R14                  uint64
+	R15                  uint64
+	Rip                  uint64
+	FltSave              FloatingSaveArea
+	VectorRegister       [26]M128A
+	VectorControl        uint64
+	DebugControl         uint64
+	LastBranchToRip      uint64
+	LastBranchFromRip    uint64
+	LastExceptionToRip   uint64
+	LastExceptionFromRip uint64
+}
+
+func getThreadContext(threadHandle windows.Handle) (*Context, error) {
+	var ctx Context
+	ctx.ContextFlags = CONTEXT_FULL | CONTEXT_DEBUG_REGISTERS
+
+	ret, _, err := procGetThreadContext.Call(
+		uintptr(threadHandle),
+		uintptr(unsafe.Pointer(&ctx)),
+	)
+	if ret == 0 {
+		return nil, fmt.Errorf("GetThreadContext failed: %v", err)
+	}
+
+	return &ctx, nil
+}
 
 type PausingReason int
 
@@ -100,6 +188,8 @@ func NewUserDebugWithOptions(autoLoadDriver bool) UserDebugger {
 			EventHandle:      windows.InvalidHandle,
 		}
 	}
+
+	packet.StartEventLoop()
 
 	return ud
 }
@@ -810,6 +900,25 @@ func (s *UserDebug) KillProcess(pid uint32) {
 //  3. 发送 ATTACH IOCTL 到内核
 //  4. 恢复进程执行 (ResumeThread) ← 关键！必须在REMOVE_HOOKS之前
 //  5. 循环发送 REMOVE_HOOKS IOCTL 等待入口点
+//  6. 使用 GetThreadContext 获取入口点地址 (RIP)
+//
+// 驱动处理 (AttachingRemoveHooks):
+//   - 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-level/Attaching.c
+//   - 函数: AttachingRemoveHooks() 在 line 997-1052
+//   - 注意: 驱动只设置 Result 字段，不填充 Rip 字段！
+//   - 驱动检查 g_IsWaitingForUserModeProcessEntryToBeCalled 变量判断入口点是否到达
+//   - 入口点未到达返回 DEBUGGER_ERROR_UNABLE_TO_REMOVE_HOOKS_ENTRYPOINT_NOT_REACHED
+//   - 入口点已到达则移除 EPT Hook 并返回 DEBUGGER_OPERATION_WAS_SUCCESSFUL
+//
+// C++ 用户模式处理 (ud.cpp):
+//   - 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/user-level/ud.cpp
+//   - 函数: UdAttachToProcess() 在 line 503-560
+//   - REMOVE_HOOKS 成功后直接 break，不检查 Rip 字段
+//   - 入口点地址通过其他方式获取（如线程上下文或内核事件回调）
+//
+// Go 实现差异:
+//   - 由于驱动不返回 Rip，Go 代码使用 GetThreadContext 获取入口点地址
+//   - 这与 C++ 实现的行为一致，只是获取方式不同
 func (s *UserDebug) StartProcess(path string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -927,13 +1036,7 @@ func (s *UserDebug) StartProcess(path string) {
 		mylog.Info("REMOVE_HOOKS 解析后", "Rip", attachResp.Rip, "Result", attachResp.Result, "Token", attachResp.Token, "ProcessId", attachResp.ProcessId, "ThreadId", attachResp.ThreadId)
 
 		if attachResp.Result == uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
-			if attachResp.Rip == 0 {
-				mylog.Warning("REMOVE_HOOKS 成功但 Rip 为 0，入口点检测失败")
-				return
-			}
 			mylog.Info("Hook 移除成功，进程已到达入口点")
-			s.activeProcess.Rip = attachResp.Rip
-			mylog.Info("入口点地址", attachResp.Rip)
 			break
 		}
 
@@ -946,6 +1049,14 @@ func (s *UserDebug) StartProcess(path string) {
 		mylog.Warning("REMOVE_HOOKS 失败", ShowErrorMessage(uint32(attachResp.Result)), attachResp.Result)
 		return
 	}
+
+	context, err := getThreadContext(windows.Handle(procInfo.ThreadHandle))
+	if err != nil {
+		mylog.Warning("获取线程上下文失败", err)
+		return
+	}
+	s.activeProcess.Rip = context.Rip
+	mylog.Info("入口点地址(从线程上下文获取)", s.activeProcess.Rip)
 
 	if s.activeProcess.Rip == 0 {
 		mylog.Warning("StartProcess 失败: 无法获取有效的入口点地址")
@@ -1429,17 +1540,82 @@ func (s *UserDebug) RemoveBreakpoint(breakpointID uint32) {
 	s.ClearBreakpoint(breakpointID)
 }
 
+func (s *UserDebug) QueryProcessStatus() (isPaused bool, rip uint64) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if !s.packeter.DriverProvider.IsConnected() {
+		return false, 0
+	}
+
+	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	if !ok || token == 0 {
+		return false, 0
+	}
+
+	req := DebuggerAttachDetachUserModeProcess{
+		ProcessId: s.activeProcess.ProcessId,
+		ThreadId:  s.activeProcess.ThreadId,
+		Action:    DebuggerAttachDetachUserModeProcessActionSwitchByProcessOrThread,
+		Token:     token,
+	}
+
+	if err := req.Validate(); err != nil {
+		return false, 0
+	}
+
+	buf := req.Serialize()
+	response := s.packeter.DriverProvider.SendReceive(bytes.NewBuffer(buf), IoctlDebuggerAttachDetachUserModeProcess)
+	if response.Len() == 0 {
+		return false, 0
+	}
+
+	if response.Len() < 72 {
+		return false, 0
+	}
+
+	var resp DebuggerAttachDetachUserModeProcess
+	resp.Deserialize(response.Bytes())
+
+	if resp.Result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		return false, 0
+	}
+
+	s.activeProcess.IsPaused = resp.IsPaused == 1
+	s.activeProcess.Rip = resp.Rip
+	return s.activeProcess.IsPaused, s.activeProcess.Rip
+}
+
+func (s *UserDebug) WaitForBreakpoint(timeoutMs int) bool {
+	start := time.Now()
+	mylog.Info("WaitForBreakpoint 开始等待", "timeoutMs", timeoutMs)
+	for {
+		isPaused, rip := s.QueryProcessStatus()
+		mylog.Info("QueryProcessStatus 结果", "isPaused", isPaused, "rip", rip)
+		if isPaused {
+			mylog.Success("断点命中")
+			return true
+		}
+		elapsed := int(time.Since(start).Milliseconds())
+		if elapsed >= timeoutMs {
+			mylog.Warning("等待断点超时", "elapsed", elapsed)
+			return false
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
+}
+
 // 来自接口: UserDebugger 第14个签名
 // Continue 继续执行
-// IOCTL: 是, IOCTL_SEND_USER_DEBUGGER_COMMANDS (0x817)
+// IOCTL: 是, IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS (0x80E)
 // 通信: 设备I/O
-// 用户命令: g命令 -> 内核: UdDispatchUsermodeCommands
-// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/commands/debugging-commands/g.cpp
-// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-mode/user-access.cpp (UdDispatchUsermodeCommands)
+// 用户命令: g命令 -> 内核: UdContinueProcess
+// 源代码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/user-level/ud.cpp (UdContinueProcess)
+// 内核处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/user-level/Attaching.c
 // 错误码: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h
 // 错误处理: doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/libhyperdbg/code/debugger/core/debugger.cpp ShowErrorMessage()
-// 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_SEND_USER_DEBUGGER_COMMANDS，内核模式使用IOCTL_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED
-// 实现过程: 用户命令g → UserDebugger.Continue() → IOCTL_SEND_USER_DEBUGGER_COMMANDS → 内核继续执行
+// 与内核模式比较: ✅ 都支持，用户模式使用IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS，内核模式使用IOCTL_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED
+// 实现过程: 用户命令g → UserDebugger.Continue() → IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS → UdContinueProcess
 func (s *UserDebug) Continue() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -1455,18 +1631,16 @@ func (s *UserDebug) Continue() {
 		return
 	}
 
-	req := DebuggerUdCommandPacket{
-		UdAction: DebuggerUdCommandAction{
-			ActionType:     DebuggerUdCommandActionTypeNone,
-			OptionalParam1: 0,
-			OptionalParam2: 0,
-			OptionalParam3: 0,
-			OptionalParam4: 0,
-		},
-		ProcessDebuggingDetailToken: token,
-		TargetThreadId:              s.activeProcess.ThreadId,
-		ApplyToAllPausedThreads:     0,
-		WaitForEventCompletion:      1,
+	if !s.activeProcess.IsPaused {
+		mylog.Warning("进程未处于暂停状态，无需继续执行")
+		return
+	}
+
+	req := DebuggerAttachDetachUserModeProcess{
+		ProcessId: s.activeProcess.ProcessId,
+		ThreadId:  s.activeProcess.ThreadId,
+		Action:    DebuggerAttachDetachUserModeProcessActionContinueProcess,
+		Token:     token,
 	}
 
 	if err := req.Validate(); err != nil {
@@ -1474,31 +1648,27 @@ func (s *UserDebug) Continue() {
 		return
 	}
 
-	if unsafe.Sizeof(req) != req.ExpectedSize() {
-		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
-		return
-	}
-
-	buf := new(bytes.Buffer)
-	binary.Write(buf, binary.LittleEndian, &req)
-
-	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSendUserDebuggerCommands)
+	buf := req.Serialize()
+	response := s.packeter.DriverProvider.SendReceive(bytes.NewBuffer(buf), IoctlDebuggerAttachDetachUserModeProcess)
 	if response.Len() == 0 {
 		mylog.Warning("内核返回空响应")
 		return
 	}
 
-	var resp DebuggerUdCommandPacket
-	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
-		mylog.Warning("反序列化响应失败", err)
+	if response.Len() < 72 {
+		mylog.Warning("响应长度不足", response.Len())
 		return
 	}
 
-	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
-		mylog.Warning("继续执行失败", ShowErrorMessage(resp.Result), resp.Result)
+	var resp DebuggerAttachDetachUserModeProcess
+	resp.Deserialize(response.Bytes())
+
+	if resp.Result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("继续执行失败", ShowErrorMessage(uint32(resp.Result)), resp.Result)
 		return
 	}
 
+	s.activeProcess.IsPaused = false
 	mylog.Success("继续执行")
 }
 
@@ -1784,20 +1954,38 @@ func (s *UserDebug) StepInto() {
 		return
 	}
 
+	if !s.activeProcess.IsPaused {
+		mylog.Warning("StepInto 检查失败: 进程未处于暂停状态，请先调用 Pause() 或等待断点命中")
+		return
+	}
+
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
 	if !ok || token == 0 {
 		mylog.Warning("StepInto 检查失败: 调试令牌无效", "ok", ok, "token", token)
 		return
 	}
 
-	mylog.Info("StepInto 检查通过，发送单步请求")
+	if s.activeProcess.ThreadId == 0 {
+		mylog.Warning("StepInto 检查失败: 线程ID无效")
+		return
+	}
+
+	mylog.Info("StepInto 检查通过，发送单步请求", "ThreadId", s.activeProcess.ThreadId, "Token", token)
+
+	const DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_IN = 0
 
 	req := DebuggerUdCommandPacket{
 		UdAction: DebuggerUdCommandAction{
-			ActionType: DebuggerUdCommandActionTypeRegularStep,
+			ActionType:     DebuggerUdCommandActionTypeRegularStep,
+			OptionalParam1: DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_IN,
+			OptionalParam2: 0,
+			OptionalParam3: 0,
+			OptionalParam4: 0,
 		},
 		ProcessDebuggingDetailToken: token,
 		TargetThreadId:              s.activeProcess.ThreadId,
+		ApplyToAllPausedThreads:     0,
+		WaitForEventCompletion:      0,
 	}
 
 	if err := req.Validate(); err != nil {
@@ -1808,9 +1996,18 @@ func (s *UserDebug) StepInto() {
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
 
+	mylog.Info("StepInto 发送数据包", "size", buf.Len(), "data", fmt.Sprintf("%x", buf.Bytes()))
+
 	response := s.packeter.DriverProvider.SendReceive(buf, IoctlSendUserDebuggerCommands)
+	mylog.Info("StepInto 响应", "size", response.Len(), "data", fmt.Sprintf("%x", response.Bytes()))
+
 	if response.Len() == 0 {
 		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	if response.Len() < 4 {
+		mylog.Warning("响应长度不足", "size", response.Len())
 		return
 	}
 
@@ -1820,6 +2017,7 @@ func (s *UserDebug) StepInto() {
 		return
 	}
 
+	s.activeProcess.IsPaused = false
 	mylog.Success("单步执行完成")
 }
 

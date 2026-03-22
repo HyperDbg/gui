@@ -966,7 +966,6 @@ type DebuggerUdCommandPacket struct {
 	TargetThreadId              uint32
 	ApplyToAllPausedThreads     uint8
 	WaitForEventCompletion      uint8
-	_                           [2]byte
 	Result                      uint32
 }
 

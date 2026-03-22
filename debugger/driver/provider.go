@@ -27,8 +27,8 @@ type Api interface {
 	Stop()
 	IsConnected() bool
 	Close()
-	// Send(buffer *bytes.Buffer, ioctlCode uint32) //发包范式不一样导致参数无效，暂时关闭接口停止访问
-	// Receive(ioctlCode uint32) *bytes.Buffer
+	Send(buffer *bytes.Buffer, ioctlCode uint32) // 发包范式不一样导致参数无效，暂时关闭接口停止访问
+	Receive(ioctlCode uint32) *bytes.Buffer
 	SendReceive(buffer *bytes.Buffer, ioctlCode uint32) *bytes.Buffer
 }
 
