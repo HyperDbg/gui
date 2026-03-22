@@ -387,6 +387,35 @@ type Monitor struct {
 	HitCount    uint32
 }
 
+type DebuggerAttachDetachUserModeProcessActionType uint32
+
+const (
+	DebuggerAttachDetachUserModeProcessActionAttach                             DebuggerAttachDetachUserModeProcessActionType = 0
+	DebuggerAttachDetachUserModeProcessActionDetach                             DebuggerAttachDetachUserModeProcessActionType = 1
+	DebuggerAttachDetachUserModeProcessActionRemoveHooks                        DebuggerAttachDetachUserModeProcessActionType = 2
+	DebuggerAttachDetachUserModeProcessActionKillProcess                        DebuggerAttachDetachUserModeProcessActionType = 3
+	DebuggerAttachDetachUserModeProcessActionContinueProcess                    DebuggerAttachDetachUserModeProcessActionType = 4
+	DebuggerAttachDetachUserModeProcessActionPauseProcess                       DebuggerAttachDetachUserModeProcessActionType = 5
+	DebuggerAttachDetachUserModeProcessActionSwitchByProcessOrThread            DebuggerAttachDetachUserModeProcessActionType = 6
+	DebuggerAttachDetachUserModeProcessActionQueryCountOfActiveDebuggingThreads DebuggerAttachDetachUserModeProcessActionType = 7
+)
+
+type DebuggerAttachDetachUserModeProcess struct {
+	IsStartingNewProcess                      uint8
+	ProcessId                                 uint32
+	ThreadId                                  uint32
+	CheckCallbackAtFirstInstruction           uint8
+	Is32Bit                                   uint8
+	Rip                                       uint64
+	InstructionBytesOnRip                     [16]byte
+	SizeOfInstruction                         uint32
+	IsPaused                                  uint8
+	Action                                    DebuggerAttachDetachUserModeProcessActionType
+	CountOfActiveDebuggingThreadsAndProcesses uint32
+	Token                                     uint64
+	Result                                    uint64
+}
+
 type CoreInfo struct {
 	CoreID             uint32
 	CurrentCore        bool
@@ -632,27 +661,6 @@ type ThreadInfo struct {
 	StartAddress uint64
 	Priority     int32
 	State        string
-}
-
-type DebuggerAttachDetachUserModeProcessAction uint32
-
-const (
-	DebuggerAttachDetachUserModeProcessActionAttach      DebuggerAttachDetachUserModeProcessAction = 1
-	DebuggerAttachDetachUserModeProcessActionDetach      DebuggerAttachDetachUserModeProcessAction = 2
-	DebuggerAttachDetachUserModeProcessActionRemoveHooks DebuggerAttachDetachUserModeProcessAction = 3
-	DebuggerAttachDetachUserModeProcessActionQueryCount  DebuggerAttachDetachUserModeProcessAction = 4
-	DebuggerAttachDetachUserModeProcessActionKillProcess DebuggerAttachDetachUserModeProcessAction = 5
-	DebuggerAttachDetachUserModeProcessActionPause       DebuggerAttachDetachUserModeProcessAction = 6
-)
-
-type DebuggerAttachDetachUserModeProcess struct {
-	Action                          DebuggerAttachDetachUserModeProcessAction
-	ProcessId                       uint32
-	ThreadId                        uint32
-	IsStartingNewProcess            bool
-	CheckCallbackAtFirstInstruction bool
-	Result                          uint32
-	Token                           uint64
 }
 
 type DebuggerUdCommandActionType uint32

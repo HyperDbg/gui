@@ -760,49 +760,57 @@ func (s *UserDebug) StartProcess(path string) {
 		ThreadId:  procInfo.ThreadId,
 	}
 
-	buffer := make([]byte, 64)
-	binary.LittleEndian.PutUint32(buffer[0:4], procInfo.ProcessId)
-	binary.LittleEndian.PutUint32(buffer[4:8], procInfo.ThreadId)
-	binary.LittleEndian.PutUint32(buffer[8:12], 1)
+	attachReq := DebuggerAttachDetachUserModeProcess{
+		IsStartingNewProcess:            1,
+		ProcessId:                       procInfo.ProcessId,
+		ThreadId:                        procInfo.ThreadId,
+		CheckCallbackAtFirstInstruction: 0,
+		Action:                          DebuggerAttachDetachUserModeProcessActionAttach,
+	}
+
+	buffer := new(bytes.Buffer)
+	mylog.Check(binary.Write(buffer, binary.LittleEndian, &attachReq))
 
 	mylog.Info("发送 ATTACH IOCTL 到内核")
-	s.packeter.DriverProvider.Send(bytes.NewBuffer(buffer), IoctlDebuggerAttachDetachUserModeProcess)
+	s.packeter.DriverProvider.Send(buffer, IoctlDebuggerAttachDetachUserModeProcess)
 	response := s.packeter.DriverProvider.Receive(IoctlDebuggerAttachDetachUserModeProcess)
 
-	status := binary.LittleEndian.Uint32(response.Bytes()[0:4])
-	if status != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
-		mylog.Warning("ATTACH 失败", ShowErrorMessage(status), status)
+	var attachResp DebuggerAttachDetachUserModeProcess
+	mylog.Check(binary.Read(response, binary.LittleEndian, &attachResp))
+
+	if attachResp.Result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("ATTACH 失败", ShowErrorMessage(uint32(attachResp.Result)), attachResp.Result)
 		return
 	}
 
-	token := binary.LittleEndian.Uint64(response.Bytes()[8:16])
-	s.activeProcess.DebuggingToken = token
-	mylog.Info("调试令牌", token)
+	s.activeProcess.DebuggingToken = attachResp.Token
+	mylog.Info("调试令牌", attachResp.Token)
 
 	mylog.Info("等待进程到达入口点")
 	for i := 0; i < 30; i++ {
-		buffer = make([]byte, 64)
-		binary.LittleEndian.PutUint32(buffer[0:4], 3)
-		binary.LittleEndian.PutUint32(buffer[4:8], procInfo.ProcessId)
-		binary.LittleEndian.PutUint32(buffer[8:12], procInfo.ThreadId)
-		binary.LittleEndian.PutUint64(buffer[12:20], token)
+		attachReq.Action = DebuggerAttachDetachUserModeProcessActionRemoveHooks
+		attachReq.Token = attachResp.Token
 
-		s.packeter.DriverProvider.Send(bytes.NewBuffer(buffer), IoctlDebuggerAttachDetachUserModeProcess)
+		buffer = new(bytes.Buffer)
+		mylog.Check(binary.Write(buffer, binary.LittleEndian, &attachReq))
+
+		s.packeter.DriverProvider.Send(buffer, IoctlDebuggerAttachDetachUserModeProcess)
 		response = s.packeter.DriverProvider.Receive(IoctlDebuggerAttachDetachUserModeProcess)
 
-		status = binary.LittleEndian.Uint32(response.Bytes()[0:4])
-		if status == uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Check(binary.Read(response, binary.LittleEndian, &attachResp))
+
+		if attachResp.Result == uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 			mylog.Info("Hook 移除成功，进程已到达入口点")
 			break
 		}
 
-		if status == uint32(DEBUGGER_ERROR_UNABLE_TO_REMOVE_HOOKS_ENTRYPOINT_NOT_REACHED) {
+		if attachResp.Result == uint64(DEBUGGER_ERROR_UNABLE_TO_REMOVE_HOOKS_ENTRYPOINT_NOT_REACHED) {
 			mylog.Info("等待入口点", i+1, "/30")
 			time.Sleep(time.Second)
 			continue
 		}
 
-		mylog.Warning("REMOVE_HOOKS 失败", ShowErrorMessage(status), status)
+		mylog.Warning("REMOVE_HOOKS 失败", ShowErrorMessage(uint32(attachResp.Result)), attachResp.Result)
 		return
 	}
 
