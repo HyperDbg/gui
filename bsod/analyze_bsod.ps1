@@ -112,6 +112,7 @@ if ($stackMatch.Success) {
 Write-Host "`n[3/4] 提取崩溃偏移..." -ForegroundColor Green
 $offsetMatch = [regex]::Match($stackOutput, "<Unloaded_$DriverName\.sys>\+0x([0-9a-fA-F]+)")
 $crashOffset = $null
+$unloadedBase = $null
 if ($offsetMatch.Success) {
     $crashOffset = "0x" + $offsetMatch.Groups[1].Value
     Write-Host "崩溃偏移: $crashOffset" -ForegroundColor Red
@@ -120,48 +121,108 @@ if ($offsetMatch.Success) {
     if ($offsetMatch.Success) {
         $crashOffset = "0x" + $offsetMatch.Groups[1].Value
         Write-Host "崩溃偏移: $crashOffset" -ForegroundColor Red
+    } else {
+        $unloadedModuleMatch = [regex]::Matches($unloadedOutput, "([0-9a-fA-F`]+)\s+([0-9a-fA-F`]+)\s+$DriverName\.sys")
+        if ($unloadedModuleMatch.Count -gt 0) {
+            Write-Host "从已卸载模块地址范围计算偏移..." -ForegroundColor Yellow
+            foreach ($match in $unloadedModuleMatch) {
+                $baseAddr = $match.Groups[1].Value -replace '`', ''
+                $endAddr = $match.Groups[2].Value -replace '`', ''
+                Write-Host "  已卸载模块: 基址=0x$baseAddr, 结束=0x$endAddr" -ForegroundColor Yellow
+            }
+            $firstMatch = $unloadedModuleMatch[0]
+            $unloadedBase = $firstMatch.Groups[1].Value -replace '`', ''
+            Write-Host "  使用第一个已卸载模块基址: 0x$unloadedBase" -ForegroundColor Yellow
+        }
     }
 }
 
 Write-Host "`n[4/4] 定位崩溃函数..." -ForegroundColor Green
-if ($crashOffset -and -not [string]::IsNullOrEmpty($PdbPath)) {
-    $driverSys = Get-ChildItem $PdbPath -Filter "$DriverName.sys" -Recurse -ErrorAction SilentlyContinue | 
-                 Select-Object -First 1 -ExpandProperty FullName
+
+$driverSys = $null
+$pdbDir = $null
+if (-not [string]::IsNullOrEmpty($PdbPath)) {
+    $directPath = Join-Path $PdbPath "$DriverName.sys"
+    if (Test-Path $directPath) {
+        $driverSys = $directPath
+        $pdbDir = $PdbPath
+    } else {
+        $driverSys = Get-ChildItem $PdbPath -Filter "$DriverName.sys" -Recurse -ErrorAction SilentlyContinue | 
+                     Select-Object -First 1 -ExpandProperty FullName
+        if ($driverSys) {
+            $pdbDir = Split-Path $driverSys
+        }
+    }
     
     if (-not $driverSys) {
         $driverSys = Get-ChildItem (Split-Path $PdbPath) -Filter "$DriverName.sys" -Recurse -ErrorAction SilentlyContinue | 
                      Select-Object -First 1 -ExpandProperty FullName
+        if ($driverSys) {
+            $pdbDir = Split-Path $driverSys
+        }
     }
+}
+
+if ($crashOffset -and $driverSys -and (Test-Path $driverSys)) {
+    Write-Host "驱动文件: $driverSys" -ForegroundColor Yellow
+    Write-Host "PDB 目录: $pdbDir" -ForegroundColor Yellow
     
-    if ($driverSys -and (Test-Path $driverSys)) {
-        Write-Host "驱动文件: $driverSys" -ForegroundColor Yellow
-        
-        $pdbDir = Split-Path $driverSys
-        $funcCmd = "lm; ln ${DriverName}+$crashOffset; q"
-        $funcOutput = & $kdExe -z $driverSys -y $pdbDir -c $funcCmd 2>&1 | Out-String
-        
-        $funcMatch = [regex]::Match($funcOutput, "\(${DriverName}!([^)\s]+)")
+    $funcCmd = "lm; ln ${DriverName}+$crashOffset; q"
+    $funcOutput = & $kdExe -z $driverSys -y $pdbDir -c $funcCmd 2>&1 | Out-String
+    
+    $funcMatch = [regex]::Match($funcOutput, "\(${DriverName}!([^)\s]+)")
+    if ($funcMatch.Success) {
+        $funcName = $funcMatch.Groups[1].Value
+        Write-Host "`n========================================" -ForegroundColor Cyan
+        Write-Host "崩溃函数: ${DriverName}!$funcName" -ForegroundColor Red
+        Write-Host "偏移: $crashOffset" -ForegroundColor Red
+        Write-Host "========================================" -ForegroundColor Cyan
+    } else {
+        $funcMatch = [regex]::Match($funcOutput, "Exact matches:\s*\r?\n\s*${DriverName}!([^\s]+)")
         if ($funcMatch.Success) {
             $funcName = $funcMatch.Groups[1].Value
             Write-Host "`n========================================" -ForegroundColor Cyan
             Write-Host "崩溃函数: ${DriverName}!$funcName" -ForegroundColor Red
             Write-Host "偏移: $crashOffset" -ForegroundColor Red
             Write-Host "========================================" -ForegroundColor Cyan
-        } else {
-            $funcMatch = [regex]::Match($funcOutput, "Exact matches:\s*\r?\n\s*${DriverName}!([^\s]+)")
+        }
+    }
+} elseif ($unloadedBase -and $driverSys -and (Test-Path $driverSys)) {
+    Write-Host "驱动文件: $driverSys" -ForegroundColor Yellow
+    Write-Host "分析已卸载模块回调问题..." -ForegroundColor Yellow
+    
+    $exceptionAddrMatch = [regex]::Match($stackOutput, "ExceptionAddress:\s*([0-9a-fA-F`]+)")
+    if ($exceptionAddrMatch.Success) {
+        $exceptionAddr = $exceptionAddrMatch.Groups[1].Value -replace '`', ''
+        Write-Host "异常地址: 0x$exceptionAddr" -ForegroundColor Yellow
+        
+        $baseInt = [convert]::ToInt64($unloadedBase, 16)
+        $exceptionInt = [convert]::ToInt64($exceptionAddr, 16)
+        
+        if ($exceptionInt -ge $baseInt -and $exceptionInt -lt ($baseInt + 0xD0000)) {
+            $calculatedOffset = "0x{0:X}" -f ($exceptionInt - $baseInt)
+            Write-Host "异常地址在已卸载模块范围内!" -ForegroundColor Red
+            Write-Host "计算偏移: $calculatedOffset" -ForegroundColor Red
+            
+            $pdbDir = Split-Path $driverSys
+            $funcCmd = "lm; ln ${DriverName}+$calculatedOffset; q"
+            $funcOutput = & $kdExe -z $driverSys -y $pdbDir -c $funcCmd 2>&1 | Out-String
+            
+            $funcMatch = [regex]::Match($funcOutput, "\(${DriverName}!([^)\s]+)")
             if ($funcMatch.Success) {
                 $funcName = $funcMatch.Groups[1].Value
                 Write-Host "`n========================================" -ForegroundColor Cyan
                 Write-Host "崩溃函数: ${DriverName}!$funcName" -ForegroundColor Red
-                Write-Host "偏移: $crashOffset" -ForegroundColor Red
+                Write-Host "偏移: $calculatedOffset" -ForegroundColor Red
                 Write-Host "========================================" -ForegroundColor Cyan
             }
+        } else {
+            Write-Host "异常地址不在已卸载模块范围内" -ForegroundColor Yellow
+            Write-Host "这可能是驱动卸载后回调未清理导致的间接崩溃" -ForegroundColor Yellow
         }
-    } else {
-        Write-Warning "找不到驱动文件 $DriverName.sys，跳过函数定位"
     }
 } else {
-    Write-Warning "未找到崩溃偏移或未指定 PDB 路径，跳过函数定位"
+    Write-Warning "未找到崩溃偏移或驱动文件，跳过函数定位"
 }
 
 Write-Host "`n[详细分析输出]" -ForegroundColor Green

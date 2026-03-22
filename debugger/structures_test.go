@@ -6,6 +6,8 @@ import (
 	"reflect"
 	"testing"
 	"unsafe"
+
+	"github.com/ddkwork/golibrary/std/mylog"
 )
 
 type StructLayout struct {
@@ -438,8 +440,8 @@ func verifyStruct[T any](t *testing.T, layout StructLayout) {
 	}
 
 	layout.FieldOffsets = make(map[string]uintptr)
-	for i := 0; i < typ.NumField(); i++ {
-		field := typ.Field(i)
+	for field := range typ.Fields() {
+		field := field
 		if field.IsExported() {
 			offset := field.Offset
 			layout.FieldOffsets[field.Name] = offset
@@ -456,9 +458,7 @@ func verifyStruct[T any](t *testing.T, layout StructLayout) {
 
 func verifySerialize[T any](t *testing.T, layout StructLayout, value T) {
 	buffer := new(bytes.Buffer)
-	if err := binary.Write(buffer, binary.LittleEndian, &value); err != nil {
-		t.Fatalf("%s 序列化失败: %v", layout.Name, err)
-	}
+	mylog.Check(binary.Write(buffer, binary.LittleEndian, &value))
 
 	t.Logf("%s 序列化后大小: %d bytes", layout.Name, buffer.Len())
 	t.Logf("%s 序列化后数据: %x", layout.Name, buffer.Bytes())
@@ -472,9 +472,7 @@ func verifySerialize[T any](t *testing.T, layout StructLayout, value T) {
 	}
 
 	var decoded T
-	if err := binary.Read(bytes.NewBuffer(buffer.Bytes()), binary.LittleEndian, &decoded); err != nil {
-		t.Fatalf("%s 反序列化失败: %v", layout.Name, err)
-	}
+	mylog.Check(binary.Read(bytes.NewBuffer(buffer.Bytes()), binary.LittleEndian, &decoded))
 
 	decodedValue := reflect.ValueOf(decoded)
 	originalValue := reflect.ValueOf(value)

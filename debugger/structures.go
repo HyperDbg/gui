@@ -1918,5 +1918,4 @@ func (s *DebuggerModuleDetailResponse) ExpectedSize() uintptr {
 
 func (s *DebuggerModuleDetailResponse) ExpectedSerSize() uintptr {
 	return 16
-
 }

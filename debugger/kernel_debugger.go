@@ -832,8 +832,7 @@ func (s *KernelDebug) Modules(pid uint32) []ModuleInfo {
 	defer s.mu.Unlock()
 
 	if !s.packet.IsConnected() {
-		mylog.Warning("驱动未连接")
-		return nil
+		mylog.Check("驱动未连接")
 	}
 
 	if pid == 0 {
@@ -841,24 +840,20 @@ func (s *KernelDebug) Modules(pid uint32) []ModuleInfo {
 			ProcessDebuggingDetailToken: 0,
 		}
 
-		if err := req.Validate(); err != nil {
-			mylog.Warning("验证失败", err)
-			return nil
-		}
+		mylog.Check(req.Validate())
 
 		buf := new(bytes.Buffer)
 		binary.Write(buf, binary.LittleEndian, &req)
 
 		response := s.packet.driver.SendReceive(buf, IoctlGetUserModeModuleDetails)
 		if response.Len() == 0 {
-			mylog.Warning("内核返回空响应")
-			return nil
+			mylog.Check("内核返回空响应")
 		}
 
 		count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 		modules := make([]ModuleInfo, count)
 
-		for i := uint32(0); i < count; i++ {
+		for i := range count {
 			offset := 4 + uintptr(i)*16
 			if offset+16 > uintptr(response.Len()) {
 				break

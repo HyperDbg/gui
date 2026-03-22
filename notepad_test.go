@@ -19,7 +19,7 @@ func TestNotepadDebugging(t *testing.T) {
 		dbg.StepInto()
 		dbg.ReadMemory(0x401000, 16)
 		dbg.WriteMemory(0x401000, []byte{0x90, 0x90})
-		//todo killprocess test
+		// todo killprocess test
 		// dbg.KillProcess()
 	})
 

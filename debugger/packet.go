@@ -414,10 +414,7 @@ func (p *Packet) EPTHook(address uint64, size uint32, hookType EPTHookType) {
 		HookType: hookType,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("EPTHook请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -458,10 +455,7 @@ func (p *Packet) HookSyscall(syscallNumber uint32) {
 		SyscallNumber: syscallNumber,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("HookSyscall请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -486,10 +480,7 @@ func (p *Packet) HookException(exceptionType uint32) {
 		ExceptionType: exceptionType,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("HookException请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -514,10 +505,7 @@ func (p *Packet) HookInterrupt(vector uint32) {
 		Vector: vector,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("HookInterrupt请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -543,10 +531,7 @@ func (p *Packet) HookIO(port uint16, hookType uint32) {
 		HookType: hookType,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("HookIO请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -571,10 +556,7 @@ func (p *Packet) HookIOAPIC(apicID uint32) {
 		ApicID: apicID,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("HookIOAPIC请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -593,10 +575,7 @@ func (p *Packet) ReadMsr(msr uint32) uint64 {
 		ActionType: DebuggerMsrActionRead,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("ReadMsr请求验证失败", err)
-		return 0
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -621,10 +600,7 @@ func (p *Packet) WriteMsr(msr uint32, value uint64) {
 		Value:      value,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("WriteMsr请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -650,10 +626,7 @@ func (p *Packet) MeasurePerformance(address uint64) {
 		Address: address,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("MeasurePerformance请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -684,10 +657,7 @@ func (p *Packet) MonitorMemory(address uint64, size uint32, monitorType MonitorT
 		MonitorType: monitorType,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("MonitorMemory请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -715,10 +685,7 @@ func (p *Packet) PCICam(bus, device, function uint32) PCICamInfo {
 		Function: function,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("PCICam请求验证失败", err)
-		return result
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -753,10 +720,7 @@ func (p *Packet) PMC(pmcNumber uint32) uint64 {
 		PmcNumber: pmcNumber,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("PMC请求验证失败", err)
-		return 0
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -786,10 +750,7 @@ func (p *Packet) ReconstructMemory(pid uint32, address uint64, size uint32, mode
 		Mode:      mode,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("ReconstructMemory请求验证失败", err)
-		return nil
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -825,10 +786,7 @@ func (p *Packet) SearchMemoryPattern(pid uint32, pattern []byte, mode Reconstruc
 		Mode:        mode,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("SearchMemoryPattern请求验证失败", err)
-		return nil
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -865,10 +823,7 @@ func (p *Packet) InstructionTrace(address uint64) {
 		Address: address,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("InstructionTrace请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -894,10 +849,7 @@ func (p *Packet) TrackMemory(address uint64, size uint32) {
 		Size:    size,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("TrackMemory请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -978,10 +930,7 @@ func (p *Packet) PTE(virtualAddress uint64, pid uint32) PageTableEntries {
 		ProcessId:      pid,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("PTE请求验证失败", err)
-		return result
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1022,10 +971,7 @@ func (p *Packet) VA2PA(virtualAddress uint64, pid uint32) uint64 {
 		IsVirtual2Physical: true,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("VA2PA请求验证失败", err)
-		return 0
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1057,10 +1003,7 @@ func (p *Packet) PA2VA(physicalAddress uint64, pid uint32) uint64 {
 		IsVirtual2Physical: false,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("PA2VA请求验证失败", err)
-		return 0
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1090,10 +1033,7 @@ func (p *Packet) ProcessDetails(pid uint32) []ProcessDetails {
 		ProcessId: pid,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("ProcessDetails请求验证失败", err)
-		return nil
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1135,10 +1075,7 @@ func (p *Packet) ThreadDetails(tid uint32) []ThreadDetails {
 		ThreadId: tid,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("ThreadDetails请求验证失败", err)
-		return nil
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1210,10 +1147,7 @@ func (p *Packet) Threads(pid uint32) []ThreadInfo {
 		ProcessId: pid,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("Threads请求验证失败", err)
-		return nil
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1285,10 +1219,7 @@ func (p *Packet) APIC(apicID uint32) APICInfo {
 		ApicID: apicID,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("APIC请求验证失败", err)
-		return result
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1356,10 +1287,7 @@ func (p *Packet) PerformSMIOperation(operation SMIType) {
 		Operation: operation,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("PerformSMIOperation请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1384,10 +1312,7 @@ func (p *Packet) HideDebugger() {
 		IsHide: true,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("HideDebugger请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1412,10 +1337,7 @@ func (p *Packet) UnhideDebugger() {
 		IsHide: false,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("UnhideDebugger请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1441,10 +1363,7 @@ func (p *Packet) BringPagesIn(fromAddr, toAddr uint64, pid uint32) {
 		ProcessId:   pid,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("BringPagesIn请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1475,10 +1394,7 @@ func (p *Packet) EditMemory(pid uint32, address uint64, data []byte) {
 		Is32BitProcess: false,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("EditMemory请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1502,10 +1418,7 @@ func (p *Packet) ReadMemory(pid uint32, address uint64, size uint32, memoryType 
 		Is32BitProcess: false,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("ReadMemory请求验证失败", err)
-		return nil
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1529,10 +1442,7 @@ func (p *Packet) WriteMemory(pid uint32, address uint64, data []byte) {
 		Is32BitProcess: false,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("WriteMemory请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1561,10 +1471,7 @@ func (p *Packet) SearchMemory(pid uint32, address uint64, size uint32, pattern [
 		PatternSize: uint32(len(pattern)),
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("SearchMemory请求验证失败", err)
-		return nil
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1610,10 +1517,7 @@ func (p *Packet) AttachProcess(pid uint32) {
 		Action:    DebuggerAttachDetachUserModeProcessActionAttach,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("AttachProcess请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1659,10 +1563,7 @@ func (p *Packet) ChangeProcess(pid uint32) {
 		ProcessId: pid,
 	}
 
-	if err := req.Validate(); err != nil {
-		mylog.Warning("ChangeProcess请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1688,11 +1589,7 @@ func (p *Packet) ChangeThread(tid uint32) {
 	req := DebuggerSwitchThreadRequest{
 		ThreadId: tid,
 	}
-
-	if err := req.Validate(); err != nil {
-		mylog.Warning("ChangeThread请求验证失败", err)
-		return
-	}
+	mylog.Check(req.Validate())
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
