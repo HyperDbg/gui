@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/ddkwork/HyperDbg/debugger"
-	"github.com/ddkwork/golibrary/std/fakeError"
 	"github.com/ddkwork/golibrary/std/mylog"
 	"github.com/ddkwork/golibrary/std/stream"
 )
@@ -15,10 +14,17 @@ func TestNotepadDebugging(t *testing.T) {
 
 	mylog.Call(func() {
 		dbg.StartProcess("c:\\windows\\system32\\notepad.exe")
-		dbg.SetBreakpoint(0x401000)
+		activeProcess := dbg.GetActiveDebuggingProcess()
+		entryPoint := activeProcess.Rip
+		if entryPoint == 0 {
+			t.Error("无法获取入口点地址")
+			return
+		}
+		mylog.Info("入口点地址", entryPoint)
+		dbg.SetBreakpoint(entryPoint)
 		dbg.StepInto()
-		dbg.ReadMemory(0x401000, 16)
-		dbg.WriteMemory(0x401000, []byte{0x90, 0x90})
+		dbg.ReadMemory(entryPoint, 16)
+		dbg.WriteMemory(entryPoint, []byte{0x90, 0x90})
 		// todo killprocess test
 		// dbg.KillProcess()
 	})
@@ -28,7 +34,7 @@ func TestNotepadDebugging(t *testing.T) {
 
 func TestFixError(t *testing.T) {
 	mylog.Call(func() {
-		fakeError.Walk(".", false)
+		// fakeError.Walk(".", false)
 		stream.Fmt(".")
 		stream.Fix(".")
 	})

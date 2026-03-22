@@ -1,1 +1,0 @@
-C:\Microsoft.WinDbg_1.2601.12001.0_x64__8wekyb3d8bbwe\amd64\kd.exe -z C:\Windows\Minidump\032226-4468-01.dmp -y srv*C:\Symbols*https://msdl.microsoft.com/download/symbols -c !analyze -v; r; lm; .exr -1; kv; q

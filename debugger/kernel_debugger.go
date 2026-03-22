@@ -832,7 +832,8 @@ func (s *KernelDebug) Modules(pid uint32) []ModuleInfo {
 	defer s.mu.Unlock()
 
 	if !s.packet.IsConnected() {
-		mylog.Check("驱动未连接")
+		mylog.Warning("驱动未连接")
+		return nil
 	}
 
 	if pid == 0 {
@@ -840,20 +841,24 @@ func (s *KernelDebug) Modules(pid uint32) []ModuleInfo {
 			ProcessDebuggingDetailToken: 0,
 		}
 
-		mylog.Check(req.Validate())
+		if err := req.Validate(); err != nil {
+			mylog.Warning("验证失败", err)
+			return nil
+		}
 
 		buf := new(bytes.Buffer)
 		binary.Write(buf, binary.LittleEndian, &req)
 
 		response := s.packet.driver.SendReceive(buf, IoctlGetUserModeModuleDetails)
 		if response.Len() == 0 {
-			mylog.Check("内核返回空响应")
+			mylog.Warning("内核返回空响应")
+			return nil
 		}
 
 		count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 		modules := make([]ModuleInfo, count)
 
-		for i := range count {
+		for i := uint32(0); i < count; i++ {
 			offset := 4 + uintptr(i)*16
 			if offset+16 > uintptr(response.Len()) {
 				break
@@ -909,10 +914,6 @@ func (s *KernelDebug) RunTests(testType string) TestResults {
 	buf.WriteString(testType)
 
 	response := s.packet.driver.SendReceive(buf, IoctlPerformKernelSideTests)
-	if response.Len() < 12 {
-		mylog.Warning("内核返回响应长度不足")
-		return TestResults{}
-	}
 
 	totalTests := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	passedTests := binary.LittleEndian.Uint32(response.Bytes()[4:8])

@@ -312,11 +312,11 @@ func (p *Packet) UnloadDriver() {
 	if p.driver != nil && p.driver.IsConnected() {
 		mylog.Info("发送终止 VMX IOCTL...")
 		emptyBuffer := bytes.NewBuffer(make([]byte, 8))
-		p.driver.Send(emptyBuffer, IoctlTerminateVmx)
+		p.driver.SendReceive(emptyBuffer, IoctlTerminateVmx)
 
 		mylog.Info("发送 IRP Pending 完成 IOCTL...")
 		emptyBuffer = bytes.NewBuffer(make([]byte, 8))
-		p.driver.Send(emptyBuffer, IoctlReturnIrpPendingPacketsAndDisallowIoctl)
+		p.driver.SendReceive(emptyBuffer, IoctlReturnIrpPendingPacketsAndDisallowIoctl)
 	}
 
 	if p.eventLoop != nil {
@@ -418,7 +418,7 @@ func (p *Packet) EPTHook(address uint64, size uint32, hookType EPTHookType) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
+	p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第7个签名
@@ -459,7 +459,7 @@ func (p *Packet) HookSyscall(syscallNumber uint32) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
+	p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第9个签名
@@ -484,7 +484,7 @@ func (p *Packet) HookException(exceptionType uint32) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
+	p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第10个签名
@@ -509,7 +509,7 @@ func (p *Packet) HookInterrupt(vector uint32) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
+	p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第11个签名
@@ -535,7 +535,7 @@ func (p *Packet) HookIO(port uint16, hookType uint32) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
+	p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第12个签名
@@ -560,7 +560,7 @@ func (p *Packet) HookIOAPIC(apicID uint32) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
+	p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第13个签名
@@ -579,8 +579,7 @@ func (p *Packet) ReadMsr(msr uint32) uint64 {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerReadOrWriteMsr)
-	response := p.driver.Receive(IoctlDebuggerReadOrWriteMsr)
+	response := p.driver.SendReceive(buf, IoctlDebuggerReadOrWriteMsr)
 
 	var result DebuggerReadOrWriteMsr
 	binary.Read(response, binary.LittleEndian, &result)
@@ -604,8 +603,7 @@ func (p *Packet) WriteMsr(msr uint32, value uint64) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerReadOrWriteMsr)
-	p.driver.Receive(IoctlDebuggerReadOrWriteMsr)
+	p.driver.SendReceive(buf, IoctlDebuggerReadOrWriteMsr)
 }
 
 // 来自接口: Packeter 第15个签名
@@ -630,7 +628,7 @@ func (p *Packet) MeasurePerformance(address uint64) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
+	p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第16个签名
@@ -661,7 +659,7 @@ func (p *Packet) MonitorMemory(address uint64, size uint32, monitorType MonitorT
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
+	p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第17个签名
@@ -689,8 +687,7 @@ func (p *Packet) PCICam(bus, device, function uint32) PCICamInfo {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
-	response := p.driver.Receive(IoctlDebuggerRegisterEvent)
+	response := p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 
 	result.Bus = bus
 	result.Device = device
@@ -724,8 +721,7 @@ func (p *Packet) PMC(pmcNumber uint32) uint64 {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
-	response := p.driver.Receive(IoctlDebuggerRegisterEvent)
+	response := p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 
 	return binary.LittleEndian.Uint64(response.Bytes()[0:8])
 }
@@ -755,8 +751,7 @@ func (p *Packet) ReconstructMemory(pid uint32, address uint64, size uint32, mode
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
 	binary.Write(buf, binary.LittleEndian, address)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
-	response := p.driver.Receive(IoctlDebuggerRegisterEvent)
+	response := p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 
 	return response.Bytes()
 }
@@ -791,8 +786,7 @@ func (p *Packet) SearchMemoryPattern(pid uint32, pattern []byte, mode Reconstruc
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
 	binary.Write(buf, binary.LittleEndian, pattern)
-	p.driver.Send(buf, IoctlDebuggerSearchMemory)
-	response := p.driver.Receive(IoctlDebuggerSearchMemory)
+	response := p.driver.SendReceive(buf, IoctlDebuggerSearchMemory)
 
 	resultCount := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	results := make([]uint64, resultCount)
@@ -827,7 +821,7 @@ func (p *Packet) InstructionTrace(address uint64) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
+	p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第22个签名
@@ -853,7 +847,7 @@ func (p *Packet) TrackMemory(address uint64, size uint32) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerRegisterEvent)
+	p.driver.SendReceive(buf, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第23个签名
@@ -870,8 +864,7 @@ func (p *Packet) TSC() uint64 {
 		return 0
 	}
 
-	p.driver.Send(nil, IoctlDebuggerRegisterEvent)
-	response := p.driver.Receive(IoctlDebuggerRegisterEvent)
+	response := p.driver.SendReceive(nil, IoctlDebuggerRegisterEvent)
 
 	return binary.LittleEndian.Uint64(response.Bytes()[0:8])
 }
@@ -890,7 +883,7 @@ func (p *Packet) VMCallHandler() {
 		return
 	}
 
-	p.driver.Send(nil, IoctlDebuggerRegisterEvent)
+	p.driver.SendReceive(nil, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第25个签名
@@ -907,7 +900,7 @@ func (p *Packet) HookXSETBV() {
 		return
 	}
 
-	p.driver.Send(nil, IoctlDebuggerRegisterEvent)
+	p.driver.SendReceive(nil, IoctlDebuggerRegisterEvent)
 }
 
 // 来自接口: Packeter 第26个签名
@@ -934,8 +927,7 @@ func (p *Packet) PTE(virtualAddress uint64, pid uint32) PageTableEntries {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerReadPageTableEntriesDetails)
-	response := p.driver.Receive(IoctlDebuggerReadPageTableEntriesDetails)
+	response := p.driver.SendReceive(buf, IoctlDebuggerReadPageTableEntriesDetails)
 
 	result.VirtualAddress = virtualAddress
 	result.ProcessId = pid
@@ -975,8 +967,7 @@ func (p *Packet) VA2PA(virtualAddress uint64, pid uint32) uint64 {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerVa2paAndPa2vaCommands)
-	response := p.driver.Receive(IoctlDebuggerVa2paAndPa2vaCommands)
+	response := p.driver.SendReceive(buf, IoctlDebuggerVa2paAndPa2vaCommands)
 
 	var result DebuggerVa2paAndPa2vaCommands
 	binary.Read(response, binary.LittleEndian, &result)
@@ -1007,8 +998,7 @@ func (p *Packet) PA2VA(physicalAddress uint64, pid uint32) uint64 {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerVa2paAndPa2vaCommands)
-	response := p.driver.Receive(IoctlDebuggerVa2paAndPa2vaCommands)
+	response := p.driver.SendReceive(buf, IoctlDebuggerVa2paAndPa2vaCommands)
 
 	var result DebuggerVa2paAndPa2vaCommands
 	binary.Read(response, binary.LittleEndian, &result)
@@ -1037,13 +1027,20 @@ func (p *Packet) ProcessDetails(pid uint32) []ProcessDetails {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlQueryCurrentProcess)
-	response := p.driver.Receive(IoctlQueryCurrentProcess)
+	response := p.driver.SendReceive(buf, IoctlQueryCurrentProcess)
+
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return nil
+	}
 
 	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	details := make([]ProcessDetails, count)
 	for i := range count {
 		offset := 4 + i*128
+		if offset+128 > uint32(response.Len()) {
+			break
+		}
 		details[i] = ProcessDetails{
 			ProcessId:    binary.LittleEndian.Uint32(response.Bytes()[offset : offset+4]),
 			BaseAddress:  binary.LittleEndian.Uint64(response.Bytes()[offset+8 : offset+16]),
@@ -1079,8 +1076,7 @@ func (p *Packet) ThreadDetails(tid uint32) []ThreadDetails {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlQueryCurrentThread)
-	response := p.driver.Receive(IoctlQueryCurrentThread)
+	response := p.driver.SendReceive(buf, IoctlQueryCurrentThread)
 
 	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	details := make([]ThreadDetails, count)
@@ -1113,8 +1109,7 @@ func (p *Packet) Processes() []ProcessInfo {
 		return nil
 	}
 
-	p.driver.Send(nil, IoctlGetListOfThreadsAndProcesses)
-	response := p.driver.Receive(IoctlGetListOfThreadsAndProcesses)
+	response := p.driver.SendReceive(nil, IoctlGetListOfThreadsAndProcesses)
 
 	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	processes := make([]ProcessInfo, count)
@@ -1151,8 +1146,7 @@ func (p *Packet) Threads(pid uint32) []ThreadInfo {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlGetListOfThreadsAndProcesses)
-	response := p.driver.Receive(IoctlGetListOfThreadsAndProcesses)
+	response := p.driver.SendReceive(buf, IoctlGetListOfThreadsAndProcesses)
 
 	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	threads := make([]ThreadInfo, count)
@@ -1182,8 +1176,7 @@ func (p *Packet) IDTEntries() []IDTEntry {
 		return nil
 	}
 
-	p.driver.Send(nil, IoctlQueryIdtEntry)
-	response := p.driver.Receive(IoctlQueryIdtEntry)
+	response := p.driver.SendReceive(nil, IoctlQueryIdtEntry)
 
 	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	entries := make([]IDTEntry, count)
@@ -1223,8 +1216,7 @@ func (p *Packet) APIC(apicID uint32) APICInfo {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlPerformActionsOnApic)
-	response := p.driver.Receive(IoctlPerformActionsOnApic)
+	response := p.driver.SendReceive(buf, IoctlPerformActionsOnApic)
 
 	result.APICID = binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	result.Version = binary.LittleEndian.Uint32(response.Bytes()[4:8])
@@ -1248,8 +1240,7 @@ func (p *Packet) PCITree() []PCIDevice {
 		return nil
 	}
 
-	p.driver.Send(nil, IoctlPcieEndpointEnum)
-	response := p.driver.Receive(IoctlPcieEndpointEnum)
+	response := p.driver.SendReceive(nil, IoctlPcieEndpointEnum)
 
 	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	devices := make([]PCIDevice, count)
@@ -1291,7 +1282,7 @@ func (p *Packet) PerformSMIOperation(operation SMIType) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlPerformSmiOperation)
+	p.driver.SendReceive(buf, IoctlPerformSmiOperation)
 }
 
 // 来自接口: Packeter 第37个签名
@@ -1316,7 +1307,7 @@ func (p *Packet) HideDebugger() {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerHideAndUnhideToTransparentTheDebugger)
+	p.driver.SendReceive(buf, IoctlDebuggerHideAndUnhideToTransparentTheDebugger)
 }
 
 // 来自接口: Packeter 第38个签名
@@ -1341,7 +1332,7 @@ func (p *Packet) UnhideDebugger() {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerHideAndUnhideToTransparentTheDebugger)
+	p.driver.SendReceive(buf, IoctlDebuggerHideAndUnhideToTransparentTheDebugger)
 }
 
 // 来自接口: Packeter 第39个签名
@@ -1367,7 +1358,7 @@ func (p *Packet) BringPagesIn(fromAddr, toAddr uint64, pid uint32) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerBringPagesIn)
+	p.driver.SendReceive(buf, IoctlDebuggerBringPagesIn)
 }
 
 // 来自接口: Packeter 第40个签名
@@ -1399,7 +1390,7 @@ func (p *Packet) EditMemory(pid uint32, address uint64, data []byte) {
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
 	binary.Write(buf, binary.LittleEndian, data)
-	p.driver.Send(buf, IoctlDebuggerEditMemory)
+	p.driver.SendReceive(buf, IoctlDebuggerEditMemory)
 }
 
 func (p *Packet) ReadMemory(pid uint32, address uint64, size uint32, memoryType MemoryType) []byte {
@@ -1422,8 +1413,7 @@ func (p *Packet) ReadMemory(pid uint32, address uint64, size uint32, memoryType 
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerReadMemory)
-	response := p.driver.Receive(IoctlDebuggerReadMemory)
+	response := p.driver.SendReceive(buf, IoctlDebuggerReadMemory)
 	return response.Bytes()
 }
 
@@ -1447,7 +1437,7 @@ func (p *Packet) WriteMemory(pid uint32, address uint64, data []byte) {
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
 	binary.Write(buf, binary.LittleEndian, data)
-	p.driver.Send(buf, IoctlDebuggerEditMemory)
+	p.driver.SendReceive(buf, IoctlDebuggerEditMemory)
 }
 
 func (p *Packet) RegisterEvent(event *Event) {
@@ -1476,8 +1466,7 @@ func (p *Packet) SearchMemory(pid uint32, address uint64, size uint32, pattern [
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
 	binary.Write(buf, binary.LittleEndian, pattern)
-	p.driver.Send(buf, IoctlDebuggerSearchMemory)
-	response := p.driver.Receive(IoctlDebuggerSearchMemory)
+	response := p.driver.SendReceive(buf, IoctlDebuggerSearchMemory)
 
 	resultCount := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	results := make([]uint64, resultCount)
@@ -1495,8 +1484,7 @@ func (p *Packet) FlushBuffers() FlushResult {
 		mylog.Check("driver not available")
 	}
 
-	p.driver.Send(nil, IoctlDebuggerFlushLoggingBuffers)
-	response := p.driver.Receive(IoctlDebuggerFlushLoggingBuffers)
+	response := p.driver.SendReceive(nil, IoctlDebuggerFlushLoggingBuffers)
 
 	result.KernelStatus = binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	result.CountOfMessagesThatSetAsReadFromVmxRoot = binary.LittleEndian.Uint32(response.Bytes()[4:8])
@@ -1521,8 +1509,7 @@ func (p *Packet) AttachProcess(pid uint32) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlDebuggerAttachDetachUserModeProcess)
-	response := p.driver.Receive(IoctlDebuggerAttachDetachUserModeProcess)
+	response := p.driver.SendReceive(buf, IoctlDebuggerAttachDetachUserModeProcess)
 
 	var result DebuggerAttachDetachUserModeProcessResponse
 	binary.Read(response, binary.LittleEndian, &result)
@@ -1567,8 +1554,7 @@ func (p *Packet) ChangeProcess(pid uint32) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlSwitchProcess)
-	p.driver.Receive(IoctlSwitchProcess)
+	p.driver.SendReceive(buf, IoctlSwitchProcess)
 }
 
 // 来自接口: Packeter 第46个签名
@@ -1593,8 +1579,7 @@ func (p *Packet) ChangeThread(tid uint32) {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-	p.driver.Send(buf, IoctlSwitchThread)
-	p.driver.Receive(IoctlSwitchThread)
+	p.driver.SendReceive(buf, IoctlSwitchThread)
 }
 
 // 来自接口: Packeter 第47个签名

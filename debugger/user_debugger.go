@@ -737,7 +737,10 @@ func (s *UserDebug) KillProcess(pid uint32) {
 		Action:               DebuggerAttachDetachUserModeProcessActionKillProcess,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
 
 	if unsafe.Sizeof(req) != req.ExpectedSize() {
 		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
@@ -754,7 +757,10 @@ func (s *UserDebug) KillProcess(pid uint32) {
 	}
 
 	var resp DebuggerAttachDetachUserModeProcess
-	mylog.Check(binary.Read(response, binary.LittleEndian, &resp))
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
 
 	if resp.Result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("终止进程失败", ShowErrorMessage(uint32(resp.Result)), resp.Result)
@@ -781,17 +787,6 @@ func (s *UserDebug) KillProcess(pid uint32) {
 //	导致系统进程(explorer、svchost等)异常，可能需要强制关机。
 //
 // 正确顺序: ResumeThread 必须在 REMOVE_HOOKS 之前执行（参见下方步骤4→5）
-//
-// ⚠️ BSOD 修复记录 (2026-03-23):
-//
-//	问题: MEMORY_MANAGEMENT (0x1A) - 页表损坏
-//	原因: mylog.Check() 在 IOCTL 通信关键路径上使用不当
-//		- mylog.Check() 可能在错误时没有正确返回，继续执行无效数据
-//		- for i := range 30 与 for i := 0; i < 30; i++ 行为差异
-//	修复: 将所有 mylog.Check() 改为显式错误检查并 return
-//		- Validate() 失败必须 return
-//		- binary.Write/Read 失败必须 return
-//		- 循环改为 for i := 0; i < 30; i++
 //
 // 实现过程:
 //  1. 创建挂起进程 (CreateProcess with CREATE_SUSPENDED)
@@ -937,6 +932,12 @@ func (s *UserDebug) StartProcess(path string) {
 		return
 	}
 
+	processDetails := s.packeter.ProcessDetails(procInfo.ProcessId)
+	if len(processDetails) > 0 && processDetails[0].EntryPoint != 0 {
+		s.activeProcess.Rip = processDetails[0].EntryPoint
+		mylog.Info("入口点地址", processDetails[0].EntryPoint)
+	}
+
 	mylog.Success("进程已启动并在入口点暂停")
 	mylog.Info("进程ID", procInfo.ProcessId, "线程ID", procInfo.ThreadId)
 }
@@ -954,7 +955,7 @@ func (s *UserDebug) initializeUserDebugger() {
 	for i := range MaximumSyncObjects {
 		event, err := windows.CreateEvent(nil, 0, 0, nil)
 		if err != nil {
-			mylog.CheckIgnore(err)
+			mylog.Check(err)
 			continue
 		}
 		s.syncObjects[i] = SyncronizationEventState{
@@ -968,13 +969,17 @@ func (s *UserDebug) initializeUserDebugger() {
 }
 
 func (s *UserDebug) createSuspendedProcess(path string) *processInfo {
-	pathPtr := mylog.Check2(windows.UTF16PtrFromString(path))
+	pathPtr, err := windows.UTF16PtrFromString(path)
+	if err != nil {
+		mylog.Check(err)
+		return nil
+	}
 
 	var si windows.StartupInfo
 	var pi windows.ProcessInformation
 	si.Cb = uint32(unsafe.Sizeof(si))
 
-	mylog.Check(windows.CreateProcess(
+	err = windows.CreateProcess(
 		nil,
 		pathPtr,
 		nil,
@@ -985,7 +990,11 @@ func (s *UserDebug) createSuspendedProcess(path string) *processInfo {
 		nil,
 		&si,
 		&pi,
-	))
+	)
+	if err != nil {
+		mylog.Check(err)
+		return nil
+	}
 
 	mylog.Info("进程已创建(挂起状态)")
 	return &processInfo{
@@ -1043,7 +1052,10 @@ func (s *UserDebug) RestartProcess() {
 	}
 
 	var result uint64
-	mylog.Check(binary.Read(response, binary.LittleEndian, &result))
+	if err := binary.Read(response, binary.LittleEndian, &result); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
 
 	if result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("重启进程失败", ShowErrorMessage(uint32(result)), result)
@@ -1078,7 +1090,10 @@ func (s *UserDebug) ClearBreakpoint(breakpointID uint32) {
 		Request:      DebuggeeBreakpointModificationRequestClear,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
 
 	if unsafe.Sizeof(req) != req.ExpectedSize() {
 		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
@@ -1095,7 +1110,10 @@ func (s *UserDebug) ClearBreakpoint(breakpointID uint32) {
 	}
 
 	var resp DebuggeeBpListOrModifyPacket
-	mylog.Check(binary.Read(response, binary.LittleEndian, &resp))
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
 
 	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("清除断点失败", ShowErrorMessage(resp.Result), resp.Result)
@@ -1130,7 +1148,10 @@ func (s *UserDebug) DisableBreakpoint(breakpointID uint32) {
 		Request:      DebuggeeBreakpointModificationRequestDisable,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
 
 	if unsafe.Sizeof(req) != req.ExpectedSize() {
 		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
@@ -1147,7 +1168,10 @@ func (s *UserDebug) DisableBreakpoint(breakpointID uint32) {
 	}
 
 	var resp DebuggeeBpListOrModifyPacket
-	mylog.Check(binary.Read(response, binary.LittleEndian, &resp))
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
 
 	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("禁用断点失败", ShowErrorMessage(resp.Result), resp.Result)
@@ -1182,7 +1206,10 @@ func (s *UserDebug) EnableBreakpoint(breakpointID uint32) {
 		Request:      DebuggeeBreakpointModificationRequestEnable,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
 
 	if unsafe.Sizeof(req) != req.ExpectedSize() {
 		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
@@ -1199,7 +1226,10 @@ func (s *UserDebug) EnableBreakpoint(breakpointID uint32) {
 	}
 
 	var resp DebuggeeBpListOrModifyPacket
-	mylog.Check(binary.Read(response, binary.LittleEndian, &resp))
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
 
 	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("启用断点失败", ShowErrorMessage(resp.Result), resp.Result)
@@ -1244,7 +1274,10 @@ func (s *UserDebug) Breakpoints() []Breakpoint {
 	}
 
 	var resp DebuggeeBpListOrModifyPacket
-	mylog.Check(binary.Read(response, binary.LittleEndian, &resp))
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return nil
+	}
 
 	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("列出断点失败", ShowErrorMessage(resp.Result), resp.Result)
@@ -1317,10 +1350,16 @@ func (s *UserDebug) SetBreakpoint(address uint64) {
 		Result:            0,
 	}
 
-	mylog.Check(bpPacket.Validate())
+	if err := bpPacket.Validate(); err != nil {
+		mylog.Warning("断点包验证失败", err)
+		return
+	}
 
 	buffer := new(bytes.Buffer)
-	mylog.Check(binary.Write(buffer, binary.LittleEndian, &bpPacket))
+	if err := binary.Write(buffer, binary.LittleEndian, &bpPacket); err != nil {
+		mylog.Warning("序列化断点请求失败", err)
+		return
+	}
 
 	if buffer.Len() != int(bpPacket.ExpectedSerSize()) {
 		mylog.Warning("断点包序列化大小不匹配", "got", buffer.Len(), "want", bpPacket.ExpectedSerSize())
@@ -1341,10 +1380,13 @@ func (s *UserDebug) SetBreakpoint(address uint64) {
 	}
 
 	var respPacket DebuggeeBpPacket
-	mylog.Check(binary.Read(response, binary.LittleEndian, &respPacket))
+	if err := binary.Read(response, binary.LittleEndian, &respPacket); err != nil {
+		mylog.Warning("反序列化断点响应失败", err)
+		return
+	}
 
 	if respPacket.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
-		mylog.Warning("设置断点失败", ShowErrorMessage(respPacket.Result))
+		mylog.Warning("设置断点失败", ShowErrorMessage(respPacket.Result), respPacket.Result)
 		return
 	}
 
@@ -1406,7 +1448,10 @@ func (s *UserDebug) Continue() {
 		WaitForEventCompletion:      1,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
 
 	if unsafe.Sizeof(req) != req.ExpectedSize() {
 		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
@@ -1423,7 +1468,10 @@ func (s *UserDebug) Continue() {
 	}
 
 	var resp DebuggerUdCommandPacket
-	mylog.Check(binary.Read(response, binary.LittleEndian, &resp))
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
 
 	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("继续执行失败", ShowErrorMessage(resp.Result), resp.Result)
@@ -1473,7 +1521,10 @@ func (s *UserDebug) StepOut() {
 		WaitForEventCompletion:      1,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
 
 	if unsafe.Sizeof(req) != req.ExpectedSize() {
 		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
@@ -1490,7 +1541,10 @@ func (s *UserDebug) StepOut() {
 	}
 
 	var resp DebuggerUdCommandPacket
-	mylog.Check(binary.Read(response, binary.LittleEndian, &resp))
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
 
 	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("StepOut失败", ShowErrorMessage(resp.Result), resp.Result)
@@ -1527,7 +1581,10 @@ func (s *UserDebug) Pause() {
 		Action:               DebuggerAttachDetachUserModeProcessActionPauseProcess,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
 
 	if unsafe.Sizeof(req) != req.ExpectedSize() {
 		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
@@ -1544,7 +1601,10 @@ func (s *UserDebug) Pause() {
 	}
 
 	var resp DebuggerAttachDetachUserModeProcess
-	mylog.Check(binary.Read(response, binary.LittleEndian, &resp))
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
 
 	if resp.Result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("暂停进程失败", ShowErrorMessage(uint32(resp.Result)), resp.Result)
@@ -1588,7 +1648,10 @@ func (s *UserDebug) Registers() []register.RegisterContext {
 		TargetThreadId:              s.activeProcess.ThreadId,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return nil
+	}
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1600,7 +1663,10 @@ func (s *UserDebug) Registers() []register.RegisterContext {
 	}
 
 	var resp DebuggerUdCommandPacket
-	mylog.Check(binary.Read(response, binary.LittleEndian, &resp))
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return nil
+	}
 
 	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("读取寄存器失败", ShowErrorMessage(resp.Result), resp.Result)
@@ -1644,7 +1710,10 @@ func (s *UserDebug) SendUserInput(input string) {
 		TargetThreadId:              s.activeProcess.ThreadId,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1656,7 +1725,10 @@ func (s *UserDebug) SendUserInput(input string) {
 	}
 
 	var resp DebuggerUdCommandPacket
-	mylog.Check(binary.Read(response, binary.LittleEndian, &resp))
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
 
 	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("发送用户输入失败", ShowErrorMessage(resp.Result), resp.Result)
@@ -1705,7 +1777,10 @@ func (s *UserDebug) StepInto() {
 		TargetThreadId:              s.activeProcess.ThreadId,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1777,7 +1852,10 @@ func (s *UserDebug) WriteRegisters(regs []register.RegisterContext) {
 		TargetThreadId:              s.activeProcess.ThreadId,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return
+	}
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -1789,7 +1867,10 @@ func (s *UserDebug) WriteRegisters(regs []register.RegisterContext) {
 	}
 
 	var resp DebuggerUdCommandPacket
-	mylog.Check(binary.Read(response, binary.LittleEndian, &resp))
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
 
 	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("写入寄存器失败", ShowErrorMessage(resp.Result), resp.Result)
@@ -1840,12 +1921,7 @@ func (s *UserDebug) ReadMemory(address uint64, size uint32) []byte {
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
-
 	response := s.packeter.DriverProvider.SendReceive(buf, IoctlDebuggerReadMemory)
-	if response.Len() == 0 {
-		mylog.Warning("内核返回空响应")
-		return nil
-	}
 
 	status := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	if status != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
@@ -1902,12 +1978,7 @@ func (s *UserDebug) WriteMemory(address uint64, data []byte) {
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
 	binary.Write(buf, binary.LittleEndian, data)
-
 	response := s.packeter.DriverProvider.SendReceive(buf, IoctlDebuggerEditMemory)
-	if response.Len() == 0 {
-		mylog.Warning("内核返回空响应")
-		return
-	}
 
 	status := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	if status != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
@@ -1954,7 +2025,10 @@ func (s *UserDebug) Modules() []ModuleInfo {
 		ProcessDebuggingDetailToken: token,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return nil
+	}
 
 	if unsafe.Sizeof(req) != req.ExpectedSize() {
 		mylog.Warning("结构大小不匹配", "got", unsafe.Sizeof(req), "want", req.ExpectedSize())
@@ -1973,7 +2047,7 @@ func (s *UserDebug) Modules() []ModuleInfo {
 	count := binary.LittleEndian.Uint32(response.Bytes()[0:4])
 	modules := make([]ModuleInfo, count)
 
-	for i := range count {
+	for i := uint32(0); i < count; i++ {
 		offset := 4 + uintptr(i)*16
 		if offset+16 > uintptr(response.Len()) {
 			break
@@ -2023,7 +2097,10 @@ func (s *UserDebug) CallStack() []StackFrame {
 		TargetThreadId:              s.activeProcess.ThreadId,
 	}
 
-	mylog.Check(req.Validate())
+	if err := req.Validate(); err != nil {
+		mylog.Warning("验证失败", err)
+		return nil
+	}
 
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, &req)
@@ -2035,7 +2112,10 @@ func (s *UserDebug) CallStack() []StackFrame {
 	}
 
 	var resp DebuggerUdCommandPacket
-	mylog.Check(binary.Read(response, binary.LittleEndian, &resp))
+	if err := binary.Read(response, binary.LittleEndian, &resp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return nil
+	}
 
 	if resp.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("获取调用栈失败", ShowErrorMessage(resp.Result), resp.Result)

@@ -89,7 +89,7 @@ func (s *KernelDebug) sendStepPacket(requestType StepRequestType) error {
 	*(*uint64)(unsafe.Pointer(&buffer[0])) = uint64(requestType)
 	*(*uint64)(unsafe.Pointer(&buffer[8])) = 0
 
-	s.packet.driver.Send(bytes.NewBuffer(buffer), IoctlStepRequest)
+	s.packet.driver.SendReceive(bytes.NewBuffer(buffer), IoctlStepRequest)
 
 	mylog.Info(requestType)
 	return nil
