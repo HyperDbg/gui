@@ -894,15 +894,19 @@ func (s *UserDebug) StartProcess(path string) {
 
 	mylog.Info("等待进程到达入口点")
 	for i := range 30 {
-		attachReq.Action = DebuggerAttachDetachUserModeProcessActionRemoveHooks
-		attachReq.Token = attachResp.Token
+		removeHooksReq := DebuggerAttachDetachUserModeProcess{
+			ProcessId: procInfo.ProcessId,
+			ThreadId:  procInfo.ThreadId,
+			Action:    DebuggerAttachDetachUserModeProcessActionRemoveHooks,
+			Token:     attachResp.Token,
+		}
 
-		if err := attachReq.Validate(); err != nil {
+		if err := removeHooksReq.Validate(); err != nil {
 			mylog.Warning("RemoveHooks请求验证失败", err)
 			return
 		}
 
-		buf := attachReq.Serialize()
+		buf := removeHooksReq.Serialize()
 		mylog.Info("REMOVE_HOOKS 请求", "hex", fmt.Sprintf("%x", buf))
 
 		response = s.packeter.DriverProvider.SendReceive(bytes.NewBuffer(buf), IoctlDebuggerAttachDetachUserModeProcess)
@@ -920,8 +924,9 @@ func (s *UserDebug) StartProcess(path string) {
 
 		if attachResp.Result == uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 			if attachResp.Rip == 0 {
-				mylog.Warning("REMOVE_HOOKS 成功但 Rip 为 0，入口点检测失败")
-				return
+				mylog.Warning("REMOVE_HOOKS 成功但 Rip 为 0，继续等待")
+				time.Sleep(time.Second)
+				continue
 			}
 			mylog.Info("Hook 移除成功，进程已到达入口点")
 			s.activeProcess.Rip = attachResp.Rip
