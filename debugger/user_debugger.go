@@ -725,26 +725,30 @@ func (s *UserDebug) KillProcess(pid uint32) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	mylog.Info("KillProcess 被调用", "请求pid", pid)
+
 	if !s.packeter.DriverProvider.IsConnected() {
-		mylog.Warning("驱动未连接，无法终止进程")
+		mylog.Warning("KillProcess 检查失败: 驱动未连接，无法终止进程")
 		return
 	}
 
 	if s.activeProcess.ProcessId != pid {
-		mylog.Warning("进程ID不匹配，无法终止", "请求pid", pid, "当前pid", s.activeProcess.ProcessId)
+		mylog.Warning("KillProcess 检查失败: 进程ID不匹配", "请求pid", pid, "当前pid", s.activeProcess.ProcessId)
 		return
 	}
 
 	if !s.activeProcess.IsActive {
-		mylog.Warning("进程未处于活动状态")
+		mylog.Warning("KillProcess 检查失败: 进程未处于活动状态")
 		return
 	}
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
 	if !ok || token == 0 {
-		mylog.Warning("调试令牌无效")
+		mylog.Warning("KillProcess 检查失败: 调试令牌无效", "ok", ok, "token", token)
 		return
 	}
+
+	mylog.Info("KillProcess 检查通过，发送终止进程请求")
 
 	req := DebuggerAttachDetachUserModeProcess{
 		IsStartingNewProcess: 0,
@@ -755,7 +759,7 @@ func (s *UserDebug) KillProcess(pid uint32) {
 	}
 
 	if err := req.Validate(); err != nil {
-		mylog.Warning("验证失败", err)
+		mylog.Warning("KillProcess 验证失败", err)
 		return
 	}
 
@@ -763,7 +767,7 @@ func (s *UserDebug) KillProcess(pid uint32) {
 
 	response := s.packeter.DriverProvider.SendReceive(buf, IoctlDebuggerAttachDetachUserModeProcess)
 	if response.Len() == 0 {
-		mylog.Warning("内核返回空响应")
+		mylog.Warning("KillProcess 失败: 内核返回空响应")
 		return
 	}
 
@@ -1301,27 +1305,29 @@ func (s *UserDebug) SetBreakpoint(address uint64) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	mylog.Info("SetBreakpoint 被调用", "address", address)
+
 	if !s.packeter.DriverProvider.IsConnected() {
-		mylog.Warning("驱动未连接，无法设置断点")
+		mylog.Warning("SetBreakpoint 检查失败: 驱动未连接")
 		return
 	}
 
 	if !s.activeProcess.IsActive {
-		mylog.Warning("没有活动的调试进程")
+		mylog.Warning("SetBreakpoint 检查失败: 没有活动的调试进程")
 		return
 	}
 
 	if s.activeProcess.ProcessId == 0 || s.activeProcess.ThreadId == 0 {
-		mylog.Warning("进程ID或线程ID无效", "ProcessId", s.activeProcess.ProcessId, "ThreadId", s.activeProcess.ThreadId)
+		mylog.Warning("SetBreakpoint 检查失败: 进程ID或线程ID无效", "ProcessId", s.activeProcess.ProcessId, "ThreadId", s.activeProcess.ThreadId)
 		return
 	}
 
 	if address == 0 {
-		mylog.Warning("断点地址无效")
+		mylog.Warning("SetBreakpoint 检查失败: 断点地址无效")
 		return
 	}
 
-	mylog.Info("设置断点", address)
+	mylog.Info("SetBreakpoint 检查通过，发送断点请求", "address", address)
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
 	if !ok || token == 0 {
@@ -1750,18 +1756,20 @@ func (s *UserDebug) StepInto() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	mylog.Info("StepInto 被调用")
+
 	if !s.activeProcess.IsActive {
-		mylog.Warning("没有活动的调试进程")
+		mylog.Warning("StepInto 检查失败: 没有活动的调试进程")
 		return
 	}
-
-	mylog.Info("执行单步进入")
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
 	if !ok || token == 0 {
-		mylog.Warning("调试令牌无效")
+		mylog.Warning("StepInto 检查失败: 调试令牌无效", "ok", ok, "token", token)
 		return
 	}
+
+	mylog.Info("StepInto 检查通过，发送单步请求")
 
 	req := DebuggerUdCommandPacket{
 		UdAction: DebuggerUdCommandAction{
@@ -1892,18 +1900,20 @@ func (s *UserDebug) ReadMemory(address uint64, size uint32) []byte {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	mylog.Info("ReadMemory 被调用", "address", address, "size", size)
+
 	if !s.activeProcess.IsActive {
-		mylog.Warning("没有活动的调试进程")
+		mylog.Warning("ReadMemory 检查失败: 没有活动的调试进程")
 		return nil
 	}
-
-	mylog.Info("读取内存", "address", address, "size", size)
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
 	if !ok || token == 0 {
-		mylog.Warning("调试令牌无效")
+		mylog.Warning("ReadMemory 检查失败: 调试令牌无效", "ok", ok, "token", token)
 		return nil
 	}
+
+	mylog.Info("ReadMemory 检查通过，发送读取请求")
 
 	req := DebuggerReadMemoryRequest{
 		ProcessId:  s.activeProcess.ProcessId,
@@ -1948,18 +1958,20 @@ func (s *UserDebug) WriteMemory(address uint64, data []byte) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	mylog.Info("WriteMemory 被调用", "address", address, "size", len(data))
+
 	if !s.activeProcess.IsActive {
-		mylog.Warning("没有活动的调试进程")
+		mylog.Warning("WriteMemory 检查失败: 没有活动的调试进程")
 		return
 	}
-
-	mylog.Info("写入内存", "address", address, "size", len(data))
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
 	if !ok || token == 0 {
-		mylog.Warning("调试令牌无效")
+		mylog.Warning("WriteMemory 检查失败: 调试令牌无效", "ok", ok, "token", token)
 		return
 	}
+
+	mylog.Info("WriteMemory 检查通过，发送写入请求")
 
 	req := DebuggerEditMemoryRequest{
 		ProcessId:  s.activeProcess.ProcessId,
