@@ -884,7 +884,7 @@ func enableSeDebugPrivilege() error {
 | 文件 | 路径 | 说明 |
 |-----|------|------|
 | VMM 管理 | [debugger/vmm.go](../debugger/vmm.go) | VMM 初始化和终止 |
-| CPU 检测 | [debugger/hardware/cpu.go](../debugger/hardware/cpu.go) | CPU 厂商和 VT-x 检测 |
+| CPU 检测 | [walker/hardware/cpu.go](../walker/hardware/cpu.go) | CPU 厂商和 VT-x 检测 |
 
 ### 7.4 调试器核心文件
 

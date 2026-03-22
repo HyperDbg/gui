@@ -16,7 +16,6 @@ import (
 	"github.com/ddkwork/HyperDbg/debugger/function"
 	"github.com/ddkwork/HyperDbg/debugger/graph"
 	"github.com/ddkwork/HyperDbg/debugger/handle"
-	"github.com/ddkwork/HyperDbg/debugger/hardware"
 	"github.com/ddkwork/HyperDbg/debugger/label"
 	"github.com/ddkwork/HyperDbg/debugger/loop"
 	"github.com/ddkwork/HyperDbg/debugger/memory"
@@ -35,6 +34,7 @@ import (
 	"github.com/ddkwork/HyperDbg/debugger/type_"
 	"github.com/ddkwork/HyperDbg/debugger/watch"
 	"github.com/ddkwork/HyperDbg/debugger/xref"
+	"github.com/ddkwork/HyperDbg/walker/hardware"
 	"github.com/ddkwork/golibrary/std/mylog"
 )
 
