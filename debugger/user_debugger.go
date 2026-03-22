@@ -895,12 +895,14 @@ func (s *UserDebug) StartProcess(path string) {
 	// ⚠️ BSOD 问题：如果 REMOVE_HOOKS 返回成功但 Rip=0，继续等待可能导致 BSOD
 	// 原因：驱动卸载后回调未清理导致的间接崩溃
 	// 解决方案：如果 Rip=0，应该直接返回失败而不是继续等待
+	// 注意：必须设置 Token，否则会导致 BSOD (Bugcheck: d1)
 	mylog.Info("等待进程到达入口点")
 	for i := range 30 {
 		removeHooksReq := DebuggerAttachDetachUserModeProcess{
 			ProcessId: procInfo.ProcessId,
 			ThreadId:  procInfo.ThreadId,
 			Action:    DebuggerAttachDetachUserModeProcessActionRemoveHooks,
+			Token:     attachResp.Token,
 		}
 
 		if err := removeHooksReq.Validate(); err != nil {
@@ -926,9 +928,8 @@ func (s *UserDebug) StartProcess(path string) {
 
 		if attachResp.Result == uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 			if attachResp.Rip == 0 {
-				mylog.Warning("REMOVE_HOOKS 成功但 Rip 为 0，继续等待")
-				time.Sleep(5 * time.Second)
-				continue
+				mylog.Warning("REMOVE_HOOKS 成功但 Rip 为 0，入口点检测失败")
+				return
 			}
 			mylog.Info("Hook 移除成功，进程已到达入口点")
 			s.activeProcess.Rip = attachResp.Rip
