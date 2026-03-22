@@ -740,12 +740,18 @@ func (s *UserDebug) KillProcess(pid uint32) {
 		return
 	}
 
+	token, ok := s.activeProcess.DebuggingToken.(uint64)
+	if !ok || token == 0 {
+		mylog.Warning("调试令牌无效")
+		return
+	}
+
 	req := DebuggerAttachDetachUserModeProcess{
 		IsStartingNewProcess: 0,
 		ProcessId:            pid,
 		ThreadId:             s.activeProcess.ThreadId,
 		Action:               DebuggerAttachDetachUserModeProcessActionKillProcess,
-		Token:                s.activeProcess.DebuggingToken.(uint64),
+		Token:                token,
 	}
 
 	if err := req.Validate(); err != nil {
