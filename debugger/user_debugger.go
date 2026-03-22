@@ -748,9 +748,20 @@ func (s *UserDebug) StartProcess(path string) {
 		s.initializeUserDebugger()
 	}
 
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接，无法启动进程")
+		return
+	}
+
 	procInfo := s.createSuspendedProcess(path)
 	if procInfo == nil {
-		mylog.Check("创建挂起进程失败")
+		mylog.Warning("创建挂起进程失败")
+		return
+	}
+
+	if procInfo.ProcessId == 0 || procInfo.ThreadId == 0 {
+		mylog.Warning("进程ID或线程ID无效", "ProcessId", procInfo.ProcessId, "ThreadId", procInfo.ThreadId)
+		return
 	}
 
 	s.activeProcess = UserActiveDebuggingProcess{
@@ -768,18 +779,50 @@ func (s *UserDebug) StartProcess(path string) {
 		Action:                          DebuggerAttachDetachUserModeProcessActionAttach,
 	}
 
-	buffer := new(bytes.Buffer)
-	mylog.Check(binary.Write(buffer, binary.LittleEndian, &attachReq))
+	if err := attachReq.Validate(); err != nil {
+		mylog.Warning("attach请求验证失败", err)
+		return
+	}
 
-	mylog.Info("发送 ATTACH IOCTL 到内核")
-	s.packeter.DriverProvider.Send(buffer, IoctlDebuggerAttachDetachUserModeProcess)
-	response := s.packeter.DriverProvider.Receive(IoctlDebuggerAttachDetachUserModeProcess)
+	if unsafe.Sizeof(attachReq) != attachReq.ExpectedSize() {
+		mylog.Warning("attach请求大小不匹配", "got", unsafe.Sizeof(attachReq), "want", attachReq.ExpectedSize())
+		return
+	}
+
+	buffer := new(bytes.Buffer)
+	if err := binary.Write(buffer, binary.LittleEndian, &attachReq); err != nil {
+		mylog.Warning("序列化请求失败", err)
+		return
+	}
+
+	mylog.Info("发送 ATTACH IOCTL 到内核", "size", buffer.Len())
+	response := s.packeter.DriverProvider.SendReceive(buffer, IoctlDebuggerAttachDetachUserModeProcess)
+
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	if response.Len() < int(unsafe.Sizeof(DebuggerAttachDetachUserModeProcess{})) {
+		mylog.Warning("内核返回数据不完整", "got", response.Len(), "want", unsafe.Sizeof(DebuggerAttachDetachUserModeProcess{}))
+		return
+	}
 
 	var attachResp DebuggerAttachDetachUserModeProcess
-	mylog.Check(binary.Read(response, binary.LittleEndian, &attachResp))
+	if err := binary.Read(response, binary.LittleEndian, &attachResp); err != nil {
+		mylog.Warning("反序列化响应失败", err)
+		return
+	}
+
+	mylog.Info("ATTACH 响应", "Result", attachResp.Result, "Token", attachResp.Token)
 
 	if attachResp.Result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("ATTACH 失败", ShowErrorMessage(uint32(attachResp.Result)), attachResp.Result)
+		return
+	}
+
+	if attachResp.Token == 0 {
+		mylog.Warning("调试令牌无效")
 		return
 	}
 
@@ -791,13 +834,29 @@ func (s *UserDebug) StartProcess(path string) {
 		attachReq.Action = DebuggerAttachDetachUserModeProcessActionRemoveHooks
 		attachReq.Token = attachResp.Token
 
+		if err := attachReq.Validate(); err != nil {
+			mylog.Warning("RemoveHooks请求验证失败", err)
+			return
+		}
+
 		buffer = new(bytes.Buffer)
-		mylog.Check(binary.Write(buffer, binary.LittleEndian, &attachReq))
+		if err := binary.Write(buffer, binary.LittleEndian, &attachReq); err != nil {
+			mylog.Warning("序列化请求失败", err)
+			return
+		}
 
-		s.packeter.DriverProvider.Send(buffer, IoctlDebuggerAttachDetachUserModeProcess)
-		response = s.packeter.DriverProvider.Receive(IoctlDebuggerAttachDetachUserModeProcess)
+		response = s.packeter.DriverProvider.SendReceive(buffer, IoctlDebuggerAttachDetachUserModeProcess)
+		if response.Len() < int(unsafe.Sizeof(DebuggerAttachDetachUserModeProcess{})) {
+			mylog.Warning("内核返回数据不完整")
+			time.Sleep(time.Second)
+			continue
+		}
 
-		mylog.Check(binary.Read(response, binary.LittleEndian, &attachResp))
+		if err := binary.Read(response, binary.LittleEndian, &attachResp); err != nil {
+			mylog.Warning("反序列化响应失败", err)
+			time.Sleep(time.Second)
+			continue
+		}
 
 		if attachResp.Result == uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 			mylog.Info("Hook 移除成功，进程已到达入口点")
@@ -997,8 +1056,23 @@ func (s *UserDebug) SetBreakpoint(address uint64) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	if !s.packeter.DriverProvider.IsConnected() {
+		mylog.Warning("驱动未连接，无法设置断点")
+		return
+	}
+
 	if !s.activeProcess.IsActive {
 		mylog.Warning("没有活动的调试进程")
+		return
+	}
+
+	if s.activeProcess.ProcessId == 0 || s.activeProcess.ThreadId == 0 {
+		mylog.Warning("进程ID或线程ID无效", "ProcessId", s.activeProcess.ProcessId, "ThreadId", s.activeProcess.ThreadId)
+		return
+	}
+
+	if address == 0 {
+		mylog.Warning("断点地址无效")
 		return
 	}
 
@@ -1010,19 +1084,58 @@ func (s *UserDebug) SetBreakpoint(address uint64) {
 		return
 	}
 
-	buffer := make([]byte, 32)
-	binary.LittleEndian.PutUint32(buffer[0:4], s.activeProcess.ProcessId)
-	binary.LittleEndian.PutUint32(buffer[4:8], s.activeProcess.ThreadId)
-	binary.LittleEndian.PutUint32(buffer[8:12], 0)
-	binary.LittleEndian.PutUint64(buffer[12:20], address)
-	binary.LittleEndian.PutUint64(buffer[20:28], token)
+	if token == 0 {
+		mylog.Warning("调试令牌无效")
+		return
+	}
 
-	s.packeter.DriverProvider.Send(bytes.NewBuffer(buffer), IoctlSetBreakpointUserDebugger)
-	response := s.packeter.DriverProvider.Receive(IoctlSetBreakpointUserDebugger)
+	bpPacket := DebuggeeBpPacket{
+		Address:           address,
+		Pid:               s.activeProcess.ProcessId,
+		Tid:               s.activeProcess.ThreadId,
+		Core:              0,
+		RemoveAfterHit:    0,
+		CheckForCallbacks: 0,
+		Result:            0,
+	}
 
-	status := binary.LittleEndian.Uint32(response.Bytes()[0:4])
-	if status != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
-		mylog.Warning("设置断点失败", ShowErrorMessage(status), status)
+	if err := bpPacket.Validate(); err != nil {
+		mylog.Warning("断点包验证失败", err)
+		return
+	}
+
+	if unsafe.Sizeof(bpPacket) != bpPacket.ExpectedSize() {
+		mylog.Warning("断点包大小不匹配", "got", unsafe.Sizeof(bpPacket), "want", bpPacket.ExpectedSize())
+		return
+	}
+
+	buffer := new(bytes.Buffer)
+	if err := binary.Write(buffer, binary.LittleEndian, &bpPacket); err != nil {
+		mylog.Warning("序列化断点请求失败", err)
+		return
+	}
+
+	mylog.Info("发送断点 IOCTL", "size", buffer.Len(), "token", token)
+	response := s.packeter.DriverProvider.SendReceive(buffer, IoctlSetBreakpointUserDebugger)
+
+	if response.Len() == 0 {
+		mylog.Warning("内核返回空响应")
+		return
+	}
+
+	if response.Len() < int(unsafe.Sizeof(DebuggeeBpPacket{})) {
+		mylog.Warning("内核返回数据不完整", "got", response.Len(), "want", unsafe.Sizeof(DebuggeeBpPacket{}))
+		return
+	}
+
+	var respPacket DebuggeeBpPacket
+	if err := binary.Read(response, binary.LittleEndian, &respPacket); err != nil {
+		mylog.Warning("反序列化断点响应失败", err)
+		return
+	}
+
+	if respPacket.Result != uint32(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
+		mylog.Warning("设置断点失败", ShowErrorMessage(respPacket.Result), respPacket.Result)
 		return
 	}
 

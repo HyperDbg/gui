@@ -1,5 +1,16 @@
 package debugger
 
+import "errors"
+
+type Validator interface {
+	Validate() error
+}
+
+type SizeVerifier interface {
+	ExpectedSize() uintptr
+	ExpectedSerSize() uintptr
+}
+
 type DebuggerReadMemoryAddressMode uint32
 
 const (
@@ -402,18 +413,32 @@ const (
 
 type DebuggerAttachDetachUserModeProcess struct {
 	IsStartingNewProcess                      uint8
+	_                                         [3]byte
 	ProcessId                                 uint32
 	ThreadId                                  uint32
 	CheckCallbackAtFirstInstruction           uint8
 	Is32Bit                                   uint8
+	_                                         [2]byte
 	Rip                                       uint64
 	InstructionBytesOnRip                     [16]byte
 	SizeOfInstruction                         uint32
 	IsPaused                                  uint8
+	_                                         [3]byte
 	Action                                    DebuggerAttachDetachUserModeProcessActionType
 	CountOfActiveDebuggingThreadsAndProcesses uint32
 	Token                                     uint64
 	Result                                    uint64
+}
+
+type DebuggeeBpPacket struct {
+	Address           uint64
+	Pid               uint32
+	Tid               uint32
+	Core              uint32
+	RemoveAfterHit    uint8
+	CheckForCallbacks uint8
+	_                 [2]byte
+	Result            uint32
 }
 
 type CoreInfo struct {
@@ -685,8 +710,9 @@ type DebuggerUdCommandPacket struct {
 	UdAction                    DebuggerUdCommandAction
 	ProcessDebuggingDetailToken uint64
 	TargetThreadId              uint32
-	ApplyToAllPausedThreads     bool
-	WaitForEventCompletion      bool
+	ApplyToAllPausedThreads     uint8
+	WaitForEventCompletion      uint8
+	_                           [2]byte
 	Result                      uint32
 }
 
@@ -694,7 +720,306 @@ type DebuggerSetBreakpointUserDebugger struct {
 	ProcessId                   uint32
 	ThreadId                    uint32
 	BreakpointType              uint32
+	_                           [4]byte
 	Address                     uint64
 	ProcessDebuggingDetailToken uint64
 	Result                      uint32
+	_                           [4]byte
+}
+
+func (s *DebuggerAttachDetachUserModeProcess) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	if s.ThreadId == 0 {
+		return errors.New("ThreadId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerAttachDetachUserModeProcess) ExpectedSize() uintptr {
+	return 72
+}
+
+func (s *DebuggerAttachDetachUserModeProcess) ExpectedSerSize() uintptr {
+	return 72
+}
+
+func (s *DebuggeeBpPacket) Validate() error {
+	if s.Pid == 0 {
+		return errors.New("Pid cannot be zero")
+	}
+	if s.Tid == 0 {
+		return errors.New("Tid cannot be zero")
+	}
+	if s.Address == 0 {
+		return errors.New("Address cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggeeBpPacket) ExpectedSize() uintptr {
+	return 32
+}
+
+func (s *DebuggeeBpPacket) ExpectedSerSize() uintptr {
+	return 28
+}
+
+func (s *DebuggerUdCommandPacket) Validate() error {
+	if s.ProcessDebuggingDetailToken == 0 {
+		return errors.New("ProcessDebuggingDetailToken cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerUdCommandPacket) ExpectedSize() uintptr {
+	return 64
+}
+
+func (s *DebuggerUdCommandPacket) ExpectedSerSize() uintptr {
+	return 64
+}
+
+func (s *DebuggerUdCommandAction) Validate() error {
+	return nil
+}
+
+func (s *DebuggerUdCommandAction) ExpectedSize() uintptr {
+	return 40
+}
+
+func (s *DebuggerUdCommandAction) ExpectedSerSize() uintptr {
+	return 40
+}
+
+func (s *DebuggerReadMemory) Validate() error {
+	if s.Pid == 0 {
+		return errors.New("Pid cannot be zero")
+	}
+	if s.Size == 0 {
+		return errors.New("Size cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerReadMemory) ExpectedSize() uintptr {
+	return 48
+}
+
+func (s *DebuggerReadMemory) ExpectedSerSize() uintptr {
+	return 48
+}
+
+func (s *DebuggerSetBreakpointUserDebugger) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	if s.ThreadId == 0 {
+		return errors.New("ThreadId cannot be zero")
+	}
+	if s.Address == 0 {
+		return errors.New("Address cannot be zero")
+	}
+	if s.ProcessDebuggingDetailToken == 0 {
+		return errors.New("ProcessDebuggingDetailToken cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerSetBreakpointUserDebugger) ExpectedSize() uintptr {
+	return 40
+}
+
+func (s *DebuggerSetBreakpointUserDebugger) ExpectedSerSize() uintptr {
+	return 40
+}
+
+func (s *DebuggerVa2paAndPa2vaCommands) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerVa2paAndPa2vaCommands) ExpectedSize() uintptr {
+	return 32
+}
+
+func (s *DebuggerVa2paAndPa2vaCommands) ExpectedSerSize() uintptr {
+	return 32
+}
+
+func (s *DebuggerGeneralEventDetails) Validate() error {
+	return nil
+}
+
+func (s *DebuggerGeneralEventDetails) ExpectedSize() uintptr {
+	return 24
+}
+
+func (s *DebuggerGeneralEventDetails) ExpectedSerSize() uintptr {
+	return 24
+}
+
+func (s *DebuggerEventAction) Validate() error {
+	return nil
+}
+
+func (s *DebuggerEventAction) ExpectedSize() uintptr {
+	return 56
+}
+
+func (s *DebuggerEventAction) ExpectedSerSize() uintptr {
+	return 56
+}
+
+func (s *DebuggerModifyEventRequest) Validate() error {
+	return nil
+}
+
+func (s *DebuggerModifyEventRequest) ExpectedSize() uintptr {
+	return 24
+}
+
+func (s *DebuggerModifyEventRequest) ExpectedSerSize() uintptr {
+	return 24
+}
+
+func (s *DebuggerEventAndActionResult) Validate() error {
+	return nil
+}
+
+func (s *DebuggerEventAndActionResult) ExpectedSize() uintptr {
+	return 8
+}
+
+func (s *DebuggerEventAndActionResult) ExpectedSerSize() uintptr {
+	return 8
+}
+
+func (s *DebuggeeKdPausedPacket) Validate() error {
+	return nil
+}
+
+func (s *DebuggeeKdPausedPacket) ExpectedSize() uintptr {
+	return 72
+}
+
+func (s *DebuggeeKdPausedPacket) ExpectedSerSize() uintptr {
+	return 72
+}
+
+func (s *DebuggeeDetailsAndSwitchProcessPacket) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggeeDetailsAndSwitchProcessPacket) ExpectedSize() uintptr {
+	return 56
+}
+
+func (s *DebuggeeDetailsAndSwitchProcessPacket) ExpectedSerSize() uintptr {
+	return 56
+}
+
+func (s *DebuggeeDetailsAndSwitchThreadPacket) Validate() error {
+	if s.ThreadId == 0 {
+		return errors.New("ThreadId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggeeDetailsAndSwitchThreadPacket) ExpectedSize() uintptr {
+	return 48
+}
+
+func (s *DebuggeeDetailsAndSwitchThreadPacket) ExpectedSerSize() uintptr {
+	return 48
+}
+
+func (s *DebuggeeRegisterReadDescription) Validate() error {
+	return nil
+}
+
+func (s *DebuggeeRegisterReadDescription) ExpectedSize() uintptr {
+	return 24
+}
+
+func (s *DebuggeeRegisterReadDescription) ExpectedSerSize() uintptr {
+	return 24
+}
+
+func (s *PageTableEntries) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *PageTableEntries) ExpectedSize() uintptr {
+	return 80
+}
+
+func (s *PageTableEntries) ExpectedSerSize() uintptr {
+	return 80
+}
+
+func (s *DebuggerReadPageTableEntriesDetails) Validate() error {
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *DebuggerReadPageTableEntriesDetails) ExpectedSize() uintptr {
+	return 88
+}
+
+func (s *DebuggerReadPageTableEntriesDetails) ExpectedSerSize() uintptr {
+	return 88
+}
+
+func (s *CoreInfo) Validate() error {
+	return nil
+}
+
+func (s *CoreInfo) ExpectedSize() uintptr {
+	return 16
+}
+
+func (s *CoreInfo) ExpectedSerSize() uintptr {
+	return 16
+}
+
+func (s *VersionInfo) Validate() error {
+	return nil
+}
+
+func (s *VersionInfo) ExpectedSize() uintptr {
+	return 20
+}
+
+func (s *VersionInfo) ExpectedSerSize() uintptr {
+	return 20
+}
+
+func (s *UserModeProcessDetails) Validate() error {
+	if s.Token == 0 {
+		return errors.New("Token cannot be zero")
+	}
+	if s.ProcessId == 0 {
+		return errors.New("ProcessId cannot be zero")
+	}
+	return nil
+}
+
+func (s *UserModeProcessDetails) ExpectedSize() uintptr {
+	return 48
+}
+
+func (s *UserModeProcessDetails) ExpectedSerSize() uintptr {
+	return 48
 }

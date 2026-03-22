@@ -28,6 +28,7 @@ type Api interface {
 	IsConnected() bool
 	Close()
 	Send(buffer *bytes.Buffer, ioctlCode uint32)
+	SendReceive(buffer *bytes.Buffer, ioctlCode uint32) *bytes.Buffer
 	Receive(ioctlCode uint32) *bytes.Buffer
 }
 
@@ -237,6 +238,22 @@ func (p *Provider) Send(buffer *bytes.Buffer, ioctlCode uint32) {
 		&bytesReturned,
 		nil,
 	))
+	buffer.Truncate(int(bytesReturned))
+}
+
+func (p *Provider) SendReceive(buffer *bytes.Buffer, ioctlCode uint32) *bytes.Buffer {
+	var bytesReturned uint32
+	mylog.Check(windows.DeviceIoControl(
+		windows.Handle(p.deviceHandle),
+		ioctlCode,
+		unsafe.SliceData(buffer.Bytes()),
+		uint32(buffer.Len()),
+		unsafe.SliceData(buffer.Bytes()),
+		uint32(buffer.Len()),
+		&bytesReturned,
+		nil,
+	))
+	return bytes.NewBuffer(buffer.Bytes()[:bytesReturned])
 }
 
 func (p *Provider) Receive(ioctlCode uint32) *bytes.Buffer {
