@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/ddkwork/golibrary/std/mylog"
 )
@@ -17,6 +18,7 @@ import (
 type Analyzer struct {
 	WinDbgPath     string
 	SymbolPath     string
+	SourcePath     string
 	DriverName     string
 	PdbPath        string
 	OutputDir      string
@@ -43,6 +45,8 @@ type AnalysisResult struct {
 	CrashOffset      string
 	IsDriverCrash    bool
 	CrashReason      string
+	RawOutput        string
+	AIAnalysis       string
 }
 
 type UnloadedModule struct {
@@ -66,14 +70,17 @@ type StackFrame struct {
 
 func NewAnalyzer() *Analyzer {
 	pdbPath := `D:\笔记本\p\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\build\Release`
+	sourcePath := `D:\笔记本\p\ux\examples\hypedbg\cpp\HyperDbgUnified\HyperDbg\hyperdbg`
 	driverName := "hyperkd"
+
 	a := &Analyzer{
 		WinDbgPath:     `C:\Microsoft.WinDbg_1.2601.12001.0_x64__8wekyb3d8bbwe\amd64\kd.exe`,
-		SymbolPath:     pdbPath + `;srv*C:\Symbols*https://msdl.microsoft.com/download/symbols`,
+		SymbolPath:     pdbPath,
+		SourcePath:     sourcePath,
 		DriverName:     driverName,
 		PdbPath:        pdbPath,
 		OutputDir:      `d:\笔记本\p\ux\examples\hypedbg\bsod`,
-		CommandTimeout: 2 * time.Minute,
+		CommandTimeout: 5 * time.Second,
 		MaxOutputSize:  256 * 1024,
 		SymOpt:         ".symopt+0x10",
 	}
@@ -82,23 +89,35 @@ func NewAnalyzer() *Analyzer {
 	return a
 }
 
+func hasChinese(s string) bool {
+	for _, r := range s {
+		if unicode.Is(unicode.Han, r) {
+			return true
+		}
+	}
+	return false
+}
+
 func (a *Analyzer) initCommands() {
 	a.AnalyzeCmds = []string{
-		a.SymOpt,
-		".lines",
+		".sympath*",
+		fmt.Sprintf(".sympath %s", a.SymbolPath),
+		".symopt+0x10",
 		".reload /f",
+		fmt.Sprintf(".srcpath %s", a.SourcePath),
 		".exr -1",
 		".ecxr",
-		"kv 50",
-		"!process 0 0",
+		"kv 30",
+		"!analyze -v",
 		"q",
 	}
 
 	a.ResolveCmds = func(frame *StackFrame) []string {
 		return []string{
-			a.SymOpt,
-			".lines",
-			".reload /f " + a.DriverName + ".sys=" + a.DriverSys,
+			".sympath*",
+			fmt.Sprintf(".sympath %s", a.SymbolPath),
+			".symopt+0x10",
+			fmt.Sprintf(".srcpath %s", a.SourcePath),
 			fmt.Sprintf("ln %s", frame.RetAddr),
 			"q",
 		}
@@ -106,9 +125,10 @@ func (a *Analyzer) initCommands() {
 
 	a.LocateCmds = func(crashOffset string) []string {
 		return []string{
-			a.SymOpt,
-			".lines",
-			".reload /f " + a.DriverName + ".sys=" + a.DriverSys,
+			".sympath*",
+			fmt.Sprintf(".sympath %s", a.SymbolPath),
+			".symopt+0x10",
+			fmt.Sprintf(".srcpath %s", a.SourcePath),
 			fmt.Sprintf("ln %s+%s", a.DriverName, crashOffset),
 			"q",
 		}
@@ -127,9 +147,20 @@ func (a *Analyzer) Run() {
 	fmt.Printf("Dump 文件: %s\n", targetDump)
 	fmt.Printf("驱动名称: %s\n", a.DriverName)
 	fmt.Printf("PDB 路径: %s\n", a.PdbPath)
+	fmt.Printf("源代码路径: %s\n", a.SourcePath)
 	if a.DriverSys != "" {
 		fmt.Printf("驱动文件: %s\n", a.DriverSys)
 	}
+
+	if hasChinese(a.PdbPath) {
+		fmt.Printf("\n[警告] PDB路径包含中文字符，WinDbg可能无法正确解析符号文件\n")
+		fmt.Printf("正在复制PDB文件到minidump目录...\n")
+		dumpDir := filepath.Dir(targetDump)
+		a.copyPdbToDir(dumpDir)
+		a.SymbolPath = dumpDir
+		fmt.Printf("符号路径已更新为: %s\n", dumpDir)
+	}
+
 	fmt.Println()
 
 	result := a.analyze(targetDump)
@@ -239,6 +270,8 @@ func (a *Analyzer) analyze(dumpFile string) *AnalysisResult {
 
 	output := a.runKdCommand(ctx, "分析dump", dumpFile, a.AnalyzeCmds)
 
+	result.RawOutput = output
+
 	a.parseExceptionInfo(output, result)
 	a.parseUnloadedModules(output, result)
 	a.parseCallStack(output, result)
@@ -248,6 +281,8 @@ func (a *Analyzer) analyze(dumpFile string) *AnalysisResult {
 	if result.ExceptionAddress != "" && len(result.UnloadedModules) > 0 {
 		a.checkDriverCrash(result)
 	}
+
+	a.extractAIAnalysis(output, result)
 
 	return result
 }
@@ -321,6 +356,29 @@ func (a *Analyzer) findDriverFile() string {
 		return matches[0]
 	}
 	return ""
+}
+
+func (a *Analyzer) copyPdbToDir(targetDir string) {
+	pdbFiles, err := filepath.Glob(filepath.Join(a.PdbPath, "*.pdb"))
+	if err != nil || len(pdbFiles) == 0 {
+		return
+	}
+
+	for _, pdbFile := range pdbFiles {
+		destPath := filepath.Join(targetDir, filepath.Base(pdbFile))
+		if _, err := os.Stat(destPath); err == nil {
+			continue
+		}
+
+		src, err := os.ReadFile(pdbFile)
+		if err != nil {
+			continue
+		}
+
+		if err := os.WriteFile(destPath, src, 0o644); err == nil {
+			fmt.Printf("已复制 PDB: %s -> %s\n", filepath.Base(pdbFile), targetDir)
+		}
+	}
 }
 
 func (a *Analyzer) parseExceptionInfo(output string, result *AnalysisResult) {
@@ -420,6 +478,28 @@ func (a *Analyzer) parseAnalyzeOutput(output string, result *AnalysisResult) {
 	}
 	if match := regexp.MustCompile(`FAILURE_BUCKET_ID:\s*(\S+)`).FindStringSubmatch(output); match != nil {
 		result.FailureBucket = match[1]
+	}
+}
+
+func (a *Analyzer) extractAIAnalysis(output string, result *AnalysisResult) {
+	analyzeIdx := strings.Index(output, "Bugcheck Analysis")
+	if analyzeIdx == -1 {
+		analyzeIdx = strings.Index(output, "DRIVER_IRQL_NOT_LESS_OR_EQUAL")
+		if analyzeIdx == -1 {
+			analyzeIdx = strings.Index(output, "PAGE_FAULT_IN_NONPAGED_AREA")
+		}
+		if analyzeIdx == -1 {
+			analyzeIdx = strings.Index(output, "KERNEL_MODE_EXCEPTION_NOT_HANDLED")
+		}
+		if analyzeIdx == -1 {
+			analyzeIdx = strings.Index(output, "SYSTEM_SERVICE_EXCEPTION")
+		}
+	}
+
+	if analyzeIdx != -1 {
+		result.AIAnalysis = output[analyzeIdx:]
+	} else {
+		result.AIAnalysis = output[len(output)/2:]
 	}
 }
 
@@ -543,6 +623,14 @@ func (a *Analyzer) buildReport(result *AnalysisResult) string {
 
 	if a.DriverSys != "" {
 		sb.WriteString(fmt.Sprintf("\n驱动文件: %s\n", a.DriverSys))
+	}
+
+	if result.AIAnalysis != "" {
+		sb.WriteString("\n========================================\n")
+		sb.WriteString("AI分析部分 (原始输出):\n")
+		sb.WriteString("========================================\n")
+		sb.WriteString(result.AIAnalysis)
+		sb.WriteString("\n========================================\n")
 	}
 
 	return sb.String()

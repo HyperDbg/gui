@@ -26,6 +26,9 @@ func TestNewAnalyzer(t *testing.T) {
 	if a.CommandTimeout <= 0 {
 		t.Error("CommandTimeout should be positive")
 	}
+	if a.CommandTimeout != 5*time.Second {
+		t.Errorf("CommandTimeout should be 5 seconds, got %v", a.CommandTimeout)
+	}
 
 	t.Logf("WinDbgPath: %s", a.WinDbgPath)
 	t.Logf("DriverName: %s", a.DriverName)
