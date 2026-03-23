@@ -81,7 +81,7 @@ func NewAnalyzer() *Analyzer {
 		PdbPath:        pdbPath,
 		OutputDir:      `d:\笔记本\p\ux\examples\hypedbg\bsod`,
 		CommandTimeout: 5 * time.Second,
-		MaxOutputSize:  256 * 1024,
+		MaxOutputSize:  10 * 1024 * 1024,
 		SymOpt:         ".symopt+0x10",
 	}
 	a.DriverSys = a.findDriverFile()
@@ -144,7 +144,6 @@ func (a *Analyzer) Run() {
 	result := a.analyze(targetDump)
 
 	report := a.buildReport(result)
-	fmt.Print(report)
 
 	outputPath := filepath.Join(a.OutputDir, filepath.Base(targetDump)+".txt")
 	os.WriteFile(outputPath, []byte(report), 0o644)
@@ -152,7 +151,7 @@ func (a *Analyzer) Run() {
 }
 
 func (a *Analyzer) runKdCommand(ctx context.Context, desc, dumpFile string, commands []string) string {
-	fmt.Printf("[%s] %s\n", time.Now().Format("15:04:05"), desc)
+	fmt.Printf("执行命令: %s\n", strings.Join(commands, "; "))
 
 	ctx, cancel := context.WithTimeout(ctx, a.CommandTimeout)
 	defer cancel()
@@ -164,14 +163,11 @@ func (a *Analyzer) runKdCommand(ctx context.Context, desc, dumpFile string, comm
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		fmt.Printf("[%s] 创建管道失败: %v\n", time.Now().Format("15:04:05"), err)
 		return ""
 	}
 	cmd.Stderr = cmd.Stdout
 
-	start := time.Now()
 	if err := cmd.Start(); err != nil {
-		fmt.Printf("[%s] 启动失败: %v\n", time.Now().Format("15:04:05"), err)
 		return ""
 	}
 
@@ -201,8 +197,6 @@ func (a *Analyzer) runKdCommand(ctx context.Context, desc, dumpFile string, comm
 	if reachedLimit {
 		cmd.Process.Kill()
 		cmd.Wait()
-		elapsed := time.Since(start)
-		fmt.Printf("[%s] 达到输出上限，已终止进程 耗时: %v 输出: %d 字节\n", time.Now().Format("15:04:05"), elapsed, output.Len())
 		return output.String()
 	}
 
@@ -215,16 +209,8 @@ func (a *Analyzer) runKdCommand(ctx context.Context, desc, dumpFile string, comm
 	case <-ctx.Done():
 		cmd.Process.Kill()
 		<-done
-		elapsed := time.Since(start)
-		fmt.Printf("[%s] 超时! 耗时: %v\n", time.Now().Format("15:04:05"), elapsed)
 		return output.String()
-	case err := <-done:
-		elapsed := time.Since(start)
-		if err != nil {
-			fmt.Printf("[%s] 完成(有错误) 耗时: %v 输出: %d 字节\n", time.Now().Format("15:04:05"), elapsed, output.Len())
-		} else {
-			fmt.Printf("[%s] 完成 耗时: %v 输出: %d 字节\n", time.Now().Format("15:04:05"), elapsed, output.Len())
-		}
+	case <-done:
 		return output.String()
 	}
 }
@@ -580,22 +566,6 @@ func (a *Analyzer) buildReport(result *AnalysisResult) string {
 
 	if a.DriverSys != "" {
 		sb.WriteString(fmt.Sprintf("\n驱动文件: %s\n", a.DriverSys))
-	}
-
-	if result.AIAnalysis != "" {
-		sb.WriteString("\n========================================\n")
-		sb.WriteString("AI分析部分 (原始输出):\n")
-		sb.WriteString("========================================\n")
-		sb.WriteString(result.AIAnalysis)
-		sb.WriteString("\n========================================\n")
-	}
-
-	if result.RawOutput != "" {
-		sb.WriteString("\n========================================\n")
-		sb.WriteString("WinDbg执行过程:\n")
-		sb.WriteString("========================================\n")
-		sb.WriteString(result.RawOutput)
-		sb.WriteString("\n========================================\n")
 	}
 
 	return sb.String()
