@@ -250,7 +250,7 @@ func (c CallingConvention) String() string {
 
 type SymbolEnumField struct {
 	Name   string
-	Value  interface{}
+	Value  any
 	Parent *Symbol
 }
 

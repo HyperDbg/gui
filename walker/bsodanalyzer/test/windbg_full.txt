@@ -1,0 +1,1 @@
+﻿NatVis script unloaded from 'C:\Microsoft.WinDbg_1.2601.12001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\winrt.natvis'

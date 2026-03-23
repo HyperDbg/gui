@@ -33,7 +33,7 @@ func copyFile(src, dst string) error {
 }
 
 func copyDir(src, dst string) error {
-	err := os.MkdirAll(dst, 0755)
+	err := os.MkdirAll(dst, 0o755)
 	if err != nil {
 		return err
 	}
@@ -223,7 +223,7 @@ func generateVtableConstants(dia2Path string) error {
 	cwd, _ := os.Getwd()
 	outputPath := filepath.Join(cwd, "walker", "pdbex", "dia_vtable_gen.go")
 
-	err = os.WriteFile(outputPath, []byte(output), 0644)
+	err = os.WriteFile(outputPath, []byte(output), 0o644)
 	if err != nil {
 		return fmt.Errorf("failed to write vtable constants: %v", err)
 	}

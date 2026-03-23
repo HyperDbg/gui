@@ -9,370 +9,369 @@ import "fmt"
 type VTableMethod int
 
 const (
-	VTDataSource_QueryInterface VTableMethod = 0
-	VTDataSource_AddRef VTableMethod = 1
-	VTDataSource_Release VTableMethod = 2
-	VTDataSource_get_lastError VTableMethod = 3
-	VTDataSource_loadDataFromPdb VTableMethod = 4
+	VTDataSource_QueryInterface             VTableMethod = 0
+	VTDataSource_AddRef                     VTableMethod = 1
+	VTDataSource_Release                    VTableMethod = 2
+	VTDataSource_get_lastError              VTableMethod = 3
+	VTDataSource_loadDataFromPdb            VTableMethod = 4
 	VTDataSource_loadAndValidateDataFromPdb VTableMethod = 5
-	VTDataSource_loadDataForExe VTableMethod = 6
-	VTDataSource_loadDataFromIStream VTableMethod = 7
-	VTDataSource_openSession VTableMethod = 8
-	VTDataSource_loadDataFromCodeViewInfo VTableMethod = 9
-	VTDataSource_loadDataFromMiscInfo VTableMethod = 10
+	VTDataSource_loadDataForExe             VTableMethod = 6
+	VTDataSource_loadDataFromIStream        VTableMethod = 7
+	VTDataSource_openSession                VTableMethod = 8
+	VTDataSource_loadDataFromCodeViewInfo   VTableMethod = 9
+	VTDataSource_loadDataFromMiscInfo       VTableMethod = 10
 
-	VTSession_QueryInterface VTableMethod = 0
-	VTSession_AddRef VTableMethod = 1
-	VTSession_Release VTableMethod = 2
-	VTSession_get_loadAddress VTableMethod = 3
-	VTSession_put_loadAddress VTableMethod = 4
-	VTSession_get_globalScope VTableMethod = 5
-	VTSession_getEnumTables VTableMethod = 6
-	VTSession_getSymbolsByAddr VTableMethod = 7
-	VTSession_findChildren VTableMethod = 8
-	VTSession_findChildrenEx VTableMethod = 9
-	VTSession_findChildrenExByAddr VTableMethod = 10
-	VTSession_findChildrenExByVA VTableMethod = 11
-	VTSession_findChildrenExByRVA VTableMethod = 12
-	VTSession_findSymbolByAddr VTableMethod = 13
-	VTSession_findSymbolByRVA VTableMethod = 14
-	VTSession_findSymbolByVA VTableMethod = 15
-	VTSession_findSymbolByToken VTableMethod = 16
-	VTSession_symsAreEquiv VTableMethod = 17
-	VTSession_symbolById VTableMethod = 18
-	VTSession_findSymbolByRVAEx VTableMethod = 19
-	VTSession_findSymbolByVAEx VTableMethod = 20
-	VTSession_findFile VTableMethod = 21
-	VTSession_findFileById VTableMethod = 22
-	VTSession_findLines VTableMethod = 23
-	VTSession_findLinesByAddr VTableMethod = 24
-	VTSession_findLinesByRVA VTableMethod = 25
-	VTSession_findLinesByVA VTableMethod = 26
-	VTSession_findLinesByLinenum VTableMethod = 27
-	VTSession_findInjectedSource VTableMethod = 28
-	VTSession_getEnumDebugStreams VTableMethod = 29
-	VTSession_findInlineFramesByAddr VTableMethod = 30
-	VTSession_findInlineFramesByRVA VTableMethod = 31
-	VTSession_findInlineFramesByVA VTableMethod = 32
-	VTSession_findInlineeLines VTableMethod = 33
-	VTSession_findInlineeLinesByAddr VTableMethod = 34
-	VTSession_findInlineeLinesByRVA VTableMethod = 35
-	VTSession_findInlineeLinesByVA VTableMethod = 36
-	VTSession_findInlineeLinesByLinenum VTableMethod = 37
-	VTSession_findInlineesByName VTableMethod = 38
-	VTSession_findAcceleratorInlineeLinesByLinenum VTableMethod = 39
-	VTSession_findSymbolsForAcceleratorPointerTag VTableMethod = 40
+	VTSession_QueryInterface                           VTableMethod = 0
+	VTSession_AddRef                                   VTableMethod = 1
+	VTSession_Release                                  VTableMethod = 2
+	VTSession_get_loadAddress                          VTableMethod = 3
+	VTSession_put_loadAddress                          VTableMethod = 4
+	VTSession_get_globalScope                          VTableMethod = 5
+	VTSession_getEnumTables                            VTableMethod = 6
+	VTSession_getSymbolsByAddr                         VTableMethod = 7
+	VTSession_findChildren                             VTableMethod = 8
+	VTSession_findChildrenEx                           VTableMethod = 9
+	VTSession_findChildrenExByAddr                     VTableMethod = 10
+	VTSession_findChildrenExByVA                       VTableMethod = 11
+	VTSession_findChildrenExByRVA                      VTableMethod = 12
+	VTSession_findSymbolByAddr                         VTableMethod = 13
+	VTSession_findSymbolByRVA                          VTableMethod = 14
+	VTSession_findSymbolByVA                           VTableMethod = 15
+	VTSession_findSymbolByToken                        VTableMethod = 16
+	VTSession_symsAreEquiv                             VTableMethod = 17
+	VTSession_symbolById                               VTableMethod = 18
+	VTSession_findSymbolByRVAEx                        VTableMethod = 19
+	VTSession_findSymbolByVAEx                         VTableMethod = 20
+	VTSession_findFile                                 VTableMethod = 21
+	VTSession_findFileById                             VTableMethod = 22
+	VTSession_findLines                                VTableMethod = 23
+	VTSession_findLinesByAddr                          VTableMethod = 24
+	VTSession_findLinesByRVA                           VTableMethod = 25
+	VTSession_findLinesByVA                            VTableMethod = 26
+	VTSession_findLinesByLinenum                       VTableMethod = 27
+	VTSession_findInjectedSource                       VTableMethod = 28
+	VTSession_getEnumDebugStreams                      VTableMethod = 29
+	VTSession_findInlineFramesByAddr                   VTableMethod = 30
+	VTSession_findInlineFramesByRVA                    VTableMethod = 31
+	VTSession_findInlineFramesByVA                     VTableMethod = 32
+	VTSession_findInlineeLines                         VTableMethod = 33
+	VTSession_findInlineeLinesByAddr                   VTableMethod = 34
+	VTSession_findInlineeLinesByRVA                    VTableMethod = 35
+	VTSession_findInlineeLinesByVA                     VTableMethod = 36
+	VTSession_findInlineeLinesByLinenum                VTableMethod = 37
+	VTSession_findInlineesByName                       VTableMethod = 38
+	VTSession_findAcceleratorInlineeLinesByLinenum     VTableMethod = 39
+	VTSession_findSymbolsForAcceleratorPointerTag      VTableMethod = 40
 	VTSession_findSymbolsByRVAForAcceleratorPointerTag VTableMethod = 41
-	VTSession_findAcceleratorInlineesByName VTableMethod = 42
-	VTSession_addressForVA VTableMethod = 43
-	VTSession_addressForRVA VTableMethod = 44
-	VTSession_findILOffsetsByAddr VTableMethod = 45
-	VTSession_findILOffsetsByRVA VTableMethod = 46
-	VTSession_findILOffsetsByVA VTableMethod = 47
-	VTSession_findInputAssemblyFiles VTableMethod = 48
-	VTSession_findInputAssembly VTableMethod = 49
-	VTSession_findInputAssemblyById VTableMethod = 50
-	VTSession_getFuncMDTokenMapSize VTableMethod = 51
-	VTSession_getFuncMDTokenMap VTableMethod = 52
-	VTSession_getTypeMDTokenMapSize VTableMethod = 53
-	VTSession_getTypeMDTokenMap VTableMethod = 54
-	VTSession_getNumberOfFunctionFragments_VA VTableMethod = 55
-	VTSession_getNumberOfFunctionFragments_RVA VTableMethod = 56
-	VTSession_getFunctionFragments_VA VTableMethod = 57
-	VTSession_getFunctionFragments_RVA VTableMethod = 58
-	VTSession_getExports VTableMethod = 59
-	VTSession_getHeapAllocationSites VTableMethod = 60
-	VTSession_findInputAssemblyFile VTableMethod = 61
+	VTSession_findAcceleratorInlineesByName            VTableMethod = 42
+	VTSession_addressForVA                             VTableMethod = 43
+	VTSession_addressForRVA                            VTableMethod = 44
+	VTSession_findILOffsetsByAddr                      VTableMethod = 45
+	VTSession_findILOffsetsByRVA                       VTableMethod = 46
+	VTSession_findILOffsetsByVA                        VTableMethod = 47
+	VTSession_findInputAssemblyFiles                   VTableMethod = 48
+	VTSession_findInputAssembly                        VTableMethod = 49
+	VTSession_findInputAssemblyById                    VTableMethod = 50
+	VTSession_getFuncMDTokenMapSize                    VTableMethod = 51
+	VTSession_getFuncMDTokenMap                        VTableMethod = 52
+	VTSession_getTypeMDTokenMapSize                    VTableMethod = 53
+	VTSession_getTypeMDTokenMap                        VTableMethod = 54
+	VTSession_getNumberOfFunctionFragments_VA          VTableMethod = 55
+	VTSession_getNumberOfFunctionFragments_RVA         VTableMethod = 56
+	VTSession_getFunctionFragments_VA                  VTableMethod = 57
+	VTSession_getFunctionFragments_RVA                 VTableMethod = 58
+	VTSession_getExports                               VTableMethod = 59
+	VTSession_getHeapAllocationSites                   VTableMethod = 60
+	VTSession_findInputAssemblyFile                    VTableMethod = 61
 
 	VTEnumSymbols_QueryInterface VTableMethod = 0
-	VTEnumSymbols_AddRef VTableMethod = 1
-	VTEnumSymbols_Release VTableMethod = 2
-	VTEnumSymbols_get__NewEnum VTableMethod = 3
-	VTEnumSymbols_get_Count VTableMethod = 4
-	VTEnumSymbols_Item VTableMethod = 5
-	VTEnumSymbols_Next VTableMethod = 6
-	VTEnumSymbols_Skip VTableMethod = 7
-	VTEnumSymbols_Reset VTableMethod = 8
-	VTEnumSymbols_Clone VTableMethod = 9
+	VTEnumSymbols_AddRef         VTableMethod = 1
+	VTEnumSymbols_Release        VTableMethod = 2
+	VTEnumSymbols_get__NewEnum   VTableMethod = 3
+	VTEnumSymbols_get_Count      VTableMethod = 4
+	VTEnumSymbols_Item           VTableMethod = 5
+	VTEnumSymbols_Next           VTableMethod = 6
+	VTEnumSymbols_Skip           VTableMethod = 7
+	VTEnumSymbols_Reset          VTableMethod = 8
+	VTEnumSymbols_Clone          VTableMethod = 9
 
 	VTEnumLineNumbers_QueryInterface VTableMethod = 0
-	VTEnumLineNumbers_AddRef VTableMethod = 1
-	VTEnumLineNumbers_Release VTableMethod = 2
-	VTEnumLineNumbers_get__NewEnum VTableMethod = 3
-	VTEnumLineNumbers_get_Count VTableMethod = 4
-	VTEnumLineNumbers_Item VTableMethod = 5
-	VTEnumLineNumbers_Next VTableMethod = 6
-	VTEnumLineNumbers_Skip VTableMethod = 7
-	VTEnumLineNumbers_Reset VTableMethod = 8
-	VTEnumLineNumbers_Clone VTableMethod = 9
+	VTEnumLineNumbers_AddRef         VTableMethod = 1
+	VTEnumLineNumbers_Release        VTableMethod = 2
+	VTEnumLineNumbers_get__NewEnum   VTableMethod = 3
+	VTEnumLineNumbers_get_Count      VTableMethod = 4
+	VTEnumLineNumbers_Item           VTableMethod = 5
+	VTEnumLineNumbers_Next           VTableMethod = 6
+	VTEnumLineNumbers_Skip           VTableMethod = 7
+	VTEnumLineNumbers_Reset          VTableMethod = 8
+	VTEnumLineNumbers_Clone          VTableMethod = 9
 
-	VTLineNumber_QueryInterface VTableMethod = 0
-	VTLineNumber_AddRef VTableMethod = 1
-	VTLineNumber_Release VTableMethod = 2
-	VTLineNumber_get_compiland VTableMethod = 3
-	VTLineNumber_get_sourceFile VTableMethod = 4
-	VTLineNumber_get_lineNumber VTableMethod = 5
-	VTLineNumber_get_lineNumberEnd VTableMethod = 6
-	VTLineNumber_get_columnNumber VTableMethod = 7
-	VTLineNumber_get_columnNumberEnd VTableMethod = 8
-	VTLineNumber_get_addressSection VTableMethod = 9
-	VTLineNumber_get_addressOffset VTableMethod = 10
+	VTLineNumber_QueryInterface             VTableMethod = 0
+	VTLineNumber_AddRef                     VTableMethod = 1
+	VTLineNumber_Release                    VTableMethod = 2
+	VTLineNumber_get_compiland              VTableMethod = 3
+	VTLineNumber_get_sourceFile             VTableMethod = 4
+	VTLineNumber_get_lineNumber             VTableMethod = 5
+	VTLineNumber_get_lineNumberEnd          VTableMethod = 6
+	VTLineNumber_get_columnNumber           VTableMethod = 7
+	VTLineNumber_get_columnNumberEnd        VTableMethod = 8
+	VTLineNumber_get_addressSection         VTableMethod = 9
+	VTLineNumber_get_addressOffset          VTableMethod = 10
 	VTLineNumber_get_relativeVirtualAddress VTableMethod = 11
-	VTLineNumber_get_virtualAddress VTableMethod = 12
-	VTLineNumber_get_length VTableMethod = 13
-	VTLineNumber_get_sourceFileId VTableMethod = 14
-	VTLineNumber_get_statement VTableMethod = 15
-	VTLineNumber_get_compilandId VTableMethod = 16
+	VTLineNumber_get_virtualAddress         VTableMethod = 12
+	VTLineNumber_get_length                 VTableMethod = 13
+	VTLineNumber_get_sourceFileId           VTableMethod = 14
+	VTLineNumber_get_statement              VTableMethod = 15
+	VTLineNumber_get_compilandId            VTableMethod = 16
 
-	VTSourceFile_QueryInterface VTableMethod = 0
-	VTSourceFile_AddRef VTableMethod = 1
-	VTSourceFile_Release VTableMethod = 2
-	VTSourceFile_get_uniqueId VTableMethod = 3
-	VTSourceFile_get_fileName VTableMethod = 4
+	VTSourceFile_QueryInterface   VTableMethod = 0
+	VTSourceFile_AddRef           VTableMethod = 1
+	VTSourceFile_Release          VTableMethod = 2
+	VTSourceFile_get_uniqueId     VTableMethod = 3
+	VTSourceFile_get_fileName     VTableMethod = 4
 	VTSourceFile_get_checksumType VTableMethod = 5
-	VTSourceFile_get_compilands VTableMethod = 6
-	VTSourceFile_get_checksum VTableMethod = 7
+	VTSourceFile_get_compilands   VTableMethod = 6
+	VTSourceFile_get_checksum     VTableMethod = 7
 
-	VTSymbol_QueryInterface VTableMethod = 0
-	VTSymbol_AddRef VTableMethod = 1
-	VTSymbol_Release VTableMethod = 2
-	VTSymbol_get_symIndexId VTableMethod = 3
-	VTSymbol_get_symTag VTableMethod = 4
-	VTSymbol_get_name VTableMethod = 5
-	VTSymbol_get_lexicalParent VTableMethod = 6
-	VTSymbol_get_classParent VTableMethod = 7
-	VTSymbol_get_type VTableMethod = 8
-	VTSymbol_get_dataKind VTableMethod = 9
-	VTSymbol_get_locationType VTableMethod = 10
-	VTSymbol_get_addressSection VTableMethod = 11
-	VTSymbol_get_addressOffset VTableMethod = 12
-	VTSymbol_get_relativeVirtualAddress VTableMethod = 13
-	VTSymbol_get_virtualAddress VTableMethod = 14
-	VTSymbol_get_registerId VTableMethod = 15
-	VTSymbol_get_offset VTableMethod = 16
-	VTSymbol_get_length VTableMethod = 17
-	VTSymbol_get_slot VTableMethod = 18
-	VTSymbol_get_volatileType VTableMethod = 19
-	VTSymbol_get_constType VTableMethod = 20
-	VTSymbol_get_unalignedType VTableMethod = 21
-	VTSymbol_get_access VTableMethod = 22
-	VTSymbol_get_libraryName VTableMethod = 23
-	VTSymbol_get_platform VTableMethod = 24
-	VTSymbol_get_language VTableMethod = 25
-	VTSymbol_get_editAndContinueEnabled VTableMethod = 26
-	VTSymbol_get_frontEndMajor VTableMethod = 27
-	VTSymbol_get_frontEndMinor VTableMethod = 28
-	VTSymbol_get_frontEndBuild VTableMethod = 29
-	VTSymbol_get_backEndMajor VTableMethod = 30
-	VTSymbol_get_backEndMinor VTableMethod = 31
-	VTSymbol_get_backEndBuild VTableMethod = 32
-	VTSymbol_get_sourceFileName VTableMethod = 33
-	VTSymbol_get_unused VTableMethod = 34
-	VTSymbol_get_thunkOrdinal VTableMethod = 35
-	VTSymbol_get_thisAdjust VTableMethod = 36
-	VTSymbol_get_virtualBaseOffset VTableMethod = 37
-	VTSymbol_get_virtual VTableMethod = 38
-	VTSymbol_get_intro VTableMethod = 39
-	VTSymbol_get_pure VTableMethod = 40
-	VTSymbol_get_callingConvention VTableMethod = 41
-	VTSymbol_get_value VTableMethod = 42
-	VTSymbol_get_baseType VTableMethod = 43
-	VTSymbol_get_token VTableMethod = 44
-	VTSymbol_get_timeStamp VTableMethod = 45
-	VTSymbol_get_guid VTableMethod = 46
-	VTSymbol_get_symbolsFileName VTableMethod = 47
-	VTSymbol_get_reference VTableMethod = 48
-	VTSymbol_get_count VTableMethod = 49
-	VTSymbol_get_bitPosition VTableMethod = 50
-	VTSymbol_get_arrayIndexType VTableMethod = 51
-	VTSymbol_get_packed VTableMethod = 52
-	VTSymbol_get_constructor VTableMethod = 53
-	VTSymbol_get_overloadedOperator VTableMethod = 54
-	VTSymbol_get_nested VTableMethod = 55
-	VTSymbol_get_hasNestedTypes VTableMethod = 56
-	VTSymbol_get_hasAssignmentOperator VTableMethod = 57
-	VTSymbol_get_hasCastOperator VTableMethod = 58
-	VTSymbol_get_scoped VTableMethod = 59
-	VTSymbol_get_virtualBaseClass VTableMethod = 60
-	VTSymbol_get_indirectVirtualBaseClass VTableMethod = 61
-	VTSymbol_get_virtualBasePointerOffset VTableMethod = 62
-	VTSymbol_get_virtualTableShape VTableMethod = 63
-	VTSymbol_get_lexicalParentId VTableMethod = 64
-	VTSymbol_get_classParentId VTableMethod = 65
-	VTSymbol_get_typeId VTableMethod = 66
-	VTSymbol_get_arrayIndexTypeId VTableMethod = 67
-	VTSymbol_get_virtualTableShapeId VTableMethod = 68
-	VTSymbol_get_code VTableMethod = 69
-	VTSymbol_get_function VTableMethod = 70
-	VTSymbol_get_managed VTableMethod = 71
-	VTSymbol_get_msil VTableMethod = 72
-	VTSymbol_get_virtualBaseDispIndex VTableMethod = 73
-	VTSymbol_get_undecoratedName VTableMethod = 74
-	VTSymbol_get_age VTableMethod = 75
-	VTSymbol_get_signature VTableMethod = 76
-	VTSymbol_get_compilerGenerated VTableMethod = 77
-	VTSymbol_get_addressTaken VTableMethod = 78
-	VTSymbol_get_rank VTableMethod = 79
-	VTSymbol_get_lowerBound VTableMethod = 80
-	VTSymbol_get_upperBound VTableMethod = 81
-	VTSymbol_get_lowerBoundId VTableMethod = 82
-	VTSymbol_get_upperBoundId VTableMethod = 83
-	VTSymbol_get_dataBytes VTableMethod = 84
-	VTSymbol_findChildren VTableMethod = 85
-	VTSymbol_findChildrenEx VTableMethod = 86
-	VTSymbol_findChildrenExByAddr VTableMethod = 87
-	VTSymbol_findChildrenExByVA VTableMethod = 88
-	VTSymbol_findChildrenExByRVA VTableMethod = 89
-	VTSymbol_get_targetSection VTableMethod = 90
-	VTSymbol_get_targetOffset VTableMethod = 91
-	VTSymbol_get_targetRelativeVirtualAddress VTableMethod = 92
-	VTSymbol_get_targetVirtualAddress VTableMethod = 93
-	VTSymbol_get_machineType VTableMethod = 94
-	VTSymbol_get_oemId VTableMethod = 95
-	VTSymbol_get_oemSymbolId VTableMethod = 96
-	VTSymbol_get_types VTableMethod = 97
-	VTSymbol_get_typeIds VTableMethod = 98
-	VTSymbol_get_objectPointerType VTableMethod = 99
-	VTSymbol_get_udtKind VTableMethod = 100
-	VTSymbol_get_undecoratedNameEx VTableMethod = 101
-	VTSymbol_get_noReturn VTableMethod = 102
-	VTSymbol_get_customCallingConvention VTableMethod = 103
-	VTSymbol_get_noInline VTableMethod = 104
-	VTSymbol_get_optimizedCodeDebugInfo VTableMethod = 105
-	VTSymbol_get_notReached VTableMethod = 106
-	VTSymbol_get_interruptReturn VTableMethod = 107
-	VTSymbol_get_farReturn VTableMethod = 108
-	VTSymbol_get_isStatic VTableMethod = 109
-	VTSymbol_get_hasDebugInfo VTableMethod = 110
-	VTSymbol_get_isLTCG VTableMethod = 111
-	VTSymbol_get_isDataAligned VTableMethod = 112
-	VTSymbol_get_hasSecurityChecks VTableMethod = 113
-	VTSymbol_get_compilerName VTableMethod = 114
-	VTSymbol_get_hasAlloca VTableMethod = 115
-	VTSymbol_get_hasSetJump VTableMethod = 116
-	VTSymbol_get_hasLongJump VTableMethod = 117
-	VTSymbol_get_hasInlAsm VTableMethod = 118
-	VTSymbol_get_hasEH VTableMethod = 119
-	VTSymbol_get_hasSEH VTableMethod = 120
-	VTSymbol_get_hasEHa VTableMethod = 121
-	VTSymbol_get_isNaked VTableMethod = 122
-	VTSymbol_get_isAggregated VTableMethod = 123
-	VTSymbol_get_isSplitted VTableMethod = 124
-	VTSymbol_get_container VTableMethod = 125
-	VTSymbol_get_inlSpec VTableMethod = 126
-	VTSymbol_get_noStackOrdering VTableMethod = 127
-	VTSymbol_get_virtualBaseTableType VTableMethod = 128
-	VTSymbol_get_hasManagedCode VTableMethod = 129
-	VTSymbol_get_isHotpatchable VTableMethod = 130
-	VTSymbol_get_isCVTCIL VTableMethod = 131
-	VTSymbol_get_isMSILNetmodule VTableMethod = 132
-	VTSymbol_get_isCTypes VTableMethod = 133
-	VTSymbol_get_isStripped VTableMethod = 134
-	VTSymbol_get_frontEndQFE VTableMethod = 135
-	VTSymbol_get_backEndQFE VTableMethod = 136
-	VTSymbol_get_wasInlined VTableMethod = 137
-	VTSymbol_get_strictGSCheck VTableMethod = 138
-	VTSymbol_get_isCxxReturnUdt VTableMethod = 139
-	VTSymbol_get_isConstructorVirtualBase VTableMethod = 140
-	VTSymbol_get_RValueReference VTableMethod = 141
-	VTSymbol_get_unmodifiedType VTableMethod = 142
-	VTSymbol_get_framePointerPresent VTableMethod = 143
-	VTSymbol_get_isSafeBuffers VTableMethod = 144
-	VTSymbol_get_intrinsic VTableMethod = 145
-	VTSymbol_get_sealed VTableMethod = 146
-	VTSymbol_get_hfaFloat VTableMethod = 147
-	VTSymbol_get_hfaDouble VTableMethod = 148
-	VTSymbol_get_liveRangeStartAddressSection VTableMethod = 149
-	VTSymbol_get_liveRangeStartAddressOffset VTableMethod = 150
-	VTSymbol_get_liveRangeStartRelativeVirtualAddress VTableMethod = 151
-	VTSymbol_get_countLiveRanges VTableMethod = 152
-	VTSymbol_get_liveRangeLength VTableMethod = 153
-	VTSymbol_get_offsetInUdt VTableMethod = 154
-	VTSymbol_get_paramBasePointerRegisterId VTableMethod = 155
-	VTSymbol_get_localBasePointerRegisterId VTableMethod = 156
-	VTSymbol_get_isLocationControlFlowDependent VTableMethod = 157
-	VTSymbol_get_stride VTableMethod = 158
-	VTSymbol_get_numberOfRows VTableMethod = 159
-	VTSymbol_get_numberOfColumns VTableMethod = 160
-	VTSymbol_get_isMatrixRowMajor VTableMethod = 161
-	VTSymbol_get_numericProperties VTableMethod = 162
-	VTSymbol_get_modifierValues VTableMethod = 163
-	VTSymbol_get_isReturnValue VTableMethod = 164
-	VTSymbol_get_isOptimizedAway VTableMethod = 165
-	VTSymbol_get_builtInKind VTableMethod = 166
-	VTSymbol_get_registerType VTableMethod = 167
-	VTSymbol_get_baseDataSlot VTableMethod = 168
-	VTSymbol_get_baseDataOffset VTableMethod = 169
-	VTSymbol_get_textureSlot VTableMethod = 170
-	VTSymbol_get_samplerSlot VTableMethod = 171
-	VTSymbol_get_uavSlot VTableMethod = 172
-	VTSymbol_get_sizeInUdt VTableMethod = 173
-	VTSymbol_get_memorySpaceKind VTableMethod = 174
-	VTSymbol_get_unmodifiedTypeId VTableMethod = 175
-	VTSymbol_get_subTypeId VTableMethod = 176
-	VTSymbol_get_subType VTableMethod = 177
-	VTSymbol_get_numberOfModifiers VTableMethod = 178
-	VTSymbol_get_numberOfRegisterIndices VTableMethod = 179
-	VTSymbol_get_isHLSLData VTableMethod = 180
-	VTSymbol_get_isPointerToDataMember VTableMethod = 181
-	VTSymbol_get_isPointerToMemberFunction VTableMethod = 182
-	VTSymbol_get_isSingleInheritance VTableMethod = 183
-	VTSymbol_get_isMultipleInheritance VTableMethod = 184
-	VTSymbol_get_isVirtualInheritance VTableMethod = 185
-	VTSymbol_get_restrictedType VTableMethod = 186
-	VTSymbol_get_isPointerBasedOnSymbolValue VTableMethod = 187
-	VTSymbol_get_baseSymbol VTableMethod = 188
-	VTSymbol_get_baseSymbolId VTableMethod = 189
-	VTSymbol_get_objectFileName VTableMethod = 190
-	VTSymbol_get_isAcceleratorGroupSharedLocal VTableMethod = 191
-	VTSymbol_get_isAcceleratorPointerTagLiveRange VTableMethod = 192
-	VTSymbol_get_isAcceleratorStubFunction VTableMethod = 193
-	VTSymbol_get_numberOfAcceleratorPointerTags VTableMethod = 194
-	VTSymbol_get_isSdl VTableMethod = 195
-	VTSymbol_get_isWinRTPointer VTableMethod = 196
-	VTSymbol_get_isRefUdt VTableMethod = 197
-	VTSymbol_get_isValueUdt VTableMethod = 198
-	VTSymbol_get_isInterfaceUdt VTableMethod = 199
-	VTSymbol_findInlineFramesByAddr VTableMethod = 200
-	VTSymbol_findInlineFramesByRVA VTableMethod = 201
-	VTSymbol_findInlineFramesByVA VTableMethod = 202
-	VTSymbol_findInlineeLines VTableMethod = 203
-	VTSymbol_findInlineeLinesByAddr VTableMethod = 204
-	VTSymbol_findInlineeLinesByRVA VTableMethod = 205
-	VTSymbol_findInlineeLinesByVA VTableMethod = 206
-	VTSymbol_findSymbolsForAcceleratorPointerTag VTableMethod = 207
-	VTSymbol_findSymbolsByRVAForAcceleratorPointerTag VTableMethod = 208
-	VTSymbol_get_acceleratorPointerTags VTableMethod = 209
-	VTSymbol_getSrcLineOnTypeDefn VTableMethod = 210
-	VTSymbol_get_isPGO VTableMethod = 211
-	VTSymbol_get_hasValidPGOCounts VTableMethod = 212
-	VTSymbol_get_isOptimizedForSpeed VTableMethod = 213
-	VTSymbol_get_PGOEntryCount VTableMethod = 214
-	VTSymbol_get_PGOEdgeCount VTableMethod = 215
-	VTSymbol_get_PGODynamicInstructionCount VTableMethod = 216
-	VTSymbol_get_staticSize VTableMethod = 217
-	VTSymbol_get_finalLiveStaticSize VTableMethod = 218
-	VTSymbol_get_phaseName VTableMethod = 219
-	VTSymbol_get_hasControlFlowCheck VTableMethod = 220
-	VTSymbol_get_constantExport VTableMethod = 221
-	VTSymbol_get_dataExport VTableMethod = 222
-	VTSymbol_get_privateExport VTableMethod = 223
-	VTSymbol_get_noNameExport VTableMethod = 224
-	VTSymbol_get_exportHasExplicitlyAssignedOrdinal VTableMethod = 225
-	VTSymbol_get_exportIsForwarder VTableMethod = 226
-	VTSymbol_get_ordinal VTableMethod = 227
-	VTSymbol_get_frameSize VTableMethod = 228
-	VTSymbol_get_exceptionHandlerAddressSection VTableMethod = 229
-	VTSymbol_get_exceptionHandlerAddressOffset VTableMethod = 230
+	VTSymbol_QueryInterface                             VTableMethod = 0
+	VTSymbol_AddRef                                     VTableMethod = 1
+	VTSymbol_Release                                    VTableMethod = 2
+	VTSymbol_get_symIndexId                             VTableMethod = 3
+	VTSymbol_get_symTag                                 VTableMethod = 4
+	VTSymbol_get_name                                   VTableMethod = 5
+	VTSymbol_get_lexicalParent                          VTableMethod = 6
+	VTSymbol_get_classParent                            VTableMethod = 7
+	VTSymbol_get_type                                   VTableMethod = 8
+	VTSymbol_get_dataKind                               VTableMethod = 9
+	VTSymbol_get_locationType                           VTableMethod = 10
+	VTSymbol_get_addressSection                         VTableMethod = 11
+	VTSymbol_get_addressOffset                          VTableMethod = 12
+	VTSymbol_get_relativeVirtualAddress                 VTableMethod = 13
+	VTSymbol_get_virtualAddress                         VTableMethod = 14
+	VTSymbol_get_registerId                             VTableMethod = 15
+	VTSymbol_get_offset                                 VTableMethod = 16
+	VTSymbol_get_length                                 VTableMethod = 17
+	VTSymbol_get_slot                                   VTableMethod = 18
+	VTSymbol_get_volatileType                           VTableMethod = 19
+	VTSymbol_get_constType                              VTableMethod = 20
+	VTSymbol_get_unalignedType                          VTableMethod = 21
+	VTSymbol_get_access                                 VTableMethod = 22
+	VTSymbol_get_libraryName                            VTableMethod = 23
+	VTSymbol_get_platform                               VTableMethod = 24
+	VTSymbol_get_language                               VTableMethod = 25
+	VTSymbol_get_editAndContinueEnabled                 VTableMethod = 26
+	VTSymbol_get_frontEndMajor                          VTableMethod = 27
+	VTSymbol_get_frontEndMinor                          VTableMethod = 28
+	VTSymbol_get_frontEndBuild                          VTableMethod = 29
+	VTSymbol_get_backEndMajor                           VTableMethod = 30
+	VTSymbol_get_backEndMinor                           VTableMethod = 31
+	VTSymbol_get_backEndBuild                           VTableMethod = 32
+	VTSymbol_get_sourceFileName                         VTableMethod = 33
+	VTSymbol_get_unused                                 VTableMethod = 34
+	VTSymbol_get_thunkOrdinal                           VTableMethod = 35
+	VTSymbol_get_thisAdjust                             VTableMethod = 36
+	VTSymbol_get_virtualBaseOffset                      VTableMethod = 37
+	VTSymbol_get_virtual                                VTableMethod = 38
+	VTSymbol_get_intro                                  VTableMethod = 39
+	VTSymbol_get_pure                                   VTableMethod = 40
+	VTSymbol_get_callingConvention                      VTableMethod = 41
+	VTSymbol_get_value                                  VTableMethod = 42
+	VTSymbol_get_baseType                               VTableMethod = 43
+	VTSymbol_get_token                                  VTableMethod = 44
+	VTSymbol_get_timeStamp                              VTableMethod = 45
+	VTSymbol_get_guid                                   VTableMethod = 46
+	VTSymbol_get_symbolsFileName                        VTableMethod = 47
+	VTSymbol_get_reference                              VTableMethod = 48
+	VTSymbol_get_count                                  VTableMethod = 49
+	VTSymbol_get_bitPosition                            VTableMethod = 50
+	VTSymbol_get_arrayIndexType                         VTableMethod = 51
+	VTSymbol_get_packed                                 VTableMethod = 52
+	VTSymbol_get_constructor                            VTableMethod = 53
+	VTSymbol_get_overloadedOperator                     VTableMethod = 54
+	VTSymbol_get_nested                                 VTableMethod = 55
+	VTSymbol_get_hasNestedTypes                         VTableMethod = 56
+	VTSymbol_get_hasAssignmentOperator                  VTableMethod = 57
+	VTSymbol_get_hasCastOperator                        VTableMethod = 58
+	VTSymbol_get_scoped                                 VTableMethod = 59
+	VTSymbol_get_virtualBaseClass                       VTableMethod = 60
+	VTSymbol_get_indirectVirtualBaseClass               VTableMethod = 61
+	VTSymbol_get_virtualBasePointerOffset               VTableMethod = 62
+	VTSymbol_get_virtualTableShape                      VTableMethod = 63
+	VTSymbol_get_lexicalParentId                        VTableMethod = 64
+	VTSymbol_get_classParentId                          VTableMethod = 65
+	VTSymbol_get_typeId                                 VTableMethod = 66
+	VTSymbol_get_arrayIndexTypeId                       VTableMethod = 67
+	VTSymbol_get_virtualTableShapeId                    VTableMethod = 68
+	VTSymbol_get_code                                   VTableMethod = 69
+	VTSymbol_get_function                               VTableMethod = 70
+	VTSymbol_get_managed                                VTableMethod = 71
+	VTSymbol_get_msil                                   VTableMethod = 72
+	VTSymbol_get_virtualBaseDispIndex                   VTableMethod = 73
+	VTSymbol_get_undecoratedName                        VTableMethod = 74
+	VTSymbol_get_age                                    VTableMethod = 75
+	VTSymbol_get_signature                              VTableMethod = 76
+	VTSymbol_get_compilerGenerated                      VTableMethod = 77
+	VTSymbol_get_addressTaken                           VTableMethod = 78
+	VTSymbol_get_rank                                   VTableMethod = 79
+	VTSymbol_get_lowerBound                             VTableMethod = 80
+	VTSymbol_get_upperBound                             VTableMethod = 81
+	VTSymbol_get_lowerBoundId                           VTableMethod = 82
+	VTSymbol_get_upperBoundId                           VTableMethod = 83
+	VTSymbol_get_dataBytes                              VTableMethod = 84
+	VTSymbol_findChildren                               VTableMethod = 85
+	VTSymbol_findChildrenEx                             VTableMethod = 86
+	VTSymbol_findChildrenExByAddr                       VTableMethod = 87
+	VTSymbol_findChildrenExByVA                         VTableMethod = 88
+	VTSymbol_findChildrenExByRVA                        VTableMethod = 89
+	VTSymbol_get_targetSection                          VTableMethod = 90
+	VTSymbol_get_targetOffset                           VTableMethod = 91
+	VTSymbol_get_targetRelativeVirtualAddress           VTableMethod = 92
+	VTSymbol_get_targetVirtualAddress                   VTableMethod = 93
+	VTSymbol_get_machineType                            VTableMethod = 94
+	VTSymbol_get_oemId                                  VTableMethod = 95
+	VTSymbol_get_oemSymbolId                            VTableMethod = 96
+	VTSymbol_get_types                                  VTableMethod = 97
+	VTSymbol_get_typeIds                                VTableMethod = 98
+	VTSymbol_get_objectPointerType                      VTableMethod = 99
+	VTSymbol_get_udtKind                                VTableMethod = 100
+	VTSymbol_get_undecoratedNameEx                      VTableMethod = 101
+	VTSymbol_get_noReturn                               VTableMethod = 102
+	VTSymbol_get_customCallingConvention                VTableMethod = 103
+	VTSymbol_get_noInline                               VTableMethod = 104
+	VTSymbol_get_optimizedCodeDebugInfo                 VTableMethod = 105
+	VTSymbol_get_notReached                             VTableMethod = 106
+	VTSymbol_get_interruptReturn                        VTableMethod = 107
+	VTSymbol_get_farReturn                              VTableMethod = 108
+	VTSymbol_get_isStatic                               VTableMethod = 109
+	VTSymbol_get_hasDebugInfo                           VTableMethod = 110
+	VTSymbol_get_isLTCG                                 VTableMethod = 111
+	VTSymbol_get_isDataAligned                          VTableMethod = 112
+	VTSymbol_get_hasSecurityChecks                      VTableMethod = 113
+	VTSymbol_get_compilerName                           VTableMethod = 114
+	VTSymbol_get_hasAlloca                              VTableMethod = 115
+	VTSymbol_get_hasSetJump                             VTableMethod = 116
+	VTSymbol_get_hasLongJump                            VTableMethod = 117
+	VTSymbol_get_hasInlAsm                              VTableMethod = 118
+	VTSymbol_get_hasEH                                  VTableMethod = 119
+	VTSymbol_get_hasSEH                                 VTableMethod = 120
+	VTSymbol_get_hasEHa                                 VTableMethod = 121
+	VTSymbol_get_isNaked                                VTableMethod = 122
+	VTSymbol_get_isAggregated                           VTableMethod = 123
+	VTSymbol_get_isSplitted                             VTableMethod = 124
+	VTSymbol_get_container                              VTableMethod = 125
+	VTSymbol_get_inlSpec                                VTableMethod = 126
+	VTSymbol_get_noStackOrdering                        VTableMethod = 127
+	VTSymbol_get_virtualBaseTableType                   VTableMethod = 128
+	VTSymbol_get_hasManagedCode                         VTableMethod = 129
+	VTSymbol_get_isHotpatchable                         VTableMethod = 130
+	VTSymbol_get_isCVTCIL                               VTableMethod = 131
+	VTSymbol_get_isMSILNetmodule                        VTableMethod = 132
+	VTSymbol_get_isCTypes                               VTableMethod = 133
+	VTSymbol_get_isStripped                             VTableMethod = 134
+	VTSymbol_get_frontEndQFE                            VTableMethod = 135
+	VTSymbol_get_backEndQFE                             VTableMethod = 136
+	VTSymbol_get_wasInlined                             VTableMethod = 137
+	VTSymbol_get_strictGSCheck                          VTableMethod = 138
+	VTSymbol_get_isCxxReturnUdt                         VTableMethod = 139
+	VTSymbol_get_isConstructorVirtualBase               VTableMethod = 140
+	VTSymbol_get_RValueReference                        VTableMethod = 141
+	VTSymbol_get_unmodifiedType                         VTableMethod = 142
+	VTSymbol_get_framePointerPresent                    VTableMethod = 143
+	VTSymbol_get_isSafeBuffers                          VTableMethod = 144
+	VTSymbol_get_intrinsic                              VTableMethod = 145
+	VTSymbol_get_sealed                                 VTableMethod = 146
+	VTSymbol_get_hfaFloat                               VTableMethod = 147
+	VTSymbol_get_hfaDouble                              VTableMethod = 148
+	VTSymbol_get_liveRangeStartAddressSection           VTableMethod = 149
+	VTSymbol_get_liveRangeStartAddressOffset            VTableMethod = 150
+	VTSymbol_get_liveRangeStartRelativeVirtualAddress   VTableMethod = 151
+	VTSymbol_get_countLiveRanges                        VTableMethod = 152
+	VTSymbol_get_liveRangeLength                        VTableMethod = 153
+	VTSymbol_get_offsetInUdt                            VTableMethod = 154
+	VTSymbol_get_paramBasePointerRegisterId             VTableMethod = 155
+	VTSymbol_get_localBasePointerRegisterId             VTableMethod = 156
+	VTSymbol_get_isLocationControlFlowDependent         VTableMethod = 157
+	VTSymbol_get_stride                                 VTableMethod = 158
+	VTSymbol_get_numberOfRows                           VTableMethod = 159
+	VTSymbol_get_numberOfColumns                        VTableMethod = 160
+	VTSymbol_get_isMatrixRowMajor                       VTableMethod = 161
+	VTSymbol_get_numericProperties                      VTableMethod = 162
+	VTSymbol_get_modifierValues                         VTableMethod = 163
+	VTSymbol_get_isReturnValue                          VTableMethod = 164
+	VTSymbol_get_isOptimizedAway                        VTableMethod = 165
+	VTSymbol_get_builtInKind                            VTableMethod = 166
+	VTSymbol_get_registerType                           VTableMethod = 167
+	VTSymbol_get_baseDataSlot                           VTableMethod = 168
+	VTSymbol_get_baseDataOffset                         VTableMethod = 169
+	VTSymbol_get_textureSlot                            VTableMethod = 170
+	VTSymbol_get_samplerSlot                            VTableMethod = 171
+	VTSymbol_get_uavSlot                                VTableMethod = 172
+	VTSymbol_get_sizeInUdt                              VTableMethod = 173
+	VTSymbol_get_memorySpaceKind                        VTableMethod = 174
+	VTSymbol_get_unmodifiedTypeId                       VTableMethod = 175
+	VTSymbol_get_subTypeId                              VTableMethod = 176
+	VTSymbol_get_subType                                VTableMethod = 177
+	VTSymbol_get_numberOfModifiers                      VTableMethod = 178
+	VTSymbol_get_numberOfRegisterIndices                VTableMethod = 179
+	VTSymbol_get_isHLSLData                             VTableMethod = 180
+	VTSymbol_get_isPointerToDataMember                  VTableMethod = 181
+	VTSymbol_get_isPointerToMemberFunction              VTableMethod = 182
+	VTSymbol_get_isSingleInheritance                    VTableMethod = 183
+	VTSymbol_get_isMultipleInheritance                  VTableMethod = 184
+	VTSymbol_get_isVirtualInheritance                   VTableMethod = 185
+	VTSymbol_get_restrictedType                         VTableMethod = 186
+	VTSymbol_get_isPointerBasedOnSymbolValue            VTableMethod = 187
+	VTSymbol_get_baseSymbol                             VTableMethod = 188
+	VTSymbol_get_baseSymbolId                           VTableMethod = 189
+	VTSymbol_get_objectFileName                         VTableMethod = 190
+	VTSymbol_get_isAcceleratorGroupSharedLocal          VTableMethod = 191
+	VTSymbol_get_isAcceleratorPointerTagLiveRange       VTableMethod = 192
+	VTSymbol_get_isAcceleratorStubFunction              VTableMethod = 193
+	VTSymbol_get_numberOfAcceleratorPointerTags         VTableMethod = 194
+	VTSymbol_get_isSdl                                  VTableMethod = 195
+	VTSymbol_get_isWinRTPointer                         VTableMethod = 196
+	VTSymbol_get_isRefUdt                               VTableMethod = 197
+	VTSymbol_get_isValueUdt                             VTableMethod = 198
+	VTSymbol_get_isInterfaceUdt                         VTableMethod = 199
+	VTSymbol_findInlineFramesByAddr                     VTableMethod = 200
+	VTSymbol_findInlineFramesByRVA                      VTableMethod = 201
+	VTSymbol_findInlineFramesByVA                       VTableMethod = 202
+	VTSymbol_findInlineeLines                           VTableMethod = 203
+	VTSymbol_findInlineeLinesByAddr                     VTableMethod = 204
+	VTSymbol_findInlineeLinesByRVA                      VTableMethod = 205
+	VTSymbol_findInlineeLinesByVA                       VTableMethod = 206
+	VTSymbol_findSymbolsForAcceleratorPointerTag        VTableMethod = 207
+	VTSymbol_findSymbolsByRVAForAcceleratorPointerTag   VTableMethod = 208
+	VTSymbol_get_acceleratorPointerTags                 VTableMethod = 209
+	VTSymbol_getSrcLineOnTypeDefn                       VTableMethod = 210
+	VTSymbol_get_isPGO                                  VTableMethod = 211
+	VTSymbol_get_hasValidPGOCounts                      VTableMethod = 212
+	VTSymbol_get_isOptimizedForSpeed                    VTableMethod = 213
+	VTSymbol_get_PGOEntryCount                          VTableMethod = 214
+	VTSymbol_get_PGOEdgeCount                           VTableMethod = 215
+	VTSymbol_get_PGODynamicInstructionCount             VTableMethod = 216
+	VTSymbol_get_staticSize                             VTableMethod = 217
+	VTSymbol_get_finalLiveStaticSize                    VTableMethod = 218
+	VTSymbol_get_phaseName                              VTableMethod = 219
+	VTSymbol_get_hasControlFlowCheck                    VTableMethod = 220
+	VTSymbol_get_constantExport                         VTableMethod = 221
+	VTSymbol_get_dataExport                             VTableMethod = 222
+	VTSymbol_get_privateExport                          VTableMethod = 223
+	VTSymbol_get_noNameExport                           VTableMethod = 224
+	VTSymbol_get_exportHasExplicitlyAssignedOrdinal     VTableMethod = 225
+	VTSymbol_get_exportIsForwarder                      VTableMethod = 226
+	VTSymbol_get_ordinal                                VTableMethod = 227
+	VTSymbol_get_frameSize                              VTableMethod = 228
+	VTSymbol_get_exceptionHandlerAddressSection         VTableMethod = 229
+	VTSymbol_get_exceptionHandlerAddressOffset          VTableMethod = 230
 	VTSymbol_get_exceptionHandlerRelativeVirtualAddress VTableMethod = 231
-	VTSymbol_get_exceptionHandlerVirtualAddress VTableMethod = 232
-	VTSymbol_findInputAssemblyFile VTableMethod = 233
-	VTSymbol_get_characteristics VTableMethod = 234
-	VTSymbol_get_coffGroup VTableMethod = 235
-	VTSymbol_get_bindID VTableMethod = 236
-	VTSymbol_get_bindSpace VTableMethod = 237
-	VTSymbol_get_bindSlot VTableMethod = 238
-
+	VTSymbol_get_exceptionHandlerVirtualAddress         VTableMethod = 232
+	VTSymbol_findInputAssemblyFile                      VTableMethod = 233
+	VTSymbol_get_characteristics                        VTableMethod = 234
+	VTSymbol_get_coffGroup                              VTableMethod = 235
+	VTSymbol_get_bindID                                 VTableMethod = 236
+	VTSymbol_get_bindSpace                              VTableMethod = 237
+	VTSymbol_get_bindSlot                               VTableMethod = 238
 )
 
 // String returns the method name
@@ -389,106 +388,106 @@ func (v VTableMethod) Get(vtable *[200]uintptr) uintptr {
 }
 
 var vtableMethodNames = []string{
-	0: "DataSource_QueryInterface",
-	1: "DataSource_AddRef",
-	2: "DataSource_Release",
-	3: "DataSource_get_lastError",
-	4: "DataSource_loadDataFromPdb",
-	5: "DataSource_loadAndValidateDataFromPdb",
-	6: "DataSource_loadDataForExe",
-	7: "DataSource_loadDataFromIStream",
-	8: "DataSource_openSession",
-	9: "DataSource_loadDataFromCodeViewInfo",
-	10: "DataSource_loadDataFromMiscInfo",
-	11: "Session_QueryInterface",
-	12: "Session_AddRef",
-	13: "Session_Release",
-	14: "Session_get_loadAddress",
-	15: "Session_put_loadAddress",
-	16: "Session_get_globalScope",
-	17: "Session_getEnumTables",
-	18: "Session_getSymbolsByAddr",
-	19: "Session_findChildren",
-	20: "Session_findChildrenEx",
-	21: "Session_findChildrenExByAddr",
-	22: "Session_findChildrenExByVA",
-	23: "Session_findChildrenExByRVA",
-	24: "Session_findSymbolByAddr",
-	25: "Session_findSymbolByRVA",
-	26: "Session_findSymbolByVA",
-	27: "Session_findSymbolByToken",
-	28: "Session_symsAreEquiv",
-	29: "Session_symbolById",
-	30: "Session_findSymbolByRVAEx",
-	31: "Session_findSymbolByVAEx",
-	32: "Session_findFile",
-	33: "Session_findFileById",
-	34: "Session_findLines",
-	35: "Session_findLinesByAddr",
-	36: "Session_findLinesByRVA",
-	37: "Session_findLinesByVA",
-	38: "Session_findLinesByLinenum",
-	39: "Session_findInjectedSource",
-	40: "Session_getEnumDebugStreams",
-	41: "Session_findInlineFramesByAddr",
-	42: "Session_findInlineFramesByRVA",
-	43: "Session_findInlineFramesByVA",
-	44: "Session_findInlineeLines",
-	45: "Session_findInlineeLinesByAddr",
-	46: "Session_findInlineeLinesByRVA",
-	47: "Session_findInlineeLinesByVA",
-	48: "Session_findInlineeLinesByLinenum",
-	49: "Session_findInlineesByName",
-	50: "Session_findAcceleratorInlineeLinesByLinenum",
-	51: "Session_findSymbolsForAcceleratorPointerTag",
-	52: "Session_findSymbolsByRVAForAcceleratorPointerTag",
-	53: "Session_findAcceleratorInlineesByName",
-	54: "Session_addressForVA",
-	55: "Session_addressForRVA",
-	56: "Session_findILOffsetsByAddr",
-	57: "Session_findILOffsetsByRVA",
-	58: "Session_findILOffsetsByVA",
-	59: "Session_findInputAssemblyFiles",
-	60: "Session_findInputAssembly",
-	61: "Session_findInputAssemblyById",
-	62: "Session_getFuncMDTokenMapSize",
-	63: "Session_getFuncMDTokenMap",
-	64: "Session_getTypeMDTokenMapSize",
-	65: "Session_getTypeMDTokenMap",
-	66: "Session_getNumberOfFunctionFragments_VA",
-	67: "Session_getNumberOfFunctionFragments_RVA",
-	68: "Session_getFunctionFragments_VA",
-	69: "Session_getFunctionFragments_RVA",
-	70: "Session_getExports",
-	71: "Session_getHeapAllocationSites",
-	72: "Session_findInputAssemblyFile",
-	73: "EnumSymbols_QueryInterface",
-	74: "EnumSymbols_AddRef",
-	75: "EnumSymbols_Release",
-	76: "EnumSymbols_get__NewEnum",
-	77: "EnumSymbols_get_Count",
-	78: "EnumSymbols_Item",
-	79: "EnumSymbols_Next",
-	80: "EnumSymbols_Skip",
-	81: "EnumSymbols_Reset",
-	82: "EnumSymbols_Clone",
-	83: "EnumLineNumbers_QueryInterface",
-	84: "EnumLineNumbers_AddRef",
-	85: "EnumLineNumbers_Release",
-	86: "EnumLineNumbers_get__NewEnum",
-	87: "EnumLineNumbers_get_Count",
-	88: "EnumLineNumbers_Item",
-	89: "EnumLineNumbers_Next",
-	90: "EnumLineNumbers_Skip",
-	91: "EnumLineNumbers_Reset",
-	92: "EnumLineNumbers_Clone",
-	93: "LineNumber_QueryInterface",
-	94: "LineNumber_AddRef",
-	95: "LineNumber_Release",
-	96: "LineNumber_get_compiland",
-	97: "LineNumber_get_sourceFile",
-	98: "LineNumber_get_lineNumber",
-	99: "LineNumber_get_lineNumberEnd",
+	0:   "DataSource_QueryInterface",
+	1:   "DataSource_AddRef",
+	2:   "DataSource_Release",
+	3:   "DataSource_get_lastError",
+	4:   "DataSource_loadDataFromPdb",
+	5:   "DataSource_loadAndValidateDataFromPdb",
+	6:   "DataSource_loadDataForExe",
+	7:   "DataSource_loadDataFromIStream",
+	8:   "DataSource_openSession",
+	9:   "DataSource_loadDataFromCodeViewInfo",
+	10:  "DataSource_loadDataFromMiscInfo",
+	11:  "Session_QueryInterface",
+	12:  "Session_AddRef",
+	13:  "Session_Release",
+	14:  "Session_get_loadAddress",
+	15:  "Session_put_loadAddress",
+	16:  "Session_get_globalScope",
+	17:  "Session_getEnumTables",
+	18:  "Session_getSymbolsByAddr",
+	19:  "Session_findChildren",
+	20:  "Session_findChildrenEx",
+	21:  "Session_findChildrenExByAddr",
+	22:  "Session_findChildrenExByVA",
+	23:  "Session_findChildrenExByRVA",
+	24:  "Session_findSymbolByAddr",
+	25:  "Session_findSymbolByRVA",
+	26:  "Session_findSymbolByVA",
+	27:  "Session_findSymbolByToken",
+	28:  "Session_symsAreEquiv",
+	29:  "Session_symbolById",
+	30:  "Session_findSymbolByRVAEx",
+	31:  "Session_findSymbolByVAEx",
+	32:  "Session_findFile",
+	33:  "Session_findFileById",
+	34:  "Session_findLines",
+	35:  "Session_findLinesByAddr",
+	36:  "Session_findLinesByRVA",
+	37:  "Session_findLinesByVA",
+	38:  "Session_findLinesByLinenum",
+	39:  "Session_findInjectedSource",
+	40:  "Session_getEnumDebugStreams",
+	41:  "Session_findInlineFramesByAddr",
+	42:  "Session_findInlineFramesByRVA",
+	43:  "Session_findInlineFramesByVA",
+	44:  "Session_findInlineeLines",
+	45:  "Session_findInlineeLinesByAddr",
+	46:  "Session_findInlineeLinesByRVA",
+	47:  "Session_findInlineeLinesByVA",
+	48:  "Session_findInlineeLinesByLinenum",
+	49:  "Session_findInlineesByName",
+	50:  "Session_findAcceleratorInlineeLinesByLinenum",
+	51:  "Session_findSymbolsForAcceleratorPointerTag",
+	52:  "Session_findSymbolsByRVAForAcceleratorPointerTag",
+	53:  "Session_findAcceleratorInlineesByName",
+	54:  "Session_addressForVA",
+	55:  "Session_addressForRVA",
+	56:  "Session_findILOffsetsByAddr",
+	57:  "Session_findILOffsetsByRVA",
+	58:  "Session_findILOffsetsByVA",
+	59:  "Session_findInputAssemblyFiles",
+	60:  "Session_findInputAssembly",
+	61:  "Session_findInputAssemblyById",
+	62:  "Session_getFuncMDTokenMapSize",
+	63:  "Session_getFuncMDTokenMap",
+	64:  "Session_getTypeMDTokenMapSize",
+	65:  "Session_getTypeMDTokenMap",
+	66:  "Session_getNumberOfFunctionFragments_VA",
+	67:  "Session_getNumberOfFunctionFragments_RVA",
+	68:  "Session_getFunctionFragments_VA",
+	69:  "Session_getFunctionFragments_RVA",
+	70:  "Session_getExports",
+	71:  "Session_getHeapAllocationSites",
+	72:  "Session_findInputAssemblyFile",
+	73:  "EnumSymbols_QueryInterface",
+	74:  "EnumSymbols_AddRef",
+	75:  "EnumSymbols_Release",
+	76:  "EnumSymbols_get__NewEnum",
+	77:  "EnumSymbols_get_Count",
+	78:  "EnumSymbols_Item",
+	79:  "EnumSymbols_Next",
+	80:  "EnumSymbols_Skip",
+	81:  "EnumSymbols_Reset",
+	82:  "EnumSymbols_Clone",
+	83:  "EnumLineNumbers_QueryInterface",
+	84:  "EnumLineNumbers_AddRef",
+	85:  "EnumLineNumbers_Release",
+	86:  "EnumLineNumbers_get__NewEnum",
+	87:  "EnumLineNumbers_get_Count",
+	88:  "EnumLineNumbers_Item",
+	89:  "EnumLineNumbers_Next",
+	90:  "EnumLineNumbers_Skip",
+	91:  "EnumLineNumbers_Reset",
+	92:  "EnumLineNumbers_Clone",
+	93:  "LineNumber_QueryInterface",
+	94:  "LineNumber_AddRef",
+	95:  "LineNumber_Release",
+	96:  "LineNumber_get_compiland",
+	97:  "LineNumber_get_sourceFile",
+	98:  "LineNumber_get_lineNumber",
+	99:  "LineNumber_get_lineNumberEnd",
 	100: "LineNumber_get_columnNumber",
 	101: "LineNumber_get_columnNumberEnd",
 	102: "LineNumber_get_addressSection",

@@ -12,7 +12,7 @@ type PhysicalMemoryRun struct {
 
 type PhysicalMemoryBlock struct {
 	NumberOfRuns uint64
-	Runs        []PhysicalMemoryRun
+	Runs         []PhysicalMemoryRun
 }
 
 func (kd *KernelDump) GetPhysicalMemoryBlock() (*PhysicalMemoryBlock, error) {

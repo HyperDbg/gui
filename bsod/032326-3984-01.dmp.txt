@@ -1,5 +1,0 @@
-=== BSOD Dump 分析结果 ===
-Dump 文件: C:\Windows\Minidump\032326-3984-01.dmp
-驱动名称: hyperkd
-
-驱动文件: D:\笔记本\p\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\build\Release\hyperkd.sys

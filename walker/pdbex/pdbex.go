@@ -2,6 +2,7 @@ package pdbex
 
 import (
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
 	"sort"
@@ -114,9 +115,7 @@ func (p *PDB) GetAllSymbols() map[uint32]*Symbol {
 	defer p.mu.RUnlock()
 
 	result := make(map[uint32]*Symbol, len(p.symbols))
-	for k, v := range p.symbols {
-		result[k] = v
-	}
+	maps.Copy(result, p.symbols)
 	return result
 }
 
@@ -125,9 +124,7 @@ func (p *PDB) GetAllNamedSymbols() map[string]*Symbol {
 	defer p.mu.RUnlock()
 
 	result := make(map[string]*Symbol, len(p.symbolNames))
-	for k, v := range p.symbolNames {
-		result[k] = v
-	}
+	maps.Copy(result, p.symbolNames)
 	return result
 }
 
@@ -136,9 +133,7 @@ func (p *PDB) GetAllFunctions() map[string]*FunctionInfo {
 	defer p.mu.RUnlock()
 
 	result := make(map[string]*FunctionInfo, len(p.functions))
-	for k, v := range p.functions {
-		result[k] = v
-	}
+	maps.Copy(result, p.functions)
 	return result
 }
 

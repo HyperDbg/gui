@@ -29,7 +29,7 @@ func (kd *KernelDump) GetModules() ([]Module, error) {
 	current := listHead
 	visited := make(map[uint64]bool)
 
-	for i := 0; i < 1000; i++ {
+	for range 1000 {
 		if visited[current] {
 			break
 		}

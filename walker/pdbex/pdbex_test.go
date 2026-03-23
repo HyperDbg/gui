@@ -272,13 +272,10 @@ func TestHeaderReconstructionAll(t *testing.T) {
 	header := reconstructor.ReconstructAll(pdb)
 
 	lines := strings.Split(header, "\n")
-	displayLines := 50
-	if len(lines) < displayLines {
-		displayLines = len(lines)
-	}
+	displayLines := min(len(lines), 50)
 
 	t.Logf("Reconstructed header (first %d lines):", displayLines)
-	for i := 0; i < displayLines; i++ {
+	for i := range displayLines {
 		t.Log(lines[i])
 	}
 

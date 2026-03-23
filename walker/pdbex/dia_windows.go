@@ -8,7 +8,7 @@ import (
 	"unsafe"
 )
 
-//D:\ewdk\dist\sdk\dia
+// D:\ewdk\dist\sdk\dia
 
 type Variant struct {
 	VT         uint16
@@ -256,7 +256,7 @@ func newDIASession(pdbPath string) (*diaSession, error) {
 
 	vtable := getVtable(dataSource)
 	fmt.Printf("dataSource vtable[0-9]:\n")
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		fmt.Printf("  [%d] = 0x%X\n", i, vtable[i])
 	}
 	loadDataFromPdb := vtable[VTDataSource_loadDataFromPdb]
@@ -312,7 +312,7 @@ func loadMsdia140() uintptr {
 	diaDir := filepath.Join(tempDir, "dia")
 
 	if _, err := os.Stat(diaDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(diaDir, 0755); err != nil {
+		if err := os.MkdirAll(diaDir, 0o755); err != nil {
 			fmt.Printf("Failed to create dia directory: %v\n", err)
 			return 0
 		}
@@ -322,7 +322,7 @@ func loadMsdia140() uintptr {
 	symSrvPath := filepath.Join(diaDir, symSrvName)
 
 	if _, err := os.Stat(dllPath); os.IsNotExist(err) {
-		if err := os.WriteFile(dllPath, dllData, 0644); err != nil {
+		if err := os.WriteFile(dllPath, dllData, 0o644); err != nil {
 			fmt.Printf("Failed to write msdia140.dll: %v\n", err)
 			return 0
 		}
@@ -330,7 +330,7 @@ func loadMsdia140() uintptr {
 
 	if symSrvData := getSymSrvDLL(); len(symSrvData) > 0 {
 		if _, err := os.Stat(symSrvPath); os.IsNotExist(err) {
-			if err := os.WriteFile(symSrvPath, symSrvData, 0644); err != nil {
+			if err := os.WriteFile(symSrvPath, symSrvData, 0o644); err != nil {
 				fmt.Printf("Failed to write symsrv.dll: %v\n", err)
 			}
 		}
@@ -843,7 +843,7 @@ func (d *diaSession) parseFunction(symbol uintptr) *FunctionInfo {
 	return fn
 }
 
-func variantToInterface(v Variant) interface{} {
+func variantToInterface(v Variant) any {
 	switch v.VT {
 	case VT_I1:
 		return int8(v.Val)
