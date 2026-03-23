@@ -40,10 +40,15 @@ type PDBViewer struct {
 	loadButton *button.Button
 	log        *logview.LogView
 
-	funcTable    *treetable.TreeTable[FuncRow]
-	symbolTable  *treetable.TreeTable[SymbolRow]
-	loading      bool
-	loadingMutex sync.Mutex
+	funcTable   *treetable.TreeTable[FuncRow]
+	symbolTable *treetable.TreeTable[SymbolRow]
+	loading     bool
+	loadingMu   sync.Mutex
+
+	pendingFuncs   []FuncRow
+	pendingSymbols []SymbolRow
+	dataReady      bool
+	dataMu         sync.Mutex
 
 	sourceInput  *input.Input
 	sourceButton *button.Button
@@ -99,21 +104,44 @@ func (v *PDBViewer) Update(gtx layout.Context) {
 	if v.sourceButton.Clicked(gtx) {
 		v.lookupSource(gtx)
 	}
+
+	v.dataMu.Lock()
+	if v.dataReady {
+		v.dataReady = false
+		funcRows := v.pendingFuncs
+		symbolRows := v.pendingSymbols
+		v.dataMu.Unlock()
+
+		v.funcTable.Root().SetChildren(nil)
+		for _, row := range funcRows {
+			v.funcTable.Root().AddChild(v.funcTable.NewNode(row))
+		}
+		v.funcTable.AirTable.Refresh()
+
+		v.symbolTable.Root().SetChildren(nil)
+		for _, row := range symbolRows {
+			v.symbolTable.Root().AddChild(v.symbolTable.NewNode(row))
+		}
+		v.symbolTable.AirTable.Refresh()
+	} else {
+		v.dataMu.Unlock()
+	}
 }
 
 func (v *PDBViewer) loadPDBAsync() {
-	v.loadingMutex.Lock()
+	v.loadingMu.Lock()
 	if v.loading {
-		v.loadingMutex.Unlock()
+		v.loadingMu.Unlock()
 		return
 	}
 	v.loading = true
-	v.loadingMutex.Unlock()
+	v.loadingMu.Unlock()
 
 	defer func() {
-		v.loadingMutex.Lock()
+		v.loadingMu.Lock()
 		v.loading = false
-		v.loadingMutex.Unlock()
+		v.loadingMu.Unlock()
+		app.RequestRedraw()
 	}()
 
 	v.pdbPath = v.pathInput.Editor.GetText()
@@ -141,31 +169,33 @@ func (v *PDBViewer) loadPDBAsync() {
 	}
 	sort.Strings(funcNames)
 
-	v.funcTable.Root().SetChildren(nil)
+	var funcRows []FuncRow
 	for _, name := range funcNames {
 		fn := functions[name]
-		row := FuncRow{
+		funcRows = append(funcRows, FuncRow{
 			Name:    name,
 			Address: fmt.Sprintf("0x%X", fn.Address),
 			Size:    fmt.Sprintf("%d", fn.Size),
-		}
-		v.funcTable.Root().AddChild(v.funcTable.NewNode(row))
+		})
 	}
-	v.funcTable.AirTable.Refresh()
 
 	udts := v.pdb.GetUDTs()
 	v.log.Infof("UDTs: %d", len(udts))
 
-	v.symbolTable.Root().SetChildren(nil)
+	var symbolRows []SymbolRow
 	for _, sym := range udts {
-		row := SymbolRow{
+		symbolRows = append(symbolRows, SymbolRow{
 			Name: sym.Name,
 			Type: sym.Tag.String(),
 			Size: fmt.Sprintf("%d", sym.Size),
-		}
-		v.symbolTable.Root().AddChild(v.symbolTable.NewNode(row))
+		})
 	}
-	v.symbolTable.AirTable.Refresh()
+
+	v.dataMu.Lock()
+	v.pendingFuncs = funcRows
+	v.pendingSymbols = symbolRows
+	v.dataReady = true
+	v.dataMu.Unlock()
 
 	v.log.Info("PDB parsing completed")
 }
@@ -218,11 +248,11 @@ func (v *PDBViewer) Layout(gtx layout.Context) layout.Dimensions {
 					layout.Rigid(layout.Spacer{Width: unit.Dp(8)}.Layout),
 					layout.Rigid(func(gtx layout.Context) layout.Dimensions {
 						label := "Load PDB"
-						v.loadingMutex.Lock()
+						v.loadingMu.Lock()
 						if v.loading {
 							label = "Loading..."
 						}
-						v.loadingMutex.Unlock()
+						v.loadingMu.Unlock()
 						return v.loadButton.Layout(gtx, label)
 					}),
 				)
