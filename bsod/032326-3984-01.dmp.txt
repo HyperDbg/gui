@@ -1,0 +1,74 @@
+=== BSOD Dump 分析结果 ===
+Dump 文件: C:\Windows\Minidump\032326-3984-01.dmp
+驱动名称: hyperkd
+
+驱动文件: D:\笔记本\p\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\build\Release\hyperkd.sys
+
+========================================
+AI分析部分 (原始输出):
+========================================
+                                             ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_EPROCESS                                  ***
+***                                                                   ***
+*************************************************************************
+Loading Kernel Symbols
+...............................................................
+................................................................
+......................................................
+Loading User Symbols
+Loading unloaded module list
+...........
+
+************* Symbol Loading Error Summary **************
+Module name            Error
+ntoskrnl               The system cannot find the file specified
+
+You can troubleshoot most symbol related issues by turning on symbol loading diagnostics (!sym noisy) and repeating the command that caused symbols to be loaded.
+You should also verify that your symbol search path (.sympath) is correct.
+For analysis of this file, run !analyze -v
+3: kd> kd: Reading initial command '.sympath*; .sympath D:\笔记本\p\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\build\Release; .symopt+0x10; .reload /f; .srcpath D:\笔记本\p\ux\examples\hypedbg\cpp\HyperDbgUnified\HyperDbg\hyperdbg; .exr -1; .ecxr; kv 30; !analyze -v; q'
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+Symbol search path is: *; .sympath D:\笔记本\p\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\build\Release; .symopt+0x10; .reload /f; .srcpath D:\笔记本\p\ux\examples\hypedbg\cpp\HyperDbgUnified\HyperDbg\hyperdbg; .exr -1; .ecxr; kv 30; !analyze -v; q
+Expanded Symbol search path is: *; .sympath d:\笔记本\p\ux\examples\hypedbg\doc\cpp\hyperdbgunified\build\release; .symopt+0x10; .reload /f; .srcpath d:\笔记本\p\ux\examples\hypedbg\cpp\hyperdbgunified\hyperdbg\hyperdbg; .exr -1; .ecxr; kv 30; !analyze -v; q
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+WARNING: Whitespace at start of path element
+
+************* Path validation summary **************
+Response                         Time (ms)     Location
+Deferred                                       *
+3: kd> 
+========================================

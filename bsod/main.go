@@ -188,7 +188,6 @@ func (a *Analyzer) runKdCommand(ctx context.Context, desc, dumpFile string, comm
 
 	cmd := exec.CommandContext(ctx, a.WinDbgPath,
 		"-z", dumpFile,
-		"-y", a.SymbolPath,
 		"-c", strings.Join(commands, "; "),
 	)
 

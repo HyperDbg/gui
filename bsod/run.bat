@@ -1,2 +1,0 @@
-go run  -x  .
-pause
