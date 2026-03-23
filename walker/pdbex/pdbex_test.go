@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	testPDBPath = `D:\笔记本\p\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\build\Release\hyperkd.pdb`
-	testPEPath  = `D:\笔记本\p\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\build\Release\hyperkd.sys`
+	testPDBPath = `D:\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\build\Release\hyperkd.pdb`
+	testPEPath  = `D:\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\build\Release\hyperkd.sys`
 )
 
 func skipIfNoPDB(t *testing.T) {

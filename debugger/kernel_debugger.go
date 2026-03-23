@@ -102,7 +102,7 @@ func EnablePrivilege(privilegeName string) {
 }
 
 func GetDriverPath() string {
-	return "d:\\笔记本\\p\\ux\\examples\\hypedbg\\doc\\cpp\\HyperDbgUnified\\build\\Release\\hyperkd.sys"
+	return "D:\\ux\\examples\\hypedbg\\doc\\cpp\\HyperDbgUnified\\build\\Release\\hyperkd.sys"
 }
 
 func loadProcess(exePath string) (uint32, uint32) {

@@ -1,0 +1,178 @@
+
+KEY_VALUES_STRING: 1
+
+    Key  : Analysis.CPU.mSec
+    Value: 62
+
+    Key  : Analysis.Elapsed.mSec
+    Value: 59
+
+    Key  : Analysis.IO.Other.Mb
+    Value: 0
+
+    Key  : Analysis.IO.Read.Mb
+    Value: 1
+
+    Key  : Analysis.IO.Write.Mb
+    Value: 0
+
+    Key  : Analysis.Init.CPU.mSec
+    Value: 156
+
+    Key  : Analysis.Init.Elapsed.mSec
+    Value: 1359
+
+    Key  : Analysis.Memory.CommitPeak.Mb
+    Value: 52
+
+    Key  : Analysis.Version.DbgEng
+    Value: 10.0.29507.1001
+
+    Key  : Analysis.Version.Description
+    Value: 10.2511.5.1 amd64fre
+
+    Key  : Analysis.Version.Ext
+    Value: 1.2511.5.1
+
+    Key  : Bugcheck.Code.LegacyAPI
+    Value: 0xef
+
+    Key  : Bugcheck.Code.TargetModel
+    Value: 0xef
+
+    Key  : Dump.Attributes.AsUlong
+    Value: 0x8
+
+    Key  : Dump.Attributes.KernelGeneratedTriageDump
+    Value: 1
+
+    Key  : Failure.Bucket
+    Value: WRONG_SYMBOLS_X64_10.0.19041.3757_(WinBuild.160101.0800)_TIMESTAMP_331108-115949_781B6FB5_nt_wrong_symbols!781B6FB51046000
+
+    Key  : Failure.Hash
+    Value: {3048acc5-43ef-b7a9-1ce3-337c1b2b8b52}
+
+    Key  : WER.System.BIOSRevision
+    Value: 1.35.0.0
+
+
+BUGCHECK_CODE:  ef
+
+BUGCHECK_P1: ffffb0818b557080
+
+BUGCHECK_P2: 0
+
+BUGCHECK_P3: 0
+
+BUGCHECK_P4: 0
+
+FILE_IN_CAB:  032326-4171-01.dmp
+
+ADDITIONAL_DEBUG_TEXT:  
+You can run '.symfix; .reload' to try to fix the symbol path and load symbols.
+
+WRONG_SYMBOLS_TIMESTAMP: 781b6fb5
+
+WRONG_SYMBOLS_SIZE: 1046000
+
+FAULTING_MODULE: fffff8053b600000 nt
+
+DUMP_FILE_ATTRIBUTES: 0x8
+  Kernel Generated Triage Dump
+
+FAULTING_THREAD:  ffffb0818c44f080
+
+BLACKBOXNTFS: 1 (!blackboxntfs)
+
+
+BLACKBOXPNP: 1 (!blackboxpnp)
+
+
+BLACKBOXWINLOGON: 1 (!blackboxwinlogon)
+
+
+CUSTOMER_CRASH_COUNT:  1
+
+STACK_TEXT:  
+ffffed86`bd780298 fffff805`3bf0c6b2     : 00000000`000000ef ffffb081`8b557080 00000000`00000000 00000000`00000000 : nt!KeBugCheckEx
+ffffed86`bd7802a0 fffff805`3be18207     : 00000000`00000001 fffff805`3b8b8c11 00000000`00000002 fffff805`3b8b8b3b : nt!PsSetLegoNotifyRoutine+0x612
+ffffed86`bd780340 fffff805`3bc82420     : ffffb081`00000000 00000000`00000000 ffffb081`8b557080 ffffb081`8b5574b8 : nt!FsRtlRegisterFltMgrCalls+0x44107
+ffffed86`bd7803b0 fffff805`3bc8221c     : ffffb081`8b557080 00000000`00000001 ffffffff`ffffffff 00000000`00000000 : nt!PsSetProcessPriorityByClass+0x4d0
+ffffed86`bd7803f0 fffff805`3ba10ef5     : ffffb081`8b557080 ffffb081`8c44f080 ffffed86`bd7804e0 fffff805`3bd31672 : nt!PsSetProcessPriorityByClass+0x2cc
+ffffed86`bd780460 fffff805`3ba022a0     : fffff805`3ba7a475 ffffed86`bd7821c0 ffffed86`bd7821c0 ffffffff`ffffffff : nt!setjmpex+0x82b5
+ffffed86`bd7805f8 fffff805`3ba7a475     : ffffed86`bd7821c0 ffffed86`bd7821c0 ffffffff`ffffffff ffffffff`ffffffff : nt!KeSynchronizeExecution+0x3600
+ffffed86`bd780600 fffff805`3bb22332     : 00000000`00000001 ffffed86`bd782170 ffffb081`8c44f080 00000fff`00000003 : nt!memset+0x67775
+ffffed86`bd781480 fffff805`3b9fe27b     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : nt!KeStallWhileFrozen+0x4662
+ffffed86`bd7822c0 fffff805`3ba10ef5     : ffffb081`8c44f080 00000000`00000000 00000000`00000001 ffffb081`00000000 : nt!KeBugCheckEx+0xbbb
+ffffed86`bd782400 00007ffb`0d40fcd4     : 00007ffb`0d410ee3 00000000`00000000 00000000`00000000 00000000`000014d0 : nt!setjmpex+0x82b5
+0000000c`17ffc1b8 00007ffb`0d410ee3     : 00000000`00000000 00000000`00000000 00000000`000014d0 00000000`00000000 : 0x00007ffb`0d40fcd4
+0000000c`17ffc1c0 00000000`00000000     : 00000000`00000000 00000000`000014d0 00000000`00000000 00000000`00000000 : 0x00007ffb`0d410ee3
+
+
+STACK_COMMAND: .thread /r /p 0xffffb0818c44f080 ; kb
+
+IMAGE_VERSION:  10.0.19041.3757
+
+EXCEPTION_CODE_STR:  781B6FB5
+
+EXCEPTION_STR:  WRONG_SYMBOLS
+
+PROCESS_NAME:  ntoskrnl.wrong.symbols.exe
+
+IMAGE_NAME:  ntoskrnl.wrong.symbols.exe
+
+MODULE_NAME: nt_wrong_symbols
+
+SYMBOL_NAME:  nt_wrong_symbols!781B6FB51046000
+
+FAILURE_BUCKET_ID:  WRONG_SYMBOLS_X64_10.0.19041.3757_(WinBuild.160101.0800)_TIMESTAMP_331108-115949_781B6FB5_nt_wrong_symbols!781B6FB51046000
+
+OSPLATFORM_TYPE:  x64
+
+OSNAME:  Windows 10
+
+FAILURE_ID_HASH:  {3048acc5-43ef-b7a9-1ce3-337c1b2b8b52}
+
+Followup:     MachineOwner
+---------
+
+4: kd> .thread /r /p 0xffffb0818c44f080 ; kb
+Implicit thread is now ffffb081`8c44f080
+Implicit process is now ffffb081`8b557080
+Loading User Symbols
+WARNING: .reload failed, module list may be incomplete
+  *** Stack trace for last set context - .thread/.cxr resets it
+ # RetAddr               : Args to Child                                                           : Call Site
+00 fffff805`3bf0c6b2     : 00000000`000000ef ffffb081`8b557080 00000000`00000000 00000000`00000000 : nt!KeBugCheckEx
+01 fffff805`3be18207     : 00000000`00000001 fffff805`3b8b8c11 00000000`00000002 fffff805`3b8b8b3b : nt!PsSetLegoNotifyRoutine+0x612
+02 fffff805`3bc82420     : ffffb081`00000000 00000000`00000000 ffffb081`8b557080 ffffb081`8b5574b8 : nt!FsRtlRegisterFltMgrCalls+0x44107
+03 fffff805`3bc8221c     : ffffb081`8b557080 00000000`00000001 ffffffff`ffffffff 00000000`00000000 : nt!PsSetProcessPriorityByClass+0x4d0
+04 fffff805`3ba10ef5     : ffffb081`8b557080 ffffb081`8c44f080 ffffed86`bd7804e0 fffff805`3bd31672 : nt!PsSetProcessPriorityByClass+0x2cc
+05 fffff805`3ba022a0     : fffff805`3ba7a475 ffffed86`bd7821c0 ffffed86`bd7821c0 ffffffff`ffffffff : nt!setjmpex+0x82b5
+06 fffff805`3ba7a475     : ffffed86`bd7821c0 ffffed86`bd7821c0 ffffffff`ffffffff ffffffff`ffffffff : nt!KeSynchronizeExecution+0x3600
+07 fffff805`3bb22332     : 00000000`00000001 ffffed86`bd782170 ffffb081`8c44f080 00000fff`00000003 : nt!memset+0x67775
+08 fffff805`3b9fe27b     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : nt!KeStallWhileFrozen+0x4662
+09 fffff805`3ba10ef5     : ffffb081`8c44f080 00000000`00000000 00000000`00000001 ffffb081`00000000 : nt!KeBugCheckEx+0xbbb
+0a 00007ffb`0d40fcd4     : 00007ffb`0d410ee3 00000000`00000000 00000000`00000000 00000000`000014d0 : nt!setjmpex+0x82b5
+0b 00007ffb`0d410ee3     : 00000000`00000000 00000000`00000000 00000000`000014d0 00000000`00000000 : 0x00007ffb`0d40fcd4
+0c 00000000`00000000     : 00000000`00000000 00000000`000014d0 00000000`00000000 00000000`00000000 : 0x00007ffb`0d410ee3
+4: kd> .thread /r /p 0xffffb0818c44f080 ; kb
+Implicit thread is now ffffb081`8c44f080
+Implicit process is now ffffb081`8b557080
+Loading User Symbols
+WARNING: .reload failed, module list may be incomplete
+  *** Stack trace for last set context - .thread/.cxr resets it
+ # RetAddr               : Args to Child                                                           : Call Site
+00 fffff805`3bf0c6b2     : 00000000`000000ef ffffb081`8b557080 00000000`00000000 00000000`00000000 : nt!KeBugCheckEx
+01 fffff805`3be18207     : 00000000`00000001 fffff805`3b8b8c11 00000000`00000002 fffff805`3b8b8b3b : nt!PsSetLegoNotifyRoutine+0x612
+02 fffff805`3bc82420     : ffffb081`00000000 00000000`00000000 ffffb081`8b557080 ffffb081`8b5574b8 : nt!FsRtlRegisterFltMgrCalls+0x44107
+03 fffff805`3bc8221c     : ffffb081`8b557080 00000000`00000001 ffffffff`ffffffff 00000000`00000000 : nt!PsSetProcessPriorityByClass+0x4d0
+04 fffff805`3ba10ef5     : ffffb081`8b557080 ffffb081`8c44f080 ffffed86`bd7804e0 fffff805`3bd31672 : nt!PsSetProcessPriorityByClass+0x2cc
+05 fffff805`3ba022a0     : fffff805`3ba7a475 ffffed86`bd7821c0 ffffed86`bd7821c0 ffffffff`ffffffff : nt!setjmpex+0x82b5
+06 fffff805`3ba7a475     : ffffed86`bd7821c0 ffffed86`bd7821c0 ffffffff`ffffffff ffffffff`ffffffff : nt!KeSynchronizeExecution+0x3600
+07 fffff805`3bb22332     : 00000000`00000001 ffffed86`bd782170 ffffb081`8c44f080 00000fff`00000003 : nt!memset+0x67775
+08 fffff805`3b9fe27b     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : nt!KeStallWhileFrozen+0x4662
+09 fffff805`3ba10ef5     : ffffb081`8c44f080 00000000`00000000 00000000`00000001 ffffb081`00000000 : nt!KeBugCheckEx+0xbbb
+0a 00007ffb`0d40fcd4     : 00007ffb`0d410ee3 00000000`00000000 00000000`00000000 00000000`000014d0 : nt!setjmpex+0x82b5
+0b 00007ffb`0d410ee3     : 00000000`00000000 00000000`00000000 00000000`000014d0 00000000`00000000 : 0x00007ffb`0d40fcd4
+0c 00000000`00000000     : 00000000`00000000 00000000`000014d0 00000000`00000000 00000000`00000000 : 0x00007ffb`0d410ee3
