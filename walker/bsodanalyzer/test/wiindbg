@@ -1,0 +1,19 @@
+[Running] powershell -ExecutionPolicy ByPass -File "d:\笔记本\p\ux\examples\hypedbg\analyze_bsod.ps1"
+=== BSOD 分析 ===
+Dump: C:\Windows\Minidump\032326-3984-01.dmp
+
+异常代码: 80000003
+异常地址: 0xfffff80450dfd6c0
+已卸载模块: 0xfffff8057c520000 - 0xfffff8057c5f0000
+
+驱动已卸载，执行详细分析...
+Bugcheck: ef
+崩溃模块: ntoskrnl.wrong.symbols.exe
+
+调用栈中未找到 hyperkd 偏移信息
+可能是驱动卸载后回调未清理导致的间接崩溃
+
+=== 完成 ===
+
+[Done] exited with code=0 in 2.492 seconds
+

@@ -7,20 +7,20 @@ import (
 )
 
 type ExceptionRecord struct {
-	ExceptionCode        uint32
-	ExceptionFlags       uint32
-	ExceptionRecord      uint64
-	ExceptionAddress     uint64
-	NumberParameters     uint32
-	UnusedAlignment      uint32
+	ExceptionCode    uint32
+	ExceptionFlags   uint32
+	ExceptionRecord  uint64
+	ExceptionAddress uint64
+	NumberParameters uint32
+	UnusedAlignment  uint32
 	ExceptionInformation [15]uint64
 }
 
 type Exception struct {
-	ThreadId        uint32
-	UnusedAlignment uint32
-	ExceptionRecord ExceptionRecord
-	ThreadContext   Context
+	ThreadId         uint32
+	UnusedAlignment  uint32
+	ExceptionRecord  ExceptionRecord
+	ThreadContext    Context
 }
 
 type Context struct {
@@ -79,18 +79,18 @@ func (m *Minidump) GetException() (*Exception, error) {
 }
 
 type Thread struct {
-	ThreadId      uint32
-	SuspendCount  uint32
-	PriorityClass uint32
-	Priority      uint32
-	Teb           uint64
-	Stack         MemoryDescriptor
-	ThreadContext Context
+	ThreadId         uint32
+	SuspendCount     uint32
+	PriorityClass    uint32
+	Priority         uint32
+	Teb              uint64
+	Stack            MemoryDescriptor
+	ThreadContext    Context
 }
 
 type MemoryDescriptor struct {
 	StartOfMemoryRange uint64
-	DataSize           uint64
+	DataSize          uint64
 }
 
 func (m *Minidump) GetThreads() ([]Thread, error) {
@@ -117,16 +117,16 @@ func (m *Minidump) GetThreads() ([]Thread, error) {
 }
 
 type Module struct {
-	BaseOfImage   uint64
-	SizeOfImage   uint32
-	CheckSum      uint32
-	TimeDateStamp uint32
-	ModuleNameRva uint32
-	VersionInfo   ImageDataDirectory
-	CvRecord      ImageDataDirectory
-	MiscRecord    ImageDataDirectory
-	Reserved0     uint64
-	Reserved1     uint64
+	BaseOfImage      uint64
+	SizeOfImage      uint32
+	CheckSum         uint32
+	TimeDateStamp    uint32
+	ModuleNameRva    uint32
+	VersionInfo      ImageDataDirectory
+	CvRecord         ImageDataDirectory
+	MiscRecord       ImageDataDirectory
+	Reserved0        uint64
+	Reserved1        uint64
 }
 
 type ImageDataDirectory struct {
@@ -168,20 +168,20 @@ func (m *Minidump) GetModules() ([]Module, []string, error) {
 }
 
 type SystemInfo struct {
-	ProcessorArchitecture uint16
-	ProcessorLevel        uint16
-	ProcessorRevision     uint16
-	Reserved0             uint8
-	NumberOfProcessors    uint8
-	ProductType           uint8
-	MajorVersion          uint8
-	MinorVersion          uint8
-	BuildNumber           uint16
-	PlatformId            uint32
-	CSDVersionRva         uint32
-	Reserved1             uint16
-	Flgs                  uint16
-	Reserved2             [3]uint32
+	ProcessorArchitecture     uint16
+	ProcessorLevel            uint16
+	ProcessorRevision         uint16
+	Reserved0                 uint8
+	NumberOfProcessors        uint8
+	ProductType               uint8
+	MajorVersion              uint8
+	MinorVersion              uint8
+	BuildNumber               uint16
+	PlatformId                uint32
+	CSDVersionRva             uint32
+	Reserved1                 uint16
+	Flgs                      uint16
+	Reserved2                 [3]uint32
 }
 
 func (m *Minidump) GetSystemInfo() (*SystemInfo, error) {
@@ -200,8 +200,8 @@ func (m *Minidump) GetSystemInfo() (*SystemInfo, error) {
 
 type Memory64List struct {
 	NumberOfMemoryRanges uint64
-	BaseRva              uint64
-	MemoryRanges         []MemoryDescriptor64
+	BaseRva             uint64
+	MemoryRanges        []MemoryDescriptor64
 }
 
 type MemoryDescriptor64 struct {
