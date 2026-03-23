@@ -155,7 +155,7 @@ type diaSession struct {
 	depth      int
 }
 
-const maxDepth = 8
+const maxDepth = 5
 
 func newDIASession(pdbPath string) (*diaSession, error) {
 	fmt.Printf("newDIASession called with path: %s\n", pdbPath)
