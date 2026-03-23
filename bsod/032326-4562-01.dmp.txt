@@ -1,5 +1,5 @@
 === BSOD Dump 分析结果 ===
-Dump 文件: C:\Windows\Minidump\032326-3984-01.dmp
+Dump 文件: C:\Windows\Minidump\032326-4562-01.dmp
 驱动名称: hyperkd
 
 驱动文件: D:\笔记本\p\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\build\Release\hyperkd.sys
@@ -19,7 +19,7 @@ Microsoft (R) Windows Debugger Version 10.0.29507.1001 AMD64
 Copyright (c) Microsoft Corporation. All rights reserved.
 
 
-Loading Dump File [C:\Windows\Minidump\032326-3984-01.dmp]
+Loading Dump File [C:\Windows\Minidump\032326-4562-01.dmp]
 Mini Kernel Dump File: Only registers and stack trace are available
 
 Symbol search path is: srv*

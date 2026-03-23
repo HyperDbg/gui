@@ -590,6 +590,14 @@ func (a *Analyzer) buildReport(result *AnalysisResult) string {
 		sb.WriteString("\n========================================\n")
 	}
 
+	if result.RawOutput != "" {
+		sb.WriteString("\n========================================\n")
+		sb.WriteString("WinDbg执行过程:\n")
+		sb.WriteString("========================================\n")
+		sb.WriteString(result.RawOutput)
+		sb.WriteString("\n========================================\n")
+	}
+
 	return sb.String()
 }
 
