@@ -111,28 +111,6 @@ func (a *Analyzer) initCommands() {
 		"!analyze -v",
 		"q",
 	}
-
-	a.ResolveCmds = func(frame *StackFrame) []string {
-		return []string{
-			".sympath*",
-			fmt.Sprintf(".sympath %s", a.SymbolPath),
-			".symopt+0x10",
-			fmt.Sprintf(".srcpath %s", a.SourcePath),
-			fmt.Sprintf("ln %s", frame.RetAddr),
-			"q",
-		}
-	}
-
-	a.LocateCmds = func(crashOffset string) []string {
-		return []string{
-			".sympath*",
-			fmt.Sprintf(".sympath %s", a.SymbolPath),
-			".symopt+0x10",
-			fmt.Sprintf(".srcpath %s", a.SourcePath),
-			fmt.Sprintf("ln %s+%s", a.DriverName, crashOffset),
-			"q",
-		}
-	}
 }
 
 func main() {
@@ -164,13 +142,6 @@ func (a *Analyzer) Run() {
 	fmt.Println()
 
 	result := a.analyze(targetDump)
-
-	if a.DriverSys != "" && len(result.CallStack) > 0 {
-		a.resolveSourceLines(result)
-	}
-	if a.DriverSys != "" && result.CrashOffset != "" {
-		a.locateCrashFunction(result)
-	}
 
 	report := a.buildReport(result)
 	fmt.Print(report)
@@ -281,45 +252,19 @@ func (a *Analyzer) analyze(dumpFile string) *AnalysisResult {
 		a.checkDriverCrash(result)
 	}
 
+	stackCommands := a.extractStackCommands(output)
+	if len(stackCommands) > 0 {
+		fmt.Printf("\n[步骤2] 执行动态命令...\n")
+		for _, cmd := range stackCommands {
+			fmt.Printf("  执行: %s\n", cmd)
+			stackOutput := a.runKdCommand(ctx, "执行动态命令", dumpFile, []string{cmd, "q"})
+			result.AIAnalysis += "\n" + stackOutput
+		}
+	}
+
 	a.extractAIAnalysis(output, result)
 
 	return result
-}
-
-func (a *Analyzer) resolveSourceLines(result *AnalysisResult) {
-	fmt.Printf("\n[步骤2] 解析调用栈 (共 %d 帧)...\n", len(result.CallStack))
-	ctx := context.Background()
-
-	for i := range result.CallStack {
-		frame := &result.CallStack[i]
-		if frame.RetAddr == "" || frame.RetAddr == "0000000000000000" {
-			continue
-		}
-
-		output := a.runKdCommand(ctx, fmt.Sprintf("解析帧 #%d", frame.Index), a.DriverSys, a.ResolveCmds(frame))
-
-		if match := regexp.MustCompile(`\[([^\]]+):(\d+)\]`).FindStringSubmatch(output); match != nil {
-			frame.SourceFile = match[1]
-			frame.SourceLine = match[2]
-		}
-		if match := regexp.MustCompile(a.DriverName + `!([a-zA-Z_][a-zA-Z0-9_]*)`).FindStringSubmatch(output); match != nil {
-			if frame.FuncName == "" || strings.HasPrefix(frame.FuncName, "0x") {
-				frame.FuncName = match[1]
-			}
-		}
-	}
-}
-
-func (a *Analyzer) locateCrashFunction(result *AnalysisResult) {
-	fmt.Printf("\n[步骤3] 定位崩溃函数 (偏移: %s)...\n", result.CrashOffset)
-	ctx := context.Background()
-
-	output := a.runKdCommand(ctx, "定位崩溃函数", a.DriverSys, a.LocateCmds(result.CrashOffset))
-
-	if match := regexp.MustCompile(a.DriverName + `!([a-zA-Z_][a-zA-Z0-9_]*)`).FindStringSubmatch(output); match != nil {
-		result.CrashFunction = match[1]
-		fmt.Printf("  找到崩溃函数: %s!%s\n", a.DriverName, result.CrashFunction)
-	}
 }
 
 func (a *Analyzer) findLatestMinidump() string {
@@ -478,6 +423,19 @@ func (a *Analyzer) parseAnalyzeOutput(output string, result *AnalysisResult) {
 	if match := regexp.MustCompile(`FAILURE_BUCKET_ID:\s*(\S+)`).FindStringSubmatch(output); match != nil {
 		result.FailureBucket = match[1]
 	}
+}
+
+func (a *Analyzer) extractStackCommands(output string) []string {
+	var commands []string
+
+	if match := regexp.MustCompile(`STACK_COMMAND:\s*(.+)`).FindStringSubmatch(output); match != nil {
+		cmd := strings.TrimSpace(match[1])
+		if cmd != "" {
+			commands = append(commands, cmd)
+		}
+	}
+
+	return commands
 }
 
 func (a *Analyzer) extractAIAnalysis(output string, result *AnalysisResult) {
