@@ -17,6 +17,7 @@ type PDB struct {
 	symbolNames     map[string]*Symbol
 	functions       map[string]*FunctionInfo
 	functionsByAddr map[uint64]*FunctionInfo
+	dia             *diaSession
 	mu              sync.RWMutex
 }
 
@@ -58,6 +59,11 @@ func (p *PDB) parsePDB() error {
 func (p *PDB) Close() {
 	p.mu.Lock()
 	defer p.mu.Unlock()
+
+	if p.dia != nil {
+		p.dia.close()
+		p.dia = nil
+	}
 
 	p.symbols = nil
 	p.symbolNames = nil
@@ -333,4 +339,62 @@ func (p *PDB) dumpSymbolRecursive(sb *strings.Builder, sym *Symbol, indent int) 
 			sb.WriteString(fmt.Sprintf("  Array[%d] of: %s\n", sym.Array.ElementCount, sym.Array.ElementType.Name))
 		}
 	}
+}
+
+func (p *PDB) FindSourceLineByRVA(rva uint32) (fileName string, lineNumber uint32, ok bool) {
+	p.mu.RLock()
+	defer p.mu.RUnlock()
+
+	if p.dia == nil {
+		return "", 0, false
+	}
+
+	return p.dia.FindSourceLineByRVA(rva)
+}
+
+func (p *PDB) FindSourceLineByVA(va uint64) (fileName string, lineNumber uint32, ok bool) {
+	p.mu.RLock()
+	defer p.mu.RUnlock()
+
+	if p.dia == nil {
+		return "", 0, false
+	}
+
+	return p.dia.FindSourceLineByVA(va)
+}
+
+type SourceLocationInfo struct {
+	FileName   string
+	LineNumber uint32
+	Function   string
+	Address    uint64
+}
+
+func (p *PDB) FindSourceLocationByRVA(rva uint32) (*SourceLocationInfo, bool) {
+	p.mu.RLock()
+	defer p.mu.RUnlock()
+
+	if p.dia == nil {
+		return nil, false
+	}
+
+	info := &SourceLocationInfo{
+		Address: uint64(rva),
+	}
+
+	fileName, lineNumber, ok := p.dia.FindSourceLineByRVA(rva)
+	if ok {
+		info.FileName = fileName
+		info.LineNumber = lineNumber
+	}
+
+	if fn, ok := p.functionsByAddr[uint64(rva)]; ok {
+		info.Function = fn.Name
+	} else {
+		if name, ok := p.GetFunctionByOffset(uint64(rva)); ok {
+			info.Function = name
+		}
+	}
+
+	return info, true
 }

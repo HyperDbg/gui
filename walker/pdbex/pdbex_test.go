@@ -527,3 +527,39 @@ func TestPEWithNonExistentFile(t *testing.T) {
 		t.Error("Expected error for non-existent PE file")
 	}
 }
+
+func TestFindSourceLineByRVA(t *testing.T) {
+	skipIfNoPDB(t)
+
+	pdb := NewPDB()
+	defer pdb.Close()
+
+	if err := pdb.Open(testPDBPath); err != nil {
+		t.Fatalf("Failed to open PDB: %v", err)
+	}
+
+	functions := pdb.GetAllFunctions()
+	if len(functions) == 0 {
+		t.Skip("No functions to test")
+	}
+
+	var testFn *FunctionInfo
+	for _, fn := range functions {
+		if fn.Address > 0 && fn.Size > 0 {
+			testFn = fn
+			break
+		}
+	}
+
+	if testFn == nil {
+		t.Skip("No function with valid address found")
+	}
+
+	rva := uint32(testFn.Address)
+	fileName, lineNumber, ok := pdb.FindSourceLineByRVA(rva)
+	t.Logf("RVA 0x%X: fileName=%q, lineNumber=%d, ok=%v", rva, fileName, lineNumber, ok)
+
+	if ok && fileName != "" {
+		t.Logf("Found source: %s:%d", fileName, lineNumber)
+	}
+}

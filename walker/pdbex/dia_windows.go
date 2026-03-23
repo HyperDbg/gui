@@ -130,10 +130,10 @@ func (p *PDB) parseWithDIA() error {
 	if err != nil {
 		return fmt.Errorf("failed to create DIA session for: %s: %w", p.path, err)
 	}
-	defer dia.close()
 
 	p.machineType = dia.getMachineType()
 	p.language = dia.getLanguage()
+	p.dia = dia
 
 	dia.enumerateSymbols(func(sym *Symbol) {
 		p.registerSymbol(sym)
@@ -868,4 +868,106 @@ func variantToInterface(v Variant) interface{} {
 	default:
 		return v.Val
 	}
+}
+
+func (d *diaSession) FindSourceLineByRVA(rva uint32) (string, uint32, bool) {
+	if d.session == 0 {
+		return "", 0, false
+	}
+
+	vtable := getVtable(d.session)
+	findLinesByRVA := VTSession_findLinesByRVA.Get(vtable)
+
+	var enumLineNumbers uintptr
+	ret, _, _ := syscall.SyscallN(findLinesByRVA, d.session, uintptr(rva), 1, uintptr(unsafe.Pointer(&enumLineNumbers)))
+	if ret != 0 || enumLineNumbers == 0 {
+		return "", 0, false
+	}
+	defer release(enumLineNumbers)
+
+	enumVtable := getVtable(enumLineNumbers)
+	next := enumVtable[VTEnumLineNumbers_Next]
+
+	var lineNumber uintptr
+	var fetched uint32
+	ret, _, _ = syscall.SyscallN(next, enumLineNumbers, 1, uintptr(unsafe.Pointer(&lineNumber)), uintptr(unsafe.Pointer(&fetched)))
+	if ret != 0 || fetched == 0 || lineNumber == 0 {
+		return "", 0, false
+	}
+	defer release(lineNumber)
+
+	lineVtable := getVtable(lineNumber)
+	getSourceFile := VTLineNumber_get_sourceFile.Get(lineVtable)
+	getLineNumber := VTLineNumber_get_lineNumber.Get(lineVtable)
+
+	var lineNum uint32
+	syscall.SyscallN(getLineNumber, lineNumber, uintptr(unsafe.Pointer(&lineNum)))
+
+	var sourceFile uintptr
+	ret, _, _ = syscall.SyscallN(getSourceFile, lineNumber, uintptr(unsafe.Pointer(&sourceFile)))
+	if ret != 0 || sourceFile == 0 {
+		return "", lineNum, true
+	}
+	defer release(sourceFile)
+
+	fileVtable := getVtable(sourceFile)
+	getFileName := VTSourceFile_get_fileName.Get(fileVtable)
+
+	var fileNameBstr uintptr
+	syscall.SyscallN(getFileName, sourceFile, uintptr(unsafe.Pointer(&fileNameBstr)))
+	fileName := bstrToString(fileNameBstr)
+	freeBstr(fileNameBstr)
+
+	return fileName, lineNum, true
+}
+
+func (d *diaSession) FindSourceLineByVA(va uint64) (string, uint32, bool) {
+	if d.session == 0 {
+		return "", 0, false
+	}
+
+	vtable := getVtable(d.session)
+	findLinesByVA := VTSession_findLinesByVA.Get(vtable)
+
+	var enumLineNumbers uintptr
+	ret, _, _ := syscall.SyscallN(findLinesByVA, d.session, uintptr(va), 1, uintptr(unsafe.Pointer(&enumLineNumbers)))
+	if ret != 0 || enumLineNumbers == 0 {
+		return "", 0, false
+	}
+	defer release(enumLineNumbers)
+
+	enumVtable := getVtable(enumLineNumbers)
+	next := enumVtable[VTEnumLineNumbers_Next]
+
+	var lineNumber uintptr
+	var fetched uint32
+	ret, _, _ = syscall.SyscallN(next, enumLineNumbers, 1, uintptr(unsafe.Pointer(&lineNumber)), uintptr(unsafe.Pointer(&fetched)))
+	if ret != 0 || fetched == 0 || lineNumber == 0 {
+		return "", 0, false
+	}
+	defer release(lineNumber)
+
+	lineVtable := getVtable(lineNumber)
+	getSourceFile := VTLineNumber_get_sourceFile.Get(lineVtable)
+	getLineNumber := VTLineNumber_get_lineNumber.Get(lineVtable)
+
+	var lineNum uint32
+	syscall.SyscallN(getLineNumber, lineNumber, uintptr(unsafe.Pointer(&lineNum)))
+
+	var sourceFile uintptr
+	ret, _, _ = syscall.SyscallN(getSourceFile, lineNumber, uintptr(unsafe.Pointer(&sourceFile)))
+	if ret != 0 || sourceFile == 0 {
+		return "", lineNum, true
+	}
+	defer release(sourceFile)
+
+	fileVtable := getVtable(sourceFile)
+	getFileName := VTSourceFile_get_fileName.Get(fileVtable)
+
+	var fileNameBstr uintptr
+	syscall.SyscallN(getFileName, sourceFile, uintptr(unsafe.Pointer(&fileNameBstr)))
+	fileName := bstrToString(fileNameBstr)
+	freeBstr(fileNameBstr)
+
+	return fileName, lineNum, true
 }

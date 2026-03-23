@@ -175,6 +175,9 @@ func generateVtableConstants(dia2Path string) error {
 		{"DataSource", "IDiaDataSourceVtbl"},
 		{"Session", "IDiaSessionVtbl"},
 		{"EnumSymbols", "IDiaEnumSymbolsVtbl"},
+		{"EnumLineNumbers", "IDiaEnumLineNumbersVtbl"},
+		{"LineNumber", "IDiaLineNumberVtbl"},
+		{"SourceFile", "IDiaSourceFileVtbl"},
 		{"Symbol", "IDiaSymbolVtbl"},
 	}
 
