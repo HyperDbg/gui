@@ -11,8 +11,8 @@ import (
 )
 
 func TestPDBParsing(t *testing.T) {
-	dumpFile := "C:\\Windows\\Minidump\\032326-4562-01.dmp"
-	pdbDir := "D:\\笔记本\\p\\ux\\examples\\hypedbg\\bsod"
+	dumpFile := "C:\\Windows\\Minidump\\032426-4203-01.dmp"
+	pdbDir := "d:\\ux\\examples\\hypedbg\\bsod"
 
 	fmt.Println("=== 测试 PDB 解析功能 ===")
 	fmt.Printf("分析文件: %s\n", filepath.Base(dumpFile))

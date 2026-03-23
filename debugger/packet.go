@@ -151,7 +151,7 @@ func GetPacket() *Packet {
 		globalPacket.SehMeta = seh.New()
 
 		globalPacket.EventManager = NewEventManager(globalPacket.driver)
-		globalPacket.eventLoop = NewEventLoop(globalPacket.EventManager)
+		globalPacket.eventLoop = NewEventLoop(globalPacket.EventManager, globalPacket.driver)
 	})
 	return globalPacket
 }
@@ -201,7 +201,7 @@ func NewPacket(dh *driver.Provider) Packeter {
 	p.SehMeta = seh.New()
 
 	p.EventManager = NewEventManager(p.driver)
-	p.eventLoop = NewEventLoop(p.EventManager)
+	p.eventLoop = NewEventLoop(p.EventManager, p.driver)
 
 	return p
 }
@@ -1656,7 +1656,7 @@ func (p *Packet) GetEventChan() <-chan *DebugEvent {
 
 func (p *Packet) StartEventLoop() {
 	if p.eventLoop == nil {
-		p.eventLoop = NewEventLoop(p.EventManager)
+		p.eventLoop = NewEventLoop(p.EventManager, p.driver)
 	}
 	p.eventLoop.Start()
 }
@@ -1677,7 +1677,7 @@ func (p *Packet) IsEventLoopRunning() bool {
 
 func (p *Packet) RegisterEventHandler(eventType EventType, handler func(*DebugEvent)) {
 	if p.eventLoop == nil {
-		p.eventLoop = NewEventLoop(p.EventManager)
+		p.eventLoop = NewEventLoop(p.EventManager, p.driver)
 	}
 	p.eventLoop.RegisterHandler(eventType, handler)
 }

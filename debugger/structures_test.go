@@ -118,8 +118,8 @@ func TestAll(t *testing.T) {
 	t.Run("DebuggerUdCommandPacket", func(t *testing.T) {
 		layout := StructLayout{
 			Name:            "DebuggerUdCommandPacket",
-			ExpectedSize:    64,
-			ExpectedSerSize: 64,
+			ExpectedSize:    60,
+			ExpectedSerSize: 60,
 			ExpectedFields: map[string]uintptr{
 				"UdAction":                    0,
 				"ProcessDebuggingDetailToken": 40,

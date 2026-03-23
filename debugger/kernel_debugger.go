@@ -61,7 +61,7 @@ func NewKernelDebuggerWithOptions(autoLoadDriver bool) KernelDebugger {
 	dbg := &KernelDebug{
 		packet:    packet,
 		driver:    packet.driver,
-		eventLoop: NewEventLoop(eventManager),
+		eventLoop: NewEventLoop(eventManager, packet.driver),
 	}
 
 	dbg.DebugEventHandler = NewDebugEventHandler(packet.DriverProvider, packet.RegistersMeta.(*register.Provider), packet.ThreadsMeta.(*thread.Provider))

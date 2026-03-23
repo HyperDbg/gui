@@ -1070,6 +1070,16 @@ func (s *UserDebug) StartProcess(path string) {
 	s.activeProcess.ThreadId = procInfo.ThreadId
 	s.activeProcess.IsActive = true
 	s.activeProcess.IsPaused = true
+
+	s.packeter.RegisterEventHandler(EventBreakpoint, func(event *DebugEvent) {
+		if event.ProcessId == s.activeProcess.ProcessId {
+			s.mu.Lock()
+			s.activeProcess.IsPaused = true
+			s.activeProcess.Rip = event.EIP
+			s.mu.Unlock()
+			mylog.Info("断点命中，进程已暂停", "ProcessId", event.ProcessId, "EIP", event.EIP)
+		}
+	})
 }
 
 type processInfo struct {
@@ -1618,21 +1628,23 @@ func (s *UserDebug) WaitForBreakpoint(timeoutMs int) bool {
 // 实现过程: 用户命令g → UserDebugger.Continue() → IOCTL_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS → UdContinueProcess
 func (s *UserDebug) Continue() {
 	s.mu.Lock()
-	defer s.mu.Unlock()
 
 	if !s.packeter.DriverProvider.IsConnected() {
 		mylog.Warning("驱动未连接，无法继续执行")
+		s.mu.Unlock()
 		return
 	}
 
 	token, ok := s.activeProcess.DebuggingToken.(uint64)
 	if !ok || token == 0 {
 		mylog.Warning("调试令牌无效")
+		s.mu.Unlock()
 		return
 	}
 
 	if !s.activeProcess.IsPaused {
 		mylog.Warning("进程未处于暂停状态，无需继续执行")
+		s.mu.Unlock()
 		return
 	}
 
@@ -1645,6 +1657,7 @@ func (s *UserDebug) Continue() {
 
 	if err := req.Validate(); err != nil {
 		mylog.Warning("验证失败", err)
+		s.mu.Unlock()
 		return
 	}
 
@@ -1652,11 +1665,13 @@ func (s *UserDebug) Continue() {
 	response := s.packeter.DriverProvider.SendReceive(bytes.NewBuffer(buf), IoctlDebuggerAttachDetachUserModeProcess)
 	if response.Len() == 0 {
 		mylog.Warning("内核返回空响应")
+		s.mu.Unlock()
 		return
 	}
 
 	if response.Len() < 72 {
 		mylog.Warning("响应长度不足", response.Len())
+		s.mu.Unlock()
 		return
 	}
 
@@ -1665,11 +1680,27 @@ func (s *UserDebug) Continue() {
 
 	if resp.Result != uint64(DEBUGGER_OPERATION_WAS_SUCCESSFUL) {
 		mylog.Warning("继续执行失败", ShowErrorMessage(uint32(resp.Result)), resp.Result)
+		s.mu.Unlock()
 		return
 	}
 
 	s.activeProcess.IsPaused = false
 	mylog.Success("继续执行")
+	s.mu.Unlock()
+
+	for i := range 30 {
+		time.Sleep(1 * time.Second)
+		s.mu.Lock()
+		if s.activeProcess.IsPaused {
+			mylog.Info("进程已暂停，等待断点命中成功")
+			s.mu.Unlock()
+			return
+		}
+		s.mu.Unlock()
+		mylog.Info("等待断点命中", i+1, "/30")
+	}
+
+	mylog.Warning("等待断点命中超时")
 }
 
 // 来自接口: UserDebugger 第15个签名

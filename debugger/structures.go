@@ -968,7 +968,6 @@ type DebuggerUdCommandPacket struct {
 	WaitForEventCompletion      uint8
 	_                           [2]byte
 	Result                      uint32
-	_                           [4]byte
 }
 
 type DebuggerSetBreakpointUserDebugger struct {
@@ -1078,11 +1077,11 @@ func (s *DebuggerUdCommandPacket) Validate() error {
 }
 
 func (s *DebuggerUdCommandPacket) ExpectedSize() uintptr {
-	return 64
+	return 60
 }
 
 func (s *DebuggerUdCommandPacket) ExpectedSerSize() uintptr {
-	return 64
+	return 60
 }
 
 func (s *DebuggerUdCommandAction) Validate() error {
