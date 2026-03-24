@@ -204,9 +204,6 @@ Write-Host "使用 EWDK 构建驱动:" -ForegroundColor Yellow
 Write-Host "1. 挂载 EWDK ISO:" -ForegroundColor White
 Write-Host "   Mount-DiskImage -ImagePath '$EWDK_ISO_PATH'" -ForegroundColor Gray
 Write-Host ""
-Write-Host "2. 在 EWDK 环境中构建:" -ForegroundColor White
-Write-Host "   cmd /c `"$EWDK_BUILD_ENV` && cargo build --release" -ForegroundColor Gray
-Write-Host ""
-Write-Host "或者创建快捷方式脚本:" -ForegroundColor White
-Write-Host "   build-driver-ewdk.ps1" -ForegroundColor Gray
+Write-Host "2. 运行通用构建脚本:" -ForegroundColor White
+Write-Host "   .\rust-driver\examples\build-all.ps1" -ForegroundColor Gray
 Write-Host ""

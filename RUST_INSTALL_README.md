@@ -34,15 +34,18 @@
 
 ### 2. 构建 Rust 驱动
 
-使用 EWDK 环境构建驱动：
+使用通用构建脚本编译所有驱动项目：
 
 ```powershell
 # 以管理员身份运行
-.\build-driver-ewdk.ps1
-
-# 或者构建 Debug 版本
-.\build-driver-ewdk.ps1 --debug
+.\rust-driver\examples\build-all.ps1
 ```
+
+该脚本会自动：
+- 挂载 EWDK ISO
+- 设置构建环境
+- 编译所有驱动项目
+- 重命名 DLL 为 SYS
 
 ## 安装内容
 
@@ -103,13 +106,13 @@ ar = "x86_64-w64-mingw32-gcc-ar"
 
 ### 问题: 编译驱动时找不到 WDK
 
-**解决**: 使用 EWDK 命令提示符
+**解决**: 使用通用构建脚本
 
-```cmd
-# 打开 EWDK 命令提示符
-# 然后运行
-cargo build
+```powershell
+.\rust-driver\examples\build-all.ps1
 ```
+
+该脚本会自动挂载 EWDK 并设置构建环境。
 
 ## 卸载 Rust
 
