@@ -1,0 +1,28 @@
+[package]
+name = "erebus"
+description = "Erebus Kernel-Mode Driver"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+
+[package.metadata.wdk.driver-model]
+driver-type = "WDM"
+
+[lib]
+crate-type = ["cdylib"]
+test = false
+
+[features]
+default = []
+nightly = ["wdk/nightly", "wdk-sys/nightly"]
+secure-device = []
+
+[build-dependencies]
+wdk-build = "0.5.1"
+
+[dependencies]
+wdk = "0.4.1"
+wdk-alloc = "0.4.1"
+wdk-panic = "0.4.1"
+wdk-sys = "0.5.1"
+shared = { path = "../shared" }

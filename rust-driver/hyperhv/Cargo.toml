@@ -1,0 +1,29 @@
+[package]
+categories = ["hardware-support"]
+description = "HyperDbg Hypervisor"
+edition = "2021"
+keywords = ["driver", "hypervisor", "debugger", "windows"]
+license = "GPL-3.0"
+name = "hyperhv"
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+protocol = { path = "../protocol" }
+wsk = { path = "../wsk" }
+wdk-alloc = "0.4"
+wdk-sys = "0.5"
+x86 = "0.52"
+bitflags = "2.4"
+spin = "0.9"
+
+[features]
+default = []
+
+[package.metadata.wdk.driver-model]
+driver-type = "WDM"
+
+[build-dependencies]
+wdk-build = "0.5"

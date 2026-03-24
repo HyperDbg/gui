@@ -1,0 +1,11 @@
+[package]
+name = "shared"
+description = "Shared objects between user-mode app and kernel-mode driver"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+
+[dependencies]
+#serde = { version = "1.0.216", default-features = false }
+#serde_json = { version = "1.0.133", default-features = false }
+#windows-sys = { version = "0.59.0", features = ["Win32_Foundation"] }

@@ -1,0 +1,499 @@
+[config]
+min_version = "0.37.16"
+init_task = "wdk-build-init"
+reduce_output = false
+
+[env]
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+CARGO_MAKE_CARGO_BUILD_TEST_FLAGS = { unset = true }
+RUST_LIB_BACKTRACE = 0
+WDK_BUILD_BASE_INFVERIF_FLAGS = "/v"
+
+[plugins.impl.rust-env-update]
+script = '''
+assert ${task.has_script} "script is required for rust-env-update plugin"
+assert_eq ${task.script_runner} @rust "script_runner must be set to @rust for rust-env-update plugin"
+cargo_make_rust_script_provider = get_env CARGO_MAKE_RUST_SCRIPT_PROVIDER
+assert_eq ${cargo_make_rust_script_provider} rust-script "rust-env-update plugin is only compatible with rust-script"
+taskjson = json_parse ${task.as_json}
+out = exec --fail-on-error cargo install ${taskjson.install_crate.crate_name} --version ${taskjson.install_crate.min_version}
+assert_eq ${out.code} 0 "[tasks.${task.name}]'s install_crate failed with exit code: ${out.code}\nstdout:\n${out.stdout}\nstderr:\n${out.stderr}"
+filepath = set "${CARGO_MAKE_CRATE_CUSTOM_TRIPLE_TARGET_DIRECTORY}/cargo-make-script/${task.name}/rust-env-update.rs"
+if is_file ${filepath}
+    old_hash = digest --algo sha256 --file ${filepath}
+    new_hash = digest --algo sha256 ${taskjson.script}
+    if not eq ${old_hash} ${new_hash}
+        writefile ${filepath} ${taskjson.script}
+    end
+else
+    writefile ${filepath} ${taskjson.script}
+end
+task_args = array_join ${task.args} " "
+cli_args = array_join ${flow.cli.args} " "
+combined_args = concat ${cli_args} " " ${task_args}
+combined_args = trim ${combined_args}
+out = exec --fail-on-error rust-script --base-path ${taskjson.env.CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY} ${CARGO_MAKE_CRATE_CUSTOM_TRIPLE_TARGET_DIRECTORY}/cargo-make-script/${task.name}/rust-env-update.rs %{combined_args}
+assert_eq ${out.code} 0 "[tasks.${task.name}]'s script failed with exit code: ${out.code}\nstdout:\n${out.stdout}\nstderr:\n${out.stderr}\nThe temporary rust-script file is located at ${CARGO_MAKE_CRATE_CUSTOM_TRIPLE_TARGET_DIRECTORY}/cargo-make-script/${task.name}/rust-env-update.rs"
+if contains ${combined_args} "--help"
+    println ${out.stdout}
+    exit 1
+end
+script_output = trim ${out.stdout}
+if not is_empty ${script_output}
+    script_output_array = split ${script_output} \n
+    looking_for_start_delimiter = set true
+    for line in ${script_output_array}
+        if ${looking_for_start_delimiter}
+            if eq ${line} "FORWARDING ARGS TO CARGO-MAKE:"
+                looking_for_start_delimiter = set false
+            else
+                println ${line}
+            end
+        else
+            if eq ${line} "END OF FORWARDING ARGS TO CARGO-MAKE"
+                looking_for_start_delimiter = set true
+            else
+                parts = split ${line} =
+                key = array_get ${parts} 0
+                value = array_get ${parts} 1
+                set_env ${key} ${value}
+            end
+        end
+    end
+    assert ${looking_for_start_delimiter} "A matching \"END OF FORWARDING ARGS TO CARGO-MAKE\" for a \"FORWARDING ARGS TO CARGO-MAKE:\" was not found in script output."
+end
+'''
+
+[plugins.impl.nested-cargo-workspace-in-cargo-make-emulated-workspace-support]
+script = '''
+if ${CARGO_MAKE_WORKSPACE_EMULATION} and ${CARGO_MAKE_CRATE_IS_WORKSPACE}
+    echo Executing \"${task.name}\" Task in a forked subprocess to run on Cargo workspace: ${CARGO_MAKE_CRATE_CURRENT_WORKSPACE_MEMBER}
+    unset_env CARGO_MAKE_CRATE_CURRENT_WORKSPACE_MEMBER
+    cm_plugin_run_custom_task "{\"run_task\":{\"name\":\"${task.name}\",\"fork\":true}}"
+else
+    cm_plugin_run_task
+end
+'''
+
+[tasks.wdk-build-init]
+private = true
+install_crate = { crate_name = "rust-script", min_version = "0.30.0" }
+plugin = "rust-env-update"
+script_runner = "@rust"
+script = '''
+//! ```cargo
+//! [dependencies]
+//! wdk-build = "0.5.1"
+//! ```
+#![allow(unused_doc_comments)]
+let cli_env_vars = wdk_build::cargo_make::validate_command_line_args();
+let path_env_vars = wdk_build::cargo_make::setup_path()?;
+let wdk_version_env_vars = wdk_build::cargo_make::setup_wdk_version()?;
+wdk_build::cargo_make::forward_printed_env_vars(
+    cli_env_vars.into_iter().chain(path_env_vars).chain(wdk_version_env_vars),
+);
+'''
+
+[tasks.setup-wdk-config-env-vars]
+private = true
+install_crate = { crate_name = "rust-script", min_version = "0.30.0" }
+plugin = "rust-env-update"
+script_runner = "@rust"
+script_runner_args = [
+    "--base-path",
+    "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}",
+]
+script = '''
+//! ```cargo
+//! [dependencies]
+//! wdk-build = "0.5.1"
+//! ```
+#![allow(unused_doc_comments)]
+let serialized_wdk_metadata_map = wdk_build::metadata::to_map_with_prefix::<std::collections::BTreeMap<_, _>>(
+    "WDK_BUILD_METADATA",
+    &wdk_build::metadata::Wdk::try_from(&wdk_build::cargo_make::get_cargo_metadata()?)?,
+)?;
+#[cfg(not(target_os = "windows"))]
+compile_error!(
+    "windows-drivers-rs is designed to be run on a Windows host machine in a WDK \
+    environment. Please build using a Windows target."
+);
+for (key, value) in &serialized_wdk_metadata_map {
+    unsafe {
+        std::env::set_var(key, value);
+    } 
+}
+wdk_build::cargo_make::forward_printed_env_vars(
+    serialized_wdk_metadata_map
+        .into_iter()
+        .map(|(key, _)| key),
+);
+'''
+
+[tasks.copy-inx-to-output]
+private = true
+script_runner = "@rust"
+script_runner_args = [
+    "--base-path",
+    "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}",
+]
+script = '''
+//! ```cargo
+//! [dependencies]
+//! wdk-build = "0.5.1"
+//! ```
+#![allow(unused_doc_comments)]
+let output_folder_path = wdk_build::cargo_make::get_wdk_build_output_directory();
+if !output_folder_path.exists() {
+    std::fs::create_dir_all(&output_folder_path).expect(&format!("creation of '{}' folder should succeed", output_folder_path.display()));
+}
+let cargo_make_working_directory = std::env::var("CARGO_MAKE_WORKING_DIRECTORY").expect(
+    "CARGO_MAKE_WORKING_DIRECTORY should be set by cargo-make via the env section of \
+        rust-driver-makefile.toml",
+);
+let source_file = [
+    cargo_make_working_directory,
+    format!("{}.inx", wdk_build::cargo_make::get_current_package_name()),
+]
+.iter()
+.collect::<std::path::PathBuf>();
+let destination_file = wdk_build::cargo_make::get_wdk_build_output_directory().join(format!(
+    "{}.inf",
+    wdk_build::cargo_make::get_current_package_name()
+));
+std::fs::copy(&source_file, &destination_file).expect(&format!(
+    "copy of '{}' file to '{}' file should succeed",
+    source_file.display(),
+    destination_file.display()
+));
+'''
+
+[tasks.generate-driver-binary-file]
+private = true
+dependencies = ["setup-wdk-config-env-vars", "build"]
+condition_script_runner_args = [
+    "--base-path",
+    "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}",
+]
+condition_script = '''
+#!@rust
+//! ```cargo
+//! [dependencies]
+//! wdk-build = "0.5.1"
+//! ```
+#![allow(unused_doc_comments)]
+wdk_build::cargo_make::condition_script(|| {
+    let driver_type = std::env::var("WDK_BUILD_METADATA-DRIVER_MODEL-DRIVER_TYPE")
+        .expect("WDK_BUILD_METADATA-DRIVER_MODEL-DRIVER_TYPE should be set by setup-wdk-config-env-vars cargo-make task");
+    match driver_type.as_str()  {
+        "WDM" | "KMDF" => Ok(()),
+        _ => Err("Non-Kernel Mode Driver detected. Skipping generate-driver-binary-file task."),
+    }
+})?
+'''
+script_runner_args = [
+    "--base-path",
+    "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}",
+]
+script = '''
+#!@rust
+//! ```cargo
+//! [dependencies]
+//! wdk-build = "0.5.1"
+//! ```
+#![allow(unused_doc_comments)]
+let source_file = wdk_build::cargo_make::get_wdk_build_output_directory().join(format!(
+    "{}.dll",
+    wdk_build::cargo_make::get_current_package_name()
+));
+let destination_file = wdk_build::cargo_make::get_wdk_build_output_directory().join(format!(
+    "{}.sys",
+    wdk_build::cargo_make::get_current_package_name()
+));
+std::fs::copy(&source_file, &destination_file).expect(&format!(
+    "copy of '{}' file to '{}' file should succeed",
+    source_file.display(),
+    destination_file.display()
+));
+'''
+
+[tasks.stampinf]
+private = true
+dependencies = ["setup-wdk-config-env-vars", "copy-inx-to-output"]
+env = { "WDK_BUILD_STAMPINF_WDF_FLAGS" = { source = "${WDK_BUILD_METADATA-DRIVER_MODEL-DRIVER_TYPE}", default_value = "", mapping = { "KMDF" = "-k ${WDK_BUILD_METADATA-DRIVER_MODEL-KMDF_VERSION_MAJOR}.${WDK_BUILD_METADATA-DRIVER_MODEL-TARGET_KMDF_VERSION_MINOR}", "UMDF" = "-u ${WDK_BUILD_METADATA-DRIVER_MODEL-UMDF_VERSION_MAJOR}.${WDK_BUILD_METADATA-DRIVER_MODEL-TARGET_UMDF_VERSION_MINOR}.0" } }, "WDK_BUILD_STAMPINF_ARCH" = { source = "${CARGO_MAKE_CRATE_TARGET_TRIPLE}", default_value = "UNKNOWN", mapping = { "x86_64-pc-windows-msvc" = "amd64", "aarch64-pc-windows-msvc" = "arm64" } } }
+command = "stampinf"
+args = [
+    "-f",
+    "${WDK_BUILD_OUTPUT_DIRECTORY}/${CARGO_MAKE_CRATE_FS_NAME}.inf",
+    "-d",
+    "*",
+    "-a",
+    "${WDK_BUILD_STAMPINF_ARCH}",
+    "-c",
+    "${CARGO_MAKE_CRATE_FS_NAME}.cat",
+    "-v",
+    "*",
+    "@@split(WDK_BUILD_STAMPINF_WDF_FLAGS, ,remove-empty)",
+]
+
+[tasks.infverif]
+private = true
+dependencies = ["setup-wdk-config-env-vars", "stampinf"]
+env = { "WDK_BUILD_BASE_INFVERIF_FLAGS" = { source = "${WDK_BUILD_METADATA-DRIVER_MODEL-DRIVER_TYPE}", default_value = "${WDK_BUILD_BASE_INFVERIF_FLAGS} /w", mapping = { "UMDF" = "${WDK_BUILD_BASE_INFVERIF_FLAGS} /u" } } }
+command = "infverif"
+args = [
+    "@@split(WDK_BUILD_BASE_INFVERIF_FLAGS, ,remove-empty)",
+    "@@split(WDK_BUILD_ADDITIONAL_INFVERIF_FLAGS, ,remove-empty)",
+    "${WDK_BUILD_OUTPUT_DIRECTORY}/${CARGO_MAKE_CRATE_FS_NAME}.inf",
+]
+
+[tasks.copy-driver-binary-to-package]
+private = true
+dependencies = ["setup-wdk-config-env-vars", "generate-driver-binary-file"]
+env = { "WDK_BUILD_DRIVER_EXTENSION" = { source = "${WDK_BUILD_METADATA-DRIVER_MODEL-DRIVER_TYPE}", default_value = "UNKNOWN_EXTENSION", mapping = { "WDM" = "sys", "KMDF" = "sys", "UMDF" = "dll" } } }
+script_runner = "@rust"
+script_runner_args = [
+    "--base-path",
+    "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}",
+]
+script = '''
+//! ```cargo
+//! [dependencies]
+//! wdk-build = "0.5.1"
+//! ```
+#![allow(unused_doc_comments)]
+let driver_binary_extension = std::env::var("WDK_BUILD_DRIVER_EXTENSION").expect("WDK_BUILD_DRIVER_EXTENSION should be set by cargo-make");
+wdk_build::cargo_make::copy_to_driver_package_folder(
+    wdk_build::cargo_make::get_wdk_build_output_directory().join(format!(
+        "{}.{driver_binary_extension}",
+        wdk_build::cargo_make::get_current_package_name()
+    )),
+)?
+'''
+
+[tasks.copy-pdb-to-package]
+private = true
+dependencies = ["build"]
+script_runner = "@rust"
+script_runner_args = [
+    "--base-path",
+    "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}",
+]
+script = '''
+//! ```cargo
+//! [dependencies]
+//! wdk-build = "0.5.1"
+//! ```
+#![allow(unused_doc_comments)]
+wdk_build::cargo_make::copy_to_driver_package_folder(
+    wdk_build::cargo_make::get_wdk_build_output_directory().join(format!(
+        "{}.pdb",
+        wdk_build::cargo_make::get_current_package_name()
+    )),
+)?
+'''
+
+[tasks.copy-inf-to-package]
+private = true
+dependencies = ["stampinf"]
+script_runner = "@rust"
+script_runner_args = [
+    "--base-path",
+    "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}",
+]
+script = '''
+//! ```cargo
+//! [dependencies]
+//! wdk-build = "0.5.1"
+//! ```
+#![allow(unused_doc_comments)]
+wdk_build::cargo_make::copy_to_driver_package_folder(
+    wdk_build::cargo_make::get_wdk_build_output_directory().join(format!(
+        "{}.inf",
+        wdk_build::cargo_make::get_current_package_name()
+    )),
+)?
+'''
+
+[tasks.copy-map-to-package]
+private = true
+dependencies = ["build"]
+script_runner = "@rust"
+script_runner_args = [
+    "--base-path",
+    "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}",
+]
+script = '''
+//! ```cargo
+//! [dependencies]
+//! wdk-build = "0.5.1"
+//! ```
+#![allow(unused_doc_comments)]
+wdk_build::cargo_make::copy_to_driver_package_folder(
+    wdk_build::cargo_make::get_wdk_build_output_directory().join(format!(
+        "deps/{}.map",
+        wdk_build::cargo_make::get_current_package_name()
+    )),
+)?
+'''
+
+[tasks.inf2cat]
+private = true
+dependencies = ["copy-driver-binary-to-package", "copy-inf-to-package"]
+env = { "WDK_BUILD_INF2CAT_OS" = { source = "${CARGO_MAKE_CRATE_TARGET_TRIPLE}", default_value = "UNKNOWN", mapping = { "x86_64-pc-windows-msvc" = "10_x64", "aarch64-pc-windows-msvc" = "Server10_arm64" } } }
+command = "inf2cat"
+args = [
+    "/driver:${WDK_BUILD_OUTPUT_DIRECTORY}/${CARGO_MAKE_CRATE_FS_NAME}_package",
+    "/os:${WDK_BUILD_INF2CAT_OS}",
+    "/uselocaltime",
+]
+
+[tasks.generate-certificate]
+private = true
+condition_script_runner_args = [
+    "--base-path",
+    "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}",
+]
+condition_script = '''
+#!@rust
+//! ```cargo
+//! [dependencies]
+//! wdk-build = "0.5.1"
+//! anyhow = "1"
+//! ```
+#![allow(unused_doc_comments)]
+fn main() -> anyhow::Result<()> {
+    wdk_build::cargo_make::generate_certificate_condition_script()
+}
+'''
+command = "makecert"
+args = [
+    "-r",
+    "-pe",
+    "-a",
+    "SHA256",
+    "-eku",
+    "1.3.6.1.5.5.7.3.3",
+    "-ss",
+    "WDRTestCertStore",
+    "-n",
+    "CN=WDRLocalTestCert",
+    "${WDK_BUILD_OUTPUT_DIRECTORY}/WDRLocalTestCert.cer",
+]
+
+[tasks.copy-certificate-to-package]
+private = true
+dependencies = ["generate-certificate"]
+script_runner = "@rust"
+script_runner_args = [
+    "--base-path",
+    "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}",
+]
+script = '''
+//! ```cargo
+//! [dependencies]
+//! wdk-build = "0.5.1"
+//! ```
+#![allow(unused_doc_comments)]
+wdk_build::cargo_make::copy_to_driver_package_folder(
+    wdk_build::cargo_make::get_wdk_build_output_directory().join("WDRLocalTestCert.cer"),
+)?
+'''
+
+[tasks.signtool-sign]
+private = true
+dependencies = ["generate-certificate"]
+command = "signtool"
+args = [
+    "sign",
+    "/v",
+    "/s",
+    "WDRTestCertStore",
+    "/n",
+    "WDRLocalTestCert",
+    "/t",
+    "http://timestamp.digicert.com",
+    "/fd",
+    "SHA256",
+    "${WDK_BUILD_SIGNTOOL_SIGN_INPUT_FILE}",
+]
+
+[tasks.sign-driver-binary]
+private = true
+dependencies = ["setup-wdk-config-env-vars", "copy-driver-binary-to-package"]
+env = { "WDK_BUILD_SIGNTOOL_SIGN_INPUT_FILE" = "${WDK_BUILD_OUTPUT_DIRECTORY}/${CARGO_MAKE_CRATE_FS_NAME}_package/${CARGO_MAKE_CRATE_FS_NAME}.${WDK_BUILD_DRIVER_EXTENSION}" }
+run_task = "signtool-sign"
+
+[tasks.sign-cat]
+private = true
+dependencies = ["inf2cat", "sign-driver-binary"]
+env = { "WDK_BUILD_SIGNTOOL_SIGN_INPUT_FILE" = "${WDK_BUILD_OUTPUT_DIRECTORY}/${CARGO_MAKE_CRATE_FS_NAME}_package/${CARGO_MAKE_CRATE_FS_NAME}.cat" }
+run_task = "signtool-sign"
+
+[tasks.signtool-verify]
+private = true
+condition = { env_true = ["WDK_BUILD_ENABLE_SIGNTOOL_VERIFY"] }
+command = "signtool"
+args = ["verify", "/v", "/pa", "${WDK_BUILD_SIGNTOOL_VERIFY_INPUT_FILE}"]
+
+[tasks.verify-signature-driver-binary]
+private = true
+dependencies = ["setup-wdk-config-env-vars", "sign-driver-binary"]
+env = { "WDK_BUILD_SIGNTOOL_VERIFY_INPUT_FILE" = "${WDK_BUILD_OUTPUT_DIRECTORY}/${CARGO_MAKE_CRATE_FS_NAME}_package/${CARGO_MAKE_CRATE_FS_NAME}.${WDK_BUILD_DRIVER_EXTENSION}" }
+run_task = "signtool-verify"
+
+[tasks.verify-signature-cat]
+private = true
+dependencies = ["sign-cat"]
+env = { "WDK_BUILD_SIGNTOOL_VERIFY_INPUT_FILE" = "${WDK_BUILD_OUTPUT_DIRECTORY}/${CARGO_MAKE_CRATE_FS_NAME}_package/${CARGO_MAKE_CRATE_FS_NAME}.cat" }
+run_task = "signtool-verify"
+
+[tasks.package-driver]
+private = true
+dependencies = [
+    "copy-driver-binary-to-package",
+    "copy-pdb-to-package",
+    "copy-inf-to-package",
+    "copy-map-to-package",
+    "copy-certificate-to-package",
+    "sign-driver-binary",
+    "verify-signature-driver-binary",
+    "sign-cat",
+    "verify-signature-cat",
+    "infverif",
+]
+
+[tasks.package-driver-flow]
+dependencies = ["build"]
+plugin = "nested-cargo-workspace-in-cargo-make-emulated-workspace-support"
+condition_script_runner_args = [
+    "--base-path",
+    "${CARGO_MAKE_CURRENT_TASK_INITIAL_MAKEFILE_DIRECTORY}",
+]
+condition_script = '''
+#!@rust
+//! ```cargo
+//! [dependencies]
+//! wdk-build = "0.5.1"
+//! anyhow = "1"
+//! ```
+#![allow(unused_doc_comments)]
+fn main() -> anyhow::Result<()> {
+    wdk_build::cargo_make::package_driver_flow_condition_script()
+}
+'''
+run_task = "package-driver"
+
+[tasks.help]
+extend = "wdk-build-init"
+private = false
+workspace = false
+args = ["--help"]
+
+[tasks.default]
+alias = "package-driver-flow"
+
+[tasks.build-secure]
+extend = "package-driver-flow"
+description = "Builds the driver with secure-device feature enabled"
+env = { CARGO_MAKE_CARGO_BUILD_TEST_FLAGS = "--features secure-device" }

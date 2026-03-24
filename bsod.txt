@@ -1,4 +1,4 @@
-ExtensionGallery settings after reading 'SOFTWARE\Microsoft\Debug Engine' registry:
+ ExtensionGallery settings after reading 'SOFTWARE\Microsoft\Debug Engine' registry:
 ExtensionGallery ExtensionRepository: Implicit
 
 ************* Path validation summary **************
@@ -26,7 +26,7 @@ OK                                             D:\ux\examples\hypedbg\doc\cpp\Hy
 
 ************* Waiting for Debugger Extensions Gallery to Initialize **************
 
->>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.047 seconds
+>>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.062 seconds
    ----> Repository : UserExtensions, Enabled: true, Packages count: 0
    ----> Repository : LocalInstalled, Enabled: true, Packages count: 46
 
@@ -34,7 +34,7 @@ Microsoft (R) Windows Debugger Version 10.0.29507.1001 AMD64
 Copyright (c) Microsoft Corporation. All rights reserved.
 
 
-Loading Dump File [C:\Windows\Minidump\032426-4093-01.dmp]
+Loading Dump File [C:\Windows\Minidump\032426-4250-01.dmp]
 Mini Kernel Dump File: Only registers and stack trace are available
 
 
@@ -69,9 +69,9 @@ Executable search path is:
 *************************************************************************
 Windows 10 Kernel Version 19041 MP (8 procs) Free x64
 Product: WinNt, suite: TerminalServer SingleUserTS
-Kernel base = 0xfffff807`7a400000 PsLoadedModuleList = 0xfffff807`7b02a730
-Debug session time: Tue Mar 24 02:27:05.758 2026 (UTC + 8:00)
-System Uptime: 0 days 0:06:45.388
+Kernel base = 0xfffff807`20600000 PsLoadedModuleList = 0xfffff807`2122a730
+Debug session time: Tue Mar 24 04:04:38.760 2026 (UTC + 8:00)
+System Uptime: 0 days 0:11:04.391
 *************************************************************************
 ***                                                                   ***
 ***                                                                   ***
@@ -99,11 +99,11 @@ System Uptime: 0 days 0:06:45.388
 Loading Kernel Symbols
 ...............................................................
 ................................................................
-.........................................................
+..........................................................
 Loading User Symbols
-PEB is paged out (Peb.Ldr = 000000cf`5543b018).  Type ".hh dbgerr001" for details
+
 Loading unloaded module list
-...........
+..........
 
 ************* Symbol Loading Error Summary **************
 Module name            Error
@@ -113,8 +113,8 @@ You can troubleshoot most symbol related issues by turning on symbol loading dia
 You should also verify that your symbol search path (.sympath) is correct.
 For analysis of this file, run !analyze -v
 nt!KeBugCheckEx:
-fffff807`7a7fd6c0 48894c2408      mov     qword ptr [rsp+8],rcx ss:0018:ffffb106`f70ffd20=000000000000000a
-2: kd> !analyze -v
+fffff807`209fd6c0 48894c2408      mov     qword ptr [rsp+8],rcx ss:0018:ffffa081`2ebbec90=0000000000000101
+4: kd> !analyze -v
 *************************************************************************
 ***                                                                   ***
 ***                                                                   ***
@@ -142,11 +142,11 @@ fffff807`7a7fd6c0 48894c2408      mov     qword ptr [rsp+8],rcx ss:0018:ffffb106
 Loading Kernel Symbols
 ...............................................................
 ................................................................
-.........................................................
+..........................................................
 Loading User Symbols
-PEB is paged out (Peb.Ldr = 000000cf`5543b018).  Type ".hh dbgerr001" for details
+
 Loading unloaded module list
-...........
+..........
 
 ************* Symbol Loading Error Summary **************
 Module name            Error
@@ -160,16 +160,15 @@ You should also verify that your symbol search path (.sympath) is correct.
 *                                                                             *
 *******************************************************************************
 
-DRIVER_IRQL_NOT_LESS_OR_EQUAL (d1)
-An attempt was made to access a pageable (or completely invalid) address at an
-interrupt request level (IRQL) that is too high.  This is usually
-caused by drivers using improper addresses.
-If kernel debugger is available get stack backtrace.
+CLOCK_WATCHDOG_TIMEOUT (101)
+An expected clock interrupt was not received on a secondary processor in an
+MP system within the allocated interval. This indicates that the specified
+processor is hung and not processing interrupts.
 Arguments:
-Arg1: fffff807c870b710, memory referenced
-Arg2: 00000000000000ff, IRQL
-Arg3: 0000000000000000, value 0 = read operation, 1 = write operation
-Arg4: fffff807c870b710, address which referenced memory
+Arg1: 0000000000000018, Clock interrupt time out interval in nominal clock ticks.
+Arg2: 0000000000000000, 0.
+Arg3: fffff8071cd52180, The PRCB address of the hung processor.
+Arg4: 0000000000000000, The index of the hung processor.
 
 Debugging Details:
 ------------------
@@ -461,7 +460,31 @@ Debugging Details:
 ***    provided you with these symbols if you need this command to    ***
 ***    work.                                                          ***
 ***                                                                   ***
-***    Type referenced: nt!_IMAGE_DOS_HEADER                          ***
+***    Type referenced: nt!_KPRCB                                     ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KPRCB                                     ***
 ***                                                                   ***
 *************************************************************************
 *************************************************************************
@@ -828,10 +851,10 @@ Debugging Details:
 KEY_VALUES_STRING: 1
 
     Key  : Analysis.CPU.mSec
-    Value: 62
+    Value: 171
 
     Key  : Analysis.Elapsed.mSec
-    Value: 72
+    Value: 210
 
     Key  : Analysis.IO.Other.Mb
     Value: 0
@@ -843,10 +866,10 @@ KEY_VALUES_STRING: 1
     Value: 0
 
     Key  : Analysis.Init.CPU.mSec
-    Value: 156
+    Value: 625
 
     Key  : Analysis.Init.Elapsed.mSec
-    Value: 2124
+    Value: 4982
 
     Key  : Analysis.Memory.CommitPeak.Mb
     Value: 52
@@ -861,10 +884,10 @@ KEY_VALUES_STRING: 1
     Value: 1.2511.5.1
 
     Key  : Bugcheck.Code.LegacyAPI
-    Value: 0xd1
+    Value: 0x101
 
     Key  : Bugcheck.Code.TargetModel
-    Value: 0xd1
+    Value: 0x101
 
     Key  : Dump.Attributes.AsUlong
     Value: 0x8
@@ -878,24 +901,21 @@ KEY_VALUES_STRING: 1
     Key  : Failure.Hash
     Value: {3048acc5-43ef-b7a9-1ce3-337c1b2b8b52}
 
-    Key  : Faulting.IP.Type
-    Value: Unloaded
-
     Key  : WER.System.BIOSRevision
     Value: 1.35.0.0
 
 
-BUGCHECK_CODE:  d1
+BUGCHECK_CODE:  101
 
-BUGCHECK_P1: fffff807c870b710
+BUGCHECK_P1: 18
 
-BUGCHECK_P2: ff
+BUGCHECK_P2: 0
 
-BUGCHECK_P3: 0
+BUGCHECK_P3: fffff8071cd52180
 
-BUGCHECK_P4: fffff807c870b710
+BUGCHECK_P4: 0
 
-FILE_IN_CAB:  032426-4093-01.dmp
+FILE_IN_CAB:  032426-4250-01.dmp
 
 ADDITIONAL_DEBUG_TEXT:  
 You can run '.symfix; .reload' to try to fix the symbol path and load symbols.
@@ -904,63 +924,12 @@ WRONG_SYMBOLS_TIMESTAMP: 781b6fb5
 
 WRONG_SYMBOLS_SIZE: 1046000
 
-FAULTING_MODULE: fffff8077a400000 nt
+FAULTING_MODULE: fffff80720600000 nt
 
 DUMP_FILE_ATTRIBUTES: 0x8
   Kernel Generated Triage Dump
 
-FAULTING_THREAD:  ffffb106f36e0080
-
-READ_ADDRESS: *************************************************************************
-***                                                                   ***
-***                                                                   ***
-***    Either you specified an unqualified symbol, or your debugger   ***
-***    doesn't have full symbol information.  Unqualified symbol      ***
-***    resolution is turned off by default. Please either specify a   ***
-***    fully qualified symbol module!symbolname, or enable resolution ***
-***    of unqualified symbols by typing ".symopt- 100". Note that     ***
-***    enabling unqualified symbol resolution with network symbol     ***
-***    server shares in the symbol path may cause the debugger to     ***
-***    appear to hang for long periods of time when an incorrect      ***
-***    symbol name is typed or the network symbol server is down.     ***
-***                                                                   ***
-***    For some commands to work properly, your symbol path           ***
-***    must point to .pdb files that have full type information.      ***
-***                                                                   ***
-***    Certain .pdb files (such as the public OS symbols) do not      ***
-***    contain the required information.  Contact the group that      ***
-***    provided you with these symbols if you need this command to    ***
-***    work.                                                          ***
-***                                                                   ***
-***    Type referenced: nt!_MMPFN                                     ***
-***                                                                   ***
-*************************************************************************
-*************************************************************************
-***                                                                   ***
-***                                                                   ***
-***    Either you specified an unqualified symbol, or your debugger   ***
-***    doesn't have full symbol information.  Unqualified symbol      ***
-***    resolution is turned off by default. Please either specify a   ***
-***    fully qualified symbol module!symbolname, or enable resolution ***
-***    of unqualified symbols by typing ".symopt- 100". Note that     ***
-***    enabling unqualified symbol resolution with network symbol     ***
-***    server shares in the symbol path may cause the debugger to     ***
-***    appear to hang for long periods of time when an incorrect      ***
-***    symbol name is typed or the network symbol server is down.     ***
-***                                                                   ***
-***    For some commands to work properly, your symbol path           ***
-***    must point to .pdb files that have full type information.      ***
-***                                                                   ***
-***    Certain .pdb files (such as the public OS symbols) do not      ***
-***    contain the required information.  Contact the group that      ***
-***    provided you with these symbols if you need this command to    ***
-***    work.                                                          ***
-***                                                                   ***
-***    Type referenced: nt!_MMPTE                                     ***
-***                                                                   ***
-*************************************************************************
-Unable to get size of nt!_MMPTE - probably bad symbols
- fffff807c870b710 
+FAULTING_THREAD:  ffffe784a2873040
 
 BLACKBOXNTFS: 1 (!blackboxntfs)
 
@@ -970,50 +939,19 @@ BLACKBOXWINLOGON: 1 (!blackboxwinlogon)
 
 CUSTOMER_CRASH_COUNT:  1
 
-IP_MODULE_UNLOADED: 
-<Unloaded_hyperkd.sys>+3b710
-fffff807`c870b710 ??              ???
-
 STACK_TEXT:  
-ffffb106`f70ffd18 fffff807`7a811729     : 00000000`0000000a fffff807`c870b710 00000000`000000ff 00000000`00000000 : nt!KeBugCheckEx
-ffffb106`f70ffd20 fffff807`7a80d2e3     : ffffffff`fc100510 ffffffff`f3bfa7eb 00000014`84e7d620 00000014`84e7da00 : nt!setjmpex+0x8ae9
-ffffb106`f70ffe60 fffff807`c870b710     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : nt!setjmpex+0x46a3
-ffffb106`f70ffff0 00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : <Unloaded_hyperkd.sys>+0x3b710
-
-
-STACK_COMMAND: .thread /r /p 0xffffb106f36e0080 ; kb
-
-EXCEPTION_CODE_STR:  781B6FB5
-
-EXCEPTION_STR:  WRONG_SYMBOLS
-
-PROCESS_NAME:  ntoskrnl.wrong.symbols.exe
-
-IMAGE_NAME:  ntoskrnl.wrong.symbols.exe
-
-MODULE_NAME: nt_wrong_symbols
-
-SYMBOL_NAME:  nt_wrong_symbols!781B6FB51046000
-
-FAILURE_BUCKET_ID:  WRONG_SYMBOLS_X64_10.0.19041.3757_(WinBuild.160101.0800)_TIMESTAMP_331108-115949_781B6FB5_nt_wrong_symbols!781B6FB51046000
-
-OSPLATFORM_TYPE:  x64
-
-OSNAME:  Windows 10
-
-FAILURE_ID_HASH:  {3048acc5-43ef-b7a9-1ce3-337c1b2b8b52}
-
-Followup:     MachineOwner
----------
-
-2: kd> .thread /r /p 0xffffb106f36e0080 ; kb
-Implicit thread is now ffffb106`f36e0080
-Implicit process is now ffffb106`f88d6300
-Loading User Symbols
-PEB is paged out (Peb.Ldr = 000000cf`5543b018).  Type ".hh dbgerr001" for details
-  *** Stack trace for last set context - .thread/.cxr resets it
- # RetAddr               : Args to Child                                                           : Call Site
-00 fffff807`7a811729     : 00000000`0000000a fffff807`c870b710 00000000`000000ff 00000000`00000000 : nt!KeBugCheckEx
-01 fffff807`7a80d2e3     : ffffffff`fc100510 ffffffff`f3bfa7eb 00000014`84e7d620 00000014`84e7da00 : nt!setjmpex+0x8ae9
-02 fffff807`c870b710     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : nt!setjmpex+0x46a3
-03 00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : <Unloaded_hyperkd.sys>+0x3b710
+ffffa081`2ebbec88 fffff807`20a37506     : 00000000`00000101 00000000`00000018 00000000`00000000 fffff807`1cd52180 : nt!KeBugCheckEx
+ffffa081`2ebbec90 fffff807`2085945d     : 00000000`00000000 ffffa081`2eba5180 00000000`00000246 00000000`0000a619 : nt!memset+0x24806
+ffffa081`2ebbecf0 fffff807`208519b1     : 00000000`0000a400 00000000`00006300 ffffa081`2eba5180 00000000`00000001 : nt!MmMapLockedPagesSpecifyCache+0x96d
+ffffa081`2ebbed40 fffff807`20853873     : ffffa081`2eba5180 00000000`00000000 fffff807`21231a70 00000000`00000000 : nt!KeStallExecutionProcessor+0xd21
+ffffa081`2ebbee80 fffff807`20850a82     : ffffbc80`5e57ee80 ffffbc80`5e57ef00 ffffbc80`5e57ef00 00000000`0000000c : nt!KeClockInterruptNotify+0x2e3
+ffffa081`2ebbef30 fffff807`20900825     : 00000001`8c196695 ffffe784`970c7ac0 ffffe784`970c7b70 00000000`00000000 : nt!EtwWriteEx+0x1d22
+ffffa081`2ebbef60 fffff807`209ff65a     : ffffbc80`5e57ef00 ffffe784`970c7ac0 00000000`00000001 00000000`00000000 : nt!CcScheduleReadAheadEx+0x46e5
+ffffa081`2ebbefb0 fffff807`209ffe27     : 00000000`06283063 ffffa081`2eba5180 00000000`00000002 ffffa081`2eba8130 : nt!KeSynchronizeExecution+0x9ba
+ffffbc80`5e57ee80 fffff807`2088f020     : 00000000`00000000 00000000`00000000 00000000`00000002 fffff807`20a058f6 : nt!KeSynchronizeExecution+0x1187
+ffffbc80`5e57f010 fffff807`2088ee38     : 00000000`00000000 ffffbc5e`00000000 ffffe784`a4729200 fffff807`2086287e : nt!IoGetCurrentProcess+0x180
+ffffbc80`5e57f0b0 fffff807`208a671e     : ffffb880`0353be90 81000001`1bea3921 00000000`00000000 00000000`00000004 : nt!KeRemoveProcessorAffinityEx+0x1e8
+ffffbc80`5e57f0e0 fffff807`20861430     : 00000000`00000001 00000000`00000001 ffffbc80`5e57f340 00000000`00000000 : nt!IoSynchronousPageWrite+0x331e
+ffffbc80`5e57f240 fffff807`20860694     : ffffe784`a332fec8 00000000`00000000 00000000`00000001 ffffbc80`5e57f3e8 : nt!CcSetFileSizesEx+0x12d0
+ffffbc80`5e57f390 fffff807`208c46b5     : ffffe784`a730e4c0 fffff807`20955a00 ffffe784`970bba01 00000000`00000000 : nt!CcSetFileSizesEx+0x534
+ffffbc80`5e57f470 fffff807`209078e5     : ffffe784`a2873040 00000000`00000080 ffffe784`97099080 00000000`00000000 : nt!ExTryQueueWork

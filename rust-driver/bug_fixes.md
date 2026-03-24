@@ -809,6 +809,228 @@ je		AsmVmxoffHandler
 
 ---
 
+## 修复 12: 驱动卸载时未正确终止 VMX
+
+### 文件
+`doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/driver/Driver.c`
+
+### 问题描述
+驱动卸载时，`DrvUnload` 函数只调用了 `LoaderUninitializeLogTracer`，但没有调用 `VmFuncUninitVmm` 来终止 VMX。这意味着驱动卸载时，VMX 仍然在运行，导致 VM-exit 仍然会发生，但处理程序已经被卸载，导致跳转到无效的内存地址，引发 BSOD。
+
+### BSOD 分析
+- **崩溃地址**: `<Unloaded_hyperkd.sys>+0x3b720` (AsmVmexitHandler 函数入口)
+- **崩溃位置**: `AsmVmexitHandler.asm:13`
+- **崩溃指令**: `push 0` (AsmVmexitHandler 入口指令)
+- **原因**: 驱动卸载时 VMX 仍在运行，VM-exit 发生时处理程序已被卸载
+- **触发场景**: 驱动卸载后发生 VM-exit
+
+### 修复位置
+**文件**: `Driver.c`
+**行号**: 97
+
+**修复前**:
+```c
+VOID
+DrvUnload(PDRIVER_OBJECT DriverObject)
+{
+    UNICODE_STRING DosDeviceName;
+
+    RtlInitUnicodeString(&DosDeviceName, L"\\DosDevices\\HyperDbgDebuggerDevice");
+    IoDeleteSymbolicLink(&DosDeviceName);
+    IoDeleteDevice(DriverObject->DeviceObject);
+
+    //
+    // Unloading VMM and Debugger
+    //
+    LoaderUninitializeLogTracer();
+}
+```
+
+**修复后**:
+```c
+VOID
+DrvUnload(PDRIVER_OBJECT DriverObject)
+{
+    UNICODE_STRING DosDeviceName;
+
+    //
+    // Uninitialize the debugger first
+    //
+    DebuggerUninitialize();
+
+    //
+    // Terminate VMX
+    //
+    VmFuncUninitVmm();
+
+    RtlInitUnicodeString(&DosDeviceName, L"\\DosDevices\\HyperDbgDebuggerDevice");
+    IoDeleteSymbolicLink(&DosDeviceName);
+    IoDeleteDevice(DriverObject->DeviceObject);
+
+    //
+    // Unloading VMM and Debugger
+    //
+    LoaderUninitializeLogTracer();
+}
+```
+
+### 影响
+- **BSOD 类型**: 跳转到无效的内存地址
+- **崩溃位置**: `AsmVmexitHandler.asm:13`
+- **崩溃指令**: `push 0` (AsmVmexitHandler 入口指令)
+- **原因**: 驱动卸载时 VMX 仍在运行，VM-exit 发生时处理程序已被卸载
+- **触发场景**: 驱动卸载后发生 VM-exit
+
+---
+
+## 修复 13: DebuggerEnableOrDisableAllEvents 空指针解引用
+
+### 文件
+`doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperkd/code/debugger/core/Debugger.c`
+
+### 问题描述
+驱动卸载时，`DebuggerUninitialize` 调用 `DebuggerClearAllEvents`，然后调用 `DebuggerEnableOrDisableAllEvents`。如果 `g_Events` 未初始化（为 NULL），函数会尝试访问空指针，导致 BSOD。
+
+### BSOD 分析
+- **崩溃地址**: `hyperkd!DebuggerEnableOrDisableAllEvents+0x6a`
+- **崩溃位置**: `Debugger.c @ 1877`
+- **崩溃指令**: `mov rax,qword ptr [rax]` (rax=0)
+- **原因**: `g_Events` 为 NULL 时访问空指针
+- **触发场景**: 驱动卸载时调用 `DebuggerUninitialize`
+
+### 调用栈
+```
+hyperkd!DebuggerEnableOrDisableAllEvents+0x6a
+hyperkd!DebuggerClearAllEvents+0x13
+hyperkd!DebuggerUninitialize+0x47
+hyperkd!DrvUnload+0xe
+```
+
+### 修复位置
+**文件**: `Debugger.c`
+**行号**: 1868
+
+**修复前**:
+```c
+BOOLEAN
+DebuggerEnableOrDisableAllEvents(BOOLEAN IsEnable)
+{
+    BOOLEAN     FindAtLeastOneEvent = FALSE;
+    PLIST_ENTRY TempList            = 0;
+    PLIST_ENTRY TempList2           = 0;
+
+    //
+    // We have to iterate through all events
+    //
+    for (size_t i = 0; i < sizeof(DEBUGGER_CORE_EVENTS) / sizeof(LIST_ENTRY); i++)
+```
+
+**修复后**:
+```c
+BOOLEAN
+DebuggerEnableOrDisableAllEvents(BOOLEAN IsEnable)
+{
+    BOOLEAN     FindAtLeastOneEvent = FALSE;
+    PLIST_ENTRY TempList            = 0;
+    PLIST_ENTRY TempList2           = 0;
+
+    //
+    // Check if g_Events is initialized
+    //
+    if (g_Events == NULL)
+    {
+        return FALSE;
+    }
+
+    //
+    // We have to iterate through all events
+    //
+    for (size_t i = 0; i < sizeof(DEBUGGER_CORE_EVENTS) / sizeof(LIST_ENTRY); i++)
+```
+
+### 影响
+- **BSOD 类型**: 空指针解引用
+- **崩溃位置**: `Debugger.c @ 1877`
+- **崩溃指令**: `mov rax,qword ptr [rax]` (rax=0)
+- **原因**: `g_Events` 为 NULL 时访问空指针
+- **触发场景**: 驱动卸载时调用 `DebuggerUninitialize`
+
+---
+
+## 修复 14: VmxTerminate 未检查 VMX 是否已启动导致系统卡住
+
+### 文件
+`doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperhv/code/vmm/vmx/Vmx.c`
+
+### 问题描述
+`VmxTerminate` 函数调用 `AsmVmxVmcall(VMCALL_VMXOFF, ...)` 来关闭 VMX。但是，如果 VMX 没有启动（`g_GuestState` 为 NULL 或 `HasLaunched` 为 FALSE），这个 vmcall 会导致系统卡住，最终触发 `CLOCK_WATCHDOG_TIMEOUT (0x101)` BSOD。
+
+### BSOD 分析
+- **BSOD 类型**: `CLOCK_WATCHDOG_TIMEOUT (0x101)`
+- **原因**: CPU 在 VMX root mode 中卡住，无法响应时钟中断
+- **触发场景**: 驱动卸载时 VMX 未启动，但仍然尝试执行 vmcall
+
+### 修复位置
+**文件**: `Vmx.c`
+**行号**: 699
+
+**修复前**:
+```c
+BOOLEAN
+VmxTerminate()
+{
+    NTSTATUS                Status      = STATUS_SUCCESS;
+    ULONG                   CurrentCore = KeGetCurrentProcessorNumberEx(NULL);
+    VIRTUAL_MACHINE_STATE * VCpu        = &g_GuestState[CurrentCore];
+
+    //
+    // Execute Vmcall to to turn off vmx from Vmx root mode
+    //
+    Status = AsmVmxVmcall(VMCALL_VMXOFF, NULL64_ZERO, NULL64_ZERO, NULL64_ZERO);
+```
+
+**修复后**:
+```c
+BOOLEAN
+VmxTerminate()
+{
+    NTSTATUS                Status      = STATUS_SUCCESS;
+    ULONG                   CurrentCore = KeGetCurrentProcessorNumberEx(NULL);
+    VIRTUAL_MACHINE_STATE * VCpu        = NULL;
+
+    //
+    // Check if g_GuestState is initialized
+    //
+    if (g_GuestState == NULL)
+    {
+        LogDebugInfo("g_GuestState is NULL, VMX not initialized, skipping termination\n");
+        return TRUE;
+    }
+
+    VCpu = &g_GuestState[CurrentCore];
+
+    //
+    // Check if VMX is launched on this core
+    //
+    if (!VCpu->HasLaunched)
+    {
+        LogDebugInfo("VMX not launched on logical core %d, skipping termination\n", CurrentCore);
+        return TRUE;
+    }
+
+    //
+    // Execute Vmcall to to turn off vmx from Vmx root mode
+    //
+    Status = AsmVmxVmcall(VMCALL_VMXOFF, NULL64_ZERO, NULL64_ZERO, NULL64_ZERO);
+```
+
+### 影响
+- **BSOD 类型**: `CLOCK_WATCHDOG_TIMEOUT (0x101)`
+- **原因**: CPU 在 VMX root mode 中卡住，无法响应时钟中断
+- **触发场景**: 驱动卸载时 VMX 未启动，但仍然尝试执行 vmcall
+
+---
+
 ## 修复日期
 2026-03-24
 
@@ -825,5 +1047,205 @@ je		AsmVmxoffHandler
 10. 在 VmxVmresume 中添加了 g_GuestState 空指针检查，防止驱动卸载时访问已释放的内存
 11. 在 AsmVmexitHandler 中添加了 VmxVmexitHandler 返回值检查，防止驱动卸载时跳转到 NULL 地址
 12. 在 AsmVmexitHandler 中修复了 VmxVmexitHandler 返回 FALSE 时的处理，防止系统卡住
+13. 在 DrvUnload 中添加了正确的 VMX 终止流程，防止驱动卸载时 VMX 仍在运行
+14. 在 DebuggerEnableOrDisableAllEvents 中添加了 g_Events 空指针检查，防止驱动卸载时访问未初始化的事件列表
+15. 在 VmxTerminate 中添加了 g_GuestState 和 HasLaunched 检查，防止在 VMX 未启动时执行 vmcall 导致系统卡住
 
 这些修复解决了导致系统蓝屏和卡住的关键问题，提高了驱动的稳定性。
+
+---
+
+## 修复 16: VmxVmexitHandler 返回值错误导致 CPU 卡住
+
+### 文件
+- `doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperhv/code/vmm/vmx/Vmexit.c`
+- `doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperhv/code/vmm/vmx/Vmx.c`
+
+### 问题描述
+当 `g_GuestState` 为 NULL 时，`VmxVmexitHandler` 返回 FALSE，导致 `AsmVmexitHandler` 跳转到 `VmxVmresume`。`VmxVmresume` 会执行 `__vmx_off()` 并返回，但这会导致问题：
+1. `__vmx_off()` 后 CPU 已经不在 VMX root mode 了
+2. 返回后的代码执行会有问题
+3. 可能导致 CPU 卡住，触发 `CLOCK_WATCHDOG_TIMEOUT (0x101)` BSOD
+
+### BSOD 分析
+- **BSOD 类型**: `CLOCK_WATCHDOG_TIMEOUT (0x101)`
+- **原因**: CPU 在 VMX root mode 中卡住，无法响应时钟中断
+- **触发场景**: Continue 执行后，进程触发断点，VMX 进入 VM-exit，但某个核心卡住
+
+### 修复位置
+**文件**: `Vmexit.c`
+**行号**: 30-36
+
+**修复前**:
+```c
+    // Check if g_GuestState is valid (not NULL)
+    if (g_GuestState == NULL)
+    {
+        // g_GuestState is NULL, driver might be unloading
+        // Return FALSE to indicate we should not continue VMX
+        return FALSE;
+    }
+```
+
+**修复后**:
+```c
+    // Check if g_GuestState is valid (not NULL)
+    if (g_GuestState == NULL)
+    {
+        // g_GuestState is NULL, driver might be unloading
+        // Return TRUE to trigger AsmVmxoffHandler to properly exit VMX mode
+        return TRUE;
+    }
+```
+
+### 附加修复
+**文件**: `Vmx.c`
+**函数**: `VmxReturnStackPointerForVmxoff` 和 `VmxReturnInstructionPointerForVmxoff`
+
+添加了 `g_GuestState` NULL 检查，如果为 NULL 则从 VMCS 中读取 GuestRsp 和 GuestRip：
+
+```c
+UINT64
+VmxReturnStackPointerForVmxoff()
+{
+    if (g_GuestState == NULL)
+    {
+        UINT64 GuestRsp = 0;
+        __vmx_vmread(VMCS_GUEST_RSP, &GuestRsp);
+        return GuestRsp;
+    }
+    return g_GuestState[KeGetCurrentProcessorNumberEx(NULL)].VmxoffState.GuestRsp;
+}
+
+UINT64
+VmxReturnInstructionPointerForVmxoff()
+{
+    if (g_GuestState == NULL)
+    {
+        UINT64 GuestRip = 0;
+        __vmx_vmread(VMCS_GUEST_RIP, &GuestRip);
+        return GuestRip;
+    }
+    return g_GuestState[KeGetCurrentProcessorNumberEx(NULL)].VmxoffState.GuestRip;
+}
+```
+
+### 影响
+- **BSOD 类型**: `CLOCK_WATCHDOG_TIMEOUT (0x101)`
+- **原因**: CPU 在 VMX root mode 中卡住，无法响应时钟中断
+- **触发场景**: Continue 执行后，进程触发断点，VMX 进入 VM-exit，但某个核心卡住
+
+---
+
+## 修复 17: VmxTerminate 在 VMX non-root mode 中执行 vmcall 导致 BSOD
+
+### 文件
+`doc/cpp/HyperDbgUnified/HyperDbg/hyperdbg/hyperhv/code/vmm/vmx/Vmx.c`
+
+### 问题描述
+`VmxTerminate` 函数调用 `AsmVmxVmcall(VMCALL_VMXOFF, ...)` 来关闭 VMX。但是，`vmcall` 指令只能在 VMX root mode 中执行。如果 CPU 不在 VMX root mode 中（例如 VMX 已经关闭或未启动），执行 `vmcall` 会导致 `#UD` (Invalid Opcode) 异常，触发 `KMODE_EXCEPTION_NOT_HANDLED (0x1e)` BSOD。
+
+### BSOD 分析
+- **BSOD 类型**: `KMODE_EXCEPTION_NOT_HANDLED (0x1e)`
+- **参数**: P1=0xC000001D (STATUS_INVALID_PARAMETER)
+- **崩溃位置**: `hyperkd!AsmVmxVmcall+0x22` (AsmVmxOperation.asm @ 32)
+- **崩溃指令**: `vmcall`
+- **原因**: `vmcall` 指令在 VMX non-root mode 中执行失败
+- **触发场景**: 驱动卸载时，某些核心可能不在 VMX root mode 中
+
+### 修复位置
+**文件**: `Vmx.c`
+**函数**: `VmxTerminate`
+
+**修复前**:
+```c
+BOOLEAN
+VmxTerminate()
+{
+    NTSTATUS                Status      = STATUS_SUCCESS;
+    ULONG                   CurrentCore = KeGetCurrentProcessorNumberEx(NULL);
+    VIRTUAL_MACHINE_STATE * VCpu        = NULL;
+
+    //
+    // Check if g_GuestState is initialized
+    //
+    if (g_GuestState == NULL)
+    {
+        LogDebugInfo("g_GuestState is NULL, VMX not initialized, skipping termination\n");
+        return TRUE;
+    }
+
+    VCpu = &g_GuestState[CurrentCore];
+
+    //
+    // Check if VMX is launched on this core
+    //
+    if (!VCpu->HasLaunched)
+    {
+        LogDebugInfo("VMX not launched on logical core %d, skipping termination\n", CurrentCore);
+        return TRUE;
+    }
+
+    //
+    // Execute Vmcall to to turn off vmx from Vmx root mode
+    //
+    Status = AsmVmxVmcall(VMCALL_VMXOFF, NULL64_ZERO, NULL64_ZERO, NULL64_ZERO);
+    ...
+}
+```
+
+**修复后**:
+```c
+BOOLEAN
+VmxTerminate()
+{
+    NTSTATUS                Status      = STATUS_SUCCESS;
+    ULONG                   CurrentCore = KeGetCurrentProcessorNumberEx(NULL);
+    VIRTUAL_MACHINE_STATE * VCpu        = NULL;
+
+    //
+    // Check if g_GuestState is initialized
+    //
+    if (g_GuestState == NULL)
+    {
+        LogDebugInfo("g_GuestState is NULL, VMX not initialized, skipping termination\n");
+        return TRUE;
+    }
+
+    VCpu = &g_GuestState[CurrentCore];
+
+    //
+    // Check if VMX is launched on this core
+    //
+    if (!VCpu->HasLaunched)
+    {
+        LogDebugInfo("VMX not launched on logical core %d, skipping termination\n", CurrentCore);
+        return TRUE;
+    }
+
+    //
+    // Check if we are in VMX root mode
+    // vmcall can only be executed in VMX root mode
+    // If we are not in VMX root mode, it means VMX is not running on this core
+    //
+    if (!VCpu->IsOnVmxRootMode)
+    {
+        LogDebugInfo("Not in VMX root mode on logical core %d, VMX not running, skipping termination\n", CurrentCore);
+        return TRUE;
+    }
+
+    //
+    // Execute Vmcall to to turn off vmx from Vmx root mode
+    // Note: vmcall can be executed in VMX non-root mode, it will trigger a VM-exit
+    //
+    Status = AsmVmxVmcall(VMCALL_VMXOFF, NULL64_ZERO, NULL64_ZERO, NULL64_ZERO);
+    ...
+}
+```
+
+### 影响
+- **BSOD 类型**: `KMODE_EXCEPTION_NOT_HANDLED (0x1e)` 和 `CLOCK_WATCHDOG_TIMEOUT (0x101)`
+- **原因**: 
+  - `vmcall` 指令可以在 VMX non-root mode 中执行，它会触发 VM-exit
+  - 错误的 `IsOnVmxRootMode` 检查导致所有核心都跳过 VMX 终止，CPU 卡住
+- **触发场景**: 驱动卸载时，DPC 在 VMX non-root mode 中执行

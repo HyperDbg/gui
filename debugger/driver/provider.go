@@ -133,6 +133,9 @@ func (p *Provider) Uninstall() {
 	if e != nil && !errors.Is(e, windows.ERROR_SERVICE_MARKED_FOR_DELETE) {
 		mylog.Check(e)
 	}
+	if e == nil {
+		mylog.Success("驱动卸载成功")
+	}
 
 	if schService != windows.Handle(0) {
 		mylog.Check(windows.CloseServiceHandle(schService))
@@ -146,6 +149,7 @@ func (p *Provider) Start() {
 	if e != nil {
 		switch {
 		case errors.Is(e, windows.ERROR_SERVICE_ALREADY_RUNNING):
+			mylog.Info("服务已在运行")
 		case errors.Is(e, windows.ERROR_PATH_NOT_FOUND):
 			mylog.Info("错误，找不到驱动路径，或对驱动文件的访问受限")
 			mylog.Info("大多数情况下，这是因为杀毒软件尚未完成对驱动的扫描，")
@@ -165,9 +169,21 @@ func (p *Provider) Start() {
 			mylog.Info("请使用有效的签名证书重新编译驱动程序")
 			mylog.Info("或者在测试环境中禁用驱动程序签名强制执行")
 			mylog.Check(e)
+		case errors.Is(e, windows.ERROR_INVALID_FUNCTION):
+			mylog.Info("错误，函数不正确")
+			mylog.Info("这通常是因为 IOCTL 控制码不对应")
+			mylog.Info("请检查驱动程序和用户模式程序使用的 IOCTL 码是否一致")
+			mylog.Check(e)
+		case errors.Is(e, windows.ERROR_BAD_ARGUMENTS):
+			mylog.Info("错误，参数不正确")
+			mylog.Info("这通常是因为 Rust 驱动程序实现有问题")
+			mylog.Info("请检查驱动程序的参数处理逻辑")
+			mylog.Check(e)
 		default:
 			mylog.Check(e)
 		}
+	} else {
+		mylog.Success("驱动启动成功")
 	}
 
 	if schService != windows.Handle(0) {
@@ -206,6 +222,9 @@ func (p *Provider) Stop() {
 	e = windows.ControlService(schService, windows.SERVICE_CONTROL_STOP, &serviceStatus)
 	if e != nil && !errors.Is(e, windows.ERROR_SERVICE_NOT_ACTIVE) {
 		mylog.Check(e)
+	}
+	if e == nil {
+		mylog.Success("驱动停止成功")
 	}
 
 	if schService != windows.Handle(0) {

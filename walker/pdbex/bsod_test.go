@@ -44,8 +44,8 @@ func TestBSODAddressAnalysis(t *testing.T) {
 	}
 	fmt.Println()
 
-	fmt.Println("=== 地址 2: <Unloaded_hyperkd.sys>+0x3b710 ===")
-	offset2 := uint64(0x3b710)
+	fmt.Println("=== 地址 2: <Unloaded_hyperkd.sys>+0x3b720 ===")
+	offset2 := uint64(0x3b720)
 	fmt.Printf("偏移: 0x%X\n", offset2)
 
 	funcName2, ok := pdb.GetFunctionByOffset(offset2)

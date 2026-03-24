@@ -1,0 +1,30 @@
+[workspace]
+resolver = "2"
+members = [
+    "hyperhv",
+    "hyperkd",
+    "protocol",
+    "wsk",
+    "disassembler",
+    "pdbex",
+    "kd",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0"
+repository = "https://github.com/HyperDbg/HyperDbg"
+readme = "README.md"
+
+[workspace.dependencies]
+protocol = { path = "protocol" }
+wsk = { path = "wsk" }
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+opt-level = "z"
+lto = true

@@ -1,0 +1,12 @@
+[package]
+name = "hyperdbg-pdbex"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+thiserror = "1.0"
+log = "0.4"
+
+[dependencies.windows-sys]
+version = "0.52"
+features = ["Win32_Foundation", "Win32_System_Diagnostics_Debug"]

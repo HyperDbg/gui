@@ -1,0 +1,23 @@
+[workspace]
+resolver = "3"
+members = ["km", "shared", "um"]
+
+[workspace.package]
+version = "0.1.0"
+authors = ["ovxrfl0w"]
+description = "A Proof-of-Concept Windows Kernel driver written in Rust using windows-drivers-rs for reading and writing arbitrary process memory."
+edition = "2024"
+
+[profile.dev]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

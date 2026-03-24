@@ -24,8 +24,7 @@ var (
 )
 
 func TestProvider(t *testing.T) {
-	mylog.Call(func() {
-		p := New("sysDemo.sys", "sysDemo", "\\\\.\\sysDemo")
+		p := New("D:\\ux\\examples\\hypedbg\\rust-driver\\examples\\sysdemo\\target\\x86_64-pc-windows-msvc\\release\\sysdemo.sys", "sysDemo", "\\\\.\\sysDemo")
 
 		p.Install()
 		p.Start()
@@ -56,5 +55,4 @@ func TestProvider(t *testing.T) {
 
 		p.Stop()
 		p.Uninstall()
-	})
 }

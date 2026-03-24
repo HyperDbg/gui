@@ -1,0 +1,29 @@
+[package]
+categories = ["hardware-support"]
+description = "HyperDbg Kernel Debugger"
+edition = "2021"
+keywords = ["driver", "debugger", "windows"]
+license = "GPL-3.0"
+name = "hyperkd"
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+protocol = { path = "../protocol" }
+wsk = { path = "../wsk" }
+hyperhv = { path = "../hyperhv" }
+wdk-alloc = "0.4"
+wdk-sys = "0.5"
+wdk = "0.4"
+spin = "0.9"
+
+[features]
+default = []
+
+[package.metadata.wdk.driver-model]
+driver-type = "WDM"
+
+[build-dependencies]
+wdk-build = "0.5"

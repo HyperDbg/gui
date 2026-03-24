@@ -1,0 +1,16 @@
+[package]
+name = "wsk"
+version.workspace = true
+edition.workspace = true
+
+[lib]
+crate-type = ["staticlib", "lib"]
+
+[dependencies]
+protocol = { workspace = true }
+wdk-alloc = "0.4"
+wdk-sys = "0.5"
+wdk = "0.4"
+
+[features]
+default = []
