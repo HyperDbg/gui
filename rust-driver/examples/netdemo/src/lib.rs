@@ -3,213 +3,153 @@
 extern crate alloc;
 extern crate wdk_panic;
 
-use alloc::format;
-use alloc::boxed::Box;
-use core::ptr::addr_of_mut;
-
-use driver_framework::{
-    log, LogLevel,
-    ctl_code, default_create_close, get_ioctl_params, complete_request,
-    read_input_buffer, write_output_buffer,
-    DriverConfig, create_device_with_config, cleanup_device,
-    FILE_DEVICE_UNKNOWN, METHOD_BUFFERED, FILE_ANY_ACCESS,
-};
-use wsk::{WskSocket, SocketAddr, Command, Response, parse_command, serialize_response, SocketType, Protocol};
 use wdk_alloc::WdkAllocator;
 use wdk_sys::{
-    DEVICE_OBJECT, NTSTATUS, PDRIVER_OBJECT, PIRP, PCUNICODE_STRING,
-    IRP_MJ_CREATE, IRP_MJ_CLOSE, IRP_MJ_DEVICE_CONTROL,
-    STATUS_SUCCESS, STATUS_UNSUCCESSFUL,
+    NTSTATUS, PDRIVER_OBJECT, PCUNICODE_STRING, IRP_MJ_CREATE, IRP_MJ_CLOSE, 
+    STATUS_SUCCESS, DEVICE_OBJECT, PIRP, HANDLE, PVOID,
+    POBJECT_ATTRIBUTES, OBJECT_ATTRIBUTES,
+    ntddk::PsCreateSystemThread,
 };
 
 #[global_allocator]
 static GLOBAL_ALLOCATOR: WdkAllocator = WdkAllocator;
 
-const IOCTL_SEND_DATA: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS);
-const IOCTL_RECEIVE_DATA: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS);
-const IOCTL_TEST_WSK: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x802, METHOD_BUFFERED, FILE_ANY_ACCESS);
-const IOCTL_JSON_COMMAND: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x803, METHOD_BUFFERED, FILE_ANY_ACCESS);
-
-const DOS_DEVICE_NAME: &str = "\\??\\netDemo";
-
-static mut DATA_BUFFER: [u8; 4096] = [0; 4096];
-static mut DATA_LENGTH: u32 = 0;
-static mut TCP_SOCKET: Option<WskSocket> = None;
-
-const SERVER_ADDR: SocketAddr = SocketAddr::localhost(9527);
+const SERVER_PORT: u16 = 50080;
+const BUFFER_SIZE: usize = 4096;
 
 #[unsafe(export_name = "DriverEntry")]
-#[allow(clippy::missing_safety_doc)]
 pub unsafe extern "system" fn driver_entry(
     driver: PDRIVER_OBJECT,
     _registry_path: PCUNICODE_STRING,
 ) -> NTSTATUS {
-    log!(LogLevel::Info, "netDemo Driver loading...");
-
-    let config = DriverConfig {
-        nt_device_name: "\\Device\\netDemo",
-        dos_device_name: DOS_DEVICE_NAME,
-        ..Default::default()
-    };
-
-    let status = create_device_with_config(driver, &config);
-    if !wdk::nt_success(status) {
-        log!(LogLevel::Error, "Failed to create device: {:x}", status);
-        return status;
-    }
-
     unsafe {
         (*driver).MajorFunction[IRP_MJ_CREATE as usize] = Some(default_create_close);
         (*driver).MajorFunction[IRP_MJ_CLOSE as usize] = Some(default_create_close);
-        (*driver).MajorFunction[IRP_MJ_DEVICE_CONTROL as usize] = Some(handle_ioctl);
         (*driver).DriverUnload = Some(driver_unload);
     }
 
-    log!(LogLevel::Success, "netDemo Driver loaded successfully");
+    // TODO: 栈溢出问题待解决
+    // let _ = wsk::wsk_init();
+    // let _ = start_server_thread();
+
     STATUS_SUCCESS
 }
 
-pub unsafe extern "C" fn driver_unload(driver: PDRIVER_OBJECT) {
-    cleanup_device(driver, DOS_DEVICE_NAME);
+pub unsafe extern "C" fn default_create_close(
+    _device: *mut DEVICE_OBJECT,
+    _irp: PIRP,
+) -> NTSTATUS {
+    STATUS_SUCCESS
 }
 
-fn handle_command(cmd: &Command) -> Response {
-    log!(LogLevel::Info, "Received command: {}", cmd.action);
-
-    match cmd.action.as_str() {
-        "ping" => Response::ok("pong"),
-        "read_memory" => {
-            if let Some(target) = &cmd.target {
-                Response::ok(&format!("Would read {} bytes from {}", cmd.size.unwrap_or(8), target))
-            } else {
-                Response::error("Missing target address")
-            }
-        }
-        "write_memory" => {
-            if let Some(data) = &cmd.data {
-                Response::ok(&format!("Would write {} to {}", data, cmd.target.as_deref().unwrap_or("?")))
-            } else {
-                Response::error("Missing data")
-            }
-        }
-        "status" => Response::ok("driver_running"),
-        _ => Response::error(&format!("Unknown command: {}", cmd.action)),
-    }
+extern "system" {
+    fn ZwClose(handle: HANDLE) -> NTSTATUS;
+    
+    fn KeDelayExecutionThread(
+        wait_mode: u32,
+        alertable: bool,
+        interval: *mut i64,
+    ) -> NTSTATUS;
 }
 
-#[allow(clippy::cast_possible_truncation)]
-pub unsafe extern "C" fn handle_ioctl(_device: *mut DEVICE_OBJECT, p_irp: PIRP) -> NTSTATUS {
-    if let Some((control_code, input_buf, input_len, output_buf, _output_len)) = get_ioctl_params(p_irp) {
-        let status = match control_code {
-            IOCTL_SEND_DATA => {
-                if let Some(data) = read_input_buffer(input_buf, input_len) {
-                    let copy_len = data.len().min(4096);
-                    unsafe {
-                        core::ptr::copy_nonoverlapping(
-                            data.as_ptr(),
-                            addr_of_mut!(DATA_BUFFER) as *mut u8,
-                            copy_len,
-                        );
-                        *addr_of_mut!(DATA_LENGTH) = copy_len as u32;
-                    }
-                    log!(LogLevel::Success, "IOCTL_SEND_DATA: Received {} bytes", copy_len);
-                    complete_request(p_irp, STATUS_SUCCESS, copy_len as u64);
-                    STATUS_SUCCESS
-                } else {
-                    complete_request(p_irp, STATUS_UNSUCCESSFUL, 0);
-                    STATUS_UNSUCCESSFUL
-                }
-            }
-            IOCTL_RECEIVE_DATA => {
-                let prefix = b"Echo: ";
-                let data_len = unsafe { *addr_of_mut!(DATA_LENGTH) as usize };
-                let total_len = prefix.len() + data_len;
+static mut SERVER_THREAD_HANDLE: HANDLE = core::ptr::null_mut();
+static mut SERVER_RUNNING: bool = true;
 
-                let mut response = Box::new([0u8; 4100]);
-                response[..prefix.len()].copy_from_slice(prefix);
-                if data_len > 0 {
-                    unsafe {
-                        core::ptr::copy_nonoverlapping(
-                            addr_of_mut!(DATA_BUFFER) as *const u8,
-                            response.as_mut_ptr().add(prefix.len()),
-                            data_len,
-                        );
-                    }
-                }
+// TODO: 栈溢出问题待解决
+// unsafe extern "C" fn server_thread_entry(_ctx: PVOID) {
+//     while !wsk::is_wsk_ready() {
+//         let mut interval: i64 = -10000000;
+//         KeDelayExecutionThread(0, false, &mut interval);
+//     }
+//     
+//     let mut listener = wsk::WskListener::new();
+//     
+//     if listener.create().is_err() {
+//         return;
+//     }
+//     
+//     let addr = wsk::SocketAddr::localhost(SERVER_PORT);
+//     if listener.bind(&addr).is_err() {
+//         listener.close();
+//         return;
+//     }
+//     
+//     while SERVER_RUNNING {
+//         match listener.accept() {
+//             Ok(mut client) => {
+//                 handle_client(&mut client);
+//                 client.close();
+//             }
+//             Err(_) => {
+//                 let mut interval: i64 = -10000000;
+//                 KeDelayExecutionThread(0, false, &mut interval);
+//             }
+//         }
+//     }
+//     
+//     listener.close();
+// }
 
-                let written = write_output_buffer(output_buf, &response[..total_len]);
-                log!(LogLevel::Success, "IOCTL_RECEIVE_DATA: Returning {} bytes", written);
-                complete_request(p_irp, STATUS_SUCCESS, written as u64);
-                STATUS_SUCCESS
-            }
-            IOCTL_TEST_WSK => {
-                log!(LogLevel::Info, "Testing wsk module...");
-                log!(LogLevel::Info, "Creating TCP client to {}:{}", SERVER_ADDR.ip[0], SERVER_ADDR.port);
+// fn handle_client(client: &mut wsk::WskSocket) {
+//     use alloc::vec::Vec;
+//     
+//     let mut buffer: Vec<u8> = alloc::vec![0u8; BUFFER_SIZE];
+//     
+//     loop {
+//         match client.recv(&mut buffer) {
+//             Ok(len) if len > 0 => {
+//                 if let Some(cmd) = wsk::parse_command(&buffer[..len]) {
+//                     let response = process_command(&cmd);
+//                     let resp_data = wsk::serialize_response(&response);
+//                     let _ = client.send(&resp_data);
+//                 } else {
+//                     let error_resp = wsk::Response::error("Invalid command format");
+//                     let resp_data = wsk::serialize_response(&error_resp);
+//                     let _ = client.send(&resp_data);
+//                 }
+//             }
+//             Ok(_) => break,
+//             Err(_) => break,
+//         }
+//     }
+// }
 
-                match WskSocket::new(SocketType::Stream, Protocol::Tcp) {
-                    Ok(mut socket) => {
-                        log!(LogLevel::Info, "TCP socket created, connecting...");
-                        match socket.connect(SERVER_ADDR) {
-                            Ok(()) => {
-                                log!(LogLevel::Info, "TCP connected successfully!");
-                                unsafe { TCP_SOCKET = Some(socket); }
-                                let response = b"WSK_CONNECT_OK";
-                                let written = write_output_buffer(output_buf, response);
-                                complete_request(p_irp, STATUS_SUCCESS, written as u64);
-                                STATUS_SUCCESS
-                            }
-                            Err(e) => {
-                                log!(LogLevel::Error, "TCP connect failed: {:?}", e);
-                                let response = b"WSK_CONNECT_FAIL";
-                                let written = write_output_buffer(output_buf, response);
-                                complete_request(p_irp, STATUS_UNSUCCESSFUL, written as u64);
-                                STATUS_UNSUCCESSFUL
-                            }
-                        }
-                    }
-                    Err(e) => {
-                        log!(LogLevel::Error, "TCP socket creation failed: {:?}", e);
-                        let response = b"WSK_SOCKET_FAIL";
-                        let written = write_output_buffer(output_buf, response);
-                        complete_request(p_irp, STATUS_UNSUCCESSFUL, written as u64);
-                        STATUS_UNSUCCESSFUL
-                    }
-                }
-            }
-            IOCTL_JSON_COMMAND => {
-                if let Some(data) = read_input_buffer(input_buf, input_len) {
-                    log!(LogLevel::Info, "IOCTL_JSON_COMMAND: {} bytes", data.len());
+// fn process_command(cmd: &wsk::Command) -> wsk::Response {
+//     match cmd.action.as_str() {
+//         "ping" => wsk::Response::ok("pong"),
+//         "status" => wsk::Response::ok("running"),
+//         _ => wsk::Response::error("Unknown command")
+//     }
+// }
 
-                    if let Some(cmd) = parse_command(data) {
-                        let resp = handle_command(&cmd);
-                        let json_bytes = serialize_response(&resp);
-                        log!(LogLevel::Info, "Response: {} bytes", json_bytes.len());
-                        let written = write_output_buffer(output_buf, &json_bytes);
-                        complete_request(p_irp, STATUS_SUCCESS, written as u64);
-                        STATUS_SUCCESS
-                    } else {
-                        log!(LogLevel::Error, "Failed to parse JSON command");
-                        let resp = Response::error("Invalid JSON");
-                        let json_bytes = serialize_response(&resp);
-                        let written = write_output_buffer(output_buf, &json_bytes);
-                        complete_request(p_irp, STATUS_UNSUCCESSFUL, written as u64);
-                        STATUS_UNSUCCESSFUL
-                    }
-                } else {
-                    complete_request(p_irp, STATUS_UNSUCCESSFUL, 0);
-                    STATUS_UNSUCCESSFUL
-                }
-            }
-            _ => {
-                log!(LogLevel::Warning, "Unknown IOCTL: {:#x}", control_code);
-                complete_request(p_irp, STATUS_UNSUCCESSFUL, 0);
-                STATUS_UNSUCCESSFUL
-            }
-        };
+// fn start_server_thread() -> Result<(), NTSTATUS> {
+//     unsafe {
+//         let mut thread_handle: HANDLE = core::ptr::null_mut();
+//         
+//         let status = PsCreateSystemThread(
+//             &mut thread_handle,
+//             0,
+//             core::ptr::null::<OBJECT_ATTRIBUTES>() as POBJECT_ATTRIBUTES,
+//             core::ptr::null_mut(),
+//             core::ptr::null_mut(),
+//             Some(server_thread_entry),
+//             core::ptr::null_mut(),
+//         );
+//         
+//         if status != STATUS_SUCCESS {
+//             return Err(status);
+//         }
+//         
+//         SERVER_THREAD_HANDLE = thread_handle;
+//         Ok(())
+//     }
+// }
 
-        return status;
+pub unsafe extern "C" fn driver_unload(_driver: PDRIVER_OBJECT) {
+    SERVER_RUNNING = false;
+    // TODO: 栈溢出问题待解决
+    // wsk::wsk_cleanup();
+    if !SERVER_THREAD_HANDLE.is_null() {
+        let _ = ZwClose(SERVER_THREAD_HANDLE);
     }
-
-    complete_request(p_irp, STATUS_UNSUCCESSFUL, 0);
-    STATUS_UNSUCCESSFUL
 }

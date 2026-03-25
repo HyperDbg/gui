@@ -1,16 +1,41 @@
+extern crate alloc;
+
+use alloc::string::String;
+use alloc::format;
 use core::ptr;
 use wdk_sys::{
-    NTSTATUS, STATUS_SUCCESS, STATUS_PENDING,
-    IO_STATUS_BLOCK,
+    NTSTATUS, STATUS_SUCCESS, STATUS_PENDING, PIRP, 
+    PRKEVENT, PVOID, ULONG, PMDL, PLARGE_INTEGER, LARGE_INTEGER, BOOLEAN,
+    KPROCESSOR_MODE,
+    _EVENT_TYPE, _KWAIT_REASON, _LOCK_OPERATION,
+    ntddk::{
+        IoAllocateIrp, IoFreeIrp, IoAllocateMdl, IoFreeMdl,
+        KeInitializeEvent, KeSetEvent, KeWaitForSingleObject,
+        MmProbeAndLockPages, MmUnlockPages,
+    },
 };
-
-use crate::{SocketError, SocketType, Protocol, SocketAddr};
-use crate::buffer::Buffer;
+use crate::SocketAddr;
 
 #[repr(C)]
-struct WSK_PROVIDER_DISPATCH {
+#[allow(non_snake_case)]
+struct ClientDispatch {
+    Version: u16,
+    Reserved: u16,
+    WskClientEvent: Option<unsafe extern "system" fn(*mut u8, u32, *const u8, u32) -> NTSTATUS>,
+}
+
+#[repr(C)]
+#[allow(non_snake_case)]
+struct ClientNpi {
+    ClientContext: *mut u8,
+    Dispatch: *const ClientDispatch,
+}
+
+#[repr(C)]
+#[allow(non_snake_case)]
+struct ProviderDispatch {
     WskSocket: usize,
-    WskSocketPair: usize,
+    WskSocketConnect: usize,
     WskCloseSocket: usize,
     WskBind: usize,
     WskListen: usize,
@@ -25,470 +50,611 @@ struct WSK_PROVIDER_DISPATCH {
     WskControlSocket: usize,
 }
 
-static mut PROVIDER_DISPATCH: Option<&'static WSK_PROVIDER_DISPATCH> = None;
-static mut PROVIDER_CONTEXT: Option<*mut u8> = None;
-static mut WSK_READY: bool = false;
+#[repr(C)]
+#[allow(non_snake_case)]
+#[derive(Clone, Copy)]
+struct ProviderNpi {
+    Client: *mut u8,
+    Dispatch: *const ProviderDispatch,
+}
 
-#[no_mangle]
-unsafe extern "system" fn wsk_attach_callback(
-    _ClientContext: *mut u8,
-    ProviderNpi: *mut u8,
+#[repr(C)]
+#[allow(non_snake_case)]
+struct Registration {
+    ReservedRegistrationState: u64,
+    ReservedRegistrationContext: *mut u8,
+    ReservedRegistrationLock: usize,
+}
+
+#[repr(C)]
+#[allow(non_snake_case)]
+struct Socket {
+    Dispatch: *const u8,
+}
+
+#[repr(C)]
+#[allow(non_snake_case)]
+struct Buffer {
+    Mdl: PMDL,
+    Offset: u64,
+    Length: u64,
+}
+
+const WSK_INFINITE_WAIT: usize = !0;
+const KERNEL_MODE: KPROCESSOR_MODE = 0;
+
+const AF_INET: u16 = 2;
+const SOCK_STREAM: u16 = 1;
+const IPPROTO_TCP: u32 = 6;
+
+const SL_INVOKE_ON_SUCCESS: u8 = 0x20;
+const SL_INVOKE_ON_ERROR: u8 = 0x40;
+const SL_INVOKE_ON_CANCEL: u8 = 0x80;
+
+extern "system" {
+    fn WskRegister(
+        WskClientNpi: *const ClientNpi,
+        WskRegistration: *mut Registration,
+    ) -> NTSTATUS;
+
+    fn WskCaptureProviderNPI(
+        WskRegistration: *mut Registration,
+        WaitTimeout: usize,
+        WskProviderNpi: *mut ProviderNpi,
+    ) -> NTSTATUS;
+
+    fn WskReleaseProviderNPI(
+        WskRegistration: *mut Registration,
+    );
+
+    fn WskDeregister(
+        WskRegistration: *mut Registration,
+    );
+}
+
+static mut WSK_REGISTRATION: Registration = Registration {
+    ReservedRegistrationState: 0,
+    ReservedRegistrationContext: ptr::null_mut(),
+    ReservedRegistrationLock: 0,
+};
+
+static mut WSK_PROVIDER: Option<ProviderNpi> = None;
+static mut WSK_CLIENT_DISPATCH: ClientDispatch = ClientDispatch {
+    Version: 0x0100,
+    Reserved: 0,
+    WskClientEvent: None,
+};
+
+static mut WSK_INITIALIZED: bool = false;
+
+unsafe extern "system" fn wsk_completion_routine(
+    _device: PVOID,
+    _irp: PIRP,
+    context: PVOID,
 ) -> NTSTATUS {
-    if ProviderNpi.is_null() {
-        return STATUS_SUCCESS;
+    if !context.is_null() {
+        KeSetEvent(context as PRKEVENT, 0, false as BOOLEAN);
     }
-
-    #[repr(C)]
-    struct WskProviderNpi {
-        Dispatch: *const WSK_PROVIDER_DISPATCH,
-        Context: *mut u8,
-    }
-
-    let npi = &*(ProviderNpi as *const WskProviderNpi);
-
-    if !npi.Dispatch.is_null() {
-        PROVIDER_DISPATCH = Some(&*npi.Dispatch);
-        PROVIDER_CONTEXT = Some(npi.Context);
-        WSK_READY = true;
-    }
-
-    STATUS_SUCCESS
+    0x00000103
 }
 
-#[no_mangle]
-unsafe extern "system" fn wsk_detach_callback(_ProviderContext: *mut u8) {
-    PROVIDER_DISPATCH = None;
-    PROVIDER_CONTEXT = None;
-    WSK_READY = false;
+struct Context {
+    event: [u8; 32],
+    irp: PIRP,
 }
 
-pub fn wsk_register_client() {
-    extern "system" {
-        fn NmrRegister(
-            ClientCharacteristics: *const NPI_CLIENT_CHARACTERISTICS,
-            ProviderId: *const u8,
-            ClientRegistration: *mut u8,
-        ) -> NTSTATUS;
+impl Context {
+    fn new() -> Result<Self, SocketError> {
+        unsafe {
+            let irp = IoAllocateIrp(1, false as BOOLEAN);
+            if irp.is_null() {
+                return Err(SocketError::IrpAllocationFailed);
+            }
+
+            let mut ctx = Context {
+                event: [0u8; 32],
+                irp,
+            };
+
+            KeInitializeEvent(ctx.event.as_mut_ptr() as PRKEVENT, _EVENT_TYPE::SynchronizationEvent, false as BOOLEAN);
+            
+            io_set_completion_routine(
+                ctx.irp,
+                Some(wsk_completion_routine),
+                ctx.event.as_mut_ptr() as PVOID,
+                true,
+                true,
+                true,
+            );
+
+            Ok(ctx)
+        }
     }
 
-    #[repr(C)]
-    struct NPI_CLIENT_CHARACTERISTICS {
-        Version: u32,
-        Length: u32,
-        ClientAttachCallback: Option<unsafe extern "system" fn(*mut u8, *mut u8) -> NTSTATUS>,
-        ClientDetachCallback: Option<unsafe extern "system" fn(*mut u8)>,
-        AddClientContext: *mut u8,
+    fn wait_for_completion(&mut self) -> NTSTATUS {
+        unsafe {
+            KeWaitForSingleObject(
+                self.event.as_mut_ptr() as PVOID,
+                _KWAIT_REASON::Executive,
+                KERNEL_MODE,
+                false as BOOLEAN,
+                ptr::null::<LARGE_INTEGER>() as PLARGE_INTEGER,
+            );
+
+            (*self.irp).IoStatus.__bindgen_anon_1.Status
+        }
     }
 
-    let client_chars = NPI_CLIENT_CHARACTERISTICS {
-        Version: 0,
-        Length: 0,
-        ClientAttachCallback: Some(wsk_attach_callback),
-        ClientDetachCallback: Some(wsk_detach_callback),
-        AddClientContext: core::ptr::null_mut(),
-    };
-
-    #[repr(C)]
-    struct WSK_REGISTRATION {
-        Node: [u8; 16],
-        Reserved: [u64; 8],
+    fn get_information(&self) -> usize {
+        unsafe { (*self.irp).IoStatus.Information as usize }
     }
 
-    let wsk_provider_id: &[u8; 16] = &[
-        0xC2, 0xBA, 0x5C, 0x6B, 0x8A, 0xE5, 0x4D, 0x4B,
-        0xB4, 0x3C, 0x17, 0xE7, 0xCD, 0x4F, 0x93, 0x22,
-    ];
+    fn free(self) {
+        unsafe {
+            if !self.irp.is_null() {
+                IoFreeIrp(self.irp);
+            }
+        }
+    }
+}
 
-    let mut registration: WSK_REGISTRATION = unsafe { core::mem::zeroed() };
+unsafe fn io_set_completion_routine(
+    irp: PIRP,
+    routine: Option<unsafe extern "system" fn(PVOID, PIRP, PVOID) -> NTSTATUS>,
+    context: PVOID,
+    invoke_on_success: bool,
+    invoke_on_error: bool,
+    invoke_on_cancel: bool,
+) {
+    let irp_ptr = irp as *mut u8;
+    
+    let stack_offset = 0xb8usize;
+    let stack = irp_ptr.add(stack_offset) as *mut IoStackLocation;
+    
+    (*stack).CompletionRoutine = routine;
+    (*stack).Context = context;
+    
+    let mut control: u8 = 0;
+    if invoke_on_success { control |= SL_INVOKE_ON_SUCCESS; }
+    if invoke_on_error { control |= SL_INVOKE_ON_ERROR; }
+    if invoke_on_cancel { control |= SL_INVOKE_ON_CANCEL; }
+    (*stack).Control = control;
+}
 
+#[repr(C)]
+struct IoStackLocation {
+    MajorFunction: u8,
+    MinorFunction: u8,
+    Flags: u8,
+    Control: u8,
+    _reserved: [u8; 56],
+    CompletionRoutine: Option<unsafe extern "system" fn(PVOID, PIRP, PVOID) -> NTSTATUS>,
+    Context: PVOID,
+}
+
+pub fn wsk_init() -> Result<(), &'static str> {
     unsafe {
-        NmrRegister(
-            &client_chars,
-            wsk_provider_id.as_ptr(),
-            &mut registration as *mut _ as *mut u8,
-        );
-    }
-}
-
-fn ensure_wsk_ready() -> Result<(), SocketError> {
-    if unsafe { WSK_READY } {
-        return Ok(());
-    }
-
-    Ok(())
-}
-
-pub struct WskSocket {
-    socket: *mut u8,
-    socket_type: SocketType,
-    protocol: Protocol,
-    connected: bool,
-    bound: bool,
-    recv_buffer: Buffer,
-    send_buffer: Buffer,
-}
-
-unsafe impl Send for WskSocket {}
-unsafe impl Sync for WskSocket {}
-
-impl WskSocket {
-    pub fn new(socket_type: SocketType, protocol: Protocol) -> Result<Self, SocketError> {
-        ensure_wsk_ready()?;
-
-        if unsafe { !WSK_READY || PROVIDER_DISPATCH.is_none() } {
-            return Err(SocketError::NotConnected);
-        }
-
-        let dispatch = unsafe { PROVIDER_DISPATCH.unwrap() };
-        let context = unsafe { PROVIDER_CONTEXT.unwrap_or(core::ptr::null_mut()) };
-
-        type WskSocketFn = unsafe extern "system" fn(
-            *mut u8, u16, u16, u16, u8, *mut u8, *mut *mut u8, *mut IO_STATUS_BLOCK
-        ) -> NTSTATUS;
-
-        let wsk_socket_fn: WskSocketFn = unsafe { core::mem::transmute(dispatch.WskSocket) };
-
-        let af: u16 = 2;
-        let socket_type_val: u16 = match socket_type {
-            SocketType::Stream => 1,
-            SocketType::Dgram => 2,
-            SocketType::Raw => 3,
-        };
-        let protocol_val: u16 = match protocol {
-            Protocol::Tcp => 6,
-            Protocol::Udp => 17,
-        };
-
-        let mut socket: *mut u8 = ptr::null_mut();
-        let mut io_status: IO_STATUS_BLOCK = unsafe { core::mem::zeroed() };
-
-        let status = unsafe {
-            wsk_socket_fn(
-                context,
-                af,
-                socket_type_val,
-                protocol_val,
-                0,
-                ptr::null_mut(),
-                &mut socket,
-                &mut io_status,
-            )
-        };
-
-        if status != STATUS_SUCCESS && status != STATUS_PENDING {
-            return Err(SocketError::SystemError(status as i32));
-        }
-
-        Ok(Self {
-            socket,
-            socket_type,
-            protocol,
-            connected: false,
-            bound: false,
-            recv_buffer: Buffer::new(4096),
-            send_buffer: Buffer::new(4096),
-        })
-    }
-
-    pub fn connect(&mut self, addr: SocketAddr) -> Result<(), SocketError> {
-        if self.connected {
+        if WSK_INITIALIZED {
             return Ok(());
         }
 
-        if self.socket.is_null() {
-            return Err(SocketError::NotConnected);
+        let wsk_client = ClientNpi {
+            ClientContext: ptr::null_mut(),
+            Dispatch: &raw const WSK_CLIENT_DISPATCH,
+        };
+
+        let status = WskRegister(&wsk_client, &raw mut WSK_REGISTRATION);
+        if status != STATUS_SUCCESS {
+            return Err("WskRegister failed");
         }
 
-        if let Some(dispatch) = unsafe { PROVIDER_DISPATCH } {
-            type WskConnectFn = unsafe extern "system" fn(
-                *mut u8, *const u8, u32, *mut IO_STATUS_BLOCK
-            ) -> NTSTATUS;
+        let mut provider = ProviderNpi {
+            Client: ptr::null_mut(),
+            Dispatch: ptr::null(),
+        };
 
-            let wsk_connect_fn: WskConnectFn = unsafe { core::mem::transmute(dispatch.WskConnect) };
+        let status = WskCaptureProviderNPI(&raw mut WSK_REGISTRATION, WSK_INFINITE_WAIT, &raw mut provider);
+        if status != STATUS_SUCCESS {
+            WskDeregister(&raw mut WSK_REGISTRATION);
+            return Err("WskCaptureProviderNPI failed");
+        }
 
+        WSK_PROVIDER = Some(provider);
+        WSK_INITIALIZED = true;
+
+        Ok(())
+    }
+}
+
+pub fn wsk_cleanup() {
+    unsafe {
+        if !WSK_INITIALIZED {
+            return;
+        }
+
+        let provider = WSK_PROVIDER;
+        if provider.is_some() {
+            WskReleaseProviderNPI(&raw mut WSK_REGISTRATION);
+            WSK_PROVIDER = None;
+        }
+
+        WskDeregister(&raw mut WSK_REGISTRATION);
+        WSK_INITIALIZED = false;
+    }
+}
+
+pub fn is_wsk_ready() -> bool {
+    unsafe { WSK_INITIALIZED }
+}
+
+pub struct Listener {
+    socket: *mut Socket,
+}
+
+impl Listener {
+    pub fn new() -> Self {
+        Listener {
+            socket: ptr::null_mut(),
+        }
+    }
+
+    pub fn create(&mut self) -> Result<(), SocketError> {
+        unsafe {
+            let provider = match WSK_PROVIDER {
+                Some(p) => p,
+                None => return Err(SocketError::NotInitialized),
+            };
+
+            let mut ctx = Context::new()?;
+            
+            let wsk_socket_fn = (*provider.Dispatch).WskSocket;
+            let wsk_socket: unsafe extern "system" fn(
+                PVOID, u16, u16, u32, u32, PVOID, PVOID, PVOID, PVOID, PVOID, PIRP
+            ) -> NTSTATUS = core::mem::transmute(wsk_socket_fn);
+
+            let status = wsk_socket(
+                provider.Client as PVOID,
+                AF_INET,
+                SOCK_STREAM,
+                IPPROTO_TCP,
+                0,
+                ptr::null_mut(),
+                ptr::null_mut(),
+                ptr::null_mut(),
+                ptr::null_mut(),
+                ptr::null_mut(),
+                ctx.irp,
+            );
+
+            let final_status = if status == STATUS_PENDING {
+                ctx.wait_for_completion()
+            } else {
+                status
+            };
+
+            if final_status == STATUS_SUCCESS {
+                self.socket = ctx.get_information() as *mut Socket;
+                ctx.free();
+                Ok(())
+            } else {
+                ctx.free();
+                Err(SocketError::SocketCreationFailed)
+            }
+        }
+    }
+
+    pub fn bind(&mut self, addr: &SocketAddr) -> Result<(), SocketError> {
+        unsafe {
+            if self.socket.is_null() {
+                return Err(SocketError::NotInitialized);
+            }
+
+            let mut ctx = Context::new()?;
+            
             let sockaddr = addr.to_sockaddr_in();
-            let mut io_status: IO_STATUS_BLOCK = unsafe { core::mem::zeroed() };
+            
+            let dispatch = (*self.socket).Dispatch as *const ConnectionDispatch;
+            let wsk_bind_fn = (*dispatch).WskBind;
+            let wsk_bind: unsafe extern "system" fn(*mut Socket, *const u8, ULONG, PIRP) -> NTSTATUS 
+                = core::mem::transmute(wsk_bind_fn);
 
-            let status = unsafe {
-                wsk_connect_fn(
-                    self.socket,
-                    sockaddr.as_ptr(),
-                    sockaddr.len() as u32,
-                    &mut io_status,
-                )
+            let status = wsk_bind(self.socket, sockaddr.as_ptr(), 0, ctx.irp);
+
+            let final_status = if status == STATUS_PENDING {
+                ctx.wait_for_completion()
+            } else {
+                status
             };
 
-            if status != STATUS_SUCCESS && status != STATUS_PENDING {
-                return Err(SocketError::SystemError(status as i32));
+            ctx.free();
+
+            if final_status == STATUS_SUCCESS {
+                Ok(())
+            } else {
+                Err(SocketError::BindFailed)
             }
         }
-
-        self.connected = true;
-        Ok(())
     }
 
-    pub fn send(&self, data: &[u8]) -> Result<usize, SocketError> {
-        if !self.connected {
-            return Err(SocketError::NotConnected);
-        }
-
-        if self.socket.is_null() {
-            return Err(SocketError::NotConnected);
-        }
-
-        if let Some(dispatch) = unsafe { PROVIDER_DISPATCH } {
-            type WskSendFn = unsafe extern "system" fn(
-                *mut u8, *mut u8, u32, u32, *mut IO_STATUS_BLOCK
-            ) -> NTSTATUS;
-
-            let wsk_send_fn: WskSendFn = unsafe { core::mem::transmute(dispatch.WskSend) };
-
-            let mut io_status: IO_STATUS_BLOCK = unsafe { core::mem::zeroed() };
-
-            let status = unsafe {
-                wsk_send_fn(
-                    self.socket,
-                    data.as_ptr() as *mut u8,
-                    data.len() as u32,
-                    0,
-                    &mut io_status,
-                )
-            };
-
-            if status != STATUS_SUCCESS && status != STATUS_PENDING {
-                return Err(SocketError::SystemError(status as i32));
-            }
-        }
-
-        Ok(data.len())
-    }
-
-    pub fn recv(&self, buf: &mut [u8]) -> Result<usize, SocketError> {
-        if !self.connected {
-            return Err(SocketError::NotConnected);
-        }
-
-        if self.socket.is_null() {
-            return Err(SocketError::NotConnected);
-        }
-
-        if let Some(dispatch) = unsafe { PROVIDER_DISPATCH } {
-            type WskReceiveFn = unsafe extern "system" fn(
-                *mut u8, *mut u8, u32, u32, *mut IO_STATUS_BLOCK
-            ) -> NTSTATUS;
-
-            let wsk_receive_fn: WskReceiveFn = unsafe { core::mem::transmute(dispatch.WskReceive) };
-
-            let mut io_status: IO_STATUS_BLOCK = unsafe { core::mem::zeroed() };
-
-            let status = unsafe {
-                wsk_receive_fn(
-                    self.socket,
-                    buf.as_mut_ptr(),
-                    buf.len() as u32,
-                    0,
-                    &mut io_status,
-                )
-            };
-
-            if status != STATUS_SUCCESS && status != STATUS_PENDING {
-                return Err(SocketError::SystemError(status as i32));
+    pub fn accept(&mut self) -> Result<StreamSocket, SocketError> {
+        unsafe {
+            if self.socket.is_null() {
+                return Err(SocketError::NotInitialized);
             }
 
-            let bytes_received = io_status.Information;
-            return Ok(bytes_received as usize);
-        }
+            let mut ctx = Context::new()?;
+            
+            let dispatch = (*self.socket).Dispatch as *const ListenDispatch;
+            let wsk_accept_fn = (*dispatch).WskAccept;
+            let wsk_accept: unsafe extern "system" fn(
+                *mut Socket, ULONG, PVOID, PVOID, PVOID, PVOID, PIRP
+            ) -> NTSTATUS = core::mem::transmute(wsk_accept_fn);
 
-        Ok(0)
-    }
+            let status = wsk_accept(
+                self.socket,
+                0,
+                ptr::null_mut(),
+                ptr::null_mut(),
+                ptr::null_mut(),
+                ptr::null_mut(),
+                ctx.irp,
+            );
 
-    pub fn bind(&mut self, addr: SocketAddr) -> Result<(), SocketError> {
-        if self.socket.is_null() {
-            return Err(SocketError::NotConnected);
-        }
-
-        if let Some(dispatch) = unsafe { PROVIDER_DISPATCH } {
-            type WskBindFn = unsafe extern "system" fn(
-                *mut u8, *const u8, u32, *mut IO_STATUS_BLOCK
-            ) -> NTSTATUS;
-
-            let wsk_bind_fn: WskBindFn = unsafe { core::mem::transmute(dispatch.WskBind) };
-
-            let sockaddr = addr.to_sockaddr_in();
-            let mut io_status: IO_STATUS_BLOCK = unsafe { core::mem::zeroed() };
-
-            let status = unsafe {
-                wsk_bind_fn(
-                    self.socket,
-                    sockaddr.as_ptr(),
-                    sockaddr.len() as u32,
-                    &mut io_status,
-                )
+            let final_status = if status == STATUS_PENDING {
+                ctx.wait_for_completion()
+            } else {
+                status
             };
 
-            if status != STATUS_SUCCESS && status != STATUS_PENDING {
-                return Err(SocketError::SystemError(status as i32));
+            if final_status == STATUS_SUCCESS {
+                let accepted_socket = ctx.get_information() as *mut Socket;
+                ctx.free();
+                Ok(StreamSocket { socket: accepted_socket })
+            } else {
+                ctx.free();
+                Err(SocketError::AcceptFailed)
             }
         }
-
-        self.bound = true;
-        Ok(())
-    }
-
-    pub fn listen(&mut self, backlog: u32) -> Result<(), SocketError> {
-        if self.socket_type != SocketType::Stream {
-            return Err(SocketError::InvalidAddress);
-        }
-
-        if self.socket.is_null() {
-            return Err(SocketError::NotConnected);
-        }
-
-        if let Some(dispatch) = unsafe { PROVIDER_DISPATCH } {
-            type WskListenFn = unsafe extern "system" fn(
-                *mut u8, u16, *mut IO_STATUS_BLOCK
-            ) -> NTSTATUS;
-
-            let wsk_listen_fn: WskListenFn = unsafe { core::mem::transmute(dispatch.WskListen) };
-
-            let mut io_status: IO_STATUS_BLOCK = unsafe { core::mem::zeroed() };
-
-            let status = unsafe {
-                wsk_listen_fn(
-                    self.socket,
-                    backlog as u16,
-                    &mut io_status,
-                )
-            };
-
-            if status != STATUS_SUCCESS && status != STATUS_PENDING {
-                return Err(SocketError::SystemError(status as i32));
-            }
-        }
-
-        Ok(())
-    }
-
-    pub fn accept(&mut self) -> Result<WskSocket, SocketError> {
-        if self.socket_type != SocketType::Stream {
-            return Err(SocketError::InvalidAddress);
-        }
-
-        if self.socket.is_null() {
-            return Err(SocketError::NotConnected);
-        }
-
-        if let Some(dispatch) = unsafe { PROVIDER_DISPATCH } {
-            type WskAcceptFn = unsafe extern "system" fn(
-                *mut u8, u32, *mut *mut u8, *mut IO_STATUS_BLOCK
-            ) -> NTSTATUS;
-
-            let wsk_accept_fn: WskAcceptFn = unsafe { core::mem::transmute(dispatch.WskAccept) };
-
-            let mut accepted_socket: *mut u8 = ptr::null_mut();
-            let mut io_status: IO_STATUS_BLOCK = unsafe { core::mem::zeroed() };
-
-            let status = unsafe {
-                wsk_accept_fn(
-                    self.socket,
-                    0,
-                    &mut accepted_socket,
-                    &mut io_status,
-                )
-            };
-
-            if status != STATUS_SUCCESS && status != STATUS_PENDING {
-                return Err(SocketError::SystemError(status as i32));
-            }
-
-            return Ok(WskSocket {
-                socket: accepted_socket,
-                socket_type: self.socket_type,
-                protocol: self.protocol,
-                connected: true,
-                bound: true,
-                recv_buffer: Buffer::new(4096),
-                send_buffer: Buffer::new(4096),
-            });
-        }
-
-        Err(SocketError::NotConnected)
     }
 
     pub fn close(&mut self) {
-        if !self.socket.is_null() {
-            if let Some(dispatch) = unsafe { PROVIDER_DISPATCH } {
-                type WskCloseSocketFn = unsafe extern "system" fn(
-                    *mut u8, *mut IO_STATUS_BLOCK
-                ) -> NTSTATUS;
+        if self.socket.is_null() {
+            return;
+        }
+        
+        unsafe {
+            let mut ctx = match Context::new() {
+                Ok(c) => c,
+                Err(_) => return,
+            };
 
-                let wsk_close_fn: WskCloseSocketFn = unsafe { core::mem::transmute(dispatch.WskCloseSocket) };
+            let dispatch = (*self.socket).Dispatch as *const BasicDispatch;
+            let wsk_close_fn = (*dispatch).WskCloseSocket;
+            let wsk_close: unsafe extern "system" fn(*mut Socket, PIRP) -> NTSTATUS 
+                = core::mem::transmute(wsk_close_fn);
 
-                let mut io_status: IO_STATUS_BLOCK = unsafe { core::mem::zeroed() };
+            let status = wsk_close(self.socket, ctx.irp);
 
-                unsafe {
-                    wsk_close_fn(self.socket, &mut io_status);
-                }
+            if status == STATUS_PENDING {
+                ctx.wait_for_completion();
             }
+
+            ctx.free();
             self.socket = ptr::null_mut();
         }
-        self.connected = false;
-        self.bound = false;
-    }
-
-    pub fn is_connected(&self) -> bool {
-        self.connected
-    }
-
-    pub fn get_socket_type(&self) -> SocketType {
-        self.socket_type
-    }
-
-    pub fn get_protocol(&self) -> Protocol {
-        self.protocol
-    }
-
-    pub fn set_recv_buffer_size(&mut self, size: usize) {
-        self.recv_buffer = Buffer::new(size);
-    }
-
-    pub fn set_send_buffer_size(&mut self, size: usize) {
-        self.send_buffer = Buffer::new(size);
-    }
-
-    pub fn available(&self) -> usize {
-        self.recv_buffer.len()
     }
 }
 
-impl Drop for WskSocket {
-    fn drop(&mut self) {
-        self.close();
-    }
+pub struct StreamSocket {
+    socket: *mut Socket,
 }
 
-pub struct WskListener {
-    socket: WskSocket,
-    backlog: u32,
-}
-
-impl WskListener {
-    pub fn new(addr: SocketAddr, backlog: u32) -> Result<Self, SocketError> {
-        let mut socket = WskSocket::new(SocketType::Stream, Protocol::Tcp)?;
-        socket.bind(addr)?;
-        socket.listen(backlog)?;
-
-        Ok(Self {
-            socket,
-            backlog,
-        })
+impl StreamSocket {
+    pub fn new() -> Self {
+        StreamSocket {
+            socket: ptr::null_mut(),
+        }
     }
 
-    pub fn accept(&mut self) -> Result<WskSocket, SocketError> {
-        self.socket.accept()
+    pub fn is_valid(&self) -> bool {
+        !self.socket.is_null()
+    }
+
+    pub fn recv(&mut self, buf: &mut [u8]) -> Result<usize, SocketError> {
+        unsafe {
+            if self.socket.is_null() {
+                return Err(SocketError::NotInitialized);
+            }
+
+            let mut ctx = Context::new()?;
+            
+            let mdl = IoAllocateMdl(
+                buf.as_mut_ptr() as PVOID, 
+                buf.len() as ULONG, 
+                false as BOOLEAN, 
+                false as BOOLEAN, 
+                ptr::null_mut()
+            );
+
+            if mdl.is_null() {
+                ctx.free();
+                return Err(SocketError::MdlAllocationFailed);
+            }
+
+            MmProbeAndLockPages(mdl, KERNEL_MODE, _LOCK_OPERATION::IoReadAccess);
+
+            let mut wsk_buf = Buffer {
+                Mdl: mdl,
+                Offset: 0,
+                Length: buf.len() as u64,
+            };
+
+            let dispatch = (*self.socket).Dispatch as *const ConnectionDispatch;
+            let wsk_recv_fn = (*dispatch).WskReceive;
+            let wsk_recv: unsafe extern "system" fn(*mut Socket, *mut Buffer, ULONG, PIRP) -> NTSTATUS 
+                = core::mem::transmute(wsk_recv_fn);
+
+            let status = wsk_recv(self.socket, &mut wsk_buf, 0, ctx.irp);
+
+            let final_status = if status == STATUS_PENDING {
+                ctx.wait_for_completion()
+            } else {
+                status
+            };
+
+            MmUnlockPages(mdl);
+            IoFreeMdl(mdl);
+            
+            let bytes_read = if final_status == STATUS_SUCCESS {
+                ctx.get_information()
+            } else {
+                0
+            };
+
+            ctx.free();
+
+            if final_status == STATUS_SUCCESS {
+                Ok(bytes_read)
+            } else {
+                Err(SocketError::RecvFailed)
+            }
+        }
+    }
+
+    pub fn send(&mut self, buf: &[u8]) -> Result<usize, SocketError> {
+        unsafe {
+            if self.socket.is_null() {
+                return Err(SocketError::NotInitialized);
+            }
+
+            let mut ctx = Context::new()?;
+            
+            let mdl = IoAllocateMdl(
+                buf.as_ptr() as PVOID, 
+                buf.len() as ULONG, 
+                false as BOOLEAN, 
+                false as BOOLEAN, 
+                ptr::null_mut()
+            );
+
+            if mdl.is_null() {
+                ctx.free();
+                return Err(SocketError::MdlAllocationFailed);
+            }
+
+            MmProbeAndLockPages(mdl, KERNEL_MODE, _LOCK_OPERATION::IoWriteAccess);
+
+            let mut wsk_buf = Buffer {
+                Mdl: mdl,
+                Offset: 0,
+                Length: buf.len() as u64,
+            };
+
+            let dispatch = (*self.socket).Dispatch as *const ConnectionDispatch;
+            let wsk_send_fn = (*dispatch).WskSend;
+            let wsk_send: unsafe extern "system" fn(*mut Socket, *mut Buffer, ULONG, PIRP) -> NTSTATUS 
+                = core::mem::transmute(wsk_send_fn);
+
+            let status = wsk_send(self.socket, &mut wsk_buf, 0, ctx.irp);
+
+            let final_status = if status == STATUS_PENDING {
+                ctx.wait_for_completion()
+            } else {
+                status
+            };
+
+            MmUnlockPages(mdl);
+            IoFreeMdl(mdl);
+            
+            let bytes_sent = if final_status == STATUS_SUCCESS {
+                ctx.get_information()
+            } else {
+                0
+            };
+
+            ctx.free();
+
+            if final_status == STATUS_SUCCESS {
+                Ok(bytes_sent)
+            } else {
+                Err(SocketError::SendFailed)
+            }
+        }
     }
 
     pub fn close(&mut self) {
-        self.socket.close();
+        if self.socket.is_null() {
+            return;
+        }
+        
+        unsafe {
+            let mut ctx = match Context::new() {
+                Ok(c) => c,
+                Err(_) => return,
+            };
+
+            let dispatch = (*self.socket).Dispatch as *const BasicDispatch;
+            let wsk_close_fn = (*dispatch).WskCloseSocket;
+            let wsk_close: unsafe extern "system" fn(*mut Socket, PIRP) -> NTSTATUS 
+                = core::mem::transmute(wsk_close_fn);
+
+            let status = wsk_close(self.socket, ctx.irp);
+
+            if status == STATUS_PENDING {
+                ctx.wait_for_completion();
+            }
+
+            ctx.free();
+            self.socket = ptr::null_mut();
+        }
     }
 }
+
+#[repr(C)]
+#[allow(non_snake_case)]
+struct BasicDispatch {
+    WskCloseSocket: usize,
+    WskControlSocket: usize,
+}
+
+#[repr(C)]
+#[allow(non_snake_case)]
+struct ConnectionDispatch {
+    WskCloseSocket: usize,
+    WskBind: usize,
+    WskConnect: usize,
+    WskGetLocalAddress: usize,
+    WskGetRemoteAddress: usize,
+    WskSend: usize,
+    WskReceive: usize,
+    WskDisconnect: usize,
+    WskRelease: usize,
+    WskControlSocket: usize,
+}
+
+#[repr(C)]
+#[allow(non_snake_case)]
+struct ListenDispatch {
+    WskCloseSocket: usize,
+    WskBind: usize,
+    WskAccept: usize,
+    WskInspect: usize,
+    WskControlSocket: usize,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum SocketError {
+    NotInitialized,
+    IrpAllocationFailed,
+    MdlAllocationFailed,
+    SocketCreationFailed,
+    BindFailed,
+    ListenFailed,
+    AcceptFailed,
+    SendFailed,
+    RecvFailed,
+    InvalidAddress,
+}
+
+pub type WskListener = Listener;
+pub type WskSocket = StreamSocket;

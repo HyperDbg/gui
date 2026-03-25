@@ -38,9 +38,14 @@ type Provider struct {
 	DriverPath   string         // 驱动程序文件的完整路径
 	DeviceName   string         // 设备名称，用于打开设备文件进行通信
 	ServiceName  string         // 服务名称，用于在 Windows 服务管理器中标识驱动服务
+	SkipDevice   bool           // 是否跳过创建设备对象（用于纯网络通信的驱动）
 }
 
 func New(driverPath, serviceName, deviceName string) Api {
+	return NewWithOptions(driverPath, serviceName, deviceName, false)
+}
+
+func NewWithOptions(driverPath, serviceName, deviceName string, skipDevice bool) Api {
 	if serviceName == "" {
 		panic("serviceName 不能为空")
 	}
@@ -62,6 +67,7 @@ func New(driverPath, serviceName, deviceName string) Api {
 		DeviceName:   deviceName,
 		ServiceName:  serviceName,
 		DriverPath:   absPath,
+		SkipDevice:   skipDevice,
 	}
 }
 
@@ -195,7 +201,7 @@ func (p *Provider) Start() {
 		mylog.Check(windows.CloseServiceHandle(schService))
 	}
 
-	if p.deviceHandle == syscall.Handle(windows.InvalidHandle) {
+	if !p.SkipDevice && p.deviceHandle == syscall.Handle(windows.InvalidHandle) {
 		deviceNamePtr := mylog.Check2(syscall.UTF16PtrFromString(p.DeviceName))
 		handle := mylog.Check2(windows.CreateFile(
 			deviceNamePtr,
