@@ -1,14 +1,851 @@
- BUGCHECK_CODE:  7e
+ ExtensionGallery settings after reading 'SOFTWARE\Microsoft\Debug Engine' registry:
+ExtensionGallery ExtensionRepository: Implicit
 
-BUGCHECK_P1: ffffffff80000003
+************* Path validation summary **************
+Response                         Time (ms)     Location
+OK                                             D:\ux\examples\hypedbg\rust-driver\examples\netdemo\src
 
-BUGCHECK_P2: fffff80113f452b3
+************* Path validation summary **************
+Response                         Time (ms)     Location
+OK                                             D:\ux\examples\hypedbg\rust-driver\examples\netdemo
 
-BUGCHECK_P3: ffffbb03b45e5f58
+************* Preparing the environment for Debugger Extensions Gallery repositories **************
+   ExtensionRepository : Implicit
+   UseExperimentalFeatureForNugetShare : true
+   AllowNugetExeUpdate : true
+   NonInteractiveNuget : true
+   AllowNugetMSCredentialProviderInstall : true
+   AllowParallelInitializationOfLocalRepositories : true
+   EnableRedirectToChakraJsProvider : false
 
-BUGCHECK_P4: ffffbb03b45e5790
+   -- Configuring repositories
+      ----> Repository : LocalInstalled, Enabled: true
+      ----> Repository : UserExtensions, Enabled: true
 
-FILE_IN_CAB:  032626-4296-01.dmp
+>>>>>>>>>>>>> Preparing the environment for Debugger Extensions Gallery repositories completed, duration 0.000 seconds
+
+************* Waiting for Debugger Extensions Gallery to Initialize **************
+
+>>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.062 seconds
+   ----> Repository : UserExtensions, Enabled: true, Packages count: 0
+   ----> Repository : LocalInstalled, Enabled: true, Packages count: 46
+
+Microsoft (R) Windows Debugger Version 10.0.29507.1001 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+
+Loading Dump File [C:\Windows\Minidump\032626-3765-01.dmp]
+Mini Kernel Dump File: Only registers and stack trace are available
+
+
+************* Path validation summary **************
+Response                         Time (ms)     Location
+OK                                             D:\ux\examples\hypedbg\rust-driver\examples\netdemo
+Symbol search path is: D:\ux\examples\hypedbg\rust-driver\examples\netdemo
+Executable search path is: 
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_EPROCESS                                  ***
+***                                                                   ***
+*************************************************************************
+Windows 10 Kernel Version 19041 MP (8 procs) Free x64
+Product: WinNt, suite: TerminalServer SingleUserTS
+Kernel base = 0xfffff806`5a200000 PsLoadedModuleList = 0xfffff806`5ae2a730
+Debug session time: Thu Mar 26 02:39:28.614 2026 (UTC + 8:00)
+System Uptime: 0 days 0:08:29.245
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_EPROCESS                                  ***
+***                                                                   ***
+*************************************************************************
+Loading Kernel Symbols
+...............................................................
+................................................................
+..........................................................
+Loading User Symbols
+
+Loading unloaded module list
+..........
+
+************* Symbol Loading Error Summary **************
+Module name            Error
+ntkrnlmp               The system cannot find the file specified
+
+You can troubleshoot most symbol related issues by turning on symbol loading diagnostics (!sym noisy) and repeating the command that caused symbols to be loaded.
+You should also verify that your symbol search path (.sympath) is correct.
+For analysis of this file, run !analyze -v
+nt!KeBugCheckEx:
+fffff806`5a5fd6c0 48894c2408      mov     qword ptr [rsp+8],rcx ss:0018:ffff8a00`29f96f50=00000000000000fc
+4: kd> !analyze -v
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_EPROCESS                                  ***
+***                                                                   ***
+*************************************************************************
+Loading Kernel Symbols
+...............................................................
+................................................................
+..........................................................
+Loading User Symbols
+
+Loading unloaded module list
+..........
+
+************* Symbol Loading Error Summary **************
+Module name            Error
+ntkrnlmp               The system cannot find the file specified
+
+You can troubleshoot most symbol related issues by turning on symbol loading diagnostics (!sym noisy) and repeating the command that caused symbols to be loaded.
+You should also verify that your symbol search path (.sympath) is correct.
+*******************************************************************************
+*                                                                             *
+*                        Bugcheck Analysis                                    *
+*                                                                             *
+*******************************************************************************
+
+ATTEMPTED_EXECUTE_OF_NOEXECUTE_MEMORY (fc)
+An attempt was made to execute non-executable memory.  The guilty driver
+is on the stack trace (and is typically the current instruction pointer).
+When possible, the guilty driver's name is printed on
+the BugCheck screen and saved in KiBugCheckDriver.
+Arguments:
+Arg1: fffff8067083f468, Virtual address for the attempted execute.
+Arg2: 8900000481545121, PTE contents.
+Arg3: ffff8a0029f97230, (reserved)
+Arg4: 0000000000000002, (reserved)
+
+Debugging Details:
+------------------
+
+*** WARNING: Unable to verify timestamp for afd.sys
+***** Kernel symbols are WRONG. Please fix symbols to do analysis.
+
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KTHREAD                                   ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_IMAGE_DOS_HEADER                          ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_IMAGE_DOS_HEADER                          ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_IMAGE_DOS_HEADER                          ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_IMAGE_DOS_HEADER                          ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_IMAGE_DOS_HEADER                          ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_IMAGE_DOS_HEADER                          ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_IMAGE_DOS_HEADER                          ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_IMAGE_DOS_HEADER                          ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_IMAGE_DOS_HEADER                          ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_IMAGE_DOS_HEADER                          ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KPRCB                                     ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!KPRCB                                      ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KPRCB                                     ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!KPRCB                                      ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KPRCB                                     ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_EPROCESS                                  ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KPRCB                                     ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KPRCB                                     ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KPRCB                                     ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KPRCB                                     ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KPRCB                                     ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KTHREAD                                   ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KPRCB                                     ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_KPRCB                                     ***
+***                                                                   ***
+*************************************************************************
+
+KEY_VALUES_STRING: 1
+
+    Key  : Analysis.CPU.mSec
+    Value: 234
+
+    Key  : Analysis.Elapsed.mSec
+    Value: 281
+
+    Key  : Analysis.IO.Other.Mb
+    Value: 0
+
+    Key  : Analysis.IO.Read.Mb
+    Value: 1
+
+    Key  : Analysis.IO.Write.Mb
+    Value: 0
+
+    Key  : Analysis.Init.CPU.mSec
+    Value: 765
+
+    Key  : Analysis.Init.Elapsed.mSec
+    Value: 3836
+
+    Key  : Analysis.Memory.CommitPeak.Mb
+    Value: 54
+
+    Key  : Analysis.Version.DbgEng
+    Value: 10.0.29507.1001
+
+    Key  : Analysis.Version.Description
+    Value: 10.2511.5.1 amd64fre
+
+    Key  : Analysis.Version.Ext
+    Value: 1.2511.5.1
+
+    Key  : Bugcheck.Code.LegacyAPI
+    Value: 0xfc
+
+    Key  : Bugcheck.Code.TargetModel
+    Value: 0xfc
+
+    Key  : Dump.Attributes.AsUlong
+    Value: 0x8
+
+    Key  : Dump.Attributes.KernelGeneratedTriageDump
+    Value: 1
+
+    Key  : Failure.Bucket
+    Value: WRONG_SYMBOLS_X64_10.0.19041.3757_(WinBuild.160101.0800)_TIMESTAMP_331108-115949_781B6FB5_nt_wrong_symbols!781B6FB51046000
+
+    Key  : Failure.Hash
+    Value: {3048acc5-43ef-b7a9-1ce3-337c1b2b8b52}
+
+    Key  : WER.System.BIOSRevision
+    Value: 1.35.0.0
+
+
+BUGCHECK_CODE:  fc
+
+BUGCHECK_P1: fffff8067083f468
+
+BUGCHECK_P2: 8900000481545121
+
+BUGCHECK_P3: ffff8a0029f97230
+
+BUGCHECK_P4: 2
+
+FILE_IN_CAB:  032626-3765-01.dmp
 
 ADDITIONAL_DEBUG_TEXT:  
 You can run '.symfix; .reload' to try to fix the symbol path and load symbols.
@@ -17,32 +854,12 @@ WRONG_SYMBOLS_TIMESTAMP: 781b6fb5
 
 WRONG_SYMBOLS_SIZE: 1046000
 
-FAULTING_MODULE: fffff80113c00000 nt
+FAULTING_MODULE: fffff8065a200000 nt
 
 DUMP_FILE_ATTRIBUTES: 0x8
   Kernel Generated Triage Dump
 
-FAULTING_THREAD:  ffffa98868aae040
-
-EXCEPTION_RECORD:  ffffbb03b45e5f58 -- (.exr 0xffffbb03b45e5f58)
-ExceptionAddress: fffff80113f452b3 (nt!IoIsSystemThread+0x0000000000000103)
-   ExceptionCode: 80000003 (Break instruction exception)
-  ExceptionFlags: 00000010
-NumberParameters: 1
-   Parameter[0]: 0000000000000000
-
-CONTEXT:  ffffbb03b45e5790 -- (.cxr 0xffffbb03b45e5790)
-rax=ffffbb03b45e61b8 rbx=ffffbb03b45e73b8 rcx=0000000000000102
-rdx=ffffbb03b45e73b8 rsi=ffffbb03b45e69b0 rdi=0000000000000102
-rip=fffff80113f452b3 rsp=ffffbb03b45e6190 rbp=ffffbb03b45e67a0
- r8=ffffbb03b45e69b0  r9=ffffbb03b45e67f0 r10=ffffbb03b45e7178
-r11=0000000000000000 r12=ffffbb03b45e7510 r13=ffffbb03b45e7178
-r14=ffffbb03b45e67f0 r15=ffffbb03b45e7178
-iopl=0         nv up ei pl nz na pe nc
-cs=0010  ss=0018  ds=002b  es=002b  fs=0053  gs=002b             efl=00040202
-nt!IoIsSystemThread+0x103:
-fffff801`13f452b3 cc              int     3
-Resetting default scope
+FAULTING_THREAD:  ffffd30b7c2f4040
 
 BLACKBOXNTFS: 1 (!blackboxntfs)
 
@@ -52,38 +869,32 @@ BLACKBOXWINLOGON: 1 (!blackboxwinlogon)
 
 CUSTOMER_CRASH_COUNT:  1
 
-EXCEPTION_STR:  WRONG_SYMBOLS
-
-IP_IN_PAGED_CODE: 
-nt!IoIsSystemThread+103
-fffff801`13f452b3 cc              int     3
-
 STACK_TEXT:  
-ffffbb03`b45e6190 fffff801`13fd010b     : fffff801`13f078e5 fffff801`13cd40b8 00000000`00000000 00000000`00000000 : nt!IoIsSystemThread+0x103
-ffffbb03`b45e61c0 fffff801`14007daf     : fffff801`13cd40b8 ffffbb03`b45e67a0 fffff801`13fd00d0 00000000`00000000 : nt!_C_specific_handler+0x3b
-ffffbb03`b45e6230 fffff801`13eab207     : ffffbb03`b45e67a0 00000000`00000000 ffffbb03`b45e7510 fffff801`13f078e5 : nt!_chkstk+0x55f
-ffffbb03`b45e6260 fffff801`13f394f6     : ffffbb03`b45e7178 ffffbb03`b45e6eb0 ffffbb03`b45e7178 ffffa988`c9d76310 : nt!KeTestAlertThread+0x14c7
-ffffbb03`b45e6980 fffff801`1401186c     : 00000000`00001000 ffffbb03`b45e7220 ffff8000`00000000 00000000`00000000 : nt!RtlTestBit+0x7e6
-ffffbb03`b45e7040 fffff801`1400d2bd     : 00000000`00000002 ffffa988`6d176600 00000000`00000000 00000000`00000000 : nt!setjmpex+0x8c2c
-ffffbb03`b45e7220 00000000`00000102     : fffff802`0cd47238 00000000`00000000 fffff801`183bd9a0 00000000`00000000 : nt!setjmpex+0x467d
-ffffbb03`b45e73b8 fffff802`0cd47238     : 00000000`00000000 fffff801`183bd9a0 00000000`00000000 fffff802`0cd4f0b0 : 0x102
-ffffbb03`b45e73c0 fffff802`0cd4145a     : 00000000`00000001 00000000`00000000 ffff9901`643c0180 fffff801`14005d82 : netdemo!_GSHandlerCheck_EH4+0x2c72
-ffffbb03`b45e74a0 fffff801`13f078e5     : ffffa988`68aae040 fffff802`0cd413fb 00000000`00000000 ffffa988`628ad5f8 : netdemo!DriverEntry+0x45a
-ffffbb03`b45e7510 fffff801`140062f8     : ffff9901`647a5180 ffffa988`68aae040 fffff801`13f07890 00000000`00000000 : nt!IoCancelIrp+0x105
-ffffbb03`b45e7560 00000000`00000000     : ffffbb03`b45e8000 ffffbb03`b45e1000 00000000`00000000 00000000`00000000 : nt!KeSynchronizeExecution+0x7658
+ffff8a00`29f96f48 fffff806`5a68852e     : 00000000`000000fc fffff806`7083f468 89000004`81545121 ffff8a00`29f97230 : nt!KeBugCheckEx
+ffff8a00`29f96f50 fffff806`5a463c26     : fffff806`7083f468 ffff8a00`29f97150 00000004`00000000 ffff8000`00000000 : nt!memset+0x7582e
+ffff8a00`29f96f90 fffff806`5a424660     : 504f470a`6578653d 00000000`00000011 ffff8a00`29f972b0 00000000`00000000 : nt!KeAcquireQueuedSpinLock+0xe56
+ffff8a00`29f97090 fffff806`5a60d1d8     : 00000000`00000000 fffff806`5af23640 00000000`00000000 fffff806`5a88c6f3 : nt!MmProbeAndLockPages+0x3d80
+ffff8a00`29f97230 fffff806`7083f468     : fffff806`aad11469 ffffffff`ffffffff 00000000`00000000 ffffd30b`7f54c050 : nt!setjmpex+0x4598
+ffff8a00`29f973c8 fffff806`aad11469     : ffffffff`ffffffff 00000000`00000000 ffffd30b`7f54c050 fffff806`5a414d5f : afd+0x1f468
+ffff8a00`29f973d0 fffff806`aad112e9     : 00000000`0000011d 00000000`00000000 00000000`00000000 fffff806`5a5aa1c3 : netdemo!DriverEntry+0x469
+ffff8a00`29f974c0 fffff806`5a5078e5     : ffffd30b`7c2f4040 fffff806`aad112a8 fffff806`aad13030 001fe4ff`bd9bbfff : netdemo!DriverEntry+0x2e9
+ffff8a00`29f97510 fffff806`5a6062f8     : ffffe581`2eba5180 ffffd30b`7c2f4040 fffff806`5a507890 00000000`00000246 : nt!IoCancelIrp+0x105
+ffff8a00`29f97560 00000000`00000000     : ffff8a00`29f98000 ffff8a00`29f91000 00000000`00000000 00000000`00000000 : nt!KeSynchronizeExecution+0x7658
 
 
-SYMBOL_NAME:  nt_wrong_symbols!781B6FB51046000
-
-STACK_COMMAND: .cxr 0xffffbb03b45e5790 ; kb
+STACK_COMMAND: .thread /r /p 0xffffd30b7c2f4040 ; kb
 
 EXCEPTION_CODE_STR:  781B6FB5
+
+EXCEPTION_STR:  WRONG_SYMBOLS
 
 PROCESS_NAME:  ntoskrnl.wrong.symbols.exe
 
 IMAGE_NAME:  ntoskrnl.wrong.symbols.exe
 
 MODULE_NAME: nt_wrong_symbols
+
+SYMBOL_NAME:  nt_wrong_symbols!781B6FB51046000
 
 FAILURE_BUCKET_ID:  WRONG_SYMBOLS_X64_10.0.19041.3757_(WinBuild.160101.0800)_TIMESTAMP_331108-115949_781B6FB5_nt_wrong_symbols!781B6FB51046000
 
@@ -96,28 +907,28 @@ FAILURE_ID_HASH:  {3048acc5-43ef-b7a9-1ce3-337c1b2b8b52}
 Followup:     MachineOwner
 ---------
 
-4: kd> .cxr 0xffffbb03b45e5790 ; kb
-rax=ffffbb03b45e61b8 rbx=ffffbb03b45e73b8 rcx=0000000000000102
-rdx=ffffbb03b45e73b8 rsi=ffffbb03b45e69b0 rdi=0000000000000102
-rip=fffff80113f452b3 rsp=ffffbb03b45e6190 rbp=ffffbb03b45e67a0
- r8=ffffbb03b45e69b0  r9=ffffbb03b45e67f0 r10=ffffbb03b45e7178
-r11=0000000000000000 r12=ffffbb03b45e7510 r13=ffffbb03b45e7178
-r14=ffffbb03b45e67f0 r15=ffffbb03b45e7178
-iopl=0         nv up ei pl nz na pe nc
-cs=0010  ss=0018  ds=002b  es=002b  fs=0053  gs=002b             efl=00040202
-nt!IoIsSystemThread+0x103:
-fffff801`13f452b3 cc              int     3
+4: kd> .thread /r /p 0xffffd30b7c2f4040 ; kb
+Implicit thread is now ffffd30b`7c2f4040
+Implicit process is now ffffd30b`68899080
+Loading User Symbols
+
+
+************* Symbol Loading Error Summary **************
+Module name            Error
+ntkrnlmp               The system cannot find the file specified
+afd                    The system cannot find the file specified
+
+You can troubleshoot most symbol related issues by turning on symbol loading diagnostics (!sym noisy) and repeating the command that caused symbols to be loaded.
+You should also verify that your symbol search path (.sympath) is correct.
   *** Stack trace for last set context - .thread/.cxr resets it
  # RetAddr               : Args to Child                                                           : Call Site
-00 fffff801`13fd010b     : fffff801`13f078e5 fffff801`13cd40b8 00000000`00000000 00000000`00000000 : nt!IoIsSystemThread+0x103
-01 fffff801`14007daf     : fffff801`13cd40b8 ffffbb03`b45e67a0 fffff801`13fd00d0 00000000`00000000 : nt!_C_specific_handler+0x3b
-02 fffff801`13eab207     : ffffbb03`b45e67a0 00000000`00000000 ffffbb03`b45e7510 fffff801`13f078e5 : nt!_chkstk+0x55f
-03 fffff801`13f394f6     : ffffbb03`b45e7178 ffffbb03`b45e6eb0 ffffbb03`b45e7178 ffffa988`c9d76310 : nt!KeTestAlertThread+0x14c7
-04 fffff801`1401186c     : 00000000`00001000 ffffbb03`b45e7220 ffff8000`00000000 00000000`00000000 : nt!RtlTestBit+0x7e6
-05 fffff801`1400d2bd     : 00000000`00000002 ffffa988`6d176600 00000000`00000000 00000000`00000000 : nt!setjmpex+0x8c2c
-06 00000000`00000102     : fffff802`0cd47238 00000000`00000000 fffff801`183bd9a0 00000000`00000000 : nt!setjmpex+0x467d
-07 fffff802`0cd47238     : 00000000`00000000 fffff801`183bd9a0 00000000`00000000 fffff802`0cd4f0b0 : 0x102
-08 fffff802`0cd4145a     : 00000000`00000001 00000000`00000000 ffff9901`643c0180 fffff801`14005d82 : netdemo!_GSHandlerCheck_EH4+0x2c72
-09 fffff801`13f078e5     : ffffa988`68aae040 fffff802`0cd413fb 00000000`00000000 ffffa988`628ad5f8 : netdemo!DriverEntry+0x45a
-0a fffff801`140062f8     : ffff9901`647a5180 ffffa988`68aae040 fffff801`13f07890 00000000`00000000 : nt!IoCancelIrp+0x105
-0b 00000000`00000000     : ffffbb03`b45e8000 ffffbb03`b45e1000 00000000`00000000 00000000`00000000 : nt!KeSynchronizeExecution+0x7658
+00 fffff806`5a68852e     : 00000000`000000fc fffff806`7083f468 89000004`81545121 ffff8a00`29f97230 : nt!KeBugCheckEx
+01 fffff806`5a463c26     : fffff806`7083f468 ffff8a00`29f97150 00000004`00000000 ffff8000`00000000 : nt!memset+0x7582e
+02 fffff806`5a424660     : 504f470a`6578653d 00000000`00000011 ffff8a00`29f972b0 00000000`00000000 : nt!KeAcquireQueuedSpinLock+0xe56
+03 fffff806`5a60d1d8     : 00000000`00000000 fffff806`5af23640 00000000`00000000 fffff806`5a88c6f3 : nt!MmProbeAndLockPages+0x3d80
+04 fffff806`7083f468     : fffff806`aad11469 ffffffff`ffffffff 00000000`00000000 ffffd30b`7f54c050 : nt!setjmpex+0x4598
+05 fffff806`aad11469     : ffffffff`ffffffff 00000000`00000000 ffffd30b`7f54c050 fffff806`5a414d5f : afd+0x1f468
+06 fffff806`aad112e9     : 00000000`0000011d 00000000`00000000 00000000`00000000 fffff806`5a5aa1c3 : netdemo!DriverEntry+0x469
+07 fffff806`5a5078e5     : ffffd30b`7c2f4040 fffff806`aad112a8 fffff806`aad13030 001fe4ff`bd9bbfff : netdemo!DriverEntry+0x2e9
+08 fffff806`5a6062f8     : ffffe581`2eba5180 ffffd30b`7c2f4040 fffff806`5a507890 00000000`00000246 : nt!IoCancelIrp+0x105
+09 00000000`00000000     : ffff8a00`29f98000 ffff8a00`29f91000 00000000`00000000 00000000`00000000 : nt!KeSynchronizeExecution+0x7658

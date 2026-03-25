@@ -4,29 +4,42 @@ use core::ptr;
 use wdk_sys::{
     NTSTATUS, STATUS_SUCCESS, STATUS_PENDING, STATUS_MORE_PROCESSING_REQUIRED, PIRP, 
     PRKEVENT, PVOID, ULONG, PMDL, PLARGE_INTEGER, LARGE_INTEGER, BOOLEAN,
-    KPROCESSOR_MODE, KEVENT, PIO_STACK_LOCATION, IRP, PDEVICE_OBJECT,
-    _EVENT_TYPE, _KWAIT_REASON, _LOCK_OPERATION,
+    KPROCESSOR_MODE, KEVENT, PIO_STACK_LOCATION, IRP, PDEVICE_OBJECT, SIZE_T,
+    _EVENT_TYPE, _KWAIT_REASON,
     SL_INVOKE_ON_SUCCESS, SL_INVOKE_ON_ERROR, SL_INVOKE_ON_CANCEL,
     ntddk::{
         IoAllocateIrp, IoFreeIrp, IoAllocateMdl, IoFreeMdl,
         KeInitializeEvent, KeSetEvent, KeWaitForSingleObject,
-        MmProbeAndLockPages, MmUnlockPages,
+        MmBuildMdlForNonPagedPool, IoReuseIrp,
     },
 };
-use crate::SocketAddr;
+use crate::SocketAddrV6;
+
+const AF_INET6: u16 = 23;
+const SOCK_STREAM: u16 = 1;
+const IPPROTO_TCP: u32 = 6;
+const IPPROTO_IPV6: u32 = 41;
+const IPV6_V6ONLY: u32 = 27;
+const WSK_SET_STATIC_EVENT_CALLBACKS: u32 = 7;
+const WSK_EVENT_ACCEPT: u32 = 0x00000080;
+const WSK_FLAG_LISTEN_SOCKET: u32 = 0x00000001;
+const KERNEL_MODE: KPROCESSOR_MODE = 0;
+const WSK_NO_WAIT: usize = 0;
+
+const POOL_TAG: u32 = 0x736B7377;
 
 #[repr(C)]
 #[allow(non_snake_case)]
 struct ClientDispatch {
     Version: u16,
     Reserved: u16,
-    WskClientEvent: Option<unsafe extern "system" fn(*mut u8, u32, *const u8, u32) -> NTSTATUS>,
+    WskClientEvent: Option<unsafe extern "system" fn(PVOID, ULONG, PVOID, SIZE_T) -> NTSTATUS>,
 }
 
 #[repr(C)]
 #[allow(non_snake_case)]
 struct ClientNpi {
-    ClientContext: *mut u8,
+    ClientContext: PVOID,
     Dispatch: *const ClientDispatch,
 }
 
@@ -46,6 +59,7 @@ struct ProviderDispatch {
     WskSend: usize,
     WskSendTo: usize,
     WskGetLocalAddress: usize,
+    WskControlClient: usize,
     WskControlSocket: usize,
 }
 
@@ -53,7 +67,7 @@ struct ProviderDispatch {
 #[allow(non_snake_case)]
 #[derive(Clone, Copy)]
 struct ProviderNpi {
-    Client: *mut u8,
+    Client: PVOID,
     Dispatch: *const ProviderDispatch,
 }
 
@@ -61,7 +75,7 @@ struct ProviderNpi {
 #[allow(non_snake_case)]
 struct Registration {
     ReservedRegistrationState: u64,
-    ReservedRegistrationContext: *mut u8,
+    ReservedRegistrationContext: PVOID,
     ReservedRegistrationLock: usize,
 }
 
@@ -75,16 +89,16 @@ struct Socket {
 #[allow(non_snake_case)]
 struct Buffer {
     Mdl: PMDL,
-    Offset: u64,
+    Offset: ULONG,
     Length: u64,
 }
 
-const WSK_NO_WAIT: usize = 0;
-const KERNEL_MODE: KPROCESSOR_MODE = 0;
-
-const AF_INET: u16 = 2;
-const SOCK_STREAM: u16 = 1;
-const IPPROTO_TCP: u32 = 6;
+#[repr(C)]
+#[allow(non_snake_case)]
+struct EventCallbackControl {
+    NpiId: *const core::ffi::c_void,
+    EventMask: ULONG,
+}
 
 extern "system" {
     fn WskRegister(
@@ -107,12 +121,7 @@ extern "system" {
     );
 }
 
-static mut WSK_REGISTRATION: Registration = Registration {
-    ReservedRegistrationState: 0,
-    ReservedRegistrationContext: ptr::null_mut(),
-    ReservedRegistrationLock: 0,
-};
-
+static mut WSK_REGISTRATION: Option<Registration> = None;
 static mut WSK_PROVIDER: Option<ProviderNpi> = None;
 static mut WSK_CLIENT_DISPATCH: ClientDispatch = ClientDispatch {
     Version: 0x0100,
@@ -122,23 +131,23 @@ static mut WSK_CLIENT_DISPATCH: ClientDispatch = ClientDispatch {
 
 static mut WSK_INITIALIZED: bool = false;
 
-unsafe extern "C" fn wsk_completion_routine(
+unsafe extern "C" fn sync_completion_routine(
     _device: PDEVICE_OBJECT,
     _irp: PIRP,
     context: PVOID,
 ) -> NTSTATUS {
     if !context.is_null() {
-        KeSetEvent(context as PRKEVENT, 0, false as BOOLEAN);
+        KeSetEvent(context as PRKEVENT, 2, false as BOOLEAN);
     }
     STATUS_MORE_PROCESSING_REQUIRED
 }
 
-struct Context {
+struct SyncContext {
     event: KEVENT,
     irp: PIRP,
 }
 
-impl Context {
+impl SyncContext {
     fn new() -> Result<Self, SocketError> {
         unsafe {
             let irp = IoAllocateIrp(1, false as BOOLEAN);
@@ -146,16 +155,20 @@ impl Context {
                 return Err(SocketError::IrpAllocationFailed);
             }
 
-            let mut ctx = Context {
+            let mut ctx = SyncContext {
                 event: core::mem::zeroed(),
                 irp,
             };
 
-            KeInitializeEvent(&raw mut ctx.event as PRKEVENT, _EVENT_TYPE::SynchronizationEvent, false as BOOLEAN);
+            KeInitializeEvent(
+                &raw mut ctx.event as PRKEVENT, 
+                _EVENT_TYPE::SynchronizationEvent, 
+                false as BOOLEAN
+            );
             
             io_set_completion_routine(
                 ctx.irp,
-                Some(wsk_completion_routine),
+                Some(sync_completion_routine),
                 &raw mut ctx.event as PVOID,
                 true,
                 true,
@@ -166,7 +179,7 @@ impl Context {
         }
     }
 
-    fn wait_for_completion(&mut self) -> NTSTATUS {
+    fn wait(&mut self) -> NTSTATUS {
         unsafe {
             KeWaitForSingleObject(
                 &raw mut self.event as PVOID,
@@ -175,13 +188,26 @@ impl Context {
                 false as BOOLEAN,
                 ptr::null::<LARGE_INTEGER>() as PLARGE_INTEGER,
             );
-
             (*self.irp).IoStatus.__bindgen_anon_1.Status
         }
     }
 
-    fn get_information(&self) -> usize {
+    fn get_info(&self) -> usize {
         unsafe { (*self.irp).IoStatus.Information as usize }
+    }
+
+    fn reuse(&mut self) {
+        unsafe {
+            IoReuseIrp(self.irp, STATUS_SUCCESS);
+            io_set_completion_routine(
+                self.irp,
+                Some(sync_completion_routine),
+                &raw mut self.event as PVOID,
+                true,
+                true,
+                true,
+            );
+        }
     }
 
     fn free(self) {
@@ -238,24 +264,32 @@ pub fn wsk_init() -> Result<(), &'static str> {
             return Ok(());
         }
 
+        let mut registration = core::mem::zeroed::<Registration>();
+        
         let wsk_client = ClientNpi {
             ClientContext: ptr::null_mut(),
             Dispatch: &raw const WSK_CLIENT_DISPATCH,
         };
 
-        let status = WskRegister(&wsk_client, &raw mut WSK_REGISTRATION);
+        let status = WskRegister(&wsk_client, &mut registration);
         if status != STATUS_SUCCESS {
             return Err("WskRegister failed");
         }
+        WSK_REGISTRATION = Some(registration);
 
         let mut provider = ProviderNpi {
             Client: ptr::null_mut(),
             Dispatch: ptr::null(),
         };
 
-        let status = WskCaptureProviderNPI(&raw mut WSK_REGISTRATION, WSK_NO_WAIT, &raw mut provider);
+        let status = WskCaptureProviderNPI(
+            WSK_REGISTRATION.as_mut().unwrap() as *mut Registration,
+            WSK_NO_WAIT, 
+            &mut provider
+        );
         if status != STATUS_SUCCESS {
-            WskDeregister(&raw mut WSK_REGISTRATION);
+            WskDeregister(WSK_REGISTRATION.as_mut().unwrap() as *mut Registration);
+            WSK_REGISTRATION = None;
             return Err("WskCaptureProviderNPI failed");
         }
 
@@ -273,13 +307,16 @@ pub fn wsk_cleanup() {
             return;
         }
 
-        let provider = WSK_PROVIDER;
-        if provider.is_some() {
-            WskReleaseProviderNPI(&raw mut WSK_REGISTRATION);
+        if WSK_PROVIDER.is_some() {
+            WskReleaseProviderNPI(WSK_REGISTRATION.as_mut().unwrap() as *mut Registration);
             WSK_PROVIDER = None;
         }
 
-        WskDeregister(&raw mut WSK_REGISTRATION);
+        if WSK_REGISTRATION.is_some() {
+            WskDeregister(WSK_REGISTRATION.as_mut().unwrap() as *mut Registration);
+            WSK_REGISTRATION = None;
+        }
+
         WSK_INITIALIZED = false;
     }
 }
@@ -291,6 +328,7 @@ pub fn is_wsk_ready() -> bool {
 
 pub struct Listener {
     socket: *mut Socket,
+    irp: PIRP,
 }
 
 impl Listener {
@@ -298,6 +336,7 @@ impl Listener {
     pub fn new() -> Self {
         Listener {
             socket: ptr::null_mut(),
+            irp: ptr::null_mut(),
         }
     }
 
@@ -309,7 +348,7 @@ impl Listener {
                 None => return Err(SocketError::NotInitialized),
             };
 
-            let mut ctx = Context::new()?;
+            let mut ctx = SyncContext::new()?;
             
             let wsk_socket_fn = (*provider.Dispatch).WskSocket;
             let wsk_socket: unsafe extern "system" fn(
@@ -317,11 +356,11 @@ impl Listener {
             ) -> NTSTATUS = core::mem::transmute(wsk_socket_fn);
 
             let status = wsk_socket(
-                provider.Client as PVOID,
-                AF_INET,
+                provider.Client,
+                AF_INET6,
                 SOCK_STREAM,
                 IPPROTO_TCP,
-                0,
+                WSK_FLAG_LISTEN_SOCKET,
                 ptr::null_mut(),
                 ptr::null_mut(),
                 ptr::null_mut(),
@@ -331,14 +370,15 @@ impl Listener {
             );
 
             let final_status = if status == STATUS_PENDING {
-                ctx.wait_for_completion()
+                ctx.wait()
             } else {
                 status
             };
 
             if final_status == STATUS_SUCCESS {
-                self.socket = ctx.get_information() as *mut Socket;
-                ctx.free();
+                self.socket = ctx.get_info() as *mut Socket;
+                self.irp = ctx.irp;
+                core::mem::forget(ctx);
                 Ok(())
             } else {
                 ctx.free();
@@ -348,25 +388,71 @@ impl Listener {
     }
 
     #[inline(never)]
-    pub fn bind(&mut self, addr: &SocketAddr) -> Result<(), SocketError> {
+    pub fn set_ipv6_only(&mut self, value: u32) -> Result<(), SocketError> {
         unsafe {
             if self.socket.is_null() {
                 return Err(SocketError::NotInitialized);
             }
 
-            let mut ctx = Context::new()?;
+            let mut ctx = SyncContext::new()?;
+            ctx.reuse();
+
+            let dispatch = (*self.socket).Dispatch as *const ListenDispatch;
+            let wsk_control_fn = (*dispatch).WskControlSocket;
+            let wsk_control: unsafe extern "system" fn(
+                *mut Socket, i32, u32, u32, SIZE_T, PVOID, SIZE_T, PVOID, SIZE_T, PIRP
+            ) -> NTSTATUS = core::mem::transmute(wsk_control_fn);
+
+            let status = wsk_control(
+                self.socket,
+                1,
+                IPV6_V6ONLY,
+                IPPROTO_IPV6,
+                core::mem::size_of::<u32>() as SIZE_T,
+                &value as *const u32 as PVOID,
+                0,
+                ptr::null_mut(),
+                0,
+                ctx.irp,
+            );
+
+            let final_status = if status == STATUS_PENDING {
+                ctx.wait()
+            } else {
+                status
+            };
+
+            ctx.free();
+
+            if final_status == STATUS_SUCCESS {
+                Ok(())
+            } else {
+                Err(SocketError::SetOptionFailed)
+            }
+        }
+    }
+
+    #[inline(never)]
+    pub fn bind(&mut self, addr: &SocketAddrV6) -> Result<(), SocketError> {
+        unsafe {
+            if self.socket.is_null() {
+                return Err(SocketError::NotInitialized);
+            }
+
+            let mut ctx = SyncContext::new()?;
+            ctx.reuse();
             
-            let sockaddr = addr.to_sockaddr_in();
+            let sockaddr = addr.to_sockaddr_in6();
             
-            let dispatch = (*self.socket).Dispatch as *const ConnectionDispatch;
+            let dispatch = (*self.socket).Dispatch as *const ListenDispatch;
             let wsk_bind_fn = (*dispatch).WskBind;
             let wsk_bind: unsafe extern "system" fn(*mut Socket, *const u8, ULONG, PIRP) -> NTSTATUS 
                 = core::mem::transmute(wsk_bind_fn);
 
-            let status = wsk_bind(self.socket, sockaddr.as_ptr(), 16, ctx.irp);
+            let status = wsk_bind(self.socket, sockaddr.as_ptr(), 28, ctx.irp);
 
             let final_status = if status == STATUS_PENDING {
-                ctx.wait_for_completion()
+                ctx.wait()
             } else {
                 status
             };
@@ -388,7 +474,7 @@ impl Listener {
                 return Err(SocketError::NotInitialized);
             }
 
-            let mut ctx = Context::new()?;
+            let mut ctx = SyncContext::new()?;
             
             let dispatch = (*self.socket).Dispatch as *const ListenDispatch;
             let wsk_accept_fn = (*dispatch).WskAccept;
@@ -407,13 +493,13 @@ impl Listener {
             );
 
             let final_status = if status == STATUS_PENDING {
-                ctx.wait_for_completion()
+                ctx.wait()
             } else {
                 status
             };
 
             if final_status == STATUS_SUCCESS {
-                let accepted_socket = ctx.get_information() as *mut Socket;
+                let accepted_socket = ctx.get_info() as *mut Socket;
                 ctx.free();
                 Ok(StreamSocket { socket: accepted_socket })
             } else {
@@ -430,7 +516,7 @@ impl Listener {
         }
         
         unsafe {
-            let mut ctx = match Context::new() {
+            let mut ctx = match SyncContext::new() {
                 Ok(c) => c,
                 Err(_) => return,
             };
@@ -443,11 +529,17 @@ impl Listener {
             let status = wsk_close(self.socket, ctx.irp);
 
             if status == STATUS_PENDING {
-                ctx.wait_for_completion();
+                ctx.wait();
             }
 
             ctx.free();
+            
+            if !self.irp.is_null() {
+                IoFreeIrp(self.irp);
+            }
+            
             self.socket = ptr::null_mut();
+            self.irp = ptr::null_mut();
         }
     }
 }
@@ -476,7 +568,7 @@ impl StreamSocket {
                 return Err(SocketError::NotInitialized);
             }
 
-            let mut ctx = Context::new()?;
+            let mut ctx = SyncContext::new()?;
             
             let mdl = IoAllocateMdl(
                 buf.as_mut_ptr() as PVOID, 
@@ -491,7 +583,7 @@ impl StreamSocket {
                 return Err(SocketError::MdlAllocationFailed);
             }
 
-            MmProbeAndLockPages(mdl, KERNEL_MODE, _LOCK_OPERATION::IoReadAccess);
+            MmBuildMdlForNonPagedPool(mdl);
 
             let mut wsk_buf = Buffer {
                 Mdl: mdl,
@@ -507,20 +599,18 @@ impl StreamSocket {
             let status = wsk_recv(self.socket, &mut wsk_buf, 0, ctx.irp);
 
             let final_status = if status == STATUS_PENDING {
-                ctx.wait_for_completion()
+                ctx.wait()
             } else {
                 status
             };
 
-            MmUnlockPages(mdl);
-            IoFreeMdl(mdl);
-            
             let bytes_read = if final_status == STATUS_SUCCESS {
-                ctx.get_information()
+                ctx.get_info()
             } else {
                 0
             };
 
+            IoFreeMdl(mdl);
             ctx.free();
 
             if final_status == STATUS_SUCCESS {
@@ -538,7 +628,7 @@ impl StreamSocket {
                 return Err(SocketError::NotInitialized);
             }
 
-            let mut ctx = Context::new()?;
+            let mut ctx = SyncContext::new()?;
             
             let mdl = IoAllocateMdl(
                 buf.as_ptr() as PVOID, 
@@ -553,7 +643,7 @@ impl StreamSocket {
                 return Err(SocketError::MdlAllocationFailed);
             }
 
-            MmProbeAndLockPages(mdl, KERNEL_MODE, _LOCK_OPERATION::IoWriteAccess);
+            MmBuildMdlForNonPagedPool(mdl);
 
             let mut wsk_buf = Buffer {
                 Mdl: mdl,
@@ -569,20 +659,18 @@ impl StreamSocket {
             let status = wsk_send(self.socket, &mut wsk_buf, 0, ctx.irp);
 
             let final_status = if status == STATUS_PENDING {
-                ctx.wait_for_completion()
+                ctx.wait()
             } else {
                 status
             };
 
-            MmUnlockPages(mdl);
-            IoFreeMdl(mdl);
-            
             let bytes_sent = if final_status == STATUS_SUCCESS {
-                ctx.get_information()
+                ctx.get_info()
             } else {
                 0
             };
 
+            IoFreeMdl(mdl);
             ctx.free();
 
             if final_status == STATUS_SUCCESS {
@@ -600,7 +688,7 @@ impl StreamSocket {
         }
         
         unsafe {
-            let mut ctx = match Context::new() {
+            let mut ctx = match SyncContext::new() {
                 Ok(c) => c,
                 Err(_) => return,
             };
@@ -613,7 +701,7 @@ impl StreamSocket {
             let status = wsk_close(self.socket, ctx.irp);
 
             if status == STATUS_PENDING {
-                ctx.wait_for_completion();
+                ctx.wait();
             }
 
             ctx.free();
@@ -665,6 +753,7 @@ pub enum SocketError {
     AcceptFailed,
     SendFailed,
     RecvFailed,
+    SetOptionFailed,
     InvalidAddress,
 }
 

@@ -83,8 +83,10 @@ if ($LASTEXITCODE -eq 0) {
     
     $workspaceTarget = "d:\ux\examples\hypedbg\rust-driver\target\x86_64-pc-windows-msvc\release"
     $dllPath = "$workspaceTarget\netdemo.dll"
+    $pdbPath = "$workspaceTarget\netdemo.pdb"
     $sysPath = "$workspaceTarget\netdemo.sys"
     $localSysPath = "$SCRIPT_DIR\netdemo.sys"
+    $localPdbPath = "$SCRIPT_DIR\netdemo.pdb"
     
     if (Test-Path $dllPath) {
         if (Test-Path $sysPath) {
@@ -98,6 +100,14 @@ if ($LASTEXITCODE -eq 0) {
         }
         Copy-Item -Path $sysPath -Destination $localSysPath -Force
         Write-Host "复制 netdemo.sys 到本地目录" -ForegroundColor Yellow
+        
+        if (Test-Path $pdbPath) {
+            if (Test-Path $localPdbPath) {
+                Remove-Item -Path $localPdbPath -Force -ErrorAction SilentlyContinue
+            }
+            Copy-Item -Path $pdbPath -Destination $localPdbPath -Force
+            Write-Host "复制 netdemo.pdb 到本地目录" -ForegroundColor Yellow
+        }
     }
     
     Write-Host ""

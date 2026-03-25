@@ -1,128 +1,121 @@
-# BSOD 修复报告 #7
+# BSOD 修复报告 #9
 
 ## 问题信息
 
-**Bugcheck Code**: 0xCE (DRIVER_UNLOADED_WITHOUT_CANCELLING_PENDING_OPERATIONS)
-**Faulting Module**: netdemo.sys (已卸载)
-**Faulting IP**: `<Unloaded_netdemo.sys>+0x10a5`
-**时间**: 2026-03-25 (第七次崩溃）
+**Bugcheck Code**: 0xFC (ATTEMPTED_EXECUTE_OF_NOEXECUTE_MEMORY)
+**Faulting Module**: netdemo.sys
+**Faulting IP**: `netdemo!DriverEntry+0x469`
+**时间**: 2026-03-26 (第九次崩溃）
 
 ## 问题分析
 
 ### 错误堆栈
 ```
 nt!KeBugCheckEx
-  -> nt!memset+0x28dad
-    -> nt!MmProbeAndLockPages+0x3d80
-      -> nt!setjmpex+0x4598
-        -> <Unloaded_netdemo.sys>+0x10a5  <-- 驱动已卸载，但代码仍在执行！
+  -> nt!memset+0x7582e
+    -> nt!setjmpex+0x4598
+      -> netdemo!DriverEntry+0x469  <-- 尝试执行不可执行内存！
 ```
 
 ### 根本原因
 
-**驱动卸载时没有等待系统线程结束！**
+**`WSK_PROVIDER_DISPATCH` 结构体定义错误！**
 
-`driver_unload` 设置 `SERVER_RUNNING = false` 后立即返回，但系统线程仍在运行。当线程继续执行时，驱动代码已被卸载，导致访问无效内存。
+漏掉了 `Version` 和 `Reserved` 字段，导致所有函数指针偏移量错误 4 字节。
 
-## 修复方案
+调用 `WskSocket` 时实际调用到了 `Version` 字段（一个小整数值如 `0x0100`），这个地址不可执行。
 
-### 第一次修复尝试（失败）
-
-使用 `KeWaitForSingleObject` 等待线程句柄：
+### 错误的结构体定义
 
 ```rust
-// 错误 ❌ - 线程句柄不是同步对象
-let _ = KeWaitForSingleObject(
-    SERVER_THREAD_HANDLE as PVOID,
-    0x02,  // Executive
-    0,     // KernelMode
-    false,
-    &timeout as *const i64 as PLARGE_INTEGER,
-);
+// 错误 ❌ - 缺少 Version 和 Reserved 字段
+#[repr(C)]
+struct ProviderDispatch {
+    WskSocket: usize,        // 偏移 0 (错误！应该是偏移 4)
+    WskSocketConnect: usize,
+    WskControlClient: usize,
+}
 ```
 
-**结果**: Bugcheck 0xA (IRQL_NOT_LESS_OR_EQUAL)
-- `KeWaitForSingleObject` 不能直接等待线程句柄
-- 线程句柄不是可等待的同步对象
+### 正确的结构体定义
 
-### 最终修复方案
+来源: `d:\todo\ewdk\dist\wdk\Include\10.0.26100.0\km\wsk.h:1534-1545`
 
-使用轮询等待 + `PsTerminateSystemThread`：
+```c
+typedef struct _WSK_PROVIDER_DISPATCH {
+    USHORT                    Version;        // 偏移 0, 2 字节
+    USHORT                    Reserved;       // 偏移 2, 2 字节
+    PFN_WSK_SOCKET            WskSocket;      // 偏移 4, 8 字节
+    PFN_WSK_SOCKET_CONNECT    WskSocketConnect;
+    PFN_WSK_CONTROL_CLIENT    WskControlClient;
+#if (NTDDI_VERSION >= NTDDI_WIN7)
+    PFN_WSK_GET_ADDRESS_INFO  WskGetAddressInfo;
+    PFN_WSK_FREE_ADDRESS_INFO WskFreeAddressInfo;
+    PFN_WSK_GET_NAME_INFO     WskGetNameInfo;
+#endif
+} WSK_PROVIDER_DISPATCH;
+```
 
 ```rust
-#[inline(never)]
-unsafe extern "C" fn server_thread_entry(_ctx: PVOID) {
-    while SERVER_RUNNING {
-        let mut interval: i64 = -10000000;
-        KeDelayExecutionThread(0, false, &mut interval);
-    }
-    
-    PsTerminateSystemThread(STATUS_SUCCESS);  // 正确终止线程
-}
-
-#[inline(never)]
-pub unsafe extern "C" fn driver_unload(_driver: PDRIVER_OBJECT) {
-    SERVER_RUNNING = false;
-    
-    // 轮询等待线程检测到退出标志
-    let mut interval: i64 = -1000000;
-    for _ in 0..100 {
-        KeDelayExecutionThread(0, false, &mut interval);
-    }
-    
-    if !SERVER_THREAD_HANDLE.is_null() {
-        let _ = ZwClose(SERVER_THREAD_HANDLE);
-        SERVER_THREAD_HANDLE = core::ptr::null_mut();
-    }
+// 正确 ✓
+#[repr(C)]
+struct ProviderDispatch {
+    Version: u16,            // 偏移 0
+    Reserved: u16,           // 偏移 2
+    WskSocket: usize,        // 偏移 4 (正确！)
+    WskSocketConnect: usize,
+    WskControlClient: usize,
 }
 ```
 
 ## 验证结果
 
-```
-=== Step 1: Load Driver ===
-驱动安装成功
-驱动启动成功
-
-=== Step 2: TCP Client Test ===
-Dial failed: dial tcp 127.0.0.1:50080: connectex: No connection could be made...
-(WSK 功能待启用)
-
-=== Step 3: Unload Driver ===
-驱动停止成功
-驱动卸载成功
-```
-
-**驱动加载/卸载成功！** 无 BSOD。
+**驱动加载成功！** 无 BSOD，WSK 网络功能正常工作。
 
 ## 经验教训
 
-### 1. 线程同步的正确方式
+### 1. WSK 结构体必须严格参考 WDK 头文件
 
-| 方法 | 适用场景 | 注意事项 |
-|------|----------|----------|
-| `KeWaitForSingleObject` | 等待 Event, Semaphore, Mutex | 不能等待线程句柄 |
-| `KeWaitForMultipleObjects` | 等待多个同步对象 | 同上 |
-| 轮询 + `PsTerminateSystemThread` | 系统线程退出 | 简单可靠 |
-| `KeSetEvent` + Event 对象 | 精确同步 | 需要额外 Event |
+所有 WSK 相关结构体定义必须参考：
+- `d:\todo\ewdk\dist\wdk\Include\10.0.26100.0\km\wsk.h`
 
-### 2. 驱动卸载的正确流程
+不能凭空猜测结构体布局！
 
+### 2. 关键结构体来源
+
+| 结构体 | 头文件位置 |
+|--------|-----------|
+| `WSK_PROVIDER_DISPATCH` | wsk.h:1534-1545 |
+| `WSK_PROVIDER_NPI` | wsk.h:1659-1662 |
+| `WSK_PROVIDER_BASIC_DISPATCH` | wsk.h:1551-1555 |
+| `WSK_PROVIDER_LISTEN_DISPATCH` | wsk.h:1557-1565 |
+| `WSK_PROVIDER_CONNECTION_DISPATCH` | wsk.h:1579-1594 |
+| `WSK_CLIENT_DISPATCH` | wsk.h:1515-1522 |
+| `WSK_SOCKET` | wsk.h:37-41 |
+| `WSK_BUF` | wsk.h:86-91 |
+
+### 3. C 语言嵌入结构体在 Rust 中的表示
+
+C 语言的结构体嵌入（继承模式）在 Rust 中需要显式定义：
+
+```c
+// C 语言
+typedef struct _WSK_PROVIDER_LISTEN_DISPATCH {
+    WSK_PROVIDER_BASIC_DISPATCH;  // 嵌入（匿名）
+    PFN_WSK_BIND WskBind;
+    ...
+} WSK_PROVIDER_LISTEN_DISPATCH;
 ```
-1. 设置退出标志 (SERVER_RUNNING = false)
-2. 等待线程检测到标志并退出
-3. 调用 PsTerminateSystemThread (在线程内部)
-4. 关闭线程句柄 (ZwClose)
-5. 清理其他资源
-6. 返回
+
+```rust
+// Rust 语言
+#[repr(C)]
+struct ProviderListenDispatch {
+    Basic: ProviderBasicDispatch,  // 显式命名
+    WskBind: usize,
+    ...
+}
 ```
-
-### 3. Bugcheck 0xCE 的含义
-
-`DRIVER_UNLOADED_WITHOUT_CANCELLING_PENDING_OPERATIONS` 表示：
-- 驱动已卸载
-- 但还有未完成的操作（如定时器、工作线程、回调等）
-- 这些操作试图执行已卸载的代码
 
 ## 待解决问题
 
@@ -143,3 +136,4 @@ WSK 网络功能因栈溢出问题暂时禁用，需要：
 | 6 | 0x7E | 栈溢出（format! 消耗大量栈空间） | 移除所有 log!/format! 调用 |
 | 7 | 0xCE | 驱动卸载时线程仍在运行 | 轮询等待 + PsTerminateSystemThread |
 | 8 | 0xA | KeWaitForSingleObject 等待线程句柄失败 | 改用轮询等待 |
+| 9 | 0xFC | WSK_PROVIDER_DISPATCH 缺少 Version/Reserved 字段 | 参考 WDK wsk.h 修正结构体定义 |

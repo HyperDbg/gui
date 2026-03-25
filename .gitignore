@@ -11,6 +11,7 @@ doc/testdata
 debugger/mcp/参考
 debugger/driver/sysDemo/build
 walker/winmd
+walker/pdbex/ok/
 
 **/target/
 rust-driver/todo/

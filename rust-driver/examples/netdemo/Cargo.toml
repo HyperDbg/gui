@@ -24,3 +24,4 @@ panic = "abort"
 panic = "abort"
 opt-level = "z"
 lto = true
+debug = "line-tables-only"

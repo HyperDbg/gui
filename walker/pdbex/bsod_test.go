@@ -86,7 +86,7 @@ func TestBSODAddressAnalysis(t *testing.T) {
 }
 
 func TestNetdemoBSOD(t *testing.T) {
-	pdbPath := "D:\\ux\\examples\\hypedbg\\rust-driver\\target\\x86_64-pc-windows-msvc\\release\\deps\\netdemo.pdb"
+	pdbPath := "D:\\ux\\examples\\hypedbg\\rust-driver\\examples\\netdemo\\netdemo.pdb"
 
 	fmt.Println("=== netdemo BSOD 地址解析 ===")
 	fmt.Println()
@@ -103,8 +103,8 @@ func TestNetdemoBSOD(t *testing.T) {
 	fmt.Printf("  机器类型: %s\n", pdb.GetArchitectureString())
 	fmt.Println()
 
-	fmt.Println("=== 解析 DriverEntry+0x879 ===")
-	offset := uint64(0x879)
+	fmt.Println("=== 解析 DriverEntry+0x469 ===")
+	offset := uint64(0x469)
 	fmt.Printf("偏移: 0x%X\n", offset)
 
 	funcName, ok := pdb.GetFunctionByOffset(offset)
@@ -155,10 +155,10 @@ func TestNetdemoBSOD(t *testing.T) {
 	}
 	fmt.Println()
 
-	fmt.Println("=== 搜索偏移 0x879 附近的函数 ===")
+	fmt.Println("=== 搜索偏移 0x469 附近的函数 ===")
 	for name, fn := range functions {
-		if fn.Address <= 0x879 && fn.Address+uint64(fn.Size) > 0x879 {
-			fmt.Printf("✓ 找到包含偏移 0x879 的函数: %s (0x%X-0x%X)\n", name, fn.Address, fn.Address+uint64(fn.Size))
+		if fn.Address <= 0x469 && fn.Address+uint64(fn.Size) > 0x469 {
+			fmt.Printf("✓ 找到包含偏移 0x469 的函数: %s (0x%X-0x%X)\n", name, fn.Address, fn.Address+uint64(fn.Size))
 		}
 	}
 	fmt.Println()
@@ -186,8 +186,8 @@ func TestNetdemoBSOD(t *testing.T) {
 	}
 	fmt.Println()
 
-	fmt.Println("=== 检查 0x879 是否在代码段开头 ===")
-	fmt.Printf("偏移 0x879 = %d 字节\n", 0x879)
+	fmt.Println("=== 检查 0x469 是否在代码段开头 ===")
+	fmt.Printf("偏移 0x469 = %d 字节\n", 0x469)
 	fmt.Println("这可能是 DriverEntry 函数的开头部分，但 Rust 编译器在 release 模式下可能没有生成符号")
 	fmt.Println()
 
