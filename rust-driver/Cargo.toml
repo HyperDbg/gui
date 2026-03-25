@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "driver-framework",
     "hyperhv",
     "hyperkd",
     "protocol",
@@ -20,6 +21,7 @@ readme = "README.md"
 [workspace.dependencies]
 protocol = { path = "protocol" }
 wsk = { path = "wsk" }
+driver-framework = { path = "driver-framework" }
 
 [profile.dev]
 panic = "abort"
