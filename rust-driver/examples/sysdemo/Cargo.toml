@@ -20,6 +20,7 @@ wdk = "0.4"
 wdk-alloc = "0.4"
 wdk-panic = "0.4"
 wdk-sys = "0.5"
+driver-framework = { path = "../../driver-framework" }
 
 [features]
 default = []

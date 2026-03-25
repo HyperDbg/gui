@@ -27,7 +27,7 @@ func main() {
 }
 
 	func run () {
-	p := driver.New("D:\\ux\\examples\\hypedbg\\rust-driver\\examples\\sysdemo\\target\\x86_64-pc-windows-msvc\\release\\sysdemo.sys", "sysDemo", "\\\\.\\sysDemo")
+	p := driver.New(`D:\ux\examples\hypedbg\rust-driver\examples\sysdemo\sysdemo.sys`, "sysDemo", "\\\\.\\sysDemo")
 
 	p.Install()
 	p.Start()

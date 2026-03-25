@@ -179,8 +179,13 @@ func (p *Provider) Start() {
 			mylog.Info("这通常是因为 Rust 驱动程序实现有问题")
 			mylog.Info("请检查驱动程序的参数处理逻辑")
 			mylog.Check(e)
-		default:
+		case e.Error() == "Incorrect function.":
+			mylog.Info("错误，函数不正确")
+			mylog.Info("这通常是因为 Rust 驱动程序缺少 IRP_MJ_CREATE 或 IRP_MJ_CLOSE 处理函数")
+			mylog.Info("请检查驱动程序的 MajorFunction 是否正确设置")
 			mylog.Check(e)
+		default:
+			mylog.Check(e) //Incorrect function. rust问题
 		}
 	} else {
 		mylog.Success("驱动启动成功")

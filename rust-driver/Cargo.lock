@@ -755,6 +755,7 @@ dependencies = [
 name = "sysdemo"
 version = "0.1.0"
 dependencies = [
+ "driver-framework",
  "wdk",
  "wdk-alloc",
  "wdk-build 0.5.1",
