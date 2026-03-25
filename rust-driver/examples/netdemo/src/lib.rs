@@ -4,7 +4,6 @@ extern crate alloc;
 extern crate wdk_panic;
 
 use alloc::boxed::Box;
-use core::ffi::c_void;
 use core::ptr::addr_of_mut;
 
 use driver_framework::{
@@ -14,6 +13,7 @@ use driver_framework::{
     DriverConfig, create_device_with_config, cleanup_device,
     FILE_DEVICE_UNKNOWN, METHOD_BUFFERED, FILE_ANY_ACCESS,
 };
+use wsk::{WskListener, SocketAddr};
 use wdk_alloc::WdkAllocator;
 use wdk_sys::{
     DEVICE_OBJECT, NTSTATUS, PDRIVER_OBJECT, PIRP, PCUNICODE_STRING,
@@ -26,11 +26,15 @@ static GLOBAL_ALLOCATOR: WdkAllocator = WdkAllocator;
 
 const IOCTL_SEND_DATA: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS);
 const IOCTL_RECEIVE_DATA: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS);
+const IOCTL_TEST_WSK: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x802, METHOD_BUFFERED, FILE_ANY_ACCESS);
 
 const DOS_DEVICE_NAME: &str = "\\??\\netDemo";
 
 static mut DATA_BUFFER: [u8; 4096] = [0; 4096];
 static mut DATA_LENGTH: u32 = 0;
+static mut TCP_LISTENER: Option<WskListener> = None;
+
+const SERVER_ADDR: SocketAddr = SocketAddr::localhost(9527);
 
 #[unsafe(export_name = "DriverEntry")]
 #[allow(clippy::missing_safety_doc)]
@@ -113,6 +117,28 @@ pub unsafe extern "C" fn handle_ioctl(_device: *mut DEVICE_OBJECT, p_irp: PIRP) 
                 log!(LogLevel::Success, "IOCTL_RECEIVE_DATA: Returning {} bytes", written);
                 complete_request(p_irp, STATUS_SUCCESS, written as u64);
                 STATUS_SUCCESS
+            }
+            IOCTL_TEST_WSK => {
+                log!(LogLevel::Info, "Testing wsk module...");
+                log!(LogLevel::Info, "Creating TCP listener on port 9527...");
+
+                match WskListener::new(SERVER_ADDR, 1) {
+                    Ok(listener) => {
+                        log!(LogLevel::Info, "TCP listener created successfully!");
+                        unsafe { TCP_LISTENER = Some(listener); }
+                        let response = b"WSK_OK";
+                        let written = write_output_buffer(output_buf, response);
+                        complete_request(p_irp, STATUS_SUCCESS, written as u64);
+                        STATUS_SUCCESS
+                    }
+                    Err(e) => {
+                        log!(LogLevel::Error, "TCP listener failed: {:?}", e);
+                        let response = b"WSK_FAIL";
+                        let written = write_output_buffer(output_buf, response);
+                        complete_request(p_irp, STATUS_UNSUCCESSFUL, written as u64);
+                        STATUS_UNSUCCESSFUL
+                    }
+                }
             }
             _ => {
                 log!(LogLevel::Warning, "Unknown IOCTL: {:#x}", control_code);

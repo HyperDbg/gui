@@ -8,6 +8,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 driver-framework = { path = "../../driver-framework" }
+wsk = { workspace = true }
 wdk = "0.4"
 wdk-sys = "0.5"
 wdk-alloc = "0.4"

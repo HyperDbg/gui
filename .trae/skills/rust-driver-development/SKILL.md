@@ -152,18 +152,29 @@ pub unsafe extern "C" fn handle_ioctl(_device: *mut DEVICE_OBJECT, p_irp: PIRP) 
    - 支持 IOCTL 通信
    - 测试脚本: `src/m.go`
 
-3. **erebus-main** - `rust-driver/erebus-main/`
+3. **netdemo** - `rust-driver/examples/netdemo/`
+   - 网络通信测试驱动
+   - 用于测试 `protocol` 模块的网络通信可行性
+   - 测试脚本: `src/m.go`
+
+4. **protocol** - `rust-driver/protocol/`
+   - 调试器通信协议定义
+   - `types.rs` - 基本类型 (RegisterState, ProcessInfo, MemoryRegion 等)
+   - `events.rs` - 事件类型 (BreakpointEvent, ExceptionEvent 等)
+   - 常量: `PROTOCOL_VERSION = 1`, `DEFAULT_PORT = 9527`
+   - 使用 serde 进行序列化/反序列化
+
+5. **erebus-main** - `rust-driver/erebus-main/`
    - 完整的驱动框架
    - 包含 km (内核模式) 和 um (用户模式)
    - shared 模块定义共享类型
 
-### 待修复的项目
+### 不可用的模块（未实现）
 
-以下项目代码存在但可能无法编译：
-- `hyperhv` - Hypervisor 核心
-- `hyperkd` - 内核调试器
-- `protocol` - 通信协议
-- `wsk` - WSK 网络套接字
+以下模块代码存在但**无法使用**：
+- `wsk` - WSK 网络套接字封装，**全是 TODO，尚未实现**
+- `hyperhv` - Hypervisor 核心，依赖 wsk
+- `hyperkd` - 内核调试器，依赖 wsk
 - `disassembler` - 反汇编器
 - `pdbex` - PDB 解析
 - `kd` - 内核调试支持
@@ -266,6 +277,55 @@ p.Uninstall()
 - 驱动停止成功
 - 驱动卸载成功
 
+## netdemo 网络测试驱动
+
+用于测试 `protocol` 模块的网络通信可行性。
+
+### 项目位置
+`rust-driver/examples/netdemo/`
+
+### 文件结构
+```
+netdemo/
+├── Cargo.toml     # 依赖配置
+├── build.ps1      # 构建脚本
+└── src/
+    ├── lib.rs     # 驱动主代码
+    └── m.go       # Go 测试程序
+```
+
+### 当前状态
+- **IOCTL 功能**：已实现，用于用户态和驱动通信
+- **网络功能**：待实现，需要添加 WSK 支持
+
+### 使用方法
+
+1. **修改 Cargo.toml 添加依赖**：
+```toml
+[dependencies]
+protocol = { path = "../../protocol" }
+serde = { version = "1.0", features = ["derive"] }
+```
+
+2. **修改 lib.rs 使用 protocol**：
+```rust
+use protocol::{types::*, events::*, PROTOCOL_VERSION, DEFAULT_PORT};
+```
+
+3. **构建驱动**：
+```powershell
+.\rust-driver\examples\netdemo\build.ps1
+```
+
+4. **运行测试**：
+```powershell
+go run .\rust-driver\examples\netdemo\src\m.go
+```
+
+### 注意事项
+- `wsk` 模块尚未实现，netdemo 的网络功能需要等待 wsk 实现后才能完整测试
+- 当前 netdemo 仅测试 IOCTL 通信
+
 ## 网络通信 (WSK)
 
 ### protocol 模块
@@ -275,13 +335,16 @@ p.Uninstall()
 - `events.rs` - 事件类型
 - 常量: `PROTOCOL_VERSION = 1`, `DEFAULT_PORT = 9527`
 
-### wsk 模块
+### wsk 模块（WSK 封装，提供网络功能）
 
-WSK (Winsock Kernel) 网络套接字封装：
-- `TcpStream` - TCP 客户端
-- `TcpListener` - TCP 服务端
-- `UdpSocket` - UDP 套接字
+WSK (Winsock Kernel) 网络套接字封装，结构体已定义，核心方法为 TODO：
+- `TcpStream` - TCP 客户端连接
+- `TcpListener` - TCP 服务端监听
+- `WskDatagram` - UDP 数据报套接字
 - `WskProvider` - WSK 提供者注册
+- `WskSocket` - 底层套接字（connect/send/recv 为 TODO）
+
+**netdemo 使用 wsk 测试网络通信**
 
 ### go-communicator
 
@@ -317,8 +380,30 @@ rust-driver/todo/
 
 ## 下一步计划
 
-1. 创建网络通信 demo 驱动
-2. 修复 `protocol` 模块编译
-3. 修复 `wsk` 模块编译
-4. 实现 WSK 实际调用
-5. 集成到 hyperhv/hyperkd
+### 模块测试顺序
+按以下顺序测试和实现模块：
+
+1. **go-communicator** - Go 端通信实现
+   - `cmd/generate/mcp_generator.go` - MCP 代码生成器
+   - `mcp/` - MCP 通信实现
+   - `walker/` - 文件遍历
+
+2. **wsk** - WSK 网络套接字封装（当前：netdemo 已添加依赖）
+
+3. **hyperhv** - Hypervisor 核心
+
+4. **hyperkd** - 内核调试器
+
+5. **protocol** - 通信协议
+
+6. **pdbex** - PDB 解析
+
+7. **disassembler** - 反汇编器
+
+### 当前任务
+- netdemo 已成功编译并依赖 wsk
+- wsk 模块修复：移除 panic_handler/global_allocator，改为 rlib
+- 等待 wsk 实现完成后，netdemo 可进行实际网络测试
+
+### 阻塞项
+- **wsk 模块** - connect/send/recv 为 TODO，无法实际网络通信

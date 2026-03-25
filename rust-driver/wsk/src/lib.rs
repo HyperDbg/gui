@@ -2,16 +2,6 @@
 
 extern crate alloc;
 
-use core::panic::PanicInfo;
-
-#[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    loop {}
-}
-
-#[global_allocator]
-static GLOBAL_ALLOC: wdk_alloc::WdkAllocator = wdk_alloc::WdkAllocator;
-
 mod socket;
 mod provider;
 mod buffer;

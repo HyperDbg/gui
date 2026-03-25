@@ -473,6 +473,7 @@ dependencies = [
  "wdk-build 0.4.0",
  "wdk-panic",
  "wdk-sys",
+ "wsk",
 ]
 
 [[package]]
@@ -1186,6 +1187,7 @@ dependencies = [
  "protocol",
  "wdk",
  "wdk-alloc",
+ "wdk-panic",
  "wdk-sys",
 ]
 

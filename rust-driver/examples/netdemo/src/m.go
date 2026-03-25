@@ -1,47 +1,53 @@
 package main
 
 import (
-	"bytes"
+	"fmt"
+	"io"
+	"net"
+	"time"
 
 	"github.com/ddkwork/HyperDbg/debugger/driver"
-	"github.com/ddkwork/golibrary/std/mylog"
-)
-
-func CTL_CODE(deviceType, function, method, access uint32) uint32 {
-	return ((deviceType) << 16) | ((access) << 14) | ((function) << 2) | (method)
-}
-
-const (
-	FILE_DEVICE_UNKNOWN = 0x00000022
-	METHOD_BUFFERED     = 0
-	FILE_ANY_ACCESS     = 0
-)
-
-var (
-	IOCTL_SEND_DATA    = CTL_CODE(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS)
-	IOCTL_RECEIVE_DATA = CTL_CODE(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS)
 )
 
 func main() {
-	mylog.Call(func() { run() })
-}
-
-func run() {
-	p := driver.New("D:\\ux\\examples\\hypedbg\\rust-driver\\examples\\netdemo\\target\\x86_64-pc-windows-msvc\\release\\netdemo.sys", "netDemo", "\\\\.\\netDemo")
+	fmt.Println("=== Step 1: Load Driver ===")
+	p := driver.New("D:\\ux\\examples\\hypedbg\\rust-driver\\examples\\netdemo\\netdemo.sys", "netDemo", "\\\\.\\netDemo")
 
 	p.Install()
 	p.Start()
 
-	connected := p.IsConnected()
-	mylog.Info(connected)
+	fmt.Println("\n=== Step 2: TCP Client Test ===")
+	addr := "127.0.0.1:9527"
+	fmt.Printf("Connecting to %s...\n", addr)
 
-	testStrings := []string{"hello", "world", "test", "driver", "communication"}
-	for _, send := range testStrings {
-		p.Send(bytes.NewBufferString(send), IOCTL_SEND_DATA)
-		receive := p.Receive(IOCTL_RECEIVE_DATA)
-		mylog.Warning(send, receive.String())
+	conn, err := net.DialTimeout("tcp", addr, 5*time.Second)
+	if err != nil {
+		fmt.Printf("Dial failed: %v\n", err)
+	} else {
+		defer conn.Close()
+		fmt.Println("Connected!")
+
+		msg := []byte("Hello from Go TCP client!")
+		_, err = conn.Write(msg)
+		if err != nil {
+			fmt.Printf("Write failed: %v\n", err)
+		} else {
+			fmt.Printf("Sent: %s\n", msg)
+		}
+
+		buf := make([]byte, 1024)
+		conn.SetReadDeadline(time.Now().Add(5 * time.Second))
+		n, err := conn.Read(buf)
+		if err != nil && err != io.EOF {
+			fmt.Printf("Read failed: %v\n", err)
+		} else {
+			fmt.Printf("Received: %s\n", buf[:n])
+		}
 	}
 
+	fmt.Println("\n=== Step 3: Unload Driver ===")
 	p.Stop()
 	p.Uninstall()
+
+	fmt.Println("\n=== Test Complete ===")
 }
