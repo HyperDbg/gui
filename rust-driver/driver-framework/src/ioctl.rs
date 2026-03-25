@@ -60,7 +60,7 @@ pub unsafe fn complete_request(p_irp: PIRP, status: NTSTATUS, information: u64) 
     }
 }
 
-pub unsafe fn read_input_buffer<T>(buffer: *mut c_void, len: u32) -> Option<&'static [u8]> {
+pub unsafe fn read_input_buffer(buffer: *mut c_void, len: u32) -> Option<&'static [u8]> {
     if buffer.is_null() || len == 0 {
         log!(LogLevel::Error, "Input buffer is null or empty");
         return None;

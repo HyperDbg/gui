@@ -7,6 +7,7 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
+driver-framework = { path = "../../driver-framework" }
 wdk = "0.4"
 wdk-sys = "0.5"
 wdk-alloc = "0.4"

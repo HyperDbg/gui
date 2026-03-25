@@ -1,5 +1,14 @@
 # Rust Windows 驱动开发指南
 
+## ⚠️ 重要警告
+
+**严禁直接使用 `cargo build` 命令！**
+
+- 本项目使用 **EWDK (Enterprise Windows Driver Kit)** 进行编译
+- **永远不会安装 VS2022**
+- 只能使用 PowerShell 构建脚本进行编译
+- 当用户要求执行某个 `.ps1` 脚本时，**必须直接执行该脚本**，不要尝试手动运行 cargo 命令
+
 ## 构建环境
 
 ### 使用通用构建脚本
