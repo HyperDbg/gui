@@ -5,9 +5,11 @@ extern crate alloc;
 mod socket;
 mod provider;
 mod buffer;
+mod message;
 
 pub use socket::*;
 pub use buffer::*;
+pub use message::*;
 
 pub const WSK_NO_WAIT: i64 = 0;
 pub const WSK_INFINITE_WAIT: i64 = -1;

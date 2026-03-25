@@ -3,6 +3,7 @@
 extern crate alloc;
 extern crate wdk_panic;
 
+use alloc::format;
 use alloc::boxed::Box;
 use core::ptr::addr_of_mut;
 
@@ -13,7 +14,7 @@ use driver_framework::{
     DriverConfig, create_device_with_config, cleanup_device,
     FILE_DEVICE_UNKNOWN, METHOD_BUFFERED, FILE_ANY_ACCESS,
 };
-use wsk::{WskListener, SocketAddr};
+use wsk::{WskSocket, SocketAddr, Command, Response, parse_command, serialize_response, SocketType, Protocol};
 use wdk_alloc::WdkAllocator;
 use wdk_sys::{
     DEVICE_OBJECT, NTSTATUS, PDRIVER_OBJECT, PIRP, PCUNICODE_STRING,
@@ -27,12 +28,13 @@ static GLOBAL_ALLOCATOR: WdkAllocator = WdkAllocator;
 const IOCTL_SEND_DATA: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS);
 const IOCTL_RECEIVE_DATA: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS);
 const IOCTL_TEST_WSK: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x802, METHOD_BUFFERED, FILE_ANY_ACCESS);
+const IOCTL_JSON_COMMAND: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x803, METHOD_BUFFERED, FILE_ANY_ACCESS);
 
 const DOS_DEVICE_NAME: &str = "\\??\\netDemo";
 
 static mut DATA_BUFFER: [u8; 4096] = [0; 4096];
 static mut DATA_LENGTH: u32 = 0;
-static mut TCP_LISTENER: Option<WskListener> = None;
+static mut TCP_SOCKET: Option<WskSocket> = None;
 
 const SERVER_ADDR: SocketAddr = SocketAddr::localhost(9527);
 
@@ -71,11 +73,33 @@ pub unsafe extern "C" fn driver_unload(driver: PDRIVER_OBJECT) {
     cleanup_device(driver, DOS_DEVICE_NAME);
 }
 
+fn handle_command(cmd: &Command) -> Response {
+    log!(LogLevel::Info, "Received command: {}", cmd.action);
+
+    match cmd.action.as_str() {
+        "ping" => Response::ok("pong"),
+        "read_memory" => {
+            if let Some(target) = &cmd.target {
+                Response::ok(&format!("Would read {} bytes from {}", cmd.size.unwrap_or(8), target))
+            } else {
+                Response::error("Missing target address")
+            }
+        }
+        "write_memory" => {
+            if let Some(data) = &cmd.data {
+                Response::ok(&format!("Would write {} to {}", data, cmd.target.as_deref().unwrap_or("?")))
+            } else {
+                Response::error("Missing data")
+            }
+        }
+        "status" => Response::ok("driver_running"),
+        _ => Response::error(&format!("Unknown command: {}", cmd.action)),
+    }
+}
+
 #[allow(clippy::cast_possible_truncation)]
 pub unsafe extern "C" fn handle_ioctl(_device: *mut DEVICE_OBJECT, p_irp: PIRP) -> NTSTATUS {
     if let Some((control_code, input_buf, input_len, output_buf, _output_len)) = get_ioctl_params(p_irp) {
-        log!(LogLevel::Info, "Received IOCTL: {:#x}", control_code);
-
         let status = match control_code {
             IOCTL_SEND_DATA => {
                 if let Some(data) = read_input_buffer(input_buf, input_len) {
@@ -120,24 +144,60 @@ pub unsafe extern "C" fn handle_ioctl(_device: *mut DEVICE_OBJECT, p_irp: PIRP) 
             }
             IOCTL_TEST_WSK => {
                 log!(LogLevel::Info, "Testing wsk module...");
-                log!(LogLevel::Info, "Creating TCP listener on port 9527...");
+                log!(LogLevel::Info, "Creating TCP client to {}:{}", SERVER_ADDR.ip[0], SERVER_ADDR.port);
 
-                match WskListener::new(SERVER_ADDR, 1) {
-                    Ok(listener) => {
-                        log!(LogLevel::Info, "TCP listener created successfully!");
-                        unsafe { TCP_LISTENER = Some(listener); }
-                        let response = b"WSK_OK";
-                        let written = write_output_buffer(output_buf, response);
-                        complete_request(p_irp, STATUS_SUCCESS, written as u64);
-                        STATUS_SUCCESS
+                match WskSocket::new(SocketType::Stream, Protocol::Tcp) {
+                    Ok(mut socket) => {
+                        log!(LogLevel::Info, "TCP socket created, connecting...");
+                        match socket.connect(SERVER_ADDR) {
+                            Ok(()) => {
+                                log!(LogLevel::Info, "TCP connected successfully!");
+                                unsafe { TCP_SOCKET = Some(socket); }
+                                let response = b"WSK_CONNECT_OK";
+                                let written = write_output_buffer(output_buf, response);
+                                complete_request(p_irp, STATUS_SUCCESS, written as u64);
+                                STATUS_SUCCESS
+                            }
+                            Err(e) => {
+                                log!(LogLevel::Error, "TCP connect failed: {:?}", e);
+                                let response = b"WSK_CONNECT_FAIL";
+                                let written = write_output_buffer(output_buf, response);
+                                complete_request(p_irp, STATUS_UNSUCCESSFUL, written as u64);
+                                STATUS_UNSUCCESSFUL
+                            }
+                        }
                     }
                     Err(e) => {
-                        log!(LogLevel::Error, "TCP listener failed: {:?}", e);
-                        let response = b"WSK_FAIL";
+                        log!(LogLevel::Error, "TCP socket creation failed: {:?}", e);
+                        let response = b"WSK_SOCKET_FAIL";
                         let written = write_output_buffer(output_buf, response);
                         complete_request(p_irp, STATUS_UNSUCCESSFUL, written as u64);
                         STATUS_UNSUCCESSFUL
                     }
+                }
+            }
+            IOCTL_JSON_COMMAND => {
+                if let Some(data) = read_input_buffer(input_buf, input_len) {
+                    log!(LogLevel::Info, "IOCTL_JSON_COMMAND: {} bytes", data.len());
+
+                    if let Some(cmd) = parse_command(data) {
+                        let resp = handle_command(&cmd);
+                        let json_bytes = serialize_response(&resp);
+                        log!(LogLevel::Info, "Response: {} bytes", json_bytes.len());
+                        let written = write_output_buffer(output_buf, &json_bytes);
+                        complete_request(p_irp, STATUS_SUCCESS, written as u64);
+                        STATUS_SUCCESS
+                    } else {
+                        log!(LogLevel::Error, "Failed to parse JSON command");
+                        let resp = Response::error("Invalid JSON");
+                        let json_bytes = serialize_response(&resp);
+                        let written = write_output_buffer(output_buf, &json_bytes);
+                        complete_request(p_irp, STATUS_UNSUCCESSFUL, written as u64);
+                        STATUS_UNSUCCESSFUL
+                    }
+                } else {
+                    complete_request(p_irp, STATUS_UNSUCCESSFUL, 0);
+                    STATUS_UNSUCCESSFUL
                 }
             }
             _ => {

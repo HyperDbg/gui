@@ -12,6 +12,8 @@ wdk-alloc = "0.4"
 wdk-sys = "0.5"
 wdk = "0.4"
 wdk-panic = "0.4"
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 
 [features]
 default = []
