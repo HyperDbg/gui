@@ -9,6 +9,73 @@
 - 只能使用 PowerShell 构建脚本进行编译
 - 当用户要求执行某个 `.ps1` 脚本时，**必须直接执行该脚本**，不要尝试手动运行 cargo 命令
 
+## 架构设计
+
+### 调试器网络通信架构
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        HyperDbg 调试系统                              │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  ┌─────────────────┐                              ┌─────────────────┐ │
+│  │   Go 用户态      │                              │   Rust 驱动      │ │
+│  │                 │                              │                 │ │
+│  │  TCP Server     │◄─────── JSON 协议 ─────────►│  TCP Client     │ │
+│  │  (监听 9527)    │                              │  (主动连接)      │ │
+│  │                 │                              │                 │ │
+│  │  - 解析 JSON    │                              │  - 解析 JSON     │ │
+│  │  - 发送命令     │                              │  - 执行调试     │ │
+│  │  - 接收结果     │                              │  - 返回结果     │ │
+│  └────────┬────────┘                              └────────┬────────┘ │
+│           │                                                │          │
+│           │                                                │          │
+│           └──────────────────┐ ┌──────────────────────────┘          │
+│                              │ │                                      │
+│                              │ │   TCP Socket 连接                     │
+└──────────────────────────────┼─┼──────────────────────────────────────┘
+                               │ │
+                               │ ▼
+                    ┌──────────────────────┐
+                    │    Windows 内核        │
+                    │                       │
+                    │  WSK (Winsock Kernel) │
+                    │  - TcpClientConnect   │
+                    │  - TcpSend / TcpRecv  │
+                    │                       │
+                    └──────────────────────┘
+```
+
+### 为什么选择 JSON + TCP Client 架构？
+
+| 对比项 | IOCTL + 结构体 | JSON + TCP Client |
+|--------|----------------|-------------------|
+| 内存对齐 | 必须严格对齐，容易出错 | 无需对齐，JSON 是文本协议 |
+| 调试 | 困难，二进制数据难读 | 方便，直接看到明文 |
+| 跨语言 | Go/Rust 结构体需一一对应 | 只需共享 JSON Schema |
+| 依赖 | 简单，WDK 内置 | 需要 WSK 或 smoltcp |
+| 灵活性 | 结构体固定，增减字段麻烦 | JSON 可扩展性好 |
+| 远程调试 | 不支持 | 支持，Go 和驱动可不在同一机器 |
+
+### 通信流程
+
+```
+1. Go 启动 TCP Server 监听 9527
+2. Rust 驱动加载后，主动连接 Go Server
+3. Go 发送 JSON 命令:
+   {
+     "action": "read_memory",
+     "target": 0xFFFFF80000000000,
+     "size": 8
+   }
+4. Rust 驱动解析 JSON，执行对应操作
+5. Rust 驱动返回 JSON 结果:
+   {
+     "status": "ok",
+     "data": "deadbeef12345678"
+   }
+```
+
 ## 构建环境
 
 ### 使用通用构建脚本
@@ -19,12 +86,6 @@
 # 使用通用构建脚本编译所有驱动项目
 .\rust-driver\examples\build-all.ps1
 ```
-
-该脚本会自动：
-1. 挂载 EWDK ISO
-2. 设置 WDK 构建环境
-3. 编译所有驱动项目
-4. 重命名 DLL 为 SYS
 
 ### EWDK 配置
 
@@ -53,233 +114,71 @@ driver-framework/src/
 └── ioctl.rs      # IOCTL 辅助宏和函数
 ```
 
-### 使用方法
+## wsk 模块 (WSK 网络封装)
 
-在 `Cargo.toml` 中添加依赖：
+### 位置
+`rust-driver/wsk/` - Winsock Kernel 网络套接字封装
+
+### 文件结构
+```
+wsk/
+├── Cargo.toml
+└── src/
+    ├── lib.rs          # 模块导出
+    ├── socket.rs       # WskSocket, WskListener 实现
+    ├── buffer.rs       # 数据缓冲区
+    ├── provider.rs     # WSK Provider (stub)
+    └── error.rs        # 错误类型
+```
+
+### 核心类型
+
+```rust
+// Socket 类型
+pub struct WskSocket {
+    socket: *mut u8,
+    dispatch: *const WSK_PROVIDER_DISPATCH_STRUCT,
+    socket_type: SocketType,
+    protocol: Protocol,
+    connected: bool,
+    bound: bool,
+    recv_buffer: Buffer,
+    send_buffer: Buffer,
+}
+
+// 监听器 (驱动作为 TCP Client 不需要这个)
+pub struct WskListener {
+    socket: WskSocket,
+    backlog: u32,
+}
+```
+
+### 依赖配置
 
 ```toml
 [dependencies]
-driver-framework = { path = "../driver-framework" }
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 ```
 
-在驱动代码中使用：
+### JSON 解析示例
 
 ```rust
-#![no_std]
+use serde::{Deserialize, Serialize};
 
-extern crate alloc;
-extern crate wdk_panic;
-
-use driver_framework::{
-    log, LogLevel,
-    utf16, ToU16Vec, ToUnicodeString,
-    DriverConfig, create_device_with_config, cleanup_device,
-    ctl_code, default_create_close, get_ioctl_params, complete_request,
-};
-use wdk_alloc::WdkAllocator;
-use wdk_sys::{NTSTATUS, PCUNICODE_STRING, PDRIVER_OBJECT, STATUS_SUCCESS};
-
-#[global_allocator]
-static GLOBAL_ALLOCATOR: WdkAllocator = WdkAllocator;
-
-#[unsafe(export_name = "DriverEntry")]
-pub unsafe extern "system" fn driver_entry(
-    driver: PDRIVER_OBJECT,
-    _registry_path: PCUNICODE_STRING,
-) -> NTSTATUS {
-    log!(LogLevel::Info, "Driver loading...");
-    
-    let config = DriverConfig {
-        nt_device_name: "\\Device\\MyDriver",
-        dos_device_name: "\\??\\MyDriver",
-        ..Default::default()
-    };
-    
-    let status = create_device_with_config(driver, &config);
-    if !wdk::nt_success(status) {
-        log!(LogLevel::Error, "Failed to create device: {:x}", status);
-        return status;
-    }
-    
-    log!(LogLevel::Success, "Driver loaded successfully");
-    STATUS_SUCCESS
-}
-```
-
-### IOCTL 定义
-
-```rust
-use driver_framework::{ctl_code, FILE_DEVICE_UNKNOWN, METHOD_BUFFERED, FILE_ANY_ACCESS};
-
-const IOCTL_MY_COMMAND: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS);
-```
-
-### IOCTL 处理
-
-```rust
-use driver_framework::{get_ioctl_params, complete_request, read_input_buffer, write_output_buffer};
-
-pub unsafe extern "C" fn handle_ioctl(_device: *mut DEVICE_OBJECT, p_irp: PIRP) -> NTSTATUS {
-    if let Some((code, input, input_len, output, output_len)) = get_ioctl_params(p_irp) {
-        match code {
-            IOCTL_MY_COMMAND => {
-                if let Some(data) = read_input_buffer(input, input_len) {
-                    // 处理数据
-                    let response = b"OK";
-                    let written = write_output_buffer(output, response);
-                    complete_request(p_irp, STATUS_SUCCESS, written as u64);
-                    return STATUS_SUCCESS;
-                }
-            }
-            _ => {}
-        }
-    }
-    complete_request(p_irp, STATUS_INVALID_DEVICE_REQUEST, 0);
-    STATUS_INVALID_DEVICE_REQUEST
-}
-```
-
-## 项目结构
-
-### 已验证可编译的项目
-
-1. **driver-framework** - `rust-driver/driver-framework/`
-   - 通用驱动框架库
-   - 所有驱动项目的基础依赖
-
-2. **sysdemo** - `rust-driver/examples/sysdemo/`
-   - 模块化 WDM 驱动示例
-   - 支持 IOCTL 通信
-   - 测试脚本: `src/m.go`
-
-3. **netdemo** - `rust-driver/examples/netdemo/`
-   - 网络通信测试驱动
-   - 用于测试 `protocol` 模块的网络通信可行性
-   - 测试脚本: `src/m.go`
-
-4. **protocol** - `rust-driver/protocol/`
-   - 调试器通信协议定义
-   - `types.rs` - 基本类型 (RegisterState, ProcessInfo, MemoryRegion 等)
-   - `events.rs` - 事件类型 (BreakpointEvent, ExceptionEvent 等)
-   - 常量: `PROTOCOL_VERSION = 1`, `DEFAULT_PORT = 9527`
-   - 使用 serde 进行序列化/反序列化
-
-5. **erebus-main** - `rust-driver/erebus-main/`
-   - 完整的驱动框架
-   - 包含 km (内核模式) 和 um (用户模式)
-   - shared 模块定义共享类型
-
-### 不可用的模块（未实现）
-
-以下模块代码存在但**无法使用**：
-- `wsk` - WSK 网络套接字封装，**全是 TODO，尚未实现**
-- `hyperhv` - Hypervisor 核心，依赖 wsk
-- `hyperkd` - 内核调试器，依赖 wsk
-- `disassembler` - 反汇编器
-- `pdbex` - PDB 解析
-- `kd` - 内核调试支持
-
-## 驱动开发模式
-
-### sysdemo 模块化架构
-
-```
-sysdemo/src/
-├── lib.rs        # 驱动入口点 (DriverEntry)
-├── constants.rs  # 设备名称、符号链接等常量
-├── device.rs     # 设备创建、清理
-├── dispatch.rs   # IRP 派发函数、IOCTL 处理
-├── ffi.rs        # Windows 内核 FFI 绑定
-├── logger.rs     # 内核日志宏
-└── utils.rs      # UTF-16 字符串转换等工具
-```
-
-### 关键技术点
-
-#### 1. UTF-16 字符串
-
-Windows 内核使用 `UNICODE_STRING`，必须使用 UTF-16 编码：
-
-```rust
-// 使用 utf16! 宏创建 UTF-16 字符串
-utf16!(DEVICE_NAME, "\\Device\\sysDemo");
-utf16!(SYMBOLIC_LINK_NAME, "\\??\\sysDemo");
-
-// 初始化 UNICODE_STRING
-RtlInitUnicodeString(&mut unicode_str, utf16_ptr);
-```
-
-#### 2. IOCTL 控制码
-
-```rust
-macro_rules! ctl_code {
-    ($device_type:expr, $function:expr, $method:expr, $access:expr) => {
-        (($device_type) << 16) | (($access) << 14) | (($function) << 2) | ($method)
-    };
+#[derive(Deserialize, Serialize)]
+pub struct Command {
+    pub action: String,
+    pub target: u64,
+    pub value: u64,
 }
 
-const IOCTL_SEND_DATA: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS);
-const IOCTL_RECEIVE_DATA: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS);
-```
-
-#### 3. 设备扩展
-
-```rust
-#[repr(C)]
-pub struct DeviceExtension {
-    pub buffer: [u8; BUFFER_SIZE],
-    pub buffer_len: usize,
+fn parse_json(data: &[u8]) -> Option<Command> {
+    serde_json::from_slice(data).ok()
 }
-
-// 在 IoCreateDevice 时设置
-(*device_object).DeviceExtension = extension_ptr;
 ```
-
-#### 4. 日志宏
-
-```rust
-#[macro_export]
-macro_rules! log {
-    ($level:expr, $($arg:tt)*) => {
-        unsafe {
-            $crate::logger::log_inner($level, format_args!($($arg)*));
-        }
-    };
-}
-
-// 使用
-log!(LogLevel::Info, "Driver loaded!");
-log!(LogLevel::Error, "IOCTL failed: {:#x}", status);
-```
-
-## Go 用户模式测试
-
-### 驱动通信
-
-```go
-p := driver.New(driverPath, serviceName, deviceName)
-p.Install()
-p.Start()
-
-// IOCTL 通信
-p.Send(bytes.NewBufferString("hello"), IOCTL_SEND_DATA)
-receive := p.Receive(IOCTL_RECEIVE_DATA)
-
-p.Stop()
-p.Uninstall()
-```
-
-### provider.go 日志
-
-已完善的日志输出：
-- 驱动安装成功
-- 驱动启动成功
-- 驱动停止成功
-- 驱动卸载成功
 
 ## netdemo 网络测试驱动
-
-用于测试 `protocol` 模块的网络通信可行性。
 
 ### 项目位置
 `rust-driver/examples/netdemo/`
@@ -295,115 +194,180 @@ netdemo/
 ```
 
 ### 当前状态
-- **IOCTL 功能**：已实现，用于用户态和驱动通信
-- **网络功能**：待实现，需要添加 WSK 支持
+- **IOCTL 功能**：已实现，用于本地通信测试
+- **网络功能**：驱动作为 TCP Client 连接 Go 服务端，使用 JSON 通信
 
-### 使用方法
+## 项目结构
 
-1. **修改 Cargo.toml 添加依赖**：
-```toml
-[dependencies]
-protocol = { path = "../../protocol" }
-serde = { version = "1.0", features = ["derive"] }
-```
+### 已验证可编译的项目
 
-2. **修改 lib.rs 使用 protocol**：
-```rust
-use protocol::{types::*, events::*, PROTOCOL_VERSION, DEFAULT_PORT};
-```
+1. **driver-framework** - `rust-driver/driver-framework/`
+   - 通用驱动框架库
+   - 所有驱动项目的基础依赖
 
-3. **构建驱动**：
-```powershell
-.\rust-driver\examples\netdemo\build.ps1
-```
+2. **sysdemo** - `rust-driver/examples/sysdemo/`
+   - 模块化 WDM 驱动示例
+   - 支持 IOCTL 通信
 
-4. **运行测试**：
-```powershell
-go run .\rust-driver\examples\netdemo\src\m.go
-```
+3. **netdemo** - `rust-driver/examples/netdemo/`
+   - 网络通信测试驱动
+   - 使用 TCP Client + JSON 协议
 
-### 注意事项
-- `wsk` 模块尚未实现，netdemo 的网络功能需要等待 wsk 实现后才能完整测试
-- 当前 netdemo 仅测试 IOCTL 通信
+4. **protocol** - `rust-driver/protocol/`
+   - 调试器通信协议定义 (JSON Schema)
+   - `types.rs` - 基本类型
+   - `events.rs` - 事件类型
+   - 常量: `PROTOCOL_VERSION = 1`, `DEFAULT_PORT = 9527`
 
-## 网络通信 (WSK)
+### 不可用的模块（未实现）
 
-### protocol 模块
-
-定义调试器通信协议：
-- `types.rs` - 基本类型 (RegisterState, ProcessInfo 等)
-- `events.rs` - 事件类型
-- 常量: `PROTOCOL_VERSION = 1`, `DEFAULT_PORT = 9527`
-
-### wsk 模块（WSK 封装，提供网络功能）
-
-WSK (Winsock Kernel) 网络套接字封装，结构体已定义，核心方法为 TODO：
-- `TcpStream` - TCP 客户端连接
-- `TcpListener` - TCP 服务端监听
-- `WskDatagram` - UDP 数据报套接字
-- `WskProvider` - WSK 提供者注册
-- `WskSocket` - 底层套接字（connect/send/recv 为 TODO）
-
-**netdemo 使用 wsk 测试网络通信**
-
-### go-communicator
-
-Go 端通信实现：
-- `protocol/protocol.go` - 协议定义
-- `debugger/debugger.go` - 调试器接口
-- `mcp/communicator_mcp.go` - MCP 通信
+- `hyperhv` - Hypervisor 核心
+- `hyperkd` - 内核调试器
+- `disassembler` - 反汇编器
+- `pdbex` - PDB 解析
+- `kd` - 内核调试支持
 
 ## 常见错误
 
 ### 1. "The parameter is incorrect"
-
 原因：`UNICODE_STRING` 初始化错误
 解决：使用 `RtlInitUnicodeString` 正确初始化
 
 ### 2. BSOD (蓝屏)
-
 原因：内存访问错误、类型不匹配
 解决：检查指针操作、确保 UTF-16 字符串正确
 
 ### 3. 链接错误
-
 原因：未使用 EWDK 环境
 解决：使用 `build-all.ps1` 构建
 
-## 文件排除
+### 调试器网络通信架构
 
-`.gitignore` 配置：
 ```
-**/target/
-rust-driver/todo/
+.==========================================================================.
+||                        HyperDbg 调试系统                               ||
+||======================================================================||
+||                                                                      ||
+||    Go 用户态                        Rust 驱动                        ||
+||  +----------------+              +----------------+                  ||
+||  |                |              |                |                  ||
+||  |  TCP Server    |<====JSON====>|  TCP Client   |                  ||
+||  |  (监听 9527)   |              |  (主动连接)    |                  ||
+||  |                |              |                |                  ||
+||  |  - 解析 JSON   |              |  - 解析 JSON   |                  ||
+||  |  - 发送命令    |              |  - 执行调试    |                  ||
+||  |  - 接收结果    |              |  - 返回结果    |                  ||
+||  +-------+--------+              +--------+-------+                  ||
+||          |                                  |                         ||
+||          |            TCP Socket            |                         ||
+||          +===============| |===============+                         ||
+||                          | |                                         ||
+||                          ▼ ▼                                         ||
+||               +----------------------+                               ||
+||               |   Windows 内核        |                               ||
+||               |                      |                               ||
+||               |  WSK (Winsock Kernel) |                               ||
+||               |  - TcpClientConnect  |                               ||
+||               |  - TcpSend / TcpRecv |                               ||
+||               +----------------------+                               ||
+||==========================================================================|
+`````
+
+### 为什么选择 JSON + TCP Client 架构？
+
+```
++-------------------+        +-------------------+
+|   IOCTL + 结构体   |        |  JSON + TCP Client |
++===================+        +===================+
+| [X] 内存对齐       |        | [ ] 内存对齐       |
+|     必须严格对齐    |        |     无需对齐       |
++-------------------+        +-------------------+
+| [X] 调试困难       |        | [√] 调试方便       |
+|     二进制数据难读  |        |     直接看明文     |
++-------------------+        +-------------------+
+| [X] 跨语言复杂     |        | [√] 跨语言简单     |
+|     结构体需对应    |        |     只需 JSON     |
++-------------------+        +-------------------+
+| [√] 依赖简单       |        | [X] 需要 WSK      |
+|     WDK 内置      |        |     或 smoltcp    |
++-------------------+        +-------------------+
+| [X] 灵活性差       |        | [√] 灵活性好      |
+|     结构体需固定    |        |     JSON 可扩展   |
++-------------------+        +-------------------+
+| [X] 不支持远程调试  |        | [√] 支持远程调试   |
++-------------------+        +-------------------+
+```
+
+### 通信流程
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│ 1. Go 启动 TCP Server 监听 9527                                  │
+│                                                                  │
+│ 2. Rust 驱动加载后，主动连接 Go Server                           │
+│                                                                  │
+│ 3. Go 发送 JSON 命令:                                           │
+│    ┌─────────────────────────────────────────────────────────┐   │
+│    │ {                                                         │   │
+│    │   "action": "read_memory",                               │   │
+│    │   "target": "0xFFFFF80000000000",                        │   │
+│    │   "size": 8                                              │   │
+│    │ }                                                         │   │
+│    └─────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│ 4. Rust 驱动解析 JSON，执行对应操作                              │
+│                                                                  │
+│ 5. Rust 驱动返回 JSON 结果:                                     │
+│    ┌─────────────────────────────────────────────────────────┐   │
+│    │ {                                                         │   │
+│    │   "status": "ok",                                        │   │
+│    │   "data": "deadbeef12345678"                            │   │
+│    │ }                                                         │   │
+│    └─────────────────────────────────────────────────────────┘   │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+## 项目结构
+
+```
+rust-driver/
+|
+├── driver-framework/          # 通用驱动框架库
+│   └── src/
+│       ├── lib.rs             # 模块导出
+│       ├── logger.rs          # 日志宏 (log!)
+│       ├── utils.rs           # UTF-16 转换工具
+│       ├── ffi.rs             # Windows FFI
+│       ├── device.rs          # 设备创建/清理
+│       └── ioctl.rs           # IOCTL 辅助
+|
+├── wsk/                       # WSK 网络封装
+│   ├── Cargo.toml
+│   └── src/
+│       ├── lib.rs             # 模块导出
+│       ├── socket.rs          # WskSocket 实现
+│       ├── buffer.rs          # 数据缓冲区
+│       ├── provider.rs         # WSK Provider
+│       └── error.rs           # 错误类型
+|
+├── protocol/                  # 通信协议定义
+│   ├── types.rs               # 基本类型
+│   └── events.rs              # 事件类型
+|
+├── examples/
+│   ├── sysdemo/               # 驱动示例 (IOCTL)
+│   └── netdemo/               # 网络测试驱动 (TCP Client + JSON)
+|
+└── erebus-main/               # 完整驱动框架
+    ├── km/                    # 内核模式
+    └── um/                    # 用户模式
 ```
 
 ## 下一步计划
 
-### 模块测试顺序
-按以下顺序测试和实现模块：
-
-1. **go-communicator** - Go 端通信实现
-   - `cmd/generate/mcp_generator.go` - MCP 代码生成器
-   - `mcp/` - MCP 通信实现
-   - `walker/` - 文件遍历
-
-2. **wsk** - WSK 网络套接字封装（当前：netdemo 已添加依赖）
-
-3. **hyperhv** - Hypervisor 核心
-
-4. **hyperkd** - 内核调试器
-
-5. **protocol** - 通信协议
-
-6. **pdbex** - PDB 解析
-
-7. **disassembler** - 反汇编器
-
-### 当前任务
-- netdemo 已成功编译并依赖 wsk
-- wsk 模块修复：移除 panic_handler/global_allocator，改为 rlib
-- 等待 wsk 实现完成后，netdemo 可进行实际网络测试
-
-### 阻塞项
-- **wsk 模块** - connect/send/recv 为 TODO，无法实际网络通信
+```
+1. [ ] 实现 wsk stub              -> 让 netdemo 编译通过
+2. [ ] 实现 TCP Client 连接        -> 驱动主动连接 Go 服务端
+3. [ ] 集成 serde_json            -> 驱动端 JSON 解析
+4. [ ] Go 端 TCP Server           -> 发送 JSON 命令测试
+```
