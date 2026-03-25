@@ -22,7 +22,7 @@ type Response struct {
 	Message string `json:"message"`
 }
 
-func main() {
+func main1() {
 	fmt.Println("=== Step 1: Load Driver ===")
 	p := driver.NewWithOptions(`D:\\ux\\examples\\hypedbg\\rust-driver\\examples\\netdemo\\netdemo.sys`, "netDemo", "\\\\.\\netDemo", true)
 

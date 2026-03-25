@@ -7,12 +7,16 @@ use wdk_alloc::WdkAllocator;
 use wdk_sys::{
     NTSTATUS, PDRIVER_OBJECT, PCUNICODE_STRING, IRP_MJ_CREATE, IRP_MJ_CLOSE, 
     STATUS_SUCCESS, DEVICE_OBJECT, PIRP, HANDLE, PVOID,
-    POBJECT_ATTRIBUTES, PRKEVENT,
+    POBJECT_ATTRIBUTES, SIZE_T,
     ntddk::PsCreateSystemThread,
 };
 
 #[global_allocator]
 static GLOBAL_ALLOCATOR: WdkAllocator = WdkAllocator;
+
+const SERVER_PORT: u16 = 50080;
+const BUFFER_SIZE: usize = 4096;
+const EXPANDED_STACK_SIZE: SIZE_T = 64 * 1024;
 
 #[unsafe(export_name = "DriverEntry")]
 pub unsafe extern "system" fn driver_entry(
@@ -54,6 +58,12 @@ extern "system" {
         interval: *mut i64,
     ) -> NTSTATUS;
     
+    fn KeExpandKernelStackAndCallout(
+        Callout: unsafe extern "C" fn(PVOID),
+        Parameter: PVOID,
+        Size: SIZE_T,
+    ) -> NTSTATUS;
+    
     fn PsTerminateSystemThread(ExitStatus: NTSTATUS);
 }
 
@@ -62,27 +72,115 @@ static mut SERVER_RUNNING: bool = true;
 
 #[inline(never)]
 unsafe extern "C" fn server_thread_entry(_ctx: PVOID) {
-    // TODO: 栈溢出问题待解决
-    // WSK 初始化消耗大量栈空间，导致 DriverEntry 栈溢出
-    // 需要进一步分析 wsk crate 的栈使用情况
+    if wsk::wsk_init().is_err() {
+        PsTerminateSystemThread(STATUS_SUCCESS);
+        return;
+    }
     
-    while SERVER_RUNNING {
+    while !wsk::is_wsk_ready() {
+        if !SERVER_RUNNING {
+            PsTerminateSystemThread(STATUS_SUCCESS);
+            return;
+        }
         let mut interval: i64 = -10000000;
         KeDelayExecutionThread(0, false, &mut interval);
     }
     
+    let mut listener = wsk::WskListener::new();
+    
+    if listener.create().is_err() {
+        PsTerminateSystemThread(STATUS_SUCCESS);
+        return;
+    }
+    
+    let addr = wsk::SocketAddr::localhost(SERVER_PORT);
+    if listener.bind(&addr).is_err() {
+        listener.close();
+        PsTerminateSystemThread(STATUS_SUCCESS);
+        return;
+    }
+    
+    while SERVER_RUNNING {
+        match listener.accept() {
+            Ok(mut client) => {
+                handle_client_with_expanded_stack(&mut client);
+                client.close();
+            }
+            Err(_) => {
+                let mut interval: i64 = -1000000;
+                KeDelayExecutionThread(0, false, &mut interval);
+            }
+        }
+    }
+    
+    listener.close();
     PsTerminateSystemThread(STATUS_SUCCESS);
+}
+
+#[inline(never)]
+unsafe extern "C" fn handle_client_callout(ctx: PVOID) {
+    let client = &mut *(ctx as *mut wsk::WskSocket);
+    handle_client(client);
+}
+
+#[inline(never)]
+fn handle_client_with_expanded_stack(client: &mut wsk::WskSocket) {
+    unsafe {
+        let status = KeExpandKernelStackAndCallout(
+            handle_client_callout,
+            client as *mut wsk::WskSocket as PVOID,
+            EXPANDED_STACK_SIZE,
+        );
+        if status != STATUS_SUCCESS {
+            return;
+        }
+    }
+}
+
+#[inline(never)]
+fn handle_client(client: &mut wsk::WskSocket) {
+    use alloc::vec::Vec;
+    
+    let mut buffer: Vec<u8> = alloc::vec![0u8; BUFFER_SIZE];
+    
+    loop {
+        match client.recv(&mut buffer) {
+            Ok(len) if len > 0 => {
+                if let Some(cmd) = wsk::parse_command(&buffer[..len]) {
+                    let response = process_command(&cmd);
+                    let resp_data = wsk::serialize_response(&response);
+                    let _ = client.send(&resp_data);
+                } else {
+                    let error_resp = wsk::Response::error("Invalid command format");
+                    let resp_data = wsk::serialize_response(&error_resp);
+                    let _ = client.send(&resp_data);
+                }
+            }
+            Ok(_) => break,
+            Err(_) => break,
+        }
+    }
+}
+
+#[inline(never)]
+fn process_command(cmd: &wsk::Command) -> wsk::Response {
+    match cmd.action.as_str() {
+        "ping" => wsk::Response::ok("pong"),
+        "status" => wsk::Response::ok("running"),
+        _ => wsk::Response::error("Unknown command")
+    }
 }
 
 #[inline(never)]
 pub unsafe extern "C" fn driver_unload(_driver: PDRIVER_OBJECT) {
     SERVER_RUNNING = false;
     
-    // 等待线程检测到退出标志
     let mut interval: i64 = -1000000;
     for _ in 0..100 {
         KeDelayExecutionThread(0, false, &mut interval);
     }
+    
+    wsk::wsk_cleanup();
     
     if !SERVER_THREAD_HANDLE.is_null() {
         let _ = ZwClose(SERVER_THREAD_HANDLE);

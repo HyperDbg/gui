@@ -24,6 +24,7 @@ pub struct Response {
 }
 
 impl Response {
+    #[inline(never)]
     pub fn ok(data: &str) -> Self {
         Self {
             status: "ok".to_string(),
@@ -32,6 +33,7 @@ impl Response {
         }
     }
 
+    #[inline(never)]
     pub fn error(msg: &str) -> Self {
         Self {
             status: "error".to_string(),
@@ -41,10 +43,12 @@ impl Response {
     }
 }
 
+#[inline(never)]
 pub fn parse_command(data: &[u8]) -> Option<Command> {
     serde_json::from_slice(data).ok()
 }
 
+#[inline(never)]
 pub fn serialize_response(resp: &Response) -> alloc::vec::Vec<u8> {
     serde_json::to_vec(resp).unwrap_or_else(|_| alloc::vec::Vec::new())
 }

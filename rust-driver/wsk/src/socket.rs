@@ -1,13 +1,12 @@
 extern crate alloc;
 
-use alloc::string::String;
-use alloc::format;
 use core::ptr;
 use wdk_sys::{
-    NTSTATUS, STATUS_SUCCESS, STATUS_PENDING, PIRP, 
+    NTSTATUS, STATUS_SUCCESS, STATUS_PENDING, STATUS_MORE_PROCESSING_REQUIRED, PIRP, 
     PRKEVENT, PVOID, ULONG, PMDL, PLARGE_INTEGER, LARGE_INTEGER, BOOLEAN,
-    KPROCESSOR_MODE,
+    KPROCESSOR_MODE, KEVENT, PIO_STACK_LOCATION, IRP, PDEVICE_OBJECT,
     _EVENT_TYPE, _KWAIT_REASON, _LOCK_OPERATION,
+    SL_INVOKE_ON_SUCCESS, SL_INVOKE_ON_ERROR, SL_INVOKE_ON_CANCEL,
     ntddk::{
         IoAllocateIrp, IoFreeIrp, IoAllocateMdl, IoFreeMdl,
         KeInitializeEvent, KeSetEvent, KeWaitForSingleObject,
@@ -80,16 +79,12 @@ struct Buffer {
     Length: u64,
 }
 
-const WSK_INFINITE_WAIT: usize = !0;
+const WSK_NO_WAIT: usize = 0;
 const KERNEL_MODE: KPROCESSOR_MODE = 0;
 
 const AF_INET: u16 = 2;
 const SOCK_STREAM: u16 = 1;
 const IPPROTO_TCP: u32 = 6;
-
-const SL_INVOKE_ON_SUCCESS: u8 = 0x20;
-const SL_INVOKE_ON_ERROR: u8 = 0x40;
-const SL_INVOKE_ON_CANCEL: u8 = 0x80;
 
 extern "system" {
     fn WskRegister(
@@ -127,19 +122,19 @@ static mut WSK_CLIENT_DISPATCH: ClientDispatch = ClientDispatch {
 
 static mut WSK_INITIALIZED: bool = false;
 
-unsafe extern "system" fn wsk_completion_routine(
-    _device: PVOID,
+unsafe extern "C" fn wsk_completion_routine(
+    _device: PDEVICE_OBJECT,
     _irp: PIRP,
     context: PVOID,
 ) -> NTSTATUS {
     if !context.is_null() {
         KeSetEvent(context as PRKEVENT, 0, false as BOOLEAN);
     }
-    0x00000103
+    STATUS_MORE_PROCESSING_REQUIRED
 }
 
 struct Context {
-    event: [u8; 32],
+    event: KEVENT,
     irp: PIRP,
 }
 
@@ -152,16 +147,16 @@ impl Context {
             }
 
             let mut ctx = Context {
-                event: [0u8; 32],
+                event: core::mem::zeroed(),
                 irp,
             };
 
-            KeInitializeEvent(ctx.event.as_mut_ptr() as PRKEVENT, _EVENT_TYPE::SynchronizationEvent, false as BOOLEAN);
+            KeInitializeEvent(&raw mut ctx.event as PRKEVENT, _EVENT_TYPE::SynchronizationEvent, false as BOOLEAN);
             
             io_set_completion_routine(
                 ctx.irp,
                 Some(wsk_completion_routine),
-                ctx.event.as_mut_ptr() as PVOID,
+                &raw mut ctx.event as PVOID,
                 true,
                 true,
                 true,
@@ -174,7 +169,7 @@ impl Context {
     fn wait_for_completion(&mut self) -> NTSTATUS {
         unsafe {
             KeWaitForSingleObject(
-                self.event.as_mut_ptr() as PVOID,
+                &raw mut self.event as PVOID,
                 _KWAIT_REASON::Executive,
                 KERNEL_MODE,
                 false as BOOLEAN,
@@ -200,38 +195,43 @@ impl Context {
 
 unsafe fn io_set_completion_routine(
     irp: PIRP,
-    routine: Option<unsafe extern "system" fn(PVOID, PIRP, PVOID) -> NTSTATUS>,
+    routine: Option<unsafe extern "C" fn(PDEVICE_OBJECT, PIRP, PVOID) -> NTSTATUS>,
     context: PVOID,
     invoke_on_success: bool,
     invoke_on_error: bool,
     invoke_on_cancel: bool,
 ) {
-    let irp_ptr = irp as *mut u8;
-    
-    let stack_offset = 0xb8usize;
-    let stack = irp_ptr.add(stack_offset) as *mut IoStackLocation;
+    let stack = io_get_next_irp_stack_location(irp);
     
     (*stack).CompletionRoutine = routine;
     (*stack).Context = context;
     
     let mut control: u8 = 0;
-    if invoke_on_success { control |= SL_INVOKE_ON_SUCCESS; }
-    if invoke_on_error { control |= SL_INVOKE_ON_ERROR; }
-    if invoke_on_cancel { control |= SL_INVOKE_ON_CANCEL; }
+    if invoke_on_success { control |= SL_INVOKE_ON_SUCCESS as u8; }
+    if invoke_on_error { control |= SL_INVOKE_ON_ERROR as u8; }
+    if invoke_on_cancel { control |= SL_INVOKE_ON_CANCEL as u8; }
     (*stack).Control = control;
 }
 
-#[repr(C)]
-struct IoStackLocation {
-    MajorFunction: u8,
-    MinorFunction: u8,
-    Flags: u8,
-    Control: u8,
-    _reserved: [u8; 56],
-    CompletionRoutine: Option<unsafe extern "system" fn(PVOID, PIRP, PVOID) -> NTSTATUS>,
-    Context: PVOID,
+#[inline(always)]
+unsafe fn io_get_next_irp_stack_location(irp: PIRP) -> PIO_STACK_LOCATION {
+    let irp_ref = &*irp;
+    let current_location = irp_ref.CurrentLocation;
+    let stack_count = irp_ref.StackCount;
+    
+    let stack_size = core::mem::size_of::<wdk_sys::_IO_STACK_LOCATION>();
+    let irp_size = core::mem::size_of::<IRP>();
+    
+    let irp_addr = irp as usize;
+    let stack_array_start = irp_addr + irp_size;
+    
+    let index = (stack_count - current_location + 1) as usize;
+    let stack_addr = stack_array_start + (index * stack_size);
+    
+    stack_addr as PIO_STACK_LOCATION
 }
 
+#[inline(never)]
 pub fn wsk_init() -> Result<(), &'static str> {
     unsafe {
         if WSK_INITIALIZED {
@@ -253,7 +253,7 @@ pub fn wsk_init() -> Result<(), &'static str> {
             Dispatch: ptr::null(),
         };
 
-        let status = WskCaptureProviderNPI(&raw mut WSK_REGISTRATION, WSK_INFINITE_WAIT, &raw mut provider);
+        let status = WskCaptureProviderNPI(&raw mut WSK_REGISTRATION, WSK_NO_WAIT, &raw mut provider);
         if status != STATUS_SUCCESS {
             WskDeregister(&raw mut WSK_REGISTRATION);
             return Err("WskCaptureProviderNPI failed");
@@ -266,6 +266,7 @@ pub fn wsk_init() -> Result<(), &'static str> {
     }
 }
 
+#[inline(never)]
 pub fn wsk_cleanup() {
     unsafe {
         if !WSK_INITIALIZED {
@@ -283,6 +284,7 @@ pub fn wsk_cleanup() {
     }
 }
 
+#[inline(never)]
 pub fn is_wsk_ready() -> bool {
     unsafe { WSK_INITIALIZED }
 }
@@ -292,12 +294,14 @@ pub struct Listener {
 }
 
 impl Listener {
+    #[inline(never)]
     pub fn new() -> Self {
         Listener {
             socket: ptr::null_mut(),
         }
     }
 
+    #[inline(never)]
     pub fn create(&mut self) -> Result<(), SocketError> {
         unsafe {
             let provider = match WSK_PROVIDER {
@@ -343,6 +347,7 @@ impl Listener {
         }
     }
 
+    #[inline(never)]
     pub fn bind(&mut self, addr: &SocketAddr) -> Result<(), SocketError> {
         unsafe {
             if self.socket.is_null() {
@@ -358,7 +363,7 @@ impl Listener {
             let wsk_bind: unsafe extern "system" fn(*mut Socket, *const u8, ULONG, PIRP) -> NTSTATUS 
                 = core::mem::transmute(wsk_bind_fn);
 
-            let status = wsk_bind(self.socket, sockaddr.as_ptr(), 0, ctx.irp);
+            let status = wsk_bind(self.socket, sockaddr.as_ptr(), 16, ctx.irp);
 
             let final_status = if status == STATUS_PENDING {
                 ctx.wait_for_completion()
@@ -376,6 +381,7 @@ impl Listener {
         }
     }
 
+    #[inline(never)]
     pub fn accept(&mut self) -> Result<StreamSocket, SocketError> {
         unsafe {
             if self.socket.is_null() {
@@ -417,6 +423,7 @@ impl Listener {
         }
     }
 
+    #[inline(never)]
     pub fn close(&mut self) {
         if self.socket.is_null() {
             return;
@@ -450,16 +457,19 @@ pub struct StreamSocket {
 }
 
 impl StreamSocket {
+    #[inline(never)]
     pub fn new() -> Self {
         StreamSocket {
             socket: ptr::null_mut(),
         }
     }
 
+    #[inline(never)]
     pub fn is_valid(&self) -> bool {
         !self.socket.is_null()
     }
 
+    #[inline(never)]
     pub fn recv(&mut self, buf: &mut [u8]) -> Result<usize, SocketError> {
         unsafe {
             if self.socket.is_null() {
@@ -521,6 +531,7 @@ impl StreamSocket {
         }
     }
 
+    #[inline(never)]
     pub fn send(&mut self, buf: &[u8]) -> Result<usize, SocketError> {
         unsafe {
             if self.socket.is_null() {
@@ -582,6 +593,7 @@ impl StreamSocket {
         }
     }
 
+    #[inline(never)]
     pub fn close(&mut self) {
         if self.socket.is_null() {
             return;

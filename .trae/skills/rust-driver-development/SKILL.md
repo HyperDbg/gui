@@ -25,9 +25,206 @@
 - `protocol` - 调试器通信协议定义
 - `wsk` - WSK 网络封装
 
-**WSK 实现参考：**
-- `todo/代码+课件/DriverUtil/SysTemp17/WskSocket.cpp` - C++ WSK 完整实现
-- `todo/代码+课件/DriverUtil/SysTemp17/WskSocket.h` - C++ WSK 接口定义
+## 📚 参考项目 (已验证可用)
+
+### WSK 网络编程参考
+
+| 项目 | 路径 | 说明 |
+|------|------|------|
+| **KSOCKET** | `todo/参考价值/KSOCKET-master/` | Berkeley Socket API 风格的 WSK 封装，支持 TCP/UDP |
+| **afdmjhk** | `todo/参考价值/afdmjhk-master/WSK/` | WSK 示例代码，包含 echoserv 服务器 |
+| **DriverUtil** | `todo/参考价值/代码+课件/DriverUtil/` | EPT Hook 和 WSK Socket 实现 |
+| **Windows-driver-samples** | `todo/参考价值/Windows-driver-samples-main/` | 微软官方驱动示例 |
+
+### KSOCKET 关键实现 (Berkeley Socket API 风格)
+
+```c
+// 来自 KSOCKET-master/src/ksocket/ksocket.c
+
+// 异步上下文结构 - 核心！
+typedef struct _KSOCKET_ASYNC_CONTEXT
+{
+  KEVENT CompletionEvent;  // 完成事件
+  PIRP Irp;                // IRP 指针
+} KSOCKET_ASYNC_CONTEXT;
+
+// 完成回调 - 必须返回 STATUS_MORE_PROCESSING_REQUIRED
+NTSTATUS NTAPI KspAsyncContextCompletionRoutine(
+  _In_ PDEVICE_OBJECT DeviceObject,
+  _In_ PIRP Irp,
+  _In_ PKEVENT CompletionEvent
+  )
+{
+  KeSetEvent(CompletionEvent, IO_NO_INCREMENT, FALSE);
+  return STATUS_MORE_PROCESSING_REQUIRED;  // 关键！
+}
+
+// 初始化异步上下文
+NTSTATUS NTAPI KspAsyncContextAllocate(PKSOCKET_ASYNC_CONTEXT AsyncContext)
+{
+  KeInitializeEvent(&AsyncContext->CompletionEvent, SynchronizationEvent, FALSE);
+  AsyncContext->Irp = IoAllocateIrp(1, FALSE);
+  
+  IoSetCompletionRoutine(
+    AsyncContext->Irp,
+    &KspAsyncContextCompletionRoutine,
+    &AsyncContext->CompletionEvent,
+    TRUE, TRUE, TRUE  // InvokeOnSuccess, InvokeOnError, InvokeOnCancel
+  );
+  return STATUS_SUCCESS;
+}
+
+// 等待完成
+NTSTATUS NTAPI KspAsyncContextWaitForCompletion(
+  PKSOCKET_ASYNC_CONTEXT AsyncContext,
+  PNTSTATUS Status
+)
+{
+  if (*Status == STATUS_PENDING) {
+    KeWaitForSingleObject(&AsyncContext->CompletionEvent, Executive, KernelMode, FALSE, NULL);
+    *Status = AsyncContext->Irp->IoStatus.Status;
+  }
+  return *Status;
+}
+
+// 重置异步上下文 (用于重用 IRP)
+VOID NTAPI KspAsyncContextReset(PKSOCKET_ASYNC_CONTEXT AsyncContext)
+{
+  KeResetEvent(&AsyncContext->CompletionEvent);
+  IoReuseIrp(AsyncContext->Irp, STATUS_UNSUCCESSFUL);
+  IoSetCompletionRoutine(AsyncContext->Irp, &KspAsyncContextCompletionRoutine,
+    &AsyncContext->CompletionEvent, TRUE, TRUE, TRUE);
+}
+```
+
+### simplewsk 关键实现 (afdmjhk)
+
+```c
+// 来自 afdmjhk-master/WSK/Samples/echoserv/simplewsk.c
+
+// 初始化 WSK 数据
+NTSTATUS InitWskData(PIRP* pIrp, PKEVENT CompletionEvent)
+{
+  *pIrp = IoAllocateIrp(1, FALSE);
+  KeInitializeEvent(CompletionEvent, SynchronizationEvent, FALSE);
+  IoSetCompletionRoutine(*pIrp, CompletionRoutine, CompletionEvent, TRUE, TRUE, TRUE);
+  return STATUS_SUCCESS;
+}
+
+// 初始化 WSK 缓冲区
+NTSTATUS InitWskBuffer(PVOID Buffer, ULONG BufferSize, PWSK_BUF WskBuffer)
+{
+  WskBuffer->Offset = 0;
+  WskBuffer->Length = BufferSize;
+  WskBuffer->Mdl = IoAllocateMdl(Buffer, BufferSize, FALSE, FALSE, NULL);
+  
+  __try {
+    MmProbeAndLockPages(WskBuffer->Mdl, KernelMode, IoWriteAccess);
+  }
+  __except(EXCEPTION_EXECUTE_HANDLER) {
+    IoFreeMdl(WskBuffer->Mdl);
+    return STATUS_ACCESS_VIOLATION;
+  }
+  return STATUS_SUCCESS;
+}
+
+// 释放 WSK 缓冲区
+VOID FreeWskBuffer(PWSK_BUF WskBuffer)
+{
+  MmUnlockPages(WskBuffer->Mdl);
+  IoFreeMdl(WskBuffer->Mdl);
+}
+
+// 创建 Socket
+PWSK_SOCKET CreateSocket(ADDRESS_FAMILY AddressFamily, USHORT SocketType, ULONG Protocol, ULONG Flags)
+{
+  KEVENT CompletionEvent;
+  PIRP Irp;
+  PWSK_SOCKET WskSocket;
+  
+  InitWskData(&Irp, &CompletionEvent);
+  
+  Status = g_WskProvider.Dispatch->WskSocket(
+    g_WskProvider.Client, AddressFamily, SocketType, Protocol, Flags,
+    NULL, NULL, NULL, NULL, NULL, Irp);
+    
+  if (Status == STATUS_PENDING) {
+    KeWaitForSingleObject(&CompletionEvent, Executive, KernelMode, FALSE, NULL);
+    Status = Irp->IoStatus.Status;
+  }
+  
+  WskSocket = NT_SUCCESS(Status) ? (PWSK_SOCKET)Irp->IoStatus.Information : NULL;
+  IoFreeIrp(Irp);
+  return WskSocket;
+}
+
+// TCP Server 示例 (echoserv.c)
+static VOID NTAPI ServerThread(PVOID p)
+{
+  SOCKADDR_IN LocalAddress = {0}, RemoteAddress = {0};
+  PWSK_SOCKET Socket;
+  
+  // 创建监听 Socket
+  g_ServerSocket = CreateSocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, WSK_FLAG_LISTEN_SOCKET);
+  
+  LocalAddress.sin_family = AF_INET;
+  LocalAddress.sin_addr.s_addr = INADDR_ANY;
+  LocalAddress.sin_port = HTONS(SERVER_PORT);
+  
+  // 绑定
+  Bind(g_ServerSocket, (PSOCKADDR)&LocalAddress);
+  
+  // 接受连接循环
+  while ((Socket = Accept(g_ServerSocket, (PSOCKADDR)&LocalAddress, (PSOCKADDR)&RemoteAddress)) != NULL)
+  {
+    // 为每个客户端创建线程
+    PsCreateSystemThread(&hThread, THREAD_ALL_ACCESS, NULL, NULL, NULL, ClientThread, Socket);
+    InterlockedIncrement(&g_ClientsCount);
+    ZwClose(hThread);
+  }
+}
+```
+
+### WSK Socket 类型标志
+
+```c
+// 创建 Socket 时必须指定类型
+#define WSK_FLAG_BASIC_SOCKET        0x00000000  // 基本套接字
+#define WSK_FLAG_LISTEN_SOCKET       0x00000001  // 监听套接字 (TCP Server)
+#define WSK_FLAG_DATAGRAM_SOCKET     0x00000002  // 数据报套接字 (UDP)
+#define WSK_FLAG_CONNECTION_SOCKET   0x00000004  // 连接套接字 (TCP Client)
+```
+
+### WSK Dispatch 表结构
+
+```c
+// 不同类型的 Socket 有不同的 Dispatch 表
+typedef struct _WSK_PROVIDER_BASIC_DISPATCH {
+  WSK_CLOSE_SOCKET WskCloseSocket;
+  WSK_CONTROL_SOCKET WskControlSocket;
+} WSK_PROVIDER_BASIC_DISPATCH;
+
+typedef struct _WSK_PROVIDER_CONNECTION_DISPATCH {
+  WSK_CLOSE_SOCKET WskCloseSocket;
+  WSK_BIND WskBind;
+  WSK_CONNECT WskConnect;
+  WSK_GET_LOCAL_ADDRESS WskGetLocalAddress;
+  WSK_GET_REMOTE_ADDRESS WskGetRemoteAddress;
+  WSK_SEND WskSend;
+  WSK_RECEIVE WskReceive;
+  WSK_DISCONNECT WskDisconnect;
+  WSK_RELEASE WskRelease;
+  WSK_CONTROL_SOCKET WskControlSocket;
+} WSK_PROVIDER_CONNECTION_DISPATCH;
+
+typedef struct _WSK_PROVIDER_LISTEN_DISPATCH {
+  WSK_CLOSE_SOCKET WskCloseSocket;
+  WSK_BIND WskBind;
+  WSK_ACCEPT WskAccept;
+  WSK_INSPECT WskInspect;
+  WSK_CONTROL_SOCKET WskControlSocket;
+} WSK_PROVIDER_LISTEN_DISPATCH;
+```
 
 ## 🔴 强制阅读 WDK-SYS 绑定文件
 
@@ -207,30 +404,267 @@ use wdk_sys::{STATUS_SUCCESS, STATUS_PENDING, STATUS_UNSUCCESSFUL};
 
 ## WSK 实现模式
 
-参考 DriverUtil 的实现，WSK 操作遵循以下模式：
+参考 KSOCKET 和 simplewsk 的实现，WSK 操作遵循以下模式：
+
+### 核心 Rust 实现模式
 
 ```rust
-// 1. 分配 IRP
-let irp = IoAllocateIrp(1, false as BOOLEAN);
-
-// 2. 初始化事件
-KeInitializeEvent(event as PRKEVENT, SYNCHRONIZATION_EVENT, false as BOOLEAN);
-
-// 3. 设置完成回调 (手动实现 IoSetCompletionRoutine 宏)
-io_set_completion_routine(irp, Some(completion_routine), event as PVOID, true, true, true);
-
-// 4. 调用 WSK 函数
-let status = wsk_function(..., irp);
-
-// 5. 等待完成
-if status == STATUS_PENDING {
-    KeWaitForSingleObject(event as PVOID, EXECUTIVE, KERNEL_MODE, false as BOOLEAN, ptr::null());
-    status = (*irp).IoStatus.__bindgen_anon_1.Status;
+// 异步上下文结构
+struct Context {
+    event: KEVENT,  // 使用 KEVENT 类型 (24字节)，不能用 [u8; 32]
+    irp: PIRP,
 }
 
-// 6. 获取结果并释放 IRP
-let result = (*irp).IoStatus.Information;
-IoFreeIrp(irp);
+// 完成回调 - 必须返回 STATUS_MORE_PROCESSING_REQUIRED
+// 注意：第一个参数必须是 PDEVICE_OBJECT，不是 PVOID！
+unsafe extern "C" fn wsk_completion_routine(
+    _device: PDEVICE_OBJECT,  // 必须是 PDEVICE_OBJECT 类型
+    _irp: PIRP,
+    context: PVOID,
+) -> NTSTATUS {
+    if !context.is_null() {
+        KeSetEvent(context as PRKEVENT, 0, false as BOOLEAN);
+    }
+    STATUS_MORE_PROCESSING_REQUIRED  // 关键！不是 STATUS_SUCCESS
+}
+
+// 初始化异步上下文
+impl Context {
+    fn new() -> Result<Self, SocketError> {
+        unsafe {
+            let irp = IoAllocateIrp(1, false as BOOLEAN);
+            if irp.is_null() {
+                return Err(SocketError::IrpAllocationFailed);
+            }
+
+            let mut ctx = Context {
+                event: core::mem::zeroed(),  // KEVENT 初始化
+                irp,
+            };
+
+            KeInitializeEvent(
+                &raw mut ctx.event as PRKEVENT, 
+                _EVENT_TYPE::SynchronizationEvent, 
+                false as BOOLEAN
+            );
+            
+            // 设置完成回调
+            io_set_completion_routine(
+                ctx.irp,
+                Some(wsk_completion_routine),
+                &raw mut ctx.event as PVOID,
+                true, true, true  // InvokeOnSuccess, InvokeOnError, InvokeOnCancel
+            );
+
+            Ok(ctx)
+        }
+    }
+
+    // 等待完成
+    fn wait_for_completion(&mut self) -> NTSTATUS {
+        unsafe {
+            let _ = KeWaitForSingleObject(
+                &raw mut self.event as PVOID,
+                _KWAIT_REASON::Executive,
+                KERNEL_MODE,
+                false as BOOLEAN,
+                ptr::null::<LARGE_INTEGER>() as PLARGE_INTEGER,
+            );
+            (*self.irp).IoStatus.__bindgen_anon_1.Status
+        }
+    }
+
+    fn get_information(&self) -> usize {
+        unsafe { (*self.irp).IoStatus.Information as usize }
+    }
+
+    fn free(self) {
+        unsafe {
+            if !self.irp.is_null() {
+                IoFreeIrp(self.irp);
+            }
+        }
+    }
+}
+
+// 设置完成回调的辅助函数
+unsafe fn io_set_completion_routine(
+    irp: PIRP,
+    routine: Option<unsafe extern "C" fn(PDEVICE_OBJECT, PIRP, PVOID) -> NTSTATUS>,
+    context: PVOID,
+    invoke_on_success: bool,
+    invoke_on_error: bool,
+    invoke_on_cancel: bool,
+) {
+    let stack = io_get_next_irp_stack_location(irp);
+    
+    (*stack).CompletionRoutine = routine;
+    (*stack).Context = context;
+    
+    let mut control: u8 = 0;
+    if invoke_on_success { control |= SL_INVOKE_ON_SUCCESS as u8; }
+    if invoke_on_error { control |= SL_INVOKE_ON_ERROR as u8; }
+    if invoke_on_cancel { control |= SL_INVOKE_ON_CANCEL as u8; }
+    (*stack).Control = control;
+}
+
+// 手动实现 IoGetNextIrpStackLocation (wdk-sys 没有提供)
+#[inline(always)]
+unsafe fn io_get_next_irp_stack_location(irp: PIRP) -> PIO_STACK_LOCATION {
+    let irp_ref = &*irp;
+    let current_location = irp_ref.CurrentLocation;
+    let stack_count = irp_ref.StackCount;
+    
+    let stack_size = core::mem::size_of::<wdk_sys::_IO_STACK_LOCATION>();
+    let irp_size = core::mem::size_of::<IRP>();
+    
+    let irp_addr = irp as usize;
+    let stack_array_start = irp_addr + irp_size;
+    
+    let index = (stack_count - current_location + 1) as usize;
+    let stack_addr = stack_array_start + (index * stack_size);
+    
+    stack_addr as PIO_STACK_LOCATION
+}
+```
+
+### WSK 初始化流程
+
+```rust
+// 1. 定义 WSK 客户端 Dispatch
+static mut WSK_CLIENT_DISPATCH: ClientDispatch = ClientDispatch {
+    Version: 0x0100,  // WSK 版本 1.0
+    Reserved: 0,
+    WskClientEvent: None,
+};
+
+// 2. 注册 WSK 客户端
+let wsk_client = ClientNpi {
+    ClientContext: ptr::null_mut(),
+    Dispatch: &raw const WSK_CLIENT_DISPATCH,
+};
+WskRegister(&wsk_client, &raw mut WSK_REGISTRATION);
+
+// 3. 获取 Provider (使用 WSK_NO_WAIT 或 WSK_INFINITE_WAIT)
+let status = WskCaptureProviderNPI(&raw mut WSK_REGISTRATION, WSK_NO_WAIT, &raw mut provider);
+
+// 4. 创建 Socket (指定类型标志)
+let wsk_socket_fn = (*provider.Dispatch).WskSocket;
+wsk_socket(
+    provider.Client, 
+    AF_INET,           // AddressFamily
+    SOCK_STREAM,       // SocketType
+    IPPROTO_TCP,       // Protocol
+    WSK_FLAG_LISTEN_SOCKET,  // Flags: 监听套接字
+    null, null, null, null, null,
+    irp
+);
+```
+
+### WSK 数据收发
+
+```rust
+// 发送数据
+pub fn send(&mut self, buf: &[u8]) -> Result<usize, SocketError> {
+    unsafe {
+        let mut ctx = Context::new()?;
+        
+        // 分配 MDL
+        let mdl = IoAllocateMdl(
+            buf.as_ptr() as PVOID, 
+            buf.len() as ULONG, 
+            false, false, null
+        );
+
+        if mdl.is_null() {
+            ctx.free();
+            return Err(SocketError::MdlAllocationFailed);
+        }
+
+        // 锁定页面 (发送用 IoWriteAccess)
+        MmProbeAndLockPages(mdl, KERNEL_MODE, _LOCK_OPERATION::IoWriteAccess);
+
+        let mut wsk_buf = Buffer { 
+            Mdl: mdl, 
+            Offset: 0, 
+            Length: buf.len() as u64 
+        };
+
+        let dispatch = (*self.socket).Dispatch as *const ConnectionDispatch;
+        let wsk_send_fn = (*dispatch).WskSend;
+        let status = wsk_send(self.socket, &mut wsk_buf, 0, ctx.irp);
+
+        let final_status = if status == STATUS_PENDING {
+            ctx.wait_for_completion()
+        } else {
+            status
+        };
+
+        // 释放资源
+        MmUnlockPages(mdl);
+        IoFreeMdl(mdl);
+        
+        let bytes_sent = if final_status == STATUS_SUCCESS {
+            ctx.get_information()
+        } else {
+            0
+        };
+
+        ctx.free();
+
+        if final_status == STATUS_SUCCESS {
+            Ok(bytes_sent)
+        } else {
+            Err(SocketError::SendFailed)
+        }
+    }
+}
+
+// 接收数据 (使用 IoReadAccess)
+pub fn recv(&mut self, buf: &mut [u8]) -> Result<usize, SocketError> {
+    // ... 类似 send，但使用 IoReadAccess
+    MmProbeAndLockPages(mdl, KERNEL_MODE, _LOCK_OPERATION::IoReadAccess);
+    // ...
+}
+```
+
+### WSK 关键类型和常量
+
+```rust
+// KEVENT 大小为 24 字节，不能使用 [u8; 32]
+use wdk_sys::KEVENT;
+
+// 完成回调签名 - 第一个参数必须是 PDEVICE_OBJECT
+unsafe extern "C" fn completion_routine(
+    _device: PDEVICE_OBJECT,  // 不是 PVOID！
+    _irp: PIRP,
+    context: PVOID,
+) -> NTSTATUS {
+    if !context.is_null() {
+        KeSetEvent(context as PRKEVENT, 0, false as BOOLEAN);
+    }
+    STATUS_MORE_PROCESSING_REQUIRED  // 重要！不是 STATUS_SUCCESS
+}
+
+// SL_INVOKE_* 常量值 (来自 wdk-sys)
+use wdk_sys::{SL_INVOKE_ON_SUCCESS, SL_INVOKE_ON_ERROR, SL_INVOKE_ON_CANCEL};
+
+// Socket 类型标志
+const WSK_FLAG_LISTEN_SOCKET: u32 = 0x00000001;     // TCP Server
+const WSK_FLAG_DATAGRAM_SOCKET: u32 = 0x00000002;   // UDP
+const WSK_FLAG_CONNECTION_SOCKET: u32 = 0x00000004; // TCP Client
+
+// 地址族
+const AF_INET: u16 = 2;      // IPv4
+const AF_INET6: u16 = 23;    // IPv6
+
+// Socket 类型
+const SOCK_STREAM: u16 = 1;  // TCP
+const SOCK_DGRAM: u16 = 2;   // UDP
+
+// 协议
+const IPPROTO_TCP: u32 = 6;
+const IPPROTO_UDP: u32 = 17;
 ```
 
 **关键函数：**
