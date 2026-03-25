@@ -1,179 +1,135 @@
-# BSOD 修复报告 #6
+# BSOD 修复报告 #7
 
 ## 问题信息
 
-**Bugcheck Code**: 0x7E (SYSTEM_THREAD_EXCEPTION_NOT_HANDLED)
-**Exception Code**: 0x80000003 (Break instruction exception - `int 3`)
-**Faulting Module**: nt
-**Faulting IP**: `nt!IoIsSystemThread+0x103`
-**时间**: 2026-03-25 (第六次崩溃）
+**Bugcheck Code**: 0xCE (DRIVER_UNLOADED_WITHOUT_CANCELLING_PENDING_OPERATIONS)
+**Faulting Module**: netdemo.sys (已卸载)
+**Faulting IP**: `<Unloaded_netdemo.sys>+0x10a5`
+**时间**: 2026-03-25 (第七次崩溃）
 
 ## 问题分析
 
 ### 错误堆栈
 ```
-nt!IoIsSystemThread+0x103:
-fffff802`3d3452b3 cc              int     3  <-- 断点异常
-
-调用栈：
-netdemo!DriverEntry+0x879
-  -> nt!_chkstk  <-- 栈检查函数！
-    -> nt!IoIsSystemThread+0x103 (崩溃)
+nt!KeBugCheckEx
+  -> nt!memset+0x28dad
+    -> nt!MmProbeAndLockPages+0x3d80
+      -> nt!setjmpex+0x4598
+        -> <Unloaded_netdemo.sys>+0x10a5  <-- 驱动已卸载，但代码仍在执行！
 ```
 
 ### 根本原因
 
-**`format!` 宏在内核模式下消耗大量栈空间！**
+**驱动卸载时没有等待系统线程结束！**
 
-`log!` 宏内部使用 `alloc::format!` 进行字符串格式化，这会：
-1. 在栈上分配临时缓冲区
-2. 调用复杂的格式化代码
-3. 消耗大量栈空间（可能超过 1KB 每次调用）
-
-在系统线程（栈大小仅 12KB-24KB）中，多次 `log!` 调用会导致栈溢出。
-
-### 为什么之前的修复没有解决问题？
-
-之前的修复只解决了 `handle_client` 中的 4KB buffer 问题，但忽略了：
-- `DriverEntry` 中的 `log!` 调用
-- `server_thread_entry` 中的多个 `log!` 调用
-- `wsk_init` 中的 `format!` 调用
+`driver_unload` 设置 `SERVER_RUNNING = false` 后立即返回，但系统线程仍在运行。当线程继续执行时，驱动代码已被卸载，导致访问无效内存。
 
 ## 修复方案
 
-### 修改文件
-`d:\ux\examples\hypedbg\rust-driver\examples\netdemo\src\lib.rs`
+### 第一次修复尝试（失败）
 
-### 修复策略
-
-1. **移除所有 `log!` 调用** - 避免栈消耗
-2. **移除 `driver-framework` 依赖** - 简化代码
-3. **使用静态字符串** - 避免 `format!` 开销
-
-### 修复后代码
+使用 `KeWaitForSingleObject` 等待线程句柄：
 
 ```rust
-#![no_std]
+// 错误 ❌ - 线程句柄不是同步对象
+let _ = KeWaitForSingleObject(
+    SERVER_THREAD_HANDLE as PVOID,
+    0x02,  // Executive
+    0,     // KernelMode
+    false,
+    &timeout as *const i64 as PLARGE_INTEGER,
+);
+```
 
-extern crate alloc;
-extern crate wdk_panic;
+**结果**: Bugcheck 0xA (IRQL_NOT_LESS_OR_EQUAL)
+- `KeWaitForSingleObject` 不能直接等待线程句柄
+- 线程句柄不是可等待的同步对象
 
-use wdk_alloc::WdkAllocator;
-use wdk_sys::{
-    NTSTATUS, PDRIVER_OBJECT, PCUNICODE_STRING, IRP_MJ_CREATE, IRP_MJ_CLOSE, 
-    STATUS_SUCCESS, DEVICE_OBJECT, PIRP, HANDLE, PVOID,
-    POBJECT_ATTRIBUTES, OBJECT_ATTRIBUTES,
-    ntddk::PsCreateSystemThread,
-};
+### 最终修复方案
 
-#[unsafe(export_name = "DriverEntry")]
-pub unsafe extern "system" fn driver_entry(
-    driver: PDRIVER_OBJECT,
-    _registry_path: PCUNICODE_STRING,
-) -> NTSTATUS {
-    unsafe {
-        (*driver).MajorFunction[IRP_MJ_CREATE as usize] = Some(default_create_close);
-        (*driver).MajorFunction[IRP_MJ_CLOSE as usize] = Some(default_create_close);
-        (*driver).DriverUnload = Some(driver_unload);
-    }
+使用轮询等待 + `PsTerminateSystemThread`：
 
-    let _ = wsk::wsk_init();
-    let _ = start_server_thread();
-
-    STATUS_SUCCESS
-}
-
+```rust
+#[inline(never)]
 unsafe extern "C" fn server_thread_entry(_ctx: PVOID) {
-    while !wsk::is_wsk_ready() {
+    while SERVER_RUNNING {
         let mut interval: i64 = -10000000;
         KeDelayExecutionThread(0, false, &mut interval);
     }
     
-    let mut listener = wsk::WskListener::new();
-    if listener.create().is_err() {
-        return;
+    PsTerminateSystemThread(STATUS_SUCCESS);  // 正确终止线程
+}
+
+#[inline(never)]
+pub unsafe extern "C" fn driver_unload(_driver: PDRIVER_OBJECT) {
+    SERVER_RUNNING = false;
+    
+    // 轮询等待线程检测到退出标志
+    let mut interval: i64 = -1000000;
+    for _ in 0..100 {
+        KeDelayExecutionThread(0, false, &mut interval);
     }
     
-    // ... 简化的代码，无 log! 调用
+    if !SERVER_THREAD_HANDLE.is_null() {
+        let _ = ZwClose(SERVER_THREAD_HANDLE);
+        SERVER_THREAD_HANDLE = core::ptr::null_mut();
+    }
 }
 ```
-
-### 关键修复点
-
-| 修复项 | 错误 | 正确 |
-|--------|------|------|
-| 日志输出 | `log!(...)` 使用 `format!` | 移除所有日志 |
-| 错误处理 | `format!("error: {}", e)` | 静态字符串 `"error"` |
-| 栈使用量 | 大量（多次 format!） | 最小化 |
-
-## 修复详情
-
-### 1. `format!` 的栈开销
-
-```rust
-// 错误 ❌ - format! 消耗大量栈空间
-log!(LogLevel::Info, "WSK initialized: {}", status);
-let msg = format!("Error: 0x{:X}", status);
-
-// 正确 ✅ - 静态字符串，无栈开销
-let _ = wsk::wsk_init();
-return Err("WskRegister failed");
-```
-
-### 2. 内核模式下的最佳实践
-
-参考 `erebus-main` 项目的做法：
-```rust
-#[macro_export]
-macro_rules! println {
-    ($msg:tt) => {
-        #[cfg(debug_assertions)]  // 只在 debug 模式下启用日志
-        $crate::logger::Logger::log($msg, $crate::logger::LogLevel::Info);
-    };
-}
-```
-
-### 3. 栈空间限制
-
-| 环境 | 栈大小 | 建议 |
-|------|--------|------|
-| 用户态线程 | 1MB | 可以使用 format! |
-| 系统线程 | 12KB-24KB | 避免使用 format! |
-| 内核驱动 | 非常有限 | 最小化栈使用 |
 
 ## 验证结果
 
-编译成功，无错误。
+```
+=== Step 1: Load Driver ===
+驱动安装成功
+驱动启动成功
+
+=== Step 2: TCP Client Test ===
+Dial failed: dial tcp 127.0.0.1:50080: connectex: No connection could be made...
+(WSK 功能待启用)
+
+=== Step 3: Unload Driver ===
+驱动停止成功
+驱动卸载成功
+```
+
+**驱动加载/卸载成功！** 无 BSOD。
 
 ## 经验教训
 
-### 1. 内核模式下避免使用 `format!`
-- `format!` 宏会分配临时缓冲区
-- 格式化代码复杂，消耗大量栈空间
-- 应使用静态字符串或条件编译
+### 1. 线程同步的正确方式
 
-### 2. 日志输出的正确方式
-```rust
-// 推荐：条件编译
-#[cfg(debug_assertions)]
-wdk::println!("debug message");
+| 方法 | 适用场景 | 注意事项 |
+|------|----------|----------|
+| `KeWaitForSingleObject` | 等待 Event, Semaphore, Mutex | 不能等待线程句柄 |
+| `KeWaitForMultipleObjects` | 等待多个同步对象 | 同上 |
+| 轮询 + `PsTerminateSystemThread` | 系统线程退出 | 简单可靠 |
+| `KeSetEvent` + Event 对象 | 精确同步 | 需要额外 Event |
 
-// 推荐：静态字符串
-wdk::println!("static message");
+### 2. 驱动卸载的正确流程
 
-// 避免：动态格式化
-// wdk::println!("dynamic: {}", value);  // 危险！
+```
+1. 设置退出标志 (SERVER_RUNNING = false)
+2. 等待线程检测到标志并退出
+3. 调用 PsTerminateSystemThread (在线程内部)
+4. 关闭线程句柄 (ZwClose)
+5. 清理其他资源
+6. 返回
 ```
 
-### 3. 系统线程的栈限制
-- 默认栈大小仅 12KB-24KB
-- 每次函数调用都会消耗栈空间
-- 大数组用堆，避免递归，避免 format!
+### 3. Bugcheck 0xCE 的含义
 
-## 相关文档
+`DRIVER_UNLOADED_WITHOUT_CANCELLING_PENDING_OPERATIONS` 表示：
+- 驱动已卸载
+- 但还有未完成的操作（如定时器、工作线程、回调等）
+- 这些操作试图执行已卸载的代码
 
-- [Stack Overflow in Kernel Mode](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/stack-overflow)
-- [Kernel-Mode Driver Architecture](https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/)
+## 待解决问题
+
+WSK 网络功能因栈溢出问题暂时禁用，需要：
+1. 分析 `wsk` crate 的栈使用情况
+2. 考虑使用 `WSK_NO_WAIT` 替代 `WSK_INFINITE_WAIT`
+3. 优化 JSON 序列化/反序列化的栈使用
 
 ## 历史修复记录
 
@@ -185,3 +141,5 @@ wdk::println!("static message");
 | 4 | 0x7E | PsCreateSystemThread 传入空指针 | 创建有效变量并传递地址 |
 | 5 | 0x7E | 栈溢出（4KB buffer 在栈上） | 改用堆分配 Vec |
 | 6 | 0x7E | 栈溢出（format! 消耗大量栈空间） | 移除所有 log!/format! 调用 |
+| 7 | 0xCE | 驱动卸载时线程仍在运行 | 轮询等待 + PsTerminateSystemThread |
+| 8 | 0xA | KeWaitForSingleObject 等待线程句柄失败 | 改用轮询等待 |

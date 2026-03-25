@@ -1,75 +1,16 @@
  
-KEY_VALUES_STRING: 1
 
-    Key  : Analysis.CPU.mSec
-    Value: 265
+BUGCHECK_CODE:  a
 
-    Key  : Analysis.Elapsed.mSec
-    Value: 320
+BUGCHECK_P1: ffffffff80002ac8
 
-    Key  : Analysis.IO.Other.Mb
-    Value: 0
+BUGCHECK_P2: 2
 
-    Key  : Analysis.IO.Read.Mb
-    Value: 1
+BUGCHECK_P3: 1
 
-    Key  : Analysis.IO.Write.Mb
-    Value: 0
+BUGCHECK_P4: fffff80049e4005e
 
-    Key  : Analysis.Init.CPU.mSec
-    Value: 640
-
-    Key  : Analysis.Init.Elapsed.mSec
-    Value: 2718
-
-    Key  : Analysis.Memory.CommitPeak.Mb
-    Value: 54
-
-    Key  : Analysis.Version.DbgEng
-    Value: 10.0.29507.1001
-
-    Key  : Analysis.Version.Description
-    Value: 10.2511.5.1 amd64fre
-
-    Key  : Analysis.Version.Ext
-    Value: 1.2511.5.1
-
-    Key  : Bugcheck.Code.LegacyAPI
-    Value: 0x1000007e
-
-    Key  : Bugcheck.Code.TargetModel
-    Value: 0x1000007e
-
-    Key  : Dump.Attributes.AsUlong
-    Value: 0x8
-
-    Key  : Dump.Attributes.KernelGeneratedTriageDump
-    Value: 1
-
-    Key  : Failure.Bucket
-    Value: WRONG_SYMBOLS_X64_10.0.19041.3757_(WinBuild.160101.0800)_TIMESTAMP_331108-115949_781B6FB5_nt_wrong_symbols!781B6FB51046000
-
-    Key  : Failure.Hash
-    Value: {3048acc5-43ef-b7a9-1ce3-337c1b2b8b52}
-
-    Key  : Faulting.IP.Type
-    Value: Paged
-
-    Key  : WER.System.BIOSRevision
-    Value: 1.35.0.0
-
-
-BUGCHECK_CODE:  7e
-
-BUGCHECK_P1: ffffffff80000003
-
-BUGCHECK_P2: fffff802077452b3
-
-BUGCHECK_P3: ffff928f5e8add68
-
-BUGCHECK_P4: ffff928f5e8ad5a0
-
-FILE_IN_CAB:  032526-3968-01.dmp
+FILE_IN_CAB:  032526-4046-01.dmp
 
 ADDITIONAL_DEBUG_TEXT:  
 You can run '.symfix; .reload' to try to fix the symbol path and load symbols.
@@ -78,32 +19,63 @@ WRONG_SYMBOLS_TIMESTAMP: 781b6fb5
 
 WRONG_SYMBOLS_SIZE: 1046000
 
-FAULTING_MODULE: fffff80207400000 nt
+FAULTING_MODULE: fffff80049c00000 nt
 
 DUMP_FILE_ATTRIBUTES: 0x8
   Kernel Generated Triage Dump
 
-FAULTING_THREAD:  ffff820871147040
+FAULTING_THREAD:  ffffb58ea2ed90c0
 
-EXCEPTION_RECORD:  ffff928f5e8add68 -- (.exr 0xffff928f5e8add68)
-ExceptionAddress: fffff802077452b3 (nt!IoIsSystemThread+0x0000000000000103)
-   ExceptionCode: 80000003 (Break instruction exception)
-  ExceptionFlags: 00000010
-NumberParameters: 1
-   Parameter[0]: 0000000000000000
-
-CONTEXT:  ffff928f5e8ad5a0 -- (.cxr 0xffff928f5e8ad5a0)
-rax=ffff928f5e8adfc8 rbx=ffff928f5e8af1c8 rcx=0000000000000102
-rdx=ffff928f5e8af1c8 rsi=ffff928f5e8ae7c0 rdi=0000000000000102
-rip=fffff802077452b3 rsp=ffff928f5e8adfa0 rbp=ffff928f5e8ae5b0
- r8=ffff928f5e8ae7c0  r9=ffff928f5e8ae600 r10=ffff928f5e8aef88
-r11=0000000000000000 r12=ffff928f5e8af510 r13=ffff928f5e8aef88
-r14=ffff928f5e8ae600 r15=ffff928f5e8aef88
-iopl=0         nv up ei pl nz na pe nc
-cs=0010  ss=0018  ds=002b  es=002b  fs=0053  gs=002b             efl=00040202
-nt!IoIsSystemThread+0x103:
-fffff802`077452b3 cc              int     3
-Resetting default scope
+WRITE_ADDRESS: *************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_MMPFN                                     ***
+***                                                                   ***
+*************************************************************************
+*************************************************************************
+***                                                                   ***
+***                                                                   ***
+***    Either you specified an unqualified symbol, or your debugger   ***
+***    doesn't have full symbol information.  Unqualified symbol      ***
+***    resolution is turned off by default. Please either specify a   ***
+***    fully qualified symbol module!symbolname, or enable resolution ***
+***    of unqualified symbols by typing ".symopt- 100". Note that     ***
+***    enabling unqualified symbol resolution with network symbol     ***
+***    server shares in the symbol path may cause the debugger to     ***
+***    appear to hang for long periods of time when an incorrect      ***
+***    symbol name is typed or the network symbol server is down.     ***
+***                                                                   ***
+***    For some commands to work properly, your symbol path           ***
+***    must point to .pdb files that have full type information.      ***
+***                                                                   ***
+***    Certain .pdb files (such as the public OS symbols) do not      ***
+***    contain the required information.  Contact the group that      ***
+***    provided you with these symbols if you need this command to    ***
+***    work.                                                          ***
+***                                                                   ***
+***    Type referenced: nt!_MMPTE                                     ***
+***                                                                   ***
+*************************************************************************
+Unable to get size of nt!_MMPTE - probably bad symbols
+ ffffffff80002ac8 
 
 BLACKBOXNTFS: 1 (!blackboxntfs)
 
@@ -113,29 +85,29 @@ BLACKBOXWINLOGON: 1 (!blackboxwinlogon)
 
 CUSTOMER_CRASH_COUNT:  1
 
-EXCEPTION_STR:  WRONG_SYMBOLS
+IP_IN_FREE_BLOCK: 0
 
 IP_IN_PAGED_CODE: 
-nt!IoIsSystemThread+103
-fffff802`077452b3 cc              int     3
+nt!KeWaitForMutexObject+18e
+fffff800`49e4005e f00fba2f07      lock bts dword ptr [rdi],7
 
 STACK_TEXT:  
-ffff928f`5e8adfa0 fffff802`077d010b     : fffff802`077078e5 fffff802`074d40b8 00000000`00000000 00000000`00000000 : nt!IoIsSystemThread+0x103
-ffff928f`5e8adfd0 fffff802`07807daf     : fffff802`074d40b8 ffff928f`5e8ae5b0 fffff802`077d00d0 00000000`00000000 : nt!_C_specific_handler+0x3b
-ffff928f`5e8ae040 fffff802`076ab207     : ffff928f`5e8ae5b0 00000000`00000000 ffff928f`5e8af510 fffff802`077078e5 : nt!_chkstk+0x55f
-ffff928f`5e8ae070 fffff802`077394f6     : ffff928f`5e8aef88 ffff928f`5e8aecc0 ffff928f`5e8aef88 ffff928f`5e8af328 : nt!KeTestAlertThread+0x14c7
-ffff928f`5e8ae790 fffff802`0781186c     : 00000000`00001000 ffff928f`5e8af030 ffff8000`00000000 00000000`00000000 : nt!RtlTestBit+0x7e6
-ffff928f`5e8aee50 fffff802`0780d2bd     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : nt!setjmpex+0x8c2c
-ffff928f`5e8af030 00000000`00000102     : fffff802`582a12d4 00000000`00000002 ffff8208`71147080 ffff8208`71147378 : nt!setjmpex+0x467d
-ffff928f`5e8af1c8 fffff802`582a12d4     : 00000000`00000002 ffff8208`71147080 ffff8208`71147378 ffff9681`b61a5180 : 0x102
-ffff928f`5e8af1d0 fffff802`077078e5     : ffff8208`71147040 fffff802`582a11f9 00000000`00000000 00000000`00000000 : netdemo!DriverEntry+0x2d4
-ffff928f`5e8af510 fffff802`078062f8     : ffff9681`b61a5180 ffff8208`71147040 fffff802`07707890 00000000`00000246 : nt!IoCancelIrp+0x105
-ffff928f`5e8af560 00000000`00000000     : ffff928f`5e8b0000 ffff928f`5e8a9000 00000000`00000000 00000000`00000000 : nt!KeSynchronizeExecution+0x7658
+ffff840d`9fe5f028 fffff800`4a011729     : 00000000`0000000a ffffffff`80002ac8 00000000`00000002 00000000`00000001 : nt!KeBugCheckEx
+ffff840d`9fe5f030 fffff800`4a00d2e3     : 00000000`0000000c 00000000`624e4d43 00000000`00000060 00000000`0000090d : nt!setjmpex+0x8ae9
+ffff840d`9fe5f170 fffff800`49e4005e     : ffffb58e`a2ed90c0 00000000`00000000 ffffb58e`a2ed9200 00000000`00000000 : nt!setjmpex+0x46a3
+ffff840d`9fe5f300 fffff801`ce3d109d     : ffffffff`80002ac8 2d50fb8f`00000002 ffffb58e`00000000 00000000`00000000 : nt!KeWaitForMutexObject+0x18e
+ffff840d`9fe5f3f0 fffff800`4a450f7d     : 00000000`00000000 ffffb58e`a91dec70 fffff800`4a925440 00000000`00000000 : netdemo!DriverEntry+0x9d
+ffff840d`9fe5f430 fffff800`49ec46b5     : ffffb58e`00000000 00000000`00000000 ffffb58e`a2ed90c0 00000000`00000000 : nt!FsRtlRegisterFltMgrCalls+0x7ce7d
+ffff840d`9fe5f470 fffff800`49f078e5     : ffffb58e`a2ed90c0 00000000`00000080 ffffb58e`97299080 00000000`00000000 : nt!ExTryQueueWorkItem+0x5b25
+ffff840d`9fe5f510 fffff800`4a0062f8     : ffff9381`869a5180 ffffb58e`a2ed90c0 fffff800`49f07890 00000000`00000246 : nt!IoCancelIrp+0x105
+ffff840d`9fe5f560 00000000`00000000     : ffff840d`9fe60000 ffff840d`9fe59000 00000000`00000000 00000000`00000000 : nt!KeSynchronizeExecution+0x7658
 
 
-STACK_COMMAND: .cxr 0xffff928f5e8ad5a0 ; kb
+STACK_COMMAND: .cxr; .ecxr ; kb
 
 EXCEPTION_CODE_STR:  781B6FB5
+
+EXCEPTION_STR:  WRONG_SYMBOLS
 
 PROCESS_NAME:  ntoskrnl.wrong.symbols.exe
 
@@ -156,27 +128,16 @@ FAILURE_ID_HASH:  {3048acc5-43ef-b7a9-1ce3-337c1b2b8b52}
 Followup:     MachineOwner
 ---------
 
-4: kd> .cxr 0xffff928f5e8ad5a0 ; kb
-rax=ffff928f5e8adfc8 rbx=ffff928f5e8af1c8 rcx=0000000000000102
-rdx=ffff928f5e8af1c8 rsi=ffff928f5e8ae7c0 rdi=0000000000000102
-rip=fffff802077452b3 rsp=ffff928f5e8adfa0 rbp=ffff928f5e8ae5b0
- r8=ffff928f5e8ae7c0  r9=ffff928f5e8ae600 r10=ffff928f5e8aef88
-r11=0000000000000000 r12=ffff928f5e8af510 r13=ffff928f5e8aef88
-r14=ffff928f5e8ae600 r15=ffff928f5e8aef88
-iopl=0         nv up ei pl nz na pe nc
-cs=0010  ss=0018  ds=002b  es=002b  fs=0053  gs=002b             efl=00040202
-nt!IoIsSystemThread+0x103:
-fffff802`077452b3 cc              int     3
-  *** Stack trace for last set context - .thread/.cxr resets it
+6: kd> .cxr; .ecxr ; kb
+Can't switch processors on a single processor kernel triage dump
+Unable to get exception context, HRESULT 0x8000FFFF
  # RetAddr               : Args to Child                                                           : Call Site
-00 fffff802`077d010b     : fffff802`077078e5 fffff802`074d40b8 00000000`00000000 00000000`00000000 : nt!IoIsSystemThread+0x103
-01 fffff802`07807daf     : fffff802`074d40b8 ffff928f`5e8ae5b0 fffff802`077d00d0 00000000`00000000 : nt!_C_specific_handler+0x3b
-02 fffff802`076ab207     : ffff928f`5e8ae5b0 00000000`00000000 ffff928f`5e8af510 fffff802`077078e5 : nt!_chkstk+0x55f
-03 fffff802`077394f6     : ffff928f`5e8aef88 ffff928f`5e8aecc0 ffff928f`5e8aef88 ffff928f`5e8af328 : nt!KeTestAlertThread+0x14c7
-04 fffff802`0781186c     : 00000000`00001000 ffff928f`5e8af030 ffff8000`00000000 00000000`00000000 : nt!RtlTestBit+0x7e6
-05 fffff802`0780d2bd     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : nt!setjmpex+0x8c2c
-06 00000000`00000102     : fffff802`582a12d4 00000000`00000002 ffff8208`71147080 ffff8208`71147378 : nt!setjmpex+0x467d
-07 fffff802`582a12d4     : 00000000`00000002 ffff8208`71147080 ffff8208`71147378 ffff9681`b61a5180 : 0x102
-08 fffff802`077078e5     : ffff8208`71147040 fffff802`582a11f9 00000000`00000000 00000000`00000000 : netdemo!DriverEntry+0x2d4
-09 fffff802`078062f8     : ffff9681`b61a5180 ffff8208`71147040 fffff802`07707890 00000000`00000246 : nt!IoCancelIrp+0x105
-0a 00000000`00000000     : ffff928f`5e8b0000 ffff928f`5e8a9000 00000000`00000000 00000000`00000000 : nt!KeSynchronizeExecution+0x7658
+00 fffff800`4a011729     : 00000000`0000000a ffffffff`80002ac8 00000000`00000002 00000000`00000001 : nt!KeBugCheckEx
+01 fffff800`4a00d2e3     : 00000000`0000000c 00000000`624e4d43 00000000`00000060 00000000`0000090d : nt!setjmpex+0x8ae9
+02 fffff800`49e4005e     : ffffb58e`a2ed90c0 00000000`00000000 ffffb58e`a2ed9200 00000000`00000000 : nt!setjmpex+0x46a3
+03 fffff801`ce3d109d     : ffffffff`80002ac8 2d50fb8f`00000002 ffffb58e`00000000 00000000`00000000 : nt!KeWaitForMutexObject+0x18e
+04 fffff800`4a450f7d     : 00000000`00000000 ffffb58e`a91dec70 fffff800`4a925440 00000000`00000000 : netdemo!DriverEntry+0x9d
+05 fffff800`49ec46b5     : ffffb58e`00000000 00000000`00000000 ffffb58e`a2ed90c0 00000000`00000000 : nt!FsRtlRegisterFltMgrCalls+0x7ce7d
+06 fffff800`49f078e5     : ffffb58e`a2ed90c0 00000000`00000080 ffffb58e`97299080 00000000`00000000 : nt!ExTryQueueWorkItem+0x5b25
+07 fffff800`4a0062f8     : ffff9381`869a5180 ffffb58e`a2ed90c0 fffff800`49f07890 00000000`00000246 : nt!IoCancelIrp+0x105
+08 00000000`00000000     : ffff840d`9fe60000 ffff840d`9fe59000 00000000`00000000 00000000`00000000 : nt!KeSynchronizeExecution+0x7658
