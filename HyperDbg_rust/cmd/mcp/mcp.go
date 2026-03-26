@@ -1042,3 +1042,19 @@ func (s *DebuggerMCPServer) handleExecuteScriptWithContext(ctx context.Context, 
 	}, result, nil
 
 }
+
+func main() {
+	impl := hyperdbgrust.NewPacket()
+	server := NewDebuggerMCPServer(impl)
+
+	mcpServer := mcp.NewServer(&mcp.Implementation{
+		Name:    "hyperdbg-mcp",
+		Version: "1.0.0",
+	}, nil)
+	server.RegisterTools(mcpServer)
+
+	ctx := context.Background()
+	if err := mcpServer.Run(ctx, &mcp.StdioTransport{}); err != nil {
+		panic(err)
+	}
+}

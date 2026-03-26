@@ -153,88 +153,110 @@ func WriteMessage(w io.Writer, msg *Message) error {
 }
 
 type RegisterState struct {
-	RAX, RBX, RCX, RDX   uint64
-	RSI, RDI, RBP, RSP   uint64
-	R8, R9, R10, R11     uint64
-	R12, R13, R14, R15   uint64
-	RIP, RFLAGS          uint64
-	CR0, CR2, CR3, CR4   uint64
-	DR0, DR1, DR2, DR3   uint64
-	DR6, DR7             uint64
-	GDTR, GSBase, FSBase uint64
+	RAX    uint64 `json:"RAX"`
+	RBX    uint64 `json:"RBX"`
+	RCX    uint64 `json:"RCX"`
+	RDX    uint64 `json:"RDX"`
+	RSI    uint64 `json:"RSI"`
+	RDI    uint64 `json:"RDI"`
+	RBP    uint64 `json:"RBP"`
+	RSP    uint64 `json:"RSP"`
+	R8     uint64 `json:"R8"`
+	R9     uint64 `json:"R9"`
+	R10    uint64 `json:"R10"`
+	R11    uint64 `json:"R11"`
+	R12    uint64 `json:"R12"`
+	R13    uint64 `json:"R13"`
+	R14    uint64 `json:"R14"`
+	R15    uint64 `json:"R15"`
+	RIP    uint64 `json:"RIP"`
+	RFLAGS uint64 `json:"RFLAGS"`
+	CR0    uint64 `json:"CR0"`
+	CR2    uint64 `json:"CR2"`
+	CR3    uint64 `json:"CR3"`
+	CR4    uint64 `json:"CR4"`
+	DR0    uint64 `json:"DR0"`
+	DR1    uint64 `json:"DR1"`
+	DR2    uint64 `json:"DR2"`
+	DR3    uint64 `json:"DR3"`
+	DR6    uint64 `json:"DR6"`
+	DR7    uint64 `json:"DR7"`
+	GDTR   uint64 `json:"GDTR"`
+	GSBase uint64 `json:"GSBase"`
+	FSBase uint64 `json:"FSBase"`
 }
 
 type ProcessInfo struct {
-	ProcessID   uint32
-	ImageName   string
-	BaseAddress uint64
-	Size        uint64
-	CR3         uint64
+	ProcessID   uint32 `json:"process_id"`
+	ImageName   string `json:"image_name"`
+	BaseAddress string `json:"base_address"`
+	Size        uint64 `json:"size"`
+	CR3         uint64 `json:"cr3"`
 }
 
 type ThreadInfo struct {
-	ThreadID     uint32
-	ProcessID    uint32
-	StartAddress uint64
-	TEB          uint64
-	State        DebugState
+	ThreadID     uint32 `json:"thread_id"`
+	ProcessID    uint32 `json:"process_id"`
+	StartAddress string `json:"start_address"`
+	TEB          string `json:"teb"`
+	State        uint32 `json:"state"`
 }
 
 type ModuleInfo struct {
-	BaseAddress uint64
-	Size        uint64
-	Name        string
-	Path        string
+	BaseAddress string `json:"base_address"`
+	Size        uint64 `json:"size"`
+	Name        string `json:"name"`
+	Path        string `json:"path"`
 }
 
 type BreakpointInfo struct {
-	ID        uint64
-	Address   uint64
-	Type      BreakpointType
-	ProcessID uint32
-	Enabled   bool
-	HitCount  uint64
+	ID        uint64 `json:"id"`
+	Address   string `json:"address"`
+	Type      int    `json:"type"`
+	ProcessID uint32 `json:"process_id"`
+	Enabled   bool   `json:"enabled"`
+	HitCount  uint64 `json:"hit_count"`
 }
 
 type BreakpointEvent struct {
-	ProcessID    uint32
-	ThreadID     uint32
-	CoreID       uint32
-	Address      uint64
-	BreakpointID uint64
-	Registers    RegisterState
+	ProcessID    uint32        `json:"process_id"`
+	ThreadID     uint32        `json:"thread_id"`
+	CoreID       uint32        `json:"core_id"`
+	Address      string        `json:"address"`
+	BreakpointID uint64        `json:"breakpoint_id"`
+	Registers    RegisterState `json:"registers"`
 }
 
 type ExceptionEvent struct {
-	ProcessID     uint32
-	ThreadID      uint32
-	CoreID        uint32
-	ExceptionCode uint32
-	Address       uint64
-	ErrorCode     uint64
-	Registers     RegisterState
+	ProcessID     uint32        `json:"process_id"`
+	ThreadID      uint32        `json:"thread_id"`
+	CoreID        uint32        `json:"core_id"`
+	ExceptionCode uint32        `json:"exception_code"`
+	Address       string        `json:"address"`
+	ErrorCode     uint64        `json:"error_code"`
+	Registers     RegisterState `json:"registers"`
 }
 
 type DebugPrintEvent struct {
-	ProcessID uint32
-	ThreadID  uint32
-	CoreID    uint32
-	Message   string
-	Level     uint32
+	ProcessID uint32 `json:"process_id"`
+	ThreadID  uint32 `json:"thread_id"`
+	CoreID    uint32 `json:"core_id"`
+	Message   string `json:"message"`
+	Level     uint32 `json:"level"`
 }
 
 type SyscallEvent struct {
-	ProcessID     uint32
-	ThreadID      uint32
-	CoreID        uint32
-	SyscallNumber uint64
-	RAX           uint64
-	RCX           uint64
-	RDX           uint64
-	R8            uint64
-	R9            uint64
-	R10           uint64
-	RSP           uint64
+	ProcessID     uint32 `json:"process_id"`
+	ThreadID      uint32 `json:"thread_id"`
+	CoreID        uint32 `json:"core_id"`
+	SyscallNumber uint64 `json:"syscall_number"`
+	RAX           uint64 `json:"rax"`
+	RCX           uint64 `json:"rcx"`
+	RDX           uint64 `json:"rdx"`
+	R8            uint64 `json:"r8"`
+	R9            uint64 `json:"r9"`
+	R10           uint64 `json:"r10"`
+	RSP           uint64 `json:"rsp"`
 }
 
 type Response[T ResponseType] struct {
@@ -668,7 +690,7 @@ func parseBreakpointEvent(data []byte) *BreakpointEvent {
 		ProcessID:    binary.LittleEndian.Uint32(data[0:4]),
 		ThreadID:     binary.LittleEndian.Uint32(data[4:8]),
 		CoreID:       binary.LittleEndian.Uint32(data[8:12]),
-		Address:      binary.LittleEndian.Uint64(data[12:20]),
+		Address:      fmt.Sprintf("0x%x", binary.LittleEndian.Uint64(data[12:20])),
 		BreakpointID: binary.LittleEndian.Uint64(data[20:28]),
 	}
 }
@@ -682,7 +704,7 @@ func parseExceptionEvent(data []byte) *ExceptionEvent {
 		ThreadID:      binary.LittleEndian.Uint32(data[4:8]),
 		CoreID:        binary.LittleEndian.Uint32(data[8:12]),
 		ExceptionCode: binary.LittleEndian.Uint32(data[12:16]),
-		Address:       binary.LittleEndian.Uint64(data[16:24]),
+		Address:       fmt.Sprintf("0x%x", binary.LittleEndian.Uint64(data[16:24])),
 		ErrorCode:     binary.LittleEndian.Uint64(data[24:32]),
 	}
 }

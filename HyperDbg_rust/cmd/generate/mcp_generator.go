@@ -279,6 +279,22 @@ func (s *{{$.ServerName}}) handle{{.Name}}(ctx context.Context, req *mcp.CallToo
 	{{end}}
 }
 {{end}}
+
+func main() {
+	impl := hyperdbgrust.NewPacket()
+	server := New{{.ServerName}}(impl)
+
+	mcpServer := mcp.NewServer(&mcp.Implementation{
+		Name:    "hyperdbg-mcp",
+		Version: "1.0.0",
+	}, nil)
+	server.RegisterTools(mcpServer)
+
+	ctx := context.Background()
+	if err := mcpServer.Run(ctx, &mcp.StdioTransport{}); err != nil {
+		panic(err)
+	}
+}
 `))
 
 type InterfaceConfig struct {
