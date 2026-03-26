@@ -2,10 +2,10 @@
 
 extern crate alloc;
 
-mod types;
+mod packet;
 mod events;
 
-pub use types::*;
+pub use packet::*;
 pub use events::*;
 
 pub const PROTOCOL_VERSION: u32 = 1;

@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/ddkwork/HyperDbg_rust/debugger"
-	"github.com/ddkwork/HyperDbg_rust/protocol"
 )
 
 func main() {

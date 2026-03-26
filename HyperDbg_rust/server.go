@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
 	"bytes"
@@ -8,8 +8,6 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
-
-	"github.com/ddkwork/HyperDbg_rust/protocol"
 )
 
 const (

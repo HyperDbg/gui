@@ -1,4 +1,4 @@
-package protocol
+package main
 
 import (
 	"encoding/binary"
@@ -6,10 +6,10 @@ import (
 )
 
 const (
-	ProtocolVersion  = 1
-	DefaultPort      = 9527
-	MaxMessageSize   = 4096
-	HeaderSize       = 20
+	ProtocolVersion = 1
+	DefaultPort     = 9527
+	MaxMessageSize  = 4096
+	HeaderSize      = 20
 )
 
 type MessageType uint32
@@ -56,8 +56,8 @@ const (
 	MsgTypeGetCallStack      MessageType = 125
 
 	// 响应
-	MsgTypeResponse          MessageType = 200
-	MsgTypeError             MessageType = 201
+	MsgTypeResponse MessageType = 200
+	MsgTypeError    MessageType = 201
 )
 
 type MessageHeader struct {
@@ -143,14 +143,14 @@ const (
 )
 
 type RegisterState struct {
-	RAX, RBX, RCX, RDX uint64
-	RSI, RDI, RBP, RSP uint64
-	R8, R9, R10, R11   uint64
-	R12, R13, R14, R15 uint64
-	RIP, RFLAGS        uint64
-	CR0, CR2, CR3, CR4 uint64
-	DR0, DR1, DR2, DR3 uint64
-	DR6, DR7           uint64
+	RAX, RBX, RCX, RDX   uint64
+	RSI, RDI, RBP, RSP   uint64
+	R8, R9, R10, R11     uint64
+	R12, R13, R14, R15   uint64
+	RIP, RFLAGS          uint64
+	CR0, CR2, CR3, CR4   uint64
+	DR0, DR1, DR2, DR3   uint64
+	DR6, DR7             uint64
 	GDTR, GSBase, FSBase uint64
 }
 
@@ -178,12 +178,12 @@ type ModuleInfo struct {
 }
 
 type BreakpointInfo struct {
-	ID         uint64
-	Address    uint64
-	Type       BreakpointType
-	ProcessID  uint32
-	Enabled    bool
-	HitCount   uint64
+	ID        uint64
+	Address   uint64
+	Type      BreakpointType
+	ProcessID uint32
+	Enabled   bool
+	HitCount  uint64
 }
 
 type BreakpointEvent struct {

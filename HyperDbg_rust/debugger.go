@@ -1,4 +1,4 @@
-package debugger
+package main
 
 import (
 	"context"
@@ -7,7 +7,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ddkwork/HyperDbg_rust/protocol"
 	"github.com/ddkwork/HyperDbg_rust/server"
 )
 

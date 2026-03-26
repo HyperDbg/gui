@@ -3,8 +3,6 @@ package walker
 import (
 	"fmt"
 	"time"
-
-	"github.com/ddkwork/HyperDbg_rust/protocol"
 )
 
 const (
@@ -18,8 +16,8 @@ const (
 )
 
 type Walker interface {
-	Maiter(event *protocol.SyscallEvent, do func())
-	Hook(event *protocol.SyscallEvent, do func())
+	Maiter(event *SyscallEvent, do func())
+	Hook(event *SyscallEvent, do func())
 }
 
 type ProcessBehaviorLogger struct {

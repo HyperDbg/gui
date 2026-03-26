@@ -2,8 +2,6 @@ package walker
 
 import (
 	"testing"
-
-	"github.com/ddkwork/HyperDbg_rust/protocol"
 )
 
 func TestWalker(t *testing.T) {
