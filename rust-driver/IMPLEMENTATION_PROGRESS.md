@@ -348,3 +348,36 @@ Rust 实现目前完成约 100%，所有核心功能已完成：
 - **Go Communicator**：创建 MCP 生成器，自动从 Go 接口生成 MCP 服务器代码
 - **脚本引擎**：实现完整的脚本引擎，支持 20+ 调试命令、变量、循环、条件执行
 - **工具库**：新增 disassembler 和 pdbex crate，完善调试器工具链
+
+---
+
+## 里程碑: WSK HTTP Server 完成 (2024-03-26)
+
+### 完成内容
+
+| 功能 | 状态 | 说明 |
+|------|------|------|
+| WSK HTTP Server | ✅ | 驱动监听 50080 端口 |
+| HTTP 请求解析 | ✅ | POST /api, /ping, /status 等 |
+| JSON 序列化/反序列化 | ✅ | 使用 serde_json |
+| 多客户端连接 | ✅ | 每连接独立 context |
+
+### 关键修复
+
+详见 `rust-driver/net/BSOD_FIX_REPORT.md`，共 14 次迭代修复：
+
+| # | 问题 | 修复 |
+|---|------|------|
+| 9 | WSK_PROVIDER_DISPATCH 缺少 Version/Reserved | 参考 WDK wsk.h 修正 |
+| 10 | accept_event 回调从未被调用 | 改用主动 WskAccept 轮询 |
+| 11 | CLIENT_LISTEN_DISPATCH 设置错误 | 运行时设置函数指针 |
+| 12 | 端口字节序错误 | 使用 to_be() 转换 |
+| 13 | Handler 值传递导致响应为 0 | 改为指针传递 |
+| 14 | WriteJSON 缺少 HTTP 响应头 | 添加 HTTP/1.1 200 OK |
+
+### 回退点
+
+如遇网络通信问题，请回退到 commit `23cea72`：
+- `rust-driver/net/src/lib.rs` - WSK 核心实现
+- `rust-driver/examples/netdemo/src/lib.rs` - 驱动入口
+- `rust-driver/net/BSOD_FIX_REPORT.md` - 完整修复记录
