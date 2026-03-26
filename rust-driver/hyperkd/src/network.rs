@@ -2,7 +2,7 @@ use alloc::boxed::Box;
 use alloc::sync::Arc;
 use alloc::vec::Vec;
 use spin::Mutex;
-use wsk::*;
+use net::*;
 use protocol::*;
 
 extern "system" {

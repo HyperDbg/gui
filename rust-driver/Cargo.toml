@@ -7,7 +7,7 @@ members = [
     "hyperhv",
     "hyperkd",
     "protocol",
-    "wsk",
+    "net",
     "disassembler",
     "pdbex",
     "kd",
@@ -22,7 +22,7 @@ readme = "README.md"
 
 [workspace.dependencies]
 protocol = { path = "protocol" }
-wsk = { path = "wsk" }
+net = { path = "net" }
 driver-framework = { path = "driver-framework" }
 
 [profile.dev]

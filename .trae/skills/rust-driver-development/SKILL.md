@@ -690,18 +690,18 @@ const IPPROTO_UDP: u32 = 17;
 │  ┌─────────────────┐                              ┌─────────────────┐ │
 │  │   Go 用户态      │                              │   Rust 驱动      │ │
 │  │                 │                              │                 │ │
-│  │  TCP Client     │─────── JSON 协议 ─────────►│  TCP Server     │ │
+│  │  HTTP Client    │─────── HTTP POST ─────────►│  HTTP Server    │ │
 │  │  (连接 50080)   │                              │  (监听 50080)   │ │
 │  │                 │                              │                 │ │
-│  │  - 解析 JSON    │◄────── JSON 响应 ──────────│  - 解析 JSON     │ │
-│  │  - 发送命令     │                              │  - 执行调试     │ │
-│  │  - 接收结果     │                              │  - 返回结果     │ │
+│  │  - 发送 HTTP    │◄────── HTTP 200 JSON ──────│  - 解析 HTTP     │ │
+│  │  - 解析 JSON    │                              │  - 执行调试     │ │
+│  │  - 接收结果     │                              │  - 返回 JSON     │ │
 │  └────────┬────────┘                              └────────┬────────┘ │
 │           │                                                │          │
 │           │                                                │          │
 │           └──────────────────┐ ┌──────────────────────────┘          │
 │                              │ │                                      │
-│                              │ │   TCP Socket 连接                     │
+│                              │ │   HTTP over TCP Socket               │
 └──────────────────────────────┼─┼──────────────────────────────────────┘
                                │ │
                                │ ▼
@@ -716,34 +716,35 @@ const IPPROTO_UDP: u32 = 17;
                     └──────────────────────┘
 ```
 
-### 为什么选择 JSON + TCP Server 架构？
+### 为什么选择 JSON + HTTP 架构？
 
-| 对比项 | IOCTL + 结构体 | JSON + TCP Server |
-|--------|----------------|-------------------|
+| 对比项 | IOCTL + 结构体 | JSON + HTTP |
+|--------|----------------|-------------|
 | 内存对齐 | 必须严格对齐，容易出错 | 无需对齐，JSON 是文本协议 |
-| 调试 | 困难，二进制数据难读 | 方便，直接看到明文 |
+| 调试 | 困难，二进制数据难读 | 方便，直接看到明文 HTTP |
 | 跨语言 | Go/Rust 结构体需一一对应 | 只需共享 JSON Schema |
 | 依赖 | 简单，WDK 内置 | 需要 WSK |
 | 灵活性 | 结构体固定，增减字段麻烦 | JSON 可扩展性好 |
 | 远程调试 | 不支持 | 支持，Go 和驱动可不在同一机器 |
+| 标准化 | 自定义协议 | HTTP 标准协议，易于测试 |
 
 ### 通信流程
 
 ```
-1. Rust 驱动加载后，启动 TCP Server 监听 50080
-2. Go 作为 TCP Client 连接到 127.0.0.1:50080
-3. Go 发送 JSON 命令:
-   {
-     "action": "read_memory",
-     "target": "0x1000",
-     "size": 64
-   }
-4. Rust 驱动解析 JSON，执行对应操作
-5. Rust 驱动返回 JSON 响应:
-   {
-     "success": true,
-     "message": "ok"
-   }
+1. Rust 驱动加载后，启动 HTTP Server 监听 50080
+2. Go 作为 HTTP Client 发送 POST 请求到 127.0.0.1:50080
+3. Go 发送 HTTP POST 请求:
+   POST /api HTTP/1.1
+   Content-Type: application/json
+   
+   {"action": "read_memory", "target": "0x1000", "size": 64}
+4. Rust 驱动解析 HTTP 请求和 JSON，执行对应操作
+5. Rust 驱动返回 HTTP 响应:
+   HTTP/1.1 200 OK
+   Content-Type: application/json
+   Content-Length: 33
+   
+   {"success": true, "message": "ok"}
 ```
 
 ## 构建环境
@@ -859,7 +860,7 @@ netdemo/
 
 ### 当前状态
 - **IOCTL 功能**：已实现，用于本地通信测试
-- **网络功能**：驱动作为 TCP Server 监听 Go 客户端，使用 JSON 通信
+- **网络功能**：驱动作为 HTTP Server 监听 Go 客户端，使用 JSON 通信
 
 ## 项目结构
 
@@ -875,7 +876,7 @@ netdemo/
 
 3. **netdemo** - `rust-driver/examples/netdemo/`
    - 网络通信测试驱动
-   - 使用 TCP Server + JSON 协议
+   - 使用 HTTP Server + JSON 协议
 
 4. **protocol** - `rust-driver/protocol/`
    - 调试器通信协议定义 (JSON Schema)
@@ -945,7 +946,7 @@ rust-driver/
 |
 ├── examples/
 │   ├── sysdemo/               # 驱动示例 (IOCTL)
-│   └── netdemo/               # 网络测试驱动 (TCP Server + JSON)
+│   └── netdemo/               # 网络测试驱动 (HTTP Server + JSON)
 |
 └── erebus-main/               # 完整驱动框架
     ├── km/                    # 内核模式
@@ -955,8 +956,52 @@ rust-driver/
 ## 下一步计划
 
 ```
-1. [ ] 实现 WSK TCP Server 功能 -> 驱动监听 50080
-2. [ ] 实现 JSON 解析 -> 解析收到的 JSON 数据
-3. [ ] 实现命令处理 -> 执行调试命令
-4. [ ] 实现响应发送 -> 返回 JSON 结果
+1. [x] 实现 WSK HTTP Server 功能 -> 驱动监听 50080 ✅ 已完成 (2024-03-26)
+2. [x] 实现 JSON 解析 -> 解析收到的 JSON 数据 ✅ 已完成 (2024-03-26)
+3. [x] 实现命令处理 -> 执行调试命令 ✅ 已完成 (2024-03-26)
+4. [x] 实现响应发送 -> 返回 JSON 结果 ✅ 已完成 (2024-03-26)
+```
+
+---
+
+## ✅ 任务 1 完成记录: WSK HTTP Server
+
+### 完成日期
+2024-03-26
+
+### 验证结果
+- ✅ 驱动加载成功，无 BSOD
+- ✅ 监听 socket 创建成功
+- ✅ 端口绑定成功 (50080)
+- ✅ 主动轮询接受连接成功
+- ✅ 多客户端连接处理正常
+- ✅ HTTP 请求处理正常
+- ✅ JSON 响应正常
+
+### 关键修复记录
+详见: `rust-driver/examples/netdemo/BSOD_FIX_REPORT.md`
+
+| # | 问题 | 修复 |
+|---|------|------|
+| 9 | WSK_PROVIDER_DISPATCH 缺少 Version/Reserved 字段 | 参考 WDK wsk.h 修正结构体定义 |
+| 10 | accept_event 事件回调从未被调用 | 改用主动 WskAccept 轮询 |
+| 11 | CLIENT_LISTEN_DISPATCH 设置方式错误 | 运行时设置函数指针 |
+| 12 | 端口字节序错误 | 使用 to_be() 转换为网络字节序 |
+| 13 | Handler 值传递导致响应长度为 0 | 改为指针传递 `*mut ResponseWriter` |
+| 14 | WriteJSON 缺少 HTTP 响应头 | 添加 HTTP/1.1 200 OK 头部 |
+
+### 回退参考
+如遇网络通信问题，请检查:
+1. `rust-driver/net/src/lib.rs` - WSK 核心实现
+2. `rust-driver/examples/netdemo/src/lib.rs` - 驱动入口和 handler
+3. `rust-driver/examples/netdemo/BSOD_FIX_REPORT.md` - 完整修复记录
+
+### 测试命令
+```powershell
+# 构建驱动
+cd d:\ux\examples\hypedbg\rust-driver\examples\netdemo
+.\build.ps1
+
+# 运行测试客户端
+go run m.go
 ```

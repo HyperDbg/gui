@@ -355,12 +355,12 @@ name = "hyperhv"
 version = "0.1.0"
 dependencies = [
  "bitflags 2.11.0",
+ "net",
  "protocol",
  "spin",
  "wdk-alloc",
  "wdk-build 0.5.1",
  "wdk-sys",
- "wsk",
  "x86",
 ]
 
@@ -369,13 +369,13 @@ name = "hyperkd"
 version = "0.1.0"
 dependencies = [
  "hyperhv",
+ "net",
  "protocol",
  "spin",
  "wdk",
  "wdk-alloc",
  "wdk-build 0.5.1",
  "wdk-sys",
- "wsk",
 ]
 
 [[package]]
@@ -464,16 +464,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
 
 [[package]]
+name = "net"
+version = "0.1.0"
+dependencies = [
+ "protocol",
+ "serde",
+ "serde_json",
+ "wdk",
+ "wdk-alloc",
+ "wdk-panic",
+ "wdk-sys",
+]
+
+[[package]]
 name = "netdemo"
 version = "0.1.0"
 dependencies = [
  "driver-framework",
+ "net",
  "wdk",
  "wdk-alloc",
  "wdk-build 0.4.0",
  "wdk-panic",
  "wdk-sys",
- "wsk",
 ]
 
 [[package]]
@@ -1179,19 +1192,6 @@ name = "windows_x86_64_msvc"
 version = "0.52.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec"
-
-[[package]]
-name = "wsk"
-version = "0.1.0"
-dependencies = [
- "protocol",
- "serde",
- "serde_json",
- "wdk",
- "wdk-alloc",
- "wdk-panic",
- "wdk-sys",
-]
 
 [[package]]
 name = "x86"

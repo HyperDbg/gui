@@ -12,7 +12,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 protocol = { path = "../protocol" }
-wsk = { path = "../wsk" }
+net = { path = "../net" }
 hyperhv = { path = "../hyperhv" }
 wdk-alloc = "0.4"
 wdk-sys = "0.5"

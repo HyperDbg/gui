@@ -21,7 +21,7 @@ use alloc::sync::Arc;
 use alloc::vec::Vec;
 use spin::Mutex;
 use protocol::*;
-use wsk::*;
+use net::*;
 use hyperhv::*;
 
 pub const DEBUGGER_TOKEN: u32 = 0x01000000;
