@@ -1,9 +1,0 @@
-#pragma once
-
-#define WPP_INIT_TRACING(DriverObject, RegistryPath)
-#define WPP_CLEANUP(DriverObject)
-#define DoTraceMessage(level, msg, ...)
-
-#define WPP_CONTROL_GUIDS
-#define WPP_DEFINE_CONTROL_GUID(name, guid, ...)
-#define WPP_DEFINE_BIT(name)
