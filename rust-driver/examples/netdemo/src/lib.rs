@@ -9,8 +9,8 @@ use core::ptr;
 use wdk_alloc::WdkAllocator;
 use wdk_sys::{
     NTSTATUS, STATUS_SUCCESS, STATUS_MORE_PROCESSING_REQUIRED,
-    STATUS_INSUFFICIENT_RESOURCES, STATUS_UNSUCCESSFUL,
-    PIRP, PVOID, ULONG, PMDL, BOOLEAN, UCHAR,
+    STATUS_INSUFFICIENT_RESOURCES, STATUS_UNSUCCESSFUL, STATUS_REQUEST_NOT_ACCEPTED,
+    PIRP, PVOID, ULONG, PMDL, BOOLEAN,
     KPROCESSOR_MODE, KEVENT, PDEVICE_OBJECT, SIZE_T, HANDLE,
     _EVENT_TYPE, _KWAIT_REASON, _SLIST_ENTRY, _SLIST_HEADER, PSLIST_ENTRY, PSLIST_HEADER,
     _IO_STACK_LOCATION, PIO_COMPLETION_ROUTINE,
@@ -29,6 +29,36 @@ use wdk_sys::{
 #[global_allocator]
 static GLOBAL_ALLOCATOR: WdkAllocator = WdkAllocator;
 
+macro_rules! log {
+    ($($arg:tt)*) => {
+        wdk::println!("[netdemo] {}", format_args!($($arg)*));
+    };
+}
+
+macro_rules! log_success {
+    ($($arg:tt)*) => {
+        wdk::println!("[netdemo] ✅ {}", format_args!($($arg)*));
+    };
+}
+
+macro_rules! log_error {
+    ($($arg:tt)*) => {
+        wdk::println!("[netdemo] ❌ {}", format_args!($($arg)*));
+    };
+}
+
+macro_rules! log_info {
+    ($($arg:tt)*) => {
+        wdk::println!("[netdemo] ℹ️ {}", format_args!($($arg)*));
+    };
+}
+
+macro_rules! log_warn {
+    ($($arg:tt)*) => {
+        wdk::println!("[netdemo] ⚠️ {}", format_args!($($arg)*));
+    };
+}
+
 const AF_INET6: u16 = 23;
 const SOCK_STREAM: u16 = 1;
 const IPPROTO_TCP: u32 = 6;
@@ -38,7 +68,12 @@ const WSK_SET_STATIC_EVENT_CALLBACKS: u32 = 7;
 const WSK_EVENT_ACCEPT: u32 = 0x00000080;
 const WSK_FLAG_LISTEN_SOCKET: u32 = 0x00000001;
 const WSK_INFINITE_WAIT: ULONG = 0xFFFFFFFF;
+const WSK_NO_WAIT: ULONG = 0;
+const WSK_CAPTURE_TIMEOUT_MS: i64 = 1000;
 const KERNEL_MODE: KPROCESSOR_MODE = 0;
+
+const WskSetOption: i32 = 0;
+const WskGetOption: i32 = 1;
 
 const POOL_TAG: u32 = 0x736B7377;
 const DATA_BUFFER_LENGTH: usize = 2048;
@@ -261,6 +296,8 @@ extern "system" {
     fn WskDeregister(
         WskRegistration: *mut Registration,
     );
+    
+    static NPI_WSK_INTERFACE_ID: [u8; 16];
 }
 
 unsafe fn allocate_socket_context(
@@ -334,6 +371,7 @@ unsafe fn free_socket_context(socket_context: *mut SocketContext) {
 }
 
 unsafe fn enqueue_op(op_ctx: *mut SocketOpContext, handler: OpHandlerFn) {
+    log_info!("enqueue_op: 入队操作 handler");
     (*op_ctx).OpHandler = Some(handler);
     (*op_ctx).QueueEntry.Next = ptr::null_mut();
     
@@ -392,19 +430,31 @@ unsafe fn set_completion_routine(irp: PIRP, routine: PIO_COMPLETION_ROUTINE, con
 }
 
 unsafe extern "C" fn op_start_listen(op_ctx: *mut SocketOpContext) {
+    log_info!("op_start_listen: 开始");
+    let socket_context = (*op_ctx).SocketContext;
+    
+    if (*socket_context).StopListening != 0 {
+        log_warn!("op_start_listen: StopListening=1, 退出");
+        return;
+    }
+    
     let mut provider_npi = ProviderNpi {
         Client: ptr::null_mut(),
         Dispatch: ptr::null_mut(),
     };
     
+    log_info!("op_start_listen: 调用 WskCaptureProviderNPI");
     let status = WskCaptureProviderNPI(&mut WSK_REGISTRATION, WSK_INFINITE_WAIT, &mut provider_npi);
+    log!("op_start_listen: WskCaptureProviderNPI 返回 status=0x{:08X}", status);
     if status == STATUS_SUCCESS {
         setup_listening_socket(&provider_npi, op_ctx);
         WskReleaseProviderNPI(&mut WSK_REGISTRATION);
     }
+    log_info!("op_start_listen: 结束");
 }
 
 unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut SocketOpContext) {
+    log_info!("setup_listening_socket: 开始");
     let socket_context = (*op_ctx).SocketContext;
     let irp = (*op_ctx).Irp;
     
@@ -412,7 +462,9 @@ unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut 
     KeInitializeEvent(&mut comp_event, _EVENT_TYPE::SynchronizationEvent, 0);
     
     if !(*socket_context).Socket.is_null() {
+        log_warn!("setup_listening_socket: Socket 已存在，先关闭");
         if (*socket_context).StopListening != 0 {
+            log_warn!("setup_listening_socket: StopListening=1, 退出");
             return;
         }
         
@@ -428,6 +480,7 @@ unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut 
         
         IoReuseIrp(irp, STATUS_UNSUCCESSFUL);
     } else {
+        log_info!("setup_listening_socket: 设置 WSK_SET_STATIC_EVENT_CALLBACKS");
         let mut callback_control = EventCallbackControl {
             NpiId: &NPI_WSK_INTERFACE_ID as *const _ as *const core::ffi::c_void,
             EventMask: WSK_EVENT_ACCEPT,
@@ -437,8 +490,7 @@ unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut 
             PVOID, ULONG, SIZE_T, PVOID, SIZE_T, PVOID, *mut SIZE_T, PIRP
         ) -> NTSTATUS = core::mem::transmute((*(*provider_npi).Dispatch).WskControlClient);
         
-        set_completion_routine(irp, Some(sync_completion_routine), &mut comp_event as *mut _ as PVOID);
-        control_fn(
+        let status = control_fn(
             (*provider_npi).Client,
             WSK_SET_STATIC_EVENT_CALLBACKS,
             core::mem::size_of::<EventCallbackControl>() as SIZE_T,
@@ -446,22 +498,30 @@ unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut 
             0,
             ptr::null_mut(),
             ptr::null_mut(),
-            irp,
+            ptr::null_mut(),
         );
-        wait_for_irp(irp, &mut comp_event);
+        log_info!("setup_listening_socket: WSK_SET_STATIC_EVENT_CALLBACKS status=0x{:08X}", status);
+        if status != STATUS_SUCCESS {
+            log_error!("setup_listening_socket: WSK_SET_STATIC_EVENT_CALLBACKS 失败，退出");
+            return;
+        }
     }
     
     KeInitializeEvent(&mut comp_event, _EVENT_TYPE::SynchronizationEvent, 0);
     
+    log_info!("setup_listening_socket: 调用 WskSocket (创建监听socket)");
     let socket_fn: unsafe extern "system" fn(
         PVOID, u16, u16, u32, u32, PVOID, *const ClientListenDispatch, PVOID, PVOID, PVOID, PIRP
     ) -> NTSTATUS = core::mem::transmute((*(*provider_npi).Dispatch).WskSocket);
     
-    static CLIENT_LISTEN_DISPATCH: ClientListenDispatch = ClientListenDispatch {
+    static mut CLIENT_LISTEN_DISPATCH: ClientListenDispatch = ClientListenDispatch {
         WskAcceptEvent: 0,
         WskInspectEvent: 0,
         WskAbortEvent: 0,
     };
+    
+    CLIENT_LISTEN_DISPATCH.WskAcceptEvent = accept_event as usize;
+    log_info!("setup_listening_socket: accept_event 函数指针 = 0x{:016X}", accept_event as usize);
     
     set_completion_routine(irp, Some(sync_completion_routine), &mut comp_event as *mut _ as PVOID);
     socket_fn(
@@ -479,11 +539,15 @@ unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut 
     );
     
     let status = wait_for_irp(irp, &mut comp_event);
+    log_info!("setup_listening_socket: WskSocket 返回 status=0x{:08X}", status);
     if status != STATUS_SUCCESS {
+        log_error!("setup_listening_socket: WskSocket 失败，退出");
         return;
     }
     
     let listening_socket = (*irp).IoStatus.Information as *mut Socket;
+    log_info!("setup_listening_socket: listening_socket = 0x{:016X}", listening_socket as usize);
+    
     let dispatch = (*listening_socket).Dispatch as *const ProviderListenDispatch;
     
     let option_value: u32 = 0;
@@ -491,13 +555,14 @@ unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut 
     KeInitializeEvent(&mut comp_event, _EVENT_TYPE::SynchronizationEvent, 0);
     set_completion_routine(irp, Some(sync_completion_routine), &mut comp_event as *mut _ as PVOID);
     
+    log_info!("setup_listening_socket: 设置 IPV6_V6ONLY=0 (双栈模式)");
     let control_fn: unsafe extern "system" fn(
         *mut Socket, i32, u32, u32, SIZE_T, PVOID, SIZE_T, PVOID, *mut SIZE_T, PIRP
     ) -> NTSTATUS = core::mem::transmute((*dispatch).Basic.WskControlSocket);
     
     control_fn(
         listening_socket,
-        1,
+        WskSetOption,
         IPV6_V6ONLY,
         IPPROTO_IPV6,
         core::mem::size_of::<u32>() as SIZE_T,
@@ -509,7 +574,9 @@ unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut 
     );
     
     let status = wait_for_irp(irp, &mut comp_event);
+    log_info!("setup_listening_socket: IPV6_V6ONLY 设置 status=0x{:08X}", status);
     if status != STATUS_SUCCESS {
+        log_error!("setup_listening_socket: IPV6_V6ONLY 设置失败，关闭socket");
         let close_fn: unsafe extern "system" fn(*mut Socket, PIRP) -> NTSTATUS = 
             core::mem::transmute((*dispatch).Basic.WskCloseSocket);
         IoReuseIrp(irp, STATUS_UNSUCCESSFUL);
@@ -524,13 +591,16 @@ unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut 
     KeInitializeEvent(&mut comp_event, _EVENT_TYPE::SynchronizationEvent, 0);
     set_completion_routine(irp, Some(sync_completion_routine), &mut comp_event as *mut _ as PVOID);
     
+    log_info!("setup_listening_socket: 调用 WskBind");
     let bind_fn: unsafe extern "system" fn(*mut Socket, *const u8, ULONG, PIRP) -> NTSTATUS =
         core::mem::transmute((*dispatch).WskBind);
     
     bind_fn(listening_socket, &LISTENING_ADDRESS as *const _ as *const u8, 0, irp);
     
     let status = wait_for_irp(irp, &mut comp_event);
+    log_info!("setup_listening_socket: WskBind 返回 status=0x{:08X}", status);
     if status != STATUS_SUCCESS {
+        log_error!("setup_listening_socket: WskBind 失败，关闭socket");
         let close_fn: unsafe extern "system" fn(*mut Socket, PIRP) -> NTSTATUS = 
             core::mem::transmute((*dispatch).Basic.WskCloseSocket);
         IoReuseIrp(irp, STATUS_UNSUCCESSFUL);
@@ -542,6 +612,46 @@ unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut 
     }
     
     (*socket_context).Socket = listening_socket;
+    log_success!("setup_listening_socket: 成功完成，socket 已保存");
+}
+
+unsafe extern "system" fn accept_event(
+    socket_context: PVOID,
+    _flags: ULONG,
+    _local_address: PVOID,
+    _remote_address: PVOID,
+    accept_socket: PVOID,
+    accept_socket_context: *mut PVOID,
+    accept_socket_dispatch: *mut *const ClientConnectionDispatch,
+) -> NTSTATUS {
+    log_success!("accept_event: 被调用! accept_socket=0x{:016X}", accept_socket as usize);
+    let listening_socket_context = socket_context as *mut SocketContext;
+    
+    if accept_socket.is_null() {
+        log_warn!("accept_event: accept_socket 为空，重新启动监听");
+        enqueue_op(&mut (*listening_socket_context).OpContext[0], op_start_listen);
+        return STATUS_REQUEST_NOT_ACCEPTED;
+    }
+    
+    log_info!("accept_event: 分配新 socket context");
+    let new_socket_context = allocate_socket_context(&mut WORK_QUEUE as *mut _, DATA_BUFFER_LENGTH as ULONG);
+    if new_socket_context.is_null() {
+        log_error!("accept_event: 分配 socket context 失败");
+        return STATUS_REQUEST_NOT_ACCEPTED;
+    }
+    
+    (*new_socket_context).Socket = accept_socket as *mut Socket;
+    log_info!("accept_event: 新 socket context=0x{:016X}", new_socket_context as usize);
+    
+    for i in 0..OP_COUNT {
+        enqueue_op(&mut (*new_socket_context).OpContext[i], op_receive);
+    }
+    
+    *accept_socket_context = ptr::null_mut();
+    *accept_socket_dispatch = ptr::null();
+    
+    log_success!("accept_event: 返回 STATUS_SUCCESS");
+    STATUS_SUCCESS
 }
 
 unsafe extern "C" fn op_stop_listen(op_ctx: *mut SocketOpContext) {
@@ -711,6 +821,7 @@ unsafe extern "C" fn op_free(op_ctx: *mut SocketOpContext) {
 }
 
 unsafe extern "C" fn worker_thread(context: PVOID) {
+    log_info!("worker_thread: 启动");
     let work_queue = context as *mut WorkQueue;
     
     loop {
@@ -718,6 +829,7 @@ unsafe extern "C" fn worker_thread(context: PVOID) {
         
         if list_entry.is_null() {
             if (*work_queue).Stop != 0 {
+                log_warn!("worker_thread: 收到停止信号，退出");
                 break;
             }
             KeWaitForSingleObject(&mut (*work_queue).Event as *mut _ as PVOID, _KWAIT_REASON::Executive, KERNEL_MODE, 0, ptr::null_mut());
@@ -740,19 +852,25 @@ unsafe extern "C" fn worker_thread(context: PVOID) {
             entry = (*entry).Next;
             
             if let Some(h) = handler {
+                log_info!("worker_thread: 执行操作");
                 h(op_ctx);
+                log_info!("worker_thread: 操作完成");
             }
         }
     }
     
+    log_info!("worker_thread: 终止");
     PsTerminateSystemThread(STATUS_SUCCESS);
 }
 
 unsafe fn start_work_queue(work_queue: *mut WorkQueue) -> NTSTATUS {
+    log_info!("start_work_queue: 开始");
     InitializeSListHead(&mut (*work_queue).Head as *mut _ as PSLIST_HEADER);
     KeInitializeEvent(&mut (*work_queue).Event, _EVENT_TYPE::SynchronizationEvent, 0);
     (*work_queue).Stop = 0;
+    (*work_queue).Thread = ptr::null_mut();
     
+    log_info!("start_work_queue: 创建工作线程");
     let mut thread_handle: HANDLE = ptr::null_mut();
     let status = PsCreateSystemThread(
         &mut thread_handle,
@@ -763,6 +881,7 @@ unsafe fn start_work_queue(work_queue: *mut WorkQueue) -> NTSTATUS {
         Some(worker_thread),
         work_queue as PVOID,
     );
+    log_info!("start_work_queue: PsCreateSystemThread 返回 status=0x{:08X}", status);
     
     if status != STATUS_SUCCESS {
         return status;
@@ -776,6 +895,7 @@ unsafe fn start_work_queue(work_queue: *mut WorkQueue) -> NTSTATUS {
         &mut (*work_queue).Thread,
         ptr::null_mut(),
     );
+    log_info!("start_work_queue: ObReferenceObjectByHandle 返回 status=0x{:08X}", status);
     
     ZwClose(thread_handle);
     
@@ -784,64 +904,79 @@ unsafe fn start_work_queue(work_queue: *mut WorkQueue) -> NTSTATUS {
         KeSetEvent(&mut (*work_queue).Event, 0, 0);
     }
     
+    log_success!("start_work_queue: 完成 status=0x{:08X}", status);
     status
 }
 
 unsafe fn stop_work_queue(work_queue: *mut WorkQueue) {
+    if (*work_queue).Thread.is_null() {
+        return;
+    }
+    
     (*work_queue).Stop = 1;
     KeSetEvent(&mut (*work_queue).Event, 0, 0);
     KeWaitForSingleObject((*work_queue).Thread, _KWAIT_REASON::Executive, KERNEL_MODE, 0, ptr::null_mut());
     ObfDereferenceObject((*work_queue).Thread);
+    (*work_queue).Thread = ptr::null_mut();
 }
-
-static NPI_WSK_INTERFACE_ID: [u8; 16] = [
-    0x8D, 0x8B, 0x92, 0x6D, 0x6D, 0x48, 0x4D, 0x48,
-    0x9B, 0x33, 0x47, 0xA6, 0x2D, 0x2B, 0x4D, 0x42
-];
 
 #[no_mangle]
 pub unsafe extern "system" fn DriverEntry(
     driver_object: *mut DRIVER_OBJECT,
     _registry_path: *mut UNICODE_STRING,
 ) -> NTSTATUS {
+    log_info!("DriverEntry: 开始");
     let socket_context = allocate_socket_context(&mut WORK_QUEUE as *mut _, 0);
     if socket_context.is_null() {
+        log_error!("DriverEntry: 分配 socket_context 失败");
         return STATUS_INSUFFICIENT_RESOURCES;
     }
     LISTENING_SOCKET_CONTEXT = socket_context;
+    log_info!("DriverEntry: socket_context=0x{:016X}", socket_context as usize);
     
     let wsk_client = ClientNpi {
         ClientContext: ptr::null_mut(),
         Dispatch: &WSK_CLIENT_DISPATCH,
     };
     
+    log_info!("DriverEntry: 调用 WskRegister");
     let status = WskRegister(&wsk_client, &mut WSK_REGISTRATION);
+    log_info!("DriverEntry: WskRegister 返回 status=0x{:08X}", status);
     if status != STATUS_SUCCESS {
         free_socket_context(socket_context);
         return status;
     }
     
+    log_info!("DriverEntry: 调用 start_work_queue");
     let status = start_work_queue(&mut WORK_QUEUE);
+    log_info!("DriverEntry: start_work_queue 返回 status=0x{:08X}", status);
     if status != STATUS_SUCCESS {
         WskDeregister(&mut WSK_REGISTRATION);
         free_socket_context(socket_context);
         return status;
     }
     
+    log_info!("DriverEntry: 入队 op_start_listen");
     enqueue_op(&mut (*socket_context).OpContext[0], op_start_listen);
     
     (*driver_object).DriverUnload = Some(driver_unload);
     
+    log_success!("DriverEntry: 成功完成");
     STATUS_SUCCESS
 }
 
 unsafe extern "C" fn driver_unload(driver_object: *mut DRIVER_OBJECT) {
+    log_info!("driver_unload: 开始");
     if !LISTENING_SOCKET_CONTEXT.is_null() {
+        log_info!("driver_unload: 入队 op_stop_listen");
         enqueue_op(&mut (*LISTENING_SOCKET_CONTEXT).OpContext[1], op_stop_listen);
     }
     
+    log_info!("driver_unload: 调用 WskDeregister");
     WskDeregister(&mut WSK_REGISTRATION);
+    log_info!("driver_unload: 调用 stop_work_queue");
     stop_work_queue(&mut WORK_QUEUE);
+    log_info!("driver_unload: 完成");
     
     let _ = driver_object;
 }
