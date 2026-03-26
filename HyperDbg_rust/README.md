@@ -373,19 +373,172 @@ Go 层提供高级功能，通过 MCP 暴露：
 - **符号解析接口** - 封装 Rust 驱动的 PDB 解析能力
 - **网络调试** - 通过 MCP 支持远程调试
 
+## Go-Rust 类型同步机制
+
+### 自动生成器
+
+项目使用 `cmd/rustgen` 生成器自动同步 Go 和 Rust 之间的类型定义，确保 JSON 通信的一致性。
+
+**生成的文件：**
+- `rust-driver/types_gen.rs` - 从 `types.go` 自动生成的共享类型（枚举、结构体）
+- `rust-driver/handlers_gen.rs` - 自动生成的 `DebuggerApi` trait 和 `dispatch_api` 调度器
+
+### 同步流程
+
+```
+┌─────────────────┐     rustgen      ┌─────────────────────┐
+│   types.go      │ ───────────────► │   types_gen.rs      │
+│  (Go 类型定义)   │                  │  (Rust 类型定义)     │
+└─────────────────┘                  └─────────────────────┘
+                                              │
+                                              ▼
+┌─────────────────┐     rustgen      ┌─────────────────────┐
+│  apiMethods[]   │ ───────────────► │  handlers_gen.rs    │
+│  (API 方法定义)  │                  │  (API 处理器)        │
+└─────────────────┘                  └─────────────────────┘
+```
+
+### 何时需要运行生成器
+
+**必须运行生成器的情况：**
+
+1. **修改 `types.go` 后**
+   ```bash
+   cd cmd/rustgen && go run main.go
+   ```
+   - 添加/修改/删除结构体
+   - 添加/修改/删除枚举
+   - 修改字段类型或 JSON 标签
+
+2. **修改 API 方法后**
+   - 更新 `cmd/rustgen/main.go` 中的 `apiMethods` 切片
+   - 重新运行生成器
+
+3. **添加新的调试器方法后**
+   - 在 `apiMethods` 中添加新方法定义
+   - 运行生成器更新 `handlers_gen.rs`
+
+### API 方法定义格式
+
+```go
+// cmd/rustgen/main.go
+var apiMethods = []APIMethod{
+    {
+        Name: "Initialize", 
+        Action: "initialize", 
+        ReturnType: "Empty", 
+        Description: "Initialize debugger"
+    },
+    {
+        Name: "ReadMemory", 
+        Action: "read_memory", 
+        Params: []APIParam{
+            {Name: "address", Type: "u64", Format: "hex"}, 
+            {Name: "size", Type: "u32", Format: "int"}
+        }, 
+        ReturnType: "Vec<u8>", 
+        Description: "Read memory"
+    },
+    // ... 更多方法
+}
+```
+
+### 生成的 Rust 代码
+
+**types_gen.rs 示例：**
+```rust
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct RegisterState {
+    #[serde(rename = "RAX")]
+    pub rax: u64,
+    #[serde(rename = "RBX")]
+    pub rbx: u64,
+    // ...
+}
+
+pub type Empty = ();
+```
+
+**handlers_gen.rs 示例：**
+```rust
+pub trait DebuggerApi {
+    fn initialize(&mut self, req: &Request) -> Result<Empty, String>;
+    fn read_memory(&mut self, req: &Request) -> Result<Vec<u8>, String>;
+    // ...
+}
+
+pub unsafe fn dispatch_api<T: DebuggerApi>(api: &mut T, w: *mut ResponseWriter, r: *mut HttpRequest) {
+    // 自动路由到对应方法
+}
+```
+
+### 文件结构
+
+```
+HyperDbg_rust/
+├── types.go                    # Go 类型定义 (源)
+├── cmd/rustgen/main.go         # Rust 代码生成器
+└── rust-driver/
+    ├── types_gen.rs            # 生成的类型定义
+    ├── handlers_gen.rs         # 生成的 API 处理器
+    ├── lib.rs                  # 主入口，导入生成的模块
+    └── net/src/util.rs         # Request 结构体和解析辅助函数
+```
+
+### 开发指南
+
+#### 添加新的调试器方法
+
+1. 在 `types.go` 中添加必要的类型定义（如果需要）
+2. 在 `cmd/rustgen/main.go` 的 `apiMethods` 中添加新方法
+3. 运行生成器：
+   ```bash
+   cd cmd/rustgen && go run main.go
+   ```
+4. 在 Rust 驱动中实现 `DebuggerApi` trait 的新方法
+5. 在 Go 端 `packet.go` 中添加对应的方法
+
+#### 修改现有类型
+
+1. 修改 `types.go` 中的类型定义
+2. 运行生成器更新 Rust 类型
+3. 确保 Go 端和 Rust 端的 JSON 标签一致
+4. 更新测试用例
+
+### MCP 生成器
+
+`cmd/mcp/mcp_generator.go` 自动从 Go 接口生成 MCP 服务器代码：
+
+- 解析 `interfaces.go` 中的接口定义
+- 生成 MCP 工具定义
+- 生成工具处理函数
+- 支持类型转换和错误处理
+
+**使用方法：**
+
+```bash
+cd cmd/mcp && go run main.go
+```
+
+这将生成：
+- `cmd/mcp/mcp.go` - MCP 服务器实现
+
 ## 开发指南
 
 ### 添加新的调试器方法
 
-1. 在 `debugger/interfaces.go` 中添加接口方法
-2. 在 `debugger/debugger.go` 中实现方法
-3. 运行 MCP 生成器：
-
-```bash
-go run cmd/generate/mcp_generator.go
-```
-
-4. 新的 MCP 工具将自动生成
+1. 在 `types.go` 中添加必要的类型定义（如果需要）
+2. 在 `cmd/rustgen/main.go` 的 `apiMethods` 中添加新方法
+3. 运行 Rust 生成器：
+   ```bash
+   cd cmd/rustgen && go run main.go
+   ```
+4. 在 `packet.go` 中实现方法
+5. 运行 MCP 生成器：
+   ```bash
+   cd cmd/mcp && go run main.go
+   ```
+6. 新的 MCP 工具将自动生成
 
 ### 添加新的消息类型
 
