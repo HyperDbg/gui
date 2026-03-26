@@ -18,8 +18,10 @@ use alloc::format;
 pub mod http;
 pub mod json;
 pub mod models;
+pub mod models_gen;
 
-pub use models::{Command, Response};
+pub use models::{Request, Response};
+pub use models_gen::*;
 
 use json::{Marshal, Unmarshal};
 use wdk_sys::{
