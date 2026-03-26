@@ -23,6 +23,125 @@
 
 **详细说明见本文档末尾的 "Go-Rust 类型同步机制" 章节。**
 
+## 🔄 Rust 生成文件分拆任务
+
+**当前状态：** `types_gen.rs` 和 `handlers_gen.rs` 是单一文件，需要分拆。
+
+**目标：** 将生成的 Rust 文件按事件类型分拆，与 Go 端保持一致的结构，便于维护。
+
+### 分拆方案
+
+将 `rust-driver/` 下的生成文件分拆为：
+
+```
+rust-driver/
+├── types_gen/                  # 生成的类型 (分拆)
+│   ├── mod.rs                  // 导出所有类型
+│   ├── common.rs               // ProcessId, ThreadId, Address 等基础类型
+│   ├── register.rs             // RegisterState
+│   ├── event_breakpoint.rs     // BreakpointType + BreakpointEvent
+│   ├── event_exception.rs      // ExceptionCode + ExceptionEvent
+│   ├── event_memory.rs         // MemoryAccessType + MemoryAccessEvent
+│   ├── event_syscall.rs        // SyscallEvent
+│   ├── event_process.rs        // ProcessInfo + ProcessEvent
+│   ├── event_thread.rs         // ThreadInfo + ThreadEvent
+│   ├── event_module.rs         // ModuleInfo + ModuleEvent
+│   ├── event_debug_print.rs    // LogLevel + DebugPrintEvent
+│   ├── event_vmx.rs            // VmxExitReason + VmxExitEvent
+│   ├── event_trap.rs           // TrapEvent
+│   ├── event_hidden_hook.rs    // HiddenHookEvent
+│   ├── event_cpuid.rs          // CpuidEvent
+│   ├── event_tsc.rs            // TscEvent
+│   ├── event_cr_access.rs      // CrAccessEvent
+│   ├── event_dr_access.rs      // DrAccessEvent
+│   ├── event_io_port.rs        // IoPortEvent
+│   ├── event_msr.rs            // MsrEvent
+│   └── event_ept_violation.rs  // EptViolationEvent
+│
+├── handlers_gen/               # 生成的处理器 (分拆)
+│   ├── mod.rs                  // 导出 + EventQueue + emit_*_event
+│   └── router.rs               // DebuggerApi trait + dispatch_api
+│
+└── lib.rs                      # 主入口，导入 types_gen 和 handlers_gen
+```
+
+### 生成器修改任务
+
+**需要修改 `cmd/rustgen/main.go`：**
+
+1. **类型生成器改造**
+   - 从单一 `types_gen.rs` 改为生成 `types_gen/` 目录
+   - 每个事件类型生成独立文件
+   - 自动生成 `mod.rs` 导出所有类型
+
+2. **处理器生成器改造**
+   - 从单一 `handlers_gen.rs` 改为生成 `handlers_gen/` 目录
+   - `mod.rs` - 导出 + EventQueue + emit_*_event 函数
+   - `router.rs` - DebuggerApi trait + dispatch_api 函数
+
+3. **文件映射规则**
+   ```
+   Go 文件                    →  Rust 生成文件
+   types.go                   →  types_gen/common.rs
+   register.go                →  types_gen/register.rs
+   event_breakpoint.go        →  types_gen/event_breakpoint.rs
+   event_exception.go         →  types_gen/event_exception.rs
+   event_memory.go            →  types_gen/event_memory.rs
+   ...                        →  ...
+   ```
+
+### 实施步骤
+
+1. **创建新的生成器结构**
+   - 在 `cmd/rustgen/` 下创建 `generator/` 子目录
+   - 实现分文件生成逻辑
+
+2. **更新生成器代码**
+   ```bash
+   # 修改 cmd/rustgen/main.go
+   # 添加分文件生成支持
+   ```
+
+3. **运行生成器**
+   ```bash
+   cd HyperDbg_rust/cmd/rustgen && go run main.go
+   ```
+
+4. **验证生成结果**
+   - 检查所有文件是否正确生成
+   - 检查 `mod.rs` 导出是否完整
+   - 运行 Rust 编译测试
+
+### 注意事项
+
+- 分拆后，`types_gen/` 和 `handlers_gen/` 仍然是**自动生成**的目录
+- **不要手动修改**生成的文件，所有修改都应该在 Go 端进行
+- 生成器会自动处理模块导入和导出
+- 保持 Go 端和 Rust 端的文件命名一致性
+
+## ⛔ 严禁修改已验证文件
+
+**以下文件已经过验证，严禁修改：**
+- `rust-driver/net/src/logger.rs` - 日志宏定义（使用 `wdk::println!`）
+
+这些文件已经过测试验证，修改可能导致编译错误或运行时问题。
+
+## ⚠️ 重复类型定义说明
+
+由于 `net` 是独立的 crate，某些类型需要在多处定义：
+
+| 类型 | 位置 | 说明 |
+|------|------|------|
+| `RegisterState` | `net/src/util.rs` | `net` crate 内部使用 |
+| `RegisterState` | `rust-driver/types_gen.rs` | 主驱动使用（自动生成） |
+| `RegisterState` | `hyperhv/src/meta_dispatch.rs` | Hypervisor 内部使用（字段较少） |
+
+**注意：** 这些类型定义在不同模块中是独立的，JSON 字段名必须保持一致。
+
+**已删除 `packet.rs`：** 所有类型现在统一在 `types_gen.rs` 中定义，通过生成器自动同步。
+
+**`events.rs` 简化：** 只包含 `DebuggerEvent` enum，其他事件结构体（`EventHeader`、`BreakpointEvent` 等）从 `types_gen.rs` 导入。
+
 ## ⛔ 严禁查看未验证模块代码
 
 **执行任务时，严禁查看以下未验证模块的代码：**

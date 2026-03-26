@@ -28,7 +28,11 @@ const (
 	HandlersOutputFile = "handlers_gen.rs"
 )
 
-var enumTypes = []string{"MessageType", "BreakpointType", "DebugState"}
+var enumTypes = []string{
+	"MessageType", "BreakpointType", "DebugState", "LogLevel",
+	"EventType", "ExceptionCode", "MemoryAccessType", "VmxExitReason",
+	"DebuggerEventType",
+}
 
 type APIMethod struct {
 	Action      string
@@ -318,6 +322,7 @@ func generateModels(projectRoot string, node *ast.File) {
 	var constants []ConstantDef
 	var enums []EnumDef
 	var structs []StructDef
+	var typeAliases []TypeAliasDef
 
 	for _, decl := range node.Decls {
 		switch d := decl.(type) {
@@ -350,6 +355,23 @@ func generateModels(projectRoot string, node *ast.File) {
 								Name: ts.Name.Name,
 								Type: t.Name,
 							})
+						} else if !ts.Assign.IsValid() {
+							enums = append(enums, EnumDef{
+								Name: ts.Name.Name,
+								Type: t.Name,
+							})
+						} else {
+							typeAliases = append(typeAliases, TypeAliasDef{
+								Name:    ts.Name.Name,
+								Aliased: t.Name,
+							})
+						}
+					case *ast.SelectorExpr:
+						if ts.Assign.IsValid() {
+							typeAliases = append(typeAliases, TypeAliasDef{
+								Name:    ts.Name.Name,
+								Aliased: t.Sel.Name,
+							})
 						}
 					case *ast.StructType:
 						structs = append(structs, StructDef{
@@ -367,6 +389,10 @@ func generateModels(projectRoot string, node *ast.File) {
 		writeEnum(&buf, e, enumValues[e.Name])
 	}
 
+	for _, a := range typeAliases {
+		writeTypeAlias(&buf, a)
+	}
+
 	for _, s := range structs {
 		writeStruct(&buf, s)
 	}
@@ -380,7 +406,6 @@ func generateModels(projectRoot string, node *ast.File) {
 	if err := os.WriteFile(outputPath, buf.Bytes(), 0644); err != nil {
 		panic(err)
 	}
-
 	fmt.Printf("Generated %s\n", outputPath)
 }
 
@@ -521,6 +546,11 @@ type StructDef struct {
 	Fields []FieldDef
 }
 
+type TypeAliasDef struct {
+	Name    string
+	Aliased string
+}
+
 type FieldDef struct {
 	Name    string
 	Type    string
@@ -602,6 +632,8 @@ func getEnumPrefix(enumName string) string {
 		return "Breakpoint"
 	case "DebugState":
 		return "State"
+	case "DebuggerEventType":
+		return "DebuggerEvent"
 	}
 	return enumName
 }
@@ -611,24 +643,33 @@ type EnumValue struct {
 	Value string
 }
 
+func writeTypeAlias(buf *bytes.Buffer, a TypeAliasDef) {
+	rustType := goTypeToRust(a.Aliased)
+	buf.WriteString(fmt.Sprintf("pub type %s = %s;\n", a.Name, rustType))
+}
+
 func writeEnum(buf *bytes.Buffer, e EnumDef, values []EnumValue) {
 	rustType := goTypeToRust(e.Type)
 	buf.WriteString(fmt.Sprintf("#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]\n"))
 	buf.WriteString(fmt.Sprintf("#[repr(%s)]\n", rustType))
 	buf.WriteString(fmt.Sprintf("pub enum %s {\n", e.Name))
 	prefix := getEnumPrefix(e.Name)
-	for _, v := range values {
+	for i, v := range values {
 		name := v.Name
 		if strings.HasPrefix(name, prefix) {
 			name = name[len(prefix):]
 		}
-		buf.WriteString(fmt.Sprintf("    %s = %s,\n", name, v.Value))
+		val := v.Value
+		if val == "" || val == "iota" {
+			val = fmt.Sprintf("%d", i)
+		}
+		buf.WriteString(fmt.Sprintf("    %s = %s,\n", name, val))
 	}
 	buf.WriteString("}\n\n")
 }
 
 func writeStruct(buf *bytes.Buffer, s StructDef) {
-	if s.Name == "Empty" || s.Name == "ResponseType" || s.Name == "EventCallback" || s.Name == "Response" {
+	if s.Name == "Empty" || s.Name == "ResponseType" || s.Name == "EventCallback" || s.Name == "Response" || s.Name == "DebuggerEvent" {
 		return
 	}
 	if strings.HasPrefix(s.Name, "Message") {
@@ -668,6 +709,591 @@ pub struct Response<T: Serialize> {
 
 pub type EmptyResponse = Response<()>;
 pub type Empty = ();
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub enum DebuggerEvent {
+    Breakpoint(BreakpointEvent),
+    Exception(ExceptionEvent),
+    MemoryAccess(MemoryAccessEvent),
+    Syscall(SyscallEvent),
+    ProcessCreate(ProcessEvent),
+    ProcessExit(ProcessEvent),
+    ThreadCreate(ThreadEvent),
+    ThreadExit(ThreadEvent),
+    ModuleLoad(ModuleEvent),
+    ModuleUnload(ModuleEvent),
+    DebugPrint(DebugPrintEvent),
+    VmxExit(VmxExitEvent),
+    Trap(TrapEvent),
+    HiddenHook(HiddenHookEvent),
+    Cpuid(CpuidEvent),
+    Tsc(TscEvent),
+    CrAccess(CrAccessEvent),
+    DrAccess(DrAccessEvent),
+    IoPort(IoPortEvent),
+    Msr(MsrEvent),
+    EptViolation(EptViolationEvent),
+}
+
+pub fn debugger_event_type_from_name(name: &str) -> Option<DebuggerEventType> {
+    match name {
+        "Breakpoint" => Some(DebuggerEventType::Breakpoint),
+        "Exception" => Some(DebuggerEventType::Exception),
+        "MemoryAccess" => Some(DebuggerEventType::MemoryAccess),
+        "Syscall" => Some(DebuggerEventType::Syscall),
+        "ProcessCreate" => Some(DebuggerEventType::ProcessCreate),
+        "ProcessExit" => Some(DebuggerEventType::ProcessExit),
+        "ThreadCreate" => Some(DebuggerEventType::ThreadCreate),
+        "ThreadExit" => Some(DebuggerEventType::ThreadExit),
+        "ModuleLoad" => Some(DebuggerEventType::ModuleLoad),
+        "ModuleUnload" => Some(DebuggerEventType::ModuleUnload),
+        "DebugPrint" => Some(DebuggerEventType::DebugPrint),
+        "VmxExit" => Some(DebuggerEventType::VmxExit),
+        "Trap" => Some(DebuggerEventType::Trap),
+        "HiddenHook" => Some(DebuggerEventType::HiddenHook),
+        "Cpuid" => Some(DebuggerEventType::Cpuid),
+        "Tsc" => Some(DebuggerEventType::Tsc),
+        "CrAccess" => Some(DebuggerEventType::CrAccess),
+        "DrAccess" => Some(DebuggerEventType::DrAccess),
+        "IoPort" => Some(DebuggerEventType::IoPort),
+        "Msr" => Some(DebuggerEventType::Msr),
+        "EptViolation" => Some(DebuggerEventType::EptViolation),
+        _ => None,
+    }
+}
+
+pub fn debugger_event_type_name(t: DebuggerEventType) -> &'static str {
+    match t {
+        DebuggerEventType::Breakpoint => "Breakpoint",
+        DebuggerEventType::Exception => "Exception",
+        DebuggerEventType::MemoryAccess => "MemoryAccess",
+        DebuggerEventType::Syscall => "Syscall",
+        DebuggerEventType::ProcessCreate => "ProcessCreate",
+        DebuggerEventType::ProcessExit => "ProcessExit",
+        DebuggerEventType::ThreadCreate => "ThreadCreate",
+        DebuggerEventType::ThreadExit => "ThreadExit",
+        DebuggerEventType::ModuleLoad => "ModuleLoad",
+        DebuggerEventType::ModuleUnload => "ModuleUnload",
+        DebuggerEventType::DebugPrint => "DebugPrint",
+        DebuggerEventType::VmxExit => "VmxExit",
+        DebuggerEventType::Trap => "Trap",
+        DebuggerEventType::HiddenHook => "HiddenHook",
+        DebuggerEventType::Cpuid => "Cpuid",
+        DebuggerEventType::Tsc => "Tsc",
+        DebuggerEventType::CrAccess => "CrAccess",
+        DebuggerEventType::DrAccess => "DrAccess",
+        DebuggerEventType::IoPort => "IoPort",
+        DebuggerEventType::Msr => "Msr",
+        DebuggerEventType::EptViolation => "EptViolation",
+    }
+}
+
+pub unsafe fn emit_event(event: DebuggerEvent) {
+    extern "C" {
+        static mut EVENT_QUEUE: *mut EventQueue;
+    }
+    if !EVENT_QUEUE.is_null() {
+        (*EVENT_QUEUE).push(event);
+    }
+}
+
+pub struct EventQueue {
+    events: Vec<DebuggerEvent>,
+    max_size: usize,
+}
+
+impl EventQueue {
+    pub fn new(max_size: usize) -> Self {
+        Self {
+            events: Vec::new(),
+            max_size,
+        }
+    }
+
+    pub fn push(&mut self, event: DebuggerEvent) {
+        if self.events.len() >= self.max_size {
+            self.events.remove(0);
+        }
+        self.events.push(event);
+    }
+
+    pub fn pop(&mut self) -> Option<DebuggerEvent> {
+        self.events.pop()
+    }
+
+    pub fn len(&self) -> usize {
+        self.events.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.events.is_empty()
+    }
+}
+
+pub unsafe fn emit_breakpoint_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    address: Address,
+    breakpoint_id: u64,
+    registers: &RegisterState,
+) {
+    emit_event(DebuggerEvent::Breakpoint(BreakpointEvent {
+        header: EventHeader {
+            event_type: EventType::Breakpoint,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        address,
+        breakpoint_id,
+        registers: registers.clone(),
+    }));
+}
+
+pub unsafe fn emit_exception_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    exception_code: ExceptionCode,
+    address: Address,
+    error_code: u64,
+    registers: &RegisterState,
+) {
+    emit_event(DebuggerEvent::Exception(ExceptionEvent {
+        header: EventHeader {
+            event_type: EventType::Exception,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        exception_code,
+        address,
+        error_code,
+        registers: registers.clone(),
+    }));
+}
+
+pub unsafe fn emit_memory_access_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    virtual_address: Address,
+    physical_address: PhysicalAddress,
+    access_type: MemoryAccessType,
+    size: u32,
+    value: u64,
+) {
+    emit_event(DebuggerEvent::MemoryAccess(MemoryAccessEvent {
+        header: EventHeader {
+            event_type: EventType::MemoryAccess,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        virtual_address,
+        physical_address,
+        access_type,
+        size,
+        value,
+    }));
+}
+
+pub unsafe fn emit_syscall_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    syscall_number: u32,
+    arguments: [u64; 8],
+    is_entry: bool,
+) {
+    emit_event(DebuggerEvent::Syscall(SyscallEvent {
+        header: EventHeader {
+            event_type: if is_entry { EventType::SyscallEntry } else { EventType::SyscallExit },
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        syscall_number,
+        arguments,
+        return_value: 0,
+        is_entry,
+    }));
+}
+
+pub unsafe fn emit_process_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    process_info: ProcessInfo,
+    parent_process_id: ProcessId,
+    is_create: bool,
+) {
+    let event = if is_create {
+        DebuggerEvent::ProcessCreate(ProcessEvent {
+            header: EventHeader {
+                event_type: EventType::ProcessCreate,
+                process_id,
+                thread_id,
+                core_id,
+                timestamp: 0,
+            },
+            process_info,
+            parent_process_id,
+            is_create,
+        })
+    } else {
+        DebuggerEvent::ProcessExit(ProcessEvent {
+            header: EventHeader {
+                event_type: EventType::ProcessExit,
+                process_id,
+                thread_id,
+                core_id,
+                timestamp: 0,
+            },
+            process_info,
+            parent_process_id,
+            is_create,
+        })
+    };
+    emit_event(event);
+}
+
+pub unsafe fn emit_thread_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    thread_info: ThreadInfo,
+    is_create: bool,
+) {
+    let event = if is_create {
+        DebuggerEvent::ThreadCreate(ThreadEvent {
+            header: EventHeader {
+                event_type: EventType::ThreadCreate,
+                process_id,
+                thread_id,
+                core_id,
+                timestamp: 0,
+            },
+            thread_info,
+            is_create,
+        })
+    } else {
+        DebuggerEvent::ThreadExit(ThreadEvent {
+            header: EventHeader {
+                event_type: EventType::ThreadExit,
+                process_id,
+                thread_id,
+                core_id,
+                timestamp: 0,
+            },
+            thread_info,
+            is_create,
+        })
+    };
+    emit_event(event);
+}
+
+pub unsafe fn emit_module_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    module_info: ModuleInfo,
+    is_load: bool,
+) {
+    let event = if is_load {
+        DebuggerEvent::ModuleLoad(ModuleEvent {
+            header: EventHeader {
+                event_type: EventType::ModuleLoad,
+                process_id,
+                thread_id,
+                core_id,
+                timestamp: 0,
+            },
+            module_info,
+            is_load,
+        })
+    } else {
+        DebuggerEvent::ModuleUnload(ModuleEvent {
+            header: EventHeader {
+                event_type: EventType::ModuleUnload,
+                process_id,
+                thread_id,
+                core_id,
+                timestamp: 0,
+            },
+            module_info,
+            is_load,
+        })
+    };
+    emit_event(event);
+}
+
+pub unsafe fn emit_debug_print_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    message: String,
+    level: LogLevel,
+) {
+    emit_event(DebuggerEvent::DebugPrint(DebugPrintEvent {
+        header: EventHeader {
+            event_type: EventType::DebugPrint,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        message,
+        level,
+    }));
+}
+
+pub unsafe fn emit_vmx_exit_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    exit_reason: VmxExitReason,
+    exit_qualification: u64,
+    guest_rip: Address,
+    guest_rsp: Address,
+    instruction_length: u32,
+) {
+    emit_event(DebuggerEvent::VmxExit(VmxExitEvent {
+        header: EventHeader {
+            event_type: EventType::VmxExit,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        exit_reason,
+        exit_qualification,
+        guest_rip,
+        guest_rsp,
+        instruction_length,
+    }));
+}
+
+pub unsafe fn emit_trap_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    trap_number: u32,
+    error_code: u64,
+    address: Address,
+) {
+    emit_event(DebuggerEvent::Trap(TrapEvent {
+        header: EventHeader {
+            event_type: EventType::Trap,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        trap_number,
+        error_code,
+        address,
+    }));
+}
+
+pub unsafe fn emit_hidden_hook_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    hook_address: Address,
+    hook_type: MemoryAccessType,
+    data: Vec<u8>,
+) {
+    emit_event(DebuggerEvent::HiddenHook(HiddenHookEvent {
+        header: EventHeader {
+            event_type: EventType::HiddenHook,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        hook_address,
+        hook_type,
+        data,
+    }));
+}
+
+pub unsafe fn emit_cpuid_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    leaf: u32,
+    sub_leaf: u32,
+    eax: u32,
+    ebx: u32,
+    ecx: u32,
+    edx: u32,
+) {
+    emit_event(DebuggerEvent::Cpuid(CpuidEvent {
+        header: EventHeader {
+            event_type: EventType::Cpuid,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        leaf,
+        sub_leaf,
+        eax,
+        ebx,
+        ecx,
+        edx,
+    }));
+}
+
+pub unsafe fn emit_tsc_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    tsc_value: u64,
+    rdtsc_exit: bool,
+) {
+    emit_event(DebuggerEvent::Tsc(TscEvent {
+        header: EventHeader {
+            event_type: EventType::Tsc,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        tsc_value,
+        rdtsc_exit,
+    }));
+}
+
+pub unsafe fn emit_cr_access_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    cr_number: u32,
+    is_write: bool,
+    old_value: u64,
+    new_value: u64,
+) {
+    emit_event(DebuggerEvent::CrAccess(CrAccessEvent {
+        header: EventHeader {
+            event_type: EventType::CrAccess,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        cr_number,
+        is_write,
+        old_value,
+        new_value,
+    }));
+}
+
+pub unsafe fn emit_dr_access_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    dr_number: u32,
+    is_write: bool,
+    value: u64,
+) {
+    emit_event(DebuggerEvent::DrAccess(DrAccessEvent {
+        header: EventHeader {
+            event_type: EventType::DrAccess,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        dr_number,
+        is_write,
+        value,
+    }));
+}
+
+pub unsafe fn emit_io_port_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    port: u16,
+    size: u32,
+    is_write: bool,
+    value: u32,
+) {
+    emit_event(DebuggerEvent::IoPort(IoPortEvent {
+        header: EventHeader {
+            event_type: EventType::IoPort,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        port,
+        size,
+        is_write,
+        value,
+    }));
+}
+
+pub unsafe fn emit_msr_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    msr: u32,
+    is_write: bool,
+    value: u64,
+) {
+    emit_event(DebuggerEvent::Msr(MsrEvent {
+        header: EventHeader {
+            event_type: EventType::Msr,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        msr,
+        is_write,
+        value,
+    }));
+}
+
+pub unsafe fn emit_ept_violation_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    guest_physical_address: PhysicalAddress,
+    guest_virtual_address: Address,
+    read: bool,
+    write: bool,
+    execute: bool,
+    readable: bool,
+    writable: bool,
+    executable: bool,
+) {
+    emit_event(DebuggerEvent::EptViolation(EptViolationEvent {
+        header: EventHeader {
+            event_type: EventType::EptViolation,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        guest_physical_address,
+        guest_virtual_address,
+        read,
+        write,
+        execute,
+        readable,
+        writable,
+        executable,
+    }));
+}
 `
 }
 

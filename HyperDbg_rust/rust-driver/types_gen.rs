@@ -70,6 +70,179 @@ pub enum DebugState {
     Terminated = 3,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[repr(u32)]
+pub enum LogLevel {
+    Trace = 0,
+    Debug = 1,
+    Info = 2,
+    Warn = 3,
+    Error = 4,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[repr(u32)]
+pub enum EventType {
+    Breakpoint = 1,
+    Exception = 2,
+    MemoryAccess = 3,
+    SyscallEntry = 4,
+    SyscallExit = 5,
+    ProcessCreate = 6,
+    ProcessExit = 7,
+    ThreadCreate = 8,
+    ThreadExit = 9,
+    ModuleLoad = 10,
+    ModuleUnload = 11,
+    DebugPrint = 12,
+    VmxExit = 13,
+    Trap = 14,
+    HiddenHookExec = 15,
+    HiddenHookRead = 16,
+    HiddenHookWrite = 17,
+    Cpuid = 18,
+    Tsc = 19,
+    Pmc = 20,
+    Interrupt = 21,
+    ExceptionBitmap = 22,
+    CrAccess = 23,
+    DrAccess = 24,
+    IoPort = 25,
+    MsrRead = 26,
+    MsrWrite = 27,
+    EptViolation = 28,
+    Vmcalled = 29,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[repr(u32)]
+pub enum ExceptionCode {
+    DivideError = 0,
+    Debug = 1,
+    Nmi = 2,
+    Breakpoint = 3,
+    Overflow = 4,
+    Bound = 5,
+    InvalidOpcode = 6,
+    NoMath = 7,
+    DoubleFault = 8,
+    CoprocessorSegment = 9,
+    InvalidTss = 10,
+    SegmentNotPresent = 11,
+    StackSegment = 12,
+    GeneralProtection = 13,
+    PageFault = 14,
+    FloatingPoint = 16,
+    AlignmentCheck = 17,
+    MachineCheck = 18,
+    SimdFloatingPoint = 19,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[repr(u32)]
+pub enum MemoryAccessType {
+    Read = 0,
+    Write = 1,
+    Execute = 2,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[repr(u32)]
+pub enum VmxExitReason {
+    ExceptionNmi = 0,
+    ExternalInterrupt = 1,
+    TripleFault = 2,
+    InitSignal = 3,
+    StartupIpi = 4,
+    IoSmi = 5,
+    OtherSmi = 6,
+    InterruptWindow = 7,
+    NmiWindow = 8,
+    TaskSwitch = 9,
+    Cpuid = 10,
+    Getsec = 11,
+    Hlt = 12,
+    Invd = 13,
+    Invlpg = 14,
+    Rdpmc = 15,
+    Rdtsc = 16,
+    Rsm = 17,
+    Vmcall = 18,
+    Vmclear = 19,
+    Vmlaunch = 20,
+    Vmptrld = 21,
+    Vmptrst = 22,
+    Vmread = 23,
+    Vmresume = 24,
+    Vmwrite = 25,
+    Vmxoff = 26,
+    Vmxon = 27,
+    CrAccess = 28,
+    MovDr = 29,
+    IoInstruction = 30,
+    Rdmsr = 31,
+    Wrmsr = 32,
+    EntryFailGuestState = 33,
+    EntryFailMsrLoad = 34,
+    Mwait = 36,
+    Mtf = 37,
+    Monitor = 39,
+    Pause = 40,
+    EntryFailMachineCheck = 41,
+    TprBelowThreshold = 43,
+    ApicAccess = 44,
+    VirtualizedEoi = 45,
+    GdtrIdtrAccess = 46,
+    LdtrTrAccess = 47,
+    EptViolation = 48,
+    EptMisconfig = 49,
+    Invept = 50,
+    Rdtscp = 51,
+    VmxPreemptTimer = 52,
+    Invvpid = 53,
+    Wbinvd = 54,
+    Xsetbv = 55,
+    ApicWrite = 56,
+    Rdrand = 57,
+    Invpcid = 58,
+    VmfFunc = 59,
+    Encls = 60,
+    Rdseed = 61,
+    PmlFull = 62,
+    Xsaves = 63,
+    Xrstors = 64,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[repr(i32)]
+pub enum DebuggerEventType {
+    Breakpoint = 0,
+    Exception = 1,
+    MemoryAccess = 2,
+    Syscall = 3,
+    ProcessCreate = 4,
+    ProcessExit = 5,
+    ThreadCreate = 6,
+    ThreadExit = 7,
+    ModuleLoad = 8,
+    ModuleUnload = 9,
+    DebugPrint = 10,
+    VmxExit = 11,
+    Trap = 12,
+    HiddenHook = 13,
+    Cpuid = 14,
+    Tsc = 15,
+    CrAccess = 16,
+    DrAccess = 17,
+    IoPort = 18,
+    Msr = 19,
+    EptViolation = 20,
+}
+
+pub type ProcessId = u32;
+pub type ThreadId = u32;
+pub type Address = u64;
+pub type PhysicalAddress = u64;
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct RegisterState {
     #[serde(rename = "RAX")]
@@ -201,13 +374,91 @@ pub struct BreakpointInfo {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct BreakpointEvent {
+pub struct MemoryRegion {
+    #[serde(rename = "base_address")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub base_address: Option<String>,
+    #[serde(rename = "size")]
+    pub size: u64,
+    #[serde(rename = "protection")]
+    pub protection: u32,
+    #[serde(rename = "state")]
+    pub state: u32,
+    #[serde(rename = "type_")]
+    pub bp_type: u32,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct CallStackFrame {
+    #[serde(rename = "instruction_pointer")]
+    pub instruction_pointer: Address,
+    #[serde(rename = "return_address")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub return_address: Option<String>,
+    #[serde(rename = "stack_pointer")]
+    pub stack_pointer: Address,
+    #[serde(rename = "frame_pointer")]
+    pub frame_pointer: Address,
+    #[serde(rename = "module_name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub module_name: Option<String>,
+    #[serde(rename = "symbol_name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub symbol_name: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct SymbolInfo {
+    #[serde(rename = "name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "address")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub address: Option<String>,
+    #[serde(rename = "size")]
+    pub size: u64,
+    #[serde(rename = "module")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub module: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct VmxCapabilities {
+    #[serde(rename = "vmx_supported")]
+    pub vmxsupported: bool,
+    #[serde(rename = "ept_supported")]
+    pub eptsupported: bool,
+    #[serde(rename = "vpid_supported")]
+    pub vpidsupported: bool,
+    #[serde(rename = "msr_bitmap_supported")]
+    pub msrbitmap_supported: bool,
+    #[serde(rename = "io_bitmap_supported")]
+    pub iobitmap_supported: bool,
+    #[serde(rename = "max_physical_address_width")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_physical_address_width: Option<String>,
+    #[serde(rename = "processor_count")]
+    pub processor_count: u32,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct EventHeader {
+    #[serde(rename = "event_type")]
+    pub event_type: EventType,
     #[serde(rename = "process_id")]
-    pub process_id: u32,
+    pub process_id: ProcessId,
     #[serde(rename = "thread_id")]
-    pub thread_id: u32,
+    pub thread_id: ThreadId,
     #[serde(rename = "core_id")]
     pub core_id: u32,
+    #[serde(rename = "timestamp")]
+    pub timestamp: u64,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct BreakpointEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
     #[serde(rename = "address")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub address: Option<String>,
@@ -219,14 +470,10 @@ pub struct BreakpointEvent {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct ExceptionEvent {
-    #[serde(rename = "process_id")]
-    pub process_id: u32,
-    #[serde(rename = "thread_id")]
-    pub thread_id: u32,
-    #[serde(rename = "core_id")]
-    pub core_id: u32,
+    #[serde(rename = "header")]
+    pub header: EventHeader,
     #[serde(rename = "exception_code")]
-    pub exception_code: u32,
+    pub exception_code: ExceptionCode,
     #[serde(rename = "address")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub address: Option<String>,
@@ -237,44 +484,226 @@ pub struct ExceptionEvent {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct DebugPrintEvent {
-    #[serde(rename = "process_id")]
-    pub process_id: u32,
-    #[serde(rename = "thread_id")]
-    pub thread_id: u32,
-    #[serde(rename = "core_id")]
-    pub core_id: u32,
-    #[serde(rename = "message")]
+pub struct MemoryAccessEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "virtual_address")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub message: Option<String>,
-    #[serde(rename = "level")]
-    pub level: u32,
+    pub virtual_address: Option<String>,
+    #[serde(rename = "physical_address")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub physical_address: Option<String>,
+    #[serde(rename = "access_type")]
+    pub access_type: MemoryAccessType,
+    #[serde(rename = "size")]
+    pub size: u32,
+    #[serde(rename = "value")]
+    pub value: u64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct SyscallEvent {
-    #[serde(rename = "process_id")]
-    pub process_id: u32,
-    #[serde(rename = "thread_id")]
-    pub thread_id: u32,
-    #[serde(rename = "core_id")]
-    pub core_id: u32,
+    #[serde(rename = "header")]
+    pub header: EventHeader,
     #[serde(rename = "syscall_number")]
-    pub syscall_number: u64,
-    #[serde(rename = "rax")]
-    pub rax: u64,
-    #[serde(rename = "rcx")]
-    pub rcx: u64,
-    #[serde(rename = "rdx")]
-    pub rdx: u64,
-    #[serde(rename = "r8")]
-    pub r8: u64,
-    #[serde(rename = "r9")]
-    pub r9: u64,
-    #[serde(rename = "r10")]
-    pub r10: u64,
-    #[serde(rename = "rsp")]
-    pub rsp: u64,
+    pub syscall_number: u32,
+    #[serde(rename = "arguments")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub arguments: Option<Vec<u64>>,
+    #[serde(rename = "return_value")]
+    pub return_value: u64,
+    #[serde(rename = "is_entry")]
+    pub is_entry: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct ProcessEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "process_info")]
+    pub process_info: ProcessInfo,
+    #[serde(rename = "parent_process_id")]
+    pub parent_process_id: ProcessId,
+    #[serde(rename = "is_create")]
+    pub is_create: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct ThreadEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "thread_info")]
+    pub thread_info: ThreadInfo,
+    #[serde(rename = "is_create")]
+    pub is_create: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct ModuleEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "module_info")]
+    pub module_info: ModuleInfo,
+    #[serde(rename = "is_load")]
+    pub is_load: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct DebugPrintEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "message")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub message: Option<String>,
+    #[serde(rename = "level")]
+    pub level: LogLevel,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct VmxExitEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "exit_reason")]
+    pub exit_reason: VmxExitReason,
+    #[serde(rename = "exit_qualification")]
+    pub exit_qualification: u64,
+    #[serde(rename = "guest_rip")]
+    pub guest_rip: Address,
+    #[serde(rename = "guest_rsp")]
+    pub guest_rsp: Address,
+    #[serde(rename = "instruction_length")]
+    pub instruction_length: u32,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct TrapEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "trap_number")]
+    pub trap_number: u32,
+    #[serde(rename = "error_code")]
+    pub error_code: u64,
+    #[serde(rename = "address")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub address: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct HiddenHookEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "hook_address")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub hook_address: Option<String>,
+    #[serde(rename = "hook_type")]
+    pub hook_type: MemoryAccessType,
+    #[serde(rename = "data")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub data: Option<Vec<u8>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct CpuidEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "leaf")]
+    pub leaf: u32,
+    #[serde(rename = "sub_leaf")]
+    pub sub_leaf: u32,
+    #[serde(rename = "eax")]
+    pub eax: u32,
+    #[serde(rename = "ebx")]
+    pub ebx: u32,
+    #[serde(rename = "ecx")]
+    pub ecx: u32,
+    #[serde(rename = "edx")]
+    pub edx: u32,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct TscEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "tsc_value")]
+    pub tsc_value: u64,
+    #[serde(rename = "rdtsc_exit")]
+    pub rdtsc_exit: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct CrAccessEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "cr_number")]
+    pub cr_number: u32,
+    #[serde(rename = "is_write")]
+    pub is_write: bool,
+    #[serde(rename = "old_value")]
+    pub old_value: u64,
+    #[serde(rename = "new_value")]
+    pub new_value: u64,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct DrAccessEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "dr_number")]
+    pub dr_number: u32,
+    #[serde(rename = "is_write")]
+    pub is_write: bool,
+    #[serde(rename = "value")]
+    pub value: u64,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct IoPortEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "port")]
+    pub port: u16,
+    #[serde(rename = "size")]
+    pub size: u32,
+    #[serde(rename = "is_write")]
+    pub is_write: bool,
+    #[serde(rename = "value")]
+    pub value: u32,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct MsrEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "msr")]
+    pub msr: u32,
+    #[serde(rename = "is_write")]
+    pub is_write: bool,
+    #[serde(rename = "value")]
+    pub value: u64,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct EptViolationEvent {
+    #[serde(rename = "header")]
+    pub header: EventHeader,
+    #[serde(rename = "guest_physical_address")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub guest_physical_address: Option<String>,
+    #[serde(rename = "guest_virtual_address")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub guest_virtual_address: Option<String>,
+    #[serde(rename = "read")]
+    pub read: bool,
+    #[serde(rename = "write")]
+    pub write: bool,
+    #[serde(rename = "execute")]
+    pub execute: bool,
+    #[serde(rename = "readable")]
+    pub readable: bool,
+    #[serde(rename = "writable")]
+    pub writable: bool,
+    #[serde(rename = "executable")]
+    pub executable: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -287,3 +716,588 @@ pub struct Response<T: Serialize> {
 
 pub type EmptyResponse = Response<()>;
 pub type Empty = ();
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub enum DebuggerEvent {
+    Breakpoint(BreakpointEvent),
+    Exception(ExceptionEvent),
+    MemoryAccess(MemoryAccessEvent),
+    Syscall(SyscallEvent),
+    ProcessCreate(ProcessEvent),
+    ProcessExit(ProcessEvent),
+    ThreadCreate(ThreadEvent),
+    ThreadExit(ThreadEvent),
+    ModuleLoad(ModuleEvent),
+    ModuleUnload(ModuleEvent),
+    DebugPrint(DebugPrintEvent),
+    VmxExit(VmxExitEvent),
+    Trap(TrapEvent),
+    HiddenHook(HiddenHookEvent),
+    Cpuid(CpuidEvent),
+    Tsc(TscEvent),
+    CrAccess(CrAccessEvent),
+    DrAccess(DrAccessEvent),
+    IoPort(IoPortEvent),
+    Msr(MsrEvent),
+    EptViolation(EptViolationEvent),
+}
+
+pub fn debugger_event_type_from_name(name: &str) -> Option<DebuggerEventType> {
+    match name {
+        "Breakpoint" => Some(DebuggerEventType::Breakpoint),
+        "Exception" => Some(DebuggerEventType::Exception),
+        "MemoryAccess" => Some(DebuggerEventType::MemoryAccess),
+        "Syscall" => Some(DebuggerEventType::Syscall),
+        "ProcessCreate" => Some(DebuggerEventType::ProcessCreate),
+        "ProcessExit" => Some(DebuggerEventType::ProcessExit),
+        "ThreadCreate" => Some(DebuggerEventType::ThreadCreate),
+        "ThreadExit" => Some(DebuggerEventType::ThreadExit),
+        "ModuleLoad" => Some(DebuggerEventType::ModuleLoad),
+        "ModuleUnload" => Some(DebuggerEventType::ModuleUnload),
+        "DebugPrint" => Some(DebuggerEventType::DebugPrint),
+        "VmxExit" => Some(DebuggerEventType::VmxExit),
+        "Trap" => Some(DebuggerEventType::Trap),
+        "HiddenHook" => Some(DebuggerEventType::HiddenHook),
+        "Cpuid" => Some(DebuggerEventType::Cpuid),
+        "Tsc" => Some(DebuggerEventType::Tsc),
+        "CrAccess" => Some(DebuggerEventType::CrAccess),
+        "DrAccess" => Some(DebuggerEventType::DrAccess),
+        "IoPort" => Some(DebuggerEventType::IoPort),
+        "Msr" => Some(DebuggerEventType::Msr),
+        "EptViolation" => Some(DebuggerEventType::EptViolation),
+        _ => None,
+    }
+}
+
+pub fn debugger_event_type_name(t: DebuggerEventType) -> &'static str {
+    match t {
+        DebuggerEventType::Breakpoint => "Breakpoint",
+        DebuggerEventType::Exception => "Exception",
+        DebuggerEventType::MemoryAccess => "MemoryAccess",
+        DebuggerEventType::Syscall => "Syscall",
+        DebuggerEventType::ProcessCreate => "ProcessCreate",
+        DebuggerEventType::ProcessExit => "ProcessExit",
+        DebuggerEventType::ThreadCreate => "ThreadCreate",
+        DebuggerEventType::ThreadExit => "ThreadExit",
+        DebuggerEventType::ModuleLoad => "ModuleLoad",
+        DebuggerEventType::ModuleUnload => "ModuleUnload",
+        DebuggerEventType::DebugPrint => "DebugPrint",
+        DebuggerEventType::VmxExit => "VmxExit",
+        DebuggerEventType::Trap => "Trap",
+        DebuggerEventType::HiddenHook => "HiddenHook",
+        DebuggerEventType::Cpuid => "Cpuid",
+        DebuggerEventType::Tsc => "Tsc",
+        DebuggerEventType::CrAccess => "CrAccess",
+        DebuggerEventType::DrAccess => "DrAccess",
+        DebuggerEventType::IoPort => "IoPort",
+        DebuggerEventType::Msr => "Msr",
+        DebuggerEventType::EptViolation => "EptViolation",
+    }
+}
+
+pub unsafe fn emit_event(event: DebuggerEvent) {
+    extern "C" {
+        static mut EVENT_QUEUE: *mut EventQueue;
+    }
+    if !EVENT_QUEUE.is_null() {
+        (*EVENT_QUEUE).push(event);
+    }
+}
+
+pub struct EventQueue {
+    events: Vec<DebuggerEvent>,
+    max_size: usize,
+}
+
+impl EventQueue {
+    pub fn new(max_size: usize) -> Self {
+        Self {
+            events: Vec::new(),
+            max_size,
+        }
+    }
+
+    pub fn push(&mut self, event: DebuggerEvent) {
+        if self.events.len() >= self.max_size {
+            self.events.remove(0);
+        }
+        self.events.push(event);
+    }
+
+    pub fn pop(&mut self) -> Option<DebuggerEvent> {
+        self.events.pop()
+    }
+
+    pub fn len(&self) -> usize {
+        self.events.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.events.is_empty()
+    }
+}
+
+pub unsafe fn emit_breakpoint_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    address: Address,
+    breakpoint_id: u64,
+    registers: &RegisterState,
+) {
+    emit_event(DebuggerEvent::Breakpoint(BreakpointEvent {
+        header: EventHeader {
+            event_type: EventType::Breakpoint,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        address,
+        breakpoint_id,
+        registers: registers.clone(),
+    }));
+}
+
+pub unsafe fn emit_exception_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    exception_code: ExceptionCode,
+    address: Address,
+    error_code: u64,
+    registers: &RegisterState,
+) {
+    emit_event(DebuggerEvent::Exception(ExceptionEvent {
+        header: EventHeader {
+            event_type: EventType::Exception,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        exception_code,
+        address,
+        error_code,
+        registers: registers.clone(),
+    }));
+}
+
+pub unsafe fn emit_memory_access_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    virtual_address: Address,
+    physical_address: PhysicalAddress,
+    access_type: MemoryAccessType,
+    size: u32,
+    value: u64,
+) {
+    emit_event(DebuggerEvent::MemoryAccess(MemoryAccessEvent {
+        header: EventHeader {
+            event_type: EventType::MemoryAccess,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        virtual_address,
+        physical_address,
+        access_type,
+        size,
+        value,
+    }));
+}
+
+pub unsafe fn emit_syscall_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    syscall_number: u32,
+    arguments: [u64; 8],
+    is_entry: bool,
+) {
+    emit_event(DebuggerEvent::Syscall(SyscallEvent {
+        header: EventHeader {
+            event_type: if is_entry { EventType::SyscallEntry } else { EventType::SyscallExit },
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        syscall_number,
+        arguments,
+        return_value: 0,
+        is_entry,
+    }));
+}
+
+pub unsafe fn emit_process_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    process_info: ProcessInfo,
+    parent_process_id: ProcessId,
+    is_create: bool,
+) {
+    let event = if is_create {
+        DebuggerEvent::ProcessCreate(ProcessEvent {
+            header: EventHeader {
+                event_type: EventType::ProcessCreate,
+                process_id,
+                thread_id,
+                core_id,
+                timestamp: 0,
+            },
+            process_info,
+            parent_process_id,
+            is_create,
+        })
+    } else {
+        DebuggerEvent::ProcessExit(ProcessEvent {
+            header: EventHeader {
+                event_type: EventType::ProcessExit,
+                process_id,
+                thread_id,
+                core_id,
+                timestamp: 0,
+            },
+            process_info,
+            parent_process_id,
+            is_create,
+        })
+    };
+    emit_event(event);
+}
+
+pub unsafe fn emit_thread_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    thread_info: ThreadInfo,
+    is_create: bool,
+) {
+    let event = if is_create {
+        DebuggerEvent::ThreadCreate(ThreadEvent {
+            header: EventHeader {
+                event_type: EventType::ThreadCreate,
+                process_id,
+                thread_id,
+                core_id,
+                timestamp: 0,
+            },
+            thread_info,
+            is_create,
+        })
+    } else {
+        DebuggerEvent::ThreadExit(ThreadEvent {
+            header: EventHeader {
+                event_type: EventType::ThreadExit,
+                process_id,
+                thread_id,
+                core_id,
+                timestamp: 0,
+            },
+            thread_info,
+            is_create,
+        })
+    };
+    emit_event(event);
+}
+
+pub unsafe fn emit_module_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    module_info: ModuleInfo,
+    is_load: bool,
+) {
+    let event = if is_load {
+        DebuggerEvent::ModuleLoad(ModuleEvent {
+            header: EventHeader {
+                event_type: EventType::ModuleLoad,
+                process_id,
+                thread_id,
+                core_id,
+                timestamp: 0,
+            },
+            module_info,
+            is_load,
+        })
+    } else {
+        DebuggerEvent::ModuleUnload(ModuleEvent {
+            header: EventHeader {
+                event_type: EventType::ModuleUnload,
+                process_id,
+                thread_id,
+                core_id,
+                timestamp: 0,
+            },
+            module_info,
+            is_load,
+        })
+    };
+    emit_event(event);
+}
+
+pub unsafe fn emit_debug_print_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    message: String,
+    level: LogLevel,
+) {
+    emit_event(DebuggerEvent::DebugPrint(DebugPrintEvent {
+        header: EventHeader {
+            event_type: EventType::DebugPrint,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        message,
+        level,
+    }));
+}
+
+pub unsafe fn emit_vmx_exit_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    exit_reason: VmxExitReason,
+    exit_qualification: u64,
+    guest_rip: Address,
+    guest_rsp: Address,
+    instruction_length: u32,
+) {
+    emit_event(DebuggerEvent::VmxExit(VmxExitEvent {
+        header: EventHeader {
+            event_type: EventType::VmxExit,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        exit_reason,
+        exit_qualification,
+        guest_rip,
+        guest_rsp,
+        instruction_length,
+    }));
+}
+
+pub unsafe fn emit_trap_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    trap_number: u32,
+    error_code: u64,
+    address: Address,
+) {
+    emit_event(DebuggerEvent::Trap(TrapEvent {
+        header: EventHeader {
+            event_type: EventType::Trap,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        trap_number,
+        error_code,
+        address,
+    }));
+}
+
+pub unsafe fn emit_hidden_hook_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    hook_address: Address,
+    hook_type: MemoryAccessType,
+    data: Vec<u8>,
+) {
+    emit_event(DebuggerEvent::HiddenHook(HiddenHookEvent {
+        header: EventHeader {
+            event_type: EventType::HiddenHook,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        hook_address,
+        hook_type,
+        data,
+    }));
+}
+
+pub unsafe fn emit_cpuid_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    leaf: u32,
+    sub_leaf: u32,
+    eax: u32,
+    ebx: u32,
+    ecx: u32,
+    edx: u32,
+) {
+    emit_event(DebuggerEvent::Cpuid(CpuidEvent {
+        header: EventHeader {
+            event_type: EventType::Cpuid,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        leaf,
+        sub_leaf,
+        eax,
+        ebx,
+        ecx,
+        edx,
+    }));
+}
+
+pub unsafe fn emit_tsc_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    tsc_value: u64,
+    rdtsc_exit: bool,
+) {
+    emit_event(DebuggerEvent::Tsc(TscEvent {
+        header: EventHeader {
+            event_type: EventType::Tsc,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        tsc_value,
+        rdtsc_exit,
+    }));
+}
+
+pub unsafe fn emit_cr_access_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    cr_number: u32,
+    is_write: bool,
+    old_value: u64,
+    new_value: u64,
+) {
+    emit_event(DebuggerEvent::CrAccess(CrAccessEvent {
+        header: EventHeader {
+            event_type: EventType::CrAccess,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        cr_number,
+        is_write,
+        old_value,
+        new_value,
+    }));
+}
+
+pub unsafe fn emit_dr_access_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    dr_number: u32,
+    is_write: bool,
+    value: u64,
+) {
+    emit_event(DebuggerEvent::DrAccess(DrAccessEvent {
+        header: EventHeader {
+            event_type: EventType::DrAccess,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        dr_number,
+        is_write,
+        value,
+    }));
+}
+
+pub unsafe fn emit_io_port_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    port: u16,
+    size: u32,
+    is_write: bool,
+    value: u32,
+) {
+    emit_event(DebuggerEvent::IoPort(IoPortEvent {
+        header: EventHeader {
+            event_type: EventType::IoPort,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        port,
+        size,
+        is_write,
+        value,
+    }));
+}
+
+pub unsafe fn emit_msr_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    msr: u32,
+    is_write: bool,
+    value: u64,
+) {
+    emit_event(DebuggerEvent::Msr(MsrEvent {
+        header: EventHeader {
+            event_type: EventType::Msr,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        msr,
+        is_write,
+        value,
+    }));
+}
+
+pub unsafe fn emit_ept_violation_event(
+    process_id: ProcessId,
+    thread_id: ThreadId,
+    core_id: u32,
+    guest_physical_address: PhysicalAddress,
+    guest_virtual_address: Address,
+    read: bool,
+    write: bool,
+    execute: bool,
+    readable: bool,
+    writable: bool,
+    executable: bool,
+) {
+    emit_event(DebuggerEvent::EptViolation(EptViolationEvent {
+        header: EventHeader {
+            event_type: EventType::EptViolation,
+            process_id,
+            thread_id,
+            core_id,
+            timestamp: 0,
+        },
+        guest_physical_address,
+        guest_virtual_address,
+        read,
+        write,
+        execute,
+        readable,
+        writable,
+        executable,
+    }));
+}

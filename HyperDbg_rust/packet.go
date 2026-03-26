@@ -449,7 +449,7 @@ func (p *Packet) handleBreakpointEvent(event any) {
 	if msg, ok := event.(*Message); ok {
 		e := parseBreakpointEvent(msg.Payload)
 		fmt.Printf("[Breakpoint] PID=%d TID=%d Address=%s\n",
-			e.ProcessID, e.ThreadID, e.Address)
+			e.Header.ProcessID, e.Header.ThreadID, e.Address)
 	}
 }
 
@@ -459,7 +459,7 @@ func (p *Packet) handleExceptionEvent(event any) {
 	if msg, ok := event.(*Message); ok {
 		e := parseExceptionEvent(msg.Payload)
 		fmt.Printf("[Exception] PID=%d TID=%d Code=0x%x Address=%s\n",
-			e.ProcessID, e.ThreadID, e.ExceptionCode, e.Address)
+			e.Header.ProcessID, e.Header.ThreadID, e.ExceptionCode, e.Address)
 	}
 }
 
@@ -475,10 +475,12 @@ func parseBreakpointEvent(data []byte) *BreakpointEvent {
 		return &BreakpointEvent{}
 	}
 	return &BreakpointEvent{
-		ProcessID:    binary.LittleEndian.Uint32(data[0:4]),
-		ThreadID:     binary.LittleEndian.Uint32(data[4:8]),
-		CoreID:       binary.LittleEndian.Uint32(data[8:12]),
-		Address:      fmt.Sprintf("0x%x", binary.LittleEndian.Uint64(data[12:20])),
+		Header: EventHeader{
+			ProcessID: ProcessId(binary.LittleEndian.Uint32(data[0:4])),
+			ThreadID:  ThreadId(binary.LittleEndian.Uint32(data[4:8])),
+			CoreID:    binary.LittleEndian.Uint32(data[8:12]),
+		},
+		Address:      Address(binary.LittleEndian.Uint64(data[12:20])),
 		BreakpointID: binary.LittleEndian.Uint64(data[20:28]),
 	}
 }
@@ -488,11 +490,13 @@ func parseExceptionEvent(data []byte) *ExceptionEvent {
 		return &ExceptionEvent{}
 	}
 	return &ExceptionEvent{
-		ProcessID:     binary.LittleEndian.Uint32(data[0:4]),
-		ThreadID:      binary.LittleEndian.Uint32(data[4:8]),
-		CoreID:        binary.LittleEndian.Uint32(data[8:12]),
-		ExceptionCode: binary.LittleEndian.Uint32(data[12:16]),
-		Address:       fmt.Sprintf("0x%x", binary.LittleEndian.Uint64(data[16:24])),
+		Header: EventHeader{
+			ProcessID: ProcessId(binary.LittleEndian.Uint32(data[0:4])),
+			ThreadID:  ThreadId(binary.LittleEndian.Uint32(data[4:8])),
+			CoreID:    binary.LittleEndian.Uint32(data[8:12]),
+		},
+		ExceptionCode: ExceptionCode(binary.LittleEndian.Uint32(data[12:16])),
+		Address:       Address(binary.LittleEndian.Uint64(data[16:24])),
 		ErrorCode:     binary.LittleEndian.Uint64(data[24:32]),
 	}
 }
@@ -506,11 +510,13 @@ func parseDebugPrintEvent(data []byte) *DebugPrintEvent {
 		msgLen = uint32(len(data) - 20)
 	}
 	return &DebugPrintEvent{
-		ProcessID: binary.LittleEndian.Uint32(data[0:4]),
-		ThreadID:  binary.LittleEndian.Uint32(data[4:8]),
-		CoreID:    binary.LittleEndian.Uint32(data[8:12]),
-		Level:     binary.LittleEndian.Uint32(data[12:16]),
-		Message:   string(data[20 : 20+msgLen]),
+		Header: EventHeader{
+			ProcessID: ProcessId(binary.LittleEndian.Uint32(data[0:4])),
+			ThreadID:  ThreadId(binary.LittleEndian.Uint32(data[4:8])),
+			CoreID:    binary.LittleEndian.Uint32(data[8:12]),
+		},
+		Level:   LogLevel(binary.LittleEndian.Uint32(data[12:16])),
+		Message: string(data[20 : 20+msgLen]),
 	}
 }
 
