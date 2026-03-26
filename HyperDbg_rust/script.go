@@ -1,4 +1,4 @@
-package debugger
+package main
 
 import (
 	"context"
@@ -523,13 +523,13 @@ func (se *ScriptEngine) cmdBreakpoint(ctx context.Context, args []string) (strin
 		return "", err
 	}
 
-	bpType := BreakpointTypeSoftware
+	bpType := BreakpointSoftware
 	if len(args) > 1 {
 		switch strings.ToLower(args[1]) {
 		case "hw":
-			bpType = BreakpointTypeHardware
+			bpType = BreakpointHardware
 		case "ept":
-			bpType = BreakpointTypeEPT
+			bpType = BreakpointEpt
 		}
 	}
 

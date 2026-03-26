@@ -23,10 +23,10 @@ var (
 )
 
 func main() {
-	mylog.Call(func() {run()})
+	mylog.Call(func() { run() })
 }
 
-	func run () {
+func run() {
 	p := driver.New(`D:\ux\examples\hypedbg\rust-driver\examples\sysdemo\sysdemo.sys`, "sysDemo", "\\\\.\\sysDemo")
 
 	p.Install()
