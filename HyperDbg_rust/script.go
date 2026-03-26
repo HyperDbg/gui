@@ -1,4 +1,4 @@
-package main
+package hyperdbgrust
 
 import (
 	"context"
@@ -661,7 +661,7 @@ func (se *ScriptEngine) dumpMemory(ctx context.Context, args []string, size int)
 
 		output.WriteString(fmt.Sprintf("%016x: ", addr+uint64(i)))
 
-		for j := 0; j < bytesPerLine; j++ {
+		for j := range bytesPerLine {
 			offset := int(i) + j*size
 			if offset >= len(data) {
 				for k := 0; k < size*2; k++ {
@@ -692,7 +692,7 @@ func (se *ScriptEngine) dumpMemory(ctx context.Context, args []string, size int)
 
 		output.WriteString(" |")
 
-		for j := 0; j < bytesPerLine; j++ {
+		for j := range bytesPerLine {
 			offset := int(i) + j
 			if offset >= len(data) {
 				output.WriteString(" ")
@@ -745,7 +745,7 @@ func (se *ScriptEngine) editMemory(ctx context.Context, args []string, size int)
 	}
 
 	data := make([]byte, size)
-	for i := 0; i < size; i++ {
+	for i := range size {
 		data[i] = byte(value >> (i * 8))
 	}
 
@@ -909,7 +909,7 @@ func (se *ScriptEngine) cmdLoop(ctx context.Context, args []string) (string, err
 	cmd := strings.Join(args[1:], " ")
 	var output strings.Builder
 
-	for i := 0; i < count; i++ {
+	for range count {
 		select {
 		case <-ctx.Done():
 			return output.String(), ctx.Err()

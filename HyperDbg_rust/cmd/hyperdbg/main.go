@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/ddkwork/HyperDbg/debugger/driver"
+	"github.com/ddkwork/HyperDbg_rust"
 )
 
 func main() {
@@ -36,7 +37,7 @@ func main() {
 		os.Exit(0)
 	}()
 
-	packet := NewPacket()
+	packet := hyperdbgrust.NewPacket()
 	if err := packet.Start(); err != nil {
 		fmt.Printf("Packet start failed: %v\n", err)
 		p.Stop()
@@ -47,15 +48,15 @@ func main() {
 
 	fmt.Println("Debugger initialized successfully")
 
-	packet.RegisterCallback(MsgTypeBreakpointEvent, func(event interface{}) {
+	packet.RegisterCallback(hyperdbgrust.MsgTypeBreakpointEvent, func(event any) {
 		fmt.Printf("[Event] Breakpoint: %+v\n", event)
 	})
 
-	packet.RegisterCallback(MsgTypeExceptionEvent, func(event interface{}) {
+	packet.RegisterCallback(hyperdbgrust.MsgTypeExceptionEvent, func(event any) {
 		fmt.Printf("[Event] Exception: %+v\n", event)
 	})
 
-	packet.RegisterCallback(MsgTypeDebugPrintEvent, func(event interface{}) {
+	packet.RegisterCallback(hyperdbgrust.MsgTypeDebugPrintEvent, func(event any) {
 		fmt.Printf("[Event] DebugPrint: %+v\n", event)
 	})
 

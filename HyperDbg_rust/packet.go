@@ -1,4 +1,4 @@
-package main
+package hyperdbgrust
 
 import (
 	"bytes"
@@ -254,7 +254,7 @@ type ResponseType interface {
 		Empty
 }
 
-type EventCallback func(event interface{})
+type EventCallback func(event any)
 
 type Packet struct {
 	client    *http.Client
@@ -264,7 +264,7 @@ type Packet struct {
 	connected atomic.Bool
 	state     atomic.Int32
 	callbacks map[MessageType][]EventCallback
-	eventChan chan interface{}
+	eventChan chan any
 }
 
 func NewPacket() Debugger {
@@ -274,7 +274,7 @@ func NewPacket() Debugger {
 		},
 		baseURL:   fmt.Sprintf("http://%s:%d", DriverHTTPHost, DriverHTTPPort),
 		callbacks: make(map[MessageType][]EventCallback),
-		eventChan: make(chan interface{}, 1000),
+		eventChan: make(chan any, 1000),
 	}
 	p.driverID.Store(1)
 	p.state.Store(int32(StateTerminated))
@@ -394,7 +394,7 @@ func (p *Packet) RegisterCallback(msgType MessageType, cb EventCallback) {
 	p.callbacks[msgType] = append(p.callbacks[msgType], cb)
 }
 
-func (p *Packet) GetEvent() interface{} {
+func (p *Packet) GetEvent() any {
 	select {
 	case event := <-p.eventChan:
 		return event
@@ -443,7 +443,7 @@ func (p *Packet) Terminate() error {
 }
 
 func (p *Packet) AttachProcess(processID uint32) error {
-	data := mylog.Check2(json.Marshal(map[string]interface{}{
+	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":     "attach_process",
 		"process_id": fmt.Sprintf("%d", processID),
 	}))
@@ -464,7 +464,7 @@ func (p *Packet) DetachProcess() error {
 }
 
 func (p *Packet) SetBreakpoint(address uint64, bpType BreakpointType) error {
-	data := mylog.Check2(json.Marshal(map[string]interface{}{
+	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":  "set_breakpoint",
 		"address": fmt.Sprintf("0x%x", address),
 		"type":    int(bpType),
@@ -477,7 +477,7 @@ func (p *Packet) SetBreakpoint(address uint64, bpType BreakpointType) error {
 }
 
 func (p *Packet) RemoveBreakpoint(breakpointID uint64) error {
-	data := mylog.Check2(json.Marshal(map[string]interface{}{
+	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":        "remove_breakpoint",
 		"breakpoint_id": fmt.Sprintf("0x%x", breakpointID),
 	}))
@@ -554,7 +554,7 @@ func (p *Packet) StepOut() error {
 }
 
 func (p *Packet) ReadMemory(address uint64, size uint32) ([]byte, error) {
-	data := mylog.Check2(json.Marshal(map[string]interface{}{
+	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":  "read_memory",
 		"address": fmt.Sprintf("0x%x", address),
 		"size":    size,
@@ -567,7 +567,7 @@ func (p *Packet) ReadMemory(address uint64, size uint32) ([]byte, error) {
 }
 
 func (p *Packet) WriteMemory(address uint64, data []byte) error {
-	jsonData := mylog.Check2(json.Marshal(map[string]interface{}{
+	jsonData := mylog.Check2(json.Marshal(map[string]any{
 		"action":  "write_memory",
 		"address": fmt.Sprintf("0x%x", address),
 		"data":    data,
@@ -589,7 +589,7 @@ func (p *Packet) ReadRegisters() (*RegisterState, error) {
 }
 
 func (p *Packet) WriteRegisters(regs *RegisterState) error {
-	data := mylog.Check2(json.Marshal(map[string]interface{}{
+	data := mylog.Check2(json.Marshal(map[string]any{
 		"action": "write_registers",
 		"data":   regs,
 	}))
@@ -610,7 +610,7 @@ func (p *Packet) GetProcessList() ([]ProcessInfo, error) {
 }
 
 func (p *Packet) GetThreadList(processID uint32) ([]ThreadInfo, error) {
-	data := mylog.Check2(json.Marshal(map[string]interface{}{
+	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":     "get_thread_list",
 		"process_id": fmt.Sprintf("%d", processID),
 	}))
@@ -622,7 +622,7 @@ func (p *Packet) GetThreadList(processID uint32) ([]ThreadInfo, error) {
 }
 
 func (p *Packet) GetModuleList(processID uint32) ([]ModuleInfo, error) {
-	data := mylog.Check2(json.Marshal(map[string]interface{}{
+	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":     "get_module_list",
 		"process_id": fmt.Sprintf("%d", processID),
 	}))
@@ -633,7 +633,7 @@ func (p *Packet) GetModuleList(processID uint32) ([]ModuleInfo, error) {
 	return resp.Data, nil
 }
 
-func (p *Packet) handleBreakpointEvent(event interface{}) {
+func (p *Packet) handleBreakpointEvent(event any) {
 	p.state.Store(int32(StatePaused))
 
 	if msg, ok := event.(*Message); ok {
@@ -643,7 +643,7 @@ func (p *Packet) handleBreakpointEvent(event interface{}) {
 	}
 }
 
-func (p *Packet) handleExceptionEvent(event interface{}) {
+func (p *Packet) handleExceptionEvent(event any) {
 	p.state.Store(int32(StatePaused))
 
 	if msg, ok := event.(*Message); ok {
@@ -653,7 +653,7 @@ func (p *Packet) handleExceptionEvent(event interface{}) {
 	}
 }
 
-func (p *Packet) handleDebugPrintEvent(event interface{}) {
+func (p *Packet) handleDebugPrintEvent(event any) {
 	if msg, ok := event.(*Message); ok {
 		e := parseDebugPrintEvent(msg.Payload)
 		fmt.Printf("[DebugPrint] %s\n", e.Message)

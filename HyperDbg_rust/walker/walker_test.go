@@ -2,6 +2,8 @@ package walker
 
 import (
 	"testing"
+
+	hyperdbgrust "github.com/ddkwork/HyperDbg_rust"
 )
 
 func TestWalker(t *testing.T) {
@@ -41,7 +43,7 @@ func TestWalker(t *testing.T) {
 		t.Logf("Process Behavior Logger initialized")
 		t.Logf("Target PID: %d (0 means all processes)", targetPid)
 
-		event := &protocol.SyscallEvent{
+		event := &hyperdbgrust.SyscallEvent{
 			ProcessID:     1234,
 			ThreadID:      5678,
 			CoreID:        0,
@@ -55,7 +57,7 @@ func TestWalker(t *testing.T) {
 			RSP:           0x6000,
 		}
 
-		for i := 0; i < 10; i++ {
+		for range 10 {
 			logger.Maiter(event, func() {
 				t.Logf("method:syscall, pid: %x, tid: %x, syscall: %x",
 					event.ProcessID, event.ThreadID, event.RAX)
@@ -71,7 +73,7 @@ func TestWalker(t *testing.T) {
 		monitor := walker.(*MemoryAllocationMonitor)
 		t.Logf("Memory Allocation Monitor initialized")
 
-		event := &protocol.SyscallEvent{
+		event := &hyperdbgrust.SyscallEvent{
 			ProcessID:     1234,
 			ThreadID:      5678,
 			CoreID:        0,
@@ -83,12 +85,9 @@ func TestWalker(t *testing.T) {
 			R9:            0x1000,
 			R10:           0x5000,
 			RSP:           0x6000,
-			Options: protocol.DebugEventOptions{
-				OptionalParam1: 0x1000,
-			},
 		}
 
-		for i := 0; i < 5; i++ {
+		for range 5 {
 			monitor.Maiter(event, func() {
 				t.Logf("[SYSCALL] NtAllocateVirtualMemory, pid: %x | size: %x",
 					event.ProcessID, event.R9)
@@ -107,7 +106,7 @@ func TestWalker(t *testing.T) {
 		syscalls := []uint64{0x12, 0x07, 0x18, 0x19, 0x1a}
 
 		for i, syscallNum := range syscalls {
-			event := &protocol.SyscallEvent{
+			event := &hyperdbgrust.SyscallEvent{
 				ProcessID:     1234,
 				ThreadID:      5678,
 				CoreID:        0,
@@ -137,8 +136,8 @@ func TestWalker(t *testing.T) {
 		monitor := walker.(*DFIRMonitor)
 		t.Logf("DFIR Monitor initialized")
 
-		for i := 0; i < 10; i++ {
-			event := &protocol.SyscallEvent{
+		for i := range 10 {
+			event := &hyperdbgrust.SyscallEvent{
 				ProcessID:     1234,
 				ThreadID:      5678,
 				CoreID:        0,
@@ -173,7 +172,7 @@ func TestWalker(t *testing.T) {
 
 		eventCount := 0
 		for _, ioctlCode := range ioctlCodes {
-			event := &protocol.SyscallEvent{
+			event := &hyperdbgrust.SyscallEvent{
 				ProcessID:     1234,
 				ThreadID:      5678,
 				CoreID:        0,
@@ -212,7 +211,7 @@ func TestWalker(t *testing.T) {
 
 		eventCount := 0
 		for _, ioctlCode := range ioctlCodes {
-			event := &protocol.SyscallEvent{
+			event := &hyperdbgrust.SyscallEvent{
 				ProcessID:     1234,
 				ThreadID:      5678,
 				CoreID:        0,
@@ -258,7 +257,7 @@ func TestWalker(t *testing.T) {
 		}
 
 		for _, ioctlCode := range ioctlCodes {
-			event := &protocol.SyscallEvent{
+			event := &hyperdbgrust.SyscallEvent{
 				ProcessID:     1234,
 				ThreadID:      5678,
 				CoreID:        0,
@@ -293,7 +292,7 @@ func TestWalker(t *testing.T) {
 		t.Logf("  Model: %s", hookInfo.SsdNumber.Mod.String())
 		t.Logf("  Serial: %s", hookInfo.SsdNumber.Serial.String())
 
-		event := &protocol.SyscallEvent{
+		event := &hyperdbgrust.SyscallEvent{
 			ProcessID:     1234,
 			ThreadID:      5678,
 			CoreID:        0,
@@ -308,7 +307,7 @@ func TestWalker(t *testing.T) {
 		}
 
 		smartCount := 0
-		for i := 0; i < 3; i++ {
+		for range 3 {
 			info := ParseNtDeviceIoControlFileEvent(event)
 			if info == nil {
 				continue
@@ -335,7 +334,7 @@ func TestWalker(t *testing.T) {
 		t.Logf("  ECX: 0x%08X", hookInfo.Cpu1.Ecx)
 		t.Logf("  EDX: 0x%08X", hookInfo.Cpu1.Edx)
 
-		event := &protocol.SyscallEvent{
+		event := &hyperdbgrust.SyscallEvent{
 			ProcessID:     1234,
 			ThreadID:      5678,
 			CoreID:        0,
@@ -350,7 +349,7 @@ func TestWalker(t *testing.T) {
 		}
 
 		cpuidCount := 0
-		for i := 0; i < 3; i++ {
+		for range 3 {
 			info := ParseNtDeviceIoControlFileEvent(event)
 			if info == nil {
 				continue
@@ -371,7 +370,7 @@ func TestWalker(t *testing.T) {
 		t.Logf("Starting network connection monitor")
 		t.Logf("Monitoring AFD_CONNECT (0x%08X) for network connections", AFD_CONNECT)
 
-		event := &protocol.SyscallEvent{
+		event := &hyperdbgrust.SyscallEvent{
 			ProcessID:     1234,
 			ThreadID:      5678,
 			CoreID:        0,
@@ -386,7 +385,7 @@ func TestWalker(t *testing.T) {
 		}
 
 		connectionCount := 0
-		for i := 0; i < 5; i++ {
+		for range 5 {
 			info := ParseNtDeviceIoControlFileEvent(event)
 			if info == nil {
 				continue

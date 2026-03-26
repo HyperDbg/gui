@@ -1,4 +1,4 @@
-package main
+package hyperdbgrust
 
 import (
 	"context"
@@ -31,7 +31,7 @@ type Debugger interface {
 	GetThreadList(processID uint32) ([]ThreadInfo, error)
 	GetModuleList(processID uint32) ([]ModuleInfo, error)
 	RegisterCallback(msgType MessageType, cb EventCallback)
-	GetEvent() interface{}
+	GetEvent() any
 	WaitForEvent(timeout time.Duration) *Message
 	GetConnectedDrivers() []uint64
 	WaitForDriver(timeout time.Duration) error

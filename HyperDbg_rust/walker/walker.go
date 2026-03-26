@@ -3,6 +3,8 @@ package walker
 import (
 	"fmt"
 	"time"
+
+	hyperdbgrust "github.com/ddkwork/HyperDbg_rust"
 )
 
 const (
@@ -16,8 +18,8 @@ const (
 )
 
 type Walker interface {
-	Maiter(event *SyscallEvent, do func())
-	Hook(event *SyscallEvent, do func())
+	Maiter(event *hyperdbgrust.SyscallEvent, do func())
+	Hook(event *hyperdbgrust.SyscallEvent, do func())
 }
 
 type ProcessBehaviorLogger struct {
@@ -34,7 +36,7 @@ func NewProcessBehaviorLogger(targetPid uint32) Walker {
 	return &ProcessBehaviorLogger{TargetPid: targetPid}
 }
 
-func (l *ProcessBehaviorLogger) Maiter(event *protocol.SyscallEvent, do func()) {
+func (l *ProcessBehaviorLogger) Maiter(event *hyperdbgrust.SyscallEvent, do func()) {
 	if event == nil || (l.TargetPid != 0 && event.ProcessID != l.TargetPid) {
 		return
 	}
@@ -42,7 +44,7 @@ func (l *ProcessBehaviorLogger) Maiter(event *protocol.SyscallEvent, do func()) 
 	do()
 }
 
-func (l *ProcessBehaviorLogger) Hook(event *protocol.SyscallEvent, do func()) {
+func (l *ProcessBehaviorLogger) Hook(event *hyperdbgrust.SyscallEvent, do func()) {
 }
 
 func (l *ProcessBehaviorLogger) Summary() string {
@@ -78,7 +80,7 @@ func NewMemoryAllocationMonitor(targetPid uint32) Walker {
 	}
 }
 
-func (m *MemoryAllocationMonitor) Maiter(event *protocol.SyscallEvent, do func()) {
+func (m *MemoryAllocationMonitor) Maiter(event *hyperdbgrust.SyscallEvent, do func()) {
 	if event == nil || (m.TargetPid != 0 && event.ProcessID != m.TargetPid) {
 		return
 	}
@@ -89,7 +91,7 @@ func (m *MemoryAllocationMonitor) Maiter(event *protocol.SyscallEvent, do func()
 	alloc := MemoryAllocationInfo{
 		ProcessId:     event.ProcessID,
 		Address:       event.RDX,
-		Size:          event.Options.OptionalParam1,
+		Size:          event.R8,
 		RequestedSize: event.R9,
 	}
 	m.Allocations = append(m.Allocations, alloc)
@@ -97,7 +99,7 @@ func (m *MemoryAllocationMonitor) Maiter(event *protocol.SyscallEvent, do func()
 	do()
 }
 
-func (m *MemoryAllocationMonitor) Hook(event *protocol.SyscallEvent, do func()) {
+func (m *MemoryAllocationMonitor) Hook(event *hyperdbgrust.SyscallEvent, do func()) {
 }
 
 func (m *MemoryAllocationMonitor) Summary() string {
@@ -136,7 +138,7 @@ func NewComprehensiveMonitor(targetPid uint32) Walker {
 	}
 }
 
-func (m *ComprehensiveMonitor) Maiter(event *protocol.SyscallEvent, do func()) {
+func (m *ComprehensiveMonitor) Maiter(event *hyperdbgrust.SyscallEvent, do func()) {
 	if event == nil || (m.TargetPid != 0 && event.ProcessID != m.TargetPid) {
 		return
 	}
@@ -145,7 +147,7 @@ func (m *ComprehensiveMonitor) Maiter(event *protocol.SyscallEvent, do func()) {
 	do()
 }
 
-func (m *ComprehensiveMonitor) Hook(event *protocol.SyscallEvent, do func()) {
+func (m *ComprehensiveMonitor) Hook(event *hyperdbgrust.SyscallEvent, do func()) {
 }
 
 func (m *ComprehensiveMonitor) Summary() string {
@@ -181,7 +183,7 @@ func NewDFIRMonitor(targetPid uint32) Walker {
 	}
 }
 
-func (d *DFIRMonitor) Maiter(event *protocol.SyscallEvent, do func()) {
+func (d *DFIRMonitor) Maiter(event *hyperdbgrust.SyscallEvent, do func()) {
 	if event == nil {
 		return
 	}
@@ -197,10 +199,10 @@ func (d *DFIRMonitor) Maiter(event *protocol.SyscallEvent, do func()) {
 	do()
 }
 
-func (d *DFIRMonitor) Hook(event *protocol.SyscallEvent, do func()) {
+func (d *DFIRMonitor) Hook(event *hyperdbgrust.SyscallEvent, do func()) {
 }
 
-func (d *DFIRMonitor) RecordEvent(eventType string, debugEvent *protocol.SyscallEvent, data map[string]any) {
+func (d *DFIRMonitor) RecordEvent(eventType string, debugEvent *hyperdbgrust.SyscallEvent, data map[string]any) {
 	if debugEvent == nil || (d.TargetPid != 0 && debugEvent.ProcessID != d.TargetPid) {
 		return
 	}
@@ -255,7 +257,7 @@ func (info *NtDeviceIoControlFileInfo) String() string {
 	)
 }
 
-func ParseNtDeviceIoControlFileEvent(event *protocol.SyscallEvent) *NtDeviceIoControlFileInfo {
+func ParseNtDeviceIoControlFileEvent(event *hyperdbgrust.SyscallEvent) *NtDeviceIoControlFileInfo {
 	if event == nil {
 		return nil
 	}
@@ -374,10 +376,10 @@ func MyNotBookHook() *HookInfo {
 	}
 }
 
-func (h *HardwareHookCallback) Maiter(event *protocol.SyscallEvent, do func()) {
+func (h *HardwareHookCallback) Maiter(event *hyperdbgrust.SyscallEvent, do func()) {
 }
 
-func (h *HardwareHookCallback) Hook(event *protocol.SyscallEvent, do func()) {
+func (h *HardwareHookCallback) Hook(event *hyperdbgrust.SyscallEvent, do func()) {
 	if event == nil {
 		return
 	}
@@ -415,7 +417,7 @@ func NewIopXxxControlFileMonitor() Walker {
 	}
 }
 
-func (m *IopXxxControlFileMonitor) Maiter(event *protocol.SyscallEvent, do func()) {
+func (m *IopXxxControlFileMonitor) Maiter(event *hyperdbgrust.SyscallEvent, do func()) {
 	if event == nil {
 		return
 	}
@@ -423,7 +425,7 @@ func (m *IopXxxControlFileMonitor) Maiter(event *protocol.SyscallEvent, do func(
 	do()
 }
 
-func (m *IopXxxControlFileMonitor) Hook(event *protocol.SyscallEvent, do func()) {
+func (m *IopXxxControlFileMonitor) Hook(event *hyperdbgrust.SyscallEvent, do func()) {
 	if event == nil {
 		return
 	}
@@ -439,11 +441,4 @@ func (m *IopXxxControlFileMonitor) Hook(event *protocol.SyscallEvent, do func())
 
 func (m *IopXxxControlFileMonitor) Summary() string {
 	return fmt.Sprintf("Total events: %d, Matched: %d", m.eventCount, m.matchedCount)
-}
-
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }

@@ -8,6 +8,7 @@ import (
 	"go/token"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"text/template"
 
@@ -114,7 +115,7 @@ var tmpl = template.Must(template.New("mcp").Funcs(template.FuncMap{
 			if strings.Contains(elemType, ".") {
 				return "mustConvert[" + paramType + "](args." + paramName + ")"
 			}
-			return "args." + paramName + ".(" + paramType + ")"
+			return "args." + paramName + ".([]hyperdbgrust." + elemType + ")"
 		}
 
 		if isMapType(paramType) {
@@ -122,6 +123,10 @@ var tmpl = template.Must(template.New("mcp").Funcs(template.FuncMap{
 		}
 
 		if strings.HasPrefix(paramType, "func(") {
+			return "args." + paramName + ".(" + paramType + ")"
+		}
+
+		if strings.Contains(paramType, ".") {
 			return "args." + paramName + ".(" + paramType + ")"
 		}
 
@@ -136,28 +141,32 @@ var tmpl = template.Must(template.New("mcp").Funcs(template.FuncMap{
 			if isMapType(baseType) {
 				return "args." + paramName + ".(*" + baseType + ")"
 			}
-			return "args." + paramName + ".(*debugger." + baseType + ")"
+			if strings.Contains(baseType, ".") {
+				return "args." + paramName + ".(*" + baseType + ")"
+			}
+			return "args." + paramName + ".(*hyperdbgrust." + baseType + ")"
 		}
 
-		return "args." + paramName + ".(debugger." + paramType + ")"
+		return "args." + paramName + ".(hyperdbgrust." + paramType + ")"
 	},
 }).Parse(`// Code generated from {{.Interface}}. DO NOT EDIT.
 
-package {{.Package}}
+package main
 
 import (
 	"context"
 	"fmt"
+	"time"
 
-	"github.com/ddkwork/HyperDbg_rust/debugger"
+	"github.com/ddkwork/HyperDbg_rust"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
 type {{.ServerName}} struct {
-	impl debugger.{{.Interface}}
+	impl hyperdbgrust.{{.Interface}}
 }
 
-func New{{.ServerName}}(impl debugger.{{.Interface}}) *{{.ServerName}} {
+func New{{.ServerName}}(impl hyperdbgrust.{{.Interface}}) *{{.ServerName}} {
 	return &{{.ServerName}}{impl: impl}
 }
 
@@ -272,56 +281,6 @@ func (s *{{$.ServerName}}) handle{{.Name}}(ctx context.Context, req *mcp.CallToo
 {{end}}
 `))
 
-var helperTmpl = template.Must(template.New("helper").Parse(`// Code generated from interfaces.go. DO NOT EDIT.
-
-package {{.Package}}
-
-import (
-	"encoding/json"
-)
-
-func getArg[T any](args map[string]any, key string) T {
-	if args == nil {
-		var zero T
-		return zero
-	}
-	val, ok := args[key]
-	if !ok {
-		var zero T
-		return zero
-	}
-	bytes, err := json.Marshal(val)
-	if err != nil {
-		var zero T
-		return zero
-	}
-	var result T
-	if err := json.Unmarshal(bytes, &result); err != nil {
-		var zero T
-		return zero
-	}
-	return result
-}
-
-func mustConvert[T any](v any) T {
-	if v == nil {
-		var zero T
-		return zero
-	}
-	bytes, err := json.Marshal(v)
-	if err != nil {
-		var zero T
-		return zero
-	}
-	var result T
-	if err := json.Unmarshal(bytes, &result); err != nil {
-		var zero T
-		return zero
-	}
-	return result
-}
-`))
-
 type InterfaceConfig struct {
 	Interface  string
 	ServerName string
@@ -331,35 +290,21 @@ type InterfaceConfig struct {
 var excludedInterfaces = map[string]bool{}
 
 func main() {
-	interfacePath := "debugger/interfaces.go"
+	interfacePath := "interfaces.go"
 
 	configs := []InterfaceConfig{
 		{
 			Interface:  "Debugger",
-			ServerName: "CommunicatorMCPServer",
-			OutputPath: "mcp/communicator_mcp.go",
+			ServerName: "DebuggerMCPServer",
+			OutputPath: "cmd/mcp/mcp.go",
 		},
 	}
-
-	mylog.Check(generateHelperFile())
 
 	for _, config := range configs {
 		mylog.Check(generateMCPServer(interfacePath, config))
 	}
 
 	fmt.Println("MCP 服务器生成完成")
-}
-
-func generateHelperFile() error {
-	var buf bytes.Buffer
-	mylog.Check(helperTmpl.Execute(&buf, map[string]any{
-		"Package": "mcp",
-	}))
-
-	mylog.Check(os.WriteFile("mcp/helper.go", buf.Bytes(), 0o644))
-
-	fmt.Printf("已生成 mcp/helper.go\n")
-	return nil
 }
 
 func generateMCPServer(interfacePath string, config InterfaceConfig) error {
@@ -370,6 +315,9 @@ func generateMCPServer(interfacePath string, config InterfaceConfig) error {
 
 	fmt.Printf("找到接口: %s\n", config.Interface)
 	fmt.Printf("找到 %d 个方法\n", len(methods))
+
+	dir := filepath.Dir(config.OutputPath)
+	mylog.Check(os.MkdirAll(dir, 0o755))
 
 	var buf bytes.Buffer
 	mylog.Check(tmpl.Execute(&buf, map[string]any{
