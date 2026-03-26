@@ -1,393 +1,389 @@
 package server
 
 import (
-	"encoding/binary"
+	"bytes"
+	"encoding/json"
 	"fmt"
-	"io"
-	"net"
+	"net/http"
 	"sync"
 	"sync/atomic"
 	"time"
-
-	"hyperdbg-communicator/protocol"
 )
 
-type DriverConnection struct {
-	conn         net.Conn
-	driverID     uint64
-	sendQueue    chan *protocol.Message
-	recvQueue    chan *protocol.Message
-	closeChan    chan struct{}
-	closed       atomic.Bool
-	lastActivity time.Time
+const (
+	DriverHTTPHost = "127.0.0.1"
+	DriverHTTPPort = 50080
+	HTTPTimeout    = 10 * time.Second
+)
+
+type HTTPResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
 }
 
-type EventCallback func(event *protocol.Message)
+type Command struct {
+	Action string `json:"action"`
+	Target string `json:"target,omitempty"`
+	Size   int    `json:"size,omitempty"`
+	Data   string `json:"data,omitempty"`
+}
+
+type EventCallback func(event interface{})
 
 type Server struct {
-	listener     net.Listener
-	drivers      map[uint64]*DriverConnection
-	driversMu    sync.RWMutex
-	nextDriverID atomic.Uint64
-	eventChan    chan *protocol.Message
-	callbacks    map[protocol.MessageType][]EventCallback
-	callbacksMu  sync.RWMutex
-	running      atomic.Bool
+	client      *http.Client
+	baseURL     string
+	driverID    atomic.Uint64
+	running     atomic.Bool
+	callbacks   map[string][]EventCallback
+	callbacksMu sync.RWMutex
+	eventChan   chan interface{}
+	connected   atomic.Bool
 }
 
 func NewServer() *Server {
-	return &Server{
-		drivers:   make(map[uint64]*DriverConnection),
-		eventChan: make(chan *protocol.Message, 1000),
-		callbacks: make(map[protocol.MessageType][]EventCallback),
+	s := &Server{
+		client: &http.Client{
+			Timeout: HTTPTimeout,
+		},
+		baseURL:   fmt.Sprintf("http://%s:%d", DriverHTTPHost, DriverHTTPPort),
+		callbacks: make(map[string][]EventCallback),
+		eventChan: make(chan interface{}, 1000),
 	}
+	s.driverID.Store(1)
+	return s
 }
 
 func (s *Server) Start(port int) error {
-	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		return fmt.Errorf("failed to start server: %w", err)
-	}
-	s.listener = listener
 	s.running.Store(true)
 
-	go s.acceptLoop()
-	go s.eventDispatcher()
+	if err := s.Ping(); err != nil {
+		return fmt.Errorf("failed to connect to driver: %w", err)
+	}
+
+	s.connected.Store(true)
+	fmt.Printf("Connected to driver at %s\n", s.baseURL)
+
+	go s.eventPoller()
 
 	return nil
 }
 
 func (s *Server) Stop() {
 	s.running.Store(false)
-	if s.listener != nil {
-		s.listener.Close()
-	}
-
-	s.driversMu.Lock()
-	for _, driver := range s.drivers {
-		driver.Close()
-	}
-	s.drivers = make(map[uint64]*DriverConnection)
-	s.driversMu.Unlock()
+	s.connected.Store(false)
 }
 
-func (s *Server) acceptLoop() {
+func (s *Server) sendRequest(method, path string, body []byte) (HTTPResponse, error) {
+	var resp HTTPResponse
+	url := fmt.Sprintf("%s%s", s.baseURL, path)
+
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(body))
+	if err != nil {
+		return resp, fmt.Errorf("create request failed: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Host", DriverHTTPHost)
+
+	response, err := s.client.Do(req)
+	if err != nil {
+		return resp, fmt.Errorf("send failed: %w", err)
+	}
+	defer response.Body.Close()
+
+	if err := json.NewDecoder(response.Body).Decode(&resp); err != nil {
+		return resp, fmt.Errorf("parse failed: %w", err)
+	}
+
+	return resp, nil
+}
+
+func (s *Server) sendCommand(cmd Command) (HTTPResponse, error) {
+	data, err := json.Marshal(cmd)
+	if err != nil {
+		return HTTPResponse{}, fmt.Errorf("marshal failed: %w", err)
+	}
+	return s.sendRequest("POST", "/api", data)
+}
+
+func (s *Server) eventPoller() {
+	ticker := time.NewTicker(100 * time.Millisecond)
+	defer ticker.Stop()
+
 	for s.running.Load() {
-		conn, err := s.listener.Accept()
-		if err != nil {
-			if s.running.Load() {
-				fmt.Printf("Accept error: %v\n", err)
-			}
+		<-ticker.C
+		if !s.connected.Load() {
 			continue
 		}
-
-		driver := s.newDriverConnection(conn)
-		go driver.recvLoop()
-		go driver.sendLoop()
 	}
 }
 
-func (s *Server) newDriverConnection(conn net.Conn) *DriverConnection {
-	driverID := s.nextDriverID.Add(1)
-	driver := &DriverConnection{
-		conn:         conn,
-		driverID:     driverID,
-		sendQueue:    make(chan *protocol.Message, 100),
-		recvQueue:    make(chan *protocol.Message, 100),
-		closeChan:    make(chan struct{}),
-		lastActivity: time.Now(),
+func (s *Server) Ping() error {
+	resp, err := s.sendRequest("GET", "/ping", nil)
+	if err != nil {
+		return err
 	}
-
-	s.driversMu.Lock()
-	s.drivers[driverID] = driver
-	s.driversMu.Unlock()
-
-	fmt.Printf("Driver %d connected from %s\n", driverID, conn.RemoteAddr())
-	return driver
+	if !resp.Success {
+		return fmt.Errorf("ping failed: %s", resp.Message)
+	}
+	return nil
 }
 
-func (d *DriverConnection) recvLoop() {
-	defer d.Close()
-
-	for {
-		msg, err := protocol.ReadMessage(d.conn)
-		if err != nil {
-			if err != io.EOF && d.closed.Load() == false {
-				fmt.Printf("Driver %d recv error: %v\n", d.driverID, err)
-			}
-			return
-		}
-
-		d.lastActivity = time.Now()
-		select {
-		case d.recvQueue <- msg:
-		default:
-			fmt.Printf("Driver %d recv queue full, dropping message\n", d.driverID)
-		}
+func (s *Server) Status() (string, error) {
+	resp, err := s.sendRequest("GET", "/status", nil)
+	if err != nil {
+		return "", err
 	}
+	return resp.Message, nil
 }
 
-func (d *DriverConnection) sendLoop() {
-	defer d.Close()
-
-	for {
-		select {
-		case msg := <-d.sendQueue:
-			if err := protocol.WriteMessage(d.conn, msg); err != nil {
-				fmt.Printf("Driver %d send error: %v\n", d.driverID, err)
-				return
-			}
-			d.lastActivity = time.Now()
-		case <-d.closeChan:
-			return
-		}
-	}
-}
-
-func (d *DriverConnection) Close() {
-	if d.closed.Swap(true) {
-		return
-	}
-	close(d.closeChan)
-	d.conn.Close()
-}
-
-func (d *DriverConnection) Send(msg *protocol.Message) error {
-	if d.closed.Load() {
-		return fmt.Errorf("connection closed")
-	}
-	select {
-	case d.sendQueue <- msg:
-		return nil
-	default:
-		return fmt.Errorf("send queue full")
-	}
-}
-
-func (d *DriverConnection) Recv() (*protocol.Message, error) {
-	select {
-	case msg := <-d.recvQueue:
-		return msg, nil
-	case <-d.closeChan:
-		return nil, fmt.Errorf("connection closed")
-	}
-}
-
-func (s *Server) eventDispatcher() {
-	for s.running.Load() {
-		s.driversMu.RLock()
-		for _, driver := range s.drivers {
-			select {
-			case msg := <-driver.recvQueue:
-				s.handleMessage(driver, msg)
-			default:
-			}
-		}
-		s.driversMu.RUnlock()
-		time.Sleep(time.Millisecond)
-	}
-}
-
-func (s *Server) handleMessage(driver *DriverConnection, msg *protocol.Message) {
-	s.callbacksMu.RLock()
-	callbacks, ok := s.callbacks[msg.Header.Type]
-	s.callbacksMu.RUnlock()
-
-	if ok {
-		for _, cb := range callbacks {
-			go cb(msg)
-		}
-	}
-
-	select {
-	case s.eventChan <- msg:
-	default:
-		fmt.Printf("Event channel full, dropping event type %d\n", msg.Header.Type)
-	}
-}
-
-func (s *Server) RegisterCallback(msgType protocol.MessageType, cb EventCallback) {
+func (s *Server) RegisterCallback(eventType string, cb EventCallback) {
 	s.callbacksMu.Lock()
 	defer s.callbacksMu.Unlock()
-	s.callbacks[msgType] = append(s.callbacks[msgType], cb)
+	s.callbacks[eventType] = append(s.callbacks[eventType], cb)
 }
 
-func (s *Server) GetEvent() *protocol.Message {
+func (s *Server) GetEvent() interface{} {
 	select {
-	case msg := <-s.eventChan:
-		return msg
+	case event := <-s.eventChan:
+		return event
 	default:
 		return nil
 	}
 }
 
-func (s *Server) WaitForEvent(timeout time.Duration) *protocol.Message {
+func (s *Server) WaitForEvent(timeout time.Duration) interface{} {
 	select {
-	case msg := <-s.eventChan:
-		return msg
+	case event := <-s.eventChan:
+		return event
 	case <-time.After(timeout):
 		return nil
 	}
 }
 
-func (s *Server) Broadcast(msg *protocol.Message) error {
-	s.driversMu.RLock()
-	defer s.driversMu.RUnlock()
-
-	var lastErr error
-	for _, driver := range s.drivers {
-		if err := driver.Send(msg); err != nil {
-			lastErr = err
-		}
-	}
-	return lastErr
-}
-
-func (s *Server) SendToDriver(driverID uint64, msg *protocol.Message) error {
-	s.driversMu.RLock()
-	driver, ok := s.drivers[driverID]
-	s.driversMu.RUnlock()
-
-	if !ok {
-		return fmt.Errorf("driver %d not found", driverID)
-	}
-	return driver.Send(msg)
-}
-
 func (s *Server) GetConnectedDrivers() []uint64 {
-	s.driversMu.RLock()
-	defer s.driversMu.RUnlock()
-
-	ids := make([]uint64, 0, len(s.drivers))
-	for id := range s.drivers {
-		ids = append(ids, id)
+	if s.connected.Load() {
+		return []uint64{s.driverID.Load()}
 	}
-	return ids
+	return nil
 }
 
 func (s *Server) GetDriverCount() int {
-	s.driversMu.RLock()
-	defer s.driversMu.RUnlock()
-	return len(s.drivers)
+	if s.connected.Load() {
+		return 1
+	}
+	return 0
 }
 
 func (s *Server) InitializeDriver(driverID uint64) error {
-	msg := protocol.NewMessage(protocol.MsgTypeInitialize, nil)
-	return s.SendToDriver(driverID, msg)
+	resp, err := s.sendCommand(Command{Action: "initialize"})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("initialize failed: %s", resp.Message)
+	}
+	return nil
 }
 
 func (s *Server) TerminateDriver(driverID uint64) error {
-	msg := protocol.NewMessage(protocol.MsgTypeTerminate, nil)
-	return s.SendToDriver(driverID, msg)
+	resp, err := s.sendCommand(Command{Action: "terminate"})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("terminate failed: %s", resp.Message)
+	}
+	return nil
 }
 
 func (s *Server) AttachProcess(driverID uint64, processID uint32) error {
-	payload := make([]byte, 4)
-	binary.LittleEndian.PutUint32(payload, processID)
-	msg := protocol.NewMessage(protocol.MsgTypeAttachProcess, payload)
-	return s.SendToDriver(driverID, msg)
+	resp, err := s.sendCommand(Command{
+		Action: "attach_process",
+		Target: fmt.Sprintf("0x%x", processID),
+	})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("attach process failed: %s", resp.Message)
+	}
+	return nil
 }
 
 func (s *Server) DetachProcess(driverID uint64) error {
-	msg := protocol.NewMessage(protocol.MsgTypeDetachProcess, nil)
-	return s.SendToDriver(driverID, msg)
+	resp, err := s.sendCommand(Command{Action: "detach_process"})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("detach process failed: %s", resp.Message)
+	}
+	return nil
 }
 
-func (s *Server) SetBreakpoint(driverID uint64, address uint64, bpType protocol.BreakpointType) error {
-	payload := make([]byte, 12)
-	binary.LittleEndian.PutUint64(payload[0:8], address)
-	binary.LittleEndian.PutUint32(payload[8:12], uint32(bpType))
-	msg := protocol.NewMessage(protocol.MsgTypeSetBreakpoint, payload)
-	return s.SendToDriver(driverID, msg)
+func (s *Server) SetBreakpoint(driverID uint64, address uint64, bpType uint32) error {
+	resp, err := s.sendCommand(Command{
+		Action: "set_breakpoint",
+		Target: fmt.Sprintf("0x%x", address),
+		Size:   int(bpType),
+	})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("set breakpoint failed: %s", resp.Message)
+	}
+	return nil
 }
 
 func (s *Server) RemoveBreakpoint(driverID uint64, breakpointID uint64) error {
-	payload := make([]byte, 8)
-	binary.LittleEndian.PutUint64(payload, breakpointID)
-	msg := protocol.NewMessage(protocol.MsgTypeRemoveBreakpoint, payload)
-	return s.SendToDriver(driverID, msg)
+	resp, err := s.sendCommand(Command{
+		Action: "remove_breakpoint",
+		Target: fmt.Sprintf("0x%x", breakpointID),
+	})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("remove breakpoint failed: %s", resp.Message)
+	}
+	return nil
 }
 
 func (s *Server) Continue(driverID uint64) error {
-	msg := protocol.NewMessage(protocol.MsgTypeContinue, nil)
-	return s.SendToDriver(driverID, msg)
+	resp, err := s.sendCommand(Command{Action: "continue"})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("continue failed: %s", resp.Message)
+	}
+	return nil
 }
 
 func (s *Server) Pause(driverID uint64) error {
-	msg := protocol.NewMessage(protocol.MsgTypePause, nil)
-	return s.SendToDriver(driverID, msg)
+	resp, err := s.sendCommand(Command{Action: "pause"})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("pause failed: %s", resp.Message)
+	}
+	return nil
 }
 
 func (s *Server) StepInto(driverID uint64) error {
-	msg := protocol.NewMessage(protocol.MsgTypeStepInto, nil)
-	return s.SendToDriver(driverID, msg)
+	resp, err := s.sendCommand(Command{Action: "step_into"})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("step into failed: %s", resp.Message)
+	}
+	return nil
 }
 
 func (s *Server) StepOver(driverID uint64) error {
-	msg := protocol.NewMessage(protocol.MsgTypeStepOver, nil)
-	return s.SendToDriver(driverID, msg)
+	resp, err := s.sendCommand(Command{Action: "step_over"})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("step over failed: %s", resp.Message)
+	}
+	return nil
 }
 
 func (s *Server) StepOut(driverID uint64) error {
-	msg := protocol.NewMessage(protocol.MsgTypeStepOut, nil)
-	return s.SendToDriver(driverID, msg)
+	resp, err := s.sendCommand(Command{Action: "step_out"})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("step out failed: %s", resp.Message)
+	}
+	return nil
 }
 
-func (s *Server) ReadMemory(driverID uint64, address uint64, size uint32) error {
-	payload := make([]byte, 12)
-	binary.LittleEndian.PutUint64(payload[0:8], address)
-	binary.LittleEndian.PutUint32(payload[8:12], size)
-	msg := protocol.NewMessage(protocol.MsgTypeReadMemory, payload)
-	return s.SendToDriver(driverID, msg)
+func (s *Server) ReadMemory(driverID uint64, address uint64, size uint32) (string, error) {
+	resp, err := s.sendCommand(Command{
+		Action: "read_memory",
+		Target: fmt.Sprintf("0x%x", address),
+		Size:   int(size),
+	})
+	if err != nil {
+		return "", err
+	}
+	if !resp.Success {
+		return "", fmt.Errorf("read memory failed: %s", resp.Message)
+	}
+	return resp.Message, nil
 }
 
-func (s *Server) WriteMemory(driverID uint64, address uint64, data []byte) error {
-	payload := make([]byte, 8+len(data))
-	binary.LittleEndian.PutUint64(payload[0:8], address)
-	copy(payload[8:], data)
-	msg := protocol.NewMessage(protocol.MsgTypeWriteMemory, payload)
-	return s.SendToDriver(driverID, msg)
+func (s *Server) WriteMemory(driverID uint64, address uint64, data string) error {
+	resp, err := s.sendCommand(Command{
+		Action: "write_memory",
+		Target: fmt.Sprintf("0x%x", address),
+		Data:   data,
+	})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("write memory failed: %s", resp.Message)
+	}
+	return nil
 }
 
-func (s *Server) ReadRegisters(driverID uint64) error {
-	msg := protocol.NewMessage(protocol.MsgTypeReadRegisters, nil)
-	return s.SendToDriver(driverID, msg)
+func (s *Server) ReadRegisters(driverID uint64) (string, error) {
+	resp, err := s.sendCommand(Command{Action: "read_registers"})
+	if err != nil {
+		return "", err
+	}
+	if !resp.Success {
+		return "", fmt.Errorf("read registers failed: %s", resp.Message)
+	}
+	return resp.Message, nil
 }
 
-func (s *Server) WriteRegisters(driverID uint64, regs *protocol.RegisterState) error {
-	payload := make([]byte, 272)
-	offset := 0
-	binary.LittleEndian.PutUint64(payload[offset:], regs.RAX); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.RBX); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.RCX); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.RDX); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.RSI); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.RDI); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.RBP); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.RSP); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.R8); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.R9); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.R10); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.R11); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.R12); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.R13); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.R14); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.R15); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.RIP); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.RFLAGS); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.CR0); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.CR2); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.CR3); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.CR4); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.DR0); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.DR1); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.DR2); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.DR3); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.DR6); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.DR7); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.GDTR); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.GSBase); offset += 8
-	binary.LittleEndian.PutUint64(payload[offset:], regs.FSBase)
-	msg := protocol.NewMessage(protocol.MsgTypeWriteRegisters, payload)
-	return s.SendToDriver(driverID, msg)
+func (s *Server) WriteRegisters(driverID uint64, regs string) error {
+	resp, err := s.sendCommand(Command{
+		Action: "write_registers",
+		Data:   regs,
+	})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("write registers failed: %s", resp.Message)
+	}
+	return nil
+}
+
+func (s *Server) Broadcast(action string) error {
+	resp, err := s.sendCommand(Command{Action: action})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("broadcast failed: %s", resp.Message)
+	}
+	return nil
+}
+
+func (s *Server) SendToDriver(driverID uint64, action string) error {
+	resp, err := s.sendCommand(Command{Action: action})
+	if err != nil {
+		return err
+	}
+	if !resp.Success {
+		return fmt.Errorf("send to driver failed: %s", resp.Message)
+	}
+	return nil
+}
+
+func (s *Server) IsConnected() bool {
+	return s.connected.Load()
 }
