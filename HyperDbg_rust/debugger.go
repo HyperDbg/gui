@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"hyperdbg-communicator/protocol"
-	"hyperdbg-communicator/server"
+	"github.com/ddkwork/HyperDbg_rust/protocol"
+	"github.com/ddkwork/HyperDbg_rust/server"
 )
 
 type Debugger struct {

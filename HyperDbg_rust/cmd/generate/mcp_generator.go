@@ -149,7 +149,7 @@ import (
 	"context"
 	"fmt"
 
-	"hyperdbg-communicator/debugger"
+	"github.com/ddkwork/HyperDbg_rust/debugger"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 

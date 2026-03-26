@@ -8,8 +8,8 @@ import (
 	"syscall"
 	"time"
 
-	"hyperdbg-communicator/debugger"
-	"hyperdbg-communicator/protocol"
+	"github.com/ddkwork/HyperDbg_rust/debugger"
+	"github.com/ddkwork/HyperDbg_rust/protocol"
 )
 
 func main() {

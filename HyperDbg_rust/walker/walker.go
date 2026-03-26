@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"hyperdbg-communicator/protocol"
+	"github.com/ddkwork/HyperDbg_rust/protocol"
 )
 
 const (

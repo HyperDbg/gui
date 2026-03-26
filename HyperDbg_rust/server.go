@@ -9,7 +9,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"hyperdbg-communicator/protocol"
+	"github.com/ddkwork/HyperDbg_rust/protocol"
 )
 
 const (

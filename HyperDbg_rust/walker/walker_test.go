@@ -1,11 +1,9 @@
 package walker
 
 import (
-	"fmt"
 	"testing"
-	"time"
 
-	"hyperdbg-communicator/protocol"
+	"github.com/ddkwork/HyperDbg_rust/protocol"
 )
 
 func TestWalker(t *testing.T) {
