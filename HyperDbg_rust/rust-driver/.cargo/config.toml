@@ -1,0 +1,11 @@
+[build]
+target = "x86_64-pc-windows-msvc"
+
+[target.x86_64-pc-windows-msvc]
+rustflags = [
+    "-C", "link-arg=/DRIVER",
+    "-C", "link-arg=/ENTRY:DriverEntry",
+    "-C", "link-arg=/SUBSYSTEM:NATIVE",
+    "-C", "link-arg=/NODEFAULTLIB",
+    "-C", "link-arg=/KERNEL",
+]

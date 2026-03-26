@@ -22,7 +22,7 @@ pub enum BreakpointType {
     Ept = 3,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Default, Debug, Serialize, Deserialize)]
 pub struct RegisterState {
     pub rax: u64,
     pub rbx: u64,
@@ -56,21 +56,6 @@ pub struct RegisterState {
     pub gdtr: u64,
     pub gs_base: u64,
     pub fs_base: u64,
-}
-
-impl Default for RegisterState {
-    fn default() -> Self {
-        Self {
-            rax: 0, rbx: 0, rcx: 0, rdx: 0,
-            rsi: 0, rdi: 0, rbp: 0, rsp: 0,
-            r8: 0, r9: 0, r10: 0, r11: 0,
-            r12: 0, r13: 0, r14: 0, r15: 0,
-            rip: 0, rflags: 0,
-            cr0: 0, cr2: 0, cr3: 0, cr4: 0, cr8: 0,
-            dr0: 0, dr1: 0, dr2: 0, dr3: 0, dr6: 0, dr7: 0,
-            gdtr: 0, gs_base: 0, fs_base: 0,
-        }
-    }
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

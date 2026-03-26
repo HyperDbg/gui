@@ -1,29 +1,20 @@
-[workspace]
-resolver = "2"
-members = [
-    "driver-framework",
-    "examples/netdemo",
-    "examples/sysdemo",
-    "hyperhv",
-    "hyperkd",
-    "protocol",
-    "net",
-    "disassembler",
-    "pdbex",
-    "kd",
-]
-
-[workspace.package]
+[package]
+name = "hyperdbg-driver"
 version = "0.1.0"
-edition = "2021"
-license = "GPL-3.0"
-repository = "https://github.com/HyperDbg/HyperDbg"
-readme = "README.md"
+edition = "2026"
 
-[workspace.dependencies]
-protocol = { path = "protocol" }
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wdk-alloc = "0.3"
+wdk-sys = "0.3"
+wdk-panic = "0.3"
 net = { path = "net" }
-driver-framework = { path = "driver-framework" }
+serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
+
+[build-dependencies]
+wdk-build = "0.3"
 
 [profile.dev]
 panic = "abort"
