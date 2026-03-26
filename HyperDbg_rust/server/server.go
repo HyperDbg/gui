@@ -8,6 +8,8 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"hyperdbg-communicator/protocol"
 )
 
 const (
@@ -17,15 +19,16 @@ const (
 )
 
 type HTTPResponse struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
+	Success bool        `json:"success"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 type Command struct {
-	Action string `json:"action"`
-	Target string `json:"target,omitempty"`
-	Size   int    `json:"size,omitempty"`
-	Data   string `json:"data,omitempty"`
+	Action string      `json:"action"`
+	Target string      `json:"target,omitempty"`
+	Size   int         `json:"size,omitempty"`
+	Data   interface{} `json:"data,omitempty"`
 }
 
 type EventCallback func(event interface{})
@@ -35,7 +38,7 @@ type Server struct {
 	baseURL     string
 	driverID    atomic.Uint64
 	running     atomic.Bool
-	callbacks   map[string][]EventCallback
+	callbacks   map[protocol.MessageType][]EventCallback
 	callbacksMu sync.RWMutex
 	eventChan   chan interface{}
 	connected   atomic.Bool
@@ -47,7 +50,7 @@ func NewServer() *Server {
 			Timeout: HTTPTimeout,
 		},
 		baseURL:   fmt.Sprintf("http://%s:%d", DriverHTTPHost, DriverHTTPPort),
-		callbacks: make(map[string][]EventCallback),
+		callbacks: make(map[protocol.MessageType][]EventCallback),
 		eventChan: make(chan interface{}, 1000),
 	}
 	s.driverID.Store(1)
@@ -138,10 +141,10 @@ func (s *Server) Status() (string, error) {
 	return resp.Message, nil
 }
 
-func (s *Server) RegisterCallback(eventType string, cb EventCallback) {
+func (s *Server) RegisterCallback(msgType protocol.MessageType, cb EventCallback) {
 	s.callbacksMu.Lock()
 	defer s.callbacksMu.Unlock()
-	s.callbacks[eventType] = append(s.callbacks[eventType], cb)
+	s.callbacks[msgType] = append(s.callbacks[msgType], cb)
 }
 
 func (s *Server) GetEvent() interface{} {
@@ -201,7 +204,7 @@ func (s *Server) TerminateDriver(driverID uint64) error {
 func (s *Server) AttachProcess(driverID uint64, processID uint32) error {
 	resp, err := s.sendCommand(Command{
 		Action: "attach_process",
-		Target: fmt.Sprintf("0x%x", processID),
+		Target: fmt.Sprintf("%d", processID),
 	})
 	if err != nil {
 		return err
@@ -223,7 +226,7 @@ func (s *Server) DetachProcess(driverID uint64) error {
 	return nil
 }
 
-func (s *Server) SetBreakpoint(driverID uint64, address uint64, bpType uint32) error {
+func (s *Server) SetBreakpoint(driverID uint64, address uint64, bpType protocol.BreakpointType) error {
 	resp, err := s.sendCommand(Command{
 		Action: "set_breakpoint",
 		Target: fmt.Sprintf("0x%x", address),
@@ -307,22 +310,29 @@ func (s *Server) StepOut(driverID uint64) error {
 	return nil
 }
 
-func (s *Server) ReadMemory(driverID uint64, address uint64, size uint32) (string, error) {
+func (s *Server) ReadMemory(driverID uint64, address uint64, size uint32) ([]byte, error) {
 	resp, err := s.sendCommand(Command{
 		Action: "read_memory",
 		Target: fmt.Sprintf("0x%x", address),
 		Size:   int(size),
 	})
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	if !resp.Success {
-		return "", fmt.Errorf("read memory failed: %s", resp.Message)
+		return nil, fmt.Errorf("read memory failed: %s", resp.Message)
 	}
-	return resp.Message, nil
+
+	if data, ok := resp.Data.([]byte); ok {
+		return data, nil
+	}
+	if data, ok := resp.Data.(string); ok {
+		return []byte(data), nil
+	}
+	return nil, fmt.Errorf("invalid response data type")
 }
 
-func (s *Server) WriteMemory(driverID uint64, address uint64, data string) error {
+func (s *Server) WriteMemory(driverID uint64, address uint64, data []byte) error {
 	resp, err := s.sendCommand(Command{
 		Action: "write_memory",
 		Target: fmt.Sprintf("0x%x", address),
@@ -337,18 +347,27 @@ func (s *Server) WriteMemory(driverID uint64, address uint64, data string) error
 	return nil
 }
 
-func (s *Server) ReadRegisters(driverID uint64) (string, error) {
+func (s *Server) ReadRegisters(driverID uint64) (*protocol.RegisterState, error) {
 	resp, err := s.sendCommand(Command{Action: "read_registers"})
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	if !resp.Success {
-		return "", fmt.Errorf("read registers failed: %s", resp.Message)
+		return nil, fmt.Errorf("read registers failed: %s", resp.Message)
 	}
-	return resp.Message, nil
+
+	var regs protocol.RegisterState
+	data, err := json.Marshal(resp.Data)
+	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(data, &regs); err != nil {
+		return nil, err
+	}
+	return &regs, nil
 }
 
-func (s *Server) WriteRegisters(driverID uint64, regs string) error {
+func (s *Server) WriteRegisters(driverID uint64, regs *protocol.RegisterState) error {
 	resp, err := s.sendCommand(Command{
 		Action: "write_registers",
 		Data:   regs,
@@ -360,6 +379,72 @@ func (s *Server) WriteRegisters(driverID uint64, regs string) error {
 		return fmt.Errorf("write registers failed: %s", resp.Message)
 	}
 	return nil
+}
+
+func (s *Server) GetProcessList(driverID uint64) ([]protocol.ProcessInfo, error) {
+	resp, err := s.sendCommand(Command{Action: "get_process_list"})
+	if err != nil {
+		return nil, err
+	}
+	if !resp.Success {
+		return nil, fmt.Errorf("get process list failed: %s", resp.Message)
+	}
+
+	var processes []protocol.ProcessInfo
+	data, err := json.Marshal(resp.Data)
+	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(data, &processes); err != nil {
+		return nil, err
+	}
+	return processes, nil
+}
+
+func (s *Server) GetThreadList(driverID uint64, processID uint32) ([]protocol.ThreadInfo, error) {
+	resp, err := s.sendCommand(Command{
+		Action: "get_thread_list",
+		Target: fmt.Sprintf("%d", processID),
+	})
+	if err != nil {
+		return nil, err
+	}
+	if !resp.Success {
+		return nil, fmt.Errorf("get thread list failed: %s", resp.Message)
+	}
+
+	var threads []protocol.ThreadInfo
+	data, err := json.Marshal(resp.Data)
+	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(data, &threads); err != nil {
+		return nil, err
+	}
+	return threads, nil
+}
+
+func (s *Server) GetModuleList(driverID uint64, processID uint32) ([]protocol.ModuleInfo, error) {
+	resp, err := s.sendCommand(Command{
+		Action: "get_module_list",
+		Target: fmt.Sprintf("%d", processID),
+	})
+	if err != nil {
+		return nil, err
+	}
+	if !resp.Success {
+		return nil, fmt.Errorf("get module list failed: %s", resp.Message)
+	}
+
+	var modules []protocol.ModuleInfo
+	data, err := json.Marshal(resp.Data)
+	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(data, &modules); err != nil {
+		return nil, err
+	}
+	return modules, nil
 }
 
 func (s *Server) Broadcast(action string) error {
