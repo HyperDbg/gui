@@ -286,3 +286,4 @@ pub struct Response<T: Serialize> {
 }
 
 pub type EmptyResponse = Response<()>;
+pub type Empty = ();

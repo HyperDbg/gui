@@ -21,6 +21,11 @@ use net::log_warn;
 
 mod packet;
 mod events;
+mod types_gen;
+mod handlers_gen;
+
+use types_gen::*;
+use handlers_gen::{DebuggerApi, dispatch_api, NoOpDebugger};
 
 use events::*;
 use packet::*;
