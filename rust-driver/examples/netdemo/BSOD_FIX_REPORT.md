@@ -126,14 +126,51 @@ WSK 网络功能因栈溢出问题暂时禁用，需要：
 
 ## 历史修复记录
 
-| # | Bugcheck | 原因 | 修复 |
-|---|----------|------|------|
-| 1 | 0xD1 | NPI_CLIENT_CHARACTERISTICS 字段错误 | 修正结构体定义 |
-| 2 | 0xD1 | ClientRegistrationInstance 是指针而非嵌入结构体 | 改为嵌入结构体 |
-| 3 | 0xD1 | NPI_REGISTRATION_INSTANCE 未正确初始化 | 正确初始化所有字段 |
-| 4 | 0x7E | PsCreateSystemThread 传入空指针 | 创建有效变量并传递地址 |
-| 5 | 0x7E | 栈溢出（4KB buffer 在栈上） | 改用堆分配 Vec |
-| 6 | 0x7E | 栈溢出（format! 消耗大量栈空间） | 移除所有 log!/format! 调用 |
-| 7 | 0xCE | 驱动卸载时线程仍在运行 | 轮询等待 + PsTerminateSystemThread |
-| 8 | 0xA | KeWaitForSingleObject 等待线程句柄失败 | 改用轮询等待 |
-| 9 | 0xFC | WSK_PROVIDER_DISPATCH 缺少 Version/Reserved 字段 | 参考 WDK wsk.h 修正结构体定义 |
+| # | Bugcheck | 原因 | 修复 | 参考 |
+|---|----------|------|------|------|
+| 1 | 0xD1 | NPI_CLIENT_CHARACTERISTICS 字段错误 | 修正结构体定义 | - |
+| 2 | 0xD1 | ClientRegistrationInstance 是指针而非嵌入结构体 | 改为嵌入结构体 | - |
+| 3 | 0xD1 | NPI_REGISTRATION_INSTANCE 未正确初始化 | 正确初始化所有字段 | - |
+| 4 | 0x7E | PsCreateSystemThread 传入空指针 | 创建有效变量并传递地址 | - |
+| 5 | 0x7E | 栈溢出（4KB buffer 在栈上） | 改用堆分配 Vec | - |
+| 6 | 0x7E | 栈溢出（format! 消耗大量栈空间） | 移除所有 log!/format! 调用 | - |
+| 7 | 0xCE | 驱动卸载时线程仍在运行 | 轮询等待 + PsTerminateSystemThread | - |
+| 8 | 0xA | KeWaitForSingleObject 等待线程句柄失败 | 改用轮询等待 | - |
+| 9 | 0xFC | WSK_PROVIDER_DISPATCH 缺少 Version/Reserved 字段 | 参考 WDK wsk.h 修正结构体定义 | WDK wsk.h |
+| 10 | - | accept_event 事件回调从未被调用 | 改用主动 WskAccept 轮询替代事件回调 | windows-kernel-rs-main |
+
+## 问题 10 详细说明
+
+### 症状
+驱动日志显示监听 socket 成功创建并绑定，但 `accept_event` 回调函数从未被调用，导致无法接受客户端连接。
+
+### 根本原因
+WSK 事件回调模式（`WSK_SET_STATIC_EVENT_CALLBACKS`）需要特定条件才能触发。在某些情况下，主动轮询模式更可靠。
+
+### 解决方案
+参考 `windows-kernel-rs-main` 项目（`windows-kernel/src/sync/wsk.rs`）的实现，添加 `op_accept` 函数主动调用 `WskAccept` 轮询接受连接。
+
+### 学习来源
+- **项目**: [windows-kernel-rs-main](file:///d:/ux/examples/hypedbg/rust-driver/examples/netdemo/src/windows-kernel-rs-main)
+- **文件**: `windows-kernel/src/sync/wsk.rs` - `accept()` 函数
+- **文件**: `windows-kernel/src/sync/berk.rs` - `TcpListener::accept()` 方法
+
+### 关键代码差异
+
+**参考项目（正确）** - 主动轮询：
+```rust
+pub fn accept(socket: &mut KSocket, ...) -> Result<Box<KSocket>, Error> {
+    let accept_fn = unsafe { (*((*socket.wsk_socket).Dispatch as PWSK_PROVIDER_LISTEN_DISPATCH)).WskAccept };
+    // 主动调用 WskAccept
+}
+```
+
+**原实现（有问题）** - 依赖事件回调：
+```rust
+// WSK_SET_STATIC_EVENT_CALLBACKS + accept_event 回调
+// 回调从未被触发
+```
+
+### 验证结果
+✅ 驱动成功接受客户端连接
+✅ 日志显示 `accept_completion: 接受新连接`

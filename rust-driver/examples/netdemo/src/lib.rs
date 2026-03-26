@@ -10,6 +10,7 @@ use wdk_alloc::WdkAllocator;
 use wdk_sys::{
     NTSTATUS, STATUS_SUCCESS, STATUS_MORE_PROCESSING_REQUIRED,
     STATUS_INSUFFICIENT_RESOURCES, STATUS_UNSUCCESSFUL, STATUS_REQUEST_NOT_ACCEPTED,
+    STATUS_PENDING,
     PIRP, PVOID, ULONG, PMDL, BOOLEAN,
     KPROCESSOR_MODE, KEVENT, PDEVICE_OBJECT, SIZE_T, HANDLE,
     _EVENT_TYPE, _KWAIT_REASON, _SLIST_ENTRY, _SLIST_HEADER, PSLIST_ENTRY, PSLIST_HEADER,
@@ -215,6 +216,8 @@ struct SockaddrIn6 {
     sin6_addr: [u8; 16],
     sin6_scope_id: u32,
 }
+
+type SOCKADDR = SockaddrIn6;
 
 type OpHandlerFn = unsafe extern "C" fn(*mut SocketOpContext);
 
@@ -449,6 +452,11 @@ unsafe extern "C" fn op_start_listen(op_ctx: *mut SocketOpContext) {
     if status == STATUS_SUCCESS {
         setup_listening_socket(&provider_npi, op_ctx);
         WskReleaseProviderNPI(&mut WSK_REGISTRATION);
+        
+        if (*socket_context).Socket as usize != 0 {
+            log_info!("op_start_listen: 监听成功，启动 op_accept");
+            enqueue_op(op_ctx, op_accept);
+        }
     }
     log_info!("op_start_listen: 结束");
 }
@@ -479,32 +487,6 @@ unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut 
         (*socket_context).Socket = ptr::null_mut();
         
         IoReuseIrp(irp, STATUS_UNSUCCESSFUL);
-    } else {
-        log_info!("setup_listening_socket: 设置 WSK_SET_STATIC_EVENT_CALLBACKS");
-        let mut callback_control = EventCallbackControl {
-            NpiId: &NPI_WSK_INTERFACE_ID as *const _ as *const core::ffi::c_void,
-            EventMask: WSK_EVENT_ACCEPT,
-        };
-        
-        let control_fn: unsafe extern "system" fn(
-            PVOID, ULONG, SIZE_T, PVOID, SIZE_T, PVOID, *mut SIZE_T, PIRP
-        ) -> NTSTATUS = core::mem::transmute((*(*provider_npi).Dispatch).WskControlClient);
-        
-        let status = control_fn(
-            (*provider_npi).Client,
-            WSK_SET_STATIC_EVENT_CALLBACKS,
-            core::mem::size_of::<EventCallbackControl>() as SIZE_T,
-            &mut callback_control as *mut _ as PVOID,
-            0,
-            ptr::null_mut(),
-            ptr::null_mut(),
-            ptr::null_mut(),
-        );
-        log_info!("setup_listening_socket: WSK_SET_STATIC_EVENT_CALLBACKS status=0x{:08X}", status);
-        if status != STATUS_SUCCESS {
-            log_error!("setup_listening_socket: WSK_SET_STATIC_EVENT_CALLBACKS 失败，退出");
-            return;
-        }
     }
     
     KeInitializeEvent(&mut comp_event, _EVENT_TYPE::SynchronizationEvent, 0);
@@ -652,6 +634,99 @@ unsafe extern "system" fn accept_event(
     
     log_success!("accept_event: 返回 STATUS_SUCCESS");
     STATUS_SUCCESS
+}
+
+unsafe extern "C" fn op_accept(op_ctx: *mut SocketOpContext) {
+    let socket_context = (*op_ctx).SocketContext;
+    let irp = (*op_ctx).Irp;
+    
+    if (*socket_context).Closing != 0 || (*socket_context).StopListening != 0 {
+        return;
+    }
+    
+    let socket = (*socket_context).Socket;
+    if socket.is_null() {
+        log_warn!("op_accept: listening socket 为空，重新启动监听");
+        enqueue_op(op_ctx, op_start_listen);
+        return;
+    }
+    
+    let dispatch = (*socket).Dispatch as *const ProviderListenDispatch;
+    let accept_fn: unsafe extern "system" fn(
+        *mut Socket, ULONG, PVOID, PVOID, *mut SOCKADDR, *mut SOCKADDR, PIRP
+    ) -> NTSTATUS = core::mem::transmute((*dispatch).WskAccept);
+    
+    let mut local_addr: SOCKADDR = core::mem::zeroed();
+    let mut remote_addr: SOCKADDR = core::mem::zeroed();
+    let mut accepted_socket: *mut Socket = core::ptr::null_mut();
+    
+    IoReuseIrp(irp, STATUS_UNSUCCESSFUL);
+    set_completion_routine(irp, Some(accept_completion), op_ctx as PVOID);
+    
+    let status = unsafe {
+        accept_fn(
+            socket,
+            0,
+            ptr::null_mut(),
+            ptr::null_mut(),
+            &mut local_addr,
+            &mut remote_addr,
+            irp,
+        )
+    };
+    
+    if status != STATUS_PENDING && status != STATUS_SUCCESS {
+        log_error!("op_accept: WskAccept 返回 status=0x{:08X}", status);
+        if status == STATUS_REQUEST_NOT_ACCEPTED {
+            enqueue_op(op_ctx, op_start_listen);
+        }
+        return;
+    }
+}
+
+unsafe extern "C" fn accept_completion(
+    _device: PDEVICE_OBJECT,
+    irp: PIRP,
+    context: PVOID,
+) -> NTSTATUS {
+    let op_ctx = context as *mut SocketOpContext;
+    let socket_context = (*op_ctx).SocketContext;
+    
+    let status = (*irp).IoStatus.__bindgen_anon_1.Status;
+    let accepted_socket = (*irp).IoStatus.Information as *mut Socket;
+    
+    if status != STATUS_SUCCESS || accepted_socket.is_null() {
+        log_warn!("accept_completion: 失败 status=0x{:08X}, accepted_socket=0x{:016X}", 
+                  status, accepted_socket as usize);
+        enqueue_op(op_ctx, op_start_listen);
+        return STATUS_MORE_PROCESSING_REQUIRED;
+    }
+    
+    log_success!("accept_completion: 接受新连接 accepted_socket=0x{:016X}", accepted_socket as usize);
+    
+    let new_socket_context = unsafe { 
+        allocate_socket_context(&raw mut WORK_QUEUE as *mut _, DATA_BUFFER_LENGTH as ULONG) 
+    };
+    if new_socket_context.is_null() {
+        log_error!("accept_completion: 分配 socket context 失败");
+        let dispatch = (*(*socket_context).Socket).Dispatch as *const ProviderBasicDispatch;
+        let close_fn: unsafe extern "system" fn(*mut Socket, PIRP) -> NTSTATUS = 
+            core::mem::transmute((*dispatch).WskCloseSocket);
+        unsafe { close_fn(accepted_socket, irp) };
+        enqueue_op(op_ctx, op_start_listen);
+        return STATUS_MORE_PROCESSING_REQUIRED;
+    }
+    
+    unsafe { (*new_socket_context).Socket = accepted_socket };
+    log_info!("accept_completion: 新 socket context=0x{:016X}", new_socket_context as usize);
+    
+    for i in 0..OP_COUNT {
+        unsafe { enqueue_op(&mut (*new_socket_context).OpContext[i], op_receive) };
+    }
+    
+    enqueue_op(op_ctx, op_accept);
+    
+    STATUS_MORE_PROCESSING_REQUIRED
 }
 
 unsafe extern "C" fn op_stop_listen(op_ctx: *mut SocketOpContext) {
