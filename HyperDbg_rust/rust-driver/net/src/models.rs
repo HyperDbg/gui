@@ -4,6 +4,10 @@ use alloc::string::String;
 use alloc::vec::Vec;
 use serde::{Serialize, Deserialize};
 
+use crate::models_gen::{RegisterState, ProcessInfo, ThreadInfo, ModuleInfo, BreakpointInfo, BreakpointEvent, ExceptionEvent, DebugPrintEvent, SyscallEvent, Response};
+
+pub use crate::models_gen::{EmptyResponse, MessageType, BreakpointType, DebugState};
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Request {
     pub action: String,
@@ -21,132 +25,6 @@ pub struct Request {
     pub data: Option<Vec<u8>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub regs: Option<RegisterState>,
-}
-
-#[derive(Serialize, Deserialize, Debug, Default)]
-pub struct Response<T: Serialize> {
-    pub success: bool,
-    pub message: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub data: Option<T>,
-}
-
-pub type EmptyResponse = Response<()>;
-
-#[derive(Serialize, Deserialize, Debug, Clone, Default)]
-pub struct RegisterState {
-    pub RAX: u64,
-    pub RBX: u64,
-    pub RCX: u64,
-    pub RDX: u64,
-    pub RSI: u64,
-    pub RDI: u64,
-    pub RBP: u64,
-    pub RSP: u64,
-    pub R8: u64,
-    pub R9: u64,
-    pub R10: u64,
-    pub R11: u64,
-    pub R12: u64,
-    pub R13: u64,
-    pub R14: u64,
-    pub R15: u64,
-    pub RIP: u64,
-    pub RFLAGS: u64,
-    pub CR0: u64,
-    pub CR2: u64,
-    pub CR3: u64,
-    pub CR4: u64,
-    pub DR0: u64,
-    pub DR1: u64,
-    pub DR2: u64,
-    pub DR3: u64,
-    pub DR6: u64,
-    pub DR7: u64,
-    pub GDTR: u64,
-    pub GSBase: u64,
-    pub FSBase: u64,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct ProcessInfo {
-    pub process_id: u32,
-    pub image_name: String,
-    pub base_address: String,
-    pub size: u64,
-    pub cr3: u64,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct ThreadInfo {
-    pub thread_id: u32,
-    pub process_id: u32,
-    pub start_address: String,
-    pub teb: String,
-    pub state: u32,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct ModuleInfo {
-    pub base_address: String,
-    pub size: u64,
-    pub name: String,
-    pub path: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct BreakpointInfo {
-    pub id: u64,
-    pub address: String,
-    pub r#type: i32,
-    pub process_id: u32,
-    pub enabled: bool,
-    pub hit_count: u64,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct BreakpointEvent {
-    pub process_id: u32,
-    pub thread_id: u32,
-    pub core_id: u32,
-    pub address: String,
-    pub breakpoint_id: u64,
-    pub registers: RegisterState,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct ExceptionEvent {
-    pub process_id: u32,
-    pub thread_id: u32,
-    pub core_id: u32,
-    pub exception_code: u32,
-    pub address: String,
-    pub error_code: u64,
-    pub registers: RegisterState,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct DebugPrintEvent {
-    pub process_id: u32,
-    pub thread_id: u32,
-    pub core_id: u32,
-    pub message: String,
-    pub level: u32,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct SyscallEvent {
-    pub process_id: u32,
-    pub thread_id: u32,
-    pub core_id: u32,
-    pub syscall_number: u64,
-    pub rax: u64,
-    pub rcx: u64,
-    pub rdx: u64,
-    pub r8: u64,
-    pub r9: u64,
-    pub r10: u64,
-    pub rsp: u64,
 }
 
 pub fn parse_hex_string(s: &str) -> Option<u64> {
@@ -253,10 +131,10 @@ mod tests {
     #[test]
     fn test_register_state() {
         let regs = RegisterState {
-            RAX: 1,
-            RBX: 2,
-            RCX: 3,
-            RDX: 4,
+            rax: 1,
+            rbx: 2,
+            rcx: 3,
+            rdx: 4,
             ..Default::default()
         };
         let json = serde_json::to_string(&regs).unwrap();
@@ -268,8 +146,8 @@ mod tests {
     fn test_process_info() {
         let info = ProcessInfo {
             process_id: 1234,
-            image_name: String::from("test.exe"),
-            base_address: String::from("0x7ffe00000000"),
+            image_name: Some(String::from("test.exe")),
+            base_address: Some(String::from("0x7ffe00000000")),
             size: 0x10000,
             cr3: 0x1234567000,
         };
@@ -284,8 +162,8 @@ mod tests {
         let info = ThreadInfo {
             thread_id: 1,
             process_id: 1234,
-            start_address: String::from("0x7ffe12340000"),
-            teb: String::from("0x7ffe00001000"),
+            start_address: Some(String::from("0x7ffe12340000")),
+            teb: Some(String::from("0x7ffe00001000")),
             state: 0,
         };
         let json = serde_json::to_string(&info).unwrap();
@@ -296,10 +174,10 @@ mod tests {
     #[test]
     fn test_module_info() {
         let info = ModuleInfo {
-            base_address: String::from("0x7ffe00000000"),
+            base_address: Some(String::from("0x7ffe00000000")),
             size: 0x10000,
-            name: String::from("ntdll.dll"),
-            path: String::from("C:\\Windows\\System32\\ntdll.dll"),
+            name: Some(String::from("ntdll.dll")),
+            path: Some(String::from("C:\\Windows\\System32\\ntdll.dll")),
         };
         let json = serde_json::to_string(&info).unwrap();
         assert!(json.contains("\"base_address\":\"0x7ffe00000000\""));
@@ -310,8 +188,8 @@ mod tests {
     fn test_breakpoint_info() {
         let info = BreakpointInfo {
             id: 1,
-            address: String::from("0x7ffe12345678"),
-            r#type: 1,
+            address: Some(String::from("0x7ffe12345678")),
+            bp_type: 1,
             process_id: 1234,
             enabled: true,
             hit_count: 5,
