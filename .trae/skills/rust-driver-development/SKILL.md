@@ -771,7 +771,7 @@ $EWDK_MOUNT_LETTER = "E:"
 
 ### 位置
 
-`rust-driver/driver-framework/` - 所有驱动项目共用的通用框架
+`HyperDbg_rust/rust-driver/driver-framework/` - 所有驱动项目共用的通用框架
 
 ### 结构
 
@@ -785,37 +785,45 @@ driver-framework/src/
 └── ioctl.rs      # IOCTL 辅助宏和函数
 ```
 
-## wsk 模块 (WSK 网络封装)
+## net 模块 (WSK 网络封装 + HTTP Server)
 
 ### 位置
-`rust-driver/wsk/` - Winsock Kernel 网络套接字封装
+`HyperDbg_rust/rust-driver/net/` - Winsock Kernel 网络套接字封装 + HTTP Server
 
 ### 文件结构
 ```
-wsk/
+net/
 ├── Cargo.toml
+├── BSOD_FIX_REPORT.md     # 14次修复记录
 └── src/
-    ├── lib.rs          # 模块导出
-    ├── socket.rs       # WskSocket, WskListener 实现
-    ├── buffer.rs       # 数据缓冲区
-    ├── provider.rs     # WSK Provider (stub)
-    └── error.rs        # 错误类型
+    ├── lib.rs             # WSK 核心实现
+    ├── http.rs            # HTTP 请求解析
+    ├── json.rs            # JSON 序列化/反序列化
+    ├── models.rs          # 数据模型 (Command, Response)
+    └── logger.rs          # 日志宏
 ```
 
 ### 核心类型
 
 ```rust
-pub struct Listener {
-    socket: *mut Socket,
+pub struct Server {
+    provider_npi: ProviderNpi,
+    socket_contexts: [SocketContext; MAX_CONNECTIONS],
 }
 
-pub struct StreamSocket {
-    socket: *mut Socket,
+pub struct Request {
+    buffer: [u8; BUFFER_SIZE],
+    length: usize,
 }
 
-// 类型别名，保持兼容性
-pub type WskListener = Listener;
-pub type WskSocket = StreamSocket;
+pub struct ResponseWriter {
+    socket: *mut Socket,
+    buffer: [u8; BUFFER_SIZE],
+    length: usize,
+}
+
+// Handler 类型
+pub type Handler = unsafe extern "C" fn(*mut ResponseWriter, *mut Request);
 ```
 
 ### 依赖配置
@@ -846,7 +854,7 @@ fn parse_json(data: &[u8]) -> Option<Command> {
 ## netdemo 网络测试驱动
 
 ### 项目位置
-`rust-driver/examples/netdemo/`
+`HyperDbg_rust/rust-driver/examples/netdemo/`
 
 ### 文件结构
 ```
@@ -866,19 +874,19 @@ netdemo/
 
 ### 已验证可编译的项目
 
-1. **driver-framework** - `rust-driver/driver-framework/`
+1. **driver-framework** - `HyperDbg_rust/rust-driver/driver-framework/`
    - 通用驱动框架库
    - 所有驱动项目的基础依赖
 
-2. **sysdemo** - `rust-driver/examples/sysdemo/`
+2. **sysdemo** - `HyperDbg_rust/rust-driver/examples/sysdemo/`
    - 模块化 WDM 驱动示例
    - 支持 IOCTL 通信
 
-3. **netdemo** - `rust-driver/examples/netdemo/`
+3. **netdemo** - `HyperDbg_rust/rust-driver/examples/netdemo/`
    - 网络通信测试驱动
    - 使用 HTTP Server + JSON 协议
 
-4. **protocol** - `rust-driver/protocol/`
+4. **protocol** - `HyperDbg_rust/rust-driver/protocol/`
    - 调试器通信协议定义 (JSON Schema)
    - `types.rs` - 基本类型
    - `events.rs` - 事件类型
@@ -916,7 +924,7 @@ netdemo/
 ## 项目结构
 
 ```
-rust-driver/
+HyperDbg_rust/rust-driver/
 |
 ├── driver-framework/          # 通用驱动框架库
 │   ├── out/                   # ⚠️ WDK-SYS 绑定文件 (必须阅读!)
@@ -931,26 +939,23 @@ rust-driver/
 │       ├── device.rs          # 设备创建/清理
 │       └── ioctl.rs           # IOCTL 辅助
 |
-├── wsk/                       # WSK 网络封装
+├── net/                       # WSK 网络封装 + HTTP Server
 │   ├── Cargo.toml
+│   ├── BSOD_FIX_REPORT.md     # 14次修复记录
 │   └── src/
-│       ├── lib.rs             # 模块导出
-│       ├── socket.rs          # Listener, StreamSocket 实现
-│       ├── buffer.rs          # 数据缓冲区
-│       ├── provider.rs        # WSK Provider
-│       └── error.rs           # 错误类型
+│       ├── lib.rs             # WSK 核心实现
+│       ├── http.rs            # HTTP 解析
+│       ├── json.rs            # JSON 序列化
+│       ├── models.rs          # 数据模型
+│       └── logger.rs          # 日志宏
 |
 ├── protocol/                  # 通信协议定义
 │   ├── types.rs               # 基本类型
 │   └── events.rs              # 事件类型
 |
-├── examples/
-│   ├── sysdemo/               # 驱动示例 (IOCTL)
-│   └── netdemo/               # 网络测试驱动 (HTTP Server + JSON)
-|
-└── erebus-main/               # 完整驱动框架
-    ├── km/                    # 内核模式
-    └── um/                    # 用户模式
+└── examples/
+    ├── sysdemo/               # 驱动示例 (IOCTL)
+    └── netdemo/               # 网络测试驱动 (HTTP Server + JSON)
 ```
 
 ## 下一步计划
@@ -979,7 +984,7 @@ rust-driver/
 - ✅ JSON 响应正常
 
 ### 关键修复记录
-详见: `rust-driver/examples/netdemo/BSOD_FIX_REPORT.md`
+详见: `HyperDbg_rust/rust-driver/net/BSOD_FIX_REPORT.md`
 
 | # | 问题 | 修复 |
 |---|------|------|
@@ -992,16 +997,16 @@ rust-driver/
 
 ### 回退参考
 如遇网络通信问题，请检查:
-1. `rust-driver/net/src/lib.rs` - WSK 核心实现
-2. `rust-driver/examples/netdemo/src/lib.rs` - 驱动入口和 handler
-3. `rust-driver/examples/netdemo/BSOD_FIX_REPORT.md` - 完整修复记录
+1. `HyperDbg_rust/rust-driver/net/src/lib.rs` - WSK 核心实现
+2. `HyperDbg_rust/rust-driver/examples/netdemo/src/lib.rs` - 驱动入口和 handler
+3. `HyperDbg_rust/rust-driver/net/BSOD_FIX_REPORT.md` - 完整修复记录
 
 ### 测试命令
 ```powershell
 # 构建驱动
-cd d:\ux\examples\hypedbg\rust-driver\examples\netdemo
+cd d:\ux\examples\hypedbg\HyperDbg_rust\rust-driver\examples\netdemo
 .\build.ps1
 
 # 运行测试客户端
-go run m.go
+go run netdemo.go
 ```

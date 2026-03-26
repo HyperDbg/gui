@@ -364,7 +364,7 @@ Rust 实现目前完成约 100%，所有核心功能已完成：
 
 ### 关键修复
 
-详见 `rust-driver/net/BSOD_FIX_REPORT.md`，共 14 次迭代修复：
+详见 `HyperDbg_rust/rust-driver/net/BSOD_FIX_REPORT.md`，共 14 次迭代修复：
 
 | # | 问题 | 修复 |
 |---|------|------|
@@ -378,6 +378,6 @@ Rust 实现目前完成约 100%，所有核心功能已完成：
 ### 回退点
 
 如遇网络通信问题，请回退到 commit `23cea72`：
-- `rust-driver/net/src/lib.rs` - WSK 核心实现
-- `rust-driver/examples/netdemo/src/lib.rs` - 驱动入口
-- `rust-driver/net/BSOD_FIX_REPORT.md` - 完整修复记录
+- `HyperDbg_rust/rust-driver/net/src/lib.rs` - WSK 核心实现
+- `HyperDbg_rust/rust-driver/examples/netdemo/src/lib.rs` - 驱动入口
+- `HyperDbg_rust/rust-driver/net/BSOD_FIX_REPORT.md` - 完整修复记录

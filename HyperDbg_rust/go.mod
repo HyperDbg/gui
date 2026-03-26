@@ -1,4 +1,4 @@
-module hyperdbg-communicator
+module github.com/ddkwork/HyperDbg_rust
 
 go 1.21
 

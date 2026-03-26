@@ -14,4 +14,4 @@ walker/winmd
 walker/pdbex/ok/
 
 **/target/
-rust-driver/todo/
+HyperDbg_rust/rust-driver/todo/
