@@ -9,6 +9,20 @@
 - 只能使用 PowerShell 构建脚本进行编译
 - 当用户要求执行某个 `.ps1` 脚本时，**必须直接执行该脚本**，不要尝试手动运行 cargo 命令
 
+## ⚠️ 类型同步警告
+
+**修改数据结构时必须更新生成器！**
+
+当修改 `types.go`、`interfaces.go` 或添加/修改 API 方法时，**必须运行对应的生成器**以确保 Go 和 Rust 端的一致性：
+
+| 修改类型 | 需要运行的命令 | 说明 |
+|----------|---------------|------|
+| 修改 `types.go` | `cd cmd/rustgen && go run main.go` | 更新 Rust 类型定义和 API 处理器 |
+| 修改 `interfaces.go` | `cd cmd/mcp && go run main.go` | 更新 MCP 服务器代码 |
+| 添加/修改 API 方法 | 更新 `apiMethods` 后运行 rustgen | 更新 Rust API 调度器 |
+
+**详细说明见本文档末尾的 "Go-Rust 类型同步机制" 章节。**
+
 ## ⛔ 严禁查看未验证模块代码
 
 **执行任务时，严禁查看以下未验证模块的代码：**
@@ -1015,6 +1029,18 @@ go run netdemo.go
 
 ## Go-Rust 类型同步机制
 
+### ⚠️ 重要：修改数据结构时必须更新生成器
+
+**当修改任何共享数据结构时，必须运行生成器以确保 Go 和 Rust 端的一致性！**
+
+**必须运行生成器的情况：**
+
+| 修改类型 | 需要运行的命令 | 说明 |
+|----------|---------------|------|
+| 修改 `types.go` | `cd cmd/rustgen && go run main.go` | 更新 Rust 类型定义和 API 处理器 |
+| 修改 `interfaces.go` | `cd cmd/rustgen && go run main.go` | 自动扫描接口更新 API 处理器 |
+| 修改 `packet.go` | `cd cmd/rustgen && go run main.go` | 自动扫描 action 字符串 |
+
 ### 自动生成器
 
 项目使用 `cmd/rustgen` 生成器自动同步 Go 和 Rust 之间的类型定义，确保 JSON 通信的一致性。
@@ -1023,22 +1049,27 @@ go run netdemo.go
 - `rust-driver/types_gen.rs` - 从 `types.go` 自动生成的共享类型（枚举、结构体）
 - `rust-driver/handlers_gen.rs` - 自动生成的 `DebuggerApi` trait 和 `dispatch_api` 调度器
 
-### 同步流程
+### 同步流程（自动扫描 AST）
 
 ```
 ┌─────────────────┐     rustgen      ┌─────────────────────┐
-│   types.go      │ ───────────────► │   types_gen.rs      │
+│   types.go      │ ───────────────► │   models_gen.rs     │
 │  (Go 类型定义)   │                  │  (Rust 类型定义)     │
 └─────────────────┘                  └─────────────────────┘
-                                              │
-                                              ▼
+                                             
 ┌─────────────────┐     rustgen      ┌─────────────────────┐
-│  apiMethods[]   │ ───────────────► │  handlers_gen.rs    │
-│  (API 方法定义)  │                  │  (API 处理器)        │
+│ interfaces.go   │ ───────────────► │  handlers_gen.rs    │
+│ (接口方法签名)   │   (自动扫描AST)   │  (API 处理器)        │
 └─────────────────┘                  └─────────────────────┘
+        │
+        │  ┌─────────────────┐
+        └─►│   packet.go     │
+           │ (action 字符串)  │
+           │  (自动提取)      │
+           └─────────────────┘
 ```
 
-### ⚠️ 何时需要运行生成器
+### 何时需要运行生成器
 
 **必须运行生成器的情况：**
 
@@ -1050,38 +1081,28 @@ go run netdemo.go
    - 添加/修改/删除枚举
    - 修改字段类型或 JSON 标签
 
-2. **修改 API 方法后**
-   - 更新 `cmd/rustgen/main.go` 中的 `apiMethods` 切片
-   - 重新运行生成器
+2. **修改 `interfaces.go` 后**
+   - 生成器会自动扫描 `Debugger` 接口的方法签名
+   - 自动提取返回类型和参数类型
+   - 重新运行生成器即可
 
-3. **添加新的调试器方法后**
-   - 在 `apiMethods` 中添加新方法定义
-   - 运行生成器更新 `handlers_gen.rs`
+3. **修改 `packet.go` 后**
+   - 生成器会自动扫描 `json.Marshal` 调用中的 action 字符串
+   - 无需手动维护方法列表
+   - 重新运行生成器即可
 
-### API 方法定义格式
+### 自动扫描原理
 
-```go
-// cmd/rustgen/main.go
-var apiMethods = []APIMethod{
-    {
-        Name: "Initialize", 
-        Action: "initialize", 
-        ReturnType: "Empty", 
-        Description: "Initialize debugger"
-    },
-    {
-        Name: "ReadMemory", 
-        Action: "read_memory", 
-        Params: []APIParam{
-            {Name: "address", Type: "u64", Format: "hex"}, 
-            {Name: "size", Type: "u32", Format: "int"}
-        }, 
-        ReturnType: "Vec<u8>", 
-        Description: "Read memory"
-    },
-    // ... 更多方法
-}
-```
+生成器会自动扫描以下文件：
+
+1. **`types.go`** - 提取所有结构体、枚举和常量定义
+2. **`interfaces.go`** - 提取 `Debugger` 接口的方法签名：
+   - 方法名称
+   - 参数类型
+   - 返回类型
+3. **`packet.go`** - 提取每个方法对应的 action 字符串：
+   - 扫描 `json.Marshal(map[string]any{"action": "xxx", ...})` 调用
+   - 自动关联方法名和 action 字符串
 
 ### 生成的 Rust 代码
 
@@ -1130,13 +1151,13 @@ HyperDbg_rust/
 #### 添加新的调试器方法
 
 1. 在 `types.go` 中添加必要的类型定义（如果需要）
-2. 在 `cmd/rustgen/main.go` 的 `apiMethods` 中添加新方法
-3. 运行生成器：
+2. 在 `interfaces.go` 的 `Debugger` 接口中添加新方法
+3. 在 `packet.go` 中实现该方法（使用 `json.Marshal` 发送 action）
+4. 运行生成器：
    ```bash
    cd cmd/rustgen && go run main.go
    ```
-4. 在 Rust 驱动中实现 `DebuggerApi` trait 的新方法
-5. 在 Go 端 `packet.go` 中添加对应的方法
+5. 在 Rust 驱动中实现 `DebuggerApi` trait 的新方法
 
 #### 修改现有类型
 

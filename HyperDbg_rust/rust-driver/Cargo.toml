@@ -1,10 +1,11 @@
 [package]
 name = "hyperdbg-driver"
 version = "0.1.0"
-edition = "2026"
+edition = "2021"
 
 [lib]
 crate-type = ["cdylib"]
+path = "lib.rs"
 
 [dependencies]
 wdk-alloc = "0.3"

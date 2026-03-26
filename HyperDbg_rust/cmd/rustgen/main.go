@@ -44,43 +44,265 @@ type APIParam struct {
 	Format string
 }
 
-var apiMethods = []APIMethod{
-	{Name: "Initialize", Action: "initialize", ReturnType: "Empty", Description: "Initialize debugger"},
-	{Name: "Terminate", Action: "terminate", ReturnType: "Empty", Description: "Terminate debugger"},
-	{Name: "AttachProcess", Action: "attach_process", Params: []APIParam{{Name: "process_id", Type: "u32", Format: "dec"}}, ReturnType: "Empty", Description: "Attach to process"},
-	{Name: "DetachProcess", Action: "detach_process", ReturnType: "Empty", Description: "Detach from process"},
-	{Name: "SetBreakpoint", Action: "set_breakpoint", Params: []APIParam{{Name: "address", Type: "u64", Format: "hex"}, {Name: "type", Type: "i32", Format: "int"}}, ReturnType: "Empty", Description: "Set breakpoint"},
-	{Name: "RemoveBreakpoint", Action: "remove_breakpoint", Params: []APIParam{{Name: "breakpoint_id", Type: "u64", Format: "hex"}}, ReturnType: "Empty", Description: "Remove breakpoint"},
-	{Name: "EnableBreakpoint", Action: "enable_breakpoint", Params: []APIParam{{Name: "breakpoint_id", Type: "u64", Format: "hex"}}, ReturnType: "Empty", Description: "Enable breakpoint"},
-	{Name: "DisableBreakpoint", Action: "disable_breakpoint", Params: []APIParam{{Name: "breakpoint_id", Type: "u64", Format: "hex"}}, ReturnType: "Empty", Description: "Disable breakpoint"},
-	{Name: "ListBreakpoints", Action: "list_breakpoints", ReturnType: "Vec<BreakpointInfo>", Description: "List all breakpoints"},
-	{Name: "Continue", Action: "continue", ReturnType: "Empty", Description: "Continue execution"},
-	{Name: "Pause", Action: "pause", ReturnType: "Empty", Description: "Pause execution"},
-	{Name: "StepInto", Action: "step_into", ReturnType: "Empty", Description: "Step into"},
-	{Name: "StepOver", Action: "step_over", ReturnType: "Empty", Description: "Step over"},
-	{Name: "StepOut", Action: "step_out", ReturnType: "Empty", Description: "Step out"},
-	{Name: "ReadMemory", Action: "read_memory", Params: []APIParam{{Name: "address", Type: "u64", Format: "hex"}, {Name: "size", Type: "u32", Format: "int"}}, ReturnType: "Vec<u8>", Description: "Read memory"},
-	{Name: "WriteMemory", Action: "write_memory", Params: []APIParam{{Name: "address", Type: "u64", Format: "hex"}, {Name: "data", Type: "Vec<u8>", Format: ""}}, ReturnType: "Empty", Description: "Write memory"},
-	{Name: "ReadRegisters", Action: "read_registers", ReturnType: "RegisterState", Description: "Read registers"},
-	{Name: "WriteRegisters", Action: "write_registers", Params: []APIParam{{Name: "regs", Type: "RegisterState", Format: ""}}, ReturnType: "Empty", Description: "Write registers"},
-	{Name: "GetProcessList", Action: "get_process_list", ReturnType: "Vec<ProcessInfo>", Description: "Get process list"},
-	{Name: "GetThreadList", Action: "get_thread_list", Params: []APIParam{{Name: "process_id", Type: "u32", Format: "dec"}}, ReturnType: "Vec<ThreadInfo>", Description: "Get thread list"},
-	{Name: "GetModuleList", Action: "get_module_list", Params: []APIParam{{Name: "process_id", Type: "u32", Format: "dec"}}, ReturnType: "Vec<ModuleInfo>", Description: "Get module list"},
-	{Name: "GetCallStack", Action: "get_call_stack", Params: []APIParam{{Name: "process_id", Type: "u32", Format: "dec"}}, ReturnType: "Vec<u64>", Description: "Get call stack"},
-}
-
 func main() {
 	projectRoot := getProjectRoot()
-	goTypesPath := filepath.Join(projectRoot, "types.go")
 
+	typesPath := filepath.Join(projectRoot, "types.go")
+	interfacesPath := filepath.Join(projectRoot, "interfaces.go")
+	packetPath := filepath.Join(projectRoot, "packet.go")
+
+	typesFile := parseFile(typesPath)
+	interfacesFile := parseFile(interfacesPath)
+	packetFile := parseFile(packetPath)
+
+	apiMethods := extractAPIMethods(interfacesFile, packetFile)
+
+	generateModels(projectRoot, typesFile)
+	generateHandlers(projectRoot, apiMethods)
+}
+
+func parseFile(path string) *ast.File {
 	fset := token.NewFileSet()
-	node, err := parser.ParseFile(fset, goTypesPath, nil, parser.ParseComments)
+	node, err := parser.ParseFile(fset, path, nil, parser.ParseComments)
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("failed to parse %s: %w", path, err))
+	}
+	return node
+}
+
+func extractAPIMethods(interfacesFile, packetFile *ast.File) []APIMethod {
+	var methods []APIMethod
+
+	debuggerMethods := extractInterfaceMethods(interfacesFile)
+	actionMap := extractActionMap(packetFile)
+
+	for _, m := range debuggerMethods {
+		if !isAPIMethod(m.Name) {
+			continue
+		}
+
+		action := actionMap[m.Name]
+		if action == "" {
+			action = toSnakeCase(m.Name)
+		}
+
+		returnType := extractReturnType(m)
+		params := extractParams(m)
+
+		methods = append(methods, APIMethod{
+			Name:       m.Name,
+			Action:     action,
+			Params:     params,
+			ReturnType: returnType,
+		})
 	}
 
-	generateModels(projectRoot, node)
-	generateHandlers(projectRoot)
+	return methods
+}
+
+type MethodInfo struct {
+	Name    string
+	Params  []*ast.Field
+	Results *ast.FieldList
+}
+
+func extractInterfaceMethods(file *ast.File) []MethodInfo {
+	var methods []MethodInfo
+
+	for _, decl := range file.Decls {
+		genDecl, ok := decl.(*ast.GenDecl)
+		if !ok || genDecl.Tok != token.TYPE {
+			continue
+		}
+
+		for _, spec := range genDecl.Specs {
+			ts, ok := spec.(*ast.TypeSpec)
+			if !ok || ts.Name.Name != "Debugger" {
+				continue
+			}
+
+			iface, ok := ts.Type.(*ast.InterfaceType)
+			if !ok {
+				continue
+			}
+
+			for _, method := range iface.Methods.List {
+				if len(method.Names) == 0 {
+					continue
+				}
+
+				ft, ok := method.Type.(*ast.FuncType)
+				if !ok {
+					continue
+				}
+
+				methods = append(methods, MethodInfo{
+					Name:    method.Names[0].Name,
+					Params:  ft.Params.List,
+					Results: ft.Results,
+				})
+			}
+		}
+	}
+
+	return methods
+}
+
+func extractActionMap(file *ast.File) map[string]string {
+	actionMap := make(map[string]string)
+
+	for _, decl := range file.Decls {
+		fn, ok := decl.(*ast.FuncDecl)
+		if !ok || fn.Recv == nil || len(fn.Recv.List) == 0 {
+			continue
+		}
+
+		methodName := fn.Name.Name
+
+		ast.Inspect(fn, func(n ast.Node) bool {
+			call, ok := n.(*ast.CallExpr)
+			if !ok {
+				return true
+			}
+
+			if isJSONMarshalCall(call) {
+				lit := findMapLiteral(call)
+				if lit != nil {
+					action := extractActionFromMap(lit)
+					if action != "" {
+						actionMap[methodName] = action
+					}
+				}
+			}
+
+			return true
+		})
+	}
+
+	return actionMap
+}
+
+func isJSONMarshalCall(call *ast.CallExpr) bool {
+	sel, ok := call.Fun.(*ast.SelectorExpr)
+	if !ok {
+		return false
+	}
+	return sel.Sel.Name == "Marshal"
+}
+
+func findMapLiteral(call *ast.CallExpr) *ast.CompositeLit {
+	if len(call.Args) < 1 {
+		return nil
+	}
+
+	if call.Args[0] != nil {
+		if check, ok := call.Args[0].(*ast.CallExpr); ok {
+			if len(check.Args) > 0 {
+				if lit, ok := check.Args[0].(*ast.CompositeLit); ok {
+					return lit
+				}
+			}
+		}
+
+		if lit, ok := call.Args[0].(*ast.CompositeLit); ok {
+			return lit
+		}
+	}
+
+	return nil
+}
+
+func extractActionFromMap(lit *ast.CompositeLit) string {
+	for _, elt := range lit.Elts {
+		kv, ok := elt.(*ast.KeyValueExpr)
+		if !ok {
+			continue
+		}
+
+		key, ok := kv.Key.(*ast.BasicLit)
+		if !ok || key.Value != `"action"` {
+			continue
+		}
+
+		switch v := kv.Value.(type) {
+		case *ast.BasicLit:
+			return strings.Trim(v.Value, `"`)
+		}
+	}
+
+	return ""
+}
+
+func isAPIMethod(name string) bool {
+	nonAPIMethods := []string{
+		"Start", "Stop", "IsConnected", "GetState", "Ping", "Status",
+		"RegisterCallback", "GetEvent", "WaitForEvent", "GetConnectedDrivers",
+		"WaitForDriver", "ExecuteScript", "ExecuteScriptWithContext",
+	}
+	return !slices.Contains(nonAPIMethods, name)
+}
+
+func extractReturnType(m MethodInfo) string {
+	if m.Results == nil || len(m.Results.List) == 0 {
+		return "Empty"
+	}
+
+	for _, field := range m.Results.List {
+		typeStr := exprToString(field.Type)
+
+		if strings.HasPrefix(typeStr, "[]") {
+			inner := strings.TrimPrefix(typeStr, "[]")
+			if inner == "byte" {
+				return "Vec<u8>"
+			}
+			return "Vec<" + goTypeToRust(inner) + ">"
+		}
+
+		if strings.HasPrefix(typeStr, "*") {
+			inner := strings.TrimPrefix(typeStr, "*")
+			return goTypeToRust(inner)
+		}
+
+		if typeStr == "error" {
+			continue
+		}
+
+		return goTypeToRust(typeStr)
+	}
+
+	return "Empty"
+}
+
+func extractParams(m MethodInfo) []APIParam {
+	var params []APIParam
+
+	for _, field := range m.Params {
+		typeStr := exprToString(field.Type)
+
+		for _, name := range field.Names {
+			format := "int"
+			if strings.Contains(strings.ToLower(name.Name), "address") ||
+				strings.Contains(strings.ToLower(name.Name), "id") ||
+				strings.Contains(strings.ToLower(name.Name), "breakpoint") {
+				if typeStr == "uint64" {
+					format = "hex"
+				}
+			}
+			if strings.Contains(strings.ToLower(name.Name), "process") ||
+				strings.Contains(strings.ToLower(name.Name), "thread") ||
+				strings.Contains(strings.ToLower(name.Name), "size") {
+				format = "dec"
+			}
+
+			params = append(params, APIParam{
+				Name:   toSnakeCase(name.Name),
+				Type:   goTypeToRust(typeStr),
+				Format: format,
+			})
+		}
+	}
+
+	return params
 }
 
 func generateModels(projectRoot string, node *ast.File) {
@@ -162,11 +384,11 @@ func generateModels(projectRoot string, node *ast.File) {
 	fmt.Printf("Generated %s\n", outputPath)
 }
 
-func generateHandlers(projectRoot string) {
+func generateHandlers(projectRoot string, apiMethods []APIMethod) {
 	var buf bytes.Buffer
 
 	buf.WriteString("// Auto-generated by rustgen - DO NOT EDIT\n")
-	buf.WriteString("// Source: api_design.md + types.go\n\n")
+	buf.WriteString("// Source: interfaces.go + packet.go (auto-scanned)\n\n")
 	buf.WriteString("#![allow(non_snake_case)]\n\n")
 	buf.WriteString("extern crate alloc;\n\n")
 	buf.WriteString("use alloc::string::String;\n")
@@ -278,6 +500,10 @@ func generateHandlers(projectRoot string) {
 	}
 
 	fmt.Printf("Generated %s\n", outputPath)
+	fmt.Printf("\nExtracted %d API methods:\n", len(apiMethods))
+	for _, m := range apiMethods {
+		fmt.Printf("  - %s -> %s\n", m.Name, m.Action)
+	}
 }
 
 type ConstantDef struct {
@@ -497,14 +723,13 @@ func goTypeToRust(goType string) string {
 		if strings.HasPrefix(goType, "map[") {
 			return "std::collections::HashMap<String, serde_json::Value>"
 		}
-		if goType == "interface{}" {
-			return "serde_json::Value"
-		}
 		return goType
 	}
 }
 
+var snakeCaseRegex = regexp.MustCompile("([a-z0-9])([A-Z])")
+
 func toSnakeCase(s string) string {
-	re := regexp.MustCompile("([a-z0-9])([A-Z])")
-	return strings.ToLower(re.ReplaceAllString(s, "${1}_${2}"))
+	snake := snakeCaseRegex.ReplaceAllString(s, "${1}_${2}")
+	return strings.ToLower(snake)
 }

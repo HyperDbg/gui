@@ -1,13 +1,13 @@
 [package]
 name = "net"
-version.workspace = true
-edition.workspace = true
+version = "0.1.0"
+edition = "2021"
 
 [lib]
 crate-type = ["rlib"]
 
 [dependencies]
-protocol = { workspace = true }
+driver-framework = { path = "../driver-framework" }
 wdk-alloc = "0.4"
 wdk-sys = "0.5"
 wdk = "0.4"
