@@ -134,6 +134,9 @@ func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Host", DriverHTTPHost)
 
+	// 打印完整的请求 URL
+	fmt.Printf("[HTTP] Sending request to: %s\n", url)
+
 	response, err := p.client.Do(httpReq)
 	if err != nil {
 		return nil

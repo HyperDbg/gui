@@ -203,6 +203,8 @@ pub struct Request {
     pub Header: *const u8,
     pub Body: *const u8,
     pub BodyLength: usize,
+    pub Host: *const u8,
+    pub Port: u16,
 }
 
 impl Request {
@@ -260,6 +262,22 @@ impl Request {
             None
         }
     }
+
+    pub unsafe fn URL(&self) -> String {
+        let path = self.Path();
+        let host = if self.Host.is_null() {
+            "127.0.0.1"
+        } else {
+            let host_bytes = core::slice::from_raw_parts(self.Host, 256);
+            let mut len = 0;
+            while len < host_bytes.len() && host_bytes[len] != 0 {
+                len += 1;
+            }
+            core::str::from_utf8_unchecked(&host_bytes[..len])
+        };
+        let port = if self.Port == 0 { 50080 } else { self.Port };
+        alloc::format!("http://{}:{}{}", host, port, path)
+    }
 }
 
 pub unsafe fn readRequest(data: *const u8, len: usize) -> Option<Request> {
@@ -305,6 +323,8 @@ pub unsafe fn readRequest(data: *const u8, len: usize) -> Option<Request> {
         Header: ptr::null(),
         Body: if body_len > 0 { data.add(body_start) } else { ptr::null() },
         BodyLength: body_len,
+        Host: ptr::null(),
+        Port: 0,
     })
 }
 
@@ -382,7 +402,7 @@ impl Router {
 
     pub unsafe fn ServeHTTP(&self, w: *mut ResponseWriter, r: *mut Request) {
         let path = (*r).Path();
-        let full_url = alloc::format!("http://127.0.0.1:50080{}", path);
+        let full_url = (*r).URL();
         log_info!("Routing request for URL: {}", full_url);
         
         let mut current = self.routes;
@@ -999,7 +1019,7 @@ unsafe extern "C" fn receive_completion(_device: PDEVICE_OBJECT, irp: PIRP, cont
                 (*(*server).Router).ServeHTTP(&mut rw, &mut parsed_req);
                 log_success!("Request processed by router");
             } else if let Some(handler) = (*server).Handler {
-                let mut req = Request { Method: b"GET\0".as_ptr(), URL: b"/\0".as_ptr(), Header: ptr::null(), Body: (*op_ctx).DataBuffer as *const u8, BodyLength: (*op_ctx).DataLength };
+                let mut req = Request { Method: b"GET\0".as_ptr(), URL: b"/\0".as_ptr(), Header: ptr::null(), Body: (*op_ctx).DataBuffer as *const u8, BodyLength: (*op_ctx).DataLength, Host: ptr::null(), Port: 0 };
                 handler(&mut rw, &mut req);
                 log_success!("Request processed by handler");
             }
