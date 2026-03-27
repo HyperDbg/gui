@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	driverPath := flag.String("driver", `D:\ux\examples\hypedbg\HyperDbg_rust\rust-driver\kd\target\x86_64-pc-windows-msvc\release\hyperdbg_kd.sys`, "Driver path")
+	driverPath := flag.String("driver", `D:\ux\examples\hypedbg\HyperDbg_rust\rust-driver\kd\hyperdbg_kd.sys`, "Driver path")
 	driverName := flag.String("name", "hyperdbg", "Driver name")
 	deviceName := flag.String("device", "\\\\.\\hyperdbg", "Device name")
 	verbose := flag.Bool("v", true, "Verbose output")
