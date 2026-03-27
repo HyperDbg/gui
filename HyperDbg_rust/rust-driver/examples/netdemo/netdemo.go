@@ -80,8 +80,8 @@ func main() {
 		req     Request
 		comment string
 	}{
-		{"/api/initialize", Request{Action: "initialize"}, "initialize action"},
-		{"/api/terminate", Request{Action: "terminate"}, "terminate action"},
+		{"/api/load_vmm", Request{Action: "load_vmm"}, "load VMM"},
+		{"/api/unload_vmm", Request{Action: "unload_vmm"}, "unload VMM"},
 		{"/api/attach_process", Request{Action: "attach_process"}, "attach_process action"},
 		{"/api/detach_process", Request{Action: "detach_process"}, "detach_process action"},
 		{"/api/pause", Request{Action: "pause"}, "pause action"},

@@ -233,21 +233,21 @@ func (p *Packet) GetConnectedDrivers() []uint64 {
 	return nil
 }
 
-func (p *Packet) Initialize() error {
-	data := mylog.Check2(json.Marshal(map[string]string{"action": "initialize"}))
+func (p *Packet) LoadVmm() error {
+	data := mylog.Check2(json.Marshal(map[string]string{"action": "load_vmm"}))
 	resp := SendReceive[Empty](p, data)
 	if resp == nil || !resp.Success {
-		return fmt.Errorf("initialize failed: %s", resp.Message)
+		return fmt.Errorf("load_vmm failed: %s", resp.Message)
 	}
 	p.state.Store(int32(StateRunning))
 	return nil
 }
 
-func (p *Packet) Terminate() error {
-	data := mylog.Check2(json.Marshal(map[string]string{"action": "terminate"}))
+func (p *Packet) UnloadVmm() error {
+	data := mylog.Check2(json.Marshal(map[string]string{"action": "unload_vmm"}))
 	resp := SendReceive[Empty](p, data)
 	if resp == nil || !resp.Success {
-		return fmt.Errorf("terminate failed: %s", resp.Message)
+		return fmt.Errorf("unload_vmm failed: %s", resp.Message)
 	}
 	p.state.Store(int32(StateTerminated))
 	return nil

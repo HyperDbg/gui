@@ -51,9 +51,9 @@ func TestRustDriverHTTP(t *testing.T) {
 		time.Sleep(100 * time.Millisecond)
 	}
 
-	t.Log("\n1. 测试 initialize...")
-	initReq, _ := json.Marshal(map[string]string{"action": "initialize"})
-	resp, err := client.Post(baseURL+"/api", "application/json", bytes.NewReader(initReq))
+	t.Log("\n1. 测试 load_vmm...")
+	loadReq, _ := json.Marshal(map[string]string{"action": "load_vmm"})
+	resp, err := client.Post(baseURL+"/api", "application/json", bytes.NewReader(loadReq))
 	if err != nil {
 		t.Fatalf("HTTP 请求失败: %v", err)
 	}
@@ -155,9 +155,9 @@ func TestPacketAPI(t *testing.T) {
 
 	t.Log("连接成功!")
 
-	t.Log("初始化...")
-	if err := packet.Initialize(); err != nil {
-		t.Logf("初始化: %v", err)
+	t.Log("加载 VMM...")
+	if err := packet.LoadVmm(); err != nil {
+		t.Logf("LoadVmm: %v", err)
 	}
 
 	t.Log("发送 pause...")

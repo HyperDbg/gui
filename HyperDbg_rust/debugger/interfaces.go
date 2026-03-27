@@ -12,8 +12,8 @@ type Debugger interface {
 	GetState() DebugState
 	Ping() error
 	Status() (string, error)
-	Initialize() error
-	Terminate() error
+	LoadVmm() error
+	UnloadVmm() error
 	AttachProcess(processID uint32) error
 	DetachProcess() error
 	SetBreakpoint(address uint64, bpType BreakpointType) error
