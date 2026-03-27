@@ -18,16 +18,16 @@ import (
 func getProjectRoot() string {
 	cwd, _ := os.Getwd()
 	if filepath.Base(cwd) == "rustgen" {
-		return filepath.Join(filepath.Dir(filepath.Dir(cwd)), "rust-driver", "kd")
+		return filepath.Dir(filepath.Dir(cwd))
 	}
 	if filepath.Base(filepath.Dir(cwd)) == "rust-driver" && filepath.Base(cwd) == "kd" {
-		return cwd
+		return filepath.Dir(cwd)
 	}
-	return filepath.Join(cwd, "rust-driver", "kd")
+	return cwd
 }
 
 const (
-	RustOutputDir     = "src/common"
+	RustOutputDir     = "rust-driver/kd/src/common"
 	TypesOutputDir    = "types_gen"
 	HandlersOutputDir = "handlers_gen"
 )
@@ -214,13 +214,30 @@ func extractActionMap(file *ast.File) map[string]string {
 
 		methodName := fn.Name.Name
 
-		ast.Inspect(fn, func(n ast.Node) bool {
-			call, ok := n.(*ast.CallExpr)
-			if !ok {
-				return true
+		var findJSONMarshal func(n ast.Node) *ast.CallExpr
+		findJSONMarshal = func(n ast.Node) *ast.CallExpr {
+			switch node := n.(type) {
+			case *ast.CallExpr:
+				if isJSONMarshalCall(node) {
+					return node
+				}
+				for _, arg := range node.Args {
+					if found := findJSONMarshal(arg); found != nil {
+						return found
+					}
+				}
+			case *ast.AssignStmt:
+				for _, expr := range node.Rhs {
+					if found := findJSONMarshal(expr); found != nil {
+						return found
+					}
+				}
 			}
+			return nil
+		}
 
-			if isJSONMarshalCall(call) {
+		ast.Inspect(fn, func(n ast.Node) bool {
+			if call := findJSONMarshal(n); call != nil {
 				lit := findMapLiteral(call)
 				if lit != nil {
 					action := extractActionFromMap(lit)
@@ -229,7 +246,6 @@ func extractActionMap(file *ast.File) map[string]string {
 					}
 				}
 			}
-
 			return true
 		})
 	}
@@ -250,21 +266,27 @@ func findMapLiteral(call *ast.CallExpr) *ast.CompositeLit {
 		return nil
 	}
 
-	if call.Args[0] != nil {
-		if check, ok := call.Args[0].(*ast.CallExpr); ok {
-			if len(check.Args) > 0 {
-				if lit, ok := check.Args[0].(*ast.CompositeLit); ok {
+	var findLiteral func(expr ast.Expr) *ast.CompositeLit
+	findLiteral = func(expr ast.Expr) *ast.CompositeLit {
+		switch e := expr.(type) {
+		case *ast.CompositeLit:
+			return e
+		case *ast.CallExpr:
+			if isJSONMarshalCall(e) {
+				if len(e.Args) > 0 {
+					return findLiteral(e.Args[0])
+				}
+			}
+			for _, arg := range e.Args {
+				if lit := findLiteral(arg); lit != nil {
 					return lit
 				}
 			}
 		}
-
-		if lit, ok := call.Args[0].(*ast.CompositeLit); ok {
-			return lit
-		}
+		return nil
 	}
 
-	return nil
+	return findLiteral(call.Args[0])
 }
 
 func extractActionFromMap(lit *ast.CompositeLit) string {
@@ -290,7 +312,7 @@ func extractActionFromMap(lit *ast.CompositeLit) string {
 
 func isAPIMethod(name string) bool {
 	nonAPIMethods := []string{
-		"Start", "Stop", "IsConnected", "GetState", "Ping", "Status",
+		"Start", "Stop", "IsConnected", "GetState",
 		"RegisterCallback", "GetEvent", "WaitForEvent", "GetConnectedDrivers",
 		"WaitForDriver", "ExecuteScript", "ExecuteScriptWithContext",
 	}
@@ -677,7 +699,7 @@ func generateHandlersRouter(projectRoot string, apiMethods []APIMethod) {
 	buf.WriteString("use alloc::vec::Vec;\n")
 	buf.WriteString("use alloc::format;\n")
 	buf.WriteString("use serde::{Serialize, Deserialize};\n\n")
-	buf.WriteString("use crate::types_gen::*;\n\n")
+	buf.WriteString("use crate::common::types_gen::*;\n\n")
 
 	buf.WriteString("// Request structure for API calls\n")
 	buf.WriteString("#[derive(Serialize, Deserialize, Debug)]\n")
@@ -872,7 +894,7 @@ extern crate alloc;
 use alloc::string::String;
 use alloc::vec::Vec;
 use alloc::format;
-use crate::types_gen::*;
+use crate::common::types_gen::*;
 
 fn addr_to_string(addr: u64) -> Option<String> {
     Some(format!("0x{:016X}", addr))

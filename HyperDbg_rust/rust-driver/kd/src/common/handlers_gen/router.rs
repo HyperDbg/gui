@@ -47,6 +47,26 @@ pub struct Empty {}
 
 // API Handler trait for implementing debugger operations
 pub trait DebuggerApi {
+    fn ping(&mut self, req: &Request) -> Result<Empty, String>;
+    fn status(&mut self, req: &Request) -> Result<String, String>;
+    fn load_vmm(&mut self, req: &Request) -> Result<Empty, String>;
+    fn unload_vmm(&mut self, req: &Request) -> Result<Empty, String>;
+    fn attach_process(&mut self, req: &Request) -> Result<Empty, String>;
+    fn detach_process(&mut self, req: &Request) -> Result<Empty, String>;
+    fn set_breakpoint(&mut self, req: &Request) -> Result<Empty, String>;
+    fn remove_breakpoint(&mut self, req: &Request) -> Result<Empty, String>;
+    fn continue_(&mut self, req: &Request) -> Result<Empty, String>;
+    fn pause(&mut self, req: &Request) -> Result<Empty, String>;
+    fn step_into(&mut self, req: &Request) -> Result<Empty, String>;
+    fn step_over(&mut self, req: &Request) -> Result<Empty, String>;
+    fn step_out(&mut self, req: &Request) -> Result<Empty, String>;
+    fn read_memory(&mut self, req: &Request) -> Result<Vec<u8>, String>;
+    fn write_memory(&mut self, req: &Request) -> Result<Empty, String>;
+    fn read_registers(&mut self, req: &Request) -> Result<RegisterState, String>;
+    fn write_registers(&mut self, req: &Request) -> Result<Empty, String>;
+    fn get_process_list(&mut self, req: &Request) -> Result<Vec<ProcessInfo>, String>;
+    fn get_thread_list(&mut self, req: &Request) -> Result<Vec<ThreadInfo>, String>;
+    fn get_module_list(&mut self, req: &Request) -> Result<Vec<ModuleInfo>, String>;
 }
 
 // Non-API methods (excluded from trait):
@@ -63,6 +83,126 @@ pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
     match req {
         Ok(req) => {
             match req.action.as_str() {
+                "ping" => {
+                    match api.ping(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "status" => {
+                    match api.status(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "load_vmm" => {
+                    match api.load_vmm(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "unload_vmm" => {
+                    match api.unload_vmm(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "attach_process" => {
+                    match api.attach_process(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "detach_process" => {
+                    match api.detach_process(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "set_breakpoint" => {
+                    match api.set_breakpoint(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "remove_breakpoint" => {
+                    match api.remove_breakpoint(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "continue" => {
+                    match api.continue_(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "pause" => {
+                    match api.pause(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "step_into" => {
+                    match api.step_into(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "step_over" => {
+                    match api.step_over(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "step_out" => {
+                    match api.step_out(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "read_memory" => {
+                    match api.read_memory(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "write_memory" => {
+                    match api.write_memory(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "read_registers" => {
+                    match api.read_registers(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "write_registers" => {
+                    match api.write_registers(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "get_process_list" => {
+                    match api.get_process_list(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "get_thread_list" => {
+                    match api.get_thread_list(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "get_module_list" => {
+                    match api.get_module_list(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
                 _ => {
                     error_response(&format!("Unknown action: {}", req.action))
                 }
@@ -116,4 +256,124 @@ impl Request {
 pub struct NoOpDebugger;
 
 impl DebuggerApi for NoOpDebugger {
+    fn ping(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn status(&mut self, _req: &Request) -> Result<String, String> {
+        Ok(Default::default())
+    }
+
+    fn load_vmm(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn unload_vmm(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn attach_process(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn detach_process(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn set_breakpoint(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn remove_breakpoint(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn continue_(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn pause(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn step_into(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn step_over(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn step_out(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn read_memory(&mut self, _req: &Request) -> Result<Vec<u8>, String> {
+        Ok(alloc::vec![0x90, 0x90, 0x90, 0x90])
+    }
+
+    fn write_memory(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn read_registers(&mut self, _req: &Request) -> Result<RegisterState, String> {
+        Ok(RegisterState {
+            rax: 0x12345678,
+            rbx: 0x87654321,
+            rcx: 0x11111111,
+            rdx: 0x22222222,
+            rsi: 0x33333333,
+            rdi: 0x44444444,
+            rbp: 0x55555555,
+            rsp: 0x7FFE0000,
+            r8: 0x66666666,
+            r9: 0x77777777,
+            r10: 0x88888888,
+            r11: 0x99999999,
+            r12: 0xAAAAAAAA,
+            r13: 0xBBBBBBBB,
+            r14: 0xCCCCCCCC,
+            r15: 0xDDDDDDDD,
+            rip: 0x7FFE1234,
+            rflags: 0x246,
+            cr0: 0x80000000,
+            cr2: 0,
+            cr3: 0x1A2B3C4D,
+            cr4: 0x406F8,
+            dr0: 0,
+            dr1: 0,
+            dr2: 0,
+            dr3: 0,
+            dr6: 0xFFFF0FF0,
+            dr7: 0x400,
+            gdtr: 0xFFFFF80000000000,
+            gsbase: 0xFFFFF80012340000,
+            fsbase: 0,
+        })
+    }
+
+    fn write_registers(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn get_process_list(&mut self, _req: &Request) -> Result<Vec<ProcessInfo>, String> {
+        Ok(alloc::vec![
+            ProcessInfo { process_id: 4, image_name: Some(String::from("System")), base_address: Some(String::from("0xFFFFF80000000000")), size: 0x100000, cr3: 0x1A000 },
+            ProcessInfo { process_id: 1234, image_name: Some(String::from("notepad.exe")), base_address: Some(String::from("0x7FFE00000000")), size: 0x2000000, cr3: 0x2B000 },
+        ])
+    }
+
+    fn get_thread_list(&mut self, _req: &Request) -> Result<Vec<ThreadInfo>, String> {
+        Ok(alloc::vec![
+            ThreadInfo { thread_id: 5678, process_id: 1234, start_address: Some(String::from("0x7FFE12340000")), teb: Some(String::from("0x7FFE56780000")), state: 2 },
+        ])
+    }
+
+    fn get_module_list(&mut self, _req: &Request) -> Result<Vec<ModuleInfo>, String> {
+        Ok(alloc::vec![
+            ModuleInfo { base_address: Some(String::from("0x7FFE00000000")), size: 0x1000000, name: Some(String::from("ntdll.dll")), path: Some(String::from("C:\\Windows\\System32\\ntdll.dll")) },
+            ModuleInfo { base_address: Some(String::from("0x7FFE10000000")), size: 0x2000000, name: Some(String::from("kernel32.dll")), path: Some(String::from("C:\\Windows\\System32\\kernel32.dll")) },
+        ])
+    }
+
 }
