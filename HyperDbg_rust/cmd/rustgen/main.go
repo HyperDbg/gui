@@ -294,6 +294,25 @@ func isAPIMethod(name string) bool {
 	return !slices.Contains(nonAPIMethods, name)
 }
 
+func getNonAPIMethodComment(name string) string {
+	comments := map[string]string{
+		"Start":                    "// Connection management - handled by driver lifecycle",
+		"Stop":                     "// Connection management - handled by driver lifecycle",
+		"IsConnected":              "// Connection management - not applicable in kernel",
+		"GetState":                 "// State management - handled separately",
+		"Ping":                     "// Health check - not needed in kernel",
+		"Status":                   "// Status query - handled separately",
+		"RegisterCallback":         "// Event handling - use EventQueue + emit_* instead",
+		"GetEvent":                 "// Event handling - use EventQueue + emit_* instead",
+		"WaitForEvent":             "// Event handling - use EventQueue + emit_* instead",
+		"GetConnectedDrivers":      "// Driver management - user-space only",
+		"WaitForDriver":            "// Driver management - user-space only",
+		"ExecuteScript":            "// Script execution - user-space only",
+		"ExecuteScriptWithContext": "// Script execution - user-space only",
+	}
+	return comments[name]
+}
+
 func extractReturnType(m MethodInfo) string {
 	if m.Results == nil || len(m.Results.List) == 0 {
 		return "Empty"
@@ -658,6 +677,13 @@ func generateHandlersRouter(projectRoot string, apiMethods []APIMethod) {
 		buf.WriteString(fmt.Sprintf("    fn %s(&mut self, req: &Request) -> Result<%s, String>;\n", toSnakeCase(m.Name), m.ReturnType))
 	}
 	buf.WriteString("}\n\n")
+
+	buf.WriteString("// Non-API methods (excluded from trait):\n")
+	buf.WriteString("// - Start, Stop, IsConnected: Connection management - handled by driver lifecycle\n")
+	buf.WriteString("// - GetState, Ping, Status: State/health checks - handled separately\n")
+	buf.WriteString("// - RegisterCallback, GetEvent, WaitForEvent: Event handling - use EventQueue + emit_* instead\n")
+	buf.WriteString("// - GetConnectedDrivers, WaitForDriver: Driver management - user-space only\n")
+	buf.WriteString("// - ExecuteScript, ExecuteScriptWithContext: Script execution - user-space only\n\n")
 
 	buf.WriteString("// Generic API dispatcher\n")
 	buf.WriteString("pub unsafe fn dispatch_api<T: DebuggerApi>(api: &mut T, w: *mut ResponseWriter, r: *mut HttpRequest) {\n")

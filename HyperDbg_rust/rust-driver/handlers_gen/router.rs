@@ -35,6 +35,13 @@ pub trait DebuggerApi {
     fn get_module_list(&mut self, req: &Request) -> Result<Vec<ModuleInfo>, String>;
 }
 
+// Non-API methods (excluded from trait):
+// - Start, Stop, IsConnected: Connection management - handled by driver lifecycle
+// - GetState, Ping, Status: State/health checks - handled separately
+// - RegisterCallback, GetEvent, WaitForEvent: Event handling - use EventQueue + emit_* instead
+// - GetConnectedDrivers, WaitForDriver: Driver management - user-space only
+// - ExecuteScript, ExecuteScriptWithContext: Script execution - user-space only
+
 // Generic API dispatcher
 pub unsafe fn dispatch_api<T: DebuggerApi>(api: &mut T, w: *mut ResponseWriter, r: *mut HttpRequest) {
     let body = core::slice::from_raw_parts((*r).Body, (*r).BodyLength);
