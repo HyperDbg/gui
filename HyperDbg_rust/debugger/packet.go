@@ -161,22 +161,10 @@ func (p *Packet) eventPoller() {
 }
 
 func (p *Packet) Ping() error {
-	reqData, _ := json.Marshal(map[string]string{"action": "ping"})
-	url := fmt.Sprintf("%s/api", p.baseURL)
-	req, err := http.NewRequest("POST", url, bytes.NewReader(reqData))
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Content-Type", "application/json")
-
-	response, err := p.client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer response.Body.Close()
-
-	if response.StatusCode != http.StatusOK {
-		return fmt.Errorf("ping failed: status %d", response.StatusCode)
+	data, _ := json.Marshal(map[string]string{"action": "ping"})
+	resp := SendReceive[Empty](p, data)
+	if resp == nil || !resp.Success {
+		return fmt.Errorf("ping failed: %s", resp.Message)
 	}
 	return nil
 }
