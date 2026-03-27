@@ -36,11 +36,20 @@ func TestRustDriverHTTP(t *testing.T) {
 		t.Log("驱动已卸载")
 	}()
 
-	t.Log("等待 HTTP 服务启动...")
-	time.Sleep(2 * time.Second)
-
+	t.Log("等待 HTTP 服务就绪...")
 	baseURL := "http://127.0.0.1:50080"
 	client := &http.Client{Timeout: 5 * time.Second}
+
+	for i := 0; i < 10; i++ {
+		req, _ := json.Marshal(map[string]string{"action": "ping"})
+		resp, err := client.Post(baseURL+"/api", "application/json", bytes.NewReader(req))
+		if err == nil {
+			resp.Body.Close()
+			t.Log("HTTP 服务已就绪")
+			break
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
 
 	t.Log("\n1. 测试 initialize...")
 	initReq, _ := json.Marshal(map[string]string{"action": "initialize"})
@@ -133,8 +142,8 @@ func TestPacketAPI(t *testing.T) {
 		t.Log("驱动已卸载")
 	}()
 
-	t.Log("等待 HTTP 服务启动...")
-	time.Sleep(2 * time.Second)
+	t.Log("等待 HTTP 服务就绪...")
+	time.Sleep(500 * time.Millisecond) // ListenAndServe 是同步的，服务已在运行
 
 	packet := debugger.NewPacket()
 
