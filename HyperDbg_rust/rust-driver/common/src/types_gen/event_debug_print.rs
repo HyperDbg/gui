@@ -3,6 +3,14 @@
 
 #![allow(non_snake_case)]
 
+extern crate alloc;
+
+use alloc::string::String;
+use alloc::vec::Vec;
+use serde::{Serialize, Deserialize};
+
+use super::*;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u32)]
 pub enum LogLevel {
@@ -11,6 +19,12 @@ pub enum LogLevel {
     Info = 2,
     Warn = 3,
     Error = 4,
+}
+
+impl Default for LogLevel {
+    fn default() -> Self {
+        LogLevel::Trace
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

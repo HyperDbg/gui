@@ -3,6 +3,14 @@
 
 #![allow(non_snake_case)]
 
+extern crate alloc;
+
+use alloc::string::String;
+use alloc::vec::Vec;
+use serde::{Serialize, Deserialize};
+
+use super::*;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u32)]
 pub enum BreakpointType {
@@ -10,6 +18,12 @@ pub enum BreakpointType {
     Hardware = 1,
     Hidden = 2,
     Ept = 3,
+}
+
+impl Default for BreakpointType {
+    fn default() -> Self {
+        BreakpointType::Software
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

@@ -1,5 +1,4 @@
-fn main() {
-    let _ = wdk_build::configure_wdk_binary_build();
+fn main() -> Result<(), wdk_build::ConfigError> {
     println!("cargo:rustc-link-lib=netio");
-    println!("cargo:rustc-link-lib=uuid");
+    wdk_build::configure_wdk_binary_build()
 }

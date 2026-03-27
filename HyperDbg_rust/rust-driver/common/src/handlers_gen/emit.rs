@@ -4,7 +4,16 @@ extern crate alloc;
 
 use alloc::string::String;
 use alloc::vec::Vec;
+use alloc::format;
 use crate::types_gen::*;
+
+fn addr_to_string(addr: u64) -> Option<String> {
+    Some(format!("0x{:016X}", addr))
+}
+
+fn args_to_option(args: [u64; 8]) -> Option<Vec<u64>> {
+    Some(args.to_vec())
+}
 
 pub unsafe fn emit_event(event: DebuggerEvent) {
     extern "C" {
@@ -64,7 +73,7 @@ pub unsafe fn emit_breakpoint_event(
             core_id,
             timestamp: 0,
         },
-        address,
+        address: addr_to_string(address),
         breakpoint_id,
         registers: registers.clone(),
     }));
@@ -88,7 +97,7 @@ pub unsafe fn emit_exception_event(
             timestamp: 0,
         },
         exception_code,
-        address,
+        address: addr_to_string(address),
         error_code,
         registers: registers.clone(),
     }));
@@ -112,8 +121,8 @@ pub unsafe fn emit_memory_access_event(
             core_id,
             timestamp: 0,
         },
-        virtual_address,
-        physical_address,
+        virtual_address: addr_to_string(virtual_address),
+        physical_address: addr_to_string(physical_address),
         access_type,
         size,
         value,
@@ -137,7 +146,7 @@ pub unsafe fn emit_syscall_event(
             timestamp: 0,
         },
         syscall_number,
-        arguments,
+        arguments: args_to_option(arguments),
         return_value: 0,
         is_entry,
     }));
@@ -266,7 +275,7 @@ pub unsafe fn emit_debug_print_event(
             core_id,
             timestamp: 0,
         },
-        message,
+        message: Some(message),
         level,
     }));
 }
@@ -291,8 +300,8 @@ pub unsafe fn emit_vmx_exit_event(
         },
         exit_reason,
         exit_qualification,
-        guest_rip,
-        guest_rsp,
+        guest_rip: addr_to_string(guest_rip),
+        guest_rsp: addr_to_string(guest_rsp),
         instruction_length,
     }));
 }
@@ -315,7 +324,7 @@ pub unsafe fn emit_trap_event(
         },
         trap_number,
         error_code,
-        address,
+        address: addr_to_string(address),
     }));
 }
 
@@ -327,17 +336,22 @@ pub unsafe fn emit_hidden_hook_event(
     hook_type: MemoryAccessType,
     data: Vec<u8>,
 ) {
+    let event_type = match hook_type {
+        MemoryAccessType::Read => EventType::HiddenHookRead,
+        MemoryAccessType::Write => EventType::HiddenHookWrite,
+        _ => EventType::HiddenHookExec,
+    };
     emit_event(DebuggerEvent::HiddenHook(HiddenHookEvent {
         header: EventHeader {
-            event_type: EventType::HiddenHook,
+            event_type,
             process_id,
             thread_id,
             core_id,
             timestamp: 0,
         },
-        hook_address,
+        hook_address: addr_to_string(hook_address),
         hook_type,
-        data,
+        data: Some(data),
     }));
 }
 
@@ -467,9 +481,10 @@ pub unsafe fn emit_msr_event(
     is_write: bool,
     value: u64,
 ) {
+    let event_type = if is_write { EventType::MsrWrite } else { EventType::MsrRead };
     emit_event(DebuggerEvent::Msr(MsrEvent {
         header: EventHeader {
-            event_type: EventType::Msr,
+            event_type,
             process_id,
             thread_id,
             core_id,
@@ -502,8 +517,8 @@ pub unsafe fn emit_ept_violation_event(
             core_id,
             timestamp: 0,
         },
-        guest_physical_address,
-        guest_virtual_address,
+        guest_physical_address: addr_to_string(guest_physical_address),
+        guest_virtual_address: addr_to_string(guest_virtual_address),
         read,
         write,
         execute,

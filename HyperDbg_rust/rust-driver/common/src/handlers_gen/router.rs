@@ -8,10 +8,42 @@ extern crate alloc;
 use alloc::string::String;
 use alloc::vec::Vec;
 use alloc::format;
+use serde::{Serialize, Deserialize};
 
-use crate::util::{Request, parse_hex_string, parse_dec_string};
 use crate::types_gen::*;
-use net::{ResponseWriter, Request as HttpRequest, log_info, log_error, log_success};
+
+// Request structure for API calls
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Request {
+    pub action: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub process_id: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub address: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub breakpoint_id: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub size: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub r#type: Option<i32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub data: Option<Vec<u8>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub regs: Option<RegisterState>,
+}
+
+// Response structure for API calls
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Response<T: Serialize> {
+    pub success: bool,
+    pub message: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub data: Option<T>,
+}
+
+// Empty type for responses without data
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Empty {}
 
 // API Handler trait for implementing debugger operations
 pub trait DebuggerApi {
@@ -21,7 +53,7 @@ pub trait DebuggerApi {
     fn detach_process(&mut self, req: &Request) -> Result<Empty, String>;
     fn set_breakpoint(&mut self, req: &Request) -> Result<Empty, String>;
     fn remove_breakpoint(&mut self, req: &Request) -> Result<Empty, String>;
-    fn continue(&mut self, req: &Request) -> Result<Empty, String>;
+    fn continue_(&mut self, req: &Request) -> Result<Empty, String>;
     fn pause(&mut self, req: &Request) -> Result<Empty, String>;
     fn step_into(&mut self, req: &Request) -> Result<Empty, String>;
     fn step_over(&mut self, req: &Request) -> Result<Empty, String>;
@@ -42,152 +74,149 @@ pub trait DebuggerApi {
 // - GetConnectedDrivers, WaitForDriver: Driver management - user-space only
 // - ExecuteScript, ExecuteScriptWithContext: Script execution - user-space only
 
-// Generic API dispatcher
-pub unsafe fn dispatch_api<T: DebuggerApi>(api: &mut T, w: *mut ResponseWriter, r: *mut HttpRequest) {
-    let body = core::slice::from_raw_parts((*r).Body, (*r).BodyLength);
+// Generic API dispatcher - takes raw JSON bytes and returns JSON response
+pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
     let req: Result<Request, _> = serde_json::from_slice(body);
     
     match req {
         Ok(req) => {
-            log_info!("API request: {}", req.action);
-            
             match req.action.as_str() {
                 "initialize" => {
                     match api.initialize(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "terminate" => {
                     match api.terminate(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "attach_process" => {
                     match api.attach_process(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "detach_process" => {
                     match api.detach_process(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "set_breakpoint" => {
                     match api.set_breakpoint(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "remove_breakpoint" => {
                     match api.remove_breakpoint(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "continue" => {
-                    match api.continue(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                    match api.continue_(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "pause" => {
                     match api.pause(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "step_into" => {
                     match api.step_into(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "step_over" => {
                     match api.step_over(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "step_out" => {
                     match api.step_out(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "read_memory" => {
                     match api.read_memory(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "write_memory" => {
                     match api.write_memory(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "read_registers" => {
                     match api.read_registers(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "write_registers" => {
                     match api.write_registers(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "get_process_list" => {
                     match api.get_process_list(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "get_thread_list" => {
                     match api.get_thread_list(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 "get_module_list" => {
                     match api.get_module_list(&req) {
-                        Ok(data) => write_success_response(w, data),
-                        Err(e) => write_error_response(w, &e),
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
                     }
                 }
                 _ => {
-                    write_error_response(w, &format!("Unknown action: {}", req.action));
+                    error_response(&format!("Unknown action: {}", req.action))
                 }
             }
         }
         Err(e) => {
-            write_error_response(w, &format!("Invalid request: {:?}", e));
+            error_response(&format!("Invalid request: {:?}", e))
         }
     }
 }
 
 // Response helpers
-unsafe fn write_success_response<T: serde::Serialize>(w: *mut ResponseWriter, data: T) {
+fn success_response<T: serde::Serialize>(data: T) -> Vec<u8> {
     let resp = Response {
         success: true,
         message: String::from("OK"),
         data: Some(data),
     };
-    (*w).WriteJSON(&resp);
+    serde_json::to_vec(&resp).unwrap_or_default()
 }
 
-unsafe fn write_error_response(w: *mut ResponseWriter, msg: &str) {
+fn error_response(msg: &str) -> Vec<u8> {
     let resp = Response::<()> {
         success: false,
         message: String::from(msg),
         data: None,
     };
-    (*w).WriteJSON(&resp);
+    serde_json::to_vec(&resp).unwrap_or_default()
 }
 
 // Request parameter helpers
@@ -209,98 +238,120 @@ impl Request {
     }
 }
 
-// Default no-op implementation for testing
+// Default test implementation with sample data
 pub struct NoOpDebugger;
 
 impl DebuggerApi for NoOpDebugger {
     fn initialize(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("Initialize (no-op)");
-        Ok(())
+        Ok(Empty {})
     }
 
     fn terminate(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("Terminate (no-op)");
-        Ok(())
+        Ok(Empty {})
     }
 
     fn attach_process(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("AttachProcess (no-op)");
-        Ok(())
+        Ok(Empty {})
     }
 
     fn detach_process(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("DetachProcess (no-op)");
-        Ok(())
+        Ok(Empty {})
     }
 
     fn set_breakpoint(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("SetBreakpoint (no-op)");
-        Ok(())
+        Ok(Empty {})
     }
 
     fn remove_breakpoint(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("RemoveBreakpoint (no-op)");
-        Ok(())
+        Ok(Empty {})
     }
 
-    fn continue(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("Continue (no-op)");
-        Ok(())
+    fn continue_(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
     }
 
     fn pause(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("Pause (no-op)");
-        Ok(())
+        Ok(Empty {})
     }
 
     fn step_into(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("StepInto (no-op)");
-        Ok(())
+        Ok(Empty {})
     }
 
     fn step_over(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("StepOver (no-op)");
-        Ok(())
+        Ok(Empty {})
     }
 
     fn step_out(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("StepOut (no-op)");
-        Ok(())
+        Ok(Empty {})
     }
 
     fn read_memory(&mut self, _req: &Request) -> Result<Vec<u8>, String> {
-        log_info!("ReadMemory (no-op)");
-        Ok(Vec::new())
+        Ok(alloc::vec![0x90, 0x90, 0x90, 0x90])
     }
 
     fn write_memory(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("WriteMemory (no-op)");
-        Ok(())
+        Ok(Empty {})
     }
 
     fn read_registers(&mut self, _req: &Request) -> Result<RegisterState, String> {
-        log_info!("ReadRegisters (no-op)");
-        Ok(RegisterState::default())
+        Ok(RegisterState {
+            rax: 0x12345678,
+            rbx: 0x87654321,
+            rcx: 0x11111111,
+            rdx: 0x22222222,
+            rsi: 0x33333333,
+            rdi: 0x44444444,
+            rbp: 0x55555555,
+            rsp: 0x7FFE0000,
+            r8: 0x66666666,
+            r9: 0x77777777,
+            r10: 0x88888888,
+            r11: 0x99999999,
+            r12: 0xAAAAAAAA,
+            r13: 0xBBBBBBBB,
+            r14: 0xCCCCCCCC,
+            r15: 0xDDDDDDDD,
+            rip: 0x7FFE1234,
+            rflags: 0x246,
+            cr0: 0x80000000,
+            cr2: 0,
+            cr3: 0x1A2B3C4D,
+            cr4: 0x406F8,
+            dr0: 0,
+            dr1: 0,
+            dr2: 0,
+            dr3: 0,
+            dr6: 0xFFFF0FF0,
+            dr7: 0x400,
+            gdtr: 0xFFFFF80000000000,
+            gsbase: 0xFFFFF80012340000,
+            fsbase: 0,
+        })
     }
 
     fn write_registers(&mut self, _req: &Request) -> Result<Empty, String> {
-        log_info!("WriteRegisters (no-op)");
-        Ok(())
+        Ok(Empty {})
     }
 
     fn get_process_list(&mut self, _req: &Request) -> Result<Vec<ProcessInfo>, String> {
-        log_info!("GetProcessList (no-op)");
-        Ok(Vec::new())
+        Ok(alloc::vec![
+            ProcessInfo { process_id: 4, image_name: Some(String::from("System")), base_address: Some(String::from("0xFFFFF80000000000")), size: 0x100000, cr3: 0x1A000 },
+            ProcessInfo { process_id: 1234, image_name: Some(String::from("notepad.exe")), base_address: Some(String::from("0x7FFE00000000")), size: 0x2000000, cr3: 0x2B000 },
+        ])
     }
 
     fn get_thread_list(&mut self, _req: &Request) -> Result<Vec<ThreadInfo>, String> {
-        log_info!("GetThreadList (no-op)");
-        Ok(Vec::new())
+        Ok(alloc::vec![
+            ThreadInfo { thread_id: 5678, process_id: 1234, start_address: Some(String::from("0x7FFE12340000")), teb: Some(String::from("0x7FFE56780000")), state: 2 },
+        ])
     }
 
     fn get_module_list(&mut self, _req: &Request) -> Result<Vec<ModuleInfo>, String> {
-        log_info!("GetModuleList (no-op)");
-        Ok(Vec::new())
+        Ok(alloc::vec![
+            ModuleInfo { base_address: Some(String::from("0x7FFE00000000")), size: 0x1000000, name: Some(String::from("ntdll.dll")), path: Some(String::from("C:\\Windows\\System32\\ntdll.dll")) },
+            ModuleInfo { base_address: Some(String::from("0x7FFE10000000")), size: 0x2000000, name: Some(String::from("kernel32.dll")), path: Some(String::from("C:\\Windows\\System32\\kernel32.dll")) },
+        ])
     }
 
 }

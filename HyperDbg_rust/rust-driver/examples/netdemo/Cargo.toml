@@ -3,16 +3,21 @@ name = "netdemo"
 version = "0.1.0"
 edition = "2021"
 
+[package.metadata.wdk.driver-model]
+driver-type = "WDM"
+
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
+common = { path = "../../common" }
 driver-framework = { path = "../../driver-framework" }
 net = { path = "../../net" }
 wdk = "0.4"
 wdk-sys = "0.5"
 wdk-alloc = "0.4"
 wdk-panic = "0.4"
+serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
 
 [build-dependencies]
 wdk-build = "0.4"

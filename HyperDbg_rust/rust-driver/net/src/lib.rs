@@ -19,7 +19,7 @@ pub mod http;
 pub mod json;
 pub mod util;
 
-pub use util::{Request, parse_hex_string, parse_dec_string};
+pub use util::{parse_hex_string, parse_dec_string};
 
 use json::{Marshal, Unmarshal};
 use wdk_sys::{
@@ -173,6 +173,10 @@ impl ResponseWriter {
         ptr::copy_nonoverlapping(data, self.buffer.add(self.length), len);
         self.length += len;
         len as isize
+    }
+
+    pub unsafe fn WriteBytes(&mut self, data: &[u8]) -> isize {
+        self.Write(data.as_ptr(), data.len())
     }
 
     pub unsafe fn WriteHeader(&mut self, _status_code: i32) {

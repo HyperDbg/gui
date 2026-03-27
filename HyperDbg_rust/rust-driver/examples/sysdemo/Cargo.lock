@@ -228,14 +228,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
-name = "common"
-version = "0.1.0"
-dependencies = [
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "driver-framework"
 version = "0.1.0"
 dependencies = [
@@ -365,34 +357,6 @@ name = "minimal-lexical"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
-
-[[package]]
-name = "net"
-version = "0.1.0"
-dependencies = [
- "driver-framework",
- "serde",
- "serde_json",
- "wdk",
- "wdk-alloc",
- "wdk-panic",
- "wdk-sys",
-]
-
-[[package]]
-name = "netdemo"
-version = "0.1.0"
-dependencies = [
- "common",
- "driver-framework",
- "net",
- "serde",
- "wdk",
- "wdk-alloc",
- "wdk-build 0.4.0",
- "wdk-panic",
- "wdk-sys",
-]
 
 [[package]]
 name = "nom"
@@ -614,6 +578,18 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "sysdemo"
+version = "0.1.0"
+dependencies = [
+ "driver-framework",
+ "wdk",
+ "wdk-alloc",
+ "wdk-build 0.5.1",
+ "wdk-panic",
+ "wdk-sys",
 ]
 
 [[package]]

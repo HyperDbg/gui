@@ -3,6 +3,14 @@
 
 #![allow(non_snake_case)]
 
+extern crate alloc;
+
+use alloc::string::String;
+use alloc::vec::Vec;
+use serde::{Serialize, Deserialize};
+
+use super::*;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u32)]
 pub enum VmxExitReason {
@@ -70,6 +78,12 @@ pub enum VmxExitReason {
     Xrstors = 64,
 }
 
+impl Default for VmxExitReason {
+    fn default() -> Self {
+        VmxExitReason::ExceptionNmi
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct VmxExitEvent {
     #[serde(rename = "header")]
@@ -79,9 +93,11 @@ pub struct VmxExitEvent {
     #[serde(rename = "exit_qualification")]
     pub exit_qualification: u64,
     #[serde(rename = "guest_rip")]
-    pub guest_rip: Address,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub guest_rip: Option<String>,
     #[serde(rename = "guest_rsp")]
-    pub guest_rsp: Address,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub guest_rsp: Option<String>,
     #[serde(rename = "instruction_length")]
     pub instruction_length: u32,
 }

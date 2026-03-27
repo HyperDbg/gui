@@ -81,7 +81,7 @@ cargo build --release --target x86_64-pc-windows-msvc
 if ($LASTEXITCODE -eq 0) {
     Write-Host "netdemo 编译成功！" -ForegroundColor Green
     
-    $workspaceTarget = "d:\ux\examples\hypedbg\rust-driver\target\x86_64-pc-windows-msvc\release"
+    $workspaceTarget = Join-Path $SCRIPT_DIR "target\x86_64-pc-windows-msvc\release"
     $dllPath = "$workspaceTarget\netdemo.dll"
     $pdbPath = "$workspaceTarget\netdemo.pdb"
     $sysPath = "$workspaceTarget\netdemo.sys"

@@ -3,6 +3,14 @@
 
 #![allow(non_snake_case)]
 
+extern crate alloc;
+
+use alloc::string::String;
+use alloc::vec::Vec;
+use serde::{Serialize, Deserialize};
+
+use super::*;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u32)]
 pub enum ExceptionCode {
@@ -25,6 +33,12 @@ pub enum ExceptionCode {
     AlignmentCheck = 17,
     MachineCheck = 18,
     SimdFloatingPoint = 19,
+}
+
+impl Default for ExceptionCode {
+    fn default() -> Self {
+        ExceptionCode::DivideError
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

@@ -3,6 +3,14 @@
 
 #![allow(non_snake_case)]
 
+extern crate alloc;
+
+use alloc::string::String;
+use alloc::vec::Vec;
+use serde::{Serialize, Deserialize};
+
+use super::*;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u32)]
 pub enum EventType {
@@ -37,6 +45,12 @@ pub enum EventType {
     Vmcalled = 29,
 }
 
+impl Default for EventType {
+    fn default() -> Self {
+        EventType::Breakpoint
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(i32)]
 pub enum DebuggerEventType {
@@ -61,6 +75,12 @@ pub enum DebuggerEventType {
     IoPort = 18,
     Msr = 19,
     EptViolation = 20,
+}
+
+impl Default for DebuggerEventType {
+    fn default() -> Self {
+        DebuggerEventType::Breakpoint
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

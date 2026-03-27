@@ -46,6 +46,10 @@ impl ResponseWriter {
         let bytes = super::json::Marshal(obj).unwrap();
         self.Write(bytes.as_ptr(), bytes.len())
     }
+
+    pub unsafe fn WriteBytes(&mut self, bytes: &[u8]) -> isize {
+        self.Write(bytes.as_ptr(), bytes.len())
+    }
 }
 
 pub unsafe fn ReadRequest(data: *const u8, len: usize) -> Option<Request> {

@@ -27,6 +27,7 @@ mod event_dr_access;
 mod event_io_port;
 mod event_msr;
 mod event_ept_violation;
+mod response;
 
 // Re-export all types
 pub use common::*;

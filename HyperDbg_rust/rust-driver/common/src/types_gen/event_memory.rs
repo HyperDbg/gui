@@ -3,12 +3,26 @@
 
 #![allow(non_snake_case)]
 
+extern crate alloc;
+
+use alloc::string::String;
+use alloc::vec::Vec;
+use serde::{Serialize, Deserialize};
+
+use super::*;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u32)]
 pub enum MemoryAccessType {
     Read = 0,
     Write = 1,
     Execute = 2,
+}
+
+impl Default for MemoryAccessType {
+    fn default() -> Self {
+        MemoryAccessType::Read
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

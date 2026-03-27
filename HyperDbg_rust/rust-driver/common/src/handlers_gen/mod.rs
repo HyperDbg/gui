@@ -3,6 +3,6 @@
 mod router;
 mod emit;
 
-pub use router::{DebuggerApi, dispatch_api, NoOpDebugger};
+pub use router::{Request, Response, Empty, DebuggerApi, dispatch_api, NoOpDebugger};
 pub use emit::{EventQueue, emit_event};
 pub use emit::*;

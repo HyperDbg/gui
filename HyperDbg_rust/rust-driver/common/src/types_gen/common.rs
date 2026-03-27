@@ -3,6 +3,14 @@
 
 #![allow(non_snake_case)]
 
+extern crate alloc;
+
+use alloc::string::String;
+use alloc::vec::Vec;
+use serde::{Serialize, Deserialize};
+
+use super::*;
+
 pub type ProcessId = u32;
 pub type ThreadId = u32;
 pub type Address = u64;
@@ -89,14 +97,17 @@ pub struct MemoryRegion {
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct CallStackFrame {
     #[serde(rename = "instruction_pointer")]
-    pub instruction_pointer: Address,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub instruction_pointer: Option<String>,
     #[serde(rename = "return_address")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub return_address: Option<String>,
     #[serde(rename = "stack_pointer")]
-    pub stack_pointer: Address,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stack_pointer: Option<String>,
     #[serde(rename = "frame_pointer")]
-    pub frame_pointer: Address,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub frame_pointer: Option<String>,
     #[serde(rename = "module_name")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub module_name: Option<String>,
