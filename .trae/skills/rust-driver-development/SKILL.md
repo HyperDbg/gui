@@ -18,106 +18,67 @@
 | 修改类型 | 需要运行的命令 | 说明 |
 |----------|---------------|------|
 | 修改 `types.go` | `cd cmd/rustgen && go run main.go` | 更新 Rust 类型定义和 API 处理器 |
-| 修改 `interfaces.go` | `cd cmd/mcp && go run main.go` | 更新 MCP 服务器代码 |
-| 添加/修改 API 方法 | 更新 `apiMethods` 后运行 rustgen | 更新 Rust API 调度器 |
+| 修改 `interfaces.go` | `cd cmd/rustgen && go run main.go` | 自动扫描接口更新 API 处理器 |
+| 修改 `packet.go` | `cd cmd/rustgen && go run main.go` | 自动扫描 action 字符串 |
 
 **详细说明见本文档末尾的 "Go-Rust 类型同步机制" 章节。**
 
-## 🔄 Rust 生成文件分拆任务
+## ✅ Rust 生成文件分拆已完成
 
-**当前状态：** `types_gen.rs` 和 `handlers_gen.rs` 是单一文件，需要分拆。
+**当前状态：** `types_gen/` 和 `handlers_gen/` 已分拆为独立目录，位于 `common/` crate 中。
 
-**目标：** 将生成的 Rust 文件按事件类型分拆，与 Go 端保持一致的结构，便于维护。
-
-### 分拆方案
-
-将 `rust-driver/` 下的生成文件分拆为：
+### 当前文件结构
 
 ```
 rust-driver/
-├── types_gen/                  # 生成的类型 (分拆)
-│   ├── mod.rs                  // 导出所有类型
-│   ├── common.rs               // ProcessId, ThreadId, Address 等基础类型
-│   ├── register.rs             // RegisterState
-│   ├── event_breakpoint.rs     // BreakpointType + BreakpointEvent
-│   ├── event_exception.rs      // ExceptionCode + ExceptionEvent
-│   ├── event_memory.rs         // MemoryAccessType + MemoryAccessEvent
-│   ├── event_syscall.rs        // SyscallEvent
-│   ├── event_process.rs        // ProcessInfo + ProcessEvent
-│   ├── event_thread.rs         // ThreadInfo + ThreadEvent
-│   ├── event_module.rs         // ModuleInfo + ModuleEvent
-│   ├── event_debug_print.rs    // LogLevel + DebugPrintEvent
-│   ├── event_vmx.rs            // VmxExitReason + VmxExitEvent
-│   ├── event_trap.rs           // TrapEvent
-│   ├── event_hidden_hook.rs    // HiddenHookEvent
-│   ├── event_cpuid.rs          // CpuidEvent
-│   ├── event_tsc.rs            // TscEvent
-│   ├── event_cr_access.rs      // CrAccessEvent
-│   ├── event_dr_access.rs      // DrAccessEvent
-│   ├── event_io_port.rs        // IoPortEvent
-│   ├── event_msr.rs            // MsrEvent
-│   └── event_ept_violation.rs  // EptViolationEvent
+├── common/                     # 通用模块（自动生成）
+│   ├── Cargo.toml
+│   └── src/
+│       ├── lib.rs
+│       ├── types_gen/          # 生成的类型 (分拆)
+│       │   ├── mod.rs
+│       │   ├── common.rs
+│       │   ├── register.rs
+│       │   ├── response.rs
+│       │   ├── event.rs
+│       │   ├── event_*.rs
+│       │
+│       └── handlers_gen/       # 生成的处理器 (分拆)
+│           ├── mod.rs
+│           ├── router.rs
+│           └── emit.rs
 │
-├── handlers_gen/               # 生成的处理器 (分拆)
-│   ├── mod.rs                  // 导出 + EventQueue + emit_*_event
-│   └── router.rs               // DebuggerApi trait + dispatch_api
+├── net/                        # 网络模块
+│   ├── Cargo.toml
+│   ├── README.md
+│   ├── BSOD_FIX_REPORT.md
+│   └── src/
+│       ├── lib.rs
+│       ├── http.rs
+│       ├── json.rs
+│       └── util.rs
 │
-└── lib.rs                      # 主入口，导入 types_gen 和 handlers_gen
+├── hyperhv/                    # Hypervisor 层
+├── hyperkd/                    # Debugger 层
+├── disassembler/               # 反汇编器
+├── driver-framework/           # 驱动框架
+└── examples/                   # 示例驱动
 ```
 
-### 生成器修改任务
+### 文件映射规则
 
-**需要修改 `cmd/rustgen/main.go`：**
-
-1. **类型生成器改造**
-   - 从单一 `types_gen.rs` 改为生成 `types_gen/` 目录
-   - 每个事件类型生成独立文件
-   - 自动生成 `mod.rs` 导出所有类型
-
-2. **处理器生成器改造**
-   - 从单一 `handlers_gen.rs` 改为生成 `handlers_gen/` 目录
-   - `mod.rs` - 导出 + EventQueue + emit_*_event 函数
-   - `router.rs` - DebuggerApi trait + dispatch_api 函数
-
-3. **文件映射规则**
-   ```
-   Go 文件                    →  Rust 生成文件
-   types.go                   →  types_gen/common.rs
-   register.go                →  types_gen/register.rs
-   event_breakpoint.go        →  types_gen/event_breakpoint.rs
-   event_exception.go         →  types_gen/event_exception.rs
-   event_memory.go            →  types_gen/event_memory.rs
-   ...                        →  ...
-   ```
-
-### 实施步骤
-
-1. **创建新的生成器结构**
-   - 在 `cmd/rustgen/` 下创建 `generator/` 子目录
-   - 实现分文件生成逻辑
-
-2. **更新生成器代码**
-   ```bash
-   # 修改 cmd/rustgen/main.go
-   # 添加分文件生成支持
-   ```
-
-3. **运行生成器**
-   ```bash
-   cd HyperDbg_rust/cmd/rustgen && go run main.go
-   ```
-
-4. **验证生成结果**
-   - 检查所有文件是否正确生成
-   - 检查 `mod.rs` 导出是否完整
-   - 运行 Rust 编译测试
-
-### 注意事项
-
-- 分拆后，`types_gen/` 和 `handlers_gen/` 仍然是**自动生成**的目录
-- **不要手动修改**生成的文件，所有修改都应该在 Go 端进行
-- 生成器会自动处理模块导入和导出
-- 保持 Go 端和 Rust 端的文件命名一致性
+```
+Go 文件                    →  Rust 生成文件
+types.go                   →  common/types_gen/common.rs
+register.go                →  common/types_gen/register.rs
+response.go                →  common/types_gen/response.rs
+event_handlers.go          →  common/types_gen/event.rs
+event_breakpoint.go        →  common/types_gen/event_breakpoint.rs
+event_exception.go         →  common/types_gen/event_exception.rs
+event_memory.go            →  common/types_gen/event_memory.rs
+...                        →  ...
+packet.go                  →  common/handlers_gen/router.rs (action 映射)
+```
 
 ## ⛔ 严禁修改已验证文件
 
@@ -125,22 +86,6 @@ rust-driver/
 - `rust-driver/net/src/logger.rs` - 日志宏定义（使用 `wdk::println!`）
 
 这些文件已经过测试验证，修改可能导致编译错误或运行时问题。
-
-## ⚠️ 重复类型定义说明
-
-由于 `net` 是独立的 crate，某些类型需要在多处定义：
-
-| 类型 | 位置 | 说明 |
-|------|------|------|
-| `RegisterState` | `net/src/util.rs` | `net` crate 内部使用 |
-| `RegisterState` | `rust-driver/types_gen.rs` | 主驱动使用（自动生成） |
-| `RegisterState` | `hyperhv/src/meta_dispatch.rs` | Hypervisor 内部使用（字段较少） |
-
-**注意：** 这些类型定义在不同模块中是独立的，JSON 字段名必须保持一致。
-
-**已删除 `packet.rs`：** 所有类型现在统一在 `types_gen.rs` 中定义，通过生成器自动同步。
-
-**`events.rs` 简化：** 只包含 `DebuggerEvent` enum，其他事件结构体（`EventHeader`、`BreakpointEvent` 等）从 `types_gen.rs` 导入。
 
 ## ⛔ 严禁查看未验证模块代码
 
@@ -155,8 +100,8 @@ rust-driver/
 - `driver-framework` - 通用驱动框架库
 - `sysdemo` - 模块化 WDM 驱动示例
 - `netdemo` - 网络通信测试驱动
-- `protocol` - 调试器通信协议定义
-- `wsk` - WSK 网络封装
+- `common` - 通用类型和处理器（自动生成）
+- `net` - WSK HTTP Server
 
 ## 📚 参考项目 (已验证可用)
 
@@ -192,7 +137,7 @@ NTSTATUS NTAPI KspAsyncContextCompletionRoutine(
   return STATUS_MORE_PROCESSING_REQUIRED;  // 关键！
 }
 
-// 初始化异步上下文
+ 初始化异步上下文
 NTSTATUS NTAPI KspAsyncContextAllocate(PKSOCKET_ASYNC_CONTEXT AsyncContext)
 {
   KeInitializeEvent(&AsyncContext->CompletionEvent, SynchronizationEvent, FALSE);
@@ -207,7 +152,7 @@ NTSTATUS NTAPI KspAsyncContextAllocate(PKSOCKET_ASYNC_CONTEXT AsyncContext)
   return STATUS_SUCCESS;
 }
 
-// 等待完成
+ 等待完成
 NTSTATUS NTAPI KspAsyncContextWaitForCompletion(
   PKSOCKET_ASYNC_CONTEXT AsyncContext,
   PNTSTATUS Status
@@ -220,7 +165,7 @@ NTSTATUS NTAPI KspAsyncContextWaitForCompletion(
   return *Status;
 }
 
-// 重置异步上下文 (用于重用 IRP)
+ 重置异步上下文 (用于重用 IRP)
 VOID NTAPI KspAsyncContextReset(PKSOCKET_ASYNC_CONTEXT AsyncContext)
 {
   KeResetEvent(&AsyncContext->CompletionEvent);
@@ -244,7 +189,7 @@ NTSTATUS InitWskData(PIRP* pIrp, PKEVENT CompletionEvent)
   return STATUS_SUCCESS;
 }
 
-// 初始化 WSK 缓冲区
+ 初始化 WSK 缓冲区
 NTSTATUS InitWskBuffer(PVOID Buffer, ULONG BufferSize, PWSK_BUF WskBuffer)
 {
   WskBuffer->Offset = 0;
@@ -261,14 +206,14 @@ NTSTATUS InitWskBuffer(PVOID Buffer, ULONG BufferSize, PWSK_BUF WskBuffer)
   return STATUS_SUCCESS;
 }
 
-// 释放 WSK 缓冲区
+ 释放 WSK 缓冲区
 VOID FreeWskBuffer(PWSK_BUF WskBuffer)
 {
   MmUnlockPages(WskBuffer->Mdl);
   IoFreeMdl(WskBuffer->Mdl);
 }
 
-// 创建 Socket
+ 创建 Socket
 PWSK_SOCKET CreateSocket(ADDRESS_FAMILY AddressFamily, USHORT SocketType, ULONG Protocol, ULONG Flags)
 {
   KEVENT CompletionEvent;
@@ -291,10 +236,11 @@ PWSK_SOCKET CreateSocket(ADDRESS_FAMILY AddressFamily, USHORT SocketType, ULONG 
   return WskSocket;
 }
 
-// TCP Server 示例 (echoserv.c)
+ TCP Server 示例 (echoserv.c)
 static VOID NTAPI ServerThread(PVOID p)
 {
   SOCKADDR_IN LocalAddress = {0}, RemoteAddress = {0};
+;
   PWSK_SOCKET Socket;
   
   // 创建监听 Socket
@@ -548,7 +494,7 @@ struct Context {
     irp: PIRP,
 }
 
-// 完成回调 - 必须返回 STATUS_MORE_PROCESSING_REQUIRED
+ 完成回调 - 必须返回 STATUS_MORE_PROCESSING_REQUIRED
 // 注意：第一个参数必须是 PDEVICE_OBJECT，不是 PVOID！
 unsafe extern "C" fn wsk_completion_routine(
     _device: PDEVICE_OBJECT,  // 必须是 PDEVICE_OBJECT 类型
@@ -561,7 +507,7 @@ unsafe extern "C" fn wsk_completion_routine(
     STATUS_MORE_PROCESSING_REQUIRED  // 关键！不是 STATUS_SUCCESS
 }
 
-// 初始化异步上下文
+ 初始化异步上下文
 impl Context {
     fn new() -> Result<Self, SocketError> {
         unsafe {
@@ -570,7 +516,7 @@ impl Context {
                 return Err(SocketError::IrpAllocationFailed);
             }
 
-            let mut ctx = Context {
+ let mut ctx = Context {
                 event: core::mem::zeroed(),  // KEVENT 初始化
                 irp,
             };
@@ -620,7 +566,7 @@ impl Context {
     }
 }
 
-// 设置完成回调的辅助函数
+ 设置完成回调的辅助函数
 unsafe fn io_set_completion_routine(
     irp: PIRP,
     routine: Option<unsafe extern "C" fn(PDEVICE_OBJECT, PIRP, PVOID) -> NTSTATUS>,
@@ -641,7 +587,7 @@ unsafe fn io_set_completion_routine(
     (*stack).Control = control;
 }
 
-// 手动实现 IoGetNextIrpStackLocation (wdk-sys 没有提供)
+ 手动实现 IoGetNextIrpStackLocation (wdk-sys 没有提供)
 #[inline(always)]
 unsafe fn io_get_next_irp_stack_location(irp: PIRP) -> PIO_STACK_LOCATION {
     let irp_ref = &*irp;
@@ -675,8 +621,7 @@ static mut WSK_CLIENT_DISPATCH: ClientDispatch = ClientDispatch {
 let wsk_client = ClientNpi {
     ClientContext: ptr::null_mut(),
     Dispatch: &raw const WSK_CLIENT_DISPATCH,
-};
-WskRegister(&wsk_client, &raw mut WSK_REGISTRATION);
+};WskRegister(&wsk_client, &raw mut WSK_REGISTRATION);
 
 // 3. 获取 Provider (使用 WSK_NO_WAIT 或 WSK_INFINITE_WAIT)
 let status = WskCaptureProviderNPI(&raw mut WSK_REGISTRATION, WSK_NO_WAIT, &raw mut provider);
@@ -714,7 +659,7 @@ pub fn send(&mut self, buf: &[u8]) -> Result<usize, SocketError> {
             return Err(SocketError::MdlAllocationFailed);
         }
 
-        // 锁定页面 (发送用 IoWriteAccess)
+ 锁定页面 (发送用 IoWriteAccess)
         MmProbeAndLockPages(mdl, KERNEL_MODE, _LOCK_OPERATION::IoWriteAccess);
 
         let mut wsk_buf = Buffer { 
@@ -751,7 +696,6 @@ pub fn send(&mut self, buf: &[u8]) -> Result<usize, SocketError> {
             Err(SocketError::SendFailed)
         }
     }
-}
 
 // 接收数据 (使用 IoReadAccess)
 pub fn recv(&mut self, buf: &mut [u8]) -> Result<usize, SocketError> {
@@ -823,8 +767,8 @@ const IPPROTO_UDP: u32 = 17;
 │  ┌─────────────────┐                              ┌─────────────────┐ │
 │  │   Go 用户态      │                              │   Rust 驱动      │ │
 │  │                 │                              │                 │ │
-│  │  HTTP Client    │─────── HTTP POST ─────────►│  HTTP Server    │ │
-│  │  (连接 50080)   │                              │  (监听 50080)   │ │
+│  │ HTTP Client    │─────── HTTP POST ─────────►│  HTTP Server    │ │
+│  │ (连接 50080)   │                              │  (监听 50080)   │ │
 │  │                 │                              │                 │ │
 │  │  - 发送 HTTP    │◄────── HTTP 200 JSON ──────│  - 解析 HTTP     │ │
 │  │  - 解析 JSON    │                              │  - 执行调试     │ │
@@ -918,6 +862,57 @@ driver-framework/src/
 └── ioctl.rs      # IOCTL 辅助宏和函数
 ```
 
+## common 模块 (自动生成)
+
+### 位置
+`HyperDbg_rust/rust-driver/common/` - 自动生成的类型和处理器
+
+### 文件结构
+```
+common/
+├── Cargo.toml
+└── src/
+    ├── lib.rs             # 模块导出
+    ├── types_gen/         # 生成的类型定义
+    │   ├── mod.rs
+    │   ├── common.rs      # 基础类型
+    │   ├── register.rs    # RegisterState
+    │   ├── response.rs    # Response[T], Empty
+    │   ├── event.rs       # DebuggerEvent
+    │   └── event_*.rs     # 各事件类型
+    └── handlers_gen/      # 生成的处理器
+        ├── mod.rs         # EventQueue + emit_*_event
+        ├── router.rs      # DebuggerApi trait + dispatch_api
+        └── emit.rs        # emit_*_event 函数
+```
+
+### 核心类型
+
+```rust
+// types_gen/common.rs
+pub type ProcessId = u32;
+pub type ThreadId = u32;
+pub type Address = u64;
+pub type PhysicalAddress = u64;
+
+// types_gen/response.rs
+pub type Empty = ();
+pub struct Response<T> {
+    pub success: bool,
+    pub message: String,
+    pub data: Option<T>,
+}
+
+ handlers_gen/router.rs
+pub trait DebuggerApi {
+    fn initialize(&mut self, req: &Request) -> Result<Empty, String>;
+    fn read_memory(&mut self, req: &Request) -> Result<Vec<u8>, String>;
+    // ... 更多方法
+}
+
+ pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8>;
+```
+
 ## net 模块 (WSK 网络封装 + HTTP Server)
 
 ### 位置
@@ -932,8 +927,7 @@ net/
     ├── lib.rs             # WSK 核心实现
     ├── http.rs            # HTTP 请求解析
     ├── json.rs            # JSON 序列化/反序列化
-    ├── models.rs          # 数据模型 (Command, Response)
-    └── logger.rs          # 日志宏
+    └── util.rs            # Request 结构体
 ```
 
 ### 核心类型
@@ -944,18 +938,18 @@ pub struct Server {
     socket_contexts: [SocketContext; MAX_CONNECTIONS],
 }
 
-pub struct Request {
+ pub struct Request {
     buffer: [u8; BUFFER_SIZE],
     length: usize,
 }
 
-pub struct ResponseWriter {
+ pub struct ResponseWriter {
     socket: *mut Socket,
     buffer: [u8; BUFFER_SIZE],
     length: usize,
 }
 
-// Handler 类型
+ Handler 类型
 pub type Handler = unsafe extern "C" fn(*mut ResponseWriter, *mut Request);
 ```
 
@@ -963,6 +957,7 @@ pub type Handler = unsafe extern "C" fn(*mut ResponseWriter, *mut Request);
 
 ```toml
 [dependencies]
+common = { path = "../common" }
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 ```
@@ -979,7 +974,7 @@ pub struct Command {
     pub value: u64,
 }
 
-fn parse_json(data: &[u8]) -> Option<Command> {
+ fn parse_json(data: &[u8]) -> Option<Command> {
     serde_json::from_slice(data).ok()
 }
 ```
@@ -1007,23 +1002,26 @@ netdemo/
 
 ### 已验证可编译的项目
 
-1. **driver-framework** - `HyperDbg_rust/rust-driver/driver-framework/`
+1. **common** - `HyperDbg_rust/rust-driver/common/`
+   - 自动生成的类型和处理器
+   - types_gen/ - 类型定义
+   - handlers_gen/ - API 调度器
+
+2. **driver-framework** - `HyperDbg_rust/rust-driver/driver-framework/`
    - 通用驱动框架库
    - 所有驱动项目的基础依赖
 
-2. **sysdemo** - `HyperDbg_rust/rust-driver/examples/sysdemo/`
+3. **net** - `HyperDbg_rust/rust-driver/net/`
+   - WSK HTTP Server
+   - JSON 通信
+
+4. **sysdemo** - `HyperDbg_rust/rust-driver/examples/sysdemo/`
    - 模块化 WDM 驱动示例
    - 支持 IOCTL 通信
 
-3. **netdemo** - `HyperDbg_rust/rust-driver/examples/netdemo/`
+5. **netdemo** - `HyperDbg_rust/rust-driver/examples/netdemo/`
    - 网络通信测试驱动
    - 使用 HTTP Server + JSON 协议
-
-4. **protocol** - `HyperDbg_rust/rust-driver/protocol/`
-   - 调试器通信协议定义 (JSON Schema)
-   - `types.rs` - 基本类型
-   - `events.rs` - 事件类型
-   - 常量: `PROTOCOL_VERSION = 1`, `DEFAULT_PORT = 9527`
 
 ### 不可用的模块（未实现）
 
@@ -1059,6 +1057,22 @@ netdemo/
 ```
 HyperDbg_rust/rust-driver/
 |
+├── common/                    # 通用模块（自动生成）
+│   ├── Cargo.toml
+│   └── src/
+│       ├── lib.rs             # 模块导出
+│       ├── types_gen/         # 生成的类型定义
+│       │   ├── mod.rs
+│       │   ├── common.rs
+│       │   ├── register.rs
+│       │   ├── response.rs
+│       │   ├── event.rs
+│       │   └── event_*.rs
+│       └── handlers_gen/      # 生成的处理器
+│           ├── mod.rs
+│           ├── router.rs
+│           └── emit.rs
+|
 ├── driver-framework/          # 通用驱动框架库
 │   ├── out/                   # ⚠️ WDK-SYS 绑定文件 (必须阅读!)
 │   │   ├── ntddk.rs           # 所有内核函数签名
@@ -1079,12 +1093,7 @@ HyperDbg_rust/rust-driver/
 │       ├── lib.rs             # WSK 核心实现
 │       ├── http.rs            # HTTP 解析
 │       ├── json.rs            # JSON 序列化
-│       ├── models.rs          # 数据模型
-│       └── logger.rs          # 日志宏
-|
-├── protocol/                  # 通信协议定义
-│   ├── types.rs               # 基本类型
-│   └── events.rs              # 事件类型
+│       └── util.rs            # Request 结构体
 |
 └── examples/
     ├── sysdemo/               # 驱动示例 (IOCTL)
@@ -1098,6 +1107,7 @@ HyperDbg_rust/rust-driver/
 2. [x] 实现 JSON 解析 -> 解析收到的 JSON 数据 ✅ 已完成 (2024-03-26)
 3. [x] 实现命令处理 -> 执行调试命令 ✅ 已完成 (2024-03-26)
 4. [x] 实现响应发送 -> 返回 JSON 结果 ✅ 已完成 (2024-03-26)
+5. [x] 分拆生成文件 -> types_gen/ 和 handlers_gen/ ✅ 已完成 (2024-03-27)
 ```
 
 ---
@@ -1122,9 +1132,9 @@ HyperDbg_rust/rust-driver/
 | # | 问题 | 修复 |
 |---|------|------|
 | 9 | WSK_PROVIDER_DISPATCH 缺少 Version/Reserved 字段 | 参考 WDK wsk.h 修正结构体定义 |
-| 10 | accept_event 事件回调从未被调用 | 改用主动 WskAccept 轮询 |
+ | 10 | accept_event 事件回调从未被调用 | 改用主动 WskAccept 轮询 |
 | 11 | CLIENT_LISTEN_DISPATCH 设置方式错误 | 运行时设置函数指针 |
-| 12 | 端口字节序错误 | 使用 to_be() 转换为网络字节序 |
+ | 12 | 端口字节序错误 | 使用 to_be() 转换为网络字节序 |
 | 13 | Handler 值传递导致响应长度为 0 | 改为指针传递 `*mut ResponseWriter` |
 | 14 | WriteJSON 缺少 HTTP 响应头 | 添加 HTTP/1.1 200 OK 头部 |
 
@@ -1165,21 +1175,22 @@ go run netdemo.go
 项目使用 `cmd/rustgen` 生成器自动同步 Go 和 Rust 之间的类型定义，确保 JSON 通信的一致性。
 
 **生成的文件：**
-- `rust-driver/types_gen.rs` - 从 `types.go` 自动生成的共享类型（枚举、结构体）
-- `rust-driver/handlers_gen.rs` - 自动生成的 `DebuggerApi` trait 和 `dispatch_api` 调度器
+- `rust-driver/common/src/types_gen/*.rs` - 从 `types.go` 和 `event_*.go` 自动生成的类型定义
+ `rust-driver/common/src/handlers_gen/router.rs` - 自动生成的 `DebuggerApi` trait 和 `dispatch_api` 调度器
+- `rust-driver/common/src/handlers_gen/emit.rs` - 自动生成的 `emit_*_event` 函数
 
 ### 同步流程（自动扫描 AST）
 
 ```
-┌─────────────────┐     rustgen      ┌─────────────────────┐
-│   types.go      │ ───────────────► │   models_gen.rs     │
-│  (Go 类型定义)   │                  │  (Rust 类型定义)     │
-└─────────────────┘                  └─────────────────────┘
+┌─────────────────┐     rustgen      ┌─────────────────────────────┐
+│   types.go      │ ───────────────► │   common/types_gen/*.rs     │
+│  (Go 类型定义)   │                  │  (Rust 类型定义)             │
+└─────────────────┘                  └─────────────────────────────┘
                                              
-┌─────────────────┐     rustgen      ┌─────────────────────┐
-│ interfaces.go   │ ───────────────► │  handlers_gen.rs    │
-│ (接口方法签名)   │   (自动扫描AST)   │  (API 处理器)        │
-└─────────────────┘                  └─────────────────────┘
+┌─────────────────┐     rustgen      ┌─────────────────────────────┐
+│ interfaces.go   │ ───────────────► │  handlers_gen/router.rs     │
+│ (接口方法签名)   │   (自动扫描AST)   │  (API 处理器)                │
+└─────────────────┘                  └─────────────────────────────┘
         │
         │  ┌─────────────────┐
         └─►│   packet.go     │
@@ -1225,7 +1236,7 @@ go run netdemo.go
 
 ### 生成的 Rust 代码
 
-**types_gen.rs 示例：**
+**types_gen/register.rs 示例：**
 ```rust
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct RegisterState {
@@ -1235,11 +1246,9 @@ pub struct RegisterState {
     pub rbx: u64,
     // ...
 }
-
-pub type Empty = ();
 ```
 
-**handlers_gen.rs 示例：**
+**handlers_gen/router.rs 示例：**
 ```rust
 pub trait DebuggerApi {
     fn initialize(&mut self, req: &Request) -> Result<Empty, String>;
@@ -1247,8 +1256,15 @@ pub trait DebuggerApi {
     // ...
 }
 
-pub unsafe fn dispatch_api<T: DebuggerApi>(api: &mut T, w: *mut ResponseWriter, r: *mut HttpRequest) {
+ pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
     // 自动路由到对应方法
+}
+```
+
+**handlers_gen/emit.rs 示例：**
+```rust
+pub fn emit_breakpoint_event(queue: &mut EventQueue, event: BreakpointEvent) {
+    queue.push(DebuggerEvent::Breakpoint(event));
 }
 ```
 
@@ -1259,9 +1275,19 @@ HyperDbg_rust/
 ├── types.go                    # Go 类型定义 (源)
 ├── cmd/rustgen/main.go         # Rust 代码生成器
 └── rust-driver/
-    ├── types_gen.rs            # 生成的类型定义
-    ├── handlers_gen.rs         # 生成的 API 处理器
-    ├── lib.rs                  # 主入口，导入生成的模块
+    ├── common/
+    │   └── src/
+    │       ├── types_gen/      # 生成的类型定义
+    │       │   ├── mod.rs
+    │       │   ├── common.rs
+    │       │   ├── register.rs
+    │       │   ├── response.rs
+    │       │   ├── event.rs
+    │       │   └── event_*.rs
+    │       └── handlers_gen/   # 生成的 API 调度器
+    │           ├── mod.rs
+    │           ├── router.rs
+    │           └── emit.rs
     └── net/src/util.rs         # Request 结构体和解析辅助函数
 ```
 
@@ -1284,3 +1310,58 @@ HyperDbg_rust/
 2. 运行生成器更新 Rust 类型
 3. 确保 Go 端和 Rust 端的 JSON 标签一致
 4. 更新测试用例
+
+## 🎯 下一步计划：API 业务代码填充
+
+### 任务概述
+
+填充 `d:\ux\examples\hypedbg\HyperDbg_rust\rust-driver\common\src\handlers_gen\router.rs` 中的真实业务代码。
+
+### 三个主要任务
+
+#### 任务一：hyperhv 模块调试和纠正
+
+**路径：** `d:\ux\examples\hypedbg\HyperDbg_rust\rust-driver\hyperhv`
+
+**参考：** `d:\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\HyperDbg\hprdbghv`
+
+**内容：**
+- Hypervisor 核心实现
+- VMX 操作、EPT 管理、VM-Exit 处理
+- VMCS 配置、VPID 管理
+- 广播通信、跨核心同步
+
+#### 任务二：hyperkd 模块调试和纠正
+
+**路径：** `d:\ux\examples\hypedbg\HyperDbg_rust\rust-driver\hyperkd`
+
+**参考：** `d:\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\HyperDbg\hyperkd`
+
+**内容：**
+- 内核调试器核心
+- 进程/线程附加
+- 内存读写操作
+- 断点管理
+- 命令处理
+
+#### 任务三：disassembler 模块调试和纠正
+
+**路径：** `d:\ux\examples\hypedbg\HyperDbg_rust\rust-driver\disassembler`
+
+**参考：** `d:\ux\examples\hypedbg\doc\cpp\HyperDbgUnified\HyperDbg\disassembler`
+
+**内容：**
+- 反汇编引擎
+- 指令解析
+- 地址计算
+
+### 执行步骤
+
+1. **对比 C++ 源码**：逐文件对比 Rust 实现与 C++ 原版
+2. **纠正差异**：修复类型、逻辑、API 调用差异
+3. **验证编译**：确保每个模块独立编译通过
+4. **集成测试**：与生成代码对接验证
+
+### 最终目标
+
+更新 `d:\ux\examples\hypedbg\HyperDbg_rust\cmd\rustgen\main.go` 生成器，自动生成完整的 API 调度代码。

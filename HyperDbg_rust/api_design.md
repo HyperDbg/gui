@@ -50,144 +50,107 @@ HyperDbg_rust/
 │   └── walker_test.go     // 测试
 │
 ├── rust-driver/           // Rust 驱动
-│   ├── Cargo.toml         // 工作空间配置
-│   ├── Cargo.lock         // 依赖锁定
+│   ├── Cargo.toml         // 主驱动 crate 配置
+│   ├── lib.rs             // 驱动入口 (DriverEntry)
 │   ├── build.rs           // 构建脚本
-│   ├── build.ps1          // 构建脚本
-│   ├── lib.rs             // 驱动入口
+│   ├── build.ps1          // PowerShell 构建脚本
 │   │
-│   ├── types_gen/         // 生成的类型 (分拆)
-│   │   ├── mod.rs         // 导出所有类型
-│   │   ├── common.rs      // ProcessId, ThreadId, Address 等基础类型
-│   │   ├── register.rs    // RegisterState
-│   │   ├── event_breakpoint.rs   // BreakpointType + BreakpointEvent
-│   │   ├── event_exception.rs    // ExceptionCode + ExceptionEvent
-│   │   ├── event_memory.rs       // MemoryAccessType + MemoryAccessEvent
-│   │   ├── event_syscall.rs      // SyscallEvent
-│   │   ├── event_process.rs      // ProcessInfo + ProcessEvent
-│   │   ├── event_thread.rs       // ThreadInfo + ThreadEvent
-│   │   ├── event_module.rs       // ModuleInfo + ModuleEvent
-│   │   ├── event_debug_print.rs  // LogLevel + DebugPrintEvent
-│   │   ├── event_vmx.rs          // VmxExitReason + VmxExitEvent
-│   │   ├── event_trap.rs         // TrapEvent
-│   │   ├── event_hidden_hook.rs  // HiddenHookEvent
-│   │   ├── event_cpuid.rs        // CpuidEvent
-│   │   ├── event_tsc.rs          // TscEvent
-│   │   ├── event_cr_access.rs    // CrAccessEvent
-│   │   ├── event_dr_access.rs    // DrAccessEvent
-│   │   ├── event_io_port.rs      // IoPortEvent
-│   │   ├── event_msr.rs          // MsrEvent
-│   │   └── event_ept_violation.rs // EptViolationEvent
-│   │
-│   ├── handlers_gen/      // 生成的处理器 (分拆)
-│   │   ├── mod.rs         // 导出 + EventQueue + emit_*_event
-│   │   └── router.rs      // DebuggerApi trait + dispatch_api
+│   ├── common/            // 通用模块（自动生成）
+│   │   ├── Cargo.toml
+│   │   └── src/
+│   │       ├── lib.rs
+│   │       ├── types_gen/     // 生成的类型 (分拆)
+│   │       │   ├── mod.rs         // 导出所有类型
+│   │       │   ├── common.rs      // ProcessId, ThreadId, Address 等基础类型
+│   │       │   ├── register.rs    // RegisterState
+│   │       │   ├── response.rs    // Response[T], Empty
+│   │       │   ├── event.rs       // DebuggerEvent, DebuggerEventType
+│   │       │   ├── event_breakpoint.rs   // BreakpointType + BreakpointEvent
+│   │       │   ├── event_exception.rs    // ExceptionCode + ExceptionEvent
+│   │       │   ├── event_memory.rs       // MemoryAccessType + MemoryAccessEvent
+│   │       │   ├── event_syscall.rs      // SyscallEvent
+│   │       │   ├── event_process.rs      // ProcessInfo + ProcessEvent
+│   │       │   ├── event_thread.rs       // ThreadInfo + ThreadEvent
+│   │       │   ├── event_module.rs       // ModuleInfo + ModuleEvent
+│   │       │   ├── event_debug_print.rs  // LogLevel + DebugPrintEvent
+│   │       │   ├── event_vmx.rs          // VmxExitReason + VmxExitEvent
+│   │       │   ├── event_trap.rs         // TrapEvent
+│   │       │   ├── event_hidden_hook.rs  // HiddenHookEvent
+│   │       │   ├── event_cpuid.rs        // CpuidEvent
+│   │       │   ├── event_tsc.rs          // TscEvent
+│   │       │   ├── event_cr_access.rs    // CrAccessEvent
+│   │       │   ├── event_dr_access.rs    // DrAccessEvent
+│   │       │   ├── event_io_port.rs      // IoPortEvent
+│   │       │   ├── event_msr.rs          // MsrEvent
+│   │       │   └── event_ept_violation.rs // EptViolationEvent
+│   │       │
+│   │       └── handlers_gen/   // 生成的处理器 (分拆)
+│   │           ├── mod.rs         // 导出 + EventQueue + emit_*_event
+│   │           ├── router.rs      // DebuggerApi trait + dispatch_api
+│   │           └── emit.rs        // emit_*_event 函数
 │   │
 │   ├── net/               // 网络模块
 │   │   ├── Cargo.toml
-│   │   ├── build.rs
 │   │   ├── README.md
 │   │   ├── BSOD_FIX_REPORT.md
 │   │   └── src/
 │   │       ├── lib.rs
 │   │       ├── http.rs
 │   │       ├── json.rs
-│   │       ├── logger.rs
 │   │       └── util.rs
 │   │
 │   ├── hyperhv/           // 虚拟化层
 │   │   ├── Cargo.toml
-│   │   ├── build.rs
 │   │   └── src/
 │   │       ├── lib.rs
-│   │       ├── apic.rs
-│   │       ├── asm.rs
-│   │       ├── broadcast.rs
-│   │       ├── callbacks.rs
-│   │       ├── communication.rs
-│   │       ├── compatibility.rs
-│   │       ├── debugger_asm.rs
-│   │       ├── dirty_logging.rs
-│   │       ├── ept_vpid.rs
-│   │       ├── events.rs
-│   │       ├── globals.rs
-│   │       ├── halted_core.rs
-│   │       ├── hooks.rs
-│   │       ├── hyper_evade.rs
-│   │       ├── idt.rs
-│   │       ├── interrupts.rs
-│   │       ├── kernel_tests.rs
-│   │       ├── lbr.rs
-│   │       ├── loader.rs
-│   │       ├── memory.rs
-│   │       ├── meta_dispatch.rs
-│   │       ├── pci.rs
-│   │       ├── process.rs
-│   │       ├── processor.rs
-│   │       ├── scheduler.rs
-│   │       ├── serial_connection.rs
-│   │       ├── smi.rs
-│   │       ├── switch_layout.rs
-│   │       ├── termination.rs
-│   │       ├── thread.rs
-│   │       ├── tracing.rs
-│   │       ├── transparency.rs
-│   │       ├── vmcall.rs
-│   │       └── vmm/
-│   │           ├── mod.rs
-│   │           ├── ept.rs
-│   │           ├── sync.rs
-│   │           ├── vmcs.rs
-│   │           ├── vmexit.rs
-│   │           └── vmx.rs
+│   │       ├── vmm/           // VMX/EPT 核心
+│   │       ├── hooks.rs       // Hook 机制
+│   │       ├── events.rs      // 事件系统
+│   │       ├── processor.rs   // 处理器管理
+│   │       └── ...            // 30+ 其他模块
 │   │
 │   ├── hyperkd/           // 调试器核心
 │   │   ├── Cargo.toml
-│   │   ├── build.rs
 │   │   └── src/
 │   │       ├── lib.rs
-│   │       ├── allocations.rs
-│   │       ├── attaching.rs
-│   │       ├── callstack.rs
-│   │       ├── commands.rs
-│   │       ├── debugger.rs
-│   │       ├── dpc_routines.rs
-│   │       ├── driver.rs
-│   │       ├── extension_commands.rs
-│   │       ├── ffi.rs
-│   │       ├── halted_broadcast.rs
-│   │       ├── network.rs
-│   │       ├── process.rs
-│   │       ├── thread.rs
-│   │       ├── ud.rs
-│   │       ├── user_access.rs
-│   │       └── user_debug.rs
+│   │       ├── debugger.rs    // 调试器核心
+│   │       ├── commands.rs    // 命令处理
+│   │       ├── network.rs     // 网络通信
+│   │       └── ...            // 15+ 其他模块
 │   │
 │   ├── kd/                // 内核调试器
 │   │   ├── Cargo.toml
 │   │   └── src/
-│   │       └── lib.rs
+│   │       └── lib.rs         // KD 上下文和断点管理
+│   │
+│   ├── pdbex/             // PDB 解析器
+│   │   ├── Cargo.toml
+│   │   └── src/
+│   │       └── lib.rs         // 符号解析、类型重建
 │   │
 │   ├── disassembler/      // 反汇编器
 │   │   ├── Cargo.toml
 │   │   └── src/
 │   │       └── lib.rs
 │   │
-│   ├── pdbex/             // PDB 解析器
+│   ├── driver-framework/  // 驱动框架
+│   │   ├── Cargo.toml
+│   │   ├── out/                // WDK 绑定（自动生成）
+│   │   │   ├── ntddk.rs        // 内核函数
+│   │   │   ├── types.rs        // 类型定义
+│   │   │   └── constants.rs    // 常量定义
+│   │   └── src/
+│   │       ├── lib.rs
+│   │       ├── device.rs       // 设备管理
+│   │       ├── ioctl.rs        // IOCTL 处理
+│   │       ├── ffi.rs          // FFI 接口
+│   │       ├── logger.rs       // 日志宏
+│   │       └── utils.rs        // 工具函数
+│   │
+│   ├── logger/            // 日志库
 │   │   ├── Cargo.toml
 │   │   └── src/
 │   │       └── lib.rs
-│   │
-│   ├── driver-framework/  // 驱动框架
-│   │   ├── Cargo.toml
-│   │   ├── build.rs
-│   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── device.rs
-│   │       ├── ffi.rs
-│   │       ├── ioctl.rs
-│   │       ├── logger.rs
-│   │       └── utils.rs
 │   │
 │   ├── examples/          // 示例驱动
 │   │   ├── netdemo/       // 网络驱动示例
@@ -202,12 +165,42 @@ HyperDbg_rust/
 │       ├── install-rust-mingw.ps1
 │       └── setup_ewdk_env.ps1
 │
+├── rust-driver/IMPLEMENTATION_PROGRESS.md  // 实现进度
 ├── api_design.md          // 本文档
 ├── README.md              // 项目说明
 ├── go.mod                 // Go 模块
 ├── go.sum                 // Go 依赖
 ├── fmt.cmd                // 格式化脚本
 └── .gitignore             // Git 忽略
+```
+
+## C++ 源代码参考路径
+
+**重要：以下路径为 C++ 原始实现的参考位置，用于验证 Rust 实现的正确性**
+
+C++ 源代码位于压缩包中，需要先解压：
+```
+doc/cpp/HyperDbg.tar.zst
+```
+
+解压后的路径结构：
+```
+doc/cpp/HyperDbgUnified/HyperDbg/
+├── hprdbghv/               # Hypervisor C++ 源码 (对应 hyperhv)
+│   ├── code/
+│   │   ├── vmm/
+│   │   ├── hooks/
+│   │   └── ...
+│   └── header/
+│
+├── hyperkd/                # Debugger C++ 源码 (对应 hyperkd)
+│   ├── code/
+│   │   ├── debugger/
+│   │   └── ...
+│   └── header/
+│
+└── libhyperdbg/            # 用户模式库 (对应 Go Communicator)
+    └── code/
 ```
 
 ## 通信架构
@@ -224,12 +217,16 @@ HyperDbg_rust/
 │  ├─ ReadMemory()                                           │
 │  └─ ...                                                    │
 │                                                             │
-│     ↓ 请求                      ↑ 事件                       │
-│     ↓                           ↑                           │
+│     ↓ HTTP/JSON 请求            ↑ JSON 事件                  │
+│     ↓ :50080                    ↑                           │
 ├─────────────────────────────────────────────────────────────┤
-│                        Rust 驱动                             │
-│  ├─ HTTP Server (:50080)                                    │
-│  ├─ 处理 API 请求                                           │
+│                     Rust 内核驱动                            │
+│  ├─ net/ (WSK HTTP Server :50080)                          │
+│  │   ├─ HTTP 请求解析                                       │
+│  │   └─ JSON 序列化/反序列化                                │
+│  ├─ common/handlers_gen/                                    │
+│  │   ├─ dispatch_api() 路由                                 │
+│  │   └─ DebuggerApi trait                                   │
 │  └─ emit_*_event() 推送事件                                 │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -239,9 +236,9 @@ HyperDbg_rust/
 ```
 驱动 emit_*_event()
         ↓
-    EventQueue
+    EventQueue (handlers_gen/mod.rs)
         ↓
-客户端轮询获取事件
+客户端轮询获取事件 (poll_events)
         ↓
     Packet 接收
         ↓
@@ -993,178 +990,152 @@ func main() {
         return nil
     })
     
-    debugger.OnDebugPrint(func(e hyperdbgrust.DebugPrintEvent) error {
-        fmt.Printf("[调试输出] %s\n", e.Message)
-        return nil
-    })
-    
     // 启动事件轮询
     go debugger.StartEventLoop()
     defer debugger.StopEventLoop()
     
-    // 初始化调试器
-    if err := debugger.Initialize(); err != nil {
-        fmt.Printf("初始化失败: %v\n", err)
-        os.Exit(1)
-    }
-    defer debugger.Terminate()
-    
-    // 设置断点
-    debugger.SetBreakpoint(0x7ffe12345678, hyperdbgrust.BreakpointSoftware)
-    
-    // 等待退出信号
+    // 等待信号
     sigChan := make(chan os.Signal, 1)
     signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
     <-sigChan
-    
-    fmt.Println("正在退出...")
 }
 ```
 
-### GUI 事件处理 (gio/ux 示例)
-```go
-package main
+## Go-Rust 类型同步机制
 
-import (
-    "gioui.org/app"
-    "gioui.org/widget/material"
-    
-    hyperdbgrust "github.com/ddkwork/HyperDbg_rust"
-)
+### ⚠️ 重要：修改数据结构时必须更新生成器
 
-type UI struct {
-    debugger   hyperdbgrust.Debugger
-    eventChan  chan hyperdbgrust.DebuggerEvent
-    eventList  []string
-    theme      *material.Theme
-}
+**当修改任何共享数据结构时，必须运行生成器以确保 Go 和 Rust 端的一致性！**
 
-func (ui *UI) Init() {
-    ui.debugger = hyperdbgrust.NewPacket()
-    ui.eventChan = make(chan hyperdbgrust.DebuggerEvent, 100)
-    ui.theme = material.NewTheme()
-    
-    // 注册事件处理器，通过 channel 发送到 UI 线程
-    ui.debugger.OnBreakpoint(func(e hyperdbgrust.BreakpointEvent) error {
-        ui.eventChan <- hyperdbgrust.DebuggerEvent{
-            Type: hyperdbgrust.DebuggerEventBreakpoint,
-            Data: e,
-        }
-        return nil
-    })
-    
-    ui.debugger.OnException(func(e hyperdbgrust.ExceptionEvent) error {
-        ui.eventChan <- hyperdbgrust.DebuggerEvent{
-            Type: hyperdbgrust.DebuggerEventException,
-            Data: e,
-        }
-        return nil
-    })
-    
-    // 启动事件轮询
-    go ui.debugger.StartEventLoop()
-    
-    // 初始化调试器
-    ui.debugger.Initialize()
-}
+**必须运行生成器的情况：**
 
-func (ui *UI) Loop(w *app.Window) {
-    for {
-        select {
-        case event := <-ui.eventChan:
-            // 在主线程更新 UI
-            ui.handleEvent(event)
-            w.Invalidate()
-        case e := <-w.Events():
-            // 处理窗口事件
-            if _, ok := e.(app.DestroyEvent); ok {
-                ui.debugger.StopEventLoop()
-                ui.debugger.Terminate()
-                return
-            }
-        }
-    }
-}
+| 修改类型 | 需要运行的命令 | 说明 |
+|----------|---------------|------|
+| 修改 `types.go` | `cd cmd/rustgen && go run main.go` | 更新 Rust 类型定义和 API 处理器 |
+| 修改 `interfaces.go` | `cd cmd/rustgen && go run main.go` | 自动扫描接口更新 API 处理器 |
+| 修改 `packet.go` | `cd cmd/rustgen && go run main.go` | 自动扫描 action 字符串 |
 
-func (ui *UI) handleEvent(event hyperdbgrust.DebuggerEvent) {
-    switch event.Type {
-    case hyperdbgrust.DebuggerEventBreakpoint:
-        e := event.Data.(hyperdbgrust.BreakpointEvent)
-        ui.eventList = append(ui.eventList, 
-            fmt.Sprintf("断点: 0x%x", e.Address))
-    case hyperdbgrust.DebuggerEventException:
-        e := event.Data.(hyperdbgrust.ExceptionEvent)
-        ui.eventList = append(ui.eventList,
-            fmt.Sprintf("异常: %d", e.ExceptionCode))
-    }
+### 自动生成器
+
+项目使用 `cmd/rustgen` 生成器自动同步 Go 和 Rust 之间的类型定义，确保 JSON 通信的一致性。
+
+**生成的文件：**
+- `rust-driver/common/src/types_gen/*.rs` - 从 `types.go` 和 `event_*.go` 自动生成的类型定义
+- `rust-driver/common/src/handlers_gen/router.rs` - 自动生成的 `DebuggerApi` trait 和 `dispatch_api` 调度器
+- `rust-driver/common/src/handlers_gen/emit.rs` - 自动生成的 `emit_*_event` 函数
+
+### 同步流程（自动扫描 AST）
+
+```
+┌─────────────────┐     rustgen      ┌─────────────────────────────┐
+│   types.go      │ ───────────────► │   common/types_gen/*.rs     │
+│  (Go 类型定义)   │                  │  (Rust 类型定义)             │
+└─────────────────┘                  └─────────────────────────────┘
+                                             
+┌─────────────────┐     rustgen      ┌─────────────────────────────┐
+│ interfaces.go   │ ───────────────► │  handlers_gen/router.rs     │
+│ (接口方法签名)   │   (自动扫描AST)   │  (API 处理器)                │
+└─────────────────┘                  └─────────────────────────────┘
+        │
+        │  ┌─────────────────┐
+        └─►│   packet.go     │
+           │ (action 字符串)  │
+           │  (自动提取)      │
+           └─────────────────┘
+```
+
+### 何时需要运行生成器
+
+**必须运行生成器的情况：**
+
+1. **修改 `types.go` 后**
+   ```bash
+   cd cmd/rustgen && go run main.go
+   ```
+   - 添加/修改/删除结构体
+   - 添加/修改/删除枚举
+   - 修改字段类型或 JSON 标签
+
+2. **修改 `interfaces.go` 后**
+   - 生成器会自动扫描 `Debugger` 接口的方法签名
+   - 自动提取返回类型和参数类型
+   - 重新运行生成器即可
+
+3. **修改 `packet.go` 后**
+   - 生成器会自动扫描 `json.Marshal` 调用中的 action 字符串
+   - 无需手动维护方法列表
+   - 重新运行生成器即可
+
+### 生成的 Rust 代码
+
+**types_gen/register.rs 示例：**
+```rust
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct RegisterState {
+    #[serde(rename = "RAX")]
+    pub rax: u64,
+    #[serde(rename = "RBX")]
+    pub rbx: u64,
+    // ...
 }
 ```
 
-### 单元测试示例
-```go
-package hyperdbgrust_test
-
-import (
-    "testing"
-    
-    hyperdbgrust "github.com/ddkwork/HyperDbg_rust"
-)
-
-func TestEventHandlers_Dispatch(t *testing.T) {
-    handlers := &hyperdbgrust.EventHandlers{}
-    
-    called := false
-    handlers.Breakpoint = func(e hyperdbgrust.BreakpointEvent) error {
-        called = true
-        if e.Address != 0x12345678 {
-            t.Errorf("expected address 0x12345678, got 0x%x", e.Address)
-        }
-        return nil
-    }
-    
-    event := hyperdbgrust.DebuggerEvent{
-        Type: hyperdbgrust.DebuggerEventBreakpoint,
-        Data: hyperdbgrust.BreakpointEvent{
-            Address: 0x12345678,
-        },
-    }
-    
-    if err := handlers.Dispatch(event); err != nil {
-        t.Errorf("dispatch failed: %v", err)
-    }
-    
-    if !called {
-        t.Error("handler was not called")
-    }
+**handlers_gen/router.rs 示例：**
+```rust
+pub trait DebuggerApi {
+    fn initialize(&mut self, req: &Request) -> Result<Empty, String>;
+    fn read_memory(&mut self, req: &Request) -> Result<Vec<u8>, String>;
+    // ...
 }
 
-func TestPacket_OnBreakpoint(t *testing.T) {
-    debugger := hyperdbgrust.NewPacket()
-    
-    received := make(chan hyperdbgrust.BreakpointEvent, 1)
-    debugger.OnBreakpoint(func(e hyperdbgrust.BreakpointEvent) error {
-        received <- e
-        return nil
-    })
-    
-    // 模拟事件
-    event := hyperdbgrust.DebuggerEvent{
-        Type: hyperdbgrust.DebuggerEventBreakpoint,
-        Data: hyperdbgrust.BreakpointEvent{
-            Address:      0xdeadbeef,
-            BreakpointID: 1,
-        },
-    }
-    
-    debugger.GetHandlers().Dispatch(event)
-    
-    select {
-    case e := <-received:
-        if e.Address != 0xdeadbeef {
-            t.Errorf("expected 0xdeadbeef, got 0x%x", e.Address)
-        }
-    default:
-        t.Error("no event received")
-    }
+pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
+    // 自动路由到对应方法
 }
 ```
+
+**handlers_gen/emit.rs 示例：**
+```rust
+pub fn emit_breakpoint_event(queue: &mut EventQueue, event: BreakpointEvent) {
+    queue.push(DebuggerEvent::Breakpoint(event));
+}
+```
+
+### 开发指南
+
+#### 添加新的调试器方法
+
+1. 在 `types.go` 中添加必要的类型定义（如果需要）
+2. 在 `interfaces.go` 的 `Debugger` 接口中添加新方法
+3. 在 `packet.go` 中实现该方法（使用 `json.Marshal` 发送 action）
+4. 运行生成器：
+   ```bash
+   cd cmd/rustgen && go run main.go
+   ```
+5. 在 Rust 驱动中实现 `DebuggerApi` trait 的新方法
+
+#### 修改现有类型
+
+1. 修改 `types.go` 中的类型定义
+2. 运行生成器更新 Rust 类型
+3. 确保 Go 端和 Rust 端的 JSON 标签一致
+4. 更新测试用例
+
+## 模块状态
+
+| 模块 | 状态 | 说明 |
+|------|------|------|
+| **common/types_gen** | ✅ 完成 | 自动生成的类型定义 |
+| **common/handlers_gen** | ✅ 完成 | 自动生成的 API 调度器 |
+| **net** | ✅ 完成 | WSK HTTP Server |
+| **driver-framework** | ✅ 完成 | WDM/WDF 框架 |
+| **hyperhv** | 🔄 开发中 | Hypervisor 核心（30+ 模块文件） |
+| **hyperkd** | 🔄 开发中 | Debugger 核心（15+ 模块文件） |
+| **kd** | 🔄 开发中 | 内核调试器 |
+| **pdbex** | 🔄 开发中 | PDB 解析器 |
+| **disassembler** | 🔄 开发中 | 反汇编器 |
+
+## 相关文档
+
+- [IMPLEMENTATION_PROGRESS.md](rust-driver/IMPLEMENTATION_PROGRESS.md) - 实现进度
+- [README.md](README.md) - 项目说明
+- [.trae/skills/rust-driver-development/SKILL.md](.trae/skills/rust-driver-development/SKILL.md) - 开发技能
