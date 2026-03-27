@@ -170,21 +170,10 @@ func (p *Packet) Ping() error {
 }
 
 func (p *Packet) Status() (string, error) {
-	url := fmt.Sprintf("%s/status", p.baseURL)
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return "", err
-	}
-
-	response, err := p.client.Do(req)
-	if err != nil {
-		return "", err
-	}
-	defer response.Body.Close()
-
-	var resp Response[Empty]
-	if err := json.NewDecoder(response.Body).Decode(&resp); err != nil {
-		return "", err
+	data, _ := json.Marshal(map[string]string{"action": "status"})
+	resp := SendReceive[Empty](p, data)
+	if resp == nil {
+		return "", fmt.Errorf("status request failed")
 	}
 	return resp.Message, nil
 }
