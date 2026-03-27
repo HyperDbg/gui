@@ -23,7 +23,7 @@ mod types_gen;
 mod handlers_gen;
 
 use types_gen::*;
-use handlers_gen::{DebuggerApi, dispatch_api, NoOpDebugger, emit_event, emit_breakpoint_event, emit_exception_event, emit_memory_access_event, emit_syscall_event, emit_process_event, emit_thread_event, emit_module_event, emit_debug_print_event, emit_vmx_exit_event, emit_trap_event, emit_hidden_hook_event, emit_cpuid_event, emit_tsc_event, emit_cr_access_event, emit_dr_access_event, emit_io_port_event, emit_msr_event, emit_ept_violation_event, EventQueue};
+use handlers_gen::{DebuggerApi, dispatch_api, NoOpDebugger, EventQueue};
 
 static mut GLOBAL_SERVER: *mut Server = core::ptr::null_mut();
 static mut EVENT_QUEUE: *mut EventQueue = core::ptr::null_mut();
