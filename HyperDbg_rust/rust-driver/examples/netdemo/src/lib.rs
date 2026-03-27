@@ -24,7 +24,7 @@ unsafe extern "C" fn api_handler(w: *mut ResponseWriter, r: *mut Request) {
     let body = core::slice::from_raw_parts((*r).Body, (*r).BodyLength);
     let mut debugger = NoOpDebugger;
     let response = dispatch_api(&mut debugger, body);
-    (*w).WriteBytes(&response);
+    (*w).WriteJSON(&response);
 }
 
 #[no_mangle]
