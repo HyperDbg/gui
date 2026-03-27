@@ -61,10 +61,10 @@ const (
 type DebugState uint32
 
 const (
-	StateRunning    DebugState = 0
-	StatePaused     DebugState = 1
-	StateStepping   DebugState = 2
-	StateTerminated DebugState = 3
+	StateRunning DebugState = iota
+	StatePaused
+	StateStepping
+	StateTerminated
 )
 
 type MessageHeader struct {
