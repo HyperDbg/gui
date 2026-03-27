@@ -82,8 +82,38 @@ cargo build --release --target x86_64-pc-windows-msvc
 if ($LASTEXITCODE -eq 0) {
     Write-Host "kd 编译成功！" -ForegroundColor Green
     
+    $workspaceTarget = "$SCRIPT_DIR\target\x86_64-pc-windows-msvc\release"
+    $dllPath = "$workspaceTarget\hyperdbg_kd.dll"
+    $sysPath = "$workspaceTarget\hyperdbg_kd.sys"
+    $pdbPath = "$workspaceTarget\hyperdbg_kd.pdb"
+    $localSysPath = "$SCRIPT_DIR\hyperdbg_kd.sys"
+    $localPdbPath = "$SCRIPT_DIR\hyperdbg_kd.pdb"
+    
+    if (Test-Path $dllPath) {
+        if (Test-Path $sysPath) {
+            Remove-Item -Path $sysPath -Force -ErrorAction SilentlyContinue
+        }
+        Rename-Item -Path $dllPath -NewName "hyperdbg_kd.sys" -Force
+        Write-Host "重命名 hyperdbg_kd.dll 为 hyperdbg_kd.sys" -ForegroundColor Yellow
+        
+        if (Test-Path $localSysPath) {
+            Remove-Item -Path $localSysPath -Force -ErrorAction SilentlyContinue
+        }
+        Copy-Item -Path $sysPath -Destination $localSysPath -Force
+        Write-Host "复制 hyperdbg_kd.sys 到本地目录" -ForegroundColor Yellow
+        
+        if (Test-Path $pdbPath) {
+            if (Test-Path $localPdbPath) {
+                Remove-Item -Path $localPdbPath -Force -ErrorAction SilentlyContinue
+            }
+            Copy-Item -Path $pdbPath -Destination $localPdbPath -Force
+            Write-Host "复制 hyperdbg_kd.pdb 到本地目录" -ForegroundColor Yellow
+        }
+    }
+    
     Write-Host ""
     Write-Host "=== 构建完成 ===" -ForegroundColor Green
+    Write-Host "请等待驱动签名后再进行测试..." -ForegroundColor Yellow
 } else {
     Write-Error "kd 编译失败"
     exit 1

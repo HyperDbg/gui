@@ -212,8 +212,6 @@ extern "system" {
     fn IoDeleteDevice(device_object: PVOID);
 
     fn IoCompleteRequest(irp: PIRP, priority_boost: i32);
-
-    fn IoGetCurrentIrpStackLocation(irp: PIRP) -> PIO_STACK_LOCATION;
 }
 
 #[cfg(feature = "standalone-driver")]
@@ -293,7 +291,7 @@ unsafe extern "C" fn driver_device_control(
     let mut driver = driver.lock();
 
     unsafe {
-        let stack = IoGetCurrentIrpStackLocation(irp);
+        let stack = crate::framework::ffi::IoGetCurrentIrpStackLocation(irp);
         let control_code = (*stack).Parameters.DeviceIoControl.IoControlCode;
         let input_buffer = (*irp).AssociatedIrp.SystemBuffer as *const u8;
         let input_length = (*stack).Parameters.DeviceIoControl.InputBufferLength as usize;

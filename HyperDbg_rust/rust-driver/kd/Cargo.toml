@@ -3,8 +3,12 @@ name = "hyperdbg-kd"
 version = "0.1.0"
 edition = "2021"
 
+[profile.release]
+panic = "abort"
+lto = true
+
 [lib]
-crate-type = ["rlib"]
+crate-type = ["cdylib"]
 
 [dependencies]
 # thiserror = "1.0"
@@ -19,7 +23,7 @@ serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 # zydis = "4.1"  # Disabled for kernel driver build
 
 [features]
-default = []
+default = ["standalone-driver"]
 standalone-driver = []
 
 [package.metadata.wdk.driver-model]
