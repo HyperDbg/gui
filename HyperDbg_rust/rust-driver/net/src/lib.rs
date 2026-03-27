@@ -5,10 +5,8 @@
 extern crate alloc;
 extern crate wdk_panic;
 
-pub mod logger;
-
+use logger::*;
 use wdk;
-use crate::logger::*;
 
 use core::ptr;
 use alloc::vec::Vec;

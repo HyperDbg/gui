@@ -14,9 +14,9 @@ crate-type = ["cdylib"]
 protocol = { path = "../protocol" }
 net = { path = "../net" }
 hyperhv = { path = "../hyperhv" }
-wdk-alloc = "0.4"
-wdk-sys = "0.5"
-wdk = "0.4"
+wdk-alloc = "0.4.1"
+wdk-sys = "0.5.1"
+wdk = "0.4.1"
 spin = "0.9"
 
 [features]
@@ -26,4 +26,4 @@ default = []
 driver-type = "WDM"
 
 [build-dependencies]
-wdk-build = "0.5"
+wdk-build = "0.5.1"

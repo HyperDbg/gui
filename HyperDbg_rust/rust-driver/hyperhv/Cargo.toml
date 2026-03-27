@@ -13,8 +13,8 @@ crate-type = ["cdylib", "staticlib"]
 [dependencies]
 protocol = { path = "../protocol" }
 net = { path = "../net" }
-wdk-alloc = "0.4"
-wdk-sys = "0.5"
+wdk-alloc = "0.4.1"
+wdk-sys = "0.5.1"
 x86 = "0.52"
 bitflags = "2.4"
 spin = "0.9"
@@ -26,4 +26,4 @@ default = []
 driver-type = "WDM"
 
 [build-dependencies]
-wdk-build = "0.5"
+wdk-build = "0.5.1"

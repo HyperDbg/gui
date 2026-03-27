@@ -11,9 +11,7 @@ use wdk_sys::{NTSTATUS, STATUS_SUCCESS, STATUS_INSUFFICIENT_RESOURCES, DRIVER_OB
 static GLOBAL_ALLOCATOR: WdkAllocator = WdkAllocator;
 
 use net::{ResponseWriter, Request, Server};
-use net::log_info;
-use net::log_success;
-use net::log_error;
+use logger::{log_info, log_success, log_error};
 
 use common::handlers_gen::{NoOpDebugger, dispatch_api, EventQueue};
 

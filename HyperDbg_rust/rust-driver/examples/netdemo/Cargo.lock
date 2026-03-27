@@ -173,16 +173,6 @@ dependencies = [
 
 [[package]]
 name = "clap-cargo"
-version = "0.14.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23b2ea69cefa96b848b73ad516ad1d59a195cdf9263087d977f648a818c8b43e"
-dependencies = [
- "anstyle",
- "clap",
-]
-
-[[package]]
-name = "clap-cargo"
 version = "0.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d546f0e84ff2bfa4da1ce9b54be42285767ba39c688572ca32412a09a73851e5"
@@ -241,7 +231,7 @@ version = "0.1.0"
 dependencies = [
  "wdk",
  "wdk-alloc",
- "wdk-build 0.4.0",
+ "wdk-build",
  "wdk-panic",
  "wdk-sys",
 ]
@@ -346,6 +336,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 
 [[package]]
+name = "logger"
+version = "0.1.0"
+dependencies = [
+ "wdk",
+]
+
+[[package]]
 name = "matchers"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -371,6 +368,7 @@ name = "net"
 version = "0.1.0"
 dependencies = [
  "driver-framework",
+ "logger",
  "serde",
  "serde_json",
  "wdk",
@@ -385,11 +383,12 @@ version = "0.1.0"
 dependencies = [
  "common",
  "driver-framework",
+ "logger",
  "net",
  "serde",
  "wdk",
  "wdk-alloc",
- "wdk-build 0.4.0",
+ "wdk-build",
  "wdk-panic",
  "wdk-sys",
 ]
@@ -733,7 +732,7 @@ dependencies = [
  "cfg-if",
  "tracing",
  "tracing-subscriber",
- "wdk-build 0.5.1",
+ "wdk-build",
  "wdk-sys",
 ]
 
@@ -745,31 +744,8 @@ checksum = "0000f9d158618c1dce7de647338e8219f9d6b618abd140c373c0552c6dbda1ca"
 dependencies = [
  "tracing",
  "tracing-subscriber",
- "wdk-build 0.5.1",
+ "wdk-build",
  "wdk-sys",
-]
-
-[[package]]
-name = "wdk-build"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5e3f0b26b6fa28e8f68a01a9d93c13433311a24e477c614659bf9e72fd9f7e26"
-dependencies = [
- "anyhow",
- "bindgen",
- "camino",
- "cargo_metadata",
- "cfg-if",
- "clap",
- "clap-cargo 0.14.1",
- "paste",
- "rustversion",
- "semver",
- "serde",
- "serde_json",
- "thiserror",
- "tracing",
- "windows",
 ]
 
 [[package]]
@@ -784,7 +760,7 @@ dependencies = [
  "cargo_metadata",
  "cfg-if",
  "clap",
- "clap-cargo 0.15.2",
+ "clap-cargo",
  "paste",
  "regex",
  "rustversion",
@@ -835,7 +811,7 @@ dependencies = [
  "thiserror",
  "tracing",
  "tracing-subscriber",
- "wdk-build 0.5.1",
+ "wdk-build",
  "wdk-macros",
 ]
 
