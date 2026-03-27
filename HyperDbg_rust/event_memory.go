@@ -3,9 +3,9 @@ package hyperdbgrust
 type MemoryAccessType uint32
 
 const (
-	MemoryAccessTypeRead    MemoryAccessType = 0
-	MemoryAccessTypeWrite   MemoryAccessType = 1
-	MemoryAccessTypeExecute MemoryAccessType = 2
+	MemoryAccessTypeRead MemoryAccessType = iota
+	MemoryAccessTypeWrite
+	MemoryAccessTypeExecute
 )
 
 type MemoryAccessEvent struct {

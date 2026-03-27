@@ -3,35 +3,35 @@ package hyperdbgrust
 type EventType uint32
 
 const (
-	EventTypeBreakpoint      EventType = 1
-	EventTypeException       EventType = 2
-	EventTypeMemoryAccess    EventType = 3
-	EventTypeSyscallEntry    EventType = 4
-	EventTypeSyscallExit     EventType = 5
-	EventTypeProcessCreate   EventType = 6
-	EventTypeProcessExit     EventType = 7
-	EventTypeThreadCreate    EventType = 8
-	EventTypeThreadExit      EventType = 9
-	EventTypeModuleLoad      EventType = 10
-	EventTypeModuleUnload    EventType = 11
-	EventTypeDebugPrint      EventType = 12
-	EventTypeVmxExit         EventType = 13
-	EventTypeTrap            EventType = 14
-	EventTypeHiddenHookExec  EventType = 15
-	EventTypeHiddenHookRead  EventType = 16
-	EventTypeHiddenHookWrite EventType = 17
-	EventTypeCpuid           EventType = 18
-	EventTypeTsc             EventType = 19
-	EventTypePmc             EventType = 20
-	EventTypeInterrupt       EventType = 21
-	EventTypeExceptionBitmap EventType = 22
-	EventTypeCrAccess        EventType = 23
-	EventTypeDrAccess        EventType = 24
-	EventTypeIoPort          EventType = 25
-	EventTypeMsrRead         EventType = 26
-	EventTypeMsrWrite        EventType = 27
-	EventTypeEptViolation    EventType = 28
-	EventTypeVmcalled        EventType = 29
+	EventTypeBreakpoint EventType = iota + 1
+	EventTypeException
+	EventTypeMemoryAccess
+	EventTypeSyscallEntry
+	EventTypeSyscallExit
+	EventTypeProcessCreate
+	EventTypeProcessExit
+	EventTypeThreadCreate
+	EventTypeThreadExit
+	EventTypeModuleLoad
+	EventTypeModuleUnload
+	EventTypeDebugPrint
+	EventTypeVmxExit
+	EventTypeTrap
+	EventTypeHiddenHookExec
+	EventTypeHiddenHookRead
+	EventTypeHiddenHookWrite
+	EventTypeCpuid
+	EventTypeTsc
+	EventTypePmc
+	EventTypeInterrupt
+	EventTypeExceptionBitmap
+	EventTypeCrAccess
+	EventTypeDrAccess
+	EventTypeIoPort
+	EventTypeMsrRead
+	EventTypeMsrWrite
+	EventTypeEptViolation
+	EventTypeVmcalled
 )
 
 type EventHeader struct {

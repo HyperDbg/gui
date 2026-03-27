@@ -11,6 +11,7 @@ import (
 	"reflect"
 	"regexp"
 	"slices"
+	"strconv"
 	"strings"
 )
 
@@ -441,6 +442,7 @@ func extractAllFromNode(node *ast.File) (map[string][]ConstantDef, map[string]En
 				var currentEnum string
 				var iotaCounter int
 				var hasIota bool
+				var iotaOffset int
 				for _, spec := range d.Specs {
 					vs := spec.(*ast.ValueSpec)
 					if len(vs.Names) > 0 && vs.Type != nil {
@@ -449,6 +451,7 @@ func extractAllFromNode(node *ast.File) (map[string][]ConstantDef, map[string]En
 							currentEnum = typeStr
 							iotaCounter = 0
 							hasIota = false
+							iotaOffset = 0
 						}
 					}
 					for i, name := range vs.Names {
@@ -456,11 +459,26 @@ func extractAllFromNode(node *ast.File) (map[string][]ConstantDef, map[string]En
 						if i < len(vs.Values) {
 							val = exprToString(vs.Values[i])
 						}
-						if val == "iota" {
+						if strings.HasPrefix(val, "iota") {
 							hasIota = true
+							if strings.Contains(val, "+") {
+								parts := strings.Split(val, "+")
+								if len(parts) == 2 {
+									if n, err := strconv.Atoi(strings.TrimSpace(parts[1])); err == nil {
+										iotaOffset = n
+									}
+								}
+							} else if strings.Contains(val, "-") {
+								parts := strings.Split(val, "-")
+								if len(parts) == 2 {
+									if n, err := strconv.Atoi(strings.TrimSpace(parts[1])); err == nil {
+										iotaOffset = -n
+									}
+								}
+							}
 						}
-						if hasIota && (val == "" || val == "iota") {
-							val = fmt.Sprintf("%d", iotaCounter)
+						if hasIota && (val == "" || strings.HasPrefix(val, "iota")) {
+							val = fmt.Sprintf("%d", iotaCounter+iotaOffset)
 						}
 						if name.Name != "_" && currentEnum != "" {
 							constants[currentEnum] = append(constants[currentEnum], ConstantDef{
@@ -1330,6 +1348,8 @@ func exprToString(expr ast.Expr) string {
 		return "map[" + exprToString(e.Key) + "]" + exprToString(e.Value)
 	case *ast.InterfaceType:
 		return "interface{}"
+	case *ast.BinaryExpr:
+		return exprToString(e.X) + " " + e.Op.String() + " " + exprToString(e.Y)
 	default:
 		return fmt.Sprintf("%T", e)
 	}

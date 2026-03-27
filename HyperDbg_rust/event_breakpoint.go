@@ -3,10 +3,10 @@ package hyperdbgrust
 type BreakpointType uint32
 
 const (
-	BreakpointSoftware BreakpointType = 0
-	BreakpointHardware BreakpointType = 1
-	BreakpointHidden   BreakpointType = 2
-	BreakpointEpt      BreakpointType = 3
+	BreakpointSoftware BreakpointType = iota
+	BreakpointHardware
+	BreakpointHidden
+	BreakpointEpt
 )
 
 type BreakpointEvent struct {
