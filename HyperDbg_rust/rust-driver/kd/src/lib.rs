@@ -158,10 +158,53 @@ impl alloc::fmt::Display for DriverError {
 static DRIVER_CONTEXT: Mutex<Option<Arc<Mutex<HyperDbgDriver>>>> = Mutex::new(None);
 
 #[cfg(feature = "standalone-driver")]
+static mut GLOBAL_SERVER: *mut net::Server = core::ptr::null_mut();
+
+#[cfg(feature = "standalone-driver")]
+static mut EVENT_QUEUE: *mut EventQueue = core::ptr::null_mut();
+
+#[cfg(feature = "standalone-driver")]
+unsafe fn extract_action_from_path(path: &str) -> Option<&str> {
+    if path.starts_with("/api/") {
+        let action = &path[5..];
+        if !action.is_empty() {
+            Some(action)
+        } else {
+            None
+        }
+    } else if path == "/api" {
+        None
+    } else {
+        None
+    }
+}
+
+#[cfg(feature = "standalone-driver")]
+unsafe extern "C" fn api_handler(w: *mut ResponseWriter, r: *mut Request) {
+    let path = (*r).Path();
+    
+    if let Some(action) = extract_action_from_path(path) {
+        log_info!("API request: {}", action);
+        
+        let json_body = alloc::format!(r#"{{"action":"{}"}}"#, action);
+        let body_bytes = json_body.as_bytes();
+        
+        let mut debugger = NoOpDebugger;
+        let response_bytes = dispatch_api(&mut debugger, body_bytes);
+        (*w).WriteJSONBytes(&response_bytes);
+    } else {
+        let body = core::slice::from_raw_parts((*r).Body, (*r).BodyLength);
+        let mut debugger = NoOpDebugger;
+        let response_bytes = dispatch_api(&mut debugger, body);
+        (*w).WriteJSONBytes(&response_bytes);
+    }
+}
+
+#[cfg(feature = "standalone-driver")]
 #[no_mangle]
 pub extern "system" fn DriverEntry(
     driver_object: PDRIVER_OBJECT,
-    registry_path: *mut UNICODE_STRING,
+    _registry_path: *mut UNICODE_STRING,
 ) -> NTSTATUS {
     unsafe {
         (*driver_object).DriverUnload = Some(driver_unload);
@@ -173,6 +216,27 @@ pub extern "system" fn DriverEntry(
         (*driver_object).MajorFunction[IRP_MJ_CREATE as usize] = Some(driver_create);
         (*driver_object).MajorFunction[IRP_MJ_CLOSE as usize] = Some(driver_close);
         (*driver_object).MajorFunction[IRP_MJ_DEVICE_CONTROL as usize] = Some(driver_device_control);
+    }
+
+    let queue = alloc::boxed::Box::new(EventQueue::new(1000));
+    unsafe { EVENT_QUEUE = alloc::boxed::Box::into_raw(queue); }
+    
+    let server = unsafe { net::Server::NewServer() };
+    if server.is_null() {
+        log_error!("Failed to create HTTP server");
+        return STATUS_INSUFFICIENT_RESOURCES;
+    }
+    
+    unsafe { GLOBAL_SERVER = server; }
+    
+    log_info!("Registering /api/* handler");
+    unsafe { (*server).Handle("/api/*", api_handler); }
+    
+    log_info!("Starting HTTP server on :50080");
+    let status = unsafe { (*server).ListenAndServe(":50080") };
+    if status != STATUS_SUCCESS {
+        log_error!("ListenAndServe failed: 0x{:08X}", status);
+        return status;
     }
 
     match initialize_driver() {
@@ -217,6 +281,19 @@ extern "system" {
 #[cfg(feature = "standalone-driver")]
 extern "C" fn driver_unload(driver_object: PDRIVER_OBJECT) {
     log_info!("HyperDbg driver unloading");
+    
+    unsafe {
+        if !GLOBAL_SERVER.is_null() {
+            log_info!("Shutting down HTTP server");
+            (*GLOBAL_SERVER).Shutdown();
+        }
+        
+        if !EVENT_QUEUE.is_null() {
+            let _ = alloc::boxed::Box::from_raw(EVENT_QUEUE);
+            EVENT_QUEUE = core::ptr::null_mut();
+        }
+    }
+    
     let mut ctx = DRIVER_CONTEXT.lock();
     if let Some(driver) = ctx.take() {
         let mut driver = driver.lock();
