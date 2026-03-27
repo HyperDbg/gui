@@ -325,8 +325,6 @@ func getNonAPIMethodComment(name string) string {
 		"Stop":                     "// Connection management - handled by driver lifecycle",
 		"IsConnected":              "// Connection management - not applicable in kernel",
 		"GetState":                 "// State management - handled separately",
-		"Ping":                     "// Health check - not needed in kernel",
-		"Status":                   "// Status query - handled separately",
 		"RegisterCallback":         "// Event handling - use EventQueue + emit_* instead",
 		"GetEvent":                 "// Event handling - use EventQueue + emit_* instead",
 		"WaitForEvent":             "// Event handling - use EventQueue + emit_* instead",
