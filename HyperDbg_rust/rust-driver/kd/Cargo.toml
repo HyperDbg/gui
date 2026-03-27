@@ -3,10 +3,27 @@ name = "hyperdbg-kd"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
-thiserror = "1.0"
-log = "0.4"
+[lib]
+crate-type = ["rlib"]
 
-[dependencies.windows-sys]
-version = "0.52"
-features = ["Win32_Foundation", "Win32_System_Threading"]
+[dependencies]
+# thiserror = "1.0"
+log = "0.4"
+spin = "0.9"
+wdk = "0.4.1"
+wdk-sys = "0.5.1"
+wdk-alloc = "0.4.1"
+wdk-panic = "0.4.1"
+serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
+serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
+# zydis = "4.1"  # Disabled for kernel driver build
+
+[features]
+default = []
+standalone-driver = []
+
+[package.metadata.wdk.driver-model]
+driver-type = "WDM"
+
+[build-dependencies]
+wdk-build = "0.5.1"

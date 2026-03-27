@@ -10,14 +10,9 @@ driver-type = "WDM"
 crate-type = ["cdylib"]
 
 [dependencies]
-common = { path = "../../common" }
-driver-framework = { path = "../../driver-framework" }
-net = { path = "../../net" }
-logger = { path = "../../logger" }
+hyperdbg-kd = { path = "../../kd" }
 wdk = "0.4.1"
 wdk-sys = "0.5.1"
-wdk-alloc = "0.4.1"
-wdk-panic = "0.4.1"
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
 
 [build-dependencies]

@@ -18,15 +18,18 @@ import (
 func getProjectRoot() string {
 	cwd, _ := os.Getwd()
 	if filepath.Base(cwd) == "rustgen" {
-		return filepath.Dir(filepath.Dir(cwd))
+		return filepath.Join(filepath.Dir(filepath.Dir(cwd)), "rust-driver", "kd")
 	}
-	return cwd
+	if filepath.Base(filepath.Dir(cwd)) == "rust-driver" && filepath.Base(cwd) == "kd" {
+		return cwd
+	}
+	return filepath.Join(cwd, "rust-driver", "kd")
 }
 
 const (
-	RustOutputDir     = "rust-driver/common"
-	TypesOutputDir    = "src/types_gen"
-	HandlersOutputDir = "src/handlers_gen"
+	RustOutputDir     = "src/common"
+	TypesOutputDir    = "types_gen"
+	HandlersOutputDir = "handlers_gen"
 )
 
 var enumTypes = []string{
@@ -100,7 +103,7 @@ func main() {
 func parseAllGoFiles(projectRoot string) map[string]*ast.File {
 	files := make(map[string]*ast.File)
 
-	goFiles, _ := filepath.Glob(filepath.Join(projectRoot, "*.go"))
+	goFiles, _ := filepath.Glob(filepath.Join(projectRoot, "debugger", "*.go"))
 	for _, path := range goFiles {
 		name := filepath.Base(path)
 		files[name] = parseFile(path)

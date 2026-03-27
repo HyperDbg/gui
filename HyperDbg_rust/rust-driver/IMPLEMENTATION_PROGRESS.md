@@ -46,155 +46,82 @@
 
 ```
 rust-driver/
-├── Cargo.toml              # 主驱动 crate 配置
-├── lib.rs                  # 驱动入口 (DriverEntry)
-├── build.rs                # 构建脚本
-├── build.ps1               # PowerShell 构建脚本
+├── kd/                         # 主驱动 crate (整合所有模块)
+│   ├── Cargo.toml
+│   ├── build.ps1
+│   ├── build.rs
+│   └── src/
+│       ├── lib.rs              # 驱动入口点
+│       ├── kd.rs               # 内核调试器
+│       ├── ud.rs               # 用户调试器
+│       ├── common/             # 内部通用模块 (types_gen + handlers_gen)
+│       ├── logger/             # 内部日志模块
+│       ├── net/                # 内部网络模块 (WSK HTTP Server)
+│       ├── framework/          # 内部驱动框架
+│       ├── disassembler/       # 反汇编器
+│       ├── pdbex/              # PDB 解析
+│       └── hyperkd/            # 调试器核心
+│           ├── mod.rs
+│           ├── hyperhv.rs      # Hypervisor 模块入口
+│           └── hyperhv/        # Hypervisor 实现
+│               ├── vmm/
+│               ├── ept.rs
+│               ├── vmx.rs
+│               └── ...
 │
-├── common/                 # 通用模块（自动生成）
-│   ├── src/
-│   │   ├── types_gen/      # 生成的类型定义
-│   │   │   ├── mod.rs
-│   │   │   ├── common.rs       # 基础类型 (ProcessId, ThreadId, Address 等)
-│   │   │   ├── register.rs    # RegisterState
-│   │   │   ├── response.rs    # Response[T]
-│   │   │   ├── event.rs       # DebuggerEvent
-│   │   │   ├── event_*.rs     # 20+ 事件类型
-│   │   │   └── mod.rs
-│   │   │
-│   │   ├── handlers_gen/  # 生成的处理器
-│   │   │   ├── mod.rs         # 导出 + EventQueue + emit_*_event
-│   │   │   ├── router.rs      # DebuggerApi trait + dispatch_api
-│   │   │   └── emit.rs        # 事件发射函数
-│   │   │
-│   │   └── lib.rs
-│   └── Cargo.toml
+├── driver-framework/           # 驱动框架库 (独立 crate，用于 examples)
+│   ├── Cargo.toml
+│   ├── build.rs
+│   └── src/
+│       ├── lib.rs
+│       ├── ffi.rs
+│       ├── utils.rs
+│       ├── device.rs
+│       └── ioctl.rs
 │
-├── net/                    # 网络模块（WSK HTTP Server）
-│   ├── src/
-│   │   ├── lib.rs          # WSK Socket 服务器核心
-│   │   ├── http.rs         # HTTP 请求处理
-│   │   ├── json.rs         # JSON 编解码
-│   │   └── util.rs         # Request 结构体和工具函数
-│   ├── tests/              # 测试
-│   ├── BSOD_FIX_REPORT.md
-│   └── Cargo.toml
+├── logger/                     # 日志模块 (独立 crate，用于 examples)
+│   ├── Cargo.toml
+│   ├── build.rs
+│   └── src/
+│       └── lib.rs
 │
-├── hyperhv/                # Hypervisor 层
-│   ├── src/
-│   │   ├── lib.rs          # #![no_std] 模块
-│   │   ├── vmm/            # VMX/EPT 核心
-│   │   │   ├── mod.rs
-│   │   │   ├── vmx.rs
-│   │   │   ├── vmcs.rs
-│   │   │   ├── vmexit.rs
-│   │   │   ├── ept.rs
-│   │   │   └── sync.rs
-│   │   ├── hooks.rs        # EPT Hook、Syscall Hook
-│   │   ├── callbacks.rs    # 回调管理
-│   │   ├── events.rs       # 事件系统
-│   │   ├── processor.rs    # 处理器管理
-│   │   ├── memory.rs       # 内存管理
-│   │   ├── loader.rs       # 驱动加载
-│   │   ├── apic.rs         # APIC 支持
-│   │   ├── broadcast.rs    # 广播通信
-│   │   ├── vmcall.rs       # VMCALL 处理
-│   │   ├── interrupts.rs   # 中断处理
-│   │   ├── idt.rs          # IDT 管理
-│   │   ├── ept_vpid.rs     # EPT/VPID 支持
-│   │   ├── smi.rs          # SMI 处理
-│   │   ├── asm.rs          # 汇编代码
-│   │   ├── globals.rs      # 全局变量
-│   │   ├── scheduler.rs    # 调度器
-│   │   ├── compatibility.rs # 兼容性检查
-│   │   ├── switch_layout.rs # 栈切换
-│   │   ├── halted_core.rs  # 停止核心
-│   │   ├── tracing.rs      # 追踪
-│   │   ├── meta_dispatch.rs # 元调度
-│   │   ├── dirty_logging.rs # 脏页记录
-│   │   ├── hyper_evade.rs  # 反检测
-│   │   ├── transparency.rs # 透明性
-│   │   ├── kernel_tests.rs # 内核测试
-│   │   ├── lbr.rs          # LBR 支持
-│   │   ├── debugger_asm.rs # 调试汇编
-│   │   ├── serial_connection.rs # 串口连接
-│   │   ├── termination.rs  # 终止处理
-│   │   ├── communication.rs # 通信
-│   │   ├── process.rs      # 进程管理
-│   │   ├── thread.rs       # 线程管理
-│   │   └── pci.rs          # PCI 支持
-│   └── Cargo.toml
+├── common/                     # 通用模块 (独立 crate，用于 examples)
+│   ├── Cargo.toml
+│   ├── build.rs
+│   └── src/
+│       ├── lib.rs
+│       ├── types_gen/          # 生成的类型 (分拆)
+│       │   ├── mod.rs
+│       │   ├── common.rs
+│       │   ├── register.rs
+│       │   ├── response.rs
+│       │   ├── event.rs
+│       │   └── event_*.rs
+│       │
+│       └── handlers_gen/       # 生成的处理器 (分拆)
+│           ├── mod.rs
+│           ├── router.rs
+│           └── emit.rs
 │
-├── hyperkd/                # Debugger 层
-│   ├── src/
-│   │   ├── lib.rs          # #![no_std] 模块
-│   │   ├── debugger.rs     # 调试器核心
-│   │   ├── commands.rs     # 命令处理
-│   │   ├── network.rs      # 网络通信
-│   │   ├── user_debug.rs   # 用户态调试
-│   │   ├── callstack.rs    # 调用栈
-│   │   ├── allocations.rs  # 内存分配
-│   │   ├── attaching.rs    # 进程附加
-│   │   ├── dpc_routines.rs # DPC 例程
-│   │   ├── driver.rs       # 驱动管理
-│   │   ├── extension_commands.rs # 扩展命令
-│   │   ├── ffi.rs          # FFI 接口
-│   │   ├── halted_broadcast.rs # 停止广播
-│   │   ├── process.rs      # 进程管理
-│   │   ├── thread.rs       # 线程管理
-│   │   ├── ud.rs           # 用户数据
-│   │   └── user_access.rs  # 用户访问
-│   └── Cargo.toml
+├── net/                        # 网络模块 (独立 crate，用于 examples)
+│   ├── Cargo.toml
+│   ├── build.rs
+│   └── src/
+│       ├── lib.rs
+│       ├── http.rs
+│       ├── json.rs
+│       └── util.rs
 │
-├── kd/                     # 内核调试器
-│   ├── src/
-│   │   └── lib.rs          # KD 上下文和断点管理
-│   └── Cargo.toml
-│
-├── pdbex/                  # PDB 解析器
-│   ├── src/
-│   │   └── lib.rs          # 符号解析、类型重建
-│   └── Cargo.toml
-│
-├── disassembler/           # 反汇编器
-│   ├── src/
-│   │   └── lib.rs          # 使用 zydis-rs
-│   └── Cargo.toml
-│
-├── driver-framework/       # 驱动框架库
-│   ├── src/
-│   │   ├── lib.rs
-│   │   ├── device.rs       # 设备管理
-│   │   ├── ioctl.rs        # IOCTL 处理
-│   │   ├── ffi.rs          # FFI 接口
-│   │   ├── logger.rs       # 日志宏
-│   │   └── utils.rs        # 工具函数
-│   ├── out/                # WDK 绑定（自动生成）
-│   │   ├── ntddk.rs        # 内核函数
-│   │   ├── types.rs        # 类型定义
-│   │   └── constants.rs    # 常量定义
-│   └── Cargo.toml
-│
-├── logger/                 # 日志库
-│   ├── src/
-│   │   └── lib.rs
-│   └── Cargo.toml
-│
-├── examples/               # 示例驱动
-│   ├── netdemo/            # 网络示例（当前测试用）
-│   │   ├── netdemo.go      # Go 测试客户端
-│   │   ├── src/lib.rs      # 驱动入口
-│   │   └── build.ps1
-│   ├── sysdemo/            # 系统驱动示例
-│   ├── sample-wdm-driver/  # WDM 驱动示例
-│   ├── sample-kmdf-driver/ # KMDF 驱动示例
-│   └── sample-umdf-driver/ # UMDF 驱动示例
-│
-└── doc/                    # 文档
-    ├── RUST_INSTALL_README.md
-    ├── bug_fixes.md
-    ├── install-rust-mingw.ps1
-    └── setup_ewdk_env.ps1
+└── examples/                   # 示例驱动
+    ├── sysdemo/                # WDM 驱动示例
+    │   ├── Cargo.toml
+    │   ├── build.ps1
+    │   └── src/lib.rs
+    │
+    └── netdemo/                # 网络驱动示例
+        ├── Cargo.toml
+        ├── build.ps1
+        └── src/lib.rs
 ```
 
 ## C++ 源代码参考路径
@@ -232,15 +159,19 @@ doc/cpp/HyperDbgUnified/HyperDbg/
 
 | 模块 | 路径 | 进度 | 说明 |
 |------|------|------|------|
-| **common/types_gen** | `common/src/types_gen/` | ✅ 100% | 自动生成的类型定义 |
-| **common/handlers_gen** | `common/src/handlers_gen/` | ✅ 100% | 自动生成的 API 调度器 |
-| **net** | `net/src/` | ✅ 100% | WSK HTTP Server |
-| **driver-framework** | `driver-framework/src/` | ✅ 100% | WDM/WDF 框架 |
-| **hyperhv** | `hyperhv/src/` | 🔄 开发中 | Hypervisor 核心（已有框架代码） |
-| **hyperkd** | `hyperkd/src/` | 🔄 开发中 | Debugger 核心（已有框架代码） |
-| **kd** | `kd/src/` | 🔄 开发中 | 内核调试器（已有框架代码） |
-| **pdbex** | `pdbex/src/` | 🔄 开发中 | PDB 解析器（已有框架代码） |
-| **disassembler** | `disassembler/src/` | 🔄 开发中 | 反汇编器 |
+| **kd** | `kd/src/` | 🔄 开发中 | 主驱动 crate (整合所有模块) |
+| **kd/common** | `kd/src/common/` | ✅ 100% | 内部通用模块 (types_gen + handlers_gen) |
+| **kd/net** | `kd/src/net/` | ✅ 100% | 内部网络模块 (WSK HTTP Server) |
+| **kd/logger** | `kd/src/logger/` | ✅ 100% | 内部日志模块 |
+| **kd/framework** | `kd/src/framework/` | ✅ 100% | 内部驱动框架 |
+| **kd/hyperkd** | `kd/src/hyperkd/` | 🔄 开发中 | 调试器核心 |
+| **kd/hyperkd/hyperhv** | `kd/src/hyperkd/hyperhv/` | 🔄 开发中 | Hypervisor 核心 |
+| **kd/disassembler** | `kd/src/disassembler/` | 🔄 开发中 | 反汇编器 |
+| **kd/pdbex** | `kd/src/pdbex/` | 🔄 开发中 | PDB 解析器 |
+| **driver-framework** | `driver-framework/src/` | ✅ 100% | 独立 crate，用于 examples |
+| **logger** | `logger/src/` | ✅ 100% | 独立 crate，用于 examples |
+| **common** | `common/src/` | ✅ 100% | 独立 crate，用于 examples |
+| **net** | `net/src/` | ✅ 100% | 独立 crate，用于 examples |
 
 ### types_gen 模块（已自动生成）
 

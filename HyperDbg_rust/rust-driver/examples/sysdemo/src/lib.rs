@@ -1,20 +1,17 @@
 #![no_std]
 
 extern crate alloc;
-extern crate wdk_panic;
 
-use driver_framework::{
+use hyperdbg_kd::{
     log, LogLevel,
     DriverConfig, create_device_with_config, cleanup_device,
-    ctl_code, default_create_close, get_ioctl_params, complete_request,
+    default_create_close, get_ioctl_params, complete_request,
     read_input_buffer, write_output_buffer,
     FILE_DEVICE_UNKNOWN, METHOD_BUFFERED, FILE_ANY_ACCESS,
 };
-use wdk_alloc::WdkAllocator;
 use wdk_sys::{NTSTATUS, PCUNICODE_STRING, PDRIVER_OBJECT, PIRP, IRP_MJ_CREATE, IRP_MJ_CLOSE, IRP_MJ_DEVICE_CONTROL, STATUS_SUCCESS, STATUS_UNSUCCESSFUL};
 
-#[global_allocator]
-static GLOBAL_ALLOCATOR: WdkAllocator = WdkAllocator;
+use hyperdbg_kd::ctl_code;
 
 const IOCTL_SEND_DATA: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS);
 const IOCTL_RECEIVE_DATA: u32 = ctl_code!(FILE_DEVICE_UNKNOWN, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS);

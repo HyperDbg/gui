@@ -50,120 +50,33 @@ HyperDbg_rust/
 │   └── walker_test.go     // 测试
 │
 ├── rust-driver/           // Rust 驱动
-│   ├── Cargo.toml         // 主驱动 crate 配置
-│   ├── lib.rs             // 驱动入口 (DriverEntry)
-│   ├── build.rs           // 构建脚本
-│   ├── build.ps1          // PowerShell 构建脚本
-│   │
-│   ├── common/            // 通用模块（自动生成）
+│   ├── kd/                // 主驱动 crate (整合所有模块)
 │   │   ├── Cargo.toml
+│   │   ├── build.ps1
+│   │   ├── build.rs
 │   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── types_gen/     // 生成的类型 (分拆)
-│   │       │   ├── mod.rs         // 导出所有类型
-│   │       │   ├── common.rs      // ProcessId, ThreadId, Address 等基础类型
-│   │       │   ├── register.rs    // RegisterState
-│   │       │   ├── response.rs    // Response[T], Empty
-│   │       │   ├── event.rs       // DebuggerEvent, DebuggerEventType
-│   │       │   ├── event_breakpoint.rs   // BreakpointType + BreakpointEvent
-│   │       │   ├── event_exception.rs    // ExceptionCode + ExceptionEvent
-│   │       │   ├── event_memory.rs       // MemoryAccessType + MemoryAccessEvent
-│   │       │   ├── event_syscall.rs      // SyscallEvent
-│   │       │   ├── event_process.rs      // ProcessInfo + ProcessEvent
-│   │       │   ├── event_thread.rs       // ThreadInfo + ThreadEvent
-│   │       │   ├── event_module.rs       // ModuleInfo + ModuleEvent
-│   │       │   ├── event_debug_print.rs  // LogLevel + DebugPrintEvent
-│   │       │   ├── event_vmx.rs          // VmxExitReason + VmxExitEvent
-│   │       │   ├── event_trap.rs         // TrapEvent
-│   │       │   ├── event_hidden_hook.rs  // HiddenHookEvent
-│   │       │   ├── event_cpuid.rs        // CpuidEvent
-│   │       │   ├── event_tsc.rs          // TscEvent
-│   │       │   ├── event_cr_access.rs    // CrAccessEvent
-│   │       │   ├── event_dr_access.rs    // DrAccessEvent
-│   │       │   ├── event_io_port.rs      // IoPortEvent
-│   │       │   ├── event_msr.rs          // MsrEvent
-│   │       │   └── event_ept_violation.rs // EptViolationEvent
-│   │       │
-│   │       └── handlers_gen/   // 生成的处理器 (分拆)
-│   │           ├── mod.rs         // 导出 + EventQueue + emit_*_event
-│   │           ├── router.rs      // DebuggerApi trait + dispatch_api
-│   │           └── emit.rs        // emit_*_event 函数
+│   │       ├── lib.rs             // 驱动入口点
+│   │       ├── kd.rs              // 内核调试器
+│   │       ├── ud.rs              // 用户调试器
+│   │       ├── common/            // 内部通用模块 (types_gen + handlers_gen)
+│   │       │   ├── types_gen/     // 生成的类型
+│   │       │   └── handlers_gen/  // 生成的处理器
+│   │       ├── logger/            // 内部日志模块
+│   │       ├── net/               // 内部网络模块 (WSK HTTP Server)
+│   │       ├── framework/         // 内部驱动框架
+│   │       ├── disassembler/      // 反汇编器
+│   │       ├── pdbex/             // PDB 解析
+│   │       └── hyperkd/           // 调试器核心
+│   │           └── hyperhv/       // Hypervisor 实现
 │   │
-│   ├── net/               // 网络模块
-│   │   ├── Cargo.toml
-│   │   ├── README.md
-│   │   ├── BSOD_FIX_REPORT.md
-│   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── http.rs
-│   │       ├── json.rs
-│   │       └── util.rs
+│   ├── driver-framework/  // 驱动框架库 (独立 crate，用于 examples)
+│   ├── logger/            // 日志模块 (独立 crate，用于 examples)
+│   ├── common/            // 通用模块 (独立 crate，用于 examples)
+│   ├── net/               // 网络模块 (独立 crate，用于 examples)
 │   │
-│   ├── hyperhv/           // 虚拟化层
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── vmm/           // VMX/EPT 核心
-│   │       ├── hooks.rs       // Hook 机制
-│   │       ├── events.rs      // 事件系统
-│   │       ├── processor.rs   // 处理器管理
-│   │       └── ...            // 30+ 其他模块
-│   │
-│   ├── hyperkd/           // 调试器核心
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── debugger.rs    // 调试器核心
-│   │       ├── commands.rs    // 命令处理
-│   │       ├── network.rs     // 网络通信
-│   │       └── ...            // 15+ 其他模块
-│   │
-│   ├── kd/                // 内核调试器
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       └── lib.rs         // KD 上下文和断点管理
-│   │
-│   ├── pdbex/             // PDB 解析器
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       └── lib.rs         // 符号解析、类型重建
-│   │
-│   ├── disassembler/      // 反汇编器
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       └── lib.rs
-│   │
-│   ├── driver-framework/  // 驱动框架
-│   │   ├── Cargo.toml
-│   │   ├── out/                // WDK 绑定（自动生成）
-│   │   │   ├── ntddk.rs        // 内核函数
-│   │   │   ├── types.rs        // 类型定义
-│   │   │   └── constants.rs    // 常量定义
-│   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── device.rs       // 设备管理
-│   │       ├── ioctl.rs        // IOCTL 处理
-│   │       ├── ffi.rs          // FFI 接口
-│   │       ├── logger.rs       // 日志宏
-│   │       └── utils.rs        // 工具函数
-│   │
-│   ├── logger/            // 日志库
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       └── lib.rs
-│   │
-│   ├── examples/          // 示例驱动
-│   │   ├── netdemo/       // 网络驱动示例
-│   │   ├── sysdemo/       // 系统驱动示例
-│   │   ├── sample-wdm-driver/
-│   │   ├── sample-kmdf-driver/
-│   │   └── sample-umdf-driver/
-│   │
-│   └── doc/               // 文档
-│       ├── RUST_INSTALL_README.md
-│       ├── bug_fixes.md
-│       ├── install-rust-mingw.ps1
-│       └── setup_ewdk_env.ps1
+│   └── examples/          // 示例驱动
+│       ├── sysdemo/       // WDM 驱动示例
+│       └── netdemo/       // 网络驱动示例
 │
 ├── rust-driver/IMPLEMENTATION_PROGRESS.md  // 实现进度
 ├── api_design.md          // 本文档

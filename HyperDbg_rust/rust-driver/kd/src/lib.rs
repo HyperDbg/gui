@@ -1,436 +1,411 @@
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::RwLock;
-use thiserror::Error;
+#![no_std]
 
-pub type ProcessorId = u32;
+extern crate alloc;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum KdState {
-    Inactive,
-    Active,
-    Paused,
-    Stepping,
+#[cfg(not(test))]
+extern crate wdk_panic;
+
+#[cfg(not(test))]
+use wdk_alloc::WdkAllocator;
+
+#[cfg(not(test))]
+#[global_allocator]
+static GLOBAL_ALLOCATOR: WdkAllocator = WdkAllocator;
+
+use alloc::sync::Arc;
+use alloc::string::String;
+use alloc::vec::Vec;
+use alloc::string::ToString;
+use spin::Mutex;
+
+pub mod kd;
+// pub mod ud;
+// pub mod hyperkd;
+pub mod logger;
+pub mod net;
+pub mod common;
+pub mod framework;
+// pub mod disassembler;
+// pub mod pdbex;
+
+pub use logger::*;
+pub use net::{Server, Request, ResponseWriter, Handler, Router};
+pub use common::types_gen::*;
+pub use common::handlers_gen::{DebuggerApi, dispatch_api, NoOpDebugger, EventQueue};
+pub use framework::{
+    log, LogLevel,
+    DriverConfig, create_device_with_config, cleanup_device,
+    default_create_close, get_ioctl_params, complete_request,
+    read_input_buffer, write_output_buffer,
+    FILE_DEVICE_UNKNOWN, METHOD_BUFFERED, FILE_ANY_ACCESS,
+};
+use kd::KernelDebugger;
+use wdk_sys::*;
+
+type DEVICE_TYPE = u32;
+
+pub struct HyperDbgDriver {
+    kernel_debugger: Arc<Mutex<KernelDebugger>>,
+    network_server: Option<usize>,
 }
 
-#[derive(Debug, Error)]
-pub enum KdError {
-    #[error("KD is not active")]
-    NotActive,
-    
-    #[error("KD is already active")]
-    AlreadyActive,
-    
-    #[error("Invalid processor ID: {0}")]
-    InvalidProcessorId(ProcessorId),
-    
-    #[error("Breakpoint not found: {0}")]
-    BreakpointNotFound(u64),
-    
-    #[error("Failed to set breakpoint at 0x{0:X}")]
-    SetBreakpointFailed(u64),
-    
-    #[error("Failed to remove breakpoint at 0x{0:X}")]
-    RemoveBreakpointFailed(u64),
-    
-    #[error("Failed to continue execution")]
-    ContinueFailed,
-    
-    #[error("Failed to pause execution")]
-    PauseFailed,
-    
-    #[error("Failed to step execution")]
-    StepFailed,
-    
-    #[error("IO error: {0}")]
-    IoError(String),
-}
+unsafe impl Send for HyperDbgDriver {}
+unsafe impl Sync for HyperDbgDriver {}
 
-#[derive(Debug, Clone)]
-pub struct Breakpoint {
-    pub address: u64,
-    pub id: u64,
-    pub enabled: bool,
-    pub is_hardware: bool,
-    pub hit_count: u32,
-}
-
-impl Breakpoint {
-    pub fn new(address: u64, id: u64, is_hardware: bool) -> Self {
-        Self {
-            address,
-            id,
-            enabled: true,
-            is_hardware,
-            hit_count: 0,
-        }
-    }
-}
-
-#[derive(Debug, Clone)]
-pub struct KdContext {
-    pub processor_id: ProcessorId,
-    pub state: KdState,
-    pub breakpoints: Vec<Breakpoint>,
-    pub ignore_breaks: bool,
-}
-
-impl KdContext {
-    pub fn new(processor_id: ProcessorId) -> Self {
-        Self {
-            processor_id,
-            state: KdState::Inactive,
-            breakpoints: Vec::new(),
-            ignore_breaks: false,
-        }
+impl HyperDbgDriver {
+    pub fn new() -> Result<Self, DriverError> {
+        Ok(Self {
+            kernel_debugger: Arc::new(Mutex::new(KernelDebugger::new(1))),
+            network_server: None,
+        })
     }
 
-    pub fn add_breakpoint(&mut self, bp: Breakpoint) {
-        self.breakpoints.push(bp);
-    }
+    pub fn initialize(&mut self) -> Result<(), DriverError> {
+        log_info!("Initializing HyperDbg driver");
 
-    pub fn remove_breakpoint(&mut self, address: u64) -> Option<Breakpoint> {
-        let pos = self.breakpoints.iter().position(|bp| bp.address == address)?;
-        Some(self.breakpoints.remove(pos))
-    }
+        let mut kd = self.kernel_debugger.lock();
+        kd.initialize().map_err(|e| DriverError::KernelDebuggerError(e.to_string()))?;
+        drop(kd);
 
-    pub fn find_breakpoint(&self, address: u64) -> Option<&Breakpoint> {
-        self.breakpoints.iter().find(|bp| bp.address == address && bp.enabled)
-    }
-
-    pub fn find_breakpoint_mut(&mut self, address: u64) -> Option<&mut Breakpoint> {
-        self.breakpoints.iter_mut().find(|bp| bp.address == address && bp.enabled)
-    }
-
-    pub fn get_breakpoint_by_id(&self, id: u64) -> Option<&Breakpoint> {
-        self.breakpoints.iter().find(|bp| bp.id == id)
-    }
-
-    pub fn get_breakpoint_by_id_mut(&mut self, id: u64) -> Option<&mut Breakpoint> {
-        self.breakpoints.iter_mut().find(|bp| bp.id == id)
-    }
-}
-
-pub struct KernelDebugger {
-    active: AtomicBool,
-    contexts: RwLock<Vec<KdContext>>,
-    ignore_breaks: RwLock<bool>,
-}
-
-impl KernelDebugger {
-    pub fn new(processor_count: ProcessorId) -> Self {
-        let contexts = (0..processor_count)
-            .map(|i| KdContext::new(i))
-            .collect();
-
-        Self {
-            active: AtomicBool::new(false),
-            contexts: RwLock::new(contexts),
-            ignore_breaks: RwLock::new(false),
-        }
-    }
-
-    pub fn is_active(&self) -> bool {
-        self.active.load(Ordering::Acquire)
-    }
-
-    pub fn initialize(&self) -> Result<(), KdError> {
-        if self.is_active() {
-            return Err(KdError::AlreadyActive);
-        }
-
-        log::info!("Initializing kernel debugger");
-
-        self.enable_debug_exits()?;
-        self.reset_ignore_breaks()?;
-
-        self.active.store(true, Ordering::Release);
-
-        log::info!("Kernel debugger initialized");
+        log_success!("HyperDbg driver initialized successfully");
         Ok(())
     }
 
-    pub fn uninitialize(&self) -> Result<(), KdError> {
-        if !self.is_active() {
-            return Err(KdError::NotActive);
-        }
+    pub fn terminate(&mut self) -> Result<(), DriverError> {
+        log_info!("Terminating HyperDbg driver");
 
-        log::info!("Uninitializing kernel debugger");
-
-        self.remove_all_breakpoints()?;
-        self.disable_debug_exits()?;
-        self.reset_ignore_breaks()?;
-
-        self.active.store(false, Ordering::Release);
-
-        log::info!("Kernel debugger uninitialized");
-        Ok(())
-    }
-
-    pub fn set_breakpoint(&self, address: u64, is_hardware: bool) -> Result<u64, KdError> {
-        if !self.is_active() {
-            return Err(KdError::NotActive);
-        }
-
-        let bp_id = self.generate_breakpoint_id();
-        let bp = Breakpoint::new(address, bp_id, is_hardware);
-
-        {
-            let mut contexts = self.contexts.write().unwrap();
-            for ctx in contexts.iter_mut() {
-                ctx.add_breakpoint(bp.clone());
+        if let Some(server) = self.network_server.take() {
+            unsafe {
+                (*(server as *mut net::Server)).Shutdown();
             }
         }
 
-        log::info!("Set breakpoint at 0x{:X} (ID: {})", address, bp_id);
-        Ok(bp_id)
-    }
+        let mut kd = self.kernel_debugger.lock();
+        kd.uninitialize().map_err(|e| DriverError::KernelDebuggerError(e.to_string()))?;
 
-    pub fn remove_breakpoint(&self, address: u64) -> Result<(), KdError> {
-        if !self.is_active() {
-            return Err(KdError::NotActive);
-        }
-
-        let mut contexts = self.contexts.write().unwrap();
-        for ctx in contexts.iter_mut() {
-            ctx.remove_breakpoint(address);
-        }
-
-        log::info!("Removed breakpoint at 0x{:X}", address);
+        log_success!("HyperDbg driver terminated successfully");
         Ok(())
     }
 
-    pub fn remove_breakpoint_by_id(&self, id: u64) -> Result<(), KdError> {
-        if !self.is_active() {
-            return Err(KdError::NotActive);
+    pub fn start_network_server(&mut self, addr: &str) -> Result<(), DriverError> {
+        log_info!("Starting network server on {}", addr);
+
+        let server = unsafe { net::Server::NewServer() };
+        if server.is_null() {
+            return Err(DriverError::NetworkError("Failed to create server".to_string()));
         }
 
-        let mut contexts = self.contexts.write().unwrap();
-        for ctx in contexts.iter_mut() {
-            if let Some(pos) = ctx.breakpoints.iter().position(|bp| bp.id == id) {
-                ctx.breakpoints.remove(pos);
-                log::info!("Removed breakpoint with ID {}", id);
-                return Ok(());
+        self.network_server = Some(server as usize);
+
+        log_success!("Network server started on {}", addr);
+        Ok(())
+    }
+
+    pub fn stop_network_server(&mut self) {
+        if let Some(server) = self.network_server.take() {
+            unsafe {
+                (*(server as *mut net::Server)).Shutdown();
             }
-        }
-
-        Err(KdError::BreakpointNotFound(id))
-    }
-
-    pub fn remove_all_breakpoints(&self) -> Result<(), KdError> {
-        let mut contexts = self.contexts.write().unwrap();
-        for ctx in contexts.iter_mut() {
-            ctx.breakpoints.clear();
-        }
-
-        log::info!("Removed all breakpoints");
-        Ok(())
-    }
-
-    pub fn enable_breakpoint(&self, id: u64) -> Result<(), KdError> {
-        let mut contexts = self.contexts.write().unwrap();
-        for ctx in contexts.iter_mut() {
-            if let Some(bp) = ctx.get_breakpoint_by_id_mut(id) {
-                bp.enabled = true;
-                log::info!("Enabled breakpoint with ID {}", id);
-                return Ok(());
-            }
-        }
-
-        Err(KdError::BreakpointNotFound(id))
-    }
-
-    pub fn disable_breakpoint(&self, id: u64) -> Result<(), KdError> {
-        let mut contexts = self.contexts.write().unwrap();
-        for ctx in contexts.iter_mut() {
-            if let Some(bp) = ctx.get_breakpoint_by_id_mut(id) {
-                bp.enabled = false;
-                log::info!("Disabled breakpoint with ID {}", id);
-                return Ok(());
-            }
-        }
-
-        Err(KdError::BreakpointNotFound(id))
-    }
-
-    pub fn hit_breakpoint(&self, processor_id: ProcessorId, address: u64) -> Result<(), KdError> {
-        let mut contexts = self.contexts.write().unwrap();
-        
-        if let Some(ctx) = contexts.get_mut(processor_id as usize) {
-            if let Some(bp) = ctx.find_breakpoint_mut(address) {
-                bp.hit_count += 1;
-                log::info!("Breakpoint hit at 0x{:X} (hit count: {})", address, bp.hit_count);
-                return Ok(());
-            }
-        }
-
-        Err(KdError::BreakpointNotFound(address))
-    }
-
-    pub fn get_context(&self, processor_id: ProcessorId) -> Result<KdContext, KdError> {
-        let contexts = self.contexts.read().unwrap();
-        
-        contexts
-            .get(processor_id as usize)
-            .cloned()
-            .ok_or(KdError::InvalidProcessorId(processor_id))
-    }
-
-    pub fn get_all_breakpoints(&self) -> Vec<Breakpoint> {
-        let contexts = self.contexts.read().unwrap();
-        
-        if let Some(ctx) = contexts.first() {
-            ctx.breakpoints.clone()
-        } else {
-            Vec::new()
+            log_info!("Network server stopped");
         }
     }
 
-    pub fn get_breakpoint_count(&self) -> usize {
-        let contexts = self.contexts.read().unwrap();
-        
-        contexts
-            .first()
-            .map(|ctx| ctx.breakpoints.len())
-            .unwrap_or(0)
-    }
-
-    pub fn set_ignore_breaks(&self, ignore: bool) {
-        let mut ignore_breaks = self.ignore_breaks.write().unwrap();
-        *ignore_breaks = ignore;
-        
-        let mut contexts = self.contexts.write().unwrap();
-        for ctx in contexts.iter_mut() {
-            ctx.ignore_breaks = ignore;
-        }
-
-        log::info!("Ignore breaks set to: {}", ignore);
-    }
-
-    pub fn get_ignore_breaks(&self) -> bool {
-        let ignore_breaks = self.ignore_breaks.read().unwrap();
-        *ignore_breaks
-    }
-
-    pub fn set_processor_state(&self, processor_id: ProcessorId, state: KdState) -> Result<(), KdError> {
-        let mut contexts = self.contexts.write().unwrap();
-        
-        if let Some(ctx) = contexts.get_mut(processor_id as usize) {
-            ctx.state = state;
-            log::info!("Processor {} state set to {:?}", processor_id, state);
-            Ok(())
-        } else {
-            Err(KdError::InvalidProcessorId(processor_id))
-        }
-    }
-
-    pub fn get_processor_state(&self, processor_id: ProcessorId) -> Result<KdState, KdError> {
-        let contexts = self.contexts.read().unwrap();
-        
-        contexts
-            .get(processor_id as usize)
-            .map(|ctx| ctx.state)
-            .ok_or(KdError::InvalidProcessorId(processor_id))
-    }
-
-    fn enable_debug_exits(&self) -> Result<(), KdError> {
-        log::info!("Enabling debug exits on all cores");
-        Ok(())
-    }
-
-    fn disable_debug_exits(&self) -> Result<(), KdError> {
-        log::info!("Disabling debug exits on all cores");
-        Ok(())
-    }
-
-    fn reset_ignore_breaks(&self) -> Result<(), KdError> {
-        self.set_ignore_breaks(false);
-        Ok(())
-    }
-
-    fn generate_breakpoint_id(&self) -> u64 {
-        use std::sync::atomic::{AtomicU64, Ordering};
-        static BREAKPOINT_ID: AtomicU64 = AtomicU64::new(1);
-        BREAKPOINT_ID.fetch_add(1, Ordering::SeqCst)
+    pub fn get_kernel_debugger(&self) -> Arc<Mutex<KernelDebugger>> {
+        self.kernel_debugger.clone()
     }
 }
 
-impl Default for KernelDebugger {
-    fn default() -> Self {
-        Self::new(1)
+#[derive(Debug)]
+pub enum DriverError {
+    KernelDebuggerError(String),
+    NetworkError(String),
+    InvalidAddress,
+    InvalidCoreId,
+    InvalidRegister,
+    ProcessNotFound,
+    ThreadNotFound,
+    BreakpointNotFound,
+    NotInitialized,
+    AlreadyInitialized,
+    NotConnected,
+    NotPaused,
+    NotRunning,
+    InsufficientResources,
+}
+
+impl alloc::fmt::Display for DriverError {
+    fn fmt(&self, f: &mut alloc::fmt::Formatter<'_>) -> alloc::fmt::Result {
+        match self {
+            DriverError::KernelDebuggerError(msg) => write!(f, "Kernel debugger error: {}", msg),
+            DriverError::NetworkError(msg) => write!(f, "Network error: {}", msg),
+            DriverError::InvalidAddress => write!(f, "Invalid address"),
+            DriverError::InvalidCoreId => write!(f, "Invalid core ID"),
+            DriverError::InvalidRegister => write!(f, "Invalid register"),
+            DriverError::ProcessNotFound => write!(f, "Process not found"),
+            DriverError::ThreadNotFound => write!(f, "Thread not found"),
+            DriverError::BreakpointNotFound => write!(f, "Breakpoint not found"),
+            DriverError::NotInitialized => write!(f, "Not initialized"),
+            DriverError::AlreadyInitialized => write!(f, "Already initialized"),
+            DriverError::NotConnected => write!(f, "Not connected"),
+            DriverError::NotPaused => write!(f, "Not paused"),
+            DriverError::NotRunning => write!(f, "Not running"),
+            DriverError::InsufficientResources => write!(f, "Insufficient resources"),
+        }
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[cfg(feature = "standalone-driver")]
+static DRIVER_CONTEXT: Mutex<Option<Arc<Mutex<HyperDbgDriver>>>> = Mutex::new(None);
 
-    #[test]
-    fn test_kd_creation() {
-        let kd = KernelDebugger::new(4);
-        assert!(!kd.is_active());
+#[cfg(feature = "standalone-driver")]
+#[no_mangle]
+pub extern "system" fn DriverEntry(
+    driver_object: PDRIVER_OBJECT,
+    registry_path: *mut UNICODE_STRING,
+) -> NTSTATUS {
+    unsafe {
+        (*driver_object).DriverUnload = Some(driver_unload);
+
+        for i in 0..IRP_MJ_MAXIMUM_FUNCTION as usize {
+            (*driver_object).MajorFunction[i] = Some(driver_default_dispatch);
+        }
+
+        (*driver_object).MajorFunction[IRP_MJ_CREATE as usize] = Some(driver_create);
+        (*driver_object).MajorFunction[IRP_MJ_CLOSE as usize] = Some(driver_close);
+        (*driver_object).MajorFunction[IRP_MJ_DEVICE_CONTROL as usize] = Some(driver_device_control);
     }
 
-    #[test]
-    fn test_kd_initialize() {
-        let kd = KernelDebugger::new(4);
-        
-        assert!(kd.initialize().is_ok());
-        assert!(kd.is_active());
+    match initialize_driver() {
+        Ok(driver) => {
+            log_success!("HyperDbg driver initialized successfully");
+            let mut ctx = DRIVER_CONTEXT.lock();
+            *ctx = Some(Arc::new(Mutex::new(driver)));
+            STATUS_SUCCESS
+        }
+        Err(e) => {
+            log_error!("Failed to initialize HyperDbg driver: {}", e);
+            STATUS_UNSUCCESSFUL
+        }
+    }
+}
+
+#[cfg(feature = "standalone-driver")]
+const IRP_MJ_MAXIMUM_FUNCTION: ULONG = 28;
+
+#[cfg(feature = "standalone-driver")]
+extern "system" {
+    fn IoCreateDevice(
+        driver_object: PDRIVER_OBJECT,
+        device_extension_size: ULONG,
+        device_name: *mut UNICODE_STRING,
+        device_type: DEVICE_TYPE,
+        device_characteristics: ULONG,
+        exclusive: bool,
+        device_object: *mut PVOID,
+    ) -> NTSTATUS;
+
+    fn IoCreateSymbolicLink(
+        symbolic_link_name: *mut UNICODE_STRING,
+        device_name: *mut UNICODE_STRING,
+    ) -> NTSTATUS;
+
+    fn IoDeleteDevice(device_object: PVOID);
+
+    fn IoCompleteRequest(irp: PIRP, priority_boost: i32);
+
+    fn IoGetCurrentIrpStackLocation(irp: PIRP) -> PIO_STACK_LOCATION;
+}
+
+#[cfg(feature = "standalone-driver")]
+extern "C" fn driver_unload(driver_object: PDRIVER_OBJECT) {
+    log_info!("HyperDbg driver unloading");
+    let mut ctx = DRIVER_CONTEXT.lock();
+    if let Some(driver) = ctx.take() {
+        let mut driver = driver.lock();
+        let _ = driver.terminate();
+    }
+    drop(ctx);
+
+    unsafe {
+        IoDeleteDevice((*driver_object).DeviceObject as PVOID);
+    }
+    log_success!("HyperDbg driver unloaded successfully");
+}
+
+#[cfg(feature = "standalone-driver")]
+extern "C" fn driver_default_dispatch(
+    device_object: PDEVICE_OBJECT,
+    irp: PIRP,
+) -> NTSTATUS {
+    unsafe {
+        (*irp).IoStatus.__bindgen_anon_1.Status = STATUS_SUCCESS;
+        (*irp).IoStatus.Information = 0;
+        IoCompleteRequest(irp, 0);
+    }
+    STATUS_SUCCESS
+}
+
+#[cfg(feature = "standalone-driver")]
+unsafe extern "C" fn driver_create(
+    device_object: PDEVICE_OBJECT,
+    irp: PIRP,
+) -> NTSTATUS {
+    unsafe {
+        (*irp).IoStatus.__bindgen_anon_1.Status = STATUS_SUCCESS;
+        (*irp).IoStatus.Information = 0;
+        IoCompleteRequest(irp, 0);
+    }
+    STATUS_SUCCESS
+}
+
+#[cfg(feature = "standalone-driver")]
+unsafe extern "C" fn driver_close(
+    device_object: PDEVICE_OBJECT,
+    irp: PIRP,
+) -> NTSTATUS {
+    unsafe {
+        (*irp).IoStatus.__bindgen_anon_1.Status = STATUS_SUCCESS;
+        (*irp).IoStatus.Information = 0;
+        IoCompleteRequest(irp, 0);
+    }
+    STATUS_SUCCESS
+}
+
+#[cfg(feature = "standalone-driver")]
+unsafe extern "C" fn driver_device_control(
+    device_object: PDEVICE_OBJECT,
+    irp: PIRP,
+) -> NTSTATUS {
+    let ctx = DRIVER_CONTEXT.lock();
+    let driver = match ctx.as_ref() {
+        Some(d) => d.clone(),
+        None => {
+            unsafe {
+                (*irp).IoStatus.__bindgen_anon_1.Status = STATUS_UNSUCCESSFUL;
+                (*irp).IoStatus.Information = 0;
+                IoCompleteRequest(irp, 0);
+            }
+            return STATUS_UNSUCCESSFUL;
+        }
+    };
+    drop(ctx);
+
+    let mut driver = driver.lock();
+
+    unsafe {
+        let stack = IoGetCurrentIrpStackLocation(irp);
+        let control_code = (*stack).Parameters.DeviceIoControl.IoControlCode;
+        let input_buffer = (*irp).AssociatedIrp.SystemBuffer as *const u8;
+        let input_length = (*stack).Parameters.DeviceIoControl.InputBufferLength as usize;
+        let output_buffer = (*irp).AssociatedIrp.SystemBuffer as *mut u8;
+        let output_length = (*stack).Parameters.DeviceIoControl.OutputBufferLength as usize;
+
+        let result = handle_ioctl(
+            &mut driver,
+            control_code,
+            core::slice::from_raw_parts(input_buffer, input_length),
+            core::slice::from_raw_parts_mut(output_buffer, output_length),
+        );
+
+        match result {
+            Ok(bytes_written) => {
+                (*irp).IoStatus.__bindgen_anon_1.Status = STATUS_SUCCESS;
+                (*irp).IoStatus.Information = bytes_written as u64;
+            }
+            Err(_) => {
+                (*irp).IoStatus.__bindgen_anon_1.Status = STATUS_UNSUCCESSFUL;
+                (*irp).IoStatus.Information = 0;
+            }
+        }
+
+        IoCompleteRequest(irp, 0);
     }
 
-    #[test]
-    fn test_kd_uninitialize() {
-        let kd = KernelDebugger::new(4);
-        
-        kd.initialize().unwrap();
-        assert!(kd.uninitialize().is_ok());
-        assert!(!kd.is_active());
-    }
+    STATUS_SUCCESS
+}
 
-    #[test]
-    fn test_set_breakpoint() {
-        let kd = KernelDebugger::new(4);
-        
-        kd.initialize().unwrap();
-        
-        let bp_id = kd.set_breakpoint(0x1000, false).unwrap();
-        assert!(bp_id > 0);
-        
-        let bps = kd.get_all_breakpoints();
-        assert_eq!(bps.len(), 1);
-        assert_eq!(bps[0].address, 0x1000);
+#[cfg(feature = "standalone-driver")]
+fn handle_ioctl(
+    driver: &mut HyperDbgDriver,
+    control_code: u32,
+    input: &[u8],
+    output: &mut [u8],
+) -> Result<usize, DriverError> {
+    match control_code {
+        0x800 => {
+            driver.initialize()?;
+            Ok(0)
+        }
+        0x801 => {
+            driver.terminate()?;
+            Ok(0)
+        }
+        0x802 => {
+            if input.len() < 6 {
+                return Err(DriverError::InvalidAddress);
+            }
+            let port = u16::from_le_bytes([input[0], input[1]]);
+            let addr_len = input[2] as usize;
+            let addr = core::str::from_utf8(&input[3..3+addr_len])
+                .map_err(|_| DriverError::InvalidAddress)?;
+            driver.start_network_server(addr)?;
+            Ok(0)
+        }
+        0x803 => {
+            driver.stop_network_server();
+            Ok(0)
+        }
+        0x900 => {
+            let kd = driver.get_kernel_debugger();
+            let mut kd = kd.lock();
+            kd.initialize().map_err(|e| DriverError::KernelDebuggerError(e.to_string()))?;
+            Ok(0)
+        }
+        0x901 => {
+            let kd = driver.get_kernel_debugger();
+            let mut kd = kd.lock();
+            kd.uninitialize().map_err(|e| DriverError::KernelDebuggerError(e.to_string()))?;
+            Ok(0)
+        }
+        0x902 => {
+            if input.len() < 12 {
+                return Err(DriverError::InvalidAddress);
+            }
+            let address = u64::from_le_bytes([
+                input[0], input[1], input[2], input[3],
+                input[4], input[5], input[6], input[7],
+            ]);
+            let is_hardware = input[8] != 0;
+            let kd = driver.get_kernel_debugger();
+            let kd = kd.lock();
+            let id = kd.set_breakpoint(address, is_hardware)
+                .map_err(|e| DriverError::KernelDebuggerError(e.to_string()))?;
+            if output.len() >= 8 {
+                output[..8].copy_from_slice(&id.to_le_bytes());
+                Ok(8)
+            } else {
+                Ok(0)
+            }
+        }
+        0x903 => {
+            if input.len() < 8 {
+                return Err(DriverError::BreakpointNotFound);
+            }
+            let id = u64::from_le_bytes([
+                input[0], input[1], input[2], input[3],
+                input[4], input[5], input[6], input[7],
+            ]);
+            let kd = driver.get_kernel_debugger();
+            let kd = kd.lock();
+            kd.remove_breakpoint_by_id(id)
+                .map_err(|e| DriverError::KernelDebuggerError(e.to_string()))?;
+            Ok(0)
+        }
+        _ => Err(DriverError::InvalidAddress),
     }
+}
 
-    #[test]
-    fn test_remove_breakpoint() {
-        let kd = KernelDebugger::new(4);
-        
-        kd.initialize().unwrap();
-        kd.set_breakpoint(0x1000, false).unwrap();
-        
-        assert!(kd.remove_breakpoint(0x1000).is_ok());
-        assert_eq!(kd.get_breakpoint_count(), 0);
-    }
-
-    #[test]
-    fn test_ignore_breaks() {
-        let kd = KernelDebugger::new(4);
-        
-        assert!(!kd.get_ignore_breaks());
-        
-        kd.set_ignore_breaks(true);
-        assert!(kd.get_ignore_breaks());
-    }
-
-    #[test]
-    fn test_processor_state() {
-        let kd = KernelDebugger::new(4);
-        
-        kd.initialize().unwrap();
-        
-        assert!(kd.set_processor_state(0, KdState::Paused).is_ok());
-        
-        let state = kd.get_processor_state(0).unwrap();
-        assert_eq!(state, KdState::Paused);
-    }
+#[cfg(feature = "standalone-driver")]
+fn initialize_driver() -> Result<HyperDbgDriver, DriverError> {
+    HyperDbgDriver::new()
 }

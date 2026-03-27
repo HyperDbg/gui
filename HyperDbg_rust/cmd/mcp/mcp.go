@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ddkwork/HyperDbg_rust"
+	"github.com/ddkwork/HyperDbg_rust/debugger"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
 type DebuggerMCPServer struct {
-	impl hyperdbgrust.Debugger
+	impl debugger.Debugger
 }
 
-func NewDebuggerMCPServer(impl hyperdbgrust.Debugger) *DebuggerMCPServer {
+func NewDebuggerMCPServer(impl debugger.Debugger) *DebuggerMCPServer {
 	return &DebuggerMCPServer{impl: impl}
 }
 
@@ -583,7 +583,7 @@ func (s *DebuggerMCPServer) handleSetBreakpoint(ctx context.Context, req *mcp.Ca
 
 		args.address,
 
-		args.bpType.(hyperdbgrust.BreakpointType),
+		args.bpType.(debugger.BreakpointType),
 	)
 	if err != nil {
 		return &mcp.CallToolResult{
@@ -811,7 +811,7 @@ func (s *DebuggerMCPServer) handleWriteRegisters(ctx context.Context, req *mcp.C
 
 	err := s.impl.WriteRegisters(
 
-		args.regs.(*hyperdbgrust.RegisterState),
+		args.regs.(*debugger.RegisterState),
 	)
 	if err != nil {
 		return &mcp.CallToolResult{
@@ -908,9 +908,9 @@ func (s *DebuggerMCPServer) handleRegisterCallback(ctx context.Context, req *mcp
 
 	s.impl.RegisterCallback(
 
-		args.msgType.(hyperdbgrust.MessageType),
+		args.msgType.(debugger.MessageType),
 
-		args.cb.(hyperdbgrust.EventCallback),
+		args.cb.(debugger.EventCallback),
 	)
 	return &mcp.CallToolResult{
 		Content: []mcp.Content{
@@ -1044,7 +1044,7 @@ func (s *DebuggerMCPServer) handleExecuteScriptWithContext(ctx context.Context, 
 }
 
 func main() {
-	impl := hyperdbgrust.NewPacket()
+	impl := debugger.NewPacket()
 	server := NewDebuggerMCPServer(impl)
 
 	mcpServer := mcp.NewServer(&mcp.Implementation{

@@ -2,18 +2,10 @@
 #![allow(non_snake_case)]
 
 extern crate alloc;
-extern crate wdk_panic;
 
-use wdk_alloc::WdkAllocator;
 use wdk_sys::{NTSTATUS, STATUS_SUCCESS, STATUS_INSUFFICIENT_RESOURCES, DRIVER_OBJECT, UNICODE_STRING};
 
-#[global_allocator]
-static GLOBAL_ALLOCATOR: WdkAllocator = WdkAllocator;
-
-use net::{ResponseWriter, Request, Server};
-use logger::{log_info, log_success, log_error};
-
-use common::handlers_gen::{NoOpDebugger, dispatch_api, EventQueue};
+use hyperdbg_kd::{ResponseWriter, Request, Server, log_info, log_success, log_error, NoOpDebugger, dispatch_api, EventQueue};
 
 static mut GLOBAL_SERVER: *mut Server = core::ptr::null_mut();
 static mut EVENT_QUEUE: *mut EventQueue = core::ptr::null_mut();

@@ -25,14 +25,31 @@
 
 ## ✅ Rust 生成文件分拆已完成
 
-**当前状态：** `types_gen/` 和 `handlers_gen/` 已分拆为独立目录，位于 `common/` crate 中。
+**当前状态：** `types_gen/` 和 `handlers_gen/` 已分拆为独立目录，位于 `kd/src/common/` 中。
 
 ### 当前文件结构
 
 ```
 rust-driver/
-├── common/                     # 通用模块（自动生成）
+├── driver-framework/           # 驱动框架库 (独立 crate)
 │   ├── Cargo.toml
+│   ├── build.rs
+│   └── src/
+│       ├── lib.rs
+│       ├── ffi.rs
+│       ├── utils.rs
+│       ├── device.rs
+│       └── ioctl.rs
+│
+├── logger/                     # 日志模块 (独立 crate)
+│   ├── Cargo.toml
+│   ├── build.rs
+│   └── src/
+│       └── lib.rs
+│
+├── common/                     # 通用模块（自动生成，独立 crate）
+│   ├── Cargo.toml
+│   ├── build.rs
 │   └── src/
 │       ├── lib.rs
 │       ├── types_gen/          # 生成的类型 (分拆)
@@ -48,44 +65,84 @@ rust-driver/
 │           ├── router.rs
 │           └── emit.rs
 │
-├── net/                        # 网络模块
+├── net/                        # 网络模块 (独立 crate)
 │   ├── Cargo.toml
-│   ├── README.md
-│   ├── BSOD_FIX_REPORT.md
+│   ├── build.rs
 │   └── src/
 │       ├── lib.rs
 │       ├── http.rs
 │       ├── json.rs
 │       └── util.rs
 │
-├── hyperhv/                    # Hypervisor 层
-├── hyperkd/                    # Debugger 层
-├── disassembler/               # 反汇编器
-├── driver-framework/           # 驱动框架
+├── kd/                         # 主驱动 crate (整合所有模块)
+│   ├── Cargo.toml
+│   ├── build.ps1
+│   ├── build.rs
+│   └── src/
+│       ├── lib.rs              # 驱动入口点
+│       ├── kd.rs               # 内核调试器
+│       ├── ud.rs               # 用户调试器
+│       ├── common/             # 内部通用模块
+│       ├── logger/             # 内部日志模块
+│       ├── net/                # 内部网络模块
+│       ├── framework/          # 内部驱动框架
+│       ├── disassembler/       # 反汇编器
+│       ├── pdbex/              # PDB 解析
+│       └── hyperkd/            # 调试器核心
+│           ├── mod.rs
+│           ├── hyperhv.rs      # Hypervisor 模块入口
+│           └── hyperhv/        # Hypervisor 实现
+│               ├── vmm/
+│               ├── ept.rs
+│               ├── vmx.rs
+│               └── ...
+│
 └── examples/                   # 示例驱动
+    ├── sysdemo/                # WDM 驱动示例
+    │   ├── Cargo.toml
+    │   ├── build.ps1
+    │   └── src/lib.rs
+    │
+    └── netdemo/                # 网络驱动示例
+        ├── Cargo.toml
+        ├── build.ps1
+        └── src/lib.rs
 ```
 
 ### 文件映射规则
 
 ```
 Go 文件                    →  Rust 生成文件
-types.go                   →  common/types_gen/common.rs
-register.go                →  common/types_gen/register.rs
-response.go                →  common/types_gen/response.rs
-event_handlers.go          →  common/types_gen/event.rs
-event_breakpoint.go        →  common/types_gen/event_breakpoint.rs
-event_exception.go         →  common/types_gen/event_exception.rs
-event_memory.go            →  common/types_gen/event_memory.rs
+debugger/types.go          →  kd/src/common/types_gen/common.rs
+debugger/register.go       →  kd/src/common/types_gen/register.rs
+debugger/response.go       →  kd/src/common/types_gen/response.rs
+debugger/event_handlers.go →  kd/src/common/types_gen/event.rs
+debugger/event_breakpoint.go → kd/src/common/types_gen/event_breakpoint.rs
+debugger/event_exception.go →  kd/src/common/types_gen/event_exception.rs
+debugger/event_memory.go   →  kd/src/common/types_gen/event_memory.rs
 ...                        →  ...
-packet.go                  →  common/handlers_gen/router.rs (action 映射)
+debugger/packet.go         →  kd/src/common/handlers_gen/router.rs (action 映射)
 ```
 
 ## ⛔ 严禁修改已验证文件
 
 **以下文件已经过验证，严禁修改：**
-- `rust-driver/net/src/logger.rs` - 日志宏定义（使用 `wdk::println!`）
+- `rust-driver/net/src/logger.rs` - net 模块内的日志宏定义（使用 `wdk::println!`）
+- `rust-driver/logger/src/lib.rs` - 独立 logger crate 的日志宏定义（使用 `wdk::println!`）
 
 这些文件已经过测试验证，修改可能导致编译错误或运行时问题。
+
+### 日志宏使用说明
+
+**独立 logger crate (`rust-driver/logger/`)：**
+- 提供 `log_success!`, `log_error!`, `log_info!`, `log_warn!` 宏
+- 使用 `wdk::println!` 输出
+- 适用于需要独立日志功能的 crate
+
+**net 模块内 logger (`rust-driver/net/src/logger.rs`)：**
+- 提供 `log_success`, `log_error`, `log_info`, `log_warn` 函数
+- 使用 `wdk::println!` 输出
+- 仅在 net 模块内部使用
 
 ## ⛔ 严禁查看未验证模块代码
 

@@ -79,101 +79,31 @@ HyperDbg_rust/
 │   └── walker_test.go     // 测试
 │
 ├── rust-driver/           // Rust 驱动
-│   ├── Cargo.toml         // 主驱动 crate 配置
-│   ├── lib.rs             // 驱动入口 (DriverEntry)
-│   ├── build.rs           // 构建脚本
-│   ├── build.ps1          // PowerShell 构建脚本
-│   │
-│   ├── common/            // 通用模块（自动生成）
+│   ├── kd/                // 主驱动 crate (整合所有模块)
 │   │   ├── Cargo.toml
+│   │   ├── build.ps1
+│   │   ├── build.rs
 │   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── types_gen/     // 生成的类型 (分拆)
-│   │       │   ├── mod.rs
-│   │       │   ├── common.rs
-│   │       │   ├── register.rs
-│   │       │   ├── response.rs
-│   │       │   ├── event.rs
-│   │       │   ├── event_*.rs
-│   │       │   └── handlers_gen/   // 生成的处理器 (分拆)
-│   │       │       ├── mod.rs
-│   │       │       ├── router.rs
-│   │       │       └── emit.rs
+│   │       ├── lib.rs             // 驱动入口点
+│   │       ├── kd.rs              // 内核调试器
+│   │       ├── ud.rs              // 用户调试器
+│   │       ├── common/            // 内部通用模块 (types_gen + handlers_gen)
+│   │       ├── logger/            // 内部日志模块
+│   │       ├── net/               // 内部网络模块 (WSK HTTP Server)
+│   │       ├── framework/         // 内部驱动框架
+│   │       ├── disassembler/      // 反汇编器
+│   │       ├── pdbex/             // PDB 解析
+│   │       └── hyperkd/           // 调试器核心
+│   │           └── hyperhv/       // Hypervisor 实现
 │   │
-│   ├── net/               // 网络模块
-│   │   ├── Cargo.toml
-│   │   ├── README.md
-│   │   ├── BSOD_FIX_REPORT.md
-│   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── http.rs
-│   │       ├── json.rs
-│   │       └── util.rs
+│   ├── driver-framework/  // 驱动框架库 (独立 crate，用于 examples)
+│   ├── logger/            // 日志模块 (独立 crate，用于 examples)
+│   ├── common/            // 通用模块 (独立 crate，用于 examples)
+│   ├── net/               // 网络模块 (独立 crate，用于 examples)
 │   │
-│   ├── hyperhv/           // Hypervisor 层
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── vmm/
-│   │       ├── hooks.rs
-│   │       ├── events.rs
-│   │       └── ...
-│   │
-│   ├── hyperkd/           // Debugger 层
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── debugger.rs
-│   │       ├── commands.rs
-│   │       ├── network.rs
-│   │       └── ...
-│   │
-│   ├── kd/                // 内核调试器
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       └── lib.rs
-│   │
-│   ├── pdbex/             // PDB 解析器
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       └── lib.rs
-│   │
-│   ├── disassembler/       // 反汇编器
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       └── lib.rs
-│   │
-│   ├── driver-framework/  // 驱动框架
-│   │   ├── Cargo.toml
-│   │   ├── out/
-│   │   │   ├── ntddk.rs
-│   │   │   ├── types.rs
-│   │   │   └── constants.rs
-│   │   └── src/
-│   │       ├── lib.rs
-│   │       ├── device.rs
-│   │       ├── ioctl.rs
-│   │       ├── ffi.rs
-│   │       ├── logger.rs
-│   │       └── utils.rs
-│   │
-│   ├── logger/            // 日志库
-│   │   ├── Cargo.toml
-│   │   └── src/
-│   │       └── lib.rs
-│   │
-│   ├── examples/          // 示例驱动
-│   │   ├── netdemo/       // 网络驱动示例
-│   │   ├── sysdemo/       // 系统驱动示例
-│   │   ├── sample-wdm-driver/
-│   │   ├── sample-kmdf-driver/
-│   │   └── sample-umdf-driver/
-│   │
-│   └── doc/               // 文档
-│       ├── RUST_INSTALL_README.md
-│       ├── bug_fixes.md
-│       ├── install-rust-mingw.ps1
-│       └── setup_ewdk_env.ps1
+│   └── examples/          // 示例驱动
+│       ├── sysdemo/       // WDM 驱动示例
+│       └── netdemo/       // 网络驱动示例
 │
 ├── rust-driver/IMPLEMENTATION_PROGRESS.md  // 实现进度
 ├── api_design.md          // API 设计文档

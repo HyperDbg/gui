@@ -132,7 +132,7 @@ var tmpl = template.Must(template.New("mcp").Funcs(template.FuncMap{
 			if strings.Contains(elemType, ".") {
 				return "mustConvert[" + paramType + "](args." + paramName + ")"
 			}
-			return "args." + paramName + ".([]hyperdbgrust." + elemType + ")"
+			return "args." + paramName + ".([]debugger." + elemType + ")"
 		}
 
 		if isMapType(paramType) {
@@ -161,10 +161,10 @@ var tmpl = template.Must(template.New("mcp").Funcs(template.FuncMap{
 			if strings.Contains(baseType, ".") {
 				return "args." + paramName + ".(*" + baseType + ")"
 			}
-			return "args." + paramName + ".(*hyperdbgrust." + baseType + ")"
+			return "args." + paramName + ".(*debugger." + baseType + ")"
 		}
 
-		return "args." + paramName + ".(hyperdbgrust." + paramType + ")"
+		return "args." + paramName + ".(debugger." + paramType + ")"
 	},
 }).Parse(`// Code generated from {{.Interface}}. DO NOT EDIT.
 
@@ -180,10 +180,10 @@ import (
 )
 
 type {{.ServerName}} struct {
-	impl hyperdbgrust.{{.Interface}}
+	impl debugger.{{.Interface}}
 }
 
-func New{{.ServerName}}(impl hyperdbgrust.{{.Interface}}) *{{.ServerName}} {
+func New{{.ServerName}}(impl debugger.{{.Interface}}) *{{.ServerName}} {
 	return &{{.ServerName}}{impl: impl}
 }
 
@@ -298,7 +298,7 @@ func (s *{{$.ServerName}}) handle{{.Name}}(ctx context.Context, req *mcp.CallToo
 {{end}}
 
 func main() {
-	impl := hyperdbgrust.NewPacket()
+	impl := debugger.NewPacket()
 	server := New{{.ServerName}}(impl)
 
 	mcpServer := mcp.NewServer(&mcp.Implementation{
