@@ -10,16 +10,22 @@ import (
 	"github.com/ddkwork/HyperDbg/debugger/driver"
 )
 
-type Command struct {
-	Action string `json:"action"`
-	Target string `json:"target,omitempty"`
-	Size   int    `json:"size,omitempty"`
-	Data   string `json:"data,omitempty"`
+// Request matches the Rust-generated Request structure
+type Request struct {
+	Action       string  `json:"action"`
+	ProcessID    *uint32 `json:"process_id,omitempty"`
+	Address      *uint64 `json:"address,omitempty"`
+	BreakpointID *uint64 `json:"breakpoint_id,omitempty"`
+	Size         *uint32 `json:"size,omitempty"`
+	Type         *int32  `json:"type,omitempty"`
+	Data         []byte  `json:"data,omitempty"`
 }
 
+// Response matches the Rust-generated Response structure
 type Response struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
+	Success bool        `json:"success"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 func sendHTTPRequest(method, path string, body []byte) (Response, error) {
@@ -65,7 +71,7 @@ func sendHTTPRequest(method, path string, body []byte) (Response, error) {
 
 func main() {
 	fmt.Println("=== Step 1: Load Driver ===")
-	p := driver.NewWithOptions(`D:\\ux\\examples\\hypedbg\\rust-driver\\examples\\netdemo\\netdemo.sys`, "netDemo", "\\\\.\\netDemo", true)
+	p := driver.NewWithOptions(`D:\\ux\\examples\\hypedbg\\HyperDbg_rust\\rust-driver\\examples\\netdemo\\netdemo.sys`, "netDemo", "\\\\.\\netDemo", true)
 
 	p.Install()
 	p.Start()
@@ -73,58 +79,29 @@ func main() {
 	fmt.Println("\n=== Step 2: HTTP Client Test ===")
 	fmt.Println("Testing connection to http://127.0.0.1:50080...")
 
-	fmt.Println("\n=== Test 1: Direct route handlers ===")
-
-	resp, err := sendHTTPRequest("GET", "/ping", []byte{})
-	if err != nil {
-		fmt.Printf("Error: %v\n\n", err)
-	} else {
-		fmt.Printf("Response: success=%v message=%s\n\n", resp.Success, resp.Message)
-	}
-
-	resp, err = sendHTTPRequest("GET", "/status", []byte{})
-	if err != nil {
-		fmt.Printf("Error: %v\n\n", err)
-	} else {
-		fmt.Printf("Response: success=%v message=%s\n\n", resp.Success, resp.Message)
-	}
-
-	readCmd := Command{Action: "read_memory", Target: "0x1000", Size: 64}
-	readData, _ := json.Marshal(readCmd)
-	resp, err = sendHTTPRequest("POST", "/read_memory", readData)
-	if err != nil {
-		fmt.Printf("Error: %v\n\n", err)
-	} else {
-		fmt.Printf("Response: success=%v message=%s\n\n", resp.Success, resp.Message)
-	}
-
-	writeCmd := Command{Action: "write_memory", Target: "0x2000", Data: "deadbeef"}
-	writeData, _ := json.Marshal(writeCmd)
-	resp, err = sendHTTPRequest("POST", "/write_memory", writeData)
-	if err != nil {
-		fmt.Printf("Error: %v\n\n", err)
-	} else {
-		fmt.Printf("Response: success=%v message=%s\n\n", resp.Success, resp.Message)
-	}
-
-	fmt.Println("\n=== Test 2: API endpoint with action-based routing ===")
+	fmt.Println("\n=== Test 1: API endpoint with generated NoOpDebugger ===")
 
 	testCases := []struct {
-		cmd     Command
+		req     Request
 		comment string
 	}{
-		{Command{Action: "ping"}, "ping action"},
-		{Command{Action: "status"}, "status action"},
-		{Command{Action: "read_memory", Target: "0x1000", Size: 64}, "read_memory action"},
-		{Command{Action: "write_memory", Target: "0x2000", Data: "deadbeef"}, "write_memory action"},
-		{Command{Action: "read_memory"}, "read_memory without params"},
-		{Command{Action: "write_memory"}, "write_memory without params"},
-		{Command{Action: "unknown_command"}, "unknown action"},
+		{Request{Action: "initialize"}, "initialize action"},
+		{Request{Action: "terminate"}, "terminate action"},
+		{Request{Action: "attach_process", ProcessID: new(uint32(1234))}, "attach_process action"},
+		{Request{Action: "detach_process"}, "detach_process action"},
+		{Request{Action: "pause"}, "pause action"},
+		{Request{Action: "continue_"}, "continue action"},
+		{Request{Action: "step_into"}, "step_into action"},
+		{Request{Action: "read_memory", Address: new(uint64(0x1000)), Size: new(uint32(64))}, "read_memory action"},
+		{Request{Action: "write_memory", Address: new(uint64(0x2000)), Data: []byte{0xDE, 0xAD, 0xBE, 0xEF}}, "write_memory action"},
+		{Request{Action: "get_registers"}, "get_registers action"},
+		{Request{Action: "set_registers"}, "set_registers action"},
+		{Request{Action: "unknown_command"}, "unknown action"},
 	}
 
 	for _, tc := range testCases {
 		fmt.Printf("Test: %s\n", tc.comment)
-		data, _ := json.Marshal(tc.cmd)
+		data, _ := json.Marshal(tc.req)
 
 		resp, err := sendHTTPRequest("POST", "/api", data)
 		if err != nil {
@@ -134,9 +111,9 @@ func main() {
 		}
 	}
 
-	fmt.Println("\n=== Test 3: Invalid route ===")
+	fmt.Println("\n=== Test 2: Invalid route ===")
 
-	resp, err = sendHTTPRequest("GET", "/invalid", []byte{})
+	resp, err := sendHTTPRequest("GET", "/invalid", []byte{})
 	if err != nil {
 		fmt.Printf("Error: %v\n\n", err)
 	} else {
