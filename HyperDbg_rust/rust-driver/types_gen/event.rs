@@ -6,6 +6,7 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u32)]
 pub enum EventType {
+    Breakpoint = 1,
     Exception = 2,
     MemoryAccess = 3,
     SyscallEntry = 4,
@@ -39,26 +40,27 @@ pub enum EventType {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(i32)]
 pub enum DebuggerEventType {
-    Exception = 0,
-    MemoryAccess = 1,
-    Syscall = 2,
-    ProcessCreate = 3,
-    ProcessExit = 4,
-    ThreadCreate = 5,
-    ThreadExit = 6,
-    ModuleLoad = 7,
-    ModuleUnload = 8,
-    DebugPrint = 9,
-    VmxExit = 10,
-    Trap = 11,
-    HiddenHook = 12,
-    Cpuid = 13,
-    Tsc = 14,
-    CrAccess = 15,
-    DrAccess = 16,
-    IoPort = 17,
-    Msr = 18,
-    EptViolation = 19,
+    Breakpoint = 0,
+    Exception = 1,
+    MemoryAccess = 2,
+    Syscall = 3,
+    ProcessCreate = 4,
+    ProcessExit = 5,
+    ThreadCreate = 6,
+    ThreadExit = 7,
+    ModuleLoad = 8,
+    ModuleUnload = 9,
+    DebugPrint = 10,
+    VmxExit = 11,
+    Trap = 12,
+    HiddenHook = 13,
+    Cpuid = 14,
+    Tsc = 15,
+    CrAccess = 16,
+    DrAccess = 17,
+    IoPort = 18,
+    Msr = 19,
+    EptViolation = 20,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]

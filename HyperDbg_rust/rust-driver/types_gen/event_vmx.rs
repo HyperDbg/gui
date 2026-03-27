@@ -6,6 +6,7 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u32)]
 pub enum VmxExitReason {
+    ExceptionNmi = 0,
     ExternalInterrupt = 1,
     TripleFault = 2,
     InitSignal = 3,

@@ -6,6 +6,7 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u32)]
 pub enum ExceptionCode {
+    DivideError = 0,
     Debug = 1,
     Nmi = 2,
     Breakpoint = 3,

@@ -6,6 +6,7 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u32)]
 pub enum MemoryAccessType {
+    Read = 0,
     Write = 1,
     Execute = 2,
 }

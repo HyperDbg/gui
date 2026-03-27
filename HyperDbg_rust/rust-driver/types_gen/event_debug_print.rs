@@ -6,6 +6,7 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u32)]
 pub enum LogLevel {
+    Trace = 0,
     Debug = 1,
     Info = 2,
     Warn = 3,

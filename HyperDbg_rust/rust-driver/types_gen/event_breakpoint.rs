@@ -6,6 +6,7 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u32)]
 pub enum BreakpointType {
+    Software = 0,
     Hardware = 1,
     Hidden = 2,
     Ept = 3,

@@ -439,27 +439,37 @@ func extractAllFromNode(node *ast.File) (map[string][]ConstantDef, map[string]En
 			switch d.Tok {
 			case token.CONST:
 				var currentEnum string
+				var iotaCounter int
+				var hasIota bool
 				for _, spec := range d.Specs {
 					vs := spec.(*ast.ValueSpec)
-					for i, name := range vs.Names {
-						if name.Name == "_" {
-							continue
+					if len(vs.Names) > 0 && vs.Type != nil {
+						typeStr := exprToString(vs.Type)
+						if slices.Contains(enumTypes, typeStr) {
+							currentEnum = typeStr
+							iotaCounter = 0
+							hasIota = false
 						}
+					}
+					for i, name := range vs.Names {
 						val := ""
 						if i < len(vs.Values) {
 							val = exprToString(vs.Values[i])
 						}
-						if currentEnum != "" {
+						if val == "iota" {
+							hasIota = true
+						}
+						if hasIota && (val == "" || val == "iota") {
+							val = fmt.Sprintf("%d", iotaCounter)
+						}
+						if name.Name != "_" && currentEnum != "" {
 							constants[currentEnum] = append(constants[currentEnum], ConstantDef{
 								Name:  name.Name,
 								Value: val,
 							})
 						}
-					}
-					if len(vs.Names) > 0 && vs.Type != nil {
-						typeStr := exprToString(vs.Type)
-						if slices.Contains(enumTypes, typeStr) {
-							currentEnum = typeStr
+						if hasIota {
+							iotaCounter++
 						}
 					}
 				}
