@@ -9,9 +9,11 @@ doc/cpp
 doc/release
 doc/testdata
 debugger/mcp/参考
-debugger/driver/sysDemo/build
+debugger/driver/sys
 walker/winmd
 walker/pdbex/ok/
 
 **/target/
 HyperDbg_rust/rust-driver/todo/
+*.sys
+*.pdb
