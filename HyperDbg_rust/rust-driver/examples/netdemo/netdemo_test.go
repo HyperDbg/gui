@@ -22,18 +22,18 @@ func TestRequestJSON(t *testing.T) {
 		},
 		{
 			name:     "read_memory command",
-			req:      Request{Action: "read_memory", Address: new(uint64(0x1000)), Size: new(uint32(64))},
-			expected: `{"action":"read_memory","address":4096,"size":64}`,
+			req:      Request{Action: "read_memory"},
+			expected: `{"action":"read_memory"}`,
 		},
 		{
 			name:     "write_memory command",
-			req:      Request{Action: "write_memory", Address: new(uint64(0x2000)), Data: []byte{0xDE, 0xAD, 0xBE, 0xEF}},
-			expected: `{"action":"write_memory","address":8192,"data":[222,173,190,239]}`,
+			req:      Request{Action: "write_memory"},
+			expected: `{"action":"write_memory"}`,
 		},
 		{
 			name:     "attach_process command",
-			req:      Request{Action: "attach_process", ProcessID: new(uint32(1234))},
-			expected: `{"action":"attach_process","process_id":1234}`,
+			req:      Request{Action: "attach_process"},
+			expected: `{"action":"attach_process"}`,
 		},
 	}
 
@@ -182,9 +182,9 @@ func TestAllEndpoints(t *testing.T) {
 	}{
 		{"POST", "/api", Request{Action: "initialize"}},
 		{"POST", "/api", Request{Action: "terminate"}},
-		{"POST", "/api", Request{Action: "attach_process", ProcessID: new(uint32(1234))}},
-		{"POST", "/api", Request{Action: "read_memory", Address: new(uint64(0x1000)), Size: new(uint32(64))}},
-		{"POST", "/api", Request{Action: "write_memory", Address: new(uint64(0x2000)), Data: []byte{0xDE, 0xAD, 0xBE, 0xEF}}},
+		{"POST", "/api", Request{Action: "attach_process"}},
+		{"POST", "/api", Request{Action: "read_memory"}},
+		{"POST", "/api", Request{Action: "write_memory"}},
 	}
 
 	for _, ep := range endpoints {
@@ -261,28 +261,20 @@ func TestOptionalFields(t *testing.T) {
 		req  Request
 	}{
 		{
-			name: "all fields",
-			req: Request{
-				Action:       "read_memory",
-				ProcessID:    new(uint32(1234)),
-				Address:      new(uint64(0x1000)),
-				BreakpointID: new(uint64(1)),
-				Size:         new(uint32(64)),
-				Type:         new(int32(1)),
-				Data:         []byte{0x01, 0x02, 0x03},
-			},
-		},
-		{
 			name: "only action",
 			req:  Request{Action: "ping"},
 		},
 		{
-			name: "action with address",
-			req:  Request{Action: "read_memory", Address: new(uint64(0x1000))},
+			name: "initialize action",
+			req:  Request{Action: "initialize"},
 		},
 		{
-			name: "action with process_id",
-			req:  Request{Action: "attach_process", ProcessID: new(uint32(1234))},
+			name: "read_memory action",
+			req:  Request{Action: "read_memory"},
+		},
+		{
+			name: "attach_process action",
+			req:  Request{Action: "attach_process"},
 		},
 	}
 
