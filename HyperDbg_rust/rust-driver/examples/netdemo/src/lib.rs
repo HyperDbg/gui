@@ -18,11 +18,40 @@ use common::handlers_gen::{NoOpDebugger, dispatch_api, EventQueue};
 static mut GLOBAL_SERVER: *mut Server = core::ptr::null_mut();
 static mut EVENT_QUEUE: *mut EventQueue = core::ptr::null_mut();
 
+unsafe fn extract_action_from_path(path: &str) -> Option<&str> {
+    if path.starts_with("/api/") {
+        let action = &path[5..];
+        if !action.is_empty() {
+            Some(action)
+        } else {
+            None
+        }
+    } else if path == "/api" {
+        None
+    } else {
+        None
+    }
+}
+
 unsafe extern "C" fn api_handler(w: *mut ResponseWriter, r: *mut Request) {
-    let body = core::slice::from_raw_parts((*r).Body, (*r).BodyLength);
-    let mut debugger = NoOpDebugger;
-    let response = dispatch_api(&mut debugger, body);
-    (*w).WriteJSON(&response);
+    let path = (*r).Path();
+    
+    if let Some(action) = extract_action_from_path(path) {
+        log_info!("Extracted action from path: {}", action);
+        
+        let json_body = alloc::format!(r#"{{"action":"{}"}}"#, action);
+        let body_bytes = json_body.as_bytes();
+        
+        let mut debugger = NoOpDebugger;
+        let response_bytes = dispatch_api(&mut debugger, body_bytes);
+        (*w).WriteJSONBytes(&response_bytes);
+    } else {
+        log_info!("No action in path, reading from body");
+        let body = core::slice::from_raw_parts((*r).Body, (*r).BodyLength);
+        let mut debugger = NoOpDebugger;
+        let response_bytes = dispatch_api(&mut debugger, body);
+        (*w).WriteJSONBytes(&response_bytes);
+    }
 }
 
 #[no_mangle]
@@ -45,8 +74,8 @@ pub unsafe extern "system" fn DriverEntry(
     
     GLOBAL_SERVER = server;
     
-    log_info!("Registering /api handler (using generated NoOpDebugger)");
-    (*server).Handle("/api", api_handler);
+    log_info!("Registering /api/* handler (using generated NoOpDebugger)");
+    (*server).Handle("/api/*", api_handler);
     
     log_info!("Starting HTTP server on :50080");
     let status = (*server).ListenAndServe(":50080");

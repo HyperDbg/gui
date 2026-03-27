@@ -187,6 +187,13 @@ impl ResponseWriter {
         self.Write(header_bytes.as_ptr(), header_bytes.len());
         self.Write(bytes.as_ptr(), bytes.len())
     }
+
+    pub unsafe fn WriteJSONBytes(&mut self, bytes: &[u8]) -> isize {
+        let header = format!("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\n\r\n", bytes.len());
+        let header_bytes = header.as_bytes();
+        self.Write(header_bytes.as_ptr(), header_bytes.len());
+        self.Write(bytes.as_ptr(), bytes.len())
+    }
 }
 
 #[repr(C)]
@@ -375,12 +382,13 @@ impl Router {
 
     pub unsafe fn ServeHTTP(&self, w: *mut ResponseWriter, r: *mut Request) {
         let path = (*r).Path();
-        log_info!("Routing request for path: {}", path);
+        let full_url = alloc::format!("http://127.0.0.1:50080{}", path);
+        log_info!("Routing request for URL: {}", full_url);
         
         let mut current = self.routes;
         while !current.is_null() {
             if self.match_pattern(&(*current).pattern, path) {
-                log_success!("Matched route: {}", (*current).pattern);
+                log_success!("Matched route: {} for URL: {}", (*current).pattern, full_url);
                 let handler = (*current).handler;
                 handler(w, r);
                 return;
@@ -388,11 +396,10 @@ impl Router {
             current = (*current).next;
         }
         
-        log_warn!("Route not found for path: {}", path);
+        log_warn!("Route not found for URL: {}", full_url);
         let not_found = b"HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\n\r\n404 Not Found\n";
         (*w).Write(not_found.as_ptr(), not_found.len());
     }
-
     unsafe fn match_pattern(&self, pattern: &str, path: &str) -> bool {
         if pattern == "*" { return true; }
         if pattern == path { return true; }
@@ -1067,3 +1074,4 @@ unsafe extern "C" fn op_free(op_ctx: *mut SocketOpContext) {
     let server = (work_queue as usize - core::mem::offset_of!(Server, WorkQueue)) as *mut Server;
     free_socket_context(socket_context, (*server).PoolTag);
 }
+

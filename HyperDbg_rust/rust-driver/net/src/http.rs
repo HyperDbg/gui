@@ -45,6 +45,11 @@ impl ResponseWriter {
     pub unsafe fn WriteJSON<T: Serialize>(&mut self, obj: &T) -> isize {
         // 必须先发送 HTTP 响应头，否则客户端等待 "HTTP/1.1 200 OK\r\n..." 超时
         let bytes = super::json::Marshal(obj).unwrap();
+        self.WriteJSONBytes(&bytes)
+    }
+
+    pub unsafe fn WriteJSONBytes(&mut self, bytes: &[u8]) -> isize {
+        // 直接写入已序列化的 JSON 字节
         let header = format!(
             "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\n\r\n",
             bytes.len()

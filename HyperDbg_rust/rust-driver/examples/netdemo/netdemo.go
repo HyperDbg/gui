@@ -10,18 +10,12 @@ import (
 	"github.com/ddkwork/HyperDbg/debugger/driver"
 )
 
-// Request matches the Rust-generated Request structure
+// Request matches the action field only
 type Request struct {
-	Action       string  `json:"action"`
-	ProcessID    *uint32 `json:"process_id,omitempty"`
-	Address      *uint64 `json:"address,omitempty"`
-	BreakpointID *uint64 `json:"breakpoint_id,omitempty"`
-	Size         *uint32 `json:"size,omitempty"`
-	Type         *int32  `json:"type,omitempty"`
-	Data         []byte  `json:"data,omitempty"`
+	Action string `json:"action"`
 }
 
-// Response matches the Rust-generated Response structure
+// Response matches Rust-generated Response structure
 type Response struct {
 	Success bool        `json:"success"`
 	Message string      `json:"message"`
@@ -44,7 +38,7 @@ func sendHTTPRequest(method, path string, body []byte) (Response, error) {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Host", "127.0.0.1")
 
-	fmt.Printf("Sending %s %s\n", method, path)
+	fmt.Printf("Sending %s %s\n", method, url)
 	if len(body) > 0 {
 		fmt.Printf("Body: %s\n", string(body))
 	}
@@ -82,28 +76,29 @@ func main() {
 	fmt.Println("\n=== Test 1: API endpoint with generated NoOpDebugger ===")
 
 	testCases := []struct {
+		path    string
 		req     Request
 		comment string
 	}{
-		{Request{Action: "initialize"}, "initialize action"},
-		{Request{Action: "terminate"}, "terminate action"},
-		{Request{Action: "attach_process", ProcessID: new(uint32(1234))}, "attach_process action"},
-		{Request{Action: "detach_process"}, "detach_process action"},
-		{Request{Action: "pause"}, "pause action"},
-		{Request{Action: "continue_"}, "continue action"},
-		{Request{Action: "step_into"}, "step_into action"},
-		{Request{Action: "read_memory", Address: new(uint64(0x1000)), Size: new(uint32(64))}, "read_memory action"},
-		{Request{Action: "write_memory", Address: new(uint64(0x2000)), Data: []byte{0xDE, 0xAD, 0xBE, 0xEF}}, "write_memory action"},
-		{Request{Action: "get_registers"}, "get_registers action"},
-		{Request{Action: "set_registers"}, "set_registers action"},
-		{Request{Action: "unknown_command"}, "unknown action"},
+		{"/api/initialize", Request{Action: "initialize"}, "initialize action"},
+		{"/api/terminate", Request{Action: "terminate"}, "terminate action"},
+		{"/api/attach_process", Request{Action: "attach_process"}, "attach_process action"},
+		{"/api/detach_process", Request{Action: "detach_process"}, "detach_process action"},
+		{"/api/pause", Request{Action: "pause"}, "pause action"},
+		{"/api/continue", Request{Action: "continue"}, "continue action"},
+		{"/api/step_into", Request{Action: "step_into"}, "step_into action"},
+		{"/api/read_memory", Request{Action: "read_memory"}, "read_memory action"},
+		{"/api/write_memory", Request{Action: "write_memory"}, "write_memory action"},
+		{"/api/get_registers", Request{Action: "get_registers"}, "get_registers action"},
+		{"/api/set_registers", Request{Action: "set_registers"}, "set_registers action"},
+		{"/api/unknown", Request{Action: "unknown_command"}, "unknown action"},
 	}
 
 	for _, tc := range testCases {
 		fmt.Printf("Test: %s\n", tc.comment)
 		data, _ := json.Marshal(tc.req)
 
-		resp, err := sendHTTPRequest("POST", "/api", data)
+		resp, err := sendHTTPRequest("POST", tc.path, data)
 		if err != nil {
 			fmt.Printf("Error: %v\n\n", err)
 		} else {
