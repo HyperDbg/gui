@@ -6,6 +6,7 @@
 extern crate alloc;
 
 use core::panic::PanicInfo;
+use vmm::ept_hook::MtfTrapState;
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
@@ -14,6 +15,28 @@ fn panic(_info: &PanicInfo) -> ! {
 
 #[global_allocator]
 static GLOBAL_ALLOC: wdk_alloc::WdkAllocator = wdk_alloc::WdkAllocator;
+
+core::arch::global_asm! {
+    r#"
+.global asm_hv_hypervisor_call
+asm_hv_hypervisor_call:
+    push r10
+    push r11
+    push rbx
+    mov r10, 0x48564653
+    mov r11, 0x564d43616c6c
+    mov rbx, 0x4e4f485950455256
+    vmcall
+    pop rbx
+    pop r11
+    pop r10
+    ret
+"#,
+}
+
+extern "C" {
+    fn asm_hv_hypervisor_call(call_number: u32, param1: u64, param2: u64, param3: u64) -> u64;
+}
 
 pub mod vmm;
 pub mod memory;
@@ -129,6 +152,7 @@ pub struct Vcpu {
     pub last_exception_to: u64,
     pub debugctl: u64,
     pub pending_debug_exception: u64,
+    pub mtf_state: MtfTrapState,
 }
 
 impl Vcpu {
@@ -169,6 +193,7 @@ impl Vcpu {
             last_exception_to: 0,
             debugctl: 0,
             pending_debug_exception: 0,
+            mtf_state: MtfTrapState::default(),
         }
     }
 }
@@ -226,20 +251,10 @@ pub extern "system" fn DriverUnload(driver_object: *mut u8) {
 }
 
 pub unsafe fn hypervisor_call(call_number: u32, param1: u64, param2: u64, param3: u64) -> u64 {
-    if !vmm::is_vmx_initialized() {
+    if !globals::globals::is_vmx_initialized() {
         return 0;
     }
-
-    let result: u64;
-    core::arch::asm!(
-        "vmcall",
-        in("eax") call_number,
-        in("rbx") param1,
-        in("rcx") param2,
-        in("rdx") param3,
-        out("eax") result,
-    );
-    result
+    asm_hv_hypervisor_call(call_number, param1, param2, param3)
 }
 
 pub unsafe fn test_hypervisor() -> bool {

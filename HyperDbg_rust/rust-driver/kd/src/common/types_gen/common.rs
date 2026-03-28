@@ -118,6 +118,8 @@ pub struct CallStackFrame {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct SymbolInfo {
+    #[serde(rename = "id")]
+    pub id: u32,
     #[serde(rename = "name")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -125,7 +127,12 @@ pub struct SymbolInfo {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub address: Option<String>,
     #[serde(rename = "size")]
-    pub size: u64,
+    pub size: u32,
+    #[serde(rename = "tag")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tag: Option<String>,
+    #[serde(rename = "type_id")]
+    pub type_id: u32,
     #[serde(rename = "module")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub module: Option<String>,
@@ -148,5 +155,53 @@ pub struct VmxCapabilities {
     pub max_physical_address_width: Option<String>,
     #[serde(rename = "processor_count")]
     pub processor_count: u32,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct Instruction {
+    #[serde(rename = "address")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub address: Option<String>,
+    #[serde(rename = "bytes")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bytes: Option<Vec<u8>>,
+    #[serde(rename = "mnemonic")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mnemonic: Option<String>,
+    #[serde(rename = "operands")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub operands: Option<String>,
+    #[serde(rename = "length")]
+    pub length: u8,
+    #[serde(rename = "category")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub category: Option<String>,
+    #[serde(rename = "is_branch")]
+    pub is_branch: bool,
+    #[serde(rename = "is_call")]
+    pub is_call: bool,
+    #[serde(rename = "is_ret")]
+    pub is_ret: bool,
+    #[serde(rename = "is_interrupt")]
+    pub is_interrupt: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct FunctionInfo {
+    #[serde(rename = "name")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+    #[serde(rename = "address")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub address: Option<String>,
+    #[serde(rename = "size")]
+    pub size: u32,
+    #[serde(rename = "return_type_id")]
+    pub return_type_id: u32,
+    #[serde(rename = "parameter_types")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parameter_types: Option<Vec<u32>>,
+    #[serde(rename = "is_variadic")]
+    pub is_variadic: bool,
 }
 

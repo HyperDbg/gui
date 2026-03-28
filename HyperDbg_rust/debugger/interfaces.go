@@ -10,7 +10,6 @@ type Debugger interface {
 	Stop()
 	IsConnected() bool
 	GetState() DebugState
-	Ping() error
 	Status() (string, error)
 	LoadVmm() error
 	UnloadVmm() error
@@ -37,4 +36,10 @@ type Debugger interface {
 	WaitForDriver(timeout time.Duration) error
 	ExecuteScript(script string) (string, error)
 	ExecuteScriptWithContext(ctx context.Context, script string) (string, error)
+	Disassemble(address uint64, bytes []byte, maxInstructions uint32) ([]Instruction, error)
+	LoadSymbols(pdbPath string) error
+	UnloadSymbols()
+	GetSymbolByName(name string) (*SymbolInfo, error)
+	GetSymbolByAddress(address uint64) (*SymbolInfo, error)
+	GetFunctionByAddress(address uint64) (*FunctionInfo, error)
 }

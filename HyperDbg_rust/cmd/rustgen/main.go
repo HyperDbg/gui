@@ -66,7 +66,7 @@ type FileMapping struct {
 }
 
 var fileMappings = []FileMapping{
-	{GoFile: "common.go", RustFile: "common.rs", Types: []string{"ProcessId", "ThreadId", "Address", "PhysicalAddress", "ProcessInfo", "ThreadInfo", "ModuleInfo", "BreakpointInfo", "MemoryRegion", "CallStackFrame", "SymbolInfo", "VmxCapabilities"}},
+	{GoFile: "common.go", RustFile: "common.rs", Types: []string{"ProcessId", "ThreadId", "Address", "PhysicalAddress", "ProcessInfo", "ThreadInfo", "ModuleInfo", "BreakpointInfo", "MemoryRegion", "CallStackFrame", "SymbolInfo", "VmxCapabilities", "Instruction", "FunctionInfo"}},
 	{GoFile: "register.go", RustFile: "register.rs", Types: []string{"RegisterState"}},
 	{GoFile: "event.go", RustFile: "event.rs", Enums: []string{"EventType", "DebuggerEventType"}, Types: []string{"EventHeader", "DebuggerEvent"}},
 	{GoFile: "event_breakpoint.go", RustFile: "event_breakpoint.rs", Enums: []string{"BreakpointType"}, Types: []string{"BreakpointEvent"}},
@@ -401,6 +401,7 @@ func extractParams(m MethodInfo) []APIParam {
 
 func generateTypesSplit(projectRoot string, allFiles map[string]*ast.File) {
 	typesDir := filepath.Join(projectRoot, RustOutputDir, TypesOutputDir)
+	os.RemoveAll(typesDir)
 	if err := os.MkdirAll(typesDir, 0755); err != nil {
 		panic(err)
 	}
@@ -661,6 +662,7 @@ func generateResponseTypes(projectRoot string) {
 
 func generateHandlersSplit(projectRoot string, apiMethods []APIMethod) {
 	handlersDir := filepath.Join(projectRoot, RustOutputDir, HandlersOutputDir)
+	os.RemoveAll(handlersDir)
 	if err := os.MkdirAll(handlersDir, 0755); err != nil {
 		panic(err)
 	}
@@ -713,6 +715,8 @@ func generateHandlersRouter(projectRoot string, apiMethods []APIMethod) {
 	buf.WriteString("    pub size: Option<u32>,\n")
 	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")
 	buf.WriteString("    pub r#type: Option<i32>,\n")
+	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")
+	buf.WriteString("    pub bp_type: Option<u32>,\n")
 	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")
 	buf.WriteString("    pub data: Option<Vec<u8>>,\n")
 	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")

@@ -27,6 +27,8 @@ pub struct Request {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub r#type: Option<i32>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub bp_type: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub data: Option<Vec<u8>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub regs: Option<RegisterState>,
@@ -47,7 +49,6 @@ pub struct Empty {}
 
 // API Handler trait for implementing debugger operations
 pub trait DebuggerApi {
-    fn ping(&mut self, req: &Request) -> Result<Empty, String>;
     fn status(&mut self, req: &Request) -> Result<String, String>;
     fn load_vmm(&mut self, req: &Request) -> Result<Empty, String>;
     fn unload_vmm(&mut self, req: &Request) -> Result<Empty, String>;
@@ -67,6 +68,12 @@ pub trait DebuggerApi {
     fn get_process_list(&mut self, req: &Request) -> Result<Vec<ProcessInfo>, String>;
     fn get_thread_list(&mut self, req: &Request) -> Result<Vec<ThreadInfo>, String>;
     fn get_module_list(&mut self, req: &Request) -> Result<Vec<ModuleInfo>, String>;
+    fn disassemble(&mut self, req: &Request) -> Result<Vec<Instruction>, String>;
+    fn load_symbols(&mut self, req: &Request) -> Result<Empty, String>;
+    fn unload_symbols(&mut self, req: &Request) -> Result<Empty, String>;
+    fn get_symbol_by_name(&mut self, req: &Request) -> Result<SymbolInfo, String>;
+    fn get_symbol_by_address(&mut self, req: &Request) -> Result<SymbolInfo, String>;
+    fn get_function_by_address(&mut self, req: &Request) -> Result<FunctionInfo, String>;
 }
 
 // Non-API methods (excluded from trait):
@@ -83,12 +90,6 @@ pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
     match req {
         Ok(req) => {
             match req.action.as_str() {
-                "ping" => {
-                    match api.ping(&req) {
-                        Ok(data) => success_response(data),
-                        Err(e) => error_response(&e),
-                    }
-                }
                 "status" => {
                     match api.status(&req) {
                         Ok(data) => success_response(data),
@@ -203,6 +204,42 @@ pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
                         Err(e) => error_response(&e),
                     }
                 }
+                "disassemble" => {
+                    match api.disassemble(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "load_symbols" => {
+                    match api.load_symbols(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "unload_symbols" => {
+                    match api.unload_symbols(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "get_symbol_by_name" => {
+                    match api.get_symbol_by_name(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "get_symbol_by_address" => {
+                    match api.get_symbol_by_address(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "get_function_by_address" => {
+                    match api.get_function_by_address(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
                 _ => {
                     error_response(&format!("Unknown action: {}", req.action))
                 }
@@ -256,10 +293,6 @@ impl Request {
 pub struct NoOpDebugger;
 
 impl DebuggerApi for NoOpDebugger {
-    fn ping(&mut self, _req: &Request) -> Result<Empty, String> {
-        Ok(Empty {})
-    }
-
     fn status(&mut self, _req: &Request) -> Result<String, String> {
         Ok(Default::default())
     }
@@ -374,6 +407,30 @@ impl DebuggerApi for NoOpDebugger {
             ModuleInfo { base_address: Some(String::from("0x7FFE00000000")), size: 0x1000000, name: Some(String::from("ntdll.dll")), path: Some(String::from("C:\\Windows\\System32\\ntdll.dll")) },
             ModuleInfo { base_address: Some(String::from("0x7FFE10000000")), size: 0x2000000, name: Some(String::from("kernel32.dll")), path: Some(String::from("C:\\Windows\\System32\\kernel32.dll")) },
         ])
+    }
+
+    fn disassemble(&mut self, _req: &Request) -> Result<Vec<Instruction>, String> {
+        Ok(Vec::new())
+    }
+
+    fn load_symbols(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn unload_symbols(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn get_symbol_by_name(&mut self, _req: &Request) -> Result<SymbolInfo, String> {
+        Ok(Default::default())
+    }
+
+    fn get_symbol_by_address(&mut self, _req: &Request) -> Result<SymbolInfo, String> {
+        Ok(Default::default())
+    }
+
+    fn get_function_by_address(&mut self, _req: &Request) -> Result<FunctionInfo, String> {
+        Ok(Default::default())
     }
 
 }

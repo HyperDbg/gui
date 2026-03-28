@@ -28,6 +28,24 @@ pub enum UdError {
     IoError(String),
 }
 
+impl alloc::fmt::Display for UdError {
+    fn fmt(&self, f: &mut alloc::fmt::Formatter<'_>) -> alloc::fmt::Result {
+        match self {
+            UdError::NotActive => write!(f, "User debugger not active"),
+            UdError::AlreadyActive => write!(f, "User debugger already active"),
+            UdError::InvalidProcessId(id) => write!(f, "Invalid process ID: {}", id),
+            UdError::InvalidThreadId(id) => write!(f, "Invalid thread ID: {}", id),
+            UdError::ProcessNotFound(id) => write!(f, "Process not found: {}", id),
+            UdError::ThreadNotFound(id) => write!(f, "Thread not found: {}", id),
+            UdError::InvalidDebuggingToken => write!(f, "Invalid debugging token"),
+            UdError::AttachFailed => write!(f, "Attach failed"),
+            UdError::DetachFailed => write!(f, "Detach failed"),
+            UdError::StepFailed => write!(f, "Step failed"),
+            UdError::IoError(msg) => write!(f, "IO error: {}", msg),
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct ThreadDebuggingAction {
     pub action_type: UdCommandActionType,
@@ -151,7 +169,7 @@ impl UserDebugger {
         self.active
     }
 
-    pub fn initialize(&self) -> Result<(), UdError> {
+    pub fn initialize(&mut self) -> Result<(), UdError> {
         if self.active {
             return Err(UdError::AlreadyActive);
         }
@@ -166,7 +184,7 @@ impl UserDebugger {
         Ok(())
     }
 
-    pub fn uninitialize(&self) -> Result<(), UdError> {
+    pub fn uninitialize(&mut self) -> Result<(), UdError> {
         if !self.active {
             return Err(UdError::NotActive);
         }
@@ -182,7 +200,7 @@ impl UserDebugger {
         Ok(())
     }
 
-    pub fn attach_process(&self, process_id: ProcessId) -> Result<u64, UdError> {
+    pub fn attach_process(&mut self, process_id: ProcessId) -> Result<u64, UdError> {
         if !self.active {
             return Err(UdError::NotActive);
         }
@@ -196,7 +214,7 @@ impl UserDebugger {
         Ok(token)
     }
 
-    pub fn detach_process(&self, token: u64) -> Result<(), UdError> {
+    pub fn detach_process(&mut self, token: u64) -> Result<(), UdError> {
         if !self.active {
             return Err(UdError::NotActive);
         }
@@ -280,11 +298,12 @@ impl UserDebugger {
         Ok(())
     }
 
-    pub fn read_registers(&self, process_id: ProcessId, thread_id: ThreadId, register_id: u32) -> Result<(), UdError> {
+    pub fn read_registers(&self, process_id: ProcessId, thread_id: ThreadId, _register_id: u32) -> Result<(), UdError> {
         let process_details = self.find_process_by_id(process_id)
             .ok_or(UdError::ProcessNotFound(process_id))?;
 
-        let thread_details = process_details.lock().find_thread_mut(thread_id)
+        let mut binding = process_details.lock();
+        let thread_details = binding.find_thread_mut(thread_id)
             .ok_or(UdError::ThreadNotFound(thread_id))?;
 
         thread_details.is_paused = false;
@@ -293,8 +312,8 @@ impl UserDebugger {
         Ok(())
     }
 
-    pub fn run_script(&self, process_id: ProcessId, script_buffer: &[u8]) -> Result<(), UdError> {
-        let process_details = self.find_process_by_id(process_id)
+    pub fn run_script(&self, process_id: ProcessId, _script_buffer: &[u8]) -> Result<(), UdError> {
+        let _process_details = self.find_process_by_id(process_id)
             .ok_or(UdError::ProcessNotFound(process_id))?;
 
         log::info!("Run script for process {}", process_id);
@@ -304,8 +323,8 @@ impl UserDebugger {
     pub fn dispatch_usermode_commands(
         &self,
         command_packet: &UdCommandPacket,
-        input_length: u32,
-        output_length: u32,
+        _input_length: u32,
+        _output_length: u32,
     ) -> Result<(), UdError> {
         let process_details = self.find_process_by_token(command_packet.process_debugging_detail_token)
             .ok_or(UdError::InvalidDebuggingToken)?;
@@ -323,7 +342,8 @@ impl UserDebugger {
         let process_details = self.find_process_by_id(process_id)
             .ok_or(UdError::ProcessNotFound(process_id))?;
 
-        let thread_details = process_details.lock().find_thread(thread_id)
+        let binding = process_details.lock();
+        let thread_details = binding.find_thread(thread_id)
             .ok_or(UdError::ThreadNotFound(thread_id))?;
 
         if !thread_details.is_paused {
@@ -343,7 +363,8 @@ impl UserDebugger {
         let process_details = self.find_process_by_id(process_id)
             .ok_or(UdError::ProcessNotFound(process_id))?;
 
-        let mut thread_details = process_details.lock().find_thread_mut(thread_id)
+        let mut binding = process_details.lock();
+        let thread_details = binding.find_thread_mut(thread_id)
             .ok_or(UdError::ThreadNotFound(thread_id))?;
 
         for action in &mut thread_details.actions {
@@ -395,13 +416,13 @@ impl UserDebugger {
         Ok(())
     }
 
-    fn remove_and_free_all_process_debugging_details(&self) -> Result<(), UdError> {
+    fn remove_and_free_all_process_debugging_details(&mut self) -> Result<(), UdError> {
         self.process_debugging_details.clear();
         log::info!("Removed all process debugging details");
         Ok(())
     }
 
-    fn configure_intercepting_threads(&self, process_details: Arc<Mutex<ProcessDebuggingDetails>>, intercept: bool) -> Result<bool, UdError> {
+    fn configure_intercepting_threads(&self, _process_details: Arc<Mutex<ProcessDebuggingDetails>>, intercept: bool) -> Result<bool, UdError> {
         log::info!("Configuring intercepting threads: {}", intercept);
         Ok(true)
     }
@@ -416,7 +437,7 @@ impl UserDebugger {
         Ok(())
     }
 
-    fn apply_action_to_paused_threads(&self, process_details: Arc<Mutex<ProcessDebuggingDetails>>, command: &UdCommandPacket) -> Result<(), UdError> {
+    fn apply_action_to_paused_threads(&self, _process_details: Arc<Mutex<ProcessDebuggingDetails>>, _command: &UdCommandPacket) -> Result<(), UdError> {
         log::info!("Applying action to paused threads");
         Ok(())
     }

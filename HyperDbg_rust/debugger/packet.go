@@ -160,15 +160,6 @@ func (p *Packet) eventPoller() {
 	}
 }
 
-func (p *Packet) Ping() error {
-	data, _ := json.Marshal(map[string]string{"action": "ping"})
-	resp := SendReceive[Empty](p, data)
-	if resp == nil || !resp.Success {
-		return fmt.Errorf("ping failed: %s", resp.Message)
-	}
-	return nil
-}
-
 func (p *Packet) Status() (string, error) {
 	data, _ := json.Marshal(map[string]string{"action": "status"})
 	resp := SendReceive[Empty](p, data)
@@ -519,4 +510,71 @@ func (p *Packet) ExecuteScriptWithContext(ctx context.Context, script string) (s
 		return engine.ExecuteWithContext(ctx, script)
 	}
 	return engine.Execute(script)
+}
+
+func (p *Packet) Disassemble(address uint64, bytes []byte, maxInstructions uint32) ([]Instruction, error) {
+	data := mylog.Check2(json.Marshal(map[string]any{
+		"action":           "disassemble",
+		"address":          fmt.Sprintf("0x%X", address),
+		"data":             bytes,
+		"max_instructions": maxInstructions,
+	}))
+	resp := SendReceive[[]Instruction](p, data)
+	if resp == nil || !resp.Success {
+		return nil, fmt.Errorf("disassemble failed: %s", resp.Message)
+	}
+	return resp.Data, nil
+}
+
+func (p *Packet) LoadSymbols(pdbPath string) error {
+	data := mylog.Check2(json.Marshal(map[string]any{
+		"action":   "load_symbols",
+		"pdb_path": pdbPath,
+	}))
+	resp := SendReceive[Empty](p, data)
+	if resp == nil || !resp.Success {
+		return fmt.Errorf("load symbols failed: %s", resp.Message)
+	}
+	return nil
+}
+
+func (p *Packet) UnloadSymbols() {
+	data := mylog.Check2(json.Marshal(map[string]string{"action": "unload_symbols"}))
+	SendReceive[Empty](p, data)
+}
+
+func (p *Packet) GetSymbolByName(name string) (*SymbolInfo, error) {
+	data := mylog.Check2(json.Marshal(map[string]any{
+		"action": "get_symbol_by_name",
+		"name":   name,
+	}))
+	resp := SendReceive[SymbolInfo](p, data)
+	if resp == nil || !resp.Success {
+		return nil, fmt.Errorf("get symbol failed: %s", resp.Message)
+	}
+	return resp.Data, nil
+}
+
+func (p *Packet) GetSymbolByAddress(address uint64) (*SymbolInfo, error) {
+	data := mylog.Check2(json.Marshal(map[string]any{
+		"action":  "get_symbol_by_address",
+		"address": fmt.Sprintf("0x%X", address),
+	}))
+	resp := SendReceive[SymbolInfo](p, data)
+	if resp == nil || !resp.Success {
+		return nil, fmt.Errorf("get symbol failed: %s", resp.Message)
+	}
+	return resp.Data, nil
+}
+
+func (p *Packet) GetFunctionByAddress(address uint64) (*FunctionInfo, error) {
+	data := mylog.Check2(json.Marshal(map[string]any{
+		"action":  "get_function_by_address",
+		"address": fmt.Sprintf("0x%X", address),
+	}))
+	resp := SendReceive[FunctionInfo](p, data)
+	if resp == nil || !resp.Success {
+		return nil, fmt.Errorf("get function failed: %s", resp.Message)
+	}
+	return resp.Data, nil
 }

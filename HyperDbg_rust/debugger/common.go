@@ -55,9 +55,12 @@ type CallStackFrame struct {
 }
 
 type SymbolInfo struct {
+	ID      uint32  `json:"id"`
 	Name    string  `json:"name"`
 	Address Address `json:"address"`
-	Size    uint64  `json:"size"`
+	Size    uint32  `json:"size"`
+	Tag     string  `json:"tag"`
+	TypeID  uint32  `json:"type_id"`
 	Module  string  `json:"module"`
 }
 
@@ -69,4 +72,26 @@ type VmxCapabilities struct {
 	IOBitmapSupported       bool   `json:"io_bitmap_supported"`
 	MaxPhysicalAddressWidth uint8  `json:"max_physical_address_width"`
 	ProcessorCount          uint32 `json:"processor_count"`
+}
+
+type Instruction struct {
+	Address     Address `json:"address"`
+	Bytes       []byte  `json:"bytes"`
+	Mnemonic    string  `json:"mnemonic"`
+	Operands    string  `json:"operands"`
+	Length      uint8   `json:"length"`
+	Category    string  `json:"category"`
+	IsBranch    bool    `json:"is_branch"`
+	IsCall      bool    `json:"is_call"`
+	IsRet       bool    `json:"is_ret"`
+	IsInterrupt bool    `json:"is_interrupt"`
+}
+
+type FunctionInfo struct {
+	Name           string   `json:"name"`
+	Address        Address  `json:"address"`
+	Size           uint32   `json:"size"`
+	ReturnTypeID   uint32   `json:"return_type_id"`
+	ParameterTypes []uint32 `json:"parameter_types"`
+	IsVariadic     bool     `json:"is_variadic"`
 }

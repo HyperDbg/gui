@@ -19,14 +19,20 @@ use alloc::string::ToString;
 use spin::Mutex;
 
 pub mod kd;
-// pub mod ud;
-// pub mod hyperkd;
+pub mod ud;
+pub mod hyperdbg_api;
+pub mod hyperkd;
 pub mod logger;
 pub mod net;
 pub mod common;
 pub mod framework;
-// pub mod disassembler;
-// pub mod pdbex;
+
+pub use hyperkd::hyperhv::vmm;
+pub use hyperkd::hyperhv::memory;
+pub use hyperkd::hyperhv::processor;
+pub use hyperkd::hyperhv::globals;
+pub use hyperkd::hyperhv::hooks;
+pub use hyperkd::{VMX_CONTEXT, VmxState, VmxError, Vcpu, VmxContext};
 
 pub use logger::*;
 pub use net::{Server, Request, ResponseWriter, Handler, Router};

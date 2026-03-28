@@ -1,5 +1,3 @@
-#![feature(abi_msvc)]
-
 extern crate alloc;
 
 use alloc::sync::Arc;
@@ -21,6 +19,28 @@ pub type PhysicalAddress = u64;
 pub type ProcessId = u32;
 pub type ThreadId = u32;
 
+core::arch::global_asm! {
+    r#"
+.global asm_hypervisor_call
+asm_hypervisor_call:
+    push r10
+    push r11
+    push rbx
+    mov r10, 0x48564653
+    mov r11, 0x564d43616c6c
+    mov rbx, 0x4e4f485950455256
+    vmcall
+    pop rbx
+    pop r11
+    pop r10
+    ret
+"#,
+}
+
+extern "C" {
+    fn asm_hypervisor_call(call_number: u32, param1: u64, param2: u64, param3: u64) -> u64;
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum VmxError {
     VmxNotSupported,
@@ -37,6 +57,7 @@ pub enum VmxError {
     InsufficientMemory,
     InvalidState,
     NotInVmxOperation,
+    InvalidVcpu,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -160,23 +181,10 @@ impl VmxContext {
 pub static VMX_CONTEXT: Mutex<VmxContext> = Mutex::new(VmxContext::new());
 
 pub unsafe fn hypervisor_call(call_number: u32, param1: u64, param2: u64, param3: u64) -> u64 {
-    if !hyperhv::vmm::is_vmx_initialized() {
+    if !hyperhv::globals::globals::is_vmx_initialized() {
         return 0;
     }
-
-    let result: u64;
-    let p1 = param1;
-    let p2 = param2;
-    let p3 = param3;
-    core::arch::asm!(
-        "vmcall",
-        in("eax") call_number,
-        in("r8") p1,
-        in("rcx") p2,
-        in("rdx") p3,
-        lateout("eax") result,
-    );
-    result
+    asm_hypervisor_call(call_number, param1, param2, param3)
 }
 
 pub unsafe fn test_hypervisor() -> bool {
