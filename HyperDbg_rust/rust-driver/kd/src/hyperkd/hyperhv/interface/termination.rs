@@ -7,11 +7,17 @@ use spin::Mutex;
 use crate::hyperkd::hyperhv::vmm::vmxoff;
 
 extern "system" {
-    fn PsTerminateProcess(process_handle: *mut u8, exit_status: u32) -> u32;
-    fn PsTerminateThread(thread_handle: *mut u8, exit_status: u32) -> u32;
-    fn ZwTerminateProcess(process_handle: *mut u8, exit_status: u32) -> u32;
-    fn ZwTerminateThread(thread_handle: *mut u8, exit_status: u32) -> u32;
-    fn KeBugCheckEx(bug_check_code: u32, bug_check_param1: u64, bug_check_param2: u64, bug_check_param3: u64, bug_check_param4: u64) -> !;
+    fn PsTerminateProcess(process_handle: *mut u8, exit_status: i32) -> i32;
+    fn PsTerminateThread(thread_handle: *mut u8, exit_status: i32) -> i32;
+    fn PsLookupProcessByProcessId(process_id: usize, process: *mut *mut u8) -> i32;
+    fn PsLookupThreadByThreadId(thread_id: usize, thread: *mut *mut u8) -> i32;
+    fn ObDereferenceObject(object: *mut u8);
+    fn KeBugCheckEx(bug_check_code: u32, param1: u64, param2: u64, param3: u64, param4: u64);
+}
+
+#[inline]
+fn nt_success(status: i32) -> bool {
+    status >= 0
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -193,9 +199,9 @@ impl TerminationManager {
             return Err(TerminationError::InvalidHandle);
         }
 
-        let status = unsafe { PsTerminateProcess(process_handle, exit_code) };
+        let status = unsafe { PsTerminateProcess(process_handle, exit_code as i32) };
 
-        if status != 0 {
+        if !nt_success(status) {
             return Err(TerminationError::TerminationFailed);
         }
 
@@ -226,9 +232,9 @@ impl TerminationManager {
             return Err(TerminationError::InvalidHandle);
         }
 
-        let status = unsafe { PsTerminateThread(thread_handle, exit_code) };
+        let status = unsafe { PsTerminateThread(thread_handle, exit_code as i32) };
 
-        if status != 0 {
+        if !nt_success(status) {
             return Err(TerminationError::TerminationFailed);
         }
 
@@ -255,15 +261,10 @@ impl TerminationManager {
             return Err(TerminationError::NotInitialized);
         }
 
-        extern "system" {
-            fn PsLookupProcessByProcessId(process_id: u32, process: *mut *mut u8) -> u32;
-            fn ObDereferenceObject(object: *mut u8);
-        }
-
         let mut process_handle: *mut u8 = core::ptr::null_mut();
-        let status = unsafe { PsLookupProcessByProcessId(process_id, &mut process_handle) };
+        let status = unsafe { PsLookupProcessByProcessId(process_id as usize, &mut process_handle) };
 
-        if status != 0 || process_handle.is_null() {
+        if !nt_success(status) || process_handle.is_null() {
             return Err(TerminationError::ProcessNotFound);
         }
 
@@ -279,15 +280,10 @@ impl TerminationManager {
             return Err(TerminationError::NotInitialized);
         }
 
-        extern "system" {
-            fn PsLookupThreadByThreadId(thread_id: u32, thread: *mut *mut u8) -> u32;
-            fn ObDereferenceObject(object: *mut u8);
-        }
-
         let mut thread_handle: *mut u8 = core::ptr::null_mut();
-        let status = unsafe { PsLookupThreadByThreadId(thread_id, &mut thread_handle) };
+        let status = unsafe { PsLookupThreadByThreadId(thread_id as usize, &mut thread_handle) };
 
-        if status != 0 || thread_handle.is_null() {
+        if !nt_success(status) || thread_handle.is_null() {
             return Err(TerminationError::ThreadNotFound);
         }
 
