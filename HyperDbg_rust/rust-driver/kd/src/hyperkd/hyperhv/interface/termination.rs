@@ -12,7 +12,7 @@ extern "system" {
     fn PsLookupProcessByProcessId(process_id: usize, process: *mut *mut u8) -> i32;
     fn PsLookupThreadByThreadId(thread_id: usize, thread: *mut *mut u8) -> i32;
     fn ObDereferenceObject(object: *mut u8);
-    fn KeBugCheckEx(bug_check_code: u32, param1: u64, param2: u64, param3: u64, param4: u64);
+    fn KeBugCheckEx(bug_check_code: u32, param1: u64, param2: u64, param3: u64, param4: u64) -> !;
 }
 
 #[inline]
@@ -295,9 +295,7 @@ impl TerminationManager {
     }
 
     pub fn terminate_system(&mut self, bug_check_code: u32, param1: u64, param2: u64, param3: u64, param4: u64) -> ! {
-        unsafe {
-            KeBugCheckEx(bug_check_code, param1, param2, param3, param4);
-        }
+        unsafe { KeBugCheckEx(bug_check_code, param1, param2, param3, param4) }
     }
 
     pub fn terminate_hypervisor(&mut self) -> Result<(), TerminationError> {
@@ -327,7 +325,7 @@ impl TerminationManager {
         }
 
         while let Some(request) = self.pending_terminations.pop_front() {
-            let result = match request.target_type {
+            let result: Result<TerminationResult, TerminationError> = match request.target_type {
                 TerminationTarget::Process => {
                     self.terminate_process_by_id(request.target_id, request.exit_code)
                 }
@@ -335,7 +333,7 @@ impl TerminationManager {
                     self.terminate_thread_by_id(request.target_id, request.exit_code)
                 }
                 TerminationTarget::System => {
-                    self.terminate_system(0, 0, 0, 0, 0);
+                    self.terminate_system(request.exit_code, 0, 0, 0, 0)
                 }
                 TerminationTarget::Hypervisor => {
                     self.terminate_hypervisor().map(|_| TerminationResult {
