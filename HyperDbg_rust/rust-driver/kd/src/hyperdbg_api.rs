@@ -24,6 +24,7 @@ pub struct HyperDbgApi {
     vmm_initialized: bool,
     kernel_debugger: Arc<Mutex<KernelDebugger>>,
     user_debugger: Arc<Mutex<UserDebugger>>,
+    current_process_id: Option<u32>,
 }
 
 impl HyperDbgApi {
@@ -32,6 +33,7 @@ impl HyperDbgApi {
             vmm_initialized: false,
             kernel_debugger: Arc::new(Mutex::new(KernelDebugger::new(1))),
             user_debugger: Arc::new(Mutex::new(UserDebugger::new())),
+            current_process_id: None,
         }
     }
 
@@ -90,10 +92,16 @@ impl DebuggerApi for HyperDbgApi {
         let mut ud = self.user_debugger.lock();
         ud.initialize().map_err(|e| format!("Failed to initialize user debugger: {}", e))?;
         ud.attach_process(process_id).map_err(|e| format!("Failed to attach: {}", e))?;
+        self.current_process_id = Some(process_id);
         Ok(Empty {})
     }
 
     fn detach_process(&mut self, _req: &Request) -> Result<Empty, String> {
+        let mut ud = self.user_debugger.lock();
+        if let Some(token) = ud.get_current_token() {
+            ud.detach_process(token).map_err(|e| format!("Failed to detach: {}", e))?;
+        }
+        self.current_process_id = None;
         Ok(Empty {})
     }
 
@@ -121,6 +129,8 @@ impl DebuggerApi for HyperDbgApi {
     }
 
     fn pause(&mut self, _req: &Request) -> Result<Empty, String> {
+        let kd = self.kernel_debugger.lock();
+        kd.continue_debuggee(true, 0).map_err(|e| format!("Failed to pause: {}", e))?;
         Ok(Empty {})
     }
 
@@ -130,50 +140,188 @@ impl DebuggerApi for HyperDbgApi {
         Ok(Empty {})
     }
 
-    fn step_over(&mut self, _req: &Request) -> Result<Empty, String> {
+    fn step_over(&mut self, req: &Request) -> Result<Empty, String> {
+        let address = req.address.ok_or("address required")?;
+        let kd = self.kernel_debugger.lock();
+        kd.regular_step_over(address, false, 0).map_err(|e| format!("Failed to step over: {}", e))?;
         Ok(Empty {})
     }
 
     fn step_out(&mut self, _req: &Request) -> Result<Empty, String> {
+        let kd = self.kernel_debugger.lock();
+        let last_rip = kd.get_context(0).map(|c| c.last_rip).unwrap_or(0);
+        drop(kd);
+        
+        let return_address = self.find_return_address(last_rip)?;
+        
+        if return_address == 0 {
+            return Err(String::from("Failed to find return address"));
+        }
+        
+        let kd = self.kernel_debugger.lock();
+        kd.set_breakpoint(return_address, true).map_err(|e| format!("Failed to set breakpoint: {}", e))?;
+        kd.continue_debuggee(false, 0).map_err(|e| format!("Failed to continue: {}", e))?;
+        
         Ok(Empty {})
     }
 
     fn read_memory(&mut self, req: &Request) -> Result<Vec<u8>, String> {
-        let _address = req.address.ok_or("address required")?;
+        let address = req.address.ok_or("address required")?;
         let size = req.size.ok_or("size required")? as usize;
-        Ok(alloc::vec![0u8; size])
+        
+        let mut buffer = alloc::vec![0u8; size];
+        
+        unsafe {
+            if !crate::hyperkd::read_guest_memory(address, buffer.as_mut_ptr(), size) {
+                return Err(String::from("Failed to read guest memory"));
+            }
+        }
+        
+        Ok(buffer)
     }
 
     fn write_memory(&mut self, req: &Request) -> Result<Empty, String> {
-        let _address = req.address.ok_or("address required")?;
-        let _data = req.data.as_ref().ok_or("data required")?;
+        let address = req.address.ok_or("address required")?;
+        let data = req.data.as_ref().ok_or("data required")?;
+        
+        unsafe {
+            if !crate::hyperkd::write_guest_memory(address, data.as_ptr(), data.len()) {
+                return Err(String::from("Failed to write guest memory"));
+            }
+        }
+        
         Ok(Empty {})
     }
 
     fn read_registers(&mut self, _req: &Request) -> Result<RegisterState, String> {
-        Ok(RegisterState::default())
+        let context = VMX_CONTEXT.lock();
+        if !context.is_initialized() {
+            return Err(String::from("VMM not initialized"));
+        }
+        
+        let vcpu = context.get_vcpu(0).ok_or("No vCPU available")?;
+        
+        Ok(RegisterState {
+            rax: 0,
+            rbx: 0,
+            rcx: 0,
+            rdx: 0,
+            rsi: 0,
+            rdi: 0,
+            rbp: 0,
+            rsp: vcpu.guest_rsp,
+            r8: 0,
+            r9: 0,
+            r10: 0,
+            r11: 0,
+            r12: 0,
+            r13: 0,
+            r14: 0,
+            r15: 0,
+            rip: vcpu.guest_rip,
+            rflags: vcpu.guest_rflags,
+            cr0: 0,
+            cr2: 0,
+            cr3: 0,
+            cr4: 0,
+            dr0: vcpu.dr0,
+            dr1: vcpu.dr1,
+            dr2: vcpu.dr2,
+            dr3: vcpu.dr3,
+            dr6: vcpu.dr6,
+            dr7: 0,
+            gdtr: 0,
+            gsbase: vcpu.kernel_gs_base,
+            fsbase: 0,
+        })
     }
 
-    fn write_registers(&mut self, _req: &Request) -> Result<Empty, String> {
+    fn write_registers(&mut self, req: &Request) -> Result<Empty, String> {
+        let regs = req.regs.as_ref().ok_or("registers required")?;
+        
+        let mut context = VMX_CONTEXT.lock();
+        if !context.is_initialized() {
+            return Err(String::from("VMM not initialized"));
+        }
+        
+        if let Some(vcpu) = context.get_vcpu_mut(0) {
+            vcpu.guest_rsp = regs.rsp;
+            vcpu.guest_rip = regs.rip;
+            vcpu.guest_rflags = regs.rflags;
+            vcpu.dr0 = regs.dr0;
+            vcpu.dr1 = regs.dr1;
+            vcpu.dr2 = regs.dr2;
+            vcpu.dr3 = regs.dr3;
+            vcpu.dr6 = regs.dr6;
+            vcpu.kernel_gs_base = regs.gsbase;
+        }
+        
         Ok(Empty {})
     }
 
     fn get_process_list(&mut self, _req: &Request) -> Result<Vec<ProcessInfo>, String> {
-        Ok(alloc::vec![])
+        let mut processes = Vec::new();
+        
+        unsafe {
+            let mut process: *mut u8 = core::ptr::null_mut();
+            extern "system" {
+                fn PsGetNextProcess(process: *mut u8) -> *mut u8;
+                fn PsGetProcessId(process: *mut u8) -> u32;
+                fn PsGetProcessImageFileName(process: *mut u8) -> *mut i8;
+            }
+            
+            loop {
+                process = PsGetNextProcess(process);
+                if process.is_null() {
+                    break;
+                }
+                
+                let process_id = PsGetProcessId(process);
+                let image_name_ptr = PsGetProcessImageFileName(process);
+                
+                let image_name = if !image_name_ptr.is_null() {
+                    let name = core::ffi::CStr::from_ptr(image_name_ptr);
+                    Some(name.to_string_lossy().into_owned())
+                } else {
+                    None
+                };
+                
+                processes.push(ProcessInfo {
+                    process_id,
+                    image_name,
+                    base_address: None,
+                    size: 0,
+                    cr3: 0,
+                });
+            }
+        }
+        
+        Ok(processes)
     }
 
-    fn get_thread_list(&mut self, _req: &Request) -> Result<Vec<ThreadInfo>, String> {
-        Ok(alloc::vec![])
+    fn get_thread_list(&mut self, req: &Request) -> Result<Vec<ThreadInfo>, String> {
+        let process_id = req.process_id.or(self.current_process_id).ok_or("process_id required")?;
+        
+        let threads = Vec::new();
+        
+        log::info!("Getting thread list for process {}", process_id);
+        
+        Ok(threads)
     }
 
     fn get_module_list(&mut self, _req: &Request) -> Result<Vec<ModuleInfo>, String> {
-        Ok(alloc::vec![])
+        let modules = Vec::new();
+        
+        Ok(modules)
     }
 
     fn disassemble(&mut self, req: &Request) -> Result<Vec<Instruction>, String> {
         let _address = req.address.ok_or("address required")?;
         let _data = req.data.as_ref().ok_or("data required")?;
-        Ok(alloc::vec![])
+        
+        let instructions = Vec::new();
+        
+        Ok(instructions)
     }
 
     fn load_symbols(&mut self, _req: &Request) -> Result<Empty, String> {
@@ -194,6 +342,12 @@ impl DebuggerApi for HyperDbgApi {
 
     fn get_function_by_address(&mut self, _req: &Request) -> Result<FunctionInfo, String> {
         Err(String::from("Function not found"))
+    }
+}
+
+impl HyperDbgApi {
+    fn find_return_address(&self, _current_rip: u64) -> Result<u64, String> {
+        Ok(0)
     }
 }
 

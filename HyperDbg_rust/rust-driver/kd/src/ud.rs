@@ -396,6 +396,10 @@ impl UserDebugger {
         Ok(())
     }
 
+    pub fn get_current_token(&self) -> Option<u64> {
+        self.process_debugging_details.first().map(|p| p.lock().token)
+    }
+
     pub fn send_formats_function_result(&self, value: u64) {
         let mut result = self.formats_result.lock();
         result.result = 0;

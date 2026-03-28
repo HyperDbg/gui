@@ -1,55 +1,57 @@
+use wdk_sys::{
+    KIRQL,
+    KDPC,
+    GROUP_AFFINITY,
+    PROCESSOR_NUMBER,
+    PKDPC,
+};
+
 extern "system" {
-    fn KeGetCurrentProcessorNumberEx(proc_number: *mut u32) -> u32;
-
-    fn KeQueryActiveProcessorCountEx(relationship_type: u32) -> u32;
-
-    fn KeSetSystemAffinityThread(affinity: usize);
-
+    fn KeGetCurrentProcessorNumberEx(proc_number: *mut PROCESSOR_NUMBER) -> u32;
+    fn KeQueryActiveProcessorCountEx(relationship_type: u16) -> u32;
+    fn KeSetSystemGroupAffinityThread(affinity: *const GROUP_AFFINITY, previous_affinity: *mut GROUP_AFFINITY);
     fn KeRevertToUserAffinityThread();
-
-    fn KeGetCurrentIrql() -> u8;
-
-    fn KeRaiseIrql(new_irql: u8, old_irql: *mut u8);
-
-    fn KeLowerIrql(new_irql: u8);
-
-    fn KeInitializeDpc(
-        dpc: *mut u8,
-        routine: extern "system" fn(*mut u8, *mut u8, *mut u8, *mut u8),
-        context: *mut u8,
-    );
-
-    fn KeInsertQueueDpc(dpc: *mut u8, arg1: *mut u8, arg2: *mut u8) -> bool;
-
-    fn KeGenericCallDpc(
-        routine: extern "system" fn(*mut u8, *mut u8, *mut u8, *mut u8),
-        context: *mut u8,
-    );
-
-    fn KeSignalCallDpcDone(context: *mut u8);
+    fn KeGetCurrentIrql() -> KIRQL;
+    fn KeRaiseIrql(new_irql: KIRQL, old_irql: *mut KIRQL);
+    fn KeLowerIrql(new_irql: KIRQL);
+    fn KeInitializeDpc(dpc: PKDPC, routine: Option<unsafe extern "system" fn(PKDPC, *mut core::ffi::c_void, *mut core::ffi::c_void, *mut core::ffi::c_void)>, context: *mut core::ffi::c_void);
+    fn KeInsertQueueDpc(dpc: PKDPC, arg1: *mut core::ffi::c_void, arg2: *mut core::ffi::c_void) -> i32;
+    fn KeQueryActiveProcessors() -> u64;
 }
 
-pub const IRQL_PASSIVE: u8 = 0;
-pub const IRQL_APC: u8 = 1;
-pub const IRQL_DISPATCH: u8 = 2;
-pub const IRQL_CLOCK: u8 = 28;
-pub const IRQL_DEVICE: u8 = 3;
-pub const IRQL_DPC: u8 = 2;
-pub const IRQL_HIGH: u8 = 31;
+pub const ALL_PROCESSOR_GROUPS: u16 = 0xFFFF;
+pub const IRQL_PASSIVE: KIRQL = 0;
+pub const IRQL_APC: KIRQL = 1;
+pub const IRQL_DISPATCH: KIRQL = 2;
+pub const IRQL_CLOCK: KIRQL = 28;
+pub const IRQL_DEVICE: KIRQL = 3;
+pub const IRQL_DPC: KIRQL = 2;
+pub const IRQL_HIGH: KIRQL = 31;
 
 #[inline(always)]
 pub fn get_current_processor_number() -> u32 {
-    unsafe { KeGetCurrentProcessorNumberEx(core::ptr::null_mut()) }
+    unsafe { 
+        let mut proc_number: PROCESSOR_NUMBER = core::mem::zeroed();
+        KeGetCurrentProcessorNumberEx(&mut proc_number);
+        proc_number.Number as u32
+    }
 }
 
 #[inline(always)]
 pub fn get_processor_count() -> u32 {
-    unsafe { KeQueryActiveProcessorCountEx(0) }
+    unsafe { KeQueryActiveProcessorCountEx(ALL_PROCESSOR_GROUPS) }
 }
 
 #[inline(always)]
 pub fn set_processor_affinity(affinity: usize) {
-    unsafe { KeSetSystemAffinityThread(affinity) }
+    unsafe { 
+        let group_affinity = GROUP_AFFINITY {
+            Group: 0,
+            Mask: affinity as u64,
+            Reserved: [0; 3],
+        };
+        KeSetSystemGroupAffinityThread(&group_affinity, core::ptr::null_mut());
+    }
 }
 
 #[inline(always)]
@@ -58,45 +60,55 @@ pub fn revert_to_user_affinity() {
 }
 
 #[inline(always)]
-pub fn get_current_irql() -> u8 {
+pub fn get_current_irql() -> KIRQL {
     unsafe { KeGetCurrentIrql() }
 }
 
 #[inline(always)]
-pub fn raise_irql(new_irql: u8) -> u8 {
-    let mut old_irql: u8 = 0;
+pub fn raise_irql(new_irql: KIRQL) -> KIRQL {
+    let mut old_irql: KIRQL = 0;
     unsafe { KeRaiseIrql(new_irql, &mut old_irql) }
     old_irql
 }
 
 #[inline(always)]
-pub fn lower_irql(new_irql: u8) {
+pub fn lower_irql(new_irql: KIRQL) {
     unsafe { KeLowerIrql(new_irql) }
 }
 
 pub struct ProcessorAffinityGuard {
-    old_affinity: usize,
+    old_affinity: GROUP_AFFINITY,
 }
 
 impl ProcessorAffinityGuard {
     pub fn new(affinity: usize) -> Self {
-        set_processor_affinity(affinity);
-        Self { old_affinity: 0 }
+        unsafe {
+            let mut old_affinity: GROUP_AFFINITY = core::mem::zeroed();
+            let group_affinity = GROUP_AFFINITY {
+                Group: 0,
+                Mask: affinity as u64,
+                Reserved: [0; 3],
+            };
+            KeSetSystemGroupAffinityThread(&group_affinity, &mut old_affinity);
+            Self { old_affinity }
+        }
     }
 }
 
 impl Drop for ProcessorAffinityGuard {
     fn drop(&mut self) {
-        revert_to_user_affinity();
+        unsafe { 
+            KeSetSystemGroupAffinityThread(&self.old_affinity, core::ptr::null_mut());
+        }
     }
 }
 
 pub struct IrqlGuard {
-    old_irql: u8,
+    old_irql: KIRQL,
 }
 
 impl IrqlGuard {
-    pub fn new(new_irql: u8) -> Self {
+    pub fn new(new_irql: KIRQL) -> Self {
         let old_irql = raise_irql(new_irql);
         Self { old_irql }
     }
@@ -119,20 +131,20 @@ impl Drop for IrqlGuard {
 pub type DpcRoutine = extern "system" fn(*mut u8, *mut u8, *mut u8, *mut u8);
 
 pub struct Dpc {
-    dpc: [u8; 64],
+    dpc: KDPC,
 }
 
 impl Dpc {
     pub fn new(routine: DpcRoutine, context: *mut u8) -> Self {
         let mut dpc = Self {
-            dpc: [0; 64],
+            dpc: unsafe { core::mem::zeroed() },
         };
 
         unsafe {
             KeInitializeDpc(
-                dpc.dpc.as_mut_ptr(),
-                routine,
-                context,
+                &mut dpc.dpc,
+                Some(core::mem::transmute(routine)),
+                context as *mut core::ffi::c_void,
             );
         }
 
@@ -140,7 +152,13 @@ impl Dpc {
     }
 
     pub fn insert(&mut self, arg1: *mut u8, arg2: *mut u8) -> bool {
-        unsafe { KeInsertQueueDpc(self.dpc.as_mut_ptr(), arg1, arg2) }
+        unsafe { 
+            KeInsertQueueDpc(
+                &mut self.dpc, 
+                arg1 as *mut core::ffi::c_void, 
+                arg2 as *mut core::ffi::c_void
+            ) != 0 
+        }
     }
 }
 
@@ -187,16 +205,8 @@ pub fn get_affinity_from_processor_index(index: u32) -> usize {
 
 pub fn is_processor_active(processor_id: u32) -> bool {
     let affinity = get_affinity_from_processor_index(processor_id);
-    let active_mask = unsafe { core::ptr::read_volatile(&(*get_active_processor_mask())) };
-    (active_mask & affinity) != 0
-}
-
-extern "system" {
-    static KeActiveProcessors: usize;
-}
-
-pub fn get_active_processor_mask() -> *const usize {
-    unsafe { &KeActiveProcessors as *const usize }
+    let active_mask = unsafe { KeQueryActiveProcessors() };
+    (active_mask & affinity as u64) != 0
 }
 
 pub fn for_each_processor<F>(mut f: F)
