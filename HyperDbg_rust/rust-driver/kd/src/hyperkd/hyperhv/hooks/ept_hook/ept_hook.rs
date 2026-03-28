@@ -71,6 +71,7 @@ impl Default for MtfTrapState {
     }
 }
 
+#[derive(Debug, Clone)]
 #[repr(C, align(4096))]
 pub struct EptHookedPageDetail {
     pub fake_page_contents: [u8; PAGE_SIZE],
@@ -369,12 +370,153 @@ impl EptHookManager {
     }
 
     pub unsafe fn set_ept_entry_and_invalidate_tlb(
-        _physical_address: u64,
-        _entry: &EptPml1Entry,
+        physical_address: u64,
+        entry: &EptPml1Entry,
     ) {
-        // TODO: 实现实际的 EPT 条目设置和 TLB 失效
-        // 需要访问当前处理器的 EPT 页表并更新相应的 PML1 条目
-        // 然后调用 invept_single_context
+        use crate::hyperkd::hyperhv::vmm::ept::ept::{ept_get_pml1_entry, invept_single_context};
+        use crate::hyperkd::hyperhv::vmm::vmx::vmx::{vmread, VMCS_CTRL_EPTP};
+        use crate::hyperkd::hyperhv::state::VIRTUAL_MACHINE_STATE;
+
+        let core_id = crate::hyperkd::hyperhv::processor::get_current_processor_number();
+        
+        let ept_page_table: *mut crate::hyperkd::hyperhv::state::VMM_EPT_PAGE_TABLE = {
+            extern "C" {
+                static mut g_GuestState: *mut VIRTUAL_MACHINE_STATE;
+            }
+            if g_GuestState.is_null() {
+                return;
+            }
+            let vcpu = g_GuestState.add(core_id as usize);
+            (*vcpu).ept_page_table
+        };
+
+        if ept_page_table.is_null() {
+            return;
+        }
+
+        let target_entry = ept_get_pml1_entry(ept_page_table, physical_address as usize);
+        
+        if target_entry.is_null() {
+            return;
+        }
+
+        (*target_entry).value = entry.value;
+
+        let eptp = vmread(VMCS_CTRL_EPTP);
+        if eptp != 0 {
+            invept_single_context(eptp);
+        }
+    }
+
+    pub unsafe fn unhook_all_pages() {
+        let mut context = EPT_HOOK_CONTEXT.lock();
+        
+        let keys: alloc::vec::Vec<u64> = context.hooked_pages.keys().copied().collect();
+        
+        for physical_address in keys {
+            if let Some(hook) = context.hooked_pages.get(&physical_address) {
+                let hook_detail = hook.lock();
+                
+                Self::set_ept_entry_and_invalidate_tlb(
+                    physical_address,
+                    &hook_detail.original_entry,
+                );
+
+                if hook_detail.physical_base_address_of_fake_page_contents != 0 {
+                    if let Some(fake_page_va) = MemoryManager::physical_to_virtual(
+                        hook_detail.physical_base_address_of_fake_page_contents
+                    ) {
+                        MemoryManager::free_contiguous(fake_page_va);
+                    }
+                }
+            }
+        }
+
+        context.clear_all_hooks();
+    }
+
+    pub unsafe fn unhook_single_page(physical_address: u64) -> Result<(), EptHookError> {
+        Self::remove_hook(physical_address)
+    }
+
+    pub fn get_hooked_page_count() -> usize {
+        let context = EPT_HOOK_CONTEXT.lock();
+        context.get_hook_count()
+    }
+
+    pub fn is_page_hooked(physical_address: u64) -> bool {
+        let page_aligned_pa = physical_address & !0xFFF;
+        let context = EPT_HOOK_CONTEXT.lock();
+        context.is_hooked(page_aligned_pa)
+    }
+
+    pub unsafe fn modify_hook_permissions(
+        physical_address: u64,
+        read: bool,
+        write: bool,
+        execute: bool,
+    ) -> Result<(), EptHookError> {
+        let page_aligned_pa = physical_address & !0xFFF;
+        
+        let context = EPT_HOOK_CONTEXT.lock();
+        let hook = context.get_hook(page_aligned_pa)
+            .ok_or(EptHookError::NotHooked)?;
+        
+        let mut hook_detail = hook.lock();
+        
+        hook_detail.changed_entry.set_read_access(read);
+        hook_detail.changed_entry.set_write_access(write);
+        hook_detail.changed_entry.set_execute_access(execute);
+
+        let changed_entry = hook_detail.changed_entry;
+        drop(hook_detail);
+
+        Self::set_ept_entry_and_invalidate_tlb(page_aligned_pa, &changed_entry);
+
+        Ok(())
+    }
+
+    pub unsafe fn update_fake_page_content(
+        physical_address: u64,
+        offset: usize,
+        data: &[u8],
+    ) -> Result<(), EptHookError> {
+        let page_aligned_pa = physical_address & !0xFFF;
+        
+        let context = EPT_HOOK_CONTEXT.lock();
+        let hook = context.get_hook(page_aligned_pa)
+            .ok_or(EptHookError::NotHooked)?;
+
+        let mut hook_detail = hook.lock();
+        
+        if offset + data.len() > PAGE_SIZE {
+            return Err(EptHookError::InvalidAddress);
+        }
+
+        hook_detail.fake_page_contents[offset..offset + data.len()].copy_from_slice(data);
+
+        if hook_detail.physical_base_address_of_fake_page_contents != 0 {
+            if let Some(fake_page_va) = MemoryManager::physical_to_virtual(
+                hook_detail.physical_base_address_of_fake_page_contents
+            ) {
+                core::ptr::copy_nonoverlapping(
+                    hook_detail.fake_page_contents.as_ptr(),
+                    fake_page_va as *mut u8,
+                    PAGE_SIZE,
+                );
+            }
+        }
+
+        Ok(())
+    }
+
+    pub fn get_hook_details(physical_address: u64) -> Option<EptHookedPageDetail> {
+        let page_aligned_pa = physical_address & !0xFFF;
+        let context = EPT_HOOK_CONTEXT.lock();
+        context.get_hook(page_aligned_pa).map(|h| {
+            let hook = h.lock();
+            hook.clone()
+        })
     }
 }
 

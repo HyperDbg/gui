@@ -493,3 +493,687 @@ pub fn dpc_synchronize_all_cores() -> Result<(), DpcError> {
 
     Ok(())
 }
+
+#[derive(Debug, Clone, Copy)]
+#[repr(C)]
+pub struct DebuggerEventOptions {
+    pub optional_param1: u64,
+    pub optional_param2: u64,
+    pub optional_param3: u64,
+    pub optional_param4: u64,
+}
+
+#[derive(Debug, Clone, Copy)]
+#[repr(C)]
+pub struct EptSingleHookUnhookingDetails {
+    pub physical_address: u64,
+    pub original_entry: u64,
+}
+
+pub const EXCEPTION_VECTOR_BREAKPOINT: u64 = 3;
+pub const EXCEPTION_VECTOR_DEBUG_BREAKPOINT: u64 = 1;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u64)]
+pub enum VmcallNumber {
+    Test = 0x0,
+    Vmxoff = 0x1,
+    SetHiddenCcBreakpoint = 0x2,
+    RemoveAndInvalidateAllEptHooks = 0x3,
+    RemoveAndInvalidateSingleEptHook = 0x4,
+    ChangeMsrBitmapRead = 0x5,
+    ChangeMsrBitmapWrite = 0x6,
+    ResetMsrBitmapRead = 0x7,
+    ResetMsrBitmapWrite = 0x8,
+    SetRdtscExiting = 0x9,
+    UnsetRdtscExiting = 0xA,
+    SetRdpmcExiting = 0xB,
+    UnsetRdpmcExiting = 0xC,
+    SetExceptionBitmap = 0xD,
+    UnsetExceptionBitmap = 0xE,
+    EnableMovToDebugRegsExiting = 0xF,
+    DisableMovToDebugRegsExiting = 0x10,
+    EnableMovToControlRegsExiting = 0x11,
+    DisableMovToControlRegsExiting = 0x12,
+    EnableExternalInterruptExiting = 0x13,
+    DisableExternalInterruptExiting = 0x14,
+    EnableSyscallHookEfer = 0x15,
+    DisableSyscallHookEfer = 0x16,
+    ChangeIoBitmap = 0x17,
+    ResetIoBitmap = 0x18,
+    EnableMovToCr3Exiting = 0x19,
+    DisableMovToCr3Exiting = 0x1A,
+    ChangeToMbecSupportedEptp = 0x1B,
+    RestoreToNormalEptp = 0x1C,
+    DisableOrEnableMbec = 0x1D,
+    EnableDirtyLoggingMechanism = 0x1E,
+    DisableDirtyLoggingMechanism = 0x1F,
+    DisableRdtscExitingOnlyForTscEvents = 0x20,
+    DisableMovToHwDrExitingOnlyForDrEvents = 0x21,
+    DisableMovToCrExitingOnlyForCrEvents = 0x22,
+    ResetExceptionBitmapOnlyOnClearingExceptionEvents = 0x23,
+    DisableExternalInterruptExitingOnlyToClearInterruptCommands = 0x24,
+    SetVmExitOnNmis = 0x25,
+    UnsetVmExitOnNmis = 0x26,
+    UnhookAllPages = 0x27,
+    UnhookSinglePage = 0x28,
+    InveptAllContexts = 0x29,
+    InveptSingleContext = 0x2A,
+}
+
+#[inline(always)]
+unsafe fn asm_vmx_vmcall(vmcall_number: u64, param1: u64, param2: u64, param3: u64) -> u64 {
+    extern "C" {
+        fn __vmx_vmcall(vmcall_number: u64, param1: u64, param2: u64, param3: u64) -> u64;
+    }
+    __vmx_vmcall(vmcall_number, param1, param2, param3)
+}
+
+pub unsafe fn dpc_routine_perform_virtualization(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    extern "C" {
+        fn VmxPerformVirtualizationOnSpecificCore();
+    }
+    VmxPerformVirtualizationOnSpecificCore();
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_perform_change_msr_bitmap_read_on_single_core(
+    _dpc: *mut KDPC,
+    deferred_context: *mut core::ffi::c_void,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::ChangeMsrBitmapRead as u64, deferred_context as u64, 0, 0);
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
+
+pub unsafe fn dpc_routine_perform_change_msr_bitmap_write_on_single_core(
+    _dpc: *mut KDPC,
+    deferred_context: *mut core::ffi::c_void,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::ChangeMsrBitmapWrite as u64, deferred_context as u64, 0, 0);
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
+
+pub unsafe fn dpc_routine_perform_enable_rdtsc_exiting_on_single_core(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::SetRdtscExiting as u64, 0, 0, 0);
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
+
+pub unsafe fn dpc_routine_perform_enable_rdpmc_exiting_on_single_core(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::SetRdpmcExiting as u64, 0, 0, 0);
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
+
+pub unsafe fn dpc_routine_perform_set_exception_bitmap_on_single_core(
+    _dpc: *mut KDPC,
+    deferred_context: *mut core::ffi::c_void,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::SetExceptionBitmap as u64, deferred_context as u64, 0, 0);
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
+
+pub unsafe fn dpc_routine_perform_enable_mov_to_debug_registers_exiting(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::EnableMovToDebugRegsExiting as u64, 0, 0, 0);
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
+
+pub unsafe fn dpc_routine_perform_enable_mov_to_control_register_exiting(
+    _dpc: *mut KDPC,
+    event_options: *mut DebuggerEventOptions,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    let opt1 = if event_options.is_null() { 0 } else { (*event_options).optional_param1 };
+    let opt2 = if event_options.is_null() { 0 } else { (*event_options).optional_param2 };
+    asm_vmx_vmcall(VmcallNumber::EnableMovToControlRegsExiting as u64, opt1, opt2, 0);
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
+
+pub unsafe fn dpc_routine_perform_set_external_interrupt_exiting_on_single_core(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::EnableExternalInterruptExiting as u64, 0, 0, 0);
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
+
+pub unsafe fn dpc_routine_perform_enable_efer_syscall_hook_on_single_core(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::EnableSyscallHookEfer as u64, 0, 0, 0);
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
+
+pub unsafe fn dpc_routine_perform_change_io_bitmap_on_single_core(
+    _dpc: *mut KDPC,
+    deferred_context: *mut core::ffi::c_void,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::ChangeIoBitmap as u64, deferred_context as u64, 0, 0);
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
+
+pub unsafe fn dpc_routine_enable_mov_to_cr3_exiting(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::EnableMovToCr3Exiting as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_change_to_mbec_supported_eptp(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::ChangeToMbecSupportedEptp as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_restore_to_normal_eptp(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::RestoreToNormalEptp as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_enable_or_disable_mbec(
+    _dpc: *mut KDPC,
+    deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::DisableOrEnableMbec as u64, deferred_context as u64, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_mov_to_cr3_exiting(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::DisableMovToCr3Exiting as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_enable_efer_syscall_events(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::EnableSyscallHookEfer as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_efer_syscall_events(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::DisableSyscallHookEfer as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_enable_pml(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::EnableDirtyLoggingMechanism as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_pml(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::DisableDirtyLoggingMechanism as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_change_msr_bitmap_read_on_all_cores(
+    _dpc: *mut KDPC,
+    deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::ChangeMsrBitmapRead as u64, deferred_context as u64, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_reset_msr_bitmap_read_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::ResetMsrBitmapRead as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_change_msr_bitmap_write_on_all_cores(
+    _dpc: *mut KDPC,
+    deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::ChangeMsrBitmapWrite as u64, deferred_context as u64, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_reset_msr_bitmap_write_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::ResetMsrBitmapWrite as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_enable_rdtsc_exiting_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::SetRdtscExiting as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_rdtsc_exiting_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::UnsetRdtscExiting as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_rdtsc_exiting_for_clearing_tsc_events_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::DisableRdtscExitingOnlyForTscEvents as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_mov2_dr_exiting_for_clearing_dr_events_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::DisableMovToHwDrExitingOnlyForDrEvents as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_mov2_cr_exiting_for_clearing_cr_events_all_cores(
+    _dpc: *mut KDPC,
+    event_options: *mut DebuggerEventOptions,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    let opt1 = if event_options.is_null() { 0 } else { (*event_options).optional_param1 };
+    let opt2 = if event_options.is_null() { 0 } else { (*event_options).optional_param2 };
+    asm_vmx_vmcall(VmcallNumber::DisableMovToCrExitingOnlyForCrEvents as u64, opt1, opt2, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_enable_rdpmc_exiting_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::SetRdpmcExiting as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_rdpmc_exiting_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::UnsetRdpmcExiting as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_set_exception_bitmap_on_all_cores(
+    _dpc: *mut KDPC,
+    deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::SetExceptionBitmap as u64, deferred_context as u64, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_unset_exception_bitmap_on_all_cores(
+    _dpc: *mut KDPC,
+    deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::UnsetExceptionBitmap as u64, deferred_context as u64, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_reset_exception_bitmap_only_on_clearing_exception_events_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::ResetExceptionBitmapOnlyOnClearingExceptionEvents as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_enable_mov_debug_register_exiting_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::EnableMovToDebugRegsExiting as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_enable_mov_control_register_exiting_all_cores(
+    _dpc: *mut KDPC,
+    event_options: *mut DebuggerEventOptions,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    let opt1 = if event_options.is_null() { 0 } else { (*event_options).optional_param1 };
+    let opt2 = if event_options.is_null() { 0 } else { (*event_options).optional_param2 };
+    asm_vmx_vmcall(VmcallNumber::EnableMovToControlRegsExiting as u64, opt1, opt2, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_mov_control_register_exiting_all_cores(
+    _dpc: *mut KDPC,
+    event_options: *mut DebuggerEventOptions,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    let opt1 = if event_options.is_null() { 0 } else { (*event_options).optional_param1 };
+    let opt2 = if event_options.is_null() { 0 } else { (*event_options).optional_param2 };
+    asm_vmx_vmcall(VmcallNumber::DisableMovToControlRegsExiting as u64, opt1, opt2, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_mov_debug_register_exiting_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::DisableMovToDebugRegsExiting as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_set_enable_external_interrupt_exiting_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::EnableExternalInterruptExiting as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_set_disable_external_interrupt_exiting_only_on_clearing_interrupt_events_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::DisableExternalInterruptExitingOnlyToClearInterruptCommands as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_change_io_bitmap_on_all_cores(
+    _dpc: *mut KDPC,
+    deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::ChangeIoBitmap as u64, deferred_context as u64, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_reset_io_bitmap_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::ResetIoBitmap as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_enable_breakpoint_on_exception_bitmap_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::SetExceptionBitmap as u64, EXCEPTION_VECTOR_BREAKPOINT, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_breakpoint_on_exception_bitmap_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::UnsetExceptionBitmap as u64, EXCEPTION_VECTOR_BREAKPOINT, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_enable_nmi_vmexit_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::SetVmExitOnNmis as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_nmi_vmexit_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::UnsetVmExitOnNmis as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_enable_db_and_bp_exiting_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::SetExceptionBitmap as u64, EXCEPTION_VECTOR_BREAKPOINT, 0, 0);
+    asm_vmx_vmcall(VmcallNumber::SetExceptionBitmap as u64, EXCEPTION_VECTOR_DEBUG_BREAKPOINT, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_disable_db_and_bp_exiting_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::UnsetExceptionBitmap as u64, EXCEPTION_VECTOR_BREAKPOINT, 0, 0);
+    asm_vmx_vmcall(VmcallNumber::UnsetExceptionBitmap as u64, EXCEPTION_VECTOR_DEBUG_BREAKPOINT, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_remove_hook_and_invalidate_all_entries_on_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    asm_vmx_vmcall(VmcallNumber::UnhookAllPages as u64, 0, 0, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_remove_hook_and_invalidate_single_entry_on_all_cores(
+    _dpc: *mut KDPC,
+    deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    let unhooking_detail = deferred_context as *mut EptSingleHookUnhookingDetails;
+    let physical_address = if unhooking_detail.is_null() { 0 } else { (*unhooking_detail).physical_address };
+    let original_entry = if unhooking_detail.is_null() { 0 } else { (*unhooking_detail).original_entry };
+    asm_vmx_vmcall(VmcallNumber::UnhookSinglePage as u64, physical_address, original_entry, 0);
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_invalidate_ept_on_all_cores(
+    _dpc: *mut KDPC,
+    deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    if deferred_context.is_null() {
+        asm_vmx_vmcall(VmcallNumber::InveptAllContexts as u64, 0, 0, 0);
+    } else {
+        extern "C" {
+            static mut g_GuestState: *mut u8;
+        }
+        let current_core = get_current_processor_number();
+        if !g_GuestState.is_null() {
+            let guest_state = g_GuestState.add(current_core as usize * core::mem::size_of::<VIRTUAL_MACHINE_STATE>());
+            let ept_pointer = (*guest_state).ept_pointer.value;
+            asm_vmx_vmcall(VmcallNumber::InveptSingleContext as u64, ept_pointer, 0, 0);
+        }
+    }
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_initialize_guest(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    extern "C" {
+        fn HvInitializeGuest();
+    }
+    HvInitializeGuest();
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+pub unsafe fn dpc_routine_terminate_guest(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    extern "C" {
+        fn HvTerminateGuest();
+    }
+    HvTerminateGuest();
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
+
+use crate::hyperkd::hyperhv::state::VIRTUAL_MACHINE_STATE;
