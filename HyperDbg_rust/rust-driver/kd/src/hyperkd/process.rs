@@ -1,45 +1,46 @@
-use crate::memory::MemoryManager;
-use crate::processor::ProcessorManager;
-use crate::switch_layout::Cr3Type;
-use crate::allocations::ProcessorDebuggingState;
+#![allow(dead_code)]
+
 use alloc::boxed::Box;
-use alloc::sync::Arc;
+use alloc::string::String;
+use alloc::vec::Vec;
 use spin::Mutex;
+
+use crate::hyperkd::{ProcessId, Address};
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct ProcessSwitch {
-    pub process: *mut u8,
-    pub process_id: u32,
+    pub process: u64,
+    pub process_id: ProcessId,
 }
 
 impl ProcessSwitch {
     pub const fn new() -> Self {
         Self {
-            process: core::ptr::null_mut(),
+            process: 0,
             process_id: 0,
         }
     }
 
     pub fn clear(&mut self) {
-        self.process = core::ptr::null_mut();
+        self.process = 0;
         self.process_id = 0;
     }
 
     pub fn is_valid(&self) -> bool {
-        !self.process.is_null() || self.process_id != 0
+        self.process != 0 || self.process_id != 0
     }
 }
 
-pub static mut PROCESS_SWITCH: ProcessSwitch = ProcessSwitch::new();
+pub static PROCESS_SWITCH: Mutex<ProcessSwitch> = Mutex::new(ProcessSwitch::new());
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct ProcessTracingDetails {
     pub is_waiting_for_mov_cr3_vm_exits: bool,
     pub intercept_clock_interrupts_for_process_change: bool,
-    pub target_process_id: u32,
-    pub target_process: *mut u8,
+    pub target_process_id: ProcessId,
+    pub target_process: u64,
 }
 
 impl ProcessTracingDetails {
@@ -48,243 +49,31 @@ impl ProcessTracingDetails {
             is_waiting_for_mov_cr3_vm_exits: false,
             intercept_clock_interrupts_for_process_change: false,
             target_process_id: 0,
-            target_process: core::ptr::null_mut(),
+            target_process: 0,
         }
     }
 }
 
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ProcessChangeReason {
     ProcessSwitched,
     ProcessCreated,
     ProcessTerminated,
 }
 
-pub unsafe fn trigger_cr3_process_change(core_id: u32) {
-    extern "C" {
-        fn PsGetCurrentProcess() -> *mut u8;
-    }
-
-    if let Some(dbg_state) = crate::allocations::get_debugging_state(core_id) {
-        if dbg_state.thread_or_process_tracing_details.is_waiting_for_mov_cr3_vm_exits {
-            handle_process_change(dbg_state);
-        }
-    }
-}
-
-pub unsafe fn handle_process_change(dbg_state: &mut ProcessorDebuggingState) -> bool {
-    extern "C" {
-        fn PsGetCurrentProcessId() -> u32;
-        fn PsGetCurrentProcess() -> *mut u8;
-    }
-
-    let current_process_id = PsGetCurrentProcessId();
-    let current_process = PsGetCurrentProcess();
-
-    let process_switch = &mut PROCESS_SWITCH;
-
-    if (process_switch.process_id != 0 && process_switch.process_id == current_process_id) ||
-       (!process_switch.process.is_null() && process_switch.process == current_process) {
-        
-        crate::kd::handle_breakpoint_and_debug_breakpoints(
-            dbg_state,
-            crate::kd::DebuggeePausingReason::DebuggeeProcessSwitched,
-            core::ptr::null_mut(),
-        );
-
-        return true;
-    }
-
-    false
-}
-
-pub unsafe fn switch_process(
-    dbg_state: &mut ProcessorDebuggingState,
-    process_id: u32,
-    eprocess: *mut u8,
-    is_switch_by_clock_interrupt: bool,
-) -> bool {
-    let process_switch = &mut PROCESS_SWITCH;
-
-    process_switch.clear();
-
-    if process_id == 0 && eprocess.is_null() {
-        return false;
-    }
-
-    if !eprocess.is_null() {
-        if crate::memory::check_access_validity_and_safety(eprocess as u64, 1) {
-            process_switch.process = eprocess;
-        } else {
-            return false;
-        }
-    } else if process_id != 0 {
-        process_switch.process_id = process_id;
-    }
-
-    crate::broadcast::halted_core_broadcast_task_all_cores(
-        dbg_state,
-        crate::broadcast::HaltedCoreTask::SetProcessInterception,
-        true,
-        true,
-        is_switch_by_clock_interrupt as *mut u8,
-    );
-
-    true
-}
-
-pub unsafe fn detect_change_by_intercepting_clock_interrupts(
-    dbg_state: &mut ProcessorDebuggingState,
-    enable: bool,
-) {
-    extern "C" {
-        fn PsGetCurrentProcess() -> *mut u8;
-    }
-
-    if enable {
-        dbg_state.thread_or_process_tracing_details.intercept_clock_interrupts_for_process_change = true;
-
-        let current_process = PsGetCurrentProcess();
-        dbg_state.thread_or_process_tracing_details.target_process = current_process;
-    } else {
-        dbg_state.thread_or_process_tracing_details.intercept_clock_interrupts_for_process_change = false;
-        dbg_state.thread_or_process_tracing_details.target_process = core::ptr::null_mut();
-    }
-}
-
-pub unsafe fn get_current_process() -> *mut u8 {
-    extern "C" {
-        fn PsGetCurrentProcess() -> *mut u8;
-    }
-
-    PsGetCurrentProcess()
-}
-
-pub unsafe fn get_current_process_id() -> u32 {
-    extern "C" {
-        fn PsGetCurrentProcessId() -> u32;
-    }
-
-    PsGetCurrentProcessId()
-}
-
-pub unsafe fn lookup_process_by_id(process_id: u32) -> Option<*mut u8> {
-    extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u32, eprocess: *mut *mut u8) -> u32;
-        fn ObDereferenceObject(object: *mut u8);
-    }
-
-    let mut eprocess: *mut u8 = core::ptr::null_mut();
-    
-    if PsLookupProcessByProcessId(process_id, &mut eprocess) == 0 {
-        Some(eprocess)
-    } else {
-        None
-    }
-}
-
-pub unsafe fn get_process_cr3(process: *mut u8) -> Option<Cr3Type> {
-    if process.is_null() {
-        return None;
-    }
-
-    let directory_table_base = *((process as *const u64).offset(0x28));
-    
-    Some(Cr3Type::new(directory_table_base))
-}
-
-pub unsafe fn get_process_name(process: *mut u8) -> Option<alloc::string::String> {
-    if process.is_null() {
-        return None;
-    }
-
-    let image_file_name_offset = 0x5A8;
-    let image_file_name = (process as *const u16).offset(image_file_name_offset as isize);
-    
-    let mut name = alloc::string::String::new();
-    for i in 0..15 {
-        let c = *image_file_name.offset(i);
-        if c == 0 {
-            break;
-        }
-        name.push(c as u8 as char);
-    }
-    
-    Some(name)
-}
-
-pub unsafe fn get_process_base_address(process: *mut u8) -> Option<u64> {
-    if process.is_null() {
-        return None;
-    }
-
-    let section_base_offset = 0x520;
-    let section_base = *((process as *const u64).offset(section_base_offset as isize));
-    
-    Some(section_base)
-}
-
-pub unsafe fn get_process_peb(process: *mut u8) -> Option<u64> {
-    if process.is_null() {
-        return None;
-    }
-
-    let peb_offset = 0x550;
-    let peb = *((process as *const u64).offset(peb_offset as isize));
-    
-    Some(peb)
-}
-
-pub unsafe fn is_process_valid(process: *mut u8) -> bool {
-    !process.is_null()
-}
-
-pub unsafe fn is_system_process(process: *mut u8) -> bool {
-    if process.is_null() {
-        return false;
-    }
-
-    let process_id = *((process as *const u32).offset(0x440));
-    
-    process_id < 4
-}
-
-pub unsafe fn dereference_process(process: *mut u8) {
-    extern "C" {
-        fn ObDereferenceObject(object: *mut u8);
-    }
-
-    if !process.is_null() {
-        ObDereferenceObject(process);
-    }
-}
-
-pub unsafe fn reference_process(process: *mut u8) -> bool {
-    extern "C" {
-        fn ObReferenceObjectByHandle(handle: u64, object_type: *mut u8, desired_access: u32, object: *mut *mut u8) -> u32;
-    }
-
-    if process.is_null() {
-        return false;
-    }
-
-    let mut object: *mut u8 = core::ptr::null_mut();
-    let result = ObReferenceObjectByHandle(
-        process as u64,
-        core::ptr::null_mut(),
-        0,
-        &mut object,
-    );
-    
-    result == 0
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ProcessError {
+    ProcessNotFound,
+    InvalidParameter,
+    AccessDenied,
+    InsufficientMemory,
 }
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct ProcessInfo {
-    pub process_id: u32,
-    pub parent_process_id: u32,
+    pub process_id: ProcessId,
+    pub parent_process_id: ProcessId,
     pub base_address: u64,
     pub peb: u64,
     pub name: [u8; 16],
@@ -292,7 +81,7 @@ pub struct ProcessInfo {
 }
 
 impl ProcessInfo {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self {
             process_id: 0,
             parent_process_id: 0,
@@ -304,110 +93,283 @@ impl ProcessInfo {
     }
 }
 
-pub unsafe fn get_process_list() -> Result<alloc::vec::Vec<ProcessInfo>, crate::process::ProcessError> {
+pub unsafe fn get_current_process() -> u64 {
     extern "C" {
-        fn PsGetNextProcess(prev_process: *mut u8) -> *mut u8;
+        fn PsGetCurrentProcess() -> u64;
+    }
+    PsGetCurrentProcess()
+}
+
+pub unsafe fn get_current_process_id() -> ProcessId {
+    extern "C" {
+        fn PsGetCurrentProcessId() -> u64;
+    }
+    PsGetCurrentProcessId() as ProcessId
+}
+
+pub unsafe fn lookup_process_by_id(process_id: ProcessId) -> Option<u64> {
+    extern "C" {
+        fn PsLookupProcessByProcessId(process_id: u64, eprocess: *mut u64) -> i32;
+        fn ObDereferenceObject(object: u64);
     }
 
-    let mut process_list = alloc::vec::Vec::new();
-    let mut current_process = PsGetNextProcess(core::ptr::null_mut());
-    
-    while !current_process.is_null() {
-        let process_id = get_current_process_id_from_eprocess(current_process);
+    let mut eprocess: u64 = 0;
+    let status = PsLookupProcessByProcessId(process_id as u64, &mut eprocess);
+
+    if status == 0 {
+        Some(eprocess)
+    } else {
+        None
+    }
+}
+
+pub unsafe fn get_process_cr3(process: u64) -> Option<u64> {
+    if process == 0 {
+        return None;
+    }
+
+    let directory_table_base = *((process as *const u64).offset(40));
+    Some(directory_table_base)
+}
+
+pub unsafe fn get_process_name(process: u64) -> Option<String> {
+    if process == 0 {
+        return None;
+    }
+
+    extern "C" {
+        fn PsGetProcessImageFileName(process: u64) -> u64;
+    }
+
+    let image_name_ptr = PsGetProcessImageFileName(process);
+    if image_name_ptr == 0 {
+        return None;
+    }
+
+    let mut name = String::new();
+    for i in 0..15 {
+        let c = *((image_name_ptr as *const u8).offset(i));
+        if c == 0 {
+            break;
+        }
+        name.push(c as char);
+    }
+
+    Some(name)
+}
+
+pub unsafe fn get_process_base_address(process: u64) -> Option<u64> {
+    if process == 0 {
+        return None;
+    }
+
+    extern "C" {
+        fn PsGetProcessSectionBaseAddress(process: u64) -> u64;
+    }
+
+    Some(PsGetProcessSectionBaseAddress(process))
+}
+
+pub unsafe fn get_process_peb(process: u64) -> Option<u64> {
+    if process == 0 {
+        return None;
+    }
+
+    extern "C" {
+        fn PsGetProcessPeb(process: u64) -> u64;
+    }
+
+    let peb = PsGetProcessPeb(process);
+    if peb == 0 {
+        None
+    } else {
+        Some(peb)
+    }
+}
+
+pub unsafe fn is_process_valid(process: u64) -> bool {
+    process != 0
+}
+
+pub unsafe fn is_system_process(process: u64) -> bool {
+    if process == 0 {
+        return false;
+    }
+
+    let process_id = *((process as *const u32).offset(0x220));
+    process_id < 4
+}
+
+pub unsafe fn dereference_process(process: u64) {
+    extern "C" {
+        fn ObDereferenceObject(object: u64);
+    }
+
+    if process != 0 {
+        ObDereferenceObject(process);
+    }
+}
+
+pub unsafe fn get_process_list() -> Result<Vec<ProcessInfo>, ProcessError> {
+    extern "C" {
+        fn PsGetNextProcess(prev_process: u64) -> u64;
+    }
+
+    let mut process_list = Vec::new();
+    let mut current_process = PsGetNextProcess(0);
+
+    while current_process != 0 {
+        let process_id = get_process_id_from_eprocess(current_process);
         let parent_process_id = get_parent_process_id(current_process);
         let base_address = get_process_base_address(current_process).unwrap_or(0);
         let peb = get_process_peb(current_process).unwrap_or(0);
         let name = get_process_name(current_process);
-        
+
         let mut name_bytes = [0u8; 16];
         if let Some(name_str) = name {
             for (i, c) in name_str.bytes().enumerate().take(15) {
                 name_bytes[i] = c;
             }
         }
-        
-        let is_wow64 = crate::user_access::is_wow64_process_by_eprocess(current_process).unwrap_or(false);
-        
+
         let info = ProcessInfo {
             process_id,
             parent_process_id,
             base_address,
             peb,
             name: name_bytes,
-            is_wow64,
+            is_wow64: false,
         };
-        
+
         process_list.push(info);
         current_process = PsGetNextProcess(current_process);
     }
-    
+
     Ok(process_list)
 }
 
-unsafe fn get_current_process_id_from_eprocess(eprocess: *mut u8) -> u32 {
+unsafe fn get_process_id_from_eprocess(eprocess: u64) -> ProcessId {
     let process_id_offset = 0x440;
-    *((eprocess as *const u32).offset(process_id_offset as isize))
+    *((eprocess as *const u32).offset(process_id_offset as isize / 4))
 }
 
-unsafe fn get_parent_process_id(eprocess: *mut u8) -> u32 {
-    let parent_pid_offset = 0x440;
-    let inherited_from_unique_process_id = *((eprocess as *const u64).offset(0x440 / 8 + 1));
-    (inherited_from_unique_process_id & 0xFFFFFFFF) as u32
+unsafe fn get_parent_process_id(eprocess: u64) -> ProcessId {
+    let inherited_from_unique_process_id_offset = 0x448;
+    *((eprocess as *const u32).offset(inherited_from_unique_process_id_offset as isize / 4))
 }
 
-pub unsafe fn get_process_name_by_id(process_id: u32, name_buffer: &mut [u16]) -> Result<(), crate::process::ProcessError> {
-    let eprocess = match lookup_process_by_id(process_id) {
-        Some(ep) => ep,
-        None => return Err(crate::process::ProcessError::ProcessNotFound),
-    };
-    
-    let name = match get_process_name(eprocess) {
-        Some(n) => n,
-        None => return Err(crate::process::ProcessError::InvalidParameter),
-    };
-    
+pub unsafe fn get_process_name_by_id(process_id: ProcessId, name_buffer: &mut [u16]) -> Result<(), ProcessError> {
+    let eprocess = lookup_process_by_id(process_id).ok_or(ProcessError::ProcessNotFound)?;
+
+    let name = get_process_name(eprocess).ok_or(ProcessError::InvalidParameter)?;
+
     for (i, c) in name.encode_utf16().enumerate().take(name_buffer.len()) {
         name_buffer[i] = c;
     }
-    
+
     dereference_process(eprocess);
     Ok(())
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum ProcessError {
-    ProcessNotFound,
-    InvalidParameter,
-    AccessDenied,
-    InsufficientMemory,
+pub unsafe fn switch_to_process_context(process: u64) -> Result<(), ProcessError> {
+    extern "C" {
+        fn KeStackAttachProcess(process: u64, apc_state: *mut u8);
+    }
+
+    if process == 0 {
+        return Err(ProcessError::InvalidParameter);
+    }
+
+    let mut apc_state = [0u8; 64];
+    KeStackAttachProcess(process, apc_state.as_mut_ptr());
+
+    Ok(())
 }
 
-pub unsafe fn switch_to_process_context_by_id(process_id: u32) -> Result<(), ProcessError> {
-    let eprocess = match lookup_process_by_id(process_id) {
-        Some(ep) => ep,
-        None => return Err(ProcessError::ProcessNotFound),
-    };
-    
-    let cr3 = match get_process_cr3(eprocess) {
-        Some(c) => c,
-        None => {
-            dereference_process(eprocess);
-            return Err(ProcessError::InvalidParameter);
-        }
-    };
-    
-    let result = unsafe {
-        extern "C" {
-            fn switch_cr3(cr3: u64, cr3_type: u32) -> u64;
-        }
-        switch_cr3(cr3.flags, 0)
-    };
-    
-    dereference_process(eprocess);
-    
-    if result == 0 {
+pub unsafe fn detach_from_process_context() {
+    extern "C" {
+        fn KeUnstackDetachProcess(apc_state: *mut u8);
+    }
+
+    let mut apc_state = [0u8; 64];
+    KeUnstackDetachProcess(apc_state.as_mut_ptr());
+}
+
+pub unsafe fn terminate_process(process: u64, exit_status: i32) -> Result<(), ProcessError> {
+    extern "C" {
+        fn ZwTerminateProcess(process_handle: u64, exit_status: i32) -> i32;
+    }
+
+    if process == 0 {
+        return Err(ProcessError::InvalidParameter);
+    }
+
+    let status = ZwTerminateProcess(process, exit_status);
+    if status == 0 {
         Ok(())
     } else {
         Err(ProcessError::AccessDenied)
     }
+}
+
+pub unsafe fn suspend_process(process: u64) -> Result<(), ProcessError> {
+    extern "C" {
+        fn PsSuspendProcess(process: u64) -> i32;
+    }
+
+    if process == 0 {
+        return Err(ProcessError::InvalidParameter);
+    }
+
+    let status = PsSuspendProcess(process);
+    if status == 0 {
+        Ok(())
+    } else {
+        Err(ProcessError::AccessDenied)
+    }
+}
+
+pub unsafe fn resume_process(process: u64) -> Result<(), ProcessError> {
+    extern "C" {
+        fn PsResumeProcess(process: u64) -> i32;
+    }
+
+    if process == 0 {
+        return Err(ProcessError::InvalidParameter);
+    }
+
+    let status = PsResumeProcess(process);
+    if status == 0 {
+        Ok(())
+    } else {
+        Err(ProcessError::AccessDenied)
+    }
+}
+
+pub unsafe fn get_process_info(process_id: ProcessId) -> Option<ProcessInfo> {
+    let eprocess = lookup_process_by_id(process_id)?;
+
+    let parent_process_id = get_parent_process_id(eprocess);
+    let base_address = get_process_base_address(eprocess).unwrap_or(0);
+    let peb = get_process_peb(eprocess).unwrap_or(0);
+    let name = get_process_name(eprocess);
+
+    let mut name_bytes = [0u8; 16];
+    if let Some(name_str) = name {
+        for (i, c) in name_str.bytes().enumerate().take(15) {
+            name_bytes[i] = c;
+        }
+    }
+
+    let info = ProcessInfo {
+        process_id,
+        parent_process_id,
+        base_address,
+        peb,
+        name: name_bytes,
+        is_wow64: false,
+    };
+
+    dereference_process(eprocess);
+    Some(info)
 }

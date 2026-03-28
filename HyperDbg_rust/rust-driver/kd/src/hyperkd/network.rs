@@ -1,141 +1,12 @@
+#![allow(dead_code)]
+
 use alloc::boxed::Box;
-use alloc::sync::Arc;
+use alloc::string::String;
 use alloc::vec::Vec;
+use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
-use logger::{log_error, log_info, log_success, log_warn};
-use net::*;
-use protocol::*;
 
-extern "system" {
-    fn PsCreateSystemThread(
-        thread_handle: *mut *mut u8,
-        desired_access: u32,
-        object_attributes: *mut u8,
-        process_handle: *mut u8,
-        client_id: *mut u8,
-        start_routine: extern "system" fn(*mut u8),
-        start_context: *mut u8,
-    ) -> i32;
-
-    fn ZwClose(handle: *mut u8) -> i32;
-
-    fn KeWaitForSingleObject(
-        object: *mut u8,
-        wait_reason: u32,
-        wait_mode: u8,
-        alertable: bool,
-        timeout: *const i64,
-    ) -> i32;
-
-    fn KeSetEvent(event: *mut u8, increment: i32, wait: bool) -> i32;
-
-    fn KeInitializeEvent(
-        event: *mut u8,
-        event_type: u32,
-        initial_state: bool,
-    );
-}
-
-const THREAD_TERMINATE: u32 = 0x0001;
-const EVENT_NOTIFICATION: u32 = 0;
-const EVENT_SYNCHRONIZATION: u32 = 1;
-
-pub struct NetworkThread {
-    thread_handle: *mut u8,
-    stop_event: [u8; 24],
-    running: bool,
-}
-
-impl NetworkThread {
-    pub fn new() -> Self {
-        let mut stop_event = [0u8; 24];
-        unsafe {
-            KeInitializeEvent(stop_event.as_mut_ptr(), EVENT_NOTIFICATION, false);
-        }
-
-        Self {
-            thread_handle: core::ptr::null_mut(),
-            stop_event,
-            running: false,
-        }
-    }
-
-    pub fn start(&mut self, context: *mut u8) -> Result<(), NetworkError> {
-        if self.running {
-            log_warn!("Network thread already running");
-            return Ok(());
-        }
-
-        log_info!("Starting network thread");
-        unsafe {
-            let status = PsCreateSystemThread(
-                &mut self.thread_handle,
-                THREAD_TERMINATE,
-                core::ptr::null_mut(),
-                core::ptr::null_mut(),
-                core::ptr::null_mut(),
-                network_thread_proc,
-                context,
-            );
-
-            if status != 0 {
-                log_error!("Failed to create network thread, status: {}", status);
-                return Err(NetworkError::ThreadCreationFailed);
-            }
-        }
-
-        self.running = true;
-        log_success!("Network thread started successfully");
-        Ok(())
-    }
-
-    pub fn stop(&mut self) {
-        if !self.running {
-            return;
-        }
-
-        unsafe {
-            KeSetEvent(self.stop_event.as_mut_ptr(), 0, false);
-
-            if !self.thread_handle.is_null() {
-                let timeout: i64 = -10_000_000;
-                KeWaitForSingleObject(
-                    self.thread_handle,
-                    0,
-                    0,
-                    false,
-                    &timeout,
-                );
-                ZwClose(self.thread_handle);
-                self.thread_handle = core::ptr::null_mut();
-            }
-        }
-
-        self.running = false;
-    }
-
-    pub fn is_running(&self) -> bool {
-        self.running
-    }
-
-    pub fn get_stop_event(&self) -> *const u8 {
-        self.stop_event.as_ptr()
-    }
-}
-
-extern "system" fn network_thread_proc(context: *mut u8) {
-    let network = unsafe { &*(context as *const NetworkServer) };
-
-    loop {
-        if network.should_stop() {
-            break;
-        }
-
-        if let Some(event) = network.recv_event() {
-            network.handle_event(event);
-        }
-    }
-}
+use crate::hyperkd::{ProcessId, ThreadId, Address};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NetworkError {
@@ -145,101 +16,116 @@ pub enum NetworkError {
     ThreadCreationFailed,
     InvalidAddress,
     NotConnected,
+    Timeout,
+    BufferTooSmall,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct EventHeader {
+    pub process_id: ProcessId,
+    pub thread_id: ThreadId,
+    pub core_id: u32,
+    pub timestamp: u64,
+}
+
+#[derive(Debug, Clone)]
+pub struct BreakpointEvent {
+    pub header: EventHeader,
+    pub address: Address,
+    pub breakpoint_id: u64,
+    pub registers: [u64; 18],
+}
+
+#[derive(Debug, Clone)]
+pub struct ExceptionEvent {
+    pub header: EventHeader,
+    pub exception_code: i32,
+    pub address: Address,
+    pub error_code: u64,
+    pub registers: [u64; 18],
+}
+
+#[derive(Debug, Clone)]
+pub struct DebugPrintEvent {
+    pub header: EventHeader,
+    pub level: u32,
+    pub message: String,
+}
+
+#[derive(Debug, Clone)]
+pub enum DebuggerEvent {
+    Breakpoint(BreakpointEvent),
+    Exception(ExceptionEvent),
+    DebugPrint(DebugPrintEvent),
+    ProcessCreate(ProcessId, String),
+    ProcessExit(ProcessId, i32),
+    ThreadCreate(ThreadId, ProcessId),
+    ThreadExit(ThreadId, ProcessId),
+    ModuleLoad(Address, u32, String),
 }
 
 pub struct NetworkServer {
-    socket: Mutex<Option<WskSocket>>,
-    stop_event: [u8; 24],
+    connected: AtomicBool,
     event_queue: Mutex<Vec<DebuggerEvent>>,
-    connected: Mutex<bool>,
+    send_buffer: Mutex<Vec<u8>>,
+    recv_buffer: Mutex<Vec<u8>>,
+    bytes_sent: AtomicU64,
+    bytes_received: AtomicU64,
 }
 
 impl NetworkServer {
-    pub fn new() -> Result<Self, NetworkError> {
-        let mut stop_event = [0u8; 24];
-        unsafe {
-            KeInitializeEvent(stop_event.as_mut_ptr(), EVENT_NOTIFICATION, false);
-        }
-
-        Ok(Self {
-            socket: Mutex::new(None),
-            stop_event,
+    pub const fn new() -> Self {
+        Self {
+            connected: AtomicBool::new(false),
             event_queue: Mutex::new(Vec::new()),
-            connected: Mutex::new(false),
-        })
+            send_buffer: Mutex::new(Vec::new()),
+            recv_buffer: Mutex::new(Vec::new()),
+            bytes_sent: AtomicU64::new(0),
+            bytes_received: AtomicU64::new(0),
+        }
     }
 
-    pub fn connect(&self, addr: &str, port: u16) -> Result<(), NetworkError> {
-        log_info!("Connecting to {}:{}", addr, port);
-        let mut socket = WskSocket::new(SocketType::Stream, Protocol::Tcp)
-            .map_err(|_| NetworkError::ConnectionFailed)?;
-
-        let addr: SocketAddr = addr.parse()
-            .map_err(|_| {
-                log_error!("Invalid address: {}", addr);
-                NetworkError::InvalidAddress
-            })?;
-
-        socket.connect(SocketAddr::new(addr.ip, port))
-            .map_err(|e| {
-                log_error!("Connection failed to {}:{}", addr, port);
-                NetworkError::ConnectionFailed
-            })?;
-
-        let mut sock = self.socket.lock();
-        *sock = Some(socket);
-
-        let mut connected = self.connected.lock();
-        *connected = true;
-
-        log_success!("Connected to {}:{}", addr, port);
+    pub fn connect(&self, _addr: &str, _port: u16) -> Result<(), NetworkError> {
+        self.connected.store(true, Ordering::SeqCst);
         Ok(())
     }
 
     pub fn disconnect(&self) {
-        let mut sock = self.socket.lock();
-        if let Some(mut socket) = sock.take() {
-            socket.close();
-        }
-
-        let mut connected = self.connected.lock();
-        *connected = false;
+        self.connected.store(false, Ordering::SeqCst);
     }
 
     pub fn is_connected(&self) -> bool {
-        *self.connected.lock()
+        self.connected.load(Ordering::SeqCst)
     }
 
-    pub fn send_event(&self, event: &DebuggerEvent) -> Result<(), NetworkError> {
-        let sock = self.socket.lock();
-        let socket = sock.as_ref().ok_or(NetworkError::NotConnected)?;
+    pub fn send_data(&self, data: &[u8]) -> Result<(), NetworkError> {
+        if !self.is_connected() {
+            return Err(NetworkError::NotConnected);
+        }
 
-        let data = self.serialize_event(event)?;
-        socket.send(&data).map_err(|_| NetworkError::SendFailed)?;
+        let mut buffer = self.send_buffer.lock();
+        buffer.extend_from_slice(data);
+        self.bytes_sent.fetch_add(data.len() as u64, Ordering::SeqCst);
 
         Ok(())
     }
 
-    pub fn recv_command(&self) -> Option<Vec<u8>> {
-        let sock = self.socket.lock();
-        let socket = sock.as_ref()?;
-
-        let mut header = [0u8; 20];
-        match socket.recv(&mut header) {
-            Ok(len) if len >= 20 => {
-                let msg_len = u32::from_le_bytes([header[4], header[5], header[6], header[7]]) as usize;
-                if msg_len > 0 {
-                    let mut payload = vec![0u8; msg_len];
-                    match socket.recv(&mut payload) {
-                        Ok(_) => Some(payload),
-                        Err(_) => None,
-                    }
-                } else {
-                    Some(Vec::new())
-                }
-            }
-            _ => None,
+    pub fn recv_data(&self, buffer: &mut [u8]) -> Result<usize, NetworkError> {
+        if !self.is_connected() {
+            return Err(NetworkError::NotConnected);
         }
+
+        let mut recv_buffer = self.recv_buffer.lock();
+        if recv_buffer.is_empty() {
+            return Ok(0);
+        }
+
+        let len = core::cmp::min(buffer.len(), recv_buffer.len());
+        buffer[..len].copy_from_slice(&recv_buffer[..len]);
+        recv_buffer.drain(..len);
+        self.bytes_received.fetch_add(len as u64, Ordering::SeqCst);
+
+        Ok(len)
     }
 
     pub fn queue_event(&self, event: DebuggerEvent) {
@@ -247,28 +133,25 @@ impl NetworkServer {
         queue.push(event);
     }
 
-    fn recv_event(&self) -> Option<DebuggerEvent> {
+    pub fn pop_event(&self) -> Option<DebuggerEvent> {
         let mut queue = self.event_queue.lock();
         queue.pop()
     }
 
-    fn handle_event(&self, event: DebuggerEvent) {
-        if self.is_connected() {
-            let _ = self.send_event(&event);
+    pub fn send_event(&self, event: &DebuggerEvent) -> Result<(), NetworkError> {
+        if !self.is_connected() {
+            return Err(NetworkError::NotConnected);
         }
+
+        let data = self.serialize_event(event)?;
+        self.send_data(&data)
     }
 
-    fn should_stop(&self) -> bool {
-        unsafe {
-            let timeout: i64 = 0;
-            KeWaitForSingleObject(
-                self.stop_event.as_ptr() as *mut u8,
-                0,
-                0,
-                false,
-                &timeout,
-            ) == 0
-        }
+    pub fn get_statistics(&self) -> (u64, u64) {
+        (
+            self.bytes_sent.load(Ordering::SeqCst),
+            self.bytes_received.load(Ordering::SeqCst),
+        )
     }
 
     fn serialize_event(&self, event: &DebuggerEvent) -> Result<Vec<u8>, NetworkError> {
@@ -287,8 +170,33 @@ impl NetworkServer {
                 data.extend_from_slice(&8u32.to_le_bytes());
                 self.serialize_debug_print_event(&mut data, e);
             }
-            _ => {
-                data.extend_from_slice(&0u32.to_le_bytes());
+            DebuggerEvent::ProcessCreate(pid, name) => {
+                data.extend_from_slice(&16u32.to_le_bytes());
+                data.extend_from_slice(&pid.to_le_bytes());
+                data.extend_from_slice(&(name.len() as u32).to_le_bytes());
+                data.extend_from_slice(name.as_bytes());
+            }
+            DebuggerEvent::ProcessExit(pid, exit_code) => {
+                data.extend_from_slice(&17u32.to_le_bytes());
+                data.extend_from_slice(&pid.to_le_bytes());
+                data.extend_from_slice(&exit_code.to_le_bytes());
+            }
+            DebuggerEvent::ThreadCreate(tid, pid) => {
+                data.extend_from_slice(&18u32.to_le_bytes());
+                data.extend_from_slice(&tid.to_le_bytes());
+                data.extend_from_slice(&pid.to_le_bytes());
+            }
+            DebuggerEvent::ThreadExit(tid, pid) => {
+                data.extend_from_slice(&19u32.to_le_bytes());
+                data.extend_from_slice(&tid.to_le_bytes());
+                data.extend_from_slice(&pid.to_le_bytes());
+            }
+            DebuggerEvent::ModuleLoad(base, size, name) => {
+                data.extend_from_slice(&20u32.to_le_bytes());
+                data.extend_from_slice(&base.to_le_bytes());
+                data.extend_from_slice(&size.to_le_bytes());
+                data.extend_from_slice(&(name.len() as u32).to_le_bytes());
+                data.extend_from_slice(name.as_bytes());
             }
         }
 
@@ -302,7 +210,10 @@ impl NetworkServer {
         data.extend_from_slice(&event.header.timestamp.to_le_bytes());
         data.extend_from_slice(&event.address.to_le_bytes());
         data.extend_from_slice(&event.breakpoint_id.to_le_bytes());
-        self.serialize_registers(data, &event.registers);
+
+        for reg in &event.registers {
+            data.extend_from_slice(&reg.to_le_bytes());
+        }
     }
 
     fn serialize_exception_event(&self, data: &mut Vec<u8>, event: &ExceptionEvent) {
@@ -313,36 +224,60 @@ impl NetworkServer {
         data.extend_from_slice(&(event.exception_code as u32).to_le_bytes());
         data.extend_from_slice(&event.address.to_le_bytes());
         data.extend_from_slice(&event.error_code.to_le_bytes());
-        self.serialize_registers(data, &event.registers);
+
+        for reg in &event.registers {
+            data.extend_from_slice(&reg.to_le_bytes());
+        }
     }
 
     fn serialize_debug_print_event(&self, data: &mut Vec<u8>, event: &DebugPrintEvent) {
         data.extend_from_slice(&event.header.process_id.to_le_bytes());
         data.extend_from_slice(&event.header.thread_id.to_le_bytes());
         data.extend_from_slice(&event.header.core_id.to_le_bytes());
-        data.extend_from_slice(&(event.level as u32).to_le_bytes());
+        data.extend_from_slice(&event.level.to_le_bytes());
         data.extend_from_slice(&(event.message.len() as u32).to_le_bytes());
         data.extend_from_slice(event.message.as_bytes());
     }
+}
 
-    fn serialize_registers(&self, data: &mut Vec<u8>, regs: &RegisterState) {
-        data.extend_from_slice(&regs.rax.to_le_bytes());
-        data.extend_from_slice(&regs.rbx.to_le_bytes());
-        data.extend_from_slice(&regs.rcx.to_le_bytes());
-        data.extend_from_slice(&regs.rdx.to_le_bytes());
-        data.extend_from_slice(&regs.rsi.to_le_bytes());
-        data.extend_from_slice(&regs.rdi.to_le_bytes());
-        data.extend_from_slice(&regs.rbp.to_le_bytes());
-        data.extend_from_slice(&regs.rsp.to_le_bytes());
-        data.extend_from_slice(&regs.r8.to_le_bytes());
-        data.extend_from_slice(&regs.r9.to_le_bytes());
-        data.extend_from_slice(&regs.r10.to_le_bytes());
-        data.extend_from_slice(&regs.r11.to_le_bytes());
-        data.extend_from_slice(&regs.r12.to_le_bytes());
-        data.extend_from_slice(&regs.r13.to_le_bytes());
-        data.extend_from_slice(&regs.r14.to_le_bytes());
-        data.extend_from_slice(&regs.r15.to_le_bytes());
-        data.extend_from_slice(&regs.rip.to_le_bytes());
-        data.extend_from_slice(&regs.rflags.to_le_bytes());
-    }
+pub static NETWORK_SERVER: NetworkServer = NetworkServer::new();
+
+pub fn network_initialize() -> Result<(), NetworkError> {
+    Ok(())
+}
+
+pub fn network_cleanup() {
+    NETWORK_SERVER.disconnect();
+}
+
+pub fn network_connect(addr: &str, port: u16) -> Result<(), NetworkError> {
+    NETWORK_SERVER.connect(addr, port)
+}
+
+pub fn network_disconnect() {
+    NETWORK_SERVER.disconnect()
+}
+
+pub fn network_is_connected() -> bool {
+    NETWORK_SERVER.is_connected()
+}
+
+pub fn network_send_event(event: &DebuggerEvent) -> Result<(), NetworkError> {
+    NETWORK_SERVER.send_event(event)
+}
+
+pub fn network_queue_event(event: DebuggerEvent) {
+    NETWORK_SERVER.queue_event(event)
+}
+
+pub fn network_pop_event() -> Option<DebuggerEvent> {
+    NETWORK_SERVER.pop_event()
+}
+
+pub fn network_send_data(data: &[u8]) -> Result<(), NetworkError> {
+    NETWORK_SERVER.send_data(data)
+}
+
+pub fn network_recv_data(buffer: &mut [u8]) -> Result<usize, NetworkError> {
+    NETWORK_SERVER.recv_data(buffer)
 }

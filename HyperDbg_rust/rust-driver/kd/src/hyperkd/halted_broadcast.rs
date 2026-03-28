@@ -411,10 +411,10 @@ unsafe fn broadcast_to_all_cores_wrapper(context: *mut DpcContext) {
         return;
     }
 
-    let message_type = (*context).arg1 as u32;
-    let target_core = (*context).arg2 as u32;
-    let halt_reason = (*context).arg3 as u32;
-    let halt_address = (*context).arg4;
+    let message_type = unsafe { (*context).arg1 as u32 };
+    let target_core = unsafe { (*context).arg2 as u32 };
+    let halt_reason = unsafe { (*context).arg3 as u32 };
+    let halt_address = unsafe { (*context).arg4 };
 
     let message = HaltBroadcastMessage {
         message_type,
@@ -437,11 +437,13 @@ pub fn initialize_broadcast_dpc() -> Result<(), HaltedBroadcastError> {
 }
 
 pub fn halt_all_cores_dpc(halt_reason: u32) -> Result<(), HaltedBroadcastError> {
-    broadcast_to_all_cores_dpc(0xFFFFFFFF)?;
+    broadcast_to_all_cores_dpc(0xFFFFFFFF)
+        .map_err(|_| HaltedBroadcastError::NotInitialized)?;
     broadcast_pause_all_cores(halt_reason)
 }
 
 pub fn resume_all_cores_dpc() -> Result<(), HaltedBroadcastError> {
-    broadcast_to_all_cores_dpc(0xFFFFFFFF)?;
+    broadcast_to_all_cores_dpc(0xFFFFFFFF)
+        .map_err(|_| HaltedBroadcastError::NotInitialized)?;
     broadcast_resume_all_cores()
 }

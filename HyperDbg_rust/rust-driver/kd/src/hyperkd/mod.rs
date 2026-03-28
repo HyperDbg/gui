@@ -6,6 +6,9 @@ use spin::Mutex;
 use crate::{log_info, log_success, log_error};
 
 pub mod hyperhv;
+pub mod attaching;
+pub mod serial_connection;
+pub mod ud;
 
 pub const HYPERDBG_SIGNATURE: u64 = 0x4859504552444247;
 pub const VMXON_REGION_SIZE: usize = 4096;

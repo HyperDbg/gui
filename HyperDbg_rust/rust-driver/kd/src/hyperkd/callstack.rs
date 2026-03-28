@@ -1,378 +1,305 @@
-use crate::memory::MemoryManager;
+#![allow(dead_code)]
+
+use alloc::vec::Vec;
 use alloc::boxed::Box;
-use alloc::sync::Arc;
-use spin::Mutex;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum CallstackError {
-    NotInitialized,
-    InvalidParameter,
-    InvalidAddress,
-    AccessDenied,
-    InsufficientMemory,
-    StackCorrupted,
-}
+use crate::hyperkd::hyperhv::memory::mapper::{check_address_safety, read_memory_safe, PAGE_SIZE};
 
-#[repr(C)]
+pub const MAXIMUM_CALL_INSTR_SIZE: usize = 5;
+pub const MAX_STACK_FRAME_COUNT: usize = 64;
+
 #[derive(Debug, Clone, Copy)]
-pub struct DebuggerSingleCallstackFrame {
-    pub is_stack_address_valid: bool,
+pub struct CallstackFrame {
+    pub stack_address: u64,
+    pub value: u64,
     pub is_valid_address: bool,
     pub is_executable: bool,
-    pub value: u64,
-    pub instruction_bytes_on_rip: [u8; 15],
+    pub is_stack_address_valid: bool,
+    pub instruction_bytes: [u8; MAXIMUM_CALL_INSTR_SIZE],
 }
 
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct CallstackRequest {
-    pub process_id: u32,
-    pub thread_id: u32,
-    pub stack_base_address: u64,
-    pub size: u32,
-    pub is_32bit: bool,
-    pub kernel_status: u32,
-    pub frame_count: u32,
-    pub frames: [DebuggerSingleCallstackFrame; 256],
-}
-
-const MAXIMUM_CALL_INSTR_SIZE: u32 = 15;
-
-pub unsafe fn callstack_walkthrough_stack(
-    address_to_save_frames: &mut [DebuggerSingleCallstackFrame],
-    frame_count: &mut u32,
-    stack_base_address: u64,
-    size: u32,
-    is_32bit: bool,
-) -> Result<(), CallstackError> {
-    if size == 0 {
-        return Err(CallstackError::InvalidParameter);
-    }
-
-    let mut frame_index: u32 = 0;
-    let mut address_mode: u32 = 0;
-    let mut value: u64 = 0;
-    let mut current_stack_address: u64 = 0;
-
-    if is_32bit {
-        address_mode = 4;
-        frame_index = size / address_mode;
-    } else {
-        address_mode = 8;
-        frame_index = size / address_mode;
-    }
-
-    *frame_count = frame_index;
-
-    for i in 0..frame_index {
-        current_stack_address = stack_base_address + (i as u64 * address_mode as u64);
-
-        if !check_access_validity_and_safety(current_stack_address, address_mode) {
-            address_to_save_frames[i as usize].is_stack_address_valid = false;
-
-            if frame_index == 0 {
-                return Err(CallstackError::StackCorrupted);
-            } else {
-                return Ok(());
-            }
-        }
-
-        address_to_save_frames[i as usize].is_stack_address_valid = true;
-
-        memory_mapper_read_memory_safe_on_target_process(
-            current_stack_address,
-            &mut value as *mut u64 as *mut u8,
-            address_mode as usize,
-        );
-
-        address_to_save_frames[i as usize].value = value;
-
-        if check_access_validity_and_safety(value, MAXIMUM_CALL_INSTR_SIZE) {
-            address_to_save_frames[i as usize].is_valid_address = true;
-
-            address_to_save_frames[i as usize].is_executable = 
-                memory_mapper_check_if_page_is_nx_bit_set_on_target_process(value as *mut u8);
-
-            let mut instruction_bytes = [0u8; 15];
-            memory_mapper_read_memory_safe_on_target_process(
-                value - MAXIMUM_CALL_INSTR_SIZE as u64,
-                instruction_bytes.as_mut_ptr(),
-                MAXIMUM_CALL_INSTR_SIZE as usize,
-            );
-            address_to_save_frames[i as usize].instruction_bytes_on_rip = instruction_bytes;
-        }
-    }
-
-    Ok(())
-}
-
-unsafe fn check_access_validity_and_safety(address: u64, size: u32) -> bool {
-    extern "C" {
-        fn mmlayout_is_address_valid(address: u64, size: u32) -> bool;
-    }
-
-    mmlayout_is_address_valid(address, size)
-}
-
-unsafe fn memory_mapper_read_memory_safe_on_target_process(
-    address: u64,
-    buffer: *mut u8,
-    size: usize,
-) -> bool {
-    extern "C" {
-        fn mmlayout_read_memory_safe(address: u64, buffer: *mut u8, size: usize) -> bool;
-    }
-
-    mmlayout_read_memory_safe(address, buffer, size)
-}
-
-unsafe fn memory_mapper_check_if_page_is_nx_bit_set_on_target_process(
-    address: *mut u8,
-) -> bool {
-    extern "C" {
-        fn mmlayout_check_nx_bit(address: *mut u8) -> bool;
-    }
-
-    mmlayout_check_nx_bit(address)
-}
-
-pub unsafe fn get_callstack(
-    process_id: u32,
-    thread_id: u32,
-    stack_base_address: u64,
-    size: u32,
-    is_32bit: bool,
-) -> Result<CallstackRequest, CallstackError> {
-    let mut request = CallstackRequest {
-        process_id,
-        thread_id,
-        stack_base_address,
-        size,
-        is_32bit,
-        kernel_status: 0,
-        frame_count: 0,
-        frames: [DebuggerSingleCallstackFrame {
-            is_stack_address_valid: false,
+impl Default for CallstackFrame {
+    fn default() -> Self {
+        Self {
+            stack_address: 0,
+            value: 0,
             is_valid_address: false,
             is_executable: false,
-            value: 0,
-            instruction_bytes_on_rip: [0; 15],
-        }; 256],
-    };
-
-    let result = callstack_walkthrough_stack(
-        &mut request.frames,
-        &mut request.frame_count,
-        stack_base_address,
-        size,
-        is_32bit,
-    );
-
-    match result {
-        Ok(_) => {
-            request.kernel_status = 0;
-            Ok(request)
-        }
-        Err(e) => {
-            request.kernel_status = 1;
-            Err(e)
+            is_stack_address_valid: false,
+            instruction_bytes: [0; MAXIMUM_CALL_INSTR_SIZE],
         }
     }
 }
 
-pub unsafe fn get_callstack_from_current_thread(
-    stack_base_address: u64,
+#[derive(Debug, Clone)]
+pub struct CallstackResult {
+    pub frames: Vec<CallstackFrame>,
+    pub frame_count: usize,
+    pub is_32bit: bool,
+}
+
+impl CallstackResult {
+    pub fn new(is_32bit: bool) -> Self {
+        Self {
+            frames: Vec::with_capacity(MAX_STACK_FRAME_COUNT),
+            frame_count: 0,
+            is_32bit,
+        }
+    }
+}
+
+pub unsafe fn walkthrough_stack(
+    stack_base: u64,
     size: u32,
     is_32bit: bool,
-) -> Result<CallstackRequest, CallstackError> {
-    extern "C" {
-        fn ps_get_current_thread_id() -> u32;
-        fn ps_get_current_process_id() -> u32;
-    }
-
-    let thread_id = ps_get_current_thread_id();
-    let process_id = ps_get_current_process_id();
-
-    get_callstack(process_id, thread_id, stack_base_address, size, is_32bit)
-}
-
-pub unsafe fn get_callstack_from_thread(
-    process_id: u32,
-    thread_id: u32,
-    is_32bit: bool,
-) -> Result<CallstackRequest, CallstackError> {
-    extern "C" {
-        fn ps_get_thread_stack_base(thread_id: u32) -> u64;
-        fn ps_get_thread_stack_size(thread_id: u32) -> u32;
-    }
-
-    let stack_base_address = ps_get_thread_stack_base(thread_id);
-    let stack_size = ps_get_thread_stack_size(thread_id);
-
-    if stack_base_address == 0 || stack_size == 0 {
-        return Err(CallstackError::InvalidParameter);
-    }
-
-    get_callstack(process_id, thread_id, stack_base_address, stack_size, is_32bit)
-}
-
-pub unsafe fn analyze_callstack_frame(
-    frame: &DebuggerSingleCallstackFrame,
-) -> Option<alloc::string::String> {
-    if !frame.is_valid_address {
+) -> Option<CallstackResult> {
+    if size == 0 {
         return None;
     }
 
-    if frame.is_executable {
-        let instruction_bytes = &frame.instruction_bytes_on_rip;
-        
-        if instruction_bytes[0] == 0xE8 {
-            let offset = i32::from_le_bytes([
-                instruction_bytes[1],
-                instruction_bytes[2],
-                instruction_bytes[3],
-                instruction_bytes[4],
-            ]);
-            let target_address = frame.value + offset as u64 + 5;
-            return Some(alloc::format!("CALL 0x{:X}", target_address));
-        } else if instruction_bytes[0] == 0xFF && instruction_bytes[1] == 0x15 {
-            return Some(alloc::format!("CALL [0x{:X}]", frame.value + 6));
-        } else if instruction_bytes[0] == 0xFF && instruction_bytes[1] == 0x14 {
-            return Some(alloc::format!("CALL [RSP + 0x{:X}]", instruction_bytes[2]));
-        } else if instruction_bytes[0] == 0xFF && instruction_bytes[1] == 0xD0 {
-            return Some(alloc::string::String::from("CALL RAX"));
-        } else if instruction_bytes[0] == 0xFF && instruction_bytes[1] == 0xD1 {
-            return Some(alloc::string::String::from("CALL RCX"));
-        } else if instruction_bytes[0] == 0xFF && instruction_bytes[1] == 0xD2 {
-            return Some(alloc::string::String::from("CALL RDX"));
-        } else if instruction_bytes[0] == 0xFF && instruction_bytes[1] == 0xD3 {
-            return Some(alloc::string::String::from("CALL RBX"));
-        } else if instruction_bytes[0] == 0xFF && instruction_bytes[1] == 0xD4 {
-            return Some(alloc::string::String::from("CALL RSP"));
-        } else if instruction_bytes[0] == 0xFF && instruction_bytes[1] == 0xD5 {
-            return Some(alloc::string::String::from("CALL RBP"));
-        } else if instruction_bytes[0] == 0xFF && instruction_bytes[1] == 0xD6 {
-            return Some(alloc::string::String::from("CALL RSI"));
-        } else if instruction_bytes[0] == 0xFF && instruction_bytes[1] == 0xD7 {
-            return Some(alloc::string::String::from("CALL RDI"));
-        }
+    let address_mode = if is_32bit { 4usize } else { 8usize };
+    let frame_count = (size as usize) / address_mode;
+
+    if frame_count == 0 {
+        return None;
     }
 
-    Some(alloc::format!("0x{:X}", frame.value))
-}
+    let mut result = CallstackResult::new(is_32bit);
 
-pub unsafe fn format_callstack(
-    request: &CallstackRequest,
-) -> alloc::vec::Vec<alloc::string::String> {
-    let mut result = alloc::vec::Vec::new();
+    for i in 0..frame_count.min(MAX_STACK_FRAME_COUNT) {
+        let current_stack_address = stack_base + (i * address_mode) as u64;
+        let mut frame = CallstackFrame::default();
 
-    for i in 0..request.frame_count {
-        let frame = &request.frames[i as usize];
-        
-        if !frame.is_stack_address_valid {
-            break;
-        }
+        frame.stack_address = current_stack_address;
 
-        if let Some(description) = analyze_callstack_frame(frame) {
-            result.push(alloc::format!(
-                "#{}: {} (0x{:X})",
-                i,
-                description,
-                frame.value
-            ));
-        } else {
-            result.push(alloc::format!(
-                "#{}: 0x{:X}",
-                i,
-                frame.value
-            ));
-        }
-    }
+        if !check_address_safety(current_stack_address, address_mode) {
+            frame.is_stack_address_valid = false;
+            result.frames.push(frame);
+            result.frame_count = i + 1;
 
-    result
-}
-
-pub unsafe fn validate_callstack(
-    request: &CallstackRequest,
-) -> bool {
-    if request.frame_count == 0 {
-        return false;
-    }
-
-    for i in 0..request.frame_count {
-        let frame = &request.frames[i as usize];
-        
-        if !frame.is_stack_address_valid {
             if i == 0 {
-                return false;
+                return None;
+            } else {
+                return Some(result);
             }
+        }
+
+        frame.is_stack_address_valid = true;
+
+        let mut value_bytes = [0u8; 8];
+        if read_memory_safe(current_stack_address, value_bytes.as_mut_ptr(), address_mode) {
+            frame.value = if is_32bit {
+                u32::from_le_bytes(value_bytes[0..4].try_into().unwrap()) as u64
+            } else {
+                u64::from_le_bytes(value_bytes)
+            };
+        }
+
+        if check_address_safety(frame.value, MAXIMUM_CALL_INSTR_SIZE) {
+            frame.is_valid_address = true;
+
+            frame.is_executable = !is_page_nx(frame.value);
+
+            let read_addr = frame.value.saturating_sub(MAXIMUM_CALL_INSTR_SIZE as u64);
+            read_memory_safe(read_addr, frame.instruction_bytes.as_mut_ptr(), MAXIMUM_CALL_INSTR_SIZE);
+        }
+
+        result.frames.push(frame);
+    }
+
+    result.frame_count = result.frames.len();
+    Some(result)
+}
+
+pub unsafe fn walkthrough_stack_with_context(
+    stack_base: u64,
+    stack_limit: u64,
+    rip: u64,
+    rbp: u64,
+    is_32bit: bool,
+) -> Option<CallstackResult> {
+    let mut result = CallstackResult::new(is_32bit);
+
+    let mut current_frame = CallstackFrame::default();
+    current_frame.stack_address = rip;
+    current_frame.value = rip;
+    current_frame.is_valid_address = check_address_safety(rip, MAXIMUM_CALL_INSTR_SIZE);
+    current_frame.is_stack_address_valid = true;
+
+    if current_frame.is_valid_address {
+        current_frame.is_executable = !is_page_nx(rip);
+        let read_addr = rip.saturating_sub(MAXIMUM_CALL_INSTR_SIZE as u64);
+        read_memory_safe(read_addr, current_frame.instruction_bytes.as_mut_ptr(), MAXIMUM_CALL_INSTR_SIZE);
+    }
+
+    result.frames.push(current_frame);
+
+    let address_mode = if is_32bit { 4usize } else { 8usize };
+    let mut current_rbp = rbp;
+
+    for _ in 1..MAX_STACK_FRAME_COUNT {
+        if current_rbp == 0 || current_rbp < stack_base || current_rbp >= stack_limit {
             break;
         }
 
-        if frame.is_valid_address && !frame.is_executable {
-            return false;
+        let mut frame = CallstackFrame::default();
+        frame.stack_address = current_rbp;
+
+        if !check_address_safety(current_rbp, address_mode * 2) {
+            break;
         }
+
+        frame.is_stack_address_valid = true;
+
+        let mut rbp_bytes = [0u8; 8];
+        let mut rip_bytes = [0u8; 8];
+
+        if !read_memory_safe(current_rbp, rbp_bytes.as_mut_ptr(), address_mode) {
+            break;
+        }
+
+        let return_addr_offset = if is_32bit { 4u64 } else { 8u64 };
+        if !read_memory_safe(current_rbp + return_addr_offset, rip_bytes.as_mut_ptr(), address_mode) {
+            break;
+        }
+
+        let next_rbp = if is_32bit {
+            u32::from_le_bytes(rbp_bytes[0..4].try_into().unwrap()) as u64
+        } else {
+            u64::from_le_bytes(rbp_bytes)
+        };
+
+        let return_addr = if is_32bit {
+            u32::from_le_bytes(rip_bytes[0..4].try_into().unwrap()) as u64
+        } else {
+            u64::from_le_bytes(rip_bytes)
+        };
+
+        frame.value = return_addr;
+
+        if check_address_safety(return_addr, MAXIMUM_CALL_INSTR_SIZE) {
+            frame.is_valid_address = true;
+            frame.is_executable = !is_page_nx(return_addr);
+            let read_addr = return_addr.saturating_sub(MAXIMUM_CALL_INSTR_SIZE as u64);
+            read_memory_safe(read_addr, frame.instruction_bytes.as_mut_ptr(), MAXIMUM_CALL_INSTR_SIZE);
+        }
+
+        result.frames.push(frame);
+        current_rbp = next_rbp;
     }
 
-    true
+    result.frame_count = result.frames.len();
+    Some(result)
 }
 
-pub unsafe fn get_call_stack(thread_id: u32) -> Result<Vec<crate::user_access::CallStackFrame>, CallstackError> {
-    extern "C" {
-        fn ps_get_thread_stack_base(thread_id: u32) -> u64;
-        fn ps_get_thread_stack_size(thread_id: u32) -> u32;
-        fn ps_get_current_process_id() -> u32;
-    }
+pub unsafe fn get_callstack_symbols(
+    callstack: &CallstackResult,
+) -> Vec<CallstackSymbolInfo> {
+    let mut symbols = Vec::with_capacity(callstack.frame_count);
 
-    let stack_base_address = ps_get_thread_stack_base(thread_id);
-    let stack_size = ps_get_thread_stack_size(thread_id);
-    let process_id = ps_get_current_process_id();
-
-    if stack_base_address == 0 || stack_size == 0 {
-        return Err(CallstackError::InvalidParameter);
-    }
-
-    let mut request = CallstackRequest {
-        process_id,
-        thread_id,
-        stack_base_address,
-        size: stack_size,
-        is_32bit: false,
-        kernel_status: 0,
-        frame_count: 0,
-        frames: [DebuggerSingleCallstackFrame {
-            is_stack_address_valid: false,
-            is_valid_address: false,
-            is_executable: false,
-            value: 0,
-            instruction_bytes_on_rip: [0; 15],
-        }; 256],
-    };
-
-    let result = callstack_walkthrough_stack(
-        &mut request.frames,
-        &mut request.frame_count,
-        stack_base_address,
-        stack_size,
-        false,
-    );
-
-    match result {
-        Ok(_) => {
-            let mut frames = Vec::new();
-            for i in 0..request.frame_count {
-                let frame = &request.frames[i as usize];
-                frames.push(crate::user_access::CallStackFrame {
-                    return_address: frame.value,
-                    frame_pointer: 0,
-                    stack_pointer: stack_base_address + (i as u64 * 8),
-                    function_name: [0; 64],
-                    module_name: [0; 32],
-                    is_valid: frame.is_valid_address && frame.is_executable,
-                });
-            }
-            Ok(frames)
+    for frame in &callstack.frames {
+        if frame.is_valid_address {
+            let symbol = resolve_symbol(frame.value);
+            symbols.push(symbol);
         }
-        Err(e) => Err(e)
     }
+
+    symbols
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct CallstackSymbolInfo {
+    pub address: u64,
+    pub module_name: Option<alloc::string::String>,
+    pub symbol_name: Option<alloc::string::String>,
+    pub offset: u64,
+}
+
+pub unsafe fn resolve_symbol(address: u64) -> CallstackSymbolInfo {
+    let mut info = CallstackSymbolInfo::default();
+    info.address = address;
+
+    extern "C" {
+        fn RtlPcToFileHeader(pc: u64, base_address: *mut u64) -> u64;
+    }
+
+    let mut base_address: u64 = 0;
+    RtlPcToFileHeader(address, &mut base_address);
+
+    if base_address != 0 {
+        info.offset = address - base_address;
+    }
+
+    info
+}
+
+unsafe fn is_page_nx(va: u64) -> bool {
+    use crate::hyperkd::hyperhv::memory::mapper::check_page_is_nx;
+    check_page_is_nx(va)
+}
+
+pub struct StackWalkIterator {
+    current_address: u64,
+    stack_limit: u64,
+    address_mode: usize,
+    is_32bit: bool,
+}
+
+impl StackWalkIterator {
+    pub fn new(stack_base: u64, stack_limit: u64, is_32bit: bool) -> Self {
+        Self {
+            current_address: stack_base,
+            stack_limit,
+            address_mode: if is_32bit { 4 } else { 8 },
+            is_32bit,
+        }
+    }
+}
+
+impl Iterator for StackWalkIterator {
+    type Item = u64;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.current_address >= self.stack_limit {
+            return None;
+        }
+
+        let address = self.current_address;
+
+        unsafe {
+            if check_address_safety(address, self.address_mode) {
+                let mut bytes = [0u8; 8];
+                if read_memory_safe(address, bytes.as_mut_ptr(), self.address_mode) {
+                    let value = if self.is_32bit {
+                        u32::from_le_bytes(bytes[0..4].try_into().unwrap()) as u64
+                    } else {
+                        u64::from_le_bytes(bytes)
+                    };
+
+                    self.current_address += self.address_mode as u64;
+                    return Some(value);
+                }
+            }
+        }
+
+        None
+    }
+}
+
+pub unsafe fn find_return_addresses(
+    stack_base: u64,
+    size: u32,
+    is_32bit: bool,
+) -> Vec<u64> {
+    let mut return_addresses = Vec::new();
+
+    if let Some(callstack) = walkthrough_stack(stack_base, size, is_32bit) {
+        for frame in callstack.frames {
+            if frame.is_valid_address && frame.is_executable {
+                return_addresses.push(frame.value);
+            }
+        }
+    }
+
+    return_addresses
 }

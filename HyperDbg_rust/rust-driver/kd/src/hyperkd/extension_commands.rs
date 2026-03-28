@@ -4,6 +4,8 @@ use alloc::boxed::Box;
 use alloc::sync::Arc;
 use spin::Mutex;
 
+use crate::hyperkd::hyperhv::broadcast::halted_core;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ExtensionCommandError {
     NotInitialized,
@@ -463,75 +465,75 @@ pub unsafe fn extension_command_pte(
 }
 
 pub unsafe fn extension_command_change_all_msr_bitmap_read_all_cores(bitmap_mask: u64) {
-    crate::halted_core::broadcast_change_all_msr_bitmap_read_all_cores(bitmap_mask);
+    halted_core::broadcast_change_all_msr_bitmap_read_all_cores(bitmap_mask);
 }
 
 pub unsafe fn extension_command_reset_change_all_msr_bitmap_read_all_cores() {
-    crate::halted_core::broadcast_reset_change_all_msr_bitmap_read_all_cores();
+    halted_core::broadcast_reset_change_all_msr_bitmap_read_all_cores();
 }
 
 pub unsafe fn extension_command_change_all_msr_bitmap_write_all_cores(bitmap_mask: u64) {
-    crate::halted_core::broadcast_change_all_msr_bitmap_write_all_cores(bitmap_mask);
+    halted_core::broadcast_change_all_msr_bitmap_write_all_cores(bitmap_mask);
 }
 
 pub unsafe fn extension_command_reset_all_msr_bitmap_write_all_cores() {
-    crate::halted_core::broadcast_reset_all_msr_bitmap_write_all_cores();
+    halted_core::broadcast_reset_all_msr_bitmap_write_all_cores();
 }
 
 pub unsafe fn extension_command_enable_rdtsc_exiting_all_cores() {
-    crate::halted_core::broadcast_enable_rdtsc_exiting_all_cores();
+    halted_core::broadcast_enable_rdtsc_exiting_all_cores();
 }
 
 pub unsafe fn extension_command_disable_rdtsc_exiting_all_cores() {
-    crate::halted_core::broadcast_disable_rdtsc_exiting_all_cores();
+    halted_core::broadcast_disable_rdtsc_exiting_all_cores();
 }
 
 pub unsafe fn extension_command_disable_rdtsc_exiting_for_clearing_events_all_cores() {
-    crate::halted_core::broadcast_disable_rdtsc_exiting_for_clearing_events_all_cores();
+    halted_core::broadcast_disable_rdtsc_exiting_for_clearing_events_all_cores();
 }
 
 pub unsafe fn extension_command_set_exception_bitmap_all_cores(exception_index: u64) {
-    crate::halted_core::broadcast_set_exception_bitmap_all_cores(exception_index);
+    halted_core::broadcast_set_exception_bitmap_all_cores(exception_index);
 }
 
 pub unsafe fn extension_command_unset_exception_bitmap_all_cores(exception_index: u64) {
-    crate::halted_core::broadcast_unset_exception_bitmap_all_cores(exception_index);
+    halted_core::broadcast_unset_exception_bitmap_all_cores(exception_index);
 }
 
 pub unsafe fn extension_command_reset_exception_bitmap_all_cores() {
-    crate::halted_core::broadcast_reset_exception_bitmap_all_cores();
+    halted_core::broadcast_reset_exception_bitmap_all_cores();
 }
 
 pub unsafe fn extension_command_enable_mov_control_register_exiting_all_cores(options: u64) {
-    crate::halted_core::broadcast_enable_mov_control_register_exiting_all_cores(options);
+    halted_core::broadcast_enable_mov_control_register_exiting_all_cores(options);
 }
 
 pub unsafe fn extension_command_disable_mov_to_control_registers_exiting_all_cores(options: u64) {
-    crate::halted_core::broadcast_disable_mov_to_control_registers_exiting_all_cores(options);
+    halted_core::broadcast_disable_mov_to_control_registers_exiting_all_cores(options);
 }
 
 pub unsafe fn extension_command_enable_mov_debug_registers_exiting_all_cores() {
-    crate::halted_core::broadcast_enable_mov_debug_registers_exiting_all_cores();
+    halted_core::broadcast_enable_mov_debug_registers_exiting_all_cores();
 }
 
 pub unsafe fn extension_command_disable_mov_debug_registers_exiting_all_cores() {
-    crate::halted_core::broadcast_disable_mov_debug_registers_exiting_all_cores();
+    halted_core::broadcast_disable_mov_debug_registers_exiting_all_cores();
 }
 
 pub unsafe fn extension_command_set_external_interrupt_exiting_all_cores() {
-    crate::halted_core::broadcast_set_external_interrupt_exiting_all_cores();
+    halted_core::broadcast_set_external_interrupt_exiting_all_cores();
 }
 
 pub unsafe fn extension_command_unset_external_interrupt_exiting_only_on_clearing_interrupt_events_all_cores() {
-    crate::halted_core::broadcast_unset_external_interrupt_exiting_only_on_clearing_interrupt_events_all_cores();
+    halted_core::broadcast_unset_external_interrupt_exiting_only_on_clearing_interrupt_events_all_cores();
 }
 
 pub unsafe fn extension_command_io_bitmap_change_all_cores(port: u64) {
-    crate::halted_core::broadcast_io_bitmap_change_all_cores(port);
+    halted_core::broadcast_io_bitmap_change_all_cores(port);
 }
 
 pub unsafe fn extension_command_io_bitmap_reset_all_cores() {
-    crate::halted_core::broadcast_io_bitmap_reset_all_cores();
+    halted_core::broadcast_io_bitmap_reset_all_cores();
 }
 
 pub unsafe fn extension_command_pcitree(

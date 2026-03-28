@@ -1,382 +1,381 @@
-use crate::memory::MemoryManager;
-use crate::process::Process;
-use crate::thread::Thread;
+#![allow(dead_code)]
+
 use alloc::boxed::Box;
+use alloc::collections::BTreeMap;
 use alloc::sync::Arc;
+use alloc::vec::Vec;
+use core::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
 use spin::Mutex;
 
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct UserModeDebuggingProcessDetails {
-    pub token: u64,
-    pub process_id: u32,
-    pub enabled: bool,
-    pub is_32_bit: bool,
-    pub check_callback_for_intercepting_first_instruction: bool,
-    pub eprocess: *mut u8,
-    pub peb_address_to_monitor: u64,
-    pub thread_holder: *mut u8,
-}
-
-impl UserModeDebuggingProcessDetails {
-    pub fn new() -> Self {
-        Self {
-            token: 0,
-            process_id: 0,
-            enabled: false,
-            is_32_bit: false,
-            check_callback_for_intercepting_first_instruction: false,
-            eprocess: core::ptr::null_mut(),
-            peb_address_to_monitor: 0,
-            thread_holder: core::ptr::null_mut(),
-        }
-    }
-}
-
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
-pub struct ThreadHolder {
-    pub thread: *mut u8,
-    pub thread_id: u32,
-    pub process_id: u32,
-    pub is_active: bool,
-    pub is_suspended: bool,
-}
-
-impl ThreadHolder {
-    pub fn new() -> Self {
-        Self {
-            thread: core::ptr::null_mut(),
-            thread_id: 0,
-            process_id: 0,
-            is_active: false,
-            is_suspended: false,
-        }
-    }
-}
-
-pub static mut PROCESS_DEBUGGING_DETAILS_LIST_HEAD: alloc::collections::LinkedList<UserModeDebuggingProcessDetails> = alloc::collections::LinkedList::new();
-pub static mut SEED_OF_USER_DEBUGGING_DETAILS: u64 = 0;
-pub static mut PS_GET_PROCESS_PEB: Option<unsafe fn(*mut u8) -> u64> = None;
-pub static mut PS_GET_PROCESS_WOW64_PROCESS: Option<unsafe fn(*mut u8) -> *mut u8> = None;
-pub static mut ZW_QUERY_INFORMATION_PROCESS: Option<unsafe fn(*mut u8, u32, *mut u8, usize, *mut u32) -> u32> = None;
+use crate::hyperkd::{ProcessId, ThreadId, Address};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum AttachingError {
-    NotInitialized,
-    InvalidParameter,
+pub enum AttachError {
     ProcessNotFound,
-    ThreadNotFound,
-    InsufficientResources,
     AlreadyAttached,
-    NotAttached,
-    OperationFailed,
+    InsufficientMemory,
+    InvalidParameter,
+    ThreadNotFound,
 }
 
-pub unsafe fn initialize_attaching() -> bool {
-    extern "C" {
-        fn MmGetSystemRoutineAddress(routine_name: *const u16) -> *mut u8;
-        fn RtlInitUnicodeString(destination_string: *mut u16, source_string: *const u16);
+#[derive(Debug, Clone)]
+pub struct UsermodeDebuggingProcessDetails {
+    pub token: u64,
+    pub process_id: ProcessId,
+    pub enabled: bool,
+    pub is_32bit: bool,
+    pub check_callback_for_first_instruction: bool,
+    pub eprocess: u64,
+    pub peb_address: u64,
+    pub entrypoint_of_main_module: u64,
+    pub is_on_starting_phase: bool,
+    pub is_on_thread_intercepting_phase: bool,
+    pub thread_details: BTreeMap<ThreadId, ThreadDebuggingDetails>,
+}
+
+impl UsermodeDebuggingProcessDetails {
+    pub fn new(process_id: ProcessId) -> Self {
+        Self {
+            token: 0,
+            process_id,
+            enabled: true,
+            is_32bit: false,
+            check_callback_for_first_instruction: false,
+            eprocess: 0,
+            peb_address: 0,
+            entrypoint_of_main_module: 0,
+            is_on_starting_phase: false,
+            is_on_thread_intercepting_phase: false,
+            thread_details: BTreeMap::new(),
+        }
     }
+}
 
-    let function_name: [u16; 20] = [
-        b'P' as u16, b's' as u16, b'G' as u16, b'e' as u16, b't' as u16,
-        b'P' as u16, b'r' as u16, b'o' as u16, b'c' as u16, b'e' as u16, b's' as u16,
-        b's' as u16, b'P' as u16, b'e' as u16, b'b' as u16, 0, 0,
-    ];
+#[derive(Debug, Clone)]
+pub struct ThreadDebuggingDetails {
+    pub thread_id: ThreadId,
+    pub is_running: bool,
+    pub context: u64,
+    pub start_address: u64,
+}
 
-    let mut unicode_string = [0u16; 20];
-    RtlInitUnicodeString(&mut unicode_string[0], &function_name[0]);
+static PROCESS_DEBUGGING_DETAILS_LIST: Mutex<Vec<UsermodeDebuggingProcessDetails>> = Mutex::new(Vec::new());
+static NEXT_TOKEN: AtomicU64 = AtomicU64::new(1);
+static IS_WAITING_FOR_USERMODE_PROCESS_ENTRY: AtomicBool = AtomicBool::new(false);
+static IS_WAITING_FOR_RETURN_FROM_PAGE_FAULT: AtomicBool = AtomicBool::new(false);
 
-    let ps_get_process_peb = MmGetSystemRoutineAddress(&unicode_string[0]) as *const u8;
-    if !ps_get_process_peb.is_null() {
-        PS_GET_PROCESS_PEB = Some(core::mem::transmute(ps_get_process_peb));
-    } else {
-        return false;
-    }
-
-    let wow64_function_name: [u16; 28] = [
-        b'P' as u16, b's' as u16, b'G' as u16, b'e' as u16, b't' as u16,
-        b'P' as u16, b'r' as u16, b'o' as u16, b'c' as u16, b'e' as u16, b's' as u16,
-        b's' as u16, b'W' as u16, b'o' as u16, b'w' as u16, b'6' as u16, b'4' as u16,
-        b'P' as u16, b'r' as u16, b'o' as u16, b'c' as u16, b'e' as u16, b's' as u16, b's' as u16,
-        0, 0,
-    ];
-
-    let mut unicode_string_wow64 = [0u16; 28];
-    RtlInitUnicodeString(&mut unicode_string_wow64[0], &wow64_function_name[0]);
-
-    let ps_get_process_wow64_process = MmGetSystemRoutineAddress(&unicode_string_wow64[0]) as *const u8;
-    if !ps_get_process_wow64_process.is_null() {
-        PS_GET_PROCESS_WOW64_PROCESS = Some(core::mem::transmute(ps_get_process_wow64_process));
-    } else {
-        return false;
-    }
-
-    let zw_query_function_name: [u16; 26] = [
-        b'Z' as u16, b'w' as u16, b'Q' as u16, b'u' as u16, b'e' as u16, b'r' as u16,
-        b'y' as u16, b'I' as u16, b'n' as u16, b'f' as u16, b'o' as u16, b'r' as u16,
-        b'm' as u16, b'a' as u16, b't' as u16, b'i' as u16, b'o' as u16, b'n' as u16,
-        b'P' as u16, b'r' as u16, b'o' as u16, b'c' as u16, b'e' as u16, b's' as u16, b's' as u16,
-        0, 0,
-    ];
-
-    let mut unicode_string_zw = [0u16; 26];
-    RtlInitUnicodeString(&mut unicode_string_zw[0], &zw_query_function_name[0]);
-
-    let zw_query_information_process = MmGetSystemRoutineAddress(&unicode_string_zw[0]) as *const u8;
-    if !zw_query_information_process.is_null() {
-        ZW_QUERY_INFORMATION_PROCESS = Some(core::mem::transmute(zw_query_information_process));
-    } else {
-        return false;
-    }
-
+pub unsafe fn attaching_initialize() -> bool {
+    let mut list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    list.clear();
     true
 }
 
-pub unsafe fn create_process_debugging_details(
-    process_id: u32,
+pub unsafe fn attaching_uninitialize() {
+    let mut list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    list.clear();
+}
+
+pub unsafe fn attaching_create_process_debugging_details(
+    process_id: ProcessId,
     enabled: bool,
-    is_32_bit: bool,
+    is_32bit: bool,
     check_callback_at_first_instruction: bool,
-    eprocess: *mut u8,
-    peb_address_to_monitor: u64,
+    eprocess: u64,
+    peb_address: u64,
 ) -> Option<u64> {
-    let process_debugging_detail = MemoryManager::allocate_non_paged_pool(
-        core::mem::size_of::<UserModeDebuggingProcessDetails>(),
-    );
+    let token = NEXT_TOKEN.fetch_add(1, Ordering::SeqCst);
 
-    if process_debugging_detail.is_null() {
-        return None;
-    }
-
-    let details = &mut *(process_debugging_detail as *mut UserModeDebuggingProcessDetails);
-    
-    details.token = SEED_OF_USER_DEBUGGING_DETAILS;
-    SEED_OF_USER_DEBUGGING_DETAILS += 1;
-    
-    details.process_id = process_id;
+    let mut details = UsermodeDebuggingProcessDetails::new(process_id);
+    details.token = token;
     details.enabled = enabled;
-    details.is_32_bit = is_32_bit;
-    details.check_callback_for_intercepting_first_instruction = check_callback_at_first_instruction;
+    details.is_32bit = is_32bit;
+    details.check_callback_for_first_instruction = check_callback_at_first_instruction;
     details.eprocess = eprocess;
-    details.peb_address_to_monitor = peb_address_to_monitor;
+    details.peb_address = peb_address;
 
-    if !assign_thread_holder_to_process_debugging_details(details) {
-        MemoryManager::free_pool(process_debugging_detail);
-        return None;
-    }
+    let mut list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    list.push(details);
 
-    Some(details.token)
+    Some(token)
 }
 
-pub unsafe fn assign_thread_holder_to_process_debugging_details(
-    details: &mut UserModeDebuggingProcessDetails,
-) -> bool {
-    let thread_holder = MemoryManager::allocate_non_paged_pool(core::mem::size_of::<ThreadHolder>());
-    
-    if thread_holder.is_null() {
-        return false;
-    }
-
-    let holder = &mut *(thread_holder as *mut ThreadHolder);
-    holder.thread = core::ptr::null_mut();
-    holder.thread_id = 0;
-    holder.process_id = details.process_id;
-    holder.is_active = false;
-    holder.is_suspended = false;
-    
-    details.thread_holder = thread_holder;
-    
-    true
-}
-
-pub unsafe fn attach_to_process(process_id: u32) -> Result<u64, AttachingError> {
-    let eprocess = Process::lookup_process_by_id(process_id);
-    
-    if eprocess.is_none() {
-        return Err(AttachingError::ProcessNotFound);
-    }
-    
-    let eprocess = eprocess.unwrap();
-    let peb_address = Process::get_process_peb(eprocess).unwrap_or(0);
-    
-    create_process_debugging_details(
-        process_id,
-        true,
-        Process::is_system_process(eprocess),
-        false,
-        eprocess,
-        peb_address,
-    ).ok_or(AttachingError::InsufficientResources)
-}
-
-pub unsafe fn detach_from_process(token: u64) -> Result<(), AttachingError> {
-    extern "C" {
-        fn RemoveEntryList(head: *mut u8, entry: *mut u8);
-    }
-
-    let mut found = false;
-    let mut current = PROCESS_DEBUGGING_DETAILS_LIST_HEAD.front_mut();
-    
-    while let Some(details) = current {
-        if details.token == token {
-            RemoveEntryList(
-                &mut PROCESS_DEBUGGING_DETAILS_LIST_HEAD as *mut u8,
-                details as *mut u8,
-            );
-            
-            MemoryManager::free_pool(details.thread_holder);
-            MemoryManager::free_pool(details as *mut u8);
-            
-            found = true;
-            break;
+pub fn attaching_find_process_debugging_details_by_token(token: u64) -> Option<UsermodeDebuggingProcessDetails> {
+    let list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    for details in list.iter() {
+        if details.token == token && details.enabled {
+            return Some(details.clone());
         }
-        
-        current = details.next;
     }
-    
-    if found {
-        Ok(())
-    } else {
-        Err(AttachingError::NotAttached)
-    }
-}
-
-pub unsafe fn is_process_attached(process_id: u32) -> bool {
-    let mut current = PROCESS_DEBUGGING_DETAILS_LIST_HEAD.front_mut();
-    
-    while let Some(details) = current {
-        if details.process_id == process_id && details.enabled {
-            return true;
-        }
-        
-        current = details.next;
-    }
-    
-    false
-}
-
-pub unsafe fn get_process_debugging_details(token: u64) -> Option<&'static mut UserModeDebuggingProcessDetails> {
-    let mut current = PROCESS_DEBUGGING_DETAILS_LIST_HEAD.front_mut();
-    
-    while let Some(details) = current {
-        if details.token == token {
-            return Some(unsafe { &mut *(details as *mut UserModeDebuggingProcessDetails) });
-        }
-        
-        current = details.next;
-    }
-    
     None
 }
 
-pub unsafe fn get_all_attached_processes() -> alloc::vec::Vec<u32> {
-    let mut process_ids = alloc::vec::Vec::new();
-    let mut current = PROCESS_DEBUGGING_DETAILS_LIST_HEAD.front_mut();
-    
-    while let Some(details) = current {
-        if details.enabled {
-            process_ids.push(details.process_id);
+pub fn attaching_find_process_debugging_details_by_process_id(process_id: ProcessId) -> Option<UsermodeDebuggingProcessDetails> {
+    let list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    for details in list.iter() {
+        if details.process_id == process_id && details.enabled {
+            return Some(details.clone());
         }
-        
-        current = details.next;
     }
-    
-    process_ids
+    None
 }
 
-pub unsafe fn cleanup_all_attachments() {
-    extern "C" {
-        fn RemoveEntryList(head: *mut u8, entry: *mut u8);
-    }
-
-    while let Some(details) = PROCESS_DEBUGGING_DETAILS_LIST_HEAD.pop_front() {
-        if !details.thread_holder.is_null() {
-            MemoryManager::free_pool(details.thread_holder);
+pub fn attaching_find_process_debugging_details_in_starting_phase() -> Option<UsermodeDebuggingProcessDetails> {
+    let list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    for details in list.iter() {
+        if details.is_on_starting_phase {
+            return Some(details.clone());
         }
-        
-        MemoryManager::free_pool(details as *mut u8);
     }
+    None
 }
 
-pub unsafe fn get_process_peb_address(process_id: u32) -> Option<u64> {
-    let eprocess = Process::lookup_process_by_id(process_id)?;
-    Process::get_process_peb(eprocess)
-}
+pub fn attaching_remove_process_debugging_details_by_token(token: u64) -> bool {
+    let mut list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    let mut found = false;
 
-pub unsafe fn get_wow64_process(process_id: u32) -> Option<*mut u8> {
-    if let Some(ps_get_process_wow64_process) = PS_GET_PROCESS_WOW64_PROCESS {
-        let eprocess = Process::lookup_process_by_id(process_id)?;
-        Some(ps_get_process_wow64_process(eprocess))
-    } else {
-        None
-    }
-}
-
-pub unsafe fn query_process_information(
-    process_handle: u64,
-    process_information_class: u32,
-    process_information: *mut u8,
-    process_information_length: usize,
-    return_length: *mut u32,
-) -> Result<(), AttachingError> {
-    if let Some(zw_query_information_process) = ZW_QUERY_INFORMATION_PROCESS {
-        let status = zw_query_information_process(
-            process_handle as *mut u8,
-            process_information_class,
-            process_information,
-            process_information_length,
-            return_length,
-        );
-        
-        if status == 0 {
-            Ok(())
+    list.retain(|details| {
+        if details.token == token {
+            found = true;
+            false
         } else {
-            Err(AttachingError::OperationFailed)
+            true
         }
-    } else {
-        Err(AttachingError::NotInitialized)
-    }
+    });
+
+    found
 }
 
-pub unsafe fn get_thread_holder(token: u64) -> Option<&'static mut ThreadHolder> {
-    let details = get_process_debugging_details(token)?;
-    
-    if !details.thread_holder.is_null() {
-        Some(unsafe { &mut *(details.thread_holder as *mut ThreadHolder) })
-    } else {
+pub fn attaching_remove_all_process_debugging_details() {
+    let mut list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    list.clear();
+}
+
+pub fn attaching_set_starting_phase_by_token(set: bool, token: u64) -> bool {
+    if set {
+        if let Some(_) = attaching_find_process_debugging_details_in_starting_phase() {
+            return false;
+        }
+    }
+
+    let mut list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    for details in list.iter_mut() {
+        if details.token == token {
+            details.is_on_starting_phase = set;
+            return true;
+        }
+    }
+    false
+}
+
+pub fn attaching_set_entrypoint(token: u64, entrypoint: u64) -> bool {
+    let mut list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    for details in list.iter_mut() {
+        if details.token == token {
+            details.entrypoint_of_main_module = entrypoint;
+            return true;
+        }
+    }
+    false
+}
+
+pub fn attaching_enable_thread_interception(token: u64, enable: bool) -> bool {
+    let mut list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    for details in list.iter_mut() {
+        if details.token == token {
+            details.is_on_thread_intercepting_phase = enable;
+            return true;
+        }
+    }
+    false
+}
+
+pub fn attaching_add_thread_debugging_details(token: u64, thread_id: ThreadId, start_address: u64) -> bool {
+    let mut list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    for details in list.iter_mut() {
+        if details.token == token {
+            let thread_details = ThreadDebuggingDetails {
+                thread_id,
+                is_running: true,
+                context: 0,
+                start_address,
+            };
+            details.thread_details.insert(thread_id, thread_details);
+            return true;
+        }
+    }
+    false
+}
+
+pub fn attaching_remove_thread_debugging_details(token: u64, thread_id: ThreadId) -> bool {
+    let mut list = PROCESS_DEBUGGING_DETAILS_LIST.lock();
+    for details in list.iter_mut() {
+        if details.token == token {
+            return details.thread_details.remove(&thread_id).is_some();
+        }
+    }
+    false
+}
+
+pub unsafe fn attaching_get_process_peb(process_id: ProcessId) -> Option<u64> {
+    extern "C" {
+        fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
+        fn ObDereferenceObject(object: u64);
+    }
+
+    type PsGetProcessPeb = unsafe extern "C" fn(u64) -> u64;
+
+    let mut eprocess: u64 = 0;
+    let status = PsLookupProcessByProcessId(process_id as u64, &mut eprocess);
+
+    if status != 0 {
+        return None;
+    }
+
+    let ps_get_process_peb: PsGetProcessPeb = core::mem::transmute(get_ps_get_process_peb_address());
+
+    let peb = ps_get_process_peb(eprocess);
+    ObDereferenceObject(eprocess);
+
+    if peb == 0 {
         None
+    } else {
+        Some(peb)
     }
 }
 
-pub unsafe fn set_thread_holder_thread(token: u64, thread: *mut u8) -> bool {
-    let details = get_process_debugging_details(token)?;
-    
-    if !details.thread_holder.is_null() {
-        let holder = unsafe { &mut *(details.thread_holder as *mut ThreadHolder) };
-        holder.thread = thread;
-        holder.is_active = true;
-        
-        true
-    } else {
-        false
+pub unsafe fn attaching_get_process_wow64_process(process_id: ProcessId) -> Option<u64> {
+    extern "C" {
+        fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
+        fn ObDereferenceObject(object: u64);
     }
+
+    type PsGetProcessWow64Process = unsafe extern "C" fn(u64) -> u64;
+
+    let mut eprocess: u64 = 0;
+    let status = PsLookupProcessByProcessId(process_id as u64, &mut eprocess);
+
+    if status != 0 {
+        return None;
+    }
+
+    let ps_get_process_wow64: PsGetProcessWow64Process = core::mem::transmute(get_ps_get_process_wow64_address());
+
+    let wow64 = ps_get_process_wow64(eprocess);
+    ObDereferenceObject(eprocess);
+
+    Some(wow64)
 }
 
-pub unsafe fn enable_process_debugging(token: u64, enabled: bool) -> bool {
-    if let Some(details) = get_process_debugging_details(token) {
-        details.enabled = enabled;
-        true
-    } else {
-        false
+pub unsafe fn attaching_check_thread_interception(core_id: u32) -> bool {
+    let process_id = get_current_process_id();
+
+    if let Some(details) = attaching_find_process_debugging_details_by_process_id(process_id) {
+        if details.is_on_thread_intercepting_phase {
+            return true;
+        }
     }
+
+    false
 }
 
-pub unsafe fn is_process_debugging_enabled(token: u64) -> bool {
-    if let Some(details) = get_process_debugging_details(token) {
-        details.enabled
-    } else {
-        false
+pub fn get_current_process_id() -> ProcessId {
+    extern "C" {
+        fn PsGetCurrentProcessId() -> u64;
     }
+    unsafe { PsGetCurrentProcessId() as ProcessId }
+}
+
+pub fn get_current_thread_id() -> ThreadId {
+    extern "C" {
+        fn PsGetCurrentThreadId() -> u64;
+    }
+    unsafe { PsGetCurrentThreadId() as ThreadId }
+}
+
+static mut PS_GET_PROCESS_PEB_ADDRESS: u64 = 0;
+static mut PS_GET_PROCESS_WOW64_ADDRESS: u64 = 0;
+
+pub unsafe fn get_ps_get_process_peb_address() -> u64 {
+    if PS_GET_PROCESS_PEB_ADDRESS == 0 {
+        extern "C" {
+            fn MmGetSystemRoutineAddress(name: *const u16) -> u64;
+        }
+
+        let name: [u16; 16] = [
+            'P' as u16, 's' as u16, 'G' as u16, 'e' as u16, 't' as u16,
+            'P' as u16, 'r' as u16, 'o' as u16, 'c' as u16, 'e' as u16,
+            's' as u16, 's' as u16, 'P' as u16, 'e' as u16, 'b' as u16,
+            0,
+        ];
+
+        PS_GET_PROCESS_PEB_ADDRESS = MmGetSystemRoutineAddress(name.as_ptr());
+    }
+    PS_GET_PROCESS_PEB_ADDRESS
+}
+
+pub unsafe fn get_ps_get_process_wow64_address() -> u64 {
+    if PS_GET_PROCESS_WOW64_ADDRESS == 0 {
+        extern "C" {
+            fn MmGetSystemRoutineAddress(name: *const u16) -> u64;
+        }
+
+        let name: [u16; 25] = [
+            'P' as u16, 's' as u16, 'G' as u16, 'e' as u16, 't' as u16,
+            'P' as u16, 'r' as u16, 'o' as u16, 'c' as u16, 'e' as u16,
+            's' as u16, 's' as u16, 'W' as u16, 'o' as u16, 'w' as u16,
+            '6' as u16, '4' as u16, 'P' as u16, 'r' as u16, 'o' as u16,
+            'c' as u16, 'e' as u16, 's' as u16, 's' as u16,
+            0,
+        ];
+
+        PS_GET_PROCESS_WOW64_ADDRESS = MmGetSystemRoutineAddress(name.as_ptr());
+    }
+    PS_GET_PROCESS_WOW64_ADDRESS
+}
+
+pub fn is_waiting_for_usermode_process_entry() -> bool {
+    IS_WAITING_FOR_USERMODE_PROCESS_ENTRY.load(Ordering::SeqCst)
+}
+
+pub fn set_waiting_for_usermode_process_entry(waiting: bool) {
+    IS_WAITING_FOR_USERMODE_PROCESS_ENTRY.store(waiting, Ordering::SeqCst);
+}
+
+pub fn is_waiting_for_return_from_page_fault() -> bool {
+    IS_WAITING_FOR_RETURN_FROM_PAGE_FAULT.load(Ordering::SeqCst)
+}
+
+pub fn set_waiting_for_return_from_page_fault(waiting: bool) {
+    IS_WAITING_FOR_RETURN_FROM_PAGE_FAULT.store(waiting, Ordering::SeqCst);
+}
+
+pub unsafe fn attaching_adjust_nop_sled_buffer(reserved_address: u64, process_id: ProcessId) -> bool {
+    extern "C" {
+        fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
+        fn KeStackAttachProcess(process: u64, apc_state: *mut u8);
+        fn KeUnstackDetachProcess(apc_state: *mut u8);
+        fn ObDereferenceObject(object: u64);
+    }
+
+    let mut eprocess: u64 = 0;
+    let status = PsLookupProcessByProcessId(process_id as u64, &mut eprocess);
+
+    if status != 0 {
+        return false;
+    }
+
+    let mut apc_state = [0u8; 64];
+
+    KeStackAttachProcess(eprocess, apc_state.as_mut_ptr());
+
+    core::ptr::write_bytes(reserved_address as *mut u8, 0x90, 4096);
+
+    let sled_end = reserved_address + 4096 - 4;
+    core::ptr::write(sled_end as *mut u16, 0xa20f);
+    core::ptr::write((sled_end + 2) as *mut u16, 0xf4eb);
+
+    KeUnstackDetachProcess(apc_state.as_mut_ptr());
+    ObDereferenceObject(eprocess);
+
+    true
 }

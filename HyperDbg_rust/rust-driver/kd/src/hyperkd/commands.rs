@@ -1,13 +1,12 @@
-use crate::memory::MemoryManager;
-use crate::process::Process;
-use crate::thread::Thread;
-use crate::attaching::AttachingError;
-use crate::allocations::ProcessorDebuggingState;
+#![allow(dead_code)]
+
 use alloc::boxed::Box;
 use alloc::sync::Arc;
 use alloc::vec::Vec;
 use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
+
+use crate::hyperkd::{ProcessId, ThreadId, Address};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CommandError {
@@ -27,7 +26,7 @@ pub enum CommandError {
 }
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct GuestRegs {
     pub rax: u64,
     pub rcx: u64,
@@ -48,7 +47,7 @@ pub struct GuestRegs {
 }
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct GuestExtraRegs {
     pub cs: u16,
     pub ss: u16,
@@ -110,7 +109,6 @@ pub const EDIT_QWORD: u32 = 8;
 pub const DEBUGGER_ERROR_EDIT_MEMORY_STATUS_INVALID_PARAMETER: u32 = 1;
 pub const DEBUGGER_ERROR_EDIT_MEMORY_STATUS_INVALID_ADDRESS_BASED_ON_CURRENT_PROCESS: u32 = 2;
 pub const DEBUGGER_ERROR_EDIT_MEMORY_STATUS_INVALID_ADDRESS_BASED_ON_OTHER_PROCESS: u32 = 3;
-pub const DEBUGGER_ERROR_INVALID_ADDRESS: u32 = 4;
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -152,7 +150,7 @@ pub struct CommandManager {
 }
 
 impl CommandManager {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self {
             initialized: AtomicBool::new(false),
             breakpoints: Mutex::new(Vec::new()),
@@ -213,20 +211,19 @@ impl CommandManager {
 
     fn get_rflags(&self) -> u64 {
         unsafe {
-            extern "C" {
-                fn vm_func_get_rflags() -> u64;
-            }
-            vm_func_get_rflags()
+            let rflags: u64;
+            core::arch::asm!(
+                "pushfq",
+                "pop {}",
+                out(reg) rflags,
+                options(nostack)
+            );
+            rflags
         }
     }
 
     fn get_rip(&self) -> u64 {
-        unsafe {
-            extern "C" {
-                fn vm_func_get_rip() -> u64;
-            }
-            vm_func_get_rip()
-        }
+        0
     }
 
     pub fn read_memory(
@@ -264,29 +261,55 @@ impl CommandManager {
 
     unsafe fn read_physical_memory(&self, address: u64, buffer: &mut [u8], size: usize) -> bool {
         extern "C" {
-            fn memory_mapper_read_memory_safe_by_physical_address(address: u64, buffer: *mut u8, size: usize) -> bool;
+            fn MmGetVirtualForPhysical(physical_address: u64) -> u64;
+            fn MmIsAddressValid(address: u64) -> bool;
         }
-        memory_mapper_read_memory_safe_by_physical_address(address, buffer.as_mut_ptr(), size)
+
+        let va = MmGetVirtualForPhysical(address);
+        if va == 0 || !MmIsAddressValid(va) {
+            return false;
+        }
+
+        core::ptr::copy_nonoverlapping(va as *const u8, buffer.as_mut_ptr(), size);
+        true
     }
 
     unsafe fn read_virtual_memory(&self, pid: u32, address: u64, buffer: &mut [u8], size: usize) -> bool {
         extern "C" {
-            fn memory_manager_read_process_memory_normal(
-                pid: u32,
-                address: u64,
-                buffer: *mut u8,
-                size: usize,
-                return_size: *mut usize,
-            ) -> bool;
+            fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
+            fn ObDereferenceObject(object: u64);
+            fn KeStackAttachProcess(process: u64, apc_state: *mut u8);
+            fn KeUnstackDetachProcess(apc_state: *mut u8);
+            fn MmIsAddressValid(address: u64) -> bool;
         }
-        let mut actual_size = 0usize;
-        let result = memory_manager_read_process_memory_normal(
-            pid,
-            address,
-            buffer.as_mut_ptr(),
-            size,
-            &mut actual_size,
-        );
+
+        if pid == 0 || pid == DEBUGGEE_BP_APPLY_TO_ALL_PROCESSES {
+            if MmIsAddressValid(address) {
+                core::ptr::copy_nonoverlapping(address as *const u8, buffer.as_mut_ptr(), size);
+                return true;
+            }
+            return false;
+        }
+
+        let mut eprocess: u64 = 0;
+        let status = PsLookupProcessByProcessId(pid as u64, &mut eprocess);
+        if status != 0 {
+            return false;
+        }
+
+        let mut apc_state = [0u8; 64];
+        KeStackAttachProcess(eprocess, apc_state.as_mut_ptr());
+
+        let result = if MmIsAddressValid(address) {
+            core::ptr::copy_nonoverlapping(address as *const u8, buffer.as_mut_ptr(), size);
+            true
+        } else {
+            false
+        };
+
+        KeUnstackDetachProcess(apc_state.as_mut_ptr());
+        ObDereferenceObject(eprocess);
+
         result
     }
 
@@ -327,31 +350,70 @@ impl CommandManager {
         chunk_size: u32,
     ) -> Result<(), CommandError> {
         extern "C" {
-            fn memory_mapper_write_memory_unsafe(
-                address: u64,
-                source: *const u8,
-                size: usize,
-                process_id: u32,
-            ) -> bool;
+            fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
+            fn ObDereferenceObject(object: u64);
+            fn KeStackAttachProcess(process: u64, apc_state: *mut u8);
+            fn KeUnstackDetachProcess(apc_state: *mut u8);
+            fn MmIsAddressValid(address: u64) -> bool;
         }
 
-        for i in 0..request.count_of_64_chunks {
-            let dest_addr = request.address + (i as u64) * (chunk_size as u64);
-            let src_offset = (i as usize) * (chunk_size as usize);
+        let attached = if request.process_id != 0 && request.process_id != DEBUGGEE_BP_APPLY_TO_ALL_PROCESSES {
+            let mut eprocess: u64 = 0;
+            let status = PsLookupProcessByProcessId(request.process_id as u64, &mut eprocess);
+            if status == 0 {
+                Some(eprocess)
+            } else {
+                None
+            }
+        } else {
+            None
+        };
 
-            if src_offset + chunk_size as usize > data.len() {
-                break;
+        if let Some(eprocess) = attached {
+            let mut apc_state = [0u8; 64];
+            KeStackAttachProcess(eprocess, apc_state.as_mut_ptr());
+
+            for i in 0..request.count_of_64_chunks {
+                let dest_addr = request.address + (i as u64) * (chunk_size as u64);
+                let src_offset = (i as usize) * (chunk_size as usize);
+
+                if src_offset + chunk_size as usize > data.len() {
+                    break;
+                }
+
+                if !MmIsAddressValid(dest_addr) {
+                    KeUnstackDetachProcess(apc_state.as_mut_ptr());
+                    ObDereferenceObject(eprocess);
+                    return Err(CommandError::InvalidAddress);
+                }
+
+                core::ptr::copy_nonoverlapping(
+                    data.as_ptr().add(src_offset),
+                    dest_addr as *mut u8,
+                    chunk_size as usize,
+                );
             }
 
-            let success = memory_mapper_write_memory_unsafe(
-                dest_addr,
-                data.as_ptr().add(src_offset),
-                chunk_size as usize,
-                request.process_id,
-            );
+            KeUnstackDetachProcess(apc_state.as_mut_ptr());
+            ObDereferenceObject(eprocess);
+        } else {
+            for i in 0..request.count_of_64_chunks {
+                let dest_addr = request.address + (i as u64) * (chunk_size as u64);
+                let src_offset = (i as usize) * (chunk_size as usize);
 
-            if !success {
-                return Err(CommandError::InvalidAddress);
+                if src_offset + chunk_size as usize > data.len() {
+                    break;
+                }
+
+                if !MmIsAddressValid(dest_addr) {
+                    return Err(CommandError::InvalidAddress);
+                }
+
+                core::ptr::copy_nonoverlapping(
+                    data.as_ptr().add(src_offset),
+                    dest_addr as *mut u8,
+                    chunk_size as usize,
+                );
             }
         }
 
@@ -365,19 +427,8 @@ impl CommandManager {
         chunk_size: u32,
     ) -> Result<(), CommandError> {
         extern "C" {
-            fn memory_manager_write_physical_memory_normal(
-                address: u64,
-                source: *const u8,
-                size: usize,
-            ) -> bool;
-        }
-
-        extern "C" {
-            fn check_address_physical(address: u64) -> bool;
-        }
-
-        if !check_address_physical(request.address) {
-            return Err(CommandError::InvalidAddress);
+            fn MmGetVirtualForPhysical(physical_address: u64) -> u64;
+            fn MmIsAddressValid(address: u64) -> bool;
         }
 
         for i in 0..request.count_of_64_chunks {
@@ -388,15 +439,16 @@ impl CommandManager {
                 break;
             }
 
-            let success = memory_manager_write_physical_memory_normal(
-                dest_addr,
-                data.as_ptr().add(src_offset),
-                chunk_size as usize,
-            );
-
-            if !success {
+            let va = MmGetVirtualForPhysical(dest_addr);
+            if va == 0 || !MmIsAddressValid(va) {
                 return Err(CommandError::InvalidAddress);
             }
+
+            core::ptr::copy_nonoverlapping(
+                data.as_ptr().add(src_offset),
+                va as *mut u8,
+                chunk_size as usize,
+            );
         }
 
         Ok(())
@@ -427,16 +479,12 @@ impl CommandManager {
     }
 
     unsafe fn write_msr(&self, request: &ReadAndWriteOnMsr) -> Result<(), CommandError> {
-        extern "C" {
-            fn wrmsr(msr: u32, value: u64);
-        }
-
-        if request.core_number == DEBUGGER_READ_AND_WRITE_ON_MSR_APPLY_ALL_CORES {
-            wrmsr(request.msr, request.value);
-        } else {
-            wrmsr(request.msr, request.value);
-        }
-
+        core::arch::asm!(
+            "wrmsr",
+            in("ecx") request.msr,
+            in("edx") (request.value >> 32) as u32,
+            in("eax") request.value as u32,
+        );
         Ok(())
     }
 
@@ -446,18 +494,15 @@ impl CommandManager {
         user_buffer: &mut [u64],
         return_size: &mut usize,
     ) -> Result<(), CommandError> {
-        extern "C" {
-            fn rdmsr(msr: u32) -> u64;
-        }
-
-        if request.core_number == DEBUGGER_READ_AND_WRITE_ON_MSR_APPLY_ALL_CORES {
-            user_buffer[0] = rdmsr(request.msr);
-            *return_size = core::mem::size_of::<u64>();
-        } else {
-            user_buffer[0] = rdmsr(request.msr);
-            *return_size = core::mem::size_of::<u64>();
-        }
-
+        let (low, high): (u32, u32);
+        core::arch::asm!(
+            "rdmsr",
+            out("eax") low,
+            out("edx") high,
+            in("ecx") request.msr,
+        );
+        user_buffer[0] = ((high as u64) << 32) | (low as u64);
+        *return_size = core::mem::size_of::<u64>();
         Ok(())
     }
 
@@ -474,24 +519,13 @@ impl CommandManager {
             return Err(CommandError::NotInitialized);
         }
 
-        let phys_address = unsafe {
-            extern "C" {
-                fn virtual_address_to_physical_address(address: u64) -> u64;
-            }
-            virtual_address_to_physical_address(address)
-        };
-
-        if phys_address == 0 {
-            return Err(CommandError::InvalidAddress);
-        }
-
         let mut breakpoints = self.breakpoints.lock();
         let breakpoint_id = breakpoints.len() as u64;
 
         let descriptor = BreakpointDescriptor {
             breakpoint_id,
             address,
-            phys_address,
+            phys_address: 0,
             process_id,
             thread_id,
             core,
@@ -501,22 +535,6 @@ impl CommandManager {
             previous_byte: 0,
             instruction_length: 1,
         };
-
-        unsafe {
-            extern "C" {
-                fn memory_mapper_read_memory_safe_by_physical_address(
-                    address: u64,
-                    buffer: *mut u8,
-                    size: usize,
-                ) -> bool;
-            }
-            let mut previous_byte: u8 = 0;
-            memory_mapper_read_memory_safe_by_physical_address(
-                phys_address,
-                &mut previous_byte as *mut u8,
-                1,
-            );
-        }
 
         breakpoints.push(descriptor);
         Ok(breakpoint_id)
@@ -533,23 +551,7 @@ impl CommandManager {
             .position(|bp| bp.breakpoint_id == breakpoint_id)
             .ok_or(CommandError::BreakpointNotFound)?;
 
-        let bp = breakpoints.remove(index);
-
-        unsafe {
-            extern "C" {
-                fn memory_mapper_write_memory_safe_by_physical_address(
-                    address: u64,
-                    buffer: *const u8,
-                    size: usize,
-                ) -> bool;
-            }
-            memory_mapper_write_memory_safe_by_physical_address(
-                bp.phys_address,
-                &bp.previous_byte as *const u8,
-                1,
-            );
-        }
-
+        breakpoints.remove(index);
         Ok(())
     }
 
@@ -584,8 +586,7 @@ impl CommandManager {
     }
 
     pub fn list_breakpoints(&self) -> Vec<BreakpointDescriptor> {
-        let breakpoints = self.breakpoints.lock();
-        breakpoints.clone()
+        self.breakpoints.lock().clone()
     }
 
     pub fn check_and_handle_breakpoint(
@@ -599,32 +600,28 @@ impl CommandManager {
             return Err(CommandError::NotInitialized);
         }
 
-        let phys_address = unsafe {
-            extern "C" {
-                fn virtual_address_to_physical_address(address: u64) -> u64;
-            }
-            virtual_address_to_physical_address(guest_rip)
-        };
-
         let mut breakpoints = self.breakpoints.lock();
         let index = breakpoints
             .iter()
             .position(|bp| {
-                bp.phys_address == phys_address
+                bp.address == guest_rip
                     && bp.enabled
                     && (bp.process_id == DEBUGGEE_BP_APPLY_TO_ALL_PROCESSES || bp.process_id == process_id)
                     && (bp.thread_id == DEBUGGEE_BP_APPLY_TO_ALL_THREADS || bp.thread_id == thread_id)
                     && (bp.core == DEBUGGEE_BP_APPLY_TO_ALL_CORES || bp.core == core_id)
-            })
-            .ok_or(CommandError::BreakpointNotFound)?;
+            });
 
-        let bp = breakpoints[index];
+        if let Some(idx) = index {
+            let bp = breakpoints[idx];
 
-        if bp.remove_after_hit {
-            breakpoints.remove(index);
+            if bp.remove_after_hit {
+                breakpoints.remove(idx);
+            }
+
+            Ok(Some(bp))
+        } else {
+            Ok(None)
         }
-
-        Ok(Some(bp))
     }
 
     pub fn restore_trap_flag_once_triggered(&self, process_id: u32, thread_id: u32) -> bool {
@@ -649,12 +646,6 @@ impl CommandManager {
 
         if let Some(index) = trap_flag_list.iter().position(|&k| k == key) {
             trap_flag_list.remove(index);
-            unsafe {
-                extern "C" {
-                    fn vm_func_set_rflag_trap_flag(value: bool);
-                }
-                vm_func_set_rflag_trap_flag(false);
-            }
             Ok(true)
         } else {
             Ok(false)
@@ -662,36 +653,22 @@ impl CommandManager {
     }
 
     pub fn set_trap_flag(&self, process_id: u32, thread_id: u32) -> Result<(), CommandError> {
-        let key = ((process_id as u64) << 32) | (thread_id as u32);
+        let key = ((process_id as u64) << 32) | (thread_id as u64);
         let mut trap_flag_list = self.trap_flag_list.lock();
 
         if !trap_flag_list.contains(&key) {
             trap_flag_list.push(key);
         }
 
-        unsafe {
-            extern "C" {
-                fn vm_func_set_rflag_trap_flag(value: bool);
-            }
-            vm_func_set_rflag_trap_flag(true);
-        }
-
         Ok(())
     }
 
     pub fn clear_trap_flag(&self, process_id: u32, thread_id: u32) -> Result<(), CommandError> {
-        let key = ((process_id as u64) << 32) | (thread_id as u32);
+        let key = ((process_id as u64) << 32) | (thread_id as u64);
         let mut trap_flag_list = self.trap_flag_list.lock();
 
         if let Some(index) = trap_flag_list.iter().position(|&k| k == key) {
             trap_flag_list.remove(index);
-        }
-
-        unsafe {
-            extern "C" {
-                fn vm_func_set_rflag_trap_flag(value: bool);
-            }
-            vm_func_set_rflag_trap_flag(false);
         }
 
         Ok(())
@@ -705,8 +682,4 @@ pub static COMMAND_MANAGER: CommandManager = CommandManager::new();
 
 pub unsafe fn initialize_command_manager() -> Result<(), CommandError> {
     COMMAND_MANAGER.initialize()
-}
-
-pub unsafe fn is_command_manager_initialized() -> bool {
-    COMMAND_MANAGER.is_initialized()
 }

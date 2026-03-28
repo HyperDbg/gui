@@ -1,56 +1,13 @@
+#![allow(dead_code)]
+
 use alloc::boxed::Box;
 use alloc::sync::Arc;
 use alloc::vec::Vec;
 use alloc::string::String;
 use spin::Mutex;
-use logger::{log_error, log_info, log_success, log_warn};
-use protocol::*;
-use hyperhv::*;
 
-extern "system" {
-    fn PsLookupProcessByProcessId(process_id: u32, process: *mut *mut u8) -> i32;
-
-    fn ObDereferenceObject(object: *mut u8);
-
-    fn PsGetProcessImageFileName(process: *mut u8) -> *mut i8;
-
-    fn PsGetProcessPeb(process: *mut u8) -> *mut u8;
-
-    fn KeStackAttachProcess(process: *mut u8, apc_state: *mut u8);
-
-    fn KeUnstackDetachProcess(apc_state: *mut u8);
-
-    fn PsLookupThreadByThreadId(thread_id: u32, thread: *mut *mut u8) -> i32;
-
-    fn PsGetThreadId(thread: *mut u8) -> u32;
-
-    fn PsGetThreadProcessId(thread: *mut u8) -> u32;
-
-    fn ZwTerminateProcess(process_handle: *mut u8, exit_status: i32) -> i32;
-
-    fn ZwReadVirtualMemory(
-        process_handle: *mut u8,
-        base_address: u64,
-        buffer: *mut u8,
-        size: usize,
-        bytes_read: *mut usize,
-    ) -> i32;
-
-    fn ZwWriteVirtualMemory(
-        process_handle: *mut u8,
-        base_address: u64,
-        buffer: *const u8,
-        size: usize,
-        bytes_written: *mut usize,
-    ) -> i32;
-}
-
-pub struct DebuggerCore {
-    breakpoints: Mutex<Vec<BreakpointInfo>>,
-    current_process: Mutex<Option<ProcessId>>,
-    current_thread: Mutex<Option<ThreadId>>,
-    state: Mutex<DebuggerState>,
-}
+use crate::hyperkd::{ProcessId, ThreadId, Address, VmxError};
+use crate::hyperkd::attaching::{UsermodeDebuggingProcessDetails, attaching_find_process_debugging_details_by_process_id};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DebuggerState {
@@ -61,8 +18,71 @@ pub enum DebuggerState {
     Terminated,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BreakpointType {
+    Software,
+    Hardware,
+    Hidden,
+    Ept,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DebuggerError {
+    NoProcess,
+    ProcessNotFound,
+    ThreadNotFound,
+    BreakpointNotFound,
+    NotPaused,
+    NotRunning,
+    MemoryReadFailed,
+    MemoryWriteFailed,
+    InvalidAddress,
+    InvalidBreakpointType,
+    VmxError(VmxError),
+}
+
+#[derive(Debug, Clone)]
+pub struct BreakpointInfo {
+    pub id: u64,
+    pub address: Address,
+    pub bp_type: BreakpointType,
+    pub process_id: ProcessId,
+    pub enabled: bool,
+    pub hit_count: u64,
+}
+
+#[derive(Debug, Clone)]
+pub struct ProcessInfo {
+    pub process_id: ProcessId,
+    pub name: String,
+    pub base_address: u64,
+    pub size: u64,
+}
+
+#[derive(Debug, Clone)]
+pub struct ThreadInfo {
+    pub thread_id: ThreadId,
+    pub process_id: ProcessId,
+    pub start_address: u64,
+    pub teb: u64,
+}
+
+#[derive(Debug, Clone)]
+pub struct ModuleInfo {
+    pub base_address: u64,
+    pub size: u32,
+    pub name: String,
+}
+
+pub struct DebuggerCore {
+    breakpoints: Mutex<Vec<BreakpointInfo>>,
+    current_process: Mutex<Option<ProcessId>>,
+    current_thread: Mutex<Option<ThreadId>>,
+    state: Mutex<DebuggerState>,
+}
+
 impl DebuggerCore {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self {
             breakpoints: Mutex::new(Vec::new()),
             current_process: Mutex::new(None),
@@ -72,26 +92,20 @@ impl DebuggerCore {
     }
 
     pub fn attach_process(&self, process_id: ProcessId) -> Result<(), DebuggerError> {
-        log_info!("Attaching to process: {}", process_id);
         let mut process = self.current_process.lock();
         *process = Some(process_id);
-        log_success!("Attached to process: {}", process_id);
         Ok(())
     }
 
     pub fn detach_process(&self) -> Result<(), DebuggerError> {
-        let process_id = self.current_process.lock().unwrap_or(0);
-        log_info!("Detaching from process: {}", process_id);
         let mut process = self.current_process.lock();
         *process = None;
         let mut thread = self.current_thread.lock();
         *thread = None;
-        log_success!("Detached from process: {}", process_id);
         Ok(())
     }
 
     pub fn set_breakpoint(&self, address: Address, bp_type: BreakpointType) -> Result<u64, DebuggerError> {
-        log_info!("Setting breakpoint at 0x{:x}, type: {:?}", address, bp_type);
         let mut breakpoints = self.breakpoints.lock();
 
         let id = breakpoints.len() as u64;
@@ -106,44 +120,19 @@ impl DebuggerCore {
             hit_count: 0,
         };
 
-        match bp_type {
-            BreakpointType::Software => {
-                self.set_software_breakpoint(address)?;
-            }
-            BreakpointType::Hardware => {
-                self.set_hardware_breakpoint(address)?;
-            }
-            BreakpointType::Hidden | BreakpointType::Ept => {
-                self.set_ept_breakpoint(address)?;
-            }
-        }
-
         breakpoints.push(bp);
-        log_success!("Breakpoint {} set at 0x{:x}", id, address);
         Ok(id)
     }
 
     pub fn remove_breakpoint(&self, breakpoint_id: u64) -> Result<(), DebuggerError> {
-        log_info!("Removing breakpoint {}", breakpoint_id);
         let mut breakpoints = self.breakpoints.lock();
 
-        if let Some(bp) = breakpoints.get(breakpoint_id as usize) {
-            match bp.bp_type {
-                BreakpointType::Software => {
-                    self.remove_software_breakpoint(bp.address)?;
-                }
-                BreakpointType::Hardware => {
-                    self.remove_hardware_breakpoint(bp.address)?;
-                }
-                BreakpointType::Hidden | BreakpointType::Ept => {
-                    self.remove_ept_breakpoint(bp.address)?;
-                }
-            }
-            log_success!("Breakpoint {} removed", breakpoint_id);
-        } else {
-            log_warn!("Breakpoint {} not found", breakpoint_id);
-        }
+        let index = breakpoints
+            .iter()
+            .position(|bp| bp.id == breakpoint_id)
+            .ok_or(DebuggerError::BreakpointNotFound)?;
 
+        breakpoints.remove(index);
         Ok(())
     }
 
@@ -215,29 +204,50 @@ impl DebuggerCore {
         let mut bytes_read: usize = 0;
 
         unsafe {
-            let mut process: *mut u8 = core::ptr::null_mut();
-            let status = PsLookupProcessByProcessId(process_id, &mut process);
+            extern "C" {
+                fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
+                fn ObDereferenceObject(object: u64);
+                fn KeStackAttachProcess(process: u64, apc_state: *mut u8);
+                fn KeUnstackDetachProcess(apc_state: *mut u8);
+                fn MmCopyVirtualMemory(
+                    source_process: u64,
+                    source_address: u64,
+                    target_process: u64,
+                    target_address: *mut u8,
+                    size: usize,
+                    access_mode: i32,
+                    bytes_read: *mut usize,
+                ) -> i32;
+            }
+
+            let mut eprocess: u64 = 0;
+            let status = PsLookupProcessByProcessId(process_id as u64, &mut eprocess);
             if status != 0 {
                 return Err(DebuggerError::ProcessNotFound);
             }
 
             let mut apc_state = [0u8; 64];
-            KeStackAttachProcess(process, apc_state.as_mut_ptr());
+            KeStackAttachProcess(eprocess, apc_state.as_mut_ptr());
 
-            let status = ZwReadVirtualMemory(
-                core::ptr::null_mut(),
-                address,
-                buffer.as_mut_ptr(),
-                size,
-                &mut bytes_read,
-            );
+            extern "C" {
+                fn MmIsAddressValid(address: u64) -> bool;
+            }
+
+            if !MmIsAddressValid(address) {
+                KeUnstackDetachProcess(apc_state.as_mut_ptr());
+                ObDereferenceObject(eprocess);
+                return Err(DebuggerError::InvalidAddress);
+            }
+
+            core::ptr::copy_nonoverlapping(address as *const u8, buffer.as_mut_ptr(), size);
+            bytes_read = size;
 
             KeUnstackDetachProcess(apc_state.as_mut_ptr());
-            ObDereferenceObject(process);
+            ObDereferenceObject(eprocess);
+        }
 
-            if status != 0 {
-                return Err(DebuggerError::MemoryReadFailed);
-            }
+        if bytes_read != size {
+            return Err(DebuggerError::MemoryReadFailed);
         }
 
         Ok(buffer)
@@ -246,32 +256,37 @@ impl DebuggerCore {
     pub fn write_memory(&self, address: Address, data: &[u8]) -> Result<(), DebuggerError> {
         let process_id = self.current_process.lock().ok_or(DebuggerError::NoProcess)?;
 
-        let mut bytes_written: usize = 0;
-
         unsafe {
-            let mut process: *mut u8 = core::ptr::null_mut();
-            let status = PsLookupProcessByProcessId(process_id, &mut process);
+            extern "C" {
+                fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
+                fn ObDereferenceObject(object: u64);
+                fn KeStackAttachProcess(process: u64, apc_state: *mut u8);
+                fn KeUnstackDetachProcess(apc_state: *mut u8);
+            }
+
+            let mut eprocess: u64 = 0;
+            let status = PsLookupProcessByProcessId(process_id as u64, &mut eprocess);
             if status != 0 {
                 return Err(DebuggerError::ProcessNotFound);
             }
 
             let mut apc_state = [0u8; 64];
-            KeStackAttachProcess(process, apc_state.as_mut_ptr());
+            KeStackAttachProcess(eprocess, apc_state.as_mut_ptr());
 
-            let status = ZwWriteVirtualMemory(
-                core::ptr::null_mut(),
-                address,
-                data.as_ptr(),
-                data.len(),
-                &mut bytes_written,
-            );
+            extern "C" {
+                fn MmIsAddressValid(address: u64) -> bool;
+            }
+
+            if !MmIsAddressValid(address) {
+                KeUnstackDetachProcess(apc_state.as_mut_ptr());
+                ObDereferenceObject(eprocess);
+                return Err(DebuggerError::InvalidAddress);
+            }
+
+            core::ptr::copy_nonoverlapping(data.as_ptr(), address as *mut u8, data.len());
 
             KeUnstackDetachProcess(apc_state.as_mut_ptr());
-            ObDereferenceObject(process);
-
-            if status != 0 {
-                return Err(DebuggerError::MemoryWriteFailed);
-            }
+            ObDereferenceObject(eprocess);
         }
 
         Ok(())
@@ -281,11 +296,11 @@ impl DebuggerCore {
         Ok(Vec::new())
     }
 
-    pub fn get_thread_list(&self, process_id: ProcessId) -> Result<Vec<ThreadInfo>, DebuggerError> {
+    pub fn get_thread_list(&self, _process_id: ProcessId) -> Result<Vec<ThreadInfo>, DebuggerError> {
         Ok(Vec::new())
     }
 
-    pub fn get_module_list(&self, process_id: ProcessId) -> Result<Vec<ModuleInfo>, DebuggerError> {
+    pub fn get_module_list(&self, _process_id: ProcessId) -> Result<Vec<ModuleInfo>, DebuggerError> {
         Ok(Vec::new())
     }
 
@@ -309,67 +324,69 @@ impl DebuggerCore {
         *self.current_thread.lock() = Some(thread_id);
     }
 
-    fn set_software_breakpoint(&self, address: Address) -> Result<(), DebuggerError> {
-        let original = self.read_memory(address, 1)?;
-        self.write_memory(address, &[0xCC])?;
-        Ok(())
+    pub fn get_breakpoints(&self) -> Vec<BreakpointInfo> {
+        self.breakpoints.lock().clone()
     }
 
-    fn remove_software_breakpoint(&self, address: Address) -> Result<(), DebuggerError> {
-        Ok(())
-    }
-
-    fn set_hardware_breakpoint(&self, address: Address) -> Result<(), DebuggerError> {
-        Ok(())
-    }
-
-    fn remove_hardware_breakpoint(&self, address: Address) -> Result<(), DebuggerError> {
-        Ok(())
-    }
-
-    fn set_ept_breakpoint(&self, address: Address) -> Result<(), DebuggerError> {
-        Ok(())
-    }
-
-    fn remove_ept_breakpoint(&self, address: Address) -> Result<(), DebuggerError> {
-        Ok(())
+    pub fn find_breakpoint_by_address(&self, address: Address) -> Option<BreakpointInfo> {
+        let breakpoints = self.breakpoints.lock();
+        breakpoints.iter().find(|bp| bp.address == address).cloned()
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum DebuggerError {
-    NoProcess,
-    ProcessNotFound,
-    ThreadNotFound,
-    BreakpointNotFound,
-    NotPaused,
-    NotRunning,
-    MemoryReadFailed,
-    MemoryWriteFailed,
-    InvalidAddress,
-    InvalidBreakpointType,
-    VmxError(VmxError),
-}
+pub static DEBUGGER_CORE: Mutex<DebuggerCore> = Mutex::new(DebuggerCore::new());
 
-pub static DEBUGGER_CORE: Mutex<Option<DebuggerCore>> = Mutex::new(None);
-
-pub fn initialize_debugger() {
-    let mut core = DEBUGGER_CORE.lock();
-    *core = Some(DebuggerCore::new());
+pub fn initialize_debugger() -> bool {
+    let core = DEBUGGER_CORE.lock();
+    core.set_state(DebuggerState::Running);
+    true
 }
 
 pub fn cleanup_debugger() {
-    let mut core = DEBUGGER_CORE.lock();
-    *core = None;
+    let core = DEBUGGER_CORE.lock();
+    core.set_state(DebuggerState::Terminated);
 }
 
-pub fn get_debugger() -> Option<&'static DebuggerCore> {
-    let core = DEBUGGER_CORE.lock();
-    if core.is_some() {
-        unsafe {
-            Some(&*core.as_ref().unwrap() as *const DebuggerCore)
-        }
-    } else {
-        None
-    }
+pub fn get_debugger_state() -> DebuggerState {
+    DEBUGGER_CORE.lock().get_state()
+}
+
+pub fn debugger_attach_process(process_id: ProcessId) -> Result<(), DebuggerError> {
+    DEBUGGER_CORE.lock().attach_process(process_id)
+}
+
+pub fn debugger_detach_process() -> Result<(), DebuggerError> {
+    DEBUGGER_CORE.lock().detach_process()
+}
+
+pub fn debugger_set_breakpoint(address: Address, bp_type: BreakpointType) -> Result<u64, DebuggerError> {
+    DEBUGGER_CORE.lock().set_breakpoint(address, bp_type)
+}
+
+pub fn debugger_remove_breakpoint(breakpoint_id: u64) -> Result<(), DebuggerError> {
+    DEBUGGER_CORE.lock().remove_breakpoint(breakpoint_id)
+}
+
+pub fn debugger_read_memory(address: Address, size: usize) -> Result<Vec<u8>, DebuggerError> {
+    DEBUGGER_CORE.lock().read_memory(address, size)
+}
+
+pub fn debugger_write_memory(address: Address, data: &[u8]) -> Result<(), DebuggerError> {
+    DEBUGGER_CORE.lock().write_memory(address, data)
+}
+
+pub fn debugger_continue() -> Result<(), DebuggerError> {
+    DEBUGGER_CORE.lock().continue_execution()
+}
+
+pub fn debugger_pause() -> Result<(), DebuggerError> {
+    DEBUGGER_CORE.lock().pause_execution()
+}
+
+pub fn debugger_step_into() -> Result<(), DebuggerError> {
+    DEBUGGER_CORE.lock().step_into()
+}
+
+pub fn debugger_step_over() -> Result<(), DebuggerError> {
+    DEBUGGER_CORE.lock().step_over()
 }

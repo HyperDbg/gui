@@ -6,6 +6,7 @@ use spin::Mutex;
 use crate::process::*;
 use crate::thread::*;
 use crate::user_access::*;
+use crate::debugger::ModuleInfo;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UserDebugError {

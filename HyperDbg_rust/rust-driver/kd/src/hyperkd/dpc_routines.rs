@@ -1,23 +1,24 @@
-use alloc::boxed::Box;
-use alloc::sync::Arc;
-use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
+#![allow(dead_code)]
+
+use core::sync::atomic::{AtomicI32, AtomicU32, AtomicU64, Ordering};
 use spin::Mutex;
+
+use crate::hyperkd::hyperhv::common::msr::{read_msr, write_msr};
+
+static ONE_CORE_LOCK: AtomicI32 = AtomicI32::new(0);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DpcError {
-    NotInitialized,
-    InvalidParameter,
-    QueueFull,
-    QueueEmpty,
-    AlreadyQueued,
-    NotQueued,
+    InvalidCoreNumber,
+    InsufficientResources,
+    Timeout,
+    Failed,
 }
 
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
 pub struct DpcContext {
-    pub dpc_data: u64,
-    pub deferred_context: u64,
+    pub core_id: u32,
+    pub routine: Option<unsafe extern "C" fn(*mut core::ffi::c_void)>,
+    pub context: *mut core::ffi::c_void,
     pub arg1: u64,
     pub arg2: u64,
     pub arg3: u64,
@@ -27,8 +28,9 @@ pub struct DpcContext {
 impl Default for DpcContext {
     fn default() -> Self {
         Self {
-            dpc_data: 0,
-            deferred_context: 0,
+            core_id: 0,
+            routine: None,
+            context: core::ptr::null_mut(),
             arg1: 0,
             arg2: 0,
             arg3: 0,
@@ -37,449 +39,457 @@ impl Default for DpcContext {
     }
 }
 
-#[repr(C)]
-#[derive(Debug, Clone, Copy)]
 pub struct DpcRoutine {
-    pub routine: unsafe fn(context: *mut DpcContext),
+    pub routine: Option<unsafe extern "C" fn(*mut DpcContext)>,
     pub context: *mut DpcContext,
-    pub importance: u32,
-    pub number: u32,
+}
+
+impl Default for DpcRoutine {
+    fn default() -> Self {
+        Self {
+            routine: None,
+            context: core::ptr::null_mut(),
+        }
+    }
 }
 
 impl DpcRoutine {
-    pub fn new(
-        routine: unsafe fn(context: *mut DpcContext),
-        context: *mut DpcContext,
-    ) -> Self {
+    pub fn new(routine: unsafe extern "C" fn(*mut DpcContext), context: *mut DpcContext) -> Self {
         Self {
-            routine,
+            routine: Some(routine),
             context,
-            importance: 0,
-            number: 0,
         }
     }
 }
 
-pub struct DpcQueue {
-    queue: alloc::vec::Deque<DpcRoutine>,
-    max_size: usize,
-    initialized: AtomicBool,
+#[repr(C)]
+pub struct KDPC {
+    pub type_: u16,
+    pub importance: u8,
+    pub number: u8,
+    pub list_entry: [u64; 2],
+    pub deferred_routine: unsafe extern "C" fn(*mut KDPC, *mut core::ffi::c_void, *mut core::ffi::c_void, *mut core::ffi::c_void),
+    pub deferred_context: *mut core::ffi::c_void,
+    pub system_argument1: *mut core::ffi::c_void,
+    pub system_argument2: *mut core::ffi::c_void,
 }
 
-impl DpcQueue {
-    pub fn new(max_size: usize) -> Self {
-        Self {
-            queue: alloc::vec::Deque::new(),
-            max_size,
-            initialized: AtomicBool::new(false),
-        }
+pub unsafe fn dpc_routine_run_task_on_single_core(
+    core_number: u32,
+    routine: unsafe extern "C" fn(*mut core::ffi::c_void),
+    context: *mut core::ffi::c_void,
+) -> Result<(), DpcError> {
+    let processor_count = get_processor_count();
+
+    if core_number >= processor_count {
+        return Err(DpcError::InvalidCoreNumber);
     }
 
-    pub fn initialize(&mut self) -> Result<(), DpcError> {
-        if self.initialized.load(Ordering::Acquire) {
-            return Err(DpcError::NotInitialized);
-        }
-
-        self.queue.clear();
-        self.initialized.store(true, Ordering::Release);
-        Ok(())
+    let dpc = allocate_dpc()?;
+    if dpc.is_null() {
+        return Err(DpcError::InsufficientResources);
     }
 
-    pub fn deinitialize(&mut self) {
-        self.queue.clear();
-        self.initialized.store(false, Ordering::Release);
+    initialize_dpc(dpc, dpc_routine_wrapper, context as *mut core::ffi::c_void);
+    set_target_processor_dpc(dpc, core_number as i8);
+
+    if !spinlock_try_lock(&ONE_CORE_LOCK) {
+        free_dpc(dpc);
+        return Err(DpcError::Failed);
     }
 
-    pub fn is_initialized(&self) -> bool {
-        self.initialized.load(Ordering::Acquire)
-    }
+    insert_queue_dpc(dpc, core::ptr::null_mut(), core::ptr::null_mut());
 
-    pub fn enqueue(&mut self, routine: DpcRoutine) -> Result<(), DpcError> {
-        if !self.is_initialized() {
-            return Err(DpcError::NotInitialized);
-        }
+    spinlock_lock(&ONE_CORE_LOCK);
+    spinlock_unlock(&ONE_CORE_LOCK);
 
-        if self.queue.len() >= self.max_size {
-            return Err(DpcError::QueueFull);
-        }
+    free_dpc(dpc);
 
-        self.queue.push_back(routine);
-        Ok(())
-    }
-
-    pub fn dequeue(&mut self) -> Result<DpcRoutine, DpcError> {
-        if !self.is_initialized() {
-            return Err(DpcError::NotInitialized);
-        }
-
-        self.queue.pop_front()
-            .ok_or(DpcError::QueueEmpty)
-    }
-
-    pub fn peek(&self) -> Option<&DpcRoutine> {
-        self.queue.front()
-    }
-
-    pub fn len(&self) -> usize {
-        self.queue.len()
-    }
-
-    pub fn is_empty(&self) -> bool {
-        self.queue.is_empty()
-    }
-
-    pub fn is_full(&self) -> usize {
-        self.queue.len() >= self.max_size
-    }
-
-    pub fn clear(&mut self) {
-        self.queue.clear();
-    }
+    Ok(())
 }
 
-pub struct DpcManager {
-    queues: alloc::vec::Vec<Mutex<DpcQueue>>,
-    current_queue: AtomicU32,
-    initialized: AtomicBool,
-    max_queues: usize,
-    max_queue_size: usize,
+pub unsafe fn dpc_routine_run_on_all_cores(
+    routine: unsafe extern "C" fn(*mut KDPC, *mut core::ffi::c_void, *mut core::ffi::c_void, *mut core::ffi::c_void),
+    context: *mut core::ffi::c_void,
+) -> Result<(), DpcError> {
+    extern "C" {
+        fn KeGenericCallDpc(
+            routine: unsafe extern "C" fn(*mut KDPC, *mut core::ffi::c_void, *mut core::ffi::c_void, *mut core::ffi::c_void),
+            context: *mut core::ffi::c_void,
+        );
+    }
+
+    KeGenericCallDpc(routine, context);
+    Ok(())
 }
 
-impl DpcManager {
-    pub fn new(max_queues: usize, max_queue_size: usize) -> Self {
-        let mut queues = alloc::vec::Vec::new();
-        for _ in 0..max_queues {
-            queues.push(Mutex::new(DpcQueue::new(max_queue_size)));
-        }
-
-        Self {
-            queues,
-            current_queue: AtomicU32::new(0),
-            initialized: AtomicBool::new(false),
-            max_queues,
-            max_queue_size,
-        }
+unsafe extern "C" fn dpc_routine_wrapper(
+    _dpc: *mut KDPC,
+    context: *mut core::ffi::c_void,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    if let Some(routine) = core::mem::transmute::<*mut core::ffi::c_void, Option<unsafe extern "C" fn(*mut core::ffi::c_void)>>(context) {
+        routine(context);
     }
 
-    pub fn initialize(&mut self) -> Result<(), DpcError> {
-        if self.initialized.load(Ordering::Acquire) {
-            return Err(DpcError::NotInitialized);
-        }
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
 
-        for queue in &mut self.queues {
-            queue.lock().initialize()?;
-        }
+pub unsafe fn dpc_routine_perform_write_msr(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    let current_core = get_current_processor_number();
 
-        self.current_queue.store(0, Ordering::Release);
-        self.initialized.store(true, Ordering::Release);
-        Ok(())
+    extern "C" {
+        static mut g_DbgState: *mut u8;
     }
 
-    pub fn deinitialize(&mut self) {
-        for queue in &mut self.queues {
-            queue.lock().deinitialize();
-        }
-        self.initialized.store(false, Ordering::Release);
+    if g_DbgState.is_null() {
+        spinlock_unlock(&ONE_CORE_LOCK);
+        return;
     }
 
-    pub fn is_initialized(&self) -> bool {
-        self.initialized.load(Ordering::Acquire)
+    let dbg_state = g_DbgState.add(current_core as usize * core::mem::size_of::<ProcessorDebuggingState>());
+
+    let msr = (*dbg_state).msr_state.msr;
+    let value = (*dbg_state).msr_state.value;
+
+    write_msr(msr, value);
+
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
+
+pub unsafe fn dpc_routine_perform_read_msr(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    _system_argument1: *mut core::ffi::c_void,
+    _system_argument2: *mut core::ffi::c_void,
+) {
+    let current_core = get_current_processor_number();
+
+    extern "C" {
+        static mut g_DbgState: *mut u8;
     }
 
-    pub fn enqueue_dpc(&self, routine: DpcRoutine, queue_index: u32) -> Result<(), DpcError> {
-        if !self.is_initialized() {
-            return Err(DpcError::NotInitialized);
-        }
-
-        if queue_index as usize >= self.max_queues {
-            return Err(DpcError::InvalidParameter);
-        }
-
-        self.queues[queue_index as usize].lock().enqueue(routine)
+    if g_DbgState.is_null() {
+        spinlock_unlock(&ONE_CORE_LOCK);
+        return;
     }
 
-    pub fn enqueue_dpc_round_robin(&self, routine: DpcRoutine) -> Result<(), DpcError> {
-        if !self.is_initialized() {
-            return Err(DpcError::NotInitialized);
-        }
+    let dbg_state = g_DbgState.add(current_core as usize * core::mem::size_of::<ProcessorDebuggingState>());
 
-        let queue_index = self.current_queue.fetch_add(1, Ordering::AcqRel) % self.max_queues as u32;
-        self.queues[queue_index as usize].lock().enqueue(routine)
+    let msr = (*dbg_state).msr_state.msr;
+    let value = read_msr(msr);
+
+    (*dbg_state).msr_state.value = value;
+
+    spinlock_unlock(&ONE_CORE_LOCK);
+}
+
+pub unsafe fn dpc_routine_write_msr_to_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    let current_core = get_current_processor_number();
+
+    extern "C" {
+        static mut g_DbgState: *mut u8;
     }
 
-    pub fn dequeue_dpc(&self, queue_index: u32) -> Result<DpcRoutine, DpcError> {
-        if !self.is_initialized() {
-            return Err(DpcError::NotInitialized);
-        }
-
-        if queue_index as usize >= self.max_queues {
-            return Err(DpcError::InvalidParameter);
-        }
-
-        self.queues[queue_index as usize].lock().dequeue()
+    if !g_DbgState.is_null() {
+        let dbg_state = g_DbgState.add(current_core as usize * core::mem::size_of::<ProcessorDebuggingState>());
+        let msr = (*dbg_state).msr_state.msr;
+        let value = (*dbg_state).msr_state.value;
+        write_msr(msr, value);
     }
 
-    pub fn process_queue(&self, queue_index: u32) -> Result<usize, DpcError> {
-        if !self.is_initialized() {
-            return Err(DpcError::NotInitialized);
-        }
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
 
-        if queue_index as usize >= self.max_queues {
-            return Err(DpcError::InvalidParameter);
-        }
+pub unsafe fn dpc_routine_read_msr_to_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    let current_core = get_current_processor_number();
 
-        let mut queue = self.queues[queue_index as usize].lock();
-        let mut processed = 0;
-
-        while let Ok(routine) = queue.dequeue() {
-            unsafe {
-                (routine.routine)(routine.context);
-            }
-            processed += 1;
-        }
-
-        Ok(processed)
+    extern "C" {
+        static mut g_DbgState: *mut u8;
     }
 
-    pub fn process_all_queues(&self) -> Result<usize, DpcError> {
-        if !self.is_initialized() {
-            return Err(DpcError::NotInitialized);
-        }
-
-        let mut total_processed = 0;
-
-        for i in 0..self.max_queues {
-            total_processed += self.process_queue(i as u32)?;
-        }
-
-        Ok(total_processed)
+    if !g_DbgState.is_null() {
+        let dbg_state = g_DbgState.add(current_core as usize * core::mem::size_of::<ProcessorDebuggingState>());
+        let msr = (*dbg_state).msr_state.msr;
+        let value = read_msr(msr);
+        (*dbg_state).msr_state.value = value;
     }
 
-    pub fn get_queue_len(&self, queue_index: u32) -> Result<usize, DpcError> {
-        if !self.is_initialized() {
-            return Err(DpcError::NotInitialized);
-        }
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
 
-        if queue_index as usize >= self.max_queues {
-            return Err(DpcError::InvalidParameter);
-        }
+pub unsafe fn dpc_routine_vmexit_and_halt_all_cores(
+    _dpc: *mut KDPC,
+    _deferred_context: *mut core::ffi::c_void,
+    system_argument1: *mut core::ffi::c_void,
+    system_argument2: *mut core::ffi::c_void,
+) {
+    use crate::hyperkd::hyperhv::vmm::vmx::vmcall::VmcallNumber;
 
-        Ok(self.queues[queue_index as usize].lock().len())
+    extern "C" {
+        fn asm_vmx_vmcall(vmcall_number: u64, param1: u64, param2: u64, param3: u64) -> u64;
     }
 
-    pub fn get_total_len(&self) -> Result<usize, DpcError> {
-        if !self.is_initialized() {
-            return Err(DpcError::NotInitialized);
-        }
+    asm_vmx_vmcall(VmcallNumber::Test as u64, 0, 0, 0);
 
-        let mut total = 0;
-        for queue in &self.queues {
-            total += queue.lock().len();
-        }
+    signal_call_dpc_synchronize(system_argument2);
+    signal_call_dpc_done(system_argument1);
+}
 
-        Ok(total)
-    }
+#[repr(C)]
+pub struct ProcessorDebuggingState {
+    pub core_id: u32,
+    pub msr_state: MsrState,
+}
 
-    pub fn clear_queue(&self, queue_index: u32) -> Result<(), DpcError> {
-        if !self.is_initialized() {
-            return Err(DpcError::NotInitialized);
-        }
+#[repr(C)]
+pub struct MsrState {
+    pub msr: u32,
+    pub value: u64,
+}
 
-        if queue_index as usize >= self.max_queues {
-            return Err(DpcError::InvalidParameter);
-        }
+#[inline(always)]
+fn spinlock_try_lock(lock: &AtomicI32) -> bool {
+    lock.compare_exchange(0, 1, Ordering::Acquire, Ordering::Relaxed).is_ok()
+}
 
-        self.queues[queue_index as usize].lock().clear();
-        Ok(())
-    }
-
-    pub fn clear_all_queues(&self) -> Result<(), DpcError> {
-        if !self.is_initialized() {
-            return Err(DpcError::NotInitialized);
-        }
-
-        for queue in &self.queues {
-            queue.lock().clear();
-        }
-
-        Ok(())
+#[inline(always)]
+fn spinlock_lock(lock: &AtomicI32) {
+    while lock.compare_exchange(0, 1, Ordering::Acquire, Ordering::Relaxed).is_err() {
+        core::hint::spin_loop();
     }
 }
 
-pub static DPC_MANAGER: Mutex<DpcManager> = Mutex::new(DpcManager::new(16, 256));
-
-pub fn initialize_dpc_manager() -> Result<(), DpcError> {
-    let mut manager = DPC_MANAGER.lock();
-    manager.initialize()
+#[inline(always)]
+fn spinlock_unlock(lock: &AtomicI32) {
+    lock.store(0, Ordering::Release);
 }
 
-pub fn deinitialize_dpc_manager() {
-    let mut manager = DPC_MANAGER.lock();
-    manager.deinitialize();
+unsafe fn allocate_dpc() -> Result<*mut KDPC, DpcError> {
+    extern "C" {
+        fn ExAllocatePoolWithTag(pool_type: u32, size: usize, tag: u32) -> *mut core::ffi::c_void;
+    }
+
+    const NON_PAGED_POOL: u32 = 0;
+    const POOL_TAG: u32 = 0x6370644B;
+
+    let dpc = ExAllocatePoolWithTag(NON_PAGED_POOL, core::mem::size_of::<KDPC>(), POOL_TAG);
+
+    if dpc.is_null() {
+        Err(DpcError::InsufficientResources)
+    } else {
+        Ok(dpc as *mut KDPC)
+    }
 }
 
-pub fn enqueue_dpc(routine: DpcRoutine, queue_index: u32) -> Result<(), DpcError> {
-    let manager = DPC_MANAGER.lock();
-    manager.enqueue_dpc(routine, queue_index)
+unsafe fn free_dpc(dpc: *mut KDPC) {
+    extern "C" {
+        fn ExFreePool(address: *mut core::ffi::c_void);
+    }
+
+    if !dpc.is_null() {
+        ExFreePool(dpc as *mut core::ffi::c_void);
+    }
 }
+
+unsafe fn initialize_dpc(
+    dpc: *mut KDPC,
+    routine: unsafe extern "C" fn(*mut KDPC, *mut core::ffi::c_void, *mut core::ffi::c_void, *mut core::ffi::c_void),
+    context: *mut core::ffi::c_void,
+) {
+    extern "C" {
+        fn KeInitializeDpc(
+            dpc: *mut KDPC,
+            routine: unsafe extern "C" fn(*mut KDPC, *mut core::ffi::c_void, *mut core::ffi::c_void, *mut core::ffi::c_void),
+            context: *mut core::ffi::c_void,
+        );
+    }
+
+    KeInitializeDpc(dpc, routine, context);
+}
+
+unsafe fn set_target_processor_dpc(dpc: *mut KDPC, processor_number: i8) {
+    extern "C" {
+        fn KeSetTargetProcessorDpc(dpc: *mut KDPC, processor_number: i8);
+    }
+
+    KeSetTargetProcessorDpc(dpc, processor_number);
+}
+
+unsafe fn insert_queue_dpc(dpc: *mut KDPC, system_argument1: *mut core::ffi::c_void, system_argument2: *mut core::ffi::c_void) {
+    extern "C" {
+        fn KeInsertQueueDpc(dpc: *mut KDPC, system_argument1: *mut core::ffi::c_void, system_argument2: *mut core::ffi::c_void) -> bool;
+    }
+
+    KeInsertQueueDpc(dpc, system_argument1, system_argument2);
+}
+
+unsafe fn signal_call_dpc_done(system_argument1: *mut core::ffi::c_void) {
+    extern "C" {
+        fn KeSignalCallDpcDone(system_argument1: *mut core::ffi::c_void);
+    }
+
+    KeSignalCallDpcDone(system_argument1);
+}
+
+unsafe fn signal_call_dpc_synchronize(system_argument2: *mut core::ffi::c_void) {
+    extern "C" {
+        fn KeSignalCallDpcSynchronize(system_argument2: *mut core::ffi::c_void);
+    }
+
+    KeSignalCallDpcSynchronize(system_argument2);
+}
+
+pub fn get_processor_count() -> u32 {
+    extern "C" {
+        fn KeQueryActiveProcessorCount(relationship_info: *mut core::ffi::c_void) -> u32;
+    }
+
+    unsafe { KeQueryActiveProcessorCount(core::ptr::null_mut()) }
+}
+
+pub fn get_current_processor_number() -> u32 {
+    extern "C" {
+        fn KeGetCurrentProcessorNumberEx(info: *mut core::ffi::c_void) -> u32;
+    }
+
+    unsafe { KeGetCurrentProcessorNumberEx(core::ptr::null_mut()) }
+}
+
+pub unsafe fn broadcast_msr_write(msr: u32, value: u64) -> Result<(), DpcError> {
+    extern "C" {
+        static mut g_DbgState: *mut u8;
+    }
+
+    if g_DbgState.is_null() {
+        return Err(DpcError::Failed);
+    }
+
+    let processor_count = get_processor_count();
+    for i in 0..processor_count {
+        let dbg_state = g_DbgState.add(i as usize * core::mem::size_of::<ProcessorDebuggingState>());
+        (*dbg_state).msr_state.msr = msr;
+        (*dbg_state).msr_state.value = value;
+    }
+
+    dpc_routine_run_on_all_cores(dpc_routine_write_msr_to_all_cores, core::ptr::null_mut())
+}
+
+pub unsafe fn broadcast_msr_read(msr: u32) -> Result<(), DpcError> {
+    extern "C" {
+        static mut g_DbgState: *mut u8;
+    }
+
+    if g_DbgState.is_null() {
+        return Err(DpcError::Failed);
+    }
+
+    let processor_count = get_processor_count();
+    for i in 0..processor_count {
+        let dbg_state = g_DbgState.add(i as usize * core::mem::size_of::<ProcessorDebuggingState>());
+        (*dbg_state).msr_state.msr = msr;
+    }
+
+    dpc_routine_run_on_all_cores(dpc_routine_read_msr_to_all_cores, core::ptr::null_mut())
+}
+
+static DPC_QUEUE_HEAD: AtomicU64 = AtomicU64::new(0);
+static DPC_QUEUE_TAIL: AtomicU64 = AtomicU64::new(0);
+static DPC_ROUND_ROBIN_INDEX: AtomicU32 = AtomicU32::new(0);
 
 pub fn enqueue_dpc_round_robin(routine: DpcRoutine) -> Result<(), DpcError> {
-    let manager = DPC_MANAGER.lock();
-    manager.enqueue_dpc_round_robin(routine)
-}
-
-pub fn dequeue_dpc(queue_index: u32) -> Result<DpcRoutine, DpcError> {
-    let manager = DPC_MANAGER.lock();
-    manager.dequeue_dpc(queue_index)
-}
-
-pub fn process_queue(queue_index: u32) -> Result<usize, DpcError> {
-    let manager = DPC_MANAGER.lock();
-    manager.process_queue(queue_index)
-}
-
-pub fn process_all_queues() -> Result<usize, DpcError> {
-    let manager = DPC_MANAGER.lock();
-    manager.process_all_queues()
-}
-
-pub fn get_queue_len(queue_index: u32) -> Result<usize, DpcError> {
-    let manager = DPC_MANAGER.lock();
-    manager.get_queue_len(queue_index)
-}
-
-pub fn get_total_len() -> Result<usize, DpcError> {
-    let manager = DPC_MANAGER.lock();
-    manager.get_total_len()
-}
-
-pub fn clear_queue(queue_index: u32) -> Result<(), DpcError> {
-    let manager = DPC_MANAGER.lock();
-    manager.clear_queue(queue_index)
-}
-
-pub fn clear_all_queues() -> Result<(), DpcError> {
-    let manager = DPC_MANAGER.lock();
-    manager.clear_all_queues()
-}
-
-unsafe fn dpc_broadcast_to_all_cores(context: *mut DpcContext) {
-    extern "C" {
-        fn broadcast_to_all_cores(function: unsafe fn());
-        fn vmx_broadcast_pause_all_cores();
+    if routine.routine.is_none() {
+        return Err(DpcError::Failed);
     }
 
-    if !context.is_null() {
-        let target_core = (*context).arg1;
-        
-        if target_core == 0xFFFFFFFF {
-            broadcast_to_all_cores(vmx_broadcast_pause_all_cores);
+    let processor_count = get_processor_count();
+    if processor_count == 0 {
+        return Err(DpcError::Failed);
+    }
+
+    let target_core = DPC_ROUND_ROBIN_INDEX.fetch_add(1, Ordering::AcqRel) % processor_count;
+
+    unsafe {
+        let context = routine.context;
+        if !context.is_null() {
+            (*context).core_id = target_core;
+        }
+
+        if let Some(r) = routine.routine {
+            r(context);
         }
     }
-}
-
-unsafe fn dpc_invalidate_tlb_all_cores(context: *mut DpcContext) {
-    extern "C" {
-        fn broadcast_to_all_cores(function: unsafe fn());
-        fn vmx_invalidate_tlb();
-    }
-
-    if !context.is_null() {
-        let cr3_value = (*context).arg1;
-        
-        if cr3_value != 0 {
-            broadcast_to_all_cores(vmx_invalidate_tlb);
-        }
-    }
-}
-
-unsafe fn dpc_flush_ept_all_cores(context: *mut DpcContext) {
-    extern "C" {
-        fn broadcast_to_all_cores(function: unsafe fn());
-        fn vmx_flush_ept();
-    }
-
-    if !context.is_null() {
-        broadcast_to_all_cores(vmx_flush_ept);
-    }
-}
-
-unsafe fn dpc_update_breakpoints(context: *mut DpcContext) {
-    extern "C" {
-        fn update_all_breakpoints();
-    }
-
-    update_all_breakpoints();
-}
-
-unsafe fn dpc_update_events(context: *mut DpcContext) {
-    extern "C" {
-        fn update_all_events();
-    }
-
-    update_all_events();
-}
-
-pub fn initialize_dpc_routines() -> Result<(), DpcError> {
-    initialize_dpc_manager()?;
-
-    let broadcast_context = Box::leak(Box::new(DpcContext::default()));
-    let broadcast_routine = DpcRoutine::new(dpc_broadcast_to_all_cores, broadcast_context);
-    enqueue_dpc_round_robin(broadcast_routine)?;
-
-    let tlb_context = Box::leak(Box::new(DpcContext::default()));
-    let tlb_routine = DpcRoutine::new(dpc_invalidate_tlb_all_cores, tlb_context);
-    enqueue_dpc_round_robin(tlb_routine)?;
-
-    let ept_context = Box::leak(Box::new(DpcContext::default()));
-    let ept_routine = DpcRoutine::new(dpc_flush_ept_all_cores, ept_context);
-    enqueue_dpc_round_robin(ept_routine)?;
-
-    let bp_context = Box::leak(Box::new(DpcContext::default()));
-    let bp_routine = DpcRoutine::new(dpc_update_breakpoints, bp_context);
-    enqueue_dpc_round_robin(bp_routine)?;
-
-    let event_context = Box::leak(Box::new(DpcContext::default()));
-    let event_routine = DpcRoutine::new(dpc_update_events, event_context);
-    enqueue_dpc_round_robin(event_routine)?;
 
     Ok(())
 }
 
 pub fn broadcast_to_all_cores_dpc(target_core: u32) -> Result<(), DpcError> {
-    let context = Box::leak(Box::new(DpcContext {
-        arg1: target_core as u64,
-        ..Default::default()
-    }));
+    let processor_count = get_processor_count();
 
-    let routine = DpcRoutine::new(dpc_broadcast_to_all_cores, context);
-    enqueue_dpc_round_robin(routine)
+    for i in 0..processor_count {
+        if target_core == 0xFFFFFFFF || i == target_core {
+            let mut context = DpcContext::default();
+            context.core_id = i;
+            
+            unsafe {
+                if let Some(r) = context.routine {
+                    r(context.context);
+                }
+            }
+        }
+    }
+
+    Ok(())
 }
 
-pub fn invalidate_tlb_all_cores_dpc(cr3_value: u64) -> Result<(), DpcError> {
-    let context = Box::leak(Box::new(DpcContext {
-        arg1: cr3_value,
-        ..Default::default()
-    }));
+pub unsafe fn dpc_perform_task_on_core(
+    core_id: u32,
+    task_type: u32,
+    param1: u64,
+    param2: u64,
+    param3: u64,
+) -> Result<u64, DpcError> {
+    let processor_count = get_processor_count();
+    if core_id >= processor_count {
+        return Err(DpcError::InvalidCoreNumber);
+    }
 
-    let routine = DpcRoutine::new(dpc_invalidate_tlb_all_cores, context);
-    enqueue_dpc_round_robin(routine)
+    let mut context = DpcContext::default();
+    context.core_id = core_id;
+    context.arg1 = task_type as u64;
+    context.arg2 = param1;
+    context.arg3 = param2;
+    context.arg4 = param3;
+
+    Ok(0)
 }
 
-pub fn flush_ept_all_cores_dpc() -> Result<(), DpcError> {
-    let context = Box::leak(Box::new(DpcContext::default()));
-    let routine = DpcRoutine::new(dpc_flush_ept_all_cores, context);
-    enqueue_dpc_round_robin(routine)
-}
+pub fn dpc_synchronize_all_cores() -> Result<(), DpcError> {
+    extern "C" {
+        fn KeFlushQueuedDpcs();
+    }
 
-pub fn update_breakpoints_dpc() -> Result<(), DpcError> {
-    let context = Box::leak(Box::new(DpcContext::default()));
-    let routine = DpcRoutine::new(dpc_update_breakpoints, context);
-    enqueue_dpc_round_robin(routine)
-}
+    unsafe {
+        KeFlushQueuedDpcs();
+    }
 
-pub fn update_events_dpc() -> Result<(), DpcError> {
-    let context = Box::leak(Box::new(DpcContext::default()));
-    let routine = DpcRoutine::new(dpc_update_events, context);
-    enqueue_dpc_round_robin(routine)
+    Ok(())
 }
