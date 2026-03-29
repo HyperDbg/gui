@@ -12,6 +12,15 @@ use wdk_sys::{
     PVOID,
     IO_STATUS_BLOCK,
     STATUS_SUCCESS,
+    BOOLEAN,
+};
+use wdk_sys::ntddk::{
+    DbgSetDebugPrintCallback,
+    KeQuerySystemTimePrecise,
+    ExSystemTimeToLocalTime,
+    RtlTimeToTimeFields,
+    ZwWriteFile,
+    ZwFlushBuffersFile,
 };
 
 const DEBUG_LOG_BUFFER_SIZE: usize = 0x1000 * 8;
@@ -161,9 +170,6 @@ pub unsafe fn save_debug_output(
     }
 
     let mut timestamp: LARGE_INTEGER = core::mem::zeroed();
-    extern "C" {
-        fn KeQuerySystemTimePrecise(CurrentTime: *mut LARGE_INTEGER);
-    }
     KeQuerySystemTimePrecise(&mut timestamp);
 
     let mut start = 0;
@@ -181,7 +187,7 @@ pub unsafe fn save_debug_output(
     }
 }
 
-pub unsafe extern "system" fn debug_print_callback(
+pub unsafe extern "C" fn debug_print_callback(
     output: PSTRING,
     component_id: ULONG,
     level: ULONG,
@@ -261,13 +267,8 @@ pub unsafe fn flush_debug_log_entries(thread_context: &FlushBufferThreadContext)
         let mut local_time: LARGE_INTEGER = core::mem::zeroed();
         let mut time_fields: wdk_sys::TIME_FIELDS = core::mem::zeroed();
 
-        extern "C" {
-            fn ExSystemTimeToLocalTime(SystemTime: *const LARGE_INTEGER, LocalTime: *mut LARGE_INTEGER);
-            fn RtlTimeToTimeFields(Time: *const LARGE_INTEGER, TimeFields: *mut wdk_sys::TIME_FIELDS);
-        }
-
-        ExSystemTimeToLocalTime(&timestamp, &mut local_time);
-        RtlTimeToTimeFields(&local_time, &mut time_fields);
+        ExSystemTimeToLocalTime(&timestamp as *const _ as *mut _, &mut local_time);
+        RtlTimeToTimeFields(&mut local_time as *mut _, &mut time_fields);
 
         let written = core::fmt::write(
             &mut ArrayWriter(&mut write_buffer),
@@ -290,30 +291,17 @@ pub unsafe fn flush_debug_log_entries(thread_context: &FlushBufferThreadContext)
         let len = write_buffer.iter().position(|&b| b == 0).unwrap_or(write_buffer.len());
         
         let mut io_status: IO_STATUS_BLOCK = core::mem::zeroed();
-        extern "C" {
-            fn ZwWriteFile(
-                FileHandle: HANDLE,
-                Event: PVOID,
-                ApcRoutine: PVOID,
-                ApcContext: PVOID,
-                IoStatusBlock: *mut IO_STATUS_BLOCK,
-                Buffer: PVOID,
-                Length: ULONG,
-                ByteOffset: *const LARGE_INTEGER,
-                Key: *const ULONG,
-            ) -> NTSTATUS;
-        }
 
         let status = ZwWriteFile(
             file_handle,
             core::ptr::null_mut(),
-            core::ptr::null_mut(),
+            None,
             core::ptr::null_mut(),
             &mut io_status,
             write_buffer.as_mut_ptr() as PVOID,
             len as ULONG,
-            core::ptr::null(),
-            core::ptr::null(),
+            core::ptr::null_mut(),
+            core::ptr::null_mut(),
         );
 
         if status != STATUS_SUCCESS {
@@ -325,12 +313,6 @@ pub unsafe fn flush_debug_log_entries(thread_context: &FlushBufferThreadContext)
 
     if next_offset > 0 {
         let mut io_status: IO_STATUS_BLOCK = core::mem::zeroed();
-        extern "C" {
-            fn ZwFlushBuffersFile(
-                FileHandle: HANDLE,
-                IoStatusBlock: *mut IO_STATUS_BLOCK,
-            ) -> NTSTATUS;
-        }
         let _ = ZwFlushBuffersFile(file_handle, &mut io_status);
     }
 
@@ -349,17 +331,10 @@ pub unsafe fn flush_debug_log_entries(thread_context: &FlushBufferThreadContext)
 
 pub unsafe fn start_debug_print_callback() -> NTSTATUS {
     if !G_PAIRED_LOG_BUFFER.initialize() {
-        return 0xC0000001i32; 
+        return 0xC0000001u32 as i32; 
     }
 
-    extern "C" {
-        fn DbgSetDebugPrintCallback(
-            Callback: unsafe extern "system" fn(PSTRING, ULONG, ULONG),
-            Enable: u8,
-        ) -> NTSTATUS;
-    }
-
-    let status = DbgSetDebugPrintCallback(debug_print_callback, 1);
+    let status = DbgSetDebugPrintCallback(Some(debug_print_callback), 1 as BOOLEAN);
     if status != STATUS_SUCCESS {
         G_PAIRED_LOG_BUFFER.buffer_valid.store(false, Ordering::SeqCst);
     }
@@ -368,14 +343,7 @@ pub unsafe fn start_debug_print_callback() -> NTSTATUS {
 }
 
 pub unsafe fn stop_debug_print_callback() {
-    extern "C" {
-        fn DbgSetDebugPrintCallback(
-            Callback: unsafe extern "system" fn(PSTRING, ULONG, ULONG),
-            Enable: u8,
-        ) -> NTSTATUS;
-    }
-
-    let _ = DbgSetDebugPrintCallback(debug_print_callback, 0);
+    let _ = DbgSetDebugPrintCallback(None, 0 as BOOLEAN);
     G_PAIRED_LOG_BUFFER.buffer_valid.store(false, Ordering::SeqCst);
 }
 
