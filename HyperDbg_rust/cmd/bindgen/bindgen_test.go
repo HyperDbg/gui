@@ -830,3 +830,69 @@ fn test() {
 		})
 	}
 }
+
+func TestGenerateHookDatabase(t *testing.T) {
+	projectRoot := getProjectRoot(t)
+	bindgenDir := getBindgenDir(t)
+
+	config := BindgenConfig{
+		ProjectRoot:    projectRoot,
+		WdkBindingsDir: bindgenDir,
+		RustSourceDir:  filepath.Join(projectRoot, "rust-driver", "kd", "src"),
+		OutputDir:      bindgenDir,
+		Verbose:        true,
+	}
+
+	bg := NewBindgen(config)
+
+	err := bg.LoadWdkBindings(
+		filepath.Join(bindgenDir, "ntddk.rs"),
+		filepath.Join(bindgenDir, "types.rs"),
+		filepath.Join(bindgenDir, "constants.rs"),
+	)
+	if err != nil {
+		t.Fatalf("Failed to load WDK bindings: %v", err)
+	}
+
+	notExported := []NotExportedFunc{
+		{Name: "KeGenericCallDpc", Params: "DpcRoutine: unsafe extern \"C\" fn(*mut core::ffi::c_void, *mut core::ffi::c_void, *mut core::ffi::c_void), Context: *mut core::ffi::c_void", ReturnType: ""},
+		{Name: "KeInitializeProcess", Params: "Process: PKPROCESS, Affinity: KAFFINITY, BaseThread: ULONG, Quantum: UCHAR, ThreadQuantumRatio: UCHAR", ReturnType: ""},
+		{Name: "KeReadyThread", Params: "Thread: PKTHREAD", ReturnType: ""},
+		{Name: "KiInitializeThread", Params: "Thread: PKTHREAD, Process: PKPROCESS, StartContext: PVOID, SystemRoutine: PKSYSTEM_ROUTINE, UserRoutine: PKUSER_ROUTINE, Teb: PVOID, Environment: PVOID", ReturnType: ""},
+		{Name: "KeSetBasePriorityThread", Params: "Thread: PKTHREAD, Increment: KPRIORITY", ReturnType: "KPRIORITY"},
+		{Name: "KeSetPriorityThread", Params: "Thread: PKTHREAD, Priority: KPRIORITY", ReturnType: "KPRIORITY"},
+		{Name: "KeSetDisableBoostThread", Params: "Thread: PKTHREAD, Disable: BOOLEAN", ReturnType: "BOOLEAN"},
+		{Name: "KeSetIdealProcessorThread", Params: "Thread: PKTHREAD, IdealProcessor: CCHAR", ReturnType: "CCHAR"},
+		{Name: "KeSetAffinityThread", Params: "Thread: PKTHREAD, Affinity: KAFFINITY", ReturnType: "KAFFINITY"},
+		{Name: "KeDelayExecutionThread", Params: "WaitMode: KPROCESSOR_MODE, Alertable: BOOLEAN, Interval: PLARGE_INTEGER", ReturnType: "NTSTATUS"},
+		{Name: "KeTestAlertThread", Params: "WaitMode: KPROCESSOR_MODE", ReturnType: "BOOLEAN"},
+		{Name: "KeForceResumeThread", Params: "Thread: PKTHREAD", ReturnType: "ULONG"},
+		{Name: "KeSuspendThread", Params: "Thread: PKTHREAD", ReturnType: "ULONG"},
+		{Name: "KeResumeThread", Params: "Thread: PKTHREAD", ReturnType: "ULONG"},
+		{Name: "KeAlertResumeThread", Params: "Thread: PKTHREAD, PreviousCount: PULONG", ReturnType: "ULONG"},
+		{Name: "KeAlertThread", Params: "Thread: PKTHREAD, AlertMode: KPROCESSOR_MODE", ReturnType: "BOOLEAN"},
+		{Name: "KeWaitForSingleObject", Params: "Object: PVOID, WaitReason: KWAIT_REASON, WaitMode: KPROCESSOR_MODE, Alertable: BOOLEAN, Timeout: PLARGE_INTEGER", ReturnType: "NTSTATUS"},
+		{Name: "KeWaitForMultipleObjects", Params: "Count: ULONG, Object: PVOID[], WaitType: WAIT_TYPE, WaitReason: KWAIT_REASON, WaitMode: KPROCESSOR_MODE, Alertable: BOOLEAN, Timeout: PLARGE_INTEGER, WaitBlockArray: PKWAIT_BLOCK", ReturnType: "NTSTATUS"},
+		{Name: "KeWaitForMutexObject", Params: "Mutex: PVOID, WaitReason: KWAIT_REASON, WaitMode: KPROCESSOR_MODE, Alertable: BOOLEAN, Timeout: PLARGE_INTEGER", ReturnType: "NTSTATUS"},
+		{Name: "KeReleaseMutant", Params: "Mutant: PKMUTANT, Increment: KPRIORITY, Abandoned: BOOLEAN, Wait: BOOLEAN", ReturnType: "LONG"},
+		{Name: "KeReleaseSemaphore", Params: "Semaphore: PKSEMAPHORE, Increment: KPRIORITY, Adjustment: LONG, Wait: BOOLEAN", ReturnType: "LONG"},
+		{Name: "KeSetEvent", Params: "Event: PKEVENT, Increment: KPRIORITY, Wait: BOOLEAN", ReturnType: "LONG"},
+	}
+
+	rustHookDir := filepath.Join(projectRoot, "rust-driver", "kd", "src", "hyperkd", "hyperhv", "hooks", "hook_db")
+	goHookFile := filepath.Join(projectRoot, "debugger", "hook_db_gen.go")
+
+	err = bg.GenerateHookDatabase(rustHookDir, goHookFile, notExported)
+	if err != nil {
+		t.Fatalf("Failed to generate hook database: %v", err)
+	}
+
+	t.Logf("Generated Rust hook database in: %s", rustHookDir)
+	t.Logf("Generated Go hook database: %s", goHookFile)
+	t.Logf("Total hooks: %d", len(bg.GetWdkBindings().Functions)-len(notExported))
+
+	ls, _ := os.ReadDir(rustHookDir)
+	for _, f := range ls {
+		t.Logf("  - %s", f.Name())
+	}
+}

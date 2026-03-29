@@ -497,16 +497,26 @@ func (b *Bindgen) parseParamList(params string) []struct{ Name, Type string } {
 			continue
 		}
 
-		fields := strings.Fields(part)
-		if len(fields) >= 2 {
+		if strings.Contains(part, ":") {
+			colonIdx := strings.Index(part, ":")
+			name := strings.TrimSpace(part[:colonIdx])
+			typePart := strings.TrimSpace(part[colonIdx+1:])
 			result = append(result, struct{ Name, Type string }{
-				Name: fields[len(fields)-1],
-				Type: strings.Join(fields[:len(fields)-1], " "),
+				Name: name,
+				Type: typePart,
 			})
-		} else if len(fields) == 1 {
-			result = append(result, struct{ Name, Type string }{
-				Type: fields[0],
-			})
+		} else {
+			fields := strings.Fields(part)
+			if len(fields) >= 2 {
+				result = append(result, struct{ Name, Type string }{
+					Name: fields[len(fields)-1],
+					Type: strings.Join(fields[:len(fields)-1], " "),
+				})
+			} else if len(fields) == 1 {
+				result = append(result, struct{ Name, Type string }{
+					Type: fields[0],
+				})
+			}
 		}
 	}
 
@@ -1294,6 +1304,590 @@ func (b *Bindgen) findMultilineUseRanges(lines []string) []LineRange {
 	}
 
 	return ranges
+}
+
+type HookEntry struct {
+	Name       string
+	Params     string
+	ReturnType string
+	ParamList  []HookParam
+}
+
+type HookParam struct {
+	Name string
+	Type string
+}
+
+func (b *Bindgen) GenerateHookDatabase(rustOutputDir, goOutputDir string, notExportedFunctions []NotExportedFunc) error {
+	if err := os.RemoveAll(rustOutputDir); err != nil {
+		return fmt.Errorf("failed to remove rust hook output directory: %w", err)
+	}
+	if err := os.MkdirAll(rustOutputDir, 0755); err != nil {
+		return fmt.Errorf("failed to create rust hook output directory: %w", err)
+	}
+
+	if err := os.MkdirAll(filepath.Dir(goOutputDir), 0755); err != nil {
+		return fmt.Errorf("failed to create go output directory: %w", err)
+	}
+
+	exportedHooks := []HookEntry{}
+	for name, sig := range b.wdk.Functions {
+		if b.isNotExported(name, notExportedFunctions) {
+			continue
+		}
+		rawParams := b.parseParamList(sig.Params)
+		hookParams := make([]HookParam, len(rawParams))
+		for i, p := range rawParams {
+			hookParams[i] = HookParam{Name: p.Name, Type: p.Type}
+		}
+		hook := HookEntry{
+			Name:       name,
+			Params:     sig.Params,
+			ReturnType: sig.ReturnType,
+			ParamList:  hookParams,
+		}
+		exportedHooks = append(exportedHooks, hook)
+	}
+	sort.Slice(exportedHooks, func(i, j int) bool {
+		return exportedHooks[i].Name < exportedHooks[j].Name
+	})
+
+	if err := b.generateRustHookDb(rustOutputDir, exportedHooks); err != nil {
+		return err
+	}
+
+	if err := b.generateGoHookDb(goOutputDir, exportedHooks); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (b *Bindgen) generateRustHookDb(outputDir string, hooks []HookEntry) error {
+	if err := b.generateRustHookEpt(outputDir, hooks); err != nil {
+		return err
+	}
+	if err := b.generateRustHookInline(outputDir, hooks); err != nil {
+		return err
+	}
+	return b.generateRustHookMod(outputDir)
+}
+
+func (b *Bindgen) generateRustHookEpt(outputDir string, hooks []HookEntry) error {
+	var sb strings.Builder
+	sb.WriteString("#![allow(non_snake_case)]\n")
+	sb.WriteString("#![allow(dead_code)]\n\n")
+
+	sb.WriteString(fmt.Sprintf("// EPT Hook Database: %d functions\n", len(hooks)))
+	sb.WriteString("// EPT hooks provide stealth by using Extended Page Tables\n\n")
+
+	sb.WriteString("use alloc::string::String;\n")
+	sb.WriteString("use alloc::vec::Vec;\n")
+	sb.WriteString("use crate::hyperkd::hyperhv::hooks::hooks::*;\n")
+	sb.WriteString("use crate::ntapi::*;\n\n")
+
+	sb.WriteString("pub struct EptHookDb {\n")
+	sb.WriteString("    pub name: &'static str,\n")
+	sb.WriteString("    pub address: u64,\n")
+	sb.WriteString("    pub enabled: bool,\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("pub static EPT_HOOK_DATABASE: &[EptHookDb] = &[\n")
+	for _, h := range hooks {
+		sb.WriteString(fmt.Sprintf("    EptHookDb { name: \"%s\", address: 0, enabled: false },\n", h.Name))
+	}
+	sb.WriteString("];\n\n")
+
+	sb.WriteString("pub fn install_ept_hook_by_name(name: &str, process_id: ProcessId) -> Result<(), HookError> {\n")
+	sb.WriteString("    match name {\n")
+	for _, h := range hooks {
+		sb.WriteString(fmt.Sprintf("        \"%s\" => {\n", h.Name))
+		sb.WriteString(fmt.Sprintf("            let addr = %s as u64;\n", h.Name))
+		sb.WriteString("            unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }\n")
+		sb.WriteString("        }\n")
+	}
+	sb.WriteString("        _ => Err(HookError::InvalidAddress),\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("pub fn remove_ept_hook_by_name(name: &str) -> Result<(), HookError> {\n")
+	sb.WriteString("    match name {\n")
+	for _, h := range hooks {
+		sb.WriteString(fmt.Sprintf("        \"%s\" => {\n", h.Name))
+		sb.WriteString(fmt.Sprintf("            let addr = %s as u64;\n", h.Name))
+		sb.WriteString("            unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }\n")
+		sb.WriteString("        }\n")
+	}
+	sb.WriteString("        _ => Err(HookError::NotHooked),\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("}\n")
+
+	return os.WriteFile(filepath.Join(outputDir, "ept_hook_gen.rs"), []byte(sb.String()), 0644)
+}
+
+func (b *Bindgen) generateRustHookInline(outputDir string, hooks []HookEntry) error {
+	var sb strings.Builder
+	sb.WriteString("#![allow(non_snake_case)]\n")
+	sb.WriteString("#![allow(dead_code)]\n\n")
+
+	sb.WriteString(fmt.Sprintf("// Inline Hook Database: %d functions\n", len(hooks)))
+	sb.WriteString("// Inline hooks modify code directly, faster but detectable\n\n")
+
+	sb.WriteString("use alloc::string::String;\n")
+	sb.WriteString("use crate::hyperkd::hyperhv::hooks::hooks::*;\n")
+	sb.WriteString("use crate::ntapi::*;\n\n")
+
+	sb.WriteString("pub struct InlineHookDb {\n")
+	sb.WriteString("    pub name: &'static str,\n")
+	sb.WriteString("    pub address: u64,\n")
+	sb.WriteString("    pub trampoline: u64,\n")
+	sb.WriteString("    pub enabled: bool,\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("pub static INLINE_HOOK_DATABASE: &[InlineHookDb] = &[\n")
+	for _, h := range hooks {
+		sb.WriteString(fmt.Sprintf("    InlineHookDb { name: \"%s\", address: 0, trampoline: 0, enabled: false },\n", h.Name))
+	}
+	sb.WriteString("];\n\n")
+
+	sb.WriteString("pub fn install_inline_hook_by_name(name: &str, hook_handler: u64) -> Result<u64, HookError> {\n")
+	sb.WriteString("    match name {\n")
+	for _, h := range hooks {
+		sb.WriteString(fmt.Sprintf("        \"%s\" => {\n", h.Name))
+		sb.WriteString(fmt.Sprintf("            let addr = %s as u64;\n", h.Name))
+		sb.WriteString("            unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }\n")
+		sb.WriteString("        }\n")
+	}
+	sb.WriteString("        _ => Err(HookError::InvalidAddress),\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("pub fn remove_inline_hook_by_name(name: &str) -> Result<(), HookError> {\n")
+	sb.WriteString("    match name {\n")
+	for _, h := range hooks {
+		sb.WriteString(fmt.Sprintf("        \"%s\" => {\n", h.Name))
+		sb.WriteString(fmt.Sprintf("            let addr = %s as u64;\n", h.Name))
+		sb.WriteString("            unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }\n")
+		sb.WriteString("        }\n")
+	}
+	sb.WriteString("        _ => Err(HookError::NotHooked),\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("}\n")
+
+	return os.WriteFile(filepath.Join(outputDir, "inline_hook_gen.rs"), []byte(sb.String()), 0644)
+}
+
+func (b *Bindgen) generateRustHookMod(outputDir string) error {
+	var sb strings.Builder
+	sb.WriteString("#![allow(non_snake_case)]\n")
+	sb.WriteString("#![allow(dead_code)]\n\n")
+
+	sb.WriteString("mod ept_hook_gen;\n")
+	sb.WriteString("mod inline_hook_gen;\n\n")
+
+	sb.WriteString("pub use ept_hook_gen::*;\n")
+	sb.WriteString("pub use inline_hook_gen::*;\n")
+
+	return os.WriteFile(filepath.Join(outputDir, "mod.rs"), []byte(sb.String()), 0644)
+}
+
+func (b *Bindgen) generateGoHookDb(outputPath string, hooks []HookEntry) error {
+	var sb strings.Builder
+	sb.WriteString("package debugger\n\n")
+	sb.WriteString("import (\n")
+	sb.WriteString("    \"encoding/json\"\n")
+	sb.WriteString("    \"fmt\"\n")
+	sb.WriteString("    \"strings\"\n")
+	sb.WriteString(")\n\n")
+
+	sb.WriteString(fmt.Sprintf("// Hook Database: %d NT API functions\n", len(hooks)))
+	sb.WriteString("// Auto-generated by bindgen - DO NOT EDIT\n\n")
+
+	sb.WriteString("// HookType defines the hook method\n")
+	sb.WriteString("type HookType int\n\n")
+	sb.WriteString("const (\n")
+	sb.WriteString("    HookTypeEPT HookType = iota    // EPT hook - stealth but slower\n")
+	sb.WriteString("    HookTypeInline                  // Inline hook - fast but detectable\n")
+	sb.WriteString(")\n\n")
+
+	sb.WriteString("type HookInfo struct {\n")
+	sb.WriteString("    Name       string      `json:\"name\"`\n")
+	sb.WriteString("    Params     []HookParam `json:\"params\"`\n")
+	sb.WriteString("    ReturnType string      `json:\"return_type\"`\n")
+	sb.WriteString("    GoType     string      `json:\"go_type\"`     // Go return type\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("type HookParam struct {\n")
+	sb.WriteString("    Name   string `json:\"name\"`\n")
+	sb.WriteString("    Type   string `json:\"type\"`    // Rust type\n")
+	sb.WriteString("    GoType string `json:\"go_type\"` // Go type for user\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("type HookRequest struct {\n")
+	sb.WriteString("    Action      string   `json:\"action\"`\n")
+	sb.WriteString("    HookType    HookType `json:\"hook_type\"`\n")
+	sb.WriteString("    ApiName     string   `json:\"api_name\"`\n")
+	sb.WriteString("    ProcessId   uint32   `json:\"process_id,omitempty\"`\n")
+	sb.WriteString("    HookHandler uint64   `json:\"hook_handler,omitempty\"`\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("type HookResponse struct {\n")
+	sb.WriteString("    Success    bool   `json:\"success\"`\n")
+	sb.WriteString("    Message    string `json:\"message\"`\n")
+	sb.WriteString("    Trampoline uint64 `json:\"trampoline,omitempty\"`\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("// Rust to Go type mapping\n")
+	sb.WriteString("var rustToGoTypes = map[string]string{\n")
+	sb.WriteString("    \"void\": \"\",\n")
+	sb.WriteString("    \"NTSTATUS\": \"int32\",\n")
+	sb.WriteString("    \"BOOLEAN\": \"bool\",\n")
+	sb.WriteString("    \"ULONG\": \"uint32\",\n")
+	sb.WriteString("    \"PULONG\": \"*uint32\",\n")
+	sb.WriteString("    \"USHORT\": \"uint16\",\n")
+	sb.WriteString("    \"PUSHORT\": \"*uint16\",\n")
+	sb.WriteString("    \"UCHAR\": \"uint8\",\n")
+	sb.WriteString("    \"PUCHAR\": \"*uint8\",\n")
+	sb.WriteString("    \"LONG\": \"int32\",\n")
+	sb.WriteString("    \"PLONG\": \"*int32\",\n")
+	sb.WriteString("    \"SHORT\": \"int16\",\n")
+	sb.WriteString("    \"PSHORT\": \"*int16\",\n")
+	sb.WriteString("    \"CHAR\": \"int8\",\n")
+	sb.WriteString("    \"PCHAR\": \"*int8\",\n")
+	sb.WriteString("    \"SIZE_T\": \"uintptr\",\n")
+	sb.WriteString("    \"PSIZE_T\": \"*uintptr\",\n")
+	sb.WriteString("    \"ULONG_PTR\": \"uintptr\",\n")
+	sb.WriteString("    \"PULONG_PTR\": \"*uintptr\",\n")
+	sb.WriteString("    \"ULONG64\": \"uint64\",\n")
+	sb.WriteString("    \"PULONG64\": \"*uint64\",\n")
+	sb.WriteString("    \"ULONGLONG\": \"uint64\",\n")
+	sb.WriteString("    \"LONGLONG\": \"int64\",\n")
+	sb.WriteString("    \"PLONGLONG\": \"*int64\",\n")
+	sb.WriteString("    \"DWORD\": \"uint32\",\n")
+	sb.WriteString("    \"PDWORD\": \"*uint32\",\n")
+	sb.WriteString("    \"DWORD64\": \"uint64\",\n")
+	sb.WriteString("    \"PDWORD64\": \"*uint64\",\n")
+	sb.WriteString("    \"UINT\": \"uint32\",\n")
+	sb.WriteString("    \"PUINT\": \"*uint32\",\n")
+	sb.WriteString("    \"INT\": \"int32\",\n")
+	sb.WriteString("    \"PINT\": \"*int32\",\n")
+	sb.WriteString("    \"UINT_PTR\": \"uintptr\",\n")
+	sb.WriteString("    \"INT_PTR\": \"intptr\",\n")
+	sb.WriteString("    \"HANDLE\": \"uintptr\",\n")
+	sb.WriteString("    \"PHANDLE\": \"*uintptr\",\n")
+	sb.WriteString("    \"PVOID\": \"uintptr\",\n")
+	sb.WriteString("    \"PPVOID\": \"*uintptr\",\n")
+	sb.WriteString("    \"LPVOID\": \"uintptr\",\n")
+	sb.WriteString("    \"LPCVOID\": \"uintptr\",\n")
+	sb.WriteString("    \"PCSTR\": \"uintptr\",\n")
+	sb.WriteString("    \"PSTR\": \"uintptr\",\n")
+	sb.WriteString("    \"PCWSTR\": \"uintptr\",\n")
+	sb.WriteString("    \"PWSTR\": \"uintptr\",\n")
+	sb.WriteString("    \"LPCSTR\": \"uintptr\",\n")
+	sb.WriteString("    \"LPSTR\": \"uintptr\",\n")
+	sb.WriteString("    \"LPCWSTR\": \"uintptr\",\n")
+	sb.WriteString("    \"LPWSTR\": \"uintptr\",\n")
+	sb.WriteString("    \"KIRQL\": \"uint8\",\n")
+	sb.WriteString("    \"PKIRQL\": \"*uint8\",\n")
+	sb.WriteString("    \"KPRIORITY\": \"int32\",\n")
+	sb.WriteString("    \"KAFFINITY\": \"uintptr\",\n")
+	sb.WriteString("    \"LARGE_INTEGER\": \"int64\",\n")
+	sb.WriteString("    \"PLARGE_INTEGER\": \"*int64\",\n")
+	sb.WriteString("    \"ULARGE_INTEGER\": \"uint64\",\n")
+	sb.WriteString("    \"PULARGE_INTEGER\": \"*uint64\",\n")
+	sb.WriteString("    \"GUID\": \"[16]byte\",\n")
+	sb.WriteString("    \"PGUID\": \"*[16]byte\",\n")
+	sb.WriteString("    \"PEPROCESS\": \"uintptr\",\n")
+	sb.WriteString("    \"PETHREAD\": \"uintptr\",\n")
+	sb.WriteString("    \"PKTHREAD\": \"uintptr\",\n")
+	sb.WriteString("    \"PKPROCESS\": \"uintptr\",\n")
+	sb.WriteString("    \"PDRIVER_OBJECT\": \"uintptr\",\n")
+	sb.WriteString("    \"PDEVICE_OBJECT\": \"uintptr\",\n")
+	sb.WriteString("    \"PIRP\": \"uintptr\",\n")
+	sb.WriteString("    \"PFILE_OBJECT\": \"uintptr\",\n")
+	sb.WriteString("    \"PSID\": \"uintptr\",\n")
+	sb.WriteString("    \"PEX_RUNDOWN_REF\": \"*uintptr\",\n")
+	sb.WriteString("    \"EX_SPIN_LOCK\": \"uintptr\",\n")
+	sb.WriteString("    \"PEX_SPIN_LOCK\": \"*uintptr\",\n")
+	sb.WriteString("    \"KSPIN_LOCK\": \"uintptr\",\n")
+	sb.WriteString("    \"PKSPIN_LOCK\": \"*uintptr\",\n")
+	sb.WriteString("    \"PERESOURCE\": \"uintptr\",\n")
+	sb.WriteString("    \"PKSEMAPHORE\": \"uintptr\",\n")
+	sb.WriteString("    \"PKEVENT\": \"uintptr\",\n")
+	sb.WriteString("    \"PKMUTANT\": \"uintptr\",\n")
+	sb.WriteString("    \"PKDPC\": \"uintptr\",\n")
+	sb.WriteString("    \"PKTIMER\": \"uintptr\",\n")
+	sb.WriteString("    \"PIO_STATUS_BLOCK\": \"uintptr\",\n")
+	sb.WriteString("    \"POBJECT_ATTRIBUTES\": \"uintptr\",\n")
+	sb.WriteString("    \"PUNICODE_STRING\": \"uintptr\",\n")
+	sb.WriteString("    \"PANSI_STRING\": \"uintptr\",\n")
+	sb.WriteString("    \"PCLIENT_ID\": \"uintptr\",\n")
+	sb.WriteString("    \"PACL\": \"uintptr\",\n")
+	sb.WriteString("    \"PSECURITY_DESCRIPTOR\": \"uintptr\",\n")
+	sb.WriteString("    \"PLIST_ENTRY\": \"uintptr\",\n")
+	sb.WriteString("    \"PSINGLE_LIST_ENTRY\": \"uintptr\",\n")
+	sb.WriteString("    \"...\": \"interface{}\",\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("func rustTypeToGo(rustType string) string {\n")
+	sb.WriteString("    rustType = trimPointerType(rustType)\n")
+	sb.WriteString("    if goType, ok := rustToGoTypes[rustType]; ok {\n")
+	sb.WriteString("        return goType\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("    if strings.HasPrefix(rustType, \"P\") {\n")
+	sb.WriteString("        return \"uintptr\"\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("    return \"uintptr\"\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("func trimPointerType(t string) string {\n")
+	sb.WriteString("    t = strings.TrimSpace(t)\n")
+	sb.WriteString("    for strings.HasPrefix(t, \"*mut \") || strings.HasPrefix(t, \"*const \") {\n")
+	sb.WriteString("        if strings.HasPrefix(t, \"*mut \") {\n")
+	sb.WriteString("            t = strings.TrimPrefix(t, \"*mut \")\n")
+	sb.WriteString("        } else {\n")
+	sb.WriteString("            t = strings.TrimPrefix(t, \"*const \")\n")
+	sb.WriteString("        }\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("    return t\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString(fmt.Sprintf("var HookDatabase = []HookInfo{\n"))
+	for _, h := range hooks {
+		goReturnType := rustTypeToGo(h.ReturnType)
+		sb.WriteString("    {\n")
+		sb.WriteString(fmt.Sprintf("        Name: \"%s\",\n", h.Name))
+		sb.WriteString("        Params: []HookParam{\n")
+		for _, p := range h.ParamList {
+			goType := rustTypeToGo(p.Type)
+			sb.WriteString(fmt.Sprintf("            {Name: \"%s\", Type: \"%s\", GoType: \"%s\"},\n", p.Name, p.Type, goType))
+		}
+		sb.WriteString("        },\n")
+		sb.WriteString(fmt.Sprintf("        ReturnType: \"%s\",\n", h.ReturnType))
+		sb.WriteString(fmt.Sprintf("        GoType: \"%s\",\n", goReturnType))
+		sb.WriteString("    },\n")
+	}
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("func GetHookInfo(name string) *HookInfo {\n")
+	sb.WriteString("    for i := range HookDatabase {\n")
+	sb.WriteString("        if HookDatabase[i].Name == name {\n")
+	sb.WriteString("            return &HookDatabase[i]\n")
+	sb.WriteString("        }\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("    return nil\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("func (p *Packet) InstallHook(apiName string, hookType HookType, processId uint32, hookHandler uint64) (*HookResponse, error) {\n")
+	sb.WriteString("    req := HookRequest{\n")
+	sb.WriteString("        Action:      \"install_hook\",\n")
+	sb.WriteString("        HookType:    hookType,\n")
+	sb.WriteString("        ApiName:     apiName,\n")
+	sb.WriteString("        ProcessId:   processId,\n")
+	sb.WriteString("        HookHandler: hookHandler,\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("    data, _ := json.Marshal(req)\n")
+	sb.WriteString("    resp := SendReceive[HookResponse](p, data)\n")
+	sb.WriteString("    if resp == nil || !resp.Success {\n")
+	sb.WriteString("        return nil, fmt.Errorf(\"install hook failed: %s\", resp.Message)\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("    return resp, nil\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("func (p *Packet) RemoveHook(apiName string, hookType HookType) error {\n")
+	sb.WriteString("    req := HookRequest{\n")
+	sb.WriteString("        Action:   \"remove_hook\",\n")
+	sb.WriteString("        HookType: hookType,\n")
+	sb.WriteString("        ApiName:  apiName,\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("    data, _ := json.Marshal(req)\n")
+	sb.WriteString("    resp := SendReceive[HookResponse](p, data)\n")
+	sb.WriteString("    if resp == nil || !resp.Success {\n")
+	sb.WriteString("        return fmt.Errorf(\"remove hook failed: %s\", resp.Message)\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("    return nil\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("func (p *Packet) ListHooks() []HookInfo {\n")
+	sb.WriteString("    return HookDatabase\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("// HookCallContext provides context for hook callback\n")
+	sb.WriteString("type HookCallContext struct {\n")
+	sb.WriteString("    ApiName    string\n")
+	sb.WriteString("    ProcessId  uint32\n")
+	sb.WriteString("    ThreadId   uint32\n")
+	sb.WriteString("    Registers  map[string]uint64\n")
+	sb.WriteString("    StackPtr   uint64\n")
+	sb.WriteString("    RetAddr    uint64\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("// HookCallback is called when a hooked API is invoked\n")
+	sb.WriteString("type HookCallback func(ctx *HookCallContext) error\n\n")
+
+	sb.WriteString("// HookManager manages hook registration and callbacks\n")
+	sb.WriteString("type HookManager struct {\n")
+	sb.WriteString("    hooks     map[string]*HookEntry\n")
+	sb.WriteString("    callbacks map[string]HookCallback\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("type HookEntry struct {\n")
+	sb.WriteString("    Info       *HookInfo\n")
+	sb.WriteString("    Type       HookType\n")
+	sb.WriteString("    ProcessId  uint32\n")
+	sb.WriteString("    Handler    uint64\n")
+	sb.WriteString("    Callback   HookCallback\n")
+	sb.WriteString("    Enabled    bool\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("func NewHookManager() *HookManager {\n")
+	sb.WriteString("    return &HookManager{\n")
+	sb.WriteString("        hooks:     make(map[string]*HookEntry),\n")
+	sb.WriteString("        callbacks: make(map[string]HookCallback),\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("func (m *HookManager) Register(apiName string, hookType HookType, processId uint32, callback HookCallback) error {\n")
+	sb.WriteString("    info := GetHookInfo(apiName)\n")
+	sb.WriteString("    if info == nil {\n")
+	sb.WriteString("        return fmt.Errorf(\"unknown API: %s\", apiName)\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("    m.hooks[apiName] = &HookEntry{\n")
+	sb.WriteString("        Info:      info,\n")
+	sb.WriteString("        Type:      hookType,\n")
+	sb.WriteString("        ProcessId: processId,\n")
+	sb.WriteString("        Callback:  callback,\n")
+	sb.WriteString("        Enabled:   true,\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("    return nil\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("func (m *HookManager) Unregister(apiName string) {\n")
+	sb.WriteString("    delete(m.hooks, apiName)\n")
+	sb.WriteString("    delete(m.callbacks, apiName)\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("func (m *HookManager) GetHook(apiName string) *HookEntry {\n")
+	sb.WriteString("    return m.hooks[apiName]\n")
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("func (m *HookManager) ListActiveHooks() []string {\n")
+	sb.WriteString("    var result []string\n")
+	sb.WriteString("    for name, entry := range m.hooks {\n")
+	sb.WriteString("        if entry.Enabled {\n")
+	sb.WriteString("            result = append(result, name)\n")
+	sb.WriteString("        }\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("    return result\n")
+	sb.WriteString("}\n")
+
+	return os.WriteFile(outputPath, []byte(sb.String()), 0644)
+}
+
+func rustTypeToGo(rustType string) string {
+	rustType = strings.TrimSpace(rustType)
+	for strings.HasPrefix(rustType, "*mut ") || strings.HasPrefix(rustType, "*const ") {
+		if strings.HasPrefix(rustType, "*mut ") {
+			rustType = strings.TrimPrefix(rustType, "*mut ")
+		} else {
+			rustType = strings.TrimPrefix(rustType, "*const ")
+		}
+	}
+	rustType = strings.TrimSpace(rustType)
+
+	typeMap := map[string]string{
+		"void":                 "",
+		"NTSTATUS":             "int32",
+		"BOOLEAN":              "bool",
+		"ULONG":                "uint32",
+		"PULONG":               "*uint32",
+		"USHORT":               "uint16",
+		"PUSHORT":              "*uint16",
+		"UCHAR":                "uint8",
+		"PUCHAR":               "*uint8",
+		"LONG":                 "int32",
+		"PLONG":                "*int32",
+		"SHORT":                "int16",
+		"PSHORT":               "*int16",
+		"CHAR":                 "int8",
+		"PCHAR":                "*int8",
+		"SIZE_T":               "uintptr",
+		"PSIZE_T":              "*uintptr",
+		"ULONG_PTR":            "uintptr",
+		"PULONG_PTR":           "*uintptr",
+		"ULONG64":              "uint64",
+		"PULONG64":             "*uint64",
+		"ULONGLONG":            "uint64",
+		"LONGLONG":             "int64",
+		"PLONGLONG":            "*int64",
+		"DWORD":                "uint32",
+		"PDWORD":               "*uint32",
+		"DWORD64":              "uint64",
+		"PDWORD64":             "*uint64",
+		"UINT":                 "uint32",
+		"PUINT":                "*uint32",
+		"INT":                  "int32",
+		"PINT":                 "*int32",
+		"UINT_PTR":             "uintptr",
+		"INT_PTR":              "intptr",
+		"HANDLE":               "uintptr",
+		"PHANDLE":              "*uintptr",
+		"PVOID":                "uintptr",
+		"PPVOID":               "*uintptr",
+		"LPVOID":               "uintptr",
+		"LPCVOID":              "uintptr",
+		"PCSTR":                "uintptr",
+		"PSTR":                 "uintptr",
+		"PCWSTR":               "uintptr",
+		"PWSTR":                "uintptr",
+		"LPCSTR":               "uintptr",
+		"LPSTR":                "uintptr",
+		"LPCWSTR":              "uintptr",
+		"LPWSTR":               "uintptr",
+		"KIRQL":                "uint8",
+		"PKIRQL":               "*uint8",
+		"KPRIORITY":            "int32",
+		"KAFFINITY":            "uintptr",
+		"LARGE_INTEGER":        "int64",
+		"PLARGE_INTEGER":       "*int64",
+		"PEPROCESS":            "uintptr",
+		"PETHREAD":             "uintptr",
+		"PKTHREAD":             "uintptr",
+		"PKPROCESS":            "uintptr",
+		"PDRIVER_OBJECT":       "uintptr",
+		"PDEVICE_OBJECT":       "uintptr",
+		"PIRP":                 "uintptr",
+		"PFILE_OBJECT":         "uintptr",
+		"PSID":                 "uintptr",
+		"PERESOURCE":           "uintptr",
+		"PEX_SPIN_LOCK":        "*uintptr",
+		"PKSEMAPHORE":          "uintptr",
+		"PKEVENT":              "uintptr",
+		"PKMUTANT":             "uintptr",
+		"PKDPC":                "uintptr",
+		"PKTIMER":              "uintptr",
+		"PKSPIN_LOCK":          "*uintptr",
+		"PIO_STATUS_BLOCK":     "uintptr",
+		"POBJECT_ATTRIBUTES":   "uintptr",
+		"PUNICODE_STRING":      "uintptr",
+		"PANSI_STRING":         "uintptr",
+		"PCLIENT_ID":           "uintptr",
+		"PACL":                 "uintptr",
+		"PSECURITY_DESCRIPTOR": "uintptr",
+		"PLIST_ENTRY":          "uintptr",
+		"PSINGLE_LIST_ENTRY":   "uintptr",
+		"...":                  "interface{}",
+	}
+
+	if goType, ok := typeMap[rustType]; ok {
+		return goType
+	}
+
+	if strings.HasPrefix(rustType, "P") && len(rustType) > 1 {
+		return "uintptr"
+	}
+
+	return "uintptr"
 }
 
 func (b *Bindgen) findExternBlockRanges(lines []string, mods []FileModification) []LineRange {
