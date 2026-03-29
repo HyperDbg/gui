@@ -430,7 +430,7 @@ func (p *Packet) handleBreakpointEvent(event any) {
 
 	if msg, ok := event.(*Message); ok {
 		e := parseBreakpointEvent(msg.Payload)
-		fmt.Printf("[Breakpoint] PID=%d TID=%d Address=%s\n",
+		fmt.Printf("[Breakpoint] PID=%d TID=%d Address=0x%X\n",
 			e.Header.ProcessID, e.Header.ThreadID, e.Address)
 	}
 }
@@ -440,7 +440,7 @@ func (p *Packet) handleExceptionEvent(event any) {
 
 	if msg, ok := event.(*Message); ok {
 		e := parseExceptionEvent(msg.Payload)
-		fmt.Printf("[Exception] PID=%d TID=%d Code=0x%x Address=%s\n",
+		fmt.Printf("[Exception] PID=%d TID=%d Code=0x%x Address=0x%X\n",
 			e.Header.ProcessID, e.Header.ThreadID, e.ExceptionCode, e.Address)
 	}
 }
@@ -597,6 +597,8 @@ func (p *Packet) InstallHookScript(script *HookScript) error {
 	if code == "" {
 		return fmt.Errorf("failed to extract closure body")
 	}
+
+	fmt.Printf("[HookScript] Extracted code from closure:\n%s\n", code)
 
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":    "install_hook_script",

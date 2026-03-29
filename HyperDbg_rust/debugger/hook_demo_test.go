@@ -2,6 +2,7 @@ package debugger
 
 import (
 	"fmt"
+	"testing"
 	"unsafe"
 )
 
@@ -14,7 +15,7 @@ const (
 	IOCTL_NDIS_QUERY_GLOBAL_STATS = 0x00170202
 )
 
-func Example_HookScript() {
+func TestHookScript(t *testing.T) {
 	packet := NewPacket().(*Packet)
 	err := packet.InstallHookScript(&HookScript{
 		ApiName:  "NtDeviceIoControlFile",
@@ -94,7 +95,7 @@ func Example_HookScript() {
 	fmt.Println("Hardware spoof hooks installed")
 }
 
-func Example_HookIopXxxControlFile() {
+func TestHookIopXxxControlFile(t *testing.T) {
 	packet := NewPacket().(*Packet)
 
 	err := packet.InstallHookScript(&HookScript{
@@ -119,7 +120,7 @@ func Example_HookIopXxxControlFile() {
 	fmt.Println("IopXxxControlFile hook installed")
 }
 
-func Example_HookCPUDID() {
+func TestHookCPUDID(t *testing.T) {
 	packet := NewPacket().(*Packet)
 
 	err := packet.InstallHookScript(&HookScript{
