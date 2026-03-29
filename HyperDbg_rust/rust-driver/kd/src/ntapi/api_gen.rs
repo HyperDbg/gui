@@ -4,7 +4,7 @@
 // Exported functions: 1248
 // Not exported functions: 22
 
-use super::types::*;
+use super::types_gen::*;
 
 pub mod exported {
     pub use wdk_sys::ntddk::{

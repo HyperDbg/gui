@@ -751,6 +751,9 @@ func (b *Bindgen) GetReport() *ValidationReport {
 }
 
 func (b *Bindgen) GenerateNtapiMod(outputDir string, notExportedFunctions []NotExportedFunc) error {
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		return fmt.Errorf("failed to create output directory: %w", err)
+	}
 	if err := b.generateNtapiApi(outputDir, notExportedFunctions); err != nil {
 		return err
 	}
@@ -779,7 +782,7 @@ func (b *Bindgen) generateNtapiApi(outputDir string, notExportedFunctions []NotE
 	sb.WriteString(fmt.Sprintf("// Exported functions: %d\n", len(exportedFuncs)))
 	sb.WriteString(fmt.Sprintf("// Not exported functions: %d\n\n", len(notExportedFunctions)))
 
-	sb.WriteString("use super::types::*;\n\n")
+	sb.WriteString("use super::types_gen::*;\n\n")
 
 	sb.WriteString("pub mod exported {\n")
 	sb.WriteString("    pub use wdk_sys::ntddk::{\n")
@@ -808,7 +811,7 @@ func (b *Bindgen) generateNtapiApi(outputDir string, notExportedFunctions []NotE
 	sb.WriteString("pub use exported::*;\n")
 	sb.WriteString("pub use not_exported::*;\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "api.rs"), []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "api_gen.rs"), []byte(sb.String()), 0644)
 }
 
 func (b *Bindgen) generateNtapiTypes(outputDir string) error {
@@ -834,7 +837,7 @@ func (b *Bindgen) generateNtapiTypes(outputDir string) error {
 	}
 	sb.WriteString("};\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "types.rs"), []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "types_gen.rs"), []byte(sb.String()), 0644)
 }
 
 func (b *Bindgen) generateNtapiConstants(outputDir string) error {
@@ -860,7 +863,7 @@ func (b *Bindgen) generateNtapiConstants(outputDir string) error {
 	}
 	sb.WriteString("};\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "constants.rs"), []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "constants_gen.rs"), []byte(sb.String()), 0644)
 }
 
 func (b *Bindgen) generateNtapiModRs(outputDir string) error {
@@ -868,15 +871,15 @@ func (b *Bindgen) generateNtapiModRs(outputDir string) error {
 	sb.WriteString("#![allow(non_snake_case)]\n")
 	sb.WriteString("#![allow(dead_code)]\n\n")
 
-	sb.WriteString("mod api;\n")
-	sb.WriteString("mod types;\n")
-	sb.WriteString("mod constants;\n\n")
+	sb.WriteString("mod api_gen;\n")
+	sb.WriteString("mod types_gen;\n")
+	sb.WriteString("mod constants_gen;\n\n")
 
-	sb.WriteString("pub use api::*;\n")
-	sb.WriteString("pub use types::*;\n")
-	sb.WriteString("pub use constants::*;\n")
+	sb.WriteString("pub use api_gen::*;\n")
+	sb.WriteString("pub use types_gen::*;\n")
+	sb.WriteString("pub use constants_gen::*;\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "mod.rs"), []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "mod_gen.rs"), []byte(sb.String()), 0644)
 }
 
 func (b *Bindgen) isNotExported(name string, notExported []NotExportedFunc) bool {
