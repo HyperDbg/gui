@@ -30,6 +30,7 @@ type Debugger interface {
 	GetThreadList(processID uint32) ([]ThreadInfo, error)
 	GetModuleList(processID uint32) ([]ModuleInfo, error)
 	RegisterCallback(msgType MessageType, cb EventCallback)
+	RegisterCpuidCallback(cb EventCallback)
 	GetEvent() any
 	WaitForEvent(timeout time.Duration) *Message
 	GetConnectedDrivers() []uint64

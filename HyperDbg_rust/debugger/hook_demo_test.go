@@ -1,9 +1,8 @@
 package debugger
 
 import (
-	"encoding/json"
 	"fmt"
-	"time"
+	"unsafe"
 )
 
 type HookFilter struct {
@@ -12,184 +11,158 @@ type HookFilter struct {
 	ExcludeSystem bool
 }
 
-func (f *HookFilter) Match(processName string, processId uint32) bool {
-	if len(f.ProcessNames) > 0 {
-		for _, name := range f.ProcessNames {
-			if name == processName {
-				return true
-			}
-		}
-		return false
-	}
-	if len(f.ProcessIds) > 0 {
-		for _, pid := range f.ProcessIds {
-			if pid == processId {
-				return true
-			}
-		}
-		return false
-	}
-	if f.ExcludeSystem && processId <= 4 {
-		return false
-	}
-	return true
-}
+type HookScriptHandler func(ctx *HookContext)
 
-type HookEvent struct {
-	EventId     uint64          `json:"event_id"`
-	ApiName     string          `json:"api_name"`
-	ProcessId   uint32          `json:"process_id"`
-	ThreadId    uint32          `json:"thread_id"`
-	ProcessName string          `json:"process_name"`
-	Args        json.RawMessage `json:"args"`
-	Timestamp   uint64          `json:"timestamp"`
-}
-
-type HookEventResponse struct {
-	EventId      uint64      `json:"event_id"`
-	Action       string      `json:"action"`
-	ModifyArgs   bool        `json:"modify_args"`
-	ModifiedArgs interface{} `json:"modified_args,omitempty"`
-	SkipCall     bool        `json:"skip_call"`
-	ReturnValue  interface{} `json:"return_value,omitempty"`
-}
-
-type HookHandler func(event *HookEvent) (*HookEventResponse, error)
-
-type HookConfig struct {
+type HookScript struct {
 	ApiName  string
 	HookType HookType
 	Filter   *HookFilter
-	Handler  HookHandler
+	OnMatch  HookScriptHandler
 }
 
-func (p *Packet) InstallHook(config *HookConfig) error {
-	info := GetHookInfo(config.ApiName)
-	if info == nil {
-		return fmt.Errorf("unknown API: %s", config.ApiName)
-	}
-
-	req := map[string]interface{}{
-		"action":    "install_hook",
-		"api_name":  config.ApiName,
-		"hook_type": config.HookType,
-	}
-	if config.Filter != nil {
-		req["filter"] = map[string]interface{}{
-			"process_names":  config.Filter.ProcessNames,
-			"process_ids":    config.Filter.ProcessIds,
-			"exclude_system": config.Filter.ExcludeSystem,
-		}
-	}
-
-	data, _ := json.Marshal(req)
-	resp := SendReceive[HookResponse](p, data)
-	if resp == nil || !resp.Success {
-		return fmt.Errorf("install hook failed: %s", resp.Message)
-	}
-	return nil
+type HookContext struct {
+	Args   interface{}
+	Return int32
 }
 
-func (p *Packet) WaitForHookEvent(timeout time.Duration) *HookEvent {
-	msg := p.WaitForEvent(timeout)
-	if msg == nil {
-		return nil
-	}
+const (
+	SMART_RCV_DRIVE_DATA          = 0x0007c088
+	IOCTL_DISK_GET_DRIVE_GEOMETRY = 0x00070000
+	IOCTL_STORAGE_QUERY_PROPERTY  = 0x002d1400
+	IOCTL_CPUID                   = 0x00220000
+	AFD_CONNECT                   = 0x12007
+	IOCTL_NDIS_QUERY_GLOBAL_STATS = 0x00170202
+)
 
-	var event HookEvent
-	if err := json.Unmarshal(msg.Payload, &event); err != nil {
-		return nil
-	}
-	return &event
-}
-
-func (p *Packet) RespondHookEvent(resp *HookEventResponse) error {
-	data, _ := json.Marshal(resp)
-	msg := NewMessage(MessageTypeHookResponse, data)
-	return p.Send(msg)
-}
-
-func Example_NtDeviceIoControlFile_Hook_EventLoop() {
+func Example_HookScript() {
 	packet := NewPacket().(*Packet)
-
-	err := packet.InstallHook(&HookConfig{
+	err := packet.InstallHookScript(&HookScript{
 		ApiName:  "NtDeviceIoControlFile",
 		HookType: HookTypeEPT,
 		Filter: &HookFilter{
-			ProcessNames: []string{"target.exe"},
+			ExcludeSystem: true,
 		},
-		Handler: func(event *HookEvent) (*HookEventResponse, error) {
-			var args NtDeviceIoControlFileArgs
-			if err := json.Unmarshal(event.Args, &args); err != nil {
-				return nil, err
+		OnMatch: func(ctx *HookContext) {
+			type IDINFO struct {
+				WGenConfig          uint16
+				WNumCyls            uint16
+				WReserved2          uint16
+				WNumHeads           uint16
+				WReserved4          uint16
+				WReserved5          uint16
+				WNumSectorsPerTrack uint16
+				WVendorUnique       [3]uint16
+				SSerialNumber       [20]byte
+				WBufferType         uint16
+				WBufferSize         uint16
+				WECCSize            uint16
+				SFirmwareRev        [8]byte
+				SModelNumber        [40]byte
 			}
-
-			if args.IoControlCode == 0x12345678 {
-				fmt.Printf("[%s] PID=%d IoControlCode=0x%X\n",
-					event.ProcessName, event.ProcessId, args.IoControlCode)
-				fmt.Printf("  InputBuffer: 0x%X (size=%d)\n",
-					args.InputBuffer, args.InputBufferLength)
-				fmt.Printf("  OutputBuffer: 0x%X (size=%d)\n",
-					args.OutputBuffer, args.OutputBufferLength)
-
-				return &HookEventResponse{
-					EventId: event.EventId,
-					Action:  "continue",
-				}, nil
+			swapBytes := func(dst []byte, src []byte) {
+				for i := 0; i < len(src); i += 2 {
+					if i+1 < len(src) && i < len(dst) {
+						dst[i] = src[i+1]
+						dst[i+1] = src[i]
+					}
+				}
 			}
+			args := ctx.Args.(*NtDeviceIoControlFileArgs)
+			switch args.IoControlCode {
+			case SMART_RCV_DRIVE_DATA, IOCTL_STORAGE_QUERY_PROPERTY:
+				if args.OutputBuffer != 0 && args.OutputBufferLength >= 512 {
+					info := (*IDINFO)(unsafe.Pointer(args.OutputBuffer))
+					model := "Hitachi HTS545050A7E380"
+					serial := "TEA55A3Q2NTK8R"
+					swapBytes(info.SSerialNumber[:], []byte(serial))
+					swapBytes(info.SModelNumber[:], []byte(model))
+				}
+				ctx.Return = 0
 
-			return &HookEventResponse{
-				EventId: event.EventId,
-				Action:  "pass",
-			}, nil
+			case IOCTL_NDIS_QUERY_GLOBAL_STATS:
+				mac := []byte{0x00, 0x11, 0x22, 0x33, 0x44, 0x55} //todo解码网卡buffer
+				args.WriteOutputBytes(mac)
+				ctx.Return = 0
+			}
 		},
 	})
+
+	packet.RegisterCpuidCallback(func(event any) {
+		cpuidEvent, ok := event.(*CpuidEvent)
+		if !ok {
+			return
+		}
+
+		if cpuidEvent.Leaf == 1 {
+			cpuidEvent.EAX = 0x000306A9
+			cpuidEvent.ECX = 0x3DBAE3BF
+			cpuidEvent.EDX = 0xBFEBFBFF
+		}
+
+		if cpuidEvent.Leaf == 0 {
+			cpuidEvent.EBX = 0x756E6547
+			cpuidEvent.ECX = 0x6C65746E
+			cpuidEvent.EDX = 0x49656E69
+		}
+	})
+
 	if err != nil {
-		fmt.Printf("Failed to install hook: %v\n", err)
+		fmt.Printf("Failed to install hook script: %v\n", err)
 		return
 	}
 
-	fmt.Println("Hook installed, waiting for events...")
+	fmt.Println("Hardware spoof hooks installed")
+}
 
-	for {
-		event := packet.WaitForHookEvent(5 * time.Second)
-		if event == nil {
-			continue
-		}
+func Example_HookIopXxxControlFile() {
+	packet := NewPacket().(*Packet)
 
-		info := GetHookInfo(event.ApiName)
-		if info == nil {
-			continue
-		}
-
-		handler := getHandler(event.ApiName)
-		if handler == nil {
-			packet.RespondHookEvent(&HookEventResponse{
-				EventId: event.EventId,
-				Action:  "pass",
-			})
-			continue
-		}
-
-		resp, err := handler(event)
-		if err != nil {
-			fmt.Printf("Handler error: %v\n", err)
-			resp = &HookEventResponse{
-				EventId: event.EventId,
-				Action:  "pass",
+	err := packet.InstallHookScript(&HookScript{
+		ApiName:  "IopXxxControlFile",
+		HookType: HookTypeInline,
+		Filter: &HookFilter{
+			ExcludeSystem: true,
+		},
+		OnMatch: func(ctx *HookContext) {
+			args := ctx.Args.(*IopXxxControlFileArgs)
+			if args.IoControlCode == AFD_CONNECT {
+				args.WriteOutputString("00:11:22:33:44:55")
+				ctx.Return = 0
 			}
-		}
-
-		packet.RespondHookEvent(resp)
+		},
+	})
+	if err != nil {
+		fmt.Printf("Failed to install IopXxxControlFile hook: %v\n", err)
+		return
 	}
+
+	fmt.Println("IopXxxControlFile hook installed")
 }
 
-var hookHandlers = make(map[string]HookHandler)
+func Example_HookCPUDID() {
+	packet := NewPacket().(*Packet)
 
-func getHandler(apiName string) HookHandler {
-	return hookHandlers[apiName]
-}
+	err := packet.InstallHookScript(&HookScript{
+		ApiName:  "Cpuid",
+		HookType: HookTypeEPT,
+		OnMatch: func(ctx *HookContext) {
+			args := ctx.Args.(*CpuidArgs)
+			if args.Leaf == 0x01 {
+				args.EAX = 0x000306A9
+				args.ECX = 0x3DBAE3BF
+				args.EDX = 0xBFEBFBFF
+			}
+			if args.Leaf == 0x00 {
+				args.EBX = 0x756E6547
+				args.ECX = 0x6C65746E
+				args.EDX = 0x49656E69
+			}
+		},
+	})
+	if err != nil {
+		fmt.Printf("Failed to install CPUID hook: %v\n", err)
+		return
+	}
 
-func registerHandler(apiName string, handler HookHandler) {
-	hookHandlers[apiName] = handler
+	fmt.Println("CPUID hook installed")
 }

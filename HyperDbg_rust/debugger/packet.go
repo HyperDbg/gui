@@ -173,6 +173,10 @@ func (p *Packet) RegisterCallback(msgType MessageType, cb EventCallback) {
 	p.callbacks[msgType] = append(p.callbacks[msgType], cb)
 }
 
+func (p *Packet) RegisterCpuidCallback(cb EventCallback) {
+	p.callbacks[MsgTypeCpuidEvent] = append(p.callbacks[MsgTypeCpuidEvent], cb)
+}
+
 func (p *Packet) GetEvent() any {
 	select {
 	case event := <-p.eventChan:

@@ -4580,7 +4580,7 @@ unsafe extern "C" {
         ServiceRoutine: PKSERVICE_ROUTINE,
         ServiceContext: PVOID,
         SpinLock: PKSPIN_LOCK,
-        Vector: ULONG,MmGetSystemRoutineAddress
+        Vector: ULONG,
         Irql: KIRQL,
         SynchronizeIrql: KIRQL,
         InterruptMode: KINTERRUPT_MODE,
@@ -11718,7 +11718,7 @@ unsafe extern "C" {
     ) -> BOOLEAN;
 }
 unsafe extern "C" {
-    pub fn PsRestoreImpersonation(
+    pub fn PsRestoreImpersonation( 
         Thread: PETHREAD,
         ImpersonationState: PSE_IMPERSONATION_STATE,
     );

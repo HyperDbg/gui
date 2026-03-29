@@ -27,6 +27,7 @@ const (
 	MsgTypeVmxExitEvent      MessageType = 9
 	MsgTypeLogEvent          MessageType = 10
 	MsgTypeHookEvent         MessageType = 11
+	MsgTypeCpuidEvent       MessageType = 12
 
 	MsgTypeInitialize        MessageType = 100
 	MsgTypeTerminate         MessageType = 101

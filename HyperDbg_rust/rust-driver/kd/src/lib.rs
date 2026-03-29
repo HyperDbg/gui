@@ -39,6 +39,7 @@ pub mod common;
 pub mod framework;
 pub mod disassembler;
 pub mod ntapi;
+pub mod expr;
 
 pub use hyperkd::hyperhv::vmm;
 pub use hyperkd::hyperhv::memory;

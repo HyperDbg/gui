@@ -1863,8 +1863,7 @@ var HookDatabase = []HookInfo{
             {Name: "ServiceContext", Type: "PVOID", GoType: "uintptr"},
             {Name: "SpinLock", Type: "PKSPIN_LOCK", GoType: "*uintptr"},
             {Name: "Vector", Type: "ULONG", GoType: "uint32"},
-            {Name: "MmGetSystemRoutineAddress
-        Irql", Type: "KIRQL", GoType: "uint8"},
+            {Name: "Irql", Type: "KIRQL", GoType: "uint8"},
             {Name: "SynchronizeIrql", Type: "KIRQL", GoType: "uint8"},
             {Name: "InterruptMode", Type: "KINTERRUPT_MODE", GoType: "uintptr"},
             {Name: "ShareVector", Type: "BOOLEAN", GoType: "bool"},
@@ -13093,9 +13092,7 @@ type IoConnectInterruptArgs struct {
     ServiceContext uintptr `json:"ServiceContext"`
     SpinLock *uintptr `json:"SpinLock"`
     Vector uint32 `json:"Vector"`
-    MmGetSystemRoutineAddress
-        Irql uint8 `json:"MmGetSystemRoutineAddress
-        Irql"`
+    Irql uint8 `json:"Irql"`
     SynchronizeIrql uint8 `json:"SynchronizeIrql"`
     InterruptMode uintptr `json:"InterruptMode"`
     ShareVector bool `json:"ShareVector"`
