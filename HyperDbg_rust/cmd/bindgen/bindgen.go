@@ -751,6 +751,9 @@ func (b *Bindgen) GetReport() *ValidationReport {
 }
 
 func (b *Bindgen) GenerateNtapiMod(outputDir string, notExportedFunctions []NotExportedFunc) error {
+	if err := os.RemoveAll(outputDir); err != nil {
+		return fmt.Errorf("failed to remove output directory: %w", err)
+	}
 	if err := os.MkdirAll(outputDir, 0755); err != nil {
 		return fmt.Errorf("failed to create output directory: %w", err)
 	}
@@ -879,7 +882,7 @@ func (b *Bindgen) generateNtapiModRs(outputDir string) error {
 	sb.WriteString("pub use types_gen::*;\n")
 	sb.WriteString("pub use constants_gen::*;\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "mod_gen.rs"), []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "mod.rs"), []byte(sb.String()), 0644)
 }
 
 func (b *Bindgen) isNotExported(name string, notExported []NotExportedFunc) bool {
