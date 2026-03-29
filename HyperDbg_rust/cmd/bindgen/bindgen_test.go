@@ -527,6 +527,17 @@ func TestGenerateNtapiMod(t *testing.T) {
 	t.Logf("Generated ntapi files in: %s", ntapiDir)
 	t.Logf("Exported functions: %d", len(bg.GetWdkBindings().Functions)-len(notExported))
 	t.Logf("Not exported functions: %d", len(notExported))
+
+	sig, ok := bg.GetWdkBindings().Functions["NtDeviceIoControlFile"]
+	if !ok {
+		t.Error("NtDeviceIoControlFile not found")
+	} else {
+		t.Logf("NtDeviceIoControlFile params: %s", sig.Params)
+		t.Logf("NtDeviceIoControlFile return: %s", sig.ReturnType)
+		if sig.ReturnType != "NTSTATUS" {
+			t.Errorf("Expected return type NTSTATUS, got %s", sig.ReturnType)
+		}
+	}
 }
 
 func TestScanProjectUsage(t *testing.T) {
