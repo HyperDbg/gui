@@ -2,6 +2,8 @@
 
 extern crate alloc;
 
+pub mod debug_logger;
+
 #[macro_export]
 macro_rules! log_success {
     ($msg:expr) => {
