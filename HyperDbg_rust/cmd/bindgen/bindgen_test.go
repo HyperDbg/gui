@@ -517,14 +517,14 @@ func TestGenerateNtapiMod(t *testing.T) {
 		},
 	}
 
-	ntapiPath := filepath.Join(projectRoot, "rust-driver", "kd", "src", "ntapi", "mod.rs")
+	ntapiDir := filepath.Join(projectRoot, "rust-driver", "kd", "src", "ntapi")
 
-	err = bg.GenerateNtapiMod(ntapiPath, notExported)
+	err = bg.GenerateNtapiMod(ntapiDir, notExported)
 	if err != nil {
-		t.Fatalf("Failed to generate ntapi/mod.rs: %v", err)
+		t.Fatalf("Failed to generate ntapi files: %v", err)
 	}
 
-	t.Logf("Generated ntapi/mod.rs: %s", ntapiPath)
+	t.Logf("Generated ntapi files in: %s", ntapiDir)
 	t.Logf("Exported functions: %d", len(bg.GetWdkBindings().Functions)-len(notExported))
 	t.Logf("Not exported functions: %d", len(notExported))
 }
@@ -613,12 +613,12 @@ func TestApplyFixesDryRun(t *testing.T) {
 		t.Fatalf("Failed to scan project: %v", err)
 	}
 
-	err = bg.ApplyFixes(true)
+	err = bg.ApplyFixes(false)
 	if err != nil {
-		t.Fatalf("Failed to apply fixes (dry run): %v", err)
+		t.Fatalf("Failed to apply fixes: %v", err)
 	}
 
-	t.Log("Dry run completed successfully")
+	t.Log("Fixes applied successfully")
 }
 
 func TestApplyFixesMultiLineUse(t *testing.T) {

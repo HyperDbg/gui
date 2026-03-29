@@ -716,11 +716,25 @@ func (b *Bindgen) GetReport() *ValidationReport {
 	return b.report
 }
 
-func (b *Bindgen) GenerateNtapiMod(outputPath string, notExportedFunctions []NotExportedFunc) error {
+func (b *Bindgen) GenerateNtapiMod(outputDir string, notExportedFunctions []NotExportedFunc) error {
+	if err := b.generateNtapiApi(outputDir, notExportedFunctions); err != nil {
+		return err
+	}
+	if err := b.generateNtapiTypes(outputDir); err != nil {
+		return err
+	}
+	if err := b.generateNtapiConstants(outputDir); err != nil {
+		return err
+	}
+	return b.generateNtapiModRs(outputDir)
+}
+
+func (b *Bindgen) generateNtapiApi(outputDir string, notExportedFunctions []NotExportedFunc) error {
 	var sb strings.Builder
 	sb.WriteString("#![allow(non_snake_case)]\n")
 	sb.WriteString("#![allow(dead_code)]\n\n")
-	sb.WriteString("extern crate alloc;\n\n")
+
+	sb.WriteString("use super::types::*;\n\n")
 
 	sb.WriteString("pub mod exported {\n")
 	sb.WriteString("    pub use wdk_sys::ntddk::{\n")
@@ -736,21 +750,7 @@ func (b *Bindgen) GenerateNtapiMod(outputPath string, notExportedFunctions []Not
 	for _, name := range exportedFuncs {
 		sb.WriteString(fmt.Sprintf("        %s,\n", name))
 	}
-	sb.WriteString("    };\n\n")
-
-	sb.WriteString("    pub use wdk_sys::{\n")
-
-	exportedTypes := []string{}
-	for name := range b.wdk.Types {
-		exportedTypes = append(exportedTypes, name)
-	}
-	sort.Strings(exportedTypes)
-
-	for _, name := range exportedTypes {
-		sb.WriteString(fmt.Sprintf("        %s,\n", name))
-	}
 	sb.WriteString("    };\n")
-
 	sb.WriteString("}\n\n")
 
 	sb.WriteString("pub mod not_exported {\n")
@@ -771,7 +771,71 @@ func (b *Bindgen) GenerateNtapiMod(outputPath string, notExportedFunctions []Not
 	sb.WriteString("pub use exported::*;\n")
 	sb.WriteString("pub use not_exported::*;\n")
 
-	return os.WriteFile(outputPath, []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "api.rs"), []byte(sb.String()), 0644)
+}
+
+func (b *Bindgen) generateNtapiTypes(outputDir string) error {
+	var sb strings.Builder
+	sb.WriteString("#![allow(non_snake_case)]\n")
+	sb.WriteString("#![allow(dead_code)]\n\n")
+
+	sb.WriteString("pub use wdk_sys::{\n")
+
+	exportedTypes := []string{}
+	for name := range b.wdk.Types {
+		if strings.HasPrefix(name, "_") {
+			continue
+		}
+		exportedTypes = append(exportedTypes, name)
+	}
+	sort.Strings(exportedTypes)
+
+	for _, name := range exportedTypes {
+		sb.WriteString(fmt.Sprintf("    %s,\n", name))
+	}
+	sb.WriteString("};\n")
+
+	return os.WriteFile(filepath.Join(outputDir, "types.rs"), []byte(sb.String()), 0644)
+}
+
+func (b *Bindgen) generateNtapiConstants(outputDir string) error {
+	var sb strings.Builder
+	sb.WriteString("#![allow(non_snake_case)]\n")
+	sb.WriteString("#![allow(dead_code)]\n\n")
+
+	sb.WriteString("pub use wdk_sys::{\n")
+
+	exportedConstants := []string{}
+	for name := range b.wdk.Constants {
+		if strings.HasPrefix(name, "_") {
+			continue
+		}
+		exportedConstants = append(exportedConstants, name)
+	}
+	sort.Strings(exportedConstants)
+
+	for _, name := range exportedConstants {
+		sb.WriteString(fmt.Sprintf("    %s,\n", name))
+	}
+	sb.WriteString("};\n")
+
+	return os.WriteFile(filepath.Join(outputDir, "constants.rs"), []byte(sb.String()), 0644)
+}
+
+func (b *Bindgen) generateNtapiModRs(outputDir string) error {
+	var sb strings.Builder
+	sb.WriteString("#![allow(non_snake_case)]\n")
+	sb.WriteString("#![allow(dead_code)]\n\n")
+
+	sb.WriteString("mod api;\n")
+	sb.WriteString("mod types;\n")
+	sb.WriteString("mod constants;\n\n")
+
+	sb.WriteString("pub use api::*;\n")
+	sb.WriteString("pub use types::*;\n")
+	sb.WriteString("pub use constants::*;\n")
+
+	return os.WriteFile(filepath.Join(outputDir, "mod.rs"), []byte(sb.String()), 0644)
 }
 
 func (b *Bindgen) isNotExported(name string, notExported []NotExportedFunc) bool {
