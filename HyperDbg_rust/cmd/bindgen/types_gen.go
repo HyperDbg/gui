@@ -4397,7 +4397,6 @@ var WdkTypes = map[string]bool{
 	"TXFS_WRITE_BACKUP_INFORMATION": true,
 	"TXN_PARAMETER_BLOCK": true,
 	"TimeStamp": true,
-	"Type": true,
 	"UCHAR": true,
 	"UHALF_PTR": true,
 	"UINT16": true,

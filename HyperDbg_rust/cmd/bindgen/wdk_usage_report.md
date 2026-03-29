@@ -10,12 +10,111 @@ Generated: now
 
 ## Files Needing Fixes
 
-### rust-driver\kd\src\hyperkd\hyperhv\interface\thread.rs
+### rust-driver\kd\src\hyperkd\dpc_routines.rs
+
+- Line 6: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 326: function `KeSetTargetProcessorDpc` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::KeSetTargetProcessorDpc;`
+- Line 334: function `KeInsertQueueDpc` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::KeInsertQueueDpc;`
+- Line 342: function `KeSignalCallDpcDone` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::KeSignalCallDpcDone;`
+- Line 350: function `KeSignalCallDpcSynchronize` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::KeSignalCallDpcSynchronize;`
+- Line 358: function `KeQueryActiveProcessorCount` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::KeQueryActiveProcessorCount;`
+- Line 366: function `KeGetCurrentProcessorNumberEx` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::KeGetCurrentProcessorNumberEx;`
+- Line 482: function `KeFlushQueuedDpcs` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::KeFlushQueuedDpcs;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\interface\ioctl_gen.rs
+
+- Line 8: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\interface\process.rs
 
 - Line 5: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
 - Line 12: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\lib.rs
+
+- Line 71: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\logger\debug_logger.rs
+
+- Line 6: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 17: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\features\compatibility.rs
+
+- Line 4: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\interface\termination.rs
+
+- Line 4: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 14: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 22: function `PsTerminateProcess` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsTerminateProcess;`
+- Line 23: function `PsTerminateThread` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsTerminateThread;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\memory\mapper.rs
+
+- Line 192: function `MmGetVirtualForPhysical` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::MmGetVirtualForPhysical;`
+- Line 283: function `MmIsAddressValid` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::MmIsAddressValid;`
+
+### rust-driver\examples\netdemo\src\lib.rs
+
+- Line 6: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\examples\sample-kmdf-driver\src\lib.rs
+
+- Line 25: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\hyperkd\attaching.rs
+
+- Line 8: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 9: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 15: function `ObfDereferenceObject` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::ObfDereferenceObject;`
+- Line 281: function `PsGetCurrentProcessId` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetCurrentProcessId;`
+- Line 288: function `PsGetCurrentThreadId` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetCurrentThreadId;`
+- Line 299: function `MmGetSystemRoutineAddress` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::MmGetSystemRoutineAddress;`
+- Line 317: function `MmGetSystemRoutineAddress` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::MmGetSystemRoutineAddress;`
+- Line 351: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 352: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\hooks\ept_hook\exec_trap.rs
+
+- Line 52: function `MmGetPhysicalMemoryRanges` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::MmGetPhysicalMemoryRanges;`
+- Line 53: function `ExFreePool` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::ExFreePool;`
+- Line 468: function `MmGetVirtualForPhysical` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::MmGetVirtualForPhysical;`
 
 ### rust-driver\kd\src\hyperkd\hyperhv\memory\memory.rs
 
@@ -31,6 +130,70 @@ Generated: now
   - Suggested fix: `use crate::ntapi::RtlCopyMemory;`
 - Line 46: function `RtlMoveMemory` (source: extern_block)
   - Suggested fix: `use crate::ntapi::RtlMoveMemory;`
+
+### rust-driver\examples\sysdemo\src\lib.rs
+
+- Line 12: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\framework\ioctl.rs
+
+- Line 7: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\hyperkd\callstack.rs
+
+- Line 223: function `RtlPcToFileHeader` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::RtlPcToFileHeader;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\devices\apic.rs
+
+- Line 4: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\interface\scheduler.rs
+
+- Line 382: function `KeStallExecutionProcessor` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::KeStallExecutionProcessor;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\interface\thread.rs
+
+- Line 5: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 12: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\memory\switch_layout.rs
+
+- Line 1: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 2: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 29: function `ObfDereferenceObject` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::ObfDereferenceObject;`
+- Line 55: function `PsGetCurrentProcess` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetCurrentProcess;`
+- Line 82: function `PsGetCurrentProcess` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetCurrentProcess;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\processor\processor.rs
+
+- Line 1: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 12: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\framework\ffi.rs
+
+- Line 1: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\hyperkd\hyperhv\vmm\vmx\sync.rs
+
+- Line 3: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 16: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
 
 ### rust-driver\kd\src\hyperkd\user_access.rs
 
@@ -85,211 +248,11 @@ Generated: now
 - Line 1177: function `ObDereferenceObject` (source: extern_block)
   - Suggested fix: `use crate::ntapi::ObDereferenceObject;`
 
-### rust-driver\examples\sample-wdm-driver\src\lib.rs
-
-- Line 20: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\framework\device.rs
-
-- Line 10: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\hyperkd\attaching.rs
-
-- Line 8: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 9: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 15: function `ObfDereferenceObject` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::ObfDereferenceObject;`
-- Line 281: function `PsGetCurrentProcessId` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetCurrentProcessId;`
-- Line 288: function `PsGetCurrentThreadId` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetCurrentThreadId;`
-- Line 299: function `MmGetSystemRoutineAddress` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::MmGetSystemRoutineAddress;`
-- Line 317: function `MmGetSystemRoutineAddress` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::MmGetSystemRoutineAddress;`
-- Line 351: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 352: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\hyperkd\hyperhv\hooks\ept_hook\exec_trap.rs
-
-- Line 52: function `MmGetPhysicalMemoryRanges` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::MmGetPhysicalMemoryRanges;`
-- Line 53: function `ExFreePool` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::ExFreePool;`
-- Line 468: function `MmGetVirtualForPhysical` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::MmGetVirtualForPhysical;`
-
-### rust-driver\kd\src\hyperkd\hyperhv\interface\ioctl_gen.rs
-
-- Line 8: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\hyperkd\hyperhv\memory\mapper.rs
-
-- Line 192: function `MmGetVirtualForPhysical` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::MmGetVirtualForPhysical;`
-- Line 283: function `MmIsAddressValid` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::MmIsAddressValid;`
-
-### rust-driver\kd\src\framework\ffi.rs
-
-- Line 1: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\hyperdbg_api.rs
-
-- Line 7: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 9: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 298: function `PsGetNextProcess` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetNextProcess;`
-- Line 299: function `PsGetProcessImageFileName` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetProcessImageFileName;`
-- Line 337: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 340: function `PsGetNextProcessThread` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetNextProcessThread;`
-- Line 341: function `PsGetThreadTeb` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetThreadTeb;`
-- Line 384: function `PsGetProcessPeb` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetProcessPeb;`
-
-### rust-driver\kd\src\hyperkd\hyperhv\features\compatibility.rs
-
-- Line 4: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\hyperkd\hyperhv\interface\termination.rs
-
-- Line 4: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 14: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 22: function `PsTerminateProcess` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsTerminateProcess;`
-- Line 23: function `PsTerminateThread` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsTerminateThread;`
-
-### rust-driver\kd\src\hyperkd\ud.rs
-
-- Line 294: function `PsGetCurrentThreadId` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetCurrentThreadId;`
-
 ### rust-driver\kd\src\lib.rs
 
 - Line 60: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
 - Line 277: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\ntapi\mod.rs
-
-- Line 7: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 567: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 7307: function `KeGenericCallDpc` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::KeGenericCallDpc;`
-- Line 7308: function `KeInsertQueueDpc` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::KeInsertQueueDpc;`
-- Line 7309: function `KeSignalCallDpcDone` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::KeSignalCallDpcDone;`
-- Line 7310: function `KeSignalCallDpcSynchronize` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::KeSignalCallDpcSynchronize;`
-- Line 7311: function `ObDereferenceObject` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::ObDereferenceObject;`
-- Line 7312: function `ObOpenObjectByPointer` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::ObOpenObjectByPointer;`
-- Line 7313: function `PsGetCurrentProcess` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetCurrentProcess;`
-- Line 7314: function `PsGetCurrentThread` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetCurrentThread;`
-- Line 7315: function `PsGetNextProcess` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetNextProcess;`
-- Line 7316: function `PsGetNextProcessThread` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetNextProcessThread;`
-- Line 7317: function `PsGetProcessImageFileName` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetProcessImageFileName;`
-- Line 7318: function `PsGetProcessPeb` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetProcessPeb;`
-- Line 7319: function `PsGetProcessSectionBaseAddress` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetProcessSectionBaseAddress;`
-- Line 7320: function `PsGetProcessWow64Process` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetProcessWow64Process;`
-- Line 7321: function `PsGetContextThread` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetContextThread;`
-- Line 7322: function `PsSetContextThread` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsSetContextThread;`
-- Line 7323: function `PsSuspendProcess` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsSuspendProcess;`
-- Line 7324: function `PsResumeProcess` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsResumeProcess;`
-- Line 7325: function `PsSuspendThread` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsSuspendThread;`
-- Line 7326: function `PsResumeThread` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsResumeThread;`
-- Line 7327: function `RtlCopyUnicodeString` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::RtlCopyUnicodeString;`
-- Line 7328: function `RtlPcToFileHeader` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::RtlPcToFileHeader;`
-
-### rust-driver\kd\src\framework\ioctl.rs
-
-- Line 7: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\hyperkd\hyperhv\interface\scheduler.rs
-
-- Line 382: function `KeStallExecutionProcessor` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::KeStallExecutionProcessor;`
-
-### rust-driver\kd\src\hyperkd\hyperhv\memory\switch_layout.rs
-
-- Line 1: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 2: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 29: function `ObfDereferenceObject` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::ObfDereferenceObject;`
-- Line 55: function `PsGetCurrentProcess` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetCurrentProcess;`
-- Line 82: function `PsGetCurrentProcess` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::PsGetCurrentProcess;`
-
-### rust-driver\kd\src\hyperkd\hyperhv\processor\processor.rs
-
-- Line 1: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 12: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\examples\sample-umdf-driver\src\lib.rs
-
-- Line 12: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\framework\utils.rs
-
-- Line 4: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\logger\debug_logger.rs
-
-- Line 6: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 17: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\hyperkd\hyperhv\lib.rs
-
-- Line 71: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
 
 ### cmd\bindgen\ntddk.rs
@@ -1409,29 +1372,39 @@ Generated: now
 - Line 12224: function `ObIsKernelHandle` (source: extern_block)
   - Suggested fix: `use crate::ntapi::ObIsKernelHandle;`
 
-### rust-driver\examples\netdemo\src\lib.rs
+### rust-driver\examples\sample-umdf-driver\src\lib.rs
 
-- Line 6: import `wdk_sys` (source: use_wdk_sys)
+- Line 12: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
 
-### rust-driver\kd\src\hyperkd\dpc_routines.rs
+### rust-driver\kd\src\framework\device.rs
 
-- Line 6: import `wdk_sys` (source: use_wdk_sys)
+- Line 10: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
-- Line 326: function `KeSetTargetProcessorDpc` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::KeSetTargetProcessorDpc;`
-- Line 334: function `KeInsertQueueDpc` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::KeInsertQueueDpc;`
-- Line 342: function `KeSignalCallDpcDone` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::KeSignalCallDpcDone;`
-- Line 350: function `KeSignalCallDpcSynchronize` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::KeSignalCallDpcSynchronize;`
-- Line 358: function `KeQueryActiveProcessorCount` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::KeQueryActiveProcessorCount;`
-- Line 366: function `KeGetCurrentProcessorNumberEx` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::KeGetCurrentProcessorNumberEx;`
-- Line 482: function `KeFlushQueuedDpcs` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::KeFlushQueuedDpcs;`
+
+### rust-driver\kd\src\framework\utils.rs
+
+- Line 4: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+
+### rust-driver\kd\src\hyperdbg_api.rs
+
+- Line 7: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 9: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 298: function `PsGetNextProcess` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetNextProcess;`
+- Line 299: function `PsGetProcessImageFileName` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetProcessImageFileName;`
+- Line 337: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 340: function `PsGetNextProcessThread` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetNextProcessThread;`
+- Line 341: function `PsGetThreadTeb` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetThreadTeb;`
+- Line 384: function `PsGetProcessPeb` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetProcessPeb;`
 
 ### rust-driver\kd\src\hyperkd\hyperhv\broadcast\broadcast.rs
 
@@ -1448,40 +1421,24 @@ Generated: now
 - Line 245: function `KeStallExecutionProcessor` (source: extern_block)
   - Suggested fix: `use crate::ntapi::KeStallExecutionProcessor;`
 
-### rust-driver\kd\src\hyperkd\hyperhv\memory\pool.rs
+### rust-driver\kd\src\hyperkd\ud.rs
 
-- Line 8: import `wdk_sys` (source: use_wdk_sys)
+- Line 294: function `PsGetCurrentThreadId` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetCurrentThreadId;`
+
+### rust-driver\kd\src\net\mod.rs
+
+- Line 22: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
 
-### rust-driver\kd\src\hyperkd\hyperhv\vmm\vmx\sync.rs
+### rust-driver\examples\sample-wdm-driver\src\lib.rs
 
-- Line 3: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 16: import `wdk_sys` (source: use_wdk_sys)
+- Line 20: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
 
-### rust-driver\kd\src\hyperkd\callstack.rs
+### rust-driver\kd\src\hyperkd\hyperhv\bindings.rs
 
-- Line 223: function `RtlPcToFileHeader` (source: extern_block)
-  - Suggested fix: `use crate::ntapi::RtlPcToFileHeader;`
-
-### rust-driver\kd\src\hyperkd\hyperhv\devices\apic.rs
-
-- Line 4: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\hyperkd\hyperhv\interface\communication.rs
-
-- Line 5: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 14: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\kd\src\hyperkd\hyperhv\interface\process.rs
-
-- Line 5: import `wdk_sys` (source: use_wdk_sys)
-  - Suggested fix: `use crate::ntapi::*;`
-- Line 12: import `wdk_sys` (source: use_wdk_sys)
+- Line 1: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
 
 ### rust-driver\kd\src\hyperkd\hyperhv\memory\peb.rs
@@ -1489,24 +1446,67 @@ Generated: now
 - Line 1: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
 
-### rust-driver\kd\src\net\mod.rs
+### rust-driver\kd\src\hyperkd\hyperhv\memory\pool.rs
 
-- Line 22: import `wdk_sys` (source: use_wdk_sys)
+- Line 8: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
 
-### rust-driver\examples\sample-kmdf-driver\src\lib.rs
+### rust-driver\kd\src\ntapi\mod.rs
 
-- Line 25: import `wdk_sys` (source: use_wdk_sys)
+- Line 7: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
-
-### rust-driver\examples\sysdemo\src\lib.rs
-
-- Line 12: import `wdk_sys` (source: use_wdk_sys)
+- Line 567: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
+- Line 7307: function `KeGenericCallDpc` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::KeGenericCallDpc;`
+- Line 7308: function `KeInsertQueueDpc` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::KeInsertQueueDpc;`
+- Line 7309: function `KeSignalCallDpcDone` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::KeSignalCallDpcDone;`
+- Line 7310: function `KeSignalCallDpcSynchronize` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::KeSignalCallDpcSynchronize;`
+- Line 7311: function `ObDereferenceObject` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::ObDereferenceObject;`
+- Line 7312: function `ObOpenObjectByPointer` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::ObOpenObjectByPointer;`
+- Line 7313: function `PsGetCurrentProcess` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetCurrentProcess;`
+- Line 7314: function `PsGetCurrentThread` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetCurrentThread;`
+- Line 7315: function `PsGetNextProcess` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetNextProcess;`
+- Line 7316: function `PsGetNextProcessThread` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetNextProcessThread;`
+- Line 7317: function `PsGetProcessImageFileName` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetProcessImageFileName;`
+- Line 7318: function `PsGetProcessPeb` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetProcessPeb;`
+- Line 7319: function `PsGetProcessSectionBaseAddress` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetProcessSectionBaseAddress;`
+- Line 7320: function `PsGetProcessWow64Process` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetProcessWow64Process;`
+- Line 7321: function `PsGetContextThread` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsGetContextThread;`
+- Line 7322: function `PsSetContextThread` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsSetContextThread;`
+- Line 7323: function `PsSuspendProcess` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsSuspendProcess;`
+- Line 7324: function `PsResumeProcess` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsResumeProcess;`
+- Line 7325: function `PsSuspendThread` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsSuspendThread;`
+- Line 7326: function `PsResumeThread` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::PsResumeThread;`
+- Line 7327: function `RtlCopyUnicodeString` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::RtlCopyUnicodeString;`
+- Line 7328: function `RtlPcToFileHeader` (source: extern_block)
+  - Suggested fix: `use crate::ntapi::RtlPcToFileHeader;`
 
-### rust-driver\kd\src\hyperkd\hyperhv\bindings.rs
+### rust-driver\kd\src\hyperkd\hyperhv\interface\communication.rs
 
-- Line 1: import `wdk_sys` (source: use_wdk_sys)
+- Line 5: import `wdk_sys` (source: use_wdk_sys)
+  - Suggested fix: `use crate::ntapi::*;`
+- Line 14: import `wdk_sys` (source: use_wdk_sys)
   - Suggested fix: `use crate::ntapi::*;`
 
 ## Detailed Usage List

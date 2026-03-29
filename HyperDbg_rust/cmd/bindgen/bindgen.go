@@ -1092,30 +1092,46 @@ func (b *Bindgen) applyFileModifications(filePath string, mods []FileModificatio
 		}
 	}
 
-	var newLines []string
-	for _, line := range lines {
-		newLines = append(newLines, line)
-	}
-
-	var addedUses map[string]bool = make(map[string]bool)
-	var lastUseLine int = -1
-
-	for i, line := range newLines {
-		if linesToDelete[i] {
-			continue
-		}
-		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, "use ") && !strings.HasPrefix(trimmed, "use crate::ntapi") {
-			lastUseLine = i
-		}
-	}
-
 	var result []string
-	for i, line := range newLines {
+	var addedUses map[string]bool = make(map[string]bool)
+	var lastUseEndLine int = -1
+	var hasNtapiWildcard bool
+
+	inMultilineUse := false
+	for i, line := range lines {
 		if linesToDelete[i] {
 			continue
 		}
 
+		trimmed := strings.TrimSpace(line)
+
+		if strings.HasPrefix(trimmed, "use ") {
+			if strings.Contains(line, "{") && !strings.Contains(line, "};") {
+				inMultilineUse = true
+			}
+			if !inMultilineUse {
+				lastUseEndLine = len(result)
+			}
+		}
+
+		if inMultilineUse && strings.Contains(line, "};") {
+			inMultilineUse = false
+			lastUseEndLine = len(result)
+		}
+
+		if trimmed == "use crate::ntapi::*;" {
+			hasNtapiWildcard = true
+		}
+
+		result = append(result, line)
+	}
+
+	if hasNtapiWildcard {
+		useStatements = make(map[string]bool)
+	}
+
+	var finalResult []string
+	for i, line := range result {
 		trimmed := strings.TrimSpace(line)
 
 		if strings.HasPrefix(trimmed, "use crate::ntapi::") {
@@ -1126,19 +1142,19 @@ func (b *Bindgen) applyFileModifications(filePath string, mods []FileModificatio
 			}
 		}
 
-		if i == lastUseLine && len(useStatements) > 0 {
-			result = append(result, line)
+		if i == lastUseEndLine && len(useStatements) > 0 {
+			finalResult = append(finalResult, line)
 			for name := range useStatements {
 				if !addedUses[name] {
-					result = append(result, fmt.Sprintf("use crate::ntapi::%s;", name))
+					finalResult = append(finalResult, fmt.Sprintf("use crate::ntapi::%s;", name))
 				}
 			}
 		} else {
-			result = append(result, line)
+			finalResult = append(finalResult, line)
 		}
 	}
 
-	newContent := strings.Join(result, "\n")
+	newContent := strings.Join(finalResult, "\n")
 	return os.WriteFile(filePath, []byte(newContent), 0644)
 }
 
@@ -1187,10 +1203,17 @@ func (b *Bindgen) findExternBlockRanges(lines []string, mods []FileModification)
 					} else if c == '}' {
 						braceCount--
 						if braceCount == 0 {
-							for _, mod := range mods {
-								if mod.Line >= start+1 && mod.Line <= j+1 {
-									hasWdkFunc = true
-									break
+							for k := start + 1; k < j; k++ {
+								fnLine := strings.TrimSpace(lines[k])
+								if strings.HasPrefix(fnLine, "fn ") {
+									idx := strings.Index(fnLine, "(")
+									if idx > 3 {
+										name := strings.TrimSpace(fnLine[3:idx])
+										if b.isWdkPrefix(name) {
+											hasWdkFunc = true
+											break
+										}
+									}
 								}
 							}
 							if hasWdkFunc {

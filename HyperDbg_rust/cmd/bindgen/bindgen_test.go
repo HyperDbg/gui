@@ -685,6 +685,54 @@ fn test() {
     }
 }`,
 		},
+		{
+			name: "use_after_multiline_use_crate",
+			input: `use core::sync::atomic::{AtomicBool, Ordering};
+
+use crate::hyperkd::hyperhv::state::{
+    EPT_PML2_ENTRY,
+    VMM_EPT_PML4E_COUNT,
+};
+
+fn test() {
+    let a = 1;
+}`,
+			expected: `use core::sync::atomic::{AtomicBool, Ordering};
+
+use crate::hyperkd::hyperhv::state::{
+    EPT_PML2_ENTRY,
+    VMM_EPT_PML4E_COUNT,
+};
+
+fn test() {
+    let a = 1;
+}`,
+		},
+		{
+			name: "use_wdk_sys_after_multiline_use_crate",
+			input: `use core::sync::atomic::{AtomicBool, Ordering};
+
+use crate::hyperkd::hyperhv::state::{
+    EPT_PML2_ENTRY,
+};
+
+use wdk_sys::*;
+
+fn test() {
+    let a = 1;
+}`,
+			expected: `use core::sync::atomic::{AtomicBool, Ordering};
+
+use crate::hyperkd::hyperhv::state::{
+    EPT_PML2_ENTRY,
+};
+
+use crate::ntapi::*;
+
+fn test() {
+    let a = 1;
+}`,
+		},
 	}
 
 	for _, tc := range testCases {
