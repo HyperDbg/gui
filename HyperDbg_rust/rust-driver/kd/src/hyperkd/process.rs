@@ -94,30 +94,25 @@ impl ProcessInfo {
 }
 
 pub unsafe fn get_current_process() -> u64 {
-    extern "C" {
-        fn PsGetCurrentProcess() -> u64;
-    }
-    PsGetCurrentProcess()
+    use crate::ntapi::PsGetCurrentProcess;
+    PsGetCurrentProcess() as u64
 }
 
 pub unsafe fn get_current_process_id() -> ProcessId {
-    extern "C" {
-        fn PsGetCurrentProcessId() -> u64;
-    }
+    use crate::ntapi::PsGetCurrentProcessId;
+    use crate::ntapi::HANDLE;
     PsGetCurrentProcessId() as ProcessId
 }
 
 pub unsafe fn lookup_process_by_id(process_id: ProcessId) -> Option<u64> {
-    extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u64, eprocess: *mut u64) -> i32;
-        fn ObDereferenceObject(object: u64);
-    }
+    use crate::ntapi::{PsLookupProcessByProcessId, ObDereferenceObject};
+    use crate::ntapi::{HANDLE, PEPROCESS, NTSTATUS};
 
-    let mut eprocess: u64 = 0;
-    let status = PsLookupProcessByProcessId(process_id as u64, &mut eprocess);
+    let mut eprocess: PEPROCESS = core::ptr::null_mut();
+    let status: NTSTATUS = PsLookupProcessByProcessId(process_id as HANDLE, &mut eprocess);
 
     if status == 0 {
-        Some(eprocess)
+        Some(eprocess as u64)
     } else {
         None
     }
@@ -137,18 +132,17 @@ pub unsafe fn get_process_name(process: u64) -> Option<String> {
         return None;
     }
 
-    extern "C" {
-        fn PsGetProcessImageFileName(process: u64) -> u64;
-    }
+    use crate::ntapi::PsGetProcessImageFileName;
+    use crate::ntapi::PEPROCESS;
 
-    let image_name_ptr = PsGetProcessImageFileName(process);
-    if image_name_ptr == 0 {
+    let image_name_ptr = PsGetProcessImageFileName(process as PEPROCESS);
+    if image_name_ptr.is_null() {
         return None;
     }
 
     let mut name = String::new();
     for i in 0..15 {
-        let c = *((image_name_ptr as *const u8).offset(i));
+        let c = *image_name_ptr.offset(i);
         if c == 0 {
             break;
         }
@@ -163,11 +157,10 @@ pub unsafe fn get_process_base_address(process: u64) -> Option<u64> {
         return None;
     }
 
-    extern "C" {
-        fn PsGetProcessSectionBaseAddress(process: u64) -> u64;
-    }
+    use crate::ntapi::PsGetProcessSectionBaseAddress;
+    use crate::ntapi::PEPROCESS;
 
-    Some(PsGetProcessSectionBaseAddress(process))
+    Some(PsGetProcessSectionBaseAddress(process as PEPROCESS) as u64)
 }
 
 pub unsafe fn get_process_peb(process: u64) -> Option<u64> {
@@ -175,15 +168,14 @@ pub unsafe fn get_process_peb(process: u64) -> Option<u64> {
         return None;
     }
 
-    extern "C" {
-        fn PsGetProcessPeb(process: u64) -> u64;
-    }
+    use crate::ntapi::PsGetProcessPeb;
+    use crate::ntapi::PEPROCESS;
 
-    let peb = PsGetProcessPeb(process);
-    if peb == 0 {
+    let peb = PsGetProcessPeb(process as PEPROCESS);
+    if peb.is_null() {
         None
     } else {
-        Some(peb)
+        Some(peb as u64)
     }
 }
 
@@ -201,22 +193,19 @@ pub unsafe fn is_system_process(process: u64) -> bool {
 }
 
 pub unsafe fn dereference_process(process: u64) {
-    extern "C" {
-        fn ObDereferenceObject(object: u64);
-    }
+    use crate::ntapi::ObDereferenceObject;
 
     if process != 0 {
-        ObDereferenceObject(process);
+        ObDereferenceObject(process as *mut core::ffi::c_void);
     }
 }
 
 pub unsafe fn get_process_list() -> Result<Vec<ProcessInfo>, ProcessError> {
-    extern "C" {
-        fn PsGetNextProcess(prev_process: u64) -> u64;
-    }
+    use crate::ntapi::PsGetNextProcess;
+    use crate::ntapi::PEPROCESS;
 
     let mut process_list = Vec::new();
-    let mut current_process = PsGetNextProcess(0);
+    let mut current_process = PsGetNextProcess(core::ptr::null_mut());
 
     while current_process != 0 {
         let process_id = get_process_id_from_eprocess(current_process);
@@ -272,27 +261,23 @@ pub unsafe fn get_process_name_by_id(process_id: ProcessId, name_buffer: &mut [u
 }
 
 pub unsafe fn switch_to_process_context(process: u64) -> Result<(), ProcessError> {
-    extern "C" {
-        fn KeStackAttachProcess(process: u64, apc_state: *mut u8);
-    }
+    use crate::ntapi::{KeStackAttachProcess, KAPC_STATE, PRKPROCESS, PRKAPC_STATE};
 
     if process == 0 {
         return Err(ProcessError::InvalidParameter);
     }
 
-    let mut apc_state = [0u8; 64];
-    KeStackAttachProcess(process, apc_state.as_mut_ptr());
+    let mut apc_state: KAPC_STATE = core::mem::zeroed();
+    KeStackAttachProcess(process as PRKPROCESS, &mut apc_state as PRKAPC_STATE);
 
     Ok(())
 }
 
 pub unsafe fn detach_from_process_context() {
-    extern "C" {
-        fn KeUnstackDetachProcess(apc_state: *mut u8);
-    }
+    use crate::ntapi::{KeUnstackDetachProcess, KAPC_STATE, PRKAPC_STATE};
 
-    let mut apc_state = [0u8; 64];
-    KeUnstackDetachProcess(apc_state.as_mut_ptr());
+    let mut apc_state: KAPC_STATE = core::mem::zeroed();
+    KeUnstackDetachProcess(&mut apc_state as PRKAPC_STATE);
 }
 
 pub unsafe fn terminate_process(process: u64, exit_status: i32) -> Result<(), ProcessError> {
@@ -313,15 +298,14 @@ pub unsafe fn terminate_process(process: u64, exit_status: i32) -> Result<(), Pr
 }
 
 pub unsafe fn suspend_process(process: u64) -> Result<(), ProcessError> {
-    extern "C" {
-        fn PsSuspendProcess(process: u64) -> i32;
-    }
+    use crate::ntapi::PsSuspendProcess;
+    use crate::ntapi::{PEPROCESS, NTSTATUS};
 
     if process == 0 {
         return Err(ProcessError::InvalidParameter);
     }
 
-    let status = PsSuspendProcess(process);
+    let status: NTSTATUS = PsSuspendProcess(process as PEPROCESS);
     if status == 0 {
         Ok(())
     } else {
@@ -330,15 +314,14 @@ pub unsafe fn suspend_process(process: u64) -> Result<(), ProcessError> {
 }
 
 pub unsafe fn resume_process(process: u64) -> Result<(), ProcessError> {
-    extern "C" {
-        fn PsResumeProcess(process: u64) -> i32;
-    }
+    use crate::ntapi::PsResumeProcess;
+    use crate::ntapi::{PEPROCESS, NTSTATUS};
 
     if process == 0 {
         return Err(ProcessError::InvalidParameter);
     }
 
-    let status = PsResumeProcess(process);
+    let status: NTSTATUS = PsResumeProcess(process as PEPROCESS);
     if status == 0 {
         Ok(())
     } else {

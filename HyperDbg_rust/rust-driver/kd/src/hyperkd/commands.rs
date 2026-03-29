@@ -260,13 +260,10 @@ impl CommandManager {
     }
 
     unsafe fn read_physical_memory(&self, address: u64, buffer: &mut [u8], size: usize) -> bool {
-        extern "C" {
-            fn MmGetVirtualForPhysical(physical_address: u64) -> u64;
-            fn MmIsAddressValid(address: u64) -> bool;
-        }
+        use crate::ntapi::{MmGetVirtualForPhysical, MmIsAddressValid};
 
         let va = MmGetVirtualForPhysical(address);
-        if va == 0 || !MmIsAddressValid(va) {
+        if va.is_null() || !MmIsAddressValid(va) {
             return false;
         }
 
@@ -275,40 +272,35 @@ impl CommandManager {
     }
 
     unsafe fn read_virtual_memory(&self, pid: u32, address: u64, buffer: &mut [u8], size: usize) -> bool {
-        extern "C" {
-            fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
-            fn ObDereferenceObject(object: u64);
-            fn KeStackAttachProcess(process: u64, apc_state: *mut u8);
-            fn KeUnstackDetachProcess(apc_state: *mut u8);
-            fn MmIsAddressValid(address: u64) -> bool;
-        }
+        use crate::ntapi::{PsLookupProcessByProcessId, ObDereferenceObject, KeStackAttachProcess, KeUnstackDetachProcess, MmIsAddressValid};
+        use crate::ntapi::{HANDLE, PEPROCESS, PRKPROCESS, PRKAPC_STATE, KAPC_STATE, NTSTATUS};
 
         if pid == 0 || pid == DEBUGGEE_BP_APPLY_TO_ALL_PROCESSES {
-            if MmIsAddressValid(address) {
+            if MmIsAddressValid(address as *mut core::ffi::c_void) {
                 core::ptr::copy_nonoverlapping(address as *const u8, buffer.as_mut_ptr(), size);
                 return true;
             }
             return false;
         }
 
-        let mut eprocess: u64 = 0;
-        let status = PsLookupProcessByProcessId(pid as u64, &mut eprocess);
+        let mut eprocess: PEPROCESS = core::ptr::null_mut();
+        let status: NTSTATUS = PsLookupProcessByProcessId(pid as HANDLE, &mut eprocess);
         if status != 0 {
             return false;
         }
 
-        let mut apc_state = [0u8; 64];
-        KeStackAttachProcess(eprocess, apc_state.as_mut_ptr());
+        let mut apc_state: KAPC_STATE = core::mem::zeroed();
+        KeStackAttachProcess(eprocess as PRKPROCESS, &mut apc_state as PRKAPC_STATE);
 
-        let result = if MmIsAddressValid(address) {
+        let result = if MmIsAddressValid(address as *mut core::ffi::c_void) {
             core::ptr::copy_nonoverlapping(address as *const u8, buffer.as_mut_ptr(), size);
             true
         } else {
             false
         };
 
-        KeUnstackDetachProcess(apc_state.as_mut_ptr());
-        ObDereferenceObject(eprocess);
+        KeUnstackDetachProcess(&mut apc_state as PRKAPC_STATE);
+        ObDereferenceObject(eprocess as PVOID);
 
         result
     }
@@ -349,17 +341,12 @@ impl CommandManager {
         data: &[u8],
         chunk_size: u32,
     ) -> Result<(), CommandError> {
-        extern "C" {
-            fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
-            fn ObDereferenceObject(object: u64);
-            fn KeStackAttachProcess(process: u64, apc_state: *mut u8);
-            fn KeUnstackDetachProcess(apc_state: *mut u8);
-            fn MmIsAddressValid(address: u64) -> bool;
-        }
+        use crate::ntapi::{PsLookupProcessByProcessId, ObDereferenceObject, KeStackAttachProcess, KeUnstackDetachProcess, MmIsAddressValid};
+        use crate::ntapi::{HANDLE, PEPROCESS, PRKPROCESS, PRKAPC_STATE, KAPC_STATE, NTSTATUS};
 
         let attached = if request.process_id != 0 && request.process_id != DEBUGGEE_BP_APPLY_TO_ALL_PROCESSES {
-            let mut eprocess: u64 = 0;
-            let status = PsLookupProcessByProcessId(request.process_id as u64, &mut eprocess);
+            let mut eprocess: PEPROCESS = core::ptr::null_mut();
+            let status: NTSTATUS = PsLookupProcessByProcessId(request.process_id as HANDLE, &mut eprocess);
             if status == 0 {
                 Some(eprocess)
             } else {
@@ -370,8 +357,8 @@ impl CommandManager {
         };
 
         if let Some(eprocess) = attached {
-            let mut apc_state = [0u8; 64];
-            KeStackAttachProcess(eprocess, apc_state.as_mut_ptr());
+            let mut apc_state: KAPC_STATE = core::mem::zeroed();
+            KeStackAttachProcess(eprocess as PRKPROCESS, &mut apc_state as PRKAPC_STATE);
 
             for i in 0..request.count_of_64_chunks {
                 let dest_addr = request.address + (i as u64) * (chunk_size as u64);
@@ -381,9 +368,9 @@ impl CommandManager {
                     break;
                 }
 
-                if !MmIsAddressValid(dest_addr) {
-                    KeUnstackDetachProcess(apc_state.as_mut_ptr());
-                    ObDereferenceObject(eprocess);
+                if !MmIsAddressValid(dest_addr as *mut core::ffi::c_void) {
+                    KeUnstackDetachProcess(&mut apc_state as PRKAPC_STATE);
+                    ObDereferenceObject(eprocess as PVOID);
                     return Err(CommandError::InvalidAddress);
                 }
 
@@ -394,8 +381,8 @@ impl CommandManager {
                 );
             }
 
-            KeUnstackDetachProcess(apc_state.as_mut_ptr());
-            ObDereferenceObject(eprocess);
+            KeUnstackDetachProcess(&mut apc_state as PRKAPC_STATE);
+            ObDereferenceObject(eprocess as PVOID);
         } else {
             for i in 0..request.count_of_64_chunks {
                 let dest_addr = request.address + (i as u64) * (chunk_size as u64);
@@ -405,7 +392,7 @@ impl CommandManager {
                     break;
                 }
 
-                if !MmIsAddressValid(dest_addr) {
+                if !MmIsAddressValid(dest_addr as *mut core::ffi::c_void) {
                     return Err(CommandError::InvalidAddress);
                 }
 
@@ -426,10 +413,7 @@ impl CommandManager {
         data: &[u8],
         chunk_size: u32,
     ) -> Result<(), CommandError> {
-        extern "C" {
-            fn MmGetVirtualForPhysical(physical_address: u64) -> u64;
-            fn MmIsAddressValid(address: u64) -> bool;
-        }
+        use crate::ntapi::{MmGetVirtualForPhysical, MmIsAddressValid};
 
         for i in 0..request.count_of_64_chunks {
             let dest_addr = request.address + (i as u64) * (chunk_size as u64);
@@ -440,7 +424,7 @@ impl CommandManager {
             }
 
             let va = MmGetVirtualForPhysical(dest_addr);
-            if va == 0 || !MmIsAddressValid(va) {
+            if va.is_null() || !MmIsAddressValid(va) {
                 return Err(CommandError::InvalidAddress);
             }
 

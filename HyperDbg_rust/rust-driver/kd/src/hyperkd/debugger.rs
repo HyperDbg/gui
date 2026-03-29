@@ -204,46 +204,29 @@ impl DebuggerCore {
         let mut bytes_read: usize = 0;
 
         unsafe {
-            extern "C" {
-                fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
-                fn ObDereferenceObject(object: u64);
-                fn KeStackAttachProcess(process: u64, apc_state: *mut u8);
-                fn KeUnstackDetachProcess(apc_state: *mut u8);
-                fn MmCopyVirtualMemory(
-                    source_process: u64,
-                    source_address: u64,
-                    target_process: u64,
-                    target_address: *mut u8,
-                    size: usize,
-                    access_mode: i32,
-                    bytes_read: *mut usize,
-                ) -> i32;
-            }
+            use crate::ntapi::{PsLookupProcessByProcessId, ObDereferenceObject, KeStackAttachProcess, KeUnstackDetachProcess, MmIsAddressValid};
+            use crate::ntapi::{HANDLE, PEPROCESS, PRKPROCESS, PRKAPC_STATE, KAPC_STATE, NTSTATUS};
 
-            let mut eprocess: u64 = 0;
-            let status = PsLookupProcessByProcessId(process_id as u64, &mut eprocess);
+            let mut eprocess: PEPROCESS = core::ptr::null_mut();
+            let status: NTSTATUS = PsLookupProcessByProcessId(process_id as HANDLE, &mut eprocess);
             if status != 0 {
                 return Err(DebuggerError::ProcessNotFound);
             }
 
-            let mut apc_state = [0u8; 64];
-            KeStackAttachProcess(eprocess, apc_state.as_mut_ptr());
+            let mut apc_state: KAPC_STATE = core::mem::zeroed();
+            KeStackAttachProcess(eprocess as PRKPROCESS, &mut apc_state as PRKAPC_STATE);
 
-            extern "C" {
-                fn MmIsAddressValid(address: u64) -> bool;
-            }
-
-            if !MmIsAddressValid(address) {
-                KeUnstackDetachProcess(apc_state.as_mut_ptr());
-                ObDereferenceObject(eprocess);
+            if !MmIsAddressValid(address as *mut core::ffi::c_void) {
+                KeUnstackDetachProcess(&mut apc_state as PRKAPC_STATE);
+                ObDereferenceObject(eprocess as PVOID);
                 return Err(DebuggerError::InvalidAddress);
             }
 
             core::ptr::copy_nonoverlapping(address as *const u8, buffer.as_mut_ptr(), size);
             bytes_read = size;
 
-            KeUnstackDetachProcess(apc_state.as_mut_ptr());
-            ObDereferenceObject(eprocess);
+            KeUnstackDetachProcess(&mut apc_state as PRKAPC_STATE);
+            ObDereferenceObject(eprocess as PVOID);
         }
 
         if bytes_read != size {
@@ -257,36 +240,28 @@ impl DebuggerCore {
         let process_id = self.current_process.lock().ok_or(DebuggerError::NoProcess)?;
 
         unsafe {
-            extern "C" {
-                fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
-                fn ObDereferenceObject(object: u64);
-                fn KeStackAttachProcess(process: u64, apc_state: *mut u8);
-                fn KeUnstackDetachProcess(apc_state: *mut u8);
-            }
+            use crate::ntapi::{PsLookupProcessByProcessId, ObDereferenceObject, KeStackAttachProcess, KeUnstackDetachProcess, MmIsAddressValid};
+            use crate::ntapi::{HANDLE, PEPROCESS, PRKPROCESS, PRKAPC_STATE, KAPC_STATE, NTSTATUS};
 
-            let mut eprocess: u64 = 0;
-            let status = PsLookupProcessByProcessId(process_id as u64, &mut eprocess);
+            let mut eprocess: PEPROCESS = core::ptr::null_mut();
+            let status: NTSTATUS = PsLookupProcessByProcessId(process_id as HANDLE, &mut eprocess);
             if status != 0 {
                 return Err(DebuggerError::ProcessNotFound);
             }
 
-            let mut apc_state = [0u8; 64];
-            KeStackAttachProcess(eprocess, apc_state.as_mut_ptr());
+            let mut apc_state: KAPC_STATE = core::mem::zeroed();
+            KeStackAttachProcess(eprocess as PRKPROCESS, &mut apc_state as PRKAPC_STATE);
 
-            extern "C" {
-                fn MmIsAddressValid(address: u64) -> bool;
-            }
-
-            if !MmIsAddressValid(address) {
-                KeUnstackDetachProcess(apc_state.as_mut_ptr());
-                ObDereferenceObject(eprocess);
+            if !MmIsAddressValid(address as *mut core::ffi::c_void) {
+                KeUnstackDetachProcess(&mut apc_state as PRKAPC_STATE);
+                ObDereferenceObject(eprocess as PVOID);
                 return Err(DebuggerError::InvalidAddress);
             }
 
             core::ptr::copy_nonoverlapping(data.as_ptr(), address as *mut u8, data.len());
 
-            KeUnstackDetachProcess(apc_state.as_mut_ptr());
-            ObDereferenceObject(eprocess);
+            KeUnstackDetachProcess(&mut apc_state as PRKAPC_STATE);
+            ObDereferenceObject(eprocess as PVOID);
         }
 
         Ok(())
