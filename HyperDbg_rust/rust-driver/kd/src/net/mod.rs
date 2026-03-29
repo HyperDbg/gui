@@ -147,11 +147,11 @@ pub struct SockaddrIn6 {
     pub sin6_scope_id: u32,
 }
 
-extern "system" {
-    pub fn WskRegister(WskClientNpi: *const ClientNpi, WskRegistration: *mut Registration) -> NTSTATUS;
-    pub fn WskCaptureProviderNPI(WskRegistration: *mut Registration, WaitTimeout: ULONG, WskProviderNpi: *mut ProviderNpi) -> NTSTATUS;
-    pub fn WskReleaseProviderNPI(WskRegistration: *mut Registration);
-    pub fn WskDeregister(WskRegistration: *mut Registration);
+extern "system" { // WSK network API - WDK missing bindings
+    pub fn WskRegister(WskClientNpi: *const ClientNpi, WskRegistration: *mut Registration) -> NTSTATUS; // WDK missing
+    pub fn WskCaptureProviderNPI(WskRegistration: *mut Registration, WaitTimeout: ULONG, WskProviderNpi: *mut ProviderNpi) -> NTSTATUS; // WDK missing
+    pub fn WskReleaseProviderNPI(WskRegistration: *mut Registration); // WDK missing
+    pub fn WskDeregister(WskRegistration: *mut Registration); // WDK missing
 }
 
 pub type Handler = unsafe extern "C" fn(*mut ResponseWriter, *mut Request);

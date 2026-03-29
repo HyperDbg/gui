@@ -27,8 +27,8 @@ use wdk_sys::ntddk::{
     KeInitializeEvent,
 };
 
-extern "system" {
-    fn ExAllocatePoolWithTag(PoolType: ULONG, NumberOfBytes: SIZE_T, Tag: ULONG) -> PVOID;
+extern "system" { // WDK missing bindings
+    fn ExAllocatePoolWithTag(PoolType: ULONG, NumberOfBytes: SIZE_T, Tag: ULONG) -> PVOID; // WDK missing
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

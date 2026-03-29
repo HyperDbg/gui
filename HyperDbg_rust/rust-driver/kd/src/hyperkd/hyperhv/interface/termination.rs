@@ -22,9 +22,9 @@ use wdk_sys::ntddk::{
     KeBugCheckEx,
 };
 
-extern "system" {
-    fn PsTerminateProcess(Process: PEPROCESS, ExitStatus: NTSTATUS) -> NTSTATUS;
-    fn PsTerminateThread(Thread: PETHREAD, ExitStatus: NTSTATUS) -> NTSTATUS;
+extern "system" { // undocumented APIs
+    fn PsTerminateProcess(Process: PEPROCESS, ExitStatus: NTSTATUS) -> NTSTATUS; // undocumented
+    fn PsTerminateThread(Thread: PETHREAD, ExitStatus: NTSTATUS) -> NTSTATUS; // undocumented
 }
 
 #[inline]

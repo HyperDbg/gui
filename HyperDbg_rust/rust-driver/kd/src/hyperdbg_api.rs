@@ -294,9 +294,9 @@ impl DebuggerApi for HyperDbgApi {
         
         unsafe {
             let mut process: PEPROCESS = core::ptr::null_mut();
-            extern "system" {
-                fn PsGetNextProcess(process: PEPROCESS) -> PEPROCESS;
-                fn PsGetProcessImageFileName(process: PEPROCESS) -> *mut i8;
+            extern "system" { // undocumented APIs
+                fn PsGetNextProcess(process: PEPROCESS) -> PEPROCESS; // undocumented
+                fn PsGetProcessImageFileName(process: PEPROCESS) -> *mut i8; // undocumented
             }
             
             loop {
@@ -336,9 +336,9 @@ impl DebuggerApi for HyperDbgApi {
         unsafe {
             use wdk_sys::STATUS_SUCCESS;
             
-            extern "system" {
-                fn PsGetNextProcessThread(Process: PEPROCESS, Thread: PETHREAD) -> PETHREAD;
-                fn PsGetThreadTeb(Thread: PETHREAD) -> u64;
+            extern "system" { // undocumented APIs
+                fn PsGetNextProcessThread(Process: PEPROCESS, Thread: PETHREAD) -> PETHREAD; // undocumented
+                fn PsGetThreadTeb(Thread: PETHREAD) -> u64; // undocumented
             }
             
             let mut process: PEPROCESS = core::ptr::null_mut();
@@ -380,8 +380,8 @@ impl DebuggerApi for HyperDbgApi {
         let mut modules = Vec::new();
         
         unsafe {
-            extern "system" {
-                fn PsGetProcessPeb(Process: PEPROCESS) -> PVOID;
+            extern "system" { // undocumented APIs
+                fn PsGetProcessPeb(Process: PEPROCESS) -> PVOID; // undocumented
             }
             
             let process = IoGetCurrentProcess();

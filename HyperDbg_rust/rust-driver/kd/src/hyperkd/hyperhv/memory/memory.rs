@@ -42,12 +42,12 @@ use wdk_sys::ntddk::{
 
 use crate::hyperkd::hyperhv::bindings::{MEMORY_CACHING_TYPE, MM_CACHED};
 
-extern "system" {
-    fn ExAllocatePoolWithTag(PoolType: ULONG, NumberOfBytes: SIZE_T, Tag: ULONG) -> PVOID;
-    fn RtlZeroMemory(Destination: PVOID, Length: SIZE_T);
-    fn RtlFillMemory(Destination: PVOID, Length: SIZE_T, Fill: u8);
-    fn RtlCopyMemory(Destination: PVOID, Source: *const u8, Length: SIZE_T);
-    fn RtlMoveMemory(Destination: PVOID, Source: *const u8, Length: SIZE_T);
+extern "system" { // WDK missing bindings
+    fn ExAllocatePoolWithTag(PoolType: ULONG, NumberOfBytes: SIZE_T, Tag: ULONG) -> PVOID; // WDK missing
+    fn RtlZeroMemory(Destination: PVOID, Length: SIZE_T); // WDK missing
+    fn RtlFillMemory(Destination: PVOID, Length: SIZE_T, Fill: u8); // WDK missing
+    fn RtlCopyMemory(Destination: PVOID, Source: *const u8, Length: SIZE_T); // WDK missing
+    fn RtlMoveMemory(Destination: PVOID, Source: *const u8, Length: SIZE_T); // WDK missing
 }
 
 fn make_physical_address(addr: u64) -> PHYSICAL_ADDRESS {
