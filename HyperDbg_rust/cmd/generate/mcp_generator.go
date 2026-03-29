@@ -324,7 +324,7 @@ var excludedInterfaces = map[string]bool{}
 
 func main() {
 	projectRoot := mylog.Check2(getProjectRoot())
-	interfacePath := filepath.Join(projectRoot, "interfaces.go")
+	interfacePath := filepath.Join(projectRoot, "debugger", "interfaces.go")
 
 	configs := []InterfaceConfig{
 		{
