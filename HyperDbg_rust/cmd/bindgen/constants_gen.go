@@ -1,9 +1,9 @@
 // Auto-generated from constants.rs - DO NOT EDIT
 
-package bindgenCheck
+package main
 
-// NtddkConstants contains all constant names from constants.rs
-var NtddkConstants = map[string]bool{
+// WdkConstants contains all constant names from constants.rs
+var WdkConstants = map[string]bool{
 	"ACCESS_ALLOWED_ACE_TYPE": true,
 	"ACCESS_ALLOWED_CALLBACK_ACE_TYPE": true,
 	"ACCESS_ALLOWED_CALLBACK_OBJECT_ACE_TYPE": true,

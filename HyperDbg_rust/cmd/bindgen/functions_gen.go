@@ -1,9 +1,9 @@
 // Auto-generated from ntddk.rs - DO NOT EDIT
 
-package bindgenCheck
+package main
 
-// NtddkFunctions contains all function names from ntddk.rs
-var NtddkFunctions = map[string]bool{
+// WdkFunctions contains all function names from ntddk.rs
+var WdkFunctions = map[string]bool{
 	"DbgBreakPointWithStatus": true,
 	"DbgPrint": true,
 	"DbgPrintEx": true,
