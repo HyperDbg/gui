@@ -1,3 +1,4 @@
+pub mod bindings;
 pub mod common;
 pub mod vmm;
 pub mod hooks;

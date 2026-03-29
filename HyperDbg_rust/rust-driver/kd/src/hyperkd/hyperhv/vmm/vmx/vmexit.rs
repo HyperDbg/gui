@@ -7,6 +7,27 @@ use crate::hyperkd::VmxState;
 use super::vmx::*;
 use crate::hyperkd::hyperhv::HYPERDBG_SIGNATURE;
 
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct GuestRegisters {
+    pub rax: u64,
+    pub rcx: u64,
+    pub rdx: u64,
+    pub rbx: u64,
+    pub rbp: u64,
+    pub rsi: u64,
+    pub rdi: u64,
+    pub r8: u64,
+    pub r9: u64,
+    pub r10: u64,
+    pub r11: u64,
+    pub r12: u64,
+    pub r13: u64,
+    pub r14: u64,
+    pub r15: u64,
+    pub cr2: u64,
+}
+
 global_asm! {
     r#"
 .global asm_set_cpuid_result
@@ -130,6 +151,7 @@ pub unsafe extern "C" fn AsmVmexitHandler() -> ! {
 
 #[no_mangle]
 pub unsafe extern "C" fn VmxVmexitHandlerEntry(
+    guest_regs: *const GuestRegisters,
     guest_rsp: *mut u64,
     guest_rip: *mut u64,
     guest_rflags: *mut u64,
@@ -151,6 +173,26 @@ pub unsafe extern "C" fn VmxVmexitHandlerEntry(
             vcpu.guest_rsp = *guest_rsp as u64;
             vcpu.guest_rflags = *guest_rflags as u64;
             vcpu.increment_rip = true;
+            
+            if !guest_regs.is_null() {
+                let regs = &*guest_regs;
+                vcpu.guest_rax = regs.rax;
+                vcpu.guest_rbx = regs.rbx;
+                vcpu.guest_rcx = regs.rcx;
+                vcpu.guest_rdx = regs.rdx;
+                vcpu.guest_rsi = regs.rsi;
+                vcpu.guest_rdi = regs.rdi;
+                vcpu.guest_rbp = regs.rbp;
+                vcpu.guest_r8 = regs.r8;
+                vcpu.guest_r9 = regs.r9;
+                vcpu.guest_r10 = regs.r10;
+                vcpu.guest_r11 = regs.r11;
+                vcpu.guest_r12 = regs.r12;
+                vcpu.guest_r13 = regs.r13;
+                vcpu.guest_r14 = regs.r14;
+                vcpu.guest_r15 = regs.r15;
+                vcpu.guest_cr2 = regs.cr2;
+            }
         }
     }
 

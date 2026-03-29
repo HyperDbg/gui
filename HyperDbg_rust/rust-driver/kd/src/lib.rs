@@ -26,6 +26,7 @@ pub mod logger;
 pub mod net;
 pub mod common;
 pub mod framework;
+pub mod disassembler;
 
 pub use hyperkd::hyperhv::vmm;
 pub use hyperkd::hyperhv::memory;
@@ -263,26 +264,12 @@ pub extern "system" fn DriverEntry(
 const IRP_MJ_MAXIMUM_FUNCTION: ULONG = 28;
 
 #[cfg(feature = "standalone-driver")]
-extern "system" {
-    fn IoCreateDevice(
-        driver_object: PDRIVER_OBJECT,
-        device_extension_size: ULONG,
-        device_name: *mut UNICODE_STRING,
-        device_type: DEVICE_TYPE,
-        device_characteristics: ULONG,
-        exclusive: bool,
-        device_object: *mut PVOID,
-    ) -> NTSTATUS;
-
-    fn IoCreateSymbolicLink(
-        symbolic_link_name: *mut UNICODE_STRING,
-        device_name: *mut UNICODE_STRING,
-    ) -> NTSTATUS;
-
-    fn IoDeleteDevice(device_object: PVOID);
-
-    fn IoCompleteRequest(irp: PIRP, priority_boost: i32);
-}
+use wdk_sys::ntddk::{
+    IoCreateDevice,
+    IoCreateSymbolicLink,
+    IoDeleteDevice,
+    IofCompleteRequest,
+};
 
 #[cfg(feature = "standalone-driver")]
 extern "C" fn driver_unload(driver_object: PDRIVER_OBJECT) {
@@ -308,7 +295,7 @@ extern "C" fn driver_unload(driver_object: PDRIVER_OBJECT) {
     drop(ctx);
 
     unsafe {
-        IoDeleteDevice((*driver_object).DeviceObject as PVOID);
+        IoDeleteDevice((*driver_object).DeviceObject);
     }
     log_success!("HyperDbg driver unloaded successfully");
 }
@@ -321,7 +308,7 @@ extern "C" fn driver_default_dispatch(
     unsafe {
         (*irp).IoStatus.__bindgen_anon_1.Status = STATUS_SUCCESS;
         (*irp).IoStatus.Information = 0;
-        IoCompleteRequest(irp, 0);
+        IofCompleteRequest(irp, 0);
     }
     STATUS_SUCCESS
 }
@@ -334,7 +321,7 @@ unsafe extern "C" fn driver_create(
     unsafe {
         (*irp).IoStatus.__bindgen_anon_1.Status = STATUS_SUCCESS;
         (*irp).IoStatus.Information = 0;
-        IoCompleteRequest(irp, 0);
+        IofCompleteRequest(irp, 0);
     }
     STATUS_SUCCESS
 }
@@ -347,7 +334,7 @@ unsafe extern "C" fn driver_close(
     unsafe {
         (*irp).IoStatus.__bindgen_anon_1.Status = STATUS_SUCCESS;
         (*irp).IoStatus.Information = 0;
-        IoCompleteRequest(irp, 0);
+        IofCompleteRequest(irp, 0);
     }
     STATUS_SUCCESS
 }
@@ -364,7 +351,7 @@ unsafe extern "C" fn driver_device_control(
             unsafe {
                 (*irp).IoStatus.__bindgen_anon_1.Status = STATUS_UNSUCCESSFUL;
                 (*irp).IoStatus.Information = 0;
-                IoCompleteRequest(irp, 0);
+                IofCompleteRequest(irp, 0);
             }
             return STATUS_UNSUCCESSFUL;
         }
@@ -399,7 +386,7 @@ unsafe extern "C" fn driver_device_control(
             }
         }
 
-        IoCompleteRequest(irp, 0);
+        IofCompleteRequest(irp, 0);
     }
 
     STATUS_SUCCESS

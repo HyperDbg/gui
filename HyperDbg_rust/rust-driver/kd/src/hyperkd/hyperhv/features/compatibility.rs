@@ -1,15 +1,7 @@
-use alloc::boxed::Box;
-use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
-extern "system" {
-    fn ExAllocatePoolWithTag(pool_type: u32, number_of_bytes: usize, tag: u32) -> *mut u8;
-    fn ExFreePool(pool: *mut u8);
-    fn KeGetCurrentIrql() -> u8;
-    fn KeGetCurrentProcessorNumber() -> u32;
-    fn KeGetActiveProcessors() -> u32;
-}
+use wdk_sys::ntddk::KeQueryActiveProcessors;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CompatibilityError {
@@ -221,7 +213,8 @@ impl CompatibilityChecker {
     }
 
     unsafe fn detect_cpu_features(&self, features: &mut CpuFeatures) {
-        features.processor_count = KeGetActiveProcessors();
+        let affinity = KeQueryActiveProcessors();
+        features.processor_count = affinity.count_ones();
 
         let mut eax: u32 = 1;
         let mut ebx: u32;

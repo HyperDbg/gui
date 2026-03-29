@@ -3,11 +3,6 @@ use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
-extern "system" {
-    fn ExAllocatePoolWithTag(pool_type: u32, number_of_bytes: usize, tag: u32) -> *mut u8;
-    fn ExFreePool(pool: *mut u8);
-}
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SmiError {
     NotInitialized,

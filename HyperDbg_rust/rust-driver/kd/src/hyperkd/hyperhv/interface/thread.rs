@@ -3,11 +3,19 @@ use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
 use spin::Mutex;
 
-extern "system" {
-    fn PsGetCurrentThreadId() -> u32;
-    fn PsLookupThreadByThreadId(thread_id: u32, thread: *mut *mut u8) -> u32;
-    fn ObDereferenceObject(object: *mut u8);
-}
+use wdk_sys::{
+    HANDLE,
+    NTSTATUS,
+    PETHREAD,
+    PVOID,
+    STATUS_SUCCESS,
+};
+
+use wdk_sys::ntddk::{
+    PsGetCurrentThreadId,
+    PsLookupThreadByThreadId,
+    ObfDereferenceObject,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ThreadError {
@@ -93,7 +101,7 @@ impl ThreadContext {
 pub struct ThreadObject {
     pub thread_id: u32,
     pub process_id: u32,
-    pub thread_handle: *mut u8,
+    pub thread_handle: PETHREAD,
     pub start_address: u64,
     pub stack_base: u64,
     pub stack_limit: u64,
@@ -166,7 +174,7 @@ impl ThreadManager {
         }
 
         let current_thread_id = unsafe { PsGetCurrentThreadId() };
-        self.current_thread_id.store(current_thread_id, Ordering::Release);
+        self.current_thread_id.store(current_thread_id as u32, Ordering::Release);
 
         self.initialized.store(true, Ordering::Release);
         Ok(())
@@ -195,7 +203,7 @@ impl ThreadManager {
         threads.get(&thread_id).cloned().ok_or(ThreadError::ThreadNotFound)
     }
 
-    pub fn lookup_thread_by_handle(&self, thread_handle: *mut u8) -> Result<ThreadObject, ThreadError> {
+    pub fn lookup_thread_by_handle(&self, thread_handle: PETHREAD) -> Result<ThreadObject, ThreadError> {
         if !self.is_initialized() {
             return Err(ThreadError::NotInitialized);
         }
@@ -311,31 +319,7 @@ impl ThreadManager {
             .ok_or(ThreadError::ThreadNotFound)
     }
 
-    pub fn suspend_thread(&self, thread_id: u32) -> Result<(), ThreadError> {
-        let mut threads = self.threads.lock();
-        if let Some(thread) = threads.get_mut(&thread_id) {
-            if !thread.is_suspended {
-                thread.is_suspended = true;
-            }
-            Ok(())
-        } else {
-            Err(ThreadError::ThreadNotFound)
-        }
-    }
-
-    pub fn resume_thread(&self, thread_id: u32) -> Result<(), ThreadError> {
-        let mut threads = self.threads.lock();
-        if let Some(thread) = threads.get_mut(&thread_id) {
-            if thread.is_suspended {
-                thread.is_suspended = false;
-            }
-            Ok(())
-        } else {
-            Err(ThreadError::ThreadNotFound)
-        }
-    }
-
-    pub fn update_thread_context(&self, thread_id: u32, context: ThreadContext) -> Result<(), ThreadError> {
+    pub fn set_thread_context(&self, thread_id: u32, context: ThreadContext) -> Result<(), ThreadError> {
         let mut threads = self.threads.lock();
         if let Some(thread) = threads.get_mut(&thread_id) {
             thread.context = context;
@@ -352,32 +336,43 @@ impl ThreadManager {
             .ok_or(ThreadError::ThreadNotFound)
     }
 
-    pub fn record_thread_switch(&self, thread_id: u32, cpu_time: u64) {
-        let mut threads = self.threads.lock();
-        if let Some(thread) = threads.get_mut(&thread_id) {
-            let timestamp = unsafe {
-                let mut rax: u64;
-                core::arch::asm!("rdtsc", out("rax") rax, out("rdx") _);
-                rax
-            };
-            thread.last_switch_time = timestamp;
-            thread.cpu_time += cpu_time;
+    fn extract_thread_id(&self, _thread_handle: PETHREAD) -> u32 {
+        0
+    }
+
+    pub fn lookup_thread_object(&self, thread_id: u32) -> Result<PETHREAD, ThreadError> {
+        if !self.is_initialized() {
+            return Err(ThreadError::NotInitialized);
         }
+
+        let mut thread: PETHREAD = core::ptr::null_mut();
+        let status = unsafe {
+            PsLookupThreadByThreadId(thread_id as HANDLE, &mut thread)
+        };
+
+        if status != STATUS_SUCCESS {
+            return Err(ThreadError::ThreadNotFound);
+        }
+
+        Ok(thread)
     }
 
-    pub fn get_thread_cpu_time(&self, thread_id: u32) -> Result<u64, ThreadError> {
-        let threads = self.threads.lock();
-        threads.get(&thread_id)
-            .map(|t| t.cpu_time)
-            .ok_or(ThreadError::ThreadNotFound)
-    }
-
-    fn extract_thread_id(&self, thread_handle: *mut u8) -> u32 {
-        unsafe { *(thread_handle as *const u32).offset(0x480 / 4) }
+    pub fn dereference_thread(&self, thread: PETHREAD) {
+        if !thread.is_null() {
+            unsafe {
+                ObfDereferenceObject(thread as PVOID);
+            }
+        }
     }
 }
 
-static THREAD_MANAGER: Mutex<ThreadManager> = Mutex::new(ThreadManager::new());
+impl Default for ThreadManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+pub static THREAD_MANAGER: Mutex<ThreadManager> = Mutex::new(ThreadManager::new());
 
 pub fn initialize_thread_manager() -> Result<(), ThreadError> {
     let mut manager = THREAD_MANAGER.lock();
@@ -386,7 +381,7 @@ pub fn initialize_thread_manager() -> Result<(), ThreadError> {
 
 pub fn deinitialize_thread_manager() {
     let mut manager = THREAD_MANAGER.lock();
-    manager.deinitialize()
+    manager.deinitialize();
 }
 
 pub fn get_current_thread_id() -> u32 {
@@ -397,11 +392,6 @@ pub fn get_current_thread_id() -> u32 {
 pub fn lookup_thread(thread_id: u32) -> Result<ThreadObject, ThreadError> {
     let manager = THREAD_MANAGER.lock();
     manager.lookup_thread(thread_id)
-}
-
-pub fn lookup_thread_by_handle(thread_handle: *mut u8) -> Result<ThreadObject, ThreadError> {
-    let manager = THREAD_MANAGER.lock();
-    manager.lookup_thread_by_handle(thread_handle)
 }
 
 pub fn add_thread(thread: ThreadObject) -> Result<(), ThreadError> {
@@ -424,11 +414,6 @@ pub fn get_threads_by_process(process_id: u32) -> alloc::vec::Vec<ThreadObject> 
     manager.get_threads_by_process(process_id)
 }
 
-pub fn get_thread_count() -> u32 {
-    let manager = THREAD_MANAGER.lock();
-    manager.get_thread_count()
-}
-
 pub fn set_thread_debugged(thread_id: u32, debugged: bool) -> Result<(), ThreadError> {
     let manager = THREAD_MANAGER.lock();
     manager.set_debugged(thread_id, debugged)
@@ -437,11 +422,6 @@ pub fn set_thread_debugged(thread_id: u32, debugged: bool) -> Result<(), ThreadE
 pub fn is_thread_debugged(thread_id: u32) -> bool {
     let manager = THREAD_MANAGER.lock();
     manager.is_debugged(thread_id)
-}
-
-pub fn get_debugged_thread_count() -> u32 {
-    let manager = THREAD_MANAGER.lock();
-    manager.get_debugged_thread_count()
 }
 
 pub fn set_thread_state(thread_id: u32, state: ThreadState) -> Result<(), ThreadError> {
@@ -464,32 +444,12 @@ pub fn get_thread_priority(thread_id: u32) -> Result<ThreadPriority, ThreadError
     manager.get_thread_priority(thread_id)
 }
 
-pub fn suspend_thread(thread_id: u32) -> Result<(), ThreadError> {
+pub fn set_thread_context(thread_id: u32, context: ThreadContext) -> Result<(), ThreadError> {
     let manager = THREAD_MANAGER.lock();
-    manager.suspend_thread(thread_id)
-}
-
-pub fn resume_thread(thread_id: u32) -> Result<(), ThreadError> {
-    let manager = THREAD_MANAGER.lock();
-    manager.resume_thread(thread_id)
-}
-
-pub fn update_thread_context(thread_id: u32, context: ThreadContext) -> Result<(), ThreadError> {
-    let manager = THREAD_MANAGER.lock();
-    manager.update_thread_context(thread_id, context)
+    manager.set_thread_context(thread_id, context)
 }
 
 pub fn get_thread_context(thread_id: u32) -> Result<ThreadContext, ThreadError> {
     let manager = THREAD_MANAGER.lock();
     manager.get_thread_context(thread_id)
-}
-
-pub fn record_thread_switch(thread_id: u32, cpu_time: u64) {
-    let manager = THREAD_MANAGER.lock();
-    manager.record_thread_switch(thread_id, cpu_time)
-}
-
-pub fn get_thread_cpu_time(thread_id: u32) -> Result<u64, ThreadError> {
-    let manager = THREAD_MANAGER.lock();
-    manager.get_thread_cpu_time(thread_id)
 }

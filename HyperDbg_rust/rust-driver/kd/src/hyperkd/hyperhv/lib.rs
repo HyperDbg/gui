@@ -70,9 +70,11 @@ pub mod smi;
 
 use wdk_sys::{
     DRIVER_OBJECT,
+    PDRIVER_OBJECT,
     PCUNICODE_STRING,
     NTSTATUS,
     STATUS_SUCCESS,
+    STATUS_UNSUCCESSFUL,
 };
 use protocol::*;
 
@@ -146,6 +148,7 @@ pub struct Vcpu {
     pub dr2: u64,
     pub dr3: u64,
     pub dr6: u64,
+    pub dr7: u64,
     pub last_branch_from: u64,
     pub last_branch_to: u64,
     pub last_exception_from: u64,
@@ -153,6 +156,34 @@ pub struct Vcpu {
     pub debugctl: u64,
     pub pending_debug_exception: u64,
     pub mtf_state: MtfTrapState,
+    pub guest_rax: u64,
+    pub guest_rbx: u64,
+    pub guest_rcx: u64,
+    pub guest_rdx: u64,
+    pub guest_rsi: u64,
+    pub guest_rdi: u64,
+    pub guest_rbp: u64,
+    pub guest_r8: u64,
+    pub guest_r9: u64,
+    pub guest_r10: u64,
+    pub guest_r11: u64,
+    pub guest_r12: u64,
+    pub guest_r13: u64,
+    pub guest_r14: u64,
+    pub guest_r15: u64,
+    pub guest_cr0: u64,
+    pub guest_cr2: u64,
+    pub guest_cr3: u64,
+    pub guest_cr4: u64,
+    pub guest_cr8: u64,
+    pub guest_gdtr_base: u64,
+    pub guest_idtr_base: u64,
+    pub guest_cs: u16,
+    pub guest_ds: u16,
+    pub guest_es: u16,
+    pub guest_fs: u16,
+    pub guest_gs: u16,
+    pub guest_ss: u16,
 }
 
 impl Vcpu {
@@ -187,6 +218,7 @@ impl Vcpu {
             dr2: 0,
             dr3: 0,
             dr6: 0xFFFF0FF0,
+            dr7: 0x400,
             last_branch_from: 0,
             last_branch_to: 0,
             last_exception_from: 0,
@@ -194,6 +226,34 @@ impl Vcpu {
             debugctl: 0,
             pending_debug_exception: 0,
             mtf_state: MtfTrapState::default(),
+            guest_rax: 0,
+            guest_rbx: 0,
+            guest_rcx: 0,
+            guest_rdx: 0,
+            guest_rsi: 0,
+            guest_rdi: 0,
+            guest_rbp: 0,
+            guest_r8: 0,
+            guest_r9: 0,
+            guest_r10: 0,
+            guest_r11: 0,
+            guest_r12: 0,
+            guest_r13: 0,
+            guest_r14: 0,
+            guest_r15: 0,
+            guest_cr0: 0,
+            guest_cr2: 0,
+            guest_cr3: 0,
+            guest_cr4: 0,
+            guest_cr8: 0,
+            guest_gdtr_base: 0,
+            guest_idtr_base: 0,
+            guest_cs: 0,
+            guest_ds: 0,
+            guest_es: 0,
+            guest_fs: 0,
+            guest_gs: 0,
+            guest_ss: 0,
         }
     }
 }
@@ -229,21 +289,24 @@ impl VmxContext {
 pub static VMX_CONTEXT: Mutex<VmxContext> = Mutex::new(VmxContext::new());
 
 #[no_mangle]
-pub extern "system" fn DriverEntry(driver_object: *mut u8, registry_path: *mut u16) -> u32 {
+pub extern "system" fn DriverEntry(
+    driver_object: PDRIVER_OBJECT,
+    registry_path: PCUNICODE_STRING,
+) -> NTSTATUS {
     unsafe {
         globals::initialize_globals();
         
         if let Err(_) = vmm::initialize_hypervisor() {
             globals::cleanup_globals();
-            return 0xC0000001;
+            return STATUS_UNSUCCESSFUL;
         }
 
-        0
+        STATUS_SUCCESS
     }
 }
 
 #[no_mangle]
-pub extern "system" fn DriverUnload(driver_object: *mut u8) {
+pub extern "system" fn DriverUnload(driver_object: PDRIVER_OBJECT) {
     unsafe {
         let _ = vmm::terminate_hypervisor();
         globals::cleanup_globals();

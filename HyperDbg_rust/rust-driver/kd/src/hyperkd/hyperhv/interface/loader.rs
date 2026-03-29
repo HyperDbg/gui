@@ -3,24 +3,32 @@ use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
+use wdk_sys::{
+    NTSTATUS,
+    PVOID,
+    PUNICODE_STRING,
+    ULONG,
+    BOOLEAN,
+    PLARGE_INTEGER,
+    PMDL,
+    KSPIN_LOCK,
+    PKSPIN_LOCK,
+    KIRQL,
+    SIZE_T,
+};
+
+use wdk_sys::ntddk::{
+    MmGetSystemRoutineAddress,
+    ExFreePoolWithTag,
+    IoAllocateMdl,
+    IoFreeMdl,
+    KeInitializeSpinLock,
+    KeReleaseSpinLock,
+    KeInitializeEvent,
+};
+
 extern "system" {
-    fn MmGetSystemRoutineAddress(routine_name: *const u8) -> *mut u8;
-    fn ExAllocatePoolWithTag(pool_type: u32, number_of_bytes: usize, tag: u32) -> *mut u8;
-    fn ExFreePool(pool: *mut u8);
-    fn RtlInitUnicodeString(destination_string: *mut u16, source_string: *const u16);
-    fn RtlUnicodeStringToAnsiString(destination_string: *mut u8, source_string: *const u16) -> u32;
-    fn IoAllocateMdl(virtual_address: *mut u8, length: u32, secondary_buffer: bool, charge_quota: bool, chain_flags: u32) -> *mut u8;
-    fn IoFreeMdl(mdl: *mut u8);
-    fn MmGetMdlVirtualAddress(mdl: *const u8) -> *mut u8;
-    fn MmGetMdlPfnArray(mdl: *const u8) -> *mut u64;
-    fn MmMapLockedPages(mdl: *mut u8, access_mode: u32, cache_type: u32) -> *mut u8;
-    fn MmUnmapLockedPages(base_address: *mut u8, mdl: *mut u8);
-    fn KeInitializeSpinLock(spin_lock: *mut u8);
-    fn KeAcquireSpinLock(spin_lock: *mut u8);
-    fn KeReleaseSpinLock(spin_lock: *mut u8);
-    fn KeInitializeEvent(event: *mut u8, event_type: u32, initial_state: bool);
-    fn KeSetEvent(event: *mut u8, increment: i32, wait: bool) -> i32;
-    fn KeWaitForSingleObject(object: *mut u8, wait_reason: u32, wait_mode: u32, alertable: bool, timeout: *const i64) -> u32;
+    fn ExAllocatePoolWithTag(PoolType: ULONG, NumberOfBytes: SIZE_T, Tag: ULONG) -> PVOID;
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -207,39 +215,24 @@ impl LoaderManager {
             return Err(LoaderError::NotInitialized);
         }
 
-        self.set_state(LoaderState::Unloading);
-
-        if self.loaded_modules.remove(&base_address).is_none() {
-            self.set_state(LoaderState::Error);
-            return Err(LoaderError::InvalidAddress);
+        if base_address == 0 {
+            return Err(LoaderError::InvalidParameter);
         }
 
-        self.total_modules.fetch_sub(1, Ordering::AcqRel);
-        self.unload_count.fetch_add(1, Ordering::AcqRel);
+        self.set_state(LoaderState::Unloading);
 
-        *self.current_context.lock() = None;
+        if self.loaded_modules.remove(&base_address).is_some() {
+            self.total_modules.fetch_sub(1, Ordering::AcqRel);
+            self.unload_count.fetch_add(1, Ordering::AcqRel);
+        }
 
         self.set_state(LoaderState::Loaded);
 
         Ok(())
     }
 
-    pub fn find_module_by_address(&self, address: u64) -> Option<ModuleInfo> {
-        self.loaded_modules
-            .iter()
-            .find(|(&base, module)| address >= base && address < base + module.size)
-            .map(|(_, module)| module.clone())
-    }
-
-    pub fn find_module_by_name(&self, name: &str) -> Option<ModuleInfo> {
-        self.loaded_modules
-            .values()
-            .find(|module| module.name == name)
-            .cloned()
-    }
-
-    pub fn get_all_modules(&self) -> alloc::vec::Vec<ModuleInfo> {
-        self.loaded_modules.values().cloned().collect()
+    pub fn get_module(&self, base_address: u64) -> Option<ModuleInfo> {
+        self.loaded_modules.get(&base_address).cloned()
     }
 
     pub fn get_module_count(&self) -> u32 {
@@ -254,73 +247,28 @@ impl LoaderManager {
         self.unload_count.load(Ordering::Acquire)
     }
 
-    pub fn get_current_context(&self) -> Option<LoadContext> {
-        self.current_context.lock().as_ref().map(|c| (**c).clone())
+    pub fn enumerate_modules(&self) -> alloc::vec::Vec<ModuleInfo> {
+        self.loaded_modules.values().cloned().collect()
     }
 
-    pub fn allocate_pool(&self, size: usize, pool_type: PoolType) -> Result<*mut u8, LoaderError> {
-        if !self.is_initialized() {
-            return Err(LoaderError::NotInitialized);
-        }
-
-        let tag = 0x4C6F6444u32;
-        let pool_type_value = match pool_type {
-            PoolType::NonPagedPool => 0,
-            PoolType::PagedPool => 1,
-            PoolType::NonPagedPoolCacheAligned => 2,
-            PoolType::PagedPoolCacheAligned => 3,
-        };
-
-        let memory = unsafe { ExAllocatePoolWithTag(pool_type_value, size, tag) };
-
-        if memory.is_null() {
-            return Err(LoaderError::MemoryAllocationFailed);
-        }
-
-        Ok(memory)
+    pub fn find_module_by_name(&self, name: &str) -> Option<ModuleInfo> {
+        self.loaded_modules
+            .values()
+            .find(|m| m.name == name)
+            .cloned()
     }
 
-    pub fn free_pool(&self, pool: *mut u8) {
-        if !pool.is_null() {
-            unsafe { ExFreePool(pool) };
-        }
+    pub fn find_module_by_address(&self, address: u64) -> Option<ModuleInfo> {
+        self.loaded_modules
+            .values()
+            .find(|m| address >= m.base_address && address < m.base_address + m.size)
+            .cloned()
     }
+}
 
-    pub fn get_system_routine(&self, routine_name: &str) -> Result<*mut u8, LoaderError> {
-        if !self.is_initialized() {
-            return Err(LoaderError::NotInitialized);
-        }
-
-        let name_bytes = routine_name.as_bytes();
-        let name_ptr = name_bytes.as_ptr() as *const u8;
-
-        let routine = unsafe { MmGetSystemRoutineAddress(name_ptr) };
-
-        if routine.is_null() {
-            return Err(LoaderError::SymbolNotFound);
-        }
-
-        Ok(routine)
-    }
-
-    pub fn validate_module(&self, module_info: &ModuleInfo) -> bool {
-        module_info.base_address != 0
-            && module_info.size != 0
-            && !module_info.name.is_empty()
-    }
-
-    pub fn get_module_statistics(&self) -> (u32, u32, u32, u32) {
-        (
-            self.get_module_count(),
-            self.get_load_count(),
-            self.get_unload_count(),
-            self.loaded_modules.len() as u32,
-        )
-    }
-
-    pub fn clear_all_modules(&mut self) {
-        self.loaded_modules.clear();
-        self.total_modules.store(0, Ordering::Release);
+impl Default for LoaderManager {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -346,19 +294,9 @@ pub fn unload_module(base_address: u64) -> Result<(), LoaderError> {
     manager.unload_module(base_address)
 }
 
-pub fn find_module_by_address(address: u64) -> Option<ModuleInfo> {
+pub fn get_module(base_address: u64) -> Option<ModuleInfo> {
     let manager = LOADER_MANAGER.lock();
-    manager.find_module_by_address(address)
-}
-
-pub fn find_module_by_name(name: &str) -> Option<ModuleInfo> {
-    let manager = LOADER_MANAGER.lock();
-    manager.find_module_by_name(name)
-}
-
-pub fn get_all_modules() -> alloc::vec::Vec<ModuleInfo> {
-    let manager = LOADER_MANAGER.lock();
-    manager.get_all_modules()
+    manager.get_module(base_address)
 }
 
 pub fn get_module_count() -> u32 {
@@ -366,37 +304,17 @@ pub fn get_module_count() -> u32 {
     manager.get_module_count()
 }
 
-pub fn get_loader_state() -> LoaderState {
+pub fn enumerate_modules() -> alloc::vec::Vec<ModuleInfo> {
     let manager = LOADER_MANAGER.lock();
-    manager.get_state()
+    manager.enumerate_modules()
 }
 
-pub fn allocate_pool(size: usize, pool_type: PoolType) -> Result<*mut u8, LoaderError> {
+pub fn find_module_by_name(name: &str) -> Option<ModuleInfo> {
     let manager = LOADER_MANAGER.lock();
-    manager.allocate_pool(size, pool_type)
+    manager.find_module_by_name(name)
 }
 
-pub fn free_pool(pool: *mut u8) {
+pub fn find_module_by_address(address: u64) -> Option<ModuleInfo> {
     let manager = LOADER_MANAGER.lock();
-    manager.free_pool(pool)
-}
-
-pub fn get_system_routine(routine_name: &str) -> Result<*mut u8, LoaderError> {
-    let manager = LOADER_MANAGER.lock();
-    manager.get_system_routine(routine_name)
-}
-
-pub fn get_loader_statistics() -> (u32, u32, u32, u32) {
-    let manager = LOADER_MANAGER.lock();
-    manager.get_module_statistics()
-}
-
-pub fn clear_all_modules() {
-    let mut manager = LOADER_MANAGER.lock();
-    manager.clear_all_modules()
-}
-
-pub fn is_loader_initialized() -> bool {
-    let manager = LOADER_MANAGER.lock();
-    manager.is_initialized()
+    manager.find_module_by_address(address)
 }

@@ -3,12 +3,10 @@ use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
 use spin::Mutex;
 
-extern "system" {
-    fn ExAllocatePoolWithTag(pool_type: u32, number_of_bytes: usize, tag: u32) -> *mut u8;
-    fn ExFreePool(pool: *mut u8);
-    fn KeGetCurrentProcessorNumber() -> u32;
-    fn KeGetActiveProcessors() -> u32;
-}
+use wdk_sys::ntddk::{
+    KeGetCurrentProcessorNumberEx,
+    KeQueryActiveProcessors,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ApicError {
@@ -212,7 +210,7 @@ impl ApicManager {
             self.read_apic_id();
         }
 
-        self.processor_count.store(unsafe { KeGetActiveProcessors() }, Ordering::Release);
+        self.processor_count.store(unsafe { KeQueryActiveProcessors() } as u32, Ordering::Release);
 
         self.initialized.store(true, Ordering::Release);
         Ok(())

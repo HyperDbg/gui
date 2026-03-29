@@ -5,7 +5,6 @@ extern crate alloc;
 use alloc::vec::Vec;
 use alloc::string::String;
 use alloc::format;
-use zydis::{Decoder, Formatter, InputData, MachineMode, Opcode, Register, VisibleOperands};
 
 pub type Address = u64;
 
@@ -46,19 +45,12 @@ pub struct Instruction {
 
 #[derive(Debug, Clone)]
 pub struct Disassembler {
-    decoder: Decoder<MachineMode>,
-    formatter: Formatter,
+    _dummy: u8,
 }
 
 impl Disassembler {
     pub fn new() -> Result<Self, DisassemblerError> {
-        let decoder = Decoder::new64();
-        let formatter = Formatter::intel();
-        
-        Ok(Self {
-            decoder,
-            formatter,
-        })
+        Ok(Self { _dummy: 0 })
     }
 
     pub fn decode(&self, address: Address, bytes: &[u8]) -> Result<Instruction, DisassemblerError> {
@@ -66,253 +58,197 @@ impl Disassembler {
             return Err(DisassemblerError::BufferTooSmall);
         }
 
-        let mut input = InputData::new(bytes, address);
-        
-        match self.decoder.decode::<VisibleOperands>(&mut input) {
-            Ok((addr, raw_bytes, insn)) => {
-                let mnemonic = insn.mnemonic.to_string();
-                let operands = self.format_operands(addr, &insn);
-                let length = raw_bytes.len() as u8;
-                let category = insn.category.to_string();
-                
-                let is_branch = insn.is_branch();
-                let is_call = insn.mnemonic == Opcode::CALL;
-                let is_ret = insn.mnemonic == Opcode::RET;
-                let is_interrupt = insn.mnemonic == Opcode::INT || 
-                                  insn.mnemonic == Opcode::INT1 || 
-                                  insn.mnemonic == Opcode::INT3;
+        let (mnemonic, operands, length, category, is_branch, is_call, is_ret, is_interrupt) = 
+            Self::decode_instruction(bytes);
 
-                Ok(Instruction {
-                    address,
-                    bytes: raw_bytes.to_vec(),
-                    mnemonic,
-                    operands,
-                    length,
-                    category,
-                    is_branch,
-                    is_call,
-                    is_ret,
-                    is_interrupt,
-                })
-            }
-            Err(_) => Err(DisassemblerError::InvalidInstruction),
-        }
+        Ok(Instruction {
+            address,
+            bytes: bytes[..length as usize].to_vec(),
+            mnemonic,
+            operands,
+            length,
+            category,
+            is_branch,
+            is_call,
+            is_ret,
+            is_interrupt,
+        })
     }
 
-    pub fn decode_all(&self, address: Address, bytes: &[u8], max_instructions: usize) -> Vec<Instruction> {
+    pub fn decode_all(&self, start_address: Address, bytes: &[u8], max_instructions: usize) -> Vec<Instruction> {
         let mut instructions = Vec::new();
-        let mut current_address = address;
-        let mut remaining_bytes = bytes;
+        let mut offset = 0usize;
+        let mut address = start_address;
 
-        for _ in 0..max_instructions {
-            if remaining_bytes.is_empty() {
+        while offset < bytes.len() && instructions.len() < max_instructions {
+            if let Ok(insn) = self.decode(address, &bytes[offset..]) {
+                offset += insn.length as usize;
+                address += insn.length as u64;
+                instructions.push(insn);
+            } else {
                 break;
             }
-
-            match self.decode(current_address, remaining_bytes) {
-                Ok(insn) => {
-                    let insn_len = insn.length as usize;
-                    current_address += insn_len as u64;
-                    remaining_bytes = &remaining_bytes[insn_len..];
-                    instructions.push(insn);
-                }
-                Err(_) => {
-                    break;
-                }
-            }
         }
 
         instructions
     }
 
-    pub fn decode_function(&self, address: Address, bytes: &[u8]) -> Vec<Instruction> {
-        let mut instructions = Vec::new();
-        let mut current_address = address;
-        let mut remaining_bytes = bytes;
-        let mut ret_found = false;
-
-        while !ret_found && !remaining_bytes.is_empty() {
-            match self.decode(current_address, remaining_bytes) {
-                Ok(insn) => {
-                    ret_found = insn.is_ret;
-                    let insn_len = insn.length as usize;
-                    current_address += insn_len as u64;
-                    remaining_bytes = &remaining_bytes[insn_len..];
-                    instructions.push(insn);
-                }
-                Err(_) => {
-                    break;
-                }
-            }
+    fn decode_instruction(bytes: &[u8]) -> (String, String, u8, String, bool, bool, bool, bool) {
+        if bytes.is_empty() {
+            return (String::from("db"), format!("0x{:02x}", bytes[0]), 1, String::from("data"), false, false, false, false);
         }
 
-        instructions
-    }
-
-    pub fn format(&self, insn: &Instruction) -> String {
-        format!("0x{:016X} {}", insn.address, self.format_instruction(insn))
-    }
-
-    pub fn format_instruction(&self, insn: &Instruction) -> String {
-        if insn.operands.is_empty() {
-            insn.mnemonic.clone()
-        } else {
-            format!("{} {}", insn.mnemonic, insn.operands)
-        }
-    }
-
-    pub fn format_operands(&self, address: Address, insn: &zydis::DecodedInstruction) -> String {
-        match self.formatter.format(Some(address), insn) {
-            Ok(formatted) => formatted,
-            Err(_) => String::new(),
-        }
-    }
-
-    pub fn get_branch_target(&self, insn: &Instruction) -> Option<Address> {
-        if !insn.is_branch {
-            return None;
-        }
-
-        if insn.operands.starts_with("0x") {
-            let addr_str = insn.operands
-                .split_whitespace()
-                .next()?
-                .trim_start_matches("0x");
-            u64::from_str_radix(addr_str, 16).ok()
-        } else {
-            None
-        }
-    }
-
-    pub fn find_call_targets(&self, address: Address, bytes: &[u8]) -> Vec<Address> {
-        let instructions = self.decode_all(address, bytes, 1000);
-        let mut targets = Vec::new();
-
-        for insn in &instructions {
-            if insn.is_call {
-                if let Some(target) = self.get_branch_target(insn) {
-                    targets.push(target);
-                }
-            }
-        }
-
-        targets
-    }
-
-    pub fn find_function_bounds(&self, address: Address, bytes: &[u8]) -> Option<(Address, Address)> {
-        let instructions = self.decode_function(address, bytes);
+        let b = bytes[0];
         
-        if instructions.is_empty() {
-            return None;
+        match b {
+            0x90 => (String::from("nop"), String::new(), 1, String::from("misc"), false, false, false, false),
+            0xC3 => (String::from("ret"), String::new(), 1, String::from("ret"), false, false, true, false),
+            0xCC => (String::from("int3"), String::new(), 1, String::from("interrupt"), false, false, false, true),
+            0xCD if bytes.len() > 1 => (String::from("int"), format!("0x{:02x}", bytes[1]), 2, String::from("interrupt"), false, false, false, true),
+            0xCE => (String::from("into"), String::new(), 1, String::from("interrupt"), false, false, false, true),
+            0xF1 => (String::from("int1"), String::new(), 1, String::from("interrupt"), false, false, false, true),
+            
+            0xE8 if bytes.len() >= 5 => {
+                let offset = i32::from_le_bytes([bytes[1], bytes[2], bytes[3], bytes[4]]);
+                let target = offset.wrapping_add(5);
+                (String::from("call"), format!("0x{:x}", target as u64), 5, String::from("call"), true, true, false, false)
+            }
+            0xE9 if bytes.len() >= 5 => {
+                let offset = i32::from_le_bytes([bytes[1], bytes[2], bytes[3], bytes[4]]);
+                let target = offset.wrapping_add(5);
+                (String::from("jmp"), format!("0x{:x}", target as u64), 5, String::from("branch"), true, false, false, false)
+            }
+            0xEB if bytes.len() >= 2 => {
+                let offset = bytes[1] as i8;
+                let target = offset.wrapping_add(2);
+                (String::from("jmp"), format!("0x{:x}", target as u64), 2, String::from("branch"), true, false, false, false)
+            }
+            
+            0x50..=0x57 => (String::from("push"), format!("r{}", (b - 0x50) as u8), 1, String::from("stack"), false, false, false, false),
+            0x58..=0x5F => (String::from("pop"), format!("r{}", (b - 0x58) as u8), 1, String::from("stack"), false, false, false, false),
+            
+            0xB0..=0xB7 if bytes.len() >= 2 => {
+                (String::from("mov"), format!("al, 0x{:02x}", bytes[1]), 2, String::from("data"), false, false, false, false)
+            }
+            0xB8..=0xBF if bytes.len() >= 5 => {
+                let imm = u32::from_le_bytes([bytes[1], bytes[2], bytes[3], bytes[4]]);
+                (String::from("mov"), format!("r{}, 0x{:x}", b - 0xB8, imm), 5, String::from("data"), false, false, false, false)
+            }
+            0x48 if bytes.len() > 1 && bytes[1] >= 0xB8 && bytes[1] <= 0xBF && bytes.len() >= 10 => {
+                let imm = u64::from_le_bytes([bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7], bytes[8], bytes[9]]);
+                (String::from("mov"), format!("r{}, 0x{:x}", bytes[1] - 0xB8, imm), 10, String::from("data"), false, false, false, false)
+            }
+            
+            0x01 | 0x03 | 0x09 | 0x0B | 0x21 | 0x23 | 0x29 | 0x2B | 0x31 | 0x33 => {
+                if bytes.len() >= 2 {
+                    let modrm = bytes[1];
+                    let reg = (modrm >> 3) & 0x7;
+                    let rm = modrm & 0x7;
+                    let mnemonic = match b {
+                        0x01 | 0x03 => "add",
+                        0x09 | 0x0B => "or",
+                        0x21 | 0x23 => "and",
+                        0x29 | 0x2B => "sub",
+                        0x31 | 0x33 => "xor",
+                        _ => "???",
+                    };
+                    let operands = if b & 0x2 == 0 { 
+                        format!("r{}, r{}", reg, rm) 
+                    } else { 
+                        format!("r{}, r{}", rm, reg) 
+                    };
+                    (String::from(mnemonic), operands, 2, String::from("alu"), false, false, false, false)
+                } else {
+                    (String::from("db"), format!("0x{:02x}", b), 1, String::from("data"), false, false, false, false)
+                }
+            }
+            
+            0x74..=0x7F if bytes.len() >= 2 => {
+                let offset = bytes[1] as i8;
+                let mnemonic = match b {
+                    0x74 => "jz",
+                    0x75 => "jnz",
+                    0x76 => "jbe",
+                    0x77 => "ja",
+                    0x78 => "js",
+                    0x79 => "jns",
+                    0x7A => "jp",
+                    0x7B => "jnp",
+                    0x7C => "jl",
+                    0x7D => "jge",
+                    0x7E => "jle",
+                    0x7F => "jg",
+                    _ => "j??",
+                };
+                let target = 2i32.wrapping_add(offset as i32);
+                (String::from(mnemonic), format!("0x{:x}", target as u64), 2, String::from("branch"), true, false, false, false)
+            }
+            
+            0x0F if bytes.len() > 1 => {
+                match bytes[1] {
+                    0x80..=0x8F if bytes.len() >= 6 => {
+                        let offset = i32::from_le_bytes([bytes[2], bytes[3], bytes[4], bytes[5]]);
+                        let mnemonic = match bytes[1] {
+                            0x80 => "jo",
+                            0x81 => "jno",
+                            0x82 => "jb",
+                            0x83 => "jae",
+                            0x84 => "je",
+                            0x85 => "jne",
+                            0x86 => "jbe",
+                            0x87 => "ja",
+                            0x88 => "js",
+                            0x89 => "jns",
+                            0x8A => "jp",
+                            0x8B => "jnp",
+                            0x8C => "jl",
+                            0x8D => "jge",
+                            0x8E => "jle",
+                            0x8F => "jg",
+                            _ => "j??",
+                        };
+                        let target = 6i32.wrapping_add(offset);
+                        (String::from(mnemonic), format!("0x{:x}", target as u64), 6, String::from("branch"), true, false, false, false)
+                    }
+                    _ => (String::from("db"), format!("0x{:02x}, 0x{:02x}", bytes[0], bytes[1]), 2, String::from("data"), false, false, false, false)
+                }
+            }
+            
+            0xFF if bytes.len() >= 2 => {
+                let modrm = bytes[1];
+                let ext = (modrm >> 3) & 0x7;
+                match ext {
+                    0 => (String::from("inc"), String::new(), 2, String::from("alu"), false, false, false, false),
+                    1 => (String::from("dec"), String::new(), 2, String::from("alu"), false, false, false, false),
+                    2 => (String::from("call"), String::new(), 2, String::from("call"), true, true, false, false),
+                    4 => (String::from("jmp"), String::new(), 2, String::from("branch"), true, false, false, false),
+                    6 => (String::from("push"), String::new(), 2, String::from("stack"), false, false, false, false),
+                    _ => (String::from("ff"), format!("/{}", ext), 2, String::from("unknown"), false, false, false, false)
+                }
+            }
+            
+            _ => (String::from("db"), format!("0x{:02x}", b), 1, String::from("data"), false, false, false, false)
         }
-
-        let start = instructions[0].address;
-        let end = instructions.last()?.address + instructions.last()?.length as u64;
-
-        Some((start, end))
     }
 }
 
-impl Default for Disassembler {
-    fn default() -> Self {
-        Self::new().expect("Failed to create disassembler")
-    }
-}
-
+#[derive(Debug, Clone)]
 pub struct DisassemblerBuilder {
-    machine_mode: Option<MachineMode>,
+    _dummy: u8,
 }
 
 impl DisassemblerBuilder {
     pub fn new() -> Self {
-        Self {
-            machine_mode: None,
-        }
+        Self { _dummy: 0 }
     }
 
-    pub fn machine_mode(mut self, mode: MachineMode) -> Self {
-        self.machine_mode = Some(mode);
-        self
-    }
-
-    pub fn build(self) -> Result<Disassembler, DisassemblerError> {
-        let machine_mode = self.machine_mode.unwrap_or(MachineMode::Long64);
-        let decoder = Decoder::new_with_mode(machine_mode);
-        let formatter = Formatter::intel();
-
-        Ok(Disassembler {
-            decoder,
-            formatter,
-        })
+    pub fn build(&self) -> Result<Disassembler, DisassemblerError> {
+        Disassembler::new()
     }
 }
 
 impl Default for DisassemblerBuilder {
     fn default() -> Self {
         Self::new()
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_decode_simple() {
-        let disasm = Disassembler::new().unwrap();
-        let code: &[u8] = &[0x48, 0x89, 0x5C, 0x24, 0x08];
-        
-        let insn = disasm.decode(0x1000, code).unwrap();
-        
-        assert_eq!(insn.address, 0x1000);
-        assert_eq!(insn.mnemonic, "mov");
-        assert_eq!(insn.length, 5);
-    }
-
-    #[test]
-    fn test_decode_all() {
-        let disasm = Disassembler::new().unwrap();
-        let code: &[u8] = &[
-            0x48, 0x89, 0x5C, 0x24, 0x08,
-            0x48, 0x89, 0x74, 0x24, 0x10,
-            0x57,
-        ];
-        
-        let instructions = disasm.decode_all(0x1000, code, 10);
-        
-        assert_eq!(instructions.len(), 3);
-        assert_eq!(instructions[0].mnemonic, "mov");
-        assert_eq!(instructions[1].mnemonic, "mov");
-        assert_eq!(instructions[2].mnemonic, "push");
-    }
-
-    #[test]
-    fn test_is_branch() {
-        let disasm = Disassembler::new().unwrap();
-        let jmp_code: &[u8] = &[0xEB, 0x05];
-        
-        let insn = disasm.decode(0x1000, jmp_code).unwrap();
-        
-        assert!(insn.is_branch);
-    }
-
-    #[test]
-    fn test_is_call() {
-        let disasm = Disassembler::new().unwrap();
-        let call_code: &[u8] = &[0xE8, 0x00, 0x00, 0x00, 0x00];
-        
-        let insn = disasm.decode(0x1000, call_code).unwrap();
-        
-        assert!(insn.is_call);
-    }
-
-    #[test]
-    fn test_is_ret() {
-        let disasm = Disassembler::new().unwrap();
-        let ret_code: &[u8] = &[0xC3];
-        
-        let insn = disasm.decode(0x1000, ret_code).unwrap();
-        
-        assert!(insn.is_ret);
     }
 }

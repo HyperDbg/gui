@@ -1,0 +1,2 @@
+﻿error: could not compile `hyperdbg-kd` (lib) due to 15 previous errors; 256 war
+nings emitted

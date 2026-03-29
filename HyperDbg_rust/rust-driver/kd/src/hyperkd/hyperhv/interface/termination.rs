@@ -10,17 +10,21 @@ use wdk_sys::{
     PETHREAD,
     PVOID,
     KIRQL,
+    HANDLE,
 };
 
 use crate::hyperkd::hyperhv::vmm::vmxoff;
 
+use wdk_sys::ntddk::{
+    PsLookupProcessByProcessId,
+    PsLookupThreadByThreadId,
+    ObfDereferenceObject,
+    KeBugCheckEx,
+};
+
 extern "system" {
-    fn PsTerminateProcess(process: PEPROCESS, exit_status: NTSTATUS) -> NTSTATUS;
-    fn PsTerminateThread(thread: PETHREAD, exit_status: NTSTATUS) -> NTSTATUS;
-    fn PsLookupProcessByProcessId(process_id: usize, process: *mut PEPROCESS) -> NTSTATUS;
-    fn PsLookupThreadByThreadId(thread_id: usize, thread: *mut PETHREAD) -> NTSTATUS;
-    fn ObDereferenceObject(object: PVOID);
-    fn KeBugCheckEx(bug_check_code: u32, param1: u64, param2: u64, param3: u64, param4: u64) -> !;
+    fn PsTerminateProcess(Process: PEPROCESS, ExitStatus: NTSTATUS) -> NTSTATUS;
+    fn PsTerminateThread(Thread: PETHREAD, ExitStatus: NTSTATUS) -> NTSTATUS;
 }
 
 #[inline]
@@ -103,13 +107,13 @@ impl TerminationManager {
         unsafe {
             let mut process: PEPROCESS = core::ptr::null_mut();
             
-            let status = PsLookupProcessByProcessId(process_id as usize, &mut process);
+            let status = PsLookupProcessByProcessId(process_id as HANDLE, &mut process);
             if !nt_success(status) {
                 return Err(TerminationError::ProcessNotFound);
             }
 
             let status = PsTerminateProcess(process, exit_status);
-            ObDereferenceObject(process as PVOID);
+            ObfDereferenceObject(process as PVOID);
 
             if !nt_success(status) {
                 return Err(TerminationError::TerminationFailed);
@@ -123,13 +127,13 @@ impl TerminationManager {
         unsafe {
             let mut thread: PETHREAD = core::ptr::null_mut();
             
-            let status = PsLookupThreadByThreadId(thread_id as usize, &mut thread);
+            let status = PsLookupThreadByThreadId(thread_id as HANDLE, &mut thread);
             if !nt_success(status) {
                 return Err(TerminationError::ThreadNotFound);
             }
 
             let status = PsTerminateThread(thread, exit_status);
-            ObDereferenceObject(thread as PVOID);
+            ObfDereferenceObject(thread as PVOID);
 
             if !nt_success(status) {
                 return Err(TerminationError::TerminationFailed);

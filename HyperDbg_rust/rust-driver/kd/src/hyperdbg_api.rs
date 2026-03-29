@@ -4,6 +4,16 @@ use alloc::sync::Arc;
 use alloc::format;
 use spin::{Mutex, Once};
 
+use wdk_sys::{PEPROCESS, PETHREAD, HANDLE, NTSTATUS, PVOID};
+
+use wdk_sys::ntddk::{
+    PsGetProcessId,
+    PsGetThreadId,
+    PsLookupProcessByProcessId,
+    ObfDereferenceObject,
+    IoGetCurrentProcess,
+};
+
 use crate::common::handlers_gen::*;
 use crate::common::types_gen::*;
 use crate::kd::KernelDebugger;
@@ -202,35 +212,35 @@ impl DebuggerApi for HyperDbgApi {
         let vcpu = context.get_vcpu(0).ok_or("No vCPU available")?;
         
         Ok(RegisterState {
-            rax: 0,
-            rbx: 0,
-            rcx: 0,
-            rdx: 0,
-            rsi: 0,
-            rdi: 0,
-            rbp: 0,
+            rax: vcpu.guest_rax,
+            rbx: vcpu.guest_rbx,
+            rcx: vcpu.guest_rcx,
+            rdx: vcpu.guest_rdx,
+            rsi: vcpu.guest_rsi,
+            rdi: vcpu.guest_rdi,
+            rbp: vcpu.guest_rbp,
             rsp: vcpu.guest_rsp,
-            r8: 0,
-            r9: 0,
-            r10: 0,
-            r11: 0,
-            r12: 0,
-            r13: 0,
-            r14: 0,
-            r15: 0,
+            r8: vcpu.guest_r8,
+            r9: vcpu.guest_r9,
+            r10: vcpu.guest_r10,
+            r11: vcpu.guest_r11,
+            r12: vcpu.guest_r12,
+            r13: vcpu.guest_r13,
+            r14: vcpu.guest_r14,
+            r15: vcpu.guest_r15,
             rip: vcpu.guest_rip,
             rflags: vcpu.guest_rflags,
-            cr0: 0,
-            cr2: 0,
-            cr3: 0,
-            cr4: 0,
+            cr0: vcpu.guest_cr0,
+            cr2: vcpu.guest_cr2,
+            cr3: vcpu.guest_cr3,
+            cr4: vcpu.guest_cr4,
             dr0: vcpu.dr0,
             dr1: vcpu.dr1,
             dr2: vcpu.dr2,
             dr3: vcpu.dr3,
             dr6: vcpu.dr6,
-            dr7: 0,
-            gdtr: 0,
+            dr7: vcpu.dr7,
+            gdtr: vcpu.guest_gdtr_base,
             gsbase: vcpu.kernel_gs_base,
             fsbase: 0,
         })
@@ -245,14 +255,34 @@ impl DebuggerApi for HyperDbgApi {
         }
         
         if let Some(vcpu) = context.get_vcpu_mut(0) {
+            vcpu.guest_rax = regs.rax;
+            vcpu.guest_rbx = regs.rbx;
+            vcpu.guest_rcx = regs.rcx;
+            vcpu.guest_rdx = regs.rdx;
+            vcpu.guest_rsi = regs.rsi;
+            vcpu.guest_rdi = regs.rdi;
+            vcpu.guest_rbp = regs.rbp;
             vcpu.guest_rsp = regs.rsp;
+            vcpu.guest_r8 = regs.r8;
+            vcpu.guest_r9 = regs.r9;
+            vcpu.guest_r10 = regs.r10;
+            vcpu.guest_r11 = regs.r11;
+            vcpu.guest_r12 = regs.r12;
+            vcpu.guest_r13 = regs.r13;
+            vcpu.guest_r14 = regs.r14;
+            vcpu.guest_r15 = regs.r15;
             vcpu.guest_rip = regs.rip;
             vcpu.guest_rflags = regs.rflags;
+            vcpu.guest_cr0 = regs.cr0;
+            vcpu.guest_cr2 = regs.cr2;
+            vcpu.guest_cr3 = regs.cr3;
+            vcpu.guest_cr4 = regs.cr4;
             vcpu.dr0 = regs.dr0;
             vcpu.dr1 = regs.dr1;
             vcpu.dr2 = regs.dr2;
             vcpu.dr3 = regs.dr3;
             vcpu.dr6 = regs.dr6;
+            vcpu.dr7 = regs.dr7;
             vcpu.kernel_gs_base = regs.gsbase;
         }
         
@@ -263,11 +293,10 @@ impl DebuggerApi for HyperDbgApi {
         let mut processes = Vec::new();
         
         unsafe {
-            let mut process: *mut u8 = core::ptr::null_mut();
+            let mut process: PEPROCESS = core::ptr::null_mut();
             extern "system" {
-                fn PsGetNextProcess(process: *mut u8) -> *mut u8;
-                fn PsGetProcessId(process: *mut u8) -> u32;
-                fn PsGetProcessImageFileName(process: *mut u8) -> *mut i8;
+                fn PsGetNextProcess(process: PEPROCESS) -> PEPROCESS;
+                fn PsGetProcessImageFileName(process: PEPROCESS) -> *mut i8;
             }
             
             loop {
@@ -287,7 +316,7 @@ impl DebuggerApi for HyperDbgApi {
                 };
                 
                 processes.push(ProcessInfo {
-                    process_id,
+                    process_id: process_id as u32,
                     image_name,
                     base_address: None,
                     size: 0,
@@ -302,24 +331,133 @@ impl DebuggerApi for HyperDbgApi {
     fn get_thread_list(&mut self, req: &Request) -> Result<Vec<ThreadInfo>, String> {
         let process_id = req.process_id.or(self.current_process_id).ok_or("process_id required")?;
         
-        let threads = Vec::new();
+        let mut threads = Vec::new();
         
-        log::info!("Getting thread list for process {}", process_id);
+        unsafe {
+            use wdk_sys::STATUS_SUCCESS;
+            
+            extern "system" {
+                fn PsGetNextProcessThread(Process: PEPROCESS, Thread: PETHREAD) -> PETHREAD;
+                fn PsGetThreadTeb(Thread: PETHREAD) -> u64;
+            }
+            
+            let mut process: PEPROCESS = core::ptr::null_mut();
+            let status = PsLookupProcessByProcessId(process_id as HANDLE, &mut process);
+            
+            if status != STATUS_SUCCESS {
+                return Err(format!("Failed to lookup process {}", process_id));
+            }
+            
+            let mut thread: PETHREAD = core::ptr::null_mut();
+            
+            loop {
+                thread = PsGetNextProcessThread(process, thread);
+                if thread.is_null() {
+                    break;
+                }
+                
+                let thread_id = PsGetThreadId(thread) as u32;
+                let teb = PsGetThreadTeb(thread);
+                
+                threads.push(ThreadInfo {
+                    thread_id,
+                    process_id,
+                    teb: if teb != 0 { Some(format!("0x{:x}", teb)) } else { None },
+                    start_address: None,
+                    state: 0,
+                });
+            }
+            
+            ObfDereferenceObject(process as PVOID);
+        }
+        
+        log::info!("Found {} threads for process {}", threads.len(), process_id);
         
         Ok(threads)
     }
 
     fn get_module_list(&mut self, _req: &Request) -> Result<Vec<ModuleInfo>, String> {
-        let modules = Vec::new();
+        let mut modules = Vec::new();
+        
+        unsafe {
+            extern "system" {
+                fn PsGetProcessPeb(Process: PEPROCESS) -> PVOID;
+            }
+            
+            let process = IoGetCurrentProcess();
+            let peb = PsGetProcessPeb(process);
+            
+            if peb.is_null() {
+                return Ok(modules);
+            }
+            
+            let peb_ref = &*(peb as *const u8 as *const crate::hyperkd::hyperhv::memory::peb::PEB);
+            
+            if peb_ref.Ldr.is_null() {
+                return Ok(modules);
+            }
+            
+            let ldr = &*peb_ref.Ldr;
+            
+            let mut head = &ldr.InLoadOrderModuleList;
+            let mut entry = head.Flink;
+            
+            while !entry.is_null() && entry != head as *const _ as *mut _ {
+                let module_entry = &*(entry as *const crate::hyperkd::hyperhv::memory::peb::LDR_DATA_TABLE_ENTRY);
+                
+                let base_address = module_entry.DllBase as u64;
+                let size = module_entry.SizeOfImage as u64;
+                
+                let name = if !module_entry.BaseDllName.Buffer.is_null() {
+                    let len = module_entry.BaseDllName.Length as usize / 2;
+                    let slice = core::slice::from_raw_parts(module_entry.BaseDllName.Buffer as *const u16, len.min(260));
+                    String::from_utf16_lossy(slice)
+                } else {
+                    String::new()
+                };
+                
+                modules.push(ModuleInfo {
+                    name: Some(name),
+                    base_address: Some(format!("0x{:x}", base_address)),
+                    size,
+                    path: None,
+                });
+                
+                entry = module_entry.InLoadOrderLinks.Flink;
+                
+                if modules.len() > 500 {
+                    break;
+                }
+            }
+        }
+        
+        log::info!("Found {} modules", modules.len());
         
         Ok(modules)
     }
 
     fn disassemble(&mut self, req: &Request) -> Result<Vec<Instruction>, String> {
-        let _address = req.address.ok_or("address required")?;
-        let _data = req.data.as_ref().ok_or("data required")?;
+        let address = req.address.ok_or("address required")?;
+        let data = req.data.as_ref().ok_or("data required")?;
         
-        let instructions = Vec::new();
+        let disasm = crate::disassembler::Disassembler::new()
+            .map_err(|e| format!("Failed to create disassembler: {:?}", e))?;
+        
+        let max_instructions = req.size.unwrap_or(20) as usize;
+        let decoded = disasm.decode_all(address, data, max_instructions);
+        
+        let instructions = decoded.into_iter().map(|insn| Instruction {
+            address: Some(format!("0x{:x}", insn.address)),
+            bytes: Some(insn.bytes),
+            mnemonic: Some(insn.mnemonic),
+            operands: Some(insn.operands),
+            length: insn.length,
+            category: Some(insn.category),
+            is_branch: insn.is_branch,
+            is_call: insn.is_call,
+            is_ret: insn.is_ret,
+            is_interrupt: insn.is_interrupt,
+        }).collect();
         
         Ok(instructions)
     }

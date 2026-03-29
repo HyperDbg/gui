@@ -3,16 +3,40 @@ use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
-extern "system" {
-    fn IoCreateDevice(driver_object: *mut u8, device_extension_size: u32, device_name: *const u16, device_type: u32, device_characteristics: u32, device: *mut *mut u8) -> u32;
-    fn IoDeleteDevice(device: *mut u8);
-    fn IoCreateSymbolicLink(symbolic_link_name: *const u16, device_name: *const u16) -> u32;
-    fn IoDeleteSymbolicLink(symbolic_link_name: *const u16);
-    fn ZwCreateFile(handle: *mut *mut u8, desired_access: u32, object_attributes: *const u8, io_status_block: *mut u32, allocation_size: *const u64, file_attributes: u32, share_access: u32, disposition: u32, create_options: u32) -> u32;
-    fn ZwClose(handle: *mut u8) -> u32;
-    fn ZwDeviceIoControlFile(handle: *mut u8, event: *mut u8, apc_routine: *const u8, apc_context: *mut u8, io_status_block: *mut u32, io_control_code: u32, input_buffer: *const u8, input_buffer_length: u32, output_buffer: *mut u8, output_buffer_length: u32) -> u32;
-    fn ZwReadFile(handle: *mut u8, event: *mut u8, apc_routine: *const u8, apc_context: *mut u8, io_status_block: *mut u32, buffer: *mut u8, length: u32, byte_offset: *const u64) -> u32;
-    fn ZwWriteFile(handle: *mut u8, event: *mut u8, apc_routine: *const u8, apc_context: *mut u8, io_status_block: *mut u32, buffer: *const u8, length: u32, byte_offset: *const u64) -> u32;
+use wdk_sys::{
+    NTSTATUS,
+    PDRIVER_OBJECT,
+    PDEVICE_OBJECT,
+    PUNICODE_STRING,
+    PIO_STATUS_BLOCK,
+    IO_STATUS_BLOCK,
+    HANDLE,
+    PHANDLE,
+    ULONG,
+    ACCESS_MASK,
+    PVOID,
+    PLARGE_INTEGER,
+    BOOLEAN,
+    POBJECT_ATTRIBUTES,
+    PIO_APC_ROUTINE,
+    PULONG,
+};
+
+use wdk_sys::ntddk::{
+    IoCreateDevice,
+    IoDeleteDevice,
+    IoCreateSymbolicLink,
+    IoDeleteSymbolicLink,
+    ZwCreateFile,
+    ZwClose,
+    ZwDeviceIoControlFile,
+    ZwReadFile,
+    ZwWriteFile,
+};
+
+#[inline]
+fn nt_success(status: NTSTATUS) -> bool {
+    status >= 0
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -253,8 +277,8 @@ pub struct IoctlResponse {
 #[derive(Debug)]
 pub struct CommunicationHandle {
     pub mode: CommunicationMode,
-    pub handle: *mut u8,
-    pub device_object: *mut u8,
+    pub handle: HANDLE,
+    pub device_object: PDEVICE_OBJECT,
     pub connected: AtomicBool,
     pub bytes_sent: AtomicU32,
     pub bytes_received: AtomicU32,
@@ -413,7 +437,7 @@ impl CommunicationManager {
                 return Err(CommunicationError::ConnectionFailed);
             }
 
-            let mut io_status: u32 = 0;
+            let mut io_status: wdk_sys::IO_STATUS_BLOCK = unsafe { core::mem::zeroed() };
             let mut output_buffer = request.output_buffer.clone();
             output_buffer.resize(request.output_length as usize, 0);
 
@@ -421,22 +445,22 @@ impl CommunicationManager {
                 ZwDeviceIoControlFile(
                     handle.handle,
                     core::ptr::null_mut(),
-                    core::ptr::null(),
+                    None,
                     core::ptr::null_mut(),
                     &mut io_status,
                     request.ioctl_code.to_u32(),
-                    request.input_buffer.as_ptr(),
+                    request.input_buffer.as_ptr() as PVOID,
                     request.input_length,
-                    output_buffer.as_mut_ptr(),
+                    output_buffer.as_mut_ptr() as PVOID,
                     request.output_length,
                 )
             };
 
-            if status != 0 {
+            if !nt_success(status) {
                 return Err(CommunicationError::SendFailed);
             }
 
-            let bytes_returned = io_status;
+            let bytes_returned = io_status.Information as u32;
             handle.bytes_sent.fetch_add(request.input_length, Ordering::AcqRel);
             handle.bytes_received.fetch_add(bytes_returned, Ordering::AcqRel);
 
@@ -467,21 +491,22 @@ impl CommunicationManager {
                 return Err(CommunicationError::ConnectionFailed);
             }
 
-            let mut io_status: u32 = 0;
+            let mut io_status: wdk_sys::IO_STATUS_BLOCK = unsafe { core::mem::zeroed() };
             let status = unsafe {
                 ZwWriteFile(
                     handle.handle,
                     core::ptr::null_mut(),
-                    core::ptr::null(),
+                    None,
                     core::ptr::null_mut(),
                     &mut io_status,
-                    data.as_ptr() as *mut u8,
-                    data.len() as u32,
-                    core::ptr::null(),
+                    data.as_ptr() as PVOID,
+                    data.len() as ULONG,
+                    core::ptr::null_mut(),
+                    core::ptr::null_mut(),
                 )
             };
 
-            if status != 0 {
+            if !nt_success(status) {
                 return Err(CommunicationError::SendFailed);
             }
 
@@ -510,17 +535,18 @@ impl CommunicationManager {
                 return Err(CommunicationError::ConnectionFailed);
             }
 
-            let mut io_status: u32 = 0;
+            let mut io_status: IO_STATUS_BLOCK = unsafe { core::mem::zeroed() };
             let status = unsafe {
                 ZwReadFile(
                     handle.handle,
                     core::ptr::null_mut(),
-                    core::ptr::null(),
+                    None,
                     core::ptr::null_mut(),
                     &mut io_status,
-                    buffer.as_mut_ptr(),
+                    buffer.as_mut_ptr() as PVOID,
                     buffer.len() as u32,
-                    core::ptr::null(),
+                    core::ptr::null_mut(),
+                    core::ptr::null_mut(),
                 )
             };
 
@@ -528,7 +554,7 @@ impl CommunicationManager {
                 return Err(CommunicationError::ReceiveFailed);
             }
 
-            let bytes_received = io_status;
+            let bytes_received = io_status.Information as u32;
             handle.bytes_received.fetch_add(bytes_received, Ordering::AcqRel);
 
             Ok(bytes_received)

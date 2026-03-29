@@ -3,12 +3,19 @@ use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
 use spin::Mutex;
 
-extern "system" {
-    fn PsGetCurrentProcess() -> *mut u8;
-    fn PsLookupProcessByProcessId(process_id: u32, process: *mut *mut u8) -> u32;
-    fn PsGetProcessImageFileName(process: *mut u8, buffer: *mut u8, buffer_size: u32) -> u32;
-    fn ObDereferenceObject(object: *mut u8);
-}
+use wdk_sys::{
+    HANDLE,
+    NTSTATUS,
+    PEPROCESS,
+    PVOID,
+    STATUS_SUCCESS,
+};
+
+use wdk_sys::ntddk::{
+    PsLookupProcessByProcessId,
+    ObfDereferenceObject,
+    IoGetCurrentProcess,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ProcessError {
@@ -35,7 +42,7 @@ pub struct ProcessInfo {
 #[derive(Debug, Clone)]
 pub struct ProcessObject {
     pub process_id: u32,
-    pub process_handle: *mut u8,
+    pub process_handle: PEPROCESS,
     pub image_name: alloc::string::String,
     pub image_path: alloc::string::String,
     pub command_line: alloc::string::String,
@@ -94,19 +101,12 @@ impl ProcessManager {
             return Err(ProcessError::NotInitialized);
         }
 
-        let current_process = unsafe { PsGetCurrentProcess() };
+        let current_process = unsafe { IoGetCurrentProcess() };
         if current_process.is_null() {
             return Err(ProcessError::ProcessNotFound);
         }
 
-        let mut image_name = [0u8; 256];
-        let name_length = unsafe { PsGetProcessImageFileName(current_process, image_name.as_mut_ptr(), 256) };
-
-        if name_length > 0 {
-            let name = core::str::from_utf8(&image_name[..name_length as usize]).unwrap_or("unknown");
-            self.current_process_id.store(self.extract_process_id(current_process), Ordering::Release);
-        }
-
+        self.current_process_id.store(self.extract_process_id(current_process), Ordering::Release);
         self.initialized.store(true, Ordering::Release);
         Ok(())
     }
@@ -134,7 +134,7 @@ impl ProcessManager {
         processes.get(&process_id).cloned().ok_or(ProcessError::ProcessNotFound)
     }
 
-    pub fn lookup_process_by_handle(&self, process_handle: *mut u8) -> Result<ProcessObject, ProcessError> {
+    pub fn lookup_process_by_handle(&self, process_handle: PEPROCESS) -> Result<ProcessObject, ProcessError> {
         if !self.is_initialized() {
             return Err(ProcessError::NotInitialized);
         }
@@ -237,12 +237,43 @@ impl ProcessManager {
             .ok_or(ProcessError::ProcessNotFound)
     }
 
-    fn extract_process_id(&self, process_handle: *mut u8) -> u32 {
-        unsafe { *(process_handle as *const u32).offset(0x2e0 / 4) }
+    fn extract_process_id(&self, _process_handle: PEPROCESS) -> u32 {
+        0
+    }
+
+    pub fn lookup_process_object(&self, process_id: u32) -> Result<PEPROCESS, ProcessError> {
+        if !self.is_initialized() {
+            return Err(ProcessError::NotInitialized);
+        }
+
+        let mut process: PEPROCESS = core::ptr::null_mut();
+        let status = unsafe {
+            PsLookupProcessByProcessId(process_id as HANDLE, &mut process)
+        };
+
+        if status != STATUS_SUCCESS {
+            return Err(ProcessError::ProcessNotFound);
+        }
+
+        Ok(process)
+    }
+
+    pub fn dereference_process(&self, process: PEPROCESS) {
+        if !process.is_null() {
+            unsafe {
+                ObfDereferenceObject(process as PVOID);
+            }
+        }
     }
 }
 
-static PROCESS_MANAGER: Mutex<ProcessManager> = Mutex::new(ProcessManager::new());
+impl Default for ProcessManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+pub static PROCESS_MANAGER: Mutex<ProcessManager> = Mutex::new(ProcessManager::new());
 
 pub fn initialize_process_manager() -> Result<(), ProcessError> {
     let mut manager = PROCESS_MANAGER.lock();
@@ -264,7 +295,7 @@ pub fn lookup_process(process_id: u32) -> Result<ProcessObject, ProcessError> {
     manager.lookup_process(process_id)
 }
 
-pub fn lookup_process_by_handle(process_handle: *mut u8) -> Result<ProcessObject, ProcessError> {
+pub fn lookup_process_by_handle(process_handle: PEPROCESS) -> Result<ProcessObject, ProcessError> {
     let manager = PROCESS_MANAGER.lock();
     manager.lookup_process_by_handle(process_handle)
 }
@@ -297,11 +328,6 @@ pub fn set_process_debugged(process_id: u32, debugged: bool) -> Result<(), Proce
 pub fn is_process_debugged(process_id: u32) -> bool {
     let manager = PROCESS_MANAGER.lock();
     manager.is_debugged(process_id)
-}
-
-pub fn get_debugged_process_count() -> u32 {
-    let manager = PROCESS_MANAGER.lock();
-    manager.get_debugged_process_count()
 }
 
 pub fn add_thread_to_process(process_id: u32, thread_id: u32) -> Result<(), ProcessError> {
