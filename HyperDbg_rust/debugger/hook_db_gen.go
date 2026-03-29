@@ -3,6 +3,7 @@ package debugger
 import (
     "encoding/json"
     "fmt"
+    "reflect"
     "strings"
 )
 
@@ -1862,7 +1863,8 @@ var HookDatabase = []HookInfo{
             {Name: "ServiceContext", Type: "PVOID", GoType: "uintptr"},
             {Name: "SpinLock", Type: "PKSPIN_LOCK", GoType: "*uintptr"},
             {Name: "Vector", Type: "ULONG", GoType: "uint32"},
-            {Name: "Irql", Type: "KIRQL", GoType: "uint8"},
+            {Name: "MmGetSystemRoutineAddress
+        Irql", Type: "KIRQL", GoType: "uint8"},
             {Name: "SynchronizeIrql", Type: "KIRQL", GoType: "uint8"},
             {Name: "InterruptMode", Type: "KINTERRUPT_MODE", GoType: "uintptr"},
             {Name: "ShareVector", Type: "BOOLEAN", GoType: "bool"},
@@ -12147,6 +12149,7985 @@ var HookDatabase = []HookInfo{
         ReturnType: "ULONG",
         GoType: "uint32",
     },
+}
+
+// Auto-generated Args structs for each API
+type DbgBreakPointWithStatusArgs struct {
+    Status uint32 `json:"Status"`
+}
+
+type DbgPrintArgs struct {
+    Format uintptr `json:"Format"`
+}
+
+type DbgPrintExArgs struct {
+    ComponentId uint32 `json:"ComponentId"`
+    Level uint32 `json:"Level"`
+    Format uintptr `json:"Format"`
+}
+
+type DbgPrintReturnControlCArgs struct {
+    Format uintptr `json:"Format"`
+}
+
+type DbgPromptArgs struct {
+    Prompt uintptr `json:"Prompt"`
+    Response uintptr `json:"Response"`
+    Length uint32 `json:"Length"`
+}
+
+type DbgQueryDebugFilterStateArgs struct {
+    ComponentId uint32 `json:"ComponentId"`
+    Level uint32 `json:"Level"`
+}
+
+type DbgSetDebugFilterStateArgs struct {
+    ComponentId uint32 `json:"ComponentId"`
+    Level uint32 `json:"Level"`
+    State bool `json:"State"`
+}
+
+type DbgSetDebugPrintCallbackArgs struct {
+    DebugPrintCallback uintptr `json:"DebugPrintCallback"`
+    Enable bool `json:"Enable"`
+}
+
+type ExAcquireFastMutexArgs struct {
+    FastMutex uintptr `json:"FastMutex"`
+}
+
+type ExAcquireFastMutexUnsafeArgs struct {
+    FastMutex uintptr `json:"FastMutex"`
+}
+
+type ExAcquirePushLockExclusiveExArgs struct {
+    PushLock *uintptr `json:"PushLock"`
+    Flags uint32 `json:"Flags"`
+}
+
+type ExAcquirePushLockSharedExArgs struct {
+    PushLock *uintptr `json:"PushLock"`
+    Flags uint32 `json:"Flags"`
+}
+
+type ExAcquireResourceExclusiveLiteArgs struct {
+    Resource uintptr `json:"Resource"`
+    Wait bool `json:"Wait"`
+}
+
+type ExAcquireResourceSharedLiteArgs struct {
+    Resource uintptr `json:"Resource"`
+    Wait bool `json:"Wait"`
+}
+
+type ExAcquireRundownProtectionArgs struct {
+    RunRef uintptr `json:"RunRef"`
+}
+
+type ExAcquireRundownProtectionCacheAwareArgs struct {
+    RunRefCacheAware uintptr `json:"RunRefCacheAware"`
+}
+
+type ExAcquireRundownProtectionCacheAwareExArgs struct {
+    RunRefCacheAware uintptr `json:"RunRefCacheAware"`
+    Count uint32 `json:"Count"`
+}
+
+type ExAcquireRundownProtectionExArgs struct {
+    RunRef uintptr `json:"RunRef"`
+    Count uint32 `json:"Count"`
+}
+
+type ExAcquireSharedStarveExclusiveArgs struct {
+    Resource uintptr `json:"Resource"`
+    Wait bool `json:"Wait"`
+}
+
+type ExAcquireSharedWaitForExclusiveArgs struct {
+    Resource uintptr `json:"Resource"`
+    Wait bool `json:"Wait"`
+}
+
+type ExAcquireSpinLockExclusiveArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type ExAcquireSpinLockExclusiveAtDpcLevelArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type ExAcquireSpinLockSharedArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type ExAcquireSpinLockSharedAtDpcLevelArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type ExAllocateCacheAwareRundownProtectionArgs struct {
+    PoolType uintptr `json:"PoolType"`
+    PoolTag uint32 `json:"PoolTag"`
+}
+
+type ExAllocateFromLookasideListExArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+}
+
+type ExAllocateFromNPagedLookasideListArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+}
+
+type ExAllocateFromPagedLookasideListArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+}
+
+type ExAllocatePool2Args struct {
+    Flags uintptr `json:"Flags"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    Tag uint32 `json:"Tag"`
+}
+
+type ExAllocatePool3Args struct {
+    Flags uintptr `json:"Flags"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    Tag uint32 `json:"Tag"`
+    ExtendedParameters uintptr `json:"ExtendedParameters"`
+    ExtendedParametersCount uint32 `json:"ExtendedParametersCount"`
+}
+
+type ExAllocatePoolWithQuotaArgs struct {
+    PoolType uintptr `json:"PoolType"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+}
+
+type ExAllocateTimerArgs struct {
+    Callback uintptr `json:"Callback"`
+    CallbackContext uintptr `json:"CallbackContext"`
+    Attributes uint32 `json:"Attributes"`
+}
+
+type ExCancelTimerArgs struct {
+    Timer uintptr `json:"Timer"`
+    Parameters uintptr `json:"Parameters"`
+}
+
+type ExCleanupRundownProtectionCacheAwareArgs struct {
+    RunRefCacheAware uintptr `json:"RunRefCacheAware"`
+}
+
+type ExConvertExclusiveToSharedLiteArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExCreateCallbackArgs struct {
+    CallbackObject uintptr `json:"CallbackObject"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    Create bool `json:"Create"`
+    AllowMultipleCallbacks bool `json:"AllowMultipleCallbacks"`
+}
+
+type ExCreatePoolArgs struct {
+    Flags uint32 `json:"Flags"`
+    Tag uintptr `json:"Tag"`
+    Params uintptr `json:"Params"`
+    PoolHandle uintptr `json:"PoolHandle"`
+}
+
+type ExDeleteLookasideListExArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+}
+
+type ExDeleteNPagedLookasideListArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+}
+
+type ExDeletePagedLookasideListArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+}
+
+type ExDeleteResourceLiteArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExDeleteTimerArgs struct {
+    Timer uintptr `json:"Timer"`
+    Cancel bool `json:"Cancel"`
+    Wait bool `json:"Wait"`
+    Parameters uintptr `json:"Parameters"`
+}
+
+type ExDestroyPoolArgs struct {
+    PoolHandle uintptr `json:"PoolHandle"`
+}
+
+type ExDisableResourceBoostLiteArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExEnterCriticalRegionAndAcquireResourceExclusiveArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExEnterCriticalRegionAndAcquireResourceSharedArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExEnterCriticalRegionAndAcquireSharedWaitForExclusiveArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExEnumerateSystemFirmwareTablesArgs struct {
+    FirmwareTableProviderSignature uint32 `json:"FirmwareTableProviderSignature"`
+    FirmwareTableBuffer uintptr `json:"FirmwareTableBuffer"`
+    BufferLength uint32 `json:"BufferLength"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+}
+
+type ExExtendZoneArgs struct {
+    Zone uintptr `json:"Zone"`
+    Segment uintptr `json:"Segment"`
+    SegmentSize uint32 `json:"SegmentSize"`
+}
+
+type ExFlushLookasideListExArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+}
+
+type ExFreeCacheAwareRundownProtectionArgs struct {
+    RunRefCacheAware uintptr `json:"RunRefCacheAware"`
+}
+
+type ExFreePoolArgs struct {
+    P uintptr `json:"P"`
+}
+
+type ExFreePool2Args struct {
+    P uintptr `json:"P"`
+    Tag uint32 `json:"Tag"`
+    ExtendedParameters uintptr `json:"ExtendedParameters"`
+    ExtendedParametersCount uint32 `json:"ExtendedParametersCount"`
+}
+
+type ExFreePoolWithTagArgs struct {
+    P uintptr `json:"P"`
+    Tag uint32 `json:"Tag"`
+}
+
+type ExFreeToLookasideListExArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+    Entry uintptr `json:"Entry"`
+}
+
+type ExFreeToNPagedLookasideListArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+    Entry uintptr `json:"Entry"`
+}
+
+type ExFreeToPagedLookasideListArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+    Entry uintptr `json:"Entry"`
+}
+
+type ExGetExclusiveWaiterCountArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExGetFirmwareEnvironmentVariableArgs struct {
+    VariableName uintptr `json:"VariableName"`
+    VendorGuid uintptr `json:"VendorGuid"`
+    Value uintptr `json:"Value"`
+    ValueLength *uint32 `json:"ValueLength"`
+    Attributes *uint32 `json:"Attributes"`
+}
+
+type ExGetSharedWaiterCountArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExGetSystemFirmwareTableArgs struct {
+    FirmwareTableProviderSignature uint32 `json:"FirmwareTableProviderSignature"`
+    FirmwareTableID uint32 `json:"FirmwareTableID"`
+    FirmwareTableBuffer uintptr `json:"FirmwareTableBuffer"`
+    BufferLength uint32 `json:"BufferLength"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+}
+
+type ExInitializeDeviceAtsArgs struct {
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    Flags uint32 `json:"Flags"`
+}
+
+type ExInitializeLookasideListExArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+    Allocate uintptr `json:"Allocate"`
+    Free uintptr `json:"Free"`
+    PoolType uintptr `json:"PoolType"`
+    Flags uint32 `json:"Flags"`
+    Size uintptr `json:"Size"`
+    Tag uint32 `json:"Tag"`
+    Depth uint16 `json:"Depth"`
+}
+
+type ExInitializeNPagedLookasideListArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+    Allocate uintptr `json:"Allocate"`
+    Free uintptr `json:"Free"`
+    Flags uint32 `json:"Flags"`
+    Size uintptr `json:"Size"`
+    Tag uint32 `json:"Tag"`
+    Depth uint16 `json:"Depth"`
+}
+
+type ExInitializePagedLookasideListArgs struct {
+    Lookaside uintptr `json:"Lookaside"`
+    Allocate uintptr `json:"Allocate"`
+    Free uintptr `json:"Free"`
+    Flags uint32 `json:"Flags"`
+    Size uintptr `json:"Size"`
+    Tag uint32 `json:"Tag"`
+    Depth uint16 `json:"Depth"`
+}
+
+type ExInitializePushLockArgs struct {
+    PushLock *uintptr `json:"PushLock"`
+}
+
+type ExInitializeResourceLiteArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExInitializeRundownProtectionArgs struct {
+    RunRef uintptr `json:"RunRef"`
+}
+
+type ExInitializeRundownProtectionCacheAwareArgs struct {
+    RunRefCacheAware uintptr `json:"RunRefCacheAware"`
+    RunRefSize uintptr `json:"RunRefSize"`
+}
+
+type ExInitializeRundownProtectionCacheAwareExArgs struct {
+    RunRefCacheAware uintptr `json:"RunRefCacheAware"`
+    Flags uint32 `json:"Flags"`
+}
+
+type ExInitializeZoneArgs struct {
+    Zone uintptr `json:"Zone"`
+    BlockSize uint32 `json:"BlockSize"`
+    InitialSegment uintptr `json:"InitialSegment"`
+    InitialSegmentSize uint32 `json:"InitialSegmentSize"`
+}
+
+type ExInterlockedAddLargeIntegerArgs struct {
+    Addend *int64 `json:"Addend"`
+    Increment int64 `json:"Increment"`
+    Lock *uintptr `json:"Lock"`
+}
+
+type ExInterlockedAddUlongArgs struct {
+    Addend *uint32 `json:"Addend"`
+    Increment uint32 `json:"Increment"`
+    Lock *uintptr `json:"Lock"`
+}
+
+type ExInterlockedExtendZoneArgs struct {
+    Zone uintptr `json:"Zone"`
+    Segment uintptr `json:"Segment"`
+    SegmentSize uint32 `json:"SegmentSize"`
+    Lock *uintptr `json:"Lock"`
+}
+
+type ExInterlockedInsertHeadListArgs struct {
+    ListHead uintptr `json:"ListHead"`
+    ListEntry uintptr `json:"ListEntry"`
+    Lock *uintptr `json:"Lock"`
+}
+
+type ExInterlockedInsertTailListArgs struct {
+    ListHead uintptr `json:"ListHead"`
+    ListEntry uintptr `json:"ListEntry"`
+    Lock *uintptr `json:"Lock"`
+}
+
+type ExInterlockedPopEntryListArgs struct {
+    ListHead uintptr `json:"ListHead"`
+    Lock *uintptr `json:"Lock"`
+}
+
+type ExInterlockedPushEntryListArgs struct {
+    ListHead uintptr `json:"ListHead"`
+    ListEntry uintptr `json:"ListEntry"`
+    Lock *uintptr `json:"Lock"`
+}
+
+type ExInterlockedRemoveHeadListArgs struct {
+    ListHead uintptr `json:"ListHead"`
+    Lock *uintptr `json:"Lock"`
+}
+
+type ExIsProcessorFeaturePresentArgs struct {
+    ProcessorFeature uint32 `json:"ProcessorFeature"`
+}
+
+type ExIsResourceAcquiredExclusiveLiteArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExIsResourceAcquiredSharedLiteArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExLocalTimeToSystemTimeArgs struct {
+    LocalTime *int64 `json:"LocalTime"`
+    SystemTime *int64 `json:"SystemTime"`
+}
+
+type ExNotifyCallbackArgs struct {
+    CallbackObject uintptr `json:"CallbackObject"`
+    Argument1 uintptr `json:"Argument1"`
+    Argument2 uintptr `json:"Argument2"`
+}
+
+type ExQueryDepthSListArgs struct {
+    SListHead uintptr `json:"SListHead"`
+}
+
+type ExQueryPoolBlockSizeArgs struct {
+    PoolBlock uintptr `json:"PoolBlock"`
+    QuotaCharged uintptr `json:"QuotaCharged"`
+}
+
+type ExQueryTimerResolutionArgs struct {
+    MaximumTime *uint32 `json:"MaximumTime"`
+    MinimumTime *uint32 `json:"MinimumTime"`
+    CurrentTime *uint32 `json:"CurrentTime"`
+}
+
+type ExQueueWorkItemArgs struct {
+    WorkItem uintptr `json:"WorkItem"`
+    QueueType uintptr `json:"QueueType"`
+}
+
+type ExRaiseStatusArgs struct {
+    Status int32 `json:"Status"`
+}
+
+type ExRcuFreePoolArgs struct {
+    Context uintptr `json:"Context"`
+    Ptr uintptr `json:"Ptr"`
+}
+
+type ExReInitializeRundownProtectionArgs struct {
+    RunRef uintptr `json:"RunRef"`
+}
+
+type ExReInitializeRundownProtectionCacheAwareArgs struct {
+    RunRefCacheAware uintptr `json:"RunRefCacheAware"`
+}
+
+type ExRegisterCallbackArgs struct {
+    CallbackObject uintptr `json:"CallbackObject"`
+    CallbackFunction uintptr `json:"CallbackFunction"`
+    CallbackContext uintptr `json:"CallbackContext"`
+}
+
+type ExReinitializeResourceLiteArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExReleaseFastMutexArgs struct {
+    FastMutex uintptr `json:"FastMutex"`
+}
+
+type ExReleaseFastMutexUnsafeArgs struct {
+    FastMutex uintptr `json:"FastMutex"`
+}
+
+type ExReleasePushLockExclusiveExArgs struct {
+    PushLock *uintptr `json:"PushLock"`
+    Flags uint32 `json:"Flags"`
+}
+
+type ExReleasePushLockSharedExArgs struct {
+    PushLock *uintptr `json:"PushLock"`
+    Flags uint32 `json:"Flags"`
+}
+
+type ExReleaseResourceAndLeaveCriticalRegionArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExReleaseResourceForThreadLiteArgs struct {
+    Resource uintptr `json:"Resource"`
+    ResourceThreadId uintptr `json:"ResourceThreadId"`
+}
+
+type ExReleaseResourceLiteArgs struct {
+    Resource uintptr `json:"Resource"`
+}
+
+type ExReleaseRundownProtectionArgs struct {
+    RunRef uintptr `json:"RunRef"`
+}
+
+type ExReleaseRundownProtectionCacheAwareArgs struct {
+    RunRefCacheAware uintptr `json:"RunRefCacheAware"`
+}
+
+type ExReleaseRundownProtectionCacheAwareExArgs struct {
+    RunRef uintptr `json:"RunRef"`
+    Count uint32 `json:"Count"`
+}
+
+type ExReleaseRundownProtectionExArgs struct {
+    RunRef uintptr `json:"RunRef"`
+    Count uint32 `json:"Count"`
+}
+
+type ExReleaseSpinLockExclusiveArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+    OldIrql uint8 `json:"OldIrql"`
+}
+
+type ExReleaseSpinLockExclusiveFromDpcLevelArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type ExReleaseSpinLockSharedArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+    OldIrql uint8 `json:"OldIrql"`
+}
+
+type ExReleaseSpinLockSharedFromDpcLevelArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type ExRundownCompletedArgs struct {
+    RunRef uintptr `json:"RunRef"`
+}
+
+type ExRundownCompletedCacheAwareArgs struct {
+    RunRefCacheAware uintptr `json:"RunRefCacheAware"`
+}
+
+type ExSecurePoolUpdateArgs struct {
+    SecurePoolHandle uintptr `json:"SecurePoolHandle"`
+    Tag uint32 `json:"Tag"`
+    Allocation uintptr `json:"Allocation"`
+    Cookie uintptr `json:"Cookie"`
+    Offset uintptr `json:"Offset"`
+    Size uintptr `json:"Size"`
+    Buffer uintptr `json:"Buffer"`
+}
+
+type ExSecurePoolValidateArgs struct {
+    SecurePoolHandle uintptr `json:"SecurePoolHandle"`
+    Tag uint32 `json:"Tag"`
+    Allocation uintptr `json:"Allocation"`
+    Cookie uintptr `json:"Cookie"`
+}
+
+type ExSetFirmwareEnvironmentVariableArgs struct {
+    VariableName uintptr `json:"VariableName"`
+    VendorGuid uintptr `json:"VendorGuid"`
+    Value uintptr `json:"Value"`
+    ValueLength uint32 `json:"ValueLength"`
+    Attributes uint32 `json:"Attributes"`
+}
+
+type ExSetResourceOwnerPointerArgs struct {
+    Resource uintptr `json:"Resource"`
+    OwnerPointer uintptr `json:"OwnerPointer"`
+}
+
+type ExSetResourceOwnerPointerExArgs struct {
+    Resource uintptr `json:"Resource"`
+    OwnerPointer uintptr `json:"OwnerPointer"`
+    Flags uint32 `json:"Flags"`
+}
+
+type ExSetTimerArgs struct {
+    Timer uintptr `json:"Timer"`
+    DueTime int64 `json:"DueTime"`
+    Period int64 `json:"Period"`
+    Parameters uintptr `json:"Parameters"`
+}
+
+type ExSetTimerResolutionArgs struct {
+    DesiredTime uint32 `json:"DesiredTime"`
+    SetResolution bool `json:"SetResolution"`
+}
+
+type ExSystemTimeToLocalTimeArgs struct {
+    SystemTime *int64 `json:"SystemTime"`
+    LocalTime *int64 `json:"LocalTime"`
+}
+
+type ExTryAcquirePushLockExclusiveExArgs struct {
+    PushLock *uintptr `json:"PushLock"`
+    Flags uint32 `json:"Flags"`
+}
+
+type ExTryAcquirePushLockSharedExArgs struct {
+    PushLock *uintptr `json:"PushLock"`
+    Flags uint32 `json:"Flags"`
+}
+
+type ExTryAcquireSpinLockExclusiveAtDpcLevelArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type ExTryAcquireSpinLockSharedAtDpcLevelArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type ExTryConvertSharedSpinLockExclusiveArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type ExTryToAcquireFastMutexArgs struct {
+    FastMutex uintptr `json:"FastMutex"`
+}
+
+type ExUnregisterCallbackArgs struct {
+    CallbackRegistration uintptr `json:"CallbackRegistration"`
+}
+
+type ExUuidCreateArgs struct {
+    Uuid uintptr `json:"Uuid"`
+}
+
+type ExVerifySuiteArgs struct {
+    SuiteType uintptr `json:"SuiteType"`
+}
+
+type ExWaitForRundownProtectionReleaseArgs struct {
+    RunRef uintptr `json:"RunRef"`
+}
+
+type ExWaitForRundownProtectionReleaseCacheAwareArgs struct {
+    RunRef uintptr `json:"RunRef"`
+}
+
+type ExpInterlockedFlushSListArgs struct {
+    ListHead uintptr `json:"ListHead"`
+}
+
+type ExpInterlockedPopEntrySListArgs struct {
+    ListHead uintptr `json:"ListHead"`
+}
+
+type ExpInterlockedPushEntrySListArgs struct {
+    ListHead uintptr `json:"ListHead"`
+    ListEntry uintptr `json:"ListEntry"`
+}
+
+type ExportSecurityContextArgs struct {
+    PhContext uintptr `json:"phContext"`
+    FFlags uint32 `json:"fFlags"`
+    PPackedContext uintptr `json:"pPackedContext"`
+    PToken uintptr `json:"pToken"`
+}
+
+type IoAcquireCancelSpinLockArgs struct {
+    Irql *uint8 `json:"Irql"`
+}
+
+type IoAcquireKsrPersistentMemoryArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    Buffer uintptr `json:"Buffer"`
+    Size *uintptr `json:"Size"`
+}
+
+type IoAcquireKsrPersistentMemoryExArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    PhysicalDeviceId uintptr `json:"PhysicalDeviceId"`
+    DataTag *uint16 `json:"DataTag"`
+    DataVersion *uint32 `json:"DataVersion"`
+    Buffer uintptr `json:"Buffer"`
+    Size *uintptr `json:"Size"`
+}
+
+type IoAcquireRemoveLockExArgs struct {
+    RemoveLock uintptr `json:"RemoveLock"`
+    Tag uintptr `json:"Tag"`
+    File uintptr `json:"File"`
+    Line uint32 `json:"Line"`
+    RemlockSize uint32 `json:"RemlockSize"`
+}
+
+type IoAcquireVpbSpinLockArgs struct {
+    Irql *uint8 `json:"Irql"`
+}
+
+type IoAllocateControllerArgs struct {
+    ControllerObject uintptr `json:"ControllerObject"`
+    DeviceObject uintptr `json:"DeviceObject"`
+    ExecutionRoutine uintptr `json:"ExecutionRoutine"`
+    Context uintptr `json:"Context"`
+}
+
+type IoAllocateDriverObjectExtensionArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    ClientIdentificationAddress uintptr `json:"ClientIdentificationAddress"`
+    DriverObjectExtensionSize uint32 `json:"DriverObjectExtensionSize"`
+    DriverObjectExtension uintptr `json:"DriverObjectExtension"`
+}
+
+type IoAllocateErrorLogEntryArgs struct {
+    IoObject uintptr `json:"IoObject"`
+    EntrySize uint8 `json:"EntrySize"`
+}
+
+type IoAllocateIrpArgs struct {
+    StackSize uintptr `json:"StackSize"`
+    ChargeQuota bool `json:"ChargeQuota"`
+}
+
+type IoAllocateIrpExArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    StackSize uintptr `json:"StackSize"`
+    ChargeQuota bool `json:"ChargeQuota"`
+}
+
+type IoAllocateMdlArgs struct {
+    VirtualAddress uintptr `json:"VirtualAddress"`
+    Length uint32 `json:"Length"`
+    SecondaryBuffer bool `json:"SecondaryBuffer"`
+    ChargeQuota bool `json:"ChargeQuota"`
+    Irp uintptr `json:"Irp"`
+}
+
+type IoAllocateMiniCompletionPacketArgs struct {
+    CallbackRoutine uintptr `json:"CallbackRoutine"`
+    Context uintptr `json:"Context"`
+}
+
+type IoAllocateSfioStreamIdentifierArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    Length uint32 `json:"Length"`
+    Signature uintptr `json:"Signature"`
+    StreamIdentifier uintptr `json:"StreamIdentifier"`
+}
+
+type IoAllocateWorkItemArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoApplyPriorityInfoThreadArgs struct {
+    InputPriorityInfo uintptr `json:"InputPriorityInfo"`
+    OutputPriorityInfo uintptr `json:"OutputPriorityInfo"`
+    Thread uintptr `json:"Thread"`
+}
+
+type IoAssignResourcesArgs struct {
+    RegistryPath uintptr `json:"RegistryPath"`
+    DriverClassName uintptr `json:"DriverClassName"`
+    DriverObject uintptr `json:"DriverObject"`
+    DeviceObject uintptr `json:"DeviceObject"`
+    RequestedResources uintptr `json:"RequestedResources"`
+    AllocatedResources uintptr `json:"AllocatedResources"`
+}
+
+type IoAttachDeviceArgs struct {
+    SourceDevice uintptr `json:"SourceDevice"`
+    TargetDevice uintptr `json:"TargetDevice"`
+    AttachedDevice uintptr `json:"AttachedDevice"`
+}
+
+type IoAttachDeviceByPointerArgs struct {
+    SourceDevice uintptr `json:"SourceDevice"`
+    TargetDevice uintptr `json:"TargetDevice"`
+}
+
+type IoAttachDeviceToDeviceStackArgs struct {
+    SourceDevice uintptr `json:"SourceDevice"`
+    TargetDevice uintptr `json:"TargetDevice"`
+}
+
+type IoAttachDeviceToDeviceStackSafeArgs struct {
+    SourceDevice uintptr `json:"SourceDevice"`
+    TargetDevice uintptr `json:"TargetDevice"`
+    AttachedToDeviceObject uintptr `json:"AttachedToDeviceObject"`
+}
+
+type IoBuildAsynchronousFsdRequestArgs struct {
+    MajorFunction uint32 `json:"MajorFunction"`
+    DeviceObject uintptr `json:"DeviceObject"`
+    Buffer uintptr `json:"Buffer"`
+    Length uint32 `json:"Length"`
+    StartingOffset *int64 `json:"StartingOffset"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+}
+
+type IoBuildDeviceIoControlRequestArgs struct {
+    IoControlCode uint32 `json:"IoControlCode"`
+    DeviceObject uintptr `json:"DeviceObject"`
+    InputBuffer uintptr `json:"InputBuffer"`
+    InputBufferLength uint32 `json:"InputBufferLength"`
+    OutputBuffer uintptr `json:"OutputBuffer"`
+    OutputBufferLength uint32 `json:"OutputBufferLength"`
+    InternalDeviceIoControl bool `json:"InternalDeviceIoControl"`
+    Event uintptr `json:"Event"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+}
+
+type IoBuildPartialMdlArgs struct {
+    SourceMdl uintptr `json:"SourceMdl"`
+    TargetMdl uintptr `json:"TargetMdl"`
+    VirtualAddress uintptr `json:"VirtualAddress"`
+    Length uint32 `json:"Length"`
+}
+
+type IoBuildSynchronousFsdRequestArgs struct {
+    MajorFunction uint32 `json:"MajorFunction"`
+    DeviceObject uintptr `json:"DeviceObject"`
+    Buffer uintptr `json:"Buffer"`
+    Length uint32 `json:"Length"`
+    StartingOffset *int64 `json:"StartingOffset"`
+    Event uintptr `json:"Event"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+}
+
+type IoCancelFileOpenArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoCancelIrpArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoCheckDesiredAccessArgs struct {
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    GrantedAccess uintptr `json:"GrantedAccess"`
+}
+
+type IoCheckEaBufferValidityArgs struct {
+    EaBuffer uintptr `json:"EaBuffer"`
+    EaLength uint32 `json:"EaLength"`
+    ErrorOffset *uint32 `json:"ErrorOffset"`
+}
+
+type IoCheckFileObjectOpenedAsCopyDestinationArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoCheckFileObjectOpenedAsCopySourceArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoCheckFunctionAccessArgs struct {
+    GrantedAccess uintptr `json:"GrantedAccess"`
+    MajorFunction uint8 `json:"MajorFunction"`
+    MinorFunction uint8 `json:"MinorFunction"`
+    IoControlCode uint32 `json:"IoControlCode"`
+    Arg1 uintptr `json:"Arg1"`
+    Arg2 uintptr `json:"Arg2"`
+}
+
+type IoCheckLinkShareAccessArgs struct {
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    DesiredShareAccess uint32 `json:"DesiredShareAccess"`
+    FileObject uintptr `json:"FileObject"`
+    ShareAccess uintptr `json:"ShareAccess"`
+    LinkShareAccess uintptr `json:"LinkShareAccess"`
+    IoShareAccessFlags uint32 `json:"IoShareAccessFlags"`
+}
+
+type IoCheckQuerySetFileInformationArgs struct {
+    FileInformationClass uintptr `json:"FileInformationClass"`
+    Length uint32 `json:"Length"`
+    SetOperation bool `json:"SetOperation"`
+}
+
+type IoCheckQuerySetVolumeInformationArgs struct {
+    FsInformationClass uintptr `json:"FsInformationClass"`
+    Length uint32 `json:"Length"`
+    SetOperation bool `json:"SetOperation"`
+}
+
+type IoCheckQuotaBufferValidityArgs struct {
+    QuotaBuffer uintptr `json:"QuotaBuffer"`
+    QuotaLength uint32 `json:"QuotaLength"`
+    ErrorOffset *uint32 `json:"ErrorOffset"`
+}
+
+type IoCheckShareAccessArgs struct {
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    DesiredShareAccess uint32 `json:"DesiredShareAccess"`
+    FileObject uintptr `json:"FileObject"`
+    ShareAccess uintptr `json:"ShareAccess"`
+    Update bool `json:"Update"`
+}
+
+type IoCheckShareAccessExArgs struct {
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    DesiredShareAccess uint32 `json:"DesiredShareAccess"`
+    FileObject uintptr `json:"FileObject"`
+    ShareAccess uintptr `json:"ShareAccess"`
+    Update bool `json:"Update"`
+    WritePermission uintptr `json:"WritePermission"`
+}
+
+type IoCleanupIrpArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoClearActivityIdThreadArgs struct {
+    OriginalId uintptr `json:"OriginalId"`
+}
+
+type IoClearFsTrackOffsetStateArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoClearIrpExtraCreateParameterArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoConnectInterruptArgs struct {
+    InterruptObject uintptr `json:"InterruptObject"`
+    ServiceRoutine uintptr `json:"ServiceRoutine"`
+    ServiceContext uintptr `json:"ServiceContext"`
+    SpinLock *uintptr `json:"SpinLock"`
+    Vector uint32 `json:"Vector"`
+    MmGetSystemRoutineAddress
+        Irql uint8 `json:"MmGetSystemRoutineAddress
+        Irql"`
+    SynchronizeIrql uint8 `json:"SynchronizeIrql"`
+    InterruptMode uintptr `json:"InterruptMode"`
+    ShareVector bool `json:"ShareVector"`
+    ProcessorEnableMask uintptr `json:"ProcessorEnableMask"`
+    FloatingSave bool `json:"FloatingSave"`
+}
+
+type IoConnectInterruptExArgs struct {
+    Parameters uintptr `json:"Parameters"`
+}
+
+type IoCreateControllerArgs struct {
+    Size uint32 `json:"Size"`
+}
+
+type IoCreateDeviceArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    DeviceExtensionSize uint32 `json:"DeviceExtensionSize"`
+    DeviceName uintptr `json:"DeviceName"`
+    DeviceType uint32 `json:"DeviceType"`
+    DeviceCharacteristics uint32 `json:"DeviceCharacteristics"`
+    Exclusive bool `json:"Exclusive"`
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoCreateDiskArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    Disk uintptr `json:"Disk"`
+}
+
+type IoCreateDriverProxyExtensionArgs struct {
+    OwningDriverObject uintptr `json:"OwningDriverObject"`
+    Flags uintptr `json:"Flags"`
+    DriverProxyExtension uintptr `json:"DriverProxyExtension"`
+}
+
+type IoCreateFileArgs struct {
+    FileHandle *uintptr `json:"FileHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    AllocationSize *int64 `json:"AllocationSize"`
+    FileAttributes uint32 `json:"FileAttributes"`
+    ShareAccess uint32 `json:"ShareAccess"`
+    Disposition uint32 `json:"Disposition"`
+    CreateOptions uint32 `json:"CreateOptions"`
+    EaBuffer uintptr `json:"EaBuffer"`
+    EaLength uint32 `json:"EaLength"`
+    CreateFileType uintptr `json:"CreateFileType"`
+    InternalParameters uintptr `json:"InternalParameters"`
+    Options uint32 `json:"Options"`
+}
+
+type IoCreateFileExArgs struct {
+    FileHandle *uintptr `json:"FileHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    AllocationSize *int64 `json:"AllocationSize"`
+    FileAttributes uint32 `json:"FileAttributes"`
+    ShareAccess uint32 `json:"ShareAccess"`
+    Disposition uint32 `json:"Disposition"`
+    CreateOptions uint32 `json:"CreateOptions"`
+    EaBuffer uintptr `json:"EaBuffer"`
+    EaLength uint32 `json:"EaLength"`
+    CreateFileType uintptr `json:"CreateFileType"`
+    InternalParameters uintptr `json:"InternalParameters"`
+    Options uint32 `json:"Options"`
+    DriverContext uintptr `json:"DriverContext"`
+}
+
+type IoCreateFileSpecifyDeviceObjectHintArgs struct {
+    FileHandle *uintptr `json:"FileHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    AllocationSize *int64 `json:"AllocationSize"`
+    FileAttributes uint32 `json:"FileAttributes"`
+    ShareAccess uint32 `json:"ShareAccess"`
+    Disposition uint32 `json:"Disposition"`
+    CreateOptions uint32 `json:"CreateOptions"`
+    EaBuffer uintptr `json:"EaBuffer"`
+    EaLength uint32 `json:"EaLength"`
+    CreateFileType uintptr `json:"CreateFileType"`
+    InternalParameters uintptr `json:"InternalParameters"`
+    Options uint32 `json:"Options"`
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoCreateNotificationEventArgs struct {
+    EventName uintptr `json:"EventName"`
+    EventHandle *uintptr `json:"EventHandle"`
+}
+
+type IoCreateStreamFileObjectArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoCreateStreamFileObjectExArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    DeviceObject uintptr `json:"DeviceObject"`
+    FileHandle *uintptr `json:"FileHandle"`
+}
+
+type IoCreateStreamFileObjectEx2Args struct {
+    CreateOptions uintptr `json:"CreateOptions"`
+    FileObject uintptr `json:"FileObject"`
+    DeviceObject uintptr `json:"DeviceObject"`
+    StreamFileObject uintptr `json:"StreamFileObject"`
+    FileHandle *uintptr `json:"FileHandle"`
+}
+
+type IoCreateStreamFileObjectLiteArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoCreateSymbolicLinkArgs struct {
+    SymbolicLinkName uintptr `json:"SymbolicLinkName"`
+    DeviceName uintptr `json:"DeviceName"`
+}
+
+type IoCreateSynchronizationEventArgs struct {
+    EventName uintptr `json:"EventName"`
+    EventHandle *uintptr `json:"EventHandle"`
+}
+
+type IoCreateSystemThreadArgs struct {
+    IoObject uintptr `json:"IoObject"`
+    ThreadHandle *uintptr `json:"ThreadHandle"`
+    DesiredAccess uint32 `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    ProcessHandle uintptr `json:"ProcessHandle"`
+    ClientId uintptr `json:"ClientId"`
+    StartRoutine uintptr `json:"StartRoutine"`
+    StartContext uintptr `json:"StartContext"`
+}
+
+type IoCreateUnprotectedSymbolicLinkArgs struct {
+    SymbolicLinkName uintptr `json:"SymbolicLinkName"`
+    DeviceName uintptr `json:"DeviceName"`
+}
+
+type IoCsqInitializeArgs struct {
+    Csq uintptr `json:"Csq"`
+    CsqInsertIrp uintptr `json:"CsqInsertIrp"`
+    CsqRemoveIrp uintptr `json:"CsqRemoveIrp"`
+    CsqPeekNextIrp uintptr `json:"CsqPeekNextIrp"`
+    CsqAcquireLock uintptr `json:"CsqAcquireLock"`
+    CsqReleaseLock uintptr `json:"CsqReleaseLock"`
+    CsqCompleteCanceledIrp uintptr `json:"CsqCompleteCanceledIrp"`
+}
+
+type IoCsqInitializeExArgs struct {
+    Csq uintptr `json:"Csq"`
+    CsqInsertIrp uintptr `json:"CsqInsertIrp"`
+    CsqRemoveIrp uintptr `json:"CsqRemoveIrp"`
+    CsqPeekNextIrp uintptr `json:"CsqPeekNextIrp"`
+    CsqAcquireLock uintptr `json:"CsqAcquireLock"`
+    CsqReleaseLock uintptr `json:"CsqReleaseLock"`
+    CsqCompleteCanceledIrp uintptr `json:"CsqCompleteCanceledIrp"`
+}
+
+type IoCsqInsertIrpArgs struct {
+    Csq uintptr `json:"Csq"`
+    Irp uintptr `json:"Irp"`
+    Context uintptr `json:"Context"`
+}
+
+type IoCsqInsertIrpExArgs struct {
+    Csq uintptr `json:"Csq"`
+    Irp uintptr `json:"Irp"`
+    Context uintptr `json:"Context"`
+    InsertContext uintptr `json:"InsertContext"`
+}
+
+type IoCsqRemoveIrpArgs struct {
+    Csq uintptr `json:"Csq"`
+    Context uintptr `json:"Context"`
+}
+
+type IoCsqRemoveNextIrpArgs struct {
+    Csq uintptr `json:"Csq"`
+    PeekContext uintptr `json:"PeekContext"`
+}
+
+type IoDecrementKeepAliveCountArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    Process uintptr `json:"Process"`
+}
+
+type IoDeleteControllerArgs struct {
+    ControllerObject uintptr `json:"ControllerObject"`
+}
+
+type IoDeleteDeviceArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoDeleteSymbolicLinkArgs struct {
+    SymbolicLinkName uintptr `json:"SymbolicLinkName"`
+}
+
+type IoDetachDeviceArgs struct {
+    TargetDevice uintptr `json:"TargetDevice"`
+}
+
+type IoDisconnectInterruptArgs struct {
+    InterruptObject uintptr `json:"InterruptObject"`
+}
+
+type IoDisconnectInterruptExArgs struct {
+    Parameters uintptr `json:"Parameters"`
+}
+
+type IoDriverProxyCreateHotSwappableWorkerThreadArgs struct {
+    DriverProxyExtension uintptr `json:"DriverProxyExtension"`
+    ThreadHandle *uintptr `json:"ThreadHandle"`
+    DesiredAccess uint32 `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    ProcessHandle uintptr `json:"ProcessHandle"`
+    ClientId uintptr `json:"ClientId"`
+    WorkerStartContext uintptr `json:"WorkerStartContext"`
+}
+
+type IoEnumerateDeviceObjectListArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    DeviceObjectList uintptr `json:"DeviceObjectList"`
+    DeviceObjectListSize uint32 `json:"DeviceObjectListSize"`
+    ActualNumberDeviceObjects *uint32 `json:"ActualNumberDeviceObjects"`
+}
+
+type IoEnumerateKsrPersistentMemoryExArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    PhysicalDeviceId uintptr `json:"PhysicalDeviceId"`
+    Callback uintptr `json:"Callback"`
+    CallbackContext uintptr `json:"CallbackContext"`
+}
+
+type IoEnumerateRegisteredFiltersListArgs struct {
+    DriverObjectList uintptr `json:"DriverObjectList"`
+    DriverObjectListSize uint32 `json:"DriverObjectListSize"`
+    ActualNumberDriverObjects *uint32 `json:"ActualNumberDriverObjects"`
+}
+
+type IoFastQueryNetworkAttributesArgs struct {
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    OpenOptions uint32 `json:"OpenOptions"`
+    IoStatus uintptr `json:"IoStatus"`
+    Buffer uintptr `json:"Buffer"`
+}
+
+type IoForwardIrpSynchronouslyArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    Irp uintptr `json:"Irp"`
+}
+
+type IoFreeControllerArgs struct {
+    ControllerObject uintptr `json:"ControllerObject"`
+}
+
+type IoFreeErrorLogEntryArgs struct {
+    ElEntry uintptr `json:"ElEntry"`
+}
+
+type IoFreeIrpArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoFreeKsrPersistentMemoryArgs struct {
+    DataHandle uintptr `json:"DataHandle"`
+}
+
+type IoFreeMdlArgs struct {
+    Mdl uintptr `json:"Mdl"`
+}
+
+type IoFreeMiniCompletionPacketArgs struct {
+    MiniPacket uintptr `json:"MiniPacket"`
+}
+
+type IoFreeSfioStreamIdentifierArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    Signature uintptr `json:"Signature"`
+}
+
+type IoFreeWorkItemArgs struct {
+    IoWorkItem uintptr `json:"IoWorkItem"`
+}
+
+type IoGetActivityIdIrpArgs struct {
+    Irp uintptr `json:"Irp"`
+    Guid uintptr `json:"Guid"`
+}
+
+type IoGetAffinityInterruptArgs struct {
+    InterruptObject uintptr `json:"InterruptObject"`
+    GroupAffinity uintptr `json:"GroupAffinity"`
+}
+
+type IoGetAttachedDeviceArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoGetAttachedDeviceReferenceArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoGetBaseFileSystemDeviceObjectArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoGetBootDiskInformationArgs struct {
+    BootDiskInformation uintptr `json:"BootDiskInformation"`
+    Size uint32 `json:"Size"`
+}
+
+type IoGetBootDiskInformationLiteArgs struct {
+    BootDiskInformation uintptr `json:"BootDiskInformation"`
+}
+
+type IoGetContainerInformationArgs struct {
+    InformationClass uintptr `json:"InformationClass"`
+    ContainerObject uintptr `json:"ContainerObject"`
+    Buffer uintptr `json:"Buffer"`
+    BufferLength uint32 `json:"BufferLength"`
+}
+
+type IoGetCopyInformationExtensionArgs struct {
+    Irp uintptr `json:"Irp"`
+    CopyInformation uintptr `json:"CopyInformation"`
+}
+
+type IoGetDeviceAttachmentBaseRefArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoGetDeviceDirectoryArgs struct {
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    DirectoryType uintptr `json:"DirectoryType"`
+    Flags uint32 `json:"Flags"`
+    Reserved uintptr `json:"Reserved"`
+    DeviceDirectoryHandle *uintptr `json:"DeviceDirectoryHandle"`
+}
+
+type IoGetDeviceInterfaceAliasArgs struct {
+    SymbolicLinkName uintptr `json:"SymbolicLinkName"`
+    AliasInterfaceClassGuid uintptr `json:"AliasInterfaceClassGuid"`
+    AliasSymbolicLinkName uintptr `json:"AliasSymbolicLinkName"`
+}
+
+type IoGetDeviceInterfacePropertyDataArgs struct {
+    SymbolicLinkName uintptr `json:"SymbolicLinkName"`
+    PropertyKey uintptr `json:"PropertyKey"`
+    Lcid uintptr `json:"Lcid"`
+    Flags uint32 `json:"Flags"`
+    Size uint32 `json:"Size"`
+    Data uintptr `json:"Data"`
+    RequiredSize *uint32 `json:"RequiredSize"`
+    Type uintptr `json:"Type"`
+}
+
+type IoGetDeviceInterfacesArgs struct {
+    InterfaceClassGuid uintptr `json:"InterfaceClassGuid"`
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    Flags uint32 `json:"Flags"`
+    SymbolicLinkList uintptr `json:"SymbolicLinkList"`
+}
+
+type IoGetDeviceNumaNodeArgs struct {
+    Pdo uintptr `json:"Pdo"`
+    NodeNumber *uint16 `json:"NodeNumber"`
+}
+
+type IoGetDeviceObjectPointerArgs struct {
+    ObjectName uintptr `json:"ObjectName"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    FileObject uintptr `json:"FileObject"`
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoGetDevicePropertyArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    DeviceProperty uintptr `json:"DeviceProperty"`
+    BufferLength uint32 `json:"BufferLength"`
+    PropertyBuffer uintptr `json:"PropertyBuffer"`
+    ResultLength *uint32 `json:"ResultLength"`
+}
+
+type IoGetDevicePropertyDataArgs struct {
+    Pdo uintptr `json:"Pdo"`
+    PropertyKey uintptr `json:"PropertyKey"`
+    Lcid uintptr `json:"Lcid"`
+    Flags uint32 `json:"Flags"`
+    Size uint32 `json:"Size"`
+    Data uintptr `json:"Data"`
+    RequiredSize *uint32 `json:"RequiredSize"`
+    Type uintptr `json:"Type"`
+}
+
+type IoGetDeviceToVerifyArgs struct {
+    Thread uintptr `json:"Thread"`
+}
+
+type IoGetDiskDeviceObjectArgs struct {
+    FileSystemDeviceObject uintptr `json:"FileSystemDeviceObject"`
+    DiskDeviceObject uintptr `json:"DiskDeviceObject"`
+}
+
+type IoGetDmaAdapterArgs struct {
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    DeviceDescription uintptr `json:"DeviceDescription"`
+    NumberOfMapRegisters *uint32 `json:"NumberOfMapRegisters"`
+}
+
+type IoGetDriverDirectoryArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    DirectoryType uintptr `json:"DirectoryType"`
+    Flags uint32 `json:"Flags"`
+    DriverDirectoryHandle *uintptr `json:"DriverDirectoryHandle"`
+}
+
+type IoGetDriverObjectExtensionArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    ClientIdentificationAddress uintptr `json:"ClientIdentificationAddress"`
+}
+
+type IoGetDriverProxyEndpointWrapperArgs struct {
+    DriverProxyExtension uintptr `json:"DriverProxyExtension"`
+    FunctionId uintptr `json:"FunctionId"`
+}
+
+type IoGetDriverProxyExtensionFromDriverObjectArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+}
+
+type IoGetDriverProxyExtensionVersionArgs struct {
+    DriverProxyExtension uintptr `json:"DriverProxyExtension"`
+}
+
+type IoGetDriverProxyFeaturesArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    Flags uintptr `json:"Flags"`
+}
+
+type IoGetFsTrackOffsetStateArgs struct {
+    Irp uintptr `json:"Irp"`
+    RetFsTrackOffsetBlob uintptr `json:"RetFsTrackOffsetBlob"`
+    RetTrackedOffset int64 `json:"RetTrackedOffset"`
+}
+
+type IoGetFsZeroingOffsetArgs struct {
+    Irp uintptr `json:"Irp"`
+    ZeroingOffset *uint32 `json:"ZeroingOffset"`
+}
+
+type IoGetInitiatorProcessArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoGetIoAttributionHandleArgs struct {
+    Irp uintptr `json:"Irp"`
+    IoAttributionHandle uintptr `json:"IoAttributionHandle"`
+}
+
+type IoGetIoPriorityHintArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoGetIommuInterfaceArgs struct {
+    Version uint32 `json:"Version"`
+    InterfaceOut uintptr `json:"InterfaceOut"`
+}
+
+type IoGetIommuInterfaceExArgs struct {
+    Version uint32 `json:"Version"`
+    Flags uint64 `json:"Flags"`
+    InterfaceOut uintptr `json:"InterfaceOut"`
+}
+
+type IoGetIrpExtraCreateParameterArgs struct {
+    Irp uintptr `json:"Irp"`
+    ExtraCreateParameter uintptr `json:"ExtraCreateParameter"`
+}
+
+type IoGetKsrPersistentMemoryBufferArgs struct {
+    DataHandle uintptr `json:"DataHandle"`
+    BufferPtr uintptr `json:"BufferPtr"`
+    BufferSize *uintptr `json:"BufferSize"`
+}
+
+type IoGetLowerDeviceObjectArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoGetOplockKeyContextArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoGetOplockKeyContextExArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoGetPagingIoPriorityArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoGetRelatedDeviceObjectArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoGetRequestorProcessArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoGetRequestorProcessIdArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoGetRequestorSessionIdArgs struct {
+    Irp uintptr `json:"Irp"`
+    PSessionId *uint32 `json:"pSessionId"`
+}
+
+type IoGetSfioStreamIdentifierArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    Signature uintptr `json:"Signature"`
+}
+
+type IoGetShadowFileInformationArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoGetSiloArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoGetSiloParametersArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoGetStackLimitsArgs struct {
+    LowLimit *uintptr `json:"LowLimit"`
+    HighLimit *uintptr `json:"HighLimit"`
+}
+
+type IoGetTransactionParameterBlockArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoHotSwapDriverProxyEndpointsArgs struct {
+    DriverProxyExtension uintptr `json:"DriverProxyExtension"`
+    PhasedCallback uintptr `json:"PhasedCallback"`
+    Context uintptr `json:"Context"`
+}
+
+type IoIncrementKeepAliveCountArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    Process uintptr `json:"Process"`
+}
+
+type IoInitializeIrpArgs struct {
+    Irp uintptr `json:"Irp"`
+    PacketSize uint16 `json:"PacketSize"`
+    StackSize uintptr `json:"StackSize"`
+}
+
+type IoInitializeIrpExArgs struct {
+    Irp uintptr `json:"Irp"`
+    DeviceObject uintptr `json:"DeviceObject"`
+    PacketSize uint16 `json:"PacketSize"`
+    StackSize uintptr `json:"StackSize"`
+}
+
+type IoInitializeRemoveLockExArgs struct {
+    Lock uintptr `json:"Lock"`
+    AllocateTag uint32 `json:"AllocateTag"`
+    MaxLockedMinutes uint32 `json:"MaxLockedMinutes"`
+    HighWatermark uint32 `json:"HighWatermark"`
+    RemlockSize uint32 `json:"RemlockSize"`
+}
+
+type IoInitializeTimerArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    TimerRoutine uintptr `json:"TimerRoutine"`
+    Context uintptr `json:"Context"`
+}
+
+type IoInitializeWorkItemArgs struct {
+    IoObject uintptr `json:"IoObject"`
+    IoWorkItem uintptr `json:"IoWorkItem"`
+}
+
+type IoInvalidateDeviceRelationsArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    Type uintptr `json:"Type"`
+}
+
+type IoInvalidateDeviceStateArgs struct {
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+}
+
+type IoIrpHasFsTrackOffsetExtensionTypeArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoIs32bitProcessArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoIsFileObjectIgnoringSharingArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoIsFileOriginRemoteArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoIsInitiator32bitProcessArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoIsOperationSynchronousArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoIsSystemThreadArgs struct {
+    Thread uintptr `json:"Thread"`
+}
+
+type IoIsValidIrpStatusArgs struct {
+    Status int32 `json:"Status"`
+}
+
+type IoIsValidNameGraftingBufferArgs struct {
+    Irp uintptr `json:"Irp"`
+    ReparseBuffer uintptr `json:"ReparseBuffer"`
+}
+
+type IoIsWdmVersionAvailableArgs struct {
+    MajorVersion uint8 `json:"MajorVersion"`
+    MinorVersion uint8 `json:"MinorVersion"`
+}
+
+type IoMakeAssociatedIrpArgs struct {
+    Irp uintptr `json:"Irp"`
+    StackSize uintptr `json:"StackSize"`
+}
+
+type IoMakeAssociatedIrpExArgs struct {
+    Irp uintptr `json:"Irp"`
+    DeviceObject uintptr `json:"DeviceObject"`
+    StackSize uintptr `json:"StackSize"`
+}
+
+type IoMapKsrPersistentMemoryExArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    PhysicalDeviceId uintptr `json:"PhysicalDeviceId"`
+    DataTag *uint16 `json:"DataTag"`
+    DataVersion *uint32 `json:"DataVersion"`
+    DataHandle uintptr `json:"DataHandle"`
+}
+
+type IoOpenDeviceInterfaceRegistryKeyArgs struct {
+    SymbolicLinkName uintptr `json:"SymbolicLinkName"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    DeviceInterfaceRegKey *uintptr `json:"DeviceInterfaceRegKey"`
+}
+
+type IoOpenDeviceRegistryKeyArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    DevInstKeyType uint32 `json:"DevInstKeyType"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    DeviceRegKey *uintptr `json:"DeviceRegKey"`
+}
+
+type IoOpenDriverRegistryKeyArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    RegKeyType uintptr `json:"RegKeyType"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    Flags uint32 `json:"Flags"`
+    DriverRegKey *uintptr `json:"DriverRegKey"`
+}
+
+type IoPageReadArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    StartingOffset *int64 `json:"StartingOffset"`
+    Event uintptr `json:"Event"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+}
+
+type IoPropagateActivityIdToThreadArgs struct {
+    Irp uintptr `json:"Irp"`
+    PropagatedId uintptr `json:"PropagatedId"`
+    OriginalId uintptr `json:"OriginalId"`
+}
+
+type IoQueryDeviceDescriptionArgs struct {
+    BusType uintptr `json:"BusType"`
+    BusNumber *uint32 `json:"BusNumber"`
+    ControllerType uintptr `json:"ControllerType"`
+    ControllerNumber *uint32 `json:"ControllerNumber"`
+    PeripheralType uintptr `json:"PeripheralType"`
+    PeripheralNumber *uint32 `json:"PeripheralNumber"`
+    CalloutRoutine uintptr `json:"CalloutRoutine"`
+    Context uintptr `json:"Context"`
+}
+
+type IoQueryDmaFeatureSupportArgs struct {
+    FeatureType uintptr `json:"FeatureType"`
+    Substatus uintptr `json:"Substatus"`
+}
+
+type IoQueryFileDosDeviceNameArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    ObjectNameInformation uintptr `json:"ObjectNameInformation"`
+}
+
+type IoQueryFileInformationArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    FileInformationClass uintptr `json:"FileInformationClass"`
+    Length uint32 `json:"Length"`
+    FileInformation uintptr `json:"FileInformation"`
+    ReturnedLength *uint32 `json:"ReturnedLength"`
+}
+
+type IoQueryFullDriverPathArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    FullPath uintptr `json:"FullPath"`
+}
+
+type IoQueryInformationByNameArgs struct {
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    FileInformation uintptr `json:"FileInformation"`
+    Length uint32 `json:"Length"`
+    FileInformationClass uintptr `json:"FileInformationClass"`
+    Options uint32 `json:"Options"`
+    DriverContext uintptr `json:"DriverContext"`
+}
+
+type IoQueryKsrPersistentMemorySizeArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    BufferSize *uintptr `json:"BufferSize"`
+}
+
+type IoQueryKsrPersistentMemorySizeExArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    PhysicalDeviceId uintptr `json:"PhysicalDeviceId"`
+    DataTag *uint16 `json:"DataTag"`
+    DataVersion *uint32 `json:"DataVersion"`
+    BufferSize *uintptr `json:"BufferSize"`
+}
+
+type IoQueryVolumeInformationArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    FsInformationClass uintptr `json:"FsInformationClass"`
+    Length uint32 `json:"Length"`
+    FsInformation uintptr `json:"FsInformation"`
+    ReturnedLength *uint32 `json:"ReturnedLength"`
+}
+
+type IoQueueThreadIrpArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoQueueWorkItemArgs struct {
+    IoWorkItem uintptr `json:"IoWorkItem"`
+    WorkerRoutine uintptr `json:"WorkerRoutine"`
+    QueueType uintptr `json:"QueueType"`
+    Context uintptr `json:"Context"`
+}
+
+type IoQueueWorkItemExArgs struct {
+    IoWorkItem uintptr `json:"IoWorkItem"`
+    WorkerRoutine uintptr `json:"WorkerRoutine"`
+    QueueType uintptr `json:"QueueType"`
+    Context uintptr `json:"Context"`
+}
+
+type IoRaiseHardErrorArgs struct {
+    Irp uintptr `json:"Irp"`
+    Vpb uintptr `json:"Vpb"`
+    RealDeviceObject uintptr `json:"RealDeviceObject"`
+}
+
+type IoRaiseInformationalHardErrorArgs struct {
+    ErrorStatus int32 `json:"ErrorStatus"`
+    String uintptr `json:"String"`
+    Thread uintptr `json:"Thread"`
+}
+
+type IoReadDiskSignatureArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    BytesPerSector uint32 `json:"BytesPerSector"`
+    Signature uintptr `json:"Signature"`
+}
+
+type IoReadPartitionTableArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    SectorSize uint32 `json:"SectorSize"`
+    ReturnRecognizedPartitions bool `json:"ReturnRecognizedPartitions"`
+    PartitionBuffer uintptr `json:"PartitionBuffer"`
+}
+
+type IoReadPartitionTableExArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    DriveLayout uintptr `json:"DriveLayout"`
+}
+
+type IoRecordIoAttributionArgs struct {
+    OpaqueHandle uintptr `json:"OpaqueHandle"`
+    AttributionInformation uintptr `json:"AttributionInformation"`
+}
+
+type IoRegisterBootDriverCallbackArgs struct {
+    CallbackFunction uintptr `json:"CallbackFunction"`
+    CallbackContext uintptr `json:"CallbackContext"`
+}
+
+type IoRegisterBootDriverReinitializationArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    DriverReinitializationRoutine uintptr `json:"DriverReinitializationRoutine"`
+    Context uintptr `json:"Context"`
+}
+
+type IoRegisterContainerNotificationArgs struct {
+    NotificationClass uintptr `json:"NotificationClass"`
+    CallbackFunction uintptr `json:"CallbackFunction"`
+    NotificationInformation uintptr `json:"NotificationInformation"`
+    NotificationInformationLength uint32 `json:"NotificationInformationLength"`
+    CallbackRegistration uintptr `json:"CallbackRegistration"`
+}
+
+type IoRegisterDeviceInterfaceArgs struct {
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    InterfaceClassGuid uintptr `json:"InterfaceClassGuid"`
+    ReferenceString uintptr `json:"ReferenceString"`
+    SymbolicLinkName uintptr `json:"SymbolicLinkName"`
+}
+
+type IoRegisterDriverProxyEndpointsArgs struct {
+    DriverProxyExtension uintptr `json:"DriverProxyExtension"`
+    EndpointInfo uintptr `json:"EndpointInfo"`
+    Count uint32 `json:"Count"`
+    PhasedCallback uintptr `json:"PhasedCallback"`
+    Context uintptr `json:"Context"`
+}
+
+type IoRegisterDriverReinitializationArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    DriverReinitializationRoutine uintptr `json:"DriverReinitializationRoutine"`
+    Context uintptr `json:"Context"`
+}
+
+type IoRegisterFileSystemArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoRegisterFsRegistrationChangeArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    DriverNotificationRoutine uintptr `json:"DriverNotificationRoutine"`
+}
+
+type IoRegisterFsRegistrationChangeMountAwareArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    DriverNotificationRoutine uintptr `json:"DriverNotificationRoutine"`
+    SynchronizeWithMounts bool `json:"SynchronizeWithMounts"`
+}
+
+type IoRegisterLastChanceShutdownNotificationArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoRegisterPlugPlayNotificationArgs struct {
+    EventCategory uintptr `json:"EventCategory"`
+    EventCategoryFlags uint32 `json:"EventCategoryFlags"`
+    EventCategoryData uintptr `json:"EventCategoryData"`
+    DriverObject uintptr `json:"DriverObject"`
+    CallbackRoutine uintptr `json:"CallbackRoutine"`
+    Context uintptr `json:"Context"`
+    NotificationEntry uintptr `json:"NotificationEntry"`
+}
+
+type IoRegisterShutdownNotificationArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoReleaseCancelSpinLockArgs struct {
+    Irql uint8 `json:"Irql"`
+}
+
+type IoReleaseRemoveLockAndWaitExArgs struct {
+    RemoveLock uintptr `json:"RemoveLock"`
+    Tag uintptr `json:"Tag"`
+    RemlockSize uint32 `json:"RemlockSize"`
+}
+
+type IoReleaseRemoveLockExArgs struct {
+    RemoveLock uintptr `json:"RemoveLock"`
+    Tag uintptr `json:"Tag"`
+    RemlockSize uint32 `json:"RemlockSize"`
+}
+
+type IoReleaseVpbSpinLockArgs struct {
+    Irql uint8 `json:"Irql"`
+}
+
+type IoRemoveIoCompletionArgs struct {
+    IoCompletionPtr uintptr `json:"IoCompletionPtr"`
+    IoCompletionInformation uintptr `json:"IoCompletionInformation"`
+    EntryArray uintptr `json:"EntryArray"`
+    Count uint32 `json:"Count"`
+    NumEntriesRemoved *uint32 `json:"NumEntriesRemoved"`
+    PreviousMode uintptr `json:"PreviousMode"`
+    CapturedTimeout *int64 `json:"CapturedTimeout"`
+    Alertable bool `json:"Alertable"`
+}
+
+type IoRemoveLinkShareAccessArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    ShareAccess uintptr `json:"ShareAccess"`
+    LinkShareAccess uintptr `json:"LinkShareAccess"`
+}
+
+type IoRemoveLinkShareAccessExArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    ShareAccess uintptr `json:"ShareAccess"`
+    LinkShareAccess uintptr `json:"LinkShareAccess"`
+    IoShareAccessFlags uint32 `json:"IoShareAccessFlags"`
+}
+
+type IoRemoveShareAccessArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    ShareAccess uintptr `json:"ShareAccess"`
+}
+
+type IoReplaceFileObjectNameArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    NewFileName uintptr `json:"NewFileName"`
+    FileNameLength uint16 `json:"FileNameLength"`
+}
+
+type IoReplacePartitionUnitArgs struct {
+    TargetPdo uintptr `json:"TargetPdo"`
+    SparePdo uintptr `json:"SparePdo"`
+    Flags uint32 `json:"Flags"`
+}
+
+type IoReportDetectedDeviceArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    LegacyBusType uintptr `json:"LegacyBusType"`
+    BusNumber uint32 `json:"BusNumber"`
+    SlotNumber uint32 `json:"SlotNumber"`
+    ResourceList uintptr `json:"ResourceList"`
+    ResourceRequirements uintptr `json:"ResourceRequirements"`
+    ResourceAssigned bool `json:"ResourceAssigned"`
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoReportInterruptActiveArgs struct {
+    Parameters uintptr `json:"Parameters"`
+}
+
+type IoReportInterruptInactiveArgs struct {
+    Parameters uintptr `json:"Parameters"`
+}
+
+type IoReportResourceForDetectionArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    DriverList uintptr `json:"DriverList"`
+    DriverListSize uint32 `json:"DriverListSize"`
+    DeviceObject uintptr `json:"DeviceObject"`
+    DeviceList uintptr `json:"DeviceList"`
+    DeviceListSize uint32 `json:"DeviceListSize"`
+    ConflictDetected uintptr `json:"ConflictDetected"`
+}
+
+type IoReportResourceUsageArgs struct {
+    DriverClassName uintptr `json:"DriverClassName"`
+    DriverObject uintptr `json:"DriverObject"`
+    DriverList uintptr `json:"DriverList"`
+    DriverListSize uint32 `json:"DriverListSize"`
+    DeviceObject uintptr `json:"DeviceObject"`
+    DeviceList uintptr `json:"DeviceList"`
+    DeviceListSize uint32 `json:"DeviceListSize"`
+    OverrideConflict bool `json:"OverrideConflict"`
+    ConflictDetected uintptr `json:"ConflictDetected"`
+}
+
+type IoReportRootDeviceArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+}
+
+type IoReportTargetDeviceChangeArgs struct {
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    NotificationStructure uintptr `json:"NotificationStructure"`
+}
+
+type IoReportTargetDeviceChangeAsynchronousArgs struct {
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    NotificationStructure uintptr `json:"NotificationStructure"`
+    Callback uintptr `json:"Callback"`
+    Context uintptr `json:"Context"`
+}
+
+type IoRequestDeviceEjectArgs struct {
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+}
+
+type IoRequestDeviceEjectExArgs struct {
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    Callback uintptr `json:"Callback"`
+    Context uintptr `json:"Context"`
+    DriverObject uintptr `json:"DriverObject"`
+}
+
+type IoRequestDeviceRemovalForResetArgs struct {
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    Flags uint32 `json:"Flags"`
+}
+
+type IoReserveKsrPersistentMemoryArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    Size uintptr `json:"Size"`
+    Flags uint32 `json:"Flags"`
+    DataHandle uintptr `json:"DataHandle"`
+}
+
+type IoReserveKsrPersistentMemoryExArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    PhysicalDeviceId uintptr `json:"PhysicalDeviceId"`
+    DataTag *uint16 `json:"DataTag"`
+    DataVersion uint32 `json:"DataVersion"`
+    Size uintptr `json:"Size"`
+    Flags uint32 `json:"Flags"`
+    DataHandle uintptr `json:"DataHandle"`
+}
+
+type IoRetrievePriorityInfoArgs struct {
+    Irp uintptr `json:"Irp"`
+    FileObject uintptr `json:"FileObject"`
+    Thread uintptr `json:"Thread"`
+    PriorityInfo uintptr `json:"PriorityInfo"`
+}
+
+type IoReuseIrpArgs struct {
+    Irp uintptr `json:"Irp"`
+    Iostatus int32 `json:"Iostatus"`
+}
+
+type IoSetActivityIdIrpArgs struct {
+    Irp uintptr `json:"Irp"`
+    Guid uintptr `json:"Guid"`
+}
+
+type IoSetActivityIdThreadArgs struct {
+    ActivityId uintptr `json:"ActivityId"`
+}
+
+type IoSetCompletionRoutineExArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    Irp uintptr `json:"Irp"`
+    CompletionRoutine uintptr `json:"CompletionRoutine"`
+    Context uintptr `json:"Context"`
+    InvokeOnSuccess bool `json:"InvokeOnSuccess"`
+    InvokeOnError bool `json:"InvokeOnError"`
+    InvokeOnCancel bool `json:"InvokeOnCancel"`
+}
+
+type IoSetDeviceInterfacePropertyDataArgs struct {
+    SymbolicLinkName uintptr `json:"SymbolicLinkName"`
+    PropertyKey uintptr `json:"PropertyKey"`
+    Lcid uintptr `json:"Lcid"`
+    Flags uint32 `json:"Flags"`
+    Type uintptr `json:"Type"`
+    Size uint32 `json:"Size"`
+    Data uintptr `json:"Data"`
+}
+
+type IoSetDeviceInterfaceStateArgs struct {
+    SymbolicLinkName uintptr `json:"SymbolicLinkName"`
+    Enable bool `json:"Enable"`
+}
+
+type IoSetDevicePropertyDataArgs struct {
+    Pdo uintptr `json:"Pdo"`
+    PropertyKey uintptr `json:"PropertyKey"`
+    Lcid uintptr `json:"Lcid"`
+    Flags uint32 `json:"Flags"`
+    Type uintptr `json:"Type"`
+    Size uint32 `json:"Size"`
+    Data uintptr `json:"Data"`
+}
+
+type IoSetDeviceToVerifyArgs struct {
+    Thread uintptr `json:"Thread"`
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoSetFileObjectIgnoreSharingArgs struct {
+    FileObject uintptr `json:"FileObject"`
+}
+
+type IoSetFileOriginArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    Remote bool `json:"Remote"`
+}
+
+type IoSetFsTrackOffsetStateArgs struct {
+    Irp uintptr `json:"Irp"`
+    FsTrackOffsetBlob uintptr `json:"FsTrackOffsetBlob"`
+    TrackedOffset int64 `json:"TrackedOffset"`
+}
+
+type IoSetFsZeroingOffsetArgs struct {
+    Irp uintptr `json:"Irp"`
+    ZeroingOffset uint32 `json:"ZeroingOffset"`
+}
+
+type IoSetFsZeroingOffsetRequiredArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoSetHardErrorOrVerifyDeviceArgs struct {
+    Irp uintptr `json:"Irp"`
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoSetInformationArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    FileInformationClass uintptr `json:"FileInformationClass"`
+    Length uint32 `json:"Length"`
+    FileInformation uintptr `json:"FileInformation"`
+}
+
+type IoSetIoAttributionIrpArgs struct {
+    Irp uintptr `json:"Irp"`
+    AttributionSource uintptr `json:"AttributionSource"`
+    Flags uint32 `json:"Flags"`
+}
+
+type IoSetIoCompletionExArgs struct {
+    IoCompletion uintptr `json:"IoCompletion"`
+    KeyContext uintptr `json:"KeyContext"`
+    ApcContext uintptr `json:"ApcContext"`
+    IoStatus int32 `json:"IoStatus"`
+    IoStatusInformation uintptr `json:"IoStatusInformation"`
+    Quota bool `json:"Quota"`
+    MiniPacket uintptr `json:"MiniPacket"`
+}
+
+type IoSetIoPriorityHintArgs struct {
+    Irp uintptr `json:"Irp"`
+    PriorityHint uintptr `json:"PriorityHint"`
+}
+
+type IoSetIrpExtraCreateParameterArgs struct {
+    Irp uintptr `json:"Irp"`
+    ExtraCreateParameter uintptr `json:"ExtraCreateParameter"`
+}
+
+type IoSetLinkShareAccessArgs struct {
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    DesiredShareAccess uint32 `json:"DesiredShareAccess"`
+    FileObject uintptr `json:"FileObject"`
+    ShareAccess uintptr `json:"ShareAccess"`
+    LinkShareAccess uintptr `json:"LinkShareAccess"`
+    IoShareAccessFlags uint32 `json:"IoShareAccessFlags"`
+}
+
+type IoSetMasterIrpStatusArgs struct {
+    MasterIrp uintptr `json:"MasterIrp"`
+    Status int32 `json:"Status"`
+}
+
+type IoSetPartitionInformationArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    SectorSize uint32 `json:"SectorSize"`
+    PartitionNumber uint32 `json:"PartitionNumber"`
+    PartitionType uint32 `json:"PartitionType"`
+}
+
+type IoSetPartitionInformationExArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    PartitionNumber uint32 `json:"PartitionNumber"`
+    PartitionInfo uintptr `json:"PartitionInfo"`
+}
+
+type IoSetShadowFileInformationArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    BackingFileObject uintptr `json:"BackingFileObject"`
+    BackingFltInstance uintptr `json:"BackingFltInstance"`
+}
+
+type IoSetShareAccessArgs struct {
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    DesiredShareAccess uint32 `json:"DesiredShareAccess"`
+    FileObject uintptr `json:"FileObject"`
+    ShareAccess uintptr `json:"ShareAccess"`
+}
+
+type IoSetShareAccessExArgs struct {
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    DesiredShareAccess uint32 `json:"DesiredShareAccess"`
+    FileObject uintptr `json:"FileObject"`
+    ShareAccess uintptr `json:"ShareAccess"`
+    WritePermission uintptr `json:"WritePermission"`
+}
+
+type IoSetStartIoAttributesArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    DeferredStartIo bool `json:"DeferredStartIo"`
+    NonCancelable bool `json:"NonCancelable"`
+}
+
+type IoSetSystemPartitionArgs struct {
+    VolumeNameString uintptr `json:"VolumeNameString"`
+}
+
+type IoSetThreadHardErrorModeArgs struct {
+    EnableHardErrors bool `json:"EnableHardErrors"`
+}
+
+type IoSetTopLevelIrpArgs struct {
+    Irp uintptr `json:"Irp"`
+}
+
+type IoSizeOfIrpExArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    StackSize uintptr `json:"StackSize"`
+}
+
+type IoStartNextPacketArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    Cancelable bool `json:"Cancelable"`
+}
+
+type IoStartNextPacketByKeyArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    Cancelable bool `json:"Cancelable"`
+    Key uint32 `json:"Key"`
+}
+
+type IoStartPacketArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    Irp uintptr `json:"Irp"`
+    Key *uint32 `json:"Key"`
+    CancelFunction uintptr `json:"CancelFunction"`
+}
+
+type IoStartTimerArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoStopTimerArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoSynchronousCallDriverArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    Irp uintptr `json:"Irp"`
+}
+
+type IoSynchronousPageWriteArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    StartingOffset *int64 `json:"StartingOffset"`
+    Event uintptr `json:"Event"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+}
+
+type IoThreadToProcessArgs struct {
+    Thread uintptr `json:"Thread"`
+}
+
+type IoTransferActivityIdArgs struct {
+    ActivityId uintptr `json:"ActivityId"`
+    RelatedActivityId uintptr `json:"RelatedActivityId"`
+}
+
+type IoTranslateBusAddressArgs struct {
+    InterfaceType uintptr `json:"InterfaceType"`
+    BusNumber uint32 `json:"BusNumber"`
+    BusAddress uintptr `json:"BusAddress"`
+    AddressSpace *uint32 `json:"AddressSpace"`
+    TranslatedAddress uintptr `json:"TranslatedAddress"`
+}
+
+type IoTryQueueWorkItemArgs struct {
+    IoWorkItem uintptr `json:"IoWorkItem"`
+    WorkerRoutine uintptr `json:"WorkerRoutine"`
+    QueueType uintptr `json:"QueueType"`
+    Context uintptr `json:"Context"`
+}
+
+type IoUninitializeWorkItemArgs struct {
+    IoWorkItem uintptr `json:"IoWorkItem"`
+}
+
+type IoUnregisterBootDriverCallbackArgs struct {
+    CallbackHandle uintptr `json:"CallbackHandle"`
+}
+
+type IoUnregisterContainerNotificationArgs struct {
+    CallbackRegistration uintptr `json:"CallbackRegistration"`
+}
+
+type IoUnregisterFileSystemArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoUnregisterFsRegistrationChangeArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+    DriverNotificationRoutine uintptr `json:"DriverNotificationRoutine"`
+}
+
+type IoUnregisterPlugPlayNotificationArgs struct {
+    NotificationEntry uintptr `json:"NotificationEntry"`
+}
+
+type IoUnregisterPlugPlayNotificationExArgs struct {
+    NotificationEntry uintptr `json:"NotificationEntry"`
+}
+
+type IoUnregisterShutdownNotificationArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoUpdateLinkShareAccessArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    ShareAccess uintptr `json:"ShareAccess"`
+    LinkShareAccess uintptr `json:"LinkShareAccess"`
+}
+
+type IoUpdateLinkShareAccessExArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    ShareAccess uintptr `json:"ShareAccess"`
+    LinkShareAccess uintptr `json:"LinkShareAccess"`
+    IoShareAccessFlags uint32 `json:"IoShareAccessFlags"`
+}
+
+type IoUpdateShareAccessArgs struct {
+    FileObject uintptr `json:"FileObject"`
+    ShareAccess uintptr `json:"ShareAccess"`
+}
+
+type IoValidateDeviceIoControlAccessArgs struct {
+    Irp uintptr `json:"Irp"`
+    RequiredAccess uint32 `json:"RequiredAccess"`
+}
+
+type IoVerifyPartitionTableArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    FixErrors bool `json:"FixErrors"`
+}
+
+type IoVerifyVolumeArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    AllowRawMount bool `json:"AllowRawMount"`
+}
+
+type IoVolumeDeviceNameToGuidArgs struct {
+    VolumeDeviceName uintptr `json:"VolumeDeviceName"`
+    Guid uintptr `json:"Guid"`
+}
+
+type IoVolumeDeviceNameToGuidPathArgs struct {
+    VolumeDeviceName uintptr `json:"VolumeDeviceName"`
+    GuidPath uintptr `json:"GuidPath"`
+}
+
+type IoVolumeDeviceToDosNameArgs struct {
+    VolumeDeviceObject uintptr `json:"VolumeDeviceObject"`
+    DosName uintptr `json:"DosName"`
+}
+
+type IoVolumeDeviceToGuidArgs struct {
+    VolumeDeviceObject uintptr `json:"VolumeDeviceObject"`
+    Guid uintptr `json:"Guid"`
+}
+
+type IoVolumeDeviceToGuidPathArgs struct {
+    VolumeDeviceObject uintptr `json:"VolumeDeviceObject"`
+    GuidPath uintptr `json:"GuidPath"`
+}
+
+type IoWMIAllocateInstanceIdsArgs struct {
+    Guid uintptr `json:"Guid"`
+    InstanceCount uint32 `json:"InstanceCount"`
+    FirstInstanceId uint32 `json:"FirstInstanceId"`
+}
+
+type IoWMIDeviceObjectToInstanceNameArgs struct {
+    DataBlockObject uintptr `json:"DataBlockObject"`
+    DeviceObject uintptr `json:"DeviceObject"`
+    InstanceName uintptr `json:"InstanceName"`
+}
+
+type IoWMIDeviceObjectToProviderIdArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+}
+
+type IoWMIExecuteMethodArgs struct {
+    DataBlockObject uintptr `json:"DataBlockObject"`
+    InstanceName uintptr `json:"InstanceName"`
+    MethodId uint32 `json:"MethodId"`
+    InBufferSize uint32 `json:"InBufferSize"`
+    OutBufferSize *uint32 `json:"OutBufferSize"`
+    InOutBuffer *uint8 `json:"InOutBuffer"`
+}
+
+type IoWMIHandleToInstanceNameArgs struct {
+    DataBlockObject uintptr `json:"DataBlockObject"`
+    FileHandle uintptr `json:"FileHandle"`
+    InstanceName uintptr `json:"InstanceName"`
+}
+
+type IoWMIOpenBlockArgs struct {
+    Guid uintptr `json:"Guid"`
+    DesiredAccess uint32 `json:"DesiredAccess"`
+    DataBlockObject uintptr `json:"DataBlockObject"`
+}
+
+type IoWMIQueryAllDataArgs struct {
+    DataBlockObject uintptr `json:"DataBlockObject"`
+    InOutBufferSize *uint32 `json:"InOutBufferSize"`
+    OutBuffer uintptr `json:"OutBuffer"`
+}
+
+type IoWMIQueryAllDataMultipleArgs struct {
+    DataBlockObjectList uintptr `json:"DataBlockObjectList"`
+    ObjectCount uint32 `json:"ObjectCount"`
+    InOutBufferSize *uint32 `json:"InOutBufferSize"`
+    OutBuffer uintptr `json:"OutBuffer"`
+}
+
+type IoWMIQuerySingleInstanceArgs struct {
+    DataBlockObject uintptr `json:"DataBlockObject"`
+    InstanceName uintptr `json:"InstanceName"`
+    InOutBufferSize *uint32 `json:"InOutBufferSize"`
+    OutBuffer uintptr `json:"OutBuffer"`
+}
+
+type IoWMIQuerySingleInstanceMultipleArgs struct {
+    DataBlockObjectList uintptr `json:"DataBlockObjectList"`
+    InstanceNames uintptr `json:"InstanceNames"`
+    ObjectCount uint32 `json:"ObjectCount"`
+    InOutBufferSize *uint32 `json:"InOutBufferSize"`
+    OutBuffer uintptr `json:"OutBuffer"`
+}
+
+type IoWMIRegistrationControlArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    Action uint32 `json:"Action"`
+}
+
+type IoWMISetNotificationCallbackArgs struct {
+    Object uintptr `json:"Object"`
+    Callback uintptr `json:"Callback"`
+    Context uintptr `json:"Context"`
+}
+
+type IoWMISetSingleInstanceArgs struct {
+    DataBlockObject uintptr `json:"DataBlockObject"`
+    InstanceName uintptr `json:"InstanceName"`
+    Version uint32 `json:"Version"`
+    ValueBufferSize uint32 `json:"ValueBufferSize"`
+    ValueBuffer uintptr `json:"ValueBuffer"`
+}
+
+type IoWMISetSingleItemArgs struct {
+    DataBlockObject uintptr `json:"DataBlockObject"`
+    InstanceName uintptr `json:"InstanceName"`
+    DataItemId uint32 `json:"DataItemId"`
+    Version uint32 `json:"Version"`
+    ValueBufferSize uint32 `json:"ValueBufferSize"`
+    ValueBuffer uintptr `json:"ValueBuffer"`
+}
+
+type IoWMISuggestInstanceNameArgs struct {
+    PhysicalDeviceObject uintptr `json:"PhysicalDeviceObject"`
+    SymbolicLinkName uintptr `json:"SymbolicLinkName"`
+    CombineNames bool `json:"CombineNames"`
+    SuggestedInstanceName uintptr `json:"SuggestedInstanceName"`
+}
+
+type IoWMIWriteEventArgs struct {
+    WnodeEventItem uintptr `json:"WnodeEventItem"`
+}
+
+type IoWithinStackLimitsArgs struct {
+    RegionStart uintptr `json:"RegionStart"`
+    RegionSize uintptr `json:"RegionSize"`
+}
+
+type IoWriteErrorLogEntryArgs struct {
+    ElEntry uintptr `json:"ElEntry"`
+}
+
+type IoWriteKsrPersistentMemoryArgs struct {
+    DataHandle uintptr `json:"DataHandle"`
+    Buffer uintptr `json:"Buffer"`
+    Size uintptr `json:"Size"`
+}
+
+type IoWritePartitionTableArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    SectorSize uint32 `json:"SectorSize"`
+    SectorsPerTrack uint32 `json:"SectorsPerTrack"`
+    NumberOfHeads uint32 `json:"NumberOfHeads"`
+    PartitionBuffer uintptr `json:"PartitionBuffer"`
+}
+
+type IoWritePartitionTableExArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    DriveLayout uintptr `json:"DriveLayout"`
+}
+
+type IofCallDriverArgs struct {
+    DeviceObject uintptr `json:"DeviceObject"`
+    Irp uintptr `json:"Irp"`
+}
+
+type IofCompleteRequestArgs struct {
+    Irp uintptr `json:"Irp"`
+    PriorityBoost uintptr `json:"PriorityBoost"`
+}
+
+type IofGetDriverProxyWrapperFromEndpointArgs struct {
+    DriverProxyExtension uintptr `json:"DriverProxyExtension"`
+    Endpoint uintptr `json:"Endpoint"`
+    Wrapper uintptr `json:"Wrapper"`
+}
+
+type KeAcquireGuardedMutexArgs struct {
+    Mutex uintptr `json:"Mutex"`
+}
+
+type KeAcquireGuardedMutexUnsafeArgs struct {
+    FastMutex uintptr `json:"FastMutex"`
+}
+
+type KeAcquireInStackQueuedSpinLockArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+    LockHandle uintptr `json:"LockHandle"`
+}
+
+type KeAcquireInStackQueuedSpinLockAtDpcLevelArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+    LockHandle uintptr `json:"LockHandle"`
+}
+
+type KeAcquireInStackQueuedSpinLockForDpcArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+    LockHandle uintptr `json:"LockHandle"`
+}
+
+type KeAcquireInterruptSpinLockArgs struct {
+    Interrupt uintptr `json:"Interrupt"`
+}
+
+type KeAcquireQueuedSpinLockArgs struct {
+    Number uintptr `json:"Number"`
+}
+
+type KeAcquireSpinLockAtDpcLevelArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type KeAcquireSpinLockForDpcArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type KeAcquireSpinLockRaiseToDpcArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type KeAcquireSpinLockRaiseToSynchArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type KeAddTriageDumpDataBlockArgs struct {
+    KtriageDumpDataArray uintptr `json:"KtriageDumpDataArray"`
+    Address uintptr `json:"Address"`
+    Size uintptr `json:"Size"`
+}
+
+type KeAttachProcessArgs struct {
+    Process uintptr `json:"Process"`
+}
+
+type KeBugCheckArgs struct {
+    BugCheckCode uint32 `json:"BugCheckCode"`
+}
+
+type KeBugCheckExArgs struct {
+    BugCheckCode uint32 `json:"BugCheckCode"`
+    BugCheckParameter1 uintptr `json:"BugCheckParameter1"`
+    BugCheckParameter2 uintptr `json:"BugCheckParameter2"`
+    BugCheckParameter3 uintptr `json:"BugCheckParameter3"`
+    BugCheckParameter4 uintptr `json:"BugCheckParameter4"`
+}
+
+type KeCancelTimerArgs struct {
+    Arg1 uintptr `json:"arg1"`
+}
+
+type KeClearEventArgs struct {
+    Event uintptr `json:"Event"`
+}
+
+type KeConvertAuxiliaryCounterToPerformanceCounterArgs struct {
+    AuxiliaryCounterValue uint64 `json:"AuxiliaryCounterValue"`
+    PerformanceCounterValue *uint64 `json:"PerformanceCounterValue"`
+    ConversionError *uint64 `json:"ConversionError"`
+}
+
+type KeConvertPerformanceCounterToAuxiliaryCounterArgs struct {
+    PerformanceCounterValue uint64 `json:"PerformanceCounterValue"`
+    AuxiliaryCounterValue *uint64 `json:"AuxiliaryCounterValue"`
+    ConversionError *uint64 `json:"ConversionError"`
+}
+
+type KeDeregisterBoundCallbackArgs struct {
+    Handle uintptr `json:"Handle"`
+}
+
+type KeDeregisterBugCheckCallbackArgs struct {
+    CallbackRecord uintptr `json:"CallbackRecord"`
+}
+
+type KeDeregisterBugCheckReasonCallbackArgs struct {
+    CallbackRecord uintptr `json:"CallbackRecord"`
+}
+
+type KeDeregisterNmiCallbackArgs struct {
+    Handle uintptr `json:"Handle"`
+}
+
+type KeDeregisterProcessorChangeCallbackArgs struct {
+    CallbackHandle uintptr `json:"CallbackHandle"`
+}
+
+type KeExpandKernelStackAndCalloutArgs struct {
+    Callout uintptr `json:"Callout"`
+    Parameter uintptr `json:"Parameter"`
+    Size uintptr `json:"Size"`
+}
+
+type KeExpandKernelStackAndCalloutExArgs struct {
+    Callout uintptr `json:"Callout"`
+    Parameter uintptr `json:"Parameter"`
+    Size uintptr `json:"Size"`
+    Wait bool `json:"Wait"`
+    Context uintptr `json:"Context"`
+}
+
+type KeFlushIoBuffersArgs struct {
+    Mdl uintptr `json:"Mdl"`
+    ReadOperation bool `json:"ReadOperation"`
+    DmaOperation bool `json:"DmaOperation"`
+}
+
+type KeGetCurrentProcessorNumberExArgs struct {
+    ProcNumber uintptr `json:"ProcNumber"`
+}
+
+type KeGetProcessorIndexFromNumberArgs struct {
+    ProcNumber uintptr `json:"ProcNumber"`
+}
+
+type KeGetProcessorNumberFromIndexArgs struct {
+    ProcIndex uint32 `json:"ProcIndex"`
+    ProcNumber uintptr `json:"ProcNumber"`
+}
+
+type KeInitializeCrashDumpHeaderArgs struct {
+    DumpType uint32 `json:"DumpType"`
+    Flags uint32 `json:"Flags"`
+    Buffer uintptr `json:"Buffer"`
+    BufferSize uint32 `json:"BufferSize"`
+    BufferNeeded *uint32 `json:"BufferNeeded"`
+}
+
+type KeInitializeDeviceQueueArgs struct {
+    DeviceQueue uintptr `json:"DeviceQueue"`
+}
+
+type KeInitializeDpcArgs struct {
+    Dpc uintptr `json:"Dpc"`
+    DeferredRoutine uintptr `json:"DeferredRoutine"`
+    DeferredContext uintptr `json:"DeferredContext"`
+}
+
+type KeInitializeEventArgs struct {
+    Event uintptr `json:"Event"`
+    Type uintptr `json:"Type"`
+    State bool `json:"State"`
+}
+
+type KeInitializeGuardedMutexArgs struct {
+    Mutex uintptr `json:"Mutex"`
+}
+
+type KeInitializeMutantArgs struct {
+    Mutant uintptr `json:"Mutant"`
+    InitialOwner bool `json:"InitialOwner"`
+}
+
+type KeInitializeMutexArgs struct {
+    Mutex uintptr `json:"Mutex"`
+    Level uint32 `json:"Level"`
+}
+
+type KeInitializeQueueArgs struct {
+    Queue uintptr `json:"Queue"`
+    Count uint32 `json:"Count"`
+}
+
+type KeInitializeSemaphoreArgs struct {
+    Semaphore uintptr `json:"Semaphore"`
+    Count int32 `json:"Count"`
+    Limit int32 `json:"Limit"`
+}
+
+type KeInitializeSpinLockArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type KeInitializeThreadedDpcArgs struct {
+    Dpc uintptr `json:"Dpc"`
+    DeferredRoutine uintptr `json:"DeferredRoutine"`
+    DeferredContext uintptr `json:"DeferredContext"`
+}
+
+type KeInitializeTimerArgs struct {
+    Timer uintptr `json:"Timer"`
+}
+
+type KeInitializeTimerExArgs struct {
+    Timer uintptr `json:"Timer"`
+    Type uintptr `json:"Type"`
+}
+
+type KeInitializeTriageDumpDataArrayArgs struct {
+    KtriageDumpDataArray uintptr `json:"KtriageDumpDataArray"`
+    Size uint32 `json:"Size"`
+}
+
+type KeInsertByKeyDeviceQueueArgs struct {
+    DeviceQueue uintptr `json:"DeviceQueue"`
+    DeviceQueueEntry uintptr `json:"DeviceQueueEntry"`
+    SortKey uint32 `json:"SortKey"`
+}
+
+type KeInsertDeviceQueueArgs struct {
+    DeviceQueue uintptr `json:"DeviceQueue"`
+    DeviceQueueEntry uintptr `json:"DeviceQueueEntry"`
+}
+
+type KeInsertHeadQueueArgs struct {
+    Queue uintptr `json:"Queue"`
+    Entry uintptr `json:"Entry"`
+}
+
+type KeInsertQueueArgs struct {
+    Queue uintptr `json:"Queue"`
+    Entry uintptr `json:"Entry"`
+}
+
+type KeInsertQueueDpcArgs struct {
+    Dpc uintptr `json:"Dpc"`
+    SystemArgument1 uintptr `json:"SystemArgument1"`
+    SystemArgument2 uintptr `json:"SystemArgument2"`
+}
+
+type KeInvalidateRangeAllCachesArgs struct {
+    BaseAddress uintptr `json:"BaseAddress"`
+    Length uint32 `json:"Length"`
+}
+
+type KeIpiGenericCallArgs struct {
+    BroadcastFunction uintptr `json:"BroadcastFunction"`
+    Context uintptr `json:"Context"`
+}
+
+type KeLowerIrqlArgs struct {
+    NewIrql uint8 `json:"NewIrql"`
+}
+
+type KePulseEventArgs struct {
+    Event uintptr `json:"Event"`
+    Increment int32 `json:"Increment"`
+    Wait bool `json:"Wait"`
+}
+
+type KeQueryActiveProcessorCountArgs struct {
+    ActiveProcessors uintptr `json:"ActiveProcessors"`
+}
+
+type KeQueryActiveProcessorCountExArgs struct {
+    GroupNumber uint16 `json:"GroupNumber"`
+}
+
+type KeQueryAuxiliaryCounterFrequencyArgs struct {
+    AuxiliaryCounterFrequency *uint64 `json:"AuxiliaryCounterFrequency"`
+}
+
+type KeQueryDpcWatchdogInformationArgs struct {
+    WatchdogInformation uintptr `json:"WatchdogInformation"`
+}
+
+type KeQueryGroupAffinityArgs struct {
+    GroupNumber uint16 `json:"GroupNumber"`
+}
+
+type KeQueryHardwareCounterConfigurationArgs struct {
+    CounterArray uintptr `json:"CounterArray"`
+    MaximumCount uint32 `json:"MaximumCount"`
+    Count *uint32 `json:"Count"`
+}
+
+type KeQueryInterruptTimePreciseArgs struct {
+    QpcTimeStamp *uint64 `json:"QpcTimeStamp"`
+}
+
+type KeQueryLogicalProcessorRelationshipArgs struct {
+    ProcessorNumber uintptr `json:"ProcessorNumber"`
+    RelationshipType uintptr `json:"RelationshipType"`
+    Information uintptr `json:"Information"`
+    Length *uint32 `json:"Length"`
+}
+
+type KeQueryMaximumProcessorCountExArgs struct {
+    GroupNumber uint16 `json:"GroupNumber"`
+}
+
+type KeQueryNodeActiveAffinityArgs struct {
+    NodeNumber uint16 `json:"NodeNumber"`
+    Affinity uintptr `json:"Affinity"`
+    Count *uint16 `json:"Count"`
+}
+
+type KeQueryNodeActiveAffinity2Args struct {
+    NodeNumber uint16 `json:"NodeNumber"`
+    GroupAffinities uintptr `json:"GroupAffinities"`
+    GroupAffinitiesCount uint16 `json:"GroupAffinitiesCount"`
+    GroupAffinitiesRequired *uint16 `json:"GroupAffinitiesRequired"`
+}
+
+type KeQueryNodeActiveProcessorCountArgs struct {
+    NodeNumber uint16 `json:"NodeNumber"`
+}
+
+type KeQueryNodeMaximumProcessorCountArgs struct {
+    NodeNumber uint16 `json:"NodeNumber"`
+}
+
+type KeQueryOwnerMutantArgs struct {
+    Mutant uintptr `json:"Mutant"`
+    ClientId uintptr `json:"ClientId"`
+}
+
+type KeQueryPerformanceCounterArgs struct {
+    PerformanceFrequency *int64 `json:"PerformanceFrequency"`
+}
+
+type KeQueryPriorityThreadArgs struct {
+    Thread uintptr `json:"Thread"`
+}
+
+type KeQueryRuntimeThreadArgs struct {
+    Thread uintptr `json:"Thread"`
+    UserTime *uint32 `json:"UserTime"`
+}
+
+type KeQuerySystemTimePreciseArgs struct {
+    CurrentTime *int64 `json:"CurrentTime"`
+}
+
+type KeQueryTotalCycleTimeThreadArgs struct {
+    Thread uintptr `json:"Thread"`
+    CycleTimeStamp *uint64 `json:"CycleTimeStamp"`
+}
+
+type KeQueryUnbiasedInterruptTimePreciseArgs struct {
+    QpcTimeStamp *uint64 `json:"QpcTimeStamp"`
+}
+
+type KeReadStateEventArgs struct {
+    Event uintptr `json:"Event"`
+}
+
+type KeReadStateMutantArgs struct {
+    Mutant uintptr `json:"Mutant"`
+}
+
+type KeReadStateMutexArgs struct {
+    Mutex uintptr `json:"Mutex"`
+}
+
+type KeReadStateQueueArgs struct {
+    Queue uintptr `json:"Queue"`
+}
+
+type KeReadStateSemaphoreArgs struct {
+    Semaphore uintptr `json:"Semaphore"`
+}
+
+type KeReadStateTimerArgs struct {
+    Timer uintptr `json:"Timer"`
+}
+
+type KeRegisterBoundCallbackArgs struct {
+    CallbackRoutine uintptr `json:"CallbackRoutine"`
+}
+
+type KeRegisterBugCheckCallbackArgs struct {
+    CallbackRecord uintptr `json:"CallbackRecord"`
+    CallbackRoutine uintptr `json:"CallbackRoutine"`
+    Buffer uintptr `json:"Buffer"`
+    Length uint32 `json:"Length"`
+    Component *uint8 `json:"Component"`
+}
+
+type KeRegisterBugCheckReasonCallbackArgs struct {
+    CallbackRecord uintptr `json:"CallbackRecord"`
+    CallbackRoutine uintptr `json:"CallbackRoutine"`
+    Reason uintptr `json:"Reason"`
+    Component *uint8 `json:"Component"`
+}
+
+type KeRegisterNmiCallbackArgs struct {
+    CallbackRoutine uintptr `json:"CallbackRoutine"`
+    Context uintptr `json:"Context"`
+}
+
+type KeRegisterProcessorChangeCallbackArgs struct {
+    CallbackFunction uintptr `json:"CallbackFunction"`
+    CallbackContext uintptr `json:"CallbackContext"`
+    Flags uint32 `json:"Flags"`
+}
+
+type KeReleaseGuardedMutexArgs struct {
+    Mutex uintptr `json:"Mutex"`
+}
+
+type KeReleaseGuardedMutexUnsafeArgs struct {
+    FastMutex uintptr `json:"FastMutex"`
+}
+
+type KeReleaseInStackQueuedSpinLockArgs struct {
+    LockHandle uintptr `json:"LockHandle"`
+}
+
+type KeReleaseInStackQueuedSpinLockForDpcArgs struct {
+    LockHandle uintptr `json:"LockHandle"`
+}
+
+type KeReleaseInStackQueuedSpinLockFromDpcLevelArgs struct {
+    LockHandle uintptr `json:"LockHandle"`
+}
+
+type KeReleaseInterruptSpinLockArgs struct {
+    Interrupt uintptr `json:"Interrupt"`
+    OldIrql uint8 `json:"OldIrql"`
+}
+
+type KeReleaseMutexArgs struct {
+    Mutex uintptr `json:"Mutex"`
+    Wait bool `json:"Wait"`
+}
+
+type KeReleaseQueuedSpinLockArgs struct {
+    Number uintptr `json:"Number"`
+    OldIrql uint8 `json:"OldIrql"`
+}
+
+type KeReleaseSpinLockArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+    NewIrql uint8 `json:"NewIrql"`
+}
+
+type KeReleaseSpinLockForDpcArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+    OldIrql uint8 `json:"OldIrql"`
+}
+
+type KeReleaseSpinLockFromDpcLevelArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type KeRemoveByKeyDeviceQueueArgs struct {
+    DeviceQueue uintptr `json:"DeviceQueue"`
+    SortKey uint32 `json:"SortKey"`
+}
+
+type KeRemoveByKeyDeviceQueueIfBusyArgs struct {
+    DeviceQueue uintptr `json:"DeviceQueue"`
+    SortKey uint32 `json:"SortKey"`
+}
+
+type KeRemoveDeviceQueueArgs struct {
+    DeviceQueue uintptr `json:"DeviceQueue"`
+}
+
+type KeRemoveEntryDeviceQueueArgs struct {
+    DeviceQueue uintptr `json:"DeviceQueue"`
+    DeviceQueueEntry uintptr `json:"DeviceQueueEntry"`
+}
+
+type KeRemoveQueueArgs struct {
+    Queue uintptr `json:"Queue"`
+    WaitMode uintptr `json:"WaitMode"`
+    Timeout *int64 `json:"Timeout"`
+}
+
+type KeRemoveQueueDpcArgs struct {
+    Dpc uintptr `json:"Dpc"`
+}
+
+type KeRemoveQueueDpcExArgs struct {
+    Dpc uintptr `json:"Dpc"`
+    WaitIfActive bool `json:"WaitIfActive"`
+}
+
+type KeRemoveQueueExArgs struct {
+    Queue uintptr `json:"Queue"`
+    WaitMode uintptr `json:"WaitMode"`
+    Alertable bool `json:"Alertable"`
+    Timeout *int64 `json:"Timeout"`
+    EntryArray uintptr `json:"EntryArray"`
+    Count uint32 `json:"Count"`
+}
+
+type KeResetEventArgs struct {
+    Event uintptr `json:"Event"`
+}
+
+type KeRestoreExtendedProcessorStateArgs struct {
+    XStateSave uintptr `json:"XStateSave"`
+}
+
+type KeRevertToUserAffinityThreadExArgs struct {
+    Affinity uintptr `json:"Affinity"`
+}
+
+type KeRevertToUserGroupAffinityThreadArgs struct {
+    PreviousAffinity uintptr `json:"PreviousAffinity"`
+}
+
+type KeRundownQueueArgs struct {
+    Queue uintptr `json:"Queue"`
+}
+
+type KeSaveExtendedProcessorStateArgs struct {
+    Mask uint64 `json:"Mask"`
+    XStateSave uintptr `json:"XStateSave"`
+}
+
+type KeSetCoalescableTimerArgs struct {
+    Timer uintptr `json:"Timer"`
+    DueTime int64 `json:"DueTime"`
+    Period uint32 `json:"Period"`
+    TolerableDelay uint32 `json:"TolerableDelay"`
+    Dpc uintptr `json:"Dpc"`
+}
+
+type KeSetHardwareCounterConfigurationArgs struct {
+    CounterArray uintptr `json:"CounterArray"`
+    Count uint32 `json:"Count"`
+}
+
+type KeSetImportanceDpcArgs struct {
+    Dpc uintptr `json:"Dpc"`
+    Importance uintptr `json:"Importance"`
+}
+
+type KeSetKernelStackSwapEnableArgs struct {
+    Enable bool `json:"Enable"`
+}
+
+type KeSetSystemAffinityThreadArgs struct {
+    Affinity uintptr `json:"Affinity"`
+}
+
+type KeSetSystemAffinityThreadExArgs struct {
+    Affinity uintptr `json:"Affinity"`
+}
+
+type KeSetSystemGroupAffinityThreadArgs struct {
+    Affinity uintptr `json:"Affinity"`
+    PreviousAffinity uintptr `json:"PreviousAffinity"`
+}
+
+type KeSetTargetProcessorDpcArgs struct {
+    Dpc uintptr `json:"Dpc"`
+    Number uintptr `json:"Number"`
+}
+
+type KeSetTargetProcessorDpcExArgs struct {
+    Dpc uintptr `json:"Dpc"`
+    ProcNumber uintptr `json:"ProcNumber"`
+}
+
+type KeSetTimerArgs struct {
+    Timer uintptr `json:"Timer"`
+    DueTime int64 `json:"DueTime"`
+    Dpc uintptr `json:"Dpc"`
+}
+
+type KeSetTimerExArgs struct {
+    Timer uintptr `json:"Timer"`
+    DueTime int64 `json:"DueTime"`
+    Period int32 `json:"Period"`
+    Dpc uintptr `json:"Dpc"`
+}
+
+type KeSrcuAllocateArgs struct {
+    Flags uint32 `json:"Flags"`
+    Tag uint32 `json:"Tag"`
+}
+
+type KeSrcuFreeArgs struct {
+    Rcu uintptr `json:"Rcu"`
+}
+
+type KeSrcuReadLockArgs struct {
+    Rcu uintptr `json:"Rcu"`
+    Lock uintptr `json:"Lock"`
+}
+
+type KeSrcuReadUnlockArgs struct {
+    Rcu uintptr `json:"Rcu"`
+    Lock uintptr `json:"Lock"`
+}
+
+type KeSrcuSynchronizeArgs struct {
+    Rcu uintptr `json:"Rcu"`
+}
+
+type KeStackAttachProcessArgs struct {
+    PROCESS uintptr `json:"PROCESS"`
+    ApcState uintptr `json:"ApcState"`
+}
+
+type KeStallExecutionProcessorArgs struct {
+    MicroSeconds uint32 `json:"MicroSeconds"`
+}
+
+type KeSynchronizeExecutionArgs struct {
+    Interrupt uintptr `json:"Interrupt"`
+    SynchronizeRoutine uintptr `json:"SynchronizeRoutine"`
+    SynchronizeContext uintptr `json:"SynchronizeContext"`
+}
+
+type KeTestSpinLockArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type KeTryToAcquireGuardedMutexArgs struct {
+    Mutex uintptr `json:"Mutex"`
+}
+
+type KeTryToAcquireQueuedSpinLockArgs struct {
+    Number uintptr `json:"Number"`
+    OldIrql *uint8 `json:"OldIrql"`
+}
+
+type KeTryToAcquireSpinLockAtDpcLevelArgs struct {
+    SpinLock *uintptr `json:"SpinLock"`
+}
+
+type KeUnstackDetachProcessArgs struct {
+    ApcState uintptr `json:"ApcState"`
+}
+
+type MmAddPhysicalMemoryArgs struct {
+    StartAddress uintptr `json:"StartAddress"`
+    NumberOfBytes *int64 `json:"NumberOfBytes"`
+}
+
+type MmAddVerifierSpecialThunksArgs struct {
+    EntryRoutine uintptr `json:"EntryRoutine"`
+    ThunkBuffer uintptr `json:"ThunkBuffer"`
+    ThunkBufferSize uint32 `json:"ThunkBufferSize"`
+}
+
+type MmAddVerifierThunksArgs struct {
+    ThunkBuffer uintptr `json:"ThunkBuffer"`
+    ThunkBufferSize uint32 `json:"ThunkBufferSize"`
+}
+
+type MmAdvanceMdlArgs struct {
+    Mdl uintptr `json:"Mdl"`
+    NumberOfBytes uint32 `json:"NumberOfBytes"`
+}
+
+type MmAllocateContiguousMemoryArgs struct {
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    HighestAcceptableAddress uintptr `json:"HighestAcceptableAddress"`
+}
+
+type MmAllocateContiguousMemoryExArgs struct {
+    NumberOfBytes *uintptr `json:"NumberOfBytes"`
+    LowestAcceptableAddress uintptr `json:"LowestAcceptableAddress"`
+    HighestAcceptableAddress uintptr `json:"HighestAcceptableAddress"`
+    BoundaryAddressMultiple uintptr `json:"BoundaryAddressMultiple"`
+    PreferredNode uintptr `json:"PreferredNode"`
+    Protect uint32 `json:"Protect"`
+    PartitionObject uintptr `json:"PartitionObject"`
+    Tag uint32 `json:"Tag"`
+    Flags uint32 `json:"Flags"`
+    BaseAddress uintptr `json:"BaseAddress"`
+}
+
+type MmAllocateContiguousMemorySpecifyCacheArgs struct {
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    LowestAcceptableAddress uintptr `json:"LowestAcceptableAddress"`
+    HighestAcceptableAddress uintptr `json:"HighestAcceptableAddress"`
+    BoundaryAddressMultiple uintptr `json:"BoundaryAddressMultiple"`
+    CacheType uintptr `json:"CacheType"`
+}
+
+type MmAllocateContiguousMemorySpecifyCacheNodeArgs struct {
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    LowestAcceptableAddress uintptr `json:"LowestAcceptableAddress"`
+    HighestAcceptableAddress uintptr `json:"HighestAcceptableAddress"`
+    BoundaryAddressMultiple uintptr `json:"BoundaryAddressMultiple"`
+    CacheType uintptr `json:"CacheType"`
+    PreferredNode uintptr `json:"PreferredNode"`
+}
+
+type MmAllocateContiguousNodeMemoryArgs struct {
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    LowestAcceptableAddress uintptr `json:"LowestAcceptableAddress"`
+    HighestAcceptableAddress uintptr `json:"HighestAcceptableAddress"`
+    BoundaryAddressMultiple uintptr `json:"BoundaryAddressMultiple"`
+    Protect uint32 `json:"Protect"`
+    PreferredNode uintptr `json:"PreferredNode"`
+}
+
+type MmAllocateMappingAddressArgs struct {
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    PoolTag uint32 `json:"PoolTag"`
+}
+
+type MmAllocateMappingAddressExArgs struct {
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    PoolTag uint32 `json:"PoolTag"`
+    Flags uint32 `json:"Flags"`
+}
+
+type MmAllocateMdlForIoSpaceArgs struct {
+    PhysicalAddressList uintptr `json:"PhysicalAddressList"`
+    NumberOfEntries uintptr `json:"NumberOfEntries"`
+    NewMdl uintptr `json:"NewMdl"`
+}
+
+type MmAllocateNodePagesForMdlExArgs struct {
+    LowAddress uintptr `json:"LowAddress"`
+    HighAddress uintptr `json:"HighAddress"`
+    SkipBytes uintptr `json:"SkipBytes"`
+    TotalBytes uintptr `json:"TotalBytes"`
+    CacheType uintptr `json:"CacheType"`
+    IdealNode uint32 `json:"IdealNode"`
+    Flags uint32 `json:"Flags"`
+}
+
+type MmAllocateNonCachedMemoryArgs struct {
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+}
+
+type MmAllocatePagesForMdlArgs struct {
+    LowAddress uintptr `json:"LowAddress"`
+    HighAddress uintptr `json:"HighAddress"`
+    SkipBytes uintptr `json:"SkipBytes"`
+    TotalBytes uintptr `json:"TotalBytes"`
+}
+
+type MmAllocatePagesForMdlExArgs struct {
+    LowAddress uintptr `json:"LowAddress"`
+    HighAddress uintptr `json:"HighAddress"`
+    SkipBytes uintptr `json:"SkipBytes"`
+    TotalBytes uintptr `json:"TotalBytes"`
+    CacheType uintptr `json:"CacheType"`
+    Flags uint32 `json:"Flags"`
+}
+
+type MmAllocatePartitionNodePagesForMdlExArgs struct {
+    LowAddress uintptr `json:"LowAddress"`
+    HighAddress uintptr `json:"HighAddress"`
+    SkipBytes uintptr `json:"SkipBytes"`
+    TotalBytes uintptr `json:"TotalBytes"`
+    CacheType uintptr `json:"CacheType"`
+    IdealNode uintptr `json:"IdealNode"`
+    Flags uint32 `json:"Flags"`
+    PartitionObject uintptr `json:"PartitionObject"`
+}
+
+type MmAreMdlPagesCachedArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+}
+
+type MmBuildMdlForNonPagedPoolArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+}
+
+type MmCanFileBeTruncatedArgs struct {
+    SectionPointer uintptr `json:"SectionPointer"`
+    NewFileSize *int64 `json:"NewFileSize"`
+}
+
+type MmCopyMemoryArgs struct {
+    TargetAddress uintptr `json:"TargetAddress"`
+    SourceAddress uintptr `json:"SourceAddress"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    Flags uint32 `json:"Flags"`
+    NumberOfBytesTransferred *uintptr `json:"NumberOfBytesTransferred"`
+}
+
+type MmCreateMdlArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    Base uintptr `json:"Base"`
+    Length uintptr `json:"Length"`
+}
+
+type MmDoesFileHaveUserWritableReferencesArgs struct {
+    SectionPointer uintptr `json:"SectionPointer"`
+}
+
+type MmFlushImageSectionArgs struct {
+    SectionObjectPointer uintptr `json:"SectionObjectPointer"`
+    FlushType uintptr `json:"FlushType"`
+}
+
+type MmForceSectionClosedArgs struct {
+    SectionObjectPointer uintptr `json:"SectionObjectPointer"`
+    DelayClose bool `json:"DelayClose"`
+}
+
+type MmForceSectionClosedExArgs struct {
+    SectionObjectPointer uintptr `json:"SectionObjectPointer"`
+    ForceCloseFlags uint32 `json:"ForceCloseFlags"`
+}
+
+type MmFreeContiguousMemoryArgs struct {
+    BaseAddress uintptr `json:"BaseAddress"`
+}
+
+type MmFreeContiguousMemorySpecifyCacheArgs struct {
+    BaseAddress uintptr `json:"BaseAddress"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    CacheType uintptr `json:"CacheType"`
+}
+
+type MmFreeMappingAddressArgs struct {
+    BaseAddress uintptr `json:"BaseAddress"`
+    PoolTag uint32 `json:"PoolTag"`
+}
+
+type MmFreeNonCachedMemoryArgs struct {
+    BaseAddress uintptr `json:"BaseAddress"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+}
+
+type MmFreePagesFromMdlArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+}
+
+type MmFreePagesFromMdlExArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    Flags uint32 `json:"Flags"`
+}
+
+type MmGetCacheAttributeArgs struct {
+    PhysicalAddress uintptr `json:"PhysicalAddress"`
+    CacheType uintptr `json:"CacheType"`
+}
+
+type MmGetCacheAttributeExArgs struct {
+    PhysicalAddress uintptr `json:"PhysicalAddress"`
+    Flags uint32 `json:"Flags"`
+    CacheType uintptr `json:"CacheType"`
+}
+
+type MmGetModuleRoutineAddressArgs struct {
+    AddressWithinCallingDriver uintptr `json:"AddressWithinCallingDriver"`
+    ExportModuleBaseName uintptr `json:"ExportModuleBaseName"`
+    RoutineName uintptr `json:"RoutineName"`
+    Flags uint32 `json:"Flags"`
+    RoutineAddress uintptr `json:"RoutineAddress"`
+}
+
+type MmGetPhysicalAddressArgs struct {
+    BaseAddress uintptr `json:"BaseAddress"`
+}
+
+type MmGetPhysicalMemoryRangesExArgs struct {
+    PartitionObject uintptr `json:"PartitionObject"`
+}
+
+type MmGetPhysicalMemoryRangesEx2Args struct {
+    PartitionObject uintptr `json:"PartitionObject"`
+    Flags uint32 `json:"Flags"`
+}
+
+type MmGetSystemRoutineAddressArgs struct {
+    SystemRoutineName uintptr `json:"SystemRoutineName"`
+}
+
+type MmGetVirtualForPhysicalArgs struct {
+    PhysicalAddress uintptr `json:"PhysicalAddress"`
+}
+
+type MmIsAddressValidArgs struct {
+    VirtualAddress uintptr `json:"VirtualAddress"`
+}
+
+type MmIsDriverSuspectForVerifierArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+}
+
+type MmIsDriverVerifyingArgs struct {
+    DriverObject uintptr `json:"DriverObject"`
+}
+
+type MmIsDriverVerifyingByAddressArgs struct {
+    AddressWithinSection uintptr `json:"AddressWithinSection"`
+}
+
+type MmIsFileSectionActiveArgs struct {
+    FsSectionPointer uintptr `json:"FsSectionPointer"`
+    Flags uint32 `json:"Flags"`
+    SectionIsActive uintptr `json:"SectionIsActive"`
+}
+
+type MmIsIoSpaceActiveArgs struct {
+    StartAddress uintptr `json:"StartAddress"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+}
+
+type MmIsKernelAddressArgs struct {
+    Address uintptr `json:"Address"`
+}
+
+type MmIsNonPagedSystemAddressValidArgs struct {
+    VirtualAddress uintptr `json:"VirtualAddress"`
+}
+
+type MmIsUserAddressArgs struct {
+    Address uintptr `json:"Address"`
+}
+
+type MmIsVerifierEnabledArgs struct {
+    VerifierFlags *uint32 `json:"VerifierFlags"`
+}
+
+type MmLockPagableDataSectionArgs struct {
+    AddressWithinSection uintptr `json:"AddressWithinSection"`
+}
+
+type MmLockPagableSectionByHandleArgs struct {
+    ImageSectionHandle uintptr `json:"ImageSectionHandle"`
+}
+
+type MmMapIoSpaceArgs struct {
+    PhysicalAddress uintptr `json:"PhysicalAddress"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    CacheType uintptr `json:"CacheType"`
+}
+
+type MmMapIoSpaceExArgs struct {
+    PhysicalAddress uintptr `json:"PhysicalAddress"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    Protect uint32 `json:"Protect"`
+}
+
+type MmMapLockedPagesArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    AccessMode uintptr `json:"AccessMode"`
+}
+
+type MmMapLockedPagesSpecifyCacheArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    AccessMode uintptr `json:"AccessMode"`
+    CacheType uintptr `json:"CacheType"`
+    RequestedAddress uintptr `json:"RequestedAddress"`
+    BugCheckOnFailure uint32 `json:"BugCheckOnFailure"`
+    Priority uint32 `json:"Priority"`
+}
+
+type MmMapLockedPagesWithReservedMappingArgs struct {
+    MappingAddress uintptr `json:"MappingAddress"`
+    PoolTag uint32 `json:"PoolTag"`
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    CacheType uintptr `json:"CacheType"`
+}
+
+type MmMapMdlArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    Protection uint32 `json:"Protection"`
+    DriverRoutine uintptr `json:"DriverRoutine"`
+    DriverContext uintptr `json:"DriverContext"`
+}
+
+type MmMapMemoryDumpMdlExArgs struct {
+    Va uintptr `json:"Va"`
+    PageTotal uintptr `json:"PageTotal"`
+    MemoryDumpMdl uintptr `json:"MemoryDumpMdl"`
+    Flags uint32 `json:"Flags"`
+}
+
+type MmMapUserAddressesToPageArgs struct {
+    BaseAddress uintptr `json:"BaseAddress"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    PageAddress uintptr `json:"PageAddress"`
+}
+
+type MmMapVideoDisplayArgs struct {
+    PhysicalAddress uintptr `json:"PhysicalAddress"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+    CacheType uintptr `json:"CacheType"`
+}
+
+type MmMapViewInSessionSpaceArgs struct {
+    Section uintptr `json:"Section"`
+    MappedBase uintptr `json:"MappedBase"`
+    ViewSize *uintptr `json:"ViewSize"`
+}
+
+type MmMapViewInSessionSpaceExArgs struct {
+    Section uintptr `json:"Section"`
+    MappedBase uintptr `json:"MappedBase"`
+    ViewSize *uintptr `json:"ViewSize"`
+    SectionOffset *int64 `json:"SectionOffset"`
+    Flags uintptr `json:"Flags"`
+}
+
+type MmMapViewInSystemSpaceArgs struct {
+    Section uintptr `json:"Section"`
+    MappedBase uintptr `json:"MappedBase"`
+    ViewSize *uintptr `json:"ViewSize"`
+}
+
+type MmMapViewInSystemSpaceExArgs struct {
+    Section uintptr `json:"Section"`
+    MappedBase uintptr `json:"MappedBase"`
+    ViewSize *uintptr `json:"ViewSize"`
+    SectionOffset *int64 `json:"SectionOffset"`
+    Flags uintptr `json:"Flags"`
+}
+
+type MmMdlPageContentsStateArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    State uintptr `json:"State"`
+}
+
+type MmMdlPagesAreZeroArgs struct {
+    Mdl uintptr `json:"Mdl"`
+}
+
+type MmPageEntireDriverArgs struct {
+    AddressWithinSection uintptr `json:"AddressWithinSection"`
+}
+
+type MmPrefetchPagesArgs struct {
+    NumberOfLists uint32 `json:"NumberOfLists"`
+    ReadLists uintptr `json:"ReadLists"`
+}
+
+type MmProbeAndLockPagesArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    AccessMode uintptr `json:"AccessMode"`
+    Operation uintptr `json:"Operation"`
+}
+
+type MmProbeAndLockPagesExArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    ProbeFlags uintptr `json:"ProbeFlags"`
+}
+
+type MmProbeAndLockProcessPagesArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    Process uintptr `json:"Process"`
+    AccessMode uintptr `json:"AccessMode"`
+    Operation uintptr `json:"Operation"`
+}
+
+type MmProbeAndLockSelectedPagesArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    SegmentArray uintptr `json:"SegmentArray"`
+    AccessMode uintptr `json:"AccessMode"`
+    Operation uintptr `json:"Operation"`
+}
+
+type MmProtectDriverSectionArgs struct {
+    AddressWithinSection uintptr `json:"AddressWithinSection"`
+    Size uintptr `json:"Size"`
+    Flags uint32 `json:"Flags"`
+}
+
+type MmProtectMdlSystemAddressArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+    NewProtect uint32 `json:"NewProtect"`
+}
+
+type MmRemovePhysicalMemoryArgs struct {
+    StartAddress uintptr `json:"StartAddress"`
+    NumberOfBytes *int64 `json:"NumberOfBytes"`
+}
+
+type MmResetDriverPagingArgs struct {
+    AddressWithinSection uintptr `json:"AddressWithinSection"`
+}
+
+type MmRotatePhysicalViewArgs struct {
+    VirtualAddress uintptr `json:"VirtualAddress"`
+    NumberOfBytes *uintptr `json:"NumberOfBytes"`
+    NewMdl uintptr `json:"NewMdl"`
+    Direction uintptr `json:"Direction"`
+    CopyFunction uintptr `json:"CopyFunction"`
+    Context uintptr `json:"Context"`
+}
+
+type MmSecureVirtualMemoryArgs struct {
+    Address uintptr `json:"Address"`
+    Size uintptr `json:"Size"`
+    ProbeMode uint32 `json:"ProbeMode"`
+}
+
+type MmSecureVirtualMemoryExArgs struct {
+    Address uintptr `json:"Address"`
+    Size uintptr `json:"Size"`
+    ProbeMode uint32 `json:"ProbeMode"`
+    Flags uint32 `json:"Flags"`
+}
+
+type MmSetAddressRangeModifiedArgs struct {
+    Address uintptr `json:"Address"`
+    Length uintptr `json:"Length"`
+}
+
+type MmSetPermanentCacheAttributeArgs struct {
+    StartAddress uintptr `json:"StartAddress"`
+    NumberOfBytes int64 `json:"NumberOfBytes"`
+    CacheType uintptr `json:"CacheType"`
+    Flags uint32 `json:"Flags"`
+}
+
+type MmSizeOfMdlArgs struct {
+    Base uintptr `json:"Base"`
+    Length uintptr `json:"Length"`
+}
+
+type MmUnlockPagableImageSectionArgs struct {
+    ImageSectionHandle uintptr `json:"ImageSectionHandle"`
+}
+
+type MmUnlockPagesArgs struct {
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+}
+
+type MmUnmapIoSpaceArgs struct {
+    BaseAddress uintptr `json:"BaseAddress"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+}
+
+type MmUnmapLockedPagesArgs struct {
+    BaseAddress uintptr `json:"BaseAddress"`
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+}
+
+type MmUnmapReservedMappingArgs struct {
+    BaseAddress uintptr `json:"BaseAddress"`
+    PoolTag uint32 `json:"PoolTag"`
+    MemoryDescriptorList uintptr `json:"MemoryDescriptorList"`
+}
+
+type MmUnmapVideoDisplayArgs struct {
+    BaseAddress uintptr `json:"BaseAddress"`
+    NumberOfBytes uintptr `json:"NumberOfBytes"`
+}
+
+type MmUnmapViewInSessionSpaceArgs struct {
+    MappedBase uintptr `json:"MappedBase"`
+}
+
+type MmUnmapViewInSystemSpaceArgs struct {
+    MappedBase uintptr `json:"MappedBase"`
+}
+
+type MmUnsecureVirtualMemoryArgs struct {
+    SecureHandle uintptr `json:"SecureHandle"`
+}
+
+type NtAccessCheckAndAuditAlarmArgs struct {
+    SubsystemName uintptr `json:"SubsystemName"`
+    HandleId uintptr `json:"HandleId"`
+    ObjectTypeName uintptr `json:"ObjectTypeName"`
+    ObjectName uintptr `json:"ObjectName"`
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    GenericMapping uintptr `json:"GenericMapping"`
+    ObjectCreation bool `json:"ObjectCreation"`
+    GrantedAccess uintptr `json:"GrantedAccess"`
+    AccessStatus uintptr `json:"AccessStatus"`
+    GenerateOnClose uintptr `json:"GenerateOnClose"`
+}
+
+type NtAccessCheckByTypeAndAuditAlarmArgs struct {
+    SubsystemName uintptr `json:"SubsystemName"`
+    HandleId uintptr `json:"HandleId"`
+    ObjectTypeName uintptr `json:"ObjectTypeName"`
+    ObjectName uintptr `json:"ObjectName"`
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    PrincipalSelfSid uintptr `json:"PrincipalSelfSid"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    AuditType uintptr `json:"AuditType"`
+    Flags uint32 `json:"Flags"`
+    ObjectTypeList uintptr `json:"ObjectTypeList"`
+    ObjectTypeListLength uint32 `json:"ObjectTypeListLength"`
+    GenericMapping uintptr `json:"GenericMapping"`
+    ObjectCreation bool `json:"ObjectCreation"`
+    GrantedAccess uintptr `json:"GrantedAccess"`
+    AccessStatus uintptr `json:"AccessStatus"`
+    GenerateOnClose uintptr `json:"GenerateOnClose"`
+}
+
+type NtAccessCheckByTypeResultListAndAuditAlarmArgs struct {
+    SubsystemName uintptr `json:"SubsystemName"`
+    HandleId uintptr `json:"HandleId"`
+    ObjectTypeName uintptr `json:"ObjectTypeName"`
+    ObjectName uintptr `json:"ObjectName"`
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    PrincipalSelfSid uintptr `json:"PrincipalSelfSid"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    AuditType uintptr `json:"AuditType"`
+    Flags uint32 `json:"Flags"`
+    ObjectTypeList uintptr `json:"ObjectTypeList"`
+    ObjectTypeListLength uint32 `json:"ObjectTypeListLength"`
+    GenericMapping uintptr `json:"GenericMapping"`
+    ObjectCreation bool `json:"ObjectCreation"`
+    GrantedAccess uintptr `json:"GrantedAccess"`
+    AccessStatus uintptr `json:"AccessStatus"`
+    GenerateOnClose uintptr `json:"GenerateOnClose"`
+}
+
+type NtAccessCheckByTypeResultListAndAuditAlarmByHandleArgs struct {
+    SubsystemName uintptr `json:"SubsystemName"`
+    HandleId uintptr `json:"HandleId"`
+    ClientToken uintptr `json:"ClientToken"`
+    ObjectTypeName uintptr `json:"ObjectTypeName"`
+    ObjectName uintptr `json:"ObjectName"`
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    PrincipalSelfSid uintptr `json:"PrincipalSelfSid"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    AuditType uintptr `json:"AuditType"`
+    Flags uint32 `json:"Flags"`
+    ObjectTypeList uintptr `json:"ObjectTypeList"`
+    ObjectTypeListLength uint32 `json:"ObjectTypeListLength"`
+    GenericMapping uintptr `json:"GenericMapping"`
+    ObjectCreation bool `json:"ObjectCreation"`
+    GrantedAccess uintptr `json:"GrantedAccess"`
+    AccessStatus uintptr `json:"AccessStatus"`
+    GenerateOnClose uintptr `json:"GenerateOnClose"`
+}
+
+type NtAdjustGroupsTokenArgs struct {
+    TokenHandle uintptr `json:"TokenHandle"`
+    ResetToDefault bool `json:"ResetToDefault"`
+    NewState uintptr `json:"NewState"`
+    BufferLength uint32 `json:"BufferLength"`
+    PreviousState uintptr `json:"PreviousState"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+}
+
+type NtAdjustPrivilegesTokenArgs struct {
+    TokenHandle uintptr `json:"TokenHandle"`
+    DisableAllPrivileges bool `json:"DisableAllPrivileges"`
+    NewState uintptr `json:"NewState"`
+    BufferLength uint32 `json:"BufferLength"`
+    PreviousState uintptr `json:"PreviousState"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+}
+
+type NtAllocateVirtualMemoryArgs struct {
+    ProcessHandle uintptr `json:"ProcessHandle"`
+    BaseAddress uintptr `json:"BaseAddress"`
+    ZeroBits uintptr `json:"ZeroBits"`
+    RegionSize *uintptr `json:"RegionSize"`
+    AllocationType uint32 `json:"AllocationType"`
+    Protect uint32 `json:"Protect"`
+}
+
+type NtCloseArgs struct {
+    Handle uintptr `json:"Handle"`
+}
+
+type NtCloseObjectAuditAlarmArgs struct {
+    SubsystemName uintptr `json:"SubsystemName"`
+    HandleId uintptr `json:"HandleId"`
+    GenerateOnClose bool `json:"GenerateOnClose"`
+}
+
+type NtCommitCompleteArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    TmVirtualClock *int64 `json:"TmVirtualClock"`
+}
+
+type NtCommitEnlistmentArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    TmVirtualClock *int64 `json:"TmVirtualClock"`
+}
+
+type NtCommitTransactionArgs struct {
+    TransactionHandle uintptr `json:"TransactionHandle"`
+    Wait bool `json:"Wait"`
+}
+
+type NtCopyFileChunkArgs struct {
+    SourceHandle uintptr `json:"SourceHandle"`
+    DestHandle uintptr `json:"DestHandle"`
+    Event uintptr `json:"Event"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    Length uint32 `json:"Length"`
+    SourceOffset *int64 `json:"SourceOffset"`
+    DestOffset *int64 `json:"DestOffset"`
+    SourceKey *uint32 `json:"SourceKey"`
+    DestKey *uint32 `json:"DestKey"`
+    Flags uint32 `json:"Flags"`
+}
+
+type NtCreateEnlistmentArgs struct {
+    EnlistmentHandle *uintptr `json:"EnlistmentHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ResourceManagerHandle uintptr `json:"ResourceManagerHandle"`
+    TransactionHandle uintptr `json:"TransactionHandle"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    CreateOptions uint32 `json:"CreateOptions"`
+    NotificationMask uintptr `json:"NotificationMask"`
+    EnlistmentKey uintptr `json:"EnlistmentKey"`
+}
+
+type NtCreateFileArgs struct {
+    FileHandle *uintptr `json:"FileHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    AllocationSize *int64 `json:"AllocationSize"`
+    FileAttributes uint32 `json:"FileAttributes"`
+    ShareAccess uint32 `json:"ShareAccess"`
+    CreateDisposition uint32 `json:"CreateDisposition"`
+    CreateOptions uint32 `json:"CreateOptions"`
+    EaBuffer uintptr `json:"EaBuffer"`
+    EaLength uint32 `json:"EaLength"`
+}
+
+type NtCreateResourceManagerArgs struct {
+    ResourceManagerHandle *uintptr `json:"ResourceManagerHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    TmHandle uintptr `json:"TmHandle"`
+    RmGuid uintptr `json:"RmGuid"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    CreateOptions uint32 `json:"CreateOptions"`
+    Description uintptr `json:"Description"`
+}
+
+type NtCreateSectionArgs struct {
+    SectionHandle *uintptr `json:"SectionHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    MaximumSize *int64 `json:"MaximumSize"`
+    SectionPageProtection uint32 `json:"SectionPageProtection"`
+    AllocationAttributes uint32 `json:"AllocationAttributes"`
+    FileHandle uintptr `json:"FileHandle"`
+}
+
+type NtCreateSectionExArgs struct {
+    SectionHandle *uintptr `json:"SectionHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    MaximumSize *int64 `json:"MaximumSize"`
+    SectionPageProtection uint32 `json:"SectionPageProtection"`
+    AllocationAttributes uint32 `json:"AllocationAttributes"`
+    FileHandle uintptr `json:"FileHandle"`
+    ExtendedParameters uintptr `json:"ExtendedParameters"`
+    ExtendedParameterCount uint32 `json:"ExtendedParameterCount"`
+}
+
+type NtCreateTransactionArgs struct {
+    TransactionHandle *uintptr `json:"TransactionHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    Uow uintptr `json:"Uow"`
+    TmHandle uintptr `json:"TmHandle"`
+    CreateOptions uint32 `json:"CreateOptions"`
+    IsolationLevel uint32 `json:"IsolationLevel"`
+    IsolationFlags uint32 `json:"IsolationFlags"`
+    Timeout *int64 `json:"Timeout"`
+    Description uintptr `json:"Description"`
+}
+
+type NtCreateTransactionManagerArgs struct {
+    TmHandle *uintptr `json:"TmHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    LogFileName uintptr `json:"LogFileName"`
+    CreateOptions uint32 `json:"CreateOptions"`
+    CommitStrength uint32 `json:"CommitStrength"`
+}
+
+type NtDeleteObjectAuditAlarmArgs struct {
+    SubsystemName uintptr `json:"SubsystemName"`
+    HandleId uintptr `json:"HandleId"`
+    GenerateOnClose bool `json:"GenerateOnClose"`
+}
+
+type NtDeviceIoControlFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    Event uintptr `json:"Event"`
+    ApcRoutine uintptr `json:"ApcRoutine"`
+    ApcContext uintptr `json:"ApcContext"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    IoControlCode uint32 `json:"IoControlCode"`
+    InputBuffer uintptr `json:"InputBuffer"`
+    InputBufferLength uint32 `json:"InputBufferLength"`
+    OutputBuffer uintptr `json:"OutputBuffer"`
+    OutputBufferLength uint32 `json:"OutputBufferLength"`
+}
+
+type NtDuplicateTokenArgs struct {
+    ExistingTokenHandle uintptr `json:"ExistingTokenHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    EffectiveOnly bool `json:"EffectiveOnly"`
+    TokenType uintptr `json:"TokenType"`
+    NewTokenHandle *uintptr `json:"NewTokenHandle"`
+}
+
+type NtEnumerateTransactionObjectArgs struct {
+    RootObjectHandle uintptr `json:"RootObjectHandle"`
+    QueryType uintptr `json:"QueryType"`
+    ObjectCursor uintptr `json:"ObjectCursor"`
+    ObjectCursorLength uint32 `json:"ObjectCursorLength"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+}
+
+type NtFilterTokenArgs struct {
+    ExistingTokenHandle uintptr `json:"ExistingTokenHandle"`
+    Flags uint32 `json:"Flags"`
+    SidsToDisable uintptr `json:"SidsToDisable"`
+    PrivilegesToDelete uintptr `json:"PrivilegesToDelete"`
+    RestrictedSids uintptr `json:"RestrictedSids"`
+    NewTokenHandle *uintptr `json:"NewTokenHandle"`
+}
+
+type NtFlushBuffersFileExArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    Flags uint32 `json:"Flags"`
+    Parameters uintptr `json:"Parameters"`
+    ParametersSize uint32 `json:"ParametersSize"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+}
+
+type NtFreeVirtualMemoryArgs struct {
+    ProcessHandle uintptr `json:"ProcessHandle"`
+    BaseAddress uintptr `json:"BaseAddress"`
+    RegionSize *uintptr `json:"RegionSize"`
+    FreeType uint32 `json:"FreeType"`
+}
+
+type NtFsControlFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    Event uintptr `json:"Event"`
+    ApcRoutine uintptr `json:"ApcRoutine"`
+    ApcContext uintptr `json:"ApcContext"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    FsControlCode uint32 `json:"FsControlCode"`
+    InputBuffer uintptr `json:"InputBuffer"`
+    InputBufferLength uint32 `json:"InputBufferLength"`
+    OutputBuffer uintptr `json:"OutputBuffer"`
+    OutputBufferLength uint32 `json:"OutputBufferLength"`
+}
+
+type NtGetNotificationResourceManagerArgs struct {
+    ResourceManagerHandle uintptr `json:"ResourceManagerHandle"`
+    TransactionNotification uintptr `json:"TransactionNotification"`
+    NotificationLength uint32 `json:"NotificationLength"`
+    Timeout *int64 `json:"Timeout"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+    Asynchronous uint32 `json:"Asynchronous"`
+    AsynchronousContext uintptr `json:"AsynchronousContext"`
+}
+
+type NtImpersonateAnonymousTokenArgs struct {
+    ThreadHandle uintptr `json:"ThreadHandle"`
+}
+
+type NtLockFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    Event uintptr `json:"Event"`
+    ApcRoutine uintptr `json:"ApcRoutine"`
+    ApcContext uintptr `json:"ApcContext"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    ByteOffset *int64 `json:"ByteOffset"`
+    Length *int64 `json:"Length"`
+    Key uint32 `json:"Key"`
+    FailImmediately bool `json:"FailImmediately"`
+    ExclusiveLock bool `json:"ExclusiveLock"`
+}
+
+type NtManagePartitionArgs struct {
+    TargetHandle uintptr `json:"TargetHandle"`
+    SourceHandle uintptr `json:"SourceHandle"`
+    PartitionInformationClass uintptr `json:"PartitionInformationClass"`
+    PartitionInformation uintptr `json:"PartitionInformation"`
+    PartitionInformationLength uint32 `json:"PartitionInformationLength"`
+}
+
+type NtOpenEnlistmentArgs struct {
+    EnlistmentHandle *uintptr `json:"EnlistmentHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ResourceManagerHandle uintptr `json:"ResourceManagerHandle"`
+    EnlistmentGuid uintptr `json:"EnlistmentGuid"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+}
+
+type NtOpenFileArgs struct {
+    FileHandle *uintptr `json:"FileHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    ShareAccess uint32 `json:"ShareAccess"`
+    OpenOptions uint32 `json:"OpenOptions"`
+}
+
+type NtOpenJobObjectTokenArgs struct {
+    JobHandle uintptr `json:"JobHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    TokenHandle *uintptr `json:"TokenHandle"`
+}
+
+type NtOpenObjectAuditAlarmArgs struct {
+    SubsystemName uintptr `json:"SubsystemName"`
+    HandleId uintptr `json:"HandleId"`
+    ObjectTypeName uintptr `json:"ObjectTypeName"`
+    ObjectName uintptr `json:"ObjectName"`
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    ClientToken uintptr `json:"ClientToken"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    GrantedAccess uintptr `json:"GrantedAccess"`
+    Privileges uintptr `json:"Privileges"`
+    ObjectCreation bool `json:"ObjectCreation"`
+    AccessGranted bool `json:"AccessGranted"`
+    GenerateOnClose uintptr `json:"GenerateOnClose"`
+}
+
+type NtOpenProcessArgs struct {
+    ProcessHandle *uintptr `json:"ProcessHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    ClientId uintptr `json:"ClientId"`
+}
+
+type NtOpenProcessTokenArgs struct {
+    ProcessHandle uintptr `json:"ProcessHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    TokenHandle *uintptr `json:"TokenHandle"`
+}
+
+type NtOpenProcessTokenExArgs struct {
+    ProcessHandle uintptr `json:"ProcessHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    HandleAttributes uint32 `json:"HandleAttributes"`
+    TokenHandle *uintptr `json:"TokenHandle"`
+}
+
+type NtOpenRegistryTransactionArgs struct {
+    TransactionHandle *uintptr `json:"TransactionHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+}
+
+type NtOpenResourceManagerArgs struct {
+    ResourceManagerHandle *uintptr `json:"ResourceManagerHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    TmHandle uintptr `json:"TmHandle"`
+    ResourceManagerGuid uintptr `json:"ResourceManagerGuid"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+}
+
+type NtOpenThreadTokenArgs struct {
+    ThreadHandle uintptr `json:"ThreadHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    OpenAsSelf bool `json:"OpenAsSelf"`
+    TokenHandle *uintptr `json:"TokenHandle"`
+}
+
+type NtOpenThreadTokenExArgs struct {
+    ThreadHandle uintptr `json:"ThreadHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    OpenAsSelf bool `json:"OpenAsSelf"`
+    HandleAttributes uint32 `json:"HandleAttributes"`
+    TokenHandle *uintptr `json:"TokenHandle"`
+}
+
+type NtOpenTransactionArgs struct {
+    TransactionHandle *uintptr `json:"TransactionHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    Uow uintptr `json:"Uow"`
+    TmHandle uintptr `json:"TmHandle"`
+}
+
+type NtOpenTransactionManagerArgs struct {
+    TmHandle *uintptr `json:"TmHandle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    LogFileName uintptr `json:"LogFileName"`
+    TmIdentity uintptr `json:"TmIdentity"`
+    OpenOptions uint32 `json:"OpenOptions"`
+}
+
+type NtPowerInformationArgs struct {
+    InformationLevel uintptr `json:"InformationLevel"`
+    InputBuffer uintptr `json:"InputBuffer"`
+    InputBufferLength uint32 `json:"InputBufferLength"`
+    OutputBuffer uintptr `json:"OutputBuffer"`
+    OutputBufferLength uint32 `json:"OutputBufferLength"`
+}
+
+type NtPrePrepareCompleteArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    TmVirtualClock *int64 `json:"TmVirtualClock"`
+}
+
+type NtPrePrepareEnlistmentArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    TmVirtualClock *int64 `json:"TmVirtualClock"`
+}
+
+type NtPrepareCompleteArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    TmVirtualClock *int64 `json:"TmVirtualClock"`
+}
+
+type NtPrepareEnlistmentArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    TmVirtualClock *int64 `json:"TmVirtualClock"`
+}
+
+type NtPrivilegeCheckArgs struct {
+    ClientToken uintptr `json:"ClientToken"`
+    RequiredPrivileges uintptr `json:"RequiredPrivileges"`
+    Result uintptr `json:"Result"`
+}
+
+type NtPrivilegeObjectAuditAlarmArgs struct {
+    SubsystemName uintptr `json:"SubsystemName"`
+    HandleId uintptr `json:"HandleId"`
+    ClientToken uintptr `json:"ClientToken"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    Privileges uintptr `json:"Privileges"`
+    AccessGranted bool `json:"AccessGranted"`
+}
+
+type NtPrivilegedServiceAuditAlarmArgs struct {
+    SubsystemName uintptr `json:"SubsystemName"`
+    ServiceName uintptr `json:"ServiceName"`
+    ClientToken uintptr `json:"ClientToken"`
+    Privileges uintptr `json:"Privileges"`
+    AccessGranted bool `json:"AccessGranted"`
+}
+
+type NtPropagationCompleteArgs struct {
+    ResourceManagerHandle uintptr `json:"ResourceManagerHandle"`
+    RequestCookie uint32 `json:"RequestCookie"`
+    BufferLength uint32 `json:"BufferLength"`
+    Buffer uintptr `json:"Buffer"`
+}
+
+type NtPropagationFailedArgs struct {
+    ResourceManagerHandle uintptr `json:"ResourceManagerHandle"`
+    RequestCookie uint32 `json:"RequestCookie"`
+    PropStatus int32 `json:"PropStatus"`
+}
+
+type NtQueryDirectoryFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    Event uintptr `json:"Event"`
+    ApcRoutine uintptr `json:"ApcRoutine"`
+    ApcContext uintptr `json:"ApcContext"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    FileInformation uintptr `json:"FileInformation"`
+    Length uint32 `json:"Length"`
+    FileInformationClass uintptr `json:"FileInformationClass"`
+    ReturnSingleEntry bool `json:"ReturnSingleEntry"`
+    FileName uintptr `json:"FileName"`
+    RestartScan bool `json:"RestartScan"`
+}
+
+type NtQueryDirectoryFileExArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    Event uintptr `json:"Event"`
+    ApcRoutine uintptr `json:"ApcRoutine"`
+    ApcContext uintptr `json:"ApcContext"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    FileInformation uintptr `json:"FileInformation"`
+    Length uint32 `json:"Length"`
+    FileInformationClass uintptr `json:"FileInformationClass"`
+    QueryFlags uint32 `json:"QueryFlags"`
+    FileName uintptr `json:"FileName"`
+}
+
+type NtQueryInformationByNameArgs struct {
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    FileInformation uintptr `json:"FileInformation"`
+    Length uint32 `json:"Length"`
+    FileInformationClass uintptr `json:"FileInformationClass"`
+}
+
+type NtQueryInformationEnlistmentArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    EnlistmentInformationClass uintptr `json:"EnlistmentInformationClass"`
+    EnlistmentInformation uintptr `json:"EnlistmentInformation"`
+    EnlistmentInformationLength uint32 `json:"EnlistmentInformationLength"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+}
+
+type NtQueryInformationFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    FileInformation uintptr `json:"FileInformation"`
+    Length uint32 `json:"Length"`
+    FileInformationClass uintptr `json:"FileInformationClass"`
+}
+
+type NtQueryInformationResourceManagerArgs struct {
+    ResourceManagerHandle uintptr `json:"ResourceManagerHandle"`
+    ResourceManagerInformationClass uintptr `json:"ResourceManagerInformationClass"`
+    ResourceManagerInformation uintptr `json:"ResourceManagerInformation"`
+    ResourceManagerInformationLength uint32 `json:"ResourceManagerInformationLength"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+}
+
+type NtQueryInformationTokenArgs struct {
+    TokenHandle uintptr `json:"TokenHandle"`
+    TokenInformationClass uintptr `json:"TokenInformationClass"`
+    TokenInformation uintptr `json:"TokenInformation"`
+    TokenInformationLength uint32 `json:"TokenInformationLength"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+}
+
+type NtQueryInformationTransactionArgs struct {
+    TransactionHandle uintptr `json:"TransactionHandle"`
+    TransactionInformationClass uintptr `json:"TransactionInformationClass"`
+    TransactionInformation uintptr `json:"TransactionInformation"`
+    TransactionInformationLength uint32 `json:"TransactionInformationLength"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+}
+
+type NtQueryInformationTransactionManagerArgs struct {
+    TransactionManagerHandle uintptr `json:"TransactionManagerHandle"`
+    TransactionManagerInformationClass uintptr `json:"TransactionManagerInformationClass"`
+    TransactionManagerInformation uintptr `json:"TransactionManagerInformation"`
+    TransactionManagerInformationLength uint32 `json:"TransactionManagerInformationLength"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+}
+
+type NtQueryObjectArgs struct {
+    Handle uintptr `json:"Handle"`
+    ObjectInformationClass uintptr `json:"ObjectInformationClass"`
+    ObjectInformation uintptr `json:"ObjectInformation"`
+    ObjectInformationLength uint32 `json:"ObjectInformationLength"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+}
+
+type NtQueryQuotaInformationFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    Buffer uintptr `json:"Buffer"`
+    Length uint32 `json:"Length"`
+    ReturnSingleEntry bool `json:"ReturnSingleEntry"`
+    SidList uintptr `json:"SidList"`
+    SidListLength uint32 `json:"SidListLength"`
+    StartSid uintptr `json:"StartSid"`
+    RestartScan bool `json:"RestartScan"`
+}
+
+type NtQuerySecurityObjectArgs struct {
+    Handle uintptr `json:"Handle"`
+    SecurityInformation uintptr `json:"SecurityInformation"`
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    Length uint32 `json:"Length"`
+    LengthNeeded *uint32 `json:"LengthNeeded"`
+}
+
+type NtQueryVirtualMemoryArgs struct {
+    ProcessHandle uintptr `json:"ProcessHandle"`
+    BaseAddress uintptr `json:"BaseAddress"`
+    MemoryInformationClass uintptr `json:"MemoryInformationClass"`
+    MemoryInformation uintptr `json:"MemoryInformation"`
+    MemoryInformationLength uintptr `json:"MemoryInformationLength"`
+    ReturnLength *uintptr `json:"ReturnLength"`
+}
+
+type NtQueryVolumeInformationFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    FsInformation uintptr `json:"FsInformation"`
+    Length uint32 `json:"Length"`
+    FsInformationClass uintptr `json:"FsInformationClass"`
+}
+
+type NtReadFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    Event uintptr `json:"Event"`
+    ApcRoutine uintptr `json:"ApcRoutine"`
+    ApcContext uintptr `json:"ApcContext"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    Buffer uintptr `json:"Buffer"`
+    Length uint32 `json:"Length"`
+    ByteOffset *int64 `json:"ByteOffset"`
+    Key *uint32 `json:"Key"`
+}
+
+type NtReadOnlyEnlistmentArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    TmVirtualClock *int64 `json:"TmVirtualClock"`
+}
+
+type NtRecoverEnlistmentArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    EnlistmentKey uintptr `json:"EnlistmentKey"`
+}
+
+type NtRecoverResourceManagerArgs struct {
+    ResourceManagerHandle uintptr `json:"ResourceManagerHandle"`
+}
+
+type NtRecoverTransactionManagerArgs struct {
+    TransactionManagerHandle uintptr `json:"TransactionManagerHandle"`
+}
+
+type NtRegisterProtocolAddressInformationArgs struct {
+    ResourceManager uintptr `json:"ResourceManager"`
+    ProtocolId uintptr `json:"ProtocolId"`
+    ProtocolInformationSize uint32 `json:"ProtocolInformationSize"`
+    ProtocolInformation uintptr `json:"ProtocolInformation"`
+    CreateOptions uint32 `json:"CreateOptions"`
+}
+
+type NtRenameTransactionManagerArgs struct {
+    LogFileName uintptr `json:"LogFileName"`
+    ExistingTransactionManagerGuid uintptr `json:"ExistingTransactionManagerGuid"`
+}
+
+type NtRollbackCompleteArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    TmVirtualClock *int64 `json:"TmVirtualClock"`
+}
+
+type NtRollbackEnlistmentArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    TmVirtualClock *int64 `json:"TmVirtualClock"`
+}
+
+type NtRollbackRegistryTransactionArgs struct {
+    TransactionHandle uintptr `json:"TransactionHandle"`
+    Flags uint32 `json:"Flags"`
+}
+
+type NtRollbackTransactionArgs struct {
+    TransactionHandle uintptr `json:"TransactionHandle"`
+    Wait bool `json:"Wait"`
+}
+
+type NtRollforwardTransactionManagerArgs struct {
+    TransactionManagerHandle uintptr `json:"TransactionManagerHandle"`
+    TmVirtualClock *int64 `json:"TmVirtualClock"`
+}
+
+type NtSetInformationEnlistmentArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    EnlistmentInformationClass uintptr `json:"EnlistmentInformationClass"`
+    EnlistmentInformation uintptr `json:"EnlistmentInformation"`
+    EnlistmentInformationLength uint32 `json:"EnlistmentInformationLength"`
+}
+
+type NtSetInformationFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    FileInformation uintptr `json:"FileInformation"`
+    Length uint32 `json:"Length"`
+    FileInformationClass uintptr `json:"FileInformationClass"`
+}
+
+type NtSetInformationResourceManagerArgs struct {
+    ResourceManagerHandle uintptr `json:"ResourceManagerHandle"`
+    ResourceManagerInformationClass uintptr `json:"ResourceManagerInformationClass"`
+    ResourceManagerInformation uintptr `json:"ResourceManagerInformation"`
+    ResourceManagerInformationLength uint32 `json:"ResourceManagerInformationLength"`
+}
+
+type NtSetInformationThreadArgs struct {
+    ThreadHandle uintptr `json:"ThreadHandle"`
+    ThreadInformationClass uintptr `json:"ThreadInformationClass"`
+    ThreadInformation uintptr `json:"ThreadInformation"`
+    ThreadInformationLength uint32 `json:"ThreadInformationLength"`
+}
+
+type NtSetInformationTokenArgs struct {
+    TokenHandle uintptr `json:"TokenHandle"`
+    TokenInformationClass uintptr `json:"TokenInformationClass"`
+    TokenInformation uintptr `json:"TokenInformation"`
+    TokenInformationLength uint32 `json:"TokenInformationLength"`
+}
+
+type NtSetInformationTransactionArgs struct {
+    TransactionHandle uintptr `json:"TransactionHandle"`
+    TransactionInformationClass uintptr `json:"TransactionInformationClass"`
+    TransactionInformation uintptr `json:"TransactionInformation"`
+    TransactionInformationLength uint32 `json:"TransactionInformationLength"`
+}
+
+type NtSetInformationTransactionManagerArgs struct {
+    TmHandle uintptr `json:"TmHandle"`
+    TransactionManagerInformationClass uintptr `json:"TransactionManagerInformationClass"`
+    TransactionManagerInformation uintptr `json:"TransactionManagerInformation"`
+    TransactionManagerInformationLength uint32 `json:"TransactionManagerInformationLength"`
+}
+
+type NtSetInformationVirtualMemoryArgs struct {
+    ProcessHandle uintptr `json:"ProcessHandle"`
+    VmInformationClass uintptr `json:"VmInformationClass"`
+    NumberOfEntries uintptr `json:"NumberOfEntries"`
+    VirtualAddresses uintptr `json:"VirtualAddresses"`
+    VmInformation uintptr `json:"VmInformation"`
+    VmInformationLength uint32 `json:"VmInformationLength"`
+}
+
+type NtSetQuotaInformationFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    Buffer uintptr `json:"Buffer"`
+    Length uint32 `json:"Length"`
+}
+
+type NtSetSecurityObjectArgs struct {
+    Handle uintptr `json:"Handle"`
+    SecurityInformation uintptr `json:"SecurityInformation"`
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+}
+
+type NtSetVolumeInformationFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    FsInformation uintptr `json:"FsInformation"`
+    Length uint32 `json:"Length"`
+    FsInformationClass uintptr `json:"FsInformationClass"`
+}
+
+type NtSinglePhaseRejectArgs struct {
+    EnlistmentHandle uintptr `json:"EnlistmentHandle"`
+    TmVirtualClock *int64 `json:"TmVirtualClock"`
+}
+
+type NtUnlockFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    ByteOffset *int64 `json:"ByteOffset"`
+    Length *int64 `json:"Length"`
+    Key uint32 `json:"Key"`
+}
+
+type NtWriteFileArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    Event uintptr `json:"Event"`
+    ApcRoutine uintptr `json:"ApcRoutine"`
+    ApcContext uintptr `json:"ApcContext"`
+    IoStatusBlock uintptr `json:"IoStatusBlock"`
+    Buffer uintptr `json:"Buffer"`
+    Length uint32 `json:"Length"`
+    ByteOffset *int64 `json:"ByteOffset"`
+    Key *uint32 `json:"Key"`
+}
+
+type ObCloseHandleArgs struct {
+    Handle uintptr `json:"Handle"`
+    PreviousMode uintptr `json:"PreviousMode"`
+}
+
+type ObCloseHandleWithResultArgs struct {
+    Handle uintptr `json:"Handle"`
+    PreviousMode uintptr `json:"PreviousMode"`
+    ResultBufferSize uint32 `json:"ResultBufferSize"`
+    Result uintptr `json:"Result"`
+}
+
+type ObDereferenceObjectDeferDeleteArgs struct {
+    Object uintptr `json:"Object"`
+}
+
+type ObDereferenceObjectDeferDeleteWithTagArgs struct {
+    Object uintptr `json:"Object"`
+    Tag uint32 `json:"Tag"`
+}
+
+type ObGetObjectSecurityArgs struct {
+    Object uintptr `json:"Object"`
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    MemoryAllocated uintptr `json:"MemoryAllocated"`
+}
+
+type ObInsertObjectArgs struct {
+    Object uintptr `json:"Object"`
+    PassedAccessState uintptr `json:"PassedAccessState"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectPointerBias uint32 `json:"ObjectPointerBias"`
+    NewObject uintptr `json:"NewObject"`
+    Handle *uintptr `json:"Handle"`
+}
+
+type ObIsKernelHandleArgs struct {
+    Handle uintptr `json:"Handle"`
+}
+
+type ObMakeTemporaryObjectArgs struct {
+    Object uintptr `json:"Object"`
+}
+
+type ObOpenObjectByPointerArgs struct {
+    Object uintptr `json:"Object"`
+    HandleAttributes uint32 `json:"HandleAttributes"`
+    PassedAccessState uintptr `json:"PassedAccessState"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectType uintptr `json:"ObjectType"`
+    AccessMode uintptr `json:"AccessMode"`
+    Handle *uintptr `json:"Handle"`
+}
+
+type ObOpenObjectByPointerWithTagArgs struct {
+    Object uintptr `json:"Object"`
+    HandleAttributes uint32 `json:"HandleAttributes"`
+    PassedAccessState uintptr `json:"PassedAccessState"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectType uintptr `json:"ObjectType"`
+    AccessMode uintptr `json:"AccessMode"`
+    Tag uint32 `json:"Tag"`
+    Handle *uintptr `json:"Handle"`
+}
+
+type ObQueryNameStringArgs struct {
+    Object uintptr `json:"Object"`
+    ObjectNameInfo uintptr `json:"ObjectNameInfo"`
+    Length uint32 `json:"Length"`
+    ReturnLength *uint32 `json:"ReturnLength"`
+}
+
+type ObQueryObjectAuditingByHandleArgs struct {
+    Handle uintptr `json:"Handle"`
+    GenerateOnClose uintptr `json:"GenerateOnClose"`
+}
+
+type ObReferenceObjectByHandleArgs struct {
+    Handle uintptr `json:"Handle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectType uintptr `json:"ObjectType"`
+    AccessMode uintptr `json:"AccessMode"`
+    Object uintptr `json:"Object"`
+    HandleInformation uintptr `json:"HandleInformation"`
+}
+
+type ObReferenceObjectByHandleWithTagArgs struct {
+    Handle uintptr `json:"Handle"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectType uintptr `json:"ObjectType"`
+    AccessMode uintptr `json:"AccessMode"`
+    Tag uint32 `json:"Tag"`
+    Object uintptr `json:"Object"`
+    HandleInformation uintptr `json:"HandleInformation"`
+}
+
+type ObReferenceObjectByPointerArgs struct {
+    Object uintptr `json:"Object"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectType uintptr `json:"ObjectType"`
+    AccessMode uintptr `json:"AccessMode"`
+}
+
+type ObReferenceObjectByPointerWithTagArgs struct {
+    Object uintptr `json:"Object"`
+    DesiredAccess uintptr `json:"DesiredAccess"`
+    ObjectType uintptr `json:"ObjectType"`
+    AccessMode uintptr `json:"AccessMode"`
+    Tag uint32 `json:"Tag"`
+}
+
+type ObReferenceObjectSafeArgs struct {
+    Object uintptr `json:"Object"`
+}
+
+type ObReferenceObjectSafeWithTagArgs struct {
+    Object uintptr `json:"Object"`
+    Tag uint32 `json:"Tag"`
+}
+
+type ObRegisterCallbacksArgs struct {
+    CallbackRegistration uintptr `json:"CallbackRegistration"`
+    RegistrationHandle uintptr `json:"RegistrationHandle"`
+}
+
+type ObReleaseObjectSecurityArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    MemoryAllocated bool `json:"MemoryAllocated"`
+}
+
+type ObUnRegisterCallbacksArgs struct {
+    RegistrationHandle uintptr `json:"RegistrationHandle"`
+}
+
+type ObfDereferenceObjectArgs struct {
+    Object uintptr `json:"Object"`
+}
+
+type ObfDereferenceObjectWithTagArgs struct {
+    Object uintptr `json:"Object"`
+    Tag uint32 `json:"Tag"`
+}
+
+type ObfReferenceObjectArgs struct {
+    Object uintptr `json:"Object"`
+}
+
+type ObfReferenceObjectWithTagArgs struct {
+    Object uintptr `json:"Object"`
+    Tag uint32 `json:"Tag"`
+}
+
+type PsAcquireSiloHardReferenceArgs struct {
+    Silo uintptr `json:"Silo"`
+}
+
+type PsAllocSiloContextSlotArgs struct {
+    Reserved uintptr `json:"Reserved"`
+    ReturnedContextSlot uint32 `json:"ReturnedContextSlot"`
+}
+
+type PsAllocateAffinityTokenArgs struct {
+    AffinityToken uintptr `json:"AffinityToken"`
+}
+
+type PsAssignImpersonationTokenArgs struct {
+    Thread uintptr `json:"Thread"`
+    Token uintptr `json:"Token"`
+}
+
+type PsAttachSiloToCurrentThreadArgs struct {
+    Silo uintptr `json:"Silo"`
+}
+
+type PsChargePoolQuotaArgs struct {
+    Process uintptr `json:"Process"`
+    PoolType uintptr `json:"PoolType"`
+    Amount uintptr `json:"Amount"`
+}
+
+type PsChargeProcessPoolQuotaArgs struct {
+    Process uintptr `json:"Process"`
+    PoolType uintptr `json:"PoolType"`
+    Amount uintptr `json:"Amount"`
+}
+
+type PsCreateSiloContextArgs struct {
+    Silo uintptr `json:"Silo"`
+    Size uint32 `json:"Size"`
+    PoolType uintptr `json:"PoolType"`
+    ContextCleanupCallback uintptr `json:"ContextCleanupCallback"`
+    ReturnedSiloContext uintptr `json:"ReturnedSiloContext"`
+}
+
+type PsCreateSystemThreadArgs struct {
+    ThreadHandle *uintptr `json:"ThreadHandle"`
+    DesiredAccess uint32 `json:"DesiredAccess"`
+    ObjectAttributes uintptr `json:"ObjectAttributes"`
+    ProcessHandle uintptr `json:"ProcessHandle"`
+    ClientId uintptr `json:"ClientId"`
+    StartRoutine uintptr `json:"StartRoutine"`
+    StartContext uintptr `json:"StartContext"`
+}
+
+type PsDereferenceImpersonationTokenArgs struct {
+    ImpersonationToken uintptr `json:"ImpersonationToken"`
+}
+
+type PsDereferencePrimaryTokenArgs struct {
+    PrimaryToken uintptr `json:"PrimaryToken"`
+}
+
+type PsDereferenceSiloContextArgs struct {
+    SiloContext uintptr `json:"SiloContext"`
+}
+
+type PsDetachSiloFromCurrentThreadArgs struct {
+    PreviousSilo uintptr `json:"PreviousSilo"`
+}
+
+type PsDisableImpersonationArgs struct {
+    Thread uintptr `json:"Thread"`
+    ImpersonationState uintptr `json:"ImpersonationState"`
+}
+
+type PsFreeAffinityTokenArgs struct {
+    AffinityToken uintptr `json:"AffinityToken"`
+}
+
+type PsFreeSiloContextSlotArgs struct {
+    ContextSlot uint32 `json:"ContextSlot"`
+}
+
+type PsGetEffectiveServerSiloArgs struct {
+    Silo uintptr `json:"Silo"`
+}
+
+type PsGetJobServerSiloArgs struct {
+    Job uintptr `json:"Job"`
+    ServerSilo uintptr `json:"ServerSilo"`
+}
+
+type PsGetJobSiloArgs struct {
+    Job uintptr `json:"Job"`
+    Silo uintptr `json:"Silo"`
+}
+
+type PsGetParentSiloArgs struct {
+    Job uintptr `json:"Job"`
+}
+
+type PsGetPermanentSiloContextArgs struct {
+    Silo uintptr `json:"Silo"`
+    ContextSlot uint32 `json:"ContextSlot"`
+    ReturnedSiloContext uintptr `json:"ReturnedSiloContext"`
+}
+
+type PsGetProcessCreateTimeQuadPartArgs struct {
+    Process uintptr `json:"Process"`
+}
+
+type PsGetProcessExitStatusArgs struct {
+    Process uintptr `json:"Process"`
+}
+
+type PsGetProcessIdArgs struct {
+    Process uintptr `json:"Process"`
+}
+
+type PsGetProcessStartKeyArgs struct {
+    Process uintptr `json:"Process"`
+}
+
+type PsGetServerSiloActiveConsoleIdArgs struct {
+    Silo uintptr `json:"Silo"`
+}
+
+type PsGetServerSiloServiceSessionIdArgs struct {
+    Silo uintptr `json:"Silo"`
+}
+
+type PsGetSiloContainerIdArgs struct {
+    Silo uintptr `json:"Silo"`
+}
+
+type PsGetSiloContextArgs struct {
+    Silo uintptr `json:"Silo"`
+    ContextSlot uint32 `json:"ContextSlot"`
+    ReturnedSiloContext uintptr `json:"ReturnedSiloContext"`
+}
+
+type PsGetSiloMonitorContextSlotArgs struct {
+    Monitor uintptr `json:"Monitor"`
+}
+
+type PsGetThreadCreateTimeArgs struct {
+    Thread uintptr `json:"Thread"`
+}
+
+type PsGetThreadExitStatusArgs struct {
+    Thread uintptr `json:"Thread"`
+}
+
+type PsGetThreadIdArgs struct {
+    Thread uintptr `json:"Thread"`
+}
+
+type PsGetThreadProcessArgs struct {
+    Thread uintptr `json:"Thread"`
+}
+
+type PsGetThreadProcessIdArgs struct {
+    Thread uintptr `json:"Thread"`
+}
+
+type PsGetThreadPropertyArgs struct {
+    Thread uintptr `json:"Thread"`
+    Key uintptr `json:"Key"`
+    Flags uint32 `json:"Flags"`
+}
+
+type PsGetThreadServerSiloArgs struct {
+    Thread uintptr `json:"Thread"`
+}
+
+type PsGetVersionArgs struct {
+    MajorVersion *uint32 `json:"MajorVersion"`
+    MinorVersion *uint32 `json:"MinorVersion"`
+    BuildNumber *uint32 `json:"BuildNumber"`
+    CSDVersion uintptr `json:"CSDVersion"`
+}
+
+type PsImpersonateClientArgs struct {
+    Thread uintptr `json:"Thread"`
+    Token uintptr `json:"Token"`
+    CopyOnOpen bool `json:"CopyOnOpen"`
+    EffectiveOnly bool `json:"EffectiveOnly"`
+    ImpersonationLevel uintptr `json:"ImpersonationLevel"`
+}
+
+type PsInsertPermanentSiloContextArgs struct {
+    Silo uintptr `json:"Silo"`
+    ContextSlot uint32 `json:"ContextSlot"`
+    SiloContext uintptr `json:"SiloContext"`
+}
+
+type PsInsertSiloContextArgs struct {
+    Silo uintptr `json:"Silo"`
+    ContextSlot uint32 `json:"ContextSlot"`
+    SiloContext uintptr `json:"SiloContext"`
+}
+
+type PsIsHostSiloArgs struct {
+    Silo uintptr `json:"Silo"`
+}
+
+type PsIsSystemThreadArgs struct {
+    Thread uintptr `json:"Thread"`
+}
+
+type PsIsThreadAttachedToSpecificSiloArgs struct {
+    Thread uintptr `json:"Thread"`
+    ThreadSilo uintptr `json:"ThreadSilo"`
+}
+
+type PsIsThreadTerminatingArgs struct {
+    Thread uintptr `json:"Thread"`
+}
+
+type PsLookupProcessByProcessIdArgs struct {
+    ProcessId uintptr `json:"ProcessId"`
+    Process uintptr `json:"Process"`
+}
+
+type PsLookupThreadByThreadIdArgs struct {
+    ThreadId uintptr `json:"ThreadId"`
+    Thread uintptr `json:"Thread"`
+}
+
+type PsMakeSiloContextPermanentArgs struct {
+    Silo uintptr `json:"Silo"`
+    ContextSlot uint32 `json:"ContextSlot"`
+}
+
+type PsQueryProcessAvailableCpusArgs struct {
+    Process uintptr `json:"Process"`
+    Affinity uintptr `json:"Affinity"`
+    ObservedSequenceNumber *uint64 `json:"ObservedSequenceNumber"`
+    SequenceNumber *uint64 `json:"SequenceNumber"`
+}
+
+type PsQueryProcessAvailableCpusCountArgs struct {
+    Process uintptr `json:"Process"`
+    AvailableCpuCount *uint32 `json:"AvailableCpuCount"`
+    SequenceNumber *uint64 `json:"SequenceNumber"`
+}
+
+type PsQuerySystemAvailableCpusArgs struct {
+    Affinity uintptr `json:"Affinity"`
+    ObservedSequenceNumber *uint64 `json:"ObservedSequenceNumber"`
+    SequenceNumber *uint64 `json:"SequenceNumber"`
+}
+
+type PsQuerySystemAvailableCpusCountArgs struct {
+    AvailableCpuCount *uint32 `json:"AvailableCpuCount"`
+    SequenceNumber *uint64 `json:"SequenceNumber"`
+}
+
+type PsQueryTotalCycleTimeProcessArgs struct {
+    Process uintptr `json:"Process"`
+    CycleTimeStamp *uint64 `json:"CycleTimeStamp"`
+}
+
+type PsReferenceImpersonationTokenArgs struct {
+    Thread uintptr `json:"Thread"`
+    CopyOnOpen uintptr `json:"CopyOnOpen"`
+    EffectiveOnly uintptr `json:"EffectiveOnly"`
+    ImpersonationLevel uintptr `json:"ImpersonationLevel"`
+}
+
+type PsReferencePrimaryTokenArgs struct {
+    Process uintptr `json:"Process"`
+}
+
+type PsReferenceSiloContextArgs struct {
+    SiloContext uintptr `json:"SiloContext"`
+}
+
+type PsRegisterProcessAvailableCpusChangeNotificationArgs struct {
+    Process uintptr `json:"Process"`
+    Callback uintptr `json:"Callback"`
+    Context uintptr `json:"Context"`
+    ObservedSequenceNumber *uint64 `json:"ObservedSequenceNumber"`
+    RegistrationHandle uintptr `json:"RegistrationHandle"`
+}
+
+type PsRegisterSiloMonitorArgs struct {
+    Registration uintptr `json:"Registration"`
+    ReturnedMonitor uintptr `json:"ReturnedMonitor"`
+}
+
+type PsRegisterSystemAvailableCpusChangeNotificationArgs struct {
+    Callback uintptr `json:"Callback"`
+    Context uintptr `json:"Context"`
+    ObservedSequenceNumber *uint64 `json:"ObservedSequenceNumber"`
+    RegistrationHandle uintptr `json:"RegistrationHandle"`
+}
+
+type PsReleaseSiloHardReferenceArgs struct {
+    Silo uintptr `json:"Silo"`
+}
+
+type PsRemoveCreateThreadNotifyRoutineArgs struct {
+    NotifyRoutine uintptr `json:"NotifyRoutine"`
+}
+
+type PsRemoveLoadImageNotifyRoutineArgs struct {
+    NotifyRoutine uintptr `json:"NotifyRoutine"`
+}
+
+type PsRemoveSiloContextArgs struct {
+    Silo uintptr `json:"Silo"`
+    ContextSlot uint32 `json:"ContextSlot"`
+    RemovedSiloContext uintptr `json:"RemovedSiloContext"`
+}
+
+type PsReplaceSiloContextArgs struct {
+    Silo uintptr `json:"Silo"`
+    ContextSlot uint32 `json:"ContextSlot"`
+    NewSiloContext uintptr `json:"NewSiloContext"`
+    OldSiloContext uintptr `json:"OldSiloContext"`
+}
+
+type PsRestoreImpersonationArgs struct {
+    Thread uintptr `json:"Thread"`
+    ImpersonationState uintptr `json:"ImpersonationState"`
+}
+
+type PsReturnPoolQuotaArgs struct {
+    Process uintptr `json:"Process"`
+    PoolType uintptr `json:"PoolType"`
+    Amount uintptr `json:"Amount"`
+}
+
+type PsRevertToUserMultipleGroupAffinityThreadArgs struct {
+    AffinityToken uintptr `json:"AffinityToken"`
+}
+
+type PsSetCreateProcessNotifyRoutineArgs struct {
+    NotifyRoutine uintptr `json:"NotifyRoutine"`
+    Remove bool `json:"Remove"`
+}
+
+type PsSetCreateProcessNotifyRoutineExArgs struct {
+    NotifyRoutine uintptr `json:"NotifyRoutine"`
+    Remove bool `json:"Remove"`
+}
+
+type PsSetCreateProcessNotifyRoutineEx2Args struct {
+    NotifyType uintptr `json:"NotifyType"`
+    NotifyInformation uintptr `json:"NotifyInformation"`
+    Remove bool `json:"Remove"`
+}
+
+type PsSetCreateThreadNotifyRoutineArgs struct {
+    NotifyRoutine uintptr `json:"NotifyRoutine"`
+}
+
+type PsSetCreateThreadNotifyRoutineExArgs struct {
+    NotifyType uintptr `json:"NotifyType"`
+    NotifyInformation uintptr `json:"NotifyInformation"`
+}
+
+type PsSetCurrentThreadPrefetchingArgs struct {
+    Prefetching bool `json:"Prefetching"`
+}
+
+type PsSetLoadImageNotifyRoutineArgs struct {
+    NotifyRoutine uintptr `json:"NotifyRoutine"`
+}
+
+type PsSetLoadImageNotifyRoutineExArgs struct {
+    NotifyRoutine uintptr `json:"NotifyRoutine"`
+    Flags uintptr `json:"Flags"`
+}
+
+type PsSetSystemMultipleGroupAffinityThreadArgs struct {
+    GroupAffinities uintptr `json:"GroupAffinities"`
+    GroupCount uint16 `json:"GroupCount"`
+    AffinityToken uintptr `json:"AffinityToken"`
+}
+
+type PsStartSiloMonitorArgs struct {
+    Monitor uintptr `json:"Monitor"`
+}
+
+type PsTerminateServerSiloArgs struct {
+    ServerSilo uintptr `json:"ServerSilo"`
+    ExitStatus int32 `json:"ExitStatus"`
+}
+
+type PsTerminateSystemThreadArgs struct {
+    ExitStatus int32 `json:"ExitStatus"`
+}
+
+type PsUnregisterAvailableCpusChangeNotificationArgs struct {
+    RegistrationHandle uintptr `json:"RegistrationHandle"`
+}
+
+type PsUnregisterSiloMonitorArgs struct {
+    Monitor uintptr `json:"Monitor"`
+}
+
+type PsUpdateDiskCountersArgs struct {
+    Process uintptr `json:"Process"`
+    BytesRead uint64 `json:"BytesRead"`
+    BytesWritten uint64 `json:"BytesWritten"`
+    ReadOperationCount uint32 `json:"ReadOperationCount"`
+    WriteOperationCount uint32 `json:"WriteOperationCount"`
+    FlushOperationCount uint32 `json:"FlushOperationCount"`
+}
+
+type PsWrapApcWow64ThreadArgs struct {
+    ApcContext uintptr `json:"ApcContext"`
+    ApcRoutine uintptr `json:"ApcRoutine"`
+}
+
+type PshedAllocateMemoryArgs struct {
+    Size uint32 `json:"Size"`
+}
+
+type PshedFreeMemoryArgs struct {
+    Address uintptr `json:"Address"`
+}
+
+type PshedRegisterPluginArgs struct {
+    Packet uintptr `json:"Packet"`
+}
+
+type PshedSynchronizeExecutionArgs struct {
+    ErrorSource uintptr `json:"ErrorSource"`
+    SynchronizeRoutine uintptr `json:"SynchronizeRoutine"`
+    SynchronizeContext uintptr `json:"SynchronizeContext"`
+}
+
+type PshedUnregisterPluginArgs struct {
+    PluginHandle uintptr `json:"PluginHandle"`
+}
+
+type RtlAbsoluteToSelfRelativeSDArgs struct {
+    AbsoluteSecurityDescriptor uintptr `json:"AbsoluteSecurityDescriptor"`
+    SelfRelativeSecurityDescriptor uintptr `json:"SelfRelativeSecurityDescriptor"`
+    BufferLength *uint32 `json:"BufferLength"`
+}
+
+type RtlAddAccessAllowedAceArgs struct {
+    Acl uintptr `json:"Acl"`
+    AceRevision uint32 `json:"AceRevision"`
+    AccessMask uintptr `json:"AccessMask"`
+    Sid uintptr `json:"Sid"`
+}
+
+type RtlAddAccessAllowedAceExArgs struct {
+    Acl uintptr `json:"Acl"`
+    AceRevision uint32 `json:"AceRevision"`
+    AceFlags uint32 `json:"AceFlags"`
+    AccessMask uintptr `json:"AccessMask"`
+    Sid uintptr `json:"Sid"`
+}
+
+type RtlAddAceArgs struct {
+    Acl uintptr `json:"Acl"`
+    AceRevision uint32 `json:"AceRevision"`
+    StartingAceIndex uint32 `json:"StartingAceIndex"`
+    AceList uintptr `json:"AceList"`
+    AceListLength uint32 `json:"AceListLength"`
+}
+
+type RtlAllocateAndInitializeSidArgs struct {
+    IdentifierAuthority uintptr `json:"IdentifierAuthority"`
+    SubAuthorityCount uint8 `json:"SubAuthorityCount"`
+    SubAuthority0 uint32 `json:"SubAuthority0"`
+    SubAuthority1 uint32 `json:"SubAuthority1"`
+    SubAuthority2 uint32 `json:"SubAuthority2"`
+    SubAuthority3 uint32 `json:"SubAuthority3"`
+    SubAuthority4 uint32 `json:"SubAuthority4"`
+    SubAuthority5 uint32 `json:"SubAuthority5"`
+    SubAuthority6 uint32 `json:"SubAuthority6"`
+    SubAuthority7 uint32 `json:"SubAuthority7"`
+    Sid uintptr `json:"Sid"`
+}
+
+type RtlAllocateAndInitializeSidExArgs struct {
+    IdentifierAuthority uintptr `json:"IdentifierAuthority"`
+    SubAuthorityCount uint8 `json:"SubAuthorityCount"`
+    SubAuthorities *uint32 `json:"SubAuthorities"`
+    Sid uintptr `json:"Sid"`
+}
+
+type RtlAllocateHeapArgs struct {
+    HeapHandle uintptr `json:"HeapHandle"`
+    Flags uint32 `json:"Flags"`
+    Size uintptr `json:"Size"`
+}
+
+type RtlAnsiStringToUnicodeStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlAppendStringToStringArgs struct {
+    Destination uintptr `json:"Destination"`
+    Source uintptr `json:"Source"`
+}
+
+type RtlAppendUnicodeStringToStringArgs struct {
+    Destination uintptr `json:"Destination"`
+    Source uintptr `json:"Source"`
+}
+
+type RtlAppendUnicodeToStringArgs struct {
+    Destination uintptr `json:"Destination"`
+    Source uintptr `json:"Source"`
+}
+
+type RtlAreBitsClearArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    StartingIndex uint32 `json:"StartingIndex"`
+    Length uint32 `json:"Length"`
+}
+
+type RtlAreBitsSetArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    StartingIndex uint32 `json:"StartingIndex"`
+    Length uint32 `json:"Length"`
+}
+
+type RtlAssertArgs struct {
+    VoidFailedAssertion uintptr `json:"VoidFailedAssertion"`
+    VoidFileName uintptr `json:"VoidFileName"`
+    LineNumber uint32 `json:"LineNumber"`
+    MutableMessage uintptr `json:"MutableMessage"`
+}
+
+type RtlCaptureContextArgs struct {
+    ContextRecord uintptr `json:"ContextRecord"`
+}
+
+type RtlCaptureContext2Args struct {
+    ContextRecord uintptr `json:"ContextRecord"`
+}
+
+type RtlCaptureStackBackTraceArgs struct {
+    FramesToSkip uint32 `json:"FramesToSkip"`
+    FramesToCapture uint32 `json:"FramesToCapture"`
+    BackTrace uintptr `json:"BackTrace"`
+    BackTraceHash *uint32 `json:"BackTraceHash"`
+}
+
+type RtlCharToIntegerArgs struct {
+    String uintptr `json:"String"`
+    Base uint32 `json:"Base"`
+    Value *uint32 `json:"Value"`
+}
+
+type RtlCheckRegistryKeyArgs struct {
+    RelativeTo uint32 `json:"RelativeTo"`
+    Path uintptr `json:"Path"`
+}
+
+type RtlClearAllBitsArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+}
+
+type RtlClearBitArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    BitNumber uint32 `json:"BitNumber"`
+}
+
+type RtlClearBitsArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    StartingIndex uint32 `json:"StartingIndex"`
+    NumberToClear uint32 `json:"NumberToClear"`
+}
+
+type RtlCmDecodeMemIoResourceArgs struct {
+    Descriptor uintptr `json:"Descriptor"`
+    Start uintptr `json:"Start"`
+}
+
+type RtlCmEncodeMemIoResourceArgs struct {
+    Descriptor uintptr `json:"Descriptor"`
+    Type uint8 `json:"Type"`
+    Length uint64 `json:"Length"`
+    Start uint64 `json:"Start"`
+}
+
+type RtlCompareAltitudesArgs struct {
+    Altitude1 uintptr `json:"Altitude1"`
+    Altitude2 uintptr `json:"Altitude2"`
+}
+
+type RtlCompareMemoryArgs struct {
+    Source1 uintptr `json:"Source1"`
+    Source2 uintptr `json:"Source2"`
+    Length uintptr `json:"Length"`
+}
+
+type RtlCompareMemoryUlongArgs struct {
+    Source uintptr `json:"Source"`
+    Length uintptr `json:"Length"`
+    Pattern uint32 `json:"Pattern"`
+}
+
+type RtlCompareStringArgs struct {
+    String1 uintptr `json:"String1"`
+    String2 uintptr `json:"String2"`
+    CaseInSensitive bool `json:"CaseInSensitive"`
+}
+
+type RtlCompareUnicodeStringArgs struct {
+    String1 uintptr `json:"String1"`
+    String2 uintptr `json:"String2"`
+    CaseInSensitive bool `json:"CaseInSensitive"`
+}
+
+type RtlCompareUnicodeStringsArgs struct {
+    String1 uintptr `json:"String1"`
+    String1Length uintptr `json:"String1Length"`
+    String2 uintptr `json:"String2"`
+    String2Length uintptr `json:"String2Length"`
+    CaseInSensitive bool `json:"CaseInSensitive"`
+}
+
+type RtlCompressBufferArgs struct {
+    CompressionFormatAndEngine uint16 `json:"CompressionFormatAndEngine"`
+    UncompressedBuffer *uint8 `json:"UncompressedBuffer"`
+    UncompressedBufferSize uint32 `json:"UncompressedBufferSize"`
+    CompressedBuffer *uint8 `json:"CompressedBuffer"`
+    CompressedBufferSize uint32 `json:"CompressedBufferSize"`
+    UncompressedChunkSize uint32 `json:"UncompressedChunkSize"`
+    FinalCompressedSize *uint32 `json:"FinalCompressedSize"`
+    WorkSpace uintptr `json:"WorkSpace"`
+}
+
+type RtlCompressChunksArgs struct {
+    UncompressedBuffer *uint8 `json:"UncompressedBuffer"`
+    UncompressedBufferSize uint32 `json:"UncompressedBufferSize"`
+    CompressedBuffer *uint8 `json:"CompressedBuffer"`
+    CompressedBufferSize uint32 `json:"CompressedBufferSize"`
+    CompressedDataInfo uintptr `json:"CompressedDataInfo"`
+    CompressedDataInfoLength uint32 `json:"CompressedDataInfoLength"`
+    WorkSpace uintptr `json:"WorkSpace"`
+}
+
+type RtlContractHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+}
+
+type RtlConvertSidToUnicodeStringArgs struct {
+    UnicodeString uintptr `json:"UnicodeString"`
+    Sid uintptr `json:"Sid"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlCopyBitMapArgs struct {
+    Source uintptr `json:"Source"`
+    Destination uintptr `json:"Destination"`
+    TargetBit uint32 `json:"TargetBit"`
+}
+
+type RtlCopyDeviceMemoryArgs struct {
+    Destination uintptr `json:"Destination"`
+    Source uintptr `json:"Source"`
+    Length uintptr `json:"Length"`
+}
+
+type RtlCopyLuidArgs struct {
+    DestinationLuid uintptr `json:"DestinationLuid"`
+    SourceLuid uintptr `json:"SourceLuid"`
+}
+
+type RtlCopyMemoryNonTemporalArgs struct {
+    Destination uintptr `json:"Destination"`
+    Source uintptr `json:"Source"`
+    Length uintptr `json:"Length"`
+}
+
+type RtlCopySidArgs struct {
+    DestinationSidLength uint32 `json:"DestinationSidLength"`
+    DestinationSid uintptr `json:"DestinationSid"`
+    SourceSid uintptr `json:"SourceSid"`
+}
+
+type RtlCopyStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+}
+
+type RtlCopyUnicodeStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+}
+
+type RtlCopyVolatileMemoryArgs struct {
+    Destination uintptr `json:"Destination"`
+    Source uintptr `json:"Source"`
+    Length uintptr `json:"Length"`
+}
+
+type RtlCrc32Args struct {
+    Buffer uintptr `json:"Buffer"`
+    Size uintptr `json:"Size"`
+    InitialCrc uint32 `json:"InitialCrc"`
+}
+
+type RtlCrc64Args struct {
+    Buffer uintptr `json:"Buffer"`
+    Size uintptr `json:"Size"`
+    InitialCrc uint64 `json:"InitialCrc"`
+}
+
+type RtlCreateAclArgs struct {
+    Acl uintptr `json:"Acl"`
+    AclLength uint32 `json:"AclLength"`
+    AclRevision uint32 `json:"AclRevision"`
+}
+
+type RtlCreateHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Shift uint32 `json:"Shift"`
+    Flags uint32 `json:"Flags"`
+}
+
+type RtlCreateHashTableExArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    InitialSize uint32 `json:"InitialSize"`
+    Shift uint32 `json:"Shift"`
+    Flags uint32 `json:"Flags"`
+}
+
+type RtlCreateHeapArgs struct {
+    Flags uint32 `json:"Flags"`
+    HeapBase uintptr `json:"HeapBase"`
+    ReserveSize uintptr `json:"ReserveSize"`
+    CommitSize uintptr `json:"CommitSize"`
+    Lock uintptr `json:"Lock"`
+    Parameters uintptr `json:"Parameters"`
+}
+
+type RtlCreateRegistryKeyArgs struct {
+    RelativeTo uint32 `json:"RelativeTo"`
+    Path uintptr `json:"Path"`
+}
+
+type RtlCreateSecurityDescriptorArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    Revision uint32 `json:"Revision"`
+}
+
+type RtlCreateSecurityDescriptorRelativeArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    Revision uint32 `json:"Revision"`
+}
+
+type RtlCreateServiceSidArgs struct {
+    ServiceName uintptr `json:"ServiceName"`
+    ServiceSid uintptr `json:"ServiceSid"`
+    ServiceSidLength *uint32 `json:"ServiceSidLength"`
+}
+
+type RtlCreateSystemVolumeInformationFolderArgs struct {
+    VolumeRootPath uintptr `json:"VolumeRootPath"`
+}
+
+type RtlCreateUnicodeStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+}
+
+type RtlCreateVirtualAccountSidArgs struct {
+    Name uintptr `json:"Name"`
+    BaseSubAuthority uint32 `json:"BaseSubAuthority"`
+    Sid uintptr `json:"Sid"`
+    SidLength *uint32 `json:"SidLength"`
+}
+
+type RtlCustomCPToUnicodeNArgs struct {
+    CustomCP uintptr `json:"CustomCP"`
+    UnicodeString uintptr `json:"UnicodeString"`
+    MaxBytesInUnicodeString uint32 `json:"MaxBytesInUnicodeString"`
+    BytesInUnicodeString *uint32 `json:"BytesInUnicodeString"`
+    CustomCPString uintptr `json:"CustomCPString"`
+    BytesInCustomCPString uint32 `json:"BytesInCustomCPString"`
+}
+
+type RtlDecompressBufferArgs struct {
+    CompressionFormat uint16 `json:"CompressionFormat"`
+    UncompressedBuffer *uint8 `json:"UncompressedBuffer"`
+    UncompressedBufferSize uint32 `json:"UncompressedBufferSize"`
+    CompressedBuffer *uint8 `json:"CompressedBuffer"`
+    CompressedBufferSize uint32 `json:"CompressedBufferSize"`
+    FinalUncompressedSize *uint32 `json:"FinalUncompressedSize"`
+}
+
+type RtlDecompressBufferExArgs struct {
+    CompressionFormat uint16 `json:"CompressionFormat"`
+    UncompressedBuffer *uint8 `json:"UncompressedBuffer"`
+    UncompressedBufferSize uint32 `json:"UncompressedBufferSize"`
+    CompressedBuffer *uint8 `json:"CompressedBuffer"`
+    CompressedBufferSize uint32 `json:"CompressedBufferSize"`
+    FinalUncompressedSize *uint32 `json:"FinalUncompressedSize"`
+    WorkSpace uintptr `json:"WorkSpace"`
+}
+
+type RtlDecompressBufferEx2Args struct {
+    CompressionFormat uint16 `json:"CompressionFormat"`
+    UncompressedBuffer *uint8 `json:"UncompressedBuffer"`
+    UncompressedBufferSize uint32 `json:"UncompressedBufferSize"`
+    CompressedBuffer *uint8 `json:"CompressedBuffer"`
+    CompressedBufferSize uint32 `json:"CompressedBufferSize"`
+    UncompressedChunkSize uint32 `json:"UncompressedChunkSize"`
+    FinalUncompressedSize *uint32 `json:"FinalUncompressedSize"`
+    WorkSpace uintptr `json:"WorkSpace"`
+}
+
+type RtlDecompressChunksArgs struct {
+    UncompressedBuffer *uint8 `json:"UncompressedBuffer"`
+    UncompressedBufferSize uint32 `json:"UncompressedBufferSize"`
+    CompressedBuffer *uint8 `json:"CompressedBuffer"`
+    CompressedBufferSize uint32 `json:"CompressedBufferSize"`
+    CompressedTail *uint8 `json:"CompressedTail"`
+    CompressedTailSize uint32 `json:"CompressedTailSize"`
+    CompressedDataInfo uintptr `json:"CompressedDataInfo"`
+}
+
+type RtlDecompressFragmentArgs struct {
+    CompressionFormat uint16 `json:"CompressionFormat"`
+    UncompressedFragment *uint8 `json:"UncompressedFragment"`
+    UncompressedFragmentSize uint32 `json:"UncompressedFragmentSize"`
+    CompressedBuffer *uint8 `json:"CompressedBuffer"`
+    CompressedBufferSize uint32 `json:"CompressedBufferSize"`
+    FragmentOffset uint32 `json:"FragmentOffset"`
+    FinalUncompressedSize *uint32 `json:"FinalUncompressedSize"`
+    WorkSpace uintptr `json:"WorkSpace"`
+}
+
+type RtlDecompressFragmentExArgs struct {
+    CompressionFormat uint16 `json:"CompressionFormat"`
+    UncompressedFragment *uint8 `json:"UncompressedFragment"`
+    UncompressedFragmentSize uint32 `json:"UncompressedFragmentSize"`
+    CompressedBuffer *uint8 `json:"CompressedBuffer"`
+    CompressedBufferSize uint32 `json:"CompressedBufferSize"`
+    FragmentOffset uint32 `json:"FragmentOffset"`
+    UncompressedChunkSize uint32 `json:"UncompressedChunkSize"`
+    FinalUncompressedSize *uint32 `json:"FinalUncompressedSize"`
+    WorkSpace uintptr `json:"WorkSpace"`
+}
+
+type RtlDeleteArgs struct {
+    Links uintptr `json:"Links"`
+}
+
+type RtlDeleteAceArgs struct {
+    Acl uintptr `json:"Acl"`
+    AceIndex uint32 `json:"AceIndex"`
+}
+
+type RtlDeleteElementGenericTableArgs struct {
+    Table uintptr `json:"Table"`
+    Buffer uintptr `json:"Buffer"`
+}
+
+type RtlDeleteElementGenericTableAvlArgs struct {
+    Table uintptr `json:"Table"`
+    Buffer uintptr `json:"Buffer"`
+}
+
+type RtlDeleteElementGenericTableAvlExArgs struct {
+    Table uintptr `json:"Table"`
+    NodeOrParent uintptr `json:"NodeOrParent"`
+}
+
+type RtlDeleteHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+}
+
+type RtlDeleteNoSplayArgs struct {
+    Links uintptr `json:"Links"`
+    Root uintptr `json:"Root"`
+}
+
+type RtlDeleteRegistryValueArgs struct {
+    RelativeTo uint32 `json:"RelativeTo"`
+    Path uintptr `json:"Path"`
+    ValueName uintptr `json:"ValueName"`
+}
+
+type RtlDescribeChunkArgs struct {
+    CompressionFormat uint16 `json:"CompressionFormat"`
+    CompressedBuffer *uint8 `json:"CompressedBuffer"`
+    EndOfCompressedBufferPlus1 *uint8 `json:"EndOfCompressedBufferPlus1"`
+    ChunkBuffer *uint8 `json:"ChunkBuffer"`
+    ChunkSize *uint32 `json:"ChunkSize"`
+}
+
+type RtlDestroyHeapArgs struct {
+    HeapHandle uintptr `json:"HeapHandle"`
+}
+
+type RtlDowncaseUnicodeCharArgs struct {
+    SourceCharacter uintptr `json:"SourceCharacter"`
+}
+
+type RtlDowncaseUnicodeStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlDrainNonVolatileFlushArgs struct {
+    NvToken uintptr `json:"NvToken"`
+}
+
+type RtlDuplicateUnicodeStringArgs struct {
+    Flags uint32 `json:"Flags"`
+    StringIn uintptr `json:"StringIn"`
+    StringOut uintptr `json:"StringOut"`
+}
+
+type RtlEndEnumerationHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Enumerator uintptr `json:"Enumerator"`
+}
+
+type RtlEndStrongEnumerationHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Enumerator uintptr `json:"Enumerator"`
+}
+
+type RtlEndWeakEnumerationHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Enumerator uintptr `json:"Enumerator"`
+}
+
+type RtlEnumerateEntryHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Enumerator uintptr `json:"Enumerator"`
+}
+
+type RtlEnumerateGenericTableArgs struct {
+    Table uintptr `json:"Table"`
+    Restart bool `json:"Restart"`
+}
+
+type RtlEnumerateGenericTableAvlArgs struct {
+    Table uintptr `json:"Table"`
+    Restart bool `json:"Restart"`
+}
+
+type RtlEnumerateGenericTableLikeADirectoryArgs struct {
+    Table uintptr `json:"Table"`
+    MatchFunction uintptr `json:"MatchFunction"`
+    MatchData uintptr `json:"MatchData"`
+    NextFlag uint32 `json:"NextFlag"`
+    RestartKey uintptr `json:"RestartKey"`
+    DeleteCount *uint32 `json:"DeleteCount"`
+    Buffer uintptr `json:"Buffer"`
+}
+
+type RtlEnumerateGenericTableWithoutSplayingArgs struct {
+    Table uintptr `json:"Table"`
+    RestartKey uintptr `json:"RestartKey"`
+}
+
+type RtlEnumerateGenericTableWithoutSplayingAvlArgs struct {
+    Table uintptr `json:"Table"`
+    RestartKey uintptr `json:"RestartKey"`
+}
+
+type RtlEqualPrefixSidArgs struct {
+    Sid1 uintptr `json:"Sid1"`
+    Sid2 uintptr `json:"Sid2"`
+}
+
+type RtlEqualSidArgs struct {
+    Sid1 uintptr `json:"Sid1"`
+    Sid2 uintptr `json:"Sid2"`
+}
+
+type RtlEqualStringArgs struct {
+    String1 uintptr `json:"String1"`
+    String2 uintptr `json:"String2"`
+    CaseInSensitive bool `json:"CaseInSensitive"`
+}
+
+type RtlEqualUnicodeStringArgs struct {
+    String1 uintptr `json:"String1"`
+    String2 uintptr `json:"String2"`
+    CaseInSensitive bool `json:"CaseInSensitive"`
+}
+
+type RtlExpandHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+}
+
+type RtlExtendCorrelationVectorArgs struct {
+    CorrelationVector uintptr `json:"CorrelationVector"`
+}
+
+type RtlExtractBitMapArgs struct {
+    Source uintptr `json:"Source"`
+    Destination uintptr `json:"Destination"`
+    TargetBit uint32 `json:"TargetBit"`
+    NumberOfBits uint32 `json:"NumberOfBits"`
+}
+
+type RtlFillMemoryNonTemporalArgs struct {
+    Destination uintptr `json:"Destination"`
+    Length uintptr `json:"Length"`
+    Value uint8 `json:"Value"`
+}
+
+type RtlFillNonVolatileMemoryArgs struct {
+    NvToken uintptr `json:"NvToken"`
+    NvDestination uintptr `json:"NvDestination"`
+    Size uintptr `json:"Size"`
+    Value uint8 `json:"Value"`
+    Flags uint32 `json:"Flags"`
+}
+
+type RtlFindClearBitsArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    NumberToFind uint32 `json:"NumberToFind"`
+    HintIndex uint32 `json:"HintIndex"`
+}
+
+type RtlFindClearBitsAndSetArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    NumberToFind uint32 `json:"NumberToFind"`
+    HintIndex uint32 `json:"HintIndex"`
+}
+
+type RtlFindClearRunsArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    RunArray uintptr `json:"RunArray"`
+    SizeOfRunArray uint32 `json:"SizeOfRunArray"`
+    LocateLongestRuns bool `json:"LocateLongestRuns"`
+}
+
+type RtlFindClosestEncodableLengthArgs struct {
+    SourceLength uint64 `json:"SourceLength"`
+    TargetLength uintptr `json:"TargetLength"`
+}
+
+type RtlFindFirstRunClearArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    StartingIndex *uint32 `json:"StartingIndex"`
+}
+
+type RtlFindLastBackwardRunClearArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    FromIndex uint32 `json:"FromIndex"`
+    StartingRunIndex *uint32 `json:"StartingRunIndex"`
+}
+
+type RtlFindLeastSignificantBitArgs struct {
+    Set uint64 `json:"Set"`
+}
+
+type RtlFindLongestRunClearArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    StartingIndex *uint32 `json:"StartingIndex"`
+}
+
+type RtlFindMostSignificantBitArgs struct {
+    Set uint64 `json:"Set"`
+}
+
+type RtlFindNextForwardRunClearArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    FromIndex uint32 `json:"FromIndex"`
+    StartingRunIndex *uint32 `json:"StartingRunIndex"`
+}
+
+type RtlFindSetBitsArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    NumberToFind uint32 `json:"NumberToFind"`
+    HintIndex uint32 `json:"HintIndex"`
+}
+
+type RtlFindSetBitsAndClearArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    NumberToFind uint32 `json:"NumberToFind"`
+    HintIndex uint32 `json:"HintIndex"`
+}
+
+type RtlFindUnicodePrefixArgs struct {
+    PrefixTable uintptr `json:"PrefixTable"`
+    FullName uintptr `json:"FullName"`
+    CaseInsensitiveIndex uint32 `json:"CaseInsensitiveIndex"`
+}
+
+type RtlFlushNonVolatileMemoryArgs struct {
+    NvToken uintptr `json:"NvToken"`
+    NvBuffer uintptr `json:"NvBuffer"`
+    Size uintptr `json:"Size"`
+    Flags uint32 `json:"Flags"`
+}
+
+type RtlFlushNonVolatileMemoryRangesArgs struct {
+    NvToken uintptr `json:"NvToken"`
+    NvRanges uintptr `json:"NvRanges"`
+    NumRanges uintptr `json:"NumRanges"`
+    Flags uint32 `json:"Flags"`
+}
+
+type RtlFreeAnsiStringArgs struct {
+    AnsiString uintptr `json:"AnsiString"`
+}
+
+type RtlFreeHeapArgs struct {
+    HeapHandle uintptr `json:"HeapHandle"`
+    Flags uint32 `json:"Flags"`
+    BaseAddress uintptr `json:"BaseAddress"`
+}
+
+type RtlFreeNonVolatileTokenArgs struct {
+    NvToken uintptr `json:"NvToken"`
+}
+
+type RtlFreeOemStringArgs struct {
+    OemString uintptr `json:"OemString"`
+}
+
+type RtlFreeSidArgs struct {
+    Sid uintptr `json:"Sid"`
+}
+
+type RtlFreeUTF8StringArgs struct {
+    Utf8String uintptr `json:"utf8String"`
+}
+
+type RtlFreeUnicodeStringArgs struct {
+    UnicodeString uintptr `json:"UnicodeString"`
+}
+
+type RtlGUIDFromStringArgs struct {
+    GuidString uintptr `json:"GuidString"`
+    Guid uintptr `json:"Guid"`
+}
+
+type RtlGenerate8dot3NameArgs struct {
+    Name uintptr `json:"Name"`
+    AllowExtendedCharacters bool `json:"AllowExtendedCharacters"`
+    Context uintptr `json:"Context"`
+    Name8dot3 uintptr `json:"Name8dot3"`
+}
+
+type RtlGenerateClass5GuidArgs struct {
+    NamespaceGuid uintptr `json:"NamespaceGuid"`
+    Buffer uintptr `json:"Buffer"`
+    BufferSize uint32 `json:"BufferSize"`
+    Guid uintptr `json:"Guid"`
+}
+
+type RtlGetAceArgs struct {
+    Acl uintptr `json:"Acl"`
+    AceIndex uint32 `json:"AceIndex"`
+    Ace uintptr `json:"Ace"`
+}
+
+type RtlGetAcesBufferSizeArgs struct {
+    Acl uintptr `json:"Acl"`
+    AcesBufferSize *uint32 `json:"AcesBufferSize"`
+}
+
+type RtlGetCallersAddressArgs struct {
+    CallersAddress uintptr `json:"CallersAddress"`
+    CallersCaller uintptr `json:"CallersCaller"`
+}
+
+type RtlGetCompressionWorkSpaceSizeArgs struct {
+    CompressionFormatAndEngine uint16 `json:"CompressionFormatAndEngine"`
+    CompressBufferWorkSpaceSize *uint32 `json:"CompressBufferWorkSpaceSize"`
+    CompressFragmentWorkSpaceSize *uint32 `json:"CompressFragmentWorkSpaceSize"`
+}
+
+type RtlGetDaclSecurityDescriptorArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    DaclPresent uintptr `json:"DaclPresent"`
+    Dacl uintptr `json:"Dacl"`
+    DaclDefaulted uintptr `json:"DaclDefaulted"`
+}
+
+type RtlGetElementGenericTableArgs struct {
+    Table uintptr `json:"Table"`
+    I uint32 `json:"I"`
+}
+
+type RtlGetElementGenericTableAvlArgs struct {
+    Table uintptr `json:"Table"`
+    I uint32 `json:"I"`
+}
+
+type RtlGetEnabledExtendedFeaturesArgs struct {
+    FeatureMask uint64 `json:"FeatureMask"`
+}
+
+type RtlGetGroupSecurityDescriptorArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    Group uintptr `json:"Group"`
+    GroupDefaulted uintptr `json:"GroupDefaulted"`
+}
+
+type RtlGetNextEntryHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Context uintptr `json:"Context"`
+}
+
+type RtlGetNonVolatileTokenArgs struct {
+    NvBuffer uintptr `json:"NvBuffer"`
+    Size uintptr `json:"Size"`
+    NvToken uintptr `json:"NvToken"`
+}
+
+type RtlGetNtProductTypeArgs struct {
+    NtProductType uintptr `json:"NtProductType"`
+}
+
+type RtlGetOwnerSecurityDescriptorArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    Owner uintptr `json:"Owner"`
+    OwnerDefaulted uintptr `json:"OwnerDefaulted"`
+}
+
+type RtlGetPersistedStateLocationArgs struct {
+    SourceID uintptr `json:"SourceID"`
+    CustomValue uintptr `json:"CustomValue"`
+    DefaultPath uintptr `json:"DefaultPath"`
+    StateLocationType uintptr `json:"StateLocationType"`
+    TargetPath uintptr `json:"TargetPath"`
+    BufferLengthIn uint32 `json:"BufferLengthIn"`
+    BufferLengthOut *uint32 `json:"BufferLengthOut"`
+}
+
+type RtlGetProductInfoArgs struct {
+    OSMajorVersion uint32 `json:"OSMajorVersion"`
+    OSMinorVersion uint32 `json:"OSMinorVersion"`
+    SpMajorVersion uint32 `json:"SpMajorVersion"`
+    SpMinorVersion uint32 `json:"SpMinorVersion"`
+    ReturnedProductType *uint32 `json:"ReturnedProductType"`
+}
+
+type RtlGetSaclSecurityDescriptorArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    SaclPresent uintptr `json:"SaclPresent"`
+    Sacl uintptr `json:"Sacl"`
+    SaclDefaulted uintptr `json:"SaclDefaulted"`
+}
+
+type RtlGetSystemGlobalDataArgs struct {
+    DataId uintptr `json:"DataId"`
+    Buffer uintptr `json:"Buffer"`
+    Size uint32 `json:"Size"`
+}
+
+type RtlGetVersionArgs struct {
+    LpVersionInformation uintptr `json:"lpVersionInformation"`
+}
+
+type RtlHashUnicodeStringArgs struct {
+    String uintptr `json:"String"`
+    CaseInSensitive bool `json:"CaseInSensitive"`
+    HashAlgorithm uint32 `json:"HashAlgorithm"`
+    HashValue *uint32 `json:"HashValue"`
+}
+
+type RtlIdentifierAuthoritySidArgs struct {
+    Sid uintptr `json:"Sid"`
+}
+
+type RtlIdnToAsciiArgs struct {
+    Flags uint32 `json:"Flags"`
+    SourceString uintptr `json:"SourceString"`
+    SourceStringLength int32 `json:"SourceStringLength"`
+    DestinationString uintptr `json:"DestinationString"`
+    DestinationStringLength *int32 `json:"DestinationStringLength"`
+}
+
+type RtlIdnToNameprepUnicodeArgs struct {
+    Flags uint32 `json:"Flags"`
+    SourceString uintptr `json:"SourceString"`
+    SourceStringLength int32 `json:"SourceStringLength"`
+    DestinationString uintptr `json:"DestinationString"`
+    DestinationStringLength *int32 `json:"DestinationStringLength"`
+}
+
+type RtlIdnToUnicodeArgs struct {
+    Flags uint32 `json:"Flags"`
+    SourceString uintptr `json:"SourceString"`
+    SourceStringLength int32 `json:"SourceStringLength"`
+    DestinationString uintptr `json:"DestinationString"`
+    DestinationStringLength *int32 `json:"DestinationStringLength"`
+}
+
+type RtlIncrementCorrelationVectorArgs struct {
+    CorrelationVector uintptr `json:"CorrelationVector"`
+}
+
+type RtlInitAnsiStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+}
+
+type RtlInitAnsiStringExArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+}
+
+type RtlInitCodePageTableArgs struct {
+    TableBase *uint16 `json:"TableBase"`
+    CodePageTable uintptr `json:"CodePageTable"`
+}
+
+type RtlInitEnumerationHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Enumerator uintptr `json:"Enumerator"`
+}
+
+type RtlInitStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+}
+
+type RtlInitStringExArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+}
+
+type RtlInitStrongEnumerationHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Enumerator uintptr `json:"Enumerator"`
+}
+
+type RtlInitUTF8StringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+}
+
+type RtlInitUTF8StringExArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+}
+
+type RtlInitUnicodeStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+}
+
+type RtlInitUnicodeStringExArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+}
+
+type RtlInitWeakEnumerationHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Enumerator uintptr `json:"Enumerator"`
+}
+
+type RtlInitializeBitMapArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    BitMapBuffer *uint32 `json:"BitMapBuffer"`
+    SizeOfBitMap uint32 `json:"SizeOfBitMap"`
+}
+
+type RtlInitializeCorrelationVectorArgs struct {
+    CorrelationVector uintptr `json:"CorrelationVector"`
+    Version uintptr `json:"Version"`
+    Guid uintptr `json:"Guid"`
+}
+
+type RtlInitializeGenericTableArgs struct {
+    Table uintptr `json:"Table"`
+    CompareRoutine uintptr `json:"CompareRoutine"`
+    AllocateRoutine uintptr `json:"AllocateRoutine"`
+    FreeRoutine uintptr `json:"FreeRoutine"`
+    TableContext uintptr `json:"TableContext"`
+}
+
+type RtlInitializeGenericTableAvlArgs struct {
+    Table uintptr `json:"Table"`
+    CompareRoutine uintptr `json:"CompareRoutine"`
+    AllocateRoutine uintptr `json:"AllocateRoutine"`
+    FreeRoutine uintptr `json:"FreeRoutine"`
+    TableContext uintptr `json:"TableContext"`
+}
+
+type RtlInitializeSidArgs struct {
+    Sid uintptr `json:"Sid"`
+    IdentifierAuthority uintptr `json:"IdentifierAuthority"`
+    SubAuthorityCount uint8 `json:"SubAuthorityCount"`
+}
+
+type RtlInitializeSidExArgs struct {
+    Sid uintptr `json:"Sid"`
+    IdentifierAuthority uintptr `json:"IdentifierAuthority"`
+    SubAuthorityCount uint8 `json:"SubAuthorityCount"`
+}
+
+type RtlInitializeUnicodePrefixArgs struct {
+    PrefixTable uintptr `json:"PrefixTable"`
+}
+
+type RtlInsertElementGenericTableArgs struct {
+    Table uintptr `json:"Table"`
+    Buffer uintptr `json:"Buffer"`
+    BufferSize uintptr `json:"BufferSize"`
+    NewElement uintptr `json:"NewElement"`
+}
+
+type RtlInsertElementGenericTableAvlArgs struct {
+    Table uintptr `json:"Table"`
+    Buffer uintptr `json:"Buffer"`
+    BufferSize uintptr `json:"BufferSize"`
+    NewElement uintptr `json:"NewElement"`
+}
+
+type RtlInsertElementGenericTableFullArgs struct {
+    Table uintptr `json:"Table"`
+    Buffer uintptr `json:"Buffer"`
+    BufferSize uintptr `json:"BufferSize"`
+    NewElement uintptr `json:"NewElement"`
+    NodeOrParent uintptr `json:"NodeOrParent"`
+    SearchResult uintptr `json:"SearchResult"`
+}
+
+type RtlInsertElementGenericTableFullAvlArgs struct {
+    Table uintptr `json:"Table"`
+    Buffer uintptr `json:"Buffer"`
+    BufferSize uintptr `json:"BufferSize"`
+    NewElement uintptr `json:"NewElement"`
+    NodeOrParent uintptr `json:"NodeOrParent"`
+    SearchResult uintptr `json:"SearchResult"`
+}
+
+type RtlInsertEntryHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Entry uintptr `json:"Entry"`
+    Signature uintptr `json:"Signature"`
+    Context uintptr `json:"Context"`
+}
+
+type RtlInsertUnicodePrefixArgs struct {
+    PrefixTable uintptr `json:"PrefixTable"`
+    Prefix uintptr `json:"Prefix"`
+    PrefixTableEntry uintptr `json:"PrefixTableEntry"`
+}
+
+type RtlInt64ToUnicodeStringArgs struct {
+    Value uint64 `json:"Value"`
+    Base uint32 `json:"Base"`
+    String uintptr `json:"String"`
+}
+
+type RtlIntegerToUnicodeStringArgs struct {
+    Value uint32 `json:"Value"`
+    Base uint32 `json:"Base"`
+    String uintptr `json:"String"`
+}
+
+type RtlIoDecodeMemIoResourceArgs struct {
+    Descriptor uintptr `json:"Descriptor"`
+    Alignment uintptr `json:"Alignment"`
+    MinimumAddress uintptr `json:"MinimumAddress"`
+    MaximumAddress uintptr `json:"MaximumAddress"`
+}
+
+type RtlIoEncodeMemIoResourceArgs struct {
+    Descriptor uintptr `json:"Descriptor"`
+    Type uint8 `json:"Type"`
+    Length uint64 `json:"Length"`
+    Alignment uint64 `json:"Alignment"`
+    MinimumAddress uint64 `json:"MinimumAddress"`
+    MaximumAddress uint64 `json:"MaximumAddress"`
+}
+
+type RtlIsApiSetImplementedArgs struct {
+    ApiSetName uintptr `json:"apiSetName"`
+}
+
+type RtlIsCloudFilesPlaceholderArgs struct {
+    FileAttributes uint32 `json:"FileAttributes"`
+    ReparseTag uint32 `json:"ReparseTag"`
+}
+
+type RtlIsGenericTableEmptyArgs struct {
+    Table uintptr `json:"Table"`
+}
+
+type RtlIsGenericTableEmptyAvlArgs struct {
+    Table uintptr `json:"Table"`
+}
+
+type RtlIsNameLegalDOS8Dot3Args struct {
+    Name uintptr `json:"Name"`
+    OemName uintptr `json:"OemName"`
+    NameContainsSpaces uintptr `json:"NameContainsSpaces"`
+}
+
+type RtlIsNonEmptyDirectoryReparsePointAllowedArgs struct {
+    ReparseTag uint32 `json:"ReparseTag"`
+}
+
+type RtlIsNormalizedStringArgs struct {
+    NormForm uint32 `json:"NormForm"`
+    SourceString uintptr `json:"SourceString"`
+    SourceStringLength int32 `json:"SourceStringLength"`
+    Normalized uintptr `json:"Normalized"`
+}
+
+type RtlIsNtDdiVersionAvailableArgs struct {
+    Version uint32 `json:"Version"`
+}
+
+type RtlIsPartialPlaceholderArgs struct {
+    FileAttributes uint32 `json:"FileAttributes"`
+    ReparseTag uint32 `json:"ReparseTag"`
+}
+
+type RtlIsPartialPlaceholderFileHandleArgs struct {
+    FileHandle uintptr `json:"FileHandle"`
+    IsPartialPlaceholder uintptr `json:"IsPartialPlaceholder"`
+}
+
+type RtlIsPartialPlaceholderFileInfoArgs struct {
+    InfoBuffer uintptr `json:"InfoBuffer"`
+    InfoClass uintptr `json:"InfoClass"`
+    IsPartialPlaceholder uintptr `json:"IsPartialPlaceholder"`
+}
+
+type RtlIsSandboxedTokenArgs struct {
+    Context uintptr `json:"Context"`
+    PreviousMode uintptr `json:"PreviousMode"`
+}
+
+type RtlIsSandboxedTokenHandleArgs struct {
+    TokenHandle uintptr `json:"TokenHandle"`
+    PreviousMode uintptr `json:"PreviousMode"`
+}
+
+type RtlIsServicePackVersionInstalledArgs struct {
+    Version uint32 `json:"Version"`
+}
+
+type RtlIsUntrustedObjectArgs struct {
+    Handle uintptr `json:"Handle"`
+    Object uintptr `json:"Object"`
+    UntrustedObject uintptr `json:"UntrustedObject"`
+}
+
+type RtlIsValidOemCharacterArgs struct {
+    Char uintptr `json:"Char"`
+}
+
+type RtlIsZeroMemoryArgs struct {
+    Buffer uintptr `json:"Buffer"`
+    Length uintptr `json:"Length"`
+}
+
+type RtlLengthRequiredSidArgs struct {
+    SubAuthorityCount uint32 `json:"SubAuthorityCount"`
+}
+
+type RtlLengthSecurityDescriptorArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+}
+
+type RtlLengthSidArgs struct {
+    Sid uintptr `json:"Sid"`
+}
+
+type RtlLookupElementGenericTableArgs struct {
+    Table uintptr `json:"Table"`
+    Buffer uintptr `json:"Buffer"`
+}
+
+type RtlLookupElementGenericTableAvlArgs struct {
+    Table uintptr `json:"Table"`
+    Buffer uintptr `json:"Buffer"`
+}
+
+type RtlLookupElementGenericTableFullArgs struct {
+    Table uintptr `json:"Table"`
+    Buffer uintptr `json:"Buffer"`
+    NodeOrParent uintptr `json:"NodeOrParent"`
+    SearchResult uintptr `json:"SearchResult"`
+}
+
+type RtlLookupElementGenericTableFullAvlArgs struct {
+    Table uintptr `json:"Table"`
+    Buffer uintptr `json:"Buffer"`
+    NodeOrParent uintptr `json:"NodeOrParent"`
+    SearchResult uintptr `json:"SearchResult"`
+}
+
+type RtlLookupEntryHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Signature uintptr `json:"Signature"`
+    Context uintptr `json:"Context"`
+}
+
+type RtlLookupFirstMatchingElementGenericTableAvlArgs struct {
+    Table uintptr `json:"Table"`
+    Buffer uintptr `json:"Buffer"`
+    RestartKey uintptr `json:"RestartKey"`
+}
+
+type RtlMapGenericMaskArgs struct {
+    AccessMask uintptr `json:"AccessMask"`
+    GenericMapping uintptr `json:"GenericMapping"`
+}
+
+type RtlMoveVolatileMemoryArgs struct {
+    Destination uintptr `json:"Destination"`
+    Source uintptr `json:"Source"`
+    Length uintptr `json:"Length"`
+}
+
+type RtlMultiByteToUnicodeNArgs struct {
+    UnicodeString uintptr `json:"UnicodeString"`
+    MaxBytesInUnicodeString uint32 `json:"MaxBytesInUnicodeString"`
+    BytesInUnicodeString *uint32 `json:"BytesInUnicodeString"`
+    MultiByteString int8 `json:"MultiByteString"`
+    BytesInMultiByteString uint32 `json:"BytesInMultiByteString"`
+}
+
+type RtlMultiByteToUnicodeSizeArgs struct {
+    BytesInUnicodeString *uint32 `json:"BytesInUnicodeString"`
+    MultiByteString int8 `json:"MultiByteString"`
+    BytesInMultiByteString uint32 `json:"BytesInMultiByteString"`
+}
+
+type RtlNextUnicodePrefixArgs struct {
+    PrefixTable uintptr `json:"PrefixTable"`
+    Restart bool `json:"Restart"`
+}
+
+type RtlNormalizeSecurityDescriptorArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    SecurityDescriptorLength uint32 `json:"SecurityDescriptorLength"`
+    NewSecurityDescriptor uintptr `json:"NewSecurityDescriptor"`
+    NewSecurityDescriptorLength *uint32 `json:"NewSecurityDescriptorLength"`
+    CheckOnly bool `json:"CheckOnly"`
+}
+
+type RtlNormalizeStringArgs struct {
+    NormForm uint32 `json:"NormForm"`
+    SourceString uintptr `json:"SourceString"`
+    SourceStringLength int32 `json:"SourceStringLength"`
+    DestinationString uintptr `json:"DestinationString"`
+    DestinationStringLength *int32 `json:"DestinationStringLength"`
+}
+
+type RtlNtStatusToDosErrorArgs struct {
+    Status int32 `json:"Status"`
+}
+
+type RtlNtStatusToDosErrorNoTebArgs struct {
+    Status int32 `json:"Status"`
+}
+
+type RtlNumberGenericTableElementsArgs struct {
+    Table uintptr `json:"Table"`
+}
+
+type RtlNumberGenericTableElementsAvlArgs struct {
+    Table uintptr `json:"Table"`
+}
+
+type RtlNumberOfClearBitsArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+}
+
+type RtlNumberOfClearBitsInRangeArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    StartingIndex uint32 `json:"StartingIndex"`
+    Length uint32 `json:"Length"`
+}
+
+type RtlNumberOfSetBitsArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+}
+
+type RtlNumberOfSetBitsInRangeArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    StartingIndex uint32 `json:"StartingIndex"`
+    Length uint32 `json:"Length"`
+}
+
+type RtlNumberOfSetBitsUlongPtrArgs struct {
+    Target uintptr `json:"Target"`
+}
+
+type RtlOemStringToCountedUnicodeStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlOemStringToUnicodeStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlOemToUnicodeNArgs struct {
+    UnicodeString uintptr `json:"UnicodeString"`
+    MaxBytesInUnicodeString uint32 `json:"MaxBytesInUnicodeString"`
+    BytesInUnicodeString *uint32 `json:"BytesInUnicodeString"`
+    OemString uintptr `json:"OemString"`
+    BytesInOemString uint32 `json:"BytesInOemString"`
+}
+
+type RtlOsDeploymentStateArgs struct {
+    Flags uint32 `json:"Flags"`
+}
+
+type RtlPrefetchMemoryNonTemporalArgs struct {
+    Source uintptr `json:"Source"`
+    Length uintptr `json:"Length"`
+}
+
+type RtlPrefixStringArgs struct {
+    String1 uintptr `json:"String1"`
+    String2 uintptr `json:"String2"`
+    CaseInSensitive bool `json:"CaseInSensitive"`
+}
+
+type RtlPrefixUnicodeStringArgs struct {
+    String1 uintptr `json:"String1"`
+    String2 uintptr `json:"String2"`
+    CaseInSensitive bool `json:"CaseInSensitive"`
+}
+
+type RtlQueryPackageIdentityArgs struct {
+    TokenObject uintptr `json:"TokenObject"`
+    PackageFullName uintptr `json:"PackageFullName"`
+    PackageSize *uintptr `json:"PackageSize"`
+    AppId uintptr `json:"AppId"`
+    AppIdSize *uintptr `json:"AppIdSize"`
+    Packaged uintptr `json:"Packaged"`
+}
+
+type RtlQueryPackageIdentityExArgs struct {
+    TokenObject uintptr `json:"TokenObject"`
+    PackageFullName uintptr `json:"PackageFullName"`
+    PackageSize *uintptr `json:"PackageSize"`
+    AppId uintptr `json:"AppId"`
+    AppIdSize *uintptr `json:"AppIdSize"`
+    DynamicId uintptr `json:"DynamicId"`
+    Flags *uint64 `json:"Flags"`
+}
+
+type RtlQueryRegistryValueWithFallbackArgs struct {
+    PrimaryHandle uintptr `json:"PrimaryHandle"`
+    FallbackHandle uintptr `json:"FallbackHandle"`
+    ValueName uintptr `json:"ValueName"`
+    ValueLength uint32 `json:"ValueLength"`
+    ValueType *uint32 `json:"ValueType"`
+    ValueData uintptr `json:"ValueData"`
+    ResultLength *uint32 `json:"ResultLength"`
+}
+
+type RtlQueryRegistryValuesArgs struct {
+    RelativeTo uint32 `json:"RelativeTo"`
+    Path uintptr `json:"Path"`
+    QueryTable uintptr `json:"QueryTable"`
+    Context uintptr `json:"Context"`
+    Environment uintptr `json:"Environment"`
+}
+
+type RtlQueryValidationRunlevelArgs struct {
+    ComponentName uintptr `json:"ComponentName"`
+}
+
+type RtlRaiseCustomSystemEventTriggerArgs struct {
+    TriggerConfig uintptr `json:"TriggerConfig"`
+}
+
+type RtlRandomArgs struct {
+    Seed *uint32 `json:"Seed"`
+}
+
+type RtlRandomExArgs struct {
+    Seed *uint32 `json:"Seed"`
+}
+
+type RtlRealPredecessorArgs struct {
+    Links uintptr `json:"Links"`
+}
+
+type RtlRealSuccessorArgs struct {
+    Links uintptr `json:"Links"`
+}
+
+type RtlRemoveEntryHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Entry uintptr `json:"Entry"`
+    Context uintptr `json:"Context"`
+}
+
+type RtlRemoveUnicodePrefixArgs struct {
+    PrefixTable uintptr `json:"PrefixTable"`
+    PrefixTableEntry uintptr `json:"PrefixTableEntry"`
+}
+
+type RtlReplaceSidInSdArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    OldSid uintptr `json:"OldSid"`
+    NewSid uintptr `json:"NewSid"`
+    NumChanges uint32 `json:"NumChanges"`
+}
+
+type RtlReserveChunkArgs struct {
+    CompressionFormat uint16 `json:"CompressionFormat"`
+    CompressedBuffer *uint8 `json:"CompressedBuffer"`
+    EndOfCompressedBufferPlus1 *uint8 `json:"EndOfCompressedBufferPlus1"`
+    ChunkBuffer *uint8 `json:"ChunkBuffer"`
+    ChunkSize uint32 `json:"ChunkSize"`
+}
+
+type RtlRunOnceBeginInitializeArgs struct {
+    RunOnce uintptr `json:"RunOnce"`
+    Flags uint32 `json:"Flags"`
+    Context uintptr `json:"Context"`
+}
+
+type RtlRunOnceCompleteArgs struct {
+    RunOnce uintptr `json:"RunOnce"`
+    Flags uint32 `json:"Flags"`
+    Context uintptr `json:"Context"`
+}
+
+type RtlRunOnceExecuteOnceArgs struct {
+    RunOnce uintptr `json:"RunOnce"`
+    InitFn uintptr `json:"InitFn"`
+    Parameter uintptr `json:"Parameter"`
+    Context uintptr `json:"Context"`
+}
+
+type RtlRunOnceInitializeArgs struct {
+    RunOnce uintptr `json:"RunOnce"`
+}
+
+type RtlSecondsSince1970ToTimeArgs struct {
+    ElapsedSeconds uint32 `json:"ElapsedSeconds"`
+    Time *int64 `json:"Time"`
+}
+
+type RtlSecondsSince1980ToTimeArgs struct {
+    ElapsedSeconds uint32 `json:"ElapsedSeconds"`
+    Time *int64 `json:"Time"`
+}
+
+type RtlSelfRelativeToAbsoluteSDArgs struct {
+    SelfRelativeSecurityDescriptor uintptr `json:"SelfRelativeSecurityDescriptor"`
+    AbsoluteSecurityDescriptor uintptr `json:"AbsoluteSecurityDescriptor"`
+    AbsoluteSecurityDescriptorSize *uint32 `json:"AbsoluteSecurityDescriptorSize"`
+    Dacl uintptr `json:"Dacl"`
+    DaclSize *uint32 `json:"DaclSize"`
+    Sacl uintptr `json:"Sacl"`
+    SaclSize *uint32 `json:"SaclSize"`
+    Owner uintptr `json:"Owner"`
+    OwnerSize *uint32 `json:"OwnerSize"`
+    PrimaryGroup uintptr `json:"PrimaryGroup"`
+    PrimaryGroupSize *uint32 `json:"PrimaryGroupSize"`
+}
+
+type RtlSetAllBitsArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+}
+
+type RtlSetBitArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    BitNumber uint32 `json:"BitNumber"`
+}
+
+type RtlSetBitsArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    StartingIndex uint32 `json:"StartingIndex"`
+    NumberToSet uint32 `json:"NumberToSet"`
+}
+
+type RtlSetDaclSecurityDescriptorArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    DaclPresent bool `json:"DaclPresent"`
+    Dacl uintptr `json:"Dacl"`
+    DaclDefaulted bool `json:"DaclDefaulted"`
+}
+
+type RtlSetGroupSecurityDescriptorArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    Group uintptr `json:"Group"`
+    GroupDefaulted bool `json:"GroupDefaulted"`
+}
+
+type RtlSetOwnerSecurityDescriptorArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+    Owner uintptr `json:"Owner"`
+    OwnerDefaulted bool `json:"OwnerDefaulted"`
+}
+
+type RtlSetProcessPlaceholderCompatibilityModeArgs struct {
+    Mode int8 `json:"Mode"`
+}
+
+type RtlSetSystemGlobalDataArgs struct {
+    DataId uintptr `json:"DataId"`
+    Buffer uintptr `json:"Buffer"`
+    Size uint32 `json:"Size"`
+}
+
+type RtlSetThreadPlaceholderCompatibilityModeArgs struct {
+    Mode int8 `json:"Mode"`
+}
+
+type RtlSetVolatileMemoryArgs struct {
+    Destination uintptr `json:"Destination"`
+    Fill uintptr `json:"Fill"`
+    Length uintptr `json:"Length"`
+}
+
+type RtlSplayArgs struct {
+    Links uintptr `json:"Links"`
+}
+
+type RtlStringFromGUIDArgs struct {
+    Guid uintptr `json:"Guid"`
+    GuidString uintptr `json:"GuidString"`
+}
+
+type RtlStronglyEnumerateEntryHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Enumerator uintptr `json:"Enumerator"`
+}
+
+type RtlSubAuthorityCountSidArgs struct {
+    Sid uintptr `json:"Sid"`
+}
+
+type RtlSubAuthoritySidArgs struct {
+    Sid uintptr `json:"Sid"`
+    SubAuthority uint32 `json:"SubAuthority"`
+}
+
+type RtlSubtreePredecessorArgs struct {
+    Links uintptr `json:"Links"`
+}
+
+type RtlSubtreeSuccessorArgs struct {
+    Links uintptr `json:"Links"`
+}
+
+type RtlSuffixUnicodeStringArgs struct {
+    String1 uintptr `json:"String1"`
+    String2 uintptr `json:"String2"`
+    CaseInSensitive bool `json:"CaseInSensitive"`
+}
+
+type RtlTestBitArgs struct {
+    BitMapHeader uintptr `json:"BitMapHeader"`
+    BitNumber uint32 `json:"BitNumber"`
+}
+
+type RtlTimeFieldsToTimeArgs struct {
+    TimeFields uintptr `json:"TimeFields"`
+    Time *int64 `json:"Time"`
+}
+
+type RtlTimeToSecondsSince1970Args struct {
+    Time *int64 `json:"Time"`
+    ElapsedSeconds *uint32 `json:"ElapsedSeconds"`
+}
+
+type RtlTimeToSecondsSince1980Args struct {
+    Time *int64 `json:"Time"`
+    ElapsedSeconds *uint32 `json:"ElapsedSeconds"`
+}
+
+type RtlTimeToTimeFieldsArgs struct {
+    Time *int64 `json:"Time"`
+    TimeFields uintptr `json:"TimeFields"`
+}
+
+type RtlUTF8StringToUnicodeStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlUTF8ToUnicodeNArgs struct {
+    UnicodeStringDestination uintptr `json:"UnicodeStringDestination"`
+    UnicodeStringMaxByteCount uint32 `json:"UnicodeStringMaxByteCount"`
+    UnicodeStringActualByteCount *uint32 `json:"UnicodeStringActualByteCount"`
+    UTF8StringSource uintptr `json:"UTF8StringSource"`
+    UTF8StringByteCount uint32 `json:"UTF8StringByteCount"`
+}
+
+type RtlUnicodeStringToAnsiStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlUnicodeStringToCountedOemStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlUnicodeStringToInt64Args struct {
+    String uintptr `json:"String"`
+    Base uint32 `json:"Base"`
+    Number uintptr `json:"Number"`
+    EndPointer uintptr `json:"EndPointer"`
+}
+
+type RtlUnicodeStringToIntegerArgs struct {
+    String uintptr `json:"String"`
+    Base uint32 `json:"Base"`
+    Value *uint32 `json:"Value"`
+}
+
+type RtlUnicodeStringToOemStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlUnicodeStringToUTF8StringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlUnicodeToCustomCPNArgs struct {
+    CustomCP uintptr `json:"CustomCP"`
+    CustomCPString uintptr `json:"CustomCPString"`
+    MaxBytesInCustomCPString uint32 `json:"MaxBytesInCustomCPString"`
+    BytesInCustomCPString *uint32 `json:"BytesInCustomCPString"`
+    UnicodeString uintptr `json:"UnicodeString"`
+    BytesInUnicodeString uint32 `json:"BytesInUnicodeString"`
+}
+
+type RtlUnicodeToMultiByteNArgs struct {
+    MultiByteString *int8 `json:"MultiByteString"`
+    MaxBytesInMultiByteString uint32 `json:"MaxBytesInMultiByteString"`
+    BytesInMultiByteString *uint32 `json:"BytesInMultiByteString"`
+    UnicodeString uintptr `json:"UnicodeString"`
+    BytesInUnicodeString uint32 `json:"BytesInUnicodeString"`
+}
+
+type RtlUnicodeToMultiByteSizeArgs struct {
+    BytesInMultiByteString *uint32 `json:"BytesInMultiByteString"`
+    UnicodeString uintptr `json:"UnicodeString"`
+    BytesInUnicodeString uint32 `json:"BytesInUnicodeString"`
+}
+
+type RtlUnicodeToOemNArgs struct {
+    OemString *int8 `json:"OemString"`
+    MaxBytesInOemString uint32 `json:"MaxBytesInOemString"`
+    BytesInOemString *uint32 `json:"BytesInOemString"`
+    UnicodeString uintptr `json:"UnicodeString"`
+    BytesInUnicodeString uint32 `json:"BytesInUnicodeString"`
+}
+
+type RtlUnicodeToUTF8NArgs struct {
+    UTF8StringDestination *int8 `json:"UTF8StringDestination"`
+    UTF8StringMaxByteCount uint32 `json:"UTF8StringMaxByteCount"`
+    UTF8StringActualByteCount *uint32 `json:"UTF8StringActualByteCount"`
+    UnicodeStringSource uintptr `json:"UnicodeStringSource"`
+    UnicodeStringByteCount uint32 `json:"UnicodeStringByteCount"`
+}
+
+type RtlUpcaseUnicodeCharArgs struct {
+    SourceCharacter uintptr `json:"SourceCharacter"`
+}
+
+type RtlUpcaseUnicodeStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlUpcaseUnicodeStringToCountedOemStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlUpcaseUnicodeStringToOemStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+    AllocateDestinationString bool `json:"AllocateDestinationString"`
+}
+
+type RtlUpcaseUnicodeToCustomCPNArgs struct {
+    CustomCP uintptr `json:"CustomCP"`
+    CustomCPString uintptr `json:"CustomCPString"`
+    MaxBytesInCustomCPString uint32 `json:"MaxBytesInCustomCPString"`
+    BytesInCustomCPString *uint32 `json:"BytesInCustomCPString"`
+    UnicodeString uintptr `json:"UnicodeString"`
+    BytesInUnicodeString uint32 `json:"BytesInUnicodeString"`
+}
+
+type RtlUpcaseUnicodeToMultiByteNArgs struct {
+    MultiByteString *int8 `json:"MultiByteString"`
+    MaxBytesInMultiByteString uint32 `json:"MaxBytesInMultiByteString"`
+    BytesInMultiByteString *uint32 `json:"BytesInMultiByteString"`
+    UnicodeString uintptr `json:"UnicodeString"`
+    BytesInUnicodeString uint32 `json:"BytesInUnicodeString"`
+}
+
+type RtlUpcaseUnicodeToOemNArgs struct {
+    OemString *int8 `json:"OemString"`
+    MaxBytesInOemString uint32 `json:"MaxBytesInOemString"`
+    BytesInOemString *uint32 `json:"BytesInOemString"`
+    UnicodeString uintptr `json:"UnicodeString"`
+    BytesInUnicodeString uint32 `json:"BytesInUnicodeString"`
+}
+
+type RtlUpperCharArgs struct {
+    Character int8 `json:"Character"`
+}
+
+type RtlUpperStringArgs struct {
+    DestinationString uintptr `json:"DestinationString"`
+    SourceString uintptr `json:"SourceString"`
+}
+
+type RtlValidRelativeSecurityDescriptorArgs struct {
+    SecurityDescriptorInput uintptr `json:"SecurityDescriptorInput"`
+    SecurityDescriptorLength uint32 `json:"SecurityDescriptorLength"`
+    RequiredInformation uintptr `json:"RequiredInformation"`
+}
+
+type RtlValidSecurityDescriptorArgs struct {
+    SecurityDescriptor uintptr `json:"SecurityDescriptor"`
+}
+
+type RtlValidSidArgs struct {
+    Sid uintptr `json:"Sid"`
+}
+
+type RtlValidateCorrelationVectorArgs struct {
+    Vector uintptr `json:"Vector"`
+}
+
+type RtlValidateUnicodeStringArgs struct {
+    Flags uint32 `json:"Flags"`
+    String uintptr `json:"String"`
+}
+
+type RtlVerifyVersionInfoArgs struct {
+    VersionInfo uintptr `json:"VersionInfo"`
+    TypeMask uint32 `json:"TypeMask"`
+    ConditionMask uint64 `json:"ConditionMask"`
+}
+
+type RtlVolumeDeviceToDosNameArgs struct {
+    VolumeDeviceObject uintptr `json:"VolumeDeviceObject"`
+    DosName uintptr `json:"DosName"`
+}
+
+type RtlWalkFrameChainArgs struct {
+    Callers uintptr `json:"Callers"`
+    Count uint32 `json:"Count"`
+    Flags uint32 `json:"Flags"`
+}
+
+type RtlWeaklyEnumerateEntryHashTableArgs struct {
+    HashTable uintptr `json:"HashTable"`
+    Enumerator uintptr `json:"Enumerator"`
+}
+
+type RtlWriteNonVolatileMemoryArgs struct {
+    NvToken uintptr `json:"NvToken"`
+    NvDestination uintptr `json:"NvDestination"`
+    Source uintptr `json:"Source"`
+    Size uintptr `json:"Size"`
+    Flags uint32 `json:"Flags"`
+}
+
+type RtlWriteRegistryValueArgs struct {
+    RelativeTo uint32 `json:"RelativeTo"`
+    Path uintptr `json:"Path"`
+    ValueName uintptr `json:"ValueName"`
+    ValueType uint32 `json:"ValueType"`
+    ValueData uintptr `json:"ValueData"`
+    ValueLength uint32 `json:"ValueLength"`
+}
+
+type RtlxAnsiStringToUnicodeSizeArgs struct {
+    AnsiString uintptr `json:"AnsiString"`
+}
+
+type RtlxOemStringToUnicodeSizeArgs struct {
+    OemString uintptr `json:"OemString"`
+}
+
+type RtlxUnicodeStringToAnsiSizeArgs struct {
+    UnicodeString uintptr `json:"UnicodeString"`
+}
+
+type RtlxUnicodeStringToOemSizeArgs struct {
+    UnicodeString uintptr `json:"UnicodeString"`
+}
+
+// ArgsRegistry maps API names to their Args struct types
+var ArgsRegistry = map[string]reflect.Type{
+    "DbgBreakPointWithStatus": reflect.TypeOf(DbgBreakPointWithStatusArgs{}),
+    "DbgPrint": reflect.TypeOf(DbgPrintArgs{}),
+    "DbgPrintEx": reflect.TypeOf(DbgPrintExArgs{}),
+    "DbgPrintReturnControlC": reflect.TypeOf(DbgPrintReturnControlCArgs{}),
+    "DbgPrompt": reflect.TypeOf(DbgPromptArgs{}),
+    "DbgQueryDebugFilterState": reflect.TypeOf(DbgQueryDebugFilterStateArgs{}),
+    "DbgSetDebugFilterState": reflect.TypeOf(DbgSetDebugFilterStateArgs{}),
+    "DbgSetDebugPrintCallback": reflect.TypeOf(DbgSetDebugPrintCallbackArgs{}),
+    "ExAcquireFastMutex": reflect.TypeOf(ExAcquireFastMutexArgs{}),
+    "ExAcquireFastMutexUnsafe": reflect.TypeOf(ExAcquireFastMutexUnsafeArgs{}),
+    "ExAcquirePushLockExclusiveEx": reflect.TypeOf(ExAcquirePushLockExclusiveExArgs{}),
+    "ExAcquirePushLockSharedEx": reflect.TypeOf(ExAcquirePushLockSharedExArgs{}),
+    "ExAcquireResourceExclusiveLite": reflect.TypeOf(ExAcquireResourceExclusiveLiteArgs{}),
+    "ExAcquireResourceSharedLite": reflect.TypeOf(ExAcquireResourceSharedLiteArgs{}),
+    "ExAcquireRundownProtection": reflect.TypeOf(ExAcquireRundownProtectionArgs{}),
+    "ExAcquireRundownProtectionCacheAware": reflect.TypeOf(ExAcquireRundownProtectionCacheAwareArgs{}),
+    "ExAcquireRundownProtectionCacheAwareEx": reflect.TypeOf(ExAcquireRundownProtectionCacheAwareExArgs{}),
+    "ExAcquireRundownProtectionEx": reflect.TypeOf(ExAcquireRundownProtectionExArgs{}),
+    "ExAcquireSharedStarveExclusive": reflect.TypeOf(ExAcquireSharedStarveExclusiveArgs{}),
+    "ExAcquireSharedWaitForExclusive": reflect.TypeOf(ExAcquireSharedWaitForExclusiveArgs{}),
+    "ExAcquireSpinLockExclusive": reflect.TypeOf(ExAcquireSpinLockExclusiveArgs{}),
+    "ExAcquireSpinLockExclusiveAtDpcLevel": reflect.TypeOf(ExAcquireSpinLockExclusiveAtDpcLevelArgs{}),
+    "ExAcquireSpinLockShared": reflect.TypeOf(ExAcquireSpinLockSharedArgs{}),
+    "ExAcquireSpinLockSharedAtDpcLevel": reflect.TypeOf(ExAcquireSpinLockSharedAtDpcLevelArgs{}),
+    "ExAllocateCacheAwareRundownProtection": reflect.TypeOf(ExAllocateCacheAwareRundownProtectionArgs{}),
+    "ExAllocateFromLookasideListEx": reflect.TypeOf(ExAllocateFromLookasideListExArgs{}),
+    "ExAllocateFromNPagedLookasideList": reflect.TypeOf(ExAllocateFromNPagedLookasideListArgs{}),
+    "ExAllocateFromPagedLookasideList": reflect.TypeOf(ExAllocateFromPagedLookasideListArgs{}),
+    "ExAllocatePool2": reflect.TypeOf(ExAllocatePool2Args{}),
+    "ExAllocatePool3": reflect.TypeOf(ExAllocatePool3Args{}),
+    "ExAllocatePoolWithQuota": reflect.TypeOf(ExAllocatePoolWithQuotaArgs{}),
+    "ExAllocateTimer": reflect.TypeOf(ExAllocateTimerArgs{}),
+    "ExCancelTimer": reflect.TypeOf(ExCancelTimerArgs{}),
+    "ExCleanupRundownProtectionCacheAware": reflect.TypeOf(ExCleanupRundownProtectionCacheAwareArgs{}),
+    "ExConvertExclusiveToSharedLite": reflect.TypeOf(ExConvertExclusiveToSharedLiteArgs{}),
+    "ExCreateCallback": reflect.TypeOf(ExCreateCallbackArgs{}),
+    "ExCreatePool": reflect.TypeOf(ExCreatePoolArgs{}),
+    "ExDeleteLookasideListEx": reflect.TypeOf(ExDeleteLookasideListExArgs{}),
+    "ExDeleteNPagedLookasideList": reflect.TypeOf(ExDeleteNPagedLookasideListArgs{}),
+    "ExDeletePagedLookasideList": reflect.TypeOf(ExDeletePagedLookasideListArgs{}),
+    "ExDeleteResourceLite": reflect.TypeOf(ExDeleteResourceLiteArgs{}),
+    "ExDeleteTimer": reflect.TypeOf(ExDeleteTimerArgs{}),
+    "ExDestroyPool": reflect.TypeOf(ExDestroyPoolArgs{}),
+    "ExDisableResourceBoostLite": reflect.TypeOf(ExDisableResourceBoostLiteArgs{}),
+    "ExEnterCriticalRegionAndAcquireResourceExclusive": reflect.TypeOf(ExEnterCriticalRegionAndAcquireResourceExclusiveArgs{}),
+    "ExEnterCriticalRegionAndAcquireResourceShared": reflect.TypeOf(ExEnterCriticalRegionAndAcquireResourceSharedArgs{}),
+    "ExEnterCriticalRegionAndAcquireSharedWaitForExclusive": reflect.TypeOf(ExEnterCriticalRegionAndAcquireSharedWaitForExclusiveArgs{}),
+    "ExEnumerateSystemFirmwareTables": reflect.TypeOf(ExEnumerateSystemFirmwareTablesArgs{}),
+    "ExExtendZone": reflect.TypeOf(ExExtendZoneArgs{}),
+    "ExFlushLookasideListEx": reflect.TypeOf(ExFlushLookasideListExArgs{}),
+    "ExFreeCacheAwareRundownProtection": reflect.TypeOf(ExFreeCacheAwareRundownProtectionArgs{}),
+    "ExFreePool": reflect.TypeOf(ExFreePoolArgs{}),
+    "ExFreePool2": reflect.TypeOf(ExFreePool2Args{}),
+    "ExFreePoolWithTag": reflect.TypeOf(ExFreePoolWithTagArgs{}),
+    "ExFreeToLookasideListEx": reflect.TypeOf(ExFreeToLookasideListExArgs{}),
+    "ExFreeToNPagedLookasideList": reflect.TypeOf(ExFreeToNPagedLookasideListArgs{}),
+    "ExFreeToPagedLookasideList": reflect.TypeOf(ExFreeToPagedLookasideListArgs{}),
+    "ExGetExclusiveWaiterCount": reflect.TypeOf(ExGetExclusiveWaiterCountArgs{}),
+    "ExGetFirmwareEnvironmentVariable": reflect.TypeOf(ExGetFirmwareEnvironmentVariableArgs{}),
+    "ExGetSharedWaiterCount": reflect.TypeOf(ExGetSharedWaiterCountArgs{}),
+    "ExGetSystemFirmwareTable": reflect.TypeOf(ExGetSystemFirmwareTableArgs{}),
+    "ExInitializeDeviceAts": reflect.TypeOf(ExInitializeDeviceAtsArgs{}),
+    "ExInitializeLookasideListEx": reflect.TypeOf(ExInitializeLookasideListExArgs{}),
+    "ExInitializeNPagedLookasideList": reflect.TypeOf(ExInitializeNPagedLookasideListArgs{}),
+    "ExInitializePagedLookasideList": reflect.TypeOf(ExInitializePagedLookasideListArgs{}),
+    "ExInitializePushLock": reflect.TypeOf(ExInitializePushLockArgs{}),
+    "ExInitializeResourceLite": reflect.TypeOf(ExInitializeResourceLiteArgs{}),
+    "ExInitializeRundownProtection": reflect.TypeOf(ExInitializeRundownProtectionArgs{}),
+    "ExInitializeRundownProtectionCacheAware": reflect.TypeOf(ExInitializeRundownProtectionCacheAwareArgs{}),
+    "ExInitializeRundownProtectionCacheAwareEx": reflect.TypeOf(ExInitializeRundownProtectionCacheAwareExArgs{}),
+    "ExInitializeZone": reflect.TypeOf(ExInitializeZoneArgs{}),
+    "ExInterlockedAddLargeInteger": reflect.TypeOf(ExInterlockedAddLargeIntegerArgs{}),
+    "ExInterlockedAddUlong": reflect.TypeOf(ExInterlockedAddUlongArgs{}),
+    "ExInterlockedExtendZone": reflect.TypeOf(ExInterlockedExtendZoneArgs{}),
+    "ExInterlockedInsertHeadList": reflect.TypeOf(ExInterlockedInsertHeadListArgs{}),
+    "ExInterlockedInsertTailList": reflect.TypeOf(ExInterlockedInsertTailListArgs{}),
+    "ExInterlockedPopEntryList": reflect.TypeOf(ExInterlockedPopEntryListArgs{}),
+    "ExInterlockedPushEntryList": reflect.TypeOf(ExInterlockedPushEntryListArgs{}),
+    "ExInterlockedRemoveHeadList": reflect.TypeOf(ExInterlockedRemoveHeadListArgs{}),
+    "ExIsProcessorFeaturePresent": reflect.TypeOf(ExIsProcessorFeaturePresentArgs{}),
+    "ExIsResourceAcquiredExclusiveLite": reflect.TypeOf(ExIsResourceAcquiredExclusiveLiteArgs{}),
+    "ExIsResourceAcquiredSharedLite": reflect.TypeOf(ExIsResourceAcquiredSharedLiteArgs{}),
+    "ExLocalTimeToSystemTime": reflect.TypeOf(ExLocalTimeToSystemTimeArgs{}),
+    "ExNotifyCallback": reflect.TypeOf(ExNotifyCallbackArgs{}),
+    "ExQueryDepthSList": reflect.TypeOf(ExQueryDepthSListArgs{}),
+    "ExQueryPoolBlockSize": reflect.TypeOf(ExQueryPoolBlockSizeArgs{}),
+    "ExQueryTimerResolution": reflect.TypeOf(ExQueryTimerResolutionArgs{}),
+    "ExQueueWorkItem": reflect.TypeOf(ExQueueWorkItemArgs{}),
+    "ExRaiseStatus": reflect.TypeOf(ExRaiseStatusArgs{}),
+    "ExRcuFreePool": reflect.TypeOf(ExRcuFreePoolArgs{}),
+    "ExReInitializeRundownProtection": reflect.TypeOf(ExReInitializeRundownProtectionArgs{}),
+    "ExReInitializeRundownProtectionCacheAware": reflect.TypeOf(ExReInitializeRundownProtectionCacheAwareArgs{}),
+    "ExRegisterCallback": reflect.TypeOf(ExRegisterCallbackArgs{}),
+    "ExReinitializeResourceLite": reflect.TypeOf(ExReinitializeResourceLiteArgs{}),
+    "ExReleaseFastMutex": reflect.TypeOf(ExReleaseFastMutexArgs{}),
+    "ExReleaseFastMutexUnsafe": reflect.TypeOf(ExReleaseFastMutexUnsafeArgs{}),
+    "ExReleasePushLockExclusiveEx": reflect.TypeOf(ExReleasePushLockExclusiveExArgs{}),
+    "ExReleasePushLockSharedEx": reflect.TypeOf(ExReleasePushLockSharedExArgs{}),
+    "ExReleaseResourceAndLeaveCriticalRegion": reflect.TypeOf(ExReleaseResourceAndLeaveCriticalRegionArgs{}),
+    "ExReleaseResourceForThreadLite": reflect.TypeOf(ExReleaseResourceForThreadLiteArgs{}),
+    "ExReleaseResourceLite": reflect.TypeOf(ExReleaseResourceLiteArgs{}),
+    "ExReleaseRundownProtection": reflect.TypeOf(ExReleaseRundownProtectionArgs{}),
+    "ExReleaseRundownProtectionCacheAware": reflect.TypeOf(ExReleaseRundownProtectionCacheAwareArgs{}),
+    "ExReleaseRundownProtectionCacheAwareEx": reflect.TypeOf(ExReleaseRundownProtectionCacheAwareExArgs{}),
+    "ExReleaseRundownProtectionEx": reflect.TypeOf(ExReleaseRundownProtectionExArgs{}),
+    "ExReleaseSpinLockExclusive": reflect.TypeOf(ExReleaseSpinLockExclusiveArgs{}),
+    "ExReleaseSpinLockExclusiveFromDpcLevel": reflect.TypeOf(ExReleaseSpinLockExclusiveFromDpcLevelArgs{}),
+    "ExReleaseSpinLockShared": reflect.TypeOf(ExReleaseSpinLockSharedArgs{}),
+    "ExReleaseSpinLockSharedFromDpcLevel": reflect.TypeOf(ExReleaseSpinLockSharedFromDpcLevelArgs{}),
+    "ExRundownCompleted": reflect.TypeOf(ExRundownCompletedArgs{}),
+    "ExRundownCompletedCacheAware": reflect.TypeOf(ExRundownCompletedCacheAwareArgs{}),
+    "ExSecurePoolUpdate": reflect.TypeOf(ExSecurePoolUpdateArgs{}),
+    "ExSecurePoolValidate": reflect.TypeOf(ExSecurePoolValidateArgs{}),
+    "ExSetFirmwareEnvironmentVariable": reflect.TypeOf(ExSetFirmwareEnvironmentVariableArgs{}),
+    "ExSetResourceOwnerPointer": reflect.TypeOf(ExSetResourceOwnerPointerArgs{}),
+    "ExSetResourceOwnerPointerEx": reflect.TypeOf(ExSetResourceOwnerPointerExArgs{}),
+    "ExSetTimer": reflect.TypeOf(ExSetTimerArgs{}),
+    "ExSetTimerResolution": reflect.TypeOf(ExSetTimerResolutionArgs{}),
+    "ExSystemTimeToLocalTime": reflect.TypeOf(ExSystemTimeToLocalTimeArgs{}),
+    "ExTryAcquirePushLockExclusiveEx": reflect.TypeOf(ExTryAcquirePushLockExclusiveExArgs{}),
+    "ExTryAcquirePushLockSharedEx": reflect.TypeOf(ExTryAcquirePushLockSharedExArgs{}),
+    "ExTryAcquireSpinLockExclusiveAtDpcLevel": reflect.TypeOf(ExTryAcquireSpinLockExclusiveAtDpcLevelArgs{}),
+    "ExTryAcquireSpinLockSharedAtDpcLevel": reflect.TypeOf(ExTryAcquireSpinLockSharedAtDpcLevelArgs{}),
+    "ExTryConvertSharedSpinLockExclusive": reflect.TypeOf(ExTryConvertSharedSpinLockExclusiveArgs{}),
+    "ExTryToAcquireFastMutex": reflect.TypeOf(ExTryToAcquireFastMutexArgs{}),
+    "ExUnregisterCallback": reflect.TypeOf(ExUnregisterCallbackArgs{}),
+    "ExUuidCreate": reflect.TypeOf(ExUuidCreateArgs{}),
+    "ExVerifySuite": reflect.TypeOf(ExVerifySuiteArgs{}),
+    "ExWaitForRundownProtectionRelease": reflect.TypeOf(ExWaitForRundownProtectionReleaseArgs{}),
+    "ExWaitForRundownProtectionReleaseCacheAware": reflect.TypeOf(ExWaitForRundownProtectionReleaseCacheAwareArgs{}),
+    "ExpInterlockedFlushSList": reflect.TypeOf(ExpInterlockedFlushSListArgs{}),
+    "ExpInterlockedPopEntrySList": reflect.TypeOf(ExpInterlockedPopEntrySListArgs{}),
+    "ExpInterlockedPushEntrySList": reflect.TypeOf(ExpInterlockedPushEntrySListArgs{}),
+    "ExportSecurityContext": reflect.TypeOf(ExportSecurityContextArgs{}),
+    "IoAcquireCancelSpinLock": reflect.TypeOf(IoAcquireCancelSpinLockArgs{}),
+    "IoAcquireKsrPersistentMemory": reflect.TypeOf(IoAcquireKsrPersistentMemoryArgs{}),
+    "IoAcquireKsrPersistentMemoryEx": reflect.TypeOf(IoAcquireKsrPersistentMemoryExArgs{}),
+    "IoAcquireRemoveLockEx": reflect.TypeOf(IoAcquireRemoveLockExArgs{}),
+    "IoAcquireVpbSpinLock": reflect.TypeOf(IoAcquireVpbSpinLockArgs{}),
+    "IoAllocateController": reflect.TypeOf(IoAllocateControllerArgs{}),
+    "IoAllocateDriverObjectExtension": reflect.TypeOf(IoAllocateDriverObjectExtensionArgs{}),
+    "IoAllocateErrorLogEntry": reflect.TypeOf(IoAllocateErrorLogEntryArgs{}),
+    "IoAllocateIrp": reflect.TypeOf(IoAllocateIrpArgs{}),
+    "IoAllocateIrpEx": reflect.TypeOf(IoAllocateIrpExArgs{}),
+    "IoAllocateMdl": reflect.TypeOf(IoAllocateMdlArgs{}),
+    "IoAllocateMiniCompletionPacket": reflect.TypeOf(IoAllocateMiniCompletionPacketArgs{}),
+    "IoAllocateSfioStreamIdentifier": reflect.TypeOf(IoAllocateSfioStreamIdentifierArgs{}),
+    "IoAllocateWorkItem": reflect.TypeOf(IoAllocateWorkItemArgs{}),
+    "IoApplyPriorityInfoThread": reflect.TypeOf(IoApplyPriorityInfoThreadArgs{}),
+    "IoAssignResources": reflect.TypeOf(IoAssignResourcesArgs{}),
+    "IoAttachDevice": reflect.TypeOf(IoAttachDeviceArgs{}),
+    "IoAttachDeviceByPointer": reflect.TypeOf(IoAttachDeviceByPointerArgs{}),
+    "IoAttachDeviceToDeviceStack": reflect.TypeOf(IoAttachDeviceToDeviceStackArgs{}),
+    "IoAttachDeviceToDeviceStackSafe": reflect.TypeOf(IoAttachDeviceToDeviceStackSafeArgs{}),
+    "IoBuildAsynchronousFsdRequest": reflect.TypeOf(IoBuildAsynchronousFsdRequestArgs{}),
+    "IoBuildDeviceIoControlRequest": reflect.TypeOf(IoBuildDeviceIoControlRequestArgs{}),
+    "IoBuildPartialMdl": reflect.TypeOf(IoBuildPartialMdlArgs{}),
+    "IoBuildSynchronousFsdRequest": reflect.TypeOf(IoBuildSynchronousFsdRequestArgs{}),
+    "IoCancelFileOpen": reflect.TypeOf(IoCancelFileOpenArgs{}),
+    "IoCancelIrp": reflect.TypeOf(IoCancelIrpArgs{}),
+    "IoCheckDesiredAccess": reflect.TypeOf(IoCheckDesiredAccessArgs{}),
+    "IoCheckEaBufferValidity": reflect.TypeOf(IoCheckEaBufferValidityArgs{}),
+    "IoCheckFileObjectOpenedAsCopyDestination": reflect.TypeOf(IoCheckFileObjectOpenedAsCopyDestinationArgs{}),
+    "IoCheckFileObjectOpenedAsCopySource": reflect.TypeOf(IoCheckFileObjectOpenedAsCopySourceArgs{}),
+    "IoCheckFunctionAccess": reflect.TypeOf(IoCheckFunctionAccessArgs{}),
+    "IoCheckLinkShareAccess": reflect.TypeOf(IoCheckLinkShareAccessArgs{}),
+    "IoCheckQuerySetFileInformation": reflect.TypeOf(IoCheckQuerySetFileInformationArgs{}),
+    "IoCheckQuerySetVolumeInformation": reflect.TypeOf(IoCheckQuerySetVolumeInformationArgs{}),
+    "IoCheckQuotaBufferValidity": reflect.TypeOf(IoCheckQuotaBufferValidityArgs{}),
+    "IoCheckShareAccess": reflect.TypeOf(IoCheckShareAccessArgs{}),
+    "IoCheckShareAccessEx": reflect.TypeOf(IoCheckShareAccessExArgs{}),
+    "IoCleanupIrp": reflect.TypeOf(IoCleanupIrpArgs{}),
+    "IoClearActivityIdThread": reflect.TypeOf(IoClearActivityIdThreadArgs{}),
+    "IoClearFsTrackOffsetState": reflect.TypeOf(IoClearFsTrackOffsetStateArgs{}),
+    "IoClearIrpExtraCreateParameter": reflect.TypeOf(IoClearIrpExtraCreateParameterArgs{}),
+    "IoConnectInterrupt": reflect.TypeOf(IoConnectInterruptArgs{}),
+    "IoConnectInterruptEx": reflect.TypeOf(IoConnectInterruptExArgs{}),
+    "IoCreateController": reflect.TypeOf(IoCreateControllerArgs{}),
+    "IoCreateDevice": reflect.TypeOf(IoCreateDeviceArgs{}),
+    "IoCreateDisk": reflect.TypeOf(IoCreateDiskArgs{}),
+    "IoCreateDriverProxyExtension": reflect.TypeOf(IoCreateDriverProxyExtensionArgs{}),
+    "IoCreateFile": reflect.TypeOf(IoCreateFileArgs{}),
+    "IoCreateFileEx": reflect.TypeOf(IoCreateFileExArgs{}),
+    "IoCreateFileSpecifyDeviceObjectHint": reflect.TypeOf(IoCreateFileSpecifyDeviceObjectHintArgs{}),
+    "IoCreateNotificationEvent": reflect.TypeOf(IoCreateNotificationEventArgs{}),
+    "IoCreateStreamFileObject": reflect.TypeOf(IoCreateStreamFileObjectArgs{}),
+    "IoCreateStreamFileObjectEx": reflect.TypeOf(IoCreateStreamFileObjectExArgs{}),
+    "IoCreateStreamFileObjectEx2": reflect.TypeOf(IoCreateStreamFileObjectEx2Args{}),
+    "IoCreateStreamFileObjectLite": reflect.TypeOf(IoCreateStreamFileObjectLiteArgs{}),
+    "IoCreateSymbolicLink": reflect.TypeOf(IoCreateSymbolicLinkArgs{}),
+    "IoCreateSynchronizationEvent": reflect.TypeOf(IoCreateSynchronizationEventArgs{}),
+    "IoCreateSystemThread": reflect.TypeOf(IoCreateSystemThreadArgs{}),
+    "IoCreateUnprotectedSymbolicLink": reflect.TypeOf(IoCreateUnprotectedSymbolicLinkArgs{}),
+    "IoCsqInitialize": reflect.TypeOf(IoCsqInitializeArgs{}),
+    "IoCsqInitializeEx": reflect.TypeOf(IoCsqInitializeExArgs{}),
+    "IoCsqInsertIrp": reflect.TypeOf(IoCsqInsertIrpArgs{}),
+    "IoCsqInsertIrpEx": reflect.TypeOf(IoCsqInsertIrpExArgs{}),
+    "IoCsqRemoveIrp": reflect.TypeOf(IoCsqRemoveIrpArgs{}),
+    "IoCsqRemoveNextIrp": reflect.TypeOf(IoCsqRemoveNextIrpArgs{}),
+    "IoDecrementKeepAliveCount": reflect.TypeOf(IoDecrementKeepAliveCountArgs{}),
+    "IoDeleteController": reflect.TypeOf(IoDeleteControllerArgs{}),
+    "IoDeleteDevice": reflect.TypeOf(IoDeleteDeviceArgs{}),
+    "IoDeleteSymbolicLink": reflect.TypeOf(IoDeleteSymbolicLinkArgs{}),
+    "IoDetachDevice": reflect.TypeOf(IoDetachDeviceArgs{}),
+    "IoDisconnectInterrupt": reflect.TypeOf(IoDisconnectInterruptArgs{}),
+    "IoDisconnectInterruptEx": reflect.TypeOf(IoDisconnectInterruptExArgs{}),
+    "IoDriverProxyCreateHotSwappableWorkerThread": reflect.TypeOf(IoDriverProxyCreateHotSwappableWorkerThreadArgs{}),
+    "IoEnumerateDeviceObjectList": reflect.TypeOf(IoEnumerateDeviceObjectListArgs{}),
+    "IoEnumerateKsrPersistentMemoryEx": reflect.TypeOf(IoEnumerateKsrPersistentMemoryExArgs{}),
+    "IoEnumerateRegisteredFiltersList": reflect.TypeOf(IoEnumerateRegisteredFiltersListArgs{}),
+    "IoFastQueryNetworkAttributes": reflect.TypeOf(IoFastQueryNetworkAttributesArgs{}),
+    "IoForwardIrpSynchronously": reflect.TypeOf(IoForwardIrpSynchronouslyArgs{}),
+    "IoFreeController": reflect.TypeOf(IoFreeControllerArgs{}),
+    "IoFreeErrorLogEntry": reflect.TypeOf(IoFreeErrorLogEntryArgs{}),
+    "IoFreeIrp": reflect.TypeOf(IoFreeIrpArgs{}),
+    "IoFreeKsrPersistentMemory": reflect.TypeOf(IoFreeKsrPersistentMemoryArgs{}),
+    "IoFreeMdl": reflect.TypeOf(IoFreeMdlArgs{}),
+    "IoFreeMiniCompletionPacket": reflect.TypeOf(IoFreeMiniCompletionPacketArgs{}),
+    "IoFreeSfioStreamIdentifier": reflect.TypeOf(IoFreeSfioStreamIdentifierArgs{}),
+    "IoFreeWorkItem": reflect.TypeOf(IoFreeWorkItemArgs{}),
+    "IoGetActivityIdIrp": reflect.TypeOf(IoGetActivityIdIrpArgs{}),
+    "IoGetAffinityInterrupt": reflect.TypeOf(IoGetAffinityInterruptArgs{}),
+    "IoGetAttachedDevice": reflect.TypeOf(IoGetAttachedDeviceArgs{}),
+    "IoGetAttachedDeviceReference": reflect.TypeOf(IoGetAttachedDeviceReferenceArgs{}),
+    "IoGetBaseFileSystemDeviceObject": reflect.TypeOf(IoGetBaseFileSystemDeviceObjectArgs{}),
+    "IoGetBootDiskInformation": reflect.TypeOf(IoGetBootDiskInformationArgs{}),
+    "IoGetBootDiskInformationLite": reflect.TypeOf(IoGetBootDiskInformationLiteArgs{}),
+    "IoGetContainerInformation": reflect.TypeOf(IoGetContainerInformationArgs{}),
+    "IoGetCopyInformationExtension": reflect.TypeOf(IoGetCopyInformationExtensionArgs{}),
+    "IoGetDeviceAttachmentBaseRef": reflect.TypeOf(IoGetDeviceAttachmentBaseRefArgs{}),
+    "IoGetDeviceDirectory": reflect.TypeOf(IoGetDeviceDirectoryArgs{}),
+    "IoGetDeviceInterfaceAlias": reflect.TypeOf(IoGetDeviceInterfaceAliasArgs{}),
+    "IoGetDeviceInterfacePropertyData": reflect.TypeOf(IoGetDeviceInterfacePropertyDataArgs{}),
+    "IoGetDeviceInterfaces": reflect.TypeOf(IoGetDeviceInterfacesArgs{}),
+    "IoGetDeviceNumaNode": reflect.TypeOf(IoGetDeviceNumaNodeArgs{}),
+    "IoGetDeviceObjectPointer": reflect.TypeOf(IoGetDeviceObjectPointerArgs{}),
+    "IoGetDeviceProperty": reflect.TypeOf(IoGetDevicePropertyArgs{}),
+    "IoGetDevicePropertyData": reflect.TypeOf(IoGetDevicePropertyDataArgs{}),
+    "IoGetDeviceToVerify": reflect.TypeOf(IoGetDeviceToVerifyArgs{}),
+    "IoGetDiskDeviceObject": reflect.TypeOf(IoGetDiskDeviceObjectArgs{}),
+    "IoGetDmaAdapter": reflect.TypeOf(IoGetDmaAdapterArgs{}),
+    "IoGetDriverDirectory": reflect.TypeOf(IoGetDriverDirectoryArgs{}),
+    "IoGetDriverObjectExtension": reflect.TypeOf(IoGetDriverObjectExtensionArgs{}),
+    "IoGetDriverProxyEndpointWrapper": reflect.TypeOf(IoGetDriverProxyEndpointWrapperArgs{}),
+    "IoGetDriverProxyExtensionFromDriverObject": reflect.TypeOf(IoGetDriverProxyExtensionFromDriverObjectArgs{}),
+    "IoGetDriverProxyExtensionVersion": reflect.TypeOf(IoGetDriverProxyExtensionVersionArgs{}),
+    "IoGetDriverProxyFeatures": reflect.TypeOf(IoGetDriverProxyFeaturesArgs{}),
+    "IoGetFsTrackOffsetState": reflect.TypeOf(IoGetFsTrackOffsetStateArgs{}),
+    "IoGetFsZeroingOffset": reflect.TypeOf(IoGetFsZeroingOffsetArgs{}),
+    "IoGetInitiatorProcess": reflect.TypeOf(IoGetInitiatorProcessArgs{}),
+    "IoGetIoAttributionHandle": reflect.TypeOf(IoGetIoAttributionHandleArgs{}),
+    "IoGetIoPriorityHint": reflect.TypeOf(IoGetIoPriorityHintArgs{}),
+    "IoGetIommuInterface": reflect.TypeOf(IoGetIommuInterfaceArgs{}),
+    "IoGetIommuInterfaceEx": reflect.TypeOf(IoGetIommuInterfaceExArgs{}),
+    "IoGetIrpExtraCreateParameter": reflect.TypeOf(IoGetIrpExtraCreateParameterArgs{}),
+    "IoGetKsrPersistentMemoryBuffer": reflect.TypeOf(IoGetKsrPersistentMemoryBufferArgs{}),
+    "IoGetLowerDeviceObject": reflect.TypeOf(IoGetLowerDeviceObjectArgs{}),
+    "IoGetOplockKeyContext": reflect.TypeOf(IoGetOplockKeyContextArgs{}),
+    "IoGetOplockKeyContextEx": reflect.TypeOf(IoGetOplockKeyContextExArgs{}),
+    "IoGetPagingIoPriority": reflect.TypeOf(IoGetPagingIoPriorityArgs{}),
+    "IoGetRelatedDeviceObject": reflect.TypeOf(IoGetRelatedDeviceObjectArgs{}),
+    "IoGetRequestorProcess": reflect.TypeOf(IoGetRequestorProcessArgs{}),
+    "IoGetRequestorProcessId": reflect.TypeOf(IoGetRequestorProcessIdArgs{}),
+    "IoGetRequestorSessionId": reflect.TypeOf(IoGetRequestorSessionIdArgs{}),
+    "IoGetSfioStreamIdentifier": reflect.TypeOf(IoGetSfioStreamIdentifierArgs{}),
+    "IoGetShadowFileInformation": reflect.TypeOf(IoGetShadowFileInformationArgs{}),
+    "IoGetSilo": reflect.TypeOf(IoGetSiloArgs{}),
+    "IoGetSiloParameters": reflect.TypeOf(IoGetSiloParametersArgs{}),
+    "IoGetStackLimits": reflect.TypeOf(IoGetStackLimitsArgs{}),
+    "IoGetTransactionParameterBlock": reflect.TypeOf(IoGetTransactionParameterBlockArgs{}),
+    "IoHotSwapDriverProxyEndpoints": reflect.TypeOf(IoHotSwapDriverProxyEndpointsArgs{}),
+    "IoIncrementKeepAliveCount": reflect.TypeOf(IoIncrementKeepAliveCountArgs{}),
+    "IoInitializeIrp": reflect.TypeOf(IoInitializeIrpArgs{}),
+    "IoInitializeIrpEx": reflect.TypeOf(IoInitializeIrpExArgs{}),
+    "IoInitializeRemoveLockEx": reflect.TypeOf(IoInitializeRemoveLockExArgs{}),
+    "IoInitializeTimer": reflect.TypeOf(IoInitializeTimerArgs{}),
+    "IoInitializeWorkItem": reflect.TypeOf(IoInitializeWorkItemArgs{}),
+    "IoInvalidateDeviceRelations": reflect.TypeOf(IoInvalidateDeviceRelationsArgs{}),
+    "IoInvalidateDeviceState": reflect.TypeOf(IoInvalidateDeviceStateArgs{}),
+    "IoIrpHasFsTrackOffsetExtensionType": reflect.TypeOf(IoIrpHasFsTrackOffsetExtensionTypeArgs{}),
+    "IoIs32bitProcess": reflect.TypeOf(IoIs32bitProcessArgs{}),
+    "IoIsFileObjectIgnoringSharing": reflect.TypeOf(IoIsFileObjectIgnoringSharingArgs{}),
+    "IoIsFileOriginRemote": reflect.TypeOf(IoIsFileOriginRemoteArgs{}),
+    "IoIsInitiator32bitProcess": reflect.TypeOf(IoIsInitiator32bitProcessArgs{}),
+    "IoIsOperationSynchronous": reflect.TypeOf(IoIsOperationSynchronousArgs{}),
+    "IoIsSystemThread": reflect.TypeOf(IoIsSystemThreadArgs{}),
+    "IoIsValidIrpStatus": reflect.TypeOf(IoIsValidIrpStatusArgs{}),
+    "IoIsValidNameGraftingBuffer": reflect.TypeOf(IoIsValidNameGraftingBufferArgs{}),
+    "IoIsWdmVersionAvailable": reflect.TypeOf(IoIsWdmVersionAvailableArgs{}),
+    "IoMakeAssociatedIrp": reflect.TypeOf(IoMakeAssociatedIrpArgs{}),
+    "IoMakeAssociatedIrpEx": reflect.TypeOf(IoMakeAssociatedIrpExArgs{}),
+    "IoMapKsrPersistentMemoryEx": reflect.TypeOf(IoMapKsrPersistentMemoryExArgs{}),
+    "IoOpenDeviceInterfaceRegistryKey": reflect.TypeOf(IoOpenDeviceInterfaceRegistryKeyArgs{}),
+    "IoOpenDeviceRegistryKey": reflect.TypeOf(IoOpenDeviceRegistryKeyArgs{}),
+    "IoOpenDriverRegistryKey": reflect.TypeOf(IoOpenDriverRegistryKeyArgs{}),
+    "IoPageRead": reflect.TypeOf(IoPageReadArgs{}),
+    "IoPropagateActivityIdToThread": reflect.TypeOf(IoPropagateActivityIdToThreadArgs{}),
+    "IoQueryDeviceDescription": reflect.TypeOf(IoQueryDeviceDescriptionArgs{}),
+    "IoQueryDmaFeatureSupport": reflect.TypeOf(IoQueryDmaFeatureSupportArgs{}),
+    "IoQueryFileDosDeviceName": reflect.TypeOf(IoQueryFileDosDeviceNameArgs{}),
+    "IoQueryFileInformation": reflect.TypeOf(IoQueryFileInformationArgs{}),
+    "IoQueryFullDriverPath": reflect.TypeOf(IoQueryFullDriverPathArgs{}),
+    "IoQueryInformationByName": reflect.TypeOf(IoQueryInformationByNameArgs{}),
+    "IoQueryKsrPersistentMemorySize": reflect.TypeOf(IoQueryKsrPersistentMemorySizeArgs{}),
+    "IoQueryKsrPersistentMemorySizeEx": reflect.TypeOf(IoQueryKsrPersistentMemorySizeExArgs{}),
+    "IoQueryVolumeInformation": reflect.TypeOf(IoQueryVolumeInformationArgs{}),
+    "IoQueueThreadIrp": reflect.TypeOf(IoQueueThreadIrpArgs{}),
+    "IoQueueWorkItem": reflect.TypeOf(IoQueueWorkItemArgs{}),
+    "IoQueueWorkItemEx": reflect.TypeOf(IoQueueWorkItemExArgs{}),
+    "IoRaiseHardError": reflect.TypeOf(IoRaiseHardErrorArgs{}),
+    "IoRaiseInformationalHardError": reflect.TypeOf(IoRaiseInformationalHardErrorArgs{}),
+    "IoReadDiskSignature": reflect.TypeOf(IoReadDiskSignatureArgs{}),
+    "IoReadPartitionTable": reflect.TypeOf(IoReadPartitionTableArgs{}),
+    "IoReadPartitionTableEx": reflect.TypeOf(IoReadPartitionTableExArgs{}),
+    "IoRecordIoAttribution": reflect.TypeOf(IoRecordIoAttributionArgs{}),
+    "IoRegisterBootDriverCallback": reflect.TypeOf(IoRegisterBootDriverCallbackArgs{}),
+    "IoRegisterBootDriverReinitialization": reflect.TypeOf(IoRegisterBootDriverReinitializationArgs{}),
+    "IoRegisterContainerNotification": reflect.TypeOf(IoRegisterContainerNotificationArgs{}),
+    "IoRegisterDeviceInterface": reflect.TypeOf(IoRegisterDeviceInterfaceArgs{}),
+    "IoRegisterDriverProxyEndpoints": reflect.TypeOf(IoRegisterDriverProxyEndpointsArgs{}),
+    "IoRegisterDriverReinitialization": reflect.TypeOf(IoRegisterDriverReinitializationArgs{}),
+    "IoRegisterFileSystem": reflect.TypeOf(IoRegisterFileSystemArgs{}),
+    "IoRegisterFsRegistrationChange": reflect.TypeOf(IoRegisterFsRegistrationChangeArgs{}),
+    "IoRegisterFsRegistrationChangeMountAware": reflect.TypeOf(IoRegisterFsRegistrationChangeMountAwareArgs{}),
+    "IoRegisterLastChanceShutdownNotification": reflect.TypeOf(IoRegisterLastChanceShutdownNotificationArgs{}),
+    "IoRegisterPlugPlayNotification": reflect.TypeOf(IoRegisterPlugPlayNotificationArgs{}),
+    "IoRegisterShutdownNotification": reflect.TypeOf(IoRegisterShutdownNotificationArgs{}),
+    "IoReleaseCancelSpinLock": reflect.TypeOf(IoReleaseCancelSpinLockArgs{}),
+    "IoReleaseRemoveLockAndWaitEx": reflect.TypeOf(IoReleaseRemoveLockAndWaitExArgs{}),
+    "IoReleaseRemoveLockEx": reflect.TypeOf(IoReleaseRemoveLockExArgs{}),
+    "IoReleaseVpbSpinLock": reflect.TypeOf(IoReleaseVpbSpinLockArgs{}),
+    "IoRemoveIoCompletion": reflect.TypeOf(IoRemoveIoCompletionArgs{}),
+    "IoRemoveLinkShareAccess": reflect.TypeOf(IoRemoveLinkShareAccessArgs{}),
+    "IoRemoveLinkShareAccessEx": reflect.TypeOf(IoRemoveLinkShareAccessExArgs{}),
+    "IoRemoveShareAccess": reflect.TypeOf(IoRemoveShareAccessArgs{}),
+    "IoReplaceFileObjectName": reflect.TypeOf(IoReplaceFileObjectNameArgs{}),
+    "IoReplacePartitionUnit": reflect.TypeOf(IoReplacePartitionUnitArgs{}),
+    "IoReportDetectedDevice": reflect.TypeOf(IoReportDetectedDeviceArgs{}),
+    "IoReportInterruptActive": reflect.TypeOf(IoReportInterruptActiveArgs{}),
+    "IoReportInterruptInactive": reflect.TypeOf(IoReportInterruptInactiveArgs{}),
+    "IoReportResourceForDetection": reflect.TypeOf(IoReportResourceForDetectionArgs{}),
+    "IoReportResourceUsage": reflect.TypeOf(IoReportResourceUsageArgs{}),
+    "IoReportRootDevice": reflect.TypeOf(IoReportRootDeviceArgs{}),
+    "IoReportTargetDeviceChange": reflect.TypeOf(IoReportTargetDeviceChangeArgs{}),
+    "IoReportTargetDeviceChangeAsynchronous": reflect.TypeOf(IoReportTargetDeviceChangeAsynchronousArgs{}),
+    "IoRequestDeviceEject": reflect.TypeOf(IoRequestDeviceEjectArgs{}),
+    "IoRequestDeviceEjectEx": reflect.TypeOf(IoRequestDeviceEjectExArgs{}),
+    "IoRequestDeviceRemovalForReset": reflect.TypeOf(IoRequestDeviceRemovalForResetArgs{}),
+    "IoReserveKsrPersistentMemory": reflect.TypeOf(IoReserveKsrPersistentMemoryArgs{}),
+    "IoReserveKsrPersistentMemoryEx": reflect.TypeOf(IoReserveKsrPersistentMemoryExArgs{}),
+    "IoRetrievePriorityInfo": reflect.TypeOf(IoRetrievePriorityInfoArgs{}),
+    "IoReuseIrp": reflect.TypeOf(IoReuseIrpArgs{}),
+    "IoSetActivityIdIrp": reflect.TypeOf(IoSetActivityIdIrpArgs{}),
+    "IoSetActivityIdThread": reflect.TypeOf(IoSetActivityIdThreadArgs{}),
+    "IoSetCompletionRoutineEx": reflect.TypeOf(IoSetCompletionRoutineExArgs{}),
+    "IoSetDeviceInterfacePropertyData": reflect.TypeOf(IoSetDeviceInterfacePropertyDataArgs{}),
+    "IoSetDeviceInterfaceState": reflect.TypeOf(IoSetDeviceInterfaceStateArgs{}),
+    "IoSetDevicePropertyData": reflect.TypeOf(IoSetDevicePropertyDataArgs{}),
+    "IoSetDeviceToVerify": reflect.TypeOf(IoSetDeviceToVerifyArgs{}),
+    "IoSetFileObjectIgnoreSharing": reflect.TypeOf(IoSetFileObjectIgnoreSharingArgs{}),
+    "IoSetFileOrigin": reflect.TypeOf(IoSetFileOriginArgs{}),
+    "IoSetFsTrackOffsetState": reflect.TypeOf(IoSetFsTrackOffsetStateArgs{}),
+    "IoSetFsZeroingOffset": reflect.TypeOf(IoSetFsZeroingOffsetArgs{}),
+    "IoSetFsZeroingOffsetRequired": reflect.TypeOf(IoSetFsZeroingOffsetRequiredArgs{}),
+    "IoSetHardErrorOrVerifyDevice": reflect.TypeOf(IoSetHardErrorOrVerifyDeviceArgs{}),
+    "IoSetInformation": reflect.TypeOf(IoSetInformationArgs{}),
+    "IoSetIoAttributionIrp": reflect.TypeOf(IoSetIoAttributionIrpArgs{}),
+    "IoSetIoCompletionEx": reflect.TypeOf(IoSetIoCompletionExArgs{}),
+    "IoSetIoPriorityHint": reflect.TypeOf(IoSetIoPriorityHintArgs{}),
+    "IoSetIrpExtraCreateParameter": reflect.TypeOf(IoSetIrpExtraCreateParameterArgs{}),
+    "IoSetLinkShareAccess": reflect.TypeOf(IoSetLinkShareAccessArgs{}),
+    "IoSetMasterIrpStatus": reflect.TypeOf(IoSetMasterIrpStatusArgs{}),
+    "IoSetPartitionInformation": reflect.TypeOf(IoSetPartitionInformationArgs{}),
+    "IoSetPartitionInformationEx": reflect.TypeOf(IoSetPartitionInformationExArgs{}),
+    "IoSetShadowFileInformation": reflect.TypeOf(IoSetShadowFileInformationArgs{}),
+    "IoSetShareAccess": reflect.TypeOf(IoSetShareAccessArgs{}),
+    "IoSetShareAccessEx": reflect.TypeOf(IoSetShareAccessExArgs{}),
+    "IoSetStartIoAttributes": reflect.TypeOf(IoSetStartIoAttributesArgs{}),
+    "IoSetSystemPartition": reflect.TypeOf(IoSetSystemPartitionArgs{}),
+    "IoSetThreadHardErrorMode": reflect.TypeOf(IoSetThreadHardErrorModeArgs{}),
+    "IoSetTopLevelIrp": reflect.TypeOf(IoSetTopLevelIrpArgs{}),
+    "IoSizeOfIrpEx": reflect.TypeOf(IoSizeOfIrpExArgs{}),
+    "IoStartNextPacket": reflect.TypeOf(IoStartNextPacketArgs{}),
+    "IoStartNextPacketByKey": reflect.TypeOf(IoStartNextPacketByKeyArgs{}),
+    "IoStartPacket": reflect.TypeOf(IoStartPacketArgs{}),
+    "IoStartTimer": reflect.TypeOf(IoStartTimerArgs{}),
+    "IoStopTimer": reflect.TypeOf(IoStopTimerArgs{}),
+    "IoSynchronousCallDriver": reflect.TypeOf(IoSynchronousCallDriverArgs{}),
+    "IoSynchronousPageWrite": reflect.TypeOf(IoSynchronousPageWriteArgs{}),
+    "IoThreadToProcess": reflect.TypeOf(IoThreadToProcessArgs{}),
+    "IoTransferActivityId": reflect.TypeOf(IoTransferActivityIdArgs{}),
+    "IoTranslateBusAddress": reflect.TypeOf(IoTranslateBusAddressArgs{}),
+    "IoTryQueueWorkItem": reflect.TypeOf(IoTryQueueWorkItemArgs{}),
+    "IoUninitializeWorkItem": reflect.TypeOf(IoUninitializeWorkItemArgs{}),
+    "IoUnregisterBootDriverCallback": reflect.TypeOf(IoUnregisterBootDriverCallbackArgs{}),
+    "IoUnregisterContainerNotification": reflect.TypeOf(IoUnregisterContainerNotificationArgs{}),
+    "IoUnregisterFileSystem": reflect.TypeOf(IoUnregisterFileSystemArgs{}),
+    "IoUnregisterFsRegistrationChange": reflect.TypeOf(IoUnregisterFsRegistrationChangeArgs{}),
+    "IoUnregisterPlugPlayNotification": reflect.TypeOf(IoUnregisterPlugPlayNotificationArgs{}),
+    "IoUnregisterPlugPlayNotificationEx": reflect.TypeOf(IoUnregisterPlugPlayNotificationExArgs{}),
+    "IoUnregisterShutdownNotification": reflect.TypeOf(IoUnregisterShutdownNotificationArgs{}),
+    "IoUpdateLinkShareAccess": reflect.TypeOf(IoUpdateLinkShareAccessArgs{}),
+    "IoUpdateLinkShareAccessEx": reflect.TypeOf(IoUpdateLinkShareAccessExArgs{}),
+    "IoUpdateShareAccess": reflect.TypeOf(IoUpdateShareAccessArgs{}),
+    "IoValidateDeviceIoControlAccess": reflect.TypeOf(IoValidateDeviceIoControlAccessArgs{}),
+    "IoVerifyPartitionTable": reflect.TypeOf(IoVerifyPartitionTableArgs{}),
+    "IoVerifyVolume": reflect.TypeOf(IoVerifyVolumeArgs{}),
+    "IoVolumeDeviceNameToGuid": reflect.TypeOf(IoVolumeDeviceNameToGuidArgs{}),
+    "IoVolumeDeviceNameToGuidPath": reflect.TypeOf(IoVolumeDeviceNameToGuidPathArgs{}),
+    "IoVolumeDeviceToDosName": reflect.TypeOf(IoVolumeDeviceToDosNameArgs{}),
+    "IoVolumeDeviceToGuid": reflect.TypeOf(IoVolumeDeviceToGuidArgs{}),
+    "IoVolumeDeviceToGuidPath": reflect.TypeOf(IoVolumeDeviceToGuidPathArgs{}),
+    "IoWMIAllocateInstanceIds": reflect.TypeOf(IoWMIAllocateInstanceIdsArgs{}),
+    "IoWMIDeviceObjectToInstanceName": reflect.TypeOf(IoWMIDeviceObjectToInstanceNameArgs{}),
+    "IoWMIDeviceObjectToProviderId": reflect.TypeOf(IoWMIDeviceObjectToProviderIdArgs{}),
+    "IoWMIExecuteMethod": reflect.TypeOf(IoWMIExecuteMethodArgs{}),
+    "IoWMIHandleToInstanceName": reflect.TypeOf(IoWMIHandleToInstanceNameArgs{}),
+    "IoWMIOpenBlock": reflect.TypeOf(IoWMIOpenBlockArgs{}),
+    "IoWMIQueryAllData": reflect.TypeOf(IoWMIQueryAllDataArgs{}),
+    "IoWMIQueryAllDataMultiple": reflect.TypeOf(IoWMIQueryAllDataMultipleArgs{}),
+    "IoWMIQuerySingleInstance": reflect.TypeOf(IoWMIQuerySingleInstanceArgs{}),
+    "IoWMIQuerySingleInstanceMultiple": reflect.TypeOf(IoWMIQuerySingleInstanceMultipleArgs{}),
+    "IoWMIRegistrationControl": reflect.TypeOf(IoWMIRegistrationControlArgs{}),
+    "IoWMISetNotificationCallback": reflect.TypeOf(IoWMISetNotificationCallbackArgs{}),
+    "IoWMISetSingleInstance": reflect.TypeOf(IoWMISetSingleInstanceArgs{}),
+    "IoWMISetSingleItem": reflect.TypeOf(IoWMISetSingleItemArgs{}),
+    "IoWMISuggestInstanceName": reflect.TypeOf(IoWMISuggestInstanceNameArgs{}),
+    "IoWMIWriteEvent": reflect.TypeOf(IoWMIWriteEventArgs{}),
+    "IoWithinStackLimits": reflect.TypeOf(IoWithinStackLimitsArgs{}),
+    "IoWriteErrorLogEntry": reflect.TypeOf(IoWriteErrorLogEntryArgs{}),
+    "IoWriteKsrPersistentMemory": reflect.TypeOf(IoWriteKsrPersistentMemoryArgs{}),
+    "IoWritePartitionTable": reflect.TypeOf(IoWritePartitionTableArgs{}),
+    "IoWritePartitionTableEx": reflect.TypeOf(IoWritePartitionTableExArgs{}),
+    "IofCallDriver": reflect.TypeOf(IofCallDriverArgs{}),
+    "IofCompleteRequest": reflect.TypeOf(IofCompleteRequestArgs{}),
+    "IofGetDriverProxyWrapperFromEndpoint": reflect.TypeOf(IofGetDriverProxyWrapperFromEndpointArgs{}),
+    "KeAcquireGuardedMutex": reflect.TypeOf(KeAcquireGuardedMutexArgs{}),
+    "KeAcquireGuardedMutexUnsafe": reflect.TypeOf(KeAcquireGuardedMutexUnsafeArgs{}),
+    "KeAcquireInStackQueuedSpinLock": reflect.TypeOf(KeAcquireInStackQueuedSpinLockArgs{}),
+    "KeAcquireInStackQueuedSpinLockAtDpcLevel": reflect.TypeOf(KeAcquireInStackQueuedSpinLockAtDpcLevelArgs{}),
+    "KeAcquireInStackQueuedSpinLockForDpc": reflect.TypeOf(KeAcquireInStackQueuedSpinLockForDpcArgs{}),
+    "KeAcquireInterruptSpinLock": reflect.TypeOf(KeAcquireInterruptSpinLockArgs{}),
+    "KeAcquireQueuedSpinLock": reflect.TypeOf(KeAcquireQueuedSpinLockArgs{}),
+    "KeAcquireSpinLockAtDpcLevel": reflect.TypeOf(KeAcquireSpinLockAtDpcLevelArgs{}),
+    "KeAcquireSpinLockForDpc": reflect.TypeOf(KeAcquireSpinLockForDpcArgs{}),
+    "KeAcquireSpinLockRaiseToDpc": reflect.TypeOf(KeAcquireSpinLockRaiseToDpcArgs{}),
+    "KeAcquireSpinLockRaiseToSynch": reflect.TypeOf(KeAcquireSpinLockRaiseToSynchArgs{}),
+    "KeAddTriageDumpDataBlock": reflect.TypeOf(KeAddTriageDumpDataBlockArgs{}),
+    "KeAttachProcess": reflect.TypeOf(KeAttachProcessArgs{}),
+    "KeBugCheck": reflect.TypeOf(KeBugCheckArgs{}),
+    "KeBugCheckEx": reflect.TypeOf(KeBugCheckExArgs{}),
+    "KeCancelTimer": reflect.TypeOf(KeCancelTimerArgs{}),
+    "KeClearEvent": reflect.TypeOf(KeClearEventArgs{}),
+    "KeConvertAuxiliaryCounterToPerformanceCounter": reflect.TypeOf(KeConvertAuxiliaryCounterToPerformanceCounterArgs{}),
+    "KeConvertPerformanceCounterToAuxiliaryCounter": reflect.TypeOf(KeConvertPerformanceCounterToAuxiliaryCounterArgs{}),
+    "KeDeregisterBoundCallback": reflect.TypeOf(KeDeregisterBoundCallbackArgs{}),
+    "KeDeregisterBugCheckCallback": reflect.TypeOf(KeDeregisterBugCheckCallbackArgs{}),
+    "KeDeregisterBugCheckReasonCallback": reflect.TypeOf(KeDeregisterBugCheckReasonCallbackArgs{}),
+    "KeDeregisterNmiCallback": reflect.TypeOf(KeDeregisterNmiCallbackArgs{}),
+    "KeDeregisterProcessorChangeCallback": reflect.TypeOf(KeDeregisterProcessorChangeCallbackArgs{}),
+    "KeExpandKernelStackAndCallout": reflect.TypeOf(KeExpandKernelStackAndCalloutArgs{}),
+    "KeExpandKernelStackAndCalloutEx": reflect.TypeOf(KeExpandKernelStackAndCalloutExArgs{}),
+    "KeFlushIoBuffers": reflect.TypeOf(KeFlushIoBuffersArgs{}),
+    "KeGetCurrentProcessorNumberEx": reflect.TypeOf(KeGetCurrentProcessorNumberExArgs{}),
+    "KeGetProcessorIndexFromNumber": reflect.TypeOf(KeGetProcessorIndexFromNumberArgs{}),
+    "KeGetProcessorNumberFromIndex": reflect.TypeOf(KeGetProcessorNumberFromIndexArgs{}),
+    "KeInitializeCrashDumpHeader": reflect.TypeOf(KeInitializeCrashDumpHeaderArgs{}),
+    "KeInitializeDeviceQueue": reflect.TypeOf(KeInitializeDeviceQueueArgs{}),
+    "KeInitializeDpc": reflect.TypeOf(KeInitializeDpcArgs{}),
+    "KeInitializeEvent": reflect.TypeOf(KeInitializeEventArgs{}),
+    "KeInitializeGuardedMutex": reflect.TypeOf(KeInitializeGuardedMutexArgs{}),
+    "KeInitializeMutant": reflect.TypeOf(KeInitializeMutantArgs{}),
+    "KeInitializeMutex": reflect.TypeOf(KeInitializeMutexArgs{}),
+    "KeInitializeQueue": reflect.TypeOf(KeInitializeQueueArgs{}),
+    "KeInitializeSemaphore": reflect.TypeOf(KeInitializeSemaphoreArgs{}),
+    "KeInitializeSpinLock": reflect.TypeOf(KeInitializeSpinLockArgs{}),
+    "KeInitializeThreadedDpc": reflect.TypeOf(KeInitializeThreadedDpcArgs{}),
+    "KeInitializeTimer": reflect.TypeOf(KeInitializeTimerArgs{}),
+    "KeInitializeTimerEx": reflect.TypeOf(KeInitializeTimerExArgs{}),
+    "KeInitializeTriageDumpDataArray": reflect.TypeOf(KeInitializeTriageDumpDataArrayArgs{}),
+    "KeInsertByKeyDeviceQueue": reflect.TypeOf(KeInsertByKeyDeviceQueueArgs{}),
+    "KeInsertDeviceQueue": reflect.TypeOf(KeInsertDeviceQueueArgs{}),
+    "KeInsertHeadQueue": reflect.TypeOf(KeInsertHeadQueueArgs{}),
+    "KeInsertQueue": reflect.TypeOf(KeInsertQueueArgs{}),
+    "KeInsertQueueDpc": reflect.TypeOf(KeInsertQueueDpcArgs{}),
+    "KeInvalidateRangeAllCaches": reflect.TypeOf(KeInvalidateRangeAllCachesArgs{}),
+    "KeIpiGenericCall": reflect.TypeOf(KeIpiGenericCallArgs{}),
+    "KeLowerIrql": reflect.TypeOf(KeLowerIrqlArgs{}),
+    "KePulseEvent": reflect.TypeOf(KePulseEventArgs{}),
+    "KeQueryActiveProcessorCount": reflect.TypeOf(KeQueryActiveProcessorCountArgs{}),
+    "KeQueryActiveProcessorCountEx": reflect.TypeOf(KeQueryActiveProcessorCountExArgs{}),
+    "KeQueryAuxiliaryCounterFrequency": reflect.TypeOf(KeQueryAuxiliaryCounterFrequencyArgs{}),
+    "KeQueryDpcWatchdogInformation": reflect.TypeOf(KeQueryDpcWatchdogInformationArgs{}),
+    "KeQueryGroupAffinity": reflect.TypeOf(KeQueryGroupAffinityArgs{}),
+    "KeQueryHardwareCounterConfiguration": reflect.TypeOf(KeQueryHardwareCounterConfigurationArgs{}),
+    "KeQueryInterruptTimePrecise": reflect.TypeOf(KeQueryInterruptTimePreciseArgs{}),
+    "KeQueryLogicalProcessorRelationship": reflect.TypeOf(KeQueryLogicalProcessorRelationshipArgs{}),
+    "KeQueryMaximumProcessorCountEx": reflect.TypeOf(KeQueryMaximumProcessorCountExArgs{}),
+    "KeQueryNodeActiveAffinity": reflect.TypeOf(KeQueryNodeActiveAffinityArgs{}),
+    "KeQueryNodeActiveAffinity2": reflect.TypeOf(KeQueryNodeActiveAffinity2Args{}),
+    "KeQueryNodeActiveProcessorCount": reflect.TypeOf(KeQueryNodeActiveProcessorCountArgs{}),
+    "KeQueryNodeMaximumProcessorCount": reflect.TypeOf(KeQueryNodeMaximumProcessorCountArgs{}),
+    "KeQueryOwnerMutant": reflect.TypeOf(KeQueryOwnerMutantArgs{}),
+    "KeQueryPerformanceCounter": reflect.TypeOf(KeQueryPerformanceCounterArgs{}),
+    "KeQueryPriorityThread": reflect.TypeOf(KeQueryPriorityThreadArgs{}),
+    "KeQueryRuntimeThread": reflect.TypeOf(KeQueryRuntimeThreadArgs{}),
+    "KeQuerySystemTimePrecise": reflect.TypeOf(KeQuerySystemTimePreciseArgs{}),
+    "KeQueryTotalCycleTimeThread": reflect.TypeOf(KeQueryTotalCycleTimeThreadArgs{}),
+    "KeQueryUnbiasedInterruptTimePrecise": reflect.TypeOf(KeQueryUnbiasedInterruptTimePreciseArgs{}),
+    "KeReadStateEvent": reflect.TypeOf(KeReadStateEventArgs{}),
+    "KeReadStateMutant": reflect.TypeOf(KeReadStateMutantArgs{}),
+    "KeReadStateMutex": reflect.TypeOf(KeReadStateMutexArgs{}),
+    "KeReadStateQueue": reflect.TypeOf(KeReadStateQueueArgs{}),
+    "KeReadStateSemaphore": reflect.TypeOf(KeReadStateSemaphoreArgs{}),
+    "KeReadStateTimer": reflect.TypeOf(KeReadStateTimerArgs{}),
+    "KeRegisterBoundCallback": reflect.TypeOf(KeRegisterBoundCallbackArgs{}),
+    "KeRegisterBugCheckCallback": reflect.TypeOf(KeRegisterBugCheckCallbackArgs{}),
+    "KeRegisterBugCheckReasonCallback": reflect.TypeOf(KeRegisterBugCheckReasonCallbackArgs{}),
+    "KeRegisterNmiCallback": reflect.TypeOf(KeRegisterNmiCallbackArgs{}),
+    "KeRegisterProcessorChangeCallback": reflect.TypeOf(KeRegisterProcessorChangeCallbackArgs{}),
+    "KeReleaseGuardedMutex": reflect.TypeOf(KeReleaseGuardedMutexArgs{}),
+    "KeReleaseGuardedMutexUnsafe": reflect.TypeOf(KeReleaseGuardedMutexUnsafeArgs{}),
+    "KeReleaseInStackQueuedSpinLock": reflect.TypeOf(KeReleaseInStackQueuedSpinLockArgs{}),
+    "KeReleaseInStackQueuedSpinLockForDpc": reflect.TypeOf(KeReleaseInStackQueuedSpinLockForDpcArgs{}),
+    "KeReleaseInStackQueuedSpinLockFromDpcLevel": reflect.TypeOf(KeReleaseInStackQueuedSpinLockFromDpcLevelArgs{}),
+    "KeReleaseInterruptSpinLock": reflect.TypeOf(KeReleaseInterruptSpinLockArgs{}),
+    "KeReleaseMutex": reflect.TypeOf(KeReleaseMutexArgs{}),
+    "KeReleaseQueuedSpinLock": reflect.TypeOf(KeReleaseQueuedSpinLockArgs{}),
+    "KeReleaseSpinLock": reflect.TypeOf(KeReleaseSpinLockArgs{}),
+    "KeReleaseSpinLockForDpc": reflect.TypeOf(KeReleaseSpinLockForDpcArgs{}),
+    "KeReleaseSpinLockFromDpcLevel": reflect.TypeOf(KeReleaseSpinLockFromDpcLevelArgs{}),
+    "KeRemoveByKeyDeviceQueue": reflect.TypeOf(KeRemoveByKeyDeviceQueueArgs{}),
+    "KeRemoveByKeyDeviceQueueIfBusy": reflect.TypeOf(KeRemoveByKeyDeviceQueueIfBusyArgs{}),
+    "KeRemoveDeviceQueue": reflect.TypeOf(KeRemoveDeviceQueueArgs{}),
+    "KeRemoveEntryDeviceQueue": reflect.TypeOf(KeRemoveEntryDeviceQueueArgs{}),
+    "KeRemoveQueue": reflect.TypeOf(KeRemoveQueueArgs{}),
+    "KeRemoveQueueDpc": reflect.TypeOf(KeRemoveQueueDpcArgs{}),
+    "KeRemoveQueueDpcEx": reflect.TypeOf(KeRemoveQueueDpcExArgs{}),
+    "KeRemoveQueueEx": reflect.TypeOf(KeRemoveQueueExArgs{}),
+    "KeResetEvent": reflect.TypeOf(KeResetEventArgs{}),
+    "KeRestoreExtendedProcessorState": reflect.TypeOf(KeRestoreExtendedProcessorStateArgs{}),
+    "KeRevertToUserAffinityThreadEx": reflect.TypeOf(KeRevertToUserAffinityThreadExArgs{}),
+    "KeRevertToUserGroupAffinityThread": reflect.TypeOf(KeRevertToUserGroupAffinityThreadArgs{}),
+    "KeRundownQueue": reflect.TypeOf(KeRundownQueueArgs{}),
+    "KeSaveExtendedProcessorState": reflect.TypeOf(KeSaveExtendedProcessorStateArgs{}),
+    "KeSetCoalescableTimer": reflect.TypeOf(KeSetCoalescableTimerArgs{}),
+    "KeSetHardwareCounterConfiguration": reflect.TypeOf(KeSetHardwareCounterConfigurationArgs{}),
+    "KeSetImportanceDpc": reflect.TypeOf(KeSetImportanceDpcArgs{}),
+    "KeSetKernelStackSwapEnable": reflect.TypeOf(KeSetKernelStackSwapEnableArgs{}),
+    "KeSetSystemAffinityThread": reflect.TypeOf(KeSetSystemAffinityThreadArgs{}),
+    "KeSetSystemAffinityThreadEx": reflect.TypeOf(KeSetSystemAffinityThreadExArgs{}),
+    "KeSetSystemGroupAffinityThread": reflect.TypeOf(KeSetSystemGroupAffinityThreadArgs{}),
+    "KeSetTargetProcessorDpc": reflect.TypeOf(KeSetTargetProcessorDpcArgs{}),
+    "KeSetTargetProcessorDpcEx": reflect.TypeOf(KeSetTargetProcessorDpcExArgs{}),
+    "KeSetTimer": reflect.TypeOf(KeSetTimerArgs{}),
+    "KeSetTimerEx": reflect.TypeOf(KeSetTimerExArgs{}),
+    "KeSrcuAllocate": reflect.TypeOf(KeSrcuAllocateArgs{}),
+    "KeSrcuFree": reflect.TypeOf(KeSrcuFreeArgs{}),
+    "KeSrcuReadLock": reflect.TypeOf(KeSrcuReadLockArgs{}),
+    "KeSrcuReadUnlock": reflect.TypeOf(KeSrcuReadUnlockArgs{}),
+    "KeSrcuSynchronize": reflect.TypeOf(KeSrcuSynchronizeArgs{}),
+    "KeStackAttachProcess": reflect.TypeOf(KeStackAttachProcessArgs{}),
+    "KeStallExecutionProcessor": reflect.TypeOf(KeStallExecutionProcessorArgs{}),
+    "KeSynchronizeExecution": reflect.TypeOf(KeSynchronizeExecutionArgs{}),
+    "KeTestSpinLock": reflect.TypeOf(KeTestSpinLockArgs{}),
+    "KeTryToAcquireGuardedMutex": reflect.TypeOf(KeTryToAcquireGuardedMutexArgs{}),
+    "KeTryToAcquireQueuedSpinLock": reflect.TypeOf(KeTryToAcquireQueuedSpinLockArgs{}),
+    "KeTryToAcquireSpinLockAtDpcLevel": reflect.TypeOf(KeTryToAcquireSpinLockAtDpcLevelArgs{}),
+    "KeUnstackDetachProcess": reflect.TypeOf(KeUnstackDetachProcessArgs{}),
+    "MmAddPhysicalMemory": reflect.TypeOf(MmAddPhysicalMemoryArgs{}),
+    "MmAddVerifierSpecialThunks": reflect.TypeOf(MmAddVerifierSpecialThunksArgs{}),
+    "MmAddVerifierThunks": reflect.TypeOf(MmAddVerifierThunksArgs{}),
+    "MmAdvanceMdl": reflect.TypeOf(MmAdvanceMdlArgs{}),
+    "MmAllocateContiguousMemory": reflect.TypeOf(MmAllocateContiguousMemoryArgs{}),
+    "MmAllocateContiguousMemoryEx": reflect.TypeOf(MmAllocateContiguousMemoryExArgs{}),
+    "MmAllocateContiguousMemorySpecifyCache": reflect.TypeOf(MmAllocateContiguousMemorySpecifyCacheArgs{}),
+    "MmAllocateContiguousMemorySpecifyCacheNode": reflect.TypeOf(MmAllocateContiguousMemorySpecifyCacheNodeArgs{}),
+    "MmAllocateContiguousNodeMemory": reflect.TypeOf(MmAllocateContiguousNodeMemoryArgs{}),
+    "MmAllocateMappingAddress": reflect.TypeOf(MmAllocateMappingAddressArgs{}),
+    "MmAllocateMappingAddressEx": reflect.TypeOf(MmAllocateMappingAddressExArgs{}),
+    "MmAllocateMdlForIoSpace": reflect.TypeOf(MmAllocateMdlForIoSpaceArgs{}),
+    "MmAllocateNodePagesForMdlEx": reflect.TypeOf(MmAllocateNodePagesForMdlExArgs{}),
+    "MmAllocateNonCachedMemory": reflect.TypeOf(MmAllocateNonCachedMemoryArgs{}),
+    "MmAllocatePagesForMdl": reflect.TypeOf(MmAllocatePagesForMdlArgs{}),
+    "MmAllocatePagesForMdlEx": reflect.TypeOf(MmAllocatePagesForMdlExArgs{}),
+    "MmAllocatePartitionNodePagesForMdlEx": reflect.TypeOf(MmAllocatePartitionNodePagesForMdlExArgs{}),
+    "MmAreMdlPagesCached": reflect.TypeOf(MmAreMdlPagesCachedArgs{}),
+    "MmBuildMdlForNonPagedPool": reflect.TypeOf(MmBuildMdlForNonPagedPoolArgs{}),
+    "MmCanFileBeTruncated": reflect.TypeOf(MmCanFileBeTruncatedArgs{}),
+    "MmCopyMemory": reflect.TypeOf(MmCopyMemoryArgs{}),
+    "MmCreateMdl": reflect.TypeOf(MmCreateMdlArgs{}),
+    "MmDoesFileHaveUserWritableReferences": reflect.TypeOf(MmDoesFileHaveUserWritableReferencesArgs{}),
+    "MmFlushImageSection": reflect.TypeOf(MmFlushImageSectionArgs{}),
+    "MmForceSectionClosed": reflect.TypeOf(MmForceSectionClosedArgs{}),
+    "MmForceSectionClosedEx": reflect.TypeOf(MmForceSectionClosedExArgs{}),
+    "MmFreeContiguousMemory": reflect.TypeOf(MmFreeContiguousMemoryArgs{}),
+    "MmFreeContiguousMemorySpecifyCache": reflect.TypeOf(MmFreeContiguousMemorySpecifyCacheArgs{}),
+    "MmFreeMappingAddress": reflect.TypeOf(MmFreeMappingAddressArgs{}),
+    "MmFreeNonCachedMemory": reflect.TypeOf(MmFreeNonCachedMemoryArgs{}),
+    "MmFreePagesFromMdl": reflect.TypeOf(MmFreePagesFromMdlArgs{}),
+    "MmFreePagesFromMdlEx": reflect.TypeOf(MmFreePagesFromMdlExArgs{}),
+    "MmGetCacheAttribute": reflect.TypeOf(MmGetCacheAttributeArgs{}),
+    "MmGetCacheAttributeEx": reflect.TypeOf(MmGetCacheAttributeExArgs{}),
+    "MmGetModuleRoutineAddress": reflect.TypeOf(MmGetModuleRoutineAddressArgs{}),
+    "MmGetPhysicalAddress": reflect.TypeOf(MmGetPhysicalAddressArgs{}),
+    "MmGetPhysicalMemoryRangesEx": reflect.TypeOf(MmGetPhysicalMemoryRangesExArgs{}),
+    "MmGetPhysicalMemoryRangesEx2": reflect.TypeOf(MmGetPhysicalMemoryRangesEx2Args{}),
+    "MmGetSystemRoutineAddress": reflect.TypeOf(MmGetSystemRoutineAddressArgs{}),
+    "MmGetVirtualForPhysical": reflect.TypeOf(MmGetVirtualForPhysicalArgs{}),
+    "MmIsAddressValid": reflect.TypeOf(MmIsAddressValidArgs{}),
+    "MmIsDriverSuspectForVerifier": reflect.TypeOf(MmIsDriverSuspectForVerifierArgs{}),
+    "MmIsDriverVerifying": reflect.TypeOf(MmIsDriverVerifyingArgs{}),
+    "MmIsDriverVerifyingByAddress": reflect.TypeOf(MmIsDriverVerifyingByAddressArgs{}),
+    "MmIsFileSectionActive": reflect.TypeOf(MmIsFileSectionActiveArgs{}),
+    "MmIsIoSpaceActive": reflect.TypeOf(MmIsIoSpaceActiveArgs{}),
+    "MmIsKernelAddress": reflect.TypeOf(MmIsKernelAddressArgs{}),
+    "MmIsNonPagedSystemAddressValid": reflect.TypeOf(MmIsNonPagedSystemAddressValidArgs{}),
+    "MmIsUserAddress": reflect.TypeOf(MmIsUserAddressArgs{}),
+    "MmIsVerifierEnabled": reflect.TypeOf(MmIsVerifierEnabledArgs{}),
+    "MmLockPagableDataSection": reflect.TypeOf(MmLockPagableDataSectionArgs{}),
+    "MmLockPagableSectionByHandle": reflect.TypeOf(MmLockPagableSectionByHandleArgs{}),
+    "MmMapIoSpace": reflect.TypeOf(MmMapIoSpaceArgs{}),
+    "MmMapIoSpaceEx": reflect.TypeOf(MmMapIoSpaceExArgs{}),
+    "MmMapLockedPages": reflect.TypeOf(MmMapLockedPagesArgs{}),
+    "MmMapLockedPagesSpecifyCache": reflect.TypeOf(MmMapLockedPagesSpecifyCacheArgs{}),
+    "MmMapLockedPagesWithReservedMapping": reflect.TypeOf(MmMapLockedPagesWithReservedMappingArgs{}),
+    "MmMapMdl": reflect.TypeOf(MmMapMdlArgs{}),
+    "MmMapMemoryDumpMdlEx": reflect.TypeOf(MmMapMemoryDumpMdlExArgs{}),
+    "MmMapUserAddressesToPage": reflect.TypeOf(MmMapUserAddressesToPageArgs{}),
+    "MmMapVideoDisplay": reflect.TypeOf(MmMapVideoDisplayArgs{}),
+    "MmMapViewInSessionSpace": reflect.TypeOf(MmMapViewInSessionSpaceArgs{}),
+    "MmMapViewInSessionSpaceEx": reflect.TypeOf(MmMapViewInSessionSpaceExArgs{}),
+    "MmMapViewInSystemSpace": reflect.TypeOf(MmMapViewInSystemSpaceArgs{}),
+    "MmMapViewInSystemSpaceEx": reflect.TypeOf(MmMapViewInSystemSpaceExArgs{}),
+    "MmMdlPageContentsState": reflect.TypeOf(MmMdlPageContentsStateArgs{}),
+    "MmMdlPagesAreZero": reflect.TypeOf(MmMdlPagesAreZeroArgs{}),
+    "MmPageEntireDriver": reflect.TypeOf(MmPageEntireDriverArgs{}),
+    "MmPrefetchPages": reflect.TypeOf(MmPrefetchPagesArgs{}),
+    "MmProbeAndLockPages": reflect.TypeOf(MmProbeAndLockPagesArgs{}),
+    "MmProbeAndLockPagesEx": reflect.TypeOf(MmProbeAndLockPagesExArgs{}),
+    "MmProbeAndLockProcessPages": reflect.TypeOf(MmProbeAndLockProcessPagesArgs{}),
+    "MmProbeAndLockSelectedPages": reflect.TypeOf(MmProbeAndLockSelectedPagesArgs{}),
+    "MmProtectDriverSection": reflect.TypeOf(MmProtectDriverSectionArgs{}),
+    "MmProtectMdlSystemAddress": reflect.TypeOf(MmProtectMdlSystemAddressArgs{}),
+    "MmRemovePhysicalMemory": reflect.TypeOf(MmRemovePhysicalMemoryArgs{}),
+    "MmResetDriverPaging": reflect.TypeOf(MmResetDriverPagingArgs{}),
+    "MmRotatePhysicalView": reflect.TypeOf(MmRotatePhysicalViewArgs{}),
+    "MmSecureVirtualMemory": reflect.TypeOf(MmSecureVirtualMemoryArgs{}),
+    "MmSecureVirtualMemoryEx": reflect.TypeOf(MmSecureVirtualMemoryExArgs{}),
+    "MmSetAddressRangeModified": reflect.TypeOf(MmSetAddressRangeModifiedArgs{}),
+    "MmSetPermanentCacheAttribute": reflect.TypeOf(MmSetPermanentCacheAttributeArgs{}),
+    "MmSizeOfMdl": reflect.TypeOf(MmSizeOfMdlArgs{}),
+    "MmUnlockPagableImageSection": reflect.TypeOf(MmUnlockPagableImageSectionArgs{}),
+    "MmUnlockPages": reflect.TypeOf(MmUnlockPagesArgs{}),
+    "MmUnmapIoSpace": reflect.TypeOf(MmUnmapIoSpaceArgs{}),
+    "MmUnmapLockedPages": reflect.TypeOf(MmUnmapLockedPagesArgs{}),
+    "MmUnmapReservedMapping": reflect.TypeOf(MmUnmapReservedMappingArgs{}),
+    "MmUnmapVideoDisplay": reflect.TypeOf(MmUnmapVideoDisplayArgs{}),
+    "MmUnmapViewInSessionSpace": reflect.TypeOf(MmUnmapViewInSessionSpaceArgs{}),
+    "MmUnmapViewInSystemSpace": reflect.TypeOf(MmUnmapViewInSystemSpaceArgs{}),
+    "MmUnsecureVirtualMemory": reflect.TypeOf(MmUnsecureVirtualMemoryArgs{}),
+    "NtAccessCheckAndAuditAlarm": reflect.TypeOf(NtAccessCheckAndAuditAlarmArgs{}),
+    "NtAccessCheckByTypeAndAuditAlarm": reflect.TypeOf(NtAccessCheckByTypeAndAuditAlarmArgs{}),
+    "NtAccessCheckByTypeResultListAndAuditAlarm": reflect.TypeOf(NtAccessCheckByTypeResultListAndAuditAlarmArgs{}),
+    "NtAccessCheckByTypeResultListAndAuditAlarmByHandle": reflect.TypeOf(NtAccessCheckByTypeResultListAndAuditAlarmByHandleArgs{}),
+    "NtAdjustGroupsToken": reflect.TypeOf(NtAdjustGroupsTokenArgs{}),
+    "NtAdjustPrivilegesToken": reflect.TypeOf(NtAdjustPrivilegesTokenArgs{}),
+    "NtAllocateVirtualMemory": reflect.TypeOf(NtAllocateVirtualMemoryArgs{}),
+    "NtClose": reflect.TypeOf(NtCloseArgs{}),
+    "NtCloseObjectAuditAlarm": reflect.TypeOf(NtCloseObjectAuditAlarmArgs{}),
+    "NtCommitComplete": reflect.TypeOf(NtCommitCompleteArgs{}),
+    "NtCommitEnlistment": reflect.TypeOf(NtCommitEnlistmentArgs{}),
+    "NtCommitTransaction": reflect.TypeOf(NtCommitTransactionArgs{}),
+    "NtCopyFileChunk": reflect.TypeOf(NtCopyFileChunkArgs{}),
+    "NtCreateEnlistment": reflect.TypeOf(NtCreateEnlistmentArgs{}),
+    "NtCreateFile": reflect.TypeOf(NtCreateFileArgs{}),
+    "NtCreateResourceManager": reflect.TypeOf(NtCreateResourceManagerArgs{}),
+    "NtCreateSection": reflect.TypeOf(NtCreateSectionArgs{}),
+    "NtCreateSectionEx": reflect.TypeOf(NtCreateSectionExArgs{}),
+    "NtCreateTransaction": reflect.TypeOf(NtCreateTransactionArgs{}),
+    "NtCreateTransactionManager": reflect.TypeOf(NtCreateTransactionManagerArgs{}),
+    "NtDeleteObjectAuditAlarm": reflect.TypeOf(NtDeleteObjectAuditAlarmArgs{}),
+    "NtDeviceIoControlFile": reflect.TypeOf(NtDeviceIoControlFileArgs{}),
+    "NtDuplicateToken": reflect.TypeOf(NtDuplicateTokenArgs{}),
+    "NtEnumerateTransactionObject": reflect.TypeOf(NtEnumerateTransactionObjectArgs{}),
+    "NtFilterToken": reflect.TypeOf(NtFilterTokenArgs{}),
+    "NtFlushBuffersFileEx": reflect.TypeOf(NtFlushBuffersFileExArgs{}),
+    "NtFreeVirtualMemory": reflect.TypeOf(NtFreeVirtualMemoryArgs{}),
+    "NtFsControlFile": reflect.TypeOf(NtFsControlFileArgs{}),
+    "NtGetNotificationResourceManager": reflect.TypeOf(NtGetNotificationResourceManagerArgs{}),
+    "NtImpersonateAnonymousToken": reflect.TypeOf(NtImpersonateAnonymousTokenArgs{}),
+    "NtLockFile": reflect.TypeOf(NtLockFileArgs{}),
+    "NtManagePartition": reflect.TypeOf(NtManagePartitionArgs{}),
+    "NtOpenEnlistment": reflect.TypeOf(NtOpenEnlistmentArgs{}),
+    "NtOpenFile": reflect.TypeOf(NtOpenFileArgs{}),
+    "NtOpenJobObjectToken": reflect.TypeOf(NtOpenJobObjectTokenArgs{}),
+    "NtOpenObjectAuditAlarm": reflect.TypeOf(NtOpenObjectAuditAlarmArgs{}),
+    "NtOpenProcess": reflect.TypeOf(NtOpenProcessArgs{}),
+    "NtOpenProcessToken": reflect.TypeOf(NtOpenProcessTokenArgs{}),
+    "NtOpenProcessTokenEx": reflect.TypeOf(NtOpenProcessTokenExArgs{}),
+    "NtOpenRegistryTransaction": reflect.TypeOf(NtOpenRegistryTransactionArgs{}),
+    "NtOpenResourceManager": reflect.TypeOf(NtOpenResourceManagerArgs{}),
+    "NtOpenThreadToken": reflect.TypeOf(NtOpenThreadTokenArgs{}),
+    "NtOpenThreadTokenEx": reflect.TypeOf(NtOpenThreadTokenExArgs{}),
+    "NtOpenTransaction": reflect.TypeOf(NtOpenTransactionArgs{}),
+    "NtOpenTransactionManager": reflect.TypeOf(NtOpenTransactionManagerArgs{}),
+    "NtPowerInformation": reflect.TypeOf(NtPowerInformationArgs{}),
+    "NtPrePrepareComplete": reflect.TypeOf(NtPrePrepareCompleteArgs{}),
+    "NtPrePrepareEnlistment": reflect.TypeOf(NtPrePrepareEnlistmentArgs{}),
+    "NtPrepareComplete": reflect.TypeOf(NtPrepareCompleteArgs{}),
+    "NtPrepareEnlistment": reflect.TypeOf(NtPrepareEnlistmentArgs{}),
+    "NtPrivilegeCheck": reflect.TypeOf(NtPrivilegeCheckArgs{}),
+    "NtPrivilegeObjectAuditAlarm": reflect.TypeOf(NtPrivilegeObjectAuditAlarmArgs{}),
+    "NtPrivilegedServiceAuditAlarm": reflect.TypeOf(NtPrivilegedServiceAuditAlarmArgs{}),
+    "NtPropagationComplete": reflect.TypeOf(NtPropagationCompleteArgs{}),
+    "NtPropagationFailed": reflect.TypeOf(NtPropagationFailedArgs{}),
+    "NtQueryDirectoryFile": reflect.TypeOf(NtQueryDirectoryFileArgs{}),
+    "NtQueryDirectoryFileEx": reflect.TypeOf(NtQueryDirectoryFileExArgs{}),
+    "NtQueryInformationByName": reflect.TypeOf(NtQueryInformationByNameArgs{}),
+    "NtQueryInformationEnlistment": reflect.TypeOf(NtQueryInformationEnlistmentArgs{}),
+    "NtQueryInformationFile": reflect.TypeOf(NtQueryInformationFileArgs{}),
+    "NtQueryInformationResourceManager": reflect.TypeOf(NtQueryInformationResourceManagerArgs{}),
+    "NtQueryInformationToken": reflect.TypeOf(NtQueryInformationTokenArgs{}),
+    "NtQueryInformationTransaction": reflect.TypeOf(NtQueryInformationTransactionArgs{}),
+    "NtQueryInformationTransactionManager": reflect.TypeOf(NtQueryInformationTransactionManagerArgs{}),
+    "NtQueryObject": reflect.TypeOf(NtQueryObjectArgs{}),
+    "NtQueryQuotaInformationFile": reflect.TypeOf(NtQueryQuotaInformationFileArgs{}),
+    "NtQuerySecurityObject": reflect.TypeOf(NtQuerySecurityObjectArgs{}),
+    "NtQueryVirtualMemory": reflect.TypeOf(NtQueryVirtualMemoryArgs{}),
+    "NtQueryVolumeInformationFile": reflect.TypeOf(NtQueryVolumeInformationFileArgs{}),
+    "NtReadFile": reflect.TypeOf(NtReadFileArgs{}),
+    "NtReadOnlyEnlistment": reflect.TypeOf(NtReadOnlyEnlistmentArgs{}),
+    "NtRecoverEnlistment": reflect.TypeOf(NtRecoverEnlistmentArgs{}),
+    "NtRecoverResourceManager": reflect.TypeOf(NtRecoverResourceManagerArgs{}),
+    "NtRecoverTransactionManager": reflect.TypeOf(NtRecoverTransactionManagerArgs{}),
+    "NtRegisterProtocolAddressInformation": reflect.TypeOf(NtRegisterProtocolAddressInformationArgs{}),
+    "NtRenameTransactionManager": reflect.TypeOf(NtRenameTransactionManagerArgs{}),
+    "NtRollbackComplete": reflect.TypeOf(NtRollbackCompleteArgs{}),
+    "NtRollbackEnlistment": reflect.TypeOf(NtRollbackEnlistmentArgs{}),
+    "NtRollbackRegistryTransaction": reflect.TypeOf(NtRollbackRegistryTransactionArgs{}),
+    "NtRollbackTransaction": reflect.TypeOf(NtRollbackTransactionArgs{}),
+    "NtRollforwardTransactionManager": reflect.TypeOf(NtRollforwardTransactionManagerArgs{}),
+    "NtSetInformationEnlistment": reflect.TypeOf(NtSetInformationEnlistmentArgs{}),
+    "NtSetInformationFile": reflect.TypeOf(NtSetInformationFileArgs{}),
+    "NtSetInformationResourceManager": reflect.TypeOf(NtSetInformationResourceManagerArgs{}),
+    "NtSetInformationThread": reflect.TypeOf(NtSetInformationThreadArgs{}),
+    "NtSetInformationToken": reflect.TypeOf(NtSetInformationTokenArgs{}),
+    "NtSetInformationTransaction": reflect.TypeOf(NtSetInformationTransactionArgs{}),
+    "NtSetInformationTransactionManager": reflect.TypeOf(NtSetInformationTransactionManagerArgs{}),
+    "NtSetInformationVirtualMemory": reflect.TypeOf(NtSetInformationVirtualMemoryArgs{}),
+    "NtSetQuotaInformationFile": reflect.TypeOf(NtSetQuotaInformationFileArgs{}),
+    "NtSetSecurityObject": reflect.TypeOf(NtSetSecurityObjectArgs{}),
+    "NtSetVolumeInformationFile": reflect.TypeOf(NtSetVolumeInformationFileArgs{}),
+    "NtSinglePhaseReject": reflect.TypeOf(NtSinglePhaseRejectArgs{}),
+    "NtUnlockFile": reflect.TypeOf(NtUnlockFileArgs{}),
+    "NtWriteFile": reflect.TypeOf(NtWriteFileArgs{}),
+    "ObCloseHandle": reflect.TypeOf(ObCloseHandleArgs{}),
+    "ObCloseHandleWithResult": reflect.TypeOf(ObCloseHandleWithResultArgs{}),
+    "ObDereferenceObjectDeferDelete": reflect.TypeOf(ObDereferenceObjectDeferDeleteArgs{}),
+    "ObDereferenceObjectDeferDeleteWithTag": reflect.TypeOf(ObDereferenceObjectDeferDeleteWithTagArgs{}),
+    "ObGetObjectSecurity": reflect.TypeOf(ObGetObjectSecurityArgs{}),
+    "ObInsertObject": reflect.TypeOf(ObInsertObjectArgs{}),
+    "ObIsKernelHandle": reflect.TypeOf(ObIsKernelHandleArgs{}),
+    "ObMakeTemporaryObject": reflect.TypeOf(ObMakeTemporaryObjectArgs{}),
+    "ObOpenObjectByPointer": reflect.TypeOf(ObOpenObjectByPointerArgs{}),
+    "ObOpenObjectByPointerWithTag": reflect.TypeOf(ObOpenObjectByPointerWithTagArgs{}),
+    "ObQueryNameString": reflect.TypeOf(ObQueryNameStringArgs{}),
+    "ObQueryObjectAuditingByHandle": reflect.TypeOf(ObQueryObjectAuditingByHandleArgs{}),
+    "ObReferenceObjectByHandle": reflect.TypeOf(ObReferenceObjectByHandleArgs{}),
+    "ObReferenceObjectByHandleWithTag": reflect.TypeOf(ObReferenceObjectByHandleWithTagArgs{}),
+    "ObReferenceObjectByPointer": reflect.TypeOf(ObReferenceObjectByPointerArgs{}),
+    "ObReferenceObjectByPointerWithTag": reflect.TypeOf(ObReferenceObjectByPointerWithTagArgs{}),
+    "ObReferenceObjectSafe": reflect.TypeOf(ObReferenceObjectSafeArgs{}),
+    "ObReferenceObjectSafeWithTag": reflect.TypeOf(ObReferenceObjectSafeWithTagArgs{}),
+    "ObRegisterCallbacks": reflect.TypeOf(ObRegisterCallbacksArgs{}),
+    "ObReleaseObjectSecurity": reflect.TypeOf(ObReleaseObjectSecurityArgs{}),
+    "ObUnRegisterCallbacks": reflect.TypeOf(ObUnRegisterCallbacksArgs{}),
+    "ObfDereferenceObject": reflect.TypeOf(ObfDereferenceObjectArgs{}),
+    "ObfDereferenceObjectWithTag": reflect.TypeOf(ObfDereferenceObjectWithTagArgs{}),
+    "ObfReferenceObject": reflect.TypeOf(ObfReferenceObjectArgs{}),
+    "ObfReferenceObjectWithTag": reflect.TypeOf(ObfReferenceObjectWithTagArgs{}),
+    "PsAcquireSiloHardReference": reflect.TypeOf(PsAcquireSiloHardReferenceArgs{}),
+    "PsAllocSiloContextSlot": reflect.TypeOf(PsAllocSiloContextSlotArgs{}),
+    "PsAllocateAffinityToken": reflect.TypeOf(PsAllocateAffinityTokenArgs{}),
+    "PsAssignImpersonationToken": reflect.TypeOf(PsAssignImpersonationTokenArgs{}),
+    "PsAttachSiloToCurrentThread": reflect.TypeOf(PsAttachSiloToCurrentThreadArgs{}),
+    "PsChargePoolQuota": reflect.TypeOf(PsChargePoolQuotaArgs{}),
+    "PsChargeProcessPoolQuota": reflect.TypeOf(PsChargeProcessPoolQuotaArgs{}),
+    "PsCreateSiloContext": reflect.TypeOf(PsCreateSiloContextArgs{}),
+    "PsCreateSystemThread": reflect.TypeOf(PsCreateSystemThreadArgs{}),
+    "PsDereferenceImpersonationToken": reflect.TypeOf(PsDereferenceImpersonationTokenArgs{}),
+    "PsDereferencePrimaryToken": reflect.TypeOf(PsDereferencePrimaryTokenArgs{}),
+    "PsDereferenceSiloContext": reflect.TypeOf(PsDereferenceSiloContextArgs{}),
+    "PsDetachSiloFromCurrentThread": reflect.TypeOf(PsDetachSiloFromCurrentThreadArgs{}),
+    "PsDisableImpersonation": reflect.TypeOf(PsDisableImpersonationArgs{}),
+    "PsFreeAffinityToken": reflect.TypeOf(PsFreeAffinityTokenArgs{}),
+    "PsFreeSiloContextSlot": reflect.TypeOf(PsFreeSiloContextSlotArgs{}),
+    "PsGetEffectiveServerSilo": reflect.TypeOf(PsGetEffectiveServerSiloArgs{}),
+    "PsGetJobServerSilo": reflect.TypeOf(PsGetJobServerSiloArgs{}),
+    "PsGetJobSilo": reflect.TypeOf(PsGetJobSiloArgs{}),
+    "PsGetParentSilo": reflect.TypeOf(PsGetParentSiloArgs{}),
+    "PsGetPermanentSiloContext": reflect.TypeOf(PsGetPermanentSiloContextArgs{}),
+    "PsGetProcessCreateTimeQuadPart": reflect.TypeOf(PsGetProcessCreateTimeQuadPartArgs{}),
+    "PsGetProcessExitStatus": reflect.TypeOf(PsGetProcessExitStatusArgs{}),
+    "PsGetProcessId": reflect.TypeOf(PsGetProcessIdArgs{}),
+    "PsGetProcessStartKey": reflect.TypeOf(PsGetProcessStartKeyArgs{}),
+    "PsGetServerSiloActiveConsoleId": reflect.TypeOf(PsGetServerSiloActiveConsoleIdArgs{}),
+    "PsGetServerSiloServiceSessionId": reflect.TypeOf(PsGetServerSiloServiceSessionIdArgs{}),
+    "PsGetSiloContainerId": reflect.TypeOf(PsGetSiloContainerIdArgs{}),
+    "PsGetSiloContext": reflect.TypeOf(PsGetSiloContextArgs{}),
+    "PsGetSiloMonitorContextSlot": reflect.TypeOf(PsGetSiloMonitorContextSlotArgs{}),
+    "PsGetThreadCreateTime": reflect.TypeOf(PsGetThreadCreateTimeArgs{}),
+    "PsGetThreadExitStatus": reflect.TypeOf(PsGetThreadExitStatusArgs{}),
+    "PsGetThreadId": reflect.TypeOf(PsGetThreadIdArgs{}),
+    "PsGetThreadProcess": reflect.TypeOf(PsGetThreadProcessArgs{}),
+    "PsGetThreadProcessId": reflect.TypeOf(PsGetThreadProcessIdArgs{}),
+    "PsGetThreadProperty": reflect.TypeOf(PsGetThreadPropertyArgs{}),
+    "PsGetThreadServerSilo": reflect.TypeOf(PsGetThreadServerSiloArgs{}),
+    "PsGetVersion": reflect.TypeOf(PsGetVersionArgs{}),
+    "PsImpersonateClient": reflect.TypeOf(PsImpersonateClientArgs{}),
+    "PsInsertPermanentSiloContext": reflect.TypeOf(PsInsertPermanentSiloContextArgs{}),
+    "PsInsertSiloContext": reflect.TypeOf(PsInsertSiloContextArgs{}),
+    "PsIsHostSilo": reflect.TypeOf(PsIsHostSiloArgs{}),
+    "PsIsSystemThread": reflect.TypeOf(PsIsSystemThreadArgs{}),
+    "PsIsThreadAttachedToSpecificSilo": reflect.TypeOf(PsIsThreadAttachedToSpecificSiloArgs{}),
+    "PsIsThreadTerminating": reflect.TypeOf(PsIsThreadTerminatingArgs{}),
+    "PsLookupProcessByProcessId": reflect.TypeOf(PsLookupProcessByProcessIdArgs{}),
+    "PsLookupThreadByThreadId": reflect.TypeOf(PsLookupThreadByThreadIdArgs{}),
+    "PsMakeSiloContextPermanent": reflect.TypeOf(PsMakeSiloContextPermanentArgs{}),
+    "PsQueryProcessAvailableCpus": reflect.TypeOf(PsQueryProcessAvailableCpusArgs{}),
+    "PsQueryProcessAvailableCpusCount": reflect.TypeOf(PsQueryProcessAvailableCpusCountArgs{}),
+    "PsQuerySystemAvailableCpus": reflect.TypeOf(PsQuerySystemAvailableCpusArgs{}),
+    "PsQuerySystemAvailableCpusCount": reflect.TypeOf(PsQuerySystemAvailableCpusCountArgs{}),
+    "PsQueryTotalCycleTimeProcess": reflect.TypeOf(PsQueryTotalCycleTimeProcessArgs{}),
+    "PsReferenceImpersonationToken": reflect.TypeOf(PsReferenceImpersonationTokenArgs{}),
+    "PsReferencePrimaryToken": reflect.TypeOf(PsReferencePrimaryTokenArgs{}),
+    "PsReferenceSiloContext": reflect.TypeOf(PsReferenceSiloContextArgs{}),
+    "PsRegisterProcessAvailableCpusChangeNotification": reflect.TypeOf(PsRegisterProcessAvailableCpusChangeNotificationArgs{}),
+    "PsRegisterSiloMonitor": reflect.TypeOf(PsRegisterSiloMonitorArgs{}),
+    "PsRegisterSystemAvailableCpusChangeNotification": reflect.TypeOf(PsRegisterSystemAvailableCpusChangeNotificationArgs{}),
+    "PsReleaseSiloHardReference": reflect.TypeOf(PsReleaseSiloHardReferenceArgs{}),
+    "PsRemoveCreateThreadNotifyRoutine": reflect.TypeOf(PsRemoveCreateThreadNotifyRoutineArgs{}),
+    "PsRemoveLoadImageNotifyRoutine": reflect.TypeOf(PsRemoveLoadImageNotifyRoutineArgs{}),
+    "PsRemoveSiloContext": reflect.TypeOf(PsRemoveSiloContextArgs{}),
+    "PsReplaceSiloContext": reflect.TypeOf(PsReplaceSiloContextArgs{}),
+    "PsRestoreImpersonation": reflect.TypeOf(PsRestoreImpersonationArgs{}),
+    "PsReturnPoolQuota": reflect.TypeOf(PsReturnPoolQuotaArgs{}),
+    "PsRevertToUserMultipleGroupAffinityThread": reflect.TypeOf(PsRevertToUserMultipleGroupAffinityThreadArgs{}),
+    "PsSetCreateProcessNotifyRoutine": reflect.TypeOf(PsSetCreateProcessNotifyRoutineArgs{}),
+    "PsSetCreateProcessNotifyRoutineEx": reflect.TypeOf(PsSetCreateProcessNotifyRoutineExArgs{}),
+    "PsSetCreateProcessNotifyRoutineEx2": reflect.TypeOf(PsSetCreateProcessNotifyRoutineEx2Args{}),
+    "PsSetCreateThreadNotifyRoutine": reflect.TypeOf(PsSetCreateThreadNotifyRoutineArgs{}),
+    "PsSetCreateThreadNotifyRoutineEx": reflect.TypeOf(PsSetCreateThreadNotifyRoutineExArgs{}),
+    "PsSetCurrentThreadPrefetching": reflect.TypeOf(PsSetCurrentThreadPrefetchingArgs{}),
+    "PsSetLoadImageNotifyRoutine": reflect.TypeOf(PsSetLoadImageNotifyRoutineArgs{}),
+    "PsSetLoadImageNotifyRoutineEx": reflect.TypeOf(PsSetLoadImageNotifyRoutineExArgs{}),
+    "PsSetSystemMultipleGroupAffinityThread": reflect.TypeOf(PsSetSystemMultipleGroupAffinityThreadArgs{}),
+    "PsStartSiloMonitor": reflect.TypeOf(PsStartSiloMonitorArgs{}),
+    "PsTerminateServerSilo": reflect.TypeOf(PsTerminateServerSiloArgs{}),
+    "PsTerminateSystemThread": reflect.TypeOf(PsTerminateSystemThreadArgs{}),
+    "PsUnregisterAvailableCpusChangeNotification": reflect.TypeOf(PsUnregisterAvailableCpusChangeNotificationArgs{}),
+    "PsUnregisterSiloMonitor": reflect.TypeOf(PsUnregisterSiloMonitorArgs{}),
+    "PsUpdateDiskCounters": reflect.TypeOf(PsUpdateDiskCountersArgs{}),
+    "PsWrapApcWow64Thread": reflect.TypeOf(PsWrapApcWow64ThreadArgs{}),
+    "PshedAllocateMemory": reflect.TypeOf(PshedAllocateMemoryArgs{}),
+    "PshedFreeMemory": reflect.TypeOf(PshedFreeMemoryArgs{}),
+    "PshedRegisterPlugin": reflect.TypeOf(PshedRegisterPluginArgs{}),
+    "PshedSynchronizeExecution": reflect.TypeOf(PshedSynchronizeExecutionArgs{}),
+    "PshedUnregisterPlugin": reflect.TypeOf(PshedUnregisterPluginArgs{}),
+    "RtlAbsoluteToSelfRelativeSD": reflect.TypeOf(RtlAbsoluteToSelfRelativeSDArgs{}),
+    "RtlAddAccessAllowedAce": reflect.TypeOf(RtlAddAccessAllowedAceArgs{}),
+    "RtlAddAccessAllowedAceEx": reflect.TypeOf(RtlAddAccessAllowedAceExArgs{}),
+    "RtlAddAce": reflect.TypeOf(RtlAddAceArgs{}),
+    "RtlAllocateAndInitializeSid": reflect.TypeOf(RtlAllocateAndInitializeSidArgs{}),
+    "RtlAllocateAndInitializeSidEx": reflect.TypeOf(RtlAllocateAndInitializeSidExArgs{}),
+    "RtlAllocateHeap": reflect.TypeOf(RtlAllocateHeapArgs{}),
+    "RtlAnsiStringToUnicodeString": reflect.TypeOf(RtlAnsiStringToUnicodeStringArgs{}),
+    "RtlAppendStringToString": reflect.TypeOf(RtlAppendStringToStringArgs{}),
+    "RtlAppendUnicodeStringToString": reflect.TypeOf(RtlAppendUnicodeStringToStringArgs{}),
+    "RtlAppendUnicodeToString": reflect.TypeOf(RtlAppendUnicodeToStringArgs{}),
+    "RtlAreBitsClear": reflect.TypeOf(RtlAreBitsClearArgs{}),
+    "RtlAreBitsSet": reflect.TypeOf(RtlAreBitsSetArgs{}),
+    "RtlAssert": reflect.TypeOf(RtlAssertArgs{}),
+    "RtlCaptureContext": reflect.TypeOf(RtlCaptureContextArgs{}),
+    "RtlCaptureContext2": reflect.TypeOf(RtlCaptureContext2Args{}),
+    "RtlCaptureStackBackTrace": reflect.TypeOf(RtlCaptureStackBackTraceArgs{}),
+    "RtlCharToInteger": reflect.TypeOf(RtlCharToIntegerArgs{}),
+    "RtlCheckRegistryKey": reflect.TypeOf(RtlCheckRegistryKeyArgs{}),
+    "RtlClearAllBits": reflect.TypeOf(RtlClearAllBitsArgs{}),
+    "RtlClearBit": reflect.TypeOf(RtlClearBitArgs{}),
+    "RtlClearBits": reflect.TypeOf(RtlClearBitsArgs{}),
+    "RtlCmDecodeMemIoResource": reflect.TypeOf(RtlCmDecodeMemIoResourceArgs{}),
+    "RtlCmEncodeMemIoResource": reflect.TypeOf(RtlCmEncodeMemIoResourceArgs{}),
+    "RtlCompareAltitudes": reflect.TypeOf(RtlCompareAltitudesArgs{}),
+    "RtlCompareMemory": reflect.TypeOf(RtlCompareMemoryArgs{}),
+    "RtlCompareMemoryUlong": reflect.TypeOf(RtlCompareMemoryUlongArgs{}),
+    "RtlCompareString": reflect.TypeOf(RtlCompareStringArgs{}),
+    "RtlCompareUnicodeString": reflect.TypeOf(RtlCompareUnicodeStringArgs{}),
+    "RtlCompareUnicodeStrings": reflect.TypeOf(RtlCompareUnicodeStringsArgs{}),
+    "RtlCompressBuffer": reflect.TypeOf(RtlCompressBufferArgs{}),
+    "RtlCompressChunks": reflect.TypeOf(RtlCompressChunksArgs{}),
+    "RtlContractHashTable": reflect.TypeOf(RtlContractHashTableArgs{}),
+    "RtlConvertSidToUnicodeString": reflect.TypeOf(RtlConvertSidToUnicodeStringArgs{}),
+    "RtlCopyBitMap": reflect.TypeOf(RtlCopyBitMapArgs{}),
+    "RtlCopyDeviceMemory": reflect.TypeOf(RtlCopyDeviceMemoryArgs{}),
+    "RtlCopyLuid": reflect.TypeOf(RtlCopyLuidArgs{}),
+    "RtlCopyMemoryNonTemporal": reflect.TypeOf(RtlCopyMemoryNonTemporalArgs{}),
+    "RtlCopySid": reflect.TypeOf(RtlCopySidArgs{}),
+    "RtlCopyString": reflect.TypeOf(RtlCopyStringArgs{}),
+    "RtlCopyUnicodeString": reflect.TypeOf(RtlCopyUnicodeStringArgs{}),
+    "RtlCopyVolatileMemory": reflect.TypeOf(RtlCopyVolatileMemoryArgs{}),
+    "RtlCrc32": reflect.TypeOf(RtlCrc32Args{}),
+    "RtlCrc64": reflect.TypeOf(RtlCrc64Args{}),
+    "RtlCreateAcl": reflect.TypeOf(RtlCreateAclArgs{}),
+    "RtlCreateHashTable": reflect.TypeOf(RtlCreateHashTableArgs{}),
+    "RtlCreateHashTableEx": reflect.TypeOf(RtlCreateHashTableExArgs{}),
+    "RtlCreateHeap": reflect.TypeOf(RtlCreateHeapArgs{}),
+    "RtlCreateRegistryKey": reflect.TypeOf(RtlCreateRegistryKeyArgs{}),
+    "RtlCreateSecurityDescriptor": reflect.TypeOf(RtlCreateSecurityDescriptorArgs{}),
+    "RtlCreateSecurityDescriptorRelative": reflect.TypeOf(RtlCreateSecurityDescriptorRelativeArgs{}),
+    "RtlCreateServiceSid": reflect.TypeOf(RtlCreateServiceSidArgs{}),
+    "RtlCreateSystemVolumeInformationFolder": reflect.TypeOf(RtlCreateSystemVolumeInformationFolderArgs{}),
+    "RtlCreateUnicodeString": reflect.TypeOf(RtlCreateUnicodeStringArgs{}),
+    "RtlCreateVirtualAccountSid": reflect.TypeOf(RtlCreateVirtualAccountSidArgs{}),
+    "RtlCustomCPToUnicodeN": reflect.TypeOf(RtlCustomCPToUnicodeNArgs{}),
+    "RtlDecompressBuffer": reflect.TypeOf(RtlDecompressBufferArgs{}),
+    "RtlDecompressBufferEx": reflect.TypeOf(RtlDecompressBufferExArgs{}),
+    "RtlDecompressBufferEx2": reflect.TypeOf(RtlDecompressBufferEx2Args{}),
+    "RtlDecompressChunks": reflect.TypeOf(RtlDecompressChunksArgs{}),
+    "RtlDecompressFragment": reflect.TypeOf(RtlDecompressFragmentArgs{}),
+    "RtlDecompressFragmentEx": reflect.TypeOf(RtlDecompressFragmentExArgs{}),
+    "RtlDelete": reflect.TypeOf(RtlDeleteArgs{}),
+    "RtlDeleteAce": reflect.TypeOf(RtlDeleteAceArgs{}),
+    "RtlDeleteElementGenericTable": reflect.TypeOf(RtlDeleteElementGenericTableArgs{}),
+    "RtlDeleteElementGenericTableAvl": reflect.TypeOf(RtlDeleteElementGenericTableAvlArgs{}),
+    "RtlDeleteElementGenericTableAvlEx": reflect.TypeOf(RtlDeleteElementGenericTableAvlExArgs{}),
+    "RtlDeleteHashTable": reflect.TypeOf(RtlDeleteHashTableArgs{}),
+    "RtlDeleteNoSplay": reflect.TypeOf(RtlDeleteNoSplayArgs{}),
+    "RtlDeleteRegistryValue": reflect.TypeOf(RtlDeleteRegistryValueArgs{}),
+    "RtlDescribeChunk": reflect.TypeOf(RtlDescribeChunkArgs{}),
+    "RtlDestroyHeap": reflect.TypeOf(RtlDestroyHeapArgs{}),
+    "RtlDowncaseUnicodeChar": reflect.TypeOf(RtlDowncaseUnicodeCharArgs{}),
+    "RtlDowncaseUnicodeString": reflect.TypeOf(RtlDowncaseUnicodeStringArgs{}),
+    "RtlDrainNonVolatileFlush": reflect.TypeOf(RtlDrainNonVolatileFlushArgs{}),
+    "RtlDuplicateUnicodeString": reflect.TypeOf(RtlDuplicateUnicodeStringArgs{}),
+    "RtlEndEnumerationHashTable": reflect.TypeOf(RtlEndEnumerationHashTableArgs{}),
+    "RtlEndStrongEnumerationHashTable": reflect.TypeOf(RtlEndStrongEnumerationHashTableArgs{}),
+    "RtlEndWeakEnumerationHashTable": reflect.TypeOf(RtlEndWeakEnumerationHashTableArgs{}),
+    "RtlEnumerateEntryHashTable": reflect.TypeOf(RtlEnumerateEntryHashTableArgs{}),
+    "RtlEnumerateGenericTable": reflect.TypeOf(RtlEnumerateGenericTableArgs{}),
+    "RtlEnumerateGenericTableAvl": reflect.TypeOf(RtlEnumerateGenericTableAvlArgs{}),
+    "RtlEnumerateGenericTableLikeADirectory": reflect.TypeOf(RtlEnumerateGenericTableLikeADirectoryArgs{}),
+    "RtlEnumerateGenericTableWithoutSplaying": reflect.TypeOf(RtlEnumerateGenericTableWithoutSplayingArgs{}),
+    "RtlEnumerateGenericTableWithoutSplayingAvl": reflect.TypeOf(RtlEnumerateGenericTableWithoutSplayingAvlArgs{}),
+    "RtlEqualPrefixSid": reflect.TypeOf(RtlEqualPrefixSidArgs{}),
+    "RtlEqualSid": reflect.TypeOf(RtlEqualSidArgs{}),
+    "RtlEqualString": reflect.TypeOf(RtlEqualStringArgs{}),
+    "RtlEqualUnicodeString": reflect.TypeOf(RtlEqualUnicodeStringArgs{}),
+    "RtlExpandHashTable": reflect.TypeOf(RtlExpandHashTableArgs{}),
+    "RtlExtendCorrelationVector": reflect.TypeOf(RtlExtendCorrelationVectorArgs{}),
+    "RtlExtractBitMap": reflect.TypeOf(RtlExtractBitMapArgs{}),
+    "RtlFillMemoryNonTemporal": reflect.TypeOf(RtlFillMemoryNonTemporalArgs{}),
+    "RtlFillNonVolatileMemory": reflect.TypeOf(RtlFillNonVolatileMemoryArgs{}),
+    "RtlFindClearBits": reflect.TypeOf(RtlFindClearBitsArgs{}),
+    "RtlFindClearBitsAndSet": reflect.TypeOf(RtlFindClearBitsAndSetArgs{}),
+    "RtlFindClearRuns": reflect.TypeOf(RtlFindClearRunsArgs{}),
+    "RtlFindClosestEncodableLength": reflect.TypeOf(RtlFindClosestEncodableLengthArgs{}),
+    "RtlFindFirstRunClear": reflect.TypeOf(RtlFindFirstRunClearArgs{}),
+    "RtlFindLastBackwardRunClear": reflect.TypeOf(RtlFindLastBackwardRunClearArgs{}),
+    "RtlFindLeastSignificantBit": reflect.TypeOf(RtlFindLeastSignificantBitArgs{}),
+    "RtlFindLongestRunClear": reflect.TypeOf(RtlFindLongestRunClearArgs{}),
+    "RtlFindMostSignificantBit": reflect.TypeOf(RtlFindMostSignificantBitArgs{}),
+    "RtlFindNextForwardRunClear": reflect.TypeOf(RtlFindNextForwardRunClearArgs{}),
+    "RtlFindSetBits": reflect.TypeOf(RtlFindSetBitsArgs{}),
+    "RtlFindSetBitsAndClear": reflect.TypeOf(RtlFindSetBitsAndClearArgs{}),
+    "RtlFindUnicodePrefix": reflect.TypeOf(RtlFindUnicodePrefixArgs{}),
+    "RtlFlushNonVolatileMemory": reflect.TypeOf(RtlFlushNonVolatileMemoryArgs{}),
+    "RtlFlushNonVolatileMemoryRanges": reflect.TypeOf(RtlFlushNonVolatileMemoryRangesArgs{}),
+    "RtlFreeAnsiString": reflect.TypeOf(RtlFreeAnsiStringArgs{}),
+    "RtlFreeHeap": reflect.TypeOf(RtlFreeHeapArgs{}),
+    "RtlFreeNonVolatileToken": reflect.TypeOf(RtlFreeNonVolatileTokenArgs{}),
+    "RtlFreeOemString": reflect.TypeOf(RtlFreeOemStringArgs{}),
+    "RtlFreeSid": reflect.TypeOf(RtlFreeSidArgs{}),
+    "RtlFreeUTF8String": reflect.TypeOf(RtlFreeUTF8StringArgs{}),
+    "RtlFreeUnicodeString": reflect.TypeOf(RtlFreeUnicodeStringArgs{}),
+    "RtlGUIDFromString": reflect.TypeOf(RtlGUIDFromStringArgs{}),
+    "RtlGenerate8dot3Name": reflect.TypeOf(RtlGenerate8dot3NameArgs{}),
+    "RtlGenerateClass5Guid": reflect.TypeOf(RtlGenerateClass5GuidArgs{}),
+    "RtlGetAce": reflect.TypeOf(RtlGetAceArgs{}),
+    "RtlGetAcesBufferSize": reflect.TypeOf(RtlGetAcesBufferSizeArgs{}),
+    "RtlGetCallersAddress": reflect.TypeOf(RtlGetCallersAddressArgs{}),
+    "RtlGetCompressionWorkSpaceSize": reflect.TypeOf(RtlGetCompressionWorkSpaceSizeArgs{}),
+    "RtlGetDaclSecurityDescriptor": reflect.TypeOf(RtlGetDaclSecurityDescriptorArgs{}),
+    "RtlGetElementGenericTable": reflect.TypeOf(RtlGetElementGenericTableArgs{}),
+    "RtlGetElementGenericTableAvl": reflect.TypeOf(RtlGetElementGenericTableAvlArgs{}),
+    "RtlGetEnabledExtendedFeatures": reflect.TypeOf(RtlGetEnabledExtendedFeaturesArgs{}),
+    "RtlGetGroupSecurityDescriptor": reflect.TypeOf(RtlGetGroupSecurityDescriptorArgs{}),
+    "RtlGetNextEntryHashTable": reflect.TypeOf(RtlGetNextEntryHashTableArgs{}),
+    "RtlGetNonVolatileToken": reflect.TypeOf(RtlGetNonVolatileTokenArgs{}),
+    "RtlGetNtProductType": reflect.TypeOf(RtlGetNtProductTypeArgs{}),
+    "RtlGetOwnerSecurityDescriptor": reflect.TypeOf(RtlGetOwnerSecurityDescriptorArgs{}),
+    "RtlGetPersistedStateLocation": reflect.TypeOf(RtlGetPersistedStateLocationArgs{}),
+    "RtlGetProductInfo": reflect.TypeOf(RtlGetProductInfoArgs{}),
+    "RtlGetSaclSecurityDescriptor": reflect.TypeOf(RtlGetSaclSecurityDescriptorArgs{}),
+    "RtlGetSystemGlobalData": reflect.TypeOf(RtlGetSystemGlobalDataArgs{}),
+    "RtlGetVersion": reflect.TypeOf(RtlGetVersionArgs{}),
+    "RtlHashUnicodeString": reflect.TypeOf(RtlHashUnicodeStringArgs{}),
+    "RtlIdentifierAuthoritySid": reflect.TypeOf(RtlIdentifierAuthoritySidArgs{}),
+    "RtlIdnToAscii": reflect.TypeOf(RtlIdnToAsciiArgs{}),
+    "RtlIdnToNameprepUnicode": reflect.TypeOf(RtlIdnToNameprepUnicodeArgs{}),
+    "RtlIdnToUnicode": reflect.TypeOf(RtlIdnToUnicodeArgs{}),
+    "RtlIncrementCorrelationVector": reflect.TypeOf(RtlIncrementCorrelationVectorArgs{}),
+    "RtlInitAnsiString": reflect.TypeOf(RtlInitAnsiStringArgs{}),
+    "RtlInitAnsiStringEx": reflect.TypeOf(RtlInitAnsiStringExArgs{}),
+    "RtlInitCodePageTable": reflect.TypeOf(RtlInitCodePageTableArgs{}),
+    "RtlInitEnumerationHashTable": reflect.TypeOf(RtlInitEnumerationHashTableArgs{}),
+    "RtlInitString": reflect.TypeOf(RtlInitStringArgs{}),
+    "RtlInitStringEx": reflect.TypeOf(RtlInitStringExArgs{}),
+    "RtlInitStrongEnumerationHashTable": reflect.TypeOf(RtlInitStrongEnumerationHashTableArgs{}),
+    "RtlInitUTF8String": reflect.TypeOf(RtlInitUTF8StringArgs{}),
+    "RtlInitUTF8StringEx": reflect.TypeOf(RtlInitUTF8StringExArgs{}),
+    "RtlInitUnicodeString": reflect.TypeOf(RtlInitUnicodeStringArgs{}),
+    "RtlInitUnicodeStringEx": reflect.TypeOf(RtlInitUnicodeStringExArgs{}),
+    "RtlInitWeakEnumerationHashTable": reflect.TypeOf(RtlInitWeakEnumerationHashTableArgs{}),
+    "RtlInitializeBitMap": reflect.TypeOf(RtlInitializeBitMapArgs{}),
+    "RtlInitializeCorrelationVector": reflect.TypeOf(RtlInitializeCorrelationVectorArgs{}),
+    "RtlInitializeGenericTable": reflect.TypeOf(RtlInitializeGenericTableArgs{}),
+    "RtlInitializeGenericTableAvl": reflect.TypeOf(RtlInitializeGenericTableAvlArgs{}),
+    "RtlInitializeSid": reflect.TypeOf(RtlInitializeSidArgs{}),
+    "RtlInitializeSidEx": reflect.TypeOf(RtlInitializeSidExArgs{}),
+    "RtlInitializeUnicodePrefix": reflect.TypeOf(RtlInitializeUnicodePrefixArgs{}),
+    "RtlInsertElementGenericTable": reflect.TypeOf(RtlInsertElementGenericTableArgs{}),
+    "RtlInsertElementGenericTableAvl": reflect.TypeOf(RtlInsertElementGenericTableAvlArgs{}),
+    "RtlInsertElementGenericTableFull": reflect.TypeOf(RtlInsertElementGenericTableFullArgs{}),
+    "RtlInsertElementGenericTableFullAvl": reflect.TypeOf(RtlInsertElementGenericTableFullAvlArgs{}),
+    "RtlInsertEntryHashTable": reflect.TypeOf(RtlInsertEntryHashTableArgs{}),
+    "RtlInsertUnicodePrefix": reflect.TypeOf(RtlInsertUnicodePrefixArgs{}),
+    "RtlInt64ToUnicodeString": reflect.TypeOf(RtlInt64ToUnicodeStringArgs{}),
+    "RtlIntegerToUnicodeString": reflect.TypeOf(RtlIntegerToUnicodeStringArgs{}),
+    "RtlIoDecodeMemIoResource": reflect.TypeOf(RtlIoDecodeMemIoResourceArgs{}),
+    "RtlIoEncodeMemIoResource": reflect.TypeOf(RtlIoEncodeMemIoResourceArgs{}),
+    "RtlIsApiSetImplemented": reflect.TypeOf(RtlIsApiSetImplementedArgs{}),
+    "RtlIsCloudFilesPlaceholder": reflect.TypeOf(RtlIsCloudFilesPlaceholderArgs{}),
+    "RtlIsGenericTableEmpty": reflect.TypeOf(RtlIsGenericTableEmptyArgs{}),
+    "RtlIsGenericTableEmptyAvl": reflect.TypeOf(RtlIsGenericTableEmptyAvlArgs{}),
+    "RtlIsNameLegalDOS8Dot3": reflect.TypeOf(RtlIsNameLegalDOS8Dot3Args{}),
+    "RtlIsNonEmptyDirectoryReparsePointAllowed": reflect.TypeOf(RtlIsNonEmptyDirectoryReparsePointAllowedArgs{}),
+    "RtlIsNormalizedString": reflect.TypeOf(RtlIsNormalizedStringArgs{}),
+    "RtlIsNtDdiVersionAvailable": reflect.TypeOf(RtlIsNtDdiVersionAvailableArgs{}),
+    "RtlIsPartialPlaceholder": reflect.TypeOf(RtlIsPartialPlaceholderArgs{}),
+    "RtlIsPartialPlaceholderFileHandle": reflect.TypeOf(RtlIsPartialPlaceholderFileHandleArgs{}),
+    "RtlIsPartialPlaceholderFileInfo": reflect.TypeOf(RtlIsPartialPlaceholderFileInfoArgs{}),
+    "RtlIsSandboxedToken": reflect.TypeOf(RtlIsSandboxedTokenArgs{}),
+    "RtlIsSandboxedTokenHandle": reflect.TypeOf(RtlIsSandboxedTokenHandleArgs{}),
+    "RtlIsServicePackVersionInstalled": reflect.TypeOf(RtlIsServicePackVersionInstalledArgs{}),
+    "RtlIsUntrustedObject": reflect.TypeOf(RtlIsUntrustedObjectArgs{}),
+    "RtlIsValidOemCharacter": reflect.TypeOf(RtlIsValidOemCharacterArgs{}),
+    "RtlIsZeroMemory": reflect.TypeOf(RtlIsZeroMemoryArgs{}),
+    "RtlLengthRequiredSid": reflect.TypeOf(RtlLengthRequiredSidArgs{}),
+    "RtlLengthSecurityDescriptor": reflect.TypeOf(RtlLengthSecurityDescriptorArgs{}),
+    "RtlLengthSid": reflect.TypeOf(RtlLengthSidArgs{}),
+    "RtlLookupElementGenericTable": reflect.TypeOf(RtlLookupElementGenericTableArgs{}),
+    "RtlLookupElementGenericTableAvl": reflect.TypeOf(RtlLookupElementGenericTableAvlArgs{}),
+    "RtlLookupElementGenericTableFull": reflect.TypeOf(RtlLookupElementGenericTableFullArgs{}),
+    "RtlLookupElementGenericTableFullAvl": reflect.TypeOf(RtlLookupElementGenericTableFullAvlArgs{}),
+    "RtlLookupEntryHashTable": reflect.TypeOf(RtlLookupEntryHashTableArgs{}),
+    "RtlLookupFirstMatchingElementGenericTableAvl": reflect.TypeOf(RtlLookupFirstMatchingElementGenericTableAvlArgs{}),
+    "RtlMapGenericMask": reflect.TypeOf(RtlMapGenericMaskArgs{}),
+    "RtlMoveVolatileMemory": reflect.TypeOf(RtlMoveVolatileMemoryArgs{}),
+    "RtlMultiByteToUnicodeN": reflect.TypeOf(RtlMultiByteToUnicodeNArgs{}),
+    "RtlMultiByteToUnicodeSize": reflect.TypeOf(RtlMultiByteToUnicodeSizeArgs{}),
+    "RtlNextUnicodePrefix": reflect.TypeOf(RtlNextUnicodePrefixArgs{}),
+    "RtlNormalizeSecurityDescriptor": reflect.TypeOf(RtlNormalizeSecurityDescriptorArgs{}),
+    "RtlNormalizeString": reflect.TypeOf(RtlNormalizeStringArgs{}),
+    "RtlNtStatusToDosError": reflect.TypeOf(RtlNtStatusToDosErrorArgs{}),
+    "RtlNtStatusToDosErrorNoTeb": reflect.TypeOf(RtlNtStatusToDosErrorNoTebArgs{}),
+    "RtlNumberGenericTableElements": reflect.TypeOf(RtlNumberGenericTableElementsArgs{}),
+    "RtlNumberGenericTableElementsAvl": reflect.TypeOf(RtlNumberGenericTableElementsAvlArgs{}),
+    "RtlNumberOfClearBits": reflect.TypeOf(RtlNumberOfClearBitsArgs{}),
+    "RtlNumberOfClearBitsInRange": reflect.TypeOf(RtlNumberOfClearBitsInRangeArgs{}),
+    "RtlNumberOfSetBits": reflect.TypeOf(RtlNumberOfSetBitsArgs{}),
+    "RtlNumberOfSetBitsInRange": reflect.TypeOf(RtlNumberOfSetBitsInRangeArgs{}),
+    "RtlNumberOfSetBitsUlongPtr": reflect.TypeOf(RtlNumberOfSetBitsUlongPtrArgs{}),
+    "RtlOemStringToCountedUnicodeString": reflect.TypeOf(RtlOemStringToCountedUnicodeStringArgs{}),
+    "RtlOemStringToUnicodeString": reflect.TypeOf(RtlOemStringToUnicodeStringArgs{}),
+    "RtlOemToUnicodeN": reflect.TypeOf(RtlOemToUnicodeNArgs{}),
+    "RtlOsDeploymentState": reflect.TypeOf(RtlOsDeploymentStateArgs{}),
+    "RtlPrefetchMemoryNonTemporal": reflect.TypeOf(RtlPrefetchMemoryNonTemporalArgs{}),
+    "RtlPrefixString": reflect.TypeOf(RtlPrefixStringArgs{}),
+    "RtlPrefixUnicodeString": reflect.TypeOf(RtlPrefixUnicodeStringArgs{}),
+    "RtlQueryPackageIdentity": reflect.TypeOf(RtlQueryPackageIdentityArgs{}),
+    "RtlQueryPackageIdentityEx": reflect.TypeOf(RtlQueryPackageIdentityExArgs{}),
+    "RtlQueryRegistryValueWithFallback": reflect.TypeOf(RtlQueryRegistryValueWithFallbackArgs{}),
+    "RtlQueryRegistryValues": reflect.TypeOf(RtlQueryRegistryValuesArgs{}),
+    "RtlQueryValidationRunlevel": reflect.TypeOf(RtlQueryValidationRunlevelArgs{}),
+    "RtlRaiseCustomSystemEventTrigger": reflect.TypeOf(RtlRaiseCustomSystemEventTriggerArgs{}),
+    "RtlRandom": reflect.TypeOf(RtlRandomArgs{}),
+    "RtlRandomEx": reflect.TypeOf(RtlRandomExArgs{}),
+    "RtlRealPredecessor": reflect.TypeOf(RtlRealPredecessorArgs{}),
+    "RtlRealSuccessor": reflect.TypeOf(RtlRealSuccessorArgs{}),
+    "RtlRemoveEntryHashTable": reflect.TypeOf(RtlRemoveEntryHashTableArgs{}),
+    "RtlRemoveUnicodePrefix": reflect.TypeOf(RtlRemoveUnicodePrefixArgs{}),
+    "RtlReplaceSidInSd": reflect.TypeOf(RtlReplaceSidInSdArgs{}),
+    "RtlReserveChunk": reflect.TypeOf(RtlReserveChunkArgs{}),
+    "RtlRunOnceBeginInitialize": reflect.TypeOf(RtlRunOnceBeginInitializeArgs{}),
+    "RtlRunOnceComplete": reflect.TypeOf(RtlRunOnceCompleteArgs{}),
+    "RtlRunOnceExecuteOnce": reflect.TypeOf(RtlRunOnceExecuteOnceArgs{}),
+    "RtlRunOnceInitialize": reflect.TypeOf(RtlRunOnceInitializeArgs{}),
+    "RtlSecondsSince1970ToTime": reflect.TypeOf(RtlSecondsSince1970ToTimeArgs{}),
+    "RtlSecondsSince1980ToTime": reflect.TypeOf(RtlSecondsSince1980ToTimeArgs{}),
+    "RtlSelfRelativeToAbsoluteSD": reflect.TypeOf(RtlSelfRelativeToAbsoluteSDArgs{}),
+    "RtlSetAllBits": reflect.TypeOf(RtlSetAllBitsArgs{}),
+    "RtlSetBit": reflect.TypeOf(RtlSetBitArgs{}),
+    "RtlSetBits": reflect.TypeOf(RtlSetBitsArgs{}),
+    "RtlSetDaclSecurityDescriptor": reflect.TypeOf(RtlSetDaclSecurityDescriptorArgs{}),
+    "RtlSetGroupSecurityDescriptor": reflect.TypeOf(RtlSetGroupSecurityDescriptorArgs{}),
+    "RtlSetOwnerSecurityDescriptor": reflect.TypeOf(RtlSetOwnerSecurityDescriptorArgs{}),
+    "RtlSetProcessPlaceholderCompatibilityMode": reflect.TypeOf(RtlSetProcessPlaceholderCompatibilityModeArgs{}),
+    "RtlSetSystemGlobalData": reflect.TypeOf(RtlSetSystemGlobalDataArgs{}),
+    "RtlSetThreadPlaceholderCompatibilityMode": reflect.TypeOf(RtlSetThreadPlaceholderCompatibilityModeArgs{}),
+    "RtlSetVolatileMemory": reflect.TypeOf(RtlSetVolatileMemoryArgs{}),
+    "RtlSplay": reflect.TypeOf(RtlSplayArgs{}),
+    "RtlStringFromGUID": reflect.TypeOf(RtlStringFromGUIDArgs{}),
+    "RtlStronglyEnumerateEntryHashTable": reflect.TypeOf(RtlStronglyEnumerateEntryHashTableArgs{}),
+    "RtlSubAuthorityCountSid": reflect.TypeOf(RtlSubAuthorityCountSidArgs{}),
+    "RtlSubAuthoritySid": reflect.TypeOf(RtlSubAuthoritySidArgs{}),
+    "RtlSubtreePredecessor": reflect.TypeOf(RtlSubtreePredecessorArgs{}),
+    "RtlSubtreeSuccessor": reflect.TypeOf(RtlSubtreeSuccessorArgs{}),
+    "RtlSuffixUnicodeString": reflect.TypeOf(RtlSuffixUnicodeStringArgs{}),
+    "RtlTestBit": reflect.TypeOf(RtlTestBitArgs{}),
+    "RtlTimeFieldsToTime": reflect.TypeOf(RtlTimeFieldsToTimeArgs{}),
+    "RtlTimeToSecondsSince1970": reflect.TypeOf(RtlTimeToSecondsSince1970Args{}),
+    "RtlTimeToSecondsSince1980": reflect.TypeOf(RtlTimeToSecondsSince1980Args{}),
+    "RtlTimeToTimeFields": reflect.TypeOf(RtlTimeToTimeFieldsArgs{}),
+    "RtlUTF8StringToUnicodeString": reflect.TypeOf(RtlUTF8StringToUnicodeStringArgs{}),
+    "RtlUTF8ToUnicodeN": reflect.TypeOf(RtlUTF8ToUnicodeNArgs{}),
+    "RtlUnicodeStringToAnsiString": reflect.TypeOf(RtlUnicodeStringToAnsiStringArgs{}),
+    "RtlUnicodeStringToCountedOemString": reflect.TypeOf(RtlUnicodeStringToCountedOemStringArgs{}),
+    "RtlUnicodeStringToInt64": reflect.TypeOf(RtlUnicodeStringToInt64Args{}),
+    "RtlUnicodeStringToInteger": reflect.TypeOf(RtlUnicodeStringToIntegerArgs{}),
+    "RtlUnicodeStringToOemString": reflect.TypeOf(RtlUnicodeStringToOemStringArgs{}),
+    "RtlUnicodeStringToUTF8String": reflect.TypeOf(RtlUnicodeStringToUTF8StringArgs{}),
+    "RtlUnicodeToCustomCPN": reflect.TypeOf(RtlUnicodeToCustomCPNArgs{}),
+    "RtlUnicodeToMultiByteN": reflect.TypeOf(RtlUnicodeToMultiByteNArgs{}),
+    "RtlUnicodeToMultiByteSize": reflect.TypeOf(RtlUnicodeToMultiByteSizeArgs{}),
+    "RtlUnicodeToOemN": reflect.TypeOf(RtlUnicodeToOemNArgs{}),
+    "RtlUnicodeToUTF8N": reflect.TypeOf(RtlUnicodeToUTF8NArgs{}),
+    "RtlUpcaseUnicodeChar": reflect.TypeOf(RtlUpcaseUnicodeCharArgs{}),
+    "RtlUpcaseUnicodeString": reflect.TypeOf(RtlUpcaseUnicodeStringArgs{}),
+    "RtlUpcaseUnicodeStringToCountedOemString": reflect.TypeOf(RtlUpcaseUnicodeStringToCountedOemStringArgs{}),
+    "RtlUpcaseUnicodeStringToOemString": reflect.TypeOf(RtlUpcaseUnicodeStringToOemStringArgs{}),
+    "RtlUpcaseUnicodeToCustomCPN": reflect.TypeOf(RtlUpcaseUnicodeToCustomCPNArgs{}),
+    "RtlUpcaseUnicodeToMultiByteN": reflect.TypeOf(RtlUpcaseUnicodeToMultiByteNArgs{}),
+    "RtlUpcaseUnicodeToOemN": reflect.TypeOf(RtlUpcaseUnicodeToOemNArgs{}),
+    "RtlUpperChar": reflect.TypeOf(RtlUpperCharArgs{}),
+    "RtlUpperString": reflect.TypeOf(RtlUpperStringArgs{}),
+    "RtlValidRelativeSecurityDescriptor": reflect.TypeOf(RtlValidRelativeSecurityDescriptorArgs{}),
+    "RtlValidSecurityDescriptor": reflect.TypeOf(RtlValidSecurityDescriptorArgs{}),
+    "RtlValidSid": reflect.TypeOf(RtlValidSidArgs{}),
+    "RtlValidateCorrelationVector": reflect.TypeOf(RtlValidateCorrelationVectorArgs{}),
+    "RtlValidateUnicodeString": reflect.TypeOf(RtlValidateUnicodeStringArgs{}),
+    "RtlVerifyVersionInfo": reflect.TypeOf(RtlVerifyVersionInfoArgs{}),
+    "RtlVolumeDeviceToDosName": reflect.TypeOf(RtlVolumeDeviceToDosNameArgs{}),
+    "RtlWalkFrameChain": reflect.TypeOf(RtlWalkFrameChainArgs{}),
+    "RtlWeaklyEnumerateEntryHashTable": reflect.TypeOf(RtlWeaklyEnumerateEntryHashTableArgs{}),
+    "RtlWriteNonVolatileMemory": reflect.TypeOf(RtlWriteNonVolatileMemoryArgs{}),
+    "RtlWriteRegistryValue": reflect.TypeOf(RtlWriteRegistryValueArgs{}),
+    "RtlxAnsiStringToUnicodeSize": reflect.TypeOf(RtlxAnsiStringToUnicodeSizeArgs{}),
+    "RtlxOemStringToUnicodeSize": reflect.TypeOf(RtlxOemStringToUnicodeSizeArgs{}),
+    "RtlxUnicodeStringToAnsiSize": reflect.TypeOf(RtlxUnicodeStringToAnsiSizeArgs{}),
+    "RtlxUnicodeStringToOemSize": reflect.TypeOf(RtlxUnicodeStringToOemSizeArgs{}),
 }
 
 func GetHookInfo(name string) *HookInfo {

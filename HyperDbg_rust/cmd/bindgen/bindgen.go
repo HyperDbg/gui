@@ -1497,6 +1497,7 @@ func (b *Bindgen) generateGoHookDb(outputPath string, hooks []HookEntry) error {
 	sb.WriteString("import (\n")
 	sb.WriteString("    \"encoding/json\"\n")
 	sb.WriteString("    \"fmt\"\n")
+	sb.WriteString("    \"reflect\"\n")
 	sb.WriteString("    \"strings\"\n")
 	sb.WriteString(")\n\n")
 
@@ -1666,6 +1667,33 @@ func (b *Bindgen) generateGoHookDb(outputPath string, hooks []HookEntry) error {
 		sb.WriteString(fmt.Sprintf("        ReturnType: \"%s\",\n", h.ReturnType))
 		sb.WriteString(fmt.Sprintf("        GoType: \"%s\",\n", goReturnType))
 		sb.WriteString("    },\n")
+	}
+	sb.WriteString("}\n\n")
+
+	sb.WriteString("// Auto-generated Args structs for each API\n")
+	for _, h := range hooks {
+		if len(h.ParamList) == 0 {
+			continue
+		}
+		sb.WriteString(fmt.Sprintf("type %sArgs struct {\n", h.Name))
+		for _, p := range h.ParamList {
+			if p.Name == "" || p.Type == "..." {
+				continue
+			}
+			goType := rustTypeToGo(p.Type)
+			fieldName := strings.Title(p.Name)
+			sb.WriteString(fmt.Sprintf("    %s %s `json:\"%s\"`\n", fieldName, goType, p.Name))
+		}
+		sb.WriteString("}\n\n")
+	}
+
+	sb.WriteString("// ArgsRegistry maps API names to their Args struct types\n")
+	sb.WriteString("var ArgsRegistry = map[string]reflect.Type{\n")
+	for _, h := range hooks {
+		if len(h.ParamList) == 0 {
+			continue
+		}
+		sb.WriteString(fmt.Sprintf("    \"%s\": reflect.TypeOf(%sArgs{}),\n", h.Name, h.Name))
 	}
 	sb.WriteString("}\n\n")
 

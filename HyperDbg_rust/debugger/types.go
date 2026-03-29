@@ -26,6 +26,7 @@ const (
 	MsgTypeDebugPrintEvent   MessageType = 8
 	MsgTypeVmxExitEvent      MessageType = 9
 	MsgTypeLogEvent          MessageType = 10
+	MsgTypeHookEvent         MessageType = 11
 
 	MsgTypeInitialize        MessageType = 100
 	MsgTypeTerminate         MessageType = 101
@@ -54,8 +55,9 @@ const (
 	MsgTypeGetModuleList     MessageType = 124
 	MsgTypeGetCallStack      MessageType = 125
 
-	MsgTypeResponse MessageType = 200
-	MsgTypeError    MessageType = 201
+	MsgTypeResponse     MessageType = 200
+	MsgTypeError        MessageType = 201
+	MsgTypeHookResponse MessageType = 202
 )
 
 type DebugState uint32
