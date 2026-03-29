@@ -547,6 +547,9 @@ func (b *Bindgen) typesCompatible(rustType, wdkType string) bool {
 }
 
 func (b *Bindgen) isWdkPrefix(name string) bool {
+	if strings.HasPrefix(name, "_") {
+		return false
+	}
 	for _, prefix := range []string{"Ps", "Mm", "Io", "Ex", "Ob", "Ke", "Rtl", "Nt", "Dbg"} {
 		if strings.HasPrefix(name, prefix) {
 			return true
