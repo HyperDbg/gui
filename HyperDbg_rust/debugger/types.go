@@ -27,7 +27,7 @@ const (
 	MsgTypeVmxExitEvent      MessageType = 9
 	MsgTypeLogEvent          MessageType = 10
 	MsgTypeHookEvent         MessageType = 11
-	MsgTypeCpuidEvent       MessageType = 12
+	MsgTypeCpuidEvent        MessageType = 12
 
 	MsgTypeInitialize        MessageType = 100
 	MsgTypeTerminate         MessageType = 101
@@ -96,7 +96,7 @@ type ResponseType interface {
 		~float32 | ~float64 |
 		~string | ~bool |
 		[]byte | *RegisterState | []ProcessInfo | []ThreadInfo | []ModuleInfo | []BreakpointInfo |
-		Empty
+		Empty | HookResponse | []Instruction | SymbolInfo | FunctionInfo
 }
 
 type EventCallback func(event any)

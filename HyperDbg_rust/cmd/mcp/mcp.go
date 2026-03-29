@@ -490,7 +490,7 @@ type DebuggerMCPServerInitializeParams struct{}
 
 func (s *DebuggerMCPServer) handleInitialize(ctx context.Context, req *mcp.CallToolRequest, args DebuggerMCPServerInitializeParams) (*mcp.CallToolResult, any, error) {
 
-	err := s.impl.Initialize()
+	err := s.impl.LoadVmm()
 	if err != nil {
 		return &mcp.CallToolResult{
 			Content: []mcp.Content{
@@ -510,7 +510,7 @@ type DebuggerMCPServerTerminateParams struct{}
 
 func (s *DebuggerMCPServer) handleTerminate(ctx context.Context, req *mcp.CallToolRequest, args DebuggerMCPServerTerminateParams) (*mcp.CallToolResult, any, error) {
 
-	err := s.impl.Terminate()
+	err := s.impl.UnloadVmm()
 	if err != nil {
 		return &mcp.CallToolResult{
 			Content: []mcp.Content{

@@ -221,8 +221,8 @@ func (b *Bindgen) parseNtddkFunctions(path string) error {
 					if braceCount == 0 {
 						params = fullDecl[start+1 : j]
 						rest := strings.TrimSpace(fullDecl[j+1:])
-						if strings.HasPrefix(rest, "->") {
-							retPart := strings.TrimPrefix(rest, "->")
+						if after, ok := strings.CutPrefix(rest, "->"); ok {
+							retPart := after
 							retPart = strings.TrimSuffix(retPart, ";")
 							returnType = strings.TrimSpace(retPart)
 						}
@@ -490,8 +490,8 @@ func (b *Bindgen) parseParamList(params string) []struct{ Name, Type string } {
 
 	var result []struct{ Name, Type string }
 
-	parts := strings.Split(params, ",")
-	for _, part := range parts {
+	parts := strings.SplitSeq(params, ",")
+	for part := range parts {
 		part = strings.TrimSpace(part)
 		if part == "" {
 			continue
@@ -599,7 +599,7 @@ func (b *Bindgen) GenerateFunctionsList(outputPath string) error {
 		sb.WriteString("\n")
 	}
 
-	return os.WriteFile(outputPath, []byte(sb.String()), 0644)
+	return os.WriteFile(outputPath, []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) GenerateFunctionsGoMap(outputPath string) error {
@@ -620,7 +620,7 @@ func (b *Bindgen) GenerateFunctionsGoMap(outputPath string) error {
 	}
 	sb.WriteString("}\n")
 
-	return os.WriteFile(outputPath, []byte(sb.String()), 0644)
+	return os.WriteFile(outputPath, []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) GenerateTypesGoMap(outputPath string) error {
@@ -641,7 +641,7 @@ func (b *Bindgen) GenerateTypesGoMap(outputPath string) error {
 	}
 	sb.WriteString("}\n")
 
-	return os.WriteFile(outputPath, []byte(sb.String()), 0644)
+	return os.WriteFile(outputPath, []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) GenerateConstantsGoMap(outputPath string) error {
@@ -662,7 +662,7 @@ func (b *Bindgen) GenerateConstantsGoMap(outputPath string) error {
 	}
 	sb.WriteString("}\n")
 
-	return os.WriteFile(outputPath, []byte(sb.String()), 0644)
+	return os.WriteFile(outputPath, []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) GenerateValidationReport(outputPath string) error {
@@ -704,7 +704,7 @@ func (b *Bindgen) GenerateValidationReport(outputPath string) error {
 		sb.WriteString("\n")
 	}
 
-	return os.WriteFile(outputPath, []byte(sb.String()), 0644)
+	return os.WriteFile(outputPath, []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) GenerateFixSuggestions(outputPath string) error {
@@ -745,7 +745,7 @@ func (b *Bindgen) GenerateFixSuggestions(outputPath string) error {
 		sb.WriteString("\n")
 	}
 
-	return os.WriteFile(outputPath, []byte(sb.String()), 0644)
+	return os.WriteFile(outputPath, []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) GetWdkBindings() *WdkBindings {
@@ -764,7 +764,7 @@ func (b *Bindgen) GenerateNtapiMod(outputDir string, notExportedFunctions []NotE
 	if err := os.RemoveAll(outputDir); err != nil {
 		return fmt.Errorf("failed to remove output directory: %w", err)
 	}
-	if err := os.MkdirAll(outputDir, 0755); err != nil {
+	if err := os.MkdirAll(outputDir, 0o755); err != nil {
 		return fmt.Errorf("failed to create output directory: %w", err)
 	}
 	if err := b.generateNtapiApi(outputDir, notExportedFunctions); err != nil {
@@ -824,7 +824,7 @@ func (b *Bindgen) generateNtapiApi(outputDir string, notExportedFunctions []NotE
 	sb.WriteString("pub use exported::*;\n")
 	sb.WriteString("pub use not_exported::*;\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "api_gen.rs"), []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "api_gen.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) generateNtapiTypes(outputDir string) error {
@@ -850,7 +850,7 @@ func (b *Bindgen) generateNtapiTypes(outputDir string) error {
 	}
 	sb.WriteString("};\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "types_gen.rs"), []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "types_gen.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) generateNtapiConstants(outputDir string) error {
@@ -876,7 +876,7 @@ func (b *Bindgen) generateNtapiConstants(outputDir string) error {
 	}
 	sb.WriteString("};\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "constants_gen.rs"), []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "constants_gen.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) generateNtapiModRs(outputDir string) error {
@@ -892,7 +892,7 @@ func (b *Bindgen) generateNtapiModRs(outputDir string) error {
 	sb.WriteString("pub use types_gen::*;\n")
 	sb.WriteString("pub use constants_gen::*;\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "mod.rs"), []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "mod.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) isNotExported(name string, notExported []NotExportedFunc) bool {
@@ -944,7 +944,6 @@ func (b *Bindgen) ScanProjectUsage(projectRoot string, excludeDirs []string) err
 		b.scanFileForWdkUsage(path)
 		return nil
 	})
-
 	if err != nil {
 		return fmt.Errorf("failed to scan project: %w", err)
 	}
@@ -1083,7 +1082,7 @@ func (b *Bindgen) GenerateUsageReport(outputPath string) error {
 		sb.WriteString(fmt.Sprintf("- %s:%d - %s: %s (needs fix: %v)\n", relPath, u.Line, u.Kind, u.Name, u.NeedsFix))
 	}
 
-	return os.WriteFile(outputPath, []byte(sb.String()), 0644)
+	return os.WriteFile(outputPath, []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) ApplyFixes(dryRun bool) error {
@@ -1167,10 +1166,10 @@ func (b *Bindgen) applyFileModifications(filePath string, mods []FileModificatio
 
 		if strings.HasPrefix(trimmed, "use wdk_sys::") {
 			if strings.Contains(line, "{") && !strings.Contains(line, "};") {
-				indent := ""
+				var indent strings.Builder
 				for _, c := range line {
 					if c == ' ' || c == '\t' {
-						indent += string(c)
+						indent.WriteString(string(c))
 					} else {
 						break
 					}
@@ -1180,21 +1179,21 @@ func (b *Bindgen) applyFileModifications(filePath string, mods []FileModificatio
 						for k := i + 1; k <= j; k++ {
 							linesToDelete[k] = true
 						}
-						lines[i] = indent + "use crate::ntapi::*;"
+						lines[i] = indent.String() + "use crate::ntapi::*;"
 						i = j
 						break
 					}
 				}
 			} else {
-				indent := ""
+				var indent strings.Builder
 				for _, c := range line {
 					if c == ' ' || c == '\t' {
-						indent += string(c)
+						indent.WriteString(string(c))
 					} else {
 						break
 					}
 				}
-				lines[i] = indent + "use crate::ntapi::*;"
+				lines[i] = indent.String() + "use crate::ntapi::*;"
 			}
 		}
 	}
@@ -1276,7 +1275,7 @@ func (b *Bindgen) applyFileModifications(filePath string, mods []FileModificatio
 	}
 
 	newContent := strings.Join(finalResult, "\n")
-	return os.WriteFile(filePath, []byte(newContent), 0644)
+	return os.WriteFile(filePath, []byte(newContent), 0o644)
 }
 
 type LineRange struct {
@@ -1322,11 +1321,11 @@ func (b *Bindgen) GenerateHookDatabase(rustOutputDir, goOutputDir string, notExp
 	if err := os.RemoveAll(rustOutputDir); err != nil {
 		return fmt.Errorf("failed to remove rust hook output directory: %w", err)
 	}
-	if err := os.MkdirAll(rustOutputDir, 0755); err != nil {
+	if err := os.MkdirAll(rustOutputDir, 0o755); err != nil {
 		return fmt.Errorf("failed to create rust hook output directory: %w", err)
 	}
 
-	if err := os.MkdirAll(filepath.Dir(goOutputDir), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(goOutputDir), 0o755); err != nil {
 		return fmt.Errorf("failed to create go output directory: %w", err)
 	}
 
@@ -1422,7 +1421,7 @@ func (b *Bindgen) generateRustHookEpt(outputDir string, hooks []HookEntry) error
 	sb.WriteString("    }\n")
 	sb.WriteString("}\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "ept_hook_gen.rs"), []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "ept_hook_gen.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) generateRustHookInline(outputDir string, hooks []HookEntry) error {
@@ -1474,7 +1473,7 @@ func (b *Bindgen) generateRustHookInline(outputDir string, hooks []HookEntry) er
 	sb.WriteString("    }\n")
 	sb.WriteString("}\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "inline_hook_gen.rs"), []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "inline_hook_gen.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) generateRustHookMod(outputDir string) error {
@@ -1488,7 +1487,7 @@ func (b *Bindgen) generateRustHookMod(outputDir string) error {
 	sb.WriteString("pub use ept_hook_gen::*;\n")
 	sb.WriteString("pub use inline_hook_gen::*;\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "mod.rs"), []byte(sb.String()), 0644)
+	return os.WriteFile(filepath.Join(outputDir, "mod.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) generateGoHookDb(outputPath string, hooks []HookEntry) error {
@@ -1706,7 +1705,7 @@ func (b *Bindgen) generateGoHookDb(outputPath string, hooks []HookEntry) error {
 	sb.WriteString("    return nil\n")
 	sb.WriteString("}\n\n")
 
-	sb.WriteString("func (p *Packet) InstallHook(apiName string, hookType HookType, processId uint32, hookHandler uint64) (*HookResponse, error) {\n")
+	sb.WriteString("func (p *Packet) InstallHook(apiName string, hookType HookType, processId uint32, hookHandler uint64) (*Response[HookResponse], error) {\n")
 	sb.WriteString("    req := HookRequest{\n")
 	sb.WriteString("        Action:      \"install_hook\",\n")
 	sb.WriteString("        HookType:    hookType,\n")
@@ -1809,14 +1808,14 @@ func (b *Bindgen) generateGoHookDb(outputPath string, hooks []HookEntry) error {
 	sb.WriteString("    return result\n")
 	sb.WriteString("}\n")
 
-	return os.WriteFile(outputPath, []byte(sb.String()), 0644)
+	return os.WriteFile(outputPath, []byte(sb.String()), 0o644)
 }
 
 func rustTypeToGo(rustType string) string {
 	rustType = strings.TrimSpace(rustType)
 	for strings.HasPrefix(rustType, "*mut ") || strings.HasPrefix(rustType, "*const ") {
-		if strings.HasPrefix(rustType, "*mut ") {
-			rustType = strings.TrimPrefix(rustType, "*mut ")
+		if after, ok := strings.CutPrefix(rustType, "*mut "); ok {
+			rustType = after
 		} else {
 			rustType = strings.TrimPrefix(rustType, "*const ")
 		}

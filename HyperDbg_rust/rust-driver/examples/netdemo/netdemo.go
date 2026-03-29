@@ -17,9 +17,9 @@ type Request struct {
 
 // Response matches Rust-generated Response structure
 type Response struct {
-	Success bool        `json:"success"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data,omitempty"`
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+	Data    any    `json:"data,omitempty"`
 }
 
 func sendHTTPRequest(method, path string, body []byte) (Response, error) {

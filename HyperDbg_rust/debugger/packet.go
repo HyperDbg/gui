@@ -169,6 +169,15 @@ func (p *Packet) Status() (string, error) {
 	return resp.Message, nil
 }
 
+func (p *Packet) Ping() error {
+	data, _ := json.Marshal(map[string]string{"action": "ping"})
+	resp := SendReceive[Empty](p, data)
+	if resp == nil || !resp.Success {
+		return fmt.Errorf("ping failed")
+	}
+	return nil
+}
+
 func (p *Packet) RegisterCallback(msgType MessageType, cb EventCallback) {
 	p.callbacks[msgType] = append(p.callbacks[msgType], cb)
 }
@@ -547,38 +556,58 @@ func (p *Packet) UnloadSymbols() {
 	SendReceive[Empty](p, data)
 }
 
-func (p *Packet) GetSymbolByName(name string) (*SymbolInfo, error) {
+func (p *Packet) GetSymbolByName(name string) (SymbolInfo, error) {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action": "get_symbol_by_name",
 		"name":   name,
 	}))
 	resp := SendReceive[SymbolInfo](p, data)
 	if resp == nil || !resp.Success {
-		return nil, fmt.Errorf("get symbol failed: %s", resp.Message)
+		return SymbolInfo{}, fmt.Errorf("get symbol failed: %s", resp.Message)
 	}
 	return resp.Data, nil
 }
 
-func (p *Packet) GetSymbolByAddress(address uint64) (*SymbolInfo, error) {
+func (p *Packet) GetSymbolByAddress(address uint64) (SymbolInfo, error) {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":  "get_symbol_by_address",
 		"address": fmt.Sprintf("0x%X", address),
 	}))
 	resp := SendReceive[SymbolInfo](p, data)
 	if resp == nil || !resp.Success {
-		return nil, fmt.Errorf("get symbol failed: %s", resp.Message)
+		return SymbolInfo{}, fmt.Errorf("get symbol failed: %s", resp.Message)
 	}
 	return resp.Data, nil
 }
 
-func (p *Packet) GetFunctionByAddress(address uint64) (*FunctionInfo, error) {
+func (p *Packet) GetFunctionByAddress(address uint64) (FunctionInfo, error) {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":  "get_function_by_address",
 		"address": fmt.Sprintf("0x%X", address),
 	}))
 	resp := SendReceive[FunctionInfo](p, data)
 	if resp == nil || !resp.Success {
-		return nil, fmt.Errorf("get function failed: %s", resp.Message)
+		return FunctionInfo{}, fmt.Errorf("get function failed: %s", resp.Message)
 	}
 	return resp.Data, nil
+}
+
+func (p *Packet) InstallHookScript(script *HookScript) error {
+	code := ExtractClosureBody(script.OnMatch)
+	if code == "" {
+		return fmt.Errorf("failed to extract closure body")
+	}
+
+	data := mylog.Check2(json.Marshal(map[string]any{
+		"action":    "install_hook_script",
+		"api_name":  script.ApiName,
+		"hook_type": script.HookType,
+		"filter":    script.Filter,
+		"code":      code,
+	}))
+	resp := SendReceive[Empty](p, data)
+	if resp == nil || !resp.Success {
+		return fmt.Errorf("install hook script failed: %s", resp.Message)
+	}
+	return nil
 }

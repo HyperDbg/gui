@@ -11,6 +11,7 @@ type Debugger interface {
 	IsConnected() bool
 	GetState() DebugState
 	Status() (string, error)
+	Ping() error
 	LoadVmm() error
 	UnloadVmm() error
 	AttachProcess(processID uint32) error
@@ -40,7 +41,7 @@ type Debugger interface {
 	Disassemble(address uint64, bytes []byte, maxInstructions uint32) ([]Instruction, error)
 	LoadSymbols(pdbPath string) error
 	UnloadSymbols()
-	GetSymbolByName(name string) (*SymbolInfo, error)
-	GetSymbolByAddress(address uint64) (*SymbolInfo, error)
-	GetFunctionByAddress(address uint64) (*FunctionInfo, error)
+	GetSymbolByName(name string) (SymbolInfo, error)
+	GetSymbolByAddress(address uint64) (SymbolInfo, error)
+	GetFunctionByAddress(address uint64) (FunctionInfo, error)
 }

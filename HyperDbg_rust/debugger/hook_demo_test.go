@@ -5,26 +5,6 @@ import (
 	"unsafe"
 )
 
-type HookFilter struct {
-	ProcessNames  []string
-	ProcessIds    []uint32
-	ExcludeSystem bool
-}
-
-type HookScriptHandler func(ctx *HookContext)
-
-type HookScript struct {
-	ApiName  string
-	HookType HookType
-	Filter   *HookFilter
-	OnMatch  HookScriptHandler
-}
-
-type HookContext struct {
-	Args   interface{}
-	Return int32
-}
-
 const (
 	SMART_RCV_DRIVE_DATA          = 0x0007c088
 	IOCTL_DISK_GET_DRIVE_GEOMETRY = 0x00070000
@@ -80,7 +60,7 @@ func Example_HookScript() {
 				ctx.Return = 0
 
 			case IOCTL_NDIS_QUERY_GLOBAL_STATS:
-				mac := []byte{0x00, 0x11, 0x22, 0x33, 0x44, 0x55} //todo解码网卡buffer
+				mac := []byte{0x00, 0x11, 0x22, 0x33, 0x44, 0x55} // todo解码网卡buffer
 				args.WriteOutputBytes(mac)
 				ctx.Return = 0
 			}

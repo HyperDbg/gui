@@ -115,12 +115,12 @@ func (a *NtDeviceIoControlFileArgs) ReadInputString() string {
 }
 
 type IopXxxControlFileArgs struct {
-	FileHandle        uintptr `json:"FileHandle"`
-	IoControlCode     uint32  `json:"IoControlCode"`
-	InputBuffer       uintptr `json:"InputBuffer"`
-	InputBufferLength uint32  `json:"InputBufferLength"`
-	OutputBuffer      uintptr `json:"OutputBuffer"`
-	OutputBufferLength uint32 `json:"OutputBufferLength"`
+	FileHandle         uintptr `json:"FileHandle"`
+	IoControlCode      uint32  `json:"IoControlCode"`
+	InputBuffer        uintptr `json:"InputBuffer"`
+	InputBufferLength  uint32  `json:"InputBufferLength"`
+	OutputBuffer       uintptr `json:"OutputBuffer"`
+	OutputBufferLength uint32  `json:"OutputBufferLength"`
 }
 
 func (a *IopXxxControlFileArgs) WriteOutputString(s string) {
@@ -149,24 +149,12 @@ func (a *IopXxxControlFileArgs) WriteOutputBytes(data []byte) {
 }
 
 type CpuidArgs struct {
-	Leaf uint32 `json:"Leaf"`
+	Leaf    uint32 `json:"Leaf"`
 	SubLeaf uint32 `json:"SubLeaf"`
-	EAX uint32 `json:"EAX"`
-	EBX uint32 `json:"EBX"`
-	ECX uint32 `json:"ECX"`
-	EDX uint32 `json:"EDX"`
-}
-
-type NtReadFileArgs struct {
-	FileHandle           uintptr `json:"FileHandle"`
-	Event                uintptr `json:"Event"`
-	ApcRoutine           uintptr `json:"ApcRoutine"`
-	ApcContext           uintptr `json:"ApcContext"`
-	IoStatusBlock        uintptr `json:"IoStatusBlock"`
-	Buffer               uintptr `json:"Buffer"`
-	Length               uint32  `json:"Length"`
-	ByteOffset           uintptr `json:"ByteOffset"`
-	Key                  uintptr `json:"Key"`
+	EAX     uint32 `json:"EAX"`
+	EBX     uint32 `json:"EBX"`
+	ECX     uint32 `json:"ECX"`
+	EDX     uint32 `json:"EDX"`
 }
 
 func (a *NtReadFileArgs) ReadBytes() []byte {
@@ -193,10 +181,10 @@ func (a *NtReadFileArgs) WriteBytes(data []byte) {
 }
 
 type NtQuerySystemInformationArgs struct {
-	SystemInformationClass uint32  `json:"SystemInformationClass"`
-	SystemInformation      uintptr `json:"SystemInformation"`
+	SystemInformationClass  uint32  `json:"SystemInformationClass"`
+	SystemInformation       uintptr `json:"SystemInformation"`
 	SystemInformationLength uint32  `json:"SystemInformationLength"`
-	ReturnLength           uintptr `json:"ReturnLength"`
+	ReturnLength            uintptr `json:"ReturnLength"`
 }
 
 func (a *NtQuerySystemInformationArgs) WriteBytes(data []byte) {
@@ -239,7 +227,7 @@ func ReadMemoryBytes(addr uintptr, length uint32) []byte {
 		return nil
 	}
 	buf := make([]byte, length)
-	for i := uint32(0); i < length; i++ {
+	for i := range length {
 		buf[i] = *(*byte)(unsafe.Pointer(addr + uintptr(i)))
 	}
 	return buf
@@ -260,7 +248,7 @@ func ReadMemoryString(addr uintptr, maxLen uint32) string {
 		return ""
 	}
 	buf := make([]byte, 0, maxLen)
-	for i := uint32(0); i < maxLen; i++ {
+	for i := range maxLen {
 		b := *(*byte)(unsafe.Pointer(addr + uintptr(i)))
 		if b == 0 {
 			break

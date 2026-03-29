@@ -20,15 +20,10 @@ func TestRustDriverHTTP(t *testing.T) {
 	p := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
 
 	t.Log("安装驱动...")
-	if !p.Install() {
-		t.Fatal("驱动安装失败")
-	}
+	p.Install()
 
 	t.Log("启动驱动...")
-	if !p.Start() {
-		p.Uninstall()
-		t.Fatal("驱动启动失败")
-	}
+	p.Start()
 	defer func() {
 		t.Log("停止驱动...")
 		p.Stop()
@@ -40,7 +35,7 @@ func TestRustDriverHTTP(t *testing.T) {
 	baseURL := "http://127.0.0.1:50080"
 	client := &http.Client{Timeout: 5 * time.Second}
 
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		req, _ := json.Marshal(map[string]string{"action": "ping"})
 		resp, err := client.Post(baseURL+"/api", "application/json", bytes.NewReader(req))
 		if err == nil {
@@ -126,15 +121,10 @@ func TestPacketAPI(t *testing.T) {
 	p := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
 
 	t.Log("安装驱动...")
-	if !p.Install() {
-		t.Fatal("驱动安装失败")
-	}
+	p.Install()
 
 	t.Log("启动驱动...")
-	if !p.Start() {
-		p.Uninstall()
-		t.Fatal("驱动启动失败")
-	}
+	p.Start()
 	defer func() {
 		t.Log("停止驱动...")
 		p.Stop()

@@ -6,6 +6,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"maps"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -345,16 +346,16 @@ func extractReturnType(m MethodInfo) string {
 	for _, field := range m.Results.List {
 		typeStr := exprToString(field.Type)
 
-		if strings.HasPrefix(typeStr, "[]") {
-			inner := strings.TrimPrefix(typeStr, "[]")
+		if after, ok := strings.CutPrefix(typeStr, "[]"); ok {
+			inner := after
 			if inner == "byte" {
 				return "Vec<u8>"
 			}
 			return "Vec<" + goTypeToRust(inner) + ">"
 		}
 
-		if strings.HasPrefix(typeStr, "*") {
-			inner := strings.TrimPrefix(typeStr, "*")
+		if after, ok := strings.CutPrefix(typeStr, "*"); ok {
+			inner := after
 			return goTypeToRust(inner)
 		}
 
@@ -403,7 +404,7 @@ func extractParams(m MethodInfo) []APIParam {
 func generateTypesSplit(projectRoot string, allFiles map[string]*ast.File) {
 	typesDir := filepath.Join(projectRoot, RustOutputDir, TypesOutputDir)
 	os.RemoveAll(typesDir)
-	if err := os.MkdirAll(typesDir, 0755); err != nil {
+	if err := os.MkdirAll(typesDir, 0o755); err != nil {
 		panic(err)
 	}
 
@@ -414,18 +415,10 @@ func generateTypesSplit(projectRoot string, allFiles map[string]*ast.File) {
 
 	for _, node := range allFiles {
 		constants, enums, structs, aliases := extractAllFromNode(node)
-		for k, v := range constants {
-			allConstants[k] = v
-		}
-		for k, v := range enums {
-			allEnums[k] = v
-		}
-		for k, v := range structs {
-			allStructs[k] = v
-		}
-		for k, v := range aliases {
-			allAliases[k] = v
-		}
+		maps.Copy(allConstants, constants)
+		maps.Copy(allEnums, enums)
+		maps.Copy(allStructs, structs)
+		maps.Copy(allAliases, aliases)
 	}
 
 	enumValues := extractEnumValuesAll(allConstants, allEnums)
@@ -466,7 +459,7 @@ func generateTypesSplit(projectRoot string, allFiles map[string]*ast.File) {
 
 		if hasContent {
 			outputPath := filepath.Join(typesDir, mapping.RustFile)
-			if err := os.WriteFile(outputPath, buf.Bytes(), 0644); err != nil {
+			if err := os.WriteFile(outputPath, buf.Bytes(), 0o644); err != nil {
 				panic(err)
 			}
 			fmt.Printf("Generated %s\n", outputPath)
@@ -635,7 +628,7 @@ func generateTypesMod(projectRoot string, mappings []FileMapping) {
 	buf.WriteString("pub use response::*;\n")
 
 	outputPath := filepath.Join(projectRoot, RustOutputDir, TypesOutputDir, "mod.rs")
-	if err := os.WriteFile(outputPath, buf.Bytes(), 0644); err != nil {
+	if err := os.WriteFile(outputPath, buf.Bytes(), 0o644); err != nil {
 		panic(err)
 	}
 	fmt.Printf("Generated %s\n", outputPath)
@@ -653,7 +646,7 @@ func generateResponseTypes(projectRoot string) {
 	buf.WriteString(writeResponseStruct())
 
 	outputPath := filepath.Join(projectRoot, RustOutputDir, TypesOutputDir, "response.rs")
-	if err := os.WriteFile(outputPath, buf.Bytes(), 0644); err != nil {
+	if err := os.WriteFile(outputPath, buf.Bytes(), 0o644); err != nil {
 		panic(err)
 	}
 	fmt.Printf("Generated %s\n", outputPath)
@@ -709,7 +702,7 @@ func generateIoctlCodes(projectRoot string, allFiles map[string]*ast.File) {
 
 	interfaceDir := filepath.Join(projectRoot, "rust-driver/kd/src/hyperkd/hyperhv/interface")
 	outputPath := filepath.Join(interfaceDir, "ioctl_gen.rs")
-	if err := os.WriteFile(outputPath, buf.Bytes(), 0644); err != nil {
+	if err := os.WriteFile(outputPath, buf.Bytes(), 0o644); err != nil {
 		panic(err)
 	}
 	fmt.Printf("Generated %s\n", outputPath)
@@ -798,7 +791,7 @@ func extractIoctlConstants(file *ast.File) []IoctlConst {
 func generateHandlersSplit(projectRoot string, apiMethods []APIMethod) {
 	handlersDir := filepath.Join(projectRoot, RustOutputDir, HandlersOutputDir)
 	os.RemoveAll(handlersDir)
-	if err := os.MkdirAll(handlersDir, 0755); err != nil {
+	if err := os.MkdirAll(handlersDir, 0o755); err != nil {
 		panic(err)
 	}
 
@@ -817,7 +810,7 @@ func generateHandlersMod(projectRoot string, apiMethods []APIMethod) {
 	buf.WriteString("pub use emit::*;\n")
 
 	outputPath := filepath.Join(projectRoot, RustOutputDir, HandlersOutputDir, "mod.rs")
-	if err := os.WriteFile(outputPath, buf.Bytes(), 0644); err != nil {
+	if err := os.WriteFile(outputPath, buf.Bytes(), 0o644); err != nil {
 		panic(err)
 	}
 	fmt.Printf("Generated %s\n", outputPath)
@@ -1017,7 +1010,7 @@ func generateHandlersRouter(projectRoot string, apiMethods []APIMethod) {
 	buf.WriteString("}\n")
 
 	outputPath := filepath.Join(projectRoot, RustOutputDir, HandlersOutputDir, "router.rs")
-	if err := os.WriteFile(outputPath, buf.Bytes(), 0644); err != nil {
+	if err := os.WriteFile(outputPath, buf.Bytes(), 0o644); err != nil {
 		panic(err)
 	}
 	fmt.Printf("Generated %s\n", outputPath)
@@ -1556,7 +1549,7 @@ pub unsafe fn emit_ept_violation_event(
 `
 
 	outputPath := filepath.Join(projectRoot, RustOutputDir, HandlersOutputDir, "emit.rs")
-	if err := os.WriteFile(outputPath, []byte(emitCode), 0644); err != nil {
+	if err := os.WriteFile(outputPath, []byte(emitCode), 0o644); err != nil {
 		panic(err)
 	}
 	fmt.Printf("Generated %s\n", outputPath)

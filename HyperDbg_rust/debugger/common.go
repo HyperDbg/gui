@@ -1,9 +1,11 @@
 package debugger
 
-type ProcessId = uint32
-type ThreadId = uint32
-type Address = uint64
-type PhysicalAddress = uint64
+type (
+	ProcessId       = uint32
+	ThreadId        = uint32
+	Address         = uint64
+	PhysicalAddress = uint64
+)
 
 type ProcessInfo struct {
 	ProcessID   uint32 `json:"process_id"`

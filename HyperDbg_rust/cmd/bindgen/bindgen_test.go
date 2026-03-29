@@ -367,13 +367,6 @@ func extractTypes(params string, types map[string][]string, funcName string) {
 	}
 }
 
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
 func TestMain(m *testing.M) {
 	fmt.Println("=== Bindgen Test Suite ===")
 	fmt.Println("Testing WDK binding validation and Rust code analysis")
@@ -806,7 +799,7 @@ fn test() {
 			bg.fixReport.FilesScanned = 1
 
 			tmpFile := filepath.Join(t.TempDir(), "test.rs")
-			err := os.WriteFile(tmpFile, []byte(tc.input), 0644)
+			err := os.WriteFile(tmpFile, []byte(tc.input), 0o644)
 			if err != nil {
 				t.Fatalf("Failed to write temp file: %v", err)
 			}

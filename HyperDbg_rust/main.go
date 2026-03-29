@@ -60,8 +60,8 @@ func main() {
 		fmt.Printf("[Event] DebugPrint: %+v\n", event)
 	})
 
-	if err := packet.Initialize(); err != nil {
-		fmt.Printf("Initialize failed: %v\n", err)
+	if err := packet.LoadVmm(); err != nil {
+		fmt.Printf("LoadVmm failed: %v\n", err)
 	} else {
 		fmt.Println("Driver initialized")
 	}
