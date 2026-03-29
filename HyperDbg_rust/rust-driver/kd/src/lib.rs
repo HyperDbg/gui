@@ -54,7 +54,6 @@ pub use framework::{
     DriverConfig, create_device_with_config, cleanup_device,
     default_create_close, get_ioctl_params, complete_request,
     read_input_buffer, write_output_buffer,
-    FILE_DEVICE_UNKNOWN, METHOD_BUFFERED, FILE_ANY_ACCESS,
 };
 use kd::KernelDebugger;
 use wdk_sys::*;

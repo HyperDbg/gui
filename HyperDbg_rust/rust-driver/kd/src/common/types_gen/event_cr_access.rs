@@ -2,9 +2,12 @@
 // Source: event_cr_access.go
 
 #![allow(non_snake_case)]
+#![allow(unused_imports)]
 
 extern crate alloc;
 
+use alloc::string::String;
+use alloc::vec::Vec;
 use serde::{Serialize, Deserialize};
 
 use super::*;

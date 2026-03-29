@@ -1,6 +1,7 @@
 pub mod callbacks;
 pub mod communication;
 pub mod hyper_evade;
+pub mod ioctl_gen;
 pub mod loader;
 pub mod meta_dispatch;
 pub mod process;

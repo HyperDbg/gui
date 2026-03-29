@@ -553,6 +553,49 @@ func (s *KernelDebug) WriteMemory(pid uint32, address uint64, data []byte) {
 }
 ```
 
+## Rust 生成器同步
+
+当 Go 端的类型定义或接口发生变化时，需要同步更新 Rust 生成器生成的代码。
+
+### 同步步骤
+
+1. **运行 Rust 生成器**
+   ```bash
+   cd HyperDbg_rust/cmd/rustgen
+   go run main.go
+   ```
+
+2. **检查 git diff**
+   ```bash
+   cd HyperDbg_rust/rust-driver/kd
+   git diff --stat
+   git diff
+   ```
+
+3. **编译 Rust 驱动验证**
+   ```bash
+   cd HyperDbg_rust/rust-driver/kd
+   cargo build
+   ```
+
+4. **修复生成器（如有警告或错误）**
+   - 如果出现 "unused import" 警告，在生成器中添加 `#![allow(unused_imports)]`
+   - 如果出现类型找不到错误，检查是否需要 `use super::*;`
+   - 生成器文件：`HyperDbg_rust/cmd/rustgen/main.go`
+
+### 生成器关键代码位置
+
+- 类型生成：`generateTypesSplit()` 函数
+- 模块生成：`generateTypesMod()` 函数
+- 响应类型：`generateResponseTypes()` 函数
+- 处理器生成：`generateHandlersSplit()` 函数
+
+### 常见问题
+
+1. **未使用的导入警告**：添加 `#![allow(unused_imports)]` 属性
+2. **类型找不到错误**：确保 `use super::*;` 存在
+3. **mod.rs 中的警告**：移除 mod.rs 中不需要的导入
+
 ## 总结
 
 1. **理解多态化设计**：UserDebugger 和 KernelDebugger 继承 Packeter，但可能重写某些方法

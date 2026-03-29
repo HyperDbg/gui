@@ -46,168 +46,19 @@ pub enum CommunicationMode {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[repr(u32)]
-pub enum IoctlCode {
-    RegisterEvent = 0x222000,
-    ReturnIrpPendingPacketsAndDisallowIoctl = 0x222004,
-    TerminateVmx = 0x222008,
-    DebuggerReadMemory = 0x22200C,
-    DebuggerReadOrWriteMsr = 0x222010,
-    DebuggerReadPageTableEntriesDetails = 0x222014,
-    DebuggerRegisterEvent = 0x222018,
-    DebuggerAddActionToEvent = 0x22201C,
-    DebuggerHideAndUnhideToTransparentTheDebugger = 0x222020,
-    DebuggerVa2paAndPa2vaCommands = 0x222024,
-    DebuggerEditMemory = 0x222028,
-    DebuggerSearchMemory = 0x22202C,
-    DebuggerModifyEvents = 0x222030,
-    DebuggerFlushLoggingBuffers = 0x222034,
-    DebuggerAttachDetachUserModeProcess = 0x222038,
-    DebuggerPrint = 0x22203C,
-    PrepareDebuggee = 0x222040,
-    PausePacketReceived = 0x222044,
-    SendSignalExecutionInDebuggeeFinished = 0x222048,
-    SendUsermodeMessagesToDebugger = 0x22204C,
-    SendGeneralBufferFromDebuggeeToDebugger = 0x222050,
-    PerformKernelSideTests = 0x222054,
-    ReservePreAllocatedPools = 0x222058,
-    SendUserDebuggerCommands = 0x22205C,
-    GetDetailOfActiveThreadsAndProcesses = 0x222060,
-    GetUserModeModuleDetails = 0x222064,
-    QueryCountOfActiveProcessesOrThreads = 0x222068,
-    GetListOfThreadsAndProcesses = 0x22206C,
-    QueryCurrentProcess = 0x222070,
-    QueryCurrentThread = 0x222074,
-    RequestRevMachineService = 0x222078,
-    DebuggerBringPagesIn = 0x22207C,
-    PreactivateFunctionality = 0x222080,
-    PcieEndpointEnum = 0x222084,
-    PerformActionsOnApic = 0x222088,
-    PcidevinfoEnum = 0x22208C,
-    QueryIdtEntry = 0x222090,
-    SetBreakpointUserDebugger = 0x222094,
-    PerformSmiOperation = 0x222098,
-    SwitchProcess = 0x22209C,
-    SwitchThread = 0x2220A0,
-    ReadControlRegister = 0x2220A4,
-    KillProcess = 0x2220A8,
-    RestartProcess = 0x2220AC,
-    EvaluateExpression = 0x2220B0,
-    Custom(u32),
-}
+pub struct IoctlCode(pub u32);
 
 impl IoctlCode {
     pub fn from_u32(code: u32) -> Self {
-        match code {
-            0x222000 => Self::RegisterEvent,
-            0x222004 => Self::ReturnIrpPendingPacketsAndDisallowIoctl,
-            0x222008 => Self::TerminateVmx,
-            0x22200C => Self::DebuggerReadMemory,
-            0x222010 => Self::DebuggerReadOrWriteMsr,
-            0x222014 => Self::DebuggerReadPageTableEntriesDetails,
-            0x222018 => Self::DebuggerRegisterEvent,
-            0x22201C => Self::DebuggerAddActionToEvent,
-            0x222020 => Self::DebuggerHideAndUnhideToTransparentTheDebugger,
-            0x222024 => Self::DebuggerVa2paAndPa2vaCommands,
-            0x222028 => Self::DebuggerEditMemory,
-            0x22202C => Self::DebuggerSearchMemory,
-            0x222030 => Self::DebuggerModifyEvents,
-            0x222034 => Self::DebuggerFlushLoggingBuffers,
-            0x222038 => Self::DebuggerAttachDetachUserModeProcess,
-            0x22203C => Self::DebuggerPrint,
-            0x222040 => Self::PrepareDebuggee,
-            0x222044 => Self::PausePacketReceived,
-            0x222048 => Self::SendSignalExecutionInDebuggeeFinished,
-            0x22204C => Self::SendUsermodeMessagesToDebugger,
-            0x222050 => Self::SendGeneralBufferFromDebuggeeToDebugger,
-            0x222054 => Self::PerformKernelSideTests,
-            0x222058 => Self::ReservePreAllocatedPools,
-            0x22205C => Self::SendUserDebuggerCommands,
-            0x222060 => Self::GetDetailOfActiveThreadsAndProcesses,
-            0x222064 => Self::GetUserModeModuleDetails,
-            0x222068 => Self::QueryCountOfActiveProcessesOrThreads,
-            0x22206C => Self::GetListOfThreadsAndProcesses,
-            0x222070 => Self::QueryCurrentProcess,
-            0x222074 => Self::QueryCurrentThread,
-            0x222078 => Self::RequestRevMachineService,
-            0x22207C => Self::DebuggerBringPagesIn,
-            0x222080 => Self::PreactivateFunctionality,
-            0x222084 => Self::PcieEndpointEnum,
-            0x222088 => Self::PerformActionsOnApic,
-            0x22208C => Self::PcidevinfoEnum,
-            0x222090 => Self::QueryIdtEntry,
-            0x222094 => Self::SetBreakpointUserDebugger,
-            0x222098 => Self::PerformSmiOperation,
-            0x22209C => Self::SwitchProcess,
-            0x2220A0 => Self::SwitchThread,
-            0x2220A4 => Self::ReadControlRegister,
-            0x2220A8 => Self::KillProcess,
-            0x2220AC => Self::RestartProcess,
-            0x2220B0 => Self::EvaluateExpression,
-            _ => Self::Custom(code),
-        }
+        Self(code)
     }
 
     pub fn to_u32(&self) -> u32 {
-        match self {
-            Self::RegisterEvent => 0x222000,
-            Self::ReturnIrpPendingPacketsAndDisallowIoctl => 0x222004,
-            Self::TerminateVmx => 0x222008,
-            Self::DebuggerReadMemory => 0x22200C,
-            Self::DebuggerReadOrWriteMsr => 0x222010,
-            Self::DebuggerReadPageTableEntriesDetails => 0x222014,
-            Self::DebuggerRegisterEvent => 0x222018,
-            Self::DebuggerAddActionToEvent => 0x22201C,
-            Self::DebuggerHideAndUnhideToTransparentTheDebugger => 0x222020,
-            Self::DebuggerVa2paAndPa2vaCommands => 0x222024,
-            Self::DebuggerEditMemory => 0x222028,
-            Self::DebuggerSearchMemory => 0x22202C,
-            Self::DebuggerModifyEvents => 0x222030,
-            Self::DebuggerFlushLoggingBuffers => 0x222034,
-            Self::DebuggerAttachDetachUserModeProcess => 0x222038,
-            Self::DebuggerPrint => 0x22203C,
-            Self::PrepareDebuggee => 0x222040,
-            Self::PausePacketReceived => 0x222044,
-            Self::SendSignalExecutionInDebuggeeFinished => 0x222048,
-            Self::SendUsermodeMessagesToDebugger => 0x22204C,
-            Self::SendGeneralBufferFromDebuggeeToDebugger => 0x222050,
-            Self::PerformKernelSideTests => 0x222054,
-            Self::ReservePreAllocatedPools => 0x222058,
-            Self::SendUserDebuggerCommands => 0x22205C,
-            Self::GetDetailOfActiveThreadsAndProcesses => 0x222060,
-            Self::GetUserModeModuleDetails => 0x222064,
-            Self::QueryCountOfActiveProcessesOrThreads => 0x222068,
-            Self::GetListOfThreadsAndProcesses => 0x22206C,
-            Self::QueryCurrentProcess => 0x222070,
-            Self::QueryCurrentThread => 0x222074,
-            Self::RequestRevMachineService => 0x222078,
-            Self::DebuggerBringPagesIn => 0x22207C,
-            Self::PreactivateFunctionality => 0x222080,
-            Self::PcieEndpointEnum => 0x222084,
-            Self::PerformActionsOnApic => 0x222088,
-            Self::PcidevinfoEnum => 0x22208C,
-            Self::QueryIdtEntry => 0x222090,
-            Self::SetBreakpointUserDebugger => 0x222094,
-            Self::PerformSmiOperation => 0x222098,
-            Self::SwitchProcess => 0x22209C,
-            Self::SwitchThread => 0x2220A0,
-            Self::ReadControlRegister => 0x2220A4,
-            Self::KillProcess => 0x2220A8,
-            Self::RestartProcess => 0x2220AC,
-            Self::EvaluateExpression => 0x2220B0,
-            Self::Custom(code) => *code,
-        }
+        self.0
     }
 }
 
-pub const FILE_DEVICE_UNKNOWN: u32 = 0x00000022;
-pub const METHOD_BUFFERED: u32 = 0;
-pub const FILE_ANY_ACCESS: u32 = 0;
 pub const COMMUNICATION_BUFFER_SIZE: u32 = 0x1000;
-
-pub const fn ctl_code(device_type: u32, function: u32, method: u32, access: u32) -> u32 {
-    (device_type << 16) | (access << 14) | (function << 2) | method
-}
 
 #[derive(Debug, Clone)]
 pub struct IoctlRequest {

@@ -2,6 +2,7 @@
 // Source: event_hidden_hook.go
 
 #![allow(non_snake_case)]
+#![allow(unused_imports)]
 
 extern crate alloc;
 

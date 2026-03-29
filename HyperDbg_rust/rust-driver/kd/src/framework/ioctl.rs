@@ -12,10 +12,6 @@ use wdk_sys::{
 pub const STATUS_INVALID_DEVICE_REQUEST: NTSTATUS = 0xC0000010u32 as NTSTATUS;
 pub const STATUS_UNSUCCESSFUL: NTSTATUS = 0xC0000001u32 as NTSTATUS;
 
-pub const FILE_DEVICE_UNKNOWN: u32 = 0x00000022;
-pub const METHOD_BUFFERED: u32 = 0;
-pub const FILE_ANY_ACCESS: u32 = 0;
-
 #[macro_export]
 macro_rules! ctl_code {
     ($DeviceType:expr, $Function:expr, $Method:expr, $Access:expr) => {

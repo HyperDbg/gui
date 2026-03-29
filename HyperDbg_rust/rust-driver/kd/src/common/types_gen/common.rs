@@ -2,6 +2,7 @@
 // Source: common.go
 
 #![allow(non_snake_case)]
+#![allow(unused_imports)]
 
 extern crate alloc;
 
@@ -9,6 +10,7 @@ use alloc::string::String;
 use alloc::vec::Vec;
 use serde::{Serialize, Deserialize};
 
+use super::*;
 
 pub type ProcessId = u32;
 pub type ThreadId = u32;
