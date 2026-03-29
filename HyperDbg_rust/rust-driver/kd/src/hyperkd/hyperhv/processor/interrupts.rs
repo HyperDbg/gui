@@ -1,5 +1,6 @@
 use core::arch::naked_asm;
 
+#[allow(static_mut_refs)]
 #[repr(C)]
 pub struct TrapFrame {
     pub rax: u64,

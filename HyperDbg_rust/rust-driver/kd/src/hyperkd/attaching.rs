@@ -1,13 +1,21 @@
 #![allow(dead_code)]
 
-use alloc::boxed::Box;
 use alloc::collections::BTreeMap;
-use alloc::sync::Arc;
 use alloc::vec::Vec;
-use core::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
+use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
 
-use crate::hyperkd::{ProcessId, ThreadId, Address};
+use wdk_sys::ntddk::PsLookupProcessByProcessId;
+use wdk_sys::{HANDLE, PEPROCESS, PVOID};
+
+use crate::hyperkd::{ProcessId, ThreadId};
+
+unsafe fn ob_dereference_object(object: PVOID) {
+    extern "C" {
+        fn ObfDereferenceObject(Object: PVOID) -> isize;
+    }
+    ObfDereferenceObject(object);
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AttachError {
@@ -217,15 +225,10 @@ pub fn attaching_remove_thread_debugging_details(token: u64, thread_id: ThreadId
 }
 
 pub unsafe fn attaching_get_process_peb(process_id: ProcessId) -> Option<u64> {
-    extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
-        fn ObDereferenceObject(object: u64);
-    }
+    type PsGetProcessPeb = unsafe extern "C" fn(PEPROCESS) -> u64;
 
-    type PsGetProcessPeb = unsafe extern "C" fn(u64) -> u64;
-
-    let mut eprocess: u64 = 0;
-    let status = PsLookupProcessByProcessId(process_id as u64, &mut eprocess);
+    let mut eprocess: PEPROCESS = core::ptr::null_mut();
+    let status = PsLookupProcessByProcessId(process_id as HANDLE, &mut eprocess);
 
     if status != 0 {
         return None;
@@ -234,7 +237,7 @@ pub unsafe fn attaching_get_process_peb(process_id: ProcessId) -> Option<u64> {
     let ps_get_process_peb: PsGetProcessPeb = core::mem::transmute(get_ps_get_process_peb_address());
 
     let peb = ps_get_process_peb(eprocess);
-    ObDereferenceObject(eprocess);
+    ob_dereference_object(eprocess as PVOID);
 
     if peb == 0 {
         None
@@ -244,15 +247,10 @@ pub unsafe fn attaching_get_process_peb(process_id: ProcessId) -> Option<u64> {
 }
 
 pub unsafe fn attaching_get_process_wow64_process(process_id: ProcessId) -> Option<u64> {
-    extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
-        fn ObDereferenceObject(object: u64);
-    }
+    type PsGetProcessWow64Process = unsafe extern "C" fn(PEPROCESS) -> u64;
 
-    type PsGetProcessWow64Process = unsafe extern "C" fn(u64) -> u64;
-
-    let mut eprocess: u64 = 0;
-    let status = PsLookupProcessByProcessId(process_id as u64, &mut eprocess);
+    let mut eprocess: PEPROCESS = core::ptr::null_mut();
+    let status = PsLookupProcessByProcessId(process_id as HANDLE, &mut eprocess);
 
     if status != 0 {
         return None;
@@ -261,12 +259,12 @@ pub unsafe fn attaching_get_process_wow64_process(process_id: ProcessId) -> Opti
     let ps_get_process_wow64: PsGetProcessWow64Process = core::mem::transmute(get_ps_get_process_wow64_address());
 
     let wow64 = ps_get_process_wow64(eprocess);
-    ObDereferenceObject(eprocess);
+    ob_dereference_object(eprocess as PVOID);
 
     Some(wow64)
 }
 
-pub unsafe fn attaching_check_thread_interception(core_id: u32) -> bool {
+pub unsafe fn attaching_check_thread_interception(_core_id: u32) -> bool {
     let process_id = get_current_process_id();
 
     if let Some(details) = attaching_find_process_debugging_details_by_process_id(process_id) {
@@ -350,23 +348,19 @@ pub fn set_waiting_for_return_from_page_fault(waiting: bool) {
 }
 
 pub unsafe fn attaching_adjust_nop_sled_buffer(reserved_address: u64, process_id: ProcessId) -> bool {
-    extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u64, process: *mut u64) -> i32;
-        fn KeStackAttachProcess(process: u64, apc_state: *mut u8);
-        fn KeUnstackDetachProcess(apc_state: *mut u8);
-        fn ObDereferenceObject(object: u64);
-    }
+    use wdk_sys::ntddk::{KeStackAttachProcess, KeUnstackDetachProcess};
+    use wdk_sys::{PRKPROCESS, PRKAPC_STATE};
 
-    let mut eprocess: u64 = 0;
-    let status = PsLookupProcessByProcessId(process_id as u64, &mut eprocess);
+    let mut eprocess: PEPROCESS = core::ptr::null_mut();
+    let status = PsLookupProcessByProcessId(process_id as HANDLE, &mut eprocess);
 
     if status != 0 {
         return false;
     }
 
-    let mut apc_state = [0u8; 64];
+    let mut apc_state: wdk_sys::_KAPC_STATE = core::mem::zeroed();
 
-    KeStackAttachProcess(eprocess, apc_state.as_mut_ptr());
+    KeStackAttachProcess(eprocess as PRKPROCESS, &mut apc_state as PRKAPC_STATE);
 
     core::ptr::write_bytes(reserved_address as *mut u8, 0x90, 4096);
 
@@ -374,8 +368,8 @@ pub unsafe fn attaching_adjust_nop_sled_buffer(reserved_address: u64, process_id
     core::ptr::write(sled_end as *mut u16, 0xa20f);
     core::ptr::write((sled_end + 2) as *mut u16, 0xf4eb);
 
-    KeUnstackDetachProcess(apc_state.as_mut_ptr());
-    ObDereferenceObject(eprocess);
+    KeUnstackDetachProcess(&mut apc_state as PRKAPC_STATE);
+    ob_dereference_object(eprocess as PVOID);
 
     true
 }

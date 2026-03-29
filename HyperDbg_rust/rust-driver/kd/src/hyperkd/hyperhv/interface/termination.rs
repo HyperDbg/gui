@@ -1,7 +1,4 @@
-use alloc::boxed::Box;
-use alloc::sync::Arc;
 use alloc::collections::VecDeque;
-use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
 use wdk_sys::{
@@ -9,7 +6,6 @@ use wdk_sys::{
     PEPROCESS,
     PETHREAD,
     PVOID,
-    KIRQL,
     HANDLE,
 };
 

@@ -1,6 +1,8 @@
+use wdk_sys::ntddk::PsLookupProcessByProcessId;
+use wdk_sys::{HANDLE, PEPROCESS, PVOID};
+
 use crate::hyperkd::hyperhv::vmm::vmx::vmx::{read_cr3 as vmx_read_cr3, write_cr3 as vmx_write_cr3};
 use crate::hyperkd::hyperhv::vmm::ept::ept_vpid::{invvpid_individual_address, invvpid_all_contexts};
-use crate::hyperkd::hyperhv::memory::MemoryManager;
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
@@ -22,15 +24,18 @@ impl Cr3Type {
     }
 }
 
-pub unsafe fn switch_to_process_memory_layout(process_id: u32) -> Option<Cr3Type> {
+unsafe fn ob_dereference_object(object: PVOID) {
     extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u32, eprocess: *mut *mut u8) -> u32;
-        fn ObDereferenceObject(object: *mut u8);
+        fn ObfDereferenceObject(Object: PVOID) -> isize;
     }
+    ObfDereferenceObject(object);
+}
 
-    let mut eprocess: *mut u8 = core::ptr::null_mut();
+pub unsafe fn switch_to_process_memory_layout(process_id: u32) -> Option<Cr3Type> {
+    let mut eprocess: PEPROCESS = core::ptr::null_mut();
     
-    if PsLookupProcessByProcessId(process_id, &mut eprocess) != 0 {
+    let status = PsLookupProcessByProcessId(process_id as HANDLE, &mut eprocess);
+    if status != 0 {
         return None;
     }
 
@@ -40,7 +45,7 @@ pub unsafe fn switch_to_process_memory_layout(process_id: u32) -> Option<Cr3Type
     
     vmx_write_cr3(guest_cr3);
     
-    ObDereferenceObject(eprocess);
+    ob_dereference_object(eprocess as PVOID);
     
     Some(current_process_cr3)
 }
@@ -96,9 +101,9 @@ pub unsafe fn invalidate_tlb() {
 }
 
 pub unsafe fn invalidate_tlb_single_address(address: u64) {
-    invvpid_individual_address(0, address);
+    let _ = invvpid_individual_address(0, address);
 }
 
 pub unsafe fn invalidate_tlb_all_contexts() {
-    invvpid_all_contexts();
+    let _ = invvpid_all_contexts();
 }

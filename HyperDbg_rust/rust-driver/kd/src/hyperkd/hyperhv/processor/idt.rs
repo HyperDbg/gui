@@ -1,12 +1,6 @@
-use alloc::boxed::Box;
-use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
-use wdk_sys::ntddk::{
-    KeGetCurrentIrql,
-    KeGetCurrentProcessorNumberEx,
-};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IdtError {

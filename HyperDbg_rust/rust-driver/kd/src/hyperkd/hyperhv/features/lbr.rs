@@ -1,8 +1,6 @@
 use alloc::collections::BTreeMap;
-use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
-use super::super::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LbrError {
@@ -275,12 +273,12 @@ impl LbrManager {
         unsafe {
             let mut cr4: u64;
             core::arch::asm!("mov {}, cr4", out(reg) cr4);
-            cr4 |= (1 << 8);
+            cr4 |= 1 << 8 ;
             core::arch::asm!("mov cr4, {}", in(reg) cr4);
 
             let mut debugctl: u64;
             core::arch::asm!("mov {}, msr 0x1d9", out(reg) debugctl, options(nomem, nostack));
-            debugctl |= (1 << 0);
+            debugctl |= 1 << 0 ;
             core::arch::asm!("mov msr 0x1d9, {}", in(reg) debugctl, options(nomem, nostack));
         }
     }

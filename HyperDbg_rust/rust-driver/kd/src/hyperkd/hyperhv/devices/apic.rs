@@ -1,12 +1,7 @@
-use alloc::boxed::Box;
-use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
 use spin::Mutex;
 
-use wdk_sys::ntddk::{
-    KeGetCurrentProcessorNumberEx,
-    KeQueryActiveProcessors,
-};
+use wdk_sys::ntddk::KeQueryActiveProcessors;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ApicError {

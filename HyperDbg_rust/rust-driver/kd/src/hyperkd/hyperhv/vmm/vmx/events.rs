@@ -1,11 +1,9 @@
-use alloc::boxed::Box;
-use alloc::sync::Arc;
-use alloc::vec::Vec;
-use core::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
+#![allow(unused_comparisons)]
+
+use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
 
 use crate::hyperkd::hyperhv::interface::callbacks::*;
-use crate::hyperkd::Address;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EventError {
@@ -310,7 +308,10 @@ impl EventManager {
     }
 
     pub fn unregister_event_callback(&mut self, callback: unsafe fn(*mut Event)) {
-        self.event_callbacks.retain(|&cb| cb != callback);
+        #[allow(unpredictable_function_pointer_comparisons)]
+        {
+            self.event_callbacks.retain(|&cb| cb != callback);
+        }
     }
 
     pub fn apply_event(&mut self, event: &Event) -> EventResult {

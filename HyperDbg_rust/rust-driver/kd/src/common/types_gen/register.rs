@@ -5,11 +5,8 @@
 
 extern crate alloc;
 
-use alloc::string::String;
-use alloc::vec::Vec;
 use serde::{Serialize, Deserialize};
 
-use super::*;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct RegisterState {

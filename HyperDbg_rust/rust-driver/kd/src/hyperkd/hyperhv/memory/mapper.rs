@@ -1,9 +1,6 @@
 #![allow(dead_code)]
 
-use core::mem::size_of;
 
-use crate::hyperkd::hyperhv::state::*;
-use crate::hyperkd::hyperhv::common::msr::*;
 use crate::hyperkd::hyperhv::vmm::vmx::vmx::read_cr3;
 
 pub const PAGE_SIZE: usize = 4096;

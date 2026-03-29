@@ -1,33 +1,17 @@
 use alloc::boxed::Box;
-use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
 use wdk_sys::{
     NTSTATUS,
-    PDRIVER_OBJECT,
     PDEVICE_OBJECT,
-    PUNICODE_STRING,
-    PIO_STATUS_BLOCK,
     IO_STATUS_BLOCK,
     HANDLE,
-    PHANDLE,
     ULONG,
-    ACCESS_MASK,
     PVOID,
-    PLARGE_INTEGER,
-    BOOLEAN,
-    POBJECT_ATTRIBUTES,
-    PIO_APC_ROUTINE,
-    PULONG,
 };
 
 use wdk_sys::ntddk::{
-    IoCreateDevice,
-    IoDeleteDevice,
-    IoCreateSymbolicLink,
-    IoDeleteSymbolicLink,
-    ZwCreateFile,
     ZwClose,
     ZwDeviceIoControlFile,
     ZwReadFile,
@@ -567,21 +551,21 @@ impl CommunicationManager {
         let mut ioctl_handle = self.ioctl_handle.lock();
         if let Some(handle) = ioctl_handle.take() {
             if !handle.handle.is_null() {
-                unsafe { ZwClose(handle.handle) };
+                let _ = unsafe { ZwClose(handle.handle) };
             }
         }
 
         let mut wsl_handle = self.wsl_handle.lock();
         if let Some(handle) = wsl_handle.take() {
             if !handle.handle.is_null() {
-                unsafe { ZwClose(handle.handle) };
+                let _ = unsafe { ZwClose(handle.handle) };
             }
         }
 
         let mut network_handle = self.network_handle.lock();
         if let Some(handle) = network_handle.take() {
             if !handle.handle.is_null() {
-                unsafe { ZwClose(handle.handle) };
+                let _ = unsafe { ZwClose(handle.handle) };
             }
         }
     }
@@ -668,7 +652,7 @@ pub fn get_communication_statistics() -> (u32, u32, bool) {
     manager.get_statistics()
 }
 
-pub fn send_ioctl_simple(code: IoctlCode, input: &[u8], output_capacity: usize) -> Result<IoctlResponse, CommunicationError> {
+pub fn send_ioctl_simple(code: IoctlCode, _input: &[u8], output_capacity: usize) -> Result<IoctlResponse, CommunicationError> {
     let request = IoctlRequest::with_output_capacity(code, output_capacity);
     send_ioctl_request(&request)
 }

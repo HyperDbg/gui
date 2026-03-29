@@ -1,9 +1,7 @@
 use alloc::collections::BTreeMap;
-use alloc::sync::Arc;
 use spin::Mutex;
 
 use crate::hyperkd::hyperhv::state::*;
-use crate::hyperkd::hyperhv::vmm::ept::*;
 use crate::hyperkd::hyperhv::hooks::ept_hook::{ept_hook_add_hidden_breakpoint, ept_hook_remove, EptHookError};
 use crate::hyperkd::hyperhv::common::msr::{read_msr, write_msr, IA32_LSTAR};
 
@@ -547,7 +545,7 @@ pub unsafe fn uninstall_inline_hook(address: Address) -> Result<(), HookError> {
     ctx.remove_inline_hook(address)
 }
 
-pub fn build_absolute_jump(from: Address, to: Address) -> [u8; 14] {
+pub fn build_absolute_jump(_from: Address, to: Address) -> [u8; 14] {
     let mut code = [0u8; 14];
 
     code[0] = 0xFF;
@@ -678,7 +676,7 @@ pub unsafe fn set_ept_hook2_detour(
 pub unsafe fn remove_ept_hook2_detour(address: Address) -> Result<(), HookError> {
     let mut ctx = HOOK_CONTEXT.lock();
     
-    let detour = ctx.ept_hook2_detours.remove(&address)
+    let _detour = ctx.ept_hook2_detours.remove(&address)
         .ok_or(HookError::NotHooked)?;
 
     let physical_address = crate::memory::MemoryManager::virtual_to_physical(address);
@@ -688,12 +686,12 @@ pub unsafe fn remove_ept_hook2_detour(address: Address) -> Result<(), HookError>
 }
 
 pub unsafe fn ept_hook2_general_detour_handler(
-    regs: *mut crate::hyperkd::hyperhv::assembly::debugger_asm::GuestContext,
+    _regs: *mut crate::hyperkd::hyperhv::assembly::debugger_asm::GuestContext,
     called_from: Address,
 ) -> Address {
     let ctx = HOOK_CONTEXT.lock();
     
-    for (address, detour) in ctx.ept_hook2_detours.iter() {
+    for (_address, detour) in ctx.ept_hook2_detours.iter() {
         if detour.hooked_function_address == called_from && detour.enabled {
             return detour.return_address;
         }

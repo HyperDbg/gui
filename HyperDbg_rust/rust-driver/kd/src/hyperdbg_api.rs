@@ -4,7 +4,7 @@ use alloc::sync::Arc;
 use alloc::format;
 use spin::{Mutex, Once};
 
-use wdk_sys::{PEPROCESS, PETHREAD, HANDLE, NTSTATUS, PVOID};
+use wdk_sys::{PEPROCESS, PETHREAD, HANDLE, PVOID};
 
 use wdk_sys::ntddk::{
     PsGetProcessId,
@@ -399,7 +399,7 @@ impl DebuggerApi for HyperDbgApi {
             
             let ldr = &*peb_ref.Ldr;
             
-            let mut head = &ldr.InLoadOrderModuleList;
+            let head = &ldr.InLoadOrderModuleList;
             let mut entry = head.Flink;
             
             while !entry.is_null() && entry != head as *const _ as *mut _ {

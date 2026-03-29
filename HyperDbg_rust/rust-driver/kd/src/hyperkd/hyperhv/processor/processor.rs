@@ -4,14 +4,9 @@ use wdk_sys::{
     GROUP_AFFINITY,
     PGROUP_AFFINITY,
     PROCESSOR_NUMBER,
-    PKDPC,
     PRKDPC,
     PVOID,
-    BOOLEAN,
-    KAFFINITY,
-    ULONG,
     USHORT,
-    PKDEFERRED_ROUTINE,
 };
 
 use wdk_sys::ntddk::{

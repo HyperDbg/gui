@@ -1,16 +1,13 @@
 #![allow(dead_code)]
 
-use alloc::boxed::Box;
 use alloc::collections::BTreeMap;
-use alloc::sync::Arc;
-use alloc::vec::Vec;
-use core::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
+use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
-use crate::hyperkd::{ProcessId, ThreadId, Address};
-use crate::hyperkd::attaching::{UsermodeDebuggingProcessDetails, attaching_find_process_debugging_details_by_process_id};
+use crate::hyperkd::{ProcessId, ThreadId};
+use crate::hyperkd::attaching::UsermodeDebuggingProcessDetails;
 use crate::hyperkd::hyperhv::components::registers::debug_registers::{
-    set_debug_register, clear_debug_register, HardwareBreakpoint,
+    set_debug_register, clear_debug_register,
     DebugRegister, DebugRegisterType,
 };
 
@@ -269,8 +266,8 @@ pub unsafe fn ud_clear_all_hardware_breakpoints(thread_id: ThreadId) -> bool {
 }
 
 pub unsafe fn ud_check_and_handle_breakpoints(
-    core_id: u32,
-    reason: PausingReason,
+    _core_id: u32,
+    _reason: PausingReason,
     process_details: Option<&UsermodeDebuggingProcessDetails>,
 ) -> bool {
     if !USER_DEBUGGER_STATE.is_debugging_active.load(Ordering::SeqCst) {
@@ -303,7 +300,7 @@ pub unsafe fn ud_handle_instant_break(core_id: u32, reason: PausingReason, proce
     true
 }
 
-pub unsafe fn ud_check_for_command(core_id: u32, process_details: &UsermodeDebuggingProcessDetails) -> bool {
+pub unsafe fn ud_check_for_command(_core_id: u32, _process_details: &UsermodeDebuggingProcessDetails) -> bool {
     if !USER_DEBUGGER_STATE.is_debugging_active.load(Ordering::SeqCst) {
         return false;
     }

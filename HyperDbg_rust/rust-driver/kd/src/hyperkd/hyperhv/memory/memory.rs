@@ -1,4 +1,3 @@
-use core::ptr;
 use crate::hyperkd::hyperhv::state::*;
 use crate::hyperkd::hyperhv::vmm::vmx::vmx::read_cr3;
 
@@ -8,9 +7,7 @@ use wdk_sys::{
     PHYSICAL_ADDRESS,
     _LARGE_INTEGER,
     ULONG,
-    BOOLEAN,
     PMDL,
-    NTSTATUS,
     POOL_FLAGS,
     KPROCESSOR_MODE,
     LOCK_OPERATION,

@@ -1,5 +1,3 @@
-use alloc::boxed::Box;
-use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
@@ -66,7 +64,7 @@ impl PciAddress {
         address |= (self.bus as u32) << 16;
         address |= (self.device as u32 & 0x1F) << 11;
         address |= (self.function as u32 & 0x07) << 8;
-        address |= (offset as u32 & 0xFC);
+        address |= offset as u32 & 0xFC ;
         address
     }
 }

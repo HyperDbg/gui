@@ -1,4 +1,16 @@
 #![no_std]
+#![allow(static_mut_refs)]
+#![allow(non_snake_case)]
+#![allow(non_upper_case_globals)]
+#![allow(unused_unsafe)]
+#![allow(unused_assignments)]
+#![allow(unused_variables)]
+#![allow(clippy::all)]
+#![allow(dead_code)]
+#![allow(non_camel_case_types)]
+#![allow(improper_ctypes)]
+#![allow(unused_comparisons)]
+#![allow(asm_sub_register)]
 
 extern crate alloc;
 
@@ -14,7 +26,6 @@ static GLOBAL_ALLOCATOR: WdkAllocator = WdkAllocator;
 
 use alloc::sync::Arc;
 use alloc::string::String;
-use alloc::vec::Vec;
 use alloc::string::ToString;
 use spin::Mutex;
 
@@ -35,7 +46,6 @@ pub use hyperkd::hyperhv::globals;
 pub use hyperkd::hyperhv::hooks;
 pub use hyperkd::{VMX_CONTEXT, VmxState, VmxError, Vcpu, VmxContext};
 
-pub use logger::*;
 pub use net::{Server, Request, ResponseWriter, Handler, Router};
 pub use common::types_gen::*;
 pub use common::handlers_gen::{DebuggerApi, dispatch_api, NoOpDebugger, EventQueue};
@@ -265,8 +275,6 @@ const IRP_MJ_MAXIMUM_FUNCTION: ULONG = 28;
 
 #[cfg(feature = "standalone-driver")]
 use wdk_sys::ntddk::{
-    IoCreateDevice,
-    IoCreateSymbolicLink,
     IoDeleteDevice,
     IofCompleteRequest,
 };
@@ -302,7 +310,7 @@ extern "C" fn driver_unload(driver_object: PDRIVER_OBJECT) {
 
 #[cfg(feature = "standalone-driver")]
 extern "C" fn driver_default_dispatch(
-    device_object: PDEVICE_OBJECT,
+    _device_object: PDEVICE_OBJECT,
     irp: PIRP,
 ) -> NTSTATUS {
     unsafe {
@@ -315,7 +323,7 @@ extern "C" fn driver_default_dispatch(
 
 #[cfg(feature = "standalone-driver")]
 unsafe extern "C" fn driver_create(
-    device_object: PDEVICE_OBJECT,
+    _device_object: PDEVICE_OBJECT,
     irp: PIRP,
 ) -> NTSTATUS {
     unsafe {
@@ -328,7 +336,7 @@ unsafe extern "C" fn driver_create(
 
 #[cfg(feature = "standalone-driver")]
 unsafe extern "C" fn driver_close(
-    device_object: PDEVICE_OBJECT,
+    _device_object: PDEVICE_OBJECT,
     irp: PIRP,
 ) -> NTSTATUS {
     unsafe {
@@ -341,7 +349,7 @@ unsafe extern "C" fn driver_close(
 
 #[cfg(feature = "standalone-driver")]
 unsafe extern "C" fn driver_device_control(
-    device_object: PDEVICE_OBJECT,
+    _device_object: PDEVICE_OBJECT,
     irp: PIRP,
 ) -> NTSTATUS {
     let ctx = DRIVER_CONTEXT.lock();
@@ -412,7 +420,7 @@ fn handle_ioctl(
             if input.len() < 6 {
                 return Err(DriverError::InvalidAddress);
             }
-            let port = u16::from_le_bytes([input[0], input[1]]);
+            let _port = u16::from_le_bytes([input[0], input[1]]);
             let addr_len = input[2] as usize;
             let addr = core::str::from_utf8(&input[3..3+addr_len])
                 .map_err(|_| DriverError::InvalidAddress)?;

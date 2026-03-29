@@ -275,7 +275,7 @@ impl UserDebugger {
     pub fn step_instructions(
         &self,
         process_id: ProcessId,
-        thread_id: ThreadId,
+        _thread_id: ThreadId,
         stepping_type: u32,
         is_current_instruction_a_call: bool,
         call_instruction_size: u32,

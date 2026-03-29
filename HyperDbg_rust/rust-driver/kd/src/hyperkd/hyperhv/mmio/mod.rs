@@ -1,10 +1,9 @@
-use alloc::boxed::Box;
 use alloc::sync::Arc;
 use alloc::vec::Vec;
 use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
 
-use crate::hyperkd::hyperhv::memory::mapper::{virtual_address_to_physical_address, physical_address_to_virtual_address};
+use crate::hyperkd::hyperhv::memory::mapper::physical_address_to_virtual_address;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MmioError {

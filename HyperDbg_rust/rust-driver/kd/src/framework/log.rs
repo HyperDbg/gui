@@ -1,7 +1,5 @@
 extern crate alloc;
 
-use alloc::string::String;
-use alloc::format;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LogLevel {

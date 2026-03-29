@@ -1,10 +1,6 @@
 #![allow(dead_code)]
 #![allow(non_camel_case_types)]
 
-use core::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, AtomicU8, Ordering};
-use alloc::boxed::Box;
-use alloc::collections::BTreeMap;
-use spin::Mutex;
 
 pub const PAGE_SIZE: usize = 0x1000;
 pub const PENDING_INTERRUPTS_BUFFER_CAPACITY: usize = 64;

@@ -1,10 +1,8 @@
 use alloc::collections::BTreeMap;
-use alloc::sync::Arc;
 use alloc::vec::Vec;
 use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
 
-use crate::hyperkd::hyperhv::vmm::vmx::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HyperEvadeError {

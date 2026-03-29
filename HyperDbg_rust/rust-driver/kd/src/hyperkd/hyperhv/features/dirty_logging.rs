@@ -1,10 +1,8 @@
 use alloc::collections::BTreeMap;
-use alloc::sync::Arc;
 use alloc::vec::Vec;
 use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
 
-use crate::hyperkd::hyperhv::vmm::ept::*;
 use crate::hyperkd::hyperhv::vmm::ept::ept_vpid::EptError;
 use crate::hyperkd::hyperhv::PhysicalAddress;
 

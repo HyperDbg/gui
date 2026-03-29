@@ -1,11 +1,7 @@
-use alloc::boxed::Box;
-use alloc::sync::Arc;
 use alloc::collections::VecDeque;
-use core::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
+use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
 
-use crate::hyperkd::hyperhv::interface::callbacks::*;
-use crate::hyperkd::hyperhv::vmm::vmx::events::*;
 use crate::hyperkd::hyperhv::vmm::vmx::vmcall::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

@@ -1,13 +1,11 @@
 #![allow(dead_code)]
 
 use core::sync::atomic::{AtomicBool, Ordering};
-use alloc::boxed::Box;
-use alloc::vec::Vec;
 
 use crate::hyperkd::hyperhv::state::{
-    VMM_EPT_PAGE_TABLE, EPT_PML4_POINTER, EPT_PML2_ENTRY, EPT_PML1_ENTRY,
+    EPT_PML2_ENTRY,
     VMM_EPT_PML4E_COUNT, VMM_EPT_PML3E_COUNT, VMM_EPT_PML2E_COUNT,
-    VIRTUAL_MACHINE_STATE, EPT_POINTER, PVMM_EPT_PAGE_TABLE,
+    VIRTUAL_MACHINE_STATE, PVMM_EPT_PAGE_TABLE,
 };
 
 pub const MAX_PHYSICAL_RAM_RANGE_COUNT: usize = 32;
@@ -139,7 +137,7 @@ pub unsafe fn ept_get_pml2_entry(ept_table: PVMM_EPT_PAGE_TABLE, physical_addres
         return None;
     }
 
-    Some((&mut (*ept_table).pml2[pdpt_index][pd_index] as *mut EPT_PML2_ENTRY))
+    Some(&mut (*ept_table).pml2[pdpt_index][pd_index] as *mut EPT_PML2_ENTRY)
 }
 
 pub unsafe fn exec_trap_traverse_through_os_page_tables(
@@ -421,7 +419,7 @@ pub unsafe fn hv_suppress_rip_increment(vcpu: *mut VIRTUAL_MACHINE_STATE) {
     }
 }
 
-pub unsafe fn dispatch_event_mode(vcpu: *mut VIRTUAL_MACHINE_STATE, _mode: DebuggerEventModeType) {
+pub unsafe fn dispatch_event_mode(_vcpu: *mut VIRTUAL_MACHINE_STATE, _mode: DebuggerEventModeType) {
 }
 
 fn is_mbec_supported() -> bool {

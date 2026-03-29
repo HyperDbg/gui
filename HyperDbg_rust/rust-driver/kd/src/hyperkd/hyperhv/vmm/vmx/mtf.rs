@@ -1,4 +1,3 @@
-use crate::hyperkd::Vcpu;
 
 pub struct MtfState {
     pub enabled: bool,

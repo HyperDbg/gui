@@ -1,6 +1,5 @@
 #![allow(dead_code)]
 
-use core::sync::atomic::{AtomicU64, Ordering};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DebugRegisterType {

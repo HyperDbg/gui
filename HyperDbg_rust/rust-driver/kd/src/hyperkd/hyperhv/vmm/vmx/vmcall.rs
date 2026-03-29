@@ -1,10 +1,6 @@
-use alloc::boxed::Box;
-use alloc::sync::Arc;
-use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use core::sync::atomic::{AtomicBool, Ordering};
 use spin::Mutex;
 
-use crate::hyperkd::hyperhv::interface::callbacks::*;
-use crate::hyperkd::hyperhv::broadcast::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum VmcallError {
@@ -248,9 +244,9 @@ impl VmcallHandler {
                 Some(VmcallNumber::FlushVirtualAddressList) |
                 Some(VmcallNumber::FlushGuestPhysicalAddressSpace) |
                 Some(VmcallNumber::FlushGuestPhysicalAddressList) => {
-                    unsafe {
-                        crate::hyperkd::hyperhv::vmm::ept::ept_vpid::invvpid_all_contexts();
-                    }
+                    let _ = unsafe {
+                        crate::hyperkd::hyperhv::vmm::ept::ept_vpid::invvpid_all_contexts()
+                    };
                     context.status = 0;
                     Ok(())
                 }

@@ -1,34 +1,9 @@
 use alloc::boxed::Box;
-use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
-use wdk_sys::{
-    NTSTATUS,
-    PVOID,
-    PUNICODE_STRING,
-    ULONG,
-    BOOLEAN,
-    PLARGE_INTEGER,
-    PMDL,
-    KSPIN_LOCK,
-    PKSPIN_LOCK,
-    KIRQL,
-    SIZE_T,
-};
 
-use wdk_sys::ntddk::{
-    MmGetSystemRoutineAddress,
-    ExAllocatePool2,
-    ExFreePoolWithTag,
-    IoAllocateMdl,
-    IoFreeMdl,
-    KeInitializeSpinLock,
-    KeReleaseSpinLock,
-    KeInitializeEvent,
-};
 
-use crate::hyperkd::hyperhv::bindings::POOL_FLAG_NON_PAGED;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LoaderError {

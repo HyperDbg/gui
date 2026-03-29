@@ -662,7 +662,7 @@ pub unsafe fn initialize_vcpu_on_current_processor(core_id: u32) -> Result<(), c
     let mut context = VMX_CONTEXT.lock();
     
     if let Some(vcpu) = context.get_vcpu_mut(core_id) {
-        let host_rip = AsmVmexitHandler as usize as u64;
+        let host_rip = AsmVmexitHandler as *const () as usize as u64;
         let host_rsp = 0;
         
         setup_vmcs(vcpu, host_rip, host_rsp)?;

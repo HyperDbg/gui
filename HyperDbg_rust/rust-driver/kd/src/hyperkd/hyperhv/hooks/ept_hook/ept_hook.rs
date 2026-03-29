@@ -2,7 +2,6 @@ use alloc::collections::BTreeMap;
 use alloc::sync::Arc;
 use spin::Mutex;
 
-use crate::hyperkd::hyperhv::vmm::ept::*;
 use crate::hyperkd::hyperhv::memory::MemoryManager;
 use crate::hyperkd::hyperhv::state::EPT_PML1_ENTRY;
 

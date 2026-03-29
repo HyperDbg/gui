@@ -1,9 +1,7 @@
 extern crate alloc;
 
-use alloc::sync::Arc;
 use alloc::boxed::Box;
 use spin::Mutex;
-use crate::{log_info, log_success, log_error};
 
 pub mod hyperhv;
 pub mod attaching;

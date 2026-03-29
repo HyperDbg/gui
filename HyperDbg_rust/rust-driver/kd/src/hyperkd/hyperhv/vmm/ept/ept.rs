@@ -1,11 +1,7 @@
 #![allow(dead_code)]
 #![allow(non_camel_case_types)]
 
-use core::mem::size_of;
-use core::sync::atomic::{AtomicU32, Ordering};
 use alloc::boxed::Box;
-use alloc::vec::Vec;
-use spin::Mutex;
 
 use crate::hyperkd::hyperhv::state::*;
 use crate::hyperkd::hyperhv::common::msr::*;
@@ -104,7 +100,7 @@ pub unsafe fn ept_check_features() -> bool {
     let page_walk_length_4 = (vpid_register & (1 << 6)) != 0;
     let memory_type_write_back = (vpid_register & (1 << 14)) != 0;
     let pde_2mb_pages = (vpid_register & (1 << 16)) != 0;
-    let execute_only_pages = (vpid_register & (1 << 0)) != 0;
+    let _execute_only_pages = (vpid_register & (1 << 0)) != 0;
 
     if !page_walk_length_4 || !memory_type_write_back || !pde_2mb_pages {
         return false;
@@ -416,7 +412,7 @@ pub unsafe fn ept_split_large_page(
         &mut new_split.dynamic_split_list as *mut _,
     );
 
-    Box::into_raw(new_split);
+    let _ = Box::into_raw(new_split);
 
     Ok(())
 }

@@ -1,5 +1,4 @@
 use alloc::boxed::Box;
-use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
@@ -357,7 +356,7 @@ pub unsafe fn broadcast_enable_debug_exits() -> Result<(), BroadcastError> {
         fn AsmVmxVmcall(vmcall_number: u64, param1: u64, param2: u64, param3: u64);
     }
 
-    let callback: BroadcastCallback = |context: *mut u8| {
+    let callback: BroadcastCallback = |_context: *mut u8| {
         AsmVmxVmcall(0x20, 0, 0, 0);
     };
 
@@ -369,7 +368,7 @@ pub unsafe fn broadcast_disable_debug_exits() -> Result<(), BroadcastError> {
         fn AsmVmxVmcall(vmcall_number: u64, param1: u64, param2: u64, param3: u64);
     }
 
-    let callback: BroadcastCallback = |context: *mut u8| {
+    let callback: BroadcastCallback = |_context: *mut u8| {
         AsmVmxVmcall(0x21, 0, 0, 0);
     };
 
@@ -381,7 +380,7 @@ pub unsafe fn broadcast_enable_breakpoint_exits() -> Result<(), BroadcastError> 
         fn AsmVmxVmcall(vmcall_number: u64, param1: u64, param2: u64, param3: u64);
     }
 
-    let callback: BroadcastCallback = |context: *mut u8| {
+    let callback: BroadcastCallback = |_context: *mut u8| {
         AsmVmxVmcall(0x22, 0, 0, 0);
     };
 
@@ -393,7 +392,7 @@ pub unsafe fn broadcast_disable_breakpoint_exits() -> Result<(), BroadcastError>
         fn AsmVmxVmcall(vmcall_number: u64, param1: u64, param2: u64, param3: u64);
     }
 
-    let callback: BroadcastCallback = |context: *mut u8| {
+    let callback: BroadcastCallback = |_context: *mut u8| {
         AsmVmxVmcall(0x23, 0, 0, 0);
     };
 
@@ -405,7 +404,7 @@ pub unsafe fn broadcast_enable_nmi_exits() -> Result<(), BroadcastError> {
         fn AsmVmxVmcall(vmcall_number: u64, param1: u64, param2: u64, param3: u64);
     }
 
-    let callback: BroadcastCallback = |context: *mut u8| {
+    let callback: BroadcastCallback = |_context: *mut u8| {
         AsmVmxVmcall(0x24, 0, 0, 0);
     };
 
@@ -417,7 +416,7 @@ pub unsafe fn broadcast_disable_nmi_exits() -> Result<(), BroadcastError> {
         fn AsmVmxVmcall(vmcall_number: u64, param1: u64, param2: u64, param3: u64);
     }
 
-    let callback: BroadcastCallback = |context: *mut u8| {
+    let callback: BroadcastCallback = |_context: *mut u8| {
         AsmVmxVmcall(0x25, 0, 0, 0);
     };
 

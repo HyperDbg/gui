@@ -2,9 +2,6 @@
 
 extern crate alloc;
 
-use alloc::string::String;
-use alloc::vec::Vec;
-use serde::{Deserialize, Serialize};
 
 mod common;
 mod register;

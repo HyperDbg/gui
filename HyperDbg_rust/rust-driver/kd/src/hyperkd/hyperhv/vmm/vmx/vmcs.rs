@@ -113,7 +113,7 @@ unsafe fn setup_vmcs_revision_id(vcpu: &Vcpu) -> Result<(), VmxError> {
     Ok(())
 }
 
-unsafe fn setup_guest_state(vcpu: &Vcpu) -> Result<(), VmxError> {
+unsafe fn setup_guest_state(_vcpu: &Vcpu) -> Result<(), VmxError> {
     let cr0 = read_cr0();
     let cr3 = read_cr3();
     let cr4 = read_cr4();
@@ -273,7 +273,7 @@ unsafe fn get_segment_base(gdt_base: u64, selector: u16) -> u64 {
 }
 
 unsafe fn setup_host_state(
-    vcpu: &Vcpu,
+    _vcpu: &Vcpu,
     host_rip: u64,
     host_rsp: u64,
 ) -> Result<(), VmxError> {
@@ -323,7 +323,7 @@ unsafe fn setup_control_fields(vcpu: &Vcpu) -> Result<(), VmxError> {
     Ok(())
 }
 
-unsafe fn setup_pin_based_controls(vcpu: &Vcpu) -> Result<(), VmxError> {
+unsafe fn setup_pin_based_controls(_vcpu: &Vcpu) -> Result<(), VmxError> {
     let msr_value = read_msr(IA32_VMX_PINBASED_CTLS);
     let allowed_0 = (msr_value & 0xFFFFFFFF) as u32;
     let allowed_1 = (msr_value >> 32) as u32;
@@ -341,7 +341,7 @@ unsafe fn setup_pin_based_controls(vcpu: &Vcpu) -> Result<(), VmxError> {
     Ok(())
 }
 
-unsafe fn setup_primary_proc_based_controls(vcpu: &Vcpu) -> Result<(), VmxError> {
+unsafe fn setup_primary_proc_based_controls(_vcpu: &Vcpu) -> Result<(), VmxError> {
     let msr_value = read_msr(IA32_VMX_PROCBASED_CTLS);
     let allowed_0 = (msr_value & 0xFFFFFFFF) as u32;
     let allowed_1 = (msr_value >> 32) as u32;
@@ -372,7 +372,7 @@ unsafe fn setup_primary_proc_based_controls(vcpu: &Vcpu) -> Result<(), VmxError>
     Ok(())
 }
 
-unsafe fn setup_secondary_proc_based_controls(vcpu: &Vcpu) -> Result<(), VmxError> {
+unsafe fn setup_secondary_proc_based_controls(_vcpu: &Vcpu) -> Result<(), VmxError> {
     let msr_value = read_msr(IA32_VMX_PROCBASED_CTLS2);
     let allowed_0 = (msr_value & 0xFFFFFFFF) as u32;
     let allowed_1 = (msr_value >> 32) as u32;
@@ -392,7 +392,7 @@ unsafe fn setup_secondary_proc_based_controls(vcpu: &Vcpu) -> Result<(), VmxErro
     Ok(())
 }
 
-unsafe fn setup_exit_controls(vcpu: &Vcpu) -> Result<(), VmxError> {
+unsafe fn setup_exit_controls(_vcpu: &Vcpu) -> Result<(), VmxError> {
     let msr_value = read_msr(IA32_VMX_EXIT_CTLS);
     let allowed_0 = (msr_value & 0xFFFFFFFF) as u32;
     let allowed_1 = (msr_value >> 32) as u32;
@@ -415,7 +415,7 @@ unsafe fn setup_exit_controls(vcpu: &Vcpu) -> Result<(), VmxError> {
     Ok(())
 }
 
-unsafe fn setup_entry_controls(vcpu: &Vcpu) -> Result<(), VmxError> {
+unsafe fn setup_entry_controls(_vcpu: &Vcpu) -> Result<(), VmxError> {
     let msr_value = read_msr(IA32_VMX_ENTRY_CTLS);
     let allowed_0 = (msr_value & 0xFFFFFFFF) as u32;
     let allowed_1 = (msr_value >> 32) as u32;

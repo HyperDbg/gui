@@ -1,4 +1,4 @@
-use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
+use core::sync::atomic::{AtomicBool, Ordering};
 use spin::Mutex;
 
 use wdk_sys::ntddk::KeQueryActiveProcessors;

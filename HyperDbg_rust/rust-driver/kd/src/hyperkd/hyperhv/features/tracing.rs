@@ -1,7 +1,4 @@
-use crate::hyperkd::hyperhv::memory::MemoryManager;
-use alloc::boxed::Box;
-use alloc::sync::Arc;
-use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use core::sync::atomic::{AtomicBool, Ordering};
 use spin::Mutex;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

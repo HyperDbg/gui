@@ -2,19 +2,14 @@ use core::sync::atomic::{AtomicU32, AtomicBool, Ordering};
 
 use wdk_sys::{
     PRKDPC,
-    PKDEFERRED_ROUTINE,
     PVOID,
-    ULONG,
     BOOLEAN,
-    NTSTATUS,
-    KIRQL,
     CCHAR,
     PLARGE_INTEGER,
     KPROCESSOR_MODE,
     PRKEVENT,
     EVENT_TYPE,
     KPRIORITY,
-    LONG,
     KWAIT_REASON,
 };
 

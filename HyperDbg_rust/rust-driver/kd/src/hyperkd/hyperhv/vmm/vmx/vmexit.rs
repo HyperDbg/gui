@@ -1,7 +1,6 @@
 use core::arch::asm;
 use core::arch::global_asm;
 use core::arch::naked_asm;
-use super::super::*;
 use crate::hyperkd::VMX_CONTEXT;
 use crate::hyperkd::VmxState;
 use super::vmx::*;

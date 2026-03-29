@@ -778,8 +778,8 @@ unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut 
         WskInspectEvent: 0,
         WskAbortEvent: 0,
     };
-    CLIENT_LISTEN_DISPATCH.WskAcceptEvent = accept_event as usize;
-    log_info!("[setup_listening_socket] accept_event function pointer = 0x{:016X}", accept_event as usize);
+    CLIENT_LISTEN_DISPATCH.WskAcceptEvent = accept_event as *const () as usize;
+    log_info!("[setup_listening_socket] accept_event function pointer = 0x{:016X}", accept_event as *const () as usize);
     
     let socket_fn: unsafe extern "system" fn(PVOID, u16, u16, u32, u32, PVOID, *const ClientListenDispatch, PVOID, PVOID, PVOID, PIRP) -> NTSTATUS = core::mem::transmute((*(*provider_npi).Dispatch).WskSocket);
     set_completion_routine(irp, Some(sync_completion_routine), &mut comp_event as *mut _ as PVOID);
