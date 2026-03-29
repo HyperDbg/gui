@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -618,4 +619,155 @@ func TestApplyFixesDryRun(t *testing.T) {
 	}
 
 	t.Log("Dry run completed successfully")
+}
+
+func TestApplyFixesMultiLineUse(t *testing.T) {
+	testCases := []struct {
+		name     string
+		input    string
+		expected string
+	}{
+		{
+			name: "single_line_use_wdk_sys",
+			input: `use wdk_sys::*;
+
+fn test() {
+    let a = 1;
+}`,
+			expected: `use crate::ntapi::*;
+
+fn test() {
+    let a = 1;
+}`,
+		},
+		{
+			name: "multi_line_use_wdk_sys",
+			input: `#[cfg(feature = "standalone-driver")]
+use wdk_sys::ntddk::{
+    IoDeleteDevice,
+    IofCompleteRequest,
+};
+
+fn test() {
+    unsafe {
+        IoDeleteDevice(device);
+    }
+}`,
+			expected: `#[cfg(feature = "standalone-driver")]
+use crate::ntapi::*;
+
+fn test() {
+    unsafe {
+        IoDeleteDevice(device);
+    }
+}`,
+		},
+		{
+			name: "extern_block_with_wdk_functions",
+			input: `use wdk_sys::*;
+
+extern "C" {
+    fn PsGetCurrentProcess() -> PEPROCESS;
+    fn PsGetNextProcess(Process: PEPROCESS) -> PEPROCESS;
+}
+
+fn test() {
+    unsafe {
+        let proc = PsGetCurrentProcess();
+    }
+}`,
+			expected: `use crate::ntapi::*;
+
+
+fn test() {
+    unsafe {
+        let proc = PsGetCurrentProcess();
+    }
+}`,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			bg := NewBindgen(BindgenConfig{})
+
+			bg.fixReport = &FixReport{
+				FilesWithFixes: make(map[string][]WdkUsage),
+			}
+
+			lines := strings.Split(tc.input, "\n")
+			for i, line := range lines {
+				if strings.Contains(line, "use wdk_sys::") {
+					bg.fixReport.Usages = append(bg.fixReport.Usages, WdkUsage{
+						File:         "test.rs",
+						Line:         i + 1,
+						Kind:         "import",
+						Name:         "wdk_sys",
+						SourceType:   "use_wdk_sys",
+						NeedsFix:     true,
+						SuggestedFix: "use crate::ntapi::*;",
+					})
+					bg.fixReport.FilesWithFixes["test.rs"] = append(bg.fixReport.FilesWithFixes["test.rs"], WdkUsage{
+						File:         "test.rs",
+						Line:         i + 1,
+						Kind:         "import",
+						Name:         "wdk_sys",
+						SourceType:   "use_wdk_sys",
+						NeedsFix:     true,
+						SuggestedFix: "use crate::ntapi::*;",
+					})
+				}
+				if strings.Contains(line, "fn PsGetCurrentProcess") || strings.Contains(line, "fn PsGetNextProcess") {
+					name := "PsGetCurrentProcess"
+					if strings.Contains(line, "PsGetNextProcess") {
+						name = "PsGetNextProcess"
+					}
+					bg.fixReport.Usages = append(bg.fixReport.Usages, WdkUsage{
+						File:         "test.rs",
+						Line:         i + 1,
+						Kind:         "function",
+						Name:         name,
+						SourceType:   "extern_block",
+						NeedsFix:     true,
+						SuggestedFix: fmt.Sprintf("use crate::ntapi::%s;", name),
+					})
+					bg.fixReport.FilesWithFixes["test.rs"] = append(bg.fixReport.FilesWithFixes["test.rs"], WdkUsage{
+						File:         "test.rs",
+						Line:         i + 1,
+						Kind:         "function",
+						Name:         name,
+						SourceType:   "extern_block",
+						NeedsFix:     true,
+						SuggestedFix: fmt.Sprintf("use crate::ntapi::%s;", name),
+					})
+				}
+			}
+
+			bg.fixReport.TotalUsages = len(bg.fixReport.Usages)
+			bg.fixReport.FilesScanned = 1
+
+			tmpFile := filepath.Join(t.TempDir(), "test.rs")
+			err := os.WriteFile(tmpFile, []byte(tc.input), 0644)
+			if err != nil {
+				t.Fatalf("Failed to write temp file: %v", err)
+			}
+
+			bg.fixReport.FilesWithFixes[tmpFile] = bg.fixReport.FilesWithFixes["test.rs"]
+			delete(bg.fixReport.FilesWithFixes, "test.rs")
+
+			err = bg.ApplyFixes(false)
+			if err != nil {
+				t.Fatalf("Failed to apply fixes: %v", err)
+			}
+
+			result, err := os.ReadFile(tmpFile)
+			if err != nil {
+				t.Fatalf("Failed to read result: %v", err)
+			}
+
+			if string(result) != tc.expected {
+				t.Errorf("Expected:\n%s\n\nGot:\n%s", tc.expected, string(result))
+			}
+		})
+	}
 }

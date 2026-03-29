@@ -1038,27 +1038,14 @@ func (b *Bindgen) applyFileModifications(filePath string, mods []FileModificatio
 
 	lines := strings.Split(string(content), "\n")
 
-	sort.Slice(mods, func(i, j int) bool {
-		return mods[i].Line > mods[j].Line
-	})
+	linesToDelete := make(map[int]bool)
 
-	useStatements := make(map[string]bool)
-	for _, mod := range mods {
-		if mod.Kind == "add_use" {
-			useStatements[mod.FuncName] = true
-		}
-	}
+	for i := 0; i < len(lines); i++ {
+		line := lines[i]
+		trimmed := strings.TrimSpace(line)
 
-	for _, mod := range mods {
-		lineIdx := mod.Line - 1
-		if lineIdx < 0 || lineIdx >= len(lines) {
-			continue
-		}
-
-		switch mod.Kind {
-		case "replace_use":
-			line := lines[lineIdx]
-			if strings.Contains(line, "use wdk_sys::") {
+		if strings.HasPrefix(trimmed, "use wdk_sys::") {
+			if strings.Contains(line, "{") && !strings.Contains(line, "};") {
 				indent := ""
 				for _, c := range line {
 					if c == ' ' || c == '\t' {
@@ -1067,28 +1054,68 @@ func (b *Bindgen) applyFileModifications(filePath string, mods []FileModificatio
 						break
 					}
 				}
-				lines[lineIdx] = indent + mod.NewText
-			}
-
-		case "add_use":
-			if strings.Contains(lines[lineIdx], "fn "+mod.FuncName) {
-				lines[lineIdx] = ""
+				for j := i + 1; j < len(lines); j++ {
+					if strings.Contains(lines[j], "};") {
+						for k := i + 1; k <= j; k++ {
+							linesToDelete[k] = true
+						}
+						lines[i] = indent + "use crate::ntapi::*;"
+						i = j
+						break
+					}
+				}
+			} else {
+				indent := ""
+				for _, c := range line {
+					if c == ' ' || c == '\t' {
+						indent += string(c)
+					} else {
+						break
+					}
+				}
+				lines[i] = indent + "use crate::ntapi::*;"
 			}
 		}
 	}
 
+	externBlockRanges := b.findExternBlockRanges(lines, mods)
+	for _, r := range externBlockRanges {
+		for i := r.start; i <= r.end; i++ {
+			linesToDelete[i] = true
+		}
+	}
+
+	useStatements := make(map[string]bool)
+	for _, mod := range mods {
+		if mod.Kind == "add_use" {
+			useStatements[mod.FuncName] = true
+		}
+	}
+
 	var newLines []string
+	for _, line := range lines {
+		newLines = append(newLines, line)
+	}
+
 	var addedUses map[string]bool = make(map[string]bool)
 	var lastUseLine int = -1
 
-	for i, line := range lines {
+	for i, line := range newLines {
+		if linesToDelete[i] {
+			continue
+		}
 		trimmed := strings.TrimSpace(line)
 		if strings.HasPrefix(trimmed, "use ") && !strings.HasPrefix(trimmed, "use crate::ntapi") {
 			lastUseLine = i
 		}
 	}
 
-	for i, line := range lines {
+	var result []string
+	for i, line := range newLines {
+		if linesToDelete[i] {
+			continue
+		}
+
 		trimmed := strings.TrimSpace(line)
 
 		if strings.HasPrefix(trimmed, "use crate::ntapi::") {
@@ -1100,17 +1127,86 @@ func (b *Bindgen) applyFileModifications(filePath string, mods []FileModificatio
 		}
 
 		if i == lastUseLine && len(useStatements) > 0 {
-			newLines = append(newLines, line)
+			result = append(result, line)
 			for name := range useStatements {
 				if !addedUses[name] {
-					newLines = append(newLines, fmt.Sprintf("use crate::ntapi::%s;", name))
+					result = append(result, fmt.Sprintf("use crate::ntapi::%s;", name))
 				}
 			}
 		} else {
-			newLines = append(newLines, line)
+			result = append(result, line)
 		}
 	}
 
-	newContent := strings.Join(newLines, "\n")
+	newContent := strings.Join(result, "\n")
 	return os.WriteFile(filePath, []byte(newContent), 0644)
+}
+
+type LineRange struct {
+	start int
+	end   int
+}
+
+func (b *Bindgen) findMultilineUseRanges(lines []string) []LineRange {
+	var ranges []LineRange
+
+	for i := 0; i < len(lines); i++ {
+		line := lines[i]
+		if strings.Contains(line, "use wdk_sys::") {
+			if strings.Contains(line, "{") && !strings.Contains(line, "}") {
+				start := i
+				for j := i + 1; j < len(lines); j++ {
+					if strings.Contains(lines[j], "};") {
+						ranges = append(ranges, LineRange{start: start, end: j})
+						i = j
+						break
+					}
+				}
+			}
+		}
+	}
+
+	return ranges
+}
+
+func (b *Bindgen) findExternBlockRanges(lines []string, mods []FileModification) []LineRange {
+	var ranges []LineRange
+
+	for i := 0; i < len(lines); i++ {
+		line := lines[i]
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, "extern \"C\"") && strings.HasSuffix(trimmed, "{") {
+			braceCount := 0
+			start := i
+			hasWdkFunc := false
+
+			for j := i; j < len(lines); j++ {
+				for _, c := range lines[j] {
+					if c == '{' {
+						braceCount++
+					} else if c == '}' {
+						braceCount--
+						if braceCount == 0 {
+							for _, mod := range mods {
+								if mod.Line >= start+1 && mod.Line <= j+1 {
+									hasWdkFunc = true
+									break
+								}
+							}
+							if hasWdkFunc {
+								ranges = append(ranges, LineRange{start: start, end: j})
+							}
+							i = j
+							break
+						}
+					}
+				}
+				if braceCount == 0 {
+					break
+				}
+			}
+		}
+	}
+
+	return ranges
 }
