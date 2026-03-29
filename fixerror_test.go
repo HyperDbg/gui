@@ -42,7 +42,7 @@ func TestMultipleDriverInitialization(t *testing.T) {
 	t.Log("此测试验证驱动能否多次成功加载而不BSOD")
 
 	iterations := 5
-	for i := 0; i < iterations; i++ {
+	for i := range iterations {
 		t.Logf("=== 第 %d 次初始化 ===", i+1)
 
 		dbg := debugger.NewUserDebug()
@@ -60,4 +60,3 @@ func TestMultipleDriverInitialization(t *testing.T) {
 	t.Log("=== 多次初始化测试完成 ===")
 	t.Logf("共完成 %d 次初始化", iterations)
 }
-

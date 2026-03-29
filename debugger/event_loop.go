@@ -126,13 +126,13 @@ func (el *EventLoop) handleUserDebuggerPause(response *bytes.Buffer) {
 	response.Next(8) // Skip Token
 	event.EIP = binary.LittleEndian.Uint64(response.Next(8))
 
-	response.Next(1) // Skip Is32Bit
-	response.Next(4) // Skip PausingReason
-	response.Next(8) // Skip Rflags
-	response.Next(8) // Skip EventTag
-	response.Next(8) // Skip EventCallingStage
+	response.Next(1)  // Skip Is32Bit
+	response.Next(4)  // Skip PausingReason
+	response.Next(8)  // Skip Rflags
+	response.Next(8)  // Skip EventTag
+	response.Next(8)  // Skip EventCallingStage
 	response.Next(16) // Skip InstructionBytesOnRip
-	response.Next(2) // Skip ReadInstructionLen
+	response.Next(2)  // Skip ReadInstructionLen
 
 	el.eventManager.TriggerDebugEvent(event)
 }

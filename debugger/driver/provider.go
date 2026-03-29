@@ -191,7 +191,7 @@ func (p *Provider) Start() {
 			mylog.Info("请检查驱动程序的 MajorFunction 是否正确设置")
 			mylog.Check(e)
 		default:
-			mylog.Check(e) //Incorrect function. rust问题
+			mylog.Check(e) // Incorrect function. rust问题
 		}
 	} else {
 		mylog.Success("驱动启动成功")

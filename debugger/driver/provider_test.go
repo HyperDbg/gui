@@ -24,35 +24,35 @@ var (
 )
 
 func TestProvider(t *testing.T) {
-		p := New("D:\\ux\\examples\\hypedbg\\rust-driver\\examples\\sysdemo\\target\\x86_64-pc-windows-msvc\\release\\sysdemo.sys", "sysDemo", "\\\\.\\sysDemo")
+	p := New("D:\\ux\\examples\\hypedbg\\rust-driver\\examples\\sysdemo\\target\\x86_64-pc-windows-msvc\\release\\sysdemo.sys", "sysDemo", "\\\\.\\sysDemo")
 
-		p.Install()
-		p.Start()
+	p.Install()
+	p.Start()
 
-		connected := p.IsConnected()
-		mylog.Info(connected)
+	connected := p.IsConnected()
+	mylog.Info(connected)
 
-		testStrings := []string{"hello", "world", "test", "driver", "communication"}
-		for _, send := range testStrings {
-			p.Send(bytes.NewBufferString(send), IOCTL_SEND_DATA)
-			receive := p.Receive(IOCTL_RECEIVE_DATA)
-			mylog.Warning(send, receive.String())
-			switch send {
-			case "hello":
-				assert.Equal(t, "received data by user hello", receive.String())
-			case "world":
-				assert.Equal(t, "received data by user world", receive.String())
-			case "test":
-				assert.Equal(t, "received data by user test", receive.String())
-			case "driver":
-				assert.Equal(t, "received data by user driver", receive.String())
-			case "communication":
-				assert.Equal(t, "received data by user communication", receive.String())
-			default:
-				panic(send)
-			}
+	testStrings := []string{"hello", "world", "test", "driver", "communication"}
+	for _, send := range testStrings {
+		p.Send(bytes.NewBufferString(send), IOCTL_SEND_DATA)
+		receive := p.Receive(IOCTL_RECEIVE_DATA)
+		mylog.Warning(send, receive.String())
+		switch send {
+		case "hello":
+			assert.Equal(t, "received data by user hello", receive.String())
+		case "world":
+			assert.Equal(t, "received data by user world", receive.String())
+		case "test":
+			assert.Equal(t, "received data by user test", receive.String())
+		case "driver":
+			assert.Equal(t, "received data by user driver", receive.String())
+		case "communication":
+			assert.Equal(t, "received data by user communication", receive.String())
+		default:
+			panic(send)
 		}
+	}
 
-		p.Stop()
-		p.Uninstall()
+	p.Stop()
+	p.Uninstall()
 }
