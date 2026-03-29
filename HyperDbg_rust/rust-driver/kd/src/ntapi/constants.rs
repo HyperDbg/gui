@@ -1,6 +1,8 @@
 #![allow(non_snake_case)]
 #![allow(dead_code)]
 
+// Constants: 5225
+
 pub use wdk_sys::{
     ACCESS_ALLOWED_ACE_TYPE,
     ACCESS_ALLOWED_CALLBACK_ACE_TYPE,

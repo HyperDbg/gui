@@ -1,6 +1,8 @@
 #![allow(non_snake_case)]
 #![allow(dead_code)]
 
+// Types: 4754
+
 pub use wdk_sys::{
     ACCEPT_SECURITY_CONTEXT_FN,
     ACCESS_ALLOWED_ACE,

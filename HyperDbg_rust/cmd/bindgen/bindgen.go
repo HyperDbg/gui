@@ -182,33 +182,64 @@ func (b *Bindgen) parseNtddkFunctions(path string) error {
 
 	b.wdk.SourceFile = path
 
-	funcPattern := regexp.MustCompile(`pub fn ([A-Z][a-zA-Z0-9]+)\s*\(([^)]*)\)(?:\s*->\s*([^;{]+))?`)
-
 	lines := strings.Split(string(content), "\n")
-	for i, line := range lines {
-		matches := funcPattern.FindStringSubmatch(line)
+
+	funcStartPattern := regexp.MustCompile(`pub fn ([A-Z][a-zA-Z0-9]+)\s*\(`)
+
+	i := 0
+	for i < len(lines) {
+		line := lines[i]
+		matches := funcStartPattern.FindStringSubmatch(line)
 		if matches == nil {
+			i++
 			continue
 		}
 
 		name := matches[1]
 		if !b.isWdkPrefix(name) {
+			i++
 			continue
 		}
 
-		params := strings.TrimSpace(matches[2])
+		fullDecl := line
+		for !strings.Contains(fullDecl, ";") && i+1 < len(lines) {
+			i++
+			fullDecl += "\n" + lines[i]
+		}
+
+		params := ""
 		returnType := "void"
-		if len(matches) > 3 && matches[3] != "" {
-			returnType = strings.TrimSpace(matches[3])
+
+		if idx := strings.Index(fullDecl, "("); idx != -1 {
+			braceCount := 0
+			start := idx
+			for j := idx; j < len(fullDecl); j++ {
+				if fullDecl[j] == '(' {
+					braceCount++
+				} else if fullDecl[j] == ')' {
+					braceCount--
+					if braceCount == 0 {
+						params = fullDecl[start+1 : j]
+						rest := strings.TrimSpace(fullDecl[j+1:])
+						if strings.HasPrefix(rest, "->") {
+							retPart := strings.TrimPrefix(rest, "->")
+							retPart = strings.TrimSuffix(retPart, ";")
+							returnType = strings.TrimSpace(retPart)
+						}
+						break
+					}
+				}
+			}
 		}
 
 		b.wdk.Functions[name] = FunctionSignature{
 			Name:       name,
-			Params:     params,
+			Params:     strings.TrimSpace(params),
 			ReturnType: returnType,
 			Line:       i + 1,
-			RawLine:    strings.TrimSpace(line),
+			RawLine:    strings.TrimSpace(fullDecl),
 		}
+		i++
 	}
 
 	return nil
@@ -734,11 +765,6 @@ func (b *Bindgen) generateNtapiApi(outputDir string, notExportedFunctions []NotE
 	sb.WriteString("#![allow(non_snake_case)]\n")
 	sb.WriteString("#![allow(dead_code)]\n\n")
 
-	sb.WriteString("use super::types::*;\n\n")
-
-	sb.WriteString("pub mod exported {\n")
-	sb.WriteString("    pub use wdk_sys::ntddk::{\n")
-
 	exportedFuncs := []string{}
 	for name := range b.wdk.Functions {
 		if !b.isNotExported(name, notExportedFunctions) {
@@ -746,6 +772,14 @@ func (b *Bindgen) generateNtapiApi(outputDir string, notExportedFunctions []NotE
 		}
 	}
 	sort.Strings(exportedFuncs)
+
+	sb.WriteString(fmt.Sprintf("// Exported functions: %d\n", len(exportedFuncs)))
+	sb.WriteString(fmt.Sprintf("// Not exported functions: %d\n\n", len(notExportedFunctions)))
+
+	sb.WriteString("use super::types::*;\n\n")
+
+	sb.WriteString("pub mod exported {\n")
+	sb.WriteString("    pub use wdk_sys::ntddk::{\n")
 
 	for _, name := range exportedFuncs {
 		sb.WriteString(fmt.Sprintf("        %s,\n", name))
@@ -779,8 +813,6 @@ func (b *Bindgen) generateNtapiTypes(outputDir string) error {
 	sb.WriteString("#![allow(non_snake_case)]\n")
 	sb.WriteString("#![allow(dead_code)]\n\n")
 
-	sb.WriteString("pub use wdk_sys::{\n")
-
 	exportedTypes := []string{}
 	for name := range b.wdk.Types {
 		if strings.HasPrefix(name, "_") {
@@ -789,6 +821,10 @@ func (b *Bindgen) generateNtapiTypes(outputDir string) error {
 		exportedTypes = append(exportedTypes, name)
 	}
 	sort.Strings(exportedTypes)
+
+	sb.WriteString(fmt.Sprintf("// Types: %d\n\n", len(exportedTypes)))
+
+	sb.WriteString("pub use wdk_sys::{\n")
 
 	for _, name := range exportedTypes {
 		sb.WriteString(fmt.Sprintf("    %s,\n", name))
@@ -803,8 +839,6 @@ func (b *Bindgen) generateNtapiConstants(outputDir string) error {
 	sb.WriteString("#![allow(non_snake_case)]\n")
 	sb.WriteString("#![allow(dead_code)]\n\n")
 
-	sb.WriteString("pub use wdk_sys::{\n")
-
 	exportedConstants := []string{}
 	for name := range b.wdk.Constants {
 		if strings.HasPrefix(name, "_") {
@@ -813,6 +847,10 @@ func (b *Bindgen) generateNtapiConstants(outputDir string) error {
 		exportedConstants = append(exportedConstants, name)
 	}
 	sort.Strings(exportedConstants)
+
+	sb.WriteString(fmt.Sprintf("// Constants: %d\n\n", len(exportedConstants)))
+
+	sb.WriteString("pub use wdk_sys::{\n")
 
 	for _, name := range exportedConstants {
 		sb.WriteString(fmt.Sprintf("    %s,\n", name))
@@ -880,7 +918,7 @@ func (b *Bindgen) ScanProjectUsage(projectRoot string, excludeDirs []string) err
 			return nil
 		}
 
-		if strings.HasSuffix(path, "ntapi/mod.rs") {
+		if strings.Contains(path, "ntapi/") {
 			return nil
 		}
 
