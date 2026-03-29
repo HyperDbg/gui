@@ -19,6 +19,7 @@ use wdk_sys::{
 
 use wdk_sys::ntddk::{
     MmGetSystemRoutineAddress,
+    ExAllocatePool2,
     ExFreePoolWithTag,
     IoAllocateMdl,
     IoFreeMdl,
@@ -27,9 +28,7 @@ use wdk_sys::ntddk::{
     KeInitializeEvent,
 };
 
-extern "system" { // WDK missing bindings
-    fn ExAllocatePoolWithTag(PoolType: ULONG, NumberOfBytes: SIZE_T, Tag: ULONG) -> PVOID; // WDK missing
-}
+use crate::hyperkd::hyperhv::bindings::POOL_FLAG_NON_PAGED;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LoaderError {

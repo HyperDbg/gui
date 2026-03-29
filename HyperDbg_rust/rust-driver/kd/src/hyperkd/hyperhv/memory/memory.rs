@@ -40,10 +40,9 @@ use wdk_sys::ntddk::{
     MmIsAddressValid,
 };
 
-use crate::hyperkd::hyperhv::bindings::{MEMORY_CACHING_TYPE, MM_CACHED};
+use crate::hyperkd::hyperhv::bindings::{MEMORY_CACHING_TYPE, MM_CACHED, POOL_FLAG_NON_PAGED, POOL_FLAG_PAGED};
 
 extern "system" { // WDK missing bindings
-    fn ExAllocatePoolWithTag(PoolType: ULONG, NumberOfBytes: SIZE_T, Tag: ULONG) -> PVOID; // WDK missing
     fn RtlZeroMemory(Destination: PVOID, Length: SIZE_T); // WDK missing
     fn RtlFillMemory(Destination: PVOID, Length: SIZE_T, Fill: u8); // WDK missing
     fn RtlCopyMemory(Destination: PVOID, Source: *const u8, Length: SIZE_T); // WDK missing
@@ -55,19 +54,10 @@ fn make_physical_address(addr: u64) -> PHYSICAL_ADDRESS {
 }
 
 pub const POOL_TAG: ULONG = 0x42445048;
-pub const POOL_TYPE_NON_PAGED: ULONG = 0;
-pub const POOL_TYPE_NON_PAGED_EXECUTE: ULONG = 0x200;
-pub const POOL_TYPE_PAGED: ULONG = 1;
-pub const POOL_TYPE_PAGED_EXECUTE: ULONG = 0x201;
 
 pub const MM_PAGE_PRIORITY_NORMAL: ULONG = 16;
 pub const MM_PAGE_PRIORITY_HIGH: ULONG = 32;
 
-pub const POOL_FLAG_NON_PAGED: POOL_FLAGS = 0x0000000000000040;
-pub const POOL_FLAG_PAGED: POOL_FLAGS = 0x0000000000000000;
-pub const POOL_FLAG_UNINITIALIZED: POOL_FLAGS = 0x0000000000000020;
-pub const POOL_FLAG_CACHE_ALIGNED: POOL_FLAGS = 0x0000000000000800;
-pub const POOL_FLAG_SPECIAL_POOL: POOL_FLAGS = 0x0000000000004000;
 pub const POOL_FLAG_EXECUTE: POOL_FLAGS = 0x0000000000020000;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -172,7 +162,7 @@ impl MemoryManager {
         }
 
         unsafe {
-            let ptr = ExAllocatePoolWithTag(POOL_TYPE_NON_PAGED, size as SIZE_T, POOL_TAG);
+            let ptr = ExAllocatePool2(POOL_FLAG_NON_PAGED, size as SIZE_T, POOL_TAG);
             if ptr.is_null() {
                 return Err(MemoryError::AllocationFailed);
             }
@@ -215,7 +205,7 @@ impl MemoryManager {
         }
 
         unsafe {
-            let ptr = ExAllocatePoolWithTag(POOL_TYPE_PAGED, size as SIZE_T, POOL_TAG);
+            let ptr = ExAllocatePool2(POOL_FLAG_PAGED, size as SIZE_T, POOL_TAG);
             if ptr.is_null() {
                 return Err(MemoryError::AllocationFailed);
             }

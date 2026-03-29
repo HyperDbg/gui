@@ -3,6 +3,10 @@ use alloc::sync::Arc;
 use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
+use wdk_sys::ntddk::ExAllocatePool2;
+
+use crate::hyperkd::hyperhv::bindings::POOL_FLAG_NON_PAGED;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BroadcastError {
     NotInitialized,
@@ -209,11 +213,7 @@ impl BroadcastManager {
     fn allocate_dpc(&self) -> *mut u8 {
         const DPC_SIZE: usize = 64;
         unsafe {
-            extern "C" {
-                fn ExAllocatePoolWithTag(pool_type: u32, size: usize, tag: u32) -> *mut u8;
-            }
-
-            ExAllocatePoolWithTag(0, DPC_SIZE, 0x44504442)
+            ExAllocatePool2(POOL_FLAG_NON_PAGED, DPC_SIZE as u64, 0x44504442) as *mut u8
         }
     }
 

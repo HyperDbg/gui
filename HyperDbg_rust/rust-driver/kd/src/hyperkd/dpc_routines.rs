@@ -3,7 +3,10 @@
 use core::sync::atomic::{AtomicI32, AtomicU32, AtomicU64, Ordering};
 use spin::Mutex;
 
+use wdk_sys::ntddk::{ExAllocatePool2, ExFreePoolWithTag};
+
 use crate::hyperkd::hyperhv::common::msr::{read_msr, write_msr};
+use crate::hyperkd::hyperhv::bindings::POOL_FLAG_NON_PAGED;
 
 static ONE_CORE_LOCK: AtomicI32 = AtomicI32::new(0);
 
@@ -284,14 +287,9 @@ fn spinlock_unlock(lock: &AtomicI32) {
 }
 
 unsafe fn allocate_dpc() -> Result<*mut KDPC, DpcError> {
-    extern "C" {
-        fn ExAllocatePoolWithTag(pool_type: u32, size: usize, tag: u32) -> *mut core::ffi::c_void;
-    }
-
-    const NON_PAGED_POOL: u32 = 0;
     const POOL_TAG: u32 = 0x6370644B;
 
-    let dpc = ExAllocatePoolWithTag(NON_PAGED_POOL, core::mem::size_of::<KDPC>(), POOL_TAG);
+    let dpc = ExAllocatePool2(POOL_FLAG_NON_PAGED, core::mem::size_of::<KDPC>(), POOL_TAG);
 
     if dpc.is_null() {
         Err(DpcError::InsufficientResources)
@@ -301,12 +299,9 @@ unsafe fn allocate_dpc() -> Result<*mut KDPC, DpcError> {
 }
 
 unsafe fn free_dpc(dpc: *mut KDPC) {
-    extern "C" {
-        fn ExFreePool(address: *mut core::ffi::c_void);
-    }
-
+    const POOL_TAG: u32 = 0x6370644B;
     if !dpc.is_null() {
-        ExFreePool(dpc as *mut core::ffi::c_void);
+        ExFreePoolWithTag(dpc as *mut core::ffi::c_void, POOL_TAG);
     }
 }
 

@@ -7,6 +7,10 @@ use alloc::vec::Vec;
 use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
 
+use wdk_sys::ntddk::{ExAllocatePool2, ExFreePoolWithTag};
+
+use crate::hyperkd::hyperhv::bindings::POOL_FLAG_NON_PAGED;
+
 pub const MAX_POOL_SIZE: usize = 1024 * 1024;
 pub const MAX_REQUESTS_QUEUE_DEPTH: usize = 100;
 
@@ -182,29 +186,21 @@ impl PoolManager {
     }
 
     unsafe fn allocate_pool_internal(size: usize) -> Option<u64> {
-        extern "C" {
-            fn ExAllocatePoolWithTag(pool_type: u32, size: usize, tag: u32) -> u64;
-        }
-
-        const NON_PAGED_POOL: u32 = 0;
         const POOL_TAG: u32 = 0x67704848;
 
-        let address = ExAllocatePoolWithTag(NON_PAGED_POOL, size, POOL_TAG);
+        let address = ExAllocatePool2(POOL_FLAG_NON_PAGED, size as u64, POOL_TAG);
 
-        if address == 0 {
+        if address.is_null() {
             None
         } else {
-            Some(address)
+            Some(address as u64)
         }
     }
 
     unsafe fn free_pool_internal(address: u64) {
-        extern "C" {
-            fn ExFreePool(address: u64);
-        }
-
+        const POOL_TAG: u32 = 0x67704848;
         if address != 0 {
-            ExFreePool(address);
+            ExFreePoolWithTag(address as *mut core::ffi::c_void, POOL_TAG);
         }
     }
 }
