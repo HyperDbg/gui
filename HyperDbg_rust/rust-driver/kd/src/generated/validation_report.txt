@@ -13,25 +13,25 @@ Not Exported by WDK: 8
 
 ## TYPE MISMATCHES
 
+rust-driver\kd\src\hyperkd\attaching.rs:288: PsGetCurrentThreadId
+  return type: rust=u64, wdk=handle
+  Rust: 
+  WDK:   (line 8468)
+
+rust-driver\kd\src\hyperkd\ud.rs:294: PsGetCurrentThreadId
+  return type: rust=u64, wdk=handle
+  Rust: 
+  WDK:   (line 8468)
+
+rust-driver\kd\src\hyperkd\dpc_routines.rs:358: KeQueryActiveProcessorCount
+  return type: rust=u32, wdk=ulong
+  Rust: relationship_info: *mut core::ffi::c_void
+  WDK:  ActiveProcessors: PKAFFINITY (line 3042)
+
 rust-driver\kd\src\hyperkd\dpc_routines.rs:366: KeGetCurrentProcessorNumberEx
   return type: rust=u32, wdk=ulong
   Rust: info: *mut core::ffi::c_void
   WDK:  ProcNumber: PPROCESSOR_NUMBER (line 3063)
-
-rust-driver\kd\src\hyperkd\hyperhv\hooks\ept_hook\exec_trap.rs:52: MmGetPhysicalMemoryRanges
-  return type: rust=*mut physicalmemoryrange, wdk=pphysical_memory_range
-  Rust: 
-  WDK:   (line 8265)
-
-rust-driver\kd\src\hyperkd\hyperhv\hooks\ept_hook\exec_trap.rs:468: MmGetVirtualForPhysical
-  return type: rust=u64, wdk=pvoid; param[0]: rust=u64, wdk=physical_address
-  Rust: physical_address: u64
-  WDK:  PhysicalAddress: PHYSICAL_ADDRESS (line 8315)
-
-rust-driver\kd\src\hyperkd\hyperhv\memory\mapper.rs:192: MmGetVirtualForPhysical
-  return type: rust=u64, wdk=pvoid; param[0]: rust=u64, wdk=physical_address
-  Rust: physical_address: u64
-  WDK:  PhysicalAddress: PHYSICAL_ADDRESS (line 8315)
 
 rust-driver\kd\src\hyperkd\attaching.rs:299: MmGetSystemRoutineAddress
   return type: rust=u64, wdk=pvoid
@@ -43,32 +43,20 @@ rust-driver\kd\src\hyperkd\attaching.rs:317: MmGetSystemRoutineAddress
   Rust: name: *const u16
   WDK:  SystemRoutineName: PUNICODE_STRING (line 1625)
 
+rust-driver\kd\src\hyperkd\dpc_routines.rs:326: KeSetTargetProcessorDpc
+  param[1]: rust=i8, wdk=cchar
+  Rust: dpc: *mut KDPC, processor_number: i8
+  WDK:  Dpc: PRKDPC, Number: CCHAR (line 2634)
+
+rust-driver\kd\src\hyperkd\hyperhv\broadcast\broadcast.rs:164: KeSetTargetProcessorDpc
+  param[1]: rust=i8, wdk=cchar
+  Rust: dpc: *mut u8, number: i8
+  WDK:  Dpc: PRKDPC, Number: CCHAR (line 2634)
+
 rust-driver\kd\src\hyperkd\hyperhv\memory\mapper.rs:283: MmIsAddressValid
   return type: rust=bool, wdk=boolean
   Rust: virtual_address: u64
   WDK:  VirtualAddress: PVOID (line 8324)
-
-rust-driver\kd\src\hyperkd\user_access.rs:198: ObOpenObjectByPointer
-  return type: rust=u32, wdk=ntstatus; param count: rust=4, wdk=7
-  Rust: object: *mut u8, attributes: u32, desired_access: u32, handle: *mut u64
-  WDK:  Object: PVOID,
-        HandleAttributes: ULONG,
-        PassedAccessState: PACCESS_STATE,
-        DesiredAccess: ACCESS_MASK,
-        ObjectType: POBJECT_TYPE,
-        AccessMode: KPROCESSOR_MODE,
-        Handle: PHANDLE, (line 12196)
-
-rust-driver\kd\src\hyperkd\user_access.rs:722: ObOpenObjectByPointer
-  return type: rust=u32, wdk=ntstatus; param count: rust=4, wdk=7
-  Rust: object: *mut u8, attributes: u32, desired_access: u32, handle: *mut u64
-  WDK:  Object: PVOID,
-        HandleAttributes: ULONG,
-        PassedAccessState: PACCESS_STATE,
-        DesiredAccess: ACCESS_MASK,
-        ObjectType: POBJECT_TYPE,
-        AccessMode: KPROCESSOR_MODE,
-        Handle: PHANDLE, (line 12196)
 
 rust-driver\kd\src\hyperkd\attaching.rs:281: PsGetCurrentProcessId
   return type: rust=u64, wdk=handle
@@ -89,10 +77,15 @@ rust-driver\kd\src\hyperkd\hyperhv\broadcast\broadcast.rs:165: KeInsertQueueDpc
         SystemArgument1: PVOID,
         SystemArgument2: PVOID, (line 2612)
 
-rust-driver\kd\src\hyperkd\dpc_routines.rs:358: KeQueryActiveProcessorCount
-  return type: rust=u32, wdk=ulong
-  Rust: relationship_info: *mut core::ffi::c_void
-  WDK:  ActiveProcessors: PKAFFINITY (line 3042)
+rust-driver\kd\src\hyperkd\hyperhv\hooks\ept_hook\exec_trap.rs:468: MmGetVirtualForPhysical
+  return type: rust=u64, wdk=pvoid; param[0]: rust=u64, wdk=physical_address
+  Rust: physical_address: u64
+  WDK:  PhysicalAddress: PHYSICAL_ADDRESS (line 8315)
+
+rust-driver\kd\src\hyperkd\hyperhv\memory\mapper.rs:192: MmGetVirtualForPhysical
+  return type: rust=u64, wdk=pvoid; param[0]: rust=u64, wdk=physical_address
+  Rust: physical_address: u64
+  WDK:  PhysicalAddress: PHYSICAL_ADDRESS (line 8315)
 
 rust-driver\kd\src\hyperkd\user_access.rs:197: PsLookupProcessByProcessId
   return type: rust=u32, wdk=ntstatus; param[0]: rust=u32, wdk=handle
@@ -136,6 +129,33 @@ rust-driver\kd\src\hyperkd\user_access.rs:1176: PsLookupProcessByProcessId
   WDK:  ProcessId: HANDLE,
         Process: *mut PEPROCESS, (line 11734)
 
+rust-driver\kd\src\hyperkd\user_access.rs:198: ObOpenObjectByPointer
+  return type: rust=u32, wdk=ntstatus; param count: rust=4, wdk=7
+  Rust: object: *mut u8, attributes: u32, desired_access: u32, handle: *mut u64
+  WDK:  Object: PVOID,
+        HandleAttributes: ULONG,
+        PassedAccessState: PACCESS_STATE,
+        DesiredAccess: ACCESS_MASK,
+        ObjectType: POBJECT_TYPE,
+        AccessMode: KPROCESSOR_MODE,
+        Handle: PHANDLE, (line 12196)
+
+rust-driver\kd\src\hyperkd\user_access.rs:722: ObOpenObjectByPointer
+  return type: rust=u32, wdk=ntstatus; param count: rust=4, wdk=7
+  Rust: object: *mut u8, attributes: u32, desired_access: u32, handle: *mut u64
+  WDK:  Object: PVOID,
+        HandleAttributes: ULONG,
+        PassedAccessState: PACCESS_STATE,
+        DesiredAccess: ACCESS_MASK,
+        ObjectType: POBJECT_TYPE,
+        AccessMode: KPROCESSOR_MODE,
+        Handle: PHANDLE, (line 12196)
+
+rust-driver\kd\src\hyperkd\hyperhv\hooks\ept_hook\exec_trap.rs:52: MmGetPhysicalMemoryRanges
+  return type: rust=*mut physicalmemoryrange, wdk=pphysical_memory_range
+  Rust: 
+  WDK:   (line 8265)
+
 rust-driver\kd\src\hyperkd\attaching.rs:15: ObfDereferenceObject
   return type: rust=isize, wdk=long_ptr
   Rust: Object: PVOID
@@ -145,26 +165,6 @@ rust-driver\kd\src\hyperkd\hyperhv\memory\switch_layout.rs:29: ObfDereferenceObj
   return type: rust=isize, wdk=long_ptr
   Rust: Object: PVOID
   WDK:  Object: PVOID (line 6182)
-
-rust-driver\kd\src\hyperkd\attaching.rs:288: PsGetCurrentThreadId
-  return type: rust=u64, wdk=handle
-  Rust: 
-  WDK:   (line 8468)
-
-rust-driver\kd\src\hyperkd\ud.rs:294: PsGetCurrentThreadId
-  return type: rust=u64, wdk=handle
-  Rust: 
-  WDK:   (line 8468)
-
-rust-driver\kd\src\hyperkd\dpc_routines.rs:326: KeSetTargetProcessorDpc
-  param[1]: rust=i8, wdk=cchar
-  Rust: dpc: *mut KDPC, processor_number: i8
-  WDK:  Dpc: PRKDPC, Number: CCHAR (line 2634)
-
-rust-driver\kd\src\hyperkd\hyperhv\broadcast\broadcast.rs:164: KeSetTargetProcessorDpc
-  param[1]: rust=i8, wdk=cchar
-  Rust: dpc: *mut u8, number: i8
-  WDK:  Dpc: PRKDPC, Number: CCHAR (line 2634)
 
 ## FUNCTIONS NOT EXPORTED BY WDK
 
