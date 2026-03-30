@@ -795,7 +795,7 @@ func (b *Bindgen) GenerateFixSuggestions(outputPath string) error {
 		sb.WriteString("\n")
 	}
 
-	sb.WriteString("## Functions NOT in WDK bindings (need manual declaration)\n\n")
+	sb.WriteString("// Functions NOT in WDK bindings (need manual declaration)\n\n")
 
 	for _, name := range b.report.NotExported {
 		funcs := b.externs.Functions[name]
@@ -822,25 +822,6 @@ func (b *Bindgen) GetReport() *ValidationReport {
 	return b.report
 }
 
-func (b *Bindgen) GenerateNtapiMod(outputDir string, notExportedFunctions []NotExportedFunc) error {
-	if err := os.RemoveAll(outputDir); err != nil {
-		return fmt.Errorf("failed to remove output directory: %w", err)
-	}
-	if err := os.MkdirAll(outputDir, 0o755); err != nil {
-		return fmt.Errorf("failed to create output directory: %w", err)
-	}
-	if err := b.generateNtapiApi(outputDir, notExportedFunctions); err != nil {
-		return err
-	}
-	if err := b.generateNtapiTypes(outputDir); err != nil {
-		return err
-	}
-	if err := b.generateNtapiConstants(outputDir); err != nil {
-		return err
-	}
-	return b.generateNtapiModRs(outputDir)
-}
-
 func (b *Bindgen) generateNtapiApi(outputDir string, notExportedFunctions []NotExportedFunc) error {
 	var sb strings.Builder
 	sb.WriteString("#![allow(non_snake_case)]\n")
@@ -857,36 +838,30 @@ func (b *Bindgen) generateNtapiApi(outputDir string, notExportedFunctions []NotE
 	sb.WriteString(fmt.Sprintf("// Exported functions: %d\n", len(exportedFuncs)))
 	sb.WriteString(fmt.Sprintf("// Not exported functions: %d\n\n", len(notExportedFunctions)))
 
-	sb.WriteString("use super::types_gen::*;\n\n")
+	sb.WriteString("use super::types::*;\n\n")
 
-	sb.WriteString("pub mod exported {\n")
-	sb.WriteString("    pub use wdk_sys::ntddk::{\n")
+	sb.WriteString(fmt.Sprintf("// Exported functions: %d\n", len(exportedFuncs)))
+	sb.WriteString("pub use wdk_sys::ntddk::{\n")
 
 	for _, name := range exportedFuncs {
-		sb.WriteString(fmt.Sprintf("        %s,\n", name))
+		sb.WriteString(fmt.Sprintf("    %s,\n", name))
 	}
-	sb.WriteString("    };\n")
-	sb.WriteString("}\n\n")
+	sb.WriteString("};\n\n")
 
-	sb.WriteString("pub mod not_exported {\n")
-	sb.WriteString("    use super::*;\n\n")
-	sb.WriteString("    extern \"C\" {\n")
+	sb.WriteString(fmt.Sprintf("// Not exported functions: %d\n", len(notExportedFunctions)))
+	sb.WriteString("extern \"C\" {\n")
 
 	for _, f := range notExportedFunctions {
-		sb.WriteString(fmt.Sprintf("        pub fn %s(%s)", f.Name, f.Params))
+		sb.WriteString(fmt.Sprintf("    pub fn %s(%s)", f.Name, f.Params))
 		if f.ReturnType != "" && f.ReturnType != "void" {
 			sb.WriteString(fmt.Sprintf(" -> %s", f.ReturnType))
 		}
 		sb.WriteString(";\n")
 	}
 
-	sb.WriteString("    }\n")
-	sb.WriteString("}\n\n")
+	sb.WriteString("}\n")
 
-	sb.WriteString("pub use exported::*;\n")
-	sb.WriteString("pub use not_exported::*;\n")
-
-	return os.WriteFile(filepath.Join(outputDir, "api_gen.rs"), []byte(sb.String()), 0o644)
+	return os.WriteFile(filepath.Join(outputDir, "ntddk.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) generateNtapiTypes(outputDir string) error {
@@ -925,7 +900,7 @@ func (b *Bindgen) generateNtapiTypes(outputDir string) error {
 		sb.WriteString("};\n")
 	}
 
-	return os.WriteFile(filepath.Join(outputDir, "types_gen.rs"), []byte(sb.String()), 0o644)
+	return os.WriteFile(filepath.Join(outputDir, "types.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) generateNtapiConstants(outputDir string) error {
@@ -951,23 +926,7 @@ func (b *Bindgen) generateNtapiConstants(outputDir string) error {
 	}
 	sb.WriteString("};\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "constants_gen.rs"), []byte(sb.String()), 0o644)
-}
-
-func (b *Bindgen) generateNtapiModRs(outputDir string) error {
-	var sb strings.Builder
-	sb.WriteString("#![allow(non_snake_case)]\n")
-	sb.WriteString("#![allow(dead_code)]\n\n")
-
-	sb.WriteString("mod api_gen;\n")
-	sb.WriteString("mod types_gen;\n")
-	sb.WriteString("mod constants_gen;\n\n")
-
-	sb.WriteString("pub use api_gen::*;\n")
-	sb.WriteString("pub use types_gen::*;\n")
-	sb.WriteString("pub use constants_gen::*;\n")
-
-	return os.WriteFile(filepath.Join(outputDir, "mod.rs"), []byte(sb.String()), 0o644)
+	return os.WriteFile(filepath.Join(outputDir, "constants.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) isNotExported(name string, notExported []NotExportedFunc) bool {
@@ -1444,10 +1403,7 @@ func (b *Bindgen) generateRustHookDb(outputDir string, hooks []HookEntry) error 
 	if err := b.generateRustHookInline(outputDir, hooks); err != nil {
 		return err
 	}
-	if err := b.generateRustHookArgs(outputDir, hooks); err != nil {
-		return err
-	}
-	return b.generateRustHookMod(outputDir)
+	return b.generateRustHookArgs(outputDir, hooks)
 }
 
 func (b *Bindgen) generateRustHookEpt(outputDir string, hooks []HookEntry) error {
@@ -1500,7 +1456,7 @@ func (b *Bindgen) generateRustHookEpt(outputDir string, hooks []HookEntry) error
 	sb.WriteString("    }\n")
 	sb.WriteString("}\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "ept_hook_gen.rs"), []byte(sb.String()), 0o644)
+	return os.WriteFile(filepath.Join(outputDir, "ept_hook.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) generateRustHookInline(outputDir string, hooks []HookEntry) error {
@@ -1552,7 +1508,7 @@ func (b *Bindgen) generateRustHookInline(outputDir string, hooks []HookEntry) er
 	sb.WriteString("    }\n")
 	sb.WriteString("}\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "inline_hook_gen.rs"), []byte(sb.String()), 0o644)
+	return os.WriteFile(filepath.Join(outputDir, "inline_hook.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) generateRustHookArgs(outputDir string, hooks []HookEntry) error {
@@ -1566,7 +1522,7 @@ func (b *Bindgen) generateRustHookArgs(outputDir string, hooks []HookEntry) erro
 	sb.WriteString("use crate::ntapi::*;\n\n")
 
 	sb.WriteString("// Args structs for each hooked API\n")
-	sb.WriteString("// All types are directly from wdk_sys via ntapi::types_gen\n")
+	sb.WriteString("// All types are directly from wdk_sys via ntapi::types\n\n")
 	for _, h := range hooks {
 		if len(h.ParamList) == 0 {
 			continue
@@ -1602,23 +1558,7 @@ func (b *Bindgen) generateRustHookArgs(outputDir string, hooks []HookEntry) erro
 	sb.WriteString("    None\n")
 	sb.WriteString("}\n")
 
-	return os.WriteFile(filepath.Join(outputDir, "hook_args_gen.rs"), []byte(sb.String()), 0o644)
-}
-
-func (b *Bindgen) generateRustHookMod(outputDir string) error {
-	var sb strings.Builder
-	sb.WriteString("#![allow(non_snake_case)]\n")
-	sb.WriteString("#![allow(dead_code)]\n\n")
-
-	sb.WriteString("mod ept_hook_gen;\n")
-	sb.WriteString("mod inline_hook_gen;\n")
-	sb.WriteString("mod hook_args_gen;\n\n")
-
-	sb.WriteString("pub use ept_hook_gen::*;\n")
-	sb.WriteString("pub use inline_hook_gen::*;\n")
-	sb.WriteString("pub use hook_args_gen::*;\n")
-
-	return os.WriteFile(filepath.Join(outputDir, "mod.rs"), []byte(sb.String()), 0o644)
+	return os.WriteFile(filepath.Join(outputDir, "hook_args.rs"), []byte(sb.String()), 0o644)
 }
 
 func (b *Bindgen) generateGoHookDb(outputPath string, hooks []HookEntry) error {
@@ -2095,4 +2035,96 @@ func (b *Bindgen) findExternBlockRanges(lines []string, mods []FileModification)
 	}
 
 	return ranges
+}
+
+func GenerateBindgen(projectRoot string) error {
+	bindgenDir := filepath.Join(projectRoot, "cmd", "rustgen")
+	rustSourceDir := filepath.Join(projectRoot, "rust-driver", "kd", "src")
+	outputDir := filepath.Join(projectRoot, "rust-driver", "kd", "src", "generated")
+
+	if err := os.MkdirAll(outputDir, 0o755); err != nil {
+		return fmt.Errorf("failed to create output dir: %w", err)
+	}
+
+	config := BindgenConfig{
+		ProjectRoot:    projectRoot,
+		WdkBindingsDir: bindgenDir,
+		RustSourceDir:  rustSourceDir,
+		OutputDir:      outputDir,
+		Verbose:        true,
+	}
+
+	bg := NewBindgen(config)
+
+	ntddkPath := filepath.Join(bindgenDir, "ntddk.rs")
+	typesPath := filepath.Join(bindgenDir, "types.rs")
+	constantsPath := filepath.Join(bindgenDir, "constants.rs")
+
+	if err := bg.LoadWdkBindings(ntddkPath, typesPath, constantsPath); err != nil {
+		return fmt.Errorf("failed to load WDK bindings: %w", err)
+	}
+
+	wdk := bg.GetWdkBindings()
+	fmt.Printf("  Loaded WDK bindings: %d functions, %d types, %d constants\n",
+		len(wdk.Functions), len(wdk.Types), len(wdk.Constants))
+
+	if err := bg.ScanRustExterns(rustSourceDir); err != nil {
+		return fmt.Errorf("failed to scan Rust externs: %w", err)
+	}
+
+	externs := bg.GetRustExterns()
+	fmt.Printf("  Scanned Rust externs: %d functions in %d files\n",
+		len(externs.Functions), len(externs.Files))
+
+	report := bg.Validate()
+	fmt.Printf("  Validation: %d mismatches, %d not exported\n",
+		report.Statistics["mismatches"], report.Statistics["not_exported"])
+
+	notExportedFuncs := make([]NotExportedFunc, len(report.NotExported))
+	for i, name := range report.NotExported {
+		externs := bg.externs.Functions[name]
+		if len(externs) > 0 {
+			notExportedFuncs[i] = NotExportedFunc{
+				Name:       name,
+				Params:     externs[0].Params,
+				ReturnType: externs[0].ReturnType,
+			}
+		}
+	}
+
+	if err := bg.generateNtapiApi(outputDir, notExportedFuncs); err != nil {
+		return fmt.Errorf("failed to generate ntapi api: %w", err)
+	}
+
+	if err := bg.generateNtapiTypes(outputDir); err != nil {
+		return fmt.Errorf("failed to generate ntapi types: %w", err)
+	}
+
+	if err := bg.generateNtapiConstants(outputDir); err != nil {
+		return fmt.Errorf("failed to generate ntapi constants: %w", err)
+	}
+
+	if err := bg.GenerateFunctionsList(filepath.Join(outputDir, "ntddk_list.txt")); err != nil {
+		return fmt.Errorf("failed to generate functions list: %w", err)
+	}
+
+	if err := bg.GenerateFunctionsGoMap(filepath.Join(outputDir, "ntddk.go")); err != nil {
+		return fmt.Errorf("failed to generate functions map: %w", err)
+	}
+
+	if err := bg.GenerateTypesGoMap(filepath.Join(outputDir, "types.go")); err != nil {
+		return fmt.Errorf("failed to generate types map: %w", err)
+	}
+
+	if err := bg.GenerateConstantsGoMap(filepath.Join(outputDir, "constants.go")); err != nil {
+		return fmt.Errorf("failed to generate constants map: %w", err)
+	}
+
+	if err := bg.GenerateValidationReport(filepath.Join(outputDir, "validation_report.txt")); err != nil {
+		return fmt.Errorf("failed to generate validation report: %w", err)
+	}
+
+	fmt.Printf("  Generated files in: %s\n", outputDir)
+
+	return nil
 }

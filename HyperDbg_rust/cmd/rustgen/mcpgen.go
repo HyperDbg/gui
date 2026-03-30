@@ -15,23 +15,6 @@ import (
 	"github.com/ddkwork/golibrary/std/mylog"
 )
 
-func getProjectRoot() (string, error) {
-	dir, err := os.Getwd()
-	if err != nil {
-		return "", err
-	}
-	for {
-		if _, err := os.Stat(filepath.Join(dir, "go.mod")); err == nil {
-			return dir, nil
-		}
-		parent := filepath.Dir(dir)
-		if parent == dir {
-			return "", fmt.Errorf("could not find go.mod")
-		}
-		dir = parent
-	}
-}
-
 type Method struct {
 	Name           string
 	Params         []Param
@@ -322,8 +305,7 @@ type InterfaceConfig struct {
 
 var excludedInterfaces = map[string]bool{}
 
-func main() {
-	projectRoot := mylog.Check2(getProjectRoot())
+func GenerateMCP(projectRoot string) error {
 	interfacePath := filepath.Join(projectRoot, "debugger", "interfaces.go")
 
 	configs := []InterfaceConfig{
@@ -335,10 +317,13 @@ func main() {
 	}
 
 	for _, config := range configs {
-		mylog.Check(generateMCPServer(interfacePath, config))
+		if err := generateMCPServer(interfacePath, config); err != nil {
+			return err
+		}
 	}
 
 	fmt.Println("MCP 服务器生成完成")
+	return nil
 }
 
 func generateMCPServer(interfacePath string, config InterfaceConfig) error {

@@ -199,20 +199,20 @@ func TestGenerateAll(t *testing.T) {
 	}
 	t.Logf("  - functions_list.txt")
 
-	if err := bg.GenerateFunctionsGoMap(filepath.Join(bindgenDir, "functions_gen.go")); err != nil {
+	if err := bg.GenerateFunctionsGoMap(filepath.Join(bindgenDir, "ntddk.go")); err != nil {
 		t.Fatalf("Failed to generate functions map: %v", err)
 	}
-	t.Logf("  - functions_gen.go")
+	t.Logf("  - ntddk.go")
 
-	if err := bg.GenerateTypesGoMap(filepath.Join(bindgenDir, "types_gen.go")); err != nil {
+	if err := bg.GenerateTypesGoMap(filepath.Join(bindgenDir, "types.go")); err != nil {
 		t.Fatalf("Failed to generate types map: %v", err)
 	}
-	t.Logf("  - types_gen.go")
+	t.Logf("  - types.go")
 
-	if err := bg.GenerateConstantsGoMap(filepath.Join(bindgenDir, "constants_gen.go")); err != nil {
+	if err := bg.GenerateConstantsGoMap(filepath.Join(bindgenDir, "constants.go")); err != nil {
 		t.Fatalf("Failed to generate constants map: %v", err)
 	}
-	t.Logf("  - constants_gen.go")
+	t.Logf("  - constants.go")
 
 	if err := bg.GenerateValidationReport(filepath.Join(bindgenDir, "validation_report.txt")); err != nil {
 		t.Fatalf("Failed to generate validation report: %v", err)
@@ -873,7 +873,7 @@ func TestGenerateHookDatabase(t *testing.T) {
 	}
 
 	rustHookDir := filepath.Join(projectRoot, "rust-driver", "kd", "src", "hyperkd", "hyperhv", "hooks", "hook_db")
-	goHookFile := filepath.Join(projectRoot, "debugger", "hook_db_gen.go")
+	goHookFile := filepath.Join(projectRoot, "debugger", "hook_db.go")
 
 	err = bg.GenerateHookDatabase(rustHookDir, goHookFile, notExported)
 	if err != nil {
