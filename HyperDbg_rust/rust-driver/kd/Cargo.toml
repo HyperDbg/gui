@@ -24,7 +24,7 @@ wdk-panic = "0.4.1"
 serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
 serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 # Go parser - local goscript parser
-goscript-parser = { path = "src/go_script/parser", default-features = false, package = "go-parser" }
+goscript-parser = { path = "src/go_script/parser", default-features = false }
 
 [features]
 default = ["standalone-driver"]
