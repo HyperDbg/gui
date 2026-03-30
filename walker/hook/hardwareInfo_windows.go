@@ -1,4 +1,0 @@
-package hook
-
-func hardInfo() {
-}

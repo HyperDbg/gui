@@ -2,18 +2,9 @@
 *.exp
 *.lib
 *.log
-fmt.cmd
 HyperDbg.exe
 initial commit.cmd
-doc/cpp
-doc/release
-doc/testdata
-debugger/mcp/参考
-debugger/driver/sys
-walker/winmd
-walker/pdbex/ok/
-
+doc/
+old/
 **/target/
-HyperDbg_rust/rust-driver/todo/
-*.sys
-*.pdb
+rust-driver/todo/
