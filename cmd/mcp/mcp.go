@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ddkwork/HyperDbg"
+	"github.com/ddkwork/HyperDbg/debugger"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 

@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func getProjectRoot(t *testing.T) string {
+func getProjectRootForTest(t *testing.T) string {
 	t.Helper()
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -19,14 +19,14 @@ func getProjectRoot(t *testing.T) string {
 
 func getBindgenDir(t *testing.T) string {
 	t.Helper()
-	return filepath.Join(getProjectRoot(t), "cmd", "bindgen")
+	return filepath.Join(getProjectRootForTest(t), "cmd", "bindgen")
 }
 
 func TestLoadWdkBindings(t *testing.T) {
 	bindgenDir := getBindgenDir(t)
 
 	config := BindgenConfig{
-		ProjectRoot:    getProjectRoot(t),
+		ProjectRoot:    getProjectRootForTest(t),
 		WdkBindingsDir: bindgenDir,
 		OutputDir:      bindgenDir,
 		Verbose:        true,
@@ -66,7 +66,7 @@ func TestLoadWdkBindings(t *testing.T) {
 }
 
 func TestScanRustExterns(t *testing.T) {
-	projectRoot := getProjectRoot(t)
+	projectRoot := getProjectRootForTest(t)
 	bindgenDir := getBindgenDir(t)
 
 	config := BindgenConfig{
@@ -109,7 +109,7 @@ func TestScanRustExterns(t *testing.T) {
 }
 
 func TestValidate(t *testing.T) {
-	projectRoot := getProjectRoot(t)
+	projectRoot := getProjectRootForTest(t)
 	bindgenDir := getBindgenDir(t)
 
 	config := BindgenConfig{
@@ -170,7 +170,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestScanProjectUsage(t *testing.T) {
-	projectRoot := getProjectRoot(t)
+	projectRoot := getProjectRootForTest(t)
 	bindgenDir := getBindgenDir(t)
 
 	config := BindgenConfig{
@@ -225,7 +225,7 @@ func TestScanProjectUsage(t *testing.T) {
 }
 
 func TestApplyFixesDryRun(t *testing.T) {
-	projectRoot := getProjectRoot(t)
+	projectRoot := getProjectRootForTest(t)
 	bindgenDir := getBindgenDir(t)
 
 	config := BindgenConfig{

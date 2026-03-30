@@ -1,10 +1,7 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"net/http"
 	"testing"
 	"time"
 	"unsafe"
@@ -12,15 +9,6 @@ import (
 	"github.com/ddkwork/HyperDbg/debugger"
 	"github.com/ddkwork/HyperDbg/debugger/driver"
 	"github.com/ddkwork/golibrary/std/stream"
-)
-
-const (
-	SMART_RCV_DRIVE_DATA          = 0x0007c088
-	IOCTL_DISK_GET_DRIVE_GEOMETRY = 0x00070000
-	IOCTL_STORAGE_QUERY_PROPERTY  = 0x002d1400
-	IOCTL_CPUID                   = 0x00220000
-	AFD_CONNECT                   = 0x12007
-	IOCTL_NDIS_QUERY_GLOBAL_STATS = 0x00170202
 )
 
 func TestFixError(t *testing.T) {
@@ -31,194 +19,32 @@ func TestFixError(t *testing.T) {
 func TestRustDriverHTTP(t *testing.T) {
 	driverPath := `d:\ux\examples\hypedbg\rust-driver\kd\hyperdbg_kd.sys`
 
-	t.Log("=== 测试 Rust 驱动 HTTP API ===")
-
-	p := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
-
-	t.Log("安装驱动...")
-	p.Install()
-
-	t.Log("启动驱动...")
-	p.Start()
+	d := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
+	d.Install()
+	d.Start()
 	defer func() {
-		t.Log("停止驱动...")
-		p.Stop()
-		p.Uninstall()
-		t.Log("驱动已卸载")
+		d.Stop()
+		d.Uninstall()
 	}()
 
-	t.Log("等待 HTTP 服务就绪...")
-	baseURL := "http://127.0.0.1:50080"
-	client := &http.Client{Timeout: 5 * time.Second}
+	p := debugger.NewPacket()
 
-	for range 10 {
-		req, _ := json.Marshal(map[string]string{"action": "ping"})
-		resp, err := client.Post(baseURL+"/api", "application/json", bytes.NewReader(req))
-		if err == nil {
-			resp.Body.Close()
-			t.Log("HTTP 服务已就绪")
-			break
-		}
-		time.Sleep(100 * time.Millisecond)
+	if err := p.WaitForDriver(5 * time.Second); err != nil {
+		t.Fatalf("等待驱动超时: %v", err)
 	}
 
-	t.Log("\n1. 测试 load_vmm...")
-	loadReq, _ := json.Marshal(map[string]string{"action": "load_vmm"})
-	resp, err := client.Post(baseURL+"/api", "application/json", bytes.NewReader(loadReq))
+	if err := p.Start(); err != nil {
+		t.Fatalf("Start 失败: %v", err)
+	}
+	defer p.Stop()
+
+	p.LoadVmm()
+	p.Pause()
+	p.Continue()
+	p.SetBreakpoint(0x7FFE0000, debugger.BreakpointType(0))
+
+	processList, err := p.GetProcessList()
 	if err != nil {
-		t.Fatalf("HTTP 请求失败: %v", err)
-	}
-	defer resp.Body.Close()
-
-	var result map[string]any
-	json.NewDecoder(resp.Body).Decode(&result)
-	t.Logf("   响应: %+v", result)
-
-	t.Log("\n2. 测试 get_version...")
-	verReq, _ := json.Marshal(map[string]string{"action": "get_version"})
-	resp2, err := client.Post(baseURL+"/api", "application/json", bytes.NewReader(verReq))
-	if err != nil {
-		t.Logf("   失败: %v", err)
-	} else {
-		defer resp2.Body.Close()
-		var verResult map[string]any
-		json.NewDecoder(resp2.Body).Decode(&verResult)
-		t.Logf("   响应: %+v", verResult)
-	}
-
-	t.Log("\n3. 测试 pause...")
-	pauseReq, _ := json.Marshal(map[string]string{"action": "pause"})
-	resp3, err := client.Post(baseURL+"/api", "application/json", bytes.NewReader(pauseReq))
-	if err != nil {
-		t.Logf("   失败: %v", err)
-	} else {
-		defer resp3.Body.Close()
-		var pauseResult map[string]any
-		json.NewDecoder(resp3.Body).Decode(&pauseResult)
-		t.Logf("   响应: %+v", pauseResult)
-	}
-
-	t.Log("\n4. 测试 continue...")
-	contReq, _ := json.Marshal(map[string]string{"action": "continue"})
-	resp4, err := client.Post(baseURL+"/api", "application/json", bytes.NewReader(contReq))
-	if err != nil {
-		t.Logf("   失败: %v", err)
-	} else {
-		defer resp4.Body.Close()
-		var contResult map[string]any
-		json.NewDecoder(resp4.Body).Decode(&contResult)
-		t.Logf("   响应: %+v", contResult)
-	}
-
-	t.Log("\n5. 测试 set_breakpoint...")
-	bpReq, _ := json.Marshal(map[string]any{
-		"action":  "set_breakpoint",
-		"address": "0x7FFE0000",
-		"type":    0,
-	})
-	resp5, err := client.Post(baseURL+"/api", "application/json", bytes.NewReader(bpReq))
-	if err != nil {
-		t.Logf("   失败: %v", err)
-	} else {
-		defer resp5.Body.Close()
-		var bpResult map[string]any
-		json.NewDecoder(resp5.Body).Decode(&bpResult)
-		t.Logf("   响应: %+v", bpResult)
-	}
-
-	t.Log("\n=== 测试完成 ===")
-}
-
-func TestPacketAPI(t *testing.T) {
-	driverPath := `d:\ux\examples\hypedbg\rust-driver\kd\hyperdbg_kd.sys`
-
-	t.Log("=== 测试 Packet API ===")
-
-	p := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
-
-	t.Log("安装驱动...")
-	p.Install()
-
-	t.Log("启动驱动...")
-	p.Start()
-	defer func() {
-		t.Log("停止驱动...")
-		p.Stop()
-		p.Uninstall()
-		t.Log("驱动已卸载")
-	}()
-
-	t.Log("等待 HTTP 服务就绪...")
-	time.Sleep(500 * time.Millisecond)
-
-	packet := debugger.NewPacket()
-
-	t.Log("连接 HTTP 服务...")
-	if err := packet.Start(); err != nil {
-		t.Fatalf("连接失败: %v", err)
-	}
-	defer packet.Stop()
-
-	t.Log("连接成功!")
-
-	t.Log("加载 VMM...")
-	if err := packet.LoadVmm(); err != nil {
-		t.Logf("LoadVmm: %v", err)
-	}
-
-	t.Log("发送 pause...")
-	if err := packet.Pause(); err != nil {
-		t.Logf("Pause 失败: %v", err)
-	}
-
-	t.Log("发送 continue...")
-	if err := packet.Continue(); err != nil {
-		t.Logf("Continue 失败: %v", err)
-	}
-
-	t.Log("=== 测试完成 ===")
-}
-
-func TestNotepadDebugging(t *testing.T) {
-	driverPath := `d:\ux\examples\hypedbg\rust-driver\kd\hyperdbg_kd.sys`
-
-	t.Log("=== 测试记事本调试 ===")
-
-	p := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
-
-	t.Log("安装驱动...")
-	p.Install()
-
-	t.Log("启动驱动...")
-	p.Start()
-	defer func() {
-		t.Log("停止驱动...")
-		p.Stop()
-		p.Uninstall()
-		t.Log("驱动已卸载")
-	}()
-
-	time.Sleep(500 * time.Millisecond)
-
-	packet := debugger.NewPacket()
-
-	t.Log("连接 HTTP 服务...")
-	if err := packet.Start(); err != nil {
-		t.Fatalf("连接失败: %v", err)
-	}
-	defer packet.Stop()
-
-	t.Log("连接成功!")
-
-	t.Log("加载 VMM...")
-	if err := packet.LoadVmm(); err != nil {
-		t.Logf("LoadVmm: %v", err)
-	}
-
-	t.Log("附加到 notepad.exe 进程...")
-	processList, err := packet.GetProcessList()
-	if err != nil {
-		t.Logf("获取进程列表失败: %v", err)
 		return
 	}
 
@@ -231,72 +57,44 @@ func TestNotepadDebugging(t *testing.T) {
 	}
 
 	if notepadPID == 0 {
-		t.Log("未找到 notepad.exe 进程，跳过测试")
 		return
 	}
 
-	t.Logf("找到 notepad.exe PID: %d", notepadPID)
-
-	if err := packet.AttachProcess(notepadPID); err != nil {
-		t.Logf("附加进程失败: %v", err)
-		return
-	}
-
-	t.Log("设置断点...")
-	if err := packet.SetBreakpoint(0x7FFE0000, debugger.BreakpointSoftware); err != nil {
-		t.Logf("设置断点失败: %v", err)
-	}
-
-	t.Log("继续执行...")
-	if err := packet.Continue(); err != nil {
-		t.Logf("Continue 失败: %v", err)
-	}
-
-	t.Log("=== 测试完成 ===")
+	p.AttachProcess(notepadPID)
+	p.SetBreakpoint(0x7FFE0000, debugger.BreakpointSoftware)
+	p.Continue()
 }
 
 func TestMultipleDriverInitialization(t *testing.T) {
 	driverPath := `d:\ux\examples\hypedbg\rust-driver\kd\hyperdbg_kd.sys`
 
-	t.Log("=== 多次驱动初始化测试 ===")
-	t.Log("此测试验证驱动能否多次成功加载而不BSOD")
-
 	iterations := 5
 	for i := range iterations {
-		t.Logf("=== 第 %d 次初始化 ===", i+1)
-
-		p := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
-		p.Install()
-		p.Start()
+		d := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
+		d.Install()
+		d.Start()
 
 		time.Sleep(200 * time.Millisecond)
 
-		packet := debugger.NewPacket()
-		if err := packet.Start(); err != nil {
+		p := debugger.NewPacket()
+		if err := p.Start(); err != nil {
 			t.Errorf("第 %d 次初始化失败: %v", i+1, err)
-			p.Stop()
-			p.Uninstall()
+			d.Stop()
+			d.Uninstall()
 			continue
 		}
 
-		if !packet.IsConnected() {
+		if !p.IsConnected() {
 			t.Errorf("第 %d 次初始化失败: 驱动未连接", i+1)
-			p.Stop()
-			p.Uninstall()
+			d.Stop()
+			d.Uninstall()
 			continue
 		}
 
-		t.Logf("第 %d 次初始化成功: 驱动已连接", i+1)
-
-		packet.Stop()
 		p.Stop()
-		p.Uninstall()
-
-		t.Logf("第 %d 次卸载完成", i+1)
+		d.Stop()
+		d.Uninstall()
 	}
-
-	t.Log("=== 多次初始化测试完成 ===")
-	t.Logf("共完成 %d 次初始化", iterations)
 }
 
 func TestHookScript(t *testing.T) {
@@ -308,6 +106,14 @@ func TestHookScript(t *testing.T) {
 			ExcludeSystem: true,
 		},
 		OnMatch: func(ctx *debugger.HookContext) {
+			const (
+				SMART_RCV_DRIVE_DATA          = 0x0007c088
+				IOCTL_DISK_GET_DRIVE_GEOMETRY = 0x00070000
+				IOCTL_STORAGE_QUERY_PROPERTY  = 0x002d1400
+				IOCTL_CPUID                   = 0x00220000
+				AFD_CONNECT                   = 0x12007
+				IOCTL_NDIS_QUERY_GLOBAL_STATS = 0x00170202
+			)
 			type IDINFO struct {
 				WGenConfig          uint16
 				WNumCyls            uint16
@@ -352,22 +158,4 @@ func TestHookScript(t *testing.T) {
 	}
 
 	fmt.Println("Hardware spoof hooks installed")
-}
-
-func jsonBytes(data []byte) *jsonReader {
-	return &jsonReader{data: data}
-}
-
-type jsonReader struct {
-	data []byte
-	pos  int
-}
-
-func (r *jsonReader) Read(p []byte) (n int, err error) {
-	if r.pos >= len(r.data) {
-		return 0, fmt.Errorf("EOF")
-	}
-	n = copy(p, r.data[r.pos:])
-	r.pos += n
-	return n, nil
 }
