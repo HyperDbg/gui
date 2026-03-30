@@ -44,4 +44,5 @@ type Debugger interface {
 	GetSymbolByName(name string) (SymbolInfo, error)
 	GetSymbolByAddress(address uint64) (SymbolInfo, error)
 	GetFunctionByAddress(address uint64) (FunctionInfo, error)
+	InstallHookScript(script *HookScript) error
 }

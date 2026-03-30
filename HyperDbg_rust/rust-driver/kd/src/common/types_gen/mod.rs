@@ -20,6 +20,8 @@ mod event_cr_access;
 mod event_dr_access;
 mod event_io_port;
 mod event_msr;
+mod hook_types;
+mod hook_db_gen;
 mod event_ept_violation;
 mod response;
 
@@ -44,5 +46,7 @@ pub use event_cr_access::*;
 pub use event_dr_access::*;
 pub use event_io_port::*;
 pub use event_msr::*;
+pub use hook_types::*;
+pub use hook_db_gen::*;
 pub use event_ept_violation::*;
 pub use response::*;

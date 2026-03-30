@@ -32,6 +32,14 @@ pub struct Request {
     pub data: Option<Vec<u8>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub regs: Option<RegisterState>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub api_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub hook_type: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub filter: Option<HookFilter>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub code: Option<String>,
 }
 
 // Response structure for API calls
@@ -50,6 +58,7 @@ pub struct Empty {}
 // API Handler trait for implementing debugger operations
 pub trait DebuggerApi {
     fn status(&mut self, req: &Request) -> Result<String, String>;
+    fn ping(&mut self, req: &Request) -> Result<Empty, String>;
     fn load_vmm(&mut self, req: &Request) -> Result<Empty, String>;
     fn unload_vmm(&mut self, req: &Request) -> Result<Empty, String>;
     fn attach_process(&mut self, req: &Request) -> Result<Empty, String>;
@@ -68,12 +77,14 @@ pub trait DebuggerApi {
     fn get_process_list(&mut self, req: &Request) -> Result<Vec<ProcessInfo>, String>;
     fn get_thread_list(&mut self, req: &Request) -> Result<Vec<ThreadInfo>, String>;
     fn get_module_list(&mut self, req: &Request) -> Result<Vec<ModuleInfo>, String>;
+    fn register_cpuid_callback(&mut self, req: &Request) -> Result<Empty, String>;
     fn disassemble(&mut self, req: &Request) -> Result<Vec<Instruction>, String>;
     fn load_symbols(&mut self, req: &Request) -> Result<Empty, String>;
     fn unload_symbols(&mut self, req: &Request) -> Result<Empty, String>;
     fn get_symbol_by_name(&mut self, req: &Request) -> Result<SymbolInfo, String>;
     fn get_symbol_by_address(&mut self, req: &Request) -> Result<SymbolInfo, String>;
     fn get_function_by_address(&mut self, req: &Request) -> Result<FunctionInfo, String>;
+    fn install_hook_script(&mut self, req: &Request) -> Result<Empty, String>;
 }
 
 // Non-API methods (excluded from trait):
@@ -92,6 +103,12 @@ pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
             match req.action.as_str() {
                 "status" => {
                     match api.status(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "ping" => {
+                    match api.ping(&req) {
                         Ok(data) => success_response(data),
                         Err(e) => error_response(&e),
                     }
@@ -204,6 +221,12 @@ pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
                         Err(e) => error_response(&e),
                     }
                 }
+                "register_cpuid_callback" => {
+                    match api.register_cpuid_callback(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
                 "disassemble" => {
                     match api.disassemble(&req) {
                         Ok(data) => success_response(data),
@@ -236,6 +259,12 @@ pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
                 }
                 "get_function_by_address" => {
                     match api.get_function_by_address(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "install_hook_script" => {
+                    match api.install_hook_script(&req) {
                         Ok(data) => success_response(data),
                         Err(e) => error_response(&e),
                     }
@@ -295,6 +324,10 @@ pub struct NoOpDebugger;
 impl DebuggerApi for NoOpDebugger {
     fn status(&mut self, _req: &Request) -> Result<String, String> {
         Ok(Default::default())
+    }
+
+    fn ping(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
     }
 
     fn load_vmm(&mut self, _req: &Request) -> Result<Empty, String> {
@@ -409,6 +442,10 @@ impl DebuggerApi for NoOpDebugger {
         ])
     }
 
+    fn register_cpuid_callback(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
     fn disassemble(&mut self, _req: &Request) -> Result<Vec<Instruction>, String> {
         Ok(Vec::new())
     }
@@ -431,6 +468,10 @@ impl DebuggerApi for NoOpDebugger {
 
     fn get_function_by_address(&mut self, _req: &Request) -> Result<FunctionInfo, String> {
         Ok(Default::default())
+    }
+
+    fn install_hook_script(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
     }
 
 }

@@ -18,9 +18,10 @@ type FunctionSignature struct {
 }
 
 type TypeDefinition struct {
-	Name string
-	Kind string
-	Line int
+	Name   string
+	Kind   string
+	Line   int
+	Source string
 }
 
 type ConstantDefinition struct {
@@ -167,6 +168,10 @@ func (b *Bindgen) LoadWdkBindings(ntddkPath, typesPath, constantsPath string) er
 		return fmt.Errorf("failed to parse types: %w", err)
 	}
 
+	if err := b.parseTypes(ntddkPath); err != nil {
+		return fmt.Errorf("failed to parse ntddk types: %w", err)
+	}
+
 	if err := b.parseConstants(constantsPath); err != nil {
 		return fmt.Errorf("failed to parse constants: %w", err)
 	}
@@ -251,11 +256,20 @@ func (b *Bindgen) parseTypes(path string) error {
 		return err
 	}
 
-	b.wdk.Types = make(map[string]TypeDefinition)
+	if b.wdk.Types == nil {
+		b.wdk.Types = make(map[string]TypeDefinition)
+	}
+
+	source := "types"
+	if strings.HasSuffix(path, "ntddk.rs") {
+		source = "ntddk"
+	}
 
 	structPattern := regexp.MustCompile(`^pub struct ([A-Z_][a-zA-Z0-9_]*)`)
 	typePattern := regexp.MustCompile(`^pub type ([A-Z_][a-zA-Z0-9_]*)\s*=`)
 	enumPattern := regexp.MustCompile(`^pub enum ([A-Z_][a-zA-Z0-9_]*)`)
+	useAsPattern := regexp.MustCompile(`^pub use self::_([A-Z_][a-zA-Z0-9_]*)::Type as ([A-Z_][a-zA-Z0-9_]*);`)
+	modPattern := regexp.MustCompile(`^pub mod ([A-Z_][a-zA-Z0-9_]*)\s*\{`)
 
 	skipTypes := map[string]bool{
 		"Type": true,
@@ -265,17 +279,27 @@ func (b *Bindgen) parseTypes(path string) error {
 	for i, line := range lines {
 		if matches := structPattern.FindStringSubmatch(line); matches != nil {
 			if !skipTypes[matches[1]] {
-				b.wdk.Types[matches[1]] = TypeDefinition{Name: matches[1], Kind: "struct", Line: i + 1}
+				b.wdk.Types[matches[1]] = TypeDefinition{Name: matches[1], Kind: "struct", Line: i + 1, Source: source}
 			}
 		}
 		if matches := typePattern.FindStringSubmatch(line); matches != nil {
 			if !skipTypes[matches[1]] {
-				b.wdk.Types[matches[1]] = TypeDefinition{Name: matches[1], Kind: "type", Line: i + 1}
+				b.wdk.Types[matches[1]] = TypeDefinition{Name: matches[1], Kind: "type", Line: i + 1, Source: source}
 			}
 		}
 		if matches := enumPattern.FindStringSubmatch(line); matches != nil {
 			if !skipTypes[matches[1]] {
-				b.wdk.Types[matches[1]] = TypeDefinition{Name: matches[1], Kind: "enum", Line: i + 1}
+				b.wdk.Types[matches[1]] = TypeDefinition{Name: matches[1], Kind: "enum", Line: i + 1, Source: source}
+			}
+		}
+		if matches := useAsPattern.FindStringSubmatch(line); matches != nil {
+			if !skipTypes[matches[2]] {
+				b.wdk.Types[matches[2]] = TypeDefinition{Name: matches[2], Kind: "type", Line: i + 1, Source: source}
+			}
+		}
+		if matches := modPattern.FindStringSubmatch(line); matches != nil {
+			if !skipTypes[matches[1]] {
+				b.wdk.Types[matches[1]] = TypeDefinition{Name: matches[1], Kind: "mod", Line: i + 1, Source: source}
 			}
 		}
 	}
@@ -483,6 +507,44 @@ func (b *Bindgen) normalizeType(t string) string {
 	return t
 }
 
+func (b *Bindgen) splitParams(params string) []string {
+	var result []string
+	var current strings.Builder
+	braceCount := 0
+	angleCount := 0
+	squareCount := 0
+
+	for _, c := range params {
+		switch c {
+		case '(':
+			braceCount++
+		case ')':
+			braceCount--
+		case '<':
+			angleCount++
+		case '>':
+			angleCount--
+		case '[':
+			squareCount++
+		case ']':
+			squareCount--
+		case ',':
+			if braceCount == 0 && angleCount == 0 && squareCount == 0 {
+				result = append(result, current.String())
+				current.Reset()
+				continue
+			}
+		}
+		current.WriteRune(c)
+	}
+
+	if current.Len() > 0 {
+		result = append(result, current.String())
+	}
+
+	return result
+}
+
 func (b *Bindgen) parseParamList(params string) []struct{ Name, Type string } {
 	if params == "" {
 		return nil
@@ -490,8 +552,8 @@ func (b *Bindgen) parseParamList(params string) []struct{ Name, Type string } {
 
 	var result []struct{ Name, Type string }
 
-	parts := strings.SplitSeq(params, ",")
-	for part := range parts {
+	parts := b.splitParams(params)
+	for _, part := range parts {
 		part = strings.TrimSpace(part)
 		if part == "" {
 			continue
@@ -832,23 +894,36 @@ func (b *Bindgen) generateNtapiTypes(outputDir string) error {
 	sb.WriteString("#![allow(non_snake_case)]\n")
 	sb.WriteString("#![allow(dead_code)]\n\n")
 
-	exportedTypes := []string{}
-	for name := range b.wdk.Types {
-		if strings.HasPrefix(name, "_") {
-			continue
+	typesFromWdk := []string{}
+	typesFromNtddk := []string{}
+	for name, def := range b.wdk.Types {
+		if def.Source == "ntddk" {
+			typesFromNtddk = append(typesFromNtddk, name)
+		} else {
+			typesFromWdk = append(typesFromWdk, name)
 		}
-		exportedTypes = append(exportedTypes, name)
 	}
-	sort.Strings(exportedTypes)
+	sort.Strings(typesFromWdk)
+	sort.Strings(typesFromNtddk)
 
-	sb.WriteString(fmt.Sprintf("// Types: %d\n\n", len(exportedTypes)))
+	sb.WriteString(fmt.Sprintf("// Types from wdk_sys: %d\n", len(typesFromWdk)))
+	sb.WriteString(fmt.Sprintf("// Types from ntddk: %d\n\n", len(typesFromNtddk)))
 
-	sb.WriteString("pub use wdk_sys::{\n")
-
-	for _, name := range exportedTypes {
-		sb.WriteString(fmt.Sprintf("    %s,\n", name))
+	if len(typesFromWdk) > 0 {
+		sb.WriteString("pub use wdk_sys::{\n")
+		for _, name := range typesFromWdk {
+			sb.WriteString(fmt.Sprintf("    %s,\n", name))
+		}
+		sb.WriteString("};\n\n")
 	}
-	sb.WriteString("};\n")
+
+	if len(typesFromNtddk) > 0 {
+		sb.WriteString("pub use wdk_sys::ntddk::{\n")
+		for _, name := range typesFromNtddk {
+			sb.WriteString(fmt.Sprintf("    %s,\n", name))
+		}
+		sb.WriteString("};\n")
+	}
 
 	return os.WriteFile(filepath.Join(outputDir, "types_gen.rs"), []byte(sb.String()), 0o644)
 }
@@ -1369,6 +1444,9 @@ func (b *Bindgen) generateRustHookDb(outputDir string, hooks []HookEntry) error 
 	if err := b.generateRustHookInline(outputDir, hooks); err != nil {
 		return err
 	}
+	if err := b.generateRustHookArgs(outputDir, hooks); err != nil {
+		return err
+	}
 	return b.generateRustHookMod(outputDir)
 }
 
@@ -1383,6 +1461,7 @@ func (b *Bindgen) generateRustHookEpt(outputDir string, hooks []HookEntry) error
 	sb.WriteString("use alloc::string::String;\n")
 	sb.WriteString("use alloc::vec::Vec;\n")
 	sb.WriteString("use crate::hyperkd::hyperhv::hooks::hooks::*;\n")
+	sb.WriteString("use crate::hyperkd::hyperhv::ProcessId;\n")
 	sb.WriteString("use crate::ntapi::*;\n\n")
 
 	sb.WriteString("pub struct EptHookDb {\n")
@@ -1476,16 +1555,68 @@ func (b *Bindgen) generateRustHookInline(outputDir string, hooks []HookEntry) er
 	return os.WriteFile(filepath.Join(outputDir, "inline_hook_gen.rs"), []byte(sb.String()), 0o644)
 }
 
+func (b *Bindgen) generateRustHookArgs(outputDir string, hooks []HookEntry) error {
+	var sb strings.Builder
+	sb.WriteString("#![allow(non_snake_case)]\n")
+	sb.WriteString("#![allow(dead_code)]\n\n")
+
+	sb.WriteString(fmt.Sprintf("// Hook Args structs: %d functions\n", len(hooks)))
+	sb.WriteString("// Auto-generated by bindgen - DO NOT EDIT\n\n")
+
+	sb.WriteString("use crate::ntapi::*;\n\n")
+
+	sb.WriteString("// Args structs for each hooked API\n")
+	sb.WriteString("// All types are directly from wdk_sys via ntapi::types_gen\n")
+	for _, h := range hooks {
+		if len(h.ParamList) == 0 {
+			continue
+		}
+		sb.WriteString(fmt.Sprintf("/// Arguments for %s\n", h.Name))
+		sb.WriteString("#[repr(C)]\n")
+		sb.WriteString(fmt.Sprintf("pub struct %sArgs {\n", h.Name))
+		for _, p := range h.ParamList {
+			if p.Name == "" || p.Type == "..." {
+				continue
+			}
+			sb.WriteString(fmt.Sprintf("    pub %s: %s,\n", p.Name, p.Type))
+		}
+		sb.WriteString("}\n\n")
+	}
+
+	sb.WriteString("// Args registry for runtime lookup\n")
+	sb.WriteString("pub static HOOK_ARGS_REGISTRY: &[(&str, usize)] = &[\n")
+	for _, h := range hooks {
+		if len(h.ParamList) == 0 {
+			continue
+		}
+		sb.WriteString(fmt.Sprintf("    (\"%s\", core::mem::size_of::< %sArgs>()),\n", h.Name, h.Name))
+	}
+	sb.WriteString("];\n\n")
+
+	sb.WriteString("pub fn get_args_size(name: &str) -> Option<usize> {\n")
+	sb.WriteString("    for (n, size) in HOOK_ARGS_REGISTRY {\n")
+	sb.WriteString("        if *n == name {\n")
+	sb.WriteString("            return Some(*size);\n")
+	sb.WriteString("        }\n")
+	sb.WriteString("    }\n")
+	sb.WriteString("    None\n")
+	sb.WriteString("}\n")
+
+	return os.WriteFile(filepath.Join(outputDir, "hook_args_gen.rs"), []byte(sb.String()), 0o644)
+}
+
 func (b *Bindgen) generateRustHookMod(outputDir string) error {
 	var sb strings.Builder
 	sb.WriteString("#![allow(non_snake_case)]\n")
 	sb.WriteString("#![allow(dead_code)]\n\n")
 
 	sb.WriteString("mod ept_hook_gen;\n")
-	sb.WriteString("mod inline_hook_gen;\n\n")
+	sb.WriteString("mod inline_hook_gen;\n")
+	sb.WriteString("mod hook_args_gen;\n\n")
 
 	sb.WriteString("pub use ept_hook_gen::*;\n")
 	sb.WriteString("pub use inline_hook_gen::*;\n")
+	sb.WriteString("pub use hook_args_gen::*;\n")
 
 	return os.WriteFile(filepath.Join(outputDir, "mod.rs"), []byte(sb.String()), 0o644)
 }

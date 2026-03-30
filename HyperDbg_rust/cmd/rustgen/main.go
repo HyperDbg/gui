@@ -36,7 +36,7 @@ const (
 var enumTypes = []string{
 	"MessageType", "BreakpointType", "DebugState", "LogLevel",
 	"EventType", "ExceptionCode", "MemoryAccessType", "VmxExitReason",
-	"DebuggerEventType",
+	"DebuggerEventType", "HookType",
 }
 
 type APIMethod struct {
@@ -87,6 +87,9 @@ var fileMappings = []FileMapping{
 	{GoFile: "event_dr_access.go", RustFile: "event_dr_access.rs", Types: []string{"DrAccessEvent"}},
 	{GoFile: "event_io_port.go", RustFile: "event_io_port.rs", Types: []string{"IoPortEvent"}},
 	{GoFile: "event_msr.go", RustFile: "event_msr.rs", Types: []string{"MsrEvent"}},
+	{GoFile: "hook_types.go", RustFile: "hook_types.rs", Types: []string{"HookFilter"}},
+	{GoFile: "hook_db_gen.go", RustFile: "hook_db_gen.rs", Enums: []string{"HookType"}, Types: []string{"HookInfo", "HookParam"}},
+	{GoFile: "hook_script_compiler.go", RustFile: "hook_script_compiler.rs", Enums: []string{"HookOpType"}, Types: []string{"HookOperation"}},
 	{GoFile: "event_ept_violation.go", RustFile: "event_ept_violation.rs", Types: []string{"EptViolationEvent"}},
 }
 
@@ -849,6 +852,14 @@ func generateHandlersRouter(projectRoot string, apiMethods []APIMethod) {
 	buf.WriteString("    pub data: Option<Vec<u8>>,\n")
 	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")
 	buf.WriteString("    pub regs: Option<RegisterState>,\n")
+	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")
+	buf.WriteString("    pub api_name: Option<String>,\n")
+	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")
+	buf.WriteString("    pub hook_type: Option<u32>,\n")
+	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")
+	buf.WriteString("    pub filter: Option<HookFilter>,\n")
+	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")
+	buf.WriteString("    pub code: Option<String>,\n")
 	buf.WriteString("}\n\n")
 
 	buf.WriteString("// Response structure for API calls\n")
@@ -1644,6 +1655,8 @@ func getEnumPrefix(enumName string) string {
 		return "State"
 	case "DebuggerEventType":
 		return "DebuggerEvent"
+	case "HookType":
+		return "HookType"
 	}
 	return enumName
 }

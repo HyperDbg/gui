@@ -7,6 +7,7 @@
 use alloc::string::String;
 use alloc::vec::Vec;
 use crate::hyperkd::hyperhv::hooks::hooks::*;
+use crate::hyperkd::hyperhv::ProcessId;
 use crate::ntapi::*;
 
 pub struct EptHookDb {

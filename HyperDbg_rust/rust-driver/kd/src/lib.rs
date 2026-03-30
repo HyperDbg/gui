@@ -40,6 +40,7 @@ pub mod framework;
 pub mod disassembler;
 pub mod ntapi;
 pub mod expr;
+pub mod go_script;
 
 pub use hyperkd::hyperhv::vmm;
 pub use hyperkd::hyperhv::memory;

@@ -1,0 +1,17 @@
+[package]
+name = "go-parser"
+version = "0.1.5"
+edition = "2021"
+license = "BSD-3-Clause"
+
+[lib]
+name = "go_parser"
+path = "lib.rs"
+
+[features]
+default = []
+btree_map = []
+serde_borsh = []
+
+[dependencies]
+spin = "0.9"

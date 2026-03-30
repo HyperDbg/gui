@@ -65,6 +65,10 @@ impl DebuggerApi for HyperDbgApi {
         }
     }
 
+    fn ping(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
     fn load_vmm(&mut self, _req: &Request) -> Result<Empty, String> {
         if self.vmm_initialized {
             return Err(String::from("VMM already loaded"));
@@ -436,6 +440,10 @@ impl DebuggerApi for HyperDbgApi {
         Ok(modules)
     }
 
+    fn register_cpuid_callback(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
     fn disassemble(&mut self, req: &Request) -> Result<Vec<Instruction>, String> {
         let address = req.address.ok_or("address required")?;
         let data = req.data.as_ref().ok_or("data required")?;
@@ -480,6 +488,20 @@ impl DebuggerApi for HyperDbgApi {
 
     fn get_function_by_address(&mut self, _req: &Request) -> Result<FunctionInfo, String> {
         Err(String::from("Function not found"))
+    }
+
+    fn install_hook_script(&mut self, req: &Request) -> Result<Empty, String> {
+        let api_name = req.api_name.as_ref().ok_or("api_name is required")?;
+        let code = req.code.as_ref().ok_or("code is required")?;
+        
+        crate::go_script::install_hook_script(
+            api_name,
+            req.hook_type.unwrap_or(0),
+            req.filter.as_ref(),
+            code,
+        ).map_err(|e| format!("Failed to install hook script: {}", e))?;
+        
+        Ok(Empty {})
     }
 }
 

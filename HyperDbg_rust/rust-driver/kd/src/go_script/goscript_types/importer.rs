@@ -1,0 +1,216 @@
+// Copyright 2022 The Goscript Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+//
+//
+// This code is adapted from the offical Go code written in Go
+// with license as follows:
+// Copyright 2013 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+use super::check::{Checker, TypeInfo};
+use super::objects::{PackageKey, TCObjects};
+use go_parser::ast;
+use go_parser::{AstObjects, ErrorList, FileSet, Map, Parser, Pos};
+use std::io;
+use std::path::{Path, PathBuf};
+
+pub struct TraceConfig {
+    //print debug info in parser
+    pub trace_parser: bool,
+    // print debug info in checker
+    pub trace_checker: bool,
+}
+
+pub trait SourceRead {
+    fn working_dir(&self) -> &Path;
+
+    fn base_dir(&self) -> Option<&Path>;
+
+    fn read_file(&self, path: &Path) -> io::Result<String>;
+
+    fn read_dir(&self, path: &Path) -> io::Result<Vec<PathBuf>>;
+
+    fn is_file(&self, path: &Path) -> bool;
+
+    fn is_dir(&self, path: &Path) -> bool;
+
+    fn canonicalize_import(&self, key: &ImportKey) -> io::Result<(PathBuf, String)>;
+}
+
+/// ImportKey identifies an imported package by import path and source directory
+/// (directory containing the file containing the import). In practice, the directory
+/// may always be the same, or may not matter. Given an (import path, directory), an
+/// importer must always return the same package (but given two different import paths,
+/// an importer may still return the same package by mapping them to the same package
+/// paths).
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+pub struct ImportKey {
+    pub path: String,
+    pub dir: String, // makes a difference only when importing local files
+}
+
+impl ImportKey {
+    pub fn new(path: &str, dir: &str) -> ImportKey {
+        ImportKey {
+            path: path.to_string(),
+            dir: dir.to_string(),
+        }
+    }
+}
+
+pub struct Importer<'a, S: SourceRead> {
+    trace_config: &'a TraceConfig,
+    reader: &'a S,
+    fset: &'a mut FileSet,
+    pkgs: &'a mut Map<String, PackageKey>,
+    all_results: &'a mut Map<PackageKey, TypeInfo>,
+    ast_objs: &'a mut AstObjects,
+    tc_objs: &'a mut TCObjects,
+    errors: &'a ErrorList,
+    pos: Pos,
+}
+
+impl<'a, S: SourceRead> Importer<'a, S> {
+    pub fn new(
+        config: &'a TraceConfig,
+        reader: &'a S,
+        fset: &'a mut FileSet,
+        pkgs: &'a mut Map<String, PackageKey>,
+        all_results: &'a mut Map<PackageKey, TypeInfo>,
+        ast_objs: &'a mut AstObjects,
+        tc_objs: &'a mut TCObjects,
+        errors: &'a ErrorList,
+        pos: Pos,
+    ) -> Importer<'a, S> {
+        Importer {
+            trace_config: config,
+            reader: reader,
+            fset: fset,
+            pkgs: pkgs,
+            all_results: all_results,
+            ast_objs: ast_objs,
+            tc_objs: tc_objs,
+            errors: errors,
+            pos: pos,
+        }
+    }
+
+    pub fn import(&mut self, key: &'a ImportKey) -> Result<PackageKey, ()> {
+        if key.path == "unsafe" {
+            return Ok(*self.tc_objs.universe().unsafe_pkg());
+        }
+
+        match self.reader.canonicalize_import(key) {
+            Ok((path, import_path)) => match self.pkgs.get(&import_path) {
+                Some(key) => Ok(*key),
+                None => {
+                    let pkg = self.tc_objs.new_package(import_path.clone());
+                    self.pkgs.insert(import_path, pkg);
+                    let files = self.parse_path(&path)?;
+                    Checker::new(
+                        self.tc_objs,
+                        self.ast_objs,
+                        self.fset,
+                        self.errors,
+                        self.pkgs,
+                        self.all_results,
+                        pkg,
+                        self.trace_config,
+                        self.reader,
+                    )
+                    .check(files)
+                }
+            },
+            Err(e) => self.error(format!("canonicalize import error: {}", e)),
+        }
+    }
+
+    fn parse_path(&mut self, path: &Path) -> Result<Vec<ast::File>, ()> {
+        match read_content(path, self.reader) {
+            Ok(contents) => {
+                if contents.len() == 0 {
+                    self.error(format!("no source file found in dir: {}", path.display()))
+                } else {
+                    let mut afiles = vec![];
+                    for (full_name, content) in contents.into_iter() {
+                        let mut pfile = self.fset.add_file(
+                            full_name,
+                            Some(self.fset.base()),
+                            content.chars().count(),
+                        );
+                        let afile = Parser::new(
+                            self.ast_objs,
+                            &mut pfile,
+                            self.errors,
+                            &content,
+                            self.trace_config.trace_parser,
+                        )
+                        .parse_file();
+                        if afile.is_none() {
+                            // parse error, the details should be in the errorlist already.
+                            // give up
+                            return Err(());
+                        } else {
+                            afiles.push(afile.unwrap());
+                        }
+                    }
+                    Ok(afiles)
+                }
+            }
+            Err(e) => self.error(format!(
+                "failed to read from path: {}, {}",
+                path.display(),
+                e
+            )),
+        }
+    }
+
+    fn error<T>(&self, err: String) -> Result<T, ()> {
+        self.errors
+            .add(self.fset.position(self.pos), err, false, false);
+        Err(())
+    }
+}
+
+fn read_content(p: &Path, reader: &dyn SourceRead) -> io::Result<Vec<(String, String)>> {
+    let working_dir = reader.working_dir().canonicalize().ok();
+    let mut result = vec![];
+    let mut read = |path: PathBuf| -> io::Result<()> {
+        if let Some(ext) = path.extension() {
+            if ext == "gos" || ext == "go" || ext == "src" {
+                if let Some(fs) = path.file_stem() {
+                    let s = fs.to_str();
+                    if s.is_some() && !s.unwrap().ends_with("_test") {
+                        let p = path.as_path();
+                        let content = reader.read_file(p)?;
+                        // try get short display name for the file
+                        let full_name = match &working_dir {
+                            Some(wd) => p.strip_prefix(wd).unwrap_or(p),
+                            None => p,
+                        }
+                        .to_string_lossy()
+                        .to_string();
+                        result.push((full_name, content))
+                    }
+                }
+            }
+        }
+        Ok(())
+    };
+
+    if reader.is_dir(p) {
+        let mut paths = reader.read_dir(p)?;
+        paths.sort_by(|a, b| a.as_os_str().cmp(b.as_os_str()));
+        for p in paths.into_iter() {
+            read(p)?;
+        }
+    } else if reader.is_file(p) {
+        read(p.to_path_buf())?;
+    }
+    if result.len() == 0 {
+        return Err(io::Error::new(io::ErrorKind::Other, "no file/dir found"));
+    }
+    Ok(result)
+}

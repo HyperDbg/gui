@@ -1,0 +1,653 @@
+// Copyright 2022 The Goscript Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+//
+//
+// This code is adapted from the offical Go code written in Go
+// with license as follows:
+// Copyright 2013 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+#![allow(dead_code)]
+use super::constant;
+use super::objects::{ObjKey, PackageKey, ScopeKey, TCObjects, TypeKey};
+use super::package::Package;
+use super::typ;
+use super::universe;
+use super::universe::Universe;
+use go_parser::{ast, Map, Pos};
+use std::borrow::Cow;
+use std::fmt;
+use std::fmt::Write;
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct VarProperty {
+    pub embedded: bool,
+    pub is_field: bool,
+    pub used: bool,
+}
+
+impl VarProperty {
+    pub fn new(embedded: bool, field: bool, used: bool) -> VarProperty {
+        VarProperty {
+            embedded: embedded,
+            is_field: field,
+            used: used,
+        }
+    }
+}
+
+/// EntityType defines the types of LangObj entities
+///
+#[derive(Clone, Debug, PartialEq)]
+pub enum EntityType {
+    /// A PkgName represents an imported Go package.
+    PkgName(PackageKey, bool), // the bool is for used
+    /// A Const represents a declared constant.
+    Const(constant::Value),
+    /// A TypeName represents a name for a (defined or alias) type.
+    TypeName,
+    /// A Variable represents a declared variable (including function
+    /// parameters and results, and struct fields).
+    Var(VarProperty),
+    /// A Func represents a declared function, concrete method, or abstract
+    /// (interface) method. Its Type() is always a *Signature.
+    /// An abstract method may belong to many interfaces due to embedding.
+    Func(bool), // has_ptr_recv, only valid for methods that don't have a type yet
+    /// A Label represents a declared label.
+    /// Labels don't have a type.
+    Label(bool), // bool for used
+    /// A Builtin represents a built-in function.
+    /// Builtins don't have a valid type.
+    Builtin(universe::Builtin),
+    /// Nil represents the predeclared value nil.
+    Nil,
+}
+
+impl EntityType {
+    pub fn is_pkg_name(&self) -> bool {
+        match self {
+            EntityType::PkgName(_, _) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_const(&self) -> bool {
+        match self {
+            EntityType::Const(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_type_name(&self) -> bool {
+        match self {
+            EntityType::TypeName => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_var(&self) -> bool {
+        match self {
+            EntityType::Var(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_func(&self) -> bool {
+        match self {
+            EntityType::Func(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_label(&self) -> bool {
+        match self {
+            EntityType::Label(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_builtin(&self) -> bool {
+        match self {
+            EntityType::Builtin(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_nil(&self) -> bool {
+        match self {
+            EntityType::Nil => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_dependency(&self) -> bool {
+        match self {
+            EntityType::Const(_) | EntityType::Var(_) | EntityType::Func(_) => true,
+            _ => false,
+        }
+    }
+
+    pub fn func_has_ptr_recv(&self) -> bool {
+        match self {
+            EntityType::Func(h) => *h,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn func_set_has_ptr_recv(&mut self, has: bool) {
+        match self {
+            EntityType::Func(h) => {
+                *h = has;
+            }
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn var_property(&self) -> &VarProperty {
+        match self {
+            EntityType::Var(prop) => prop,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn var_property_mut(&mut self) -> &mut VarProperty {
+        match self {
+            EntityType::Var(prop) => prop,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn label_used(&self) -> bool {
+        match self {
+            EntityType::Label(u) => *u,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn label_set_used(&mut self, used: bool) {
+        match self {
+            EntityType::Label(u) => {
+                *u = used;
+            }
+            _ => unreachable!(),
+        }
+    }
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub(crate) enum ObjColor {
+    White,
+    Black,
+    Gray(usize),
+}
+
+impl fmt::Display for ObjColor {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            ObjColor::White => f.write_str("white"),
+            ObjColor::Black => f.write_str("black"),
+            ObjColor::Gray(_) => f.write_str("gray"),
+        }
+    }
+}
+
+// ----------------------------------------------------------------------------
+// LangObj
+//
+/// A LangObj describes a named language entity such as a package,
+/// constant, type, variable, function (incl. methods), or label.
+///
+#[derive(Clone, Debug)]
+pub struct LangObj {
+    entity_type: EntityType,
+    parent: Option<ScopeKey>,
+    pos: Pos,
+    pkg: Option<PackageKey>,
+    name: String,
+    typ: Option<TypeKey>,
+    order: u32,
+    color: ObjColor,
+    scope_pos: Pos,
+}
+
+impl LangObj {
+    pub fn new_pkg_name(
+        pos: Pos,
+        pkg: Option<PackageKey>,
+        name: String,
+        imported: PackageKey,
+        univ: &Universe,
+    ) -> LangObj {
+        let t = univ.types()[&typ::BasicType::Invalid];
+        LangObj::new(
+            EntityType::PkgName(imported, false),
+            pos,
+            pkg,
+            name,
+            Some(t),
+        )
+    }
+
+    pub fn new_const(
+        pos: Pos,
+        pkg: Option<PackageKey>,
+        name: String,
+        typ: Option<TypeKey>,
+        val: constant::Value,
+    ) -> LangObj {
+        LangObj::new(EntityType::Const(val), pos, pkg, name, typ)
+    }
+
+    pub fn new_type_name(
+        pos: Pos,
+        pkg: Option<PackageKey>,
+        name: String,
+        typ: Option<TypeKey>,
+    ) -> LangObj {
+        LangObj::new(EntityType::TypeName, pos, pkg, name, typ)
+    }
+
+    pub fn new_var(
+        pos: Pos,
+        pkg: Option<PackageKey>,
+        name: String,
+        typ: Option<TypeKey>,
+    ) -> LangObj {
+        LangObj::new(
+            EntityType::Var(VarProperty::new(false, false, false)),
+            pos,
+            pkg,
+            name,
+            typ,
+        )
+    }
+
+    pub fn new_param_var(
+        pos: Pos,
+        pkg: Option<PackageKey>,
+        name: String,
+        typ: Option<TypeKey>,
+    ) -> LangObj {
+        LangObj::new(
+            EntityType::Var(VarProperty::new(false, false, true)),
+            pos,
+            pkg,
+            name,
+            typ,
+        )
+    }
+
+    pub fn new_field(
+        pos: Pos,
+        pkg: Option<PackageKey>,
+        name: String,
+        typ: Option<TypeKey>,
+        embedded: bool,
+    ) -> LangObj {
+        LangObj::new(
+            EntityType::Var(VarProperty::new(embedded, true, false)),
+            pos,
+            pkg,
+            name,
+            typ,
+        )
+    }
+
+    pub fn new_func(
+        pos: Pos,
+        pkg: Option<PackageKey>,
+        name: String,
+        typ: Option<TypeKey>,
+    ) -> LangObj {
+        LangObj::new(EntityType::Func(false), pos, pkg, name, typ)
+    }
+
+    pub fn new_label(pos: Pos, pkg: Option<PackageKey>, name: String, univ: &Universe) -> LangObj {
+        let t = univ.types()[&typ::BasicType::Invalid];
+        LangObj::new(EntityType::Label(false), pos, pkg, name, Some(t))
+    }
+
+    pub fn new_builtin(f: universe::Builtin, name: String, typ: TypeKey) -> LangObj {
+        LangObj::new(EntityType::Builtin(f), 0, None, name, Some(typ))
+    }
+
+    pub fn new_nil(typ: TypeKey) -> LangObj {
+        LangObj::new(EntityType::Nil, 0, None, "nil".to_owned(), Some(typ))
+    }
+
+    pub fn entity_type(&self) -> &EntityType {
+        &self.entity_type
+    }
+
+    pub fn entity_type_mut(&mut self) -> &mut EntityType {
+        &mut self.entity_type
+    }
+
+    pub fn parent(&self) -> Option<ScopeKey> {
+        self.parent
+    }
+
+    pub fn pos(&self) -> Pos {
+        self.pos
+    }
+
+    pub fn name(&self) -> &String {
+        &self.name
+    }
+
+    pub fn typ(&self) -> Option<TypeKey> {
+        self.typ
+    }
+
+    pub fn pkg(&self) -> Option<PackageKey> {
+        self.pkg
+    }
+
+    pub fn exported(&self) -> bool {
+        ast::is_exported(&self.name)
+    }
+
+    pub fn id(&self, objs: &TCObjects) -> Cow<str> {
+        let pkg = self.pkg.map(|x| &objs.pkgs[x]);
+        get_id(pkg, &self.name)
+    }
+
+    pub fn order(&self) -> u32 {
+        self.order
+    }
+
+    pub(crate) fn color(&self) -> ObjColor {
+        self.color
+    }
+
+    pub(crate) fn set_type(&mut self, typ: Option<TypeKey>) {
+        self.typ = typ
+    }
+
+    pub(crate) fn set_pkg(&mut self, pkg: Option<PackageKey>) {
+        self.pkg = pkg;
+    }
+
+    pub(crate) fn set_parent(&mut self, parent: Option<ScopeKey>) {
+        self.parent = parent
+    }
+
+    pub fn scope_pos(&self) -> &Pos {
+        &self.scope_pos
+    }
+
+    pub fn set_order(&mut self, order: u32) {
+        assert!(order > 0);
+        self.order = order;
+    }
+
+    pub(crate) fn set_color(&mut self, color: ObjColor) {
+        assert!(color != ObjColor::White);
+        self.color = color
+    }
+
+    pub(crate) fn set_scope_pos(&mut self, pos: Pos) {
+        self.scope_pos = pos
+    }
+
+    pub fn same_id(&self, pkg: Option<PackageKey>, name: &str, objs: &TCObjects) -> bool {
+        // spec:
+        // "Two identifiers are different if they are spelled differently,
+        // or if they appear in different packages and are not exported.
+        // Otherwise, they are the same."
+        if name != self.name {
+            false
+        } else if self.exported() {
+            true
+        } else if pkg.is_none() || self.pkg.is_none() {
+            pkg == self.pkg
+        } else {
+            let a = &objs.pkgs[pkg.unwrap()];
+            let b = &objs.pkgs[self.pkg.unwrap()];
+            a.path() == b.path()
+        }
+    }
+
+    pub fn pkg_name_imported(&self) -> PackageKey {
+        match &self.entity_type {
+            EntityType::PkgName(imported, _) => *imported,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn const_val(&self) -> &constant::Value {
+        match &self.entity_type {
+            EntityType::Const(val) => val,
+            _ => unreachable!(),
+        }
+    }
+
+    pub(crate) fn set_const_val(&mut self, v: constant::Value) {
+        match &mut self.entity_type {
+            EntityType::Const(val) => *val = v,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn var_embedded(&self) -> bool {
+        match &self.entity_type {
+            EntityType::Var(prop) => prop.embedded,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn var_is_field(&self) -> bool {
+        match &self.entity_type {
+            EntityType::Var(prop) => prop.is_field,
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn func_fmt_name(&self, f: &mut fmt::Formatter<'_>, objs: &TCObjects) -> fmt::Result {
+        match &self.entity_type {
+            EntityType::Func(_) => fmt_func_name(self, f, objs),
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn func_scope(&self) -> &ScopeKey {
+        unimplemented!()
+    }
+
+    fn new(
+        entity_type: EntityType,
+        pos: Pos,
+        pkg: Option<PackageKey>,
+        name: String,
+        typ: Option<TypeKey>,
+    ) -> LangObj {
+        LangObj {
+            entity_type: entity_type,
+            parent: None,
+            pos: pos,
+            pkg: pkg,
+            name: name,
+            typ: typ,
+            order: 0,
+            color: color_for_typ(typ),
+            scope_pos: 0,
+        }
+    }
+}
+
+pub(crate) fn type_name_is_alias(okey: ObjKey, objs: &TCObjects) -> bool {
+    let lobj = &objs.lobjs[okey];
+    match lobj.entity_type {
+        EntityType::TypeName => match lobj.typ {
+            Some(t) => {
+                let ty = &objs.types[t];
+                match ty {
+                    typ::Type::Basic(detail) => {
+                        let universe = objs.universe();
+                        // unsafe.Pointer is not an alias.
+                        if lobj.pkg() == Some(*universe.unsafe_pkg()) {
+                            false
+                        } else {
+                            // Any user-defined type name for a basic type is an alias for a
+                            // basic type (because basic types are pre-declared in the Universe
+                            // scope, outside any package scope), and so is any type name with
+                            // a different name than the name of the basic type it refers to.
+                            // Additionally, we need to look for "byte" and "rune" because they
+                            // are aliases but have the same names (for better error messages).
+                            lobj.pkg().is_some()
+                                || detail.name() != lobj.name()
+                                || t == *universe.byte()
+                                || t == *universe.rune()
+                        }
+                    }
+                    typ::Type::Named(detail) => *detail.obj() != Some(okey),
+                    _ => true,
+                }
+            }
+            None => false,
+        },
+        _ => unreachable!(),
+    }
+}
+
+// ----------------------------------------------------------------------------
+// ObjSet
+//
+/// An ObjSet is a set of objects identified by their unique id.
+pub(crate) struct ObjSet(Map<String, ObjKey>);
+
+impl ObjSet {
+    pub fn new() -> ObjSet {
+        ObjSet(Map::new())
+    }
+
+    pub fn insert(&self, okey: ObjKey, objs: &TCObjects) -> Option<&ObjKey> {
+        let obj = &objs.lobjs[okey];
+        let id = obj.id(objs);
+        self.0.get(id.as_ref())
+    }
+}
+
+// ----------------------------------------------------------------------------
+// utilities
+
+pub(crate) fn get_id<'a>(pkg: Option<&Package>, name: &'a str) -> Cow<'a, str> {
+    if ast::is_exported(name) {
+        return Cow::Borrowed(name);
+    }
+    let path = if let Some(p) = pkg {
+        if !p.path().is_empty() {
+            p.path()
+        } else {
+            "_"
+        }
+    } else {
+        "_"
+    };
+    Cow::Owned(format!("{}.{}", path, name))
+}
+
+pub(crate) fn fmt_obj(okey: ObjKey, f: &mut fmt::Formatter<'_>, objs: &TCObjects) -> fmt::Result {
+    let obj = &objs.lobjs[okey];
+    match obj.entity_type() {
+        EntityType::PkgName(imported, _) => {
+            write!(f, "package {}", obj.name())?;
+            let path = objs.pkgs[*imported].path();
+            if path != obj.name() {
+                write!(f, " ('{}')", path)?;
+            }
+        }
+        EntityType::Const(_) => {
+            f.write_str("const")?;
+            fmt_obj_name(okey, f, objs)?;
+            fmt_obj_type(okey, f, objs)?;
+        }
+        EntityType::TypeName => {
+            f.write_str("type")?;
+            fmt_obj_name(okey, f, objs)?;
+            fmt_obj_type(okey, f, objs)?;
+        }
+        EntityType::Var(prop) => {
+            f.write_str(if prop.is_field { "field" } else { "var" })?;
+            fmt_obj_name(okey, f, objs)?;
+            fmt_obj_type(okey, f, objs)?;
+        }
+        EntityType::Func(_) => {
+            f.write_str("func ")?;
+            fmt_func_name(obj, f, objs)?;
+            if let Some(t) = obj.typ() {
+                typ::fmt_signature(t, f, objs)?;
+            }
+        }
+        EntityType::Label(_) => {
+            f.write_str("label")?;
+            fmt_obj_name(okey, f, objs)?;
+        }
+        EntityType::Builtin(_) => {
+            f.write_str("builtin")?;
+            fmt_obj_name(okey, f, objs)?;
+        }
+        EntityType::Nil => f.write_str("nil")?,
+    }
+    Ok(())
+}
+
+fn fmt_obj_name(okey: ObjKey, f: &mut fmt::Formatter<'_>, objs: &TCObjects) -> fmt::Result {
+    f.write_char(' ')?;
+    let obj = &objs.lobjs[okey];
+    if let Some(p) = obj.pkg {
+        let pkg_val = &objs.pkgs[p];
+        if let Some(k) = objs.scopes[*pkg_val.scope()].lookup(obj.name()) {
+            if *k == okey {
+                pkg_val.fmt_with_qualifier(f, objs.fmt_qualifier.as_ref())?;
+            }
+        }
+    }
+    f.write_str(obj.name())
+}
+
+fn fmt_obj_type(okey: ObjKey, f: &mut fmt::Formatter<'_>, objs: &TCObjects) -> fmt::Result {
+    let obj = &objs.lobjs[okey];
+    if obj.typ().is_none() {
+        return Ok(());
+    }
+    let mut obj_typ = obj.typ().unwrap();
+    if obj.entity_type().is_type_name() {
+        let typ_val = &objs.types[obj.typ().unwrap()];
+        if typ_val.try_as_basic().is_some() {
+            return Ok(());
+        }
+        if type_name_is_alias(okey, objs) {
+            f.write_str(" =")?;
+        } else {
+            obj_typ = typ::underlying_type(obj_typ, objs);
+        }
+    }
+    f.write_char(' ')?;
+    typ::fmt_type(Some(obj_typ), f, objs)
+}
+
+fn fmt_func_name(func: &LangObj, f: &mut fmt::Formatter<'_>, objs: &TCObjects) -> fmt::Result {
+    if let Some(t) = func.typ() {
+        let sig = objs.types[t].try_as_signature().unwrap();
+        if let Some(r) = sig.recv() {
+            f.write_char('(')?;
+            typ::fmt_type(objs.lobjs[*r].typ(), f, objs)?;
+            f.write_str(").")?;
+        } else {
+            if let Some(p) = func.pkg() {
+                objs.pkgs[p].fmt_with_qualifier(f, objs.fmt_qualifier.as_ref())?;
+            }
+        }
+    }
+    f.write_str(func.name())
+}
+
+fn color_for_typ(typ: Option<TypeKey>) -> ObjColor {
+    match typ {
+        Some(_) => ObjColor::Black,
+        None => ObjColor::White,
+    }
+}
