@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 #![allow(dead_code)]
 
-// EPT Hook Database: 1242 functions
+// EPT Hook Database: 1251 functions
 // EPT hooks provide stealth by using Extended Page Tables
 
 use alloc::string::String;
@@ -489,6 +489,7 @@ pub static EPT_HOOK_DATABASE: &[EptHookDb] = &[
     EptHookDb { name: "KeClearEvent", address: 0, enabled: false },
     EptHookDb { name: "KeConvertAuxiliaryCounterToPerformanceCounter", address: 0, enabled: false },
     EptHookDb { name: "KeConvertPerformanceCounterToAuxiliaryCounter", address: 0, enabled: false },
+    EptHookDb { name: "KeDelayExecutionThread", address: 0, enabled: false },
     EptHookDb { name: "KeDeregisterBoundCallback", address: 0, enabled: false },
     EptHookDb { name: "KeDeregisterBugCheckCallback", address: 0, enabled: false },
     EptHookDb { name: "KeDeregisterBugCheckReasonCallback", address: 0, enabled: false },
@@ -583,8 +584,10 @@ pub static EPT_HOOK_DATABASE: &[EptHookDb] = &[
     EptHookDb { name: "KeReleaseInStackQueuedSpinLockForDpc", address: 0, enabled: false },
     EptHookDb { name: "KeReleaseInStackQueuedSpinLockFromDpcLevel", address: 0, enabled: false },
     EptHookDb { name: "KeReleaseInterruptSpinLock", address: 0, enabled: false },
+    EptHookDb { name: "KeReleaseMutant", address: 0, enabled: false },
     EptHookDb { name: "KeReleaseMutex", address: 0, enabled: false },
     EptHookDb { name: "KeReleaseQueuedSpinLock", address: 0, enabled: false },
+    EptHookDb { name: "KeReleaseSemaphore", address: 0, enabled: false },
     EptHookDb { name: "KeReleaseSpinLock", address: 0, enabled: false },
     EptHookDb { name: "KeReleaseSpinLockForDpc", address: 0, enabled: false },
     EptHookDb { name: "KeReleaseSpinLockFromDpcLevel", address: 0, enabled: false },
@@ -603,10 +606,14 @@ pub static EPT_HOOK_DATABASE: &[EptHookDb] = &[
     EptHookDb { name: "KeRevertToUserGroupAffinityThread", address: 0, enabled: false },
     EptHookDb { name: "KeRundownQueue", address: 0, enabled: false },
     EptHookDb { name: "KeSaveExtendedProcessorState", address: 0, enabled: false },
+    EptHookDb { name: "KeSetBasePriorityThread", address: 0, enabled: false },
     EptHookDb { name: "KeSetCoalescableTimer", address: 0, enabled: false },
+    EptHookDb { name: "KeSetEvent", address: 0, enabled: false },
     EptHookDb { name: "KeSetHardwareCounterConfiguration", address: 0, enabled: false },
+    EptHookDb { name: "KeSetIdealProcessorThread", address: 0, enabled: false },
     EptHookDb { name: "KeSetImportanceDpc", address: 0, enabled: false },
     EptHookDb { name: "KeSetKernelStackSwapEnable", address: 0, enabled: false },
+    EptHookDb { name: "KeSetPriorityThread", address: 0, enabled: false },
     EptHookDb { name: "KeSetSystemAffinityThread", address: 0, enabled: false },
     EptHookDb { name: "KeSetSystemAffinityThreadEx", address: 0, enabled: false },
     EptHookDb { name: "KeSetSystemGroupAffinityThread", address: 0, enabled: false },
@@ -628,6 +635,8 @@ pub static EPT_HOOK_DATABASE: &[EptHookDb] = &[
     EptHookDb { name: "KeTryToAcquireQueuedSpinLock", address: 0, enabled: false },
     EptHookDb { name: "KeTryToAcquireSpinLockAtDpcLevel", address: 0, enabled: false },
     EptHookDb { name: "KeUnstackDetachProcess", address: 0, enabled: false },
+    EptHookDb { name: "KeWaitForMultipleObjects", address: 0, enabled: false },
+    EptHookDb { name: "KeWaitForSingleObject", address: 0, enabled: false },
     EptHookDb { name: "MmAddPhysicalMemory", address: 0, enabled: false },
     EptHookDb { name: "MmAddVerifierSpecialThunks", address: 0, enabled: false },
     EptHookDb { name: "MmAddVerifierThunks", address: 0, enabled: false },
@@ -3151,6 +3160,10 @@ pub fn install_ept_hook_by_name(name: &str, process_id: ProcessId) -> Result<(),
             let addr = KeConvertPerformanceCounterToAuxiliaryCounter as u64;
             unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
         }
+        "KeDelayExecutionThread" => {
+            let addr = KeDelayExecutionThread as u64;
+            unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
+        }
         "KeDeregisterBoundCallback" => {
             let addr = KeDeregisterBoundCallback as u64;
             unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
@@ -3527,12 +3540,20 @@ pub fn install_ept_hook_by_name(name: &str, process_id: ProcessId) -> Result<(),
             let addr = KeReleaseInterruptSpinLock as u64;
             unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
         }
+        "KeReleaseMutant" => {
+            let addr = KeReleaseMutant as u64;
+            unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
+        }
         "KeReleaseMutex" => {
             let addr = KeReleaseMutex as u64;
             unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
         }
         "KeReleaseQueuedSpinLock" => {
             let addr = KeReleaseQueuedSpinLock as u64;
+            unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
+        }
+        "KeReleaseSemaphore" => {
+            let addr = KeReleaseSemaphore as u64;
             unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
         }
         "KeReleaseSpinLock" => {
@@ -3607,12 +3628,24 @@ pub fn install_ept_hook_by_name(name: &str, process_id: ProcessId) -> Result<(),
             let addr = KeSaveExtendedProcessorState as u64;
             unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
         }
+        "KeSetBasePriorityThread" => {
+            let addr = KeSetBasePriorityThread as u64;
+            unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
+        }
         "KeSetCoalescableTimer" => {
             let addr = KeSetCoalescableTimer as u64;
             unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
         }
+        "KeSetEvent" => {
+            let addr = KeSetEvent as u64;
+            unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
+        }
         "KeSetHardwareCounterConfiguration" => {
             let addr = KeSetHardwareCounterConfiguration as u64;
+            unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
+        }
+        "KeSetIdealProcessorThread" => {
+            let addr = KeSetIdealProcessorThread as u64;
             unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
         }
         "KeSetImportanceDpc" => {
@@ -3621,6 +3654,10 @@ pub fn install_ept_hook_by_name(name: &str, process_id: ProcessId) -> Result<(),
         }
         "KeSetKernelStackSwapEnable" => {
             let addr = KeSetKernelStackSwapEnable as u64;
+            unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
+        }
+        "KeSetPriorityThread" => {
+            let addr = KeSetPriorityThread as u64;
             unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
         }
         "KeSetSystemAffinityThread" => {
@@ -3705,6 +3742,14 @@ pub fn install_ept_hook_by_name(name: &str, process_id: ProcessId) -> Result<(),
         }
         "KeUnstackDetachProcess" => {
             let addr = KeUnstackDetachProcess as u64;
+            unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
+        }
+        "KeWaitForMultipleObjects" => {
+            let addr = KeWaitForMultipleObjects as u64;
+            unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
+        }
+        "KeWaitForSingleObject" => {
+            let addr = KeWaitForSingleObject as u64;
             unsafe { HOOK_CONTEXT.lock().set_ept_hook(addr, 0, process_id) }
         }
         "MmAddPhysicalMemory" => {
@@ -8125,6 +8170,10 @@ pub fn remove_ept_hook_by_name(name: &str) -> Result<(), HookError> {
             let addr = KeConvertPerformanceCounterToAuxiliaryCounter as u64;
             unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
         }
+        "KeDelayExecutionThread" => {
+            let addr = KeDelayExecutionThread as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
+        }
         "KeDeregisterBoundCallback" => {
             let addr = KeDeregisterBoundCallback as u64;
             unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
@@ -8501,12 +8550,20 @@ pub fn remove_ept_hook_by_name(name: &str) -> Result<(), HookError> {
             let addr = KeReleaseInterruptSpinLock as u64;
             unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
         }
+        "KeReleaseMutant" => {
+            let addr = KeReleaseMutant as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
+        }
         "KeReleaseMutex" => {
             let addr = KeReleaseMutex as u64;
             unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
         }
         "KeReleaseQueuedSpinLock" => {
             let addr = KeReleaseQueuedSpinLock as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
+        }
+        "KeReleaseSemaphore" => {
+            let addr = KeReleaseSemaphore as u64;
             unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
         }
         "KeReleaseSpinLock" => {
@@ -8581,12 +8638,24 @@ pub fn remove_ept_hook_by_name(name: &str) -> Result<(), HookError> {
             let addr = KeSaveExtendedProcessorState as u64;
             unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
         }
+        "KeSetBasePriorityThread" => {
+            let addr = KeSetBasePriorityThread as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
+        }
         "KeSetCoalescableTimer" => {
             let addr = KeSetCoalescableTimer as u64;
             unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
         }
+        "KeSetEvent" => {
+            let addr = KeSetEvent as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
+        }
         "KeSetHardwareCounterConfiguration" => {
             let addr = KeSetHardwareCounterConfiguration as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
+        }
+        "KeSetIdealProcessorThread" => {
+            let addr = KeSetIdealProcessorThread as u64;
             unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
         }
         "KeSetImportanceDpc" => {
@@ -8595,6 +8664,10 @@ pub fn remove_ept_hook_by_name(name: &str) -> Result<(), HookError> {
         }
         "KeSetKernelStackSwapEnable" => {
             let addr = KeSetKernelStackSwapEnable as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
+        }
+        "KeSetPriorityThread" => {
+            let addr = KeSetPriorityThread as u64;
             unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
         }
         "KeSetSystemAffinityThread" => {
@@ -8679,6 +8752,14 @@ pub fn remove_ept_hook_by_name(name: &str) -> Result<(), HookError> {
         }
         "KeUnstackDetachProcess" => {
             let addr = KeUnstackDetachProcess as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
+        }
+        "KeWaitForMultipleObjects" => {
+            let addr = KeWaitForMultipleObjects as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
+        }
+        "KeWaitForSingleObject" => {
+            let addr = KeWaitForSingleObject as u64;
             unsafe { HOOK_CONTEXT.lock().remove_ept_hook(addr) }
         }
         "MmAddPhysicalMemory" => {

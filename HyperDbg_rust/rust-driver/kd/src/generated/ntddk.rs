@@ -2,7 +2,7 @@
 #![allow(dead_code)]
 
 // Exported functions: 1251
-// Not exported functions: 19
+// Not exported functions: 8
 
 use super::types::*;
 
@@ -1261,25 +1261,14 @@ pub use wdk_sys::ntddk::{
     RtlxUnicodeStringToOemSize,
 };
 
-// Not exported functions: 19
+// Not exported functions: 8
 extern "C" {
     pub fn KeGenericCallDpc(routine: *mut u8, context: *mut u8);
     pub fn KeSignalCallDpcDone(system_argument1: *mut core::ffi::c_void);
     pub fn KeSignalCallDpcSynchronize(system_argument2: *mut core::ffi::c_void);
     pub fn ObDereferenceObject(object: *mut u8);
-    pub fn PsGetContextThread(Thread: PETHREAD, Context: *mut core::ffi::c_void) -> NTSTATUS;
     pub fn PsGetCurrentProcess() -> *mut u8;
-    pub fn PsGetCurrentThread() -> PETHREAD;
-    pub fn PsGetNextProcess(Process: PEPROCESS) -> PEPROCESS;
-    pub fn PsGetNextProcessThread(Thread: PETHREAD, Process: PEPROCESS) -> PETHREAD;
-    pub fn PsGetProcessImageFileName(Process: PEPROCESS) -> *mut u8;
     pub fn PsGetProcessPeb(process: *mut u8) -> u64;
-    pub fn PsGetProcessSectionBaseAddress(Process: PEPROCESS) -> PVOID;
     pub fn PsGetProcessWow64Process(process: *mut u8) -> u32;
-    pub fn PsResumeProcess(Process: PEPROCESS) -> NTSTATUS;
-    pub fn PsResumeThread(Thread: PETHREAD, PreviousSuspendCount: *mut ULONG) -> NTSTATUS;
-    pub fn PsSetContextThread(Thread: PETHREAD, Context: *mut core::ffi::c_void) -> NTSTATUS;
-    pub fn PsSuspendProcess(Process: PEPROCESS) -> NTSTATUS;
-    pub fn PsSuspendThread(Thread: PETHREAD, PreviousSuspendCount: *mut ULONG) -> NTSTATUS;
     pub fn RtlPcToFileHeader(pc: u64, base_address: *mut u64) -> u64;
 }

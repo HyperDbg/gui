@@ -90,7 +90,7 @@ type IUsageScanner interface {
 	ScanProjectUsage(projectRoot string, excludeDirs []string) error
 	GetFixReport() *FixReport
 	GenerateUsageReport(outputPath string) error
-	ApplyFixes(dryRun bool) error
+	ApplyFixes() error
 }
 
 type BindgenConfig struct {
@@ -1119,7 +1119,7 @@ func (b *Bindgen) GenerateUsageReport(outputPath string) error {
 	return os.WriteFile(outputPath, []byte(sb.String()), 0o644)
 }
 
-func (b *Bindgen) ApplyFixes(dryRun bool) error {
+func (b *Bindgen) ApplyFixes() error {
 	if b.fixReport == nil {
 		return fmt.Errorf("no fix report available, run ScanProjectUsage first")
 	}
@@ -1158,18 +1158,10 @@ func (b *Bindgen) ApplyFixes(dryRun bool) error {
 	}
 
 	for file, mods := range fileModifications {
-		if dryRun {
-			relPath, _ := filepath.Rel(b.config.ProjectRoot, file)
-			fmt.Printf("Would modify: %s\n", relPath)
-			for _, m := range mods {
-				fmt.Printf("  Line %d: %s\n", m.Line, m.NewText)
-			}
-			continue
-		}
-
-		err := b.applyFileModifications(file, mods)
-		if err != nil {
-			return fmt.Errorf("failed to modify %s: %w", file, err)
+		relPath, _ := filepath.Rel(b.config.ProjectRoot, file)
+		fmt.Printf("Would modify: %s\n", relPath)
+		for _, m := range mods {
+			fmt.Printf("  Line %d: %s\n", m.Line, m.NewText)
 		}
 	}
 
@@ -1352,17 +1344,6 @@ type HookParam struct {
 }
 
 func (b *Bindgen) GenerateHookDatabase(rustOutputDir, goOutputDir string, notExportedFunctions []NotExportedFunc) error {
-	if err := os.RemoveAll(rustOutputDir); err != nil {
-		return fmt.Errorf("failed to remove rust hook output directory: %w", err)
-	}
-	if err := os.MkdirAll(rustOutputDir, 0o755); err != nil {
-		return fmt.Errorf("failed to create rust hook output directory: %w", err)
-	}
-
-	if err := os.MkdirAll(filepath.Dir(goOutputDir), 0o755); err != nil {
-		return fmt.Errorf("failed to create go output directory: %w", err)
-	}
-
 	exportedHooks := []HookEntry{}
 	for name, sig := range b.wdk.Functions {
 		if b.isNotExported(name, notExportedFunctions) {
@@ -2122,6 +2103,23 @@ func GenerateBindgen(projectRoot string) error {
 
 	if err := bg.GenerateValidationReport(filepath.Join(outputDir, "validation_report.txt")); err != nil {
 		return fmt.Errorf("failed to generate validation report: %w", err)
+	}
+
+	fmt.Printf("  Scanning for WDK usage...\n")
+	excludeDirs := []string{"cmd", "target", "todo"}
+	if err := bg.ScanProjectUsage(projectRoot, excludeDirs); err != nil {
+		return fmt.Errorf("failed to scan project usage: %w", err)
+	}
+
+	if err := bg.GenerateUsageReport(filepath.Join(outputDir, "wdk_usage_report.txt")); err != nil {
+		return fmt.Errorf("failed to generate usage report: %w", err)
+	}
+
+	fmt.Printf("  Generating hook database...\n")
+	rustHookDir := filepath.Join(projectRoot, "rust-driver", "kd", "src", "generated")
+	goHookFile := filepath.Join(projectRoot, "debugger", "hook_db.go")
+	if err := bg.GenerateHookDatabase(rustHookDir, goHookFile, notExportedFuncs); err != nil {
+		return fmt.Errorf("failed to generate hook database: %w", err)
 	}
 
 	fmt.Printf("  Generated files in: %s\n", outputDir)

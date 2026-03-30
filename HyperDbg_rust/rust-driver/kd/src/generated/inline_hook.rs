@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 #![allow(dead_code)]
 
-// Inline Hook Database: 1242 functions
+// Inline Hook Database: 1251 functions
 // Inline hooks modify code directly, faster but detectable
 
 use alloc::string::String;
@@ -488,6 +488,7 @@ pub static INLINE_HOOK_DATABASE: &[InlineHookDb] = &[
     InlineHookDb { name: "KeClearEvent", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeConvertAuxiliaryCounterToPerformanceCounter", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeConvertPerformanceCounterToAuxiliaryCounter", address: 0, trampoline: 0, enabled: false },
+    InlineHookDb { name: "KeDelayExecutionThread", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeDeregisterBoundCallback", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeDeregisterBugCheckCallback", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeDeregisterBugCheckReasonCallback", address: 0, trampoline: 0, enabled: false },
@@ -582,8 +583,10 @@ pub static INLINE_HOOK_DATABASE: &[InlineHookDb] = &[
     InlineHookDb { name: "KeReleaseInStackQueuedSpinLockForDpc", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeReleaseInStackQueuedSpinLockFromDpcLevel", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeReleaseInterruptSpinLock", address: 0, trampoline: 0, enabled: false },
+    InlineHookDb { name: "KeReleaseMutant", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeReleaseMutex", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeReleaseQueuedSpinLock", address: 0, trampoline: 0, enabled: false },
+    InlineHookDb { name: "KeReleaseSemaphore", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeReleaseSpinLock", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeReleaseSpinLockForDpc", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeReleaseSpinLockFromDpcLevel", address: 0, trampoline: 0, enabled: false },
@@ -602,10 +605,14 @@ pub static INLINE_HOOK_DATABASE: &[InlineHookDb] = &[
     InlineHookDb { name: "KeRevertToUserGroupAffinityThread", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeRundownQueue", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeSaveExtendedProcessorState", address: 0, trampoline: 0, enabled: false },
+    InlineHookDb { name: "KeSetBasePriorityThread", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeSetCoalescableTimer", address: 0, trampoline: 0, enabled: false },
+    InlineHookDb { name: "KeSetEvent", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeSetHardwareCounterConfiguration", address: 0, trampoline: 0, enabled: false },
+    InlineHookDb { name: "KeSetIdealProcessorThread", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeSetImportanceDpc", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeSetKernelStackSwapEnable", address: 0, trampoline: 0, enabled: false },
+    InlineHookDb { name: "KeSetPriorityThread", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeSetSystemAffinityThread", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeSetSystemAffinityThreadEx", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeSetSystemGroupAffinityThread", address: 0, trampoline: 0, enabled: false },
@@ -627,6 +634,8 @@ pub static INLINE_HOOK_DATABASE: &[InlineHookDb] = &[
     InlineHookDb { name: "KeTryToAcquireQueuedSpinLock", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeTryToAcquireSpinLockAtDpcLevel", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "KeUnstackDetachProcess", address: 0, trampoline: 0, enabled: false },
+    InlineHookDb { name: "KeWaitForMultipleObjects", address: 0, trampoline: 0, enabled: false },
+    InlineHookDb { name: "KeWaitForSingleObject", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "MmAddPhysicalMemory", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "MmAddVerifierSpecialThunks", address: 0, trampoline: 0, enabled: false },
     InlineHookDb { name: "MmAddVerifierThunks", address: 0, trampoline: 0, enabled: false },
@@ -3150,6 +3159,10 @@ pub fn install_inline_hook_by_name(name: &str, hook_handler: u64) -> Result<u64,
             let addr = KeConvertPerformanceCounterToAuxiliaryCounter as u64;
             unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
         }
+        "KeDelayExecutionThread" => {
+            let addr = KeDelayExecutionThread as u64;
+            unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
+        }
         "KeDeregisterBoundCallback" => {
             let addr = KeDeregisterBoundCallback as u64;
             unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
@@ -3526,12 +3539,20 @@ pub fn install_inline_hook_by_name(name: &str, hook_handler: u64) -> Result<u64,
             let addr = KeReleaseInterruptSpinLock as u64;
             unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
         }
+        "KeReleaseMutant" => {
+            let addr = KeReleaseMutant as u64;
+            unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
+        }
         "KeReleaseMutex" => {
             let addr = KeReleaseMutex as u64;
             unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
         }
         "KeReleaseQueuedSpinLock" => {
             let addr = KeReleaseQueuedSpinLock as u64;
+            unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
+        }
+        "KeReleaseSemaphore" => {
+            let addr = KeReleaseSemaphore as u64;
             unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
         }
         "KeReleaseSpinLock" => {
@@ -3606,12 +3627,24 @@ pub fn install_inline_hook_by_name(name: &str, hook_handler: u64) -> Result<u64,
             let addr = KeSaveExtendedProcessorState as u64;
             unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
         }
+        "KeSetBasePriorityThread" => {
+            let addr = KeSetBasePriorityThread as u64;
+            unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
+        }
         "KeSetCoalescableTimer" => {
             let addr = KeSetCoalescableTimer as u64;
             unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
         }
+        "KeSetEvent" => {
+            let addr = KeSetEvent as u64;
+            unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
+        }
         "KeSetHardwareCounterConfiguration" => {
             let addr = KeSetHardwareCounterConfiguration as u64;
+            unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
+        }
+        "KeSetIdealProcessorThread" => {
+            let addr = KeSetIdealProcessorThread as u64;
             unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
         }
         "KeSetImportanceDpc" => {
@@ -3620,6 +3653,10 @@ pub fn install_inline_hook_by_name(name: &str, hook_handler: u64) -> Result<u64,
         }
         "KeSetKernelStackSwapEnable" => {
             let addr = KeSetKernelStackSwapEnable as u64;
+            unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
+        }
+        "KeSetPriorityThread" => {
+            let addr = KeSetPriorityThread as u64;
             unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
         }
         "KeSetSystemAffinityThread" => {
@@ -3704,6 +3741,14 @@ pub fn install_inline_hook_by_name(name: &str, hook_handler: u64) -> Result<u64,
         }
         "KeUnstackDetachProcess" => {
             let addr = KeUnstackDetachProcess as u64;
+            unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
+        }
+        "KeWaitForMultipleObjects" => {
+            let addr = KeWaitForMultipleObjects as u64;
+            unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
+        }
+        "KeWaitForSingleObject" => {
+            let addr = KeWaitForSingleObject as u64;
             unsafe { HOOK_CONTEXT.lock().set_inline_hook_with_trampoline(addr, hook_handler, 14) }
         }
         "MmAddPhysicalMemory" => {
@@ -8124,6 +8169,10 @@ pub fn remove_inline_hook_by_name(name: &str) -> Result<(), HookError> {
             let addr = KeConvertPerformanceCounterToAuxiliaryCounter as u64;
             unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
         }
+        "KeDelayExecutionThread" => {
+            let addr = KeDelayExecutionThread as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
+        }
         "KeDeregisterBoundCallback" => {
             let addr = KeDeregisterBoundCallback as u64;
             unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
@@ -8500,12 +8549,20 @@ pub fn remove_inline_hook_by_name(name: &str) -> Result<(), HookError> {
             let addr = KeReleaseInterruptSpinLock as u64;
             unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
         }
+        "KeReleaseMutant" => {
+            let addr = KeReleaseMutant as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
+        }
         "KeReleaseMutex" => {
             let addr = KeReleaseMutex as u64;
             unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
         }
         "KeReleaseQueuedSpinLock" => {
             let addr = KeReleaseQueuedSpinLock as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
+        }
+        "KeReleaseSemaphore" => {
+            let addr = KeReleaseSemaphore as u64;
             unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
         }
         "KeReleaseSpinLock" => {
@@ -8580,12 +8637,24 @@ pub fn remove_inline_hook_by_name(name: &str) -> Result<(), HookError> {
             let addr = KeSaveExtendedProcessorState as u64;
             unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
         }
+        "KeSetBasePriorityThread" => {
+            let addr = KeSetBasePriorityThread as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
+        }
         "KeSetCoalescableTimer" => {
             let addr = KeSetCoalescableTimer as u64;
             unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
         }
+        "KeSetEvent" => {
+            let addr = KeSetEvent as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
+        }
         "KeSetHardwareCounterConfiguration" => {
             let addr = KeSetHardwareCounterConfiguration as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
+        }
+        "KeSetIdealProcessorThread" => {
+            let addr = KeSetIdealProcessorThread as u64;
             unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
         }
         "KeSetImportanceDpc" => {
@@ -8594,6 +8663,10 @@ pub fn remove_inline_hook_by_name(name: &str) -> Result<(), HookError> {
         }
         "KeSetKernelStackSwapEnable" => {
             let addr = KeSetKernelStackSwapEnable as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
+        }
+        "KeSetPriorityThread" => {
+            let addr = KeSetPriorityThread as u64;
             unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
         }
         "KeSetSystemAffinityThread" => {
@@ -8678,6 +8751,14 @@ pub fn remove_inline_hook_by_name(name: &str) -> Result<(), HookError> {
         }
         "KeUnstackDetachProcess" => {
             let addr = KeUnstackDetachProcess as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
+        }
+        "KeWaitForMultipleObjects" => {
+            let addr = KeWaitForMultipleObjects as u64;
+            unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
+        }
+        "KeWaitForSingleObject" => {
+            let addr = KeWaitForSingleObject as u64;
             unsafe { HOOK_CONTEXT.lock().remove_inline_hook(addr) }
         }
         "MmAddPhysicalMemory" => {

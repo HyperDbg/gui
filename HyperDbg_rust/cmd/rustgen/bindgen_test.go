@@ -162,77 +162,6 @@ func TestValidate(t *testing.T) {
 	}
 }
 
-func TestGenerateAll(t *testing.T) {
-	projectRoot := getProjectRoot(t)
-	bindgenDir := getBindgenDir(t)
-
-	config := BindgenConfig{
-		ProjectRoot:    projectRoot,
-		WdkBindingsDir: bindgenDir,
-		RustSourceDir:  filepath.Join(projectRoot, "rust-driver", "kd", "src"),
-		OutputDir:      bindgenDir,
-		Verbose:        true,
-	}
-
-	bg := NewBindgen(config)
-
-	err := bg.LoadWdkBindings(
-		filepath.Join(bindgenDir, "ntddk.rs"),
-		filepath.Join(bindgenDir, "types.rs"),
-		filepath.Join(bindgenDir, "constants.rs"),
-	)
-	if err != nil {
-		t.Fatalf("Failed to load WDK bindings: %v", err)
-	}
-
-	err = bg.ScanRustExterns(config.RustSourceDir)
-	if err != nil {
-		t.Fatalf("Failed to scan Rust externs: %v", err)
-	}
-
-	report := bg.Validate()
-
-	t.Logf("Generating output files...")
-
-	if err := bg.GenerateFunctionsList(filepath.Join(bindgenDir, "functions_list.txt")); err != nil {
-		t.Fatalf("Failed to generate functions list: %v", err)
-	}
-	t.Logf("  - functions_list.txt")
-
-	if err := bg.GenerateFunctionsGoMap(filepath.Join(bindgenDir, "ntddk.go")); err != nil {
-		t.Fatalf("Failed to generate functions map: %v", err)
-	}
-	t.Logf("  - ntddk.go")
-
-	if err := bg.GenerateTypesGoMap(filepath.Join(bindgenDir, "types.go")); err != nil {
-		t.Fatalf("Failed to generate types map: %v", err)
-	}
-	t.Logf("  - types.go")
-
-	if err := bg.GenerateConstantsGoMap(filepath.Join(bindgenDir, "constants.go")); err != nil {
-		t.Fatalf("Failed to generate constants map: %v", err)
-	}
-	t.Logf("  - constants.go")
-
-	if err := bg.GenerateValidationReport(filepath.Join(bindgenDir, "validation_report.txt")); err != nil {
-		t.Fatalf("Failed to generate validation report: %v", err)
-	}
-	t.Logf("  - validation_report.txt")
-
-	if err := bg.GenerateFixSuggestions(filepath.Join(bindgenDir, "fix_suggestions.txt")); err != nil {
-		t.Fatalf("Failed to generate fix suggestions: %v", err)
-	}
-	t.Logf("  - fix_suggestions.txt")
-
-	t.Logf("\nSummary:")
-	t.Logf("  WDK Functions: %d", report.Statistics["total_wdk_functions"])
-	t.Logf("  WDK Types: %d", report.Statistics["total_wdk_types"])
-	t.Logf("  WDK Constants: %d", report.Statistics["total_wdk_constants"])
-	t.Logf("  Rust Externs: %d", report.Statistics["total_externs"])
-	t.Logf("  Type Mismatches: %d", report.Statistics["mismatches"])
-	t.Logf("  Not Exported: %d", report.Statistics["not_exported"])
-}
-
 func TestPrintWdkFunctionSignatures(t *testing.T) {
 	bindgenDir := getBindgenDir(t)
 
@@ -617,7 +546,7 @@ func TestApplyFixesDryRun(t *testing.T) {
 		t.Fatalf("Failed to scan project: %v", err)
 	}
 
-	err = bg.ApplyFixes(false)
+	err = bg.ApplyFixes()
 	if err != nil {
 		t.Fatalf("Failed to apply fixes: %v", err)
 	}
@@ -807,7 +736,7 @@ fn test() {
 			bg.fixReport.FilesWithFixes[tmpFile] = bg.fixReport.FilesWithFixes["test.rs"]
 			delete(bg.fixReport.FilesWithFixes, "test.rs")
 
-			err = bg.ApplyFixes(false)
+			err = bg.ApplyFixes()
 			if err != nil {
 				t.Fatalf("Failed to apply fixes: %v", err)
 			}
