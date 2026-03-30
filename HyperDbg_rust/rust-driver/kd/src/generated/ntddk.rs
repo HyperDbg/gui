@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 #![allow(dead_code)]
+#![allow(clashing_extern_declarations)]
 
 // Exported functions: 1251
 // Not exported functions: 8

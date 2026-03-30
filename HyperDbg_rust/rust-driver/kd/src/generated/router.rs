@@ -2,6 +2,7 @@
 // Source: interfaces.go + packet.go (auto-scanned)
 
 #![allow(non_snake_case)]
+#![allow(unused_imports)]
 
 extern crate alloc;
 

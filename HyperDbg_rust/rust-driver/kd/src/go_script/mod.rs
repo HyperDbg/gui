@@ -20,6 +20,9 @@
 //! 6. On hook trigger → execute_script_hook() → WDK bindings
 //! ```
 
+#![allow(unused_imports)]
+#![allow(warnings)]
+
 pub mod parser;
 mod analyzer;
 mod generator;

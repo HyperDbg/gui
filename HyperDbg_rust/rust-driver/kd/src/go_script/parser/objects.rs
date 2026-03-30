@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+#![allow(unexpected_cfgs)]
+
 use super::ast;
 use super::scope;
 use core::marker::PhantomData;

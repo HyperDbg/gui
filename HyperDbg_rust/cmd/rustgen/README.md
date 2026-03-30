@@ -1,147 +1,92 @@
-# HyperDbg Code Generator
+# Rust 代码生成器
 
-统一代码生成工具，用于生成 Rust 驱动代码、WDK 绑定验证和 MCP 服务器。
+从 Go 类型定义自动生成 Rust 代码的工具。
 
-## 文件结构
+## 功能
 
-```
-rustgen/
-├── main.go          # 主入口，调用所有生成器
-├── rustgen.go       # Rust 类型生成器
-├── wdkgen.go        # WDK 绑定验证器
-├── mcpgen.go        # MCP 服务器生成器
-├── bindgen_test.go  # 测试文件
-├── ntddk.rs         # WDK 函数定义 (输入)
-├── types.rs         # WDK 类型定义 (输入)
-├── constants.rs     # WDK 常量定义 (输入)
-└── README.md        # 本文档
-```
+1. **类型生成** - 将 Go 结构体转换为 Rust 结构体
+2. **处理器生成** - 生成 API 请求处理器
+3. **WDK 绑定验证** - 验证 WDK 函数签名一致性
+4. **MCP 服务器生成** - 从接口定义生成 MCP 服务器
 
 ## 使用方法
 
 ```bash
-cd cmd/rustgen
-go build -o rustgen.exe .
-./rustgen.exe
+cd d:\ux\examples\hypedbg\HyperDbg_rust\cmd\rustgen
+go run .
 ```
 
-**注意**: 每次运行前会自动删除 `rust-driver/kd/src/generated/` 目录中的旧文件。
+## 输出目录
 
-## 生成器说明
-
-### 1. Rust 类型生成器 (rustgen.go)
-
-**功能**: 从 Go 代码生成 Rust 类型和处理器
-
-**入口函数**: `GenerateRustTypes(projectRoot string) error`
-
-**生成内容**:
-- `rust-driver/kd/src/generated/mod.rs` - 统一模块入口
-- `rust-driver/kd/src/generated/common.rs` - 通用类型
-- `rust-driver/kd/src/generated/register.rs` - 寄存器类型
-- `rust-driver/kd/src/generated/event_*.rs` - 事件类型
-- `rust-driver/kd/src/generated/router.rs` - API 路由器
-- `rust-driver/kd/src/generated/emit.rs` - 事件发射器
-- `rust-driver/kd/src/generated/ioctl.rs` - IOCTL 代码
-
-**数据流**:
 ```
-debugger/*.go -> AST 解析 -> 类型提取 -> Rust 代码生成
-```
-
-### 2. WDK 绑定验证器 (wdkgen.go)
-
-**功能**: 验证 Rust 代码中的 WDK extern 声明与 wdk-sys 绑定一致性
-
-**入口函数**: `GenerateBindgen(projectRoot string) error`
-
-**生成内容**:
-- `rust-driver/kd/src/generated/functions_list.txt` - 函数列表
-- `rust-driver/kd/src/generated/ntddk.go` - Go 函数映射
-- `rust-driver/kd/src/generated/types.go` - Go 类型映射
-- `rust-driver/kd/src/generated/constants.go` - Go 常量映射
-- `rust-driver/kd/src/generated/validation_report.txt` - 验证报告
-
-**数据流**:
-```
-ntddk.rs/types.rs/constants.rs -> WDK 绑定解析
-rust-driver/kd/src/*.rs -> Rust extern 扫描
--> 签名比对 -> 验证报告
+rust-driver/kd/src/generated/
+├── mod.rs           # 模块入口
+├── common.rs        # 基础类型
+├── register.rs      # 寄存器状态
+├── response.rs      # 响应类型
+├── event.rs         # 事件枚举
+├── event_*.rs       # 事件类型 (22个文件)
+├── router.rs        # API 路由器
+├── emit.rs          # 事件发射器
+├── ioctl.rs         # IOCTL 代码
+├── hook_db.rs       # Hook 数据库
+├── hook_types.rs    # Hook 类型
+├── hook_args.rs     # Hook 参数
+├── ept_hook.rs      # EPT Hook 数据库
+├── inline_hook.rs   # Inline Hook 数据库
+├── ntddk.rs         # WDK 函数导出
+├── types.rs         # WDK 类型
+└── constants.rs     # WDK 常量
 ```
 
-### 3. MCP 服务器生成器 (mcpgen.go)
+## 源文件
 
-**功能**: 从 Debugger 接口生成 MCP 服务器代码
+| 文件 | 用途 |
+|------|------|
+| `debugger/types.go` | 类型定义 |
+| `debugger/interfaces.go` | 接口定义 |
+| `debugger/packet.go` | 通信协议 |
+| `debugger/event_*.go` | 事件类型 |
 
-**入口函数**: `GenerateMCP(projectRoot string) error`
+## 生成器文件
 
-**生成内容**:
-- `cmd/mcp/mcp.go` - MCP 服务器实现
+| 文件 | 功能 |
+|------|------|
+| `main.go` | 入口点 |
+| `rustgen.go` | Rust 类型生成 |
+| `wdkgen.go` | WDK 绑定验证 |
+| `mcpgen.go` | MCP 服务器生成 |
 
-**数据流**:
-```
-debugger/interfaces.go -> 接口解析 -> MCP 服务器生成
-```
+## 类型映射
 
-## 输入文件
+| Go 类型 | Rust 类型 |
+|---------|----------|
+| `uint8` | `u8` |
+| `uint16` | `u16` |
+| `uint32` | `u32` |
+| `uint64` | `u64` |
+| `int32` | `i32` |
+| `int64` | `i64` |
+| `string` | `alloc::string::String` |
+| `[]T` | `alloc::vec::Vec<T>` |
+| `map[K]V` | `alloc::collections::BTreeMap<K, V>` |
 
-| 文件 | 用途 | 使用者 |
-|------|------|--------|
-| `ntddk.rs` | WDK 函数签名 | wdkgen.go |
-| `types.rs` | WDK 类型定义 | wdkgen.go |
-| `constants.rs` | WDK 常量定义 | wdkgen.go |
-| `debugger/*.go` | Go 类型定义 | rustgen.go, mcpgen.go |
+## 生成的代码特性
 
-## 类型定义
+- `#![allow(non_snake_case)]` - 允许非蛇形命名
+- `#![allow(dead_code)]` - 允许未使用代码
+- `#![allow(unused_imports)]` - 允许未使用导入
+- `#![allow(clashing_extern_declarations)]` - 允许外部声明冲突
 
-### rustgen.go
-```go
-type APIMethod struct { ... }      // API 方法信息
-type APIParam struct { ... }       // API 参数
-type MethodInfo struct { ... }     // 接口方法信息
-type ConstantDef struct { ... }    // 常量定义
-type EnumDef struct { ... }        // 枚举定义
-type StructDef struct { ... }      // 结构体定义
-type TypeAliasDef struct { ... }   // 类型别名
-```
+## WDK 绑定统计
 
-### wdkgen.go
-```go
-type FunctionSignature struct { ... }  // WDK 函数签名
-type TypeDefinition struct { ... }     // WDK 类型定义
-type ExternFunction struct { ... }     // Rust extern 函数
-type ValidationReport struct { ... }   // 验证报告
-type Bindgen struct { ... }            // 主验证器
-```
+| 类别 | 数量 |
+|------|------|
+| 函数 | 1251 |
+| 类型 | 7317 |
+| 常量 | 5348 |
 
-### mcpgen.go
-```go
-type Method struct { ... }             // MCP 方法
-type Param struct { ... }              // MCP 参数
-type InterfaceConfig struct { ... }    // 接口配置
-```
+## 相关文档
 
-## 已知问题
-
-### 重复代码
-
-以下函数存在重复或相似实现：
-
-| 函数 | 位置 | 说明 |
-|------|------|------|
-| `exprToString` | rustgen.go:1612 | AST 表达式转字符串 |
-| `typeToString` | mcpgen.go:448 | AST 类型转字符串 (相似功能) |
-
-**建议**: 可以统一到 `main.go` 作为公共工具函数。
-
-## 测试
-
-```bash
-go test -v ./...
-```
-
-主要测试用例：
-- `TestLoadWdkBindings` - WDK 绑定加载
-- `TestScanRustExterns` - Rust extern 扫描
-- `TestValidate` - 签名验证
-- `TestGenerateAll` - 完整生成流程
+- [SKILL.md](../../.trae/skills/hyperdbg-rust-driver/SKILL.md) - 开发技能指南
+- [IMPLEMENTATION_STATUS.md](../../rust-driver/kd/IMPLEMENTATION_STATUS.md) - 实现状态

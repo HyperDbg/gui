@@ -3,6 +3,8 @@
 //! Executes the generated Rust operations within the hook context.
 //! Provides preset functions that interface with WDK bindings.
 
+#![allow(unused_imports)]
+
 use alloc::vec::Vec;
 use crate::go_script::analyzer::HookOperation;
 use crate::hyperkd::hyperhv::assembly::debugger_asm::GuestContext;

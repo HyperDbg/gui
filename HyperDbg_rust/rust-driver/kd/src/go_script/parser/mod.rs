@@ -2,16 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-#![no_std]
-
 extern crate alloc;
 
 use alloc::vec::Vec;
 use alloc::vec;
 use alloc::string::{String, ToString};
-use alloc::boxed::Box;
 use alloc::format;
-use alloc::collections::BTreeMap;
 use alloc::borrow::ToOwned;
 
 // This crate is part of Goscript project. Please refer to <https://goscript.dev> for more information.

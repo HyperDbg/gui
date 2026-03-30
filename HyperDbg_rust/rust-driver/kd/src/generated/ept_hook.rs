@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 #![allow(dead_code)]
+#![allow(unused_imports)]
+#![allow(warnings)]
 
 // EPT Hook Database: 1251 functions
 // EPT hooks provide stealth by using Extended Page Tables

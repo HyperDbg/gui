@@ -11,6 +11,7 @@
 #![allow(improper_ctypes)]
 #![allow(unused_comparisons)]
 #![allow(asm_sub_register)]
+#![allow(warnings)]
 
 extern crate alloc;
 

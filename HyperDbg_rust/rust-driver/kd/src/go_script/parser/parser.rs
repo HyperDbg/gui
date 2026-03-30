@@ -17,7 +17,7 @@ use super::scanner;
 use super::scope::*;
 use super::token::{Token, LOWEST_PREC};
 use alloc::rc::Rc;
-use alloc::string::{String, ToString};
+use alloc::string::String;
 use alloc::borrow::ToOwned;
 use alloc::vec::Vec;
 use alloc::boxed::Box;

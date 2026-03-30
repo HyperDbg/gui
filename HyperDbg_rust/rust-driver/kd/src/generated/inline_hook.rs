@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 #![allow(dead_code)]
+#![allow(unused_imports)]
+#![allow(warnings)]
 
 // Inline Hook Database: 1251 functions
 // Inline hooks modify code directly, faster but detectable

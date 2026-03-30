@@ -9,6 +9,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+#![allow(unexpected_cfgs)]
+
 #[cfg(feature = "serde_borsh")]
 use borsh::{
     maybestd::io::Result as BorshResult, maybestd::io::Write as BorshWrite, BorshDeserialize,
