@@ -1272,3 +1272,12 @@ extern "C" {
     pub fn PsGetProcessWow64Process(process: *mut u8) -> u32;
     pub fn RtlPcToFileHeader(pc: u64, base_address: *mut u64) -> u64;
 }
+
+// Inline functions from WDK (not in wdk_sys)
+// PsGetCurrentThread is inline in ntddk.h, calls KeGetCurrentThread
+extern "C" {
+    pub fn KeGetCurrentThread() -> *mut u8;
+}
+pub fn PsGetCurrentThread() -> PETHREAD {
+    unsafe { KeGetCurrentThread() as PETHREAD }
+}

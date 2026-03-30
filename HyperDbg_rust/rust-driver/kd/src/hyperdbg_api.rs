@@ -14,8 +14,7 @@ use wdk_sys::ntddk::{
     IoGetCurrentProcess,
 };
 
-use crate::common::handlers_gen::*;
-use crate::common::types_gen::*;
+use crate::generated::*;
 use crate::kd::KernelDebugger;
 use crate::ud::UserDebugger;
 use crate::hyperkd::hyperhv::interface::termination::terminate_hypervisor;

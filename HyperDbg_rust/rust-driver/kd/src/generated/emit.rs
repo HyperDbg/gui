@@ -5,7 +5,28 @@ extern crate alloc;
 use alloc::string::String;
 use alloc::vec::Vec;
 use alloc::format;
-use crate::common::types::*;
+use super::common::*;
+use super::event::*;
+use super::event_breakpoint::*;
+use super::event_exception::*;
+use super::event_memory::*;
+use super::event_syscall::*;
+use super::event_process::*;
+use super::event_thread::*;
+use super::event_module::*;
+use super::event_debug_print::*;
+use super::event_vmx::*;
+use super::event_trap::*;
+use super::event_hidden_hook::*;
+use super::event_cpuid::*;
+use super::event_tsc::*;
+use super::event_cr_access::*;
+use super::event_dr_access::*;
+use super::event_io_port::*;
+use super::event_msr::*;
+use super::event_ept_violation::*;
+use super::register::*;
+use super::response::*;
 
 fn addr_to_string(addr: u64) -> Option<String> {
     Some(format!("0x{:016X}", addr))

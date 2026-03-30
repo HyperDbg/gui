@@ -35,12 +35,10 @@ pub mod hyperdbg_api;
 pub mod hyperkd;
 pub mod logger;
 pub mod net;
-pub mod common;
 pub mod framework;
 pub mod disassembler;
-pub mod ntapi;
-pub mod expr;
 pub mod go_script;
+pub mod generated;
 
 pub use hyperkd::hyperhv::vmm;
 pub use hyperkd::hyperhv::memory;
@@ -50,8 +48,7 @@ pub use hyperkd::hyperhv::hooks;
 pub use hyperkd::{VMX_CONTEXT, VmxState, VmxError, Vcpu, VmxContext};
 
 pub use net::{Server, Request, ResponseWriter, Handler, Router};
-pub use common::types_gen::*;
-pub use common::handlers_gen::{DebuggerApi, dispatch_api, NoOpDebugger, EventQueue};
+pub use generated::*;
 pub use framework::{
     log, LogLevel,
     DriverConfig, create_device_with_config, cleanup_device,

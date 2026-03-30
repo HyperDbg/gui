@@ -10,7 +10,9 @@ use alloc::vec::Vec;
 use alloc::format;
 use serde::{Serialize, Deserialize};
 
-use crate::common::types::*;
+use super::common::*;
+use super::register::*;
+use super::hook_types::*;
 
 // Request structure for API calls
 #[derive(Serialize, Deserialize, Debug)]

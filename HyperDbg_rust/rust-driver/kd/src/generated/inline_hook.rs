@@ -6,7 +6,7 @@
 
 use alloc::string::String;
 use crate::hyperkd::hyperhv::hooks::hooks::*;
-use crate::ntapi::*;
+use super::*;
 
 pub struct InlineHookDb {
     pub name: &'static str,

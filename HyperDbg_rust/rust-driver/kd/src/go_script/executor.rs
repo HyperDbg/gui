@@ -6,10 +6,7 @@
 use alloc::vec::Vec;
 use crate::go_script::analyzer::HookOperation;
 use crate::hyperkd::hyperhv::assembly::debugger_asm::GuestContext;
-use crate::hyperkd::hyperhv::hooks::hook_db::NtDeviceIoControlFileArgs;
-use crate::ntapi::*;
-use crate::ntapi::exported::*;
-use crate::ntapi::not_exported::{PsGetCurrentProcess, PsGetCurrentThread};
+use crate::generated::*;
 
 pub struct ScriptExecutor {
     operations: Vec<HookOperation>,

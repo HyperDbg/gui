@@ -20,7 +20,7 @@
 //! 6. On hook trigger → execute_script_hook() → WDK bindings
 //! ```
 
-mod parser;
+pub mod parser;
 mod analyzer;
 mod generator;
 mod executor;
@@ -34,14 +34,14 @@ use alloc::string::String;
 use alloc::vec::Vec;
 use alloc::collections::BTreeMap;
 use spin::Mutex;
-use crate::common::types_gen::HookFilter;
-use crate::framework::log::LogLevel;
+use crate::generated::HookFilter;
+use crate::generated::LogLevel;
 use crate::hyperkd::hyperhv::hooks::hooks::{
     HookError, HOOK_CONTEXT,
     install_ept_hook, install_inline_hook,
     set_ept_hook2_detour, EptHook2DetourEntry,
 };
-use crate::hyperkd::hyperhv::hooks::hook_db::{
+use crate::generated::{
     EPT_HOOK_DATABASE, EptHookDb,
     INLINE_HOOK_DATABASE, InlineHookDb,
 };
@@ -76,8 +76,8 @@ pub fn find_api_address(api_name: &str) -> Option<u64> {
 }
 
 pub fn find_api_address_dynamic(api_name: &str) -> Option<u64> {
-    use crate::ntapi::exported::MmGetSystemRoutineAddress;
-    use crate::ntapi::{UNICODE_STRING, PUNICODE_STRING};
+    use crate::generated::MmGetSystemRoutineAddress;
+    use wdk_sys::{UNICODE_STRING, PUNICODE_STRING};
     
     let mut name_buffer = [0u16; 256];
     let bytes = api_name.as_bytes();

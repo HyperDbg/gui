@@ -157,7 +157,7 @@ macro_rules! piggy_key_type {
             }
         }
 
-        impl $crate::PiggyVecKey for $name {
+        impl PiggyVecKey for $name {
             #[inline]
             fn as_usize(&self) -> usize {
                 self.0
