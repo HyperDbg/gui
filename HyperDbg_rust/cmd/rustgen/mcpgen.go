@@ -158,7 +158,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ddkwork/HyperDbg_rust"
+	"github.com/ddkwork/HyperDbg_rust/debugger"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
