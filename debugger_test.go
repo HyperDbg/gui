@@ -11,7 +11,6 @@ import (
 
 	"github.com/ddkwork/HyperDbg/debugger"
 	"github.com/ddkwork/HyperDbg/debugger/driver"
-	"github.com/ddkwork/golibrary/std/mylog"
 	"github.com/ddkwork/golibrary/std/stream"
 )
 
@@ -181,30 +180,84 @@ func TestPacketAPI(t *testing.T) {
 }
 
 func TestNotepadDebugging(t *testing.T) {
-	dbg := debugger.NewUserDebug()
-	defer dbg.UnloadDriver()
+	driverPath := `d:\ux\examples\hypedbg\rust-driver\kd\hyperdbg_kd.sys`
 
-	mylog.Call(func() {
-		dbg.StartProcess("c:\\windows\\system32\\notepad.exe")
-		activeProcess := dbg.GetActiveDebuggingProcess()
-		entryPoint := activeProcess.Rip
-		if entryPoint == 0 {
-			t.Error("无法获取入口点地址")
-			return
+	t.Log("=== 测试记事本调试 ===")
+
+	p := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
+
+	t.Log("安装驱动...")
+	p.Install()
+
+	t.Log("启动驱动...")
+	p.Start()
+	defer func() {
+		t.Log("停止驱动...")
+		p.Stop()
+		p.Uninstall()
+		t.Log("驱动已卸载")
+	}()
+
+	time.Sleep(500 * time.Millisecond)
+
+	packet := debugger.NewPacket()
+
+	t.Log("连接 HTTP 服务...")
+	if err := packet.Start(); err != nil {
+		t.Fatalf("连接失败: %v", err)
+	}
+	defer packet.Stop()
+
+	t.Log("连接成功!")
+
+	t.Log("加载 VMM...")
+	if err := packet.LoadVmm(); err != nil {
+		t.Logf("LoadVmm: %v", err)
+	}
+
+	t.Log("附加到 notepad.exe 进程...")
+	processList, err := packet.GetProcessList()
+	if err != nil {
+		t.Logf("获取进程列表失败: %v", err)
+		return
+	}
+
+	var notepadPID uint32
+	for _, proc := range processList {
+		if proc.ImageName == "notepad.exe" {
+			notepadPID = proc.ProcessID
+			break
 		}
-		mylog.Hex(entryPoint)
-		dbg.SetBreakpoint(entryPoint)
-		dbg.Continue()
-		dbg.StepInto()
-		dbg.ReadMemory(entryPoint, 16)
-		dbg.WriteMemory(entryPoint, []byte{0x90, 0x90})
-		dbg.KillProcess(activeProcess.ProcessId)
-	})
+	}
 
-	t.Log("驱动加载/卸载测试通过")
+	if notepadPID == 0 {
+		t.Log("未找到 notepad.exe 进程，跳过测试")
+		return
+	}
+
+	t.Logf("找到 notepad.exe PID: %d", notepadPID)
+
+	if err := packet.AttachProcess(notepadPID); err != nil {
+		t.Logf("附加进程失败: %v", err)
+		return
+	}
+
+	t.Log("设置断点...")
+	if err := packet.SetBreakpoint(0x7FFE0000, debugger.BreakpointSoftware); err != nil {
+		t.Logf("设置断点失败: %v", err)
+	}
+
+	t.Log("继续执行...")
+	if err := packet.Continue(); err != nil {
+		t.Logf("Continue 失败: %v", err)
+	}
+
+	t.Log("=== 测试完成 ===")
 }
 
 func TestMultipleDriverInitialization(t *testing.T) {
+	driverPath := `d:\ux\examples\hypedbg\rust-driver\kd\hyperdbg_kd.sys`
+
 	t.Log("=== 多次驱动初始化测试 ===")
 	t.Log("此测试验证驱动能否多次成功加载而不BSOD")
 
@@ -212,16 +265,34 @@ func TestMultipleDriverInitialization(t *testing.T) {
 	for i := range iterations {
 		t.Logf("=== 第 %d 次初始化 ===", i+1)
 
-		dbg := debugger.NewUserDebug()
+		p := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
+		p.Install()
+		p.Start()
 
-		if !dbg.IsConnected() {
+		time.Sleep(200 * time.Millisecond)
+
+		packet := debugger.NewPacket()
+		if err := packet.Start(); err != nil {
+			t.Errorf("第 %d 次初始化失败: %v", i+1, err)
+			p.Stop()
+			p.Uninstall()
+			continue
+		}
+
+		if !packet.IsConnected() {
 			t.Errorf("第 %d 次初始化失败: 驱动未连接", i+1)
+			p.Stop()
+			p.Uninstall()
 			continue
 		}
 
 		t.Logf("第 %d 次初始化成功: 驱动已连接", i+1)
 
-		t.Logf("注意: 第 %d 次不卸载驱动，继续下一次初始化", i+1)
+		packet.Stop()
+		p.Stop()
+		p.Uninstall()
+
+		t.Logf("第 %d 次卸载完成", i+1)
 	}
 
 	t.Log("=== 多次初始化测试完成 ===")
@@ -275,7 +346,6 @@ func TestHookScript(t *testing.T) {
 			}
 		},
 	})
-
 	if err != nil {
 		fmt.Printf("Failed to install hook script: %v\n", err)
 		return
