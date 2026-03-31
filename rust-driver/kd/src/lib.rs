@@ -303,7 +303,10 @@ extern "C" fn driver_unload(driver_object: PDRIVER_OBJECT) {
     drop(ctx);
 
     unsafe {
-        IoDeleteDevice((*driver_object).DeviceObject);
+        let device_object = (*driver_object).DeviceObject;
+        if !device_object.is_null() {
+            IoDeleteDevice(device_object);
+        }
     }
     log_success!("HyperDbg driver unloaded successfully");
 }
