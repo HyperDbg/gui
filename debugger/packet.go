@@ -613,3 +613,62 @@ func (p *Packet) InstallHookScript(script *HookScript) error {
 	}
 	return nil
 }
+
+func (p *Packet) Initialize() error {
+	data := mylog.Check2(json.Marshal(map[string]string{"action": "initialize"}))
+	resp := SendReceive[Empty](p, data)
+	if resp == nil || !resp.Success {
+		return fmt.Errorf("initialize failed: %s", resp.Message)
+	}
+	p.state.Store(int32(StateInitialized))
+	return nil
+}
+
+func (p *Packet) Terminate() error {
+	data := mylog.Check2(json.Marshal(map[string]string{"action": "terminate"}))
+	resp := SendReceive[Empty](p, data)
+	if resp == nil || !resp.Success {
+		return fmt.Errorf("terminate failed: %s", resp.Message)
+	}
+	p.state.Store(int32(StateTerminated))
+	return nil
+}
+
+func (p *Packet) StartNetworkServer(addr string) error {
+	data := mylog.Check2(json.Marshal(map[string]any{
+		"action": "start_network_server",
+		"addr":   addr,
+	}))
+	resp := SendReceive[Empty](p, data)
+	if resp == nil || !resp.Success {
+		return fmt.Errorf("start network server failed: %s", resp.Message)
+	}
+	return nil
+}
+
+func (p *Packet) StopNetworkServer() error {
+	data := mylog.Check2(json.Marshal(map[string]string{"action": "stop_network_server"}))
+	resp := SendReceive[Empty](p, data)
+	if resp == nil || !resp.Success {
+		return fmt.Errorf("stop network server failed: %s", resp.Message)
+	}
+	return nil
+}
+
+func (p *Packet) KernelDebuggerInitialize() error {
+	data := mylog.Check2(json.Marshal(map[string]string{"action": "kernel_debugger_initialize"}))
+	resp := SendReceive[Empty](p, data)
+	if resp == nil || !resp.Success {
+		return fmt.Errorf("kernel debugger initialize failed: %s", resp.Message)
+	}
+	return nil
+}
+
+func (p *Packet) KernelDebuggerUninitialize() error {
+	data := mylog.Check2(json.Marshal(map[string]string{"action": "kernel_debugger_uninitialize"}))
+	resp := SendReceive[Empty](p, data)
+	if resp == nil || !resp.Success {
+		return fmt.Errorf("kernel debugger uninitialize failed: %s", resp.Message)
+	}
+	return nil
+}

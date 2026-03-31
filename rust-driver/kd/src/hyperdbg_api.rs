@@ -56,6 +56,43 @@ impl HyperDbgApi {
 }
 
 impl DebuggerApi for HyperDbgApi {
+    fn initialize(&mut self, _req: &Request) -> Result<Empty, String> {
+        if self.vmm_initialized {
+            return Err(String::from("Already initialized"));
+        }
+        self.vmm_initialized = true;
+        Ok(Empty {})
+    }
+
+    fn terminate(&mut self, _req: &Request) -> Result<Empty, String> {
+        if !self.vmm_initialized {
+            return Err(String::from("Not initialized"));
+        }
+        self.vmm_initialized = false;
+        Ok(Empty {})
+    }
+
+    fn start_network_server(&mut self, req: &Request) -> Result<Empty, String> {
+        let _addr = req.addr.as_ref().ok_or("addr required")?;
+        Ok(Empty {})
+    }
+
+    fn stop_network_server(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn kernel_debugger_initialize(&mut self, _req: &Request) -> Result<Empty, String> {
+        let mut kd = self.kernel_debugger.lock();
+        kd.initialize().map_err(|e| format!("Failed to initialize kernel debugger: {}", e))?;
+        Ok(Empty {})
+    }
+
+    fn kernel_debugger_uninitialize(&mut self, _req: &Request) -> Result<Empty, String> {
+        let mut kd = self.kernel_debugger.lock();
+        kd.uninitialize().map_err(|e| format!("Failed to uninitialize kernel debugger: {}", e))?;
+        Ok(Empty {})
+    }
+
     fn status(&mut self, _req: &Request) -> Result<String, String> {
         if is_vmx_initialized() {
             Ok(String::from("VMM Running"))

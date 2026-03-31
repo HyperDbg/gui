@@ -43,6 +43,8 @@ pub struct Request {
     pub filter: Option<HookFilter>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub addr: Option<String>,
 }
 
 // Response structure for API calls
@@ -60,6 +62,12 @@ pub struct Empty {}
 
 // API Handler trait for implementing debugger operations
 pub trait DebuggerApi {
+    fn initialize(&mut self, req: &Request) -> Result<Empty, String>;
+    fn terminate(&mut self, req: &Request) -> Result<Empty, String>;
+    fn start_network_server(&mut self, req: &Request) -> Result<Empty, String>;
+    fn stop_network_server(&mut self, req: &Request) -> Result<Empty, String>;
+    fn kernel_debugger_initialize(&mut self, req: &Request) -> Result<Empty, String>;
+    fn kernel_debugger_uninitialize(&mut self, req: &Request) -> Result<Empty, String>;
     fn status(&mut self, req: &Request) -> Result<String, String>;
     fn ping(&mut self, req: &Request) -> Result<Empty, String>;
     fn load_vmm(&mut self, req: &Request) -> Result<Empty, String>;
@@ -104,6 +112,42 @@ pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
     match req {
         Ok(req) => {
             match req.action.as_str() {
+                "initialize" => {
+                    match api.initialize(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "terminate" => {
+                    match api.terminate(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "start_network_server" => {
+                    match api.start_network_server(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "stop_network_server" => {
+                    match api.stop_network_server(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "kernel_debugger_initialize" => {
+                    match api.kernel_debugger_initialize(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "kernel_debugger_uninitialize" => {
+                    match api.kernel_debugger_uninitialize(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
                 "status" => {
                     match api.status(&req) {
                         Ok(data) => success_response(data),
@@ -325,6 +369,30 @@ impl Request {
 pub struct NoOpDebugger;
 
 impl DebuggerApi for NoOpDebugger {
+    fn initialize(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn terminate(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn start_network_server(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn stop_network_server(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn kernel_debugger_initialize(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn kernel_debugger_uninitialize(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
     fn status(&mut self, _req: &Request) -> Result<String, String> {
         Ok(Default::default())
     }

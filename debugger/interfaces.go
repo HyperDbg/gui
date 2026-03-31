@@ -6,6 +6,12 @@ import (
 )
 
 type Debugger interface {
+	Initialize() error
+	Terminate() error
+	StartNetworkServer(addr string) error
+	StopNetworkServer() error
+	KernelDebuggerInitialize() error
+	KernelDebuggerUninitialize() error
 	Start() error
 	Stop()
 	IsConnected() bool

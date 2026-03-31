@@ -407,16 +407,18 @@ fn handle_ioctl(
     input: &[u8],
     output: &mut [u8],
 ) -> Result<usize, DriverError> {
+    use crate::generated::ioctl::*;
+    
     match control_code {
-        0x800 => {
+        IOCTL_INTERNAL_DRIVER_INITIALIZE => {
             driver.initialize()?;
             Ok(0)
         }
-        0x801 => {
+        IOCTL_INTERNAL_DRIVER_TERMINATE => {
             driver.terminate()?;
             Ok(0)
         }
-        0x802 => {
+        IOCTL_INTERNAL_START_NETWORK_SERVER => {
             if input.len() < 6 {
                 return Err(DriverError::InvalidAddress);
             }
@@ -427,23 +429,23 @@ fn handle_ioctl(
             driver.start_network_server(addr)?;
             Ok(0)
         }
-        0x803 => {
+        IOCTL_INTERNAL_STOP_NETWORK_SERVER => {
             driver.stop_network_server();
             Ok(0)
         }
-        0x900 => {
+        IOCTL_INTERNAL_KERNEL_DEBUGGER_INITIALIZE => {
             let kd = driver.get_kernel_debugger();
             let mut kd = kd.lock();
             kd.initialize().map_err(|e| DriverError::KernelDebuggerError(e.to_string()))?;
             Ok(0)
         }
-        0x901 => {
+        IOCTL_INTERNAL_KERNEL_DEBUGGER_UNINITIALIZE => {
             let kd = driver.get_kernel_debugger();
             let mut kd = kd.lock();
             kd.uninitialize().map_err(|e| DriverError::KernelDebuggerError(e.to_string()))?;
             Ok(0)
         }
-        0x902 => {
+        IOCTL_INTERNAL_SET_BREAKPOINT => {
             if input.len() < 12 {
                 return Err(DriverError::InvalidAddress);
             }
@@ -463,7 +465,7 @@ fn handle_ioctl(
                 Ok(0)
             }
         }
-        0x903 => {
+        IOCTL_INTERNAL_REMOVE_BREAKPOINT => {
             if input.len() < 8 {
                 return Err(DriverError::BreakpointNotFound);
             }

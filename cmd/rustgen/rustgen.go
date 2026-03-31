@@ -606,7 +606,7 @@ func generateMod(projectRoot string, mappings []FileMapping) {
 	buf.WriteString("mod response;\n")
 	buf.WriteString("mod router;\n")
 	buf.WriteString("mod emit;\n")
-	buf.WriteString("mod ioctl;\n")
+	buf.WriteString("pub mod ioctl;\n")
 	buf.WriteString("mod ntddk;\n")
 	buf.WriteString("mod types;\n")
 	buf.WriteString("mod constants;\n\n")
@@ -856,6 +856,8 @@ func generateHandlersRouter(projectRoot string, apiMethods []APIMethod) {
 	buf.WriteString("    pub filter: Option<HookFilter>,\n")
 	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")
 	buf.WriteString("    pub code: Option<String>,\n")
+	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")
+	buf.WriteString("    pub addr: Option<String>,\n")
 	buf.WriteString("}\n\n")
 
 	buf.WriteString("// Response structure for API calls\n")

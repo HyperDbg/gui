@@ -29,7 +29,7 @@ pub mod hook_args;
 mod response;
 mod router;
 mod emit;
-mod ioctl;
+pub mod ioctl;
 mod ntddk;
 mod types;
 mod constants;

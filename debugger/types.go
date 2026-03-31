@@ -64,7 +64,8 @@ const (
 type DebugState uint32
 
 const (
-	StateRunning DebugState = iota
+	StateInitialized DebugState = iota
+	StateRunning
 	StatePaused
 	StateStepping
 	StateTerminated
