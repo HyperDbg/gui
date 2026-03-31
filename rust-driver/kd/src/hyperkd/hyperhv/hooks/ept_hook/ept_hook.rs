@@ -374,19 +374,21 @@ impl EptHookManager {
     ) {
         use crate::hyperkd::hyperhv::vmm::ept::ept::{ept_get_pml1_entry, invept_single_context};
         use crate::hyperkd::hyperhv::vmm::vmx::vmx::{vmread, VMCS_CTRL_EPTP};
-        use crate::hyperkd::hyperhv::state::VIRTUAL_MACHINE_STATE;
+        use crate::hyperkd::hyperhv::globals::GUEST_STATE;
 
         let core_id = crate::hyperkd::hyperhv::processor::get_current_processor_number();
         
         let ept_page_table: *mut crate::hyperkd::hyperhv::state::VMM_EPT_PAGE_TABLE = {
-            extern "C" {
-                static mut g_GuestState: *mut VIRTUAL_MACHINE_STATE;
-            }
-            if g_GuestState.is_null() {
+            let guest_state = GUEST_STATE.lock();
+            if let Some(ref vcpus) = *guest_state {
+                if let Some(vcpu) = vcpus.get(core_id as usize) {
+                    vcpu.ept_page_table
+                } else {
+                    return;
+                }
+            } else {
                 return;
             }
-            let vcpu = g_GuestState.add(core_id as usize);
-            (*vcpu).ept_page_table
         };
 
         if ept_page_table.is_null() {

@@ -136,7 +136,12 @@ pub struct Vcpu {
     pub guest_fs: u16,
     pub guest_gs: u16,
     pub guest_ss: u16,
+    pub ept_pointer: crate::hyperkd::hyperhv::state::EPT_POINTER,
+    pub ept_page_table: *mut crate::hyperkd::hyperhv::state::VMM_EPT_PAGE_TABLE,
 }
+
+unsafe impl Send for Vcpu {}
+unsafe impl Sync for Vcpu {}
 
 impl Vcpu {
     pub fn new(core_id: u32) -> Self {
@@ -205,6 +210,8 @@ impl Vcpu {
             guest_fs: 0,
             guest_gs: 0,
             guest_ss: 0,
+            ept_pointer: unsafe { core::mem::zeroed() },
+            ept_page_table: core::ptr::null_mut(),
         }
     }
 }

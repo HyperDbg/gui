@@ -1,5 +1,10 @@
-use crate::hyperkd::hyperhv::state::*;
+use crate::hyperkd::hyperhv::state::{
+    EPT_HOOKED_PAGE_DETAIL, EPT_POINTER, EPT_PML1_ENTRY, EPT_PML2_ENTRY, EPT_PML3_ENTRY,
+    EPT_PML4_POINTER, EPT_PML3_POINTER, EPT_PML2_POINTER, LIST_ENTRY, PVMM_EPT_PAGE_TABLE,
+    VIRTUAL_MACHINE_STATE, VMM_EPT_PAGE_TABLE,
+};
 use crate::hyperkd::hyperhv::vmm::vmx::vmx::read_cr3;
+use crate::generated::*;
 
 use wdk_sys::{
     PVOID,
@@ -13,38 +18,7 @@ use wdk_sys::{
     LOCK_OPERATION,
 };
 
-use wdk_sys::ntddk::{
-    MmAllocateContiguousMemory,
-    MmAllocateContiguousMemorySpecifyCache,
-    MmFreeContiguousMemory,
-    MmFreeContiguousMemorySpecifyCache,
-    MmGetPhysicalAddress,
-    MmGetVirtualForPhysical,
-    MmMapIoSpace,
-    MmMapIoSpaceEx,
-    MmUnmapIoSpace,
-    MmBuildMdlForNonPagedPool,
-    MmMapLockedPagesSpecifyCache,
-    MmUnmapLockedPages,
-    MmProbeAndLockPages,
-    MmUnlockPages,
-    IoAllocateMdl,
-    IoFreeMdl,
-    ExAllocatePool2,
-    ExFreePool,
-    ExFreePoolWithTag,
-    RtlCompareMemory,
-    MmIsAddressValid,
-};
-
 use crate::hyperkd::hyperhv::bindings::{MEMORY_CACHING_TYPE, MM_CACHED, POOL_FLAG_NON_PAGED, POOL_FLAG_PAGED};
-
-extern "system" { // WDK missing bindings
-    fn RtlZeroMemory(Destination: PVOID, Length: SIZE_T); // WDK missing
-    fn RtlFillMemory(Destination: PVOID, Length: SIZE_T, Fill: u8); // WDK missing
-    fn RtlCopyMemory(Destination: PVOID, Source: *const u8, Length: SIZE_T); // WDK missing
-    fn RtlMoveMemory(Destination: PVOID, Source: *const u8, Length: SIZE_T); // WDK missing
-}
 
 fn make_physical_address(addr: u64) -> PHYSICAL_ADDRESS {
     _LARGE_INTEGER { QuadPart: addr as i64 }

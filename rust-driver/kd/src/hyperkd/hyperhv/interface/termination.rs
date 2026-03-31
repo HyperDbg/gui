@@ -9,19 +9,8 @@ use wdk_sys::{
     HANDLE,
 };
 
+use crate::generated::*;
 use crate::hyperkd::hyperhv::vmm::vmxoff;
-
-use wdk_sys::ntddk::{
-    PsLookupProcessByProcessId,
-    PsLookupThreadByThreadId,
-    ObfDereferenceObject,
-    KeBugCheckEx,
-};
-
-extern "system" { // undocumented APIs
-    fn PsTerminateProcess(Process: PEPROCESS, ExitStatus: NTSTATUS) -> NTSTATUS; // undocumented
-    fn PsTerminateThread(Thread: PETHREAD, ExitStatus: NTSTATUS) -> NTSTATUS; // undocumented
-}
 
 #[inline]
 fn nt_success(status: NTSTATUS) -> bool {

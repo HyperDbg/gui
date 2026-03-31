@@ -858,6 +858,8 @@ func generateHandlersRouter(projectRoot string, apiMethods []APIMethod) {
 	buf.WriteString("    pub code: Option<String>,\n")
 	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")
 	buf.WriteString("    pub addr: Option<String>,\n")
+	buf.WriteString("    #[serde(skip_serializing_if = \"Option::is_none\")]\n")
+	buf.WriteString("    pub exe_path: Option<String>,\n")
 	buf.WriteString("}\n\n")
 
 	buf.WriteString("// Response structure for API calls\n")

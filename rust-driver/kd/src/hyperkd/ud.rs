@@ -4,6 +4,7 @@ use alloc::collections::BTreeMap;
 use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
 
+use crate::generated::*;
 use crate::hyperkd::{ProcessId, ThreadId};
 use crate::hyperkd::attaching::UsermodeDebuggingProcessDetails;
 use crate::hyperkd::hyperhv::components::registers::debug_registers::{
@@ -288,10 +289,6 @@ pub unsafe fn ud_check_and_handle_breakpoints(
 pub unsafe fn ud_handle_instant_break(core_id: u32, reason: PausingReason, process_details: Option<&UsermodeDebuggingProcessDetails>) -> bool {
     if !ud_check_and_handle_breakpoints(core_id, reason, process_details) {
         return false;
-    }
-
-    extern "C" {
-        fn PsGetCurrentThreadId() -> u64;
     }
 
     let thread_id = PsGetCurrentThreadId() as ThreadId;

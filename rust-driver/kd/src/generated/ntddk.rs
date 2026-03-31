@@ -3,7 +3,7 @@
 #![allow(clashing_extern_declarations)]
 
 // Exported functions: 1251
-// Not exported functions: 8
+// Not exported functions: 24
 
 use super::types::*;
 
@@ -1262,7 +1262,7 @@ pub use wdk_sys::ntddk::{
     RtlxUnicodeStringToOemSize,
 };
 
-// Not exported functions: 8
+// Not exported functions: 24
 extern "C" {
     pub fn KeGenericCallDpc(routine: *mut u8, context: *mut u8);
     pub fn KeSignalCallDpcDone(system_argument1: *mut core::ffi::c_void);
@@ -1272,6 +1272,22 @@ extern "C" {
     pub fn PsGetProcessPeb(process: *mut u8) -> u64;
     pub fn PsGetProcessWow64Process(process: *mut u8) -> u32;
     pub fn RtlPcToFileHeader(pc: u64, base_address: *mut u64) -> u64;
+    // pub fn PsGetNextProcess(process: PEPROCESS) -> PEPROCESS;
+    pub fn PsGetProcessImageFileName(process: PEPROCESS) -> *mut i8;
+    // pub fn PsGetNextProcessThread(Process: PEPROCESS, Thread: PETHREAD) -> PETHREAD;
+    pub fn PsGetThreadTeb(Thread: PETHREAD) -> u64;
+    pub fn PsTerminateProcess(Process: PEPROCESS, ExitStatus: NTSTATUS) -> NTSTATUS;
+    pub fn PsTerminateThread(Thread: PETHREAD, ExitStatus: NTSTATUS) -> NTSTATUS;
+    pub fn RtlZeroMemory(Destination: PVOID, Length: SIZE_T);
+    pub fn RtlFillMemory(Destination: PVOID, Length: SIZE_T, Fill: u8);
+    pub fn RtlCopyMemory(Destination: PVOID, Source: *const u8, Length: SIZE_T);
+    pub fn RtlMoveMemory(Destination: PVOID, Source: *const u8, Length: SIZE_T);
+    pub fn WskRegister(WskClientNpi: *const core::ffi::c_void, WskRegistration: *mut core::ffi::c_void) -> NTSTATUS;
+    pub fn WskCaptureProviderNPI(WskRegistration: *mut core::ffi::c_void, WaitTimeout: ULONG, WskProviderNpi: *mut core::ffi::c_void) -> NTSTATUS;
+    pub fn WskReleaseProviderNPI(WskRegistration: *mut core::ffi::c_void);
+    pub fn WskDeregister(WskRegistration: *mut core::ffi::c_void);
+    pub fn ZwTerminateProcess(ProcessHandle: HANDLE, ExitStatus: NTSTATUS) -> NTSTATUS;
+    pub fn KfRaiseIrql(NewIrql: KIRQL) -> KIRQL;
 }
 
 // Inline functions from WDK (not in wdk_sys)

@@ -45,6 +45,8 @@ pub struct Request {
     pub code: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub addr: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub exe_path: Option<String>,
 }
 
 // Response structure for API calls
@@ -76,6 +78,8 @@ pub trait DebuggerApi {
     fn unload_vmm(&mut self, req: &Request) -> Result<Empty, String>;
     fn attach_process(&mut self, req: &Request) -> Result<Empty, String>;
     fn detach_process(&mut self, req: &Request) -> Result<Empty, String>;
+    fn start_process(&mut self, req: &Request) -> Result<u32, String>;
+    fn kill_process(&mut self, req: &Request) -> Result<Empty, String>;
     fn set_breakpoint(&mut self, req: &Request) -> Result<Empty, String>;
     fn remove_breakpoint(&mut self, req: &Request) -> Result<Empty, String>;
     fn continue_(&mut self, req: &Request) -> Result<Empty, String>;
@@ -194,6 +198,18 @@ pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
                 }
                 "detach_process" => {
                     match api.detach_process(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "start_process" => {
+                    match api.start_process(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "kill_process" => {
+                    match api.kill_process(&req) {
                         Ok(data) => success_response(data),
                         Err(e) => error_response(&e),
                     }
@@ -436,6 +452,14 @@ impl DebuggerApi for NoOpDebugger {
     }
 
     fn detach_process(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn start_process(&mut self, _req: &Request) -> Result<u32, String> {
+        Ok(Default::default())
+    }
+
+    fn kill_process(&mut self, _req: &Request) -> Result<Empty, String> {
         Ok(Empty {})
     }
 

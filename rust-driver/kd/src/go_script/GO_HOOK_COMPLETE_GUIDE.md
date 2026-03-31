@@ -537,7 +537,7 @@ pub fn execute_script_hook(
     let mut executor = ScriptExecutor::new();
     unsafe {
         executor.load(operations);
-        executor.execute(regs);  // 调用 executor.rs → crate::ntapi
+        executor.execute(regs);  // 调用 executor.rs → crate::generated
     }
     
     true
@@ -574,20 +574,20 @@ pub fn execute_script_hook(
 │  └─────────────────────┘         │ │   ↓             │ │             │
 │                                   │ │ write_memory()  │ │             │
 │  hooks/hooks.rs                   │ │   ↓             │ │             │
-│  ┌─────────────────────┐         │ │ crate::ntapi    │ │             │
+│  ┌─────────────────────┐         │ │ crate::generated│ │             │
 │  │ HOOK_CONTEXT         │         │ │   ↓             │ │             │
 │  │ ┌─────────────────┐ │         │ │ WDK绑定         │ │             │
 │  │ │ ept_hooks       │ │         │ └─────────────────┘ │             │
 │  │ │ inline_hooks    │ │         └─────────────────────┘             │
 │  │ │ syscall_hooks   │ │                   │                         │
 │  │ └─────────────────┘ │                   ▼                         │
-│  │    运行时Hook状态    │         ntapi/exported                      │
+│  │    运行时Hook状态    │         generated/ntddk                     │
 │  └─────────────────────┘         ┌─────────────────────┐             │
 │                                   │ ExAllocatePool2    │             │
 │                                   │ ExFreePool         │             │
 │                                   │ PsGetCurrentPid    │             │
 │                                   │ RtlCompareMemory   │             │
-│                                   │ ...1248个函数       │             │
+│                                   │ ...1251个函数       │             │
 │                                   └─────────────────────┘             │
 └───────────────────────────────────────────────────────────────────────┘
 ```
@@ -843,65 +843,70 @@ func BenchmarkInstallHookScript(b *testing.B) {
 
 ### 8.2 WDK绑定详解
 
-WDK绑定来自`wdk-sys` crate，通过`ntapi`模块重新导出：
+WDK绑定来自`wdk-sys` crate，通过`generated`模块重新导出：
 
 ```rust
-// ntapi/mod.rs
-mod api_gen;
-mod types_gen;
-mod constants_gen;
+// generated/mod.rs
+mod ntddk;
+mod types;
+mod constants;
 
-pub use api_gen::*;
-pub use types_gen::*;
-pub use constants_gen::*;
+pub use ntddk::*;
+pub use types::*;
+pub use constants::*;
 
-// ntapi/api_gen.rs
-pub mod exported {
-    pub use wdk_sys::ntddk::*;  // 1248个导出函数
+// generated/ntddk.rs
+pub use wdk_sys::ntddk::*;  // 1251个导出函数
+
+// Not exported functions: 22
+extern "C" {
+    pub fn PsGetNextProcess(process: PEPROCESS) -> PEPROCESS;
+    pub fn PsGetProcessImageFileName(process: PEPROCESS) -> *mut i8;
+    // ... 其他未导出函数
 }
 
-// ntapi/types_gen.rs
-pub use wdk_sys::*;  // 4754个类型定义
+// generated/types.rs
+pub use wdk_sys::*;  // 7317个类型定义
 
-// ntapi/constants_gen.rs
-pub use wdk_sys::*;  // 5225个常量定义
+// generated/constants.rs
+pub use wdk_sys::*;  // 5348个常量定义
 ```
 
 **WDK绑定包含：**
 
 | 类别 | 数量 | 示例 |
 |------|------|------|
-| 导出函数 | 1248 | `DbgPrint`, `ExAllocatePool2`, `IoCreateDevice` |
-| 类型定义 | 4754 | `DEVICE_OBJECT`, `IRP`, `DRIVER_OBJECT` |
-| 常量定义 | 5225 | `STATUS_SUCCESS`, `FILE_ATTRIBUTE_NORMAL` |
+| 导出函数 | 1251 | `DbgPrint`, `ExAllocatePool2`, `IoCreateDevice` |
+| 类型定义 | 7317 | `DEVICE_OBJECT`, `IRP`, `DRIVER_OBJECT` |
+| 常量定义 | 5348 | `STATUS_SUCCESS`, `FILE_ATTRIBUTE_NORMAL` |
 
-**executor.rs 使用 crate::ntapi 调用WDK：**
+**executor.rs 使用 crate::generated 调用WDK：**
 
 ```rust
-// 内存分配 (通过 crate::ntapi)
-use crate::ntapi::exported::ExAllocatePool2;
-use crate::ntapi::POOL_FLAG_NON_PAGED;
+// 内存分配 (通过 crate::generated)
+use crate::generated::ExAllocatePool2;
+use crate::generated::POOL_FLAG_NON_PAGED;
 ExAllocatePool2(POOL_FLAG_NON_PAGED, size, tag)
 
 // 内存释放
-use crate::ntapi::exported::ExFreePool;
+use crate::generated::ExFreePool;
 ExFreePool(ptr)
 
 // 进程/线程信息
-use crate::ntapi::exported::PsGetCurrentProcessId;
-use crate::ntapi::exported::PsGetCurrentThreadId;
-use crate::ntapi::exported::IoGetCurrentProcess;
+use crate::generated::PsGetCurrentProcessId;
+use crate::generated::PsGetCurrentThreadId;
+use crate::generated::IoGetCurrentProcess;
 
 // 内存操作
-use crate::ntapi::exported::RtlCompareMemory;
-use crate::ntapi::exported::RtlCopyMemory;
-use crate::ntapi::exported::RtlFillMemory;
-use crate::ntapi::exported::RtlZeroMemory;
+use crate::generated::RtlCompareMemory;
+use crate::generated::RtlCopyMemory;
+use crate::generated::RtlFillMemory;
+use crate::generated::RtlZeroMemory;
 
 // IRQL操作
-use crate::ntapi::exported::KeGetCurrentIrql;
-use crate::ntapi::exported::KeLowerIrql;
-use crate::ntapi::exported::KeRaiseIrqlToDpcLevel;
+use crate::generated::KeGetCurrentIrql;
+use crate::generated::KeLowerIrql;
+use crate::generated::KeRaiseIrqlToDpcLevel;
 ```
 
 ### 8.3 更新关注点
@@ -1307,8 +1312,8 @@ HyperDbg_rust/
     │   ├── types_gen/            # 自动生成的类型
     │   └── handlers_gen/         # 自动生成的处理器
     │
-    └── ntapi/
-        └── api_gen.rs            # NT API绑定
+    └── generated/
+        └── ntddk.rs              # NT API绑定
 ```
 
 ## 十二、总结
@@ -1351,17 +1356,17 @@ HyperDbg_rust/
 │  wdk-sys crate                                                                      │
 │  (自动生成的Rust FFI绑定)                                                            │
 │         │                                                                           │
-│         ▼ cmd/bindgen/bindgen.go                                                    │
-│  ntapi/types_gen.rs                                                                 │
+│         ▼ cmd/rustgen/wdkgen.go                                                     │
+│  generated/types.rs                                                                 │
 │  (pub use wdk_sys::{HANDLE, PVOID, ULONG, ...})                                    │
 │         │                                                                           │
-│         ▼ hook_db/hook_args_gen.rs                                                  │
+│         ▼ hook_db/hook_args.rs                                                      │
 │  Args结构体                                                                          │
 │  (pub struct NtDeviceIoControlFileArgs { pub FileHandle: HANDLE, ... })            │
 │         │                                                                           │
 │         ▼ go_script/executor.rs                                                     │
 │  执行器使用                                                                           │
-│  (use crate::hyperkd::hyperhv::hooks::hook_db::NtDeviceIoControlFileArgs)          │
+│  (use crate::generated::NtDeviceIoControlFileArgs)                                 │
 │                                                                                     │
 └─────────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -1381,7 +1386,7 @@ typeMap := map[string]string{
 **正确做法**：
 ```rust
 // hook_args_gen.rs - 直接使用wdk_sys类型
-use crate::ntapi::*;
+use crate::generated::*;
 
 pub struct NtDeviceIoControlFileArgs {
     pub FileHandle: HANDLE,           // 直接使用HANDLE，不是u64
@@ -1455,18 +1460,18 @@ Go用户代码:
 
 ### 13.6 bindgen工具链说明
 
-`cmd/bindgen` 的职责：
+`cmd/rustgen` 的职责：
 
 1. **解析ntddk.rs** - 提取所有WDK函数签名
 2. **解析types.rs** - 提取所有WDK类型定义
 3. **解析constants.rs** - 提取所有WDK常量
-4. **生成ntapi模块**:
-   - `api_gen.rs` - 导出WDK函数
-   - `types_gen.rs` - 导出WDK类型
-   - `constants_gen.rs` - 导出WDK常量
+4. **生成generated模块**:
+   - `ntddk.rs` - 导出WDK函数 + 未导出函数声明
+   - `types.rs` - 导出WDK类型
+   - `constants.rs` - 导出WDK常量
 5. **生成hook_db模块**:
-   - `hook_args_gen.rs` - 为每个API生成Args结构体
-   - `ept_hook_gen.rs` - EPT Hook数据库
-   - `inline_hook_gen.rs` - Inline Hook数据库
+   - `hook_args.rs` - 为每个API生成Args结构体
+   - `ept_hook.rs` - EPT Hook数据库
+   - `inline_hook.rs` - Inline Hook数据库
 
-**关键点**：所有类型都来自`wdk_sys`，通过`ntapi::types_gen`导出，`hook_args_gen`直接使用，无需手动映射。
+**关键点**：所有类型都来自`wdk_sys`，通过`generated::types`导出，`hook_args`直接使用，无需手动映射。

@@ -379,15 +379,40 @@ _EVENT_TYPE::SynchronizationEvent  // 正确！
 
 **每次修改后必须验证编译通过！**
 
+### 方法 1: 使用 fmt.cmd（推荐）
+
+```bash
+# 必须在项目根目录运行！
+cd d:\ux\examples\hypedbg
+d:\ux\examples\hypedbg\fmt.cmd
+```
+
+**fmt.cmd 内容**:
+```bash
+go run mvdan.cc/gofumpt@latest -w .
+go fix ./...
+cd rust-driver\kd && cargo check
+```
+
+**注意事项**:
+- ⚠️ 必须在项目根目录 `d:\ux\examples\hypedbg` 运行
+- ⚠️ 不要在子目录运行，否则 `cd rust-driver\kd` 会失败
+
+### 方法 2: 分步执行
+
 ```bash
 # 1. 运行生成器
 go run ./cmd/rustgen/...
 
-# 2. 编译驱动
-powershell -ExecutionPolicy Bypass -File "rust-driver/kd/build.ps1"
+# 2. 格式化 Go 代码
+go run mvdan.cc/gofumpt@latest -w .
+go fix ./...
 
-# 3. 运行测试（如有）
-go test ./...
+# 3. 检查 Rust 编译
+cd d:\ux\examples\hypedbg; cd rust-driver\kd; cargo check
+
+# 4. 编译驱动（使用 EWDK）
+powershell -ExecutionPolicy Bypass -File "rust-driver/kd/build.ps1"
 ```
 
 ## 🔴 使用生成的 IOCTL 常量
@@ -715,3 +740,83 @@ buf.WriteString("    pub addr: Option<String>,\n")
 3. **Request 字段要同步** - 新方法需要新字段时，必须更新生成器
 4. **编译验证不可少** - 每次修改后都要运行编译验证
 5. **使用生成的常量** - 不要硬编码 IOCTL 数字，使用生成的常量
+
+---
+
+# 第九部分：常见编译错误修复
+
+## 汇编语法错误
+
+### 错误: brackets expression not supported
+
+```
+error: brackets expression not supported on this target
+  --> <inline asm>:1:15
+   |
+1  |     invept %rcx, [%rax]
+   |                  ^
+```
+
+**原因**: `att_syntax` 选项与 Intel 语法内存操作数 `[%rax]` 不兼容
+
+**解决**: 移除 `att_syntax`，使用 Intel 语法
+
+```rust
+// 错误 ❌
+core::arch::asm!(
+    "invept {0}, [{1}]",
+    in(reg) 1u64,
+    in(reg) &descriptor,
+    options(nostack, att_syntax)
+);
+
+// 正确 ✅
+core::arch::asm!(
+    "invept {type}, [{desc}]",
+    type = in(reg) 1u64,
+    desc = in(reg) &descriptor,
+    options(nostack)
+);
+```
+
+## Go 编译错误
+
+### 错误: not enough arguments
+
+```
+fix.exe: main.go:40:31: not enough arguments in call to debugger.NewPacket
+        have ()
+        want (string)
+```
+
+**原因**: 函数签名已更改，但调用处未更新
+
+**解决**: 更新调用处参数
+
+```go
+// 错误 ❌
+packet := debugger.NewPacket()
+
+// 正确 ✅
+packet := debugger.NewPacket("http://127.0.0.1:50080")
+```
+
+### 错误: import is a program
+
+```
+cmd\mcp\mcp.go:10:2: import "github.com/ddkwork/HyperDbg" is a program, not an importable package
+```
+
+**原因**: 导入了 main 包而非子包
+
+**解决**: 修改导入路径
+
+```go
+// 错误 ❌
+import "github.com/ddkwork/HyperDbg"
+
+// 正确 ✅
+import "github.com/ddkwork/HyperDbg/debugger"
+```
+
+**注意**: 如果是生成器生成的代码，需要修改生成器模板 `cmd/rustgen/mcpgen.go`

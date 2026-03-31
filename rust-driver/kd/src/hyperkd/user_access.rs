@@ -1,3 +1,4 @@
+use crate::generated::*;
 use crate::memory::MemoryManager;
 use crate::process::Process;
 use alloc::boxed::Box;
@@ -193,12 +194,6 @@ pub unsafe fn allocate_and_get_image_path_from_process_id(
     process_image_name: &mut UnicodeString,
     size_of_image_name_to_be_allocated: u32,
 ) -> Result<(), UserAccessError> {
-    extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u32, eprocess: *mut *mut u8) -> u32;
-        fn ObOpenObjectByPointer(object: *mut u8, attributes: u32, desired_access: u32, handle: *mut u64) -> u32;
-        fn ObDereferenceObject(object: *mut u8);
-    }
-
     let mut eprocess: *mut u8 = core::ptr::null_mut();
     let status = PsLookupProcessByProcessId(process_id, &mut eprocess);
 
@@ -285,10 +280,6 @@ pub unsafe fn allocate_and_get_image_path_from_process_id(
 }
 
 unsafe fn copy_unicode_string(destination: &mut UnicodeString, source: &UnicodeString) {
-    extern "C" {
-        fn RtlCopyUnicodeString(destination: *mut UnicodeString, source: *const UnicodeString);
-    }
-
     if !source.is_valid() || !destination.buffer.is_null() {
         return;
     }
@@ -314,11 +305,6 @@ pub unsafe fn get_process_image_path(process_id: u32) -> Result<alloc::string::S
 }
 
 pub unsafe fn get_process_command_line(process_id: u32) -> Result<alloc::string::String, UserAccessError> {
-    extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u32, eprocess: *mut *mut u8) -> u32;
-        fn ObDereferenceObject(object: *mut u8);
-    }
-
     let mut eprocess: *mut u8 = core::ptr::null_mut();
     let status = PsLookupProcessByProcessId(process_id, &mut eprocess);
 
@@ -350,11 +336,6 @@ pub unsafe fn get_process_command_line(process_id: u32) -> Result<alloc::string:
 }
 
 pub unsafe fn get_process_working_directory(process_id: u32) -> Result<alloc::string::String, UserAccessError> {
-    extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u32, eprocess: *mut *mut u8) -> u32;
-        fn ObDereferenceObject(object: *mut u8);
-    }
-
     let mut eprocess: *mut u8 = core::ptr::null_mut();
     let status = PsLookupProcessByProcessId(process_id, &mut eprocess);
 
@@ -458,11 +439,6 @@ pub unsafe fn write_process_memory(
 pub unsafe fn get_process_environment_variables(
     process_id: u32,
 ) -> Result<alloc::vec::Vec<(alloc::string::String, alloc::string::String)>, UserAccessError> {
-    extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u32, eprocess: *mut *mut u8) -> u32;
-        fn ObDereferenceObject(object: *mut u8);
-    }
-
     let mut eprocess: *mut u8 = core::ptr::null_mut();
     let status = PsLookupProcessByProcessId(process_id, &mut eprocess);
 
@@ -528,11 +504,6 @@ pub unsafe fn get_process_environment_variables(
 pub unsafe fn get_process_modules(
     process_id: u32,
 ) -> Result<alloc::vec::Vec<ProcessModule>, UserAccessError> {
-    extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u32, eprocess: *mut *mut u8) -> u32;
-        fn ObDereferenceObject(object: *mut u8);
-    }
-
     let mut eprocess: *mut u8 = core::ptr::null_mut();
     let status = PsLookupProcessByProcessId(process_id, &mut eprocess);
 
@@ -717,12 +688,6 @@ pub struct LdrDataTableEntry {
 }
 
 pub unsafe fn get_peb_from_process_id(process_id: u32) -> Result<u64, UserAccessError> {
-    extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u32, eprocess: *mut *mut u8) -> u32;
-        fn ObOpenObjectByPointer(object: *mut u8, attributes: u32, desired_access: u32, handle: *mut u64) -> u32;
-        fn ObDereferenceObject(object: *mut u8);
-    }
-
     let mut eprocess: *mut u8 = core::ptr::null_mut();
     let status = PsLookupProcessByProcessId(process_id, &mut eprocess);
 
@@ -940,12 +905,6 @@ pub unsafe fn print_loaded_modules_x64(
     process: *mut u8,
     only_count_modules: bool,
 ) -> Result<u32, UserAccessError> {
-    extern "C" {
-        fn PsGetProcessPeb(process: *mut u8) -> u64;
-        fn KeStackAttachProcess(process: *mut u8, apc_state: *mut u8);
-        fn KeUnstackDetachProcess(apc_state: *mut u8);
-    }
-
     if crate::attaching::PS_GET_PROCESS_PEB.is_none() {
         return Err(UserAccessError::OperationFailed);
     }
@@ -1047,12 +1006,6 @@ pub unsafe fn print_loaded_modules_x86(
     process: *mut u8,
     only_count_modules: bool,
 ) -> Result<u32, UserAccessError> {
-    extern "C" {
-        fn PsGetProcessWow64Process(process: *mut u8) -> u32;
-        fn KeStackAttachProcess(process: *mut u8, apc_state: *mut u8);
-        fn KeUnstackDetachProcess(apc_state: *mut u8);
-    }
-
     if crate::attaching::PS_GET_PROCESS_WOW64_PROCESS.is_none() {
         return Err(UserAccessError::OperationFailed);
     }
@@ -1149,11 +1102,6 @@ pub unsafe fn print_loaded_modules_x86(
 }
 
 pub unsafe fn is_wow64_process_by_eprocess(process: *mut u8) -> Result<bool, UserAccessError> {
-    extern "C" {
-        fn PsGetProcessWow64Process(process: *mut u8) -> u32;
-        fn PsGetProcessPeb(process: *mut u8) -> u64;
-    }
-
     if crate::attaching::PS_GET_PROCESS_WOW64_PROCESS.is_none() || crate::attaching::PS_GET_PROCESS_PEB.is_none() {
         return Err(UserAccessError::OperationFailed);
     }
@@ -1172,11 +1120,6 @@ pub unsafe fn is_wow64_process_by_eprocess(process: *mut u8) -> Result<bool, Use
 }
 
 pub unsafe fn is_wow64_process(process_id: u32) -> Result<bool, UserAccessError> {
-    extern "C" {
-        fn PsLookupProcessByProcessId(process_id: u32, eprocess: *mut *mut u8) -> u32;
-        fn ObDereferenceObject(object: *mut u8);
-    }
-
     let mut eprocess: *mut u8 = core::ptr::null_mut();
     let status = PsLookupProcessByProcessId(process_id, &mut eprocess);
 

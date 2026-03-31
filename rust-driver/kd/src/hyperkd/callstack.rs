@@ -3,6 +3,7 @@
 use alloc::vec::Vec;
 use alloc::boxed::Box;
 
+use crate::generated::*;
 use crate::hyperkd::hyperhv::memory::mapper::{check_address_safety, read_memory_safe, PAGE_SIZE};
 
 pub const MAXIMUM_CALL_INSTR_SIZE: usize = 5;
@@ -218,10 +219,6 @@ pub struct CallstackSymbolInfo {
 pub unsafe fn resolve_symbol(address: u64) -> CallstackSymbolInfo {
     let mut info = CallstackSymbolInfo::default();
     info.address = address;
-
-    extern "C" {
-        fn RtlPcToFileHeader(pc: u64, base_address: *mut u64) -> u64;
-    }
 
     let mut base_address: u64 = 0;
     RtlPcToFileHeader(address, &mut base_address);

@@ -1,3 +1,5 @@
+use crate::generated::*;
+
 use wdk_sys::{
     KIRQL,
     KDPC,
@@ -7,19 +9,6 @@ use wdk_sys::{
     PRKDPC,
     PVOID,
     USHORT,
-};
-
-use wdk_sys::ntddk::{
-    KeGetCurrentProcessorNumberEx,
-    KeQueryActiveProcessorCountEx,
-    KeSetSystemGroupAffinityThread,
-    KeRevertToUserAffinityThread,
-    KeGetCurrentIrql,
-    KfRaiseIrql,
-    KeLowerIrql,
-    KeInitializeDpc,
-    KeInsertQueueDpc,
-    KeQueryActiveProcessors,
 };
 
 pub const ALL_PROCESSOR_GROUPS: USHORT = 0xFFFF;

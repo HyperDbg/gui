@@ -5,6 +5,7 @@ use alloc::string::String;
 use alloc::vec::Vec;
 use spin::Mutex;
 
+use crate::generated::*;
 use crate::hyperkd::{ProcessId, Address};
 
 #[repr(C)]
@@ -94,20 +95,14 @@ impl ProcessInfo {
 }
 
 pub unsafe fn get_current_process() -> u64 {
-    use crate::ntapi::PsGetCurrentProcess;
     PsGetCurrentProcess() as u64
 }
 
 pub unsafe fn get_current_process_id() -> ProcessId {
-    use crate::ntapi::PsGetCurrentProcessId;
-    use crate::ntapi::HANDLE;
     PsGetCurrentProcessId() as ProcessId
 }
 
 pub unsafe fn lookup_process_by_id(process_id: ProcessId) -> Option<u64> {
-    use crate::ntapi::{PsLookupProcessByProcessId, ObDereferenceObject};
-    use crate::ntapi::{HANDLE, PEPROCESS, NTSTATUS};
-
     let mut eprocess: PEPROCESS = core::ptr::null_mut();
     let status: NTSTATUS = PsLookupProcessByProcessId(process_id as HANDLE, &mut eprocess);
 
@@ -132,9 +127,6 @@ pub unsafe fn get_process_name(process: u64) -> Option<String> {
         return None;
     }
 
-    use crate::ntapi::PsGetProcessImageFileName;
-    use crate::ntapi::PEPROCESS;
-
     let image_name_ptr = PsGetProcessImageFileName(process as PEPROCESS);
     if image_name_ptr.is_null() {
         return None;
@@ -157,9 +149,6 @@ pub unsafe fn get_process_base_address(process: u64) -> Option<u64> {
         return None;
     }
 
-    use crate::ntapi::PsGetProcessSectionBaseAddress;
-    use crate::ntapi::PEPROCESS;
-
     Some(PsGetProcessSectionBaseAddress(process as PEPROCESS) as u64)
 }
 
@@ -167,9 +156,6 @@ pub unsafe fn get_process_peb(process: u64) -> Option<u64> {
     if process == 0 {
         return None;
     }
-
-    use crate::ntapi::PsGetProcessPeb;
-    use crate::ntapi::PEPROCESS;
 
     let peb = PsGetProcessPeb(process as PEPROCESS);
     if peb.is_null() {
@@ -193,26 +179,39 @@ pub unsafe fn is_system_process(process: u64) -> bool {
 }
 
 pub unsafe fn dereference_process(process: u64) {
-    use crate::ntapi::ObDereferenceObject;
-
     if process != 0 {
         ObDereferenceObject(process as *mut core::ffi::c_void);
     }
 }
 
 pub unsafe fn get_process_list() -> Result<Vec<ProcessInfo>, ProcessError> {
-    use crate::ntapi::PsGetNextProcess;
-    use crate::ntapi::PEPROCESS;
-
     let mut process_list = Vec::new();
-    let mut current_process = PsGetNextProcess(core::ptr::null_mut());
-
-    while current_process != 0 {
-        let process_id = get_process_id_from_eprocess(current_process);
-        let parent_process_id = get_parent_process_id(current_process);
-        let base_address = get_process_base_address(current_process).unwrap_or(0);
-        let peb = get_process_peb(current_process).unwrap_or(0);
-        let name = get_process_name(current_process);
+    
+    // TODO: 当前硬编码偏移量，后期需要从 PDB 符号文件动态获取
+    // HyperDbg C 代码做法：加载 ntoskrnl.pdb，解析 _EPROCESS 结构体布局
+    // 参考文档：https://docs.hyperdbg.org/commands/meta-commands/.process
+    // Windows 10 21H2+ 偏移量：
+    //   - ActiveProcessLinks: 0x448
+    //   - UniqueProcessId: 0x440
+    //   - ImageFileName: 0x5a0 (使用 PsGetProcessImageFileName 替代)
+    let active_process_links_offset = 0x448usize;
+    
+    let system_process = PsGetCurrentProcess();
+    if system_process.is_null() {
+        return Ok(process_list);
+    }
+    
+    let first_entry = (system_process as *const u8).add(active_process_links_offset) as *const LIST_ENTRY;
+    let mut current_entry = (*first_entry).Flink as *const LIST_ENTRY;
+    
+    while current_entry != first_entry {
+        let eprocess = (current_entry as *const u8).sub(active_process_links_offset) as u64;
+        
+        let process_id = get_process_id_from_eprocess(eprocess);
+        let parent_process_id = get_parent_process_id(eprocess);
+        let base_address = get_process_base_address(eprocess).unwrap_or(0);
+        let peb = get_process_peb(eprocess).unwrap_or(0);
+        let name = get_process_name(eprocess);
 
         let mut name_bytes = [0u8; 16];
         if let Some(name_str) = name {
@@ -231,18 +230,23 @@ pub unsafe fn get_process_list() -> Result<Vec<ProcessInfo>, ProcessError> {
         };
 
         process_list.push(info);
-        current_process = PsGetNextProcess(current_process);
+        current_entry = (*current_entry).Flink as *const LIST_ENTRY;
     }
 
     Ok(process_list)
 }
 
 unsafe fn get_process_id_from_eprocess(eprocess: u64) -> ProcessId {
+    // TODO: 硬编码偏移量，后期从 PDB 动态获取
+    // Windows 10 21H2+: UniqueProcessId 偏移量 0x440
     let process_id_offset = 0x440;
     *((eprocess as *const u32).offset(process_id_offset as isize / 4))
 }
 
 unsafe fn get_parent_process_id(eprocess: u64) -> ProcessId {
+    // TODO: 硬编码偏移量，后期从 PDB 动态获取
+    // Windows 10 21H2+: InheritedFromUniqueProcessId 偏移量 0x448
+    // 注意：此偏移量与 ActiveProcessLinks 相同，因为它们在结构体中相邻
     let inherited_from_unique_process_id_offset = 0x448;
     *((eprocess as *const u32).offset(inherited_from_unique_process_id_offset as isize / 4))
 }
@@ -261,8 +265,6 @@ pub unsafe fn get_process_name_by_id(process_id: ProcessId, name_buffer: &mut [u
 }
 
 pub unsafe fn switch_to_process_context(process: u64) -> Result<(), ProcessError> {
-    use crate::ntapi::{KeStackAttachProcess, KAPC_STATE, PRKPROCESS, PRKAPC_STATE};
-
     if process == 0 {
         return Err(ProcessError::InvalidParameter);
     }
@@ -274,17 +276,11 @@ pub unsafe fn switch_to_process_context(process: u64) -> Result<(), ProcessError
 }
 
 pub unsafe fn detach_from_process_context() {
-    use crate::ntapi::{KeUnstackDetachProcess, KAPC_STATE, PRKAPC_STATE};
-
     let mut apc_state: KAPC_STATE = core::mem::zeroed();
     KeUnstackDetachProcess(&mut apc_state as PRKAPC_STATE);
 }
 
 pub unsafe fn terminate_process(process: u64, exit_status: i32) -> Result<(), ProcessError> {
-    extern "C" {
-        fn ZwTerminateProcess(process_handle: u64, exit_status: i32) -> i32;
-    }
-
     if process == 0 {
         return Err(ProcessError::InvalidParameter);
     }
@@ -298,9 +294,6 @@ pub unsafe fn terminate_process(process: u64, exit_status: i32) -> Result<(), Pr
 }
 
 pub unsafe fn suspend_process(process: u64) -> Result<(), ProcessError> {
-    use crate::ntapi::PsSuspendProcess;
-    use crate::ntapi::{PEPROCESS, NTSTATUS};
-
     if process == 0 {
         return Err(ProcessError::InvalidParameter);
     }
@@ -314,9 +307,6 @@ pub unsafe fn suspend_process(process: u64) -> Result<(), ProcessError> {
 }
 
 pub unsafe fn resume_process(process: u64) -> Result<(), ProcessError> {
-    use crate::ntapi::PsResumeProcess;
-    use crate::ntapi::{PEPROCESS, NTSTATUS};
-
     if process == 0 {
         return Err(ProcessError::InvalidParameter);
     }

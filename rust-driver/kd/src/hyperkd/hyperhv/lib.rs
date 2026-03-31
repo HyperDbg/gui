@@ -184,6 +184,8 @@ pub struct Vcpu {
     pub guest_fs: u16,
     pub guest_gs: u16,
     pub guest_ss: u16,
+    pub ept_pointer: crate::hyperkd::hyperhv::state::EPT_POINTER,
+    pub ept_page_table: *mut crate::hyperkd::hyperhv::state::VMM_EPT_PAGE_TABLE,
 }
 
 impl Vcpu {

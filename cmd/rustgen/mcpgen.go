@@ -158,7 +158,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ddkwork/HyperDbg"
+	"github.com/ddkwork/HyperDbg/debugger"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
@@ -281,7 +281,7 @@ func (s *{{$.ServerName}}) handle{{.Name}}(ctx context.Context, req *mcp.CallToo
 {{end}}
 
 func main() {
-	impl := debugger.NewPacket()
+	impl := debugger.NewPacket("http://127.0.0.1:50080")
 	server := New{{.ServerName}}(impl)
 
 	mcpServer := mcp.NewServer(&mcp.Implementation{

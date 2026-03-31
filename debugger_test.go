@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os/exec"
 	"testing"
 	"time"
 	"unsafe"
@@ -35,33 +34,16 @@ func TestRustDriverHTTP(t *testing.T) {
 	}
 	defer conn.Disconnect()
 
-	cmd := exec.Command("notepad.exe")
-	if err := cmd.Start(); err != nil {
-		t.Fatalf("启动记事本失败: %v", err)
+	notepadPID, err := conn.StartProcess("notepad.exe")
+	if err != nil {
+		t.Fatalf("StartProcess 失败: %v", err)
 	}
-	defer cmd.Process.Kill()
+	defer conn.KillProcess(notepadPID)
 
 	time.Sleep(500 * time.Millisecond)
 
 	if err := conn.LoadVmm(); err != nil {
 		t.Fatalf("LoadVmm 失败: %v", err)
-	}
-
-	processList, err := conn.GetProcessList()
-	if err != nil {
-		t.Fatalf("GetProcessList 失败: %v", err)
-	}
-
-	var notepadPID uint32
-	for _, proc := range processList {
-		if proc.ImageName == "notepad.exe" {
-			notepadPID = proc.ProcessID
-			break
-		}
-	}
-
-	if notepadPID == 0 {
-		t.Fatal("找不到记事本进程")
 	}
 
 	if err := conn.AttachProcess(notepadPID); err != nil {

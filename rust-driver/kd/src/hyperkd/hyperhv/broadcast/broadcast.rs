@@ -1,8 +1,7 @@
+use crate::generated::*;
 use alloc::boxed::Box;
 use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
 use spin::Mutex;
-
-use wdk_sys::ntddk::ExAllocatePool2;
 
 use crate::hyperkd::hyperhv::bindings::POOL_FLAG_NON_PAGED;
 
@@ -71,7 +70,7 @@ pub struct BroadcastManager {
 unsafe impl Send for BroadcastManager {}
 unsafe impl Sync for BroadcastManager {}
 
-unsafe fn broadcast_wrapper(context: *mut u8) {
+unsafe extern "C" fn broadcast_wrapper(_dpc: *mut KDPC, context: *mut core::ffi::c_void, _arg1: *mut core::ffi::c_void, _arg2: *mut core::ffi::c_void) {
     let dpc_context = &*(context as *const DpcContext);
     (dpc_context.callback)(dpc_context.context);
     (*dpc_context).set_completed(true);
@@ -121,10 +120,6 @@ impl BroadcastManager {
         self.active_broadcasts.fetch_add(1, Ordering::AcqRel);
 
         unsafe {
-            extern "C" {
-                fn KeGenericCallDpc(routine: *mut u8, context: *mut u8);
-            }
-
             let dpc_context = Box::new(DpcContext::new(callback, context));
             let dpc_ptr = Box::into_raw(dpc_context);
             self.dpc_contexts.push(dpc_ptr);
@@ -155,16 +150,6 @@ impl BroadcastManager {
         self.active_broadcasts.fetch_add(1, Ordering::AcqRel);
 
         unsafe {
-            extern "C" {
-                fn KeInitializeDpc(
-                    dpc: *mut u8,
-                    routine: *mut u8,
-                    context: *mut u8,
-                );
-                fn KeSetTargetProcessorDpc(dpc: *mut u8, number: i8);
-                fn KeInsertQueueDpc(dpc: *mut u8, param1: *mut u8, param2: *mut u8);
-            }
-
             let dpc_context = Box::new(DpcContext::new(callback, context));
             let dpc_ptr = Box::into_raw(dpc_context);
             self.dpc_contexts.push(dpc_ptr);
@@ -172,10 +157,10 @@ impl BroadcastManager {
             let dpc = self.allocate_dpc();
             KeInitializeDpc(
                 dpc,
-                broadcast_wrapper as *mut u8,
-                dpc_ptr as *mut u8,
+                Some(broadcast_wrapper),
+                dpc_ptr as *mut core::ffi::c_void,
             );
-            KeSetTargetProcessorDpc(dpc, core_id as i8);
+            KeSetTargetProcessorDpc(dpc, core_id as u8 as i8);
             KeInsertQueueDpc(dpc, core::ptr::null_mut(), core::ptr::null_mut());
         }
 
@@ -209,10 +194,10 @@ impl BroadcastManager {
         Ok(())
     }
 
-    fn allocate_dpc(&self) -> *mut u8 {
+    fn allocate_dpc(&self) -> *mut KDPC {
         const DPC_SIZE: usize = 64;
         unsafe {
-            ExAllocatePool2(POOL_FLAG_NON_PAGED, DPC_SIZE as u64, 0x44504442) as *mut u8
+            ExAllocatePool2(POOL_FLAG_NON_PAGED, DPC_SIZE as u64, 0x44504442) as *mut KDPC
         }
     }
 
@@ -230,9 +215,6 @@ impl BroadcastManager {
             }
 
             unsafe {
-                extern "C" {
-                    fn KeStallExecutionProcessor(microseconds: u32);
-                }
                 KeStallExecutionProcessor(1000);
             }
         }
@@ -241,9 +223,6 @@ impl BroadcastManager {
     pub fn wait_for_all_broadcasts(&self) {
         while self.active_broadcasts.load(Ordering::Acquire) > 0 {
             unsafe {
-                extern "C" {
-                    fn KeStallExecutionProcessor(microseconds: u32);
-                }
                 KeStallExecutionProcessor(1000);
             }
         }

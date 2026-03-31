@@ -5,6 +5,7 @@ use alloc::string::String;
 use alloc::vec::Vec;
 use spin::Mutex;
 
+use crate::generated::*;
 use crate::hyperkd::{ProcessId, ThreadId, Address};
 
 #[repr(C)]
@@ -127,19 +128,14 @@ impl ThreadState {
 }
 
 pub unsafe fn get_current_thread() -> u64 {
-    use crate::ntapi::PsGetCurrentThread;
     PsGetCurrentThread() as u64
 }
 
 pub unsafe fn get_current_thread_id() -> ThreadId {
-    use crate::ntapi::PsGetCurrentThreadId;
     PsGetCurrentThreadId() as ThreadId
 }
 
 pub unsafe fn lookup_thread_by_id(thread_id: ThreadId) -> Option<u64> {
-    use crate::ntapi::PsLookupThreadByThreadId;
-    use crate::ntapi::{HANDLE, PETHREAD, NTSTATUS};
-
     let mut ethread: PETHREAD = core::ptr::null_mut();
     let status: NTSTATUS = PsLookupThreadByThreadId(thread_id as HANDLE, &mut ethread);
 
@@ -185,9 +181,6 @@ pub unsafe fn get_thread_priority(thread: u64) -> Option<u32> {
         return None;
     }
 
-    use crate::ntapi::KeQueryPriorityThread;
-    use crate::ntapi::{PKTHREAD, KPRIORITY};
-
     Some(KeQueryPriorityThread(thread as PKTHREAD) as u32)
 }
 
@@ -221,17 +214,12 @@ pub unsafe fn is_thread_running(thread: u64) -> bool {
 }
 
 pub unsafe fn dereference_thread(thread: u64) {
-    use crate::ntapi::ObDereferenceObject;
-
     if thread != 0 {
         ObDereferenceObject(thread as *mut core::ffi::c_void);
     }
 }
 
 pub unsafe fn suspend_thread(thread: u64) -> Result<u32, ThreadError> {
-    use crate::ntapi::PsSuspendThread;
-    use crate::ntapi::{PETHREAD, NTSTATUS, ULONG};
-
     if thread == 0 {
         return Err(ThreadError::InvalidParameter);
     }
@@ -247,9 +235,6 @@ pub unsafe fn suspend_thread(thread: u64) -> Result<u32, ThreadError> {
 }
 
 pub unsafe fn resume_thread(thread: u64) -> Result<u32, ThreadError> {
-    use crate::ntapi::PsResumeThread;
-    use crate::ntapi::{PETHREAD, NTSTATUS, ULONG};
-
     if thread == 0 {
         return Err(ThreadError::InvalidParameter);
     }
@@ -265,9 +250,6 @@ pub unsafe fn resume_thread(thread: u64) -> Result<u32, ThreadError> {
 }
 
 pub unsafe fn terminate_thread(thread: u64, exit_status: i32) -> Result<(), ThreadError> {
-    use crate::ntapi::PsTerminateSystemThread;
-    use crate::ntapi::NTSTATUS;
-
     if thread == 0 {
         return Err(ThreadError::InvalidParameter);
     }
@@ -281,26 +263,37 @@ pub unsafe fn terminate_thread(thread: u64, exit_status: i32) -> Result<(), Thre
 }
 
 pub unsafe fn get_thread_list(process_id: ProcessId) -> Result<Vec<ThreadListDetails>, ThreadError> {
-    use crate::ntapi::PsGetNextProcessThread;
-    use crate::ntapi::{PEPROCESS, PETHREAD};
-
+    // TODO: 当前硬编码偏移量，后期需要从 PDB 符号文件动态获取
+    // HyperDbg C 代码做法：加载 ntoskrnl.pdb，解析 _EPROCESS 和 _ETHREAD 结构体布局
+    // Windows 10 21H2+ 偏移量：
+    //   - EPROCESS.ThreadListHead: 0x5e0
+    //   - ETHREAD.ThreadListEntry: 0x6b8
+    //   - ETHREAD.UniqueThread: 0x448
+    
     let process = crate::hyperkd::process::lookup_process_by_id(process_id)
         .ok_or(ThreadError::ProcessNotFound)?;
 
     let mut thread_list = Vec::new();
-    let mut current_thread = PsGetNextProcessThread(core::ptr::null_mut(), process as PEPROCESS);
-
-    while !current_thread.is_null() {
-        let thread_id = get_thread_id_from_ethread(current_thread as u64);
-        let start_address = get_thread_start_address(current_thread as u64).unwrap_or(0);
-        let stack_base = get_thread_stack_base(current_thread as u64).unwrap_or(0);
-        let stack_limit = get_thread_stack_limit(current_thread as u64).unwrap_or(0);
-        let priority = get_thread_priority(current_thread as u64).unwrap_or(0);
-        let state = get_thread_state(current_thread as u64) as u32;
+    
+    let thread_list_head_offset = 0x5e0usize;
+    let thread_list_entry_offset = 0x6b8usize;
+    
+    let first_entry = (process as *const u8).add(thread_list_head_offset) as *const LIST_ENTRY;
+    let mut current_entry = (*first_entry).Flink as *const LIST_ENTRY;
+    
+    while current_entry != first_entry {
+        let ethread = (current_entry as *const u8).sub(thread_list_entry_offset) as u64;
+        
+        let thread_id = get_thread_id_from_ethread(ethread);
+        let start_address = get_thread_start_address(ethread).unwrap_or(0);
+        let stack_base = get_thread_stack_base(ethread).unwrap_or(0);
+        let stack_limit = get_thread_stack_limit(ethread).unwrap_or(0);
+        let priority = get_thread_priority(ethread).unwrap_or(0);
+        let state = get_thread_state(ethread) as u32;
 
         let details = ThreadListDetails {
             thread_id,
-            thread_address: current_thread as u64,
+            thread_address: ethread,
             process_id,
             thread_name: [0; 16],
             start_address,
@@ -311,7 +304,7 @@ pub unsafe fn get_thread_list(process_id: ProcessId) -> Result<Vec<ThreadListDet
         };
 
         thread_list.push(details);
-        current_thread = PsGetNextProcessThread(current_thread, process as PEPROCESS);
+        current_entry = (*current_entry).Flink as *const LIST_ENTRY;
     }
 
     crate::hyperkd::process::dereference_process(process);
@@ -319,13 +312,13 @@ pub unsafe fn get_thread_list(process_id: ProcessId) -> Result<Vec<ThreadListDet
 }
 
 unsafe fn get_thread_id_from_ethread(thread: u64) -> ThreadId {
+    // TODO: 硬编码偏移量，后期从 PDB 动态获取
+    // Windows 10 21H2+: UniqueThread 偏移量 0x448
     let thread_id_offset = 0x448;
     *((thread as *const u32).offset(thread_id_offset as isize / 4))
 }
 
 pub unsafe fn set_thread_priority(thread: u64, priority: u32) -> Result<(), ThreadError> {
-    use crate::ntapi::{KeSetPriorityThread, PKTHREAD, KPRIORITY};
-
     if thread == 0 {
         return Err(ThreadError::InvalidParameter);
     }
@@ -335,9 +328,6 @@ pub unsafe fn set_thread_priority(thread: u64, priority: u32) -> Result<(), Thre
 }
 
 pub unsafe fn get_thread_context(thread: u64, context: &mut [u8]) -> Result<(), ThreadError> {
-    use crate::ntapi::PsGetContextThread;
-    use crate::ntapi::{PETHREAD, NTSTATUS};
-
     if thread == 0 {
         return Err(ThreadError::InvalidParameter);
     }
@@ -351,9 +341,6 @@ pub unsafe fn get_thread_context(thread: u64, context: &mut [u8]) -> Result<(), 
 }
 
 pub unsafe fn set_thread_context(thread: u64, context: &[u8]) -> Result<(), ThreadError> {
-    use crate::ntapi::PsSetContextThread;
-    use crate::ntapi::{PETHREAD, NTSTATUS};
-
     if thread == 0 {
         return Err(ThreadError::InvalidParameter);
     }

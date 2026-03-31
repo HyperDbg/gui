@@ -517,12 +517,12 @@ pub unsafe fn invept_single_context(eptp: u64) {
 
     let result: u8;
     core::arch::asm!(
-        "invept {0}, [{1}]",
-        "setna {2}",
-        in(reg) 1u64,
-        in(reg) &descriptor,
-        out(reg_byte) result,
-        options(nostack, att_syntax)
+        "invept {type}, [{desc}]",
+        "setna {res}",
+        type = in(reg) 1u64,
+        desc = in(reg) &descriptor,
+        res = out(reg_byte) result,
+        options(nostack)
     );
 }
 
@@ -534,12 +534,12 @@ pub unsafe fn invept_all_contexts() {
 
     let result: u8;
     core::arch::asm!(
-        "invept {0}, [{1}]",
-        "setna {2}",
-        in(reg) 2u64,
-        in(reg) &descriptor,
-        out(reg_byte) result,
-        options(nostack, att_syntax)
+        "invept {type}, [{desc}]",
+        "setna {res}",
+        type = in(reg) 2u64,
+        desc = in(reg) &descriptor,
+        res = out(reg_byte) result,
+        options(nostack)
     );
 }
 
@@ -558,10 +558,10 @@ pub unsafe fn invvpid_single_context(vpid: u16) {
     };
 
     core::arch::asm!(
-        "invvpid {0}, [{1}]",
-        in(reg) 1u64,
-        in(reg) &descriptor,
-        options(nostack, att_syntax)
+        "invvpid {type}, [{desc}]",
+        type = in(reg) 1u64,
+        desc = in(reg) &descriptor,
+        options(nostack)
     );
 }
 
@@ -573,10 +573,10 @@ pub unsafe fn invvpid_all_contexts() {
     };
 
     core::arch::asm!(
-        "invvpid {0}, [{1}]",
-        in(reg) 0u64,
-        in(reg) &descriptor,
-        options(nostack, att_syntax)
+        "invvpid {type}, [{desc}]",
+        type = in(reg) 0u64,
+        desc = in(reg) &descriptor,
+        options(nostack)
     );
 }
 

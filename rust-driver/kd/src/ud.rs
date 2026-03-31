@@ -230,6 +230,36 @@ impl UserDebugger {
         Ok(())
     }
 
+    pub fn start_process(&mut self, process_id: ProcessId) -> Result<u64, UdError> {
+        if !self.active {
+            return Err(UdError::NotActive);
+        }
+
+        let token = self.generate_debugging_token();
+        let process_details = ProcessDebuggingDetails::new(process_id, token);
+
+        self.process_debugging_details.push(Arc::new(Mutex::new(process_details)));
+
+        log::info!("Started process {} with token {}", process_id, token);
+        Ok(token)
+    }
+
+    pub fn kill_process(&mut self, process_id: ProcessId) -> Result<(), UdError> {
+        if !self.active {
+            return Err(UdError::NotActive);
+        }
+
+        let pos = self.process_debugging_details
+            .iter()
+            .position(|p| p.lock().process_id == process_id)
+            .ok_or(UdError::ProcessNotFound(process_id))?;
+
+        self.process_debugging_details.remove(pos);
+
+        log::info!("Killed process {}", process_id);
+        Ok(())
+    }
+
     pub fn find_process_by_token(&self, token: u64) -> Option<Arc<Mutex<ProcessDebuggingDetails>>> {
         self.process_debugging_details
             .iter()

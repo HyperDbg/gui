@@ -2,6 +2,7 @@
 
 use core::sync::atomic::{AtomicBool, Ordering};
 
+use crate::generated::*;
 use crate::hyperkd::hyperhv::state::{
     EPT_PML2_ENTRY,
     VMM_EPT_PML4E_COUNT, VMM_EPT_PML3E_COUNT, VMM_EPT_PML2E_COUNT,
@@ -48,17 +49,6 @@ pub unsafe fn exec_trap_set_uninitialization_started(started: bool) {
 }
 
 pub unsafe fn exec_trap_read_ram_physical_regions() {
-    extern "C" {
-        fn MmGetPhysicalMemoryRanges() -> *mut PhysicalMemoryRange;
-        fn ExFreePool(buffer: *mut core::ffi::c_void);
-    }
-
-    #[repr(C)]
-    struct PhysicalMemoryRange {
-        base_address: u64,
-        number_of_bytes: u64,
-    }
-
     let physical_memory_ranges = MmGetPhysicalMemoryRanges();
 
     if physical_memory_ranges.is_null() {
@@ -70,12 +60,12 @@ pub unsafe fn exec_trap_read_ram_physical_regions() {
     while count < MAX_PHYSICAL_RAM_RANGE_COUNT {
         let range = &*physical_memory_ranges.add(count);
 
-        if range.base_address == 0 && range.number_of_bytes == 0 {
+        if range.BaseAddress.QuadPart == 0 && range.NumberOfBytes.QuadPart == 0 {
             break;
         }
 
-        PHYSICAL_RAM_REGIONS[count].ram_physical_address = range.base_address;
-        PHYSICAL_RAM_REGIONS[count].ram_size = range.number_of_bytes;
+        PHYSICAL_RAM_REGIONS[count].ram_physical_address = range.BaseAddress.QuadPart as u64;
+        PHYSICAL_RAM_REGIONS[count].ram_size = range.NumberOfBytes.QuadPart as u64;
 
         count += 1;
     }
@@ -464,10 +454,9 @@ unsafe fn switch_to_previous_process(previous_cr3: u64) {
 }
 
 unsafe fn physical_address_to_virtual_address(pa: u64) -> u64 {
-    extern "C" {
-        fn MmGetVirtualForPhysical(physical_address: u64) -> u64;
-    }
-    MmGetVirtualForPhysical(pa)
+    let mut phys_addr: wdk_sys::PHYSICAL_ADDRESS = core::mem::zeroed();
+    phys_addr.QuadPart = pa as i64;
+    MmGetVirtualForPhysical(phys_addr) as u64
 }
 
 unsafe fn ept_invept_single_context(ept_pointer: u64) {

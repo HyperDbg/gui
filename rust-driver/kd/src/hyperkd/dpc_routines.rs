@@ -3,7 +3,7 @@
 use core::sync::atomic::{AtomicI32, AtomicU32, AtomicU64, Ordering};
 use spin::Mutex;
 
-use wdk_sys::ntddk::{ExAllocatePool2, ExFreePoolWithTag};
+use crate::generated::*;
 
 use crate::hyperkd::hyperhv::common::msr::{read_msr, write_msr};
 use crate::hyperkd::hyperhv::bindings::POOL_FLAG_NON_PAGED;
@@ -115,13 +115,6 @@ pub unsafe fn dpc_routine_run_on_all_cores(
     routine: unsafe extern "C" fn(*mut KDPC, *mut core::ffi::c_void, *mut core::ffi::c_void, *mut core::ffi::c_void),
     context: *mut core::ffi::c_void,
 ) -> Result<(), DpcError> {
-    extern "C" {
-        fn KeGenericCallDpc(
-            routine: unsafe extern "C" fn(*mut KDPC, *mut core::ffi::c_void, *mut core::ffi::c_void, *mut core::ffi::c_void),
-            context: *mut core::ffi::c_void,
-        );
-    }
-
     KeGenericCallDpc(routine, context);
     Ok(())
 }
@@ -310,62 +303,30 @@ unsafe fn initialize_dpc(
     routine: unsafe extern "C" fn(*mut KDPC, *mut core::ffi::c_void, *mut core::ffi::c_void, *mut core::ffi::c_void),
     context: *mut core::ffi::c_void,
 ) {
-    extern "C" {
-        fn KeInitializeDpc(
-            dpc: *mut KDPC,
-            routine: unsafe extern "C" fn(*mut KDPC, *mut core::ffi::c_void, *mut core::ffi::c_void, *mut core::ffi::c_void),
-            context: *mut core::ffi::c_void,
-        );
-    }
-
     KeInitializeDpc(dpc, routine, context);
 }
 
 unsafe fn set_target_processor_dpc(dpc: *mut KDPC, processor_number: i8) {
-    extern "C" {
-        fn KeSetTargetProcessorDpc(dpc: *mut KDPC, processor_number: i8);
-    }
-
     KeSetTargetProcessorDpc(dpc, processor_number);
 }
 
 unsafe fn insert_queue_dpc(dpc: *mut KDPC, system_argument1: *mut core::ffi::c_void, system_argument2: *mut core::ffi::c_void) {
-    extern "C" {
-        fn KeInsertQueueDpc(dpc: *mut KDPC, system_argument1: *mut core::ffi::c_void, system_argument2: *mut core::ffi::c_void) -> bool;
-    }
-
     KeInsertQueueDpc(dpc, system_argument1, system_argument2);
 }
 
-unsafe fn signal_call_dpc_done(system_argument1: *mut core::ffi::c_void) {
-    extern "C" {
-        fn KeSignalCallDpcDone(system_argument1: *mut core::ffi::c_void);
-    }
-
-    KeSignalCallDpcDone(system_argument1);
+unsafe fn signal_call_dpc_done(system_parameter1: *mut core::ffi::c_void) {
+    KeSignalCallDpcDone(system_parameter1);
 }
 
-unsafe fn signal_call_dpc_synchronize(system_argument2: *mut core::ffi::c_void) {
-    extern "C" {
-        fn KeSignalCallDpcSynchronize(system_argument2: *mut core::ffi::c_void);
-    }
-
-    KeSignalCallDpcSynchronize(system_argument2);
+unsafe fn signal_call_dpc_synchronize(system_parameter2: *mut core::ffi::c_void) {
+    KeSignalCallDpcSynchronize(system_parameter2);
 }
 
 pub fn get_processor_count() -> u32 {
-    extern "C" {
-        fn KeQueryActiveProcessorCount(relationship_info: *mut core::ffi::c_void) -> u32;
-    }
-
     unsafe { KeQueryActiveProcessorCount(core::ptr::null_mut()) }
 }
 
 pub fn get_current_processor_number() -> u32 {
-    extern "C" {
-        fn KeGetCurrentProcessorNumberEx(info: *mut core::ffi::c_void) -> u32;
-    }
-
     unsafe { KeGetCurrentProcessorNumberEx(core::ptr::null_mut()) }
 }
 
@@ -478,14 +439,9 @@ pub unsafe fn dpc_perform_task_on_core(
 }
 
 pub fn dpc_synchronize_all_cores() -> Result<(), DpcError> {
-    extern "C" {
-        fn KeFlushQueuedDpcs();
-    }
-
     unsafe {
         KeFlushQueuedDpcs();
     }
-
     Ok(())
 }
 
@@ -1129,14 +1085,14 @@ pub unsafe fn dpc_routine_invalidate_ept_on_all_cores(
     if deferred_context.is_null() {
         asm_vmx_vmcall(VmcallNumber::InveptAllContexts as u64, 0, 0, 0);
     } else {
-        extern "C" {
-            static mut g_GuestState: *mut u8;
-        }
+        use super::hyperhv::globals::GUEST_STATE;
         let current_core = get_current_processor_number();
-        if !g_GuestState.is_null() {
-            let guest_state = g_GuestState.add(current_core as usize * core::mem::size_of::<VIRTUAL_MACHINE_STATE>());
-            let ept_pointer = (*guest_state).ept_pointer.value;
-            asm_vmx_vmcall(VmcallNumber::InveptSingleContext as u64, ept_pointer, 0, 0);
+        let guest_state = GUEST_STATE.lock();
+        if let Some(ref vcpus) = *guest_state {
+            if let Some(vcpu) = vcpus.get(current_core as usize) {
+                let ept_pointer = vcpu.ept_pointer.value;
+                asm_vmx_vmcall(VmcallNumber::InveptSingleContext as u64, ept_pointer, 0, 0);
+            }
         }
     }
     signal_call_dpc_synchronize(system_argument2);

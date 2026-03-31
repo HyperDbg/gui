@@ -6,6 +6,7 @@ use alloc::vec::Vec;
 use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
 
+use crate::generated::*;
 use crate::hyperkd::{ProcessId, ThreadId, Address};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -260,8 +261,6 @@ impl CommandManager {
     }
 
     unsafe fn read_physical_memory(&self, address: u64, buffer: &mut [u8], size: usize) -> bool {
-        use crate::ntapi::{MmGetVirtualForPhysical, MmIsAddressValid};
-
         let va = MmGetVirtualForPhysical(address);
         if va.is_null() || !MmIsAddressValid(va) {
             return false;
@@ -272,9 +271,6 @@ impl CommandManager {
     }
 
     unsafe fn read_virtual_memory(&self, pid: u32, address: u64, buffer: &mut [u8], size: usize) -> bool {
-        use crate::ntapi::{PsLookupProcessByProcessId, ObDereferenceObject, KeStackAttachProcess, KeUnstackDetachProcess, MmIsAddressValid};
-        use crate::ntapi::{HANDLE, PEPROCESS, PRKPROCESS, PRKAPC_STATE, KAPC_STATE, NTSTATUS};
-
         if pid == 0 || pid == DEBUGGEE_BP_APPLY_TO_ALL_PROCESSES {
             if MmIsAddressValid(address as *mut core::ffi::c_void) {
                 core::ptr::copy_nonoverlapping(address as *const u8, buffer.as_mut_ptr(), size);
@@ -341,9 +337,6 @@ impl CommandManager {
         data: &[u8],
         chunk_size: u32,
     ) -> Result<(), CommandError> {
-        use crate::ntapi::{PsLookupProcessByProcessId, ObDereferenceObject, KeStackAttachProcess, KeUnstackDetachProcess, MmIsAddressValid};
-        use crate::ntapi::{HANDLE, PEPROCESS, PRKPROCESS, PRKAPC_STATE, KAPC_STATE, NTSTATUS};
-
         let attached = if request.process_id != 0 && request.process_id != DEBUGGEE_BP_APPLY_TO_ALL_PROCESSES {
             let mut eprocess: PEPROCESS = core::ptr::null_mut();
             let status: NTSTATUS = PsLookupProcessByProcessId(request.process_id as HANDLE, &mut eprocess);
@@ -413,8 +406,6 @@ impl CommandManager {
         data: &[u8],
         chunk_size: u32,
     ) -> Result<(), CommandError> {
-        use crate::ntapi::{MmGetVirtualForPhysical, MmIsAddressValid};
-
         for i in 0..request.count_of_64_chunks {
             let dest_addr = request.address + (i as u64) * (chunk_size as u64);
             let src_offset = (i as usize) * (chunk_size as usize);

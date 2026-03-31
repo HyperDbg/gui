@@ -1,3 +1,4 @@
+use crate::generated::*;
 use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
 
@@ -378,9 +379,6 @@ impl Scheduler {
             }
 
             unsafe {
-                extern "C" {
-                    fn KeStallExecutionProcessor(microseconds: u32);
-                }
                 KeStallExecutionProcessor(1000);
             }
         }

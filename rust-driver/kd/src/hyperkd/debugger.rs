@@ -6,6 +6,7 @@ use alloc::vec::Vec;
 use alloc::string::String;
 use spin::Mutex;
 
+use crate::generated::*;
 use crate::hyperkd::{ProcessId, ThreadId, Address, VmxError};
 use crate::hyperkd::attaching::{UsermodeDebuggingProcessDetails, attaching_find_process_debugging_details_by_process_id};
 
@@ -204,8 +205,6 @@ impl DebuggerCore {
         let mut bytes_read: usize = 0;
 
         unsafe {
-            use crate::ntapi::{PsLookupProcessByProcessId, ObDereferenceObject, KeStackAttachProcess, KeUnstackDetachProcess, MmIsAddressValid};
-            use crate::ntapi::{HANDLE, PEPROCESS, PRKPROCESS, PRKAPC_STATE, KAPC_STATE, NTSTATUS};
 
             let mut eprocess: PEPROCESS = core::ptr::null_mut();
             let status: NTSTATUS = PsLookupProcessByProcessId(process_id as HANDLE, &mut eprocess);
@@ -240,8 +239,6 @@ impl DebuggerCore {
         let process_id = self.current_process.lock().ok_or(DebuggerError::NoProcess)?;
 
         unsafe {
-            use crate::ntapi::{PsLookupProcessByProcessId, ObDereferenceObject, KeStackAttachProcess, KeUnstackDetachProcess, MmIsAddressValid};
-            use crate::ntapi::{HANDLE, PEPROCESS, PRKPROCESS, PRKAPC_STATE, KAPC_STATE, NTSTATUS};
 
             let mut eprocess: PEPROCESS = core::ptr::null_mut();
             let status: NTSTATUS = PsLookupProcessByProcessId(process_id as HANDLE, &mut eprocess);

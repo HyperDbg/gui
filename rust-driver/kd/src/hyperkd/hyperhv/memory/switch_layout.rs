@@ -1,4 +1,4 @@
-use wdk_sys::ntddk::PsLookupProcessByProcessId;
+use crate::generated::*;
 use wdk_sys::{HANDLE, PEPROCESS, PVOID};
 
 use crate::hyperkd::hyperhv::vmm::vmx::vmx::{read_cr3 as vmx_read_cr3, write_cr3 as vmx_write_cr3};
@@ -25,9 +25,6 @@ impl Cr3Type {
 }
 
 unsafe fn ob_dereference_object(object: PVOID) {
-    extern "C" {
-        fn ObfDereferenceObject(Object: PVOID) -> isize;
-    }
     ObfDereferenceObject(object);
 }
 
@@ -51,10 +48,6 @@ pub unsafe fn switch_to_process_memory_layout(process_id: u32) -> Option<Cr3Type
 }
 
 pub unsafe fn switch_to_current_process_memory_layout() -> Option<Cr3Type> {
-    extern "C" {
-        fn PsGetCurrentProcess() -> *mut u8;
-    }
-
     let current_process = PsGetCurrentProcess();
     let guest_cr3 = *((current_process as *const u64).offset(0x28));
     
@@ -78,10 +71,6 @@ pub unsafe fn switch_to_previous_process(previous_process: Cr3Type) {
 }
 
 pub unsafe fn get_current_process_cr3() -> Cr3Type {
-    extern "C" {
-        fn PsGetCurrentProcess() -> *mut u8;
-    }
-
     let current_process = PsGetCurrentProcess();
     let guest_cr3 = *((current_process as *const u64).offset(0x28));
     

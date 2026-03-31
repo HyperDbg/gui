@@ -9,7 +9,9 @@ import (
 	"io"
 	"net/http"
 	"sync/atomic"
+	"syscall"
 	"time"
+	"unsafe"
 
 	"github.com/ddkwork/golibrary/std/mylog"
 )
@@ -244,6 +246,96 @@ func (p *Packet) DetachProcess() error {
 	resp := SendReceive[Empty](p, data)
 	if resp == nil || !resp.Success {
 		return fmt.Errorf("detach process failed: %s", resp.Message)
+	}
+	return nil
+}
+
+func (p *Packet) StartProcess(exePath string) (uint32, error) {
+	type ProcessInformation struct {
+		ProcessHandle uintptr
+		ThreadHandle  uintptr
+		ProcessID     uint32
+		ThreadID      uint32
+	}
+
+	type StartupInfo struct {
+		Cb    uint32
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		Flags uint32
+		_     uint16
+		_     uint16
+		_     uintptr
+		_     uintptr
+		_     uintptr
+		_     uintptr
+	}
+
+	const CREATE_SUSPENDED = 0x00000004
+
+	var si StartupInfo
+	si.Cb = uint32(unsafe.Sizeof(si))
+	var pi ProcessInformation
+
+	cmdLinePtr, _ := syscall.UTF16PtrFromString(exePath)
+
+	ret, _, err := syscall.NewLazyDLL("kernel32.dll").NewProc("CreateProcessW").Call(
+		0,
+		uintptr(unsafe.Pointer(cmdLinePtr)),
+		0, 0, 0,
+		CREATE_SUSPENDED,
+		0, 0,
+		uintptr(unsafe.Pointer(&si)),
+		uintptr(unsafe.Pointer(&pi)),
+	)
+
+	if ret == 0 {
+		return 0, fmt.Errorf("CreateProcess failed: %v", err)
+	}
+
+	data := mylog.Check2(json.Marshal(map[string]any{
+		"action":     "start_process",
+		"process_id": fmt.Sprintf("%d", pi.ProcessID),
+		"thread_id":  fmt.Sprintf("%d", pi.ThreadID),
+		"exe_path":   exePath,
+	}))
+	resp := SendReceive[Empty](p, data)
+	if resp == nil || !resp.Success {
+		syscall.CloseHandle(syscall.Handle(pi.ProcessHandle))
+		syscall.CloseHandle(syscall.Handle(pi.ThreadHandle))
+		return 0, fmt.Errorf("start process failed: %s", resp.Message)
+	}
+
+	ret, _, _ = syscall.NewLazyDLL("kernel32.dll").NewProc("ResumeThread").Call(pi.ThreadHandle)
+	_ = ret
+
+	syscall.CloseHandle(syscall.Handle(pi.ProcessHandle))
+	syscall.CloseHandle(syscall.Handle(pi.ThreadHandle))
+
+	return pi.ProcessID, nil
+}
+
+func (p *Packet) KillProcess(processID uint32) error {
+	data := mylog.Check2(json.Marshal(map[string]any{
+		"action":     "kill_process",
+		"process_id": fmt.Sprintf("%d", processID),
+	}))
+	resp := SendReceive[Empty](p, data)
+	if resp == nil || !resp.Success {
+		return fmt.Errorf("kill process failed: %s", resp.Message)
 	}
 	return nil
 }

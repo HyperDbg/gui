@@ -8,7 +8,7 @@
 use super::*;
 
 // Args structs for each hooked API
-// All types are directly from wdk_sys via ntapi::types
+// All types are directly from wdk_sys via generated::types
 
 /// Arguments for DbgBreakPointWithStatus
 #[repr(C)]

@@ -22,6 +22,8 @@ type Debugger interface {
 	UnloadVmm() error
 	AttachProcess(processID uint32) error
 	DetachProcess() error
+	StartProcess(exePath string) (uint32, error)
+	KillProcess(processID uint32) error
 	SetBreakpoint(address uint64, bpType BreakpointType) error
 	RemoveBreakpoint(breakpointID uint64) error
 	Continue() error

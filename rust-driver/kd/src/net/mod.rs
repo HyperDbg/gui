@@ -5,6 +5,7 @@ extern crate alloc;
 extern crate wdk_panic;
 
 use crate::{log_info, log_error, log_success, log_warn};
+use crate::generated::*;
 use wdk;
 
 use core::ptr;
@@ -145,13 +146,6 @@ pub struct SockaddrIn6 {
     pub sin6_flowinfo: u32,
     pub sin6_addr: [u8; 16],
     pub sin6_scope_id: u32,
-}
-
-extern "system" { // WSK network API - WDK missing bindings
-    pub fn WskRegister(WskClientNpi: *const ClientNpi, WskRegistration: *mut Registration) -> NTSTATUS; // WDK missing
-    pub fn WskCaptureProviderNPI(WskRegistration: *mut Registration, WaitTimeout: ULONG, WskProviderNpi: *mut ProviderNpi) -> NTSTATUS; // WDK missing
-    pub fn WskReleaseProviderNPI(WskRegistration: *mut Registration); // WDK missing
-    pub fn WskDeregister(WskRegistration: *mut Registration); // WDK missing
 }
 
 pub type Handler = unsafe extern "C" fn(*mut ResponseWriter, *mut Request);
@@ -629,7 +623,7 @@ impl Server {
         self.ListeningContext = socket_context;
 
         let wsk_client = ClientNpi { ClientContext: ptr::null_mut(), Dispatch: &self.ClientDispatch };
-        let status = WskRegister(&wsk_client, &mut self.Registration);
+        let status = WskRegister(&wsk_client as *const _ as *const core::ffi::c_void, &mut self.Registration as *mut _ as *mut core::ffi::c_void);
         log_info!("[ListenAndServe] WskRegister status: 0x{:X}", status);
         if status != STATUS_SUCCESS {
             log_error!("[ListenAndServe] Failed to register WSK client: 0x{:X}", status);
@@ -641,7 +635,7 @@ impl Server {
         log_info!("[ListenAndServe] start_work_queue status: 0x{:X}", status);
         if status != STATUS_SUCCESS {
             log_error!("[ListenAndServe] Failed to start work queue: 0x{:X}", status);
-            WskDeregister(&mut self.Registration);
+            WskDeregister(&mut self.Registration as *mut _ as *mut core::ffi::c_void);
             free_socket_context(socket_context, self.PoolTag);
             return status;
         }
@@ -690,7 +684,7 @@ impl Server {
             }
         }
         
-        WskDeregister(&mut self.Registration);
+        WskDeregister(&mut self.Registration as *mut _ as *mut core::ffi::c_void);
         stop_work_queue(&mut self.WorkQueue);
     }
 }
@@ -720,13 +714,13 @@ unsafe extern "C" fn op_start_listen(op_ctx: *mut SocketOpContext) {
     let server = (work_queue as usize - core::mem::offset_of!(Server, WorkQueue)) as *mut Server;
     log_info!("[op_start_listen] Server: {:?}", server);
     log_info!("[op_start_listen] Capturing WSK provider NPI");
-    let status = WskCaptureProviderNPI(&mut (*server).Registration, WSK_INFINITE_WAIT, &mut provider_npi);
+    let status = WskCaptureProviderNPI(&mut (*server).Registration as *mut _ as *mut core::ffi::c_void, WSK_INFINITE_WAIT, &mut provider_npi as *mut _ as *mut core::ffi::c_void);
     log_info!("[op_start_listen] WskCaptureProviderNPI status: 0x{:X}", status);
     if status == STATUS_SUCCESS {
         log_success!("[op_start_listen] WSK provider NPI captured successfully");
         log_info!("[op_start_listen] Provider NPI captured");
         setup_listening_socket(&provider_npi, op_ctx, server);
-        WskReleaseProviderNPI(&mut (*server).Registration);
+        WskReleaseProviderNPI(&mut (*server).Registration as *mut _ as *mut core::ffi::c_void);
         log_info!("[op_start_listen] WSK provider NPI released");
         if (*socket_context).Socket as usize != 0 {
             log_success!("[op_start_listen] Listening socket created, starting to accept connections");

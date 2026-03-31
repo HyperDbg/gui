@@ -37,14 +37,14 @@ func main() {
 		os.Exit(0)
 	}()
 
-	packet := debugger.NewPacket()
-	if err := packet.Start(); err != nil {
-		fmt.Printf("Packet start failed: %v\n", err)
+	packet := debugger.NewPacket("http://127.0.0.1:50080")
+	if err := packet.Connect(); err != nil {
+		fmt.Printf("Connect failed: %v\n", err)
 		p.Stop()
 		p.Uninstall()
 		os.Exit(1)
 	}
-	defer packet.Stop()
+	defer packet.Disconnect()
 
 	fmt.Println("Debugger initialized successfully")
 

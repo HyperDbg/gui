@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-
+use crate::generated::*;
 use crate::hyperkd::hyperhv::vmm::vmx::vmx::read_cr3;
 
 pub const PAGE_SIZE: usize = 4096;
@@ -188,10 +188,9 @@ pub unsafe fn virtual_address_to_physical_address(va: u64) -> u64 {
 }
 
 pub unsafe fn physical_address_to_virtual_address(pa: u64) -> u64 {
-    extern "C" {
-        fn MmGetVirtualForPhysical(physical_address: u64) -> u64;
-    }
-    MmGetVirtualForPhysical(pa)
+    let mut phys_addr: wdk_sys::PHYSICAL_ADDRESS = core::mem::zeroed();
+    phys_addr.QuadPart = pa as i64;
+    MmGetVirtualForPhysical(phys_addr) as u64
 }
 
 pub unsafe fn get_pte(va: u64, level: PagingLevel) -> *mut PageTableEntry {
@@ -279,15 +278,11 @@ pub unsafe fn check_address_safety(va: u64, size: usize) -> bool {
         return false;
     }
 
-    extern "C" {
-        fn MmIsAddressValid(virtual_address: u64) -> bool;
-    }
-
     let mut current_va = va;
     let end_va = va.saturating_add(size as u64);
 
     while current_va < end_va {
-        if !MmIsAddressValid(current_va) {
+        if MmIsAddressValid(current_va as *mut core::ffi::c_void) == 0 {
             return false;
         }
         current_va += PAGE_SIZE as u64;

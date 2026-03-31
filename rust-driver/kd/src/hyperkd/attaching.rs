@@ -5,15 +5,12 @@ use alloc::vec::Vec;
 use core::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use spin::Mutex;
 
-use wdk_sys::ntddk::PsLookupProcessByProcessId;
+use crate::generated::*;
 use wdk_sys::{HANDLE, PEPROCESS, PVOID};
 
 use crate::hyperkd::{ProcessId, ThreadId};
 
 unsafe fn ob_dereference_object(object: PVOID) {
-    extern "C" {
-        fn ObfDereferenceObject(Object: PVOID) -> isize;
-    }
     ObfDereferenceObject(object);
 }
 
@@ -277,16 +274,10 @@ pub unsafe fn attaching_check_thread_interception(_core_id: u32) -> bool {
 }
 
 pub fn get_current_process_id() -> ProcessId {
-    extern "C" {
-        fn PsGetCurrentProcessId() -> u64;
-    }
     unsafe { PsGetCurrentProcessId() as ProcessId }
 }
 
 pub fn get_current_thread_id() -> ThreadId {
-    extern "C" {
-        fn PsGetCurrentThreadId() -> u64;
-    }
     unsafe { PsGetCurrentThreadId() as ThreadId }
 }
 
@@ -295,10 +286,6 @@ static mut PS_GET_PROCESS_WOW64_ADDRESS: u64 = 0;
 
 pub unsafe fn get_ps_get_process_peb_address() -> u64 {
     if PS_GET_PROCESS_PEB_ADDRESS == 0 {
-        extern "C" {
-            fn MmGetSystemRoutineAddress(name: *const u16) -> u64;
-        }
-
         let name: [u16; 16] = [
             'P' as u16, 's' as u16, 'G' as u16, 'e' as u16, 't' as u16,
             'P' as u16, 'r' as u16, 'o' as u16, 'c' as u16, 'e' as u16,
@@ -306,17 +293,19 @@ pub unsafe fn get_ps_get_process_peb_address() -> u64 {
             0,
         ];
 
-        PS_GET_PROCESS_PEB_ADDRESS = MmGetSystemRoutineAddress(name.as_ptr());
+        let mut uni_name = wdk_sys::UNICODE_STRING {
+            Length: (14 * 2) as u16,
+            MaximumLength: (15 * 2) as u16,
+            Buffer: name.as_ptr() as *mut u16,
+        };
+
+        PS_GET_PROCESS_PEB_ADDRESS = MmGetSystemRoutineAddress(&mut uni_name) as u64;
     }
     PS_GET_PROCESS_PEB_ADDRESS
 }
 
 pub unsafe fn get_ps_get_process_wow64_address() -> u64 {
     if PS_GET_PROCESS_WOW64_ADDRESS == 0 {
-        extern "C" {
-            fn MmGetSystemRoutineAddress(name: *const u16) -> u64;
-        }
-
         let name: [u16; 25] = [
             'P' as u16, 's' as u16, 'G' as u16, 'e' as u16, 't' as u16,
             'P' as u16, 'r' as u16, 'o' as u16, 'c' as u16, 'e' as u16,
@@ -326,7 +315,13 @@ pub unsafe fn get_ps_get_process_wow64_address() -> u64 {
             0,
         ];
 
-        PS_GET_PROCESS_WOW64_ADDRESS = MmGetSystemRoutineAddress(name.as_ptr());
+        let mut uni_name = wdk_sys::UNICODE_STRING {
+            Length: (23 * 2) as u16,
+            MaximumLength: (24 * 2) as u16,
+            Buffer: name.as_ptr() as *mut u16,
+        };
+
+        PS_GET_PROCESS_WOW64_ADDRESS = MmGetSystemRoutineAddress(&mut uni_name) as u64;
     }
     PS_GET_PROCESS_WOW64_ADDRESS
 }
@@ -348,7 +343,6 @@ pub fn set_waiting_for_return_from_page_fault(waiting: bool) {
 }
 
 pub unsafe fn attaching_adjust_nop_sled_buffer(reserved_address: u64, process_id: ProcessId) -> bool {
-    use wdk_sys::ntddk::{KeStackAttachProcess, KeUnstackDetachProcess};
     use wdk_sys::{PRKPROCESS, PRKAPC_STATE};
 
     let mut eprocess: PEPROCESS = core::ptr::null_mut();

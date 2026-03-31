@@ -68,31 +68,6 @@ type ValidationReport struct {
 	Statistics     map[string]int
 }
 
-type WdkUsage struct {
-	File         string
-	Line         int
-	Kind         string
-	Name         string
-	SourceType   string
-	NeedsFix     bool
-	SuggestedFix string
-}
-
-type FixReport struct {
-	FilesScanned   int
-	TotalUsages    int
-	NeedsFix       int
-	Usages         []WdkUsage
-	FilesWithFixes map[string][]WdkUsage
-}
-
-type IUsageScanner interface {
-	ScanProjectUsage(projectRoot string, excludeDirs []string) error
-	GetFixReport() *FixReport
-	GenerateUsageReport(outputPath string) error
-	ApplyFixes() error
-}
-
 type BindgenConfig struct {
 	ProjectRoot    string
 	WdkBindingsDir string
@@ -127,7 +102,6 @@ type IReportGenerator interface {
 	GenerateTypesGoMap(outputPath string) error
 	GenerateConstantsGoMap(outputPath string) error
 	GenerateValidationReport(outputPath string) error
-	GenerateFixSuggestions(outputPath string) error
 }
 
 type IBindgen interface {
@@ -142,20 +116,18 @@ type IBindgen interface {
 }
 
 type Bindgen struct {
-	config    BindgenConfig
-	wdk       *WdkBindings
-	externs   *RustExterns
-	report    *ValidationReport
-	fixReport *FixReport
+	config  BindgenConfig
+	wdk     *WdkBindings
+	externs *RustExterns
+	report  *ValidationReport
 }
 
 func NewBindgen(config BindgenConfig) *Bindgen {
 	return &Bindgen{
-		config:    config,
-		wdk:       &WdkBindings{Functions: make(map[string]FunctionSignature)},
-		externs:   &RustExterns{Functions: make(map[string][]ExternFunction)},
-		report:    &ValidationReport{Statistics: make(map[string]int)},
-		fixReport: &FixReport{FilesWithFixes: make(map[string][]WdkUsage)},
+		config:  config,
+		wdk:     &WdkBindings{Functions: make(map[string]FunctionSignature)},
+		externs: &RustExterns{Functions: make(map[string][]ExternFunction)},
+		report:  &ValidationReport{Statistics: make(map[string]int)},
 	}
 }
 
@@ -784,47 +756,6 @@ func (b *Bindgen) GenerateValidationReport(outputPath string) error {
 	return os.WriteFile(outputPath, []byte(sb.String()), 0o644)
 }
 
-func (b *Bindgen) GenerateFixSuggestions(outputPath string) error {
-	var sb strings.Builder
-	sb.WriteString("// Auto-generated fix suggestions - DO NOT EDIT\n\n")
-	sb.WriteString("=== SUGGESTED FIXES FOR RUST EXTERN DECLARATIONS ===\n\n")
-
-	sb.WriteString("## Functions that should use wdk_sys::ntddk\n\n")
-
-	var availableFuncs []string
-	for name := range b.externs.Functions {
-		if _, exists := b.wdk.Functions[name]; exists {
-			availableFuncs = append(availableFuncs, name)
-		}
-	}
-	sort.Strings(availableFuncs)
-
-	for _, name := range availableFuncs {
-		funcs := b.externs.Functions[name]
-		sb.WriteString(fmt.Sprintf("### %s\n", name))
-		sb.WriteString(fmt.Sprintf("// Found in WDK: use `use wdk_sys::ntddk::%s;`\n", name))
-		sb.WriteString("// Files to update:\n")
-		for _, f := range funcs {
-			sb.WriteString(fmt.Sprintf("//   - %s:%d\n", f.File, f.Line))
-		}
-		sb.WriteString("\n")
-	}
-
-	sb.WriteString("// Functions NOT in WDK bindings (need manual declaration)\n\n")
-
-	for _, name := range b.report.NotExported {
-		funcs := b.externs.Functions[name]
-		sb.WriteString(fmt.Sprintf("### %s\n", name))
-		sb.WriteString("// Not exported by WDK - add to ntapi/mod.rs\n")
-		for _, f := range funcs {
-			sb.WriteString(fmt.Sprintf("//   - %s:%d\n", f.File, f.Line))
-		}
-		sb.WriteString("\n")
-	}
-
-	return os.WriteFile(outputPath, []byte(sb.String()), 0o644)
-}
-
 func (b *Bindgen) GetWdkBindings() *WdkBindings {
 	return b.wdk
 }
@@ -837,7 +768,7 @@ func (b *Bindgen) GetReport() *ValidationReport {
 	return b.report
 }
 
-func (b *Bindgen) generateNtapiApi(outputDir string, notExportedFunctions []NotExportedFunc) error {
+func (b *Bindgen) generateNtddkApi(outputDir string, notExportedFunctions []NotExportedFunc) error {
 	var sb strings.Builder
 	sb.WriteString("#![allow(non_snake_case)]\n")
 	sb.WriteString("#![allow(dead_code)]\n")
@@ -889,7 +820,7 @@ func (b *Bindgen) generateNtapiApi(outputDir string, notExportedFunctions []NotE
 	return os.WriteFile(filepath.Join(outputDir, "ntddk.rs"), []byte(sb.String()), 0o644)
 }
 
-func (b *Bindgen) generateNtapiTypes(outputDir string) error {
+func (b *Bindgen) generateTypes(outputDir string) error {
 	var sb strings.Builder
 	sb.WriteString("#![allow(non_snake_case)]\n")
 	sb.WriteString("#![allow(dead_code)]\n\n")
@@ -928,7 +859,7 @@ func (b *Bindgen) generateNtapiTypes(outputDir string) error {
 	return os.WriteFile(filepath.Join(outputDir, "types.rs"), []byte(sb.String()), 0o644)
 }
 
-func (b *Bindgen) generateNtapiConstants(outputDir string) error {
+func (b *Bindgen) generateConstants(outputDir string) error {
 	var sb strings.Builder
 	sb.WriteString("#![allow(non_snake_case)]\n")
 	sb.WriteString("#![allow(dead_code)]\n")
@@ -970,391 +901,33 @@ type NotExportedFunc struct {
 	ReturnType string
 }
 
-func (b *Bindgen) ScanProjectUsage(projectRoot string, excludeDirs []string) error {
-	b.fixReport = &FixReport{
-		FilesWithFixes: make(map[string][]WdkUsage),
+func getPredefinedNotExportedFuncs() []NotExportedFunc {
+	return []NotExportedFunc{
+		{Name: "KeGenericCallDpc", Params: "routine: *mut u8, context: *mut u8", ReturnType: ""},
+		{Name: "KeSignalCallDpcDone", Params: "system_argument1: *mut core::ffi::c_void", ReturnType: ""},
+		{Name: "KeSignalCallDpcSynchronize", Params: "system_argument2: *mut core::ffi::c_void", ReturnType: ""},
+		{Name: "ObDereferenceObject", Params: "object: *mut u8", ReturnType: ""},
+		{Name: "PsGetCurrentProcess", Params: "", ReturnType: "*mut u8"},
+		{Name: "PsGetProcessPeb", Params: "process: *mut u8", ReturnType: "u64"},
+		{Name: "PsGetProcessWow64Process", Params: "process: *mut u8", ReturnType: "u32"},
+		{Name: "RtlPcToFileHeader", Params: "pc: u64, base_address: *mut u64", ReturnType: "u64"},
+		{Name: "PsGetNextProcess", Params: "process: PEPROCESS", ReturnType: "PEPROCESS"},
+		{Name: "PsGetProcessImageFileName", Params: "process: PEPROCESS", ReturnType: "*mut i8"},
+		{Name: "PsGetNextProcessThread", Params: "Process: PEPROCESS, Thread: PETHREAD", ReturnType: "PETHREAD"},
+		{Name: "PsGetThreadTeb", Params: "Thread: PETHREAD", ReturnType: "u64"},
+		{Name: "PsTerminateProcess", Params: "Process: PEPROCESS, ExitStatus: NTSTATUS", ReturnType: "NTSTATUS"},
+		{Name: "PsTerminateThread", Params: "Thread: PETHREAD, ExitStatus: NTSTATUS", ReturnType: "NTSTATUS"},
+		{Name: "RtlZeroMemory", Params: "Destination: PVOID, Length: SIZE_T", ReturnType: ""},
+		{Name: "RtlFillMemory", Params: "Destination: PVOID, Length: SIZE_T, Fill: u8", ReturnType: ""},
+		{Name: "RtlCopyMemory", Params: "Destination: PVOID, Source: *const u8, Length: SIZE_T", ReturnType: ""},
+		{Name: "RtlMoveMemory", Params: "Destination: PVOID, Source: *const u8, Length: SIZE_T", ReturnType: ""},
+		{Name: "WskRegister", Params: "WskClientNpi: *const core::ffi::c_void, WskRegistration: *mut core::ffi::c_void", ReturnType: "NTSTATUS"},
+		{Name: "WskCaptureProviderNPI", Params: "WskRegistration: *mut core::ffi::c_void, WaitTimeout: ULONG, WskProviderNpi: *mut core::ffi::c_void", ReturnType: "NTSTATUS"},
+		{Name: "WskReleaseProviderNPI", Params: "WskRegistration: *mut core::ffi::c_void", ReturnType: ""},
+		{Name: "WskDeregister", Params: "WskRegistration: *mut core::ffi::c_void", ReturnType: ""},
+		{Name: "ZwTerminateProcess", Params: "ProcessHandle: HANDLE, ExitStatus: NTSTATUS", ReturnType: "NTSTATUS"},
+		{Name: "KfRaiseIrql", Params: "NewIrql: KIRQL", ReturnType: "KIRQL"},
 	}
-
-	excludeMap := make(map[string]bool)
-	for _, dir := range excludeDirs {
-		excludeMap[dir] = true
-	}
-
-	err := filepath.Walk(projectRoot, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-
-		if info.IsDir() {
-			relPath, _ := filepath.Rel(projectRoot, path)
-			if excludeMap[relPath] || strings.Contains(relPath, "target") || strings.Contains(relPath, "todo") {
-				return filepath.SkipDir
-			}
-			return nil
-		}
-
-		if !strings.HasSuffix(path, ".rs") {
-			return nil
-		}
-
-		if strings.Contains(path, "ntapi/") {
-			return nil
-		}
-
-		b.scanFileForWdkUsage(path)
-		return nil
-	})
-	if err != nil {
-		return fmt.Errorf("failed to scan project: %w", err)
-	}
-
-	b.fixReport.TotalUsages = len(b.fixReport.Usages)
-	b.fixReport.FilesScanned = len(b.fixReport.FilesWithFixes)
-	for _, usages := range b.fixReport.FilesWithFixes {
-		for _, u := range usages {
-			if u.NeedsFix {
-				b.fixReport.NeedsFix++
-			}
-		}
-	}
-
-	return nil
-}
-
-func (b *Bindgen) scanFileForWdkUsage(filePath string) {
-	content, err := os.ReadFile(filePath)
-	if err != nil {
-		return
-	}
-
-	lines := strings.Split(string(content), "\n")
-
-	externBlockPattern := regexp.MustCompile(`extern\s+"(C|system)"\s*\{`)
-	fnDeclPattern := regexp.MustCompile(`fn\s+([A-Z][a-zA-Z0-9]+)\s*\(([^)]*)\)(?:\s*->\s*([^;{]+))?`)
-	useWdkSysPattern := regexp.MustCompile(`use\s+wdk_sys::`)
-	useCrateNtapiPattern := regexp.MustCompile(`use\s+crate::ntapi::`)
-
-	inExternBlock := false
-
-	for i, line := range lines {
-		if externBlockPattern.MatchString(line) {
-			inExternBlock = true
-			continue
-		}
-
-		if inExternBlock && strings.TrimSpace(line) == "}" {
-			inExternBlock = false
-			continue
-		}
-
-		if inExternBlock {
-			matches := fnDeclPattern.FindStringSubmatch(line)
-			if matches != nil {
-				name := matches[1]
-				if b.isWdkPrefix(name) {
-					usage := WdkUsage{
-						File:         filePath,
-						Line:         i + 1,
-						Kind:         "function",
-						Name:         name,
-						SourceType:   "extern_block",
-						NeedsFix:     true,
-						SuggestedFix: fmt.Sprintf("use crate::ntapi::%s;", name),
-					}
-					b.fixReport.Usages = append(b.fixReport.Usages, usage)
-					b.fixReport.FilesWithFixes[filePath] = append(b.fixReport.FilesWithFixes[filePath], usage)
-				}
-			}
-		}
-
-		if useWdkSysPattern.MatchString(line) {
-			usage := WdkUsage{
-				File:         filePath,
-				Line:         i + 1,
-				Kind:         "import",
-				Name:         "wdk_sys",
-				SourceType:   "use_wdk_sys",
-				NeedsFix:     true,
-				SuggestedFix: "use crate::ntapi::*;",
-			}
-			b.fixReport.Usages = append(b.fixReport.Usages, usage)
-			b.fixReport.FilesWithFixes[filePath] = append(b.fixReport.FilesWithFixes[filePath], usage)
-		}
-
-		if useCrateNtapiPattern.MatchString(line) {
-			usage := WdkUsage{
-				File:       filePath,
-				Line:       i + 1,
-				Kind:       "import",
-				Name:       "ntapi",
-				SourceType: "use_crate_ntapi",
-				NeedsFix:   false,
-			}
-			b.fixReport.Usages = append(b.fixReport.Usages, usage)
-		}
-	}
-}
-
-func (b *Bindgen) GetFixReport() *FixReport {
-	return b.fixReport
-}
-
-func (b *Bindgen) GenerateUsageReport(outputPath string) error {
-	var sb strings.Builder
-
-	sb.WriteString("# WDK Usage Fix Report\n\n")
-	sb.WriteString(fmt.Sprintf("Generated: %s\n\n", "now"))
-	sb.WriteString("## Summary\n\n")
-	sb.WriteString(fmt.Sprintf("- Files Scanned: %d\n", b.fixReport.FilesScanned))
-	sb.WriteString(fmt.Sprintf("- Total Usages: %d\n", b.fixReport.TotalUsages))
-	sb.WriteString(fmt.Sprintf("- Needs Fix: %d\n\n", b.fixReport.NeedsFix))
-
-	sb.WriteString("## Files Needing Fixes\n\n")
-
-	for file, usages := range b.fixReport.FilesWithFixes {
-		needsFix := false
-		for _, u := range usages {
-			if u.NeedsFix {
-				needsFix = true
-				break
-			}
-		}
-		if !needsFix {
-			continue
-		}
-
-		relPath, _ := filepath.Rel(b.config.ProjectRoot, file)
-		sb.WriteString(fmt.Sprintf("### %s\n\n", relPath))
-
-		for _, u := range usages {
-			if u.NeedsFix {
-				sb.WriteString(fmt.Sprintf("- Line %d: %s `%s` (source: %s)\n", u.Line, u.Kind, u.Name, u.SourceType))
-				sb.WriteString(fmt.Sprintf("  - Suggested fix: `%s`\n", u.SuggestedFix))
-			}
-		}
-		sb.WriteString("\n")
-	}
-
-	sb.WriteString("## Detailed Usage List\n\n")
-
-	for _, u := range b.fixReport.Usages {
-		relPath, _ := filepath.Rel(b.config.ProjectRoot, u.File)
-		sb.WriteString(fmt.Sprintf("- %s:%d - %s: %s (needs fix: %v)\n", relPath, u.Line, u.Kind, u.Name, u.NeedsFix))
-	}
-
-	return os.WriteFile(outputPath, []byte(sb.String()), 0o644)
-}
-
-func (b *Bindgen) ApplyFixes() error {
-	if b.fixReport == nil {
-		return fmt.Errorf("no fix report available, run ScanProjectUsage first")
-	}
-
-	fileModifications := make(map[string][]FileModification)
-
-	for file, usages := range b.fixReport.FilesWithFixes {
-		var mods []FileModification
-		for _, u := range usages {
-			if !u.NeedsFix {
-				continue
-			}
-
-			switch u.SourceType {
-			case "use_wdk_sys":
-				mods = append(mods, FileModification{
-					Line:     u.Line,
-					Kind:     "replace_use",
-					OldText:  "",
-					NewText:  u.SuggestedFix,
-					FuncName: "",
-				})
-			case "extern_block":
-				mods = append(mods, FileModification{
-					Line:     u.Line,
-					Kind:     "add_use",
-					OldText:  "",
-					NewText:  u.SuggestedFix,
-					FuncName: u.Name,
-				})
-			}
-		}
-		if len(mods) > 0 {
-			fileModifications[file] = mods
-		}
-	}
-
-	for file, mods := range fileModifications {
-		relPath, _ := filepath.Rel(b.config.ProjectRoot, file)
-		fmt.Printf("Would modify: %s\n", relPath)
-		for _, m := range mods {
-			fmt.Printf("  Line %d: %s\n", m.Line, m.NewText)
-		}
-	}
-
-	return nil
-}
-
-type FileModification struct {
-	Line     int
-	Kind     string
-	OldText  string
-	NewText  string
-	FuncName string
-}
-
-func (b *Bindgen) applyFileModifications(filePath string, mods []FileModification) error {
-	content, err := os.ReadFile(filePath)
-	if err != nil {
-		return err
-	}
-
-	lines := strings.Split(string(content), "\n")
-
-	linesToDelete := make(map[int]bool)
-
-	for i := 0; i < len(lines); i++ {
-		line := lines[i]
-		trimmed := strings.TrimSpace(line)
-
-		if strings.HasPrefix(trimmed, "use wdk_sys::") {
-			if strings.Contains(line, "{") && !strings.Contains(line, "};") {
-				var indent strings.Builder
-				for _, c := range line {
-					if c == ' ' || c == '\t' {
-						indent.WriteString(string(c))
-					} else {
-						break
-					}
-				}
-				for j := i + 1; j < len(lines); j++ {
-					if strings.Contains(lines[j], "};") {
-						for k := i + 1; k <= j; k++ {
-							linesToDelete[k] = true
-						}
-						lines[i] = indent.String() + "use crate::ntapi::*;"
-						i = j
-						break
-					}
-				}
-			} else {
-				var indent strings.Builder
-				for _, c := range line {
-					if c == ' ' || c == '\t' {
-						indent.WriteString(string(c))
-					} else {
-						break
-					}
-				}
-				lines[i] = indent.String() + "use crate::ntapi::*;"
-			}
-		}
-	}
-
-	externBlockRanges := b.findExternBlockRanges(lines, mods)
-	for _, r := range externBlockRanges {
-		for i := r.start; i <= r.end; i++ {
-			linesToDelete[i] = true
-		}
-	}
-
-	useStatements := make(map[string]bool)
-	for _, mod := range mods {
-		if mod.Kind == "add_use" {
-			useStatements[mod.FuncName] = true
-		}
-	}
-
-	var result []string
-	var addedUses map[string]bool = make(map[string]bool)
-	var lastUseEndLine int = -1
-	var hasNtapiWildcard bool
-
-	inMultilineUse := false
-	for i, line := range lines {
-		if linesToDelete[i] {
-			continue
-		}
-
-		trimmed := strings.TrimSpace(line)
-
-		if strings.HasPrefix(trimmed, "use ") {
-			if strings.Contains(line, "{") && !strings.Contains(line, "};") {
-				inMultilineUse = true
-			}
-			if !inMultilineUse {
-				lastUseEndLine = len(result)
-			}
-		}
-
-		if inMultilineUse && strings.Contains(line, "};") {
-			inMultilineUse = false
-			lastUseEndLine = len(result)
-		}
-
-		if trimmed == "use crate::ntapi::*;" {
-			hasNtapiWildcard = true
-		}
-
-		result = append(result, line)
-	}
-
-	if hasNtapiWildcard {
-		useStatements = make(map[string]bool)
-	}
-
-	var finalResult []string
-	for i, line := range result {
-		trimmed := strings.TrimSpace(line)
-
-		if strings.HasPrefix(trimmed, "use crate::ntapi::") {
-			parts := strings.Split(trimmed, "::")
-			if len(parts) >= 3 {
-				name := strings.TrimSuffix(parts[len(parts)-1], ";")
-				addedUses[name] = true
-			}
-		}
-
-		if i == lastUseEndLine && len(useStatements) > 0 {
-			finalResult = append(finalResult, line)
-			for name := range useStatements {
-				if !addedUses[name] {
-					finalResult = append(finalResult, fmt.Sprintf("use crate::ntapi::%s;", name))
-				}
-			}
-		} else {
-			finalResult = append(finalResult, line)
-		}
-	}
-
-	newContent := strings.Join(finalResult, "\n")
-	return os.WriteFile(filePath, []byte(newContent), 0o644)
-}
-
-type LineRange struct {
-	start int
-	end   int
-}
-
-func (b *Bindgen) findMultilineUseRanges(lines []string) []LineRange {
-	var ranges []LineRange
-
-	for i := 0; i < len(lines); i++ {
-		line := lines[i]
-		if strings.Contains(line, "use wdk_sys::") {
-			if strings.Contains(line, "{") && !strings.Contains(line, "}") {
-				start := i
-				for j := i + 1; j < len(lines); j++ {
-					if strings.Contains(lines[j], "};") {
-						ranges = append(ranges, LineRange{start: start, end: j})
-						i = j
-						break
-					}
-				}
-			}
-		}
-	}
-
-	return ranges
 }
 
 type HookEntry struct {
@@ -1534,7 +1107,7 @@ func (b *Bindgen) generateRustHookArgs(outputDir string, hooks []HookEntry) erro
 	sb.WriteString("use super::*;\n\n")
 
 	sb.WriteString("// Args structs for each hooked API\n")
-	sb.WriteString("// All types are directly from wdk_sys via ntapi::types\n\n")
+	sb.WriteString("// All types are directly from wdk_sys via generated::types\n\n")
 	for _, h := range hooks {
 		if len(h.ParamList) == 0 {
 			continue
@@ -2000,55 +1573,6 @@ func rustTypeToGo(rustType string) string {
 	return "uintptr"
 }
 
-func (b *Bindgen) findExternBlockRanges(lines []string, mods []FileModification) []LineRange {
-	var ranges []LineRange
-
-	for i := 0; i < len(lines); i++ {
-		line := lines[i]
-		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, "extern \"C\"") && strings.HasSuffix(trimmed, "{") {
-			braceCount := 0
-			start := i
-			hasWdkFunc := false
-
-			for j := i; j < len(lines); j++ {
-				for _, c := range lines[j] {
-					if c == '{' {
-						braceCount++
-					} else if c == '}' {
-						braceCount--
-						if braceCount == 0 {
-							for k := start + 1; k < j; k++ {
-								fnLine := strings.TrimSpace(lines[k])
-								if strings.HasPrefix(fnLine, "fn ") {
-									idx := strings.Index(fnLine, "(")
-									if idx > 3 {
-										name := strings.TrimSpace(fnLine[3:idx])
-										if b.isWdkPrefix(name) {
-											hasWdkFunc = true
-											break
-										}
-									}
-								}
-							}
-							if hasWdkFunc {
-								ranges = append(ranges, LineRange{start: start, end: j})
-							}
-							i = j
-							break
-						}
-					}
-				}
-				if braceCount == 0 {
-					break
-				}
-			}
-		}
-	}
-
-	return ranges
-}
-
 func GenerateBindgen(projectRoot string) error {
 	bindgenDir := filepath.Join(projectRoot, "cmd", "rustgen")
 	rustSourceDir := filepath.Join(projectRoot, "rust-driver", "kd", "src")
@@ -2092,28 +1616,19 @@ func GenerateBindgen(projectRoot string) error {
 	fmt.Printf("  Validation: %d mismatches, %d not exported\n",
 		report.Statistics["mismatches"], report.Statistics["not_exported"])
 
-	notExportedFuncs := make([]NotExportedFunc, len(report.NotExported))
-	for i, name := range report.NotExported {
-		externs := bg.externs.Functions[name]
-		if len(externs) > 0 {
-			notExportedFuncs[i] = NotExportedFunc{
-				Name:       name,
-				Params:     externs[0].Params,
-				ReturnType: externs[0].ReturnType,
-			}
-		}
+	notExportedFuncs := getPredefinedNotExportedFuncs()
+	fmt.Printf("  Using %d predefined not-exported functions\n", len(notExportedFuncs))
+
+	if err := bg.generateNtddkApi(outputDir, notExportedFuncs); err != nil {
+		return fmt.Errorf("failed to generate ntddk.rs: %w", err)
 	}
 
-	if err := bg.generateNtapiApi(outputDir, notExportedFuncs); err != nil {
-		return fmt.Errorf("failed to generate ntapi api: %w", err)
+	if err := bg.generateTypes(outputDir); err != nil {
+		return fmt.Errorf("failed to generate types.rs: %w", err)
 	}
 
-	if err := bg.generateNtapiTypes(outputDir); err != nil {
-		return fmt.Errorf("failed to generate ntapi types: %w", err)
-	}
-
-	if err := bg.generateNtapiConstants(outputDir); err != nil {
-		return fmt.Errorf("failed to generate ntapi constants: %w", err)
+	if err := bg.generateConstants(outputDir); err != nil {
+		return fmt.Errorf("failed to generate constants.rs: %w", err)
 	}
 
 	if err := bg.GenerateFunctionsList(filepath.Join(outputDir, "ntddk_list.txt")); err != nil {
@@ -2134,16 +1649,6 @@ func GenerateBindgen(projectRoot string) error {
 
 	if err := bg.GenerateValidationReport(filepath.Join(outputDir, "validation_report.txt")); err != nil {
 		return fmt.Errorf("failed to generate validation report: %w", err)
-	}
-
-	fmt.Printf("  Scanning for WDK usage...\n")
-	excludeDirs := []string{"cmd", "target", "todo"}
-	if err := bg.ScanProjectUsage(projectRoot, excludeDirs); err != nil {
-		return fmt.Errorf("failed to scan project usage: %w", err)
-	}
-
-	if err := bg.GenerateUsageReport(filepath.Join(outputDir, "wdk_usage_report.txt")); err != nil {
-		return fmt.Errorf("failed to generate usage report: %w", err)
 	}
 
 	fmt.Printf("  Generating hook database...\n")

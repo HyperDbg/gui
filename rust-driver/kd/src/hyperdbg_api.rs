@@ -6,14 +6,6 @@ use spin::{Mutex, Once};
 
 use wdk_sys::{PEPROCESS, PETHREAD, HANDLE, PVOID};
 
-use wdk_sys::ntddk::{
-    PsGetProcessId,
-    PsGetThreadId,
-    PsLookupProcessByProcessId,
-    ObfDereferenceObject,
-    IoGetCurrentProcess,
-};
-
 use crate::generated::*;
 use crate::kd::KernelDebugger;
 use crate::ud::UserDebugger;
@@ -160,6 +152,25 @@ impl DebuggerApi for HyperDbgApi {
             ud.detach_process(token).map_err(|e| format!("Failed to detach: {}", e))?;
         }
         self.current_process_id = None;
+        Ok(Empty {})
+    }
+
+    fn start_process(&mut self, req: &Request) -> Result<u32, String> {
+        let process_id = req.process_id.ok_or("process_id required")?;
+        let mut ud = self.user_debugger.lock();
+        ud.initialize().map_err(|e| format!("Failed to initialize user debugger: {}", e))?;
+        ud.start_process(process_id).map_err(|e| format!("Failed to start process: {}", e))?;
+        self.current_process_id = Some(process_id);
+        Ok(process_id)
+    }
+
+    fn kill_process(&mut self, req: &Request) -> Result<Empty, String> {
+        let process_id = req.process_id.ok_or("process_id required")?;
+        let mut ud = self.user_debugger.lock();
+        ud.kill_process(process_id).map_err(|e| format!("Failed to kill process: {}", e))?;
+        if self.current_process_id == Some(process_id) {
+            self.current_process_id = None;
+        }
         Ok(Empty {})
     }
 
@@ -338,23 +349,29 @@ impl DebuggerApi for HyperDbgApi {
     }
 
     fn get_process_list(&mut self, _req: &Request) -> Result<Vec<ProcessInfo>, String> {
+        // TODO: 当前硬编码偏移量，后期需要从 PDB 符号文件动态获取
+        // Windows 10 21H2+ 偏移量：
+        //   - ActiveProcessLinks: 0x448
+        //   - UniqueProcessId: 0x440
+        let active_process_links_offset = 0x448usize;
+        let unique_process_id_offset = 0x440usize;
+        
         let mut processes = Vec::new();
         
         unsafe {
-            let mut process: PEPROCESS = core::ptr::null_mut();
-            extern "system" { // undocumented APIs
-                fn PsGetNextProcess(process: PEPROCESS) -> PEPROCESS; // undocumented
-                fn PsGetProcessImageFileName(process: PEPROCESS) -> *mut i8; // undocumented
+            let system_process = PsGetCurrentProcess();
+            if system_process.is_null() {
+                return Ok(processes);
             }
             
-            loop {
-                process = PsGetNextProcess(process);
-                if process.is_null() {
-                    break;
-                }
+            let first_entry = (system_process as *const u8).add(active_process_links_offset) as *const LIST_ENTRY;
+            let mut current_entry = (*first_entry).Flink as *const LIST_ENTRY;
+            
+            while current_entry != first_entry {
+                let eprocess = (current_entry as *const u8).sub(active_process_links_offset) as PEPROCESS;
                 
-                let process_id = PsGetProcessId(process);
-                let image_name_ptr = PsGetProcessImageFileName(process);
+                let process_id = *((eprocess as *const u8).add(unique_process_id_offset) as *const u32);
+                let image_name_ptr = PsGetProcessImageFileName(eprocess);
                 
                 let image_name = if !image_name_ptr.is_null() {
                     let name = core::ffi::CStr::from_ptr(image_name_ptr);
@@ -364,12 +381,14 @@ impl DebuggerApi for HyperDbgApi {
                 };
                 
                 processes.push(ProcessInfo {
-                    process_id: process_id as u32,
+                    process_id,
                     image_name,
                     base_address: None,
                     size: 0,
                     cr3: 0,
                 });
+                
+                current_entry = (*current_entry).Flink as *const LIST_ENTRY;
             }
         }
         
@@ -379,15 +398,19 @@ impl DebuggerApi for HyperDbgApi {
     fn get_thread_list(&mut self, req: &Request) -> Result<Vec<ThreadInfo>, String> {
         let process_id = req.process_id.or(self.current_process_id).ok_or("process_id required")?;
         
+        // TODO: 当前硬编码偏移量，后期需要从 PDB 符号文件动态获取
+        // Windows 10 21H2+ 偏移量：
+        //   - EPROCESS.ThreadListHead: 0x5e0
+        //   - ETHREAD.ThreadListEntry: 0x6b8
+        //   - ETHREAD.UniqueThread: 0x448
+        let thread_list_head_offset = 0x5e0usize;
+        let thread_list_entry_offset = 0x6b8usize;
+        let unique_thread_offset = 0x448usize;
+        
         let mut threads = Vec::new();
         
         unsafe {
             use wdk_sys::STATUS_SUCCESS;
-            
-            extern "system" { // undocumented APIs
-                fn PsGetNextProcessThread(Process: PEPROCESS, Thread: PETHREAD) -> PETHREAD; // undocumented
-                fn PsGetThreadTeb(Thread: PETHREAD) -> u64; // undocumented
-            }
             
             let mut process: PEPROCESS = core::ptr::null_mut();
             let status = PsLookupProcessByProcessId(process_id as HANDLE, &mut process);
@@ -396,16 +419,14 @@ impl DebuggerApi for HyperDbgApi {
                 return Err(format!("Failed to lookup process {}", process_id));
             }
             
-            let mut thread: PETHREAD = core::ptr::null_mut();
+            let first_entry = (process as *const u8).add(thread_list_head_offset) as *const LIST_ENTRY;
+            let mut current_entry = (*first_entry).Flink as *const LIST_ENTRY;
             
-            loop {
-                thread = PsGetNextProcessThread(process, thread);
-                if thread.is_null() {
-                    break;
-                }
+            while current_entry != first_entry {
+                let ethread = (current_entry as *const u8).sub(thread_list_entry_offset) as PETHREAD;
                 
-                let thread_id = PsGetThreadId(thread) as u32;
-                let teb = PsGetThreadTeb(thread);
+                let thread_id = *((ethread as *const u8).add(unique_thread_offset) as *const u32);
+                let teb = PsGetThreadTeb(ethread);
                 
                 threads.push(ThreadInfo {
                     thread_id,
@@ -414,6 +435,8 @@ impl DebuggerApi for HyperDbgApi {
                     start_address: None,
                     state: 0,
                 });
+                
+                current_entry = (*current_entry).Flink as *const LIST_ENTRY;
             }
             
             ObfDereferenceObject(process as PVOID);
@@ -428,14 +451,10 @@ impl DebuggerApi for HyperDbgApi {
         let mut modules = Vec::new();
         
         unsafe {
-            extern "system" { // undocumented APIs
-                fn PsGetProcessPeb(Process: PEPROCESS) -> PVOID; // undocumented
-            }
-            
             let process = IoGetCurrentProcess();
-            let peb = PsGetProcessPeb(process);
+            let peb = PsGetProcessPeb(process as *mut u8);
             
-            if peb.is_null() {
+            if peb == 0 {
                 return Ok(modules);
             }
             

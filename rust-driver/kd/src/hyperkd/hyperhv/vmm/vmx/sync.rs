@@ -1,5 +1,7 @@
 use core::sync::atomic::{AtomicU32, AtomicBool, Ordering};
 
+use crate::generated::*;
+
 use wdk_sys::{
     PRKDPC,
     PVOID,
@@ -11,17 +13,6 @@ use wdk_sys::{
     EVENT_TYPE,
     KPRIORITY,
     KWAIT_REASON,
-};
-
-use wdk_sys::ntddk::{
-    KeQueryUnbiasedInterruptTime,
-    KeStallExecutionProcessor,
-    KeInitializeDpc,
-    KeSetTargetProcessorDpc,
-    KeInsertQueueDpc,
-    KeWaitForSingleObject,
-    KeSetEvent,
-    KeInitializeEvent,
 };
 
 use crate::hyperkd::hyperhv::processor::*;
