@@ -171,7 +171,7 @@ impl UserDebugger {
 
     pub fn initialize(&mut self) -> Result<(), UdError> {
         if self.active {
-            return Err(UdError::AlreadyActive);
+            return Ok(());
         }
 
         log::info!("Initializing user debugger");

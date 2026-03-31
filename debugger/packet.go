@@ -343,7 +343,7 @@ func (p *Packet) KillProcess(processID uint32) error {
 func (p *Packet) SetBreakpoint(address uint64, bpType BreakpointType) error {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":  "set_breakpoint",
-		"address": fmt.Sprintf("0x%x", address),
+		"address": address,
 		"type":    int(bpType),
 	}))
 	resp := SendReceive[Empty](p, data)
@@ -356,7 +356,7 @@ func (p *Packet) SetBreakpoint(address uint64, bpType BreakpointType) error {
 func (p *Packet) RemoveBreakpoint(breakpointID uint64) error {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":        "remove_breakpoint",
-		"breakpoint_id": fmt.Sprintf("0x%x", breakpointID),
+		"breakpoint_id": breakpointID,
 	}))
 	resp := SendReceive[Empty](p, data)
 	if resp == nil || !resp.Success {
@@ -433,7 +433,7 @@ func (p *Packet) StepOut() error {
 func (p *Packet) ReadMemory(address uint64, size uint32) ([]byte, error) {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":  "read_memory",
-		"address": fmt.Sprintf("0x%x", address),
+		"address": address,
 		"size":    size,
 	}))
 	resp := SendReceive[[]byte](p, data)
@@ -446,7 +446,7 @@ func (p *Packet) ReadMemory(address uint64, size uint32) ([]byte, error) {
 func (p *Packet) WriteMemory(address uint64, data []byte) error {
 	jsonData := mylog.Check2(json.Marshal(map[string]any{
 		"action":  "write_memory",
-		"address": fmt.Sprintf("0x%x", address),
+		"address": address,
 		"data":    data,
 	}))
 	resp := SendReceive[Empty](p, jsonData)
@@ -602,7 +602,7 @@ func (p *Packet) ExecuteScriptWithContext(ctx context.Context, script string) (s
 func (p *Packet) Disassemble(address uint64, bytes []byte, maxInstructions uint32) ([]Instruction, error) {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":           "disassemble",
-		"address":          fmt.Sprintf("0x%X", address),
+		"address":          address,
 		"data":             bytes,
 		"max_instructions": maxInstructions,
 	}))
@@ -645,7 +645,7 @@ func (p *Packet) GetSymbolByName(name string) (SymbolInfo, error) {
 func (p *Packet) GetSymbolByAddress(address uint64) (SymbolInfo, error) {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":  "get_symbol_by_address",
-		"address": fmt.Sprintf("0x%X", address),
+		"address": address,
 	}))
 	resp := SendReceive[SymbolInfo](p, data)
 	if resp == nil || !resp.Success {
@@ -657,7 +657,7 @@ func (p *Packet) GetSymbolByAddress(address uint64) (SymbolInfo, error) {
 func (p *Packet) GetFunctionByAddress(address uint64) (FunctionInfo, error) {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":  "get_function_by_address",
-		"address": fmt.Sprintf("0x%X", address),
+		"address": address,
 	}))
 	resp := SendReceive[FunctionInfo](p, data)
 	if resp == nil || !resp.Success {

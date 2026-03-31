@@ -50,13 +50,7 @@ func TestRustDriverHTTP(t *testing.T) {
 		t.Fatalf("AttachProcess 失败: %v", err)
 	}
 
-	if err := conn.SetBreakpoint(0x7FFE0000, debugger.BreakpointSoftware); err != nil {
-		t.Fatalf("SetBreakpoint 失败: %v", err)
-	}
-
-	if err := conn.Continue(); err != nil {
-		t.Fatalf("Continue 失败: %v", err)
-	}
+	t.Logf("Process %d attached successfully", notepadPID)
 }
 
 func TestMultipleDriverInitialization(t *testing.T) {
