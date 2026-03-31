@@ -232,7 +232,7 @@ func (p *Packet) UnloadVmm() error {
 func (p *Packet) AttachProcess(processID uint32) error {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":     "attach_process",
-		"process_id": fmt.Sprintf("%d", processID),
+		"process_id": processID,
 	}))
 	resp := SendReceive[Empty](p, data)
 	if resp == nil || !resp.Success {
@@ -489,7 +489,7 @@ func (p *Packet) GetProcessList() ([]ProcessInfo, error) {
 func (p *Packet) GetThreadList(processID uint32) ([]ThreadInfo, error) {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":     "get_thread_list",
-		"process_id": fmt.Sprintf("%d", processID),
+		"process_id": processID,
 	}))
 	resp := SendReceive[[]ThreadInfo](p, data)
 	if resp == nil || !resp.Success {
@@ -501,7 +501,7 @@ func (p *Packet) GetThreadList(processID uint32) ([]ThreadInfo, error) {
 func (p *Packet) GetModuleList(processID uint32) ([]ModuleInfo, error) {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":     "get_module_list",
-		"process_id": fmt.Sprintf("%d", processID),
+		"process_id": processID,
 	}))
 	resp := SendReceive[[]ModuleInfo](p, data)
 	if resp == nil || !resp.Success {

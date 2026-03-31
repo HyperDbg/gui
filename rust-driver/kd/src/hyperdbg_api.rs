@@ -157,8 +157,41 @@ impl DebuggerApi for HyperDbgApi {
 
     fn start_process(&mut self, req: &Request) -> Result<u32, String> {
         let process_id = req.process_id.ok_or("process_id required")?;
+        
         let mut ud = self.user_debugger.lock();
         ud.initialize().map_err(|e| format!("Failed to initialize user debugger: {}", e))?;
+        
+        unsafe {
+            use crate::hyperkd::attaching::{attaching_create_process_debugging_details, attaching_set_starting_phase_by_token};
+            use crate::generated::*;
+            use core::ffi::c_void;
+            
+            let mut eprocess: PEPROCESS = core::ptr::null_mut();
+            let status = PsLookupProcessByProcessId(process_id as *mut c_void, &mut eprocess);
+            if status != 0 {
+                return Err(format!("PsLookupProcessByProcessId failed: 0x{:x}", status));
+            }
+            
+            let peb_address = PsGetProcessPeb(eprocess as *mut u8);
+            let is_32bit = PsGetProcessWow64Process(eprocess as *mut u8) != 0;
+            
+            let token = attaching_create_process_debugging_details(
+                process_id,
+                true,
+                is_32bit,
+                true,
+                eprocess as u64,
+                peb_address,
+            ).ok_or("Failed to create process debugging details")?;
+            
+            attaching_set_starting_phase_by_token(true, token);
+            
+            ObDereferenceObject(eprocess as *mut u8);
+            
+            log::info!("Started process {} (token {}, peb 0x{:x}, {}bit)", 
+                process_id, token, peb_address, if is_32bit { "32" } else { "64" });
+        }
+        
         ud.start_process(process_id).map_err(|e| format!("Failed to start process: {}", e))?;
         self.current_process_id = Some(process_id);
         Ok(process_id)
