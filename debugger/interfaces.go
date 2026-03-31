@@ -40,8 +40,6 @@ type Debugger interface {
 	RegisterCpuidCallback(cb EventCallback)
 	GetEvent() any
 	WaitForEvent(timeout time.Duration) *Message
-	GetConnectedDrivers() []uint64
-	WaitForDriver(timeout time.Duration) error
 	ExecuteScript(script string) (string, error)
 	ExecuteScriptWithContext(ctx context.Context, script string) (string, error)
 	Disassemble(address uint64, bytes []byte, maxInstructions uint32) ([]Instruction, error)

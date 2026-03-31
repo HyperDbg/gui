@@ -495,34 +495,6 @@ func (s *DebuggerMCPServer) RegisterTools(server *mcp.Server) {
 	
 	
 	mcp.AddTool(server, &mcp.Tool{
-		Name:        "GetConnectedDrivers",
-		Description: "",
-		InputSchema: map[string]any{
-			"type": "object",
-			"properties": map[string]any{
-				
-			},
-		},
-	}, s.handleGetConnectedDrivers)
-	
-	
-	mcp.AddTool(server, &mcp.Tool{
-		Name:        "WaitForDriver",
-		Description: "",
-		InputSchema: map[string]any{
-			"type": "object",
-			"properties": map[string]any{
-				
-				"timeout": map[string]any{
-					"type": "string",
-				},
-				
-			},
-		},
-	}, s.handleWaitForDriver)
-	
-	
-	mcp.AddTool(server, &mcp.Tool{
 		Name:        "ExecuteScript",
 		Description: "",
 		InputSchema: map[string]any{
@@ -1641,60 +1613,6 @@ func (s *DebuggerMCPServer) handleWaitForEvent(ctx context.Context, req *mcp.Cal
 			&mcp.TextContent{Text: fmt.Sprintf("%v", result)},
 		},
 	}, result, nil
-	
-	
-}
-
-
-type DebuggerMCPServerGetConnectedDriversParams struct {}
-
-
-func (s *DebuggerMCPServer) handleGetConnectedDrivers(ctx context.Context, req *mcp.CallToolRequest, args DebuggerMCPServerGetConnectedDriversParams) (*mcp.CallToolResult, any, error) {
-	
-	
-	result := s.impl.GetConnectedDrivers(
-		
-		
-	)
-	return &mcp.CallToolResult{
-		Content: []mcp.Content{
-			&mcp.TextContent{Text: fmt.Sprintf("%v", result)},
-		},
-	}, result, nil
-	
-	
-}
-
-
-type DebuggerMCPServerWaitForDriverParams struct {
-	
-	timeout any `json:"timeout"`
-	
-}
-
-
-func (s *DebuggerMCPServer) handleWaitForDriver(ctx context.Context, req *mcp.CallToolRequest, args DebuggerMCPServerWaitForDriverParams) (*mcp.CallToolResult, any, error) {
-	
-	
-	err := s.impl.WaitForDriver(
-		
-		
-		args.timeout.(time.Duration),
-		
-		
-	)
-	if err != nil {
-		return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				&mcp.TextContent{Text: fmt.Sprintf("Error: %v", err)},
-			},
-		}, nil, err
-	}
-	return &mcp.CallToolResult{
-		Content: []mcp.Content{
-			&mcp.TextContent{Text: "OK"},
-		},
-	}, nil, nil
 	
 	
 }

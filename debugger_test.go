@@ -29,10 +29,6 @@ func TestRustDriverHTTP(t *testing.T) {
 
 	p := debugger.NewPacket()
 
-	if err := p.WaitForDriver(5 * time.Second); err != nil {
-		t.Fatalf("等待驱动超时: %v", err)
-	}
-
 	if err := p.Start(); err != nil {
 		t.Fatalf("Start 失败: %v", err)
 	}

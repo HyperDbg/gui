@@ -207,13 +207,6 @@ func (p *Packet) WaitForEvent(timeout time.Duration) *Message {
 	}
 }
 
-func (p *Packet) GetConnectedDrivers() []uint64 {
-	if p.connected.Load() {
-		return []uint64{p.driverID.Load()}
-	}
-	return nil
-}
-
 func (p *Packet) LoadVmm() error {
 	data := mylog.Check2(json.Marshal(map[string]string{"action": "load_vmm"}))
 	resp := SendReceive[Empty](p, data)
@@ -500,17 +493,6 @@ func parseDebugPrintEvent(data []byte) *DebugPrintEvent {
 		Level:   LogLevel(binary.LittleEndian.Uint32(data[12:16])),
 		Message: string(data[20 : 20+msgLen]),
 	}
-}
-
-func (p *Packet) WaitForDriver(timeout time.Duration) error {
-	deadline := time.Now().Add(timeout)
-	for time.Now().Before(deadline) {
-		if err := p.Ping(); err == nil {
-			return nil
-		}
-		time.Sleep(100 * time.Millisecond)
-	}
-	return fmt.Errorf("timeout waiting for driver")
 }
 
 func (p *Packet) ExecuteScript(script string) (string, error) {
