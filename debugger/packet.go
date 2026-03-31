@@ -308,8 +308,8 @@ func (p *Packet) StartProcess(exePath string) (uint32, error) {
 
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":     "start_process",
-		"process_id": fmt.Sprintf("%d", pi.ProcessID),
-		"thread_id":  fmt.Sprintf("%d", pi.ThreadID),
+		"process_id": pi.ProcessID,
+		"thread_id":  pi.ThreadID,
 		"exe_path":   exePath,
 	}))
 	resp := SendReceive[Empty](p, data)
@@ -331,7 +331,7 @@ func (p *Packet) StartProcess(exePath string) (uint32, error) {
 func (p *Packet) KillProcess(processID uint32) error {
 	data := mylog.Check2(json.Marshal(map[string]any{
 		"action":     "kill_process",
-		"process_id": fmt.Sprintf("%d", processID),
+		"process_id": processID,
 	}))
 	resp := SendReceive[Empty](p, data)
 	if resp == nil || !resp.Success {
