@@ -19,27 +19,27 @@ func TestFixError(t *testing.T) {
 func TestRustDriverHTTP(t *testing.T) {
 	driverPath := `d:\ux\examples\hypedbg\rust-driver\kd\hyperdbg_kd.sys`
 
-	d := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
-	d.Install()
-	d.Start()
+	drv := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
+	drv.Install()
+	drv.Start()
 	defer func() {
-		d.Stop()
-		d.Uninstall()
+		drv.Stop()
+		drv.Uninstall()
 	}()
 
-	p := debugger.NewPacket()
+	conn := debugger.NewPacket("http://127.0.0.1:50080")
 
-	if err := p.Start(); err != nil {
-		t.Fatalf("Start 失败: %v", err)
+	if err := conn.Connect(); err != nil {
+		t.Fatalf("Connect 失败: %v", err)
 	}
-	defer p.Stop()
+	defer conn.Disconnect()
 
-	p.LoadVmm()
-	p.Pause()
-	p.Continue()
-	p.SetBreakpoint(0x7FFE0000, debugger.BreakpointType(0))
+	conn.LoadVmm()
+	conn.Pause()
+	conn.Continue()
+	conn.SetBreakpoint(0x7FFE0000, debugger.BreakpointType(0))
 
-	processList, err := p.GetProcessList()
+	processList, err := conn.GetProcessList()
 	if err != nil {
 		return
 	}
@@ -56,9 +56,9 @@ func TestRustDriverHTTP(t *testing.T) {
 		return
 	}
 
-	p.AttachProcess(notepadPID)
-	p.SetBreakpoint(0x7FFE0000, debugger.BreakpointSoftware)
-	p.Continue()
+	conn.AttachProcess(notepadPID)
+	conn.SetBreakpoint(0x7FFE0000, debugger.BreakpointSoftware)
+	conn.Continue()
 }
 
 func TestMultipleDriverInitialization(t *testing.T) {
@@ -66,35 +66,35 @@ func TestMultipleDriverInitialization(t *testing.T) {
 
 	iterations := 5
 	for i := range iterations {
-		d := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
-		d.Install()
-		d.Start()
+		drv := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
+		drv.Install()
+		drv.Start()
 
 		time.Sleep(200 * time.Millisecond)
 
-		p := debugger.NewPacket()
-		if err := p.Start(); err != nil {
+		conn := debugger.NewPacket("http://127.0.0.1:50080")
+		if err := conn.Connect(); err != nil {
 			t.Errorf("第 %d 次初始化失败: %v", i+1, err)
-			d.Stop()
-			d.Uninstall()
+			drv.Stop()
+			drv.Uninstall()
 			continue
 		}
 
-		if !p.IsConnected() {
+		if !conn.IsConnected() {
 			t.Errorf("第 %d 次初始化失败: 驱动未连接", i+1)
-			d.Stop()
-			d.Uninstall()
+			drv.Stop()
+			drv.Uninstall()
 			continue
 		}
 
-		p.Stop()
-		d.Stop()
-		d.Uninstall()
+		conn.Disconnect()
+		drv.Stop()
+		drv.Uninstall()
 	}
 }
 
 func TestHookScript(t *testing.T) {
-	packet := debugger.NewPacket().(*debugger.Packet)
+	packet := debugger.NewPacket("http://127.0.0.1:50080").(*debugger.Packet)
 	err := packet.InstallHookScript(&debugger.HookScript{
 		ApiName:  "NtDeviceIoControlFile",
 		HookType: debugger.HookTypeEPT,

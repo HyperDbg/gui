@@ -68,6 +68,8 @@ pub trait DebuggerApi {
     fn stop_network_server(&mut self, req: &Request) -> Result<Empty, String>;
     fn kernel_debugger_initialize(&mut self, req: &Request) -> Result<Empty, String>;
     fn kernel_debugger_uninitialize(&mut self, req: &Request) -> Result<Empty, String>;
+    fn connect(&mut self, req: &Request) -> Result<Empty, String>;
+    fn disconnect(&mut self, req: &Request) -> Result<Empty, String>;
     fn status(&mut self, req: &Request) -> Result<String, String>;
     fn ping(&mut self, req: &Request) -> Result<Empty, String>;
     fn load_vmm(&mut self, req: &Request) -> Result<Empty, String>;
@@ -144,6 +146,18 @@ pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
                 }
                 "kernel_debugger_uninitialize" => {
                     match api.kernel_debugger_uninitialize(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "connect" => {
+                    match api.connect(&req) {
+                        Ok(data) => success_response(data),
+                        Err(e) => error_response(&e),
+                    }
+                }
+                "disconnect" => {
+                    match api.disconnect(&req) {
                         Ok(data) => success_response(data),
                         Err(e) => error_response(&e),
                     }
@@ -390,6 +404,14 @@ impl DebuggerApi for NoOpDebugger {
     }
 
     fn kernel_debugger_uninitialize(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn connect(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn disconnect(&mut self, _req: &Request) -> Result<Empty, String> {
         Ok(Empty {})
     }
 

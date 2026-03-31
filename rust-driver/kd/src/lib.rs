@@ -41,6 +41,8 @@ pub mod disassembler;
 pub mod go_script;
 pub mod generated;
 
+pub use hyperdbg_api::HyperDbgApi;
+
 pub use hyperkd::hyperhv::vmm;
 pub use hyperkd::hyperhv::memory;
 pub use hyperkd::hyperhv::processor;
@@ -181,6 +183,9 @@ static mut GLOBAL_SERVER: *mut net::Server = core::ptr::null_mut();
 static mut EVENT_QUEUE: *mut EventQueue = core::ptr::null_mut();
 
 #[cfg(feature = "standalone-driver")]
+static HYPERDBG_API: Mutex<Option<HyperDbgApi>> = Mutex::new(None);
+
+#[cfg(feature = "standalone-driver")]
 unsafe fn extract_action_from_path(path: &str) -> Option<&str> {
     if path.starts_with("/api/") {
         let action = &path[5..];
@@ -200,21 +205,26 @@ unsafe fn extract_action_from_path(path: &str) -> Option<&str> {
 unsafe extern "C" fn api_handler(w: *mut ResponseWriter, r: *mut Request) {
     let path = (*r).Path();
     
-    if let Some(action) = extract_action_from_path(path) {
+    let body_bytes = if let Some(action) = extract_action_from_path(path) {
         log_info!("API request: {}", action);
-        
         let json_body = alloc::format!(r#"{{"action":"{}"}}"#, action);
-        let body_bytes = json_body.as_bytes();
-        
-        let mut debugger = NoOpDebugger;
-        let response_bytes = dispatch_api(&mut debugger, body_bytes);
-        (*w).WriteJSONBytes(&response_bytes);
+        json_body.as_bytes().to_vec()
     } else {
-        let body = core::slice::from_raw_parts((*r).Body, (*r).BodyLength);
-        let mut debugger = NoOpDebugger;
-        let response_bytes = dispatch_api(&mut debugger, body);
-        (*w).WriteJSONBytes(&response_bytes);
-    }
+        core::slice::from_raw_parts((*r).Body, (*r).BodyLength).to_vec()
+    };
+    
+    let response_bytes = {
+        let mut api_guard = HYPERDBG_API.lock();
+        match api_guard.as_mut() {
+            Some(api) => dispatch_api(api, &body_bytes),
+            None => {
+                log_error!("HyperDbgApi not initialized");
+                let error_response = alloc::format!(r#"{{"success":false,"message":"API not initialized"}}"#);
+                error_response.into_bytes()
+            }
+        }
+    };
+    (*w).WriteJSONBytes(&response_bytes);
 }
 
 #[cfg(feature = "standalone-driver")]
@@ -237,6 +247,12 @@ pub extern "system" fn DriverEntry(
 
     let queue = alloc::boxed::Box::new(EventQueue::new(1000));
     unsafe { EVENT_QUEUE = alloc::boxed::Box::into_raw(queue); }
+    
+    {
+        let mut api_guard = HYPERDBG_API.lock();
+        *api_guard = Some(HyperDbgApi::new());
+    }
+    log_info!("HyperDbgApi initialized");
     
     let server = unsafe { net::Server::NewServer() };
     if server.is_null() {

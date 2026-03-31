@@ -105,6 +105,14 @@ impl DebuggerApi for HyperDbgApi {
         Ok(Empty {})
     }
 
+    fn connect(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
+    fn disconnect(&mut self, _req: &Request) -> Result<Empty, String> {
+        Ok(Empty {})
+    }
+
     fn load_vmm(&mut self, _req: &Request) -> Result<Empty, String> {
         if self.vmm_initialized {
             return Err(String::from("VMM already loaded"));

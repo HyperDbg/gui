@@ -12,8 +12,8 @@ type Debugger interface {
 	StopNetworkServer() error
 	KernelDebuggerInitialize() error
 	KernelDebuggerUninitialize() error
-	Start() error
-	Stop()
+	Connect() error
+	Disconnect()
 	IsConnected() bool
 	GetState() DebugState
 	Status() (string, error)

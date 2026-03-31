@@ -77,12 +77,12 @@ type Packet struct {
 	eventChan chan any
 }
 
-func NewPacket() Debugger {
+func NewPacket(baseURL string) Debugger {
 	p := &Packet{
 		client: &http.Client{
 			Timeout: HTTPTimeout,
 		},
-		baseURL:   fmt.Sprintf("http://%s:%d", DriverHTTPHost, DriverHTTPPort),
+		baseURL:   baseURL,
 		callbacks: make(map[MessageType][]EventCallback),
 		eventChan: make(chan any, 1000),
 	}
@@ -91,7 +91,7 @@ func NewPacket() Debugger {
 	return p
 }
 
-func (p *Packet) Start() error {
+func (p *Packet) Connect() error {
 	p.running.Store(true)
 
 	if err := p.Ping(); err != nil {
@@ -110,7 +110,7 @@ func (p *Packet) Start() error {
 	return nil
 }
 
-func (p *Packet) Stop() {
+func (p *Packet) Disconnect() {
 	p.running.Store(false)
 	p.connected.Store(false)
 }

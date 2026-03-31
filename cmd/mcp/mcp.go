@@ -99,7 +99,7 @@ func (s *DebuggerMCPServer) RegisterTools(server *mcp.Server) {
 	
 	
 	mcp.AddTool(server, &mcp.Tool{
-		Name:        "Start",
+		Name:        "Connect",
 		Description: "",
 		InputSchema: map[string]any{
 			"type": "object",
@@ -107,11 +107,11 @@ func (s *DebuggerMCPServer) RegisterTools(server *mcp.Server) {
 				
 			},
 		},
-	}, s.handleStart)
+	}, s.handleConnect)
 	
 	
 	mcp.AddTool(server, &mcp.Tool{
-		Name:        "Stop",
+		Name:        "Disconnect",
 		Description: "",
 		InputSchema: map[string]any{
 			"type": "object",
@@ -119,7 +119,7 @@ func (s *DebuggerMCPServer) RegisterTools(server *mcp.Server) {
 				
 			},
 		},
-	}, s.handleStop)
+	}, s.handleDisconnect)
 	
 	
 	mcp.AddTool(server, &mcp.Tool{
@@ -818,13 +818,13 @@ func (s *DebuggerMCPServer) handleKernelDebuggerUninitialize(ctx context.Context
 }
 
 
-type DebuggerMCPServerStartParams struct {}
+type DebuggerMCPServerConnectParams struct {}
 
 
-func (s *DebuggerMCPServer) handleStart(ctx context.Context, req *mcp.CallToolRequest, args DebuggerMCPServerStartParams) (*mcp.CallToolResult, any, error) {
+func (s *DebuggerMCPServer) handleConnect(ctx context.Context, req *mcp.CallToolRequest, args DebuggerMCPServerConnectParams) (*mcp.CallToolResult, any, error) {
 	
 	
-	err := s.impl.Start(
+	err := s.impl.Connect(
 		
 		
 	)
@@ -845,13 +845,13 @@ func (s *DebuggerMCPServer) handleStart(ctx context.Context, req *mcp.CallToolRe
 }
 
 
-type DebuggerMCPServerStopParams struct {}
+type DebuggerMCPServerDisconnectParams struct {}
 
 
-func (s *DebuggerMCPServer) handleStop(ctx context.Context, req *mcp.CallToolRequest, args DebuggerMCPServerStopParams) (*mcp.CallToolResult, any, error) {
+func (s *DebuggerMCPServer) handleDisconnect(ctx context.Context, req *mcp.CallToolRequest, args DebuggerMCPServerDisconnectParams) (*mcp.CallToolResult, any, error) {
 	
 	
-	s.impl.Stop(
+	s.impl.Disconnect(
 		
 		
 	)
