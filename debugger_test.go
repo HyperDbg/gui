@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os/exec"
 	"testing"
 	"time"
 	"unsafe"
@@ -34,14 +35,21 @@ func TestRustDriverHTTP(t *testing.T) {
 	}
 	defer conn.Disconnect()
 
-	conn.LoadVmm()
-	conn.Pause()
-	conn.Continue()
-	conn.SetBreakpoint(0x7FFE0000, debugger.BreakpointType(0))
+	cmd := exec.Command("notepad.exe")
+	if err := cmd.Start(); err != nil {
+		t.Fatalf("启动记事本失败: %v", err)
+	}
+	defer cmd.Process.Kill()
+
+	time.Sleep(500 * time.Millisecond)
+
+	if err := conn.LoadVmm(); err != nil {
+		t.Fatalf("LoadVmm 失败: %v", err)
+	}
 
 	processList, err := conn.GetProcessList()
 	if err != nil {
-		return
+		t.Fatalf("GetProcessList 失败: %v", err)
 	}
 
 	var notepadPID uint32
@@ -53,12 +61,20 @@ func TestRustDriverHTTP(t *testing.T) {
 	}
 
 	if notepadPID == 0 {
-		return
+		t.Fatal("找不到记事本进程")
 	}
 
-	conn.AttachProcess(notepadPID)
-	conn.SetBreakpoint(0x7FFE0000, debugger.BreakpointSoftware)
-	conn.Continue()
+	if err := conn.AttachProcess(notepadPID); err != nil {
+		t.Fatalf("AttachProcess 失败: %v", err)
+	}
+
+	if err := conn.SetBreakpoint(0x7FFE0000, debugger.BreakpointSoftware); err != nil {
+		t.Fatalf("SetBreakpoint 失败: %v", err)
+	}
+
+	if err := conn.Continue(); err != nil {
+		t.Fatalf("Continue 失败: %v", err)
+	}
 }
 
 func TestMultipleDriverInitialization(t *testing.T) {
