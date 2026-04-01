@@ -51,7 +51,7 @@ impl ResponseWriter {
     pub unsafe fn WriteJSONBytes(&mut self, bytes: &[u8]) -> isize {
         // 直接写入已序列化的 JSON 字节
         let header = format!(
-            "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\n\r\n",
+            "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: close\r\nContent-Length: {}\r\n\r\n",
             bytes.len()
         );
         let header_bytes = header.as_bytes();

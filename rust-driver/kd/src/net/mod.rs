@@ -198,14 +198,14 @@ impl ResponseWriter {
 
     pub unsafe fn WriteJSON<T: serde::Serialize>(&mut self, obj: &T) -> isize {
         let bytes = Marshal(obj).unwrap();
-        let header = format!("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\n\r\n", bytes.len());
+        let header = format!("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: close\r\nContent-Length: {}\r\n\r\n", bytes.len());
         let header_bytes = header.as_bytes();
         self.Write(header_bytes.as_ptr(), header_bytes.len());
         self.Write(bytes.as_ptr(), bytes.len())
     }
 
     pub unsafe fn WriteJSONBytes(&mut self, bytes: &[u8]) -> isize {
-        let header = format!("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\n\r\n", bytes.len());
+        let header = format!("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: close\r\nContent-Length: {}\r\n\r\n", bytes.len());
         let header_bytes = header.as_bytes();
         self.Write(header_bytes.as_ptr(), header_bytes.len());
         self.Write(bytes.as_ptr(), bytes.len())
