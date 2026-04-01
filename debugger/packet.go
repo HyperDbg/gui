@@ -128,18 +128,14 @@ func (p *Packet) GetState() DebugState {
 func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 	var action string
 	var reqMap map[string]any
-	if json.Unmarshal(jsonData, &reqMap) == nil {
-		if a, ok := reqMap["action"].(string); ok {
-			action = a
-		}
+	mylog.Check(json.Unmarshal(jsonData, &reqMap))
+	if a, ok := reqMap["action"].(string); ok {
+		action = a
 	}
 
 	url := fmt.Sprintf("%s/api/%s", p.baseURL, action)
 
-	httpReq, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
-	if err != nil {
-		return nil
-	}
+	httpReq := mylog.Check2(http.NewRequest("POST", url, bytes.NewBuffer(jsonData)))
 
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Host", DriverHTTPHost)
@@ -147,14 +143,15 @@ func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 	mylog.Info("[HTTP] POST", url)
 	mylog.Info("  body:", string(jsonData))
 
-	response, err := p.client.Do(httpReq)
-	if err != nil {
-		return nil
-	}
+	response := mylog.Check2(p.client.Do(httpReq))
 	defer response.Body.Close()
 
+	bodyBytes := mylog.Check2(io.ReadAll(response.Body))
+	mylog.Info("[HTTP] Response", response.Status)
+	mylog.Info("  body:", string(bodyBytes))
+
 	var result Response[T]
-	json.NewDecoder(response.Body).Decode(&result)
+	mylog.Check(json.Unmarshal(bodyBytes, &result))
 	return &result
 }
 
