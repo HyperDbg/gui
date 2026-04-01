@@ -68,12 +68,9 @@ pub struct WskEventCallbackControl {
     pub EventMask: ULONG,
 }
 
-pub static NPI_WSK_INTERFACE_ID: NPIID = NPIID {
-    Data1: 0x2227E803,
-    Data2: 0x8D8B,
-    Data3: 0x11D4,
-    Data4: [0xAB, 0xAD, 0x00, 0x90, 0x27, 0x71, 0x9E, 0x09],
-};
+extern "C" {
+    static NPI_WSK_INTERFACE_ID: NPIID;
+}
 
 #[repr(C)]
 pub struct ClientDispatch {
@@ -649,6 +646,14 @@ impl Server {
         self.ListeningContext = socket_context;
 
         let wsk_client = ClientNpi { ClientContext: ptr::null_mut(), Dispatch: &self.ClientDispatch };
+        
+        let guid = &NPI_WSK_INTERFACE_ID;
+        log_info!("[ListenAndServe] NPI_WSK_INTERFACE_ID GUID:");
+        log_info!("  Data1: 0x{:08X}", (*guid).Data1);
+        log_info!("  Data2: 0x{:04X}", (*guid).Data2);
+        log_info!("  Data3: 0x{:04X}", (*guid).Data3);
+        log_info!("  Data4: {:02X?}", (*guid).Data4);
+        
         let status = WskRegister(&wsk_client as *const _ as *const core::ffi::c_void, &mut self.Registration as *mut _ as *mut core::ffi::c_void);
         log_info!("[ListenAndServe] WskRegister status: 0x{:X}", status);
         if status != STATUS_SUCCESS {
