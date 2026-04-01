@@ -204,13 +204,17 @@ unsafe fn extract_action_from_path(path: &str) -> Option<&str> {
 #[cfg(feature = "standalone-driver")]
 unsafe extern "C" fn api_handler(w: *mut ResponseWriter, r: *mut Request) {
     let path = (*r).Path();
+    let original_body = core::slice::from_raw_parts((*r).Body, (*r).BodyLength).to_vec();
     
     let body_bytes = if let Some(action) = extract_action_from_path(path) {
-        log_info!("API request: {}", action);
-        let json_body = alloc::format!(r#"{{"action":"{}"}}"#, action);
-        json_body.as_bytes().to_vec()
+        log_info!("API request from path: {}", action);
+        if original_body.is_empty() || original_body.iter().all(|&b| b == b' ' || b == b'\n' || b == b'\r' || b == b'\t') {
+            alloc::format!(r#"{{"action":"{}"}}"#, action).into_bytes()
+        } else {
+            original_body
+        }
     } else {
-        core::slice::from_raw_parts((*r).Body, (*r).BodyLength).to_vec()
+        original_body
     };
     
     let response_bytes = {

@@ -126,7 +126,15 @@ func (p *Packet) GetState() DebugState {
 }
 
 func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
-	url := fmt.Sprintf("%s/api", p.baseURL)
+	var action string
+	var reqMap map[string]any
+	if json.Unmarshal(jsonData, &reqMap) == nil {
+		if a, ok := reqMap["action"].(string); ok {
+			action = a
+		}
+	}
+
+	url := fmt.Sprintf("%s/api/%s", p.baseURL, action)
 
 	httpReq, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	if err != nil {
@@ -136,14 +144,7 @@ func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Host", DriverHTTPHost)
 
-	var action string
-	var reqMap map[string]any
-	if json.Unmarshal(jsonData, &reqMap) == nil {
-		if a, ok := reqMap["action"].(string); ok {
-			action = a
-		}
-	}
-	fmt.Printf("[HTTP] POST %s action=%s body=%s\n", url, action, string(jsonData))
+	fmt.Printf("[HTTP] POST %s\n  body: %s\n", url, string(jsonData))
 
 	response, err := p.client.Do(httpReq)
 	if err != nil {
