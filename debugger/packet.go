@@ -96,10 +96,8 @@ func NewPacket(baseURL string) Debugger {
 func (p *Packet) Connect() error {
 	p.running.Store(true)
 
-	mylog.Check(p.Ping())
-
 	p.connected.Store(true)
-	mylog.Success("Connected to driver at %s", p.baseURL)
+	mylog.Success("Connected to driver at", p.baseURL)
 
 	go p.eventPoller()
 
@@ -168,15 +166,6 @@ func (p *Packet) Status() (string, error) {
 		return "", fmt.Errorf("status request failed")
 	}
 	return resp.Message, nil
-}
-
-func (p *Packet) Ping() error {
-	data, _ := json.Marshal(map[string]string{"action": "ping"})
-	resp := SendReceive[Empty](p, data)
-	if resp == nil || !resp.Success {
-		return fmt.Errorf("ping failed")
-	}
-	return nil
 }
 
 func (p *Packet) RegisterCallback(msgType MessageType, cb EventCallback) {

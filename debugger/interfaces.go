@@ -17,7 +17,6 @@ type Debugger interface {
 	IsConnected() bool
 	GetState() DebugState
 	Status() (string, error)
-	Ping() error
 	LoadVmm() error
 	UnloadVmm() error
 	AttachProcess(processID uint32) error

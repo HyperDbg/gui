@@ -1272,9 +1272,9 @@ extern "C" {
     pub fn PsGetProcessPeb(process: *mut u8) -> u64;
     pub fn PsGetProcessWow64Process(process: *mut u8) -> u32;
     pub fn RtlPcToFileHeader(pc: u64, base_address: *mut u64) -> u64;
-    // pub fn PsGetNextProcess(process: PEPROCESS) -> PEPROCESS;
+    pub fn PsGetNextProcess(process: PEPROCESS) -> PEPROCESS;
     pub fn PsGetProcessImageFileName(process: PEPROCESS) -> *mut i8;
-    // pub fn PsGetNextProcessThread(Process: PEPROCESS, Thread: PETHREAD) -> PETHREAD;
+    pub fn PsGetNextProcessThread(Process: PEPROCESS, Thread: PETHREAD) -> PETHREAD;
     pub fn PsGetThreadTeb(Thread: PETHREAD) -> u64;
     pub fn PsTerminateProcess(Process: PEPROCESS, ExitStatus: NTSTATUS) -> NTSTATUS;
     pub fn PsTerminateThread(Thread: PETHREAD, ExitStatus: NTSTATUS) -> NTSTATUS;

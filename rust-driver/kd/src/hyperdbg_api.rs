@@ -93,10 +93,6 @@ impl DebuggerApi for HyperDbgApi {
         }
     }
 
-    fn ping(&mut self, _req: &Request) -> Result<Empty, String> {
-        Ok(Empty {})
-    }
-
     fn connect(&mut self, _req: &Request) -> Result<Empty, String> {
         Ok(Empty {})
     }

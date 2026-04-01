@@ -73,7 +73,6 @@ pub trait DebuggerApi {
     fn connect(&mut self, req: &Request) -> Result<Empty, String>;
     fn disconnect(&mut self, req: &Request) -> Result<Empty, String>;
     fn status(&mut self, req: &Request) -> Result<String, String>;
-    fn ping(&mut self, req: &Request) -> Result<Empty, String>;
     fn load_vmm(&mut self, req: &Request) -> Result<Empty, String>;
     fn unload_vmm(&mut self, req: &Request) -> Result<Empty, String>;
     fn attach_process(&mut self, req: &Request) -> Result<Empty, String>;
@@ -168,12 +167,6 @@ pub fn dispatch_api<T: DebuggerApi>(api: &mut T, body: &[u8]) -> Vec<u8> {
                 }
                 "status" => {
                     match api.status(&req) {
-                        Ok(data) => success_response(data),
-                        Err(e) => error_response(&e),
-                    }
-                }
-                "ping" => {
-                    match api.ping(&req) {
                         Ok(data) => success_response(data),
                         Err(e) => error_response(&e),
                     }
@@ -433,10 +426,6 @@ impl DebuggerApi for NoOpDebugger {
 
     fn status(&mut self, _req: &Request) -> Result<String, String> {
         Ok(Default::default())
-    }
-
-    fn ping(&mut self, _req: &Request) -> Result<Empty, String> {
-        Ok(Empty {})
     }
 
     fn load_vmm(&mut self, _req: &Request) -> Result<Empty, String> {
