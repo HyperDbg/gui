@@ -144,7 +144,8 @@ func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Host", DriverHTTPHost)
 
-	fmt.Printf("[HTTP] POST %s\n  body: %s\n", url, string(jsonData))
+	mylog.Info("[HTTP] POST", url)
+	mylog.Info("  body:", string(jsonData))
 
 	response, err := p.client.Do(httpReq)
 	if err != nil {
