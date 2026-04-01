@@ -8,9 +8,11 @@ import (
 
 	"github.com/ddkwork/HyperDbg/debugger"
 	"github.com/ddkwork/HyperDbg/debugger/driver"
+	"github.com/ddkwork/golibrary/std/mylog"
 	"github.com/ddkwork/golibrary/std/stream"
 )
- func TestFixError(t *testing.T) {
+
+func TestFixError(t *testing.T) {
 	stream.Fmt(".")
 	stream.Fix(".")
 }
@@ -28,27 +30,13 @@ func TestRustDriverHTTP(t *testing.T) {
 
 	conn := debugger.NewPacket("http://127.0.0.1:50080")
 
-	if err := conn.Connect(); err != nil {
-		t.Fatalf("Connect 失败: %v", err)
-	}
+	mylog.Check(conn.Connect())
 	defer conn.Disconnect()
 
-	notepadPID, err := conn.StartProcess("notepad.exe")
-	if err != nil {
-		t.Fatalf("StartProcess 失败: %v", err)
-	}
+	notepadPID := mylog.Check2(conn.StartProcess("notepad.exe"))
 	defer conn.KillProcess(notepadPID)
-
-	time.Sleep(500 * time.Millisecond)
-
-	if err := conn.LoadVmm(); err != nil {
-		t.Fatalf("LoadVmm 失败: %v", err)
-	}
-
-	if err := conn.AttachProcess(notepadPID); err != nil {
-		t.Fatalf("AttachProcess 失败: %v", err)
-	}
-
+	mylog.Check(conn.LoadVmm())
+	mylog.Check(conn.AttachProcess(notepadPID))
 	t.Logf("Process %d attached successfully", notepadPID)
 }
 
