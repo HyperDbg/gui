@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 	"syscall"
+	"time"
 	"unsafe"
 
 	"github.com/ddkwork/golibrary/std/mylog"
@@ -139,10 +140,7 @@ func (p *Provider) Uninstall() {
 	if e != nil && !errors.Is(e, windows.ERROR_SERVICE_MARKED_FOR_DELETE) {
 		mylog.Check(e)
 	}
-	if e == nil {
-		mylog.Success("驱动卸载成功")
-	}
-
+	mylog.Success("驱动卸载成功")
 	if schService != windows.Handle(0) {
 		mylog.Check(windows.CloseServiceHandle(schService))
 	}
@@ -230,16 +228,31 @@ func (p *Provider) Stop() {
 	}
 
 	var serviceStatus windows.SERVICE_STATUS
-	e = windows.ControlService(schService, windows.SERVICE_CONTROL_STOP, &serviceStatus)
-	if e != nil && !errors.Is(e, windows.ERROR_SERVICE_NOT_ACTIVE) {
-		mylog.Check(e)
-	}
-	if e == nil {
+	var closeHandleScheduled bool
+
+	done := make(chan error, 1)
+	go func() {
+		done <- windows.ControlService(schService, windows.SERVICE_CONTROL_STOP, &serviceStatus)
+	}()
+
+	select {
+	case e := <-done:
+		if schService != windows.Handle(0) {
+			mylog.Check(windows.CloseServiceHandle(schService))
+		}
+		closeHandleScheduled = true
+		if e != nil {
+			if e.Error() != "The service has not been started." {
+				mylog.Check(e)
+			}
+		}
 		mylog.Success("驱动停止成功")
+	case <-time.After(2 * time.Second):
+		mylog.Warning("驱动停止超时 (5秒)，跳过等待")
 	}
 
-	if schService != windows.Handle(0) {
-		mylog.Check(windows.CloseServiceHandle(schService))
+	if !closeHandleScheduled && schService != windows.Handle(0) {
+		go windows.CloseServiceHandle(schService)
 	}
 }
 

@@ -554,8 +554,24 @@ unsafe fn stop_work_queue(work_queue: *mut WorkQueue) {
     if (*work_queue).Thread.is_null() { return; }
     (*work_queue).Stop = 1;
     KeSetEvent(&mut (*work_queue).Event, 0, 0);
-    let _ = KeWaitForSingleObject((*work_queue).Thread, _KWAIT_REASON::Executive, KERNEL_MODE, 0, ptr::null_mut());
-    ObfDereferenceObject((*work_queue).Thread);
+    
+    let timeout: i64 = -5 * 10 * 1000 * 1000;
+    let status = KeWaitForSingleObject(
+        (*work_queue).Thread, 
+        _KWAIT_REASON::Executive, 
+        KERNEL_MODE, 
+        0, 
+        &timeout as *const i64 as *mut _,
+    );
+    
+    use wdk_sys::STATUS_SUCCESS;
+    use wdk_sys::STATUS_TIMEOUT;
+    
+    if status == STATUS_SUCCESS {
+        ObfDereferenceObject((*work_queue).Thread);
+    } else if status == STATUS_TIMEOUT {
+        log_warn!("[stop_work_queue] Timeout waiting for worker thread, thread may still be running");
+    }
     (*work_queue).Thread = ptr::null_mut();
 }
 
@@ -647,40 +663,25 @@ impl Server {
     }
 
     pub unsafe fn Shutdown(&mut self) {
-        if !self.ListeningContext.is_null() { enqueue_op(&mut (*self.ListeningContext).OpContext[1], op_stop_listen); }
-        
-        // 等待工作队列中的所有操作完成
-        let mut processed_count = 0;
-        loop {
-            let list_entry = ExpInterlockedFlushSList(&mut self.WorkQueue.Head as *mut _ as PSLIST_HEADER);
-            if list_entry.is_null() {
-                // 检查是否还有正在处理的操作
-                if processed_count > 0 {
-                    // 如果之前处理过操作，再检查一次
-                    processed_count = 0;
-                    continue;
-                } else {
-                    // 队列为空且没有正在处理的操作，退出循环
-                    break;
-                }
-            }
+        if !self.ListeningContext.is_null() {
+            (*self.ListeningContext).StopListening = 1;
             
-            processed_count += 1;
-            // 处理剩余的操作
-            let mut entry = list_entry;
-            let mut reversed: PSLIST_ENTRY = ptr::null_mut();
-            while !entry.is_null() {
-                let next = (*entry).Next;
-                (*entry).Next = reversed;
-                reversed = entry;
-                entry = next;
-            }
-            entry = reversed;
-            while !entry.is_null() {
-                let op_ctx = (entry as usize - core::mem::offset_of!(SocketOpContext, QueueEntry)) as *mut SocketOpContext;
-                let handler = (*op_ctx).OpHandler;
-                entry = (*entry).Next;
-                if let Some(h) = handler { h(op_ctx); }
+            if !(*self.ListeningContext).Socket.is_null() {
+                let socket = (*self.ListeningContext).Socket;
+                let dispatch = (*socket).Dispatch as *const ProviderBasicDispatch;
+                let close_fn: unsafe extern "system" fn(*mut Socket, PIRP) -> NTSTATUS = core::mem::transmute((*dispatch).WskCloseSocket);
+                
+                let mut event: KEVENT = core::mem::zeroed();
+                KeInitializeEvent(&mut event as *mut _ as PRKEVENT, _EVENT_TYPE::SynchronizationEvent, 0);
+                
+                let irp = IoAllocateIrp(1, 0);
+                if !irp.is_null() {
+                    set_completion_routine(irp, Some(sync_completion_routine), &mut event as *mut _ as PVOID);
+                    let _ = close_fn(socket, irp);
+                    let _ = KeWaitForSingleObject(&mut event as *mut _ as PVOID, _KWAIT_REASON::Executive, KERNEL_MODE, 0, ptr::null_mut());
+                    IoFreeIrp(irp);
+                }
+                (*self.ListeningContext).Socket = ptr::null_mut();
             }
         }
         

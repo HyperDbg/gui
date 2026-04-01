@@ -29,18 +29,17 @@ func TestRustDriverHTTP(t *testing.T) {
 	mylog.Check(conn.Connect())
 
 	notepadPID := mylog.Check2(conn.StartProcess("notepad.exe"))
-	//defer conn.KillProcess(notepadPID)
+	// defer conn.KillProcess(notepadPID)
 	mylog.Success(notepadPID)
 
 	// mylog.Check(conn.LoadVmm())
 	// mylog.Check(conn.AttachProcess(notepadPID))
 	// t.Logf("Process %d attached successfully", notepadPID)
-	//defer conn.Disconnect()
-	//defer func() {
+	// defer conn.Disconnect()
+	// defer func() {
 	drv.Stop()
 	drv.Uninstall()
 	//}()
-
 }
 
 func TestMultipleDriverInitialization(t *testing.T) {
