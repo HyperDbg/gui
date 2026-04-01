@@ -136,8 +136,14 @@ func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Host", DriverHTTPHost)
 
-	// 打印完整的请求 URL
-	fmt.Printf("[HTTP] Sending request to: %s\n", url)
+	var action string
+	var reqMap map[string]any
+	if json.Unmarshal(jsonData, &reqMap) == nil {
+		if a, ok := reqMap["action"].(string); ok {
+			action = a
+		}
+	}
+	fmt.Printf("[HTTP] POST %s action=%s body=%s\n", url, action, string(jsonData))
 
 	response, err := p.client.Do(httpReq)
 	if err != nil {
