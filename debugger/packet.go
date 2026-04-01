@@ -135,12 +135,11 @@ func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 
 	url := fmt.Sprintf("%s/api/%s", p.baseURL, action)
 
-	httpReq := mylog.Check2(http.NewRequest("POST", url, bytes.NewBuffer(jsonData)))
-
+	httpReq := mylog.Check2(http.NewRequest("POST", url, bytes.NewReader(jsonData)))
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Host", DriverHTTPHost)
 
-	mylog.Info("[HTTP] POST", url)
+	mylog.Warning("[HTTP] POST", url)
 	mylog.Info("  body:", string(jsonData))
 
 	response := mylog.Check2(p.client.Do(httpReq))
