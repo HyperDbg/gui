@@ -134,6 +134,8 @@ func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 	httpReq := mylog.Check2(http.NewRequest(http.MethodPost, url, bytes.NewReader(jsonData)))
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Host", DriverHTTPHost)
+	httpReq.Header.Set("Connection", "close")
+	httpReq.Close = true
 
 	mylog.Request(httpReq, true)
 
