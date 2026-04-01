@@ -554,24 +554,8 @@ unsafe fn stop_work_queue(work_queue: *mut WorkQueue) {
     if (*work_queue).Thread.is_null() { return; }
     (*work_queue).Stop = 1;
     KeSetEvent(&mut (*work_queue).Event, 0, 0);
-    
-    let timeout: i64 = -5 * 10 * 1000 * 1000;
-    let status = KeWaitForSingleObject(
-        (*work_queue).Thread, 
-        _KWAIT_REASON::Executive, 
-        KERNEL_MODE, 
-        0, 
-        &timeout as *const i64 as *mut _,
-    );
-    
-    use wdk_sys::STATUS_SUCCESS;
-    use wdk_sys::STATUS_TIMEOUT;
-    
-    if status == STATUS_SUCCESS {
-        ObfDereferenceObject((*work_queue).Thread);
-    } else if status == STATUS_TIMEOUT {
-        log_warn!("[stop_work_queue] Timeout waiting for worker thread, thread may still be running");
-    }
+    let _ = KeWaitForSingleObject((*work_queue).Thread, _KWAIT_REASON::Executive, KERNEL_MODE, 0, ptr::null_mut());
+    ObfDereferenceObject((*work_queue).Thread);
     (*work_queue).Thread = ptr::null_mut();
 }
 
