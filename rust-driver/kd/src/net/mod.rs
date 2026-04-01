@@ -48,6 +48,32 @@ pub const IPV6_V6ONLY: u32 = 27;
 pub const WSK_FLAG_LISTEN_SOCKET: u32 = 0x00000001;
 pub const WSK_INFINITE_WAIT: ULONG = 0xFFFFFFFF;
 pub const KERNEL_MODE: KPROCESSOR_MODE = 0;
+pub const WSK_SET_STATIC_EVENT_CALLBACKS: u32 = 7;
+pub const WSK_EVENT_ACCEPT: u32 = 0x00000200;
+
+#[repr(C)]
+pub struct Guid {
+    pub Data1: u32,
+    pub Data2: u16,
+    pub Data3: u16,
+    pub Data4: [u8; 8],
+}
+
+pub type NPIID = Guid;
+pub type PNPIID = *const NPIID;
+
+#[repr(C)]
+pub struct WskEventCallbackControl {
+    pub NpiId: PNPIID,
+    pub EventMask: ULONG,
+}
+
+pub static NPI_WSK_INTERFACE_ID: NPIID = NPIID {
+    Data1: 0x8290D494,
+    Data2: 0x6A43,
+    Data3: 0x11DC,
+    Data4: [0x96, 0x3C, 0x00, 0x50, 0x56, 0xC0, 0x00, 0x08],
+};
 
 #[repr(C)]
 pub struct ClientDispatch {
@@ -727,6 +753,27 @@ unsafe fn setup_listening_socket(provider_npi: *const ProviderNpi, op_ctx: *mut 
         (*socket_context).Socket = ptr::null_mut();
         IoReuseIrp(irp, STATUS_UNSUCCESSFUL);
         log_success!("[setup_listening_socket] Existing socket closed");
+    } else {
+        let mut callback_control = WskEventCallbackControl {
+            NpiId: ptr::addr_of!(NPI_WSK_INTERFACE_ID),
+            EventMask: WSK_EVENT_ACCEPT,
+        };
+        let control_client_fn: unsafe extern "system" fn(PVOID, u32, SIZE_T, PVOID, SIZE_T, PVOID, *mut SIZE_T, PIRP) -> NTSTATUS = core::mem::transmute((*(*provider_npi).Dispatch).WskControlClient);
+        let status = control_client_fn(
+            (*provider_npi).Client,
+            WSK_SET_STATIC_EVENT_CALLBACKS,
+            core::mem::size_of::<WskEventCallbackControl>() as SIZE_T,
+            &mut callback_control as *mut _ as PVOID,
+            0,
+            ptr::null_mut(),
+            ptr::null_mut(),
+            ptr::null_mut(),
+        );
+        if status != STATUS_SUCCESS {
+            log_error!("[setup_listening_socket] WSK_SET_STATIC_EVENT_CALLBACKS failed: 0x{:X}", status);
+            return;
+        }
+        log_success!("[setup_listening_socket] WSK_SET_STATIC_EVENT_CALLBACKS set successfully");
     }
     
     KeInitializeEvent(&mut comp_event, _EVENT_TYPE::SynchronizationEvent, 0);
