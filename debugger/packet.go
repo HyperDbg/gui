@@ -69,15 +69,14 @@ func WriteMessage(w io.Writer, msg *Message) error {
 }
 
 type Packet struct {
-	client       *http.Client
-	baseURL      string
-	driverID     atomic.Uint64
-	running      atomic.Bool
-	connected    atomic.Bool
-	state        atomic.Int32
-	requestCount atomic.Int64
-	callbacks    map[MessageType][]EventCallback
-	eventChan    chan any
+	client    *http.Client
+	baseURL   string
+	driverID  atomic.Uint64
+	running   atomic.Bool
+	connected atomic.Bool
+	state     atomic.Int32
+	callbacks map[MessageType][]EventCallback
+	eventChan chan any
 }
 
 func NewPacket(baseURL string) Debugger {
@@ -138,19 +137,15 @@ func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Host", DriverHTTPHost)
 
-	count := p.requestCount.Add(1)
-	mylog.Warning("[HTTP-", fmt.Sprintf("%03d", count), "]", action, "|POST|", url)
-	mylog.Info("  body:", string(jsonData))
+	mylog.Request(httpReq, true)
 
 	response := mylog.Check2(p.client.Do(httpReq))
 	defer response.Body.Close()
 
-	bodyBytes := mylog.Check2(io.ReadAll(response.Body))
-	mylog.Info("[HTTP-", fmt.Sprintf("%03d", count), "]", action, "|Response|", response.Status)
-	mylog.Info("  body:", string(bodyBytes))
+	bodyBytes := mylog.Response(response, true)
 
 	var result Response[T]
-	mylog.Check(json.Unmarshal(bodyBytes, &result))
+	mylog.Check(json.Unmarshal(bodyBytes.Bytes(), &result))
 	return &result
 }
 
