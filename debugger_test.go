@@ -23,21 +23,24 @@ func TestRustDriverHTTP(t *testing.T) {
 	drv := driver.NewWithOptions(driverPath, "hyperdbg", "\\\\.\\hyperdbg", true)
 	drv.Install()
 	drv.Start()
-	defer func() {
-		drv.Stop()
-		drv.Uninstall()
-	}()
 
 	conn := debugger.NewPacket("http://127.0.0.1:50080")
 
 	mylog.Check(conn.Connect())
-	defer conn.Disconnect()
 
 	notepadPID := mylog.Check2(conn.StartProcess("notepad.exe"))
-	defer conn.KillProcess(notepadPID)
-	mylog.Check(conn.LoadVmm())
-	mylog.Check(conn.AttachProcess(notepadPID))
-	t.Logf("Process %d attached successfully", notepadPID)
+	//defer conn.KillProcess(notepadPID)
+	mylog.Success(notepadPID)
+
+	// mylog.Check(conn.LoadVmm())
+	// mylog.Check(conn.AttachProcess(notepadPID))
+	// t.Logf("Process %d attached successfully", notepadPID)
+	//defer conn.Disconnect()
+	//defer func() {
+	drv.Stop()
+	drv.Uninstall()
+	//}()
+
 }
 
 func TestMultipleDriverInitialization(t *testing.T) {

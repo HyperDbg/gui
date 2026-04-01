@@ -138,12 +138,13 @@ func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 	mylog.Request(httpReq, true)
 
 	response := mylog.Check2(p.client.Do(httpReq))
-	defer response.Body.Close()
-
-	bodyBytes := mylog.Response(response, true)
+	mylog.Response(response, true)
 
 	var result Response[T]
-	mylog.Check(json.Unmarshal(bodyBytes.Bytes(), &result))
+	if response.Body != nil {
+		mylog.Check(json.Unmarshal(mylog.Check2(io.ReadAll(response.Body)), &result))
+		mylog.Check(response.Body.Close())
+	}
 	return &result
 }
 
@@ -166,6 +167,26 @@ func (p *Packet) Status() (string, error) {
 		return "", fmt.Errorf("status request failed")
 	}
 	return resp.Message, nil
+}
+
+func extractJsonBody(data []byte) []byte {
+	lines := bytes.Split(data, []byte("\n"))
+	var jsonLines [][]byte
+	foundJson := false
+	for _, line := range lines {
+		trimmed := bytes.TrimSpace(line)
+		if len(trimmed) > 0 && trimmed[0] == '{' {
+			foundJson = true
+		}
+		if foundJson {
+			jsonLines = append(jsonLines, line)
+		}
+	}
+	if len(jsonLines) == 0 {
+		return data
+	}
+	result := bytes.Join(jsonLines, []byte("\n"))
+	return bytes.TrimRight(result, "\n")
 }
 
 func (p *Packet) RegisterCallback(msgType MessageType, cb EventCallback) {
@@ -300,7 +321,7 @@ func (p *Packet) StartProcess(exePath string) (uint32, error) {
 		"thread_id":  pi.ThreadID,
 		"exe_path":   exePath,
 	}))
-	resp := SendReceive[Empty](p, data)
+	resp := SendReceive[uint32](p, data)
 	if resp == nil || !resp.Success {
 		syscall.CloseHandle(syscall.Handle(pi.ProcessHandle))
 		syscall.CloseHandle(syscall.Handle(pi.ThreadHandle))
@@ -313,7 +334,7 @@ func (p *Packet) StartProcess(exePath string) (uint32, error) {
 	syscall.CloseHandle(syscall.Handle(pi.ProcessHandle))
 	syscall.CloseHandle(syscall.Handle(pi.ThreadHandle))
 
-	return pi.ProcessID, nil
+	return resp.Data, nil
 }
 
 func (p *Packet) KillProcess(processID uint32) error {
