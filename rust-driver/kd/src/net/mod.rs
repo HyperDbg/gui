@@ -648,27 +648,8 @@ impl Server {
 
     pub unsafe fn Shutdown(&mut self) {
         if !self.ListeningContext.is_null() {
-            (*self.ListeningContext).StopListening = 1;
-            
-            if !(*self.ListeningContext).Socket.is_null() {
-                let socket = (*self.ListeningContext).Socket;
-                let dispatch = (*socket).Dispatch as *const ProviderBasicDispatch;
-                let close_fn: unsafe extern "system" fn(*mut Socket, PIRP) -> NTSTATUS = core::mem::transmute((*dispatch).WskCloseSocket);
-                
-                let mut event: KEVENT = core::mem::zeroed();
-                KeInitializeEvent(&mut event as *mut _ as PRKEVENT, _EVENT_TYPE::SynchronizationEvent, 0);
-                
-                let irp = IoAllocateIrp(1, 0);
-                if !irp.is_null() {
-                    set_completion_routine(irp, Some(sync_completion_routine), &mut event as *mut _ as PVOID);
-                    let _ = close_fn(socket, irp);
-                    let _ = KeWaitForSingleObject(&mut event as *mut _ as PVOID, _KWAIT_REASON::Executive, KERNEL_MODE, 0, ptr::null_mut());
-                    IoFreeIrp(irp);
-                }
-                (*self.ListeningContext).Socket = ptr::null_mut();
-            }
+            enqueue_op(&mut (*self.ListeningContext).OpContext[1], op_stop_listen);
         }
-        
         WskDeregister(&mut self.Registration as *mut _ as *mut core::ffi::c_void);
         stop_work_queue(&mut self.WorkQueue);
     }
@@ -708,10 +689,8 @@ unsafe extern "C" fn op_start_listen(op_ctx: *mut SocketOpContext) {
         WskReleaseProviderNPI(&mut (*server).Registration as *mut _ as *mut core::ffi::c_void);
         log_info!("[op_start_listen] WSK provider NPI released");
         if (*socket_context).Socket as usize != 0 {
-            log_success!("[op_start_listen] Listening socket created, starting to accept connections");
+            log_success!("[op_start_listen] Listening socket created, accept connections via callback");
             log_info!("[op_start_listen] Listening socket: {:?}", (*socket_context).Socket);
-            enqueue_op(op_ctx, op_accept);
-            log_info!("[op_start_listen] Enqueued op_accept");
         } else {
             log_error!("[op_start_listen] Failed to create listening socket");
         }
