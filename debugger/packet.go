@@ -139,14 +139,14 @@ func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 	httpReq.Header.Set("Host", DriverHTTPHost)
 
 	count := p.requestCount.Add(1)
-	mylog.Warning("[HTTP]", count, action, "|POST|", url)
+	mylog.Warning("[HTTP-", fmt.Sprintf("%03d", count), "]", action, "|POST|", url)
 	mylog.Info("  body:", string(jsonData))
 
 	response := mylog.Check2(p.client.Do(httpReq))
 	defer response.Body.Close()
 
 	bodyBytes := mylog.Check2(io.ReadAll(response.Body))
-	mylog.Info("[HTTP]", count, action, "|Response|", response.Status)
+	mylog.Info("[HTTP-", fmt.Sprintf("%03d", count), "]", action, "|Response|", response.Status)
 	mylog.Info("  body:", string(bodyBytes))
 
 	var result Response[T]
