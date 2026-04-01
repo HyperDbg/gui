@@ -96,12 +96,10 @@ func NewPacket(baseURL string) Debugger {
 func (p *Packet) Connect() error {
 	p.running.Store(true)
 
-	if err := p.Ping(); err != nil {
-		return fmt.Errorf("failed to connect to driver: %w", err)
-	}
+	mylog.Check(p.Ping())
 
 	p.connected.Store(true)
-	fmt.Printf("Connected to driver at %s\n", p.baseURL)
+	mylog.Success("Connected to driver at %s", p.baseURL)
 
 	go p.eventPoller()
 
@@ -135,7 +133,7 @@ func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 
 	url := fmt.Sprintf("%s/api/%s", p.baseURL, action)
 
-	httpReq := mylog.Check2(http.NewRequest("POST", url, bytes.NewReader(jsonData)))
+	httpReq := mylog.Check2(http.NewRequest(http.MethodPost, url, bytes.NewReader(jsonData)))
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Host", DriverHTTPHost)
 
@@ -146,7 +144,7 @@ func SendReceive[T ResponseType](p *Packet, jsonData []byte) *Response[T] {
 	defer response.Body.Close()
 
 	bodyBytes := mylog.Check2(io.ReadAll(response.Body))
-	mylog.Info("[HTTP] Response", response.Status)
+	mylog.Info("[HTTP] Response ", response.Status)
 	mylog.Info("  body:", string(bodyBytes))
 
 	var result Response[T]
