@@ -1,0 +1,1 @@
+& "C:\Microsoft.WinDbg_1.2601.12001.0_x64__8wekyb3d8bbwe\amd64\kd.exe" -z "C:\Windows\MEMORY.DMP" -y "c:\Users\Admin\Desktop\hypedbg\HyperDbgUnified\build\Release" -srcpath "c:\Users\Admin\Desktop\hypedbg\HyperDbgUnified\HyperDbg" -lines -c ".reload /i hyperkd.sys=fffff8066ff00000;ln hyperkd+0x3b650;q"

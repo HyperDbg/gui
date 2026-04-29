@@ -1,0 +1,16 @@
+.idea
+*.exp
+*.lib
+*.log
+HyperDbg.exe
+doc/
+old/
+**/target/
+rust-driver/todo/
+/todo/
+/HyperDbgUnified/build_debug/
+/HyperDbgUnified/build/
+/init.cmd
+/dep/
+/arch/
+/debugger/pdbex/ok/

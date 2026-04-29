@@ -1,0 +1,17 @@
+go 1.26.1
+
+use (
+	.
+	./arch
+	./dep/bindgen
+	./dep/bindgen/cc/v4
+	./dep/bindgen/project/ARImpRec
+	./dep/bindgen/project/Everything-SDK
+	./dep/bindgen/project/WinDivert
+	./dep/bindgen/project/hyperdbg/sdk
+	./dep/bindgen/project/keystone
+	./dep/bindgen/project/xed
+	./dep/bindgen/project/zydis
+	./dep/golibrary
+	./dep/pe
+)
