@@ -8,8 +8,10 @@ import (
 	"strings"
 	"syscall"
 	"testing"
+	"time"
 	"unsafe"
 
+	"github.com/ddkwork/HyperDbg/debugger/app"
 	"github.com/ddkwork/HyperDbg/debugger/commands/debugging"
 	"github.com/ddkwork/HyperDbg/debugger/commands/extension"
 	"github.com/ddkwork/HyperDbg/debugger/commands/hwdbg"
@@ -20,9 +22,11 @@ import (
 	"github.com/ddkwork/HyperDbg/debugger/misc"
 	"github.com/ddkwork/HyperDbg/debugger/scriptengine"
 	"github.com/ddkwork/HyperDbg/debugger/transparency"
+	"github.com/ddkwork/HyperDbg/debugger/user_level"
 	"github.com/ddkwork/golibrary/std/mylog"
 	"github.com/ddkwork/golibrary/std/stream"
 	"github.com/ddkwork/sdk"
+	"golang.org/x/sys/windows"
 )
 
 func TestFixError(t *testing.T) {
@@ -929,4 +933,66 @@ func TestHookNtDeviceIoControlFile(t *testing.T) {
 			"code", fmt.Sprintf("0x%08X", unhookRec.Code),
 		)
 	})
+}
+
+func TestDebugNotepad(t *testing.T) {
+	driverPath := mylog.Check2(filepath.Abs(`..\HyperDbgUnified\build_debug\hyperkd.sys`))
+	if _, err := os.Stat(driverPath); err != nil {
+		t.Skipf("driver not found at %s, skip: %v", driverPath, err)
+	}
+
+	l := app.NewLibhyperdbg()
+	l.SetCustomDriverPath(driverPath, app.KernelDebuggerDriverName)
+	if l.HyperDbgInstallVmmDriver() != 0 {
+		t.Fatal("install driver failed")
+	}
+	if !driver_loader.ManageDriver(app.KernelDebuggerDriverName, driverPath, driver_loader.DriverFuncStart) {
+		t.Fatal("start driver failed")
+	}
+	if l.LoadVmmModule("\\\\.\\HprDbgHv") != 0 {
+		t.Fatal("install driver or load vmm failed")
+	}
+	defer func() {
+		l.UnloadVmm(func(buf []byte, code uint32) ([]byte, error) {
+			out := make([]byte, 0x10000)
+			var n uint32
+			var inPtr *byte
+			if len(buf) > 0 {
+				inPtr = &buf[0]
+			}
+			windows.DeviceIoControl(l.GetDeviceHandle(), code, inPtr, uint32(len(buf)), &out[0], 0x10000, &n, nil)
+			return out[:n], nil
+		})
+		l.HyperDbgStopVmmDriver()
+		l.HyperDbgUninstallVmmDriver()
+	}()
+
+	h := l.GetDeviceHandle()
+	dc := core.NewDebuggerCore()
+	dc.SetDeviceHandle(h)
+	dc.SetConnectedToHyperDbgLocally(true)
+	dc.SetDeviceIoControl(func(code uint32, in []byte, inSz uint32, out []byte, outSz uint32) (bool, uint32, error) {
+		var n uint32
+		var inPtr, outPtr *byte
+		if len(in) > 0 {
+			inPtr = &in[0]
+		}
+		if len(out) > 0 {
+			outPtr = &out[0]
+		}
+		err := windows.DeviceIoControl(h, code, inPtr, inSz, outPtr, outSz, &n, nil)
+		return err == nil, n, err
+	})
+
+	ud := user_level.NewUserDebugger()
+	ud.Initialize()
+	defer ud.Uninitialize()
+
+	if err := dc.StartProcess(`C:\Windows\System32\notepad.exe`, ""); err != nil {
+		t.Fatalf("start notepad: %v", err)
+	}
+	mylog.Success("notepad started, debugging...")
+
+	time.Sleep(500 * time.Millisecond)
+	dc.KillActiveProcess()
 }
