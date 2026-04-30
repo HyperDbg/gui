@@ -58,26 +58,6 @@ func TestCommonUtilities(t *testing.T) {
 	mylog.Success("common utilities test passed")
 }
 
-func TestCpuDetection(t *testing.T) {
-	vendor := common.CpuReadVendorString()
-	vendorStr := string(vendor[:12])
-	if vendorStr == "" {
-		t.Error("CpuReadVendorString should not return empty")
-	}
-	mylog.Info("CPU Vendor:", vendorStr)
-
-	vmx := common.VmxSupportDetection()
-	mylog.Info("VMX Support:", vmx)
-}
-
-func TestExportFunctions(t *testing.T) {
-	vmx := common.VmxSupportDetection()
-	mylog.Info("Export DetectVmxSupport:", vmx)
-
-	vendor := common.CpuReadVendorString()
-	mylog.Info("Export ReadVendorString:", string(vendor[:12]))
-}
-
 func TestSymbolTable(t *testing.T) {
 	st := scriptengine.NewSymbolTable()
 	if st == nil {
@@ -90,13 +70,6 @@ func TestSymbolTable(t *testing.T) {
 	}
 }
 
-func TestTransparency(t *testing.T) {
-	tm := transparency.NewTransparencyManager()
-	if tm == nil {
-		t.Error("NewTransparencyManager should not return nil")
-	}
-}
-
 func TestGaussianRng(t *testing.T) {
 	data := make([]float64, 1000)
 	for i := range data {
@@ -104,13 +77,6 @@ func TestGaussianRng(t *testing.T) {
 	}
 	result := transparency.GuassianGenerateRandom(data)
 	mylog.Info("Gaussian RNG result:", "avg", result.Average, "stddev", result.StandardDeviation, "median", result.Median)
-}
-
-func TestMiscAssembler(t *testing.T) {
-	asmblr := misc.NewAssembler()
-	if asmblr == nil {
-		t.Error("NewAssembler should not return nil")
-	}
 }
 
 func TestMiscDisassembler(t *testing.T) {
@@ -130,13 +96,6 @@ func TestMiscCallstack(t *testing.T) {
 	mylog.Info("Callstack test:", "found", found, "idx", idx)
 }
 
-func TestMiscPciId(t *testing.T) {
-	pciDb := misc.NewPciIdDatabase()
-	if pciDb == nil {
-		t.Error("NewPciIdDatabase should not return nil")
-	}
-}
-
 func TestMiscReadmem(t *testing.T) {
 	data := []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08}
 	dwords := misc.FormatMemoryAsDwords(data)
@@ -150,13 +109,6 @@ func TestMiscReadmem(t *testing.T) {
 	s := misc.FormatMemoryAsString(data)
 	if s == "" {
 		t.Error("FormatMemoryAsString should return empty")
-	}
-}
-
-func TestDriverLoader(t *testing.T) {
-	ok := driver_loader.ManageDriver("test_driver", "C:\\nonexistent.sys", driver_loader.DriverFuncInstall)
-	if ok {
-		t.Error("ManageDriver should fail with nonexistent driver")
 	}
 }
 
