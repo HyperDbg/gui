@@ -1,0 +1,1585 @@
+---------------------------------------------
+Video 1
+---------------------------------------------
+
+
+IATSTART
+00457118  028E0000  <-- Redirected API
+
+$+60C     5D460205  comctl32.ImageList_Create
+$+610     00000000  <-- IAT END 
+
+
+JMP DWORD PTR DS:[ADDR]  <-- Right API commands used no direct API commands to fix in this file.
+
+
+00405DAC     53                   PUSH EBX                                       ; Near OEP
+
+Stack:
+$ ==>    0012FDA8    00556D18  PackedAL.00556D18 <-- Retrun Address
+
+
+Retrun Address to WL section:
+---------------------------------------------------------
+00556D18     68 F9EA290D          PUSH 0D29EAF9  <-- specific value to handle next xy code
+00556D1D   ^ E9 901FF2FF          JMP 00478CB2   <-- going to WL VM
+
+
+
+$ ==>    0012FD94    0D315318
+$ ==>    0012FD94    0D316E98
+$ ==>    0012FD94    0D317E71
+$ ==>    0012FD94    0D31BCC2
+$ ==>    0012FD94    0D31C4D5
+$ ==>    0012FD94    0D31C7F0
+$ ==>    0012FD94    0D31D04F
+$ ==>    0012FD94    0D31D195
+$ ==>    0012FD94    0D31D1E3
+$ ==>    0012FD94    0D31D55A
+$ ==>    0012FD94    0D31D65D
+$ ==>    0012FD94    0D31D802
+$ ==>    0012FD94    0D344053
+$ ==>    0012FD94    0D3450AA
+$+28     0012FDBC    0D298D18 <--- Last Push Value before access same WL Routine to 00478CB2
+
+=
+push 0D298D18
+JMP  00478CB2
+
+
+0055CDB2     PUSH 0D298D18   <--- = VM OEP ADDR at 0055CDB2
+0055CDB7     JMP  00478CB2 
+
+Now we can use this VM OEP Address in our file or we try to rebuild it via UV plugin.
+
+
+So its your choice whether you rebuild OEP or just use VM OEP = WL VM must keep in your target!
+
+
+----------------------------
+0045711C  7C9110E0  ntdll.RtlLeaveCriticalSection
+
+
+7C8091C9 LeaveCriticalSection   4E 54 44 4C 4C 2E 52 74 6C 4C 65 61 76 65 43 72  NTDLL.RtlLeaveCr
+7C8091D9                        69 74 69 63 61 6C 53 65 63 74 69 6F 6E           iticalSection
+
+LeaveCriticalSection kernel32 | Forwarded to | ntdll.RtlLeaveCriticalSection
+
+
+
+005CD2DE    /0F84 39010000       JE 005CD41D  // Raw API in eax
+
+005CD424     FFD3                CALL EBX                                    ; Check APIs if FW API = Get Real API
+005CD426     E9 05000000         JMP 005CD430                                ; Here you have the real API in eax
+
+
+005CFAB1     890B                MOV DWORD PTR DS:[EBX],ECX                  ; <--- One API or RD API write command
+
+So this traget used just 2 diffrent API write commands...
+
+MOV DWORD PTR DS:[EBX],ECX  <-- Just needed for small script
+and
+POP DWORD PTR DS:[EDX]      <-- Just needed for small script
+
+
+Section datas was changed to none readable datas = you cant dump this file with the PE Header data which 
+are used from your file in Olly now.In this case just use the option dump PE from disk.Then it read the 
+PE data from the original packed file.
+
+00400248    7A BD 13 87>ASCII "z½‡ÆU¡"     ; SECTION
+00400250    182F281A    DD 1A282F18          ;  VirtualSize = 1A282F18 (438841112.)
+00400254    DE84C99B    DD 9BC984DE          ;  VirtualAddress = 9BC984DE
+00400258    C685B69B    DD 9BB685C6          ;  SizeOfRawData = 9BB685C6 (-1682537018.)
+
+
+
+Done with Main step 1 now
+---------------------------
+OEP Found           = YES
+IAT FOUND           = YES
+Direct API Fixed    = Not needed
+Got all API in IAT  = YES
+Dumped & Fixed file = YES
+----------------------------
+Main Unpack finished so far
+
+Main unpacked file does not start = Problem can be "XY"
+Now we need to find all possible reasons why the unpacked file does not run.
+So next steps in the next video!
+
+
+---------------------------------------------
+Video 2
+---------------------------------------------
+
+00419249  - E9 78061900             JMP 005A98C6                               ; VM Entry
+
+00405F94  - FF25 E8724500           JMP DWORD PTR DS:[4572E8]                  ; kernel32.CreateEventA
+
+7C8308A2    E8 A29EFDFF             CALL 7C80A749                              ; kernel32.CreateEventW
+----------------------------------------------
+Access vio in CreateEventA API to CreateEventW
+
+
+Stack at API in dumped file:
+----------------------------------------------
+$ ==>    0012FF60   005A21AE  /CALL to CreateEventA
+$+4      0012FF64   FFFFFFFF  |pSecurity = FFFFFFFF
+$+8      0012FF68   00000000  |ManualReset = FALSE
+$+C      0012FF6C   00419264  |InitiallySignaled = TRUE
+$+10     0012FF70   0041A73F  \EventName = "¸¨¤A"
+$+14     0012FF74   0012FF88  Pointer to next SEH record
+$+18     0012FF78   0041A7A9  SE handler
+$+1C     0012FF7C   0012FF80
+$+20     0012FF80  /0012FFA0
+$+24     0012FF84  |00403CB8  RETURN to Dump_1_S.00403CB8
+
+
+So the API parameter seems to be wrong!Why?True = 1 False = 0 normaly and has no address etc!
+Now just lets have a look at the original file if it does access this API at the same address.
+
+Stack at API in original file:
+----------------------------------------------
+$ ==>    0012FD54   005A21AE  /CALL to CreateEventA
+$+4      0012FD58   00000000  |pSecurity = NULL
+$+8      0012FD5C   FFFFFFFF  |ManualReset = TRUE
+$+C      0012FD60   00000000  |InitiallySignaled = FALSE
+$+10     0012FD64   00419264  \EventName = ""
+$+14     0012FD68   0041A73F  RETURN to PackedAL.0041A73F from PackedAL.00419234
+$+18     0012FD6C   0012FD80  Pointer to next SEH record
+$+1C     0012FD70   0041A7A9  SE handler
+$+20     0012FD74   0012FD78
+$+24     0012FD78  /0012FD98
+$+28     0012FD7C  |00403CB8  RETURN to PackedAL.00403CB8
+
+
+So you see the parameters are others than in our dumped file and with wrong parameters the API will get a 
+access violation.So this is the reason.Question now is why our dumped file will get from or better say why 
+the stack is changed and points to the wrong stack addresses.Lets try to exe the API with the right parameters.
+
+So you see it works if we enter the right API parameters.
+Now we come also back to codesection at address 00419261.So this means we have access this VM Entry at 00419249 
+successfully.
+
+00419261    C3                      RETN
+
+So this is the main problem why the most unpacked WL files will not run and if they using still VM like in this 
+unpackme so in the VM code must be some checks which we need to find and patch.
+
+What to do now first?First we should find all VM Entrys = calls & jumps so for this we use the UV plugin.
+
+
+
+Oreans Virtual Machine References
+Address    Disassembly                       Comment
+00407CB9   JMP 00569A05
+00407CF1   JMP 005717D9
+00407D28   JMP 00578391
+004082AD   JMP 0057DB26
+0040C175   JMP 0058570E
+0040CBF2   JMP 0058D487
+0040CC02   JMP 00594EF3
+0040CC5E   JMP 0059BF8B
+0040CC67   JMP 005A2196
+00419249   JMP 005A98C6                      VM Entry
+00419278   JMP 005AFC80
+0042049A   CALL 004BF107                     Wrong!
+00420A4F   JMP 005B4E36
+00450453   JMP 005B92B1
+004504D3   JMP 005BE46B
+0045308E   JMP 005C58E5
+004533A1   JMP 005F7240
+004534A0   CALL 00601383
+004534C7   CALL 00601383
+004534F7   CALL 005EEC8E
+0045354A   CALL 005EEC8E
+004535B1   CALL 00601383
+004535EA   CALL 00601383
+00453655   JMP 005EF85E                      Other entry
+0045371C   CALL 005EF7A9
+00453797   JMP 005FD8F0
+
+
+Now we found some VM jump entrys and some calls + a special VM Entry jump and one wrong call.Lets set BPs on all 
+valid founds and let create a BP file.
+
+
+So now we know already that our dump does crash in the first access VM Entry at 00419249.Now we try to UV this entry 
+and we will try to find the reason or better to say what it does check and what does not match anymore in our dumped 
+file.
+
+So if we wanna check this VM code then we also need to enter the needed Aligin value in ebp.
+
+00478A06  F32BE014  Aligin
+
+
+So after a little manually tracing you have seen the diffrent and what happend so far.So WL does read a value does
+calc them and does get a result address of 0012FFB8 from our stack and does again calc with the dword whats inside 
+at 0012FFB8 and also the same with 0012FFB8+4 and at the end it does compare the result with a static value.
+
+Our stack in dump is:
+---------------------------------------------
+0012FFB8  0012FFE0  Pointer to next SEH record
+0012FFBC  00403B38  SE handler
+
+Our stack in original is:
+---------------------------------------------
+0012FFB8  368F1A4A
+0012FFBC  0012FFE0
+
+So you see we have 2 diffrent values at both addresses in dump and original file in the stack.
+
+= Stack AntiDump feature of WL
+
+Calculation process:
+---------------------------------------------
+004193A0  MOV ECX,DWORD PTR SS:[EBP+D1FB4E8]  = 004B94FC  7655590C to ecx 
+
+004193A7  MOV EDX,7647A6B4   ; static value to edx
+
+004193AC  XOR ECX,EDX        ; xor 7655590C with 7647A6B4 = 0012FFB8
+
+004193C6  MOV EDI,4
+
+004193E2  PUSH DWORD PTR DS:[ECX] ; 0012FFB8 | 0012FFE0 <--
+
+004193E5  MOV EDX,5B2459EE              = static value
+
+004193EA  SUB DWORD PTR SS:[ESP+4],EDX  = A4EEA5F2
+
+004193F4  MOV EAX,DWORD PTR SS:[ESP]    = A4EEA5F2 to eax
+
+004193FA  ADD EAX,5B2459EE              = 0012FFE0 in eax 
+
+00419418  ADD EBX,ECX                   = 0012FFBC in ebx
+0041941A  XOR EAX,DWORD PTR DS:[EBX]    = 0012FFE0 xor 00403B38 = 0052C4D8 in eax
+
+00419435  CMP EAX,369DE5AA              = compare of 369DE5AA 
+0041943A  JE SHORT 00419498             = Je does not jump so in eax is 0052C4D8
+---------------------------------------------
+---------------------------------------------
+004B94FC  7655590C  <--- Start Point of reading data
+
+MOV EDX,7647A6B4    <--- static DWORD to use for xoring
+
+7655590C xor 7647A6B4 = 0012FFB8 <--- Stack AntiDump address
+
+MOV EDI,4           <--- add 4 bytes to first Stack AntiDump address later
+
+PUSH DWORD PTR DS:[ECX] ; 0012FFB8 | --> 0012FFE0 <-- [SAD]
+
+004193E5  MOV EDX,5B2459EE
+UB DWORD PTR SS:[ESP+4],EDX
+
+0012FFE0 - 5B2459EE = A4EEA5F2
+
+A4EEA5F2 + 5B2459EE = 0012FFE0
+
+XOR EAX,DWORD PTR DS:[EBX]    = 0012FFE0 xor 00403B38 = 0052C4D8 in eax
+
+CMP EAX,369DE5AA
+---------------------------------------------
+---------------------------------------------
+So what is needed now?
+
+004B94FC  7655590C  <--- Start Point of reading data
+
+MOV EDX,7647A6B4    <--- Static calc value
+
+2 Stack addresses and original 2 values.
+0012FFB8  368F1A4A  <--- See original file
+0012FFBC  0012FFE0  <--- See original file
+---------------------------------------------
+---------------------------------------------
+So WL does read the value 7655590C from address 004B94FC and does xor it = 1. SAD address of 0012FFB8
+Now WL does read the dword whats inside [SAD] 1 = 368F1A4A original DWORD and also the same with the 2. SAD.
+So what we have to do now is that we need to restore the 2 stack values in our stack in our dumped file.
+So this we can do but its only working if your target get always the same stack memory.So a better way we can 
+use it that we redirect the first address to our code so for this we need to recalc.
+
+Address  | DWORD      xor    value        Address SAD 1
+------------------------------------------------------------------
+004B94FC | 7655590C          7647A6B4  =  0012FFB8 
+------------------------------------------------------------------
+           value      xor    Address   
+------------------------------------------------------------------
+Recalc   | 7647A6B4          0012FFB8  =  7655590C  <--- Match
+------------------------------------------------------------------
+
+Exsample if we wanna redirect SAD to address 0045CBD0 in our dump: 
+------------------------------------------------------------------
+7647A6B4  xor  0045CBD0  =  76026D64 <-- New value which we have to enter at 004B94FC
+
+004B94FC | 7655590C
+to
+004B94FC | 76026D64
+
+Verify:
+------------------------------------------------------------------
+76026D64  xor  7647A6B4  =  0045CBD0  <-- Point now to our address and no more to stack.
+
+Stack value Patch at 45CBD0
+------------------------------------------------------------------
+0045CBD0  368F1A4A  <--- See original file
+0045CBD4  0012FFE0  <--- See original file
+------------------------------------------------------------------
+------------------------------------------------------------------
+So now we have redirected the stack main address to our code + adding right dwords.So this is what WL did check 
+at this first VM Entry so far.So now lets try to make this first patch.So I will add a new free section to create 
+the patches there.
+
+7647A6B4  xor  00770000  =  7630A6B4 to 004B94FC
+
+
+So you see after redirecting the stack antidump locations it will access our own code and does read the dwords 
+which we insert there from the original file run.Now after this the stack checking was ok and we also get the 
+right API parameters in stack at the API and we also come back to codesection.Now we did patched the file so that 
+we can bypass the first VM Entry successfully.
+
+
+Next VM Problem!
+-----------------------------------------------------------
+0040CC02  - E9 EC821800         JMP 00594EF3                               ; 3
+
+Ok so here is again any touble what we have to check and find so see next steps in the next video!
+
+---------------------------------------------
+Video 3
+---------------------------------------------
+
+edx = 52D07434 
+
+
+0040CD6E    8B95 D4161B0D           MOV EDX,DWORD PTR SS:[EBP+D1B16D4] = 0046F6E8  001A6718
+
+0040CD78    BA 10BAE452             MOV EDX,52E4BA10  <--- static value
+0040CD7D    89D3                    MOV EBX,EDX       <--- 52E4BA10 to ebx
+
+0040CD85    391A                    CMP DWORD PTR DS:[EDX],EBX <-- [edx] is 00 at 001A6718
+0040CD87    0F84 A3000000           JE 0040CE30       <--- Does not jump!
+
+
+WL does read the value from [0046F6E8] = 001A6718
+0046F6E8  001A6718
+
+Then it does compare the static value of 52E4BA10 with the value at address 001A6718 = 00000000 and its not same 
+and the JE will not jump!
+
+Ok now we have some questions right?001A6718 should be a address which does hold the DWORD of 52E4BA10 and if this 
+is there then the JE will also jump = success.
+
+Next question is how did WL got the low mem address of 001A6718?So if you know already some APIs then you will also 
+know that this address seems to be a part of the processheap section.
+
+7C80AC61 GetProcessHeap     64:A1 18000000   MOV EAX,DWORD PTR FS:[18]
+7C80AC67                    8B40 30          MOV EAX,DWORD PTR DS:[EAX+30]
+7C80AC6A                    8B40 18          MOV EAX,DWORD PTR DS:[EAX+18]
+7C80AC6D                    C3               RETN
+
+7FFDD018  7FFDD000
+7FFDD030  7FFDE000
+7FFDE018  001A0000 <---- Here
+
+The address of 001A6718 does belong to 001A0000
+
+So somewhere WL does handle with the heaps and does copy address of heap to WL and at heap it does copy any dword.
+Later in the dumped file it will also check this address again + dword whats into but if the same address is not there 
+or the dword = crash Peng over and out!So this is again a little AntiDump trick called Heap AntiDumps.So in our 3 VM 
+entry it does check one WL selfmade heap....
+
+Adress    Heap Address   Heap DWORD
+---------------------------------------------
+0046F6E8  001A6718       00000000   <--- we have address but no dword
+---------------------------------------------
+
+So it has to look so....
+
+Adress    Heap Address   Heap DWORD
+---------------------------------------------
+0046F6E8  001A6718       52E4BA10   <--- we have address but no dword
+---------------------------------------------
+
+Now the check will successfully bypassed.Problem here is again the static heap address of 001A6718 so on other system 
+you will also have other mem locations which does the heap use so here have to patch heap address and dword.
+
+
+We just enter a other address and there we put the dword into.
+
+One Heap Patch:
+---------------------------------------------
+0046F6E8  001A6718
+to
+0046F6E8  00770040  <--- Our address
+
+00770040  52E4BA10  <--- original dword
+---------------------------------------------
+
+
+But now just lets trace also the other part of the WL code......
+
+
+0040CE30          8B9D 6221260D    MOV EBX,DWORD PTR SS:[EBP+D262162]
+0040CE36          339D 2FBE200D    XOR EBX,DWORD PTR SS:[EBP+D20BE2F]
+0040CE3C          2B9D D1D51F0D    SUB EBX,DWORD PTR SS:[EBP+D1FD5D1]
+
+00520176  3C68493E
+004C9E43  FFAE800F
+004BB5E5  4746C931
+
+3C68493E xor FFAE800F sub 4746C931 = 7C800000 = Base of kernel32.dll
+
+0040CE6F          FF72 3C          PUSH DWORD PTR DS:[EDX+3C]  = PE offset = 000000F0 from direct address of kernel
+
+7C8000F0    50 45 00 00>ASCII "PE"           ; PE signature (PE)
+
+7C8001E8    2E 74 65 78>ASCII ".text"        ; SECTION
+
+7C8001F8    003A0800    DD 00083A00          ;  SizeOfRawData = 83A00 (539136.)
+
+0040CEE4          8B1A             MOV EBX,DWORD PTR DS:[EDX] = 00083A00 to ebx
+
+
+0040CEE7          8B95 99371B0D    MOV EDX,DWORD PTR SS:[EBP+D1B3799]
+0040CEED          2B95 F1C0200D    SUB EDX,DWORD PTR SS:[EBP+D20C0F1]
+0040CEF3          2B95 FF03220D    SUB EDX,DWORD PTR SS:[EBP+D2203FF]
+= 00083A00
+
+0040CEF9          39DA             CMP EDX,EBX    <---- compare of 00083A00 = 7C8001F8 | SizeOfRawData = 83A00
+0040CEFB          75 3A            JNZ SHORT 0040CF37  <--- Its not jumps so its same
+
+
+Ok here we found a another other check.So here WL has stored the direct base of kernel32.dll of 7C800000 in WL 
+code a little crypted.So WL will always get the value of 7C800000 if it does access this part in VM Entry 3.So you 
+know on other system kernel does use other bases or get loaded with other kernel bases like on win7 or other XP SP 
+versions etc.So this what WL did was that it stored a direct address of kernel on a crypted way in WL code and this 
+means that the dump will crash if address 7C800000 is not there on your system.
+
+Also from this address it will read some PE datas like [+3C] = pointer to offset = F0 and from PE start it does 
+read the address of 7C8001F8 and read the value of 00083A00 =  SizeOfRawData.
+
+So now we have to patch our Heap and also the kernel stuff to get it also working on other system who using other 
+kernel bases and SizeOfRawData of course.
+
+
+Lets first make the one heap patch....
+
+
+Ok now we have patched one heap to our code and you see its working again.After this comes a next problem at..
+
+VM ENtry call
+---------------------------------------------------------------------------------
+004534A0     E8 DEDE1A00      CALL 00601383                                  ; 4 Problem next one!
+
+So you remember at our VM Entry list right?There we found some calls so lets see again....
+
+VM calls
+004534A0   CALL 00601383  same x2
+004534C7   CALL 00601383
+------------------------
+004534F7   CALL 005EEC8E  same x2
+0045354A   CALL 005EEC8E
+------------------------
+004535B1   CALL 00601383  same x2
+004535EA   CALL 00601383
+------------------------
+0045371C   CALL 005EF7A9  Other x1
+------------------------
+
+So you see there are 2 times 2 of the same calls at the same routine and between you see some not readable bytes.
+If you know already other protections then you will think these calls should be some kind of Encrypt and DeCrypt 
+calls right?If we execute the first call then we come no more back = crash in our dump so lets check the original 
+file at these addresses.
+
+You see they are EN DEcrypt calls.Just exe them to get the code so you can do this before you dump the file for 
+exsample or just copy the code into your dumped file.
+
+Ok now we just got the code of all 3 En DeCrypt calls and entered them into our dumped file and saved it.Now if 
+we run the dump you see it does start now! :) Good Work so far!
+
+You see we are not finished yet so all buttons are giving a good result except 2 of them.
+
+CheckProtection Button = failed info
+CheckCodeCRC           = Crash
+
+So these problems and more we will check in the next videos........
+
+---------------------------------------------
+Video 4
+---------------------------------------------
+
+CheckProtection Button = failed info
+CheckCodeCRC           = Crash
+
+So now we check first why the dump does crash if we press the CheckCodeCRC button in the unpackme.Somewhere must 
+be again a another AntiDump check.
+
+
+00453797  - E9 54A11A00             JMP 005FD8F0    
+
+
+Access on static address of 0046F319 where the unpacked base of target was stored!
+
+0046F319  00400000  ASCII "MZP"  <--- Base of target used durring unpacking
+
+Normaly no problem if always the same base is used for exe files like on XP and older OS and files who dosen't 
+use any relocations anymore like unpacked exe files.On the other hand for dll files there you will get trouble 
+later.Keep this in your mind!
+
+
+004537E6    FF71 3C                 PUSH DWORD PTR DS:[ECX+3C] <-- access PE offset
+
+00400100    50 45 00 00>ASCII "PE"           ; PE signature (PE)
+
+00453818    8379 28 00              CMP DWORD PTR DS:[ECX+28],0  <--- AddressOfEntryPoint check for 00
+0045381C    0F84 99000000           JE 004538BB                     
+
+00400128    00F03600    DD 0036F000          ;  AddressOfEntryPoint = 36F000  <-- our EP
+
+So here we have found a check for AddressOfEntryPoint = 00 but our EP is 36F000 and the JE will not jump = diffrent.
+So in the original file at OEP you can see the PE AddressOfEntryPoint was changed to 00.
+
+Here we have again to patch our dumped PE AddressOfEntryPoint to 00 to get this check successfully bypassed!
+
+
+Now in the UV code below you see....
+
+0045391B  PUSH 0
+0045391D  POP DWORD PTR DS:[0]
+00453923  JMP SHORT 00453931
+
+00453931  CMP DWORD PTR SS:[EBP-4],0AB4130   <--- check for 0AB4130
+00453938  JE SHORT 00453946                  <--- Must jump
+
+...so this is a part of the UV macro call which was used directly in a normal VM Entry so it was some kind of 
+hidden for us.Problem now is that the UV plugin does only UV the macro directly without to UV the VM code 
+between where are can be hidden some more checks which are now not visible for us.Just lets find and UV them.
+
+So before this we should first make the PE Header patch so here you can restore the full PE of original file 
+from OEP or just restore the EP.
+
+If we wanna restore the original PE at EP in our dump then we need also a VirtualProtect API to set the PE to 
+writeable.So in the IAT is no VirtualProtect API to find so in this case we have to add this API or we just 
+call them via some code.
+
+So we need for this the LoadLibraryA or GetModuleHandleA API to get the base of kernel32 and we need the 
+GetProcAddress API to call the API VirtualProtect.
+
+So I wrote a little code who does do it for us.So I used also static addresses so this file will always get 
+loaded with a base of 400000 and in this case we can use static addresses.LoadLibraryA and GetProcAddress 
+can you find already in the IAT and you can use them.
+
+Here the strings of dll and API
+0076EFC0  6B 65 72 6E 65 6C 33 32 2E 64 6C 6C 00 56 69 72  kernel32.dll.Vir
+0076EFD0  74 75 61 6C 50 72 6F 74 65 63 74                 tualProtect
+
+
+0076F000  PUSHAD                                         ; Save register to stack
+0076F001  NOP
+0076F002  PUSH 76EFC0                                    ; ASCII "kernel32.dll"
+0076F007  CALL 004060E4                                  ; <JMP.&kernel32.LoadLibraryA>
+0076F00C  PUSH 76EFCD                                    ; ASCII "VirtualProtect"
+0076F011  PUSH EAX                                       ; KernelBase
+0076F012  CALL 0040126C                                  ; <JMP.&kernel32.GetProcAddress>
+0076F017  MOV EDI,EAX                                    ; VirtualProtect to edi
+0076F019  PUSH 76EFE0                                    ; Old Protect store address
+0076F01E  PUSH 4                                         ; page read / write parameter
+0076F020  PUSH 1000                                      ; PE size
+0076F025  PUSH 400000                                    ; ASCII "MZP"
+0076F02A  CALL EDI                                       ; VirtualProtect
+0076F02C  MOV ECX,0E00                                   ; PE size some less
+0076F031  MOV EDI,400000                                 ; ASCII "MZP"
+0076F036  MOV ESI,76E000                                 ; ASCII "MZP"
+0076F03B  REP MOVS BYTE PTR ES:[EDI],BYTE PTR DS:[ESI]   ; Copy our PE to real PE
+0076F03D  POPAD                                          ; restore register from stack
+0076F03E  JMP 0055CDB2                                   ; JMP VM OEP
+
+
+I did forget to save the PE in our patchsection! :)
+
+Ok now we got it.
+
+After adding the PE patch we crash now on a other address than before so this means we did bypassed successfully 
+the PE checks and after this we got catched by a other check.
+
+
+00479A25  LOCK CMPXCHG DWORD PTR DS:[EDI+74],ECX         ; <--- VM switcher 1 = On - 0 = Off
+
+004789EA  | 00000001  <--- Input  VM
+VM
+004789EA  | 00000000  <--- Output VM
+
+
+0048BCAD  POPAD
+0048BCAE  POPFD
+0048BCAF  RETN  <--- Out of VM routine xy
+
+
+005EB54C  PUSH 0D325EF5   <--- Next VM start till end = ok no problem!
+-------------------------------------------------------------------------
+005D976F  PUSH EBX        <--- Next VM looks others....
+Another PE Header check of VirtualAddress = 1000 of first section of our dump
+00400204    00100000    DD 00001000          ;  VirtualAddress = 1000
+-------------------------------------------------------------------------
+005E3EFF  PUSH 0D32CE62  <--- Next VM start till end = problem!
+
+0012F95C  PUSH DF0012F9  <--- Here we come out after VM at any stack address as return!
+-------------------------------------------------------------------------
+So now lest UV the VM at 005E3EFF
+
+
+00C64DCC  00AB4130
+
+Ok so the problem does happen already before!
+
+Oh ha,so here we found a another calculation process to get a address and checking whats inside followed by a compare.
+
+
+0045B1E3    8B9D DD2A1B0D      MOV EBX,DWORD PTR SS:[EBP+D1B2ADD] = 00470AF1 | 4ED362F6
+0045B1E9    8B95 BA281B0D      MOV EDX,DWORD PTR SS:[EBP+D1B28BA] = 004708CE | 825A0FD7
+
+EBX = 4ED362F6
+EDX = 825A0FD7
+
+0045B1F1    BE A652817C        MOV ESI,7C8152A6
+0045B1F6    46                 INC ESI
+0045B1F7    46                 INC ESI
+0045B1F8    81E6 1B361030      AND ESI,3010361B
+0045B1FE    C1EE 04            SHR ESI,4
+0045B201    C1EE 02            SHR ESI,2
+0045B204    81F6 83021774      XOR ESI,74170283
+0045B20A    89F0               MOV EAX,ESI
+
+EAX = 74D702CB
+
+0045B20D    81EB 094FD21F      SUB EBX,1FD24F09  = ebx 4ED362F6 - 1FD24F09
+
+EBX = 2F0113ED 
+
+0045B213    29C3               SUB EBX,EAX  = ebx 2F0113ED - 74D702CB
+
+EBX = BA2A1122
+
+0045B215    81C3 094FD21F      ADD EBX,1FD24F09 = BA2A1122 + 1FD24F09
+
+EBX = D9FC602B
+
+0045B21C    29D3               SUB EBX,EDX = D9FC602B - 825A0FD7
+
+EBX = 57A25054
+
+0045B21E    81C3 CB02D774      ADD EBX,74D702CB
+
+EBX = CC79531F
+
+0045B22B    B9 B6119F29        MOV ECX,299F11B6
+0045B230    81C9 E879DF7A      OR ECX,7ADF79E8
+0045B236    C1E9 02            SHR ECX,2
+0045B239    81E9 278429AA      SUB ECX,AA298427
+
+ECX = 74CE5A58
+
+0045B23F    31CB               XOR EBX,ECX  = ebx CC79531F xor 74CE5A58
+
+EBX = B8B70947
+
+0045B243    BA 716A6F12        MOV EDX,126F6A71
+0045B248    81C2 3E220D6F      ADD EDX,6F0D223E
+
+EDX = 817C8CAF
+
+0045B24F    B9 450E0558        MOV ECX,58050E45
+0045B254    81F1 315D0813      XOR ECX,13085D31
+0045B25A    81F1 BA7DF445      XOR ECX,45F47DBA
+0045B260    81C1 7206152E      ADD ECX,2E150672
+0045B266    C1E9 04            SHR ECX,4
+0045B269    81E1 2D221914      AND ECX,1419222D
+0045B26F    81C1 2EAFD6C5      ADD ECX,C5D6AF2E
+
+ECX = C5E6D132
+
+0045B275    01CA               ADD EDX,ECX = 817C8CAF + C5E6D132
+
+EDX = 47635DE1
+EBX = B8B70947
+
+0045B278    81C3 1479D120      ADD EBX,20D17914
+0045B27E    81EB 347E7F77      SUB EBX,777F7E34
+0045B284    01D3               ADD EBX,EDX
+0045B286    81C3 347E7F77      ADD EBX,777F7E34
+0045B28C    81EB 1479D120      SUB EBX,20D17914
+
+EBX = 001A6728  <----- mem address of heap section again!Crypt calc this time!
+
+
+0045B294    BA 00000000        MOV EDX,0
+0045B299    81C2 D3755021      ADD EDX,215075D3
+0045B29F    81EA 2750BC0A      SUB EDX,0ABC5027   EDX = 169425AC after
+
+0045B2A5    01DA               ADD EDX,EBX        169425AC + 001A6728 = 16AE8CD4 in edx after
+0045B2A7    81C2 2750BC0A      ADD EDX,0ABC5027   edx = 216ADCFB after
+
+0045B2AE    B9 D3755021        MOV ECX,215075D3
+0045B2B3    29CA               SUB EDX,ECX       = 216ADCFB - 215075D3 = 001A6728 in edx after
+
+0045B2B6    8B1A               MOV EBX,DWORD PTR DS:[EDX] = edx 001A6728 | 00000000 to ebx
+
+EBX = 00000000
+
+0045B2BA    BD D4769407        MOV EBP,79476D4
+0045B2BF    F7D5               NOT EBP
+0045B2C1    C1ED 05            SHR EBP,5
+0045B2C4    81ED 1BA26F90      SUB EBP,906FA21B
+
+EBP = 7753BA2E
+
+0045B2CA    55                 PUSH EBP
+0045B2CB    8B1424             MOV EDX,DWORD PTR SS:[ESP]  7753BA2E to EDX
+
+
+0045B2D7    39D3               CMP EBX,EDX  <----- ebx 00000000 edx 7753BA2E
+0045B2D9    74 6B              JE SHORT 0045B346 <--- does not jump = crash later!
+
+
+Ok there was a lot code so far.So what we can see is that WL does try to check a dword of 7753BA2E on the mem address
+at 001A6728 which does belong to heap section!The address 001A6728 does it calc via static dwords. 
+
+So to say it short,this is a another heap AntiDump check of WL!
+
+Heap Address 2 |    DWORD to check inside!
+---------------------------------------------------------------
+001A6728       |    7753BA2E
+---------------------------------------------------------------
+
+So now we have again to find a way to redirect the address to our code.
+
+---------------------------------------------------------------
+MOV EBX,DWORD PTR SS:[EBP+D1B2ADD] = 00470AF1  4ED362F6
+---------------------------------------------------------------
+
+Calculation starting with DWORD 1 of 4ED362F6 to get Heap ADDR 2 in ebx
+------------------------------------------------------------------------
+4ED362F6 - 1FD24F09 = 2F0113ED - 74D702CB = BA2A1122 + 1FD24F09 = D9FC602B - 825A0FD7 = 57A25054 + 74D702CB = CC79531F
+
+CC79531F xor 74CE5A58 = B8B70947 + 20D17914 = D988825B - 777F7E34 = 62090427 + 47635DE1 = A96C6208 + 777F7E34 = 20EBE03C 
+
+20EBE03C - 20D17914 = 001A6728  <-- in EBX at the end of calc
+------------------------------------------------------------------------
+Now we wanna change the end address of  001A6728 to 00770044 <--- our code
+
+So we need to reverse this calculation but this is not so easy also not for me. :)
+
+So we will try now a other way to find the first calculation of this address of 001A6728
+
+So we know its a part of the heap section so lets check the GetProcessHeap API
+
+
+7C8090F6 HeapAlloc   4E 54 44 4C 4C 2E 52 74 6C 41 6C 6C 6F 63 61 74  NTDLL.RtlAllocat
+7C809106             65 48 65 61 70                                   eHeap
+
+
+HeapAlloc = forwarded to NTDLL.RtlAllocateHeap
+
+So WL seems to use this API to put the DWORD in the heap after calling this API.
+
+HeapADDR            DWORD = size 0f 4 bytes
+-------------------------------------------------
+001A6728       |    7753BA2E
+
+Lets check the original file now......
+
+
+address    
+00770044  - 47635DE1 = B913A263 xor 74CE5A58 = CDDDF83B
+
+00470603  C84EAEEB   <---- 1 new dword 
+
+C84EAEEB  xor CDDDF83B = 059356D0 + 7C9201DB = 822558AB
+
+004708CE  822558AB  <---- 2 new dword
+
+CDDDF83B + 822558AB = 500350E6
+
+00470AF1  500350E6  <---- 3 new dword
+
+
+Ok now we have 3 new dwords which we can use so that this heap will point to our code at 00770044
+
+
+So you see now we did fixed the 2. Heap location to our code + original DWORD.
+
+In the next video we will check the new Problem.......
+
+---------------------------------------------
+Video 5
+---------------------------------------------
+
+Now you see we got a new problem and get a access violation at 4883A1 | 001A4D78 but only if we run this file 
+outside from Olly itself!
+
+
+004883A1    FF32                 PUSH DWORD PTR DS:[EDX]  <--- command in WL VM
+
+
+001A4D78  00000000  <--- address is there but nothing into 
+
+So this address does also belong to the Heap section and the reason why we only get a access vio if we run outside 
+the dump is that there is used a other heap section.
+
+So we know already that WL does use the RtlAllocateHeap API to make use the return addresses to store dwords into so 
+we have already fixed 2 of them and now it seems that this was not enough and a third Heap AntiDump checks seems to 
+be there and not fixed yet.Lets find the 3. Heap now.
+
+What we have:
+---------------------------------
+RtlAllocateHeap
+
+004883A1  PUSH DWORD PTR DS:[EDX] accessvio address where
+
+001A4D78 address what it want to check inside 
+
+checking of a DWORD only = 4 bytes
+---------------------------------
+
+So you see it will stop a lot time at this API from the system but we need to find the stop where it was called 
+from WL code itself.So in this case we try to hook the API and check whether it was called from WL + a size of 
+4 bytes.
+
+
+00840000    837C24 0C 04         CMP DWORD PTR SS:[ESP+C],4               ; check size for 00000004 dword
+00840005    74 0B                JE SHORT 00840012                        ; jump if 4 only
+00840007    68 04020000          PUSH 204
+0084000C  - E9 B8000E7C          JMP 7C9200C9                             ; ntdll.7C9200C9
+00840011    90                   NOP
+00840012    60                   PUSHAD
+00840013    8B4424 20            MOV EAX,DWORD PTR SS:[ESP+20]            ; mov called from address to eax
+00840017    3D 00E04600          CMP EAX,46E000                           ; compare whether it belong to WL
+0084001C    72 08                JB SHORT 00840026                        ; jump if eax lower
+0084001E    3D F0CF6000          CMP EAX,60CFF0                           ; mov called from address to eax
+00840023    77 01                JA SHORT 00840026                        ; jump if eax higher
+00840025    90                   NOP                                      ; <--- we set BP here to catch the right condition
+00840026    61                   POPAD
+00840027  ^ EB DE                JMP SHORT 00840007
+
+
+WL Heaps's x 3
+-------------------------------------------------------------------------------------------------
+00529872     68 50CB260D      PUSH 0D26CB50
+00529877   ^ E9 36F4F4FF      JMP 00478CB2                             ; PackedAL.00478CB2
+
+
+001A4D78  D3935C42
+          D3935C42
+
+005D9CB8     68 5DD6310D      PUSH 0D31D65D
+005D9CBD   ^ E9 F0EFE9FF      JMP 00478CB2                             ; PackedAL.00478CB2
+
+001A6718  52E4BA10
+
+
+005D9CC2     68 02D8310D      PUSH 0D31D802
+005D9CC7   ^ E9 E6EFE9FF      JMP 00478CB2                             ; PackedAL.00478CB2
+
+001A6728  7753BA2E  ole32.7753BA2E
+-------------------------------------------------------------------------------------------------
+001A4D78  D3935C42  = Heap 1
+001A6718  52E4BA10  = Heap 2
+001A6728  7753BA2E  = Heap 3
+-------------------------------------------------------------------------------------------------
+You see WL does call the API 3 times and does store 3 diffrent dwords on each address which all get checked later 
+in our dumped file too.So we did already patch heap 2 and 3 and now we need also to patch the first heap too.
+
+
+00470A44  003D0000
+0050A46F  004A0048  PackedAL.004A0048
+00770048  D3935C42
+
+Ok here we catched the data + using our patch address of 00770048
+
+So now we need to patch in our dump file the dwords above.
+
+You see it works again. :) Lets save heap patch 3 now to file.
+
+Now heap 3 was also successfully redirected.
+
+
+In the next video we will check also the other problem about the failed message on button 1.Stay tuned!
+
+---------------------------------------------
+Video 6
+---------------------------------------------
+
+Now lets check the failed button return.
+
+004533A1  - E9 9A3E1A00             JMP 005F7240                                   ; Dump_1_S.005F7240
+
+00456C00  00000000
+
+
+CMP DWORD PTR [0x456c00], 0xa98ac7
+
+
+00456C00  00A98AC7   <---- DWORD check!
+
+
+So here we had a dword check directly from codesection.So this is some kind of anti patching checking which does 
+check the right dword from diffrent calculation of codesection code.If it was changed = wrong dword than original.
+UV plugin does help us again and does show us the direct address and dword what it was checking for.After insert 
+this dword we will get the successfully path message and no more failed.
+
+So till here we did unpacked and patch some more stuff and our file is working so far on our unpack system so that we 
+now can try the dump also on other system.But remember!!!!!!Kernel Base 7C800000 <---- + size check of kernel?Ohhhhh 
+yes so I hope that you did not forget this too.So for this we also need to make a patch.
+
+See the next patching and test steps in next video.....
+
+---------------------------------------------
+Video 7
+---------------------------------------------
+
+Ok so lets now take care of our kernel stuff which we found earlier in the VM so you remember right?So our dump is 
+now already working on our unpack system but we wanna also get it working for other systems too right.
+
+
+Here again the infos which we found in video 3
+
+0040CE30          8B9D 6221260D    MOV EBX,DWORD PTR SS:[EBP+D262162]
+0040CE36          339D 2FBE200D    XOR EBX,DWORD PTR SS:[EBP+D20BE2F]
+0040CE3C          2B9D D1D51F0D    SUB EBX,DWORD PTR SS:[EBP+D1FD5D1]
+
+00520176  3C68493E
+004C9E43  FFAE800F
+004BB5E5  4746C931
+
+Calculation of DWORDs to get static kernelBase
+------------------------------------------------------------------------------------------
+3C68493E xor FFAE800F sub 4746C931 = 7C800000 = Base of kernel32.dll
+------------------------------------------------------------------------------------------
+0040CE6F          FF72 3C          PUSH DWORD PTR DS:[EDX+3C]  = PE offset = 000000F0 from direct address of kernel
+
+7C8000F0    50 45 00 00>ASCII "PE"           ; PE signature (PE)
+
+7C8001E8    2E 74 65 78>ASCII ".text"        ; SECTION
+
+7C8001F8    003A0800    DD 00083A00          ;  SizeOfRawData = 83A00 (539136.)
+
+0040CEE4          8B1A             MOV EBX,DWORD PTR DS:[EDX] = 00083A00 to ebx
+
+
+So we see that WL wanna check only the SizeOfRawData of the kernel PE and does access for this also a static base 
+address of 7C800000 which are just a part of XP SP3.So this means if you dont run the file so on XP SP3 = wrong 
+access = no match = crash.
+
+So what we do not is that we just fake the kernel PE Header and copy the whole PE into our patchsection and then 
+we will also change the DWORD in the 3 locations above so that WL will access our patch address.
+
+Calulation is:
+------------------------------------------------------------------------------------------
+3C68493E xor FFAE800F = C3C6C931 sub 4746C931 = 7C800000 = Base of kernel32.dll
+------------------------------------------------------------------------------------------
+So now we wanna redirect this calc to our patch address of 00771000 where we will copy the kernel PE into later.
+Now we re-calc:
+----------------
+00771000 - C3C6C931 = C34FB931  <--- to enter at location dword 3 at 004BB5E5
+
+Verify:
+---------------
+3C68493E xor FFAE800F = C3C6C931 sub C34FB931 = 771000
+
+
+So now after changing one dword in WL it will access no more the address 7C800000 anymore so now it access our 
+patch address at 771000 where we wrote the original kernel PE header inside.We successfully patched the kernel 
+address pointer now to our patch address.So I think now its time that we check the patched file on a other OS. 
+So lets see whether patching so far was enough or not.
+
+See next steps in next video......
+
+---------------------------------------------
+Video 8
+---------------------------------------------
+
+Now lets check the file on other OS XP SP0
+
+419249 VM Entry
+
+access vio at 004883A1 push dword [edx]
+
+7C80A0CB = ???
+
+7C80A0CB  0002FEDB
+
+
+Ok you see there was a another check hidden in WL VM which does only happend on other system who has no address of 
+7C80A0CB  and dword 0002FEDB which does belong to the SetEvent API+14 bytes
+
+
+$ ==>    7C80A0B7 SetEvent     8BFF                    MOV EDI,EDI
+$+2      7C80A0B9              55                      PUSH EBP
+$+3      7C80A0BA              8BEC                    MOV EBP,ESP
+$+5      7C80A0BC              6A 00                   PUSH 0
+$+7      7C80A0BE              FF75 08                 PUSH DWORD PTR SS:[EBP+8]
+$+A      7C80A0C1              FF15 9C14807C           CALL DWORD PTR DS:[7C80149C]
+$+10     7C80A0C7              85C0                    TEST EAX,EAX
+$+12     7C80A0C9              0F8C DBFE0200           JL 7C839FAA
+$+18     7C80A0CF              33C0                    XOR EAX,EAX
+$+1A     7C80A0D1              40                      INC EAX
+$+1B     7C80A0D2              5D                      POP EBP
+$+1C     7C80A0D3              C2 0400                 RETN 4
+
+$ ==>    7C80A0B7  8B55FF8B
+$+4      7C80A0BB  FF006AEC
+$+8      7C80A0BF  15FF0875
+$+C      7C80A0C3  7C80149C  <&ntdll.NtSetEvent>
+$+10     7C80A0C7  8C0FC085
+$+14     7C80A0CB  0002FEDB  <---- check for dword 
+
+So this is a newer SetEvent AntiDump check of WL.So here we will just hook the check address in VM and patch the 
+right dword into stack.
+
+
+004883A1   PUSH DWORD PTR DS:[EDX]
+004883A3   JMP 00479A33
+
+0076F043
+
+We make this patch this time on this way
+--------------------------------------------------------------------------------------------------
+0076F043   CMP EDX,7C80A0CB                               ; compare for static address 7C80A0CB
+0076F049   JE SHORT 0076F052                              ; jump if so
+0076F04B   PUSH DWORD PTR DS:[EDX]                        ; original command of WL
+0076F04D   JMP 00479A33                                   ; original command of WL
+0076F052   PUSH 2FEDB                                     ; push [setevent+14] dword
+0076F057   JMP SHORT 0076F04D                             ; jump to WL jump
+--------------------------------------------------------------------------------------------------
+Lets check the new file on XP SP0 
+
+
+So you see it run now without to get any error etc.Problem is that you dont see the unpackme gui and also not 
+with the original protected file so the file seems not to be working correctly on XP SP0 so this is the only 
+OS which I have to test but you see it works like the original file = successfully unpacked and patched now.
+
+So thats it so far.So I hope you like the tutorial and will unpack the file too with my descriptions.
+
+So I will whether there is enough space or not [board attaching size 62 MB] if yes then I will create after this video 
+a another video to show you some more details.If not then I say already thank you for watching and have fun.
+
+
+LCF-AT
+
+---------------------------------------------
+Video 9
+---------------------------------------------
+
+Ok I think there is some more space free to create a another video to show you some more trick and check.
+
+Protector calling APIs from exports and GetProcAddress API
+
+
+Export Table of kernel32.dll + 18 = NumberOfNames
+---------------------------------------------
+Like the most protectors will also WL access the kernel32 exports to read many API from there and to store them 
+in WL code somewhere which WL can also use for itself.Just hook this place and let log all APIs calling from 
+exports.Also GetProcAddress will used by WL so hook this too.If you hook both then log all API and you will know 
+which APIs WL will use in your target. :) So for this I wrote a little script which can do this for you so I will 
+show you now.Also I wrote a small script which will give you all 3 Heap locations in dwords of your xy target.Just 
+use it if you can't find them by yourself.
+
+1. Check AntiDump locations at the begining
+2. UV the code and see what WL do
+3. You can use this way too for license file protected targets
+4. Is there a new unpack script who can do all these steps for you?HHmmmmm! :) Lets see....
+
+1.) Stack AntiDump location top at eip
+---------------------------------------------
+newer targets is ESP-0C
+older targets is ESP-04
+---------------------------------------------
+
+Now I show you how to catch the right VM to get this part UnVirtualized and check the whole routine at start.
+
+$-20     004789EA   00000000  VM on off switcher
+
+Top of block
+005D9C63    /E9 D4240000     JMP 005DC13C
+
+
+push 0D31BCC2
+jmp 00478CB2
+
+So you have seen it.Stack AntiDump was created and 2 Heap AntiDumps in this one routine block.Also here you can see 
+the diffrent xor values which are used to make it harder.
+
+3.)
+0060E684   JMP 0061521D  = top
+
+0043C123     81BD 2FC3AE0C 46BC8673   CMP DWORD PTR SS:[EBP+CAEC32F],7386BC46
+0043C12D     75 28                    JNZ SHORT 0043C157
+0043C12F     81BD 385EAD0C 6730CC29   CMP DWORD PTR SS:[EBP+CAD5E38],29CC3067
+0043C139     75 1C                    JNZ SHORT 0043C157
+
+00523343  61F41F8B  <--- HWID  DWORD check
+0050CE4C  29CC3067  <--- TRIAL DWORD check
+
+Also for this you can use the UV plugin if you need.
+-------------------------------------------------------------
+
+
+Export Table of kernel32.dll + 18 = NumberOfNames
+
+0047205F     C2 0800                  RETN 8  // see APIs in eax which WL will use
+
+Also the same with GetProcAddress API called from WL.
+
+
+
+Script Log Window
+Message
+EXPORT_ACCESS: 7C802644
+---------------EX--------------------------------------
+Call from: 47234A | API: 7C809AF1 | NAME: VirtualAlloc
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4B5DB9 | API: 7C801D7B | NAME: LoadLibraryA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4B5DD7 | API: 7C801D7B | NAME: LoadLibraryA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4B5DEB | API: 7C80A874 | NAME: GetLocalTime
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4B8890 | API: 7E3A085C | NAME: MessageBoxExA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4BA05B | API: 7C801A28 | NAME: CreateFileA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4BAE2C | API: 77DCBCF3 | NAME: RegCreateKeyA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4BAE4B | API: 77DC4CE0 | NAME: RegFlushKey
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4BAE6A | API: 77DAEAE7 | NAME: RegSetValueExA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4BAE89 | API: 77DA6C27 | NAME: RegCloseKey
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4BAEA8 | API: 77DA7ABB | NAME: RegQueryValueExA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4BB2A9 | API: 7C812FBD | NAME: GetCommandLineA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C5FE6 | API: 7C80A0B7 | NAME: SetEvent
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C6004 | API: 7C802530 | NAME: WaitForSingleObject
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C6022 | API: 7C830885 | NAME: CreateEventA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C6040 | API: 7C801D7B | NAME: LoadLibraryA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C605E | API: 7C80AC7E | NAME: FreeLibrary
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C607C | API: 7C80AE40 | NAME: GetProcAddress
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C609A | API: 7C814B92 | NAME: GetEnvironmentVariableA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C60B8 | API: 7E36A8AD | NAME: wsprintfA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C60D6 | API: 7C81127A | NAME: GetVersion
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C60F4 | API: 7C801A28 | NAME: CreateFileA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C6112 | API: 7C81CB12 | NAME: ExitProcess
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C6130 | API: 7C801629 | NAME: DeviceIoControl
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C6147 | API: 77DAEFC8 | NAME: RegOpenKeyA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C6165 | API: 7C809BE7 | NAME: CloseHandle
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C6183 | API: 7C809B84 | NAME: VirtualFree
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C61A1 | API: 7C802446 | NAME: Sleep
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C5417 | API: 7C812B7E | NAME: GetVersionExA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C2F80 | API: 77DA6C27 | NAME: RegCloseKey
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4C2FFA | API: 77DA7ABB | NAME: RegQueryValueExA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4CA701 | API: 7C802446 | NAME: Sleep
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4CE60E | API: 7C801A28 | NAME: CreateFileA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4CE618 | API: 7C810B17 | NAME: GetFileSize
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4CE622 | API: 7C809AF1 | NAME: VirtualAlloc
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4CE62C | API: 7C801812 | NAME: ReadFile
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4CE636 | API: 7C812B7E | NAME: GetVersionExA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4CE64A | API: 7C814F8A | NAME: GetSystemDirectoryA
+-------------------------------------------------------
+
+WLSEC: 0046E000
+ALIGIN: 0012FF74
+---------------EX--------------------------------------
+Call from: 4CE686 | API: 7C809BE7 | NAME: CloseHandle
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4DE33B | API: 7C809EA1 | NAME: IsBadReadPtr
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E071F | API: 7C91D65E | NAME: NtOpenThread
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E0D30 | API: 76AF4E4F | NAME: timeGetTime
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 507D73 | API: 7C8656A8 | NAME: Process32Next
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 50A4F7 | API: 7C809EA1 | NAME: IsBadReadPtr
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 50CD9B | API: 7C91D7FE | NAME: ZwQueryInformationProcess
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E78BA | API: 7C809EA1 | NAME: IsBadReadPtr
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 511672 | API: 7C91D7FE | NAME: ZwQueryInformationProcess
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5161F2 | API: 7C91DCAE | NAME: ZwSetInformationThread
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 51A227 | API: 7C91DCAE | NAME: ZwSetInformationThread
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 51A231 | API: 7C91DC0E | NAME: ZwSetEvent
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 51EB9E | API: 7C91D7FE | NAME: ZwQueryInformationProcess
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 52602A | API: 7C96211C | NAME: DbgUiRemoteBreakin
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 526048 | API: 7C934778 | NAME: LdrShutdownProcess
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 52605C | API: 7C91120E | NAME: DbgBreakPoint
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 52E0C6 | API: 7C834FFE | NAME: GetCurrentDirectoryA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 52E0EF | API: 7C8360DD | NAME: SetCurrentDirectoryA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 529818 | API: 7C80AC61 | NAME: GetProcessHeap
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 529836 | API: 7C9200C4 | NAME: RtlAllocateHeap
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5474C3 | API: 7C80A0B7 | NAME: SetEvent
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 4E77CD | API: 7C80BB41 | NAME: lstrcmpiA
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 4E7AC0 | API: 7C91D92E | NAME: NtQuerySystemInformation
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5C7437 | API: 7E3A07EA | NAME: MessageBoxA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5C987D | API: 7C81CB12 | NAME: ExitProcess
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5C9AB7 | API: 7C911000 | NAME: RtlEnterCriticalSection
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5C9B3B | API: 7C9110E0 | NAME: RtlLeaveCriticalSection
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5C9BAB | API: 7E37D64F | NAME: SendNotifyMessageW
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5C9C2D | API: 7E3A3948 | NAME: SendNotifyMessageA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5C9CC8 | API: 7C801812 | NAME: ReadFile
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5C9D3D | API: 7C832361 | NAME: LockFile
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5C9E0C | API: 7C82F541 | NAME: LockFileEx
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5C9EBE | API: 7E36A8AD | NAME: wsprintfA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5C9F67 | API: 7C812AA9 | NAME: RaiseException
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5CA065 | API: 7C80B56F | NAME: GetModuleFileNameA
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5CA0D8 | API: 7C80AE40 | NAME: GetProcAddress
+-------------------------------------------------------
+
+---------------EX--------------------------------------
+Call from: 5D9C90 | API: 7C80AC61 | NAME: GetProcessHeap
+-------------------------------------------------------
+
+---------------GPA---------------------------------
+Call from: 5D9CAE | API: 7C9200C4 | NAME: RtlAllocateHeap
+-------------------------------------------------------
+
+
+Also on this way if you catch the SetEvent API you can UV the code and see what WL do with this API and also with 
+the kernel PE.
+
+The heap script I made can you also use if you need it to get all 3 locations and dwords of your target.
+
+Ok so that all what I wanted to show you in this tutorial.This time its very long and has a lot of video.So just 
+keep watching and try by yourself and if you have any questions about it or if you didn't understand something 
+of this tutorial than ask on the topic where I did post this tutorial on tuts4you.com.
+
+PS: Big special thanks goes to our member Lostin who made some very nice UnpackMes for this tutorial. :) Thank you.
+
+
+LCF-AT
+
+
+---------------------------------------------
+Video 10
+---------------------------------------------
+
+Ok so now at the end I show you a quick preview of my latest TM WL Unpack script and how the script does 
+unpack the same file.Not bad right?Quickly unpacked the same file as in the tutorial but this time just the 
+script does do the whole work also IAT fixing = same way like in my VMProtect script.Just stay tuned so 
+someday I will release it.
+
+
+Edit:
+---------------------------------------------
+Unpacked file of this tutorial: PackedALLMacros_CISC_Final-Unpacked.exe
+
+Tested successfully on OS:
+---------------------------------------------
+Windows 7 ultimate SP1 32 bit
+Windows 7 64Bit
+Windows 8 32Bit
+Windows XP SP0  <-- Runs like original file
+Windows XP SP3  <-- Unpack system of target
+---------------------------------------------
+EDIT2:
+---------------------------------------------
+Updated script: Get WL Heap and Stack AntiDump Loactions and DWORDs + Near OEP Stop Script.txt
+
+- Added Heap called from return log
+- Added StackAnti scan and log  [for exe files]
+
+
+LCF-AT

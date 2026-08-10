@@ -1,0 +1,104 @@
+// Catch IAT APIs and Store Locations Script
+// Use this script only with the file PackedALLMacros_CISC.exe
+// LCF-AT
+pause
+bphwc
+bc
+bpmc
+alloc 2000
+mov LOGSEC, $RESULT
+var API_READ_ADDR
+var OEP_ADDR
+var counter
+/////////////////////////////
+mov API_READ_ADDR, 005CD2DE   // <-- Enter API Read address     VA
+mov OEP_ADDR,      0055CDB2   // <-- Enter OEP / VM OEP address VA
+/////////////////////////////
+bphws API_READ_ADDR, "x"
+esto
+gmi eip, MODULEBASE
+mov BASE, $RESULT
+gmemi BASE, MEMORYSIZE
+add BASE, $RESULT
+mov CODE, BASE
+sub BASE, $RESULT
+gmemi CODE, MEMORYSIZE
+mov CODESIZE, $RESULT
+bphws OEP_ADDR
+bpgoto OEP_ADDR,      OEP_STOP
+bpgoto API_READ_ADDR, API_STOP
+/////////////////////////////
+API_STOP:
+mov API, eax
+gn eax
+cmp $RESULT, 00
+jne IS_A_API
+refresh eax
+inc counter
+cmp counter, 04
+jb API_STOP
+pause
+pause
+ret
+/////////////////////////////
+IS_A_API:
+mov DLLNAME, $RESULT_1
+mov APINAME, $RESULT_2
+gpa APINAME, DLLNAME
+mov API_IS, $RESULT
+bpwm CODE, CODESIZE
+esto
+bpmc
+cmp [eip], 028F, 02
+je RIGHT
+cmp [eip], 0B89, 02
+je RIGHT_2
+pause
+pause 
+/////////////////////////////
+RIGHT_2:
+gn ecx
+cmp $RESULT, 00
+jne FILL
+mov [LOGSEC], ebx
+jmp LOG
+/////////////////////////////
+RIGHT:
+gn [esp]
+cmp $RESULT, 00
+jne FILL
+mov [LOGSEC], edx
+/////////////////////////////
+LOG:
+mov [LOGSEC+04], API_IS
+add LOGSEC,  08
+/////////////////////////////
+FILL:
+mov API_IS,  00
+mov DLLNAME, 00
+mov APINAME, 00
+mov counter, 00
+esto
+pause
+pause
+ret
+/////////////////////////////
+OEP_STOP:
+bphwc
+pusha
+gmemi LOGSEC, MEMORYBASE
+mov edi, $RESULT
+/////////////////////////////
+LOOP:
+cmp [edi], 00
+je OVER
+mov eax, [edi]
+mov ecx, [edi+04]
+mov [eax], ecx
+add edi, 08
+jmp LOOP
+/////////////////////////////
+OVER:
+popa
+pause
+ret

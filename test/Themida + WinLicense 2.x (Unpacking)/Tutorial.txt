@@ -1,0 +1,994 @@
+Hello,
+
+so today I wanna show you one exsample how to unpack a newer TM WL UnpackMe which has some more 
+enabled protection features.So all these steps we will check manually to find possible reasons why 
+a unpacked file does not run.Just keep in your mind that this is only a basic exsample!
+
+Target    : PackedALLMacros_CISC.exe
+Protection: CISC
+Plugins   : StrongOD | Phant0m | ODBGScript | Breakpoint Manager | UnVirtualizer 1.6
+Scripts   : Little selfmade scripts to get infos faster  
+
+Important is that your target does run in your OllyDBG without to get any problems like DebuggerDetected. 
+Also the DRx option of the Phant0m plugin has to work on your OS.If they working fine then we can start.
+
+So this is also the text file with all infos about this tutorial so here you can read all more in detail 
+later so I don't write text directly in the videos.In the videos you can see each steps which I do and in 
+this text file you can read all steps so don't forget to this file too to know what you have to do later.
+
+Step-List:
+---------------------------------------------------------------------------------
+1. Find OEP / Near OEP / VM OEP / Rebuild OEP - optional
+2. Check APIs and IAT at OEP
+3. Find Address to Catch IAT and Location Addresses and log them
+4. Check Target for VM Entrys Jumps & Calls and Verify them
+5. Log all valid VM Entrys as BP list
+6. Dump & Fix
+7. Keep First Olly Open
+8. Run Dumped File
+9. Find and Analyze possible Exceptions
+10.Find VM Right Entry Who Makes Trouble
+11.UnVM VM Entry Who Make trouble and find what it checks inside VM [ANTI-DUMPS]
+12.Find A Way to Fix Anti-Dumps Manually in your dumped file [After-Fix]
+13.Fix all exception / AntiDump reasons via selfmade patching
+14.Run fixed file on other OS
+---------------------------------------------------------------------------------
+
+
+1. Find OEP / Near OEP / VM OEP
+2. Check APIs and IAT at OEP
+---------------------------------------------------------------------------------
+So first you should do some first basic checkings to get some basic datas about the target.
+
+- Run target = does it run = ok
+- Now if the target runs we check whether the target did used a IAT redirection or not + direct API commands
+  or not.So in many cases WL does not write real API commands of call and jump dword [addr] in the codesection 
+  and in this case we have to fix them from direct commands jmp / call API xy to jmp / call dword [addr]; API.
+  In other cases there are a mix of both,fixed commands and direct commands and in other cases there are all 
+  commands already ok and pointing to the real IAT.
+- Check where the IAT starts and end.
+
+Now if you have found out this basic datas you can start to find the OEP so there is also a very simple way 
+how you can do this.You just need to know which address in the IAT was filled at last or near at last.So for this 
+you can first try to use the last address in the IAT and there you set a HWBP write dword and restart the app 
+and run till this address was filled by WL with the API address or API redirected address.After this you only 
+just set a mem BP access on codesection and run and you break very quickly in codesection direct at the OEP 
+or near OEP = sub routine if WL used stolen OEP bytes.
+
+So in the case that your target used stolen OEP bytes and you stop near at OEP then you can check the stack 
+for the return address in [ESP].Follow the address and you see where it was called from [WL section].
+
+00405DAC  PUSH EBX  ; Near OEP sub routine
+
+Stack:
+$ ==>    0012FDA8    00556D18  PackedAL.00556D18
+
+Return to: 00556D18
+-----------------------------
+00556D18   PUSH 0D29EAF9  <-- specific value to handle next xy code
+00556D1D   JMP  00478CB2  <-- going to WL VM
+
+So there are now 2 ways which we can try to find the VM OEP or to restore the OEP bytes with the UV plugin.
+So for both we need now to know what the push value was before we did reach the sub routine = near OEP.So 
+what we already know is the jump address to WL VM which are used for the stolen routine.
+
+PUSH ????????  <-- Need to find out now!
+JMP  00478CB2  <-- going to WL VM
+
+Restart target and do the same as before.Set HWBP write on last address in IAT run till it was filled.Now set 
+a soft or hard breakpoint at the VM jumper address which have = 00478CB2
+Also set again a mem BP access on codesection or HWBP at near OEP address = 00405DAC
+Now run til you break at 00478CB2 and just log the stack value [ESP] which you see on each stop at this address 
+so long til you stop at near OEP.
+
+Results are:
+-----------------------------
+$ ==>    0012FD94    0D315318
+$ ==>    0012FD94    0D316E98
+$ ==>    0012FD94    0D317E71
+$ ==>    0012FD94    0D31BCC2
+$ ==>    0012FD94    0D31C4D5
+$ ==>    0012FD94    0D31C7F0
+$ ==>    0012FD94    0D31D04F
+$ ==>    0012FD94    0D31D195
+$ ==>    0012FD94    0D31D1E3
+$ ==>    0012FD94    0D31D55A
+$ ==>    0012FD94    0D31D65D
+$ ==>    0012FD94    0D31D802
+$ ==>    0012FD94    0D344053
+$ ==>    0012FD94    0D3450AA
+$ ==>    0012FDBC    0D298D18  <---- Last value we logged
+
+After the last stop we stop at near OEP again.Also between this logs did happend no another access on codesection 
+at any address in IAT etc so if this would happend then use the push value before but in this case we have to use 
+the last logged push value.
+
+So what we have now:
+-----------------------------
+PUSH 0D298D18
+JMP  00478CB2
+
+So this are now the datas which we can use as VM OEP!So you can write this commands in your target somewhere as 
+OEP or just search this PUSH 0D298D18 command in the WL section and if this will found then use this address as 
+VM OEP.
+
+0055CDB2  PUSH 0D298D18  <-- Found in WL section at 0055CDB2
+0055CDB7  JMP 00478CB2
+
+So if you follow this way then you will find the VM OEP manually which you also can use later.
+
+VM OEP found        = YES
+UnVirtualize VM OEP = How?
+
+Of course you can try to UV the VMed OEP with the UV plugin by Deathway which does work very good for CISC 
+protected files like our unpackme used.So to use the plugin is very simple but you have to follow some rules 
+to get it also work.
+
+Rule 1: There has always to be a VM Entry jump from codesection to WL section!
+Rule 2: Right Push value has already to pushed directly!If not then find value after a little trace and use 
+        this value and craete a push value command.
+
+Ok so we found the VM OEP in WL section but there is no jump to find in codesection which does jump to this 
+address and now we just create a jump to our found VM OEP address somewhere in codesection.
+
+
+0045DB3A   JMP 0055CDB2  <-- Create jump to VM OEP address
+
+Now you can select this address and choose the UV plugin / UV no jmp 2 times.First time the plugin does analyze 
+this entry and WL code to check whether it can handle it.On the second time it will UV this code and it will 
+show you a text file CISC_UV_DUMP where you can see the UV code.So we know already we just wanna UV the OEP 
+routine part and no WL code parts and in this case we start the search in this text file from bottom to top.
+Just have a look for a ESP command which could change the ESP address itself like POP ESP or PUSH [ESP].So WL 
+does use it own stack memory section if it will access the WL VM and at the end it does restore the target 
+stack back.Now lets have a look into the last ASM commands in the text file....
+
+................................................
+	0055C986	MOV DWORD PTR [ESP],ESI
+	0055C9D4	POP ESI
+------------------------------------------------
+	0055C9EA	POP ESP
+------------------------------------------------
+	0055C9F5	PUSH EBP
+	0055CA11	MOV EBP,ESP
+	0055CA31	ADD ESP,0xf0
+	0055CA6A	MOV EAX,0x4538f0
+	0055CAD4	CALL 0x405dac
+@Label_0055CB0D
+	0055CB46	MOV EAX,DWORD PTR [0x455024]
+	0055CBC4	MOV EAX,DWORD PTR [EAX]
+	0055CBFE	CALL 0x451b48
+@Label_0055CC4F
+	0055CC8B	MOV EAX,DWORD PTR [0x455024]
+	0055CCFA	MOV EAX,DWORD PTR [EAX]
+	0055CD67	JMP 0x453af3
+
+
+So you see there are not very much and you will find it quickly.The real main code start with a PUSH EBP 
+command till MOV EAX,DWORD PTR [EAX] followed by a jmp to VA 0x453af3.Lets have a look to 0x453af3.
+
+
+00453AF3   MOV EDX,453B30
+00453AF8   CALL 00451758
+00453AFD   MOV ECX,DWORD PTR DS:[455108]
+00453B03   MOV EAX,DWORD PTR DS:[455024]
+00453B08   MOV EAX,DWORD PTR DS:[EAX]
+00453B0A   MOV EDX,DWORD PTR DS:[4530F8]
+00453B10   CALL 00451B60
+00453B15   MOV EAX,DWORD PTR DS:[455024]
+00453B1A   MOV EAX,DWORD PTR DS:[EAX]
+00453B1C   CALL 00451BE0
+00453B21   CALL 00403EA8
+
+So the jump brings us to the rest of the original untouched OEP routine and the commands above are just stolen 
+= VMed from this routine.
+
+Ok now just let use create the real commands at our jump which we have created.Just enter now the address 
+0055C9F5 of the text file into the window by the plugin which is open.
+
+$ ==>    0045DB3A     55             PUSH EBP
+$+1      0045DB3B     89E5           MOV EBP,ESP
+$+3      0045DB3D     83C4 F0        ADD ESP,-10
+$+6      0045DB40     B8 F0384500    MOV EAX,4538F0
+$+B      0045DB45     E8 6282FAFF    CALL 00405DAC
+$+10     0045DB4A     A1 24504500    MOV EAX,DWORD PTR DS:[455024]
+$+15     0045DB4F     8B00           MOV EAX,DWORD PTR DS:[EAX]
+$+17     0045DB51     E8 F23FFFFF    CALL 00451B48
+$+1C     0045DB56     A1 24504500    MOV EAX,DWORD PTR DS:[455024]
+$+21     0045DB5B     8B00           MOV EAX,DWORD PTR DS:[EAX]
+$+23     0045DB5D   ^ E9 915FFFFF    JMP 00453AF3
+
+
+So the OEP code has a size of 23 bytes without the last jump command.Now you can copy this code at the real 
+start of OEP.
+
+00453AF3 Rest OEP - 23 bytes = 00453AD0 VA = Real OEP
+
+To copy the first OEP bytes you can use the MultiASM plugin and enter the new address of 00453AD0 and assemble 
+the first OEP bytes at real OEP address.
+
+---------------------------------------------------------------------------------
+$ ==>    00453AD0     55              PUSH EBP
+$+1      00453AD1     8BEC            MOV EBP,ESP
+$+3      00453AD3     83C4 F0         ADD ESP,-10
+$+6      00453AD6     B8 F0384500     MOV EAX,4538F0
+$+B      00453ADB     E8 CC22FBFF     CALL 00405DAC
+$+10     00453AE0     A1 24504500     MOV EAX,DWORD PTR DS:[455024]
+$+15     00453AE5     8B00            MOV EAX,DWORD PTR DS:[EAX]
+$+17     00453AE7     E8 5CE0FFFF     CALL 00451B48
+$+1C     00453AEC     A1 24504500     MOV EAX,DWORD PTR DS:[455024]
+$+21     00453AF1     8B00            MOV EAX,DWORD PTR DS:[EAX]
+---------------------------------------------------------------------------------
+$+23     00453AF3     BA 303B4500     MOV EDX,453B30
+$+28     00453AF8     E8 5BDCFFFF     CALL 00451758
+$+2D     00453AFD     8B0D 08514500   MOV ECX,DWORD PTR DS:[455108]
+$+33     00453B03     A1 24504500     MOV EAX,DWORD PTR DS:[455024]
+$+38     00453B08     8B00            MOV EAX,DWORD PTR DS:[EAX]
+$+3A     00453B0A     8B15 F8304500   MOV EDX,DWORD PTR DS:[4530F8]
+$+40     00453B10     E8 4BE0FFFF     CALL 00451B60
+$+45     00453B15     A1 24504500     MOV EAX,DWORD PTR DS:[455024]
+$+4A     00453B1A     8B00            MOV EAX,DWORD PTR DS:[EAX]
+$+4C     00453B1C     E8 BFE0FFFF     CALL 00451BE0
+$+51     00453B21     E8 8203FBFF     CALL 00403EA8
+---------------------------------------------------------------------------------
+
+The older craeted OEP bytes by UV plugin can you undo now.So now we have restored our first OEP byte block of 
+23 bytes which was VMed by WL in this target.
+
+Now you have the choice to use the found VM OEP directly or to restore the VM OEP back.If you restore the OEP 
+back like above then it will also no more access the WL VM for this part only.If you do this with any VM Entrys 
+then the WL VM section will also no more needed and access anymore and in this case you can remove the whole 
+WL VM.Remember: No VM access = No extra checks like AntiDumps etc.Of course our UnpackMe has more VM Entrys 
+which we also NOT VM later and in this case we have also to keep the WL section on the target.
+
+
+3. Find Address to Catch IAT and Location Addresses and log them
+---------------------------------------------------------------------------
+So now we can check the IAT and try to find a way to get all imports not redirected into the IAT.So our IAT 
+start at: 00457118 and has a size of 610 bytes.
+
+$ ==>    00457118   028E0000
+$+4      0045711C   7C9110E0  ntdll.RtlLeaveCriticalSection
+$+8      00457120   7C911000  ntdll.RtlEnterCriticalSection
+$+C      00457124   028E07B9
+$+10     00457128   028E0957
+....
+$+60C    00457724   5D460205  comctl32.ImageList_Create
+$+610    00457728   00000000
+
+Some API are already there and many other are redirected into memory like 
+
+00457118   028E0000 = API xy
+00457124   028E07B9 = API xy
+
+What to do now?So its always good if there are already some API to see in IAT which are not redirected 
+[mostly always] so this we will use for our advantage.So now choose a API which you can see.So you can 
+choose a normal API or a none direct API like ntdll.RtlLeaveCriticalSection for exsample.So if you already 
+know something about APIs + IAT fixing then you will know that this kind of API a forwarded API from kernel32.dll.
+
+Kernel32.dll
+--------------------------------
+7C8091C9 LeaveCriticalSection   4E 54 44 4C 4C 2E 52 74 6C 4C 65 61 76 65 43 72  NTDLL.RtlLeaveCr
+7C8091D9                        69 74 69 63 61 6C 53 65 63 74 69 6F 6E 00        iticalSection.
+
+ntdll.RtlLeaveCriticalSection = kernel32.LeaveCriticalSection
+
+So this API has to be fixed by kernel32 as LeaveCriticalSection API.Just start your fixing tool and have a look 
+there it will also show you this API as kernel version.Just only a info of course.
+
+So what we have to do now?Restart target set MEM BP write on the codesection and run till the codesection was 
+first filled with all main code datas except the IAT datas.
+
+Third stop:
+----------------------------------------------------------------
+00555641  REP MOVS BYTE PTR ES:[EDI],BYTE PTR DS:[ESI]
+ECX=00061000 (decimal 397312.)
+DS:[ESI]=[027D0000]=04
+ES:[EDI]=[00401000]=04
+
+Above the command does fill the code from [esi] to [edi] = 401000 and 00061000 bytes.After this command the 
+codesection was filled with the real main code.
+
+
+At this command one line below the codesection filling is ended.
+00555643  MOV BYTE PTR SS:[EBP+D1B28C0],56  <--- Run till this command 
+
+So now after this main filling WL does now wanna get all APIs for the codesection IAT and here we can start.
+Just set now a HWBP access byte on our API above.
+
+7C8091C9 LeaveCriticalSection   4E 54 44 4C 4C 2E 52 74 6C 4C 65 61 76 65 43 72  NTDLL.RtlLeaveCr
+7C8091D9                        69 74 69 63 61 6C 53 65 63 74 69 6F 6E 00        iticalSection.
+
+
+HWBP access byte at 7C8091C9 and run one time.
+
+005CD09C  CMP DWORD PTR DS:[EAX],0E8   <-- Check for call opcode
+005CD0A2  JNZ 005CD1DD                 <-- Here we stop = does jump = no E8 opcode at 7C8091C9
+
+EAX 7C8091C9 ASCII "NTDLL.RtlLeaveCriticalSection"  <-- String in eax to see
+ECX 7C800000 kernel32.7C800000
+EDX 3643B231
+EBX 003C0000
+ESP 0012FF6C
+EBP F32BE014
+ESI 7C802F64 kernel32.7C802F64
+EDI 0040136D PackedAL.0040136D
+EIP 005CD0A2 PackedAL.005CD0A2
+
+So in eax you see the address of LeaveCriticalSection kernel32 which does hold the forwarded API to 
+"NTDLL.RtlLeaveCriticalSection".So WL can not use this address 7C8091C9 as API so it also has to check whether 
+is a forwarded API or not to get the real API address of NTDLL.RtlLeaveCriticalSection.
+
+Scroll slowly forward....
+
+005CD1DD  TEST EAX,EAX   <--- EAX 7C8091C9 ASCII "NTDLL.RtlLeaveCriticalSection"
+005CD1DF  JE 005CD2B5    <--- no jump
+005CD1E5  JNB 005CD1F0   <--- jumps
+
+005CD1F0  CMP DWORD PTR DS:[EAX],6C687069  <-- String check = "iphl"
+005CD1F6  JNZ 005CD2B5   <--- jumps = no "iphl" in [eax]
+
+005CD2B5  PUSH DWORD PTR SS:[ESP] = ESP 0012FF6C | 00562CE8  <-- pushed 00562CE8 in stack
+005CD2B8  POP ESI                 = POP [ESP] to esi = 00562CE8 to esi
+005CD2B9  ADD ESP,4               = add 4 bytes to esp
+005CD2BC  JMP 005CD2C9
+
+005CD2C9  MOV EBX,DWORD PTR SS:[EBP+D1B2B72] <-- EBP = WL Aligin = F32BE014 + D1B2B72 = 00470B86 | 00000000
+005CD2CF  PUSHAD                             <-- Save Register to stack / esp+20
+005CD2D0  SUB EDX,28465E3F
+005CD2D6  SBB ESI,81792D6
+005CD2DC  POPAD                              <-- Restore register again
+005CD2DD  DEC EBX                            <-- Sub ebx 1 = -1 in ebx
+005CD2DE  JE 005CD41D                        <-- no jump
+
+005CD30E  MOV EBX,DWORD PTR SS:[EBP+D1B0BA9] <-- kernelbase to ebx
+005CD315  SUB EBX,ECX                        <-- ebx & ecx are kernelbase of 7C800000 then 00 in ebx
+005CD317  JE 005CD41D                        <-- ebx = 00 je does jump now
+
+
+005CD41D  LEA EBX,DWORD PTR SS:[EBP+D3122DD] <-- mov EBP+D3122DD = 005D02F1 to ebx
+005CD423  STC                                <-- Set CF
+005CD424  CALL EBX                           <-- call ebx = 005D02F1
+005CD426  JMP 005CD430
+
+Ok so far all clear right?No? :) So if you already unpacked some WL targets then you know that the code above 
+is already the place called magic jumps which you can patch to prevent the IAT redirection.
+
+Now just see where we are now after tracing till call EBX.In eax we still see the API address
+
+EAX 7C8091C9 ASCII "NTDLL.RtlLeaveCriticalSection"
+
+which is no direct accessable API.So if you now trace in call EBX and you will see the checks into dll exports 
+to get the right API address of "NTDLL.RtlLeaveCriticalSection".So now just set a BP after call EBX at
+
+005CD426  JMP 005CD430
+
+and run and look at eax.....
+
+EAX 7C9110E0 ntdll.RtlLeaveCriticalSection
+ECX 7C800000 kernel32.7C800000
+EDX 3643B231
+EBX 005D02F1 PackedAL.005D02F1
+ESP 0012FF70
+EBP F32BE014
+ESI 00562CE8 PackedAL.00562CE8
+EDI 0040136D PackedAL.0040136D
+EIP 005CD426 PackedAL.005CD426
+
+....after this call EBX you will see the right API address of RtlLeaveCriticalSection which does WL also use to 
+store this address in our target IAT.
+
+So a way we can choose is that we just patch the first JE to jump where it calls ebx to get the right API adddress.
+Then we set a HWBP at 005CD426  JMP 005CD430 and just reading each API from eax and note them.Of course we can also 
+set a HWBP at 005CD2DD  DEC EBX to read APIs from eax but then you have to use gpa commands to get the right 
+address if you want to use a script like we will do later.
+
+So to know which API WL does write into our IAT we have to set a MEM BP write on codesection where our IAT is 
+stored and then we also catch eax address for each API and at the end we just restore the right APIs at the 
+right address.
+
+So with this way we get all APIs and addresses without to get catched by WL with any error if we do patch the 
+JE jumps.
+
+The only thing on this way you have to find out are the commands which are used to write the API into IAT.So in 
+this target there are only 2 diffrent commands used.
+
+POP DWORD PTR DS:[EDX]        <-- API or RD Addr in [ESP] move to [edx] / edx = IAT addr of API
+MOV DWORD PTR DS:[EBX],ECX    <-- API or RD ADDR in ecx   move to [ebx] / ebx = IAT addr of API
+
+So this work will the little script to for use to get all API back to IAT.
+
+
+Catch IAT APIs and Store Locations script.txt - Use it now
+----------------------------------------------------------------
+After using this script you can dump and fix your target.
+
+
+4. Check Target for VM Entrys Jumps & Calls and Verify them
+----------------------------------------------------------------
+So now we have to check why our dumped target not runs.So you know already that our file is a TM WL protected file 
+which also still can use WL VM parts.So now we should first check and find all possible VM Entrys from codesection 
+to WL section.So for this we will use the UV plugin and search for references.Go to codesection and choose UV plugin 
+/ references and now enter the WL section address and WE section size and let analyse it.
+
+WL section: 
+----------------------
+If you don't know what the WL section is then use this quick scan-pattern below.
+
+68????????E9??????FF68????????E9??????FF68????????E9??????FF
+=
+004B5DB9  PUSH 0D1F7F56
+004B5DBE  JMP 00478CB2
+004B5DC3  PUSH 0D1F8055
+004B5DC8  JMP 00478CB2
+004B5DCD  PUSH 0D1F82D7
+004B5DD2  JMP 00478CB2
+
+UV data to enter in plugin:
+---------------------------------
+Codesection VA:    00401000
+Codesection size:  00061000
+WL section VA:     0046E000
+WL section size:   0019F000
+---------------------------------
+
+Now after analysing it pop up a new window with all possible found results.All jumps and calls are logged in this 
+window going from code to WL section.Now you also need to verify the founds so there can also be logged wrong 
+founds.
+
+Oreans Virtual Machine References
+---------------------------------
+00407CB9    JMP 00569A05       1
+00407CF1    JMP 005717D9       2
+00407D28    JMP 00578391       3
+004082AD    JMP 0057DB26       4
+0040C175    JMP 0058570E       5
+0040CBF2    JMP 0058D487       6
+0040CC02    JMP 00594EF3       7
+0040CC5E    JMP 0059BF8B       8
+0040CC67    JMP 005A2196       9
+00419249    JMP 005A98C6       10
+00419278    JMP 005AFC80       11
+0042049A    CALL 004BF107      <-- Wrong
+00420A4F    JMP 005B4E36       12
+00450453    JMP 005B92B1       13
+004504D3    JMP 005BE46B       14
+0045308E    JMP 005C58E5       15
+004533A1    JMP 005F7240       16
+004534A0    CALL 00601383      17
+004534C7    CALL 00601383      18
+004534F7    CALL 005EEC8E      19
+0045354A    CALL 005EEC8E      20
+004535B1    CALL 00601383      21
+004535EA    CALL 00601383      22
+00453655    JMP 005EF85E       23 x
+0045371C    CALL 005EF7A9      24
+00453797    JMP 005FD8F0       25
+---------------------------------
+So above you can see the list with all results found by UV.So I gave them all a nummber.Normal VM Entry jump are 
+mostly the same so there was written a JUMP into codesection going to WL section followed by a push value and jump 
+again.
+
+00407CB9  JMP  00569A05      1
+to
+00569A05  PUSH 0D2A7087
+00569A0A  JMP  00478CB2
+
+These are normal entrys where you can also try to use the UV plugin to solve the VM code.
+Found 1 till 16  and 25 are such kind of VM Entrys.
+
+
+0042049A    CALL 004BF107      <-- Wrong
+
+Above is one wrong found so you will see it if you scroll the address a bit then you see the real code and also the 
+destination point to nowhere.
+
+0042049A  CALL 004BF107                         ; <-- Wrong
+0042049F  ADD BYTE PTR DS:[EDI],CL
+004204A1  MOV BH,45
+004204A3  IN AL,DX                              ; I/O command
+004204A4  PUSH EAX
+
+Real code
+00420497  MOV WORD PTR SS:[EBP-18],AX
+0042049B  PUSH 9EC
+004204A0  MOVZX EAX,WORD PTR SS:[EBP-14]
+004204A4  PUSH EAX
+
+So this can happen if same opcodes are used and UV does only scan for entrys to WL.
+
+Lets check this founds.....
+004534A0    CALL 00601383      17
+004534C7    CALL 00601383      18
+004534F7    CALL 005EEC8E      19
+0045354A    CALL 005EEC8E      20
+004535B1    CALL 00601383      21
+004535EA    CALL 00601383      22
+
+...you see there are 3x2 same calls!Below I nopped the code between so that you can see it better...also the code 
+where you now can see the nops are not readable normaly so its some kind of crypted.
+
+
+$ ==>    004534A0   CALL 00601383                         ; 17
+$+5      004534A5   MOV EDI,EDI  
+$+7      004534A7   MOV EBX,EBX
+$+9      004534A9   NOP
+$+A      004534AA   NOP
+$+B      004534AB   NOP
+$+C      004534AC   NOP
+$+D      004534AD   NOP
+$+E      004534AE   NOP
+$+F      004534AF   NOP
+$+10     004534B0   NOP
+$+11     004534B1   NOP
+$+12     004534B2   NOP
+$+13     004534B3   NOP
+$+14     004534B4   NOP
+$+15     004534B5   NOP
+$+16     004534B6   NOP
+$+17     004534B7   NOP
+$+18     004534B8   NOP
+$+19     004534B9   NOP
+$+1A     004534BA   NOP
+$+1B     004534BB   NOP
+$+1C     004534BC   NOP
+$+1D     004534BD   NOP
+$+1E     004534BE   NOP
+$+1F     004534BF   NOP
+$+20     004534C0   NOP
+$+21     004534C1   NOP
+$+22     004534C2   NOP
+$+23     004534C3   NOP
+$+24     004534C4   NOP
+$+25     004534C5   NOP
+$+26     004534C6   NOP
+$+27     004534C7   CALL 00601383                         ; 18
+$+2C     004534CC   MOV EBX,EBX
+$+2E     004534CE   MOV EDX,EDX                  
+$+30     004534D0   MOV ESI,ESI
+$+32     004534D2   MOV EDI,EDI                      
+$+34     004534D4   MOV ECX,ECX
+$+36     004534D6   MOV EDI,EDI                      
+$+38     004534D8   MOV ECX,ECX
+$+3A     004534DA   MOV EBX,EBX
+$+3C     004534DC   MOV EDX,EDX   
+$+3E     004534DE   RETN
+
+So this calls are some Macro calls.So there can also be used diffrent kind of macros.In the exsample above you have 
+to execute the first call found to get the code after decrypted.
+
+$ ==>    004534A0   CALL 00601383  DeCrypt call
+
+$+27     004534C7   CALL 00601383  Enrypt  call
+
+So in this case just exe the DeCrypt call and then you can nop both calls after.
+
+$ ==>    004534A0   NOP
+$+1      004534A1   NOP
+$+2      004534A2   NOP
+$+3      004534A3   NOP
+$+4      004534A4   NOP
+$+5      004534A5   MOV EDI,EDI
+$+7      004534A7   MOV EBX,EBX
+$+9      004534A9   MOV EAX,EAX
+$+B      004534AB   MOV EAX,EAX
+$+D      004534AD   MOV EDX,EDX
+$+F      004534AF   MOV ESI,ESI
+$+11     004534B1   NOP
+$+12     004534B2   INC DWORD PTR DS:[456C04]
+$+18     004534B8   MOV EAX,DWORD PTR DS:[455024]
+$+1D     004534BD   MOV EAX,DWORD PTR DS:[EAX]
+$+1F     004534BF   MOV EAX,DWORD PTR DS:[EAX+30]
+$+22     004534C2   MOV DWORD PTR DS:[456C04],EAX
+$+27     004534C7   NOP
+$+28     004534C8   NOP
+$+29     004534C9   NOP
+$+2A     004534CA   NOP
+$+2B     004534CB   NOP
+$+2C     004534CC   MOV EBX,EBX
+$+2E     004534CE   MOV EDX,EDX
+$+30     004534D0   MOV ESI,ESI
+$+32     004534D2   MOV EDI,EDI
+$+34     004534D4   MOV ECX,ECX
+$+36     004534D6   MOV EDI,EDI
+$+38     004534D8   MOV ECX,ECX
+$+3A     004534DA   MOV EBX,EBX
+$+3C     004534DC   MOV EDX,EDX
+$+3E     004534DE   RETN
+
+So this you have to do on the original file before you dump it or just copy the code via MultiASM plugin.Do this with 
+all DE | ENCrypt founds you have.
+
+
+
+Now we still have these founds.......
+
+00453655    JMP 005EF85E       23 x
+0045371C    CALL 005EF7A9      24
+
+
+JMP 005EF85E       23 x
+to
+$ ==>    005EF85E   LEA EDX,DWORD PTR SS:[EBP-8]
+$+3      005EF861   PUSH DWORD PTR DS:[455024]  <--- address in codesection
+$+9      005EF867   PUSH ECX
+$+A      005EF868   PUSH EAX
+$+B      005EF869   PUSH 33AB
+$+10     005EF86E   MOV DWORD PTR SS:[ESP],EBX
+$+13     005EF871   PUSH EBP
+$+14     005EF872   PUSH 7D0A6B02
+.......
+$+178    005EF9D6   CALL 004521F0  <--- call to codesection
+.......
+$+2FC    005EFB5A   CALL 004042A4  <--- call to codesection
+......
+$+3B1    005EFC0F   CALL 00427530  <--- call to codesection
+$+3B6    005EFC14   JMP 004536A0   <--- jump to codesection
+
+So this is a Mutant macro.You see in this routine it also used direct commands of codesection and some obfus code.
+Normaly you can keep this so far original but you can also use the codedoctor plugin which does translate these 
+commands to normal single commands which you then can later copy back to the original routine.No big thing so far.
+
+
+0045371C    CALL 005EF7A9      24   <--- So whats this?
+
+There is only one call.....
+
+00453707   LEA EDX,DWORD PTR SS:[EBP-8]
+0045370A   MOV EAX,DWORD PTR DS:[455024]
+0045370F   MOV EAX,DWORD PTR DS:[EAX]
+00453711   CALL 004521F0
+00453716   MOV ECX,DWORD PTR SS:[EBP-8]
+00453719   LEA EAX,DWORD PTR SS:[EBP-4]
+------------------------------
+0045371C   CALL 005EF7A9
+------------------------------
+00453721   CALL 004042A4
+00453726   MOV EAX,DWORD PTR SS:[EBP-4]
+00453729   CALL 00427530
+
+So this call is a StrEncrypt macro call.So you see below or above is normal code and if you exe this call then you 
+will see only one change in the registers in EDX.
+
+EAX 0012F458
+ECX 02DA2488 ASCII "C:\TheMida WinLicense Manually Unpack Tutorial Exsample\PackedALLMacros_CISC.exe"
+EDX 00000000  <----- Nothing
+EBX 02DA4ABC
+ESP 0012F448
+EBP 0012F45C
+ESI 0042C1CC PackedAL.0042C1CC
+EDI 0012F5D8
+EIP 0045371C PackedAL.0045371C
+
+EAX 0012F458
+ECX 02DA2488 ASCII "C:\TheMida WinLicense Manually Unpack Tutorial Exsample\PackedALLMacros_CISC.exe"
+EDX 005EED44 ASCII "Running from: "  <----- Address with String
+EBX 02DA4ABC
+ESP 0012F448
+EBP 0012F45C
+ESI 0042C1CC PackedAL.0042C1CC
+EDI 0012F5D8
+EIP 00453721 PackedAL.00453721
+
+
+005EED44  52 75 6E 6E 69 6E 67 20 66 72 6F 6D 3A 20 00     Running from: .
+
+So if you now restart the original target and check this address then you will see this...
+
+
+005EED44  35 16 11 11 0A 11 08 C3 09 15 10 0E DD C3 00 00  5.Ã.ÝÃ..  <--- No String.
+
+First if you exe this call then it will DeCrypt this pattern with the string.
+
+So this kind of call can you also keep original.Ok so thats are the founds we have now.We only should later 
+get and rebuild the code of the normal DE ENCrypt double macro calls and the rest we keep so far for the moment.
+
+
+Back to List
+---------------------------------------------
+Ok back again to our list of all founds.So now we just set on all real founds a soft BP and will save this BP 
+list to file so for this you can use the BreakPoint Manager plugin.Now run the dumped file and we see where it stop 
+and also on which VM Entry.So if before any exception happend then its no VM Entry problem so far.
+
+So we stop now at VM Entry 10 the first time.
+
+00419249   JMP 005A98C6    ; 10 Entry
+.......................
+00419261   RETN
+
+So now run go on and you will see the target does crash and will not stop at any other BP.This does tell use that 
+the problem does happend from this VM Entry 10 somewhere.Restart set BP at VM 10 and run.Now set a mem BP access 
+on codesection and run.So we do this to verify whether it does access any code in codesection.
+
+We stop here in codesection with the mem BP access
+
+00405F94   JMP DWORD PTR DS:[4572E8]     ; kernel32.CreateEventA
+
+So it try to access this address in code which wants to jump and execute the CreateEventA API.Lets check the stack.
+
+Stack:
+---------------------------------------------------------------
+$ ==>    0012FF60    005A21AE  /CALL to CreateEventA
+$+4      0012FF64    FFFFFFFF  |pSecurity = FFFFFFFF
+$+8      0012FF68    00000000  |ManualReset = FALSE
+$+C      0012FF6C    00419264  |InitiallySignaled = TRUE
+$+10     0012FF70    0041A73F  \EventName = "¸¨¤A"
+$+14     0012FF74    0012FF88  Pointer to next SEH record
+$+18     0012FF78    0041A7A9  SE handler
+$+1C     0012FF7C    0012FF80
+$+20     0012FF80   /0012FFA0
+$+24     0012FF84   |00403CB8  RETURN to Dump_1_S.00403CB8
+
+
+Do you see something on the first view?No?Ok.If no then step in this API and trace with F8.
+
+
+7C830885 CreateEventA   MOV EDI,EDI                 
+7C830887                PUSH EBP
+7C830888                MOV EBP,ESP
+7C83088A                PUSH ECX
+7C83088B                PUSH ECX
+7C83088C                PUSH ESI
+7C83088D                XOR ESI,ESI
+7C83088F                CMP DWORD PTR SS:[EBP+14],ESI
+7C830892                JNZ 7C83284E                 
+7C830898                PUSH ESI
+7C830899                PUSH DWORD PTR SS:[EBP+10]     
+7C83089C                PUSH DWORD PTR SS:[EBP+C]
+7C83089F                PUSH DWORD PTR SS:[EBP+8]
+7C8308A2                CALL 7C80A749             ; kernel32.CreateEventW  <--- Here we are.
+7C8308A7                POP ESI
+7C8308A8                LEAVE
+7C8308A9                RETN 10
+
+So if you step over call to CEW API [some does happend] and over RET 10 then you come back somewhere in the kernel 
+dll.Also if you check the stack then you can see a access violation string was created.So something is wrong here.
+So in this case we should restart again to VM Entry 10 in dump and break again on API CreateEventA and now just disable 
+all exceptions in Olly [custom and access violations] and plugins and now trace again in the call over CraeteEventW.
+
+Now we break on the exception:
+--------------------------------------------------
+7C91100B   CMP DWORD PTR DS:[EDX+14],0  // EDX: 00000008
+DS:[0000001C]=???
+
+So in EDX is 8 and the command want to check [edx+14] whats not possible of course if EDX has only a value of 8.
+So the problem does happen if we access the API CreateEventW.So the main API which was access was CreateEventA so 
+lets check this again and the parameters which we see in stack.
+
+$ ==>    0012FF60    005A21AE  /CALL to CreateEventA
+$+4      0012FF64    FFFFFFFF  |pSecurity = FFFFFFFF
+$+8      0012FF68    00000000  |ManualReset = FALSE
+$+C      0012FF6C    00419264  |InitiallySignaled = TRUE
+$+10     0012FF70    0041A73F  \EventName = "¸¨¤A"
+
+
+API Help file said....
+--------------------------------------------------
+The CreateEvent function creates a named or unnamed event object. 
+
+HANDLE CreateEvent(
+
+    LPSECURITY_ATTRIBUTES lpEventAttributes,	// pointer to security attributes  
+    BOOL bManualReset,	                        // flag for manual-reset event 
+    BOOL bInitialState,	                        // flag for initial state 
+    LPCTSTR lpName 	                        // pointer to event-object name  
+   );
+
+
+So if you don't know how to handle or understand this API then you can also just have a look on the original file at 
+this call.How does the original file does look at this call?
+
+00419249   JMP 005A98C6   ; VM 10 Entry
+
+Set MEM BP access code
+
+00405F94   JMP DWORD PTR DS:[4572E8]  <--- You see now API so its redirected.
+
+Just change to
+
+00405F94   JMP DWORD PTR DS:[4572E8]       ; kernel32.CreateEventA
+
+Now see the stack original
+---------------------------------------------------------
+$ ==>    0012FD54    005A21AE  /CALL to CreateEventA
+$+4      0012FD58    00000000  |pSecurity = NULL
+$+8      0012FD5C    FFFFFFFF  |ManualReset = TRUE
+$+C      0012FD60    00000000  |InitiallySignaled = FALSE
+$+10     0012FD64    00419264  \EventName = ""
+$+14     0012FD68    RETURN to PackedAL.0041A73F from PackedAL.00419234
+$+18     0012FD6C    0012FD80  Pointer to next SEH record
+$+1C     0012FD70    0041A7A9  SE handler
+$+20     0012FD74    0012FD78
+$+24     0012FD78   /0012FD98
+$+28     0012FD7C   |00403CB8  RETURN to PackedAL.00403CB8
+
+So you see already this parameters are others than in our dump right.
+
+
+Stack: Dumped file
+---------------------------------------------------------------
+$ ==>    0012FF60    005A21AE  /CALL to CreateEventA
+$+4      0012FF64    FFFFFFFF  |pSecurity = FFFFFFFF     <----- -1
+$+8      0012FF68    00000000  |ManualReset = FALSE      <-----  0
+$+C      0012FF6C    00419264  |InitiallySignaled = TRUE <---- 0041926
+$+10     0012FF70    0041A73F  \EventName = "¸¨¤A"       <---- 0041A73F
+$+14     0012FF74    0012FF88  Pointer to next SEH record <--- etc..
+$+18     0012FF78    0041A7A9  SE handler
+$+1C     0012FF7C    0012FF80
+$+20     0012FF80   /0012FFA0
+$+24     0012FF84   |00403CB8  RETURN to Dump_1_S.00403CB8
+
+So you see there is something wrong with the stack in our dumped file!So the stack is some kind of moved some 
+more 10 bytes down instead of the original and the addresses and parameters does not match.So this API get called 
+with wrong / strange parameters which makes this API bring to a access violation inside = no normal retrun out of 
+this API.
+
+Now lets try to change the stack manually...
+
+$ ==>    0012FF60    005A21AE  /CALL to CreateEventA
+$+4      0012FF64    00000000  |pSecurity = NULL
+$+8      0012FF68    FFFFFFFF  |ManualReset = TRUE
+$+C      0012FF6C    00000000  |InitiallySignaled = FALSE
+$+10     0012FF70    00419264  \EventName = ""
+
+Now trace again in API over CreateEventW...you see this time it works and the API will execute correctly.Out of the 
+API we are now here....
+
+005A21AE   PUSH 0D2EB680   <---- Back to WL code after bypassing API successfully
+005A21B3   JMP 00478CB2
+
+Now set mem bp access on code again and run a view times and we come back to codesection....
+
+00419261   RETN  <--- Here we are
+
+So now we did bypass this VM Entry 10 successfully.The main question now is why the stack does change in VM 10?
+So somewhere in this VM 10 code must be checked something what is no more original in our dumped file so you know the 
+original file does work normaly but not our dumped file at this location.
+
+How to handle this stack problem?
+
+So we will try to UV the VM Entry 10 with the plugin and then we will just trace the code to find out what it does 
+do with our stack so somewhere are happend some checks for this.
+
+
+Basic Infos: UV Entry and check code
+
+So for this we need the Aligin value of our target.Aligin is some kind of base address which does WL use for some 
+diffrent dynamic commands like "mov ptr ss: [Aligin+/-value]"
+
+So Aligin is always set into EBP register.The aligin can you get if you run the target and set HWBP on VirtualAlloc 
+then see EBP [In protected file] or just enter any VM Entry and trace till Aligin check in code then you see it in 
+dump + WL IAT etc.So we only need to know the Aligin now.
+
+
+
+Small Scripts:
+-------------------------------------------------------
+Catch IAT APIs and Store Locations script.txt  <-- Use it to get API & IAT addresses of this UnpackMe
+
+
+Catch and Log Export and GPA API callers from WL Code script.txt
+-------------------------------------------------------
+Explain: So this script you can use on any TM WL target which does log all APIs which WL does use by itself via 
+         Export access and via GetProcAddress API.Also it will log the addresses where it was called from WL so
+         this is helpfully if you need to stop after a API xy was called from VM for exsample like SetEVent and 
+         others like some used AntiDebug APIs.After using this script open script log window and copy the whole
+         log in a txt file.
+-------------------------------------------------------
+         ---EX--- = Got API from exports
+         ---GPA-- = Got API from GetProcAddress API
+         ALIGIN   = Aligin value of your WL target
+-------------------------------------------------------
+         So this script should be very interesting for you so don't underestimate it.
+
+
+
+Get WL Heap AntiDump Loactions and DWORDs + Near OEP Stop script.txt
+-------------------------------------------------------
+       This script can you also use for any TM WL target to get the three AntiDump Heap locations in memory and 
+       the used DWORDs inside.Its also just a info script.Also it will bring you to the OEP / Near OEP of your 
+       target.
+
+
+
+Info: Ok so all other steps which you can see in the videos are also explained in the live.txt file so also read 
+      this file.
+
+Note: In the videos you will only see fixes of the stuff who will also checked in this UnpackMe not more or less.
+      Of course there can also be some other checks in other protected files like other AntiDumps so these you
+      can also find on the same way like you have seen in my videos.The tutorial is only just a exsample how you 
+      can find possible checks and how to deal with them.
+
+      Other targets can also use API locations who are still a part of the WL code if your target still use WL VM.
+      In this case you have to find and fix them.Always a good idea to check your unpacked file on other OS and
+      check possible exception and the reasons.
+
+      Ok thats it so far.So I hope you like the tutorial and lern something with my help if possible.Yes I also 
+      know I am no good tutorial writer / creater so this is really not my thing and normaly I don't also have
+      the patience to write long descriptions etc you know.Anyway.Also I know you will maybe have much patience
+      too to follow my descriptions and videos so if something does not work for you or you get any trouble then 
+      ask on the topic where I did post this tutorial to get some help.
+
+Special Thanks goes to Lostin who did create some UnpackMes for me also this I used in this tutorial.
+
+Thank you for watching and keep clean.
+
+LCF-AT
+
+
+Basic Infos:
+---------------------------------------------------------------------------------
+
+How does TM WL get APIs to use them for itself?
+---------------------------------------------------------------------------------
+So TM WL used 2 diffrent ways to read system APIs.
+1. Read APIs from the export table of a dll [most protector have to do it]
+2. Call APIs directly via GetProcAddress API
+
+So if you want to know which APIs does the WL will access then you just need to find the place where you 
+can catch the API addresses.So you can do it if you directly access the kernel32.dll export table 
+Number of Names VA of the dll and you can also hook the GetProcAddress API.So this is a good and simple way 
+to find out which APIs WL does call and wanna use and also you can find out which AntiDebug API will used 
+by WL.Hook and log them to get a full list of called APIs by WL.
+
+
+
+Dll Emulation
+---------------------------------------------------------------------------------
+WL does also emulate some system dlls like kernel32.dll user32.dll Advapi32.dll.So if you want to prevent 
+using EMU dlls by WL for WL code then you can prevent it if you patch the return of CreateFile API to -1 or 
+just set the system dll path to 00.
+
+0012FF6C   004CB257  /CALL to CreateFileA
+0012FF70   0046E2B5  |FileName = "C:\WINDOWS\system32\KERNEL32.dll"
+0012FF74   80000000  |Access = GENERIC_READ
+0012FF78   00000001  |ShareMode = FILE_SHARE_READ
+0012FF7C   00000000  |pSecurity = NULL
+0012FF80   00000003  |Mode = OPEN_EXISTING
+0012FF84   00000004  |Attributes = SYSTEM
+0012FF88   00000000  \hTemplateFile = NULL
+to
+0012FF6C   004CB257  /CALL to CreateFileA
+0012FF70   00000000  |FileName = NULL    <------ set path to 00 before exe the API
+0012FF74   80000000  |Access = GENERIC_READ
+0012FF78   00000001  |ShareMode = FILE_SHARE_READ
+0012FF7C   00000000  |pSecurity = NULL
+0012FF80   00000003  |Mode = OPEN_EXISTING
+0012FF84   00000004  |Attributes = SYSTEM
+0012FF88   00000000  \hTemplateFile = NULL
+
+
+VirtualAlloc
+---------------------------------------------------------------------------
+7C809AF1 VirtualAlloc     8BFF          MOV EDI,EDI
+7C809AF3                  55            PUSH EBP
+7C809AF4                  8BEC          MOV EBP,ESP
+7C809AF6                  FF75 14       PUSH DWORD PTR SS:[EBP+14]
+7C809AF9                  FF75 10       PUSH DWORD PTR SS:[EBP+10]
+7C809AFC                  FF75 0C       PUSH DWORD PTR SS:[EBP+C]
+7C809AFF                  FF75 08       PUSH DWORD PTR SS:[EBP+8]
+7C809B02                  6A FF         PUSH -1
+7C809B04                  E8 09000000   CALL 7C809B12   ; kernel32.VirtualAllocEx
+7C809B09                  5D            POP EBP
+7C809B0A                  C2 1000       RETN 10
+
+VirtualAlloc Enulated
+---------------------------------------------------------------------------
+00CD8EF1                 8BFF           MOV EDI,EDI
+00CD8EF3                 55             PUSH EBP
+00CD8EF4                 8BEC           MOV EBP,ESP
+00CD8EF6                 FF75 14        PUSH DWORD PTR SS:[EBP+14]
+00CD8EF9                 FF75 10        PUSH DWORD PTR SS:[EBP+10]
+00CD8EFC                 FF75 0C        PUSH DWORD PTR SS:[EBP+C]
+00CD8EFF                 FF75 08        PUSH DWORD PTR SS:[EBP+8]
+00CD8F02                 6A FF          PUSH -1
+00CD8F04                 E8 09000000    CALL 00CD8F12
+00CD8F09                 5D             POP EBP
+00CD8F0A                 C2 1000        RETN 10
+
+If you don't prevent the dll EMU then WL will use direct API addresses and also EMU API addresses for it 
+own WL code. 
+
+Also CreateFile API is used to check some tools and drivers etc.
+
+Also it will check your running system processlist and if you have running something which does check WL 
+then you will get a detecting message,error or the target just terminates without message.

@@ -1,0 +1,27 @@
+#include "stdafx.h"
+#include "stdafx.h"
+#include "Global.Engine.h"
+#include "Global.Garbage.h"
+#include "Global.Injector.h"
+#include "Global.Engine.Threading.h"
+#include "Global.Debugger.h"
+
+// Global.Engine.Entry:
+BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+{
+    switch(fdwReason)
+    {
+    case DLL_PROCESS_ATTACH:
+        engineHandle = hinstDLL;
+        InitializeCriticalSection(&engineStepActiveCr);
+        EngineInit();
+        break;
+    case DLL_THREAD_ATTACH:
+    case DLL_THREAD_DETACH:
+        break; //this bug has been here since 2010
+    case DLL_PROCESS_DETACH:
+        CriticalSectionLocker::Deinitialize(); //delete critical sections
+        break;
+    }
+    return TRUE;
+}

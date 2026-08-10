@@ -1,0 +1,73 @@
+name: HyperDbg Source Snapshot
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+  pull_request:
+    branches:
+      - master
+      - dev
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+
+    - name: Install zstd
+      run: sudo apt-get update && sudo apt-get install -y zstd
+
+    - name: Clone HyperDbg repository
+      run: |
+        rm -rf HyperDbg
+        git clone --recursive -b dev https://github.com/HyperDbg/HyperDbg.git HyperDbg
+
+    - name: Get HyperDbg commit info
+      id: hyperdbg_info
+      working-directory: HyperDbg
+      run: |
+        echo "commit=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+        echo "date=$(git log -1 --format=%cd --date=short)" >> $GITHUB_OUTPUT
+
+    - name: Create archive
+      run: |
+        set -o pipefail
+        tar -cf - HyperDbg | zstd -T0 -19 -o HyperDbg.tar.zst
+        ls -lh HyperDbg.tar.zst
+
+    - name: Delete existing release
+      uses: dev-drprasad/delete-older-releases@v0.3.4
+      with:
+        keep_latest: 0
+        delete_tag_pattern: latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v3
+      with:
+        tag_name: latest
+        name: HyperDbg Source Snapshot - Latest
+        files: |
+          HyperDbg.tar.zst
+        body: |
+          HyperDbg dev branch source code snapshot
+
+          Snapshot Date: ${{ steps.hyperdbg_info.outputs.date }}
+          HyperDbg Commit: ${{ steps.hyperdbg_info.outputs.commit }}
+          Unified Repo Commit: ${{ github.sha }}
+
+          Automatically updated with each successful run.
+        draft: false
+        prerelease: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

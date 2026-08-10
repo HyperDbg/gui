@@ -1,0 +1,5 @@
+.connect local
+load vmm
+.start path D:\ux\examples\ewdk\tt\vt\good\todo\HyperDbgUnified\test\SuperRecovery_V4.8.1.5.exe
+g
+g

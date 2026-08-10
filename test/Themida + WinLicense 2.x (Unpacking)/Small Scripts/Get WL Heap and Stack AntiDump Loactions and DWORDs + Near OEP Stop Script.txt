@@ -1,0 +1,241 @@
+// Get WL Heap and Stack AntiDump Loactions and DWORDs + Near OEP Stop Script
+// StackAnti for exe files only
+// LCF-AT
+pause
+bphwc
+bc
+lc
+lclr
+bpmc
+var NOTHING
+var COUNT
+var IS_WRITE
+gpa "GetModuleHandleA", "kernel32.dll"
+mov GetModuleHandleA,    $RESULT
+gpa "GetProcAddress",   "kernel32.dll"
+mov GetProcAddress,      $RESULT
+gpa "VirtualAlloc",     "kernel32.dll"
+mov VirtualAlloc,        $RESULT
+gpa "RtlAllocateHeap",  "ntdll.dll"
+mov RtlAllocateHeap,     $RESULT
+gpi PROCESSNAME
+mov APP_NAME, $RESULT
+gpi EXEFILENAME
+mov FULL_PATH, $RESULT
+alloc 1000
+mov SEC, $RESULT
+mov [SEC], FULL_PATH
+pusha
+mov eax, SEC
+mov edi, GetModuleHandleA
+exec
+push eax
+call edi
+ende
+mov APP_BASE, eax
+popa
+free SEC
+pusha
+mov eax, APP_BASE+[APP_BASE+3c]
+mov EP, [eax+28]
+add EP, APP_BASE
+popa
+cmp eip, EP
+je SAD
+bphws EP
+esto
+bphwc
+/////////////////////
+SAD:
+mov SAD_OLD, esp-04
+mov SAD_NEW, esp-0C
+gmi eip, CODEBASE
+mov CODEBASE, $RESULT
+gmi CODEBASE, CODESIZE
+mov CODESIZE, $RESULT
+/////////////////////
+START:
+bphws VirtualAlloc
+esto
+bphwc
+mov WLSEC, [esp]
+gmemi WLSEC, MEMORYBASE
+mov WLSEC, $RESULT
+gmemi WLSEC, MEMORYSIZE
+mov WLSECSIZE, $RESULT
+add WLSECSIZE, WLSEC
+gmi WLSEC, MODULEBASE
+mov PE, $RESULT
+gmemi PE, MEMORYSIZE
+add PE, $RESULT
+gmemi PE, MEMORYSIZE
+mov CODESIZE, $RESULT
+bphws GetProcAddress
+bpwm CODEBASE, CODESIZE
+/////////////////////
+GPA_LOOP:
+esto
+gbpr
+cmp $RESULT, 20
+jne RUN_GO
+log ""
+log "First Heap not active!"
+log ""
+inc COUNT
+eval "Heap {COUNT} location at: Not Active!"
+log $RESULT, ""
+bpmc
+mov IS_WRITE, 01
+jmp GPA_LOOP
+/////////////////////
+RUN_GO:
+mov TEST, [esp]
+cmp TEST, WLSEC
+jb GPA_LOOP
+cmp TEST, WLSECSIZE
+ja GPA_LOOP
+cmp [[esp+08]], 416C7452
+jne GPA_LOOP
+mov TEST, [esp+08]
+cmp [TEST+04], 636F6C6C
+jne GPA_LOOP
+cmp [TEST+08], 48657461
+jne GPA_LOOP
+bphwc
+bpmc
+/////////////////////
+GPA_LOOP2:
+cmp IS_WRITE, 01
+je GPA_LOOP2_A
+bpwm CODEBASE, CODESIZE
+/////////////////////
+GPA_LOOP2_A:
+bphws RtlAllocateHeap
+esto
+gbpr
+cmp $RESULT, 20
+jne RUN_GO_2
+log ""
+inc COUNT
+eval "Heap {COUNT} location at: Not Active!"
+log $RESULT, ""
+bpmc
+mov IS_WRITE, 01
+jmp GPA_LOOP2_A
+/////////////////////
+RUN_GO_2:
+mov TEST, [esp]
+cmp TEST, WLSEC
+jb GPA_LOOP2
+cmp TEST, WLSECSIZE
+ja GPA_LOOP2
+bphwc
+bpmc
+cmp COUNT, 2
+jne RTR
+mov HEAP_IN, [HEAP]
+eval "Heap {COUNT} location at: {HEAP} | {HEAP_IN} | Redirect at: {HEAP_BACK}"
+log $RESULT, ""
+/////////////////////
+RTR:
+rtr
+cmp eip, RtlAllocateHeap
+je RTR
+inc COUNT
+mov HEAP, eax
+mov HEAP_BACK, [esp]
+cmp COUNT, 1
+jne OVER_MEM
+bpwm PE, CODESIZE
+esto
+bpmc
+mov HEAP_IN, [HEAP]
+eval "Heap {COUNT} location at: {HEAP} | {HEAP_IN} | Redirect at: {HEAP_BACK}"
+log $RESULT, ""
+mov IS_WRITE, 01
+/////////////////////
+OVER_MEM:
+cmp COUNT, 3
+jne GPA_LOOP2
+/////////////////////
+CODE_STOP:
+bprm PE, CODESIZE
+esto
+gmemi eip, MEMORYBASE
+cmp $RESULT, PE
+jne CODE_STOP
+bpmc
+mov HEAP_IN, [HEAP]
+eval "Heap {COUNT} location at: {HEAP} | {HEAP_IN} | Redirect at: {HEAP_BACK}"
+log $RESULT, ""
+cmt eip, "OEP / Near OEP!"
+pusha
+mov eax, WLSEC
+mov ecx, SAD_OLD
+mov edx, SAD_NEW
+xor ecx, 8647A6B4
+mov SA_1, ecx
+xor edx, 7647A6B4
+mov SA_2, edx
+/////////////////////
+AGAIN:
+find eax, SA_1
+cmp $RESULT, 00
+je CHECK_NEW
+mov eax, $RESULT+01
+mov SAD_CALC, $RESULT
+cmp ecx, [SAD_CALC]
+jne AGAIN
+mov SAD_CALC_IN, [SAD_CALC]
+mov SAD_IN, [SAD_OLD]
+mov SAD_2,  SAD_OLD+04
+mov SAD_2_IN, [SAD_2]
+mov SAD_IS, SAD_OLD
+jmp SAD_LOG
+/////////////////////
+CHECK_NEW:
+mov eax, WLSEC
+/////////////////////
+AGAIN_2:
+find eax, SA_2
+cmp $RESULT, 00
+je NOTHING_FOUND
+mov eax, $RESULT+01
+mov SAD_CALC, $RESULT
+cmp edx, [SAD_CALC]
+jne AGAIN_2
+mov SAD_CALC_IN, [SAD_CALC]
+mov SAD_IN, [SAD_NEW]
+mov SAD_2,  SAD_NEW+04
+mov SAD_2_IN, [SAD_2]
+mov SAD_IS, SAD_NEW
+jmp SAD_LOG
+/////////////////////
+NOTHING_FOUND:
+mov NOTHING, 01
+/////////////////////
+SAD_LOG:
+popa
+cmp NOTHING, 00
+jne NO_SAD
+log ""
+log "Stack AntiDump & Calc:"
+eval "{SAD_IS} | {SAD_IN}"
+log $RESULT, ""
+eval "{SAD_2} | {SAD_2_IN}"
+log $RESULT, ""
+eval "{SAD_CALC} | {SAD_CALC_IN}"
+log $RESULT, ""
+log ""
+eval "Stack AntiDump & Calc: \r\n\r\n{SAD_IS} | {SAD_IN} \r\n{SAD_2} | {SAD_2_IN} \r\n{SAD_CALC} | {SAD_CALC_IN} \r\n\r\nHeap AntiDump: <-- OPEN Olly LOG! \r\n\r\nLCF-AT"
+msg $RESULT
+jmp LOG
+/////////////////////
+NO_SAD:
+log ""
+log "No Stack AntiDumps found!"
+/////////////////////
+LOG:
+msg "Open Script Log Window!"
+pause
+ret
