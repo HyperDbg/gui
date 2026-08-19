@@ -1,0 +1,102 @@
+// ============================================================
+// OEP Detection Script for Themida/WinLicense 2.x
+// 复刻 OllyDbg "Get WL Heap and Stack AntiDump Loactions and
+//              DWORDs + Near OEP Stop Script"
+//
+// 原理（对应原脚本行号）:
+//   [L57-60] bphws VirtualAlloc; esto; mov WLSEC,[esp]
+//            → HyperDbg: !epthook + poi(@rsp) = 调用者返回地址
+//   [L62-64] gmemi WLSEC, MEMORYBASE
+//            → HyperDbg: gmemi(caller, 0) = Themida 段基址 = PE
+//   [L67-72] gmi WLSEC, MODULEBASE; gmemi PE, MEMORYSIZE
+//            → HyperDbg: gmemi(pe, 1) = 段大小 = CODESIZE
+//   [L161-166] bprm PE, CODESIZE; esto; cmp eip, PE
+//             → HyperDbg: !monitor x PE l CODESIZE (执行监控)
+//             → 触发时 @ip 在 PE 范围 = NEAR-OEP
+//
+// Themida 解压流程:
+//   1. Themida loader 调用 VirtualAlloc 分配新内存
+//   2. 将原始代码解密复制到新内存（= Themida PE）
+//   3. 跳转到新 PE 的 OEP 执行
+//   4. !monitor x 捕获跳转 → @ip = NEAR-OEP
+//
+// 使用方法:
+//   1.cmd 启动 → 输入 g → 看到 THEMIDA PE FOUND → 手动 pause
+//   → 复制输出的 !monitor x 命令执行 → 输入 g → 触发即 OEP
+// ============================================================
+
+.logopen d:\ux\examples\ewdk\tt\vt\good\todo\HyperDbgUnified\find-oep.log
+.connect local
+load vmm
+
+.sympath srv*c:\symbols*https://msdl.microsoft.com/download/symbols
+
+.start path D:\ux\examples\ewdk\tt\vt\good\todo\HyperDbgUnified\test\SuperRecovery_V4.8.1.5.exe
+
+// 到达入口点（对应原脚本 L43-46: cmp eip,EP; bphws EP; esto）
+g
+
+// 加载 32 位符号
+.sym unload
+.sym reload
+.sym download
+
+// ============================================================
+// 阶段1: 钩 VirtualAlloc，找 Themida PE 基址
+// 对应原脚本 L57-72:
+//   bphws VirtualAlloc
+//   esto
+//   bphwc
+//   mov WLSEC, [esp]              ; poi(@rsp) = 调用者地址(在Themida段内)
+//   gmemi WLSEC, MEMORYBASE       ; → Themida 段基址
+//   gmemi WLSEC, MEMORYSIZE       ; → 段大小
+//   gmi WLSEC, MODULEBASE         ; → Themida PE 基址
+//   gmemi PE, MEMORYSIZE          ; → CODESIZE
+//
+// HyperDbg 适配:
+//   gmemi(addr, 0) = MEMORYBASE (向下扫描页边界找段基址)
+//   gmemi(addr, 1) = MEMORYSIZE (向上扫描页边界找段大小)
+//   动态分配内存无模块信息，直接用段基址作为 PE
+//
+// 注意: 脚本主体不支持 C 风格全局变量声明
+//       用 event_disable(event_tag) 禁用钩子避免重复触发
+// ============================================================
+!epthook kernelbase!VirtualAlloc script {
+    unsigned long long caller = poi(@rsp) & 0xFFFFFFFF;
+
+    // 过滤：只关注非系统DLL调用（Themida 代码在低地址 < 0x70000000）
+    // 系统DLL在 0x70xxxxxx - 0x7Fxxxxxx 范围
+    if (caller < 0x70000000) {
+        // gmemi(caller, MEMORYBASE) = caller 所在内存段基址 = Themida PE
+        unsigned long long pe = gmemi(caller, 0);
+        // gmemi(pe, MEMORYSIZE) = 段大小 = CODESIZE
+        unsigned long long size = gmemi(pe, 1);
+
+        printf("=== THEMIDA PE FOUND ===\n");
+        printf("VA caller  = %llx\n", caller);
+        printf("Themida PE  = %llx\n", pe);
+        printf("PE size     = %llx\n", size);
+        printf("OEP range   = %llx - %llx\n", pe, pe + size);
+        printf("\n");
+        printf("=== NEXT STEP ===\n");
+        printf("1. Run: !monitor x %llx l %llx\n", pe, size);
+        printf("2. Run: g\n");
+        printf("3. !monitor triggers (break) => check @ip = NEAR-OEP\n");
+        printf("===================\n");
+    }
+}
+// 让进程运行，等 VirtualAlloc hook 触发（Themida loader 会调 VirtualAlloc 分配解壳内存）
+// 对应原脚本 L57-60: bphws VirtualAlloc; esto
+g
+// ============================================================
+// 脚本结束 - CLI 进入交互模式
+//
+// 操作步骤:
+//   1. 脚本已自动输入 g，等 VirtualAlloc 触发（20-30 秒）
+//   2. 看到 "THEMIDA PE FOUND"   （手动输入 pause 暂停）
+//   3. 复制输出中的 !monitor x PE l SIZE 命令执行
+//   4. 输入 g                    （等执行监控触发 = OEP 跳转）
+//   5. 触发后 @ip = NEAR-OEP     （检查 @ip 是否在 PE 范围）
+//
+// 调试结束后手动输入: unload vmm
+// ============================================================

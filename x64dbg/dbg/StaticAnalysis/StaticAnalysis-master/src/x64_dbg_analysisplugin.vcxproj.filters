@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Header Files\pluginsdk">
+      <UniqueIdentifier>{c1da8cdf-a9ee-44c4-b3cd-1c80f423d5d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pluginsdk\TitanEngine">
+      <UniqueIdentifier>{5e6574a6-83dc-45c6-b04d-36cc9e285f85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Analysis">
+      <UniqueIdentifier>{d9d8164c-333c-460d-83ac-2d2318eaf3d7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pluginmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalysisRunner.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="ICommand.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="S_IntermodularCallsX86.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="ApiDB.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="internal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="S_IntermodularCallsX64.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="StackEmulator.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="RegisterEmulator.cpp">
+      <Filter>Analysis</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pluginmain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_plugin_types.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\_plugins.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\bridgemain.h">
+      <Filter>Header Files\pluginsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="AnalysisRunner.h">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\basic_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\BeaEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ICommand.h">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="meta.h">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="ApiDB.h">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StackEmulator.h">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginsdk\TitanEngine\TitanEngine.hpp">
+      <Filter>Header Files\pluginsdk\TitanEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="S_IntermodularCalls.h">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisterEmulator.h">
+      <Filter>Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="TitanEngine.h">
+      <Filter>Header Files\pluginsdk\TitanEngine</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

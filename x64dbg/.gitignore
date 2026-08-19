@@ -1,0 +1,12 @@
+.idea
+*.exp
+*.lib
+*.log
+*.reg
+reset_git.cmd
+cmake-build-debug
+HyperDbg.exe
+/cache/
+HyperDbg.tar
+initial commit.cmd
+#git tag v0.0.6

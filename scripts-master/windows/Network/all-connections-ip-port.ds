@@ -1,0 +1,104 @@
+## @file all-connections-ip-port.ds
+# @author Sina Karvandi (sina@hyperdbg.org)
+# @brief Shows connections (IP address & port number) of user-mode applications
+# @version 0.2
+# @date 2023-05-18
+# @copyright This script is released under the MIT License.
+# 
+# @details In order to run this script, you should use '.script'
+# command. 
+# @param No parameter needed!
+#
+# Run it like:
+#     .script c:\users\sina\desktop\all-connections-ip-port.ds
+#
+# It gathers different details about connections like this:
+#
+#     Process Id: 16b0, name: msedge.exe connects to ====> Address: 51.11.192.50:443
+#     Process Id: 16b0, name: msedge.exe connects to ====> Address: 192.168.40.2:53
+#     Process Id: 1c0, name: test.exe connects to ====> Address: 192.168.40.2:53
+#     Process Id: 16b0, name: msedge.exe connects to ====> Address: 0.0.0.0:53
+#     Process Id: 16b0, name: msedge.exe connects to ====> Address: 23.96.124.68:443
+#     Process Id: 16b0, name: msedge.exe connects to ====> Address: 51.11.192.50:443
+#     Process Id: 29f0, name: simple_send.ex connects to ====> Address: 23.96.124.68:443
+#     Process Id: 16b0, name: msedge.exe connects to ====> Address: 51.11.192.50:443
+#     Process Id: 29f0, name: simple_send.ex connects to ====> Address: 0.0.0.0:53
+#     Process Id: 16b0, name: msedge.exe connects to ====> Address: 51.11.192.50:443
+#     Process Id: 16b0, name: msedge.exe connects to ====> Address: 51.11.192.50:443
+#     Process Id: 1c0, name: test.exe connects to ====> Address: 51.11.192.50:443
+#     Process Id: 16b0, name: msedge.exe connects to ====> Address: 192.168.40.2:53
+#     Process Id: 1c0, name: test.exe connects to ====> Address: 192.168.40.2:53
+#     Process Id: 16b0, name: msedge.exe connects to ====> Address: 192.168.40.2:53
+#     Process Id: 16b0, name: msedge.exe connects to ====> Address: 13.107.5.80:443
+#
+
+!syscall script {
+
+  //
+  // IOCTL Codes:
+  // 		AFD_Connect: 0x12007
+  //
+  /*
+  	
+  	typedef struct  _AFD_CONNECT_INFO {
+  		BOOLEAN		      UseSAN;
+  		ULONG		      Root;
+  		ULONG		      Unknown;
+  		SOCKADDR		  RemoteAddress;
+  	} AFD_CONNECT_INFO , *PAFD_CONNECT_INFO ;
+  	
+  	typedef struct sockaddr_in {
+  	short          sin_family;
+  	USHORT         sin_port;
+  	IN_ADDR        sin_addr;
+  	CHAR           sin_zero[8];
+  	} SOCKADDR_IN, *PSOCKADDR_IN;
+
+  */
+
+  if (@rax == 0x7) {
+  
+    // printf("IoControlCode: %x\n", dd(@rsp + 30));
+
+    if (dd(@rsp + 30) == 0x12007) {
+      //
+      // Details derived from: https://www.cyberus-technology.de/posts/network-analysis-with-tycho/
+      //
+
+      //
+      // Get the port address
+      //
+      port_num_high_bit = db(poi(@rsp + 38) + 1a);
+      port_num_low_bit = db(poi(@rsp + 38) + 1b);
+
+      port_num = 0;
+      port_num = port_num_high_bit << 8 | port_num_low_bit;
+
+      //
+      // Get the IP address
+      //
+      part0 = db(poi(@rsp + 38) + 1c);
+      part1 = db(poi(@rsp + 38) + 1d);
+      part2 = db(poi(@rsp + 38) + 1e);
+      part3 = db(poi(@rsp + 38) + 1f);
+
+      part0 = part0 << 0n24;
+      part1 = part1 << 0n16;
+      part2 = part2 << 0n8;
+      part3 = part3 << 0n0;
+
+      ip_addr = part0 | part1 | part2 | part3;
+
+      // printf("Process Id: %x, name: %s connects to ====> IP address (hex): %x\n", $pid, $pname, ip_addr);
+
+      printf("Process Id: %x, name: %s connects to ====> Address: %d.%d.%d.%d:%d\n",
+		$pid,
+		$pname,
+        (ip_addr & 0xFF000000) >> 0n24,
+        (ip_addr & 0x00FF0000) >> 0n16,
+        (ip_addr & 0x0000FF00) >> 0n8,
+        ip_addr & 0x000000FF,
+		port_num);
+    }
+  }
+}

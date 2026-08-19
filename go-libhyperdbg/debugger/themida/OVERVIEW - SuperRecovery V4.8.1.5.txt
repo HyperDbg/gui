@@ -1,0 +1,54 @@
+Themida - Winlicense Ultra Unpacker 1.4
+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+UnpackUser : Admin
+UnpackHome : UNKNOWN
+Unpack OS  : OS=x64 64-Bit
+UnpackDate : 11.06.2024 <=> EuroTimeFormat Day.Month.Year
+UnpackStart: 14:59:12   <=> HH:MM:SS
+UnpackEnd  : 15:19:19   <=> HH:MM:SS
+UnpackTime : 00:20:07   <=> HH:MM:SS
+
+SuperRecovery V4.8.1.5
+************************************************************
+Packed Size: 3.528 MB +/-     <=>     UnPack Size: 8.268 MB +/-
+************************************************************
+TM WL VM Protection: CISC | Dumped: Intern WL Section
+
+Not Found! : 1.0.0.0 - 1.1.1.5
+************************************************************
+VM OEP Address found! - Is in use!
+
+VM ADDR: 7A978B 
+VM ALIGN: D695C014 
+VM PUSH: 29E4826D 
+VM JUMP: 6C5F95
+********************
+UnVirtualizer data:
+
+Code Start: 401000 
+Code Size:  1E9000 
+VM Start:   6BC000 
+VM Size:    2C6000
+********************
+Possible VM Entrys:
+
+VM Entrys:      1B
+VM Reg | Trial: 0 <=> Or API wsprintfA
+Code-Replace:   0
+Crypt-to-Code:  0
+Macro DE - EN:  0
+SDK VM APIs:    0
+********************
+VM Sleep APIs:  1
+********************
+XBundler Files: 0
+Overlay Dumped: Yes! | Overlay Added: Yes Added to DP File!
+********************
+IAT START  : 4FD000 | 769019B0 | ADVAPI32.RegOpenKeyExW 
+IAT END    : 4FD708 | 73026FA0 | oledlg.OleUIBusyW 
+IAT SIZE   : 70C 
+IAT COUNT  : 438
+API FOUND  : 0 and fixed DIRECT APIs to original IAT by user data.
+******************** 
+LCF-AT

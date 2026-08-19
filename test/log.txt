@@ -1,0 +1,237 @@
+记录数据
+地址       消息
+009820C9   特权指令
+006BE5BE   特权指令
+006BF63C   特权指令
+006BF731   特权指令
+0071249B   特权指令
+007127E6   特权指令
+00715B10   特权指令
+00715DF2   特权指令
+00716981   特权指令
+0071DDA5   特权指令
+           [ScyllaHide] Illegal Instruction 0071DEBD
+0071F2F1   特权指令
+76670000   模块 C:\Windows\System32\IMM32.DLL
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+00723E3E   特权指令
+00723CFF   特权指令
+00724605   访问违规: 读取 [FFFFFFFF]
+0072EA84   特权指令
+0072ED9D   特权指令
+0072EE21   特权指令
+0073141D   特权指令
+00732205   特权指令
+00732BA4   特权指令
+00735348   特权指令
+75DE65F0   硬件断点 1 位于 KERNEL32.VirtualAlloc
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+006BCCB3   ID 00000AA0 的新线程已创建
+006BCCB3   ID 0000068C 的新线程已创建
+006BCCB3   ID 00000B90 的新线程已创建
+006BCCB3   ID 00002B8C 的新线程已创建
+006BCCB3   ID 00002B34 的新线程已创建
+006BCCB3   ID 00000C68 的新线程已创建
+006BCCB3   ID 00000C84 的新线程已创建
+006BCCB3   ID 000011F0 的新线程已创建
+006BCCB3   ID 000014DC 的新线程已创建
+006BCCB3   ID 00002BD4 的新线程已创建
+006BCCB3   ID 00000B0C 的新线程已创建
+006BCCB3   ID 00002300 的新线程已创建
+006BCCB3   ID 000007D8 的新线程已创建
+006BCCB3   ID 00001C3C 的新线程已创建
+006BCCB3   ID 00002A7C 的新线程已创建
+006BCCB3   ID 00002AF0 的新线程已创建
+006BCCB3   ID 000020AC 的新线程已创建
+006BCCB3   ID 0000299C 的新线程已创建
+006BCCB3   ID 00001734 的新线程已创建
+006BCCB3   ID 0000152C 的新线程已创建
+006BCCB3   ID 00000B74 的新线程已创建
+006BCCB3   ID 0000150C 的新线程已创建
+006BCCB3   ID 000014CC 的新线程已创建
+006BCCB3   ID 000019E8 的新线程已创建
+00753802   特权指令
+007533AF   特权指令
+007533A9   特权指令
+00754ABD   特权指令
+007549EB   特权指令
+00755150   特权指令
+00755786   特权指令
+00756F6B   特权指令
+007572F6   特权指令
+00756BC3   特权指令
+0075803E   特权指令
+007586A1   特权指令
+007581F9   特权指令
+0075BFAC   特权指令
+0075C3DB   特权指令
+0075D4E3   特权指令
+0075CF8D   特权指令
+0075F06C   特权指令
+00762B45   特权指令
+0076321B   特权指令
+0076680E   特权指令
+0076627C   特权指令
+75DE65F0   硬件断点 1 位于 KERNEL32.VirtualAlloc
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+0076E07D   特权指令
+0076E2B7   特权指令
+0076E3BE   特权指令
+0076FA01   特权指令
+0076FA5B   特权指令
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+00775867   特权指令
+00775B19   特权指令
+0077590B   特权指令
+00779073   特权指令
+0077966D   特权指令
+00778D79   特权指令
+75DE6780   硬件断点 1 位于 KERNEL32.GetProcAddress
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+740C0000   模块 C:\Windows\SYSTEM32\winmm.dll
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+778B0000   模块 C:\Windows\System32\SHLWAPI.dll
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+741A0000   模块 C:\Windows\SYSTEM32\MSIMG32.dll
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+776F0000   模块 C:\Windows\System32\comdlg32.dll
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+75F40000   模块 C:\Windows\System32\combase.dll
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+75CE0000   模块 C:\Windows\System32\shcore.dll
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+76CB0000   模块 C:\Windows\System32\SHELL32.dll
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+72650000   模块 C:\Windows\SYSTEM32\WINSPOOL.DRV
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+753B0000   模块 C:\Windows\SYSTEM32\cfgmgr32.dll
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+72120000   模块 C:\Windows\SYSTEM32\oledlg.dll
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+75B10000   模块 C:\Windows\System32\ole32.dll
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+764B0000   模块 C:\Windows\System32\OLEAUT32.dll
+             CRC 已更改, 正在放弃 .udd 数据
+             调试信息 (Microsoft 格式) 有效
+0077DEA4   特权指令
+0077DF5A   特权指令
+0077E0F1   特权指令
+0077ED47   特权指令
+0077EF74   特权指令
+0077E8FE   特权指令
+00780756   特权指令
+0077FEB5   特权指令
+007819C5   特权指令
+00781A54   特权指令
+00781B89   特权指令
+007861F1   特权指令
+007875B7   特权指令
+0078722B   特权指令
+007874D7   特权指令
+00788623   特权指令
+007887D6   特权指令
+0078982E   特权指令
+00789ADB   特权指令
+0078E5FE   特权指令
+0078EAC7   特权指令
+0078E64C   特权指令
+0078F0B0   特权指令
+0078F7EC   特权指令
+0078FC6B   特权指令
+007901A9   特权指令
+00791501   特权指令
+007918BD   特权指令
+00791E02   特权指令
+00793325   特权指令
+00794204   特权指令
+00796D1B   特权指令
+007968FB   特权指令
+00797560   特权指令
+007972D6   特权指令
+0079853A   特权指令
+0079B022   特权指令
+0079B065   特权指令
+0079BAB5   特权指令
+0079B8AD   特权指令
+0079C1F2   特权指令
+0079C954   特权指令
+0079D777   特权指令
+007A0BF9   特权指令
+007A0C53   特权指令
+007A1490   特权指令
+007A178E   特权指令
+00401000   当禁用内存断点时发生错误:
+00401000     访问内存已被更改,从 RE 到 RWE (original RWECopy)
+007A1BA4   当写入 [00490000] 时设置内存断点
+           Heap 1 location at: E90970 | 25E80252 | Redirect at: 779AF6
+007A1F8F   特权指令
+007A22DC   特权指令
+007A2B51   特权指令
+007A31A1   特权指令
+007A340A   特权指令
+006BCCB3   ID 000020E8 的新线程已创建
+007AC8A0   特权指令
+007ACB90   特权指令
+007B100E   特权指令
+007B106E   特权指令
+007B3093   特权指令
+007B2D05   特权指令
+007B3653   特权指令
+007B3EDC   特权指令
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+007C1F67   特权指令
+007C23E0   特权指令
+007C218E   特权指令
+007C29A4   特权指令
+007C2AFC   特权指令
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+7795F670   硬件断点 1 位于 ntdll.RtlAllocateHeap
+           Heap 2 location at: E90960 | 6A2E3207 | Redirect at: 7C51CF
+004D4DE0   当执行 [004D4DE0] 时设置内存断点
+           Heap 3 location at: E90A40 | B1253554 | Redirect at: 7C51D9
+
+           Stack AntiDump & Calc:
+           1AFF6C | 9FEA0494
+           1AFF70 | 1AFFCC
+           6BE0BF | 765D59D8
+

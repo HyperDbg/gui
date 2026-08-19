@@ -1,0 +1,93 @@
+// Catch and Log Export and GPA API callers from WL Code Script
+// LCF-AT
+pause
+bphwc
+bc
+lc
+lclr
+var WLSEC
+var ALIGIN
+gpa "VirtualAlloc",   "kernel32.dll"
+mov VirtualAlloc,      $RESULT
+gpa "GetProcAddress", "kernel32.dll"
+mov GetProcAddress,    $RESULT
+gmi VirtualAlloc, MODULEBASE
+mov KERNELBASE, $RESULT
+pusha
+mov eax, KERNELBASE
+mov ecx, eax
+mov eax, [eax+3C]
+add eax, ecx
+mov edx, [eax+78]
+add edx, ecx
+add edx, 18
+mov EXPORT_ACCESS, edx
+popa
+log EXPORT_ACCESS
+bphws EXPORT_ACCESS, "r"
+esto
+bphwc
+find eip, #C20800#
+mov EX_END, $RESULT
+bphws EX_END
+bpgoto EX_END, EX_STOP
+bphws VirtualAlloc
+/////////////////////////////
+RUN:
+esto
+mov WLSEC, [esp]
+gmemi WLSEC, MEMORYBASE
+mov WLSEC, $RESULT
+bphwc VirtualAlloc
+mov ALIGIN, ebp
+log WLSEC
+log ALIGIN
+jmp RUN
+/////////////////////////////
+EX_STOP:
+mov ADDR,    [esp]
+mov API_ADDR, eax
+gn eax
+mov APINAME, $RESULT_2
+log "---------------EX--------------------------------------"
+eval "Call from: {ADDR} | API: {API_ADDR} | NAME: {APINAME}"
+log $RESULT, ""
+log "-------------------------------------------------------"
+log ""
+bphws GetProcAddress
+bpgoto GetProcAddress, GPA_STOP
+jmp RUN
+/////////////////////////////
+GPA_STOP:
+cmp WLSEC, 00
+je RUN
+gmemi [esp], MEMORYBASE
+cmp $RESULT, WLSEC
+jne RUN
+log "---------------GPA---------------------------------"
+mov ADDR,    [esp]
+pusha
+mov eax, [esp+08]
+gstr eax
+mov APINAME, $RESULT
+/////////////////////////////
+MOD:
+mov MODULE, 00
+mov MODULE, [esp+04]
+gmi MODULE, NAME
+cmp $RESULT, 00
+jne OK
+refresh eip
+jmp MOD
+/////////////////////////////
+OK:
+mov MODULE, 00
+mov MODULE, $RESULT
+gpa APINAME, MODULE
+mov API_ADDR, $RESULT
+popa
+eval "Call from: {ADDR} | API: {API_ADDR} | NAME: {APINAME}"
+log $RESULT, ""
+log "-------------------------------------------------------"
+log ""
+jmp RUN

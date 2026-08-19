@@ -1,0 +1,10 @@
+.idea
+Debug/
+Release/
+HyperDbg/
+/HyperDbg.tar
+*.zst
+*.exe
+./x64dbg
+walker.tar
+init.cmd
