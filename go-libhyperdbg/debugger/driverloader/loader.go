@@ -59,15 +59,20 @@ func (d *Driver) withSCManager(fn func(windows.Handle) error) error {
 // differ from the user-mode build — the most common cause of BSOD after a
 // rebuild.
 //
-// If Remove fails during the stale-cleanup path, Install returns an error
-// rather than reusing the old service (matching C++ which returns FALSE).
+// Crash recovery: if a previous test/process was force-killed mid-session,
+// the service is left RUNNING and DeleteService marks it
+// MARKED_FOR_DELETE. SCM only purges a marked-for-delete service once it is
+// STOPPED and all handles close. Install detects this state, stops the
+// service (triggering driver VMX unload), waits for STOPPED, then waits for
+// SCM to actually purge the service before retrying CreateService.
 func (d *Driver) Install() error {
 	return d.installRecursive(false)
 }
 
 // installRecursive is the recursive core of Install. The `retried` flag
 // prevents infinite recursion if the second CreateService still reports
-// EXISTS (should not happen, but guards against a misbehaving SCM).
+// EXISTS/MARKED_FOR_DELETE (should not happen, but guards against a
+// misbehaving SCM).
 func (d *Driver) installRecursive(retried bool) error {
 	return d.withSCManager(func(sc windows.Handle) error {
 		namePtr, err := windows.UTF16PtrFromString(d.Name)
@@ -86,36 +91,38 @@ func (d *Driver) installRecursive(retried bool) error {
 			windows.CloseServiceHandle(svc)
 			return nil
 		}
-		if err == windows.ERROR_SERVICE_MARKED_FOR_DELETE {
-			// Service is being torn down asynchronously by SCM.
-			// StartService cannot start a service marked for deletion,
-			// so we must wait for SCM to complete the deletion, then
-			// recreate.
+		switch err {
+		case windows.ERROR_SERVICE_MARKED_FOR_DELETE:
+			// Previous run crashed and left the service marked-for-delete.
+			// SCM completes deletion only after the service is STOPPED and
+			// all handles close. Stop it (triggers driver VMX unload), wait
+			// for STOPPED, then wait for SCM to purge the deletion before
+			// retrying CreateService.
 			if retried {
-				return fmt.Errorf("Install: service %q still marked-for-delete after wait", d.Name)
+				return fmt.Errorf("Install: service %q stuck marked-for-delete after stop+wait (driver unload hung? reboot required)", d.Name)
 			}
-			// Poll QueryServiceStatus until the service is no longer
-			// STOP_PENDING (max 15s). VMX cleanup is synchronous but
-			// may take several seconds on multi-core systems.
-			d.waitForServiceStopped()
+			_ = d.Stop()             // trigger driver unload if still running
+			d.waitForServiceStopped()  // wait for STOPPED (max 15s)
+			d.waitForServiceGone()     // wait for SCM to purge deletion (max 20s)
 			return d.installRecursive(true)
-		}
-		if err != windows.ERROR_SERVICE_EXISTS {
+		case windows.ERROR_SERVICE_EXISTS:
+			// Stale service exists — mirrors C++: stop + remove, then recurse.
+			if retried {
+				// Second attempt still reports EXISTS; reuse the service
+				// (fixed path guarantees the correct .sys image).
+				return nil
+			}
+			if err := d.Stop(); err != nil {
+				// Non-fatal: service may not be running.
+			}
+			if err := d.Remove(); err != nil {
+				return fmt.Errorf("Install: failed to remove stale service %q: %w", d.Name, err)
+			}
+			d.waitForServiceGone() // wait for SCM to purge before retry
+			return d.installRecursive(true)
+		default:
 			return fmt.Errorf("CreateService failed for %q: %w", d.Name, err)
 		}
-		// Stale service exists — mirrors C++: stop + remove, then recurse.
-		if retried {
-			// Second attempt still reports EXISTS; reuse the service
-			// (fixed path guarantees the correct .sys image).
-			return nil
-		}
-		if err := d.Stop(); err != nil {
-			// Non-fatal: service may not be running.
-		}
-		if err := d.Remove(); err != nil {
-			return fmt.Errorf("Install: failed to remove stale service %q: %w", d.Name, err)
-		}
-		return d.installRecursive(true)
 	})
 }
 
@@ -143,9 +150,12 @@ func (d *Driver) Remove() error {
 	})
 }
 
-// waitForServiceStopped polls QueryServiceStatus until the service is no
-// longer STOP_PENDING (max 15s). Used by Install when a stale service is
-// marked-for-delete and by Stop to ensure the unload routine completes.
+// waitForServiceStopped polls QueryServiceStatus until the service reaches
+// SERVICE_STOPPED (max 15s). Used by Install when a stale service is
+// marked-for-delete and by Stop to ensure the driver unload routine
+// completes. Unlike the previous version (which only waited for
+// STOP_PENDING to clear), this waits for the actual STOPPED state so a
+// still-RUNNING marked-for-delete service is properly waited on.
 func (d *Driver) waitForServiceStopped() {
 	_ = d.withSCManager(func(sc windows.Handle) error {
 		namePtr, err := windows.UTF16PtrFromString(d.Name)
@@ -158,13 +168,37 @@ func (d *Driver) waitForServiceStopped() {
 		}
 		defer windows.CloseServiceHandle(svc)
 		var status windows.SERVICE_STATUS
-		for i := 0; i < 150; i++ {
+		for i := 0; i < 150; i++ { // 150 * 100ms = 15s
 			if err := windows.QueryServiceStatus(svc, &status); err != nil {
 				break
 			}
-			if status.CurrentState != windows.SERVICE_STOP_PENDING {
+			if status.CurrentState == windows.SERVICE_STOPPED {
 				break
 			}
+			time.Sleep(100 * time.Millisecond)
+		}
+		return nil
+	})
+}
+
+// waitForServiceGone polls OpenService until the service no longer exists
+// (ERROR_SERVICE_DOES_NOT_EXIST or unopenable), up to 20s. Used after
+// DeleteService to ensure SCM has fully purged the marked-for-delete
+// service before CreateService is retried — otherwise the retry returns
+// ERROR_SERVICE_MARKED_FOR_DELETE again (the exact bug that left the test
+// unable to reload the driver after a force-stop).
+func (d *Driver) waitForServiceGone() {
+	_ = d.withSCManager(func(sc windows.Handle) error {
+		namePtr, err := windows.UTF16PtrFromString(d.Name)
+		if err != nil {
+			return err
+		}
+		for i := 0; i < 200; i++ { // 200 * 100ms = 20s
+			svc, err := windows.OpenService(sc, namePtr, windows.SERVICE_QUERY_STATUS)
+			if err != nil {
+				return nil // service gone (DOES_NOT_EXIST) or unopenable
+			}
+			windows.CloseServiceHandle(svc)
 			time.Sleep(100 * time.Millisecond)
 		}
 		return nil
@@ -218,12 +252,13 @@ func (d *Driver) Stop() error {
 			return fmt.Errorf("ControlService(STOP) failed for %q: %w", d.Name, err)
 		}
 		// Poll for STOPPED (max 15s). VMX cleanup is synchronous in the
-		// driver's Unload routine but may take several seconds.
+		// driver's Unload routine but may take several seconds. Wait for
+		// the actual STOPPED state, not just for STOP_PENDING to clear.
 		for i := 0; i < 150; i++ {
 			if err := windows.QueryServiceStatus(svc, &status); err != nil {
 				break
 			}
-			if status.CurrentState != windows.SERVICE_STOP_PENDING {
+			if status.CurrentState == windows.SERVICE_STOPPED {
 				break
 			}
 			time.Sleep(100 * time.Millisecond)

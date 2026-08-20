@@ -12,12 +12,17 @@
 package core
 
 import (
+	"encoding/hex"
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
 
+	"github.com/ddkwork/hyperdbgsdk"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
+	"github.com/hyperdbg/go-libhyperdbg/debugger/misc"
+	"github.com/hyperdbg/go-libhyperdbg/debugger/readmem"
 	"golang.org/x/sys/windows"
 )
 
@@ -30,12 +35,12 @@ import (
 func TestStepSequence(t *testing.T) {
 	const driverPath = `C:\Users\Administrator\AppData\Local\hyperdbg\hyperkd.sys`
 
-	// 选择调试目标：优先用户桌面 calc32.exe，回退 notepad.exe
-	// 注意：notepad 的 GDI 渲染会触发 dxgmms2 EPT hook 干扰导致 BSOD
-	exePath := `C:\Users\Administrator\Desktop\calc32.exe`
+	// 选择调试目标：优先 64 位 notepad.exe（system32），回退 calc32.exe。
+	// 用 64 位目标避免 WOW64 模式转换指令导致 step #DB 不触发的问题。
+	system32, _ := windows.GetSystemDirectory()
+	exePath := filepath.Join(system32, "notepad.exe")
 	if _, err := os.Stat(exePath); err != nil {
-		system32, _ := windows.GetSystemDirectory()
-		exePath = filepath.Join(system32, "notepad.exe")
+		exePath = `C:\Users\Administrator\Desktop\calc32.exe`
 		if _, err := os.Stat(exePath); err != nil {
 			t.Skipf("debuggee not found")
 		}
@@ -48,10 +53,10 @@ func TestStepSequence(t *testing.T) {
 	t.Cleanup(func() { _ = dbg.UnloadVMM(); _ = dbg.UnloadDriver() })
 
 	if err := dbg.LoadDriver(driverPath); err != nil {
-		t.Skipf("LoadVMM: %v (VT-x not available?)", err)
+		t.Skipf("LoadDriver: %v (driver stuck? VT-x not available?)", err)
 	}
 	if err := dbg.InitVMM(); err != nil {
-		t.Skipf("LoadVMM: %v (VT-x not available?)", err)
+		t.Skipf("InitVMM: %v (VT-x not available?)", err)
 	}
 	t.Logf("VMM loaded")
 
@@ -124,6 +129,51 @@ func TestStepSequence(t *testing.T) {
 		rip, regs.Rsp, regs.Rax, rflags)
 	prevRIP := rip
 
+	// helper: dump bytes at rip (diagnostics)
+	dumpBytes := func(rip uint64) string {
+		b, _, err := readmem.ReadMemory(dbg.device, rip, dbg.processPid, 16,
+			hyperdbgsdk.DebuggerReadVirtualAddress, hyperdbgsdk.ReadFromKernel, false)
+		if err != nil || len(b) == 0 {
+			return "<read failed>"
+		}
+		return hex.EncodeToString(b)
+	}
+
+	// helper: disassemble instruction at rip
+	disasmAt := func(rip uint64) string {
+		b, _, err := readmem.ReadMemory(dbg.device, rip, dbg.processPid, 16,
+			hyperdbgsdk.DebuggerReadVirtualAddress, hyperdbgsdk.ReadFromKernel, false)
+		if err != nil || len(b) == 0 {
+			return "<read failed>"
+		}
+		dis := misc.NewDisassembler()
+		r, err := dis.Disassemble(misc.ModeLong64, rip, b)
+		if err != nil {
+			return fmt.Sprintf("<disasm err: %v, bytes=%s>", err, hex.EncodeToString(b[:min(8, len(b))]))
+		}
+		return fmt.Sprintf("%s (len=%d)", r.Text, r.Length)
+	}
+
+	// helper: read debuggee memory via Windows ReadProcessMemory
+	// (bypasses HyperDbg's read path — useful to verify HyperDbg isn't
+	// substituting/hiding bytes via EPT split or breakpoint invisibility).
+	windowsReadBytes := func(rip uint64) string {
+		h, err := windows.OpenProcess(windows.PROCESS_VM_READ|windows.PROCESS_QUERY_INFORMATION, false, dbg.processPid)
+		if err != nil {
+			return fmt.Sprintf("<openproc: %v>", err)
+		}
+		defer windows.CloseHandle(h)
+		var n uintptr
+		buf := make([]byte, 16)
+		var old uint32
+		// virtualprotect first to ensure read access (executable pages may be read-only)
+		_ = windows.VirtualProtectEx(h, uintptr(rip), uintptr(len(buf)), windows.PAGE_EXECUTE_READ, &old)
+		if err := windows.ReadProcessMemory(h, uintptr(rip), &buf[0], uintptr(len(buf)), &n); err != nil {
+			return fmt.Sprintf("<rpm: %v>", err)
+		}
+		return hex.EncodeToString(buf[:n])
+	}
+
 	// === 5. 连续单步 5 次 ===
 	const stepCount = 5
 	for i := range stepCount {
@@ -133,19 +183,24 @@ func TestStepSequence(t *testing.T) {
 		default:
 		}
 
+		// 打印 rip 处的指令字节，便于定位失败点
+		t.Logf("Step #%d: RIP=0x%X hyperdbg_bytes=%s windows_bytes=%s hyperdbg_disasm=%s",
+			i+1, prevRIP, dumpBytes(prevRIP), windowsReadBytes(prevRIP), disasmAt(prevRIP))
+
 		err := dbg.Step()
 		if err != nil {
-			t.Fatalf("Step #%d failed: %v\n  prevRIP=0x%X", i+1, err, prevRIP)
+			t.Fatalf("Step #%d failed: %v\n  prevRIP=0x%X disasm=%s bytes=%s", i+1, err, prevRIP, disasmAt(prevRIP), dumpBytes(prevRIP))
 		}
 
 		// 读寄存器验证 RIP 变化
-		regs2, rip2, _, err := dbg.ReadRegisters()
+		regs2, rip2, rflags2, err := dbg.ReadRegisters()
 		if err != nil {
 			t.Fatalf("Step #%d ReadRegisters: %v", i+1, err)
 		}
 
-		t.Logf("Step #%d: RIP 0x%X → 0x%X (delta=0x%X), RSP=0x%X",
-			i+1, prevRIP, rip2, rip2-prevRIP, regs2.Rsp)
+		// 同时打印 pausedRIP（来自 PAUSED 包）与 ReadRegisters 的 RIP 对比
+		t.Logf("Step #%d: RIP 0x%X → 0x%X (delta=0x%X), pausedRIP=0x%X, RSP=0x%X, RFL=0x%X, next_disasm=%s",
+			i+1, prevRIP, rip2, rip2-prevRIP, dbg.pausedRIP, regs2.Rsp, rflags2, disasmAt(rip2))
 
 		if rip2 == prevRIP {
 			t.Errorf("Step #%d: RIP did not change (0x%X)", i+1, rip2)

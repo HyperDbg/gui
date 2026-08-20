@@ -111,6 +111,10 @@ func (d *Debugger) ReadRegisters() (regs hyperdbgsdk.GUEST_REGS, rip uint64, rfl
 	// GUEST_EXTRA_REGISTERS 紧跟 GUEST_REGS 之后（含 RIP 和 RFLAGS）
 	off += guestRegsSize
 	extra := *(*hyperdbgsdk.GUEST_EXTRA_REGISTERS)(unsafe.Pointer(&buf[off]))
+
+	// 镜像 C++ r.cpp:386 — 直接用 IOCTL 返回的 ExtraRegs.RIP / RFLAGS。
+	// 不替换为 PAUSED 包中的 pausedRIP：C++ HyperDbgReadAllRegisters 也
+	// 只读 GUEST_EXTRA_REGISTERS，不存在用 PAUSED 包覆盖 RIP 的逻辑。
 	rip = extra.RIP
 	rflags = extra.RFLAGS
 
@@ -127,30 +131,33 @@ const (
 // maxInstructionLength 是 x86-64 单条指令的最大长度（15 字节）。
 const maxInstructionLength = 15
 
-// Step 执行单步步入（RegularStep, STEP_IN）。内核设置 RFLAGS.TF 后让进程
-// 执行一条指令，#DB 触发后再次暂停并发 DEBUGGEE_UD_PAUSED_PACKET。
+// Step 执行单步步入。
 //
-// 与 C libhyperdbg 一致，使用 WaitForEventCompletion=false：IOCTL 立即返回，
-// 然后通过 MessagePump 的 DEBUGGEE_UD_PAUSED_PACKET 等待单步完成。
+// 镜像 C++ UdSendStepPacketToDebuggee(StepType=DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_IN)
+// （ud.cpp:1255）。C++ 对 STEP_IN 不检查 IsCall，直接传 IsCall=FALSE、CallLen=0。
+// 内核 UdStepInstructions 对 STEP_IN 调 TracingRegularStepInInstruction()
+// （Tracing.c:135）→ VmFuncSetRflagTrapFlag(TRUE) 设 RFLAGS.TF → Continue →
+// 下条指令触发 #DB → 线程重新暂停 → 内核发 DEBUGGEE_UD_PAUSED_PACKET。
 //
-// 超时恢复：若等待 PAUSED 包超时（典型场景：Step 4 走 AttachingHandleEntrypointInterception
-// 路径不发 PAUSED，详见 Attaching.c:440），则调用 pauseProcess 强制重新暂停，
-// 再等一次 PAUSED。这样即使某一步丢失 PAUSED 也能恢复，避免测试卡死。
+// IOCTL 用 WaitForEventCompletion=FALSE（与 C++ UdSendCommand 一致），
+// 立即返回，随后等 pauseEvent（对应 C++ DbgWaitForUserResponse）。
 func (d *Debugger) Step() error {
 	return d.stepImpl(stepRequestStepIn, false, 0)
 }
 
-// StepOver 执行单步步过（RegularStep, STEP_OVER）。若当前指令是 CALL，
-// 内核在下一指令设硬件断点；否则等同 StepIn。
+// StepOver 执行单步步过。
 //
-// 对应 C++ UdSendStepPacketToDebuggee(StepType=STEP_OVER)（ud.cpp:1254）：
-// 先反汇编当前指令判断是否为 CALL，若是则传 IsCall=true + CallLength，
-// 否则 IsCall=false（内核走 TracingRegularStepInInstruction 路径）。
+// 镜像 C++ UdSendStepPacketToDebuggee(StepType=DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_OVER)
+// （ud.cpp:1255）。C++ 用 HyperDbgCheckWhetherTheCurrentInstructionIsCall 判断：
+//   - 是 CALL: IsCall=TRUE, CallLen=指令长度 → 内核 UdRegularStepOver 在
+//     LastRip+CallLen 设硬件 DR 断点（Ud.c:227）
+//   - 非 CALL: IsCall=FALSE, CallLen=0 → 内核走 TracingRegularStepInInstruction (TF)
+//
+// 反汇编失败（zydis DLL 未加载、内存不可读等）时退化为 STEP_IN，
+// 不返回错误，避免 UI 步过按钮在边界场景下整体不可用。
 func (d *Debugger) StepOver() error {
 	isCall, callLen, err := d.detectCallAtPausedRip()
 	if err != nil {
-		// 反汇编失败（zydis DLL 未加载、内存不可读等）时退化为 STEP_IN。
-		// 不返回错误，避免 UI 步过按钮在边界场景下整体不可用。
 		isCall, callLen = false, 0
 	}
 	return d.stepImpl(stepRequestStepOver, isCall, callLen)
@@ -159,13 +166,34 @@ func (d *Debugger) StepOver() error {
 // stepImpl 是 Step / StepOver 的共享实现。
 //
 // stepType: stepRequestStepIn 或 stepRequestStepOver。
-// isCall / callLen: 仅 stepOver 时有意义，由 detectCallAtPausedRip 计算。
+// isCall / callLen: 仅 stepOver 且当前指令为 CALL 时有意义。
+//
+// 流程（镜像 C++ UdSendStepPacketToDebuggee + DbgWaitForUserResponse）：
+//  1. 排空 pauseEvent 旧信号
+//  2. 发 RegularStep IOCTL（WaitForEventCompletion=false，立即返回）
+//  3. 等 pauseEvent（MessagePump 收到 PAUSED 包后信号）
+//  4. 超时→pauseProcess 强制暂停→再等一次
+//
+// 内核 UdStepInstructions 路径（Ud.c:303）：
+//   - STEP_IN: TracingRegularStepInInstruction (设 TF)
+//   - STEP_OVER + IsCall: UdRegularStepOver (设 DR 断点 at LastRip+CallLen)
+//   - STEP_OVER + 非 CALL: TracingRegularStepInInstruction (设 TF)
+//
+// WaitForEventCompletion=false 与 C++ UdSendCommand(...,FALSE,...) 一致：
+// IOCTL 立即返回，随后由 pauseEvent 等待 PAUSED 包（对应 DbgWaitForUserResponse）。
 func (d *Debugger) stepImpl(stepType uint64, isCall bool, callLen uint32) error {
 	if d.processToken == 0 {
 		return fmt.Errorf("Step: no process attached")
 	}
 
 	d.mu.Lock()
+	// 排空 pauseEvent 旧信号，确保等到的是本次 step 的 PAUSED。
+	if d.pauseEvent != nil {
+		select {
+		case <-d.pauseEvent:
+		default:
+		}
+	}
 	pkt := hyperdbgsdk.DEBUGGER_UD_COMMAND_PACKET{
 		UdAction: hyperdbgsdk.DEBUGGER_UD_COMMAND_ACTION{
 			ActionType:     hyperdbgsdk.DebuggerUdCommandActionTypeRegularStep,
@@ -178,36 +206,74 @@ func (d *Debugger) stepImpl(stepType uint64, isCall bool, callLen uint32) error 
 		// 与 C libhyperdbg 的 g_ActiveProcessDebuggingState.ThreadId 一致。
 		TargetThreadId:          d.pausedThreadId,
 		ApplyToAllPausedThreads: false,
-		// WaitForEventCompletion=true: 内核在 VMX-root #DB handler 中
-		// SynchronizationSetEvent 后才返回 IOCTL（Ud.c:698）。Go 用独立
-		// 设备句柄做 MessagePump，不会死锁。这是比 C++ 的 false +
-		// DbgWaitForUserResponse 更简洁的方案 — 不依赖 MessagePump 的
-		// IRP 时序，从根本上消除了 PAUSED 包丢包竞态。
-		WaitForEventCompletion: true,
+		// WaitForEventCompletion=false: 内核设 RFLAGS.TF 并恢复线程后
+		// 立即返回 IOCTL。step 完成时 #DB 触发→线程重新暂停→内核通过
+		// IRP 通道发 DEBUGGEE_UD_PAUSED_PACKET→MessagePump 信号 pauseEvent。
+		// 这与 C++ UdSendStepPacketToDebuggee + DbgWaitForUserResponse 一致。
+		WaitForEventCompletion: false,
 	}
 	dev := d.device
+	pe := d.pauseEvent
+	d.state = StateProcessRunning
 	d.mu.Unlock()
 
 	// 用同一个缓冲区做输入和输出（METHOD_BUFFERED）
 	buf := (*[udPacketSize]byte)(unsafe.Pointer(&pkt))[:]
 
 	if _, err := dev.Ioctl(comm.IOCTL_CODE_SEND_USER_DEBUGGER_COMMANDS, buf, buf); err != nil {
+		d.mu.Lock()
+		d.state = StateProcessPaused
+		d.mu.Unlock()
 		return fmt.Errorf("Step: IOCTL failed: %w", err)
 	}
 
 	// 读取 Result
 	outPkt := (*hyperdbgsdk.DEBUGGER_UD_COMMAND_PACKET)(unsafe.Pointer(&buf[0]))
 	if outPkt.Result != DebuggerOperationWasSuccessful {
+		d.mu.Lock()
+		d.state = StateProcessPaused
+		d.mu.Unlock()
 		return fmt.Errorf("Step: kernel error (Result=0x%X)", outPkt.Result)
 	}
 
-	// WaitForEventCompletion=true 时 IOCTL 返回即表示 step 完成，线程已暂停。
-	// PAUSED 包通过 MessagePump 异步到达，更新 pausedRIP（用于下一次
-	// detectCallAtPausedRip / OnPaused 回调刷新 UI）。
-	d.mu.Lock()
-	d.state = StateProcessPaused
-	d.mu.Unlock()
-	return nil
+	// 无 MessagePump（pe==nil）: 调用方自行轮询，直接返回。
+	if pe == nil {
+		return nil
+	}
+
+	return d.waitForPaused(dev, pe, 5*time.Second)
+}
+
+// waitForPaused 等 pauseEvent 信号（MessagePump 收到 PAUSED 包后触发），
+// 超时后调 pauseProcess 强制暂停再等一次。Step/StepOut 共用。
+func (d *Debugger) waitForPaused(dev *comm.Device, pe chan struct{}, timeout time.Duration) error {
+	select {
+	case <-pe:
+		d.mu.Lock()
+		d.state = StateProcessPaused
+		d.mu.Unlock()
+		return nil
+	case <-time.After(timeout):
+		// 超时恢复：#DB / 断点未触发，强制 Pause 重新暂停线程。
+		if perr := pauseProcess(dev, d.processToken); perr != nil && perr != ErrAlreadyPaused {
+			d.mu.Lock()
+			d.state = StateProcessPaused
+			d.mu.Unlock()
+			return fmt.Errorf("Step: timeout, recovery Pause failed: %w", perr)
+		}
+		select {
+		case <-pe:
+			d.mu.Lock()
+			d.state = StateProcessPaused
+			d.mu.Unlock()
+			return nil
+		case <-time.After(5 * time.Second):
+			d.mu.Lock()
+			d.state = StateProcessPaused
+			d.mu.Unlock()
+			return fmt.Errorf("Step: timeout waiting for PAUSED after recovery Pause")
+		}
+	}
 }
 
 // detectCallAtPausedRip 反汇编当前暂停 RIP 处的指令，判断是否为 CALL。
