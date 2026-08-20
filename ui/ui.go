@@ -1,7 +1,6 @@
 package ui
 
 import (
-	"context"
 	"embed"
 	"fmt"
 	"os"
@@ -160,7 +159,7 @@ var (
 	currentExePath string                // 当前加载的进程路径（用于 restart）
 	messagePump    *core.MessagePump     // 内核日志消息泵（hook 回调输出）
 	globalProc     *core.Process         // 当前调试进程（退出时需 Terminate + Close）
-	driverPath     = "Debug/hyperhv.sys" // VMM 驱动路径（可由 SetDriverPath 覆盖）
+	driverPath     = `C:\Users\Administrator\AppData\Local\hyperdbg\hyperkd.sys` // VMM 驱动路径（可由 SetDriverPath 覆盖）
 	vmmLoaded      bool                  // VMM 驱动是否已加载（避免重复 LoadVMM）
 	isLoading      bool                  // loadProcess 正在进行中，工具栏按钮应忽略
 )
@@ -217,7 +216,7 @@ func Run(onReady func(*api.Debugger)) {
 	// 对 nil 安全，双重调用不会出问题）。
 	app.ExitCallback(func() {
 		fmt.Println("=== UI Exited, cleanup start ===")
-		cleanupDebugger()
+		cleanupDebugger(globalDbg)
 		fmt.Println("=== cleanup done ===")
 	})
 	// defer cleanupDebugger()
@@ -225,50 +224,22 @@ func Run(onReady func(*api.Debugger)) {
 	runUI(onReady)
 }
 
-// cleanupDebugger 按照与 themida Unpacker.Run 相同的顺序释放资源：
-//  1. 停止消息泵（必须在 UnloadVMM 前：Stop 需要主设备句柄发送
-//     IOCTL_RETURN_IRP_PENDING_PACKETS_AND_DISALLOW_IOCTL，而 UnloadVMM
-//     会停止驱动服务使该句柄失效）
-//  3. UnloadVMM（内部顺序：清事件 → continue+detach → TERMINATE_VMX →
-//     卸载驱动服务）
-//  2. TerminateProcess（VMX 关闭后再杀调试进程，避免进程在 hook 已拆除
-//     但 VMX 仍开时 fault）
-//  4. proc.Close + dbg.Close
+// cleanupDebugger 退出时清理调试器资源。
 //
-// 全程使用 context.Background()（不设超时）：终止 VMX 是慢操作，带超时的
-// ctx 会让 IOCTL 立即失败，导致驱动残留 + VT-x 卡死（StopPending），
-// 只能重启恢复。错误只打印不返回——退出路径必须尽力走完所有步骤。
-func cleanupDebugger() {
-	// 1. 停消息泵
+// 参考 C++ exit 命令（exit.cpp）：仅调用 UnloadVMM（内部自动 clear events
+// + continue+detach debuggee + TERMINATE_VMX + 卸载驱动），然后关闭设备。
+// 不显式 terminate debuggee——UnloadVMM 的 detach 让进程恢复自由运行，
+// 强杀被拦截的进程可能导致 BSOD。
+func cleanupDebugger(dbg *api.Debugger) {
 	if messagePump != nil {
-		fmt.Println("[cleanup] stopping message pump...")
 		messagePump.Stop()
 		messagePump = nil
 	}
-
-	// 2. 终止调试进程（UnloadVMM 已 detach，进程可能仍在跑）
-	if globalProc != nil {
-		fmt.Println("[cleanup] terminating debuggee...")
-		_ = globalProc.Terminate()
-		_ = globalProc.Close()
-		globalProc = nil
+	if dbg != nil {
+		_ = dbg.UnloadVMM()
+		_ = dbg.Close()
 	}
-
-	// 3. UnloadVMM（TERMINATE_VMX + 卸载驱动）
-	if globalDbg != nil && vmmLoaded {
-		fmt.Println("[cleanup] UnloadVMM...")
-		if err := globalDbg.UnloadVMM(context.Background()); err != nil {
-			fmt.Printf("[cleanup] UnloadVMM error: %v\n", err)
-		}
-		vmmLoaded = false
-	}
-
-	// 4. 关闭 debugger（设备句柄 + 日志文件）
-	if globalDbg != nil {
-		fmt.Println("[cleanup] closing debugger...")
-		_ = globalDbg.Close()
-		globalDbg = nil
-	}
+	globalProc = nil
 }
 
 // RunDriverOnly 仅加载 VMM 驱动，不启动 GUI（控制台模式）。
@@ -283,28 +254,19 @@ func RunDriverOnly() {
 		fmt.Printf("Failed to create debugger: %v\n", err)
 		return
 	}
-	globalDbg = dbg
 
-	ctx := context.Background()
-
-	driverPath := filepath.Join("Debug", "hyperhv.sys")
-	if err := dbg.LoadVMM(ctx, driverPath); err != nil {
+	driverPath := `C:\Users\Administrator\AppData\Local\hyperdbg\hyperkd.sys`
+	if err := dbg.LoadVMM(driverPath); err != nil {
 		fmt.Printf("LoadVMM failed: %v\n", err)
 	} else {
 		vmmLoaded = true
 		fmt.Println("=== Driver Loaded ===")
 	}
 
-	app.ExitCallback(func() {
-		fmt.Println("\n=== Unloading Driver ===")
-		cleanupDebugger()
-		fmt.Println("=== Driver Unloaded ===")
-	})
-
 	fmt.Println("Press Enter to exit...")
 	fmt.Scanln()
 
-	cleanupDebugger()
+	cleanupDebugger(dbg)
 	fmt.Println("=== Driver Unloaded ===")
 }
 
@@ -321,10 +283,6 @@ func runUI(onReady func(*api.Debugger)) {
 	hPanel := panel.NewHPanel()
 	p.AddChild(hPanel)
 
-	logFilePath := "hyperdbg_ui.log"
-	fmt.Printf("日志文件: %s\n", logFilePath)
-	_ = globalDbg.LogOpen(logFilePath)
-
 	NewToolbar(hPanel, globalDbg)
 
 	if onReady != nil {
@@ -339,7 +297,7 @@ func runUI(onReady func(*api.Debugger)) {
 	})
 
 	// 创建各页面
-	cpuPage = pages.NewCpu(globalDbg, globalOut)
+	cpuPage = pages.NewCpu(globalDbg)
 	eventsPage = pages.NewEvents(globalDbg)
 	breaksPage = pages.NewBreaks(globalDbg)
 	modulesPage = pages.NewModules(globalDbg)
@@ -384,10 +342,9 @@ func stopCurrentDebuggee() {
 	if globalProc == nil {
 		return
 	}
-	ctx := context.Background()
 	// 1. detach（让内核释放调试会话，拆除 PEB 监控 hook）
 	if globalDbg != nil {
-		if err := globalDbg.Detach(ctx); err != nil {
+		if err := globalDbg.Detach(); err != nil {
 			statusf("stopCurrentDebuggee: Detach 失败: %v", err)
 		}
 	}
@@ -400,7 +357,6 @@ func stopCurrentDebuggee() {
 
 // loadProcess 加载 VMM 驱动（仅首次）并启动目标进程，同时启动消息泵接收 hook 回调。
 func loadProcess(exePath string) {
-	ctx := context.Background()
 	currentExePath = exePath
 	isLoading = true
 	defer func() { isLoading = false }()
@@ -411,7 +367,7 @@ func loadProcess(exePath string) {
 
 	// 仅首次加载 VMM 驱动；重复 LoadVMM 会因驱动服务已存在而失败
 	if !vmmLoaded {
-		if err := globalDbg.LoadVMM(ctx, driverPath); err != nil {
+		if err := globalDbg.LoadVMM(driverPath); err != nil {
 			statusf("LoadVMM 失败: %v", err)
 			return
 		}
@@ -421,7 +377,7 @@ func loadProcess(exePath string) {
 
 	// 启动消息泵（hook 回调输出到日志文件）
 	if messagePump == nil {
-		if pump, err := globalDbg.StartMessagePump(ctx); err != nil {
+		if pump, err := globalDbg.StartMessagePump(); err != nil {
 			statusf("StartMessagePump 失败: %v", err)
 		} else {
 			messagePump = pump
@@ -429,7 +385,7 @@ func loadProcess(exePath string) {
 		}
 	}
 
-	if proc, err := globalDbg.StartProcess(ctx, exePath); err != nil {
+	if proc, err := globalDbg.StartProcess(exePath); err != nil {
 		statusf("启动进程失败: %v", err)
 		return
 	} else {
@@ -442,11 +398,9 @@ func loadProcess(exePath string) {
 	// 等待 PAUSED 到达（MessagePump 设置 pausedRIP），否则 StepOver 的
 	// detectCallAtPausedRip 会因 pausedRIP=0 失败，退化为 STEP_IN 后卡死。
 	time.Sleep(2 * time.Second)
-	pauseCtx, pauseCancel := context.WithTimeout(ctx, 5*time.Second)
-	if err := globalDbg.Pause(pauseCtx); err != nil {
+	if err := globalDbg.Pause(); err != nil {
 		statusf("初始 Pause: %v", err)
 	}
-	pauseCancel()
 	statusf("进程已启动: %s（已暂停）", exePath)
 	// 进程停在 OEP，自动刷新 CPU 页显示入口点的反汇编/寄存器/堆栈/内存
 	autoRefreshCPU()
@@ -522,7 +476,7 @@ func NewToolbar(hpanel *panel.Panel, dbg *api.Debugger) {
 // 过期刷新（如 Continue 后进程仍在运行时读到的错误数据）会被
 // CpuPage.refreshVersion 机制丢弃，不会覆盖 OnPaused 刷新的新鲜数据。
 // 如果 isLoading=true（loadProcess 正在进行中），忽略操作避免竞态。
-func runAsync(name string, fn func(ctx context.Context) error) {
+func runAsync(name string, fn func() error) {
 	if isLoading {
 		statusf("%s: 进程加载中，请稍候", name)
 		return
@@ -532,9 +486,7 @@ func runAsync(name string, fn func(ctx context.Context) error) {
 		return
 	}
 	go func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
-		defer cancel()
-		if err := fn(ctx); err != nil {
+		if err := fn(); err != nil {
 			statusf("%s 失败: %v", name, err)
 		} else {
 			statusf("%s 完成", name)
@@ -598,15 +550,15 @@ func toolbarItems(m *safemap.M[string, []byte], dbg *api.Debugger) []*toolbar.It
 		item("tilluser.png", "tilluser", func() { statusf("tilluser: 暂未实装") }),
 		item("log.png", "log", func() { switchTab(LogType) }),
 		item("modules.png", "modules", func() {
-			runAsync("lm", func(ctx context.Context) error { return dbg.Exec(ctx, "lm") })
+			runAsync("lm", func() error { return dbg.Exec("lm") })
 			switchTab(LogType)
 		}),
 		item("windows.png", "windows", func() {
-			runAsync("process", func(ctx context.Context) error { return dbg.Exec(ctx, "process") })
+			runAsync("process", func() error { return dbg.Exec("process") })
 			switchTab(LogType)
 		}),
 		item("threads.png", "threads", func() {
-			runAsync("thread", func(ctx context.Context) error { return dbg.Exec(ctx, "thread") })
+			runAsync("thread", func() error { return dbg.Exec("thread") })
 			switchTab(LogType)
 		}),
 		item("cpu.png", "cpu", func() { switchTab(CpuType) }),
@@ -628,8 +580,8 @@ func toolbarItems(m *safemap.M[string, []byte], dbg *api.Debugger) []*toolbar.It
 		item("scylla.png", "scylla", func() { statusf("scylla: 暂未实装") }),
 		item("about.png", "about", func() { statusf("HyperDbg v1.0 — 基于 hypervisor 的调试器") }),
 		item("settings.png", "settings", func() {
-			runAsync("settings", func(ctx context.Context) error {
-				s, err := dbg.Settings(ctx)
+			runAsync("settings", func() error {
+				s, err := dbg.Settings()
 				if err != nil {
 					return err
 				}

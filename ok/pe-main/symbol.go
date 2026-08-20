@@ -303,7 +303,7 @@ func (pe *File) ParseCOFFSymbolTable() error {
 
 	// Each record is either a standard or auxiliary symbol-table record.
 	// A standard record defines a symbol or name and has the COFFSymbol STRUCT format.
-	for i := uint32(0); i < symCount; i++ {
+	for i := range symCount {
 		err := pe.structUnpack(&symbols[i], offset, size)
 		if err != nil {
 			return err

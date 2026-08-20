@@ -12,7 +12,6 @@
 package userlevel
 
 import (
-	"context"
 	"fmt"
 	"sync"
 )
@@ -40,9 +39,9 @@ type PausedPacket struct {
 // Handler is called by the listener for every paused packet. Implementations
 // write to the user output (CLI: stdout, GUI: widget, MCP: JSON channel).
 // Returning an error stops the listener.
-type Handler func(ctx context.Context, pkt PausedPacket) error
+type Handler func(pkt PausedPacket) error
 
-// Listener runs until ctx is cancelled. Each paused packet read from ch is
+// Listener runs until ch is closed. Each paused packet read from ch is
 // dispatched to handler. The listener is goroutine-safe; a single listener
 // per UdState is the expected usage.
 type Listener struct {
@@ -57,32 +56,24 @@ func NewListener(state *UdState, handler Handler) *Listener {
 	return &Listener{state: state, handler: handler}
 }
 
-// Run blocks until ctx is cancelled or ch is closed. For every packet read
-// from ch it calls the handler; if the handler returns an error the listener
-// returns it.
-func (l *Listener) Run(ctx context.Context, ch <-chan PausedPacket) error {
-	for {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		case pkt, ok := <-ch:
-			if !ok {
-				return nil
-			}
-			l.state.SetPaused(true)
-			if l.handler != nil {
-				if err := l.handler(ctx, pkt); err != nil {
-					return err
-				}
+// Run blocks until ch is closed. For every packet read from ch it calls
+// the handler; if the handler returns an error the listener returns it.
+func (l *Listener) Run(ch <-chan PausedPacket) error {
+	for pkt := range ch {
+		l.state.SetPaused(true)
+		if l.handler != nil {
+			if err := l.handler(pkt); err != nil {
+				return err
 			}
 		}
 	}
+	return nil
 }
 
 // DefaultHandler prints a CLI-style message for the packet, mirroring the
 // ShowMessages calls in UdHandleUserDebuggerPausing.
 func DefaultHandler(out func(format string, args ...any)) Handler {
-	return func(ctx context.Context, pkt PausedPacket) error {
+	return func(pkt PausedPacket) error {
 		switch pkt.PausingReason {
 		case PausingReasonStartingModuleLoaded:
 			out("the target module is loaded and a breakpoint is set to the entrypoint\n")

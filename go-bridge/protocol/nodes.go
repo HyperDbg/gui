@@ -55,7 +55,7 @@ func NewLiteralBool(b bool) *Node {
 // NewLiteralUint64 creates a uint64 literal (8 bytes, little-endian).
 func NewLiteralUint64(u uint64) *Node {
 	v := make([]byte, 8)
-	for i := 0; i < 8; i++ {
+	for i := range 8 {
 		v[i] = byte(u >> (8 * i))
 	}
 	return NewLiteral(KindUint64, v)
@@ -64,7 +64,7 @@ func NewLiteralUint64(u uint64) *Node {
 // NewLiteralUint32 creates a uint32 literal (4 bytes, little-endian).
 func NewLiteralUint32(u uint32) *Node {
 	v := make([]byte, 4)
-	for i := 0; i < 4; i++ {
+	for i := range 4 {
 		v[i] = byte(u >> (8 * i))
 	}
 	return NewLiteral(KindUint32, v)
@@ -156,7 +156,7 @@ func nodeString(n *Node, indent int) string {
 		return "nil"
 	}
 	pad := ""
-	for i := 0; i < indent; i++ {
+	for range indent {
 		pad += "  "
 	}
 	s := pad + opcodeName(n.Opcode)

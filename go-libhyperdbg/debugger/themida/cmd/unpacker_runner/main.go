@@ -3,12 +3,9 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/hyperdbg/go-libhyperdbg/debugger/themida"
 )
@@ -31,9 +28,6 @@ func main() {
 		os.Exit(2)
 	}
 
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer cancel()
-
 	cfg := themida.UnpackerConfig{
 		DriverPath:     *driverPath,
 		ExePath:        *exePath,
@@ -45,7 +39,7 @@ func main() {
 	}
 
 	u := themida.NewUnpacker(cfg)
-	result, err := u.Run(ctx)
+	result, err := u.Run()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ERROR: %v\n", err)
 		os.Exit(1)

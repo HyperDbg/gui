@@ -298,7 +298,7 @@ func TestSingleStepAtOEP(t *testing.T) {
 	fmt.Printf("✓ OEP: 0x%X\n", oep)
 
 	fmt.Println("\n=== 等待调试器进入暂停状态 ===")
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		time.Sleep(50 * time.Millisecond)
 		state := dbg.GetState()
 		if state == debugger.StatePaused {

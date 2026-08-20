@@ -96,7 +96,7 @@ func humanizeTimestamp(ts uint32) string {
 func hexDump(b []byte) {
 	var a [16]byte
 	n := (len(b) + 15) &^ 15
-	for i := 0; i < n; i++ {
+	for i := range n {
 		if i%16 == 0 {
 			fmt.Printf("%4d", i)
 		}
@@ -133,7 +133,7 @@ func hexDumpSize(b []byte, size int) {
 	}
 
 	n := (size + 15) &^ 15
-	for i := 0; i < n; i++ {
+	for i := range n {
 		if i%16 == 0 {
 			fmt.Printf("%4d", i)
 		}
@@ -161,7 +161,7 @@ func hexDumpSize(b []byte, size int) {
 func IntToByteArray(num uint64) []byte {
 	size := int(unsafe.Sizeof(num))
 	arr := make([]byte, size)
-	for i := 0; i < size; i++ {
+	for i := range size {
 		byt := *(*uint8)(unsafe.Pointer(uintptr(unsafe.Pointer(&num)) + uintptr(i)))
 		arr[i] = byt
 	}
@@ -373,7 +373,7 @@ func parsePE(filename string, cfg config) {
 			fmt.Fprintf(w, "Loader Flags:\t 0x%x\n", oh.LoaderFlags)
 			fmt.Fprintf(w, "Number Of RVA And Sizes:\t 0x%x\n", oh.NumberOfRvaAndSizes)
 			fmt.Fprintf(w, "\n")
-			for entry := peparser.ImageDirectoryEntry(0); entry < peparser.ImageNumberOfDirectoryEntries; entry++ {
+			for entry := range peparser.ImageNumberOfDirectoryEntries {
 				rva := oh.DataDirectory[entry].VirtualAddress
 				size := oh.DataDirectory[entry].Size
 				fmt.Fprintf(w, "%s Table:\t RVA: 0x%0.8x\t Size:0x%0.8x\t\n", entry.String(), rva, size)
@@ -415,7 +415,7 @@ func parsePE(filename string, cfg config) {
 			fmt.Fprintf(w, "Loader Flags:\t 0x%x\n", oh.LoaderFlags)
 			fmt.Fprintf(w, "Number Of RVA And Sizes:\t 0x%x\n", oh.NumberOfRvaAndSizes)
 			fmt.Fprintf(w, "\n")
-			for entry := peparser.ImageDirectoryEntry(0); entry < peparser.ImageNumberOfDirectoryEntries; entry++ {
+			for entry := range peparser.ImageNumberOfDirectoryEntries {
 				rva := oh.DataDirectory[entry].VirtualAddress
 				size := oh.DataDirectory[entry].Size
 				fmt.Fprintf(w, "%s Table:\t RVA: 0x%0.8x\t Size:0x%0.8x\t\n", entry.String(), rva, size)

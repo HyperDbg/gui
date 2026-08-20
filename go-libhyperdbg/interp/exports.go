@@ -24,8 +24,8 @@ func errNotImpl(name string) error {
 }
 
 // unwrapPanic converts a yaegi interp.Panic into a plain error so callers
-// don't depend on yaegi types. Other errors (context.Canceled, parse errors,
-// etc.) are returned unchanged.
+// don't depend on yaegi types. Other errors (parse errors, etc.) are returned
+// unchanged.
 func unwrapPanic(err error) error {
 	if p, ok := err.(interp.Panic); ok {
 		return fmt.Errorf("interp panic: %v", p.Value)
@@ -35,13 +35,7 @@ func unwrapPanic(err error) error {
 
 // registerHyperdbgSymbols injects the HyperDbg API into the yaegi interpreter
 // under the hyperdbgPkgPath ("hyperdbg/hyperdbg") package path. Each exported
-// symbol is a closure that captures the Interpreter (so it can read the
-// in-flight ctx via currentCtx) and the *api.Debugger (for the actual call).
-//
-// Symbol signatures intentionally drop the context.Context parameter that the
-// underlying api.Debugger methods require: scripts don't manage contexts, so
-// the closures inject the current Eval ctx transparently. This matches the
-// "context propagation" API principle without burdening script authors.
+// symbol is a closure that captures the *api.Debugger (for the actual call).
 //
 // Exported symbols (matching the task spec):
 //   - Version() string
@@ -71,7 +65,7 @@ func registerHyperdbgSymbols(yi *interp.Interpreter, i *Interpreter) {
 				if dbg == nil {
 					return errNoDebugger
 				}
-				return dbg.Connect(i.currentCtx(), target)
+				return dbg.Connect(target)
 			}),
 
 			// LoadVMM installs and starts the VMM driver from driverPath.
@@ -79,7 +73,7 @@ func registerHyperdbgSymbols(yi *interp.Interpreter, i *Interpreter) {
 				if dbg == nil {
 					return errNoDebugger
 				}
-				return dbg.LoadVMM(i.currentCtx(), driverPath)
+				return dbg.LoadVMM(driverPath)
 			}),
 
 			// UnloadVMM terminates the VMM and removes the driver service.
@@ -87,7 +81,7 @@ func registerHyperdbgSymbols(yi *interp.Interpreter, i *Interpreter) {
 				if dbg == nil {
 					return errNoDebugger
 				}
-				return dbg.UnloadVMM(i.currentCtx())
+				return dbg.UnloadVMM()
 			}),
 
 			// StartProcess launches a debuggee process and returns its
@@ -97,7 +91,7 @@ func registerHyperdbgSymbols(yi *interp.Interpreter, i *Interpreter) {
 				if dbg == nil {
 					return core.Process{}, errNoDebugger
 				}
-				return dbg.StartProcess(i.currentCtx(), exePath)
+				return dbg.StartProcess(exePath)
 			}),
 
 			// Continue resumes the debugged process.
@@ -105,7 +99,7 @@ func registerHyperdbgSymbols(yi *interp.Interpreter, i *Interpreter) {
 				if dbg == nil {
 					return errNoDebugger
 				}
-				return dbg.Continue(i.currentCtx())
+				return dbg.Continue()
 			}),
 
 			// Pause halts the debugged process.
@@ -113,7 +107,7 @@ func registerHyperdbgSymbols(yi *interp.Interpreter, i *Interpreter) {
 				if dbg == nil {
 					return errNoDebugger
 				}
-				return dbg.Pause(i.currentCtx())
+				return dbg.Pause()
 			}),
 
 			// EptHook registers an EPT execution hook at hookAddress with a
@@ -123,7 +117,7 @@ func registerHyperdbgSymbols(yi *interp.Interpreter, i *Interpreter) {
 				if dbg == nil {
 					return 0, errNoDebugger
 				}
-				return dbg.EptHook(i.currentCtx(), hookAddress, callbackSrc)
+				return dbg.EptHook(hookAddress, callbackSrc)
 			}),
 
 			// RemoveHook removes a previously registered hook by ID. Stub:
@@ -154,7 +148,7 @@ func registerHyperdbgSymbols(yi *interp.Interpreter, i *Interpreter) {
 				if dbg == nil {
 					return errNoDebugger
 				}
-				return dbg.Exec(i.currentCtx(), cmdLine)
+				return dbg.Exec(cmdLine)
 			}),
 
 			// Sleep waits for the given duration. Convenience for scripts

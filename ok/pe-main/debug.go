@@ -317,7 +317,7 @@ func (pe *File) parseDebugDirectory(rva, size uint32) error {
 	debugDirSize := uint32(binary.Size(debugDir))
 	debugDirsCount := size / debugDirSize
 
-	for i := uint32(0); i < debugDirsCount; i++ {
+	for i := range debugDirsCount {
 		offset := pe.GetOffsetFromRva(rva + debugDirSize*i)
 		err := pe.structUnpack(&debugDir, offset, debugDirSize)
 		if err != nil {

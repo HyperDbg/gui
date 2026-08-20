@@ -104,5 +104,5 @@ func (p *BreaksPage) SetTagInputForTest(s string) {
 
 // SetAddrInputForTest 设置地址输入框文本。
 func (c *CpuPage) SetAddrInputForTest(s string) {
-	c.addrEditor.Editor.SetText(s)
+	//c.addrEditor.Editor.SetText(s)
 }

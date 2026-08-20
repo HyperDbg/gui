@@ -7,19 +7,14 @@
 // Design (per the API spec):
 //   - No global state: each Interpreter owns its own yaegi instance and is
 //     bound to a single *api.Debugger.
-//   - Context propagation: Eval/EvalFile respect ctx cancellation (yaegi's
-//     EvalWithContext/EvalPathWithContext runs the evaluation in a goroutine
-//     and interrupts it via interp.stop() on ctx.Done). The current ctx is
-//     also surfaced to registered HyperDbg symbols so API calls honour it.
-//   - Panic isolation: yaegi's EvalWithContext recovers panics from user code
-//     and returns them as errors (the SEH-equivalent required by the spec).
+//   - Panic isolation: yaegi recovers panics from user code and returns them
+//     as errors (the SEH-equivalent required by the spec).
 //   - Concurrency-safe: a mutex serialises Eval/EvalFile/Use calls because
 //     yaegi's Interpreter is single-goroutine.
 //   - No cgo: yaegi is pure Go.
 package interp
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"reflect"
@@ -46,22 +41,15 @@ const hyperdbgPkgPath = "hyperdbg/hyperdbg"
 // Interpreter wraps a yaegi.Interpreter with HyperDbg API symbols bound to a
 // specific *api.Debugger instance. It is safe for concurrent use: mu
 // serialises Eval/EvalFile/Use because yaegi's Interpreter is
-// single-goroutine, and ctxMu protects ctx which is read by registered
-// symbol closures running inside the interpreter's goroutine.
+// single-goroutine.
 type Interpreter struct {
-	// mu serialises Eval/EvalFile/Use. yaegi's EvalWithContext takes its own
+	// mu serialises Eval/EvalFile/Use. yaegi's Eval takes its own
 	// internal mutex, but concurrent Evals on the same Interpreter are not
 	// supported, so we add our own.
 	mu sync.Mutex
 
 	yi  *interp.Interpreter
 	dbg *api.Debugger
-
-	// ctxMu protects ctx. Symbol closures call currentCtx() to read it; Eval
-	// writes it before invoking yaegi. An RWMutex is used because reads (one
-	// per API call in user code) outnumber writes (one per Eval).
-	ctxMu sync.RWMutex
-	ctx   context.Context
 }
 
 // NewInterpreter creates a yaegi interpreter pre-loaded with the Go standard
@@ -96,30 +84,7 @@ func NewInterpreter(dbg *api.Debugger) *Interpreter {
 	return i
 }
 
-// currentCtx returns the context associated with the in-flight Eval call, or
-// context.Background() if no Eval is running. Symbol closures call this to
-// propagate cancellation to api.Debugger methods. Safe to call from any
-// goroutine.
-func (i *Interpreter) currentCtx() context.Context {
-	i.ctxMu.RLock()
-	defer i.ctxMu.RUnlock()
-	if i.ctx != nil {
-		return i.ctx
-	}
-	return context.Background()
-}
-
-// setCtx stores the evaluation context. Called under i.mu.
-func (i *Interpreter) setCtx(ctx context.Context) {
-	i.ctxMu.Lock()
-	i.ctx = ctx
-	i.ctxMu.Unlock()
-}
-
-// Eval interprets a Go source string. The ctx is respected: if cancelled,
-// Eval returns ctx.Err() promptly (yaegi's EvalWithContext runs the evaluation
-// in a goroutine and interrupts it via interp.stop() on ctx.Done, which
-// aborts interpreted loops like `(func(){ for {} })()`).
+// Eval interprets a Go source string.
 //
 // Panics from user code are recovered by yaegi and returned as errors of type
 // interp.Panic (the SEH-equivalent required by the spec); Eval unwraps them
@@ -128,12 +93,11 @@ func (i *Interpreter) setCtx(ctx context.Context) {
 // The returned interface{} is the reflect.Value.Interface() of yaegi's result:
 // for expression evaluations like "1+1" it is the expression value (int(2)),
 // for statements it is nil.
-func (i *Interpreter) Eval(ctx context.Context, src string) (interface{}, error) {
+func (i *Interpreter) Eval(src string) (interface{}, error) {
 	i.mu.Lock()
 	defer i.mu.Unlock()
-	i.setCtx(ctx)
 
-	v, err := i.yi.EvalWithContext(ctx, src)
+	v, err := i.yi.Eval(src)
 	if err != nil {
 		return nil, unwrapPanic(err)
 	}
@@ -143,14 +107,13 @@ func (i *Interpreter) Eval(ctx context.Context, src string) (interface{}, error)
 	return v.Interface(), nil
 }
 
-// EvalFile reads and evaluates a Go script file. Context and panic handling
-// are identical to Eval. The path must be readable.
-func (i *Interpreter) EvalFile(ctx context.Context, path string) (interface{}, error) {
+// EvalFile reads and evaluates a Go script file. Panic handling
+// is identical to Eval. The path must be readable.
+func (i *Interpreter) EvalFile(path string) (interface{}, error) {
 	i.mu.Lock()
 	defer i.mu.Unlock()
-	i.setCtx(ctx)
 
-	v, err := i.yi.EvalPathWithContext(ctx, path)
+	v, err := i.yi.EvalPath(path)
 	if err != nil {
 		return nil, unwrapPanic(err)
 	}

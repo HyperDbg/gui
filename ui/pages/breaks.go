@@ -1,7 +1,6 @@
 package pages
 
 import (
-	"context"
 	"fmt"
 	"strconv"
 	"strings"
@@ -135,7 +134,7 @@ func (p *BreaksPage) parseTag() uint64 {
 }
 
 func (p *BreaksPage) bpSet() {
-	tag, err := p.dbg.BpSet(context.Background(), p.parseAddr())
+	tag, err := p.dbg.BpSet(p.parseAddr())
 	if err != nil {
 		fmt.Printf("BpSet 失败: %v\n", err)
 		return
@@ -145,21 +144,21 @@ func (p *BreaksPage) bpSet() {
 }
 
 func (p *BreaksPage) bpClear() {
-	if err := p.dbg.BpClear(context.Background(), p.parseTag()); err != nil {
+	if err := p.dbg.BpClear(p.parseTag()); err != nil {
 		fmt.Printf("BpClear 失败: %v\n", err)
 	}
 	p.bpList()
 }
 
 func (p *BreaksPage) bpDisable() {
-	if err := p.dbg.BpDisable(context.Background(), p.parseTag()); err != nil {
+	if err := p.dbg.BpDisable(p.parseTag()); err != nil {
 		fmt.Printf("BpDisable 失败: %v\n", err)
 	}
 	p.bpList()
 }
 
 func (p *BreaksPage) bpEnable() {
-	if err := p.dbg.BpEnable(context.Background(), p.parseTag()); err != nil {
+	if err := p.dbg.BpEnable(p.parseTag()); err != nil {
 		fmt.Printf("BpEnable 失败: %v\n", err)
 	}
 	p.bpList()
@@ -168,8 +167,7 @@ func (p *BreaksPage) bpEnable() {
 func (p *BreaksPage) bpList() {
 	// BpList 走字符串命令路径，输出到 debugger output（日志页）。
 	// 这里额外用 Exec 捕获显示在断点页。
-	ctx := context.Background()
-	if err := p.dbg.Exec(ctx, "bl"); err != nil {
+	if err := p.dbg.Exec("bl"); err != nil {
 		p.list.SetCode(fmt.Sprintf("bl 失败: %v", err))
 	}
 	app.RequestRedraw()

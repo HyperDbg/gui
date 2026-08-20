@@ -21,7 +21,6 @@ package main
 
 import (
 	"bufio"
-	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -60,10 +59,10 @@ func NewScriptRunner(dbg *api.Debugger) *ScriptRunner {
 // `{ ... }` blocks the C++ interpreter supports) are not handled here —
 // the Go command registry is single-line.
 //
-// SIGINT (Ctrl+C) aborts the run gracefully: the script's child context
-// is cancelled, dbg.Exec returns, and the post-script pause is skipped.
+// SIGINT (Ctrl+C) aborts the run gracefully: a non-blocking check on
+// sigCh between lines breaks the loop and skips the post-script pause.
 // Any other error (file open, read failure) is returned to the caller.
-func (r *ScriptRunner) Run(ctx context.Context, scriptPath string) error {
+func (r *ScriptRunner) Run(scriptPath string) error {
 	f, err := os.Open(scriptPath)
 	if err != nil {
 		return fmt.Errorf("open script %q: %w", scriptPath, err)
@@ -77,17 +76,6 @@ func (r *ScriptRunner) Run(ctx context.Context, scriptPath string) error {
 	signal.Notify(sigCh, os.Interrupt)
 	defer signal.Stop(sigCh)
 
-	scriptCtx, scriptCancel := context.WithCancel(ctx)
-	defer scriptCancel()
-
-	go func() {
-		select {
-		case <-sigCh:
-			scriptCancel()
-		case <-scriptCtx.Done():
-		}
-	}()
-
 	fmt.Fprintf(os.Stdout, "Running script: %s\n", scriptPath)
 
 	sc := bufio.NewScanner(f)
@@ -97,9 +85,14 @@ func (r *ScriptRunner) Run(ctx context.Context, scriptPath string) error {
 
 	for sc.Scan() {
 		lineNo++
-		// Honor cancellation between lines.
-		if err := scriptCtx.Err(); err != nil {
+		// Honor Ctrl+C between lines.
+		select {
+		case <-sigCh:
 			aborted = true
+			break
+		default:
+		}
+		if aborted {
 			break
 		}
 
@@ -113,13 +106,9 @@ func (r *ScriptRunner) Run(ctx context.Context, scriptPath string) error {
 		// CommandScriptRunCommand prints the line via ShowMessages.
 		fmt.Fprintf(os.Stdout, "hyperdbg> %s\n", line)
 
-		if err := r.dbg.Exec(scriptCtx, line); err != nil {
+		if err := r.dbg.Exec(line); err != nil {
 			if errors.Is(err, metacmds.ErrExit) {
 				fmt.Fprintf(os.Stdout, "[exit requested at line %d]\n", lineNo)
-				break
-			}
-			if errors.Is(err, context.Canceled) {
-				aborted = true
 				break
 			}
 			fmt.Fprintf(os.Stderr, "err (line %d): %v\n", lineNo, err)
@@ -146,8 +135,7 @@ func (r *ScriptRunner) Run(ctx context.Context, scriptPath string) error {
 // through yaegi (Phase C.4.3). It currently always returns
 // ErrYaegiNotIntegrated; once yaegi is wired up it will parse the file,
 // export the api package symbols, and run main() in the script.
-func (r *ScriptRunner) RunGoScript(ctx context.Context, scriptPath string) error {
-	_ = ctx
+func (r *ScriptRunner) RunGoScript(scriptPath string) error {
 	return fmt.Errorf("RunGoScript(%q): %w", scriptPath, ErrYaegiNotIntegrated)
 }
 

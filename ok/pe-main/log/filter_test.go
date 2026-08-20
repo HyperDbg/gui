@@ -83,7 +83,7 @@ func testFilterFunc(level Level, keyvals ...interface{}) bool {
 	if level == LevelWarn {
 		return true
 	}
-	for i := 0; i < len(keyvals); i++ {
+	for i := range keyvals {
 		if keyvals[i] == "password" {
 			keyvals[i+1] = fuzzyStr
 		}

@@ -16,13 +16,12 @@
 // Lifecycle:
 //
 //	obj := objects.New(coreDebugger, out)
-//	_ = obj.ShowProcessDetails(ctx)
-//	procs, _ := obj.ListProcesses(ctx)
+//	_ = obj.ShowProcessDetails()
+//	procs, _ := obj.ListProcesses()
 //	for _, p := range procs { out.Printf("pid=%x cr3=%016x image=%s\n", p.ProcessId, p.Cr3, p.Image) }
 package objects
 
 import (
-	"context"
 	"encoding/binary"
 	"fmt"
 	"sync"
@@ -92,7 +91,7 @@ type ThreadListEntry = hyperdbgsdk.DEBUGGEE_THREAD_LIST_DETAILS_ENTRY
 // ShowProcessDetails mirrors ObjectShowProcessesOrThreadDetails(TRUE). It
 // queries the current process via IOCTL_QUERY_CURRENT_PROCESS and prints
 // the result to out. Returns the parsed details on success.
-func (o *Objects) ShowProcessDetails(ctx context.Context) (ProcessDetails, error) {
+func (o *Objects) ShowProcessDetails() (ProcessDetails, error) {
 	var pkt hyperdbgsdk.DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_PACKET
 	buf := make([]byte, int(unsafe.Sizeof(pkt)))
 	pktBytes := asBytes(&pkt)
@@ -102,7 +101,7 @@ func (o *Objects) ShowProcessDetails(ctx context.Context) (ProcessDetails, error
 	if err != nil {
 		return ProcessDetails{}, err
 	}
-	n, err := dev.Ioctl(ctx, comm.IOCTL_CODE_QUERY_CURRENT_PROCESS, buf, buf)
+	n, err := dev.Ioctl(comm.IOCTL_CODE_QUERY_CURRENT_PROCESS, buf, buf)
 	if err != nil {
 		return ProcessDetails{}, fmt.Errorf("ShowProcessDetails: IOCTL_QUERY_CURRENT_PROCESS failed: %w", err)
 	}
@@ -126,7 +125,7 @@ func (o *Objects) ShowProcessDetails(ctx context.Context) (ProcessDetails, error
 // ShowThreadDetails mirrors ObjectShowProcessesOrThreadDetails(FALSE). It
 // queries the current thread via IOCTL_QUERY_CURRENT_THREAD and prints the
 // result to out. Returns the parsed details on success.
-func (o *Objects) ShowThreadDetails(ctx context.Context) (ThreadDetails, error) {
+func (o *Objects) ShowThreadDetails() (ThreadDetails, error) {
 	var pkt hyperdbgsdk.DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET
 	buf := make([]byte, int(unsafe.Sizeof(pkt)))
 	pktBytes := asBytes(&pkt)
@@ -136,7 +135,7 @@ func (o *Objects) ShowThreadDetails(ctx context.Context) (ThreadDetails, error) 
 	if err != nil {
 		return ThreadDetails{}, err
 	}
-	n, err := dev.Ioctl(ctx, comm.IOCTL_CODE_QUERY_CURRENT_THREAD, buf, buf)
+	n, err := dev.Ioctl(comm.IOCTL_CODE_QUERY_CURRENT_THREAD, buf, buf)
 	if err != nil {
 		return ThreadDetails{}, fmt.Errorf("ShowThreadDetails: IOCTL_QUERY_CURRENT_THREAD failed: %w", err)
 	}
@@ -165,15 +164,15 @@ func (o *Objects) ShowThreadDetails(ctx context.Context) (ThreadDetails, error) 
 // ListProcesses mirrors ObjectShowProcessesOrThreadList(TRUE, ...). It first
 // queries the count of active processes, then queries the list itself.
 // Returns the parsed list entries. The caller owns the returned slice.
-func (o *Objects) ListProcesses(ctx context.Context) ([]ProcessListEntry, error) {
-	return o.listActive(ctx, true)
+func (o *Objects) ListProcesses() ([]ProcessListEntry, error) {
+	return o.listActive(true)
 }
 
 // ListThreads mirrors ObjectShowProcessesOrThreadList(FALSE, ...). It first
 // queries the count of active threads, then queries the list itself.
 // Returns the parsed list entries. The caller owns the returned slice.
-func (o *Objects) ListThreads(ctx context.Context) ([]ThreadListEntry, error) {
-	raw, err := o.listActive(ctx, false)
+func (o *Objects) ListThreads() ([]ThreadListEntry, error) {
+	raw, err := o.listActive(false)
 	if err != nil {
 		return nil, err
 	}
@@ -203,7 +202,7 @@ func (o *Objects) ListThreads(ctx context.Context) ([]ThreadListEntry, error) {
 
 // listActive implements the two-step count+list query used by both
 // ListProcesses and ListThreads. isProcess selects the query type.
-func (o *Objects) listActive(ctx context.Context, isProcess bool) ([]ProcessListEntry, error) {
+func (o *Objects) listActive(isProcess bool) ([]ProcessListEntry, error) {
 	dev, err := o.device()
 	if err != nil {
 		return nil, err
@@ -221,7 +220,7 @@ func (o *Objects) listActive(ctx context.Context, isProcess bool) ([]ProcessList
 	qBytes := asBytes(&query)
 	copy(queryBuf, qBytes)
 
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_QUERY_COUNT_OF_ACTIVE_PROCESSES_OR_THREADS, queryBuf, queryBuf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_QUERY_COUNT_OF_ACTIVE_PROCESSES_OR_THREADS, queryBuf, queryBuf); err != nil {
 		return nil, fmt.Errorf("listActive: count IOCTL failed: %w", err)
 	}
 	copy(qBytes, queryBuf)
@@ -247,7 +246,7 @@ func (o *Objects) listActive(ctx context.Context, isProcess bool) ([]ProcessList
 	}
 	copy(queryBuf, qBytes)
 
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_GET_LIST_OF_THREADS_AND_PROCESSES, queryBuf, listBuf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_GET_LIST_OF_THREADS_AND_PROCESSES, queryBuf, listBuf); err != nil {
 		return nil, fmt.Errorf("listActive: list IOCTL failed: %w", err)
 	}
 	copy(qBytes, queryBuf)

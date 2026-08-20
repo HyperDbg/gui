@@ -6,13 +6,12 @@
 // Usage:
 //
 //	dbg, _ := api.New(api.WithOutput(os.Stdout))
-//	dbg.Connect(ctx, "local")
-//	dbg.LoadVMM(ctx, `Debug\hyperkd.sys`)
-//	hookID, _ := dbg.EptHook(ctx, 0x00c12000, `func hook(ctx *HookCtx) { ctx.Break() }`)
+//	dbg.Connect("local")
+//	dbg.LoadVMM(`Debug\hyperkd.sys`)
+//	hookID, _ := dbg.EptHook(0x00c12000, `func hook(ctx *HookCtx) { ctx.Break() }`)
 package api
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"sync"
@@ -89,6 +88,10 @@ func New(opts ...Option) (*Debugger, error) {
 			return nil, err
 		}
 	}
+	// 注册默认包分发：内核推送的文本包写入 output（命令输出/日志），
+	// PAUSED 包已由 core 内部处理（更新寄存器 + signal pauseEvent +
+	// 调 OnPaused），dispatchPacket 跳过避免重复处理。
+	d.core.OnPacket = d.dispatchPacket
 	d.commands = commands.NewRegistry(d.output)
 	metacmds.RegisterAll(d.commands)
 	dbgcmds.RegisterAll(d.commands)
@@ -99,24 +102,24 @@ func New(opts ...Option) (*Debugger, error) {
 
 // Connect opens the HyperDbg device for the given target ("local" for local
 // debugging).
-func (d *Debugger) Connect(ctx context.Context, target string) error {
+func (d *Debugger) Connect(target string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Connect(ctx, target)
+	return d.core.Connect(target)
 }
 
 // LoadVMM installs and starts the VMM driver.
-func (d *Debugger) LoadVMM(ctx context.Context, driverPath string) error {
+func (d *Debugger) LoadVMM(driverPath string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.LoadVMM(ctx, driverPath)
+	return d.core.LoadVMM(driverPath)
 }
 
 // UnloadVMM terminates the VMM and removes the driver service.
-func (d *Debugger) UnloadVMM(ctx context.Context) error {
+func (d *Debugger) UnloadVMM() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.UnloadVMM(ctx)
+	return d.core.UnloadVMM()
 }
 
 // Close releases all resources.
@@ -129,38 +132,38 @@ func (d *Debugger) Close() error {
 // EptHook registers an EPT execution hook at hookAddress with a Go callback.
 // The callback source is compiled to binary AST and sent to the driver.
 // Returns the hook ID (event tag).
-func (d *Debugger) EptHook(ctx context.Context, hookAddress uint64, callbackSrc string) (uint64, error) {
+func (d *Debugger) EptHook(hookAddress uint64, callbackSrc string) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.EptHook(ctx, hookAddress, callbackSrc)
+	return d.core.EptHook(hookAddress, callbackSrc)
 }
 
 // EptHookForProcess registers an EPT execution hook at hookAddress for a
 // specific process (pid). This is required for WOW64 target processes whose
 // DLL addresses are not valid in the debugger process's address space.
-func (d *Debugger) EptHookForProcess(ctx context.Context, hookAddress uint64, pid uint32, callbackSrc string) (uint64, error) {
+func (d *Debugger) EptHookForProcess(hookAddress uint64, pid uint32, callbackSrc string) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.EptHookForProcess(ctx, hookAddress, pid, callbackSrc)
+	return d.core.EptHookForProcess(hookAddress, pid, callbackSrc)
 }
 
 // EptHookSymbol registers an EPT hook at the address of the given symbol
 // string (e.g. "ntdll!RtlAllocateHeap"). Requires a SymbolResolver to have
 // been injected via WithSymbolResolver; otherwise it returns an error.
-func (d *Debugger) EptHookSymbol(ctx context.Context, symbol string, callbackSrc string) (uint64, error) {
+func (d *Debugger) EptHookSymbol(symbol string, callbackSrc string) (uint64, error) {
 	d.mu.Lock()
 	resolver := d.symbols
 	d.mu.Unlock()
 	if resolver == nil {
 		return 0, fmt.Errorf("EptHookSymbol(%q): no symbol resolver injected (use WithSymbolResolver)", symbol)
 	}
-	addr, err := resolver.FromName(ctx, symbol)
+	addr, err := resolver.FromName(symbol)
 	if err != nil {
 		return 0, fmt.Errorf("EptHookSymbol(%q): resolve failed: %w", symbol, err)
 	}
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.EptHook(ctx, addr, callbackSrc)
+	return d.core.EptHook(addr, callbackSrc)
 }
 
 // SymbolResolver returns the injected symbol resolver (nil if none). GUI/MCP
@@ -174,43 +177,70 @@ func (d *Debugger) SymbolResolver() symbolparser.Resolver {
 // StartProcess launches a process for debugging. The VMM (already loaded)
 // intercepts the child via the debug-port callback. Returns a Process
 // handle the caller owns (call proc.Close when done).
-func (d *Debugger) StartProcess(ctx context.Context, exePath string) (core.Process, error) {
+func (d *Debugger) StartProcess(exePath string) (core.Process, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.StartProcess(ctx, exePath)
+	return d.core.StartProcess(exePath)
 }
 
 // Continue resumes the debugged process.
-func (d *Debugger) Continue(ctx context.Context) error {
+func (d *Debugger) Continue() error {
 	// 不持 api.mu —— core 层管理锁，等 PAUSED 期间允许查询并发
-	return d.core.Continue(ctx)
+	return d.core.Continue()
 }
 
 // Pause halts the debugged process.
-func (d *Debugger) Pause(ctx context.Context) error {
-	return d.core.Pause(ctx)
+func (d *Debugger) Pause() error {
+	return d.core.Pause()
 }
 
-// LogOpen opens a file for log output.
-func (d *Debugger) LogOpen(path string) error {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-	return d.core.LogOpen(path)
-}
-
-// StartMessagePump spawns a goroutine that drains kernel log messages (produced
-// by hook callbacks via ctx.Printf → LogInfo) to the open log file. It must be
-// called after LogOpen and after LoadVMM. The returned pump MUST be stopped
-// (pump.Stop) before UnloadVMM so the dedicated device handle is released
-// cleanly and the goroutine exits.
+// StartMessagePump spawns a goroutine that drains kernel packets via the
+// IRP-based channel, forwarding each one to core.OnPacket (which dispatchPacket
+// routes to output). It must be called after LoadVMM. The returned pump MUST be
+// stopped (pump.Stop) before UnloadVMM so the dedicated device handle is
+// released cleanly and the goroutine exits.
 //
 // The pump opens a SECOND device handle so the pending IRP does not block the
 // main IOCTL handle used by Continue/Pause/EptHook/… — this matches the C++
 // ReadIrpBasedBuffer pattern.
-func (d *Debugger) StartMessagePump(ctx context.Context) (*core.MessagePump, error) {
+func (d *Debugger) StartMessagePump() (*core.MessagePump, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.StartMessagePump(ctx)
+	return d.core.StartMessagePump()
+}
+
+// operationNotificationFromUserDebuggerPause mirrors
+// OPERATION_NOTIFICATION_FROM_USER_DEBUGGER_PAUSE in
+// hyperdbg/include/SDK/headers/Constants.h (16 | mandatory bit). The PAUSED
+// packet is handled inside core.MessagePump (updates paused register state +
+// signals pauseEvent + calls OnPaused), so dispatchPacket skips it to avoid
+// writing binary structure bytes to output as text.
+const operationNotificationFromUserDebuggerPause uint32 = 16 | (1 << 31)
+
+// dispatchPacket 是 core.OnPacket 的默认实现：把内核推送的文本包写入
+// output（命令输出/日志），PAUSED 包已由 core 内部处理（更新寄存器状态
+// + signal pauseEvent + 调 OnPaused），这里不重复处理。
+func (d *Debugger) dispatchPacket(opCode uint32, payload []byte) {
+	if opCode == operationNotificationFromUserDebuggerPause {
+		return // core 已处理，避免重复
+	}
+	// 文本包：去 NUL 终止 + 写 output
+	msg := payload
+	for i, b := range msg {
+		if b == 0 {
+			msg = msg[:i]
+			break
+		}
+	}
+	if len(msg) == 0 {
+		return
+	}
+	d.mu.Lock()
+	out := d.output
+	d.mu.Unlock()
+	if out != nil {
+		out.Write(append(msg, '\n'))
+	}
 }
 
 // SetOnPaused registers a callback that fires (from the MessagePump goroutine)
@@ -230,18 +260,11 @@ func (d *Debugger) SetOnPaused(fn func()) {
 // address. It triggers page-fault mapping for demand-paged DLLs, which is
 // required before EptHookForProcess can validate the address (MmGetPhysicalAddress
 // returns 0 for not-present pages).
-func (d *Debugger) ReadMemory(ctx context.Context, addr uint64, pid uint32, size uint32) ([]byte, error) {
+func (d *Debugger) ReadMemory(addr uint64, pid uint32, size uint32) ([]byte, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	data, _, err := d.core.ReadMemory(ctx, addr, pid, size)
+	data, _, err := d.core.ReadMemory(addr, pid, size)
 	return data, err
-}
-
-// LogClose closes the log file.
-func (d *Debugger) LogClose() error {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-	return d.core.LogClose()
 }
 
 // Sleep waits for the given duration. This is a convenience for scripts that
@@ -261,12 +284,12 @@ func (d *Debugger) Printf(format string, args ...any) error {
 // It is the single entry point the CLI REPL and MCP tools use to drive the
 // debugger without calling individual methods. Returns meta.ErrExit when the
 // user runs `exit` (the CLI loop checks for this).
-func (d *Debugger) Exec(ctx context.Context, cmdLine string) error {
+func (d *Debugger) Exec(cmdLine string) error {
 	// Exec does not take the api mutex itself: command handlers acquire the
 	// core mutex as needed (via core.Debugger methods), and the registry's
 	// output sink is goroutine-safe. This avoids deadlocks when a handler
 	// calls back into the api layer.
-	return d.commands.Exec(ctx, d.core, cmdLine)
+	return d.commands.Exec(d.core, cmdLine)
 }
 
 // Commands returns the underlying command registry. GUI/MCP layers use it to

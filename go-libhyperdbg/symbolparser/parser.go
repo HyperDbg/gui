@@ -11,7 +11,6 @@
 package symbolparser
 
 import (
-	"context"
 	"fmt"
 	"sync"
 	"unsafe"
@@ -25,19 +24,19 @@ import (
 type Resolver interface {
 	// Init opens a DbgHelp context with the given symbol search path (e.g.
 	// "srv*c:\\symbols*https://msdl.microsoft.com/download/symbols").
-	Init(ctx context.Context, sympath string) error
+	Init(sympath string) error
 
 	// LoadModule loads a PE module's symbols. base is the load address (as
 	// reported by the loader or the debugger). Returns the module's symbol
 	// base on success.
-	LoadModule(ctx context.Context, imagePath string, base uint64) (uint64, error)
+	LoadModule(imagePath string, base uint64) (uint64, error)
 
 	// FromName resolves "module!symbol" or "symbol" to an address.
-	FromName(ctx context.Context, name string) (uint64, error)
+	FromName(name string) (uint64, error)
 
 	// FromAddr resolves an address to "module!symbol+offset" (offset is 0
 	// when addr is exactly at a symbol).
-	FromAddr(ctx context.Context, addr uint64) (name string, offset uint64, err error)
+	FromAddr(addr uint64) (name string, offset uint64, err error)
 
 	// Close releases the DbgHelp context.
 	Close() error
@@ -124,7 +123,7 @@ type imagehlpModuleW64 struct {
 	Reserved        [256]uint16
 }
 
-func (d *dbghelp) Init(ctx context.Context, sympath string) error {
+func (d *dbghelp) Init(sympath string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.loaded {
@@ -157,7 +156,7 @@ func (d *dbghelp) Init(ctx context.Context, sympath string) error {
 	return nil
 }
 
-func (d *dbghelp) LoadModule(ctx context.Context, imagePath string, base uint64) (uint64, error) {
+func (d *dbghelp) LoadModule(imagePath string, base uint64) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if !d.loaded {
@@ -184,7 +183,7 @@ func (d *dbghelp) LoadModule(ctx context.Context, imagePath string, base uint64)
 	return uint64(r1), nil
 }
 
-func (d *dbghelp) FromName(ctx context.Context, name string) (uint64, error) {
+func (d *dbghelp) FromName(name string) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if !d.loaded {
@@ -212,7 +211,7 @@ func (d *dbghelp) FromName(ctx context.Context, name string) (uint64, error) {
 	return si.Address, nil
 }
 
-func (d *dbghelp) FromAddr(ctx context.Context, addr uint64) (string, uint64, error) {
+func (d *dbghelp) FromAddr(addr uint64) (string, uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if !d.loaded {

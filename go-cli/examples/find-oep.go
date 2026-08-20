@@ -33,12 +33,9 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/hyperdbg/go-libhyperdbg/api"
@@ -78,9 +75,6 @@ func main() {
 	}
 
 	// Catch Ctrl-C so the VMM is always unloaded on exit.
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer cancel()
-
 	// Build options: output + optional symbol resolver.
 	opts := []api.Option{api.WithOutput(os.Stdout)}
 	var resolver symbolparser.Resolver
@@ -96,40 +90,33 @@ func main() {
 	}
 	defer dbg.Close()
 
-	if err := dbg.Connect(ctx, "local"); err != nil {
+	if err := dbg.Connect("local"); err != nil {
 		fmt.Fprintf(os.Stderr, "Connect failed: %v\n", err)
 		os.Exit(1)
 	}
 	fmt.Printf("[*] Connected to local HyperDbg device\n")
 
-	if err := dbg.LoadVMM(ctx, *driverPath); err != nil {
+	if err := dbg.LoadVMM(*driverPath); err != nil {
 		fmt.Fprintf(os.Stderr, "LoadVMM failed: %v\n", err)
 		os.Exit(1)
 	}
 	fmt.Printf("[*] VMM loaded (%s)\n", *driverPath)
-	defer dbg.UnloadVMM(ctx)
-
-	if err := dbg.LogOpen(*logPath); err != nil {
-		fmt.Fprintf(os.Stderr, "LogOpen failed: %v\n", err)
-		os.Exit(1)
-	}
-	defer dbg.LogClose()
-	fmt.Printf("[*] Logging to %s\n", *logPath)
+	defer dbg.UnloadVMM()
 
 	// Initialise symbol resolver (symbol mode only).
 	if useSymbolMode {
-		if err := resolver.Init(ctx, *sympath); err != nil {
+		if err := resolver.Init(*sympath); err != nil {
 			fmt.Fprintf(os.Stderr, "symbol Init failed: %v\n", err)
 			os.Exit(1)
 		}
 		defer resolver.Close()
 		if *ntdllPath != "" {
-			if _, err := resolver.LoadModule(ctx, *ntdllPath, 0); err != nil {
+			if _, err := resolver.LoadModule(*ntdllPath, 0); err != nil {
 				fmt.Fprintf(os.Stderr, "LoadModule(ntdll) failed (non-fatal): %v\n", err)
 			}
 		}
 		if *kernelbasePath != "" {
-			if _, err := resolver.LoadModule(ctx, *kernelbasePath, 0); err != nil {
+			if _, err := resolver.LoadModule(*kernelbasePath, 0); err != nil {
 				fmt.Fprintf(os.Stderr, "LoadModule(kernelbase) failed (non-fatal): %v\n", err)
 			}
 		}
@@ -158,13 +145,13 @@ func hook(ctx *HookCtx) {
 	rahSrc += `}`
 
 	if useSymbolMode {
-		if _, err := dbg.EptHookSymbol(ctx, *rtlAllocHeapSym, rahSrc); err != nil {
+		if _, err := dbg.EptHookSymbol(*rtlAllocHeapSym, rahSrc); err != nil {
 			fmt.Fprintf(os.Stderr, "EptHookSymbol(%s) failed: %v\n", *rtlAllocHeapSym, err)
 			os.Exit(1)
 		}
 		fmt.Printf("[*] Hooked %s\n", *rtlAllocHeapSym)
 	} else {
-		if _, err := dbg.EptHook(ctx, *rtlAllocHeap, rahSrc); err != nil {
+		if _, err := dbg.EptHook(*rtlAllocHeap, rahSrc); err != nil {
 			fmt.Fprintf(os.Stderr, "EptHook(RtlAllocateHeap @ %#x) failed: %v\n", *rtlAllocHeap, err)
 			os.Exit(1)
 		}
@@ -182,14 +169,14 @@ func hook(ctx *HookCtx) {
 	ctx.Printf("VA ret=%x\n", ret)
 }`
 	if useSymbolMode && *virtualAllocSym != "" {
-		if _, err := dbg.EptHookSymbol(ctx, *virtualAllocSym, vaSrc); err != nil {
+		if _, err := dbg.EptHookSymbol(*virtualAllocSym, vaSrc); err != nil {
 			fmt.Fprintf(os.Stderr, "EptHookSymbol(%s) failed (non-fatal): %v\n", *virtualAllocSym, err)
 		} else {
 			fmt.Printf("[*] Hooked %s\n", *virtualAllocSym)
 			vaHooked = true
 		}
 	} else if *virtualAlloc != 0 {
-		if _, err := dbg.EptHook(ctx, *virtualAlloc, vaSrc); err != nil {
+		if _, err := dbg.EptHook(*virtualAlloc, vaSrc); err != nil {
 			fmt.Fprintf(os.Stderr, "EptHook(VirtualAlloc @ %#x) failed (non-fatal): %v\n", *virtualAlloc, err)
 		} else {
 			fmt.Printf("[*] Hooked VirtualAlloc @ %#x\n", *virtualAlloc)
@@ -201,7 +188,7 @@ func hook(ctx *HookCtx) {
 	}
 
 	// ---- Launch the debuggee ----
-	proc, err := dbg.StartProcess(ctx, *exePath)
+	proc, err := dbg.StartProcess(*exePath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "StartProcess failed: %v\n", err)
 		os.Exit(1)
@@ -222,7 +209,7 @@ func hook(ctx *HookCtx) {
 	// = true in core.Debugger) pauses at the first instruction; the first
 	// Continue moves to the entry point; the second Continue lets the
 	// loader run so the hooks can fire.
-	if err := dbg.Continue(ctx); err != nil {
+	if err := dbg.Continue(); err != nil {
 		fmt.Fprintf(os.Stderr, "Continue (1st, to entry point) failed: %v\n", err)
 		os.Exit(1)
 	}
@@ -234,19 +221,16 @@ func hook(ctx *HookCtx) {
 	// pause state and be coalesced into the first.
 	time.Sleep(2 * time.Second)
 
-	if err := dbg.Continue(ctx); err != nil {
+	if err := dbg.Continue(); err != nil {
 		fmt.Fprintf(os.Stderr, "Continue (2nd, past entry point) failed: %v\n", err)
 		os.Exit(1)
 	}
 	fmt.Printf("[*] 2nd 'g' sent (running past entry point; hooks are live)\n")
 	fmt.Printf("[*] Running for %d seconds... (Ctrl-C to pause early)\n", *runSeconds)
 
-	select {
-	case <-time.After(time.Duration(*runSeconds) * time.Second):
-	case <-ctx.Done():
-	}
+	time.Sleep(time.Duration(*runSeconds) * time.Second)
 
-	if err := dbg.Pause(ctx); err != nil {
+	if err := dbg.Pause(); err != nil {
 		fmt.Fprintf(os.Stderr, "Pause failed: %v\n", err)
 		os.Exit(1)
 	}

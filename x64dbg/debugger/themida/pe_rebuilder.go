@@ -178,7 +178,7 @@ func (r *PERebuilder) parsePEHeaders(data []byte) error {
 	}
 
 	r.sections = make([]ImageSectionHeader, sectionCount)
-	for i := uint16(0); i < sectionCount; i++ {
+	for i := range sectionCount {
 		offset := sectionHeaderOffset + uint32(i)*40
 		if err := binary.Read(bytes.NewReader(data[offset:offset+40]), binary.LittleEndian, &r.sections[i]); err != nil {
 			return fmt.Errorf("读取段头失败: %v", err)

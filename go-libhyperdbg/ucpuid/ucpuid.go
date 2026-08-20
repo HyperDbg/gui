@@ -19,12 +19,11 @@
 // Lifecycle:
 //
 //	h := ucpuid.New(coreDebugger, out)
-//	_ = h.RequestCpuid(ctx, 0x1, 0x0)          // raw IOCTL
-//	_ = h.ParseAndExecute(ctx, []string{"ucpuid", "1"}) // full command
+//	_ = h.RequestCpuid(0x1, 0x0)          // raw IOCTL
+//	_ = h.ParseAndExecute([]string{"ucpuid", "1"}) // full command
 package ucpuid
 
 import (
-	"context"
 	"fmt"
 	"strings"
 	"sync"
@@ -104,10 +103,7 @@ func (h *Handler) Help() {
 //
 // tokens is the full token list including the command name. Returns an error
 // if parsing fails or if the IOCTL fails.
-func (h *Handler) ParseAndExecute(ctx context.Context, tokens []string) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
+func (h *Handler) ParseAndExecute(tokens []string) error {
 	if len(tokens) == 0 {
 		return fmt.Errorf("ucpuid: empty token list")
 	}
@@ -149,7 +145,7 @@ func (h *Handler) ParseAndExecute(ctx context.Context, tokens []string) error {
 		h.Help()
 		return fmt.Errorf("ucpuid: missing function id")
 	}
-	return h.RequestCpuid(ctx, functionId, subFunctionId)
+	return h.RequestCpuid(functionId, subFunctionId)
 }
 
 // RequestCpuid mirrors CommandCpuidRequestCpuid. It sends IOCTL_DEBUGGER_CPUID
@@ -159,10 +155,7 @@ func (h *Handler) ParseAndExecute(ctx context.Context, tokens []string) error {
 // The serial-debuggee path (KdSendUserCpuidPacketToDebuggee) is not yet
 // ported; if SetSerialConnected(true) was called, RequestCpuid returns an
 // error indicating the path is not yet available.
-func (h *Handler) RequestCpuid(ctx context.Context, functionId, subFunctionId uint32) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
+func (h *Handler) RequestCpuid(functionId, subFunctionId uint32) error {
 	h.mu.Lock()
 	serial := h.isSerialConnectedToRemoteDebuggee
 	h.mu.Unlock()
@@ -181,7 +174,7 @@ func (h *Handler) RequestCpuid(ctx context.Context, functionId, subFunctionId ui
 	req.SubFunctionId = subFunctionId
 
 	buf := asBytes(&req)
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_CPUID, buf, buf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_CPUID, buf, buf); err != nil {
 		h.out.Printf("ioctl failed with code 0x%x\n", err)
 		return fmt.Errorf("ucpuid: IOCTL_DEBUGGER_CPUID failed: %w", err)
 	}

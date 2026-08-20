@@ -1088,7 +1088,7 @@ func (pe *File) doParseResourceDirectory(rva, size, baseRVA, level uint32,
 		return ResourceDirectory{}, nil
 	}
 
-	for i := 0; i < numberOfEntries; i++ {
+	for range numberOfEntries {
 		res := pe.parseResourceDirectoryEntry(rva)
 		if res == nil {
 			pe.logger.Warn("Error parsing a resource directory entry, the RVA is invalid")

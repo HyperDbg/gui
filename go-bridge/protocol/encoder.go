@@ -142,7 +142,7 @@ func (e *Encoder) encodeNode(n *Node) error {
 		e.nodeBuf = append(e.nodeBuf, OpNil) // absent else
 	case OpForStmt:
 		e.nodeBuf = append(e.nodeBuf, OpForStmt)
-		for i := 0; i < 4; i++ {
+		for i := range 4 {
 			var c *Node
 			if i < len(n.Children) {
 				c = n.Children[i]

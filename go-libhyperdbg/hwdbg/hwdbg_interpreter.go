@@ -20,16 +20,15 @@
 // Lifecycle:
 //
 //	intp := hwdbg.NewInterpreter(out)
-//	_ = intp.LoadInstanceInfo(ctx, "instance.bin", 4096)
+//	_ = intp.LoadInstanceInfo("instance.bin", 4096)
 //	intp.ShowInstanceInfo()
-//	_ = intp.SendPacket(ctx, instanceInfo, "out.bin",
+//	_ = intp.SendPacket(instanceInfo, "out.bin",
 //	    hyperdbgsdk.DebuggerRemotePacketTypeDebuggerToDebuggeeHardwareLevel,
 //	    hyperdbgsdk.HwdbgActionSendInstanceInfo, nil)
 package hwdbg
 
 import (
 	"bufio"
-	"context"
 	"fmt"
 	"os"
 	"strconv"
@@ -446,10 +445,7 @@ func (i *Interpreter) ReadInstanceInfoFromFile(fileName string, memoryBuffer []u
 // initialBramBufferSize is the number of uint32 words to allocate for the
 // read buffer; it must be large enough to hold the entire instance-info
 // packet (header + instance info + port configuration).
-func (i *Interpreter) LoadInstanceInfo(ctx context.Context, instanceFilePathToRead string, initialBramBufferSize uint32) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
+func (i *Interpreter) LoadInstanceInfo(instanceFilePathToRead string, initialBramBufferSize uint32) error {
 	memBuf := make([]uint32, initialBramBufferSize)
 	if err := i.ReadInstanceInfoFromFile(instanceFilePathToRead, memBuf); err != nil {
 		i.out.Printf("err, unable to read instance info packet of the debuggee")

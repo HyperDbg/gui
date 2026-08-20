@@ -45,7 +45,7 @@ func (d *Decoder) Decode() (*Node, error) {
 	strCount := binary.LittleEndian.Uint32(d.buf[d.pos : d.pos+4])
 	d.pos += 4
 	d.strs = make([]string, strCount)
-	for i := uint32(0); i < strCount; i++ {
+	for i := range strCount {
 		s, err := d.decodeString()
 		if err != nil {
 			return nil, err
@@ -288,7 +288,7 @@ func (d *Decoder) decodeNode() (*Node, error) {
 		// args + rets + body
 		total := int(nargs) + int(nrets) + 1
 		node.Children = make([]*Node, total)
-		for i := 0; i < total; i++ {
+		for i := range total {
 			c, err := d.decodeNode()
 			if err != nil {
 				return nil, err
@@ -306,7 +306,7 @@ func (d *Decoder) decodeNode() (*Node, error) {
 		}
 		total := int(nargs) + int(nrets) + 1
 		node.Children = make([]*Node, total)
-		for i := 0; i < total; i++ {
+		for i := range total {
 			c, err := d.decodeNode()
 			if err != nil {
 				return nil, err

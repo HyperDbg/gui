@@ -1,7 +1,6 @@
 package themida
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -88,21 +87,14 @@ func TestDiskSerialHook_SuperRecovery(t *testing.T) {
 	}
 	defer dbg.Close()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
-	defer cancel()
-
-	if err := dbg.LoadVMM(ctx, diskDriverPath); err != nil {
+	if err := dbg.LoadVMM(diskDriverPath); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
-	if err := dbg.LogOpen(diskLogPath); err != nil {
-		t.Logf("[!] LogOpen failed: %v", err)
-	}
-	defer dbg.LogClose()
 
 	// 启动 SuperRecovery（挂起状态）
-	proc, err := dbg.StartProcess(ctx, diskSuperRecoveryExe)
+	proc, err := dbg.StartProcess(diskSuperRecoveryExe)
 	if err != nil {
-		dbg.UnloadVMM(ctx)
+		dbg.UnloadVMM()
 		t.Fatalf("StartProcess: %v", err)
 	}
 	pid := proc.Pid
@@ -110,7 +102,7 @@ func TestDiskSerialHook_SuperRecovery(t *testing.T) {
 
 	// ★ 先 Continue 一次让 loader 完成 DLL 映射（包括 32-bit ntdll）
 	//   然后立即暂停，在 Themida loader 开始执行之前设置 hook
-	_ = dbg.Continue(ctx)
+	_ = dbg.Continue()
 	t.Logf("[*] First Continue done (loader initialized)")
 
 	// 解析 32-bit kernelbase!DeviceIoControl（ntdll 在 WOW64 中无法通过
@@ -136,7 +128,7 @@ func TestDiskSerialHook_SuperRecovery(t *testing.T) {
 		}
 	}
 	if dicAddr == 0 {
-		cleanupDisk(t, dbg, ctx, &proc)
+		cleanupDisk(t, dbg, &proc)
 		t.Fatal("could not resolve DeviceIoControl address")
 	}
 
@@ -144,7 +136,7 @@ func TestDiskSerialHook_SuperRecovery(t *testing.T) {
 	t.Logf("[*] Warmup: waiting for DeviceIoControl page to fault in...")
 	pagesReady := false
 	for i := 0; i < 20; i++ {
-		_ = dbg.Continue(ctx)
+		_ = dbg.Continue()
 		time.Sleep(300 * time.Millisecond)
 		if e := touchPageViaReadProcessMemory(proc.Handle, dicAddr); e == nil {
 			pagesReady = true
@@ -158,7 +150,7 @@ func TestDiskSerialHook_SuperRecovery(t *testing.T) {
 	}
 
 	// 暂停进程，设置 hook
-	_ = dbg.Pause(ctx)
+	_ = dbg.Pause()
 	t.Logf("[*] Process paused, setting up hook")
 	_ = touchPageViaReadProcessMemory(proc.Handle, dicAddr)
 
@@ -179,15 +171,15 @@ func hook(ctx *HookCtx) {
 	}
 }`, pid, ioctlStorageQueryProperty)
 
-	tag, err := dbg.EptHookForProcess(ctx, dicAddr, pid, hookSrc)
+	tag, err := dbg.EptHookForProcess(dicAddr, pid, hookSrc)
 	if err != nil {
-		cleanupDisk(t, dbg, ctx, &proc)
+		cleanupDisk(t, dbg, &proc)
 		t.Fatalf("EptHookForProcess(DeviceIoControl): %v", err)
 	}
 	t.Logf("[*] Hooked DeviceIoControl tag=%d", tag)
 
 	// 启动消息泵
-	pump, pumpErr := dbg.StartMessagePump(ctx)
+	pump, pumpErr := dbg.StartMessagePump()
 	if pumpErr != nil {
 		t.Logf("[!] StartMessagePump: %v", pumpErr)
 	}
@@ -198,20 +190,17 @@ func hook(ctx *HookCtx) {
 	}()
 
 	// ★ 现在 Continue——hook 已就位，从进程第一条指令开始拦截
-	_ = dbg.Continue(ctx)
+	_ = dbg.Continue()
 	t.Logf("[*] Process resumed with hook in place, running 30s...")
 
-	select {
-	case <-time.After(30 * time.Second):
-	case <-ctx.Done():
-	}
+	<-time.After(30 * time.Second)
 
 	// 清理
-	_ = dbg.Pause(ctx)
+	_ = dbg.Pause()
 	if pump != nil {
 		pump.Stop()
 	}
-	_ = dbg.UnloadVMM(ctx)
+	_ = dbg.UnloadVMM()
 	if proc.Handle != 0 {
 		syscall.TerminateProcess(syscall.Handle(proc.Handle), 1)
 	}
@@ -300,27 +289,20 @@ func TestDiskSerialHook_Helper64(t *testing.T) {
 	}
 	defer dbg.Close()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
-	defer cancel()
-
-	if err := dbg.LoadVMM(ctx, diskDriverPath); err != nil {
+	if err := dbg.LoadVMM(diskDriverPath); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
-	if err := dbg.LogOpen(diskLogPath); err != nil {
-		t.Logf("[!] LogOpen failed: %v", err)
-	}
-	defer dbg.LogClose()
 
-	proc, err := dbg.StartProcess(ctx, helperExe)
+	proc, err := dbg.StartProcess(helperExe)
 	if err != nil {
-		dbg.UnloadVMM(ctx)
+		dbg.UnloadVMM()
 		t.Fatalf("StartProcess: %v", err)
 	}
 	pid := proc.Pid
 	t.Logf("[*] Started helper (pid=%d)", pid)
 
-	_ = dbg.Continue(ctx)
-	_ = dbg.Continue(ctx)
+	_ = dbg.Continue()
+	_ = dbg.Continue()
 
 	// 解析 64-bit DeviceIoControl — 使用 getModuleBaseForWow64Target（含多种回退）
 	var dicAddr uint64
@@ -349,7 +331,7 @@ func TestDiskSerialHook_Helper64(t *testing.T) {
 		}
 	}
 	if dicAddr == 0 {
-		cleanupDisk(t, dbg, ctx, &proc)
+		cleanupDisk(t, dbg, &proc)
 		t.Fatal("could not resolve DeviceIoControl address")
 	}
 
@@ -371,14 +353,14 @@ func hook(ctx *HookCtx) {
 	}
 }`, pid, ioctlStorageQueryProperty)
 
-	tag, err := dbg.EptHookForProcess(ctx, dicAddr, pid, hookSrc)
+	tag, err := dbg.EptHookForProcess(dicAddr, pid, hookSrc)
 	if err != nil {
-		cleanupDisk(t, dbg, ctx, &proc)
+		cleanupDisk(t, dbg, &proc)
 		t.Fatalf("EptHookForProcess: %v", err)
 	}
 	t.Logf("[*] Hooked DeviceIoControl tag=%d", tag)
 
-	pump, pumpErr := dbg.StartMessagePump(ctx)
+	pump, pumpErr := dbg.StartMessagePump()
 	if pumpErr != nil {
 		t.Logf("[!] StartMessagePump: %v", pumpErr)
 	}
@@ -388,22 +370,22 @@ func hook(ctx *HookCtx) {
 		}
 	}()
 
-	_ = dbg.Continue(ctx)
+	_ = dbg.Continue()
 	t.Logf("[*] Helper running (max 15s)...")
 
 	deadline := time.Now().Add(15 * time.Second)
 	for time.Now().Before(deadline) {
-		if err := dbg.Continue(ctx); err != nil {
+		if err := dbg.Continue(); err != nil {
 			break
 		}
 		time.Sleep(200 * time.Millisecond)
 	}
 
-	_ = dbg.Pause(ctx)
+	_ = dbg.Pause()
 	if pump != nil {
 		pump.Stop()
 	}
-	_ = dbg.UnloadVMM(ctx)
+	_ = dbg.UnloadVMM()
 	if proc.Handle != 0 {
 		syscall.TerminateProcess(syscall.Handle(proc.Handle), 1)
 	}
@@ -468,39 +450,32 @@ func TestDiskSerialHook_Sysret_Helper64(t *testing.T) {
 	}
 	defer dbg.Close()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
-	defer cancel()
-
-	if err := dbg.LoadVMM(ctx, diskDriverPath); err != nil {
+	if err := dbg.LoadVMM(diskDriverPath); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
-	if err := dbg.LogOpen(diskSysretLogPath); err != nil {
-		t.Logf("[!] LogOpen failed: %v", err)
-	}
-	defer dbg.LogClose()
 
-	proc, err := dbg.StartProcess(ctx, helperExe)
+	proc, err := dbg.StartProcess(helperExe)
 	if err != nil {
-		dbg.UnloadVMM(ctx)
+		dbg.UnloadVMM()
 		t.Fatalf("StartProcess: %v", err)
 	}
 	pid := proc.Pid
 	t.Logf("[*] Started helper (pid=%d)", pid)
 
-	_ = dbg.Continue(ctx)
-	_ = dbg.Continue(ctx)
+	_ = dbg.Continue()
+	_ = dbg.Continue()
 
 	// Resolve ntdll!NtDeviceIoControlFile address in the target process.
 	ntdllBase, err := getModuleBaseForWow64Target(pid, proc.Handle, "ntdll.dll")
 	if err != nil {
-		cleanupDisk(t, dbg, ctx, &proc)
+		cleanupDisk(t, dbg, &proc)
 		t.Fatalf("getModuleBaseForWow64Target(ntdll.dll): %v", err)
 	}
 	t.Logf("[*] ntdll base = 0x%X", ntdllBase)
 
 	ntdicRVA, _, err := resolveExportRVA(diskNtdllNative, "NtDeviceIoControlFile")
 	if err != nil {
-		cleanupDisk(t, dbg, ctx, &proc)
+		cleanupDisk(t, dbg, &proc)
 		t.Fatalf("resolveExportRVA(NtDeviceIoControlFile): %v", err)
 	}
 	ntdicAddr := ntdllBase + ntdicRVA
@@ -523,7 +498,7 @@ func TestDiskSerialHook_Sysret_Helper64(t *testing.T) {
 	}
 	funcBytes, err := readProcMem(proc.Handle, ntdicAddr, 32)
 	if err != nil {
-		cleanupDisk(t, dbg, ctx, &proc)
+		cleanupDisk(t, dbg, &proc)
 		t.Fatalf("readProcMem(NtDeviceIoControlFile): %v", err)
 	}
 	t.Logf("[*] NtDeviceIoControlFile bytes: % x", funcBytes)
@@ -536,7 +511,7 @@ func TestDiskSerialHook_Sysret_Helper64(t *testing.T) {
 		}
 	}
 	if syscallOffset < 0 {
-		cleanupDisk(t, dbg, ctx, &proc)
+		cleanupDisk(t, dbg, &proc)
 		t.Fatalf("syscall instruction (0F 05) not found in NtDeviceIoControlFile bytes: % x", funcBytes)
 	}
 	expectedRetAddr := ntdicAddr + uint64(syscallOffset) + 2
@@ -567,14 +542,14 @@ func hook(ctx *HookCtx) {
 	}
 }`, pid, expectedRetAddr)
 
-	tag, err := dbg.SysretHookForProcess(ctx, pid, hookSrc)
+	tag, err := dbg.SysretHookForProcess(pid, hookSrc)
 	if err != nil {
-		cleanupDisk(t, dbg, ctx, &proc)
+		cleanupDisk(t, dbg, &proc)
 		t.Fatalf("SysretHookForProcess: %v", err)
 	}
 	t.Logf("[*] SysretHookForProcess installed tag=%d pid=%d", tag, pid)
 
-	pump, pumpErr := dbg.StartMessagePump(ctx)
+	pump, pumpErr := dbg.StartMessagePump()
 	if pumpErr != nil {
 		t.Logf("[!] StartMessagePump: %v", pumpErr)
 	}
@@ -584,22 +559,22 @@ func hook(ctx *HookCtx) {
 		}
 	}()
 
-	_ = dbg.Continue(ctx)
+	_ = dbg.Continue()
 	t.Logf("[*] Helper running with sysret hook (max 15s)...")
 
 	deadline := time.Now().Add(15 * time.Second)
 	for time.Now().Before(deadline) {
-		if err := dbg.Continue(ctx); err != nil {
+		if err := dbg.Continue(); err != nil {
 			break
 		}
 		time.Sleep(200 * time.Millisecond)
 	}
 
-	_ = dbg.Pause(ctx)
+	_ = dbg.Pause()
 	if pump != nil {
 		pump.Stop()
 	}
-	_ = dbg.UnloadVMM(ctx)
+	_ = dbg.UnloadVMM()
 	if proc.Handle != 0 {
 		syscall.TerminateProcess(syscall.Handle(proc.Handle), 1)
 	}
@@ -646,9 +621,9 @@ func readProcMem(processHandle uintptr, addr uint64, n int) ([]byte, error) {
 }
 
 // cleanupDisk 在测试失败路径上安全清理。
-func cleanupDisk(t *testing.T, dbg *api.Debugger, ctx context.Context, proc *core.Process) {
+func cleanupDisk(t *testing.T, dbg *api.Debugger, proc *core.Process) {
 	t.Helper()
-	_ = dbg.UnloadVMM(ctx)
+	_ = dbg.UnloadVMM()
 	if proc != nil && proc.Handle != 0 {
 		syscall.TerminateProcess(syscall.Handle(proc.Handle), 1)
 		proc.Close()

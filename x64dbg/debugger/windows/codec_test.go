@@ -56,7 +56,7 @@ func TestExceptionRecordCodec(t *testing.T) {
 		t.Errorf("NumberParameters不匹配: 期望%d，实际%d", original.NumberParameters, decoded.NumberParameters)
 	}
 
-	for i := 0; i < 15; i++ {
+	for i := range 15 {
 		if decoded.ExceptionInformation[i] != original.ExceptionInformation[i] {
 			t.Errorf("ExceptionInformation[%d]不匹配: 期望%x，实际%x", i, original.ExceptionInformation[i], decoded.ExceptionInformation[i])
 		}
@@ -115,7 +115,7 @@ func TestDebugEventCodec(t *testing.T) {
 	binary.LittleEndian.PutUint32(original.data[4:8], 1234)
 	binary.LittleEndian.PutUint32(original.data[8:12], 5678)
 
-	for i := 0; i < 160; i++ {
+	for i := range 160 {
 		original.data[12+i] = byte(i % 256)
 	}
 
@@ -146,7 +146,7 @@ func TestDebugEventCodec(t *testing.T) {
 		t.Errorf("ThreadId不匹配: 期望%d，实际%d", 5678, decoded.ThreadId())
 	}
 
-	for i := 0; i < 160; i++ {
+	for i := range 160 {
 		if decoded.data[12+i] != byte(i%256) {
 			t.Errorf("data[12+%d]不匹配: 期望%d，实际%d", i, byte(i%256), decoded.data[12+i])
 		}

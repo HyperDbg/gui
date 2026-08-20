@@ -17,7 +17,6 @@
 package core
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"unsafe"
@@ -52,7 +51,7 @@ const attachDetachRequestSize = unsafe.Sizeof(hyperdbgsdk.DEBUGGER_ATTACH_DETACH
 // Token is required for all subsequent Continue/Pause/Command IOCTLs.
 //
 // Mirrors UdAttachToProcess in ud.cpp:380-480.
-func attachProcess(ctx context.Context, dev *comm.Device, pid uint32, tid uint32, checkCallbackAtFirstInstruction bool) (uint64, error) {
+func attachProcess(dev *comm.Device, pid uint32, tid uint32, checkCallbackAtFirstInstruction bool) (uint64, error) {
 	if dev == nil {
 		return 0, fmt.Errorf("attachProcess: nil device (not connected?)")
 	}
@@ -67,7 +66,7 @@ func attachProcess(ctx context.Context, dev *comm.Device, pid uint32, tid uint32
 	// so we pass the same slice for both and the driver writes the response
 	// back into it.
 	buf := (*[attachDetachRequestSize]byte)(unsafe.Pointer(&pkt))[:]
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS,
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS,
 		buf, buf); err != nil {
 		return 0, fmt.Errorf("attachProcess: ATTACH IOCTL failed: %w", err)
 	}
@@ -85,7 +84,7 @@ func attachProcess(ctx context.Context, dev *comm.Device, pid uint32, tid uint32
 // registered event (hook/breakpoint) fires.
 //
 // Mirrors UdContinueProcess in ud.cpp:941-1000.
-func continueProcess(ctx context.Context, dev *comm.Device, token uint64) error {
+func continueProcess(dev *comm.Device, token uint64) error {
 	if dev == nil {
 		return fmt.Errorf("continueProcess: nil device")
 	}
@@ -97,7 +96,7 @@ func continueProcess(ctx context.Context, dev *comm.Device, token uint64) error 
 		Token:  token,
 	}
 	buf := (*[attachDetachRequestSize]byte)(unsafe.Pointer(&pkt))[:]
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS,
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS,
 		buf, buf); err != nil {
 		return fmt.Errorf("continueProcess: CONTINUE IOCTL failed: %w", err)
 	}
@@ -127,7 +126,7 @@ var ErrAlreadyPaused = errors.New("process already in intercepting (paused) phas
 // C libhyperdbg treats it as success.
 //
 // Mirrors UdPauseProcess in ud.cpp:873-932.
-func pauseProcess(ctx context.Context, dev *comm.Device, token uint64) error {
+func pauseProcess(dev *comm.Device, token uint64) error {
 	if dev == nil {
 		return fmt.Errorf("pauseProcess: nil device")
 	}
@@ -139,7 +138,7 @@ func pauseProcess(ctx context.Context, dev *comm.Device, token uint64) error {
 		Token:  token,
 	}
 	buf := (*[attachDetachRequestSize]byte)(unsafe.Pointer(&pkt))[:]
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS,
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS,
 		buf, buf); err != nil {
 		return fmt.Errorf("pauseProcess: PAUSE IOCTL failed: %w", err)
 	}
@@ -159,25 +158,25 @@ func pauseProcess(ctx context.Context, dev *comm.Device, token uint64) error {
 	return nil
 }
 
-// detachProcess sends the detach IOCTL for the given debugging token. The
-// kernel removes the debuggee from the user-debugger tracking table and
-// releases the token. Best-effort: errors are returned but the caller
-// typically tolerates them during shutdown.
+// detachProcess sends the detach IOCTL for the given process. The kernel
+// looks up the debug session by ProcessId (not Token) — see
+// AttachingPerformDetach in Attaching.c:1224. The caller must have already
+// continued the process (C++ UdDetachProcess calls UdContinueProcess first).
 //
-// Mirrors the detach path in UdAttachToProcess (Action=DETACH).
-func detachProcess(ctx context.Context, dev *comm.Device, token uint64) error {
+// Mirrors UdDetachProcess in ud.cpp:795-864.
+func detachProcess(dev *comm.Device, pid uint32) error {
 	if dev == nil {
 		return fmt.Errorf("detachProcess: nil device")
 	}
-	if token == 0 {
+	if pid == 0 {
 		return nil
 	}
 	pkt := hyperdbgsdk.DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS{
-		Action: hyperdbgsdk.DebuggerAttachDetachUserModeProcessActionDetach,
-		Token:  token,
+		Action:    hyperdbgsdk.DebuggerAttachDetachUserModeProcessActionDetach,
+		ProcessId: pid,
 	}
 	buf := (*[attachDetachRequestSize]byte)(unsafe.Pointer(&pkt))[:]
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS,
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS,
 		buf, buf); err != nil {
 		return fmt.Errorf("detachProcess: DETACH IOCTL failed: %w", err)
 	}

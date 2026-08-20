@@ -14,7 +14,6 @@
 package commands
 
 import (
-	"context"
 	"fmt"
 	"sort"
 	"strings"
@@ -51,7 +50,7 @@ type Output interface {
 
 // Handler is the signature every command handler implements. args is the
 // command line split on whitespace with the command name removed (argv[1:]).
-type Handler func(ctx context.Context, d *core.Debugger, args []string, out Output) error
+type Handler func(d *core.Debugger, args []string, out Output) error
 
 // HelpFunc prints the command's help text to out.
 type HelpFunc func(d *core.Debugger, out Output) error
@@ -118,7 +117,7 @@ func (r *Registry) Names() []string {
 // The command name is matched case-sensitively (HyperDbg commands are
 // case-sensitive). Commands prefixed with '.' (e.g. ".connect") and '!'
 // (e.g. "!epthook") are meta/extension commands and are matched verbatim.
-func (r *Registry) Exec(ctx context.Context, d *core.Debugger, cmdLine string) error {
+func (r *Registry) Exec(d *core.Debugger, cmdLine string) error {
 	cmdLine = strings.TrimSpace(cmdLine)
 	if cmdLine == "" {
 		return nil
@@ -134,7 +133,7 @@ func (r *Registry) Exec(ctx context.Context, d *core.Debugger, cmdLine string) e
 	if spec.Handler == nil {
 		return fmt.Errorf("err_cmd_no_handler (%q)", name)
 	}
-	return spec.Handler(ctx, d, args, r.output)
+	return spec.Handler(d, args, r.output)
 }
 
 // splitFields splits cmdLine on runs of whitespace, respecting double-quoted
@@ -168,7 +167,7 @@ func splitFields(s string) []string {
 // reference so it can enumerate names — handlers normally do not have it, so
 // this factory exists specifically for the help command.
 func (r *Registry) NewHelpHandler() Handler {
-	return func(ctx context.Context, d *core.Debugger, args []string, out Output) error {
+	return func(d *core.Debugger, args []string, out Output) error {
 		if len(args) == 0 {
 			// List all visible commands, grouped by type.
 			byType := map[CommandType][]string{}

@@ -9,12 +9,10 @@
 package themida
 
 import (
-	"context"
 	"encoding/binary"
 	"os"
 	"strings"
 	"testing"
-	"time"
 )
 
 const (
@@ -656,10 +654,8 @@ func TestUnpacker_SuperRecovery_DriverIntegration(t *testing.T) {
 	}
 
 	u := NewUnpacker(cfg)
-	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
-	defer cancel()
 
-	result, err := u.Run(ctx)
+	result, err := u.Run()
 	if err != nil {
 		t.Fatalf("Unpacker.Run failed: %v", err)
 	}

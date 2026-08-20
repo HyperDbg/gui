@@ -880,7 +880,7 @@ func (pe *File) getSEHHandlers() []uint32 {
 		SEHandlerTable := uint32(v.Field(18).Uint())
 		imageBase := pe.NtHeader.OptionalHeader.(ImageOptionalHeader32).ImageBase
 		rva := SEHandlerTable - imageBase
-		for i := uint32(0); i < SEHandlerCount; i++ {
+		for i := range SEHandlerCount {
 			offset := pe.GetOffsetFromRva(rva + i*4)
 			handler, err := pe.ReadUint32(offset)
 			if err != nil {
@@ -1194,7 +1194,7 @@ func (pe *File) getHybridPE() *HybridPE {
 	// Compiler IAT
 	if imgCHPEMetaX86.CompilerIATPointer != 0 {
 		rva := imgCHPEMetaX86.CompilerIATPointer
-		for i := 0; i < 1024; i++ {
+		for range 1024 {
 			compilerIAT := CompilerIAT{}
 			compilerIAT.RVA = rva
 			fileOffset = pe.GetOffsetFromRva(rva)
@@ -1420,7 +1420,7 @@ func (pe *File) getEnclaveConfiguration() *Enclave {
 	ImportEntrySize := val.FieldByName("ImportEntrySize").Interface().(uint32)
 
 	offset := pe.GetOffsetFromRva(ImportListRVA)
-	for i := uint32(0); i < NumberOfImports; i++ {
+	for range NumberOfImports {
 		imgEncImp := ImageEnclaveImport{}
 		imgEncImpSize := uint32(binary.Size(imgEncImp))
 		err := pe.structUnpack(&imgEncImp, offset, imgEncImpSize)

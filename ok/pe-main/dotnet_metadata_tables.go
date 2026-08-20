@@ -30,7 +30,7 @@ func (pe *File) parseMetadataModuleTable(off uint32) ([]ModuleTableRow, uint32, 
 
 	rowCount := int(pe.CLR.MetadataTables[Module].CountCols)
 	rows := make([]ModuleTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Generation, err = pe.ReadUint16(off); err != nil {
 			return rows, n, err
 		}
@@ -83,7 +83,7 @@ func (pe *File) parseMetadataTypeRefTable(off uint32) ([]TypeRefTableRow, uint32
 
 	rowCount := int(pe.CLR.MetadataTables[TypeRef].CountCols)
 	rows := make([]TypeRefTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxResolutionScope, off, &rows[i].ResolutionScope); err != nil {
 			return rows, n, err
 		}
@@ -132,7 +132,7 @@ func (pe *File) parseMetadataTypeDefTable(off uint32) ([]TypeDefTableRow, uint32
 
 	rowCount := int(pe.CLR.MetadataTables[TypeDef].CountCols)
 	rows := make([]TypeDefTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Flags, err = pe.ReadUint32(off); err != nil {
 			return rows, n, err
 		}
@@ -190,7 +190,7 @@ func (pe *File) parseMetadataFieldTable(off uint32) ([]FieldTableRow, uint32, er
 
 	rowCount := int(pe.CLR.MetadataTables[Field].CountCols)
 	rows := make([]FieldTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Flags, err = pe.ReadUint16(off); err != nil {
 			return rows, n, err
 		}
@@ -236,7 +236,7 @@ func (pe *File) parseMetadataMethodDefTable(off uint32) ([]MethodDefTableRow, ui
 
 	rowCount := int(pe.CLR.MetadataTables[MethodDef].CountCols)
 	rows := make([]MethodDefTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].RVA, err = pe.ReadUint32(off); err != nil {
 			return rows, n, err
 		}
@@ -294,7 +294,7 @@ func (pe *File) parseMetadataParamTable(off uint32) ([]ParamTableRow, uint32, er
 
 	rowCount := int(pe.CLR.MetadataTables[Param].CountCols)
 	rows := make([]ParamTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Flags, err = pe.ReadUint16(off); err != nil {
 			return rows, n, err
 		}
@@ -333,7 +333,7 @@ func (pe *File) parseMetadataInterfaceImplTable(off uint32) ([]InterfaceImplTabl
 
 	rowCount := int(pe.CLR.MetadataTables[InterfaceImpl].CountCols)
 	rows := make([]InterfaceImplTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxTypeDef, off, &rows[i].Class); err != nil {
 			return rows, n, err
 		}
@@ -368,7 +368,7 @@ func (pe *File) parseMetadataMemberRefTable(off uint32) ([]MemberRefTableRow, ui
 
 	rowCount := int(pe.CLR.MetadataTables[MemberRef].CountCols)
 	rows := make([]MemberRefTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxMemberRefParent, off, &rows[i].Class); err != nil {
 			return rows, n, err
 		}
@@ -413,7 +413,7 @@ func (pe *File) parseMetadataConstantTable(off uint32) ([]ConstantTableRow, uint
 
 	rowCount := int(pe.CLR.MetadataTables[Constant].CountCols)
 	rows := make([]ConstantTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Type, err = pe.ReadUint8(off); err != nil {
 			return rows, n, err
 		}
@@ -461,7 +461,7 @@ func (pe *File) parseMetadataCustomAttributeTable(off uint32) ([]CustomAttribute
 
 	rowCount := int(pe.CLR.MetadataTables[CustomAttribute].CountCols)
 	rows := make([]CustomAttributeTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxHasCustomAttributes, off, &rows[i].Parent); err != nil {
 			return rows, n, err
 		}
@@ -500,7 +500,7 @@ func (pe *File) parseMetadataFieldMarshalTable(off uint32) ([]FieldMarshalTableR
 
 	rowCount := int(pe.CLR.MetadataTables[FieldMarshal].CountCols)
 	rows := make([]FieldMarshalTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxHasFieldMarshall, off, &rows[i].Parent); err != nil {
 			return rows, n, err
 		}
@@ -535,7 +535,7 @@ func (pe *File) parseMetadataDeclSecurityTable(off uint32) ([]DeclSecurityTableR
 
 	rowCount := int(pe.CLR.MetadataTables[DeclSecurity].CountCols)
 	rows := make([]DeclSecurityTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Action, err = pe.ReadUint16(off); err != nil {
 			return rows, n, err
 		}
@@ -575,7 +575,7 @@ func (pe *File) parseMetadataClassLayoutTable(off uint32) ([]ClassLayoutTableRow
 
 	rowCount := int(pe.CLR.MetadataTables[ClassLayout].CountCols)
 	rows := make([]ClassLayoutTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].PackingSize, err = pe.ReadUint16(off); err != nil {
 			return rows, n, err
 		}
@@ -611,7 +611,7 @@ func (pe *File) parseMetadataFieldLayoutTable(off uint32) ([]FieldLayoutTableRow
 
 	rowCount := int(pe.CLR.MetadataTables[FieldLayout].CountCols)
 	rows := make([]FieldLayoutTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Offset, err = pe.ReadUint32(off); err != nil {
 			return rows, n, err
 		}
@@ -640,7 +640,7 @@ func (pe *File) parseMetadataStandAloneSignTable(off uint32) ([]StandAloneSigTab
 
 	rowCount := int(pe.CLR.MetadataTables[StandAloneSig].CountCols)
 	rows := make([]StandAloneSigTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxBlob, off, &rows[i].Signature); err != nil {
 			return rows, n, err
 		}
@@ -666,7 +666,7 @@ func (pe *File) parseMetadataEventMapTable(off uint32) ([]EventMapTableRow, uint
 
 	rowCount := int(pe.CLR.MetadataTables[EventMap].CountCols)
 	rows := make([]EventMapTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxTypeDef, off, &rows[i].Parent); err != nil {
 			return rows, n, err
 		}
@@ -702,7 +702,7 @@ func (pe *File) parseMetadataEventTable(off uint32) ([]EventTableRow, uint32, er
 
 	rowCount := int(pe.CLR.MetadataTables[Event].CountCols)
 	rows := make([]EventTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].EventFlags, err = pe.ReadUint16(off); err != nil {
 			return rows, n, err
 		}
@@ -740,7 +740,7 @@ func (pe *File) parseMetadataPropertyMapTable(off uint32) ([]PropertyMapTableRow
 
 	rowCount := int(pe.CLR.MetadataTables[PropertyMap].CountCols)
 	rows := make([]PropertyMapTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxTypeDef, off, &rows[i].Parent); err != nil {
 			return rows, n, err
 		}
@@ -774,7 +774,7 @@ func (pe *File) parseMetadataPropertyTable(off uint32) ([]PropertyTableRow, uint
 
 	rowCount := int(pe.CLR.MetadataTables[Property].CountCols)
 	rows := make([]PropertyTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Flags, err = pe.ReadUint16(off); err != nil {
 			return rows, n, err
 		}
@@ -815,7 +815,7 @@ func (pe *File) parseMetadataMethodSemanticsTable(off uint32) ([]MethodSemantics
 
 	rowCount := int(pe.CLR.MetadataTables[MethodSemantics].CountCols)
 	rows := make([]MethodSemanticsTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Semantics, err = pe.ReadUint16(off); err != nil {
 			return rows, n, err
 		}
@@ -857,7 +857,7 @@ func (pe *File) parseMetadataMethodImplTable(off uint32) ([]MethodImplTableRow, 
 
 	rowCount := int(pe.CLR.MetadataTables[MethodImpl].CountCols)
 	rows := make([]MethodImplTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxTypeDef, off, &rows[i].Class); err != nil {
 			return rows, n, err
 		}
@@ -893,7 +893,7 @@ func (pe *File) parseMetadataModuleRefTable(off uint32) ([]ModuleRefTableRow, ui
 
 	rowCount := int(pe.CLR.MetadataTables[ModuleRef].CountCols)
 	rows := make([]ModuleRefTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxString, off, &rows[i].Name); err != nil {
 			return rows, n, err
 		}
@@ -917,7 +917,7 @@ func (pe *File) parseMetadataTypeSpecTable(off uint32) ([]TypeSpecTableRow, uint
 
 	rowCount := int(pe.CLR.MetadataTables[TypeSpec].CountCols)
 	rows := make([]TypeSpecTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxBlob, off, &rows[i].Signature); err != nil {
 			return rows, n, err
 		}
@@ -948,7 +948,7 @@ func (pe *File) parseMetadataImplMapTable(off uint32) ([]ImplMapTableRow, uint32
 
 	rowCount := int(pe.CLR.MetadataTables[ImplMap].CountCols)
 	rows := make([]ImplMapTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].MappingFlags, err = pe.ReadUint16(off); err != nil {
 			return rows, n, err
 		}
@@ -992,7 +992,7 @@ func (pe *File) parseMetadataFieldRVATable(off uint32) ([]FieldRVATableRow, uint
 
 	rowCount := int(pe.CLR.MetadataTables[FieldRVA].CountCols)
 	rows := make([]FieldRVATableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].RVA, err = pe.ReadUint32(off); err != nil {
 			return rows, n, err
 		}
@@ -1038,7 +1038,7 @@ func (pe *File) parseMetadataAssemblyTable(off uint32) ([]AssemblyTableRow, uint
 
 	rowCount := int(pe.CLR.MetadataTables[Assembly].CountCols)
 	rows := make([]AssemblyTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].HashAlgId, err = pe.ReadUint32(off); err != nil {
 			return rows, n, err
 		}
@@ -1129,7 +1129,7 @@ func (pe *File) parseMetadataAssemblyRefTable(off uint32) ([]AssemblyRefTableRow
 
 	rowCount := int(pe.CLR.MetadataTables[AssemblyRef].CountCols)
 	rows := make([]AssemblyRefTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].MajorVersion, err = pe.ReadUint16(off); err != nil {
 			return rows, n, err
 		}
@@ -1218,7 +1218,7 @@ func (pe *File) parseMetadataExportedTypeTable(off uint32) ([]ExportedTypeTableR
 
 	rowCount := int(pe.CLR.MetadataTables[ExportedType].CountCols)
 	rows := make([]ExportedTypeTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Flags, err = pe.ReadUint32(off); err != nil {
 			return rows, n, err
 		}
@@ -1268,7 +1268,7 @@ func (pe *File) parseMetadataManifestResourceTable(off uint32) ([]ManifestResour
 
 	rowCount := int(pe.CLR.MetadataTables[ManifestResource].CountCols)
 	rows := make([]ManifestResourceTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Offset, err = pe.ReadUint32(off); err != nil {
 			return rows, n, err
 		}
@@ -1310,7 +1310,7 @@ func (pe *File) parseMetadataNestedClassTable(off uint32) ([]NestedClassTableRow
 
 	rowCount := int(pe.CLR.MetadataTables[NestedClass].CountCols)
 	rows := make([]NestedClassTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxTypeDef, off, &rows[i].NestedClass); err != nil {
 			return rows, n, err
 		}
@@ -1342,7 +1342,7 @@ func (pe *File) parseMetadataGenericParamTable(off uint32) ([]GenericParamTableR
 
 	rowCount := int(pe.CLR.MetadataTables[GenericParam].CountCols)
 	rows := make([]GenericParamTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Number, err = pe.ReadUint16(off); err != nil {
 			return rows, n, err
 		}
@@ -1383,7 +1383,7 @@ func (pe *File) parseMetadataMethodSpecTable(off uint32) ([]MethodSpecTableRow, 
 
 	rowCount := int(pe.CLR.MetadataTables[MethodSpec].CountCols)
 	rows := make([]MethodSpecTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxMethodDefOrRef, off, &rows[i].Method); err != nil {
 			return rows, n, err
 		}
@@ -1413,7 +1413,7 @@ func (pe *File) parseMetadataGenericParamConstraintTable(off uint32) ([]GenericP
 
 	rowCount := int(pe.CLR.MetadataTables[GenericParamConstraint].CountCols)
 	rows := make([]GenericParamConstraintTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if indexSize, err = pe.readFromMetadataStream(idxGenericParam, off, &rows[i].Owner); err != nil {
 			return rows, n, err
 		}
@@ -1444,7 +1444,7 @@ func (pe *File) parseMetadataFileTable(off uint32) ([]FileTableRow, uint32, erro
 
 	rowCount := int(pe.CLR.MetadataTables[FileMD].CountCols)
 	rows := make([]FileTableRow, rowCount)
-	for i := 0; i < rowCount; i++ {
+	for i := range rowCount {
 		if rows[i].Flags, err = pe.ReadUint32(off); err != nil {
 			return rows, n, err
 		}

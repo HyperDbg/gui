@@ -1,13 +1,11 @@
 package pages
 
 import (
-	"context"
 	"encoding/hex"
 	"fmt"
 	"strconv"
 	"strings"
 	"sync"
-	"time"
 
 	"gioui.org/layout"
 	"github.com/ddkwork/ux/app"
@@ -19,24 +17,15 @@ import (
 	"github.com/hyperdbg/go-libhyperdbg/api"
 )
 
-// Capturer 允许页面临时捕获 debugger 命令输出（而非写入日志页）。
-// ui.uiOutput 实现此接口。
-type Capturer interface {
-	StartCapture()
-	StopCapture() string
-}
-
 // CpuPage 是 CPU 标签页，镜像 x64dbg 的 4 窗格布局：
 //
 //	左上 反汇编 | 右上 寄存器
 //	左下 Hex   | 右下 调用栈
 //
-// 反汇编与 Hex 使用 typed API（Unassemble/DumpMem，直接返回数据）；
-// 寄存器与调用栈走字符串命令路径（Exec("r")/Exec("k")），
-// 通过 Capturer 捕获输出显示在窗格中。
+// 全部使用 typed API：Unassemble/DumpMem 直接返回数据，
+// Register("RIP") 返回 uint64，K(16) 返回 []CallFrame。
 type CpuPage struct {
-	dbg      *api.Debugger
-	capturer Capturer
+	dbg *api.Debugger
 
 	// 反汇编改用 table 控件（地址 | 指令 | 注释），更接近 OllyDbg/x64dbg。
 	disasmTbl  *table.Table
@@ -57,19 +46,23 @@ type CpuPage struct {
 	pendingDisasmRows [][]string
 	pendingHex        string
 	pendingStack      string
+	pendingRIP        uint64 // 本次刷新读取到的 RIP（用于计算选中行）
 
 	// refreshVersion 用于丢弃过期刷新结果：每次 Refresh 递增版本号，
 	// refreshInternal 完成时检查版本号是否仍为最新，否则丢弃（避免
 	// 旧刷新覆盖新刷新，例如 Continue 后 runAsync 立即刷新读到的
 	// 过期数据覆盖 OnPaused 回调刷新的新鲜数据）。
 	refreshVersion uint64
+
+	// currentRIP 是当前已应用到 UI 的 RIP 值，用于 layoutDisasm
+	// 计算反汇编表格的选中行（OllyDbg 风格：高亮当前指令所在行）。
+	currentRIP uint64
 }
 
-// NewCpu 创建 CPU 页。capturer 用于捕获字符串命令输出（可为 nil）。
-func NewCpu(dbg *api.Debugger, capturer Capturer) *CpuPage {
+// NewCpu 创建 CPU 页。
+func NewCpu(dbg *api.Debugger) *CpuPage {
 	c := &CpuPage{
-		dbg:      dbg,
-		capturer: capturer,
+		dbg: dbg,
 		disasmTbl: table.New([]table.Column{
 			{Name: "地址", Width: 160, MinWidth: 120},
 			{Name: "指令", Width: 240, MinWidth: 160},
@@ -105,8 +98,22 @@ func NewCpu(dbg *api.Debugger, capturer Capturer) *CpuPage {
 }
 
 // layoutDisasm 渲染反汇编表格。disasmRows 由 applyPending 在 UI 线程更新。
+// 当前 RIP 所在行被高亮选中（OllyDbg 风格）。
+// 由于 Unassemble 从 currentRIP 开始反汇编，RIP 行通常为第 0 行。
 func (c *CpuPage) layoutDisasm(gtx layout.Context) layout.Dimensions {
 	rows := c.disasmRows
+
+	// 根据 currentRIP 查找选中行索引
+	ripStr := fmt.Sprintf("%016X", c.currentRIP)
+	selectedRow := -1
+	for i, row := range rows {
+		if len(row) > 0 && strings.EqualFold(row[0], ripStr) {
+			selectedRow = i
+			break
+		}
+	}
+	c.disasmTbl.SelectedRow = selectedRow
+
 	c.disasmTbl.SetColumns(gtx, c.disasmTbl.Columns, rows)
 	return table.SimpleTable(gtx, c.disasmTbl, len(rows), func(gtx layout.Context, row, col int) layout.Dimensions {
 		if row < 0 || row >= len(rows) {
@@ -162,6 +169,7 @@ func (c *CpuPage) applyPending() {
 	disasmRows := c.pendingDisasmRows
 	hexT := c.pendingHex
 	stack := c.pendingStack
+	rip := c.pendingRIP
 	c.hasPending = false
 	c.mu.Unlock()
 
@@ -177,12 +185,14 @@ func (c *CpuPage) applyPending() {
 	if stack != "" {
 		c.stack.SetCode(stack)
 	}
+	if rip != 0 {
+		c.currentRIP = rip
+	}
 }
 
 // Refresh 在 goroutine 中拉取 4 窗格数据并更新编辑器内容。
 // 优先使用当前 RIP 作为反汇编/Hex dump 地址（模拟 OllyDbg 行为），
-// RIP 解析失败时回退到固定地址 0x10000。
-// 使用 5 秒超时防止 IOCTL 阻塞导致 UI 冻结。
+// RIP 读取失败时回退到固定地址 0x10000。
 func (c *CpuPage) Refresh() {
 	c.mu.Lock()
 	c.refreshVersion++
@@ -193,54 +203,44 @@ func (c *CpuPage) Refresh() {
 
 // refreshInternal 实际执行数据拉取，在后台 goroutine 中运行。
 func (c *CpuPage) refreshInternal(version uint64) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	// 1. 用 Register API 读取所有寄存器（输出到 capturer）
-	var regText string
-	if c.capturer != nil {
-		c.capturer.StartCapture()
-	}
-	_, regErr := c.dbg.Register(ctx, "")
-	if c.capturer != nil {
-		regText = c.capturer.StopCapture()
-	}
-
-	// 2. 解析 RIP，作为反汇编/Hex 地址
+	// 1. 读取所有寄存器（文本），并解析 RIP 地址
+	regText, regErr := c.dbg.AllRegisters()
 	addr := parseRIP(regText)
-	if addr == 0 {
-		addr = 0x10000 // RIP 解析失败时回退到固定地址
+	if regErr != nil || addr == 0 {
+		addr = 0x10000 // RIP 读取失败时回退到固定地址
 	}
 
-	// 3. 反汇编（typed 返回，解析为表格行）
+	// 2. 反汇编（typed 返回，解析为表格行）
 	var disasmRows [][]string
 	if regErr != nil {
 		disasmRows = [][]string{{"", fmt.Sprintf("寄存器读取失败: %v", regErr), ""}}
-	} else if disasm, err := c.dbg.Unassemble(ctx, addr, 20); err == nil && disasm != "" {
+	} else if disasm, err := c.dbg.Unassemble(addr, 20); err == nil && disasm != "" {
 		disasmRows = parseDisasmRows(disasm)
 	} else if err != nil {
 		disasmRows = [][]string{{"", fmt.Sprintf("反汇编失败: %v", err), ""}}
 	}
 
-	// 4. Hex dump（typed 返回）
+	// 3. Hex dump（typed 返回）
 	var hexText string
-	if data, err := c.dbg.DumpMem(ctx, addr, 256); err == nil && len(data) > 0 {
+	if data, err := c.dbg.DumpMem(addr, 256); err == nil && len(data) > 0 {
 		hexText = hex.Dump(data)
 	} else if err != nil {
 		hexText = fmt.Sprintf("DumpMem 失败: %v", err)
 	}
 
-	// 5. 调用栈（用 K API，输出到 capturer）
+	// 4. 调用栈（K 返回 []CallFrame，格式化为文本显示）
 	var stackText string
-	if c.capturer != nil {
-		c.capturer.StartCapture()
-	}
-	_, _ = c.dbg.K(ctx, 16)
-	if c.capturer != nil {
-		stackText = c.capturer.StopCapture()
+	if frames, err := c.dbg.K(16); err == nil && len(frames) > 0 {
+		var sb strings.Builder
+		for _, f := range frames {
+			fmt.Fprintf(&sb, "%016X  %s\n", f.Address, f.Symbol)
+		}
+		stackText = sb.String()
+	} else if err != nil {
+		stackText = fmt.Sprintf("K 失败: %v", err)
 	}
 
-	// 6. 在 UI 线程中更新 widget 状态（通过 RequestRedraw 触发）
+	// 5. 在 UI 线程中更新 widget 状态（通过 RequestRedraw 触发）
 	//    先存到临时字段，Layout 时再更新 editor。
 	//    检查版本号：如果期间有新的 Refresh 调用，丢弃当前过期结果。
 	c.mu.Lock()
@@ -252,6 +252,7 @@ func (c *CpuPage) refreshInternal(version uint64) {
 	c.pendingDisasmRows = disasmRows
 	c.pendingHex = hexText
 	c.pendingStack = stackText
+	c.pendingRIP = addr
 	c.hasPending = true
 	c.mu.Unlock()
 
@@ -264,7 +265,7 @@ func parseRIP(regText string) uint64 {
 	if regText == "" {
 		return 0
 	}
-	for _, line := range strings.Split(regText, "\n") {
+	for line := range strings.SplitSeq(regText, "\n") {
 		line = strings.TrimSpace(line)
 		lower := strings.ToLower(line)
 		// 查找 "rip=" 或 "rip:"

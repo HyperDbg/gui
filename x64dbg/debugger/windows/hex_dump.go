@@ -30,7 +30,7 @@ func (h *HexDump) String() string {
 	for i := 0; i < len(h.data); i += 16 {
 		result += fmt.Sprintf("%08X  ", h.address+uint64(i))
 
-		for j := 0; j < 16; j++ {
+		for j := range 16 {
 			if i+j < len(h.data) {
 				result += fmt.Sprintf("%02x ", h.data[i+j])
 			} else {
@@ -40,7 +40,7 @@ func (h *HexDump) String() string {
 
 		result += " |"
 
-		for j := 0; j < 16; j++ {
+		for j := range 16 {
 			if i+j < len(h.data) {
 				b := h.data[i+j]
 				if b >= 32 && b <= 126 {

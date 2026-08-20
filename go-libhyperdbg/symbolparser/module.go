@@ -11,7 +11,6 @@
 package symbolparser
 
 import (
-	"context"
 	"fmt"
 	"path/filepath"
 	"strings"
@@ -138,11 +137,10 @@ func (c *ModuleCache) Add(path string, base uint64) (*Module, error) {
 	}
 
 	if c.resolver != nil {
-		// Auto-load symbols via DbgHelp. We use context.Background because
-		// Add has no ctx parameter (the task spec); callers needing
-		// cancellation should call Resolver.LoadModule directly and then
+		// Auto-load symbols via DbgHelp. Callers needing cancellation
+		// should call Resolver.LoadModule directly and then
 		// ModuleCache.Register to record the module.
-		mb, err := c.resolver.LoadModule(context.Background(), path, base)
+		mb, err := c.resolver.LoadModule(path, base)
 		if err != nil {
 			return nil, fmt.Errorf("symbolparser: load module %q: %w", path, err)
 		}

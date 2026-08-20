@@ -16,7 +16,6 @@
 package symbolparser
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"strings"
@@ -222,11 +221,7 @@ func (d *DiaResolver) Path() string {
 // when the module is unambiguous), it returns the absolute virtual address.
 // This mirrors the C++ SymConvertNameToAddress flow: split on '!', look up
 // the module by name, then look up the symbol within the module's PDB.
-//
-// The ctx parameter is accepted for future cancellation propagation; the
-// underlying pdbex calls are currently synchronous and do not honour ctx.
-func (d *DiaResolver) ResolveModuleSymbol(ctx context.Context, cache *ModuleCache, qualified string) (uint64, error) {
-	_ = ctx // reserved for cancellation; pdbex doesn't honour ctx yet
+func (d *DiaResolver) ResolveModuleSymbol(cache *ModuleCache, qualified string) (uint64, error) {
 	if qualified == "" {
 		return 0, errors.New("symbolparser: empty symbol")
 	}

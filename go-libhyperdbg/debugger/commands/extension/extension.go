@@ -11,7 +11,6 @@
 package extcmds
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/hyperdbg/go-libhyperdbg/debugger/commands"
@@ -48,7 +47,7 @@ func RegisterAll(r *commands.Registry) {
 // ---------- stubs ----------
 
 func stubHandler(name string) commands.Handler {
-	return func(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
+	return func(d *core.Debugger, args []string, out commands.Output) error {
 		out.Printf("%s: %v\n", name, ErrNotImplemented)
 		return nil
 	}

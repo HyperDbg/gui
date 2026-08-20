@@ -19,11 +19,10 @@
 //	r := rev.New(coreDebugger, out)
 //	req := rev.ReconstructMemoryRequest{ProcessId: pid, Size: 0x1000,
 //	    Mode: rev.ModeReconstruct, Type: rev.TypeMemory}
-//	_ = r.RequestService(ctx, &req)
+//	_ = r.RequestService(&req)
 package rev
 
 import (
-	"context"
 	"fmt"
 	"sync"
 	"unsafe"
@@ -82,10 +81,7 @@ func New(d *core.Debugger, out Output) *Ctrl {
 //
 // Returns nil if the kernel reports DEBUGGER_OPERATION_WAS_SUCCESSFUL;
 // otherwise returns an error describing the status code.
-func (c *Ctrl) RequestService(ctx context.Context, req *ReconstructMemoryRequest) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
+func (c *Ctrl) RequestService(req *ReconstructMemoryRequest) error {
 	if req == nil {
 		return fmt.Errorf("rev.RequestService: nil request")
 	}
@@ -97,7 +93,7 @@ func (c *Ctrl) RequestService(ctx context.Context, req *ReconstructMemoryRequest
 	if buf == nil {
 		return fmt.Errorf("rev.RequestService: cannot serialise request")
 	}
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_REQUEST_REV_MACHINE_SERVICE, buf, buf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_REQUEST_REV_MACHINE_SERVICE, buf, buf); err != nil {
 		return fmt.Errorf("rev.RequestService: IOCTL failed: %w", err)
 	}
 	if req.KernelStatus != DebuggerOperationWasSuccessful {

@@ -1,7 +1,6 @@
 package scriptengine
 
 import (
-	"context"
 	"os"
 	"path/filepath"
 	"testing"
@@ -77,7 +76,7 @@ func clearEvent(t *testing.T, dev *comm.Device, tag uint64) {
 	mod.Tag = tag
 	mod.TypeOfAction = hyperdbgsdk.DebuggerModifyEventsClear
 	modSize := uint32(unsafe.Sizeof(mod))
-	if _, err := dev.IoctlStruct(context.Background(),
+	if _, err := dev.IoctlStruct(
 		comm.IOCTL_CODE_DEBUGGER_MODIFY_EVENTS,
 		unsafe.Pointer(&mod), unsafe.Pointer(&mod), modSize, modSize); err != nil {
 		t.Logf("best-effort clearEvent(tag=%d) failed: %v", tag, err)
@@ -117,31 +116,30 @@ func TestEptHook_Register(t *testing.T) {
 	}
 	t.Logf("using driver: %s", driverPath)
 
-	ctx := context.Background()
 	d := driverloader.NewDriver(driverPath)
 
 	// Best-effort cleanup of any stale service from a prior run. A previous
 	// test may have left the service in a "marked for delete" state because
 	// VMM teardown is asynchronous; retry Unload after a short wait so
 	// ControlService(STOP) succeeds.
-	_ = d.Unload(ctx)
-	if exists, _ := d.Exists(ctx); exists {
+	_ = d.Unload()
+	if exists, _ := d.Exists(); exists {
 		time.Sleep(500 * time.Millisecond)
-		_ = d.Unload(ctx)
+		_ = d.Unload()
 	}
 
-	if err := d.Load(ctx); err != nil {
+	if err := d.Load(); err != nil {
 		t.Fatalf("driverloader.Load failed: %v", err)
 	}
 	// 等待驱动 DriverEntry 完成设备创建
 	time.Sleep(2 * time.Second)
-	t.Cleanup(func() { _ = d.Unload(ctx) })
+	t.Cleanup(func() { _ = d.Unload() })
 
 	// Open the device handle exposed by the loaded driver (with retries).
 	var dev *comm.Device
 	var err error
 	for i := 0; i < 5; i++ {
-		dev, err = comm.Open(ctx, comm.DeviceName)
+		dev, err = comm.Open(comm.DeviceName)
 		if err == nil {
 			break
 		}
@@ -158,7 +156,7 @@ func TestEptHook_Register(t *testing.T) {
 	// tolerate. A short delay lets VMX teardown complete before
 	// ControlService(STOP) is issued in Unload.
 	t.Cleanup(func() {
-		_, _ = dev.IoctlStruct(context.Background(),
+		_, _ = dev.IoctlStruct(
 			comm.IOCTL_CODE_TERMINATE_VMX, nil, nil, 0, 0)
 		time.Sleep(500 * time.Millisecond)
 	})
@@ -168,7 +166,7 @@ func TestEptHook_Register(t *testing.T) {
 	// MODIFY_EVENTS) are admitted instead of being silently dropped.
 	var vmmReq initVmmRequest
 	vmmSize := uint32(unsafe.Sizeof(vmmReq))
-	if _, err := dev.IoctlStruct(ctx, comm.IOCTL_CODE_INIT_VMM,
+	if _, err := dev.IoctlStruct(comm.IOCTL_CODE_INIT_VMM,
 		unsafe.Pointer(&vmmReq), unsafe.Pointer(&vmmReq), vmmSize, vmmSize); err != nil {
 		t.Skipf("IOCTL_INIT_VMM failed: %v", err)
 	}
@@ -224,7 +222,7 @@ func hook(ctx *HookCtx) {
 
 	// Register the hook. RegisterHook sends REGISTER_EVENT then
 	// ADD_ACTION_TO_EVENT and returns the event tag on success.
-	tag, err := w.RegisterHook(ctx, dev, event, action)
+	tag, err := w.RegisterHook(dev, event, action)
 	if err != nil {
 		// The kernel may reject the event if the hook target address is not a
 		// valid executable page. Fall back to CpuidInstructionExecution,
@@ -240,7 +238,7 @@ func hook(ctx *HookCtx) {
 		if err2 != nil {
 			t.Fatalf("BuildEvent (fallback) failed: %v", err2)
 		}
-		tag, err = w.RegisterHook(ctx, dev, event2, action2)
+		tag, err = w.RegisterHook(dev, event2, action2)
 		if err != nil {
 			t.Fatalf("RegisterHook (fallback with CpuidInstructionExecution) "+
 				"failed: %v", err)

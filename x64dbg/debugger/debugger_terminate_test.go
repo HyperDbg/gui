@@ -23,7 +23,7 @@ func TestTerminatePerformance(t *testing.T) {
 
 	fmt.Println("=== Phase 2: Wait for process handle ===")
 	start = time.Now()
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		if dbg.GetProcessHandle() != 0 {
 			break
 		}
@@ -67,7 +67,7 @@ func TestRestartPerformance(t *testing.T) {
 		t.Fatalf("CreateProcess failed: %v", err)
 	}
 
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		if dbg.GetProcessHandle() != 0 {
 			break
 		}
@@ -90,7 +90,7 @@ func TestRestartPerformance(t *testing.T) {
 		t.Fatalf("Second CreateProcess failed: %v", err)
 	}
 
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		if dbg.GetProcessHandle() != 0 {
 			break
 		}

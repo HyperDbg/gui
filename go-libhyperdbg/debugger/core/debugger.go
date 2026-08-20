@@ -8,15 +8,14 @@
 package core
 
 import (
-	"context"
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"os"
 	"sync"
 	"time"
 	"unsafe"
 
+	"github.com/ddkwork/golibrary/byteslice"
 	"github.com/ddkwork/hyperdbgsdk"
 	astencoder "github.com/hyperdbg/go-bridge/ast"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
@@ -35,6 +34,13 @@ const (
 	StateProcessPaused
 )
 
+// Kernel IRP operation codes for the message pump. Mirrors
+// OPERATION_* constants in hyperdbg/include/SDK/headers/Constants.h.
+const (
+	operationHypervisorDriverEndOfIrps            uint32 = 14 | (1 << 31)
+	operationNotificationFromUserDebuggerPause    uint32 = 16 | (1 << 31)
+)
+
 // Debugger is the core debugger instance. It owns the driver service, the
 // device handle, and the registered hook table.
 type Debugger struct {
@@ -46,9 +52,6 @@ type Debugger struct {
 	// nextTag is the monotonically increasing event tag. Tags identify
 	// event+action pairs in the driver.
 	nextTag uint64
-
-	// logFile is the currently open log file (nil if none).
-	logFile WriteCloser
 
 	// processToken is the kernel-side debugging handle returned by the
 	// ATTACH IOCTL (see attachProcess). It is 0 when no debuggee is
@@ -80,6 +83,16 @@ type Debugger struct {
 	// methods that could deadlock (use a goroutine or channel).
 	OnPaused func()
 
+	// OnPacket is the single callback for every packet the kernel pushes
+	// through the IRP-based channel (see MessagePump). It receives the raw
+	// operation code and the message body (bytes after the 4-byte opCode
+	// prefix). The PAUSED packet is handled internally by the pump (it
+	// updates pausedRIP/pausedThreadId and signals pauseEvent + OnPaused)
+	// and is also forwarded here so consumers can react (e.g. refresh UI).
+	// All other packets (log messages, command output text, …) are
+	// forwarded unchanged. Set to nil to drop kernel output.
+	OnPacket func(opCode uint32, payload []byte)
+
 	// pauseEvent is signaled (non-blocking) by MessagePump when a
 	// DEBUGGEE_UD_PAUSED_PACKET is received. Step/TraceInto/StepOver
 	// use this to wait for the step to complete after sending the IOCTL
@@ -87,12 +100,6 @@ type Debugger struct {
 	// approach, which uses DbgWaitForUserResponse instead of the
 	// kernel's WaitForEventCompletion flag that can deadlock).
 	pauseEvent chan struct{}
-}
-
-// WriteCloser is the minimal interface for log output (os.File implements it).
-type WriteCloser interface {
-	Write([]byte) (int, error)
-	Close() error
 }
 
 // New creates a Debugger. It does not connect or load any driver; call
@@ -111,13 +118,13 @@ func (d *Debugger) State() DebuggerState {
 // Connect opens the HyperDbg device. For "local" target this opens
 // \\.\HyperDbgDebuggerDevice. The device must already be created by a loaded
 // VMM driver; call LoadVMM first if the driver is not yet running.
-func (d *Debugger) Connect(ctx context.Context, target string) error {
+func (d *Debugger) Connect(target string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state != StateDisconnected {
 		return fmt.Errorf("Connect: already connected (state=%d)", d.state)
 	}
-	dev, err := comm.Open(ctx, comm.DeviceName)
+	dev, err := comm.Open(comm.DeviceName)
 	if err != nil {
 		return fmt.Errorf("Connect(%q): %w", target, err)
 	}
@@ -126,42 +133,25 @@ func (d *Debugger) Connect(ctx context.Context, target string) error {
 	return nil
 }
 
-// LoadVMM installs and starts the VMM driver (hyperhv/hyperkd), connects
-// to the device, and initializes the VMM. driverPath is the absolute path
-// to the .sys file.
-//
-// If the Debugger is Disconnected, this method will:
-//  1. Install+start the driver service (driverloader.Load)
-//  2. Open the device (comm.Open) — the device is created by DriverEntry
-//  3. Send IOCTL_INIT_VMM
-//
-// If the Debugger is already Connected (device open but VMM not yet
-// initialized), only steps 1 and 3 are performed.
-func (d *Debugger) LoadVMM(ctx context.Context, driverPath string) error {
+// LoadVMM mirrors C++ HyperDbgLoadVmmModule + HyperDbgInitVmmModule:
+// load driver service → open device → single IOCTL_INIT_VMM. No retry,
+// no sleep — the driver service manager creates the device synchronously
+// before Load returns.
+func (d *Debugger) LoadVMM(driverPath string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	// Step 1: Install and start the driver service.
+	// Install and start the driver service.
 	d.driver = driverloader.NewDriver(driverPath)
-	if err := d.driver.Load(ctx); err != nil {
+	if err := d.driver.Load(); err != nil {
 		return fmt.Errorf("LoadVMM: %w", err)
 	}
 
-	// Step 2: Open the device if not already connected.
+	// Open the device (single attempt — mirrors C++ CreateFile).
 	if d.state == StateDisconnected {
-		dev, err := comm.Open(ctx, comm.DeviceName)
+		dev, err := comm.Open(comm.DeviceName)
 		if err != nil {
-			// Driver loaded but device not yet created? Retry with delay.
-			for i := 0; i < 5; i++ {
-				time.Sleep(500 * time.Millisecond)
-				dev, err = comm.Open(ctx, comm.DeviceName)
-				if err == nil {
-					break
-				}
-			}
-			if err != nil {
-				return fmt.Errorf("LoadVMM: open device after driver load: %w", err)
-			}
+			return fmt.Errorf("LoadVMM: open device: %w", err)
 		}
 		d.device = dev
 		d.state = StateConnected
@@ -171,13 +161,12 @@ func (d *Debugger) LoadVMM(ctx context.Context, driverPath string) error {
 		return fmt.Errorf("LoadVMM: unexpected state %d", d.state)
 	}
 
-	// Step 3: Initialize the VMM.
-	// IOCTL_INIT_VMM requires a DEBUGGER_INIT_VMM_PACKET (METHOD_BUFFERED
-	// alias, input = output). The driver reads KernelStatus from the input
-	// buffer and writes the result back. Sending nil causes STATUS_INVALID_PARAMETER.
-	var vmmPacket uint32 // DEBUGGER_INIT_VMM_PACKET.KernelStatus
+	// Initialize the VMM (single IOCTL — mirrors C++ HyperDbgInitVmmModule).
+	// METHOD_BUFFERED: input = output = DEBUGGER_INIT_VMM_PACKET (just a
+	// uint32 KernelStatus field).
+	var vmmPacket uint32
 	vmmSize := uint32(unsafe.Sizeof(vmmPacket))
-	if _, err := d.device.IoctlStruct(ctx, comm.IOCTL_CODE_INIT_VMM,
+	if _, err := d.device.IoctlStruct(comm.IOCTL_CODE_INIT_VMM,
 		unsafe.Pointer(&vmmPacket), unsafe.Pointer(&vmmPacket), vmmSize, vmmSize); err != nil {
 		return fmt.Errorf("LoadVMM: IOCTL_INIT_VMM failed: %w", err)
 	}
@@ -189,144 +178,46 @@ func (d *Debugger) LoadVMM(ctx context.Context, driverPath string) error {
 	return nil
 }
 
-// UnloadVMM sends IOCTL_TERMINATE_VMX and stops+removes the driver service.
-//
-// If a debuggee is attached, the cleanup sequence is:
-//  1. Continue (resume any paused threads) — AttachingPerformDetach rejects
-//     detach with DEBUGGER_ERROR_UNABLE_TO_DETACH_AS_THERE_ARE_PAUSED_THREADS
-//     while threads are paused, and a failed detach leaves the PEB monitor
-//     EPT hook in g_EptState->HookedPagesList. TERMINATE_VMX then crashes
-//     in EptHookUnHookAll → EptHookRemoveEntryAndFreePoolFromEptHook2sDetourList
-//     because that hook has IsHiddenBreakpoint == FALSE but no !epthook2
-//     was ever registered (g_EptHook2sDetourListHead is uninitialized).
-//  2. Detach (best-effort, removes the PEB monitor hook).
-//  3. TERMINATE_VMX.
-//  4. Unload the driver service.
-//
-// Errors from the continue/detach path are swallowed because the unload
-// itself is more important: a stale token after UnloadVMM is unrecoverable.
-func (d *Debugger) UnloadVMM(ctx context.Context) error {
+// UnloadVMM mirrors C++ HyperDbgUnloadVmm: detach debuggee → single
+// IOCTL_TERMINATE_VMX → unload driver. No retry, no sleep — the kernel
+// handler synchronously tears down VMX/EPT on all cores.
+func (d *Debugger) UnloadVMM() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	// Step 1: Clear all registered events. If any EPT hooks are still
-	// active when TERMINATE_VMX is called, the EPT hook cleanup code
-	// (EptHookUnHookAll) may crash or leave VMX in a bad state, which
-	// prevents the driver from being loaded again without a reboot.
-	if d.device != nil && d.state >= StateVmmLoaded {
-		clearAll := hyperdbgsdk.DEBUGGER_MODIFY_EVENTS{
-			Tag:          0,
-			TypeOfAction: hyperdbgsdk.DebuggerModifyEventsClear,
-		}
-		clearBuf, err := structToBytes(&clearAll)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "[UnloadVMM] MODIFY_EVENTS Clear structToBytes failed: %v\n", err)
-		} else {
-			var dummy [256]byte
-			n, ioctlErr := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_MODIFY_EVENTS, clearBuf, dummy[:])
-			if ioctlErr != nil {
-				fmt.Fprintf(os.Stderr, "[UnloadVMM] MODIFY_EVENTS Clear failed: %v (n=%d)\n", ioctlErr, n)
-			} else {
-				fmt.Fprintf(os.Stderr, "[UnloadVMM] MODIFY_EVENTS Clear OK\n")
-			}
-		}
-	}
-
-	// Step 2: Resume + detach attached process.
-	// 关键：detach 必须成功才能继续 TERMINATE_VMX，否则被拦截的
-	// csrss/系统线程状态不一致 → 堆元数据损坏 → CRITICAL_PROCESS_DIED BSOD。
-	// 重试多次，仍失败则跳过 TERMINATE_VMX（驱动残留好过蓝屏）。
-	detachOk := true
+	// Resume + detach attached process (mirrors UdUninitializeUserDebugger's
+	// detach path). Best-effort like C++ which ignores the result.
 	if d.device != nil && d.processToken != 0 {
-		fmt.Fprintf(os.Stderr, "[UnloadVMM] Continuing process (token=0x%X)...\n", d.processToken)
-		if err := continueProcess(ctx, d.device, d.processToken); err != nil {
-			fmt.Fprintf(os.Stderr, "[UnloadVMM] Continue failed: %v\n", err)
-		}
-		const maxDetachRetries = 5
-		for attempt := 1; attempt <= maxDetachRetries; attempt++ {
-			fmt.Fprintf(os.Stderr, "[UnloadVMM] Detaching process (token=0x%X) attempt %d/%d...\n",
-				d.processToken, attempt, maxDetachRetries)
-			if err := detachProcess(ctx, d.device, d.processToken); err != nil {
-				fmt.Fprintf(os.Stderr, "[UnloadVMM] Detach failed: %v\n", err)
-				detachOk = false
-				if attempt < maxDetachRetries {
-					d.mu.Unlock()
-					time.Sleep(time.Duration(attempt) * time.Second)
-					d.mu.Lock()
-				}
-			} else {
-				fmt.Fprintf(os.Stderr, "[UnloadVMM] Detach OK\n")
-				detachOk = true
-				break
-			}
-		}
+		_ = continueProcess(d.device, d.processToken)
+		_ = detachProcess(d.device, d.processPid)
 		d.processToken = 0
 		d.processPid = 0
 	}
 
-	if !detachOk {
-		fmt.Fprintf(os.Stderr, "[UnloadVMM] Detach failed after retries — skipping TERMINATE_VMX to avoid BSOD (csrss heap corruption). Driver will residue; reboot to clean up.\n")
-		d.state = StateConnected
-		return fmt.Errorf("UnloadVMM: detach failed, skipped TERMINATE_VMX to avoid BSOD")
-	}
-
-	// Step 3: Terminate VMX with retry.
-	// If TERMINATE_VMX fails (e.g. a core is stuck in VMX root),
-	// VT-x remains locked and the driver cannot be reloaded without reboot.
-	// We retry up to 3 times with increasing delays.
+	// Terminate VMX (single call, no retry — mirrors C++).
 	if d.device != nil && d.state >= StateVmmLoaded {
-		const maxRetries = 3
-		for attempt := 1; attempt <= maxRetries; attempt++ {
-			fmt.Fprintf(os.Stderr, "[UnloadVMM] TERMINATE_VMX attempt %d/%d...\n", attempt, maxRetries)
-			n, ioctlErr := d.device.Ioctl(ctx, comm.IOCTL_CODE_TERMINATE_VMX, nil, nil)
-			if ioctlErr == nil {
-				fmt.Fprintf(os.Stderr, "[UnloadVMM] TERMINATE_VMX OK\n")
-				break
-			}
-			fmt.Fprintf(os.Stderr, "[UnloadVMM] TERMINATE_VMX failed: %v (n=%d)\n", ioctlErr, n)
-			if attempt < maxRetries {
-				delay := time.Duration(attempt*2) * time.Second
-				fmt.Fprintf(os.Stderr, "[UnloadVMM] Waiting %v before retry...\n", delay)
-				d.mu.Unlock()
-				time.Sleep(delay)
-				d.mu.Lock()
-			}
-		}
-		// Give the kernel time to complete EPT hook cleanup and VMXOFF
-		// on all cores (asynchronous VMX root → non-root transitions).
-		d.mu.Unlock()
-		time.Sleep(3 * time.Second)
-		d.mu.Lock()
+		_, _ = d.device.Ioctl(comm.IOCTL_CODE_TERMINATE_VMX, nil, nil)
 	}
 
-	// Step 4: Unload the driver service.
+	// Unload driver service.
 	if d.driver != nil {
-		fmt.Fprintf(os.Stderr, "[UnloadVMM] Unloading driver service...\n")
-		if err := d.driver.Unload(ctx); err != nil {
-			fmt.Fprintf(os.Stderr, "[UnloadVMM] Driver unload failed: %v\n", err)
-		} else {
-			fmt.Fprintf(os.Stderr, "[UnloadVMM] Driver unloaded OK\n")
-		}
+		_ = d.driver.Unload()
 	}
 	d.state = StateConnected
 	return nil
 }
 
-// Close releases all resources (device handle, driver service, log file).
+// Close releases all resources (device handle, driver service).
 // If a debuggee is attached, the same continue→detach sequence as UnloadVMM
 // is performed first to avoid the BSOD described in UnloadVMM.
 func (d *Debugger) Close() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.processToken != 0 && d.device != nil {
-		_ = continueProcess(context.Background(), d.device, d.processToken)
-		_ = detachProcess(context.Background(), d.device, d.processToken)
+		_ = continueProcess(d.device, d.processToken)
+		_ = detachProcess(d.device, d.processPid)
 		d.processToken = 0
 		d.processPid = 0
-	}
-	if d.logFile != nil {
-		_ = d.logFile.Close()
-		d.logFile = nil
 	}
 	if d.device != nil {
 		_ = d.device.Close()
@@ -336,49 +227,13 @@ func (d *Debugger) Close() error {
 	return nil
 }
 
-// LogOpen opens a file for log output. Printf-style log lines from hooks are
-// written here.
-func (d *Debugger) LogOpen(path string) error {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-	// Use os.Create through a wrapper to avoid importing os in the core.
-	f, err := openFileForLog(path)
-	if err != nil {
-		return fmt.Errorf("LogOpen(%q): %w", path, err)
-	}
-	d.logFile = f
-	return nil
-}
-
-// LogClose closes the log file.
-func (d *Debugger) LogClose() error {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-	if d.logFile == nil {
-		return nil
-	}
-	err := d.logFile.Close()
-	d.logFile = nil
-	return err
-}
-
-// WriteLog writes raw bytes to the log file (if open).
-func (d *Debugger) WriteLog(p []byte) (int, error) {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-	if d.logFile == nil {
-		return 0, fmt.Errorf("no log file open")
-	}
-	return d.logFile.Write(p)
-}
-
 // EptHook registers an EPT execution hook (detours-style) at the given
 // address with a Go callback. The callback source is compiled to the binary
 // AST wire format (go-bridge/ast) and sent to the driver as the script buffer
 // of a RunScript action.
 //
 // Returns the event tag (hook ID) on success.
-func (d *Debugger) EptHook(ctx context.Context, hookAddress uint64, callbackSrc string) (uint64, error) {
+func (d *Debugger) EptHook(hookAddress uint64, callbackSrc string) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -405,23 +260,15 @@ func (d *Debugger) EptHook(ctx context.Context, hookAddress uint64, callbackSrc 
 		},
 	}
 
-	eventBuf, err := structToBytes(&event)
-	if err != nil {
-		return 0, err
-	}
+	eventBuf := byteslice.FromStruct(&event)
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
-	resultBuf, err := structToBytes(&result)
-	if err != nil {
-		return 0, err
-	}
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT,
+	resultBuf := byteslice.FromStruct(&result)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT,
 		eventBuf, resultBuf); err != nil {
 		return 0, fmt.Errorf("EptHook: REGISTER_EVENT IOCTL failed: %w", err)
 	}
 	// Re-read result from the output buffer.
-	if err := bytesToStruct(resultBuf, &result); err != nil {
-		return 0, err
-	}
+	result = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT](resultBuf)
 	if !result.IsSuccessful {
 		return 0, fmt.Errorf("EptHook: event registration failed, error=%d", result.Error)
 	}
@@ -438,25 +285,17 @@ func (d *Debugger) EptHook(ctx context.Context, hookAddress uint64, callbackSrc 
 	actionSize := unsafe.Sizeof(action)
 	totalSize := uint32(actionSize) + uint32(len(astBytes))
 	buf := make([]byte, totalSize)
-	actionBytes, err := structToBytes(&action)
-	if err != nil {
-		return 0, err
-	}
+	actionBytes := byteslice.FromStruct(&action)
 	copy(buf, actionBytes)
 	copy(buf[actionSize:], astBytes)
 
 	var actionResult hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
-	actionResultBuf, err := structToBytes(&actionResult)
-	if err != nil {
-		return 0, err
-	}
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT,
+	actionResultBuf := byteslice.FromStruct(&actionResult)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT,
 		buf, actionResultBuf); err != nil {
 		return 0, fmt.Errorf("EptHook: ADD_ACTION IOCTL failed: %w", err)
 	}
-	if err := bytesToStruct(actionResultBuf, &actionResult); err != nil {
-		return 0, err
-	}
+	actionResult = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT](actionResultBuf)
 	if !actionResult.IsSuccessful {
 		return 0, fmt.Errorf("EptHook: action registration failed, error=%d", actionResult.Error)
 	}
@@ -473,7 +312,7 @@ func (d *Debugger) EptHook(ctx context.Context, hookAddress uint64, callbackSrc 
 // space does not contain user-mode DLLs like ntdll.dll.
 //
 // Returns the event tag (hook ID) on success.
-func (d *Debugger) EptHookForProcess(ctx context.Context, hookAddress uint64, pid uint32, callbackSrc string) (uint64, error) {
+func (d *Debugger) EptHookForProcess(hookAddress uint64, pid uint32, callbackSrc string) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -498,22 +337,14 @@ func (d *Debugger) EptHookForProcess(ctx context.Context, hookAddress uint64, pi
 		},
 	}
 
-	eventBuf, err := structToBytes(&event)
-	if err != nil {
-		return 0, err
-	}
+	eventBuf := byteslice.FromStruct(&event)
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
-	resultBuf, err := structToBytes(&result)
-	if err != nil {
-		return 0, err
-	}
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT,
+	resultBuf := byteslice.FromStruct(&result)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT,
 		eventBuf, resultBuf); err != nil {
 		return 0, fmt.Errorf("EptHookForProcess: REGISTER_EVENT IOCTL failed: %w", err)
 	}
-	if err := bytesToStruct(resultBuf, &result); err != nil {
-		return 0, err
-	}
+	result = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT](resultBuf)
 	if !result.IsSuccessful {
 		return 0, fmt.Errorf("EptHookForProcess: event registration failed, error=%d", result.Error)
 	}
@@ -527,25 +358,17 @@ func (d *Debugger) EptHookForProcess(ctx context.Context, hookAddress uint64, pi
 	actionSize := unsafe.Sizeof(action)
 	totalSize := uint32(actionSize) + uint32(len(astBytes))
 	buf := make([]byte, totalSize)
-	actionBytes, err := structToBytes(&action)
-	if err != nil {
-		return 0, err
-	}
+	actionBytes := byteslice.FromStruct(&action)
 	copy(buf, actionBytes)
 	copy(buf[actionSize:], astBytes)
 
 	var actionResult hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
-	actionResultBuf, err := structToBytes(&actionResult)
-	if err != nil {
-		return 0, err
-	}
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT,
+	actionResultBuf := byteslice.FromStruct(&actionResult)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT,
 		buf, actionResultBuf); err != nil {
 		return 0, fmt.Errorf("EptHookForProcess: ADD_ACTION IOCTL failed: %w", err)
 	}
-	if err := bytesToStruct(actionResultBuf, &actionResult); err != nil {
-		return 0, err
-	}
+	actionResult = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT](actionResultBuf)
 	if !actionResult.IsSuccessful {
 		return 0, fmt.Errorf("EptHookForProcess: action registration failed, error=%d", actionResult.Error)
 	}
@@ -566,7 +389,7 @@ func (d *Debugger) EptHookForProcess(ctx context.Context, hookAddress uint64, pi
 // already be running (pid > 0).
 //
 // Returns the event tag on success.
-func (d *Debugger) MonitorReadForProcess(ctx context.Context, addrStart, addrEnd uint64, pid uint32, callbackSrc string) (uint64, error) {
+func (d *Debugger) MonitorReadForProcess(addrStart, addrEnd uint64, pid uint32, callbackSrc string) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -592,22 +415,14 @@ func (d *Debugger) MonitorReadForProcess(ctx context.Context, addrStart, addrEnd
 		},
 	}
 
-	eventBuf, err := structToBytes(&event)
-	if err != nil {
-		return 0, err
-	}
+	eventBuf := byteslice.FromStruct(&event)
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
-	resultBuf, err := structToBytes(&result)
-	if err != nil {
-		return 0, err
-	}
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT,
+	resultBuf := byteslice.FromStruct(&result)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT,
 		eventBuf, resultBuf); err != nil {
 		return 0, fmt.Errorf("MonitorReadForProcess: REGISTER_EVENT IOCTL failed: %w", err)
 	}
-	if err := bytesToStruct(resultBuf, &result); err != nil {
-		return 0, err
-	}
+	result = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT](resultBuf)
 	if !result.IsSuccessful {
 		return 0, fmt.Errorf("MonitorReadForProcess: event registration failed, error=%d", result.Error)
 	}
@@ -621,25 +436,17 @@ func (d *Debugger) MonitorReadForProcess(ctx context.Context, addrStart, addrEnd
 	actionSize := unsafe.Sizeof(action)
 	totalSize := uint32(actionSize) + uint32(len(astBytes))
 	buf := make([]byte, totalSize)
-	actionBytes, err := structToBytes(&action)
-	if err != nil {
-		return 0, err
-	}
+	actionBytes := byteslice.FromStruct(&action)
 	copy(buf, actionBytes)
 	copy(buf[actionSize:], astBytes)
 
 	var actionResult hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
-	actionResultBuf, err := structToBytes(&actionResult)
-	if err != nil {
-		return 0, err
-	}
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT,
+	actionResultBuf := byteslice.FromStruct(&actionResult)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT,
 		buf, actionResultBuf); err != nil {
 		return 0, fmt.Errorf("MonitorReadForProcess: ADD_ACTION IOCTL failed: %w", err)
 	}
-	if err := bytesToStruct(actionResultBuf, &actionResult); err != nil {
-		return 0, err
-	}
+	actionResult = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT](actionResultBuf)
 	if !actionResult.IsSuccessful {
 		return 0, fmt.Errorf("MonitorReadForProcess: action registration failed, error=%d", actionResult.Error)
 	}
@@ -666,7 +473,7 @@ func (d *Debugger) MonitorReadForProcess(ctx context.Context, addrStart, addrEnd
 //
 // Lifecycle:
 //
-//	mp, _ := dbg.StartMessagePump(ctx)   // spawns the goroutine
+//	mp, _ := dbg.StartMessagePump()   // spawns the goroutine
 //	...                                  // hooks fire, log file fills
 //	mp.Stop()                            // signal + wait for goroutine
 //
@@ -687,20 +494,16 @@ type MessagePump struct {
 	done chan struct{}
 }
 
-// StartMessagePump spawns a goroutine that drains kernel log messages to the
-// open log file (see LogOpen). It must be called AFTER LogOpen and AFTER
-// LoadVMM; the caller must invoke (*MessagePump).Stop BEFORE UnloadVMM so the
-// dedicated device handle is released cleanly and the main handle is still
-// usable for the END_OF_IRPS signal.
-func (d *Debugger) StartMessagePump(ctx context.Context) (*MessagePump, error) {
+// StartMessagePump spawns a goroutine that drains kernel packets via the
+// IRP-based channel, forwarding each one to OnPacket. It must be called
+// AFTER LoadVMM; the caller must invoke (*MessagePump).Stop BEFORE
+// UnloadVMM so the dedicated device handle is released cleanly and the
+// main handle is still usable for the END_OF_IRPS signal.
+func (d *Debugger) StartMessagePump() (*MessagePump, error) {
 	d.mu.Lock()
 	if d.state < StateVmmLoaded {
 		d.mu.Unlock()
 		return nil, fmt.Errorf("StartMessagePump: VMM not loaded")
-	}
-	if d.logFile == nil {
-		d.mu.Unlock()
-		return nil, fmt.Errorf("StartMessagePump: no log file open (call LogOpen first)")
 	}
 	if d.pauseEvent == nil {
 		d.pauseEvent = make(chan struct{}, 1)
@@ -711,7 +514,7 @@ func (d *Debugger) StartMessagePump(ctx context.Context) (*MessagePump, error) {
 	// Open a dedicated device handle so the pending IRP does not block the
 	// main IOCTL handle used by Continue/Pause/EptHook/… (mirrors the C++
 	// ReadIrpBasedBuffer opening a second \\.\HyperDbgDebuggerDevice).
-	dev, err := comm.Open(ctx, comm.DeviceName)
+	dev, err := comm.Open(comm.DeviceName)
 	if err != nil {
 		return nil, fmt.Errorf("StartMessagePump: open dedicated device: %w", err)
 	}
@@ -722,14 +525,14 @@ func (d *Debugger) StartMessagePump(ctx context.Context) (*MessagePump, error) {
 		stop:    make(chan struct{}),
 		done:    make(chan struct{}),
 	}
-	go mp.run(ctx, d)
+	go mp.run(d)
 	return mp, nil
 }
 
 // run is the IRP-reading loop. It mirrors ReadIrpBasedBuffer in
 // go-libhyperdbg/app/packets.go but writes packets straight to the log file
 // instead of routing them through the Messaging dispatcher.
-func (mp *MessagePump) run(ctx context.Context, d *Debugger) {
+func (mp *MessagePump) run(d *Debugger) {
 	defer close(mp.done)
 	defer mp.dev.Close()
 
@@ -745,13 +548,11 @@ func (mp *MessagePump) run(ctx context.Context, d *Debugger) {
 	// operationHypervisorDriverEndOfIrps — the kernel completes the pending
 	// IRP with this code when Stop signals it via
 	// IOCTL_RETURN_IRP_PENDING_PACKETS_AND_DISALLOW_IOCTL (see Ioctl.c:337).
-	const operationHypervisorDriverEndOfIrps uint32 = 14 | (1 << 31)
 	// operationNotificationFromUserDebuggerPause — the kernel sends this
 	// when the user-mode debugger pauses the debuggee (Step/Pause/bp hit).
 	// The body is a DEBUGGEE_UD_PAUSED_PACKET. Value mirrors
 	// OPERATION_NOTIFICATION_FROM_USER_DEBUGGER_PAUSE in
 	// hyperdbg/include/SDK/headers/Constants.h (16 | mandatory bit).
-	const operationNotificationFromUserDebuggerPause uint32 = 16 | (1 << 31)
 
 	for {
 		select {
@@ -770,7 +571,7 @@ func (mp *MessagePump) run(ctx context.Context, d *Debugger) {
 		// (b) Stop sending IOCTL_RETURN_IRP_PENDING_PACKETS_AND_DISALLOW_IOCTL
 		// on the main handle, which causes the kernel to complete this IRP
 		// with OPERATION_HYPERVISOR_DRIVER_END_OF_IRPS.
-		n, err := mp.dev.Ioctl(ctx, comm.IOCTL_CODE_REGISTER_EVENT, regBuf, out)
+		n, err := mp.dev.Ioctl(comm.IOCTL_CODE_REGISTER_EVENT, regBuf, out)
 		if err != nil {
 			// IRP cancelled (Stop closed mp.dev) or driver gone — exit if
 			// stop was signaled, otherwise continue (mirrors C++ behaviour
@@ -794,10 +595,14 @@ func (mp *MessagePump) run(ctx context.Context, d *Debugger) {
 		// Message body: bytes [4:n].
 		msg := out[4:n]
 
-		// 严格按 opCode 判断是否为 DEBUGGEE_UD_PAUSED_PACKET。
-		// 之前用 "Rip 在用户空间范围" 启发式判断会被 LogInfo 等文本
-		// 消息误判（前 8 字节恰好是用户态地址时），导致 pauseEvent
-		// 被错误信号、Step 在错误时刻返回 → 后续单步超时。
+		// PAUSED packets are handled internally first (they update the
+		// paused register/thread state and signal pauseEvent + OnPaused
+		// so Step/TraceInto can complete). The packet is then forwarded
+		// to OnPacket like every other packet so consumers can react
+		// (e.g. refresh the UI).
+		// 严格按 opCode 判断：之前用 "Rip 在用户空间范围" 启发式判断
+		// 会被 LogInfo 等文本消息误判（前 8 字节恰好是用户态地址），
+		// 导致 pauseEvent 被错误信号、Step 在错误时刻返回 → 单步超时。
 		if opCode == operationNotificationFromUserDebuggerPause {
 			pausedSize := unsafe.Sizeof(hyperdbgsdk.DEBUGGEE_UD_PAUSED_PACKET{})
 			if uint32(len(msg)) >= uint32(pausedSize) {
@@ -818,30 +623,24 @@ func (mp *MessagePump) run(ctx context.Context, d *Debugger) {
 				}
 				d.mu.Unlock()
 				// 在 mu 外部调用回调，避免回调中的 core 方法死锁。
-				// 回调运行在 pump goroutine 中，应只做异步刷新（如
-				// cpuPage.Refresh() 本身就是 go refreshInternal()）。
 				if cb != nil {
 					cb()
 				}
 			}
-			// PAUSED 包是二进制结构，不写入文本日志
-			continue
-		}
-
-		// Strip trailing NULs for text log output
-		for i, b := range msg {
-			if b == 0 {
-				msg = msg[:i]
-				break
+			// 转发 PAUSED 包给 OnPacket 消费者（即使 PAUSED 也转发，
+			// 让 UI 等消费者知道暂停发生）。PAUSED 包是二进制结构，
+			// 消费者应按 opCode 区分，不要当文本写日志。
+			if cb := d.OnPacket; cb != nil {
+				cb(opCode, msg)
 			}
-		}
-		if len(msg) == 0 {
 			continue
 		}
 
-		// Append '\n' so each kernel message is on its own line (matches
-		// the format expected by ParseAPILog which uses bufio.Scanner).
-		_, _ = d.WriteLog(append(msg, '\n'))
+		// 其他包统一转发给 OnPacket 回调（文本日志、命令输出等）。
+		// 消费者自行处理 NUL 终止和换行。
+		if cb := d.OnPacket; cb != nil {
+			cb(opCode, msg)
+		}
 	}
 }
 
@@ -871,7 +670,7 @@ func (mp *MessagePump) Stop() {
 	// MAIN handle avoids that race because the kernel completes the pump's
 	// IRP *before* returning from this IOCTL.
 	if mp.mainDev != nil {
-		_, _ = mp.mainDev.Ioctl(context.Background(),
+		_, _ = mp.mainDev.Ioctl(
 			comm.IOCTL_CODE_RETURN_IRP_PENDING_PACKETS_AND_DISALLOW_IOCTL, nil, nil)
 	}
 
@@ -896,14 +695,14 @@ func (mp *MessagePump) Stop() {
 
 // ReadMemory reads size bytes from the target process at the given virtual address.
 // This is a convenience wrapper around readmem.ReadMemory.
-func (d *Debugger) ReadMemory(ctx context.Context, addr uint64, pid uint32, size uint32) ([]byte, hyperdbgsdk.DEBUGGER_READ_MEMORY_ADDRESS_MODE, error) {
+func (d *Debugger) ReadMemory(addr uint64, pid uint32, size uint32) ([]byte, hyperdbgsdk.DEBUGGER_READ_MEMORY_ADDRESS_MODE, error) {
 	d.mu.Lock()
 	dev := d.device
 	d.mu.Unlock()
 	if dev == nil {
 		return nil, 0, fmt.Errorf("ReadMemory: not connected")
 	}
-	return readmem.ReadMemory(ctx, dev, addr, pid, size,
+	return readmem.ReadMemory(dev, addr, pid, size,
 		hyperdbgsdk.DebuggerReadVirtualAddress, hyperdbgsdk.ReadFromKernel, false)
 }
 
@@ -912,13 +711,13 @@ func (d *Debugger) ReadMemory(ctx context.Context, addr uint64, pid uint32, size
 // until a pause is requested (Pause) or a registered event fires.
 //
 // Mirrors the C libhyperdbg 'g' command path: UdContinueProcess(token).
-func (d *Debugger) Continue(ctx context.Context) error {
+func (d *Debugger) Continue() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.processToken == 0 {
 		return fmt.Errorf("Continue: no process attached (call StartProcess first)")
 	}
-	if err := continueProcess(ctx, d.device, d.processToken); err != nil {
+	if err := continueProcess(d.device, d.processToken); err != nil {
 		return fmt.Errorf("Continue: %w", err)
 	}
 	d.state = StateProcessRunning
@@ -938,13 +737,13 @@ func (d *Debugger) Continue(ctx context.Context) error {
 // Mirrors the C libhyperdbg 'pause' command path: UdPauseProcess(token)
 // followed by CommandPauseRequest's silent handling of FALSE returns
 // (pause.cpp:55).
-func (d *Debugger) Pause(ctx context.Context) error {
+func (d *Debugger) Pause() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.processToken == 0 {
 		return fmt.Errorf("Pause: no process attached (call StartProcess first)")
 	}
-	if err := pauseProcess(ctx, d.device, d.processToken); err != nil {
+	if err := pauseProcess(d.device, d.processToken); err != nil {
 		if errors.Is(err, ErrAlreadyPaused) {
 			// Already paused — not an error, matching C pause.cpp:55.
 			d.state = StateProcessPaused
@@ -972,7 +771,7 @@ func (d *Debugger) Pause(ctx context.Context) error {
 //
 // The caller owns the returned Process and must Close it when done
 // (typically via defer).
-func (d *Debugger) StartProcess(ctx context.Context, exePath string) (Process, error) {
+func (d *Debugger) StartProcess(exePath string) (Process, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -990,7 +789,7 @@ func (d *Debugger) StartProcess(ctx context.Context, exePath string) (Process, e
 	//    then calls Continue to reach the entry point and continue execution.
 	//    This matches the .ds script flow: .start pauses, 'g' runs to entry
 	//    point, second 'g' continues execution.
-	token, err := attachProcess(ctx, d.device, proc.Pid, proc.Tid, true)
+	token, err := attachProcess(d.device, proc.Pid, proc.Tid, true)
 	if err != nil {
 		// Best-effort cleanup of the suspended child on attach failure: kill
 		// the process (it never ran) and close handles so we don't leak.
@@ -1010,7 +809,7 @@ func (d *Debugger) StartProcess(ctx context.Context, exePath string) (Process, e
 	if err := windowsResumeThread(proc.ThreadHandle); err != nil {
 		// ResumeThread failed: the kernel attach succeeded but we cannot
 		// resume the main thread. Detach and clean up so the user can retry.
-		_ = detachProcess(ctx, d.device, token)
+		_ = detachProcess(d.device, proc.Pid)
 		d.processToken = 0
 		d.processPid = 0
 		_ = windowsTerminateProcess(proc.Handle)
@@ -1033,53 +832,3 @@ type Process struct {
 	Pid          uint32
 	Tid          uint32
 }
-
-// binary.LittleEndian is referenced to keep the import for future use.
-var _ = binary.LittleEndian
-
-// The layout matches the C ABI because the types package preserves field
-// alignment.
-func structToBytes(v any) ([]byte, error) {
-	// Use encoding/binary for a safer path when possible; for arbitrary structs
-	// we fall back to unsafe.
-	switch s := v.(type) {
-	case *hyperdbgsdk.DEBUGGER_GENERAL_EVENT_DETAIL:
-		var buf [unsafe.Sizeof(*s)]byte
-		copy(buf[:], (*[unsafe.Sizeof(*s)]byte)(unsafe.Pointer(s))[:])
-		return buf[:], nil
-	case *hyperdbgsdk.DEBUGGER_GENERAL_ACTION:
-		var buf [unsafe.Sizeof(*s)]byte
-		copy(buf[:], (*[unsafe.Sizeof(*s)]byte)(unsafe.Pointer(s))[:])
-		return buf[:], nil
-	case *hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT:
-		var buf [unsafe.Sizeof(*s)]byte
-		copy(buf[:], (*[unsafe.Sizeof(*s)]byte)(unsafe.Pointer(s))[:])
-		return buf[:], nil
-	case *hyperdbgsdk.DEBUGGER_MODIFY_EVENTS:
-		var buf [unsafe.Sizeof(*s)]byte
-		copy(buf[:], (*[unsafe.Sizeof(*s)]byte)(unsafe.Pointer(s))[:])
-		return buf[:], nil
-	}
-	return nil, fmt.Errorf("structToBytes: unsupported type %T", v)
-}
-
-// bytesToStruct deserialises a byte slice back into a pointer-to-struct.
-func bytesToStruct(buf []byte, v any) error {
-	switch s := v.(type) {
-	case *hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT:
-		size := unsafe.Sizeof(*s)
-		if uint32(len(buf)) < uint32(size) {
-			return fmt.Errorf("bytesToStruct: buffer too small (%d < %d)", len(buf), size)
-		}
-		copy((*[unsafe.Sizeof(*s)]byte)(unsafe.Pointer(s))[:], buf[:size])
-		return nil
-	}
-	return fmt.Errorf("bytesToStruct: unsupported type %T", v)
-}
-
-// openFileForLog is set by the os import in file_log.go to avoid importing
-// "os" in this file (keeps the core importable in constrained environments).
-var openFileForLog func(path string) (WriteCloser, error)
-
-// binary.LittleEndian is referenced to keep the import for future use.
-var _ = binary.LittleEndian

@@ -45,7 +45,6 @@
 package api
 
 import (
-	"context"
 	"fmt"
 
 	metacmds "github.com/hyperdbg/go-libhyperdbg/debugger/commands/meta"
@@ -58,7 +57,7 @@ import (
 // ============================================================
 
 // Status 对应 'status' 命令：返回当前调试器状态。
-func (d *Debugger) Status(ctx context.Context) (core.DebuggerState, error) {
+func (d *Debugger) Status() (core.DebuggerState, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return d.core.State(), nil
@@ -79,7 +78,7 @@ func (d *Debugger) ClearScreen() error {
 //   - cmdName 非空：打印该命令的详细帮助
 //
 // 帮助文本写入 d.output，返回写过程中遇到的错误。
-func (d *Debugger) Help(ctx context.Context, cmdName string) error {
+func (d *Debugger) Help(cmdName string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// 复用 Registry 已构造的 help handler，保证行为与字符串命令路径一致。
@@ -87,7 +86,7 @@ func (d *Debugger) Help(ctx context.Context, cmdName string) error {
 	if cmdName != "" {
 		line = "help " + cmdName
 	}
-	return d.commands.Exec(ctx, d.core, line)
+	return d.commands.Exec(d.core, line)
 }
 
 // Exit 对应 'exit'/'.exit'/'quit' 命令：返回 metacmds.ErrExit 信号。
@@ -106,75 +105,75 @@ func (d *Debugger) Exit() error {
 // 行，改为委托 core 方法即可）。
 
 // Attach 对应 'attach <pid>'：附加到已运行的进程。
-func (d *Debugger) Attach(ctx context.Context, pid uint32) error {
+func (d *Debugger) Attach(pid uint32) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Attach(ctx, pid)
+	return d.core.Attach(pid)
 }
 
 // Debug 对应 'debug <exe>'：以调试模式启动一个新进程（与 .start 的区别
 // 在于 debug 会等待符号加载完成才返回）。
-func (d *Debugger) Debug(ctx context.Context, exePath string) error {
+func (d *Debugger) Debug(exePath string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// Debug is StartProcess + (future) symbol-load wait. The returned Process
 	// handle is intentionally discarded: core.StartProcess stores the kernel
 	// token internally; the caller does not need the Win32 handles here.
-	_, err := d.core.StartProcess(ctx, exePath)
+	_, err := d.core.StartProcess(exePath)
 	return err
 }
 
 // Detach 对应 'detach'：从当前调试目标分离（不终止进程）。
-func (d *Debugger) Detach(ctx context.Context) error {
+func (d *Debugger) Detach() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Detach(ctx)
+	return d.core.Detach()
 }
 
 // Disconnect 对应 'disconnect'：断开与远程/local 调试目标的连接。
-func (d *Debugger) Disconnect(ctx context.Context) error {
+func (d *Debugger) Disconnect() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Disconnect(ctx)
+	return d.core.Disconnect()
 }
 
 // Dump 对应 'dump <path>'：将目标进程内存转储到文件（minidump 格式）。
-func (d *Debugger) Dump(ctx context.Context, path string) error {
+func (d *Debugger) Dump(path string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return fmt.Errorf("Dump: minidump not yet implemented (requires MiniDumpWriteDump wrapper)")
 }
 
 // Formats 对应 'formats <expr>'：以多种格式（hex/dec/oct/bin）显示表达式值。
-func (d *Debugger) Formats(ctx context.Context, expr string) error {
+func (d *Debugger) Formats(expr string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.commands.Exec(ctx, d.core, "formats "+expr)
+	return d.commands.Exec(d.core, "formats "+expr)
 }
 
 // Kill 对应 'kill <pid>'：终止目标进程。
-func (d *Debugger) Kill(ctx context.Context, pid uint32) error {
+func (d *Debugger) Kill(pid uint32) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Kill(ctx, pid)
+	return d.core.Kill(pid)
 }
 
 // Listen 对应 'listen <ip> <port>'：在指定端口监听远程调试连接。
-func (d *Debugger) Listen(ctx context.Context, ip string, port int) error {
+func (d *Debugger) Listen(ip string, port int) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return fmt.Errorf("Listen: remote debugging listener not yet wired (see kernellvl.KernelListener)")
 }
 
 // PageIn 对应 'pagein <addr>'：强制将指定地址的页面调入物理内存。
-func (d *Debugger) PageIn(ctx context.Context, addr uint64) error {
+func (d *Debugger) PageIn(addr uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.PageIn(ctx, addr)
+	return d.core.PageIn(addr)
 }
 
 // Pe 对应 'pe <path>'：解析 PE 文件头并显示其属性（入口点/段/导入表等）。
-func (d *Debugger) Pe(ctx context.Context, path string) error {
+func (d *Debugger) Pe(path string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	pf, err := userlevel.PeOpen(path)
@@ -201,58 +200,58 @@ func (d *Debugger) Pe(ctx context.Context, path string) error {
 }
 
 // Process 对应 'process'（无参）：列出系统所有进程（类似 !process 0 0）。
-func (d *Debugger) Process(ctx context.Context) error {
+func (d *Debugger) Process() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.commands.Exec(ctx, d.core, "process")
+	return d.commands.Exec(d.core, "process")
 }
 
 // Restart 对应 'restart'：重启当前调试目标。
-func (d *Debugger) Restart(ctx context.Context) error {
+func (d *Debugger) Restart() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return fmt.Errorf("Restart: not supported (no exePath tracked); use Kill + StartProcess")
 }
 
 // Script 对应 'script <path>'：执行 .ds 脚本文件。
-func (d *Debugger) Script(ctx context.Context, path string) error {
+func (d *Debugger) Script(path string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.commands.Exec(ctx, d.core, "script "+path)
+	return d.commands.Exec(d.core, "script "+path)
 }
 
 // Switch 对应 'switch <pid>'：切换当前调试目标到指定进程。
-func (d *Debugger) Switch(ctx context.Context, pid uint32) error {
+func (d *Debugger) Switch(pid uint32) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.commands.Exec(ctx, d.core, fmt.Sprintf("switch %d", pid))
+	return d.commands.Exec(d.core, fmt.Sprintf("switch %d", pid))
 }
 
 // Sym 对应 'sym <name>'：解析符号名到地址（需要 SymbolResolver）。
-func (d *Debugger) Sym(ctx context.Context, name string) (uint64, error) {
+func (d *Debugger) Sym(name string) (uint64, error) {
 	d.mu.Lock()
 	resolver := d.symbols
 	d.mu.Unlock()
 	if resolver == nil {
 		return 0, fmt.Errorf("Sym(%q): no symbol resolver injected (use WithSymbolResolver)", name)
 	}
-	return resolver.FromName(ctx, name)
+	return resolver.FromName(name)
 }
 
 // SymPath 对应 'sympath <path>'：设置符号搜索路径。
-func (d *Debugger) SymPath(ctx context.Context, path string) error {
+func (d *Debugger) SymPath(path string) error {
 	d.mu.Lock()
 	resolver := d.symbols
 	d.mu.Unlock()
 	if resolver == nil {
 		return fmt.Errorf("SymPath(%q): no symbol resolver injected (use WithSymbolResolver)", path)
 	}
-	return resolver.Init(ctx, path)
+	return resolver.Init(path)
 }
 
 // Thread 对应 'thread'（无参）：列出当前调试目标的线程。
-func (d *Debugger) Thread(ctx context.Context) error {
+func (d *Debugger) Thread() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.commands.Exec(ctx, d.core, "thread")
+	return d.commands.Exec(d.core, "thread")
 }

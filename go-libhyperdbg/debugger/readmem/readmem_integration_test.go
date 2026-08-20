@@ -16,7 +16,6 @@
 package readmem
 
 import (
-	"context"
 	"os"
 	"path/filepath"
 	"testing"
@@ -73,24 +72,23 @@ func TestReadMemory_KuserSharedData(t *testing.T) {
 	}
 	t.Logf("using driver: %s", driverPath)
 
-	ctx := context.Background()
 	d := driverloader.NewDriver(driverPath)
 
-	_ = d.Unload(ctx)
-	if exists, _ := d.Exists(ctx); exists {
+	_ = d.Unload()
+	if exists, _ := d.Exists(); exists {
 		time.Sleep(1 * time.Second)
-		_ = d.Unload(ctx)
+		_ = d.Unload()
 	}
 	time.Sleep(2 * time.Second)
 
-	if err := d.Load(ctx); err != nil {
+	if err := d.Load(); err != nil {
 		t.Fatalf("driver Load failed: %v", err)
 	}
-	t.Cleanup(func() { _ = d.Unload(ctx) })
+	t.Cleanup(func() { _ = d.Unload() })
 	time.Sleep(1 * time.Second)
 
 	// 打开设备 — sandbox 环境下会失败
-	dev, err := comm.Open(ctx, comm.DeviceName)
+	dev, err := comm.Open(comm.DeviceName)
 	if err != nil {
 		t.Skipf("comm.Open failed (sandbox restricts device access in go test): %v", err)
 	}
@@ -98,14 +96,14 @@ func TestReadMemory_KuserSharedData(t *testing.T) {
 
 	// VMM 终止清理
 	t.Cleanup(func() {
-		_, _ = dev.Ioctl(context.Background(),
+		_, _ = dev.Ioctl(
 			comm.IOCTL_CODE_TERMINATE_VMX, nil, nil)
 		time.Sleep(500 * time.Millisecond)
 	})
 
 	// IOCTL_INIT_VMM
 	vmmBuf := make([]byte, 4)
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_INIT_VMM, vmmBuf, vmmBuf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_INIT_VMM, vmmBuf, vmmBuf); err != nil {
 		t.Skipf("IOCTL_INIT_VMM failed: %v", err)
 	}
 	vmmStatus := *(*uint32)(unsafe.Pointer(&vmmBuf[0]))
@@ -117,7 +115,7 @@ func TestReadMemory_KuserSharedData(t *testing.T) {
 	// ReadMemory 读取 KUSER_SHARED_DATA
 	addr := uint64(kuserSharedDataAddr) + ntMajorVersionOff
 	pid := windows.GetCurrentProcessId()
-	data, _, err := ReadMemory(ctx, dev, addr, pid, kuserReadSize,
+	data, _, err := ReadMemory(dev, addr, pid, kuserReadSize,
 		hyperdbgsdk.DebuggerReadVirtualAddress, hyperdbgsdk.ReadFromKernel, false)
 	if err != nil {
 		t.Fatalf("ReadMemory failed: %v", err)

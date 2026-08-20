@@ -22,11 +22,11 @@
 package core
 
 import (
-	"context"
 	"fmt"
 	"time"
 	"unsafe"
 
+	"github.com/ddkwork/golibrary/byteslice"
 	"github.com/ddkwork/hyperdbgsdk"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/readmem"
@@ -41,20 +41,18 @@ import (
 //
 // C++: apic.cpp — sends IOCTL_CODE_PERFORM_ACTIONS_ON_APIC with
 // ApicType=DebuggerApicRequestTypeReadLocalApic.
-func (d *Debugger) Apic(ctx context.Context) (hyperdbgsdk.DEBUGGER_APIC_REQUEST, error) {
+func (d *Debugger) Apic() (hyperdbgsdk.DEBUGGER_APIC_REQUEST, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
 		return hyperdbgsdk.DEBUGGER_APIC_REQUEST{}, fmt.Errorf("Apic: VMM not loaded")
 	}
 	req := hyperdbgsdk.DEBUGGER_APIC_REQUEST{ApicType: hyperdbgsdk.DebuggerApicRequestTypeReadLocalApic}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_PERFORM_ACTIONS_ON_APIC, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_ACTIONS_ON_APIC, reqBuf, reqBuf); err != nil {
 		return hyperdbgsdk.DEBUGGER_APIC_REQUEST{}, fmt.Errorf("Apic: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return hyperdbgsdk.DEBUGGER_APIC_REQUEST{}, err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_APIC_REQUEST](reqBuf)
 	if req.KernelStatus != debuggerOperationWasSuccessful {
 		return hyperdbgsdk.DEBUGGER_APIC_REQUEST{}, fmt.Errorf("Apic: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
@@ -65,20 +63,18 @@ func (d *Debugger) Apic(ctx context.Context) (hyperdbgsdk.DEBUGGER_APIC_REQUEST,
 // ApicType=ReadIoApic.
 //
 // C++: ioapic.cpp.
-func (d *Debugger) Ioapic(ctx context.Context) (hyperdbgsdk.DEBUGGER_APIC_REQUEST, error) {
+func (d *Debugger) Ioapic() (hyperdbgsdk.DEBUGGER_APIC_REQUEST, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
 		return hyperdbgsdk.DEBUGGER_APIC_REQUEST{}, fmt.Errorf("Ioapic: VMM not loaded")
 	}
 	req := hyperdbgsdk.DEBUGGER_APIC_REQUEST{ApicType: hyperdbgsdk.DebuggerApicRequestTypeReadIoApic}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_PERFORM_ACTIONS_ON_APIC, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_ACTIONS_ON_APIC, reqBuf, reqBuf); err != nil {
 		return hyperdbgsdk.DEBUGGER_APIC_REQUEST{}, fmt.Errorf("Ioapic: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return hyperdbgsdk.DEBUGGER_APIC_REQUEST{}, err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_APIC_REQUEST](reqBuf)
 	if req.KernelStatus != debuggerOperationWasSuccessful {
 		return hyperdbgsdk.DEBUGGER_APIC_REQUEST{}, fmt.Errorf("Ioapic: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
@@ -90,7 +86,7 @@ func (d *Debugger) Ioapic(ctx context.Context) (hyperdbgsdk.DEBUGGER_APIC_REQUES
 //
 // C++: lbr.cpp — sends IOCTL_CODE_PERFORM_HYPERTRACE_LBR_OPERATION with
 // LbrOperationType=Enable.
-func (d *Debugger) Lbr(ctx context.Context) error {
+func (d *Debugger) Lbr() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -99,13 +95,11 @@ func (d *Debugger) Lbr(ctx context.Context) error {
 	req := hyperdbgsdk.HYPERTRACE_LBR_OPERATION_PACKETS{
 		LbrOperationType: hyperdbgsdk.HypertraceLbrOperationRequestTypeEnable,
 	}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_PERFORM_HYPERTRACE_LBR_OPERATION, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_HYPERTRACE_LBR_OPERATION, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Lbr: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.HYPERTRACE_LBR_OPERATION_PACKETS](reqBuf)
 	if req.KernelStatus != debuggerOperationWasSuccessful {
 		return fmt.Errorf("Lbr: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
@@ -118,7 +112,7 @@ func (d *Debugger) Lbr(ctx context.Context) error {
 // C++: lbrdump.cpp — uses the dedicated IOCTL_PERFORM_HYPERTRACE_LBR_DUMP
 // with HYPERTRACE_LBR_DUMP_PACKETS (the DUMP enum value was removed from
 // HYPERTRACE_LBR_OPERATION_REQUEST_TYPE in the new SDK).
-func (d *Debugger) LbrDump(ctx context.Context) error {
+func (d *Debugger) LbrDump() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -127,13 +121,11 @@ func (d *Debugger) LbrDump(ctx context.Context) error {
 	req := hyperdbgsdk.HYPERTRACE_LBR_DUMP_PACKETS{
 		CoreId: hyperdbgsdk.HypertraceLbrDumpAllCores,
 	}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_PERFORM_HYPERTRACE_LBR_DUMP, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_HYPERTRACE_LBR_DUMP, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("LbrDump: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.HYPERTRACE_LBR_DUMP_PACKETS](reqBuf)
 	if req.KernelStatus != debuggerOperationWasSuccessful {
 		return fmt.Errorf("LbrDump: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
@@ -144,7 +136,7 @@ func (d *Debugger) LbrDump(ctx context.Context) error {
 //
 // C++: pt.cpp — sends IOCTL_CODE_PERFORM_HYPERTRACE_PT_OPERATION with
 // PtOperationType=Enable.
-func (d *Debugger) Pt(ctx context.Context) error {
+func (d *Debugger) Pt() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -153,13 +145,11 @@ func (d *Debugger) Pt(ctx context.Context) error {
 	req := hyperdbgsdk.HYPERTRACE_PT_OPERATION_PACKETS{
 		PtOperationType: hyperdbgsdk.HypertracePtOperationRequestTypeEnable,
 	}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_PERFORM_HYPERTRACE_PT_OPERATION, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_HYPERTRACE_PT_OPERATION, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Pt: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.HYPERTRACE_PT_OPERATION_PACKETS](reqBuf)
 	if req.KernelStatus != debuggerOperationWasSuccessful {
 		return fmt.Errorf("Pt: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
@@ -171,8 +161,8 @@ func (d *Debugger) Pt(ctx context.Context) error {
 // type as Pt.
 //
 // C++: trace.cpp delegates to the PT enable path.
-func (d *Debugger) Trace(ctx context.Context) error {
-	return d.Pt(ctx)
+func (d *Debugger) Trace() error {
+	return d.Pt()
 }
 
 // Smi reads the SMI count (number of System Management Interrupts that
@@ -181,7 +171,7 @@ func (d *Debugger) Trace(ctx context.Context) error {
 //
 // C++: smi.cpp — sends IOCTL_CODE_PERFORM_SMI_OPERATION with
 // SmiOperationType=ReadCount.
-func (d *Debugger) Smi(ctx context.Context) (hyperdbgsdk.SMI_OPERATION_PACKETS, error) {
+func (d *Debugger) Smi() (hyperdbgsdk.SMI_OPERATION_PACKETS, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -190,13 +180,11 @@ func (d *Debugger) Smi(ctx context.Context) (hyperdbgsdk.SMI_OPERATION_PACKETS, 
 	req := hyperdbgsdk.SMI_OPERATION_PACKETS{
 		SmiOperationType: hyperdbgsdk.SmiOperationRequestTypeReadCount,
 	}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_PERFORM_SMI_OPERATION, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_SMI_OPERATION, reqBuf, reqBuf); err != nil {
 		return hyperdbgsdk.SMI_OPERATION_PACKETS{}, fmt.Errorf("Smi: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return hyperdbgsdk.SMI_OPERATION_PACKETS{}, err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.SMI_OPERATION_PACKETS](reqBuf)
 	if req.KernelStatus != debuggerOperationWasSuccessful {
 		return hyperdbgsdk.SMI_OPERATION_PACKETS{}, fmt.Errorf("Smi: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
@@ -208,20 +196,18 @@ func (d *Debugger) Smi(ctx context.Context) (hyperdbgsdk.SMI_OPERATION_PACKETS, 
 // DeviceInfoList.
 //
 // C++: pcitree.cpp — sends IOCTL_CODE_PCIE_ENDPOINT_ENUM.
-func (d *Debugger) PciTree(ctx context.Context) (hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET, error) {
+func (d *Debugger) PciTree() (hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
 		return hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET{}, fmt.Errorf("PciTree: VMM not loaded")
 	}
 	req := hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET{}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_PCIE_ENDPOINT_ENUM, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PCIE_ENDPOINT_ENUM, reqBuf, reqBuf); err != nil {
 		return hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET{}, fmt.Errorf("PciTree: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET{}, err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET](reqBuf)
 	if req.KernelStatus != debuggerOperationWasSuccessful {
 		return hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET{}, fmt.Errorf("PciTree: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
@@ -232,13 +218,13 @@ func (d *Debugger) PciTree(ctx context.Context) (hyperdbgsdk.DEBUGGEE_PCITREE_RE
 // HyperDbg's C++ pcicam reaches the config space via port I/O (0xCF8/0xCFC),
 // which is privileged and cannot be issued from user-mode Go. Use PciTree
 // for device enumeration instead.
-func (d *Debugger) PciCam(ctx context.Context, bus, device, function, offset uint32) (uint32, error) {
+func (d *Debugger) PciCam(bus, device, function, offset uint32) (uint32, error) {
 	return 0, fmt.Errorf("PciCam: PCI CAM access not supported via IOCTL (use PciTree for enumeration)")
 }
 
 // Measure is a script-engine timing helper in C++ (not a kernel IOCTL).
 // It is surfaced as a no-op success so typed callers do not break.
-func (d *Debugger) Measure(ctx context.Context) error {
+func (d *Debugger) Measure() error {
 	return nil
 }
 
@@ -248,14 +234,14 @@ func (d *Debugger) Measure(ctx context.Context) error {
 // The fallback returns the wall-clock nanosecond count — sufficient for
 // coarse timing and ordering, but not cycle-accurate. A real RDTSC path
 // belongs in transparency.rdtsc once exported (see transparency/cpu_amd64.go).
-func (d *Debugger) Tsc(ctx context.Context) (uint64, error) {
+func (d *Debugger) Tsc() (uint64, error) {
 	return uint64(time.Now().UnixNano()), nil
 }
 
 // Pmc reads a Performance Monitoring Counter via RDPMC. RDPMC is a
 // privileged instruction (CR4.PCE controls user-mode access) and HyperDbg
 // exposes it through the !pmc hook (core.PmcHook), not a read IOCTL.
-func (d *Debugger) Pmc(ctx context.Context, counter uint32) (uint64, error) {
+func (d *Debugger) Pmc(counter uint32) (uint64, error) {
 	return 0, fmt.Errorf("Pmc: RDPMC is privileged; use !pmc hook (core.PmcHook) instead")
 }
 
@@ -263,7 +249,7 @@ func (d *Debugger) Pmc(ctx context.Context, counter uint32) (uint64, error) {
 // registers a TrapExecutionInstructionTrace event with a callback; the
 // typed Track() signature here has no callbackSrc parameter, so it cannot
 // register a real hook. Use registerHookEvent directly with a Go callback.
-func (d *Debugger) Track(ctx context.Context) error {
+func (d *Debugger) Track() error {
 	return fmt.Errorf("Track: not supported via typed API — use registerHookEvent with TrapExecutionInstructionTrace and a Go callback directly")
 }
 
@@ -274,7 +260,7 @@ func (d *Debugger) Track(ctx context.Context) error {
 
 // modifyBreakpoint sends the breakpoint list/modify IOCTL with the given
 // request type and tag. Shared by BpClear/BpDisable/BpEnable.
-func (d *Debugger) modifyBreakpoint(ctx context.Context, tag uint64, req hyperdbgsdk.DEBUGGEE_BREAKPOINT_MODIFICATION_REQUEST) error {
+func (d *Debugger) modifyBreakpoint(tag uint64, req hyperdbgsdk.DEBUGGEE_BREAKPOINT_MODIFICATION_REQUEST) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -284,13 +270,11 @@ func (d *Debugger) modifyBreakpoint(ctx context.Context, tag uint64, req hyperdb
 		BreakpointId: tag,
 		Request:      req,
 	}
-	reqBuf := structBytes(&pkt)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_SET_BREAKPOINT_USER_DEBUGGER, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&pkt)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_SET_BREAKPOINT_USER_DEBUGGER, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("modifyBreakpoint: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &pkt); err != nil {
-		return err
-	}
+	pkt = *byteslice.ToStruct[hyperdbgsdk.DEBUGGEE_BP_LIST_OR_MODIFY_PACKET](reqBuf)
 	if pkt.Result != debuggerOperationWasSuccessful {
 		return fmt.Errorf("modifyBreakpoint: kernel rejected, Result=0x%08X", pkt.Result)
 	}
@@ -300,23 +284,23 @@ func (d *Debugger) modifyBreakpoint(ctx context.Context, tag uint64, req hyperdb
 // BpClear clears (removes) the breakpoint with the given tag (bc <tag>).
 //
 // C++: bc.cpp.
-func (d *Debugger) BpClear(ctx context.Context, tag uint64) error {
-	return d.modifyBreakpoint(ctx, tag, hyperdbgsdk.DebuggeeBreakpointModificationRequestClear)
+func (d *Debugger) BpClear(tag uint64) error {
+	return d.modifyBreakpoint(tag, hyperdbgsdk.DebuggeeBreakpointModificationRequestClear)
 }
 
 // BpDisable disables the breakpoint with the given tag (bd <tag>). The
 // breakpoint configuration is preserved so it can be re-enabled with BpEnable.
 //
 // C++: bd.cpp.
-func (d *Debugger) BpDisable(ctx context.Context, tag uint64) error {
-	return d.modifyBreakpoint(ctx, tag, hyperdbgsdk.DebuggeeBreakpointModificationRequestDisable)
+func (d *Debugger) BpDisable(tag uint64) error {
+	return d.modifyBreakpoint(tag, hyperdbgsdk.DebuggeeBreakpointModificationRequestDisable)
 }
 
 // BpEnable re-enables a previously disabled breakpoint (be <tag>).
 //
 // C++: be.cpp.
-func (d *Debugger) BpEnable(ctx context.Context, tag uint64) error {
-	return d.modifyBreakpoint(ctx, tag, hyperdbgsdk.DebuggeeBreakpointModificationRequestEnable)
+func (d *Debugger) BpEnable(tag uint64) error {
+	return d.modifyBreakpoint(tag, hyperdbgsdk.DebuggeeBreakpointModificationRequestEnable)
 }
 
 // BpSet installs a software breakpoint at addr and returns the breakpoint
@@ -326,7 +310,7 @@ func (d *Debugger) BpEnable(ctx context.Context, tag uint64) error {
 //
 // C++: bp.cpp — sends IOCTL_CODE_SET_BREAKPOINT_USER_DEBUGGER with a
 // DEBUGGEE_BP_PACKET; the kernel returns the tag in Result.
-func (d *Debugger) BpSet(ctx context.Context, addr uint64) (uint64, error) {
+func (d *Debugger) BpSet(addr uint64) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -340,13 +324,11 @@ func (d *Debugger) BpSet(ctx context.Context, addr uint64) (uint64, error) {
 		RemoveAfterHit:    false,
 		CheckForCallbacks: true,
 	}
-	reqBuf := structBytes(&pkt)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_SET_BREAKPOINT_USER_DEBUGGER, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&pkt)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_SET_BREAKPOINT_USER_DEBUGGER, reqBuf, reqBuf); err != nil {
 		return 0, fmt.Errorf("BpSet: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &pkt); err != nil {
-		return 0, err
-	}
+	pkt = *byteslice.ToStruct[hyperdbgsdk.DEBUGGEE_BP_PACKET](reqBuf)
 	// On success the kernel writes the assigned breakpoint tag into Result
 	// (a small integer); on failure it writes an error code. There is no
 	// separate KernelStatus field on this packet, so the tag is returned
@@ -359,20 +341,18 @@ func (d *Debugger) BpSet(ctx context.Context, addr uint64) (uint64, error) {
 // the response struct from its cached CPUID data.
 //
 // C++: cpu.cpp — sends IOCTL_CODE_DEBUGGER_CPUID.
-func (d *Debugger) Cpu(ctx context.Context) (hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE, error) {
+func (d *Debugger) Cpu() (hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
 		return hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE{}, fmt.Errorf("Cpu: VMM not loaded")
 	}
 	req := hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE{}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_CPUID, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_CPUID, reqBuf, reqBuf); err != nil {
 		return hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE{}, fmt.Errorf("Cpu: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE{}, err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE](reqBuf)
 	if req.KernelStatus != debuggerOperationWasSuccessful {
 		return hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE{}, fmt.Errorf("Cpu: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
@@ -385,7 +365,7 @@ func (d *Debugger) Cpu(ctx context.Context) (hyperdbgsdk.DEBUGGER_CPUID_REQUEST_
 // process's address space (KeStackAttachProcess) before reading.
 //
 // C++: d.cpp.
-func (d *Debugger) DumpMem(ctx context.Context, addr uint64, size uint32) ([]byte, error) {
+func (d *Debugger) DumpMem(addr uint64, size uint32) ([]byte, error) {
 	d.mu.Lock()
 	dev := d.device
 	pid := d.processPid
@@ -393,7 +373,7 @@ func (d *Debugger) DumpMem(ctx context.Context, addr uint64, size uint32) ([]byt
 	if dev == nil {
 		return nil, fmt.Errorf("DumpMem: not connected")
 	}
-	data, _, err := readmem.ReadMemory(ctx, dev, addr, pid, size,
+	data, _, err := readmem.ReadMemory(dev, addr, pid, size,
 		hyperdbgsdk.DebuggerReadVirtualAddress, hyperdbgsdk.ReadFromKernel, false)
 	return data, err
 }
@@ -402,7 +382,7 @@ func (d *Debugger) DumpMem(ctx context.Context, addr uint64, size uint32) ([]byt
 // debuggee's PID (set by StartProcess).
 //
 // C++: e.cpp.
-func (d *Debugger) EditMem(ctx context.Context, addr uint64, data []byte) error {
+func (d *Debugger) EditMem(addr uint64, data []byte) error {
 	d.mu.Lock()
 	dev := d.device
 	pid := d.processPid
@@ -410,7 +390,7 @@ func (d *Debugger) EditMem(ctx context.Context, addr uint64, data []byte) error 
 	if dev == nil {
 		return fmt.Errorf("EditMem: not connected")
 	}
-	if _, err := readmem.WriteMemory(ctx, dev, addr, pid, data,
+	if _, err := readmem.WriteMemory(dev, addr, pid, data,
 		hyperdbgsdk.EditVirtualMemory, hyperdbgsdk.ReadFromKernel); err != nil {
 		return fmt.Errorf("EditMem: %w", err)
 	}
@@ -424,7 +404,7 @@ func (d *Debugger) EditMem(ctx context.Context, addr uint64, data []byte) error 
 //
 // C++: rdmsr.cpp — sends IOCTL_CODE_DEBUGGER_READ_OR_WRITE_MSR with
 // ActionType=DebuggerMsrRead.
-func (d *Debugger) Rdmsr(ctx context.Context, msr uint32) (uint64, error) {
+func (d *Debugger) Rdmsr(msr uint32) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -435,20 +415,18 @@ func (d *Debugger) Rdmsr(ctx context.Context, msr uint32) (uint64, error) {
 		CoreNumber: 0xFFFFFFFF,
 		ActionType: hyperdbgsdk.DebuggerMsrRead,
 	}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_READ_OR_WRITE_MSR, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_READ_OR_WRITE_MSR, reqBuf, reqBuf); err != nil {
 		return 0, fmt.Errorf("Rdmsr: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return 0, err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_READ_AND_WRITE_ON_MSR](reqBuf)
 	return req.Value, nil
 }
 
 // Wrmsr writes val to the Model-Specific Register identified by msr.
 //
 // C++: wrmsr.cpp — same IOCTL with ActionType=DebuggerMsrWrite.
-func (d *Debugger) Wrmsr(ctx context.Context, msr uint32, val uint64) error {
+func (d *Debugger) Wrmsr(msr uint32, val uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -460,13 +438,11 @@ func (d *Debugger) Wrmsr(ctx context.Context, msr uint32, val uint64) error {
 		ActionType: hyperdbgsdk.DebuggerMsrWrite,
 		Value:      val,
 	}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_READ_OR_WRITE_MSR, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_READ_OR_WRITE_MSR, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Wrmsr: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_READ_AND_WRITE_ON_MSR](reqBuf)
 	return nil
 }
 
@@ -477,7 +453,7 @@ func (d *Debugger) Wrmsr(ctx context.Context, msr uint32, val uint64) error {
 // C++: search.cpp — sends IOCTL_CODE_DEBUGGER_SEARCH_MEMORY. The input
 // buffer is the DEBUGGER_SEARCH_MEMORY header plus the pattern padded to
 // 8-byte chunks.
-func (d *Debugger) Search(ctx context.Context, addr uint64, size uint32, pattern []byte) ([]uint64, error) {
+func (d *Debugger) Search(addr uint64, size uint32, pattern []byte) ([]uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -507,7 +483,7 @@ func (d *Debugger) Search(ctx context.Context, addr uint64, size uint32, pattern
 	const maxResults = 256
 	outSize := unsafe.Sizeof(hyperdbgsdk.DEBUGGEE_RESULT_OF_SEARCH_PACKET{}) + uintptr(maxResults)*8
 	outBuf := make([]byte, outSize)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_SEARCH_MEMORY, inBuf, outBuf); err != nil {
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_SEARCH_MEMORY, inBuf, outBuf); err != nil {
 		return nil, fmt.Errorf("Search: IOCTL failed: %w", err)
 	}
 	resHdr := (*hyperdbgsdk.DEBUGGEE_RESULT_OF_SEARCH_PACKET)(unsafe.Pointer(&outBuf[0]))
@@ -535,20 +511,18 @@ func (d *Debugger) Search(ctx context.Context, addr uint64, size uint32, pattern
 // of internal checks and writes KernelStatus.
 //
 // C++: test.cpp — sends IOCTL_CODE_PERFORM_KERNEL_SIDE_TESTS.
-func (d *Debugger) Test(ctx context.Context) error {
+func (d *Debugger) Test() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
 		return fmt.Errorf("Test: VMM not loaded")
 	}
 	req := hyperdbgsdk.DEBUGGER_PERFORM_KERNEL_TESTS{}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_PERFORM_KERNEL_SIDE_TESTS, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_KERNEL_SIDE_TESTS, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Test: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_PERFORM_KERNEL_TESTS](reqBuf)
 	if req.KernelStatus != debuggerOperationWasSuccessful {
 		return fmt.Errorf("Test: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
@@ -558,7 +532,7 @@ func (d *Debugger) Test(ctx context.Context) error {
 // Core switches the current debugging core. This is only meaningful in
 // kernel-debugging (KD) mode over serial; local user-mode debugging has
 // no per-core IOCTL.
-func (d *Debugger) Core(ctx context.Context, coreId uint32) error {
+func (d *Debugger) Core(coreId uint32) error {
 	return fmt.Errorf("Core: only supported in kernel-debugging mode")
 }
 
@@ -566,7 +540,7 @@ func (d *Debugger) Core(ctx context.Context, coreId uint32) error {
 // privileged outside ring 0 (CR4.IOPL controls user-mode access), so it
 // cannot be issued from user-mode Go. Use the !ioin hook (core.IoInHook)
 // to trap IN reads from VMX-root.
-func (d *Debugger) IoIn(ctx context.Context, port uint16) (byte, error) {
+func (d *Debugger) IoIn(port uint16) (byte, error) {
 	return 0, fmt.Errorf("IoIn: IN instruction is privileged; use !ioin hook (core.IoInHook) instead")
 }
 
@@ -584,7 +558,7 @@ func (d *Debugger) IoIn(ctx context.Context, port uint16) (byte, error) {
 //
 // C++: attach.cpp — sends IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS
 // with Action=Attach.
-func (d *Debugger) Attach(ctx context.Context, pid uint32) error {
+func (d *Debugger) Attach(pid uint32) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -597,7 +571,7 @@ func (d *Debugger) Attach(ctx context.Context, pid uint32) error {
 		Action:                          hyperdbgsdk.DebuggerAttachDetachUserModeProcessActionAttach,
 	}
 	buf := (*[attachDetachRequestSize]byte)(unsafe.Pointer(&pkt))[:]
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS, buf, buf); err != nil {
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS, buf, buf); err != nil {
 		return fmt.Errorf("Attach: IOCTL failed: %w", err)
 	}
 	if pkt.Result != uint64(DebuggerOperationWasSuccessful) {
@@ -615,17 +589,23 @@ func (d *Debugger) Attach(ctx context.Context, pid uint32) error {
 // Attach/StartProcess). The stored process token is cleared and the state
 // moves back to StateVmmLoaded.
 //
-// C++: detach.cpp.
-func (d *Debugger) Detach(ctx context.Context) error {
+// Mirrors C++ UdDetachProcess (ud.cpp:795): continue first, then detach
+// by ProcessId (the kernel looks up the session by pid, not token).
+func (d *Debugger) Detach() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.processToken == 0 {
 		return fmt.Errorf("Detach: no process attached")
 	}
-	if err := detachProcess(ctx, d.device, d.processToken); err != nil {
+	// Continue the debuggee before detaching — the kernel rejects detach
+	// with DEBUGGER_ERROR_UNABLE_TO_DETACH_AS_THERE_ARE_PAUSED_THREADS
+	// (0xC0000034) if any thread is still paused.
+	_ = continueProcess(d.device, d.processToken)
+	if err := detachProcess(d.device, d.processPid); err != nil {
 		return fmt.Errorf("Detach: %w", err)
 	}
 	d.processToken = 0
+	d.processPid = 0
 	d.state = StateVmmLoaded
 	return nil
 }
@@ -635,20 +615,18 @@ func (d *Debugger) Detach(ctx context.Context) error {
 // device handle is not closed (Close is separate).
 //
 // C++: libhyperdbg.cpp HyperDbgClose path.
-func (d *Debugger) Disconnect(ctx context.Context) error {
+func (d *Debugger) Disconnect() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
 		return fmt.Errorf("Disconnect: VMM not loaded")
 	}
 	req := hyperdbgsdk.DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL{}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Disconnect: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL](reqBuf)
 	if req.KernelStatus != debuggerOperationWasSuccessful {
 		return fmt.Errorf("Disconnect: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
@@ -660,7 +638,7 @@ func (d *Debugger) Disconnect(ctx context.Context) error {
 // process is attached, Token=0 is sent and the kernel looks up pid directly.
 //
 // C++: kill.cpp — sends the attach IOCTL with Action=KillProcess.
-func (d *Debugger) Kill(ctx context.Context, pid uint32) error {
+func (d *Debugger) Kill(pid uint32) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -672,7 +650,7 @@ func (d *Debugger) Kill(ctx context.Context, pid uint32) error {
 		Token:     d.processToken,
 	}
 	buf := (*[attachDetachRequestSize]byte)(unsafe.Pointer(&pkt))[:]
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS, buf, buf); err != nil {
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS, buf, buf); err != nil {
 		return fmt.Errorf("Kill: IOCTL failed: %w", err)
 	}
 	if pkt.Result != uint64(DebuggerOperationWasSuccessful) {
@@ -690,7 +668,7 @@ func (d *Debugger) Kill(ctx context.Context, pid uint32) error {
 // out). The kernel faults the page in via the standard page-fault path.
 //
 // C++: pagein.cpp — sends IOCTL_CODE_DEBUGGER_BRING_PAGES_IN.
-func (d *Debugger) PageIn(ctx context.Context, addr uint64) error {
+func (d *Debugger) PageIn(addr uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -702,13 +680,11 @@ func (d *Debugger) PageIn(ctx context.Context, addr uint64) error {
 		ProcessId:          d.processPid,
 		PageFaultErrorCode: 0,
 	}
-	reqBuf := structBytes(&req)
-	if _, err := d.device.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_BRING_PAGES_IN, reqBuf, reqBuf); err != nil {
+	reqBuf := byteslice.FromStruct(&req)
+	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_BRING_PAGES_IN, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("PageIn: IOCTL failed: %w", err)
 	}
-	if err := readStruct(reqBuf, &req); err != nil {
-		return err
-	}
+	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_PAGE_IN_REQUEST](reqBuf)
 	if req.KernelStatus != debuggerOperationWasSuccessful {
 		return fmt.Errorf("PageIn: kernel rejected, status=0x%08X", req.KernelStatus)
 	}

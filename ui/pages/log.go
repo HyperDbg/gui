@@ -43,7 +43,7 @@ func (p *LogPage) Write(b []byte) (int, error) {
 		text = text[:len(text)-1]
 	}
 	if text != "" {
-		for _, line := range strings.Split(text, "\n") {
+		for line := range strings.SplitSeq(text, "\n") {
 			p.pending = append(p.pending, line)
 		}
 	}

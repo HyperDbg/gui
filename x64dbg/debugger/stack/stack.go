@@ -206,7 +206,7 @@ func (m *Manager) ReadStackMemory(rsp uint64, count int, readMemory func(uint64,
 		}
 
 		var value uint64
-		for j := 0; j < 8; j++ {
+		for j := range 8 {
 			value |= uint64(data[j]) << (uint(j) * 8)
 		}
 

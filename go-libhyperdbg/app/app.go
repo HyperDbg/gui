@@ -1,6 +1,6 @@
 // Package app implements the libhyperdbg entry-point layer that ties together
-// driver loading, the kernel→user message channel, and the IRP-based packet
-// reader. The C++ counterpart is libhyperdbg/code/app/libhyperdbg.cpp.
+// driver loading with the *core.Debugger state machine. The C++ counterpart is
+// libhyperdbg/code/app/libhyperdbg.cpp.
 //
 // In the C++ implementation the entry points (HyperDbgLoadVmmModule,
 // HyperDbgUnloadVmm, HyperDbgCreateHandleFromKdModule, ...) mutate a set of
@@ -12,24 +12,20 @@
 //
 // The App struct owns:
 //   - a *core.Debugger (driver + device + state machine)
-//   - a *Messaging (ShowMessages callback dispatch)
-//   - a *PacketReader (IRP-based kernel→user buffer pump)
 //
 // Lifecycle:
 //
 //	app := app.New(out)
-//	_ = app.Init(ctx)          // enable debug privilege, prepare messaging
-//	_ = app.LoadVMM(ctx, path) // install+start driver, IOCTL_INIT_VMM
-//	...                        // run commands / hooks
-//	_ = app.UnloadVMM(ctx)     // IOCTL_TERMINATE_VMX + stop driver
-//	_ = app.Cleanup(ctx)       // stop packet reader, close device
+//	_ = app.Init()          // enable debug privilege
+//	_ = app.LoadVMM(path)   // install+start driver, IOCTL_INIT_VMM
+//	...                     // run commands / hooks
+//	_ = app.UnloadVMM()     // IOCTL_TERMINATE_VMX + stop driver
+//	_ = app.Cleanup()       // close device
 //
 // App is safe for concurrent use; the internal state is guarded by a mutex.
-// Long-running operations (LoadVMM, Init, ...) honour context cancellation.
 package app
 
 import (
-	"context"
 	"fmt"
 	"sync"
 
@@ -53,14 +49,12 @@ type ModuleLoaded struct {
 	HyperTrace bool
 }
 
-// App is the libhyperdbg entry-point aggregating driver, messaging and the
-// packet reader. The zero value is not usable; use New.
+// App is the libhyperdbg entry-point aggregating driver state. The zero
+// value is not usable; use New.
 type App struct {
-	mu        sync.Mutex
-	out       Output
-	core      *core.Debugger
-	messaging *Messaging
-	packets   *PacketReader
+	mu   sync.Mutex
+	out  Output
+	core *core.Debugger
 
 	loaded                  ModuleLoaded
 	driverPath              string
@@ -68,7 +62,7 @@ type App struct {
 	useCustomDriverLocation bool
 
 	// initialised is set true once Init runs the one-time setup
-	// (debug privilege, messaging buffer).
+	// (debug privilege).
 	initialised bool
 }
 
@@ -80,20 +74,16 @@ func New(out Output) *App {
 	}
 	c := core.New()
 	return &App{
-		out:       out,
-		core:      c,
-		messaging: NewMessaging(out),
+		out:  out,
+		core: c,
 	}
 }
 
 // Init performs one-time setup: enables SeDebugPrivilege on the current
-// process token and prepares the messaging shared buffer. Idempotent —
-// calling it twice is a no-op. Mirrors the preamble of
-// HyperDbgLoadKdModule / HyperDbgCreateHandleFromKdModule in the C++ source.
-func (a *App) Init(ctx context.Context) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
+// process token. Idempotent — calling it twice is a no-op. Mirrors the
+// preamble of HyperDbgLoadKdModule / HyperDbgCreateHandleFromKdModule in
+// the C++ source.
+func (a *App) Init() error {
 	a.mu.Lock()
 	defer a.mu.Unlock()
 	if a.initialised {
@@ -108,19 +98,11 @@ func (a *App) Init(ctx context.Context) error {
 	return nil
 }
 
-// Cleanup tears down everything Init/LoadVMM set up. It stops the packet
-// reader, closes the device handle and the messaging buffer. Safe to call
-// on a partially-initialised App.
-func (a *App) Cleanup(ctx context.Context) error {
+// Cleanup tears down everything Init/LoadVMM set up. It closes the device
+// handle. Safe to call on a partially-initialised App.
+func (a *App) Cleanup() error {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	if a.packets != nil {
-		a.packets.Stop()
-		a.packets = nil
-	}
-	if a.messaging != nil {
-		a.messaging.UnsetCallback()
-	}
 	if a.core != nil {
 		_ = a.core.Close()
 	}
@@ -137,11 +119,11 @@ func (a *App) Core() *core.Debugger {
 	return a.core
 }
 
-// Messaging returns the messaging dispatcher (used by ShowMessages).
-func (a *App) Messaging() *Messaging {
+// Printf writes formatted output to the App's Output sink.
+func (a *App) Printf(format string, args ...any) error {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	return a.messaging
+	return a.out.Printf(format, args...)
 }
 
 // IsAnyModuleLoaded mirrors HyperDbgIsAnyModuleLoaded: returns true if KD,
@@ -184,12 +166,8 @@ func (a *App) UseDefaultDriverPath() {
 // module (opens the device), then initialises the VMM via IOCTL_INIT_VMM.
 // driverPath is the absolute path to the .sys file.
 //
-// On success the Vmm flag is set in LoadedModules and the packet reader is
-// started so kernel messages begin flowing to Messaging.
-func (a *App) LoadVMM(ctx context.Context, driverPath string) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
+// On success the Vmm flag is set in LoadedModules.
+func (a *App) LoadVMM(driverPath string) error {
 	a.mu.Lock()
 	if a.core == nil {
 		a.mu.Unlock()
@@ -206,28 +184,23 @@ func (a *App) LoadVMM(ctx context.Context, driverPath string) error {
 	c := a.core
 	a.mu.Unlock()
 
-	if err := c.Connect(ctx, "local"); err != nil {
+	if err := c.Connect("local"); err != nil {
 		return fmt.Errorf("LoadVMM: %w", err)
 	}
-	if err := c.LoadVMM(ctx, driverPath); err != nil {
+	if err := c.LoadVMM(driverPath); err != nil {
 		return fmt.Errorf("LoadVMM: %w", err)
 	}
 
 	a.mu.Lock()
 	a.loaded.Kd = true
 	a.loaded.Vmm = true
-	// Start the IRP packet reader now that the device is live.
-	if a.packets == nil {
-		a.packets = NewPacketReader(c, a.messaging, a.out)
-		a.packets.Start(ctx)
-	}
 	a.mu.Unlock()
 	return nil
 }
 
 // UnloadVMM mirrors HyperDbgUnloadVmm: sends IOCTL_TERMINATE_VMX and stops
 // the driver service. HyperTrace (if loaded) is unloaded first.
-func (a *App) UnloadVMM(ctx context.Context) error {
+func (a *App) UnloadVMM() error {
 	a.mu.Lock()
 	if !a.loaded.Vmm {
 		a.mu.Unlock()
@@ -236,7 +209,7 @@ func (a *App) UnloadVMM(ctx context.Context) error {
 	c := a.core
 	a.mu.Unlock()
 
-	if err := c.UnloadVMM(ctx); err != nil {
+	if err := c.UnloadVMM(); err != nil {
 		return fmt.Errorf("UnloadVMM: %w", err)
 	}
 	a.mu.Lock()
@@ -247,10 +220,7 @@ func (a *App) UnloadVMM(ctx context.Context) error {
 
 // LoadKd mirrors HyperDbgLoadKdModule: opens the device handle without
 // entering VMX. Used when only kernel-debugging (no hypervisor) is needed.
-func (a *App) LoadKd(ctx context.Context) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
+func (a *App) LoadKd() error {
 	a.mu.Lock()
 	if a.loaded.Kd {
 		a.mu.Unlock()
@@ -258,22 +228,18 @@ func (a *App) LoadKd(ctx context.Context) error {
 	}
 	c := a.core
 	a.mu.Unlock()
-	if err := c.Connect(ctx, "local"); err != nil {
+	if err := c.Connect("local"); err != nil {
 		return fmt.Errorf("LoadKd: %w", err)
 	}
 	a.mu.Lock()
 	a.loaded.Kd = true
-	if a.packets == nil {
-		a.packets = NewPacketReader(c, a.messaging, a.out)
-		a.packets.Start(ctx)
-	}
 	a.mu.Unlock()
 	return nil
 }
 
 // UnloadKd mirrors HyperDbgUnloadKd: closes the device handle and clears
 // the KD flag. Refuses if VMM/HyperTrace is still loaded (they depend on KD).
-func (a *App) UnloadKd(ctx context.Context) error {
+func (a *App) UnloadKd() error {
 	a.mu.Lock()
 	if !a.loaded.Kd {
 		a.mu.Unlock()
@@ -286,10 +252,6 @@ func (a *App) UnloadKd(ctx context.Context) error {
 	if a.loaded.HyperTrace {
 		a.mu.Unlock()
 		return fmt.Errorf("UnloadKd: HyperTrace still loaded; unload it first")
-	}
-	if a.packets != nil {
-		a.packets.Stop()
-		a.packets = nil
 	}
 	a.mu.Unlock()
 	if err := a.core.Close(); err != nil {
@@ -304,7 +266,7 @@ func (a *App) UnloadKd(ctx context.Context) error {
 // LoadHyperTrace mirrors HyperDbgLoadHyperTraceModule. Stub: HyperTrace
 // IOCTL integration is Phase C.3 work; the method is here so callers can
 // wire it up without touching App internals.
-func (a *App) LoadHyperTrace(ctx context.Context) error {
+func (a *App) LoadHyperTrace() error {
 	// TODO(Phase C.3): send IOCTL_INIT_HYPERTRACE once the comm layer
 	// exposes the typed wrapper. For now return an error so callers
 	// know it's not wired up.
@@ -312,39 +274,39 @@ func (a *App) LoadHyperTrace(ctx context.Context) error {
 }
 
 // UnloadHyperTrace mirrors HyperDbgUnloadHyperTrace. Stub.
-func (a *App) UnloadHyperTrace(ctx context.Context) error {
+func (a *App) UnloadHyperTrace() error {
 	// TODO(Phase C.3): send IOCTL_PERFORM_HYPERTRACE_UNLOAD.
 	return fmt.Errorf("UnloadHyperTrace: not yet implemented (Phase C.3)")
 }
 
 // LoadAllModules mirrors HyperDbgLoadAllModules: KD + VMM + HyperTrace.
 // HyperTrace currently returns ErrNotImplemented; KD+VMM are loaded.
-func (a *App) LoadAllModules(ctx context.Context, driverPath string) error {
-	if err := a.LoadVMM(ctx, driverPath); err != nil {
+func (a *App) LoadAllModules(driverPath string) error {
+	if err := a.LoadVMM(driverPath); err != nil {
 		return err
 	}
 	// HyperTrace is optional; ignore the not-implemented error for now.
-	_ = a.LoadHyperTrace(ctx)
+	_ = a.LoadHyperTrace()
 	return nil
 }
 
 // UnloadAllModules mirrors HyperDbgUnloadAllModules: HyperTrace → VMM → KD.
-func (a *App) UnloadAllModules(ctx context.Context) error {
+func (a *App) UnloadAllModules() error {
 	a.mu.Lock()
 	ht := a.loaded.HyperTrace
 	vm := a.loaded.Vmm
 	kd := a.loaded.Kd
 	a.mu.Unlock()
 	if ht {
-		_ = a.UnloadHyperTrace(ctx)
+		_ = a.UnloadHyperTrace()
 	}
 	if vm {
-		if err := a.UnloadVMM(ctx); err != nil {
+		if err := a.UnloadVMM(); err != nil {
 			return err
 		}
 	}
 	if kd {
-		if err := a.UnloadKd(ctx); err != nil {
+		if err := a.UnloadKd(); err != nil {
 			return err
 		}
 	}

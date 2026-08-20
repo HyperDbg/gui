@@ -13,12 +13,10 @@
 package driverloader
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"golang.org/x/sys/windows"
 )
@@ -42,10 +40,7 @@ func NewDriver(driverPath string) *Driver {
 
 // withSCManager opens the SCM with ALL_ACCESS and invokes fn with the handle.
 // The handle is always closed. The returned error wraps the SCM failure cause.
-func (d *Driver) withSCManager(ctx context.Context, fn func(windows.Handle) error) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
+func (d *Driver) withSCManager(fn func(windows.Handle) error) error {
 	sc, err := windows.OpenSCManager(nil, nil, windows.SC_MANAGER_ALL_ACCESS)
 	if err != nil {
 		return fmt.Errorf("OpenSCManager failed: %w", err)
@@ -56,12 +51,24 @@ func (d *Driver) withSCManager(ctx context.Context, fn func(windows.Handle) erro
 
 // Install registers the driver as a kernel service (SERVICE_DEMAND_START).
 //
-// If the service already exists it is treated as success so that Install is
-// idempotent — matching HyperDbg's behaviour where a stale service entry is
-// reused rather than causing a hard failure. Use Remove before Install to
-// guarantee a fresh registration.
-func (d *Driver) Install(ctx context.Context) error {
-	return d.withSCManager(ctx, func(sc windows.Handle) error {
+// Mirrors C++ InstallDriver (install.cpp): if the service already exists
+// (ERROR_SERVICE_EXISTS), the stale service is stopped and removed first,
+// then Install recurses to create a fresh registration pointing at the
+// current .sys path. This avoids loading a stale driver image that may
+// differ from the user-mode build — the most common cause of BSOD after a
+// rebuild.
+//
+// If Remove fails during the stale-cleanup path, Install returns an error
+// rather than reusing the old service (matching C++ which returns FALSE).
+func (d *Driver) Install() error {
+	return d.installRecursive(false)
+}
+
+// installRecursive is the recursive core of Install. The `retried` flag
+// prevents infinite recursion if the second CreateService still reports
+// EXISTS (should not happen, but guards against a misbehaving SCM).
+func (d *Driver) installRecursive(retried bool) error {
+	return d.withSCManager(func(sc windows.Handle) error {
 		namePtr, err := windows.UTF16PtrFromString(d.Name)
 		if err != nil {
 			return err
@@ -74,38 +81,31 @@ func (d *Driver) Install(ctx context.Context) error {
 			sc, namePtr, namePtr, windows.SERVICE_ALL_ACCESS,
 			windows.SERVICE_KERNEL_DRIVER, windows.SERVICE_DEMAND_START,
 			windows.SERVICE_ERROR_NORMAL, exePtr, nil, nil, nil, nil, nil)
-		if err != nil {
-			if err == windows.ERROR_SERVICE_EXISTS {
-				return nil
-			}
-			if err == windows.ERROR_SERVICE_MARKED_FOR_DELETE {
-				// The previous instance is still being torn down asynchronously.
-				// Wait and retry once.
-				time.Sleep(3 * time.Second)
-				svc, err = windows.CreateService(
-					sc, namePtr, namePtr, windows.SERVICE_ALL_ACCESS,
-					windows.SERVICE_KERNEL_DRIVER, windows.SERVICE_DEMAND_START,
-					windows.SERVICE_ERROR_NORMAL, exePtr, nil, nil, nil, nil, nil)
-				if err != nil {
-					if err == windows.ERROR_SERVICE_EXISTS || err == windows.ERROR_SERVICE_MARKED_FOR_DELETE {
-						return nil
-					}
-					return fmt.Errorf("CreateService (retry) failed for %q: %w", d.Name, err)
-				}
-				windows.CloseServiceHandle(svc)
-				return nil
-			}
+		if err == nil {
+			windows.CloseServiceHandle(svc)
+			return nil
+		}
+		if err != windows.ERROR_SERVICE_EXISTS && err != windows.ERROR_SERVICE_MARKED_FOR_DELETE {
 			return fmt.Errorf("CreateService failed for %q: %w", d.Name, err)
 		}
-		windows.CloseServiceHandle(svc)
-		return nil
+		// Stale service exists — mirrors C++: stop + remove, then recurse.
+		if retried {
+			return fmt.Errorf("Install: service %q still exists after remove", d.Name)
+		}
+		if err := d.Stop(); err != nil {
+			// Non-fatal: service may not be running.
+		}
+		if err := d.Remove(); err != nil {
+			return fmt.Errorf("Install: failed to remove stale service %q: %w", d.Name, err)
+		}
+		return d.installRecursive(true)
 	})
 }
 
 // Remove deletes the service registration. A non-existent service is treated
 // as success so Remove is idempotent and safe to call after a failed install.
-func (d *Driver) Remove(ctx context.Context) error {
-	return d.withSCManager(ctx, func(sc windows.Handle) error {
+func (d *Driver) Remove() error {
+	return d.withSCManager(func(sc windows.Handle) error {
 		namePtr, err := windows.UTF16PtrFromString(d.Name)
 		if err != nil {
 			return err
@@ -132,8 +132,8 @@ func (d *Driver) Remove(ctx context.Context) error {
 // Common failure causes returned:
 //   - ERROR_PATH_NOT_FOUND        — driver file missing or AV blocking access
 //   - ERROR_INVALID_IMAGE_HASH    — driver signature enforcement / HVCI active
-func (d *Driver) Start(ctx context.Context) error {
-	return d.withSCManager(ctx, func(sc windows.Handle) error {
+func (d *Driver) Start() error {
+	return d.withSCManager(func(sc windows.Handle) error {
 		namePtr, err := windows.UTF16PtrFromString(d.Name)
 		if err != nil {
 			return err
@@ -156,8 +156,8 @@ func (d *Driver) Start(ctx context.Context) error {
 // Stop sends SERVICE_CONTROL_STOP to the driver service. A service that is not
 // running or not removable returns an error; callers may treat such errors as
 // non-fatal (the C version also just warns and proceeds to remove).
-func (d *Driver) Stop(ctx context.Context) error {
-	return d.withSCManager(ctx, func(sc windows.Handle) error {
+func (d *Driver) Stop() error {
+	return d.withSCManager(func(sc windows.Handle) error {
 		namePtr, err := windows.UTF16PtrFromString(d.Name)
 		if err != nil {
 			return err
@@ -175,60 +175,34 @@ func (d *Driver) Stop(ctx context.Context) error {
 	})
 }
 
-// Load is a convenience helper that installs and starts the driver. It is the
-// Go equivalent of the C ManageDriver(DRIVER_FUNC_INSTALL) flow.
-//
-// NOTE: Do NOT call Stop here to "clean up" a stale running instance.
-// Stopping a driver that still has VMX active causes a BSOD
-// (DRIVER_IRQL_NOT_LESS_OR_EQUAL in AsmVmexitHandler) because the OS
-// unmaps the driver's code section while VMX is still enabled — the next
-// VMX exit jumps to unmapped code. The stale-driver state
-// (g_HyperLogInitialized==TRUE after DrvClose) must instead be fixed in
-// the driver source (Loader.c: LoaderInitHyperLog must return TRUE when
-// already initialized).
-func (d *Driver) Load(ctx context.Context) error {
+// Load installs and starts the driver — the Go equivalent of C++
+// ManageDriver(DRIVER_FUNC_INSTALL): single Install + Start, no retry.
+// Install itself handles stale-service cleanup (Stop+Remove+recreate)
+// so that the freshly built .sys is always loaded.
+func (d *Driver) Load() error {
 	if _, err := os.Stat(d.Path); err != nil {
 		return fmt.Errorf("driver file not accessible %q: %w", d.Path, err)
 	}
-	// Retry Install+Start a few times: immediately after a previous
-	// TERMINATE_VMX the VMX state may not have fully settled, causing
-	// DriverEntry (and thus StartService) to fail. A short delay + retry
-	// avoids requiring a manual `sc delete` between runs.
-	var lastErr error
-	for attempt := 0; attempt < 3; attempt++ {
-		if attempt > 0 {
-			// Clean up any stale service from the previous failed attempt.
-			_ = d.Remove(ctx)
-			time.Sleep(2 * time.Second)
-		}
-		if err := d.Install(ctx); err != nil {
-			lastErr = err
-			continue
-		}
-		if err := d.Start(ctx); err != nil {
-			_ = d.Remove(ctx)
-			lastErr = err
-			continue
-		}
-		return nil
+	if err := d.Install(); err != nil {
+		return err
 	}
-	return lastErr
+	return d.Start()
 }
 
 // Unload is a convenience helper that stops and removes the driver. It is the
 // Go equivalent of the C stop+remove flow. Stop failures are tolerated so
 // that Remove still runs (matching HyperDbg's tolerant unload behaviour).
-func (d *Driver) Unload(ctx context.Context) error {
-	if err := d.Stop(ctx); err != nil {
+func (d *Driver) Unload() error {
+	if err := d.Stop(); err != nil {
 		// Non-fatal: driver may not be running. Continue to remove.
 	}
-	return d.Remove(ctx)
+	return d.Remove()
 }
 
 // Exists reports whether the service is currently registered with the SCM.
-func (d *Driver) Exists(ctx context.Context) (bool, error) {
+func (d *Driver) Exists() (bool, error) {
 	var exists bool
-	err := d.withSCManager(ctx, func(sc windows.Handle) error {
+	err := d.withSCManager(func(sc windows.Handle) error {
 		namePtr, err := windows.UTF16PtrFromString(d.Name)
 		if err != nil {
 			return err

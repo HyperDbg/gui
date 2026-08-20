@@ -1,13 +1,13 @@
 package scriptengine
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"sync"
 	"sync/atomic"
 	"unsafe"
 
+	"github.com/ddkwork/golibrary/byteslice"
 	"github.com/ddkwork/hyperdbgsdk"
 	astencoder "github.com/hyperdbg/go-bridge/ast"
 	"github.com/hyperdbg/go-bridge/protocol"
@@ -219,9 +219,9 @@ func (w *Wrapper) BuildEvent(eventType hyperdbgsdk.VMM_EVENT_TYPE_ENUM, options 
 // (see BuildAction); calling RegisterHook twice with the same action is
 // an error (the second call will send an empty script buffer).
 //
-// Context cancellation is checked before each IOCTL; the IOCTLs themselves
-// are synchronous (METHOD_BUFFERED) and cannot be interrupted mid-call.
-func (w *Wrapper) RegisterHook(ctx context.Context, dev *comm.Device, event *hyperdbgsdk.DEBUGGER_GENERAL_EVENT_DETAIL, action *hyperdbgsdk.DEBUGGER_GENERAL_ACTION) (uint64, error) {
+// The IOCTLs themselves are synchronous (METHOD_BUFFERED) and cannot be
+// interrupted mid-call.
+func (w *Wrapper) RegisterHook(dev *comm.Device, event *hyperdbgsdk.DEBUGGER_GENERAL_EVENT_DETAIL, action *hyperdbgsdk.DEBUGGER_GENERAL_ACTION) (uint64, error) {
 	if dev == nil {
 		return 0, fmt.Errorf("%w: nil device", ErrIoctlRegister)
 	}
@@ -233,19 +233,14 @@ func (w *Wrapper) RegisterHook(ctx context.Context, dev *comm.Device, event *hyp
 	}
 
 	// 1. Register the event.
-	eventBuf, err := structToBytes(event)
-	if err != nil {
-		return 0, fmt.Errorf("%w: serialise event: %v", ErrIoctlRegister, err)
-	}
+	eventBuf := byteslice.FromStruct(event)
 	resultSize := unsafe.Sizeof(hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT{})
 	resultBuf := make([]byte, resultSize)
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT, eventBuf, resultBuf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT, eventBuf, resultBuf); err != nil {
 		return 0, fmt.Errorf("%w: REGISTER_EVENT IOCTL: %v", ErrIoctlRegister, err)
 	}
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
-	if err := bytesToStruct(resultBuf, &result); err != nil {
-		return 0, fmt.Errorf("%w: deserialise REGISTER_EVENT result: %v", ErrIoctlRegister, err)
-	}
+	result = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT](resultBuf)
 	if !result.IsSuccessful {
 		return 0, fmt.Errorf("%w: kernel rejected event (error=%d, see DEBUGGER_ERROR_* in SDK)",
 			ErrIoctlRegister, result.Error)
@@ -259,22 +254,17 @@ func (w *Wrapper) RegisterHook(ctx context.Context, dev *comm.Device, event *hyp
 	action.EventTag = event.Tag
 	scriptBytes := w.takeScriptBytes(action) // may be nil for BreakToDebugger
 
-	actionBuf, err := structToBytes(action)
-	if err != nil {
-		return 0, fmt.Errorf("%w: serialise action: %v", ErrIoctlRegister, err)
-	}
+	actionBuf := byteslice.FromStruct(action)
 	payload := make([]byte, len(actionBuf)+len(scriptBytes))
 	copy(payload, actionBuf)
 	copy(payload[len(actionBuf):], scriptBytes)
 
 	actionResultBuf := make([]byte, resultSize)
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT, payload, actionResultBuf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT, payload, actionResultBuf); err != nil {
 		return 0, fmt.Errorf("%w: ADD_ACTION_TO_EVENT IOCTL: %v", ErrIoctlRegister, err)
 	}
 	var actionResult hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
-	if err := bytesToStruct(actionResultBuf, &actionResult); err != nil {
-		return 0, fmt.Errorf("%w: deserialise ADD_ACTION_TO_EVENT result: %v", ErrIoctlRegister, err)
-	}
+	actionResult = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT](actionResultBuf)
 	if !actionResult.IsSuccessful {
 		return 0, fmt.Errorf("%w: kernel rejected action (error=%d, see DEBUGGER_ERROR_* in SDK)",
 			ErrIoctlRegister, actionResult.Error)
@@ -292,52 +282,4 @@ func (w *Wrapper) takeScriptBytes(action *hyperdbgsdk.DEBUGGER_GENERAL_ACTION) [
 	sb := w.scripts[action]
 	delete(w.scripts, action)
 	return sb
-}
-
-// structToBytes serialises a pointer-to-struct into a byte slice whose
-// layout matches the C ABI. The types package preserves field alignment
-// via explicit padding fields (e.g. `_ [N]byte`), so the resulting bytes
-// can be sent directly to the driver via DeviceIoControl without any
-// packing transformation.
-//
-// Returns a copy: the caller may freely mutate the result without affecting
-// the source struct, and vice versa.
-func structToBytes(ptr any) ([]byte, error) {
-	switch s := ptr.(type) {
-	case *hyperdbgsdk.DEBUGGER_GENERAL_EVENT_DETAIL:
-		sz := unsafe.Sizeof(*s)
-		src := unsafe.Slice((*byte)(unsafe.Pointer(s)), sz)
-		out := make([]byte, sz)
-		copy(out, src)
-		return out, nil
-	case *hyperdbgsdk.DEBUGGER_GENERAL_ACTION:
-		sz := unsafe.Sizeof(*s)
-		src := unsafe.Slice((*byte)(unsafe.Pointer(s)), sz)
-		out := make([]byte, sz)
-		copy(out, src)
-		return out, nil
-	case *hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT:
-		sz := unsafe.Sizeof(*s)
-		src := unsafe.Slice((*byte)(unsafe.Pointer(s)), sz)
-		out := make([]byte, sz)
-		copy(out, src)
-		return out, nil
-	}
-	return nil, fmt.Errorf("structToBytes: unsupported type %T (expected *hyperdbgsdk.DEBUGGER_GENERAL_EVENT_DETAIL, *hyperdbgsdk.DEBUGGER_GENERAL_ACTION or *hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT)", ptr)
-}
-
-// bytesToStruct deserialises a byte slice into a pointer-to-struct. The
-// inverse of structToBytes; same ABI-compatibility notes apply.
-func bytesToStruct(buf []byte, ptr any) error {
-	switch s := ptr.(type) {
-	case *hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT:
-		sz := unsafe.Sizeof(*s)
-		if uintptr(len(buf)) < sz {
-			return fmt.Errorf("bytesToStruct: buffer %d bytes < struct %d bytes", len(buf), sz)
-		}
-		dst := unsafe.Slice((*byte)(unsafe.Pointer(s)), sz)
-		copy(dst, buf[:sz])
-		return nil
-	}
-	return fmt.Errorf("bytesToStruct: unsupported type %T (expected *hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT)", ptr)
 }

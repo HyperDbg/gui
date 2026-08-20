@@ -23,7 +23,7 @@ func TestDetachPerformance(t *testing.T) {
 
 	fmt.Println("=== Phase 2: Wait for process handle ===")
 	start = time.Now()
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		if dbg.GetProcessHandle() != 0 {
 			break
 		}
@@ -53,7 +53,7 @@ func TestDetachPerformance(t *testing.T) {
 
 	fmt.Println("=== Phase 5: Wait for detach to complete ===")
 	start = time.Now()
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		if dbg.GetProcessHandle() == 0 {
 			break
 		}

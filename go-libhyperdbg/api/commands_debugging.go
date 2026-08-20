@@ -42,7 +42,6 @@
 package api
 
 import (
-	"context"
 	"encoding/binary"
 	"fmt"
 	"strings"
@@ -104,7 +103,7 @@ type Settings struct {
 //
 // core 层尚未暴露 tag 表，本方法当前返回空 slice（不报错）——
 // 调用方可据此判断"功能可用但暂无数据"，与字符串命令路径行为一致。
-func (d *Debugger) Events(ctx context.Context) ([]uint64, error) {
+func (d *Debugger) Events() ([]uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// core.Debugger 尚未暴露 tag 表，返回空 slice 保持 typed 签名稳定。
@@ -112,7 +111,7 @@ func (d *Debugger) Events(ctx context.Context) ([]uint64, error) {
 }
 
 // Settings 对应 'settings' 命令：返回当前调试器设置。
-func (d *Debugger) Settings(ctx context.Context) (Settings, error) {
+func (d *Debugger) Settings() (Settings, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return Settings{
@@ -125,7 +124,7 @@ func (d *Debugger) Settings(ctx context.Context) (Settings, error) {
 // ============================================================
 
 // Assemble 对应 'a <addr> <instr>'：在指定地址汇编一条指令。
-func (d *Debugger) Assemble(ctx context.Context, addr uint64, instr string) error {
+func (d *Debugger) Assemble(addr uint64, instr string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	asm := misc.NewAssembler()
@@ -137,55 +136,55 @@ func (d *Debugger) Assemble(ctx context.Context, addr uint64, instr string) erro
 }
 
 // BpClear 对应 'bc <tag>'：清除指定断点。
-func (d *Debugger) BpClear(ctx context.Context, tag uint64) error {
+func (d *Debugger) BpClear(tag uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.BpClear(ctx, tag)
+	return d.core.BpClear(tag)
 }
 
 // BpDisable 对应 'bd <tag>'：禁用指定断点（保留但不触发）。
-func (d *Debugger) BpDisable(ctx context.Context, tag uint64) error {
+func (d *Debugger) BpDisable(tag uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.BpDisable(ctx, tag)
+	return d.core.BpDisable(tag)
 }
 
 // BpEnable 对应 'be <tag>'：启用之前禁用的断点。
-func (d *Debugger) BpEnable(ctx context.Context, tag uint64) error {
+func (d *Debugger) BpEnable(tag uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.BpEnable(ctx, tag)
+	return d.core.BpEnable(tag)
 }
 
 // BpList 对应 'bl'：列出所有断点。
-func (d *Debugger) BpList(ctx context.Context) ([]Breakpoint, error) {
+func (d *Debugger) BpList() ([]Breakpoint, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// Delegate to the string command path; the listing is written to
 	// d.output. The typed slice is not populated (the string path owns the
 	// formatting).
-	return nil, d.commands.Exec(ctx, d.core, "bl")
+	return nil, d.commands.Exec(d.core, "bl")
 }
 
 // BpSet 对应 'bp <addr>'：在指定地址设置软件断点，返回断点 tag。
-func (d *Debugger) BpSet(ctx context.Context, addr uint64) (uint64, error) {
+func (d *Debugger) BpSet(addr uint64) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.BpSet(ctx, addr)
+	return d.core.BpSet(addr)
 }
 
 // Core 对应 'core <id>'：切换当前核心（仅多核调试有意义）。
-func (d *Debugger) Core(ctx context.Context, coreId uint32) error {
+func (d *Debugger) Core(coreId uint32) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Core(ctx, coreId)
+	return d.core.Core(coreId)
 }
 
 // Cpu 对应 'cpu'：返回 CPU 信息。
-func (d *Debugger) Cpu(ctx context.Context) (CpuInfo, error) {
+func (d *Debugger) Cpu() (CpuInfo, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	resp, err := d.core.Cpu(ctx)
+	resp, err := d.core.Cpu()
 	if err != nil {
 		return CpuInfo{}, err
 	}
@@ -198,21 +197,21 @@ func (d *Debugger) Cpu(ctx context.Context) (CpuInfo, error) {
 //
 // 注意：与 ReadMemory 的区别在于 DumpMem 针对当前 attached 的调试目标，
 // 不需要显式传 pid。core 层补齐后会自动用 d.core 的 processToken 推导 pid。
-func (d *Debugger) DumpMem(ctx context.Context, addr uint64, size uint32) ([]byte, error) {
+func (d *Debugger) DumpMem(addr uint64, size uint32) ([]byte, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.DumpMem(ctx, addr, size)
+	return d.core.DumpMem(addr, size)
 }
 
 // Unassemble 对应 'u <addr> <count>'：反汇编指定地址的 count 条指令。
-func (d *Debugger) Unassemble(ctx context.Context, addr uint64, count uint32) (string, error) {
+func (d *Debugger) Unassemble(addr uint64, count uint32) (string, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if count == 0 {
 		return "", nil
 	}
 	// 15 bytes is the max x86-64 instruction length.
-	code, err := d.core.DumpMem(ctx, addr, count*15)
+	code, err := d.core.DumpMem(addr, count*15)
 	if err != nil {
 		return "", err
 	}
@@ -229,70 +228,71 @@ func (d *Debugger) Unassemble(ctx context.Context, addr uint64, count uint32) (s
 }
 
 // Dt 对应 'dt <type> <addr>'：按结构体类型显示内存。
-func (d *Debugger) Dt(ctx context.Context, typeName string, addr uint64) (string, error) {
+func (d *Debugger) Dt(typeName string, addr uint64) (string, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// Delegate to the string command path; the formatted output goes to
 	// d.output. The typed string return is not populated.
-	err := d.commands.Exec(ctx, d.core, fmt.Sprintf("dt %s 0x%X", typeName, addr))
+	err := d.commands.Exec(d.core, fmt.Sprintf("dt %s 0x%X", typeName, addr))
 	return "", err
 }
 
 // EditMem 对应 'e <addr> <data>'：写入内存。
-func (d *Debugger) EditMem(ctx context.Context, addr uint64, data []byte) error {
+func (d *Debugger) EditMem(addr uint64, data []byte) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.EditMem(ctx, addr, data)
+	return d.core.EditMem(addr, data)
 }
 
 // Eval 对应 'eval <expr>'：求值表达式，返回 64-bit 结果。
-func (d *Debugger) Eval(ctx context.Context, expr string) (uint64, error) {
+func (d *Debugger) Eval(expr string) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// Delegate to the string command path; the value is printed to d.output.
 	// The typed uint64 return is not populated (parsing the formatted output
 	// back is out of scope for this wrapper).
-	err := d.commands.Exec(ctx, d.core, "eval "+expr)
+	err := d.commands.Exec(d.core, "eval "+expr)
 	return 0, err
 }
 
 // Flush 对应 'flush'：刷新调试器缓存（符号/断点等）。
 // core 层发送 IOCTL_DEBUGGER_FLUSH_LOGGING_BUFFERS，将内核日志缓冲排空到用户态。
-func (d *Debugger) Flush(ctx context.Context) error {
+func (d *Debugger) Flush() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Flush(ctx)
+	return d.core.Flush()
 }
 
 // Gg 对应 'gg <addr>'：运行到指定地址（go until address）。
-func (d *Debugger) Gg(ctx context.Context, addr uint64) error {
+func (d *Debugger) Gg(addr uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.commands.Exec(ctx, d.core, fmt.Sprintf("g 0x%X", addr))
+	return d.commands.Exec(d.core, fmt.Sprintf("g 0x%X", addr))
 }
 
 // Gu 对应 'gu'：运行到当前函数返回（go until return）。
 // 当前用 Step 近似（多次单步直到 RSP 变化），完整实现需要栈回溯。
-func (d *Debugger) Gu(ctx context.Context) error {
+func (d *Debugger) Gu() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Step(ctx)
+	return d.core.Step()
 }
 
 // IoIn 对应 'i <port>'：从 I/O 端口读取一字节。
-func (d *Debugger) IoIn(ctx context.Context, port uint16) (byte, error) {
+func (d *Debugger) IoIn(port uint16) (byte, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.IoIn(ctx, port)
+	return d.core.IoIn(port)
 }
 
-// K 对应 'k <count>'：回溯调用栈。当前通过 ReadRegisters 获取 RSP 后
-// 用 DumpMem 读栈内存，扫描返回地址生成调用栈文本输出到 d.output。
-func (d *Debugger) K(ctx context.Context, count uint32) ([]CallFrame, error) {
+// K 对应 'k <count>'：回溯调用栈。通过 ReadRegisters 获取 RSP 后
+// 用 DumpMem 读栈内存，扫描返回地址生成 []CallFrame 返回。
+// 调用方（如 CPU 页）自行格式化显示，无需捕获 d.output 文本。
+func (d *Debugger) K(count uint32) ([]CallFrame, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	regs, rip, _, err := d.core.ReadRegisters(ctx)
+	regs, rip, _, err := d.core.ReadRegisters()
 	if err != nil {
 		return nil, fmt.Errorf("K: ReadRegisters: %w", err)
 	}
@@ -305,43 +305,48 @@ func (d *Debugger) K(ctx context.Context, count uint32) ([]CallFrame, error) {
 	if stackSize > 4096 {
 		stackSize = 4096
 	}
-	stackData, err := d.core.DumpMem(ctx, regs.Rsp, stackSize)
+	stackData, err := d.core.DumpMem(regs.Rsp, stackSize)
 	if err != nil {
 		return nil, fmt.Errorf("K: DumpMem: %w", err)
 	}
 
-	// 格式化调用栈输出
-	fmt.Fprintf(d.output, "Child-SP          RetAddr           Call Site\n")
-	fmt.Fprintf(d.output, "%016X %016X %s\n", regs.Rsp, rip, "<entry>")
+	// 构建调用栈帧。首帧为当前 RIP（入口点）。
+	frames := make([]CallFrame, 0, count+1)
+	frames = append(frames, CallFrame{
+		Address: rip,
+		Symbol:  "<entry>",
+	})
 
 	// 扫描栈上的返回地址（简化版：每 8 字节检查是否像合法地址）
 	for i := 0; i+8 <= len(stackData) && i/8 < int(count); i += 8 {
 		val := binary.LittleEndian.Uint64(stackData[i:])
 		// 简单启发式：用户态地址范围 (0x00000000 - 0x7FFFFFFFFFFF)
 		if val > 0x10000 && val < 0x800000000000 {
-			fmt.Fprintf(d.output, "%016X %016X %s\n",
-				regs.Rsp+uint64(i), val, "<unknown>")
+			frames = append(frames, CallFrame{
+				Address: val,
+				Symbol:  "<unknown>",
+			})
 		}
 	}
 
-	return nil, nil
+	return frames, nil
 }
 
 // Lm 对应 'lm'：列出当前调试目标已加载的模块。
-func (d *Debugger) Lm(ctx context.Context) ([]Module, error) {
+func (d *Debugger) Lm() ([]Module, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// Delegate to the string command path; the module listing is written to
 	// d.output. The typed slice is not populated.
-	err := d.commands.Exec(ctx, d.core, "lm")
+	err := d.commands.Exec(d.core, "lm")
 	return nil, err
 }
 
 // Output 对应 'output <expr>'：将表达式求值结果输出到日志（不打印到 console）。
-func (d *Debugger) Output(ctx context.Context, expr string) error {
+func (d *Debugger) Output(expr string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.commands.Exec(ctx, d.core, "output "+expr)
+	return d.commands.Exec(d.core, "output "+expr)
 }
 
 // StepOver 对应 'p'：单步步过（step over，不进入 call）。
@@ -350,133 +355,138 @@ func (d *Debugger) Output(ctx context.Context, expr string) error {
 //
 // 不持有 api.mu —— core 层内部管理锁（获取 dev 后释放），等 PAUSED 期间
 // 不持任何锁，允许 Register/Unassemble 等查询并发执行（OnPaused 回调刷新）。
-func (d *Debugger) StepOver(ctx context.Context) error {
-	return d.core.StepOver(ctx)
+func (d *Debugger) StepOver() error {
+	return d.core.StepOver()
 }
 
 // StepOut 执行到当前函数返回（step out / execute till return）。
 // 读 [RSP] 返回地址，设临时断点后 Continue，命中后自动移除断点。
 // 对应 OllyDbg Ctrl+F9 / x64dbg "执行到返回"。
 // 不持 api.mu，理由同 StepOver。
-func (d *Debugger) StepOut(ctx context.Context) error {
-	return d.core.StepOut(ctx)
+func (d *Debugger) StepOut() error {
+	return d.core.StepOut()
 }
 
 // Preactivate 对应 'preactivate'：预激活所有断点（确保下次 Continue 立即生效）。
 // core 层发送 IOCTL_PREACTIVATE_FUNCTIONALITY，目前仅支持 mode-change 预激活。
-func (d *Debugger) Preactivate(ctx context.Context) error {
+func (d *Debugger) Preactivate() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Preactivate(ctx, hyperdbgsdk.DebuggerPreactivateCommandTypeMode)
+	return d.core.Preactivate(hyperdbgsdk.DebuggerPreactivateCommandTypeMode)
 }
 
 // Prealloc 对应 'prealloc <size>'：预分配内核缓冲区（用于大日志量场景）。
 // size 是缓冲数量；类型默认为 RegularEvent（如需其他类型用 core.Prealloc）。
-func (d *Debugger) Prealloc(ctx context.Context, size uint64) error {
+func (d *Debugger) Prealloc(size uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if size > 0xFFFFFFFF {
 		return fmt.Errorf("Prealloc: size %d exceeds uint32", size)
 	}
-	return d.core.Prealloc(ctx, hyperdbgsdk.DebuggerPreallocCommandTypeRegularEvent, uint32(size))
+	return d.core.Prealloc(hyperdbgsdk.DebuggerPreallocCommandTypeRegularEvent, uint32(size))
 }
 
 // Print 对应 'print <expr>'：打印表达式值（与 eval 的区别在于 print 格式化输出）。
-func (d *Debugger) Print(ctx context.Context, expr string) (string, error) {
+func (d *Debugger) Print(expr string) (string, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// Delegate to the string command path; the formatted value is written to
 	// d.output. The typed string return is not populated.
-	err := d.commands.Exec(ctx, d.core, "print "+expr)
+	err := d.commands.Exec(d.core, "print "+expr)
 	return "", err
 }
 
-// Register 对应 'r <reg>'（无值）或 'r <reg> <val>'（写）。
-// 读取所有寄存器并格式化输出到 d.output。返回 0（typed 返回未填充）。
-func (d *Debugger) Register(ctx context.Context, reg string) (uint64, error) {
+// Register 对应 'r <reg>'：读取单个寄存器，返回其数值。
+func (d *Debugger) Register(reg string) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	regs, rip, rflags, err := d.core.ReadRegisters(ctx)
+	regs, rip, rflags, err := d.core.ReadRegisters()
 	if err != nil {
 		return 0, fmt.Errorf("Register: ReadRegisters: %w", err)
 	}
 
-	// 如果指定了具体寄存器名，只输出该寄存器的值
 	switch strings.ToUpper(reg) {
 	case "RIP":
-		fmt.Fprintf(d.output, "RIP=%016X\n", rip)
 		return rip, nil
 	case "RFL", "RFLAGS", "EFLAGS":
-		fmt.Fprintf(d.output, "RFL=%016X\n", rflags)
 		return rflags, nil
 	case "":
-		// 输出所有寄存器
-		fmt.Fprintf(d.output, "RAX=%016X RBX=%016X RCX=%016X\n", regs.Rax, regs.Rbx, regs.Rcx)
-		fmt.Fprintf(d.output, "RDX=%016X RSI=%016X RDI=%016X\n", regs.Rdx, regs.Rsi, regs.Rdi)
-		fmt.Fprintf(d.output, "RIP=%016X RSP=%016X RBP=%016X\n", rip, regs.Rsp, regs.Rbp)
-		fmt.Fprintf(d.output, "R8 =%016X R9 =%016X R10=%016X\n", regs.R8, regs.R9, regs.R10)
-		fmt.Fprintf(d.output, "R11=%016X R12=%016X R13=%016X\n", regs.R11, regs.R12, regs.R13)
-		fmt.Fprintf(d.output, "R14=%016X R15=%016X\n", regs.R14, regs.R15)
-		fmt.Fprintf(d.output, "RFL=%016X\n", rflags)
-		return 0, nil
+		return 0, fmt.Errorf("Register: empty reg name, use AllRegisters")
 	default:
-		// 查找指定寄存器
-		v := lookupRegByName(regs, rip, rflags, reg)
-		fmt.Fprintf(d.output, "%s=%016X\n", strings.ToUpper(reg), v)
-		return v, nil
+		return lookupRegByName(regs, rip, rflags, reg), nil
 	}
 }
 
-// SetRegister 对应 'r <reg> <val>'：写入寄存器。
-func (d *Debugger) SetRegister(ctx context.Context, reg string, val uint64) error {
+// AllRegisters 对应 'r'（无参数）：读取所有寄存器，返回格式化文本。
+func (d *Debugger) AllRegisters() (string, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.commands.Exec(ctx, d.core, fmt.Sprintf("r %s 0x%X", reg, val))
+
+	regs, rip, rflags, err := d.core.ReadRegisters()
+	if err != nil {
+		return "", fmt.Errorf("AllRegisters: ReadRegisters: %w", err)
+	}
+
+	return fmt.Sprintf("RAX=%016X RBX=%016X RCX=%016X\nRDX=%016X RSI=%016X RDI=%016X\nRIP=%016X RSP=%016X RBP=%016X\nR8 =%016X R9 =%016X R10=%016X\nR11=%016X R12=%016X R13=%016X\nR14=%016X R15=%016X\nRFL=%016X",
+		regs.Rax, regs.Rbx, regs.Rcx,
+		regs.Rdx, regs.Rsi, regs.Rdi,
+		rip, regs.Rsp, regs.Rbp,
+		regs.R8, regs.R9, regs.R10,
+		regs.R11, regs.R12, regs.R13,
+		regs.R14, regs.R15,
+		rflags), nil
+}
+
+// SetRegister 对应 'r <reg> <val>'：写入寄存器。
+func (d *Debugger) SetRegister(reg string, val uint64) error {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	return d.commands.Exec(d.core, fmt.Sprintf("r %s 0x%X", reg, val))
 }
 
 // Rdmsr 对应 'rdmsr <msr>'：读取 MSR（Model Specific Register）。
-func (d *Debugger) Rdmsr(ctx context.Context, msr uint32) (uint64, error) {
+func (d *Debugger) Rdmsr(msr uint32) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Rdmsr(ctx, msr)
+	return d.core.Rdmsr(msr)
 }
 
 // Search 对应 's <addr> <size> <pattern>'：在内存中搜索字节模式。
 // 返回所有匹配地址。
-func (d *Debugger) Search(ctx context.Context, addr uint64, size uint32, pattern []byte) ([]uint64, error) {
+func (d *Debugger) Search(addr uint64, size uint32, pattern []byte) ([]uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Search(ctx, addr, size, pattern)
+	return d.core.Search(addr, size, pattern)
 }
 
 // TraceInto 对应 't'：单步步入（trace into，进入 call）。
 // 不持 api.mu，理由同 StepOver（等 PAUSED 期间允许查询并发）。
-func (d *Debugger) TraceInto(ctx context.Context) error {
-	return d.core.Step(ctx)
+func (d *Debugger) TraceInto() error {
+	return d.core.Step()
 }
 
 // Test 对应 'test'：自检命令（运行内部测试套件）。
-func (d *Debugger) Test(ctx context.Context) error {
+func (d *Debugger) Test() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Test(ctx)
+	return d.core.Test()
 }
 
 // Wrmsr 对应 'wrmsr <msr> <val>'：写入 MSR。
-func (d *Debugger) Wrmsr(ctx context.Context, msr uint32, val uint64) error {
+func (d *Debugger) Wrmsr(msr uint32, val uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Wrmsr(ctx, msr, val)
+	return d.core.Wrmsr(msr, val)
 }
 
 // Examine 对应 'x <pattern>'：按通配符查找符号（如 "nt!Nt*"）。
-func (d *Debugger) Examine(ctx context.Context, pattern string) ([]Module, error) {
+func (d *Debugger) Examine(pattern string) ([]Module, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// Delegate to the string command path; the symbol listing is written to
 	// d.output. The typed slice is not populated.
-	err := d.commands.Exec(ctx, d.core, "x "+pattern)
+	err := d.commands.Exec(d.core, "x "+pattern)
 	return nil, err
 }
 

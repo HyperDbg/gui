@@ -20,14 +20,11 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"os"
-	"os/signal"
 	"path/filepath"
 	"strings"
-	"syscall"
 
 	"github.com/hyperdbg/go-libhyperdbg/api"
 	"github.com/hyperdbg/go-libhyperdbg/symbolparser"
@@ -68,13 +65,6 @@ func main() {
 	fmt.Printf("Please visit https://docs.hyperdbg.org for more information...\n")
 	fmt.Printf("HyperDbg is released under the GNU Public License v3 (GPLv3).\n\n")
 
-	// Main context: SIGTERM cancels it for a graceful exit. SIGINT is
-	// intentionally NOT registered here so the REPL and the script runner
-	// can install their own per-mode handlers (REPL: interrupt current
-	// command; script: abort the run).
-	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM)
-	defer cancel()
-
 	// Build the debugger options. The symbol resolver must be injected at
 	// New() time (the registry captures the output sink), but its Init()
 	// runs after the device is open — see find-oep.go for the same pattern.
@@ -94,7 +84,7 @@ func main() {
 
 	// --connect: open the local device (or, in future, a remote target).
 	if *connect != "" {
-		if err := dbg.Connect(ctx, *connect); err != nil {
+		if err := dbg.Connect(*connect); err != nil {
 			fmt.Fprintf(os.Stderr, "connect %q failed: %v\n", *connect, err)
 			os.Exit(1)
 		}
@@ -107,7 +97,7 @@ func main() {
 			fmt.Fprintln(os.Stderr, "err: --load-vmm requires --driver <path>")
 			os.Exit(2)
 		}
-		if err := dbg.LoadVMM(ctx, *driverPath); err != nil {
+		if err := dbg.LoadVMM(*driverPath); err != nil {
 			fmt.Fprintf(os.Stderr, "load-vmm failed: %v\n", err)
 			os.Exit(1)
 		}
@@ -118,7 +108,7 @@ func main() {
 	// effort — if it fails we warn and continue without symbols rather
 	// than aborting, since not every workflow needs them.
 	if *symPath != "" && resolver != nil {
-		if err := resolver.Init(ctx, *symPath); err != nil {
+		if err := resolver.Init(*symPath); err != nil {
 			fmt.Fprintf(os.Stderr, "warn: sym-path init failed: %v (continuing without symbols)\n", err)
 		} else {
 			fmt.Printf("[*] Symbol resolver initialised (sympath=%s)\n", *symPath)
@@ -132,10 +122,10 @@ func main() {
 		var runErr error
 		switch strings.ToLower(filepath.Ext(*scriptPath)) {
 		case ".go":
-			runErr = runner.RunGoScript(ctx, *scriptPath)
+			runErr = runner.RunGoScript(*scriptPath)
 		default:
 			// ".ds" or any other extension: treat as a command script.
-			runErr = runner.Run(ctx, *scriptPath)
+			runErr = runner.Run(*scriptPath)
 		}
 		if runErr != nil {
 			fmt.Fprintf(os.Stderr, "script error: %v\n", runErr)
@@ -150,7 +140,7 @@ func main() {
 		WithHistoryPath(defaultHistoryPath()),
 		WithHistorySize(defaultHistoryMax),
 	)
-	if err := repl.Run(ctx); err != nil {
+	if err := repl.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "repl error: %v\n", err)
 		os.Exit(1)
 	}

@@ -32,7 +32,6 @@
 package hwdbg
 
 import (
-	"context"
 	"fmt"
 	"sync"
 	"unsafe"
@@ -312,14 +311,11 @@ func (r *ScriptRunner) SendScriptPacket(instanceInfo *hyperdbgsdk.HWDBG_INSTANCE
 // instance-info read buffer (mirrors the C++ parameter).
 //
 // Returns ErrScriptEngineNotAvailable when no ScriptEngine is wired up.
-func (r *ScriptRunner) RunScript(ctx context.Context, script, instanceFilePathToRead, hardwareScriptFilePathToSave string, initialBramBufferSize uint32) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
+func (r *ScriptRunner) RunScript(script, instanceFilePathToRead, hardwareScriptFilePathToSave string, initialBramBufferSize uint32) error {
 	if r.intp == nil {
 		return fmt.Errorf("hwdbg.RunScript: no *Interpreter bound")
 	}
-	if err := r.intp.LoadInstanceInfo(ctx, instanceFilePathToRead, initialBramBufferSize); err != nil {
+	if err := r.intp.LoadInstanceInfo(instanceFilePathToRead, initialBramBufferSize); err != nil {
 		return err
 	}
 

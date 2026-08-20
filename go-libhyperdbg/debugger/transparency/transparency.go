@@ -25,7 +25,6 @@
 package transparency
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"sync"
@@ -263,13 +262,9 @@ func (t *Transparency) RdtscEmulationDetection() (detected bool, avg, stddev, me
 // CheckHypervisorPresence runs CpuidTimeStampCounter and prints the verdict.
 // Mirrors C++ TransparentModeCheckHypervisorPresence.
 //
-// ctx is checked for cancellation before the (CPU-bound) measurement loop
-// starts; the loop itself runs for ~TestCount iterations and is not
+// The (CPU-bound) measurement loop runs for ~TestCount iterations and is not
 // interruptible mid-flight.
-func (t *Transparency) CheckHypervisorPresence(ctx context.Context) (detected bool, avg, stddev, median uint64, err error) {
-	if err = ctx.Err(); err != nil {
-		return
-	}
+func (t *Transparency) CheckHypervisorPresence() (detected bool, avg, stddev, median uint64, err error) {
 	detected, avg, stddev, median = t.CpuidTimeStampCounter()
 	if detected {
 		t.output.Printf("hypervisor detected\n")
@@ -281,10 +276,7 @@ func (t *Transparency) CheckHypervisorPresence(ctx context.Context) (detected bo
 
 // CheckRdtscpVmexit runs RdtscEmulationDetection and prints the verdict.
 // Mirrors C++ TransparentModeCheckRdtscpVmexit.
-func (t *Transparency) CheckRdtscpVmexit(ctx context.Context) (detected bool, avg, stddev, median uint64, err error) {
-	if err = ctx.Err(); err != nil {
-		return
-	}
+func (t *Transparency) CheckRdtscpVmexit() (detected bool, avg, stddev, median uint64, err error) {
 	detected, avg, stddev, median = t.RdtscEmulationDetection()
 	if detected {
 		t.output.Printf("rdtsc/p emulation detected\n")
@@ -309,14 +301,14 @@ func (t *Transparency) CheckRdtscpVmexit(ctx context.Context) (detected bool, av
 // from multiple goroutines will skew the timings. Callers that want accurate
 // measurements should serialise calls to TransparentHypervisor (and to the
 // individual Check* methods).
-func (t *Transparency) TransparentHypervisor(ctx context.Context) (HypervisorResult, error) {
+func (t *Transparency) TransparentHypervisor() (HypervisorResult, error) {
 	var r HypervisorResult
 	var err error
-	r.HypervisorDetected, r.CpuidAvg, r.CpuidStddev, r.CpuidMedian, err = t.CheckHypervisorPresence(ctx)
+	r.HypervisorDetected, r.CpuidAvg, r.CpuidStddev, r.CpuidMedian, err = t.CheckHypervisorPresence()
 	if err != nil {
 		return r, err
 	}
-	r.RdtscpEmulated, r.RdtscAvg, r.RdtscStddev, r.RdtscMedian, err = t.CheckRdtscpVmexit(ctx)
+	r.RdtscpEmulated, r.RdtscAvg, r.RdtscStddev, r.RdtscMedian, err = t.CheckRdtscpVmexit()
 	return r, err
 }
 
@@ -327,15 +319,15 @@ func (t *Transparency) TransparentHypervisor(ctx context.Context) (HypervisorRes
 // HideDebugger enables transparent mode for the given process ID. Mirrors C++
 // HyperDbgEnableTransparentMode(ProcessId, NULL, TRUE) with the default evade
 // mask (TRANSPARENT_EVADE_MASK_DEFAULT).
-func (t *Transparency) HideDebugger(ctx context.Context, processID uint32) error {
-	return t.HideDebuggerEx(ctx, processID, "", true, EvadeMaskDefault)
+func (t *Transparency) HideDebugger(processID uint32) error {
+	return t.HideDebuggerEx(processID, "", true, EvadeMaskDefault)
 }
 
 // HideDebuggerByName enables transparent mode for processes matching the
 // given name. Mirrors C++ HyperDbgEnableTransparentMode(NULL, name, FALSE)
 // with the default evade mask.
-func (t *Transparency) HideDebuggerByName(ctx context.Context, processName string) error {
-	return t.HideDebuggerEx(ctx, 0, processName, false, EvadeMaskDefault)
+func (t *Transparency) HideDebuggerByName(processName string) error {
+	return t.HideDebuggerEx(0, processName, false, EvadeMaskDefault)
 }
 
 // HideDebuggerEx enables transparent mode with full parameters. Mirrors C++
@@ -352,10 +344,7 @@ func (t *Transparency) HideDebuggerByName(ctx context.Context, processName strin
 //
 // On success the kernel reports KernelStatusSuccess and the method returns
 // nil. On failure the method returns an error wrapping the kernel status.
-func (t *Transparency) HideDebuggerEx(ctx context.Context, processID uint32, processName string, isProcessID bool, evadeMask uint32) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
+func (t *Transparency) HideDebuggerEx(processID uint32, processName string, isProcessID bool, evadeMask uint32) error {
 	if t.dev == nil {
 		return errors.New("transparency: nil device; cannot send hide IOCTL")
 	}
@@ -429,7 +418,7 @@ func (t *Transparency) HideDebuggerEx(ctx context.Context, processID uint32, pro
 	//         FinalRequestBuffer, SIZEOF_DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE,
 	//         &ReturnedLength, NULL);
 	outBuf := make([]byte, structSize)
-	if _, err := t.dev.Ioctl(ctx,
+	if _, err := t.dev.Ioctl(
 		comm.IOCTL_CODE_DEBUGGER_HIDE_AND_UNHIDE_TO_TRANSPARENT_THE_DEBUGGER,
 		inBuf, outBuf); err != nil {
 		return fmt.Errorf("hide IOCTL failed: %w", err)
@@ -455,10 +444,7 @@ func (t *Transparency) HideDebuggerEx(ctx context.Context, processID uint32, pro
 // UnhideDebugger disables transparent mode. Mirrors C++ HyperDbgDisable-
 // TransparentMode: sends the same IOCTL with IsHide=FALSE and an empty
 // request, the kernel reverts all transparency measures.
-func (t *Transparency) UnhideDebugger(ctx context.Context) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
+func (t *Transparency) UnhideDebugger() error {
 	if t.dev == nil {
 		return errors.New("transparency: nil device; cannot send unhide IOCTL")
 	}
@@ -474,7 +460,7 @@ func (t *Transparency) UnhideDebugger(ctx context.Context) error {
 
 	// C++: same IOCTL, input/output both SIZEOF_DEBUGGER_HIDE_AND_TRANSPARENT_
 	// DEBUGGER_MODE.
-	if _, err := t.dev.Ioctl(ctx,
+	if _, err := t.dev.Ioctl(
 		comm.IOCTL_CODE_DEBUGGER_HIDE_AND_UNHIDE_TO_TRANSPARENT_THE_DEBUGGER,
 		inBuf, outBuf); err != nil {
 		return fmt.Errorf("unhide IOCTL failed: %w", err)

@@ -134,6 +134,7 @@ func TestWhitelistFuncs(t *testing.T) {
 		"StackReadQword", "StackReadDword", "Reg", "SetReg",
 		"ReadMem", "ReadMemQword", "Printf", "Break",
 		"Continue", "GetPid", "GetTid", "GetIP",
+		"SetCtxVar", "GetCtxVar", "SetMemWriteBp", "ReadInstrOperand",
 	}
 	for _, name := range expected {
 		if _, ok := WhitelistFuncs[name]; !ok {

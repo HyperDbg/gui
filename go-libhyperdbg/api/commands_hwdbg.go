@@ -12,19 +12,18 @@
 package api
 
 import (
-	"context"
 	"fmt"
 )
 
 // Hw 对应 'hw'：启动/查询硬件调试设备。
-func (d *Debugger) Hw(ctx context.Context) error {
+func (d *Debugger) Hw() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return fmt.Errorf("Hw: hwdbg hardware device not present (FPGA-based; see hwdbg package)")
 }
 
 // HwClk 对应 'hw_clk'：硬件调试设备的时钟配置。
-func (d *Debugger) HwClk(ctx context.Context) error {
+func (d *Debugger) HwClk() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return fmt.Errorf("HwClk: hwdbg hardware device not present")

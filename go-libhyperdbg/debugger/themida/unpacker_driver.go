@@ -7,7 +7,6 @@
 package themida
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"syscall"
@@ -60,7 +59,7 @@ func NewUnpacker(cfg UnpackerConfig) *Unpacker {
 }
 
 // Run 执行完整解壳流程：
-//  1. 创建 api.Debugger + LoadVMM + LogOpen
+//  1. 创建 api.Debugger + LoadVMM
 //  2. 启动目标进程（挂起状态）
 //  3. 用目标进程 PID 获取 32-bit DLL 基址（WOW64）
 //  4. 设置 EPT hook（EptHookForProcess，限定到目标进程）
@@ -73,7 +72,7 @@ func NewUnpacker(cfg UnpackerConfig) *Unpacker {
 // unpacker14.go 的 ParseAPILog 解析日志，从中提取 SetEvent 入口和
 // IO Marker，最终推导 VM OEP。这对应 OllyDbg 脚本 L1430+ 的流程：
 // 监控 VirtualAlloc 找 WL Section → 在 WL Section 中扫描 VM OEP 签名。
-func (u *Unpacker) Run(ctx context.Context) (UnpackerResult, error) {
+func (u *Unpacker) Run() (UnpackerResult, error) {
 	var result UnpackerResult
 	result.LogPath = u.cfg.LogPath
 
@@ -86,25 +85,18 @@ func (u *Unpacker) Run(ctx context.Context) (UnpackerResult, error) {
 	defer dbg.Close()
 
 	// LoadVMM 包含: 安装驱动 → 打开设备 → IOCTL_INIT_VMM
-	if err := dbg.LoadVMM(ctx, u.cfg.DriverPath); err != nil {
+	if err := dbg.LoadVMM(u.cfg.DriverPath); err != nil {
 		return result, fmt.Errorf("LoadVMM: %w", err)
 	}
 	// 注意: 不用 defer UnloadVMM，而是手动调用，确保执行顺序：
 	// UnloadVMM (TERMINATE_VMX) → TerminateProcess → Close
 
-	if u.cfg.LogPath != "" {
-		if err := dbg.LogOpen(u.cfg.LogPath); err != nil {
-			fmt.Fprintf(os.Stderr, "[!] LogOpen failed: %v\n", err)
-		}
-		defer dbg.LogClose()
-	}
-
 	// 2. 启动目标进程（挂起状态），获取 PID 和 Handle
 	//    必须先启动进程才能获取 32-bit DLL 基址（WOW64 目标的 DLL
 	//    基址与 64-bit 调试器进程不同，不能用 GetModuleHandleW）。
-	proc, err := dbg.StartProcess(ctx, u.cfg.ExePath)
+	proc, err := dbg.StartProcess(u.cfg.ExePath)
 	if err != nil {
-		dbg.UnloadVMM(ctx)
+		dbg.UnloadVMM()
 		return result, fmt.Errorf("StartProcess: %w", err)
 	}
 	pid := proc.Pid
@@ -114,7 +106,7 @@ func (u *Unpacker) Run(ctx context.Context) (UnpackerResult, error) {
 	//    StartProcess 以 CREATE_SUSPENDED 创建进程并 attach，内核在
 	//    第一条指令处暂停。Continue 让进程运行，但 PEB monitor EPT
 	//    hook 会在 PEB 被访问时再次暂停进程（此时 loader 尚未完成）。
-	if err := dbg.Continue(ctx); err != nil {
+	if err := dbg.Continue(); err != nil {
 		fmt.Fprintf(os.Stderr, "[!] 1st Continue (to entry point) failed: %v\n", err)
 	}
 
@@ -124,7 +116,7 @@ func (u *Unpacker) Run(ctx context.Context) (UnpackerResult, error) {
 	//    被 demand-paging 映射到物理内存。如果进程在 PEB 访问时暂停，
 	//    kernelbase 的代码页还未 fault in，EptHookForProcess 会因
 	//    MmGetPhysicalAddress 返回 0 而失败 (0xC0000005)。
-	if err := dbg.Continue(ctx); err != nil {
+	if err := dbg.Continue(); err != nil {
 		fmt.Fprintf(os.Stderr, "[!] 2nd Continue (past entry point) failed: %v\n", err)
 	}
 
@@ -188,7 +180,7 @@ func (u *Unpacker) Run(ctx context.Context) (UnpackerResult, error) {
 	pagesReady := false
 	for i := 0; i < warmupMax; i++ {
 		// Resume if paused (PEB hook, exception, etc.)
-		_ = dbg.Continue(ctx)
+		_ = dbg.Continue()
 		time.Sleep(300 * time.Millisecond)
 
 		// Check if all target pages are faulted in
@@ -213,7 +205,7 @@ func (u *Unpacker) Run(ctx context.Context) (UnpackerResult, error) {
 	}
 
 	// 7. 暂停进程，准备设置 EPT hook
-	_ = dbg.Pause(ctx) // may be "already paused" — that's fine
+	_ = dbg.Pause() // may be "already paused" — that's fine
 	fmt.Fprintf(os.Stderr, "[*] Process paused, setting up hooks\n")
 
 	// 5.5 触发页面映射（demand-paging）
@@ -255,7 +247,7 @@ func hook(ctx *HookCtx) {
 	ret := ctx.StackReadQword(0) & 0xFFFFFFFF
 	ctx.Printf("Call from: %%x | API: %%x | NAME: RtlAllocateHeap\n", ret, 0x%X)
 }`, pid, rtlAllocateHeapAddr)
-		if tagRAH, err := dbg.EptHookForProcess(ctx, rtlAllocateHeapAddr, pid, rahCode); err != nil {
+		if tagRAH, err := dbg.EptHookForProcess(rtlAllocateHeapAddr, pid, rahCode); err != nil {
 			fmt.Fprintf(os.Stderr, "[!] EptHookForProcess(RtlAllocateHeap) failed: %v\n", err)
 		} else {
 			fmt.Fprintf(os.Stderr, "[*] Hooked RtlAllocateHeap tag=%d\n", tagRAH)
@@ -276,7 +268,7 @@ func hook(ctx *HookCtx) {
 	ctx.Printf("Call from: %%x | API: %%x | NAME: VirtualAlloc\n", ret, 0x%X)
 	ctx.SetCtxVar("va_ret", ret)
 }`, pid, virtualAllocAddr)
-		if tagVA, err := dbg.EptHookForProcess(ctx, virtualAllocAddr, pid, vaCode); err != nil {
+		if tagVA, err := dbg.EptHookForProcess(virtualAllocAddr, pid, vaCode); err != nil {
 			fmt.Fprintf(os.Stderr, "[!] EptHookForProcess(VirtualAlloc) failed (non-fatal): %v\n", err)
 		} else {
 			fmt.Fprintf(os.Stderr, "[*] Hooked VirtualAlloc tag=%d\n", tagVA)
@@ -316,7 +308,7 @@ func hook(ctx *HookCtx) {
 		ctx.Printf("Address: %%x | PUSH %%x | JUMP %%x\n", ret, push, jump)
 	}
 }`, pid, setEventAddr)
-		if tagSE, err := dbg.EptHookForProcess(ctx, setEventAddr, pid, seCode); err != nil {
+		if tagSE, err := dbg.EptHookForProcess(setEventAddr, pid, seCode); err != nil {
 			fmt.Fprintf(os.Stderr, "[!] EptHookForProcess(SetEvent) failed: %v\n", err)
 		} else {
 			fmt.Fprintf(os.Stderr, "[*] Hooked SetEvent tag=%d\n", tagSE)
@@ -331,7 +323,7 @@ func hook(ctx *HookCtx) {
 	//     but never reach user-mode, so test-oep.log stays empty.
 	//     The pump opens a DEDICATED device handle so the blocking IRP
 	//     does not stall the main IOCTL handle used by Continue/Pause.
-	pump, pumpErr := dbg.StartMessagePump(ctx)
+	pump, pumpErr := dbg.StartMessagePump()
 	if pumpErr != nil {
 		fmt.Fprintf(os.Stderr, "[!] StartMessagePump failed: %v (hooks will fire but log will be empty)\n", pumpErr)
 	} else {
@@ -349,7 +341,7 @@ func hook(ctx *HookCtx) {
 	// 8. 第三次 Continue — 继续运行，让 Themida loader 执行并调用 hooked API
 	//    此时 EPT hook 已设置，Themida loader 调用 SetEvent/VirtualAlloc/
 	//    RtlAllocateHeap 时会触发 hook 回调，输出 API Logger 格式日志。
-	if err := dbg.Continue(ctx); err != nil {
+	if err := dbg.Continue(); err != nil {
 		fmt.Fprintf(os.Stderr, "[!] 3rd Continue (resume with hooks) failed: %v\n", err)
 	}
 
@@ -359,34 +351,22 @@ func hook(ctx *HookCtx) {
 		runSec = 30
 	}
 	fmt.Fprintf(os.Stderr, "[*] Running for %d seconds...\n", runSec)
-	select {
-	case <-time.After(time.Duration(runSec) * time.Second):
-	case <-ctx.Done():
-		// Stop the pump BEFORE UnloadVMM — Stop needs the main device
-		// handle to send IOCTL_RETURN_IRP_PENDING_PACKETS_AND_DISALLOW_IOCTL,
-		// and UnloadVMM stops the driver service which makes that handle
-		// unusable.
-		if pump != nil {
-			pump.Stop()
-		}
-		dbg.UnloadVMM(ctx)
-		return result, ctx.Err()
-	}
+	<-time.After(time.Duration(runSec) * time.Second)
 
 	// 10. 暂停进程，检查 hook 输出
-	if err := dbg.Pause(ctx); err != nil {
+	if err := dbg.Pause(); err != nil {
 		fmt.Fprintf(os.Stderr, "[!] Pause failed: %v\n", err)
 	}
 	fmt.Fprintf(os.Stderr, "[*] Paused. Check %s for hook output.\n", u.cfg.LogPath)
 
-	// Stop the pump BEFORE UnloadVMM (see ctx.Done() comment above).
+	// Stop the pump BEFORE UnloadVMM (see comment above).
 	if pump != nil {
 		pump.Stop()
 		fmt.Fprintf(os.Stderr, "[*] Message pump stopped\n")
 	}
 
 	// 清理顺序：先 UnloadVMM（含 TERMINATE_VMX），再终止进程
-	dbg.UnloadVMM(ctx)
+	dbg.UnloadVMM()
 	if proc.Handle != 0 {
 		syscall.TerminateProcess(syscall.Handle(proc.Handle), 1)
 		fmt.Fprintf(os.Stderr, "[*] Process terminated (cleanup)\n")

@@ -16,16 +16,15 @@
 //
 //	exp := export.NewExporter(appInstance)
 //	_ = exp.HyperdbgUDetectVmxSupport()
-//	_ = exp.HyperdbgULoadVmm(ctx, driverPath)
-//	_ = exp.HyperdbgURunCommand(ctx, "load vmm")
-//	_ = exp.HyperdbgUUnloadVmm(ctx)
+//	_ = exp.HyperdbgULoadVmm(driverPath)
+//	_ = exp.HyperdbgURunCommand("load vmm")
+//	_ = exp.HyperdbgUUnloadVmm()
 //
 // Exporter holds no mutable state of its own; it is safe for concurrent use
 // because the underlying *app.App is.
 package export
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/hyperdbg/go-libhyperdbg/app"
@@ -93,43 +92,43 @@ func (e *Exporter) HyperdbgUReadVendorString(dst []byte) error {
 
 // HyperdbgULoadVmm mirrors hyperdbg_u_load_vmm. driverPath is the absolute
 // path to the VMM .sys file. Returns nil on success.
-func (e *Exporter) HyperdbgULoadVmm(ctx context.Context, driverPath string) error {
-	return e.app.LoadVMM(ctx, driverPath)
+func (e *Exporter) HyperdbgULoadVmm(driverPath string) error {
+	return e.app.LoadVMM(driverPath)
 }
 
 // HyperdbgUUnloadVmm mirrors hyperdbg_u_unload_vmm.
-func (e *Exporter) HyperdbgUUnloadVmm(ctx context.Context) error {
-	return e.app.UnloadVMM(ctx)
+func (e *Exporter) HyperdbgUUnloadVmm() error {
+	return e.app.UnloadVMM()
 }
 
 // HyperdbgULoadKd mirrors hyperdbg_u_load_kd_module.
-func (e *Exporter) HyperdbgULoadKd(ctx context.Context) error {
-	return e.app.LoadKd(ctx)
+func (e *Exporter) HyperdbgULoadKd() error {
+	return e.app.LoadKd()
 }
 
 // HyperdbgUUnloadKd mirrors hyperdbg_u_unload_kd.
-func (e *Exporter) HyperdbgUUnloadKd(ctx context.Context) error {
-	return e.app.UnloadKd(ctx)
+func (e *Exporter) HyperdbgUUnloadKd() error {
+	return e.app.UnloadKd()
 }
 
 // HyperdbgULoadHypertrace mirrors hyperdbg_u_load_hypertrace_module.
-func (e *Exporter) HyperdbgULoadHypertrace(ctx context.Context) error {
-	return e.app.LoadHyperTrace(ctx)
+func (e *Exporter) HyperdbgULoadHypertrace() error {
+	return e.app.LoadHyperTrace()
 }
 
 // HyperdbgUUnloadHypertrace mirrors hyperdbg_u_unload_hypertrace_module.
-func (e *Exporter) HyperdbgUUnloadHypertrace(ctx context.Context) error {
-	return e.app.UnloadHyperTrace(ctx)
+func (e *Exporter) HyperdbgUUnloadHypertrace() error {
+	return e.app.UnloadHyperTrace()
 }
 
 // HyperdbgULoadAllModules mirrors hyperdbg_u_load_all_modules.
-func (e *Exporter) HyperdbgULoadAllModules(ctx context.Context, driverPath string) error {
-	return e.app.LoadAllModules(ctx, driverPath)
+func (e *Exporter) HyperdbgULoadAllModules(driverPath string) error {
+	return e.app.LoadAllModules(driverPath)
 }
 
 // HyperdbgUUnloadAllModules mirrors hyperdbg_u_unload_all_modules.
-func (e *Exporter) HyperdbgUUnloadAllModules(ctx context.Context) error {
-	return e.app.UnloadAllModules(ctx)
+func (e *Exporter) HyperdbgUUnloadAllModules() error {
+	return e.app.UnloadAllModules()
 }
 
 // HyperdbgUIsAnyModuleLoaded mirrors hyperdbg_u_is_any_module_loaded.
@@ -151,22 +150,22 @@ func (e *Exporter) HyperdbgUGetProcessorVendor() ProcessorVendor {
 // driver-loader layer. The Go driver-loader (debugger/driverloader) is
 // invoked implicitly by App.LoadVMM; this method is a stub that returns
 // ErrNotImplemented until the explicit install-only path is wired up.
-func (e *Exporter) HyperdbgUInstallKdDriver(ctx context.Context) error {
+func (e *Exporter) HyperdbgUInstallKdDriver() error {
 	return fmt.Errorf("HyperdbgUInstallKdDriver: not yet implemented (use HyperdbgULoadVmm instead)")
 }
 
 // HyperdbgUUninstallKdDriver mirrors hyperdbg_u_uninstall_kd_driver.
-func (e *Exporter) HyperdbgUUninstallKdDriver(ctx context.Context) error {
+func (e *Exporter) HyperdbgUUninstallKdDriver() error {
 	return fmt.Errorf("HyperdbgUUninstallKdDriver: not yet implemented")
 }
 
 // HyperdbgUStartKdDriver mirrors hyperdbg_u_start_kd_driver.
-func (e *Exporter) HyperdbgUStartKdDriver(ctx context.Context) error {
+func (e *Exporter) HyperdbgUStartKdDriver() error {
 	return fmt.Errorf("HyperdbgUStartKdDriver: not yet implemented")
 }
 
 // HyperdbgUStopKdDriver mirrors hyperdbg_u_stop_kd_driver.
-func (e *Exporter) HyperdbgUStopKdDriver(ctx context.Context) error {
+func (e *Exporter) HyperdbgUStopKdDriver() error {
 	return fmt.Errorf("HyperdbgUStopKdDriver: not yet implemented")
 }
 
@@ -178,7 +177,7 @@ func (e *Exporter) HyperdbgUStopKdDriver(ctx context.Context) error {
 // command line (e.g. "load vmm", "bp 0x7ffe1234", "g"). The actual
 // interpreter lives in debugger/commands; this façade delegates to it via
 // the App's Core (Phase C.3 will wire the command dispatcher to App).
-func (e *Exporter) HyperdbgURunCommand(ctx context.Context, command string) error {
+func (e *Exporter) HyperdbgURunCommand(command string) error {
 	return fmt.Errorf("HyperdbgURunCommand(%q): not yet implemented (Phase C.3)", command)
 }
 
@@ -205,9 +204,5 @@ func (e *Exporter) HyperdbgUShowSignature() {
 	// The signature constants live in include/SDK/headers/Constants.h. The
 	// Go port does not yet expose them as variables; this is a static
 	// placeholder until the build-info package lands.
-	msg := e.app.Messaging()
-	if msg == nil {
-		return
-	}
-	msg.ShowMessages("HyperDbg v0.22.0 (go-libhyperdbg framework)\n")
+	_ = e.app.Printf("HyperDbg v0.22.0 (go-libhyperdbg framework)\n")
 }

@@ -9,8 +9,6 @@
 //	unload                   — stop + remove the VMM driver (debugging group, also here)
 //	g / go                   — continue execution
 //	pause                    — halt execution
-//	.logopen / logopen       — open log file
-//	.logclose / logclose     — close log file
 //	.start path              — launch debuggee (start command, meta group)
 //	status                   — print debugger state
 //	cls / clear              — clear screen (CLI side; emits ANSI clear)
@@ -25,7 +23,6 @@
 package metacmds
 
 import (
-	"context"
 	"errors"
 	"fmt"
 
@@ -79,22 +76,6 @@ func RegisterAll(r *commands.Registry) {
 		Help:    helpPause,
 		Attrs:   commands.CommandAttributes{Visible: true, Type: commands.CmdDebugging},
 	})
-
-	// ---- .logopen / logopen ----
-	r.Register(".logopen", commands.CommandSpec{
-		Handler: cmdLogopen,
-		Help:    helpLogopen,
-		Attrs:   commands.CommandAttributes{Visible: true, Type: commands.CmdMeta},
-	})
-	r.RegisterAlias("logopen", ".logopen")
-
-	// ---- .logclose / logclose ----
-	r.Register(".logclose", commands.CommandSpec{
-		Handler: cmdLogclose,
-		Help:    helpLogclose,
-		Attrs:   commands.CommandAttributes{Visible: true, Type: commands.CmdMeta},
-	})
-	r.RegisterAlias("logclose", ".logclose")
 
 	// ---- .start path (launch debuggee) ----
 	r.Register(".start", commands.CommandSpec{
@@ -157,9 +138,9 @@ func RegisterAll(r *commands.Registry) {
 
 // ---------- handlers ----------
 
-func cmdConnect(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
+func cmdConnect(d *core.Debugger, args []string, out commands.Output) error {
 	if len(args) == 0 || args[0] == "local" {
-		return d.Connect(ctx, "local")
+		return d.Connect("local")
 	}
 	// Remote: .connect <ip> <port> — not yet supported (no TCP transport).
 	if len(args) >= 2 {
@@ -168,40 +149,29 @@ func cmdConnect(ctx context.Context, d *core.Debugger, args []string, out comman
 	return fmt.Errorf(".connect: expected 'local' or '<ip> <port>'")
 }
 
-func cmdLoad(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
+func cmdLoad(d *core.Debugger, args []string, out commands.Output) error {
 	if len(args) != 1 {
 		return fmt.Errorf("load: expected exactly one argument (driver path), got %d", len(args))
 	}
-	return d.LoadVMM(ctx, args[0])
+	return d.LoadVMM(args[0])
 }
 
-func cmdUnload(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
-	return d.UnloadVMM(ctx)
+func cmdUnload(d *core.Debugger, args []string, out commands.Output) error {
+	return d.UnloadVMM()
 }
 
-func cmdG(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
-	return d.Continue(ctx)
+func cmdG(d *core.Debugger, args []string, out commands.Output) error {
+	return d.Continue()
 }
 
-func cmdPause(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
-	return d.Pause(ctx)
+func cmdPause(d *core.Debugger, args []string, out commands.Output) error {
+	return d.Pause()
 }
 
-func cmdLogopen(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
-	if len(args) != 1 {
-		return fmt.Errorf(".logopen: expected exactly one argument (file path)")
-	}
-	return d.LogOpen(args[0])
-}
-
-func cmdLogclose(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
-	return d.LogClose()
-}
-
-func cmdStart(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
+func cmdStart(d *core.Debugger, args []string, out commands.Output) error {
 	// ".start path <exe>" — args[0] == "path", args[1] == exe path
 	if len(args) >= 2 && args[0] == "path" {
-		proc, err := d.StartProcess(ctx, args[1])
+		proc, err := d.StartProcess(args[1])
 		if err != nil {
 			return err
 		}
@@ -211,26 +181,26 @@ func cmdStart(ctx context.Context, d *core.Debugger, args []string, out commands
 	return fmt.Errorf(".start: expected 'path <exe>'")
 }
 
-func cmdStatus(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
+func cmdStatus(d *core.Debugger, args []string, out commands.Output) error {
 	out.Printf("debugger state: %s\n", stateName(d.State()))
 	return nil
 }
 
-func cmdCls(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
+func cmdCls(d *core.Debugger, args []string, out commands.Output) error {
 	// ANSI clear-screen + cursor home. The CLI passes a real terminal; GUI/MCP
 	// implementations can interpret or ignore this.
 	out.Write([]byte("\x1b[2J\x1b[H"))
 	return nil
 }
 
-func cmdExit(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
+func cmdExit(d *core.Debugger, args []string, out commands.Output) error {
 	return ErrExit
 }
 
 // ---------- stubs ----------
 
 func stubHandler(name string) commands.Handler {
-	return func(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
+	return func(d *core.Debugger, args []string, out commands.Output) error {
 		out.Printf("%s: %v\n", name, ErrNotImplemented)
 		return nil
 	}
@@ -277,19 +247,6 @@ func helpG(d *core.Debugger, out commands.Output) error {
 func helpPause(d *core.Debugger, out commands.Output) error {
 	out.Printf("pause : halts the debuggee.\n\n")
 	out.Printf("syntax : \tpause\n")
-	return nil
-}
-
-func helpLogopen(d *core.Debugger, out commands.Output) error {
-	out.Printf(".logopen : saves commands and results in a file.\n\n")
-	out.Printf("syntax : \t.logopen [FilePath (string)]\n\n")
-	out.Printf("\t\te.g : .logopen log.txt\n")
-	return nil
-}
-
-func helpLogclose(d *core.Debugger, out commands.Output) error {
-	out.Printf(".logclose : closes the open log file.\n\n")
-	out.Printf("syntax : \t.logclose\n")
 	return nil
 }
 

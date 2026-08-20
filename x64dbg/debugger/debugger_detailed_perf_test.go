@@ -26,7 +26,7 @@ func TestDetailedPerformance(t *testing.T) {
 
 	t.Log("=== Phase 2: Wait for process handle ===")
 	start = time.Now()
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		if dbg.GetProcessHandle() != 0 {
 			break
 		}
@@ -61,7 +61,7 @@ func TestUpdateAllPagesDetailed(t *testing.T) {
 		t.Fatalf("CreateProcess failed: %v", err)
 	}
 
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		if dbg.GetProcessHandle() != 0 {
 			break
 		}
@@ -123,7 +123,7 @@ func TestEventLoopPerformance(t *testing.T) {
 
 	fmt.Println("=== Waiting for process to be ready ===")
 	start = time.Now()
-	for i := 0; i < 200; i++ {
+	for i := range 200 {
 		if dbg.GetProcessHandle() != 0 {
 			fmt.Printf("Process handle ready after: %v (iteration %d)\n", time.Since(start), i)
 			break

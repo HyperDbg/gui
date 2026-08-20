@@ -1,7 +1,6 @@
 package comm
 
 import (
-	"context"
 	"fmt"
 	"unsafe"
 
@@ -25,10 +24,7 @@ type Device struct {
 //
 // Open requires administrator privileges; ERROR_ACCESS_DENIED is mapped to a
 // descriptive error to aid diagnosis.
-func Open(ctx context.Context, devicePath string) (*Device, error) {
-	if err := ctx.Err(); err != nil {
-		return nil, err
-	}
+func Open(devicePath string) (*Device, error) {
 	namePtr, err := windows.UTF16PtrFromString(devicePath)
 	if err != nil {
 		return nil, err
@@ -70,8 +66,8 @@ func Open(ctx context.Context, devicePath string) (*Device, error) {
 
 // OpenDefault opens the standard HyperDbg device (\\.\HyperDbgDebuggerDevice).
 // This is the convenience entry point used by Connect("local").
-func OpenDefault(ctx context.Context) (*Device, error) {
-	return Open(ctx, DeviceName)
+func OpenDefault() (*Device, error) {
+	return Open(DeviceName)
 }
 
 // Close releases the device handle. It is safe to call on an already-closed
@@ -100,13 +96,7 @@ func (d *Device) Name() string { return d.name }
 // memory (the common METHOD_BUFFERED case) pass the same slice for both and
 // the driver will overwrite it in place. The number of bytes returned by the
 // driver is reported via bytesReturned.
-//
-// ctx is checked for cancellation before the syscall; DeviceIoControl itself
-// is synchronous and cannot be interrupted mid-call.
-func (d *Device) Ioctl(ctx context.Context, code uint32, inBuf, outBuf []byte) (bytesReturned uint32, err error) {
-	if err := ctx.Err(); err != nil {
-		return 0, err
-	}
+func (d *Device) Ioctl(code uint32, inBuf, outBuf []byte) (bytesReturned uint32, err error) {
 	if d.handle == 0 || d.handle == windows.InvalidHandle {
 		return 0, fmt.Errorf("Ioctl on closed device")
 	}
@@ -137,10 +127,7 @@ func (d *Device) Ioctl(ctx context.Context, code uint32, inBuf, outBuf []byte) (
 // inVal must be a pointer to a struct (or a slice with a backing array);
 // outVal must be a pointer to a struct into which the driver writes. Either
 // may be nil. The returned n is the number of bytes the driver wrote.
-func (d *Device) IoctlStruct(ctx context.Context, code uint32, inVal, outVal unsafe.Pointer, inSize, outSize uint32) (uint32, error) {
-	if err := ctx.Err(); err != nil {
-		return 0, err
-	}
+func (d *Device) IoctlStruct(code uint32, inVal, outVal unsafe.Pointer, inSize, outSize uint32) (uint32, error) {
 	if d.handle == 0 || d.handle == windows.InvalidHandle {
 		return 0, fmt.Errorf("IoctlStruct on closed device")
 	}

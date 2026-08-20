@@ -27,7 +27,7 @@ func EncodeExceptionRecord(record *ExceptionRecord) ([]byte, error) {
 	binary.LittleEndian.PutUint32(buf[24:28], record.NumberParameters)
 	binary.LittleEndian.PutUint32(buf[28:32], record._UnusedAlignment)
 
-	for i := 0; i < 15; i++ {
+	for i := range 15 {
 		binary.LittleEndian.PutUint64(buf[32+i*8:40+i*8], record.ExceptionInformation[i])
 	}
 
@@ -49,7 +49,7 @@ func DecodeExceptionRecord(data []byte) (*ExceptionRecord, error) {
 		_UnusedAlignment: binary.LittleEndian.Uint32(data[28:32]),
 	}
 
-	for i := 0; i < 15; i++ {
+	for i := range 15 {
 		record.ExceptionInformation[i] = binary.LittleEndian.Uint64(data[32+i*8 : 40+i*8])
 	}
 
@@ -337,7 +337,7 @@ func EncodeContext(ctx *Context) ([]byte, error) {
 	binary.LittleEndian.PutUint16(buf[66:68], ctx.SegSs)
 	binary.LittleEndian.PutUint32(buf[68:72], ctx.EFlags)
 
-	for i := 0; i < 8; i++ {
+	for i := range 8 {
 		offset := 72 + i*8
 		switch i {
 		case 0:
@@ -370,7 +370,7 @@ func EncodeContext(ctx *Context) ([]byte, error) {
 	}
 	copy(buf[272:384], fltSaveData)
 
-	for i := 0; i < 26; i++ {
+	for i := range 26 {
 		offset := 384 + i*16
 		m128aData, err := EncodeM128A(&ctx.VectorRegister[i])
 		if err != nil {
@@ -434,7 +434,7 @@ func DecodeContext(data []byte) (*Context, error) {
 	}
 	ctx.FltSave = *fltSave
 
-	for i := 0; i < 26; i++ {
+	for i := range 26 {
 		offset := 384 + i*16
 		m128a, err := DecodeM128A(data[offset : offset+16])
 		if err != nil {

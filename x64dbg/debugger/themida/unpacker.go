@@ -279,7 +279,7 @@ func (t *ThemidaUnpacker) findRISCVMEntry(event *windows.DebugEvent) {
 
 	var secLocation uint64 = 0
 
-	for i := 0; i < 1000; i++ {
+	for range 1000 {
 		data, err := t.dbg.GetMemory().ReadMemory(eip, 2)
 		if err != nil {
 			log.Printf("读取内存失败: %v", err)
@@ -305,7 +305,7 @@ func (t *ThemidaUnpacker) findRISCVMEntry(event *windows.DebugEvent) {
 		return
 	}
 
-	for i := 0; i < 1000; i++ {
+	for range 1000 {
 		data, err := t.dbg.GetMemory().ReadMemory(eip, 1)
 		if err != nil {
 			log.Printf("读取内存失败: %v", err)

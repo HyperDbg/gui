@@ -23,7 +23,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"os"
@@ -95,8 +94,9 @@ func main() {
 		fmt.Printf("[*] Expect  : window containing %q (absent => DETECTED)\n", *expectWindow)
 	}
 
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer cancel()
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, os.Interrupt, syscall.SIGTERM)
+	defer signal.Stop(sigCh)
 
 	dbg, err := api.New(api.WithOutput(os.Stderr))
 	if err != nil {
@@ -105,18 +105,14 @@ func main() {
 	}
 	defer dbg.Close()
 
-	if err := dbg.LoadVMM(ctx, *driverPath); err != nil {
+	if err := dbg.LoadVMM(*driverPath); err != nil {
 		fmt.Fprintf(os.Stderr, "error: LoadVMM: %v\n", err)
 		os.Exit(1)
 	}
-	if err := dbg.LogOpen(*logPath); err != nil {
-		fmt.Printf("[!] LogOpen failed: %v\n", err)
-	}
-	defer dbg.LogClose()
 
-	proc, err := dbg.StartProcess(ctx, *targetExe)
+	proc, err := dbg.StartProcess(*targetExe)
 	if err != nil {
-		_ = dbg.UnloadVMM(ctx)
+		_ = dbg.UnloadVMM()
 		fmt.Fprintf(os.Stderr, "error: StartProcess: %v\n", err)
 		os.Exit(1)
 	}
@@ -124,11 +120,11 @@ func main() {
 	fmt.Printf("[*] Started pid=%d\n", pid)
 
 	// 第一次 Continue：从第一条指令运行到入口点
-	if e := dbg.Continue(ctx); e != nil {
+	if e := dbg.Continue(); e != nil {
 		fmt.Printf("[!] first Continue: %v\n", e)
 	}
 	// 第二次 Continue：从入口点继续执行（让反调试代码有机会运行）
-	if e := dbg.Continue(ctx); e != nil {
+	if e := dbg.Continue(); e != nil {
 		fmt.Printf("[!] second Continue: %v\n", e)
 	}
 	fmt.Printf("[*] Process running, monitoring %ds...\n", *runSeconds)
@@ -142,7 +138,7 @@ func main() {
 
 	for time.Now().Before(deadline) {
 		select {
-		case <-ctx.Done():
+		case <-sigCh:
 			detected = true
 			detectedReason = "interrupted by signal"
 			break
@@ -218,8 +214,8 @@ func main() {
 	}
 
 	// 清理（先 Pause 再 Unload，避免 VM exit 时进程仍在运行触发 BSOD）
-	_ = dbg.Pause(ctx)
-	_ = dbg.UnloadVMM(ctx)
+	_ = dbg.Pause()
+	_ = dbg.UnloadVMM()
 	if proc.Handle != 0 {
 		_ = syscall.TerminateProcess(syscall.Handle(proc.Handle), 1)
 	}

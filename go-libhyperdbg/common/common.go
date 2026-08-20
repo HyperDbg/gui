@@ -27,7 +27,6 @@
 package common
 
 import (
-	"context"
 	"encoding/binary"
 	"fmt"
 	"net"
@@ -345,10 +344,7 @@ type CpuidReader interface {
 // CommonCpuidInstruction executes CPUID with the given (func, subFunc) and
 // writes the four result registers into cpuInfo[0..3]. Mirrors the C++
 // CommonCpuidInstruction function. cpuInfo must have length >= 4.
-func (c *Common) CommonCpuidInstruction(ctx context.Context, func_, subFunc uint32, cpuInfo []int32) error {
-	if err := ctx.Err(); err != nil {
-		return err
-	}
+func (c *Common) CommonCpuidInstruction(func_, subFunc uint32, cpuInfo []int32) error {
 	if len(cpuInfo) < 4 {
 		return fmt.Errorf("CommonCpuidInstruction: cpuInfo must have length >= 4 (got %d)", len(cpuInfo))
 	}

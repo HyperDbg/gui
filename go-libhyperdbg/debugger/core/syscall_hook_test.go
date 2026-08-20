@@ -9,7 +9,7 @@
 package core
 
 import (
-	"context"
+	"bytes"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -44,38 +44,35 @@ func TestSyscallHook(t *testing.T) {
 	if !isAdmin() {
 		t.Skip("not admin")
 	}
-	ctx := context.Background()
+
+	// 清空日志文件
+	_ = os.Truncate(monitorLogPath, 0)
+	logFile, err := os.OpenFile(monitorLogPath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0o644)
+	if err != nil {
+		t.Fatalf("open log: %v", err)
+	}
+	defer logFile.Close()
 
 	// Load driver + open device + init VMM.
 	d := driverloader.NewDriver(hyperkdSysPath)
-	_ = d.Unload(ctx)
-	if err := d.Load(ctx); err != nil {
+	if err := d.Load(); err != nil {
 		t.Fatalf("load: %v", err)
 	}
-	t.Cleanup(func() { _ = d.Unload(ctx) })
-	time.Sleep(2 * time.Second)
+	t.Cleanup(func() { _ = d.Unload() })
 
-	var dev *comm.Device
-	var err error
-	for i := 0; i < 5; i++ {
-		if dev, err = comm.Open(ctx, comm.DeviceName); err == nil {
-			break
-		}
-		time.Sleep(500 * time.Millisecond)
-	}
+	dev, err := comm.Open(comm.DeviceName)
 	if err != nil {
 		t.Fatalf("open: %v", err)
 	}
 	t.Cleanup(func() {
-		_, _ = dev.IoctlStruct(context.Background(),
+		_, _ = dev.IoctlStruct(
 			comm.IOCTL_CODE_TERMINATE_VMX, nil, nil, 0, 0)
-		time.Sleep(500 * time.Millisecond)
 		_ = dev.Close()
 	})
 
 	var vmm initVmmRequest
 	sz := uint32(unsafe.Sizeof(vmm))
-	if _, err := dev.IoctlStruct(ctx, comm.IOCTL_CODE_INIT_VMM,
+	if _, err := dev.IoctlStruct(comm.IOCTL_CODE_INIT_VMM,
 		unsafe.Pointer(&vmm), unsafe.Pointer(&vmm), sz, sz); err != nil {
 		t.Skipf("init VMM: %v", err)
 	}
@@ -83,13 +80,23 @@ func TestSyscallHook(t *testing.T) {
 		t.Skipf("VMM init status=0x%08x", vmm.KernelStatus)
 	}
 
-	dbg := &Debugger{device: dev, state: StateVmmLoaded}
-	if err := dbg.LogOpen(monitorLogPath); err != nil {
-		t.Fatalf("log open: %v", err)
+	dbg := &Debugger{
+		device: dev,
+		state: StateVmmLoaded,
+		OnPacket: func(opCode uint32, payload []byte) {
+			if opCode == operationNotificationFromUserDebuggerPause {
+				return
+			}
+			// NUL 终止的 C 字符串，去掉末尾 NUL
+			if i := bytes.IndexByte(payload, 0); i >= 0 {
+				payload = payload[:i]
+			}
+			logFile.Write(payload)
+			logFile.Write([]byte{'\n'})
+		},
 	}
-	t.Cleanup(func() { _ = dbg.LogClose() })
 
-	mp, err := dbg.StartMessagePump(ctx)
+	mp, err := dbg.StartMessagePump()
 	if err != nil {
 		t.Fatalf("pump: %v", err)
 	}
@@ -97,7 +104,7 @@ func TestSyscallHook(t *testing.T) {
 
 	// Register !syscall 0x7 hook. MUST be 0x7 (specific), not 0xFFFFFFFF
 	// (all) — see BSOD note below.
-	tag, err := dbg.SyscallHook(ctx, 0x7, monitorDeviceIoCallbackSrc)
+	tag, err := dbg.SyscallHook(0x7, monitorDeviceIoCallbackSrc)
 	if err != nil {
 		t.Fatalf("hook: %v", err)
 	}

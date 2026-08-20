@@ -17,7 +17,6 @@ package main
 
 import (
 	"bufio"
-	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -86,15 +85,14 @@ func NewRepl(dbg *api.Debugger, opts ...ReplOption) *Repl {
 }
 
 // Run enters the REPL loop. It returns nil on a clean exit (exit/quit
-// command, Ctrl+D/EOF, or parent context cancellation). Unexpected I/O
-// errors are returned for the caller to report.
+// command, Ctrl+D/EOF). Unexpected I/O errors are returned for the caller
+// to report.
 //
 // SIGINT (Ctrl+C) is intercepted per-iteration: if a command is running,
 // its child context is cancelled so dbg.Exec returns promptly; if the
 // REPL is idle at the prompt, the signal is swallowed and a new prompt
-// is shown. SIGTERM and parent-context cancellation propagate through
-// and terminate the loop.
-func (r *Repl) Run(ctx context.Context) error {
+// is shown.
+func (r *Repl) Run() error {
 	// Load persisted history (best effort — a missing file is fine).
 	if r.historyPath != "" {
 		_ = r.history.Load(r.historyPath)
@@ -117,12 +115,6 @@ func (r *Repl) Run(ctx context.Context) error {
 	scanner.Buffer(make([]byte, 0, 4096), 1<<20)
 
 	for {
-		// Honour parent-context cancellation (SIGTERM, etc.) before
-		// blocking on stdin.
-		if err := ctx.Err(); err != nil {
-			return nil
-		}
-
 		// Drain any SIGINT that arrived while idle so it does not
 		// accidentally interrupt the next command.
 		select {
@@ -135,9 +127,6 @@ func (r *Repl) Run(ctx context.Context) error {
 		if !scanner.Scan() {
 			// EOF (Ctrl+D / Ctrl+Z+Enter on Windows) or read error.
 			if err := scanner.Err(); err != nil {
-				if errors.Is(err, context.Canceled) {
-					return nil
-				}
 				return fmt.Errorf("repl input: %w", err)
 			}
 			fmt.Fprintln(os.Stdout)
@@ -179,13 +168,9 @@ func (r *Repl) Run(ctx context.Context) error {
 		// if dbg.Exec hangs or panics.
 		r.history.Add(line)
 
-		if err := r.execInterruptible(ctx, sigCh, line); err != nil {
+		if err := r.execInterruptible(sigCh, line); err != nil {
 			if errors.Is(err, metacmds.ErrExit) {
 				fmt.Fprintln(os.Stdout, "bye.")
-				return nil
-			}
-			if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
-				// Parent context gone — exit quietly.
 				return nil
 			}
 			fmt.Fprintf(os.Stderr, "err: %v\n", err)
@@ -193,32 +178,24 @@ func (r *Repl) Run(ctx context.Context) error {
 	}
 }
 
-// execInterruptible runs dbg.Exec on a child context that can be
-// cancelled by either parent cancellation or a SIGINT arriving on
-// sigCh. When interrupted by SIGINT the command's error (if any) is
-// swallowed and nil is returned so the REPL loop continues. When the
-// parent context is cancelled, the underlying error is propagated.
-func (r *Repl) execInterruptible(ctx context.Context, sigCh <-chan os.Signal, line string) error {
-	cmdCtx, cmdCancel := context.WithCancel(ctx)
-	defer cmdCancel()
-
+// execInterruptible runs dbg.Exec in a goroutine. Because Exec is a
+// synchronous IOCTL it cannot be interrupted mid-call; on SIGINT we wait
+// for the in-flight command to finish, then report ^C and keep the REPL
+// alive.
+func (r *Repl) execInterruptible(sigCh <-chan os.Signal, line string) error {
 	done := make(chan error, 1)
 	go func() {
-		done <- r.dbg.Exec(cmdCtx, line)
+		done <- r.dbg.Exec(line)
 	}()
 
 	select {
 	case err := <-done:
 		return err
 	case <-sigCh:
-		// Cancel the in-flight command and wait for it to unwind so we
-		// don't leak the goroutine or interleave its output with the
-		// next prompt.
-		cmdCancel()
+		// Exec is uninterruptible; wait for it to finish so we don't
+		// leak the goroutine or interleave its output with the next prompt.
 		err := <-done
-		if err != nil && !errors.Is(err, context.Canceled) {
-			// The command surfaced a real error after we cancelled it;
-			// report it but keep the REPL alive.
+		if err != nil {
 			return err
 		}
 		fmt.Fprint(os.Stderr, "^C (command interrupted)\n")

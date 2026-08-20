@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"strings"
 	"testing"
 	"time"
@@ -13,18 +12,15 @@ import (
 
 // cleanupTestDebugger 严格按照 themida Unpacker.Run 的顺序释放资源：
 //
-//	pump.Stop → UnloadVMM(bgCtx) → proc.Terminate → proc.Close → dbg.Close
+//	pump.Stop → UnloadVMM → proc.Terminate → proc.Close → dbg.Close
 //
-// 关键：使用 context.Background() 而非测试的超时 ctx。若复用超时 ctx，
-// 一旦测试超时，UnloadVMM 的 IOCTL 会因 ctx.Err() 立即失败，导致
-// TERMINATE_VMX 未发送、驱动残留、VT-x 卡死（StopPending），只能重启。
 // 全程只打印错误不 panic，确保退出路径走完每一步。
 func cleanupTestDebugger(dbg *api.Debugger, proc *core.Process, mp *core.MessagePump) {
 	if mp != nil {
 		mp.Stop()
 	}
 	if dbg != nil {
-		_ = dbg.UnloadVMM(context.Background())
+		_ = dbg.UnloadVMM()
 	}
 	if proc != nil {
 		_ = proc.Terminate()
@@ -59,22 +55,18 @@ func TestIntegration_CpuPage_FullRefresh(t *testing.T) {
 	var mp *core.MessagePump
 	defer func() { cleanupTestDebugger(dbg, &proc, mp) }()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	defer cancel()
-
-	if err := dbg.LoadVMM(ctx, driverPath); err != nil {
+	if err := dbg.LoadVMM(driverPath); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
 
-	proc, err = dbg.StartProcess(ctx, `C:\Windows\System32\notepad.exe`)
+	proc, err = dbg.StartProcess(`C:\Windows\System32\notepad.exe`)
 	if err != nil {
 		t.Fatalf("StartProcess: %v", err)
 	}
 	t.Logf("notepad 已启动 pid=%d，停在入口点", proc.Pid)
 
 	// 启动 MessagePump 以接收 DEBUGGEE_UD_PAUSED_PACKET（含 RIP/RFLAGS）
-	dbg.LogOpen("test_hyperdbg.log")
-	mp, err = dbg.StartMessagePump(ctx)
+	mp, err = dbg.StartMessagePump()
 	if err != nil {
 		t.Fatalf("StartMessagePump: %v", err)
 	}
@@ -88,7 +80,7 @@ func TestIntegration_CpuPage_FullRefresh(t *testing.T) {
 	// 需要线程再次被拦截才能执行。PauseProcess 触发持续拦截，使内核在
 	// 每次循环中检查并执行 pending 命令。
 	// ErrAlreadyPaused 是正常的（线程已在拦截阶段），忽略。
-	if err := dbg.Pause(ctx); err != nil {
+	if err := dbg.Pause(); err != nil {
 		t.Logf("Pause (可能已暂停，正常): %v", err)
 	}
 	time.Sleep(500 * time.Millisecond)
@@ -96,7 +88,7 @@ func TestIntegration_CpuPage_FullRefresh(t *testing.T) {
 	// === 测试 1：Register("") — 读取所有寄存器 ===
 	outBuf.Reset()
 	t.Logf("--- 测试 Register(\"\") ---")
-	_, err = dbg.Register(ctx, "")
+	_, err = dbg.Register("")
 	if err != nil {
 		t.Fatalf("Register 失败: %v", err)
 	}
@@ -118,7 +110,7 @@ func TestIntegration_CpuPage_FullRefresh(t *testing.T) {
 
 	// === 测试 2：Unassemble — 反汇编 ===
 	t.Logf("--- 测试 Unassemble(RIP=0x%X, 20) ---", rip)
-	disasm, err := dbg.Unassemble(ctx, rip, 20)
+	disasm, err := dbg.Unassemble(rip, 20)
 	if err != nil {
 		t.Errorf("Unassemble 失败: %v", err)
 	} else if disasm == "" {
@@ -137,7 +129,7 @@ func TestIntegration_CpuPage_FullRefresh(t *testing.T) {
 
 	// === 测试 3：DumpMem — 内存 hex dump ===
 	t.Logf("--- 测试 DumpMem(RIP=0x%X, 256) ---", rip)
-	memData, err := dbg.DumpMem(ctx, rip, 256)
+	memData, err := dbg.DumpMem(rip, 256)
 	if err != nil {
 		t.Errorf("DumpMem 失败: %v", err)
 	} else if len(memData) == 0 {
@@ -149,7 +141,7 @@ func TestIntegration_CpuPage_FullRefresh(t *testing.T) {
 	// === 测试 4：K — 调用栈 ===
 	outBuf.Reset()
 	t.Logf("--- 测试 K(16) ---")
-	_, _ = dbg.K(ctx, 16)
+	_, _ = dbg.K(16)
 	stackText := outBuf.String()
 	if stackText == "" {
 		t.Log("K() 输出为空（可能无栈帧信息）")
@@ -160,14 +152,14 @@ func TestIntegration_CpuPage_FullRefresh(t *testing.T) {
 	// === 测试 5：Continue → 等待 → Pause → 再读寄存器 ===
 	t.Logf("--- 测试 Continue → Pause → Register ---")
 	outBuf.Reset()
-	if err := dbg.Continue(ctx); err != nil {
+	if err := dbg.Continue(); err != nil {
 		t.Logf("Continue 失败: %v", err)
 	} else {
 		time.Sleep(2 * time.Second)
-		if err := dbg.Pause(ctx); err != nil {
+		if err := dbg.Pause(); err != nil {
 			t.Logf("Pause 失败: %v", err)
 		} else {
-			_, err = dbg.Register(ctx, "")
+			_, err = dbg.Register("")
 			if err != nil {
 				t.Errorf("暂停后 Register 失败: %v", err)
 			} else {
@@ -201,14 +193,11 @@ func TestIntegration_StepOver_TraceInto(t *testing.T) {
 	var mp *core.MessagePump
 	defer func() { cleanupTestDebugger(dbg, &proc, mp) }()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	defer cancel()
-
-	if err := dbg.LoadVMM(ctx, driverPath); err != nil {
+	if err := dbg.LoadVMM(driverPath); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
 
-	proc, err = dbg.StartProcess(ctx, `C:\Windows\System32\notepad.exe`)
+	proc, err = dbg.StartProcess(`C:\Windows\System32\notepad.exe`)
 	if err != nil {
 		t.Fatalf("StartProcess: %v", err)
 	}
@@ -216,20 +205,19 @@ func TestIntegration_StepOver_TraceInto(t *testing.T) {
 	// 启动 MessagePump + Pause 建立持续 #UD 拦截循环
 	// （StartProcess 的 CheckCallbackAtFirstInstruction 只拦截一次，
 	// 不建立循环；Step/TraceInto 需要 #UD 拦截循环才能执行）
-	dbg.LogOpen("test_hyperdbg_step.log")
-	mp, err = dbg.StartMessagePump(ctx)
+	mp, err = dbg.StartMessagePump()
 	if err != nil {
 		t.Fatalf("StartMessagePump: %v", err)
 	}
 	time.Sleep(2 * time.Second)
-	if err := dbg.Pause(ctx); err != nil {
+	if err := dbg.Pause(); err != nil {
 		t.Logf("Pause (可能已暂停，正常): %v", err)
 	}
 	time.Sleep(500 * time.Millisecond)
 
 	// 读入口点 RIP
 	outBuf.Reset()
-	_, err = dbg.Register(ctx, "")
+	_, err = dbg.Register("")
 	if err != nil {
 		t.Fatalf("Register 失败: %v", err)
 	}
@@ -241,22 +229,22 @@ func TestIntegration_StepOver_TraceInto(t *testing.T) {
 
 	// TraceInto（单步步入）
 	t.Logf("--- 测试 TraceInto ---")
-	if err := dbg.TraceInto(ctx); err != nil {
+	if err := dbg.TraceInto(); err != nil {
 		t.Errorf("TraceInto 失败: %v", err)
 	} else {
 		outBuf.Reset()
-		_, _ = dbg.Register(ctx, "")
+		_, _ = dbg.Register("")
 		rip2 := parseRIPFromText(outBuf.String())
 		t.Logf("单步后 RIP = 0x%X (变化: %+d bytes)", rip2, int64(rip2)-int64(rip1))
 	}
 
 	// StepOver（单步步过）
 	t.Logf("--- 测试 StepOver ---")
-	if err := dbg.StepOver(ctx); err != nil {
+	if err := dbg.StepOver(); err != nil {
 		t.Errorf("StepOver 失败: %v", err)
 	} else {
 		outBuf.Reset()
-		_, _ = dbg.Register(ctx, "")
+		_, _ = dbg.Register("")
 		rip3 := parseRIPFromText(outBuf.String())
 		t.Logf("步过后 RIP = 0x%X", rip3)
 	}
@@ -332,34 +320,30 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 	defer func() { cleanupTestDebugger(dbg, &proc, mp) }()
 
 	// 初始化：LoadVMM → StartProcess → LogOpen → StartMessagePump → Pause
-	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
-	defer cancel()
-
-	if err := dbg.LoadVMM(ctx, driverPath); err != nil {
+	if err := dbg.LoadVMM(driverPath); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
 	t.Log("✓ LoadVMM (open/restart 按钮)")
 
-	proc, err = dbg.StartProcess(ctx, `C:\Windows\System32\notepad.exe`)
+	proc, err = dbg.StartProcess(`C:\Windows\System32\notepad.exe`)
 	if err != nil {
 		t.Fatalf("StartProcess: %v", err)
 	}
 	t.Log("✓ StartProcess (拖入 exe / restart 按钮)")
 
-	dbg.LogOpen("test_hyperdbg_toolbar.log")
-	mp, err = dbg.StartMessagePump(ctx)
+	mp, err = dbg.StartMessagePump()
 	if err != nil {
 		t.Fatalf("StartMessagePump: %v", err)
 	}
 	time.Sleep(2 * time.Second)
-	if err := dbg.Pause(ctx); err != nil {
+	if err := dbg.Pause(); err != nil {
 		t.Logf("Pause (可能已暂停): %v", err)
 	}
 	time.Sleep(500 * time.Millisecond)
 
 	// 读初始 RIP
 	outBuf.Reset()
-	_, err = dbg.Register(ctx, "")
+	_, err = dbg.Register("")
 	if err != nil {
 		t.Fatalf("Register: %v", err)
 	}
@@ -368,13 +352,11 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 
 	// --- stepin / trin 按钮：TraceInto ---
 	t.Run("TraceInto", func(t *testing.T) {
-		ctx2, cancel2 := context.WithTimeout(ctx, 15*time.Second)
-		defer cancel2()
-		if err := dbg.TraceInto(ctx2); err != nil {
+		if err := dbg.TraceInto(); err != nil {
 			t.Fatalf("TraceInto: %v", err)
 		}
 		outBuf.Reset()
-		_, _ = dbg.Register(ctx2, "")
+		_, _ = dbg.Register("")
 		rip := parseRIPFromText(outBuf.String())
 		t.Logf("✓ TraceInto: RIP 0x%X → 0x%X", rip0, rip)
 		if rip == 0 {
@@ -385,15 +367,13 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 	// --- stepover / trover 按钮：StepOver ---
 	t.Run("StepOver", func(t *testing.T) {
 		outBuf.Reset()
-		_, _ = dbg.Register(ctx, "")
+		_, _ = dbg.Register("")
 		ripBefore := parseRIPFromText(outBuf.String())
-		ctx2, cancel2 := context.WithTimeout(ctx, 15*time.Second)
-		defer cancel2()
-		if err := dbg.StepOver(ctx2); err != nil {
+		if err := dbg.StepOver(); err != nil {
 			t.Fatalf("StepOver: %v", err)
 		}
 		outBuf.Reset()
-		_, _ = dbg.Register(ctx2, "")
+		_, _ = dbg.Register("")
 		ripAfter := parseRIPFromText(outBuf.String())
 		t.Logf("✓ StepOver: RIP 0x%X → 0x%X", ripBefore, ripAfter)
 		if ripAfter == 0 {
@@ -403,9 +383,7 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 
 	// --- tillret 按钮：Gu (步出，当前用 Step 近似) ---
 	t.Run("Gu", func(t *testing.T) {
-		ctx2, cancel2 := context.WithTimeout(ctx, 15*time.Second)
-		defer cancel2()
-		if err := dbg.Gu(ctx2); err != nil {
+		if err := dbg.Gu(); err != nil {
 			t.Errorf("Gu: %v", err)
 		} else {
 			t.Log("✓ Gu")
@@ -415,9 +393,7 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 	// --- modules 按钮：lm ---
 	t.Run("lm", func(t *testing.T) {
 		outBuf.Reset()
-		ctx2, cancel2 := context.WithTimeout(ctx, 10*time.Second)
-		defer cancel2()
-		if err := dbg.Exec(ctx2, "lm"); err != nil {
+		if err := dbg.Exec("lm"); err != nil {
 			t.Errorf("Exec(lm): %v", err)
 		}
 		out := outBuf.String()
@@ -430,9 +406,7 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 	// --- windows 按钮：process ---
 	t.Run("process", func(t *testing.T) {
 		outBuf.Reset()
-		ctx2, cancel2 := context.WithTimeout(ctx, 10*time.Second)
-		defer cancel2()
-		if err := dbg.Exec(ctx2, "process"); err != nil {
+		if err := dbg.Exec("process"); err != nil {
 			t.Errorf("Exec(process): %v", err)
 		}
 		out := outBuf.String()
@@ -445,9 +419,7 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 	// --- threads 按钮：thread ---
 	t.Run("thread", func(t *testing.T) {
 		outBuf.Reset()
-		ctx2, cancel2 := context.WithTimeout(ctx, 10*time.Second)
-		defer cancel2()
-		if err := dbg.Exec(ctx2, "thread"); err != nil {
+		if err := dbg.Exec("thread"); err != nil {
 			t.Errorf("Exec(thread): %v", err)
 		}
 		out := outBuf.String()
@@ -459,9 +431,7 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 
 	// --- settings 按钮：Settings ---
 	t.Run("Settings", func(t *testing.T) {
-		ctx2, cancel2 := context.WithTimeout(ctx, 10*time.Second)
-		defer cancel2()
-		s, err := dbg.Settings(ctx2)
+		s, err := dbg.Settings()
 		if err != nil {
 			t.Errorf("Settings: %v", err)
 		} else {
@@ -472,9 +442,7 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 	// --- 验证所有暂停态按钮执行后 Register 仍正常 ---
 	t.Run("ReadRegs_BeforeContinue", func(t *testing.T) {
 		outBuf.Reset()
-		ctx2, cancel2 := context.WithTimeout(ctx, 10*time.Second)
-		defer cancel2()
-		_, err := dbg.Register(ctx2, "")
+		_, err := dbg.Register("")
 		if err != nil {
 			t.Errorf("暂停态按钮测试后 Register 失败: %v", err)
 		} else {
@@ -485,16 +453,14 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 
 	// --- run / pause 按钮：Continue → Pause ---
 	t.Run("Continue_Pause", func(t *testing.T) {
-		ctx2, cancel2 := context.WithTimeout(ctx, 15*time.Second)
-		defer cancel2()
 		// Continue 让进程运行（IOCTL 立即返回）
-		if err := dbg.Continue(ctx2); err != nil {
+		if err := dbg.Continue(); err != nil {
 			t.Fatalf("Continue: %v", err)
 		}
 		t.Log("✓ Continue (run 按钮)")
 		time.Sleep(1 * time.Second)
 		// Pause 让进程暂停
-		if err := dbg.Pause(ctx2); err != nil {
+		if err := dbg.Pause(); err != nil {
 			// Pause 可能返回 ErrAlreadyPaused，这是可接受的
 			t.Logf("Pause: %v (可能已暂停)", err)
 		} else {
@@ -506,9 +472,7 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 
 	// --- trace 按钮：Trace (Intel PT) — 放最后，可能失败但不影响其他测试 ---
 	t.Run("Trace", func(t *testing.T) {
-		ctx2, cancel2 := context.WithTimeout(ctx, 10*time.Second)
-		defer cancel2()
-		err := dbg.Trace(ctx2)
+		err := dbg.Trace()
 		if err != nil {
 			t.Logf("Trace: %v (Intel PT 可能不支持)", err)
 		} else {
@@ -537,30 +501,26 @@ func TestIntegration_MultiStep(t *testing.T) {
 	var mp *core.MessagePump
 	defer func() { cleanupTestDebugger(dbg, &proc, mp) }()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
-	defer cancel()
-
-	if err := dbg.LoadVMM(ctx, driverPath); err != nil {
+	if err := dbg.LoadVMM(driverPath); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
-	proc, err = dbg.StartProcess(ctx, `C:\Windows\System32\notepad.exe`)
+	proc, err = dbg.StartProcess(`C:\Windows\System32\notepad.exe`)
 	if err != nil {
 		t.Fatalf("StartProcess: %v", err)
 	}
-	dbg.LogOpen("test_hyperdbg_multistep.log")
-	mp, err = dbg.StartMessagePump(ctx)
+	mp, err = dbg.StartMessagePump()
 	if err != nil {
 		t.Fatalf("StartMessagePump: %v", err)
 	}
 	time.Sleep(2 * time.Second)
-	if err := dbg.Pause(ctx); err != nil {
+	if err := dbg.Pause(); err != nil {
 		t.Logf("Pause: %v", err)
 	}
 	time.Sleep(500 * time.Millisecond)
 
 	// 读初始 RIP
 	outBuf.Reset()
-	_, _ = dbg.Register(ctx, "")
+	_, _ = dbg.Register("")
 	ripPrev := parseRIPFromText(outBuf.String())
 	t.Logf("入口点 RIP = 0x%X", ripPrev)
 
@@ -570,16 +530,14 @@ func TestIntegration_MultiStep(t *testing.T) {
 	const numOver = 3
 	overOK := 0
 	for i := range numOver {
-		stepCtx, stepCancel := context.WithTimeout(ctx, 15*time.Second)
-		err := dbg.StepOver(stepCtx)
-		stepCancel()
+		err := dbg.StepOver()
 		if err != nil {
 			t.Errorf("第 %d 次 StepOver 失败: %v", i+1, err)
 			break
 		}
 		overOK++
 		outBuf.Reset()
-		_, _ = dbg.Register(ctx, "")
+		_, _ = dbg.Register("")
 		ripNow := parseRIPFromText(outBuf.String())
 		t.Logf("  步过 %d: RIP 0x%X → 0x%X", i+1, ripPrev, ripNow)
 		if ripNow == 0 {
@@ -590,14 +548,12 @@ func TestIntegration_MultiStep(t *testing.T) {
 
 	// StepOut（执行到返回）：在 [RSP] 返回地址设临时断点后 Continue。
 	// 入口点 [RSP] 是 ntdll 启动代码的返回地址，StepOut 应跳回 ntdll。
-	outCtx, outCancel := context.WithTimeout(ctx, 15*time.Second)
-	err = dbg.StepOut(outCtx)
-	outCancel()
+	err = dbg.StepOut()
 	if err != nil {
 		t.Logf("StepOut 失败: %v", err)
 	} else {
 		outBuf.Reset()
-		_, _ = dbg.Register(ctx, "")
+		_, _ = dbg.Register("")
 		ripNow := parseRIPFromText(outBuf.String())
 		t.Logf("  StepOut: RIP → 0x%X", ripNow)
 		if ripNow != 0 && ripNow != ripPrev {
@@ -606,16 +562,14 @@ func TestIntegration_MultiStep(t *testing.T) {
 	}
 
 	// TraceInto（步入）—— 验证至少 1 次单步指令执行。
-	stepCtx, stepCancel := context.WithTimeout(ctx, 12*time.Second)
-	err = dbg.TraceInto(stepCtx)
-	stepCancel()
+	err = dbg.TraceInto()
 	traceIntoOK := 0
 	if err != nil {
 		t.Logf("TraceInto 失败（已知限制）: %v", err)
 	} else {
 		traceIntoOK = 1
 		outBuf.Reset()
-		_, _ = dbg.Register(ctx, "")
+		_, _ = dbg.Register("")
 		ripNow := parseRIPFromText(outBuf.String())
 		t.Logf("  步入 1: RIP 0x%X → 0x%X", ripPrev, ripNow)
 		if ripNow != 0 {

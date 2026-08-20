@@ -259,7 +259,7 @@ func (pe *File) ParseSectionHeader() (err error) {
 	// contiguously in the order defined by the section header table, with
 	// starting RVAs aligned by the value of the SectionAlignment field of the
 	// PE header.
-	for i := uint16(0); i < numberOfSections; i++ {
+	for range numberOfSections {
 		err := pe.structUnpack(&secHeader, offset, secHeaderSize)
 		if err != nil {
 			return err

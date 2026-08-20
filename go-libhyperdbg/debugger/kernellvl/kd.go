@@ -26,7 +26,6 @@
 package kernellvl
 
 import (
-	"context"
 	"encoding/binary"
 	"fmt"
 	"sync"
@@ -144,10 +143,10 @@ type BpInfo struct {
 type Transport interface {
 	// Write sends len(buf) bytes to the debuggee. It must return an error if
 	// fewer bytes were written.
-	Write(ctx context.Context, buf []byte) error
+	Write(buf []byte) error
 	// Read reads up to len(buf) bytes from the debuggee. It blocks until at
-	// least one byte is available or ctx is cancelled.
-	Read(ctx context.Context, buf []byte) (int, error)
+	// least one byte is available.
+	Read(buf []byte) (int, error)
 	// Close releases the transport resource.
 	Close() error
 }
@@ -428,8 +427,8 @@ func (k *KdState) SetKernelBaseAddress(base uint64) {
 // ----------------------------------------------------------------------------
 
 // WaitForKernelResponse blocks until ReceivedKernelResponse is called for the
-// given sync object, or ctx is cancelled. Mirrors DbgWaitForKernelResponse.
-func (k *KdState) WaitForKernelResponse(ctx context.Context, obj KernelSyncObject) error {
+// given sync object. Mirrors DbgWaitForKernelResponse.
+func (k *KdState) WaitForKernelResponse(obj KernelSyncObject) error {
 	if int(obj) >= len(k.syncObjects) {
 		return fmt.Errorf("WaitForKernelResponse: invalid sync object %d", obj)
 	}
@@ -445,13 +444,8 @@ func (k *KdState) WaitForKernelResponse(ctx context.Context, obj KernelSyncObjec
 		k.syncObjects[obj].done = ch
 		k.mu.Unlock()
 	}
-	select {
-	case <-ch:
-		return nil
-	case <-ctx.Done():
-		// Best-effort cleanup: leave the slot so a late signal still finds it.
-		return ctx.Err()
-	}
+	<-ch
+	return nil
 }
 
 // ReceivedKernelResponse signals the goroutine waiting on the given sync
@@ -516,7 +510,7 @@ type requestBuffersMap = map[KernelSyncObject][]byte
 // telling it the serial/named-pipe parameters and the ntoskrnl base address.
 // Mirrors the IOCTL portion of KdPrepareAndConnectDebugPort (IsPreparing=true
 // branch).
-func (k *KdState) KdPrepareDebuggee(ctx context.Context, portAddress, baudrate, kernelBase uint32, osName string) error {
+func (k *KdState) KdPrepareDebuggee(portAddress, baudrate, kernelBase uint32, osName string) error {
 	k.mu.Lock()
 	dev := k.device
 	k.mu.Unlock()
@@ -533,7 +527,7 @@ func (k *KdState) KdPrepareDebuggee(ctx context.Context, portAddress, baudrate, 
 	inBuf := structAsBytes(unsafe.Pointer(&req), unsafe.Sizeof(req))
 	outBuf := make([]byte, unsafe.Sizeof(req))
 	copy(outBuf, inBuf)
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_PREPARE_DEBUGGEE, inBuf, outBuf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_PREPARE_DEBUGGEE, inBuf, outBuf); err != nil {
 		return fmt.Errorf("KdPrepareDebuggee: IOCTL_PREPARE_DEBUGGEE failed: %w", err)
 	}
 	// Re-read Result from the output buffer.
@@ -548,7 +542,7 @@ func (k *KdState) KdPrepareDebuggee(ctx context.Context, portAddress, baudrate, 
 // KdSendUserInterfacePausePacket sends IOCTL_PAUSE_PACKET_RECEIVED to the
 // local VMM driver. Mirrors the IOCTL call in the C++ pause path on the
 // debuggee side.
-func (k *KdState) KdSendUserInterfacePausePacket(ctx context.Context) error {
+func (k *KdState) KdSendUserInterfacePausePacket() error {
 	k.mu.Lock()
 	dev := k.device
 	k.mu.Unlock()
@@ -557,7 +551,7 @@ func (k *KdState) KdSendUserInterfacePausePacket(ctx context.Context) error {
 	}
 	var pkt hyperdbgsdk.DEBUGGER_PAUSE_PACKET_RECEIVED
 	buf := structAsBytes(unsafe.Pointer(&pkt), unsafe.Sizeof(pkt))
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_PAUSE_PACKET_RECEIVED, buf, buf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_PAUSE_PACKET_RECEIVED, buf, buf); err != nil {
 		return fmt.Errorf("KdSendUserInterfacePausePacket: IOCTL_PAUSE_PACKET_RECEIVED failed: %w", err)
 	}
 	return nil
@@ -566,7 +560,7 @@ func (k *KdState) KdSendUserInterfacePausePacket(ctx context.Context) error {
 // KdRegisterEventInDebuggee sends IOCTL_DEBUGGER_REGISTER_EVENT to the local
 // VMM driver and forwards the result back to the remote debugger via
 // KdSendGeneralBuffersFromDebuggeeToDebugger. Mirrors KdRegisterEventInDebuggee.
-func (k *KdState) KdRegisterEventInDebuggee(ctx context.Context, eventBuf []byte) (hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT, error) {
+func (k *KdState) KdRegisterEventInDebuggee(eventBuf []byte) (hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT, error) {
 	k.mu.Lock()
 	dev := k.device
 	k.mu.Unlock()
@@ -575,13 +569,12 @@ func (k *KdState) KdRegisterEventInDebuggee(ctx context.Context, eventBuf []byte
 	}
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
 	resultBuf := structAsBytes(unsafe.Pointer(&result), unsafe.Sizeof(result))
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT, eventBuf, resultBuf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT, eventBuf, resultBuf); err != nil {
 		return result, fmt.Errorf("KdRegisterEventInDebuggee: IOCTL failed: %w", err)
 	}
 	bytesIntoStruct(unsafe.Pointer(&result), resultBuf, unsafe.Sizeof(result))
 	// Forward to the remote debugger.
 	if err := k.KdSendGeneralBuffersFromDebuggeeToDebugger(
-		ctx,
 		hyperdbgsdk.DebuggerRemotePacketRequestedActionDebuggeeResultOfRegisteringEvent,
 		resultBuf,
 		true,
@@ -594,7 +587,7 @@ func (k *KdState) KdRegisterEventInDebuggee(ctx context.Context, eventBuf []byte
 // KdAddActionToEventInDebuggee sends IOCTL_DEBUGGER_ADD_ACTION_TO_EVENT to
 // the local VMM driver and forwards the result back to the remote debugger.
 // Mirrors KdAddActionToEventInDebuggee.
-func (k *KdState) KdAddActionToEventInDebuggee(ctx context.Context, actionBuf []byte) (hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT, error) {
+func (k *KdState) KdAddActionToEventInDebuggee(actionBuf []byte) (hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT, error) {
 	k.mu.Lock()
 	dev := k.device
 	k.mu.Unlock()
@@ -603,12 +596,11 @@ func (k *KdState) KdAddActionToEventInDebuggee(ctx context.Context, actionBuf []
 	}
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
 	resultBuf := structAsBytes(unsafe.Pointer(&result), unsafe.Sizeof(result))
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT, actionBuf, resultBuf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT, actionBuf, resultBuf); err != nil {
 		return result, fmt.Errorf("KdAddActionToEventInDebuggee: IOCTL failed: %w", err)
 	}
 	bytesIntoStruct(unsafe.Pointer(&result), resultBuf, unsafe.Sizeof(result))
 	if err := k.KdSendGeneralBuffersFromDebuggeeToDebugger(
-		ctx,
 		hyperdbgsdk.DebuggerRemotePacketRequestedActionDebuggeeResultOfAddingActionToEvent,
 		resultBuf,
 		true,
@@ -621,7 +613,7 @@ func (k *KdState) KdAddActionToEventInDebuggee(ctx context.Context, actionBuf []
 // KdSendModifyEventInDebuggee sends IOCTL_DEBUGGER_MODIFY_EVENTS to the local
 // VMM driver and optionally forwards the result back to the remote debugger.
 // Mirrors KdSendModifyEventInDebuggee.
-func (k *KdState) KdSendModifyEventInDebuggee(ctx context.Context, modify *hyperdbgsdk.DEBUGGER_MODIFY_EVENTS, sendResultToDebugger bool) error {
+func (k *KdState) KdSendModifyEventInDebuggee(modify *hyperdbgsdk.DEBUGGER_MODIFY_EVENTS, sendResultToDebugger bool) error {
 	k.mu.Lock()
 	dev := k.device
 	k.mu.Unlock()
@@ -631,13 +623,12 @@ func (k *KdState) KdSendModifyEventInDebuggee(ctx context.Context, modify *hyper
 	inBuf := structAsBytes(unsafe.Pointer(modify), unsafe.Sizeof(*modify))
 	outBuf := make([]byte, unsafe.Sizeof(*modify))
 	copy(outBuf, inBuf)
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_MODIFY_EVENTS, inBuf, outBuf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_MODIFY_EVENTS, inBuf, outBuf); err != nil {
 		return fmt.Errorf("KdSendModifyEventInDebuggee: IOCTL failed: %w", err)
 	}
 	bytesIntoStruct(unsafe.Pointer(modify), outBuf, unsafe.Sizeof(*modify))
 	if sendResultToDebugger {
 		if err := k.KdSendGeneralBuffersFromDebuggeeToDebugger(
-			ctx,
 			hyperdbgsdk.DebuggerRemotePacketRequestedActionDebuggeeResultOfQueryAndModifyEvent,
 			outBuf,
 			true,
@@ -651,7 +642,7 @@ func (k *KdState) KdSendModifyEventInDebuggee(ctx context.Context, modify *hyper
 // KdSendSignalExecutionFinished sends
 // IOCTL_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED to the local VMM driver.
 // Mirrors the IOCTL call in KdHandleUserInputInDebuggee.
-func (k *KdState) KdSendSignalExecutionFinished(ctx context.Context) error {
+func (k *KdState) KdSendSignalExecutionFinished() error {
 	k.mu.Lock()
 	dev := k.device
 	k.mu.Unlock()
@@ -660,7 +651,7 @@ func (k *KdState) KdSendSignalExecutionFinished(ctx context.Context) error {
 	}
 	var sig hyperdbgsdk.DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL
 	buf := structAsBytes(unsafe.Pointer(&sig), unsafe.Sizeof(sig))
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED, buf, buf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED, buf, buf); err != nil {
 		return fmt.Errorf("KdSendSignalExecutionFinished: IOCTL failed: %w", err)
 	}
 	return nil
@@ -669,7 +660,7 @@ func (k *KdState) KdSendSignalExecutionFinished(ctx context.Context) error {
 // KdSendUsermodePrints sends IOCTL_SEND_USERMODE_MESSAGES_TO_DEBUGGER to
 // forward a chunk of user-mode output to the remote debugger. Mirrors
 // KdSendUsermodePrints.
-func (k *KdState) KdSendUsermodePrints(ctx context.Context, msg []byte) error {
+func (k *KdState) KdSendUsermodePrints(msg []byte) error {
 	k.mu.Lock()
 	dev := k.device
 	k.mu.Unlock()
@@ -684,7 +675,7 @@ func (k *KdState) KdSendUsermodePrints(ctx context.Context, msg []byte) error {
 	// KernelStatus; we set Length.
 	binary.LittleEndian.PutUint32(buf[4:8], uint32(len(msg)))
 	copy(buf[hdrSize:], msg)
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_SEND_USERMODE_MESSAGES_TO_DEBUGGER, buf, buf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_SEND_USERMODE_MESSAGES_TO_DEBUGGER, buf, buf); err != nil {
 		return fmt.Errorf("KdSendUsermodePrints: IOCTL failed: %w", err)
 	}
 	return nil
@@ -695,7 +686,6 @@ func (k *KdState) KdSendUsermodePrints(ctx context.Context, msg []byte) error {
 // arbitrary buffer from the debuggee to the debugger. Mirrors
 // KdSendGeneralBuffersFromDebuggeeToDebugger.
 func (k *KdState) KdSendGeneralBuffersFromDebuggeeToDebugger(
-	ctx context.Context,
 	action hyperdbgsdk.DEBUGGER_REMOTE_PACKET_REQUESTED_ACTION,
 	buf []byte,
 	pauseDebuggeeWhenSent bool,
@@ -720,7 +710,7 @@ func (k *KdState) KdSendGeneralBuffersFromDebuggeeToDebugger(
 	copy(packet[hdrSize:], buf)
 	outBuf := make([]byte, hdrSize) // driver returns just the header
 	copy(outBuf, packet[:hdrSize])
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_SEND_GENERAL_BUFFER_FROM_DEBUGGEE_TO_DEBUGGER, packet, outBuf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_SEND_GENERAL_BUFFER_FROM_DEBUGGEE_TO_DEBUGGER, packet, outBuf); err != nil {
 		return fmt.Errorf("KdSendGeneralBuffersFromDebuggeeToDebugger: IOCTL failed: %w", err)
 	}
 	// Check KernelResult at offset 12.
@@ -745,7 +735,7 @@ func (k *KdState) KdSendGeneralBuffersFromDebuggeeToDebugger(
 
 // KdCommandGoto sends a 'g' (continue) packet to the debuggee. Mirrors
 // KdSendContinuePacketToDebuggee.
-func (k *KdState) KdCommandGoto(ctx context.Context) error {
+func (k *KdState) KdCommandGoto() error {
 	k.mu.Lock()
 	k.currentRemoteCore = DebuggerDebuggeeIsRunningNoCore
 	t := k.transport
@@ -759,14 +749,13 @@ func (k *KdState) KdCommandGoto(ctx context.Context) error {
 	); err != nil {
 		return err
 	}
-	_ = ctx // transport.Write honours its own ctx if it supports cancellation
 	return nil
 }
 
 // KdCommandStep sends a 't'/'p' (step-in / step-over) packet to the debuggee.
 // Mirrors KdSendStepPacketToDebuggee. callInstrSize is the size of the current
 // CALL instruction (0 if not a CALL); it is only meaningful for step-over.
-func (k *KdState) KdCommandStep(ctx context.Context, stepType hyperdbgsdk.DEBUGGER_REMOTE_STEPPING_REQUEST, isCall bool, callInstrSize uint32) error {
+func (k *KdState) KdCommandStep(stepType hyperdbgsdk.DEBUGGER_REMOTE_STEPPING_REQUEST, isCall bool, callInstrSize uint32) error {
 	k.mu.Lock()
 	t := k.transport
 	k.mu.Unlock()
@@ -796,12 +785,12 @@ func (k *KdState) KdCommandStep(ctx context.Context, stepType hyperdbgsdk.DEBUGG
 	); err != nil {
 		return err
 	}
-	return k.WaitForKernelResponse(ctx, SyncObjectIsDebuggerRunning)
+	return k.WaitForKernelResponse(SyncObjectIsDebuggerRunning)
 }
 
 // KdCommandPause sends a PAUSE packet to the debuggee and then handles the
 // paused state. Mirrors KdSendPausePacketToDebuggee.
-func (k *KdState) KdCommandPause(ctx context.Context) error {
+func (k *KdState) KdCommandPause() error {
 	if err := k.KdCommandPacketToDebuggee(
 		hyperdbgsdk.DebuggerRemotePacketTypeDebuggerToDebuggeeExecuteOnUserMode,
 		hyperdbgsdk.DebuggerRemotePacketRequestedActionOnUserModePause,
@@ -812,42 +801,42 @@ func (k *KdState) KdCommandPause(ctx context.Context) error {
 	// goroutine will receive the paused packet and signal
 	// SyncObjectPausedDebuggeeDetails. We mirror KdInterpretPausedDebuggee by
 	// waiting on that sync object.
-	return k.WaitForKernelResponse(ctx, SyncObjectPausedDebuggeeDetails)
+	return k.WaitForKernelResponse(SyncObjectPausedDebuggeeDetails)
 }
 
 // KdContinue is the high-level "go" entry point: it sends the continue packet
 // and then waits for the debuggee to pause again (CTRL+C or breakpoint hit).
 // Mirrors KdBreakControlCheckAndContinueDebugger + KdSetStatusAndWaitForPause.
-func (k *KdState) KdContinue(ctx context.Context) error {
+func (k *KdState) KdContinue() error {
 	k.mu.Lock()
 	if k.isDebuggeeRunning {
 		k.mu.Unlock()
 		return nil // already running, nothing to do
 	}
 	k.mu.Unlock()
-	if err := k.KdCommandGoto(ctx); err != nil {
+	if err := k.KdCommandGoto(); err != nil {
 		k.printf("err, unable to continue the debuggee: %v\n", err)
 		return err
 	}
-	return k.KdSetStatusAndWaitForPause(ctx)
+	return k.KdSetStatusAndWaitForPause()
 }
 
 // KdSetStatusAndWaitForPause marks the debuggee as running and blocks until
 // the listener signals a pause. Mirrors KdSetStatusAndWaitForPause +
 // KdTheRemoteSystemIsRunning.
-func (k *KdState) KdSetStatusAndWaitForPause(ctx context.Context) error {
+func (k *KdState) KdSetStatusAndWaitForPause() error {
 	k.mu.Lock()
 	k.isDebuggeeRunning = true
 	k.mu.Unlock()
 	k.printf("debuggee is running...\n")
-	return k.WaitForKernelResponse(ctx, SyncObjectIsDebuggerRunning)
+	return k.WaitForKernelResponse(SyncObjectIsDebuggerRunning)
 }
 
 // KdBreakControlCheckAndPauseDebugger sends a pause request to the debuggee
 // if it is currently running. Mirrors KdBreakControlCheckAndPauseDebugger.
 // signalRunningFlag controls whether the IsDebuggerRunning sync object is
 // signalled (used by the post-connection pause path).
-func (k *KdState) KdBreakControlCheckAndPauseDebugger(ctx context.Context, signalRunningFlag bool) error {
+func (k *KdState) KdBreakControlCheckAndPauseDebugger(signalRunningFlag bool) error {
 	k.mu.Lock()
 	running := k.isDebuggeeRunning
 	ignore := k.ignorePauseRequests
@@ -858,7 +847,7 @@ func (k *KdState) KdBreakControlCheckAndPauseDebugger(ctx context.Context, signa
 	if !running {
 		return nil
 	}
-	if err := k.KdCommandPause(ctx); err != nil {
+	if err := k.KdCommandPause(); err != nil {
 		k.printf("err, unable to pause the debuggee: %v\n", err)
 		return err
 	}
@@ -870,23 +859,23 @@ func (k *KdState) KdBreakControlCheckAndPauseDebugger(ctx context.Context, signa
 
 // KdBreakControlCheckAndContinueDebugger sends a continue request if the
 // debuggee is currently paused. Mirrors KdBreakControlCheckAndContinueDebugger.
-func (k *KdState) KdBreakControlCheckAndContinueDebugger(ctx context.Context) error {
+func (k *KdState) KdBreakControlCheckAndContinueDebugger() error {
 	k.mu.Lock()
 	running := k.isDebuggeeRunning
 	k.mu.Unlock()
 	if running {
 		return nil
 	}
-	if err := k.KdCommandGoto(ctx); err != nil {
+	if err := k.KdCommandGoto(); err != nil {
 		k.printf("err, unable to continue the debuggee: %v\n", err)
 		return err
 	}
-	return k.KdSetStatusAndWaitForPause(ctx)
+	return k.KdSetStatusAndWaitForPause()
 }
 
 // KdCloseConnection closes the connection in both debuggee and debugger
 // roles. Mirrors KdCloseConnection. Safe to call multiple times.
-func (k *KdState) KdCloseConnection(ctx context.Context) error {
+func (k *KdState) KdCloseConnection() error {
 	k.mu.Lock()
 	if k.serialConnectionAlreadyClosed {
 		k.mu.Unlock()
@@ -920,13 +909,13 @@ func (k *KdState) KdCloseConnection(ctx context.Context) error {
 		k.ReceivedKernelResponse(SyncObjectStartedPacketReceived)
 	}
 
-	k.KdUninitializeConnection(ctx)
+	k.KdUninitializeConnection()
 	return nil
 }
 
 // KdUninitializeConnection resets all connection state and releases the
 // transport. Mirrors KdUninitializeConnection.
-func (k *KdState) KdUninitializeConnection(ctx context.Context) {
+func (k *KdState) KdUninitializeConnection() {
 	k.mu.Lock()
 	t := k.transport
 	k.transport = nil
@@ -999,7 +988,7 @@ func KdCheckForTheEndOfTheBuffer(buf *[]byte) bool {
 
 // KdSendPacketToDebuggee writes buf to the transport and optionally appends
 // the -byte end-of-buffer marker. Mirrors KdSendPacketToDebuggee.
-func (k *KdState) KdSendPacketToDebuggee(ctx context.Context, buf []byte, sendEndOfBuffer bool) error {
+func (k *KdState) KdSendPacketToDebuggee(buf []byte, sendEndOfBuffer bool) error {
 	k.mu.Lock()
 	t := k.transport
 	k.ignoreNewLoggingMessages = false
@@ -1010,12 +999,12 @@ func (k *KdState) KdSendPacketToDebuggee(ctx context.Context, buf []byte, sendEn
 	if uint32(len(buf))+SerialEndOfBufferCharsCount > MaxSerialPacketSize {
 		return fmt.Errorf("KdSendPacketToDebuggee: buffer too large (%d > %d)", len(buf), MaxSerialPacketSize)
 	}
-	if err := t.Write(ctx, buf); err != nil {
+	if err := t.Write(buf); err != nil {
 		return fmt.Errorf("KdSendPacketToDebuggee: write failed: %w", err)
 	}
 	if sendEndOfBuffer {
 		marker := []byte{SerialEndOfBufferChar1, SerialEndOfBufferChar2, SerialEndOfBufferChar3, SerialEndOfBufferChar4}
-		if err := t.Write(ctx, marker); err != nil {
+		if err := t.Write(marker); err != nil {
 			return fmt.Errorf("KdSendPacketToDebuggee: end-of-buffer write failed: %w", err)
 		}
 	}
@@ -1036,7 +1025,7 @@ func (k *KdState) KdCommandPacketToDebuggee(
 	// Checksum byte.
 	pktBytes := structAsBytes(unsafe.Pointer(&pkt), unsafe.Sizeof(pkt))
 	pkt.Checksum = KdComputeDataChecksum(pktBytes[1:])
-	return k.KdSendPacketToDebuggee(context.Background(), pktBytes, true)
+	return k.KdSendPacketToDebuggee(pktBytes, true)
 }
 
 // KdCommandPacketAndBufferToDebuggee builds and sends a DEBUGGER_REMOTE_PACKET
@@ -1059,11 +1048,11 @@ func (k *KdState) KdCommandPacketAndBufferToDebuggee(
 	pkt.Checksum = KdComputeDataChecksum(pktBytes[1:])
 	pkt.Checksum += KdComputeDataChecksum(payload)
 	// Send the packet header without end-of-buffer...
-	if err := k.KdSendPacketToDebuggee(context.Background(), pktBytes, false); err != nil {
+	if err := k.KdSendPacketToDebuggee(pktBytes, false); err != nil {
 		return err
 	}
 	// ...then the payload with end-of-buffer.
-	return k.KdSendPacketToDebuggee(context.Background(), payload, true)
+	return k.KdSendPacketToDebuggee(payload, true)
 }
 
 // ----------------------------------------------------------------------------
@@ -1072,7 +1061,7 @@ func (k *KdState) KdCommandPacketAndBufferToDebuggee(
 
 // KdSendBpPacket sends a 'bp' breakpoint packet to the debuggee and waits for
 // the result. Mirrors KdSendBpPacketToDebuggee.
-func (k *KdState) KdSendBpPacket(ctx context.Context, bp *hyperdbgsdk.DEBUGGEE_BP_PACKET) error {
+func (k *KdState) KdSendBpPacket(bp *hyperdbgsdk.DEBUGGEE_BP_PACKET) error {
 	buf := structAsBytes(unsafe.Pointer(bp), unsafe.Sizeof(*bp))
 	if err := k.KdCommandPacketAndBufferToDebuggee(
 		hyperdbgsdk.DebuggerRemotePacketTypeDebuggerToDebuggeeExecuteOnVmxRoot,
@@ -1081,12 +1070,12 @@ func (k *KdState) KdSendBpPacket(ctx context.Context, bp *hyperdbgsdk.DEBUGGEE_B
 	); err != nil {
 		return err
 	}
-	return k.WaitForKernelResponse(ctx, SyncObjectBp)
+	return k.WaitForKernelResponse(SyncObjectBp)
 }
 
 // KdSendListOrModifyBpPacket sends a 'bc'/'bd'/'be'/'bl' packet to the
 // debuggee. Mirrors KdSendListOrModifyPacketToDebuggee.
-func (k *KdState) KdSendListOrModifyBpPacket(ctx context.Context, pkt *hyperdbgsdk.DEBUGGEE_BP_LIST_OR_MODIFY_PACKET) error {
+func (k *KdState) KdSendListOrModifyBpPacket(pkt *hyperdbgsdk.DEBUGGEE_BP_LIST_OR_MODIFY_PACKET) error {
 	buf := structAsBytes(unsafe.Pointer(pkt), unsafe.Sizeof(*pkt))
 	if err := k.KdCommandPacketAndBufferToDebuggee(
 		hyperdbgsdk.DebuggerRemotePacketTypeDebuggerToDebuggeeExecuteOnVmxRoot,
@@ -1095,12 +1084,12 @@ func (k *KdState) KdSendListOrModifyBpPacket(ctx context.Context, pkt *hyperdbgs
 	); err != nil {
 		return err
 	}
-	return k.WaitForKernelResponse(ctx, SyncObjectListOrModifyBreakpoints)
+	return k.WaitForKernelResponse(SyncObjectListOrModifyBreakpoints)
 }
 
 // KdSendFlushPacket sends a 'flush' packet to the debuggee. Mirrors
 // KdSendFlushPacketToDebuggee.
-func (k *KdState) KdSendFlushPacket(ctx context.Context) error {
+func (k *KdState) KdSendFlushPacket() error {
 	var pkt hyperdbgsdk.DEBUGGER_FLUSH_LOGGING_BUFFERS
 	buf := structAsBytes(unsafe.Pointer(&pkt), unsafe.Sizeof(pkt))
 	if err := k.KdCommandPacketAndBufferToDebuggee(
@@ -1110,12 +1099,12 @@ func (k *KdState) KdSendFlushPacket(ctx context.Context) error {
 	); err != nil {
 		return err
 	}
-	return k.WaitForKernelResponse(ctx, SyncObjectFlushResult)
+	return k.WaitForKernelResponse(SyncObjectFlushResult)
 }
 
 // KdSendSwitchCorePacket sends a '~' (switch core) packet to the debuggee.
 // Mirrors KdSendSwitchCorePacketToDebuggee.
-func (k *KdState) KdSendSwitchCorePacket(ctx context.Context, newCore uint32) error {
+func (k *KdState) KdSendSwitchCorePacket(newCore uint32) error {
 	k.mu.Lock()
 	current := k.currentRemoteCore
 	k.mu.Unlock()
@@ -1133,12 +1122,12 @@ func (k *KdState) KdSendSwitchCorePacket(ctx context.Context, newCore uint32) er
 	); err != nil {
 		return err
 	}
-	return k.WaitForKernelResponse(ctx, SyncObjectCoreSwitchingResult)
+	return k.WaitForKernelResponse(SyncObjectCoreSwitchingResult)
 }
 
 // KdSendShortCircuitingEvent sends a short-circuiting enable/disable packet
 // to the debuggee. Mirrors KdSendShortCircuitingEventToDebuggee.
-func (k *KdState) KdSendShortCircuitingEvent(ctx context.Context, isEnabled bool) error {
+func (k *KdState) KdSendShortCircuitingEvent(isEnabled bool) error {
 	var pkt hyperdbgsdk.DEBUGGER_SHORT_CIRCUITING_EVENT
 	pkt.IsShortCircuiting = isEnabled
 	buf := structAsBytes(unsafe.Pointer(&pkt), unsafe.Sizeof(pkt))
@@ -1149,14 +1138,13 @@ func (k *KdState) KdSendShortCircuitingEvent(ctx context.Context, isEnabled bool
 	); err != nil {
 		return err
 	}
-	return k.WaitForKernelResponse(ctx, SyncObjectShortCircuitingEventState)
+	return k.WaitForKernelResponse(SyncObjectShortCircuitingEventState)
 }
 
 // KdSendEventQueryAndModifyPacket sends a query/modify event packet to the
 // debuggee and returns the queried state (only meaningful for query actions).
 // Mirrors KdSendEventQueryAndModifyPacketToDebuggee.
 func (k *KdState) KdSendEventQueryAndModifyPacket(
-	ctx context.Context,
 	tag uint64,
 	actionType hyperdbgsdk.DEBUGGER_MODIFY_EVENTS_TYPE,
 ) (bool, error) {
@@ -1174,7 +1162,7 @@ func (k *KdState) KdSendEventQueryAndModifyPacket(
 	); err != nil {
 		return false, err
 	}
-	if err := k.WaitForKernelResponse(ctx, SyncObjectModifyAndQueryEvent); err != nil {
+	if err := k.WaitForKernelResponse(SyncObjectModifyAndQueryEvent); err != nil {
 		return false, err
 	}
 	k.mu.Lock()
@@ -1188,7 +1176,7 @@ func (k *KdState) KdSendEventQueryAndModifyPacket(
 // KdSendUserInputPacket sends a user-input command string to the debuggee.
 // Mirrors KdSendUserInputPacketToDebuggee. ignoreBreakingAgain corresponds to
 // the IgnoreFinishedSignal field of DEBUGGEE_USER_INPUT_PACKET.
-func (k *KdState) KdSendUserInputPacket(ctx context.Context, input string, ignoreBreakingAgain bool) error {
+func (k *KdState) KdSendUserInputPacket(input string, ignoreBreakingAgain bool) error {
 	var hdr hyperdbgsdk.DEBUGGEE_USER_INPUT_PACKET
 	hdr.CommandLen = uint32(len(input))
 	hdr.IgnoreFinishedSignal = ignoreBreakingAgain
@@ -1205,7 +1193,7 @@ func (k *KdState) KdSendUserInputPacket(ctx context.Context, input string, ignor
 		return err
 	}
 	if !ignoreBreakingAgain {
-		return k.WaitForKernelResponse(ctx, SyncObjectDebuggeeFinishedCommandExecution)
+		return k.WaitForKernelResponse(SyncObjectDebuggeeFinishedCommandExecution)
 	}
 	return nil
 }
@@ -1213,7 +1201,7 @@ func (k *KdState) KdSendUserInputPacket(ctx context.Context, input string, ignor
 // KdSendScriptPacket sends a script buffer to the debuggee. Mirrors
 // KdSendScriptPacketToDebuggee. isFormat distinguishes the '.formats' path
 // which waits on an extra sync object.
-func (k *KdState) KdSendScriptPacket(ctx context.Context, scriptBuf []byte, pointer uint32, isFormat bool) error {
+func (k *KdState) KdSendScriptPacket(scriptBuf []byte, pointer uint32, isFormat bool) error {
 	var hdr hyperdbgsdk.DEBUGGEE_SCRIPT_PACKET
 	hdr.ScriptBufferSize = uint32(len(scriptBuf))
 	hdr.ScriptBufferPointer = pointer
@@ -1231,16 +1219,16 @@ func (k *KdState) KdSendScriptPacket(ctx context.Context, scriptBuf []byte, poin
 		return err
 	}
 	if isFormat {
-		if err := k.WaitForKernelResponse(ctx, SyncObjectScriptFormatsResult); err != nil {
+		if err := k.WaitForKernelResponse(SyncObjectScriptFormatsResult); err != nil {
 			return err
 		}
 	}
-	return k.WaitForKernelResponse(ctx, SyncObjectScriptRunningResult)
+	return k.WaitForKernelResponse(SyncObjectScriptRunningResult)
 }
 
 // KdSendSymbolReloadPacket sends a '.sym reload' packet to the debuggee.
 // Mirrors KdSendSymbolReloadPacketToDebuggee.
-func (k *KdState) KdSendSymbolReloadPacket(ctx context.Context, processId uint32) error {
+func (k *KdState) KdSendSymbolReloadPacket(processId uint32) error {
 	var pkt hyperdbgsdk.DEBUGGEE_SYMBOL_REQUEST_PACKET
 	pkt.ProcessId = processId
 	buf := structAsBytes(unsafe.Pointer(&pkt), unsafe.Sizeof(pkt))
@@ -1251,7 +1239,7 @@ func (k *KdState) KdSendSymbolReloadPacket(ctx context.Context, processId uint32
 	); err != nil {
 		return err
 	}
-	return k.WaitForKernelResponse(ctx, SyncObjectSymbolReload)
+	return k.WaitForKernelResponse(SyncObjectSymbolReload)
 }
 
 // SetSharedEventStatus stores the result of a query-state event action.
@@ -1375,7 +1363,7 @@ var HyperdbgBuildSignature = []byte("0.22.0-20260101.0000\x00")
 // back the build signature. Mirrors KdSendResponseOfThePingPacket in kd.cpp.
 // Called by the listener when DEBUGGER_REMOTE_PACKET_PING_AND_SEND_SUPPORTED_VERSION
 // is received.
-func (k *KdState) KdSendResponseOfThePingPacket(ctx context.Context) error {
+func (k *KdState) KdSendResponseOfThePingPacket() error {
 	sig := HyperdbgBuildSignature
 	if err := k.KdCommandPacketAndBufferToDebuggee(
 		hyperdbgsdk.DebuggerRemotePacketTypeDebuggerToDebuggeeExecuteOnUserMode,
@@ -1385,6 +1373,5 @@ func (k *KdState) KdSendResponseOfThePingPacket(ctx context.Context) error {
 		k.printf("err, unable to send response to the ping packet: %v\n", err)
 		return err
 	}
-	_ = ctx
 	return nil
 }

@@ -12,7 +12,7 @@ func TestStressRapidRestart(t *testing.T) {
 	dbg := debugger.New()
 	exePath := `C:\Windows\System32\notepad.exe`
 
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		fmt.Printf("\n=== Iteration %d ===\n", i+1)
 
 		start := time.Now()
@@ -22,7 +22,7 @@ func TestStressRapidRestart(t *testing.T) {
 		}
 		fmt.Printf("CreateProcess took: %v\n", time.Since(start))
 
-		for j := 0; j < 50; j++ {
+		for range 50 {
 			if dbg.GetProcessHandle() != 0 {
 				break
 			}
@@ -40,7 +40,7 @@ func TestStressRapidRestart(t *testing.T) {
 		}
 		fmt.Printf("TerminateProcess took: %v\n", time.Since(start))
 
-		for j := 0; j < 50; j++ {
+		for range 50 {
 			if dbg.GetProcessHandle() == 0 {
 				break
 			}
@@ -57,7 +57,7 @@ func TestStressRapidDetach(t *testing.T) {
 	dbg := debugger.New()
 	exePath := `C:\Windows\System32\notepad.exe`
 
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		fmt.Printf("\n=== Iteration %d ===\n", i+1)
 
 		start := time.Now()
@@ -67,7 +67,7 @@ func TestStressRapidDetach(t *testing.T) {
 		}
 		fmt.Printf("CreateProcess took: %v\n", time.Since(start))
 
-		for j := 0; j < 100; j++ {
+		for range 100 {
 			if dbg.GetProcessHandle() != 0 {
 				break
 			}
@@ -85,7 +85,7 @@ func TestStressRapidDetach(t *testing.T) {
 		}
 		fmt.Printf("Detach took: %v\n", time.Since(start))
 
-		for j := 0; j < 100; j++ {
+		for range 100 {
 			if dbg.GetProcessHandle() == 0 {
 				break
 			}
@@ -102,7 +102,7 @@ func TestStressMixedOperations(t *testing.T) {
 	dbg := debugger.New()
 	exePath := `C:\Windows\System32\notepad.exe`
 
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		fmt.Printf("\n=== Iteration %d ===\n", i+1)
 
 		start := time.Now()
@@ -112,7 +112,7 @@ func TestStressMixedOperations(t *testing.T) {
 		}
 		fmt.Printf("CreateProcess took: %v\n", time.Since(start))
 
-		for j := 0; j < 50; j++ {
+		for range 50 {
 			if dbg.GetProcessHandle() != 0 {
 				break
 			}
@@ -137,7 +137,7 @@ func TestStressMixedOperations(t *testing.T) {
 			t.Fatalf("Iteration %d: Operation failed: %v", i+1, err)
 		}
 
-		for j := 0; j < 50; j++ {
+		for range 50 {
 			if dbg.GetProcessHandle() == 0 {
 				break
 			}
@@ -154,7 +154,7 @@ func TestStressNoWait(t *testing.T) {
 	dbg := debugger.New()
 	exePath := `C:\Windows\System32\notepad.exe`
 
-	for i := 0; i < 5; i++ {
+	for i := range 5 {
 		fmt.Printf("\n=== Iteration %d (no wait) ===\n", i+1)
 
 		start := time.Now()

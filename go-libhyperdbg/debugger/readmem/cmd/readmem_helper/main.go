@@ -6,7 +6,6 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -36,20 +35,19 @@ func main() {
 		driverPath = filepath.Join(filepath.Dir(filepath.Dir(os.Args[0])), "Debug", "hyperkd.sys")
 	}
 
-	ctx := context.Background()
 	d := driverloader.NewDriver(driverPath)
-	_ = d.Unload(ctx)
+	_ = d.Unload()
 	time.Sleep(2 * time.Second)
 
-	if err := d.Load(ctx); err != nil {
+	if err := d.Load(); err != nil {
 		out, _ := json.Marshal(result{Error: "Load failed: " + err.Error()})
 		fmt.Println(string(out))
 		return
 	}
-	defer d.Unload(ctx)
+	defer d.Unload()
 	time.Sleep(1 * time.Second)
 
-	dev, err := comm.Open(ctx, comm.DeviceName)
+	dev, err := comm.Open(comm.DeviceName)
 	if err != nil {
 		out, _ := json.Marshal(result{Error: "Open failed: " + err.Error()})
 		fmt.Println(string(out))
@@ -59,7 +57,7 @@ func main() {
 
 	// IOCTL_INIT_VMM
 	vmmBuf := make([]byte, 4)
-	_, _ = dev.Ioctl(ctx, comm.IOCTL_CODE_INIT_VMM, vmmBuf, vmmBuf)
+	_, _ = dev.Ioctl(comm.IOCTL_CODE_INIT_VMM, vmmBuf, vmmBuf)
 	vmmStatus := *(*uint32)(unsafe.Pointer(&vmmBuf[0]))
 	if vmmStatus != 0xFFFFFFFF {
 		out, _ := json.Marshal(result{Error: "VMM init failed", InitStatus: fmt.Sprintf("0x%08X", vmmStatus)})
@@ -70,7 +68,7 @@ func main() {
 	// ReadMemory KUSER_SHARED_DATA
 	addr := uint64(0x7FFE026C)
 	pid := windows.GetCurrentProcessId()
-	data, _, err := readmem.ReadMemory(ctx, dev, addr, pid, 8,
+	data, _, err := readmem.ReadMemory(dev, addr, pid, 8,
 		hyperdbgsdk.DebuggerReadVirtualAddress, hyperdbgsdk.ReadFromKernel, false)
 	if err != nil {
 		out, _ := json.Marshal(result{Error: "ReadMemory failed: " + err.Error(), InitStatus: "0xFFFFFFFF"})
@@ -82,7 +80,7 @@ func main() {
 	ntMinor := *(*uint32)(unsafe.Pointer(&data[4]))
 
 	// TERMINATE_VMX
-	_, _ = dev.Ioctl(context.Background(), comm.IOCTL_CODE_TERMINATE_VMX, nil, nil)
+	_, _ = dev.Ioctl(comm.IOCTL_CODE_TERMINATE_VMX, nil, nil)
 
 	out, _ := json.Marshal(result{
 		InitStatus:   "0xFFFFFFFF",

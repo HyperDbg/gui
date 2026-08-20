@@ -27,7 +27,7 @@ func TestDebuggerLoadPerformance(t *testing.T) {
 
 	t.Log("=== Phase 2: Wait for process to initialize ===")
 	start = time.Now()
-	for i := 0; i < 50; i++ {
+	for range 50 {
 		time.Sleep(100 * time.Millisecond)
 		if dbg.GetProcessHandle() != 0 {
 			break

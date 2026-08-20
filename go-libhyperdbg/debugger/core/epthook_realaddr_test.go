@@ -17,13 +17,13 @@
 package core
 
 import (
-	"context"
 	"os"
 	"syscall"
 	"testing"
 	"time"
 	"unsafe"
 
+	"github.com/ddkwork/golibrary/byteslice"
 	"github.com/ddkwork/hyperdbgsdk"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/driverloader"
@@ -63,27 +63,26 @@ func TestEptHook_RealAddress(t *testing.T) {
 		t.Fatal("failed to resolve kernelbase!SetEvent")
 	}
 
-	ctx := context.Background()
 	d := driverloader.NewDriver(driverPath)
 
 	// Best-effort cleanup of any stale service from a prior run.
-	_ = d.Unload(ctx)
-	if exists, _ := d.Exists(ctx); exists {
+	_ = d.Unload()
+	if exists, _ := d.Exists(); exists {
 		time.Sleep(500 * time.Millisecond)
-		_ = d.Unload(ctx)
+		_ = d.Unload()
 	}
 
-	if err := d.Load(ctx); err != nil {
+	if err := d.Load(); err != nil {
 		t.Fatalf("driverloader.Load failed: %v", err)
 	}
 	time.Sleep(2 * time.Second) // let DriverEntry create the device
-	t.Cleanup(func() { _ = d.Unload(ctx) })
+	t.Cleanup(func() { _ = d.Unload() })
 
 	// Open the device handle (with retries).
 	var dev *comm.Device
 	var err error
 	for i := 0; i < 5; i++ {
-		dev, err = comm.Open(ctx, comm.DeviceName)
+		dev, err = comm.Open(comm.DeviceName)
 		if err == nil {
 			break
 		}
@@ -100,11 +99,10 @@ func TestEptHook_RealAddress(t *testing.T) {
 		clearAll := hyperdbgsdk.DEBUGGER_MODIFY_EVENTS{
 			TypeOfAction: hyperdbgsdk.DebuggerModifyEventsClear,
 		}
-		if clearBuf, e := structToBytes(&clearAll); e == nil {
-			var dummy [256]byte
-			_, _ = dev.Ioctl(context.Background(), comm.IOCTL_CODE_DEBUGGER_MODIFY_EVENTS, clearBuf, dummy[:])
-		}
-		_, _ = dev.IoctlStruct(context.Background(),
+		clearBuf := byteslice.FromStruct(&clearAll)
+		var dummy [256]byte
+		_, _ = dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_MODIFY_EVENTS, clearBuf, dummy[:])
+		_, _ = dev.IoctlStruct(
 			comm.IOCTL_CODE_TERMINATE_VMX, nil, nil, 0, 0)
 		time.Sleep(2 * time.Second)
 	})
@@ -112,7 +110,7 @@ func TestEptHook_RealAddress(t *testing.T) {
 	// Step 1: Initialise the VMM.
 	var vmmReq initVmmRequest
 	vmmSize := uint32(unsafe.Sizeof(vmmReq))
-	if _, err := dev.IoctlStruct(ctx, comm.IOCTL_CODE_INIT_VMM,
+	if _, err := dev.IoctlStruct(comm.IOCTL_CODE_INIT_VMM,
 		unsafe.Pointer(&vmmReq), unsafe.Pointer(&vmmReq), vmmSize, vmmSize); err != nil {
 		t.Skipf("IOCTL_INIT_VMM failed: %v", err)
 	}
@@ -148,7 +146,7 @@ func hook(ctx *HookCtx) {
 	// Test 1: kernelbase!SetEvent (the primary failing case).
 	// Note: core.Debugger's nextTag starts at 0, so Tag=0 is a valid first
 	// hook id (the driver accepts it). Success is indicated by err == nil.
-	tagSE, err := dbg.EptHookForProcess(ctx, setEventAddr, pid, callbackSrc)
+	tagSE, err := dbg.EptHookForProcess(setEventAddr, pid, callbackSrc)
 	if err != nil {
 		t.Errorf("EptHookForProcess(kernelbase!SetEvent @ 0x%X) failed: %v", setEventAddr, err)
 	} else {
@@ -157,7 +155,7 @@ func hook(ctx *HookCtx) {
 
 	// Test 2: ntdll!RtlAllocateHeap (the OEP detection hook).
 	if rtlAllocateHeapAddr != 0 {
-		tagRAH, err := dbg.EptHookForProcess(ctx, rtlAllocateHeapAddr, pid, callbackSrc)
+		tagRAH, err := dbg.EptHookForProcess(rtlAllocateHeapAddr, pid, callbackSrc)
 		if err != nil {
 			t.Errorf("EptHookForProcess(ntdll!RtlAllocateHeap @ 0x%X) failed: %v", rtlAllocateHeapAddr, err)
 		} else {
@@ -167,7 +165,7 @@ func hook(ctx *HookCtx) {
 
 	// Test 3: kernelbase!VirtualAlloc (the OEP detection hook).
 	if virtualAllocAddr != 0 {
-		tagVA, err := dbg.EptHookForProcess(ctx, virtualAllocAddr, pid, callbackSrc)
+		tagVA, err := dbg.EptHookForProcess(virtualAllocAddr, pid, callbackSrc)
 		if err != nil {
 			t.Errorf("EptHookForProcess(kernelbase!VirtualAlloc @ 0x%X) failed: %v", virtualAllocAddr, err)
 		} else {

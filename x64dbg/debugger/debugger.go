@@ -509,7 +509,7 @@ func (d *Debugger) CreateProcess(exePath string, cmdLine string) error {
 	if d.processHandle != 0 {
 		d.mu.Unlock()
 		d.TerminateProcess(0)
-		for i := 0; i < 10; i++ {
+		for range 10 {
 			time.Sleep(5 * time.Millisecond)
 			d.mu.Lock()
 			done := d.processHandle == 0

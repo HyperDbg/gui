@@ -19,7 +19,6 @@
 package dbgcmds
 
 import (
-	"context"
 	"fmt"
 	"time"
 
@@ -85,7 +84,7 @@ func RegisterAll(r *commands.Registry) {
 
 // ---------- handlers ----------
 
-func cmdSleep(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
+func cmdSleep(d *core.Debugger, args []string, out commands.Output) error {
 	if len(args) != 1 {
 		return fmt.Errorf("sleep: expected exactly one argument (seconds)")
 	}
@@ -96,34 +95,30 @@ func cmdSleep(ctx context.Context, d *core.Debugger, args []string, out commands
 	if secs < 0 {
 		return fmt.Errorf("sleep: seconds must be non-negative")
 	}
-	// Honour context cancellation while sleeping.
-	select {
-	case <-time.After(time.Duration(secs) * time.Second):
-	case <-ctx.Done():
-		return ctx.Err()
-	}
+	// Sleep for the requested duration.
+	time.Sleep(time.Duration(secs) * time.Second)
 	return nil
 }
 
-func cmdEvents(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
+func cmdEvents(d *core.Debugger, args []string, out commands.Output) error {
 	out.Printf("event registration list: (core.Debugger does not yet expose the tag table)\n")
 	return nil
 }
 
-func cmdSettings(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
+func cmdSettings(d *core.Debugger, args []string, out commands.Output) error {
 	out.Printf("debugger state: %s\n", stateName(d.State()))
 	out.Printf("settings: (no user-tunable settings yet)\n")
 	return nil
 }
 
-func cmdG(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
-	return d.Continue(ctx)
+func cmdG(d *core.Debugger, args []string, out commands.Output) error {
+	return d.Continue()
 }
 
 // ---------- stubs ----------
 
 func stubHandler(name string) commands.Handler {
-	return func(ctx context.Context, d *core.Debugger, args []string, out commands.Output) error {
+	return func(d *core.Debugger, args []string, out commands.Output) error {
 		out.Printf("%s: %v\n", name, ErrNotImplemented)
 		return nil
 	}

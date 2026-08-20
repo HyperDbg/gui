@@ -10,7 +10,6 @@
 package readmem
 
 import (
-	"context"
 	"fmt"
 	"unsafe"
 
@@ -29,7 +28,7 @@ const DebuggerOperationWasSuccessful uint32 = 0xFFFFFFFF
 //
 // Returns the bytes read and the address-mode the driver probed (32 or 64
 // when GetAddressMode was requested, 0 otherwise).
-func ReadMemory(ctx context.Context, dev *comm.Device, addr uint64, pid uint32, size uint32, memType hyperdbgsdk.DEBUGGER_READ_MEMORY_TYPE, readingType hyperdbgsdk.DEBUGGER_READ_READING_TYPE, getAddrMode bool) ([]byte, hyperdbgsdk.DEBUGGER_READ_MEMORY_ADDRESS_MODE, error) {
+func ReadMemory(dev *comm.Device, addr uint64, pid uint32, size uint32, memType hyperdbgsdk.DEBUGGER_READ_MEMORY_TYPE, readingType hyperdbgsdk.DEBUGGER_READ_READING_TYPE, getAddrMode bool) ([]byte, hyperdbgsdk.DEBUGGER_READ_MEMORY_ADDRESS_MODE, error) {
 	if dev == nil {
 		return nil, 0, fmt.Errorf("ReadMemory: nil device (not connected?)")
 	}
@@ -51,7 +50,7 @@ func ReadMemory(ctx context.Context, dev *comm.Device, addr uint64, pid uint32, 
 	// Output buffer: the response struct plus the read bytes.
 	outBuf := make([]byte, int(pktSize)+int(size))
 
-	returned, err := dev.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_READ_MEMORY, inBuf, outBuf)
+	returned, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_READ_MEMORY, inBuf, outBuf)
 	if err != nil {
 		return nil, 0, fmt.Errorf("ReadMemory: IOCTL failed: %w", err)
 	}
@@ -91,7 +90,7 @@ func ReadMemory(ctx context.Context, dev *comm.Device, addr uint64, pid uint32, 
 // NOTE: the full chunking logic from the C side is intentionally elided here;
 // this is the minimal path used by the `e` command. The Phase C.3.6 work
 // extends it to support per-byte and per-dword writes.
-func WriteMemory(ctx context.Context, dev *comm.Device, addr uint64, pid uint32, data []byte, memType hyperdbgsdk.DEBUGGER_EDIT_MEMORY_TYPE, readingType hyperdbgsdk.DEBUGGER_READ_READING_TYPE) (uint32, error) {
+func WriteMemory(dev *comm.Device, addr uint64, pid uint32, data []byte, memType hyperdbgsdk.DEBUGGER_EDIT_MEMORY_TYPE, readingType hyperdbgsdk.DEBUGGER_READ_READING_TYPE) (uint32, error) {
 	if dev == nil {
 		return 0, fmt.Errorf("WriteMemory: nil device")
 	}
@@ -115,7 +114,7 @@ func WriteMemory(ctx context.Context, dev *comm.Device, addr uint64, pid uint32,
 	copy(inBuf[hdrSize:], data)
 
 	outBuf := make([]byte, hdrSize)
-	if _, err := dev.Ioctl(ctx, comm.IOCTL_CODE_DEBUGGER_EDIT_MEMORY, inBuf, outBuf); err != nil {
+	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_EDIT_MEMORY, inBuf, outBuf); err != nil {
 		return 0, fmt.Errorf("WriteMemory: IOCTL failed: %w", err)
 	}
 	resp := (*hyperdbgsdk.DEBUGGER_EDIT_MEMORY)(unsafe.Pointer(&outBuf[0]))

@@ -26,7 +26,6 @@
 package kernellvl
 
 import (
-	"context"
 	"encoding/binary"
 	"fmt"
 	"sync"
@@ -141,7 +140,7 @@ type KernelPausedPacket struct {
 //   - MCP: emit a JSON event to the AI agent
 //
 // Returning an error stops the listener.
-type KernelHandler func(ctx context.Context, state *KdState, ev KernelEvent, pkt hyperdbgsdk.DEBUGGEE_KD_PAUSED_PACKET) error
+type KernelHandler func(state *KdState, ev KernelEvent, pkt hyperdbgsdk.DEBUGGEE_KD_PAUSED_PACKET) error
 
 // KernelListener dispatches packets received from the debuggee. It owns no
 // transport — packets are pushed onto the channel by a separate reader
@@ -171,35 +170,27 @@ func (l *KernelListener) SetHandler(h KernelHandler) {
 	l.handler = h
 }
 
-// Run consumes packets from ch until ctx is cancelled or ch is closed. For
-// each packet it validates the indicator/checksum/type and dispatches on the
-// RequestedAction. Mirrors ListeningSerialPortInDebugger in
-// kernel-listening.cpp.
+// Run consumes packets from ch until ch is closed. For each packet it
+// validates the indicator/checksum/type and dispatches on the RequestedAction.
+// Mirrors ListeningSerialPortInDebugger in kernel-listening.cpp.
 //
 // Transient errors (bad checksum, unknown action) are logged via the state's
 // Output and dropped, mirroring the C++ 'goto StartAgain' behaviour. An error
-// is returned only if ctx is cancelled or the handler returns one.
-func (l *KernelListener) Run(ctx context.Context, ch <-chan KernelPausedPacket) error {
-	for {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		case pkt, ok := <-ch:
-			if !ok {
-				return nil
-			}
-			if err := l.dispatch(ctx, pkt); err != nil {
-				return err
-			}
+// is returned only if the handler returns one.
+func (l *KernelListener) Run(ch <-chan KernelPausedPacket) error {
+	for pkt := range ch {
+		if err := l.dispatch(pkt); err != nil {
+			return err
 		}
 	}
+	return nil
 }
 
 // dispatch validates the packet and switches on RequestedAction. Returning an
 // error stops the listener; the C++ code never does this for packet-level
 // issues (it just logs and continues), so dispatch only returns an error when
 // the user-supplied KernelHandler does.
-func (l *KernelListener) dispatch(ctx context.Context, p KernelPausedPacket) error {
+func (l *KernelListener) dispatch(p KernelPausedPacket) error {
 	if p.Header.Indicator != IndicatorOfHyperdbgPacket {
 		l.printf("err, invalid packet received\n")
 		return nil
@@ -215,7 +206,7 @@ func (l *KernelListener) dispatch(ctx context.Context, p KernelPausedPacket) err
 
 	switch p.Header.RequestedActionOfThePacket {
 	case hyperdbgsdk.DebuggerRemotePacketPingAndSendSupportedVersion:
-		if err := l.state.KdSendResponseOfThePingPacket(ctx); err != nil {
+		if err := l.state.KdSendResponseOfThePingPacket(); err != nil {
 			l.printf("err, failed to send ping response: %v\n", err)
 		}
 
@@ -226,7 +217,7 @@ func (l *KernelListener) dispatch(ctx context.Context, p KernelPausedPacket) err
 		l.handleLoggingMechanism(p)
 
 	case hyperdbgsdk.DebuggerRemotePacketRequestedActionDebuggeePausedAndCurrentInstruction:
-		return l.handlePausedAndCurrentInstruction(ctx, p)
+		return l.handlePausedAndCurrentInstruction(p)
 
 	case hyperdbgsdk.DebuggerRemotePacketRequestedActionDebuggeeResultOfChangingCore:
 		l.handleChangeCoreResult(p)
@@ -399,7 +390,7 @@ func (l *KernelListener) handleLoggingMechanism(p KernelPausedPacket) {
 // mark the debuggee paused, save the current core + instruction, print the
 // pre-disassembly context, call the user handler, then signal the sync object
 // that matches the pausing reason.
-func (l *KernelListener) handlePausedAndCurrentInstruction(ctx context.Context, p KernelPausedPacket) error {
+func (l *KernelListener) handlePausedAndCurrentInstruction(p KernelPausedPacket) error {
 	if uint32(len(p.Payload)) < uint32(unsafe.Sizeof(hyperdbgsdk.DEBUGGEE_KD_PAUSED_PACKET{})) {
 		l.printf("err, paused packet too small\n")
 		l.state.ReceivedKernelResponse(SyncObjectIsDebuggerRunning)
@@ -452,7 +443,7 @@ func (l *KernelListener) handlePausedAndCurrentInstruction(ctx context.Context, 
 	handler := l.handler
 	l.mu.Unlock()
 	if handler != nil && !pkt.IgnoreDisassembling {
-		if err := handler(ctx, l.state, ev, pkt); err != nil {
+		if err := handler(l.state, ev, pkt); err != nil {
 			// The handler bailed; still signal the waiter so the waiting
 			// command does not deadlock.
 			l.signalPauseSync(ev)
@@ -942,8 +933,7 @@ func (l *KernelListener) handlePcidevinfoResult(p KernelPausedPacket) {
 // core, and the instruction bytes, so the listener's output stays useful even
 // before a disassembler is plugged in. Pass nil to silence all output.
 func DefaultKernelHandler(out Output) KernelHandler {
-	return func(ctx context.Context, state *KdState, ev KernelEvent, pkt hyperdbgsdk.DEBUGGEE_KD_PAUSED_PACKET) error {
-		_ = ctx
+	return func(state *KdState, ev KernelEvent, pkt hyperdbgsdk.DEBUGGEE_KD_PAUSED_PACKET) error {
 		if out == nil {
 			return nil
 		}

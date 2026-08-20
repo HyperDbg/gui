@@ -1,7 +1,6 @@
 package comm
 
 import (
-	"context"
 	"testing"
 )
 
@@ -84,7 +83,7 @@ func TestDevicePaths(t *testing.T) {
 // when the VMM driver is not loaded. This needs no admin rights — a missing
 // device simply returns an error from CreateFile.
 func TestOpenDevice_NoDriver(t *testing.T) {
-	_, err := OpenDefault(context.Background())
+	_, err := OpenDefault()
 	if err == nil {
 		// The device exists, meaning the driver is loaded. That's fine — the
 		// test only asserts Open returns an error OR succeeds without panic.
@@ -106,8 +105,7 @@ func TestOpenDevice_NoDriver(t *testing.T) {
 // To run: load hyperhv.sys, then `go test -run TestIoctlRoundTrip` from an
 // elevated shell.
 func TestIoctlRoundTrip(t *testing.T) {
-	ctx := context.Background()
-	dev, err := OpenDefault(ctx)
+	dev, err := OpenDefault()
 	if err != nil {
 		t.Skipf("device not available (driver not loaded?): %v", err)
 	}
@@ -115,7 +113,7 @@ func TestIoctlRoundTrip(t *testing.T) {
 
 	// IOCTL_DEBUGGER_FLUSH_LOGGING_BUFFERS takes no input/output payload in
 	// the common case; a zero-length call should still return without error.
-	n, err := dev.Ioctl(ctx, IOCTL_CODE_DEBUGGER_FLUSH_LOGGING_BUFFERS, nil, nil)
+	n, err := dev.Ioctl(IOCTL_CODE_DEBUGGER_FLUSH_LOGGING_BUFFERS, nil, nil)
 	if err != nil {
 		t.Fatalf("FlushLoggingBuffers IOCTL failed: %v", err)
 	}

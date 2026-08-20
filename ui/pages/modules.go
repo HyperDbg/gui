@@ -1,7 +1,6 @@
 package pages
 
 import (
-	"context"
 	"fmt"
 
 	"gioui.org/layout"
@@ -86,8 +85,7 @@ func (p *ModulesPage) btn(b *button.Button, label string) layout.Widget {
 }
 
 func (p *ModulesPage) exec(cmd string) {
-	ctx := context.Background()
-	if err := p.dbg.Exec(ctx, cmd); err != nil {
+	if err := p.dbg.Exec(cmd); err != nil {
 		p.list.SetCode(fmt.Sprintf("%s 失败: %v", cmd, err))
 	}
 	app.RequestRedraw()

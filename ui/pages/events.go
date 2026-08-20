@@ -1,7 +1,6 @@
 package pages
 
 import (
-	"context"
 	"fmt"
 	"strconv"
 	"strings"
@@ -234,113 +233,113 @@ func (p *EventsPage) parseTag() uint64 {
 
 func (p *EventsPage) registerEptHook() {
 	addr := p.parseAddr()
-	tag, err := p.dbg.EptHook(context.Background(), addr, defaultCallback)
+	tag, err := p.dbg.EptHook(addr, defaultCallback)
 	p.recordHook("EptHook", addr, 0, tag, err)
 }
 
 func (p *EventsPage) registerEptHookForProcess() {
 	addr := p.parseAddr()
 	pid := p.parsePID()
-	tag, err := p.dbg.EptHookForProcess(context.Background(), addr, pid, defaultCallback)
+	tag, err := p.dbg.EptHookForProcess(addr, pid, defaultCallback)
 	p.recordHook("EptHookForProcess", addr, pid, tag, err)
 }
 
 func (p *EventsPage) registerSyscallHook() {
-	tag, err := p.dbg.SyscallHook(context.Background(), defaultCallback)
+	tag, err := p.dbg.SyscallHook(defaultCallback)
 	p.recordHook("SyscallHook", 0, 0, tag, err)
 }
 
 func (p *EventsPage) registerSysretHook() {
 	pid := p.parsePID()
-	tag, err := p.dbg.SysretHookForProcess(context.Background(), pid, defaultCallback)
+	tag, err := p.dbg.SysretHookForProcess(pid, defaultCallback)
 	p.recordHook("SysretHookForProcess", 0, pid, tag, err)
 }
 
 func (p *EventsPage) registerMonitorRead() {
 	addr := p.parseAddr()
 	pid := p.parsePID()
-	tag, err := p.dbg.MonitorReadForProcess(context.Background(), addr, addr+0x100, pid, defaultCallback)
+	tag, err := p.dbg.MonitorReadForProcess(addr, addr+0x100, pid, defaultCallback)
 	p.recordHook("MonitorRead", addr, pid, tag, err)
 }
 
 func (p *EventsPage) registerMonitorWrite() {
 	addr := p.parseAddr()
 	pid := p.parsePID()
-	tag, err := p.dbg.MonitorWrite(context.Background(), addr, addr+0x100, pid, defaultCallback)
+	tag, err := p.dbg.MonitorWrite(addr, addr+0x100, pid, defaultCallback)
 	p.recordHook("MonitorWrite", addr, pid, tag, err)
 }
 
 func (p *EventsPage) registerMonitorExec() {
 	addr := p.parseAddr()
 	pid := p.parsePID()
-	tag, err := p.dbg.MonitorExec(context.Background(), addr, pid, defaultCallback)
+	tag, err := p.dbg.MonitorExec(addr, pid, defaultCallback)
 	p.recordHook("MonitorExec", addr, pid, tag, err)
 }
 
 func (p *EventsPage) registerCpuidHook() {
-	tag, err := p.dbg.CpuidHook(context.Background(), defaultCallback)
+	tag, err := p.dbg.CpuidHook(defaultCallback)
 	p.recordHook("CpuidHook", 0, 0, tag, err)
 }
 
 func (p *EventsPage) registerDrHook() {
-	tag, err := p.dbg.DrHook(context.Background(), defaultCallback)
+	tag, err := p.dbg.DrHook(defaultCallback)
 	p.recordHook("DrHook", 0, 0, tag, err)
 }
 
 func (p *EventsPage) registerVmcallHook() {
-	tag, err := p.dbg.VmcallHook(context.Background(), defaultCallback)
+	tag, err := p.dbg.VmcallHook(defaultCallback)
 	p.recordHook("VmcallHook", 0, 0, tag, err)
 }
 
 func (p *EventsPage) registerModeHook() {
-	tag, err := p.dbg.ModeHook(context.Background(), defaultCallback)
+	tag, err := p.dbg.ModeHook(defaultCallback)
 	p.recordHook("ModeHook", 0, 0, tag, err)
 }
 
 func (p *EventsPage) registerMsrRead() {
 	addr := p.parseAddr()
-	tag, err := p.dbg.MsrReadHook(context.Background(), uint32(addr), defaultCallback)
+	tag, err := p.dbg.MsrReadHook(uint32(addr), defaultCallback)
 	p.recordHook(fmt.Sprintf("MsrReadHook(0x%X)", addr), 0, 0, tag, err)
 }
 
 func (p *EventsPage) registerMsrWrite() {
 	addr := p.parseAddr()
-	tag, err := p.dbg.MsrWriteHook(context.Background(), uint32(addr), defaultCallback)
+	tag, err := p.dbg.MsrWriteHook(uint32(addr), defaultCallback)
 	p.recordHook(fmt.Sprintf("MsrWriteHook(0x%X)", addr), 0, 0, tag, err)
 }
 
 func (p *EventsPage) registerException() {
 	addr := p.parseAddr()
-	tag, err := p.dbg.ExceptionHook(context.Background(), uint32(addr), defaultCallback)
+	tag, err := p.dbg.ExceptionHook(uint32(addr), defaultCallback)
 	p.recordHook(fmt.Sprintf("ExceptionHook(%d)", addr), 0, 0, tag, err)
 }
 
 func (p *EventsPage) registerInterrupt() {
 	addr := p.parseAddr()
-	tag, err := p.dbg.InterruptHook(context.Background(), uint32(addr), defaultCallback)
+	tag, err := p.dbg.InterruptHook(uint32(addr), defaultCallback)
 	p.recordHook(fmt.Sprintf("InterruptHook(%d)", addr), 0, 0, tag, err)
 }
 
 func (p *EventsPage) registerIoIn() {
 	addr := p.parseAddr()
-	tag, err := p.dbg.IoInHook(context.Background(), uint16(addr), defaultCallback)
+	tag, err := p.dbg.IoInHook(uint16(addr), defaultCallback)
 	p.recordHook(fmt.Sprintf("IoInHook(0x%X)", addr), 0, 0, tag, err)
 }
 
 func (p *EventsPage) registerIoOut() {
 	addr := p.parseAddr()
-	tag, err := p.dbg.IoOutHook(context.Background(), uint16(addr), defaultCallback)
+	tag, err := p.dbg.IoOutHook(uint16(addr), defaultCallback)
 	p.recordHook(fmt.Sprintf("IoOutHook(0x%X)", addr), 0, 0, tag, err)
 }
 
 func (p *EventsPage) registerCrwrite() {
 	addr := p.parseAddr()
-	tag, err := p.dbg.CrwriteHook(context.Background(), uint32(addr), defaultCallback)
+	tag, err := p.dbg.CrwriteHook(uint32(addr), defaultCallback)
 	p.recordHook(fmt.Sprintf("CrwriteHook(%d)", addr), 0, 0, tag, err)
 }
 
 func (p *EventsPage) registerXsetbv() {
-	tag, err := p.dbg.XsetbvHook(context.Background(), defaultCallback)
+	tag, err := p.dbg.XsetbvHook(defaultCallback)
 	p.recordHook("XsetbvHook", 0, 0, tag, err)
 }
 
@@ -364,7 +363,7 @@ func (p *EventsPage) recordHook(hookType string, addr uint64, pid uint32, tag ui
 
 func (p *EventsPage) clearEvent() {
 	tag := p.parseTag()
-	if err := p.dbg.ClearEvent(context.Background(), tag); err != nil {
+	if err := p.dbg.ClearEvent(tag); err != nil {
 		fmt.Printf("ClearEvent 失败: %v\n", err)
 		return
 	}
@@ -381,7 +380,7 @@ func (p *EventsPage) clearEvent() {
 
 func (p *EventsPage) disableEvent() {
 	tag := p.parseTag()
-	if err := p.dbg.DisableEvent(context.Background(), tag); err != nil {
+	if err := p.dbg.DisableEvent(tag); err != nil {
 		fmt.Printf("DisableEvent 失败: %v\n", err)
 		return
 	}
@@ -398,7 +397,7 @@ func (p *EventsPage) disableEvent() {
 
 func (p *EventsPage) enableEvent() {
 	tag := p.parseTag()
-	if err := p.dbg.EnableEvent(context.Background(), tag); err != nil {
+	if err := p.dbg.EnableEvent(tag); err != nil {
 		fmt.Printf("EnableEvent 失败: %v\n", err)
 		return
 	}

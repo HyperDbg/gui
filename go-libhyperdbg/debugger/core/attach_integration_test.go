@@ -27,7 +27,6 @@
 package core
 
 import (
-	"context"
 	"errors"
 	"os"
 	"path/filepath"
@@ -109,7 +108,7 @@ func clearEvent(t *testing.T, dev *comm.Device, tag uint64) {
 	mod.Tag = tag
 	mod.TypeOfAction = hyperdbgsdk.DebuggerModifyEventsClear
 	modSize := uint32(unsafe.Sizeof(mod))
-	if _, err := dev.IoctlStruct(context.Background(),
+	if _, err := dev.IoctlStruct(
 		comm.IOCTL_CODE_DEBUGGER_MODIFY_EVENTS,
 		unsafe.Pointer(&mod), unsafe.Pointer(&mod), modSize, modSize); err != nil {
 		t.Logf("best-effort clearEvent(tag=%d) failed: %v", tag, err)
@@ -143,26 +142,25 @@ func TestAttachContinuePause(t *testing.T) {
 	}
 	t.Logf("using debuggee: %s", notepadPath)
 
-	ctx := context.Background()
 	d := driverloader.NewDriver(driverPath)
 
 	// Best-effort cleanup of any stale service from a prior run.
-	_ = d.Unload(ctx)
-	if exists, _ := d.Exists(ctx); exists {
+	_ = d.Unload()
+	if exists, _ := d.Exists(); exists {
 		time.Sleep(500 * time.Millisecond)
-		_ = d.Unload(ctx)
+		_ = d.Unload()
 	}
 
-	if err := d.Load(ctx); err != nil {
+	if err := d.Load(); err != nil {
 		t.Fatalf("driverloader.Load failed: %v", err)
 	}
 	time.Sleep(2 * time.Second) // let DriverEntry create the device
-	t.Cleanup(func() { _ = d.Unload(ctx) })
+	t.Cleanup(func() { _ = d.Unload() })
 
 	// Open the device handle (with retries for slow systems).
 	var dev *comm.Device
 	for i := 0; i < 5; i++ {
-		dev, err = comm.Open(ctx, comm.DeviceName)
+		dev, err = comm.Open(comm.DeviceName)
 		if err == nil {
 			break
 		}
@@ -175,7 +173,7 @@ func TestAttachContinuePause(t *testing.T) {
 
 	// Best-effort VMX teardown before unloading the driver.
 	t.Cleanup(func() {
-		_, _ = dev.IoctlStruct(context.Background(),
+		_, _ = dev.IoctlStruct(
 			comm.IOCTL_CODE_TERMINATE_VMX, nil, nil, 0, 0)
 		time.Sleep(500 * time.Millisecond)
 	})
@@ -183,7 +181,7 @@ func TestAttachContinuePause(t *testing.T) {
 	// Step 1: Initialise the VMM.
 	var vmmReq initVmmRequest
 	vmmSize := uint32(unsafe.Sizeof(vmmReq))
-	if _, err := dev.IoctlStruct(ctx, comm.IOCTL_CODE_INIT_VMM,
+	if _, err := dev.IoctlStruct(comm.IOCTL_CODE_INIT_VMM,
 		unsafe.Pointer(&vmmReq), unsafe.Pointer(&vmmReq), vmmSize, vmmSize); err != nil {
 		t.Skipf("IOCTL_INIT_VMM failed: %v", err)
 	}
@@ -210,7 +208,7 @@ func TestAttachContinuePause(t *testing.T) {
 		_ = proc.Close()
 	})
 
-	token, err := attachProcess(ctx, dev, proc.Pid, proc.Tid, true)
+	token, err := attachProcess(dev, proc.Pid, proc.Tid, true)
 	if err != nil {
 		t.Fatalf("attachProcess failed: %v", err)
 	}
@@ -230,7 +228,7 @@ func TestAttachContinuePause(t *testing.T) {
 	// Step 4: Continue (g). The kernel lets the debuggee run; notepad is
 	// harmless and will sit in its message loop. We tolerate a brief delay
 	// for the kernel to settle into the running state.
-	if err := continueProcess(ctx, dev, token); err != nil {
+	if err := continueProcess(dev, token); err != nil {
 		t.Fatalf("continueProcess failed: %v", err)
 	}
 	t.Logf("CONTINUE OK")
@@ -246,7 +244,7 @@ func TestAttachContinuePause(t *testing.T) {
 	// Attaching.c:912-927) has already fired and put the debuggee into
 	// IsOnThreadInterceptingPhase. The C CommandPauseRequest treats this
 	// case as a silent no-op (pause.cpp:55), so we do the same.
-	if err := pauseProcess(ctx, dev, token); err != nil {
+	if err := pauseProcess(dev, token); err != nil {
 		if errors.Is(err, ErrAlreadyPaused) {
 			t.Logf("PAUSE: process already in intercepting phase (PEB monitor hook fired) — treated as success, matching C pause.cpp:55")
 		} else {
@@ -265,7 +263,7 @@ func TestAttachContinuePause(t *testing.T) {
 	// EptHookRemoveEntryAndFreePoolFromEptHook2sDetourList because that
 	// hook has IsHiddenBreakpoint == FALSE but no !epthook2 was ever
 	// registered (g_EptHook2sDetourListHead is uninitialized).
-	if err := continueProcess(ctx, dev, token); err != nil {
+	if err := continueProcess(dev, token); err != nil {
 		t.Fatalf("continueProcess (pre-detach) failed: %v", err)
 	}
 	t.Logf("CONTINUE (pre-detach) OK")
@@ -276,7 +274,7 @@ func TestAttachContinuePause(t *testing.T) {
 	// Step 7: Detach. Now that no threads are paused, the kernel accepts
 	// the detach and removes the PEB monitor EPT hook. Errors here are
 	// still tolerated because the debuggee is about to be terminated.
-	if err := detachProcess(ctx, dev, token); err != nil {
+	if err := detachProcess(dev, proc.Pid); err != nil {
 		t.Logf("best-effort detachProcess failed (non-fatal): %v", err)
 	} else {
 		t.Logf("DETACH OK")
