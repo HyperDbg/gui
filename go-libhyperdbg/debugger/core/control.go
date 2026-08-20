@@ -149,7 +149,7 @@ func (d *Debugger) Unhide() error {
 //
 // C++: va2pa.cpp — sends IOCTL_DEBUGGER_VA2PA_AND_PA2VA_COMMANDS with
 // IsVirtual2Physical=TRUE.
-func (d *Debugger) Va2Pa(va uint64, pid uint32) (uint64, error) {
+func (d *Debugger) VirtualToPhysical(va uint64, pid uint32) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -176,7 +176,7 @@ func (d *Debugger) Va2Pa(va uint64, pid uint32) (uint64, error) {
 // process (the inverse of Va2Pa).
 //
 // C++: pa2va.cpp — same IOCTL with IsVirtual2Physical=FALSE.
-func (d *Debugger) Pa2Va(pa uint64, pid uint32) (uint64, error) {
+func (d *Debugger) PhysicalToVirtual(pa uint64, pid uint32) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -208,7 +208,7 @@ func (d *Debugger) Pa2Va(pa uint64, pid uint32) (uint64, error) {
 // values). pid==0 means the debugger process.
 //
 // C++: pte.cpp — sends IOCTL_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS.
-func (d *Debugger) Pte(va uint64, pid uint32) (hyperdbgsdk.DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS, error) {
+func (d *Debugger) PageTableEntry(va uint64, pid uint32) (hyperdbgsdk.DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -235,7 +235,7 @@ func (d *Debugger) Pte(va uint64, pid uint32) (hyperdbgsdk.DEBUGGER_READ_PAGE_TA
 // KernelStatus into the first field.
 //
 // C++: idt.cpp — sends IOCTL_QUERY_IDT_ENTRY.
-func (d *Debugger) Idt() (hyperdbgsdk.INTERRUPT_DESCRIPTOR_TABLE_ENTRIES_PACKETS, error) {
+func (d *Debugger) InterruptDescriptorTable() (hyperdbgsdk.INTERRUPT_DESCRIPTOR_TABLE_ENTRIES_PACKETS, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -260,7 +260,7 @@ func (d *Debugger) Idt() (hyperdbgsdk.INTERRUPT_DESCRIPTOR_TABLE_ENTRIES_PACKETS
 //
 // C++: rev.cpp → RevRequestService sends
 // IOCTL_REQUEST_REV_MACHINE_SERVICE.
-func (d *Debugger) Rev(pid uint32, mode hyperdbgsdk.REVERSING_MACHINE_RECONSTRUCT_MEMORY_MODE, typ hyperdbgsdk.REVERSING_MACHINE_RECONSTRUCT_MEMORY_TYPE) error {
+func (d *Debugger) Revision(pid uint32, mode hyperdbgsdk.REVERSING_MACHINE_RECONSTRUCT_MEMORY_MODE, typ hyperdbgsdk.REVERSING_MACHINE_RECONSTRUCT_MEMORY_TYPE) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {

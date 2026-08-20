@@ -80,7 +80,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "init failed: %v\n", err)
 		os.Exit(1)
 	}
-	defer dbg.Close()
+	defer func() { _ = dbg.UnloadVMM(); _ = dbg.UnloadDriver() }()
 
 	// --connect: open the local device (or, in future, a remote target).
 	if *connect != "" {
@@ -97,7 +97,11 @@ func main() {
 			fmt.Fprintln(os.Stderr, "err: --load-vmm requires --driver <path>")
 			os.Exit(2)
 		}
-		if err := dbg.LoadVMM(*driverPath); err != nil {
+		if err := dbg.LoadDriver(*driverPath); err != nil {
+			fmt.Fprintf(os.Stderr, "load-vmm failed: %v\n", err)
+			os.Exit(1)
+		}
+		if err := dbg.InitVMM(); err != nil {
 			fmt.Fprintf(os.Stderr, "load-vmm failed: %v\n", err)
 			os.Exit(1)
 		}

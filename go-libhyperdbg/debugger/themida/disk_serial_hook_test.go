@@ -85,9 +85,12 @@ func TestDiskSerialHook_SuperRecovery(t *testing.T) {
 	if err != nil {
 		t.Fatalf("api.New: %v", err)
 	}
-	defer dbg.Close()
+	defer func() { _ = dbg.UnloadVMM(); _ = dbg.UnloadDriver() }()
 
-	if err := dbg.LoadVMM(diskDriverPath); err != nil {
+	if err := dbg.LoadDriver(diskDriverPath); err != nil {
+		t.Fatalf("LoadVMM: %v", err)
+	}
+	if err := dbg.InitVMM(); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
 
@@ -287,9 +290,12 @@ func TestDiskSerialHook_Helper64(t *testing.T) {
 	if err != nil {
 		t.Fatalf("api.New: %v", err)
 	}
-	defer dbg.Close()
+	defer func() { _ = dbg.UnloadVMM(); _ = dbg.UnloadDriver() }()
 
-	if err := dbg.LoadVMM(diskDriverPath); err != nil {
+	if err := dbg.LoadDriver(diskDriverPath); err != nil {
+		t.Fatalf("LoadVMM: %v", err)
+	}
+	if err := dbg.InitVMM(); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
 
@@ -448,9 +454,12 @@ func TestDiskSerialHook_Sysret_Helper64(t *testing.T) {
 	if err != nil {
 		t.Fatalf("api.New: %v", err)
 	}
-	defer dbg.Close()
+	defer func() { _ = dbg.UnloadVMM(); _ = dbg.UnloadDriver() }()
 
-	if err := dbg.LoadVMM(diskDriverPath); err != nil {
+	if err := dbg.LoadDriver(diskDriverPath); err != nil {
+		t.Fatalf("LoadVMM: %v", err)
+	}
+	if err := dbg.InitVMM(); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
 

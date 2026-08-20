@@ -153,7 +153,10 @@ func cmdLoad(d *core.Debugger, args []string, out commands.Output) error {
 	if len(args) != 1 {
 		return fmt.Errorf("load: expected exactly one argument (driver path), got %d", len(args))
 	}
-	return d.LoadVMM(args[0])
+	if err := d.LoadDriver(args[0]); err != nil {
+		return err
+	}
+	return d.InitVMM()
 }
 
 func cmdUnload(d *core.Debugger, args []string, out commands.Output) error {

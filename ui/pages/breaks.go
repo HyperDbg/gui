@@ -134,7 +134,7 @@ func (p *BreaksPage) parseTag() uint64 {
 }
 
 func (p *BreaksPage) bpSet() {
-	tag, err := p.dbg.BpSet(p.parseAddr())
+	tag, err := p.dbg.BreakpointSet(p.parseAddr())
 	if err != nil {
 		fmt.Printf("BpSet 失败: %v\n", err)
 		return
@@ -144,21 +144,21 @@ func (p *BreaksPage) bpSet() {
 }
 
 func (p *BreaksPage) bpClear() {
-	if err := p.dbg.BpClear(p.parseTag()); err != nil {
+	if err := p.dbg.BreakpointClear(p.parseTag()); err != nil {
 		fmt.Printf("BpClear 失败: %v\n", err)
 	}
 	p.bpList()
 }
 
 func (p *BreaksPage) bpDisable() {
-	if err := p.dbg.BpDisable(p.parseTag()); err != nil {
+	if err := p.dbg.BreakpointDisable(p.parseTag()); err != nil {
 		fmt.Printf("BpDisable 失败: %v\n", err)
 	}
 	p.bpList()
 }
 
 func (p *BreaksPage) bpEnable() {
-	if err := p.dbg.BpEnable(p.parseTag()); err != nil {
+	if err := p.dbg.BreakpointEnable(p.parseTag()); err != nil {
 		fmt.Printf("BpEnable 失败: %v\n", err)
 	}
 	p.bpList()

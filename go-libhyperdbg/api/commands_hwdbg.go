@@ -16,7 +16,7 @@ import (
 )
 
 // Hw 对应 'hw'：启动/查询硬件调试设备。
-func (d *Debugger) Hw() error {
+func (d *Debugger) Hardware() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return fmt.Errorf("Hw: hwdbg hardware device not present (FPGA-based; see hwdbg package)")

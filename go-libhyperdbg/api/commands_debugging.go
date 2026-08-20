@@ -136,28 +136,28 @@ func (d *Debugger) Assemble(addr uint64, instr string) error {
 }
 
 // BpClear 对应 'bc <tag>'：清除指定断点。
-func (d *Debugger) BpClear(tag uint64) error {
+func (d *Debugger) BreakpointClear(tag uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.BpClear(tag)
+	return d.core.BreakpointClear(tag)
 }
 
 // BpDisable 对应 'bd <tag>'：禁用指定断点（保留但不触发）。
-func (d *Debugger) BpDisable(tag uint64) error {
+func (d *Debugger) BreakpointDisable(tag uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.BpDisable(tag)
+	return d.core.BreakpointDisable(tag)
 }
 
 // BpEnable 对应 'be <tag>'：启用之前禁用的断点。
-func (d *Debugger) BpEnable(tag uint64) error {
+func (d *Debugger) BreakpointEnable(tag uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.BpEnable(tag)
+	return d.core.BreakpointEnable(tag)
 }
 
 // BpList 对应 'bl'：列出所有断点。
-func (d *Debugger) BpList() ([]Breakpoint, error) {
+func (d *Debugger) BreakpointList() ([]Breakpoint, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// Delegate to the string command path; the listing is written to
@@ -167,10 +167,10 @@ func (d *Debugger) BpList() ([]Breakpoint, error) {
 }
 
 // BpSet 对应 'bp <addr>'：在指定地址设置软件断点，返回断点 tag。
-func (d *Debugger) BpSet(addr uint64) (uint64, error) {
+func (d *Debugger) BreakpointSet(addr uint64) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.BpSet(addr)
+	return d.core.BreakpointSet(addr)
 }
 
 // Core 对应 'core <id>'：切换当前核心（仅多核调试有意义）。
@@ -228,7 +228,7 @@ func (d *Debugger) Unassemble(addr uint64, count uint32) (string, error) {
 }
 
 // Dt 对应 'dt <type> <addr>'：按结构体类型显示内存。
-func (d *Debugger) Dt(typeName string, addr uint64) (string, error) {
+func (d *Debugger) DumpType(typeName string, addr uint64) (string, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// Delegate to the string command path; the formatted output goes to
@@ -264,7 +264,7 @@ func (d *Debugger) Flush() error {
 }
 
 // Gg 对应 'gg <addr>'：运行到指定地址（go until address）。
-func (d *Debugger) Gg(addr uint64) error {
+func (d *Debugger) GoUntilAddress(addr uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return d.commands.Exec(d.core, fmt.Sprintf("g 0x%X", addr))
@@ -272,7 +272,7 @@ func (d *Debugger) Gg(addr uint64) error {
 
 // Gu 对应 'gu'：运行到当前函数返回（go until return）。
 // 当前用 Step 近似（多次单步直到 RSP 变化），完整实现需要栈回溯。
-func (d *Debugger) Gu() error {
+func (d *Debugger) GoUntilReturn() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return d.core.Step()
@@ -288,7 +288,7 @@ func (d *Debugger) IoIn(port uint16) (byte, error) {
 // K 对应 'k <count>'：回溯调用栈。通过 ReadRegisters 获取 RSP 后
 // 用 DumpMem 读栈内存，扫描返回地址生成 []CallFrame 返回。
 // 调用方（如 CPU 页）自行格式化显示，无需捕获 d.output 文本。
-func (d *Debugger) K(count uint32) ([]CallFrame, error) {
+func (d *Debugger) CallStack(count uint32) ([]CallFrame, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
@@ -333,7 +333,7 @@ func (d *Debugger) K(count uint32) ([]CallFrame, error) {
 }
 
 // Lm 对应 'lm'：列出当前调试目标已加载的模块。
-func (d *Debugger) Lm() ([]Module, error) {
+func (d *Debugger) ListModules() ([]Module, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	// Delegate to the string command path; the module listing is written to
@@ -446,10 +446,10 @@ func (d *Debugger) SetRegister(reg string, val uint64) error {
 }
 
 // Rdmsr 对应 'rdmsr <msr>'：读取 MSR（Model Specific Register）。
-func (d *Debugger) Rdmsr(msr uint32) (uint64, error) {
+func (d *Debugger) ReadMsr(msr uint32) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Rdmsr(msr)
+	return d.core.ReadMsr(msr)
 }
 
 // Search 对应 's <addr> <size> <pattern>'：在内存中搜索字节模式。
@@ -474,10 +474,10 @@ func (d *Debugger) Test() error {
 }
 
 // Wrmsr 对应 'wrmsr <msr> <val>'：写入 MSR。
-func (d *Debugger) Wrmsr(msr uint32, val uint64) error {
+func (d *Debugger) WriteMsr(msr uint32, val uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Wrmsr(msr, val)
+	return d.core.WriteMsr(msr, val)
 }
 
 // Examine 对应 'x <pattern>'：按通配符查找符号（如 "nt!Nt*"）。

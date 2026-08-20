@@ -69,12 +69,15 @@ func registerHyperdbgSymbols(yi *interp.Interpreter, i *Interpreter) {
 			}),
 
 			// LoadVMM installs and starts the VMM driver from driverPath.
-			"LoadVMM": reflect.ValueOf(func(driverPath string) error {
-				if dbg == nil {
-					return errNoDebugger
-				}
-				return dbg.LoadVMM(driverPath)
-			}),
+		"LoadVMM": reflect.ValueOf(func(driverPath string) error {
+			if dbg == nil {
+				return errNoDebugger
+			}
+			if err := dbg.LoadDriver(driverPath); err != nil {
+				return err
+			}
+			return dbg.InitVMM()
+		}),
 
 			// UnloadVMM terminates the VMM and removes the driver service.
 			"UnloadVMM": reflect.ValueOf(func() error {

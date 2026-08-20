@@ -267,13 +267,13 @@ func (d *Debugger) Hide() error {
 
 // Idt 对应 '!idt <vector>'：读取并返回指定向量的 IDT 表项地址。
 // core 层读取全部 256 个表项后取 [vector]。
-func (d *Debugger) Idt(vector uint32) (uint64, error) {
+func (d *Debugger) InterruptDescriptorTable(vector uint32) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if vector > 255 {
 		return 0, fmt.Errorf("Idt: vector %d out of range (0-255)", vector)
 	}
-	pkt, err := d.core.Idt()
+	pkt, err := d.core.InterruptDescriptorTable()
 	if err != nil {
 		return 0, err
 	}
@@ -281,18 +281,18 @@ func (d *Debugger) Idt(vector uint32) (uint64, error) {
 }
 
 // Ioapic 对应 '!ioapic'：显示 I/O APIC 状态。
-func (d *Debugger) Ioapic() error {
+func (d *Debugger) IoApic() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	_, err := d.core.Ioapic()
+	_, err := d.core.IoApic()
 	return err
 }
 
 // Lbr 对应 '!lbr'：启用 LBR（Last Branch Record）分支记录。
-func (d *Debugger) Lbr() error {
+func (d *Debugger) LastBranchRecord() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Lbr()
+	return d.core.LastBranchRecord()
 }
 
 // LbrDump 对应 '!lbrdump'：转储 LBR 记录的分支。
@@ -310,10 +310,10 @@ func (d *Debugger) Measure() error {
 }
 
 // Pa2Va 对应 '!pa2va <pa> <pid>'：物理地址转虚拟地址。
-func (d *Debugger) Pa2Va(pa uint64, pid uint32) (uint64, error) {
+func (d *Debugger) PhysicalToVirtual(pa uint64, pid uint32) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Pa2Va(pa, pid)
+	return d.core.PhysicalToVirtual(pa, pid)
 }
 
 // PciCam 对应 '!pcicam'：通过 PCI CAM（Configuration Access Method）读取配置。
@@ -332,25 +332,25 @@ func (d *Debugger) PciTree() error {
 }
 
 // Pmc 对应 '!pmc'：读取 PMC（Performance Monitoring Counter）。
-func (d *Debugger) Pmc(counter uint32) (uint64, error) {
+func (d *Debugger) PerfCounter(counter uint32) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Pmc(counter)
+	return d.core.PerfCounter(counter)
 }
 
 // Pt 对应 '!pt'：Intel PT（Processor Trace）配置。
-func (d *Debugger) Pt() error {
+func (d *Debugger) ProcessorTrace() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Pt()
+	return d.core.ProcessorTrace()
 }
 
 // Pte 对应 '!pte <va>'：读取指定虚拟地址的页表项链（PML4E/PDPTE/PDE/PTE）。
 // 返回 PTE 的值（最末一级页表项）。pid 默认为 0（当前进程）。
-func (d *Debugger) Pte(va uint64) (uint64, error) {
+func (d *Debugger) PageTableEntry(va uint64) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	details, err := d.core.Pte(va, 0)
+	details, err := d.core.PageTableEntry(va, 0)
 	if err != nil {
 		return 0, err
 	}
@@ -361,20 +361,20 @@ func (d *Debugger) Pte(va uint64) (uint64, error) {
 // Rev 对应 '!rev'：触发 reversing-machine 内存重建（pattern/reconstruct）。
 // 本签名不传 pid/mode/type，core 层使用默认值；返回 0（该 IOCTL 无数值返回）。
 // 如需精细控制，使用 core.Rev。
-func (d *Debugger) Rev() (uint32, error) {
+func (d *Debugger) Revision() (uint32, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	err := d.core.Rev(0,
+	err := d.core.Revision(0,
 		hyperdbgsdk.ReversingMachineReconstructMemoryModeUnknown,
 		hyperdbgsdk.ReversingMachineReconstructMemoryTypeUnknown)
 	return 0, err
 }
 
 // Smi 对应 '!smi'：触发 SMI（System Management Interrupt）。
-func (d *Debugger) Smi() error {
+func (d *Debugger) SmiInterrupt() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	_, err := d.core.Smi()
+	_, err := d.core.SmiInterrupt()
 	return err
 }
 
@@ -393,10 +393,10 @@ func (d *Debugger) Track() error {
 }
 
 // Tsc 对应 '!tsc'：读取 TSC（Time Stamp Counter）。
-func (d *Debugger) Tsc() (uint64, error) {
+func (d *Debugger) TimeStampCounter() (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Tsc()
+	return d.core.TimeStampCounter()
 }
 
 // Unhide 对应 '!unhide'：取消 !hide 的隐藏（让 hypervisor 重新可见）。
@@ -407,10 +407,10 @@ func (d *Debugger) Unhide() error {
 }
 
 // Va2Pa 对应 '!va2pa <va> <pid>'：虚拟地址转物理地址。
-func (d *Debugger) Va2Pa(va uint64, pid uint32) (uint64, error) {
+func (d *Debugger) VirtualToPhysical(va uint64, pid uint32) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Va2Pa(va, pid)
+	return d.core.VirtualToPhysical(va, pid)
 }
 
 // ============================================================

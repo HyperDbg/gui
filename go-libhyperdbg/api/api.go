@@ -29,12 +29,14 @@ type API interface {
 
 	// Connect opens the HyperDbg device by name ("local" for local debug).
 	Connect(target string) error
-	// LoadVMM installs+starts the VMM driver and sends IOCTL_INIT_VMM.
-	LoadVMM(driverPath string) error
-	// UnloadVMM stops the VMM and removes the driver service.
+	// LoadDriver installs and starts the kernel driver service.
+	LoadDriver(driverPath string) error
+	// InitVMM opens the device and sends IOCTL_INIT_VMM.
+	InitVMM() error
+	// UnloadVMM sends TERMINATE_VMX and closes the device handle.
 	UnloadVMM() error
-	// Close releases all resources held by the debugger.
-	Close() error
+	// UnloadDriver stops and removes the driver service.
+	UnloadDriver() error
 	// StartProcess launches a process for debugging; the VMM intercepts it
 	// via the debug-port callback. Caller owns the returned Process handle.
 	StartProcess(exePath string) (core.Process, error)
@@ -76,9 +78,9 @@ type API interface {
 	// TraceInto single-steps into calls (t).
 	TraceInto() error
 	// Gg runs until the given address (go until address).
-	Gg(addr uint64) error
+	GoUntilAddress(addr uint64) error
 	// Gu runs until the current function returns (go until return).
-	Gu() error
+	GoUntilReturn() error
 
 	// === Registers & Memory ===
 	// Read/write registers and target memory, search and evaluate.
@@ -112,23 +114,23 @@ type API interface {
 	// Software breakpoint management (bp / bc / bd / be / bl).
 
 	// BpSet sets a software breakpoint at addr, returns its tag (bp).
-	BpSet(addr uint64) (uint64, error)
+	BreakpointSet(addr uint64) (uint64, error)
 	// BpClear removes the breakpoint with the given tag (bc).
-	BpClear(tag uint64) error
+	BreakpointClear(tag uint64) error
 	// BpDisable disables a breakpoint without removing it (bd).
-	BpDisable(tag uint64) error
+	BreakpointDisable(tag uint64) error
 	// BpEnable re-enables a disabled breakpoint (be).
-	BpEnable(tag uint64) error
+	BreakpointEnable(tag uint64) error
 	// BpList lists all breakpoints (bl).
-	BpList() ([]Breakpoint, error)
+	BreakpointList() ([]Breakpoint, error)
 
 	// === Stack & Modules ===
 	// Call stack, module list and symbol examination (k / lm / x).
 
 	// K walks the call stack, returning up to count frames (k <count>).
-	K(count uint32) ([]CallFrame, error)
+	CallStack(count uint32) ([]CallFrame, error)
 	// Lm lists the modules loaded by the current target (lm).
-	Lm() ([]Module, error)
+	ListModules() ([]Module, error)
 	// Examine lists symbols matching a wildcard pattern (x <pattern>).
 	Examine(pattern string) ([]Module, error)
 
@@ -140,21 +142,21 @@ type API interface {
 	// Core switches the active logical core (core <id>).
 	Core(coreId uint32) error
 	// Rdmsr reads a Model-Specific Register (rdmsr <msr>).
-	Rdmsr(msr uint32) (uint64, error)
+	ReadMsr(msr uint32) (uint64, error)
 	// Wrmsr writes a Model-Specific Register (wrmsr <msr> <val>).
-	Wrmsr(msr uint32, val uint64) error
+	WriteMsr(msr uint32, val uint64) error
 	// Tsc reads the Time-Stamp Counter (tsc).
-	Tsc() (uint64, error)
+	TimeStampCounter() (uint64, error)
 
 	// === Address Translation ===
 	// Virtual/physical address conversion and page-table walk (pa2va / va2pa / pte).
 
 	// Pa2Va translates a physical address to virtual (pa2va <pa> <pid>).
-	Pa2Va(pa uint64, pid uint32) (uint64, error)
+	PhysicalToVirtual(pa uint64, pid uint32) (uint64, error)
 	// Va2Pa translates a virtual address to physical (va2pa <va> <pid>).
-	Va2Pa(va uint64, pid uint32) (uint64, error)
+	VirtualToPhysical(va uint64, pid uint32) (uint64, error)
 	// Pte returns the last-level PTE for va (pte <va>).
-	Pte(va uint64) (uint64, error)
+	PageTableEntry(va uint64) (uint64, error)
 
 	// === EPT Hooks ===
 	// Execution hooks via EPT (epthook family).
@@ -235,7 +237,7 @@ type API interface {
 	// FPGA-based hwdbg subsystem (hw / hw_clk).
 
 	// Hw starts/queries the hardware debug device (hw).
-	Hw() error
+	Hardware() error
 	// HwClk configures the hardware debug device clock (hw_clk).
 	HwClk() error
 
@@ -253,7 +255,7 @@ type API interface {
 	// Help lists commands or prints detailed help for cmdName (help [name]).
 	Help(cmdName string) error
 	// Sym resolves a symbol name to an address (sym <name>); needs a resolver.
-	Sym(name string) (uint64, error)
+	ResolveSymbol(name string) (uint64, error)
 	// SymPath sets the symbol search path (sympath <path>); needs a resolver.
 	SymPath(path string) error
 
@@ -275,7 +277,7 @@ type API interface {
 	// Struct-aware memory display (dt).
 
 	// Dt displays memory at addr formatted as the named struct type (dt <type> <addr>).
-	Dt(typeName string, addr uint64) (string, error)
+	DumpType(typeName string, addr uint64) (string, error)
 
 	// === Misc ===
 	// Output, scripting, platform introspection and assorted commands.
@@ -303,11 +305,11 @@ type API interface {
 	// Unhide reverses !hide, making the hypervisor visible again (!unhide).
 	Unhide() error
 	// Idt returns the IDT entry address for the given vector (!idt <vector>).
-	Idt(vector uint32) (uint64, error)
+	InterruptDescriptorTable(vector uint32) (uint64, error)
 	// Ioapic prints I/O APIC status (!ioapic).
-	Ioapic() error
+	IoApic() error
 	// Lbr enables Last Branch Record capture (!lbr).
-	Lbr() error
+	LastBranchRecord() error
 	// LbrDump dumps the captured LBR branches (!lbrdump).
 	LbrDump() error
 	// Measure measures VM-exit overhead for anti-debug timing assessment (!measure).
@@ -317,13 +319,13 @@ type API interface {
 	// PciTree prints the PCI device tree (!pcitree).
 	PciTree() error
 	// Pmc reads a Performance Monitoring Counter (!pmc <counter>).
-	Pmc(counter uint32) (uint64, error)
+	PerfCounter(counter uint32) (uint64, error)
 	// Pt configures Intel Processor Trace (!pt).
-	Pt() error
+	ProcessorTrace() error
 	// Rev triggers the reversing-machine memory reconstruction (!rev).
-	Rev() (uint32, error)
+	Revision() (uint32, error)
 	// Smi triggers a System Management Interrupt (!smi).
-	Smi() error
+	SmiInterrupt() error
 	// Trace enables Intel PT tracing (!trace).
 	Trace() error
 	// Track tracks memory access patterns (!track).
@@ -335,7 +337,7 @@ type API interface {
 	// PageIn forces the page containing addr into physical memory (pagein <addr>).
 	PageIn(addr uint64) error
 	// Pe parses and prints a PE file's header/sections/imports/exports (pe <path>).
-	Pe(path string) error
+	DumpPe(path string) error
 	// Process lists all system processes (process).
 	Process() error
 	// Script executes a .ds script file (script <path>).

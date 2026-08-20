@@ -27,7 +27,7 @@ func cleanupTestDebugger(dbg *api.Debugger, proc *core.Process, mp *core.Message
 		_ = proc.Close()
 	}
 	if dbg != nil {
-		_ = dbg.Close()
+		_ = dbg.UnloadVMM(); _ = dbg.UnloadDriver()
 	}
 }
 
@@ -41,7 +41,7 @@ func TestIntegration_CpuPage_FullRefresh(t *testing.T) {
 		t.Fatalf("释放驱动失败: %v", err)
 	}
 
-	// 用 bytes.Buffer 作为 output，捕获 Register()/K() 的格式化输出
+	// 用 bytes.Buffer 作为 output，捕获 Register()/CallStack() 的格式化输出
 	var outBuf bytes.Buffer
 	dbg, err := api.New(api.WithOutput(&outBuf))
 	if err != nil {
@@ -55,7 +55,10 @@ func TestIntegration_CpuPage_FullRefresh(t *testing.T) {
 	var mp *core.MessagePump
 	defer func() { cleanupTestDebugger(dbg, &proc, mp) }()
 
-	if err := dbg.LoadVMM(driverPath); err != nil {
+	if err := dbg.LoadDriver(driverPath); err != nil {
+		t.Fatalf("LoadVMM: %v", err)
+	}
+	if err := dbg.InitVMM(); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
 
@@ -140,11 +143,11 @@ func TestIntegration_CpuPage_FullRefresh(t *testing.T) {
 
 	// === 测试 4：K — 调用栈 ===
 	outBuf.Reset()
-	t.Logf("--- 测试 K(16) ---")
-	_, _ = dbg.K(16)
+	t.Logf("--- 测试 CallStack(16) ---")
+	_, _ = dbg.CallStack(16)
 	stackText := outBuf.String()
 	if stackText == "" {
-		t.Log("K() 输出为空（可能无栈帧信息）")
+		t.Log("CallStack() 输出为空（可能无栈帧信息）")
 	} else {
 		t.Logf("调用栈输出:\n%s", stackText)
 	}
@@ -193,7 +196,10 @@ func TestIntegration_StepOver_TraceInto(t *testing.T) {
 	var mp *core.MessagePump
 	defer func() { cleanupTestDebugger(dbg, &proc, mp) }()
 
-	if err := dbg.LoadVMM(driverPath); err != nil {
+	if err := dbg.LoadDriver(driverPath); err != nil {
+		t.Fatalf("LoadVMM: %v", err)
+	}
+	if err := dbg.InitVMM(); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
 
@@ -320,7 +326,10 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 	defer func() { cleanupTestDebugger(dbg, &proc, mp) }()
 
 	// 初始化：LoadVMM → StartProcess → LogOpen → StartMessagePump → Pause
-	if err := dbg.LoadVMM(driverPath); err != nil {
+	if err := dbg.LoadDriver(driverPath); err != nil {
+		t.Fatalf("LoadVMM: %v", err)
+	}
+	if err := dbg.InitVMM(); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
 	t.Log("✓ LoadVMM (open/restart 按钮)")
@@ -383,7 +392,7 @@ func TestIntegration_ToolbarButtons(t *testing.T) {
 
 	// --- tillret 按钮：Gu (步出，当前用 Step 近似) ---
 	t.Run("Gu", func(t *testing.T) {
-		if err := dbg.Gu(); err != nil {
+		if err := dbg.GoUntilReturn(); err != nil {
 			t.Errorf("Gu: %v", err)
 		} else {
 			t.Log("✓ Gu")
@@ -501,7 +510,10 @@ func TestIntegration_MultiStep(t *testing.T) {
 	var mp *core.MessagePump
 	defer func() { cleanupTestDebugger(dbg, &proc, mp) }()
 
-	if err := dbg.LoadVMM(driverPath); err != nil {
+	if err := dbg.LoadDriver(driverPath); err != nil {
+		t.Fatalf("LoadVMM: %v", err)
+	}
+	if err := dbg.InitVMM(); err != nil {
 		t.Fatalf("LoadVMM: %v", err)
 	}
 	proc, err = dbg.StartProcess(`C:\Windows\System32\notepad.exe`)

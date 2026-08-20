@@ -33,13 +33,7 @@ import (
 // kernelbase!SetEvent address resolved via GetProcAddress. This is the exact
 // scenario that was failing with 0xC0000005 before the ProcessId fix.
 func TestEptHook_RealAddress(t *testing.T) {
-	driverPath := findHyperkdDriver(t)
-	if driverPath == "" {
-		t.Skip("hyperkd.sys not found in build output; build the VMM driver first")
-	}
-	if !isAdmin() {
-		t.Skip("not running as administrator; driver load + device open require elevation")
-	}
+	const driverPath = `C:\Users\Administrator\AppData\Local\hyperdbg\hyperkd.sys`
 	t.Logf("using driver: %s", driverPath)
 
 	// Resolve real addresses via GetProcAddress. kernelbase!SetEvent is the

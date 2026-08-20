@@ -7,7 +7,8 @@
 //
 //	dbg, _ := api.New(api.WithOutput(os.Stdout))
 //	dbg.Connect("local")
-//	dbg.LoadVMM(`Debug\hyperkd.sys`)
+//	dbg.LoadDriver(`Debug\hyperkd.sys`)
+//	dbg.InitVMM()
 //	hookID, _ := dbg.EptHook(0x00c12000, `func hook(ctx *HookCtx) { ctx.Break() }`)
 package api
 
@@ -100,33 +101,49 @@ func New(opts ...Option) (*Debugger, error) {
 	return d, nil
 }
 
-// Connect opens the HyperDbg device for the given target ("local" for local
-// debugging).
+// Connect marks the debugger as connected to the given target ("local" for
+// local debugging). Mirrors C++ ConnectLocalDebugger: only sets a flag, does
+// NOT open the device (the device is opened by InitVMM, matching the C++
+// `load vmm` command). Must precede `load vmm`, just like C++ `.connect local`.
 func (d *Debugger) Connect(target string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return d.core.Connect(target)
 }
 
-// LoadVMM installs and starts the VMM driver.
-func (d *Debugger) LoadVMM(driverPath string) error {
+// LoadDriver installs and starts the kernel driver service.
+func (d *Debugger) LoadDriver(driverPath string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.LoadVMM(driverPath)
+	return d.core.LoadDriver(driverPath)
 }
 
-// UnloadVMM terminates the VMM and removes the driver service.
+// InitVMM opens the device (if not already open) and sends IOCTL_INIT_VMM.
+// Matches the C++ `load vmm` command: HyperDbgCreateHandleFromKdModule +
+// HyperDbgInitVmmModule. Safe after Connect (flag-only) or directly after
+// LoadDriver — InitVMM owns the device-open, so there's no duplicate with
+// Connect.
+func (d *Debugger) InitVMM() error {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	return d.core.InitVMM()
+}
+
+// UnloadVMM detaches the debuggee, sends IOCTL_TERMINATE_VMX and closes the
+// device handle. Matches the C++ `unload vmm` command (unload.cpp):
+// HyperDbgUnloadVmm + HyperDbgUnloadKd (close device). Driver service is
+// left running for UnloadDriver to tear down.
 func (d *Debugger) UnloadVMM() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	return d.core.UnloadVMM()
 }
 
-// Close releases all resources.
-func (d *Debugger) Close() error {
+// UnloadDriver stops and removes the driver service.
+func (d *Debugger) UnloadDriver() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.Close()
+	return d.core.UnloadDriver()
 }
 
 // EptHook registers an EPT execution hook at hookAddress with a Go callback.

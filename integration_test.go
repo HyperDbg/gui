@@ -38,11 +38,16 @@ func TestIntegration_LoadVMM_StartProcess_Notepad(t *testing.T) {
 	if err != nil {
 		t.Fatalf("api.New: %v", err)
 	}
-	defer dbg.Close()
+	defer func() { _ = dbg.UnloadVMM(); _ = dbg.UnloadDriver() }()
 
 	// Step 3: 加载 VMM 驱动（需要管理员权限 + testsigning）
 	t.Logf("正在加载 VMM 驱动...")
-	if err := dbg.LoadVMM(driverPath); err != nil {
+	if err := dbg.LoadDriver(driverPath); err != nil {
+		t.Fatalf("LoadVMM 失败: %v\n"+
+			"排查: 1) 确认以管理员运行 2) bcdedit /set testsigning on + 重启 "+
+			"3) 关闭 Hyper-V/VBS 4) 清理 stale 服务: sc stop hyperkd && sc delete hyperkd", err)
+	}
+	if err := dbg.InitVMM(); err != nil {
 		t.Fatalf("LoadVMM 失败: %v\n"+
 			"排查: 1) 确认以管理员运行 2) bcdedit /set testsigning on + 重启 "+
 			"3) 关闭 Hyper-V/VBS 4) 清理 stale 服务: sc stop hyperkd && sc delete hyperkd", err)

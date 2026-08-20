@@ -49,6 +49,14 @@ type Debugger struct {
 	driver *driverloader.Driver
 	device *comm.Device
 
+	// connected mirrors C++ g_IsConnectedToHyperDbgLocally: Connect() only
+	// sets this flag, it does NOT open the device. The device is opened by
+	// InitVMM (matching the C++ `load vmm` command, where
+	// HyperDbgCreateHandleFromKdModule runs inside HyperDbgLoadVmmModule).
+	// target records the connect argument ("local" or future remote addr).
+	connected bool
+	target    string
+
 	// nextTag is the monotonically increasing event tag. Tags identify
 	// event+action pairs in the driver.
 	nextTag uint64
@@ -103,7 +111,7 @@ type Debugger struct {
 }
 
 // New creates a Debugger. It does not connect or load any driver; call
-// Connect + LoadVMM explicitly.
+// Connect (flag) + LoadDriver + InitVMM explicitly.
 func New() *Debugger {
 	return &Debugger{state: StateDisconnected}
 }
@@ -115,115 +123,100 @@ func (d *Debugger) State() DebuggerState {
 	return d.state
 }
 
-// Connect opens the HyperDbg device. For "local" target this opens
-// \\.\HyperDbgDebuggerDevice. The device must already be created by a loaded
-// VMM driver; call LoadVMM first if the driver is not yet running.
+// Connect marks this Debugger as connected to the given target. For "local"
+// this mirrors C++ ConnectLocalDebugger (connect.cpp): it only sets the
+// connected flag — it does NOT open the device. The device is opened later
+// by InitVMM, matching the C++ `load vmm` command flow where
+// HyperDbgCreateHandleFromKdModule runs inside HyperDbgLoadVmmModule (so
+// `.connect local` then `load vmm` is the C++ pattern). This avoids the
+// previous duplicate where both Connect and InitVMM opened the device.
 func (d *Debugger) Connect(target string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	if d.state != StateDisconnected {
-		return fmt.Errorf("Connect: already connected (state=%d)", d.state)
+	if d.connected {
+		return fmt.Errorf("Connect: already connected to %q", d.target)
 	}
-	dev, err := comm.Open(comm.DeviceName)
-	if err != nil {
-		return fmt.Errorf("Connect(%q): %w", target, err)
-	}
-	d.device = dev
-	d.state = StateConnected
+	d.target = target
+	d.connected = true
 	return nil
 }
 
-// LoadVMM mirrors C++ HyperDbgLoadVmmModule + HyperDbgInitVmmModule:
-// load driver service → open device → single IOCTL_INIT_VMM. No retry,
-// no sleep — the driver service manager creates the device synchronously
-// before Load returns.
-func (d *Debugger) LoadVMM(driverPath string) error {
+// LoadDriver installs and starts the kernel driver service.
+func (d *Debugger) LoadDriver(driverPath string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-
-	// Install and start the driver service.
 	d.driver = driverloader.NewDriver(driverPath)
 	if err := d.driver.Load(); err != nil {
-		return fmt.Errorf("LoadVMM: %w", err)
+		return fmt.Errorf("LoadDriver: %w", err)
 	}
+	return nil
+}
 
-	// Open the device (single attempt — mirrors C++ CreateFile).
+// InitVMM opens the device and sends IOCTL_INIT_VMM. This matches the C++
+// `load vmm` command flow: HyperDbgCreateHandleFromKdModule (open device) +
+// HyperDbgInitVmmModule (IOCTL_INIT_VMM). It opens the device only if not
+// already open (StateDisconnected), so it's safe to call after Connect
+// (which no longer opens the device) or directly after LoadDriver.
+func (d *Debugger) InitVMM() error {
+	d.mu.Lock()
+	defer d.mu.Unlock()
 	if d.state == StateDisconnected {
 		dev, err := comm.Open(comm.DeviceName)
 		if err != nil {
-			return fmt.Errorf("LoadVMM: open device: %w", err)
+			return fmt.Errorf("InitVMM: open device: %w", err)
 		}
 		d.device = dev
 		d.state = StateConnected
 	}
-
-	if d.state != StateConnected && d.state < StateVmmLoaded {
-		return fmt.Errorf("LoadVMM: unexpected state %d", d.state)
-	}
-
-	// Initialize the VMM (single IOCTL — mirrors C++ HyperDbgInitVmmModule).
-	// METHOD_BUFFERED: input = output = DEBUGGER_INIT_VMM_PACKET (just a
-	// uint32 KernelStatus field).
 	var vmmPacket uint32
 	vmmSize := uint32(unsafe.Sizeof(vmmPacket))
 	if _, err := d.device.IoctlStruct(comm.IOCTL_CODE_INIT_VMM,
 		unsafe.Pointer(&vmmPacket), unsafe.Pointer(&vmmPacket), vmmSize, vmmSize); err != nil {
-		return fmt.Errorf("LoadVMM: IOCTL_INIT_VMM failed: %w", err)
+		return fmt.Errorf("InitVMM: IOCTL_INIT_VMM failed: %w", err)
 	}
 	const debuggerOperationWasSuccessful uint32 = 0xFFFFFFFF
 	if vmmPacket != debuggerOperationWasSuccessful {
-		return fmt.Errorf("LoadVMM: VMM init failed (KernelStatus=0x%08X)", vmmPacket)
+		return fmt.Errorf("InitVMM: VMM init failed (KernelStatus=0x%08X)", vmmPacket)
 	}
 	d.state = StateVmmLoaded
 	return nil
 }
 
-// UnloadVMM mirrors C++ HyperDbgUnloadVmm: detach debuggee → single
-// IOCTL_TERMINATE_VMX → unload driver. No retry, no sleep — the kernel
-// handler synchronously tears down VMX/EPT on all cores.
+// UnloadVMM detaches the debuggee, sends IOCTL_TERMINATE_VMX and closes the
+// device handle. This matches the C++ `unload vmm` command flow (unload.cpp):
+// HyperDbgUnloadVmm (UdUninitializeUserDebugger + IOCTL_TERMINATE_VMX) +
+// HyperDbgUnloadKd (close device). The device close lives here, not in
+// UnloadDriver, so a mid-session UnloadVMM (without UnloadDriver) leaves the
+// driver service intact for a later InitVMM restart.
 func (d *Debugger) UnloadVMM() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-
-	// Resume + detach attached process (mirrors UdUninitializeUserDebugger's
-	// detach path). Best-effort like C++ which ignores the result.
 	if d.device != nil && d.processToken != 0 {
 		_ = continueProcess(d.device, d.processToken)
 		_ = detachProcess(d.device, d.processPid)
 		d.processToken = 0
 		d.processPid = 0
 	}
-
-	// Terminate VMX (single call, no retry — mirrors C++).
 	if d.device != nil && d.state >= StateVmmLoaded {
 		_, _ = d.device.Ioctl(comm.IOCTL_CODE_TERMINATE_VMX, nil, nil)
-	}
-
-	// Unload driver service.
-	if d.driver != nil {
-		_ = d.driver.Unload()
-	}
-	d.state = StateConnected
-	return nil
-}
-
-// Close releases all resources (device handle, driver service).
-// If a debuggee is attached, the same continue→detach sequence as UnloadVMM
-// is performed first to avoid the BSOD described in UnloadVMM.
-func (d *Debugger) Close() error {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-	if d.processToken != 0 && d.device != nil {
-		_ = continueProcess(d.device, d.processToken)
-		_ = detachProcess(d.device, d.processPid)
-		d.processToken = 0
-		d.processPid = 0
 	}
 	if d.device != nil {
 		_ = d.device.Close()
 		d.device = nil
 	}
 	d.state = StateDisconnected
+	return nil
+}
+
+// UnloadDriver stops and removes the driver service.
+func (d *Debugger) UnloadDriver() error {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	if d.driver != nil {
+		if err := d.driver.Unload(); err != nil {
+			return fmt.Errorf("UnloadDriver: %w", err)
+		}
+	}
 	return nil
 }
 

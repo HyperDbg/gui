@@ -173,7 +173,7 @@ func (d *Debugger) PageIn(addr uint64) error {
 }
 
 // Pe 对应 'pe <path>'：解析 PE 文件头并显示其属性（入口点/段/导入表等）。
-func (d *Debugger) Pe(path string) error {
+func (d *Debugger) DumpPe(path string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	pf, err := userlevel.PeOpen(path)
@@ -228,12 +228,12 @@ func (d *Debugger) Switch(pid uint32) error {
 }
 
 // Sym 对应 'sym <name>'：解析符号名到地址（需要 SymbolResolver）。
-func (d *Debugger) Sym(name string) (uint64, error) {
+func (d *Debugger) ResolveSymbol(name string) (uint64, error) {
 	d.mu.Lock()
 	resolver := d.symbols
 	d.mu.Unlock()
 	if resolver == nil {
-		return 0, fmt.Errorf("Sym(%q): no symbol resolver injected (use WithSymbolResolver)", name)
+		return 0, fmt.Errorf("ResolveSymbol(%q): no symbol resolver injected (use WithSymbolResolver)", name)
 	}
 	return resolver.FromName(name)
 }

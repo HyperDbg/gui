@@ -293,7 +293,7 @@ func (d *Debugger) StepOut() error {
 		return fmt.Errorf("StepOut: set temp breakpoint at 0x%X: %w", returnAddress, err)
 	}
 	// 保险：即使命中后内核自动移除，defer 也尝试 clear（已移除则 no-op）
-	defer func() { _ = d.BpClear(tag) }()
+	defer func() { _ = d.BreakpointClear(tag) }()
 
 	// 4. Drain stale pauseEvent, Continue, wait for PAUSED
 	d.mu.Lock()

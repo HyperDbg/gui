@@ -88,7 +88,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "New failed: %v\n", err)
 		os.Exit(1)
 	}
-	defer dbg.Close()
+	defer func() { _ = dbg.UnloadVMM(); _ = dbg.UnloadDriver() }()
 
 	if err := dbg.Connect("local"); err != nil {
 		fmt.Fprintf(os.Stderr, "Connect failed: %v\n", err)
@@ -96,7 +96,11 @@ func main() {
 	}
 	fmt.Printf("[*] Connected to local HyperDbg device\n")
 
-	if err := dbg.LoadVMM(*driverPath); err != nil {
+	if err := dbg.LoadDriver(*driverPath); err != nil {
+		fmt.Fprintf(os.Stderr, "LoadVMM failed: %v\n", err)
+		os.Exit(1)
+	}
+	if err := dbg.InitVMM(); err != nil {
 		fmt.Fprintf(os.Stderr, "LoadVMM failed: %v\n", err)
 		os.Exit(1)
 	}

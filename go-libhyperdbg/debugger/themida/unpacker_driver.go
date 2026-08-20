@@ -82,10 +82,13 @@ func (u *Unpacker) Run() (UnpackerResult, error) {
 		return result, fmt.Errorf("api.New: %w", err)
 	}
 	u.dbg = dbg
-	defer dbg.Close()
+	defer func() { _ = dbg.UnloadVMM(); _ = dbg.UnloadDriver() }()
 
 	// LoadVMM 包含: 安装驱动 → 打开设备 → IOCTL_INIT_VMM
-	if err := dbg.LoadVMM(u.cfg.DriverPath); err != nil {
+	if err := dbg.LoadDriver(u.cfg.DriverPath); err != nil {
+		return result, fmt.Errorf("LoadVMM: %w", err)
+	}
+	if err := dbg.InitVMM(); err != nil {
 		return result, fmt.Errorf("LoadVMM: %w", err)
 	}
 	// 注意: 不用 defer UnloadVMM，而是手动调用，确保执行顺序：

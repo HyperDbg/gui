@@ -40,47 +40,6 @@ import (
 	"golang.org/x/sys/windows"
 )
 
-// isAdmin reports whether the current process has administrator
-// privileges by inspecting the process token elevation state. Driver load
-// and device open both require elevation, so tests skip rather than fail
-// when not elevated.
-func isAdmin() bool {
-	var token windows.Token
-	if err := windows.OpenProcessToken(windows.CurrentProcess(), windows.TOKEN_QUERY, &token); err != nil {
-		return false
-	}
-	defer token.Close()
-	return token.IsElevated()
-}
-
-// findHyperkdDriver searches common build output directories for
-// hyperkd.sys starting from the test working directory and walking up to
-// the repository root. Returns the absolute path or "" if not found.
-func findHyperkdDriver(t *testing.T) string {
-	t.Helper()
-	candidates := []string{
-		`Debug\hyperkd.sys`,
-		`Release\hyperkd.sys`,
-		`x64\Debug\hyperkd.sys`,
-		`x64\Release\hyperkd.sys`,
-	}
-	wd, err := os.Getwd()
-	if err != nil {
-		return ""
-	}
-	dir := wd
-	for i := 0; i < 8 && dir != "" && dir != filepath.Dir(dir); i++ {
-		for _, c := range candidates {
-			p := filepath.Join(dir, c)
-			if fi, err := os.Stat(p); err == nil && !fi.IsDir() {
-				return p
-			}
-		}
-		dir = filepath.Dir(dir)
-	}
-	return ""
-}
-
 // debuggerOperationWasSuccessful is now declared in control.go (promoted
 // from the test package to the real package so non-test code can use it).
 // The value is 0xFFFFFFFF per
@@ -121,13 +80,7 @@ func clearEvent(t *testing.T, dev *comm.Device, tag uint64) {
 // scripts (run-notepad.ds) and is guaranteed to be present on every
 // Windows system.
 func TestAttachContinuePause(t *testing.T) {
-	driverPath := findHyperkdDriver(t)
-	if driverPath == "" {
-		t.Skip("hyperkd.sys not found in build output; build the VMM driver first")
-	}
-	if !isAdmin() {
-		t.Skip("not running as administrator; driver load + device open require elevation")
-	}
+	const driverPath = `C:\Users\Administrator\AppData\Local\hyperdbg\hyperkd.sys`
 	t.Logf("using driver: %s", driverPath)
 
 	// notepad.exe is on the system PATH; resolve it via the System32

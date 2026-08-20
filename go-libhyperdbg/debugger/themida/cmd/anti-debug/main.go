@@ -103,9 +103,13 @@ func main() {
 		fmt.Fprintf(os.Stderr, "error: api.New: %v\n", err)
 		os.Exit(1)
 	}
-	defer dbg.Close()
+	defer func() { _ = dbg.UnloadVMM(); _ = dbg.UnloadDriver() }()
 
-	if err := dbg.LoadVMM(*driverPath); err != nil {
+	if err := dbg.LoadDriver(*driverPath); err != nil {
+		fmt.Fprintf(os.Stderr, "error: LoadVMM: %v\n", err)
+		os.Exit(1)
+	}
+	if err := dbg.InitVMM(); err != nil {
 		fmt.Fprintf(os.Stderr, "error: LoadVMM: %v\n", err)
 		os.Exit(1)
 	}

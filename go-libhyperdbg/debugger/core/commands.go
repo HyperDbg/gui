@@ -63,7 +63,7 @@ func (d *Debugger) Apic() (hyperdbgsdk.DEBUGGER_APIC_REQUEST, error) {
 // ApicType=ReadIoApic.
 //
 // C++: ioapic.cpp.
-func (d *Debugger) Ioapic() (hyperdbgsdk.DEBUGGER_APIC_REQUEST, error) {
+func (d *Debugger) IoApic() (hyperdbgsdk.DEBUGGER_APIC_REQUEST, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -86,7 +86,7 @@ func (d *Debugger) Ioapic() (hyperdbgsdk.DEBUGGER_APIC_REQUEST, error) {
 //
 // C++: lbr.cpp — sends IOCTL_CODE_PERFORM_HYPERTRACE_LBR_OPERATION with
 // LbrOperationType=Enable.
-func (d *Debugger) Lbr() error {
+func (d *Debugger) LastBranchRecord() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -136,7 +136,7 @@ func (d *Debugger) LbrDump() error {
 //
 // C++: pt.cpp — sends IOCTL_CODE_PERFORM_HYPERTRACE_PT_OPERATION with
 // PtOperationType=Enable.
-func (d *Debugger) Pt() error {
+func (d *Debugger) ProcessorTrace() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -162,7 +162,7 @@ func (d *Debugger) Pt() error {
 //
 // C++: trace.cpp delegates to the PT enable path.
 func (d *Debugger) Trace() error {
-	return d.Pt()
+	return d.ProcessorTrace()
 }
 
 // Smi reads the SMI count (number of System Management Interrupts that
@@ -171,7 +171,7 @@ func (d *Debugger) Trace() error {
 //
 // C++: smi.cpp — sends IOCTL_CODE_PERFORM_SMI_OPERATION with
 // SmiOperationType=ReadCount.
-func (d *Debugger) Smi() (hyperdbgsdk.SMI_OPERATION_PACKETS, error) {
+func (d *Debugger) SmiInterrupt() (hyperdbgsdk.SMI_OPERATION_PACKETS, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -234,14 +234,14 @@ func (d *Debugger) Measure() error {
 // The fallback returns the wall-clock nanosecond count — sufficient for
 // coarse timing and ordering, but not cycle-accurate. A real RDTSC path
 // belongs in transparency.rdtsc once exported (see transparency/cpu_amd64.go).
-func (d *Debugger) Tsc() (uint64, error) {
+func (d *Debugger) TimeStampCounter() (uint64, error) {
 	return uint64(time.Now().UnixNano()), nil
 }
 
 // Pmc reads a Performance Monitoring Counter via RDPMC. RDPMC is a
 // privileged instruction (CR4.PCE controls user-mode access) and HyperDbg
 // exposes it through the !pmc hook (core.PmcHook), not a read IOCTL.
-func (d *Debugger) Pmc(counter uint32) (uint64, error) {
+func (d *Debugger) PerfCounter(counter uint32) (uint64, error) {
 	return 0, fmt.Errorf("Pmc: RDPMC is privileged; use !pmc hook (core.PmcHook) instead")
 }
 
@@ -284,7 +284,7 @@ func (d *Debugger) modifyBreakpoint(tag uint64, req hyperdbgsdk.DEBUGGEE_BREAKPO
 // BpClear clears (removes) the breakpoint with the given tag (bc <tag>).
 //
 // C++: bc.cpp.
-func (d *Debugger) BpClear(tag uint64) error {
+func (d *Debugger) BreakpointClear(tag uint64) error {
 	return d.modifyBreakpoint(tag, hyperdbgsdk.DebuggeeBreakpointModificationRequestClear)
 }
 
@@ -292,14 +292,14 @@ func (d *Debugger) BpClear(tag uint64) error {
 // breakpoint configuration is preserved so it can be re-enabled with BpEnable.
 //
 // C++: bd.cpp.
-func (d *Debugger) BpDisable(tag uint64) error {
+func (d *Debugger) BreakpointDisable(tag uint64) error {
 	return d.modifyBreakpoint(tag, hyperdbgsdk.DebuggeeBreakpointModificationRequestDisable)
 }
 
 // BpEnable re-enables a previously disabled breakpoint (be <tag>).
 //
 // C++: be.cpp.
-func (d *Debugger) BpEnable(tag uint64) error {
+func (d *Debugger) BreakpointEnable(tag uint64) error {
 	return d.modifyBreakpoint(tag, hyperdbgsdk.DebuggeeBreakpointModificationRequestEnable)
 }
 
@@ -310,7 +310,7 @@ func (d *Debugger) BpEnable(tag uint64) error {
 //
 // C++: bp.cpp — sends IOCTL_CODE_SET_BREAKPOINT_USER_DEBUGGER with a
 // DEBUGGEE_BP_PACKET; the kernel returns the tag in Result.
-func (d *Debugger) BpSet(addr uint64) (uint64, error) {
+func (d *Debugger) BreakpointSet(addr uint64) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -404,7 +404,7 @@ func (d *Debugger) EditMem(addr uint64, data []byte) error {
 //
 // C++: rdmsr.cpp — sends IOCTL_CODE_DEBUGGER_READ_OR_WRITE_MSR with
 // ActionType=DebuggerMsrRead.
-func (d *Debugger) Rdmsr(msr uint32) (uint64, error) {
+func (d *Debugger) ReadMsr(msr uint32) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {
@@ -426,7 +426,7 @@ func (d *Debugger) Rdmsr(msr uint32) (uint64, error) {
 // Wrmsr writes val to the Model-Specific Register identified by msr.
 //
 // C++: wrmsr.cpp — same IOCTL with ActionType=DebuggerMsrWrite.
-func (d *Debugger) Wrmsr(msr uint32, val uint64) error {
+func (d *Debugger) WriteMsr(msr uint32, val uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.state < StateVmmLoaded {

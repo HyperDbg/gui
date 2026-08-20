@@ -236,8 +236,8 @@ func cleanupDebugger(dbg *api.Debugger) {
 		messagePump = nil
 	}
 	if dbg != nil {
-		_ = dbg.UnloadVMM()
-		_ = dbg.Close()
+		_ = dbg.UnloadVMM(); 
+		_ = dbg.UnloadDriver()
 	}
 	globalProc = nil
 }
@@ -256,7 +256,9 @@ func RunDriverOnly() {
 	}
 
 	driverPath := `C:\Users\Administrator\AppData\Local\hyperdbg\hyperkd.sys`
-	if err := dbg.LoadVMM(driverPath); err != nil {
+	if err := dbg.LoadDriver(driverPath); err != nil {
+		fmt.Printf("LoadVMM failed: %v\n", err)
+	} else if err := dbg.InitVMM(); err != nil {
 		fmt.Printf("LoadVMM failed: %v\n", err)
 	} else {
 		vmmLoaded = true
@@ -367,7 +369,11 @@ func loadProcess(exePath string) {
 
 	// 仅首次加载 VMM 驱动；重复 LoadVMM 会因驱动服务已存在而失败
 	if !vmmLoaded {
-		if err := globalDbg.LoadVMM(driverPath); err != nil {
+		if err := globalDbg.LoadDriver(driverPath); err != nil {
+			statusf("LoadVMM 失败: %v", err)
+			return
+		}
+		if err := globalDbg.InitVMM(); err != nil {
 			statusf("LoadVMM 失败: %v", err)
 			return
 		}
@@ -546,7 +552,7 @@ func toolbarItems(m *safemap.M[string, []byte], dbg *api.Debugger) []*toolbar.It
 		item("stepover.png", "stepover", func() { runAsync("StepOver", dbg.StepOver) }),
 		item("trin.png", "trin", func() { runAsync("TraceInto", dbg.TraceInto) }),
 		item("trover.png", "trover", func() { runAsync("StepOver", dbg.StepOver) }),
-		item("tillret.png", "tillret", func() { runAsync("Gu", dbg.Gu) }),
+		item("tillret.png", "tillret", func() { runAsync("GoUntilReturn", dbg.GoUntilReturn) }),
 		item("tilluser.png", "tilluser", func() { statusf("tilluser: 暂未实装") }),
 		item("log.png", "log", func() { switchTab(LogType) }),
 		item("modules.png", "modules", func() {

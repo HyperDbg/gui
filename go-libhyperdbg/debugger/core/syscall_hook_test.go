@@ -41,10 +41,6 @@ func hook(ctx *HookCtx) {
 `
 
 func TestSyscallHook(t *testing.T) {
-	if !isAdmin() {
-		t.Skip("not admin")
-	}
-
 	// 清空日志文件
 	_ = os.Truncate(monitorLogPath, 0)
 	logFile, err := os.OpenFile(monitorLogPath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0o644)
@@ -65,8 +61,6 @@ func TestSyscallHook(t *testing.T) {
 		t.Fatalf("open: %v", err)
 	}
 	t.Cleanup(func() {
-		_, _ = dev.IoctlStruct(
-			comm.IOCTL_CODE_TERMINATE_VMX, nil, nil, 0, 0)
 		_ = dev.Close()
 	})
 
@@ -100,7 +94,12 @@ func TestSyscallHook(t *testing.T) {
 	if err != nil {
 		t.Fatalf("pump: %v", err)
 	}
-	t.Cleanup(func() { mp.Stop() })
+	// TERMINATE_VMX 必须在 mp.Stop() 之前：mp.Stop() 发 DISALLOW_IOCTL
+	// 会阻止后续 TERMINATE_VMX → VMX 未清理 → 驱动卸载卡死。
+	t.Cleanup(func() {
+		_, _ = dev.IoctlStruct(comm.IOCTL_CODE_TERMINATE_VMX, nil, nil, 0, 0)
+		mp.Stop()
+	})
 
 	// Register !syscall 0x7 hook. MUST be 0x7 (specific), not 0xFFFFFFFF
 	// (all) — see BSOD note below.

@@ -23,7 +23,7 @@ import (
 //	左下 Hex   | 右下 调用栈
 //
 // 全部使用 typed API：Unassemble/DumpMem 直接返回数据，
-// Register("RIP") 返回 uint64，K(16) 返回 []CallFrame。
+// Register("RIP") 返回 uint64，CallStack(16) 返回 []CallFrame。
 type CpuPage struct {
 	dbg *api.Debugger
 
@@ -230,7 +230,7 @@ func (c *CpuPage) refreshInternal(version uint64) {
 
 	// 4. 调用栈（K 返回 []CallFrame，格式化为文本显示）
 	var stackText string
-	if frames, err := c.dbg.K(16); err == nil && len(frames) > 0 {
+	if frames, err := c.dbg.CallStack(16); err == nil && len(frames) > 0 {
 		var sb strings.Builder
 		for _, f := range frames {
 			fmt.Fprintf(&sb, "%016X  %s\n", f.Address, f.Symbol)

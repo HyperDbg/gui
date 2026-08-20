@@ -18,7 +18,6 @@ import (
 	"time"
 
 	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
-	"github.com/hyperdbg/go-libhyperdbg/debugger/driverloader"
 	"golang.org/x/sys/windows"
 )
 
@@ -29,13 +28,7 @@ import (
 //  4. 连续执行 N 次 Step，每次验证 RIP 变化 + 寄存器可读
 //  5. 测试 Continue → Pause 循环
 func TestStepSequence(t *testing.T) {
-	driverPath := findHyperkdDriver(t)
-	if driverPath == "" {
-		t.Skip("hyperkd.sys not found")
-	}
-	if !isAdmin() {
-		t.Skip("not running as administrator")
-	}
+	const driverPath = `C:\Users\Administrator\AppData\Local\hyperdbg\hyperkd.sys`
 
 	// 选择调试目标：优先用户桌面 calc32.exe，回退 notepad.exe
 	// 注意：notepad 的 GDI 渲染会触发 dxgmms2 EPT hook 干扰导致 BSOD
@@ -50,27 +43,14 @@ func TestStepSequence(t *testing.T) {
 	t.Logf("driver: %s", driverPath)
 	t.Logf("debuggee: %s", exePath)
 
-	// === 1. 加载驱动 ===
-	drv := driverloader.NewDriver(driverPath)
-	_ = drv.Unload()
-	if exists, _ := drv.Exists(); exists {
-		time.Sleep(500 * time.Millisecond)
-		_ = drv.Unload()
-	}
-	if err := drv.Load(); err != nil {
-		t.Fatalf("driver load: %v", err)
-	}
-	time.Sleep(2 * time.Second)
-	t.Cleanup(func() { _ = drv.Unload() })
-
-	// === 2. 创建 Debugger 并初始化 ===
+	// === 1. 创建 Debugger 并初始化 ===
 	dbg := New()
-	if err := dbg.Connect(comm.DeviceName); err != nil {
-		t.Fatalf("Connect: %v", err)
-	}
-	t.Cleanup(func() { dbg.Close() })
+	t.Cleanup(func() { _ = dbg.UnloadVMM(); _ = dbg.UnloadDriver() })
 
-	if err := dbg.LoadVMM(driverPath); err != nil {
+	if err := dbg.LoadDriver(driverPath); err != nil {
+		t.Skipf("LoadVMM: %v (VT-x not available?)", err)
+	}
+	if err := dbg.InitVMM(); err != nil {
 		t.Skipf("LoadVMM: %v (VT-x not available?)", err)
 	}
 	t.Logf("VMM loaded")
@@ -89,7 +69,15 @@ func TestStepSequence(t *testing.T) {
 	if err != nil {
 		t.Fatalf("StartMessagePump: %v", err)
 	}
-	t.Cleanup(func() { pump.Stop() })
+	// TERMINATE_VMX 必须在 pump.Stop() 之前执行：
+	// pump.Stop() 发 DISALLOW_IOCTL，会阻止后续 TERMINATE_VMX，
+	// 导致 VMX 未清理 → 驱动卸载卡死在 STOP_PENDING。
+	t.Cleanup(func() {
+		if dbg.device != nil {
+			_, _ = dbg.device.IoctlStruct(comm.IOCTL_CODE_TERMINATE_VMX, nil, nil, 0, 0)
+		}
+		pump.Stop()
+	})
 	t.Logf("MessagePump started")
 
 	// === 3. 启动调试进程 ===

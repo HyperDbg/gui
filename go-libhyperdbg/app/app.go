@@ -104,7 +104,7 @@ func (a *App) Cleanup() error {
 	a.mu.Lock()
 	defer a.mu.Unlock()
 	if a.core != nil {
-		_ = a.core.Close()
+		_ = a.core.UnloadVMM(); _ = a.core.UnloadDriver()
 	}
 	a.loaded = ModuleLoaded{}
 	a.initialised = false
@@ -187,7 +187,10 @@ func (a *App) LoadVMM(driverPath string) error {
 	if err := c.Connect("local"); err != nil {
 		return fmt.Errorf("LoadVMM: %w", err)
 	}
-	if err := c.LoadVMM(driverPath); err != nil {
+	if err := c.LoadDriver(driverPath); err != nil {
+		return fmt.Errorf("LoadVMM: %w", err)
+	}
+	if err := c.InitVMM(); err != nil {
 		return fmt.Errorf("LoadVMM: %w", err)
 	}
 
@@ -254,7 +257,10 @@ func (a *App) UnloadKd() error {
 		return fmt.Errorf("UnloadKd: HyperTrace still loaded; unload it first")
 	}
 	a.mu.Unlock()
-	if err := a.core.Close(); err != nil {
+	if err := a.core.UnloadVMM(); err != nil {
+		return fmt.Errorf("UnloadKd: %w", err)
+	}
+	if err := a.core.UnloadDriver(); err != nil {
 		return fmt.Errorf("UnloadKd: %w", err)
 	}
 	a.mu.Lock()
