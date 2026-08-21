@@ -34,88 +34,8 @@ import (
 	"github.com/ddkwork/hyperdbgsdk"
 )
 
-// KernelEvent categorises why the debuggee paused. It is derived from the
-// DEBUGGEE_PAUSING_REASON field of DEBUGGEE_KD_PAUSED_PACKET so the handler
-// can switch on a stable Go enum instead of the wire numeric. Mirrors the
-// relevant subset of DEBUGGEE_PAUSING_REASON_DEBUGGEE_*.
-type KernelEvent uint32
-
-const (
-	// KernelEventUnknown is the zero value; used when the pausing reason does
-	// not map to a more specific event.
-	KernelEventUnknown KernelEvent = iota
-	// KernelEventPaused is a user-triggered pause (CTRL+C or 'pause' command).
-	KernelEventPaused
-	// KernelEventRequestFromDebugger is a pause triggered by a debugger request
-	// that needs the debuggee to drop into the interactive prompt.
-	KernelEventRequestFromDebugger
-	// KernelEventSingleStep is the result of a 't'/'p' step command.
-	KernelEventSingleStep
-	// KernelEventTrackingStep is the result of a 'tt' tracking step.
-	KernelEventTrackingStep
-	// KernelEventBreakpointHit is a software breakpoint hit.
-	KernelEventBreakpointHit
-	// KernelEventHardwareDebugRegisterHit is a hardware debug-register hit.
-	KernelEventHardwareDebugRegisterHit
-	// KernelEventCoreSwitched is the result of a '~' core switch.
-	KernelEventCoreSwitched
-	// KernelEventProcessSwitched is the result of a process switch.
-	KernelEventProcessSwitched
-	// KernelEventThreadSwitched is the result of a thread switch.
-	KernelEventThreadSwitched
-	// KernelEventCommandFinished is the result of a remote command finishing.
-	KernelEventCommandFinished
-	// KernelEventTriggered is an event (hook) triggered; the handler should
-	// consult pkt.EventCallingStage for pre/post emulation.
-	KernelEventTriggered
-	// KernelEventStartingModuleLoaded is the initial module-load pause before
-	// the entry-point breakpoint is set.
-	KernelEventStartingModuleLoaded
-	// KernelEventGeneralDebugBreak is a generic debug break.
-	KernelEventGeneralDebugBreak
-	// KernelEventGeneralThreadIntercepted is a thread intercept pause.
-	KernelEventGeneralThreadIntercepted
-	// KernelEventHardwareBasedGeneralBreak is a hardware-based debug break.
-	KernelEventHardwareBasedGeneralBreak
-)
-
-// fromPausingReason maps a wire DEBUGGEE_PAUSING_REASON to a KernelEvent.
-func fromPausingReason(r hyperdbgsdk.DEBUGGEE_PAUSING_REASON) KernelEvent {
-	switch r {
-	case hyperdbgsdk.DebuggeePausingReasonPause:
-		return KernelEventPaused
-	case hyperdbgsdk.DebuggeePausingReasonRequestFromDebugger:
-		return KernelEventRequestFromDebugger
-	case hyperdbgsdk.DebuggeePausingReasonDebuggeeStepped:
-		return KernelEventSingleStep
-	case hyperdbgsdk.DebuggeePausingReasonDebuggeeTrackingStepped:
-		return KernelEventTrackingStep
-	case hyperdbgsdk.DebuggeePausingReasonDebuggeeSoftwareBreakpointHit:
-		return KernelEventBreakpointHit
-	case hyperdbgsdk.DebuggeePausingReasonDebuggeeHardwareDebugRegisterHit:
-		return KernelEventHardwareDebugRegisterHit
-	case hyperdbgsdk.DebuggeePausingReasonDebuggeeCoreSwitched:
-		return KernelEventCoreSwitched
-	case hyperdbgsdk.DebuggeePausingReasonDebuggeeProcessSwitched:
-		return KernelEventProcessSwitched
-	case hyperdbgsdk.DebuggeePausingReasonDebuggeeThreadSwitched:
-		return KernelEventThreadSwitched
-	case hyperdbgsdk.DebuggeePausingReasonDebuggeeCommandExecutionFinished:
-		return KernelEventCommandFinished
-	case hyperdbgsdk.DebuggeePausingReasonDebuggeeEventTriggered:
-		return KernelEventTriggered
-	case hyperdbgsdk.DebuggeePausingReasonDebuggeeStartingModuleLoaded:
-		return KernelEventStartingModuleLoaded
-	case hyperdbgsdk.DebuggeePausingReasonDebuggeeGeneralDebugBreak:
-		return KernelEventGeneralDebugBreak
-	case hyperdbgsdk.DebuggeePausingReasonDebuggeeGeneralThreadIntercepted:
-		return KernelEventGeneralThreadIntercepted
-	case hyperdbgsdk.DebuggeePausingReasonHardwareBasedDebuggeeGeneralBreak:
-		return KernelEventHardwareBasedGeneralBreak
-	default:
-		return KernelEventUnknown
-	}
-}
+// KernelEvent 直接使用 SDK 绑定 hyperdbgsdk.DEBUGGEE_PAUSING_REASON。
+type KernelEvent = hyperdbgsdk.DEBUGGEE_PAUSING_REASON
 
 // KernelPausedPacket is the unit the listener consumes. The producer (typically
 // a transport-reading goroutine) parses the wire bytes into Header + Payload
@@ -409,16 +329,16 @@ func (l *KernelListener) handlePausedAndCurrentInstruction(p KernelPausedPacket)
 	copy(instr[:], pkt.InstructionBytesOnRip[:])
 	l.state.SetCurrentRunningInstruction(instr, pkt.IsProcessorOn32BitMode)
 
-	ev := fromPausingReason(pkt.PausingReason)
+	ev := pkt.PausingReason
 
 	// Print the pre-disassembly context messages. Mirrors the first switch in
 	// the C++ case arm.
 	switch ev {
-	case KernelEventBreakpointHit:
+	case hyperdbgsdk.DebuggeePausingReasonDebuggeeSoftwareBreakpointHit:
 		if pkt.EventTag != 0 {
 			l.printf("breakpoint 0x%x hit\n", pkt.EventTag)
 		}
-	case KernelEventTriggered:
+	case hyperdbgsdk.DebuggeePausingReasonDebuggeeEventTriggered:
 		if pkt.EventTag != 0 {
 			if pkt.EventCallingStage == hyperdbgsdk.VmmCallbackCallingStagePostEventEmulation {
 				l.printf("event 0x%x triggered (post)\n", pkt.EventTag-DebuggerEventTagStartSeed)
@@ -426,11 +346,11 @@ func (l *KernelListener) handlePausedAndCurrentInstruction(p KernelPausedPacket)
 				l.printf("event 0x%x triggered (pre)\n", pkt.EventTag-DebuggerEventTagStartSeed)
 			}
 		}
-	case KernelEventProcessSwitched:
+	case hyperdbgsdk.DebuggeePausingReasonDebuggeeProcessSwitched:
 		l.printf("switched to the specified process\n")
-	case KernelEventThreadSwitched:
+	case hyperdbgsdk.DebuggeePausingReasonDebuggeeThreadSwitched:
 		l.printf("switched to the specified thread\n")
-	case KernelEventStartingModuleLoaded:
+	case hyperdbgsdk.DebuggeePausingReasonDebuggeeStartingModuleLoaded:
 		l.printf("the target module is loaded and a breakpoint is set to the entrypoint\n")
 		l.printf("press 'g' to reach to the entrypoint of the main module...\n")
 	}
@@ -461,26 +381,26 @@ func (l *KernelListener) handlePausedAndCurrentInstruction(p KernelPausedPacket)
 // DEBUGGEE_PAUSED_AND_CURRENT_INSTRUCTION case arm.
 func (l *KernelListener) signalPauseSync(ev KernelEvent) {
 	switch ev {
-	case KernelEventBreakpointHit,
-		KernelEventHardwareDebugRegisterHit,
-		KernelEventTriggered,
-		KernelEventSingleStep,
-		KernelEventProcessSwitched,
-		KernelEventThreadSwitched,
-		KernelEventTrackingStep,
-		KernelEventStartingModuleLoaded,
-		KernelEventGeneralDebugBreak,
-		KernelEventGeneralThreadIntercepted,
-		KernelEventHardwareBasedGeneralBreak:
+	case hyperdbgsdk.DebuggeePausingReasonDebuggeeSoftwareBreakpointHit,
+		hyperdbgsdk.DebuggeePausingReasonDebuggeeHardwareDebugRegisterHit,
+		hyperdbgsdk.DebuggeePausingReasonDebuggeeEventTriggered,
+		hyperdbgsdk.DebuggeePausingReasonDebuggeeStepped,
+		hyperdbgsdk.DebuggeePausingReasonDebuggeeProcessSwitched,
+		hyperdbgsdk.DebuggeePausingReasonDebuggeeThreadSwitched,
+		hyperdbgsdk.DebuggeePausingReasonDebuggeeTrackingStepped,
+		hyperdbgsdk.DebuggeePausingReasonDebuggeeStartingModuleLoaded,
+		hyperdbgsdk.DebuggeePausingReasonDebuggeeGeneralDebugBreak,
+		hyperdbgsdk.DebuggeePausingReasonDebuggeeGeneralThreadIntercepted,
+		hyperdbgsdk.DebuggeePausingReasonHardwareBasedDebuggeeGeneralBreak:
 		l.state.ReceivedKernelResponse(SyncObjectIsDebuggerRunning)
-	case KernelEventCoreSwitched:
+	case hyperdbgsdk.DebuggeePausingReasonDebuggeeCoreSwitched:
 		l.state.ReceivedKernelResponse(SyncObjectCoreSwitchingResult)
-	case KernelEventCommandFinished:
+	case hyperdbgsdk.DebuggeePausingReasonDebuggeeCommandExecutionFinished:
 		l.printf("\n")
 		l.state.ReceivedKernelResponse(SyncObjectDebuggeeFinishedCommandExecution)
-	case KernelEventRequestFromDebugger:
+	case hyperdbgsdk.DebuggeePausingReasonRequestFromDebugger:
 		l.state.ReceivedKernelResponse(SyncObjectPausedDebuggeeDetails)
-	case KernelEventPaused:
+	case hyperdbgsdk.DebuggeePausingReasonPause:
 		// Nothing — the pause was user-triggered and no command is waiting.
 		// The interactive loop polls IsDebuggeeRunning() instead.
 	default:
@@ -497,7 +417,7 @@ func (l *KernelListener) handleChangeCoreResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGEE_CHANGE_CORE_PACKET
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.Result == DebuggerOperationWasSuccessful {
+	if pkt.Result == uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		l.printf("current operating core changed to 0x%x\n", pkt.NewCore)
 	} else {
 		l.printf("err, change-core failed with error 0x%x\n", pkt.Result)
@@ -514,7 +434,7 @@ func (l *KernelListener) handleChangeProcessResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_PACKET
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.Result == DebuggerOperationWasSuccessful {
+	if pkt.Result == uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		switch pkt.ActionType {
 		case hyperdbgsdk.DebuggeeDetailsAndSwitchProcessGetProcessDetails:
 			l.printf("process id: %x\nprocess (_EPROCESS): %s\nprocess name (16-Byte): %s\n",
@@ -539,7 +459,7 @@ func (l *KernelListener) handleChangeThreadResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.Result == DebuggerOperationWasSuccessful {
+	if pkt.Result == uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		switch pkt.ActionType {
 		case hyperdbgsdk.DebuggeeDetailsAndSwitchThreadGetThreadDetails:
 			l.printf("thread id: %x (pid: %x)\nthread (_ETHREAD): %s\nprocess (_EPROCESS): %s\nprocess name (16-Byte): %s\n",
@@ -565,7 +485,7 @@ func (l *KernelListener) handleSearchQueryResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGEE_RESULT_OF_SEARCH_PACKET
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.Result == DebuggerOperationWasSuccessful {
+	if pkt.Result == uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		if pkt.CountOfResults == 0 {
 			l.printf("not found\n")
 		}
@@ -584,7 +504,7 @@ func (l *KernelListener) handleFlushResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGER_FLUSH_LOGGING_BUFFERS
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.KernelStatus == DebuggerOperationWasSuccessful {
+	if pkt.KernelStatus == uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		l.printf("flushing buffers was successful, total %d messages were cleared.\n",
 			pkt.CountOfMessagesThatSetAsReadFromVmxNonRoot+pkt.CountOfMessagesThatSetAsReadFromVmxRoot)
 	} else {
@@ -602,7 +522,7 @@ func (l *KernelListener) handleCpuidResult(p KernelPausedPacket) {
 	// first uint32 of every result packet is KernelStatus in the C++ structs).
 	if len(p.Payload) >= 4 {
 		ks := binary.LittleEndian.Uint32(p.Payload[:4])
-		if ks != DebuggerOperationWasSuccessful {
+		if ks != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 			l.printf("err, cpuid failed with error 0x%x\n", ks)
 		}
 	}
@@ -620,7 +540,7 @@ func (l *KernelListener) handleCallstackResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGER_CALLSTACK_REQUEST
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.KernelStatus != DebuggerOperationWasSuccessful {
+	if pkt.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		l.printf("err, callstack failed with error 0x%x\n", pkt.KernelStatus)
 	}
 	l.state.ReceivedKernelResponse(SyncObjectCallstackResult)
@@ -635,7 +555,7 @@ func (l *KernelListener) handleTestQueryResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGER_DEBUGGER_TEST_QUERY_BUFFER
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.KernelStatus == DebuggerOperationWasSuccessful {
+	if pkt.KernelStatus == uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		switch pkt.RequestType {
 		case hyperdbgsdk.TestBreakpointTurnOffBps:
 			l.printf("breakpoint interception (#BP) is deactivated\nfrom now, the breakpoints will be re-injected into the guest debuggee\n")
@@ -661,7 +581,7 @@ func (l *KernelListener) handleScriptResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGEE_SCRIPT_PACKET
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.Result != DebuggerOperationWasSuccessful {
+	if pkt.Result != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		l.printf("err, script failed with error 0x%x\n", pkt.Result)
 	}
 	if pkt.IsFormat {
@@ -717,7 +637,7 @@ func (l *KernelListener) handleQueryAndModifyEventResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGER_MODIFY_EVENTS
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.KernelStatus != uint64(DebuggerOperationWasSuccessful) {
+	if pkt.KernelStatus != uint64(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		l.printf("err, query-modify-event failed with error 0x%x\n", uint32(pkt.KernelStatus))
 	} else if pkt.TypeOfAction == hyperdbgsdk.DebuggerModifyEventsQueryState {
 		l.state.SetSharedEventStatus(pkt.IsEnabled)
@@ -736,7 +656,7 @@ func (l *KernelListener) handleSymbolReloadFinished(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGEE_SYMBOL_UPDATE_RESULT
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.KernelStatus != uint64(DebuggerOperationWasSuccessful) {
+	if pkt.KernelStatus != uint64(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		l.printf("err, symbol reload failed with error 0x%x\n", uint32(pkt.KernelStatus))
 	}
 	l.state.ReceivedKernelResponse(SyncObjectSymbolReload)
@@ -787,7 +707,7 @@ func (l *KernelListener) handleBpResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGEE_BP_PACKET
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.Result != DebuggerOperationWasSuccessful {
+	if pkt.Result != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		l.printf("err, bp failed with error 0x%x\n", pkt.Result)
 	}
 	l.state.ReceivedKernelResponse(SyncObjectBp)
@@ -802,7 +722,7 @@ func (l *KernelListener) handleShortCircuitingResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGER_SHORT_CIRCUITING_EVENT
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.KernelStatus == uint64(DebuggerOperationWasSuccessful) {
+	if pkt.KernelStatus == uint64(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		state := "'off'"
 		if pkt.IsShortCircuiting {
 			state = "'on'"
@@ -825,7 +745,7 @@ func (l *KernelListener) handlePteResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.KernelStatus != DebuggerOperationWasSuccessful {
+	if pkt.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		l.printf("err, pte query failed with error 0x%x\n", pkt.KernelStatus)
 	}
 	l.state.ReceivedKernelResponse(SyncObjectPteResult)
@@ -840,7 +760,7 @@ func (l *KernelListener) handlePageInResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGER_PAGE_IN_REQUEST
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.KernelStatus == DebuggerOperationWasSuccessful {
+	if pkt.KernelStatus == uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		l.printf("the page-fault is delivered to the target thread\npress 'g' to continue debuggee (the current thread will execute ONLY one instruction and will be halted again)...\n")
 	} else {
 		l.printf("err, page-in failed with error 0x%x\n", pkt.KernelStatus)
@@ -857,7 +777,7 @@ func (l *KernelListener) handleVa2paPa2vaResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGER_VA2PA_AND_PA2VA_COMMANDS
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.KernelStatus == DebuggerOperationWasSuccessful {
+	if pkt.KernelStatus == uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		if pkt.IsVirtual2Physical {
 			l.printf("%llx\n", pkt.PhysicalAddress)
 		} else {
@@ -878,7 +798,7 @@ func (l *KernelListener) handleListOrModifyBpResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGEE_BP_LIST_OR_MODIFY_PACKET
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.Result != DebuggerOperationWasSuccessful {
+	if pkt.Result != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		l.printf("err, list-modify-bp failed with error 0x%x\n", pkt.Result)
 	}
 	l.state.ReceivedKernelResponse(SyncObjectListOrModifyBreakpoints)
@@ -896,7 +816,7 @@ func (l *KernelListener) handlePcitreeResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.KernelStatus != DebuggerOperationWasSuccessful {
+	if pkt.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		l.printf("err, pcitree failed with error 0x%x\n", pkt.KernelStatus)
 	}
 	l.state.ReceivedKernelResponse(SyncObjectPcitreeResult)
@@ -913,7 +833,7 @@ func (l *KernelListener) handlePcidevinfoResult(p KernelPausedPacket) {
 	}
 	var pkt hyperdbgsdk.DEBUGGEE_PCIDEVINFO_REQUEST_RESPONSE_PACKET
 	bytesIntoStruct(unsafe.Pointer(&pkt), p.Payload, unsafe.Sizeof(pkt))
-	if pkt.KernelStatus != DebuggerOperationWasSuccessful {
+	if pkt.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		l.printf("err, pcidevinfo failed with error 0x%x\n", pkt.KernelStatus)
 	}
 	l.state.ReceivedKernelResponse(SyncObjectPcidevinfoResult)

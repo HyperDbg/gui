@@ -1,19 +1,17 @@
 // Package core — ud_commands.go
 //
-// 用户态调试器命令（User-Debugger Commands）：通过 IOCTL_CODE_SEND_USER_DEBUGGER_COMMANDS
+// 用户态调试器命令（User-Debugger Commands）：通过 hyperdbgsdk.IoctlSendUserDebuggerCommands
 // 向内核发送 ReadRegisters / RegularStep 指令。
 //
 // 对应 C++ libhyperdbg 的 UdCommandReadRegisters / UdCommandStepGeneralCommand 路径。
 package core
 
 import (
-	"encoding/binary"
 	"fmt"
 	"strings"
 	"time"
 	"unsafe"
 
-	"github.com/ddkwork/golibrary/byteslice"
 	"github.com/ddkwork/hyperdbgsdk"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/misc"
@@ -39,9 +37,8 @@ const guestRegsSize = unsafe.Sizeof(hyperdbgsdk.GUEST_REGS{})
 // extraRegsSize 是 GUEST_EXTRA_REGISTERS 的字节大小。
 const extraRegsSize = unsafe.Sizeof(hyperdbgsdk.GUEST_EXTRA_REGISTERS{})
 
-// DEBUGGEE_SHOW_ALL_REGISTERS 对应 C 宏 DEBUGGEE_SHOW_ALL_REGISTERS = 0xFFFFFFFF。
-// 设置为 RegisterId 时，内核一次性返回全部通用寄存器 + 扩展寄存器。
-const debuggeeshAllRegisters uint32 = 0xFFFFFFFF
+// DebuggeeShowAllRegisters 对应 C 宏 DEBUGGEE_SHOW_ALL_REGISTERS = 0xFFFFFFFF。
+// SDK 已绑定: hyperdbgsdk.DebuggeeShowAllRegisters。
 
 // ReadRegisters 读取当前暂停的调试目标的全部通用寄存器 + RIP + RFLAGS。
 //
@@ -61,23 +58,31 @@ func (d *Debugger) ReadRegisters() (regs hyperdbgsdk.GUEST_REGS, rip uint64, rfl
 	if d.processToken == 0 {
 		return regs, 0, 0, fmt.Errorf("ReadRegisters: no process attached")
 	}
+	if d.pausedThreadId == 0 {
+		return regs, 0, 0, fmt.Errorf("ReadRegisters: no paused thread (wait for PAUSED or call Pause)")
+	}
 
 	// 构建 OptionalBuffer: [DEBUGGEE_REGISTER_READ_DESCRIPTION][GUEST_REGS][GUEST_EXTRA_REGISTERS]
 	optBufSize := regDescSize + guestRegsSize + extraRegsSize
 	optBuf := make([]byte, optBufSize)
 	desc := (*hyperdbgsdk.DEBUGGEE_REGISTER_READ_DESCRIPTION)(unsafe.Pointer(&optBuf[0]))
-	desc.RegisterId = debuggeeshAllRegisters
+	desc.RegisterId = hyperdbgsdk.DebuggeeShowAllRegisters
 
 	// 构建 IOCTL packet
 	pkt := hyperdbgsdk.DEBUGGER_UD_COMMAND_PACKET{
 		UdAction: hyperdbgsdk.DEBUGGER_UD_COMMAND_ACTION{
 			ActionType:     hyperdbgsdk.DebuggerUdCommandActionTypeReadRegisters,
-			OptionalParam1: uint64(debuggeeshAllRegisters), // C: RegDes->RegisterId
+			OptionalParam1: uint64(hyperdbgsdk.DebuggeeShowAllRegisters), // C: RegDes->RegisterId
 		},
 		ProcessDebuggingDetailToken: d.processToken,
-		// ApplyToAllPausedThreads=true：不指定具体线程，让内核对所有暂停线程
-		// 应用命令。C CLI 传具体 ThreadId，但我们 StartProcess 后只有主线程暂停。
-		ApplyToAllPausedThreads: true,
+		// 镜像 C++ r.cpp:221 → ud.cpp:1160-1166 UdSendReadRegisterToUserDebugger:
+		// 传具体 active ThreadId + ApplyToAllPausedThreads=FALSE。
+		// 不要用 ApplyToAllPausedThreads=true——调试目标常有多个暂停线程
+		// （其它线程被 debug 拦截时也会发 PAUSED 包），内核遍历所有暂停
+		// 线程后输出缓冲区留下的是"最后一个被处理线程"的寄存器，导致
+		// 读到的 RIP/寄存器属于另一个线程。
+		TargetThreadId:          d.pausedThreadId,
+		ApplyToAllPausedThreads: false,
 		WaitForEventCompletion:  true,
 	}
 
@@ -88,19 +93,19 @@ func (d *Debugger) ReadRegisters() (regs hyperdbgsdk.GUEST_REGS, rip uint64, rfl
 	copy(buf[0:], pktBytes)
 	copy(buf[udPacketSize:], optBuf)
 
-	if _, err = d.device.Ioctl(comm.IOCTL_CODE_SEND_USER_DEBUGGER_COMMANDS, buf, buf); err != nil {
+	if _, err = d.device.Ioctl(hyperdbgsdk.IoctlSendUserDebuggerCommands, buf, buf); err != nil {
 		return regs, 0, 0, fmt.Errorf("ReadRegisters: IOCTL failed: %w", err)
 	}
 
 	// 检查 packet Result
 	outPkt := (*hyperdbgsdk.DEBUGGER_UD_COMMAND_PACKET)(unsafe.Pointer(&buf[0]))
-	if outPkt.Result != DebuggerOperationWasSuccessful {
+	if outPkt.Result != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return regs, 0, 0, fmt.Errorf("ReadRegisters: kernel error (Result=0x%X)", outPkt.Result)
 	}
 
 	// 检查 DEBUGGEE_REGISTER_READ_DESCRIPTION.KernelStatus
 	outDesc := (*hyperdbgsdk.DEBUGGEE_REGISTER_READ_DESCRIPTION)(unsafe.Pointer(&buf[udPacketSize]))
-	if outDesc.KernelStatus != DebuggerOperationWasSuccessful {
+	if outDesc.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return regs, 0, 0, fmt.Errorf("ReadRegisters: kernel status error (0x%X)", outDesc.KernelStatus)
 	}
 
@@ -121,28 +126,19 @@ func (d *Debugger) ReadRegisters() (regs hyperdbgsdk.GUEST_REGS, rip uint64, rfl
 	return regs, rip, rflags, nil
 }
 
-// DEBUGGER_REMOTE_STEPPING_REQUEST 枚举值（RequestStructures.h:1044）。
-// OptionalParam1 传给 UdStepInstructions 决定步入/步过。
-const (
-	stepRequestStepIn   uint64 = 0 // DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_IN
-	stepRequestStepOver uint64 = 3 // DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_OVER
-)
-
 // maxInstructionLength 是 x86-64 单条指令的最大长度（15 字节）。
 const maxInstructionLength = 15
 
 // Step 执行单步步入。
 //
-// 镜像 C++ UdSendStepPacketToDebuggee(StepType=DEBUGGER_REMOTE_STEPPING_REQUEST_STEP_IN)
-// （ud.cpp:1255）。C++ 对 STEP_IN 不检查 IsCall，直接传 IsCall=FALSE、CallLen=0。
+// 镜像 C++ SteppingRegularStepIn()（steppings.cpp:80）→
+// UdSendStepPacketToDebuggee(Token, ThreadId, STEP_IN)（ud.cpp:1255）。
+// C++ 对 STEP_IN: IsCall=FALSE, CallLen=0。
 // 内核 UdStepInstructions 对 STEP_IN 调 TracingRegularStepInInstruction()
-// （Tracing.c:135）→ VmFuncSetRflagTrapFlag(TRUE) 设 RFLAGS.TF → Continue →
+// （Tracing.c:112）→ VmFuncSetRflagTrapFlag(TRUE) 设 TF → Continue →
 // 下条指令触发 #DB → 线程重新暂停 → 内核发 DEBUGGEE_UD_PAUSED_PACKET。
-//
-// IOCTL 用 WaitForEventCompletion=FALSE（与 C++ UdSendCommand 一致），
-// 立即返回，随后等 pauseEvent（对应 C++ DbgWaitForUserResponse）。
 func (d *Debugger) Step() error {
-	return d.stepImpl(stepRequestStepIn, false, 0)
+	return d.stepImpl(uint64(hyperdbgsdk.DebuggerRemoteSteppingRequestStepIn), false, 0)
 }
 
 // StepOver 执行单步步过。
@@ -160,13 +156,13 @@ func (d *Debugger) StepOver() error {
 	if err != nil {
 		isCall, callLen = false, 0
 	}
-	return d.stepImpl(stepRequestStepOver, isCall, callLen)
+	return d.stepImpl(uint64(hyperdbgsdk.DebuggerRemoteSteppingRequestStepOver), isCall, callLen)
 }
 
-// stepImpl 是 Step / StepOver 的共享实现。
+// stepImpl 是 Step / StepOver / StepOut 的共享实现。
 //
-// stepType: stepRequestStepIn 或 stepRequestStepOver。
-// isCall / callLen: 仅 stepOver 且当前指令为 CALL 时有意义。
+// stepType: StepIn / StepOver / StepOverForGu，对应 C++ steppings.cpp 的三个函数。
+// isCall / callLen: 仅 StepOver 且当前指令为 CALL 时有意义（C++ 仅对 STEP_OVER 检查 IsCall）。
 //
 // 流程（镜像 C++ UdSendStepPacketToDebuggee + DbgWaitForUserResponse）：
 //  1. 排空 pauseEvent 旧信号
@@ -178,6 +174,7 @@ func (d *Debugger) StepOver() error {
 //   - STEP_IN: TracingRegularStepInInstruction (设 TF)
 //   - STEP_OVER + IsCall: UdRegularStepOver (设 DR 断点 at LastRip+CallLen)
 //   - STEP_OVER + 非 CALL: TracingRegularStepInInstruction (设 TF)
+//   - STEP_OVER_FOR_GU: UdRegularStepOverForGu
 //
 // WaitForEventCompletion=false 与 C++ UdSendCommand(...,FALSE,...) 一致：
 // IOCTL 立即返回，随后由 pauseEvent 等待 PAUSED 包（对应 DbgWaitForUserResponse）。
@@ -220,7 +217,7 @@ func (d *Debugger) stepImpl(stepType uint64, isCall bool, callLen uint32) error 
 	// 用同一个缓冲区做输入和输出（METHOD_BUFFERED）
 	buf := (*[udPacketSize]byte)(unsafe.Pointer(&pkt))[:]
 
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_SEND_USER_DEBUGGER_COMMANDS, buf, buf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlSendUserDebuggerCommands, buf, buf); err != nil {
 		d.mu.Lock()
 		d.state = StateProcessPaused
 		d.mu.Unlock()
@@ -229,7 +226,7 @@ func (d *Debugger) stepImpl(stepType uint64, isCall bool, callLen uint32) error 
 
 	// 读取 Result
 	outPkt := (*hyperdbgsdk.DEBUGGER_UD_COMMAND_PACKET)(unsafe.Pointer(&buf[0]))
-	if outPkt.Result != DebuggerOperationWasSuccessful {
+	if outPkt.Result != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		d.mu.Lock()
 		d.state = StateProcessPaused
 		d.mu.Unlock()
@@ -318,112 +315,10 @@ func boolToUint64(b bool) uint64 {
 
 // StepOut 执行到当前函数返回（Execute till Return / Step Out）。
 //
-// 实现：读 [RSP] 得到返回地址 → 在返回地址设临时断点（RemoveAfterHit=true）
-// → Continue → 等断点命中的 PAUSED 包。断点命中后内核自动移除。
-//
-// 对应 OllyDbg 的 Ctrl+F9 / x64dbg 的 "执行到返回"。
+// 镜像 C++ SteppingStepOverForGu(FALSE)（steppings.cpp:155）→
+// UdSendStepPacketToDebuggee(Token, ThreadId, STEP_OVER_FOR_GU)（ud.cpp:1255）。
+// C++ 对 STEP_OVER_FOR_GU: IsCall=FALSE, CallLen=0（只有 STEP_OVER 才检查 IsCall）。
+// 内核 UdStepInstructions 对 STEP_OVER_FOR_GU 走 UdRegularStepOverForGu 路径。
 func (d *Debugger) StepOut() error {
-	if d.processToken == 0 {
-		return fmt.Errorf("StepOut: no process attached")
-	}
-
-	// 1. 读寄存器拿 RSP
-	regs, _, _, err := d.ReadRegisters()
-	if err != nil {
-		return fmt.Errorf("StepOut: read registers: %w", err)
-	}
-	rsp := regs.Rsp
-	if rsp == 0 {
-		return fmt.Errorf("StepOut: RSP=0")
-	}
-
-	// 2. 读 [RSP] 8 字节 = 返回地址
-	d.mu.Lock()
-	dev := d.device
-	pid := d.processPid
-	pe := d.pauseEvent
-	d.mu.Unlock()
-	retAddr, _, err := readmem.ReadMemory(dev, rsp, pid, 8,
-		hyperdbgsdk.DebuggerReadVirtualAddress, hyperdbgsdk.ReadFromKernel, false)
-	if err != nil || len(retAddr) < 8 {
-		return fmt.Errorf("StepOut: read return address: %w", err)
-	}
-	returnAddress := binary.LittleEndian.Uint64(retAddr[:8])
-	if returnAddress == 0 {
-		return fmt.Errorf("StepOut: return address is 0 (not in a call frame?)")
-	}
-
-	// 3. 在返回地址设临时断点（RemoveAfterHit=true）
-	tag, err := d.bpSetTemporary(returnAddress)
-	if err != nil {
-		return fmt.Errorf("StepOut: set temp breakpoint at 0x%X: %w", returnAddress, err)
-	}
-	// 保险：即使命中后内核自动移除，defer 也尝试 clear（已移除则 no-op）
-	defer func() { _ = d.BreakpointClear(tag) }()
-
-	// 4. Drain stale pauseEvent, Continue, wait for PAUSED
-	d.mu.Lock()
-	if d.pauseEvent != nil {
-		select {
-		case <-d.pauseEvent:
-		default:
-		}
-	}
-	d.mu.Unlock()
-
-	if err := continueProcess(dev, d.processToken); err != nil {
-		return fmt.Errorf("StepOut: continue: %w", err)
-	}
-	d.mu.Lock()
-	d.state = StateProcessRunning
-	d.mu.Unlock()
-
-	if pe == nil {
-		return nil // no MessagePump — caller polls
-	}
-
-	select {
-	case <-pe:
-		d.mu.Lock()
-		d.state = StateProcessPaused
-		d.mu.Unlock()
-		return nil
-	case <-time.After(5 * time.Second):
-		// 超时恢复：强制 Pause
-		if perr := pauseProcess(dev, d.processToken); perr != nil && perr != ErrAlreadyPaused {
-			return fmt.Errorf("StepOut: timeout, recovery Pause failed: %w", perr)
-		}
-		select {
-		case <-pe:
-			d.mu.Lock()
-			d.state = StateProcessPaused
-			d.mu.Unlock()
-			return nil
-		case <-time.After(5 * time.Second):
-			return fmt.Errorf("StepOut: timeout waiting for return breakpoint")
-		}
-	}
-}
-
-// bpSetTemporary 在 addr 设一个命中后自动移除的软件断点，返回 tag。
-func (d *Debugger) bpSetTemporary(addr uint64) (uint64, error) {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-	if d.state < StateVmmLoaded {
-		return 0, fmt.Errorf("bpSetTemporary: VMM not loaded")
-	}
-	pkt := hyperdbgsdk.DEBUGGEE_BP_PACKET{
-		Address:           addr,
-		Pid:               0,
-		Tid:               0,
-		Core:              0xFFFFFFFF,
-		RemoveAfterHit:    true, // 关键：命中后内核自动移除
-		CheckForCallbacks: true,
-	}
-	reqBuf := byteslice.FromStruct(&pkt)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_SET_BREAKPOINT_USER_DEBUGGER, reqBuf, reqBuf); err != nil {
-		return 0, fmt.Errorf("bpSetTemporary: IOCTL failed: %w", err)
-	}
-	pkt = *byteslice.ToStruct[hyperdbgsdk.DEBUGGEE_BP_PACKET](reqBuf)
-	return uint64(pkt.Result), nil
+	return d.stepImpl(uint64(hyperdbgsdk.DebuggerRemoteSteppingRequestStepOverForGu), false, 0)
 }

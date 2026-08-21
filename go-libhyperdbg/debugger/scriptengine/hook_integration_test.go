@@ -11,10 +11,6 @@ import (
 
 const driverPath = `C:\Users\Administrator\AppData\Local\hyperdbg\hyperkd.sys`
 
-// debuggerOperationWasSuccessful is 0xFFFFFFFF per
-// HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h.
-const debuggerOperationWasSuccessful uint32 = 0xFFFFFFFF
-
 // initVmmRequest mirrors DEBUGGER_INIT_VMM_PACKET.
 type initVmmRequest struct {
 	KernelStatus uint32
@@ -29,7 +25,7 @@ func clearEvent(t *testing.T, dev *comm.Device, tag uint64) {
 	mod.TypeOfAction = hyperdbgsdk.DebuggerModifyEventsClear
 	modSize := uint32(unsafe.Sizeof(mod))
 	if _, err := dev.IoctlStruct(
-		comm.IOCTL_CODE_DEBUGGER_MODIFY_EVENTS,
+		hyperdbgsdk.IoctlDebuggerModifyEvents,
 		unsafe.Pointer(&mod), unsafe.Pointer(&mod), modSize, modSize); err != nil {
 		t.Logf("best-effort clearEvent(tag=%d) failed: %v", tag, err)
 	}
@@ -53,15 +49,15 @@ func TestEptHook_Register(t *testing.T) {
 
 	var vmmReq initVmmRequest
 	vmmSize := uint32(unsafe.Sizeof(vmmReq))
-	if _, err := dev.IoctlStruct(comm.IOCTL_CODE_INIT_VMM,
+	if _, err := dev.IoctlStruct(hyperdbgsdk.IoctlInitVmm,
 		unsafe.Pointer(&vmmReq), unsafe.Pointer(&vmmReq), vmmSize, vmmSize); err != nil {
 		t.Skipf("IOCTL_INIT_VMM failed: %v", err)
 	}
-	if vmmReq.KernelStatus != debuggerOperationWasSuccessful {
+	if vmmReq.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		t.Skipf("VMM init failed (0x%08x); system lacks VT-x", vmmReq.KernelStatus)
 	}
 	t.Cleanup(func() {
-		_, _ = dev.IoctlStruct(comm.IOCTL_CODE_TERMINATE_VMX, nil, nil, 0, 0)
+		_, _ = dev.IoctlStruct(hyperdbgsdk.IoctlTerminateVmx, nil, nil, 0, 0)
 	})
 
 	// 3. 编译 Go 回调并注册 EPT hook

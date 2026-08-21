@@ -42,9 +42,6 @@ type Output interface {
 	Printf(format string, args ...any) error
 }
 
-// DebuggerOperationWasSuccessful mirrors DEBUGGER_OPERATION_WAS_SUCCESSFUL.
-const DebuggerOperationWasSuccessful uint32 = 0xFFFFFFFF
-
 // Handler owns the ucpuid command state. It is bound to one *core.Debugger
 // (for the device handle) and one Output sink.
 //
@@ -174,11 +171,11 @@ func (h *Handler) RequestCpuid(functionId, subFunctionId uint32) error {
 	req.SubFunctionId = subFunctionId
 
 	buf := asBytes(&req)
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_CPUID, buf, buf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlDebuggerCpuid, buf, buf); err != nil {
 		h.out.Printf("ioctl failed with code 0x%x\n", err)
 		return fmt.Errorf("ucpuid: IOCTL_DEBUGGER_CPUID failed: %w", err)
 	}
-	if req.KernelStatus != DebuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		h.out.Printf("Receiving CPUID result was not successful :(\n")
 		return fmt.Errorf("ucpuid: kernel returned status 0x%x", req.KernelStatus)
 	}

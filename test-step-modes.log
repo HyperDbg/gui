@@ -1,0 +1,57 @@
+[1m[95m2026-08-21 21:08:30  Trac         doInit1 │ log_header------------------ key & value ------------------ proc.go:8154
+[0m=== RUN   TestStepModesAll
+    step_integration_test.go:292: debuggee: C:\Windows\system32\notepad.exe
+    step_integration_test.go:327: process started: pid=2220 tid=1936
+    step_integration_test.go:435: Step Into #1: RIP=0x7FFD33DAD60E (pausedRIP=0x7FFD33DAD60E) RSP=0xDF480 RFL=0x10246 stack32=1800000000000000181200000000000000000000000000000000000000000000 disasm="mov eax, 0x7FFE0384" (len=5)
+    step_integration_test.go:435: Step Into #2: RIP=0x7FFD33DAD613 (pausedRIP=0x7FFD33DAD613) RSP=0xDF480 RFL=0x10246 stack32=1800000000000000181200000000000000000000000000000000000000000000 disasm="cmp byte ptr [rax], 0x00" (len=3)
+    step_integration_test.go:435: Step Into #3: RIP=0x7FFD33DAD616 (pausedRIP=0x7FFD33DAD616) RSP=0xDF480 RFL=0x10246 stack32=1800000000000000181200000000000000000000000000000000000000000000 disasm="jz 0x00007FFD33DAD62A" (len=2)
+    step_integration_test.go:437: === Phase 1: Step Into x3 OK ===
+    step_integration_test.go:441: pre-StepOver #1: RIP=0x7FFD33DAD616 (pausedRIP=0x7FFD33DAD616) RSP=0xDF480 RFL=0x10246 stack32=1800000000000000181200000000000000000000000000000000000000000000 disasm="jz 0x00007FFD33DAD62A" (len=2)
+    step_integration_test.go:445: Step Over #1: RIP=0x7FFD33DAD62A (pausedRIP=0x7FFD33DAD62A) RSP=0xDF480 RFL=0x10246 stack32=1800000000000000181200000000000000000000000000000000000000000000 disasm="mov rbx, [rsp+0x40]" (len=5)
+    step_integration_test.go:441: pre-StepOver #2: RIP=0x7FFD33DAD62A (pausedRIP=0x7FFD33DAD62A) RSP=0xDF480 RFL=0x10246 stack32=1800000000000000181200000000000000000000000000000000000000000000 disasm="mov rbx, [rsp+0x40]" (len=5)
+    step_integration_test.go:445: Step Over #2: RIP=0x7FFD33DAD62F (pausedRIP=0x7FFD33DAD62F) RSP=0xDF480 RFL=0x10246 stack32=1800000000000000181200000000000000000000000000000000000000000000 disasm="mov rsi, [rsp+0x48]" (len=5)
+    step_integration_test.go:441: pre-StepOver #3: RIP=0x7FFD33DAD62F (pausedRIP=0x7FFD33DAD62F) RSP=0xDF480 RFL=0x10246 stack32=1800000000000000181200000000000000000000000000000000000000000000 disasm="mov rsi, [rsp+0x48]" (len=5)
+    step_integration_test.go:445: Step Over #3: RIP=0x7FFD33DAD634 (pausedRIP=0x7FFD33DAD634) RSP=0xDF480 RFL=0x10246 stack32=1800000000000000181200000000000000000000000000000000000000000000 disasm="add rsp, 0x30" (len=4)
+    step_integration_test.go:451: === Phase 2: Step Over (non-call) x3 OK ===
+    step_integration_test.go:454: scan: RIP=0x7FFD33DAD634 (pausedRIP=0x7FFD33DAD634) RSP=0xDF480 RFL=0x10246 stack32=1800000000000000181200000000000000000000000000000000000000000000 disasm="add rsp, 0x30" (len=4)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DAD638 (pausedRIP=0x7FFD33DAD638) RSP=0xDF4B0 RFL=0x10202 stack32=00000000000000008503db33fd7f0000c0e74c00000000000000000000000000 disasm="pop rdi" (len=1)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DAD639 (pausedRIP=0x7FFD33DAD639) RSP=0xDF4B8 RFL=0x10202 stack32=8503db33fd7f0000c0e74c000000000000000000000000006814ef33fd7f0000 disasm="ret" (len=1)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DB0385 (pausedRIP=0x7FFD33DB0385) RSP=0xDF4C0 RFL=0x10202 stack32=c0e74c000000000000000000000000006814ef33fd7f0000f800004001000000 disasm="mov eax, r14d" (len=3)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DB0388 (pausedRIP=0x7FFD33DB0388) RSP=0xDF4C0 RFL=0x10202 stack32=c0e74c000000000000000000000000006814ef33fd7f0000f800004001000000 disasm="mov rsi, [rsp+0xC8]" (len=8)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DB0390 (pausedRIP=0x7FFD33DB0390) RSP=0xDF4C0 RFL=0x10202 stack32=c0e74c000000000000000000000000006814ef33fd7f0000f800004001000000 disasm="mov rbx, [rsp+0xD0]" (len=8)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DB0398 (pausedRIP=0x7FFD33DB0398) RSP=0xDF4C0 RFL=0x10202 stack32=c0e74c000000000000000000000000006814ef33fd7f0000f800004001000000 disasm="add rsp, 0x90" (len=7)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DB039F (pausedRIP=0x7FFD33DB039F) RSP=0xDF550 RFL=0x10206 stack32=0000000000000000020000000000000000fa0d000000000000c0270000000000 disasm="pop r15" (len=2)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DB03A1 (pausedRIP=0x7FFD33DB03A1) RSP=0xDF558 RFL=0x10206 stack32=020000000000000000fa0d000000000000c02700000000000000000000000000 disasm="pop r14" (len=2)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DB03A3 (pausedRIP=0x7FFD33DB03A3) RSP=0xDF560 RFL=0x10206 stack32=00fa0d000000000000c02700000000000000000000000000ec03dd33fd7f0000 disasm="pop r12" (len=2)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DB03A5 (pausedRIP=0x7FFD33DB03A5) RSP=0xDF568 RFL=0x10206 stack32=00c02700000000000000000000000000ec03dd33fd7f0000f800004001000000 disasm="pop rdi" (len=1)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DB03A6 (pausedRIP=0x7FFD33DB03A6) RSP=0xDF570 RFL=0x10206 stack32=0000000000000000ec03dd33fd7f0000f8000040010000004090e933fd7f0000 disasm="pop rbp" (len=1)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DB03A7 (pausedRIP=0x7FFD33DB03A7) RSP=0xDF578 RFL=0x10206 stack32=ec03dd33fd7f0000f8000040010000004090e933fd7f0000a0a0eb33fd7f0000 disasm="ret" (len=1)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DD03EC (pausedRIP=0x7FFD33DD03EC) RSP=0xDF580 RFL=0x10206 stack32=f8000040010000004090e933fd7f0000a0a0eb33fd7f0000f800004001000000 disasm="mov [rsp+0x50], eax" (len=4)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DD03F0 (pausedRIP=0x7FFD33DD03F0) RSP=0xDF580 RFL=0x10206 stack32=f8000040010000004090e933fd7f0000a0a0eb33fd7f0000f800004001000000 disasm="test eax, eax" (len=2)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DD03F2 (pausedRIP=0x7FFD33DD03F2) RSP=0xDF580 RFL=0x10246 stack32=f8000040010000004090e933fd7f0000a0a0eb33fd7f0000f800004001000000 disasm="js 0x00007FFD33DCF96A" (len=6)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DD03F8 (pausedRIP=0x7FFD33DD03F8) RSP=0xDF580 RFL=0x10246 stack32=f8000040010000004090e933fd7f0000a0a0eb33fd7f0000f800004001000000 disasm="mov rax, [0x00007FFD33EF1848]" (len=7)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DD03FF (pausedRIP=0x7FFD33DD03FF) RSP=0xDF580 RFL=0x10246 stack32=f8000040010000004090e933fd7f0000a0a0eb33fd7f0000f800004001000000 disasm="mov rcx, [rax+0x98]" (len=7)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DD0406 (pausedRIP=0x7FFD33DD0406) RSP=0xDF580 RFL=0x10246 stack32=f8000040010000004090e933fd7f0000a0a0eb33fd7f0000f800004001000000 disasm="mov dword ptr [rcx+0x38], 0x09" (len=7)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DD040D (pausedRIP=0x7FFD33DD040D) RSP=0xDF580 RFL=0x10246 stack32=f8000040010000004090e933fd7f0000a0a0eb33fd7f0000f800004001000000 disasm="lea rcx, [rsp+0xC0]" (len=8)
+    step_integration_test.go:454: scan: RIP=0x7FFD33DD0415 (pausedRIP=0x7FFD33DD0415) RSP=0xDF580 RFL=0x10246 stack32=f8000040010000004090e933fd7f0000a0a0eb33fd7f0000f800004001000000 disasm="call 0x00007FFD33DB4888" (len=5)
+    step_integration_test.go:459: found CALL at 0x7FFD33DD0415 (next=0x7FFD33DD041A): call 0x00007FFD33DB4888
+    step_integration_test.go:461: pre-StepOver-Call: RIP=0x7FFD33DD0415 (pausedRIP=0x7FFD33DD0415) RSP=0xDF580 RFL=0x10246 stack32=f8000040010000004090e933fd7f0000a0a0eb33fd7f0000f800004001000000 disasm="call 0x00007FFD33DB4888" (len=5)
+    step_integration_test.go:465: Step Over CALL: RIP=0x1400019C0 (pausedRIP=0x1400019C0) RSP=0xDFF58 RFL=0x10247 stack32=b7ccb231fd7f0000000000000000000000000000000000000000000000000000 disasm="sub rsp, 0x28" (len=4)
+    step_integration_test.go:469: Step Over CALL: RIP=0x1400019C0, want callNext=0x7FFD33DD041A (skipped instruction?)
+    step_integration_test.go:472: Step Over CALL: RSP changed 0xDF580 → 0xDFF58 (entered callee?)
+    step_integration_test.go:474: === Phase 3: Step Over CALL OK (RIP=callNext=0x7FFD33DD041A, RSP unchanged) ===
+    step_integration_test.go:477: scan: RIP=0x1400019C0 (pausedRIP=0x1400019C0) RSP=0xDFF58 RFL=0x10247 stack32=b7ccb231fd7f0000000000000000000000000000000000000000000000000000 disasm="sub rsp, 0x28" (len=4)
+    step_integration_test.go:477: scan: RIP=0x1400019C4 (pausedRIP=0x1400019C4) RSP=0xDFF30 RFL=0x10206 stack32=0000000000000000000000000000000000000000000000000000000000000000 disasm="call 0x0000000140001F98" (len=5)
+    step_integration_test.go:482: found second CALL at 0x1400019C4 (next=0x1400019C9): call 0x0000000140001F98
+    step_integration_test.go:488: Step Into CALL: RIP=0x140001F98 (pausedRIP=0x140001F98) RSP=0xDFF28 RFL=0x10206 stack32=c919004001000000000000000000000000000000000000000000000000000000 disasm="mov [rsp+0x18], rbx" (len=5)
+    step_integration_test.go:500: stepped into callee: RIP=0x140001F98, [rsp]=0x1400019C9 (== callNext ✓)
+    step_integration_test.go:506: Step Out: RIP=0x140001F9D (pausedRIP=0x140001F9D) RSP=0xDFF28 RFL=0x10206 stack32=c919004001000000000000000000000000000000000000000000000000000000 disasm="push rbp" (len=1)
+    step_integration_test.go:510: Step Out: RIP=0x140001F9D, want return addr=0x1400019C9
+    step_integration_test.go:513: Step Out: RSP 0xDFF28 not unwound above callee frame (was 0xDFF28, want ≥ 0xDFF30)
+    step_integration_test.go:516: === Phase 4: Step Into CALL + Step Out OK (RIP==retaddr=0x1400019C9, RSP unwound) ===
+    step_integration_test.go:522: Step after Step Out: RIP=0x140001F9E (pausedRIP=0x140001F9E) RSP=0xDFF20 RFL=0x10206 stack32=0000000000000000c91900400100000000000000000000000000000000000000 disasm="mov rbp, rsp" (len=3)
+    step_integration_test.go:524: === TestStepModesAll PASSED: Step Into / Step Over (plain + CALL) / Step Out all verified (regs+stack+disasm) ===
+--- FAIL: TestStepModesAll (1.51s)
+FAIL
+FAIL	github.com/hyperdbg/go-libhyperdbg/debugger/core	1.600s
+FAIL

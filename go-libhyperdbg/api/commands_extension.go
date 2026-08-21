@@ -59,10 +59,6 @@ import (
 	"github.com/ddkwork/hyperdbgsdk"
 )
 
-// allProcesses is DEBUGGER_EVENT_APPLY_TO_ALL_PROCESSES (0xFFFFFFFF) —
-// used as the pid for hooks that apply to every process (matching the
-// default in the C++ InterpretGeneralEventAndActionsFields).
-const allProcesses uint32 = 0xFFFFFFFF
 
 // ============================================================
 // A) 已实装命令的 typed API
@@ -115,7 +111,7 @@ func (d *Debugger) DrHook(callbackSrc string) (uint64, error) {
 func (d *Debugger) EptHook2(hookAddress uint64, callbackSrc string) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.EptHook2(hookAddress, allProcesses, callbackSrc)
+	return d.core.EptHook2(hookAddress, hyperdbgsdk.DebuggerEventApplyToAllProcesses, callbackSrc)
 }
 
 // ExceptionHook 对应 '!exception <vector>'：挂钩异常（#PF/#GP/#UD 等）。
@@ -154,7 +150,7 @@ func (d *Debugger) IoOutHook(port uint16, callbackSrc string) (uint64, error) {
 func (d *Debugger) ModeHook(callbackSrc string) (uint64, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	return d.core.ModeHook(hyperdbgsdk.DebuggerEventModeTypeUserModeAndKernelMode, allProcesses, callbackSrc)
+	return d.core.ModeHook(hyperdbgsdk.DebuggerEventModeTypeUserModeAndKernelMode, hyperdbgsdk.DebuggerEventApplyToAllProcesses, callbackSrc)
 }
 
 // MonitorWrite 对应 '!monitor w <addr> <size> <pid>'：监控内存写入。

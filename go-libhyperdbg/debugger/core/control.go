@@ -28,13 +28,7 @@ import (
 
 	"github.com/ddkwork/golibrary/byteslice"
 	"github.com/ddkwork/hyperdbgsdk"
-	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
 )
-
-// debuggerOperationWasSuccessful is DEBUGGER_OPERATION_WAS_SUCCESSFUL
-// (ErrorCodes.h:23) — the kernel writes this into KernelStatus when an
-// IOCTL completed without error.
-const debuggerOperationWasSuccessful uint32 = 0xFFFFFFFF
 
 // ----------------------------------------------------------------
 // Event management — mirrors events.cpp 'e'/'d'/'c' subcommands.
@@ -55,7 +49,7 @@ func (d *Debugger) modifyEvent(tag uint64, action hyperdbgsdk.DEBUGGER_MODIFY_EV
 	}
 	reqBuf := byteslice.FromStruct(&req)
 	var dummy [256]byte
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_MODIFY_EVENTS, reqBuf, dummy[:]); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerModifyEvents, reqBuf, dummy[:]); err != nil {
 		return fmt.Errorf("modifyEvent(%v, tag=%d): IOCTL failed: %w", action, tag, err)
 	}
 	return nil
@@ -104,12 +98,12 @@ func (d *Debugger) Hide(pid uint32) error {
 		ProcId:                               pid,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_HIDE_AND_UNHIDE_TO_TRANSPARENT_THE_DEBUGGER,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerHideAndUnhideToTransparentTheDebugger,
 		reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Hide: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("Hide: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return nil
@@ -128,12 +122,12 @@ func (d *Debugger) Unhide() error {
 		IsHide: false,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_HIDE_AND_UNHIDE_TO_TRANSPARENT_THE_DEBUGGER,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerHideAndUnhideToTransparentTheDebugger,
 		reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Unhide: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("Unhide: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return nil
@@ -161,12 +155,12 @@ func (d *Debugger) VirtualToPhysical(va uint64, pid uint32) (uint64, error) {
 		IsVirtual2Physical: true,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_VA2PA_AND_PA2VA_COMMANDS,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerVa2paAndPa2vaCommands,
 		reqBuf, reqBuf); err != nil {
 		return 0, fmt.Errorf("Va2Pa: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_VA2PA_AND_PA2VA_COMMANDS](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return 0, fmt.Errorf("Va2Pa: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return req.PhysicalAddress, nil
@@ -188,12 +182,12 @@ func (d *Debugger) PhysicalToVirtual(pa uint64, pid uint32) (uint64, error) {
 		IsVirtual2Physical: false,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_VA2PA_AND_PA2VA_COMMANDS,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerVa2paAndPa2vaCommands,
 		reqBuf, reqBuf); err != nil {
 		return 0, fmt.Errorf("Pa2Va: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_VA2PA_AND_PA2VA_COMMANDS](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return 0, fmt.Errorf("Pa2Va: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return req.VirtualAddress, nil
@@ -219,7 +213,7 @@ func (d *Debugger) PageTableEntry(va uint64, pid uint32) (hyperdbgsdk.DEBUGGER_R
 		ProcessId:      pid,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerReadPageTableEntriesDetails,
 		reqBuf, reqBuf); err != nil {
 		return hyperdbgsdk.DEBUGGER_READ_PAGE_TABLE_ENTRIES_DETAILS{}, fmt.Errorf("Pte: IOCTL failed: %w", err)
 	}
@@ -243,7 +237,7 @@ func (d *Debugger) InterruptDescriptorTable() (hyperdbgsdk.INTERRUPT_DESCRIPTOR_
 	}
 	req := hyperdbgsdk.INTERRUPT_DESCRIPTOR_TABLE_ENTRIES_PACKETS{}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_QUERY_IDT_ENTRY,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlQueryIdtEntry,
 		reqBuf, reqBuf); err != nil {
 		return hyperdbgsdk.INTERRUPT_DESCRIPTOR_TABLE_ENTRIES_PACKETS{}, fmt.Errorf("Idt: IOCTL failed: %w", err)
 	}
@@ -272,12 +266,12 @@ func (d *Debugger) Revision(pid uint32, mode hyperdbgsdk.REVERSING_MACHINE_RECON
 		Type:      typ,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_REQUEST_REV_MACHINE_SERVICE,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlRequestRevMachineService,
 		reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Rev: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.REVERSING_MACHINE_RECONSTRUCT_MEMORY_REQUEST](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("Rev: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return nil
@@ -303,12 +297,12 @@ func (d *Debugger) Prealloc(typ hyperdbgsdk.DEBUGGER_PREALLOC_COMMAND_TYPE, coun
 		Count: count,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_RESERVE_PRE_ALLOCATED_POOLS,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlReservePreAllocatedPools,
 		reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Prealloc: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_PREALLOC_COMMAND](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("Prealloc: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return nil
@@ -329,12 +323,12 @@ func (d *Debugger) Preactivate(typ hyperdbgsdk.DEBUGGER_PREACTIVATE_COMMAND_TYPE
 		Type: typ,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PREACTIVATE_FUNCTIONALITY,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlPreactivateFunctionality,
 		reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Preactivate: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_PREACTIVATE_COMMAND](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("Preactivate: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return nil
@@ -351,7 +345,7 @@ func (d *Debugger) Flush() error {
 	if d.device == nil {
 		return fmt.Errorf("Flush: not connected")
 	}
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_FLUSH_LOGGING_BUFFERS,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerFlushLoggingBuffers,
 		nil, nil); err != nil {
 		return fmt.Errorf("Flush: IOCTL failed: %w", err)
 	}

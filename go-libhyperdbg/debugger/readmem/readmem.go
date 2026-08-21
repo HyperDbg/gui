@@ -17,11 +17,6 @@ import (
 	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
 )
 
-// DebuggerOperationWasSuccessful mirrors DEBUGGER_OPERATION_WAS_SUCCESSFUL
-// (HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h): the driver sets
-// KernelStatus to this value when an IOCTL handler completed without error.
-const DebuggerOperationWasSuccessful uint32 = 0xFFFFFFFF
-
 // ReadMemory issues IOCTL_DEBUGGER_READ_MEMORY to read Size bytes at Address
 // from the debuggee. The caller must supply an open Device (typically owned
 // by core.Debugger).
@@ -50,7 +45,7 @@ func ReadMemory(dev *comm.Device, addr uint64, pid uint32, size uint32, memType 
 	// Output buffer: the response struct plus the read bytes.
 	outBuf := make([]byte, int(pktSize)+int(size))
 
-	returned, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_READ_MEMORY, inBuf, outBuf)
+	returned, err := dev.Ioctl(hyperdbgsdk.IoctlDebuggerReadMemory, inBuf, outBuf)
 	if err != nil {
 		return nil, 0, fmt.Errorf("ReadMemory: IOCTL failed: %w", err)
 	}
@@ -60,7 +55,7 @@ func ReadMemory(dev *comm.Device, addr uint64, pid uint32, size uint32, memType 
 
 	// Re-interpret the first pktSize bytes as the response.
 	resp := (*hyperdbgsdk.DEBUGGER_READ_MEMORY)(unsafe.Pointer(&outBuf[0]))
-	if resp.KernelStatus != DebuggerOperationWasSuccessful {
+	if resp.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return nil, 0, fmt.Errorf("ReadMemory: driver returned status 0x%08x", resp.KernelStatus)
 	}
 
@@ -114,7 +109,7 @@ func WriteMemory(dev *comm.Device, addr uint64, pid uint32, data []byte, memType
 	copy(inBuf[hdrSize:], data)
 
 	outBuf := make([]byte, hdrSize)
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_EDIT_MEMORY, inBuf, outBuf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlDebuggerEditMemory, inBuf, outBuf); err != nil {
 		return 0, fmt.Errorf("WriteMemory: IOCTL failed: %w", err)
 	}
 	resp := (*hyperdbgsdk.DEBUGGER_EDIT_MEMORY)(unsafe.Pointer(&outBuf[0]))

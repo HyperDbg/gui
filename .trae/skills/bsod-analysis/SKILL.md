@@ -22,9 +22,13 @@ description: "Analyzes Windows kernel crash dumps (.dmp) with kd.exe and PDB sym
 
 | 项目 | 路径 |
 |------|------|
-| 项目根（CMake 顶层目录） | `d:\ux\examples\ewdk\debuger\SimpleHv\` |
-| .sys 输出 | `<项目根>\Debug\SimpleHv.sys` |
-| .pdb 符号  | `<项目根>\Debug\SimpleHv.pdb` |
+| 项目根（CMake 顶层目录） | `d:\ux\HyperDbgUnified\` |
+| 源码根 | `d:\ux\HyperDbgUnified\HyperDbg\hyperdbg\` |
+| .sys 输出 | `D:\ux\HyperDbgUnified\Debug\hyperkd.sys`（hyperhv 静态链入 hyperkd，栈帧符号统一在 hyperkd） |
+| .pdb 符号  | `D:\ux\HyperDbgUnified\Debug\hyperkd.pdb` |
+
+注意：本项目的崩溃栈里 `hyperkd!Vmx*` 系列函数实际来自 hyperhv 源码（静态链接合并），
+定位源码行时用 PDB 记录的文件路径，源文件在 `hyperhv\code\` 下。
 
 ## 标准分析命令
 
@@ -88,6 +92,27 @@ knL
 | 0x3B | APC_LEVEL 下 PagedPool 分配 |
 | 0x19 | Bad Pool Header，tag 不匹配、double free |
 | 0x101 | CLOCK_WATCHDOG_TIMEOUT，中断被禁用导致 IPI 无响应 |
+| 0x1AA | EXCEPTION_ON_INVALID_STACK：VMX 根模式（VM-exit 处理器、VmmStack）上调用了阻塞型 Windows API（如 `KeGenericCallDpc`），调度器在 VmmStack 上切换线程污染 VM-exit 上下文，vmresume 触发 #UD。特征：故障 CONTEXT 的 RSP 落在 VmmStack、EFlags.IF=1、Dr0/Dr7=0 |
+
+## PDB 与 .sys 匹配验证（dumpbin）
+
+PDB 找不到/不匹配时，先用 dumpbin 看 .sys 的 debug 目录记录的 PDB GUID+Age 和路径：
+
+```powershell
+& "E:\Program Files\Microsoft Visual Studio\18\BuildTools\VC\Tools\MSVC\14.50.35717\bin\Hostx64\x64\dumpbin.exe" /headers "<sys路径>" | Select-String -Pattern "pdb|Debug" -Context 0,2
+```
+
+输出中的 `Format: RSDS, {GUID}, Age, 文件名` 就是该 .sys 编译时期望的 PDB；
+对比 `.pdb` 文件名与修改时间是否是同一次编译产物（同时刻生成即匹配）。
+
+## VMX 项目专项检查清单
+
+崩溃栈涉及 `hyperkd!VmxPerformVmresume` / `vmresume` #UD 时，重点核查：
+
+1. 故障 CONTEXT 的 RSP 是否落在某核 VmmStack（`dt hyperkd!_VIRTUAL_MACHINE_STATE poi(hyperkd!g_GuestState)+i*sizeof(...)` 看 VmmStack 字段）
+2. `ExitReason` / `ExitQualification` / `LastVmexitRip`（崩溃核最后一次 VM-exit 的原因与位置）
+3. `g_ProcessDebuggingDetailsListHead` 走链找 `USERMODE_DEBUGGING_THREAD_DETAILS.UdAction[]`（VMX 根模式里未消费完的用户调试命令）
+4. 代码路径上是否存在任何"会阻塞/调度"的 Windows API（KeGenericCallDpc / KeWaitForSingleObject / ExAllocatePool with PoolQuota 等）被 VMX 根模式调用
 
 ## 输出格式
 

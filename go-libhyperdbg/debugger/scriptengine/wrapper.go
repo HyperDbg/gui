@@ -236,7 +236,7 @@ func (w *Wrapper) RegisterHook(dev *comm.Device, event *hyperdbgsdk.DEBUGGER_GEN
 	eventBuf := byteslice.FromStruct(event)
 	resultSize := unsafe.Sizeof(hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT{})
 	resultBuf := make([]byte, resultSize)
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT, eventBuf, resultBuf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlDebuggerRegisterEvent, eventBuf, resultBuf); err != nil {
 		return 0, fmt.Errorf("%w: REGISTER_EVENT IOCTL: %v", ErrIoctlRegister, err)
 	}
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
@@ -260,7 +260,7 @@ func (w *Wrapper) RegisterHook(dev *comm.Device, event *hyperdbgsdk.DEBUGGER_GEN
 	copy(payload[len(actionBuf):], scriptBytes)
 
 	actionResultBuf := make([]byte, resultSize)
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT, payload, actionResultBuf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlDebuggerAddActionToEvent, payload, actionResultBuf); err != nil {
 		return 0, fmt.Errorf("%w: ADD_ACTION_TO_EVENT IOCTL: %v", ErrIoctlRegister, err)
 	}
 	var actionResult hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT

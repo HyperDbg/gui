@@ -57,9 +57,9 @@ func main() {
 
 	// IOCTL_INIT_VMM
 	vmmBuf := make([]byte, 4)
-	_, _ = dev.Ioctl(comm.IOCTL_CODE_INIT_VMM, vmmBuf, vmmBuf)
+	_, _ = dev.Ioctl(hyperdbgsdk.IoctlInitVmm, vmmBuf, vmmBuf)
 	vmmStatus := *(*uint32)(unsafe.Pointer(&vmmBuf[0]))
-	if vmmStatus != 0xFFFFFFFF {
+	if vmmStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		out, _ := json.Marshal(result{Error: "VMM init failed", InitStatus: fmt.Sprintf("0x%08X", vmmStatus)})
 		fmt.Println(string(out))
 		return
@@ -80,7 +80,7 @@ func main() {
 	ntMinor := *(*uint32)(unsafe.Pointer(&data[4]))
 
 	// TERMINATE_VMX
-	_, _ = dev.Ioctl(comm.IOCTL_CODE_TERMINATE_VMX, nil, nil)
+	_, _ = dev.Ioctl(hyperdbgsdk.IoctlTerminateVmx, nil, nil)
 
 	out, _ := json.Marshal(result{
 		InitStatus:   "0xFFFFFFFF",

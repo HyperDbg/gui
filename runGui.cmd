@@ -1,2 +1,2 @@
-go run .
-go build .
+go run -x .
+go build -x .

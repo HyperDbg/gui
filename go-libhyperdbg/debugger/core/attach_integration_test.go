@@ -40,11 +40,6 @@ import (
 	"golang.org/x/sys/windows"
 )
 
-// debuggerOperationWasSuccessful is now declared in control.go (promoted
-// from the test package to the real package so non-test code can use it).
-// The value is 0xFFFFFFFF per
-// HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h.
-
 // initVmmRequest mirrors DEBUGGER_INIT_VMM_PACKET: a single UINT32
 // KernelStatus field used as both IOCTL input and output (METHOD_BUFFERED
 // aliases the same kernel SystemBuffer for both directions).
@@ -68,7 +63,7 @@ func clearEvent(t *testing.T, dev *comm.Device, tag uint64) {
 	mod.TypeOfAction = hyperdbgsdk.DebuggerModifyEventsClear
 	modSize := uint32(unsafe.Sizeof(mod))
 	if _, err := dev.IoctlStruct(
-		comm.IOCTL_CODE_DEBUGGER_MODIFY_EVENTS,
+		hyperdbgsdk.IoctlDebuggerModifyEvents,
 		unsafe.Pointer(&mod), unsafe.Pointer(&mod), modSize, modSize); err != nil {
 		t.Logf("best-effort clearEvent(tag=%d) failed: %v", tag, err)
 	}
@@ -127,19 +122,19 @@ func TestAttachContinuePause(t *testing.T) {
 	// Best-effort VMX teardown before unloading the driver.
 	t.Cleanup(func() {
 		_, _ = dev.IoctlStruct(
-			comm.IOCTL_CODE_TERMINATE_VMX, nil, nil, 0, 0)
+			hyperdbgsdk.IoctlTerminateVmx, nil, nil, 0, 0)
 		time.Sleep(500 * time.Millisecond)
 	})
 
 	// Step 1: Initialise the VMM.
 	var vmmReq initVmmRequest
 	vmmSize := uint32(unsafe.Sizeof(vmmReq))
-	if _, err := dev.IoctlStruct(comm.IOCTL_CODE_INIT_VMM,
+	if _, err := dev.IoctlStruct(hyperdbgsdk.IoctlInitVmm,
 		unsafe.Pointer(&vmmReq), unsafe.Pointer(&vmmReq), vmmSize, vmmSize); err != nil {
 		t.Skipf("IOCTL_INIT_VMM failed: %v", err)
 	}
 	t.Logf("IOCTL_INIT_VMM: KernelStatus=0x%08x", vmmReq.KernelStatus)
-	if vmmReq.KernelStatus != debuggerOperationWasSuccessful {
+	if vmmReq.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		t.Skipf("VMM init failed (KernelStatus=0x%08x); system likely lacks "+
 			"VT-x / nested-virt support", vmmReq.KernelStatus)
 	}

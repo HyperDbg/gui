@@ -43,15 +43,15 @@ func TestReadMemory_KuserSharedData(t *testing.T) {
 	t.Cleanup(func() { _ = dev.Close() })
 
 	vmmBuf := make([]byte, 4)
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_INIT_VMM, vmmBuf, vmmBuf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlInitVmm, vmmBuf, vmmBuf); err != nil {
 		t.Skipf("IOCTL_INIT_VMM failed: %v", err)
 	}
 	vmmStatus := *(*uint32)(unsafe.Pointer(&vmmBuf[0]))
-	if vmmStatus != DebuggerOperationWasSuccessful {
+	if vmmStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		t.Skipf("VMM init failed (0x%08x); system lacks VT-x", vmmStatus)
 	}
 	t.Cleanup(func() {
-		_, _ = dev.Ioctl(comm.IOCTL_CODE_TERMINATE_VMX, nil, nil)
+		_, _ = dev.Ioctl(hyperdbgsdk.IoctlTerminateVmx, nil, nil)
 	})
 
 	// 3. ReadMemory 读取 KUSER_SHARED_DATA

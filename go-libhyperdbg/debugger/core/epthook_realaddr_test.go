@@ -95,21 +95,21 @@ func TestEptHook_RealAddress(t *testing.T) {
 		}
 		clearBuf := byteslice.FromStruct(&clearAll)
 		var dummy [256]byte
-		_, _ = dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_MODIFY_EVENTS, clearBuf, dummy[:])
+		_, _ = dev.Ioctl(hyperdbgsdk.IoctlDebuggerModifyEvents, clearBuf, dummy[:])
 		_, _ = dev.IoctlStruct(
-			comm.IOCTL_CODE_TERMINATE_VMX, nil, nil, 0, 0)
+			hyperdbgsdk.IoctlTerminateVmx, nil, nil, 0, 0)
 		time.Sleep(2 * time.Second)
 	})
 
 	// Step 1: Initialise the VMM.
 	var vmmReq initVmmRequest
 	vmmSize := uint32(unsafe.Sizeof(vmmReq))
-	if _, err := dev.IoctlStruct(comm.IOCTL_CODE_INIT_VMM,
+	if _, err := dev.IoctlStruct(hyperdbgsdk.IoctlInitVmm,
 		unsafe.Pointer(&vmmReq), unsafe.Pointer(&vmmReq), vmmSize, vmmSize); err != nil {
 		t.Skipf("IOCTL_INIT_VMM failed: %v", err)
 	}
 	t.Logf("IOCTL_INIT_VMM: KernelStatus=0x%08x", vmmReq.KernelStatus)
-	if vmmReq.KernelStatus != debuggerOperationWasSuccessful {
+	if vmmReq.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		t.Skipf("VMM init failed (KernelStatus=0x%08x); system likely lacks "+
 			"VT-x / nested-virt support", vmmReq.KernelStatus)
 	}

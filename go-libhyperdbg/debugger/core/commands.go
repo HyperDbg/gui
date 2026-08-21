@@ -28,7 +28,6 @@ import (
 
 	"github.com/ddkwork/golibrary/byteslice"
 	"github.com/ddkwork/hyperdbgsdk"
-	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/readmem"
 )
 
@@ -49,11 +48,11 @@ func (d *Debugger) Apic() (hyperdbgsdk.DEBUGGER_APIC_REQUEST, error) {
 	}
 	req := hyperdbgsdk.DEBUGGER_APIC_REQUEST{ApicType: hyperdbgsdk.DebuggerApicRequestTypeReadLocalApic}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_ACTIONS_ON_APIC, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlPerformActionsOnApic, reqBuf, reqBuf); err != nil {
 		return hyperdbgsdk.DEBUGGER_APIC_REQUEST{}, fmt.Errorf("Apic: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_APIC_REQUEST](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return hyperdbgsdk.DEBUGGER_APIC_REQUEST{}, fmt.Errorf("Apic: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return req, nil
@@ -71,11 +70,11 @@ func (d *Debugger) IoApic() (hyperdbgsdk.DEBUGGER_APIC_REQUEST, error) {
 	}
 	req := hyperdbgsdk.DEBUGGER_APIC_REQUEST{ApicType: hyperdbgsdk.DebuggerApicRequestTypeReadIoApic}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_ACTIONS_ON_APIC, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlPerformActionsOnApic, reqBuf, reqBuf); err != nil {
 		return hyperdbgsdk.DEBUGGER_APIC_REQUEST{}, fmt.Errorf("Ioapic: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_APIC_REQUEST](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return hyperdbgsdk.DEBUGGER_APIC_REQUEST{}, fmt.Errorf("Ioapic: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return req, nil
@@ -96,11 +95,11 @@ func (d *Debugger) LastBranchRecord() error {
 		LbrOperationType: hyperdbgsdk.HypertraceLbrOperationRequestTypeEnable,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_HYPERTRACE_LBR_OPERATION, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlPerformHypertraceLbrOperation, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Lbr: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.HYPERTRACE_LBR_OPERATION_PACKETS](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("Lbr: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return nil
@@ -122,11 +121,11 @@ func (d *Debugger) LbrDump() error {
 		CoreId: hyperdbgsdk.HypertraceLbrDumpAllCores,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_HYPERTRACE_LBR_DUMP, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlPerformHypertraceLbrDump, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("LbrDump: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.HYPERTRACE_LBR_DUMP_PACKETS](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("LbrDump: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return nil
@@ -146,11 +145,11 @@ func (d *Debugger) ProcessorTrace() error {
 		PtOperationType: hyperdbgsdk.HypertracePtOperationRequestTypeEnable,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_HYPERTRACE_PT_OPERATION, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlPerformHypertracePtOperation, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Pt: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.HYPERTRACE_PT_OPERATION_PACKETS](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("Pt: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return nil
@@ -181,11 +180,11 @@ func (d *Debugger) SmiInterrupt() (hyperdbgsdk.SMI_OPERATION_PACKETS, error) {
 		SmiOperationType: hyperdbgsdk.SmiOperationRequestTypeReadCount,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_SMI_OPERATION, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlPerformSmiOperation, reqBuf, reqBuf); err != nil {
 		return hyperdbgsdk.SMI_OPERATION_PACKETS{}, fmt.Errorf("Smi: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.SMI_OPERATION_PACKETS](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return hyperdbgsdk.SMI_OPERATION_PACKETS{}, fmt.Errorf("Smi: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return req, nil
@@ -204,11 +203,11 @@ func (d *Debugger) PciTree() (hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACK
 	}
 	req := hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET{}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PCIE_ENDPOINT_ENUM, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlPcieEndpointEnum, reqBuf, reqBuf); err != nil {
 		return hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET{}, fmt.Errorf("PciTree: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return hyperdbgsdk.DEBUGGEE_PCITREE_REQUEST_RESPONSE_PACKET{}, fmt.Errorf("PciTree: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return req, nil
@@ -271,11 +270,11 @@ func (d *Debugger) modifyBreakpoint(tag uint64, req hyperdbgsdk.DEBUGGEE_BREAKPO
 		Request:      req,
 	}
 	reqBuf := byteslice.FromStruct(&pkt)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_SET_BREAKPOINT_USER_DEBUGGER, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlSetBreakpointUserDebugger, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("modifyBreakpoint: IOCTL failed: %w", err)
 	}
 	pkt = *byteslice.ToStruct[hyperdbgsdk.DEBUGGEE_BP_LIST_OR_MODIFY_PACKET](reqBuf)
-	if pkt.Result != debuggerOperationWasSuccessful {
+	if pkt.Result != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("modifyBreakpoint: kernel rejected, Result=0x%08X", pkt.Result)
 	}
 	return nil
@@ -325,7 +324,7 @@ func (d *Debugger) BreakpointSet(addr uint64) (uint64, error) {
 		CheckForCallbacks: true,
 	}
 	reqBuf := byteslice.FromStruct(&pkt)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_SET_BREAKPOINT_USER_DEBUGGER, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlSetBreakpointUserDebugger, reqBuf, reqBuf); err != nil {
 		return 0, fmt.Errorf("BpSet: IOCTL failed: %w", err)
 	}
 	pkt = *byteslice.ToStruct[hyperdbgsdk.DEBUGGEE_BP_PACKET](reqBuf)
@@ -349,11 +348,11 @@ func (d *Debugger) Cpu() (hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE, error) {
 	}
 	req := hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE{}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_CPUID, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerCpuid, reqBuf, reqBuf); err != nil {
 		return hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE{}, fmt.Errorf("Cpu: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return hyperdbgsdk.DEBUGGER_CPUID_REQUEST_RESPONSE{}, fmt.Errorf("Cpu: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return req, nil
@@ -416,7 +415,7 @@ func (d *Debugger) ReadMsr(msr uint32) (uint64, error) {
 		ActionType: hyperdbgsdk.DebuggerMsrRead,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_READ_OR_WRITE_MSR, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerReadOrWriteMsr, reqBuf, reqBuf); err != nil {
 		return 0, fmt.Errorf("Rdmsr: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_READ_AND_WRITE_ON_MSR](reqBuf)
@@ -439,7 +438,7 @@ func (d *Debugger) WriteMsr(msr uint32, val uint64) error {
 		Value:      val,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_READ_OR_WRITE_MSR, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerReadOrWriteMsr, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Wrmsr: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_READ_AND_WRITE_ON_MSR](reqBuf)
@@ -483,11 +482,11 @@ func (d *Debugger) Search(addr uint64, size uint32, pattern []byte) ([]uint64, e
 	const maxResults = 256
 	outSize := unsafe.Sizeof(hyperdbgsdk.DEBUGGEE_RESULT_OF_SEARCH_PACKET{}) + uintptr(maxResults)*8
 	outBuf := make([]byte, outSize)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_SEARCH_MEMORY, inBuf, outBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerSearchMemory, inBuf, outBuf); err != nil {
 		return nil, fmt.Errorf("Search: IOCTL failed: %w", err)
 	}
 	resHdr := (*hyperdbgsdk.DEBUGGEE_RESULT_OF_SEARCH_PACKET)(unsafe.Pointer(&outBuf[0]))
-	if resHdr.Result != debuggerOperationWasSuccessful {
+	if resHdr.Result != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return nil, fmt.Errorf("Search: kernel rejected, Result=0x%08X", resHdr.Result)
 	}
 	count := resHdr.CountOfResults
@@ -519,11 +518,11 @@ func (d *Debugger) Test() error {
 	}
 	req := hyperdbgsdk.DEBUGGER_PERFORM_KERNEL_TESTS{}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_PERFORM_KERNEL_SIDE_TESTS, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlPerformKernelSideTests, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Test: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_PERFORM_KERNEL_TESTS](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("Test: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return nil
@@ -571,10 +570,10 @@ func (d *Debugger) Attach(pid uint32) error {
 		Action:                          hyperdbgsdk.DebuggerAttachDetachUserModeProcessActionAttach,
 	}
 	buf := (*[attachDetachRequestSize]byte)(unsafe.Pointer(&pkt))[:]
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS, buf, buf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerAttachDetachUserModeProcess, buf, buf); err != nil {
 		return fmt.Errorf("Attach: IOCTL failed: %w", err)
 	}
-	if pkt.Result != uint64(DebuggerOperationWasSuccessful) {
+	if pkt.Result != uint64(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("Attach: kernel rejected (Result=0x%016X)", pkt.Result)
 	}
 	if pkt.Token == 0 {
@@ -623,11 +622,11 @@ func (d *Debugger) Disconnect() error {
 	}
 	req := hyperdbgsdk.DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL{}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlSendSignalExecutionInDebuggeeFinished, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("Disconnect: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("Disconnect: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return nil
@@ -650,10 +649,10 @@ func (d *Debugger) Kill(pid uint32) error {
 		Token:     d.processToken,
 	}
 	buf := (*[attachDetachRequestSize]byte)(unsafe.Pointer(&pkt))[:]
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS, buf, buf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerAttachDetachUserModeProcess, buf, buf); err != nil {
 		return fmt.Errorf("Kill: IOCTL failed: %w", err)
 	}
-	if pkt.Result != uint64(DebuggerOperationWasSuccessful) {
+	if pkt.Result != uint64(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("Kill: kernel rejected (Result=0x%016X)", pkt.Result)
 	}
 	if d.processToken != 0 {
@@ -681,11 +680,11 @@ func (d *Debugger) PageIn(addr uint64) error {
 		PageFaultErrorCode: 0,
 	}
 	reqBuf := byteslice.FromStruct(&req)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_BRING_PAGES_IN, reqBuf, reqBuf); err != nil {
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerBringPagesIn, reqBuf, reqBuf); err != nil {
 		return fmt.Errorf("PageIn: IOCTL failed: %w", err)
 	}
 	req = *byteslice.ToStruct[hyperdbgsdk.DEBUGGER_PAGE_IN_REQUEST](reqBuf)
-	if req.KernelStatus != debuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("PageIn: kernel rejected, status=0x%08X", req.KernelStatus)
 	}
 	return nil

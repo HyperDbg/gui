@@ -38,33 +38,6 @@ import (
 // Public constants — mirror C++ #defines used by the transparency code.
 // ----------------------------------------------------------------------------
 
-// Transparent-mode evade-mask bits. Mirror TRANSPARENT_EVADE_MASK_* in
-// include/SDK/headers/Constants.h.
-const (
-	EvadeMaskSyscallHook             uint32 = 0x00000001 // TRANSPARENT_EVADE_MASK_SYSCALL_HOOK
-	EvadeMaskCpuid                   uint32 = 0x00000002 // TRANSPARENT_EVADE_MASK_CPUID
-	EvadeMaskMsr                     uint32 = 0x00000004 // TRANSPARENT_EVADE_MASK_MSR
-	EvadeMaskTrapFlag                uint32 = 0x00000008 // TRANSPARENT_EVADE_MASK_TRAP_FLAG
-	EvadeCheckNonLongModeRipOverflow uint32 = 0x00000010 // TRANSPARENT_EVADE_CHECK_NON_LONG_MODE_RIP_OVERFLOW
-
-	// EvadeMaskAll is the bitwise-OR of all evade-mask bits, matching
-	// TRANSPARENT_EVADE_MASK_ALL.
-	EvadeMaskAll uint32 = EvadeMaskSyscallHook | EvadeMaskCpuid | EvadeMaskMsr | EvadeMaskTrapFlag | EvadeCheckNonLongModeRipOverflow
-
-	// EvadeMaskDefault matches TRANSPARENT_EVADE_MASK_DEFAULT (== EvadeMaskAll).
-	EvadeMaskDefault uint32 = EvadeMaskAll
-)
-
-// Kernel status codes returned in DEBUGGER_HIDE_AND_TRANSPARENT_DEBUGGER_MODE.
-// .KernelStatus. Mirror include/SDK/headers/ErrorCodes.h.
-const (
-	// KernelStatusSuccess is DEBUGGER_OPERATION_WAS_SUCCESSFUL (0xFFFFFFFF).
-	KernelStatusSuccess uint32 = 0xFFFFFFFF
-	// KernelStatusUnableToHideOrUnhideDebugger is
-	// DEBUGGER_ERROR_UNABLE_TO_HIDE_OR_UNHIDE_DEBUGGER (0xc0000009).
-	KernelStatusUnableToHideOrUnhideDebugger uint32 = 0xc0000009
-)
-
 // TestCount is the number of samples taken per measurement, matching the C++
 // #define TestCount 1000 in transparency.h.
 const TestCount = 1000
@@ -112,7 +85,7 @@ type HypervisorResult struct {
 
 // SyscallNumberResolver resolves a Windows native syscall number by name (e.g.
 // "NtQuerySystemInformation"). It is used by HideDebuggerEx when the
-// EvadeMaskSyscallHook bit is set, mirroring C++ CommandHideFillSystemCalls
+// hyperdbgsdk.TransparentEvadeMaskSyscallHook bit is set, mirroring C++ CommandHideFillSystemCalls
 // (which uses PeGetSyscallNumber). Callers that want syscall-hook transparency
 // must supply a resolver — typically backed by the pe-parser module — since
 // the transparency package itself has no PE dependency.
@@ -138,7 +111,7 @@ type Transparency struct {
 	rng *GaussianRng // for adding Gaussian noise to simulated CPUID/RDTSC values
 
 	// syscallResolver, if non-nil, is consulted by HideDebuggerEx to fill the
-	// SYSTEM_CALL_NUMBERS_INFORMATION block when EvadeMaskSyscallHook is set.
+	// SYSTEM_CALL_NUMBERS_INFORMATION block when hyperdbgsdk.TransparentEvadeMaskSyscallHook is set.
 	// If nil, HideDebuggerEx returns an error for any request that includes
 	// the syscall-hook bit.
 	syscallResolver SyscallNumberResolver
@@ -179,7 +152,7 @@ func (t *Transparency) SetRng(rng *GaussianRng) {
 }
 
 // SetSyscallResolver installs a syscall-number resolver for use by
-// HideDebuggerEx when the EvadeMaskSyscallHook bit is set. Pass nil to
+// HideDebuggerEx when the hyperdbgsdk.TransparentEvadeMaskSyscallHook bit is set. Pass nil to
 // disable syscall-hook transparency.
 func (t *Transparency) SetSyscallResolver(r SyscallNumberResolver) {
 	t.mu.Lock()
@@ -320,14 +293,14 @@ func (t *Transparency) TransparentHypervisor() (HypervisorResult, error) {
 // HyperDbgEnableTransparentMode(ProcessId, NULL, TRUE) with the default evade
 // mask (TRANSPARENT_EVADE_MASK_DEFAULT).
 func (t *Transparency) HideDebugger(processID uint32) error {
-	return t.HideDebuggerEx(processID, "", true, EvadeMaskDefault)
+	return t.HideDebuggerEx(processID, "", true, hyperdbgsdk.TransparentEvadeMaskDefault)
 }
 
 // HideDebuggerByName enables transparent mode for processes matching the
 // given name. Mirrors C++ HyperDbgEnableTransparentMode(NULL, name, FALSE)
 // with the default evade mask.
 func (t *Transparency) HideDebuggerByName(processName string) error {
-	return t.HideDebuggerEx(0, processName, false, EvadeMaskDefault)
+	return t.HideDebuggerEx(0, processName, false, hyperdbgsdk.TransparentEvadeMaskDefault)
 }
 
 // HideDebuggerEx enables transparent mode with full parameters. Mirrors C++
@@ -340,9 +313,9 @@ func (t *Transparency) HideDebuggerByName(processName string) error {
 //     name (case-sensitive, NUL-terminated). The name is appended to the IOCTL
 //     input buffer past the struct, exactly as in C++ hide.cpp.
 //   - evadeMask selects which transparency features to enable. A zero mask is
-//     replaced with EvadeMaskDefault.
+//     replaced with hyperdbgsdk.TransparentEvadeMaskDefault.
 //
-// On success the kernel reports KernelStatusSuccess and the method returns
+// On success the kernel reports uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) and the method returns
 // nil. On failure the method returns an error wrapping the kernel status.
 func (t *Transparency) HideDebuggerEx(processID uint32, processName string, isProcessID bool, evadeMask uint32) error {
 	if t.dev == nil {
@@ -350,10 +323,10 @@ func (t *Transparency) HideDebuggerEx(processID uint32, processName string, isPr
 	}
 
 	if evadeMask == 0 {
-		evadeMask = EvadeMaskDefault
+		evadeMask = hyperdbgsdk.TransparentEvadeMaskDefault
 	}
 	// C++: if ((EffectiveEvadeMask & ~TRANSPARENT_EVADE_MASK_ALL) != 0)
-	if evadeMask&^EvadeMaskAll != 0 {
+	if evadeMask&^hyperdbgsdk.TransparentEvadeMaskAll != 0 {
 		return fmt.Errorf("transparency: unknown evade-mask bits 0x%x", evadeMask)
 	}
 
@@ -371,12 +344,12 @@ func (t *Transparency) HideDebuggerEx(processID uint32, processName string, isPr
 	// block. C++ hide.cpp does this via CommandHideFillSystemCalls which calls
 	// PeGetSyscallNumber for each Nt* routine. We delegate to the configured
 	// SyscallNumberResolver.
-	if evadeMask&EvadeMaskSyscallHook != 0 {
+	if evadeMask&hyperdbgsdk.TransparentEvadeMaskSyscallHook != 0 {
 		t.mu.Lock()
 		resolver := t.syscallResolver
 		t.mu.Unlock()
 		if resolver == nil {
-			return errors.New("transparency: EvadeMaskSyscallHook set but no SyscallNumberResolver configured")
+			return errors.New("transparency: hyperdbgsdk.TransparentEvadeMaskSyscallHook set but no SyscallNumberResolver configured")
 		}
 		if err := fillSystemCalls(&req.SystemCallNumbersInformation, resolver, t.output); err != nil {
 			return fmt.Errorf("transparency: failed to resolve syscall numbers: %w", err)
@@ -419,7 +392,7 @@ func (t *Transparency) HideDebuggerEx(processID uint32, processName string, isPr
 	//         &ReturnedLength, NULL);
 	outBuf := make([]byte, structSize)
 	if _, err := t.dev.Ioctl(
-		comm.IOCTL_CODE_DEBUGGER_HIDE_AND_UNHIDE_TO_TRANSPARENT_THE_DEBUGGER,
+		hyperdbgsdk.IoctlDebuggerHideAndUnhideToTransparentTheDebugger,
 		inBuf, outBuf); err != nil {
 		return fmt.Errorf("hide IOCTL failed: %w", err)
 	}
@@ -429,10 +402,10 @@ func (t *Transparency) HideDebuggerEx(processID uint32, processName string, isPr
 	bytesIntoStruct(unsafe.Pointer(&resp), outBuf)
 
 	switch resp.KernelStatus {
-	case KernelStatusSuccess:
+	case uint32(hyperdbgsdk.DebuggerOperationWasSuccessful):
 		t.output.Printf("transparent debugging successfully enabled :)\n")
 		return nil
-	case KernelStatusUnableToHideOrUnhideDebugger:
+	case uint32(hyperdbgsdk.DebuggerErrorUnableToHideOrUnhideDebugger):
 		t.output.Printf("unable to hide the debugger (transparent-debugging) :(\n")
 		return fmt.Errorf("transparency: kernel unable to hide debugger (status 0x%x)", resp.KernelStatus)
 	default:
@@ -461,7 +434,7 @@ func (t *Transparency) UnhideDebugger() error {
 	// C++: same IOCTL, input/output both SIZEOF_DEBUGGER_HIDE_AND_TRANSPARENT_
 	// DEBUGGER_MODE.
 	if _, err := t.dev.Ioctl(
-		comm.IOCTL_CODE_DEBUGGER_HIDE_AND_UNHIDE_TO_TRANSPARENT_THE_DEBUGGER,
+		hyperdbgsdk.IoctlDebuggerHideAndUnhideToTransparentTheDebugger,
 		inBuf, outBuf); err != nil {
 		return fmt.Errorf("unhide IOCTL failed: %w", err)
 	}
@@ -470,7 +443,7 @@ func (t *Transparency) UnhideDebugger() error {
 	bytesIntoStruct(unsafe.Pointer(&resp), outBuf)
 
 	switch resp.KernelStatus {
-	case KernelStatusSuccess:
+	case uint32(hyperdbgsdk.DebuggerOperationWasSuccessful):
 		t.output.Printf("transparent debugging successfully disabled :)\n")
 		return nil
 	default:

@@ -28,20 +28,10 @@ import (
 	"github.com/ddkwork/golibrary/byteslice"
 	"github.com/ddkwork/hyperdbgsdk"
 	astencoder "github.com/hyperdbg/go-bridge/ast"
-	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
 )
 
 // Common constants for event registration (mirror Constants.h).
 const (
-	// debuggerEventApplyToAllProcesses is DEBUGGER_EVENT_APPLY_TO_ALL_PROCESSES
-	// (0xFFFFFFFF) — used as ProcessId to apply an event to every process.
-	debuggerEventApplyToAllProcesses uint32 = 0xFFFFFFFF
-
-	// debuggerEventSyscallAllSysretsOrSyscalls is
-	// DEBUGGER_EVENT_SYSCALL_ALL_SYSRET_OR_SYSCALLS (0xFFFFFFFF) — used as
-	// OptionalParam1 for !syscall/!sysret to mean "all syscalls/sysrets".
-	debuggerEventSyscallAllSysretsOrSyscalls uint64 = 0xFFFFFFFF
-
 	// hookFlagGoAst is the ScriptBufferPointer flag that tells the kernel
 	// the script buffer is a Go AST wire-format payload (go-bridge/ast),
 	// not a HyperDbg script-engine string or raw custom code.
@@ -56,7 +46,7 @@ const (
 // Mirrors the C++ InterpretGeneralEventAndActionsFields +
 // SendEventToKernel + RegisterActionToEvent sequence.
 //
-// pid == debuggerEventApplyToAllProcesses means "all processes"; a real
+// pid == hyperdbgsdk.DebuggerEventApplyToAllProcesses means "all processes"; a real
 // pid is required for user-mode hooks (EptHook2/Monitor*/ModeHook) so the
 // kernel can resolve the virtual address through that process's CR3.
 func (d *Debugger) registerHookEvent(
@@ -90,7 +80,7 @@ func (d *Debugger) registerHookEvent(
 	eventBuf := byteslice.FromStruct(&event)
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
 	resultBuf := byteslice.FromStruct(&result)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerRegisterEvent,
 		eventBuf, resultBuf); err != nil {
 		return 0, fmt.Errorf("registerHookEvent: REGISTER_EVENT IOCTL failed: %w", err)
 	}
@@ -117,7 +107,7 @@ func (d *Debugger) registerHookEvent(
 
 	var actionResult hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
 	actionResultBuf := byteslice.FromStruct(&actionResult)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerAddActionToEvent,
 		buf, actionResultBuf); err != nil {
 		return 0, fmt.Errorf("registerHookEvent: ADD_ACTION IOCTL failed: %w", err)
 	}
@@ -146,7 +136,7 @@ func (d *Debugger) CpuidHook(hasEax bool, eax uint64, callbackSrc string) (uint6
 		opts.OptionalParam2 = eax
 	}
 	return d.registerHookEvent(hyperdbgsdk.CpuidInstructionExecution,
-		debuggerEventApplyToAllProcesses, opts, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, opts, callbackSrc)
 }
 
 // CrwriteHook registers a control-register write hook.
@@ -163,7 +153,7 @@ func (d *Debugger) CrwriteHook(cr uint32, mask uint64, callbackSrc string) (uint
 		OptionalParam2: mask,
 	}
 	return d.registerHookEvent(hyperdbgsdk.ControlRegisterModified,
-		debuggerEventApplyToAllProcesses, opts, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, opts, callbackSrc)
 }
 
 // DrHook registers a debug-register access hook (MOV to/from DRn).
@@ -171,7 +161,7 @@ func (d *Debugger) CrwriteHook(cr uint32, mask uint64, callbackSrc string) (uint
 // C++: dr.cpp — EventType=DEBUG_REGISTERS_ACCESSED, no optional params.
 func (d *Debugger) DrHook(callbackSrc string) (uint64, error) {
 	return d.registerHookEvent(hyperdbgsdk.DebugRegistersAccessed,
-		debuggerEventApplyToAllProcesses, hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{}, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{}, callbackSrc)
 }
 
 // EptHook2 registers an EPT execution hook in detours mode (!epthook2).
@@ -196,7 +186,7 @@ func (d *Debugger) EptHook2(hookAddress uint64, pid uint32, callbackSrc string) 
 func (d *Debugger) ExceptionHook(vector uint32, callbackSrc string) (uint64, error) {
 	opts := hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{OptionalParam1: uint64(vector)}
 	return d.registerHookEvent(hyperdbgsdk.ExceptionOccurred,
-		debuggerEventApplyToAllProcesses, opts, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, opts, callbackSrc)
 }
 
 // InterruptHook registers a hardware-interrupt hook for the given vector
@@ -208,7 +198,7 @@ func (d *Debugger) ExceptionHook(vector uint32, callbackSrc string) (uint64, err
 func (d *Debugger) InterruptHook(vector uint32, callbackSrc string) (uint64, error) {
 	opts := hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{OptionalParam1: uint64(vector)}
 	return d.registerHookEvent(hyperdbgsdk.ExternalInterruptOccurred,
-		debuggerEventApplyToAllProcesses, opts, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, opts, callbackSrc)
 }
 
 // IoInHook registers an IN-instruction hook for the given I/O port.
@@ -218,7 +208,7 @@ func (d *Debugger) InterruptHook(vector uint32, callbackSrc string) (uint64, err
 func (d *Debugger) IoInHook(port uint16, callbackSrc string) (uint64, error) {
 	opts := hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{OptionalParam1: uint64(port)}
 	return d.registerHookEvent(hyperdbgsdk.InInstructionExecution,
-		debuggerEventApplyToAllProcesses, opts, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, opts, callbackSrc)
 }
 
 // IoOutHook registers an OUT-instruction hook for the given I/O port.
@@ -228,7 +218,7 @@ func (d *Debugger) IoInHook(port uint16, callbackSrc string) (uint64, error) {
 func (d *Debugger) IoOutHook(port uint16, callbackSrc string) (uint64, error) {
 	opts := hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{OptionalParam1: uint64(port)}
 	return d.registerHookEvent(hyperdbgsdk.OutInstructionExecution,
-		debuggerEventApplyToAllProcesses, opts, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, opts, callbackSrc)
 }
 
 // ModeHook registers an execution-mode-change hook (user↔kernel).
@@ -285,7 +275,7 @@ func (d *Debugger) MonitorExec(addrStart, addrEnd uint64, pid uint32, callbackSr
 func (d *Debugger) MsrReadHook(msr uint32, callbackSrc string) (uint64, error) {
 	opts := hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{OptionalParam1: uint64(msr)}
 	return d.registerHookEvent(hyperdbgsdk.RdmsrInstructionExecution,
-		debuggerEventApplyToAllProcesses, opts, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, opts, callbackSrc)
 }
 
 // MsrWriteHook registers a WRMSR hook. msr==0 means "all MSRs".
@@ -295,7 +285,7 @@ func (d *Debugger) MsrReadHook(msr uint32, callbackSrc string) (uint64, error) {
 func (d *Debugger) MsrWriteHook(msr uint32, callbackSrc string) (uint64, error) {
 	opts := hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{OptionalParam1: uint64(msr)}
 	return d.registerHookEvent(hyperdbgsdk.WrmsrInstructionExecution,
-		debuggerEventApplyToAllProcesses, opts, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, opts, callbackSrc)
 }
 
 // SyscallHook registers a SYSCALL-instruction hook. syscallNumber selects
@@ -314,7 +304,7 @@ func (d *Debugger) SyscallHook(syscallNumber uint64, callbackSrc string) (uint64
 		OptionalParam2: uint64(hyperdbgsdk.DebuggerEventSyscallSysretSafeAccessMemory),
 	}
 	return d.registerHookEvent(hyperdbgsdk.SyscallHookEferSyscall,
-		debuggerEventApplyToAllProcesses, opts, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, opts, callbackSrc)
 }
 
 // SysretHook registers a SYSRET-instruction hook. syscallNumber selects a
@@ -333,7 +323,7 @@ func (d *Debugger) SysretHook(syscallNumber uint64, callbackSrc string) (uint64,
 		OptionalParam2: uint64(hyperdbgsdk.DebuggerEventSyscallSysretSafeAccessMemory),
 	}
 	return d.registerHookEvent(hyperdbgsdk.SyscallHookEferSysret,
-		debuggerEventApplyToAllProcesses, opts, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, opts, callbackSrc)
 }
 
 // SysretHookForProcess registers a SYSRET-instruction hook scoped to a
@@ -368,7 +358,7 @@ func (d *Debugger) SysretHookForProcess(pid uint32, syscallNumber uint64, callba
 // C++: vmcall.cpp — EventType=VMCALL_INSTRUCTION_EXECUTION, no params.
 func (d *Debugger) VmcallHook(callbackSrc string) (uint64, error) {
 	return d.registerHookEvent(hyperdbgsdk.VmcallInstructionExecution,
-		debuggerEventApplyToAllProcesses, hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{}, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{}, callbackSrc)
 }
 
 // XsetbvHook registers an XSETBV-instruction hook (writes XCR0).
@@ -376,7 +366,7 @@ func (d *Debugger) VmcallHook(callbackSrc string) (uint64, error) {
 // C++: xsetbv.cpp — EventType=XSETBV_INSTRUCTION_EXECUTION, no params.
 func (d *Debugger) XsetbvHook(callbackSrc string) (uint64, error) {
 	return d.registerHookEvent(hyperdbgsdk.XsetbvInstructionExecution,
-		debuggerEventApplyToAllProcesses, hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{}, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{}, callbackSrc)
 }
 
 // TscHook registers an RDTSC/RDTSCP-instruction hook.
@@ -384,7 +374,7 @@ func (d *Debugger) XsetbvHook(callbackSrc string) (uint64, error) {
 // C++: tsc.cpp — EventType=TSC_INSTRUCTION_EXECUTION, no params.
 func (d *Debugger) TscHook(callbackSrc string) (uint64, error) {
 	return d.registerHookEvent(hyperdbgsdk.TscInstructionExecution,
-		debuggerEventApplyToAllProcesses, hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{}, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{}, callbackSrc)
 }
 
 // PmcHook registers an RDPMC-instruction hook.
@@ -392,5 +382,5 @@ func (d *Debugger) TscHook(callbackSrc string) (uint64, error) {
 // C++: pmc.cpp — EventType=PMC_INSTRUCTION_EXECUTION, no params.
 func (d *Debugger) PmcHook(callbackSrc string) (uint64, error) {
 	return d.registerHookEvent(hyperdbgsdk.PmcInstructionExecution,
-		debuggerEventApplyToAllProcesses, hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{}, callbackSrc)
+		hyperdbgsdk.DebuggerEventApplyToAllProcesses, hyperdbgsdk.DEBUGGER_EVENT_OPTIONS{}, callbackSrc)
 }

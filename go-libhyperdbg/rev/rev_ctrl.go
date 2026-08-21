@@ -25,8 +25,8 @@ package rev
 import (
 	"fmt"
 	"sync"
-	"unsafe"
 
+	"github.com/ddkwork/golibrary/byteslice"
 	"github.com/ddkwork/hyperdbgsdk"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/core"
@@ -38,9 +38,6 @@ import (
 type Output interface {
 	Printf(format string, args ...any) error
 }
-
-// DebuggerOperationWasSuccessful mirrors DEBUGGER_OPERATION_WAS_SUCCESSFUL.
-const DebuggerOperationWasSuccessful uint32 = 0xFFFFFFFF
 
 // ReconstructMemoryMode mirrors REVERSING_MACHINE_RECONSTRUCT_MEMORY_MODE.
 // The concrete values are defined in types/sdk.go; we re-export the type
@@ -89,14 +86,11 @@ func (c *Ctrl) RequestService(req *ReconstructMemoryRequest) error {
 	if err != nil {
 		return err
 	}
-	buf := asBytes(req)
-	if buf == nil {
-		return fmt.Errorf("rev.RequestService: cannot serialise request")
-	}
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_REQUEST_REV_MACHINE_SERVICE, buf, buf); err != nil {
+	buf := byteslice.FromStruct(req)
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlRequestRevMachineService, buf, buf); err != nil {
 		return fmt.Errorf("rev.RequestService: IOCTL failed: %w", err)
 	}
-	if req.KernelStatus != DebuggerOperationWasSuccessful {
+	if req.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("rev.RequestService: kernel returned status 0x%x", req.KernelStatus)
 	}
 	c.out.Printf("the reversing machine service request was successful!\n")
@@ -115,13 +109,6 @@ func (c *Ctrl) device() (*comm.Device, error) {
 	}
 	// TODO(Phase C.3): core.Debugger.Device() *comm.Device
 	return nil, fmt.Errorf("rev: core.Debugger.Device() not yet exposed (Phase C.3)")
-}
-
-// asBytes returns a byte slice aliasing the memory of req for the duration
-// of the call.
-func asBytes(req *ReconstructMemoryRequest) []byte {
-	const sz = int(unsafe.Sizeof(*req))
-	return unsafe.Slice((*byte)(unsafe.Pointer(req)), sz)
 }
 
 // discardOutput is the default Output when the caller passes nil.

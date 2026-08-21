@@ -27,6 +27,7 @@ import (
 	"sync"
 	"unsafe"
 
+	"github.com/ddkwork/golibrary/byteslice"
 	"github.com/ddkwork/hyperdbgsdk"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/core"
@@ -38,9 +39,6 @@ import (
 type Output interface {
 	Printf(format string, args ...any) error
 }
-
-// DebuggerOperationWasSuccessful mirrors DEBUGGER_OPERATION_WAS_SUCCESSFUL.
-const DebuggerOperationWasSuccessful uint32 = 0xFFFFFFFF
 
 // Objects owns the process/thread query state. It is bound to one
 // *core.Debugger (for the device handle) and one Output sink.
@@ -94,14 +92,14 @@ type ThreadListEntry = hyperdbgsdk.DEBUGGEE_THREAD_LIST_DETAILS_ENTRY
 func (o *Objects) ShowProcessDetails() (ProcessDetails, error) {
 	var pkt hyperdbgsdk.DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_PACKET
 	buf := make([]byte, int(unsafe.Sizeof(pkt)))
-	pktBytes := asBytes(&pkt)
+	pktBytes := byteslice.FromStruct(&pkt)
 	copy(buf, pktBytes)
 
 	dev, err := o.device()
 	if err != nil {
 		return ProcessDetails{}, err
 	}
-	n, err := dev.Ioctl(comm.IOCTL_CODE_QUERY_CURRENT_PROCESS, buf, buf)
+	n, err := dev.Ioctl(hyperdbgsdk.IoctlQueryCurrentProcess, buf, buf)
 	if err != nil {
 		return ProcessDetails{}, fmt.Errorf("ShowProcessDetails: IOCTL_QUERY_CURRENT_PROCESS failed: %w", err)
 	}
@@ -109,7 +107,7 @@ func (o *Objects) ShowProcessDetails() (ProcessDetails, error) {
 		return ProcessDetails{}, fmt.Errorf("ShowProcessDetails: short IOCTL response (%d < %d)", n, len(buf))
 	}
 	copy(pktBytes, buf)
-	if pkt.Result != DebuggerOperationWasSuccessful {
+	if pkt.Result != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return ProcessDetails{}, fmt.Errorf("ShowProcessDetails: kernel returned status 0x%x", pkt.Result)
 	}
 	d := ProcessDetails{
@@ -128,14 +126,14 @@ func (o *Objects) ShowProcessDetails() (ProcessDetails, error) {
 func (o *Objects) ShowThreadDetails() (ThreadDetails, error) {
 	var pkt hyperdbgsdk.DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET
 	buf := make([]byte, int(unsafe.Sizeof(pkt)))
-	pktBytes := asBytes(&pkt)
+	pktBytes := byteslice.FromStruct(&pkt)
 	copy(buf, pktBytes)
 
 	dev, err := o.device()
 	if err != nil {
 		return ThreadDetails{}, err
 	}
-	n, err := dev.Ioctl(comm.IOCTL_CODE_QUERY_CURRENT_THREAD, buf, buf)
+	n, err := dev.Ioctl(hyperdbgsdk.IoctlQueryCurrentThread, buf, buf)
 	if err != nil {
 		return ThreadDetails{}, fmt.Errorf("ShowThreadDetails: IOCTL_QUERY_CURRENT_THREAD failed: %w", err)
 	}
@@ -143,7 +141,7 @@ func (o *Objects) ShowThreadDetails() (ThreadDetails, error) {
 		return ThreadDetails{}, fmt.Errorf("ShowThreadDetails: short IOCTL response (%d < %d)", n, len(buf))
 	}
 	copy(pktBytes, buf)
-	if pkt.Result != DebuggerOperationWasSuccessful {
+	if pkt.Result != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return ThreadDetails{}, fmt.Errorf("ShowThreadDetails: kernel returned status 0x%x", pkt.Result)
 	}
 	d := ThreadDetails{
@@ -217,14 +215,14 @@ func (o *Objects) listActive(isProcess bool) ([]ProcessListEntry, error) {
 	query.QueryAction = hyperdbgsdk.DebuggerQueryActiveProcessesOrThreadsActionShowInstantly
 
 	queryBuf := make([]byte, int(unsafe.Sizeof(query)))
-	qBytes := asBytes(&query)
+	qBytes := byteslice.FromStruct(&query)
 	copy(queryBuf, qBytes)
 
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_QUERY_COUNT_OF_ACTIVE_PROCESSES_OR_THREADS, queryBuf, queryBuf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlQueryCountOfActiveProcessesOrThreads, queryBuf, queryBuf); err != nil {
 		return nil, fmt.Errorf("listActive: count IOCTL failed: %w", err)
 	}
 	copy(qBytes, queryBuf)
-	if query.Result != uint64(DebuggerOperationWasSuccessful) {
+	if query.Result != uint64(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return nil, fmt.Errorf("listActive: count IOCTL returned status 0x%x", uint32(query.Result))
 	}
 	if query.Count == 0 {
@@ -246,11 +244,11 @@ func (o *Objects) listActive(isProcess bool) ([]ProcessListEntry, error) {
 	}
 	copy(queryBuf, qBytes)
 
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_GET_LIST_OF_THREADS_AND_PROCESSES, queryBuf, listBuf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlGetListOfThreadsAndProcesses, queryBuf, listBuf); err != nil {
 		return nil, fmt.Errorf("listActive: list IOCTL failed: %w", err)
 	}
 	copy(qBytes, queryBuf)
-	if query.Result != uint64(DebuggerOperationWasSuccessful) {
+	if query.Result != uint64(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return nil, fmt.Errorf("listActive: list IOCTL returned status 0x%x", uint32(query.Result))
 	}
 
@@ -302,24 +300,6 @@ func cstr(b []byte) string {
 		}
 	}
 	return string(b)
-}
-
-// asBytes returns a byte slice aliasing the memory of v for the duration of
-// the call. It is the standard unsafe.Pointer trick used to (de)serialise
-// fixed-size C structs without encoding/binary overhead.
-func asBytes(v any) []byte {
-	switch p := v.(type) {
-	case *hyperdbgsdk.DEBUGGEE_DETAILS_AND_SWITCH_PROCESS_PACKET:
-		const sz = int(unsafe.Sizeof(*p))
-		return unsafe.Slice((*byte)(unsafe.Pointer(p)), sz)
-	case *hyperdbgsdk.DEBUGGEE_DETAILS_AND_SWITCH_THREAD_PACKET:
-		const sz = int(unsafe.Sizeof(*p))
-		return unsafe.Slice((*byte)(unsafe.Pointer(p)), sz)
-	case *hyperdbgsdk.DEBUGGER_QUERY_ACTIVE_PROCESSES_OR_THREADS:
-		const sz = int(unsafe.Sizeof(*p))
-		return unsafe.Slice((*byte)(unsafe.Pointer(p)), sz)
-	}
-	return nil
 }
 
 // NativeEndian mirrors binary.LittleEndian; used implicitly by the unsafe

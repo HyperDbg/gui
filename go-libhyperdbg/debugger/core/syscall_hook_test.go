@@ -20,6 +20,7 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/ddkwork/hyperdbgsdk"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
 	"github.com/hyperdbg/go-libhyperdbg/debugger/driverloader"
 	"golang.org/x/sys/windows"
@@ -66,11 +67,11 @@ func TestSyscallHook(t *testing.T) {
 
 	var vmm initVmmRequest
 	sz := uint32(unsafe.Sizeof(vmm))
-	if _, err := dev.IoctlStruct(comm.IOCTL_CODE_INIT_VMM,
+	if _, err := dev.IoctlStruct(hyperdbgsdk.IoctlInitVmm,
 		unsafe.Pointer(&vmm), unsafe.Pointer(&vmm), sz, sz); err != nil {
 		t.Skipf("init VMM: %v", err)
 	}
-	if vmm.KernelStatus != debuggerOperationWasSuccessful {
+	if vmm.KernelStatus != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		t.Skipf("VMM init status=0x%08x", vmm.KernelStatus)
 	}
 
@@ -97,7 +98,7 @@ func TestSyscallHook(t *testing.T) {
 	// TERMINATE_VMX 必须在 mp.Stop() 之前：mp.Stop() 发 DISALLOW_IOCTL
 	// 会阻止后续 TERMINATE_VMX → VMX 未清理 → 驱动卸载卡死。
 	t.Cleanup(func() {
-		_, _ = dev.IoctlStruct(comm.IOCTL_CODE_TERMINATE_VMX, nil, nil, 0, 0)
+		_, _ = dev.IoctlStruct(hyperdbgsdk.IoctlTerminateVmx, nil, nil, 0, 0)
 		mp.Stop()
 	})
 

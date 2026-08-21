@@ -7,6 +7,22 @@ import (
 	"golang.org/x/sys/windows"
 )
 
+// Device path constants. HyperDbg's VMM driver exposes its device at
+// \\.\HyperDbgDebuggerDevice (see libhyperdbg/code/app/libhyperdbg.cpp).
+const (
+	// DeviceName is the Win32 device path for the HyperDbg VMM driver.
+	DeviceName = `\\.\HyperDbgDebuggerDevice`
+
+	// HyperDbgPipe is the default named pipe for remote debugging sessions.
+	HyperDbgPipe = `\\.\pipe\HyperDbgPipe`
+
+	// HyperDbgOutputPipe is the named pipe used for output forwarding.
+	HyperDbgOutputPipe = `\\.\Pipe\HyperDbgOutput`
+
+	// HyperDbgTestsPipe is the named pipe used by the test harness.
+	HyperDbgTestsPipe = `\\.\Pipe\HyperDbgTests`
+)
+
 // Device wraps a HANDLE to the HyperDbg VMM driver. It is the Go equivalent of
 // g_DeviceHandle + PlatformOpenDevice/PlatformDeviceIoControl in the C
 // libhyperdbg. A Device is not safe for concurrent use; callers serialising

@@ -72,9 +72,6 @@ const (
 
 	// MaxSerialPacketSize mirrors MaxSerialPacketSize (20 * NORMAL_PAGE_SIZE).
 	MaxSerialPacketSize = 20 * 4096
-
-	// DebuggerOperationWasSuccessful mirrors DEBUGGER_OPERATION_WAS_SUCCESSFUL.
-	DebuggerOperationWasSuccessful uint32 = 0xFFFFFFFF
 )
 
 // KernelSyncObject enumerates the synchronization slots used by the kernel
@@ -527,13 +524,13 @@ func (k *KdState) KdPrepareDebuggee(portAddress, baudrate, kernelBase uint32, os
 	inBuf := structAsBytes(unsafe.Pointer(&req), unsafe.Sizeof(req))
 	outBuf := make([]byte, unsafe.Sizeof(req))
 	copy(outBuf, inBuf)
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_PREPARE_DEBUGGEE, inBuf, outBuf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlPrepareDebuggee, inBuf, outBuf); err != nil {
 		return fmt.Errorf("KdPrepareDebuggee: IOCTL_PREPARE_DEBUGGEE failed: %w", err)
 	}
 	// Re-read Result from the output buffer.
 	var resp hyperdbgsdk.DEBUGGER_PREPARE_DEBUGGEE
 	bytesIntoStruct(unsafe.Pointer(&resp), outBuf, unsafe.Sizeof(resp))
-	if resp.Result != DebuggerOperationWasSuccessful {
+	if resp.Result != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("KdPrepareDebuggee: kernel returned error 0x%x", resp.Result)
 	}
 	return nil
@@ -551,7 +548,7 @@ func (k *KdState) KdSendUserInterfacePausePacket() error {
 	}
 	var pkt hyperdbgsdk.DEBUGGER_PAUSE_PACKET_RECEIVED
 	buf := structAsBytes(unsafe.Pointer(&pkt), unsafe.Sizeof(pkt))
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_PAUSE_PACKET_RECEIVED, buf, buf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlPausePacketReceived, buf, buf); err != nil {
 		return fmt.Errorf("KdSendUserInterfacePausePacket: IOCTL_PAUSE_PACKET_RECEIVED failed: %w", err)
 	}
 	return nil
@@ -569,7 +566,7 @@ func (k *KdState) KdRegisterEventInDebuggee(eventBuf []byte) (hyperdbgsdk.DEBUGG
 	}
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
 	resultBuf := structAsBytes(unsafe.Pointer(&result), unsafe.Sizeof(result))
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT, eventBuf, resultBuf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlDebuggerRegisterEvent, eventBuf, resultBuf); err != nil {
 		return result, fmt.Errorf("KdRegisterEventInDebuggee: IOCTL failed: %w", err)
 	}
 	bytesIntoStruct(unsafe.Pointer(&result), resultBuf, unsafe.Sizeof(result))
@@ -596,7 +593,7 @@ func (k *KdState) KdAddActionToEventInDebuggee(actionBuf []byte) (hyperdbgsdk.DE
 	}
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
 	resultBuf := structAsBytes(unsafe.Pointer(&result), unsafe.Sizeof(result))
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT, actionBuf, resultBuf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlDebuggerAddActionToEvent, actionBuf, resultBuf); err != nil {
 		return result, fmt.Errorf("KdAddActionToEventInDebuggee: IOCTL failed: %w", err)
 	}
 	bytesIntoStruct(unsafe.Pointer(&result), resultBuf, unsafe.Sizeof(result))
@@ -623,7 +620,7 @@ func (k *KdState) KdSendModifyEventInDebuggee(modify *hyperdbgsdk.DEBUGGER_MODIF
 	inBuf := structAsBytes(unsafe.Pointer(modify), unsafe.Sizeof(*modify))
 	outBuf := make([]byte, unsafe.Sizeof(*modify))
 	copy(outBuf, inBuf)
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_MODIFY_EVENTS, inBuf, outBuf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlDebuggerModifyEvents, inBuf, outBuf); err != nil {
 		return fmt.Errorf("KdSendModifyEventInDebuggee: IOCTL failed: %w", err)
 	}
 	bytesIntoStruct(unsafe.Pointer(modify), outBuf, unsafe.Sizeof(*modify))
@@ -651,7 +648,7 @@ func (k *KdState) KdSendSignalExecutionFinished() error {
 	}
 	var sig hyperdbgsdk.DEBUGGER_SEND_COMMAND_EXECUTION_FINISHED_SIGNAL
 	buf := structAsBytes(unsafe.Pointer(&sig), unsafe.Sizeof(sig))
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED, buf, buf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlSendSignalExecutionInDebuggeeFinished, buf, buf); err != nil {
 		return fmt.Errorf("KdSendSignalExecutionFinished: IOCTL failed: %w", err)
 	}
 	return nil
@@ -675,7 +672,7 @@ func (k *KdState) KdSendUsermodePrints(msg []byte) error {
 	// KernelStatus; we set Length.
 	binary.LittleEndian.PutUint32(buf[4:8], uint32(len(msg)))
 	copy(buf[hdrSize:], msg)
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_SEND_USERMODE_MESSAGES_TO_DEBUGGER, buf, buf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlSendUsermodeMessagesToDebugger, buf, buf); err != nil {
 		return fmt.Errorf("KdSendUsermodePrints: IOCTL failed: %w", err)
 	}
 	return nil
@@ -710,12 +707,12 @@ func (k *KdState) KdSendGeneralBuffersFromDebuggeeToDebugger(
 	copy(packet[hdrSize:], buf)
 	outBuf := make([]byte, hdrSize) // driver returns just the header
 	copy(outBuf, packet[:hdrSize])
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_SEND_GENERAL_BUFFER_FROM_DEBUGGEE_TO_DEBUGGER, packet, outBuf); err != nil {
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlSendGeneralBufferFromDebuggeeToDebugger, packet, outBuf); err != nil {
 		return fmt.Errorf("KdSendGeneralBuffersFromDebuggeeToDebugger: IOCTL failed: %w", err)
 	}
 	// Check KernelResult at offset 12.
 	kernelResult := binary.LittleEndian.Uint32(outBuf[12:16])
-	if kernelResult != DebuggerOperationWasSuccessful {
+	if kernelResult != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("KdSendGeneralBuffersFromDebuggeeToDebugger: kernel returned 0x%x", kernelResult)
 	}
 	return nil

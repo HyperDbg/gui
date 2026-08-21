@@ -25,16 +25,6 @@ import (
 	"github.com/hyperdbg/go-libhyperdbg/debugger/comm"
 )
 
-// DebuggerOperationWasSuccessful mirrors DEBUGGER_OPERATION_WAS_SUCCESSFUL
-// (HyperDbg/hyperdbg/include/SDK/headers/ErrorCodes.h). The driver writes
-// this value into the Result field of DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS
-// when the attach/continue/pause action completed without error.
-//
-// Defined as uint32 to match the C macro; callers compare
-// packet.Result == uint64(DebuggerOperationWasSuccessful) because the Result
-// field in the Go struct is uint64 (mirroring the C UINT64).
-const DebuggerOperationWasSuccessful uint32 = 0xFFFFFFFF
-
 // attachDetachRequestSize is the C ABI size of
 // DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS. The kernel expects both the
 // input and output buffer to be exactly this size; a smaller buffer is
@@ -66,11 +56,11 @@ func attachProcess(dev *comm.Device, pid uint32, tid uint32, checkCallbackAtFirs
 	// so we pass the same slice for both and the driver writes the response
 	// back into it.
 	buf := (*[attachDetachRequestSize]byte)(unsafe.Pointer(&pkt))[:]
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS,
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlDebuggerAttachDetachUserModeProcess,
 		buf, buf); err != nil {
 		return 0, fmt.Errorf("attachProcess: ATTACH IOCTL failed: %w", err)
 	}
-	if pkt.Result != uint64(DebuggerOperationWasSuccessful) {
+	if pkt.Result != uint64(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return 0, fmt.Errorf("attachProcess: kernel rejected attach (Result=0x%016X, see DEBUGGER_ERROR_* in SDK)", pkt.Result)
 	}
 	if pkt.Token == 0 {
@@ -96,11 +86,11 @@ func continueProcess(dev *comm.Device, token uint64) error {
 		Token:  token,
 	}
 	buf := (*[attachDetachRequestSize]byte)(unsafe.Pointer(&pkt))[:]
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS,
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlDebuggerAttachDetachUserModeProcess,
 		buf, buf); err != nil {
 		return fmt.Errorf("continueProcess: CONTINUE IOCTL failed: %w", err)
 	}
-	if pkt.Result != uint64(DebuggerOperationWasSuccessful) {
+	if pkt.Result != uint64(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("continueProcess: kernel rejected continue (Result=0x%016X)", pkt.Result)
 	}
 	return nil
@@ -138,7 +128,7 @@ func pauseProcess(dev *comm.Device, token uint64) error {
 		Token:  token,
 	}
 	buf := (*[attachDetachRequestSize]byte)(unsafe.Pointer(&pkt))[:]
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS,
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlDebuggerAttachDetachUserModeProcess,
 		buf, buf); err != nil {
 		return fmt.Errorf("pauseProcess: PAUSE IOCTL failed: %w", err)
 	}
@@ -152,7 +142,7 @@ func pauseProcess(dev *comm.Device, token uint64) error {
 	if pkt.Result == debuggerErrorUnableToPauseTheProcessThreads {
 		return ErrAlreadyPaused
 	}
-	if pkt.Result != uint64(DebuggerOperationWasSuccessful) {
+	if pkt.Result != uint64(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("pauseProcess: kernel rejected pause (Result=0x%016X)", pkt.Result)
 	}
 	return nil
@@ -176,11 +166,11 @@ func detachProcess(dev *comm.Device, pid uint32) error {
 		ProcessId: pid,
 	}
 	buf := (*[attachDetachRequestSize]byte)(unsafe.Pointer(&pkt))[:]
-	if _, err := dev.Ioctl(comm.IOCTL_CODE_DEBUGGER_ATTACH_DETACH_USER_MODE_PROCESS,
+	if _, err := dev.Ioctl(hyperdbgsdk.IoctlDebuggerAttachDetachUserModeProcess,
 		buf, buf); err != nil {
 		return fmt.Errorf("detachProcess: DETACH IOCTL failed: %w", err)
 	}
-	if pkt.Result != uint64(DebuggerOperationWasSuccessful) {
+	if pkt.Result != uint64(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("detachProcess: kernel rejected detach (Result=0x%016X)", pkt.Result)
 	}
 	return nil

@@ -170,12 +170,11 @@ func (d *Debugger) InitVMM() error {
 	}
 	var vmmPacket uint32
 	vmmSize := uint32(unsafe.Sizeof(vmmPacket))
-	if _, err := d.device.IoctlStruct(comm.IOCTL_CODE_INIT_VMM,
+	if _, err := d.device.IoctlStruct(hyperdbgsdk.IoctlInitVmm,
 		unsafe.Pointer(&vmmPacket), unsafe.Pointer(&vmmPacket), vmmSize, vmmSize); err != nil {
 		return fmt.Errorf("InitVMM: IOCTL_INIT_VMM failed: %w", err)
 	}
-	const debuggerOperationWasSuccessful uint32 = 0xFFFFFFFF
-	if vmmPacket != debuggerOperationWasSuccessful {
+	if vmmPacket != uint32(hyperdbgsdk.DebuggerOperationWasSuccessful) {
 		return fmt.Errorf("InitVMM: VMM init failed (KernelStatus=0x%08X)", vmmPacket)
 	}
 	d.state = StateVmmLoaded
@@ -198,7 +197,7 @@ func (d *Debugger) UnloadVMM() error {
 		d.processPid = 0
 	}
 	if d.device != nil && d.state >= StateVmmLoaded {
-		_, _ = d.device.Ioctl(comm.IOCTL_CODE_TERMINATE_VMX, nil, nil)
+		_, _ = d.device.Ioctl(hyperdbgsdk.IoctlTerminateVmx, nil, nil)
 	}
 	if d.device != nil {
 		_ = d.device.Close()
@@ -256,7 +255,7 @@ func (d *Debugger) EptHook(hookAddress uint64, callbackSrc string) (uint64, erro
 	eventBuf := byteslice.FromStruct(&event)
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
 	resultBuf := byteslice.FromStruct(&result)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerRegisterEvent,
 		eventBuf, resultBuf); err != nil {
 		return 0, fmt.Errorf("EptHook: REGISTER_EVENT IOCTL failed: %w", err)
 	}
@@ -284,7 +283,7 @@ func (d *Debugger) EptHook(hookAddress uint64, callbackSrc string) (uint64, erro
 
 	var actionResult hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
 	actionResultBuf := byteslice.FromStruct(&actionResult)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerAddActionToEvent,
 		buf, actionResultBuf); err != nil {
 		return 0, fmt.Errorf("EptHook: ADD_ACTION IOCTL failed: %w", err)
 	}
@@ -333,7 +332,7 @@ func (d *Debugger) EptHookForProcess(hookAddress uint64, pid uint32, callbackSrc
 	eventBuf := byteslice.FromStruct(&event)
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
 	resultBuf := byteslice.FromStruct(&result)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerRegisterEvent,
 		eventBuf, resultBuf); err != nil {
 		return 0, fmt.Errorf("EptHookForProcess: REGISTER_EVENT IOCTL failed: %w", err)
 	}
@@ -357,7 +356,7 @@ func (d *Debugger) EptHookForProcess(hookAddress uint64, pid uint32, callbackSrc
 
 	var actionResult hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
 	actionResultBuf := byteslice.FromStruct(&actionResult)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerAddActionToEvent,
 		buf, actionResultBuf); err != nil {
 		return 0, fmt.Errorf("EptHookForProcess: ADD_ACTION IOCTL failed: %w", err)
 	}
@@ -411,7 +410,7 @@ func (d *Debugger) MonitorReadForProcess(addrStart, addrEnd uint64, pid uint32, 
 	eventBuf := byteslice.FromStruct(&event)
 	var result hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
 	resultBuf := byteslice.FromStruct(&result)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_REGISTER_EVENT,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerRegisterEvent,
 		eventBuf, resultBuf); err != nil {
 		return 0, fmt.Errorf("MonitorReadForProcess: REGISTER_EVENT IOCTL failed: %w", err)
 	}
@@ -435,7 +434,7 @@ func (d *Debugger) MonitorReadForProcess(addrStart, addrEnd uint64, pid uint32, 
 
 	var actionResult hyperdbgsdk.DEBUGGER_EVENT_AND_ACTION_RESULT
 	actionResultBuf := byteslice.FromStruct(&actionResult)
-	if _, err := d.device.Ioctl(comm.IOCTL_CODE_DEBUGGER_ADD_ACTION_TO_EVENT,
+	if _, err := d.device.Ioctl(hyperdbgsdk.IoctlDebuggerAddActionToEvent,
 		buf, actionResultBuf); err != nil {
 		return 0, fmt.Errorf("MonitorReadForProcess: ADD_ACTION IOCTL failed: %w", err)
 	}
@@ -564,7 +563,7 @@ func (mp *MessagePump) run(d *Debugger) {
 		// (b) Stop sending IOCTL_RETURN_IRP_PENDING_PACKETS_AND_DISALLOW_IOCTL
 		// on the main handle, which causes the kernel to complete this IRP
 		// with OPERATION_HYPERVISOR_DRIVER_END_OF_IRPS.
-		n, err := mp.dev.Ioctl(comm.IOCTL_CODE_REGISTER_EVENT, regBuf, out)
+		n, err := mp.dev.Ioctl(hyperdbgsdk.IoctlRegisterEvent, regBuf, out)
 		if err != nil {
 			// IRP cancelled (Stop closed mp.dev) or driver gone — exit if
 			// stop was signaled, otherwise continue (mirrors C++ behaviour
@@ -601,9 +600,18 @@ func (mp *MessagePump) run(d *Debugger) {
 			if uint32(len(msg)) >= uint32(pausedSize) {
 				paused := (*hyperdbgsdk.DEBUGGEE_UD_PAUSED_PACKET)(unsafe.Pointer(&msg[0]))
 				d.mu.Lock()
-				d.pausedRIP = paused.Rip
-				d.pausedRFLAGS = paused.Rflags
-				d.pausedThreadId = paused.ThreadId
+				// 镜像 C++ user-listening.cpp:74 的过滤：只有当前没有
+				// active 暂停线程（首次暂停，等价 IsPaused==FALSE，用
+				// pausedThreadId==0 表示），或 PAUSED 包来自同一个 active
+				// 线程时，才更新 active 状态（RIP/RFLAGS/ThreadId）。
+				// 调试目标常有多个线程被拦截暂停（各自发 PAUSED 包），
+				// 无条件覆盖会把 active 线程切到别的线程 → 下一次 Step
+				// 单步了错误的线程、ReadRegisters 读到错误线程的寄存器。
+				if d.pausedThreadId == 0 || paused.ThreadId == d.pausedThreadId {
+					d.pausedRIP = paused.Rip
+					d.pausedRFLAGS = paused.Rflags
+					d.pausedThreadId = paused.ThreadId
+				}
 				cb := d.OnPaused
 				// Signal pauseEvent (non-blocking: if channel is full,
 				// drain first so the latest pause is what Step waits on).
@@ -664,7 +672,7 @@ func (mp *MessagePump) Stop() {
 	// IRP *before* returning from this IOCTL.
 	if mp.mainDev != nil {
 		_, _ = mp.mainDev.Ioctl(
-			comm.IOCTL_CODE_RETURN_IRP_PENDING_PACKETS_AND_DISALLOW_IOCTL, nil, nil)
+			hyperdbgsdk.IoctlReturnIrpPendingPacketsAndDisallowIoctl, nil, nil)
 	}
 
 	// Wait for the goroutine to exit (it received END_OF_IRPS and returned,
@@ -713,6 +721,11 @@ func (d *Debugger) Continue() error {
 	if err := continueProcess(d.device, d.processToken); err != nil {
 		return fmt.Errorf("Continue: %w", err)
 	}
+	// 镜像 C++ g.cpp:75（CommandGRequest 在 UdContinueProcess 后置
+	// g_ActiveProcessDebuggingState.IsPaused = FALSE）：清除 active 暂停
+	// 线程，这样恢复运行后第一个到达的 PAUSED 包（无论哪个线程）都会
+	// 重新成为 active 线程。
+	d.pausedThreadId = 0
 	d.state = StateProcessRunning
 	return nil
 }
