@@ -617,6 +617,13 @@ func (d *Debugger) Detach() error {
 func (d *Debugger) Disconnect() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
+	return d.disconnectLocked()
+}
+
+// disconnectLocked is the lock-free body of Disconnect. Caller must hold d.mu
+// (UnloadVMM calls this while already holding d.mu — Go mutex 非重入，直接调
+// Disconnect 会自死锁).
+func (d *Debugger) disconnectLocked() error {
 	if d.state < StateVmmLoaded {
 		return fmt.Errorf("Disconnect: VMM not loaded")
 	}

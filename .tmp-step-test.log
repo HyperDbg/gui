@@ -1,0 +1,30 @@
+[1m[95m2026-08-22 00:51:12  Trac         doInit1 │ log_header------------------ key & value ------------------ proc.go:8154
+[0m=== RUN   TestStepSequence
+    step_integration_test.go:49: driver: C:\Users\Administrator\AppData\Local\hyperdbg\hyperkd.sys
+    step_integration_test.go:50: debuggee: C:\Windows\system32\notepad.exe
+    step_integration_test.go:72: VMM loaded
+    step_integration_test.go:95: MessagePump started
+    step_integration_test.go:102: process started: pid=8236 tid=8552
+    step_integration_test.go:115: waiting for initial PAUSED...
+    step_integration_test.go:118: initial PAUSED received, RIP=0x7FF9A57AD60C
+    step_integration_test.go:136: initial regs: RIP=0x7FF9A57AD60C RSP=0xDF480 RAX=0x2A5000 RFL=0x10246
+    step_integration_test.go:195: Step #1: RIP=0x7FF9A57AD60C hyperdbg_bytes=752db88403fe7f803800741265488b04 windows_bytes=752db88403fe7f803800741265488b04 hyperdbg_disasm=jnz 0x00007FF9A57AD63B (len=2)
+    step_integration_test.go:210: Step #1: RIP 0x7FF9A57AD60C → 0x7FF9A57AD60E (delta=0x2), pausedRIP=0x7FF9A57AD60E, RSP=0xDF480, RFL=0x10246, next_disasm=mov eax, 0x7FFE0384 (len=5)
+    step_integration_test.go:195: Step #2: RIP=0x7FF9A57AD60E hyperdbg_bytes=b88403fe7f803800741265488b042560 windows_bytes=b88403fe7f803800741265488b042560 hyperdbg_disasm=mov eax, 0x7FFE0384 (len=5)
+    step_integration_test.go:210: Step #2: RIP 0x7FF9A57AD60E → 0x7FF9A57AD613 (delta=0x5), pausedRIP=0x7FF9A57AD613, RSP=0xDF480, RFL=0x10246, next_disasm=cmp byte ptr [rax], 0x00 (len=3)
+    step_integration_test.go:195: Step #3: RIP=0x7FF9A57AD613 hyperdbg_bytes=803800741265488b042560000000f680 windows_bytes=803800741265488b042560000000f680 hyperdbg_disasm=cmp byte ptr [rax], 0x00 (len=3)
+    step_integration_test.go:210: Step #3: RIP 0x7FF9A57AD613 → 0x7FF9A57AD616 (delta=0x3), pausedRIP=0x7FF9A57AD616, RSP=0xDF480, RFL=0x10246, next_disasm=jz 0x00007FF9A57AD62A (len=2)
+    step_integration_test.go:195: Step #4: RIP=0x7FF9A57AD616 hyperdbg_bytes=741265488b042560000000f680780300 windows_bytes=741265488b042560000000f680780300 hyperdbg_disasm=jz 0x00007FF9A57AD62A (len=2)
+    step_integration_test.go:210: Step #4: RIP 0x7FF9A57AD616 → 0x7FF9A57AD62A (delta=0x14), pausedRIP=0x7FF9A57AD62A, RSP=0xDF480, RFL=0x10246, next_disasm=mov rbx, [rsp+0x40] (len=5)
+    step_integration_test.go:195: Step #5: RIP=0x7FF9A57AD62A hyperdbg_bytes=488b5c2440488b7424484883c4305fc3 windows_bytes=488b5c2440488b7424484883c4305fc3 hyperdbg_disasm=mov rbx, [rsp+0x40] (len=5)
+    step_integration_test.go:210: Step #5: RIP 0x7FF9A57AD62A → 0x7FF9A57AD62F (delta=0x5), pausedRIP=0x7FF9A57AD62F, RSP=0xDF480, RFL=0x10246, next_disasm=mov rsi, [rsp+0x48] (len=5)
+    step_integration_test.go:218: === 5 consecutive steps all succeeded ===
+    step_integration_test.go:224: Continue OK, process running
+    step_integration_test.go:237: Pause returned: process already in intercepting (paused) phase (may be already-paused)
+    step_integration_test.go:243: PAUSED after Continue→Pause
+    step_integration_test.go:253: after Continue→Pause: RIP=0x1400019C0 RSP=0xDFF58
+    step_integration_test.go:264: Step after Continue→Pause: RIP=0x1400019C4
+    step_integration_test.go:267: === TestStepSequence PASSED ===
+--- PASS: TestStepSequence (1.32s)
+PASS
+ok  	github.com/hyperdbg/go-libhyperdbg/debugger/core	1.392s

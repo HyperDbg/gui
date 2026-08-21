@@ -51,7 +51,17 @@ func TestStepSequence(t *testing.T) {
 
 	// === 1. 创建 Debugger 并初始化 ===
 	dbg := New()
-	t.Cleanup(func() { _ = dbg.UnloadVMM(); _ = dbg.UnloadDriver() })
+	// teardown 总顺序（LIFO，后注册先执行）：
+	//   Continue+Disconnect → Terminate/Close proc → TERMINATE_VMX
+	//   → pump.Stop → device.Close → UnloadDriver
+	//
+	// 关键约束（违反会 BSOD/驱动残留）：
+	//   - Disconnect 必须在进程还活着、VMX 还在时发（内核 EPT/UD 清理
+	//     要访问进程地址空间；晚发=对已死会话清理 → 状态污染，
+	//     曾导致 csrss 0xEF CRITICAL_PROCESS_DIED BSOD）。
+	//   - TERMINATE_VMX 必须在 pump.Stop 之前（DISALLOW_IOCTL 会阻止它）。
+	//   - device/pump 句柄全部关闭后才能卸载驱动服务，否则 STOP_PENDING。
+	t.Cleanup(func() { _ = dbg.UnloadDriver() }) // reg#1 → 最后执行
 
 	if err := dbg.LoadDriver(driverPath); err != nil {
 		t.Skipf("LoadDriver: %v (driver stuck? VT-x not available?)", err)
@@ -60,6 +70,7 @@ func TestStepSequence(t *testing.T) {
 		t.Skipf("InitVMM: %v (VT-x not available?)", err)
 	}
 	t.Logf("VMM loaded")
+	t.Cleanup(func() { _ = dbg.device.Close() }) // reg#2 → 第6执行
 
 	// 用 OnPaused 回调追踪暂停事件
 	pausedCh := make(chan struct{}, 16)
@@ -75,14 +86,11 @@ func TestStepSequence(t *testing.T) {
 	if err != nil {
 		t.Fatalf("StartMessagePump: %v", err)
 	}
-	// TERMINATE_VMX 必须在 pump.Stop() 之前执行：
-	// pump.Stop() 发 DISALLOW_IOCTL，会阻止后续 TERMINATE_VMX，
-	// 导致 VMX 未清理 → 驱动卸载卡死在 STOP_PENDING。
-	t.Cleanup(func() {
+	t.Cleanup(func() { pump.Stop() }) // reg#3 → 第5执行
+	t.Cleanup(func() { // reg#4 → 第4执行：TERMINATE_VMX（须在 pump.Stop 前）
 		if dbg.device != nil {
 			_, _ = dbg.device.IoctlStruct(hyperdbgsdk.IoctlTerminateVmx, nil, nil, 0, 0)
 		}
-		pump.Stop()
 	})
 	t.Logf("MessagePump started")
 
@@ -93,16 +101,15 @@ func TestStepSequence(t *testing.T) {
 	}
 	t.Logf("process started: pid=%d tid=%d", proc.Pid, proc.Tid)
 
-	// cleanup 顺序（LIFO，后注册先执行）：
-	// 只 terminate + close，不 detach — detach 在 step 超时/异常后
-	// 可能触发 EPT hook 清理访问已释放页面 → 0x50 BSOD。
-	// terminate 后进程退出，内核自动清理调试会话。
-	t.Cleanup(func() {
-		_ = proc.Close()
-	})
-	t.Cleanup(func() {
-		_ = proc.Terminate()
-	})
+	// 不单独 detach/kill — UnloadVMM 内部已按 C++ ground truth 处理：
+	// Continue+Detach（摘除监控）→ TERMINATE_VMX。这里的顺序是：
+	//   Detach(含 Continue) → Terminate → Close → TERMINATE_VMX →
+	//   pump.Stop → device.Close → UnloadDriver
+	// Detach 必须最先：进程脱离 exec-trap 监控后 Terminate/VMXOFF 才安全，
+	// 否则被拦截线程会让全核 DPC 永等 → 整机冻结。
+	t.Cleanup(func() { _ = proc.Close() })                     // reg#5 → 第3执行
+	t.Cleanup(func() { _ = proc.Terminate() })                 // reg#6 → 第2执行
+	t.Cleanup(func() { _ = dbg.Detach() })                     // reg#7 → 最先执行
 
 	// === 4. 等待初始 PAUSED ===
 	t.Logf("waiting for initial PAUSED...")
@@ -292,7 +299,12 @@ func TestStepModesAll(t *testing.T) {
 	t.Logf("debuggee: %s", exePath)
 
 	dbg := New()
-	t.Cleanup(func() { _ = dbg.UnloadVMM(); _ = dbg.UnloadDriver() })
+	// teardown 总顺序（LIFO，后注册先执行）：
+	//   Continue+Disconnect → Terminate/Close proc → TERMINATE_VMX
+	//   → pump.Stop → device.Close → UnloadDriver
+	// （约束同 TestStepSequence：Disconnect 须在进程活着时发，
+	//   TERMINATE_VMX 须在 pump.Stop 前，句柄全关后才卸载驱动）
+	t.Cleanup(func() { _ = dbg.UnloadDriver() }) // reg#1 → 最后执行
 
 	if err := dbg.LoadDriver(driverPath); err != nil {
 		t.Skipf("LoadDriver: %v", err)
@@ -300,6 +312,7 @@ func TestStepModesAll(t *testing.T) {
 	if err := dbg.InitVMM(); err != nil {
 		t.Skipf("InitVMM: %v", err)
 	}
+	t.Cleanup(func() { _ = dbg.device.Close() }) // reg#2 → 第6执行
 
 	pausedCh := make(chan struct{}, 32)
 	dbg.OnPaused = func() {
@@ -313,11 +326,11 @@ func TestStepModesAll(t *testing.T) {
 	if err != nil {
 		t.Fatalf("StartMessagePump: %v", err)
 	}
-	t.Cleanup(func() {
+	t.Cleanup(func() { pump.Stop() }) // reg#3 → 第5执行
+	t.Cleanup(func() { // reg#4 → 第4执行：TERMINATE_VMX（须在 pump.Stop 前）
 		if dbg.device != nil {
 			_, _ = dbg.device.IoctlStruct(hyperdbgsdk.IoctlTerminateVmx, nil, nil, 0, 0)
 		}
-		pump.Stop()
 	})
 
 	proc, err := dbg.StartProcess(exePath)
@@ -325,8 +338,9 @@ func TestStepModesAll(t *testing.T) {
 		t.Fatalf("StartProcess: %v", err)
 	}
 	t.Logf("process started: pid=%d tid=%d", proc.Pid, proc.Tid)
-	t.Cleanup(func() { _ = proc.Close() })
-	t.Cleanup(func() { _ = proc.Terminate() })
+	t.Cleanup(func() { _ = proc.Close() })                     // reg#5 → 第3执行
+	t.Cleanup(func() { _ = proc.Terminate() })                 // reg#6 → 第2执行
+	t.Cleanup(func() { _ = dbg.Detach() })                     // reg#7 → 最先执行
 
 	// 等待初始 PAUSED
 	select {

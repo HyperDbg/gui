@@ -187,9 +187,29 @@ func (d *Debugger) InitVMM() error {
 // HyperDbgUnloadKd (close device). The device close lives here, not in
 // UnloadDriver, so a mid-session UnloadVMM (without UnloadDriver) leaves the
 // driver service intact for a later InitVMM restart.
+//
+// Disconnect() is called first to signal the kernel that the debugging session
+// is finished. This ensures EPT hooks and debug state are cleaned up while the
+// debuggee process is still alive — otherwise Kill/Detach on a dead process
+// can cause use-after-free (0x50 BSOD in win32kfull or similar).
+//
+// NOTE: 上述旧注释的描述是错的。C++ 本地模式 unload 不发 disconnect 信号；
+// 现在的顺序是 Continue+Detach（把进程从监控摘除）→ TERMINATE_VMX。
 func (d *Debugger) UnloadVMM() error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
+	// C++ ground truth (libhyperdbg.cpp HyperDbgUnloadVmm:380):
+	//   本地模式 unload vmm 只发 IOCTL_TERMINATE_VMX —— 不发
+	//   IOCTL_SEND_SIGNAL_EXECUTION_IN_DEBUGGEE_FINISHED（那是远程
+	//   内核调试 KdSendCommandFinishedSignal 的机制，本地 attach 模式
+	//   发它是误用）。
+	//
+	// 与 C++ 的差异：C++ CLI 用户通常在 unload 前已显式 kill/detach
+	// debuggee；Go 程序化退出必须自动做——必须在 TERMINATE_VMX 之前
+	// Continue+Detach 把进程从 exec-trap 监控摘除。否则被拦截线程仍在
+	// vm-exit 循环里，TERMINATE_VMX 的 KeGenericCallDpc 全核广播永远
+	// 等不到那个核 → 整机冻结（鼠标不动）；或者并发释放 details 链表
+	// → 状态污染 → 延迟 BSOD。
 	if d.device != nil && d.processToken != 0 {
 		_ = continueProcess(d.device, d.processToken)
 		_ = detachProcess(d.device, d.processPid)
